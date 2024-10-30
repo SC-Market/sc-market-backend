@@ -61,7 +61,7 @@
     "@types/ws": "^8.2.0",
     "@typescript-eslint/eslint-plugin": "^8.6.0",
     "@typescript-eslint/parser": "^8.6.0",
-    "eslint": "^8.57.1",
+    "eslint": "^9.13.0",
     "eslint-plugin-prettier": "^4.2.1",
     "prettier": "^2.8.8",
     "prettier-config-nick": "^1.0.8",
