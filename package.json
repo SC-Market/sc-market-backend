@@ -16,7 +16,7 @@
     "bson": "^6.2.0",
     "cheerio": "^1.0.0-rc.12",
     "compression": "^1.7.4",
-    "connect-pg-simple": "^9.0.1",
+    "connect-pg-simple": "^10.0.0",
     "cors": "^2.8.5",
     "discord-api-types": "^0.37.103",
     "dotenv": "^16.3.1",

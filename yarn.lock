@@ -2265,12 +2265,12 @@ concat-stream@^1.5.2:
     readable-stream "^2.2.2"
     typedarray "^0.0.6"
 
-connect-pg-simple@^9.0.1:
-  version "9.0.1"
-  resolved "https://registry.yarnpkg.com/connect-pg-simple/-/connect-pg-simple-9.0.1.tgz#98637ff17a5bfeaeef638093fcf484bc96fcbbf6"
-  integrity sha512-BuwWJH3K3aLpONkO9s12WhZ9ceMjIBxIJAh0JD9x4z1Y9nShmWqZvge5PG/+4j2cIOcguUoa2PSQ4HO/oTsrVg==
+connect-pg-simple@^10.0.0:
+  version "10.0.0"
+  resolved "https://registry.yarnpkg.com/connect-pg-simple/-/connect-pg-simple-10.0.0.tgz#972b08d9fc6a1861c523a6c9166240a24b4bc3ca"
+  integrity sha512-pBGVazlqiMrackzCr0eKhn4LO5trJXsOX0nQoey9wCOayh80MYtThCbq8eoLsjpiWgiok/h+1/uti9/2/Una8A==
   dependencies:
-    pg "^8.8.0"
+    pg "^8.12.0"
 
 content-disposition@0.5.4:
   version "0.5.4"
@@ -3714,7 +3714,7 @@ pg-types@^4.0.1:
     postgres-interval "^3.0.0"
     postgres-range "^1.1.1"
 
-pg@^8.6.0, pg@^8.8.0:
+pg@^8.12.0, pg@^8.6.0:
   version "8.13.1"
   resolved "https://registry.yarnpkg.com/pg/-/pg-8.13.1.tgz#6498d8b0a87ff76c2df7a32160309d3168c0c080"
   integrity sha512-OUir1A0rPNZlX//c7ksiu7crsGZTKSOXJPgtNiHGIlC9H0lO+NC6ZDYksSgBYY/thSWhnSRBv8w1lieNNGATNQ==
