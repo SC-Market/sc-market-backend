@@ -87,20 +87,22 @@ export async function verifiedUser(
   }
 }
 
-export async function adminAuthorized(
+export function adminAuthorized(
   req: Request,
   res: Response,
   next: NextFunction,
-) {
+): void {
   if (req.isAuthenticated()) {
     const user = req.user as User
     if (user.banned) {
-      return res.status(418).json({ error: "Internal server error" })
+      res.status(418).json({ error: "Internal server error" })
+      return
     }
     if (user.role === "admin") {
-      await next()
+      next()
     } else {
       res.status(403).send({ error: "Unauthorized" })
+      return
     }
   } else {
     res.status(401).send({ error: "Unauthenticated" })

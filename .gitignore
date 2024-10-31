@@ -29,5 +29,6 @@ yarn-error.log*
 .idea/
 node_modules/
 /dist
+config/certificates/
 
 docker-compose.override.yml

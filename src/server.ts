@@ -16,7 +16,7 @@ import pg from "pg"
 import { apiRouter } from "./api/routes/v1/api-router.js"
 import { database } from "./clients/database/knex-db.js"
 import { hostname } from "os"
-import { errorHandler } from "./api/middleware/auth.js"
+import { adminAuthorized, errorHandler } from "./api/middleware/auth.js"
 import { SitemapStream, streamToPromise } from "sitemap"
 import { createGzip } from "zlib"
 import { registrationRouter } from "./clients/discord_api/registration.js"
@@ -33,6 +33,8 @@ import { createServer } from "node:http"
 import { envoyManager } from "./clients/messaging/envoy.js"
 import { oapi } from "./api/routes/v1/openapi.js"
 import { env } from "./config/env.js"
+import * as https from "node:https"
+import fs from "node:fs"
 
 const SessionPool = pg.Pool
 
@@ -106,7 +108,7 @@ const sessionDBaccess = new SessionPool({
 })
 
 if (app.get("env") === "production") {
-  app.set("trust proxy", 1) // trust first proxy
+  app.set("trust proxy", 2) // trust first and second proxy
 }
 
 const sessionMiddleware = session({
@@ -365,17 +367,9 @@ app.get("/sitemap.xml", async function (req, res) {
   }
 })
 
-// app.use(
-//   OpenApiValidator.middleware({
-//     apiSpec: "./src/openapi.yaml",
-//     validateRequests: false, // (default)
-//     validateResponses: true, // false by default
-//   }),
-// )
-
 if (deployEnvironment === "development") {
   app.use(oapi)
-  app.use("/swaggerui", oapi.swaggerui())
+  app.use("/swaggerui", adminAuthorized, oapi.swaggerui())
 }
 
 app.use("/api", apiRouter)
@@ -414,19 +408,24 @@ envoyManager.envoy.io.engine.use(
 envoyManager.initialize()
 
 // Start the app
-console.log(`server up on port ${hostname()}:${backend_url.port || 80}`)
-httpServer.listen(backend_url.port || 80)
+console.log(`server up on port ${hostname()}:${env.BACKEND_PORT || 80}`)
+httpServer.listen(env.BACKEND_PORT || 80)
 
-// TODO: Use self signed keys
-// if (deployEnvironment == 'production') {
-//     let privateKey = fs.readFileSync('/etc/letsencrypt/live/sc-market.space/privkey.pem', 'utf8');
-//     let certificate = fs.readFileSync('/etc/letsencrypt/live/sc-market.space/fullchain.pem', 'utf8');
-//
-//     let credentials = {key: privateKey, cert: certificate};
-//
-//     let httpsServer = https.createServer(credentials, app);
-//     httpsServer.listen(8443);
-// }
+if (deployEnvironment == "production") {
+  const privateKey = fs.readFileSync(
+    "/etc/letsencrypt/live/sc-market.space/privkey.pem",
+    "utf8",
+  )
+  const certificate = fs.readFileSync(
+    "/etc/letsencrypt/live/sc-market.space/fullchain.pem",
+    "utf8",
+  )
+
+  const credentials = { key: privateKey, cert: certificate }
+
+  const httpsServer = https.createServer(credentials, app)
+  httpsServer.listen(443)
+}
 
 const discord_app = express()
 discord_app.use(
