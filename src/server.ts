@@ -79,7 +79,7 @@ const passportConfig = {
 
   // The callback URL - Your app should be accessible on this domain. You can use
   // localhost for testing, just makes sure it's set as a Redirect URL (See "Discord Application Setup")
-  callbackURL: `${backend_url}/auth/discord/callback`,
+  callbackURL: new URL("auth/discord/callback", backend_url).toString(),
 
   /* Optional items: */
 
@@ -199,7 +199,7 @@ app.get("/auth/discord/callback", async (req, res, next) => {
 
   return passport.authenticate("discord", {
     failureRedirect: frontend_url.toString(),
-    successRedirect: `${frontend_url.toString()}${state}`,
+    successRedirect: new URL(state || "", frontend_url).toString(),
     session: true,
   })(req, res, next)
 })
