@@ -1687,10 +1687,10 @@
   dependencies:
     "@types/node" "*"
 
-"@types/passport-discord@^0.1.5":
-  version "0.1.13"
-  resolved "https://registry.yarnpkg.com/@types/passport-discord/-/passport-discord-0.1.13.tgz#630ea9a5f3b5cb8af8c13a423c95ed85b44e277e"
-  integrity sha512-A9fGTf69C19xQr4BQUHvK+/DpGuSLF/v/MEMdw4Z46sQd0dqeP+4ysBZqF5rXxaCWVcJKBxXUpV8MpW5jwWVIQ==
+"@types/passport-discord@^0.1.14":
+  version "0.1.14"
+  resolved "https://registry.yarnpkg.com/@types/passport-discord/-/passport-discord-0.1.14.tgz#a6a8866f88932cc7499cfa325b9f47a4a390e283"
+  integrity sha512-JE7Wbtr4bqqV9poWAbwB+aeVkd3/TM6wgGTtn4Ym6KPLJlJju73BEIH3uS+EeR+D7tY3lP1MtUpJPbxC86PXzA==
   dependencies:
     "@types/express" "*"
     "@types/passport" "*"
