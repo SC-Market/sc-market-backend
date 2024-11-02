@@ -33,12 +33,10 @@ import { createServer } from "node:http"
 import { envoyManager } from "./clients/messaging/envoy.js"
 import { oapi } from "./api/routes/v1/openapi.js"
 import { env } from "./config/env.js"
-import * as https from "node:https"
-import fs from "node:fs"
 
 const SessionPool = pg.Pool
 
-const deployEnvironment = env.DEPLOY_ENVIRONMENT
+const deployEnvironment = env.NODE_ENV
 const backend_url = new URL(env.BACKEND_URL || "http://localhost:7000")
 const frontend_url = new URL(env.FRONTEND_URL || "http://localhost:5173")
 const discord_backend_url = new URL(

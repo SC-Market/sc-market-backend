@@ -586,7 +586,13 @@ offerRouter.put(
   }),
   async (req, res) => {
     const session = req.offer_session!
-    const status = req.body.status
+    const status = req.body.status as "accepted" | "rejected" | "counteroffered"
+
+    const nameMap = new Map([
+      ["accepted" as const, "Accepted" as const],
+      ["rejected" as const, "Rejected" as const],
+      ["counteroffered" as const, "Counter-Offered" as const],
+    ])
 
     if (["accepted", "rejected"].includes(status)) {
       await database.updateOfferSession(session.id, { status: "closed" })
@@ -594,10 +600,15 @@ offerRouter.put(
         status,
       })
 
-      await sendOfferStatusNotification(session, "Accepted")
-      const order = await initiateOrder(session)
+      await sendOfferStatusNotification(session, nameMap.get(status)!)
 
-      res.json(createResponse({ order_id: order.order_id }))
+      if (status === "accepted") {
+        const order = await initiateOrder(session)
+
+        res.json(createResponse({ order_id: order.order_id }))
+      } else {
+        return res.json(createResponse({ result: "Success" }))
+      }
     } else {
       const user = req.user as User
       const customer = await database.getUser({ user_id: session.customer_id })
