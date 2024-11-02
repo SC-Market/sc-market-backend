@@ -811,7 +811,7 @@ contractorsRouter.post(
   async (req, res, next) => {
     const user = req.user as User
 
-    const { invite_id }: { invite_id?: string } = req.body
+    const { invite_id }: { invite_id: string } = req.body
 
     // Invite Code
     const [invite] = await database.getInviteCodes({
