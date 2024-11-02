@@ -411,22 +411,6 @@ envoyManager.initialize()
 console.log(`server up on port ${hostname()}:${env.BACKEND_PORT || 80}`)
 httpServer.listen(env.BACKEND_PORT || 80)
 
-if (deployEnvironment == "production") {
-  const privateKey = fs.readFileSync(
-    "/etc/letsencrypt/live/sc-market.space/privkey.pem",
-    "utf8",
-  )
-  const certificate = fs.readFileSync(
-    "/etc/letsencrypt/live/sc-market.space/fullchain.pem",
-    "utf8",
-  )
-
-  const credentials = { key: privateKey, cert: certificate }
-
-  const httpsServer = https.createServer(credentials, app)
-  httpsServer.listen(443)
-}
-
 const discord_app = express()
 discord_app.use(
   bodyParser.urlencoded({
