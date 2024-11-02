@@ -92,7 +92,7 @@ oapi.schema("ContractorRole", {
     position: {
       title: "ContractorRole.position",
       type: "integer",
-      minimum: 0,
+      minimum: 1,
     },
     role_id: {
       title: "ContractorRole.role_id",
