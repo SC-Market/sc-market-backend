@@ -36,15 +36,17 @@ shipRouter.post("/import", userAuthorized, async (req, res) => {
   const ships = req.body as ShipsFileEntry[]
 
   if (!ships) {
-    return res.status(400).send({
+    res.status(400).json({
       error: "No ships provided",
     })
+    return
   }
 
   if (!validate(ships, ShipsFileSchema).valid) {
-    return res.status(400).send({
+    res.status(400).json({
       error: "Invalid ships provided",
     })
+    return
   }
 
   await Promise.all(
@@ -57,7 +59,8 @@ shipRouter.post("/import", userAuthorized, async (req, res) => {
     }),
   )
 
-  return res.status(200).send({ result: "Success!" })
+  res.status(200).json({ result: "Success!" })
+  return
 })
 
 export const shipsRouter = express.Router()
@@ -66,5 +69,5 @@ shipsRouter.get("/mine", userAuthorized, async (req, res) => {
   const user = req.user as User
   const ships = await database.getShips({ owner: user.user_id })
 
-  res.json(await Promise.all(ships.map(formatUserShip)))
+  res.status(200).json(await Promise.all(ships.map(formatUserShip)))
 })

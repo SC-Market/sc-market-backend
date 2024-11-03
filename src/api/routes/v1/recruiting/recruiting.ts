@@ -28,7 +28,8 @@ export async function contractorRecruiting(
     try {
       contractor = await database.getContractor({ spectrum_id })
     } catch (e) {
-      return res.status(400).json({ error: "Invalid contractor" })
+      res.status(400).json({ error: "Invalid contractor" })
+      return
     }
 
     const success = await has_permission(
@@ -37,12 +38,13 @@ export async function contractorRecruiting(
       "manage_recruiting",
     )
     if (!success) {
-      return res.status(400).send({ error: "Missing permissions" })
+      res.status(400).json({ error: "Missing permissions" })
+      return
     }
 
     next()
   } else {
-    res.status(401).send({ error: "Unauthenticated" })
+    res.status(401).json({ error: "Unauthenticated" })
   }
 }
 
@@ -133,7 +135,7 @@ recruitingRouter.get("/posts", async function (req, res) {
   const counts = await database.getRecruitingPostCount()
   const formatted = await Promise.all(posts.map(formatRecruitingPost))
 
-  res.json({ total: +counts[0].count, items: formatted })
+  res.status(200).json({ total: +counts[0].count, items: formatted })
 })
 
 recruitingRouter.post(
@@ -151,7 +153,8 @@ recruitingRouter.post(
     } = req.body
 
     if (!title || !body || !spectrum_id) {
-      return res.status(400).json({ error: "Missing required fields" })
+      res.status(400).json({ error: "Missing required fields" })
+      return
     }
 
     const contractor_obj = await database.getContractor({
@@ -161,7 +164,8 @@ recruitingRouter.post(
       contractor_id: contractor_obj.contractor_id,
     })
     if (last_post) {
-      return res.status(400).json({ error: "Cannot create multiple posts" })
+      res.status(400).json({ error: "Cannot create multiple posts" })
+      return
     }
 
     const posts = await database
@@ -169,7 +173,7 @@ recruitingRouter.post(
       .insert({ title, body, contractor_id: contractor_obj.contractor_id })
       .returning("*")
 
-    res.json(posts[0])
+    res.status(200).json(posts[0])
   },
 )
 
@@ -180,12 +184,13 @@ recruitingRouter.get("/post/:post_id", async function (req, res) {
   const post = await database.getRecruitingPost({ post_id })
 
   if (!post) {
-    return res.status(400).send({ message: "Invalid post" })
+    res.status(400).json({ message: "Invalid post" })
+    return
   }
 
   const formatted = await formatRecruitingPost(post)
 
-  res.json(formatted)
+  res.status(200).json(formatted)
 })
 
 recruitingRouter.get("/post/:post_id/comments", async function (req, res) {
@@ -193,7 +198,8 @@ recruitingRouter.get("/post/:post_id/comments", async function (req, res) {
   const post = await database.getRecruitingPost({ post_id })
 
   if (!post) {
-    return res.status(400).send({ message: "Invalid post" })
+    res.status(400).json({ message: "Invalid post" })
+    return
   }
 
   const comments_raw = await database.getRecruitingPostComments({
@@ -206,7 +212,7 @@ recruitingRouter.get("/post/:post_id/comments", async function (req, res) {
       +b.upvotes! - +b.downvotes! - (+a.upvotes! - +a.downvotes!),
   )
 
-  res.json(comments)
+  res.status(200).json(comments)
 })
 
 recruitingRouter.post("/post/:post_id/update", async function (req, res) {
@@ -215,7 +221,8 @@ recruitingRouter.post("/post/:post_id/update", async function (req, res) {
   const post = await database.getRecruitingPost({ post_id })
 
   if (!post) {
-    return res.status(400).send({ message: "Invalid post" })
+    res.status(400).json({ message: "Invalid post" })
+    return
   }
 
   const contractor = await database.getContractor({
@@ -228,7 +235,8 @@ recruitingRouter.post("/post/:post_id/update", async function (req, res) {
       "manage_recruiting",
     ))
   ) {
-    return res.status(400).send({ message: "Missing permissions" })
+    res.status(400).json({ message: "Missing permissions" })
+    return
   }
 
   const {
@@ -240,7 +248,8 @@ recruitingRouter.post("/post/:post_id/update", async function (req, res) {
   } = req.body
 
   if (!title && !body) {
-    return res.status(400).json({ error: "Missing required fields" })
+    res.status(400).json({ error: "Missing required fields" })
+    return
   }
 
   const newValues: { title?: string; body?: string } = {}
@@ -249,7 +258,7 @@ recruitingRouter.post("/post/:post_id/update", async function (req, res) {
 
   const results = await database.updateRecruitingPost({ post_id }, newValues)
 
-  res.json(results[0])
+  res.status(200).json(results[0])
 })
 
 recruitingRouter.post(
@@ -261,7 +270,8 @@ recruitingRouter.post(
     const user = req.user as User
 
     if (!post) {
-      return res.status(400).send({ message: "Invalid post" })
+      res.status(400).json({ message: "Invalid post" })
+      return
     }
 
     const vote = await database.getRecruitingPostVoteWithinWeek({
@@ -276,7 +286,7 @@ recruitingRouter.post(
       })
     }
 
-    res.json({ message: "Success!", already_voted: !!vote })
+    res.status(200).json({ message: "Success!", already_voted: !!vote })
   },
 )
 
@@ -289,7 +299,8 @@ recruitingRouter.post(
     const user = req.user as User
 
     if (!post) {
-      return res.status(400).send({ message: "Invalid post" })
+      res.status(400).json({ message: "Invalid post" })
+      return
     }
 
     const {
@@ -305,7 +316,8 @@ recruitingRouter.post(
       const comment = await database.getComment({ comment_id: reply_to })
 
       if (!comment) {
-        return res.status(400).send({ message: "Invalid comment" })
+        res.status(400).json({ message: "Invalid comment" })
+        return
       }
 
       comments = await database.insertComment({
@@ -326,7 +338,7 @@ recruitingRouter.post(
       comment_id: comments[0].comment_id,
     })
 
-    res.json({ message: "Success!" })
+    res.status(200).json({ message: "Success!" })
   },
 )
 
@@ -335,7 +347,8 @@ recruitingRouter.get("/org/:spectrum_id", async function (req, res) {
   const contractor = await database.getContractorSafe({ spectrum_id })
 
   if (!contractor) {
-    return res.status(400).json({ message: "Invalid contractor" })
+    res.status(400).json({ message: "Invalid contractor" })
+    return
   }
 
   const post = await database.getRecruitingPost({
@@ -343,9 +356,10 @@ recruitingRouter.get("/org/:spectrum_id", async function (req, res) {
   })
 
   if (!post) {
-    return res.status(400).send({ message: "Invalid post" })
+    res.status(400).json({ message: "Invalid post" })
+    return
   }
 
   const formatted = await formatRecruitingPost(post)
-  res.json(formatted)
+  res.status(200).json(formatted)
 })

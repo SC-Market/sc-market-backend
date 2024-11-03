@@ -357,7 +357,9 @@ offerRouter.get(
   userAuthorized,
   related_to_offer,
   async (req, res) => {
-    res.json(createResponse(await serializeOfferSession(req.offer_session!)))
+    res
+      .status(200)
+      .json(createResponse(await serializeOfferSession(req.offer_session!)))
   },
 )
 
@@ -401,9 +403,13 @@ offersRouter.get(
       assigned_id: user.user_id,
     })
 
-    res.json(
-      createResponse(await Promise.all(offers.map(serializeOfferSessionStub))),
-    )
+    res
+      .status(200)
+      .json(
+        createResponse(
+          await Promise.all(offers.map(serializeOfferSessionStub)),
+        ),
+      )
   },
 )
 
@@ -459,9 +465,13 @@ offersRouter.get(
       contractor_id: req.contractor!.contractor_id,
     })
 
-    res.json(
-      createResponse(await Promise.all(offers.map(serializeOfferSessionStub))),
-    )
+    res
+      .status(200)
+      .json(
+        createResponse(
+          await Promise.all(offers.map(serializeOfferSessionStub)),
+        ),
+      )
   },
 )
 
@@ -505,9 +515,13 @@ offersRouter.get(
       customer_id: user.user_id,
     })
 
-    res.json(
-      createResponse(await Promise.all(offers.map(serializeOfferSessionStub))),
-    )
+    res
+      .status(200)
+      .json(
+        createResponse(
+          await Promise.all(offers.map(serializeOfferSessionStub)),
+        ),
+      )
   },
 )
 
@@ -605,9 +619,10 @@ offerRouter.put(
       if (status === "accepted") {
         const order = await initiateOrder(session)
 
-        res.json(createResponse({ order_id: order.order_id }))
+        res.status(200).json(createResponse({ order_id: order.order_id }))
       } else {
-        return res.json(createResponse({ result: "Success" }))
+        res.status(200).json(createResponse({ result: "Success" }))
+        return
       }
     } else {
       const user = req.user as User
@@ -629,24 +644,27 @@ offerRouter.put(
         })
 
         if (!service) {
-          return res
+          res
             .status(400)
             .json(createErrorResponse({ error: "Invalid service" }))
+          return
         }
 
         if (service.user_id && service.user_id !== session.assigned_id) {
-          return res
+          res
             .status(400)
             .json(createErrorResponse({ error: "Invalid service" }))
+          return
         }
 
         if (
           service.contractor_id &&
           service.contractor_id !== session.contractor_id
         ) {
-          return res
+          res
             .status(400)
             .json(createErrorResponse({ error: "Invalid service" }))
+          return
         }
       }
 
@@ -681,7 +699,7 @@ offerRouter.put(
         console.error(e)
       }
 
-      res.json(createResponse({ status: "Success" }))
+      res.status(200).json(createResponse({ status: "Success" }))
     }
   },
 )
@@ -739,9 +757,10 @@ offersRouter.post(
   related_to_offer,
   async (req, res) => {
     if (req.offer_session!.thread_id) {
-      return res
+      res
         .status(409)
         .json(createErrorResponse({ message: "Offer already has a thread!" }))
+      return
     }
 
     try {
@@ -751,9 +770,10 @@ offersRouter.post(
       })
     } catch (e) {
       logger.error("Failed to create thread", e)
-      return res
+      res
         .status(500)
         .json(createErrorResponse({ message: "An unknown error occurred" }))
+      return
     }
     res.status(201).json(
       createResponse({

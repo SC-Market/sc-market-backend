@@ -1,4 +1,4 @@
-import { NextFunction, Request, Response } from "express"
+import { NextFunction, Request, RequestHandler, Response } from "express"
 import { User } from "../routes/v1/api-models.js"
 
 export function pageAuthentication(
@@ -21,7 +21,7 @@ export async function guestAuthorized(
   if (req.isAuthenticated()) {
     next()
   } else {
-    res.status(401).send({ error: "Unauthenticated" })
+    res.status(401).json({ error: "Unauthenticated" })
   }
 }
 
@@ -31,6 +31,7 @@ export function errorHandler(
   res: Response,
   next: NextFunction,
 ) {
+  console.log(err)
   if (res.headersSent) {
     return next(err)
   }
@@ -42,24 +43,25 @@ export function errorHandler(
   })
 }
 
-export async function userAuthorized(
+export const userAuthorized: RequestHandler = async (
   req: Request,
   res: Response,
   next: NextFunction,
-) {
+) => {
   try {
     if (req.isAuthenticated()) {
       const user = req.user as User
       if (user.banned) {
-        return res.status(418).json({ error: "Internal server error" })
+        res.status(418).json({ error: "Internal server error" })
+        return
       }
       if (user.role === "user" || user.role === "admin") {
         next()
       } else {
-        res.status(403).send({ error: "Unauthorized" })
+        res.status(403).json({ error: "Unauthorized" })
       }
     } else {
-      res.status(401).send({ error: "Unauthenticated" })
+      res.status(401).json({ error: "Unauthenticated" })
     }
   } catch (e) {
     console.error(e)
@@ -75,15 +77,17 @@ export async function verifiedUser(
   if (req.isAuthenticated()) {
     const user = req.user as User
     if (user.banned) {
-      return res.status(418).json({ error: "Internal server error" })
+      res.status(418).json({ error: "Internal server error" })
+      return
     }
     if (!user.rsi_confirmed) {
-      return res.status(401).send({ error: "Your account is not verified." })
+      res.status(401).json({ error: "Your account is not verified." })
+      return
     } else {
       next()
     }
   } else {
-    res.status(401).send({ error: "Unauthenticated" })
+    res.status(401).json({ error: "Unauthenticated" })
   }
 }
 
@@ -101,11 +105,11 @@ export function adminAuthorized(
     if (user.role === "admin") {
       next()
     } else {
-      res.status(403).send({ error: "Unauthorized" })
+      res.status(403).json({ error: "Unauthorized" })
       return
     }
   } else {
-    res.status(401).send({ error: "Unauthenticated" })
+    res.status(401).json({ error: "Unauthenticated" })
   }
 }
 

@@ -202,9 +202,8 @@ servicesRouter.post(
       if (
         !(await has_permission(contractor_id, user.user_id, "manage_orders"))
       ) {
-        return res
-          .status(403)
-          .json(createErrorResponse({ error: "No permissions" }))
+        res.status(403).json(createErrorResponse({ error: "No permissions" }))
+        return
       }
     } else {
       contractor_id = null
@@ -231,7 +230,7 @@ servicesRouter.post(
       await createServicePhotos(service.service_id, photos)
     } catch {}
 
-    res.json(createResponse({ result: "Success" }))
+    res.status(200).json(createResponse({ result: "Success" }))
   },
 )
 
@@ -289,9 +288,8 @@ servicesRouter.get(
         { noBalance: true },
       )
     } catch {
-      return res
-        .status(400)
-        .json(createErrorResponse({ error: "Invalid user" }))
+      res.status(400).json(createErrorResponse({ error: "Invalid user" }))
+      return
     }
 
     const isOwner = user && username === user.username
@@ -300,17 +298,17 @@ servicesRouter.get(
       const services = await database.getServices({
         user_id: target.user_id,
       })
-      res.json(
-        createResponse(await Promise.all(services.map(serializeService))),
-      )
+      res
+        .status(200)
+        .json(createResponse(await Promise.all(services.map(serializeService))))
     } else {
       const services = await database.getServices({
         user_id: target.user_id,
         status: "active",
       })
-      res.json(
-        createResponse(await Promise.all(services.map(serializeService))),
-      )
+      res
+        .status(200)
+        .json(createResponse(await Promise.all(services.map(serializeService))))
     }
   },
 )
@@ -350,7 +348,9 @@ servicesRouter.get(
     const services = await database.getServices({
       status: "active",
     })
-    res.json(createResponse(await Promise.all(services.map(serializeService))))
+    res
+      .status(200)
+      .json(createResponse(await Promise.all(services.map(serializeService))))
   },
 )
 
@@ -413,17 +413,17 @@ servicesRouter.get(
       const services = await database.getServices({
         contractor_id: req.contractor!.contractor_id,
       })
-      res.json(
-        createResponse(await Promise.all(services.map(serializeService))),
-      )
+      res
+        .status(200)
+        .json(createResponse(await Promise.all(services.map(serializeService))))
     } else {
       const services = await database.getServices({
         contractor_id: req.contractor!.contractor_id,
         status: "active",
       })
-      res.json(
-        createResponse(await Promise.all(services.map(serializeService))),
-      )
+      res
+        .status(200)
+        .json(createResponse(await Promise.all(services.map(serializeService))))
     }
   },
 )
@@ -484,15 +484,13 @@ servicesRouter.put(
     try {
       service = await database.getService({ service_id })
     } catch {
-      return res
-        .status(400)
-        .json(createErrorResponse({ error: "Invalid service" }))
+      res.status(400).json(createErrorResponse({ error: "Invalid service" }))
+      return
     }
 
     if (!service) {
-      return res
-        .status(400)
-        .json(createErrorResponse({ error: "Invalid service" }))
+      res.status(400).json(createErrorResponse({ error: "Invalid service" }))
+      return
     }
 
     const {
@@ -535,15 +533,13 @@ servicesRouter.put(
           "manage_orders",
         ))
       ) {
-        return res
-          .status(400)
-          .json(createErrorResponse({ error: "No permissions!" }))
+        res.status(400).json(createErrorResponse({ error: "No permissions!" }))
+        return
       }
     } else {
       if (service.user_id !== user.user_id) {
-        return res
-          .status(400)
-          .json(createErrorResponse({ error: "No permissions!" }))
+        res.status(400).json(createErrorResponse({ error: "No permissions!" }))
+        return
       }
     }
 
@@ -577,9 +573,8 @@ servicesRouter.put(
           service_id,
         })
       } catch (e: any) {
-        return res
-          .status(400)
-          .json(createErrorResponse({ error: "Invalid photo!" }))
+        res.status(400).json(createErrorResponse({ error: "Invalid photo!" }))
+        return
       }
     }
 
@@ -590,7 +585,7 @@ servicesRouter.put(
       } catch {}
     }
 
-    res.json(createResponse({ result: "Success" }))
+    res.status(200).json(createResponse({ result: "Success" }))
   },
 )
 
@@ -636,17 +631,15 @@ servicesRouter.get(
     try {
       service = await database.getService({ service_id })
     } catch {
-      return res
-        .status(400)
-        .json(createErrorResponse({ error: "Invalid service" }))
+      res.status(400).json(createErrorResponse({ error: "Invalid service" }))
+      return
     }
 
     if (!service) {
-      return res
-        .status(400)
-        .json(createErrorResponse({ error: "Invalid service" }))
+      res.status(400).json(createErrorResponse({ error: "Invalid service" }))
+      return
     }
 
-    res.json(createResponse(await serializeService(service)))
+    res.status(200).json(createResponse(await serializeService(service)))
   },
 )

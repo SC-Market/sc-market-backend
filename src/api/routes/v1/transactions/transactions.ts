@@ -39,7 +39,7 @@ transactionRouter.get(
     }
 
     // TODO: Factor transaction details into another function
-    res.json({
+    res.status(200).json({
       transaction_id: transaction.transaction_id,
       kind: transaction.kind,
       timestamp: +transaction.timestamp,
@@ -178,7 +178,7 @@ transactionRouter.post("/create", userAuthorized, async (req, res, next) => {
     user_recipient_id: target_user && target_user.user_id,
   })
 
-  res.json({ result: "Success" })
+  res.status(200).json({ result: "Success" })
 })
 
 transactionRouter.post(
@@ -292,7 +292,7 @@ transactionRouter.post(
       user_recipient_id: target_user && target_user.user_id,
     })
     // TODO: Make the above an atomic function in PSQL, so that the same dollar isn't spent twice
-    res.json({ result: "Success" })
+    res.status(200).json({ result: "Success" })
   },
 )
 
@@ -302,7 +302,7 @@ transactionsRouter.get("/mine", userAuthorized, async (req, res, next) => {
   const user = req.user as User
   const transactions = await database.getUserTransactions(user.user_id)
 
-  res.json(
+  res.status(200).json(
     await Promise.all(
       transactions.map(async (transaction) => ({
         transaction_id: transaction.transaction_id,
@@ -326,14 +326,12 @@ transactionsRouter.get("/mine", userAuthorized, async (req, res, next) => {
           ).spectrum_id,
         user_sender_id:
           transaction.user_sender_id &&
-          (
-            await database.getUser({ user_id: transaction.user_sender_id })
-          ).username,
+          (await database.getUser({ user_id: transaction.user_sender_id }))
+            .username,
         user_recipient_id:
           transaction.user_recipient_id &&
-          (
-            await database.getUser({ user_id: transaction.user_recipient_id })
-          ).username,
+          (await database.getUser({ user_id: transaction.user_recipient_id }))
+            .username,
       })),
     ),
   )
@@ -371,7 +369,7 @@ transactionsRouter.get(
       contractor.contractor_id,
     )
 
-    res.json(
+    res.status(200).json(
       await Promise.all(
         transactions.map(async (transaction) => ({
           transaction_id: transaction.transaction_id,
@@ -395,14 +393,12 @@ transactionsRouter.get(
             ).spectrum_id,
           user_sender_id:
             transaction.user_sender_id &&
-            (
-              await database.getUser({ user_id: transaction.user_sender_id })
-            ).username,
+            (await database.getUser({ user_id: transaction.user_sender_id }))
+              .username,
           user_recipient_id:
             transaction.user_recipient_id &&
-            (
-              await database.getUser({ user_id: transaction.user_recipient_id })
-            ).username,
+            (await database.getUser({ user_id: transaction.user_recipient_id }))
+              .username,
         })),
       ),
     )

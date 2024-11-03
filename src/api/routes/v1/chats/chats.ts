@@ -297,9 +297,8 @@ chatsRouter.post(
     }
 
     if (!content) {
-      return res
-        .status(400)
-        .json(createErrorResponse({ error: "Invalid content" }))
+      res.status(400).json(createErrorResponse({ error: "Invalid content" }))
+      return
     }
 
     const chat = req.chat!
@@ -328,7 +327,7 @@ chatsRouter.post(
       }
     }
 
-    res.json(createResponse({ result: "Success" }))
+    res.status(200).json(createResponse({ result: "Success" }))
   },
 )
 
@@ -405,14 +404,14 @@ chatsRouter.post(
         chat_id: chat!.chat_id,
       })
       if (eqSet(new Set(participants), new Set(users.map((u) => u?.user_id)))) {
-        res.json(createResponse({ result: "Success" }))
+        res.status(200).json(createResponse({ result: "Success" }))
         return
       }
     }
 
     await database.insertChat(Array.from(new Set(users.map((x) => x!.user_id))))
 
-    res.json(createResponse({ result: "Success" }))
+    res.status(200).json(createResponse({ result: "Success" }))
   },
 )
 
@@ -466,7 +465,7 @@ chatsRouter.get(
 
     const messages = await Promise.all(msg_entries.map(serializeMessage))
 
-    res.json(
+    res.status(200).json(
       createResponse({
         chat_id: chat.chat_id,
         participants: await Promise.all(
@@ -548,6 +547,6 @@ chatsRouter.get(
         }
       }),
     )
-    res.json(createResponse(newchats))
+    res.status(200).json(createResponse(newchats))
   },
 )

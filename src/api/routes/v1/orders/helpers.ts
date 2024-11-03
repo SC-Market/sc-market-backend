@@ -209,20 +209,20 @@ export async function handleStatusUpdate(req: any, res: any, status: string) {
     if (
       !["fulfilled", "in-progress", "not-started", "cancelled"].includes(status)
     ) {
-      return res
-        .status(400)
-        .json(createErrorResponse({ message: "Invalid status!" }))
+      res.status(400).json(createErrorResponse({ message: "Invalid status!" }))
+      return
     }
 
     if (
       user.role !== "admin" &&
       (order.status.includes("cancelled") || order.status.includes("fulfilled"))
     ) {
-      return res.status(400).json(
+      res.status(400).json(
         createErrorResponse({
           message: "Cannot change status for closed order",
         }),
       )
+      return
     }
 
     if (!order.contractor_id) {
@@ -231,11 +231,12 @@ export async function handleStatusUpdate(req: any, res: any, status: string) {
         order.assigned_id !== user.user_id &&
         user.role !== "admin"
       ) {
-        return res.status(403).json(
+        res.status(403).json(
           createErrorResponse({
             message: `Only the assigned user may set the status of this order to ${status}`,
           }),
         )
+        return
       }
     } else {
       const orgAdmin = await has_permission(
@@ -248,9 +249,10 @@ export async function handleStatusUpdate(req: any, res: any, status: string) {
         !order.assigned_id &&
         !orgAdmin
       ) {
-        return res
+        res
           .status(400)
           .json(createErrorResponse({ message: "Invalid status!" }))
+        return
       }
     }
 
@@ -279,9 +281,10 @@ export async function handleStatusUpdate(req: any, res: any, status: string) {
 
 export async function handleAssignedUpdate(req: any, res: any) {
   if (!req.order.contractor_id) {
-    return res
+    res
       .status(400)
       .json(createErrorResponse({ message: "This order cannot be assigned" }))
+    return
   }
 
   const {
@@ -302,11 +305,12 @@ export async function handleAssignedUpdate(req: any, res: any) {
       "manage_orders",
     ))
   ) {
-    return res.status(403).json(
+    res.status(403).json(
       createErrorResponse({
         message: "No permission to assign this order",
       }),
     )
+    return
   }
 
   if (targetUser) {
@@ -323,9 +327,8 @@ export async function handleAssignedUpdate(req: any, res: any) {
       contractorObj.contractor_id,
     )
     if (!targetUserRole) {
-      return res
-        .status(400)
-        .send(createErrorResponse({ message: "Invalid user!" }))
+      res.status(400).json(createErrorResponse({ message: "Invalid user!" }))
+      return
     }
 
     const newOrders = await database.updateOrder(req.order.order_id, {
@@ -350,19 +353,21 @@ export async function acceptApplicant(
   const { target_contractor, target_username } = arg
 
   if (req.user.user_id !== req.order.customer_id) {
-    return res.status(403).json(
+    res.status(403).json(
       createErrorResponse({
         message: "You are not authorized to assign this order",
       }),
     )
+    return
   }
 
   if (req.order.contractor_id || req.order.assigned_id) {
-    return res.status(400).json(
+    res.status(400).json(
       createErrorResponse({
         message: "This order is already assigned",
       }),
     )
+    return
   }
 
   let targetContractorObj: undefined | null | DBContractor
@@ -373,22 +378,21 @@ export async function acceptApplicant(
         spectrum_id: target_contractor,
       })
     } catch {
-      return res
+      res
         .status(400)
         .json(createErrorResponse({ message: "Invalid contractor" }))
+      return
     }
   } else if (target_username) {
     try {
       targetUserObj = await database.getUser({ username: target_username })
     } catch {
-      return res
-        .status(400)
-        .json(createErrorResponse({ message: "Invalid user" }))
+      res.status(400).json(createErrorResponse({ message: "Invalid user" }))
+      return
     }
   } else {
-    return res
-      .status(400)
-      .json(createErrorResponse({ message: "Invalid target" }))
+    res.status(400).json(createErrorResponse({ message: "Invalid target" }))
+    return
   }
 
   const applicants = await database.getOrderApplicants({
@@ -401,11 +405,12 @@ export async function acceptApplicant(
         app.user_applicant_id === targetUserObj?.user_id,
     )
   ) {
-    return res.status(400).json(
+    res.status(400).json(
       createErrorResponse({
         message: "The target has not applied to this order",
       }),
     )
+    return
   }
 
   const newOrders = await database.updateOrder(req.order.order_id, {

@@ -80,7 +80,7 @@ deliveryRouter.post("/create", userAuthorized, async (req, res, next) => {
     status: "pending",
   })
 
-  res.json({ result: "Success" })
+  res.status(200).json({ result: "Success" })
 })
 
 export const deliveriesRouter = express.Router()
@@ -89,7 +89,7 @@ deliveriesRouter.get("/mine", userAuthorized, async (req, res, next) => {
   const user = req.user as User
   const orders = await database.getDeliveries({ customer_id: user.user_id })
 
-  res.json(
+  res.status(200).json(
     await Promise.all(
       orders.map(async (delivery) => ({
         ...delivery,

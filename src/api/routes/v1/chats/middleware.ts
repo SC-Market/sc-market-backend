@@ -14,7 +14,8 @@ export async function valid_chat(
   try {
     chat = await database.getChat({ chat_id: req.params.chat_id })
   } catch {
-    return res.status(404).json(createErrorResponse({ error: "Invalid chat" }))
+    res.status(404).json(createErrorResponse({ error: "Invalid chat" }))
+    return
   }
 
   req.chat = chat
@@ -39,20 +40,18 @@ export async function related_to_chat(
   }
   let session = undefined
   if (chat.session_id) {
-    [session] = await database.getOfferSessions({ id: chat.session_id })
+    ;[session] = await database.getOfferSessions({ id: chat.session_id })
   }
 
   if (!participants.includes(user.user_id)) {
     if (order && !(await is_related_to_order(order, user))) {
-      return res
-        .status(403)
-        .json(createErrorResponse({ error: "Not authorized" }))
+      res.status(403).json(createErrorResponse({ error: "Not authorized" }))
+      return
     }
 
     if (session && !(await is_related_to_offer(user.user_id, session))) {
-      return res
-        .status(403)
-        .json(createErrorResponse({ error: "Not authorized" }))
+      res.status(403).json(createErrorResponse({ error: "Not authorized" }))
+      return
     }
   }
 

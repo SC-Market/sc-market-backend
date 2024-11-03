@@ -12,7 +12,7 @@ export function rate_limit(points: number) {
         next()
       })
       .catch((_) => {
-        // res.status(429).send('Too Many Requests');
+        // res.status(429).json('Too Many Requests');
         next()
       })
   }

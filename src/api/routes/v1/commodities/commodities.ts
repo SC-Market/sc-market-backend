@@ -17,5 +17,5 @@ export const commodityRouter = express.Router()
 
 commodityRouter.get("", async function (req, res) {
   const route = await getCommodities()
-  res.json(route)
+  res.status(200).json(route)
 })

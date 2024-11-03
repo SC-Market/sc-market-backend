@@ -18,17 +18,19 @@ registrationRouter.post("/contractor/:spectrum_id", async (req, res) => {
       user = await database.getUser({ discord_id: discord_id })
       database.upsertDailyActivity(user.user_id)
     } catch (e) {
-      return res.status(403).json({
+      res.status(403).json({
         error:
           "You are not registered. Please sign up on [SC Market](https://sc-market.space/)",
       })
+      return
     }
 
     let contractor
     try {
       contractor = await database.getContractor({ spectrum_id: spectrum_id })
     } catch (e) {
-      return res.status(400).json({ error: "Invalid contractor Spectrum ID" })
+      res.status(400).json({ error: "Invalid contractor Spectrum ID" })
+      return
     }
 
     if (
@@ -38,11 +40,11 @@ registrationRouter.post("/contractor/:spectrum_id", async (req, res) => {
         "manage_webhooks",
       ))
     ) {
-      console.log(contractor, user)
-      return res.status(403).json({
+      res.status(403).json({
         error:
           "You do not have permission to register on behalf of this contractor",
       })
+      return
     }
 
     if (server_id) {
@@ -59,10 +61,11 @@ registrationRouter.post("/contractor/:spectrum_id", async (req, res) => {
       )
     }
 
-    res.json({ result: "Success" })
+    res.status(200).json({ result: "Success" })
   } catch (e) {
     console.error(e)
-    return ""
+    res.status(500).json({ error: "An unknown error occurred" })
+    return
   }
 })
 
@@ -78,10 +81,11 @@ registrationRouter.post("/user", async (req, res) => {
     user = await database.getUser({ discord_id: discord_id })
     database.upsertDailyActivity(user.user_id)
   } catch (e) {
-    return res.status(403).json({
+    res.status(403).json({
       error:
         "You are not registered. Please sign up on [SC Market](https://sc-market.space/)",
     })
+    return
   }
 
   if (server_id) {
@@ -98,5 +102,5 @@ registrationRouter.post("/user", async (req, res) => {
     )
   }
 
-  res.json({ result: "Success" })
+  res.status(200).json({ result: "Success" })
 })

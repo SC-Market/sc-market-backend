@@ -38,7 +38,7 @@ export async function handle_chat_response(
     }),
   )
 
-  res.json(
+  res.status(200).json(
     createResponse({
       chat_id: chat.chat_id,
       participants: await Promise.all(

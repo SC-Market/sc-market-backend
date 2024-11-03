@@ -145,7 +145,8 @@ contractsRouter.post(
       customer_id: (req.user as User).user_id,
     })
 
-    return res.status(201).json(createResponse({ contract_id: contract.id }))
+    res.status(201).json(createResponse({ contract_id: contract.id }))
+    return
   },
 )
 
@@ -265,11 +266,12 @@ contractsRouter.post(
     const user = req.user as User
 
     if (req.contract!.customer_id === user.user_id && !req.body.contractor) {
-      return res.status(400).json(
+      res.status(400).json(
         createErrorResponse({
           message: "You cannot create an offer on your own contract",
         }),
       )
+      return
     }
 
     let contractor: DBContractor | null = null
@@ -279,9 +281,10 @@ contractsRouter.post(
           spectrum_id: req.body.contractor,
         })
       } catch {
-        return res
+        res
           .status(400)
           .json(createErrorResponse({ message: "Invalid contractor" }))
+        return
       }
       if (
         !(await has_permission(
@@ -290,12 +293,13 @@ contractsRouter.post(
           "manage_orders",
         ))
       ) {
-        return res.status(403).json(
+        res.status(403).json(
           createErrorResponse({
             message:
               "You do not have permission to make offers on behalf of this contractor",
           }),
         )
+        return
       }
     }
 

@@ -18,7 +18,8 @@ commentRouter.post(
     const user = req.user as User
 
     if (!comment) {
-      return res.status(400).send({ message: "Invalid comment" })
+      res.status(400).json({ message: "Invalid comment" })
+      return
     }
 
     const {
@@ -33,7 +34,7 @@ commentRouter.post(
       reply_to: comment.comment_id,
     })
 
-    res.json(await formatComment(comments[0]))
+    res.status(200).json(await formatComment(comments[0]))
   },
 )
 
@@ -46,15 +47,17 @@ commentRouter.post(
     const user = req.user as User
 
     if (!comment) {
-      return res.status(400).send({ message: "Invalid comment" })
+      res.status(400).json({ message: "Invalid comment" })
+      return
     }
 
     if (comment.author !== user.user_id && user.role !== "admin") {
-      return res.status(400).send({ message: "No permissions" })
+      res.status(400).json({ message: "No permissions" })
+      return
     }
 
     await database.updateComments({ comment_id }, { deleted: true })
-    res.json({ message: "Success" })
+    res.status(200).json({ message: "Success" })
   },
 )
 
@@ -68,11 +71,13 @@ commentRouter.post(
     const user = req.user as User
 
     if (!comment) {
-      return res.status(400).send({ message: "Invalid comment" })
+      res.status(400).json({ message: "Invalid comment" })
+      return
     }
 
     if (comment.author !== user.user_id && user.role !== "admin") {
-      return res.status(400).send({ message: "No permissions" })
+      res.status(400).json({ message: "No permissions" })
+      return
     }
 
     const {
@@ -82,11 +87,12 @@ commentRouter.post(
     } = req.body
 
     if (!content) {
-      return res.status(400).send({ message: "Invalid argument" })
+      res.status(400).json({ message: "Invalid argument" })
+      return
     }
 
     await database.updateComments({ comment_id }, { content })
-    res.json({ message: "Success" })
+    res.status(200).json({ message: "Success" })
   },
 )
 
@@ -100,7 +106,8 @@ commentRouter.post(
     const user = req.user as User
 
     if (!comment) {
-      return res.status(400).send({ message: "Invalid comment" })
+      res.status(400).json({ message: "Invalid comment" })
+      return
     }
 
     const vote = await database.getCommentVote({
@@ -116,7 +123,7 @@ commentRouter.post(
       })
     }
 
-    res.json({ message: "Success" })
+    res.status(200).json({ message: "Success" })
   },
 )
 
@@ -130,7 +137,8 @@ commentRouter.post(
     const user = req.user as User
 
     if (!comment) {
-      return res.status(400).send({ message: "Invalid comment" })
+      res.status(400).json({ message: "Invalid comment" })
+      return
     }
 
     const vote = await database.getCommentVote({
@@ -146,6 +154,6 @@ commentRouter.post(
       })
     }
 
-    res.json({ message: "Success" })
+    res.status(200).json({ message: "Success" })
   },
 )

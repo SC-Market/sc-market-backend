@@ -90,15 +90,15 @@ export const starmapRouter = express.Router()
 
 starmapRouter.get("/route/:from/:to", async function (req, res) {
   const route = await getRoute(req.params.from, req.params.to)
-  res.json(route)
+  res.status(200).json(route)
 })
 
 starmapRouter.get("/route/:identifier", async function (req, res) {
   const route = await getObject(req.params.identifier)
-  res.json(route)
+  res.status(200).json(route)
 })
 
 starmapRouter.get("/search/:query", async function (req, res) {
   const results = await search(req.params.query)
-  res.json(results)
+  res.status(200).json(results)
 })
