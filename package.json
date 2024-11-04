@@ -59,7 +59,7 @@
     "@types/passport-oauth2-refresh": "^1.1.1",
     "@types/pg": "^8.6.1",
     "@types/ws": "^8.2.0",
-    "@eslint/js": "^9.13.0",
+    "@eslint/js": "^9.14.0",
     "typescript-eslint": "^8.12.2",
     "eslint": "^9.13.0",
     "eslint-plugin-prettier": "^5.2.1",
