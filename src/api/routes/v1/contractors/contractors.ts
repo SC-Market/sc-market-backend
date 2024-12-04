@@ -255,6 +255,11 @@ oapi.schema("ContractorRoleUpdateBody", {
       minLength: 3,
       maxLength: 100,
     },
+    position: {
+      title: "ContractorRoleUpdateBody.position",
+      type: "integer",
+      minimum: 1,
+    },
     manage_roles: {
       title: "ContractorRoleUpdateBody.manage_roles",
       type: "boolean",
