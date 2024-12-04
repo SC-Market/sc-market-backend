@@ -746,8 +746,14 @@ offersRouter.post(
 
     try {
       const bot_response = await createThread(req.offer_session!)
+      if (bot_response.result.failed) {
+        return res
+          .status(500)
+          .json(createErrorResponse({ message: bot_response.result.message }))
+      }
+
       await database.updateOfferSession(req.offer_session!.id, {
-        thread_id: bot_response.result.thread.thread_id,
+        thread_id: bot_response.result.thread!.thread_id,
       })
     } catch (e) {
       logger.error("Failed to create thread", e)

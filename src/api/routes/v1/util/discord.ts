@@ -19,7 +19,7 @@ import {
   generateStatusUpdateMessage,
 } from "./webhooks.js"
 import logger from "../../../../logger/logger.js"
-import {env} from "../../../../config/env.js";
+import { env } from "../../../../config/env.js"
 
 export const rest = new REST({ version: "10" }).setToken(
   env.DISCORD_API_KEY || "missing",
@@ -66,7 +66,12 @@ export async function notifyBot(endpoint: string, body: any) {
 }
 
 export async function createThread(object: DBOfferSession | DBOrder): Promise<{
-  result: { invite_code: string; thread: { thread_id: string } }
+  result: {
+    invite_code: string
+    thread?: { thread_id: string }
+    message?: string
+    failed: boolean
+  }
 }> {
   const contractor = object.contractor_id
     ? await database.getContractor({ contractor_id: object.contractor_id })
@@ -98,7 +103,12 @@ export async function createThread(object: DBOfferSession | DBOrder): Promise<{
 }
 
 export async function createOfferThread(session: DBOfferSession): Promise<{
-  result: { invite_code: string; thread: { thread_id: string } }
+  result: {
+    invite_code: string
+    thread?: { thread_id: string }
+    message?: string
+    failed: boolean
+  }
 }> {
   const assigned = session.assigned_id
     ? await database.getUser({ user_id: session.assigned_id })
@@ -115,7 +125,7 @@ export async function createOfferThread(session: DBOfferSession): Promise<{
 
   try {
     await rest.post(
-      Routes.channelMessages(bot_response.result.thread.thread_id),
+      Routes.channelMessages(bot_response.result.thread!.thread_id),
       {
         body: await generateNewOfferMessage(session, customer, assigned),
       },
