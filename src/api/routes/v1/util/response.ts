@@ -5,7 +5,7 @@ export function createResponse(data: any) {
 }
 
 export function createErrorResponse(error: any) {
-  return { data: { error } }
+  return { error }
 }
 
 export type APIResponse = { data: any } | { error: any }
