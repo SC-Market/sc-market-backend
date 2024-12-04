@@ -5,7 +5,7 @@ import { database } from "../database/knex-db.js"
 import { DBImageResource } from "../database/db-models.js"
 import { getSignedUrl } from "@aws-sdk/cloudfront-signer"
 import moment from "moment/moment.js"
-import { CDN, valid_domains } from "../cdn/cdn.js"
+import { CDN, CDNError, valid_domains } from "../cdn/cdn.js"
 import { env } from "../../config/env.js"
 
 const twoHours = 2 * 60 * 60 * 1000
@@ -168,7 +168,7 @@ export class AWSCDN implements CDN {
     filename: string,
   ): Promise<DBImageResource> {
     if (!this.verifyExternalResource(external_url)) {
-      throw Error("Invalid external URL")
+      throw new CDNError("Invalid external URL")
     }
 
     return await database.insertImageResource({

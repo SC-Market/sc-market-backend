@@ -22,6 +22,8 @@ export interface CDN {
   getFileLinkResource(resource_id?: string): Promise<string | null>
 }
 
+export class CDNError extends Error {}
+
 export class ExternalCDN implements CDN {
   async uploadFile(
     filename: string,
@@ -61,7 +63,7 @@ export class ExternalCDN implements CDN {
     filename: string,
   ): Promise<DBImageResource> {
     if (!this.verifyExternalResource(external_url)) {
-      throw Error("Invalid external URL")
+      throw new CDNError("Invalid external URL")
     }
 
     return await database.insertImageResource({

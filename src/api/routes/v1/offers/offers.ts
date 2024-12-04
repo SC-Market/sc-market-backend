@@ -605,7 +605,7 @@ offerRouter.put(
       if (status === "accepted") {
         const order = await initiateOrder(session)
 
-        res.json(createResponse({ order_id: order.order_id }))
+        return res.json(createResponse({ order_id: order.order_id }))
       } else {
         return res.json(createResponse({ result: "Success" }))
       }
