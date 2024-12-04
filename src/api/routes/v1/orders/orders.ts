@@ -1567,13 +1567,13 @@ ordersRouter.post(
 
     try {
       const bot_response = await createThread(req.order!)
-      if (bot_response.result.thread.thread_id) {
+      if (bot_response.result.thread?.thread_id) {
         await database.updateOrder(req.order!.order_id, {
           thread_id: bot_response.result.thread.thread_id,
         })
       } else {
         logger.error("Failed to create thread", bot_response)
-        return res.status(500).json({ message: "An unknown error occurred" })
+        return res.status(500).json({ message: bot_response.result.message })
       }
     } catch (e) {
       logger.error("Failed to create thread", e)

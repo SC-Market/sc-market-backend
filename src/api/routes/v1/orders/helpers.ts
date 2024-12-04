@@ -141,9 +141,9 @@ export async function createOffer(
       const bot_response = await createOfferThread(session)
       invite_code = bot_response.result.invite_code
       await database.updateOfferSession(session.id, {
-        thread_id: bot_response.result.thread.thread_id,
+        thread_id: bot_response.result.thread?.thread_id || null,
       })
-      session.thread_id = bot_response.result.thread.thread_id
+      session.thread_id = bot_response.result.thread?.thread_id || null
     } catch (e) {
       logger.error(`Failed to create thread ${e}`)
     }
