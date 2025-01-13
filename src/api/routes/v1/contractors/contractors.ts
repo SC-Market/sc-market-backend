@@ -167,7 +167,7 @@ oapi.schema("OrderWebhook", {
       title: "OrderWebhook.webhook_url",
       type: "string",
       minLength: 3,
-      maxLength: 100,
+      maxLength: 1000,
     },
     actions: {
       title: "OrderWebhook.actions",
