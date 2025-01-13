@@ -23,6 +23,8 @@ export interface DBUser {
   official_server_id: string | null
   discord_thread_channel_id: string | null
   // discord_invite: string | null,
+
+  market_order_template: string
 }
 
 export interface DBAccountSettings {
@@ -164,6 +166,7 @@ export interface DBContractor {
   discord_thread_channel_id: string | null
   // discord_invite: string | null,
   banner: string
+  market_order_template: string
 }
 
 export interface Rating {

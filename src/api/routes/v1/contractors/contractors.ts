@@ -367,6 +367,10 @@ oapi.schema("Contractor", {
       title: "Contractor.spectrum_id",
       type: "string",
     },
+    market_order_template: {
+      title: "Contractor.market_order_template",
+      type: "string",
+    },
     members: {
       items: {
         properties: {
@@ -486,6 +490,12 @@ oapi.schema("ContractorUpdateBody", {
     },
     description: {
       title: "ContractorUpdateBody.description",
+      type: "string",
+      minLength: 0,
+      maxLength: 2000,
+    },
+    market_order_template: {
+      title: "ContractorUpdateBody.market_order_template",
       type: "string",
       minLength: 0,
       maxLength: 2000,
@@ -2115,6 +2125,7 @@ contractorsRouter.put(
       site_url,
       name,
       banner_url,
+      market_order_template,
     }: {
       description?: string
       tags?: string[]
@@ -2122,6 +2133,7 @@ contractorsRouter.put(
       site_url?: string
       name?: string
       banner_url?: string
+      market_order_template?: string
     } = req.body
 
     // Do checks first
@@ -2161,7 +2173,8 @@ contractorsRouter.put(
       description !== undefined ||
       avatar_resource !== undefined ||
       banner_resource !== undefined ||
-      name !== undefined
+      name !== undefined ||
+      market_order_template !== undefined
     ) {
       await database.updateContractor(
         { contractor_id: contractor.contractor_id },
@@ -2171,6 +2184,7 @@ contractorsRouter.put(
           avatar: avatar_resource ? avatar_resource.resource_id : undefined,
           banner: banner_resource ? banner_resource.resource_id : undefined,
           name: name || undefined,
+          market_order_template: market_order_template,
         },
       )
     }

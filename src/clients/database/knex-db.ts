@@ -358,6 +358,7 @@ export class KnexDatabase implements Database {
       discord_refresh_token: user.discord_refresh_token,
       official_server_id: user.official_server_id,
       discord_thread_channel_id: user.discord_thread_channel_id,
+      market_order_template: user.market_order_template,
     } as User
   }
 
@@ -530,9 +531,8 @@ export class KnexDatabase implements Database {
       .delete()
       .returning("*")
 
-    const action = await database.getNotificationActionByName(
-      "contractor_invite",
-    )
+    const action =
+      await database.getNotificationActionByName("contractor_invite")
     for (const invite of invites) {
       await this.knex<DBNotificationObject>("notification_object")
         .where({
@@ -978,7 +978,7 @@ export class KnexDatabase implements Database {
       .returning("*")
   }
 
-  async updateContractor(where: any, values: any) {
+  async updateContractor(where: any, values: Partial<DBContractor>) {
     return this.knex<DBContractor>("contractors")
       .where(where)
       .update(values)

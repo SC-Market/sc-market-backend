@@ -365,10 +365,8 @@ app.get("/sitemap.xml", async function (req, res) {
   }
 })
 
-if (deployEnvironment === "development") {
-  app.use(oapi)
-  app.use("/swaggerui", adminAuthorized, oapi.swaggerui())
-}
+app.use(oapi)
+app.use("/swaggerui", adminAuthorized, oapi.swaggerui())
 
 app.use("/api", apiRouter)
 messagingHandler.register(app)

@@ -121,11 +121,13 @@ profileRouter.post(
       avatar_url,
       banner_url,
       display_name,
+      market_order_template,
     }: {
       about?: string
       avatar_url?: string
       banner_url?: string
       display_name?: string
+      market_order_template?: string
     } = req.body
 
     // Do checks first
@@ -171,6 +173,7 @@ profileRouter.post(
         banner: banner_resource ? banner_resource.resource_id : undefined,
         avatar: avatar_resource ? avatar_resource.resource_id : undefined,
         display_name: display_name || undefined,
+        market_order_template: market_order_template,
       },
     )
 
@@ -490,6 +493,7 @@ profileRouter.get("", rate_limit(1), userAuthorized, async (req, res, next) => {
         discriminator: discord_profile?.discriminator,
         id: discord_profile?.id,
       },
+      market_order_template: user.market_order_template,
     })
   } catch (e) {
     console.error(e)

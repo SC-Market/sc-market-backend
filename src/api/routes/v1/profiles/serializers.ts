@@ -40,6 +40,7 @@ export async function serializePublicProfile(
           id: discord_profile.id,
         }
       : undefined,
+    market_order_template: user.market_order_template,
   }
 }
 

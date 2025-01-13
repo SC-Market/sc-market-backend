@@ -670,6 +670,7 @@ export async function contractorDetails(
         : await database.getContractorRolesPublic({
             contractor_id: contractor.contractor_id,
           }),
+    market_order_template: contractor.market_order_template,
     // balance: ['admin', 'owner'].includes(members.find(m => m.username === user?.username)?.role || '') ? Number.parseInt(contractor.balance) : undefined,
   }
 }
