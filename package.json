@@ -40,7 +40,7 @@
     "typescript": "^5.2.2",
     "universal-cookie": "^7.0.1",
     "winston": "^3.17.0",
-    "ws": "^8.2.3"
+    "ws": "^8.18.1"
   },
   "devDependencies": {
     "@discordjs/rest": "^2.0.1",
@@ -58,7 +58,7 @@
     "@types/passport-discord": "^0.1.14",
     "@types/passport-oauth2-refresh": "^1.1.1",
     "@types/pg": "^8.6.1",
-    "@types/ws": "^8.2.0",
+    "@types/ws": "^8.18.0",
     "@eslint/js": "^9.16.0",
     "typescript-eslint": "^8.12.2",
     "eslint": "^9.19.0",
