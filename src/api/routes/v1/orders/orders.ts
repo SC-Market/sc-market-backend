@@ -10,15 +10,17 @@ import { User } from "../api-models.js"
 import { formatOrderStub } from "../util/formatting.js"
 import { createOrderReviewNotification } from "../util/notifications.js"
 import { rate_limit } from "../../../middleware/ratelimiting.js"
-import { has_permission } from "../util/permissions.js"
+import { has_permission, is_member } from "../util/permissions.js"
 import {
   acceptApplicant,
+  convert_order_search_query,
   createOffer,
   handleAssignedUpdate,
   handleStatusUpdate,
   is_related_to_order,
   orderTypes,
   paymentTypes,
+  search_orders,
 } from "./helpers.js"
 import { createErrorResponse, createResponse } from "../util/response.js"
 import {
@@ -30,7 +32,11 @@ import {
   Response409,
 } from "../openapi.js"
 import { serializeOrderDetails, serializePublicOrder } from "./serializers.js"
-import { related_to_order } from "./middleware.js"
+import {
+  related_to_order,
+  validate_optional_spectrum_id,
+  validate_optional_username,
+} from "./middleware.js"
 import { createThread } from "../util/discord.js"
 import logger from "../../../../logger/logger.js"
 
@@ -600,6 +606,234 @@ ordersRouter.get("/public", async (req, res, next) => {
     ),
   )
 })
+
+export type OrderSearchSortMethod =
+  | "title"
+  | "customer_name"
+  | "status"
+  | "timestamp"
+  | "contractor_name"
+
+export type OrderSearchStatus =
+  | "fulfilled"
+  | "in-progress"
+  | "not-started"
+  | "cancelled"
+  | "active"
+  | "past"
+
+export interface OrderSearchQueryArguments {
+  sort_method: OrderSearchSortMethod
+  status?: OrderSearchStatus
+  assigned_id?: string
+  contractor_id?: string
+  customer_id?: string
+  index: number
+  page_size: number
+  reverse_sort: boolean
+}
+
+export interface OrderSearchQuery {
+  sort_method?: OrderSearchSortMethod
+  status?:
+    | "fulfilled"
+    | "in-progress"
+    | "not-started"
+    | "cancelled"
+    | "active"
+    | "past"
+  assigned?: string
+  contractor?: string
+  customer?: string
+  index?: string
+  page_size?: string
+  reverse_sort?: string
+}
+
+ordersRouter.get(
+  "/search",
+  oapi.validPath({
+    summary: "Search orders",
+    deprecated: false,
+    description: "",
+    operationId: "searchOrders",
+    tags: ["Orders"],
+    parameters: [
+      {
+        name: "spectrum_id",
+        in: "query",
+        description: "The Spectrum ID of the contracting org",
+        required: false,
+        schema: {
+          type: "string",
+          minLength: 3,
+          maxLength: 50,
+        },
+      },
+      {
+        name: "assigned",
+        in: "query",
+        description: "The assigned user's username",
+        required: false,
+        schema: {
+          type: "string",
+          minLength: 3,
+          maxLength: 50,
+        },
+      },
+      {
+        name: "customer",
+        in: "query",
+        description: "The customer's username",
+        required: false,
+        schema: {
+          type: "string",
+          minLength: 3,
+          maxLength: 50,
+        },
+      },
+      {
+        name: "sort_method",
+        in: "query",
+        description: "The method to sort results by",
+        required: false,
+        schema: {
+          type: "string",
+          enum: [
+            "title",
+            "customer_name",
+            "status",
+            "contractor_name",
+            "timestamp",
+          ],
+          default: "timestamp",
+        },
+      },
+      {
+        name: "status",
+        in: "query",
+        description: "The current status of the order",
+        required: false,
+        schema: {
+          type: "string",
+          enum: [
+            "fulfilled",
+            "in-progress",
+            "not-started",
+            "cancelled",
+            "active",
+            "past",
+          ],
+        },
+      },
+      {
+        name: "index",
+        in: "query",
+        description: "The page index of the search",
+        required: false,
+        schema: {
+          type: "integer",
+          minimum: 0,
+          default: 0,
+        },
+      },
+      {
+        name: "page_size",
+        in: "query",
+        description: "The page size for the search",
+        required: false,
+        schema: {
+          type: "integer",
+          minimum: 1,
+          maximum: 25,
+          default: 5,
+        },
+      },
+      {
+        name: "reverse_sort",
+        in: "query",
+        description: "Whether to reverse the sort",
+        required: false,
+        schema: {
+          type: "boolean",
+          default: false,
+        },
+      },
+    ],
+    responses: {
+      "200": {
+        description: "OK - Successful request with response body",
+        content: {
+          "application/json": {
+            schema: {
+              properties: {
+                data: {
+                  type: "object",
+                  properties: {
+                    items: {
+                      type: "array",
+                      items: oapi.schema("OrderStub"),
+                    },
+                    item_count: {
+                      type: "integer",
+                      minimum: 0,
+                    },
+                  },
+                },
+              },
+              required: ["data"],
+              type: "object",
+              title: "SearchOrdersOk",
+            },
+          },
+        },
+        headers: {},
+      },
+      "400": Response400,
+      "401": Response401,
+      "403": Response403,
+      "404": Response404,
+    },
+    security: [],
+  }),
+  userAuthorized,
+  validate_optional_username("customer"),
+  validate_optional_username("assigned"),
+  validate_optional_spectrum_id("contractor"),
+  async (req, res) => {
+    const user = req.user as User
+    const args = await convert_order_search_query(req)
+    if (!(args.contractor_id || args.assigned_id || args.customer_id)) {
+      if (user.role !== "admin") {
+        return res.status(400).json(createErrorResponse("Missing permissions."))
+      }
+    }
+
+    if (args.contractor_id) {
+      if (!(await is_member(args.contractor_id, user.user_id))) {
+        return res.status(400).json(createErrorResponse("Missing permissions."))
+      }
+    }
+
+    if (args.assigned_id && args.assigned_id !== user.user_id) {
+      return res.status(400).json(createErrorResponse("Missing permissions."))
+    }
+
+    const result = await search_orders(args)
+    let size: number
+    if (result.length < args.page_size) {
+      size = result.length
+    } else {
+      size = +result[0].full_count
+    }
+    return res.json(
+      createResponse({
+        item_count: size,
+        items: await Promise.all(result.map(formatOrderStub)),
+      }),
+    )
+  },
+)
 
 ordersRouter.get("/all", adminAuthorized, async (req, res, next) => {
   const orders = await database.getOrders({})
@@ -1502,7 +1736,7 @@ ordersRouter.get(
         ),
       )
     } catch (e) {
-      console.error(e)
+      logger.error(e)
     }
   },
 )

@@ -27,6 +27,14 @@ import { has_permission } from "../util/permissions.js"
 import { createErrorResponse, createResponse } from "../util/response.js"
 import winston from "winston"
 import logger from "../../../../logger/logger.js"
+import { Request } from "express"
+import {
+  OrderSearchQuery,
+  OrderSearchQueryArguments,
+  OrderSearchSortMethod,
+  OrderSearchStatus,
+} from "./orders.js"
+import knex from "knex"
 
 export const orderTypes = [
   "Escort",
@@ -417,4 +425,83 @@ export async function acceptApplicant(
   await createOrderNotifications(newOrders[0])
 
   res.status(201).json(createResponse({ result: "Success" }))
+}
+
+export async function convert_order_search_query(
+  req: Request,
+): Promise<OrderSearchQueryArguments> {
+  const query = req.query as OrderSearchQuery
+
+  const customer = query.customer ? req.users!.get("customer") : null
+  const assigned = query.assigned ? req.users!.get("assigned") : null
+  const contractor = query.contractor
+    ? req.contractors!.get("contractor")
+    : null
+
+  return {
+    assigned_id: assigned?.user_id || undefined,
+    contractor_id: contractor?.contractor_id || undefined,
+    customer_id: customer?.user_id || undefined,
+    index: +(query.index || 0),
+    page_size: +((query.page_size as string) || 5),
+    sort_method: (query.sort_method as OrderSearchSortMethod) || "timestamp",
+    status: (query.status as OrderSearchStatus) || undefined,
+    reverse_sort: query.reverse_sort == "true",
+  }
+}
+
+export async function search_orders(
+  args: OrderSearchQueryArguments,
+): Promise<(DBOrder & { full_count: string })[]> {
+  let base = database.knex("orders").where((qd) => {
+    if (args.customer_id) qd = qd.where("customer_id", args.customer_id)
+    if (args.assigned_id) qd = qd.where("assigned_id", args.assigned_id)
+    if (args.contractor_id) qd = qd.where("contractor_id", args.contractor_id)
+    return qd
+  })
+
+  if (args.status) {
+    base = base.andWhere((qb) => {
+      if (args.status === "past") {
+        return qb.whereRaw("status = ANY(?)", [["fulfilled", "cancelled"]])
+      }
+
+      if (args.status === "active") {
+        return qb.whereRaw("status = ANY(?)", [["in-progress", "not-started"]])
+      }
+
+      return qb.where("status", args.status)
+    })
+  }
+
+  switch (args.sort_method) {
+    case "timestamp":
+    case "status":
+    case "title":
+      base = base.orderBy(args.sort_method, args.reverse_sort ? "desc" : "asc")
+      break
+    case "customer_name":
+      base = base
+        .leftJoin("accounts", "orders.customer_id", "=", "accounts.user_id")
+        .orderBy("accounts.username", args.reverse_sort ? "desc" : "asc")
+      break
+    case "contractor_name":
+      base = base
+        .leftJoin("accounts", "orders.customer_id", "=", "accounts.user_id")
+        .leftJoin(
+          "contractors",
+          "orders.contractor_id",
+          "=",
+          "accounts.user_id",
+        )
+        .orderByRaw(
+          `COALESCE(accounts.username, contractors.name) ${args.reverse_sort ? "desc" : "asc"}`,
+        )
+      break
+  }
+
+  return base
+    .limit(args.page_size)
+    .offset(args.page_size * args.index)
+    .select("*", database.knex.raw("count(*) OVER() AS full_count"))
 }
