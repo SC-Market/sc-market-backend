@@ -1,5 +1,6 @@
 import { database } from "../database/knex-db.js"
 import { DBImageResource } from "../database/db-models.js"
+import { BackBlazeCDN } from "../backblaze/backblaze.js"
 
 export const external_resource_pattern =
   /^https?:\/\/(www\.)?((((media)|(cdn)\.)?robertsspaceindustries\.com)|((media\.)?starcitizen.tools)|(i\.imgur\.com)|(cstone\.space))\b([-a-zA-Z0-9()@:%_\+.~#?&//=]*)$/
@@ -20,6 +21,7 @@ export const external_resource_regex = new RegExp(external_resource_pattern)
 
 export interface CDN {
   getFileLinkResource(resource_id?: string): Promise<string | null>
+  removeResource(resource_id: string): Promise<void>
 }
 
 export class CDNError extends Error {}
@@ -107,4 +109,4 @@ export class ExternalCDN implements CDN {
   }
 }
 
-export const cdn = ExternalCDN.getInstance()
+export const cdn = BackBlazeCDN.getInstance()

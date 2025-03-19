@@ -38,6 +38,8 @@ import {
   verify_listings,
 } from "./helpers.js"
 import { oapi, Response400, Response401, Response403 } from "../openapi.js"
+import multer from "multer"
+import { randomUUID } from "node:crypto"
 
 export const marketRouter = express.Router()
 
@@ -1863,6 +1865,32 @@ marketRouter.post(
   },
 )
 
+const upload = multer({
+  dest: "uploads/",
+  limits: { fileSize: 2 * 1000 * 1000 /* 2mb */ },
+})
+
+marketRouter.post(
+  "/listing/:listing_id/photos",
+  upload.array("photos", 5),
+  async (req, res) => {
+    const photos = req.files as unknown as Express.Multer.File[]
+    const listing_id = req.params.listing_id
+    Promise.all(
+      photos.map((p, i) => {
+        cdn.uploadFile(`${listing_id}-photos-${i}-${randomUUID()}.png`, p.path)
+      }),
+    )
+  },
+)
+
+export async function get_my_listings(user: User) {
+  const listings = await database.getMarketUniqueListingsComplete({
+    user_seller_id: user.user_id,
+  })
+  const multiples = await database.getMarketMultiplesComplete(
+    {
+      "market_multiples.user_seller_id": user.user_id,
 marketRouter.get(
   "/mine",
   userAuthorized,

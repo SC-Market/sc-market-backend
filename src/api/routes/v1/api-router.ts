@@ -15,6 +15,7 @@ import { adminRouter } from "./admin/admin.js"
 import { offerRouter, offersRouter } from "./offers/offers.js"
 import { servicesRouter } from "./services/services.js"
 import { contractsRouter } from "./contracts/contracts.js"
+import { shopRouter } from "./shops/shops.js"
 
 export const apiRouter = express.Router()
 

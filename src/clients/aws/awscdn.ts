@@ -219,4 +219,8 @@ export class AWSCDN implements CDN {
 
     await this.cloudfront.createInvalidation(params)
   }
+
+  removeResource(_resource_id: string): Promise<void> {
+    throw new Error("Not implemented")
+  }
 }
