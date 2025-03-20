@@ -32,13 +32,12 @@ import {
   Response409,
 } from "../openapi.js"
 import { serializeOrderDetails, serializePublicOrder } from "./serializers.js"
-import {
-  related_to_order,
-  validate_optional_spectrum_id,
-  validate_optional_username,
-} from "./middleware.js"
+import { related_to_order } from "./middleware.js"
 import { createThread } from "../util/discord.js"
 import logger from "../../../../logger/logger.js"
+import { validate_optional_username } from "../profiles/middleware.js"
+import { validate_optional_spectrum_id } from "../contractors/middleware.js"
+import { ORDER_SEARCH_SORT_METHODS, ORDER_SEARCH_STATUS } from "./types.js"
 
 export const ordersRouter = express.Router()
 
@@ -607,49 +606,6 @@ ordersRouter.get("/public", async (req, res, next) => {
   )
 })
 
-export type OrderSearchSortMethod =
-  | "title"
-  | "customer_name"
-  | "status"
-  | "timestamp"
-  | "contractor_name"
-
-export type OrderSearchStatus =
-  | "fulfilled"
-  | "in-progress"
-  | "not-started"
-  | "cancelled"
-  | "active"
-  | "past"
-
-export interface OrderSearchQueryArguments {
-  sort_method: OrderSearchSortMethod
-  status?: OrderSearchStatus
-  assigned_id?: string
-  contractor_id?: string
-  customer_id?: string
-  index: number
-  page_size: number
-  reverse_sort: boolean
-}
-
-export interface OrderSearchQuery {
-  sort_method?: OrderSearchSortMethod
-  status?:
-    | "fulfilled"
-    | "in-progress"
-    | "not-started"
-    | "cancelled"
-    | "active"
-    | "past"
-  assigned?: string
-  contractor?: string
-  customer?: string
-  index?: string
-  page_size?: string
-  reverse_sort?: string
-}
-
 ordersRouter.get(
   "/search",
   oapi.validPath({
@@ -699,13 +655,7 @@ ordersRouter.get(
         required: false,
         schema: {
           type: "string",
-          enum: [
-            "title",
-            "customer_name",
-            "status",
-            "contractor_name",
-            "timestamp",
-          ],
+          enum: ORDER_SEARCH_SORT_METHODS,
           default: "timestamp",
         },
       },
@@ -716,14 +666,7 @@ ordersRouter.get(
         required: false,
         schema: {
           type: "string",
-          enum: [
-            "fulfilled",
-            "in-progress",
-            "not-started",
-            "cancelled",
-            "active",
-            "past",
-          ],
+          enum: ORDER_SEARCH_STATUS,
         },
       },
       {

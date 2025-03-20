@@ -91,3 +91,29 @@ export function org_permission(permission_name: keyof DBContractorRole) {
     }
   }
 }
+
+export function validate_optional_spectrum_id(path: string) {
+  return async (req: Request, res: Response, next: NextFunction) => {
+    const spectrum_id = req.query[path] as string
+    if (!spectrum_id) {
+      return next()
+    }
+
+    let contractor
+    try {
+      contractor = await database.getContractor({ spectrum_id })
+    } catch {
+      return res
+        .status(404)
+        .json(
+          createErrorResponse({ error: "Contractor not found", contractor }),
+        )
+    }
+
+    if (!req.contractors) {
+      req.contractors = new Map<string, User>()
+    }
+    req.contractors.set(path, contractor)
+    next()
+  }
+}

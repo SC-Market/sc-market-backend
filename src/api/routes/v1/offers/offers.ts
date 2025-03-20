@@ -13,7 +13,11 @@ import {
   dispatchOfferNotifications,
   sendOfferStatusNotification,
 } from "../util/notifications.js"
-import { CounterOfferBody } from "./types.js"
+import {
+  CounterOfferBody,
+  OFFER_SEARCH_SORT_METHODS,
+  OFFER_SEARCH_STATUS,
+} from "./types.js"
 import {
   oapi,
   Response400,
@@ -26,7 +30,13 @@ import { createErrorResponse, createResponse } from "../util/response.js"
 import { createThread } from "../util/discord.js"
 import logger from "../../../../logger/logger.js"
 import { can_respond_to_offer, related_to_offer } from "./middleware.js"
-import { org_authorized } from "../contractors/middleware.js"
+import {
+  org_authorized,
+  validate_optional_spectrum_id,
+} from "../contractors/middleware.js"
+import { validate_optional_username } from "../profiles/middleware.js"
+import { convert_offer_search_query, search_offer_sessions } from "./helpers.js"
+import { is_member } from "../util/permissions.js"
 
 export const offersRouter = express.Router()
 export const offerRouter = express.Router()
@@ -764,6 +774,173 @@ offersRouter.post(
     res.status(201).json(
       createResponse({
         result: "Success",
+      }),
+    )
+  },
+)
+
+offersRouter.get(
+  "/search",
+  oapi.validPath({
+    summary: "Search offers",
+    deprecated: false,
+    description: "",
+    operationId: "searchOffers",
+    tags: ["Offers"],
+    parameters: [
+      {
+        name: "spectrum_id",
+        in: "query",
+        description: "The Spectrum ID of the contracting org",
+        required: false,
+        schema: {
+          type: "string",
+          minLength: 3,
+          maxLength: 50,
+        },
+      },
+      {
+        name: "assigned",
+        in: "query",
+        description: "The assigned user's username",
+        required: false,
+        schema: {
+          type: "string",
+          minLength: 3,
+          maxLength: 50,
+        },
+      },
+      {
+        name: "customer",
+        in: "query",
+        description: "The customer's username",
+        required: false,
+        schema: {
+          type: "string",
+          minLength: 3,
+          maxLength: 50,
+        },
+      },
+      {
+        name: "sort_method",
+        in: "query",
+        description: "The method to sort results by",
+        required: false,
+        schema: {
+          type: "string",
+          enum: OFFER_SEARCH_SORT_METHODS,
+          default: "timestamp",
+        },
+      },
+      {
+        name: "status",
+        in: "query",
+        description: "The current status of the order",
+        required: false,
+        schema: {
+          type: "string",
+          enum: OFFER_SEARCH_STATUS,
+        },
+      },
+      {
+        name: "index",
+        in: "query",
+        description: "The page index of the search",
+        required: false,
+        schema: {
+          type: "integer",
+          minimum: 0,
+          default: 0,
+        },
+      },
+      {
+        name: "page_size",
+        in: "query",
+        description: "The page size for the search",
+        required: false,
+        schema: {
+          type: "integer",
+          minimum: 1,
+          maximum: 25,
+          default: 5,
+        },
+      },
+      {
+        name: "reverse_sort",
+        in: "query",
+        description: "Whether to reverse the sort",
+        required: false,
+        schema: {
+          type: "boolean",
+          default: false,
+        },
+      },
+    ],
+    responses: {
+      "200": {
+        description: "OK - Successful request with response body",
+        content: {
+          "application/json": {
+            schema: {
+              properties: {
+                data: {
+                  type: "object",
+                  properties: {
+                    items: {
+                      type: "array",
+                      items: oapi.schema("OrderStub"),
+                    },
+                    item_count: {
+                      type: "integer",
+                      minimum: 0,
+                    },
+                  },
+                },
+              },
+              required: ["data"],
+              type: "object",
+              title: "SearchOrdersOk",
+            },
+          },
+        },
+        headers: {},
+      },
+      "400": Response400,
+      "401": Response401,
+      "403": Response403,
+      "404": Response404,
+    },
+    security: [],
+  }),
+  userAuthorized,
+  validate_optional_username("customer"),
+  validate_optional_username("assigned"),
+  validate_optional_spectrum_id("contractor"),
+  async (req, res) => {
+    const user = req.user as User
+    const args = await convert_offer_search_query(req)
+    if (!(args.contractor_id || args.assigned_id || args.customer_id)) {
+      if (user.role !== "admin") {
+        return res.status(400).json(createErrorResponse("Missing permissions."))
+      }
+    }
+
+    if (args.contractor_id) {
+      if (!(await is_member(args.contractor_id, user.user_id))) {
+        return res.status(400).json(createErrorResponse("Missing permissions."))
+      }
+    }
+
+    if (args.assigned_id && args.assigned_id !== user.user_id) {
+      return res.status(400).json(createErrorResponse("Missing permissions."))
+    }
+
+    const result = await search_offer_sessions(args)
+
+    return res.json(
+      createResponse({
+        item_counts: result.item_counts,
+        items: await Promise.all(result.items.map(serializeOfferSessionStub)),
       }),
     )
   },

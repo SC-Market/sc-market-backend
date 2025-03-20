@@ -25,7 +25,6 @@ import { User } from "../api-models.js"
 import { sendSystemMessage } from "../chats/helpers.js"
 import { has_permission } from "../util/permissions.js"
 import { createErrorResponse, createResponse } from "../util/response.js"
-import winston from "winston"
 import logger from "../../../../logger/logger.js"
 import { Request } from "express"
 import {
@@ -33,8 +32,7 @@ import {
   OrderSearchQueryArguments,
   OrderSearchSortMethod,
   OrderSearchStatus,
-} from "./orders.js"
-import knex from "knex"
+} from "./types.js"
 
 export const orderTypes = [
   "Escort",
