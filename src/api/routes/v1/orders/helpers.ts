@@ -450,13 +450,22 @@ export async function convert_order_search_query(
 
 export async function search_orders(
   args: OrderSearchQueryArguments,
-): Promise<(DBOrder & { full_count: string })[]> {
+): Promise<{ item_counts: { [k: string]: number }; items: DBOrder[] }> {
   let base = database.knex("orders").where((qd) => {
     if (args.customer_id) qd = qd.where("customer_id", args.customer_id)
     if (args.assigned_id) qd = qd.where("assigned_id", args.assigned_id)
     if (args.contractor_id) qd = qd.where("contractor_id", args.contractor_id)
     return qd
   })
+
+  const totals = await base
+    .clone()
+    .groupByRaw("status")
+    .select("status", database.knex.raw("COUNT(*) as count"))
+
+  const item_counts = Object.fromEntries(
+    totals.map(({ status, count }) => [status, +count]),
+  )
 
   if (args.status) {
     base = base.andWhere((qb) => {
@@ -498,8 +507,10 @@ export async function search_orders(
       break
   }
 
-  return base
+  const items = await base
     .limit(args.page_size)
     .offset(args.page_size * args.index)
     .select("*", database.knex.raw("count(*) OVER() AS full_count"))
+
+  return { item_counts, items }
 }

@@ -763,16 +763,10 @@ ordersRouter.get(
     }
 
     const result = await search_orders(args)
-    let size: number
-    if (result.length < args.page_size) {
-      size = result.length
-    } else {
-      size = +result[0].full_count
-    }
     return res.json(
       createResponse({
-        item_count: size,
-        items: await Promise.all(result.map(formatOrderStub)),
+        item_counts: result.item_counts,
+        items: await Promise.all(result.items.map(formatOrderStub)),
       }),
     )
   },
