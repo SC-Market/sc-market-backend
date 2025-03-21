@@ -1077,20 +1077,20 @@
   resolved "https://registry.yarnpkg.com/@discordjs/collection/-/collection-2.1.1.tgz#901917bc538c12b9c3613036d317847baee08cae"
   integrity sha512-LiSusze9Tc7qF03sLCujF5iZp7K+vRNEDBZ86FT9aQAv3vxMLihUvKvpsCWiQ2DJq1tVckopKm1rxomgNUc9hg==
 
-"@discordjs/rest@^2.0.1":
-  version "2.4.0"
-  resolved "https://registry.yarnpkg.com/@discordjs/rest/-/rest-2.4.0.tgz#63bfc816af58af844914e3589d7eae609cd199b5"
-  integrity sha512-Xb2irDqNcq+O8F0/k/NaDp7+t091p+acb51iA4bCKfIn+WFWd6HrNvcsSbMMxIR9NjcMZS6NReTKygqiQN+ntw==
+"@discordjs/rest@^2.4.3":
+  version "2.4.3"
+  resolved "https://registry.yarnpkg.com/@discordjs/rest/-/rest-2.4.3.tgz#44cf066113f5ad6e7cee3f827d0815a6b1e0f843"
+  integrity sha512-+SO4RKvWsM+y8uFHgYQrcTl/3+cY02uQOH7/7bKbVZsTfrfpoE62o5p+mmV+s7FVhTX82/kQUGGbu4YlV60RtA==
   dependencies:
     "@discordjs/collection" "^2.1.1"
     "@discordjs/util" "^1.1.1"
     "@sapphire/async-queue" "^1.5.3"
     "@sapphire/snowflake" "^3.5.3"
     "@vladfrangu/async_event_emitter" "^2.4.6"
-    discord-api-types "0.37.97"
+    discord-api-types "^0.37.119"
     magic-bytes.js "^1.10.0"
     tslib "^2.6.3"
-    undici "6.19.8"
+    undici "6.21.1"
 
 "@discordjs/util@^1.1.1":
   version "1.1.1"
@@ -2782,15 +2782,10 @@ destroy@1.2.0:
   resolved "https://registry.yarnpkg.com/destroy/-/destroy-1.2.0.tgz#4803735509ad8be552934c67df614f94e66fa015"
   integrity sha512-2sJGJTaXIIaR1w4iJSNoN0hnMY7Gpc/n8D4qSCJw8QqFWXf7cuAgnEHxBpweaVcPevC2l3KpjYCx3NypQQgaJg==
 
-discord-api-types@0.37.97:
-  version "0.37.97"
-  resolved "https://registry.yarnpkg.com/discord-api-types/-/discord-api-types-0.37.97.tgz#d658573f726ad179261d538dbad4e7e8eca48d11"
-  integrity sha512-No1BXPcVkyVD4ZVmbNgDKaBoqgeQ+FJpzZ8wqHkfmBnTZig1FcH3iPPersiK1TUIAzgClh2IvOuVUYfcWLQAOA==
-
-discord-api-types@^0.37.103:
-  version "0.37.103"
-  resolved "https://registry.yarnpkg.com/discord-api-types/-/discord-api-types-0.37.103.tgz#215423355c6bd9780f367453b9f01d7731cbfb95"
-  integrity sha512-r+qitxXKe2l6KFw5odPdZSSqdEou+7eNC7BfbZ7mny5Me/K06wCTeKUMVeH/YsI9+4QQudskeQ307kr/7ppQ1A==
+discord-api-types@^0.37.103, discord-api-types@^0.37.119:
+  version "0.37.119"
+  resolved "https://registry.yarnpkg.com/discord-api-types/-/discord-api-types-0.37.119.tgz#29e32f635351da32dd4c92defcafdeb65156ad33"
+  integrity sha512-WasbGFXEB+VQWXlo6IpW3oUv73Yuau1Ig4AZF/m13tXcTKnMpc/mHjpztIlz4+BM9FG9BHQkEXiPto3bKduQUg==
 
 dom-serializer@^2.0.0:
   version "2.0.0"
@@ -4621,15 +4616,10 @@ undici-types@~6.19.2, undici-types@~6.19.8:
   resolved "https://registry.yarnpkg.com/undici-types/-/undici-types-6.19.8.tgz#35111c9d1437ab83a7cdc0abae2f26d88eda0a02"
   integrity sha512-ve2KP6f/JnbPBFyobGHuerC9g1FYGn/F8n1LWTwNxCEzd6IfqTwUQcNXgEtmmQ6DlRrC1hrSrBnCZPokRrDHjw==
 
-undici@6.19.8:
-  version "6.19.8"
-  resolved "https://registry.yarnpkg.com/undici/-/undici-6.19.8.tgz#002d7c8a28f8cc3a44ff33c3d4be4d85e15d40e1"
-  integrity sha512-U8uCCl2x9TK3WANvmBavymRzxbfFYG+tAu+fgx3zxQy3qdagQqBLwJVrdyO1TBfUXvfKveMKJZhpvUYoOjM+4g==
-
-undici@^6.19.5:
-  version "6.20.1"
-  resolved "https://registry.yarnpkg.com/undici/-/undici-6.20.1.tgz#fbb87b1e2b69d963ff2d5410a40ffb4c9e81b621"
-  integrity sha512-AjQF1QsmqfJys+LXfGTNum+qw4S88CojRInG/6t31W/1fk6G59s92bnAvGz5Cmur+kQv2SURXEvvudLmbrE8QA==
+undici@6.21.1, undici@^6.19.5:
+  version "6.21.1"
+  resolved "https://registry.yarnpkg.com/undici/-/undici-6.21.1.tgz#336025a14162e6837e44ad7b819b35b6c6af0e05"
+  integrity sha512-q/1rj5D0/zayJB2FraXdaWxbhWiNKDvu8naDT2dl1yTlvJp4BLtOcp2a5BvgGNQpYYJzau7tf1WgKv3b+7mqpQ==
 
 universal-cookie@^7.0.1:
   version "7.2.2"
