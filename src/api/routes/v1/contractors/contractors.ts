@@ -172,7 +172,7 @@ oapi.schema("OrderWebhook", {
     actions: {
       title: "OrderWebhook.actions",
       type: "array",
-      minLength: 0,
+      minItems: 0,
       items: {
         type: "string",
       },
@@ -2704,8 +2704,8 @@ contractorsRouter.post(
                 items: {
                   type: "string",
                 },
-                minLength: 1,
-                maxLength: 50,
+                minItems: 1,
+                maxItems: 50,
               },
             },
           },
