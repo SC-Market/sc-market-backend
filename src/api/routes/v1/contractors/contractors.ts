@@ -2851,7 +2851,7 @@ contractorsRouter.post(
     tags: ["Contractor Invites"],
     parameters: [
       {
-        name: "invite_id",
+        name: "spectrum_id",
         in: "path",
         description: "",
         required: true,
