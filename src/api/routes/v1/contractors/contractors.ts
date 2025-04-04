@@ -3139,13 +3139,15 @@ contractorsRouter.get(
       channel = await fetchChannel(contractor.discord_thread_channel_id)
     }
 
-    return res.json({
-      guild_avatar: avatar,
-      guild_name: guild?.name,
-      channel_name: channel?.name,
-      official_server_id: contractor.official_server_id,
-      discord_thread_channel_id: contractor.discord_thread_channel_id,
-    })
+    return res.json(
+      createResponse({
+        guild_avatar: avatar,
+        guild_name: guild?.name,
+        channel_name: channel?.name,
+        official_server_id: contractor.official_server_id,
+        discord_thread_channel_id: contractor.discord_thread_channel_id,
+      }),
+    )
   },
 )
 
