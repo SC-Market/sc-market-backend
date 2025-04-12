@@ -204,9 +204,8 @@ marketRouter.post(
     }
 
     if (photos && photos.length) {
-      const old_photos = await database.getMarketListingImagesByListingID(
-        listing,
-      )
+      const old_photos =
+        await database.getMarketListingImagesByListingID(listing)
 
       for (const photo of photos) {
         try {
@@ -555,6 +554,10 @@ export async function verify_listings(
     if (!listing) {
       res.status(400).json({ error: "Invalid listing" })
       return
+    }
+
+    if (listing.listing.status !== "active") {
+      res.status(404).json({ error: "Invalid listing" })
     }
 
     if (listing.listing.quantity_available < quantity || quantity < 1) {
@@ -2057,9 +2060,8 @@ marketRouter.post(
       }
 
       for (const listing_id of removed) {
-        const listing = await database.getMarketMultipleListingComplete(
-          listing_id,
-        )
+        const listing =
+          await database.getMarketMultipleListingComplete(listing_id)
         // Set it to type multiple
         await database.updateMarketListing(listing_id, { sale_type: "sale" })
         // Remove old multiple listing
