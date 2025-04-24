@@ -15,7 +15,7 @@ export async function related_to_offer(
   const id = req.params["session_id"]
   let offer: DBOfferSession
   try {
-    [offer] = await database.getOfferSessions({ id: id })
+    ;[offer] = await database.getOfferSessions({ id: id })
   } catch (e) {
     res.status(404).json(createErrorResponse({ error: "Invalid offer" }))
     return
@@ -62,6 +62,10 @@ export async function can_respond_to_offer(
     mostRecent,
     req.user as User,
   )
+
+  if (req.body.status === "cancelled") {
+    return next() // anyone can cancel if they are related
+  }
 
   if (!related) {
     res.status(403).json(

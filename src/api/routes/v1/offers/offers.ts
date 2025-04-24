@@ -48,7 +48,7 @@ oapi.schema("OfferSessionStatus", {
 })
 
 oapi.schema("OfferStatus", {
-  enum: ["rejected", "accepted", "counteroffered"],
+  enum: ["rejected", "accepted", "counteroffered", "cancelled"],
   title: "OfferStatus",
   type: "string",
 })
@@ -525,7 +525,6 @@ offerRouter.put(
   "/:session_id",
   userAuthorized,
   related_to_offer,
-  can_respond_to_offer,
   oapi.validPath({
     summary: "Update an offer",
     deprecated: false,
@@ -594,13 +593,23 @@ offerRouter.put(
       "404": Response404,
     },
   }),
+  can_respond_to_offer,
   async (req, res) => {
     const session = req.offer_session!
-    const status = req.body.status as "accepted" | "rejected" | "counteroffered"
+    let status = req.body.status as
+      | "accepted"
+      | "rejected"
+      | "counteroffered"
+      | "cancelled"
+
+    if (status === "cancelled") {
+      status = "rejected"
+    }
 
     const nameMap = new Map([
       ["accepted" as const, "Accepted" as const],
       ["rejected" as const, "Rejected" as const],
+      ["cancelled" as const, "Rejected" as const],
       ["counteroffered" as const, "Counter-Offered" as const],
     ])
 
