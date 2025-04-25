@@ -3,7 +3,10 @@ import {
   DBOfferSession,
 } from "../../../../clients/database/db-models.js"
 import { database } from "../../../../clients/database/knex-db.js"
-import { formatListingComplete } from "../util/formatting.js"
+import {
+  formatListingComplete,
+  formatOrderAvailability,
+} from "../util/formatting.js"
 import { serializeService } from "../services/serializers.js"
 import { DBContractOffer } from "../contracts/types.js"
 
@@ -79,6 +82,7 @@ export async function serializeOfferSession(session: DBOfferSession) {
     ...stub,
     contract_id: contract_offer?.contract_id || undefined,
     offers: await Promise.all(offers.map(serializeOffer)),
+    availability: await formatOrderAvailability(session),
     discord_thread_id: session.thread_id,
     discord_server_id:
       contractor?.official_server_id || assignee?.official_server_id || null,

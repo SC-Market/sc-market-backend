@@ -13,6 +13,8 @@ import {
   DBMultipleComplete,
   DBMultipleListingComplete,
   DBMultipleListingCompositeComplete,
+  DBOffer,
+  DBOfferSession,
   DBOrder,
   DBPriceHistory,
   DBRecruitingPost,
@@ -529,7 +531,7 @@ export async function formatReview(
   }
 }
 
-export async function formatOrderAvailability(order: DBOrder) {
+export async function formatOrderAvailability(order: DBOrder | DBOfferSession) {
   const availabilities: {
     customer: null | DBAvailabilityEntry[]
     assigned: null | DBAvailabilityEntry[]
