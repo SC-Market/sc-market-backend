@@ -132,8 +132,8 @@ export async function generateNewOfferMessage(
     // the username to be displayed
     // the avatar to be displayed
     content:
-      `<@${customer.discord_id} ` +
-      (assigned ? `<@${assigned.discord_id}` : ""),
+      `<@${customer.discord_id}> ` +
+      (assigned ? `<@${assigned.discord_id}>` : ""),
 
     // // enable mentioning of individual users or roles, but not @everyone/@here
     allowed_mentions: {
