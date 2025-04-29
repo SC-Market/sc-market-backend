@@ -35,7 +35,7 @@
     "passport-discord": "https://github.com/tonestrike/passport-discord.git",
     "passport-oauth2-refresh": "^2.1.0",
     "pg": "^8.6.0",
-    "rate-limiter-flexible": "^5.0.4",
+    "rate-limiter-flexible": "^7.1.0",
     "sitemap": "^8.0.0",
     "typescript": "^5.2.2",
     "universal-cookie": "^7.0.1",
