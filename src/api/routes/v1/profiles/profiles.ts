@@ -13,27 +13,25 @@ import {
   serializeDetailedProfile,
   serializePublicProfile,
 } from "./serializers.js"
+import { createErrorResponse, createResponse } from "../util/response.js"
 
 export const profileRouter = express.Router()
 
 profileRouter.post("/auth/link", userAuthorized, async (req, res, next) => {
   try {
     const user = req.user as User
-    if (user.rsi_confirmed) {
-      res.status(400).json({ error: "Already authorized!", status: "error" })
-      return
-    }
-
     const username = req.body.username || ""
 
     const result = await authorizeProfile(username, user.user_id)
     if (result.success) {
-      res.json(await serializeDetailedProfile(user))
+      res.json(createResponse(await serializeDetailedProfile(user)))
     } else {
-      res.status(402).json({
-        error: result.error,
-        status: "error",
-      })
+      res.status(402).json(
+        createErrorResponse({
+          message: result.error,
+          status: "error",
+        }),
+      )
     }
   } catch (e) {
     console.error(e)
