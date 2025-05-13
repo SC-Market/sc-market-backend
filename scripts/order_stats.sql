@@ -1,13 +1,13 @@
-CREATE OR REPLACE VIEW order_week_stats AS
-SELECT COUNT(*)                                        as week_orders,
-       (SELECT COALESCE(SUM(orders.cost), 0)
+SELECT count(*)                            AS total_orders,
+       (SELECT COALESCE(sum(orders.cost), 0::numeric) AS "coalesce"
         FROM orders
-        WHERE status = 'cancelled'
-          AND timestamp > (NOW() - INTERVAL '1 week')) as week_order_value
-FROM orders t
-WHERE timestamp > (NOW() - INTERVAL '1 week');
+        WHERE orders.status = 'fulfilled') AS total_order_value
+FROM orders t;
 
-CREATE OR REPLACE VIEW order_stats AS
-SELECT COUNT(*)                                                         as total_orders,
-       (SELECT COALESCE(SUM(orders.cost), 0) FROM orders WHERE status = 'fulfilled') as total_order_value
-FROM orders as t;
+SELECT count(*)                                                  AS week_orders,
+       (SELECT COALESCE(sum(orders.cost), 0::numeric) AS "coalesce"
+        FROM orders
+        WHERE orders.status = 'fulfilled'
+          AND orders."timestamp" > (now() - '7 days'::interval)) AS week_order_value
+FROM orders t
+WHERE t."timestamp" > (now() - '7 days'::interval);
