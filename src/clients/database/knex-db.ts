@@ -94,7 +94,6 @@ import { RecruitingSearchQuery } from "../../api/routes/v1/recruiting/recruiting
 import { RateLimiterPostgres } from "rate-limiter-flexible"
 import { RESTGetAPIUserResult, Routes } from "discord-api-types/v10"
 import { rest } from "../../api/routes/v1/util/discord.js"
-import { MarketSearchQuery } from "../../api/routes/v1/market/market.js"
 import pg from "pg"
 import { serializeOrderDetails } from "../../api/routes/v1/orders/serializers.js"
 import {
@@ -103,6 +102,7 @@ import {
 } from "../../api/routes/v1/contracts/types.js"
 import { serializeOfferSession } from "../../api/routes/v1/offers/serializers.js"
 import { env } from "../../config/env.js"
+import { MarketSearchQuery } from "../../api/routes/v1/market/types.js"
 
 pg.types.setTypeParser(1114, (s: string) => new Date(s.replace(" ", "T") + "Z"))
 

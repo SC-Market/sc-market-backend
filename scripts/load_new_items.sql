@@ -4,8 +4,6 @@ BEGIN;
 -- DELETE FROM game_items_staging;
 ALTER TABLE game_items
     ALTER COLUMN details_id DROP NOT NULL;
-SELECT * FROM game_items WHERE name = 'Hadanite'; -- 125dd723-95ad-488d-830f-62c954445ca1
-SELECT * FROM game_items_staging WHERE name = 'Hadanite'; -- 3998d58a-4021-4697-9432-2162aff01c73
 
 INSERT INTO game_items(name, cstone_uuid, image_url, type, description, details_id)
 SELECT name, cstone_uuid, image_url, type, description, NULL

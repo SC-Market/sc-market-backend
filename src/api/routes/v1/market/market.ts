@@ -1,4 +1,4 @@
-import express, { NextFunction, Request, Response } from "express"
+import express, { Request } from "express"
 import {
   adminAuthorized,
   userAuthorized,
@@ -6,16 +6,12 @@ import {
 } from "../../../middleware/auth.js"
 import { database } from "../../../../clients/database/knex-db.js"
 import {
-  DBAggregateListingComplete,
   DBContractor,
   DBMarketListing,
   DBMultipleListingComplete,
-  DBMultipleListingCompositeComplete,
   DBUniqueListing,
-  DBUniqueListingComplete,
 } from "../../../../clients/database/db-models.js"
 import { User } from "../api-models.js"
-import AsyncLock from "async-lock"
 import {
   formatBuyOrderChartDetails,
   formatListing,
@@ -30,17 +26,15 @@ import { createOffer } from "../orders/helpers.js"
 import { has_permission, is_member } from "../util/permissions.js"
 import { org_permission } from "../contractors/middleware.js"
 import moment from "moment"
+import {
+  convertQuery,
+  get_my_listings,
+  get_org_listings,
+  sameSeller,
+  verify_listings,
+} from "./helpers.js"
 
 export const marketRouter = express.Router()
-
-/* TODO:
-    - Buy a listing
-    - Delete a listing
-    - Edit a listing
-    - Buying a listing will create a transaction and an order
-    - The transaction will be pending until 30 days have passed or the buyer marks the transaction as complete
-    - Need some way to account for the available stock, some items will be unlimited some may not be
- */
 
 marketRouter.get("/stats", async (req, res) => {
   const order_stats = await database.getOrderStats()
@@ -50,7 +44,7 @@ marketRouter.get("/stats", async (req, res) => {
 marketRouter.post(
   "/listing/:listing_id/update",
   userAuthorized,
-  async (req, res, next) => {
+  async (req, res) => {
     const listing_id = req.params["listing_id"]
     const user = req.user as User
 
@@ -286,7 +280,7 @@ export async function handle_quantity_update(
 marketRouter.post(
   "/listing/:listing_id/update_quantity",
   userAuthorized,
-  async (req, res, next) => {
+  async (req, res) => {
     const listing_id = req.params["listing_id"]
     const user = req.user as User
 
@@ -310,7 +304,7 @@ marketRouter.post(
 marketRouter.post(
   "/listing/:listing_id/refresh",
   userAuthorized,
-  async (req, res, next) => {
+  async (req, res) => {
     const listing_id = req.params["listing_id"]
     const user = req.user as User
 
@@ -363,7 +357,7 @@ marketRouter.post(
   },
 )
 
-marketRouter.post("/offer/accept", userAuthorized, async (req, res, next) => {
+marketRouter.post("/offer/accept", userAuthorized, async (req, res) => {
   const user = req.user as User
 
   const {
@@ -442,7 +436,7 @@ marketRouter.post("/offer/accept", userAuthorized, async (req, res, next) => {
   // return res.json({result: 'Success'})
 })
 
-marketRouter.get("/listing/:listing_id", async (req, res, next) => {
+marketRouter.get("/listing/:listing_id", async (req, res) => {
   const user = req.user as User | null | undefined
   const listing_id = req.params["listing_id"]
   let listing: DBMarketListing
@@ -478,110 +472,7 @@ marketRouter.get("/listing/:listing_id", async (req, res, next) => {
   res.json(await formatListing(listing))
 })
 
-const userListingLock = new AsyncLock()
-const contractorListingLock = new AsyncLock()
-
-export async function lockUserMarket(
-  req: Request,
-  res: Response,
-  next: NextFunction,
-) {
-  const user = req.user as User
-  await userListingLock.acquire(user.user_id, next)
-}
-
-export async function lockContractorMarket(
-  req: Request,
-  res: Response,
-  next: NextFunction,
-) {
-  const spectrum_id = req.params["spectrum_id"]
-  await contractorListingLock.acquire(spectrum_id, next)
-}
-
-export interface MarketListingBody {
-  price: number
-  title: string
-  description: string
-  sale_type: string
-  item_type: string
-  quantity_available: number
-}
-
-function sameSeller(listings: DBMarketListing[]) {
-  if (!listings.length) {
-    return true
-  }
-  const user_seller = listings[0].user_seller_id
-  const contractor_seller = listings[0].contractor_seller_id
-
-  for (const listing of listings) {
-    if (user_seller && listing.user_seller_id !== user_seller) {
-      return false
-    }
-    if (
-      contractor_seller &&
-      listing.contractor_seller_id !== contractor_seller
-    ) {
-      return false
-    }
-  }
-
-  return true
-}
-
-export async function verify_listings(
-  res: Response,
-  items: { listing_id: string; quantity: number }[],
-  user: User,
-) {
-  const listings: {
-    listing:
-      | DBAggregateListingComplete
-      | DBUniqueListingComplete
-      | DBMultipleListingCompositeComplete
-    quantity: number
-  }[] = []
-  for (const { listing_id, quantity } of items) {
-    let listing
-    try {
-      listing = await database.getMarketListingComplete(listing_id)
-    } catch {
-      res.status(400).json({ error: "Invalid listing" })
-      return
-    }
-
-    if (!listing) {
-      res.status(400).json({ error: "Invalid listing" })
-      return
-    }
-
-    if (listing.listing.status !== "active") {
-      res.status(404).json({ error: "Invalid listing" })
-    }
-
-    if (listing.listing.quantity_available < quantity || quantity < 1) {
-      res.status(400).json({ error: "Invalid quantity" })
-      return
-    }
-
-    if (listing.listing.user_seller_id === user.user_id) {
-      res.status(400).json({ error: "You cannot buy your own item!" })
-      return
-    }
-
-    listings.push({ quantity, listing })
-  }
-
-  if (!sameSeller(listings.map((u) => u.listing.listing))) {
-    res.status(400).json({ message: "All items must be from same seller" })
-    return
-  }
-
-  return listings
-}
-
-marketRouter.post("/purchase", verifiedUser, async (req, res, next) => {
+marketRouter.post("/purchase", verifiedUser, async (req, res) => {
   try {
     const user = req.user as User
 
@@ -660,7 +551,7 @@ marketRouter.post("/purchase", verifiedUser, async (req, res, next) => {
   }
 })
 
-marketRouter.post("/offer", verifiedUser, async (req, res, next) => {
+marketRouter.post("/offer", verifiedUser, async (req, res) => {
   const user = req.user as User
 
   const {
@@ -727,7 +618,7 @@ marketRouter.post("/offer", verifiedUser, async (req, res, next) => {
   res.json({ result: "Success" })
 })
 
-marketRouter.post("/bid", verifiedUser, async (req, res, next) => {
+marketRouter.post("/bid", verifiedUser, async (req, res) => {
   const user = req.user as User
 
   const {
@@ -796,7 +687,7 @@ marketRouter.post("/bid", verifiedUser, async (req, res, next) => {
   res.json({ result: "Success" })
 })
 
-marketRouter.post("/create", verifiedUser, async (req, res, next) => {
+marketRouter.post("/create", verifiedUser, async (req, res) => {
   try {
     const user = req.user as User
 
@@ -949,7 +840,7 @@ marketRouter.post("/create", verifiedUser, async (req, res, next) => {
 marketRouter.post(
   "/contractor/:spectrum_id/create",
   verifiedUser,
-  async (req, res, next) => {
+  async (req, res) => {
     const spectrum_id = req.params["spectrum_id"]
     const user = req.user as User
 
@@ -1117,29 +1008,7 @@ marketRouter.post(
   },
 )
 
-export async function get_my_listings(user: User) {
-  const listings = await database.getMarketUniqueListingsComplete({
-    user_seller_id: user.user_id,
-  })
-  const multiples = await database.getMarketMultiplesComplete(
-    {
-      "market_multiples.user_seller_id": user.user_id,
-    },
-    {},
-  )
-
-  const multiple_listings = await database.getMarketMultipleListingsComplete({
-    "market_multiples.user_seller_id": user.user_id,
-  })
-
-  return await Promise.all(
-    [...listings, ...multiples, ...multiple_listings].map((l) =>
-      formatListingComplete(l, true),
-    ),
-  )
-}
-
-marketRouter.get("/mine", userAuthorized, async (req, res, next) => {
+marketRouter.get("/mine", userAuthorized, async (req, res) => {
   try {
     const user = req.user as User
 
@@ -1150,138 +1019,7 @@ marketRouter.get("/mine", userAuthorized, async (req, res, next) => {
   }
 })
 
-const sortingMethods = [
-  "title",
-  "timestamp",
-  "minimum_price",
-  "maximum_price",
-  "avg_rating",
-  "total_rating",
-  "expiration",
-]
-
-export interface MarketSearchQueryArguments {
-  item_type: string | null
-  sale_type: string | null
-  minCost: string
-  rating: string | null
-  maxCost: string | null
-  quantityAvailable: string
-  query: string
-  sort: string
-  seller_rating: string
-  index: string
-  page_size: string
-  user_seller: string
-  contractor_seller: string
-  listing_type: string | null
-}
-
-export interface MarketSearchQuery {
-  item_type: string | null
-  sale_type: string | null
-  minCost: number
-  rating: number | null
-  maxCost: number | null
-  quantityAvailable: number
-  query: string
-  sort: string
-  seller_rating: number
-  index: number
-  page_size: number
-  reverseSort: boolean
-  user_seller_id?: string | null
-  contractor_seller_id?: string | null
-  listing_type?: string | null
-}
-
-export async function convertQuery(
-  query: Partial<MarketSearchQueryArguments>,
-): Promise<MarketSearchQuery> {
-  let sorting = (query.sort || "timestamp").toLowerCase()
-  if (sorting === "date-old") {
-    sorting = "timestamp"
-  }
-
-  if (sorting === "date-new") {
-    sorting = "timestamp-reverse"
-  }
-
-  if (sorting === "rating") {
-    sorting = "total_rating"
-  }
-
-  if (sorting === "title") {
-    sorting = "title-reverse"
-  }
-
-  if (sorting === "price-low") {
-    sorting = "minimum_price-reverse"
-  }
-
-  if (sorting === "price-high") {
-    sorting = "minimum_price"
-  }
-
-  if (sorting === "quantity-low") {
-    sorting = "quantity_available-reverse"
-  }
-
-  if (sorting === "quantity-high") {
-    sorting = "quantity_available"
-  }
-
-  if (sorting === "activity") {
-    sorting = "expiration"
-  }
-
-  const reverseSort = sorting.endsWith("-reverse")
-  if (reverseSort) {
-    sorting = sorting.slice(0, sorting.length - "-reverse".length)
-  }
-
-  if (sortingMethods.indexOf(sorting) === -1) {
-    sorting = "timestamp"
-  }
-
-  let user_seller_id = undefined
-  let contractor_seller_id = undefined
-
-  if (query.user_seller) {
-    const user = await database.getUser({ username: query.user_seller })
-    user_seller_id = user.user_id
-  }
-
-  if (query.contractor_seller) {
-    const contractor = await database.getContractor({
-      spectrum_id: query.contractor_seller,
-    })
-    contractor_seller_id = contractor.contractor_id
-  }
-
-  const searchQuery = (query.query || "").toLowerCase()
-  const seller_rating = +(query.seller_rating || 0)
-  const page_size = Math.min(+(query.page_size || 16), 96)
-  return {
-    sale_type: query.sale_type || null,
-    maxCost: query.maxCost && query.maxCost !== "null" ? +query.maxCost : null,
-    minCost: +(query.minCost || 0),
-    quantityAvailable: +(query.quantityAvailable || 0),
-    item_type: query.item_type || null,
-    index: +(query.index || 0),
-    rating: +(query.rating || 0),
-    reverseSort,
-    sort: sorting,
-    query: searchQuery,
-    seller_rating,
-    page_size: page_size,
-    user_seller_id,
-    contractor_seller_id,
-    listing_type: query.listing_type || null,
-  }
-}
-
-marketRouter.get("/public/search", async (req, res, next) => {
+marketRouter.get("/public/search", async (req, res) => {
   let query
   try {
     query = await convertQuery(req.query)
@@ -1331,7 +1069,7 @@ marketRouter.get("/public/search", async (req, res, next) => {
   }
 })
 
-marketRouter.get("/public", async (req, res, next) => {
+marketRouter.get("/public", async (req, res) => {
   try {
     const listings = await database.getMarketUniqueListingsComplete({
       status: "active",
@@ -1361,13 +1099,13 @@ marketRouter.get("/public", async (req, res, next) => {
   }
 })
 
-marketRouter.get("/all_listings", adminAuthorized, async (req, res, next) => {
+marketRouter.get("/all_listings", adminAuthorized, async (req, res) => {
   const listings = await database.getMarketListings({})
 
   res.json(await Promise.all(listings.map((l) => formatListing(l, true))))
 })
 
-marketRouter.get("/user/:username", async (req, res, next) => {
+marketRouter.get("/user/:username", async (req, res) => {
   const username = req.params["username"]
   const user = await database.getUser({ username: username })
   if (!user) {
@@ -1395,31 +1133,10 @@ marketRouter.get("/user/:username", async (req, res, next) => {
   )
 })
 
-export async function get_org_listings(contractor: DBContractor) {
-  const listings = await database.getMarketUniqueListingsComplete({
-    contractor_seller_id: contractor.contractor_id,
-  })
-  const multiples = await database.getMarketMultiplesComplete(
-    {
-      "market_multiples.contractor_seller_id": contractor.contractor_id,
-    },
-    {},
-  )
-  const multiple_listings = await database.getMarketMultipleListingsComplete({
-    "market_multiples.contractor_seller_id": contractor.contractor_id,
-  })
-
-  return await Promise.all(
-    [...listings, ...multiples, ...multiple_listings].map((l) =>
-      formatListingComplete(l, true),
-    ),
-  )
-}
-
 marketRouter.get(
   "/contractor/:spectrum_id/mine",
   userAuthorized,
-  async (req, res, next) => {
+  async (req, res) => {
     try {
       const spectrum_id = req.params["spectrum_id"]
       const contractor = await database.getContractor({
@@ -1452,7 +1169,7 @@ marketRouter.get(
   },
 )
 
-marketRouter.get("/contractor/:spectrum_id", async (req, res, next) => {
+marketRouter.get("/contractor/:spectrum_id", async (req, res) => {
   try {
     const spectrum_id = req.params["spectrum_id"]
     const contractor = await database.getContractor({
@@ -1512,50 +1229,7 @@ marketRouter.get("/contractor/:spectrum_id", async (req, res, next) => {
   }
 })
 
-// marketRouter.get("/aggregate/contractor/:spectrum_id", userAuthorized, async (req, res, next) => {
-//     try {
-//         const spectrum_id = req.params['spectrum_id']
-//         const contractor = await database.getContractor({spectrum_id: spectrum_id})
-//         if (!contractor) {
-//             res.status(400).json({error: "Invalid contractor"})
-//             return
-//         }
-//
-//         const user = req.user as User
-//
-//         const role = await database.getContractorRoleLegacy(user.user_id, contractor.contractor_id)
-//
-//         let where: any = {
-//             contractor_seller_id: contractor.contractor_id,
-//         }
-//
-//         if (!await has_permission(contractor.contractor_id, user.user_id, 'manage_market')) {
-//             if (role) {
-//                 where = {
-//                     contractor_seller_id: contractor.contractor_id,
-//                     status: "active",
-//                 }
-//             } else {
-//                 where = {
-//                     contractor_seller_id: contractor.contractor_id,
-//                     status: "active",
-//                     internal: false,
-//                 }
-//             }
-//         }
-//
-//         let listings = []
-//         listings.push(...await database.getMarketAggregateListingsComplete(where))
-//         listings.push(...await database.getMarketUniqueListingsComplete(where))
-//
-//         res.json(await Promise.all(listings.map(l => formatListingComplete(l, false))))
-//     } catch (e) {
-//         console.error(e)
-//         res.status(400).json({error: "Invalid listing"})
-//     }
-// })
-
-marketRouter.get("/aggregates/buyorders", async (req, res, next) => {
+marketRouter.get("/aggregates/buyorders", async (req, res) => {
   try {
     const aggregates = await database.getMarketBuyOrdersComplete()
     return res.json(
@@ -1568,7 +1242,7 @@ marketRouter.get("/aggregates/buyorders", async (req, res, next) => {
   }
 })
 
-marketRouter.get("/aggregates", async (req, res, next) => {
+marketRouter.get("/aggregates", async (req, res) => {
   try {
     const aggregates = await database.getMarketAggregatesComplete(
       {},
@@ -1585,7 +1259,7 @@ marketRouter.get("/aggregates", async (req, res, next) => {
   }
 })
 
-marketRouter.get("/aggregate/:game_item_id/chart", async (req, res, next) => {
+marketRouter.get("/aggregate/:game_item_id/chart", async (req, res) => {
   try {
     const game_item_id = req.params["game_item_id"]
     const buy_orders = await database.getBuyOrdersByGameItemID(
@@ -1599,7 +1273,7 @@ marketRouter.get("/aggregate/:game_item_id/chart", async (req, res, next) => {
   }
 })
 
-marketRouter.get("/aggregate/:game_item_id/history", async (req, res, next) => {
+marketRouter.get("/aggregate/:game_item_id/history", async (req, res) => {
   try {
     const game_item_id = req.params["game_item_id"]
     const price_history = await database.getPriceHistory({ game_item_id })
@@ -1614,7 +1288,7 @@ marketRouter.get("/aggregate/:game_item_id/history", async (req, res, next) => {
 marketRouter.post(
   "/aggregate/:game_item_id/update",
   adminAuthorized,
-  async (req, res, next) => {
+  async (req, res) => {
     try {
       const game_item_id = req.params["game_item_id"]
       const game_item = await database.getGameItem({
@@ -1673,7 +1347,7 @@ marketRouter.post(
   },
 )
 
-marketRouter.get("/aggregate/:game_item_id", async (req, res, next) => {
+marketRouter.get("/aggregate/:game_item_id", async (req, res) => {
   try {
     const game_item_id = req.params["game_item_id"]
     const aggregate = await database.getMarketAggregateComplete(game_item_id, {
@@ -1692,7 +1366,7 @@ marketRouter.get("/aggregate/:game_item_id", async (req, res, next) => {
   }
 })
 
-marketRouter.get("/multiple/:multiple_id", async (req, res, next) => {
+marketRouter.get("/multiple/:multiple_id", async (req, res) => {
   try {
     const user = req.user as User | undefined | null
     const multiple_id = req.params["multiple_id"]
@@ -1725,7 +1399,7 @@ marketRouter.post(
   "/multiple/contractor/:spectrum_id/create",
   verifiedUser,
   org_permission("manage_market"),
-  async (req: Request, res, next) => {
+  async (req: Request, res) => {
     try {
       const contractor = req.contractor
       const user = req.user
@@ -1829,7 +1503,7 @@ marketRouter.post(
 marketRouter.post(
   "/multiple/create",
   verifiedUser,
-  async (req: Request, res, next) => {
+  async (req: Request, res) => {
     try {
       const user = req.user as User
 
@@ -1926,7 +1600,7 @@ marketRouter.post(
 marketRouter.post(
   "/multiple/:multiple_id/update",
   userAuthorized,
-  async (req: Request, res, next) => {
+  async (req: Request, res) => {
     try {
       const multiple_id = req.params.multiple_id
       const user = req.user as User
@@ -2098,7 +1772,7 @@ marketRouter.post(
 marketRouter.post(
   "/buyorder/create",
   verifiedUser,
-  async (req: Request, res, next) => {
+  async (req: Request, res) => {
     try {
       const user = req.user as User
 
@@ -2148,7 +1822,7 @@ marketRouter.post(
 marketRouter.post(
   "/buyorder/:buy_order_id/fulfill",
   verifiedUser,
-  async (req: Request, res, next) => {
+  async (req: Request, res) => {
     try {
       const { contractor_spectrum_id } = req.body as {
         contractor_spectrum_id?: string | null
@@ -2236,7 +1910,7 @@ marketRouter.post(
 marketRouter.post(
   "/buyorder/:buy_order_id/cancel",
   userAuthorized,
-  async (req: Request, res, next) => {
+  async (req: Request, res) => {
     try {
       const user = req.user as User
       const buy_order_id = req.params["buy_order_id"]
@@ -2269,17 +1943,17 @@ marketRouter.post(
   },
 )
 
-marketRouter.get("/export", userAuthorized, async (req: Request, res, next) => {
+marketRouter.get("/export", userAuthorized, async (req: Request, res) => {
   // TODO: Do this
 })
 
-marketRouter.get("/category/:category", async (req: Request, res, next) => {
+marketRouter.get("/category/:category", async (req: Request, res) => {
   const { category } = req.params
   const items = await database.getMarketItemsBySubcategory(category)
   res.json(items)
 })
 
-marketRouter.get("/categories", async (req: Request, res, next) => {
+marketRouter.get("/categories", async (req: Request, res) => {
   const raw_categories = await database.getMarketCategories()
   // const categories: { [key: string]: string[] } = {}
   // raw_categories.forEach((c) => {

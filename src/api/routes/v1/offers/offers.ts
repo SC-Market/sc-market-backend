@@ -8,7 +8,6 @@ import {
 
 import express from "express"
 import { initiateOrder, paymentTypes } from "../orders/helpers.js"
-import { verify_listings } from "../market/market.js"
 import {
   dispatchOfferNotifications,
   sendOfferStatusNotification,
@@ -37,6 +36,7 @@ import {
 import { validate_optional_username } from "../profiles/middleware.js"
 import { convert_offer_search_query, search_offer_sessions } from "./helpers.js"
 import { is_member } from "../util/permissions.js"
+import { verify_listings } from "../market/helpers.js"
 
 export const offersRouter = express.Router()
 export const offerRouter = express.Router()
