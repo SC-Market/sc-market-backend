@@ -214,6 +214,61 @@ export async function formatListing(
   }
 }
 
+/**
+ * Generates the stats associated with a user's listing, including
+ * the views the listing has gotten, the number of associated open orders and
+ * offers, and some other stuff probably
+ *
+ * @param listing The listing to fetch and format stats for
+ */
+async function serializeListingStats(listing: DBMarketListing) {
+  const [{ order_count }] = await database
+    .knex<{ order_count: number }>("orders")
+    .rightJoin(
+      "market_orders",
+      "market_orders.order_id",
+      "=",
+      "orders.order_id",
+    )
+    .where("market_orders.listing_id", listing.listing_id)
+    .andWhere((pred) =>
+      pred.whereIn("orders.status", ["not-started", "in-progress"]),
+    )
+    .count("* as order_count")
+    .select()
+
+  const [{ offer_count }] = await database
+    .knex<{ offer_count: number }>("offer_market_items")
+    .rightJoin(
+      "order_offers",
+      "order_offers.id",
+      "=",
+      "offer_market_items.offer_id",
+    )
+    .rightJoin(
+      "offer_sessions",
+      "offer_sessions.id",
+      "=",
+      "order_offers.session_id",
+    )
+    .where("offer_market_items.listing_id", listing.listing_id)
+    .andWhere("offer_sessions.status", "active")
+    .countDistinct("order_offers.session_id as offer_count")
+    .select()
+
+  return {
+    order_count: order_count,
+    offer_count: offer_count,
+    view_count: 0,
+  }
+}
+
+/**
+ * Serializes a Unique listing
+ * @param complete The complete details from the DB to be serialized
+ * @param isPrivate Whether or not to include private details such as current
+ * bids and order stats
+ */
 export async function formatUniqueListingComplete(
   complete: DBUniqueListingComplete,
   isPrivate: boolean = false,
@@ -256,6 +311,7 @@ export async function formatUniqueListingComplete(
           contractor_id: listing.contractor_seller_id,
         })
       : null,
+    stats: await serializeListingStats(listing),
   }
 }
 
