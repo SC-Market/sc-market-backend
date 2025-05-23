@@ -198,7 +198,7 @@ export async function convertQuery(
 
   const searchQuery = (query.query || "").toLowerCase()
   const seller_rating = +(query.seller_rating || 0)
-  const page_size = Math.min(+(query.page_size || 16), 96)
+  const page_size = Math.max(Math.min(+(query.page_size || 16), 96), 0)
   return {
     sale_type: query.sale_type || null,
     maxCost: query.maxCost && query.maxCost !== "null" ? +query.maxCost : null,
@@ -237,4 +237,10 @@ export async function get_org_listings(contractor: DBContractor) {
       formatListingComplete(l, true),
     ),
   )
+}
+export function formatListingSlug(title: string) {
+  return title
+    .toLowerCase()
+    .replace(/ /g, "-")
+    .replace(/[^\w-]+/g, "")
 }

@@ -3414,10 +3414,13 @@ export class KnexDatabase implements Database {
       query = query.andWhere(andWhere)
     }
 
-    return query
+    if (searchQuery.page_size) {
+      query = query
       .limit(searchQuery.page_size)
       .offset(searchQuery.page_size * searchQuery.index)
-      .select("*", knex.raw("count(*) OVER() AS full_count"))
+    }
+
+    return query.select("*", knex.raw("count(*) OVER() AS full_count"))
   }
 
   async getOrderStats() {

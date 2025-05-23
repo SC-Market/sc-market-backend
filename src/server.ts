@@ -33,6 +33,7 @@ import { createServer } from "node:http"
 import { envoyManager } from "./clients/messaging/envoy.js"
 import { oapi } from "./api/routes/v1/openapi.js"
 import { env } from "./config/env.js"
+import { formatListingSlug } from "./api/routes/v1/market/helpers.js"
 
 const SessionPool = pg.Pool
 
@@ -219,6 +220,26 @@ app.get("/sitemap.xml", async function (req, res) {
     const contractors = await database.getContractorListings({})
     const users = await database.getUsersWhere({ rsi_confirmed: true })
     const recruit_posts = await database.getAllRecruitingPosts()
+    const market_listings = await database.searchMarket(
+      {
+        sale_type: null,
+        maxCost: null,
+        minCost: 0,
+        quantityAvailable: 1,
+        item_type: null,
+        index: 0,
+        rating: 0,
+        reverseSort: false,
+        sort: "timestamp",
+        query: "",
+        seller_rating: 0,
+        page_size: 0,
+      },
+      {
+        status: "active",
+        internal: "false",
+      },
+    )
 
     const user_routes = []
     for (const user of users) {
@@ -249,6 +270,15 @@ app.get("/sitemap.xml", async function (req, res) {
           priority: 0.2,
         },
       )
+    }
+
+    const market_routes = []
+    for (const listing of market_listings) {
+      market_routes.push({
+        url: `/market/${listing.listing_id}/#/${formatListingSlug(listing.title)}`,
+        changefreq: "weekly",
+        priority: 0.8,
+      })
     }
 
     const contractor_routes = []
@@ -330,6 +360,7 @@ app.get("/sitemap.xml", async function (req, res) {
       ...contractor_routes,
       ...user_routes,
       ...recruit_routes,
+      ...market_routes,
     ]
 
     try {
