@@ -274,8 +274,10 @@ app.get("/sitemap.xml", async function (req, res) {
 
     const market_routes = []
     for (const listing of market_listings) {
+      const type =
+        listing.listing_type === "unique" ? "market" : listing.listing_type
       market_routes.push({
-        url: `/market/${listing.listing_id}/#/${formatListingSlug(listing.title)}`,
+        url: `/${type}/${listing.listing_id}/#/${formatListingSlug(listing.title)}`,
         changefreq: "weekly",
         priority: 0.8,
       })
