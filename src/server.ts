@@ -274,8 +274,23 @@ app.get("/sitemap.xml", async function (req, res) {
 
     const market_routes = []
     for (const listing of market_listings) {
-      const type =
-        listing.listing_type === "unique" ? "market" : listing.listing_type
+      let type
+      switch (listing.listing_type) {
+        case "unique": {
+          type = "market"
+          break
+        }
+        case "aggregate": {
+          type = "market/aggregate"
+          break
+        }
+        case "multiple": {
+          type = "market/multiple"
+          break
+        }
+        default:
+          type = "market"
+      }
       market_routes.push({
         url: `/${type}/${listing.listing_id}/#/${formatListingSlug(listing.title)}`,
         changefreq: "weekly",
