@@ -1061,13 +1061,6 @@ contractorsRouter.get(
         },
       },
     ],
-    requestBody: {
-      content: {
-        "application/json": {
-          schema: oapi.schema("ContractorBody"),
-        },
-      },
-    },
     responses: {
       "200": {
         description: "OK - Successful request with response body",
