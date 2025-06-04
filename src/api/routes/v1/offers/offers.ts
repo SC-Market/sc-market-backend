@@ -65,7 +65,6 @@ oapi.schema("OfferBodyMarketListing", {
     },
   },
   required: ["quantity", "listing_id"],
-  additionalProperties: false,
   title: "OfferBodyMarketListing",
   type: "object",
 })

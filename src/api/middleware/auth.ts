@@ -88,9 +88,11 @@ export async function verifiedUser(
       return
     } else {
       next()
+      return
     }
   } else {
     res.status(401).json({ error: "Unauthenticated" })
+    return
   }
 }
 

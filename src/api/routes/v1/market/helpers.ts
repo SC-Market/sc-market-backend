@@ -88,6 +88,7 @@ export async function verify_listings(
 
     if (listing.listing.status !== "active") {
       res.status(404).json({ error: "Invalid listing" })
+      return
     }
 
     if (listing.listing.quantity_available < quantity || quantity < 1) {

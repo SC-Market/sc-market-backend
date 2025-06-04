@@ -835,7 +835,7 @@ oapi.schema("MarketListingComplete", {
     },
     sale_type: {
       type: "string",
-      enum: ["direct", "auction", "aggregate", "multiple"],
+      enum: ["sale", "auction", "aggregate", "multiple"],
       title: "MarketListingComplete.sale_type",
     },
     quantity_available: {
@@ -1409,7 +1409,7 @@ oapi.schema("MarketListingCreateRequest", {
     },
     sale_type: {
       type: "string",
-      enum: ["direct", "auction"],
+      enum: ["sale", "auction"],
       title: "MarketListingCreateRequest.sale_type",
     },
     item_type: {
@@ -1447,6 +1447,7 @@ oapi.schema("MarketListingCreateRequest", {
     },
     end_time: {
       type: "string",
+      nullable: true,
       format: "date-time",
       title: "MarketListingCreateRequest.end_time",
     },
@@ -1462,7 +1463,6 @@ oapi.schema("MarketListingCreateRequest", {
     "photos",
     "status",
   ],
-  additionalProperties: false,
 })
 
 marketRouter.post(
@@ -1628,7 +1628,7 @@ oapi.schema("ContractorMarketListingCreateRequest", {
     },
     sale_type: {
       type: "string",
-      enum: ["direct", "auction"],
+      enum: ["sale", "auction"],
       title: "ContractorMarketListingCreateRequest.sale_type",
     },
     item_type: {
@@ -1666,6 +1666,7 @@ oapi.schema("ContractorMarketListingCreateRequest", {
     end_time: {
       type: "string",
       format: "date-time",
+      nullable: true,
       title: "ContractorMarketListingCreateRequest.end_time",
     },
     minimum_bid_increment: {
