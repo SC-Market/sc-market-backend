@@ -15,6 +15,7 @@ import {
   MarketSearchQueryArguments,
   sortingMethods,
 } from "./types.js"
+import { has_permission } from "../util/permissions.js"
 
 const userListingLock = new AsyncLock()
 const contractorListingLock = new AsyncLock()
@@ -238,6 +239,57 @@ export async function get_org_listings(contractor: DBContractor) {
     ),
   )
 }
+
+export async function handle_quantity_update(
+  res: any,
+  user: User,
+  listing: DBMarketListing,
+  quantity_available: number,
+) {
+  if (user.role !== "admin") {
+    if (listing.contractor_seller_id) {
+      const contractor = await database.getContractor({
+        contractor_id: listing.contractor_seller_id,
+      })
+
+      if (
+        !(await has_permission(
+          contractor.contractor_id,
+          user.user_id,
+          "manage_market",
+        ))
+      ) {
+        return res.status(403).json({
+          error:
+            "You are not authorized to update listings on behalf of this contractor!",
+        })
+      }
+    } else {
+      if (listing.user_seller_id !== user.user_id) {
+        return res
+          .status(403)
+          .json({ error: "You are not authorized to update this listing!" })
+      }
+    }
+  }
+
+  if (listing.status === "archived") {
+    return res.status(400).json({ error: "Cannot update archived listing" })
+  }
+
+  if (quantity_available === undefined) {
+    return res.status(400).json({ error: "Missing required fields" })
+  }
+
+  if (quantity_available < 0) {
+    return res.status(400).send({ error: "Invalid quantity" })
+  }
+
+  await database.updateMarketListing(listing.listing_id, { quantity_available })
+
+  res.json({ result: "Success" })
+}
+
 export function formatListingSlug(title: string) {
   return title
     .toLowerCase()

@@ -102,7 +102,10 @@ import {
 } from "../../api/routes/v1/contracts/types.js"
 import { serializeOfferSession } from "../../api/routes/v1/offers/serializers.js"
 import { env } from "../../config/env.js"
-import { MarketSearchQuery } from "../../api/routes/v1/market/types.js"
+import {
+  MarketSearchQuery,
+  OrderStats,
+} from "../../api/routes/v1/market/types.js"
 
 pg.types.setTypeParser(1114, (s: string) => new Date(s.replace(" ", "T") + "Z"))
 
@@ -129,7 +132,7 @@ export class KnexDatabase implements Database {
         host: dbConfig.host || env.DATABASE_HOST || "localhost",
         user: dbConfig.username || env.DATABASE_USER || "postgres",
         password: dbConfig.password || env.DATABASE_PASS || "",
-        database: dbConfig.dbname || env.DATABASE_TARGET || "sashimi.me",
+        database: dbConfig.dbname || env.DATABASE_TARGET || "postgres",
         port:
           (dbConfig.port as unknown as number) ||
           (env.DATABASE_PORT ? +env.DATABASE_PORT : 5431),
@@ -3416,18 +3419,15 @@ export class KnexDatabase implements Database {
 
     if (searchQuery.page_size) {
       query = query
-      .limit(searchQuery.page_size)
-      .offset(searchQuery.page_size * searchQuery.index)
+        .limit(searchQuery.page_size)
+        .offset(searchQuery.page_size * searchQuery.index)
     }
 
     return query.select("*", knex.raw("count(*) OVER() AS full_count"))
   }
 
   async getOrderStats() {
-    const order_stats = await this.knex<{
-      total_orders: number
-      total_order_value: number
-    }>("order_stats").first()
+    const order_stats = await this.knex<OrderStats>("order_stats").first()
 
     const order_week_stats = await this.knex<{
       week_orders: number

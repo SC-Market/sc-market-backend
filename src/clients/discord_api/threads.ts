@@ -5,9 +5,11 @@ import { serializeMessage } from "../../api/routes/v1/chats/serializers.js"
 import { handleStatusUpdate } from "../../api/routes/v1/orders/helpers.js"
 import { serializeAssignedOrder } from "../../api/routes/v1/orders/serializers.js"
 import { has_permission } from "../../api/routes/v1/util/permissions.js"
-import { handle_quantity_update } from "../../api/routes/v1/market/market.js"
 import { User } from "../../api/routes/v1/api-models.js"
-import { convertQuery } from "../../api/routes/v1/market/helpers.js"
+import {
+  convertQuery,
+  handle_quantity_update,
+} from "../../api/routes/v1/market/helpers.js"
 
 export const threadRouter = express.Router()
 

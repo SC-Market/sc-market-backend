@@ -1,3 +1,8 @@
+import {
+  MinimalContractor,
+  MinimalUser,
+} from "../../../../clients/database/db-models.js"
+
 export interface MarketListingBody {
   price: number
   title: string
@@ -50,4 +55,24 @@ export interface MarketSearchQuery {
   user_seller_id?: string | null
   contractor_seller_id?: string | null
   listing_type?: string | null
+}
+
+export interface OrderStats {
+  total_orders: number
+  total_order_value: number
+}
+
+export interface ListingBase {
+  listing_id: string
+  price: number
+  timestamp: Date
+  quantity_available: number
+  user_seller: MinimalUser | null
+  contractor_seller: MinimalContractor | null
+  status: string
+  sale_type: string
+  expiration: Date
+  // Omitted for now
+  orders?: any[]
+  bids?: any[]
 }
