@@ -6,13 +6,13 @@ export function rate_limit(points: number) {
   return (req: Request, res: Response, next: NextFunction) => {
     const user = req.user as User
     const key = user?.user_id ? user.user_id : req.ip
-    next()
+
     database.ratelimiter
       .consume(key!, points!)
       .then(() => {
         next()
       })
-      .catch((_) => {
+      .catch(() => {
         // res.status(429).json('Too Many Requests');
         next()
       })

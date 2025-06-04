@@ -55,7 +55,8 @@ export async function userAuthorized(
         return
       }
       if (user.role === "user" || user.role === "admin") {
-        return next()
+        next()
+        return
       } else {
         res.status(403).json({ error: "Unauthorized" })
         return

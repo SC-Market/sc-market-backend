@@ -487,7 +487,6 @@ profileRouter.get("", rate_limit(1), userAuthorized, async (req, res, next) => {
     const discord_profile = await database.discord_profile_cache.fetch(
       user.user_id,
     )
-    const settings = await database.getUserSettings(user.user_id)
 
     res.json({
       ...user,
