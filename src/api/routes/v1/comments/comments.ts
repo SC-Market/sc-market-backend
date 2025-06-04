@@ -18,7 +18,8 @@ commentRouter.post(
     const user = req.user as User
 
     if (!comment) {
-      return res.status(400).send({ message: "Invalid comment" })
+      res.status(400).json({ message: "Invalid comment" })
+      return
     }
 
     const {
@@ -46,11 +47,13 @@ commentRouter.post(
     const user = req.user as User
 
     if (!comment) {
-      return res.status(400).send({ message: "Invalid comment" })
+      res.status(400).json({ message: "Invalid comment" })
+      return
     }
 
     if (comment.author !== user.user_id && user.role !== "admin") {
-      return res.status(400).send({ message: "No permissions" })
+      res.status(400).json({ message: "No permissions" })
+      return
     }
 
     await database.updateComments({ comment_id }, { deleted: true })
@@ -68,11 +71,13 @@ commentRouter.post(
     const user = req.user as User
 
     if (!comment) {
-      return res.status(400).send({ message: "Invalid comment" })
+      res.status(400).json({ message: "Invalid comment" })
+      return
     }
 
     if (comment.author !== user.user_id && user.role !== "admin") {
-      return res.status(400).send({ message: "No permissions" })
+      res.status(400).json({ message: "No permissions" })
+      return
     }
 
     const {
@@ -82,7 +87,8 @@ commentRouter.post(
     } = req.body
 
     if (!content) {
-      return res.status(400).send({ message: "Invalid argument" })
+      res.status(400).json({ message: "Invalid argument" })
+      return
     }
 
     await database.updateComments({ comment_id }, { content })
@@ -100,7 +106,8 @@ commentRouter.post(
     const user = req.user as User
 
     if (!comment) {
-      return res.status(400).send({ message: "Invalid comment" })
+      res.status(400).json({ message: "Invalid comment" })
+      return
     }
 
     const vote = await database.getCommentVote({
@@ -130,7 +137,8 @@ commentRouter.post(
     const user = req.user as User
 
     if (!comment) {
-      return res.status(400).send({ message: "Invalid comment" })
+      res.status(400).json({ message: "Invalid comment" })
+      return
     }
 
     const vote = await database.getCommentVote({

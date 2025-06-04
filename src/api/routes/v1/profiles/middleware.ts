@@ -7,16 +7,18 @@ export function validate_optional_username(path: string) {
   return async (req: Request, res: Response, next: NextFunction) => {
     const username = req.query[path] as string
     if (!username) {
-      return next()
+      next()
+      return
     }
 
     let user
     try {
       user = await database.getUser({ username })
     } catch {
-      return res
+      res
         .status(404)
         .json(createErrorResponse({ error: "User not found", username }))
+      return
     }
 
     if (!req.users) {

@@ -326,14 +326,12 @@ transactionsRouter.get("/mine", userAuthorized, async (req, res, next) => {
           ).spectrum_id,
         user_sender_id:
           transaction.user_sender_id &&
-          (
-            await database.getUser({ user_id: transaction.user_sender_id })
-          ).username,
+          (await database.getUser({ user_id: transaction.user_sender_id }))
+            .username,
         user_recipient_id:
           transaction.user_recipient_id &&
-          (
-            await database.getUser({ user_id: transaction.user_recipient_id })
-          ).username,
+          (await database.getUser({ user_id: transaction.user_recipient_id }))
+            .username,
       })),
     ),
   )
@@ -395,14 +393,12 @@ transactionsRouter.get(
             ).spectrum_id,
           user_sender_id:
             transaction.user_sender_id &&
-            (
-              await database.getUser({ user_id: transaction.user_sender_id })
-            ).username,
+            (await database.getUser({ user_id: transaction.user_sender_id }))
+              .username,
           user_recipient_id:
             transaction.user_recipient_id &&
-            (
-              await database.getUser({ user_id: transaction.user_recipient_id })
-            ).username,
+            (await database.getUser({ user_id: transaction.user_recipient_id }))
+              .username,
         })),
       ),
     )

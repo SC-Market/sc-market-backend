@@ -60,7 +60,8 @@ profileRouter.post(
     //         user = await database.getUser({username})
     //         data = await fetchProfile(username)
     //     } catch (e) {
-    //         return res.status(400).json({error: "Invalid username"})
+    //         res.status(400).json({error: "Invalid username"})
+    return
     //     }
     //
     //     const banner_resource = await database.getImageResource({resource_id: user.banner})
@@ -130,18 +131,21 @@ profileRouter.post(
 
     // Do checks first
     if (avatar_url && !avatar_url.match(external_resource_regex)) {
-      return res.status(400).send({ error: "Invalid URL" })
+      res.status(400).json({ error: "Invalid URL" })
+      return
     }
 
     if (banner_url && !banner_url.match(external_resource_regex)) {
-      return res.status(400).send({ error: "Invalid URL" })
+      res.status(400).json({ error: "Invalid URL" })
+      return
     }
 
     if (
       display_name &&
       (display_name.length > 30 || display_name.length === 0)
     ) {
-      return res.status(400).send({ error: "Invalid display name" })
+      res.status(400).json({ error: "Invalid display name" })
+      return
     }
 
     const old_avatar = user.avatar
@@ -206,7 +210,8 @@ profileRouter.post(
 
     // TODO: Check for actual URL
     if (!webhook_url || !name) {
-      return res.status(400).send({ error: "Invalid arguments" })
+      res.status(400).json({ error: "Invalid arguments" })
+      return
     }
 
     try {
@@ -218,7 +223,8 @@ profileRouter.post(
         user.user_id,
       )
     } catch (e) {
-      return res.status(400).json({ error: "Invalid actions" })
+      res.status(400).json({ error: "Invalid actions" })
+      return
     }
     res.json({ result: "Success" })
   },
@@ -238,12 +244,14 @@ profileRouter.post(
 
     // Do checks first
     if (!webhook_id) {
-      return res.status(400).send({ error: "Invalid arguments" })
+      res.status(400).json({ error: "Invalid arguments" })
+      return
     }
 
     const webhook = await database.getNotificationWebhook({ webhook_id })
     if (webhook?.user_id !== user.user_id) {
-      return res.status(403).send({ error: "Unauthorized" })
+      res.status(403).json({ error: "Unauthorized" })
+      return
     }
 
     await database.deleteNotificationWebhook({
@@ -312,7 +320,8 @@ profileRouter.get("/user/:username", async (req, res, next) => {
     res.json(await serializePublicProfile(user, { discord: !!requester }))
   } catch (e) {
     console.error(e)
-    return res.status(400).json({ error: "Invalid user" })
+    res.status(400).json({ error: "Invalid user" })
+    return
   }
 })
 
@@ -330,7 +339,8 @@ profileRouter.post(
     const { discord_order_share, discord_public } = req.body
 
     if (discord_order_share === undefined && discord_public === undefined) {
-      return res.status(400).json({ error: "Invalid body" })
+      res.status(400).json({ error: "Invalid body" })
+      return
     }
 
     await database.updateUserSettings(user.user_id, {
@@ -338,7 +348,8 @@ profileRouter.post(
       discord_public,
     })
 
-    return res.json({ result: "Success" })
+    res.json({ result: "Success" })
+    return
   },
 )
 
@@ -356,14 +367,16 @@ profileRouter.post(
         try {
           cobj = await database.getContractor({ spectrum_id: contractor })
         } catch {
-          return res.status(403).json({ error: "Invalid contractor" })
+          res.status(403).json({ error: "Invalid contractor" })
+          return
         }
 
         if (
           !(await database.getMemberRoles(cobj.contractor_id, user.user_id))
             .length
         ) {
-          return res.status(403).json({ error: "Invalid contractor" })
+          res.status(403).json({ error: "Invalid contractor" })
+          return
         }
 
         await database.updateUserAvailability(
@@ -375,7 +388,8 @@ profileRouter.post(
         await database.updateUserAvailability(user.user_id, null, selections)
       }
 
-      return res.json({ result: "Success" })
+      res.json({ result: "Success" })
+      return
     } catch (e) {
       console.error(e)
     }
@@ -393,16 +407,18 @@ profileRouter.get(
     try {
       cobj = await database.getContractor({ spectrum_id })
     } catch {
-      return res.status(403).json({ error: "Invalid contractor" })
+      res.status(403).json({ error: "Invalid contractor" })
+      return
     }
 
-    return res.json({
+    res.json({
       contractor: spectrum_id,
       selections: await database.getUserAvailability(
         user.user_id,
         cobj.contractor_id,
       ),
     })
+    return
   },
 )
 
@@ -423,13 +439,14 @@ profileRouter.get(
       channel = await fetchChannel(user.discord_thread_channel_id)
     }
 
-    return res.json({
+    res.json({
       guild_avatar: avatar,
       guild_name: guild?.name,
       channel_name: channel?.name,
       official_server_id: user.official_server_id,
       discord_thread_channel_id: user.discord_thread_channel_id,
     })
+    return
   },
 )
 profileRouter.post(
@@ -444,17 +461,19 @@ profileRouter.post(
         discord_thread_channel_id: "1072580369251041330",
       },
     )
-    return res.json({ result: "Success" })
+    res.json({ result: "Success" })
+    return
   },
 )
 
 profileRouter.get("/availability", userAuthorized, async (req, res, next) => {
   const user = req.user as User
 
-  return res.json({
+  res.json({
     contractor: null,
     selections: await database.getUserAvailability(user.user_id, null),
   })
+  return
 })
 
 profileRouter.get("", rate_limit(1), userAuthorized, async (req, res, next) => {
@@ -495,7 +514,8 @@ profileRouter.get("", rate_limit(1), userAuthorized, async (req, res, next) => {
     })
   } catch (e) {
     console.error(e)
-    return res.status(500)
+    res.status(500)
+    return
   }
 })
 
@@ -658,6 +678,6 @@ profileRouter.get(
     }
     content += "\n"
 
-    res.send(content)
+    res.json(content)
   },
 )

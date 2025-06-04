@@ -15,9 +15,8 @@ export async function valid_contractor(
     req.contractor = await database.getContractor({ spectrum_id })
     next()
   } catch {
-    return res
-      .status(400)
-      .json(createErrorResponse({ error: "Invalid contractor" }))
+    res.status(400).json(createErrorResponse({ error: "Invalid contractor" }))
+    return
   }
 }
 
@@ -29,25 +28,24 @@ export async function org_authorized(
   if (req.isAuthenticated()) {
     const user = req.user as User
     if (user.banned) {
-      return res
+      res
         .status(418)
         .json(createErrorResponse({ error: "Internal server error" }))
+      return
     }
 
     const spectrum_id = req.params["spectrum_id"]
     const contractor = await database.getContractor({ spectrum_id })
     if (!(await is_member(contractor.contractor_id, user.user_id))) {
-      return res
-        .status(403)
-        .json(createErrorResponse({ error: "Unauthorized" }))
+      res.status(403).json(createErrorResponse({ error: "Unauthorized" }))
+      return
     } else {
       req.contractor = contractor
       next()
     }
   } else {
-    return res
-      .status(401)
-      .json(createErrorResponse({ error: "Unauthenticated" }))
+    res.status(401).json(createErrorResponse({ error: "Unauthenticated" }))
+    return
   }
 }
 
@@ -56,9 +54,10 @@ export function org_permission(permission_name: keyof DBContractorRole) {
     if (req.isAuthenticated()) {
       const user = req.user as User
       if (user.banned) {
-        return res
+        res
           .status(418)
           .json(createErrorResponse({ error: "Internal server error" }))
+        return
       }
 
       const spectrum_id = req.params["spectrum_id"]
@@ -66,9 +65,10 @@ export function org_permission(permission_name: keyof DBContractorRole) {
       try {
         contractor = await database.getContractor({ spectrum_id })
       } catch (e) {
-        return res
+        res
           .status(400)
           .json(createErrorResponse({ error: "Invalid contractor" }))
+        return
       }
 
       if (
@@ -78,9 +78,8 @@ export function org_permission(permission_name: keyof DBContractorRole) {
           permission_name,
         ))
       ) {
-        return res
-          .status(403)
-          .json(createErrorResponse({ error: "Unauthorized" }))
+        res.status(403).json(createErrorResponse({ error: "Unauthorized" }))
+        return
       }
 
       req.contractor = contractor
@@ -103,11 +102,12 @@ export function validate_optional_spectrum_id(path: string) {
     try {
       contractor = await database.getContractor({ spectrum_id })
     } catch {
-      return res
+      res
         .status(404)
         .json(
           createErrorResponse({ error: "Contractor not found", contractor }),
         )
+      return
     }
 
     if (!req.contractors) {

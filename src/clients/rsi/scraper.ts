@@ -45,7 +45,8 @@ export async function fetchRSIOrg(spectrum_id: string) {
     )}`,
   )
 
-  return result.text()
+  result.text()
+  return
 }
 
 const size_pattern = /<span class="count">(\d+) members<\/span>/

@@ -624,9 +624,11 @@ offerRouter.put(
       if (status === "accepted") {
         const order = await initiateOrder(session)
 
-        return res.json(createResponse({ order_id: order.order_id }))
+        res.json(createResponse({ order_id: order.order_id }))
+        return
       } else {
-        return res.json(createResponse({ result: "Success" }))
+        res.json(createResponse({ result: "Success" }))
+        return
       }
     } else {
       const user = req.user as User
@@ -648,24 +650,27 @@ offerRouter.put(
         })
 
         if (!service) {
-          return res
+          res
             .status(400)
             .json(createErrorResponse({ error: "Invalid service" }))
+          return
         }
 
         if (service.user_id && service.user_id !== session.assigned_id) {
-          return res
+          res
             .status(400)
             .json(createErrorResponse({ error: "Invalid service" }))
+          return
         }
 
         if (
           service.contractor_id &&
           service.contractor_id !== session.contractor_id
         ) {
-          return res
+          res
             .status(400)
             .json(createErrorResponse({ error: "Invalid service" }))
+          return
         }
       }
 
@@ -758,17 +763,19 @@ offersRouter.post(
   related_to_offer,
   async (req, res) => {
     if (req.offer_session!.thread_id) {
-      return res
+      res
         .status(409)
         .json(createErrorResponse({ message: "Offer already has a thread!" }))
+      return
     }
 
     try {
       const bot_response = await createThread(req.offer_session!)
       if (bot_response.result.failed) {
-        return res
+        res
           .status(500)
           .json(createErrorResponse({ message: bot_response.result.message }))
+        return
       }
 
       await database.updateOfferSession(req.offer_session!.id, {
@@ -776,9 +783,10 @@ offersRouter.post(
       })
     } catch (e) {
       logger.error("Failed to create thread", e)
-      return res
+      res
         .status(500)
         .json(createErrorResponse({ message: "An unknown error occurred" }))
+      return
     }
     res.status(201).json(
       createResponse({
@@ -930,27 +938,31 @@ offersRouter.get(
     const args = await convert_offer_search_query(req)
     if (!(args.contractor_id || args.assigned_id || args.customer_id)) {
       if (user.role !== "admin") {
-        return res.status(400).json(createErrorResponse("Missing permissions."))
+        res.status(400).json(createErrorResponse("Missing permissions."))
+        return
       }
     }
 
     if (args.contractor_id) {
       if (!(await is_member(args.contractor_id, user.user_id))) {
-        return res.status(400).json(createErrorResponse("Missing permissions."))
+        res.status(400).json(createErrorResponse("Missing permissions."))
+        return
       }
     }
 
     if (args.assigned_id && args.assigned_id !== user.user_id) {
-      return res.status(400).json(createErrorResponse("Missing permissions."))
+      res.status(400).json(createErrorResponse("Missing permissions."))
+      return
     }
 
     const result = await search_offer_sessions(args)
 
-    return res.json(
+    res.json(
       createResponse({
         item_counts: result.item_counts,
         items: await Promise.all(result.items.map(serializeOfferSessionStub)),
       }),
     )
+    return
   },
 )

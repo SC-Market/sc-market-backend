@@ -202,9 +202,8 @@ servicesRouter.post(
       if (
         !(await has_permission(contractor_id, user.user_id, "manage_orders"))
       ) {
-        return res
-          .status(403)
-          .json(createErrorResponse({ error: "No permissions" }))
+        res.status(403).json(createErrorResponse({ error: "No permissions" }))
+        return
       }
     } else {
       contractor_id = null
@@ -289,9 +288,8 @@ servicesRouter.get(
         { noBalance: true },
       )
     } catch {
-      return res
-        .status(400)
-        .json(createErrorResponse({ error: "Invalid user" }))
+      res.status(400).json(createErrorResponse({ error: "Invalid user" }))
+      return
     }
 
     const isOwner = user && username === user.username
@@ -484,15 +482,13 @@ servicesRouter.put(
     try {
       service = await database.getService({ service_id })
     } catch {
-      return res
-        .status(400)
-        .json(createErrorResponse({ error: "Invalid service" }))
+      res.status(400).json(createErrorResponse({ error: "Invalid service" }))
+      return
     }
 
     if (!service) {
-      return res
-        .status(400)
-        .json(createErrorResponse({ error: "Invalid service" }))
+      res.status(400).json(createErrorResponse({ error: "Invalid service" }))
+      return
     }
 
     const {
@@ -535,15 +531,13 @@ servicesRouter.put(
           "manage_orders",
         ))
       ) {
-        return res
-          .status(400)
-          .json(createErrorResponse({ error: "No permissions!" }))
+        res.status(400).json(createErrorResponse({ error: "No permissions!" }))
+        return
       }
     } else {
       if (service.user_id !== user.user_id) {
-        return res
-          .status(400)
-          .json(createErrorResponse({ error: "No permissions!" }))
+        res.status(400).json(createErrorResponse({ error: "No permissions!" }))
+        return
       }
     }
 
@@ -577,9 +571,8 @@ servicesRouter.put(
           service_id,
         })
       } catch (e: any) {
-        return res
-          .status(400)
-          .json(createErrorResponse({ error: "Invalid photo!" }))
+        res.status(400).json(createErrorResponse({ error: "Invalid photo!" }))
+        return
       }
     }
 
@@ -636,15 +629,13 @@ servicesRouter.get(
     try {
       service = await database.getService({ service_id })
     } catch {
-      return res
-        .status(400)
-        .json(createErrorResponse({ error: "Invalid service" }))
+      res.status(400).json(createErrorResponse({ error: "Invalid service" }))
+      return
     }
 
     if (!service) {
-      return res
-        .status(400)
-        .json(createErrorResponse({ error: "Invalid service" }))
+      res.status(400).json(createErrorResponse({ error: "Invalid service" }))
+      return
     }
 
     res.json(createResponse(await serializeService(service)))

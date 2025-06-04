@@ -9,5 +9,6 @@ adminRouter.get("/activity", adminAuthorized, async (req, res) => {
   const daily = await database.getDailyActivity()
   const weekly = await database.getWeeklyActivity()
   const monthly = await database.getMonthlyActivity()
-  return res.json(createResponse({ daily, weekly, monthly }))
+  res.json(createResponse({ daily, weekly, monthly }))
+  return
 })
