@@ -44,7 +44,10 @@ export async function sendDM(
   }
 }
 
-export async function notifyBot(endpoint: string, body: any) {
+export async function notifyBot(
+  endpoint: string,
+  body: any,
+): Promise<BotThreadCreateResponse> {
   const url = `${env.DISCORD_BOT_URL}/${endpoint}`
 
   const resp = await fetch(url, {
@@ -58,21 +61,23 @@ export async function notifyBot(endpoint: string, body: any) {
   })
 
   if (!resp.ok) {
-    console.log(resp.text())
-    return null
+    throw new Error("Failed to parse bot response")
   }
 
   return resp.json()
 }
 
-export async function createThread(object: DBOfferSession | DBOrder): Promise<{
+export interface BotThreadCreateResponse {
   result: {
     invite_code: string
     thread?: { thread_id: string }
     message?: string
     failed: boolean
   }
-}> {
+}
+export async function createThread(
+  object: DBOfferSession | DBOrder,
+): Promise<BotThreadCreateResponse> {
   const contractor = object.contractor_id
     ? await database.getContractor({ contractor_id: object.contractor_id })
     : null

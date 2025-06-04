@@ -51,7 +51,8 @@ threadRouter.post("/message", async (req, res) => {
   } catch (e) {
     const [session] = await database.getOfferSessions({ thread_id })
     if (!session) {
-      return res.json({ result: "Success" })
+      res.json({ result: "Success" })
+      return
     }
 
     chat = await database.getChat({ session_id: session.id })
@@ -86,10 +87,12 @@ threadRouter.post("/order/status", async (req, res) => {
   } = req.body
 
   if (!thread_id && !order_id) {
-    return res.status(400).json({ error: "Invalid order" })
+    res.status(400).json({ error: "Invalid order" })
+    return
   }
   if (thread_id && order_id) {
-    return res.status(400).json({ error: "Invalid order" })
+    res.status(400).json({ error: "Invalid order" })
+    return
   }
 
   let order
@@ -101,7 +104,8 @@ threadRouter.post("/order/status", async (req, res) => {
     }
   } catch (e) {
     console.error(e)
-    return res.status(400).json({ error: "Invalid order" })
+    res.status(400).json({ error: "Invalid order" })
+    return
   }
 
   const user = await database.getUser({ discord_id })
@@ -128,14 +132,16 @@ threadRouter.post("/market/quantity/:opt", async (req, res) => {
   try {
     user = await database.getUser({ discord_id: discord_id })
   } catch (e) {
-    return res.json({ result: "Success", thread_ids: [] })
+    res.json({ result: "Success", thread_ids: [] })
+    return
   }
 
   let listing
   try {
     listing = await database.getMarketListing({ listing_id })
   } catch {
-    return res.status(400).json({ error: "Invalid listing" })
+    res.status(400).json({ error: "Invalid listing" })
+    return
   }
 
   let new_quantity = quantity
@@ -144,7 +150,8 @@ threadRouter.post("/market/quantity/:opt", async (req, res) => {
   } else if (opt === "sub") {
     new_quantity = listing.quantity_available - quantity
     if (new_quantity < 0) {
-      return res.status(400).json({ error: "Invalid quantity" })
+      res.status(400).json({ error: "Invalid quantity" })
+      return
     }
   }
 
@@ -158,7 +165,8 @@ threadRouter.get("/user/:discord_id/assigned", async (req, res) => {
   try {
     user = await database.getUser({ discord_id: discord_id })
   } catch (e) {
-    return res.json({ result: "Success", thread_ids: [] })
+    res.json({ result: "Success", thread_ids: [] })
+    return
   }
 
   const orders = await database.getRelatedActiveOrders(user.user_id)
@@ -182,7 +190,8 @@ threadRouter.get("/user/:discord_id/contractors", async (req, res) => {
   try {
     user = await database.getUser({ discord_id: discord_id })
   } catch (e) {
-    return res.json({ result: "Success", thread_ids: [] })
+    res.json({ result: "Success", thread_ids: [] })
+    return
   }
 
   const contractors = await database.getUserContractors({
@@ -215,7 +224,8 @@ threadRouter.get("/user/:discord_id/listings", async (req, res) => {
   try {
     user = await database.getUser({ discord_id: discord_id })
   } catch (e) {
-    return res.json({ result: "Success", thread_ids: [] })
+    res.json({ result: "Success", thread_ids: [] })
+    return
   }
 
   const listings = await database.searchMarket(
@@ -241,7 +251,8 @@ threadRouter.get(
     try {
       user = await database.getUser({ discord_id: discord_id })
     } catch (e) {
-      return res.json({ result: "Success", thread_ids: [] })
+      res.json({ result: "Success", thread_ids: [] })
+      return
     }
 
     const spectrum_id = req.params["spectrum_id"]
@@ -289,7 +300,8 @@ threadRouter.get("/user/:discord_id", async (req, res) => {
   try {
     user = await database.getUser({ discord_id: discord_id })
   } catch (e) {
-    return res.json({ result: "Success", thread_ids: [] })
+    res.json({ result: "Success", thread_ids: [] })
+    return
   }
 
   const orders = await database.getRelatedOrders(user.user_id)

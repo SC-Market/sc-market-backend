@@ -21,7 +21,7 @@ export async function guestAuthorized(
   if (req.isAuthenticated()) {
     next()
   } else {
-    res.status(401).send({ error: "Unauthenticated" })
+    res.status(401).json({ error: "Unauthenticated" })
   }
 }
 
@@ -46,24 +46,28 @@ export async function userAuthorized(
   req: Request,
   res: Response,
   next: NextFunction,
-) {
+): Promise<void> {
   try {
     if (req.isAuthenticated()) {
       const user = req.user as User
       if (user.banned) {
-        return res.status(418).json({ error: "Internal server error" })
+        res.status(418).json({ error: "Internal server error" })
+        return
       }
       if (user.role === "user" || user.role === "admin") {
         return next()
       } else {
-        return res.status(403).send({ error: "Unauthorized" })
+        res.status(403).json({ error: "Unauthorized" })
+        return
       }
     } else {
-      return res.status(401).send({ error: "Unauthenticated" })
+      res.status(401).json({ error: "Unauthenticated" })
+      return
     }
   } catch (e) {
     console.error(e)
-    return res.status(400)
+    res.status(400)
+    return
   }
 }
 
@@ -75,15 +79,17 @@ export async function verifiedUser(
   if (req.isAuthenticated()) {
     const user = req.user as User
     if (user.banned) {
-      return res.status(418).json({ error: "Internal server error" })
+      res.status(418).json({ error: "Internal server error" })
+      return
     }
     if (!user.rsi_confirmed) {
-      return res.status(401).send({ error: "Your account is not verified." })
+      res.status(401).json({ error: "Your account is not verified." })
+      return
     } else {
       next()
     }
   } else {
-    res.status(401).send({ error: "Unauthenticated" })
+    res.status(401).json({ error: "Unauthenticated" })
   }
 }
 
@@ -101,11 +107,11 @@ export function adminAuthorized(
     if (user.role === "admin") {
       next()
     } else {
-      res.status(403).send({ error: "Unauthorized" })
+      res.status(403).json({ error: "Unauthorized" })
       return
     }
   } else {
-    res.status(401).send({ error: "Unauthenticated" })
+    res.status(401).json({ error: "Unauthenticated" })
   }
 }
 

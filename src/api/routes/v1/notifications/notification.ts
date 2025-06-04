@@ -12,7 +12,8 @@ notificationRouter.post("/update", userAuthorized, async (req, res, next) => {
 
   for (const { notification_id, read } of values) {
     if (!notification_id || !read) {
-      return res.status(400).json({ error: "Invalid formatting" })
+      res.status(400).json({ error: "Invalid formatting" })
+      return
     }
 
     const notifications = await database.getNotifications({
@@ -21,7 +22,8 @@ notificationRouter.post("/update", userAuthorized, async (req, res, next) => {
     })
 
     if (!notifications.length) {
-      return res.status(400).json({ error: "Invalid notification" })
+      res.status(400).json({ error: "Invalid notification" })
+      return
     }
 
     await database.updateNotifications(
@@ -43,11 +45,13 @@ notificationRouter.post("/delete", userAuthorized, async (req, res, next) => {
     })
 
     if (!notification_id) {
-      return res.status(400).json({ error: "Invalid formatting" })
+      res.status(400).json({ error: "Invalid formatting" })
+      return
     }
 
     if (!notifications.length) {
-      return res.status(400).json({ error: "Invalid notification" })
+      res.status(400).json({ error: "Invalid notification" })
+      return
     }
 
     await database.deleteNotifications({

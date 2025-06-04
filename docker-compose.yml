@@ -1,4 +1,4 @@
-version: '3'
+version: "3"
 services:
   nginx:
     image: nginx:1.16-alpine
@@ -9,7 +9,7 @@ services:
       - ./config/certificates:/var/www/sc-market.space/certificates
       - ./config/nginx:/etc/nginx/conf.d
 
-    command: "/bin/sh -c 'while :; do sleep 6h & wait $${!}; nginx -s reload; done & nginx -g \"daemon off;\"'"
+    command: '/bin/sh -c ''while :; do sleep 6h & wait $${!}; nginx -s reload; done & nginx -g "daemon off;"'''
 
   web:
     build: .

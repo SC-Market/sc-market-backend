@@ -297,9 +297,8 @@ chatsRouter.post(
     }
 
     if (!content) {
-      return res
-        .status(400)
-        .json(createErrorResponse({ error: "Invalid content" }))
+      res.status(400).json(createErrorResponse({ error: "Invalid content" }))
+      return
     }
 
     const chat = req.chat!

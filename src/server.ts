@@ -125,10 +125,12 @@ const sessionMiddleware = session({
 app.use(sessionMiddleware)
 
 app.use(express.json({ limit: "2mb" }))
-app.use(express.urlencoded({
-  extended: true,
-  limit: "2mb",
-}))
+app.use(
+  express.urlencoded({
+    extended: true,
+    limit: "2mb",
+  }),
+)
 
 app.use(cors(corsOptions))
 app.use(express.json())
@@ -209,7 +211,7 @@ app.get("/sitemap.xml", async function (req, res) {
     res.header("Content-Encoding", "gzip")
 
     if (sitemap) {
-      res.send(sitemap)
+      res.json(sitemap)
       return
     }
 

@@ -243,9 +243,10 @@ ordersRouter.post(
           contractor_id,
         )
         if (!role) {
-          return res
+          res
             .status(400)
             .json(createErrorResponse({ message: "Invalid assignee" }))
+          return
         }
       }
     } else {
@@ -748,27 +749,31 @@ ordersRouter.get(
     const args = await convert_order_search_query(req)
     if (!(args.contractor_id || args.assigned_id || args.customer_id)) {
       if (user.role !== "admin") {
-        return res.status(400).json(createErrorResponse("Missing permissions."))
+        res.status(400).json(createErrorResponse("Missing permissions."))
+        return
       }
     }
 
     if (args.contractor_id) {
       if (!(await is_member(args.contractor_id, user.user_id))) {
-        return res.status(400).json(createErrorResponse("Missing permissions."))
+        res.status(400).json(createErrorResponse("Missing permissions."))
+        return
       }
     }
 
     if (args.assigned_id && args.assigned_id !== user.user_id) {
-      return res.status(400).json(createErrorResponse("Missing permissions."))
+      res.status(400).json(createErrorResponse("Missing permissions."))
+      return
     }
 
     const result = await search_orders(args)
-    return res.json(
+    res.json(
       createResponse({
         item_counts: result.item_counts,
         items: await Promise.all(result.items.map(formatOrderStub)),
       }),
     )
+    return
   },
 )
 
@@ -877,7 +882,8 @@ ordersRouter.post(
     } = req.body
 
     if (!["customer", "contractor"].includes(role)) {
-      return res.status(400).json({ message: "Invalid role" })
+      res.status(400).json({ message: "Invalid role" })
+      return
     }
 
     const amCustomer = order.customer_id === user.user_id
@@ -891,24 +897,26 @@ ordersRouter.post(
         )))
 
     if (role === "customer" && !amCustomer) {
-      return res
+      res
         .status(403)
         .json({ message: "You are not authorized to review this order!" })
+      return
     }
     if (role === "contractor" && !amContractor) {
-      return res
+      res
         .status(403)
         .json({ message: "You are not authorized to review this order!" })
+      return
     }
 
     if (!content) {
-      return res
-        .status(400)
-        .json({ message: "Message content cannot be empty!" })
+      res.status(400).json({ message: "Message content cannot be empty!" })
+      return
     }
 
     if (!rating || rating > 5 || rating <= 0 || rating % 0.5 !== 0) {
-      return res.status(400).json({ message: "Invalid rating!" })
+      res.status(400).json({ message: "Invalid rating!" })
+      return
     }
 
     const existing = await database.getOrderReview({
@@ -916,9 +924,10 @@ ordersRouter.post(
       role: role as "customer" | "contractor",
     })
     if (existing) {
-      return res
+      res
         .status(409)
         .json({ message: "A review has already been left on this order" })
+      return
     }
 
     const review = await database.createOrderReview({
@@ -1214,11 +1223,12 @@ async function updateAssigned(
   const user = req.user as User
 
   if (order.customer_id !== user.user_id) {
-    return res.status(403).json(
+    res.status(403).json(
       createErrorResponse({
         message: "You are not authorized to accept this application",
       }),
     )
+    return
   }
 
   if (order.assigned_id || order.contractor_id) {
@@ -1235,9 +1245,10 @@ async function updateAssigned(
         spectrum_id: contractor_spectrum_id,
       })
     } catch {
-      return res
+      res
         .status(400)
         .json(createErrorResponse({ message: "Invalid contractor" }))
+      return
     }
 
     await database.updateOrder(order.order_id, {
@@ -1640,9 +1651,8 @@ ordersRouter.get(
       try {
         order = await database.getOrder({ order_id: order_id })
       } catch (e) {
-        return res
-          .status(404)
-          .json(createErrorResponse({ message: "Invalid order" }))
+        res.status(404).json(createErrorResponse({ message: "Invalid order" }))
+        return
       }
       const user = req.user as User | null | undefined
 
@@ -1650,20 +1660,22 @@ ordersRouter.get(
         const unrelated = !(await is_related_to_order(order, user))
 
         if (unrelated) {
-          return res.status(403).json(
+          res.status(403).json(
             createErrorResponse({
               message: "You are not authorized to view this order",
             }),
           )
+          return
         }
       }
 
       if (!user) {
-        return res.status(403).json(
+        res.status(403).json(
           createErrorResponse({
             message: "You are not authorized to view this order",
           }),
         )
+        return
       }
 
       // TODO: Factor order details into another function
@@ -1731,9 +1743,10 @@ ordersRouter.post(
   related_to_order,
   async (req, res) => {
     if (req.order!.thread_id) {
-      return res
+      res
         .status(409)
         .json(createErrorResponse({ message: "Order already has a thread!" }))
+      return
     }
 
     try {
@@ -1744,11 +1757,13 @@ ordersRouter.post(
         })
       } else {
         logger.error("Failed to create thread", bot_response)
-        return res.status(500).json({ message: bot_response.result.message })
+        res.status(500).json({ message: bot_response.result.message })
+        return
       }
     } catch (e) {
       logger.error("Failed to create thread", e)
-      return res.status(500).json({ message: "An unknown error occurred" })
+      res.status(500).json({ message: "An unknown error occurred" })
+      return
     }
     res.status(201).json(
       createResponse({

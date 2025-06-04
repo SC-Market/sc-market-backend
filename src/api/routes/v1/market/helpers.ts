@@ -259,10 +259,11 @@ export async function handle_quantity_update(
           "manage_market",
         ))
       ) {
-        return res.status(403).json({
+        res.status(403).json({
           error:
             "You are not authorized to update listings on behalf of this contractor!",
         })
+        return
       }
     } else {
       if (listing.user_seller_id !== user.user_id) {
@@ -274,15 +275,18 @@ export async function handle_quantity_update(
   }
 
   if (listing.status === "archived") {
-    return res.status(400).json({ error: "Cannot update archived listing" })
+    res.status(400).json({ error: "Cannot update archived listing" })
+    return
   }
 
   if (quantity_available === undefined) {
-    return res.status(400).json({ error: "Missing required fields" })
+    res.status(400).json({ error: "Missing required fields" })
+    return
   }
 
   if (quantity_available < 0) {
-    return res.status(400).send({ error: "Invalid quantity" })
+    res.status(400).json({ error: "Invalid quantity" })
+    return
   }
 
   await database.updateMarketListing(listing.listing_id, { quantity_available })

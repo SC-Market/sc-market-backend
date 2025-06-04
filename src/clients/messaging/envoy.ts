@@ -73,7 +73,7 @@ class EnvoyManager {
 
     this.envoy.getUsersInRoom((message) => {
       const subs = this.subscribers.get(message.chat_id)
-      return Array.from(subs || []).map((s) => ({ user_id: s } as User))
+      return Array.from(subs || []).map((s) => ({ user_id: s }) as User)
     })
   }
 

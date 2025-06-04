@@ -1,5 +1,5 @@
 import { createLogger, format, transports } from "winston"
-import {env} from "../config/env.js";
+import { env } from "../config/env.js"
 
 const { Console } = transports
 

@@ -258,7 +258,7 @@ export class DeleteMessageCommand implements Command {
 
 class WebsocketConnection implements MessagingSubscriber {
   ws!: WebSocket
-  // eslint-disable-next-line no-undef
+
   pingTimeout!: NodeJS.Timeout
   user: User
   handler!: MessagingHandler
