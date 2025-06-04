@@ -54,16 +54,16 @@ export async function userAuthorized(
         return res.status(418).json({ error: "Internal server error" })
       }
       if (user.role === "user" || user.role === "admin") {
-        next()
+        return next()
       } else {
-        res.status(403).send({ error: "Unauthorized" })
+        return res.status(403).send({ error: "Unauthorized" })
       }
     } else {
-      res.status(401).send({ error: "Unauthenticated" })
+      return res.status(401).send({ error: "Unauthenticated" })
     }
   } catch (e) {
     console.error(e)
-    res.status(400)
+    return res.status(400)
   }
 }
 

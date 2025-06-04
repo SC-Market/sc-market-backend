@@ -8,7 +8,6 @@ import { Profile, Strategy } from "passport-discord"
 import refresh from "passport-oauth2-refresh"
 
 import * as oauth2 from "passport-oauth2"
-import bodyParser from "body-parser"
 import { User } from "./api/routes/v1/api-models.js"
 import enableWS from "express-ws"
 import wrapPGSession from "connect-pg-simple"
@@ -100,7 +99,7 @@ const sessionDBaccess = new SessionPool({
   host: dbConfig.host || env.DATABASE_HOST || "localhost",
   user: dbConfig.username || env.DATABASE_USER || "postgres",
   password: dbConfig.password || env.DATABASE_PASS || "",
-  database: dbConfig.dbname || env.DATABASE_TARGET || "sashimi.me",
+  database: dbConfig.dbname || env.DATABASE_TARGET || "postgres",
   port:
     (dbConfig.port as unknown as number) ||
     (env.DATABASE_PORT ? +env.DATABASE_PORT : 5431),
@@ -125,14 +124,11 @@ const sessionMiddleware = session({
 
 app.use(sessionMiddleware)
 
-// configure the app to use bodyParser()
-app.use(
-  bodyParser.urlencoded({
-    extended: true,
-    limit: "2mb",
-  }),
-)
-app.use(bodyParser.json({ limit: "2mb" }))
+app.use(express.json({ limit: "2mb" }))
+app.use(express.urlencoded({
+  extended: true,
+  limit: "2mb",
+}))
 
 app.use(cors(corsOptions))
 app.use(express.json())
@@ -457,12 +453,12 @@ httpServer.listen(env.BACKEND_PORT || 80)
 
 const discord_app = express()
 discord_app.use(
-  bodyParser.urlencoded({
+  express.urlencoded({
     extended: true,
     limit: "2mb",
   }),
 )
-discord_app.use(bodyParser.json({ limit: "2mb" }))
+discord_app.use(express.json({ limit: "2mb" }))
 discord_app.use("/register", registrationRouter)
 discord_app.use("/threads", threadRouter)
 discord_app.listen(discord_backend_url.port || 8081)

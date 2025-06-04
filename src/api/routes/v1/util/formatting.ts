@@ -13,7 +13,6 @@ import {
   DBMultipleComplete,
   DBMultipleListingComplete,
   DBMultipleListingCompositeComplete,
-  DBOffer,
   DBOfferSession,
   DBOrder,
   DBPriceHistory,
@@ -30,6 +29,7 @@ import { User } from "../api-models.js"
 import { is_member } from "./permissions.js"
 import moment from "moment"
 import { serializeOrderDetails } from "../orders/serializers.js"
+import { ListingBase } from "../market/types.js"
 
 export async function formatSearchResult(listing: DBMarketSearchResult) {
   if (listing.listing_type === "unique") {
@@ -356,7 +356,9 @@ export async function formatMarketMultipleComplete(
     complete.listings.map((l) => formatMultipleListingComplete(l, isPrivate)),
   )
   if (!isPrivate) {
-    listings = listings.filter((l) => l.listing.status === "active")
+    listings = listings.filter(
+      (l) => l.listing.status === "active" && l.listing.expiration > new Date(),
+    )
   }
 
   const photos =
@@ -429,20 +431,20 @@ export async function formatMultipleListingCompleteComposite(
 export async function formatListingBase(
   listing: DBMarketListing,
   isPrivate: boolean = false,
-): Promise<any> {
+): Promise<ListingBase> {
   const public_details = {
     price: +listing.price,
     timestamp: listing.timestamp,
     quantity_available: listing.quantity_available,
     listing_id: listing.listing_id,
-    user_seller:
-      listing.user_seller_id &&
-      (await database.getMinimalUser({ user_id: listing.user_seller_id })),
-    contractor_seller:
-      listing.contractor_seller_id &&
-      (await database.getMinimalContractor({
-        contractor_id: listing.contractor_seller_id,
-      })),
+    user_seller: listing.user_seller_id
+      ? await database.getMinimalUser({ user_id: listing.user_seller_id })
+      : null,
+    contractor_seller: listing.contractor_seller_id
+      ? await database.getMinimalContractor({
+          contractor_id: listing.contractor_seller_id,
+        })
+      : null,
     status: listing.status,
     sale_type: listing.sale_type,
     expiration: listing.expiration,

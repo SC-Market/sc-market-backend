@@ -152,6 +152,35 @@ $$
     LANGUAGE plpgsql
     STABLE;
 
+ABORT;
+CREATE OR REPLACE FUNCTION get_average_rating_float(UUID, UUID) RETURNS float AS
+$$
+BEGIN
+    IF $1 IS NOT NULL THEN
+        RETURN (SELECT COALESCE(AVG(CAST(order_reviews.rating as FLOAT)), 0.) as t
+                FROM order_reviews
+                         JOIN orders ON order_reviews.order_id = orders.order_id
+                WHERE (CASE
+                           WHEN assigned_id = $1 AND contractor_id IS null AND role = 'customer' THEN TRUE
+                           WHEN customer_id = $1 AND role = 'contractor' THEN TRUE
+                           ELSE FALSE
+                    END)
+                  AND rating > 0);
+    ELSE
+        RETURN (SELECT COALESCE(AVG(CAST(order_reviews.rating as FLOAT)), 0.) as t
+                FROM order_reviews
+                         JOIN orders ON order_reviews.order_id = orders.order_id
+                WHERE contractor_id = $2
+                  AND role = 'customer'
+                  AND rating > 0);
+    END IF;
+END;
+$$
+    LANGUAGE plpgsql
+    STABLE;
+
+BEGIN;
+DROP MATERIALIZED VIEW market_search_materialized;
 DROP VIEW market_search_complete;
 DROP VIEW market_search;
 CREATE OR REPLACE VIEW market_search AS
@@ -184,7 +213,7 @@ SELECT market_listings.listing_id                                               
        market_listings.expiration                                                                    AS expiration,
        get_total_rating(market_listings.user_seller_id,
                         market_listings.contractor_seller_id)                                        AS total_rating,
-       get_average_rating(market_listings.user_seller_id, market_listings.contractor_seller_id)      AS avg_rating,
+       get_average_rating_float(market_listings.user_seller_id, market_listings.contractor_seller_id)      AS avg_rating,
        market_listing_details.details_id                                                             as details_id,
        to_tsvector('english',
                    CONCAT(ARRAY [market_listing_details.title, market_listing_details.description])) AS textsearch,
@@ -219,19 +248,19 @@ SELECT market_multiples.multiple_id                                             
        MAX(market_listings.timestamp)                                                                AS timestamp,
        MAX(market_listings.expiration)                                                               AS expiration,
        MAX(get_total_rating(market_listings.user_seller_id, market_listings.contractor_seller_id))   AS total_rating,
-       MAX(get_average_rating(market_listings.user_seller_id, market_listings.contractor_seller_id)) AS avg_rating,
+       MAX(get_average_rating_float(market_listings.user_seller_id, market_listings.contractor_seller_id)) AS avg_rating,
        main_details.details_id                                                                       as details_id,
        to_tsvector('english',
                    main_details.title || ' ' || main_details.description ||
                    (SELECT STRING_AGG(entry_details.title || ' ' || entry_details.description, ','))
        )                                                                                             AS textsearch,
        CASE
-           WHEN NOT EVERY(market_listings.status = 'inactive') THEN 'active'
+           WHEN bool_or(market_listings.status = 'active') THEN 'active'
            ELSE 'inactive'
            END
                                                                                                      AS status,
        CASE
-           WHEN NOT EVERY(market_listings.internal) THEN false
+           WHEN bool_or(NOT market_listings.internal) THEN false
            ELSE true
            END
                                                                                                      AS internal,
@@ -267,7 +296,7 @@ SELECT game_items.id                                                 AS listing_
        MAX(market_listings.timestamp)                                AS timestamp,
        MAX(market_listings.expiration)                               AS expiration,
        MAX(get_total_rating(user_seller_id, contractor_seller_id))   AS total_rating,
-       MAX(get_average_rating(user_seller_id, contractor_seller_id)) AS avg_rating,
+       MAX(get_average_rating_float(user_seller_id, contractor_seller_id)) AS avg_rating,
        (SELECT details_id
         FROM market_listing_details d
         WHERE market_listing_details.game_item_id = d.game_item_id
@@ -299,8 +328,6 @@ FROM game_items
          LEFT JOIN market_listings ON market_unique_listings.listing_id = market_listings.listing_id AND
                                       market_listings.quantity_available > 0 AND market_listings.status = 'active'
 GROUP BY market_listing_details.game_item_id, game_items.id;
-
-REFRESH MATERIALIZED VIEW market_search_materialized;
 
 CREATE OR REPLACE VIEW market_search_complete AS
 SELECT market_search.listing_id,
@@ -346,6 +373,8 @@ FROM market_search
 CREATE MATERIALIZED VIEW market_search_materialized AS
 SELECT *
 FROM market_search_complete;
+
+REFRESH MATERIALIZED VIEW market_search_materialized;
 
 CREATE UNIQUE INDEX market_search_materialized_listing_id_index ON market_search_materialized (listing_id);
 CREATE INDEX market_search_materialized_price_index ON market_search_materialized (price);
