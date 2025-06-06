@@ -5,12 +5,7 @@ import { profileRouter } from "./profiles/profiles.js"
 import { commodityRouter } from "./commodities/commodities.js"
 import { contractorsRouter } from "./contractors/contractors.js"
 import { ordersRouter } from "./orders/orders.js"
-import {
-  transactionRouter,
-  transactionsRouter,
-} from "./transactions/transactions.js"
 import { deliveriesRouter, deliveryRouter } from "./deliveries/deliveries.js"
-import { shipRouter, shipsRouter } from "./ships/ships.js"
 import { marketRouter } from "./market/market.js"
 import { notificationRouter } from "./notifications/notification.js"
 import { recruitingRouter } from "./recruiting/recruiting.js"
@@ -42,13 +37,13 @@ apiRouter.use("/offers", offersRouter)
 apiRouter.use("/offer", offerRouter)
 apiRouter.use("/services", servicesRouter)
 
-apiRouter.use("/transaction", transactionRouter)
-apiRouter.use("/transactions", transactionsRouter)
+// apiRouter.use("/transaction", transactionRouter)
+// apiRouter.use("/transactions", transactionsRouter)
 
 apiRouter.use("/delivery", deliveryRouter)
 apiRouter.use("/deliveries", deliveriesRouter)
 
-apiRouter.use("/ship", shipRouter)
-apiRouter.use("/ships", shipsRouter)
+// apiRouter.use("/ship", shipRouter)
+// apiRouter.use("/ships", shipsRouter)
 
 apiRouter.use("/wiki", wikiRouter)
