@@ -8,7 +8,6 @@ import {
   createOfferMessageNotification,
   createOrderMessageNotification,
 } from "../util/notifications.js"
-import { envoyManager } from "../../../../clients/messaging/envoy.js"
 import { eqSet, handle_chat_response } from "./helpers.js"
 import { serializeMessage } from "./serializers.js"
 import { related_to_order } from "../orders/middleware.js"
@@ -22,6 +21,7 @@ import {
   Response403,
   Response404,
 } from "../openapi.js"
+import { chatServer } from "../../../../clients/messaging/websocket.js"
 
 export const chatsRouter = express.Router()
 
@@ -309,7 +309,7 @@ chatsRouter.post(
       author: user.user_id,
     })
 
-    envoyManager.envoy.emitMessage(await serializeMessage(message))
+    chatServer.emitMessage(await serializeMessage(message))
 
     const order = req.order
     const session = req.offer_session

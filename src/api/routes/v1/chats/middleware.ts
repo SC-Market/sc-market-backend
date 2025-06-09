@@ -4,6 +4,12 @@ import { createErrorResponse } from "../util/response.js"
 import { is_related_to_order } from "../orders/helpers.js"
 import { is_related_to_offer } from "../offers/helpers.js"
 import { User } from "../api-models.js"
+import {
+  DBChat,
+  DBOffer,
+  DBOfferSession,
+  DBOrder,
+} from "../../../../clients/database/db-models.js"
 
 export async function valid_chat(
   req: express.Request,
@@ -22,14 +28,14 @@ export async function valid_chat(
   next()
 }
 
-export async function related_to_chat(
-  req: express.Request,
-  res: express.Response,
-  next: express.NextFunction,
-) {
-  const user = req.user as User
-  const chat = req.chat!
-
+export async function can_view_chat(
+  user: User,
+  chat: DBChat,
+): Promise<{
+  result: boolean
+  order?: DBOrder
+  offer_session?: DBOfferSession
+}> {
   const participants = await database.getChatParticipants({
     chat_id: chat.chat_id,
   })
@@ -45,18 +51,33 @@ export async function related_to_chat(
 
   if (!participants.includes(user.user_id)) {
     if (order && !(await is_related_to_order(order, user))) {
-      res.status(403).json(createErrorResponse({ error: "Not authorized" }))
-      return
+      return { result: false }
     }
 
     if (session && !(await is_related_to_offer(user.user_id, session))) {
-      res.status(403).json(createErrorResponse({ error: "Not authorized" }))
-      return
+      return { result: false }
     }
   }
 
-  req.order = order
-  req.offer_session = session
+  return { result: true, order, offer_session: session }
+}
+
+export async function related_to_chat(
+  req: express.Request,
+  res: express.Response,
+  next: express.NextFunction,
+) {
+  const user = req.user as User
+  const chat = req.chat!
+
+  const result = await can_view_chat(user, chat)
+
+  if (!result.result) {
+    res.status(403).json(createErrorResponse({ error: "Not authorized" }))
+  }
+
+  req.order = result.order || undefined
+  req.offer_session = result.offer_session || undefined
 
   next()
 }

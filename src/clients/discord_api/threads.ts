@@ -1,6 +1,5 @@
 import { database } from "../database/knex-db.js"
 import express from "express"
-import { envoyManager } from "../messaging/envoy.js"
 import { serializeMessage } from "../../api/routes/v1/chats/serializers.js"
 import { handleStatusUpdate } from "../../api/routes/v1/orders/helpers.js"
 import { serializeAssignedOrder } from "../../api/routes/v1/orders/serializers.js"
@@ -10,6 +9,7 @@ import {
   convertQuery,
   handle_quantity_update,
 } from "../../api/routes/v1/market/helpers.js"
+import { chatServer } from "../messaging/websocket.js"
 
 export const threadRouter = express.Router()
 
@@ -64,7 +64,7 @@ threadRouter.post("/message", async (req, res) => {
     content: finalContent,
   })
 
-  envoyManager.envoy.emitMessage(await serializeMessage(message))
+  chatServer.emitMessage(await serializeMessage(message))
 
   if (user) {
     database.upsertDailyActivity(user.user_id)

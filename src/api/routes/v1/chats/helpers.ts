@@ -1,9 +1,9 @@
 import express from "express"
 import { database } from "../../../../clients/database/knex-db.js"
 import { cdn } from "../../../../clients/cdn/cdn.js"
-import { envoyManager } from "../../../../clients/messaging/envoy.js"
 import { serializeMessage } from "./serializers.js"
 import { createResponse } from "../util/response.js"
+import { chatServer } from "../../../../clients/messaging/websocket.js"
 
 export function eqSet<T>(as: Set<T>, bs: Set<T>) {
   if (as.size !== bs.size) return false
@@ -68,5 +68,5 @@ export async function sendSystemMessage(
     author: null,
   })
 
-  envoyManager.envoy.emitMessage(await serializeMessage(message))
+  chatServer.emitMessage(await serializeMessage(message))
 }

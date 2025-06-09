@@ -29,10 +29,11 @@ import {
 import { trackActivity } from "./api/middleware/activity.js"
 import { messagingHandler } from "./clients/messaging/messaging.js"
 import { createServer } from "node:http"
-import { envoyManager } from "./clients/messaging/envoy.js"
 import { oapi } from "./api/routes/v1/openapi.js"
 import { env } from "./config/env.js"
 import { formatListingSlug } from "./api/routes/v1/market/helpers.js"
+import { Server } from "socket.io"
+import { chatServer } from "./clients/messaging/websocket.js"
 
 const SessionPool = pg.Pool
 
@@ -419,7 +420,13 @@ messagingHandler.register(app)
 
 app.use(errorHandler)
 const httpServer = createServer(app)
-envoyManager.register(httpServer, allowlist)
+const io = new Server(httpServer, {
+  path: "/ws",
+  cors: {
+    credentials: true,
+    origin: allowlist,
+  },
+})
 
 function onlyForHandshake(middleware: RequestHandler): RequestHandler {
   return (req, res, next) => {
@@ -433,10 +440,10 @@ function onlyForHandshake(middleware: RequestHandler): RequestHandler {
   }
 }
 
-envoyManager.envoy.io.engine.use(onlyForHandshake(sessionMiddleware))
-envoyManager.envoy.io.engine.use(onlyForHandshake(passport.initialize()))
-envoyManager.envoy.io.engine.use(onlyForHandshake(passport.session()))
-envoyManager.envoy.io.engine.use(
+io.engine.use(onlyForHandshake(sessionMiddleware))
+io.engine.use(onlyForHandshake(passport.initialize()))
+io.engine.use(onlyForHandshake(passport.session()))
+io.engine.use(
   onlyForHandshake((req, res, next) => {
     if (req.user) {
       next()
@@ -447,7 +454,7 @@ envoyManager.envoy.io.engine.use(
   }),
 )
 
-envoyManager.initialize()
+chatServer.initialize(io)
 
 // Start the app
 console.log(`server up on port ${hostname()}:${env.BACKEND_PORT || 80}`)

@@ -55,25 +55,25 @@ async function fetchProfile(spectrum_id: string) {
     } catch (e) {}
   }
 
-  let nydoo
-  try {
-    nydoo = await fetchRSIProfileNydoo(spectrum_id)
-  } catch (e) {
-    console.log("Failed to fetch Nydoo", e)
-    nydoo = undefined
-  }
-
-  if (nydoo) {
-    try {
-      return {
-        handle: nydoo.data[0].user_handle,
-        display_name: nydoo.data[0].user_displayname,
-        biography: nydoo.data[0].user_biography || "",
-        profile_image: nydoo.data[0].user_profile_image,
-      }
-    } catch (e) {}
-  }
-  logger.error("Malformed Nydoo data", nydoo)
+  // let nydoo
+  // try {
+  //   nydoo = await fetchRSIProfileNydoo(spectrum_id)
+  // } catch (e) {
+  //   console.log("Failed to fetch Nydoo", e)
+  //   nydoo = undefined
+  // }
+  //
+  // if (nydoo) {
+  //   try {
+  //     return {
+  //       handle: nydoo.data[0].user_handle,
+  //       display_name: nydoo.data[0].user_displayname,
+  //       biography: nydoo.data[0].user_biography || "",
+  //       profile_image: nydoo.data[0].user_profile_image,
+  //     }
+  //   } catch (e) {}
+  // }
+  // logger.error("Malformed Nydoo data", nydoo)
 
   try {
     return await fetchRSIProfileDirect(spectrum_id)
