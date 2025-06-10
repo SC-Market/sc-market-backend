@@ -38,6 +38,7 @@ import {
   verify_listings,
 } from "./helpers.js"
 import { oapi, Response400, Response401, Response403 } from "../openapi.js"
+import { createErrorResponse } from "../util/response.js"
 
 export const marketRouter = express.Router()
 
@@ -1524,14 +1525,14 @@ marketRouter.post(
 
       // Validate urls are valid
       if (photos.find((p: string) => !cdn.verifyExternalResource(p))) {
-        res.status(400).json({ error: "Invalid photo!" })
+        res.status(400).json({ message: "Invalid photo!" })
         return
       }
 
       // Validate auction end time
       if (sale_type === "auction") {
         if (new Date(end_time) < new Date()) {
-          res.status(400).json({ error: "Invalid end time" })
+          res.status(400).json({ message: "Invalid end time" })
           return
         }
       }
@@ -1541,7 +1542,7 @@ marketRouter.post(
       if (item_name) {
         const item = await database.getGameItem({ name: item_name })
         if (!item) {
-          res.status(400).json({ error: "Invalid item name" })
+          res.status(400).json({ message: "Invalid item name" })
           return
         }
         game_item_id = item.id
@@ -1599,7 +1600,7 @@ marketRouter.post(
       res.json(listings[0])
     } catch (e) {
       console.error(e)
-      res.status(500).json({ error: "Internal server error" })
+      res.status(500).json({ message: "Internal server error" })
       return
     }
   },
@@ -1746,7 +1747,7 @@ marketRouter.post(
       // Validate contractor exists and user has permissions
       const contractor = await database.getContractor({ spectrum_id })
       if (!contractor) {
-        res.status(400).json({ error: "Invalid contractor" })
+        res.status(400).json({ message: "Invalid contractor" })
         return
       }
 
@@ -1758,7 +1759,7 @@ marketRouter.post(
         ))
       ) {
         res.status(403).json({
-          error:
+          message:
             "You are not authorized to create listings on behalf of this contractor!",
         })
         return
@@ -1781,14 +1782,14 @@ marketRouter.post(
 
       // Validate photos are from CDN
       if (photos.find((p: string) => !cdn.verifyExternalResource(p))) {
-        res.status(400).json({ error: "Invalid photo!" })
+        res.status(400).json({ message: "Invalid photo!" })
         return
       }
 
       // Validate auction end time
       if (sale_type === "auction") {
         if (new Date(end_time) < new Date()) {
-          res.status(400).json({ error: "Invalid end time" })
+          res.status(400).json({ message: "Invalid end time" })
           return
         }
       }
@@ -1798,7 +1799,7 @@ marketRouter.post(
       if (item_name) {
         const item = await database.getGameItem({ name: item_name })
         if (!item) {
-          res.status(400).json({ error: "Invalid item name" })
+          res.status(400).json({ message: "Invalid item name" })
           return
         }
         game_item_id = item.id
@@ -1857,7 +1858,7 @@ marketRouter.post(
       res.json(listings[0])
     } catch (e) {
       console.error(e)
-      res.status(500).json({ error: "Internal server error" })
+      res.status(500).json({ message: "Internal server error" })
       return
     }
   },
