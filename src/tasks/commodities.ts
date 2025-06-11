@@ -1,4 +1,6 @@
 import { database } from "../clients/database/knex-db.js"
+import { DBMarketItem } from "../clients/database/db-models.js"
+import knex from "knex"
 
 interface CommodityResponse {
   status: string
@@ -80,7 +82,7 @@ export async function insertNewCommodity(
         .insert({
           name: commodityData.name,
           image_url: null,
-          type: commodityData.kind,
+          type: "Commodity",
           description: `${commodityData.name} (${commodityData.code}) - ${commodityData.kind} commodity`,
         })
         .returning<[{ id: string }]>("id")
@@ -96,7 +98,7 @@ export async function insertNewCommodity(
       // Insert market_listing_details with reference to the game item
       const [detailsId] = await trx("market_listing_details")
         .insert({
-          item_type: commodityData.kind,
+          item_type: "Commodity",
           title: commodityData.name,
           description: `${commodityData.name} (${commodityData.code}) - ${commodityData.kind} commodity`,
           game_item_id: gameItemId.id,
@@ -151,12 +153,31 @@ export async function fetchAndInsertCommodities(): Promise<void> {
   )
 
   for (const category of categories) {
+    if (category === "Commodity") {
+      continue
+    }
+
+    console.log(`Processing category: ${category}`)
+    await database
+      .knex("game_items")
+      .where({ type: category })
+      .update({
+        type: "Commodity",
+      })
+      .returning<DBMarketItem[]>("*")
+
+    await database
+      .knex("market_listing_details")
+      .where("item_type", category)
+      .update({ item_type: "Commodity" })
+
     await database
       .knex("game_item_categories")
-      .insert({
+      .where({
         category: "Commodity",
         subcategory: category,
       })
+      .delete()
       .onConflict(["subcategory"])
       .ignore()
   }
