@@ -7,7 +7,10 @@ import {
 import { database } from "../../../../clients/database/knex-db.js"
 import { cdn, external_resource_regex } from "../../../../clients/cdn/cdn.js"
 import { Contractor, User } from "../api-models.js"
-import { DBContractor } from "../../../../clients/database/db-models.js"
+import {
+  DBContractor,
+  DBContractorMemberRole,
+} from "../../../../clients/database/db-models.js"
 import { contractorDetails } from "../util/formatting.js"
 import { createContractorInviteNotification } from "../util/notifications.js"
 import { createNotificationWebhook } from "../util/webhooks.js"
@@ -16,7 +19,6 @@ import { convertQuery } from "../recruiting/recruiting.js"
 import {
   can_manage_role,
   get_min_position,
-  has_permission,
   is_member,
   outranks,
 } from "../util/permissions.js"
@@ -33,7 +35,11 @@ import {
   Response409,
 } from "../openapi.js"
 import { createErrorResponse, createResponse } from "../util/response.js"
-import { org_permission, valid_contractor } from "./middleware.js"
+import {
+  org_authorized,
+  org_permission,
+  valid_contractor,
+} from "./middleware.js"
 
 export const contractorsRouter = express.Router()
 
@@ -3188,6 +3194,80 @@ contractorsRouter.post(
       },
     )
     res.json(createResponse({ result: "Success" }))
-    return
+  },
+)
+
+contractorsRouter.post(
+  "/:spectrum_id/leave",
+  oapi.validPath({
+    summary: "Leave a contractor you are a member of",
+    deprecated: false,
+    description: "",
+    operationId: "leaveContractor",
+    tags: ["Contractors"],
+    parameters: [
+      {
+        name: "spectrum_id",
+        in: "path",
+        description: "",
+        required: true,
+        example: "",
+        schema: {
+          type: "string",
+        },
+      },
+    ],
+    responses: {
+      "201": {
+        description: "Created - Resource successfully created",
+        content: {
+          "application/json": {
+            schema: {
+              properties: {
+                data: {
+                  type: "object",
+                  properties: {},
+                },
+              },
+              required: ["data"],
+              type: "object",
+            },
+          },
+        },
+        headers: {},
+      },
+      "400": Response400,
+      "401": Response401,
+      "403": Response403,
+    },
+    security: [],
+  }),
+  userAuthorized,
+  org_authorized,
+  async (req, res, next) => {
+    const user = req.user as User
+    const contractor = req.contractor!
+    // TODO: Check not org owner
+    await database.removeContractorMember({
+      user_id: user.user_id,
+      contractor_id: contractor.contractor_id,
+    })
+    await database
+      .knex<DBContractorMemberRole>("contractor_member_roles")
+      .where({
+        user_id: user.user_id,
+      })
+      .andWhere(
+        database.knex.raw(
+          "role_id = ANY(?)",
+          database
+            .knex("contractor_roles")
+            .where({ contractor_id: contractor.contractor_id })
+            .select("role_id"),
+        ),
+      )
+      .delete()
+
+    res.json(createResponse({ result: "Success" }))
   },
 )

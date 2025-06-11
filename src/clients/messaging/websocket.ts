@@ -15,7 +15,7 @@ class WebsocketMessagingServer {
       const user = (socket.request as Request).user as User
       const user_id = user.user_id
       const chats = await database.getChatByParticipant(user_id)
-      socket.join(user_id)
+
       chats.forEach((chat) => {
         socket.join(chat.chat_id)
       })

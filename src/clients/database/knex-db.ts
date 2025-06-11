@@ -309,7 +309,9 @@ export class KnexDatabase implements Database {
    * @deprecated
    * @param where
    */
-  async removeContractorMember(where: any): Promise<DBContractorMember[]> {
+  async removeContractorMember(
+    where: Partial<DBContractorMember>,
+  ): Promise<DBContractorMember[]> {
     return this.knex<DBContractorMember>("contractor_members")
       .where(where)
       .delete()
@@ -884,7 +886,7 @@ export class KnexDatabase implements Database {
   }
 
   async removeContractorMemberRoles(
-    where: any,
+    where: Partial<DBContractorMemberRole>,
   ): Promise<DBContractorMemberRole[]> {
     return this.knex<DBContractorMemberRole>("contractor_member_roles")
       .where(where)
