@@ -3327,7 +3327,10 @@ export class KnexDatabase implements Database {
   }
 
   async rebuildMarket() {
-    await this.knex.schema.refreshMaterializedView("market_search_materialized")
+    await this.knex.schema.refreshMaterializedView(
+      "market_search_materialized",
+      true,
+    )
   }
 
   async updatePriceHistpry() {

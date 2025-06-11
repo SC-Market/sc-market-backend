@@ -14,7 +14,7 @@ export function start_tasks() {
   setInterval(process_expiring_market_listings, 60 * 60 * 1000) // 1 hour
 
   rebuild_search_view()
-  setInterval(rebuild_search_view, 10 * 60 * 1000) // 5 minutes
+  setInterval(rebuild_search_view, 5 * 60 * 1000) // 5 minutes
 
   update_price_history()
   setInterval(update_price_history, 6 * 60 * 60 * 1000) // 6 hours, twice as long as needed
