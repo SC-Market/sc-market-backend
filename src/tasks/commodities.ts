@@ -148,42 +148,6 @@ export async function fetchAndInsertCommodities(): Promise<void> {
 
   console.log(`Fetched ${commodities.data.length} commodities. Processing...`)
 
-  const categories = new Set(
-    commodities.data.map((commodity) => commodity.kind),
-  )
-
-  for (const category of categories) {
-    if (category === "Commodity") {
-      continue
-    }
-
-    console.log(`Processing category: ${category}`)
-    await database
-      .knex("game_items")
-      .where({ type: category })
-      .update({
-        type: "Commodity",
-      })
-      .returning<DBMarketItem[]>("*")
-
-    await database
-      .knex("market_listing_details")
-      .where("item_type", category)
-      .update({ item_type: "Commodity" })
-
-    await database
-      .knex("game_item_categories")
-      .where({
-        category: "Commodity",
-        subcategory: category,
-      })
-      .delete()
-      .onConflict(["subcategory"])
-      .ignore()
-  }
-
-  console.log(`Inserted ${categories.size} categories.`)
-
   // Track success and failure counts
   let successCount = 0
   let skipCount = 0
