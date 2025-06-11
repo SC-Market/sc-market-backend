@@ -1,9 +1,9 @@
-import { database } from "../../../../clients/database/knex-db.js"
-import { createOffer } from "../orders/helpers.js"
+import { database } from "../clients/database/knex-db.js"
+import { createOffer } from "../api/routes/v1/orders/helpers.js"
 import {
   DBAuctionDetails,
   DBMarketListing,
-} from "../../../../clients/database/db-models.js"
+} from "../clients/database/db-models.js"
 
 export async function process_auction(auction: DBAuctionDetails) {
   const complete = await database.getMarketListingComplete(auction.listing_id)

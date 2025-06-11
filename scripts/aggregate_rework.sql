@@ -5,7 +5,7 @@ CREATE TABLE IF NOT EXISTS game_items
 (
     id          UUID         NOT NULL PRIMARY KEY DEFAULT gen_random_uuid(),
     name        varchar(100) NOT NULL UNIQUE,
-    cstone_uuid UUID         NOT NULL,
+    cstone_uuid UUID,
     image_url   URL,
     type        varchar(50),
     description TEXT
