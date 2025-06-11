@@ -647,7 +647,7 @@ export class KnexDatabase implements Database {
       .select("contractors.*")
   }
 
-  async getUserContractorRoles(where: any): Promise<
+  async getUserContractorRoles(where: Partial<DBContractorMemberRole>): Promise<
     {
       spectrum_id: string
       role: string

@@ -3248,6 +3248,23 @@ contractorsRouter.post(
     const user = req.user as User
     const contractor = req.contractor!
     // TODO: Check not org owner
+    const owner_role = await database.getContractorRole({
+      contractor_id: contractor.contractor_id,
+      priority: 0,
+    })
+    const roles = await database.getUserContractorRoles({
+      role_id: owner_role?.role_id,
+      user_id: user.user_id,
+    })
+    if (roles.length) {
+      res.status(400).json(
+        createErrorResponse({
+          message: "You cannot leave a contractor you own",
+        }),
+      )
+      return
+    }
+
     await database.removeContractorMember({
       user_id: user.user_id,
       contractor_id: contractor.contractor_id,
