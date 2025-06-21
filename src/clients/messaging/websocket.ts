@@ -33,7 +33,7 @@ class WebsocketMessagingServer {
   }
 
   emitMessage(message: MessageType) {
-    this.io.to(message.chat_id).emit("serverMessage", JSON.stringify(message))
+    this.io.to(message.chat_id).emit("serverMessage", message)
   }
 }
 

@@ -20,14 +20,7 @@ import { SitemapStream, streamToPromise } from "sitemap"
 import { createGzip } from "zlib"
 import { registrationRouter } from "./clients/discord_api/registration.js"
 import { threadRouter } from "./clients/discord_api/threads.js"
-import {
-  process_auctions,
-  process_expiring_market_listings,
-  rebuild_search_view,
-  update_price_history,
-} from "./tasks/timers.js"
 import { trackActivity } from "./api/middleware/activity.js"
-import { messagingHandler } from "./clients/messaging/messaging.js"
 import { createServer } from "node:http"
 import { oapi } from "./api/routes/v1/openapi.js"
 import { env } from "./config/env.js"
@@ -417,7 +410,6 @@ app.use(oapi)
 app.use("/swaggerui", adminAuthorized, oapi.swaggerui())
 
 app.use("/api", apiRouter)
-messagingHandler.register(app)
 
 app.use(errorHandler)
 const httpServer = createServer(app)
