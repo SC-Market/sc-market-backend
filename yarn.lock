@@ -1010,10 +1010,10 @@
   resolved "https://registry.yarnpkg.com/@discordjs/util/-/util-1.1.1.tgz#bafcde0faa116c834da1258d78ec237080bbab29"
   integrity sha512-eddz6UnOBEB1oITPinyrB2Pttej49M9FZQY8NxgEvc3tq6ZICZ19m70RsmzRdDHk80O9NoYN/25AqJl8vPVf/g==
 
-"@envoy-js/express@^1.0.18":
-  version "1.0.18"
-  resolved "https://registry.yarnpkg.com/@envoy-js/express/-/express-1.0.18.tgz#99ed1d93d1e411103dc7785efea4deb874a3d27a"
-  integrity sha512-HRvhngbGniZLONHbc/Jx8d5QLREdgIFpABelB4iWvBuVSs/rE8ZuimpTRrcnx1NIetrGWYxN3oWM8xlAsvfgZA==
+"@envoy-js/express@^1.0.19":
+  version "1.0.19"
+  resolved "https://registry.yarnpkg.com/@envoy-js/express/-/express-1.0.19.tgz#5b3f52cb979f8d0eaed8a36a4242208c68c71789"
+  integrity sha512-3ecjDKlFTHgih8+uVqWxcvtMjCX9bCieQSfFBx8XXds3JjlyPwZ7hBbvhXSM+j+HjSvXRYpoLf5ly2uMFb5ycg==
   dependencies:
     express "^4.18.2"
     socket.io "^4.6.1"
