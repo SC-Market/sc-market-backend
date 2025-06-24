@@ -635,4 +635,5 @@ export interface DBMarketItem {
   name: string
   id: string
   details_id: string
+  description: string | null
 }

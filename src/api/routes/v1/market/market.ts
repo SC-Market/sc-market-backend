@@ -38,7 +38,6 @@ import {
   verify_listings,
 } from "./helpers.js"
 import { oapi, Response400, Response401, Response403 } from "../openapi.js"
-import { createErrorResponse } from "../util/response.js"
 
 export const marketRouter = express.Router()
 
@@ -3439,6 +3438,138 @@ marketRouter.get("/categories", async (req: Request, res) => {
 
   res.json(raw_categories)
 })
+
+// First register the schema for game item description
+oapi.schema("GameItemDescription", {
+  type: "object",
+  title: "GameItemDescription",
+  properties: {
+    id: {
+      type: "string",
+      description: "Unique identifier for the game item",
+    },
+    name: {
+      type: "string",
+      description: "Name of the game item",
+    },
+    type: {
+      type: "string",
+      description: "Type/category of the game item",
+    },
+    description: {
+      type: "string",
+      description: "Description of the game item",
+    },
+    image_url: {
+      type: "string",
+      nullable: true,
+      description: "URL to the item's image",
+    },
+  },
+  required: ["id", "name", "type", "description"],
+  additionalProperties: false,
+})
+
+marketRouter.get(
+  "/item/:name",
+  oapi.validPath({
+    summary: "Get game item description by name",
+    description: "Returns detailed information about a game item by its name",
+    operationId: "getGameItemByName",
+    tags: ["Market", "Game Items"],
+    parameters: [
+      {
+        name: "name",
+        in: "path",
+        required: true,
+        schema: {
+          type: "string",
+        },
+        description: "Name of the game item to retrieve",
+      },
+    ],
+    responses: {
+      "200": {
+        description: "Game item retrieved successfully",
+        content: {
+          "application/json": {
+            schema: {
+              $ref: "#/components/schemas/GameItemDescription",
+            },
+          },
+        },
+      },
+      "400": {
+        description: "Game item not found",
+        content: {
+          "application/json": {
+            schema: {
+              $ref: "#/components/schemas/ErrorResponse",
+            },
+            examples: {
+              "Item not found": {
+                value: { error: "Game item not found" },
+              },
+            },
+          },
+        },
+      },
+      "500": {
+        description: "Internal server error",
+        content: {
+          "application/json": {
+            schema: {
+              $ref: "#/components/schemas/ErrorResponse",
+            },
+            examples: {
+              "Internal error": {
+                value: { error: "Internal server error" },
+              },
+            },
+          },
+        },
+      },
+    },
+  }),
+  async (req, res) => {
+    try {
+      const item_name = req.params["name"]
+
+      if (!item_name) {
+        res.status(400).json({ error: "Item name is required" })
+        return
+      }
+
+      const game_item = await database.getGameItem({ name: item_name })
+
+      if (!game_item) {
+        res.status(400).json({ error: "Game item not found" })
+        return
+      }
+
+      // Fetch the details from market_listing_details using the details_id
+      const details = await database.getMarketListingDetails({
+        details_id: game_item.details_id,
+      })
+
+      // Get the image URL from the market listing images
+      const images = await database.getMarketListingImagesResolved({
+        details_id: game_item.details_id,
+      })
+
+      res.json({
+        id: game_item.id,
+        name: game_item.name,
+        type: game_item.type,
+        description: details.description,
+        image_url: images.length > 0 ? images[0] : null,
+      })
+    } catch (e) {
+      console.error(e)
+      res.status(500).json({ error: "Internal server error" })
+    }
+  },
+)
 
 // TODO: Create listing as part of multiple
 //  ~~fetch a multiple~~
