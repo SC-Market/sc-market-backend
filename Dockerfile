@@ -1,15 +1,4 @@
-#FROM node:20-buster-slim AS deps
-#
-#RUN apt update
-#RUN apt install -y git
-#WORKDIR /app
-#
-#COPY package.json yarn.lock* ./
-#RUN yarn global add typescript
-#
-#RUN yarn install --frozen-lockfile --production
-
-FROM node:20-buster-slim AS release
+FROM node:22-buster-slim AS release
 
 RUN apt update
 RUN apt install -y git
