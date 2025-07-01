@@ -5,10 +5,8 @@ RUN apt install -y git
 
 WORKDIR /app
 
-#COPY --from=deps . .
-
-COPY package.json yarn.lock* ./
 RUN yarn global add typescript
+COPY package.json yarn.lock* ./
 
 RUN yarn install
 
