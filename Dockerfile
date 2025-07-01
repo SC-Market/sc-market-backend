@@ -1,4 +1,4 @@
-FROM node:22-buster-slim AS release
+FROM node:22-slim AS release
 
 RUN apt update
 RUN apt install -y git
