@@ -2,8 +2,10 @@
 -- PostgreSQL database dump
 --
 
--- Dumped from database version 14.2 (Debian 14.2-1.pgdg110+1)
--- Dumped by pg_dump version 14.9 (Homebrew)
+-- Dumped from database version 13.20
+-- Dumped by pg_dump version 14.4
+
+-- Started on 2025-07-28 08:29:09 PDT
 
 SET statement_timeout = 0;
 SET lock_timeout = 0;
@@ -17,6 +19,7 @@ SET client_min_messages = warning;
 SET row_security = off;
 
 --
+-- TOC entry 2 (class 3079 OID 18521)
 -- Name: citext; Type: EXTENSION; Schema: -; Owner: -
 --
 
@@ -24,6 +27,8 @@ CREATE EXTENSION IF NOT EXISTS citext WITH SCHEMA public;
 
 
 --
+-- TOC entry 4754 (class 0 OID 0)
+-- Dependencies: 2
 -- Name: EXTENSION citext; Type: COMMENT; Schema: -; Owner: 
 --
 
@@ -31,27 +36,30 @@ COMMENT ON EXTENSION citext IS 'data type for case-insensitive character strings
 
 
 --
--- Name: email; Type: DOMAIN; Schema: public; Owner: voc_sc
+-- TOC entry 868 (class 1247 OID 245061)
+-- Name: email; Type: DOMAIN; Schema: public; Owner: scmarket
 --
 
 CREATE DOMAIN public.email AS character varying(320)
 	CONSTRAINT email_check CHECK (((VALUE)::text ~ '^[a-zA-Z0-9.!#$%&''*+/=?^_`{|}~-]+@[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?(?:\.[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?)*$'::text));
 
 
-ALTER DOMAIN public.email OWNER TO voc_sc;
+ALTER DOMAIN public.email OWNER TO scmarket;
 
 --
--- Name: url; Type: DOMAIN; Schema: public; Owner: voc_sc
+-- TOC entry 872 (class 1247 OID 245064)
+-- Name: url; Type: DOMAIN; Schema: public; Owner: scmarket
 --
 
 CREATE DOMAIN public.url AS character varying(2048)
 	CONSTRAINT url_check CHECK (((VALUE)::text ~ 'https?:\/\/(www\.)?[-a-zA-Z0-9@:%._\+~#=]{2,255}\.[a-z]{2,9}\y([-a-zA-Z0-9@:%_\+.~#?&//=]*)$'::text));
 
 
-ALTER DOMAIN public.url OWNER TO voc_sc;
+ALTER DOMAIN public.url OWNER TO scmarket;
 
 --
--- Name: get_auction_end(uuid, character varying); Type: FUNCTION; Schema: public; Owner: dashboard
+-- TOC entry 366 (class 1255 OID 502354)
+-- Name: get_auction_end(uuid, character varying); Type: FUNCTION; Schema: public; Owner: scmarket
 --
 
 CREATE FUNCTION public.get_auction_end(uuid, character varying) RETURNS timestamp without time zone
@@ -70,10 +78,11 @@ END;
 $_$;
 
 
-ALTER FUNCTION public.get_auction_end(uuid, character varying) OWNER TO dashboard;
+ALTER FUNCTION public.get_auction_end(uuid, character varying) OWNER TO scmarket;
 
 --
--- Name: get_average_rating(uuid, uuid); Type: FUNCTION; Schema: public; Owner: dashboard
+-- TOC entry 373 (class 1255 OID 502324)
+-- Name: get_average_rating(uuid, uuid); Type: FUNCTION; Schema: public; Owner: scmarket
 --
 
 CREATE FUNCTION public.get_average_rating(uuid, uuid) RETURNS integer
@@ -81,7 +90,7 @@ CREATE FUNCTION public.get_average_rating(uuid, uuid) RETURNS integer
     AS $_$
 BEGIN
     IF $1 IS NOT NULL THEN
-        RETURN (SELECT COALESCE(AVG(order_reviews.rating), 0) as t
+        RETURN (SELECT COALESCE(AVG(CAST(order_reviews.rating as FLOAT8)), 0.) as t
                 FROM order_reviews
                          JOIN orders ON order_reviews.order_id = orders.order_id
                 WHERE (CASE
@@ -91,7 +100,7 @@ BEGIN
                     END)
                   AND rating > 0);
     ELSE
-        RETURN (SELECT COALESCE(AVG(order_reviews.rating), 0) as t
+        RETURN (SELECT COALESCE(AVG(CAST(order_reviews.rating as FLOAT9)), 0.) as t
                 FROM order_reviews
                          JOIN orders ON order_reviews.order_id = orders.order_id
                 WHERE contractor_id = $2
@@ -102,10 +111,74 @@ END;
 $_$;
 
 
-ALTER FUNCTION public.get_average_rating(uuid, uuid) OWNER TO dashboard;
+ALTER FUNCTION public.get_average_rating(uuid, uuid) OWNER TO scmarket;
 
 --
--- Name: get_order_count(); Type: FUNCTION; Schema: public; Owner: dashboard
+-- TOC entry 384 (class 1255 OID 4050815)
+-- Name: get_average_rating_float(uuid, uuid); Type: FUNCTION; Schema: public; Owner: scmarket
+--
+
+CREATE FUNCTION public.get_average_rating_float(uuid, uuid) RETURNS double precision
+    LANGUAGE plpgsql STABLE
+    AS $_$
+BEGIN
+    IF $1 IS NOT NULL THEN
+        RETURN (SELECT COALESCE(AVG(CAST(order_reviews.rating as FLOAT)), 0.) as t
+                FROM order_reviews
+                         JOIN orders ON order_reviews.order_id = orders.order_id
+                WHERE (CASE
+                           WHEN assigned_id = $1 AND contractor_id IS null AND role = 'customer' THEN TRUE
+                           WHEN customer_id = $1 AND role = 'contractor' THEN TRUE
+                           ELSE FALSE
+                    END)
+                  AND rating > 0);
+    ELSE
+        RETURN (SELECT COALESCE(AVG(CAST(order_reviews.rating as FLOAT)), 0.) as t
+                FROM order_reviews
+                         JOIN orders ON order_reviews.order_id = orders.order_id
+                WHERE contractor_id = $2
+                  AND role = 'customer'
+                  AND rating > 0);
+    END IF;
+END;
+$_$;
+
+
+ALTER FUNCTION public.get_average_rating_float(uuid, uuid) OWNER TO scmarket;
+
+--
+-- TOC entry 382 (class 1255 OID 3305888)
+-- Name: get_offer_status(uuid, uuid, character varying); Type: FUNCTION; Schema: public; Owner: scmarket
+--
+
+CREATE FUNCTION public.get_offer_status(uuid, uuid, character varying) RETURNS character varying
+    LANGUAGE plpgsql STABLE
+    AS $_$
+BEGIN
+    IF $3 = 'active' THEN
+        RETURN (SELECT (
+                           CASE WHEN actor_id = $2 THEN 'to-seller' ELSE 'to-customer' END
+                           )
+                FROM order_offers
+                WHERE session_id = $1
+                ORDER BY timestamp DESC
+                LIMIT 1);
+    ELSE
+        RETURN (SELECT status
+                FROM order_offers
+                WHERE session_id = $1
+                ORDER BY timestamp DESC
+                LIMIT 1);
+    END IF;
+END;
+$_$;
+
+
+ALTER FUNCTION public.get_offer_status(uuid, uuid, character varying) OWNER TO scmarket;
+
+--
+-- TOC entry 370 (class 1255 OID 509800)
+-- Name: get_order_count(); Type: FUNCTION; Schema: public; Owner: scmarket
 --
 
 CREATE FUNCTION public.get_order_count() RETURNS integer
@@ -119,10 +192,11 @@ END;
 $$;
 
 
-ALTER FUNCTION public.get_order_count() OWNER TO dashboard;
+ALTER FUNCTION public.get_order_count() OWNER TO scmarket;
 
 --
--- Name: get_order_count(uuid, uuid); Type: FUNCTION; Schema: public; Owner: dashboard
+-- TOC entry 368 (class 1255 OID 509798)
+-- Name: get_order_count(uuid, uuid); Type: FUNCTION; Schema: public; Owner: scmarket
 --
 
 CREATE FUNCTION public.get_order_count(uuid, uuid) RETURNS integer
@@ -134,10 +208,11 @@ END;
 $$;
 
 
-ALTER FUNCTION public.get_order_count(uuid, uuid) OWNER TO dashboard;
+ALTER FUNCTION public.get_order_count(uuid, uuid) OWNER TO scmarket;
 
 --
--- Name: get_rating_count(uuid, uuid); Type: FUNCTION; Schema: public; Owner: dashboard
+-- TOC entry 381 (class 1255 OID 502371)
+-- Name: get_rating_count(uuid, uuid); Type: FUNCTION; Schema: public; Owner: scmarket
 --
 
 CREATE FUNCTION public.get_rating_count(uuid, uuid) RETURNS integer
@@ -166,10 +241,11 @@ END;
 $_$;
 
 
-ALTER FUNCTION public.get_rating_count(uuid, uuid) OWNER TO dashboard;
+ALTER FUNCTION public.get_rating_count(uuid, uuid) OWNER TO scmarket;
 
 --
--- Name: get_rating_streak(uuid, uuid); Type: FUNCTION; Schema: public; Owner: dashboard
+-- TOC entry 372 (class 1255 OID 502372)
+-- Name: get_rating_streak(uuid, uuid); Type: FUNCTION; Schema: public; Owner: scmarket
 --
 
 CREATE FUNCTION public.get_rating_streak(uuid, uuid) RETURNS integer
@@ -213,10 +289,11 @@ END;
 $_$;
 
 
-ALTER FUNCTION public.get_rating_streak(uuid, uuid) OWNER TO dashboard;
+ALTER FUNCTION public.get_rating_streak(uuid, uuid) OWNER TO scmarket;
 
 --
--- Name: get_total_orders(uuid, uuid); Type: FUNCTION; Schema: public; Owner: dashboard
+-- TOC entry 374 (class 1255 OID 502373)
+-- Name: get_total_orders(uuid, uuid); Type: FUNCTION; Schema: public; Owner: scmarket
 --
 
 CREATE FUNCTION public.get_total_orders(uuid, uuid) RETURNS integer
@@ -237,10 +314,11 @@ END;
 $_$;
 
 
-ALTER FUNCTION public.get_total_orders(uuid, uuid) OWNER TO dashboard;
+ALTER FUNCTION public.get_total_orders(uuid, uuid) OWNER TO scmarket;
 
 --
--- Name: get_total_rating(uuid, uuid); Type: FUNCTION; Schema: public; Owner: dashboard
+-- TOC entry 380 (class 1255 OID 502323)
+-- Name: get_total_rating(uuid, uuid); Type: FUNCTION; Schema: public; Owner: scmarket
 --
 
 CREATE FUNCTION public.get_total_rating(uuid, uuid) RETURNS integer
@@ -269,10 +347,11 @@ END;
 $_$;
 
 
-ALTER FUNCTION public.get_total_rating(uuid, uuid) OWNER TO dashboard;
+ALTER FUNCTION public.get_total_rating(uuid, uuid) OWNER TO scmarket;
 
 --
--- Name: get_week_order_count(); Type: FUNCTION; Schema: public; Owner: dashboard
+-- TOC entry 371 (class 1255 OID 509801)
+-- Name: get_week_order_count(); Type: FUNCTION; Schema: public; Owner: scmarket
 --
 
 CREATE FUNCTION public.get_week_order_count() RETURNS integer
@@ -289,10 +368,11 @@ END;
 $$;
 
 
-ALTER FUNCTION public.get_week_order_count() OWNER TO dashboard;
+ALTER FUNCTION public.get_week_order_count() OWNER TO scmarket;
 
 --
--- Name: get_week_order_count(uuid, uuid); Type: FUNCTION; Schema: public; Owner: dashboard
+-- TOC entry 369 (class 1255 OID 509799)
+-- Name: get_week_order_count(uuid, uuid); Type: FUNCTION; Schema: public; Owner: scmarket
 --
 
 CREATE FUNCTION public.get_week_order_count(uuid, uuid) RETURNS integer
@@ -307,10 +387,68 @@ END;
 $$;
 
 
-ALTER FUNCTION public.get_week_order_count(uuid, uuid) OWNER TO dashboard;
+ALTER FUNCTION public.get_week_order_count(uuid, uuid) OWNER TO scmarket;
 
 --
--- Name: update_listing_expiration(); Type: FUNCTION; Schema: public; Owner: dashboard
+-- TOC entry 376 (class 1255 OID 510161)
+-- Name: log_status_change(); Type: FUNCTION; Schema: public; Owner: scmarket
+--
+
+CREATE FUNCTION public.log_status_change() RETURNS trigger
+    LANGUAGE plpgsql
+    AS $$
+BEGIN
+    IF (NEW.status != OLD.status) THEN
+        INSERT INTO market_status_update VALUES (NEW.listing_id, NEW.status);
+    end if;
+    RETURN NEW;
+END;
+$$;
+
+
+ALTER FUNCTION public.log_status_change() OWNER TO scmarket;
+
+--
+-- TOC entry 379 (class 1255 OID 510175)
+-- Name: market_log_status_change(); Type: FUNCTION; Schema: public; Owner: scmarket
+--
+
+CREATE FUNCTION public.market_log_status_change() RETURNS trigger
+    LANGUAGE plpgsql
+    AS $$
+BEGIN
+    IF (NEW.status != OLD.status) THEN
+        INSERT INTO market_status_update VALUES (NEW.listing_id, NEW.status);
+    end if;
+    RETURN NEW;
+END;
+$$;
+
+
+ALTER FUNCTION public.market_log_status_change() OWNER TO scmarket;
+
+--
+-- TOC entry 378 (class 1255 OID 510173)
+-- Name: order_log_status_change(); Type: FUNCTION; Schema: public; Owner: scmarket
+--
+
+CREATE FUNCTION public.order_log_status_change() RETURNS trigger
+    LANGUAGE plpgsql
+    AS $$
+BEGIN
+    IF (NEW.status != OLD.status) THEN
+        INSERT INTO order_status_update VALUES (NEW.order_id, NEW.status);
+    end if;
+    RETURN NEW;
+END;
+$$;
+
+
+ALTER FUNCTION public.order_log_status_change() OWNER TO scmarket;
+
+--
+-- TOC entry 367 (class 1255 OID 502153)
+-- Name: update_listing_expiration(); Type: FUNCTION; Schema: public; Owner: scmarket
 --
 
 CREATE FUNCTION public.update_listing_expiration() RETURNS trigger
@@ -323,10 +461,11 @@ END;
 $$;
 
 
-ALTER FUNCTION public.update_listing_expiration() OWNER TO dashboard;
+ALTER FUNCTION public.update_listing_expiration() OWNER TO scmarket;
 
 --
--- Name: update_public_contract_expiration(); Type: FUNCTION; Schema: public; Owner: dashboard
+-- TOC entry 377 (class 1255 OID 1636689)
+-- Name: update_public_contract_expiration(); Type: FUNCTION; Schema: public; Owner: scmarket
 --
 
 CREATE FUNCTION public.update_public_contract_expiration() RETURNS trigger
@@ -339,29 +478,14 @@ END;
 $$;
 
 
-ALTER FUNCTION public.update_public_contract_expiration() OWNER TO dashboard;
+ALTER FUNCTION public.update_public_contract_expiration() OWNER TO scmarket;
 
 --
--- Name: update_unique_listing_expiration(); Type: FUNCTION; Schema: public; Owner: dashboard
+-- TOC entry 375 (class 1255 OID 510641)
+-- Name: upsert_daily_activity(uuid); Type: PROCEDURE; Schema: public; Owner: scmarket
 --
 
-CREATE FUNCTION public.update_unique_listing_expiration() RETURNS trigger
-    LANGUAGE plpgsql
-    AS $$
-BEGIN
-    UPDATE market_listings SET expiration = NOW() + '4 months' WHERE listing_id = NEW.listing_id;
-    RETURN NEW;
-END;
-$$;
-
-
-ALTER FUNCTION public.update_unique_listing_expiration() OWNER TO dashboard;
-
---
--- Name: upsert_daily_activity(uuid); Type: PROCEDURE; Schema: public; Owner: dashboard
---
-
-CREATE PROCEDURE public.upsert_daily_activity(IN uuid)
+CREATE PROCEDURE public.upsert_daily_activity(uuid)
     LANGUAGE plpgsql
     AS $_$
 BEGIN
@@ -370,10 +494,11 @@ END;
 $_$;
 
 
-ALTER PROCEDURE public.upsert_daily_activity(IN uuid) OWNER TO dashboard;
+ALTER PROCEDURE public.upsert_daily_activity(uuid) OWNER TO scmarket;
 
 --
--- Name: upsert_daily_price_history(); Type: PROCEDURE; Schema: public; Owner: dashboard
+-- TOC entry 383 (class 1255 OID 1530576)
+-- Name: upsert_daily_price_history(); Type: PROCEDURE; Schema: public; Owner: scmarket
 --
 
 CREATE PROCEDURE public.upsert_daily_price_history()
@@ -404,27 +529,29 @@ END;
 $$;
 
 
-ALTER PROCEDURE public.upsert_daily_price_history() OWNER TO dashboard;
+ALTER PROCEDURE public.upsert_daily_price_history() OWNER TO scmarket;
 
 SET default_tablespace = '';
 
 SET default_table_access_method = heap;
 
 --
--- Name: account_settings; Type: TABLE; Schema: public; Owner: voc_sc
+-- TOC entry 270 (class 1259 OID 280186)
+-- Name: account_settings; Type: TABLE; Schema: public; Owner: scmarket
 --
 
 CREATE TABLE public.account_settings (
     user_id uuid NOT NULL,
-    discord_order_share boolean DEFAULT false NOT NULL,
-    discord_public boolean DEFAULT false NOT NULL
+    discord_order_share boolean DEFAULT true NOT NULL,
+    discord_public boolean DEFAULT true NOT NULL
 );
 
 
-ALTER TABLE public.account_settings OWNER TO voc_sc;
+ALTER TABLE public.account_settings OWNER TO scmarket;
 
 --
--- Name: accounts; Type: TABLE; Schema: public; Owner: voc_sc
+-- TOC entry 229 (class 1259 OID 245083)
+-- Name: accounts; Type: TABLE; Schema: public; Owner: scmarket
 --
 
 CREATE TABLE public.accounts (
@@ -442,14 +569,17 @@ CREATE TABLE public.accounts (
     discord_refresh_token character varying(200) DEFAULT ''::character varying NOT NULL,
     created_at timestamp without time zone DEFAULT now(),
     official_server_id bigint,
-    discord_thread_channel_id bigint
+    discord_thread_channel_id bigint,
+    banned boolean DEFAULT false NOT NULL,
+    market_order_template character varying(2000) DEFAULT ''::character varying
 );
 
 
-ALTER TABLE public.accounts OWNER TO voc_sc;
+ALTER TABLE public.accounts OWNER TO scmarket;
 
 --
--- Name: activity_history; Type: TABLE; Schema: public; Owner: dashboard
+-- TOC entry 291 (class 1259 OID 510630)
+-- Name: activity_history; Type: TABLE; Schema: public; Owner: scmarket
 --
 
 CREATE TABLE public.activity_history (
@@ -458,10 +588,11 @@ CREATE TABLE public.activity_history (
 );
 
 
-ALTER TABLE public.activity_history OWNER TO dashboard;
+ALTER TABLE public.activity_history OWNER TO scmarket;
 
 --
--- Name: chat_participants; Type: TABLE; Schema: public; Owner: voc_sc
+-- TOC entry 235 (class 1259 OID 245174)
+-- Name: chat_participants; Type: TABLE; Schema: public; Owner: scmarket
 --
 
 CREATE TABLE public.chat_participants (
@@ -470,10 +601,11 @@ CREATE TABLE public.chat_participants (
 );
 
 
-ALTER TABLE public.chat_participants OWNER TO voc_sc;
+ALTER TABLE public.chat_participants OWNER TO scmarket;
 
 --
--- Name: chats; Type: TABLE; Schema: public; Owner: voc_sc
+-- TOC entry 234 (class 1259 OID 245168)
+-- Name: chats; Type: TABLE; Schema: public; Owner: scmarket
 --
 
 CREATE TABLE public.chats (
@@ -485,10 +617,11 @@ CREATE TABLE public.chats (
 );
 
 
-ALTER TABLE public.chats OWNER TO voc_sc;
+ALTER TABLE public.chats OWNER TO scmarket;
 
 --
--- Name: comment_votes; Type: TABLE; Schema: public; Owner: voc_sc
+-- TOC entry 266 (class 1259 OID 269615)
+-- Name: comment_votes; Type: TABLE; Schema: public; Owner: scmarket
 --
 
 CREATE TABLE public.comment_votes (
@@ -499,10 +632,11 @@ CREATE TABLE public.comment_votes (
 );
 
 
-ALTER TABLE public.comment_votes OWNER TO voc_sc;
+ALTER TABLE public.comment_votes OWNER TO scmarket;
 
 --
--- Name: comments; Type: TABLE; Schema: public; Owner: voc_sc
+-- TOC entry 264 (class 1259 OID 269582)
+-- Name: comments; Type: TABLE; Schema: public; Owner: scmarket
 --
 
 CREATE TABLE public.comments (
@@ -515,10 +649,11 @@ CREATE TABLE public.comments (
 );
 
 
-ALTER TABLE public.comments OWNER TO voc_sc;
+ALTER TABLE public.comments OWNER TO scmarket;
 
 --
--- Name: contractor_fields; Type: TABLE; Schema: public; Owner: voc_sc
+-- TOC entry 233 (class 1259 OID 245160)
+-- Name: contractor_fields; Type: TABLE; Schema: public; Owner: scmarket
 --
 
 CREATE TABLE public.contractor_fields (
@@ -527,10 +662,11 @@ CREATE TABLE public.contractor_fields (
 );
 
 
-ALTER TABLE public.contractor_fields OWNER TO voc_sc;
+ALTER TABLE public.contractor_fields OWNER TO scmarket;
 
 --
--- Name: contractor_fleet; Type: TABLE; Schema: public; Owner: voc_sc
+-- TOC entry 241 (class 1259 OID 245255)
+-- Name: contractor_fleet; Type: TABLE; Schema: public; Owner: scmarket
 --
 
 CREATE TABLE public.contractor_fleet (
@@ -539,10 +675,11 @@ CREATE TABLE public.contractor_fleet (
 );
 
 
-ALTER TABLE public.contractor_fleet OWNER TO voc_sc;
+ALTER TABLE public.contractor_fleet OWNER TO scmarket;
 
 --
--- Name: contractor_invite_codes; Type: TABLE; Schema: public; Owner: voc_sc
+-- TOC entry 254 (class 1259 OID 251240)
+-- Name: contractor_invite_codes; Type: TABLE; Schema: public; Owner: scmarket
 --
 
 CREATE TABLE public.contractor_invite_codes (
@@ -554,10 +691,11 @@ CREATE TABLE public.contractor_invite_codes (
 );
 
 
-ALTER TABLE public.contractor_invite_codes OWNER TO voc_sc;
+ALTER TABLE public.contractor_invite_codes OWNER TO scmarket;
 
 --
--- Name: contractor_invites; Type: TABLE; Schema: public; Owner: voc_sc
+-- TOC entry 232 (class 1259 OID 245144)
+-- Name: contractor_invites; Type: TABLE; Schema: public; Owner: scmarket
 --
 
 CREATE TABLE public.contractor_invites (
@@ -569,10 +707,11 @@ CREATE TABLE public.contractor_invites (
 );
 
 
-ALTER TABLE public.contractor_invites OWNER TO voc_sc;
+ALTER TABLE public.contractor_invites OWNER TO scmarket;
 
 --
--- Name: contractor_member_roles; Type: TABLE; Schema: public; Owner: voc_sc
+-- TOC entry 273 (class 1259 OID 312811)
+-- Name: contractor_member_roles; Type: TABLE; Schema: public; Owner: scmarket
 --
 
 CREATE TABLE public.contractor_member_roles (
@@ -581,10 +720,11 @@ CREATE TABLE public.contractor_member_roles (
 );
 
 
-ALTER TABLE public.contractor_member_roles OWNER TO voc_sc;
+ALTER TABLE public.contractor_member_roles OWNER TO scmarket;
 
 --
--- Name: contractor_members; Type: TABLE; Schema: public; Owner: voc_sc
+-- TOC entry 231 (class 1259 OID 245130)
+-- Name: contractor_members; Type: TABLE; Schema: public; Owner: scmarket
 --
 
 CREATE TABLE public.contractor_members (
@@ -594,10 +734,11 @@ CREATE TABLE public.contractor_members (
 );
 
 
-ALTER TABLE public.contractor_members OWNER TO voc_sc;
+ALTER TABLE public.contractor_members OWNER TO scmarket;
 
 --
--- Name: contractor_roles; Type: TABLE; Schema: public; Owner: voc_sc
+-- TOC entry 272 (class 1259 OID 312790)
+-- Name: contractor_roles; Type: TABLE; Schema: public; Owner: scmarket
 --
 
 CREATE TABLE public.contractor_roles (
@@ -617,10 +758,11 @@ CREATE TABLE public.contractor_roles (
 );
 
 
-ALTER TABLE public.contractor_roles OWNER TO voc_sc;
+ALTER TABLE public.contractor_roles OWNER TO scmarket;
 
 --
--- Name: contractors; Type: TABLE; Schema: public; Owner: voc_sc
+-- TOC entry 230 (class 1259 OID 245110)
+-- Name: contractors; Type: TABLE; Schema: public; Owner: scmarket
 --
 
 CREATE TABLE public.contractors (
@@ -638,14 +780,16 @@ CREATE TABLE public.contractors (
     created_at timestamp without time zone DEFAULT now() NOT NULL,
     official_server_id bigint,
     discord_thread_channel_id bigint,
-    banner uuid DEFAULT '0008300c-fc6a-4e4e-9488-7d696f00e8b2'::uuid NOT NULL
+    banner uuid DEFAULT '0008300c-fc6a-4e4e-9488-7d696f00e8b2'::uuid NOT NULL,
+    market_order_template character varying(2000) DEFAULT ''::character varying
 );
 
 
-ALTER TABLE public.contractors OWNER TO voc_sc;
+ALTER TABLE public.contractors OWNER TO scmarket;
 
 --
--- Name: daily_activity; Type: VIEW; Schema: public; Owner: dashboard
+-- TOC entry 292 (class 1259 OID 510642)
+-- Name: daily_activity; Type: VIEW; Schema: public; Owner: scmarket
 --
 
 CREATE VIEW public.daily_activity AS
@@ -655,10 +799,11 @@ CREATE VIEW public.daily_activity AS
   GROUP BY activity_history.date;
 
 
-ALTER TABLE public.daily_activity OWNER TO dashboard;
+ALTER TABLE public.daily_activity OWNER TO scmarket;
 
 --
--- Name: deliveries; Type: TABLE; Schema: public; Owner: voc_sc
+-- TOC entry 242 (class 1259 OID 245268)
+-- Name: deliveries; Type: TABLE; Schema: public; Owner: scmarket
 --
 
 CREATE TABLE public.deliveries (
@@ -673,39 +818,84 @@ CREATE TABLE public.deliveries (
 );
 
 
-ALTER TABLE public.deliveries OWNER TO voc_sc;
+ALTER TABLE public.deliveries OWNER TO scmarket;
 
 --
--- Name: game_item_categories; Type: TABLE; Schema: public; Owner: dashboard
+-- TOC entry 297 (class 1259 OID 511648)
+-- Name: game_item_categories; Type: TABLE; Schema: public; Owner: scmarket
 --
 
 CREATE TABLE public.game_item_categories (
+    id integer NOT NULL,
     category character varying(50),
     subcategory character varying(50)
 );
 
 
-ALTER TABLE public.game_item_categories OWNER TO dashboard;
+ALTER TABLE public.game_item_categories OWNER TO scmarket;
 
 --
--- Name: game_items; Type: TABLE; Schema: public; Owner: dashboard
+-- TOC entry 296 (class 1259 OID 511646)
+-- Name: game_item_categories_id_seq; Type: SEQUENCE; Schema: public; Owner: scmarket
+--
+
+CREATE SEQUENCE public.game_item_categories_id_seq
+    AS integer
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER TABLE public.game_item_categories_id_seq OWNER TO scmarket;
+
+--
+-- TOC entry 4755 (class 0 OID 0)
+-- Dependencies: 296
+-- Name: game_item_categories_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: scmarket
+--
+
+ALTER SEQUENCE public.game_item_categories_id_seq OWNED BY public.game_item_categories.id;
+
+
+--
+-- TOC entry 295 (class 1259 OID 511635)
+-- Name: game_items; Type: TABLE; Schema: public; Owner: scmarket
 --
 
 CREATE TABLE public.game_items (
+    id uuid DEFAULT gen_random_uuid() NOT NULL,
     name character varying(100) NOT NULL,
-    cstone_uuid uuid NOT NULL,
+    cstone_uuid uuid,
     image_url public.url,
     type character varying(50),
     description text,
-    id uuid DEFAULT gen_random_uuid(),
-    details_id uuid NOT NULL
+    details_id uuid
 );
 
 
-ALTER TABLE public.game_items OWNER TO dashboard;
+ALTER TABLE public.game_items OWNER TO scmarket;
 
 --
--- Name: image_resources; Type: TABLE; Schema: public; Owner: voc_sc
+-- TOC entry 305 (class 1259 OID 3857366)
+-- Name: game_items_staging; Type: TABLE; Schema: public; Owner: scmarket
+--
+
+CREATE TABLE public.game_items_staging (
+    name text NOT NULL,
+    cstone_uuid uuid NOT NULL,
+    image_url text NOT NULL,
+    type text NOT NULL,
+    description text NOT NULL
+);
+
+
+ALTER TABLE public.game_items_staging OWNER TO scmarket;
+
+--
+-- TOC entry 228 (class 1259 OID 245074)
+-- Name: image_resources; Type: TABLE; Schema: public; Owner: scmarket
 --
 
 CREATE TABLE public.image_resources (
@@ -715,10 +905,11 @@ CREATE TABLE public.image_resources (
 );
 
 
-ALTER TABLE public.image_resources OWNER TO voc_sc;
+ALTER TABLE public.image_resources OWNER TO scmarket;
 
 --
--- Name: login_sessions; Type: TABLE; Schema: public; Owner: voc_sc
+-- TOC entry 227 (class 1259 OID 245066)
+-- Name: login_sessions; Type: TABLE; Schema: public; Owner: scmarket
 --
 
 CREATE TABLE public.login_sessions (
@@ -728,10 +919,11 @@ CREATE TABLE public.login_sessions (
 );
 
 
-ALTER TABLE public.login_sessions OWNER TO voc_sc;
+ALTER TABLE public.login_sessions OWNER TO scmarket;
 
 --
--- Name: market_aggregate_listings; Type: TABLE; Schema: public; Owner: dashboard
+-- TOC entry 281 (class 1259 OID 501895)
+-- Name: market_aggregate_listings; Type: TABLE; Schema: public; Owner: scmarket
 --
 
 CREATE TABLE public.market_aggregate_listings (
@@ -740,10 +932,11 @@ CREATE TABLE public.market_aggregate_listings (
 );
 
 
-ALTER TABLE public.market_aggregate_listings OWNER TO dashboard;
+ALTER TABLE public.market_aggregate_listings OWNER TO scmarket;
 
 --
--- Name: market_aggregate_listings_legacy; Type: TABLE; Schema: public; Owner: voc_sc
+-- TOC entry 269 (class 1259 OID 279944)
+-- Name: market_aggregate_listings_legacy; Type: TABLE; Schema: public; Owner: scmarket
 --
 
 CREATE TABLE public.market_aggregate_listings_legacy (
@@ -761,10 +954,11 @@ CREATE TABLE public.market_aggregate_listings_legacy (
 );
 
 
-ALTER TABLE public.market_aggregate_listings_legacy OWNER TO voc_sc;
+ALTER TABLE public.market_aggregate_listings_legacy OWNER TO scmarket;
 
 --
--- Name: market_aggregates; Type: TABLE; Schema: public; Owner: dashboard
+-- TOC entry 280 (class 1259 OID 501884)
+-- Name: market_aggregates; Type: TABLE; Schema: public; Owner: scmarket
 --
 
 CREATE TABLE public.market_aggregates (
@@ -774,10 +968,11 @@ CREATE TABLE public.market_aggregates (
 );
 
 
-ALTER TABLE public.market_aggregates OWNER TO dashboard;
+ALTER TABLE public.market_aggregates OWNER TO scmarket;
 
 --
--- Name: market_aggregates_legacy; Type: TABLE; Schema: public; Owner: voc_sc
+-- TOC entry 268 (class 1259 OID 279936)
+-- Name: market_aggregates_legacy; Type: TABLE; Schema: public; Owner: scmarket
 --
 
 CREATE TABLE public.market_aggregates_legacy (
@@ -788,10 +983,11 @@ CREATE TABLE public.market_aggregates_legacy (
 );
 
 
-ALTER TABLE public.market_aggregates_legacy OWNER TO voc_sc;
+ALTER TABLE public.market_aggregates_legacy OWNER TO scmarket;
 
 --
--- Name: market_auction_details; Type: TABLE; Schema: public; Owner: voc_sc
+-- TOC entry 275 (class 1259 OID 501646)
+-- Name: market_auction_details; Type: TABLE; Schema: public; Owner: scmarket
 --
 
 CREATE TABLE public.market_auction_details (
@@ -804,10 +1000,11 @@ CREATE TABLE public.market_auction_details (
 );
 
 
-ALTER TABLE public.market_auction_details OWNER TO voc_sc;
+ALTER TABLE public.market_auction_details OWNER TO scmarket;
 
 --
--- Name: market_bids; Type: TABLE; Schema: public; Owner: voc_sc
+-- TOC entry 244 (class 1259 OID 245304)
+-- Name: market_bids; Type: TABLE; Schema: public; Owner: scmarket
 --
 
 CREATE TABLE public.market_bids (
@@ -820,10 +1017,11 @@ CREATE TABLE public.market_bids (
 );
 
 
-ALTER TABLE public.market_bids OWNER TO voc_sc;
+ALTER TABLE public.market_bids OWNER TO scmarket;
 
 --
--- Name: market_buy_orders; Type: TABLE; Schema: public; Owner: dashboard
+-- TOC entry 286 (class 1259 OID 502117)
+-- Name: market_buy_orders; Type: TABLE; Schema: public; Owner: scmarket
 --
 
 CREATE TABLE public.market_buy_orders (
@@ -838,10 +1036,11 @@ CREATE TABLE public.market_buy_orders (
 );
 
 
-ALTER TABLE public.market_buy_orders OWNER TO dashboard;
+ALTER TABLE public.market_buy_orders OWNER TO scmarket;
 
 --
--- Name: market_images; Type: TABLE; Schema: public; Owner: dashboard
+-- TOC entry 278 (class 1259 OID 501858)
+-- Name: market_images; Type: TABLE; Schema: public; Owner: scmarket
 --
 
 CREATE TABLE public.market_images (
@@ -850,10 +1049,11 @@ CREATE TABLE public.market_images (
 );
 
 
-ALTER TABLE public.market_images OWNER TO dashboard;
+ALTER TABLE public.market_images OWNER TO scmarket;
 
 --
--- Name: market_images_legacy; Type: TABLE; Schema: public; Owner: voc_sc
+-- TOC entry 245 (class 1259 OID 245349)
+-- Name: market_images_legacy; Type: TABLE; Schema: public; Owner: scmarket
 --
 
 CREATE TABLE public.market_images_legacy (
@@ -863,10 +1063,11 @@ CREATE TABLE public.market_images_legacy (
 );
 
 
-ALTER TABLE public.market_images_legacy OWNER TO voc_sc;
+ALTER TABLE public.market_images_legacy OWNER TO scmarket;
 
 --
--- Name: market_listing_details; Type: TABLE; Schema: public; Owner: dashboard
+-- TOC entry 277 (class 1259 OID 501849)
+-- Name: market_listing_details; Type: TABLE; Schema: public; Owner: scmarket
 --
 
 CREATE TABLE public.market_listing_details (
@@ -878,10 +1079,11 @@ CREATE TABLE public.market_listing_details (
 );
 
 
-ALTER TABLE public.market_listing_details OWNER TO dashboard;
+ALTER TABLE public.market_listing_details OWNER TO scmarket;
 
 --
--- Name: market_listings; Type: TABLE; Schema: public; Owner: dashboard
+-- TOC entry 276 (class 1259 OID 501828)
+-- Name: market_listings; Type: TABLE; Schema: public; Owner: scmarket
 --
 
 CREATE TABLE public.market_listings (
@@ -894,15 +1096,16 @@ CREATE TABLE public.market_listings (
     user_seller_id uuid,
     contractor_seller_id uuid,
     "timestamp" timestamp without time zone DEFAULT now() NOT NULL,
-    expiration timestamp without time zone DEFAULT (now() + '4 mons'::interval) NOT NULL,
+    expiration timestamp without time zone DEFAULT (now() + '1 mon'::interval) NOT NULL,
     CONSTRAINT market_listings_new_quantity_available_check CHECK ((quantity_available >= 0))
 );
 
 
-ALTER TABLE public.market_listings OWNER TO dashboard;
+ALTER TABLE public.market_listings OWNER TO scmarket;
 
 --
--- Name: market_listings_legacy; Type: TABLE; Schema: public; Owner: voc_sc
+-- TOC entry 243 (class 1259 OID 245282)
+-- Name: market_listings_legacy; Type: TABLE; Schema: public; Owner: scmarket
 --
 
 CREATE TABLE public.market_listings_legacy (
@@ -921,10 +1124,25 @@ CREATE TABLE public.market_listings_legacy (
 );
 
 
-ALTER TABLE public.market_listings_legacy OWNER TO voc_sc;
+ALTER TABLE public.market_listings_legacy OWNER TO scmarket;
 
 --
--- Name: market_multiple_listings; Type: TABLE; Schema: public; Owner: dashboard
+-- TOC entry 282 (class 1259 OID 501907)
+-- Name: market_multiple; Type: TABLE; Schema: public; Owner: scmarket
+--
+
+CREATE TABLE public.market_multiple (
+    multiple_id uuid DEFAULT gen_random_uuid() NOT NULL,
+    user_seller_id uuid,
+    contractor_seller_id uuid
+);
+
+
+ALTER TABLE public.market_multiple OWNER TO scmarket;
+
+--
+-- TOC entry 285 (class 1259 OID 502030)
+-- Name: market_multiple_listings; Type: TABLE; Schema: public; Owner: scmarket
 --
 
 CREATE TABLE public.market_multiple_listings (
@@ -934,10 +1152,11 @@ CREATE TABLE public.market_multiple_listings (
 );
 
 
-ALTER TABLE public.market_multiple_listings OWNER TO dashboard;
+ALTER TABLE public.market_multiple_listings OWNER TO scmarket;
 
 --
--- Name: market_multiples; Type: TABLE; Schema: public; Owner: dashboard
+-- TOC entry 284 (class 1259 OID 502004)
+-- Name: market_multiples; Type: TABLE; Schema: public; Owner: scmarket
 --
 
 CREATE TABLE public.market_multiples (
@@ -950,10 +1169,11 @@ CREATE TABLE public.market_multiples (
 );
 
 
-ALTER TABLE public.market_multiples OWNER TO dashboard;
+ALTER TABLE public.market_multiples OWNER TO scmarket;
 
 --
--- Name: market_orders; Type: TABLE; Schema: public; Owner: dashboard
+-- TOC entry 283 (class 1259 OID 501939)
+-- Name: market_orders; Type: TABLE; Schema: public; Owner: scmarket
 --
 
 CREATE TABLE public.market_orders (
@@ -963,10 +1183,11 @@ CREATE TABLE public.market_orders (
 );
 
 
-ALTER TABLE public.market_orders OWNER TO dashboard;
+ALTER TABLE public.market_orders OWNER TO scmarket;
 
 --
--- Name: market_orders_legacy; Type: TABLE; Schema: public; Owner: voc_sc
+-- TOC entry 247 (class 1259 OID 245395)
+-- Name: market_orders_legacy; Type: TABLE; Schema: public; Owner: scmarket
 --
 
 CREATE TABLE public.market_orders_legacy (
@@ -980,10 +1201,11 @@ CREATE TABLE public.market_orders_legacy (
 );
 
 
-ALTER TABLE public.market_orders_legacy OWNER TO voc_sc;
+ALTER TABLE public.market_orders_legacy OWNER TO scmarket;
 
 --
--- Name: market_price_history; Type: TABLE; Schema: public; Owner: dashboard
+-- TOC entry 302 (class 1259 OID 1530804)
+-- Name: market_price_history; Type: TABLE; Schema: public; Owner: scmarket
 --
 
 CREATE TABLE public.market_price_history (
@@ -994,10 +1216,11 @@ CREATE TABLE public.market_price_history (
 );
 
 
-ALTER TABLE public.market_price_history OWNER TO dashboard;
+ALTER TABLE public.market_price_history OWNER TO scmarket;
 
 --
--- Name: market_search; Type: VIEW; Schema: public; Owner: dashboard
+-- TOC entry 306 (class 1259 OID 4051084)
+-- Name: market_search; Type: VIEW; Schema: public; Owner: scmarket
 --
 
 CREATE VIEW public.market_search AS
@@ -1012,7 +1235,7 @@ SELECT
     NULL::timestamp without time zone AS "timestamp",
     NULL::timestamp without time zone AS expiration,
     NULL::integer AS total_rating,
-    NULL::integer AS avg_rating,
+    NULL::double precision AS avg_rating,
     NULL::uuid AS details_id,
     NULL::tsvector AS textsearch,
     NULL::character varying AS status,
@@ -1028,10 +1251,11 @@ SELECT
     NULL::uuid AS photo_details;
 
 
-ALTER TABLE public.market_search OWNER TO dashboard;
+ALTER TABLE public.market_search OWNER TO scmarket;
 
 --
--- Name: market_search_complete; Type: VIEW; Schema: public; Owner: dashboard
+-- TOC entry 307 (class 1259 OID 4051089)
+-- Name: market_search_complete; Type: VIEW; Schema: public; Owner: scmarket
 --
 
 CREATE VIEW public.market_search_complete AS
@@ -1075,10 +1299,11 @@ CREATE VIEW public.market_search_complete AS
      LEFT JOIN public.game_item_categories ON (((market_listing_details.item_type)::text = (game_item_categories.subcategory)::text)));
 
 
-ALTER TABLE public.market_search_complete OWNER TO dashboard;
+ALTER TABLE public.market_search_complete OWNER TO scmarket;
 
 --
--- Name: market_search_materialized; Type: MATERIALIZED VIEW; Schema: public; Owner: dashboard
+-- TOC entry 308 (class 1259 OID 4051094)
+-- Name: market_search_materialized; Type: MATERIALIZED VIEW; Schema: public; Owner: scmarket
 --
 
 CREATE MATERIALIZED VIEW public.market_search_materialized AS
@@ -1116,10 +1341,25 @@ CREATE MATERIALIZED VIEW public.market_search_materialized AS
   WITH NO DATA;
 
 
-ALTER TABLE public.market_search_materialized OWNER TO dashboard;
+ALTER TABLE public.market_search_materialized OWNER TO scmarket;
 
 --
--- Name: market_unique_listings; Type: TABLE; Schema: public; Owner: dashboard
+-- TOC entry 289 (class 1259 OID 510150)
+-- Name: market_status_update; Type: TABLE; Schema: public; Owner: scmarket
+--
+
+CREATE TABLE public.market_status_update (
+    listing_id uuid NOT NULL,
+    new_status character varying(20),
+    "timestamp" timestamp without time zone DEFAULT now()
+);
+
+
+ALTER TABLE public.market_status_update OWNER TO scmarket;
+
+--
+-- TOC entry 279 (class 1259 OID 501871)
+-- Name: market_unique_listings; Type: TABLE; Schema: public; Owner: scmarket
 --
 
 CREATE TABLE public.market_unique_listings (
@@ -1129,10 +1369,11 @@ CREATE TABLE public.market_unique_listings (
 );
 
 
-ALTER TABLE public.market_unique_listings OWNER TO dashboard;
+ALTER TABLE public.market_unique_listings OWNER TO scmarket;
 
 --
--- Name: message_attachments; Type: TABLE; Schema: public; Owner: voc_sc
+-- TOC entry 237 (class 1259 OID 245207)
+-- Name: message_attachments; Type: TABLE; Schema: public; Owner: scmarket
 --
 
 CREATE TABLE public.message_attachments (
@@ -1141,10 +1382,11 @@ CREATE TABLE public.message_attachments (
 );
 
 
-ALTER TABLE public.message_attachments OWNER TO voc_sc;
+ALTER TABLE public.message_attachments OWNER TO scmarket;
 
 --
--- Name: messages; Type: TABLE; Schema: public; Owner: voc_sc
+-- TOC entry 236 (class 1259 OID 245187)
+-- Name: messages; Type: TABLE; Schema: public; Owner: scmarket
 --
 
 CREATE TABLE public.messages (
@@ -1156,10 +1398,11 @@ CREATE TABLE public.messages (
 );
 
 
-ALTER TABLE public.messages OWNER TO voc_sc;
+ALTER TABLE public.messages OWNER TO scmarket;
 
 --
--- Name: monthly_activity; Type: VIEW; Schema: public; Owner: dashboard
+-- TOC entry 294 (class 1259 OID 510663)
+-- Name: monthly_activity; Type: VIEW; Schema: public; Owner: scmarket
 --
 
 CREATE VIEW public.monthly_activity AS
@@ -1169,10 +1412,11 @@ CREATE VIEW public.monthly_activity AS
   GROUP BY (date_trunc('month'::text, (activity_history.date)::timestamp with time zone));
 
 
-ALTER TABLE public.monthly_activity OWNER TO dashboard;
+ALTER TABLE public.monthly_activity OWNER TO scmarket;
 
 --
--- Name: notification; Type: TABLE; Schema: public; Owner: voc_sc
+-- TOC entry 261 (class 1259 OID 251965)
+-- Name: notification; Type: TABLE; Schema: public; Owner: scmarket
 --
 
 CREATE TABLE public.notification (
@@ -1183,10 +1427,11 @@ CREATE TABLE public.notification (
 );
 
 
-ALTER TABLE public.notification OWNER TO voc_sc;
+ALTER TABLE public.notification OWNER TO scmarket;
 
 --
--- Name: notification_actions; Type: TABLE; Schema: public; Owner: voc_sc
+-- TOC entry 256 (class 1259 OID 251922)
+-- Name: notification_actions; Type: TABLE; Schema: public; Owner: scmarket
 --
 
 CREATE TABLE public.notification_actions (
@@ -1196,10 +1441,11 @@ CREATE TABLE public.notification_actions (
 );
 
 
-ALTER TABLE public.notification_actions OWNER TO voc_sc;
+ALTER TABLE public.notification_actions OWNER TO scmarket;
 
 --
--- Name: notification_actions_action_type_id_seq; Type: SEQUENCE; Schema: public; Owner: voc_sc
+-- TOC entry 255 (class 1259 OID 251920)
+-- Name: notification_actions_action_type_id_seq; Type: SEQUENCE; Schema: public; Owner: scmarket
 --
 
 CREATE SEQUENCE public.notification_actions_action_type_id_seq
@@ -1211,17 +1457,20 @@ CREATE SEQUENCE public.notification_actions_action_type_id_seq
     CACHE 1;
 
 
-ALTER TABLE public.notification_actions_action_type_id_seq OWNER TO voc_sc;
+ALTER TABLE public.notification_actions_action_type_id_seq OWNER TO scmarket;
 
 --
--- Name: notification_actions_action_type_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: voc_sc
+-- TOC entry 4756 (class 0 OID 0)
+-- Dependencies: 255
+-- Name: notification_actions_action_type_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: scmarket
 --
 
 ALTER SEQUENCE public.notification_actions_action_type_id_seq OWNED BY public.notification_actions.action_type_id;
 
 
 --
--- Name: notification_change; Type: TABLE; Schema: public; Owner: voc_sc
+-- TOC entry 260 (class 1259 OID 251949)
+-- Name: notification_change; Type: TABLE; Schema: public; Owner: scmarket
 --
 
 CREATE TABLE public.notification_change (
@@ -1231,10 +1480,11 @@ CREATE TABLE public.notification_change (
 );
 
 
-ALTER TABLE public.notification_change OWNER TO voc_sc;
+ALTER TABLE public.notification_change OWNER TO scmarket;
 
 --
--- Name: notification_change_notification_change_id_seq; Type: SEQUENCE; Schema: public; Owner: voc_sc
+-- TOC entry 259 (class 1259 OID 251947)
+-- Name: notification_change_notification_change_id_seq; Type: SEQUENCE; Schema: public; Owner: scmarket
 --
 
 CREATE SEQUENCE public.notification_change_notification_change_id_seq
@@ -1246,17 +1496,20 @@ CREATE SEQUENCE public.notification_change_notification_change_id_seq
     CACHE 1;
 
 
-ALTER TABLE public.notification_change_notification_change_id_seq OWNER TO voc_sc;
+ALTER TABLE public.notification_change_notification_change_id_seq OWNER TO scmarket;
 
 --
--- Name: notification_change_notification_change_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: voc_sc
+-- TOC entry 4757 (class 0 OID 0)
+-- Dependencies: 259
+-- Name: notification_change_notification_change_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: scmarket
 --
 
 ALTER SEQUENCE public.notification_change_notification_change_id_seq OWNED BY public.notification_change.notification_change_id;
 
 
 --
--- Name: notification_object; Type: TABLE; Schema: public; Owner: voc_sc
+-- TOC entry 258 (class 1259 OID 251935)
+-- Name: notification_object; Type: TABLE; Schema: public; Owner: scmarket
 --
 
 CREATE TABLE public.notification_object (
@@ -1267,10 +1520,11 @@ CREATE TABLE public.notification_object (
 );
 
 
-ALTER TABLE public.notification_object OWNER TO voc_sc;
+ALTER TABLE public.notification_object OWNER TO scmarket;
 
 --
--- Name: notification_object_notification_object_id_seq; Type: SEQUENCE; Schema: public; Owner: voc_sc
+-- TOC entry 257 (class 1259 OID 251933)
+-- Name: notification_object_notification_object_id_seq; Type: SEQUENCE; Schema: public; Owner: scmarket
 --
 
 CREATE SEQUENCE public.notification_object_notification_object_id_seq
@@ -1282,17 +1536,20 @@ CREATE SEQUENCE public.notification_object_notification_object_id_seq
     CACHE 1;
 
 
-ALTER TABLE public.notification_object_notification_object_id_seq OWNER TO voc_sc;
+ALTER TABLE public.notification_object_notification_object_id_seq OWNER TO scmarket;
 
 --
--- Name: notification_object_notification_object_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: voc_sc
+-- TOC entry 4758 (class 0 OID 0)
+-- Dependencies: 257
+-- Name: notification_object_notification_object_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: scmarket
 --
 
 ALTER SEQUENCE public.notification_object_notification_object_id_seq OWNED BY public.notification_object.notification_object_id;
 
 
 --
--- Name: notification_webhooks; Type: TABLE; Schema: public; Owner: voc_sc
+-- TOC entry 253 (class 1259 OID 249368)
+-- Name: notification_webhooks; Type: TABLE; Schema: public; Owner: scmarket
 --
 
 CREATE TABLE public.notification_webhooks (
@@ -1306,10 +1563,11 @@ CREATE TABLE public.notification_webhooks (
 );
 
 
-ALTER TABLE public.notification_webhooks OWNER TO voc_sc;
+ALTER TABLE public.notification_webhooks OWNER TO scmarket;
 
 --
--- Name: offer_market_items; Type: TABLE; Schema: public; Owner: dashboard
+-- TOC entry 300 (class 1259 OID 512040)
+-- Name: offer_market_items; Type: TABLE; Schema: public; Owner: scmarket
 --
 
 CREATE TABLE public.offer_market_items (
@@ -1320,10 +1578,11 @@ CREATE TABLE public.offer_market_items (
 );
 
 
-ALTER TABLE public.offer_market_items OWNER TO dashboard;
+ALTER TABLE public.offer_market_items OWNER TO scmarket;
 
 --
--- Name: offer_sessions; Type: TABLE; Schema: public; Owner: dashboard
+-- TOC entry 298 (class 1259 OID 511987)
+-- Name: offer_sessions; Type: TABLE; Schema: public; Owner: scmarket
 --
 
 CREATE TABLE public.offer_sessions (
@@ -1337,10 +1596,11 @@ CREATE TABLE public.offer_sessions (
 );
 
 
-ALTER TABLE public.offer_sessions OWNER TO dashboard;
+ALTER TABLE public.offer_sessions OWNER TO scmarket;
 
 --
--- Name: order_applicants; Type: TABLE; Schema: public; Owner: voc_sc
+-- TOC entry 248 (class 1259 OID 245410)
+-- Name: order_applicants; Type: TABLE; Schema: public; Owner: scmarket
 --
 
 CREATE TABLE public.order_applicants (
@@ -1352,10 +1612,11 @@ CREATE TABLE public.order_applicants (
 );
 
 
-ALTER TABLE public.order_applicants OWNER TO voc_sc;
+ALTER TABLE public.order_applicants OWNER TO scmarket;
 
 --
--- Name: order_comments; Type: TABLE; Schema: public; Owner: voc_sc
+-- TOC entry 249 (class 1259 OID 245423)
+-- Name: order_comments; Type: TABLE; Schema: public; Owner: scmarket
 --
 
 CREATE TABLE public.order_comments (
@@ -1367,10 +1628,11 @@ CREATE TABLE public.order_comments (
 );
 
 
-ALTER TABLE public.order_comments OWNER TO voc_sc;
+ALTER TABLE public.order_comments OWNER TO scmarket;
 
 --
--- Name: order_deliveries; Type: TABLE; Schema: public; Owner: voc_sc
+-- TOC entry 250 (class 1259 OID 245441)
+-- Name: order_deliveries; Type: TABLE; Schema: public; Owner: scmarket
 --
 
 CREATE TABLE public.order_deliveries (
@@ -1379,10 +1641,11 @@ CREATE TABLE public.order_deliveries (
 );
 
 
-ALTER TABLE public.order_deliveries OWNER TO voc_sc;
+ALTER TABLE public.order_deliveries OWNER TO scmarket;
 
 --
--- Name: order_offers; Type: TABLE; Schema: public; Owner: dashboard
+-- TOC entry 299 (class 1259 OID 512010)
+-- Name: order_offers; Type: TABLE; Schema: public; Owner: scmarket
 --
 
 CREATE TABLE public.order_offers (
@@ -1401,10 +1664,11 @@ CREATE TABLE public.order_offers (
 );
 
 
-ALTER TABLE public.order_offers OWNER TO dashboard;
+ALTER TABLE public.order_offers OWNER TO scmarket;
 
 --
--- Name: order_reviews; Type: TABLE; Schema: public; Owner: voc_sc
+-- TOC entry 251 (class 1259 OID 245454)
+-- Name: order_reviews; Type: TABLE; Schema: public; Owner: scmarket
 --
 
 CREATE TABLE public.order_reviews (
@@ -1419,10 +1683,11 @@ CREATE TABLE public.order_reviews (
 );
 
 
-ALTER TABLE public.order_reviews OWNER TO voc_sc;
+ALTER TABLE public.order_reviews OWNER TO scmarket;
 
 --
--- Name: orders; Type: TABLE; Schema: public; Owner: voc_sc
+-- TOC entry 246 (class 1259 OID 245363)
+-- Name: orders; Type: TABLE; Schema: public; Owner: scmarket
 --
 
 CREATE TABLE public.orders (
@@ -1447,10 +1712,11 @@ CREATE TABLE public.orders (
 );
 
 
-ALTER TABLE public.orders OWNER TO voc_sc;
+ALTER TABLE public.orders OWNER TO scmarket;
 
 --
--- Name: order_stats; Type: VIEW; Schema: public; Owner: dashboard
+-- TOC entry 288 (class 1259 OID 509806)
+-- Name: order_stats; Type: VIEW; Schema: public; Owner: scmarket
 --
 
 CREATE VIEW public.order_stats AS
@@ -1461,25 +1727,41 @@ CREATE VIEW public.order_stats AS
    FROM public.orders t;
 
 
-ALTER TABLE public.order_stats OWNER TO dashboard;
+ALTER TABLE public.order_stats OWNER TO scmarket;
 
 --
--- Name: order_week_stats; Type: VIEW; Schema: public; Owner: dashboard
+-- TOC entry 290 (class 1259 OID 510188)
+-- Name: order_status_update; Type: TABLE; Schema: public; Owner: scmarket
+--
+
+CREATE TABLE public.order_status_update (
+    order_id uuid,
+    new_status character varying(20),
+    "timestamp" timestamp without time zone DEFAULT now()
+);
+
+
+ALTER TABLE public.order_status_update OWNER TO scmarket;
+
+--
+-- TOC entry 287 (class 1259 OID 509802)
+-- Name: order_week_stats; Type: VIEW; Schema: public; Owner: scmarket
 --
 
 CREATE VIEW public.order_week_stats AS
  SELECT count(*) AS week_orders,
     ( SELECT COALESCE(sum(orders.cost), (0)::numeric) AS "coalesce"
            FROM public.orders
-          WHERE (((orders.status)::text = 'fulfilled'::text) AND (orders."timestamp" > (now() - '7 days'::interval)))) AS week_order_value
+          WHERE (((orders.status)::text <> 'cancelled'::text) AND (orders."timestamp" > (now() - '7 days'::interval)))) AS week_order_value
    FROM public.orders t
   WHERE (t."timestamp" > (now() - '7 days'::interval));
 
 
-ALTER TABLE public.order_week_stats OWNER TO dashboard;
+ALTER TABLE public.order_week_stats OWNER TO scmarket;
 
 --
--- Name: public_contract_offers; Type: TABLE; Schema: public; Owner: dashboard
+-- TOC entry 304 (class 1259 OID 1636676)
+-- Name: public_contract_offers; Type: TABLE; Schema: public; Owner: scmarket
 --
 
 CREATE TABLE public.public_contract_offers (
@@ -1488,10 +1770,11 @@ CREATE TABLE public.public_contract_offers (
 );
 
 
-ALTER TABLE public.public_contract_offers OWNER TO dashboard;
+ALTER TABLE public.public_contract_offers OWNER TO scmarket;
 
 --
--- Name: public_contracts; Type: TABLE; Schema: public; Owner: dashboard
+-- TOC entry 303 (class 1259 OID 1636653)
+-- Name: public_contracts; Type: TABLE; Schema: public; Owner: scmarket
 --
 
 CREATE TABLE public.public_contracts (
@@ -1511,10 +1794,11 @@ CREATE TABLE public.public_contracts (
 );
 
 
-ALTER TABLE public.public_contracts OWNER TO dashboard;
+ALTER TABLE public.public_contracts OWNER TO scmarket;
 
 --
--- Name: recruiting_comments; Type: TABLE; Schema: public; Owner: voc_sc
+-- TOC entry 265 (class 1259 OID 269602)
+-- Name: recruiting_comments; Type: TABLE; Schema: public; Owner: scmarket
 --
 
 CREATE TABLE public.recruiting_comments (
@@ -1523,10 +1807,11 @@ CREATE TABLE public.recruiting_comments (
 );
 
 
-ALTER TABLE public.recruiting_comments OWNER TO voc_sc;
+ALTER TABLE public.recruiting_comments OWNER TO scmarket;
 
 --
--- Name: recruiting_posts; Type: TABLE; Schema: public; Owner: voc_sc
+-- TOC entry 262 (class 1259 OID 269551)
+-- Name: recruiting_posts; Type: TABLE; Schema: public; Owner: scmarket
 --
 
 CREATE TABLE public.recruiting_posts (
@@ -1538,10 +1823,11 @@ CREATE TABLE public.recruiting_posts (
 );
 
 
-ALTER TABLE public.recruiting_posts OWNER TO voc_sc;
+ALTER TABLE public.recruiting_posts OWNER TO scmarket;
 
 --
--- Name: recruiting_votes; Type: TABLE; Schema: public; Owner: voc_sc
+-- TOC entry 263 (class 1259 OID 269566)
+-- Name: recruiting_votes; Type: TABLE; Schema: public; Owner: scmarket
 --
 
 CREATE TABLE public.recruiting_votes (
@@ -1552,10 +1838,11 @@ CREATE TABLE public.recruiting_votes (
 );
 
 
-ALTER TABLE public.recruiting_votes OWNER TO voc_sc;
+ALTER TABLE public.recruiting_votes OWNER TO scmarket;
 
 --
--- Name: rlflx; Type: TABLE; Schema: public; Owner: voc_sc
+-- TOC entry 271 (class 1259 OID 290928)
+-- Name: rlflx; Type: TABLE; Schema: public; Owner: scmarket
 --
 
 CREATE TABLE public.rlflx (
@@ -1565,10 +1852,11 @@ CREATE TABLE public.rlflx (
 );
 
 
-ALTER TABLE public.rlflx OWNER TO voc_sc;
+ALTER TABLE public.rlflx OWNER TO scmarket;
 
 --
--- Name: service_images; Type: TABLE; Schema: public; Owner: dashboard
+-- TOC entry 301 (class 1259 OID 512894)
+-- Name: service_images; Type: TABLE; Schema: public; Owner: scmarket
 --
 
 CREATE TABLE public.service_images (
@@ -1577,10 +1865,11 @@ CREATE TABLE public.service_images (
 );
 
 
-ALTER TABLE public.service_images OWNER TO dashboard;
+ALTER TABLE public.service_images OWNER TO scmarket;
 
 --
--- Name: services; Type: TABLE; Schema: public; Owner: voc_sc
+-- TOC entry 252 (class 1259 OID 247971)
+-- Name: services; Type: TABLE; Schema: public; Owner: scmarket
 --
 
 CREATE TABLE public.services (
@@ -1605,10 +1894,11 @@ CREATE TABLE public.services (
 );
 
 
-ALTER TABLE public.services OWNER TO voc_sc;
+ALTER TABLE public.services OWNER TO scmarket;
 
 --
--- Name: ship_checkins; Type: TABLE; Schema: public; Owner: voc_sc
+-- TOC entry 240 (class 1259 OID 245240)
+-- Name: ship_checkins; Type: TABLE; Schema: public; Owner: scmarket
 --
 
 CREATE TABLE public.ship_checkins (
@@ -1621,10 +1911,11 @@ CREATE TABLE public.ship_checkins (
 );
 
 
-ALTER TABLE public.ship_checkins OWNER TO voc_sc;
+ALTER TABLE public.ship_checkins OWNER TO scmarket;
 
 --
--- Name: ships; Type: TABLE; Schema: public; Owner: voc_sc
+-- TOC entry 239 (class 1259 OID 245229)
+-- Name: ships; Type: TABLE; Schema: public; Owner: scmarket
 --
 
 CREATE TABLE public.ships (
@@ -1635,10 +1926,11 @@ CREATE TABLE public.ships (
 );
 
 
-ALTER TABLE public.ships OWNER TO voc_sc;
+ALTER TABLE public.ships OWNER TO scmarket;
 
 --
--- Name: transactions; Type: TABLE; Schema: public; Owner: voc_sc
+-- TOC entry 238 (class 1259 OID 245220)
+-- Name: transactions; Type: TABLE; Schema: public; Owner: scmarket
 --
 
 CREATE TABLE public.transactions (
@@ -1655,10 +1947,11 @@ CREATE TABLE public.transactions (
 );
 
 
-ALTER TABLE public.transactions OWNER TO voc_sc;
+ALTER TABLE public.transactions OWNER TO scmarket;
 
 --
--- Name: user_availability; Type: TABLE; Schema: public; Owner: voc_sc
+-- TOC entry 274 (class 1259 OID 329100)
+-- Name: user_availability; Type: TABLE; Schema: public; Owner: scmarket
 --
 
 CREATE TABLE public.user_availability (
@@ -1669,10 +1962,25 @@ CREATE TABLE public.user_availability (
 );
 
 
-ALTER TABLE public.user_availability OWNER TO voc_sc;
+ALTER TABLE public.user_availability OWNER TO scmarket;
 
 --
--- Name: webhook_actions; Type: TABLE; Schema: public; Owner: voc_sc
+-- TOC entry 309 (class 1259 OID 4175564)
+-- Name: user_contractor_settings; Type: TABLE; Schema: public; Owner: scmarket
+--
+
+CREATE TABLE public.user_contractor_settings (
+    user_id uuid NOT NULL,
+    contractor_id uuid NOT NULL,
+    display_membership boolean DEFAULT true NOT NULL
+);
+
+
+ALTER TABLE public.user_contractor_settings OWNER TO scmarket;
+
+--
+-- TOC entry 267 (class 1259 OID 277870)
+-- Name: webhook_actions; Type: TABLE; Schema: public; Owner: scmarket
 --
 
 CREATE TABLE public.webhook_actions (
@@ -1681,10 +1989,11 @@ CREATE TABLE public.webhook_actions (
 );
 
 
-ALTER TABLE public.webhook_actions OWNER TO voc_sc;
+ALTER TABLE public.webhook_actions OWNER TO scmarket;
 
 --
--- Name: weekly_activity; Type: VIEW; Schema: public; Owner: dashboard
+-- TOC entry 293 (class 1259 OID 510659)
+-- Name: weekly_activity; Type: VIEW; Schema: public; Owner: scmarket
 --
 
 CREATE VIEW public.weekly_activity AS
@@ -1694,31 +2003,43 @@ CREATE VIEW public.weekly_activity AS
   GROUP BY (date_trunc('week'::text, (activity_history.date)::timestamp with time zone));
 
 
-ALTER TABLE public.weekly_activity OWNER TO dashboard;
+ALTER TABLE public.weekly_activity OWNER TO scmarket;
 
 --
--- Name: notification_actions action_type_id; Type: DEFAULT; Schema: public; Owner: voc_sc
+-- TOC entry 4333 (class 2604 OID 511651)
+-- Name: game_item_categories id; Type: DEFAULT; Schema: public; Owner: scmarket
+--
+
+ALTER TABLE ONLY public.game_item_categories ALTER COLUMN id SET DEFAULT nextval('public.game_item_categories_id_seq'::regclass);
+
+
+--
+-- TOC entry 4276 (class 2604 OID 251925)
+-- Name: notification_actions action_type_id; Type: DEFAULT; Schema: public; Owner: scmarket
 --
 
 ALTER TABLE ONLY public.notification_actions ALTER COLUMN action_type_id SET DEFAULT nextval('public.notification_actions_action_type_id_seq'::regclass);
 
 
 --
--- Name: notification_change notification_change_id; Type: DEFAULT; Schema: public; Owner: voc_sc
+-- TOC entry 4279 (class 2604 OID 251952)
+-- Name: notification_change notification_change_id; Type: DEFAULT; Schema: public; Owner: scmarket
 --
 
 ALTER TABLE ONLY public.notification_change ALTER COLUMN notification_change_id SET DEFAULT nextval('public.notification_change_notification_change_id_seq'::regclass);
 
 
 --
--- Name: notification_object notification_object_id; Type: DEFAULT; Schema: public; Owner: voc_sc
+-- TOC entry 4277 (class 2604 OID 251938)
+-- Name: notification_object notification_object_id; Type: DEFAULT; Schema: public; Owner: scmarket
 --
 
 ALTER TABLE ONLY public.notification_object ALTER COLUMN notification_object_id SET DEFAULT nextval('public.notification_object_notification_object_id_seq'::regclass);
 
 
 --
--- Name: account_settings account_settings_pkey; Type: CONSTRAINT; Schema: public; Owner: voc_sc
+-- TOC entry 4428 (class 2606 OID 280192)
+-- Name: account_settings account_settings_pkey; Type: CONSTRAINT; Schema: public; Owner: scmarket
 --
 
 ALTER TABLE ONLY public.account_settings
@@ -1726,7 +2047,8 @@ ALTER TABLE ONLY public.account_settings
 
 
 --
--- Name: accounts accounts_pkey; Type: CONSTRAINT; Schema: public; Owner: voc_sc
+-- TOC entry 4364 (class 2606 OID 245097)
+-- Name: accounts accounts_pkey; Type: CONSTRAINT; Schema: public; Owner: scmarket
 --
 
 ALTER TABLE ONLY public.accounts
@@ -1734,7 +2056,8 @@ ALTER TABLE ONLY public.accounts
 
 
 --
--- Name: accounts accounts_username_key; Type: CONSTRAINT; Schema: public; Owner: voc_sc
+-- TOC entry 4366 (class 2606 OID 245099)
+-- Name: accounts accounts_username_key; Type: CONSTRAINT; Schema: public; Owner: scmarket
 --
 
 ALTER TABLE ONLY public.accounts
@@ -1742,7 +2065,8 @@ ALTER TABLE ONLY public.accounts
 
 
 --
--- Name: activity_history activity_history_pkey; Type: CONSTRAINT; Schema: public; Owner: dashboard
+-- TOC entry 4455 (class 2606 OID 510635)
+-- Name: activity_history activity_history_pkey; Type: CONSTRAINT; Schema: public; Owner: scmarket
 --
 
 ALTER TABLE ONLY public.activity_history
@@ -1750,7 +2074,8 @@ ALTER TABLE ONLY public.activity_history
 
 
 --
--- Name: market_auction_details auction_details_pkey; Type: CONSTRAINT; Schema: public; Owner: voc_sc
+-- TOC entry 4436 (class 2606 OID 501653)
+-- Name: market_auction_details auction_details_pkey; Type: CONSTRAINT; Schema: public; Owner: scmarket
 --
 
 ALTER TABLE ONLY public.market_auction_details
@@ -1758,7 +2083,8 @@ ALTER TABLE ONLY public.market_auction_details
 
 
 --
--- Name: chats chats_pk; Type: CONSTRAINT; Schema: public; Owner: voc_sc
+-- TOC entry 4376 (class 2606 OID 492411)
+-- Name: chats chats_pk; Type: CONSTRAINT; Schema: public; Owner: scmarket
 --
 
 ALTER TABLE ONLY public.chats
@@ -1766,7 +2092,8 @@ ALTER TABLE ONLY public.chats
 
 
 --
--- Name: chats chats_pkey; Type: CONSTRAINT; Schema: public; Owner: voc_sc
+-- TOC entry 4378 (class 2606 OID 245173)
+-- Name: chats chats_pkey; Type: CONSTRAINT; Schema: public; Owner: scmarket
 --
 
 ALTER TABLE ONLY public.chats
@@ -1774,7 +2101,8 @@ ALTER TABLE ONLY public.chats
 
 
 --
--- Name: comment_votes comment_votes_actor_id_comment_id_key; Type: CONSTRAINT; Schema: public; Owner: voc_sc
+-- TOC entry 4420 (class 2606 OID 269620)
+-- Name: comment_votes comment_votes_actor_id_comment_id_key; Type: CONSTRAINT; Schema: public; Owner: scmarket
 --
 
 ALTER TABLE ONLY public.comment_votes
@@ -1782,7 +2110,8 @@ ALTER TABLE ONLY public.comment_votes
 
 
 --
--- Name: comments comments_pkey; Type: CONSTRAINT; Schema: public; Owner: voc_sc
+-- TOC entry 4418 (class 2606 OID 269591)
+-- Name: comments comments_pkey; Type: CONSTRAINT; Schema: public; Owner: scmarket
 --
 
 ALTER TABLE ONLY public.comments
@@ -1790,7 +2119,8 @@ ALTER TABLE ONLY public.comments
 
 
 --
--- Name: contractor_invite_codes contractor_invite_codes_pkey; Type: CONSTRAINT; Schema: public; Owner: voc_sc
+-- TOC entry 4404 (class 2606 OID 251248)
+-- Name: contractor_invite_codes contractor_invite_codes_pkey; Type: CONSTRAINT; Schema: public; Owner: scmarket
 --
 
 ALTER TABLE ONLY public.contractor_invite_codes
@@ -1798,7 +2128,8 @@ ALTER TABLE ONLY public.contractor_invite_codes
 
 
 --
--- Name: contractor_invites contractor_invites_pkey; Type: CONSTRAINT; Schema: public; Owner: voc_sc
+-- TOC entry 4373 (class 2606 OID 307774)
+-- Name: contractor_invites contractor_invites_pkey; Type: CONSTRAINT; Schema: public; Owner: scmarket
 --
 
 ALTER TABLE ONLY public.contractor_invites
@@ -1806,7 +2137,8 @@ ALTER TABLE ONLY public.contractor_invites
 
 
 --
--- Name: contractor_roles contractor_roles_pkey; Type: CONSTRAINT; Schema: public; Owner: voc_sc
+-- TOC entry 4433 (class 2606 OID 312804)
+-- Name: contractor_roles contractor_roles_pkey; Type: CONSTRAINT; Schema: public; Owner: scmarket
 --
 
 ALTER TABLE ONLY public.contractor_roles
@@ -1814,7 +2146,8 @@ ALTER TABLE ONLY public.contractor_roles
 
 
 --
--- Name: contractors contractors_pkey; Type: CONSTRAINT; Schema: public; Owner: voc_sc
+-- TOC entry 4368 (class 2606 OID 245122)
+-- Name: contractors contractors_pkey; Type: CONSTRAINT; Schema: public; Owner: scmarket
 --
 
 ALTER TABLE ONLY public.contractors
@@ -1822,7 +2155,8 @@ ALTER TABLE ONLY public.contractors
 
 
 --
--- Name: contractors contractors_spectrum_id_key; Type: CONSTRAINT; Schema: public; Owner: voc_sc
+-- TOC entry 4370 (class 2606 OID 245124)
+-- Name: contractors contractors_spectrum_id_key; Type: CONSTRAINT; Schema: public; Owner: scmarket
 --
 
 ALTER TABLE ONLY public.contractors
@@ -1830,7 +2164,8 @@ ALTER TABLE ONLY public.contractors
 
 
 --
--- Name: deliveries deliveries_pkey; Type: CONSTRAINT; Schema: public; Owner: voc_sc
+-- TOC entry 4386 (class 2606 OID 245276)
+-- Name: deliveries deliveries_pkey; Type: CONSTRAINT; Schema: public; Owner: scmarket
 --
 
 ALTER TABLE ONLY public.deliveries
@@ -1838,31 +2173,44 @@ ALTER TABLE ONLY public.deliveries
 
 
 --
--- Name: game_item_categories game_item_categories_pk; Type: CONSTRAINT; Schema: public; Owner: dashboard
+-- TOC entry 4461 (class 2606 OID 511653)
+-- Name: game_item_categories game_item_categories_pkey; Type: CONSTRAINT; Schema: public; Owner: scmarket
 --
 
 ALTER TABLE ONLY public.game_item_categories
-    ADD CONSTRAINT game_item_categories_pk UNIQUE (subcategory);
+    ADD CONSTRAINT game_item_categories_pkey PRIMARY KEY (id);
 
 
 --
--- Name: game_items game_items_pk; Type: CONSTRAINT; Schema: public; Owner: dashboard
+-- TOC entry 4463 (class 2606 OID 511655)
+-- Name: game_item_categories game_item_categories_subcategory_key; Type: CONSTRAINT; Schema: public; Owner: scmarket
+--
+
+ALTER TABLE ONLY public.game_item_categories
+    ADD CONSTRAINT game_item_categories_subcategory_key UNIQUE (subcategory);
+
+
+--
+-- TOC entry 4457 (class 2606 OID 511645)
+-- Name: game_items game_items_name_key; Type: CONSTRAINT; Schema: public; Owner: scmarket
 --
 
 ALTER TABLE ONLY public.game_items
-    ADD CONSTRAINT game_items_pk UNIQUE (name);
+    ADD CONSTRAINT game_items_name_key UNIQUE (name);
 
 
 --
--- Name: game_items game_items_pk_2; Type: CONSTRAINT; Schema: public; Owner: dashboard
+-- TOC entry 4459 (class 2606 OID 511643)
+-- Name: game_items game_items_pkey; Type: CONSTRAINT; Schema: public; Owner: scmarket
 --
 
 ALTER TABLE ONLY public.game_items
-    ADD CONSTRAINT game_items_pk_2 UNIQUE (id);
+    ADD CONSTRAINT game_items_pkey PRIMARY KEY (id);
 
 
 --
--- Name: image_resources image_resources_pkey; Type: CONSTRAINT; Schema: public; Owner: voc_sc
+-- TOC entry 4362 (class 2606 OID 245082)
+-- Name: image_resources image_resources_pkey; Type: CONSTRAINT; Schema: public; Owner: scmarket
 --
 
 ALTER TABLE ONLY public.image_resources
@@ -1870,7 +2218,8 @@ ALTER TABLE ONLY public.image_resources
 
 
 --
--- Name: login_sessions login_sessions_pkey; Type: CONSTRAINT; Schema: public; Owner: voc_sc
+-- TOC entry 4360 (class 2606 OID 245073)
+-- Name: login_sessions login_sessions_pkey; Type: CONSTRAINT; Schema: public; Owner: scmarket
 --
 
 ALTER TABLE ONLY public.login_sessions
@@ -1878,7 +2227,8 @@ ALTER TABLE ONLY public.login_sessions
 
 
 --
--- Name: market_aggregate_listings market_aggregate_listings_new_pkey; Type: CONSTRAINT; Schema: public; Owner: dashboard
+-- TOC entry 4445 (class 2606 OID 501900)
+-- Name: market_aggregate_listings market_aggregate_listings_new_pkey; Type: CONSTRAINT; Schema: public; Owner: scmarket
 --
 
 ALTER TABLE ONLY public.market_aggregate_listings
@@ -1886,7 +2236,8 @@ ALTER TABLE ONLY public.market_aggregate_listings
 
 
 --
--- Name: market_aggregate_listings_legacy market_aggregate_listings_pkey; Type: CONSTRAINT; Schema: public; Owner: voc_sc
+-- TOC entry 4426 (class 2606 OID 279954)
+-- Name: market_aggregate_listings_legacy market_aggregate_listings_pkey; Type: CONSTRAINT; Schema: public; Owner: scmarket
 --
 
 ALTER TABLE ONLY public.market_aggregate_listings_legacy
@@ -1894,7 +2245,8 @@ ALTER TABLE ONLY public.market_aggregate_listings_legacy
 
 
 --
--- Name: market_aggregates market_aggregates_new_pkey; Type: CONSTRAINT; Schema: public; Owner: dashboard
+-- TOC entry 4442 (class 2606 OID 501889)
+-- Name: market_aggregates market_aggregates_new_pkey; Type: CONSTRAINT; Schema: public; Owner: scmarket
 --
 
 ALTER TABLE ONLY public.market_aggregates
@@ -1902,7 +2254,8 @@ ALTER TABLE ONLY public.market_aggregates
 
 
 --
--- Name: market_aggregates_legacy market_aggregates_pkey; Type: CONSTRAINT; Schema: public; Owner: voc_sc
+-- TOC entry 4424 (class 2606 OID 279943)
+-- Name: market_aggregates_legacy market_aggregates_pkey; Type: CONSTRAINT; Schema: public; Owner: scmarket
 --
 
 ALTER TABLE ONLY public.market_aggregates_legacy
@@ -1910,7 +2263,8 @@ ALTER TABLE ONLY public.market_aggregates_legacy
 
 
 --
--- Name: market_bids market_bids_pkey; Type: CONSTRAINT; Schema: public; Owner: voc_sc
+-- TOC entry 4390 (class 2606 OID 245310)
+-- Name: market_bids market_bids_pkey; Type: CONSTRAINT; Schema: public; Owner: scmarket
 --
 
 ALTER TABLE ONLY public.market_bids
@@ -1918,7 +2272,8 @@ ALTER TABLE ONLY public.market_bids
 
 
 --
--- Name: market_buy_orders market_buy_orders_pkey; Type: CONSTRAINT; Schema: public; Owner: dashboard
+-- TOC entry 4453 (class 2606 OID 502123)
+-- Name: market_buy_orders market_buy_orders_pkey; Type: CONSTRAINT; Schema: public; Owner: scmarket
 --
 
 ALTER TABLE ONLY public.market_buy_orders
@@ -1926,7 +2281,8 @@ ALTER TABLE ONLY public.market_buy_orders
 
 
 --
--- Name: market_listing_details market_listing_details_new_pkey; Type: CONSTRAINT; Schema: public; Owner: dashboard
+-- TOC entry 4440 (class 2606 OID 501857)
+-- Name: market_listing_details market_listing_details_new_pkey; Type: CONSTRAINT; Schema: public; Owner: scmarket
 --
 
 ALTER TABLE ONLY public.market_listing_details
@@ -1934,7 +2290,8 @@ ALTER TABLE ONLY public.market_listing_details
 
 
 --
--- Name: market_listings market_listings_new_pkey; Type: CONSTRAINT; Schema: public; Owner: dashboard
+-- TOC entry 4438 (class 2606 OID 501838)
+-- Name: market_listings market_listings_new_pkey; Type: CONSTRAINT; Schema: public; Owner: scmarket
 --
 
 ALTER TABLE ONLY public.market_listings
@@ -1942,7 +2299,8 @@ ALTER TABLE ONLY public.market_listings
 
 
 --
--- Name: market_listings_legacy market_listings_pkey; Type: CONSTRAINT; Schema: public; Owner: voc_sc
+-- TOC entry 4388 (class 2606 OID 245293)
+-- Name: market_listings_legacy market_listings_pkey; Type: CONSTRAINT; Schema: public; Owner: scmarket
 --
 
 ALTER TABLE ONLY public.market_listings_legacy
@@ -1950,7 +2308,8 @@ ALTER TABLE ONLY public.market_listings_legacy
 
 
 --
--- Name: market_multiple_listings market_multiple_listings_pkey; Type: CONSTRAINT; Schema: public; Owner: dashboard
+-- TOC entry 4451 (class 2606 OID 502035)
+-- Name: market_multiple_listings market_multiple_listings_pkey; Type: CONSTRAINT; Schema: public; Owner: scmarket
 --
 
 ALTER TABLE ONLY public.market_multiple_listings
@@ -1958,15 +2317,26 @@ ALTER TABLE ONLY public.market_multiple_listings
 
 
 --
--- Name: market_multiples market_multiple_pkey; Type: CONSTRAINT; Schema: public; Owner: dashboard
+-- TOC entry 4447 (class 2606 OID 501912)
+-- Name: market_multiple market_multiple_pkey; Type: CONSTRAINT; Schema: public; Owner: scmarket
 --
 
-ALTER TABLE ONLY public.market_multiples
+ALTER TABLE ONLY public.market_multiple
     ADD CONSTRAINT market_multiple_pkey PRIMARY KEY (multiple_id);
 
 
 --
--- Name: market_price_history market_price_history_game_item_id_date_key; Type: CONSTRAINT; Schema: public; Owner: dashboard
+-- TOC entry 4449 (class 2606 OID 502009)
+-- Name: market_multiples market_multiples_pkey; Type: CONSTRAINT; Schema: public; Owner: scmarket
+--
+
+ALTER TABLE ONLY public.market_multiples
+    ADD CONSTRAINT market_multiples_pkey PRIMARY KEY (multiple_id);
+
+
+--
+-- TOC entry 4469 (class 2606 OID 1530809)
+-- Name: market_price_history market_price_history_game_item_id_date_key; Type: CONSTRAINT; Schema: public; Owner: scmarket
 --
 
 ALTER TABLE ONLY public.market_price_history
@@ -1974,7 +2344,8 @@ ALTER TABLE ONLY public.market_price_history
 
 
 --
--- Name: messages messages_pkey; Type: CONSTRAINT; Schema: public; Owner: voc_sc
+-- TOC entry 4380 (class 2606 OID 245196)
+-- Name: messages messages_pkey; Type: CONSTRAINT; Schema: public; Owner: scmarket
 --
 
 ALTER TABLE ONLY public.messages
@@ -1982,7 +2353,8 @@ ALTER TABLE ONLY public.messages
 
 
 --
--- Name: notification_actions notification_actions_action_key; Type: CONSTRAINT; Schema: public; Owner: voc_sc
+-- TOC entry 4406 (class 2606 OID 251932)
+-- Name: notification_actions notification_actions_action_key; Type: CONSTRAINT; Schema: public; Owner: scmarket
 --
 
 ALTER TABLE ONLY public.notification_actions
@@ -1990,7 +2362,8 @@ ALTER TABLE ONLY public.notification_actions
 
 
 --
--- Name: notification_actions notification_actions_pkey; Type: CONSTRAINT; Schema: public; Owner: voc_sc
+-- TOC entry 4408 (class 2606 OID 251930)
+-- Name: notification_actions notification_actions_pkey; Type: CONSTRAINT; Schema: public; Owner: scmarket
 --
 
 ALTER TABLE ONLY public.notification_actions
@@ -1998,7 +2371,8 @@ ALTER TABLE ONLY public.notification_actions
 
 
 --
--- Name: notification_change notification_change_notification_change_id_key; Type: CONSTRAINT; Schema: public; Owner: voc_sc
+-- TOC entry 4412 (class 2606 OID 251954)
+-- Name: notification_change notification_change_notification_change_id_key; Type: CONSTRAINT; Schema: public; Owner: scmarket
 --
 
 ALTER TABLE ONLY public.notification_change
@@ -2006,7 +2380,8 @@ ALTER TABLE ONLY public.notification_change
 
 
 --
--- Name: notification_object notification_object_pkey; Type: CONSTRAINT; Schema: public; Owner: voc_sc
+-- TOC entry 4410 (class 2606 OID 251941)
+-- Name: notification_object notification_object_pkey; Type: CONSTRAINT; Schema: public; Owner: scmarket
 --
 
 ALTER TABLE ONLY public.notification_object
@@ -2014,7 +2389,8 @@ ALTER TABLE ONLY public.notification_object
 
 
 --
--- Name: notification notification_pkey; Type: CONSTRAINT; Schema: public; Owner: voc_sc
+-- TOC entry 4414 (class 2606 OID 251971)
+-- Name: notification notification_pkey; Type: CONSTRAINT; Schema: public; Owner: scmarket
 --
 
 ALTER TABLE ONLY public.notification
@@ -2022,7 +2398,8 @@ ALTER TABLE ONLY public.notification
 
 
 --
--- Name: offer_sessions offer_sessions_pkey; Type: CONSTRAINT; Schema: public; Owner: dashboard
+-- TOC entry 4465 (class 2606 OID 511994)
+-- Name: offer_sessions offer_sessions_pkey; Type: CONSTRAINT; Schema: public; Owner: scmarket
 --
 
 ALTER TABLE ONLY public.offer_sessions
@@ -2030,7 +2407,8 @@ ALTER TABLE ONLY public.offer_sessions
 
 
 --
--- Name: order_offers order_offers_pkey; Type: CONSTRAINT; Schema: public; Owner: dashboard
+-- TOC entry 4467 (class 2606 OID 512024)
+-- Name: order_offers order_offers_pkey; Type: CONSTRAINT; Schema: public; Owner: scmarket
 --
 
 ALTER TABLE ONLY public.order_offers
@@ -2038,7 +2416,8 @@ ALTER TABLE ONLY public.order_offers
 
 
 --
--- Name: order_reviews order_reviews_pkey; Type: CONSTRAINT; Schema: public; Owner: voc_sc
+-- TOC entry 4398 (class 2606 OID 245463)
+-- Name: order_reviews order_reviews_pkey; Type: CONSTRAINT; Schema: public; Owner: scmarket
 --
 
 ALTER TABLE ONLY public.order_reviews
@@ -2046,7 +2425,8 @@ ALTER TABLE ONLY public.order_reviews
 
 
 --
--- Name: services order_templates_pkey; Type: CONSTRAINT; Schema: public; Owner: voc_sc
+-- TOC entry 4400 (class 2606 OID 247984)
+-- Name: services order_templates_pkey; Type: CONSTRAINT; Schema: public; Owner: scmarket
 --
 
 ALTER TABLE ONLY public.services
@@ -2054,7 +2434,8 @@ ALTER TABLE ONLY public.services
 
 
 --
--- Name: notification_webhooks order_webhooks_pkey; Type: CONSTRAINT; Schema: public; Owner: voc_sc
+-- TOC entry 4402 (class 2606 OID 249377)
+-- Name: notification_webhooks order_webhooks_pkey; Type: CONSTRAINT; Schema: public; Owner: scmarket
 --
 
 ALTER TABLE ONLY public.notification_webhooks
@@ -2062,7 +2443,8 @@ ALTER TABLE ONLY public.notification_webhooks
 
 
 --
--- Name: orders orders_pkey; Type: CONSTRAINT; Schema: public; Owner: voc_sc
+-- TOC entry 4392 (class 2606 OID 245379)
+-- Name: orders orders_pkey; Type: CONSTRAINT; Schema: public; Owner: scmarket
 --
 
 ALTER TABLE ONLY public.orders
@@ -2070,7 +2452,17 @@ ALTER TABLE ONLY public.orders
 
 
 --
--- Name: public_contracts public_contracts_pkey; Type: CONSTRAINT; Schema: public; Owner: dashboard
+-- TOC entry 4394 (class 2606 OID 4379842)
+-- Name: orders orders_session_unique; Type: CONSTRAINT; Schema: public; Owner: scmarket
+--
+
+ALTER TABLE ONLY public.orders
+    ADD CONSTRAINT orders_session_unique UNIQUE (offer_session_id);
+
+
+--
+-- TOC entry 4471 (class 2606 OID 1636670)
+-- Name: public_contracts public_contracts_pkey; Type: CONSTRAINT; Schema: public; Owner: scmarket
 --
 
 ALTER TABLE ONLY public.public_contracts
@@ -2078,7 +2470,8 @@ ALTER TABLE ONLY public.public_contracts
 
 
 --
--- Name: recruiting_posts recruiting_posts_pkey; Type: CONSTRAINT; Schema: public; Owner: voc_sc
+-- TOC entry 4416 (class 2606 OID 269560)
+-- Name: recruiting_posts recruiting_posts_pkey; Type: CONSTRAINT; Schema: public; Owner: scmarket
 --
 
 ALTER TABLE ONLY public.recruiting_posts
@@ -2086,7 +2479,8 @@ ALTER TABLE ONLY public.recruiting_posts
 
 
 --
--- Name: rlflx rlflx_pkey; Type: CONSTRAINT; Schema: public; Owner: voc_sc
+-- TOC entry 4430 (class 2606 OID 290933)
+-- Name: rlflx rlflx_pkey; Type: CONSTRAINT; Schema: public; Owner: scmarket
 --
 
 ALTER TABLE ONLY public.rlflx
@@ -2094,7 +2488,8 @@ ALTER TABLE ONLY public.rlflx
 
 
 --
--- Name: ships ships_pkey; Type: CONSTRAINT; Schema: public; Owner: voc_sc
+-- TOC entry 4384 (class 2606 OID 245234)
+-- Name: ships ships_pkey; Type: CONSTRAINT; Schema: public; Owner: scmarket
 --
 
 ALTER TABLE ONLY public.ships
@@ -2102,7 +2497,8 @@ ALTER TABLE ONLY public.ships
 
 
 --
--- Name: transactions transactions_pkey; Type: CONSTRAINT; Schema: public; Owner: voc_sc
+-- TOC entry 4382 (class 2606 OID 245228)
+-- Name: transactions transactions_pkey; Type: CONSTRAINT; Schema: public; Owner: scmarket
 --
 
 ALTER TABLE ONLY public.transactions
@@ -2110,7 +2506,8 @@ ALTER TABLE ONLY public.transactions
 
 
 --
--- Name: webhook_actions webhook_actions_webhook_id_action_type_id_key; Type: CONSTRAINT; Schema: public; Owner: voc_sc
+-- TOC entry 4422 (class 2606 OID 277874)
+-- Name: webhook_actions webhook_actions_webhook_id_action_type_id_key; Type: CONSTRAINT; Schema: public; Owner: scmarket
 --
 
 ALTER TABLE ONLY public.webhook_actions
@@ -2118,133 +2515,152 @@ ALTER TABLE ONLY public.webhook_actions
 
 
 --
--- Name: contractor_invites_user_id_contractor_id_index; Type: INDEX; Schema: public; Owner: voc_sc
+-- TOC entry 4374 (class 1259 OID 245159)
+-- Name: contractor_invites_user_id_contractor_id_index; Type: INDEX; Schema: public; Owner: scmarket
 --
 
 CREATE INDEX contractor_invites_user_id_contractor_id_index ON public.contractor_invites USING btree (user_id, contractor_id);
 
 
 --
--- Name: contractor_members_contractor_id_position_uindex; Type: INDEX; Schema: public; Owner: voc_sc
+-- TOC entry 4431 (class 1259 OID 312810)
+-- Name: contractor_members_contractor_id_position_uindex; Type: INDEX; Schema: public; Owner: scmarket
 --
 
 CREATE UNIQUE INDEX contractor_members_contractor_id_position_uindex ON public.contractor_roles USING btree (contractor_id, "position");
 
 
 --
--- Name: contractor_members_contractor_id_user_id_uindex; Type: INDEX; Schema: public; Owner: voc_sc
+-- TOC entry 4371 (class 1259 OID 245143)
+-- Name: contractor_members_contractor_id_user_id_uindex; Type: INDEX; Schema: public; Owner: scmarket
 --
 
 CREATE UNIQUE INDEX contractor_members_contractor_id_user_id_uindex ON public.contractor_members USING btree (contractor_id, user_id);
 
 
 --
--- Name: contractor_members_roles_user_id_role_id_uindex; Type: INDEX; Schema: public; Owner: voc_sc
+-- TOC entry 4434 (class 1259 OID 312824)
+-- Name: contractor_members_roles_user_id_role_id_uindex; Type: INDEX; Schema: public; Owner: scmarket
 --
 
 CREATE UNIQUE INDEX contractor_members_roles_user_id_role_id_uindex ON public.contractor_member_roles USING btree (user_id, role_id);
 
 
 --
--- Name: market_aggregate_listings_aggregate_id; Type: INDEX; Schema: public; Owner: dashboard
+-- TOC entry 4443 (class 1259 OID 501906)
+-- Name: market_aggregate_listings_aggregate_id; Type: INDEX; Schema: public; Owner: scmarket
 --
 
 CREATE INDEX market_aggregate_listings_aggregate_id ON public.market_aggregate_listings USING btree (aggregate_id);
 
 
 --
--- Name: market_orders_listing_id_index; Type: INDEX; Schema: public; Owner: voc_sc
+-- TOC entry 4395 (class 1259 OID 245408)
+-- Name: market_orders_listing_id_index; Type: INDEX; Schema: public; Owner: scmarket
 --
 
 CREATE INDEX market_orders_listing_id_index ON public.market_orders_legacy USING btree (listing_id);
 
 
 --
--- Name: market_orders_order_id_index; Type: INDEX; Schema: public; Owner: voc_sc
+-- TOC entry 4396 (class 1259 OID 245409)
+-- Name: market_orders_order_id_index; Type: INDEX; Schema: public; Owner: scmarket
 --
 
 CREATE INDEX market_orders_order_id_index ON public.market_orders_legacy USING btree (order_id);
 
 
 --
--- Name: market_search_materialized_contractor_seller_index; Type: INDEX; Schema: public; Owner: dashboard
+-- TOC entry 4472 (class 1259 OID 4051131)
+-- Name: market_search_materialized_contractor_seller_index; Type: INDEX; Schema: public; Owner: scmarket
 --
 
 CREATE INDEX market_search_materialized_contractor_seller_index ON public.market_search_materialized USING btree (contractor_seller_id);
 
 
 --
--- Name: market_search_materialized_item_id_index; Type: INDEX; Schema: public; Owner: dashboard
+-- TOC entry 4473 (class 1259 OID 4051132)
+-- Name: market_search_materialized_item_id_index; Type: INDEX; Schema: public; Owner: scmarket
 --
 
 CREATE INDEX market_search_materialized_item_id_index ON public.market_search_materialized USING btree (game_item_id);
 
 
 --
--- Name: market_search_materialized_listing_id_index; Type: INDEX; Schema: public; Owner: dashboard
+-- TOC entry 4474 (class 1259 OID 4051122)
+-- Name: market_search_materialized_listing_id_index; Type: INDEX; Schema: public; Owner: scmarket
 --
 
 CREATE UNIQUE INDEX market_search_materialized_listing_id_index ON public.market_search_materialized USING btree (listing_id);
 
 
 --
--- Name: market_search_materialized_max_price_index; Type: INDEX; Schema: public; Owner: dashboard
+-- TOC entry 4475 (class 1259 OID 4051125)
+-- Name: market_search_materialized_max_price_index; Type: INDEX; Schema: public; Owner: scmarket
 --
 
 CREATE INDEX market_search_materialized_max_price_index ON public.market_search_materialized USING btree (maximum_price);
 
 
 --
--- Name: market_search_materialized_min_price_index; Type: INDEX; Schema: public; Owner: dashboard
+-- TOC entry 4476 (class 1259 OID 4051124)
+-- Name: market_search_materialized_min_price_index; Type: INDEX; Schema: public; Owner: scmarket
 --
 
 CREATE INDEX market_search_materialized_min_price_index ON public.market_search_materialized USING btree (minimum_price);
 
 
 --
--- Name: market_search_materialized_price_index; Type: INDEX; Schema: public; Owner: dashboard
+-- TOC entry 4477 (class 1259 OID 4051123)
+-- Name: market_search_materialized_price_index; Type: INDEX; Schema: public; Owner: scmarket
 --
 
 CREATE INDEX market_search_materialized_price_index ON public.market_search_materialized USING btree (price);
 
 
 --
--- Name: market_search_materialized_quantity_index; Type: INDEX; Schema: public; Owner: dashboard
+-- TOC entry 4478 (class 1259 OID 4051126)
+-- Name: market_search_materialized_quantity_index; Type: INDEX; Schema: public; Owner: scmarket
 --
 
 CREATE INDEX market_search_materialized_quantity_index ON public.market_search_materialized USING btree (quantity_available);
 
 
 --
--- Name: market_search_materialized_status_index; Type: INDEX; Schema: public; Owner: dashboard
+-- TOC entry 4479 (class 1259 OID 4051129)
+-- Name: market_search_materialized_status_index; Type: INDEX; Schema: public; Owner: scmarket
 --
 
 CREATE INDEX market_search_materialized_status_index ON public.market_search_materialized USING btree (status);
 
 
 --
--- Name: market_search_materialized_textsearch_index; Type: INDEX; Schema: public; Owner: dashboard
+-- TOC entry 4480 (class 1259 OID 4051128)
+-- Name: market_search_materialized_textsearch_index; Type: INDEX; Schema: public; Owner: scmarket
 --
 
 CREATE INDEX market_search_materialized_textsearch_index ON public.market_search_materialized USING btree (textsearch);
 
 
 --
--- Name: market_search_materialized_timestamp_index; Type: INDEX; Schema: public; Owner: dashboard
+-- TOC entry 4481 (class 1259 OID 4051127)
+-- Name: market_search_materialized_timestamp_index; Type: INDEX; Schema: public; Owner: scmarket
 --
 
 CREATE INDEX market_search_materialized_timestamp_index ON public.market_search_materialized USING btree ("timestamp");
 
 
 --
--- Name: market_search_materialized_user_seller_index; Type: INDEX; Schema: public; Owner: dashboard
+-- TOC entry 4482 (class 1259 OID 4051130)
+-- Name: market_search_materialized_user_seller_index; Type: INDEX; Schema: public; Owner: scmarket
 --
 
 CREATE INDEX market_search_materialized_user_seller_index ON public.market_search_materialized USING btree (user_seller_id);
 
 
 --
--- Name: market_search _RETURN; Type: RULE; Schema: public; Owner: dashboard
+-- TOC entry 4745 (class 2618 OID 4051087)
+-- Name: market_search _RETURN; Type: RULE; Schema: public; Owner: scmarket
 --
 
 CREATE OR REPLACE VIEW public.market_search AS
@@ -2273,7 +2689,7 @@ CREATE OR REPLACE VIEW public.market_search AS
     market_listings."timestamp",
     market_listings.expiration,
     public.get_total_rating(market_listings.user_seller_id, market_listings.contractor_seller_id) AS total_rating,
-    public.get_average_rating(market_listings.user_seller_id, market_listings.contractor_seller_id) AS avg_rating,
+    public.get_average_rating_float(market_listings.user_seller_id, market_listings.contractor_seller_id) AS avg_rating,
     market_listing_details.details_id,
     to_tsvector('english'::regconfig, concat(ARRAY[market_listing_details.title, market_listing_details.description])) AS textsearch,
     market_listings.status,
@@ -2307,15 +2723,15 @@ UNION
     max(market_listings."timestamp") AS "timestamp",
     max(market_listings.expiration) AS expiration,
     max(public.get_total_rating(market_listings.user_seller_id, market_listings.contractor_seller_id)) AS total_rating,
-    max(public.get_average_rating(market_listings.user_seller_id, market_listings.contractor_seller_id)) AS avg_rating,
+    max(public.get_average_rating_float(market_listings.user_seller_id, market_listings.contractor_seller_id)) AS avg_rating,
     main_details.details_id,
     to_tsvector('english'::regconfig, ((((main_details.title)::text || ' '::text) || (main_details.description)::text) || ( SELECT string_agg((((entry_details.title)::text || ' '::text) || (entry_details.description)::text), ','::text) AS string_agg))) AS textsearch,
         CASE
-            WHEN (NOT every(((market_listings.status)::text = 'inactive'::text))) THEN 'active'::text
+            WHEN bool_or(((market_listings.status)::text = 'active'::text)) THEN 'active'::text
             ELSE 'inactive'::text
         END AS status,
         CASE
-            WHEN (NOT every(market_listings.internal)) THEN false
+            WHEN bool_or((NOT market_listings.internal)) THEN false
             ELSE true
         END AS internal,
     market_multiples.user_seller_id,
@@ -2350,7 +2766,7 @@ UNION
     max(market_listings."timestamp") AS "timestamp",
     max(market_listings.expiration) AS expiration,
     max(public.get_total_rating(market_listings.user_seller_id, market_listings.contractor_seller_id)) AS total_rating,
-    max(public.get_average_rating(market_listings.user_seller_id, market_listings.contractor_seller_id)) AS avg_rating,
+    max(public.get_average_rating_float(market_listings.user_seller_id, market_listings.contractor_seller_id)) AS avg_rating,
     ( SELECT d.details_id
            FROM public.market_listing_details d
           WHERE (market_listing_details.game_item_id = d.game_item_id)
@@ -2384,28 +2800,40 @@ UNION
 
 
 --
--- Name: market_listings extend_expiration; Type: TRIGGER; Schema: public; Owner: dashboard
+-- TOC entry 4608 (class 2620 OID 510312)
+-- Name: market_listings extend_expiration; Type: TRIGGER; Schema: public; Owner: scmarket
 --
 
 CREATE TRIGGER extend_expiration BEFORE UPDATE ON public.market_listings FOR EACH ROW EXECUTE FUNCTION public.update_listing_expiration();
 
 
 --
--- Name: market_unique_listings extend_expiration; Type: TRIGGER; Schema: public; Owner: dashboard
---
-
-CREATE TRIGGER extend_expiration AFTER UPDATE ON public.market_unique_listings FOR EACH ROW EXECUTE FUNCTION public.update_unique_listing_expiration();
-
-
---
--- Name: public_contracts extend_expiration; Type: TRIGGER; Schema: public; Owner: dashboard
+-- TOC entry 4609 (class 2620 OID 1636690)
+-- Name: public_contracts extend_expiration; Type: TRIGGER; Schema: public; Owner: scmarket
 --
 
 CREATE TRIGGER extend_expiration BEFORE UPDATE ON public.public_contracts FOR EACH ROW EXECUTE FUNCTION public.update_public_contract_expiration();
 
 
 --
--- Name: account_settings account_settings_user_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: voc_sc
+-- TOC entry 4607 (class 2620 OID 510176)
+-- Name: market_listings log_status_change; Type: TRIGGER; Schema: public; Owner: scmarket
+--
+
+CREATE TRIGGER log_status_change BEFORE UPDATE ON public.market_listings FOR EACH ROW EXECUTE FUNCTION public.market_log_status_change();
+
+
+--
+-- TOC entry 4606 (class 2620 OID 510174)
+-- Name: orders log_status_change; Type: TRIGGER; Schema: public; Owner: scmarket
+--
+
+CREATE TRIGGER log_status_change BEFORE UPDATE ON public.orders FOR EACH ROW EXECUTE FUNCTION public.order_log_status_change();
+
+
+--
+-- TOC entry 4556 (class 2606 OID 280193)
+-- Name: account_settings account_settings_user_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: scmarket
 --
 
 ALTER TABLE ONLY public.account_settings
@@ -2413,7 +2841,8 @@ ALTER TABLE ONLY public.account_settings
 
 
 --
--- Name: accounts accounts_avatar_fkey; Type: FK CONSTRAINT; Schema: public; Owner: voc_sc
+-- TOC entry 4483 (class 2606 OID 245100)
+-- Name: accounts accounts_avatar_fkey; Type: FK CONSTRAINT; Schema: public; Owner: scmarket
 --
 
 ALTER TABLE ONLY public.accounts
@@ -2421,7 +2850,8 @@ ALTER TABLE ONLY public.accounts
 
 
 --
--- Name: accounts accounts_banner_fkey; Type: FK CONSTRAINT; Schema: public; Owner: voc_sc
+-- TOC entry 4484 (class 2606 OID 245105)
+-- Name: accounts accounts_banner_fkey; Type: FK CONSTRAINT; Schema: public; Owner: scmarket
 --
 
 ALTER TABLE ONLY public.accounts
@@ -2429,15 +2859,17 @@ ALTER TABLE ONLY public.accounts
 
 
 --
--- Name: activity_history activity_history_user_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: dashboard
+-- TOC entry 4588 (class 2606 OID 1294145)
+-- Name: activity_history activity_history_user_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: scmarket
 --
 
 ALTER TABLE ONLY public.activity_history
-    ADD CONSTRAINT activity_history_user_id_fkey FOREIGN KEY (user_id) REFERENCES public.accounts(user_id);
+    ADD CONSTRAINT activity_history_user_id_fkey FOREIGN KEY (user_id) REFERENCES public.accounts(user_id) ON DELETE CASCADE;
 
 
 --
--- Name: market_auction_details auction_details_listing_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: voc_sc
+-- TOC entry 4562 (class 2606 OID 501985)
+-- Name: market_auction_details auction_details_listing_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: scmarket
 --
 
 ALTER TABLE ONLY public.market_auction_details
@@ -2445,7 +2877,8 @@ ALTER TABLE ONLY public.market_auction_details
 
 
 --
--- Name: chat_participants chat_participants_chat_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: voc_sc
+-- TOC entry 4494 (class 2606 OID 245177)
+-- Name: chat_participants chat_participants_chat_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: scmarket
 --
 
 ALTER TABLE ONLY public.chat_participants
@@ -2453,7 +2886,8 @@ ALTER TABLE ONLY public.chat_participants
 
 
 --
--- Name: chat_participants chat_participants_user_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: voc_sc
+-- TOC entry 4495 (class 2606 OID 245182)
+-- Name: chat_participants chat_participants_user_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: scmarket
 --
 
 ALTER TABLE ONLY public.chat_participants
@@ -2461,23 +2895,26 @@ ALTER TABLE ONLY public.chat_participants
 
 
 --
--- Name: chats chats_order_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: voc_sc
+-- TOC entry 4492 (class 2606 OID 4379718)
+-- Name: chats chats_order_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: scmarket
 --
 
 ALTER TABLE ONLY public.chats
-    ADD CONSTRAINT chats_order_id_fkey FOREIGN KEY (order_id) REFERENCES public.orders(order_id);
+    ADD CONSTRAINT chats_order_id_fkey FOREIGN KEY (order_id) REFERENCES public.orders(order_id) ON DELETE CASCADE;
 
 
 --
--- Name: chats chats_session_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: voc_sc
+-- TOC entry 4493 (class 2606 OID 512055)
+-- Name: chats chats_session_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: scmarket
 --
 
 ALTER TABLE ONLY public.chats
-    ADD CONSTRAINT chats_session_id_fkey FOREIGN KEY (session_id) REFERENCES public.offer_sessions(id) ON DELETE CASCADE;
+    ADD CONSTRAINT chats_session_id_fkey FOREIGN KEY (session_id) REFERENCES public.offer_sessions(id);
 
 
 --
--- Name: comment_votes comment_votes_actor_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: voc_sc
+-- TOC entry 4550 (class 2606 OID 269626)
+-- Name: comment_votes comment_votes_actor_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: scmarket
 --
 
 ALTER TABLE ONLY public.comment_votes
@@ -2485,7 +2922,8 @@ ALTER TABLE ONLY public.comment_votes
 
 
 --
--- Name: comment_votes comment_votes_comment_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: voc_sc
+-- TOC entry 4549 (class 2606 OID 269621)
+-- Name: comment_votes comment_votes_comment_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: scmarket
 --
 
 ALTER TABLE ONLY public.comment_votes
@@ -2493,7 +2931,8 @@ ALTER TABLE ONLY public.comment_votes
 
 
 --
--- Name: comments comments_author_fkey; Type: FK CONSTRAINT; Schema: public; Owner: voc_sc
+-- TOC entry 4545 (class 2606 OID 269592)
+-- Name: comments comments_author_fkey; Type: FK CONSTRAINT; Schema: public; Owner: scmarket
 --
 
 ALTER TABLE ONLY public.comments
@@ -2501,7 +2940,8 @@ ALTER TABLE ONLY public.comments
 
 
 --
--- Name: comments comments_reply_to_fkey; Type: FK CONSTRAINT; Schema: public; Owner: voc_sc
+-- TOC entry 4546 (class 2606 OID 269597)
+-- Name: comments comments_reply_to_fkey; Type: FK CONSTRAINT; Schema: public; Owner: scmarket
 --
 
 ALTER TABLE ONLY public.comments
@@ -2509,7 +2949,8 @@ ALTER TABLE ONLY public.comments
 
 
 --
--- Name: contractor_fields contractor_fields_contractor_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: voc_sc
+-- TOC entry 4491 (class 2606 OID 320051)
+-- Name: contractor_fields contractor_fields_contractor_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: scmarket
 --
 
 ALTER TABLE ONLY public.contractor_fields
@@ -2517,7 +2958,8 @@ ALTER TABLE ONLY public.contractor_fields
 
 
 --
--- Name: contractor_fleet contractor_fleet_contractor_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: voc_sc
+-- TOC entry 4504 (class 2606 OID 245263)
+-- Name: contractor_fleet contractor_fleet_contractor_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: scmarket
 --
 
 ALTER TABLE ONLY public.contractor_fleet
@@ -2525,7 +2967,8 @@ ALTER TABLE ONLY public.contractor_fleet
 
 
 --
--- Name: contractor_fleet contractor_fleet_ship_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: voc_sc
+-- TOC entry 4503 (class 2606 OID 245258)
+-- Name: contractor_fleet contractor_fleet_ship_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: scmarket
 --
 
 ALTER TABLE ONLY public.contractor_fleet
@@ -2533,7 +2976,8 @@ ALTER TABLE ONLY public.contractor_fleet
 
 
 --
--- Name: contractor_invite_codes contractor_invite_codes_contractor_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: voc_sc
+-- TOC entry 4536 (class 2606 OID 320056)
+-- Name: contractor_invite_codes contractor_invite_codes_contractor_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: scmarket
 --
 
 ALTER TABLE ONLY public.contractor_invite_codes
@@ -2541,7 +2985,8 @@ ALTER TABLE ONLY public.contractor_invite_codes
 
 
 --
--- Name: contractor_invites contractor_invites_contractor_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: voc_sc
+-- TOC entry 4489 (class 2606 OID 320061)
+-- Name: contractor_invites contractor_invites_contractor_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: scmarket
 --
 
 ALTER TABLE ONLY public.contractor_invites
@@ -2549,7 +2994,8 @@ ALTER TABLE ONLY public.contractor_invites
 
 
 --
--- Name: contractor_invites contractor_invites_user_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: voc_sc
+-- TOC entry 4490 (class 2606 OID 320066)
+-- Name: contractor_invites contractor_invites_user_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: scmarket
 --
 
 ALTER TABLE ONLY public.contractor_invites
@@ -2557,7 +3003,8 @@ ALTER TABLE ONLY public.contractor_invites
 
 
 --
--- Name: contractor_member_roles contractor_member_roles_role_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: voc_sc
+-- TOC entry 4559 (class 2606 OID 320036)
+-- Name: contractor_member_roles contractor_member_roles_role_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: scmarket
 --
 
 ALTER TABLE ONLY public.contractor_member_roles
@@ -2565,7 +3012,8 @@ ALTER TABLE ONLY public.contractor_member_roles
 
 
 --
--- Name: contractor_member_roles contractor_member_roles_user_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: voc_sc
+-- TOC entry 4558 (class 2606 OID 320031)
+-- Name: contractor_member_roles contractor_member_roles_user_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: scmarket
 --
 
 ALTER TABLE ONLY public.contractor_member_roles
@@ -2573,7 +3021,8 @@ ALTER TABLE ONLY public.contractor_member_roles
 
 
 --
--- Name: contractor_members contractor_members_contractor_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: voc_sc
+-- TOC entry 4487 (class 2606 OID 320021)
+-- Name: contractor_members contractor_members_contractor_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: scmarket
 --
 
 ALTER TABLE ONLY public.contractor_members
@@ -2581,7 +3030,8 @@ ALTER TABLE ONLY public.contractor_members
 
 
 --
--- Name: contractor_members contractor_members_user_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: voc_sc
+-- TOC entry 4488 (class 2606 OID 320026)
+-- Name: contractor_members contractor_members_user_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: scmarket
 --
 
 ALTER TABLE ONLY public.contractor_members
@@ -2589,7 +3039,8 @@ ALTER TABLE ONLY public.contractor_members
 
 
 --
--- Name: contractor_roles contractor_roles_contractor_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: voc_sc
+-- TOC entry 4557 (class 2606 OID 320041)
+-- Name: contractor_roles contractor_roles_contractor_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: scmarket
 --
 
 ALTER TABLE ONLY public.contractor_roles
@@ -2597,7 +3048,8 @@ ALTER TABLE ONLY public.contractor_roles
 
 
 --
--- Name: contractors contractors_avatar_fkey; Type: FK CONSTRAINT; Schema: public; Owner: voc_sc
+-- TOC entry 4485 (class 2606 OID 245125)
+-- Name: contractors contractors_avatar_fkey; Type: FK CONSTRAINT; Schema: public; Owner: scmarket
 --
 
 ALTER TABLE ONLY public.contractors
@@ -2605,7 +3057,8 @@ ALTER TABLE ONLY public.contractors
 
 
 --
--- Name: contractors contractors_banner_fkey; Type: FK CONSTRAINT; Schema: public; Owner: voc_sc
+-- TOC entry 4486 (class 2606 OID 473642)
+-- Name: contractors contractors_banner_fkey; Type: FK CONSTRAINT; Schema: public; Owner: scmarket
 --
 
 ALTER TABLE ONLY public.contractors
@@ -2613,7 +3066,8 @@ ALTER TABLE ONLY public.contractors
 
 
 --
--- Name: deliveries deliveries_ship_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: voc_sc
+-- TOC entry 4505 (class 2606 OID 245277)
+-- Name: deliveries deliveries_ship_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: scmarket
 --
 
 ALTER TABLE ONLY public.deliveries
@@ -2621,7 +3075,8 @@ ALTER TABLE ONLY public.deliveries
 
 
 --
--- Name: game_items game_items_details_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: dashboard
+-- TOC entry 4589 (class 2606 OID 513410)
+-- Name: game_items game_items_details_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: scmarket
 --
 
 ALTER TABLE ONLY public.game_items
@@ -2629,7 +3084,8 @@ ALTER TABLE ONLY public.game_items
 
 
 --
--- Name: market_aggregate_listings_legacy market_aggregate_listings_aggregate_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: voc_sc
+-- TOC entry 4553 (class 2606 OID 279955)
+-- Name: market_aggregate_listings_legacy market_aggregate_listings_aggregate_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: scmarket
 --
 
 ALTER TABLE ONLY public.market_aggregate_listings_legacy
@@ -2637,7 +3093,8 @@ ALTER TABLE ONLY public.market_aggregate_listings_legacy
 
 
 --
--- Name: market_aggregate_listings_legacy market_aggregate_listings_contractor_seller_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: voc_sc
+-- TOC entry 4555 (class 2606 OID 279965)
+-- Name: market_aggregate_listings_legacy market_aggregate_listings_contractor_seller_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: scmarket
 --
 
 ALTER TABLE ONLY public.market_aggregate_listings_legacy
@@ -2645,7 +3102,8 @@ ALTER TABLE ONLY public.market_aggregate_listings_legacy
 
 
 --
--- Name: market_aggregate_listings market_aggregate_listings_market_listings_listing_id_fk; Type: FK CONSTRAINT; Schema: public; Owner: dashboard
+-- TOC entry 4573 (class 2606 OID 509874)
+-- Name: market_aggregate_listings market_aggregate_listings_market_listings_listing_id_fk; Type: FK CONSTRAINT; Schema: public; Owner: scmarket
 --
 
 ALTER TABLE ONLY public.market_aggregate_listings
@@ -2653,7 +3111,8 @@ ALTER TABLE ONLY public.market_aggregate_listings
 
 
 --
--- Name: market_aggregate_listings market_aggregate_listings_new_aggregate_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: dashboard
+-- TOC entry 4572 (class 2606 OID 501901)
+-- Name: market_aggregate_listings market_aggregate_listings_new_aggregate_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: scmarket
 --
 
 ALTER TABLE ONLY public.market_aggregate_listings
@@ -2661,7 +3120,8 @@ ALTER TABLE ONLY public.market_aggregate_listings
 
 
 --
--- Name: market_aggregate_listings_legacy market_aggregate_listings_user_seller_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: voc_sc
+-- TOC entry 4554 (class 2606 OID 279960)
+-- Name: market_aggregate_listings_legacy market_aggregate_listings_user_seller_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: scmarket
 --
 
 ALTER TABLE ONLY public.market_aggregate_listings_legacy
@@ -2669,7 +3129,8 @@ ALTER TABLE ONLY public.market_aggregate_listings_legacy
 
 
 --
--- Name: market_aggregates market_aggregates_new_details_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: dashboard
+-- TOC entry 4571 (class 2606 OID 501890)
+-- Name: market_aggregates market_aggregates_new_details_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: scmarket
 --
 
 ALTER TABLE ONLY public.market_aggregates
@@ -2677,7 +3138,8 @@ ALTER TABLE ONLY public.market_aggregates
 
 
 --
--- Name: market_bids market_bids_contractor_bidder_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: voc_sc
+-- TOC entry 4509 (class 2606 OID 245316)
+-- Name: market_bids market_bids_contractor_bidder_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: scmarket
 --
 
 ALTER TABLE ONLY public.market_bids
@@ -2685,7 +3147,8 @@ ALTER TABLE ONLY public.market_bids
 
 
 --
--- Name: market_bids market_bids_listing_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: voc_sc
+-- TOC entry 4510 (class 2606 OID 501934)
+-- Name: market_bids market_bids_listing_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: scmarket
 --
 
 ALTER TABLE ONLY public.market_bids
@@ -2693,7 +3156,8 @@ ALTER TABLE ONLY public.market_bids
 
 
 --
--- Name: market_bids market_bids_user_bidder_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: voc_sc
+-- TOC entry 4508 (class 2606 OID 245311)
+-- Name: market_bids market_bids_user_bidder_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: scmarket
 --
 
 ALTER TABLE ONLY public.market_bids
@@ -2701,7 +3165,8 @@ ALTER TABLE ONLY public.market_bids
 
 
 --
--- Name: market_buy_orders market_buy_orders_buyer_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: dashboard
+-- TOC entry 4584 (class 2606 OID 502129)
+-- Name: market_buy_orders market_buy_orders_buyer_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: scmarket
 --
 
 ALTER TABLE ONLY public.market_buy_orders
@@ -2709,7 +3174,8 @@ ALTER TABLE ONLY public.market_buy_orders
 
 
 --
--- Name: market_buy_orders market_buy_orders_game_item_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: dashboard
+-- TOC entry 4585 (class 2606 OID 511800)
+-- Name: market_buy_orders market_buy_orders_game_item_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: scmarket
 --
 
 ALTER TABLE ONLY public.market_buy_orders
@@ -2717,7 +3183,8 @@ ALTER TABLE ONLY public.market_buy_orders
 
 
 --
--- Name: market_images_legacy market_images_aggregate_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: voc_sc
+-- TOC entry 4511 (class 2606 OID 279971)
+-- Name: market_images_legacy market_images_aggregate_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: scmarket
 --
 
 ALTER TABLE ONLY public.market_images_legacy
@@ -2725,7 +3192,8 @@ ALTER TABLE ONLY public.market_images_legacy
 
 
 --
--- Name: market_images_legacy market_images_listing_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: voc_sc
+-- TOC entry 4512 (class 2606 OID 297672)
+-- Name: market_images_legacy market_images_listing_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: scmarket
 --
 
 ALTER TABLE ONLY public.market_images_legacy
@@ -2733,7 +3201,8 @@ ALTER TABLE ONLY public.market_images_legacy
 
 
 --
--- Name: market_images market_images_new_details_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: dashboard
+-- TOC entry 4568 (class 2606 OID 501866)
+-- Name: market_images market_images_new_details_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: scmarket
 --
 
 ALTER TABLE ONLY public.market_images
@@ -2741,7 +3210,8 @@ ALTER TABLE ONLY public.market_images
 
 
 --
--- Name: market_images market_images_new_resource_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: dashboard
+-- TOC entry 4567 (class 2606 OID 501861)
+-- Name: market_images market_images_new_resource_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: scmarket
 --
 
 ALTER TABLE ONLY public.market_images
@@ -2749,7 +3219,8 @@ ALTER TABLE ONLY public.market_images
 
 
 --
--- Name: market_images_legacy market_images_resource_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: voc_sc
+-- TOC entry 4513 (class 2606 OID 297677)
+-- Name: market_images_legacy market_images_resource_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: scmarket
 --
 
 ALTER TABLE ONLY public.market_images_legacy
@@ -2757,23 +3228,26 @@ ALTER TABLE ONLY public.market_images_legacy
 
 
 --
--- Name: market_listing_details market_listing_details_game_item_categories_subcategory_fk; Type: FK CONSTRAINT; Schema: public; Owner: dashboard
+-- TOC entry 4566 (class 2606 OID 511795)
+-- Name: market_listing_details market_listing_details_game_item_categories_subcategory_fk; Type: FK CONSTRAINT; Schema: public; Owner: scmarket
 --
 
 ALTER TABLE ONLY public.market_listing_details
-    ADD CONSTRAINT market_listing_details_game_item_categories_subcategory_fk FOREIGN KEY (item_type) REFERENCES public.game_item_categories(subcategory) ON UPDATE CASCADE;
+    ADD CONSTRAINT market_listing_details_game_item_categories_subcategory_fk FOREIGN KEY (item_type) REFERENCES public.game_item_categories(subcategory);
 
 
 --
--- Name: market_listing_details market_listing_details_game_item_id2_fkey; Type: FK CONSTRAINT; Schema: public; Owner: dashboard
+-- TOC entry 4565 (class 2606 OID 511790)
+-- Name: market_listing_details market_listing_details_game_item_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: scmarket
 --
 
 ALTER TABLE ONLY public.market_listing_details
-    ADD CONSTRAINT market_listing_details_game_item_id2_fkey FOREIGN KEY (game_item_id) REFERENCES public.game_items(id);
+    ADD CONSTRAINT market_listing_details_game_item_id_fkey FOREIGN KEY (game_item_id) REFERENCES public.game_items(id);
 
 
 --
--- Name: market_listings_legacy market_listings_contractor_seller_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: voc_sc
+-- TOC entry 4507 (class 2606 OID 245299)
+-- Name: market_listings_legacy market_listings_contractor_seller_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: scmarket
 --
 
 ALTER TABLE ONLY public.market_listings_legacy
@@ -2781,7 +3255,8 @@ ALTER TABLE ONLY public.market_listings_legacy
 
 
 --
--- Name: market_listings market_listings_new_contractor_seller_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: dashboard
+-- TOC entry 4564 (class 2606 OID 501844)
+-- Name: market_listings market_listings_new_contractor_seller_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: scmarket
 --
 
 ALTER TABLE ONLY public.market_listings
@@ -2789,7 +3264,8 @@ ALTER TABLE ONLY public.market_listings
 
 
 --
--- Name: market_listings market_listings_new_user_seller_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: dashboard
+-- TOC entry 4563 (class 2606 OID 501839)
+-- Name: market_listings market_listings_new_user_seller_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: scmarket
 --
 
 ALTER TABLE ONLY public.market_listings
@@ -2797,7 +3273,8 @@ ALTER TABLE ONLY public.market_listings
 
 
 --
--- Name: market_listings_legacy market_listings_user_seller_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: voc_sc
+-- TOC entry 4506 (class 2606 OID 245294)
+-- Name: market_listings_legacy market_listings_user_seller_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: scmarket
 --
 
 ALTER TABLE ONLY public.market_listings_legacy
@@ -2805,31 +3282,17 @@ ALTER TABLE ONLY public.market_listings_legacy
 
 
 --
--- Name: market_multiples market_multiple_contractor_seller_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: dashboard
+-- TOC entry 4575 (class 2606 OID 501918)
+-- Name: market_multiple market_multiple_contractor_seller_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: scmarket
 --
 
-ALTER TABLE ONLY public.market_multiples
+ALTER TABLE ONLY public.market_multiple
     ADD CONSTRAINT market_multiple_contractor_seller_id_fkey FOREIGN KEY (contractor_seller_id) REFERENCES public.contractors(contractor_id);
 
 
 --
--- Name: market_multiples market_multiple_default_listing_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: dashboard
---
-
-ALTER TABLE ONLY public.market_multiples
-    ADD CONSTRAINT market_multiple_default_listing_id_fkey FOREIGN KEY (default_listing_id) REFERENCES public.market_listings(listing_id);
-
-
---
--- Name: market_multiples market_multiple_details_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: dashboard
---
-
-ALTER TABLE ONLY public.market_multiples
-    ADD CONSTRAINT market_multiple_details_id_fkey FOREIGN KEY (details_id) REFERENCES public.market_listing_details(details_id);
-
-
---
--- Name: market_multiple_listings market_multiple_listings_details_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: dashboard
+-- TOC entry 4583 (class 2606 OID 502041)
+-- Name: market_multiple_listings market_multiple_listings_details_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: scmarket
 --
 
 ALTER TABLE ONLY public.market_multiple_listings
@@ -2837,7 +3300,8 @@ ALTER TABLE ONLY public.market_multiple_listings
 
 
 --
--- Name: market_multiple_listings market_multiple_listings_multiple_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: dashboard
+-- TOC entry 4582 (class 2606 OID 502036)
+-- Name: market_multiple_listings market_multiple_listings_multiple_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: scmarket
 --
 
 ALTER TABLE ONLY public.market_multiple_listings
@@ -2845,15 +3309,53 @@ ALTER TABLE ONLY public.market_multiple_listings
 
 
 --
--- Name: market_multiples market_multiple_user_seller_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: dashboard
+-- TOC entry 4574 (class 2606 OID 501913)
+-- Name: market_multiple market_multiple_user_seller_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: scmarket
 --
 
-ALTER TABLE ONLY public.market_multiples
+ALTER TABLE ONLY public.market_multiple
     ADD CONSTRAINT market_multiple_user_seller_id_fkey FOREIGN KEY (user_seller_id) REFERENCES public.accounts(user_id);
 
 
 --
--- Name: market_orders_legacy market_orders_aggregate_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: voc_sc
+-- TOC entry 4579 (class 2606 OID 502015)
+-- Name: market_multiples market_multiples_contractor_seller_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: scmarket
+--
+
+ALTER TABLE ONLY public.market_multiples
+    ADD CONSTRAINT market_multiples_contractor_seller_id_fkey FOREIGN KEY (contractor_seller_id) REFERENCES public.contractors(contractor_id);
+
+
+--
+-- TOC entry 4581 (class 2606 OID 502025)
+-- Name: market_multiples market_multiples_default_listing_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: scmarket
+--
+
+ALTER TABLE ONLY public.market_multiples
+    ADD CONSTRAINT market_multiples_default_listing_id_fkey FOREIGN KEY (default_listing_id) REFERENCES public.market_listings(listing_id);
+
+
+--
+-- TOC entry 4580 (class 2606 OID 502020)
+-- Name: market_multiples market_multiples_details_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: scmarket
+--
+
+ALTER TABLE ONLY public.market_multiples
+    ADD CONSTRAINT market_multiples_details_id_fkey FOREIGN KEY (details_id) REFERENCES public.market_listing_details(details_id);
+
+
+--
+-- TOC entry 4578 (class 2606 OID 502010)
+-- Name: market_multiples market_multiples_user_seller_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: scmarket
+--
+
+ALTER TABLE ONLY public.market_multiples
+    ADD CONSTRAINT market_multiples_user_seller_id_fkey FOREIGN KEY (user_seller_id) REFERENCES public.accounts(user_id);
+
+
+--
+-- TOC entry 4521 (class 2606 OID 279976)
+-- Name: market_orders_legacy market_orders_aggregate_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: scmarket
 --
 
 ALTER TABLE ONLY public.market_orders_legacy
@@ -2861,7 +3363,8 @@ ALTER TABLE ONLY public.market_orders_legacy
 
 
 --
--- Name: market_orders_legacy market_orders_aggregate_listing_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: voc_sc
+-- TOC entry 4522 (class 2606 OID 314933)
+-- Name: market_orders_legacy market_orders_aggregate_listing_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: scmarket
 --
 
 ALTER TABLE ONLY public.market_orders_legacy
@@ -2869,7 +3372,8 @@ ALTER TABLE ONLY public.market_orders_legacy
 
 
 --
--- Name: market_orders_legacy market_orders_market_listings_listing_id_fk; Type: FK CONSTRAINT; Schema: public; Owner: voc_sc
+-- TOC entry 4520 (class 2606 OID 245403)
+-- Name: market_orders_legacy market_orders_market_listings_listing_id_fk; Type: FK CONSTRAINT; Schema: public; Owner: scmarket
 --
 
 ALTER TABLE ONLY public.market_orders_legacy
@@ -2877,7 +3381,8 @@ ALTER TABLE ONLY public.market_orders_legacy
 
 
 --
--- Name: market_orders market_orders_new_listing_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: dashboard
+-- TOC entry 4577 (class 2606 OID 501948)
+-- Name: market_orders market_orders_new_listing_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: scmarket
 --
 
 ALTER TABLE ONLY public.market_orders
@@ -2885,15 +3390,17 @@ ALTER TABLE ONLY public.market_orders
 
 
 --
--- Name: market_orders market_orders_new_order_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: dashboard
+-- TOC entry 4576 (class 2606 OID 4379614)
+-- Name: market_orders market_orders_new_order_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: scmarket
 --
 
 ALTER TABLE ONLY public.market_orders
-    ADD CONSTRAINT market_orders_new_order_id_fkey FOREIGN KEY (order_id) REFERENCES public.orders(order_id);
+    ADD CONSTRAINT market_orders_new_order_id_fkey FOREIGN KEY (order_id) REFERENCES public.orders(order_id) ON DELETE CASCADE;
 
 
 --
--- Name: market_orders_legacy market_orders_orders_order_id_fk; Type: FK CONSTRAINT; Schema: public; Owner: voc_sc
+-- TOC entry 4519 (class 2606 OID 245398)
+-- Name: market_orders_legacy market_orders_orders_order_id_fk; Type: FK CONSTRAINT; Schema: public; Owner: scmarket
 --
 
 ALTER TABLE ONLY public.market_orders_legacy
@@ -2901,7 +3408,8 @@ ALTER TABLE ONLY public.market_orders_legacy
 
 
 --
--- Name: offer_market_items market_orders_orders_order_id_fk; Type: FK CONSTRAINT; Schema: public; Owner: dashboard
+-- TOC entry 4596 (class 2606 OID 512045)
+-- Name: offer_market_items market_orders_orders_order_id_fk; Type: FK CONSTRAINT; Schema: public; Owner: scmarket
 --
 
 ALTER TABLE ONLY public.offer_market_items
@@ -2909,7 +3417,8 @@ ALTER TABLE ONLY public.offer_market_items
 
 
 --
--- Name: market_price_history market_price_history_game_item_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: dashboard
+-- TOC entry 4600 (class 2606 OID 1530810)
+-- Name: market_price_history market_price_history_game_item_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: scmarket
 --
 
 ALTER TABLE ONLY public.market_price_history
@@ -2917,7 +3426,17 @@ ALTER TABLE ONLY public.market_price_history
 
 
 --
--- Name: market_unique_listings market_unique_listings_details_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: dashboard
+-- TOC entry 4586 (class 2606 OID 510156)
+-- Name: market_status_update market_status_update_listing_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: scmarket
+--
+
+ALTER TABLE ONLY public.market_status_update
+    ADD CONSTRAINT market_status_update_listing_id_fkey FOREIGN KEY (listing_id) REFERENCES public.market_listings(listing_id);
+
+
+--
+-- TOC entry 4569 (class 2606 OID 501879)
+-- Name: market_unique_listings market_unique_listings_details_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: scmarket
 --
 
 ALTER TABLE ONLY public.market_unique_listings
@@ -2925,15 +3444,17 @@ ALTER TABLE ONLY public.market_unique_listings
 
 
 --
--- Name: market_unique_listings market_unique_listings_listing_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: dashboard
+-- TOC entry 4570 (class 2606 OID 509854)
+-- Name: market_unique_listings market_unique_listings_listing_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: scmarket
 --
 
 ALTER TABLE ONLY public.market_unique_listings
-    ADD CONSTRAINT market_unique_listings_listing_id_fkey FOREIGN KEY (listing_id) REFERENCES public.market_listings(listing_id);
+    ADD CONSTRAINT market_unique_listings_listing_id_fkey FOREIGN KEY (listing_id) REFERENCES public.market_listings(listing_id) ON DELETE CASCADE;
 
 
 --
--- Name: message_attachments message_attachments_message_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: voc_sc
+-- TOC entry 4498 (class 2606 OID 245210)
+-- Name: message_attachments message_attachments_message_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: scmarket
 --
 
 ALTER TABLE ONLY public.message_attachments
@@ -2941,7 +3462,8 @@ ALTER TABLE ONLY public.message_attachments
 
 
 --
--- Name: message_attachments message_attachments_resource_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: voc_sc
+-- TOC entry 4499 (class 2606 OID 245215)
+-- Name: message_attachments message_attachments_resource_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: scmarket
 --
 
 ALTER TABLE ONLY public.message_attachments
@@ -2949,7 +3471,8 @@ ALTER TABLE ONLY public.message_attachments
 
 
 --
--- Name: messages messages_author_fkey; Type: FK CONSTRAINT; Schema: public; Owner: voc_sc
+-- TOC entry 4496 (class 2606 OID 245197)
+-- Name: messages messages_author_fkey; Type: FK CONSTRAINT; Schema: public; Owner: scmarket
 --
 
 ALTER TABLE ONLY public.messages
@@ -2957,7 +3480,8 @@ ALTER TABLE ONLY public.messages
 
 
 --
--- Name: messages messages_chat_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: voc_sc
+-- TOC entry 4497 (class 2606 OID 245202)
+-- Name: messages messages_chat_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: scmarket
 --
 
 ALTER TABLE ONLY public.messages
@@ -2965,7 +3489,8 @@ ALTER TABLE ONLY public.messages
 
 
 --
--- Name: notification_change notification_change_actor_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: voc_sc
+-- TOC entry 4538 (class 2606 OID 251955)
+-- Name: notification_change notification_change_actor_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: scmarket
 --
 
 ALTER TABLE ONLY public.notification_change
@@ -2973,7 +3498,8 @@ ALTER TABLE ONLY public.notification_change
 
 
 --
--- Name: notification_change notification_change_notification_object_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: voc_sc
+-- TOC entry 4539 (class 2606 OID 251960)
+-- Name: notification_change notification_change_notification_object_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: scmarket
 --
 
 ALTER TABLE ONLY public.notification_change
@@ -2981,7 +3507,8 @@ ALTER TABLE ONLY public.notification_change
 
 
 --
--- Name: notification notification_notification_object_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: voc_sc
+-- TOC entry 4540 (class 2606 OID 251972)
+-- Name: notification notification_notification_object_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: scmarket
 --
 
 ALTER TABLE ONLY public.notification
@@ -2989,7 +3516,8 @@ ALTER TABLE ONLY public.notification
 
 
 --
--- Name: notification notification_notifier_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: voc_sc
+-- TOC entry 4541 (class 2606 OID 251977)
+-- Name: notification notification_notifier_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: scmarket
 --
 
 ALTER TABLE ONLY public.notification
@@ -2997,7 +3525,8 @@ ALTER TABLE ONLY public.notification
 
 
 --
--- Name: notification_object notification_object_action_type_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: voc_sc
+-- TOC entry 4537 (class 2606 OID 251942)
+-- Name: notification_object notification_object_action_type_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: scmarket
 --
 
 ALTER TABLE ONLY public.notification_object
@@ -3005,7 +3534,8 @@ ALTER TABLE ONLY public.notification_object
 
 
 --
--- Name: offer_market_items offer_market_items_listing_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: dashboard
+-- TOC entry 4597 (class 2606 OID 512050)
+-- Name: offer_market_items offer_market_items_listing_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: scmarket
 --
 
 ALTER TABLE ONLY public.offer_market_items
@@ -3013,31 +3543,35 @@ ALTER TABLE ONLY public.offer_market_items
 
 
 --
--- Name: offer_sessions offer_sessions_assigned_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: dashboard
+-- TOC entry 4590 (class 2606 OID 511995)
+-- Name: offer_sessions offer_sessions_assigned_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: scmarket
 --
 
 ALTER TABLE ONLY public.offer_sessions
-    ADD CONSTRAINT offer_sessions_assigned_id_fkey FOREIGN KEY (assigned_id) REFERENCES public.accounts(user_id);
+    ADD CONSTRAINT offer_sessions_assigned_id_fkey FOREIGN KEY (assigned_id) REFERENCES public.accounts(user_id) ON DELETE CASCADE;
 
 
 --
--- Name: offer_sessions offer_sessions_contractor_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: dashboard
---
-
-ALTER TABLE ONLY public.offer_sessions
-    ADD CONSTRAINT offer_sessions_contractor_id_fkey FOREIGN KEY (contractor_id) REFERENCES public.contractors(contractor_id);
-
-
---
--- Name: offer_sessions offer_sessions_customer_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: dashboard
+-- TOC entry 4592 (class 2606 OID 512005)
+-- Name: offer_sessions offer_sessions_contractor_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: scmarket
 --
 
 ALTER TABLE ONLY public.offer_sessions
-    ADD CONSTRAINT offer_sessions_customer_id_fkey FOREIGN KEY (customer_id) REFERENCES public.accounts(user_id);
+    ADD CONSTRAINT offer_sessions_contractor_id_fkey FOREIGN KEY (contractor_id) REFERENCES public.contractors(contractor_id) ON DELETE CASCADE;
 
 
 --
--- Name: order_applicants order_applicants_order_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: voc_sc
+-- TOC entry 4591 (class 2606 OID 512000)
+-- Name: offer_sessions offer_sessions_customer_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: scmarket
+--
+
+ALTER TABLE ONLY public.offer_sessions
+    ADD CONSTRAINT offer_sessions_customer_id_fkey FOREIGN KEY (customer_id) REFERENCES public.accounts(user_id) ON DELETE CASCADE;
+
+
+--
+-- TOC entry 4523 (class 2606 OID 245418)
+-- Name: order_applicants order_applicants_order_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: scmarket
 --
 
 ALTER TABLE ONLY public.order_applicants
@@ -3045,7 +3579,8 @@ ALTER TABLE ONLY public.order_applicants
 
 
 --
--- Name: order_comments order_comments_author_fkey; Type: FK CONSTRAINT; Schema: public; Owner: voc_sc
+-- TOC entry 4525 (class 2606 OID 245436)
+-- Name: order_comments order_comments_author_fkey; Type: FK CONSTRAINT; Schema: public; Owner: scmarket
 --
 
 ALTER TABLE ONLY public.order_comments
@@ -3053,7 +3588,8 @@ ALTER TABLE ONLY public.order_comments
 
 
 --
--- Name: order_comments order_comments_order_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: voc_sc
+-- TOC entry 4524 (class 2606 OID 245431)
+-- Name: order_comments order_comments_order_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: scmarket
 --
 
 ALTER TABLE ONLY public.order_comments
@@ -3061,7 +3597,8 @@ ALTER TABLE ONLY public.order_comments
 
 
 --
--- Name: order_deliveries order_deliveries_delivery_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: voc_sc
+-- TOC entry 4526 (class 2606 OID 245444)
+-- Name: order_deliveries order_deliveries_delivery_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: scmarket
 --
 
 ALTER TABLE ONLY public.order_deliveries
@@ -3069,7 +3606,8 @@ ALTER TABLE ONLY public.order_deliveries
 
 
 --
--- Name: order_deliveries order_deliveries_order_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: voc_sc
+-- TOC entry 4527 (class 2606 OID 245449)
+-- Name: order_deliveries order_deliveries_order_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: scmarket
 --
 
 ALTER TABLE ONLY public.order_deliveries
@@ -3077,15 +3615,17 @@ ALTER TABLE ONLY public.order_deliveries
 
 
 --
--- Name: order_offers order_offers_actor_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: dashboard
+-- TOC entry 4595 (class 2606 OID 512035)
+-- Name: order_offers order_offers_actor_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: scmarket
 --
 
 ALTER TABLE ONLY public.order_offers
-    ADD CONSTRAINT order_offers_actor_id_fkey FOREIGN KEY (actor_id) REFERENCES public.accounts(user_id) ON DELETE CASCADE;
+    ADD CONSTRAINT order_offers_actor_id_fkey FOREIGN KEY (actor_id) REFERENCES public.accounts(user_id);
 
 
 --
--- Name: order_offers order_offers_session_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: dashboard
+-- TOC entry 4593 (class 2606 OID 512025)
+-- Name: order_offers order_offers_session_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: scmarket
 --
 
 ALTER TABLE ONLY public.order_offers
@@ -3093,15 +3633,17 @@ ALTER TABLE ONLY public.order_offers
 
 
 --
--- Name: order_offers order_offers_template_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: dashboard
+-- TOC entry 4594 (class 2606 OID 512030)
+-- Name: order_offers order_offers_template_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: scmarket
 --
 
 ALTER TABLE ONLY public.order_offers
-    ADD CONSTRAINT order_offers_template_id_fkey FOREIGN KEY (service_id) REFERENCES public.services(service_id) ON DELETE SET NULL;
+    ADD CONSTRAINT order_offers_template_id_fkey FOREIGN KEY (service_id) REFERENCES public.services(service_id);
 
 
 --
--- Name: order_reviews order_reviews_author_fkey; Type: FK CONSTRAINT; Schema: public; Owner: voc_sc
+-- TOC entry 4529 (class 2606 OID 245469)
+-- Name: order_reviews order_reviews_author_fkey; Type: FK CONSTRAINT; Schema: public; Owner: scmarket
 --
 
 ALTER TABLE ONLY public.order_reviews
@@ -3109,7 +3651,8 @@ ALTER TABLE ONLY public.order_reviews
 
 
 --
--- Name: order_reviews order_reviews_contractor_author_fkey; Type: FK CONSTRAINT; Schema: public; Owner: voc_sc
+-- TOC entry 4530 (class 2606 OID 502452)
+-- Name: order_reviews order_reviews_contractor_author_fkey; Type: FK CONSTRAINT; Schema: public; Owner: scmarket
 --
 
 ALTER TABLE ONLY public.order_reviews
@@ -3117,7 +3660,8 @@ ALTER TABLE ONLY public.order_reviews
 
 
 --
--- Name: order_reviews order_reviews_order_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: voc_sc
+-- TOC entry 4528 (class 2606 OID 245464)
+-- Name: order_reviews order_reviews_order_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: scmarket
 --
 
 ALTER TABLE ONLY public.order_reviews
@@ -3125,7 +3669,17 @@ ALTER TABLE ONLY public.order_reviews
 
 
 --
--- Name: services order_templates_assigned_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: voc_sc
+-- TOC entry 4587 (class 2606 OID 4379683)
+-- Name: order_status_update order_status_update_order_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: scmarket
+--
+
+ALTER TABLE ONLY public.order_status_update
+    ADD CONSTRAINT order_status_update_order_id_fkey FOREIGN KEY (order_id) REFERENCES public.orders(order_id) ON DELETE CASCADE;
+
+
+--
+-- TOC entry 4533 (class 2606 OID 247995)
+-- Name: services order_templates_assigned_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: scmarket
 --
 
 ALTER TABLE ONLY public.services
@@ -3133,7 +3687,8 @@ ALTER TABLE ONLY public.services
 
 
 --
--- Name: services order_templates_contractor_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: voc_sc
+-- TOC entry 4531 (class 2606 OID 247985)
+-- Name: services order_templates_contractor_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: scmarket
 --
 
 ALTER TABLE ONLY public.services
@@ -3141,7 +3696,8 @@ ALTER TABLE ONLY public.services
 
 
 --
--- Name: services order_templates_user_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: voc_sc
+-- TOC entry 4532 (class 2606 OID 247990)
+-- Name: services order_templates_user_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: scmarket
 --
 
 ALTER TABLE ONLY public.services
@@ -3149,7 +3705,8 @@ ALTER TABLE ONLY public.services
 
 
 --
--- Name: notification_webhooks order_webhooks_contractor_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: voc_sc
+-- TOC entry 4534 (class 2606 OID 249378)
+-- Name: notification_webhooks order_webhooks_contractor_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: scmarket
 --
 
 ALTER TABLE ONLY public.notification_webhooks
@@ -3157,7 +3714,8 @@ ALTER TABLE ONLY public.notification_webhooks
 
 
 --
--- Name: notification_webhooks order_webhooks_user_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: voc_sc
+-- TOC entry 4535 (class 2606 OID 249383)
+-- Name: notification_webhooks order_webhooks_user_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: scmarket
 --
 
 ALTER TABLE ONLY public.notification_webhooks
@@ -3165,7 +3723,8 @@ ALTER TABLE ONLY public.notification_webhooks
 
 
 --
--- Name: orders orders_assigned_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: voc_sc
+-- TOC entry 4514 (class 2606 OID 245380)
+-- Name: orders orders_assigned_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: scmarket
 --
 
 ALTER TABLE ONLY public.orders
@@ -3173,7 +3732,8 @@ ALTER TABLE ONLY public.orders
 
 
 --
--- Name: orders orders_contractor_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: voc_sc
+-- TOC entry 4516 (class 2606 OID 245390)
+-- Name: orders orders_contractor_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: scmarket
 --
 
 ALTER TABLE ONLY public.orders
@@ -3181,7 +3741,8 @@ ALTER TABLE ONLY public.orders
 
 
 --
--- Name: orders orders_customer_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: voc_sc
+-- TOC entry 4515 (class 2606 OID 245385)
+-- Name: orders orders_customer_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: scmarket
 --
 
 ALTER TABLE ONLY public.orders
@@ -3189,7 +3750,8 @@ ALTER TABLE ONLY public.orders
 
 
 --
--- Name: orders orders_offer_session_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: voc_sc
+-- TOC entry 4518 (class 2606 OID 1586925)
+-- Name: orders orders_offer_session_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: scmarket
 --
 
 ALTER TABLE ONLY public.orders
@@ -3197,7 +3759,8 @@ ALTER TABLE ONLY public.orders
 
 
 --
--- Name: orders orders_template_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: voc_sc
+-- TOC entry 4517 (class 2606 OID 248000)
+-- Name: orders orders_template_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: scmarket
 --
 
 ALTER TABLE ONLY public.orders
@@ -3205,7 +3768,8 @@ ALTER TABLE ONLY public.orders
 
 
 --
--- Name: public_contract_offers public_contract_offers_contract_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: dashboard
+-- TOC entry 4602 (class 2606 OID 1636679)
+-- Name: public_contract_offers public_contract_offers_contract_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: scmarket
 --
 
 ALTER TABLE ONLY public.public_contract_offers
@@ -3213,7 +3777,8 @@ ALTER TABLE ONLY public.public_contract_offers
 
 
 --
--- Name: public_contract_offers public_contract_offers_session_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: dashboard
+-- TOC entry 4603 (class 2606 OID 1636684)
+-- Name: public_contract_offers public_contract_offers_session_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: scmarket
 --
 
 ALTER TABLE ONLY public.public_contract_offers
@@ -3221,7 +3786,8 @@ ALTER TABLE ONLY public.public_contract_offers
 
 
 --
--- Name: public_contracts public_contracts_customer_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: dashboard
+-- TOC entry 4601 (class 2606 OID 1636671)
+-- Name: public_contracts public_contracts_customer_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: scmarket
 --
 
 ALTER TABLE ONLY public.public_contracts
@@ -3229,7 +3795,8 @@ ALTER TABLE ONLY public.public_contracts
 
 
 --
--- Name: recruiting_comments recruiting_comments_comment_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: voc_sc
+-- TOC entry 4547 (class 2606 OID 269605)
+-- Name: recruiting_comments recruiting_comments_comment_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: scmarket
 --
 
 ALTER TABLE ONLY public.recruiting_comments
@@ -3237,7 +3804,8 @@ ALTER TABLE ONLY public.recruiting_comments
 
 
 --
--- Name: recruiting_comments recruiting_comments_post_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: voc_sc
+-- TOC entry 4548 (class 2606 OID 269610)
+-- Name: recruiting_comments recruiting_comments_post_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: scmarket
 --
 
 ALTER TABLE ONLY public.recruiting_comments
@@ -3245,7 +3813,8 @@ ALTER TABLE ONLY public.recruiting_comments
 
 
 --
--- Name: recruiting_posts recruiting_posts_contractor_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: voc_sc
+-- TOC entry 4542 (class 2606 OID 320046)
+-- Name: recruiting_posts recruiting_posts_contractor_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: scmarket
 --
 
 ALTER TABLE ONLY public.recruiting_posts
@@ -3253,7 +3822,8 @@ ALTER TABLE ONLY public.recruiting_posts
 
 
 --
--- Name: recruiting_votes recruiting_votes_actor_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: voc_sc
+-- TOC entry 4544 (class 2606 OID 269577)
+-- Name: recruiting_votes recruiting_votes_actor_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: scmarket
 --
 
 ALTER TABLE ONLY public.recruiting_votes
@@ -3261,7 +3831,8 @@ ALTER TABLE ONLY public.recruiting_votes
 
 
 --
--- Name: recruiting_votes recruiting_votes_post_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: voc_sc
+-- TOC entry 4543 (class 2606 OID 269572)
+-- Name: recruiting_votes recruiting_votes_post_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: scmarket
 --
 
 ALTER TABLE ONLY public.recruiting_votes
@@ -3269,7 +3840,8 @@ ALTER TABLE ONLY public.recruiting_votes
 
 
 --
--- Name: service_images service_images_resource_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: dashboard
+-- TOC entry 4599 (class 2606 OID 512903)
+-- Name: service_images service_images_resource_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: scmarket
 --
 
 ALTER TABLE ONLY public.service_images
@@ -3277,7 +3849,8 @@ ALTER TABLE ONLY public.service_images
 
 
 --
--- Name: service_images service_images_template_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: dashboard
+-- TOC entry 4598 (class 2606 OID 512898)
+-- Name: service_images service_images_template_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: scmarket
 --
 
 ALTER TABLE ONLY public.service_images
@@ -3285,7 +3858,8 @@ ALTER TABLE ONLY public.service_images
 
 
 --
--- Name: ship_checkins ship_checkins_ship_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: voc_sc
+-- TOC entry 4501 (class 2606 OID 245245)
+-- Name: ship_checkins ship_checkins_ship_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: scmarket
 --
 
 ALTER TABLE ONLY public.ship_checkins
@@ -3293,7 +3867,8 @@ ALTER TABLE ONLY public.ship_checkins
 
 
 --
--- Name: ship_checkins ship_checkins_user_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: voc_sc
+-- TOC entry 4502 (class 2606 OID 245250)
+-- Name: ship_checkins ship_checkins_user_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: scmarket
 --
 
 ALTER TABLE ONLY public.ship_checkins
@@ -3301,7 +3876,8 @@ ALTER TABLE ONLY public.ship_checkins
 
 
 --
--- Name: ships ships_owner_fkey; Type: FK CONSTRAINT; Schema: public; Owner: voc_sc
+-- TOC entry 4500 (class 2606 OID 245235)
+-- Name: ships ships_owner_fkey; Type: FK CONSTRAINT; Schema: public; Owner: scmarket
 --
 
 ALTER TABLE ONLY public.ships
@@ -3309,7 +3885,8 @@ ALTER TABLE ONLY public.ships
 
 
 --
--- Name: user_availability user_availability_accounts_user_id_fk; Type: FK CONSTRAINT; Schema: public; Owner: voc_sc
+-- TOC entry 4560 (class 2606 OID 329103)
+-- Name: user_availability user_availability_accounts_user_id_fk; Type: FK CONSTRAINT; Schema: public; Owner: scmarket
 --
 
 ALTER TABLE ONLY public.user_availability
@@ -3317,7 +3894,8 @@ ALTER TABLE ONLY public.user_availability
 
 
 --
--- Name: user_availability user_availability_contractors_contractor_id_fk; Type: FK CONSTRAINT; Schema: public; Owner: voc_sc
+-- TOC entry 4561 (class 2606 OID 329108)
+-- Name: user_availability user_availability_contractors_contractor_id_fk; Type: FK CONSTRAINT; Schema: public; Owner: scmarket
 --
 
 ALTER TABLE ONLY public.user_availability
@@ -3325,7 +3903,26 @@ ALTER TABLE ONLY public.user_availability
 
 
 --
--- Name: webhook_actions webhook_actions_action_type_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: voc_sc
+-- TOC entry 4605 (class 2606 OID 4175573)
+-- Name: user_contractor_settings user_contractor_settings_contractor_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: scmarket
+--
+
+ALTER TABLE ONLY public.user_contractor_settings
+    ADD CONSTRAINT user_contractor_settings_contractor_id_fkey FOREIGN KEY (contractor_id) REFERENCES public.contractors(contractor_id);
+
+
+--
+-- TOC entry 4604 (class 2606 OID 4175568)
+-- Name: user_contractor_settings user_contractor_settings_user_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: scmarket
+--
+
+ALTER TABLE ONLY public.user_contractor_settings
+    ADD CONSTRAINT user_contractor_settings_user_id_fkey FOREIGN KEY (user_id) REFERENCES public.accounts(user_id);
+
+
+--
+-- TOC entry 4552 (class 2606 OID 277880)
+-- Name: webhook_actions webhook_actions_action_type_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: scmarket
 --
 
 ALTER TABLE ONLY public.webhook_actions
@@ -3333,7 +3930,8 @@ ALTER TABLE ONLY public.webhook_actions
 
 
 --
--- Name: webhook_actions webhook_actions_webhook_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: voc_sc
+-- TOC entry 4551 (class 2606 OID 277875)
+-- Name: webhook_actions webhook_actions_webhook_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: scmarket
 --
 
 ALTER TABLE ONLY public.webhook_actions
@@ -3341,11 +3939,18 @@ ALTER TABLE ONLY public.webhook_actions
 
 
 --
--- Name: SCHEMA public; Type: ACL; Schema: -; Owner: dashboard
+-- TOC entry 4753 (class 0 OID 0)
+-- Dependencies: 4
+-- Name: SCHEMA public; Type: ACL; Schema: -; Owner: scmarket
 --
 
-GRANT ALL ON SCHEMA public TO voc_sc;
+REVOKE ALL ON SCHEMA public FROM rdsadmin;
+REVOKE ALL ON SCHEMA public FROM PUBLIC;
+GRANT ALL ON SCHEMA public TO scmarket;
+GRANT ALL ON SCHEMA public TO PUBLIC;
 
+
+-- Completed on 2025-07-28 08:29:57 PDT
 
 --
 -- PostgreSQL database dump complete
