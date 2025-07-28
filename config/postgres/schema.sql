@@ -904,6 +904,9 @@ CREATE TABLE public.image_resources (
     external_url public.url
 );
 
+INSERT INTO image_resources VALUES ('5226c767-0599-419b-ae71-a7303c441db0', 'default_profile_picture.png', 'https://robertsspaceindustries.com/rsi/static/images/account/avatar_default_big.jpg');
+INSERT INTO image_resources VALUES ('0008300c-fc6a-4e4e-9488-7d696f00e8b2', 'default_profile_banner.png', 'https://media.discordapp.net/attachments/690989503397101678/1157162282468524092/default_profile_banner.jpg?ex=65179adb&is=6516495b&hm=ce331ef90d2acf941e008199b7df2fd8127df642fdade0deb70d3fb79b136eae&=&width=2430&height=1366');
+
 
 ALTER TABLE public.image_resources OWNER TO scmarket;
 
