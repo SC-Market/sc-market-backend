@@ -74,6 +74,7 @@ INSERT INTO public.game_item_categories VALUES (58, 'Component', 'Flight Blade')
 INSERT INTO public.game_item_categories VALUES (59, 'Component', 'Bomb Launcher');
 INSERT INTO public.game_item_categories VALUES (60, 'Commodity', 'Commodity');
 
+ALTER TABLE ONLY public.game_items DROP CONSTRAINT game_items_details_id_fkey;
 
 --
 -- Data for Name: game_items; Type: TABLE DATA; Schema: public; Owner: scmarket
@@ -201295,9 +201296,13 @@ BIOCHEMICAL
 STUN
 0.7', '963e9f20-0b41-4b88-b960-6ce4c786bc9a');
 
+INSERT INTO public.market_listing_details SELECT details_id, type, name, description, id FROM public.game_items;
 
 --
 -- Name: game_item_categories_id_seq; Type: SEQUENCE SET; Schema: public; Owner: scmarket
 --
 
 SELECT pg_catalog.setval('public.game_item_categories_id_seq', 147, true);
+
+ALTER TABLE ONLY public.game_items
+    ADD CONSTRAINT game_items_details_id_fkey FOREIGN KEY (details_id) REFERENCES public.market_listing_details(details_id);

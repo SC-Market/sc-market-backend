@@ -37,6 +37,6 @@ services:
       POSTGRES_PASSWORD: scmarket
     volumes:
       - ./config/postgres/schema.sql:/docker-entrypoint-initdb.d/1-schema.sql
-      - /var/lib/dashboard/postgresql/data_prodcopy:/var/lib/postgresql/data
+      - ./config/postgres/populate_db.sql:/docker-entrypoint-initdb.d/2-populate_db.sql
     ports:
       - "5432:5432"
