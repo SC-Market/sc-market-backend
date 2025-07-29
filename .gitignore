@@ -31,3 +31,6 @@ node_modules/
 config/certificates/
 
 docker-compose.override.yml
+.htaccess
+
+.htaccess
