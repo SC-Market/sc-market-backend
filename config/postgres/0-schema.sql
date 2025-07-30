@@ -34,7 +34,14 @@ CREATE EXTENSION IF NOT EXISTS citext WITH SCHEMA public;
 
 COMMENT ON EXTENSION citext IS 'data type for case-insensitive character strings';
 
-CREATE ROLE scmarket;
+DO
+$do$
+    BEGIN
+        IF NOT EXISTS (SELECT 1 FROM pg_roles WHERE rolname = 'scmarket') THEN
+            CREATE ROLE scmarket;
+        END IF;
+    END
+$do$;
 
 --
 -- TOC entry 868 (class 1247 OID 245061)
