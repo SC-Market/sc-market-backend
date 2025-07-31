@@ -23,6 +23,8 @@
     "express-ws": "^5.0.2",
     "graphql": "^16.11.0",
     "graphql-request": "^7.2.0",
+    "i18next": "^25.3.2",
+    "i18next-http-middleware": "^3.8.0",
     "jsonschema": "^1.5.0",
     "knex": "^3.1.0",
     "lru-cache": "^11.1.0",

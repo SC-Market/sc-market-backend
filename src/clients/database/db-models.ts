@@ -16,6 +16,7 @@ export interface DBUser {
   banner: string
   balance: string
   created_at: Date
+  locale: string
 
   rsi_confirmed: boolean
   discord_access_token?: string | null

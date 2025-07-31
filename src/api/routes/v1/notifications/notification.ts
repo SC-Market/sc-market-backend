@@ -62,8 +62,10 @@ notificationRouter.post("/delete", userAuthorized, async (req, res, next) => {
 
   res.json({ status: "Success" })
 })
-notificationRouter.get("", userAuthorized, async (req, res, next) => {
-  const user = req.user as User
 
-  res.json(await database.getCompleteNotificationsByUser(user.user_id))
+notificationRouter.get("/:page", userAuthorized, async (req, res, next) => {
+  const user = req.user as User
+  const page = +req.params.page
+
+  res.json(await database.getCompleteNotificationsByUser(user.user_id, page))
 })

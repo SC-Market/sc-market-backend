@@ -28,6 +28,10 @@ import { formatListingSlug } from "./api/routes/v1/market/helpers.js"
 import { Server } from "socket.io"
 import { chatServer } from "./clients/messaging/websocket.js"
 import { start_tasks } from "./tasks/tasks.js"
+import {
+  i18nMiddleware,
+  addTranslationToRequestWithUser,
+} from "./api/routes/v1/util/i18n.js"
 
 const SessionPool = pg.Pool
 
@@ -155,7 +159,15 @@ const strategy = new Strategy(
     profile.username = "new_user" + profile.id
     profile.displayName = "new_user" + profile.id
 
-    cb(null, await database.insertUser(profile, accessToken, refreshToken))
+    cb(
+      null,
+      await database.insertUserWithLocale(
+        profile,
+        accessToken,
+        refreshToken,
+        profile.locale,
+      ),
+    )
   },
 )
 
@@ -408,6 +420,10 @@ app.get("/sitemap.xml", async function (req, res) {
 
 app.use(oapi)
 app.use("/swaggerui", adminAuthorized, oapi.swaggerui())
+
+// Add i18n middleware for internationalization
+app.use(i18nMiddleware)
+app.use(addTranslationToRequestWithUser)
 
 app.use("/api", apiRouter)
 

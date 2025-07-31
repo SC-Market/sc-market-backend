@@ -579,7 +579,8 @@ CREATE TABLE public.accounts (
     official_server_id bigint,
     discord_thread_channel_id bigint,
     banned boolean DEFAULT false NOT NULL,
-    market_order_template character varying(2000) DEFAULT ''::character varying
+    market_order_template character varying(2000) DEFAULT ''::character varying,
+    locale character varying(10) DEFAULT 'en' NOT NULL
 );
 
 

@@ -244,6 +244,10 @@ export class KnexDatabase implements Database {
           })
           .returning("*")
       )[0]
+
+      await this.knex<DBAccountSettings>("account_settings").insert({
+        user_id: user.user_id,
+      })
     } else {
       await this.updateUser(
         { user_id: user.user_id },
@@ -253,6 +257,39 @@ export class KnexDatabase implements Database {
         },
       )
     }
+
+    return {
+      // discord_data: profile,
+      discord_id: profile.id,
+      user_id: user!.user_id,
+      display_name: user!.display_name,
+      role: user!.role,
+      username: user!.display_name,
+    } as User
+  }
+
+  async insertUserWithLocale(
+    profile: CachedDiscordUser,
+    access_token: string,
+    refresh_token: string,
+    preferredLocale: string,
+  ): Promise<User> {
+    const [user] = await this.knex<DBUser>("accounts")
+      .insert({
+        discord_id: profile.id,
+        display_name: profile.username,
+        username: profile.username,
+        discord_access_token: access_token,
+        discord_refresh_token: refresh_token,
+        locale: preferredLocale,
+      })
+      .onConflict("discord_id")
+      .merge({
+        discord_access_token: access_token,
+        discord_refresh_token: refresh_token,
+        locale: preferredLocale,
+      })
+      .returning("*")
 
     return {
       // discord_data: profile,
@@ -2747,6 +2784,14 @@ export class KnexDatabase implements Database {
     return this.knex<DBNotification>("notification").select("*").where(where)
   }
 
+  async getNotificationsPaginated(where: any, page: number) {
+    return this.knex<DBNotification>("notification")
+      .offset(page * 20)
+      .limit(20)
+      .select("*")
+      .where(where)
+  }
+
   async updateNotifications(where: any, values: any) {
     return this.knex<DBNotification>("notification").update(values).where(where)
   }
@@ -2813,8 +2858,11 @@ export class KnexDatabase implements Database {
     }
   }
 
-  async getCompleteNotificationsByUser(user_id: string) {
-    const notifs = await this.getNotifications({ notifier_id: user_id })
+  async getCompleteNotificationsByUser(user_id: string, page: number) {
+    const notifs = await this.getNotificationsPaginated(
+      { notifier_id: user_id },
+      page,
+    )
     const complete_notifs = []
     for (const notif of notifs) {
       const notif_object = await this.getNotificationObject({
