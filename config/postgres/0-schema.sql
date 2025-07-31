@@ -583,6 +583,13 @@ CREATE TABLE public.accounts (
     locale character varying(10) DEFAULT 'en' NOT NULL
 );
 
+-- Add unique constraint
+ALTER TABLE public.accounts
+    ADD CONSTRAINT accounts_discord_id_unique UNIQUE (discord_id);
+
+-- Add comment to document the constraint
+COMMENT ON CONSTRAINT accounts_discord_id_unique ON public.accounts IS 'Ensures each Discord ID can only be associated with one account';
+
 
 ALTER TABLE public.accounts OWNER TO scmarket;
 

@@ -15,7 +15,6 @@ i18next.init({
   resources,
   lng: "en", // default language
   fallbackLng: "en",
-  debug: process.env.NODE_ENV === "development",
   interpolation: {
     escapeValue: false, // React already escapes values
   },
