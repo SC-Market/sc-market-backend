@@ -912,9 +912,6 @@ CREATE TABLE public.image_resources (
     external_url public.url
 );
 
-INSERT INTO public.image_resources VALUES ('5226c767-0599-419b-ae71-a7303c441db0', 'default_profile_picture.png', 'https://robertsspaceindustries.com/rsi/static/images/account/avatar_default_big.jpg');
-INSERT INTO public.image_resources VALUES ('0008300c-fc6a-4e4e-9488-7d696f00e8b2', 'default_profile_banner.png', 'https://media.discordapp.net/attachments/690989503397101678/1157162282468524092/default_profile_banner.jpg?ex=65179adb&is=6516495b&hm=ce331ef90d2acf941e008199b7df2fd8127df642fdade0deb70d3fb79b136eae&=&width=2430&height=1366');
-
 
 ALTER TABLE public.image_resources OWNER TO scmarket;
 
@@ -3950,6 +3947,251 @@ ALTER TABLE ONLY public.webhook_actions
 ALTER TABLE ONLY public.webhook_actions
     ADD CONSTRAINT webhook_actions_webhook_id_fkey FOREIGN KEY (webhook_id) REFERENCES public.notification_webhooks(webhook_id) ON DELETE CASCADE;
 
+
+CREATE OR REPLACE FUNCTION public.create_contractor(
+    p_name VARCHAR(255),
+    p_spectrum_id VARCHAR(30),
+    p_description TEXT,
+    p_size INT,
+    p_logo_url TEXT,
+    p_banner_url TEXT,
+    p_owner_username VARCHAR(255),
+    p_kind VARCHAR(20) DEFAULT 'independent',
+    p_site_url TEXT DEFAULT NULL,
+    p_official_server_id INT DEFAULT 1003056231591727264,
+    p_discord_thread_channel_id INT DEFAULT 1072580369251041330,
+    p_market_order_template TEXT DEFAULT ''
+)
+    RETURNS TABLE(
+                     spectrum_id VARCHAR(255),
+                     success BOOLEAN,
+                     message TEXT
+                 )
+    LANGUAGE plpgsql
+    SECURITY DEFINER
+AS $$
+DECLARE
+    v_owner_user_id UUID;
+    v_contractor_id UUID;
+    v_owner_role_id UUID;
+    v_default_role_id UUID;
+    v_admin_role_id UUID;
+    v_avatar_resource_id UUID;
+    v_banner_resource_id UUID;
+BEGIN
+    -- Validate input parameters
+    IF p_name IS NULL OR p_name = '' THEN
+        RETURN QUERY SELECT NULL::VARCHAR(255), FALSE, 'Contractor name is required'::TEXT;
+        RETURN;
+    END IF;
+
+    IF p_spectrum_id IS NULL OR p_spectrum_id = '' THEN
+        RETURN QUERY SELECT NULL::VARCHAR(255), FALSE, 'Contractor spectrum_id is required'::TEXT;
+        RETURN;
+    END IF;
+
+    IF p_owner_username IS NULL OR p_owner_username = '' THEN
+        RETURN QUERY SELECT NULL::VARCHAR(255), FALSE, 'Owner username is required'::TEXT;
+        RETURN;
+    END IF;
+
+    -- Check if spectrum_id already exists
+    IF EXISTS (SELECT 1 FROM contractors WHERE contractors.spectrum_id = p_spectrum_id) THEN
+        RETURN QUERY SELECT NULL::VARCHAR(255), FALSE, 'Contractor spectrum_id already exists'::TEXT;
+        RETURN;
+    END IF;
+
+    -- Get owner user ID
+    SELECT user_id INTO v_owner_user_id
+    FROM accounts
+    WHERE username = p_owner_username;
+
+    IF v_owner_user_id IS NULL THEN
+        RETURN QUERY SELECT NULL::VARCHAR(255), FALSE, 'Owner user not found'::TEXT;
+        RETURN;
+    END IF;
+
+    -- Begin transaction
+    BEGIN
+        -- Create avatar image resource if URL provided
+        IF p_logo_url IS NOT NULL AND p_logo_url != '' THEN
+            INSERT INTO image_resources (
+                filename,
+                external_url
+            ) VALUES (
+                         'contractor_avatar_' || p_spectrum_id,
+                         p_logo_url
+                     ) RETURNING resource_id INTO v_avatar_resource_id;
+        ELSE
+            -- Use default avatar
+            v_avatar_resource_id := '3d3db169-6b57-4936-94e2-f2534b29663a'::uuid;
+        END IF;
+
+        -- Create banner image resource if URL provided
+        IF p_banner_url IS NOT NULL AND p_banner_url != '' THEN
+            INSERT INTO image_resources (
+                filename,
+                external_url
+            ) VALUES (
+                         'contractor_banner_' || p_spectrum_id,
+                         p_banner_url
+                     ) RETURNING resource_id INTO v_banner_resource_id;
+        ELSE
+            -- Use default banner
+            v_banner_resource_id := '0008300c-fc6a-4e4e-9488-7d696f00e8b2'::uuid;
+        END IF;
+
+        -- Insert contractor record and get the generated UUID
+        INSERT INTO contractors (
+            spectrum_id,
+            name,
+            description,
+            avatar,
+            banner,
+            kind,
+            site_url,
+            official_server_id,
+            discord_thread_channel_id,
+            market_order_template,
+            size
+        ) VALUES (
+                     p_spectrum_id,
+                     p_name,
+                     COALESCE(p_description, ''),
+                     v_avatar_resource_id,
+                     v_banner_resource_id,
+                     p_kind,
+                     p_site_url,
+                     p_official_server_id,
+                     p_discord_thread_channel_id,
+                     COALESCE(p_market_order_template, ''),
+                     COALESCE(p_size, 1)
+                 ) RETURNING contractor_id INTO v_contractor_id;
+
+        -- Create owner role and get the generated UUID
+        INSERT INTO contractor_roles (
+            contractor_id,
+            name,
+            position,
+            manage_roles,
+            manage_orders,
+            kick_members,
+            manage_invites,
+            manage_org_details,
+            manage_stock,
+            manage_market,
+            manage_recruiting,
+            manage_webhooks
+        ) VALUES (
+                     v_contractor_id,
+                     'Owner',
+                     0,
+                     TRUE,
+                     TRUE,
+                     TRUE,
+                     TRUE,
+                     TRUE,
+                     TRUE,
+                     TRUE,
+                     TRUE,
+                     TRUE
+                 ) RETURNING role_id INTO v_owner_role_id;
+
+        -- Create admin role and get the generated UUID
+        INSERT INTO contractor_roles (
+            contractor_id,
+            name,
+            position,
+            manage_roles,
+            manage_orders,
+            kick_members,
+            manage_invites,
+            manage_org_details,
+            manage_stock,
+            manage_market,
+            manage_recruiting,
+            manage_webhooks
+        ) VALUES (
+                     v_contractor_id,
+                     'Admin',
+                     1,
+                     TRUE,
+                     TRUE,
+                     TRUE,
+                     TRUE,
+                     TRUE,
+                     TRUE,
+                     TRUE,
+                     TRUE,
+                     TRUE
+                 ) RETURNING role_id INTO v_admin_role_id;
+
+        -- Create default role and get the generated UUID
+        INSERT INTO contractor_roles (
+            contractor_id,
+            name,
+            position,
+            manage_roles,
+            manage_orders,
+            kick_members,
+            manage_invites,
+            manage_org_details,
+            manage_stock,
+            manage_market,
+            manage_recruiting,
+            manage_webhooks
+        ) VALUES (
+                     v_contractor_id,
+                     'Member',
+                     10,
+                     FALSE,
+                     FALSE,
+                     FALSE,
+                     FALSE,
+                     FALSE,
+                     FALSE,
+                     FALSE,
+                     FALSE,
+                     FALSE
+                 ) RETURNING role_id INTO v_default_role_id;
+
+        -- Add owner as member
+        INSERT INTO contractor_members (
+            contractor_id,
+            user_id,
+            role
+        ) VALUES (
+                     v_contractor_id,
+                     v_owner_user_id,
+                     'admin'
+                 );
+
+        -- Add owner to both owner and admin roles
+        INSERT INTO contractor_member_roles (
+            user_id,
+            role_id
+        ) VALUES
+              (v_owner_user_id, v_owner_role_id),
+              (v_owner_user_id, v_default_role_id);
+
+        -- Update contractor with role references
+        UPDATE contractors
+        SET
+            owner_role = v_owner_role_id,
+            default_role = v_default_role_id
+        WHERE contractor_id = v_contractor_id;
+
+
+        RETURN QUERY SELECT p_spectrum_id, TRUE, 'Contractor created successfully'::TEXT;
+
+    EXCEPTION
+        WHEN OTHERS THEN
+            -- Rollback will happen automatically
+            RETURN QUERY SELECT NULL::VARCHAR(255), FALSE, 'Failed to create contractor: ' || SQLERRM::TEXT;
+    END;
+
+END;
+$$;
 
 --
 -- TOC entry 4753 (class 0 OID 0)

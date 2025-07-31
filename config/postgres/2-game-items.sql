@@ -201306,5 +201306,3 @@ SELECT pg_catalog.setval('public.game_item_categories_id_seq', 147, true);
 
 ALTER TABLE ONLY public.game_items
     ADD CONSTRAINT game_items_details_id_fkey FOREIGN KEY (details_id) REFERENCES public.market_listing_details(details_id);
-
-INSERT INTO public.accounts(username, rsi_confirmed, display_name, discord_id, role, official_server_id, discord_thread_channel_id) VALUES ('Khuzdul', true, 'Khuzdul', 122739797646245899, 'admin', 1003056231591727264, 1072580369251041330);
