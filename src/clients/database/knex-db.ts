@@ -2858,11 +2858,9 @@ export class KnexDatabase implements Database {
     }
   }
 
-  async getCompleteNotificationsByUser(user_id: string, page: number) {
-    const notifs = await this.getNotificationsPaginated(
-      { notifier_id: user_id },
-      page,
-    )
+  async getCompleteNotificationsByUser(user_id: string) {
+    const notifs = await this.getNotifications({ notifier_id: user_id })
+
     const complete_notifs = []
     for (const notif of notifs) {
       const notif_object = await this.getNotificationObject({
