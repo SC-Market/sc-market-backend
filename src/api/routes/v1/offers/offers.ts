@@ -7,7 +7,8 @@ import {
 } from "./serializers.js"
 
 import express from "express"
-import { initiateOrder, paymentTypes } from "../orders/helpers.js"
+import { initiateOrder } from "../orders/helpers.js"
+import { PAYMENT_TYPES } from "../types/payment-types.js"
 import {
   dispatchOfferNotifications,
   sendOfferStatusNotification,
@@ -134,7 +135,7 @@ oapi.schema("Offer", {
     payment_type: {
       title: "Offer.payment_type",
       type: "string",
-      enum: paymentTypes,
+      enum: PAYMENT_TYPES,
     },
   },
   additionalProperties: false,
@@ -189,7 +190,7 @@ oapi.schema("CounterOfferBody", {
     payment_type: {
       title: "CounterOfferBody.payment_type",
       type: "string",
-      enum: paymentTypes,
+      enum: PAYMENT_TYPES,
     },
     status: {
       type: "string",
@@ -275,7 +276,7 @@ oapi.schema("OfferStub", {
     payment_type: {
       title: "OfferStub.payment_type",
       type: "string",
-      enum: paymentTypes,
+      enum: PAYMENT_TYPES,
     },
     count: {
       title: "OfferStub.count",

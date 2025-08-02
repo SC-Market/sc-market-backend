@@ -19,9 +19,9 @@ import {
   handleStatusUpdate,
   is_related_to_order,
   orderTypes,
-  paymentTypes,
   search_orders,
 } from "./helpers.js"
+import { PAYMENT_TYPES } from "../types/payment-types.js"
 import { createErrorResponse, createResponse } from "../util/response.js"
 import {
   oapi,
@@ -107,7 +107,7 @@ oapi.schema("OrderBody", {
       nullable: true,
     },
     payment_type: {
-      enum: paymentTypes,
+      enum: PAYMENT_TYPES,
       title: "OrderBody.payment_type",
       type: "string",
     },
@@ -332,7 +332,7 @@ oapi.schema("OrderStub", {
     payment_type: {
       title: "OrderStub.payment_type",
       type: "string",
-      enum: paymentTypes,
+      enum: PAYMENT_TYPES,
     },
     count: {
       title: "OrderStub.count",
@@ -1570,7 +1570,7 @@ oapi.schema("Order", {
       nullable: true,
     },
     payment_type: {
-      enum: ["one-time", "daily", "hourly"],
+      enum: PAYMENT_TYPES,
       title: "Order.payment_type",
       type: "string",
     },

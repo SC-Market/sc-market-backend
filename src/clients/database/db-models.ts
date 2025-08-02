@@ -1,3 +1,5 @@
+import { PaymentTypes } from "../../api/routes/v1/types/payment-types.js"
+
 export type OrderStatus =
   | "fulfilled"
   | "in-progress"
@@ -206,7 +208,7 @@ export interface DBOrder {
   destination?: string | null
   service_id: string
   rush: boolean
-  payment_type: "one-time" | "hourly" | "daily"
+  payment_type: PaymentTypes
   thread_id: string | null
   offer_session_id: string | null
 }
@@ -246,7 +248,7 @@ export interface DBOffer {
   status: string
   collateral?: string | number | null
   service_id: string
-  payment_type: "one-time" | "hourly" | "daily"
+  payment_type: PaymentTypes
   actor_id: string
 }
 
@@ -287,7 +289,7 @@ export interface DBService {
   departure: string | null
   destination: string | null
   cost: number
-  payment_type: "one-time" | "hourly" | "daily"
+  payment_type: PaymentTypes
   offer: number
   contractor_id?: string | null
   user_id?: string | null

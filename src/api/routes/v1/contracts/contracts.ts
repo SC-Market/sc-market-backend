@@ -7,7 +7,8 @@ import {
   Response404,
 } from "../openapi.js"
 import { verifiedUser } from "../../../middleware/auth.js"
-import { createOffer, orderTypes, paymentTypes } from "../orders/helpers.js"
+import { createOffer, orderTypes } from "../orders/helpers.js"
+import { PAYMENT_TYPES } from "../types/payment-types.js"
 import { database } from "../../../../clients/database/knex-db.js"
 import { User } from "../api-models.js"
 import { createErrorResponse, createResponse } from "../util/response.js"
@@ -60,7 +61,7 @@ oapi.schema("PublicContractBody", {
       minimum: 0,
     },
     payment_type: {
-      enum: paymentTypes,
+      enum: PAYMENT_TYPES,
       title: "PublicContractBody.payment_type",
       type: "string",
     },
@@ -195,7 +196,7 @@ oapi.schema("PublicContractOfferBody", {
       minimum: 0,
     },
     payment_type: {
-      enum: paymentTypes,
+      enum: PAYMENT_TYPES,
       title: "PublicContractBody.payment_type",
       type: "string",
     },
@@ -378,7 +379,7 @@ oapi.schema("PublicContract", {
       minimum: 0,
     },
     payment_type: {
-      enum: paymentTypes,
+      enum: PAYMENT_TYPES,
       title: "PublicContract.payment_type",
       type: "string",
     },

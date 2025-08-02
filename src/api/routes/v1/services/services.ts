@@ -5,7 +5,8 @@ import { database } from "../../../../clients/database/knex-db.js"
 import { has_permission } from "../util/permissions.js"
 import { cdn } from "../../../../clients/cdn/cdn.js"
 import { serializeService } from "./serializers.js"
-import { orderTypes, paymentTypes } from "../orders/helpers.js"
+import { orderTypes } from "../orders/helpers.js"
+import { PAYMENT_TYPES, PaymentType } from "../types/payment-types.js"
 import { createServicePhotos } from "./helpers.js"
 import {
   oapi,
@@ -70,7 +71,7 @@ oapi.schema("ServiceBody", {
       minimum: 0,
     },
     payment_type: {
-      enum: ["one-time", "daily", "hourly"],
+      enum: PAYMENT_TYPES,
       title: "ServiceBody.payment_type",
       type: "string",
     },
@@ -181,7 +182,7 @@ servicesRouter.post(
       destination: string | null
       cost: number
       contractor?: string | null
-      payment_type: string
+      payment_type: PaymentType
       photos: string[]
       status: string
     } = req.body
@@ -503,6 +504,7 @@ servicesRouter.put(
       destination,
       collateral,
       status,
+      payment_type,
       photos,
     }: {
       service_name: string
@@ -516,6 +518,7 @@ servicesRouter.put(
       destination: string | null
       cost: number
       status: string
+      payment_type: PaymentType
       photos: string[]
     } = req.body
 
@@ -555,6 +558,7 @@ servicesRouter.put(
         destination: destination,
         collateral: collateral || 0,
         status: status,
+        payment_type,
       },
     )
 
