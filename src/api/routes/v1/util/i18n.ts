@@ -4,13 +4,13 @@ import { Request, Response, NextFunction } from "express"
 import { DBUser } from "../../../../clients/database/db-models.js"
 
 // Import locale JSON files
-import enTranslations from "../../../locale/en.json"
-import esTranslations from "../../../locale/es.json"
-import ukTranslations from "../../../locale/uk.json"
-import zhCNTranslations from "../../../locale/zh-CN.json"
-import frTranslations from "../../../locale/fr.json"
-import deTranslations from "../../../locale/de.json"
-import jaTranslations from "../../../locale/ja.json"
+import enTranslations from "../../../locale/en.json" with { type: "json" }
+import esTranslations from "../../../locale/es.json" with { type: "json" }
+import ukTranslations from "../../../locale/uk.json" with { type: "json" }
+import zhCNTranslations from "../../../locale/zh-CN.json" with { type: "json" }
+import frTranslations from "../../../locale/fr.json" with { type: "json" }
+import deTranslations from "../../../locale/de.json" with { type: "json" }
+import jaTranslations from "../../../locale/ja.json" with { type: "json" }
 
 // Supported locales/languages
 export const SUPPORTED_LOCALES = [
