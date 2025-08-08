@@ -3,11 +3,28 @@ import i18nextHttpMiddleware from "i18next-http-middleware"
 import { Request, Response, NextFunction } from "express"
 import { DBUser } from "../../../../clients/database/db-models.js"
 
-// Default language resources
+// Import locale JSON files
+import enTranslations from "../../../locale/en.json" assert { type: "json" }
+import esTranslations from "../../../locale/es.json" assert { type: "json" }
+import ukTranslations from "../../../locale/uk.json" assert { type: "json" }
+import zhCNTranslations from "../../../locale/zh-CN.json" assert { type: "json" }
+import frTranslations from "../../../locale/fr.json" assert { type: "json" }
+import deTranslations from "../../../locale/de.json" assert { type: "json" }
+import jaTranslations from "../../../locale/ja.json" assert { type: "json" }
+
+// Supported locales/languages
+export const SUPPORTED_LOCALES = ["en", "es", "uk", "zh-CN", "fr", "de", "ja"] as const
+export type SupportedLocale = typeof SUPPORTED_LOCALES[number]
+
+// Create resources object from imported translations
 const resources = {
-  en: {
-    translation: {},
-  },
+  en: { translation: enTranslations },
+  es: { translation: esTranslations },
+  uk: { translation: ukTranslations },
+  "zh-CN": { translation: zhCNTranslations },
+  fr: { translation: frTranslations },
+  de: { translation: deTranslations },
+  ja: { translation: jaTranslations },
 }
 
 // Initialize i18next

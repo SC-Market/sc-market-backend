@@ -14,8 +14,27 @@ import {
   serializePublicProfile,
 } from "./serializers.js"
 import { createErrorResponse, createResponse } from "../util/response.js"
+import { oapi, Response400, Response401, Response500 } from "../openapi.js"
+import { SUPPORTED_LOCALES } from "../util/i18n.js"
+import logger from "../../../../logger/logger.js"
 
 export const profileRouter = express.Router()
+
+// Define OpenAPI schema for profile update
+oapi.schema("ProfileUpdateBody", {
+  properties: {
+    locale: {
+      title: "ProfileUpdateBody.locale",
+      type: "string",
+      enum: [...SUPPORTED_LOCALES],
+      description: "User's preferred locale/language",
+    },
+  },
+  required: ["locale"],
+  additionalProperties: false,
+  title: "ProfileUpdateBody",
+  type: "object",
+})
 
 profileRouter.post("/auth/link", userAuthorized, async (req, res, next) => {
   try {
@@ -107,6 +126,104 @@ profileRouter.get("/search/:query", async (req, res, next) => {
 
   res.json(await Promise.all(users.map((u) => serializePublicProfile(u))))
 })
+
+profileRouter.put(
+  "",
+  rate_limit(30),
+  userAuthorized,
+  oapi.validPath({
+    summary: "Update user profile",
+    deprecated: false,
+    description: "Update user profile settings including locale preference",
+    operationId: "updateProfile",
+    tags: ["Profiles"],
+    parameters: [],
+    requestBody: {
+      content: {
+        "application/json": {
+          schema: oapi.schema("ProfileUpdateBody"),
+        },
+      },
+    },
+    responses: {
+      "200": {
+        description: "OK - Profile successfully updated",
+        content: {
+          "application/json": {
+            schema: {
+              properties: {
+                data: {
+                  type: "object",
+                  properties: {
+                    message: {
+                      type: "string",
+                      example: "Locale updated successfully",
+                    },
+                    locale: {
+                      type: "string",
+                      enum: [...SUPPORTED_LOCALES],
+                      example: "en",
+                    },
+                  },
+                  required: ["message", "locale"],
+                },
+                status: {
+                  type: "string",
+                  example: "success",
+                },
+              },
+              required: ["data", "status"],
+              type: "object",
+              title: "UpdateProfileSuccess",
+            },
+          },
+        },
+        headers: {},
+      },
+      "400": Response400,
+      "401": Response401,
+      "500": Response500,
+    },
+    security: [],
+  }),
+  async (req, res) => {
+    try {
+      const user = req.user as User
+      const { locale }: { locale: string } = req.body
+
+      // Update user locale in database
+      const updatedUsers = await database.updateUser(
+        { user_id: user.user_id },
+        { locale },
+      )
+
+      if (updatedUsers.length === 0) {
+        res.status(500).json(
+          createErrorResponse({
+            message: "Failed to update user locale",
+            status: "error",
+          }),
+        )
+        return
+      }
+
+      res.json(
+        createResponse({
+          message: "Locale updated successfully",
+          locale: updatedUsers[0].locale,
+        }),
+      )
+    } catch (error) {
+      logger.error("Error updating user locale:", error)
+      res.status(500).json(
+        createErrorResponse({
+          message: "Internal server error",
+          status: "error",
+        }),
+      )
+    }
+  },
+)
 
 profileRouter.post(
   "/update",
@@ -476,47 +593,241 @@ profileRouter.get("/availability", userAuthorized, async (req, res, next) => {
   return
 })
 
-profileRouter.get("", rate_limit(1), userAuthorized, async (req, res, next) => {
-  try {
-    const { discord_access_token, discord_refresh_token, ...user } =
-      req.user as User
-
-    const contractors = await database.getUserContractorRoles({
-      user_id: user.user_id,
-    })
-    const discord_profile = await database.discord_profile_cache.fetch(
-      user.user_id,
-    )
-
-    res.json({
-      ...user,
-      balance: +user.balance!,
-      contractors: await Promise.all(
-        contractors.map(async (s) => ({
-          ...(await database.getMinimalContractor({
-            spectrum_id: s.spectrum_id,
-          })),
-          role: s.role,
-        })),
-      ),
-      avatar: await cdn.getFileLinkResource(user.avatar),
-      banner: await cdn.getFileLinkResource(user.banner),
-      // notifications: await database.getCompleteNotificationsByUser(user.user_id),
-      settings: await database.getUserSettings(user.user_id),
-      rating: await getUserRating(user.user_id),
-      discord_profile: {
-        username: discord_profile?.username,
-        discriminator: discord_profile?.discriminator,
-        id: discord_profile?.id,
+profileRouter.get(
+  "",
+  rate_limit(1),
+  userAuthorized,
+  oapi.validPath({
+    summary: "Get current user profile",
+    deprecated: false,
+    description:
+      "Retrieve the complete profile information for the authenticated user including contractors, settings, and preferences",
+    operationId: "getCurrentUserProfile",
+    tags: ["Profiles"],
+    parameters: [],
+    responses: {
+      "200": {
+        description: "OK - User profile retrieved successfully",
+        content: {
+          "application/json": {
+            schema: {
+              properties: {
+                user_id: {
+                  type: "string",
+                  format: "uuid",
+                  example: "123e4567-e89b-12d3-a456-426614174000",
+                },
+                username: {
+                  type: "string",
+                  example: "example_user",
+                },
+                display_name: {
+                  type: "string",
+                  example: "Example User",
+                },
+                profile_description: {
+                  type: "string",
+                  example: "A brief description about the user",
+                },
+                role: {
+                  type: "string",
+                  enum: ["user", "admin"],
+                  example: "user",
+                },
+                banned: {
+                  type: "boolean",
+                  example: false,
+                },
+                balance: {
+                  type: "number",
+                  example: 1000,
+                },
+                created_at: {
+                  type: "string",
+                  format: "date-time",
+                  example: "2023-01-01T00:00:00Z",
+                },
+                official_server_id: {
+                  type: "string",
+                  nullable: true,
+                  example: "1003056231591727264",
+                },
+                discord_thread_channel_id: {
+                  type: "string",
+                  nullable: true,
+                  example: "1072580369251041330",
+                },
+                market_order_template: {
+                  type: "string",
+                  example: "Default order template",
+                },
+                locale: {
+                  type: "string",
+                  enum: [...SUPPORTED_LOCALES],
+                  example: "en",
+                },
+                contractors: {
+                  type: "array",
+                  items: {
+                    type: "object",
+                    properties: {
+                      contractor_id: {
+                        type: "string",
+                        format: "uuid",
+                      },
+                      spectrum_id: {
+                        type: "string",
+                      },
+                      name: {
+                        type: "string",
+                      },
+                      description: {
+                        type: "string",
+                      },
+                      avatar: {
+                        type: "string",
+                      },
+                      banner: {
+                        type: "string",
+                      },
+                      size: {
+                        type: "number",
+                      },
+                      role: {
+                        type: "string",
+                      },
+                    },
+                  },
+                },
+                avatar: {
+                  type: "string",
+                  format: "uri",
+                  example: "https://cdn.example.com/avatar.jpg",
+                },
+                banner: {
+                  type: "string",
+                  format: "uri",
+                  example: "https://cdn.example.com/banner.jpg",
+                },
+                settings: {
+                  type: "object",
+                  properties: {
+                    discord_order_share: {
+                      type: "boolean",
+                      example: true,
+                    },
+                    discord_public: {
+                      type: "boolean",
+                      example: false,
+                    },
+                  },
+                },
+                rating: {
+                  type: "object",
+                  properties: {
+                    average: {
+                      type: "number",
+                      example: 4.5,
+                    },
+                    count: {
+                      type: "number",
+                      example: 10,
+                    },
+                  },
+                },
+                discord_profile: {
+                  type: "object",
+                  properties: {
+                    username: {
+                      type: "string",
+                      nullable: true,
+                      example: "discord_user",
+                    },
+                    discriminator: {
+                      type: "string",
+                      nullable: true,
+                      example: "1234",
+                    },
+                    id: {
+                      type: "string",
+                      nullable: true,
+                      example: "123456789012345678",
+                    },
+                  },
+                },
+              },
+              required: [
+                "user_id",
+                "username",
+                "display_name",
+                "profile_description",
+                "role",
+                "banned",
+                "balance",
+                "created_at",
+                "locale",
+                "contractors",
+                "avatar",
+                "banner",
+                "settings",
+                "rating",
+                "discord_profile",
+                "market_order_template",
+              ],
+              type: "object",
+              title: "GetCurrentUserProfileSuccess",
+            },
+          },
+        },
+        headers: {},
       },
-      market_order_template: user.market_order_template,
-    })
-  } catch (e) {
-    console.error(e)
-    res.status(500)
-    return
-  }
-})
+      "401": Response401,
+      "500": Response500,
+    },
+    security: [],
+  }),
+  async (req, res, next) => {
+    try {
+      const { discord_access_token, discord_refresh_token, ...user } =
+        req.user as User
+
+      const contractors = await database.getUserContractorRoles({
+        user_id: user.user_id,
+      })
+      const discord_profile = await database.discord_profile_cache.fetch(
+        user.user_id,
+      )
+
+      res.json({
+        ...user,
+        balance: +user.balance!,
+        contractors: await Promise.all(
+          contractors.map(async (s) => ({
+            ...(await database.getMinimalContractor({
+              spectrum_id: s.spectrum_id,
+            })),
+            role: s.role,
+          })),
+        ),
+        avatar: await cdn.getFileLinkResource(user.avatar),
+        banner: await cdn.getFileLinkResource(user.banner),
+        // notifications: await database.getCompleteNotificationsByUser(user.user_id),
+        settings: await database.getUserSettings(user.user_id),
+        rating: await getUserRating(user.user_id),
+        discord_profile: {
+          username: discord_profile?.username,
+          discriminator: discord_profile?.discriminator,
+          id: discord_profile?.id,
+        },
+        market_order_template: user.market_order_template,
+      })
+    } catch (e) {
+      logger.error("Error fetching user profile:", e)
+      res.status(500)
+      return
+    }
+  },
+)
 
 export type PaymentTypes =
   | "one-time"

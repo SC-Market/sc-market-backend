@@ -401,6 +401,7 @@ export class KnexDatabase implements Database {
       official_server_id: user.official_server_id,
       discord_thread_channel_id: user.discord_thread_channel_id,
       market_order_template: user.market_order_template,
+      locale: user.locale,
     } as User
   }
 

@@ -1,0 +1,23 @@
+{
+  "common": {
+    "success": "Erfolg",
+    "error": "Fehler",
+    "loading": "Laden...",
+    "save": "Speichern",
+    "cancel": "Abbrechen",
+    "delete": "Löschen",
+    "edit": "Bearbeiten",
+    "create": "Erstellen",
+    "update": "Aktualisieren",
+    "search": "Suchen",
+    "filter": "Filter",
+    "sort": "Sortieren",
+    "next": "Weiter",
+    "previous": "Zurück",
+    "back": "Zurück",
+    "close": "Schließen",
+    "confirm": "Bestätigen",
+    "yes": "Ja",
+    "no": "Nein"
+  }
+} 

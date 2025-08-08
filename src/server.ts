@@ -4,7 +4,7 @@ import passport from "passport"
 import cors, { CorsOptions } from "cors"
 import session from "express-session"
 
-import { Profile, Strategy } from "passport-discord"
+import { Profile, Strategy, StrategyOptionsWithRequest } from "passport-discord"
 import refresh from "passport-oauth2-refresh"
 
 import * as oauth2 from "passport-oauth2"
@@ -31,9 +31,17 @@ import { start_tasks } from "./tasks/tasks.js"
 import {
   i18nMiddleware,
   addTranslationToRequestWithUser,
+  SUPPORTED_LOCALES,
 } from "./api/routes/v1/util/i18n.js"
 
 const SessionPool = pg.Pool
+
+// Helper function to validate locale and fallback to 'en' if not supported
+function getValidLocale(requestedLocale: string): string {
+  return SUPPORTED_LOCALES.includes(requestedLocale as any)
+    ? requestedLocale
+    : "en"
+}
 
 const deployEnvironment = env.NODE_ENV
 const backend_url = new URL(env.BACKEND_URL || "http://localhost:7000")
@@ -69,7 +77,7 @@ const corsOptions = function (
   callback(null, corsOptions) // callback expects two parameters: error and options
 }
 
-const passportConfig = {
+const passportConfig: StrategyOptionsWithRequest = {
   // The Client Id for your discord application (See "Discord Application Setup")
   clientID: env.DISCORD_CLIENT_ID || "wumpus",
 
@@ -85,6 +93,7 @@ const passportConfig = {
   // The scope for your OAuth request - You can use strings or Scope values
   // The default scope is Scope.IDENTIFY which gives basic profile information
   scope: ["identify"], // 'email', 'guilds'
+  passReqToCallback: true,
 }
 
 const app = enableWS(express()).app
@@ -133,6 +142,7 @@ app.use(
 
 app.use(cors(corsOptions))
 app.use(express.json())
+app.use(i18nMiddleware)
 
 // Set up passport
 passport.serializeUser((user: Express.User, done) => {
@@ -151,6 +161,7 @@ passport.deserializeUser(async (id: string, done) => {
 const strategy = new Strategy(
   passportConfig,
   async (
+    req: Request,
     accessToken: string,
     refreshToken: string,
     profile: Profile,
@@ -165,7 +176,7 @@ const strategy = new Strategy(
         profile,
         accessToken,
         refreshToken,
-        profile.locale,
+        getValidLocale(req.language),
       ),
     )
   },
@@ -421,8 +432,6 @@ app.get("/sitemap.xml", async function (req, res) {
 app.use(oapi)
 app.use("/swaggerui", adminAuthorized, oapi.swaggerui())
 
-// Add i18n middleware for internationalization
-app.use(i18nMiddleware)
 app.use(addTranslationToRequestWithUser)
 
 app.use("/api", apiRouter)

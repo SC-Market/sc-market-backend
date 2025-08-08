@@ -388,6 +388,17 @@ const document: OpenAPIV3.Document = {
         required: ["message"],
         type: "object",
       },
+      ServerError: {
+        properties: {
+          message: {
+            default: "Internal Server Error",
+            enum: ["Internal Server Error"],
+            type: "string",
+          },
+        },
+        required: ["message"],
+        type: "object",
+      },
     },
   },
   servers: [
@@ -438,6 +449,17 @@ export const Response404 = {
   content: {
     "application/json": {
       schema: oapi.schema("NotFound"),
+    },
+  },
+  headers: {},
+}
+
+export const Response500 = {
+  description:
+    "The server encountered an unexpected condition that prevented it from fulfilling the request. Please try again later.",
+  content: {
+    "application/json": {
+      schema: oapi.schema("ServerError"),
     },
   },
   headers: {},
