@@ -78,9 +78,21 @@ export async function serializeOfferSession(session: DBOfferSession) {
     ? await database.getUser({ user_id: session.assigned_id })
     : null
 
+  // Check if there's an order associated with this offer session (when status is "Accepted")
+  let order_id = undefined
+  if (stub.status === "Accepted") {
+    const order = await database.knex("orders")
+      .where({ offer_session_id: session.id })
+      .first()
+    if (order) {
+      order_id = order.order_id
+    }
+  }
+
   return {
     ...stub,
     contract_id: contract_offer?.contract_id || undefined,
+    order_id,
     offers: await Promise.all(offers.map(serializeOffer)),
     availability: await formatOrderAvailability(session),
     discord_thread_id: session.thread_id,
