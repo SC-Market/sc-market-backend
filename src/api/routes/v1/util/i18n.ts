@@ -4,17 +4,25 @@ import { Request, Response, NextFunction } from "express"
 import { DBUser } from "../../../../clients/database/db-models.js"
 
 // Import locale JSON files
-import enTranslations from "../../../locale/en.json" assert { type: "json" }
-import esTranslations from "../../../locale/es.json" assert { type: "json" }
-import ukTranslations from "../../../locale/uk.json" assert { type: "json" }
-import zhCNTranslations from "../../../locale/zh-CN.json" assert { type: "json" }
-import frTranslations from "../../../locale/fr.json" assert { type: "json" }
-import deTranslations from "../../../locale/de.json" assert { type: "json" }
-import jaTranslations from "../../../locale/ja.json" assert { type: "json" }
+import enTranslations from "../../../locale/en.json"
+import esTranslations from "../../../locale/es.json"
+import ukTranslations from "../../../locale/uk.json"
+import zhCNTranslations from "../../../locale/zh-CN.json"
+import frTranslations from "../../../locale/fr.json"
+import deTranslations from "../../../locale/de.json"
+import jaTranslations from "../../../locale/ja.json"
 
 // Supported locales/languages
-export const SUPPORTED_LOCALES = ["en", "es", "uk", "zh-CN", "fr", "de", "ja"] as const
-export type SupportedLocale = typeof SUPPORTED_LOCALES[number]
+export const SUPPORTED_LOCALES = [
+  "en",
+  "es",
+  "uk",
+  "zh-CN",
+  "fr",
+  "de",
+  "ja",
+] as const
+export type SupportedLocale = (typeof SUPPORTED_LOCALES)[number]
 
 // Create resources object from imported translations
 const resources = {
