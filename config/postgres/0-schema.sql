@@ -797,7 +797,8 @@ CREATE TABLE public.contractors (
     official_server_id bigint,
     discord_thread_channel_id bigint,
     banner uuid DEFAULT '0008300c-fc6a-4e4e-9488-7d696f00e8b2'::uuid NOT NULL,
-    market_order_template character varying(2000) DEFAULT ''::character varying
+    market_order_template character varying(2000) DEFAULT ''::character varying,
+    locale character varying(10) DEFAULT 'en' NOT NULL
 );
 
 

@@ -170,6 +170,7 @@ export interface DBContractor {
   // discord_invite: string | null,
   banner: string
   market_order_template: string
+  locale: string
 }
 
 export interface Rating {

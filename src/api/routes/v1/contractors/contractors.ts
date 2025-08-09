@@ -12,6 +12,7 @@ import {
   DBContractorMemberRole,
 } from "../../../../clients/database/db-models.js"
 import { contractorDetails } from "../util/formatting.js"
+import { SUPPORTED_LOCALES } from "../util/i18n.js"
 import { createContractorInviteNotification } from "../util/notifications.js"
 import { createNotificationWebhook } from "../util/webhooks.js"
 import { rate_limit } from "../../../middleware/ratelimiting.js"
@@ -421,6 +422,12 @@ oapi.schema("Contractor", {
       title: "Contractor.balance",
       type: "number",
     },
+    locale: {
+      title: "Contractor.locale",
+      type: "string",
+      enum: [...SUPPORTED_LOCALES],
+      description: "Preferred locale for the contractor",
+    },
   },
   required: [
     "kind",
@@ -513,6 +520,12 @@ oapi.schema("ContractorUpdateBody", {
         type: "string",
         enum: VALID_ORG_TAGS,
       },
+    },
+    locale: {
+      title: "ContractorUpdateBody.locale",
+      type: "string",
+      enum: [...SUPPORTED_LOCALES],
+      description: "Preferred locale for the contractor",
     },
   },
   required: [],
@@ -615,7 +628,7 @@ contractorsRouter.post(
       }
     } catch {}
 
-    if (await authorizeContractor(spectrum_id, user.user_id)) {
+    if (await authorizeContractor(spectrum_id, user)) {
       const contractor = await database.getContractor({ spectrum_id })
       res.json(createResponse(contractorDetails(contractor, user)))
     } else {
@@ -708,6 +721,7 @@ contractorsRouter.post(
       logo,
       banner,
       member_count: 1,
+      locale: user.locale,
     })
     res.status(201).json(createResponse({ result: "Success" }))
     return
@@ -2109,6 +2123,7 @@ contractorsRouter.put(
       name,
       banner_url,
       market_order_template,
+      locale,
     }: {
       description?: string
       tags?: string[]
@@ -2117,6 +2132,7 @@ contractorsRouter.put(
       name?: string
       banner_url?: string
       market_order_template?: string
+      locale?: string
     } = req.body
 
     // Do checks first
@@ -2155,7 +2171,8 @@ contractorsRouter.put(
       avatar_resource !== undefined ||
       banner_resource !== undefined ||
       name !== undefined ||
-      market_order_template !== undefined
+      market_order_template !== undefined ||
+      locale !== undefined
     ) {
       await database.updateContractor(
         { contractor_id: contractor.contractor_id },
@@ -2166,6 +2183,7 @@ contractorsRouter.put(
           banner: banner_resource ? banner_resource.resource_id : undefined,
           name: name || undefined,
           market_order_template: market_order_template,
+          locale: locale || undefined,
         },
       )
     }
@@ -3058,7 +3076,7 @@ contractorsRouter.post(
         await authorizeProfile(owner_username, user.user_id, true)
       }
 
-      await authorizeContractor(spectrum_id, user.user_id, true)
+      await authorizeContractor(spectrum_id, user, true)
 
       res.json(createResponse({ result: "Success" }))
     } catch (e) {

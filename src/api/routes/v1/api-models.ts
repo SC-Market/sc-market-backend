@@ -34,17 +34,6 @@ export interface Contractor {
   description: string
 }
 
-export interface ContractorBody {
-  spectrum_id: string
-  name: string
-  kind: string
-  size: number
-  avatar?: string
-  description: string
-  site_url?: string
-  banner?: string
-}
-
 export interface ShipsFileEntry {
   name: string
   manufacturer_code: string

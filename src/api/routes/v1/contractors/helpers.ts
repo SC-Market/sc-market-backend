@@ -2,6 +2,7 @@ import { cdn } from "../../../../clients/cdn/cdn.js"
 import { database } from "../../../../clients/database/knex-db.js"
 import { get_sentinel } from "../profiles/helpers.js"
 import { fetchRSIOrgSCAPI } from "../../../../clients/scapi/scapi.js"
+import { User } from "../api-models.js"
 
 export async function createContractor(options: {
   owner_id: string
@@ -11,6 +12,7 @@ export async function createContractor(options: {
   logo: string
   banner: string
   member_count: number
+  locale: string
 }) {
   const {
     owner_id,
@@ -20,6 +22,7 @@ export async function createContractor(options: {
     logo,
     banner,
     member_count,
+    locale,
   } = options
   let avatar_resource = undefined
   if (logo) {
@@ -59,6 +62,7 @@ export async function createContractor(options: {
     avatar: avatar_resource ? avatar_resource.resource_id : undefined,
     description: description.trim(),
     banner: banner_resource ? banner_resource.resource_id : undefined,
+    locale,
   })
 
   await database.insertContractorMember(
@@ -131,7 +135,7 @@ export async function createContractor(options: {
 
 export async function authorizeContractor(
   spectrum_id: string,
-  user_id: string,
+  user: User,
   override = false,
 ) {
   const orgDetails = await fetchRSIOrgSCAPI(spectrum_id)
@@ -143,54 +147,21 @@ export async function authorizeContractor(
     orgDetails.data?.history?.plaintext || "",
   ]
 
-  const sentinel = get_sentinel(user_id)
+  const sentinel = get_sentinel(user.user_id)
 
   if (override || choices.find((c) => c.includes(sentinel))) {
     await createContractor({
-      owner_id: user_id,
+      owner_id: user.user_id,
       spectrum_id,
       description: choices[0].trim(),
       name: orgDetails?.data?.name || spectrum_id,
       banner: orgDetails?.data?.banner,
       logo: orgDetails?.data?.logo,
       member_count: orgDetails?.data?.members || 1,
+      locale: user.locale,
     })
     return true
   }
 
   return false
 }
-
-// async function authorizeContractor(spectrum_id: string, user_id: string) {
-//     const orgPage = await fetchRSIOrg(spectrum_id)
-//     console.log(orgPage)
-//
-//     if (orgPage.includes(user_id) || true) {
-//         const avatar_url: string | undefined = (orgPage.match(thumb_regex) || [])[1]
-//         const name: string | undefined = (orgPage.match(name_regex) || [])[1]
-//         const size: string | undefined = (orgPage.match(size_regex) || [])[1]
-//         console.log(orgPage.match(thumb_regex))
-//
-//         let avatar_resource = undefined
-//         if (avatar_url) {
-//             try {
-//                 avatar_resource = await cdn.createExternalResource(`https://robertsspaceindustries.com/${avatar_url}`, spectrum_id + "_org_avatar")
-//             } catch {
-//                 avatar_resource = undefined
-//             }
-//         }
-//
-//         const contractor = await database.insertContractor({
-//             spectrum_id: spectrum_id.toUpperCase(),
-//             name: name || spectrum_id.toUpperCase(),
-//             kind: 'organization',
-//             size: size,
-//             avatar: avatar_resource ? avatar_resource.resource_id : undefined
-//         })
-//         await database.insertContractorMember(contractor.contractor_id, user_id, 'owner')
-//
-//         return true
-//     }
-//
-//     return false
-// }

@@ -1,11 +1,6 @@
 import Knex, { Knex as KnexClass } from "knex"
 import { Profile, Strategy } from "passport-discord"
-import {
-  ContractorBody,
-  MessageBody,
-  PostBody,
-  User,
-} from "../../api/routes/v1/api-models.js"
+import { MessageBody, PostBody, User } from "../../api/routes/v1/api-models.js"
 import { LRUCache } from "lru-cache"
 import {
   AvailabilitySpan,
@@ -301,7 +296,9 @@ export class KnexDatabase implements Database {
     } as User
   }
 
-  async insertContractor(details: ContractorBody): Promise<DBContractor> {
+  async insertContractor(
+    details: Partial<DBContractor>,
+  ): Promise<DBContractor> {
     return (
       await this.knex<DBContractor>("contractors")
         .insert(details)
