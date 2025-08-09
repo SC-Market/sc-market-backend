@@ -2,7 +2,7 @@ import { database } from "../database/knex-db.js"
 import { DBImageResource } from "../database/db-models.js"
 
 export const external_resource_pattern =
-  /^https?:\/\/(www\.)?((((media)|(cdn)\.)?robertsspaceindustries\.com)|((media\.)?starcitizen.tools)|(i\.imgur\.com)|(media\.discordapp\.net)|(cdn\.discordapp\.com)|(cstone\.space))\b([-a-zA-Z0-9()@:%_\+.~#?&//=]*)$/
+  /^https?:\/\/(www\.)?((((media)|(cdn)\.)?robertsspaceindustries\.com)|((media\.)?starcitizen.tools)|(i\.imgur\.com)|(cstone\.space))\b([-a-zA-Z0-9()@:%_\+.~#?&//=]*)$/
 
 export const valid_domains = [
   "media.robertsspaceindustries.com",
