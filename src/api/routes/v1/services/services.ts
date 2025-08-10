@@ -14,9 +14,12 @@ import {
   Response401,
   Response403,
   Response404,
+  Response500,
 } from "../openapi.js"
 import { createErrorResponse, createResponse } from "../util/response.js"
 import { valid_contractor } from "../contractors/middleware.js"
+import multer from "multer"
+import { randomUUID } from "node:crypto"
 
 export const servicesRouter = express.Router()
 
@@ -643,5 +646,194 @@ servicesRouter.get(
     }
 
     res.json(createResponse(await serializeService(service)))
+  },
+)
+
+// Configure multer for file uploads
+const upload = multer({
+  dest: "uploads/",
+  limits: { fileSize: 2 * 1000 * 1000 /* 2mb */ },
+})
+
+// Upload photos for a service (multipart/form-data)
+servicesRouter.post(
+  "/:service_id/photos",
+  userAuthorized,
+  upload.array("photos", 5),
+  oapi.validPath({
+    summary: "Upload photos for a service",
+    description:
+      "Upload up to 5 photos for a specific service. Photos are stored in CDN and linked to the service. If the total number of photos would exceed 5, the oldest photos will be automatically removed to maintain the limit.",
+    operationId: "uploadServicePhotos",
+    tags: ["Services"],
+    parameters: [
+      {
+        name: "service_id",
+        in: "path",
+        required: true,
+        description: "ID of the service to upload photos for",
+        schema: {
+          type: "string",
+        },
+      },
+    ],
+    responses: {
+      "200": {
+        description: "Photos uploaded successfully",
+        content: {
+          "application/json": {
+            schema: {
+              $ref: "#/components/schemas/PhotoUploadResponse",
+            },
+          },
+        },
+      },
+      "400": Response400,
+      "401": Response401,
+      "403": Response403,
+      "404": Response404,
+      "500": Response500,
+    },
+  }),
+  async (req, res) => {
+    try {
+      const user = req.user as User
+      const service_id = req.params.service_id
+      const photos = req.files as unknown as Express.Multer.File[]
+
+      if (!photos || photos.length === 0) {
+        res
+          .status(400)
+          .json(createErrorResponse({ error: "No photos provided" }))
+        return
+      }
+
+      if (photos.length > 5) {
+        res.status(400).json(
+          createErrorResponse({
+            error: "Maximum 5 photos can be uploaded at once",
+          }),
+        )
+        return
+      }
+
+      // Validate service exists
+      const service = await database.getService({ service_id })
+      if (!service) {
+        res
+          .status(404)
+          .json(createErrorResponse({ error: "Service not found" }))
+        return
+      }
+
+      // Check if user has permission to modify this service
+      if (service.contractor_id) {
+        const contractor = await database.getContractor({
+          contractor_id: service.contractor_id,
+        })
+        if (
+          !contractor ||
+          !(await has_permission(
+            contractor.contractor_id,
+            user.user_id,
+            "manage_orders",
+          ))
+        ) {
+          res.status(403).json(
+            createErrorResponse({
+              error: "You are not authorized to modify this service",
+            }),
+          )
+          return
+        }
+      } else {
+        // If no contractor, check if user owns the service
+        if (service.user_id !== user.user_id) {
+          res.status(403).json(
+            createErrorResponse({
+              error: "You are not authorized to modify this service",
+            }),
+          )
+          return
+        }
+      }
+
+      // Get existing photos to check count
+      const existing_photos = await database.getServiceListingImages({
+        service_id,
+      })
+
+      const totalPhotosAfterUpload = existing_photos.length + photos.length
+
+      // Only delete old photos if we would exceed 5 total photos
+      if (totalPhotosAfterUpload > 5) {
+        // Calculate how many old photos to delete to stay under 5
+        const photosToDelete = totalPhotosAfterUpload - 5
+
+        // Delete oldest photos first (assuming they're ordered by creation time)
+        const photosToRemove = existing_photos.slice(0, photosToDelete)
+
+        for (const photo of photosToRemove) {
+          try {
+            await database.deleteServiceImages(photo)
+            await database.removeImageResource({
+              resource_id: photo.resource_id,
+            })
+          } catch (error) {
+            console.error("Failed to delete old photo:", error)
+            // Continue with new photo insertion even if deletion fails
+          }
+        }
+      }
+
+      // Upload new photos to CDN and create database records
+      const uploadPromises = photos.map(async (photo, index) => {
+        try {
+          const filename = `${service_id}-photos-${index}-${randomUUID()}.png`
+          await cdn.uploadFile(filename, photo.path)
+
+          // Create image resource in database
+          const resource = await database.insertImageResource({
+            filename,
+            external_url: null,
+          })
+
+          return resource
+        } catch (error) {
+          console.error(`Failed to upload photo ${index}:`, error)
+          throw new Error(`Failed to upload photo ${index}`)
+        }
+      })
+
+      const uploadedResources = await Promise.all(uploadPromises)
+
+      // Insert new photos into database
+      for (const resource of uploadedResources) {
+        await database.insertServiceImage({
+          resource_id: resource.resource_id,
+          service_id,
+        })
+      }
+
+      // Get CDN URLs for response
+      const photoUrls = await Promise.all(
+        uploadedResources.map(async (resource) => ({
+          resource_id: resource.resource_id,
+          url: await cdn.getFileLinkResource(resource.resource_id),
+        })),
+      )
+
+      res.json(
+        createResponse({
+          result: "Photos uploaded successfully",
+          photos: photoUrls,
+        }),
+      )
+    } catch (error) {
+      console.error("Error uploading photos:", error)
+      res
+        .status(500)
+        .json(createErrorResponse({ error: "Internal server error" }))
+    }
   },
 )

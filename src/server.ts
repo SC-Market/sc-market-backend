@@ -141,7 +141,6 @@ app.use(
 )
 
 app.use(cors(corsOptions))
-app.use(express.json())
 app.use(i18nMiddleware)
 
 // Set up passport

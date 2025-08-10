@@ -16,6 +16,7 @@ import {
   sortingMethods,
 } from "./types.js"
 import { has_permission } from "../util/permissions.js"
+import { cdn } from "../../../../clients/cdn/cdn.js"
 
 const userListingLock = new AsyncLock()
 const contractorListingLock = new AsyncLock()
@@ -300,4 +301,85 @@ export function formatListingSlug(title: string) {
     .toLowerCase()
     .replace(/ /g, "-")
     .replace(/[^\w-]+/g, "")
+}
+
+/**
+ * Helper function to check if URL is from SC markets CDN
+ * @param url - The URL to check
+ * @returns boolean - True if the URL is from SC markets CDN
+ */
+export const isSCMarketsCDN = (url: string): boolean => {
+  try {
+    const urlObj = new URL(url)
+    // Check if the URL matches the CDN pattern
+    // This will need to be updated based on your actual CDN URL structure
+    return urlObj.hostname.includes('cdn') || 
+           urlObj.hostname.includes('backblaze') ||
+           urlObj.hostname.includes('b2') ||
+           urlObj.hostname.includes('sc-market')
+  } catch {
+    return false
+  }
+}
+
+/**
+ * Helper function to check if image is already associated with the listing
+ * @param imageUrl - The image URL to check
+ * @param listing - The market listing object
+ * @returns Promise<boolean> - True if the image is already associated
+ */
+export const isImageAlreadyAssociated = async (
+  imageUrl: string, 
+  listing: DBMarketListing
+): Promise<boolean> => {
+  try {
+    // Get all current images for this listing
+    const currentImages = await database.getMarketListingImagesByListingID(listing)
+    
+    // Check if any of the current images match this URL
+    for (const image of currentImages) {
+      const resolvedUrl = await cdn.getFileLinkResource(image.resource_id)
+      if (resolvedUrl === imageUrl) {
+        return true
+      }
+    }
+    return false
+  } catch {
+    return false
+  }
+}
+
+/**
+ * Validates photos for market listings, ensuring CDN images are already associated
+ * @param photos - Array of photo URLs to validate
+ * @param listing - The market listing object (for existing listings)
+ * @returns Promise<{valid: boolean, error?: string}> - Validation result
+ */
+export const validateMarketListingPhotos = async (
+  photos: string[], 
+  listing?: DBMarketListing
+): Promise<{valid: boolean, error?: string}> => {
+  for (const photo of photos) {
+    // Check if this is a SC markets CDN URL
+    if (isSCMarketsCDN(photo)) {
+      // If we have a listing, check if the image is already associated
+      if (listing) {
+        const isAssociated = await isImageAlreadyAssociated(photo, listing)
+        if (!isAssociated) {
+          return {
+            valid: false,
+            error: "Cannot use image from SC markets CDN that is not already associated with this listing"
+          }
+        }
+      } else {
+        // For new listings, CDN images are not allowed
+        return {
+          valid: false,
+          error: "Cannot use images from SC markets CDN when creating new listings"
+        }
+      }
+    }
+  }
+  
+  return { valid: true }
 }

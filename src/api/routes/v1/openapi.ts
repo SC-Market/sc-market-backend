@@ -399,6 +399,47 @@ const document: OpenAPIV3.Document = {
         required: ["message"],
         type: "object",
       },
+      PhotoUploadResponse: {
+        type: "object",
+        title: "PhotoUploadResponse",
+        properties: {
+          result: {
+            type: "string",
+            description: "Success message",
+            example: "Photos uploaded successfully",
+          },
+          photos: {
+            type: "array",
+            items: {
+              type: "object",
+              properties: {
+                resource_id: {
+                  type: "string",
+                  description: "Unique identifier for the uploaded photo",
+                },
+                url: {
+                  type: "string",
+                  format: "uri",
+                  description: "CDN URL for the uploaded photo",
+                },
+              },
+              required: ["resource_id", "url"],
+            },
+          },
+        },
+        required: ["result", "photos"],
+      },
+      PhotoUploadError: {
+        type: "object",
+        title: "PhotoUploadError",
+        properties: {
+          error: {
+            type: "string",
+            description: "Error message describing what went wrong",
+          },
+        },
+        required: ["error"],
+      },
     },
   },
   servers: [

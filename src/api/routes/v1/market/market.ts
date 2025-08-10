@@ -36,8 +36,19 @@ import {
   get_org_listings,
   handle_quantity_update,
   verify_listings,
+  isSCMarketsCDN,
+  isImageAlreadyAssociated,
+  validateMarketListingPhotos,
 } from "./helpers.js"
-import { oapi, Response400, Response401, Response403 } from "../openapi.js"
+import { DEFAULT_PLACEHOLDER_PHOTO_URL } from "./constants.js"
+import {
+  oapi,
+  Response400,
+  Response401,
+  Response403,
+  Response404,
+  Response500,
+} from "../openapi.js"
 import multer from "multer"
 import { randomUUID } from "node:crypto"
 
@@ -410,7 +421,47 @@ marketRouter.post(
       const old_photos =
         await database.getMarketListingImagesByListingID(listing)
 
+      // Validate photos using the helper function
+      const photoValidation = await validateMarketListingPhotos(photos, listing)
+      if (!photoValidation.valid) {
+        res.status(400).json({ error: photoValidation.error })
+        return
+      }
+
+      // Track which old photos should be preserved (CDN images that are still being used)
+      const photosToPreserve = new Set<string>()
+      
+      // Process photos - CDN images that are already associated will be skipped
       for (const photo of photos) {
+        // Check if this is a SC markets CDN URL
+        if (isSCMarketsCDN(photo)) {
+          // Check if the image is already associated with this listing
+          const isAssociated = await isImageAlreadyAssociated(photo, listing)
+          if (isAssociated) {
+            // Find the corresponding old photo entry and mark it for preservation
+            for (const oldPhoto of old_photos) {
+              try {
+                const resolvedUrl = await cdn.getFileLinkResource(oldPhoto.resource_id)
+                if (resolvedUrl === photo) {
+                  photosToPreserve.add(oldPhoto.resource_id)
+                  break
+                }
+              } catch {
+                // Skip if we can't resolve the URL
+              }
+            }
+            // Skip this image as it's already associated
+            continue
+          }
+          // If we reach here, the image is not associated, but validation should have caught this
+          // This is a safety check
+          res.status(400).json({ 
+            error: "Cannot use image from SC markets CDN that is not already associated with this listing" 
+          })
+          return
+        }
+
+        // For non-CDN images, proceed with normal processing
         try {
           const resource = await cdn.createExternalResource(
             photo,
@@ -425,11 +476,15 @@ marketRouter.post(
         }
       }
 
+      // Only delete old photos that are not being preserved
       for (const p of old_photos) {
-        await database.deleteMarketListingImages(p)
-        try {
-          await database.removeImageResource({ resource_id: p.resource_id })
-        } catch {}
+        if (!photosToPreserve.has(p.resource_id)) {
+          await database.deleteMarketListingImages(p)
+          try {
+            // Use CDN removeResource to ensure both database and CDN cleanup
+            await cdn.removeResource(p.resource_id)
+          } catch {}
+        }
       }
     }
 
@@ -1434,8 +1489,8 @@ oapi.schema("MarketListingCreateRequest", {
         type: "string",
         format: "uri",
       },
-      minItems: 1,
       title: "MarketListingCreateRequest.photos",
+      description: "Array of photo URLs. If empty or not provided, a default placeholder photo will be used.",
     },
     minimum_bid_increment: {
       type: "number",
@@ -1462,7 +1517,6 @@ oapi.schema("MarketListingCreateRequest", {
     "item_type",
     "quantity_available",
     "minimum_bid_increment",
-    "photos",
     "status",
   ],
 })
@@ -1524,8 +1578,11 @@ marketRouter.post(
         end_time,
       } = req.body
 
+      // Handle empty photos by using default placeholder
+      const photosToProcess = photos && photos.length > 0 ? photos : [DEFAULT_PLACEHOLDER_PHOTO_URL]
+      
       // Validate urls are valid
-      if (photos.find((p: string) => !cdn.verifyExternalResource(p))) {
+      if (photosToProcess.find((p: string) => !cdn.verifyExternalResource(p))) {
         res.status(400).json({ message: "Invalid photo!" })
         return
       }
@@ -1582,7 +1639,7 @@ marketRouter.post(
       }
 
       const resources = await Promise.all(
-        photos
+        photosToProcess
           .filter((p: string) => p)
           .map(
             async (p: string, i: number) =>
@@ -1653,8 +1710,8 @@ oapi.schema("ContractorMarketListingCreateRequest", {
         type: "string",
         format: "uri",
       },
-      minItems: 1,
       title: "ContractorMarketListingCreateRequest.photos",
+      description: "Array of photo URLs. If empty or not provided, a default placeholder photo will be used.",
     },
     status: {
       type: "string",
@@ -1684,7 +1741,6 @@ oapi.schema("ContractorMarketListingCreateRequest", {
     "sale_type",
     "item_type",
     "quantity_available",
-    "photos",
     "status",
     "internal",
   ],
@@ -1781,8 +1837,11 @@ marketRouter.post(
         minimum_bid_increment,
       } = req.body
 
+      // Handle empty photos by using default placeholder
+      const photosToProcess = photos && photos.length > 0 ? photos : [DEFAULT_PLACEHOLDER_PHOTO_URL]
+      
       // Validate photos are from CDN
-      if (photos.find((p: string) => !cdn.verifyExternalResource(p))) {
+      if (photosToProcess.find((p: string) => !cdn.verifyExternalResource(p))) {
         res.status(400).json({ message: "Invalid photo!" })
         return
       }
@@ -1840,7 +1899,7 @@ marketRouter.post(
       }
 
       const resources = await Promise.all(
-        photos
+        photosToProcess
           .filter((p: string) => p)
           .map(
             async (p: string, i: number) =>
@@ -1870,27 +1929,212 @@ const upload = multer({
   limits: { fileSize: 2 * 1000 * 1000 /* 2mb */ },
 })
 
+// Upload photos for a market listing (multipart/form-data)
 marketRouter.post(
   "/listing/:listing_id/photos",
+  userAuthorized,
   upload.array("photos", 5),
+  oapi.validPath({
+    summary: "Upload photos for a market listing",
+    description:
+      "Upload up to 5 photos for a specific market listing. Photos are stored in CDN and linked to the listing. If the total number of photos would exceed 5, the oldest photos will be automatically removed to maintain the limit.",
+    operationId: "uploadListingPhotos",
+    tags: ["Market"],
+    parameters: [
+      {
+        name: "listing_id",
+        in: "path",
+        required: true,
+        description: "ID of the listing to upload photos for",
+        schema: {
+          type: "string",
+        },
+      },
+    ],
+    responses: {
+      "200": {
+        description: "Photos uploaded successfully",
+        content: {
+          "application/json": {
+            schema: {
+              $ref: "#/components/schemas/PhotoUploadResponse",
+            },
+          },
+        },
+      },
+      "400": Response400,
+      "401": Response401,
+      "403": Response403,
+      "404": Response404,
+      "500": Response500,
+    },
+  }),
   async (req, res) => {
-    const photos = req.files as unknown as Express.Multer.File[]
-    const listing_id = req.params.listing_id
-    Promise.all(
-      photos.map((p, i) => {
-        cdn.uploadFile(`${listing_id}-photos-${i}-${randomUUID()}.png`, p.path)
-      }),
-    )
+    try {
+      const user = req.user as User
+      const listing_id = req.params.listing_id
+      const photos = req.files as unknown as Express.Multer.File[]
+
+      if (!photos || photos.length === 0) {
+        res.status(400).json({ message: "No photos provided" })
+        return
+      }
+
+      if (photos.length > 5) {
+        res
+          .status(400)
+          .json({ message: "Maximum 5 photos can be uploaded at once" })
+        return
+      }
+
+      // Validate listing exists
+      const listing = await database.getMarketListing({ listing_id })
+      if (!listing) {
+        res.status(404).json({ message: "Listing not found" })
+        return
+      }
+
+      // Check if user has permission to modify this listing
+      if (listing.user_seller_id && listing.user_seller_id !== user.user_id) {
+        res
+          .status(403)
+          .json({ message: "You are not authorized to modify this listing" })
+        return
+      }
+
+      if (listing.contractor_seller_id) {
+        const contractor = await database.getContractor({
+          contractor_id: listing.contractor_seller_id,
+        })
+        if (
+          !contractor ||
+          !(await has_permission(
+            contractor.contractor_id,
+            user.user_id,
+            "manage_market",
+          ))
+        ) {
+          res
+            .status(403)
+            .json({ message: "You are not authorized to modify this listing" })
+          return
+        }
+      }
+
+      // Get existing photos to check count
+      const existing_photos =
+        await database.getMarketListingImagesByListingID(listing)
+
+      // Check if any existing photos are the default placeholder and should be removed
+      const photosToRemove: any[] = []
+      
+      // First, identify and remove default placeholder photos
+      for (const photo of existing_photos) {
+        try {
+          const resolvedUrl = await cdn.getFileLinkResource(photo.resource_id)
+          if (resolvedUrl === DEFAULT_PLACEHOLDER_PHOTO_URL) {
+            photosToRemove.push(photo)
+          }
+        } catch (error) {
+          console.error("Failed to resolve photo URL:", error)
+          // Continue processing other photos
+        }
+      }
+
+      // Calculate total photos after upload (excluding default photos that will be removed)
+      const totalPhotosAfterUpload = (existing_photos.length - photosToRemove.length) + photos.length
+
+      // If we would still exceed 5 total photos, remove additional old photos
+      if (totalPhotosAfterUpload > 5) {
+        const additionalPhotosToDelete = totalPhotosAfterUpload - 5
+        const nonDefaultPhotos = existing_photos.filter(photo => 
+          !photosToRemove.some(toRemove => toRemove.resource_id === photo.resource_id)
+        )
+        
+        // Delete oldest non-default photos first
+        const additionalPhotosToRemove = nonDefaultPhotos.slice(0, additionalPhotosToDelete)
+        photosToRemove.push(...additionalPhotosToRemove)
+      }
+
+      // Remove identified photos
+      for (const photo of photosToRemove) {
+        try {
+          await database.deleteMarketListingImages(photo)
+          // Use CDN removeResource to ensure both database and CDN cleanup
+          await cdn.removeResource(photo.resource_id)
+        } catch (error) {
+          console.error("Failed to delete old photo:", error)
+          // Continue with new photo insertion even if deletion fails
+        }
+      }
+
+      // Upload new photos to CDN and create database records
+      const uploadPromises = photos.map(async (photo, index) => {
+        try {
+          const filename = `${listing_id}-photos-${index}-${randomUUID()}.png`
+          await cdn.uploadFile(filename, photo.path)
+
+          // Create image resource in database
+          const resource = await database.insertImageResource({
+            filename,
+            external_url: null,
+          })
+
+          // Clean up the temporary file from uploads folder after successful processing
+          try {
+            const fs = require('fs')
+            if (fs.existsSync(photo.path)) {
+              fs.unlinkSync(photo.path)
+            }
+          } catch (cleanupError) {
+            console.error(`Failed to cleanup temporary file ${photo.path}:`, cleanupError)
+            // Don't fail the upload if cleanup fails
+          }
+
+          return resource
+        } catch (error) {
+          // Clean up the temporary file even if upload fails
+          try {
+            const fs = require('fs')
+            if (fs.existsSync(photo.path)) {
+              fs.unlinkSync(photo.path)
+            }
+          } catch (cleanupError) {
+            console.error(`Failed to cleanup temporary file ${photo.path}:`, cleanupError)
+          }
+          
+          console.error(`Failed to upload photo ${index}:`, error)
+          throw new Error(`Failed to upload photo ${index}`)
+        }
+      })
+
+      const uploadedResources = await Promise.all(uploadPromises)
+
+      // Insert new photos into database
+      await database.insertMarketListingPhoto(
+        listing,
+        uploadedResources.map((r) => ({ resource_id: r.resource_id })),
+      )
+
+      // Get CDN URLs for response
+      const photoUrls = await Promise.all(
+        uploadedResources.map(async (resource) => ({
+          resource_id: resource.resource_id,
+          url: await cdn.getFileLinkResource(resource.resource_id),
+        })),
+      )
+
+      res.json({
+        result: "Photos uploaded successfully",
+        photos: photoUrls,
+      })
+    } catch (error) {
+      console.error("Error uploading photos:", error)
+      res.status(500).json({ message: "Internal server error" })
+    }
   },
 )
 
-export async function get_my_listings(user: User) {
-  const listings = await database.getMarketUniqueListingsComplete({
-    user_seller_id: user.user_id,
-  })
-  const multiples = await database.getMarketMultiplesComplete(
-    {
-      "market_multiples.user_seller_id": user.user_id,
 marketRouter.get(
   "/mine",
   userAuthorized,
@@ -2790,7 +3034,8 @@ marketRouter.post(
         for (const p of photos) {
           await database.deleteMarketListingImages(p)
           try {
-            await database.removeImageResource({ resource_id: p.resource_id })
+            // Use CDN removeResource to ensure both database and CDN cleanup
+            await cdn.removeResource(p.resource_id)
           } catch {}
         }
 
