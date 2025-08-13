@@ -1305,7 +1305,7 @@ CREATE VIEW public.market_search_complete AS
     game_items.name AS item_name,
     market_listing_details.game_item_id,
     to_tsvector('english'::regconfig, concat(ARRAY[market_listing_details.item_type, game_item_categories.category])) AS item_type_ts,
-    ( SELECT image_resources.external_url
+    ( SELECT COALESCE(image_resources.external_url, ('https://cdn.sc-market.space/' || image_resources.filename)::url)
            FROM (public.image_resources
              LEFT JOIN public.market_images ON ((market_images.resource_id = image_resources.resource_id)))
           WHERE (market_images.details_id = market_search.photo_details)
