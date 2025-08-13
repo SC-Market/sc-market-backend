@@ -4343,3 +4343,21 @@ CREATE INDEX CONCURRENTLY idx_orders_date_created
 CREATE INDEX CONCURRENTLY idx_market_listings_covering
     ON market_listings (status, timestamp DESC)
     INCLUDE (price, quantity_available, sale_type, internal);
+
+CREATE INDEX CONCURRENTLY idx_market_unique_listings_join
+    ON market_unique_listings (listing_id, details_id);
+
+CREATE INDEX CONCURRENTLY idx_market_unique_listings_details_id
+    ON market_unique_listings (details_id);
+
+CREATE INDEX CONCURRENTLY idx_market_aggregate_listings_join
+    ON market_aggregate_listings (aggregate_listing_id, aggregate_id);
+
+CREATE INDEX CONCURRENTLY idx_market_images_details_id
+    ON market_images (details_id, resource_id);
+
+CREATE INDEX CONCURRENTLY idx_image_resources_resource_id
+    ON image_resources (resource_id, external_url, filename);
+
+CREATE INDEX CONCURRENTLY idx_game_item_categories_subcategory
+    ON game_item_categories (subcategory, category);
