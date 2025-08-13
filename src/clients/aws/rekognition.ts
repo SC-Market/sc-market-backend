@@ -51,7 +51,9 @@ export class AWSRekognitionClient {
       const { Buckets } = await this.s3.listBuckets({})
       if (Buckets && Buckets.length > 0) {
         Buckets.forEach((bucket, index) => {
-          logger.info(`${index + 1}. ${bucket.Name} (Created: ${bucket.CreationDate})`)
+          logger.info(
+            `${index + 1}. ${bucket.Name} (Created: ${bucket.CreationDate})`,
+          )
         })
       } else {
         logger.info("No buckets found")
@@ -71,10 +73,10 @@ export class AWSRekognitionClient {
    */
   async scanImageForModeration(
     imageBuffer: Buffer,
-    contentType: string
+    contentType: string,
   ): Promise<ContentModerationResult> {
     const tempKey = `temp-moderation/${uuidv4()}-${Date.now()}.${this.getFileExtension(contentType)}`
-    
+
     try {
       // 1. Upload image to S3
       await this.s3.putObject({
@@ -99,7 +101,7 @@ export class AWSRekognitionClient {
       const moderationLabels = moderationResult.ModerationLabels || []
       const maxConfidence = moderationLabels.reduce(
         (max, label) => Math.max(max, label.Confidence || 0),
-        0
+        0,
       )
 
       // Check if any explicit content was detected
@@ -116,8 +118,10 @@ export class AWSRekognitionClient {
         "Adult Content",
       ]
 
-      const hasExplicitContent = moderationLabels.some(label => 
-        explicitContentLabels.includes(label.Name || "") && (label.Confidence || 0) >= 70
+      const hasExplicitContent = moderationLabels.some(
+        (label) =>
+          explicitContentLabels.includes(label.Name || "") &&
+          (label.Confidence || 0) >= 70,
       )
 
       // 4. Clean up S3 resource
@@ -128,14 +132,18 @@ export class AWSRekognitionClient {
 
       return {
         passed: !hasExplicitContent,
-        moderationLabels: moderationLabels.map(label => label.Name || "").filter(Boolean),
+        moderationLabels: moderationLabels
+          .map((label) => label.Name || "")
+          .filter(Boolean),
         confidence: maxConfidence,
       }
-
     } catch (error) {
-      logger.error("S3 operation failed, listing available buckets for debugging:", { error })
+      logger.error(
+        "S3 operation failed, listing available buckets for debugging:",
+        { error },
+      )
       await this.listBuckets()
-      
+
       // Clean up S3 resource even if there's an error
       try {
         await this.s3.deleteObject({
@@ -143,7 +151,9 @@ export class AWSRekognitionClient {
           Key: tempKey,
         })
       } catch (cleanupError) {
-        logger.error("Failed to cleanup S3 resource after error:", { cleanupError })
+        logger.error("Failed to cleanup S3 resource after error:", {
+          cleanupError,
+        })
         logger.error("Listing buckets again for cleanup debugging:")
         await this.listBuckets()
       }
@@ -152,7 +162,8 @@ export class AWSRekognitionClient {
         passed: false,
         moderationLabels: [],
         confidence: 0,
-        error: error instanceof Error ? error.message : "Unknown error occurred",
+        error:
+          error instanceof Error ? error.message : "Unknown error occurred",
       }
     }
   }
@@ -172,7 +183,7 @@ export class AWSRekognitionClient {
       "image/bmp": "bmp",
       "image/tiff": "tiff",
     }
-    
+
     return extensions[contentType.toLowerCase()] || "jpg"
   }
 
@@ -184,7 +195,7 @@ export class AWSRekognitionClient {
    */
   async scanImageFileForModeration(
     filePath: string,
-    contentType: string
+    contentType: string,
   ): Promise<ContentModerationResult> {
     const fs = await import("node:fs")
     const imageBuffer = fs.readFileSync(filePath)

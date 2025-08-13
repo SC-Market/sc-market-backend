@@ -241,7 +241,8 @@ oapi.schema("OfferSessionDetails", {
     order_id: {
       type: "string",
       nullable: true,
-      description: "Order ID associated with this offer session when status is 'Accepted'",
+      description:
+        "Order ID associated with this offer session when status is 'Accepted'",
       example: "123e4567-e89b-12d3-a456-426614174000",
     },
     offers: {

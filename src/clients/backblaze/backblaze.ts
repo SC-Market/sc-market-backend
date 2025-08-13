@@ -39,23 +39,26 @@ export class BackBlazeCDN implements CDN {
    * @param filePath - Path to the file
    * @returns Object with isImage boolean and contentType string
    */
-  private getImageInfo(filePath: string): { isImage: boolean; contentType: string } {
-    const ext = filePath.toLowerCase().split('.').pop()
-    const imageExtensions = ['jpg', 'jpeg', 'png', 'gif', 'webp', 'bmp', 'tiff']
-    const isImage = imageExtensions.includes(ext || '')
-    
+  private getImageInfo(filePath: string): {
+    isImage: boolean
+    contentType: string
+  } {
+    const ext = filePath.toLowerCase().split(".").pop()
+    const imageExtensions = ["jpg", "jpeg", "png", "gif", "webp", "bmp", "tiff"]
+    const isImage = imageExtensions.includes(ext || "")
+
     const contentTypeMap: { [key: string]: string } = {
-      'jpg': 'image/jpeg',
-      'jpeg': 'image/jpeg',
-      'png': 'image/png',
-      'gif': 'image/gif',
-      'webp': 'image/webp',
-      'bmp': 'image/bmp',
-      'tiff': 'image/tiff'
+      jpg: "image/jpeg",
+      jpeg: "image/jpeg",
+      png: "image/png",
+      gif: "image/gif",
+      webp: "image/webp",
+      bmp: "image/bmp",
+      tiff: "image/tiff",
     }
-    
-    const contentType = contentTypeMap[ext || ''] || 'application/octet-stream'
-    
+
+    const contentType = contentTypeMap[ext || ""] || "application/octet-stream"
+
     return { isImage, contentType }
   }
 
@@ -65,24 +68,32 @@ export class BackBlazeCDN implements CDN {
    * @param contentType - MIME type of the image
    * @returns Promise<boolean> - True if image passes moderation
    */
-  private async checkImageModeration(imageBuffer: Buffer, contentType: string): Promise<boolean> {
+  private async checkImageModeration(
+    imageBuffer: Buffer,
+    contentType: string,
+  ): Promise<boolean> {
     try {
-      const result = await rekognitionClient.scanImageForModeration(imageBuffer, contentType)
-      
+      const result = await rekognitionClient.scanImageForModeration(
+        imageBuffer,
+        contentType,
+      )
+
       if (result.error) {
-        logger.error("Content moderation check failed:", { error: result.error })
+        logger.error("Content moderation check failed:", {
+          error: result.error,
+        })
         // If moderation fails, we'll allow the upload but log the error
         return true
       }
-      
+
       if (!result.passed) {
         logger.warn("Image failed content moderation:", {
           labels: result.moderationLabels,
-          confidence: result.confidence
+          confidence: result.confidence,
         })
         return false
       }
-      
+
       return true
     } catch (error) {
       logger.error("Error during content moderation check:", { error })
@@ -91,7 +102,10 @@ export class BackBlazeCDN implements CDN {
     }
   }
 
-  async uploadFile(filename: string, fileDirectoryPath: string): Promise<string> {
+  async uploadFile(
+    filename: string,
+    fileDirectoryPath: string,
+  ): Promise<string> {
     return new Promise((resolve, reject) => {
       fs.readFile(fileDirectoryPath.toString(), (err, data) => {
         if (err) {
@@ -101,16 +115,16 @@ export class BackBlazeCDN implements CDN {
 
         // Check if this is an image file and perform content moderation
         const { isImage, contentType } = this.getImageInfo(fileDirectoryPath)
-        
+
         if (isImage) {
           // For images, check content moderation before uploading
           this.checkImageModeration(data, contentType)
-            .then(passed => {
+            .then((passed) => {
               if (!passed) {
                 reject(new Error("Image failed content moderation check"))
                 return
               }
-              
+
               // Proceed with upload if moderation passes
               this.s3.putObject(
                 {
@@ -125,7 +139,7 @@ export class BackBlazeCDN implements CDN {
                 },
               )
             })
-            .catch(error => {
+            .catch((error) => {
               reject(error)
             })
         } else {
@@ -151,19 +165,19 @@ export class BackBlazeCDN implements CDN {
     return new Promise((resolve, reject) => {
       // Check if this is an image file and perform content moderation
       const { isImage, contentType } = this.getImageInfo(filename)
-      
+
       if (isImage) {
         // Convert string data to buffer for moderation check
-        const buffer = Buffer.from(data, 'binary')
-        
+        const buffer = Buffer.from(data, "binary")
+
         // For images, check content moderation before uploading
         this.checkImageModeration(buffer, contentType)
-          .then(passed => {
+          .then((passed) => {
             if (!passed) {
               reject(new Error("Image failed content moderation check"))
               return
             }
-            
+
             // Proceed with upload if moderation passes
             this.s3.putObject(
               {
@@ -178,7 +192,7 @@ export class BackBlazeCDN implements CDN {
               },
             )
           })
-          .catch(error => {
+          .catch((error) => {
             reject(error)
           })
       } else {

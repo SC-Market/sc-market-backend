@@ -313,10 +313,12 @@ export const isSCMarketsCDN = (url: string): boolean => {
     const urlObj = new URL(url)
     // Check if the URL matches the CDN pattern
     // This will need to be updated based on your actual CDN URL structure
-    return urlObj.hostname.includes('cdn') || 
-           urlObj.hostname.includes('backblaze') ||
-           urlObj.hostname.includes('b2') ||
-           urlObj.hostname.includes('sc-market')
+    return (
+      urlObj.hostname.includes("cdn") ||
+      urlObj.hostname.includes("backblaze") ||
+      urlObj.hostname.includes("b2") ||
+      urlObj.hostname.includes("sc-market")
+    )
   } catch {
     return false
   }
@@ -329,13 +331,14 @@ export const isSCMarketsCDN = (url: string): boolean => {
  * @returns Promise<boolean> - True if the image is already associated
  */
 export const isImageAlreadyAssociated = async (
-  imageUrl: string, 
-  listing: DBMarketListing
+  imageUrl: string,
+  listing: DBMarketListing,
 ): Promise<boolean> => {
   try {
     // Get all current images for this listing
-    const currentImages = await database.getMarketListingImagesByListingID(listing)
-    
+    const currentImages =
+      await database.getMarketListingImagesByListingID(listing)
+
     // Check if any of the current images match this URL
     for (const image of currentImages) {
       const resolvedUrl = await cdn.getFileLinkResource(image.resource_id)
@@ -356,9 +359,9 @@ export const isImageAlreadyAssociated = async (
  * @returns Promise<{valid: boolean, error?: string}> - Validation result
  */
 export const validateMarketListingPhotos = async (
-  photos: string[], 
-  listing?: DBMarketListing
-): Promise<{valid: boolean, error?: string}> => {
+  photos: string[],
+  listing?: DBMarketListing,
+): Promise<{ valid: boolean; error?: string }> => {
   for (const photo of photos) {
     // Check if this is a SC markets CDN URL
     if (isSCMarketsCDN(photo)) {
@@ -368,18 +371,20 @@ export const validateMarketListingPhotos = async (
         if (!isAssociated) {
           return {
             valid: false,
-            error: "Cannot use image from SC markets CDN that is not already associated with this listing"
+            error:
+              "Cannot use image from SC markets CDN that is not already associated with this listing",
           }
         }
       } else {
         // For new listings, CDN images are not allowed
         return {
           valid: false,
-          error: "Cannot use images from SC markets CDN when creating new listings"
+          error:
+            "Cannot use images from SC markets CDN when creating new listings",
         }
       }
     }
   }
-  
+
   return { valid: true }
 }

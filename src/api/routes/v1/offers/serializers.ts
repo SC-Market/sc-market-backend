@@ -81,7 +81,8 @@ export async function serializeOfferSession(session: DBOfferSession) {
   // Check if there's an order associated with this offer session (when status is "Accepted")
   let order_id = undefined
   if (stub.status === "Accepted") {
-    const order = await database.knex("orders")
+    const order = await database
+      .knex("orders")
       .where({ offer_session_id: session.id })
       .first()
     if (order) {

@@ -4,20 +4,20 @@
  */
 export enum PaymentType {
   ONE_TIME = "one-time",
-  HOURLY = "hourly", 
+  HOURLY = "hourly",
   DAILY = "daily",
   UNIT = "unit",
   BOX = "box",
   SCU = "scu",
   CSCU = "cscu",
-  MSCU = "mscu"
+  MSCU = "mscu",
 }
 
 /**
  * TypeScript type for payment types
  * Can be used for function parameters and return types
  */
-export type PaymentTypes = 
+export type PaymentTypes =
   | "one-time"
   | "hourly"
   | "daily"
@@ -38,7 +38,7 @@ export const PAYMENT_TYPES: PaymentTypes[] = [
   PaymentType.BOX,
   PaymentType.SCU,
   PaymentType.CSCU,
-  PaymentType.MSCU
+  PaymentType.MSCU,
 ]
 
 /**
@@ -47,12 +47,12 @@ export const PAYMENT_TYPES: PaymentTypes[] = [
 export const PAYMENT_TYPE_DESCRIPTIONS: Record<PaymentTypes, string> = {
   [PaymentType.ONE_TIME]: "One-time payment",
   [PaymentType.HOURLY]: "Per hour",
-  [PaymentType.DAILY]: "Per day", 
+  [PaymentType.DAILY]: "Per day",
   [PaymentType.UNIT]: "Per unit",
   [PaymentType.BOX]: "Per box",
   [PaymentType.SCU]: "Per SCU (Standard Cargo Unit)",
   [PaymentType.CSCU]: "Per cSCU (centi Standard Cargo Unit)",
-  [PaymentType.MSCU]: "Per mSCU (milli Standard Cargo Unit)"
+  [PaymentType.MSCU]: "Per mSCU (milli Standard Cargo Unit)",
 }
 
 /**
@@ -66,7 +66,7 @@ export const PAYMENT_TYPE_LABELS: Record<PaymentTypes, string> = {
   [PaymentType.BOX]: "Per Box",
   [PaymentType.SCU]: "Per SCU",
   [PaymentType.CSCU]: "Per cSCU",
-  [PaymentType.MSCU]: "Per mSCU"
+  [PaymentType.MSCU]: "Per mSCU",
 }
 
 /**
@@ -76,7 +76,7 @@ export const PAYMENT_TYPE_LABELS: Record<PaymentTypes, string> = {
 export const LEGACY_PAYMENT_TYPES: PaymentTypes[] = [
   PaymentType.ONE_TIME,
   PaymentType.HOURLY,
-  PaymentType.DAILY
+  PaymentType.DAILY,
 ]
 
 /**
@@ -98,4 +98,4 @@ export function getPaymentTypeDescription(type: PaymentTypes): string {
  */
 export function getPaymentTypeLabel(type: PaymentTypes): string {
   return PAYMENT_TYPE_LABELS[type]
-} 
+}
