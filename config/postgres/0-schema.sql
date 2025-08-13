@@ -4218,3 +4218,128 @@ GRANT ALL ON SCHEMA public TO PUBLIC;
 -- PostgreSQL database dump complete
 --
 
+
+-- Create additional indices
+-- Composite index for common listing queries by user/contractor + status + timestamp
+CREATE INDEX CONCURRENTLY idx_market_listings_seller_status_timestamp
+    ON market_listings (user_seller_id, status, timestamp DESC);
+
+CREATE INDEX CONCURRENTLY idx_market_listings_contractor_status_timestamp
+    ON market_listings (contractor_seller_id, status, timestamp DESC);
+
+-- Index for status-based queries (very common)
+CREATE INDEX CONCURRENTLY idx_market_listings_status_timestamp
+    ON market_listings (status, timestamp DESC);
+
+-- Index for expiration-based queries (for cleanup jobs)
+CREATE INDEX CONCURRENTLY idx_market_listings_expiration_status
+    ON market_listings (expiration, status)
+    WHERE status = 'active';
+
+-- Index for sale type + status queries
+CREATE INDEX CONCURRENTLY idx_market_listings_sale_type_status
+    ON market_listings (sale_type, status, timestamp DESC);
+
+-- Index for price range queries
+CREATE INDEX CONCURRENTLY idx_market_listings_price_status
+    ON market_listings (price, status)
+    WHERE status = 'active';
+
+-- Index for item type + game item queries
+CREATE INDEX CONCURRENTLY idx_market_listing_details_item_type_game_item
+    ON market_listing_details (item_type, game_item_id);
+
+-- Index for title/description text search
+CREATE INDEX CONCURRENTLY idx_market_listing_details_title_gin
+    ON market_listing_details USING gin (to_tsvector('english', title));
+
+CREATE INDEX CONCURRENTLY idx_market_listing_details_description_gin
+    ON market_listing_details USING gin (to_tsvector('english', description));
+
+-- Composite index for user-based order queries
+CREATE INDEX CONCURRENTLY idx_orders_customer_status_timestamp
+    ON orders (customer_id, status, timestamp DESC);
+
+CREATE INDEX CONCURRENTLY idx_orders_assigned_status_timestamp
+    ON orders (assigned_id, status, timestamp DESC);
+
+CREATE INDEX CONCURRENTLY idx_orders_contractor_status_timestamp
+    ON orders (contractor_id, status, timestamp DESC);
+
+-- Index for status-based queries
+CREATE INDEX CONCURRENTLY idx_orders_status_timestamp
+    ON orders (status, timestamp DESC);
+
+-- Index for cost-based queries
+CREATE INDEX CONCURRENTLY idx_orders_cost_status
+    ON orders (cost, status);
+
+-- Index for service-based queries
+CREATE INDEX CONCURRENTLY idx_orders_service_id_status
+    ON orders (service_id, status)
+    WHERE service_id IS NOT NULL;
+
+-- Index for listing-based bid queries
+CREATE INDEX CONCURRENTLY idx_market_bids_listing_timestamp
+    ON market_bids (listing_id, timestamp DESC);
+
+-- Index for user-based bid queries
+CREATE INDEX CONCURRENTLY idx_market_bids_user_timestamp
+    ON market_bids (user_bidder_id, timestamp DESC);
+
+CREATE INDEX CONCURRENTLY idx_market_bids_contractor_timestamp
+    ON market_bids (contractor_bidder_id, timestamp DESC);
+
+-- Index for buyer-based queries
+CREATE INDEX CONCURRENTLY idx_market_buy_orders_buyer_expiry
+    ON market_buy_orders (buyer_id, expiry DESC);
+
+-- Index for game item + price queries
+CREATE INDEX CONCURRENTLY idx_market_buy_orders_item_price
+    ON market_buy_orders (game_item_id, price DESC);
+
+-- Index for expiry-based cleanup
+CREATE INDEX CONCURRENTLY idx_market_buy_orders_expiry_status
+    ON market_buy_orders (expiry)
+    WHERE fulfilled_timestamp IS NULL;
+
+-- Index for type-based queries
+CREATE INDEX CONCURRENTLY idx_game_items_type_name
+    ON game_items (type, name);
+
+-- Index for cstone_uuid lookups
+CREATE INDEX CONCURRENTLY idx_game_items_cstone_uuid
+    ON game_items (cstone_uuid)
+    WHERE cstone_uuid IS NOT NULL;
+
+-- For market search queries combining multiple criteria
+CREATE INDEX CONCURRENTLY idx_market_listings_composite_search
+    ON market_listings (status, internal, sale_type, timestamp DESC)
+    INCLUDE (price, quantity_available, user_seller_id, contractor_seller_id);
+
+-- For order management queries
+CREATE INDEX CONCURRENTLY idx_orders_composite_management
+    ON orders (status, timestamp DESC)
+    INCLUDE (customer_id, assigned_id, contractor_id, cost, kind);
+
+-- Only index active listings (most common query)
+CREATE INDEX CONCURRENTLY idx_market_listings_active_only
+    ON market_listings (timestamp DESC, price)
+    WHERE status = 'active';
+
+-- Only index pending/active orders
+CREATE INDEX CONCURRENTLY idx_orders_active_only
+    ON orders (timestamp DESC, cost)
+    WHERE status IN ('not-started', 'in-progress');
+
+-- Index for date-based queries (common for reporting)
+CREATE INDEX CONCURRENTLY idx_market_listings_date_created
+    ON market_listings (DATE(timestamp));
+
+CREATE INDEX CONCURRENTLY idx_orders_date_created
+    ON orders (DATE(timestamp));
+
+-- Include commonly selected columns to avoid table lookups
+CREATE INDEX CONCURRENTLY idx_market_listings_covering
+    ON market_listings (status, timestamp DESC)
+    INCLUDE (price, quantity_available, sale_type, internal);
