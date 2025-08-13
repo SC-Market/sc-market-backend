@@ -311,7 +311,7 @@ export async function formatUniqueListingComplete(
           contractor_id: listing.contractor_seller_id,
         })
       : null,
-    stats: await serializeListingStats(listing),
+    stats: isPrivate ? await serializeListingStats(listing) : null,
   }
 }
 
