@@ -589,89 +589,79 @@ servicesRouter.put(
     if (photos !== undefined) {
       const old_photos = await database.getServiceListingImages({ service_id })
 
-      if (photos.length === 0) {
-        // Empty photos array - remove all existing photos
-        for (const p of old_photos) {
-          await database.deleteServiceImages(p)
-          try {
-            await cdn.removeResource(p.resource_id)
-          } catch {}
-        }
-      } else {
-        // Photos provided - validate and process them
-        const photoValidation = await validateServicePhotos(photos, service)
-        if (!photoValidation.valid) {
-          res
-            .status(400)
-            .json(createErrorResponse({ error: photoValidation.error }))
+      // Validate photos using the helper function
+      const photoValidation = await validateServicePhotos(photos, service)
+      if (!photoValidation.valid) {
+        res
+          .status(400)
+          .json(createErrorResponse({ error: photoValidation.error }))
+        return
+      }
+
+      // Track which old photos should be preserved (CDN images that are still being used)
+      const photosToPreserve = new Set<string>()
+
+      // Process photos - CDN images that are already associated will be skipped
+      for (const photo of photos) {
+        // Check if this is a SC markets CDN URL
+        if (isSCMarketsCDN(photo)) {
+          // Check if the image is already associated with this service
+          const isAssociated = await isImageAlreadyAssociated(photo, service)
+          if (isAssociated) {
+            // Find the corresponding old photo entry and mark it for preservation
+            for (const oldPhoto of old_photos) {
+              try {
+                const resolvedUrl = await cdn.getFileLinkResource(
+                  oldPhoto.resource_id,
+                )
+                if (resolvedUrl === photo) {
+                  photosToPreserve.add(oldPhoto.resource_id)
+                  break
+                }
+              } catch {
+                // Skip if we can't resolve the URL
+              }
+            }
+            // Skip this image as it's already associated
+            continue
+          }
+          // If we reach here, the image is not associated, but validation should have caught this
+          // This is a safety check
+          res.status(400).json(
+            createErrorResponse({
+              error:
+                "Cannot use image from SC markets CDN that is not already associated with this service",
+            }),
+          )
           return
         }
 
-        // Track which old photos should be preserved (CDN images that are still being used)
-        const photosToPreserve = new Set<string>()
-
-        // Process photos - CDN images that are already associated will be skipped
-        for (const photo of photos) {
-          // Check if this is a SC markets CDN URL
-          if (isSCMarketsCDN(photo)) {
-            // Check if the image is already associated with this service
-            const isAssociated = await isImageAlreadyAssociated(photo, service)
-            if (isAssociated) {
-              // Find the corresponding old photo entry and mark it for preservation
-              for (const oldPhoto of old_photos) {
-                try {
-                  const resolvedUrl = await cdn.getFileLinkResource(
-                    oldPhoto.resource_id,
-                  )
-                  if (resolvedUrl === photo) {
-                    photosToPreserve.add(oldPhoto.resource_id)
-                    break
-                  }
-                } catch {
-                  // Skip if we can't resolve the URL
-                }
-              }
-              // Skip this image as it's already associated
-              continue
-            }
-            // If we reach here, the image is not associated, but validation should have caught this
-            // This is a safety check
-            res.status(400).json(
-              createErrorResponse({
-                error:
-                  "Cannot use image from SC markets CDN that is not already associated with this service",
-              }),
-            )
-            return
-          }
-
-          // For non-CDN images, proceed with normal processing
-          try {
-            const resource = await cdn.createExternalResource(
-              photo,
-              service_id + `_photo_${0}`,
-            )
-            await database.insertServiceImage({
-              resource_id: resource.resource_id,
-              service_id,
-            })
-          } catch (e: any) {
-            res
-              .status(400)
-              .json(createErrorResponse({ error: "Invalid photo!" }))
-            return
-          }
+        // For non-CDN images, proceed with normal processing
+        try {
+          const resource = await cdn.createExternalResource(
+            photo,
+            service_id + `_photo_${0}`,
+          )
+          await database.insertServiceImage({
+            resource_id: resource.resource_id,
+            service_id,
+          })
+        } catch (e: any) {
+          res
+            .status(400)
+            .json(createErrorResponse({ error: "Invalid photo!" }))
+          return
         }
+      }
 
-        // Only delete old photos that are not being preserved
-        for (const p of old_photos) {
-          if (!photosToPreserve.has(p.resource_id)) {
-            await database.deleteServiceImages(p)
-            try {
-              // Use CDN removeResource to ensure both database and CDN cleanup
-              await cdn.removeResource(p.resource_id)
-            } catch {}
-          }
+      // Remove any old photos that are not being preserved
+      for (const p of old_photos) {
+        if (!photosToPreserve.has(p.resource_id)) {
+          await database.deleteServiceImages(p)
+          try {
+            // Use CDN removeResource to ensure both database and CDN cleanup
+            await cdn.removeResource(p.resource_id)
+          } catch {}
         }
       }
     }

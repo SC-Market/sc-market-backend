@@ -418,12 +418,16 @@ marketRouter.post(
       )
     }
 
-    if (photos && photos.length) {
+    // Handle photo updates
+    if (photos !== undefined) {
       const old_photos =
         await database.getMarketListingImagesByListingID(listing)
 
       // Validate photos using the helper function
-      const photoValidation = await validateMarketListingPhotos(photos, listing)
+      const photoValidation = await validateMarketListingPhotos(
+        photos,
+        listing,
+      )
       if (!photoValidation.valid) {
         res.status(400).json({ error: photoValidation.error })
         return
@@ -480,7 +484,7 @@ marketRouter.post(
         }
       }
 
-      // Only delete old photos that are not being preserved
+      // Remove any old photos that are not being preserved
       for (const p of old_photos) {
         if (!photosToPreserve.has(p.resource_id)) {
           await database.deleteMarketListingImages(p)
