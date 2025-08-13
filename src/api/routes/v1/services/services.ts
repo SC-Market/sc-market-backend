@@ -18,8 +18,14 @@ import {
 } from "../openapi.js"
 import { createErrorResponse, createResponse } from "../util/response.js"
 import { valid_contractor } from "../contractors/middleware.js"
-import multer from "multer"
+import { multiplePhotoUpload } from "../util/upload.js"
 import { randomUUID } from "node:crypto"
+import fs from "node:fs"
+import {
+  isSCMarketsCDN,
+  isImageAlreadyAssociated,
+  validateServicePhotos,
+} from "./helpers.js"
 
 export const servicesRouter = express.Router()
 
@@ -104,7 +110,6 @@ oapi.schema("ServiceBody", {
     "title",
     "rush",
     "description",
-    "kind",
     "collateral",
     "departure",
     "destination",
@@ -231,8 +236,23 @@ servicesRouter.post(
     })
 
     try {
+      // Validate photos for new service (no existing service to check against)
+      const photoValidation = await validateServicePhotos(photos)
+      if (!photoValidation.valid) {
+        res
+          .status(400)
+          .json(createErrorResponse({ error: photoValidation.error }))
+        return
+      }
+
       await createServicePhotos(service.service_id, photos)
-    } catch {}
+    } catch (error) {
+      console.error("Failed to create service photos:", error)
+      res
+        .status(500)
+        .json(createErrorResponse({ error: "Failed to create service photos" }))
+      return
+    }
 
     res.json(createResponse({ result: "Success" }))
   },
@@ -565,29 +585,95 @@ servicesRouter.put(
       },
     )
 
-    const old_photos = await database.getServiceListingImages({ service_id })
+    // Handle photo updates
+    if (photos !== undefined) {
+      const old_photos = await database.getServiceListingImages({ service_id })
 
-    for (const photo of photos) {
-      try {
-        const resource = await cdn.createExternalResource(
-          photo,
-          service_id + `_photo_${0}`,
-        )
-        await database.insertServiceImage({
-          resource_id: resource.resource_id,
-          service_id,
-        })
-      } catch (e: any) {
-        res.status(400).json(createErrorResponse({ error: "Invalid photo!" }))
-        return
+      if (photos.length === 0) {
+        // Empty photos array - remove all existing photos
+        for (const p of old_photos) {
+          await database.deleteServiceImages(p)
+          try {
+            await cdn.removeResource(p.resource_id)
+          } catch {}
+        }
+      } else {
+        // Photos provided - validate and process them
+        const photoValidation = await validateServicePhotos(photos, service)
+        if (!photoValidation.valid) {
+          res
+            .status(400)
+            .json(createErrorResponse({ error: photoValidation.error }))
+          return
+        }
+
+        // Track which old photos should be preserved (CDN images that are still being used)
+        const photosToPreserve = new Set<string>()
+
+        // Process photos - CDN images that are already associated will be skipped
+        for (const photo of photos) {
+          // Check if this is a SC markets CDN URL
+          if (isSCMarketsCDN(photo)) {
+            // Check if the image is already associated with this service
+            const isAssociated = await isImageAlreadyAssociated(photo, service)
+            if (isAssociated) {
+              // Find the corresponding old photo entry and mark it for preservation
+              for (const oldPhoto of old_photos) {
+                try {
+                  const resolvedUrl = await cdn.getFileLinkResource(
+                    oldPhoto.resource_id,
+                  )
+                  if (resolvedUrl === photo) {
+                    photosToPreserve.add(oldPhoto.resource_id)
+                    break
+                  }
+                } catch {
+                  // Skip if we can't resolve the URL
+                }
+              }
+              // Skip this image as it's already associated
+              continue
+            }
+            // If we reach here, the image is not associated, but validation should have caught this
+            // This is a safety check
+            res.status(400).json(
+              createErrorResponse({
+                error:
+                  "Cannot use image from SC markets CDN that is not already associated with this service",
+              }),
+            )
+            return
+          }
+
+          // For non-CDN images, proceed with normal processing
+          try {
+            const resource = await cdn.createExternalResource(
+              photo,
+              service_id + `_photo_${0}`,
+            )
+            await database.insertServiceImage({
+              resource_id: resource.resource_id,
+              service_id,
+            })
+          } catch (e: any) {
+            res
+              .status(400)
+              .json(createErrorResponse({ error: "Invalid photo!" }))
+            return
+          }
+        }
+
+        // Only delete old photos that are not being preserved
+        for (const p of old_photos) {
+          if (!photosToPreserve.has(p.resource_id)) {
+            await database.deleteServiceImages(p)
+            try {
+              // Use CDN removeResource to ensure both database and CDN cleanup
+              await cdn.removeResource(p.resource_id)
+            } catch {}
+          }
+        }
       }
-    }
-
-    for (const p of old_photos) {
-      await database.deleteServiceImages(p)
-      try {
-        await database.removeImageResource({ resource_id: p.resource_id })
-      } catch {}
     }
 
     res.json(createResponse({ result: "Success" }))
@@ -649,17 +735,11 @@ servicesRouter.get(
   },
 )
 
-// Configure multer for file uploads
-const upload = multer({
-  dest: "uploads/",
-  limits: { fileSize: 2 * 1000 * 1000 /* 2mb */ },
-})
-
 // Upload photos for a service (multipart/form-data)
 servicesRouter.post(
   "/:service_id/photos",
   userAuthorized,
-  upload.array("photos", 5),
+  multiplePhotoUpload.array("photos", 5),
   oapi.validPath({
     summary: "Upload photos for a service",
     description:
@@ -834,6 +914,22 @@ servicesRouter.post(
       res
         .status(500)
         .json(createErrorResponse({ error: "Internal server error" }))
+    } finally {
+      // Clean up uploaded files regardless of success/failure
+      if (req.files && Array.isArray(req.files)) {
+        for (const file of req.files as Express.Multer.File[]) {
+          try {
+            if (fs.existsSync(file.path)) {
+              fs.unlinkSync(file.path)
+            }
+          } catch (cleanupError) {
+            console.error(
+              `Failed to cleanup temporary file ${file.path}:`,
+              cleanupError,
+            )
+          }
+        }
+      }
     }
   },
 )

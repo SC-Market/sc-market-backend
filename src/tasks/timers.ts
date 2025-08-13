@@ -4,6 +4,8 @@ import {
   DBAuctionDetails,
   DBMarketListing,
 } from "../clients/database/db-models.js"
+import fs from "node:fs"
+import path from "node:path"
 
 export async function process_auction(auction: DBAuctionDetails) {
   const complete = await database.getMarketListingComplete(auction.listing_id)
@@ -78,4 +80,29 @@ export async function rebuild_search_view() {
 
 export async function update_price_history() {
   await database.updatePriceHistpry()
+}
+
+export async function clear_uploads_folder() {
+  try {
+    const uploadsDir = path.join(process.cwd(), "uploads")
+
+    if (fs.existsSync(uploadsDir)) {
+      const files = fs.readdirSync(uploadsDir)
+      for (const file of files) {
+        const filePath = path.join(uploadsDir, file)
+        try {
+          const stat = fs.statSync(filePath)
+          if (stat.isFile()) {
+            fs.unlinkSync(filePath)
+            console.log(`Cleaned up upload file: ${file}`)
+          }
+        } catch (error) {
+          console.error(`Failed to delete file ${file}:`, error)
+        }
+      }
+      console.log("Uploads folder cleared on server start")
+    }
+  } catch (error) {
+    console.error("Failed to clear uploads folder:", error)
+  }
 }

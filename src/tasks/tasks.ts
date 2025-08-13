@@ -3,6 +3,7 @@ import {
   process_expiring_market_listings,
   rebuild_search_view,
   update_price_history,
+  clear_uploads_folder,
 } from "./timers.js"
 import { fetchAndInsertCommodities } from "./commodities.js"
 
@@ -21,4 +22,7 @@ export function start_tasks() {
 
   fetchAndInsertCommodities()
   setInterval(fetchAndInsertCommodities, 24 * 60 * 60 * 1000) // 24 hours
+
+  // Clear uploads folder on server start
+  clear_uploads_folder()
 }

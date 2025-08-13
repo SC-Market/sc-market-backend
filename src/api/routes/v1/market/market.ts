@@ -49,8 +49,9 @@ import {
   Response404,
   Response500,
 } from "../openapi.js"
-import multer from "multer"
+import { multiplePhotoUpload } from "../util/upload.js"
 import { randomUUID } from "node:crypto"
+import fs from "node:fs"
 
 export const marketRouter = express.Router()
 
@@ -430,7 +431,7 @@ marketRouter.post(
 
       // Track which old photos should be preserved (CDN images that are still being used)
       const photosToPreserve = new Set<string>()
-      
+
       // Process photos - CDN images that are already associated will be skipped
       for (const photo of photos) {
         // Check if this is a SC markets CDN URL
@@ -441,7 +442,9 @@ marketRouter.post(
             // Find the corresponding old photo entry and mark it for preservation
             for (const oldPhoto of old_photos) {
               try {
-                const resolvedUrl = await cdn.getFileLinkResource(oldPhoto.resource_id)
+                const resolvedUrl = await cdn.getFileLinkResource(
+                  oldPhoto.resource_id,
+                )
                 if (resolvedUrl === photo) {
                   photosToPreserve.add(oldPhoto.resource_id)
                   break
@@ -455,8 +458,9 @@ marketRouter.post(
           }
           // If we reach here, the image is not associated, but validation should have caught this
           // This is a safety check
-          res.status(400).json({ 
-            error: "Cannot use image from SC markets CDN that is not already associated with this listing" 
+          res.status(400).json({
+            error:
+              "Cannot use image from SC markets CDN that is not already associated with this listing",
           })
           return
         }
@@ -1490,7 +1494,8 @@ oapi.schema("MarketListingCreateRequest", {
         format: "uri",
       },
       title: "MarketListingCreateRequest.photos",
-      description: "Array of photo URLs. If empty or not provided, a default placeholder photo will be used.",
+      description:
+        "Array of photo URLs. If empty or not provided, a default placeholder photo will be used.",
     },
     minimum_bid_increment: {
       type: "number",
@@ -1579,8 +1584,9 @@ marketRouter.post(
       } = req.body
 
       // Handle empty photos by using default placeholder
-      const photosToProcess = photos && photos.length > 0 ? photos : [DEFAULT_PLACEHOLDER_PHOTO_URL]
-      
+      const photosToProcess =
+        photos && photos.length > 0 ? photos : [DEFAULT_PLACEHOLDER_PHOTO_URL]
+
       // Validate urls are valid
       if (photosToProcess.find((p: string) => !cdn.verifyExternalResource(p))) {
         res.status(400).json({ message: "Invalid photo!" })
@@ -1711,7 +1717,8 @@ oapi.schema("ContractorMarketListingCreateRequest", {
         format: "uri",
       },
       title: "ContractorMarketListingCreateRequest.photos",
-      description: "Array of photo URLs. If empty or not provided, a default placeholder photo will be used.",
+      description:
+        "Array of photo URLs. If empty or not provided, a default placeholder photo will be used.",
     },
     status: {
       type: "string",
@@ -1838,8 +1845,9 @@ marketRouter.post(
       } = req.body
 
       // Handle empty photos by using default placeholder
-      const photosToProcess = photos && photos.length > 0 ? photos : [DEFAULT_PLACEHOLDER_PHOTO_URL]
-      
+      const photosToProcess =
+        photos && photos.length > 0 ? photos : [DEFAULT_PLACEHOLDER_PHOTO_URL]
+
       // Validate photos are from CDN
       if (photosToProcess.find((p: string) => !cdn.verifyExternalResource(p))) {
         res.status(400).json({ message: "Invalid photo!" })
@@ -1924,16 +1932,11 @@ marketRouter.post(
   },
 )
 
-const upload = multer({
-  dest: "uploads/",
-  limits: { fileSize: 2 * 1000 * 1000 /* 2mb */ },
-})
-
 // Upload photos for a market listing (multipart/form-data)
 marketRouter.post(
   "/listing/:listing_id/photos",
   userAuthorized,
-  upload.array("photos", 5),
+  multiplePhotoUpload.array("photos", 5),
   oapi.validPath({
     summary: "Upload photos for a market listing",
     description:
@@ -2027,7 +2030,7 @@ marketRouter.post(
 
       // Check if any existing photos are the default placeholder and should be removed
       const photosToRemove: any[] = []
-      
+
       // First, identify and remove default placeholder photos
       for (const photo of existing_photos) {
         try {
@@ -2042,17 +2045,24 @@ marketRouter.post(
       }
 
       // Calculate total photos after upload (excluding default photos that will be removed)
-      const totalPhotosAfterUpload = (existing_photos.length - photosToRemove.length) + photos.length
+      const totalPhotosAfterUpload =
+        existing_photos.length - photosToRemove.length + photos.length
 
       // If we would still exceed 5 total photos, remove additional old photos
       if (totalPhotosAfterUpload > 5) {
         const additionalPhotosToDelete = totalPhotosAfterUpload - 5
-        const nonDefaultPhotos = existing_photos.filter(photo => 
-          !photosToRemove.some(toRemove => toRemove.resource_id === photo.resource_id)
+        const nonDefaultPhotos = existing_photos.filter(
+          (photo) =>
+            !photosToRemove.some(
+              (toRemove) => toRemove.resource_id === photo.resource_id,
+            ),
         )
-        
+
         // Delete oldest non-default photos first
-        const additionalPhotosToRemove = nonDefaultPhotos.slice(0, additionalPhotosToDelete)
+        const additionalPhotosToRemove = nonDefaultPhotos.slice(
+          0,
+          additionalPhotosToDelete,
+        )
         photosToRemove.push(...additionalPhotosToRemove)
       }
 
@@ -2080,29 +2090,8 @@ marketRouter.post(
             external_url: null,
           })
 
-          // Clean up the temporary file from uploads folder after successful processing
-          try {
-            const fs = require('fs')
-            if (fs.existsSync(photo.path)) {
-              fs.unlinkSync(photo.path)
-            }
-          } catch (cleanupError) {
-            console.error(`Failed to cleanup temporary file ${photo.path}:`, cleanupError)
-            // Don't fail the upload if cleanup fails
-          }
-
           return resource
         } catch (error) {
-          // Clean up the temporary file even if upload fails
-          try {
-            const fs = require('fs')
-            if (fs.existsSync(photo.path)) {
-              fs.unlinkSync(photo.path)
-            }
-          } catch (cleanupError) {
-            console.error(`Failed to cleanup temporary file ${photo.path}:`, cleanupError)
-          }
-          
           console.error(`Failed to upload photo ${index}:`, error)
           throw new Error(`Failed to upload photo ${index}`)
         }
@@ -2131,6 +2120,22 @@ marketRouter.post(
     } catch (error) {
       console.error("Error uploading photos:", error)
       res.status(500).json({ message: "Internal server error" })
+    } finally {
+      // Clean up uploaded files regardless of success/failure
+      if (req.files && Array.isArray(req.files)) {
+        for (const file of req.files as Express.Multer.File[]) {
+          try {
+            if (fs.existsSync(file.path)) {
+              fs.unlinkSync(file.path)
+            }
+          } catch (cleanupError) {
+            console.error(
+              `Failed to cleanup temporary file ${file.path}:`,
+              cleanupError,
+            )
+          }
+        }
+      }
     }
   },
 )
