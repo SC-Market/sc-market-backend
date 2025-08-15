@@ -2,8 +2,16 @@ import express from "express"
 import { userAuthorized, adminAuthorized } from "../../../middleware/auth.js"
 import { User } from "../api-models.js"
 import { database } from "../../../../clients/database/knex-db.js"
+import { DBContentReport } from "../../../../clients/database/db-models.js"
 import { createErrorResponse, createResponse } from "../util/response.js"
-import { oapi, Response400, Response401, Response403, Response500 } from "../openapi.js"
+import {
+  oapi,
+  Response400,
+  Response401,
+  Response403,
+  Response404,
+  Response500,
+} from "../openapi.js"
 
 export const moderationRouter = express.Router()
 
@@ -353,14 +361,17 @@ moderationRouter.get(
                     type: "object",
                     properties: {
                       report_id: { type: "string", format: "uuid" },
-                      reporter_id: { type: "string", format: "uuid" },
+                      reporter: oapi.schema("MinimalUser"),
                       reported_url: { type: "string" },
                       report_reason: { type: "string" },
                       report_details: { type: "string" },
                       status: { type: "string" },
                       created_at: { type: "string", format: "date-time" },
                       handled_at: { type: "string", format: "date-time" },
-                      handled_by: { type: "string", format: "uuid" },
+                      handled_by: {
+                        nullable: true,
+                        ...oapi.schema("MinimalUser")
+                      },
                       notes: { type: "string" },
                     },
                   },
@@ -389,7 +400,10 @@ moderationRouter.get(
   async (req, res) => {
     try {
       const page = Math.max(1, parseInt(req.query.page as string) || 1)
-      const pageSize = Math.min(100, Math.max(1, parseInt(req.query.page_size as string) || 20))
+      const pageSize = Math.min(
+        100,
+        Math.max(1, parseInt(req.query.page_size as string) || 20),
+      )
       const status = req.query.status as string
       const reporterId = req.query.reporter_id as string
 
@@ -415,20 +429,32 @@ moderationRouter.get(
       // Get paginated reports
       const reports = allReports.slice(offset, offset + pageSize)
 
-      res.json(
-        createResponse({
-          reports: reports.map((report) => ({
+      // Fetch user information for reporter and handler
+      const reportsWithUsers = await Promise.all(
+        reports.map(async (report) => {
+          const reporter = await database.getMinimalUser({ user_id: report.reporter_id })
+          const handledBy = report.handled_by 
+            ? await database.getMinimalUser({ user_id: report.handled_by })
+            : null
+
+          return {
             report_id: report.report_id,
-            reporter_id: report.reporter_id,
+            reporter,
             reported_url: report.reported_url,
             report_reason: report.report_reason,
             report_details: report.report_details,
             status: report.status,
             created_at: report.created_at,
             handled_at: report.handled_at,
-            handled_by: report.handled_by,
+            handled_by: handledBy,
             notes: report.notes,
-          })),
+          }
+        })
+      )
+
+      res.json(
+        createResponse({
+          reports: reportsWithUsers,
           pagination: {
             page,
             page_size: pageSize,
@@ -441,8 +467,185 @@ moderationRouter.get(
       )
     } catch (error) {
       console.error("Failed to retrieve admin reports:", error)
+      res
+        .status(500)
+        .json(
+          createErrorResponse({ error: "Failed to retrieve admin reports" }),
+        )
+    }
+  },
+)
+
+// Admin endpoint to update report status and add moderation details
+moderationRouter.put(
+  "/admin/reports/:report_id",
+  adminAuthorized,
+  oapi.validPath({
+    summary: "Update report status and moderation details (Admin only)",
+    description:
+      "Update the status of a content report and add moderation notes. Only accessible by administrators.",
+    operationId: "updateReportStatus",
+    tags: ["Moderation"],
+    parameters: [
+      {
+        name: "report_id",
+        in: "path",
+        required: true,
+        description: "ID of the report to update",
+        schema: {
+          type: "string",
+          format: "uuid",
+        },
+      },
+    ],
+    requestBody: {
+      required: true,
+      content: {
+        "application/json": {
+          schema: {
+            type: "object",
+            properties: {
+              status: {
+                type: "string",
+                enum: ["pending", "in_progress", "resolved", "dismissed"],
+                description: "New status for the report",
+              },
+              notes: {
+                type: "string",
+                description: "Moderation notes or action taken",
+                maxLength: 2000,
+              },
+            },
+            required: ["status"],
+          },
+        },
+      },
+    },
+    responses: {
+      "200": {
+        description: "Report updated successfully",
+        content: {
+          "application/json": {
+            schema: {
+              type: "object",
+              properties: {
+                result: {
+                  type: "string",
+                  example: "Report updated successfully",
+                },
+                report: {
+                  type: "object",
+                  properties: {
+                    report_id: { type: "string", format: "uuid" },
+                    reporter: oapi.schema("MinimalUser"),
+                    reported_url: { type: "string" },
+                    report_reason: { type: "string" },
+                    report_details: { type: "string" },
+                    status: { type: "string" },
+                    created_at: { type: "string", format: "date-time" },
+                    handled_at: { type: "string", format: "date-time" },
+                    handled_by: {
+                      nullable: true,
+                      ...oapi.schema("MinimalUser")
+                    },
+                    notes: { type: "string" },
+                  },
+                },
+              },
+            },
+          },
+        },
+      },
+      "400": Response400,
+      "401": Response401,
+      "403": Response403,
+      "404": Response404,
+      "500": Response500,
+    },
+  }),
+  async (req, res) => {
+    try {
+      const adminUser = req.user as User
+      const reportId = req.params.report_id
+      const { status, notes } = req.body
+
+      // Validate required fields
+      if (!status || typeof status !== "string") {
+        res.status(400).json(
+          createErrorResponse({ error: "status is required and must be a string" })
+        )
+        return
+      }
+
+      // Validate status enum
+      const validStatuses = ["pending", "in_progress", "resolved", "dismissed"]
+      if (!validStatuses.includes(status)) {
+        res.status(400).json(
+          createErrorResponse({ error: "Invalid status provided" })
+        )
+        return
+      }
+
+      // Validate notes length if provided
+      if (notes && typeof notes === "string" && notes.length > 2000) {
+        res.status(400).json(
+          createErrorResponse({ error: "notes must be 2000 characters or less" })
+        )
+        return
+      }
+
+      // Check if report exists
+      const existingReports = await database.getContentReports({ report_id: reportId })
+      if (existingReports.length === 0) {
+        res.status(404).json(
+          createErrorResponse({ error: "Report not found" })
+        )
+        return
+      }
+
+      const existingReport = existingReports[0]
+
+      // Prepare update data
+      const updateData: Partial<DBContentReport> = {
+        status: status as "pending" | "in_progress" | "resolved" | "dismissed",
+        notes: notes || undefined,
+        handled_at: status === "pending" ? undefined : new Date(),
+        handled_by: status === "pending" ? undefined : adminUser.user_id,
+      }
+
+      // Update the report
+      const [updatedReport] = await database.updateContentReport(
+        { report_id: reportId },
+        updateData
+      )
+
+      // Get the updated report with user information
+      const reporter = await database.getMinimalUser({ user_id: updatedReport.reporter_id })
+      const handledBy = updatedReport.handled_by 
+        ? await database.getMinimalUser({ user_id: updatedReport.handled_by })
+        : null
+
+      res.json(
+        createResponse({
+          result: "Report updated successfully",
+          report: {
+            report_id: updatedReport.report_id,
+            reporter,
+            reported_url: updatedReport.reported_url,
+            report_reason: updatedReport.report_reason,
+            report_details: updatedReport.report_details,
+            status: updatedReport.status,
+            created_at: updatedReport.created_at,
+            handled_at: updatedReport.handled_at,
+            handled_by: handledBy,
+            notes: updatedReport.notes,
+          },
+        })
+      )
+    } catch (error) {
+      console.error("Failed to update report:", error)
       res.status(500).json(
-        createErrorResponse({ error: "Failed to retrieve admin reports" }),
+        createErrorResponse({ error: "Failed to update report" })
       )
     }
   },
