@@ -641,3 +641,16 @@ export interface DBMarketItem {
   details_id: string
   description: string | null
 }
+
+export interface DBContentReport {
+  report_id: string
+  reporter_id: string
+  reported_url: string
+  report_reason?: string
+  report_details?: string
+  status: "pending" | "in_progress" | "resolved" | "dismissed"
+  created_at: Date
+  handled_at?: Date
+  handled_by?: string
+  notes?: string
+}

@@ -16,6 +16,7 @@ import {
   DBChatParticipant,
   DBComment,
   DBCommentVote,
+  DBContentReport,
   DBContractor,
   DBContractorInvite,
   DBContractorInviteCode,
@@ -3628,6 +3629,43 @@ export class KnexDatabase implements Database {
   ) {
     return this.knex<DBContractOffer>("public_contract_offers")
       .insert(data)
+      .returning("*")
+  }
+
+  // Content Reports
+  async insertContentReport(
+    data: Partial<DBContentReport>,
+  ): Promise<DBContentReport[]> {
+    return this.knex<DBContentReport>("content_reports")
+      .insert(data)
+      .returning("*")
+  }
+
+  async getContentReports(
+    where: Partial<DBContentReport>,
+  ): Promise<DBContentReport[]> {
+    return this.knex<DBContentReport>("content_reports")
+      .where(where)
+      .orderBy("created_at", "desc")
+      .select()
+  }
+
+  async updateContentReport(
+    where: Partial<DBContentReport>,
+    data: Partial<DBContentReport>,
+  ): Promise<DBContentReport[]> {
+    return this.knex<DBContentReport>("content_reports")
+      .where(where)
+      .update(data)
+      .returning("*")
+  }
+
+  async deleteContentReport(
+    where: Partial<DBContentReport>,
+  ): Promise<DBContentReport[]> {
+    return this.knex<DBContentReport>("content_reports")
+      .where(where)
+      .delete()
       .returning("*")
   }
 }

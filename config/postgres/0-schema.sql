@@ -4361,3 +4361,37 @@ CREATE INDEX CONCURRENTLY idx_image_resources_resource_id
 
 CREATE INDEX CONCURRENTLY idx_game_item_categories_subcategory
     ON game_item_categories (subcategory, category);
+
+-- Content Reports Table
+CREATE TABLE public.content_reports (
+    report_id uuid DEFAULT gen_random_uuid() NOT NULL PRIMARY KEY,
+    reporter_id uuid NOT NULL REFERENCES public.accounts(user_id),
+    reported_url text NOT NULL,
+    report_reason text,
+    report_details text,
+    status character varying(20) DEFAULT 'pending' NOT NULL,
+    created_at timestamp without time zone DEFAULT now() NOT NULL,
+    handled_at timestamp without time zone,
+    handled_by uuid REFERENCES public.accounts(user_id),
+    notes text
+);
+
+ALTER TABLE public.content_reports OWNER TO scmarket;
+
+-- Indices for common queries
+CREATE INDEX CONCURRENTLY idx_content_reports_status_created
+    ON content_reports (status, created_at DESC);
+
+CREATE INDEX CONCURRENTLY idx_content_reports_reporter_id
+    ON content_reports (reporter_id, created_at DESC);
+
+CREATE INDEX CONCURRENTLY idx_content_reports_url
+    ON content_reports (reported_url);
+
+CREATE INDEX CONCURRENTLY idx_content_reports_handled_by
+    ON content_reports (handled_by, handled_at DESC);
+
+-- Prevent duplicate unhandled reports from the same user for the same URL
+CREATE UNIQUE INDEX CONCURRENTLY idx_content_reports_unique_pending
+    ON content_reports (reporter_id, reported_url)
+    WHERE status = 'pending';
