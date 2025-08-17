@@ -647,9 +647,7 @@ servicesRouter.put(
             service_id,
           })
         } catch (e: any) {
-          res
-            .status(400)
-            .json(createErrorResponse({ error: "Invalid photo!" }))
+          res.status(400).json(createErrorResponse({ error: "Invalid photo!" }))
           return
         }
       }

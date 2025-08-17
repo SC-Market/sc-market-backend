@@ -370,7 +370,7 @@ moderationRouter.get(
                       handled_at: { type: "string", format: "date-time" },
                       handled_by: {
                         nullable: true,
-                        ...oapi.schema("MinimalUser")
+                        ...oapi.schema("MinimalUser"),
                       },
                       notes: { type: "string" },
                     },
@@ -432,8 +432,10 @@ moderationRouter.get(
       // Fetch user information for reporter and handler
       const reportsWithUsers = await Promise.all(
         reports.map(async (report) => {
-          const reporter = await database.getMinimalUser({ user_id: report.reporter_id })
-          const handledBy = report.handled_by 
+          const reporter = await database.getMinimalUser({
+            user_id: report.reporter_id,
+          })
+          const handledBy = report.handled_by
             ? await database.getMinimalUser({ user_id: report.handled_by })
             : null
 
@@ -449,7 +451,7 @@ moderationRouter.get(
             handled_by: handledBy,
             notes: report.notes,
           }
-        })
+        }),
       )
 
       res.json(
@@ -546,7 +548,7 @@ moderationRouter.put(
                     handled_at: { type: "string", format: "date-time" },
                     handled_by: {
                       nullable: true,
-                      ...oapi.schema("MinimalUser")
+                      ...oapi.schema("MinimalUser"),
                     },
                     notes: { type: "string" },
                   },
@@ -571,35 +573,43 @@ moderationRouter.put(
 
       // Validate required fields
       if (!status || typeof status !== "string") {
-        res.status(400).json(
-          createErrorResponse({ error: "status is required and must be a string" })
-        )
+        res
+          .status(400)
+          .json(
+            createErrorResponse({
+              error: "status is required and must be a string",
+            }),
+          )
         return
       }
 
       // Validate status enum
       const validStatuses = ["pending", "in_progress", "resolved", "dismissed"]
       if (!validStatuses.includes(status)) {
-        res.status(400).json(
-          createErrorResponse({ error: "Invalid status provided" })
-        )
+        res
+          .status(400)
+          .json(createErrorResponse({ error: "Invalid status provided" }))
         return
       }
 
       // Validate notes length if provided
       if (notes && typeof notes === "string" && notes.length > 2000) {
-        res.status(400).json(
-          createErrorResponse({ error: "notes must be 2000 characters or less" })
-        )
+        res
+          .status(400)
+          .json(
+            createErrorResponse({
+              error: "notes must be 2000 characters or less",
+            }),
+          )
         return
       }
 
       // Check if report exists
-      const existingReports = await database.getContentReports({ report_id: reportId })
+      const existingReports = await database.getContentReports({
+        report_id: reportId,
+      })
       if (existingReports.length === 0) {
-        res.status(404).json(
-          createErrorResponse({ error: "Report not found" })
-        )
+        res.status(404).json(createErrorResponse({ error: "Report not found" }))
         return
       }
 
@@ -616,12 +626,14 @@ moderationRouter.put(
       // Update the report
       const [updatedReport] = await database.updateContentReport(
         { report_id: reportId },
-        updateData
+        updateData,
       )
 
       // Get the updated report with user information
-      const reporter = await database.getMinimalUser({ user_id: updatedReport.reporter_id })
-      const handledBy = updatedReport.handled_by 
+      const reporter = await database.getMinimalUser({
+        user_id: updatedReport.reporter_id,
+      })
+      const handledBy = updatedReport.handled_by
         ? await database.getMinimalUser({ user_id: updatedReport.handled_by })
         : null
 
@@ -640,13 +652,13 @@ moderationRouter.put(
             handled_by: handledBy,
             notes: updatedReport.notes,
           },
-        })
+        }),
       )
     } catch (error) {
       console.error("Failed to update report:", error)
-      res.status(500).json(
-        createErrorResponse({ error: "Failed to update report" })
-      )
+      res
+        .status(500)
+        .json(createErrorResponse({ error: "Failed to update report" }))
     }
   },
 )
