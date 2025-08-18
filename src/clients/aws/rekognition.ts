@@ -18,11 +18,12 @@ export class AWSRekognitionClient {
 
   private constructor() {
     this.s3 = new S3({
+      endpoint: "https://s3.us-east-2.amazonaws.com",
       credentials: {
         accessKeyId: env.S3_ACCESS_KEY_ID!,
         secretAccessKey: env.S3_SECRET_ACCESS_KEY!,
       },
-      region: env.AWS_REGION || "us-west-2",
+      region: env.AWS_REGION || "us-east-2",
     })
 
     this.rekognition = new Rekognition({
@@ -30,7 +31,7 @@ export class AWSRekognitionClient {
         accessKeyId: env.S3_ACCESS_KEY_ID!,
         secretAccessKey: env.S3_SECRET_ACCESS_KEY!,
       },
-      region: env.AWS_REGION || "us-west-2",
+      region: env.AWS_REGION || "us-east-2",
     })
   }
 
@@ -39,29 +40,6 @@ export class AWSRekognitionClient {
       this.instance = new AWSRekognitionClient()
     }
     return this.instance
-  }
-
-  /**
-   * Helper method to list all S3 buckets (for debugging purposes)
-   * @returns Promise<void> - Prints bucket list to console
-   */
-  private async listBuckets(): Promise<void> {
-    try {
-      logger.info("=== S3 Bucket List (Debug Info) ===")
-      const { Buckets } = await this.s3.listBuckets({})
-      if (Buckets && Buckets.length > 0) {
-        Buckets.forEach((bucket, index) => {
-          logger.info(
-            `${index + 1}. ${bucket.Name} (Created: ${bucket.CreationDate})`,
-          )
-        })
-      } else {
-        logger.info("No buckets found")
-      }
-      logger.info("==================================")
-    } catch (error) {
-      logger.error("Failed to list buckets:", { error })
-    }
   }
 
   /**
@@ -75,6 +53,7 @@ export class AWSRekognitionClient {
     imageBuffer: Buffer,
     contentType: string,
   ): Promise<ContentModerationResult> {
+    console.log("Content type is: ", contentType)
     const tempKey = `temp-moderation/${uuidv4()}-${Date.now()}.${this.getFileExtension(contentType)}`
 
     try {
@@ -96,6 +75,8 @@ export class AWSRekognitionClient {
         },
         MinConfidence: 50, // Minimum confidence threshold for moderation labels
       })
+
+      console.log(moderationResult)
 
       // 3. Process moderation results
       const moderationLabels = moderationResult.ModerationLabels || []
@@ -138,12 +119,6 @@ export class AWSRekognitionClient {
         confidence: maxConfidence,
       }
     } catch (error) {
-      logger.error(
-        "S3 operation failed, listing available buckets for debugging:",
-        { error },
-      )
-      await this.listBuckets()
-
       // Clean up S3 resource even if there's an error
       try {
         await this.s3.deleteObject({
@@ -154,8 +129,6 @@ export class AWSRekognitionClient {
         logger.error("Failed to cleanup S3 resource after error:", {
           cleanupError,
         })
-        logger.error("Listing buckets again for cleanup debugging:")
-        await this.listBuckets()
       }
 
       return {

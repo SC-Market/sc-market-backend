@@ -35,31 +35,25 @@ export class BackBlazeCDN implements CDN {
   }
 
   /**
-   * Helper method to check if a file is an image and get its content type
-   * @param filePath - Path to the file
-   * @returns Object with isImage boolean and contentType string
+   * Helper method to validate MIME type and check if it's an allowed image format
+   * @param mimeType - MIME type from the request
+   * @returns Object with isValid boolean and contentType string
    */
-  private getImageInfo(filePath: string): {
-    isImage: boolean
+  private validateMimeType(mimeType: string): {
+    isValid: boolean
     contentType: string
   } {
-    const ext = filePath.toLowerCase().split(".").pop()
-    const imageExtensions = ["jpg", "jpeg", "png", "gif", "webp", "bmp", "tiff"]
-    const isImage = imageExtensions.includes(ext || "")
+    const allowedMimeTypes = [
+      "image/png",
+      "image/jpeg",
+      "image/jpg",
+      "image/gif",
+      "image/webp",
+    ]
 
-    const contentTypeMap: { [key: string]: string } = {
-      jpg: "image/jpeg",
-      jpeg: "image/jpeg",
-      png: "image/png",
-      gif: "image/gif",
-      webp: "image/webp",
-      bmp: "image/bmp",
-      tiff: "image/tiff",
-    }
+    const isValid = allowedMimeTypes.includes(mimeType)
 
-    const contentType = contentTypeMap[ext || ""] || "application/octet-stream"
-
-    return { isImage, contentType }
+    return { isValid, contentType: mimeType }
   }
 
   /**
@@ -105,112 +99,36 @@ export class BackBlazeCDN implements CDN {
   async uploadFile(
     filename: string,
     fileDirectoryPath: string,
+    mimeType: string,
   ): Promise<string> {
-    return new Promise((resolve, reject) => {
-      fs.readFile(fileDirectoryPath.toString(), (err, data) => {
-        if (err) {
-          reject(err)
-          return
-        }
+    const data = await fs.promises.readFile(fileDirectoryPath.toString())
 
-        // Check if this is an image file and perform content moderation
-        const { isImage, contentType } = this.getImageInfo(fileDirectoryPath)
+    // Validate MIME type and check if it's an allowed image format
+    const { isValid, contentType } = this.validateMimeType(mimeType)
 
-        if (isImage) {
-          // For images, check content moderation before uploading
-          this.checkImageModeration(data, contentType)
-            .then((passed) => {
-              if (!passed) {
-                reject(new Error("Image failed content moderation check"))
-                return
-              }
+    if (!isValid) {
+      throw new Error(
+        `Unsupported MIME type: ${mimeType}. Only PNG, JPG, GIF, and WEBP images are allowed.`,
+      )
+    }
 
-              // Proceed with upload if moderation passes
-              this.s3.putObject(
-                {
-                  Bucket: "" + env.B2_BUCKET_NAME,
-                  Key: filename,
-                  Body: data,
-                  // ACL: 'public-read'
-                },
-                function (err, data) {
-                  if (err) reject(err)
-                  else resolve("successfully uploaded")
-                },
-              )
-            })
-            .catch((error) => {
-              reject(error)
-            })
-        } else {
-          // For non-image files, upload directly
-          this.s3.putObject(
-            {
-              Bucket: "" + env.B2_BUCKET_NAME,
-              Key: filename,
-              Body: data,
-              // ACL: 'public-read'
-            },
-            function (err, data) {
-              if (err) reject(err)
-              else resolve("successfully uploaded")
-            },
-          )
-        }
-      })
+    // All allowed types are images, so perform content moderation
+    const passed = await this.checkImageModeration(data, contentType)
+
+    if (!passed) {
+      throw new Error("Image failed content moderation check")
+    }
+
+    // Proceed with upload
+    await this.s3.putObject({
+      Bucket: "" + env.B2_BUCKET_NAME,
+      Key: filename,
+      Body: data,
+      ContentType: contentType,
+      // ACL: 'public-read'
     })
-  }
 
-  async uploadFileRaw(filename: string, data: string): Promise<string> {
-    return new Promise((resolve, reject) => {
-      // Check if this is an image file and perform content moderation
-      const { isImage, contentType } = this.getImageInfo(filename)
-
-      if (isImage) {
-        // Convert string data to buffer for moderation check
-        const buffer = Buffer.from(data, "binary")
-
-        // For images, check content moderation before uploading
-        this.checkImageModeration(buffer, contentType)
-          .then((passed) => {
-            if (!passed) {
-              reject(new Error("Image failed content moderation check"))
-              return
-            }
-
-            // Proceed with upload if moderation passes
-            this.s3.putObject(
-              {
-                Bucket: "" + env.B2_BUCKET_NAME,
-                Key: filename,
-                Body: data,
-                // ACL: 'public-read'
-              },
-              function (err, data) {
-                if (err) reject(err)
-                else resolve("successfully uploaded")
-              },
-            )
-          })
-          .catch((error) => {
-            reject(error)
-          })
-      } else {
-        // For non-image files, upload directly
-        this.s3.putObject(
-          {
-            Bucket: "" + env.B2_BUCKET_NAME,
-            Key: filename,
-            Body: data,
-            // ACL: 'public-read'
-          },
-          function (err, data) {
-            if (err) reject(err)
-            else resolve("successfully uploaded")
-          },
-        )
-      }
-    })
+    return "successfully uploaded"
   }
 
   deleteFile(filename: string): Promise<string> {

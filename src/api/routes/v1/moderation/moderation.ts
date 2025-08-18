@@ -573,13 +573,11 @@ moderationRouter.put(
 
       // Validate required fields
       if (!status || typeof status !== "string") {
-        res
-          .status(400)
-          .json(
-            createErrorResponse({
-              error: "status is required and must be a string",
-            }),
-          )
+        res.status(400).json(
+          createErrorResponse({
+            error: "status is required and must be a string",
+          }),
+        )
         return
       }
 
@@ -594,13 +592,11 @@ moderationRouter.put(
 
       // Validate notes length if provided
       if (notes && typeof notes === "string" && notes.length > 2000) {
-        res
-          .status(400)
-          .json(
-            createErrorResponse({
-              error: "notes must be 2000 characters or less",
-            }),
-          )
+        res.status(400).json(
+          createErrorResponse({
+            error: "notes must be 2000 characters or less",
+          }),
+        )
         return
       }
 

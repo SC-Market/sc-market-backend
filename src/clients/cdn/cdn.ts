@@ -20,6 +20,11 @@ export const valid_domains = [
 export const external_resource_regex = new RegExp(external_resource_pattern)
 
 export interface CDN {
+  uploadFile(
+    filename: string,
+    fileDirectoryPath: string,
+    mimeType: string,
+  ): Promise<string>
   getFileLinkResource(resource_id?: string): Promise<string | null>
   removeResource(resource_id: string): Promise<void>
 }
@@ -30,6 +35,7 @@ export class ExternalCDN implements CDN {
   async uploadFile(
     filename: string,
     fileDirectoryPath: string,
+    mimeType: string,
   ): Promise<string> {
     throw new Error("Method not implemented")
   }
@@ -92,10 +98,6 @@ export class ExternalCDN implements CDN {
       // Delete it only if no other rows depend on it
       // await this.deleteFile(resource.filename)
     }
-  }
-
-  async uploadFileRaw(filename: string, data: string): Promise<string> {
-    throw new Error("Method not implemented")
   }
 
   static instance: ExternalCDN

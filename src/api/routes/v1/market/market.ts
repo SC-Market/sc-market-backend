@@ -52,6 +52,7 @@ import {
 import { multiplePhotoUpload } from "../util/upload.js"
 import { randomUUID } from "node:crypto"
 import fs from "node:fs"
+import logger from "../../../../logger/logger.js"
 
 export const marketRouter = express.Router()
 
@@ -2083,7 +2084,7 @@ marketRouter.post(
       const uploadPromises = photos.map(async (photo, index) => {
         try {
           const filename = `${listing_id}-photos-${index}-${randomUUID()}.png`
-          await cdn.uploadFile(filename, photo.path)
+          await cdn.uploadFile(filename, photo.path, photo.mimetype)
 
           // Create image resource in database
           const resource = await database.insertImageResource({
@@ -2093,8 +2094,35 @@ marketRouter.post(
 
           return resource
         } catch (error) {
-          console.error(`Failed to upload photo ${index}:`, error)
-          throw new Error(`Failed to upload photo ${index}`)
+          // Check if it's a moderation check failure
+          if (
+            error instanceof Error &&
+            error.message.includes("failed content moderation check")
+          ) {
+            logger.debug(
+              `Photo ${index + 1} failed content moderation check: ${error.message}`,
+            )
+            throw new Error(
+              `Photo ${index + 1} failed content moderation check and cannot be uploaded`,
+            )
+          }
+
+          // Check if it's an unsupported MIME type
+          if (
+            error instanceof Error &&
+            error.message.includes("Unsupported MIME type")
+          ) {
+            logger.debug(
+              `Photo ${index + 1} has unsupported MIME type: ${error.message}`,
+            )
+            throw new Error(
+              `Photo ${index + 1} has an unsupported file type. Only PNG, JPG, GIF, and WEBP images are allowed.`,
+            )
+          }
+
+          // Log unexpected errors as error level
+          logger.error(`Failed to upload photo ${index + 1}:`, error)
+          throw new Error(`Failed to upload photo ${index + 1}`)
         }
       })
 
@@ -2119,8 +2147,41 @@ marketRouter.post(
         photos: photoUrls,
       })
     } catch (error) {
-      console.error("Error uploading photos:", error)
-      res.status(500).json({ message: "Internal server error" })
+      // Check for specific error types and return appropriate responses
+      if (error instanceof Error) {
+        if (error.message.includes("failed content moderation check")) {
+          logger.debug("Photo upload failed content moderation check:", {
+            error: error.message,
+          })
+          res.status(400).json({
+            error: "Content Moderation Failed",
+            message: error.message,
+            details:
+              "One or more photos contain inappropriate content and cannot be uploaded.",
+          })
+          return
+        }
+
+        if (error.message.includes("unsupported file type")) {
+          logger.debug("Photo upload failed due to unsupported file type:", {
+            error: error.message,
+          })
+          res.status(400).json({
+            error: "Unsupported File Type",
+            message: error.message,
+            details:
+              "Please ensure all photos are in PNG, JPG, GIF, or WEBP format.",
+          })
+          return
+        }
+      }
+
+      // Log unexpected server errors as error level
+      logger.error("Unexpected error uploading photos:", error)
+      res.status(500).json({
+        error: "Upload Failed",
+        message: "Failed to upload photos. Please try again.",
+      })
     } finally {
       // Clean up uploaded files regardless of success/failure
       if (req.files && Array.isArray(req.files)) {
@@ -2130,7 +2191,7 @@ marketRouter.post(
               fs.unlinkSync(file.path)
             }
           } catch (cleanupError) {
-            console.error(
+            logger.error(
               `Failed to cleanup temporary file ${file.path}:`,
               cleanupError,
             )

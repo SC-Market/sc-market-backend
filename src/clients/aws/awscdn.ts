@@ -82,7 +82,11 @@ export class AWSCDN implements CDN {
     return this.instance
   }
 
-  uploadFile(filename: string, fileDirectoryPath: string): Promise<string> {
+  uploadFile(
+    filename: string,
+    fileDirectoryPath: string,
+    mimeType: string,
+  ): Promise<string> {
     return new Promise((resolve, reject) => {
       fs.readFile(fileDirectoryPath.toString(), (err, data) => {
         if (err) {
@@ -94,6 +98,7 @@ export class AWSCDN implements CDN {
             Bucket: "" + env.S3_BUCKET_NAME,
             Key: filename,
             Body: data,
+            ContentType: mimeType,
             // ACL: 'public-read'
           },
           function (err, data) {
@@ -102,26 +107,6 @@ export class AWSCDN implements CDN {
           },
         )
       })
-    })
-  }
-
-  uploadFileRaw(filename: string, data: string): Promise<string> {
-    return new Promise((resolve, reject) => {
-      // if (err) {
-      //     reject(err);
-      // }
-      this.s3.putObject(
-        {
-          Bucket: "" + env.S3_BUCKET_NAME,
-          Key: filename,
-          Body: data,
-          // ACL: 'public-read'
-        },
-        function (err, data) {
-          if (err) reject(err)
-          resolve("succesfully uploaded")
-        },
-      )
     })
   }
 
