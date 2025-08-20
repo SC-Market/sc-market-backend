@@ -83,7 +83,6 @@ export class BackBlazeCDN implements CDN {
       // The Lambda already provides the complete filename with the correct extension
       const imageResource = await database.insertImageResource({
         filename: result.data!.filename,
-        external_url: result.data!.backblazeUrl,
       })
 
       return imageResource
