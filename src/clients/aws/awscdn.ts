@@ -82,15 +82,16 @@ export class AWSCDN implements CDN {
     return this.instance
   }
 
-  uploadFile(
+  async uploadFile(
     filename: string,
     fileDirectoryPath: string,
     mimeType: string,
-  ): Promise<string> {
+  ): Promise<DBImageResource> {
     return new Promise((resolve, reject) => {
-      fs.readFile(fileDirectoryPath.toString(), (err, data) => {
+      fs.readFile(fileDirectoryPath.toString(), async (err, data) => {
         if (err) {
           reject(err)
+          return
         }
 
         this.s3.putObject(
@@ -101,9 +102,22 @@ export class AWSCDN implements CDN {
             ContentType: mimeType,
             // ACL: 'public-read'
           },
-          function (err, data) {
-            if (err) reject(err)
-            resolve("succesfully uploaded")
+          async function (err, data) {
+            if (err) {
+              reject(err)
+              return
+            }
+
+            try {
+              // Create image resource in database
+              const imageResource = await database.insertImageResource({
+                filename,
+                external_url: null,
+              })
+              resolve(imageResource)
+            } catch (dbError) {
+              reject(dbError)
+            }
           },
         )
       })

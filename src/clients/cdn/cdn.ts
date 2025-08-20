@@ -24,7 +24,7 @@ export interface CDN {
     filename: string,
     fileDirectoryPath: string,
     mimeType: string,
-  ): Promise<string>
+  ): Promise<DBImageResource>
   getFileLinkResource(resource_id?: string): Promise<string | null>
   removeResource(resource_id: string): Promise<void>
 }
@@ -36,7 +36,7 @@ export class ExternalCDN implements CDN {
     filename: string,
     fileDirectoryPath: string,
     mimeType: string,
-  ): Promise<string> {
+  ): Promise<DBImageResource> {
     throw new Error("Method not implemented")
   }
 

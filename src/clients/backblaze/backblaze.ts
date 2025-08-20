@@ -59,7 +59,7 @@ export class BackBlazeCDN implements CDN {
     filename: string,
     fileDirectoryPath: string,
     mimeType: string,
-  ): Promise<string> {
+  ): Promise<DBImageResource> {
     const data = await fs.promises.readFile(fileDirectoryPath.toString())
 
     // Validate MIME type and check if it's an allowed image format
@@ -79,13 +79,14 @@ export class BackBlazeCDN implements CDN {
         contentType,
       )
 
-      // Store the image resource in the database
-      await database.insertImageResource({
+      // Store the image resource in the database using the filename returned from Lambda
+      // The Lambda already provides the complete filename with the correct extension
+      const imageResource = await database.insertImageResource({
         filename: result.data!.filename,
         external_url: result.data!.backblazeUrl,
       })
 
-      return "successfully uploaded"
+      return imageResource
     } catch (error) {
       // Only log system errors here - user-fault errors will be handled at the API route level
       // where we have better context about the user's request

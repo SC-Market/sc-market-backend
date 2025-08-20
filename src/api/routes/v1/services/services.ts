@@ -860,14 +860,12 @@ servicesRouter.post(
       for (let index = 0; index < photos.length; index++) {
         const photo = photos[index]
         try {
-          const filename = `${service_id}-photos-${index}-${randomUUID()}.png`
-          await cdn.uploadFile(filename, photo.path, photo.mimetype)
-
-          // Create image resource in database
-          const resource = await database.insertImageResource({
-            filename,
-            external_url: null,
-          })
+          const fileExtension = photo.mimetype.split("/")[1] || "png"
+          const resource = await cdn.uploadFile(
+            `${service_id}-photos-${index}-${randomUUID()}.${fileExtension}`,
+            photo.path,
+            photo.mimetype,
+          )
 
           uploadResults.push({ success: true, resource, index })
         } catch (error) {
