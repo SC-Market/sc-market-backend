@@ -29,6 +29,13 @@ services:
     env_file: .env
     restart: unless-stopped
 
+  images:
+    build: ../sc-market-image-lambda
+    env_file: .env
+    restart: unless-stopped
+    ports:
+      - "8082:8080"
+
   postgres:
     image: postgres:13.20
     environment:

@@ -139,7 +139,12 @@ export async function insertNewCommodity(
  * Fetches commodity data from UEX API and inserts new commodities into the database
  */
 export async function fetchAndInsertCommodities(): Promise<void> {
-  const commodities = await fetchCommodities()
+  let commodities: CommodityResponse | undefined
+  try {
+    commodities = await fetchCommodities()
+  } catch (error: any) {
+    commodities = undefined
+  }
 
   if (!commodities) {
     console.log("Unable to fetch commodities. No items will be inserted.")

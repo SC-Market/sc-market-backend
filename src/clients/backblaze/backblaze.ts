@@ -4,8 +4,8 @@ import { DBImageResource } from "../database/db-models.js"
 import { CDN, CDNError, valid_domains } from "../cdn/cdn.js"
 import { env } from "../../config/env.js"
 import { S3, S3ClientConfig } from "@aws-sdk/client-s3"
-import { rekognitionClient } from "../aws/rekognition.js"
 import logger from "../../logger/logger.js"
+import { ImageLambdaClient } from "../image-lambda/image-lambda.js"
 
 export class BackBlazeCDN implements CDN {
   // Implements Singleton
@@ -47,53 +47,12 @@ export class BackBlazeCDN implements CDN {
       "image/png",
       "image/jpeg",
       "image/jpg",
-      "image/gif",
       "image/webp",
     ]
 
     const isValid = allowedMimeTypes.includes(mimeType)
 
     return { isValid, contentType: mimeType }
-  }
-
-  /**
-   * Helper method to check image content moderation using AWS Rekognition
-   * @param imageBuffer - Buffer containing the image data
-   * @param contentType - MIME type of the image
-   * @returns Promise<boolean> - True if image passes moderation
-   */
-  private async checkImageModeration(
-    imageBuffer: Buffer,
-    contentType: string,
-  ): Promise<boolean> {
-    try {
-      const result = await rekognitionClient.scanImageForModeration(
-        imageBuffer,
-        contentType,
-      )
-
-      if (result.error) {
-        logger.error("Content moderation check failed:", {
-          error: result.error,
-        })
-        // If moderation fails, we'll allow the upload but log the error
-        return true
-      }
-
-      if (!result.passed) {
-        logger.warn("Image failed content moderation:", {
-          labels: result.moderationLabels,
-          confidence: result.confidence,
-        })
-        return false
-      }
-
-      return true
-    } catch (error) {
-      logger.error("Error during content moderation check:", { error })
-      // If moderation check fails, we'll allow the upload but log the error
-      return true
-    }
   }
 
   async uploadFile(
@@ -108,27 +67,41 @@ export class BackBlazeCDN implements CDN {
 
     if (!isValid) {
       throw new Error(
-        `Unsupported MIME type: ${mimeType}. Only PNG, JPG, GIF, and WEBP images are allowed.`,
+        `Unsupported MIME type: ${mimeType}. Only PNG, JPG, and WEBP images are allowed.`,
       )
     }
 
-    // All allowed types are images, so perform content moderation
-    const passed = await this.checkImageModeration(data, contentType)
+    try {
+      // Use the image lambda for processing and moderation
+      const result = await ImageLambdaClient.uploadImage(
+        data,
+        filename,
+        contentType,
+      )
 
-    if (!passed) {
-      throw new Error("Image failed content moderation check")
+      // Store the image resource in the database
+      await database.insertImageResource({
+        filename: result.data!.filename,
+        external_url: result.data!.backblazeUrl,
+      })
+
+      return "successfully uploaded"
+    } catch (error) {
+      // Only log system errors here - user-fault errors will be handled at the API route level
+      // where we have better context about the user's request
+      if (
+        error instanceof Error &&
+        !error.message.includes("Image failed moderation checks")
+      ) {
+        logger.error(
+          "Failed to upload image via lambda (system error):",
+          error,
+          { filename },
+        )
+      }
+
+      throw error
     }
-
-    // Proceed with upload
-    await this.s3.putObject({
-      Bucket: "" + env.B2_BUCKET_NAME,
-      Key: filename,
-      Body: data,
-      ContentType: contentType,
-      // ACL: 'public-read'
-    })
-
-    return "successfully uploaded"
   }
 
   deleteFile(filename: string): Promise<string> {

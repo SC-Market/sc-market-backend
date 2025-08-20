@@ -856,7 +856,9 @@ servicesRouter.post(
       }
 
       // Upload new photos to CDN and create database records
-      const uploadPromises = photos.map(async (photo, index) => {
+      const uploadResults = []
+      for (let index = 0; index < photos.length; index++) {
+        const photo = photos[index]
         try {
           const filename = `${service_id}-photos-${index}-${randomUUID()}.png`
           await cdn.uploadFile(filename, photo.path, photo.mimetype)
@@ -867,41 +869,69 @@ servicesRouter.post(
             external_url: null,
           })
 
-          return resource
+          uploadResults.push({ success: true, resource, index })
         } catch (error) {
-          // Check if it's a moderation check failure
-          if (
-            error instanceof Error &&
-            error.message.includes("failed content moderation check")
-          ) {
-            logger.debug(
-              `Photo ${index + 1} failed content moderation check: ${error.message}`,
-            )
-            throw new Error(
-              `Photo ${index + 1} failed content moderation check and cannot be uploaded`,
-            )
-          }
+          // Handle different types of errors and return appropriate responses
+          if (error instanceof Error) {
+            if (error.message.includes("Image failed moderation checks")) {
+              logger.debug(
+                `Photo ${index + 1} failed content moderation:`,
+                error,
+              )
+              res.status(400).json(
+                createErrorResponse({
+                  error: "Content Moderation Failed",
+                  message: `Photo ${index + 1} failed content moderation checks and cannot be uploaded.`,
+                  details: "One or more photos contain inappropriate content.",
+                }),
+              )
+              return
+            }
 
-          // Check if it's an unsupported MIME type
-          if (
-            error instanceof Error &&
-            error.message.includes("Unsupported MIME type")
-          ) {
-            logger.debug(
-              `Photo ${index + 1} has unsupported MIME type: ${error.message}`,
-            )
-            throw new Error(
-              `Photo ${index + 1} has an unsupported file type. Only PNG, JPG, GIF, and WEBP images are allowed.`,
-            )
+            if (
+              error.message.includes("Missing required fields") ||
+              error.message.includes("VALIDATION_ERROR") ||
+              error.message.includes("UNSUPPORTED_FORMAT")
+            ) {
+              logger.debug(`Photo ${index + 1} failed validation:`, error)
+              res.status(400).json(
+                createErrorResponse({
+                  error: "Validation Failed",
+                  message: `Photo ${index + 1} failed validation: ${error.message}`,
+                  details: "Please check the file format and try again.",
+                }),
+              )
+              return
+            }
+
+            if (error.message.includes("Unsupported MIME type")) {
+              logger.debug(`Photo ${index + 1} has unsupported format:`, error)
+              res.status(400).json(
+                createErrorResponse({
+                  error: "Unsupported File Type",
+                  message: `Photo ${index + 1} has an unsupported file type. Only PNG, JPG, and WEBP images are allowed.`,
+                  details: "Please ensure all photos are in supported formats.",
+                }),
+              )
+              return
+            }
           }
 
           // Log unexpected errors as error level
           logger.error(`Failed to upload photo ${index + 1}:`, error)
-          throw new Error(`Failed to upload photo ${index + 1}`)
+          res.status(500).json(
+            createErrorResponse({
+              error: "Upload Failed",
+              message: `Failed to upload photo ${index + 1}`,
+              details:
+                "An unexpected error occurred during upload. Please try again.",
+            }),
+          )
+          return
         }
-      })
+      }
 
-      const uploadedResources = await Promise.all(uploadPromises)
+      const uploadedResources = uploadResults.map((result) => result.resource)
 
       // Insert new photos into database
       for (const resource of uploadedResources) {
