@@ -52,8 +52,11 @@ if (env.NODE_ENV !== "production") {
   formats.push(format.colorize())
 }
 
+// Set log level based on environment:
+// - Development: debug (most verbose)
+// - Production: info (less verbose, no debug logs)
 const logger = createLogger({
-  level: env.LOG_LEVEL || "debug",
+  level: env.NODE_ENV === "production" ? "info" : "debug",
   format: format.combine(...formats),
   transports: [new Console()],
 })

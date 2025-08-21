@@ -132,11 +132,11 @@ const sessionMiddleware = session({
 
 app.use(sessionMiddleware)
 
-app.use(express.json({ limit: "2mb" }))
+app.use(express.json({ limit: "2.5mb" }))
 app.use(
   express.urlencoded({
     extended: true,
-    limit: "2mb",
+    limit: "2.5mb",
   }),
 )
 
@@ -481,10 +481,10 @@ const discord_app = express()
 discord_app.use(
   express.urlencoded({
     extended: true,
-    limit: "2mb",
+    limit: "2.5mb",
   }),
 )
-discord_app.use(express.json({ limit: "2mb" }))
+discord_app.use(express.json({ limit: "2.5mb" }))
 discord_app.use("/register", registrationRouter)
 discord_app.use("/threads", threadRouter)
 discord_app.listen(discord_backend_url.port || 8081)

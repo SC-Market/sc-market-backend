@@ -3,19 +3,25 @@ import multer from "multer"
 // Standard file upload configuration for photos
 export const photoUpload = multer({
   dest: "uploads/",
-  limits: { fileSize: 2 * 1000 * 1000 /* 2mb */ },
+  limits: {
+    fileSize: 2.5 * 1000 * 1000 /* 2.5mb to account for multipart overhead */,
+  },
 })
 
 // Configuration for single photo uploads
 export const singlePhotoUpload = multer({
   dest: "uploads/",
-  limits: { fileSize: 2 * 1000 * 1000 /* 2mb */ },
+  limits: {
+    fileSize: 2.5 * 1000 * 1000 /* 2.5mb to account for multipart overhead */,
+  },
 })
 
 // Configuration for multiple photo uploads (up to 5)
 export const multiplePhotoUpload = multer({
   dest: "uploads/",
-  limits: { fileSize: 2 * 1000 * 1000 /* 2mb */ },
+  limits: {
+    fileSize: 2.5 * 1000 * 1000 /* 2.5mb to account for multipart overhead */,
+  },
 })
 
 // Configuration for document uploads
