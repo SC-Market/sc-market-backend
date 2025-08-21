@@ -2783,12 +2783,45 @@ export class KnexDatabase implements Database {
     return this.knex<DBNotification>("notification").select("*").where(where)
   }
 
-  async getNotificationsPaginated(where: any, page: number) {
-    return this.knex<DBNotification>("notification")
-      .offset(page * 20)
-      .limit(20)
+  async getNotificationsPaginated(
+    where: any,
+    page: number,
+    pageSize: number = 20,
+    actionFilter?: string,
+    entityIdFilter?: string,
+  ) {
+    let query = this.knex<DBNotification>("notification")
+      .offset(page * pageSize)
+      .limit(pageSize)
       .select("*")
       .where(where)
+
+    // Apply filters if provided
+    if (actionFilter || entityIdFilter) {
+      query = query.join(
+        "notification_object",
+        "notification.notification_object_id",
+        "=",
+        "notification_object.notification_object_id",
+      )
+
+      if (actionFilter) {
+        query = query
+          .join(
+            "notification_actions",
+            "notification_object.action_type_id",
+            "=",
+            "notification_actions.action_type_id",
+          )
+          .where("notification_actions.action", actionFilter)
+      }
+
+      if (entityIdFilter) {
+        query = query.where("notification_object.entity_id", entityIdFilter)
+      }
+    }
+
+    return query
   }
 
   async updateNotifications(where: any, values: any) {
@@ -2901,6 +2934,165 @@ export class KnexDatabase implements Database {
     )
 
     return complete_notifs
+  }
+
+  async getCompleteNotificationsByUserPaginated(
+    user_id: string,
+    page: number,
+    pageSize: number = 20,
+    actionFilter?: string,
+    entityIdFilter?: string,
+  ) {
+    // Build base query for filtering
+    let baseQuery = this.knex<DBNotification>("notification").where({
+      notifier_id: user_id,
+    })
+
+    // Apply filters if provided
+    if (actionFilter || entityIdFilter) {
+      baseQuery = baseQuery.join(
+        "notification_object",
+        "notification.notification_object_id",
+        "=",
+        "notification_object.notification_object_id",
+      )
+
+      if (actionFilter) {
+        baseQuery = baseQuery
+          .join(
+            "notification_actions",
+            "notification_object.action_type_id",
+            "=",
+            "notification_actions.action_type_id",
+          )
+          .where("notification_actions.action", actionFilter)
+      }
+
+      if (entityIdFilter) {
+        baseQuery = baseQuery.where(
+          "notification_object.entity_id",
+          entityIdFilter,
+        )
+      }
+    }
+
+    // Get total count for pagination metadata
+    const totalCount = await baseQuery
+      .clone()
+      .count("notification.notification_id as count")
+      .first()
+
+    // Get paginated notifications
+    const notifs = await this.getNotificationsPaginated(
+      { notifier_id: user_id },
+      page,
+      pageSize,
+      actionFilter,
+      entityIdFilter,
+    )
+
+    const complete_notifs = []
+    for (const notif of notifs) {
+      const notif_object = await this.getNotificationObject({
+        notification_object_id: notif.notification_object_id,
+      })
+      const notif_action = await this.getNotificationAction({
+        action_type_id: notif_object[0].action_type_id,
+      })
+      const notif_change = await this.getNotificationChange({
+        notification_object_id: notif.notification_object_id,
+      })
+      const actors = await Promise.all(
+        notif_change.map((c) => this.getMinimalUser({ user_id: c.actor_id })),
+      )
+
+      let entity
+      try {
+        entity = await this.getEntityByType(
+          notif_action[0].entity,
+          notif_object[0].entity_id,
+        )
+      } catch (e) {
+        // console.error(e)
+        continue
+      }
+      complete_notifs.push({
+        read: notif.read,
+        notification_id: notif.notification_id,
+        action: notif_action[0].action,
+        actors: actors,
+        entity_type: notif_action[0].entity,
+        entity: entity,
+        timestamp: notif_object[0].timestamp,
+      })
+    }
+
+    // Sort by timestamp (newest first)
+    complete_notifs.sort(
+      (a, b) => b.timestamp.getTime() - a.timestamp.getTime(),
+    )
+
+    const total = totalCount ? parseInt((totalCount as any).count) : 0
+    const totalPages = Math.ceil(total / pageSize)
+
+    return {
+      notifications: complete_notifs,
+      pagination: {
+        currentPage: page,
+        pageSize,
+        total,
+        totalPages,
+        hasNextPage: page < totalPages - 1,
+        hasPreviousPage: page > 0,
+      },
+    }
+  }
+
+  async getUnreadNotificationCount(
+    user_id: string,
+    actionFilter?: string,
+    entityIdFilter?: string,
+  ): Promise<number> {
+    // Build base query for filtering unread notifications
+    let baseQuery = this.knex<DBNotification>("notification").where({
+      notifier_id: user_id,
+      read: false,
+    })
+
+    // Apply filters if provided
+    if (actionFilter || entityIdFilter) {
+      baseQuery = baseQuery.join(
+        "notification_object",
+        "notification.notification_object_id",
+        "=",
+        "notification_object.notification_object_id",
+      )
+
+      if (actionFilter) {
+        baseQuery = baseQuery
+          .join(
+            "notification_actions",
+            "notification_object.action_type_id",
+            "=",
+            "notification_actions.action_type_id",
+          )
+          .where("notification_actions.action", actionFilter)
+      }
+
+      if (entityIdFilter) {
+        baseQuery = baseQuery.where(
+          "notification_object.entity_id",
+          entityIdFilter,
+        )
+      }
+    }
+
+    // Get count of unread notifications
+    const result = await baseQuery
+      .count("notification.notification_id as count")
+      .first()
+
+    return result ? parseInt((result as any).count) : 0
   }
 
   async getNotificationActionByName(
