@@ -2102,15 +2102,6 @@ ALTER TABLE ONLY public.market_auction_details
 
 
 --
--- TOC entry 4376 (class 2606 OID 492411)
--- Name: chats chats_pk; Type: CONSTRAINT; Schema: public; Owner: scmarket
---
-
-ALTER TABLE ONLY public.chats
-    ADD CONSTRAINT chats_pk UNIQUE (order_id);
-
-
---
 -- TOC entry 4378 (class 2606 OID 245173)
 -- Name: chats chats_pkey; Type: CONSTRAINT; Schema: public; Owner: scmarket
 --
@@ -4395,3 +4386,22 @@ CREATE INDEX CONCURRENTLY idx_content_reports_handled_by
 CREATE UNIQUE INDEX CONCURRENTLY idx_content_reports_unique_pending
     ON content_reports (reporter_id, reported_url)
     WHERE status = 'pending';
+
+
+-- Add a new constraint that ensures both order_id and session_id are unique when not null
+-- This allows a chat to be linked to either an order OR a session, but not both
+ALTER TABLE public.chats ADD CONSTRAINT chats_order_id_unique UNIQUE (order_id);
+ALTER TABLE public.chats ADD CONSTRAINT chats_session_id_unique UNIQUE (session_id);
+
+-- Add an index to improve query performance for order_id lookups
+CREATE INDEX IF NOT EXISTS chats_order_id_idx ON public.chats(order_id) WHERE order_id IS NOT NULL;
+
+-- Add an index to improve query performance for session_id lookups
+CREATE INDEX IF NOT EXISTS chats_session_id_idx ON public.chats(session_id) WHERE session_id IS NOT NULL;
+
+CREATE INDEX IF NOT EXISTS notification_unread_user_object_idx
+    ON public.notification (notifier_id, notification_object_id)
+    WHERE read = false;
+
+CREATE INDEX IF NOT EXISTS notification_object_entity_action_idx
+    ON public.notification_object (entity_id, action_type_id);

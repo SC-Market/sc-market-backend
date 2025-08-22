@@ -53,17 +53,6 @@ async function fetchCommodities(): Promise<CommodityResponse> {
   let response: Response
   try {
     response = await fetch(UEX_COMMODITIES_ENDPOINT)
-    logger.debug("Fetch request completed", {
-      status: response.status,
-      statusText: response.statusText,
-      ok: response.ok,
-      headers: {
-        contentType: response.headers.get("content-type"),
-        contentLength: response.headers.get("content-length"),
-        server: response.headers.get("server"),
-        date: response.headers.get("date"),
-      },
-    })
   } catch (error) {
     logger.error("Network error during commodity fetch", {
       endpoint: UEX_COMMODITIES_ENDPOINT,
@@ -92,11 +81,14 @@ async function fetchCommodities(): Promise<CommodityResponse> {
     } catch (bodyError) {
       logger.error("Failed to read error response body", {
         ...errorDetails,
-        bodyError: bodyError instanceof Error ? bodyError.message : "Unknown error",
+        bodyError:
+          bodyError instanceof Error ? bodyError.message : "Unknown error",
       })
     }
 
-    throw new Error(`HTTP error! status: ${response.status} - ${response.statusText}`)
+    throw new Error(
+      `HTTP error! status: ${response.status} - ${response.statusText}`,
+    )
   }
 
   let data: CommodityResponse
@@ -112,7 +104,11 @@ async function fetchCommodities(): Promise<CommodityResponse> {
       status: data.status,
       httpCode: data.http_code,
       dataLength: data.data?.length || 0,
-      hasValidStructure: !!(data.status && data.http_code && Array.isArray(data.data)),
+      hasValidStructure: !!(
+        data.status &&
+        data.http_code &&
+        Array.isArray(data.data)
+      ),
     })
   } catch (error) {
     logger.error("Failed to parse JSON response", {
@@ -208,7 +204,7 @@ export async function insertNewCommodity(
           commodityCode: commodityData.code,
           gameItemId: gameItemId.id,
           detailsId: detailsId.details_id,
-        }
+        },
       )
       return gameItemId.id
     } catch (error) {
@@ -238,7 +234,7 @@ export async function insertNewCommodity(
  */
 export async function fetchAndInsertCommodities(): Promise<void> {
   logger.debug("Starting fetchAndInsertCommodities process")
-  
+
   let commodities: CommodityResponse | undefined
   try {
     commodities = await fetchCommodities()
@@ -258,11 +254,14 @@ export async function fetchAndInsertCommodities(): Promise<void> {
     return
   }
 
-  logger.debug(`Fetched ${commodities.data.length} commodities. Processing...`, {
-    totalCommodities: commodities.data.length,
-    responseStatus: commodities.status,
-    httpCode: commodities.http_code,
-  })
+  logger.debug(
+    `Fetched ${commodities.data.length} commodities. Processing...`,
+    {
+      totalCommodities: commodities.data.length,
+      responseStatus: commodities.status,
+      httpCode: commodities.http_code,
+    },
+  )
 
   // Track success and failure counts
   let successCount = 0
@@ -271,13 +270,6 @@ export async function fetchAndInsertCommodities(): Promise<void> {
 
   // Process each commodity
   for (const commodity of commodities.data) {
-    logger.debug("Processing commodity", {
-      name: commodity.name,
-      code: commodity.code,
-      kind: commodity.kind,
-      id: commodity.id,
-    })
-
     // Insert the new commodity (checking for existence is handled inside insertNewCommodity)
     const id = await insertNewCommodity(commodity)
 
@@ -289,10 +281,6 @@ export async function fetchAndInsertCommodities(): Promise<void> {
       })
     } else if (id === null) {
       skipCount++
-      logger.debug("Skipped existing commodity", {
-        name: commodity.name,
-        reason: "Already exists in database",
-      })
     } else {
       failureCount++
       logger.error("Failed to insert commodity", {
@@ -311,6 +299,6 @@ export async function fetchAndInsertCommodities(): Promise<void> {
       failureCount,
       totalProcessed: successCount + skipCount + failureCount,
       totalFetched: commodities.data.length,
-    }
+    },
   )
 }

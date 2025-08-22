@@ -2790,12 +2790,12 @@ export class KnexDatabase implements Database {
     actionFilter?: string,
     entityIdFilter?: string,
   ) {
-    let query = this.knex<DBNotification>("notification")
-      .select("*")
-      .where(where)
+    try {
+      let query = this.knex<DBNotification>("notification")
+        .select("*")
+        .where(where)
 
-    // Apply filters if provided
-    if (actionFilter || entityIdFilter) {
+      // Always join notification_object for timestamp ordering
       query = query.join(
         "notification_object",
         "notification.notification_object_id",
@@ -2803,6 +2803,7 @@ export class KnexDatabase implements Database {
         "notification_object.notification_object_id",
       )
 
+      // Apply filters if provided
       if (actionFilter) {
         query = query
           .join(
@@ -2817,19 +2818,18 @@ export class KnexDatabase implements Database {
       if (entityIdFilter) {
         query = query.where("notification_object.entity_id", entityIdFilter)
       }
-    }
 
-    // Apply pagination AFTER filtering
-    return query
-      .join(
-        "notification_object",
-        "notification.notification_object_id",
-        "=",
-        "notification_object.notification_object_id",
-      )
-      .orderBy("notification_object.timestamp", "desc") // Sort by timestamp, newest first
-      .offset(page * pageSize)
-      .limit(pageSize)
+      // Apply pagination AFTER filtering
+      const result = query
+        .orderBy("notification_object.timestamp", "desc") // Sort by timestamp, newest first
+        .offset(page * pageSize)
+        .limit(pageSize)
+
+      return result
+    } catch (error) {
+      console.error("Error in getNotificationsPaginated:", error)
+      throw error
+    }
   }
 
   async updateNotifications(where: any, values: any) {
@@ -2951,37 +2951,36 @@ export class KnexDatabase implements Database {
     actionFilter?: string,
     entityIdFilter?: string,
   ) {
-    // Build base query for filtering
+    // Build base query for filtering - use the same logic as getNotificationsPaginated
     let baseQuery = this.knex<DBNotification>("notification").where({
       notifier_id: user_id,
     })
 
+    // Always join notification_object for consistent filtering
+    baseQuery = baseQuery.join(
+      "notification_object",
+      "notification.notification_object_id",
+      "=",
+      "notification_object.notification_object_id",
+    )
+
     // Apply filters if provided
-    if (actionFilter || entityIdFilter) {
-      baseQuery = baseQuery.join(
-        "notification_object",
-        "notification.notification_object_id",
-        "=",
-        "notification_object.notification_object_id",
-      )
-
-      if (actionFilter) {
-        baseQuery = baseQuery
-          .join(
-            "notification_actions",
-            "notification_object.action_type_id",
-            "=",
-            "notification_actions.action_type_id",
-          )
-          .where("notification_actions.action", actionFilter)
-      }
-
-      if (entityIdFilter) {
-        baseQuery = baseQuery.where(
-          "notification_object.entity_id",
-          entityIdFilter,
+    if (actionFilter) {
+      baseQuery = baseQuery
+        .join(
+          "notification_actions",
+          "notification_object.action_type_id",
+          "=",
+          "notification_actions.action_type_id",
         )
-      }
+        .where("notification_actions.action", actionFilter)
+    }
+
+    if (entityIdFilter) {
+      baseQuery = baseQuery.where(
+        "notification_object.entity_id",
+        entityIdFilter,
+      )
     }
 
     // Get total count for pagination metadata
@@ -3866,6 +3865,43 @@ export class KnexDatabase implements Database {
       .where(where)
       .delete()
       .returning("*")
+  }
+
+  // Notification deduplication functions
+  async getNotificationObjectByEntityAndAction(
+    entity_id: string,
+    action_type_id: string,
+  ): Promise<DBNotificationObject | undefined> {
+    const result = await this.knex<DBNotificationObject>("notification_object")
+      .select("*")
+      .where("entity_id", entity_id)
+      .where("action_type_id", action_type_id)
+      .first()
+
+    return result
+  }
+
+  async updateNotificationObjectTimestamp(
+    notification_object_id: string,
+  ): Promise<DBNotificationObject[]> {
+    return this.knex<DBNotificationObject>("notification_object")
+      .where("notification_object_id", notification_object_id)
+      .update({ timestamp: this.knex.fn.now() })
+      .returning("*")
+  }
+
+  async getUnreadNotificationByUserAndObject(
+    user_id: string,
+    notification_object_id: string,
+  ): Promise<DBNotification | undefined> {
+    const result = await this.knex<DBNotification>("notification")
+      .select("*")
+      .where("notifier_id", user_id)
+      .where("notification_object_id", notification_object_id)
+      .where("read", false)
+      .first()
+
+    return result
   }
 }
 

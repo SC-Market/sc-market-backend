@@ -16,19 +16,74 @@ import {
 oapi.schema("Notification", {
   type: "object",
   title: "Notification",
+  description:
+    "A notification object containing information about a system event",
   properties: {
-    read: { type: "boolean" },
-    notification_id: { type: "string" },
-    action: { type: "string" },
+    read: {
+      type: "boolean",
+      description: "Whether the notification has been read by the user",
+    },
+    notification_id: {
+      type: "string",
+      format: "uuid",
+      description: "Unique identifier for the notification",
+    },
+    action: {
+      type: "string",
+      description: "The type of action that triggered this notification",
+      allOf: [{ $ref: "#/components/schemas/NotificationActionType" }],
+    },
     actors: {
       type: "array",
-      items: { type: "object" },
+      description:
+        "List of users who performed the action that triggered this notification",
+      items: {
+        type: "object",
+        properties: {
+          username: { type: "string" },
+          avatar: { type: "string" },
+        },
+      },
     },
-    entity_type: { type: "string" },
-    entity: { type: "object" },
-    timestamp: { type: "string", format: "date-time" },
+    entity_type: {
+      type: "string",
+      description: "The type of entity this notification relates to",
+      allOf: [{ $ref: "#/components/schemas/NotificationEntityType" }],
+    },
+    entity: {
+      type: "object",
+      description:
+        "The actual entity object this notification relates to (order, offer, etc.)",
+    },
+    timestamp: {
+      type: "string",
+      format: "date-time",
+      description: "When the notification was created",
+    },
   },
-  required: ["read", "notification_id", "action", "actors", "entity_type", "entity", "timestamp"],
+  required: [
+    "read",
+    "notification_id",
+    "action",
+    "actors",
+    "entity_type",
+    "entity",
+    "timestamp",
+  ],
+  example: {
+    read: false,
+    notification_id: "123e4567-e89b-12d3-a456-426614174000",
+    action: "order_message",
+    actors: [
+      { username: "john_doe", avatar: "https://example.com/avatar.jpg" },
+    ],
+    entity_type: "orders",
+    entity: {
+      order_id: "456e7890-e89b-12d3-a456-426614174000",
+      title: "Sample Order",
+    },
+    timestamp: "2025-01-22T06:14:41.058Z",
+  },
 })
 
 oapi.schema("NotificationUpdateBody", {
@@ -74,11 +129,19 @@ oapi.schema("PaginatedNotificationsResponse", {
         hasNextPage: { type: "boolean" },
         hasPreviousPage: { type: "boolean" },
       },
-      required: ["currentPage", "pageSize", "total", "totalPages", "hasNextPage", "hasPreviousPage"],
+      required: [
+        "currentPage",
+        "pageSize",
+        "total",
+        "totalPages",
+        "hasNextPage",
+        "hasPreviousPage",
+      ],
     },
     unread_count: {
       type: "integer",
-      description: "Total number of unread notifications matching the current search criteria",
+      description:
+        "Total number of unread notifications matching the current search criteria",
     },
   },
   required: ["notifications", "pagination", "unread_count"],
@@ -128,6 +191,61 @@ oapi.schema("NotificationBulkUpdateBody", {
   required: ["read"],
 })
 
+// Notification action types enum for OpenAPI specification
+oapi.schema("NotificationActionType", {
+  type: "string",
+  title: "NotificationActionType",
+  description:
+    "Available notification action types for filtering and identification",
+  enum: [
+    // Order notifications
+    "order_create",
+    "order_assigned",
+    "order_status_fulfilled",
+    "order_status_in_progress",
+    "order_status_not_started",
+    "order_status_cancelled",
+    "order_comment",
+    "order_review",
+    "order_contractor_applied",
+    "public_order_create",
+    "order_message",
+    // Offer notifications
+    "offer_create",
+    "counter_offer_create",
+    "offer_message",
+    // Market notifications
+    "market_item_bid",
+    "market_item_offer",
+    "market_bid_accepted",
+    "market_bid_declined",
+    "market_offer_accepted",
+    "market_offer_declined",
+    // Contractor notifications
+    "contractor_invite",
+  ],
+  example: "order_message",
+})
+
+// Notification entity types enum
+oapi.schema("NotificationEntityType", {
+  type: "string",
+  title: "NotificationEntityType",
+  description: "Available notification entity types",
+  enum: [
+    "orders",
+    "order_reviews",
+    "order_comments",
+    "order_applicants",
+    "offer_sessions",
+    "market_listing",
+    "market_bids",
+    "market_offers",
+    "contractor_invites",
+  ],
+  example: "orders",
+})
+
 export const notificationRouter = express.Router()
 
 /*
@@ -162,23 +280,23 @@ notificationRouter.patch(
         },
       },
     ],
-         requestBody: {
-       required: true,
-       content: {
-         "application/json": {
-           schema: oapi.schema("NotificationUpdateBody"),
-         },
-       },
-     },
+    requestBody: {
+      required: true,
+      content: {
+        "application/json": {
+          schema: oapi.schema("NotificationUpdateBody"),
+        },
+      },
+    },
     responses: {
-             "200": {
-         description: "Notification updated successfully",
-         content: {
-           "application/json": {
-             schema: oapi.schema("SuccessResponse"),
-           },
-         },
-       },
+      "200": {
+        description: "Notification updated successfully",
+        content: {
+          "application/json": {
+            schema: oapi.schema("SuccessResponse"),
+          },
+        },
+      },
       "400": Response400,
       "401": Response401,
       "404": Response404,
@@ -229,7 +347,8 @@ notificationRouter.patch(
   userAuthorized,
   oapi.validPath({
     summary: "Bulk update notifications",
-    description: "Update all notifications for the authenticated user (e.g., mark all as read)",
+    description:
+      "Update all notifications for the authenticated user (e.g., mark all as read)",
     operationId: "bulkUpdateNotifications",
     tags: ["Notifications"],
     requestBody: {
@@ -259,8 +378,8 @@ notificationRouter.patch(
     const { read } = req.body as { read: boolean }
 
     if (typeof read !== "boolean") {
-      res.status(400).json({ 
-        error: "Invalid request body. 'read' field must be a boolean" 
+      res.status(400).json({
+        error: "Invalid request body. 'read' field must be a boolean",
       })
       return
     }
@@ -321,14 +440,14 @@ notificationRouter.delete(
       },
     ],
     responses: {
-             "200": {
-         description: "Notification deleted successfully",
-         content: {
-           "application/json": {
-             schema: oapi.schema("SuccessResponse"),
-           },
-         },
-       },
+      "200": {
+        description: "Notification deleted successfully",
+        content: {
+          "application/json": {
+            schema: oapi.schema("SuccessResponse"),
+          },
+        },
+      },
       "401": Response401,
       "404": Response404,
       "500": Response500,
@@ -370,7 +489,8 @@ notificationRouter.delete(
   userAuthorized,
   oapi.validPath({
     summary: "Bulk delete notifications",
-    description: "Delete multiple notifications by their IDs, or delete all notifications if no IDs provided",
+    description:
+      "Delete multiple notifications by their IDs, or delete all notifications if no IDs provided",
     operationId: "bulkDeleteNotifications",
     tags: ["Notifications"],
     requestBody: {
@@ -383,7 +503,8 @@ notificationRouter.delete(
               notification_ids: {
                 type: "array",
                 items: { type: "string" },
-                description: "Array of notification IDs to delete. If omitted or empty, all notifications will be deleted.",
+                description:
+                  "Array of notification IDs to delete. If omitted or empty, all notifications will be deleted.",
               },
             },
           },
@@ -441,7 +562,8 @@ notificationRouter.delete(
       // Validate notification_ids array
       if (!Array.isArray(notification_ids)) {
         res.status(400).json({
-          error: "Invalid request body. 'notification_ids' must be an array or omitted for delete all",
+          error:
+            "Invalid request body. 'notification_ids' must be an array or omitted for delete all",
         })
         return
       }
@@ -521,9 +643,9 @@ notificationRouter.get(
         in: "query",
         required: false,
         description:
-          "Filter notifications by action type (e.g., 'order_created', 'offer_received')",
+          "Filter notifications by action type. See NotificationActionType schema for available values. Examples: 'order_message', 'offer_message', 'order_create', 'market_item_bid'",
         schema: {
-          type: "string",
+          allOf: [{ $ref: "#/components/schemas/NotificationActionType" }],
         },
       },
       {
@@ -531,21 +653,22 @@ notificationRouter.get(
         in: "query",
         required: false,
         description:
-          "Filter notifications by entity ID (e.g., order ID, market listing ID)",
+          "Filter notifications by entity ID (e.g., order ID, market listing ID). The entity type is determined by the action filter.",
         schema: {
           type: "string",
+          format: "uuid",
         },
       },
     ],
     responses: {
-             "200": {
-         description: "Paginated notifications retrieved successfully",
-         content: {
-           "application/json": {
-             schema: oapi.schema("PaginatedNotificationsResponse"),
-           },
-         },
-       },
+      "200": {
+        description: "Paginated notifications retrieved successfully",
+        content: {
+          "application/json": {
+            schema: oapi.schema("PaginatedNotificationsResponse"),
+          },
+        },
+      },
       "400": Response400,
       "401": Response401,
       "500": Response500,
@@ -580,20 +703,20 @@ notificationRouter.get(
         actionFilter,
         entityIdFilter,
       )
-      
+
       // Get unread count with the same filters
       const unreadCount = await database.getUnreadNotificationCount(
         user.user_id,
         actionFilter,
         entityIdFilter,
       )
-      
+
       // Add unread count to the response
       const responseWithUnreadCount = {
         ...result,
         unread_count: unreadCount,
       }
-      
+
       // Log pagination details for debugging
       logger.debug("Notification pagination result", {
         userId: user.user_id,
@@ -605,7 +728,7 @@ notificationRouter.get(
         currentPageCount: result.notifications.length,
         unreadCount,
       })
-      
+
       res.json(responseWithUnreadCount)
     } catch (error) {
       logger.error("Failed to fetch paginated notifications:", error)

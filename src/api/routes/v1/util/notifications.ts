@@ -11,6 +11,7 @@ import {
   DBReview,
 } from "../../../../clients/database/db-models.js"
 import { database } from "../../../../clients/database/knex-db.js"
+import logger from "../../../../logger/logger.js"
 import {
   sendAssignedWebhook,
   sendBidWebhooks,
@@ -243,33 +244,88 @@ export async function createOrderMessageNotification(
   order: DBOrder,
   message: DBMessage,
 ) {
-  const action = await database.getNotificationActionByName("order_message")
+  logger.debug(
+    `Creating order message notification for order ${order.order_id}, message ${message.message_id}`,
+  )
 
-  const notif_objects = await database.insertNotificationObjects([
-    {
-      action_type_id: action.action_type_id,
-      entity_id: order.order_id,
-    },
-  ])
+  try {
+    const action = await database.getNotificationActionByName("order_message")
+    logger.debug(`Found notification action: ${action.action_type_id}`)
 
-  await database.insertNotificationChange([
-    {
-      notification_object_id: notif_objects[0].notification_object_id,
-      actor_id: message.author,
-    },
-  ])
+    // Check if there's already a notification object for this order and action type
+    let existingNotificationObject =
+      await database.getNotificationObjectByEntityAndAction(
+        order.order_id,
+        action.action_type_id,
+      )
 
-  for (const notified of [order.assigned_id, order.customer_id]) {
-    if (!notified || notified === message.author) {
-      continue
+    let notificationObjectId: string
+
+    if (existingNotificationObject) {
+      // Reuse existing notification object and update timestamp
+      notificationObjectId = existingNotificationObject.notification_object_id
+      await database.updateNotificationObjectTimestamp(notificationObjectId)
+      logger.debug(
+        `Reusing existing notification object: ${notificationObjectId}`,
+      )
+    } else {
+      // Create new notification object
+      const notif_objects = await database.insertNotificationObjects([
+        {
+          action_type_id: action.action_type_id,
+          entity_id: order.order_id,
+        },
+      ])
+      notificationObjectId = notif_objects[0].notification_object_id
+      logger.debug(`Created new notification object: ${notificationObjectId}`)
     }
 
-    await database.insertNotifications([
+    // Add notification change for this message
+    await database.insertNotificationChange([
       {
-        notification_object_id: notif_objects[0].notification_object_id,
-        notifier_id: notified!,
+        notification_object_id: notificationObjectId,
+        actor_id: message.author,
       },
     ])
+    logger.debug(`Created notification change for actor: ${message.author}`)
+
+    let notificationCount = 0
+    for (const notified of [order.assigned_id, order.customer_id]) {
+      if (!notified || notified === message.author) {
+        logger.debug(`Skipping notification for ${notified} (author or null)`)
+        continue
+      }
+
+      // Check if user already has an unread notification for this order
+      const existingNotification =
+        await database.getUnreadNotificationByUserAndObject(
+          notified,
+          notificationObjectId,
+        )
+
+      if (existingNotification) {
+        logger.debug(
+          `User ${notified} already has unread notification, skipping`,
+        )
+        continue
+      }
+
+      await database.insertNotifications([
+        {
+          notification_object_id: notificationObjectId,
+          notifier_id: notified!,
+        },
+      ])
+      notificationCount++
+      logger.debug(`Created notification for user: ${notified}`)
+    }
+
+    logger.debug(
+      `Successfully created ${notificationCount} order message notifications`,
+    )
+  } catch (error) {
+    logger.error(`Error creating order message notification:`, error)
+    throw error
   }
 }
 
@@ -277,33 +333,88 @@ export async function createOfferMessageNotification(
   session: DBOfferSession,
   message: DBMessage,
 ) {
-  const action = await database.getNotificationActionByName("offer_message")
+  logger.debug(
+    `Creating offer message notification for session ${session.id}, message ${message.message_id}`,
+  )
 
-  const notif_objects = await database.insertNotificationObjects([
-    {
-      action_type_id: action.action_type_id,
-      entity_id: session.id,
-    },
-  ])
+  try {
+    const action = await database.getNotificationActionByName("offer_message")
+    logger.debug(`Found notification action: ${action.action_type_id}`)
 
-  await database.insertNotificationChange([
-    {
-      notification_object_id: notif_objects[0].notification_object_id,
-      actor_id: message.author,
-    },
-  ])
+    // Check if there's already a notification object for this session and action type
+    let existingNotificationObject =
+      await database.getNotificationObjectByEntityAndAction(
+        session.id,
+        action.action_type_id,
+      )
 
-  for (const notified of [session.assigned_id, session.customer_id]) {
-    if (!notified || notified === message.author) {
-      continue
+    let notificationObjectId: string
+
+    if (existingNotificationObject) {
+      // Reuse existing notification object and update timestamp
+      notificationObjectId = existingNotificationObject.notification_object_id
+      await database.updateNotificationObjectTimestamp(notificationObjectId)
+      logger.debug(
+        `Reusing existing notification object: ${notificationObjectId}`,
+      )
+    } else {
+      // Create new notification object
+      const notif_objects = await database.insertNotificationObjects([
+        {
+          action_type_id: action.action_type_id,
+          entity_id: session.id,
+        },
+      ])
+      notificationObjectId = notif_objects[0].notification_object_id
+      logger.debug(`Created new notification object: ${notificationObjectId}`)
     }
 
-    await database.insertNotifications([
+    // Add notification change for this message
+    await database.insertNotificationChange([
       {
-        notification_object_id: notif_objects[0].notification_object_id,
-        notifier_id: notified!,
+        notification_object_id: notificationObjectId,
+        actor_id: message.author,
       },
     ])
+    logger.debug(`Created notification change for actor: ${message.author}`)
+
+    let notificationCount = 0
+    for (const notified of [session.assigned_id, session.customer_id]) {
+      if (!notified || notified === message.author) {
+        logger.debug(`Skipping notification for ${notified} (author or null)`)
+        continue
+      }
+
+      // Check if user already has an unread notification for this session
+      const existingNotification =
+        await database.getUnreadNotificationByUserAndObject(
+          notified,
+          notificationObjectId,
+        )
+
+      if (existingNotification) {
+        logger.debug(
+          `User ${notified} already has unread notification, skipping`,
+        )
+        continue
+      }
+
+      await database.insertNotifications([
+        {
+          notification_object_id: notificationObjectId,
+          notifier_id: notified!,
+        },
+      ])
+      notificationCount++
+      logger.debug(`Created notification for user: ${notified}`)
+    }
+
+    logger.debug(
+      `Successfully created ${notificationCount} offer message notifications`,
+    )
+  } catch (error) {
+    logger.error(`Error creating offer message notification:`, error)
+    throw error
   }
 }
 

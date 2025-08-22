@@ -22,6 +22,7 @@ import {
   Response404,
 } from "../openapi.js"
 import { chatServer } from "../../../../clients/messaging/websocket.js"
+import logger from "../../../../logger/logger.js"
 
 export const chatsRouter = express.Router()
 
@@ -313,18 +314,34 @@ chatsRouter.post(
 
     const order = req.order
     const session = req.offer_session
+
+    logger.debug(
+      `Chat message sent - Order: ${order?.order_id || "null"}, Session: ${session?.id || "null"}`,
+    )
+
     if (order || session) {
       if ((order || session)!.thread_id) {
+        logger.debug(
+          `Sending user chat message for ${order ? "order" : "session"}: ${(order || session)!.thread_id}`,
+        )
         await sendUserChatMessage(order || session!, user, content)
       }
 
       if (order) {
+        logger.debug(
+          `Creating order message notification for order: ${order.order_id}`,
+        )
         await createOrderMessageNotification(order, message)
       }
 
       if (session) {
+        logger.debug(
+          `Creating offer message notification for session: ${session.id}`,
+        )
         await createOfferMessageNotification(session, message)
       }
+    } else {
+      logger.debug("No order or session found for this chat message")
     }
 
     res.json(createResponse({ result: "Success" }))
