@@ -2791,8 +2791,6 @@ export class KnexDatabase implements Database {
     entityIdFilter?: string,
   ) {
     let query = this.knex<DBNotification>("notification")
-      .offset(page * pageSize)
-      .limit(pageSize)
       .select("*")
       .where(where)
 
@@ -2821,7 +2819,17 @@ export class KnexDatabase implements Database {
       }
     }
 
+    // Apply pagination AFTER filtering
     return query
+      .join(
+        "notification_object",
+        "notification.notification_object_id",
+        "=",
+        "notification_object.notification_object_id",
+      )
+      .orderBy("notification_object.timestamp", "desc") // Sort by timestamp, newest first
+      .offset(page * pageSize)
+      .limit(pageSize)
   }
 
   async updateNotifications(where: any, values: any) {
@@ -2993,6 +3001,8 @@ export class KnexDatabase implements Database {
 
     const complete_notifs = []
     for (const notif of notifs) {
+      // Since we already joined notification_object in getNotificationsPaginated,
+      // we can access the timestamp directly from the joined result
       const notif_object = await this.getNotificationObject({
         notification_object_id: notif.notification_object_id,
       })
@@ -3027,10 +3037,7 @@ export class KnexDatabase implements Database {
       })
     }
 
-    // Sort by timestamp (newest first)
-    complete_notifs.sort(
-      (a, b) => b.timestamp.getTime() - a.timestamp.getTime(),
-    )
+    // Note: Sorting is now handled in the database query for consistency
 
     const total = totalCount ? parseInt((totalCount as any).count) : 0
     const totalPages = Math.ceil(total / pageSize)

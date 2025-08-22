@@ -105,6 +105,29 @@ oapi.schema("DeleteMultipleResponse", {
   required: ["success", "message", "deleted_count"],
 })
 
+oapi.schema("BulkActionResponse", {
+  type: "object",
+  title: "BulkActionResponse",
+  properties: {
+    success: { type: "boolean" },
+    message: { type: "string" },
+    affected_count: { type: "integer" },
+  },
+  required: ["success", "message", "affected_count"],
+})
+
+oapi.schema("NotificationBulkUpdateBody", {
+  type: "object",
+  title: "NotificationBulkUpdateBody",
+  properties: {
+    read: {
+      type: "boolean",
+      description: "Whether all notifications should be marked as read",
+    },
+  },
+  required: ["read"],
+})
+
 export const notificationRouter = express.Router()
 
 /*
@@ -112,8 +135,9 @@ export const notificationRouter = express.Router()
  *
  * GET    /:page                    - Get paginated notifications (with optional filters)
  * PATCH  /:notification_id         - Update notification read status
+ * PATCH  /                         - Mark all notifications as read for the user (bulk update)
  * DELETE /:notification_id         - Delete a specific notification
- * DELETE /                         - Delete multiple notifications
+ * DELETE /                         - Delete multiple notifications or all notifications (bulk delete)
  */
 
 // Update notification read status
@@ -197,6 +221,84 @@ notificationRouter.patch(
   },
 )
 
+// Bulk update notifications (mark all as read)
+// PATCH /notifications
+// Body: { "read": true }
+notificationRouter.patch(
+  "/",
+  userAuthorized,
+  oapi.validPath({
+    summary: "Bulk update notifications",
+    description: "Update all notifications for the authenticated user (e.g., mark all as read)",
+    operationId: "bulkUpdateNotifications",
+    tags: ["Notifications"],
+    requestBody: {
+      required: true,
+      content: {
+        "application/json": {
+          schema: oapi.schema("NotificationBulkUpdateBody"),
+        },
+      },
+    },
+    responses: {
+      "200": {
+        description: "Notifications updated successfully",
+        content: {
+          "application/json": {
+            schema: oapi.schema("BulkActionResponse"),
+          },
+        },
+      },
+      "400": Response400,
+      "401": Response401,
+      "500": Response500,
+    },
+  }),
+  async (req, res, next) => {
+    const user = req.user as User
+    const { read } = req.body as { read: boolean }
+
+    if (typeof read !== "boolean") {
+      res.status(400).json({ 
+        error: "Invalid request body. 'read' field must be a boolean" 
+      })
+      return
+    }
+
+    try {
+      // Get all notifications that would be affected by this update
+      const targetNotifications = await database.getNotifications({
+        notifier_id: user.user_id,
+        read: !read, // If marking as read, get unread ones; if marking as unread, get read ones
+      })
+
+      // Update all notifications with the opposite read status
+      await database.updateNotifications(
+        { notifier_id: user.user_id, read: !read },
+        { read },
+      )
+
+      const affectedCount = targetNotifications.length
+      const action = read ? "marked as read" : "marked as unread"
+
+      logger.debug(`Bulk updated notifications: ${action}`, {
+        userId: user.user_id,
+        affectedCount,
+        read,
+      })
+
+      res.json({
+        success: true,
+        message: `Successfully ${action} ${affectedCount} notification(s)`,
+        affected_count: affectedCount,
+      })
+    } catch (error) {
+      logger.error("Failed to bulk update notifications:", error)
+      res.status(500).json({ error: "Failed to update notifications" })
+    }
+  },
+)
+
 // Delete a specific notification
 // DELETE /notifications/:notification_id
 notificationRouter.delete(
@@ -260,34 +362,43 @@ notificationRouter.delete(
   },
 )
 
-// Delete multiple notifications
+// Delete multiple notifications or all notifications
 // DELETE /notifications
-// Body: { "notification_ids": string[] }
+// Body: { "notification_ids": string[] } for specific deletions, or empty body {} for delete all
 notificationRouter.delete(
-  "",
+  "/",
   userAuthorized,
   oapi.validPath({
-    summary: "Delete multiple notifications",
-    description: "Remove multiple notifications by their IDs",
-    operationId: "deleteMultipleNotifications",
+    summary: "Bulk delete notifications",
+    description: "Delete multiple notifications by their IDs, or delete all notifications if no IDs provided",
+    operationId: "bulkDeleteNotifications",
     tags: ["Notifications"],
-         requestBody: {
-       required: true,
-       content: {
-         "application/json": {
-           schema: oapi.schema("NotificationDeleteBody"),
-         },
-       },
-     },
+    requestBody: {
+      required: false,
+      content: {
+        "application/json": {
+          schema: {
+            type: "object",
+            properties: {
+              notification_ids: {
+                type: "array",
+                items: { type: "string" },
+                description: "Array of notification IDs to delete. If omitted or empty, all notifications will be deleted.",
+              },
+            },
+          },
+        },
+      },
+    },
     responses: {
-             "200": {
-         description: "Notifications deleted successfully",
-         content: {
-           "application/json": {
-             schema: oapi.schema("DeleteMultipleResponse"),
-           },
-         },
-       },
+      "200": {
+        description: "Notifications deleted successfully",
+        content: {
+          "application/json": {
+            schema: oapi.schema("BulkActionResponse"),
+          },
+        },
+      },
       "400": Response400,
       "401": Response401,
       "500": Response500,
@@ -295,20 +406,47 @@ notificationRouter.delete(
   }),
   async (req, res, next) => {
     const user = req.user as User
-    const { notification_ids } = req.body as { notification_ids: string[] }
-
-    if (!Array.isArray(notification_ids) || notification_ids.length === 0) {
-      res
-        .status(400)
-        .json({
-          error:
-            "Invalid request body. 'notification_ids' must be a non-empty array",
-        })
-      return
-    }
+    const { notification_ids } = req.body as { notification_ids?: string[] }
 
     try {
       let deletedCount = 0
+
+      // If no notification_ids provided or empty array, delete all notifications
+      if (!notification_ids || notification_ids.length === 0) {
+        // Get all notifications for the user to count them
+        const allNotifications = await database.getNotifications({
+          notifier_id: user.user_id,
+        })
+
+        // Delete all notifications for the user
+        await database.deleteNotifications({
+          notifier_id: user.user_id,
+        })
+
+        deletedCount = allNotifications.length
+
+        logger.debug("Bulk deleted all notifications", {
+          userId: user.user_id,
+          deletedCount,
+        })
+
+        res.json({
+          success: true,
+          message: `Successfully deleted all ${deletedCount} notification(s)`,
+          affected_count: deletedCount,
+        })
+        return
+      }
+
+      // Validate notification_ids array
+      if (!Array.isArray(notification_ids)) {
+        res.status(400).json({
+          error: "Invalid request body. 'notification_ids' must be an array or omitted for delete all",
+        })
+        return
+      }
+
+      // Delete specific notifications
       for (const notification_id of notification_ids) {
         const notifications = await database.getNotifications({
           notifier_id: user.user_id,
@@ -324,13 +462,19 @@ notificationRouter.delete(
         }
       }
 
+      logger.debug("Bulk deleted specific notifications", {
+        userId: user.user_id,
+        requestedIds: notification_ids.length,
+        deletedCount,
+      })
+
       res.json({
         success: true,
-        message: `Successfully deleted ${deletedCount} notification(s)`,
-        deleted_count: deletedCount,
+        message: `Successfully deleted ${deletedCount} of ${notification_ids.length} requested notification(s)`,
+        affected_count: deletedCount,
       })
     } catch (error) {
-      logger.error("Failed to delete notifications:", error)
+      logger.error("Failed to bulk delete notifications:", error)
       res.status(500).json({ error: "Failed to delete notifications" })
     }
   },
@@ -449,6 +593,18 @@ notificationRouter.get(
         ...result,
         unread_count: unreadCount,
       }
+      
+      // Log pagination details for debugging
+      logger.debug("Notification pagination result", {
+        userId: user.user_id,
+        page,
+        pageSize,
+        actionFilter,
+        entityIdFilter,
+        totalNotifications: result.pagination.total,
+        currentPageCount: result.notifications.length,
+        unreadCount,
+      })
       
       res.json(responseWithUnreadCount)
     } catch (error) {
