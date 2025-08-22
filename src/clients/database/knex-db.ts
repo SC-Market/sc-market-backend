@@ -3903,6 +3903,284 @@ export class KnexDatabase implements Database {
 
     return result
   }
+
+  // Listing view tracking methods
+  async trackListingView(data: {
+    listing_type: "market" | "service"
+    listing_id: string
+    viewer_id?: string | null
+    viewer_ip?: string
+    user_agent?: string
+    referrer?: string
+    session_id?: string | null
+  }): Promise<void> {
+    // Don't track views from the seller themselves
+    if (data.viewer_id) {
+      if (data.listing_type === 'market') {
+        const listing = await this.knex("market_listings")
+          .where("listing_id", data.listing_id)
+          .first()
+        
+        if (listing && (listing.user_seller_id === data.viewer_id || listing.contractor_seller_id === data.viewer_id)) {
+          return // Don't track seller's own views
+        }
+      } else if (data.listing_type === 'service') {
+        const service = await this.knex("services")
+          .where("service_id", data.listing_id)
+          .first()
+        
+        if (service && (service.user_id === data.viewer_id || service.contractor_id === data.viewer_id)) {
+          return // Don't track seller's own views
+        }
+      }
+    }
+
+    // Check if this is a unique view (same user/session hasn't viewed in last 24 hours)
+    // Only check for existing views if we have a session_id
+    let existingView = null
+    if (data.session_id) {
+      existingView = await this.knex("listing_views")
+        .where({
+          listing_type: data.listing_type,
+          listing_id: data.listing_id,
+          session_id: data.session_id,
+        })
+        .where("timestamp", ">", new Date(Date.now() - 24 * 60 * 60 * 1000))
+        .first()
+    }
+
+    if (existingView) {
+      // Update existing view timestamp but don't count as new view
+      await this.knex("listing_views")
+        .where({ view_id: existingView.view_id })
+        .update({
+          timestamp: new Date(),
+          is_unique: false,
+        })
+    } else {
+      // Insert new view
+      await this.knex("listing_views").insert({
+        listing_type: data.listing_type,
+        listing_id: data.listing_id,
+        viewer_id: data.viewer_id,
+        viewer_ip: data.viewer_ip,
+        user_agent: data.user_agent,
+        referrer: data.referrer,
+        session_id: data.session_id || null,
+        is_unique: true,
+      })
+    }
+  }
+
+  async getListingViewStats(
+    listing_type: "market" | "service",
+    listing_id: string,
+  ) {
+    return this.knex("listing_view_stats")
+      .where({ listing_type, listing_id })
+      .first()
+  }
+
+  async getSellerListingAnalytics(data: {
+    user_id?: string
+    contractor_id?: string
+    time_period?: string
+  }) {
+    const { user_id, contractor_id, time_period = "30d" } = data
+
+    let timeFilter
+    switch (time_period) {
+      case "7d":
+        timeFilter = new Date(Date.now() - 7 * 24 * 60 * 60 * 1000)
+        break
+      case "30d":
+        timeFilter = new Date(Date.now() - 30 * 24 * 60 * 60 * 1000)
+        break
+      case "90d":
+        timeFilter = new Date(Date.now() - 90 * 24 * 60 * 60 * 1000)
+        break
+      default:
+        timeFilter = new Date(Date.now() - 30 * 24 * 60 * 60 * 1000)
+    }
+
+    // Get market listing analytics
+    const marketListings = await this.knex("market_listings")
+      .select("listing_id")
+      .where("timestamp", ">=", timeFilter)
+      .modify((queryBuilder) => {
+        if (user_id) {
+          queryBuilder.where("user_seller_id", user_id)
+        }
+        if (contractor_id) {
+          queryBuilder.where("contractor_seller_id", contractor_id)
+        }
+      })
+
+    const marketListingIds = marketListings.map((l: any) => l.listing_id)
+
+    // Get service analytics
+    const services = await this.knex("services")
+      .select("service_id")
+      .where("timestamp", ">=", timeFilter)
+      .modify((queryBuilder) => {
+        if (user_id) {
+          queryBuilder.where("user_id", user_id)
+        }
+        if (contractor_id) {
+          queryBuilder.where("contractor_id", contractor_id)
+        }
+      })
+
+    const serviceIds = services.map((s: any) => s.service_id)
+
+    // Get view statistics for all listings
+    const marketViews = await this.knex("listing_views")
+      .where("listing_type", "market")
+      .whereIn("listing_id", marketListingIds)
+      .where("timestamp", ">=", timeFilter)
+      .count("* as view_count")
+
+    const serviceViews = await this.knex("listing_views")
+      .where("listing_type", "service")
+      .whereIn("listing_id", serviceIds)
+      .where("timestamp", ">=", timeFilter)
+      .count("* as view_count")
+
+    return {
+      market_listings: marketListingIds.length,
+      services: serviceIds.length,
+      total_market_views: marketViews[0]?.view_count || 0,
+      total_service_views: serviceViews[0]?.view_count || 0,
+      time_period: time_period,
+    }
+  }
+
+  async getOrderAnalytics() {
+    // Get daily totals for the last 30 days
+    const dailyTotals = await this.knex.raw(`
+      SELECT 
+        DATE(timestamp) as date,
+        COUNT(*) as total,
+        COUNT(CASE WHEN status = 'in-progress' THEN 1 END) as in_progress,
+        COUNT(CASE WHEN status = 'fulfilled' THEN 1 END) as fulfilled,
+        COUNT(CASE WHEN status = 'cancelled' THEN 1 END) as cancelled,
+        COUNT(CASE WHEN status = 'not-started' THEN 1 END) as not_started
+      FROM orders 
+      WHERE timestamp >= NOW() - INTERVAL '30 days'
+      GROUP BY DATE(timestamp)
+      ORDER BY date ASC
+    `)
+
+    // Get weekly totals for the last 12 weeks
+    const weeklyTotals = await this.knex.raw(`
+      SELECT 
+        DATE_TRUNC('week', timestamp) as date,
+        COUNT(*) as total,
+        COUNT(CASE WHEN status = 'in-progress' THEN 1 END) as in_progress,
+        COUNT(CASE WHEN status = 'fulfilled' THEN 1 END) as fulfilled,
+        COUNT(CASE WHEN status = 'cancelled' THEN 1 END) as cancelled,
+        COUNT(CASE WHEN status = 'not-started' THEN 1 END) as not_started
+      FROM orders 
+      WHERE timestamp >= NOW() - INTERVAL '12 weeks'
+      GROUP BY DATE_TRUNC('week', timestamp)
+      ORDER BY date ASC
+    `)
+
+    // Get monthly totals for the last 12 months
+    const monthlyTotals = await this.knex.raw(`
+      SELECT 
+        DATE_TRUNC('month', timestamp) as date,
+        COUNT(*) as total,
+        COUNT(CASE WHEN status = 'in-progress' THEN 1 END) as in_progress,
+        COUNT(CASE WHEN status = 'fulfilled' THEN 1 END) as fulfilled,
+        COUNT(CASE WHEN status = 'cancelled' THEN 1 END) as cancelled,
+        COUNT(CASE WHEN status = 'not-started' THEN 1 END) as not_started
+      FROM orders 
+      WHERE timestamp >= NOW() - INTERVAL '12 months'
+      GROUP BY DATE_TRUNC('month', timestamp)
+      ORDER BY date ASC
+    `)
+
+    // Get top contractors by fulfilled orders
+    const topContractors = await this.knex.raw(`
+      SELECT 
+        c.name,
+        COUNT(CASE WHEN o.status = 'fulfilled' THEN 1 END) as fulfilled_orders,
+        COUNT(*) as total_orders
+      FROM orders o
+      JOIN contractors c ON o.contractor_id = c.contractor_id
+      WHERE o.contractor_id IS NOT NULL
+      GROUP BY c.contractor_id, c.name
+      ORDER BY fulfilled_orders DESC, total_orders DESC
+      LIMIT 10
+    `)
+
+    // Get top users by fulfilled orders
+    const topUsers = await this.knex.raw(`
+      SELECT 
+        a.username,
+        COUNT(CASE WHEN o.status = 'fulfilled' THEN 1 END) as fulfilled_orders,
+        COUNT(*) as total_orders
+      FROM orders o
+      JOIN accounts a ON o.customer_id = a.user_id
+      GROUP BY a.user_id, a.username
+      ORDER BY fulfilled_orders DESC, total_orders DESC
+      LIMIT 10
+    `)
+
+    // Get summary stats
+    const summary = await this.knex.raw(`
+      SELECT 
+        COUNT(*) as total_orders,
+        COUNT(CASE WHEN status IN ('in-progress', 'not-started') THEN 1 END) as active_orders,
+        COUNT(CASE WHEN status = 'fulfilled' THEN 1 END) as completed_orders,
+        COALESCE(SUM(CASE WHEN status = 'fulfilled' THEN cost ELSE 0 END), 0) as total_value
+      FROM orders
+    `)
+
+    return {
+      daily_totals: dailyTotals.rows.map((row: any) => ({
+        date: row.date.toISOString().split("T")[0],
+        total: parseInt(row.total),
+        in_progress: parseInt(row.in_progress),
+        fulfilled: parseInt(row.fulfilled),
+        cancelled: parseInt(row.cancelled),
+        not_started: parseInt(row.not_started),
+      })),
+      weekly_totals: weeklyTotals.rows.map((row: any) => ({
+        date: row.date.toISOString().split("T")[0],
+        total: parseInt(row.total),
+        in_progress: parseInt(row.in_progress),
+        fulfilled: parseInt(row.fulfilled),
+        cancelled: parseInt(row.cancelled),
+        not_started: parseInt(row.not_started),
+      })),
+      monthly_totals: monthlyTotals.rows.map((row: any) => ({
+        date: row.date.toISOString().split("T")[0],
+        total: parseInt(row.total),
+        in_progress: parseInt(row.in_progress),
+        fulfilled: parseInt(row.fulfilled),
+        cancelled: parseInt(row.cancelled),
+        not_started: parseInt(row.not_started),
+      })),
+      top_contractors: topContractors.rows.map((row: any) => ({
+        name: row.name,
+        fulfilled_orders: parseInt(row.fulfilled_orders),
+        total_orders: parseInt(row.total_orders),
+      })),
+      top_users: topUsers.rows.map((row: any) => ({
+        username: row.username,
+        fulfilled_orders: parseInt(row.fulfilled_orders),
+        total_orders: parseInt(row.total_orders),
+      })),
+      summary: {
+        total_orders: parseInt(summary.rows[0].total_orders),
+        active_orders: parseInt(summary.rows[0].active_orders),
+        completed_orders: parseInt(summary.rows[0].completed_orders),
+        total_value: parseInt(summary.rows[0].total_value),
+      },
+    }
+  }
 }
 
 export const database = new KnexDatabase()
