@@ -290,6 +290,10 @@ export async function formatUniqueListingComplete(
     }
   }
 
+  // Get view count for unique listings only
+  const viewStats = await database.getListingViewStats('market', listing.listing_id)
+  const viewCount = viewStats ? parseInt(viewStats.total_views) : 0
+
   return {
     type: "unique",
     details: complete.details,
@@ -306,12 +310,13 @@ export async function formatUniqueListingComplete(
     user_seller: listing.user_seller_id
       ? await database.getMinimalUser({ user_id: listing.user_seller_id })
       : null,
-    contractor_seller: listing.contractor_seller_id
-      ? await database.getMinimalContractor({
-          contractor_id: listing.contractor_seller_id,
-        })
-      : null,
+            contractor_seller: listing.contractor_seller_id
+          ? await database.getMinimalContractor({
+              contractor_id: listing.contractor_seller_id,
+            })
+          : null,
     stats: isPrivate ? await serializeListingStats(listing) : null,
+    view_count: viewCount,
   }
 }
 

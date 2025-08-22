@@ -4419,7 +4419,7 @@ CREATE TABLE IF NOT EXISTS public.listing_views (
                                                     user_agent TEXT,
                                                     referrer TEXT,
                                                     timestamp TIMESTAMP WITHOUT TIME ZONE DEFAULT NOW() NOT NULL,
-                                                    session_id UUID,
+                                                    session_id TEXT,
                                                     is_unique BOOLEAN DEFAULT true
 );
 

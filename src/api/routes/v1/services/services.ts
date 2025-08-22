@@ -1014,3 +1014,163 @@ servicesRouter.post(
     }
   },
 )
+
+// Track a view on a service
+servicesRouter.post(
+  "/:service_id/view",
+  oapi.validPath({
+    summary: "Track a view on a service",
+    description: "Records a view on a service for analytics purposes",
+    operationId: "trackServiceView",
+    deprecated: false,
+    tags: ["Services"],
+    parameters: [
+      {
+        name: "service_id",
+        in: "path",
+        required: true,
+        description: "ID of the service to track view for",
+        schema: {
+          type: "string",
+        },
+      },
+    ],
+    responses: {
+      "200": {
+        description: "View tracked successfully",
+        content: {
+          "application/json": {
+            schema: {
+              type: "object",
+              properties: {
+                message: { type: "string" },
+              },
+              required: ["message"],
+            },
+          },
+        },
+      },
+      "400": Response400,
+      "404": Response404,
+      "500": Response500,
+    },
+    security: [],
+  }),
+  async (req, res) => {
+    try {
+      const { service_id } = req.params
+      const user = req.user
+
+      // Verify service exists and is active
+      const service = await database.getService({ service_id })
+      if (!service || service.status !== "active") {
+        return res
+          .status(404)
+          .json({ message: "Service not found or inactive" })
+      }
+
+      // Track the view
+      await database.trackListingView({
+        listing_type: "service",
+        listing_id: service_id,
+        viewer_id: user ? (user as User).user_id : null,
+        viewer_ip: req.ip,
+        user_agent: req.get("User-Agent"),
+        referrer: req.get("Referer"),
+        session_id: req.sessionID,
+      })
+
+      res.json({ message: "View tracked successfully" })
+    } catch (error) {
+      logger.error("Error tracking service view", {
+        error,
+        service_id: req.params.service_id,
+      })
+      res.status(500).json({ message: "Internal server error" })
+    }
+  },
+)
+
+// Get view analytics for a seller's services
+servicesRouter.get(
+  "/seller/analytics",
+  userAuthorized,
+  oapi.validPath({
+    summary: "Get seller service analytics",
+    description: "Returns analytics data for the authenticated user's services",
+    operationId: "getServiceAnalytics",
+    deprecated: false,
+    tags: ["Services"],
+    parameters: [
+      {
+        name: "period",
+        in: "query",
+        description: "Time period for analytics (7d, 30d, 90d)",
+        schema: {
+          type: "string",
+          enum: ["7d", "30d", "90d"],
+        },
+      },
+    ],
+    responses: {
+      "200": {
+        description: "Analytics retrieved successfully",
+        content: {
+          "application/json": {
+            schema: {
+              type: "object",
+              properties: {
+                data: {
+                  type: "object",
+                  properties: {
+                    services: { type: "number" },
+                    total_service_views: { type: "number" },
+                    time_period: { type: "string" },
+                    user_id: { type: "string" },
+                  },
+                  required: [
+                    "services",
+                    "total_service_views",
+                    "time_period",
+                    "user_id",
+                  ],
+                },
+              },
+              required: ["data"],
+            },
+          },
+        },
+      },
+      "401": Response401,
+      "500": Response500,
+    },
+    security: [],
+  }),
+  async (req, res) => {
+    try {
+      const user = req.user as User
+      const period = (req.query.period as string) || "30d"
+
+      // Get analytics for user's services
+      const userAnalytics = await database.getSellerListingAnalytics({
+        user_id: user.user_id,
+        time_period: period,
+      })
+
+      res.json(
+        createResponse({
+          services: userAnalytics.services,
+          total_service_views: userAnalytics.total_service_views,
+          time_period: period,
+          user_id: user.user_id,
+        }),
+      )
+    } catch (error) {
+      logger.error("Error fetching service analytics", {
+        error,
+        user_id: (req.user as User)?.user_id,
+      })
+      res.status(500).json({ message: "Internal server error" })
+    }
+  },
+)

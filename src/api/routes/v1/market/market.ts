@@ -49,6 +49,7 @@ import {
   Response404,
   Response500,
 } from "../openapi.js"
+import { createResponse } from "../util/response.js"
 import { multiplePhotoUpload } from "../util/upload.js"
 import { randomUUID } from "node:crypto"
 import fs from "node:fs"
@@ -846,6 +847,11 @@ oapi.schema("UniqueListing", {
             icon_url: { type: "string" },
           },
           nullable: true,
+        },
+        view_count: { 
+          type: "number", 
+          description: "Total number of views for this listing",
+          minimum: 0
         },
       },
     },
@@ -2182,6 +2188,82 @@ marketRouter.post(
           }
         }
       }
+    }
+  },
+)
+
+// Track a view on a market listing
+marketRouter.post(
+  "/listing/:listing_id/view",
+  oapi.validPath({
+    summary: "Track a view on a market listing",
+    description: "Records a view on a market listing for analytics purposes",
+    operationId: "trackMarketListingView",
+    deprecated: false,
+    tags: ["Market"],
+    parameters: [
+      {
+        name: "listing_id",
+        in: "path",
+        required: true,
+        description: "ID of the listing to track view for",
+        schema: {
+          type: "string",
+        },
+      },
+    ],
+    responses: {
+      "200": {
+        description: "View tracked successfully",
+        content: {
+          "application/json": {
+            schema: {
+              type: "object",
+              properties: {
+                message: { type: "string" },
+              },
+              required: ["message"],
+            },
+          },
+        },
+      },
+      "400": Response400,
+      "404": Response404,
+      "500": Response500,
+    },
+    security: [],
+  }),
+  async (req, res) => {
+    try {
+      const { listing_id } = req.params
+      const user = req.user
+
+      // Verify listing exists and is active
+      const listing = await database.getMarketListing({ listing_id })
+      if (!listing || listing.status !== "active") {
+        return res
+          .status(404)
+          .json({ message: "Listing not found or inactive" })
+      }
+
+      // Track the view
+      await database.trackListingView({
+        listing_type: "market",
+        listing_id,
+        viewer_id: user ? (user as User).user_id : null,
+        viewer_ip: req.ip,
+        user_agent: req.get("User-Agent"),
+        referrer: req.get("Referer"),
+        session_id: req.sessionID,
+      })
+
+      res.json({ message: "View tracked successfully" })
+    } catch (error) {
+      logger.error("Error tracking market listing view", {
+        error,
+        listing_id: req.params.listing_id,
+      })
+      res.status(500).json({ message: "Internal server error" })
     }
   },
 )
@@ -3891,6 +3973,100 @@ marketRouter.get(
     } catch (e) {
       console.error(e)
       res.status(500).json({ error: "Internal server error" })
+    }
+  },
+)
+
+// Get view analytics for a seller's listings
+marketRouter.get(
+  "/seller/analytics",
+  userAuthorized,
+  oapi.validPath({
+    summary: "Get seller listing analytics",
+    description:
+      "Returns analytics data for the authenticated user's market listings and services",
+    operationId: "getSellerAnalytics",
+    deprecated: false,
+    tags: ["Market"],
+    parameters: [
+      {
+        name: "period",
+        in: "query",
+        description: "Time period for analytics (7d, 30d, 90d)",
+        schema: {
+          type: "string",
+          enum: ["7d", "30d", "90d"],
+        },
+      },
+    ],
+    responses: {
+      "200": {
+        description: "Analytics retrieved successfully",
+        content: {
+          "application/json": {
+            schema: {
+              type: "object",
+              properties: {
+                data: {
+                  type: "object",
+                  properties: {
+                    market_listings: { type: "number" },
+                    services: { type: "number" },
+                    total_market_views: { type: "number" },
+                    total_service_views: { type: "number" },
+                    time_period: { type: "string" },
+                    user_id: { type: "string" },
+                  },
+                  required: [
+                    "market_listings",
+                    "services",
+                    "total_market_views",
+                    "total_service_views",
+                    "time_period",
+                    "user_id",
+                  ],
+                },
+              },
+              required: ["data"],
+            },
+          },
+        },
+      },
+      "401": Response401,
+      "500": Response500,
+    },
+    security: [],
+  }),
+  async (req, res) => {
+    try {
+      const user = req.user as User
+      const period = (req.query.period as string) || "30d"
+
+      // Get analytics for user's listings
+      const userAnalytics = await database.getSellerListingAnalytics({
+        user_id: user.user_id,
+        time_period: period,
+      })
+
+      // If user is part of a contractor, also get contractor analytics
+      let contractorAnalytics = null
+      if (user.role === "admin" || user.role === "user") {
+        // This could be enhanced to check if user has contractor permissions
+        // For now, we'll just return user analytics
+      }
+
+      res.json(
+        createResponse({
+          ...userAnalytics,
+          user_id: user.user_id,
+        }),
+      )
+    } catch (error) {
+      logger.error("Error fetching seller analytics", {
+        error,
+        user_id: (req.user as User)?.user_id,
+      })
+      res.status(500).json({ message: "Internal server error" })
     }
   },
 )
