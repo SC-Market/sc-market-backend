@@ -205,6 +205,155 @@ oapi.schema("OrderAnalyticsResponse", {
   ],
 })
 
+oapi.schema("MembershipAnalyticsTimeSeries", {
+  type: "object",
+  title: "MembershipAnalyticsTimeSeries",
+  properties: {
+    date: {
+      type: "string",
+      format: "date",
+      description: "ISO date string",
+      example: "2024-01-01",
+    },
+    new_members: {
+      type: "integer",
+      description: "Total new members registered in this period",
+      minimum: 0,
+      example: 25,
+    },
+    new_members_rsi_verified: {
+      type: "integer",
+      description: "New RSI verified members registered in this period",
+      minimum: 0,
+      example: 15,
+    },
+    new_members_rsi_unverified: {
+      type: "integer",
+      description: "New RSI unverified members registered in this period",
+      minimum: 0,
+      example: 10,
+    },
+    cumulative_members: {
+      type: "integer",
+      description: "Total members up to this period",
+      minimum: 0,
+      example: 1250,
+    },
+    cumulative_members_rsi_verified: {
+      type: "integer",
+      description: "Total RSI verified members up to this period",
+      minimum: 0,
+      example: 750,
+    },
+    cumulative_members_rsi_unverified: {
+      type: "integer",
+      description: "Total RSI unverified members up to this period",
+      minimum: 0,
+      example: 500,
+    },
+  },
+  required: [
+    "date",
+    "new_members",
+    "new_members_rsi_verified",
+    "new_members_rsi_unverified",
+    "cumulative_members",
+    "cumulative_members_rsi_verified",
+    "cumulative_members_rsi_unverified",
+  ],
+})
+
+oapi.schema("MembershipAnalyticsSummary", {
+  type: "object",
+  title: "MembershipAnalyticsSummary",
+  properties: {
+    total_members: {
+      type: "integer",
+      description: "Total number of registered members",
+      minimum: 0,
+      example: 1500,
+    },
+    admin_members: {
+      type: "integer",
+      description: "Number of admin members",
+      minimum: 0,
+      example: 5,
+    },
+    regular_members: {
+      type: "integer",
+      description: "Number of regular user members",
+      minimum: 0,
+      example: 1495,
+    },
+    rsi_confirmed_members: {
+      type: "integer",
+      description: "Number of RSI confirmed members",
+      minimum: 0,
+      example: 850,
+    },
+    banned_members: {
+      type: "integer",
+      description: "Number of banned members",
+      minimum: 0,
+      example: 12,
+    },
+    new_members_30d: {
+      type: "integer",
+      description: "New members in the last 30 days",
+      minimum: 0,
+      example: 75,
+    },
+    new_members_7d: {
+      type: "integer",
+      description: "New members in the last 7 days",
+      minimum: 0,
+      example: 18,
+    },
+  },
+  required: [
+    "total_members",
+    "admin_members",
+    "regular_members",
+    "rsi_confirmed_members",
+    "banned_members",
+    "new_members_30d",
+    "new_members_7d",
+  ],
+})
+
+oapi.schema("MembershipAnalyticsResponse", {
+  type: "object",
+  title: "MembershipAnalyticsResponse",
+  properties: {
+    daily_totals: {
+      type: "array",
+      items: {
+        $ref: "#/components/schemas/MembershipAnalyticsTimeSeries",
+      },
+      description: "Daily membership statistics for the last 30 days",
+    },
+    weekly_totals: {
+      type: "array",
+      items: {
+        $ref: "#/components/schemas/MembershipAnalyticsTimeSeries",
+      },
+      description: "Weekly membership statistics for the last 12 weeks",
+    },
+    monthly_totals: {
+      type: "array",
+      items: {
+        $ref: "#/components/schemas/MembershipAnalyticsTimeSeries",
+      },
+      description: "Monthly membership statistics for the last 12 months",
+    },
+    summary: {
+      $ref: "#/components/schemas/MembershipAnalyticsSummary",
+      description: "Summary statistics for all members",
+    },
+  },
+  required: ["daily_totals", "weekly_totals", "monthly_totals", "summary"],
+})
+
 adminRouter.get(
   "/activity",
   oapi.validPath({
@@ -338,6 +487,224 @@ adminRouter.get(
       res
         .status(500)
         .json(createResponse({ error: "Failed to fetch order analytics" }))
+    }
+    return
+  },
+)
+
+adminRouter.get(
+  "/users",
+  oapi.validPath({
+    summary: "Get all users with pagination",
+    description:
+      "Retrieve all users with pagination support. Only accessible by administrators.",
+    operationId: "getAllUsers",
+    tags: ["Admin"],
+    parameters: [
+      {
+        name: "page",
+        in: "query",
+        description: "Page number (1-based)",
+        required: false,
+        schema: {
+          type: "integer",
+          minimum: 1,
+          default: 1,
+        },
+      },
+      {
+        name: "page_size",
+        in: "query",
+        description: "Number of users per page",
+        required: false,
+        schema: {
+          type: "integer",
+          minimum: 1,
+          maximum: 100,
+          default: 20,
+        },
+      },
+      {
+        name: "role",
+        in: "query",
+        description: "Filter by user role",
+        required: false,
+        schema: {
+          type: "string",
+          enum: ["user", "admin"],
+        },
+      },
+      {
+        name: "banned",
+        in: "query",
+        description: "Filter by banned status",
+        required: false,
+        schema: {
+          type: "boolean",
+        },
+      },
+      {
+        name: "rsi_confirmed",
+        in: "query",
+        description: "Filter by RSI confirmation status",
+        required: false,
+        schema: {
+          type: "boolean",
+        },
+      },
+    ],
+    responses: {
+      "200": {
+        description: "Users retrieved successfully",
+        content: {
+          "application/json": {
+            schema: {
+              type: "object",
+              properties: {
+                data: {
+                  type: "object",
+                  properties: {
+                    users: {
+                      type: "array",
+                      items: {
+                        type: "object",
+                        properties: {
+                          discord_id: { type: "string" },
+                          user_id: { type: "string", format: "uuid" },
+                          display_name: { type: "string" },
+                          profile_description: { type: "string" },
+                          role: { type: "string", enum: ["user", "admin"] },
+                          banned: { type: "boolean" },
+                          username: { type: "string" },
+                          avatar: { type: "string" },
+                          banner: { type: "string" },
+                          balance: { type: "string" },
+                          created_at: { type: "string", format: "date-time" },
+                          locale: { type: "string" },
+                          rsi_confirmed: { type: "boolean" },
+                          official_server_id: {
+                            type: "string",
+                            nullable: true,
+                          },
+                          discord_thread_channel_id: {
+                            type: "string",
+                            nullable: true,
+                          },
+                          market_order_template: { type: "string" },
+                        },
+                      },
+                    },
+                    pagination: {
+                      type: "object",
+                      properties: {
+                        page: { type: "integer" },
+                        page_size: { type: "integer" },
+                        total_users: { type: "integer" },
+                        total_pages: { type: "integer" },
+                        has_next: { type: "boolean" },
+                        has_prev: { type: "boolean" },
+                      },
+                    },
+                  },
+                  required: ["users", "pagination"],
+                },
+              },
+              required: ["data"],
+            },
+          },
+        },
+      },
+      "401": Response401,
+      "403": Response403,
+      "500": Response500,
+    },
+    security: [{ adminAuth: [] }],
+  }),
+  adminAuthorized,
+  async (req, res) => {
+    try {
+      const page = Math.max(1, parseInt(req.query.page as string) || 1)
+      const pageSize = Math.min(
+        100,
+        Math.max(1, parseInt(req.query.page_size as string) || 20),
+      )
+      const role = req.query.role as string
+      const banned =
+        req.query.banned !== undefined ? req.query.banned === "true" : undefined
+      const rsiConfirmed =
+        req.query.rsi_confirmed !== undefined
+          ? req.query.rsi_confirmed === "true"
+          : undefined
+
+      // Build where clause for filtering
+      const whereClause: any = {}
+      if (role) {
+        whereClause.role = role
+      }
+      if (banned !== undefined) {
+        whereClause.banned = banned
+      }
+      if (rsiConfirmed !== undefined) {
+        whereClause.rsi_confirmed = rsiConfirmed
+      }
+
+      const result = await database.getUsersPaginated(
+        page,
+        pageSize,
+        whereClause,
+      )
+
+      res.json(createResponse(result))
+    } catch (error) {
+      console.error("Error fetching users:", error)
+      res.status(500).json(createResponse({ error: "Failed to fetch users" }))
+    }
+    return
+  },
+)
+
+adminRouter.get(
+  "/membership/analytics",
+  oapi.validPath({
+    summary: "Get membership analytics over time",
+    description:
+      "Returns detailed membership growth statistics including time-series data and summary metrics for the admin panel",
+    operationId: "getMembershipAnalytics",
+    tags: ["Admin"],
+    parameters: [],
+    responses: {
+      "200": {
+        description: "Membership analytics data retrieved successfully",
+        content: {
+          "application/json": {
+            schema: {
+              type: "object",
+              properties: {
+                data: {
+                  $ref: "#/components/schemas/MembershipAnalyticsResponse",
+                },
+              },
+              required: ["data"],
+            },
+          },
+        },
+      },
+      "401": Response401,
+      "403": Response403,
+      "500": Response500,
+    },
+    security: [{ adminAuth: [] }],
+  }),
+  adminAuthorized,
+  async (req, res) => {
+    try {
+      const analytics = await database.getMembershipAnalytics()
+      res.json(createResponse(analytics))
+    } catch (error) {
+      console.error("Error fetching membership analytics:", error)
+      res
+        .status(500)
+        .json(createResponse({ error: "Failed to fetch membership analytics" }))
     }
     return
   },

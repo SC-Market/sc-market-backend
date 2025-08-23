@@ -1034,6 +1034,37 @@ export class KnexDatabase implements Database {
     return this.knex<DBUser>("accounts").where(where).select()
   }
 
+  async getUsersPaginated(page: number, pageSize: number, where: any = {}) {
+    const offset = (page - 1) * pageSize
+
+    // Get total count
+    const totalCount = await this.knex<DBUser>("accounts")
+      .where(where)
+      .count("* as count")
+      .first()
+    const total = totalCount ? parseInt((totalCount as any).count) : 0
+
+    // Get paginated users
+    const users = await this.knex<DBUser>("accounts")
+      .where(where)
+      .orderBy("created_at", "desc")
+      .limit(pageSize)
+      .offset(offset)
+      .select()
+
+    return {
+      users,
+      pagination: {
+        page,
+        page_size: pageSize,
+        total_users: total,
+        total_pages: Math.ceil(total / pageSize),
+        has_next: page < Math.ceil(total / pageSize),
+        has_prev: page > 1,
+      },
+    }
+  }
+
   async getOrders(where: any): Promise<DBOrder[]> {
     return this.knex<DBOrder>("orders").where(where).select()
   }
@@ -3916,20 +3947,28 @@ export class KnexDatabase implements Database {
   }): Promise<void> {
     // Don't track views from the seller themselves
     if (data.viewer_id) {
-      if (data.listing_type === 'market') {
+      if (data.listing_type === "market") {
         const listing = await this.knex("market_listings")
           .where("listing_id", data.listing_id)
           .first()
-        
-        if (listing && (listing.user_seller_id === data.viewer_id || listing.contractor_seller_id === data.viewer_id)) {
+
+        if (
+          listing &&
+          (listing.user_seller_id === data.viewer_id ||
+            listing.contractor_seller_id === data.viewer_id)
+        ) {
           return // Don't track seller's own views
         }
-      } else if (data.listing_type === 'service') {
+      } else if (data.listing_type === "service") {
         const service = await this.knex("services")
           .where("service_id", data.listing_id)
           .first()
-        
-        if (service && (service.user_id === data.viewer_id || service.contractor_id === data.viewer_id)) {
+
+        if (
+          service &&
+          (service.user_id === data.viewer_id ||
+            service.contractor_id === data.viewer_id)
+        ) {
           return // Don't track seller's own views
         }
       }
@@ -4052,6 +4091,76 @@ export class KnexDatabase implements Database {
       total_market_views: marketViews[0]?.view_count || 0,
       total_service_views: serviceViews[0]?.view_count || 0,
       time_period: time_period,
+    }
+  }
+
+  async getMembershipAnalytics() {
+    // Get daily new members for the last 30 days with RSI verification breakdown
+    const dailyMembers = await this.knex.raw(`
+      SELECT 
+        DATE(created_at) as date,
+        COUNT(*) as new_members,
+        COUNT(CASE WHEN rsi_confirmed = true THEN 1 END) as new_members_rsi_verified,
+        COUNT(CASE WHEN rsi_confirmed = false THEN 1 END) as new_members_rsi_unverified,
+        SUM(COUNT(*)) OVER (ORDER BY DATE(created_at)) as cumulative_members,
+        SUM(COUNT(CASE WHEN rsi_confirmed = true THEN 1 END)) OVER (ORDER BY DATE(created_at)) as cumulative_members_rsi_verified,
+        SUM(COUNT(CASE WHEN rsi_confirmed = false THEN 1 END)) OVER (ORDER BY DATE(created_at)) as cumulative_members_rsi_unverified
+      FROM accounts 
+      WHERE created_at >= NOW() - INTERVAL '30 days'
+      GROUP BY DATE(created_at)
+      ORDER BY date ASC
+    `)
+
+    // Get weekly new members for the last 12 weeks with RSI verification breakdown
+    const weeklyMembers = await this.knex.raw(`
+      SELECT 
+        DATE_TRUNC('week', created_at) as date,
+        COUNT(*) as new_members,
+        COUNT(CASE WHEN rsi_confirmed = true THEN 1 END) as new_members_rsi_verified,
+        COUNT(CASE WHEN rsi_confirmed = false THEN 1 END) as new_members_rsi_unverified,
+        SUM(COUNT(*)) OVER (ORDER BY DATE_TRUNC('week', created_at)) as cumulative_members,
+        SUM(COUNT(CASE WHEN rsi_confirmed = true THEN 1 END)) OVER (ORDER BY DATE_TRUNC('week', created_at)) as cumulative_members_rsi_verified,
+        SUM(COUNT(CASE WHEN rsi_confirmed = false THEN 1 END)) OVER (ORDER BY DATE_TRUNC('week', created_at)) as cumulative_members_rsi_unverified
+      FROM accounts 
+      WHERE created_at >= NOW() - INTERVAL '12 weeks'
+      GROUP BY DATE_TRUNC('week', created_at)
+      ORDER BY date ASC
+    `)
+
+    // Get monthly new members for the last 12 months with RSI verification breakdown
+    const monthlyMembers = await this.knex.raw(`
+      SELECT 
+        DATE_TRUNC('month', created_at) as date,
+        COUNT(*) as new_members,
+        COUNT(CASE WHEN rsi_confirmed = true THEN 1 END) as new_members_rsi_verified,
+        COUNT(CASE WHEN rsi_confirmed = false THEN 1 END) as new_members_rsi_unverified,
+        SUM(COUNT(*)) OVER (ORDER BY DATE_TRUNC('month', created_at)) as cumulative_members,
+        SUM(COUNT(CASE WHEN rsi_confirmed = true THEN 1 END)) OVER (ORDER BY DATE_TRUNC('month', created_at)) as cumulative_members_rsi_verified,
+        SUM(COUNT(CASE WHEN rsi_confirmed = false THEN 1 END)) OVER (ORDER BY DATE_TRUNC('month', created_at)) as cumulative_members_rsi_unverified
+      FROM accounts 
+      WHERE created_at >= NOW() - INTERVAL '12 months'
+      GROUP BY DATE_TRUNC('month', created_at)
+      ORDER BY date ASC
+    `)
+
+    // Get overall membership statistics
+    const totalMembers = await this.knex.raw(`
+      SELECT 
+        COUNT(*) as total_members,
+        COUNT(CASE WHEN role = 'admin' THEN 1 END) as admin_members,
+        COUNT(CASE WHEN role = 'user' THEN 1 END) as regular_members,
+        COUNT(CASE WHEN rsi_confirmed = true THEN 1 END) as rsi_confirmed_members,
+        COUNT(CASE WHEN banned = true THEN 1 END) as banned_members,
+        COUNT(CASE WHEN created_at >= NOW() - INTERVAL '30 days' THEN 1 END) as new_members_30d,
+        COUNT(CASE WHEN created_at >= NOW() - INTERVAL '7 days' THEN 1 END) as new_members_7d
+      FROM accounts
+    `)
+
+    return {
+      daily_totals: dailyMembers.rows || [],
+      weekly_totals: weeklyMembers.rows || [],
+      monthly_totals: monthlyMembers.rows || [],
+      summary: totalMembers.rows?.[0] || {},
     }
   }
 
