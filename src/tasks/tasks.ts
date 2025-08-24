@@ -6,6 +6,7 @@ import {
   clear_uploads_folder,
 } from "./timers.js"
 import { fetchAndInsertCommodities } from "./commodities.js"
+import { processDiscordQueue } from "./discord-queue-consumer.js"
 
 export function start_tasks() {
   process_auctions()
@@ -25,4 +26,8 @@ export function start_tasks() {
 
   // Clear uploads folder on server start
   clear_uploads_folder()
+
+  // Process Discord queue every 5 seconds
+  processDiscordQueue()
+  setInterval(processDiscordQueue, 5 * 1000) // 5 seconds
 }

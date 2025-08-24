@@ -786,9 +786,12 @@ offersRouter.post(
         return
       }
 
-      await database.updateOfferSession(req.offer_session!.id, {
-        thread_id: bot_response.result.thread!.thread_id,
-      })
+      // Thread creation is now queued asynchronously
+      // The Discord bot will process the queue and create the thread
+      // We'll update the thread_id later when we receive the response from the bot
+      logger.info(
+        `Thread creation queued successfully for offer session ${req.offer_session!.id}. Thread will be created asynchronously.`,
+      )
     } catch (e) {
       logger.error("Failed to create thread", e)
       res

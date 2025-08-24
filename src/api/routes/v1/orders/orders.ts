@@ -1751,15 +1751,18 @@ ordersRouter.post(
 
     try {
       const bot_response = await createThread(req.order!)
-      if (bot_response.result.thread?.thread_id) {
-        await database.updateOrder(req.order!.order_id, {
-          thread_id: bot_response.result.thread.thread_id,
-        })
-      } else {
+      if (bot_response.result.failed) {
         logger.error("Failed to create thread", bot_response)
         res.status(500).json({ message: bot_response.result.message })
         return
       }
+
+      // Thread creation is now queued asynchronously
+      // The Discord bot will process the queue and create the thread
+      // We'll update the thread_id later when we receive the response from the bot
+      logger.info(
+        `Thread creation queued successfully for order ${req.order!.order_id}. Thread will be created asynchronously.`,
+      )
     } catch (e) {
       logger.error("Failed to create thread", e)
       res.status(500).json({ message: "An unknown error occurred" })

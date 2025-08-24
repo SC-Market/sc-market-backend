@@ -153,21 +153,19 @@ export async function createOffer(
     logger.error(`Failed to dispatch offer notifications: ${e}`)
   }
 
-  let invite_code = null
+  // Discord thread creation is now handled asynchronously via SQS queues
+  // The invite_code will be available later when the Discord bot processes the queue
   if (session.contractor_id || session.assigned_id) {
     try {
       const bot_response = await createOfferThread(session)
-      invite_code = bot_response.result.invite_code
 
-      // Only update thread_id if thread creation was successful
-      if (bot_response.result.thread?.thread_id) {
-        await database.updateOfferSession(session.id, {
-          thread_id: bot_response.result.thread.thread_id,
-        })
-        session.thread_id = bot_response.result.thread.thread_id
-      } else {
+      if (bot_response.result.failed) {
         logger.debug(
           `Discord thread creation failed for session ${session.id}: ${bot_response.result.message}`,
+        )
+      } else {
+        logger.info(
+          `Discord thread creation queued successfully for session ${session.id}. Thread will be created asynchronously.`,
         )
       }
     } catch (e) {
@@ -178,7 +176,9 @@ export async function createOffer(
   }
 
   // Offer counteroffer model
-  return { offer, session, discord_invite: invite_code }
+  // Note: discord_invite will be null initially since thread creation is now asynchronous
+  // The Discord bot will process the queue and create the thread, then send back the invite code
+  return { offer, session, discord_invite: null }
 }
 
 export async function cancelOrderMarketItems(order: DBOrder) {

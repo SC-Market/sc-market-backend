@@ -74,7 +74,6 @@ export async function notifyBot(
     logger.debug(`Failed to communicate with Discord bot service: ${error}`)
     return {
       result: {
-        invite_code: "",
         failed: true,
         message: "Discord bot service unavailable",
       },
@@ -84,8 +83,6 @@ export async function notifyBot(
 
 export interface BotThreadCreateResponse {
   result: {
-    invite_code: string
-    thread?: { thread_id: string }
     message?: string
     failed: boolean
   }
@@ -158,13 +155,12 @@ export async function createThread(
 ): Promise<BotThreadCreateResponse> {
   // Use the new queue-based approach
   const result = await queueThreadCreation(object)
-  
+
   if (result.status === "queued") {
     // Return a temporary response indicating the thread is queued
     // The actual thread creation will happen asynchronously via the Discord bot
     return {
       result: {
-        invite_code: "",
         failed: false,
         message: "Thread creation queued successfully",
       },
@@ -173,7 +169,6 @@ export async function createThread(
     // Return failure response
     return {
       result: {
-        invite_code: "",
         failed: true,
         message: result.message,
       },
@@ -183,8 +178,6 @@ export async function createThread(
 
 export async function createOfferThread(session: DBOfferSession): Promise<{
   result: {
-    invite_code: string
-    thread?: { thread_id: string }
     message?: string
     failed: boolean
   }
@@ -206,9 +199,7 @@ export async function createOfferThread(session: DBOfferSession): Promise<{
   // The Discord bot will handle this when it processes the queue
   // For now, just return the response indicating the thread is queued
   if (bot_response.result.failed) {
-    logger.warn(
-      `Offer thread creation failed: ${bot_response.result.message}`,
-    )
+    logger.warn(`Offer thread creation failed: ${bot_response.result.message}`)
   } else {
     logger.info(
       `Offer thread creation queued successfully for session ${session.id}`,
