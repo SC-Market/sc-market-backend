@@ -42,7 +42,7 @@ export async function processDiscordQueue() {
             await handleMessageReceived(body.payload)
             break
           case "thread_created":
-            await handleThreadCreated(body.payload)
+            await handleThreadCreated(body.payload, body.metadata)
             break
           default:
             logger.warn("Unknown message type:", body.type)
@@ -99,9 +99,10 @@ async function handleMessageReceived(payload: any) {
   }
 }
 
-async function handleThreadCreated(payload: any) {
+async function handleThreadCreated(payload: any, metadata: any) {
   // Update database with thread_id when Discord bot creates thread
-  const { thread_id, entity_type, entity_info } = payload
+  const { thread_id } = payload
+  const { original_order_id, entity_type } = metadata
 
   try {
     logger.info(`Processing thread creation - ${entity_type}: ${thread_id}`)
@@ -112,8 +113,12 @@ async function handleThreadCreated(payload: any) {
     logger.info(`Thread created for ${entity_type}: ${thread_id}`)
     
     // Post initialization messages to the new thread
-    if (entity_info) {
-      await postThreadInitializationMessages(entity_info, thread_id)
+    if (original_order_id && entity_type) {
+      const entityInfo = {
+        type: entity_type,
+        id: original_order_id
+      }
+      await postThreadInitializationMessages(entityInfo, thread_id)
     }
     
   } catch (error) {
