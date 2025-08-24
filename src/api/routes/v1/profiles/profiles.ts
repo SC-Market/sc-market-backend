@@ -8,7 +8,7 @@ import { getUserRating } from "../util/formatting.js"
 import { createNotificationWebhook } from "../util/webhooks.js"
 import { rate_limit } from "../../../middleware/ratelimiting.js"
 import { fetchChannel, fetchGuild } from "../util/discord.js"
-import { authorizeProfile, get_sentinel } from "./helpers.js"
+import { authorizeProfile, get_sentinel, syncRSIHandle } from "./helpers.js"
 import {
   serializeDetailedProfile,
   serializePublicProfile,
@@ -57,6 +57,134 @@ profileRouter.post("/auth/link", userAuthorized, async (req, res, next) => {
   }
 })
 
+profileRouter.post(
+  "/auth/sync-handle",
+  rate_limit(30),
+  userAuthorized,
+  oapi.validPath({
+    summary: "Sync RSI handle from Spectrum profile",
+    deprecated: false,
+    description:
+      "Sync the user's RSI handle and display name from their current Spectrum profile. This updates the handle to match what's currently set in their RSI account. User must already be verified.",
+    operationId: "syncRSIHandle",
+    tags: ["Profiles"],
+    parameters: [],
+    requestBody: {
+      content: {
+        "application/json": {
+          schema: {
+            type: "object",
+            properties: {},
+            required: [],
+          },
+        },
+      },
+    },
+    responses: {
+      "200": {
+        description: "RSI handle successfully synced from Spectrum",
+        content: {
+          "application/json": {
+            schema: {
+              properties: {
+                data: {
+                  $ref: "#/components/schemas/GetCurrentUserProfileSuccess",
+                },
+              },
+              required: ["data"],
+              type: "object",
+            },
+          },
+        },
+      },
+      "400": {
+        description: "User not eligible for handle sync",
+        content: {
+          "application/json": {
+            schema: {
+              properties: {
+                message: {
+                  type: "string",
+                  example:
+                    "User must be already verified with a Spectrum ID to sync handle",
+                },
+                status: {
+                  type: "string",
+                  example: "error",
+                },
+              },
+              required: ["message", "status"],
+              type: "object",
+            },
+          },
+        },
+      },
+      "402": {
+        description: "Handle sync failed",
+        content: {
+          "application/json": {
+            schema: {
+              properties: {
+                message: {
+                  type: "string",
+                  example: "Could not fetch current Spectrum profile information",
+                },
+                status: {
+                  type: "string",
+                  example: "error",
+                },
+              },
+              required: ["message", "status"],
+              type: "object",
+            },
+          },
+        },
+      },
+      "401": Response401,
+      "500": Response500,
+    },
+    security: [],
+  }),
+  async (req, res, next) => {
+    try {
+      const user = req.user as User
+
+      // Check if user is already verified
+      if (!user.rsi_confirmed || !user.spectrum_user_id) {
+        res.status(400).json(
+          createErrorResponse({
+            message:
+              "User must be already verified with a Spectrum ID to sync handle",
+            status: "error",
+          }),
+        )
+        return
+      }
+
+      // Sync handle using existing Spectrum ID
+      const result = await syncRSIHandle(user.user_id)
+      if (result.success) {
+        res.json(createResponse(await serializeDetailedProfile(user)))
+      } else {
+        res.status(402).json(
+          createErrorResponse({
+            message: result.error,
+            status: "error",
+          }),
+        )
+      }
+    } catch (e) {
+      logger.error("Error during RSI handle sync:", e)
+      res.status(500).json(
+        createErrorResponse({
+          message: "Internal server error during handle sync",
+          status: "error",
+        }),
+      )
+    }
+  },
+)
+
 profileRouter.get(
   "/auth/ident",
   rate_limit(1),
@@ -64,51 +192,6 @@ profileRouter.get(
   async (req, res, next) => {
     const user = req.user as User
     res.json({ identifier: get_sentinel(user.user_id) })
-  },
-)
-
-profileRouter.post(
-  "/:username/refetch",
-  adminAuthorized,
-  async (req, res, next) => {
-    // try {
-    //     const username = req.params['username']
-    //
-    //     let user, data
-    //     try {
-    //         user = await database.getUser({username})
-    //         data = await fetchProfile(username)
-    //     } catch (e) {
-    //         res.status(400).json({error: "Invalid username"})
-    return
-    //     }
-    //
-    //     const banner_resource = await database.getImageResource({resource_id: user.banner})
-    //     if (banner_resource.filename === 'default_profile_banner.png') {
-    //         const old_banner = user.banner
-    //
-    //         let banner_resource = undefined
-    //         if (data.banner) {
-    //             banner_resource = await cdn.createExternalResource(
-    //                 data.banner,
-    //                 user.user_id + "_profile_banner",
-    //             )
-    //
-    //             await database.updateUser({user_id: user.user_id}, {
-    //                 banner: banner_resource ? banner_resource.resource_id : undefined,
-    //             })
-    //
-    //             await cdn.removeResource(old_banner)
-    //         }
-    //     }
-    //
-    //     await database.updateContractor({contractor_id: contractor.contractor_id}, {size: data.data.members})
-    //
-    //     res.json({result: "Success"})
-    // } catch (e) {
-    //     console.error(e)
-    // }
-    res.status(400).json({ error: "No access" })
   },
 )
 

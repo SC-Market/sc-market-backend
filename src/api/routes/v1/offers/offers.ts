@@ -713,6 +713,7 @@ offerRouter.put(
       }
 
       res.json(createResponse({ status: "Success" }))
+      return
     }
   },
 )
