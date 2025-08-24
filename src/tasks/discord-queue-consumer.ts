@@ -105,12 +105,27 @@ async function handleThreadCreated(payload: any, metadata: any) {
   const { original_order_id, entity_type } = metadata
 
   try {
-    logger.info(`Processing thread creation - ${entity_type}: ${thread_id}`)
+    logger.info(`Processing thread creation - ${entity_type}: ${original_order_id}, Thread: ${thread_id}`)
     
-    // TODO: Implement database update logic
-    // This will need to integrate with existing order/offer session handling
-    // For now, just log the creation
-    logger.info(`Thread created for ${entity_type}: ${thread_id}`)
+    // Update the database with the thread_id
+    try {
+      if (entity_type === "order") {
+        await database.updateOrder(original_order_id, { thread_id: thread_id })
+        logger.info(`Updated order ${original_order_id} with thread_id: ${thread_id}`)
+      } else if (entity_type === "offer_session") {
+        await database.updateOfferSession(original_order_id, { thread_id: thread_id })
+        logger.info(`Updated offer session ${original_order_id} with thread_id: ${thread_id}`)
+      } else {
+        logger.warn(`Unknown entity type: ${entity_type}`)
+        return
+      }
+    } catch (error) {
+      logger.error(`Failed to update database with thread_id ${thread_id} for ${entity_type} ${original_order_id}:`, error)
+      // Don't proceed with initialization messages if database update failed
+      return
+    }
+    
+    logger.info(`Successfully updated database for ${entity_type}: ${original_order_id} with thread_id: ${thread_id}`)
     
     // Post initialization messages to the new thread
     if (original_order_id && entity_type) {
