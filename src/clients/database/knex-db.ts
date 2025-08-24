@@ -393,6 +393,7 @@ export class KnexDatabase implements Database {
       avatar: user.avatar,
       banner: user.banner,
       rsi_confirmed: user.rsi_confirmed,
+      spectrum_user_id: user.spectrum_user_id,
       discord_id: user.discord_id,
       discord_access_token: user.discord_access_token,
       discord_refresh_token: user.discord_refresh_token,
@@ -419,6 +420,7 @@ export class KnexDatabase implements Database {
       avatar: user.avatar,
       banner: user.banner,
       rsi_confirmed: user.rsi_confirmed,
+      spectrum_user_id: user.spectrum_user_id,
       discord_id: user.discord_id,
     } as User
   }
@@ -1034,7 +1036,13 @@ export class KnexDatabase implements Database {
     return this.knex<DBUser>("accounts").where(where).select()
   }
 
-  async getUsersPaginated(page: number, pageSize: number, where: any = {}) {
+  async getUsersPaginated(
+    page: number,
+    pageSize: number,
+    where: any = {},
+    sortBy: string = "created_at",
+    sortOrder: "asc" | "desc" = "desc",
+  ) {
     const offset = (page - 1) * pageSize
 
     // Get total count
@@ -1047,7 +1055,7 @@ export class KnexDatabase implements Database {
     // Get paginated users
     const users = await this.knex<DBUser>("accounts")
       .where(where)
-      .orderBy("created_at", "desc")
+      .orderBy(sortBy, sortOrder)
       .limit(pageSize)
       .offset(offset)
       .select()
