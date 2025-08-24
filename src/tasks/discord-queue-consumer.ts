@@ -1,14 +1,19 @@
 import { receiveMessage, deleteMessage } from "../clients/aws/sqs.js"
 import { env } from "../config/env.js"
 import logger from "../logger/logger.js"
+import { Routes } from "discord-api-types/v10"
+import { database } from "../clients/database/knex-db.js"
+import { rest } from "../api/routes/v1/util/discord.js"
 
 // Types for messages from Discord bot
 interface BackendQueueMessage {
   type: "status_update" | "message_received" | "thread_created"
   payload: any
   metadata: {
-    discord_message_id: string
+    discord_message_id?: string
     created_at: string
+    original_order_id?: string
+    entity_type?: string
   }
 }
 
@@ -96,17 +101,62 @@ async function handleMessageReceived(payload: any) {
 
 async function handleThreadCreated(payload: any) {
   // Update database with thread_id when Discord bot creates thread
-  const { order_id, thread_id, entity_type } = payload
+  const { thread_id, entity_type, entity_info } = payload
 
   try {
-    logger.info(`Processing thread creation - ${entity_type}: ${order_id}, Thread: ${thread_id}`)
+    logger.info(`Processing thread creation - ${entity_type}: ${thread_id}`)
     
     // TODO: Implement database update logic
     // This will need to integrate with existing order/offer session handling
     // For now, just log the creation
-    logger.info(`Thread created for ${entity_type} ${order_id}: ${thread_id}`)
+    logger.info(`Thread created for ${entity_type}: ${thread_id}`)
+    
+    // Post initialization messages to the new thread
+    if (entity_info) {
+      await postThreadInitializationMessages(entity_info, thread_id)
+    }
     
   } catch (error) {
     logger.error("Failed to update thread_id in database:", error)
+  }
+}
+
+async function postThreadInitializationMessages(entityInfo: any, threadId: string) {
+  try {
+    logger.info(`Posting initialization messages to thread ${threadId}`)
+    
+    // Import the message generation functions
+    const { generateNewOrderMessage, generateNewOfferMessage } = await import("../api/routes/v1/util/webhooks.js")
+    
+    let message
+    if (entityInfo.type === "order") {
+      // Get order and user data
+      const order = await database.getOrder({ order_id: entityInfo.id })
+      const customer = await database.getUser({ user_id: order.customer_id })
+      const assigned = order.assigned_id ? await database.getUser({ user_id: order.assigned_id }) : null
+      
+      message = await generateNewOrderMessage(order, customer, assigned)
+    } else if (entityInfo.type === "offer_session") {
+      // Get offer session and user data
+      const sessions = await database.getOfferSessions({ id: entityInfo.id })
+      if (sessions.length === 0) {
+        logger.warn(`No offer session found for id ${entityInfo.id}`)
+        return
+      }
+      const session = sessions[0]
+      const customer = await database.getUser({ user_id: session.customer_id })
+      const assigned = session.assigned_id ? await database.getUser({ user_id: session.assigned_id }) : null
+      
+      message = await generateNewOfferMessage(session, customer, assigned)
+    }
+    
+    if (message) {
+      // Post the message to the Discord thread
+      await rest.post(Routes.channelMessages(threadId), { body: message })
+      logger.info(`Initialization message posted to thread ${threadId}`)
+    }
+    
+  } catch (error) {
+    logger.error("Failed to post initialization messages:", error)
   }
 }

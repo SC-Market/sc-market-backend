@@ -14,7 +14,6 @@ import {
 import { database } from "../../../../clients/database/knex-db.js"
 import {
   generateAssignedMessage,
-  generateNewOfferMessage,
   generateOfferStatusUpdateMessage,
   generateStatusUpdateMessage,
 } from "./webhooks.js"
@@ -120,6 +119,10 @@ export async function queueThreadCreation(
     }
   }
 
+
+  
+
+
   const messageBody = {
     type: "create_thread",
     payload: {
@@ -128,6 +131,13 @@ export async function queueThreadCreation(
       members: [assigned?.discord_id, customer?.discord_id].filter((o) => o),
       order: object,
       customer_discord_id: customer?.discord_id,
+      // Store the entity info so we can post initialization messages after thread creation
+      entity_info: {
+        type: "order_id" in object ? "order" : "offer_session",
+        id: "order_id" in object ? object.order_id : object.id,
+        customer_discord_id: customer?.discord_id,
+        assigned_discord_id: assigned?.discord_id || null
+      }
     },
     metadata: {
       order_id: "order_id" in object ? object.order_id : object.id,
