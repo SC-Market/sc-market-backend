@@ -1,8 +1,0 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<project version="4">
-  <component name="DataSourcePerFileMappings">
-    <file url="file://$PROJECT_DIR$/config/postgres/0-schema.sql" value="d435ed48-e24c-4e2a-bdc7-72f577696aea" />
-    <file url="file://$PROJECT_DIR$/scripts/add_spectrum_user_id.sql" value="d435ed48-e24c-4e2a-bdc7-72f577696aea" />
-    <file url="file://$PROJECT_DIR$/scripts/listing_views.sql" value="2067fbd4-a9af-4ac6-b869-f806eb558404" />
-  </component>
-</project>

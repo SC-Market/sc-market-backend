@@ -9,12 +9,8 @@ import {
   Response403,
   Response500,
 } from "../openapi.js"
-import { spectrumMigrationRouter } from "./spectrum-migration.js"
 
 export const adminRouter = express.Router()
-
-// Mount spectrum migration routes
-adminRouter.use("/spectrum-migration", spectrumMigrationRouter)
 
 // Define schemas
 oapi.schema("OrderAnalyticsTimeSeries", {
@@ -556,37 +552,6 @@ adminRouter.get(
           type: "boolean",
         },
       },
-      {
-        name: "sort_by",
-        in: "query",
-        description: "Field to sort by",
-        required: false,
-        schema: {
-          type: "string",
-          enum: [
-            "created_at",
-            "username",
-            "display_name",
-            "role",
-            "banned",
-            "rsi_confirmed",
-            "balance",
-            "locale",
-          ],
-          default: "created_at",
-        },
-      },
-      {
-        name: "sort_order",
-        in: "query",
-        description: "Sort order (ascending or descending)",
-        required: false,
-        schema: {
-          type: "string",
-          enum: ["asc", "desc"],
-          default: "desc",
-        },
-      },
     ],
     responses: {
       "200": {
@@ -671,22 +636,6 @@ adminRouter.get(
           ? req.query.rsi_confirmed === "true"
           : undefined
 
-      // Get sorting parameters
-      const validSortFields = [
-        "created_at",
-        "username",
-        "display_name",
-        "role",
-        "banned",
-        "rsi_confirmed",
-        "balance",
-        "locale",
-      ]
-      const sortBy = validSortFields.includes(req.query.sort_by as string)
-        ? (req.query.sort_by as string)
-        : "created_at"
-      const sortOrder = (req.query.sort_order as "asc" | "desc") || "desc"
-
       // Build where clause for filtering
       const whereClause: any = {}
       if (role) {
@@ -703,8 +652,6 @@ adminRouter.get(
         page,
         pageSize,
         whereClause,
-        sortBy,
-        sortOrder,
       )
 
       res.json(createResponse(result))
