@@ -20,6 +20,7 @@ import {
 } from "./webhooks.js"
 import logger from "../../../../logger/logger.js"
 import { env } from "../../../../config/env.js"
+import { sendMessage } from "../../../../clients/aws/sqs.js"
 
 export const rest = new REST({ version: "10" }).setToken(
   env.DISCORD_API_KEY || "missing",
@@ -89,9 +90,11 @@ export interface BotThreadCreateResponse {
     failed: boolean
   }
 }
-export async function createThread(
+
+// New function to queue thread creation via SQS
+export async function queueThreadCreation(
   object: DBOfferSession | DBOrder,
-): Promise<BotThreadCreateResponse> {
+): Promise<{ status: string; message: string }> {
   const contractor = object.contractor_id
     ? await database.getContractor({ contractor_id: object.contractor_id })
     : null
@@ -109,30 +112,73 @@ export async function createThread(
     ? contractor?.discord_thread_channel_id
     : assigned?.discord_thread_channel_id
 
-  // Check if Discord configuration is available
   if (!server_id || !channel_id) {
     const entityId = "order_id" in object ? object.order_id : object.id
     logger.debug(
       `Discord not configured for ${"order_id" in object ? "order" : "offer session"} ${entityId}`,
     )
     return {
-      result: {
-        invite_code: "",
-        failed: true,
-        message: "Discord not configured for this entity",
-      },
+      status: "failed",
+      message: "Discord not configured for this entity",
     }
   }
 
-  const body = {
-    server_id: server_id,
-    channel_id: channel_id,
-    members: [assigned?.discord_id, customer?.discord_id].filter((o) => o),
-    order: object,
-    customer_discord_id: customer?.discord_id,
+  const messageBody = {
+    type: "create_thread",
+    payload: {
+      server_id: server_id,
+      channel_id: channel_id,
+      members: [assigned?.discord_id, customer?.discord_id].filter((o) => o),
+      order: object,
+      customer_discord_id: customer?.discord_id,
+    },
+    metadata: {
+      order_id: "order_id" in object ? object.order_id : object.id,
+      entity_type: "order_id" in object ? "order" : "offer_session",
+      created_at: new Date().toISOString(),
+    },
   }
 
-  return await notifyBot("order_placed", body)
+  try {
+    await sendMessage(env.DISCORD_QUEUE_URL!, messageBody)
+    return {
+      status: "queued",
+      message: "Thread creation queued successfully",
+    }
+  } catch (error) {
+    logger.error("Failed to queue thread creation:", error)
+    return {
+      status: "failed",
+      message: "Failed to queue thread creation",
+    }
+  }
+}
+export async function createThread(
+  object: DBOfferSession | DBOrder,
+): Promise<BotThreadCreateResponse> {
+  // Use the new queue-based approach
+  const result = await queueThreadCreation(object)
+  
+  if (result.status === "queued") {
+    // Return a temporary response indicating the thread is queued
+    // The actual thread creation will happen asynchronously via the Discord bot
+    return {
+      result: {
+        invite_code: "",
+        failed: false,
+        message: "Thread creation queued successfully",
+      },
+    }
+  } else {
+    // Return failure response
+    return {
+      result: {
+        invite_code: "",
+        failed: true,
+        message: result.message,
+      },
+    }
+  }
 }
 
 export async function createOfferThread(session: DBOfferSession): Promise<{
@@ -156,20 +202,17 @@ export async function createOfferThread(session: DBOfferSession): Promise<{
     return bot_response
   }
 
-  // Only try to send message if thread creation was successful
-  if (bot_response.result.thread?.thread_id) {
-    try {
-      await rest.post(
-        Routes.channelMessages(bot_response.result.thread.thread_id),
-        {
-          body: await generateNewOfferMessage(session, customer, assigned),
-        },
-      )
-    } catch (error) {
-      logger.debug(
-        `Failed to send initial message to Discord thread ${bot_response.result.thread.thread_id}: ${error}`,
-      )
-    }
+  // Since thread creation is now queued, we can't send the initial message yet
+  // The Discord bot will handle this when it processes the queue
+  // For now, just return the response indicating the thread is queued
+  if (bot_response.result.failed) {
+    logger.warn(
+      `Offer thread creation failed: ${bot_response.result.message}`,
+    )
+  } else {
+    logger.info(
+      `Offer thread creation queued successfully for session ${session.id}`,
+    )
   }
 
   return bot_response
