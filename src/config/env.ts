@@ -19,6 +19,14 @@ interface Environment {
   S3_SECRET_ACCESS_KEY?: string
   S3_BUCKET_NAME?: string
   IMAGE_LAMBDA_NAME?: string
+  
+  // SQS Queues
+  DISCORD_QUEUE_URL?: string
+  BACKEND_QUEUE_URL?: string
+  
+  // SQS-specific AWS Credentials (separate from other AWS services)
+  SQS_ACCESS_KEY_ID?: string
+  SQS_SECRET_ACCESS_KEY?: string
 
   // Discord
   DISCORD_API_KEY?: string
