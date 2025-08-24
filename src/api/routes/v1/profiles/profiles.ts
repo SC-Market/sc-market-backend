@@ -127,7 +127,8 @@ profileRouter.post(
               properties: {
                 message: {
                   type: "string",
-                  example: "Could not fetch current Spectrum profile information",
+                  example:
+                    "Could not fetch current Spectrum profile information",
                 },
                 status: {
                   type: "string",

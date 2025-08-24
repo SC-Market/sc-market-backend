@@ -40,8 +40,8 @@ export class ImageLambdaClient {
     this.lambdaClient = new LambdaClient({
       region: env.AWS_REGION,
       credentials: {
-        accessKeyId: env.S3_ACCESS_KEY_ID!,
-        secretAccessKey: env.S3_SECRET_ACCESS_KEY!,
+        accessKeyId: env.BACKEND_ACCESS_KEY_ID!,
+        secretAccessKey: env.BACKEND_SECRET_ACCESS_KEY!,
       },
     })
 
