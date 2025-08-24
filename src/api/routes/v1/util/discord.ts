@@ -50,21 +50,35 @@ export async function notifyBot(
 ): Promise<BotThreadCreateResponse> {
   const url = `${env.DISCORD_BOT_URL}/${endpoint}`
 
-  const resp = await fetch(url, {
-    headers: {
-      accept: "application/json, text/javascript, */*; q=0.01",
-      "accept-language": "en-US,en;q=0.9,fr;q=0.8",
-      "content-type": "application/json; charset=UTF-8",
-    },
-    body: JSON.stringify(body),
-    method: "POST",
-  })
+  try {
+    const resp = await fetch(url, {
+      headers: {
+        accept: "application/json, text/javascript, */*; q=0.01",
+        "accept-language": "en-US,en;q=0.9,fr;q=0.8",
+        "content-type": "application/json; charset=UTF-8",
+      },
+      body: JSON.stringify(body),
+      method: "POST",
+    })
 
-  if (!resp.ok) {
-    throw new Error("Failed to parse bot response")
+    if (!resp.ok) {
+      logger.debug(
+        `Discord bot service returned ${resp.status}: ${resp.statusText}`,
+      )
+      throw new Error(`Discord bot service error: ${resp.status}`)
+    }
+
+    return resp.json()
+  } catch (error) {
+    logger.debug(`Failed to communicate with Discord bot service: ${error}`)
+    return {
+      result: {
+        invite_code: "",
+        failed: true,
+        message: "Discord bot service unavailable",
+      },
+    }
   }
-
-  return resp.json()
 }
 
 export interface BotThreadCreateResponse {
@@ -94,7 +108,21 @@ export async function createThread(
   const channel_id = contractor
     ? contractor?.discord_thread_channel_id
     : assigned?.discord_thread_channel_id
-  // const discord_invite = contractor ? contractor.discord_invite : assigned?.discord_invite
+
+  // Check if Discord configuration is available
+  if (!server_id || !channel_id) {
+    const entityId = "order_id" in object ? object.order_id : object.id
+    logger.debug(
+      `Discord not configured for ${"order_id" in object ? "order" : "offer session"} ${entityId}`,
+    )
+    return {
+      result: {
+        invite_code: "",
+        failed: true,
+        message: "Discord not configured for this entity",
+      },
+    }
+  }
 
   const body = {
     server_id: server_id,
@@ -128,15 +156,20 @@ export async function createOfferThread(session: DBOfferSession): Promise<{
     return bot_response
   }
 
-  try {
-    await rest.post(
-      Routes.channelMessages(bot_response.result.thread!.thread_id),
-      {
-        body: await generateNewOfferMessage(session, customer, assigned),
-      },
-    )
-  } catch (error) {
-    console.error(bot_response, error)
+  // Only try to send message if thread creation was successful
+  if (bot_response.result.thread?.thread_id) {
+    try {
+      await rest.post(
+        Routes.channelMessages(bot_response.result.thread.thread_id),
+        {
+          body: await generateNewOfferMessage(session, customer, assigned),
+        },
+      )
+    } catch (error) {
+      logger.debug(
+        `Failed to send initial message to Discord thread ${bot_response.result.thread.thread_id}: ${error}`,
+      )
+    }
   }
 
   return bot_response
@@ -147,7 +180,9 @@ export async function assignToThread(order: DBOrder, user: DBUser) {
     try {
       await rest.put(Routes.threadMembers(order.thread_id, user.discord_id), {})
     } catch (error) {
-      console.error(error)
+      logger.debug(
+        `Failed to assign user ${user.discord_id} to Discord thread ${order.thread_id}: ${error}`,
+      )
     }
   }
 }
@@ -164,7 +199,9 @@ export async function rename_offer_thread(
         },
       })
     } catch (error) {
-      console.error(error)
+      logger.debug(
+        `Failed to rename Discord thread ${session.thread_id}: ${error}`,
+      )
     }
   }
 }
@@ -182,7 +219,9 @@ export async function manageOrderStatusUpdateDiscord(
       body: await generateStatusUpdateMessage(order, newStatus),
     })
   } catch (error) {
-    console.error(error)
+    logger.debug(
+      `Failed to send status update to Discord thread ${order.thread_id}: ${error}`,
+    )
   }
 
   if (["fulfilled", "cancelled"].includes(newStatus)) {
@@ -191,7 +230,9 @@ export async function manageOrderStatusUpdateDiscord(
         body: { archived: true },
       })
     } catch (error) {
-      console.error(error)
+      logger.debug(
+        `Failed to archive Discord thread ${order.thread_id}: ${error}`,
+      )
     }
   }
 
@@ -200,7 +241,7 @@ export async function manageOrderStatusUpdateDiscord(
 
 export async function manageOfferStatusUpdateDiscord(
   offer: DBOfferSession,
-  newStatus: string,
+  newStatus: "Rejected" | "Accepted" | "Counter-Offered",
 ) {
   if (!offer.thread_id) {
     return
@@ -211,7 +252,9 @@ export async function manageOfferStatusUpdateDiscord(
       body: await generateOfferStatusUpdateMessage(offer, newStatus),
     })
   } catch (error) {
-    console.error(error)
+    logger.debug(
+      `Failed to send offer status update to Discord thread ${offer.thread_id}: ${error}`,
+    )
   }
 
   if (["Rejected"].includes(newStatus)) {
@@ -220,7 +263,9 @@ export async function manageOfferStatusUpdateDiscord(
         body: { archived: true },
       })
     } catch (error) {
-      console.error(error)
+      logger.debug(
+        `Failed to archive Discord thread ${offer.thread_id}: ${error}`,
+      )
     }
   }
 
@@ -233,6 +278,10 @@ export async function sendUserChatMessage(
   content: string,
 ) {
   if (!order.thread_id) {
+    const identifier = "order_id" in order ? order.order_id : order.id
+    logger.debug(
+      `No Discord thread_id available for ${identifier}, skipping message`,
+    )
     return
   }
 
@@ -246,7 +295,10 @@ export async function sendUserChatMessage(
       },
     })
   } catch (error) {
-    console.error(error)
+    // Log as debug since this is a user-caused issue (invalid thread_id)
+    logger.debug(
+      `Failed to send Discord message to thread ${order.thread_id}: ${error}`,
+    )
   }
 }
 
@@ -263,7 +315,9 @@ export async function manageOrderAssignedDiscord(
       body: await generateAssignedMessage(order, assigned),
     })
   } catch (error) {
-    console.error(error)
+    logger.debug(
+      `Failed to send assigned message to Discord thread ${order.thread_id}: ${error}`,
+    )
   }
 
   try {
@@ -272,7 +326,9 @@ export async function manageOrderAssignedDiscord(
       {},
     )
   } catch (error) {
-    console.error(error)
+    logger.debug(
+      `Failed to add assigned user ${assigned.discord_id} to Discord thread ${order.thread_id}: ${error}`,
+    )
   }
 
   return
