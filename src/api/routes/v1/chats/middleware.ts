@@ -4,6 +4,7 @@ import { createErrorResponse } from "../util/response.js"
 import { is_related_to_order } from "../orders/helpers.js"
 import { is_related_to_offer } from "../offers/helpers.js"
 import { User } from "../api-models.js"
+import logger from "../../../../logger/logger.js"
 import {
   DBChat,
   DBOffer,
@@ -19,8 +20,9 @@ export async function valid_chat(
   let chat
   try {
     chat = await database.getChat({ chat_id: req.params.chat_id })
-  } catch {
-    res.status(404).json(createErrorResponse({ error: "Invalid chat" }))
+  } catch (error) {
+    logger.debug(`Chat not found for ID: ${req.params.chat_id}`)
+    res.status(404).json(createErrorResponse({ error: "Chat not found" }))
     return
   }
 

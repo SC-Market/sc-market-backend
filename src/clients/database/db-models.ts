@@ -21,6 +21,7 @@ export interface DBUser {
   locale: string
 
   rsi_confirmed: boolean
+  spectrum_user_id: string | null
   discord_access_token?: string | null
   discord_refresh_token?: string | null
   official_server_id: string | null

@@ -6,6 +6,7 @@ import {
   clear_uploads_folder,
 } from "./timers.js"
 import { fetchAndInsertCommodities } from "./commodities.js"
+import { migrateExistingUsersToSpectrumIds } from "../api/routes/v1/util/spectrum-migration.js"
 
 export function start_tasks() {
   process_auctions()

@@ -64,14 +64,14 @@ export async function dispatchOfferNotifications(
     // 1 Send DMS
     await sendOfferDM(offer)
   } catch (e) {
-    console.error(e)
+    logger.debug(`Failed to send offer DM: ${e}`)
   }
 
   try {
     // 4 Send message in chat
     await sendOfferChatMessage(offer)
   } catch (e) {
-    console.error(e)
+    logger.debug(`Failed to send offer chat message: ${e}`)
   }
 
   // 2 Insert notification
@@ -84,7 +84,7 @@ export async function dispatchOfferNotifications(
       type === "create" ? "offer_create" : "counter_offer_create",
     )
   } catch (e) {
-    console.error(e)
+    logger.debug(`Failed to send offer webhooks: ${e}`)
   }
 
   try {
@@ -92,7 +92,7 @@ export async function dispatchOfferNotifications(
       await sendOfferStatusNotification(offer, "Counter-Offered")
     }
   } catch (e) {
-    console.error(e)
+    logger.debug(`Failed to send offer status notification: ${e}`)
   }
 }
 
@@ -164,9 +164,16 @@ export async function sendAssignedMessage(order: DBOrder) {
   await sendSystemMessage(chat.chat_id, content, false)
 }
 export async function sendOfferChatMessage(order: DBOfferSession) {
-  const chat = await database.getChat({ session_id: order.id })
-  const content = `An offer has been submitted`
-  await sendSystemMessage(chat.chat_id, content, false)
+  try {
+    const chat = await database.getChat({ session_id: order.id })
+    const content = `An offer has been submitted`
+    await sendSystemMessage(chat.chat_id, content, false)
+  } catch (error) {
+    // Log as debug since this is expected when chat creation fails
+    logger.debug(
+      `Failed to send offer chat message for session ${order.id}: ${error}`,
+    )
+  }
 }
 
 export async function sendUnassignedMessage(order: DBOrder) {

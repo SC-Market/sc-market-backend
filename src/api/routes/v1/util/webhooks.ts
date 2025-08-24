@@ -96,7 +96,7 @@ export async function sendOfferWebhooks(
   offer: DBOfferSession,
   type: "offer_create" | "counter_offer_create" = "offer_create",
 ) {
-  console.log("Sending offer webhooks!")
+  logger.debug("Sending offer webhooks!")
   let webhooks
   if (offer.contractor_id) {
     webhooks = await database.getNotificationWebhooksByAction(

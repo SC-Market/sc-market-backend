@@ -848,10 +848,10 @@ oapi.schema("UniqueListing", {
           },
           nullable: true,
         },
-        view_count: { 
-          type: "number", 
+        view_count: {
+          type: "number",
           description: "Total number of views for this listing",
-          minimum: 0
+          minimum: 0,
         },
       },
     },

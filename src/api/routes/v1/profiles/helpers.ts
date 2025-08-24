@@ -9,6 +9,7 @@ import { fetchRSIProfileNydoo } from "../../../../clients/nydoo/nydoo.js"
 import { fetchRSIProfileCommunityHub } from "../../../../clients/rsi/community_hub.js"
 import { fetchRSIProfileSCAPI } from "../../../../clients/scapi/scapi.js"
 import logger from "../../../../logger/logger.js"
+import { getSpectrumUserIdByHandle } from "../util/spectrum.js"
 
 export function get_sentinel(user_id: string) {
   return `[SCMKT:${user_id.substring(0, 8).toUpperCase()}]`
@@ -105,6 +106,41 @@ export async function authorizeProfile(
       (profileDetails.biography &&
         profileDetails.biography.toUpperCase().includes(sentinel)))
   ) {
+    // Fetch the Spectrum user ID using the new API client
+    let spectrum_user_id: string | null = null
+    try {
+      spectrum_user_id = await getSpectrumUserIdByHandle(profileDetails.handle)
+      logger.debug(
+        `Fetched Spectrum user ID ${spectrum_user_id} for handle ${profileDetails.handle}`,
+      )
+    } catch (error) {
+      logger.debug(
+        `Failed to fetch Spectrum user ID for handle ${profileDetails.handle}: ${error}`,
+      )
+      // Continue with verification even if Spectrum ID fetch fails
+    }
+
+    // Check if this Spectrum user ID is already in use by another account
+    if (spectrum_user_id) {
+      try {
+        const existingUser = await database.getUser({ spectrum_user_id })
+        if (existingUser && existingUser.user_id !== user_id) {
+          logger.debug(
+            `Spectrum user ID ${spectrum_user_id} is already in use by user ${existingUser.user_id}`,
+          )
+          return {
+            success: false,
+            error: "This RSI account is already linked to another user",
+          }
+        }
+      } catch (error) {
+        // User not found with this spectrum_user_id, which is expected for new verifications
+        logger.debug(
+          `No existing user found with Spectrum ID ${spectrum_user_id}`,
+        )
+      }
+    }
+
     const avatar_url: string | undefined = profileDetails.profile_image
 
     let avatar_resource = undefined
@@ -128,10 +164,14 @@ export async function authorizeProfile(
         username: profileDetails.handle,
         display_name: profileDetails.display_name,
         rsi_confirmed: true,
+        spectrum_user_id: spectrum_user_id,
         avatar: avatar_resource ? avatar_resource.resource_id : undefined,
       },
     )
 
+    logger.debug(
+      `Successfully verified and updated user ${user_id} with RSI handle ${profileDetails.handle} and Spectrum ID ${spectrum_user_id}`,
+    )
     return { success: true, error: null }
   }
 

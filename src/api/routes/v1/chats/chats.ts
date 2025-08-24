@@ -167,8 +167,11 @@ chatsRouter.get(
     let chat
     try {
       chat = await database.getChat({ order_id: req.params.order_id })
-    } catch {
-      res.status(404).json(createErrorResponse({ error: "Invalid chat" }))
+    } catch (error) {
+      logger.debug(`Chat not found for order ID: ${req.params.order_id}`)
+      res
+        .status(404)
+        .json(createErrorResponse({ error: "Chat not found for this order" }))
       return
     }
 
@@ -223,8 +226,13 @@ chatsRouter.get(
     let chat
     try {
       chat = await database.getChat({ session_id: session_id })
-    } catch {
-      res.status(404).json(createErrorResponse({ error: "Invalid chat" }))
+    } catch (error) {
+      logger.debug(`Chat not found for session ID: ${session_id}`)
+      res.status(404).json(
+        createErrorResponse({
+          error: "Chat not found for this offer session",
+        }),
+      )
       return
     }
 

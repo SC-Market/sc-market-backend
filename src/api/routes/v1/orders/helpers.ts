@@ -134,6 +134,18 @@ export async function createOffer(
     session_id: session.id,
   })
 
+  // Create chat first before dispatching notifications
+  await database.insertChat([], undefined, session.id)
+
+  // Modifiable
+  for (const { quantity, listing } of market_listings) {
+    await database.insertOfferMarketListing({
+      listing_id: listing.listing.listing_id,
+      offer_id: offer.id,
+      quantity,
+    })
+  }
+
   try {
     // TODO
     await dispatchOfferNotifications(session, "create")
@@ -146,25 +158,24 @@ export async function createOffer(
     try {
       const bot_response = await createOfferThread(session)
       invite_code = bot_response.result.invite_code
-      await database.updateOfferSession(session.id, {
-        thread_id: bot_response.result.thread?.thread_id || null,
-      })
-      session.thread_id = bot_response.result.thread?.thread_id || null
+
+      // Only update thread_id if thread creation was successful
+      if (bot_response.result.thread?.thread_id) {
+        await database.updateOfferSession(session.id, {
+          thread_id: bot_response.result.thread.thread_id,
+        })
+        session.thread_id = bot_response.result.thread.thread_id
+      } else {
+        logger.debug(
+          `Discord thread creation failed for session ${session.id}: ${bot_response.result.message}`,
+        )
+      }
     } catch (e) {
-      logger.error(`Failed to create thread ${e}`)
+      logger.error(
+        `Failed to create Discord thread for session ${session.id}: ${e}`,
+      )
     }
   }
-
-  // Modifiable
-  for (const { quantity, listing } of market_listings) {
-    await database.insertOfferMarketListing({
-      listing_id: listing.listing.listing_id,
-      offer_id: offer.id,
-      quantity,
-    })
-  }
-
-  await database.insertChat([], undefined, session.id)
 
   // Offer counteroffer model
   return { offer, session, discord_invite: invite_code }

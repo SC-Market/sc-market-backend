@@ -4406,9 +4406,6 @@ CREATE INDEX IF NOT EXISTS notification_unread_user_object_idx
 CREATE INDEX IF NOT EXISTS notification_object_entity_action_idx
     ON public.notification_object (entity_id, action_type_id);
 
-ABORT;
-BEGIN;
-
 -- Create a view tracking table for both market listings and services
 CREATE TABLE IF NOT EXISTS public.listing_views (
                                                     view_id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
@@ -4446,4 +4443,15 @@ GROUP BY listing_type, listing_id;
 GRANT SELECT, INSERT, UPDATE ON public.listing_views TO scmarket;
 GRANT SELECT ON public.listing_view_stats TO scmarket;
 
-COMMIT;
+ALTER TABLE public.accounts
+    ADD COLUMN spectrum_user_id character varying(50);
+
+-- Add index for performance on spectrum_user_id lookups
+CREATE INDEX CONCURRENTLY idx_accounts_spectrum_user_id ON public.accounts(spectrum_user_id);
+
+-- Add unique constraint to ensure each spectrum_user_id is only used once
+ALTER TABLE public.accounts
+    ADD CONSTRAINT accounts_spectrum_user_id_unique UNIQUE (spectrum_user_id);
+
+-- Add comment to document the column
+COMMENT ON COLUMN public.accounts.spectrum_user_id IS 'Primary identifier from the RSI Spectrum API, fetched during profile verification';
