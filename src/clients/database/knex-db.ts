@@ -3322,7 +3322,7 @@ export class KnexDatabase implements Database {
 
     if (searchQuery.rating) {
       query = query.where(
-        "get_average_rating(null, contractors.contractor_id)",
+        knex.raw("get_average_rating(null, contractors.contractor_id)"),
         ">=",
         searchQuery.rating,
       )
@@ -3375,7 +3375,7 @@ export class KnexDatabase implements Database {
 
     if (searchQuery.rating) {
       query = query.where(
-        "get_average_rating(null, orders.contractor_id)",
+        knex.raw("get_average_rating(null, orders.contractor_id)"),
         ">=",
         searchQuery.rating,
       )
