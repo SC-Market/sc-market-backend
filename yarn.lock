@@ -2227,7 +2227,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@types/node@npm:*, @types/node@npm:>=10.0.0":
+"@types/node@npm:*, @types/node@npm:>=10.0.0, @types/node@npm:^24.3.0":
   version: 24.3.0
   resolution: "@types/node@npm:24.3.0"
   dependencies:
@@ -2240,15 +2240,6 @@ __metadata:
   version: 17.0.45
   resolution: "@types/node@npm:17.0.45"
   checksum: 10c0/0db377133d709b33a47892581a21a41cd7958f22723a3cc6c71d55ac018121382de42fbfc7970d5ae3e7819dbe5f40e1c6a5174aedf7e7964e9cb8fa72b580b0
-  languageName: node
-  linkType: hard
-
-"@types/node@npm:^22.15.34":
-  version: 22.18.0
-  resolution: "@types/node@npm:22.18.0"
-  dependencies:
-    undici-types: "npm:~6.21.0"
-  checksum: 10c0/02cce4493eee8408e66e76fcad164f33c0600ed0854ad08e5519a76a06402da5b589b278cf71bc975c9e014f2668bdf758bc3be7fed63bdbfd0900495372797c
   languageName: node
   linkType: hard
 
@@ -2765,7 +2756,7 @@ __metadata:
     "@types/express-session": "npm:^1.18.1"
     "@types/express-ws": "npm:^3.0.1"
     "@types/multer": "npm:^1.4.12"
-    "@types/node": "npm:^22.15.34"
+    "@types/node": "npm:^24.3.0"
     "@types/node-fetch": "npm:^2.6.12"
     "@types/passport": "npm:^1.0.17"
     "@types/passport-discord": "npm:^0.1.14"
@@ -6371,13 +6362,6 @@ __metadata:
   version: 0.0.4
   resolution: "uid2@npm:0.0.4"
   checksum: 10c0/c3ed69da75d117214891f4743a1d8521db823d7a2f57644c1a9ae8b3bf25f0ba666d893264bf7e22be3dbbaa292d35a23d71d06ce7283458a65e8dd137c5c362
-  languageName: node
-  linkType: hard
-
-"undici-types@npm:~6.21.0":
-  version: 6.21.0
-  resolution: "undici-types@npm:6.21.0"
-  checksum: 10c0/c01ed51829b10aa72fc3ce64b747f8e74ae9b60eafa19a7b46ef624403508a54c526ffab06a14a26b3120d055e1104d7abe7c9017e83ced038ea5cf52f8d5e04
   languageName: node
   linkType: hard
 
