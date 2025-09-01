@@ -43,7 +43,9 @@ export class WebsocketMessagingServer {
   }
 
   emitMessage(message: MessageType) {
-    this.io.to(message.chat_id).emit("serverMessage", message)
+    if (this.io) {
+      this.io.to(message.chat_id).emit("serverMessage", message)
+    }
   }
 }
 

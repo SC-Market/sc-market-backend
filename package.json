@@ -35,9 +35,9 @@
     "moment": "^2.29.4",
     "multer": "^2.0.2",
     "node-fetch": "^3.3.2",
-    "passport": "^0.7.0",
+    "passport": "https://github.com/jaredhanson/passport.git",
     "passport-discord": "https://github.com/tonestrike/passport-discord.git",
-    "passport-oauth2-refresh": "^2.1.0",
+    "passport-oauth2-refresh": "^2.2.0",
     "pg": "^8.16.0",
     "rate-limiter-flexible": "^7.1.1",
     "sitemap": "^8.0.0",
@@ -60,9 +60,9 @@
     "@types/multer": "^1.4.12",
     "@types/node": "^22.15.34",
     "@types/node-fetch": "^2.6.12",
-    "@types/passport": "^1.0.7",
+    "@types/passport": "^1.0.17",
     "@types/passport-discord": "^0.1.14",
-    "@types/passport-oauth2-refresh": "^1.1.1",
+    "@types/passport-oauth2-refresh": "^1.1.4",
     "@types/pg": "^8.15.4",
     "@types/uuid": "^10.0.0",
     "@types/ws": "^8.18.1",
@@ -101,5 +101,6 @@
       "no-empty": "warn"
     }
   },
-  "prettier": "prettier-config-nick"
+  "prettier": "prettier-config-nick",
+  "packageManager": "yarn@4.5.1+sha512.341db9396b6e289fecc30cd7ab3af65060e05ebff4b3b47547b278b9e67b08f485ecd8c79006b405446262142c7a38154445ef7f17c1d5d1de7d90bf9ce7054d"
 }
