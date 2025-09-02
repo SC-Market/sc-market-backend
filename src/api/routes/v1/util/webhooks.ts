@@ -127,7 +127,7 @@ export async function generateNewOfferMessage(
   return {
     // author: {
     //     username: 'SC Market - Order Placed',
-    //     avatar_url: 'https://sc-market.space/assets/BG0TEXT1SHADOW1-Cqbbzppd.png',
+    //     avatar_url: 'https://raw.githubusercontent.com/SC-Market/sc-market-frontend/refs/heads/main/src/assets/BG0TEXT1SHADOW1.png',
     // },
     // the username to be displayed
     // the avatar to be displayed
@@ -194,7 +194,7 @@ export async function generateNewOrderMessage(
   return {
     // author: {
     //     username: 'SC Market - Order Placed',
-    //     avatar_url: 'https://sc-market.space/assets/BG0TEXT1SHADOW1-Cqbbzppd.png',
+    //     avatar_url: 'https://raw.githubusercontent.com/SC-Market/sc-market-frontend/refs/heads/main/src/assets/BG0TEXT1SHADOW1.png',
     // },
     // the username to be displayed
     // the avatar to be displayed
@@ -419,7 +419,8 @@ async function sendOrderWebhook(
       // the username to be displayed
       username: "SC Market - Order Placed",
       // the avatar to be displayed
-      avatar_url: "https://sc-market.space/assets/BG0TEXT1SHADOW1-Cqbbzppd.png",
+      avatar_url:
+        "https://raw.githubusercontent.com/SC-Market/sc-market-frontend/refs/heads/main/src/assets/BG0TEXT1SHADOW1.png",
 
       // // enable mentioning of individual users or roles, but not @everyone/@here
       allowed_mentions: {
@@ -492,7 +493,8 @@ async function sendOfferWebhook(
         type === "offer_create" ? "Offer Received" : "Counter Offer Received"
       }`,
       // the avatar to be displayed
-      avatar_url: "https://sc-market.space/assets/BG0TEXT1SHADOW1-Cqbbzppd.png",
+      avatar_url:
+        "https://raw.githubusercontent.com/SC-Market/sc-market-frontend/refs/heads/main/src/assets/BG0TEXT1SHADOW1.png",
 
       // // enable mentioning of individual users or roles, but not @everyone/@here
       allowed_mentions: {
@@ -574,7 +576,8 @@ async function marketBidWebhook(
     {
       username: "SC Market - Bid Received",
       // the avatar to be displayed
-      avatar_url: "https://sc-market.space/assets/BG0TEXT1SHADOW1-Cqbbzppd.png",
+      avatar_url:
+        "https://raw.githubusercontent.com/SC-Market/sc-market-frontend/refs/heads/main/src/assets/BG0TEXT1SHADOW1.png",
       // // enable mentioning of individual users or roles, but not @everyone/@here
       allowed_mentions: {
         parse: [],
@@ -660,7 +663,8 @@ async function orderCommentWebhook(
     {
       username: "SC Market - Order Comment Received",
       // the avatar to be displayed
-      avatar_url: "https://sc-market.space/assets/BG0TEXT1SHADOW1-Cqbbzppd.png",
+      avatar_url:
+        "https://raw.githubusercontent.com/SC-Market/sc-market-frontend/refs/heads/main/src/assets/BG0TEXT1SHADOW1.png",
       // // enable mentioning of individual users or roles, but not @everyone/@here
       allowed_mentions: {
         parse: [],
@@ -767,7 +771,8 @@ async function orderStatusWebhook(
     {
       username: "SC Market - Order Status Updated",
       // the avatar to be displayed
-      avatar_url: "https://sc-market.space/assets/BG0TEXT1SHADOW1-Cqbbzppd.png",
+      avatar_url:
+        "https://raw.githubusercontent.com/SC-Market/sc-market-frontend/refs/heads/main/src/assets/BG0TEXT1SHADOW1.png",
       // // enable mentioning of individual users or roles, but not @everyone/@here
       allowed_mentions: {
         parse: [],
