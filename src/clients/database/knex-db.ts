@@ -5,6 +5,7 @@ import { LRUCache } from "lru-cache"
 import {
   AvailabilitySpan,
   DBAccountSettings,
+  DBAdminAlert,
   DBAggregateComplete,
   DBAggregateListingComplete,
   DBAggregateListingRaw,
@@ -2929,6 +2930,10 @@ export class KnexDatabase implements Database {
         const [offers] = await this.getOfferSessions({ id: entity_id })
         return await serializeOfferSession(offers)
       }
+      case "admin_alerts": {
+        const alerts = await this.getAdminAlerts({ alert_id: entity_id })
+        return alerts[0] || null
+      }
       // case 'recruiting_comment_reply':
       //     const offers = await this.getMarketOffers({offer_id: entity_id})
       //     return await formatComment(offers[0])
@@ -4297,6 +4302,151 @@ export class KnexDatabase implements Database {
         total_value: parseInt(summary.rows[0].total_value),
       },
     }
+  }
+
+  // Admin Alerts Methods
+  async createAdminAlert(
+    alert: Omit<DBAdminAlert, "alert_id" | "created_at">,
+  ): Promise<DBAdminAlert> {
+    const [newAlert] = await this.knex<DBAdminAlert>("admin_alerts")
+      .insert(alert)
+      .returning("*")
+
+    return newAlert
+  }
+
+  async getAdminAlerts(where: any = {}): Promise<DBAdminAlert[]> {
+    return this.knex<DBAdminAlert>("admin_alerts")
+      .select("*")
+      .where(where)
+      .orderBy("created_at", "desc")
+  }
+
+  async getAdminAlertsPaginated(
+    page: number = 0,
+    pageSize: number = 20,
+    where: any = {},
+  ): Promise<{ alerts: DBAdminAlert[]; pagination: any }> {
+    const offset = page * pageSize
+
+    const alerts = await this.knex<DBAdminAlert>("admin_alerts")
+      .select("*")
+      .where(where)
+      .orderBy("created_at", "desc")
+      .offset(offset)
+      .limit(pageSize)
+
+    const [{ count }] = await this.knex("admin_alerts")
+      .count("* as count")
+      .where(where)
+
+    const total = parseInt(count as string)
+    const totalPages = Math.ceil(total / pageSize)
+
+    return {
+      alerts,
+      pagination: {
+        page,
+        page_size: pageSize,
+        total,
+        total_pages: totalPages,
+        has_next: page < totalPages - 1,
+        has_prev: page > 0,
+      },
+    }
+  }
+
+  async updateAdminAlert(
+    alertId: string,
+    updates: Partial<DBAdminAlert>,
+  ): Promise<DBAdminAlert | null> {
+    const [updatedAlert] = await this.knex<DBAdminAlert>("admin_alerts")
+      .where({ alert_id: alertId })
+      .update(updates)
+      .returning("*")
+
+    return updatedAlert || null
+  }
+
+  async deleteAdminAlert(alertId: string): Promise<boolean> {
+    const deletedCount = await this.knex<DBAdminAlert>("admin_alerts")
+      .where({ alert_id: alertId })
+      .del()
+
+    return deletedCount > 0
+  }
+
+  async getUsersForAlertTarget(
+    targetType: string,
+    targetContractorId?: string,
+  ): Promise<string[]> {
+    let query = this.knex("accounts").select("accounts.user_id")
+
+    switch (targetType) {
+      case "all_users":
+        // All users except banned ones
+        query = query.where("banned", false)
+        break
+
+      case "org_members":
+        // Users who are members of any organization
+        query = query
+          .join(
+            "contractor_members",
+            "accounts.user_id",
+            "=",
+            "contractor_members.user_id",
+          )
+          .where("accounts.banned", false)
+        break
+
+      case "org_owners":
+        // Users who own organizations (have Owner role in contractor_member_roles)
+        query = query
+          .join(
+            "contractor_member_roles",
+            "accounts.user_id",
+            "=",
+            "contractor_member_roles.user_id",
+          )
+          .join(
+            "contractor_roles",
+            "contractor_member_roles.role_id",
+            "=",
+            "contractor_roles.role_id",
+          )
+          .where("contractor_roles.name", "Owner")
+          .where("accounts.banned", false)
+        break
+
+      case "admins_only":
+        // Only admin users
+        query = query.where("role", "admin").where("banned", false)
+        break
+
+      case "specific_org":
+        // Members of a specific organization
+        if (!targetContractorId) {
+          return []
+        }
+
+        query = query
+          .join(
+            "contractor_members",
+            "accounts.user_id",
+            "=",
+            "contractor_members.user_id",
+          )
+          .where("contractor_members.contractor_id", targetContractorId)
+          .where("accounts.banned", false)
+        break
+
+      default:
+        return []
+    }
+
+    const results = await query
+    return results.map((row: any) => row.user_id)
   }
 }
 

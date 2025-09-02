@@ -148,11 +148,11 @@ passport.serializeUser((user: Express.User, done) => {
   done(null, (user as User).user_id) // user.id
 })
 passport.deserializeUser(async (id: string, done) => {
-  // Retrieve a User object from database given an ID
   try {
-    done(null, await database.getUser({ user_id: id }))
+    const user = await database.getUser({ user_id: id })
+    return done(null, user)
   } catch (e) {
-    return null
+    return done(e as Error)
   }
 })
 
@@ -472,8 +472,8 @@ io.engine.use(
 chatServer.initialize(io)
 
 // Start the app
-console.log(`server up on port ${hostname()}:${env.BACKEND_PORT || 80}`)
-httpServer.listen(env.BACKEND_PORT || 80)
+console.log(`server up on port ${hostname()}:${env.BACKEND_PORT || 7000}`)
+httpServer.listen(env.BACKEND_PORT || 7000)
 
 const discord_app = express()
 discord_app.use(

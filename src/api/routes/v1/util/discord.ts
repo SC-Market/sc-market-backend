@@ -20,6 +20,7 @@ import {
 import logger from "../../../../logger/logger.js"
 import { env } from "../../../../config/env.js"
 import { sendMessage } from "../../../../clients/aws/sqs.js"
+import { checkSQSConfiguration } from "../../../../clients/aws/sqs-config.js"
 
 export const rest = new REST({ version: "10" }).setToken(
   env.DISCORD_API_KEY || "missing",
@@ -119,10 +120,6 @@ export async function queueThreadCreation(
     }
   }
 
-
-  
-
-
   const messageBody = {
     type: "create_thread",
     payload: {
@@ -136,8 +133,8 @@ export async function queueThreadCreation(
         type: "order_id" in object ? "order" : "offer_session",
         id: "order_id" in object ? object.order_id : object.id,
         customer_discord_id: customer?.discord_id,
-        assigned_discord_id: assigned?.discord_id || null
-      }
+        assigned_discord_id: assigned?.discord_id || null,
+      },
     },
     metadata: {
       order_id: "order_id" in object ? object.order_id : object.id,
@@ -147,6 +144,22 @@ export async function queueThreadCreation(
   }
 
   try {
+    const config = checkSQSConfiguration()
+
+    if (!config.isConfigured) {
+      logger.warn(
+        "SQS not configured - Discord thread creation will be skipped",
+        {
+          entityId: "order_id" in object ? object.order_id : object.id,
+          missingConfig: config.missingConfig,
+        },
+      )
+      return {
+        status: "failed",
+        message: "Discord queue not configured - thread creation disabled",
+      }
+    }
+
     await sendMessage(env.DISCORD_QUEUE_URL!, messageBody)
     return {
       status: "queued",

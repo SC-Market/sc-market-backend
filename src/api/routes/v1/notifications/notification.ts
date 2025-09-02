@@ -223,6 +223,8 @@ oapi.schema("NotificationActionType", {
     "market_offer_declined",
     // Contractor notifications
     "contractor_invite",
+    // Admin notifications
+    "admin_alert",
   ],
   example: "order_message",
 })
@@ -242,6 +244,7 @@ oapi.schema("NotificationEntityType", {
     "market_bids",
     "market_offers",
     "contractor_invites",
+    "admin_alerts",
   ],
   example: "orders",
 })

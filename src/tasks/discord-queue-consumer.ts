@@ -4,6 +4,7 @@ import logger from "../logger/logger.js"
 import { Routes } from "discord-api-types/v10"
 import { database } from "../clients/database/knex-db.js"
 import { rest } from "../api/routes/v1/util/discord.js"
+import { checkSQSConfiguration } from "../clients/aws/sqs-config.js"
 
 // Types for messages from Discord bot
 interface BackendQueueMessage {
@@ -17,17 +18,36 @@ interface BackendQueueMessage {
   }
 }
 
+// Track last warning time to avoid spam
+let lastConfigWarning = 0
+
 export async function processDiscordQueue() {
+  const config = checkSQSConfiguration()
+
+  if (!config.isConfigured) {
+    // Only log this once per minute to avoid spam
+    const now = Date.now()
+    if (!lastConfigWarning || now - lastConfigWarning > 60000) {
+      logger.debug("SQS not configured - Discord queue processing disabled", {
+        missingConfig: config.missingConfig,
+      })
+      lastConfigWarning = now
+    }
+    return
+  }
+
   try {
     logger.debug("Processing Discord queue...")
-    
+
     const response = await receiveMessage(env.BACKEND_QUEUE_URL!, 10)
 
     if (!response.Messages || response.Messages.length === 0) {
       return
     }
 
-    logger.info(`Processing ${response.Messages.length} messages from Discord queue`)
+    logger.info(
+      `Processing ${response.Messages.length} messages from Discord queue`,
+    )
 
     for (const message of response.Messages) {
       try {
@@ -50,8 +70,9 @@ export async function processDiscordQueue() {
 
         // Delete the message after successful processing
         await deleteMessage(env.BACKEND_QUEUE_URL!, message.ReceiptHandle!)
-        logger.debug(`Successfully processed and deleted message: ${message.MessageId}`)
-
+        logger.debug(
+          `Successfully processed and deleted message: ${message.MessageId}`,
+        )
       } catch (error) {
         logger.error("Error processing Discord queue message:", error)
         // Message will be retried automatically by SQS
@@ -70,12 +91,13 @@ async function handleStatusUpdate(payload: any) {
 
   try {
     logger.info(`Processing status update for order ${order_id}: ${status}`)
-    
+
     // TODO: Implement status update logic
     // This will need to integrate with existing order status handling
     // For now, just log the update
-    logger.info(`Status update - Order: ${order_id}, Status: ${status}, Discord ID: ${discord_id}`)
-    
+    logger.info(
+      `Status update - Order: ${order_id}, Status: ${status}, Discord ID: ${discord_id}`,
+    )
   } catch (error) {
     logger.error("Failed to handle status update:", error)
   }
@@ -87,13 +109,16 @@ async function handleMessageReceived(payload: any) {
   const { author_id, thread_id, name, content } = payload
 
   try {
-    logger.info(`Processing message from Discord - Thread: ${thread_id}, Author: ${name}`)
-    
+    logger.info(
+      `Processing message from Discord - Thread: ${thread_id}, Author: ${name}`,
+    )
+
     // TODO: Implement message handling logic
     // This will need to integrate with existing chat system
     // For now, just log the message
-    logger.info(`Message received - Thread: ${thread_id}, Author: ${name}, Content: ${content}`)
-    
+    logger.info(
+      `Message received - Thread: ${thread_id}, Author: ${name}, Content: ${content}`,
+    )
   } catch (error) {
     logger.error("Failed to handle message received:", error)
   }
@@ -105,56 +130,75 @@ async function handleThreadCreated(payload: any, metadata: any) {
   const { original_order_id, entity_type } = metadata
 
   try {
-    logger.info(`Processing thread creation - ${entity_type}: ${original_order_id}, Thread: ${thread_id}`)
-    
+    logger.info(
+      `Processing thread creation - ${entity_type}: ${original_order_id}, Thread: ${thread_id}`,
+    )
+
     // Update the database with the thread_id
     try {
       if (entity_type === "order") {
         await database.updateOrder(original_order_id, { thread_id: thread_id })
-        logger.info(`Updated order ${original_order_id} with thread_id: ${thread_id}`)
+        logger.info(
+          `Updated order ${original_order_id} with thread_id: ${thread_id}`,
+        )
       } else if (entity_type === "offer_session") {
-        await database.updateOfferSession(original_order_id, { thread_id: thread_id })
-        logger.info(`Updated offer session ${original_order_id} with thread_id: ${thread_id}`)
+        await database.updateOfferSession(original_order_id, {
+          thread_id: thread_id,
+        })
+        logger.info(
+          `Updated offer session ${original_order_id} with thread_id: ${thread_id}`,
+        )
       } else {
         logger.warn(`Unknown entity type: ${entity_type}`)
         return
       }
     } catch (error) {
-      logger.error(`Failed to update database with thread_id ${thread_id} for ${entity_type} ${original_order_id}:`, error)
+      logger.error(
+        `Failed to update database with thread_id ${thread_id} for ${entity_type} ${original_order_id}:`,
+        error,
+      )
       // Don't proceed with initialization messages if database update failed
       return
     }
-    
-    logger.info(`Successfully updated database for ${entity_type}: ${original_order_id} with thread_id: ${thread_id}`)
-    
+
+    logger.info(
+      `Successfully updated database for ${entity_type}: ${original_order_id} with thread_id: ${thread_id}`,
+    )
+
     // Post initialization messages to the new thread
     if (original_order_id && entity_type) {
       const entityInfo = {
         type: entity_type,
-        id: original_order_id
+        id: original_order_id,
       }
       await postThreadInitializationMessages(entityInfo, thread_id)
     }
-    
   } catch (error) {
     logger.error("Failed to update thread_id in database:", error)
   }
 }
 
-async function postThreadInitializationMessages(entityInfo: any, threadId: string) {
+async function postThreadInitializationMessages(
+  entityInfo: any,
+  threadId: string,
+) {
   try {
     logger.info(`Posting initialization messages to thread ${threadId}`)
-    
+
     // Import the message generation functions
-    const { generateNewOrderMessage, generateNewOfferMessage } = await import("../api/routes/v1/util/webhooks.js")
-    
+    const { generateNewOrderMessage, generateNewOfferMessage } = await import(
+      "../api/routes/v1/util/webhooks.js"
+    )
+
     let message
     if (entityInfo.type === "order") {
       // Get order and user data
       const order = await database.getOrder({ order_id: entityInfo.id })
       const customer = await database.getUser({ user_id: order.customer_id })
-      const assigned = order.assigned_id ? await database.getUser({ user_id: order.assigned_id }) : null
-      
+      const assigned = order.assigned_id
+        ? await database.getUser({ user_id: order.assigned_id })
+        : null
+
       message = await generateNewOrderMessage(order, customer, assigned)
     } else if (entityInfo.type === "offer_session") {
       // Get offer session and user data
@@ -165,17 +209,18 @@ async function postThreadInitializationMessages(entityInfo: any, threadId: strin
       }
       const session = sessions[0]
       const customer = await database.getUser({ user_id: session.customer_id })
-      const assigned = session.assigned_id ? await database.getUser({ user_id: session.assigned_id }) : null
-      
+      const assigned = session.assigned_id
+        ? await database.getUser({ user_id: session.assigned_id })
+        : null
+
       message = await generateNewOfferMessage(session, customer, assigned)
     }
-    
+
     if (message) {
       // Post the message to the Discord thread
       await rest.post(Routes.channelMessages(threadId), { body: message })
       logger.info(`Initialization message posted to thread ${threadId}`)
     }
-    
   } catch (error) {
     logger.error("Failed to post initialization messages:", error)
   }

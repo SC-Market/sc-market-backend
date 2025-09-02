@@ -7,8 +7,15 @@ import {
 } from "./timers.js"
 import { fetchAndInsertCommodities } from "./commodities.js"
 import { processDiscordQueue } from "./discord-queue-consumer.js"
+import {
+  logSQSConfigurationStatus,
+  checkSQSConfiguration,
+} from "../clients/aws/sqs-config.js"
 
 export function start_tasks() {
+  // Log SQS configuration status
+  logSQSConfigurationStatus()
+
   process_auctions()
   setInterval(process_auctions, 5 * 60 * 1000) // 5 minutes
 
@@ -27,7 +34,12 @@ export function start_tasks() {
   // Clear uploads folder on server start
   clear_uploads_folder()
 
-  // Process Discord queue every 5 seconds
-  processDiscordQueue()
-  setInterval(processDiscordQueue, 5 * 1000) // 5 seconds
+  // Process Discord queue every 5 seconds (only if SQS is configured)
+  const sqsConfig = checkSQSConfiguration()
+  if (sqsConfig.isConfigured) {
+    processDiscordQueue()
+    setInterval(processDiscordQueue, 5 * 1000) // 5 seconds
+  } else {
+    console.log("⚠️  Discord queue processing disabled - SQS not configured")
+  }
 }

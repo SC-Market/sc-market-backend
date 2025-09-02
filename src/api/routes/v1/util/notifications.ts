@@ -1,4 +1,5 @@
 import {
+  DBAdminAlert,
   DBContractorInvite,
   DBMarketBid,
   DBMarketListing,
@@ -658,4 +659,58 @@ export async function sendOfferStatusNotification(
   status: "Rejected" | "Accepted" | "Counter-Offered",
 ) {
   await manageOfferStatusUpdateDiscord(offer, status)
+}
+
+export async function createAdminAlertNotifications(alert: DBAdminAlert) {
+  try {
+    // Get the admin_alert notification action
+    const action = await database.getNotificationActionByName("admin_alert")
+
+    // Create notification object
+    const notif_objects = await database.insertNotificationObjects([
+      {
+        action_type_id: action.action_type_id,
+        entity_id: alert.alert_id,
+      },
+    ])
+
+    // Add the admin who created the alert as the actor
+    await database.insertNotificationChange([
+      {
+        notification_object_id: notif_objects[0].notification_object_id,
+        actor_id: alert.created_by,
+      },
+    ])
+
+    // Get target users based on alert target type
+    const targetUserIds = await database.getUsersForAlertTarget(
+      alert.target_type,
+      alert.target_contractor_id || undefined,
+    )
+
+    if (targetUserIds.length === 0) {
+      logger.warn(`No users found for admin alert target: ${alert.target_type}`)
+      return
+    }
+
+    // Create notifications for all target users
+    const notifications = targetUserIds.map((userId) => ({
+      notification_object_id: notif_objects[0].notification_object_id,
+      notifier_id: userId,
+    }))
+
+    await database.insertNotifications(notifications)
+
+    logger.info(
+      `Created admin alert notifications for ${targetUserIds.length} users`,
+      {
+        alertId: alert.alert_id,
+        targetType: alert.target_type,
+        targetContractorId: alert.target_contractor_id,
+      },
+    )
+  } catch (error) {
+    logger.error("Failed to create admin alert notifications:", error)
+    throw error
+  }
 }

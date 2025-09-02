@@ -10,11 +10,15 @@ import {
   Response500,
 } from "../openapi.js"
 import { spectrumMigrationRouter } from "./spectrum-migration.js"
+import { adminAlertsRouter } from "./alerts.js"
 
 export const adminRouter = express.Router()
 
 // Mount spectrum migration routes
 adminRouter.use("/spectrum-migration", spectrumMigrationRouter)
+
+// Mount admin alerts routes
+adminRouter.use("/alerts", adminAlertsRouter)
 
 // Define schemas
 oapi.schema("OrderAnalyticsTimeSeries", {

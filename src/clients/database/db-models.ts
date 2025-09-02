@@ -556,6 +556,23 @@ export interface DBRecruitingVote {
   timestamp: Date
 }
 
+export interface DBAdminAlert {
+  alert_id: string
+  title: string
+  content: string
+  link: string | null
+  target_type:
+    | "all_users"
+    | "org_members"
+    | "org_owners"
+    | "admins_only"
+    | "specific_org"
+  target_contractor_id: string | null
+  created_by: string
+  created_at: Date
+  active: boolean
+}
+
 export interface DBComment {
   author: string
   content: string
