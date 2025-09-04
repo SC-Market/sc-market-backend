@@ -20,7 +20,7 @@
     "compression": "^1.7.5",
     "connect-pg-simple": "^10.0.0",
     "cors": "^2.8.5",
-    "discord-api-types": "^0.37.103",
+    "discord-api-types": "^0.38.22",
     "dotenv": "^16.5.0",
     "express": "^4.21.2",
     "express-session": "^1.18.1",
