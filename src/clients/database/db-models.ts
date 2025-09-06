@@ -119,6 +119,17 @@ export interface DBFollow {
   followed: string
 }
 
+export interface DBBlocklist {
+  id: string
+  blocker_id: string // DEPRECATED: Use blocker_user_id or blocker_contractor_id
+  blocker_user_id: string | null
+  blocker_contractor_id: string | null
+  blocked_id: string
+  blocker_type: "user" | "contractor"
+  created_at: Date
+  reason: string
+}
+
 export interface DBContractorMember {
   contractor_id: string
   user_id: string
@@ -139,7 +150,7 @@ export interface DBContractorRole {
   manage_market: boolean
   manage_recruiting: boolean
   manage_webhooks: boolean
-  manage_discord_integration: boolean
+  manage_blocklist: boolean
 }
 
 export interface DBContractorMemberRole {

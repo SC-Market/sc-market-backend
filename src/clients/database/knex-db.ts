@@ -15,6 +15,7 @@ import {
   DBBuyOrder,
   DBChat,
   DBChatParticipant,
+  DBBlocklist,
   DBComment,
   DBCommentVote,
   DBContentReport,
@@ -1589,6 +1590,136 @@ export class KnexDatabase implements Database {
     })
   }
 
+  // Blocklist methods
+  async blockUser(
+    blocker_id: string,
+    blocked_id: string,
+    blocker_type: "user" | "contractor",
+    reason?: string,
+  ): Promise<DBBlocklist> {
+    const insertData: any = {
+      blocker_id, // Keep for backward compatibility
+      blocked_id,
+      blocker_type,
+      reason: reason || "",
+    }
+
+    // Set the appropriate blocker column based on type
+    if (blocker_type === "user") {
+      insertData.blocker_user_id = blocker_id
+      insertData.blocker_contractor_id = null
+    } else {
+      insertData.blocker_user_id = null
+      insertData.blocker_contractor_id = blocker_id
+    }
+
+    const [blocklist] = await this.knex<DBBlocklist>("blocklist")
+      .insert(insertData)
+      .returning("*")
+    return blocklist
+  }
+
+  async unblockUser(
+    blocker_id: string,
+    blocked_id: string,
+    blocker_type: "user" | "contractor",
+  ): Promise<void> {
+    const whereClause: any = {
+      blocked_id,
+      blocker_type,
+    }
+
+    // Use the appropriate blocker column based on type
+    if (blocker_type === "user") {
+      whereClause.blocker_user_id = blocker_id
+    } else {
+      whereClause.blocker_contractor_id = blocker_id
+    }
+
+    await this.knex("blocklist").where(whereClause).delete()
+  }
+
+  async isUserBlocked(
+    blocker_id: string,
+    blocked_id: string,
+    blocker_type: "user" | "contractor",
+  ): Promise<boolean> {
+    const whereClause: any = {
+      blocked_id,
+      blocker_type,
+    }
+
+    // Use the appropriate blocker column based on type
+    if (blocker_type === "user") {
+      whereClause.blocker_user_id = blocker_id
+    } else {
+      whereClause.blocker_contractor_id = blocker_id
+    }
+
+    const block = await this.knex<DBBlocklist>("blocklist")
+      .where(whereClause)
+      .first()
+    return !!block
+  }
+
+  async getUserBlocklist(
+    blocker_id: string,
+    blocker_type: "user" | "contractor",
+  ): Promise<DBBlocklist[]> {
+    const whereClause: any = {
+      blocker_type,
+    }
+
+    // Use the appropriate blocker column based on type
+    if (blocker_type === "user") {
+      whereClause.blocker_user_id = blocker_id
+    } else {
+      whereClause.blocker_contractor_id = blocker_id
+    }
+
+    return this.knex<DBBlocklist>("blocklist")
+      .where(whereClause)
+      .orderBy("created_at", "desc")
+  }
+
+  async getBlockedByUsers(user_id: string): Promise<DBBlocklist[]> {
+    return this.knex<DBBlocklist>("blocklist")
+      .where("blocked_id", user_id)
+      .orderBy("created_at", "desc")
+  }
+
+  async checkIfBlockedForOrder(
+    customer_id: string,
+    contractor_id: string | null,
+    assigned_id: string | null,
+  ): Promise<boolean> {
+    // Check if customer is blocked by contractor
+    if (contractor_id) {
+      const contractorBlock = await this.knex<DBBlocklist>("blocklist")
+        .where({
+          blocker_contractor_id: contractor_id,
+          blocked_id: customer_id,
+          blocker_type: "contractor",
+        })
+        .first()
+      if (contractorBlock) return true
+    }
+
+    // Check if customer is blocked by assigned user
+    if (assigned_id) {
+      const userBlock = await this.knex<DBBlocklist>("blocklist")
+        .where({
+          blocker_user_id: assigned_id,
+          blocked_id: customer_id,
+          blocker_type: "user",
+        })
+        .first()
+      if (userBlock) return true
+    }
+
+    return false
+  }
+
   insertLike(body: { post_id: string; user_id: string }): Promise<void> {
     return this.knex("likes").insert(body)
   }
@@ -2860,7 +2991,7 @@ export class KnexDatabase implements Database {
       }
 
       // Apply pagination AFTER filtering
-      const result = query
+      const result = await query
         .orderBy("notification_object.timestamp", "desc") // Sort by timestamp, newest first
         .offset(page * pageSize)
         .limit(pageSize)

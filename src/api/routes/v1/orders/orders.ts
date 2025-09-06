@@ -253,6 +253,22 @@ ordersRouter.post(
       assigned_user = null
     }
 
+    // Check if customer is blocked by contractor or assigned user
+    const isBlocked = await database.checkIfBlockedForOrder(
+      user.user_id,
+      contractor_id,
+      assigned_user?.user_id || null,
+    )
+    if (isBlocked) {
+      res.status(403).json(
+        createErrorResponse({
+          message:
+            "You are blocked from creating orders with this contractor or user",
+        }),
+      )
+      return
+    }
+
     // TODO: Allow for public contracts again
     const { session, discord_invite } = await createOffer(
       {

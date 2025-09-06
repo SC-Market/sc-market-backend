@@ -770,7 +770,8 @@ CREATE TABLE public.contractor_roles (
     manage_stock boolean DEFAULT false NOT NULL,
     manage_market boolean DEFAULT false NOT NULL,
     manage_recruiting boolean DEFAULT false NOT NULL,
-    manage_webhooks boolean DEFAULT false NOT NULL
+    manage_webhooks boolean DEFAULT false NOT NULL,
+    manage_blocklist boolean DEFAULT false NOT NULL
 );
 
 
@@ -4081,11 +4082,13 @@ BEGIN
             manage_stock,
             manage_market,
             manage_recruiting,
-            manage_webhooks
+            manage_webhooks,
+            manage_blocklist
         ) VALUES (
                      v_contractor_id,
                      'Owner',
                      0,
+                     TRUE,
                      TRUE,
                      TRUE,
                      TRUE,
@@ -4110,11 +4113,13 @@ BEGIN
             manage_stock,
             manage_market,
             manage_recruiting,
-            manage_webhooks
+            manage_webhooks,
+            manage_blocklist
         ) VALUES (
                      v_contractor_id,
                      'Admin',
                      1,
+                     TRUE,
                      TRUE,
                      TRUE,
                      TRUE,
@@ -4139,11 +4144,13 @@ BEGIN
             manage_stock,
             manage_market,
             manage_recruiting,
-            manage_webhooks
+            manage_webhooks,
+            manage_blocklist
         ) VALUES (
                      v_contractor_id,
                      'Member',
                      10,
+                     FALSE,
                      FALSE,
                      FALSE,
                      FALSE,

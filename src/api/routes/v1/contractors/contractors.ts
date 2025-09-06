@@ -1424,6 +1424,7 @@ contractorsRouter.post(
       manage_market,
       manage_webhooks,
       manage_recruiting,
+      manage_blocklist,
       name,
     }: {
       manage_roles: boolean
@@ -1435,6 +1436,7 @@ contractorsRouter.post(
       manage_market: boolean
       manage_webhooks: boolean
       manage_recruiting: boolean
+      manage_blocklist: boolean
       name: string
     } = req.body
 
@@ -1453,6 +1455,7 @@ contractorsRouter.post(
       manage_market: manage_market,
       manage_webhooks: manage_webhooks,
       manage_recruiting: manage_recruiting,
+      manage_blocklist: manage_blocklist,
       position: Math.max(...roles.map((r) => r.position)) + 1,
       name: name,
     })
@@ -1543,6 +1546,7 @@ contractorsRouter.put(
       manage_market,
       manage_webhooks,
       manage_recruiting,
+      manage_blocklist,
       name,
       position,
     }: {
@@ -1555,6 +1559,7 @@ contractorsRouter.put(
       manage_market: boolean
       manage_webhooks: boolean
       manage_recruiting: boolean
+      manage_blocklist: boolean
       name: string
       position: number
     } = req.body
@@ -1595,6 +1600,7 @@ contractorsRouter.put(
         manage_market: manage_market,
         manage_webhooks: manage_webhooks,
         manage_recruiting: manage_recruiting,
+        manage_blocklist: manage_blocklist,
         name: name,
         position: position,
       },
@@ -3304,5 +3310,323 @@ contractorsRouter.post(
       .delete()
 
     res.json(createResponse({ result: "Success" }))
+  },
+)
+
+// Organization blocklist endpoints
+contractorsRouter.get(
+  "/:spectrum_id/blocklist",
+  org_authorized,
+  org_permission("manage_blocklist"),
+  oapi.validPath({
+    summary: "Get organization's blocklist",
+    description: "Retrieve the list of users blocked by the organization",
+    operationId: "getOrgBlocklist",
+    tags: ["Contractors"],
+    parameters: [
+      {
+        name: "spectrum_id",
+        in: "path",
+        required: true,
+        schema: { type: "string" },
+        description: "Organization spectrum ID",
+      },
+    ],
+    responses: {
+      "200": {
+        description: "OK - Blocklist retrieved successfully",
+        content: {
+          "application/json": {
+            schema: {
+              type: "object",
+              properties: {
+                data: {
+                  type: "array",
+                  items: {
+                    type: "object",
+                    properties: {
+                      id: { type: "string", format: "uuid" },
+                      blocked_id: { type: "string", format: "uuid" },
+                      created_at: { type: "string", format: "date-time" },
+                      reason: { type: "string" },
+                      blocked_user: {
+                        type: "object",
+                        properties: {
+                          username: { type: "string" },
+                          display_name: { type: "string" },
+                          avatar: { type: "string" },
+                        },
+                      },
+                    },
+                  },
+                },
+              },
+            },
+          },
+        },
+      },
+      "401": Response401,
+      "403": Response403,
+      "404": Response404,
+    },
+    security: [{ userAuth: [] }],
+  }),
+  async (req, res) => {
+    try {
+      const contractor = req.contractor as DBContractor
+      const blocklist = await database.getUserBlocklist(
+        contractor.contractor_id,
+        "contractor",
+      )
+
+      // Get user details for each blocked user
+      const blocklistWithUsers = await Promise.all(
+        blocklist.map(async (block) => {
+          try {
+            const blockedUser = await database.getMinimalUser({
+              user_id: block.blocked_id,
+            })
+            return {
+              id: block.id,
+              blocked_username: blockedUser.username,
+              created_at: block.created_at,
+              reason: block.reason,
+              blocked_user: blockedUser,
+            }
+          } catch {
+            return {
+              id: block.id,
+              blocked_username: null,
+              created_at: block.created_at,
+              reason: block.reason,
+              blocked_user: null,
+            }
+          }
+        }),
+      )
+
+      res.json(createResponse(blocklistWithUsers))
+    } catch (error) {
+      console.error("Error fetching org blocklist:", error)
+      res
+        .status(500)
+        .json(createErrorResponse({ message: "Failed to fetch blocklist" }))
+    }
+  },
+)
+
+contractorsRouter.post(
+  "/:spectrum_id/blocklist/block",
+  org_authorized,
+  org_permission("manage_blocklist"),
+  oapi.validPath({
+    summary: "Block a user for organization",
+    description: "Add a user to the organization's blocklist",
+    operationId: "blockUserForOrg",
+    tags: ["Contractors"],
+    parameters: [
+      {
+        name: "spectrum_id",
+        in: "path",
+        required: true,
+        schema: { type: "string" },
+        description: "Organization spectrum ID",
+      },
+    ],
+    requestBody: {
+      content: {
+        "application/json": {
+          schema: {
+            type: "object",
+            properties: {
+              username: {
+                type: "string",
+                description: "Username of the user to block",
+              },
+              reason: {
+                type: "string",
+                description: "Optional reason for blocking",
+              },
+            },
+            required: ["username"],
+          },
+        },
+      },
+    },
+    responses: {
+      "200": {
+        description: "OK - User blocked successfully",
+        content: {
+          "application/json": {
+            schema: {
+              type: "object",
+              properties: {
+                data: {
+                  type: "object",
+                  properties: {
+                    message: { type: "string" },
+                  },
+                },
+              },
+            },
+          },
+        },
+      },
+      "400": Response400,
+      "401": Response401,
+      "403": Response403,
+      "404": Response404,
+    },
+    security: [{ userAuth: [] }],
+  }),
+  async (req, res) => {
+    try {
+      const contractor = req.contractor as DBContractor
+      const { username, reason } = req.body
+
+      if (!username) {
+        res
+          .status(400)
+          .json(createErrorResponse({ message: "Username is required" }))
+        return
+      }
+
+      // Get the user to block
+      const userToBlock = await database.getUser({ username })
+      if (!userToBlock) {
+        res.status(404).json(createErrorResponse({ message: "User not found" }))
+        return
+      }
+
+      // Prevent self-blocking (organization can block the user who is managing the org)
+      const user = req.user as User
+      if (user.user_id === userToBlock.user_id) {
+        res
+          .status(400)
+          .json(createErrorResponse({ message: "You cannot block yourself" }))
+        return
+      }
+
+      // Check if already blocked
+      const isBlocked = await database.isUserBlocked(
+        contractor.contractor_id,
+        userToBlock.user_id,
+        "contractor",
+      )
+      if (isBlocked) {
+        res
+          .status(400)
+          .json(createErrorResponse({ message: "User is already blocked" }))
+        return
+      }
+
+      // Block the user
+      await database.blockUser(
+        contractor.contractor_id,
+        userToBlock.user_id,
+        "contractor",
+        reason,
+      )
+
+      res.json(createResponse({ message: "User blocked successfully" }))
+    } catch (error) {
+      console.error("Error blocking user for org:", error)
+      res
+        .status(500)
+        .json(createErrorResponse({ message: "Failed to block user" }))
+    }
+  },
+)
+
+contractorsRouter.delete(
+  "/:spectrum_id/blocklist/unblock/:username",
+  org_authorized,
+  org_permission("manage_blocklist"),
+  oapi.validPath({
+    summary: "Unblock a user for organization",
+    description: "Remove a user from the organization's blocklist",
+    operationId: "unblockUserForOrg",
+    tags: ["Contractors"],
+    parameters: [
+      {
+        name: "spectrum_id",
+        in: "path",
+        required: true,
+        schema: { type: "string" },
+        description: "Organization spectrum ID",
+      },
+      {
+        name: "username",
+        in: "path",
+        required: true,
+        schema: { type: "string" },
+        description: "Username of the user to unblock",
+      },
+    ],
+    responses: {
+      "200": {
+        description: "OK - User unblocked successfully",
+        content: {
+          "application/json": {
+            schema: {
+              type: "object",
+              properties: {
+                data: {
+                  type: "object",
+                  properties: {
+                    message: { type: "string" },
+                  },
+                },
+              },
+            },
+          },
+        },
+      },
+      "400": Response400,
+      "401": Response401,
+      "403": Response403,
+      "404": Response404,
+    },
+    security: [{ userAuth: [] }],
+  }),
+  async (req, res) => {
+    try {
+      const contractor = req.contractor as DBContractor
+      const { username } = req.params
+
+      // Get the user to unblock
+      const userToUnblock = await database.getUser({ username })
+      if (!userToUnblock) {
+        res.status(404).json(createErrorResponse({ message: "User not found" }))
+        return
+      }
+
+      // Check if user is blocked
+      const isBlocked = await database.isUserBlocked(
+        contractor.contractor_id,
+        userToUnblock.user_id,
+        "contractor",
+      )
+      if (!isBlocked) {
+        res
+          .status(404)
+          .json(createErrorResponse({ message: "User is not blocked" }))
+        return
+      }
+
+      // Unblock the user
+      await database.unblockUser(
+        contractor.contractor_id,
+        userToUnblock.user_id,
+        "contractor",
+      )
+
+      res.json(createResponse({ message: "User unblocked successfully" }))
+    } catch (error) {
+      console.error("Error unblocking user for org:", error)
+      res
+        .status(500)
+        .json(createErrorResponse({ message: "Failed to unblock user" }))
+    }
   },
 )

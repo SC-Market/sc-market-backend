@@ -1075,3 +1075,305 @@ profileRouter.get(
     res.json(content)
   },
 )
+
+// Blocklist endpoints
+profileRouter.get(
+  "/blocklist",
+  userAuthorized,
+  oapi.validPath({
+    summary: "Get user's blocklist",
+    description: "Retrieve the list of users blocked by the current user",
+    operationId: "getUserBlocklist",
+    tags: ["Profiles"],
+    responses: {
+      "200": {
+        description: "OK - Blocklist retrieved successfully",
+        content: {
+          "application/json": {
+            schema: {
+              type: "object",
+              properties: {
+                data: {
+                  type: "array",
+                  items: {
+                    type: "object",
+                    properties: {
+                      id: { type: "string", format: "uuid" },
+                      blocked_id: { type: "string", format: "uuid" },
+                      created_at: { type: "string", format: "date-time" },
+                      reason: { type: "string" },
+                      blocked_user: {
+                        type: "object",
+                        properties: {
+                          username: { type: "string" },
+                          display_name: { type: "string" },
+                          avatar: { type: "string" },
+                        },
+                      },
+                    },
+                  },
+                },
+              },
+            },
+          },
+        },
+      },
+      "401": Response401,
+    },
+    security: [{ userAuth: [] }],
+  }),
+  async (req, res) => {
+    try {
+      const user = req.user as User
+      const blocklist = await database.getUserBlocklist(user.user_id, "user")
+
+      // Get user details for each blocked user
+      const blocklistWithUsers = await Promise.all(
+        blocklist.map(async (block) => {
+          try {
+            const blockedUser = await database.getMinimalUser({
+              user_id: block.blocked_id,
+            })
+            return {
+              id: block.id,
+              blocked_username: blockedUser.username,
+              created_at: block.created_at,
+              reason: block.reason,
+              blocked_user: blockedUser,
+            }
+          } catch {
+            return {
+              id: block.id,
+              blocked_username: null,
+              created_at: block.created_at,
+              reason: block.reason,
+              blocked_user: null,
+            }
+          }
+        }),
+      )
+
+      res.json(createResponse(blocklistWithUsers))
+    } catch (error) {
+      console.error("Error fetching user blocklist:", error)
+      res
+        .status(500)
+        .json(createErrorResponse({ message: "Failed to fetch blocklist" }))
+    }
+  },
+)
+
+profileRouter.post(
+  "/blocklist/block",
+  userAuthorized,
+  oapi.validPath({
+    summary: "Block a user",
+    description: "Add a user to the current user's blocklist",
+    operationId: "blockUser",
+    tags: ["Profiles"],
+    requestBody: {
+      content: {
+        "application/json": {
+          schema: {
+            type: "object",
+            properties: {
+              username: {
+                type: "string",
+                description: "Username of the user to block",
+              },
+              reason: {
+                type: "string",
+                description: "Optional reason for blocking",
+              },
+            },
+            required: ["username"],
+          },
+        },
+      },
+    },
+    responses: {
+      "200": {
+        description: "OK - User blocked successfully",
+        content: {
+          "application/json": {
+            schema: {
+              type: "object",
+              properties: {
+                data: {
+                  type: "object",
+                  properties: {
+                    message: { type: "string" },
+                  },
+                },
+              },
+            },
+          },
+        },
+      },
+      "400": Response400,
+      "401": Response401,
+      "404": {
+        description: "Not Found - User not found",
+        content: {
+          "application/json": {
+            schema: {
+              type: "object",
+              properties: {
+                error: { type: "string" },
+              },
+            },
+          },
+        },
+      },
+    },
+    security: [{ userAuth: [] }],
+  }),
+  async (req, res) => {
+    try {
+      const user = req.user as User
+      const { username, reason } = req.body
+
+      if (!username) {
+        res
+          .status(400)
+          .json(createErrorResponse({ message: "Username is required" }))
+        return
+      }
+
+      // Get the user to block
+      const userToBlock = await database.getUser({ username })
+      if (!userToBlock) {
+        res.status(404).json(createErrorResponse({ message: "User not found" }))
+        return
+      }
+
+      // Prevent self-blocking
+      if (user.user_id === userToBlock.user_id) {
+        res
+          .status(400)
+          .json(createErrorResponse({ message: "You cannot block yourself" }))
+        return
+      }
+
+      // Check if already blocked
+      const isBlocked = await database.isUserBlocked(
+        user.user_id,
+        userToBlock.user_id,
+        "user",
+      )
+      if (isBlocked) {
+        res
+          .status(400)
+          .json(createErrorResponse({ message: "User is already blocked" }))
+        return
+      }
+
+      // Block the user
+      await database.blockUser(
+        user.user_id,
+        userToBlock.user_id,
+        "user",
+        reason,
+      )
+
+      res.json(createResponse({ message: "User blocked successfully" }))
+    } catch (error) {
+      console.error("Error blocking user:", error)
+      res
+        .status(500)
+        .json(createErrorResponse({ message: "Failed to block user" }))
+    }
+  },
+)
+
+profileRouter.delete(
+  "/blocklist/unblock/:username",
+  userAuthorized,
+  oapi.validPath({
+    summary: "Unblock a user",
+    description: "Remove a user from the current user's blocklist",
+    operationId: "unblockUser",
+    tags: ["Profiles"],
+    parameters: [
+      {
+        name: "username",
+        in: "path",
+        required: true,
+        schema: { type: "string" },
+        description: "Username of the user to unblock",
+      },
+    ],
+    responses: {
+      "200": {
+        description: "OK - User unblocked successfully",
+        content: {
+          "application/json": {
+            schema: {
+              type: "object",
+              properties: {
+                data: {
+                  type: "object",
+                  properties: {
+                    message: { type: "string" },
+                  },
+                },
+              },
+            },
+          },
+        },
+      },
+      "400": Response400,
+      "401": Response401,
+      "404": {
+        description: "Not Found - User not found or not blocked",
+        content: {
+          "application/json": {
+            schema: {
+              type: "object",
+              properties: {
+                error: { type: "string" },
+              },
+            },
+          },
+        },
+      },
+    },
+    security: [{ userAuth: [] }],
+  }),
+  async (req, res) => {
+    try {
+      const user = req.user as User
+      const { username } = req.params
+
+      // Get the user to unblock
+      const userToUnblock = await database.getUser({ username })
+      if (!userToUnblock) {
+        res.status(404).json(createErrorResponse({ message: "User not found" }))
+        return
+      }
+
+      // Check if user is blocked
+      const isBlocked = await database.isUserBlocked(
+        user.user_id,
+        userToUnblock.user_id,
+        "user",
+      )
+      if (!isBlocked) {
+        res
+          .status(404)
+          .json(createErrorResponse({ message: "User is not blocked" }))
+        return
+      }
+
+      // Unblock the user
+      await database.unblockUser(user.user_id, userToUnblock.user_id, "user")
+
+      res.json(createResponse({ message: "User unblocked successfully" }))
+    } catch (error) {
+      console.error("Error unblocking user:", error)
+      res
+        .status(500)
+        .json(createErrorResponse({ message: "Failed to unblock user" }))
+    }
+  },
+)

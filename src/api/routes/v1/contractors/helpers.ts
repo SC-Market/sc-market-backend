@@ -82,6 +82,7 @@ export async function createContractor(options: {
     manage_market: true,
     manage_webhooks: true,
     manage_recruiting: true,
+    manage_blocklist: true,
     name: "Owner",
   })
 
@@ -97,6 +98,7 @@ export async function createContractor(options: {
     manage_market: false,
     manage_webhooks: false,
     manage_recruiting: false,
+    manage_blocklist: false,
     name: "Member",
   })
 
@@ -112,6 +114,7 @@ export async function createContractor(options: {
     manage_market: true,
     manage_webhooks: true,
     manage_recruiting: true,
+    manage_blocklist: true,
     name: "Admin",
   })
   await database.insertContractorMemberRole({

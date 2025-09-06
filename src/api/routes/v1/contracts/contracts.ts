@@ -304,6 +304,22 @@ contractsRouter.post(
       }
     }
 
+    // Check if customer is blocked by contractor
+    const isBlocked = await database.checkIfBlockedForOrder(
+      req.contract!.customer_id,
+      contractor?.contractor_id || null,
+      contractor ? null : user?.user_id,
+    )
+    if (isBlocked) {
+      res.status(403).json(
+        createErrorResponse({
+          message:
+            "You are blocked from creating offers with this contractor or user",
+        }),
+      )
+      return
+    }
+
     const { session } = await createOffer(
       {
         assigned_id: contractor ? null : user?.user_id,
