@@ -2992,8 +2992,11 @@ export class KnexDatabase implements Database {
         return serializeOrderDetails(order, null)
       case "order_reviews": {
         const review = await this.getOrderReview({ review_id: entity_id })
-        order = await this.getOrder({ order_id: review?.order_id })
-        return await formatReview(order)
+        if (!review) {
+          return null
+        }
+        order = await this.getOrder({ order_id: review.order_id })
+        return await formatReview(order, review.role)
       }
       case "contractors":
         return await this.getMinimalContractor({ contractor_id: entity_id })
