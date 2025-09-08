@@ -3,7 +3,9 @@ import {
   APIChannel,
   APIGuild,
   APITextChannel,
+  APIInvite,
   RESTPostAPIChannelMessageJSONBody,
+  RESTPostAPIChannelInviteJSONBody,
   Routes,
 } from "discord-api-types/v10"
 import {
@@ -399,4 +401,35 @@ export async function fetchChannel(
   channel_id: string,
 ): Promise<APITextChannel> {
   return rest.get(Routes.channel(channel_id)) as Promise<APITextChannel>
+}
+
+export async function createDiscordInvite(
+  channelId: string,
+  options: {
+    max_age?: number
+    max_uses?: number
+    temporary?: boolean
+    unique?: boolean
+  } = {},
+): Promise<string | null> {
+  try {
+    logger.info(`Creating Discord invite for channel ${channelId}`)
+
+    const invite = (await rest.post(Routes.channelInvites(channelId), {
+      body: {
+        max_age: options.max_age ?? 3600, // 1 hour (3600 seconds)
+        max_uses: options.max_uses ?? 0, // 0 = unlimited uses
+        temporary: options.temporary ?? false, // false = permanent membership
+        unique: options.unique ?? true, // true = create unique invite
+      } as RESTPostAPIChannelInviteJSONBody,
+    })) as APIInvite
+
+    logger.info(`Successfully created Discord invite: ${invite.code}`)
+    return invite.code
+  } catch (error) {
+    logger.error(
+      `Failed to create Discord invite for channel ${channelId}: ${error}`,
+    )
+    return null
+  }
 }

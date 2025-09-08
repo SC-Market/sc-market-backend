@@ -153,9 +153,43 @@ export async function createOffer(
     logger.error(`Failed to dispatch offer notifications: ${e}`)
   }
 
-  // Discord thread creation is now handled asynchronously via SQS queues
-  // The invite_code will be available later when the Discord bot processes the queue
+  // Create Discord invite directly for immediate user redirection
+  let discord_invite: string | null = null
   if (session.contractor_id || session.assigned_id) {
+    try {
+      const contractor = session.contractor_id
+        ? await database.getContractor({ contractor_id: session.contractor_id })
+        : null
+      const assigned = session.assigned_id
+        ? await database.getUser({ user_id: session.assigned_id })
+        : null
+
+      const channel_id = contractor
+        ? contractor?.discord_thread_channel_id
+        : assigned?.discord_thread_channel_id
+
+      if (channel_id) {
+        const { createDiscordInvite } = await import("../util/discord.js")
+        discord_invite = await createDiscordInvite(channel_id)
+        if (discord_invite) {
+          logger.info(
+            `Created Discord invite for session ${session.id}: ${discord_invite}`,
+          )
+        } else {
+          logger.warn(
+            `Failed to create Discord invite for session ${session.id}`,
+          )
+        }
+      } else {
+        logger.debug(`No Discord channel configured for session ${session.id}`)
+      }
+    } catch (e) {
+      logger.error(
+        `Failed to create Discord invite for session ${session.id}: ${e}`,
+      )
+    }
+
+    // Still queue thread creation for Discord bot (but without invite creation)
     try {
       const bot_response = await createOfferThread(session)
 
@@ -175,10 +209,8 @@ export async function createOffer(
     }
   }
 
-  // Offer counteroffer model
-  // Note: discord_invite will be null initially since thread creation is now asynchronous
-  // The Discord bot will process the queue and create the thread, then send back the invite code
-  return { offer, session, discord_invite: null }
+  // Return the offer with the Discord invite for immediate user redirection
+  return { offer, session, discord_invite }
 }
 
 export async function cancelOrderMarketItems(order: DBOrder) {
