@@ -2992,11 +2992,8 @@ export class KnexDatabase implements Database {
         return serializeOrderDetails(order, null)
       case "order_reviews": {
         const review = await this.getOrderReview({ review_id: entity_id })
-        if (!review) {
-          return null
-        }
-        order = await this.getOrder({ order_id: review.order_id })
-        return await formatReview(order, review.role)
+        order = await this.getOrder({ order_id: review!.order_id })
+        return await formatReview(order, review!.role)
       }
       case "contractors":
         return await this.getMinimalContractor({ contractor_id: entity_id })
@@ -3146,9 +3143,15 @@ export class KnexDatabase implements Database {
 
       let entity
       try {
+        logger.debug(
+          `Processing notification ${notif.notification_id}: entity_type=${notif_action[0].entity}, entity_id=${notif_object[0].entity_id}`,
+        )
         entity = await this.getEntityByType(
           notif_action[0].entity,
           notif_object[0].entity_id,
+        )
+        logger.debug(
+          `Entity serialization result: ${entity ? "success" : "null"}`,
         )
       } catch (e) {
         logger.error(
