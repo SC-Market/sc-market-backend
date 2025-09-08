@@ -14,15 +14,12 @@ export async function adminOverride(
       if (override) {
         try {
           req.user = await database.getUser({ username: override })
-          next()
         } catch {
-          next()
+          /* empty */
         }
-      } else {
-        next()
       }
-    } else {
-      next()
     }
   }
+
+  next()
 }
