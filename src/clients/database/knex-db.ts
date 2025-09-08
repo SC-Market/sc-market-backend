@@ -12,10 +12,10 @@ import {
   DBAggregateRaw,
   DBAuctionDetails,
   DBAvailabilityEntry,
+  DBBlocklist,
   DBBuyOrder,
   DBChat,
   DBChatParticipant,
-  DBBlocklist,
   DBComment,
   DBCommentVote,
   DBContentReport,
@@ -2954,55 +2954,6 @@ export class KnexDatabase implements Database {
     return this.knex<DBNotification>("notification").select("*").where(where)
   }
 
-  async getNotificationsPaginated(
-    where: any,
-    page: number,
-    pageSize: number = 20,
-    actionFilter?: string,
-    entityIdFilter?: string,
-  ) {
-    try {
-      let query = this.knex<DBNotification>("notification")
-        .select("*")
-        .where(where)
-
-      // Always join notification_object for timestamp ordering
-      query = query.join(
-        "notification_object",
-        "notification.notification_object_id",
-        "=",
-        "notification_object.notification_object_id",
-      )
-
-      // Apply filters if provided
-      if (actionFilter) {
-        query = query
-          .join(
-            "notification_actions",
-            "notification_object.action_type_id",
-            "=",
-            "notification_actions.action_type_id",
-          )
-          .where("notification_actions.action", actionFilter)
-      }
-
-      if (entityIdFilter) {
-        query = query.where("notification_object.entity_id", entityIdFilter)
-      }
-
-      // Apply pagination AFTER filtering
-      const result = await query
-        .orderBy("notification_object.timestamp", "desc") // Sort by timestamp, newest first
-        .offset(page * pageSize)
-        .limit(pageSize)
-
-      return result
-    } catch (error) {
-      console.error("Error in getNotificationsPaginated:", error)
-      throw error
-    }
-  }
-
   async updateNotifications(where: any, values: any) {
     return this.knex<DBNotification>("notification").update(values).where(where)
   }
@@ -3126,7 +3077,7 @@ export class KnexDatabase implements Database {
     actionFilter?: string,
     entityIdFilter?: string,
   ) {
-    // Build base query for filtering - use the same logic as getNotificationsPaginated
+    // Build base query for filtering - will be reused for both counting and data fetching
     let baseQuery = this.knex<DBNotification>("notification").where({
       notifier_id: user_id,
     })
@@ -3164,18 +3115,17 @@ export class KnexDatabase implements Database {
       .count("notification.notification_id as count")
       .first()
 
-    // Get paginated notifications
-    const notifs = await this.getNotificationsPaginated(
-      { notifier_id: user_id },
-      page,
-      pageSize,
-      actionFilter,
-      entityIdFilter,
-    )
+    // Get paginated notifications using the same base query
+    const notifs = await baseQuery
+      .clone()
+      .select("*")
+      .orderBy("notification_object.timestamp", "desc")
+      .offset(page * pageSize)
+      .limit(pageSize)
 
     const complete_notifs = []
     for (const notif of notifs) {
-      // Since we already joined notification_object in getNotificationsPaginated,
+      // Since we already joined notification_object in baseQuery,
       // we can access the timestamp directly from the joined result
       const notif_object = await this.getNotificationObject({
         notification_object_id: notif.notification_object_id,
@@ -3212,7 +3162,6 @@ export class KnexDatabase implements Database {
     }
 
     // Note: Sorting is now handled in the database query for consistency
-
     const total = totalCount ? parseInt((totalCount as any).count) : 0
     const totalPages = Math.ceil(total / pageSize)
 
