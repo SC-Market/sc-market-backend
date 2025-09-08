@@ -2,6 +2,7 @@ import Knex, { Knex as KnexClass } from "knex"
 import { Profile, Strategy } from "passport-discord"
 import { MessageBody, PostBody, User } from "../../api/routes/v1/api-models.js"
 import { LRUCache } from "lru-cache"
+import logger from "../../logger/logger.js"
 import {
   AvailabilitySpan,
   DBAccountSettings,
@@ -3147,7 +3148,9 @@ export class KnexDatabase implements Database {
           notif_object[0].entity_id,
         )
       } catch (e) {
-        // console.error(e)
+        logger.error(
+          `Failed to serialize notification ${notif.notification_id}: ${e}`,
+        )
         continue
       }
       complete_notifs.push({
