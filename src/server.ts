@@ -33,6 +33,7 @@ import {
   addTranslationToRequestWithUser,
   SUPPORTED_LOCALES,
 } from "./api/routes/v1/util/i18n.js"
+import { adminOverride } from "./api/routes/v1/admin/middleware.js"
 
 const SessionPool = pg.Pool
 
@@ -433,6 +434,7 @@ app.use("/swaggerui", adminAuthorized, oapi.swaggerui())
 
 app.use(addTranslationToRequestWithUser)
 
+app.use(adminOverride)
 app.use("/api", apiRouter)
 
 app.use(errorHandler)
