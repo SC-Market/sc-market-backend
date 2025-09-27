@@ -634,7 +634,7 @@ contractorsRouter.post(
     } else {
       res.status(403).json(
         createErrorResponse({
-          message: "Failed to authenticate",
+          message: "Failed to authenticate, code not found",
           status: "error",
         }),
       )
