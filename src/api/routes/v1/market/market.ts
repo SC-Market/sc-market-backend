@@ -346,6 +346,7 @@ marketRouter.post(
       quantity_available,
       photos,
       minimum_bid_increment,
+      internal,
     }: {
       title?: string
       description?: string
@@ -357,6 +358,7 @@ marketRouter.post(
       quantity_available?: number
 
       minimum_bid_increment?: number
+      internal?: boolean
 
       photos?: string[]
     } = req.body
@@ -397,11 +399,18 @@ marketRouter.post(
       }
     }
 
-    if (status || price !== undefined || quantity_available !== undefined) {
+    if (status || price !== undefined || quantity_available !== undefined || internal !== undefined) {
+      // Only allow internal updates for contractor listings
+      if (internal !== undefined && !listing.contractor_seller_id) {
+        res.status(400).json({ error: "Internal status can only be set for contractor listings" })
+        return
+      }
+      
       await database.updateMarketListing(listing_id, {
         status,
         price,
         quantity_available,
+        internal,
       })
     }
 
@@ -2497,9 +2506,20 @@ marketRouter.get(
     }
 
     try {
+      // Determine if we should include internal listings
+      let includeInternal = false
+      
+      // If contractor_seller_id is specified and user is authenticated, check if user is a member
+      if (query.contractor_seller_id && req.user) {
+        const user = req.user as User
+        if (await is_member(query.contractor_seller_id, user.user_id)) {
+          includeInternal = true
+        }
+      }
+
       const searchResults = await database.searchMarket(query, {
         status: "active",
-        internal: "false",
+        ...(includeInternal ? {} : { internal: "false" }), // Only filter internal when we don't want to include them
       })
 
       res.json({

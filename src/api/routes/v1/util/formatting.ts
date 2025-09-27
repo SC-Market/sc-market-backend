@@ -456,6 +456,7 @@ export async function formatListingBase(
     status: listing.status,
     sale_type: listing.sale_type,
     expiration: listing.expiration,
+    internal: listing.internal,
     // aggregate: await
   }
 
