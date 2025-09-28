@@ -2729,6 +2729,9 @@ marketRouter.get(
           rating_count: r.rating_count,
           rating_streak: r.rating_streak,
           total_orders: r.total_orders,
+          // Add responsive badge data
+          total_assignments: r.total_assignments,
+          response_rate: r.response_rate,
           title: r.title,
           photo: r.photo,
           internal: r.internal,

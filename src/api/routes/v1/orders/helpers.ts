@@ -818,3 +818,137 @@ export async function getContractorOrderMetrics(contractor_id: string): Promise<
     })),
   }
 }
+
+// Interface for comprehensive contractor order data
+interface ContractorOrderData {
+  metrics: ContractorOrderMetrics & {
+    trend_data?: {
+      daily_orders: Array<{ date: string; count: number }>
+      daily_value: Array<{ date: string; value: number }>
+      status_trends: {
+        "not-started": Array<{ date: string; count: number }>
+        "in-progress": Array<{ date: string; count: number }>
+        "fulfilled": Array<{ date: string; count: number }>
+        "cancelled": Array<{ date: string; count: number }>
+      }
+    }
+  }
+  recent_orders?: Array<{
+    order_id: string
+    timestamp: string
+    status: string
+    cost: number
+    title: string
+  }>
+}
+
+// Get comprehensive contractor order data including metrics and trend data
+export async function getContractorOrderData(
+  contractor_id: string, 
+  options: { include_trends?: boolean; assigned_only?: boolean } = {}
+): Promise<ContractorOrderData> {
+  const { include_trends = true, assigned_only = false } = options
+
+  // Get basic metrics
+  const metrics = await getContractorOrderMetrics(contractor_id)
+
+  let trend_data = undefined
+  let recent_orders = undefined
+
+  // Get trend data if requested
+  if (include_trends) {
+    const thirtyDaysAgo = new Date(Date.now() - 30 * 24 * 60 * 60 * 1000)
+    
+    // Get daily order counts
+    const dailyOrders = await database.knex("orders")
+      .where({ contractor_id })
+      .where("timestamp", ">=", thirtyDaysAgo)
+      .select(
+        database.knex.raw("DATE(timestamp) as date"),
+        database.knex.raw("COUNT(*) as count")
+      )
+      .groupBy(database.knex.raw("DATE(timestamp)"))
+      .orderBy("date")
+
+    // Get daily order values
+    const dailyValue = await database.knex("orders")
+      .where({ contractor_id })
+      .where("timestamp", ">=", thirtyDaysAgo)
+      .select(
+        database.knex.raw("DATE(timestamp) as date"),
+        database.knex.raw("COALESCE(SUM(cost), 0) as value")
+      )
+      .groupBy(database.knex.raw("DATE(timestamp)"))
+      .orderBy("date")
+
+    // Get status trends
+    const statusTrends = await database.knex("orders")
+      .where({ contractor_id })
+      .where("timestamp", ">=", thirtyDaysAgo)
+      .select(
+        "status",
+        database.knex.raw("DATE(timestamp) as date"),
+        database.knex.raw("COUNT(*) as count")
+      )
+      .groupBy("status", database.knex.raw("DATE(timestamp)"))
+      .orderBy("date")
+
+    // Organize status trends by status
+    const status_trends = {
+      "not-started": [] as Array<{ date: string; count: number }>,
+      "in-progress": [] as Array<{ date: string; count: number }>,
+      "fulfilled": [] as Array<{ date: string; count: number }>,
+      "cancelled": [] as Array<{ date: string; count: number }>,
+    }
+
+    statusTrends.forEach(({ status, date, count }) => {
+      if (status in status_trends) {
+        status_trends[status as keyof typeof status_trends].push({
+          date: date.toISOString().split('T')[0],
+          count: +count
+        })
+      }
+    })
+
+    trend_data = {
+      daily_orders: dailyOrders.map(({ date, count }: { date: Date; count: number }) => ({
+        date: date.toISOString().split('T')[0],
+        count: +count
+      })),
+      daily_value: dailyValue.map(({ date, value }: { date: Date; value: number }) => ({
+        date: date.toISOString().split('T')[0],
+        value: +value
+      })),
+      status_trends
+    }
+  }
+
+  // Get recent orders for fallback
+  const recentOrdersQuery = database.knex("orders")
+    .where({ contractor_id })
+    .select("order_id", "timestamp", "status", "cost", "title")
+    .orderBy("timestamp", "desc")
+    .limit(50)
+
+  if (assigned_only) {
+    recentOrdersQuery.whereNotNull("assigned_id")
+  }
+
+  const recentOrdersData = await recentOrdersQuery
+
+  recent_orders = recentOrdersData.map(order => ({
+    order_id: order.order_id,
+    timestamp: order.timestamp.toISOString(),
+    status: order.status,
+    cost: +order.cost,
+    title: order.title
+  }))
+
+  return {
+    metrics: {
+      ...metrics,
+      trend_data
+    },
+    recent_orders
+  }
+}

@@ -16,6 +16,7 @@ import {
   convert_order_search_query,
   createOffer,
   getContractorOrderMetrics,
+  getContractorOrderData,
   handleAssignedUpdate,
   handleStatusUpdate,
   is_related_to_order,
@@ -38,7 +39,7 @@ import { related_to_order } from "./middleware.js"
 import { createThread } from "../util/discord.js"
 import logger from "../../../../logger/logger.js"
 import { validate_optional_username } from "../profiles/middleware.js"
-import { validate_optional_spectrum_id } from "../contractors/middleware.js"
+import { validate_optional_spectrum_id, org_authorized } from "../contractors/middleware.js"
 import { ORDER_SEARCH_SORT_METHODS, ORDER_SEARCH_STATUS } from "./types.js"
 
 export const ordersRouter = express.Router()
@@ -931,6 +932,210 @@ ordersRouter.get(
     const metrics = await getContractorOrderMetrics(contractor.contractor_id)
     
     res.json(createResponse(metrics))
+  },
+)
+
+ordersRouter.get(
+  "/contractor/:spectrum_id/data",
+  oapi.validPath({
+    summary: "Get comprehensive contractor order data",
+    deprecated: false,
+    description: "Returns comprehensive order data including metrics, trend data, and recent orders for a specific contractor",
+    operationId: "getContractorOrderData",
+    tags: ["Orders"],
+    parameters: [
+      {
+        name: "spectrum_id",
+        in: "path",
+        description: "The Spectrum ID of the contractor",
+        required: true,
+        example: "SCMARKET",
+        schema: {
+          type: "string",
+        },
+      },
+      {
+        name: "include_trends",
+        in: "query",
+        description: "Whether to include pre-computed trend data",
+        required: false,
+        schema: {
+          type: "boolean",
+          default: true,
+        },
+      },
+      {
+        name: "assigned_only",
+        in: "query",
+        description: "Whether to only include assigned orders (for user trends)",
+        required: false,
+        schema: {
+          type: "boolean",
+          default: false,
+        },
+      },
+    ],
+    responses: {
+      200: {
+        description: "Comprehensive contractor order data",
+        content: {
+          "application/json": {
+            schema: {
+              type: "object",
+              properties: {
+                success: { type: "boolean" },
+                data: {
+                  type: "object",
+                  properties: {
+                    metrics: {
+                      type: "object",
+                      properties: {
+                        total_orders: { type: "number" },
+                        total_value: { type: "number" },
+                        active_value: { type: "number" },
+                        completed_value: { type: "number" },
+                        status_counts: {
+                          type: "object",
+                          properties: {
+                            "not-started": { type: "number" },
+                            "in-progress": { type: "number" },
+                            "fulfilled": { type: "number" },
+                            "cancelled": { type: "number" },
+                          },
+                        },
+                        recent_activity: {
+                          type: "object",
+                          properties: {
+                            orders_last_7_days: { type: "number" },
+                            orders_last_30_days: { type: "number" },
+                            value_last_7_days: { type: "number" },
+                            value_last_30_days: { type: "number" },
+                          },
+                        },
+                        top_customers: {
+                          type: "array",
+                          items: {
+                            type: "object",
+                            properties: {
+                              username: { type: "string" },
+                              order_count: { type: "number" },
+                              total_value: { type: "number" },
+                            },
+                          },
+                        },
+                        trend_data: {
+                          type: "object",
+                          properties: {
+                            daily_orders: {
+                              type: "array",
+                              items: {
+                                type: "object",
+                                properties: {
+                                  date: { type: "string" },
+                                  count: { type: "number" },
+                                },
+                              },
+                            },
+                            daily_value: {
+                              type: "array",
+                              items: {
+                                type: "object",
+                                properties: {
+                                  date: { type: "string" },
+                                  value: { type: "number" },
+                                },
+                              },
+                            },
+                            status_trends: {
+                              type: "object",
+                              properties: {
+                                "not-started": {
+                                  type: "array",
+                                  items: {
+                                    type: "object",
+                                    properties: {
+                                      date: { type: "string" },
+                                      count: { type: "number" },
+                                    },
+                                  },
+                                },
+                                "in-progress": {
+                                  type: "array",
+                                  items: {
+                                    type: "object",
+                                    properties: {
+                                      date: { type: "string" },
+                                      count: { type: "number" },
+                                    },
+                                  },
+                                },
+                                "fulfilled": {
+                                  type: "array",
+                                  items: {
+                                    type: "object",
+                                    properties: {
+                                      date: { type: "string" },
+                                      count: { type: "number" },
+                                    },
+                                  },
+                                },
+                                "cancelled": {
+                                  type: "array",
+                                  items: {
+                                    type: "object",
+                                    properties: {
+                                      date: { type: "string" },
+                                      count: { type: "number" },
+                                    },
+                                  },
+                                },
+                              },
+                            },
+                          },
+                        },
+                      },
+                    },
+                    recent_orders: {
+                      type: "array",
+                      items: {
+                        type: "object",
+                        properties: {
+                          order_id: { type: "string" },
+                          timestamp: { type: "string" },
+                          status: { type: "string" },
+                          cost: { type: "number" },
+                          title: { type: "string" },
+                        },
+                      },
+                    },
+                  },
+                },
+              },
+            },
+          },
+        },
+      },
+      401: Response401,
+      403: Response403,
+      404: Response404,
+    },
+  }),
+  org_authorized,
+  async (req, res) => {
+    const { include_trends, assigned_only } = req.query
+    const contractor = req.contractor!
+
+    // Parse query parameters
+    const includeTrends = include_trends === "true" || include_trends === undefined
+    const assignedOnly = assigned_only === "true"
+
+    // Get comprehensive contractor order data
+    const data = await getContractorOrderData(contractor.contractor_id, {
+      include_trends: includeTrends,
+      assigned_only: assignedOnly
+    })
+    
+    res.json(createResponse(data))
   },
 )
 

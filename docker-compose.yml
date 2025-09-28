@@ -17,6 +17,8 @@ services:
     ports:
       - "8080:8080"
       - "7000:7000"
+    volumes:
+      - ./logs:/app/logs
     restart: always
     healthcheck:
       test: curl -sS http://127.0.0.1:8080/api/market/stats || exit 1

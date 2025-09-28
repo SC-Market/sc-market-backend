@@ -31,3 +31,7 @@ node_modules/
 config/certificates/
 
 docker-compose.override.yml
+
+# Log files
+/logs
+*.log

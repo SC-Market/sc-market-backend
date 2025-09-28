@@ -655,6 +655,9 @@ export interface DBMarketSearchResult {
   rating_count: number | null
   rating_streak: number | null
   total_orders: number | null
+  // Add responsive badge data
+  total_assignments: number | null
+  response_rate: number | null
   contractor_seller_id: string | null
   user_seller_id: string | null
   auction_end_time: Date | null
