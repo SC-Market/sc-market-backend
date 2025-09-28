@@ -692,24 +692,37 @@ export class KnexDatabase implements Database {
     {
       spectrum_id: string
       role: string
+      role_id: string
       name: string
+      position: number
     }[]
   > {
+    // Use contractor_member_roles to get all roles for the user
     return this.knex<{
       spectrum_id: string
       role: string
+      role_id: string
       name: string
-    }>("contractor_members")
+      position: number
+    }>("contractor_member_roles")
+      .join(
+        "contractor_roles",
+        "contractor_member_roles.role_id",
+        "=",
+        "contractor_roles.role_id",
+      )
       .join(
         "contractors",
-        "contractors.contractor_id",
+        "contractor_roles.contractor_id",
         "=",
-        "contractor_members.contractor_id",
+        "contractors.contractor_id",
       )
       .where(where)
       .select(
         "contractors.spectrum_id",
-        "contractor_members.role",
+        "contractor_roles.name as role",
+        "contractor_roles.role_id",
+        "contractor_roles.position",
         "contractors.name",
       )
   }
@@ -760,6 +773,116 @@ export class KnexDatabase implements Database {
     return this.knex<DBContractorMember>("contractor_members")
       .where(where)
       .select("*")
+  }
+
+  async getContractorMembersPaginated(
+    contractor_id: string,
+    options: {
+      page: number
+      page_size: number
+      search?: string
+      sort?: string
+      role_filter?: string
+    }
+  ): Promise<{ members: any[], total: number }> {
+    const knex = this.knex
+    const { page, page_size, search, sort = "username", role_filter } = options
+
+    // Build base query using contractor_member_roles for multiple roles support
+    let query = knex("contractor_member_roles")
+      .join("contractor_roles", "contractor_member_roles.role_id", "contractor_roles.role_id")
+      .join("accounts", "contractor_member_roles.user_id", "accounts.user_id")
+      .where("contractor_roles.contractor_id", contractor_id)
+      .select(
+        "contractor_member_roles.user_id",
+        "contractor_roles.role_id",
+        "contractor_roles.name as role_name",
+        "accounts.username",
+        "accounts.avatar"
+      )
+
+    // Add search filter
+    if (search) {
+      query = query.where("accounts.username", "ilike", `%${search}%`)
+    }
+
+    // Add role filter (using role_id)
+    if (role_filter) {
+      query = query.where("contractor_roles.role_id", role_filter)
+    }
+
+    // Get total count (separate query to avoid GROUP BY issues)
+    const countQuery = knex("contractor_member_roles")
+      .join("contractor_roles", "contractor_member_roles.role_id", "contractor_roles.role_id")
+      .join("accounts", "contractor_member_roles.user_id", "accounts.user_id")
+      .where("contractor_roles.contractor_id", contractor_id)
+    
+    if (search) {
+      countQuery.where("accounts.username", "ilike", `%${search}%`)
+    }
+    
+    if (role_filter) {
+      countQuery.where("contractor_roles.role_id", role_filter)
+    }
+    
+    const countResult = await countQuery.countDistinct("contractor_member_roles.user_id as total")
+    const total = parseInt(countResult[0].total as string)
+
+    // Add sorting
+    switch (sort) {
+      case "username":
+        query = query.orderBy("accounts.username", "asc")
+        break
+      case "role":
+        query = query.orderBy("contractor_roles.position", "asc")
+        break
+      default:
+        query = query.orderBy("accounts.username", "asc")
+    }
+
+    // Add pagination
+    query = query.limit(page_size).offset(page * page_size)
+
+    // Execute query to get filtered members
+    const filteredMembers = await query
+
+    // Get all roles for each filtered member (regardless of filter)
+    const memberIds = [...new Set(filteredMembers.map(m => m.user_id))]
+    const allRolesQuery = knex("contractor_member_roles")
+      .join("contractor_roles", "contractor_member_roles.role_id", "contractor_roles.role_id")
+      .join("accounts", "contractor_member_roles.user_id", "accounts.user_id")
+      .where("contractor_roles.contractor_id", contractor_id)
+      .whereIn("contractor_member_roles.user_id", memberIds)
+      .select(
+        "contractor_member_roles.user_id",
+        "contractor_roles.role_id",
+        "accounts.username",
+        "accounts.avatar"
+      )
+
+    const allRoles = await allRolesQuery
+
+    // Group roles by user to handle multiple roles per member
+    const membersMap = new Map()
+    allRoles.forEach((member) => {
+      if (!membersMap.has(member.user_id)) {
+        membersMap.set(member.user_id, {
+          user_id: member.user_id,
+          username: member.username,
+          roles: [],
+          avatar: member.avatar || "",
+        })
+      }
+      membersMap.get(member.user_id).roles.push(member.role_id)
+    })
+
+    // Convert to array format
+    const membersWithRoles = Array.from(membersMap.values())
+
+    return {
+      members: membersWithRoles,
+      total,
+    }
   }
 
   async getContractorMemberRoles(
@@ -1113,6 +1236,114 @@ export class KnexDatabase implements Database {
 
   async getServices(where: any): Promise<DBService[]> {
     return this.knex<DBService>("services").where(where).select()
+  }
+
+  async getServicesPaginated(params: {
+    page?: number;
+    pageSize?: number;
+    search?: string;
+    kind?: string;
+    minCost?: number;
+    maxCost?: number;
+    paymentType?: string;
+    sortBy?: 'timestamp' | 'cost' | 'service_name';
+    sortOrder?: 'asc' | 'desc';
+    status?: string;
+  }): Promise<{
+    services: DBService[];
+    pagination: {
+      currentPage: number;
+      pageSize: number;
+      totalItems: number;
+      totalPages: number;
+      hasNextPage: boolean;
+      hasPreviousPage: boolean;
+    };
+  }> {
+    const {
+      page = 0,
+      pageSize = 20,
+      search,
+      kind,
+      minCost,
+      maxCost,
+      paymentType,
+      sortBy = 'timestamp',
+      sortOrder = 'desc',
+      status = 'active'
+    } = params;
+
+    // Build base query with filters
+    let query = this.knex<DBService>("services");
+    let countQuery = this.knex<DBService>("services");
+
+    // Apply status filter
+    query = query.where("status", status);
+    countQuery = countQuery.where("status", status);
+
+    // Apply search filter (search in service_name and service_description)
+    if (search) {
+      const searchTerm = `%${search.toLowerCase()}%`;
+      query = query.where(function() {
+        this.whereRaw('LOWER(service_name) LIKE ?', [searchTerm])
+          .orWhereRaw('LOWER(service_description) LIKE ?', [searchTerm]);
+      });
+      countQuery = countQuery.where(function() {
+        this.whereRaw('LOWER(service_name) LIKE ?', [searchTerm])
+          .orWhereRaw('LOWER(service_description) LIKE ?', [searchTerm]);
+      });
+    }
+
+    // Apply kind filter
+    if (kind) {
+      query = query.where("kind", kind);
+      countQuery = countQuery.where("kind", kind);
+    }
+
+    // Apply cost range filters
+    if (minCost !== undefined) {
+      query = query.where("cost", ">=", minCost);
+      countQuery = countQuery.where("cost", ">=", minCost);
+    }
+    if (maxCost !== undefined) {
+      query = query.where("cost", "<=", maxCost);
+      countQuery = countQuery.where("cost", "<=", maxCost);
+    }
+
+    // Apply payment type filter
+    if (paymentType) {
+      query = query.where("payment_type", paymentType);
+      countQuery = countQuery.where("payment_type", paymentType);
+    }
+
+    // Get total count
+    const totalCountResult = await countQuery.count('* as count').first();
+    const totalItems = parseInt((totalCountResult as any).count);
+
+    // Calculate pagination
+    const totalPages = Math.ceil(totalItems / pageSize);
+    const offset = page * pageSize;
+
+    // Apply sorting and pagination
+    query = query
+      .orderBy(sortBy, sortOrder)
+      .offset(offset)
+      .limit(pageSize);
+
+    // Execute query
+    const services = await query.select();
+
+    return {
+      services,
+      pagination: {
+        currentPage: page,
+        pageSize,
+        totalItems,
+        totalPages,
+        hasNextPage: page < totalPages - 1,
+        hasPreviousPage: page > 0,
+      },
+    };
   }
 
   async getService(where: any): Promise<DBService | undefined> {
@@ -2619,6 +2850,69 @@ export class KnexDatabase implements Database {
     where: Partial<DBMarketOrder>,
   ): Promise<DBMarketOrder[]> {
     return this.knex<DBMarketOrder>("market_orders").where(where).select()
+  }
+
+  async getOrdersForListingPaginated(params: {
+    listing_id: string;
+    page?: number;
+    pageSize?: number;
+    status?: string[];
+    sortBy?: 'timestamp' | 'status';
+    sortOrder?: 'asc' | 'desc';
+  }): Promise<{
+    orders: DBOrder[];
+    pagination: {
+      currentPage: number;
+      pageSize: number;
+      totalItems: number;
+      totalPages: number;
+      hasNextPage: boolean;
+      hasPreviousPage: boolean;
+    };
+  }> {
+    const {
+      listing_id,
+      page = 1,
+      pageSize = 20,
+      status,
+      sortBy = 'timestamp',
+      sortOrder = 'desc'
+    } = params;
+
+    // Build the base query
+    let query = this.knex<DBOrder>("orders")
+      .join("market_orders", "market_orders.order_id", "=", "orders.order_id")
+      .where("market_orders.listing_id", listing_id);
+
+    // Apply status filter if provided
+    if (status && status.length > 0) {
+      query = query.whereIn("orders.status", status);
+    }
+
+    // Get total count for pagination
+    const [{ count }] = await query.clone().count("* as count");
+    const totalItems = parseInt(count as string);
+    const totalPages = Math.ceil(totalItems / pageSize);
+    const offset = (page - 1) * pageSize;
+
+    // Apply sorting and pagination
+    const orders = await query
+      .orderBy(`orders.${sortBy}`, sortOrder)
+      .limit(pageSize)
+      .offset(offset)
+      .select("orders.*");
+
+    return {
+      orders,
+      pagination: {
+        currentPage: page,
+        pageSize,
+        totalItems,
+        totalPages,
+        hasNextPage: page < totalPages,
+        hasPreviousPage: page > 1,
+      },
+    };
   }
 
   async insertMarketListingOrder(

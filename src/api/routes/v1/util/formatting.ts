@@ -464,17 +464,9 @@ export async function formatListingBase(
     return public_details
   }
 
-  const market_orders = await database.getMarketListingOrders({
-    listing_id: listing.listing_id,
-  })
-
-  const orders = await Promise.all(
-    market_orders.map(async (ml) => {
-      const order = await database.getOrder({ order_id: ml.order_id })
-      return await serializeOrderDetails(order, null)
-    }),
-  )
-
+  // Note: Orders are now fetched via separate paginated endpoint
+  // /api/market/listing/:listing_id/orders
+  
   let bids: any | undefined = []
   if (listing.sale_type === "auction") {
     const bid_objects = await database.getMarketBids({
@@ -489,7 +481,6 @@ export async function formatListingBase(
 
   return {
     ...public_details,
-    orders: orders,
     bids: bids,
   }
 }
@@ -710,23 +701,12 @@ export async function contractorDetails(
   contractor: DBContractor,
   user: User | null,
 ) {
-  const members = await database.getContractorMembersUsernamesAndID({
-    "contractor_members.contractor_id": contractor.contractor_id,
-  })
   const fields = await database.getContractorFields({
     "contractors.contractor_id": contractor.contractor_id,
   })
 
   return {
     ...contractor,
-    members: await Promise.all(
-      members.map(async (m) => ({
-        username: m.username,
-        roles: (
-          await database.getMemberRoles(contractor.contractor_id, m.user_id)
-        ).map((r) => r.role_id),
-      })),
-    ),
     fields: fields.map((f) => f.field),
     rating: await getContractorRating(contractor.contractor_id),
     avatar: await cdn.getFileLinkResource(contractor.avatar),

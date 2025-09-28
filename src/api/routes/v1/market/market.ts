@@ -23,6 +23,7 @@ import {
 import { cdn } from "../../../../clients/cdn/cdn.js"
 import { marketBidNotification } from "../util/notifications.js"
 import { createOffer } from "../orders/helpers.js"
+import { serializeOrderDetails } from "../orders/serializers.js"
 import { has_permission, is_member } from "../util/permissions.js"
 import {
   org_authorized,
@@ -1119,6 +1120,182 @@ marketRouter.get(
     }
 
     res.json(await formatListing(listing))
+  },
+)
+
+// Schema for listing orders pagination response
+oapi.schema("ListingOrdersPagination", {
+  type: "object",
+  title: "ListingOrdersPagination",
+  properties: {
+    currentPage: { type: "number" },
+    pageSize: { type: "number" },
+    totalItems: { type: "number" },
+    totalPages: { type: "number" },
+    hasNextPage: { type: "boolean" },
+    hasPreviousPage: { type: "boolean" },
+  },
+  required: ["currentPage", "pageSize", "totalItems", "totalPages", "hasNextPage", "hasPreviousPage"],
+})
+
+oapi.schema("ListingOrdersResponse", {
+  type: "object",
+  title: "ListingOrdersResponse",
+  properties: {
+    data: {
+      type: "array",
+      items: { $ref: "#/components/schemas/Order" },
+    },
+    pagination: { $ref: "#/components/schemas/ListingOrdersPagination" },
+  },
+  required: ["data", "pagination"],
+})
+
+marketRouter.get(
+  "/listing/:listing_id/orders",
+  oapi.validPath({
+    summary: "Get paginated orders for a market listing",
+    description: "Returns paginated orders associated with a specific market listing",
+    tags: ["Market", "Market Listing"],
+    parameters: [
+      {
+        name: "listing_id",
+        in: "path",
+        required: true,
+        schema: { type: "string" },
+        description: "ID of the listing to get orders for",
+      },
+      {
+        name: "page",
+        in: "query",
+        required: false,
+        schema: { type: "number", minimum: 1, default: 1 },
+        description: "Page number (1-based)",
+      },
+      {
+        name: "pageSize",
+        in: "query",
+        required: false,
+        schema: { type: "number", minimum: 1, maximum: 100, default: 20 },
+        description: "Number of orders per page",
+      },
+      {
+        name: "status",
+        in: "query",
+        required: false,
+        schema: { 
+          type: "array", 
+          items: { 
+            type: "string",
+            enum: ["not-started", "in-progress", "fulfilled", "cancelled"]
+          }
+        },
+        description: "Filter orders by status",
+      },
+      {
+        name: "sortBy",
+        in: "query",
+        required: false,
+        schema: { type: "string", enum: ["timestamp", "status"], default: "timestamp" },
+        description: "Field to sort by",
+      },
+      {
+        name: "sortOrder",
+        in: "query",
+        required: false,
+        schema: { type: "string", enum: ["asc", "desc"], default: "desc" },
+        description: "Sort order",
+      },
+    ],
+    responses: {
+      "200": {
+        description: "Successfully retrieved listing orders",
+        content: {
+          "application/json": {
+            schema: { $ref: "#/components/schemas/ListingOrdersResponse" },
+          },
+        },
+      },
+      "400": {
+        description: "Bad request",
+        content: {
+          "application/json": {
+            schema: { $ref: "#/components/schemas/ErrorResponse" },
+            examples: {
+              "Invalid listing": {
+                value: { error: "Invalid listing" },
+              },
+            },
+          },
+        },
+      },
+      "404": {
+        description: "Listing not found",
+        content: {
+          "application/json": {
+            schema: { $ref: "#/components/schemas/ErrorResponse" },
+          },
+        },
+      },
+    },
+  }),
+  async (req, res) => {
+    const listing_id = req.params["listing_id"]
+    const page = parseInt(req.query["page"] as string) || 1
+    const pageSize = parseInt(req.query["pageSize"] as string) || 20
+    const status = req.query["status"] as string[] | undefined
+    const sortBy = (req.query["sortBy"] as string) || "timestamp"
+    const sortOrder = (req.query["sortOrder"] as string) || "desc"
+
+    // Validate listing exists
+    let listing: DBMarketListing
+    try {
+      listing = await database.getMarketListing({ listing_id: listing_id })
+    } catch (e) {
+      res.status(400).json({ error: "Invalid listing" })
+      return
+    }
+
+    if (!listing) {
+      res.status(404).json({ error: "Listing not found" })
+      return
+    }
+
+    // Parse status array if provided as comma-separated string
+    let statusArray: string[] | undefined
+    if (status) {
+      if (Array.isArray(status)) {
+        statusArray = status
+      } else if (typeof status === "string") {
+        statusArray = (status as string).split(",").map((s: string) => s.trim())
+      }
+    }
+
+    try {
+      const result = await database.getOrdersForListingPaginated({
+        listing_id,
+        page,
+        pageSize,
+        status: statusArray,
+        sortBy: sortBy as 'timestamp' | 'status',
+        sortOrder: sortOrder as 'asc' | 'desc',
+      })
+
+      // Format the orders using the existing serialization
+      const formattedOrders = await Promise.all(
+        result.orders.map(async (order) => {
+          return await serializeOrderDetails(order, null)
+        })
+      )
+
+      res.json({
+        data: formattedOrders,
+        pagination: result.pagination,
+      })
+    } catch (error) {
+      logger.error("Error fetching listing orders:", error)
+      res.status(500).json({ error: "Internal server error" })
+    }
   },
 )
 

@@ -886,11 +886,35 @@ profileRouter.get(
         ...user,
         balance: +user.balance!,
         contractors: await Promise.all(
-          contractors.map(async (s) => ({
+          (() => {
+            // Group contractors by spectrum_id to collect all roles with details
+            const contractorMap = new Map()
+
+            contractors.forEach((s) => {
+              if (!contractorMap.has(s.spectrum_id)) {
+                contractorMap.set(s.spectrum_id, {
+                  spectrum_id: s.spectrum_id,
+                  name: s.name,
+                  roles: [],
+                  role_details: [], // Array of {role_id, role_name, position}
+                })
+              }
+              contractorMap.get(s.spectrum_id).roles.push(s.role_id)
+              contractorMap.get(s.spectrum_id).role_details.push({
+                role_id: s.role_id,
+                role_name: s.role,
+                position: s.position,
+              })
+            })
+
+            const groupedContractors = Array.from(contractorMap.values())
+            console.log("Grouped contractors:", groupedContractors)
+            return groupedContractors
+          })().map(async (contractor) => ({
+            ...contractor,
             ...(await database.getMinimalContractor({
-              spectrum_id: s.spectrum_id,
+              spectrum_id: contractor.spectrum_id,
             })),
-            role: s.role,
           })),
         ),
         avatar: await cdn.getFileLinkResource(user.avatar),

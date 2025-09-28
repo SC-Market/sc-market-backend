@@ -1,7 +1,15 @@
 import { createLogger, format, transports } from "winston"
 import { env } from "../config/env.js"
+import fs from "fs"
+import path from "path"
 
-const { Console } = transports
+const { Console, File } = transports
+
+// Ensure logs directory exists
+const logsDir = path.join(process.cwd(), "logs")
+if (!fs.existsSync(logsDir)) {
+  fs.mkdirSync(logsDir, { recursive: true })
+}
 
 const formats = [
   format.timestamp(),
@@ -58,7 +66,27 @@ if (env.NODE_ENV !== "production") {
 const logger = createLogger({
   level: env.NODE_ENV === "production" ? "info" : "debug",
   format: format.combine(...formats),
-  transports: [new Console()],
+  transports: [
+    // Console output (for development and Docker logs)
+    new Console(),
+    
+    // Error log file (only errors)
+    new File({
+      filename: path.join(logsDir, "error.log"),
+      level: "error",
+      maxsize: 10485760, // 10MB
+      maxFiles: 5,
+      tailable: true,
+    }),
+    
+    // Combined log file (all levels)
+    new File({
+      filename: path.join(logsDir, "combined.log"),
+      maxsize: 10485760, // 10MB
+      maxFiles: 5,
+      tailable: true,
+    }),
+  ],
 })
 
 export default logger

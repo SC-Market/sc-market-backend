@@ -341,12 +341,106 @@ servicesRouter.get(
 servicesRouter.get(
   "/public",
   oapi.validPath({
-    summary: "Get public services",
+    summary: "Get public services with pagination",
     deprecated: false,
-    description: "",
+    description: "Get paginated list of active services with optional filtering and sorting",
     operationId: "getPublicServices",
     tags: ["Services"],
-    parameters: [],
+    parameters: [
+      {
+        name: "page",
+        in: "query",
+        description: "Page number (0-based)",
+        required: false,
+        schema: {
+          type: "integer",
+          minimum: 0,
+          default: 0,
+        },
+      },
+      {
+        name: "pageSize",
+        in: "query",
+        description: "Number of items per page",
+        required: false,
+        schema: {
+          type: "integer",
+          minimum: 1,
+          maximum: 100,
+          default: 20,
+        },
+      },
+      {
+        name: "search",
+        in: "query",
+        description: "Search term for service name and description",
+        required: false,
+        schema: {
+          type: "string",
+        },
+      },
+      {
+        name: "kind",
+        in: "query",
+        description: "Filter by service kind",
+        required: false,
+        schema: {
+          type: "string",
+        },
+      },
+      {
+        name: "minCost",
+        in: "query",
+        description: "Minimum cost filter",
+        required: false,
+        schema: {
+          type: "number",
+          minimum: 0,
+        },
+      },
+      {
+        name: "maxCost",
+        in: "query",
+        description: "Maximum cost filter",
+        required: false,
+        schema: {
+          type: "number",
+          minimum: 0,
+        },
+      },
+      {
+        name: "paymentType",
+        in: "query",
+        description: "Filter by payment type",
+        required: false,
+        schema: {
+          type: "string",
+          enum: PAYMENT_TYPES,
+        },
+      },
+      {
+        name: "sortBy",
+        in: "query",
+        description: "Field to sort by",
+        required: false,
+        schema: {
+          type: "string",
+          enum: ["timestamp", "cost", "service_name"],
+          default: "timestamp",
+        },
+      },
+      {
+        name: "sortOrder",
+        in: "query",
+        description: "Sort order",
+        required: false,
+        schema: {
+          type: "string",
+          enum: ["asc", "desc"],
+          default: "desc",
+        },
+      },
+    ],
     responses: {
       "200": {
         description: "OK - Successful request with response body",
@@ -358,8 +452,27 @@ servicesRouter.get(
                   type: "array",
                   items: oapi.schema("Service"),
                 },
+                pagination: {
+                  type: "object",
+                  properties: {
+                    currentPage: { type: "integer" },
+                    pageSize: { type: "integer" },
+                    totalItems: { type: "integer" },
+                    totalPages: { type: "integer" },
+                    hasNextPage: { type: "boolean" },
+                    hasPreviousPage: { type: "boolean" },
+                  },
+                  required: [
+                    "currentPage",
+                    "pageSize",
+                    "totalItems",
+                    "totalPages",
+                    "hasNextPage",
+                    "hasPreviousPage",
+                  ],
+                },
               },
-              required: ["data"],
+              required: ["data", "pagination"],
               type: "object",
               title: "GetPublicServicesOk",
             },
@@ -370,10 +483,44 @@ servicesRouter.get(
     },
   }),
   async (req, res, next) => {
-    const services = await database.getServices({
-      status: "active",
-    })
-    res.json(createResponse(await Promise.all(services.map(serializeService))))
+    const {
+      page,
+      pageSize,
+      search,
+      kind,
+      minCost,
+      maxCost,
+      paymentType,
+      sortBy,
+      sortOrder,
+    } = req.query;
+
+    // Parse and validate parameters
+    const params = {
+      page: page ? parseInt(page as string) : undefined,
+      pageSize: pageSize ? parseInt(pageSize as string) : undefined,
+      search: search as string,
+      kind: kind as string,
+      minCost: minCost ? parseFloat(minCost as string) : undefined,
+      maxCost: maxCost ? parseFloat(maxCost as string) : undefined,
+      paymentType: paymentType as string,
+      sortBy: sortBy as 'timestamp' | 'cost' | 'service_name',
+      sortOrder: sortOrder as 'asc' | 'desc',
+    };
+
+    const result = await database.getServicesPaginated(params);
+    
+    // Serialize services
+    const serializedServices = await Promise.all(
+      result.services.map(serializeService)
+    );
+
+    res.json(
+      createResponse({
+        data: serializedServices,
+        pagination: result.pagination,
+      })
+    );
   },
 )
 

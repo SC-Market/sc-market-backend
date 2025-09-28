@@ -1354,6 +1354,259 @@ contractorsRouter.get(
   },
 )
 
+contractorsRouter.get(
+  "/:spectrum_id/members/:username",
+  oapi.validPath({
+    summary: "Check if user is member of contractor",
+    deprecated: false,
+    description: "Check if a specific user is a member of the contractor",
+    operationId: "checkContractorMembership",
+    tags: ["Contractors"],
+    parameters: [
+      {
+        name: "spectrum_id",
+        in: "path",
+        description: "Contractor spectrum ID",
+        required: true,
+        schema: {
+          type: "string",
+          minLength: 3,
+          maxLength: 50,
+        },
+      },
+      {
+        name: "username",
+        in: "path",
+        description: "Username to check",
+        required: true,
+        schema: {
+          type: "string",
+        },
+      },
+    ],
+    responses: {
+      "200": {
+        description: "OK - Membership status retrieved",
+        content: {
+          "application/json": {
+            schema: {
+              type: "object",
+              properties: {
+                data: {
+                  type: "object",
+                  properties: {
+                    is_member: { type: "boolean" },
+                    user_id: { type: "string" },
+                    username: { type: "string" },
+                    roles: {
+                      type: "array",
+                      items: { type: "string" },
+                    },
+                  },
+                  required: ["is_member", "user_id", "username", "roles"],
+                },
+              },
+              required: ["data"],
+            },
+          },
+        },
+      },
+      "403": Response403,
+      "404": Response404,
+    },
+  }),
+  valid_contractor,
+  org_authorized,
+  async (req, res, next) => {
+    const contractor = req.contractor!
+    const username = req.params.username
+
+    try {
+      // Get user by username
+      const user = await database.getUser({ username })
+      
+      // Check if user is a member using the contractor_member_roles table
+      const memberRoles = await database.knex("contractor_member_roles")
+        .join("contractor_roles", "contractor_member_roles.role_id", "contractor_roles.role_id")
+        .where("contractor_roles.contractor_id", contractor.contractor_id)
+        .where("contractor_member_roles.user_id", user.user_id)
+        .select("contractor_roles.role_id")
+
+      const is_member = memberRoles.length > 0
+      const roles = memberRoles.map(r => r.role_id)
+
+      res.json(createResponse({
+        is_member,
+        user_id: user.user_id,
+        username: user.username,
+        roles,
+      }))
+    } catch (error) {
+      console.error("Error checking contractor membership:", error)
+      res.status(500).json(createErrorResponse({
+        message: "Internal server error",
+        status: "error",
+      }))
+    }
+  },
+)
+
+contractorsRouter.get(
+  "/:spectrum_id/members",
+  oapi.validPath({
+    summary: "Get contractor members (paginated)",
+    deprecated: false,
+    description: "Get a paginated list of contractor members with search and filtering capabilities",
+    operationId: "getContractorMembers",
+    tags: ["Contractors"],
+    parameters: [
+      {
+        name: "spectrum_id",
+        in: "path",
+        description: "Contractor spectrum ID",
+        required: true,
+        schema: {
+          type: "string",
+          minLength: 3,
+          maxLength: 50,
+        },
+      },
+      {
+        name: "page",
+        in: "query",
+        description: "Page number (0-based)",
+        required: false,
+        schema: {
+          type: "integer",
+          minimum: 0,
+          default: 0,
+        },
+      },
+      {
+        name: "page_size",
+        in: "query",
+        description: "Number of items per page",
+        required: false,
+        schema: {
+          type: "integer",
+          minimum: 1,
+          maximum: 100,
+          default: 50,
+        },
+      },
+      {
+        name: "search",
+        in: "query",
+        description: "Search by username",
+        required: false,
+        schema: {
+          type: "string",
+        },
+      },
+      {
+        name: "sort",
+        in: "query",
+        description: "Sort field",
+        required: false,
+        schema: {
+          type: "string",
+          enum: ["username", "role"],
+          default: "username",
+        },
+      },
+      {
+        name: "role_filter",
+        in: "query",
+        description: "Filter by role ID",
+        required: false,
+        schema: {
+          type: "string",
+        },
+      },
+    ],
+    responses: {
+      "200": {
+        description: "OK - Successful request with paginated members",
+        content: {
+          "application/json": {
+            schema: {
+              type: "object",
+              properties: {
+                data: {
+                  type: "object",
+                  properties: {
+                    total: { type: "integer" },
+                    page: { type: "integer" },
+                    page_size: { type: "integer" },
+                    members: {
+                      type: "array",
+                      items: {
+                        type: "object",
+                        properties: {
+                          user_id: { type: "string" },
+                          username: { type: "string" },
+                          roles: {
+                            type: "array",
+                            items: { type: "string" },
+                          },
+                          avatar: { type: "string" },
+                        },
+                        required: ["user_id", "username", "roles", "avatar"],
+                      },
+                    },
+                  },
+                  required: ["total", "page", "page_size", "members"],
+                },
+              },
+              required: ["data"],
+            },
+          },
+        },
+      },
+      "403": Response403,
+      "404": Response404,
+    },
+  }),
+  valid_contractor,
+  org_authorized,
+  async (req, res, next) => {
+    const user = req.user as User
+    const contractor = req.contractor!
+    
+    const page = parseInt(req.query.page as string) || 0
+    const page_size = Math.min(parseInt(req.query.page_size as string) || 50, 100)
+    const search = req.query.search as string || ""
+    const sort = req.query.sort as string || "username"
+    const role_filter = req.query.role_filter as string || ""
+
+    try {
+      const result = await database.getContractorMembersPaginated(
+        contractor.contractor_id,
+        {
+          page,
+          page_size,
+          search,
+          sort,
+          role_filter,
+        }
+      )
+
+      res.json(createResponse({
+        total: result.total,
+        page,
+        page_size,
+        members: result.members,
+      }))
+    } catch (error) {
+      console.error("Error fetching contractor members:", error)
+      res.status(500).json(createErrorResponse({
+        message: "Internal server error",
+        status: "error",
+      }))
+    }
+  },
+)
+
 contractorsRouter.post(
   "/:spectrum_id/roles",
   oapi.validPath({
