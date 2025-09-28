@@ -4,6 +4,7 @@ import { database } from "../../../../clients/database/knex-db.js"
 import {
   serializeOfferSession,
   serializeOfferSessionStub,
+  serializeOfferSessionStubOptimized,
 } from "./serializers.js"
 
 import express from "express"
@@ -35,7 +36,7 @@ import {
   validate_optional_spectrum_id,
 } from "../contractors/middleware.js"
 import { validate_optional_username } from "../profiles/middleware.js"
-import { convert_offer_search_query, search_offer_sessions } from "./helpers.js"
+import { convert_offer_search_query, search_offer_sessions, search_offer_sessions_optimized } from "./helpers.js"
 import { is_member } from "../util/permissions.js"
 import { verify_listings } from "../market/helpers.js"
 
@@ -966,12 +967,12 @@ offersRouter.get(
       return
     }
 
-    const result = await search_offer_sessions(args)
+    const result = await search_offer_sessions_optimized(args)
 
     res.json(
       createResponse({
         item_counts: result.item_counts,
-        items: await Promise.all(result.items.map(serializeOfferSessionStub)),
+        items: await Promise.all(result.items.map(serializeOfferSessionStubOptimized)),
       }),
     )
     return

@@ -314,6 +314,14 @@ export async function handleStatusUpdate(req: any, res: any, status: string) {
         status,
         assigned_id: req.user.user_id,
       })
+      
+      // Track order response for responsive badge
+      await database.trackOrderResponse(
+        order.order_id,
+        order.assigned_id || undefined,
+        order.contractor_id || undefined
+      )
+      
       await assignToThread(order, req.user)
     } else {
       await database.updateOrder(order.order_id, { status: status })
@@ -468,6 +476,13 @@ export async function acceptApplicant(
     contractor_id: targetContractorObj?.contractor_id || undefined,
   })
 
+  // Track order assignment for responsive badge
+  await database.trackOrderAssignment(
+    req.order.order_id,
+    targetUserObj?.user_id,
+    targetContractorObj?.contractor_id
+  )
+
   await database.clearOrderApplications(req.order.order_id)
   await createOrderNotifications(newOrders[0])
 
@@ -560,6 +575,142 @@ export async function search_orders(
     .limit(args.page_size)
     .offset(args.page_size * args.index)
     .select("*", database.knex.raw("count(*) OVER() AS full_count"))
+
+  return { item_counts, items }
+}
+
+// Type for the optimized query result with all joined data
+interface OptimizedOrderRow {
+  // Order fields
+  order_id: string
+  customer_id: string
+  assigned_id: string | null
+  contractor_id: string | null
+  status: string
+  timestamp: Date
+  title: string
+  kind: string
+  cost: number
+  payment_type: string
+  service_id: string | null
+  
+  // Item count
+  item_count: number
+  
+  // Service fields
+  service_title: string | null
+  
+  // Customer account fields
+  customer_username: string
+  customer_avatar: string
+  customer_display_name: string
+  
+  // Assigned account fields
+  assigned_username: string | null
+  assigned_avatar: string | null
+  assigned_display_name: string | null
+  
+  // Contractor fields
+  contractor_spectrum_id: string | null
+  contractor_name: string | null
+  contractor_avatar: string | null
+}
+
+// Optimized version that includes all related data in a single query
+export async function search_orders_optimized(
+  args: OrderSearchQueryArguments,
+): Promise<{
+  items: OptimizedOrderRow[]
+  item_counts: { [k: string]: number }
+}> {
+  let base = database.knex("orders").where((qd) => {
+    if (args.customer_id) qd = qd.where("customer_id", args.customer_id)
+    if (args.assigned_id) qd = qd.where("assigned_id", args.assigned_id)
+    if (args.contractor_id) qd = qd.where("contractor_id", args.contractor_id)
+    return qd
+  })
+
+  // Get totals (same as before)
+  const totals = await base
+    .clone()
+    .groupByRaw("status")
+    .select("status", database.knex.raw("COUNT(*) as count"))
+
+  const item_counts = Object.fromEntries(
+    totals.map(({ status, count }) => [status, +count]),
+  )
+
+  // Build optimized query with JOINs to get all related data
+  let optimizedQuery = database.knex("orders")
+    .leftJoin("market_orders", "orders.order_id", "=", "market_orders.order_id")
+    .leftJoin("services", "orders.service_id", "=", "services.service_id")
+    .leftJoin("accounts as customer_account", "orders.customer_id", "=", "customer_account.user_id")
+    .leftJoin("accounts as assigned_account", "orders.assigned_id", "=", "assigned_account.user_id")
+    .leftJoin("contractors", "orders.contractor_id", "=", "contractors.contractor_id")
+    .where((qd) => {
+      if (args.customer_id) qd = qd.where("orders.customer_id", args.customer_id)
+      if (args.assigned_id) qd = qd.where("orders.assigned_id", args.assigned_id)
+      if (args.contractor_id) qd = qd.where("orders.contractor_id", args.contractor_id)
+      return qd
+    })
+
+  // Apply status filter
+  if (args.status) {
+    optimizedQuery = optimizedQuery.andWhere((qb) => {
+      if (args.status === "past") {
+        return qb.whereRaw("orders.status = ANY(?)", [["fulfilled", "cancelled"]])
+      }
+
+      if (args.status === "active") {
+        return qb.whereRaw("orders.status = ANY(?)", [["in-progress", "not-started"]])
+      }
+
+      return qb.where("orders.status", args.status)
+    })
+  }
+
+  // Apply sorting
+  switch (args.sort_method) {
+    case "timestamp":
+    case "status":
+    case "title":
+      optimizedQuery = optimizedQuery.orderBy(`orders.${args.sort_method}`, args.reverse_sort ? "desc" : "asc")
+      break
+    case "customer_name":
+      optimizedQuery = optimizedQuery.orderBy("customer_account.username", args.reverse_sort ? "desc" : "asc")
+      break
+    case "contractor_name":
+      optimizedQuery = optimizedQuery.orderByRaw(
+        `COALESCE(customer_account.username, contractors.name) ${args.reverse_sort ? "desc" : "asc"}`,
+      )
+      break
+  }
+
+  // Execute query with all related data
+  const items = await optimizedQuery
+    .limit(args.page_size)
+    .offset(args.page_size * args.index)
+    .select(
+      "orders.*",
+      database.knex.raw("COUNT(market_orders.order_id) as item_count"),
+      "services.title as service_title",
+      "customer_account.username as customer_username",
+      "customer_account.avatar as customer_avatar",
+      "customer_account.display_name as customer_display_name",
+      "assigned_account.username as assigned_username",
+      "assigned_account.avatar as assigned_avatar",
+      "assigned_account.display_name as assigned_display_name",
+      "contractors.spectrum_id as contractor_spectrum_id",
+      "contractors.name as contractor_name",
+      "contractors.avatar as contractor_avatar"
+    )
+    .groupBy(
+      "orders.order_id",
+      "services.service_id",
+      "customer_account.user_id",
+      "assigned_account.user_id",
+      "contractors.contractor_id"
+    )
 
   return { item_counts, items }
 }

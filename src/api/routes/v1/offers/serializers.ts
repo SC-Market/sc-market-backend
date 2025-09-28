@@ -9,6 +9,7 @@ import {
 } from "../util/formatting.js"
 import { serializeService } from "../services/serializers.js"
 import { DBContractOffer } from "../contracts/types.js"
+import { cdn } from "../../../../clients/cdn/cdn.js"
 
 export async function serializeOfferSessionStub(session: DBOfferSession) {
   const mostRecent = await database.getMostRecentOrderOffer(session.id)
@@ -58,6 +59,101 @@ export async function serializeOfferSessionStub(session: DBOfferSession) {
       payment_type: mostRecent.payment_type,
       count: +itemCount.sum,
       service_name,
+    },
+  }
+}
+
+// Type for the optimized query result
+interface OptimizedOfferSessionRow {
+  // Offer session fields
+  id: string
+  customer_id: string
+  assigned_id: string | null
+  contractor_id: string | null
+  status: string
+  timestamp: Date
+  
+  // Most recent offer fields
+  most_recent_offer_id: string
+  most_recent_cost: number
+  most_recent_title: string
+  most_recent_payment_type: string
+  most_recent_timestamp: Date
+  most_recent_actor_id: string
+  most_recent_status: string
+  most_recent_service_id: string | null
+  
+  // Item count
+  item_count: number
+  
+  // Service fields
+  service_title: string | null
+  
+  // Customer account fields
+  customer_username: string
+  customer_avatar: string
+  customer_display_name: string
+  
+  // Assigned account fields
+  assigned_username: string | null
+  assigned_avatar: string | null
+  assigned_display_name: string | null
+  
+  // Contractor fields
+  contractor_spectrum_id: string | null
+  contractor_name: string | null
+  contractor_avatar: string | null
+}
+
+// Optimized serializer for pre-joined data
+export async function serializeOfferSessionStubOptimized(row: OptimizedOfferSessionRow) {
+  let status
+  if (row.status === "active") {
+    if (row.most_recent_actor_id === row.customer_id) {
+      status = "Waiting for Seller"
+    } else {
+      status = "Waiting for Customer"
+    }
+  } else {
+    if (row.most_recent_status === "rejected") {
+      status = "Rejected"
+    } else if (row.most_recent_status === "accepted") {
+      status = "Accepted"
+    } else {
+      status = "Counter Offered"
+    }
+  }
+
+  // Process avatars through CDN service
+  const customerAvatar = await cdn.getFileLinkResource(row.customer_avatar)
+  const assignedAvatar = row.assigned_avatar ? await cdn.getFileLinkResource(row.assigned_avatar) : null
+  const contractorAvatar = row.contractor_avatar ? await cdn.getFileLinkResource(row.contractor_avatar) : null
+
+  return {
+    id: row.id,
+    contractor: row.contractor_id ? {
+      spectrum_id: row.contractor_spectrum_id,
+      name: row.contractor_name,
+      avatar: contractorAvatar!,
+    } : null,
+    assigned_to: row.assigned_id ? {
+      username: row.assigned_username,
+      avatar: assignedAvatar!,
+      display_name: row.assigned_display_name,
+    } : null,
+    customer: {
+      username: row.customer_username,
+      avatar: customerAvatar!,
+      display_name: row.customer_display_name,
+    },
+    status: status,
+    timestamp: +row.most_recent_timestamp,
+    most_recent_offer: {
+      cost: +row.most_recent_cost,
+      title: row.most_recent_title,
+      payment_type: row.most_recent_payment_type,
+      count: +row.item_count,
+      service_name: row.service_title,
     },
   }
 }

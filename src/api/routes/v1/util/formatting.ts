@@ -643,6 +643,85 @@ export async function formatOrderStub(order: DBOrder): Promise<OrderStub> {
   }
 }
 
+// Type for the optimized order row from search_orders_optimized
+interface OptimizedOrderRow {
+  // Order fields
+  order_id: string
+  customer_id: string
+  assigned_id: string | null
+  contractor_id: string | null
+  status: string
+  timestamp: Date
+  title: string
+  kind: string
+  cost: number
+  payment_type: string
+  service_id: string | null
+  
+  // Item count
+  item_count: number
+  
+  // Service fields
+  service_title: string | null
+  
+  // Customer account fields
+  customer_username: string
+  customer_avatar: string
+  customer_display_name: string
+  
+  // Assigned account fields
+  assigned_username: string | null
+  assigned_avatar: string | null
+  assigned_display_name: string | null
+  
+  // Contractor fields
+  contractor_spectrum_id: string | null
+  contractor_name: string | null
+  contractor_avatar: string | null
+}
+
+// Optimized serializer for pre-joined data
+export async function formatOrderStubOptimized(row: OptimizedOrderRow): Promise<OrderStub> {
+  // We still need to fetch ratings and process avatars since they're not in the optimized query
+  const customerRating = await getUserRating(row.customer_id)
+  const assignedRating = row.assigned_id ? await getUserRating(row.assigned_id) : null
+  const contractorRating = row.contractor_id ? await getContractorRating(row.contractor_id) : null
+
+  // Process avatars through CDN service
+  const customerAvatar = await cdn.getFileLinkResource(row.customer_avatar)
+  const assignedAvatar = row.assigned_avatar ? await cdn.getFileLinkResource(row.assigned_avatar) : null
+  const contractorAvatar = row.contractor_avatar ? await cdn.getFileLinkResource(row.contractor_avatar) : null
+
+  return {
+    order_id: row.order_id,
+    contractor: row.contractor_id && row.contractor_spectrum_id && row.contractor_name ? {
+      spectrum_id: row.contractor_spectrum_id,
+      name: row.contractor_name,
+      avatar: contractorAvatar!,
+      rating: contractorRating!,
+    } : null,
+    assigned_to: row.assigned_id && row.assigned_username && row.assigned_display_name ? {
+      username: row.assigned_username,
+      avatar: assignedAvatar!,
+      display_name: row.assigned_display_name,
+      rating: assignedRating!,
+    } : null,
+    customer: {
+      username: row.customer_username,
+      avatar: customerAvatar!,
+      display_name: row.customer_display_name,
+      rating: customerRating,
+    },
+    status: row.status as OrderStatus,
+    timestamp: row.timestamp.toISOString(),
+    cost: row.cost.toString(),
+    title: row.title,
+    payment_type: row.payment_type,
+    count: +row.item_count,
+    service_name: row.service_title,
+  }
+}
+
 export async function getContractorRating(
   contractor_id: string,
 ): Promise<Rating> {
@@ -663,11 +742,15 @@ export async function getContractorRating(
   }
 
   const ratings = reviews.filter((r) => r.rating).map((r) => +r.rating)
+  const responseStats = await database.getContractorResponseStats(contractor_id)
+  
   return {
     avg_rating: (ratings.reduce((a, b) => a + b, 0) * 10) / ratings.length || 0,
     rating_count: ratings.length,
     streak,
     total_orders: count,
+    response_rate: responseStats.response_rate,
+    total_assignments: responseStats.total_assignments,
   }
 }
 
@@ -689,11 +772,15 @@ export async function getUserRating(user_id: string): Promise<Rating> {
   }
 
   const ratings = reviews.filter((r) => r.rating).map((r) => +r.rating)
+  const responseStats = await database.getUserResponseStats(user_id)
+  
   return {
     avg_rating: (ratings.reduce((a, b) => a + b, 0) * 10) / ratings.length || 0,
     rating_count: ratings.length,
     streak,
     total_orders: count,
+    response_rate: responseStats.response_rate,
+    total_assignments: responseStats.total_assignments,
   }
 }
 

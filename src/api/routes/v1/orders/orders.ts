@@ -7,7 +7,7 @@ import {
 import { database } from "../../../../clients/database/knex-db.js"
 import { DBOrder } from "../../../../clients/database/db-models.js"
 import { User } from "../api-models.js"
-import { formatOrderStub } from "../util/formatting.js"
+import { formatOrderStub, formatOrderStubOptimized } from "../util/formatting.js"
 import { createOrderReviewNotification } from "../util/notifications.js"
 import { rate_limit } from "../../../middleware/ratelimiting.js"
 import { has_permission, is_member } from "../util/permissions.js"
@@ -15,11 +15,13 @@ import {
   acceptApplicant,
   convert_order_search_query,
   createOffer,
+  getContractorOrderMetrics,
   handleAssignedUpdate,
   handleStatusUpdate,
   is_related_to_order,
   orderTypes,
   search_orders,
+  search_orders_optimized,
 } from "./helpers.js"
 import { PAYMENT_TYPES } from "../types/payment-types.js"
 import { createErrorResponse, createResponse } from "../util/response.js"
@@ -782,11 +784,11 @@ ordersRouter.get(
       return
     }
 
-    const result = await search_orders(args)
+    const result = await search_orders_optimized(args)
     res.json(
       createResponse({
         item_counts: result.item_counts,
-        items: await Promise.all(result.items.map(formatOrderStub)),
+        items: await Promise.all(result.items.map(formatOrderStubOptimized)),
       }),
     )
     return
@@ -798,6 +800,131 @@ ordersRouter.get("/all", adminAuthorized, async (req, res, next) => {
 
   res.json(createResponse(await Promise.all(orders.map(formatOrderStub))))
 })
+
+ordersRouter.get(
+  "/contractor/:spectrum_id/metrics",
+  oapi.validPath({
+    summary: "Get contractor order metrics",
+    deprecated: false,
+    description: "Returns aggregated metrics for orders placed with a specific contractor",
+    operationId: "getContractorOrderMetrics",
+    tags: ["Orders"],
+    parameters: [
+      {
+        name: "spectrum_id",
+        in: "path",
+        description: "The Spectrum ID of the contractor",
+        required: true,
+        example: "SCMARKET",
+        schema: {
+          type: "string",
+          minLength: 3,
+          maxLength: 50,
+        },
+      },
+    ],
+    responses: {
+      "200": {
+        description: "OK - Successful request with response body",
+        content: {
+          "application/json": {
+            schema: {
+              properties: {
+                data: {
+                  type: "object",
+                  properties: {
+                    total_orders: {
+                      type: "integer",
+                      description: "Total number of orders",
+                    },
+                    total_value: {
+                      type: "integer", 
+                      description: "Total value of all orders",
+                    },
+                    status_counts: {
+                      type: "object",
+                      properties: {
+                        "not-started": { type: "integer" },
+                        "in-progress": { type: "integer" },
+                        "fulfilled": { type: "integer" },
+                        "cancelled": { type: "integer" },
+                      },
+                      description: "Count of orders by status",
+                    },
+                    recent_activity: {
+                      type: "object",
+                      properties: {
+                        orders_last_7_days: { type: "integer" },
+                        orders_last_30_days: { type: "integer" },
+                        value_last_7_days: { type: "integer" },
+                        value_last_30_days: { type: "integer" },
+                      },
+                      description: "Recent activity metrics",
+                    },
+                    top_customers: {
+                      type: "array",
+                      items: {
+                        type: "object",
+                        properties: {
+                          username: { type: "string" },
+                          order_count: { type: "integer" },
+                          total_value: { type: "integer" },
+                        },
+                      },
+                      description: "Top customers by order count",
+                    },
+                  },
+                  required: ["total_orders", "total_value", "status_counts", "recent_activity"],
+                  title: "ContractorOrderMetrics",
+                },
+              },
+              required: ["data"],
+              type: "object",
+              title: "GetContractorOrderMetricsOk",
+            },
+          },
+        },
+        headers: {},
+      },
+      "400": Response400,
+      "401": Response401,
+      "403": Response403,
+      "404": Response404,
+    },
+    security: [],
+  }),
+  userAuthorized,
+  async (req, res) => {
+    const spectrum_id = req.params["spectrum_id"]
+    const contractor = await database.getContractor({
+      spectrum_id: spectrum_id,
+    })
+    if (!contractor) {
+      res.status(404).json(createErrorResponse({ message: "Invalid contractor" }))
+      return
+    }
+
+    const user = req.user as User
+    const contractors = await database.getUserContractors({
+      "contractor_members.user_id": user.user_id,
+    })
+
+    if (
+      contractors.filter((c) => c.contractor_id === contractor.contractor_id)
+        .length === 0
+    ) {
+      res
+        .status(403)
+        .json(createErrorResponse({ message: "You are not authorized to view these metrics" }))
+      return
+    }
+
+    // Get contractor order metrics using optimized query
+    const metrics = await getContractorOrderMetrics(contractor.contractor_id)
+    
+    res.json(createResponse(metrics))
+  },
+)
 
 ordersRouter.post(
   "/:order_id/review",
