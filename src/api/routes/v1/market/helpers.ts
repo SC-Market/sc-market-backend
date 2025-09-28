@@ -219,6 +219,7 @@ export async function convertQuery(
     contractor_seller_id,
     listing_type: query.listing_type || null,
     status: query.status || null,
+    excludeArchived: !query.status, // Exclude archived when no specific status is provided
   }
 }
 

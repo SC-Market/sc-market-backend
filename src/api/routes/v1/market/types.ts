@@ -57,6 +57,7 @@ export interface MarketSearchQuery {
   contractor_seller_id?: string | null
   listing_type?: string | null
   status?: string | null
+  excludeArchived?: boolean
 }
 
 export interface OrderStats {

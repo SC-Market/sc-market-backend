@@ -2524,7 +2524,6 @@ marketRouter.get(
       }
 
       const searchResults = await database.searchMarket(query, {
-        ...(query.status ? { status: query.status } : { status: "active" }), // Use provided status or default to active
         ...(includeInternal ? {} : { internal: "false" }), // Only filter internal when we don't want to include them
       })
 
@@ -2555,6 +2554,7 @@ marketRouter.get(
           total_orders: r.total_orders,
           title: r.title,
           photo: r.photo,
+          internal: r.internal,
         })),
       })
     } catch (e) {

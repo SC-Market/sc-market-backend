@@ -3796,6 +3796,8 @@ export class KnexDatabase implements Database {
 
     if (searchQuery.status) {
       query = query.andWhere("status", searchQuery.status)
+    } else if (searchQuery.excludeArchived) {
+      query = query.andWhere("status", "!=", "archived")
     }
 
     if (andWhere) {
