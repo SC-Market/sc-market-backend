@@ -218,6 +218,7 @@ export async function convertQuery(
     user_seller_id,
     contractor_seller_id,
     listing_type: query.listing_type || null,
+    status: query.status || null,
   }
 }
 

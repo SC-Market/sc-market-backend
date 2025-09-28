@@ -37,6 +37,7 @@ export interface MarketSearchQueryArguments {
   user_seller: string
   contractor_seller: string
   listing_type: string | null
+  status: string | null
 }
 
 export interface MarketSearchQuery {
@@ -55,6 +56,7 @@ export interface MarketSearchQuery {
   user_seller_id?: string | null
   contractor_seller_id?: string | null
   listing_type?: string | null
+  status?: string | null
 }
 
 export interface OrderStats {

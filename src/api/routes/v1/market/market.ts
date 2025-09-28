@@ -400,9 +400,10 @@ marketRouter.post(
     }
 
     if (status || price !== undefined || quantity_available !== undefined || internal !== undefined) {
-      // Only allow internal updates for contractor listings
-      if (internal !== undefined && !listing.contractor_seller_id) {
-        res.status(400).json({ error: "Internal status can only be set for contractor listings" })
+      // Only allow internal=true for contractor listings
+      // User listings must always be public (internal=false)
+      if (internal === true && !listing.contractor_seller_id) {
+        res.status(400).json({ error: "Internal listings can only be created for contractor listings" })
         return
       }
       
@@ -2457,6 +2458,11 @@ marketRouter.get(
         in: "query",
         schema: { type: "string", nullable: true },
       },
+      {
+        name: "status",
+        in: "query",
+        schema: { type: "string", nullable: true },
+      },
     ],
     responses: {
       "200": {
@@ -2518,7 +2524,7 @@ marketRouter.get(
       }
 
       const searchResults = await database.searchMarket(query, {
-        status: "active",
+        ...(query.status ? { status: query.status } : { status: "active" }), // Use provided status or default to active
         ...(includeInternal ? {} : { internal: "false" }), // Only filter internal when we don't want to include them
       })
 

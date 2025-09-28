@@ -3794,6 +3794,10 @@ export class KnexDatabase implements Database {
       )
     }
 
+    if (searchQuery.status) {
+      query = query.andWhere("status", searchQuery.status)
+    }
+
     if (andWhere) {
       query = query.andWhere(andWhere)
     }
