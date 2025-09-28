@@ -714,3 +714,107 @@ export async function search_orders_optimized(
 
   return { item_counts, items }
 }
+
+// Interface for contractor order metrics
+interface ContractorOrderMetrics {
+  total_orders: number
+  total_value: number
+  active_value: number  // Sum of costs for active orders (not-started + in-progress)
+  completed_value: number  // Sum of costs for fulfilled orders
+  status_counts: {
+    "not-started": number
+    "in-progress": number
+    "fulfilled": number
+    "cancelled": number
+  }
+  recent_activity: {
+    orders_last_7_days: number
+    orders_last_30_days: number
+    value_last_7_days: number
+    value_last_30_days: number
+  }
+  top_customers: Array<{
+    username: string
+    order_count: number
+    total_value: number
+  }>
+}
+
+// Get contractor order metrics using optimized queries
+export async function getContractorOrderMetrics(contractor_id: string): Promise<ContractorOrderMetrics> {
+  // Get basic counts and totals
+  const basicStats = await database.knex("orders")
+    .where({ contractor_id })
+    .select(
+      database.knex.raw("COUNT(*) as total_orders"),
+      database.knex.raw("COALESCE(SUM(cost), 0) as total_value"),
+      database.knex.raw("COALESCE(SUM(CASE WHEN status IN ('not-started', 'in-progress') THEN cost ELSE 0 END), 0) as active_value"),
+      database.knex.raw("COALESCE(SUM(CASE WHEN status = 'fulfilled' THEN cost ELSE 0 END), 0) as completed_value")
+    )
+    .first()
+
+  // Get status counts
+  const statusCounts = await database.knex("orders")
+    .where({ contractor_id })
+    .groupBy("status")
+    .select("status", database.knex.raw("COUNT(*) as count"))
+
+  const status_counts = {
+    "not-started": 0,
+    "in-progress": 0,
+    "fulfilled": 0,
+    "cancelled": 0,
+  }
+
+  statusCounts.forEach(({ status, count }) => {
+    if (status in status_counts) {
+      status_counts[status as keyof typeof status_counts] = +count
+    }
+  })
+
+  // Get recent activity (last 7 and 30 days)
+  const sevenDaysAgo = new Date(Date.now() - 7 * 24 * 60 * 60 * 1000)
+  const thirtyDaysAgo = new Date(Date.now() - 30 * 24 * 60 * 60 * 1000)
+
+  const recentActivity = await database.knex("orders")
+    .where({ contractor_id })
+    .select(
+      database.knex.raw("COUNT(CASE WHEN timestamp >= ? THEN 1 END) as orders_last_7_days", [sevenDaysAgo]),
+      database.knex.raw("COUNT(CASE WHEN timestamp >= ? THEN 1 END) as orders_last_30_days", [thirtyDaysAgo]),
+      database.knex.raw("COALESCE(SUM(CASE WHEN timestamp >= ? THEN cost ELSE 0 END), 0) as value_last_7_days", [sevenDaysAgo]),
+      database.knex.raw("COALESCE(SUM(CASE WHEN timestamp >= ? THEN cost ELSE 0 END), 0) as value_last_30_days", [thirtyDaysAgo])
+    )
+    .first()
+
+  // Get top customers
+  const topCustomers = await database.knex("orders")
+    .join("accounts", "orders.customer_id", "=", "accounts.user_id")
+    .where({ contractor_id })
+    .groupBy("orders.customer_id", "accounts.username")
+    .select(
+      "accounts.username",
+      database.knex.raw("COUNT(*) as order_count"),
+      database.knex.raw("COALESCE(SUM(orders.cost), 0) as total_value")
+    )
+    .orderBy("order_count", "desc")
+    .limit(10)
+
+  return {
+    total_orders: +basicStats.total_orders,
+    total_value: +basicStats.total_value,
+    active_value: +basicStats.active_value,
+    completed_value: +basicStats.completed_value,
+    status_counts,
+    recent_activity: {
+      orders_last_7_days: +recentActivity.orders_last_7_days,
+      orders_last_30_days: +recentActivity.orders_last_30_days,
+      value_last_7_days: +recentActivity.value_last_7_days,
+      value_last_30_days: +recentActivity.value_last_30_days,
+    },
+    top_customers: topCustomers.map(customer => ({
+      username: customer.username,
+      order_count: +customer.order_count,
+      total_value: +customer.total_value,
+    })),
+  }
+}

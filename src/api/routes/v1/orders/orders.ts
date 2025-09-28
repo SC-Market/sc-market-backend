@@ -841,6 +841,14 @@ ordersRouter.get(
                       type: "integer", 
                       description: "Total value of all orders",
                     },
+                    active_value: {
+                      type: "integer",
+                      description: "Total value of active orders (not-started + in-progress)",
+                    },
+                    completed_value: {
+                      type: "integer",
+                      description: "Total value of completed orders (fulfilled)",
+                    },
                     status_counts: {
                       type: "object",
                       properties: {
@@ -874,7 +882,7 @@ ordersRouter.get(
                       description: "Top customers by order count",
                     },
                   },
-                  required: ["total_orders", "total_value", "status_counts", "recent_activity"],
+                  required: ["total_orders", "total_value", "active_value", "completed_value", "status_counts", "recent_activity"],
                   title: "ContractorOrderMetrics",
                 },
               },

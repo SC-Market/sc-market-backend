@@ -4844,6 +4844,108 @@ export class KnexDatabase implements Database {
     const results = await query
     return results.map((row: any) => row.user_id)
   }
+
+  // Responsive Badge Tracking Functions
+  
+  async trackOrderAssignment(
+    order_id: string, 
+    assigned_user_id?: string, 
+    assigned_contractor_id?: string
+  ) {
+    if (!assigned_user_id && !assigned_contractor_id) {
+      throw new Error("Either assigned_user_id or assigned_contractor_id must be provided")
+    }
+    
+    await this.knex("order_response_times").insert({
+      order_id,
+      assigned_user_id: assigned_user_id || null,
+      assigned_contractor_id: assigned_contractor_id || null,
+      assigned_at: new Date(),
+      is_responded: false
+    })
+  }
+
+  async trackOrderResponse(
+    order_id: string, 
+    assigned_user_id?: string, 
+    assigned_contractor_id?: string
+  ) {
+    if (!assigned_user_id && !assigned_contractor_id) {
+      throw new Error("Either assigned_user_id or assigned_contractor_id must be provided")
+    }
+
+    const whereClause: any = { order_id }
+    if (assigned_user_id) {
+      whereClause.assigned_user_id = assigned_user_id
+    }
+    if (assigned_contractor_id) {
+      whereClause.assigned_contractor_id = assigned_contractor_id
+    }
+
+    const assignment = await this.knex("order_response_times")
+      .where(whereClause)
+      .first()
+    
+    if (assignment && !assignment.is_responded) {
+      const responseTimeMinutes = Math.floor(
+        (new Date().getTime() - new Date(assignment.assigned_at).getTime()) / (1000 * 60)
+      )
+      
+      await this.knex("order_response_times")
+        .where(whereClause)
+        .update({
+          responded_at: new Date(),
+          response_time_minutes: responseTimeMinutes,
+          is_responded: true
+        })
+    }
+  }
+
+  async getUserResponseStats(user_id: string): Promise<{
+    total_assignments: number
+    responded_within_24h: number
+    response_rate: number
+  }> {
+    const stats = await this.knex("order_response_times")
+      .where("assigned_user_id", user_id)
+      .select(
+        this.knex.raw("COUNT(*) as total_assignments"),
+        this.knex.raw("COUNT(CASE WHEN response_time_minutes <= 1440 THEN 1 END) as responded_within_24h")
+      )
+      .first()
+    
+    const total = parseInt(stats.total_assignments) || 0
+    const within24h = parseInt(stats.responded_within_24h) || 0
+    
+    return {
+      total_assignments: total,
+      responded_within_24h: within24h,
+      response_rate: total > 0 ? (within24h / total) * 100 : 0
+    }
+  }
+
+  async getContractorResponseStats(contractor_id: string): Promise<{
+    total_assignments: number
+    responded_within_24h: number
+    response_rate: number
+  }> {
+    const stats = await this.knex("order_response_times")
+      .where("assigned_contractor_id", contractor_id)
+      .select(
+        this.knex.raw("COUNT(*) as total_assignments"),
+        this.knex.raw("COUNT(CASE WHEN response_time_minutes <= 1440 THEN 1 END) as responded_within_24h")
+      )
+      .first()
+    
+    const total = parseInt(stats.total_assignments) || 0
+    const within24h = parseInt(stats.responded_within_24h) || 0
+    
+    return {
+      total_assignments: total,
+      responded_within_24h: within24h,
+      response_rate: total > 0 ? (within24h / total) * 100 : 0
+    }
+  }
 }
 
 export const database = new KnexDatabase()
