@@ -870,14 +870,21 @@ export class KnexDatabase implements Database {
           user_id: member.user_id,
           username: member.username,
           roles: [],
-          avatar: member.avatar || "",
         })
       }
       membersMap.get(member.user_id).roles.push(member.role_id)
     })
 
-    // Convert to array format
-    const membersWithRoles = Array.from(membersMap.values())
+    // Convert to array format and enrich with minimal user data
+    const membersWithRoles = await Promise.all(
+      Array.from(membersMap.values()).map(async (member) => {
+        const minimalUser = await this.getMinimalUser({ user_id: member.user_id })
+        return {
+          ...minimalUser,
+          roles: member.roles,
+        }
+      })
+    )
 
     return {
       members: membersWithRoles,

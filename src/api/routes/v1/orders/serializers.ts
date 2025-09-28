@@ -66,7 +66,14 @@ export async function serializeOrderDetails(
     })
   }
 
-  const assigned_to = order.assigned_id
+  const assigned_to_minimal = order.assigned_id
+    ? await database.getMinimalUser({ user_id: order.assigned_id })
+    : null
+
+  const customer = await database.getMinimalUser({ user_id: order.customer_id })
+
+  // Get full assigned user data for discord_server_id (only if needed)
+  const assigned_to_full = order.assigned_id
     ? await database.getUser({ user_id: order.assigned_id })
     : null
 
@@ -82,8 +89,10 @@ export async function serializeOrderDetails(
           .spectrum_id),
     cost: +order.cost,
     title: order.title,
-    assigned_to: assigned_to?.username,
-    customer: (await database.getUser({ user_id: order.customer_id })).username,
+    assigned_to: assigned_to_minimal?.username,
+    assigned_to_minimal: assigned_to_minimal,
+    customer: customer.username,
+    customer_minimal: customer,
     timestamp: +order.timestamp,
     // comments: !comments ? [] : await fetchOrderComments(order.order_id), // TODO: Get order comments, but not for public orders / orders w/o perms
     applicants: !applicants
@@ -104,6 +113,6 @@ export async function serializeOrderDetails(
     rush: order.rush,
     offer_session_id: order.offer_session_id,
     discord_thread_id: order.thread_id,
-    discord_server_id: assigned_to?.official_server_id,
+    discord_server_id: assigned_to_full?.official_server_id,
   }
 }
