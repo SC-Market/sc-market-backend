@@ -907,9 +907,7 @@ profileRouter.get(
               })
             })
 
-            const groupedContractors = Array.from(contractorMap.values())
-            console.log("Grouped contractors:", groupedContractors)
-            return groupedContractors
+            return Array.from(contractorMap.values())
           })().map(async (contractor) => ({
             ...contractor,
             ...(await database.getMinimalContractor({
