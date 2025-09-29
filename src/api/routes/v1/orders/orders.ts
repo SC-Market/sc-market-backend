@@ -47,6 +47,7 @@ import { validate_optional_username } from "../profiles/middleware.js"
 import {
   validate_optional_spectrum_id,
   org_authorized,
+  valid_contractor,
 } from "../contractors/middleware.js"
 import { ORDER_SEARCH_SORT_METHODS, ORDER_SEARCH_STATUS } from "./types.js"
 import orderSettingsRouter from "./order-settings.js"
@@ -468,8 +469,6 @@ ordersRouter.get(
       "401": Response401,
     },
   }),
-
-  userAuthorized,
   async (req, res, next) => {
     const user = req.user as User
     const orders = await database.getOrders({ assigned_id: user.user_id })
@@ -479,7 +478,7 @@ ordersRouter.get(
 
 ordersRouter.get(
   "/contractor/:spectrum_id/assigned",
-  userAuthorized,
+  org_authorized,
   requireOrdersRead,
   oapi.validPath({
     summary: "Get orders assigned to you for a given contractor",
@@ -524,18 +523,9 @@ ordersRouter.get(
     },
     security: [],
   }),
-  userAuthorized,
   async (req, res, next) => {
-    const spectrum_id = req.params["spectrum_id"]
-    const contractor = await database.getContractor({
-      spectrum_id: spectrum_id,
-    })
-    if (!contractor) {
-      res.status(400).json({ message: "Invalid contractor" })
-      return
-    }
-
     const user = req.user as User
+    const contractor = req.contractor!
     const orders = await database.getOrders({
       assigned_id: user.user_id,
       contractor_id: contractor.contractor_id,
