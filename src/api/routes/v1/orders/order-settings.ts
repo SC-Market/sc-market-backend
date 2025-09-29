@@ -60,13 +60,11 @@ orderSettingsRouter.post("/settings", userAuthorized, async (req, res) => {
   }: CreateOrderSettingRequest = req.body
 
   if (!setting_type || !message_content) {
-    res
-      .status(400)
-      .json(
-        createErrorResponse({
-          error: "setting_type and message_content are required",
-        }),
-      )
+    res.status(400).json(
+      createErrorResponse({
+        error: "setting_type and message_content are required",
+      }),
+    )
     return
   }
 
@@ -137,13 +135,11 @@ orderSettingsRouter.put("/settings/:id", userAuthorized, async (req, res) => {
   const { message_content, enabled }: UpdateOrderSettingRequest = req.body
 
   if (message_content === undefined && enabled === undefined) {
-    res
-      .status(400)
-      .json(
-        createErrorResponse({
-          error: "At least one field must be provided for update",
-        }),
-      )
+    res.status(400).json(
+      createErrorResponse({
+        error: "At least one field must be provided for update",
+      }),
+    )
     return
   }
 
@@ -244,13 +240,11 @@ orderSettingsRouter.get(
         error: error instanceof Error ? error.message : String(error),
         stack: error instanceof Error ? error.stack : undefined,
       })
-      res
-        .status(500)
-        .json(
-          createErrorResponse({
-            error: "Failed to fetch contractor order settings",
-          }),
-        )
+      res.status(500).json(
+        createErrorResponse({
+          error: "Failed to fetch contractor order settings",
+        }),
+      )
     }
   },
 )
@@ -282,13 +276,11 @@ orderSettingsRouter.post(
         setting_type,
         hasMessageContent: !!message_content,
       })
-      res
-        .status(400)
-        .json(
-          createErrorResponse({
-            error: "setting_type and message_content are required",
-          }),
-        )
+      res.status(400).json(
+        createErrorResponse({
+          error: "setting_type and message_content are required",
+        }),
+      )
       return
     }
 
@@ -355,13 +347,11 @@ orderSettingsRouter.post(
         error: error instanceof Error ? error.message : String(error),
         stack: error instanceof Error ? error.stack : undefined,
       })
-      res
-        .status(500)
-        .json(
-          createErrorResponse({
-            error: "Failed to create contractor order setting",
-          }),
-        )
+      res.status(500).json(
+        createErrorResponse({
+          error: "Failed to create contractor order setting",
+        }),
+      )
     }
   },
 )
@@ -377,13 +367,11 @@ orderSettingsRouter.put(
     const { message_content, enabled }: UpdateOrderSettingRequest = req.body
 
     if (message_content === undefined && enabled === undefined) {
-      res
-        .status(400)
-        .json(
-          createErrorResponse({
-            error: "At least one field must be provided for update",
-          }),
-        )
+      res.status(400).json(
+        createErrorResponse({
+          error: "At least one field must be provided for update",
+        }),
+      )
       return
     }
 
@@ -412,13 +400,11 @@ orderSettingsRouter.put(
       res.json(createResponse({ setting: serializeOrderSetting(updated) }))
     } catch (error) {
       console.error("Error updating contractor order setting:", error)
-      res
-        .status(500)
-        .json(
-          createErrorResponse({
-            error: "Failed to update contractor order setting",
-          }),
-        )
+      res.status(500).json(
+        createErrorResponse({
+          error: "Failed to update contractor order setting",
+        }),
+      )
     }
   },
 )
@@ -454,13 +440,11 @@ orderSettingsRouter.delete(
       res.status(204).send()
     } catch (error) {
       console.error("Error deleting contractor order setting:", error)
-      res
-        .status(500)
-        .json(
-          createErrorResponse({
-            error: "Failed to delete contractor order setting",
-          }),
-        )
+      res.status(500).json(
+        createErrorResponse({
+          error: "Failed to delete contractor order setting",
+        }),
+      )
     }
   },
 )

@@ -462,9 +462,10 @@ export function requireContractorAccessFromSpectrumId() {
       try {
         // Dynamic import to avoid circular dependency
         const { database } = await import("../../clients/database/knex-db.js")
-        const contractor = await database.getContractor({ spectrum_id })
-
-        if (!contractor) {
+        let contractor
+        try {
+          contractor = await database.getContractor({ spectrum_id })
+        } catch (error) {
           res.status(404).json({
             error: "Contractor not found",
           })

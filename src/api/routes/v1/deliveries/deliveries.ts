@@ -69,11 +69,9 @@ deliveryRouter.post(
     const ship = await database.getShip({ ship_id })
 
     if (!ship || ship.owner !== user.user_id) {
-      res
-        .status(403)
-        .json({
-          error: "You are not allowed to create a delivery for this ship",
-        })
+      res.status(403).json({
+        error: "You are not allowed to create a delivery for this ship",
+      })
       return
     }
 
