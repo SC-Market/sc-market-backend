@@ -1,5 +1,8 @@
 import express from "express"
-import { userAuthorized, requireProfileWrite } from "../../../middleware/auth.js"
+import {
+  userAuthorized,
+  requireProfileWrite,
+} from "../../../middleware/auth.js"
 import { ShipsFileEntry, ShipsFileSchema, User } from "../api-models.js"
 import { database } from "../../../../clients/database/knex-db.js"
 import { DBShip } from "../../../../clients/database/db-models.js"
@@ -31,37 +34,42 @@ export const shipRouter = express.Router()
  *  - Delete a ship
  */
 
-shipRouter.post("/import", userAuthorized, requireProfileWrite, async (req, res) => {
-  const user = req.user as User
-  const ships = req.body as ShipsFileEntry[]
+shipRouter.post(
+  "/import",
+  userAuthorized,
+  requireProfileWrite,
+  async (req, res) => {
+    const user = req.user as User
+    const ships = req.body as ShipsFileEntry[]
 
-  if (!ships) {
-    res.status(400).json({
-      error: "No ships provided",
-    })
-    return
-  }
-
-  if (!validate(ships, ShipsFileSchema).valid) {
-    res.status(400).json({
-      error: "Invalid ships provided",
-    })
-    return
-  }
-
-  await Promise.all(
-    ships.map((ship) => {
-      return database.createShip({
-        owner: user.user_id,
-        name: ship.name,
-        kind: ship.ship_code,
+    if (!ships) {
+      res.status(400).json({
+        error: "No ships provided",
       })
-    }),
-  )
+      return
+    }
 
-  res.status(200).json({ result: "Success!" })
-  return
-})
+    if (!validate(ships, ShipsFileSchema).valid) {
+      res.status(400).json({
+        error: "Invalid ships provided",
+      })
+      return
+    }
+
+    await Promise.all(
+      ships.map((ship) => {
+        return database.createShip({
+          owner: user.user_id,
+          name: ship.name,
+          kind: ship.ship_code,
+        })
+      }),
+    )
+
+    res.status(200).json({ result: "Success!" })
+    return
+  },
+)
 
 export const shipsRouter = express.Router()
 

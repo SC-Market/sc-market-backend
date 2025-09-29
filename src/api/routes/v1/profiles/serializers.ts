@@ -28,7 +28,7 @@ export async function serializePublicProfile(
       (() => {
         // Group contractors by spectrum_id to collect all roles with details
         const contractorMap = new Map()
-        
+
         contractors.forEach((s) => {
           if (!contractorMap.has(s.spectrum_id)) {
             contractorMap.set(s.spectrum_id, {
@@ -42,17 +42,17 @@ export async function serializePublicProfile(
           contractorMap.get(s.spectrum_id).role_details.push({
             role_id: s.role_id,
             role_name: s.role,
-            position: s.position
+            position: s.position,
           })
         })
-        
+
         return Array.from(contractorMap.values())
       })().map(async (contractor) => ({
         ...contractor,
         ...(await database.getMinimalContractor({
           spectrum_id: contractor.spectrum_id,
         })),
-      }))
+      })),
     ),
     rating: await getUserRating(user.user_id),
     discord_profile: discord_profile

@@ -9,7 +9,10 @@ import {
 import { database } from "../../../../clients/database/knex-db.js"
 import { DBOrder } from "../../../../clients/database/db-models.js"
 import { User } from "../api-models.js"
-import { formatOrderStub, formatOrderStubOptimized } from "../util/formatting.js"
+import {
+  formatOrderStub,
+  formatOrderStubOptimized,
+} from "../util/formatting.js"
 import { createOrderReviewNotification } from "../util/notifications.js"
 import { rate_limit } from "../../../middleware/ratelimiting.js"
 import { has_permission, is_member } from "../util/permissions.js"
@@ -41,7 +44,10 @@ import { related_to_order } from "./middleware.js"
 import { createThread } from "../util/discord.js"
 import logger from "../../../../logger/logger.js"
 import { validate_optional_username } from "../profiles/middleware.js"
-import { validate_optional_spectrum_id, org_authorized } from "../contractors/middleware.js"
+import {
+  validate_optional_spectrum_id,
+  org_authorized,
+} from "../contractors/middleware.js"
 import { ORDER_SEARCH_SORT_METHODS, ORDER_SEARCH_STATUS } from "./types.js"
 import orderSettingsRouter from "./order-settings.js"
 
@@ -467,10 +473,6 @@ ordersRouter.get(
   async (req, res, next) => {
     const user = req.user as User
     const orders = await database.getOrders({ assigned_id: user.user_id })
-    const contractors = await database.getUserContractors({
-      "contractor_members.user_id": user.user_id,
-    })
-
     res.json(createResponse(await Promise.all(orders.map(formatOrderStub))))
   },
 )
@@ -812,11 +814,16 @@ ordersRouter.get(
   },
 )
 
-ordersRouter.get("/all", adminAuthorized, requireOrdersRead, async (req, res, next) => {
-  const orders = await database.getOrders({})
+ordersRouter.get(
+  "/all",
+  adminAuthorized,
+  requireOrdersRead,
+  async (req, res, next) => {
+    const orders = await database.getOrders({})
 
-  res.json(createResponse(await Promise.all(orders.map(formatOrderStub))))
-})
+    res.json(createResponse(await Promise.all(orders.map(formatOrderStub))))
+  },
+)
 
 ordersRouter.get(
   "/contractor/:spectrum_id/metrics",
@@ -825,7 +832,8 @@ ordersRouter.get(
   oapi.validPath({
     summary: "Get contractor order metrics",
     deprecated: false,
-    description: "Returns aggregated metrics for orders placed with a specific contractor",
+    description:
+      "Returns aggregated metrics for orders placed with a specific contractor",
     operationId: "getContractorOrderMetrics",
     tags: ["Orders"],
     parameters: [
@@ -857,24 +865,26 @@ ordersRouter.get(
                       description: "Total number of orders",
                     },
                     total_value: {
-                      type: "integer", 
+                      type: "integer",
                       description: "Total value of all orders",
                     },
                     active_value: {
                       type: "integer",
-                      description: "Total value of active orders (not-started + in-progress)",
+                      description:
+                        "Total value of active orders (not-started + in-progress)",
                     },
                     completed_value: {
                       type: "integer",
-                      description: "Total value of completed orders (fulfilled)",
+                      description:
+                        "Total value of completed orders (fulfilled)",
                     },
                     status_counts: {
                       type: "object",
                       properties: {
                         "not-started": { type: "integer" },
                         "in-progress": { type: "integer" },
-                        "fulfilled": { type: "integer" },
-                        "cancelled": { type: "integer" },
+                        fulfilled: { type: "integer" },
+                        cancelled: { type: "integer" },
                       },
                       description: "Count of orders by status",
                     },
@@ -901,7 +911,14 @@ ordersRouter.get(
                       description: "Top customers by order count",
                     },
                   },
-                  required: ["total_orders", "total_value", "active_value", "completed_value", "status_counts", "recent_activity"],
+                  required: [
+                    "total_orders",
+                    "total_value",
+                    "active_value",
+                    "completed_value",
+                    "status_counts",
+                    "recent_activity",
+                  ],
                   title: "ContractorOrderMetrics",
                 },
               },
@@ -927,7 +944,9 @@ ordersRouter.get(
       spectrum_id: spectrum_id,
     })
     if (!contractor) {
-      res.status(404).json(createErrorResponse({ message: "Invalid contractor" }))
+      res
+        .status(404)
+        .json(createErrorResponse({ message: "Invalid contractor" }))
       return
     }
 
@@ -940,15 +959,17 @@ ordersRouter.get(
       contractors.filter((c) => c.contractor_id === contractor.contractor_id)
         .length === 0
     ) {
-      res
-        .status(403)
-        .json(createErrorResponse({ message: "You are not authorized to view these metrics" }))
+      res.status(403).json(
+        createErrorResponse({
+          message: "You are not authorized to view these metrics",
+        }),
+      )
       return
     }
 
     // Get contractor order metrics using optimized query
     const metrics = await getContractorOrderMetrics(contractor.contractor_id)
-    
+
     res.json(createResponse(metrics))
   },
 )
@@ -960,7 +981,8 @@ ordersRouter.get(
   oapi.validPath({
     summary: "Get comprehensive contractor order data",
     deprecated: false,
-    description: "Returns comprehensive order data including metrics, trend data, and recent orders for a specific contractor",
+    description:
+      "Returns comprehensive order data including metrics, trend data, and recent orders for a specific contractor",
     operationId: "getContractorOrderData",
     tags: ["Orders"],
     parameters: [
@@ -987,7 +1009,8 @@ ordersRouter.get(
       {
         name: "assigned_only",
         in: "query",
-        description: "Whether to only include assigned orders (for user trends)",
+        description:
+          "Whether to only include assigned orders (for user trends)",
         required: false,
         schema: {
           type: "boolean",
@@ -1019,8 +1042,8 @@ ordersRouter.get(
                           properties: {
                             "not-started": { type: "number" },
                             "in-progress": { type: "number" },
-                            "fulfilled": { type: "number" },
-                            "cancelled": { type: "number" },
+                            fulfilled: { type: "number" },
+                            cancelled: { type: "number" },
                           },
                         },
                         recent_activity: {
@@ -1089,7 +1112,7 @@ ordersRouter.get(
                                     },
                                   },
                                 },
-                                "fulfilled": {
+                                fulfilled: {
                                   type: "array",
                                   items: {
                                     type: "object",
@@ -1099,7 +1122,7 @@ ordersRouter.get(
                                     },
                                   },
                                 },
-                                "cancelled": {
+                                cancelled: {
                                   type: "array",
                                   items: {
                                     type: "object",
@@ -1146,15 +1169,16 @@ ordersRouter.get(
     const contractor = req.contractor!
 
     // Parse query parameters
-    const includeTrends = include_trends === "true" || include_trends === undefined
+    const includeTrends =
+      include_trends === "true" || include_trends === undefined
     const assignedOnly = assigned_only === "true"
 
     // Get comprehensive contractor order data
     const data = await getContractorOrderData(contractor.contractor_id, {
       include_trends: includeTrends,
-      assigned_only: assignedOnly
+      assigned_only: assignedOnly,
     })
-    
+
     res.json(createResponse(data))
   },
 )

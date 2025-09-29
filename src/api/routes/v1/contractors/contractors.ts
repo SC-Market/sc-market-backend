@@ -1455,29 +1455,38 @@ contractorsRouter.get(
     try {
       // Get user by username
       const user = await database.getUser({ username })
-      
+
       // Check if user is a member using the contractor_member_roles table
-      const memberRoles = await database.knex("contractor_member_roles")
-        .join("contractor_roles", "contractor_member_roles.role_id", "contractor_roles.role_id")
+      const memberRoles = await database
+        .knex("contractor_member_roles")
+        .join(
+          "contractor_roles",
+          "contractor_member_roles.role_id",
+          "contractor_roles.role_id",
+        )
         .where("contractor_roles.contractor_id", contractor.contractor_id)
         .where("contractor_member_roles.user_id", user.user_id)
         .select("contractor_roles.role_id")
 
       const is_member = memberRoles.length > 0
-      const roles = memberRoles.map(r => r.role_id)
+      const roles = memberRoles.map((r) => r.role_id)
 
-      res.json(createResponse({
-        is_member,
-        user_id: user.user_id,
-        username: user.username,
-        roles,
-      }))
+      res.json(
+        createResponse({
+          is_member,
+          user_id: user.user_id,
+          username: user.username,
+          roles,
+        }),
+      )
     } catch (error) {
       console.error("Error checking contractor membership:", error)
-      res.status(500).json(createErrorResponse({
-        message: "Internal server error",
-        status: "error",
-      }))
+      res.status(500).json(
+        createErrorResponse({
+          message: "Internal server error",
+          status: "error",
+        }),
+      )
     }
   },
 )
@@ -1487,7 +1496,8 @@ contractorsRouter.get(
   oapi.validPath({
     summary: "Get contractor members (paginated)",
     deprecated: false,
-    description: "Get a paginated list of contractor members with search and filtering capabilities",
+    description:
+      "Get a paginated list of contractor members with search and filtering capabilities",
     operationId: "getContractorMembers",
     tags: ["Contractors"],
     parameters: [
@@ -1602,12 +1612,15 @@ contractorsRouter.get(
   valid_contractor,
   async (req, res, next) => {
     const contractor = req.contractor!
-    
+
     const page = parseInt(req.query.page as string) || 0
-    const page_size = Math.min(parseInt(req.query.page_size as string) || 50, 100)
-    const search = req.query.search as string || ""
-    const sort = req.query.sort as string || "username"
-    const role_filter = req.query.role_filter as string || ""
+    const page_size = Math.min(
+      parseInt(req.query.page_size as string) || 50,
+      100,
+    )
+    const search = (req.query.search as string) || ""
+    const sort = (req.query.sort as string) || "username"
+    const role_filter = (req.query.role_filter as string) || ""
 
     try {
       const result = await database.getContractorMembersPaginated(
@@ -1618,21 +1631,25 @@ contractorsRouter.get(
           search,
           sort,
           role_filter,
-        }
+        },
       )
 
-      res.json(createResponse({
-        total: result.total,
-        page,
-        page_size,
-        members: result.members,
-      }))
+      res.json(
+        createResponse({
+          total: result.total,
+          page,
+          page_size,
+          members: result.members,
+        }),
+      )
     } catch (error) {
       console.error("Error fetching contractor members:", error)
-      res.status(500).json(createErrorResponse({
-        message: "Internal server error",
-        status: "error",
-      }))
+      res.status(500).json(
+        createErrorResponse({
+          message: "Internal server error",
+          status: "error",
+        }),
+      )
     }
   },
 )

@@ -784,14 +784,18 @@ export class KnexDatabase implements Database {
       search?: string
       sort?: string
       role_filter?: string
-    }
-  ): Promise<{ members: any[], total: number }> {
+    },
+  ): Promise<{ members: any[]; total: number }> {
     const knex = this.knex
     const { page, page_size, search, sort = "username", role_filter } = options
 
     // Build base query using contractor_member_roles for multiple roles support
     let query = knex("contractor_member_roles")
-      .join("contractor_roles", "contractor_member_roles.role_id", "contractor_roles.role_id")
+      .join(
+        "contractor_roles",
+        "contractor_member_roles.role_id",
+        "contractor_roles.role_id",
+      )
       .join("accounts", "contractor_member_roles.user_id", "accounts.user_id")
       .where("contractor_roles.contractor_id", contractor_id)
       .select(
@@ -799,7 +803,7 @@ export class KnexDatabase implements Database {
         "contractor_roles.role_id",
         "contractor_roles.name as role_name",
         "accounts.username",
-        "accounts.avatar"
+        "accounts.avatar",
       )
 
     // Add search filter
@@ -814,19 +818,25 @@ export class KnexDatabase implements Database {
 
     // Get total count (separate query to avoid GROUP BY issues)
     const countQuery = knex("contractor_member_roles")
-      .join("contractor_roles", "contractor_member_roles.role_id", "contractor_roles.role_id")
+      .join(
+        "contractor_roles",
+        "contractor_member_roles.role_id",
+        "contractor_roles.role_id",
+      )
       .join("accounts", "contractor_member_roles.user_id", "accounts.user_id")
       .where("contractor_roles.contractor_id", contractor_id)
-    
+
     if (search) {
       countQuery.where("accounts.username", "ilike", `%${search}%`)
     }
-    
+
     if (role_filter) {
       countQuery.where("contractor_roles.role_id", role_filter)
     }
-    
-    const countResult = await countQuery.countDistinct("contractor_member_roles.user_id as total")
+
+    const countResult = await countQuery.countDistinct(
+      "contractor_member_roles.user_id as total",
+    )
     const total = parseInt(countResult[0].total as string)
 
     // Add sorting
@@ -848,9 +858,13 @@ export class KnexDatabase implements Database {
     const filteredMembers = await query
 
     // Get all roles for each filtered member (regardless of filter)
-    const memberIds = [...new Set(filteredMembers.map(m => m.user_id))]
+    const memberIds = [...new Set(filteredMembers.map((m) => m.user_id))]
     const allRolesQuery = knex("contractor_member_roles")
-      .join("contractor_roles", "contractor_member_roles.role_id", "contractor_roles.role_id")
+      .join(
+        "contractor_roles",
+        "contractor_member_roles.role_id",
+        "contractor_roles.role_id",
+      )
       .join("accounts", "contractor_member_roles.user_id", "accounts.user_id")
       .where("contractor_roles.contractor_id", contractor_id)
       .whereIn("contractor_member_roles.user_id", memberIds)
@@ -858,7 +872,7 @@ export class KnexDatabase implements Database {
         "contractor_member_roles.user_id",
         "contractor_roles.role_id",
         "accounts.username",
-        "accounts.avatar"
+        "accounts.avatar",
       )
 
     const allRoles = await allRolesQuery
@@ -879,12 +893,14 @@ export class KnexDatabase implements Database {
     // Convert to array format and enrich with minimal user data
     const membersWithRoles = await Promise.all(
       Array.from(membersMap.values()).map(async (member) => {
-        const minimalUser = await this.getMinimalUser({ user_id: member.user_id })
+        const minimalUser = await this.getMinimalUser({
+          user_id: member.user_id,
+        })
         return {
           ...minimalUser,
           roles: member.roles,
         }
-      })
+      }),
     )
 
     return {
@@ -1247,26 +1263,26 @@ export class KnexDatabase implements Database {
   }
 
   async getServicesPaginated(params: {
-    page?: number;
-    pageSize?: number;
-    search?: string;
-    kind?: string;
-    minCost?: number;
-    maxCost?: number;
-    paymentType?: string;
-    sortBy?: 'timestamp' | 'cost' | 'service_name';
-    sortOrder?: 'asc' | 'desc';
-    status?: string;
+    page?: number
+    pageSize?: number
+    search?: string
+    kind?: string
+    minCost?: number
+    maxCost?: number
+    paymentType?: string
+    sortBy?: "timestamp" | "cost" | "service_name"
+    sortOrder?: "asc" | "desc"
+    status?: string
   }): Promise<{
-    services: DBService[];
+    services: DBService[]
     pagination: {
-      currentPage: number;
-      pageSize: number;
-      totalItems: number;
-      totalPages: number;
-      hasNextPage: boolean;
-      hasPreviousPage: boolean;
-    };
+      currentPage: number
+      pageSize: number
+      totalItems: number
+      totalPages: number
+      hasNextPage: boolean
+      hasPreviousPage: boolean
+    }
   }> {
     const {
       page = 0,
@@ -1276,70 +1292,71 @@ export class KnexDatabase implements Database {
       minCost,
       maxCost,
       paymentType,
-      sortBy = 'timestamp',
-      sortOrder = 'desc',
-      status = 'active'
-    } = params;
+      sortBy = "timestamp",
+      sortOrder = "desc",
+      status = "active",
+    } = params
 
     // Build base query with filters
-    let query = this.knex<DBService>("services");
-    let countQuery = this.knex<DBService>("services");
+    let query = this.knex<DBService>("services")
+    let countQuery = this.knex<DBService>("services")
 
     // Apply status filter
-    query = query.where("status", status);
-    countQuery = countQuery.where("status", status);
+    query = query.where("status", status)
+    countQuery = countQuery.where("status", status)
 
     // Apply search filter (search in service_name and service_description)
     if (search) {
-      const searchTerm = `%${search.toLowerCase()}%`;
-      query = query.where(function() {
-        this.whereRaw('LOWER(service_name) LIKE ?', [searchTerm])
-          .orWhereRaw('LOWER(service_description) LIKE ?', [searchTerm]);
-      });
-      countQuery = countQuery.where(function() {
-        this.whereRaw('LOWER(service_name) LIKE ?', [searchTerm])
-          .orWhereRaw('LOWER(service_description) LIKE ?', [searchTerm]);
-      });
+      const searchTerm = `%${search.toLowerCase()}%`
+      query = query.where(function () {
+        this.whereRaw("LOWER(service_name) LIKE ?", [searchTerm]).orWhereRaw(
+          "LOWER(service_description) LIKE ?",
+          [searchTerm],
+        )
+      })
+      countQuery = countQuery.where(function () {
+        this.whereRaw("LOWER(service_name) LIKE ?", [searchTerm]).orWhereRaw(
+          "LOWER(service_description) LIKE ?",
+          [searchTerm],
+        )
+      })
     }
 
     // Apply kind filter
     if (kind) {
-      query = query.where("kind", kind);
-      countQuery = countQuery.where("kind", kind);
+      query = query.where("kind", kind)
+      countQuery = countQuery.where("kind", kind)
     }
 
     // Apply cost range filters
     if (minCost !== undefined) {
-      query = query.where("cost", ">=", minCost);
-      countQuery = countQuery.where("cost", ">=", minCost);
+      query = query.where("cost", ">=", minCost)
+      countQuery = countQuery.where("cost", ">=", minCost)
     }
     if (maxCost !== undefined) {
-      query = query.where("cost", "<=", maxCost);
-      countQuery = countQuery.where("cost", "<=", maxCost);
+      query = query.where("cost", "<=", maxCost)
+      countQuery = countQuery.where("cost", "<=", maxCost)
     }
 
     // Apply payment type filter
     if (paymentType) {
-      query = query.where("payment_type", paymentType);
-      countQuery = countQuery.where("payment_type", paymentType);
+      query = query.where("payment_type", paymentType)
+      countQuery = countQuery.where("payment_type", paymentType)
     }
 
     // Get total count
-    const totalCountResult = await countQuery.count('* as count').first();
-    const totalItems = parseInt((totalCountResult as any).count);
+    const totalCountResult = await countQuery.count("* as count").first()
+    const totalItems = parseInt((totalCountResult as any).count)
 
     // Calculate pagination
-    const totalPages = Math.ceil(totalItems / pageSize);
-    const offset = page * pageSize;
+    const totalPages = Math.ceil(totalItems / pageSize)
+    const offset = page * pageSize
 
     // Apply sorting and pagination
-    query = query
-      .orderBy(sortBy, sortOrder)
-      .offset(offset)
-      .limit(pageSize);
+    query = query.orderBy(sortBy, sortOrder).offset(offset).limit(pageSize)
 
     // Execute query
-    const services = await query.select();
+    const services = await query.select()
 
     return {
       services,
@@ -1351,7 +1368,7 @@ export class KnexDatabase implements Database {
         hasNextPage: page < totalPages - 1,
         hasPreviousPage: page > 0,
       },
-    };
+    }
   }
 
   async getService(where: any): Promise<DBService | undefined> {
@@ -2861,54 +2878,54 @@ export class KnexDatabase implements Database {
   }
 
   async getOrdersForListingPaginated(params: {
-    listing_id: string;
-    page?: number;
-    pageSize?: number;
-    status?: string[];
-    sortBy?: 'timestamp' | 'status';
-    sortOrder?: 'asc' | 'desc';
+    listing_id: string
+    page?: number
+    pageSize?: number
+    status?: string[]
+    sortBy?: "timestamp" | "status"
+    sortOrder?: "asc" | "desc"
   }): Promise<{
-    orders: DBOrder[];
+    orders: DBOrder[]
     pagination: {
-      currentPage: number;
-      pageSize: number;
-      totalItems: number;
-      totalPages: number;
-      hasNextPage: boolean;
-      hasPreviousPage: boolean;
-    };
+      currentPage: number
+      pageSize: number
+      totalItems: number
+      totalPages: number
+      hasNextPage: boolean
+      hasPreviousPage: boolean
+    }
   }> {
     const {
       listing_id,
       page = 1,
       pageSize = 20,
       status,
-      sortBy = 'timestamp',
-      sortOrder = 'desc'
-    } = params;
+      sortBy = "timestamp",
+      sortOrder = "desc",
+    } = params
 
     // Build the base query
     let query = this.knex<DBOrder>("orders")
       .join("market_orders", "market_orders.order_id", "=", "orders.order_id")
-      .where("market_orders.listing_id", listing_id);
+      .where("market_orders.listing_id", listing_id)
 
     // Apply status filter if provided
     if (status && status.length > 0) {
-      query = query.whereIn("orders.status", status);
+      query = query.whereIn("orders.status", status)
     }
 
     // Get total count for pagination
-    const [{ count }] = await query.clone().count("* as count");
-    const totalItems = parseInt(count as string);
-    const totalPages = Math.ceil(totalItems / pageSize);
-    const offset = (page - 1) * pageSize;
+    const [{ count }] = await query.clone().count("* as count")
+    const totalItems = parseInt(count as string)
+    const totalPages = Math.ceil(totalItems / pageSize)
+    const offset = (page - 1) * pageSize
 
     // Apply sorting and pagination
     const orders = await query
       .orderBy(`orders.${sortBy}`, sortOrder)
       .limit(pageSize)
       .offset(offset)
-      .select("orders.*");
+      .select("orders.*")
 
     return {
       orders,
@@ -2920,7 +2937,7 @@ export class KnexDatabase implements Database {
         hasNextPage: page < totalPages,
         hasPreviousPage: page > 1,
       },
-    };
+    }
   }
 
   async insertMarketListingOrder(
@@ -4845,32 +4862,36 @@ export class KnexDatabase implements Database {
   }
 
   // Responsive Badge Tracking Functions
-  
+
   async trackOrderAssignment(
-    order_id: string, 
-    assigned_user_id?: string, 
-    assigned_contractor_id?: string
+    order_id: string,
+    assigned_user_id?: string,
+    assigned_contractor_id?: string,
   ) {
     if (!assigned_user_id && !assigned_contractor_id) {
-      throw new Error("Either assigned_user_id or assigned_contractor_id must be provided")
+      throw new Error(
+        "Either assigned_user_id or assigned_contractor_id must be provided",
+      )
     }
-    
+
     await this.knex("order_response_times").insert({
       order_id,
       assigned_user_id: assigned_user_id || null,
       assigned_contractor_id: assigned_contractor_id || null,
       assigned_at: new Date(),
-      is_responded: false
+      is_responded: false,
     })
   }
 
   async trackOrderResponse(
-    order_id: string, 
-    assigned_user_id?: string, 
-    assigned_contractor_id?: string
+    order_id: string,
+    assigned_user_id?: string,
+    assigned_contractor_id?: string,
   ) {
     if (!assigned_user_id && !assigned_contractor_id) {
-      throw new Error("Either assigned_user_id or assigned_contractor_id must be provided")
+      throw new Error(
+        "Either assigned_user_id or assigned_contractor_id must be provided",
+      )
     }
 
     const whereClause: any = { order_id }
@@ -4884,19 +4905,18 @@ export class KnexDatabase implements Database {
     const assignment = await this.knex("order_response_times")
       .where(whereClause)
       .first()
-    
+
     if (assignment && !assignment.is_responded) {
       const responseTimeMinutes = Math.floor(
-        (new Date().getTime() - new Date(assignment.assigned_at).getTime()) / (1000 * 60)
+        (new Date().getTime() - new Date(assignment.assigned_at).getTime()) /
+          (1000 * 60),
       )
-      
-      await this.knex("order_response_times")
-        .where(whereClause)
-        .update({
-          responded_at: new Date(),
-          response_time_minutes: responseTimeMinutes,
-          is_responded: true
-        })
+
+      await this.knex("order_response_times").where(whereClause).update({
+        responded_at: new Date(),
+        response_time_minutes: responseTimeMinutes,
+        is_responded: true,
+      })
     }
   }
 
@@ -4909,17 +4929,19 @@ export class KnexDatabase implements Database {
       .where("assigned_user_id", user_id)
       .select(
         this.knex.raw("COUNT(*) as total_assignments"),
-        this.knex.raw("COUNT(CASE WHEN response_time_minutes <= 1440 THEN 1 END) as responded_within_24h")
+        this.knex.raw(
+          "COUNT(CASE WHEN response_time_minutes <= 1440 THEN 1 END) as responded_within_24h",
+        ),
       )
       .first()
-    
+
     const total = parseInt(stats.total_assignments) || 0
     const within24h = parseInt(stats.responded_within_24h) || 0
-    
+
     return {
       total_assignments: total,
       responded_within_24h: within24h,
-      response_rate: total > 0 ? (within24h / total) * 100 : 0
+      response_rate: total > 0 ? (within24h / total) * 100 : 0,
     }
   }
 
@@ -4932,17 +4954,19 @@ export class KnexDatabase implements Database {
       .where("assigned_contractor_id", contractor_id)
       .select(
         this.knex.raw("COUNT(*) as total_assignments"),
-        this.knex.raw("COUNT(CASE WHEN response_time_minutes <= 1440 THEN 1 END) as responded_within_24h")
+        this.knex.raw(
+          "COUNT(CASE WHEN response_time_minutes <= 1440 THEN 1 END) as responded_within_24h",
+        ),
       )
       .first()
-    
+
     const total = parseInt(stats.total_assignments) || 0
     const within24h = parseInt(stats.responded_within_24h) || 0
-    
+
     return {
       total_assignments: total,
       responded_within_24h: within24h,
-      response_rate: total > 0 ? (within24h / total) * 100 : 0
+      response_rate: total > 0 ? (within24h / total) * 100 : 0,
     }
   }
 
@@ -4950,55 +4974,62 @@ export class KnexDatabase implements Database {
   // ORDER SETTINGS METHODS
   // =============================================================================
 
-  async getOrderSettings(entityType: 'user' | 'contractor', entityId: string): Promise<DBOrderSetting[]> {
-    return await this.knex<DBOrderSetting>('order_settings')
+  async getOrderSettings(
+    entityType: "user" | "contractor",
+    entityId: string,
+  ): Promise<DBOrderSetting[]> {
+    return await this.knex<DBOrderSetting>("order_settings")
       .where({ entity_type: entityType, entity_id: entityId })
-      .orderBy('setting_type', 'asc')
+      .orderBy("setting_type", "asc")
   }
 
   async getOrderSetting(
-    entityType: 'user' | 'contractor', 
-    entityId: string, 
-    settingType: 'offer_message' | 'order_message'
+    entityType: "user" | "contractor",
+    entityId: string,
+    settingType: "offer_message" | "order_message",
   ): Promise<DBOrderSetting | null> {
-    return await this.knex<DBOrderSetting>('order_settings')
-      .where({ 
-        entity_type: entityType, 
-        entity_id: entityId, 
-        setting_type: settingType 
-      })
-      .first() || null
+    return (
+      (await this.knex<DBOrderSetting>("order_settings")
+        .where({
+          entity_type: entityType,
+          entity_id: entityId,
+          setting_type: settingType,
+        })
+        .first()) || null
+    )
   }
 
-  async createOrderSetting(setting: Omit<DBOrderSetting, 'id' | 'created_at' | 'updated_at'>): Promise<DBOrderSetting> {
-    const [created] = await this.knex<DBOrderSetting>('order_settings')
+  async createOrderSetting(
+    setting: Omit<DBOrderSetting, "id" | "created_at" | "updated_at">,
+  ): Promise<DBOrderSetting> {
+    const [created] = await this.knex<DBOrderSetting>("order_settings")
       .insert({
         ...setting,
         created_at: new Date(),
-        updated_at: new Date()
+        updated_at: new Date(),
       })
-      .returning('*')
-    
+      .returning("*")
+
     return created
   }
 
   async updateOrderSetting(
-    id: string, 
-    updates: Partial<Pick<DBOrderSetting, 'message_content' | 'enabled'>>
+    id: string,
+    updates: Partial<Pick<DBOrderSetting, "message_content" | "enabled">>,
   ): Promise<DBOrderSetting> {
-    const [updated] = await this.knex<DBOrderSetting>('order_settings')
+    const [updated] = await this.knex<DBOrderSetting>("order_settings")
       .where({ id })
       .update({
         ...updates,
-        updated_at: new Date()
+        updated_at: new Date(),
       })
-      .returning('*')
-    
+      .returning("*")
+
     return updated
   }
 
   async deleteOrderSetting(id: string): Promise<void> {
-    await this.knex('order_settings').where({ id }).del()
+    await this.knex("order_settings").where({ id }).del()
   }
 }
 

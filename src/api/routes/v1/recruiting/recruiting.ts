@@ -7,7 +7,11 @@ import {
 } from "../util/formatting.js"
 import { DBRecruitingPost } from "../../../../clients/database/db-models.js"
 import { User } from "../api-models.js"
-import { verifiedUser, requireRecruitingRead, requireRecruitingWrite } from "../../../middleware/auth.js"
+import {
+  verifiedUser,
+  requireRecruitingRead,
+  requireRecruitingWrite,
+} from "../../../middleware/auth.js"
 import { has_permission } from "../util/permissions.js"
 
 export async function contractorRecruiting(
@@ -216,51 +220,56 @@ recruitingRouter.get("/post/:post_id/comments", async function (req, res) {
   res.json(comments)
 })
 
-recruitingRouter.post("/post/:post_id/update", verifiedUser, requireRecruitingWrite, async function (req, res) {
-  const user = req.user as User
-  const post_id = req.params["post_id"]
-  const post = await database.getRecruitingPost({ post_id })
+recruitingRouter.post(
+  "/post/:post_id/update",
+  verifiedUser,
+  requireRecruitingWrite,
+  async function (req, res) {
+    const user = req.user as User
+    const post_id = req.params["post_id"]
+    const post = await database.getRecruitingPost({ post_id })
 
-  if (!post) {
-    res.status(400).json({ message: "Invalid post" })
-    return
-  }
+    if (!post) {
+      res.status(400).json({ message: "Invalid post" })
+      return
+    }
 
-  const contractor = await database.getContractor({
-    contractor_id: post.contractor_id,
-  })
-  if (
-    !(await has_permission(
-      contractor.contractor_id,
-      user.user_id,
-      "manage_recruiting",
-    ))
-  ) {
-    res.status(400).json({ message: "Missing permissions" })
-    return
-  }
+    const contractor = await database.getContractor({
+      contractor_id: post.contractor_id,
+    })
+    if (
+      !(await has_permission(
+        contractor.contractor_id,
+        user.user_id,
+        "manage_recruiting",
+      ))
+    ) {
+      res.status(400).json({ message: "Missing permissions" })
+      return
+    }
 
-  const {
-    title,
-    body,
-  }: {
-    title: string
-    body: string
-  } = req.body
+    const {
+      title,
+      body,
+    }: {
+      title: string
+      body: string
+    } = req.body
 
-  if (!title && !body) {
-    res.status(400).json({ error: "Missing required fields" })
-    return
-  }
+    if (!title && !body) {
+      res.status(400).json({ error: "Missing required fields" })
+      return
+    }
 
-  const newValues: { title?: string; body?: string } = {}
-  if (title) newValues.title = title
-  if (body) newValues.body = body
+    const newValues: { title?: string; body?: string } = {}
+    if (title) newValues.title = title
+    if (body) newValues.body = body
 
-  const results = await database.updateRecruitingPost({ post_id }, newValues)
+    const results = await database.updateRecruitingPost({ post_id }, newValues)
 
-  res.json(results[0])
-})
+    res.json(results[0])
+  },
+)
 
 recruitingRouter.post(
   "/post/:post_id/upvote",

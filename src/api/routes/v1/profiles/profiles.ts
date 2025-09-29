@@ -1,9 +1,9 @@
 import express from "express"
-import { 
-  adminAuthorized, 
-  userAuthorized, 
-  requireProfileRead, 
-  requireProfileWrite 
+import {
+  adminAuthorized,
+  userAuthorized,
+  requireProfileRead,
+  requireProfileWrite,
 } from "../../../middleware/auth.js"
 import { User } from "../api-models.js"
 import { database } from "../../../../clients/database/knex-db.js"

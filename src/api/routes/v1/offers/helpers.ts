@@ -196,7 +196,7 @@ interface OptimizedOfferSessionRow {
   contractor_id: string | null
   status: string
   timestamp: Date
-  
+
   // Most recent offer fields
   most_recent_offer_id: string
   most_recent_cost: number
@@ -206,23 +206,23 @@ interface OptimizedOfferSessionRow {
   most_recent_actor_id: string
   most_recent_status: string
   most_recent_service_id: string | null
-  
+
   // Item count
   item_count: number
-  
+
   // Service fields
   service_title: string | null
-  
+
   // Customer account fields
   customer_username: string
   customer_avatar: string
   customer_display_name: string
-  
+
   // Assigned account fields
   assigned_username: string | null
   assigned_avatar: string | null
   assigned_display_name: string | null
-  
+
   // Contractor fields
   contractor_spectrum_id: string | null
   contractor_name: string | null
@@ -259,19 +259,51 @@ export async function search_offer_sessions_optimized(
   )
 
   // Build optimized query with JOINs to get all related data
-  let optimizedQuery = database.knex("offer_sessions")
-    .leftJoin("order_offers as most_recent_offer", 
-      "offer_sessions.id", "=", "most_recent_offer.session_id"
+  let optimizedQuery = database
+    .knex("offer_sessions")
+    .leftJoin(
+      "order_offers as most_recent_offer",
+      "offer_sessions.id",
+      "=",
+      "most_recent_offer.session_id",
     )
-    .leftJoin("offer_market_items", "most_recent_offer.id", "=", "offer_market_items.offer_id")
-    .leftJoin("services", "most_recent_offer.service_id", "=", "services.service_id")
-    .leftJoin("accounts as customer_account", "offer_sessions.customer_id", "=", "customer_account.user_id")
-    .leftJoin("accounts as assigned_account", "offer_sessions.assigned_id", "=", "assigned_account.user_id")
-    .leftJoin("contractors", "offer_sessions.contractor_id", "=", "contractors.contractor_id")
+    .leftJoin(
+      "offer_market_items",
+      "most_recent_offer.id",
+      "=",
+      "offer_market_items.offer_id",
+    )
+    .leftJoin(
+      "services",
+      "most_recent_offer.service_id",
+      "=",
+      "services.service_id",
+    )
+    .leftJoin(
+      "accounts as customer_account",
+      "offer_sessions.customer_id",
+      "=",
+      "customer_account.user_id",
+    )
+    .leftJoin(
+      "accounts as assigned_account",
+      "offer_sessions.assigned_id",
+      "=",
+      "assigned_account.user_id",
+    )
+    .leftJoin(
+      "contractors",
+      "offer_sessions.contractor_id",
+      "=",
+      "contractors.contractor_id",
+    )
     .where((qd) => {
-      if (args.customer_id) qd = qd.where("offer_sessions.customer_id", args.customer_id)
-      if (args.assigned_id) qd = qd.where("offer_sessions.assigned_id", args.assigned_id)
-      if (args.contractor_id) qd = qd.where("offer_sessions.contractor_id", args.contractor_id)
+      if (args.customer_id)
+        qd = qd.where("offer_sessions.customer_id", args.customer_id)
+      if (args.assigned_id)
+        qd = qd.where("offer_sessions.assigned_id", args.assigned_id)
+      if (args.contractor_id)
+        qd = qd.where("offer_sessions.contractor_id", args.contractor_id)
       return qd
     })
 
@@ -283,13 +315,22 @@ export async function search_offer_sessions_optimized(
       )
       break
     case "timestamp":
-      optimizedQuery = optimizedQuery.orderBy("offer_sessions.timestamp", args.reverse_sort ? "desc" : "asc")
+      optimizedQuery = optimizedQuery.orderBy(
+        "offer_sessions.timestamp",
+        args.reverse_sort ? "desc" : "asc",
+      )
       break
     case "title":
-      optimizedQuery = optimizedQuery.orderBy("most_recent_offer.title", args.reverse_sort ? "desc" : "asc")
+      optimizedQuery = optimizedQuery.orderBy(
+        "most_recent_offer.title",
+        args.reverse_sort ? "desc" : "asc",
+      )
       break
     case "customer_name":
-      optimizedQuery = optimizedQuery.orderBy("customer_account.username", args.reverse_sort ? "desc" : "asc")
+      optimizedQuery = optimizedQuery.orderBy(
+        "customer_account.username",
+        args.reverse_sort ? "desc" : "asc",
+      )
       break
     case "contractor_name":
       optimizedQuery = optimizedQuery.orderByRaw(
@@ -301,9 +342,10 @@ export async function search_offer_sessions_optimized(
   // Apply status filter
   if (args.status) {
     optimizedQuery = optimizedQuery.andWhere((qb) => {
-      return qb.whereRaw("get_offer_status(offer_sessions.id, offer_sessions.customer_id, offer_sessions.status) = ?", [
-        args.status,
-      ])
+      return qb.whereRaw(
+        "get_offer_status(offer_sessions.id, offer_sessions.customer_id, offer_sessions.status) = ?",
+        [args.status],
+      )
     })
   }
 
@@ -331,7 +373,7 @@ export async function search_offer_sessions_optimized(
       "assigned_account.display_name as assigned_display_name",
       "contractors.spectrum_id as contractor_spectrum_id",
       "contractors.name as contractor_name",
-      "contractors.avatar as contractor_avatar"
+      "contractors.avatar as contractor_avatar",
     )
     .groupBy(
       "offer_sessions.id",
@@ -339,7 +381,7 @@ export async function search_offer_sessions_optimized(
       "services.service_id",
       "customer_account.user_id",
       "assigned_account.user_id",
-      "contractors.contractor_id"
+      "contractors.contractor_id",
     )
 
   return { item_counts, items }

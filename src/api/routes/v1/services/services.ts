@@ -1,5 +1,10 @@
 import express from "express"
-import { userAuthorized, verifiedUser, requireServicesRead, requireServicesWrite } from "../../../middleware/auth.js"
+import {
+  userAuthorized,
+  verifiedUser,
+  requireServicesRead,
+  requireServicesWrite,
+} from "../../../middleware/auth.js"
 import { User } from "../api-models.js"
 import { database } from "../../../../clients/database/knex-db.js"
 import { has_permission } from "../util/permissions.js"
@@ -344,7 +349,8 @@ servicesRouter.get(
   oapi.validPath({
     summary: "Get public services with pagination",
     deprecated: false,
-    description: "Get paginated list of active services with optional filtering and sorting",
+    description:
+      "Get paginated list of active services with optional filtering and sorting",
     operationId: "getPublicServices",
     tags: ["Services"],
     parameters: [
@@ -494,7 +500,7 @@ servicesRouter.get(
       paymentType,
       sortBy,
       sortOrder,
-    } = req.query;
+    } = req.query
 
     // Parse and validate parameters
     const params = {
@@ -505,23 +511,23 @@ servicesRouter.get(
       minCost: minCost ? parseFloat(minCost as string) : undefined,
       maxCost: maxCost ? parseFloat(maxCost as string) : undefined,
       paymentType: paymentType as string,
-      sortBy: sortBy as 'timestamp' | 'cost' | 'service_name',
-      sortOrder: sortOrder as 'asc' | 'desc',
-    };
+      sortBy: sortBy as "timestamp" | "cost" | "service_name",
+      sortOrder: sortOrder as "asc" | "desc",
+    }
 
-    const result = await database.getServicesPaginated(params);
-    
+    const result = await database.getServicesPaginated(params)
+
     // Serialize services
     const serializedServices = await Promise.all(
-      result.services.map(serializeService)
-    );
+      result.services.map(serializeService),
+    )
 
     res.json(
       createResponse({
         data: serializedServices,
         pagination: result.pagination,
-      })
-    );
+      }),
+    )
   },
 )
 

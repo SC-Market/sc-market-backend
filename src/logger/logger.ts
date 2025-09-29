@@ -69,7 +69,7 @@ const logger = createLogger({
   transports: [
     // Console output (for development and Docker logs)
     new Console(),
-    
+
     // Error log file (only errors)
     new File({
       filename: path.join(logsDir, "error.log"),
@@ -78,7 +78,7 @@ const logger = createLogger({
       maxFiles: 5,
       tailable: true,
     }),
-    
+
     // Combined log file (all levels)
     new File({
       filename: path.join(logsDir, "combined.log"),

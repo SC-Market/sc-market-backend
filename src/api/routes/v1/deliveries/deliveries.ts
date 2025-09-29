@@ -17,71 +17,78 @@ export const deliveryRouter = express.Router()
  *  - Multiple orders per delivery
  */
 
-deliveryRouter.post("/create", userAuthorized, requireOrdersWrite, async (req, res, next) => {
-  const user = req.user as User
+deliveryRouter.post(
+  "/create",
+  userAuthorized,
+  requireOrdersWrite,
+  async (req, res, next) => {
+    const user = req.user as User
 
-  const {
-    start,
-    end,
-    order_id,
-    ship_id,
-  }: {
-    start: string
-    end: string
-    order_id: string
-    ship_id: string
-  } = req.body
+    const {
+      start,
+      end,
+      order_id,
+      ship_id,
+    }: {
+      start: string
+      end: string
+      order_id: string
+      ship_id: string
+    } = req.body
 
-  if (!start || !end || !order_id || !ship_id) {
-    res.status(400).json({ error: "Missing required fields" })
-    return
-  }
+    if (!start || !end || !order_id || !ship_id) {
+      res.status(400).json({ error: "Missing required fields" })
+      return
+    }
 
-  const contractors = await database.getUserContractors({
-    user_id: user.user_id,
-  })
-  const order = await database.getOrder({ order_id })
-  let contractor
-  let manageOrders
-  if (order.contractor_id) {
-    contractor = contractors.find(
-      (c) => c.contractor_id === order.contractor_id,
-    )
-    manageOrders = await has_permission(
-      contractor!.contractor_id,
-      user.user_id,
-      "manage_market",
-    )
-  }
-  const unrelated = !(order.assigned_id === user.user_id || manageOrders)
-
-  if (unrelated) {
-    res.status(403).json({
-      error: "You are not allowed to create a delivery for this order",
+    const contractors = await database.getUserContractors({
+      user_id: user.user_id,
     })
-    return
-  }
+    const order = await database.getOrder({ order_id })
+    let contractor
+    let manageOrders
+    if (order.contractor_id) {
+      contractor = contractors.find(
+        (c) => c.contractor_id === order.contractor_id,
+      )
+      manageOrders = await has_permission(
+        contractor!.contractor_id,
+        user.user_id,
+        "manage_market",
+      )
+    }
+    const unrelated = !(order.assigned_id === user.user_id || manageOrders)
 
-  const ship = await database.getShip({ ship_id })
+    if (unrelated) {
+      res.status(403).json({
+        error: "You are not allowed to create a delivery for this order",
+      })
+      return
+    }
 
-  if (!ship || ship.owner !== user.user_id) {
-    res
-      .status(403)
-      .json({ error: "You are not allowed to create a delivery for this ship" })
-    return
-  }
+    const ship = await database.getShip({ ship_id })
 
-  await database.createDelivery({
-    departure: start,
-    destination: end,
-    order_id: order_id,
-    ship_id: ship_id,
-    progress: 0,
-    status: "pending",
-  })
+    if (!ship || ship.owner !== user.user_id) {
+      res
+        .status(403)
+        .json({
+          error: "You are not allowed to create a delivery for this ship",
+        })
+      return
+    }
 
-  res.json({ result: "Success" })
-})
+    await database.createDelivery({
+      departure: start,
+      destination: end,
+      order_id: order_id,
+      ship_id: ship_id,
+      progress: 0,
+      status: "pending",
+    })
+
+    res.json({ result: "Success" })
+  },
+)
 
 export const deliveriesRouter = express.Router()
 

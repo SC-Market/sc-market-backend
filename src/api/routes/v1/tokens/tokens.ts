@@ -111,16 +111,23 @@ tokensRouter.post("/", userAuthorized, async (req, res) => {
           .status(400)
           .json(createErrorResponse("contractor_ids must be an array"))
       }
-      
+
       // Validate UUID format for contractor_ids
-      const uuidRegex = /^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i
-      const invalidContractorIds = contractor_ids.filter((id: string) => !uuidRegex.test(id))
+      const uuidRegex =
+        /^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i
+      const invalidContractorIds = contractor_ids.filter(
+        (id: string) => !uuidRegex.test(id),
+      )
       if (invalidContractorIds.length > 0) {
         return res
           .status(400)
-          .json(createErrorResponse(`Invalid contractor IDs: ${invalidContractorIds.join(", ")}`))
+          .json(
+            createErrorResponse(
+              `Invalid contractor IDs: ${invalidContractorIds.join(", ")}`,
+            ),
+          )
       }
-      
+
       validatedContractorIds = contractor_ids
     }
 
@@ -134,15 +141,17 @@ tokensRouter.post("/", userAuthorized, async (req, res) => {
       // datetime-local sends format like "2024-01-15T14:30" (local time)
       // We need to treat this as UTC to avoid timezone issues
       // If the string doesn't end with 'Z', we'll treat it as UTC
-      const dateString = expires_at.endsWith('Z') ? expires_at : `${expires_at}Z`
+      const dateString = expires_at.endsWith("Z")
+        ? expires_at
+        : `${expires_at}Z`
       expiresAt = new Date(dateString)
-      
+
       if (isNaN(expiresAt.getTime())) {
         return res
           .status(400)
           .json(createErrorResponse("Invalid expiration date"))
       }
-      
+
       // Ensure the date is in the future
       if (expiresAt <= new Date()) {
         return res
@@ -152,7 +161,8 @@ tokensRouter.post("/", userAuthorized, async (req, res) => {
     }
 
     // Insert token into database
-    const [tokenRecord] = await database.knex("api_tokens")
+    const [tokenRecord] = await database
+      .knex("api_tokens")
       .insert({
         user_id: user.user_id,
         name,
@@ -192,7 +202,8 @@ tokensRouter.get("/", userAuthorized, async (req, res) => {
   try {
     const user = req.user! as User
 
-    const tokens = await database.knex("api_tokens")
+    const tokens = await database
+      .knex("api_tokens")
       .where("user_id", user.user_id)
       .select(
         "id",
@@ -220,7 +231,8 @@ tokensRouter.get("/:tokenId", userAuthorized, async (req, res) => {
     const user = req.user! as User
     const { tokenId } = req.params
 
-    const token = await database.knex("api_tokens")
+    const token = await database
+      .knex("api_tokens")
       .where("id", tokenId)
       .where("user_id", user.user_id)
       .select(
@@ -255,7 +267,8 @@ tokensRouter.put("/:tokenId", userAuthorized, async (req, res) => {
     const { name, description, scopes, expires_at, contractor_ids } = req.body
 
     // Check if token exists and belongs to user
-    const existingToken = await database.knex("api_tokens")
+    const existingToken = await database
+      .knex("api_tokens")
       .where("id", tokenId)
       .where("user_id", user.user_id)
       .first()
@@ -336,12 +349,19 @@ tokensRouter.put("/:tokenId", userAuthorized, async (req, res) => {
         validatedContractorIds = []
       } else if (Array.isArray(contractor_ids)) {
         // Validate UUID format for contractor_ids
-        const uuidRegex = /^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i
-        const invalidContractorIds = contractor_ids.filter((id: string) => !uuidRegex.test(id))
+        const uuidRegex =
+          /^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i
+        const invalidContractorIds = contractor_ids.filter(
+          (id: string) => !uuidRegex.test(id),
+        )
         if (invalidContractorIds.length > 0) {
           return res
             .status(400)
-            .json(createErrorResponse(`Invalid contractor IDs: ${invalidContractorIds.join(", ")}`))
+            .json(
+              createErrorResponse(
+                `Invalid contractor IDs: ${invalidContractorIds.join(", ")}`,
+              ),
+            )
         }
         validatedContractorIds = contractor_ids
       } else {
@@ -360,15 +380,17 @@ tokensRouter.put("/:tokenId", userAuthorized, async (req, res) => {
         // datetime-local sends format like "2024-01-15T14:30" (local time)
         // We need to treat this as UTC to avoid timezone issues
         // If the string doesn't end with 'Z', we'll treat it as UTC
-        const dateString = expires_at.endsWith('Z') ? expires_at : `${expires_at}Z`
+        const dateString = expires_at.endsWith("Z")
+          ? expires_at
+          : `${expires_at}Z`
         expiresAt = new Date(dateString)
-        
+
         if (isNaN(expiresAt.getTime())) {
           return res
             .status(400)
             .json(createErrorResponse("Invalid expiration date"))
         }
-        
+
         // Ensure the date is in the future
         if (expiresAt <= new Date()) {
           return res
@@ -386,10 +408,12 @@ tokensRouter.put("/:tokenId", userAuthorized, async (req, res) => {
     if (name !== undefined) updateData.name = name
     if (description !== undefined) updateData.description = description
     if (scopes !== undefined) updateData.scopes = scopes
-    if (contractor_ids !== undefined) updateData.contractor_ids = validatedContractorIds
+    if (contractor_ids !== undefined)
+      updateData.contractor_ids = validatedContractorIds
     if (expires_at !== undefined) updateData.expires_at = expiresAt
 
-    const [updatedToken] = await database.knex("api_tokens")
+    const [updatedToken] = await database
+      .knex("api_tokens")
       .where("id", tokenId)
       .where("user_id", user.user_id)
       .update(updateData)
@@ -419,7 +443,8 @@ tokensRouter.delete("/:tokenId", userAuthorized, async (req, res) => {
     const user = req.user! as User
     const { tokenId } = req.params
 
-    const deletedCount = await database.knex("api_tokens")
+    const deletedCount = await database
+      .knex("api_tokens")
       .where("id", tokenId)
       .where("user_id", user.user_id)
       .del()
@@ -449,15 +474,15 @@ tokensRouter.post("/:tokenId/extend", userAuthorized, async (req, res) => {
     // datetime-local sends format like "2024-01-15T14:30" (local time)
     // We need to treat this as UTC to avoid timezone issues
     // If the string doesn't end with 'Z', we'll treat it as UTC
-    const dateString = expires_at.endsWith('Z') ? expires_at : `${expires_at}Z`
+    const dateString = expires_at.endsWith("Z") ? expires_at : `${expires_at}Z`
     const newExpiration = new Date(dateString)
-    
+
     if (isNaN(newExpiration.getTime())) {
       return res
         .status(400)
         .json(createErrorResponse("Invalid expiration date"))
     }
-    
+
     // Ensure the date is in the future
     if (newExpiration <= new Date()) {
       return res
@@ -466,7 +491,8 @@ tokensRouter.post("/:tokenId/extend", userAuthorized, async (req, res) => {
     }
 
     // Check if token exists and belongs to user
-    const existingToken = await database.knex("api_tokens")
+    const existingToken = await database
+      .knex("api_tokens")
       .where("id", tokenId)
       .where("user_id", user.user_id)
       .first()
@@ -476,7 +502,8 @@ tokensRouter.post("/:tokenId/extend", userAuthorized, async (req, res) => {
     }
 
     // Update expiration
-    const [updatedToken] = await database.knex("api_tokens")
+    const [updatedToken] = await database
+      .knex("api_tokens")
       .where("id", tokenId)
       .where("user_id", user.user_id)
       .update({
@@ -505,7 +532,8 @@ tokensRouter.get("/:tokenId/stats", userAuthorized, async (req, res) => {
     const user = req.user! as User
     const { tokenId } = req.params
 
-    const token = await database.knex("api_tokens")
+    const token = await database
+      .knex("api_tokens")
       .where("id", tokenId)
       .where("user_id", user.user_id)
       .select("id", "name", "created_at", "last_used_at", "expires_at")

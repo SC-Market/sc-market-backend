@@ -466,7 +466,7 @@ export async function formatListingBase(
 
   // Note: Orders are now fetched via separate paginated endpoint
   // /api/market/listing/:listing_id/orders
-  
+
   let bids: any | undefined = []
   if (listing.sale_type === "auction") {
     const bid_objects = await database.getMarketBids({
@@ -657,23 +657,23 @@ interface OptimizedOrderRow {
   cost: number
   payment_type: string
   service_id: string | null
-  
+
   // Item count
   item_count: number
-  
+
   // Service fields
   service_title: string | null
-  
+
   // Customer account fields
   customer_username: string
   customer_avatar: string
   customer_display_name: string
-  
+
   // Assigned account fields
   assigned_username: string | null
   assigned_avatar: string | null
   assigned_display_name: string | null
-  
+
   // Contractor fields
   contractor_spectrum_id: string | null
   contractor_name: string | null
@@ -681,31 +681,47 @@ interface OptimizedOrderRow {
 }
 
 // Optimized serializer for pre-joined data
-export async function formatOrderStubOptimized(row: OptimizedOrderRow): Promise<OrderStub> {
+export async function formatOrderStubOptimized(
+  row: OptimizedOrderRow,
+): Promise<OrderStub> {
   // We still need to fetch ratings and process avatars since they're not in the optimized query
   const customerRating = await getUserRating(row.customer_id)
-  const assignedRating = row.assigned_id ? await getUserRating(row.assigned_id) : null
-  const contractorRating = row.contractor_id ? await getContractorRating(row.contractor_id) : null
+  const assignedRating = row.assigned_id
+    ? await getUserRating(row.assigned_id)
+    : null
+  const contractorRating = row.contractor_id
+    ? await getContractorRating(row.contractor_id)
+    : null
 
   // Process avatars through CDN service
   const customerAvatar = await cdn.getFileLinkResource(row.customer_avatar)
-  const assignedAvatar = row.assigned_avatar ? await cdn.getFileLinkResource(row.assigned_avatar) : null
-  const contractorAvatar = row.contractor_avatar ? await cdn.getFileLinkResource(row.contractor_avatar) : null
+  const assignedAvatar = row.assigned_avatar
+    ? await cdn.getFileLinkResource(row.assigned_avatar)
+    : null
+  const contractorAvatar = row.contractor_avatar
+    ? await cdn.getFileLinkResource(row.contractor_avatar)
+    : null
 
   return {
     order_id: row.order_id,
-    contractor: row.contractor_id && row.contractor_spectrum_id && row.contractor_name ? {
-      spectrum_id: row.contractor_spectrum_id,
-      name: row.contractor_name,
-      avatar: contractorAvatar!,
-      rating: contractorRating!,
-    } : null,
-    assigned_to: row.assigned_id && row.assigned_username && row.assigned_display_name ? {
-      username: row.assigned_username,
-      avatar: assignedAvatar!,
-      display_name: row.assigned_display_name,
-      rating: assignedRating!,
-    } : null,
+    contractor:
+      row.contractor_id && row.contractor_spectrum_id && row.contractor_name
+        ? {
+            spectrum_id: row.contractor_spectrum_id,
+            name: row.contractor_name,
+            avatar: contractorAvatar!,
+            rating: contractorRating!,
+          }
+        : null,
+    assigned_to:
+      row.assigned_id && row.assigned_username && row.assigned_display_name
+        ? {
+            username: row.assigned_username,
+            avatar: assignedAvatar!,
+            display_name: row.assigned_display_name,
+            rating: assignedRating!,
+          }
+        : null,
     customer: {
       username: row.customer_username,
       avatar: customerAvatar!,
@@ -743,7 +759,7 @@ export async function getContractorRating(
 
   const ratings = reviews.filter((r) => r.rating).map((r) => +r.rating)
   const responseStats = await database.getContractorResponseStats(contractor_id)
-  
+
   return {
     avg_rating: (ratings.reduce((a, b) => a + b, 0) * 10) / ratings.length || 0,
     rating_count: ratings.length,
@@ -773,7 +789,7 @@ export async function getUserRating(user_id: string): Promise<Rating> {
 
   const ratings = reviews.filter((r) => r.rating).map((r) => +r.rating)
   const responseStats = await database.getUserResponseStats(user_id)
-  
+
   return {
     avg_rating: (ratings.reduce((a, b) => a + b, 0) * 10) / ratings.length || 0,
     rating_count: ratings.length,

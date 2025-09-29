@@ -2844,11 +2844,16 @@ marketRouter.get(
   },
 )
 
-marketRouter.get("/all_listings", adminAuthorized, requireMarketAdmin, async (req, res) => {
-  const listings = await database.getMarketListings({})
+marketRouter.get(
+  "/all_listings",
+  adminAuthorized,
+  requireMarketAdmin,
+  async (req, res) => {
+    const listings = await database.getMarketListings({})
 
-  res.json(await Promise.all(listings.map((l) => formatListing(l, true))))
-})
+    res.json(await Promise.all(listings.map((l) => formatListing(l, true))))
+  },
+)
 
 marketRouter.get(
   "/user/:username",
@@ -4068,9 +4073,14 @@ marketRouter.post(
   },
 )
 
-marketRouter.get("/export", userAuthorized, requireMarketRead, async (req: Request, res) => {
-  // TODO: Do this
-})
+marketRouter.get(
+  "/export",
+  userAuthorized,
+  requireMarketRead,
+  async (req: Request, res) => {
+    // TODO: Do this
+  },
+)
 
 marketRouter.get("/category/:category", async (req: Request, res) => {
   const { category } = req.params

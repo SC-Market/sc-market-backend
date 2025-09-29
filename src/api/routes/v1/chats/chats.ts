@@ -1,5 +1,10 @@
 import express from "express"
-import { userAuthorized , AuthRequest, requireChatsRead, requireChatsWrite} from "../../../middleware/auth.js"
+import {
+  userAuthorized,
+  AuthRequest,
+  requireChatsRead,
+  requireChatsWrite,
+} from "../../../middleware/auth.js"
 import { User } from "../api-models.js"
 import { database } from "../../../../clients/database/knex-db.js"
 import { cdn } from "../../../../clients/cdn/cdn.js"

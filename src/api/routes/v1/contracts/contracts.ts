@@ -6,7 +6,11 @@ import {
   Response403,
   Response404,
 } from "../openapi.js"
-import { verifiedUser, requireOrdersWrite, requireOrdersRead } from "../../../middleware/auth.js"
+import {
+  verifiedUser,
+  requireOrdersWrite,
+  requireOrdersRead,
+} from "../../../middleware/auth.js"
 import { createOffer, orderTypes } from "../orders/helpers.js"
 import { PAYMENT_TYPES } from "../types/payment-types.js"
 import { database } from "../../../../clients/database/knex-db.js"

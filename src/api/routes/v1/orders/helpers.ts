@@ -321,14 +321,14 @@ export async function handleStatusUpdate(req: any, res: any, status: string) {
         status,
         assigned_id: req.user.user_id,
       })
-      
+
       // Track order response for responsive badge
       await database.trackOrderResponse(
         order.order_id,
         order.assigned_id || undefined,
-        order.contractor_id || undefined
+        order.contractor_id || undefined,
       )
-      
+
       await assignToThread(order, req.user)
     } else {
       await database.updateOrder(order.order_id, { status: status })
@@ -487,7 +487,7 @@ export async function acceptApplicant(
   await database.trackOrderAssignment(
     req.order.order_id,
     targetUserObj?.user_id,
-    targetContractorObj?.contractor_id
+    targetContractorObj?.contractor_id,
   )
 
   await database.clearOrderApplications(req.order.order_id)
@@ -600,23 +600,23 @@ interface OptimizedOrderRow {
   cost: number
   payment_type: string
   service_id: string | null
-  
+
   // Item count
   item_count: number
-  
+
   // Service fields
   service_title: string | null
-  
+
   // Customer account fields
   customer_username: string
   customer_avatar: string
   customer_display_name: string
-  
+
   // Assigned account fields
   assigned_username: string | null
   assigned_avatar: string | null
   assigned_display_name: string | null
-  
+
   // Contractor fields
   contractor_spectrum_id: string | null
   contractor_name: string | null
@@ -648,16 +648,35 @@ export async function search_orders_optimized(
   )
 
   // Build optimized query with JOINs to get all related data
-  let optimizedQuery = database.knex("orders")
+  let optimizedQuery = database
+    .knex("orders")
     .leftJoin("market_orders", "orders.order_id", "=", "market_orders.order_id")
     .leftJoin("services", "orders.service_id", "=", "services.service_id")
-    .leftJoin("accounts as customer_account", "orders.customer_id", "=", "customer_account.user_id")
-    .leftJoin("accounts as assigned_account", "orders.assigned_id", "=", "assigned_account.user_id")
-    .leftJoin("contractors", "orders.contractor_id", "=", "contractors.contractor_id")
+    .leftJoin(
+      "accounts as customer_account",
+      "orders.customer_id",
+      "=",
+      "customer_account.user_id",
+    )
+    .leftJoin(
+      "accounts as assigned_account",
+      "orders.assigned_id",
+      "=",
+      "assigned_account.user_id",
+    )
+    .leftJoin(
+      "contractors",
+      "orders.contractor_id",
+      "=",
+      "contractors.contractor_id",
+    )
     .where((qd) => {
-      if (args.customer_id) qd = qd.where("orders.customer_id", args.customer_id)
-      if (args.assigned_id) qd = qd.where("orders.assigned_id", args.assigned_id)
-      if (args.contractor_id) qd = qd.where("orders.contractor_id", args.contractor_id)
+      if (args.customer_id)
+        qd = qd.where("orders.customer_id", args.customer_id)
+      if (args.assigned_id)
+        qd = qd.where("orders.assigned_id", args.assigned_id)
+      if (args.contractor_id)
+        qd = qd.where("orders.contractor_id", args.contractor_id)
       return qd
     })
 
@@ -665,11 +684,15 @@ export async function search_orders_optimized(
   if (args.status) {
     optimizedQuery = optimizedQuery.andWhere((qb) => {
       if (args.status === "past") {
-        return qb.whereRaw("orders.status = ANY(?)", [["fulfilled", "cancelled"]])
+        return qb.whereRaw("orders.status = ANY(?)", [
+          ["fulfilled", "cancelled"],
+        ])
       }
 
       if (args.status === "active") {
-        return qb.whereRaw("orders.status = ANY(?)", [["in-progress", "not-started"]])
+        return qb.whereRaw("orders.status = ANY(?)", [
+          ["in-progress", "not-started"],
+        ])
       }
 
       return qb.where("orders.status", args.status)
@@ -681,10 +704,16 @@ export async function search_orders_optimized(
     case "timestamp":
     case "status":
     case "title":
-      optimizedQuery = optimizedQuery.orderBy(`orders.${args.sort_method}`, args.reverse_sort ? "desc" : "asc")
+      optimizedQuery = optimizedQuery.orderBy(
+        `orders.${args.sort_method}`,
+        args.reverse_sort ? "desc" : "asc",
+      )
       break
     case "customer_name":
-      optimizedQuery = optimizedQuery.orderBy("customer_account.username", args.reverse_sort ? "desc" : "asc")
+      optimizedQuery = optimizedQuery.orderBy(
+        "customer_account.username",
+        args.reverse_sort ? "desc" : "asc",
+      )
       break
     case "contractor_name":
       optimizedQuery = optimizedQuery.orderByRaw(
@@ -709,14 +738,14 @@ export async function search_orders_optimized(
       "assigned_account.display_name as assigned_display_name",
       "contractors.spectrum_id as contractor_spectrum_id",
       "contractors.name as contractor_name",
-      "contractors.avatar as contractor_avatar"
+      "contractors.avatar as contractor_avatar",
     )
     .groupBy(
       "orders.order_id",
       "services.service_id",
       "customer_account.user_id",
       "assigned_account.user_id",
-      "contractors.contractor_id"
+      "contractors.contractor_id",
     )
 
   return { item_counts, items }
@@ -726,13 +755,13 @@ export async function search_orders_optimized(
 interface ContractorOrderMetrics {
   total_orders: number
   total_value: number
-  active_value: number  // Sum of costs for active orders (not-started + in-progress)
-  completed_value: number  // Sum of costs for fulfilled orders
+  active_value: number // Sum of costs for active orders (not-started + in-progress)
+  completed_value: number // Sum of costs for fulfilled orders
   status_counts: {
     "not-started": number
     "in-progress": number
-    "fulfilled": number
-    "cancelled": number
+    fulfilled: number
+    cancelled: number
   }
   recent_activity: {
     orders_last_7_days: number
@@ -748,20 +777,28 @@ interface ContractorOrderMetrics {
 }
 
 // Get contractor order metrics using optimized queries
-export async function getContractorOrderMetrics(contractor_id: string): Promise<ContractorOrderMetrics> {
+export async function getContractorOrderMetrics(
+  contractor_id: string,
+): Promise<ContractorOrderMetrics> {
   // Get basic counts and totals
-  const basicStats = await database.knex("orders")
+  const basicStats = await database
+    .knex("orders")
     .where({ contractor_id })
     .select(
       database.knex.raw("COUNT(*) as total_orders"),
       database.knex.raw("COALESCE(SUM(cost), 0) as total_value"),
-      database.knex.raw("COALESCE(SUM(CASE WHEN status IN ('not-started', 'in-progress') THEN cost ELSE 0 END), 0) as active_value"),
-      database.knex.raw("COALESCE(SUM(CASE WHEN status = 'fulfilled' THEN cost ELSE 0 END), 0) as completed_value")
+      database.knex.raw(
+        "COALESCE(SUM(CASE WHEN status IN ('not-started', 'in-progress') THEN cost ELSE 0 END), 0) as active_value",
+      ),
+      database.knex.raw(
+        "COALESCE(SUM(CASE WHEN status = 'fulfilled' THEN cost ELSE 0 END), 0) as completed_value",
+      ),
     )
     .first()
 
   // Get status counts
-  const statusCounts = await database.knex("orders")
+  const statusCounts = await database
+    .knex("orders")
     .where({ contractor_id })
     .groupBy("status")
     .select("status", database.knex.raw("COUNT(*) as count"))
@@ -769,8 +806,8 @@ export async function getContractorOrderMetrics(contractor_id: string): Promise<
   const status_counts = {
     "not-started": 0,
     "in-progress": 0,
-    "fulfilled": 0,
-    "cancelled": 0,
+    fulfilled: 0,
+    cancelled: 0,
   }
 
   statusCounts.forEach(({ status, count }) => {
@@ -783,25 +820,39 @@ export async function getContractorOrderMetrics(contractor_id: string): Promise<
   const sevenDaysAgo = new Date(Date.now() - 7 * 24 * 60 * 60 * 1000)
   const thirtyDaysAgo = new Date(Date.now() - 30 * 24 * 60 * 60 * 1000)
 
-  const recentActivity = await database.knex("orders")
+  const recentActivity = await database
+    .knex("orders")
     .where({ contractor_id })
     .select(
-      database.knex.raw("COUNT(CASE WHEN timestamp >= ? THEN 1 END) as orders_last_7_days", [sevenDaysAgo]),
-      database.knex.raw("COUNT(CASE WHEN timestamp >= ? THEN 1 END) as orders_last_30_days", [thirtyDaysAgo]),
-      database.knex.raw("COALESCE(SUM(CASE WHEN timestamp >= ? THEN cost ELSE 0 END), 0) as value_last_7_days", [sevenDaysAgo]),
-      database.knex.raw("COALESCE(SUM(CASE WHEN timestamp >= ? THEN cost ELSE 0 END), 0) as value_last_30_days", [thirtyDaysAgo])
+      database.knex.raw(
+        "COUNT(CASE WHEN timestamp >= ? THEN 1 END) as orders_last_7_days",
+        [sevenDaysAgo],
+      ),
+      database.knex.raw(
+        "COUNT(CASE WHEN timestamp >= ? THEN 1 END) as orders_last_30_days",
+        [thirtyDaysAgo],
+      ),
+      database.knex.raw(
+        "COALESCE(SUM(CASE WHEN timestamp >= ? THEN cost ELSE 0 END), 0) as value_last_7_days",
+        [sevenDaysAgo],
+      ),
+      database.knex.raw(
+        "COALESCE(SUM(CASE WHEN timestamp >= ? THEN cost ELSE 0 END), 0) as value_last_30_days",
+        [thirtyDaysAgo],
+      ),
     )
     .first()
 
   // Get top customers
-  const topCustomers = await database.knex("orders")
+  const topCustomers = await database
+    .knex("orders")
     .join("accounts", "orders.customer_id", "=", "accounts.user_id")
     .where({ contractor_id })
     .groupBy("orders.customer_id", "accounts.username")
     .select(
       "accounts.username",
       database.knex.raw("COUNT(*) as order_count"),
-      database.knex.raw("COALESCE(SUM(orders.cost), 0) as total_value")
+      database.knex.raw("COALESCE(SUM(orders.cost), 0) as total_value"),
     )
     .orderBy("order_count", "desc")
     .limit(10)
@@ -818,7 +869,7 @@ export async function getContractorOrderMetrics(contractor_id: string): Promise<
       value_last_7_days: +recentActivity.value_last_7_days,
       value_last_30_days: +recentActivity.value_last_30_days,
     },
-    top_customers: topCustomers.map(customer => ({
+    top_customers: topCustomers.map((customer) => ({
       username: customer.username,
       order_count: +customer.order_count,
       total_value: +customer.total_value,
@@ -835,8 +886,8 @@ interface ContractorOrderData {
       status_trends: {
         "not-started": Array<{ date: string; count: number }>
         "in-progress": Array<{ date: string; count: number }>
-        "fulfilled": Array<{ date: string; count: number }>
-        "cancelled": Array<{ date: string; count: number }>
+        fulfilled: Array<{ date: string; count: number }>
+        cancelled: Array<{ date: string; count: number }>
       }
     }
   }
@@ -851,8 +902,8 @@ interface ContractorOrderData {
 
 // Get comprehensive contractor order data including metrics and trend data
 export async function getContractorOrderData(
-  contractor_id: string, 
-  options: { include_trends?: boolean; assigned_only?: boolean } = {}
+  contractor_id: string,
+  options: { include_trends?: boolean; assigned_only?: boolean } = {},
 ): Promise<ContractorOrderData> {
   const { include_trends = true, assigned_only = false } = options
 
@@ -865,37 +916,40 @@ export async function getContractorOrderData(
   // Get trend data if requested
   if (include_trends) {
     const thirtyDaysAgo = new Date(Date.now() - 30 * 24 * 60 * 60 * 1000)
-    
+
     // Get daily order counts
-    const dailyOrders = await database.knex("orders")
+    const dailyOrders = await database
+      .knex("orders")
       .where({ contractor_id })
       .where("timestamp", ">=", thirtyDaysAgo)
       .select(
         database.knex.raw("DATE(timestamp) as date"),
-        database.knex.raw("COUNT(*) as count")
+        database.knex.raw("COUNT(*) as count"),
       )
       .groupBy(database.knex.raw("DATE(timestamp)"))
       .orderBy("date")
 
     // Get daily order values
-    const dailyValue = await database.knex("orders")
+    const dailyValue = await database
+      .knex("orders")
       .where({ contractor_id })
       .where("timestamp", ">=", thirtyDaysAgo)
       .select(
         database.knex.raw("DATE(timestamp) as date"),
-        database.knex.raw("COALESCE(SUM(cost), 0) as value")
+        database.knex.raw("COALESCE(SUM(cost), 0) as value"),
       )
       .groupBy(database.knex.raw("DATE(timestamp)"))
       .orderBy("date")
 
     // Get status trends
-    const statusTrends = await database.knex("orders")
+    const statusTrends = await database
+      .knex("orders")
       .where({ contractor_id })
       .where("timestamp", ">=", thirtyDaysAgo)
       .select(
         "status",
         database.knex.raw("DATE(timestamp) as date"),
-        database.knex.raw("COUNT(*) as count")
+        database.knex.raw("COUNT(*) as count"),
       )
       .groupBy("status", database.knex.raw("DATE(timestamp)"))
       .orderBy("date")
@@ -904,34 +958,39 @@ export async function getContractorOrderData(
     const status_trends = {
       "not-started": [] as Array<{ date: string; count: number }>,
       "in-progress": [] as Array<{ date: string; count: number }>,
-      "fulfilled": [] as Array<{ date: string; count: number }>,
-      "cancelled": [] as Array<{ date: string; count: number }>,
+      fulfilled: [] as Array<{ date: string; count: number }>,
+      cancelled: [] as Array<{ date: string; count: number }>,
     }
 
     statusTrends.forEach(({ status, date, count }) => {
       if (status in status_trends) {
         status_trends[status as keyof typeof status_trends].push({
-          date: date.toISOString().split('T')[0],
-          count: +count
+          date: date.toISOString().split("T")[0],
+          count: +count,
         })
       }
     })
 
     trend_data = {
-      daily_orders: dailyOrders.map(({ date, count }: { date: Date; count: number }) => ({
-        date: date.toISOString().split('T')[0],
-        count: +count
-      })),
-      daily_value: dailyValue.map(({ date, value }: { date: Date; value: number }) => ({
-        date: date.toISOString().split('T')[0],
-        value: +value
-      })),
-      status_trends
+      daily_orders: dailyOrders.map(
+        ({ date, count }: { date: Date; count: number }) => ({
+          date: date.toISOString().split("T")[0],
+          count: +count,
+        }),
+      ),
+      daily_value: dailyValue.map(
+        ({ date, value }: { date: Date; value: number }) => ({
+          date: date.toISOString().split("T")[0],
+          value: +value,
+        }),
+      ),
+      status_trends,
     }
   }
 
   // Get recent orders for fallback
-  const recentOrdersQuery = database.knex("orders")
+  const recentOrdersQuery = database
+    .knex("orders")
     .where({ contractor_id })
     .select("order_id", "timestamp", "status", "cost", "title")
     .orderBy("timestamp", "desc")
@@ -943,20 +1002,20 @@ export async function getContractorOrderData(
 
   const recentOrdersData = await recentOrdersQuery
 
-  recent_orders = recentOrdersData.map(order => ({
+  recent_orders = recentOrdersData.map((order) => ({
     order_id: order.order_id,
     timestamp: order.timestamp.toISOString(),
     status: order.status,
     cost: +order.cost,
-    title: order.title
+    title: order.title,
   }))
 
   return {
     metrics: {
       ...metrics,
-      trend_data
+      trend_data,
     },
-    recent_orders
+    recent_orders,
   }
 }
 
@@ -964,135 +1023,145 @@ export async function getContractorOrderData(
 // ORDER SETTINGS HELPER FUNCTIONS
 // =============================================================================
 
-
 /**
  * Get the relevant order setting for a session (contractor takes priority over user)
  */
 export async function getRelevantOrderSetting(
-  session: DBOfferSession, 
-  settingType: 'offer_message' | 'order_message'
+  session: DBOfferSession,
+  settingType: "offer_message" | "order_message",
 ): Promise<DBOrderSetting | null> {
-  logger.debug('Looking for relevant order setting', {
+  logger.debug("Looking for relevant order setting", {
     sessionId: session.id,
     settingType,
     contractorId: session.contractor_id,
-    assignedId: session.assigned_id
+    assignedId: session.assigned_id,
   })
-  
+
   // Priority: contractor setting > assigned user setting
   if (session.contractor_id) {
-    logger.debug('Checking contractor order setting', {
+    logger.debug("Checking contractor order setting", {
       contractorId: session.contractor_id,
-      settingType
+      settingType,
     })
-    
-    const contractorSetting = await database.getOrderSetting('contractor', session.contractor_id, settingType)
+
+    const contractorSetting = await database.getOrderSetting(
+      "contractor",
+      session.contractor_id,
+      settingType,
+    )
     if (contractorSetting && contractorSetting.enabled) {
-      logger.debug('Found enabled contractor setting', {
+      logger.debug("Found enabled contractor setting", {
         settingId: contractorSetting.id,
         entityType: contractorSetting.entity_type,
-        enabled: contractorSetting.enabled
+        enabled: contractorSetting.enabled,
       })
       return contractorSetting
     } else {
-      logger.debug('No enabled contractor setting found', {
+      logger.debug("No enabled contractor setting found", {
         contractorId: session.contractor_id,
         hasSetting: !!contractorSetting,
-        enabled: contractorSetting?.enabled
+        enabled: contractorSetting?.enabled,
       })
     }
   }
-  
+
   if (session.assigned_id) {
-    logger.debug('Checking user order setting', {
+    logger.debug("Checking user order setting", {
       assignedId: session.assigned_id,
-      settingType
+      settingType,
     })
-    
-    const userSetting = await database.getOrderSetting('user', session.assigned_id, settingType)
+
+    const userSetting = await database.getOrderSetting(
+      "user",
+      session.assigned_id,
+      settingType,
+    )
     if (userSetting && userSetting.enabled) {
-      logger.debug('Found enabled user setting', {
+      logger.debug("Found enabled user setting", {
         settingId: userSetting.id,
         entityType: userSetting.entity_type,
-        enabled: userSetting.enabled
+        enabled: userSetting.enabled,
       })
       return userSetting
     } else {
-      logger.debug('No enabled user setting found', {
+      logger.debug("No enabled user setting found", {
         assignedId: session.assigned_id,
         hasSetting: !!userSetting,
-        enabled: userSetting?.enabled
+        enabled: userSetting?.enabled,
       })
     }
   }
-  
-  logger.debug('No relevant order setting found', {
+
+  logger.debug("No relevant order setting found", {
     sessionId: session.id,
-    settingType
+    settingType,
   })
-  
+
   return null
 }
 
 /**
  * Send custom offer message if setting exists
  */
-export async function sendCustomOfferMessage(session: DBOfferSession, offer: DBOffer): Promise<void> {
+export async function sendCustomOfferMessage(
+  session: DBOfferSession,
+  offer: DBOffer,
+): Promise<void> {
   try {
-    logger.debug('Attempting to send custom offer message', {
+    logger.debug("Attempting to send custom offer message", {
       sessionId: session.id,
       contractorId: session.contractor_id,
-      assignedId: session.assigned_id
+      assignedId: session.assigned_id,
     })
-    
-    const setting = await getRelevantOrderSetting(session, 'offer_message')
-    
+
+    const setting = await getRelevantOrderSetting(session, "offer_message")
+
     if (setting && setting.message_content.trim()) {
-      logger.debug('Found offer message setting', {
+      logger.debug("Found offer message setting", {
         settingId: setting.id,
         entityType: setting.entity_type,
-        messageLength: setting.message_content.length
+        messageLength: setting.message_content.length,
       })
-      
+
       // Get the chat for this session
       const chat = await database.getChat({ session_id: session.id })
-      
+
       if (chat) {
-        logger.debug('Found chat for session', { chatId: chat.chat_id })
-        
-        logger.debug('Sending offer message to chat', {
+        logger.debug("Found chat for session", { chatId: chat.chat_id })
+
+        logger.debug("Sending offer message to chat", {
           chatId: chat.chat_id,
-          author: 'system',
-          messageLength: setting.message_content.length
+          author: "system",
+          messageLength: setting.message_content.length,
         })
-        
+
         // Send message to chat on behalf of the system
         await database.insertMessage({
           chat_id: chat.chat_id,
           content: setting.message_content,
           author: null, // System message
         })
-        
-        logger.info('Successfully sent custom offer message', {
+
+        logger.info("Successfully sent custom offer message", {
           sessionId: session.id,
           chatId: chat.chat_id,
-          author: 'system'
+          author: "system",
         })
       } else {
-        logger.warn('No chat found for session', { sessionId: session.id })
+        logger.warn("No chat found for session", { sessionId: session.id })
       }
     } else {
-      logger.debug('No offer message setting found or empty content', {
+      logger.debug("No offer message setting found or empty content", {
         sessionId: session.id,
         hasSetting: !!setting,
-        hasContent: setting ? !!setting.message_content.trim() : false
+        hasContent: setting ? !!setting.message_content.trim() : false,
       })
     }
   } catch (error) {
-    logger.error('Failed to send custom offer message:', {
+    logger.error("Failed to send custom offer message:", {
       sessionId: session.id,
       error: error instanceof Error ? error.message : String(error),
-      stack: error instanceof Error ? error.stack : undefined
+      stack: error instanceof Error ? error.stack : undefined,
     })
     // Don't throw - this is optional functionality
   }
@@ -1101,63 +1170,66 @@ export async function sendCustomOfferMessage(session: DBOfferSession, offer: DBO
 /**
  * Send custom order message if setting exists
  */
-export async function sendCustomOrderMessage(order: DBOrder, session: DBOfferSession): Promise<void> {
+export async function sendCustomOrderMessage(
+  order: DBOrder,
+  session: DBOfferSession,
+): Promise<void> {
   try {
-    logger.debug('Attempting to send custom order message', {
+    logger.debug("Attempting to send custom order message", {
       orderId: order.order_id,
       sessionId: session.id,
       contractorId: order.contractor_id,
-      assignedId: order.assigned_id
+      assignedId: order.assigned_id,
     })
-    
-    const setting = await getRelevantOrderSetting(session, 'order_message')
-    
+
+    const setting = await getRelevantOrderSetting(session, "order_message")
+
     if (setting && setting.message_content.trim()) {
-      logger.debug('Found order message setting', {
+      logger.debug("Found order message setting", {
         settingId: setting.id,
         entityType: setting.entity_type,
-        messageLength: setting.message_content.length
+        messageLength: setting.message_content.length,
       })
-      
+
       // Get the chat for this order
       const chat = await database.getChat({ order_id: order.order_id })
-      
+
       if (chat) {
-        logger.debug('Found chat for order', { chatId: chat.chat_id })
-        
-        logger.debug('Sending order message to chat', {
+        logger.debug("Found chat for order", { chatId: chat.chat_id })
+
+        logger.debug("Sending order message to chat", {
           chatId: chat.chat_id,
-          author: 'system',
-          messageLength: setting.message_content.length
+          author: "system",
+          messageLength: setting.message_content.length,
         })
-        
+
         // Send message to chat on behalf of the system
         await database.insertMessage({
           chat_id: chat.chat_id,
           content: setting.message_content,
           author: null, // System message
         })
-        
-        logger.info('Successfully sent custom order message', {
+
+        logger.info("Successfully sent custom order message", {
           orderId: order.order_id,
           chatId: chat.chat_id,
-          author: 'system'
+          author: "system",
         })
       } else {
-        logger.warn('No chat found for order', { orderId: order.order_id })
+        logger.warn("No chat found for order", { orderId: order.order_id })
       }
     } else {
-      logger.debug('No order message setting found or empty content', {
+      logger.debug("No order message setting found or empty content", {
         orderId: order.order_id,
         hasSetting: !!setting,
-        hasContent: setting ? !!setting.message_content.trim() : false
+        hasContent: setting ? !!setting.message_content.trim() : false,
       })
     }
   } catch (error) {
-    logger.error('Failed to send custom order message:', {
+    logger.error("Failed to send custom order message:", {
       orderId: order.order_id,
       error: error instanceof Error ? error.message : String(error),
-      stack: error instanceof Error ? error.stack : undefined
+      stack: error instanceof Error ? error.stack : undefined,
     })
     // Don't throw - this is optional functionality
   }

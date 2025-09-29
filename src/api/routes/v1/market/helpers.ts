@@ -218,7 +218,9 @@ export async function convertQuery(
     user_seller_id,
     contractor_seller_id,
     listing_type: query.listing_type || null,
-    statuses: query.statuses ? query.statuses.split(',').map(s => s.trim()) : ['active'], // Default to active only
+    statuses: query.statuses
+      ? query.statuses.split(",").map((s) => s.trim())
+      : ["active"], // Default to active only
   }
 }
 

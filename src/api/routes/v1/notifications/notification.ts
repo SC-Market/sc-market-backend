@@ -1,5 +1,9 @@
 import express from "express"
-import { userAuthorized, requireNotificationsRead, requireNotificationsWrite } from "../../../middleware/auth.js"
+import {
+  userAuthorized,
+  requireNotificationsRead,
+  requireNotificationsWrite,
+} from "../../../middleware/auth.js"
 import { User } from "../api-models.js"
 import { database } from "../../../../clients/database/knex-db.js"
 import logger from "../../../../logger/logger.js"

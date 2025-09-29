@@ -72,7 +72,7 @@ interface OptimizedOfferSessionRow {
   contractor_id: string | null
   status: string
   timestamp: Date
-  
+
   // Most recent offer fields
   most_recent_offer_id: string
   most_recent_cost: number
@@ -82,23 +82,23 @@ interface OptimizedOfferSessionRow {
   most_recent_actor_id: string
   most_recent_status: string
   most_recent_service_id: string | null
-  
+
   // Item count
   item_count: number
-  
+
   // Service fields
   service_title: string | null
-  
+
   // Customer account fields
   customer_username: string
   customer_avatar: string
   customer_display_name: string
-  
+
   // Assigned account fields
   assigned_username: string | null
   assigned_avatar: string | null
   assigned_display_name: string | null
-  
+
   // Contractor fields
   contractor_spectrum_id: string | null
   contractor_name: string | null
@@ -106,7 +106,9 @@ interface OptimizedOfferSessionRow {
 }
 
 // Optimized serializer for pre-joined data
-export async function serializeOfferSessionStubOptimized(row: OptimizedOfferSessionRow) {
+export async function serializeOfferSessionStubOptimized(
+  row: OptimizedOfferSessionRow,
+) {
   let status
   if (row.status === "active") {
     if (row.most_recent_actor_id === row.customer_id) {
@@ -126,21 +128,29 @@ export async function serializeOfferSessionStubOptimized(row: OptimizedOfferSess
 
   // Process avatars through CDN service
   const customerAvatar = await cdn.getFileLinkResource(row.customer_avatar)
-  const assignedAvatar = row.assigned_avatar ? await cdn.getFileLinkResource(row.assigned_avatar) : null
-  const contractorAvatar = row.contractor_avatar ? await cdn.getFileLinkResource(row.contractor_avatar) : null
+  const assignedAvatar = row.assigned_avatar
+    ? await cdn.getFileLinkResource(row.assigned_avatar)
+    : null
+  const contractorAvatar = row.contractor_avatar
+    ? await cdn.getFileLinkResource(row.contractor_avatar)
+    : null
 
   return {
     id: row.id,
-    contractor: row.contractor_id ? {
-      spectrum_id: row.contractor_spectrum_id,
-      name: row.contractor_name,
-      avatar: contractorAvatar!,
-    } : null,
-    assigned_to: row.assigned_id ? {
-      username: row.assigned_username,
-      avatar: assignedAvatar!,
-      display_name: row.assigned_display_name,
-    } : null,
+    contractor: row.contractor_id
+      ? {
+          spectrum_id: row.contractor_spectrum_id,
+          name: row.contractor_name,
+          avatar: contractorAvatar!,
+        }
+      : null,
+    assigned_to: row.assigned_id
+      ? {
+          username: row.assigned_username,
+          avatar: assignedAvatar!,
+          display_name: row.assigned_display_name,
+        }
+      : null,
     customer: {
       username: row.customer_username,
       avatar: customerAvatar!,
