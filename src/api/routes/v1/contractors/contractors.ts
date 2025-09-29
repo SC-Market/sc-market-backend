@@ -239,6 +239,10 @@ oapi.schema("ContractorRoleBody", {
       title: "ContractorRoleBody.manage_webhooks",
       type: "boolean",
     },
+    manage_blocklist: {
+      title: "ContractorRoleBody.manage_blocklist",
+      type: "boolean",
+    },
   },
   required: [
     "name",
@@ -251,6 +255,7 @@ oapi.schema("ContractorRoleBody", {
     "manage_market",
     "manage_recruiting",
     "manage_webhooks",
+    "manage_blocklist",
   ],
   additionalProperties: false,
   title: "ContractorRoleBody",
@@ -306,6 +311,10 @@ oapi.schema("ContractorRoleUpdateBody", {
       title: "ContractorRoleUpdateBody.manage_webhooks",
       type: "boolean",
     },
+    manage_blocklist: {
+      title: "ContractorRoleUpdateBody.manage_blocklist",
+      type: "boolean",
+    },
   },
   required: [
     "name",
@@ -319,6 +328,7 @@ oapi.schema("ContractorRoleUpdateBody", {
     "manage_market",
     "manage_recruiting",
     "manage_webhooks",
+    "manage_blocklist",
   ],
   additionalProperties: false,
   title: "ContractorRoleUpdateBody",
@@ -1377,8 +1387,6 @@ contractorsRouter.get(
 
 contractorsRouter.get(
   "/:spectrum_id/members/:username",
-  userAuthorized,
-  requireContractorsRead,
   oapi.validPath({
     summary: "Check if user is member of contractor",
     deprecated: false,
@@ -1437,9 +1445,9 @@ contractorsRouter.get(
       "403": Response403,
       "404": Response404,
     },
+    security: [],
   }),
   valid_contractor,
-  org_authorized,
   async (req, res, next) => {
     const contractor = req.contractor!
     const username = req.params.username
@@ -1476,8 +1484,6 @@ contractorsRouter.get(
 
 contractorsRouter.get(
   "/:spectrum_id/members",
-  userAuthorized,
-  requireContractorsRead,
   oapi.validPath({
     summary: "Get contractor members (paginated)",
     deprecated: false,
@@ -1591,11 +1597,10 @@ contractorsRouter.get(
       "403": Response403,
       "404": Response404,
     },
+    security: [],
   }),
   valid_contractor,
-  org_authorized,
   async (req, res, next) => {
-    const user = req.user as User
     const contractor = req.contractor!
     
     const page = parseInt(req.query.page as string) || 0
