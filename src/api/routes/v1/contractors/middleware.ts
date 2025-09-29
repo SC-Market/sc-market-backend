@@ -36,7 +36,14 @@ export async function org_authorized(
     }
 
     const spectrum_id = req.params["spectrum_id"]
-    const contractor = await database.getContractor({ spectrum_id })
+    let contractor
+    try {
+      contractor = await database.getContractor({ spectrum_id })
+    } catch (e) {
+      res.status(400).json(createErrorResponse({ error: "Invalid contractor" }))
+      return
+    }
+
     if (!(await is_member(contractor.contractor_id, user.user_id))) {
       res.status(403).json(createErrorResponse({ error: "Unauthorized" }))
       return
