@@ -15,7 +15,11 @@ import pg from "pg"
 import { apiRouter } from "./api/routes/v1/api-router.js"
 import { database } from "./clients/database/knex-db.js"
 import { hostname } from "os"
-import { adminAuthorized, errorHandler } from "./api/middleware/auth.js"
+import {
+  adminAuthorized,
+  errorHandler,
+  userAuthorized,
+} from "./api/middleware/auth.js"
 import { SitemapStream, streamToPromise } from "sitemap"
 import { createGzip } from "zlib"
 import { registrationRouter } from "./clients/discord_api/registration.js"
@@ -430,7 +434,7 @@ app.get("/sitemap.xml", async function (req, res) {
 })
 
 app.use(oapi)
-app.use("/swaggerui", adminAuthorized, oapi.swaggerui())
+app.use("/swaggerui", userAuthorized, oapi.swaggerui())
 
 app.use(addTranslationToRequestWithUser)
 
