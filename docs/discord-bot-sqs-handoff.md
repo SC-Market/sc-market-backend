@@ -7,11 +7,13 @@ This document outlines the changes made to the backend to send Discord bot inter
 ## Architecture Changes
 
 ### Before (Synchronous HTTP)
+
 ```
 Backend → HTTP POST → Discord Bot → Immediate Response
 ```
 
 ### After (Asynchronous SQS)
+
 ```
 Backend → SQS Message → Discord Bot → Process Queue → SQS Response → Backend
 ```
@@ -19,11 +21,13 @@ Backend → SQS Message → Discord Bot → Process Queue → SQS Response → B
 ## SQS Queue Details
 
 ### Input Queue: `DISCORD_QUEUE_URL`
+
 - **Purpose**: Messages from backend to Discord bot
 - **Message Format**: JSON with `type`, `payload`, and `metadata` fields
 - **Processing**: Discord bot should consume this queue and process messages
 
 ### Output Queue: `BACKEND_QUEUE_URL`
+
 - **Purpose**: Responses from Discord bot back to backend
 - **Message Format**: JSON with status updates and results
 - **Usage**: Backend will consume this queue for status updates
@@ -35,6 +39,7 @@ Backend → SQS Message → Discord Bot → Process Queue → SQS Response → B
 **When Sent**: When a new order or offer session is created
 
 **Message Structure**:
+
 ```json
 {
   "type": "create_thread",
@@ -61,12 +66,14 @@ Backend → SQS Message → Discord Bot → Process Queue → SQS Response → B
 ```
 
 **Expected Discord Bot Action**:
+
 1. Create a new thread in the specified channel
 2. Add the specified members to the thread
 3. Send initial welcome message
 4. Send response to `BACKEND_QUEUE_URL` with thread details
 
 **Response Message to Backend**:
+
 ```json
 {
   "type": "thread_created",
@@ -88,6 +95,7 @@ Backend → SQS Message → Discord Bot → Process Queue → SQS Response → B
 ### 1. Queue Consumer Setup
 
 The Discord bot needs to:
+
 - Set up an SQS consumer for `DISCORD_QUEUE_URL`
 - Process messages in batches (recommend 10 messages per batch)
 - Handle long polling (20 seconds) for efficiency
@@ -96,6 +104,7 @@ The Discord bot needs to:
 ### 2. Message Processing
 
 For each message type:
+
 - Parse the JSON payload
 - Validate required fields
 - Execute the Discord API operations
@@ -119,6 +128,7 @@ For each message type:
 ## Environment Variables Required
 
 The Discord bot needs these environment variables:
+
 ```bash
 # SQS Configuration
 DISCORD_QUEUE_URL=https://sqs.us-east-2.amazonaws.com/ACCOUNT/DiscordQueuesStack-discord-queue
@@ -136,22 +146,26 @@ DISCORD_BOT_TOKEN=your_bot_token
 ## Testing and Validation
 
 ### 1. Backend Testing ✅ COMPLETED
+
 - **Test 1**: Orders without Discord configuration fail gracefully ✅
 - **Test 2**: Orders with Discord configuration queue successfully ✅
 - **Validation**: Backend no longer waits for Discord bot responses ✅
 - **SQS Integration**: Messages are properly queued ✅
 
 ### 2. Message Validation
+
 - Test with various order/offer session configurations
 - Verify all required fields are present
 - Test error scenarios (missing Discord IDs, invalid channels)
 
 ### 3. Discord API Integration
+
 - Verify thread creation works in test servers
 - Test member addition and permissions
 - Validate invite code generation
 
 ### 4. Queue Integration
+
 - Test message consumption from `DISCORD_QUEUE_URL`
 - Verify responses are sent to `BACKEND_QUEUE_URL`
 - Test error handling and retry logic
@@ -159,12 +173,14 @@ DISCORD_BOT_TOKEN=your_bot_token
 ## Migration Timeline
 
 ### Phase 1: Infrastructure ✅ COMPLETED
+
 - SQS queues deployed
 - Backend credentials configured
 - Basic SQS client working
 - SQS client with role assumption working
 
 ### Phase 2: Thread Creation ✅ COMPLETED
+
 - Backend modified to queue thread creation
 - `createThread()` function now uses SQS instead of HTTP
 - `createOfferThread()` function updated for queue-based approach
@@ -172,11 +188,13 @@ DISCORD_BOT_TOKEN=your_bot_token
 - **Test end-to-end thread creation flow**
 
 ### Phase 3: Message Processing Infrastructure
+
 - Backend queue consumer for responses
 - Error handling and retry logic
 - Monitoring and alerting
 
 ### Phase 4: Additional Endpoints
+
 - Status updates
 - User assignments
 - Chat message forwarding
@@ -201,6 +219,7 @@ DISCORD_BOT_TOKEN=your_bot_token
 ## Questions and Clarifications
 
 If you need clarification on any part of this document:
+
 - **Backend Changes**: Check the migration plan in `docs/discord-sqs-migration-plan.md`
 - **SQS Configuration**: Review the CDK stack in `../sc-market-cdk/`
 - **Message Formats**: See the TypeScript interfaces in `src/types/discord-queue.ts`

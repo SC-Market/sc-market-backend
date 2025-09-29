@@ -1,5 +1,5 @@
 import express from "express"
-import { userAuthorized } from "../../../middleware/auth.js"
+import { userAuthorized, requireProfileWrite } from "../../../middleware/auth.js"
 import { ShipsFileEntry, ShipsFileSchema, User } from "../api-models.js"
 import { database } from "../../../../clients/database/knex-db.js"
 import { DBShip } from "../../../../clients/database/db-models.js"
@@ -31,7 +31,7 @@ export const shipRouter = express.Router()
  *  - Delete a ship
  */
 
-shipRouter.post("/import", userAuthorized, async (req, res) => {
+shipRouter.post("/import", userAuthorized, requireProfileWrite, async (req, res) => {
   const user = req.user as User
   const ships = req.body as ShipsFileEntry[]
 

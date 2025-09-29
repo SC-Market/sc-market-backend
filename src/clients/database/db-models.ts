@@ -207,6 +207,17 @@ export interface DBImageResource {
   external_url?: string | null
 }
 
+export interface DBOrderSetting {
+  id: string
+  entity_type: 'user' | 'contractor'
+  entity_id: string
+  setting_type: 'offer_message' | 'order_message'
+  message_content: string
+  enabled: boolean
+  created_at: Date
+  updated_at: Date
+}
+
 export interface DBOrder {
   order_id: string
   kind: string

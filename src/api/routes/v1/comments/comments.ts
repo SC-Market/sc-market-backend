@@ -2,7 +2,7 @@ import express from "express"
 import { database } from "../../../../clients/database/knex-db.js"
 import { User } from "../api-models.js"
 import { formatComment } from "../util/formatting.js"
-import { verifiedUser } from "../../../middleware/auth.js"
+import { verifiedUser, requireCommentsWrite } from "../../../middleware/auth.js"
 import { rate_limit } from "../../../middleware/ratelimiting.js"
 
 export const commentRouter = express.Router()
@@ -12,6 +12,7 @@ commentRouter.post(
   "/:comment_id/reply",
   rate_limit(15),
   verifiedUser,
+  requireCommentsWrite,
   async function (req, res) {
     const comment_id = req.params["comment_id"]
     const comment = await database.getComment({ comment_id })

@@ -1,5 +1,5 @@
 import express from "express"
-import { userAuthorized } from "../../../middleware/auth.js"
+import { userAuthorized, requireOrdersWrite } from "../../../middleware/auth.js"
 import { User } from "../api-models.js"
 import { database } from "../../../../clients/database/knex-db.js"
 import { has_permission } from "../util/permissions.js"
@@ -17,7 +17,7 @@ export const deliveryRouter = express.Router()
  *  - Multiple orders per delivery
  */
 
-deliveryRouter.post("/create", userAuthorized, async (req, res, next) => {
+deliveryRouter.post("/create", userAuthorized, requireOrdersWrite, async (req, res, next) => {
   const user = req.user as User
 
   const {

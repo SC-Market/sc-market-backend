@@ -3,6 +3,9 @@ import {
   adminAuthorized,
   userAuthorized,
   verifiedUser,
+  requireContractorAccessFromSpectrumId,
+  requireContractorsRead,
+  requireContractorsWrite,
 } from "../../../middleware/auth.js"
 import { database } from "../../../../clients/database/knex-db.js"
 import { cdn, external_resource_regex } from "../../../../clients/cdn/cdn.js"
@@ -557,6 +560,8 @@ oapi.schema("ContractorMemberSearchBody", {
 
 contractorsRouter.post(
   "/auth/link",
+  userAuthorized,
+  requireContractorsWrite,
   oapi.validPath({
     summary: "Verify a contractor with the site",
     deprecated: false,
@@ -644,6 +649,8 @@ contractorsRouter.post(
 
 contractorsRouter.post(
   "/",
+  userAuthorized,
+  requireContractorsWrite,
   oapi.validPath({
     summary: "Create a new contractor",
     deprecated: false,
@@ -730,6 +737,8 @@ contractorsRouter.post(
 
 contractorsRouter.get(
   "/search/:query",
+  userAuthorized,
+  requireContractorsRead,
   oapi.validPath({
     summary: "Search contractors",
     deprecated: false,
@@ -798,6 +807,8 @@ contractorsRouter.get(
 
 contractorsRouter.get(
   "/invites/:invite_id",
+  userAuthorized,
+  requireContractorsRead,
   oapi.validPath({
     summary: "Fetch details about a contractor invite",
     deprecated: false,
@@ -872,6 +883,8 @@ contractorsRouter.get(
 
 contractorsRouter.post(
   "/invites/:invite_id/accept",
+  userAuthorized,
+  requireContractorsWrite,
   oapi.validPath({
     summary: "Accept a contractor invite code",
     deprecated: false,
@@ -977,6 +990,8 @@ contractorsRouter.post(
 
 contractorsRouter.get(
   "/:spectrum_id/members/search/:query",
+  userAuthorized,
+  requireContractorsRead,
   oapi.validPath({
     summary: "Search contractor members",
     deprecated: false,
@@ -1035,6 +1050,7 @@ contractorsRouter.get(
   rate_limit(2),
   userAuthorized,
   valid_contractor,
+  requireContractorAccessFromSpectrumId(),
   async (req, res, next) => {
     const query = req.params["query"]
 
@@ -1061,6 +1077,8 @@ contractorsRouter.get(
 
 contractorsRouter.get(
   "/:spectrum_id/members/csv",
+  userAuthorized,
+  requireContractorsRead,
   oapi.validPath({
     summary: "Create a new contractor",
     deprecated: false,
@@ -1097,6 +1115,7 @@ contractorsRouter.get(
   rate_limit(2),
   userAuthorized,
   valid_contractor,
+  requireContractorAccessFromSpectrumId(),
   async (req, res, next) => {
     const members = await database.getContractorMembersUsernamesAndID({
       "contractor_members.contractor_id": req.contractor!.contractor_id,
@@ -1114,6 +1133,8 @@ contractorsRouter.get(
 
 contractorsRouter.get(
   "/:spectrum_id/customers",
+  userAuthorized,
+  requireContractorsRead,
   oapi.validPath({
     summary: "Get Contractor Customers",
     deprecated: false,
@@ -1356,6 +1377,8 @@ contractorsRouter.get(
 
 contractorsRouter.get(
   "/:spectrum_id/members/:username",
+  userAuthorized,
+  requireContractorsRead,
   oapi.validPath({
     summary: "Check if user is member of contractor",
     deprecated: false,
@@ -1453,6 +1476,8 @@ contractorsRouter.get(
 
 contractorsRouter.get(
   "/:spectrum_id/members",
+  userAuthorized,
+  requireContractorsRead,
   oapi.validPath({
     summary: "Get contractor members (paginated)",
     deprecated: false,
@@ -1609,6 +1634,8 @@ contractorsRouter.get(
 
 contractorsRouter.post(
   "/:spectrum_id/roles",
+  userAuthorized,
+  requireContractorsWrite,
   oapi.validPath({
     summary: "Create a contractor role",
     deprecated: false,
@@ -1719,6 +1746,8 @@ contractorsRouter.post(
 
 contractorsRouter.put(
   "/:spectrum_id/roles/:role_id",
+  userAuthorized,
+  requireContractorsWrite,
   oapi.validPath({
     summary: "Update a contractor role",
     deprecated: false,
@@ -1865,6 +1894,8 @@ contractorsRouter.put(
 
 contractorsRouter.delete(
   "/:spectrum_id/roles/:role_id",
+  userAuthorized,
+  requireContractorsWrite,
   oapi.validPath({
     summary: "Delete a contractor role",
     deprecated: false,
@@ -1961,6 +1992,8 @@ contractorsRouter.delete(
 
 contractorsRouter.post(
   "/:spectrum_id/roles/:role_id/members/:username",
+  userAuthorized,
+  requireContractorsWrite,
   oapi.validPath({
     summary: "Give a user a contractor role",
     deprecated: false,
@@ -2083,6 +2116,8 @@ contractorsRouter.post(
 
 contractorsRouter.delete(
   "/:spectrum_id/roles/:role_id/members/:username",
+  userAuthorized,
+  requireContractorsWrite,
   oapi.validPath({
     summary: "Remove a contractor role from a user",
     deprecated: false,
@@ -2211,6 +2246,8 @@ contractorsRouter.delete(
 
 contractorsRouter.delete(
   "/:spectrum_id/members/:username",
+  userAuthorized,
+  requireContractorsWrite,
   oapi.validPath({
     summary: "Kick a contractor member",
     deprecated: false,
@@ -2326,6 +2363,8 @@ contractorsRouter.delete(
 
 contractorsRouter.put(
   "/:spectrum_id",
+  userAuthorized,
+  requireContractorsWrite,
   oapi.validPath({
     summary: "Update a contractor",
     deprecated: false,
@@ -2465,6 +2504,8 @@ contractorsRouter.put(
 
 contractorsRouter.post(
   "/:spectrum_id/webhooks",
+  userAuthorized,
+  requireContractorsWrite,
   oapi.validPath({
     summary: "Create a webhook for a contractor",
     deprecated: false,
@@ -2561,6 +2602,8 @@ contractorsRouter.post(
 
 contractorsRouter.delete(
   "/:spectrum_id/webhooks/:webhook_id",
+  userAuthorized,
+  requireContractorsWrite,
   oapi.validPath({
     summary: "Create a webhook for a contractor",
     deprecated: false,
@@ -2639,6 +2682,8 @@ contractorsRouter.delete(
 
 contractorsRouter.get(
   "/:spectrum_id/webhooks",
+  userAuthorized,
+  requireContractorsRead,
   oapi.validPath({
     summary: "Get contractor webhooks",
     deprecated: false,
@@ -2697,6 +2742,8 @@ contractorsRouter.get(
 
 contractorsRouter.post(
   "/:spectrum_id/invites",
+  userAuthorized,
+  requireContractorsWrite,
   oapi.validPath({
     summary: "Create contractor invite",
     deprecated: false,
@@ -2787,6 +2834,8 @@ contractorsRouter.post(
 
 contractorsRouter.delete(
   "/:spectrum_id/invites/:invite_id",
+  userAuthorized,
+  requireContractorsWrite,
   oapi.validPath({
     summary: "Get a contractor invite by ID",
     deprecated: false,
@@ -2872,6 +2921,8 @@ contractorsRouter.delete(
 
 contractorsRouter.get(
   "/:spectrum_id/invites",
+  userAuthorized,
+  requireContractorsRead,
   oapi.validPath({
     summary: "Get contractor invites",
     deprecated: false,
@@ -2930,6 +2981,8 @@ contractorsRouter.get(
 
 contractorsRouter.post(
   "/:spectrum_id/members",
+  userAuthorized,
+  requireContractorsWrite,
   oapi.validPath({
     summary: "Invite members to contractor",
     deprecated: false,

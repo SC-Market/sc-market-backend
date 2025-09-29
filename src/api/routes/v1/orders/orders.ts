@@ -3,6 +3,8 @@ import {
   adminAuthorized,
   userAuthorized,
   verifiedUser,
+  requireOrdersRead,
+  requireOrdersWrite,
 } from "../../../middleware/auth.js"
 import { database } from "../../../../clients/database/knex-db.js"
 import { DBOrder } from "../../../../clients/database/db-models.js"
@@ -41,8 +43,12 @@ import logger from "../../../../logger/logger.js"
 import { validate_optional_username } from "../profiles/middleware.js"
 import { validate_optional_spectrum_id, org_authorized } from "../contractors/middleware.js"
 import { ORDER_SEARCH_SORT_METHODS, ORDER_SEARCH_STATUS } from "./types.js"
+import orderSettingsRouter from "./order-settings.js"
 
 export const ordersRouter = express.Router()
+
+// Mount order settings routes
+ordersRouter.use("/", orderSettingsRouter)
 
 oapi.schema("OrderStatus", {
   enum: ["fulfilled", "in-progress", "not-started", "cancelled"],
@@ -133,6 +139,8 @@ oapi.schema("OrderBody", {
 
 ordersRouter.post(
   "/",
+  userAuthorized,
+  requireOrdersWrite,
   oapi.validPath({
     summary: "Create a new order",
     deprecated: false,
@@ -379,6 +387,8 @@ oapi.schema("OrderStub", {
 
 ordersRouter.get(
   "/mine",
+  userAuthorized,
+  requireOrdersRead,
   oapi.validPath({
     summary: "Get orders you've placed",
     deprecated: false,
@@ -420,6 +430,8 @@ ordersRouter.get(
 
 ordersRouter.get(
   "/assigned",
+  userAuthorized,
+  requireOrdersRead,
   oapi.validPath({
     summary: "Get orders assigned to you",
     deprecated: false,
@@ -465,6 +477,8 @@ ordersRouter.get(
 
 ordersRouter.get(
   "/contractor/:spectrum_id/assigned",
+  userAuthorized,
+  requireOrdersRead,
   oapi.validPath({
     summary: "Get orders assigned to you for a given contractor",
     deprecated: false,
@@ -531,6 +545,8 @@ ordersRouter.get(
 
 ordersRouter.get(
   "/contractor/:spectrum_id",
+  userAuthorized,
+  requireOrdersRead,
   oapi.validPath({
     summary: "Get orders placed with the given contractor",
     deprecated: false,
@@ -796,7 +812,7 @@ ordersRouter.get(
   },
 )
 
-ordersRouter.get("/all", adminAuthorized, async (req, res, next) => {
+ordersRouter.get("/all", adminAuthorized, requireOrdersRead, async (req, res, next) => {
   const orders = await database.getOrders({})
 
   res.json(createResponse(await Promise.all(orders.map(formatOrderStub))))
@@ -804,6 +820,8 @@ ordersRouter.get("/all", adminAuthorized, async (req, res, next) => {
 
 ordersRouter.get(
   "/contractor/:spectrum_id/metrics",
+  userAuthorized,
+  requireOrdersRead,
   oapi.validPath({
     summary: "Get contractor order metrics",
     deprecated: false,
@@ -937,6 +955,8 @@ ordersRouter.get(
 
 ordersRouter.get(
   "/contractor/:spectrum_id/data",
+  userAuthorized,
+  requireOrdersRead,
   oapi.validPath({
     summary: "Get comprehensive contractor order data",
     deprecated: false,
@@ -1141,6 +1161,8 @@ ordersRouter.get(
 
 ordersRouter.post(
   "/:order_id/review",
+  userAuthorized,
+  requireOrdersWrite,
   oapi.validPath({
     summary: "Leave a review on an order",
     deprecated: false,
@@ -1302,6 +1324,8 @@ ordersRouter.post(
 
 ordersRouter.put(
   "/:order_id",
+  userAuthorized,
+  requireOrdersWrite,
   oapi.validPath({
     summary: "Update an order",
     deprecated: false,
@@ -1398,6 +1422,8 @@ ordersRouter.put(
 
 ordersRouter.post(
   "/:order_id/applicants",
+  userAuthorized,
+  requireOrdersWrite,
   oapi.validPath({
     summary: "Apply to an open contract",
     deprecated: true,
@@ -1629,6 +1655,8 @@ async function updateAssigned(
 
 ordersRouter.post(
   "/:order_id/applicants/contractors/:spectrum_id",
+  userAuthorized,
+  requireOrdersWrite,
   related_to_order,
   oapi.validPath({
     summary: "Accept an application on an order",
@@ -1706,6 +1734,8 @@ ordersRouter.post(
 
 ordersRouter.post(
   "/:order_id/applicants/users/:username",
+  userAuthorized,
+  requireOrdersWrite,
   oapi.validPath({
     summary: "Accept an application on an order",
     deprecated: true,
@@ -1964,6 +1994,8 @@ oapi.schema("Order", {
 
 ordersRouter.get(
   "/:order_id",
+  userAuthorized,
+  requireOrdersRead,
   oapi.validPath({
     summary: "Get an order by ID",
     deprecated: false,
@@ -2048,6 +2080,8 @@ ordersRouter.get(
 
 ordersRouter.post(
   "/:order_id/thread",
+  userAuthorized,
+  requireOrdersWrite,
   oapi.validPath({
     summary: "Create a new thread for the order",
     deprecated: false,

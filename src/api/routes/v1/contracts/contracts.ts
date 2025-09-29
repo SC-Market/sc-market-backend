@@ -6,7 +6,7 @@ import {
   Response403,
   Response404,
 } from "../openapi.js"
-import { verifiedUser } from "../../../middleware/auth.js"
+import { verifiedUser, requireOrdersWrite, requireOrdersRead } from "../../../middleware/auth.js"
 import { createOffer, orderTypes } from "../orders/helpers.js"
 import { PAYMENT_TYPES } from "../types/payment-types.js"
 import { database } from "../../../../clients/database/knex-db.js"
@@ -84,6 +84,8 @@ oapi.schema("PublicContractBody", {
 
 contractsRouter.post(
   "",
+  verifiedUser,
+  requireOrdersWrite,
   oapi.validPath({
     summary: "Create a public contract",
     deprecated: false,
@@ -215,6 +217,7 @@ oapi.schema("PublicContractOfferBody", {
 contractsRouter.post(
   "/:contract_id/offers",
   verifiedUser,
+  requireOrdersWrite,
   valid_public_contract,
   oapi.validPath({
     summary: "Create an offer on a public contract",

@@ -1,6 +1,6 @@
 import express from "express"
 import { database } from "../../../../clients/database/knex-db.js"
-import { adminAuthorized } from "../../../middleware/auth.js"
+import { adminAuthorized, requireAdmin } from "../../../middleware/auth.js"
 import { createResponse } from "../util/response.js"
 import {
   oapi,

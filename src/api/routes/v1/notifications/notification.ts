@@ -1,5 +1,5 @@
 import express from "express"
-import { userAuthorized } from "../../../middleware/auth.js"
+import { userAuthorized, requireNotificationsRead, requireNotificationsWrite } from "../../../middleware/auth.js"
 import { User } from "../api-models.js"
 import { database } from "../../../../clients/database/knex-db.js"
 import logger from "../../../../logger/logger.js"
@@ -426,6 +426,7 @@ notificationRouter.patch(
 notificationRouter.delete(
   "/:notification_id",
   userAuthorized,
+  requireNotificationsWrite,
   oapi.validPath({
     summary: "Delete a specific notification",
     description: "Remove a single notification by ID",
@@ -490,6 +491,7 @@ notificationRouter.delete(
 notificationRouter.delete(
   "/",
   userAuthorized,
+  requireNotificationsWrite,
   oapi.validPath({
     summary: "Bulk delete notifications",
     description:
@@ -612,6 +614,7 @@ notificationRouter.delete(
 notificationRouter.get(
   "/:page",
   userAuthorized,
+  requireNotificationsRead,
   oapi.validPath({
     summary: "Get paginated notifications for user",
     description:

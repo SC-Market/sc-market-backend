@@ -1,5 +1,5 @@
 import express, { NextFunction, Request, Response } from "express"
-import { userAuthorized } from "../../../middleware/auth.js"
+import { userAuthorized, requireOrdersRead } from "../../../middleware/auth.js"
 import { database } from "../../../../clients/database/knex-db.js"
 import {
   DBContractor,
@@ -14,6 +14,7 @@ export const transactionRouter = express.Router()
 transactionRouter.get(
   "/:transaction_id",
   userAuthorized,
+  requireOrdersRead,
   async (req, res, next) => {
     const transaction_id = req.params["transaction_id"]
     let transaction: DBTransaction

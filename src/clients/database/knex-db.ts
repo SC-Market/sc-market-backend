@@ -60,6 +60,7 @@ import {
   DBOrder,
   DBOrderApplicant,
   DBOrderComment,
+  DBOrderSetting,
   DBPost,
   DBPostPhoto,
   DBPriceHistory,
@@ -4943,6 +4944,61 @@ export class KnexDatabase implements Database {
       responded_within_24h: within24h,
       response_rate: total > 0 ? (within24h / total) * 100 : 0
     }
+  }
+
+  // =============================================================================
+  // ORDER SETTINGS METHODS
+  // =============================================================================
+
+  async getOrderSettings(entityType: 'user' | 'contractor', entityId: string): Promise<DBOrderSetting[]> {
+    return await this.knex<DBOrderSetting>('order_settings')
+      .where({ entity_type: entityType, entity_id: entityId })
+      .orderBy('setting_type', 'asc')
+  }
+
+  async getOrderSetting(
+    entityType: 'user' | 'contractor', 
+    entityId: string, 
+    settingType: 'offer_message' | 'order_message'
+  ): Promise<DBOrderSetting | null> {
+    return await this.knex<DBOrderSetting>('order_settings')
+      .where({ 
+        entity_type: entityType, 
+        entity_id: entityId, 
+        setting_type: settingType 
+      })
+      .first() || null
+  }
+
+  async createOrderSetting(setting: Omit<DBOrderSetting, 'id' | 'created_at' | 'updated_at'>): Promise<DBOrderSetting> {
+    const [created] = await this.knex<DBOrderSetting>('order_settings')
+      .insert({
+        ...setting,
+        created_at: new Date(),
+        updated_at: new Date()
+      })
+      .returning('*')
+    
+    return created
+  }
+
+  async updateOrderSetting(
+    id: string, 
+    updates: Partial<Pick<DBOrderSetting, 'message_content' | 'enabled'>>
+  ): Promise<DBOrderSetting> {
+    const [updated] = await this.knex<DBOrderSetting>('order_settings')
+      .where({ id })
+      .update({
+        ...updates,
+        updated_at: new Date()
+      })
+      .returning('*')
+    
+    return updated
+  }
+
+  async deleteOrderSetting(id: string): Promise<void> {
+    await this.knex('order_settings').where({ id }).del()
   }
 }
 

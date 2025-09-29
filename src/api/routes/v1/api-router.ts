@@ -17,6 +17,7 @@ import { servicesRouter } from "./services/services.js"
 import { contractsRouter } from "./contracts/contracts.js"
 import { shopRouter } from "./shops/shops.js"
 import { moderationRouter } from "./moderation/moderation.js"
+import { tokensRouter } from "./tokens/tokens.js"
 
 export const apiRouter = express.Router()
 
@@ -51,3 +52,4 @@ apiRouter.use("/deliveries", deliveriesRouter)
 apiRouter.use("/wiki", wikiRouter)
 apiRouter.use("/moderation", moderationRouter)
 apiRouter.use("/shops", shopRouter)
+apiRouter.use("/tokens", tokensRouter)

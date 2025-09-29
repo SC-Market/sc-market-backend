@@ -5,6 +5,7 @@ import {
   DBOffer,
   DBOfferSession,
   DBOrder,
+  DBOrderSetting,
   DBUniqueListingComplete,
 } from "../../../../clients/database/db-models.js"
 import { database } from "../../../../clients/database/knex-db.js"
@@ -113,6 +114,9 @@ export async function initiateOrder(session: DBOfferSession) {
     logger.error(`Failed to rename thread: ${e}`)
   }
 
+  // Send custom order message if setting exists
+  await sendCustomOrderMessage(order, session)
+
   return { ...order }
 }
 
@@ -208,6 +212,9 @@ export async function createOffer(
       )
     }
   }
+
+  // Send custom offer message if setting exists
+  await sendCustomOfferMessage(session, offer)
 
   // Return the offer with the Discord invite for immediate user redirection
   return { offer, session, discord_invite }
@@ -950,5 +957,208 @@ export async function getContractorOrderData(
       trend_data
     },
     recent_orders
+  }
+}
+
+// =============================================================================
+// ORDER SETTINGS HELPER FUNCTIONS
+// =============================================================================
+
+
+/**
+ * Get the relevant order setting for a session (contractor takes priority over user)
+ */
+export async function getRelevantOrderSetting(
+  session: DBOfferSession, 
+  settingType: 'offer_message' | 'order_message'
+): Promise<DBOrderSetting | null> {
+  logger.debug('Looking for relevant order setting', {
+    sessionId: session.id,
+    settingType,
+    contractorId: session.contractor_id,
+    assignedId: session.assigned_id
+  })
+  
+  // Priority: contractor setting > assigned user setting
+  if (session.contractor_id) {
+    logger.debug('Checking contractor order setting', {
+      contractorId: session.contractor_id,
+      settingType
+    })
+    
+    const contractorSetting = await database.getOrderSetting('contractor', session.contractor_id, settingType)
+    if (contractorSetting && contractorSetting.enabled) {
+      logger.debug('Found enabled contractor setting', {
+        settingId: contractorSetting.id,
+        entityType: contractorSetting.entity_type,
+        enabled: contractorSetting.enabled
+      })
+      return contractorSetting
+    } else {
+      logger.debug('No enabled contractor setting found', {
+        contractorId: session.contractor_id,
+        hasSetting: !!contractorSetting,
+        enabled: contractorSetting?.enabled
+      })
+    }
+  }
+  
+  if (session.assigned_id) {
+    logger.debug('Checking user order setting', {
+      assignedId: session.assigned_id,
+      settingType
+    })
+    
+    const userSetting = await database.getOrderSetting('user', session.assigned_id, settingType)
+    if (userSetting && userSetting.enabled) {
+      logger.debug('Found enabled user setting', {
+        settingId: userSetting.id,
+        entityType: userSetting.entity_type,
+        enabled: userSetting.enabled
+      })
+      return userSetting
+    } else {
+      logger.debug('No enabled user setting found', {
+        assignedId: session.assigned_id,
+        hasSetting: !!userSetting,
+        enabled: userSetting?.enabled
+      })
+    }
+  }
+  
+  logger.debug('No relevant order setting found', {
+    sessionId: session.id,
+    settingType
+  })
+  
+  return null
+}
+
+/**
+ * Send custom offer message if setting exists
+ */
+export async function sendCustomOfferMessage(session: DBOfferSession, offer: DBOffer): Promise<void> {
+  try {
+    logger.debug('Attempting to send custom offer message', {
+      sessionId: session.id,
+      contractorId: session.contractor_id,
+      assignedId: session.assigned_id
+    })
+    
+    const setting = await getRelevantOrderSetting(session, 'offer_message')
+    
+    if (setting && setting.message_content.trim()) {
+      logger.debug('Found offer message setting', {
+        settingId: setting.id,
+        entityType: setting.entity_type,
+        messageLength: setting.message_content.length
+      })
+      
+      // Get the chat for this session
+      const chat = await database.getChat({ session_id: session.id })
+      
+      if (chat) {
+        logger.debug('Found chat for session', { chatId: chat.chat_id })
+        
+        logger.debug('Sending offer message to chat', {
+          chatId: chat.chat_id,
+          author: 'system',
+          messageLength: setting.message_content.length
+        })
+        
+        // Send message to chat on behalf of the system
+        await database.insertMessage({
+          chat_id: chat.chat_id,
+          content: setting.message_content,
+          author: null, // System message
+        })
+        
+        logger.info('Successfully sent custom offer message', {
+          sessionId: session.id,
+          chatId: chat.chat_id,
+          author: 'system'
+        })
+      } else {
+        logger.warn('No chat found for session', { sessionId: session.id })
+      }
+    } else {
+      logger.debug('No offer message setting found or empty content', {
+        sessionId: session.id,
+        hasSetting: !!setting,
+        hasContent: setting ? !!setting.message_content.trim() : false
+      })
+    }
+  } catch (error) {
+    logger.error('Failed to send custom offer message:', {
+      sessionId: session.id,
+      error: error instanceof Error ? error.message : String(error),
+      stack: error instanceof Error ? error.stack : undefined
+    })
+    // Don't throw - this is optional functionality
+  }
+}
+
+/**
+ * Send custom order message if setting exists
+ */
+export async function sendCustomOrderMessage(order: DBOrder, session: DBOfferSession): Promise<void> {
+  try {
+    logger.debug('Attempting to send custom order message', {
+      orderId: order.order_id,
+      sessionId: session.id,
+      contractorId: order.contractor_id,
+      assignedId: order.assigned_id
+    })
+    
+    const setting = await getRelevantOrderSetting(session, 'order_message')
+    
+    if (setting && setting.message_content.trim()) {
+      logger.debug('Found order message setting', {
+        settingId: setting.id,
+        entityType: setting.entity_type,
+        messageLength: setting.message_content.length
+      })
+      
+      // Get the chat for this order
+      const chat = await database.getChat({ order_id: order.order_id })
+      
+      if (chat) {
+        logger.debug('Found chat for order', { chatId: chat.chat_id })
+        
+        logger.debug('Sending order message to chat', {
+          chatId: chat.chat_id,
+          author: 'system',
+          messageLength: setting.message_content.length
+        })
+        
+        // Send message to chat on behalf of the system
+        await database.insertMessage({
+          chat_id: chat.chat_id,
+          content: setting.message_content,
+          author: null, // System message
+        })
+        
+        logger.info('Successfully sent custom order message', {
+          orderId: order.order_id,
+          chatId: chat.chat_id,
+          author: 'system'
+        })
+      } else {
+        logger.warn('No chat found for order', { orderId: order.order_id })
+      }
+    } else {
+      logger.debug('No order message setting found or empty content', {
+        orderId: order.order_id,
+        hasSetting: !!setting,
+        hasContent: setting ? !!setting.message_content.trim() : false
+      })
+    }
+  } catch (error) {
+    logger.error('Failed to send custom order message:', {
+      orderId: order.order_id,
+      error: error instanceof Error ? error.message : String(error),
+      stack: error instanceof Error ? error.stack : undefined
+    })
+    // Don't throw - this is optional functionality
   }
 }

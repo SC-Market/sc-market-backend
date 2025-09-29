@@ -1,4 +1,4 @@
-import { userAuthorized, verifiedUser } from "../../../middleware/auth.js"
+import { userAuthorized, verifiedUser, requireOffersRead, requireOffersWrite } from "../../../middleware/auth.js"
 import { User } from "../api-models.js"
 import { database } from "../../../../clients/database/knex-db.js"
 import {
@@ -337,6 +337,8 @@ oapi.schema("OfferSessionStub", {
 
 offerRouter.get(
   "/:session_id",
+  userAuthorized,
+  requireOffersRead,
   oapi.validPath({
     summary: "Get an offer by ID",
     deprecated: false,
@@ -381,6 +383,8 @@ offerRouter.get(
 
 offersRouter.get(
   "/received",
+  userAuthorized,
+  requireOffersRead,
   oapi.validPath({
     summary: "Get received offers",
     deprecated: false,
@@ -427,6 +431,8 @@ offersRouter.get(
 
 offersRouter.get(
   "/contractor/:spectrum_id/received",
+  userAuthorized,
+  requireOffersRead,
   oapi.validPath({
     summary: "Get received offers for a contractor",
     deprecated: false,
@@ -485,6 +491,8 @@ offersRouter.get(
 
 offersRouter.get(
   "/sent",
+  userAuthorized,
+  requireOffersRead,
   oapi.validPath({
     summary: "Get sent offers",
     deprecated: false,
@@ -532,6 +540,7 @@ offersRouter.get(
 offerRouter.put(
   "/:session_id",
   userAuthorized,
+  requireOffersWrite,
   related_to_offer,
   oapi.validPath({
     summary: "Update an offer",
@@ -721,6 +730,8 @@ offerRouter.put(
 
 offersRouter.post(
   "/:session_id/thread",
+  userAuthorized,
+  requireOffersWrite,
   oapi.validPath({
     summary: "Create a new thread for the offer",
     deprecated: false,
@@ -810,6 +821,8 @@ offersRouter.post(
 
 offersRouter.get(
   "/search",
+  userAuthorized,
+  requireOffersRead,
   oapi.validPath({
     summary: "Search offers",
     deprecated: false,

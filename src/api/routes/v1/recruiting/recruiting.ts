@@ -7,7 +7,7 @@ import {
 } from "../util/formatting.js"
 import { DBRecruitingPost } from "../../../../clients/database/db-models.js"
 import { User } from "../api-models.js"
-import { verifiedUser } from "../../../middleware/auth.js"
+import { verifiedUser, requireRecruitingRead, requireRecruitingWrite } from "../../../middleware/auth.js"
 import { has_permission } from "../util/permissions.js"
 
 export async function contractorRecruiting(
@@ -72,11 +72,11 @@ export interface RecruitingSearchQuery {
 
 export function convertQuery(query: {
   index?: string
-  sorting: string
-  query: string
-  fields: string
-  rating: string
-  pageSize: string
+  sorting?: string
+  query?: string
+  fields?: string
+  rating?: string
+  pageSize?: string
 }): RecruitingSearchQuery {
   const index = +(query.index || 0)
   let sorting = (query.sorting || "name").toLowerCase()
@@ -89,7 +89,7 @@ export function convertQuery(query: {
     sorting = "name"
   }
 
-  const searchQuery = query.query.toLowerCase()
+  const searchQuery = (query.query || "").toLowerCase()
   const fields = query.fields ? query.fields.toLowerCase().split(",") : []
   const rating = +(query.rating || 0)
   const pageSize = +(query.pageSize || 15)
@@ -141,6 +141,7 @@ recruitingRouter.get("/posts", async function (req, res) {
 recruitingRouter.post(
   "/post/create",
   contractorRecruiting,
+  requireRecruitingWrite,
   async function (req, res) {
     const {
       title,
@@ -215,7 +216,7 @@ recruitingRouter.get("/post/:post_id/comments", async function (req, res) {
   res.json(comments)
 })
 
-recruitingRouter.post("/post/:post_id/update", async function (req, res) {
+recruitingRouter.post("/post/:post_id/update", verifiedUser, requireRecruitingWrite, async function (req, res) {
   const user = req.user as User
   const post_id = req.params["post_id"]
   const post = await database.getRecruitingPost({ post_id })
@@ -264,6 +265,7 @@ recruitingRouter.post("/post/:post_id/update", async function (req, res) {
 recruitingRouter.post(
   "/post/:post_id/upvote",
   verifiedUser,
+  requireRecruitingWrite,
   async function (req, res) {
     const post_id = req.params["post_id"]
     const post = await database.getRecruitingPost({ post_id })
@@ -293,6 +295,7 @@ recruitingRouter.post(
 recruitingRouter.post(
   "/post/:post_id/comment",
   verifiedUser,
+  requireRecruitingWrite,
   async function (req, res) {
     const post_id = req.params["post_id"]
     const post = await database.getRecruitingPost({ post_id })

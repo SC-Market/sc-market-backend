@@ -49,6 +49,28 @@ export interface ShipsFileEntry {
   warbond: boolean
 }
 
+export interface OrderSetting {
+  id: string
+  entity_type: 'user' | 'contractor'
+  entity_id: string
+  setting_type: 'offer_message' | 'order_message'
+  message_content: string
+  enabled: boolean
+  created_at: string
+  updated_at: string
+}
+
+export interface CreateOrderSettingRequest {
+  setting_type: 'offer_message' | 'order_message'
+  message_content: string
+  enabled?: boolean
+}
+
+export interface UpdateOrderSettingRequest {
+  message_content?: string
+  enabled?: boolean
+}
+
 export const ShipsFileSchema = [
   {
     name: "string",

@@ -1,5 +1,5 @@
 import express from "express"
-import { adminAuthorized } from "../../../middleware/auth.js"
+import { adminAuthorized , AuthRequest} from "../../../middleware/auth.js"
 import {
   migrateExistingUsersToSpectrumIds,
   simulateSpectrumMigration,

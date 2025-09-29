@@ -1,5 +1,10 @@
 import express from "express"
-import { adminAuthorized, userAuthorized } from "../../../middleware/auth.js"
+import { 
+  adminAuthorized, 
+  userAuthorized, 
+  requireProfileRead, 
+  requireProfileWrite 
+} from "../../../middleware/auth.js"
 import { User } from "../api-models.js"
 import { database } from "../../../../clients/database/knex-db.js"
 import { cdn, external_resource_regex } from "../../../../clients/cdn/cdn.js"
@@ -215,6 +220,7 @@ profileRouter.put(
   "",
   rate_limit(30),
   userAuthorized,
+  requireProfileWrite,
   oapi.validPath({
     summary: "Update user profile",
     deprecated: false,
@@ -681,6 +687,7 @@ profileRouter.get(
   "",
   rate_limit(1),
   userAuthorized,
+  requireProfileRead,
   oapi.validPath({
     summary: "Get current user profile",
     deprecated: false,

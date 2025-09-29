@@ -1,5 +1,5 @@
 import express from "express"
-import { userAuthorized, verifiedUser } from "../../../middleware/auth.js"
+import { userAuthorized, verifiedUser, requireServicesRead, requireServicesWrite } from "../../../middleware/auth.js"
 import { User } from "../api-models.js"
 import { database } from "../../../../clients/database/knex-db.js"
 import { has_permission } from "../util/permissions.js"
@@ -127,6 +127,7 @@ oapi.schema("ServiceBody", {
 servicesRouter.post(
   "",
   verifiedUser,
+  requireServicesWrite,
   oapi.validPath({
     summary: "Create a new service",
     deprecated: false,
@@ -527,6 +528,7 @@ servicesRouter.get(
 servicesRouter.get(
   "/contractor/:spectrum_id",
   userAuthorized,
+  requireServicesRead,
   oapi.validPath({
     summary: "Get services by contractor",
     deprecated: false,
@@ -601,6 +603,7 @@ servicesRouter.get(
 servicesRouter.put(
   "/:service_id",
   userAuthorized,
+  requireServicesWrite,
   oapi.validPath({
     summary: "Update a service",
     deprecated: false,
@@ -875,6 +878,7 @@ servicesRouter.get(
 servicesRouter.post(
   "/:service_id/photos",
   userAuthorized,
+  requireServicesWrite,
   multiplePhotoUpload.array("photos", 5),
   oapi.validPath({
     summary: "Upload photos for a service",
@@ -1242,6 +1246,7 @@ servicesRouter.post(
 servicesRouter.get(
   "/seller/analytics",
   userAuthorized,
+  requireServicesRead,
   oapi.validPath({
     summary: "Get seller service analytics",
     description: "Returns analytics data for the authenticated user's services",

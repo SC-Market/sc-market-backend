@@ -3,6 +3,9 @@ import {
   adminAuthorized,
   userAuthorized,
   verifiedUser,
+  requireMarketRead,
+  requireMarketWrite,
+  requireMarketAdmin,
 } from "../../../middleware/auth.js"
 import { database } from "../../../../clients/database/knex-db.js"
 import {
@@ -546,6 +549,7 @@ oapi.schema("UpdateQuantityResponse", {
 marketRouter.post(
   "/listing/:listing_id/update_quantity",
   userAuthorized,
+  requireMarketWrite,
   oapi.validPath({
     summary: "Update listing quantity",
     description: "Update the available quantity of a market listing",
@@ -668,6 +672,7 @@ oapi.schema("RefreshListingResponse", {
 marketRouter.post(
   "/listing/:listing_id/refresh",
   userAuthorized,
+  requireMarketWrite,
   oapi.validPath({
     summary: "Refresh listing expiration",
     description:
@@ -1346,6 +1351,7 @@ oapi.schema("PurchaseRequest", {
 marketRouter.post(
   "/purchase",
   verifiedUser,
+  requireMarketWrite,
   oapi.validPath({
     summary: "Purchase market listings",
     description: "Create a purchase offer for one or more market listings",
@@ -1502,6 +1508,7 @@ oapi.schema("MarketBidRequest", {
 marketRouter.post(
   "/bid",
   verifiedUser,
+  requireMarketWrite,
   oapi.validPath({
     summary: "Place a bid on an auction listing",
     description: "Place or update a bid on an auction listing",
@@ -1744,6 +1751,7 @@ oapi.schema("MarketListingCreateRequest", {
 marketRouter.post(
   "/create",
   verifiedUser,
+  requireMarketWrite,
   oapi.validPath({
     summary: "Create a new market listing",
     description: "Create a new market listing with optional auction settings",
@@ -1972,6 +1980,7 @@ oapi.schema("ContractorMarketListingCreateRequest", {
 marketRouter.post(
   "/contractor/:spectrum_id/create",
   verifiedUser,
+  requireMarketWrite,
   oapi.validPath({
     summary: "Create a new contractor market listing",
     description: "Create a new market listing on behalf of a contractor",
@@ -2151,6 +2160,7 @@ marketRouter.post(
 marketRouter.post(
   "/listing/:listing_id/photos",
   userAuthorized,
+  requireMarketWrite,
   multiplePhotoUpload.array("photos", 5),
   oapi.validPath({
     summary: "Upload photos for a market listing",
@@ -2478,6 +2488,7 @@ marketRouter.post(
 marketRouter.get(
   "/mine",
   userAuthorized,
+  requireMarketRead,
   oapi.validPath({
     summary: "Get user's market listings",
     description: "Returns all market listings owned by the authenticated user",
@@ -2833,7 +2844,7 @@ marketRouter.get(
   },
 )
 
-marketRouter.get("/all_listings", adminAuthorized, async (req, res) => {
+marketRouter.get("/all_listings", adminAuthorized, requireMarketAdmin, async (req, res) => {
   const listings = await database.getMarketListings({})
 
   res.json(await Promise.all(listings.map((l) => formatListing(l, true))))
@@ -2916,6 +2927,7 @@ marketRouter.get(
 marketRouter.get(
   "/contractor/:spectrum_id/mine",
   userAuthorized,
+  requireMarketRead,
   org_authorized,
   oapi.validPath({
     summary: "Get contractor's market listings",
@@ -3352,6 +3364,7 @@ marketRouter.get("/aggregate/:game_item_id/history", async (req, res) => {
 marketRouter.post(
   "/aggregate/:game_item_id/update",
   adminAuthorized,
+  requireMarketAdmin,
   async (req, res) => {
     try {
       const game_item_id = req.params["game_item_id"]
@@ -3470,6 +3483,7 @@ marketRouter.get("/multiple/:multiple_id", async (req, res) => {
 marketRouter.post(
   "/multiple/contractor/:spectrum_id/create",
   verifiedUser,
+  requireMarketWrite,
   org_permission("manage_market"),
   async (req: Request, res) => {
     try {
@@ -3579,6 +3593,7 @@ marketRouter.post(
 marketRouter.post(
   "/multiple/create",
   verifiedUser,
+  requireMarketWrite,
   async (req: Request, res) => {
     try {
       const user = req.user as User
@@ -3682,6 +3697,7 @@ marketRouter.post(
 marketRouter.post(
   "/multiple/:multiple_id/update",
   userAuthorized,
+  requireMarketWrite,
   async (req: Request, res) => {
     try {
       const multiple_id = req.params.multiple_id
@@ -3863,6 +3879,7 @@ marketRouter.post(
 marketRouter.post(
   "/buyorder/create",
   verifiedUser,
+  requireMarketWrite,
   async (req: Request, res) => {
     try {
       const user = req.user as User
@@ -3919,6 +3936,7 @@ marketRouter.post(
 marketRouter.post(
   "/buyorder/:buy_order_id/fulfill",
   verifiedUser,
+  requireMarketWrite,
   async (req: Request, res) => {
     try {
       const { contractor_spectrum_id } = req.body as {
@@ -4012,6 +4030,7 @@ marketRouter.post(
 marketRouter.post(
   "/buyorder/:buy_order_id/cancel",
   userAuthorized,
+  requireMarketWrite,
   async (req: Request, res) => {
     try {
       const user = req.user as User
@@ -4049,7 +4068,7 @@ marketRouter.post(
   },
 )
 
-marketRouter.get("/export", userAuthorized, async (req: Request, res) => {
+marketRouter.get("/export", userAuthorized, requireMarketRead, async (req: Request, res) => {
   // TODO: Do this
 })
 
@@ -4209,6 +4228,7 @@ marketRouter.get(
 marketRouter.get(
   "/seller/analytics",
   userAuthorized,
+  requireMarketRead,
   oapi.validPath({
     summary: "Get seller listing analytics",
     description:

@@ -1,5 +1,5 @@
 import express from "express"
-import { userAuthorized } from "../../../middleware/auth.js"
+import { userAuthorized , AuthRequest, requireChatsRead, requireChatsWrite} from "../../../middleware/auth.js"
 import { User } from "../api-models.js"
 import { database } from "../../../../clients/database/knex-db.js"
 import { cdn } from "../../../../clients/cdn/cdn.js"
@@ -126,6 +126,8 @@ oapi.schema("ChatBody", {
 
 chatsRouter.get(
   "/orders/:order_id",
+  userAuthorized,
+  requireChatsRead,
   oapi.validPath({
     summary: "Get a chat by order ID",
     deprecated: false,
@@ -183,6 +185,8 @@ chatsRouter.get(
 
 chatsRouter.get(
   "/offers/:session_id",
+  userAuthorized,
+  requireChatsRead,
   oapi.validPath({
     summary: "Get a chat by offer session ID",
     deprecated: false,
@@ -244,6 +248,8 @@ chatsRouter.get(
 
 chatsRouter.post(
   "/:chat_id/messages",
+  userAuthorized,
+  requireChatsWrite,
   oapi.validPath({
     summary: "Send a message",
     deprecated: false,
@@ -358,6 +364,8 @@ chatsRouter.post(
 
 chatsRouter.post(
   "",
+  userAuthorized,
+  requireChatsWrite,
   oapi.validPath({
     summary: "Creates a chat",
     deprecated: false,
@@ -442,6 +450,8 @@ chatsRouter.post(
 
 chatsRouter.get(
   "/:chat_id",
+  userAuthorized,
+  requireChatsRead,
   oapi.validPath({
     summary: "Get a chat by ID",
     deprecated: false,
@@ -511,6 +521,8 @@ chatsRouter.get(
 
 chatsRouter.get(
   "",
+  userAuthorized,
+  requireChatsRead,
   oapi.validPath({
     summary: "Get my chats",
     deprecated: false,

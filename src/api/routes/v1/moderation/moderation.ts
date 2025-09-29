@@ -1,5 +1,5 @@
 import express from "express"
-import { userAuthorized, adminAuthorized } from "../../../middleware/auth.js"
+import { userAuthorized, adminAuthorized, requireModerationRead, requireModerationWrite } from "../../../middleware/auth.js"
 import { User } from "../api-models.js"
 import { database } from "../../../../clients/database/knex-db.js"
 import { DBContentReport } from "../../../../clients/database/db-models.js"
