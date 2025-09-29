@@ -218,8 +218,7 @@ export async function convertQuery(
     user_seller_id,
     contractor_seller_id,
     listing_type: query.listing_type || null,
-    status: query.status || null,
-    excludeArchived: !query.status, // Exclude archived when no specific status is provided
+    statuses: query.statuses ? query.statuses.split(',').map(s => s.trim()) : ['active'], // Default to active only
   }
 }
 

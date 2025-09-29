@@ -400,14 +400,22 @@ marketRouter.post(
       }
     }
 
-    if (status || price !== undefined || quantity_available !== undefined || internal !== undefined) {
+    if (
+      status ||
+      price !== undefined ||
+      quantity_available !== undefined ||
+      internal !== undefined
+    ) {
       // Only allow internal=true for contractor listings
       // User listings must always be public (internal=false)
       if (internal === true && !listing.contractor_seller_id) {
-        res.status(400).json({ error: "Internal listings can only be created for contractor listings" })
+        res.status(400).json({
+          error:
+            "Internal listings can only be created for contractor listings",
+        })
         return
       }
-      
+
       await database.updateMarketListing(listing_id, {
         status,
         price,
@@ -1135,7 +1143,14 @@ oapi.schema("ListingOrdersPagination", {
     hasNextPage: { type: "boolean" },
     hasPreviousPage: { type: "boolean" },
   },
-  required: ["currentPage", "pageSize", "totalItems", "totalPages", "hasNextPage", "hasPreviousPage"],
+  required: [
+    "currentPage",
+    "pageSize",
+    "totalItems",
+    "totalPages",
+    "hasNextPage",
+    "hasPreviousPage",
+  ],
 })
 
 oapi.schema("ListingOrdersResponse", {
@@ -1155,7 +1170,8 @@ marketRouter.get(
   "/listing/:listing_id/orders",
   oapi.validPath({
     summary: "Get paginated orders for a market listing",
-    description: "Returns paginated orders associated with a specific market listing",
+    description:
+      "Returns paginated orders associated with a specific market listing",
     tags: ["Market", "Market Listing"],
     parameters: [
       {
@@ -1183,12 +1199,12 @@ marketRouter.get(
         name: "status",
         in: "query",
         required: false,
-        schema: { 
-          type: "array", 
-          items: { 
+        schema: {
+          type: "array",
+          items: {
             type: "string",
-            enum: ["not-started", "in-progress", "fulfilled", "cancelled"]
-          }
+            enum: ["not-started", "in-progress", "fulfilled", "cancelled"],
+          },
         },
         description: "Filter orders by status",
       },
@@ -1196,7 +1212,11 @@ marketRouter.get(
         name: "sortBy",
         in: "query",
         required: false,
-        schema: { type: "string", enum: ["timestamp", "status"], default: "timestamp" },
+        schema: {
+          type: "string",
+          enum: ["timestamp", "status"],
+          default: "timestamp",
+        },
         description: "Field to sort by",
       },
       {
@@ -1277,15 +1297,15 @@ marketRouter.get(
         page,
         pageSize,
         status: statusArray,
-        sortBy: sortBy as 'timestamp' | 'status',
-        sortOrder: sortOrder as 'asc' | 'desc',
+        sortBy: sortBy as "timestamp" | "status",
+        sortOrder: sortOrder as "asc" | "desc",
       })
 
       // Format the orders using the existing serialization
       const formattedOrders = await Promise.all(
         result.orders.map(async (order) => {
           return await serializeOrderDetails(order, null)
-        })
+        }),
       )
 
       res.json({
@@ -2636,9 +2656,11 @@ marketRouter.get(
         schema: { type: "string", nullable: true },
       },
       {
-        name: "status",
+        name: "statuses",
         in: "query",
         schema: { type: "string", nullable: true },
+        description:
+          "Comma-separated list of statuses to include (e.g., 'active', 'active,inactive', 'active,inactive,archived')",
       },
     ],
     responses: {
@@ -2691,7 +2713,7 @@ marketRouter.get(
     try {
       // Determine if we should include internal listings
       let includeInternal = false
-      
+
       // If contractor_seller_id is specified and user is authenticated, check if user is a member
       if (query.contractor_seller_id && req.user) {
         const user = req.user as User
@@ -4255,7 +4277,7 @@ marketRouter.get(
       })
 
       // If user is part of a contractor, also get contractor analytics
-      let contractorAnalytics = null
+      const contractorAnalytics = null
       if (user.role === "admin" || user.role === "user") {
         // This could be enhanced to check if user has contractor permissions
         // For now, we'll just return user analytics
