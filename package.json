@@ -61,7 +61,7 @@
     "@types/express-session": "^1.18.1",
     "@types/express-ws": "^3.0.1",
     "@types/multer": "^1.4.12",
-    "@types/node": "^22.15.34",
+    "@types/node": "^24.6.0",
     "@types/node-fetch": "^2.6.12",
     "@types/passport": "^1.0.17",
     "@types/passport-discord": "^0.1.14",
