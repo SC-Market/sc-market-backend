@@ -53,7 +53,7 @@ import {
   Response404,
   Response500,
 } from "../openapi.js"
-import { createResponse } from "../util/response.js"
+import { createResponse, createErrorResponse } from "../util/response.js"
 import { multiplePhotoUpload } from "../util/upload.js"
 import { randomUUID } from "node:crypto"
 import fs from "node:fs"
@@ -75,6 +75,314 @@ oapi.schema("OrderStats", {
     },
   },
   required: ["total_orders", "total_order_value"],
+})
+
+// Market Listing Schemas
+oapi.schema("MarketListing", {
+  type: "object",
+  title: "MarketListing",
+  properties: {
+    listing_id: {
+      type: "string",
+      format: "uuid",
+      title: "MarketListing.listing_id",
+    },
+    sale_type: {
+      type: "string",
+      enum: ["unique", "aggregate", "multiple", "auction"],
+      title: "MarketListing.sale_type",
+    },
+    price: {
+      type: "number",
+      minimum: 0,
+      title: "MarketListing.price",
+    },
+    quantity_available: {
+      type: "integer",
+      minimum: 0,
+      title: "MarketListing.quantity_available",
+    },
+    status: {
+      type: "string",
+      enum: ["active", "inactive", "archived"],
+      title: "MarketListing.status",
+    },
+    internal: {
+      type: "boolean",
+      title: "MarketListing.internal",
+    },
+    user_seller_id: {
+      type: "string",
+      nullable: true,
+      title: "MarketListing.user_seller_id",
+    },
+    contractor_seller_id: {
+      type: "string",
+      nullable: true,
+      title: "MarketListing.contractor_seller_id",
+    },
+    timestamp: {
+      type: "string",
+      format: "date-time",
+      title: "MarketListing.timestamp",
+    },
+    expiration: {
+      type: "string",
+      format: "date-time",
+      title: "MarketListing.expiration",
+    },
+    title: {
+      type: "string",
+      maxLength: 200,
+      title: "MarketListing.title",
+    },
+    description: {
+      type: "string",
+      maxLength: 2000,
+      title: "MarketListing.description",
+    },
+    item_type: {
+      type: "string",
+      title: "MarketListing.item_type",
+    },
+    game_item_id: {
+      type: "string",
+      nullable: true,
+      title: "MarketListing.game_item_id",
+    },
+    photos: {
+      type: "array",
+      items: {
+        type: "string",
+      },
+      title: "MarketListing.photos",
+    },
+  },
+  required: ["listing_id", "sale_type", "price", "quantity_available", "status", "internal", "timestamp", "expiration", "title", "description", "item_type"],
+  additionalProperties: false,
+})
+
+oapi.schema("CreateMarketListingRequest", {
+  type: "object",
+  title: "CreateMarketListingRequest",
+  properties: {
+    sale_type: {
+      type: "string",
+      enum: ["unique", "aggregate", "multiple", "auction"],
+      title: "CreateMarketListingRequest.sale_type",
+    },
+    price: {
+      type: "number",
+      minimum: 0,
+      title: "CreateMarketListingRequest.price",
+    },
+    quantity_available: {
+      type: "integer",
+      minimum: 1,
+      title: "CreateMarketListingRequest.quantity_available",
+    },
+    title: {
+      type: "string",
+      maxLength: 200,
+      minLength: 1,
+      title: "CreateMarketListingRequest.title",
+    },
+    description: {
+      type: "string",
+      maxLength: 2000,
+      minLength: 1,
+      title: "CreateMarketListingRequest.description",
+    },
+    item_type: {
+      type: "string",
+      title: "CreateMarketListingRequest.item_type",
+    },
+    game_item_id: {
+      type: "string",
+      nullable: true,
+      title: "CreateMarketListingRequest.game_item_id",
+    },
+    photos: {
+      type: "array",
+      items: {
+        type: "string",
+      },
+      maxItems: 10,
+      title: "CreateMarketListingRequest.photos",
+    },
+    expiration_days: {
+      type: "integer",
+      minimum: 1,
+      maximum: 30,
+      default: 7,
+      title: "CreateMarketListingRequest.expiration_days",
+    },
+  },
+  required: ["sale_type", "price", "quantity_available", "title", "description", "item_type"],
+  additionalProperties: false,
+})
+
+oapi.schema("UpdateMarketListingRequest", {
+  type: "object",
+  title: "UpdateMarketListingRequest",
+  properties: {
+    price: {
+      type: "number",
+      minimum: 0,
+      title: "UpdateMarketListingRequest.price",
+    },
+    quantity_available: {
+      type: "integer",
+      minimum: 0,
+      title: "UpdateMarketListingRequest.quantity_available",
+    },
+    title: {
+      type: "string",
+      maxLength: 200,
+      minLength: 1,
+      title: "UpdateMarketListingRequest.title",
+    },
+    description: {
+      type: "string",
+      maxLength: 2000,
+      minLength: 1,
+      title: "UpdateMarketListingRequest.description",
+    },
+    status: {
+      type: "string",
+      enum: ["active", "inactive", "archived"],
+      title: "UpdateMarketListingRequest.status",
+    },
+    photos: {
+      type: "array",
+      items: {
+        type: "string",
+      },
+      maxItems: 10,
+      title: "UpdateMarketListingRequest.photos",
+    },
+  },
+  additionalProperties: false,
+})
+
+oapi.schema("MarketBid", {
+  type: "object",
+  title: "MarketBid",
+  properties: {
+    bid_id: {
+      type: "string",
+      format: "uuid",
+      title: "MarketBid.bid_id",
+    },
+    listing_id: {
+      type: "string",
+      format: "uuid",
+      title: "MarketBid.listing_id",
+    },
+    bidder: {
+      type: "object",
+      properties: {
+        user_id: {
+          type: "string",
+          nullable: true,
+        },
+        contractor_id: {
+          type: "string",
+          nullable: true,
+        },
+        username: {
+          type: "string",
+        },
+        display_name: {
+          type: "string",
+        },
+      },
+      title: "MarketBid.bidder",
+    },
+    bid_amount: {
+      type: "number",
+      minimum: 0,
+      title: "MarketBid.bid_amount",
+    },
+    timestamp: {
+      type: "string",
+      format: "date-time",
+      title: "MarketBid.timestamp",
+    },
+  },
+  required: ["bid_id", "listing_id", "bidder", "bid_amount", "timestamp"],
+  additionalProperties: false,
+})
+
+oapi.schema("CreateBidRequest", {
+  type: "object",
+  title: "CreateBidRequest",
+  properties: {
+    bid_amount: {
+      type: "number",
+      minimum: 0,
+      title: "CreateBidRequest.bid_amount",
+    },
+  },
+  required: ["bid_amount"],
+  additionalProperties: false,
+})
+
+oapi.schema("MarketSearchParams", {
+  type: "object",
+  title: "MarketSearchParams",
+  properties: {
+    query: {
+      type: "string",
+      title: "MarketSearchParams.query",
+    },
+    statuses: {
+      type: "string",
+      title: "MarketSearchParams.statuses",
+      description: "Comma-separated list of statuses (e.g., 'active,inactive')",
+    },
+    sale_type: {
+      type: "string",
+      enum: ["unique", "aggregate", "multiple", "auction"],
+      title: "MarketSearchParams.sale_type",
+    },
+    item_type: {
+      type: "string",
+      title: "MarketSearchParams.item_type",
+    },
+    min_price: {
+      type: "number",
+      minimum: 0,
+      title: "MarketSearchParams.min_price",
+    },
+    max_price: {
+      type: "number",
+      minimum: 0,
+      title: "MarketSearchParams.max_price",
+    },
+    user_seller_id: {
+      type: "string",
+      title: "MarketSearchParams.user_seller_id",
+    },
+    contractor_seller_id: {
+      type: "string",
+      title: "MarketSearchParams.contractor_seller_id",
+    },
+    page: {
+      type: "integer",
+      minimum: 0,
+      default: 0,
+      title: "MarketSearchParams.page",
+    },
+    pageSize: {
+      type: "integer",
+      minimum: 1,
+      maximum: 100,
+      default: 20,
+      title: "MarketSearchParams.pageSize",
+    },
+  },
+  additionalProperties: false,
 })
 
 marketRouter.get(
@@ -1054,7 +1362,7 @@ oapi.schema("MarketListingComplete", {
 })
 
 marketRouter.get(
-  "/listing/:listing_id",
+  "/listings/:listing_id",
   oapi.validPath({
     summary: "Get market listing details",
     description: "Returns detailed information about a specific market listing",
@@ -1104,7 +1412,7 @@ marketRouter.get(
     try {
       listing = await database.getMarketListing({ listing_id: listing_id })
     } catch (e) {
-      res.status(400).json({ error: "Invalid listing" })
+      res.status(400).json(createErrorResponse("Invalid listing"))
       return
     }
 
@@ -1121,18 +1429,18 @@ marketRouter.get(
           listing.user_seller_id === user.user_id ||
           user.role === "admin"
         ) {
-          res.json(await formatListing(listing, true))
+          res.json(createResponse(await formatListing(listing, true)))
           return
         }
       } else {
         if (listing.user_seller_id === user.user_id) {
-          res.json(await formatListing(listing, true))
+          res.json(createResponse(await formatListing(listing, true)))
           return
         }
       }
     }
 
-    res.json(await formatListing(listing))
+    res.json(createResponse(await formatListing(listing)))
   },
 )
 
@@ -1506,7 +1814,7 @@ oapi.schema("MarketBidRequest", {
 })
 
 marketRouter.post(
-  "/bid",
+  "/listings/:listing_id/bids",
   verifiedUser,
   requireMarketWrite,
   oapi.validPath({
@@ -1749,7 +2057,7 @@ oapi.schema("MarketListingCreateRequest", {
 })
 
 marketRouter.post(
-  "/create",
+  "/listings",
   verifiedUser,
   requireMarketWrite,
   oapi.validPath({
@@ -2411,7 +2719,7 @@ marketRouter.post(
 
 // Track a view on a market listing
 marketRouter.post(
-  "/listing/:listing_id/view",
+  "/listings/:listing_id/views",
   oapi.validPath({
     summary: "Track a view on a market listing",
     description: "Records a view on a market listing for analytics purposes",
@@ -2581,12 +2889,12 @@ oapi.schema("MarketListingSearchResult", {
 })
 
 marketRouter.get(
-  "/public/search",
+  "/listings",
   oapi.validPath({
-    summary: "Search public market listings",
+    summary: "Search market listings",
     description:
-      "Search for active, public market listings with various filters",
-    operationId: "searchPublicListings",
+      "Search for market listings with various filters and status options",
+    operationId: "searchMarketListings",
     tags: ["Market"],
     parameters: [
       {
@@ -2682,34 +2990,25 @@ marketRouter.get(
             schema: {
               type: "object",
               properties: {
-                total: { type: "integer" },
-                listings: {
-                  type: "array",
-                  items: oapi.schema("MarketListingSearchResult"),
+                data: {
+                  type: "object",
+                  properties: {
+                    total: { type: "integer" },
+                    listings: {
+                      type: "array",
+                      items: oapi.schema("MarketListingSearchResult"),
+                    },
+                  },
+                  required: ["total", "listings"],
                 },
               },
-              required: ["total", "listings"],
+              required: ["data"],
             },
           },
         },
       },
-      "400": {
-        description: "Invalid query parameters",
-        content: {
-          "application/json": {
-            schema: {
-              type: "object",
-              properties: {
-                error: { type: "string" },
-              },
-              required: ["error"],
-            },
-          },
-        },
-      },
-      "500": {
-        description: "Internal server error",
-      },
+      "400": Response400,
+      "500": Response500,
     },
   }),
   async (req, res) => {
@@ -2717,7 +3016,7 @@ marketRouter.get(
     try {
       query = await convertQuery(req.query)
     } catch (e) {
-      res.status(400).json({ error: "Invalid query" })
+      res.status(400).json(createErrorResponse({ message: "Invalid query" }))
       return
     }
 
@@ -2737,7 +3036,7 @@ marketRouter.get(
         ...(includeInternal ? {} : { internal: "false" }), // Only filter internal when we don't want to include them
       })
 
-      res.json({
+      res.json(createResponse({
         total: searchResults[0] ? searchResults[0].full_count : 0,
         listings: searchResults.map((r) => ({
           listing_id: r.listing_id,
@@ -2769,10 +3068,10 @@ marketRouter.get(
           photo: r.photo,
           internal: r.internal,
         })),
-      })
+      }))
     } catch (e) {
       console.error(e)
-      res.status(500).json({ error: "Internal server error" })
+      res.status(500).json(createErrorResponse({ message: "Internal server error" }))
     }
   },
 )

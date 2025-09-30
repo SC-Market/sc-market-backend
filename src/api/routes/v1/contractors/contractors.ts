@@ -37,6 +37,7 @@ import {
   Response403,
   Response404,
   Response409,
+  Response500,
 } from "../openapi.js"
 import { createErrorResponse, createResponse } from "../util/response.js"
 import {
@@ -3423,7 +3424,125 @@ contractorsRouter.post(
   },
 )
 
-contractorsRouter.get("", async (req, res, next) => {
+contractorsRouter.get("", 
+  oapi.validPath({
+    summary: "Get paginated contractors list",
+    description: "Get a paginated list of contractors with search, filtering, and sorting capabilities",
+    operationId: "getContractors",
+    tags: ["Contractors"],
+    parameters: [
+      {
+        name: "index",
+        in: "query",
+        required: false,
+        schema: { type: "integer", minimum: 0, default: 0 },
+        description: "Page index for pagination"
+      },
+      {
+        name: "pageSize",
+        in: "query",
+        required: false,
+        schema: { type: "integer", minimum: 1, maximum: 100, default: 20 },
+        description: "Number of items per page"
+      },
+      {
+        name: "sorting",
+        in: "query",
+        required: false,
+        schema: { 
+          type: "string", 
+          enum: ["name", "rating", "created_at", "member_count"],
+          default: "name"
+        },
+        description: "Field to sort by"
+      },
+      {
+        name: "reverseSort",
+        in: "query",
+        required: false,
+        schema: { type: "boolean", default: false },
+        description: "Reverse the sort order"
+      },
+      {
+        name: "query",
+        in: "query",
+        required: false,
+        schema: { type: "string" },
+        description: "Search query to filter contractors by name or description"
+      },
+      {
+        name: "fields",
+        in: "query",
+        required: false,
+        schema: { type: "string" },
+        description: "Comma-separated list of fields to filter by"
+      },
+      {
+        name: "rating",
+        in: "query",
+        required: false,
+        schema: { type: "string" },
+        description: "Filter by minimum rating"
+      }
+    ],
+    responses: {
+      "200": {
+        description: "Contractors list retrieved successfully",
+        content: {
+          "application/json": {
+            schema: {
+              type: "object",
+              properties: {
+                total: { type: "integer", description: "Total number of contractors matching the criteria" },
+                items: {
+                  type: "array",
+                  items: {
+                    type: "object",
+                    properties: {
+                      contractor_id: { type: "string" },
+                      spectrum_id: { type: "string" },
+                      name: { type: "string" },
+                      description: { type: "string", nullable: true },
+                      avatar: { type: "string", nullable: true },
+                      banner: { type: "string", nullable: true },
+                      site_url: { type: "string", nullable: true },
+                      locale: { type: "string", nullable: true },
+                      market_order_template: { type: "string", nullable: true },
+                      created_at: { type: "string", format: "date-time" },
+                      updated_at: { type: "string", format: "date-time" },
+                      fields: {
+                        type: "array",
+                        items: { type: "string" },
+                        description: "Contractor specialization fields"
+                      },
+                      rating: { type: "number", nullable: true, description: "Average contractor rating" },
+                      roles: {
+                        type: "array",
+                        items: {
+                          type: "object",
+                          properties: {
+                            role_id: { type: "string" },
+                            name: { type: "string" },
+                            position: { type: "number" },
+                            permissions: { type: "object" }
+                          }
+                        },
+                        description: "Available contractor roles"
+                      }
+                    },
+                    required: ["contractor_id", "spectrum_id", "name", "created_at", "updated_at", "fields", "roles"]
+                  }
+                }
+              },
+              required: ["total", "items"]
+            }
+          }
+        }
+      },
+      "500": Response500
+    }
+  }),
+  async (req, res, next) => {
   try {
     const query = req.query as {
       index?: string
@@ -3457,6 +3576,45 @@ contractorsRouter.get("", async (req, res, next) => {
 
 contractorsRouter.get(
   "/:spectrum_id/settings/discord",
+  oapi.validPath({
+    summary: "Get Discord settings for contractor",
+    description: "Get Discord server and channel settings for a contractor",
+    operationId: "getContractorDiscordSettings",
+    tags: ["Contractors", "Discord"],
+    parameters: [
+      {
+        name: "spectrum_id",
+        in: "path",
+        required: true,
+        schema: { type: "string" },
+        description: "Contractor spectrum ID"
+      }
+    ],
+    responses: {
+      "200": {
+        description: "Discord settings retrieved successfully",
+        content: {
+          "application/json": {
+            schema: {
+              type: "object",
+              properties: {
+                guild_avatar: { type: "string", nullable: true, description: "Discord server avatar URL" },
+                guild_name: { type: "string", nullable: true, description: "Discord server name" },
+                channel_name: { type: "string", nullable: true, description: "Discord channel name" },
+                official_server_id: { type: "string", nullable: true, description: "Official Discord server ID" },
+                discord_thread_channel_id: { type: "string", nullable: true, description: "Discord thread channel ID" }
+              }
+            }
+          }
+        }
+      },
+      "400": Response400,
+      "401": Response401,
+      "403": Response403,
+      "500": Response500
+    },
+    security: [{ bearerAuth: [] }]
+  }),
   userAuthorized,
   org_permission("manage_webhooks"),
   async (req, res, next) => {

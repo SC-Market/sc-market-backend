@@ -4,7 +4,9 @@ import {
   DBOffer,
   DBOfferSession,
   DBOrder,
+  DBRecruitingPost,
   DBUser,
+  DBMarketListingComplete,
 } from "../../clients/database/db-models.js"
 import { DBPublicContract } from "../../api/routes/v1/contracts/types.js"
 
@@ -17,6 +19,10 @@ declare global {
       most_recent_offer?: DBOffer
       contract?: DBPublicContract
       chat?: DBChat
+      recruiting_post?: DBRecruitingPost
+      market_listing?: DBMarketListingComplete
+      user_listings?: DBMarketListingComplete[]
+      contractor_listings?: DBMarketListingComplete[]
       users?: Map<string, DBUser>
       contractors?: Map<string, DBContractor>
     }

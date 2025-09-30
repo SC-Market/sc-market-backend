@@ -1,4 +1,5 @@
 import express from "express"
+import { oapi, Response400, Response500 } from "../openapi.js"
 
 const example_image_resp = {
   pages: [
@@ -98,7 +99,126 @@ async function wikiImageDetails(url: string) {
 
 export const wikiRouter = express.Router()
 
-wikiRouter.get("/imagesearch/:query", async function (req, res) {
+// OpenAPI Schema Definitions
+oapi.schema("WikiImageSearchResult", {
+  type: "object",
+  properties: {
+    id: { type: "number" },
+    key: { type: "string" },
+    title: { type: "string" },
+    excerpt: { type: "string", nullable: true },
+    matched_title: { type: "string", nullable: true },
+    description: { type: "string", nullable: true },
+    thumbnail: {
+      type: "object",
+      nullable: true,
+      properties: {
+        mimetype: { type: "string" },
+        size: { type: "number" },
+        width: { type: "number" },
+        height: { type: "number" },
+        duration: { type: "number", nullable: true },
+        url: { type: "string" }
+      }
+    },
+    images: {
+      type: "object",
+      nullable: true,
+      properties: {
+        pages: {
+          type: "array",
+          items: {
+            type: "object",
+            properties: {
+              imageinfo: {
+                type: "array",
+                items: {
+                  type: "object",
+                  properties: {
+                    url: { type: "string" },
+                    thumburl: { type: "string" }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  required: ["id", "key", "title"]
+})
+
+oapi.schema("WikiItemSearchResult", {
+  type: "object",
+  properties: {
+    query: {
+      type: "object",
+      properties: {
+        pages: {
+          type: "object",
+          additionalProperties: {
+            type: "object",
+            properties: {
+              pageid: { type: "number" },
+              title: { type: "string" },
+              extract: { type: "string", nullable: true },
+              thumbnail: {
+                type: "object",
+                nullable: true,
+                properties: {
+                  source: { type: "string" }
+                }
+              },
+              categories: {
+                type: "array",
+                items: {
+                  type: "object",
+                  properties: {
+                    title: { type: "string" }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+})
+
+wikiRouter.get("/imagesearch/:query", 
+  oapi.validPath({
+    summary: "Search wiki images",
+    description: "Search for images in the Star Citizen wiki",
+    operationId: "searchWikiImages",
+    tags: ["Wiki"],
+    parameters: [
+      {
+        name: "query",
+        in: "path",
+        required: true,
+        schema: { type: "string", minLength: 3 },
+        description: "Search query (minimum 3 characters)"
+      }
+    ],
+    responses: {
+      "200": {
+        description: "Image search results retrieved successfully",
+        content: {
+          "application/json": {
+            schema: {
+              type: "array",
+              items: { $ref: "#/components/schemas/WikiImageSearchResult" }
+            }
+          }
+        }
+      },
+      "400": Response400,
+      "500": Response500
+    }
+  }),
+  async function (req, res) {
   try {
     const query = req.params["query"]
 
@@ -124,7 +244,35 @@ wikiRouter.get("/imagesearch/:query", async function (req, res) {
   }
 })
 
-wikiRouter.get("/itemsearch/:query", async function (req, res) {
+wikiRouter.get("/itemsearch/:query", 
+  oapi.validPath({
+    summary: "Search wiki items",
+    description: "Search for items and pages in the Star Citizen wiki",
+    operationId: "searchWikiItems",
+    tags: ["Wiki"],
+    parameters: [
+      {
+        name: "query",
+        in: "path",
+        required: true,
+        schema: { type: "string", minLength: 3 },
+        description: "Search query (minimum 3 characters)"
+      }
+    ],
+    responses: {
+      "200": {
+        description: "Item search results retrieved successfully",
+        content: {
+          "application/json": {
+            schema: { $ref: "#/components/schemas/WikiItemSearchResult" }
+          }
+        }
+      },
+      "400": Response400,
+      "500": Response500
+    }
+  }),
+  async function (req, res) {
   const query = req.params["query"]
 
   if (query.length < 3) {
