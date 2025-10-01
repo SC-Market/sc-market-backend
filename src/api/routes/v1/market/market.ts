@@ -644,16 +644,20 @@ marketRouter.post(
         !Array.isArray(listing_ids) ||
         listing_ids.length === 0
       ) {
-        res.status(400).json({
-          error: "listing_ids array is required and must not be empty",
-        })
+        res.status(400).json(
+          createErrorResponse({
+            error: "listing_ids array is required and must not be empty",
+          }),
+        )
         return
       }
 
-      if (listing_ids.length > 50) {
-        res
-          .status(400)
-          .json({ error: "Maximum 50 listing IDs allowed per request" })
+      if (listing_ids.length > 96) {
+        res.status(400).json(
+          createErrorResponse({
+            error: "Maximum 96 listing IDs allowed per request",
+          }),
+        )
         return
       }
 
@@ -665,7 +669,11 @@ marketRouter.post(
           const listing = await database.getMarketListing({ listing_id })
 
           if (!listing) {
-            res.status(400).json({ error: `Listing ${listing_id} not found` })
+            res.status(400).json(
+              createErrorResponse({
+                error: `Listing ${listing_id} not found`,
+              }),
+            )
             return
           }
 
@@ -694,9 +702,11 @@ marketRouter.post(
           }
 
           if (!hasPermission) {
-            res.status(403).json({
-              error: `You don't have permission to view stats for listing ${listing_id}`,
-            })
+            res.status(403).json(
+              createErrorResponse({
+                error: `You don't have permission to view stats for listing ${listing_id}`,
+              }),
+            )
             return
           }
 
@@ -708,17 +718,21 @@ marketRouter.post(
           })
         } catch (error) {
           console.error(`Error processing listing ${listing_id}:`, error)
-          res
-            .status(500)
-            .json({ error: `Error processing listing ${listing_id}` })
+          res.status(500).json(
+            createErrorResponse({
+              error: `Error processing listing ${listing_id}`,
+            }),
+          )
           return
         }
       }
 
-      res.json({ stats })
+      res.json(createResponse({ stats }))
     } catch (error) {
       console.error("Error in /listings/stats:", error)
-      res.status(500).json({ error: "Internal server error" })
+      res
+        .status(500)
+        .json(createErrorResponse({ error: "Internal server error" }))
     }
   },
 )
