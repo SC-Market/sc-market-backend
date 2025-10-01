@@ -3424,10 +3424,12 @@ contractorsRouter.post(
   },
 )
 
-contractorsRouter.get("", 
+contractorsRouter.get(
+  "",
   oapi.validPath({
     summary: "Get paginated contractors list",
-    description: "Get a paginated list of contractors with search, filtering, and sorting capabilities",
+    description:
+      "Get a paginated list of contractors with search, filtering, and sorting capabilities",
     operationId: "getContractors",
     tags: ["Contractors"],
     parameters: [
@@ -3436,54 +3438,67 @@ contractorsRouter.get("",
         in: "query",
         required: false,
         schema: { type: "integer", minimum: 0, default: 0 },
-        description: "Page index for pagination"
+        description: "Page index for pagination",
       },
       {
         name: "pageSize",
         in: "query",
         required: false,
         schema: { type: "integer", minimum: 1, maximum: 100, default: 20 },
-        description: "Number of items per page"
+        description: "Number of items per page",
       },
       {
         name: "sorting",
         in: "query",
         required: false,
-        schema: { 
-          type: "string", 
-          enum: ["name", "rating", "created_at", "member_count"],
-          default: "name"
+        schema: {
+          type: "string",
+          enum: [
+            "name",
+            "name-reverse",
+            "rating",
+            "rating-reverse",
+            "created_at",
+            "created_at-reverse",
+            "members",
+            "members-reverse",
+            "member_count",
+            "date",
+            "date-reverse",
+          ],
+          default: "name",
         },
-        description: "Field to sort by"
+        description: "Field to sort by",
       },
       {
         name: "reverseSort",
         in: "query",
         required: false,
         schema: { type: "boolean", default: false },
-        description: "Reverse the sort order"
+        description: "Reverse the sort order",
       },
       {
         name: "query",
         in: "query",
         required: false,
         schema: { type: "string" },
-        description: "Search query to filter contractors by name or description"
+        description:
+          "Search query to filter contractors by name or description",
       },
       {
         name: "fields",
         in: "query",
         required: false,
         schema: { type: "string" },
-        description: "Comma-separated list of fields to filter by"
+        description: "Comma-separated list of fields to filter by",
       },
       {
         name: "rating",
         in: "query",
         required: false,
         schema: { type: "string" },
-        description: "Filter by minimum rating"
-      }
+        description: "Filter by minimum rating",
+      },
     ],
     responses: {
       "200": {
@@ -3493,7 +3508,11 @@ contractorsRouter.get("",
             schema: {
               type: "object",
               properties: {
-                total: { type: "integer", description: "Total number of contractors matching the criteria" },
+                total: {
+                  type: "integer",
+                  description:
+                    "Total number of contractors matching the criteria",
+                },
                 items: {
                   type: "array",
                   items: {
@@ -3513,9 +3532,13 @@ contractorsRouter.get("",
                       fields: {
                         type: "array",
                         items: { type: "string" },
-                        description: "Contractor specialization fields"
+                        description: "Contractor specialization fields",
                       },
-                      rating: { type: "number", nullable: true, description: "Average contractor rating" },
+                      rating: {
+                        type: "number",
+                        nullable: true,
+                        description: "Average contractor rating",
+                      },
                       roles: {
                         type: "array",
                         items: {
@@ -3524,55 +3547,64 @@ contractorsRouter.get("",
                             role_id: { type: "string" },
                             name: { type: "string" },
                             position: { type: "number" },
-                            permissions: { type: "object" }
-                          }
+                            permissions: { type: "object" },
+                          },
                         },
-                        description: "Available contractor roles"
-                      }
+                        description: "Available contractor roles",
+                      },
                     },
-                    required: ["contractor_id", "spectrum_id", "name", "created_at", "updated_at", "fields", "roles"]
-                  }
-                }
+                    required: [
+                      "contractor_id",
+                      "spectrum_id",
+                      "name",
+                      "created_at",
+                      "updated_at",
+                      "fields",
+                      "roles",
+                    ],
+                  },
+                },
               },
-              required: ["total", "items"]
-            }
-          }
-        }
+              required: ["total", "items"],
+            },
+          },
+        },
       },
-      "500": Response500
-    }
+      "500": Response500,
+    },
   }),
   async (req, res, next) => {
-  try {
-    const query = req.query as {
-      index?: string
-      reverseSort: string
-      sorting: string
-      query: string
-      fields: string
-      rating: string
-      pageSize: string
-    }
-
-    const searchData = convertQuery(query)
-
-    let contractor: DBContractor[] = []
     try {
-      contractor = await database.getAllContractorsPaginated(searchData)
+      const query = req.query as {
+        index?: string
+        reverseSort: string
+        sorting: string
+        query: string
+        fields: string
+        rating: string
+        pageSize: string
+      }
+
+      const searchData = convertQuery(query)
+
+      let contractor: DBContractor[] = []
+      try {
+        contractor = await database.getAllContractorsPaginated(searchData)
+      } catch (e) {
+        console.error(e)
+      }
+      const user = req.user as User
+      const counts = await database.getAllContractorsCount(searchData)
+      const formatted = await Promise.all(
+        contractor.map((c) => contractorDetails(c, user)),
+      )
+
+      res.json(createResponse({ total: counts[0].count, items: formatted }))
     } catch (e) {
       console.error(e)
     }
-    const user = req.user as User
-    const counts = await database.getAllContractorsCount(searchData)
-    const formatted = await Promise.all(
-      contractor.map((c) => contractorDetails(c, user)),
-    )
-
-    res.json(createResponse({ total: counts[0].count, items: formatted }))
-  } catch (e) {
-    console.error(e)
-  }
-})
+  },
+)
 
 contractorsRouter.get(
   "/:spectrum_id/settings/discord",
@@ -3587,8 +3619,8 @@ contractorsRouter.get(
         in: "path",
         required: true,
         schema: { type: "string" },
-        description: "Contractor spectrum ID"
-      }
+        description: "Contractor spectrum ID",
+      },
     ],
     responses: {
       "200": {
@@ -3598,22 +3630,42 @@ contractorsRouter.get(
             schema: {
               type: "object",
               properties: {
-                guild_avatar: { type: "string", nullable: true, description: "Discord server avatar URL" },
-                guild_name: { type: "string", nullable: true, description: "Discord server name" },
-                channel_name: { type: "string", nullable: true, description: "Discord channel name" },
-                official_server_id: { type: "string", nullable: true, description: "Official Discord server ID" },
-                discord_thread_channel_id: { type: "string", nullable: true, description: "Discord thread channel ID" }
-              }
-            }
-          }
-        }
+                guild_avatar: {
+                  type: "string",
+                  nullable: true,
+                  description: "Discord server avatar URL",
+                },
+                guild_name: {
+                  type: "string",
+                  nullable: true,
+                  description: "Discord server name",
+                },
+                channel_name: {
+                  type: "string",
+                  nullable: true,
+                  description: "Discord channel name",
+                },
+                official_server_id: {
+                  type: "string",
+                  nullable: true,
+                  description: "Official Discord server ID",
+                },
+                discord_thread_channel_id: {
+                  type: "string",
+                  nullable: true,
+                  description: "Discord thread channel ID",
+                },
+              },
+            },
+          },
+        },
       },
       "400": Response400,
       "401": Response401,
       "403": Response403,
-      "500": Response500
+      "500": Response500,
     },
-    security: [{ bearerAuth: [] }]
+    security: [{ bearerAuth: [] }],
   }),
   userAuthorized,
   org_permission("manage_webhooks"),

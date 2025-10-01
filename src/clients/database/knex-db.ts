@@ -2927,6 +2927,15 @@ export class KnexDatabase implements Database {
       .offset(offset)
       .select("orders.*")
 
+    console.log(
+      query
+        .orderBy(`orders.${sortBy}`, sortOrder)
+        .limit(pageSize)
+        .offset(offset)
+        .select("orders.*")
+        .toQuery(),
+    )
+
     return {
       orders,
       pagination: {

@@ -21,7 +21,10 @@ import {
   Response404,
 } from "../openapi.js"
 import { createResponse, createErrorResponse } from "../util/response.js"
-import { valid_recruiting_post, valid_recruiting_post_by_contractor } from "./middleware.js"
+import {
+  valid_recruiting_post,
+  valid_recruiting_post_by_contractor,
+} from "./middleware.js"
 
 export async function contractorRecruiting(
   req: Request,
@@ -105,7 +108,15 @@ oapi.schema("RecruitingPost", {
       title: "RecruitingPost.downvotes",
     },
   },
-  required: ["post_id", "contractor", "title", "body", "timestamp", "upvotes", "downvotes"],
+  required: [
+    "post_id",
+    "contractor",
+    "title",
+    "body",
+    "timestamp",
+    "upvotes",
+    "downvotes",
+  ],
   additionalProperties: false,
 })
 
@@ -202,7 +213,15 @@ oapi.schema("RecruitingComment", {
       title: "RecruitingComment.deleted",
     },
   },
-  required: ["comment_id", "author", "content", "timestamp", "upvotes", "downvotes", "deleted"],
+  required: [
+    "comment_id",
+    "author",
+    "content",
+    "timestamp",
+    "upvotes",
+    "downvotes",
+    "deleted",
+  ],
   additionalProperties: false,
 })
 
@@ -294,7 +313,8 @@ recruitingRouter.get(
   oapi.validPath({
     summary: "Get recruiting posts",
     deprecated: false,
-    description: "Retrieve a paginated list of recruiting posts with search and filtering capabilities",
+    description:
+      "Retrieve a paginated list of recruiting posts with search and filtering capabilities",
     operationId: "getRecruitingPosts",
     tags: ["Recruiting"],
     parameters: [
@@ -392,20 +412,20 @@ recruitingRouter.get(
     },
   }),
   async function (req, res) {
-  // /posts?index=0&reverseSort=false&sorting=rating&query=&fields=&rating=0
-  const query = req.query as {
-    index?: string
-    reverseSort: string
-    sorting: string
-    query: string
-    fields: string
-    rating: string
-    pageSize: string
-  }
+    // /posts?index=0&reverseSort=false&sorting=rating&query=&fields=&rating=0
+    const query = req.query as {
+      index?: string
+      reverseSort: string
+      sorting: string
+      query: string
+      fields: string
+      rating: string
+      pageSize: string
+    }
 
-  const searchData = convertQuery(query)
+    const searchData = convertQuery(query)
 
-  /*
+    /*
     SELECT recruiting_posts.*
                     FROM recruiting_posts
                     ORDER BY (SELECT COUNT(*) FROM recruiting_votes rv WHERE rv.post_id = recruiting_posts.post_id)
@@ -413,17 +433,18 @@ recruitingRouter.get(
                     OFFSET 0;
      */
 
-  let posts: DBRecruitingPost[] = []
-  try {
-    posts = await database.getAllRecruitingPostsPaginated(searchData)
-  } catch (e) {
-    console.error(e)
-  }
-  const counts = await database.getRecruitingPostCount()
-  const formatted = await Promise.all(posts.map(formatRecruitingPost))
+    let posts: DBRecruitingPost[] = []
+    try {
+      posts = await database.getAllRecruitingPostsPaginated(searchData)
+    } catch (e) {
+      console.error(e)
+    }
+    const counts = await database.getRecruitingPostCount()
+    const formatted = await Promise.all(posts.map(formatRecruitingPost))
 
-  res.json(createResponse({ total: +counts[0].count, items: formatted }))
-})
+    res.json(createResponse({ total: +counts[0].count, items: formatted }))
+  },
+)
 
 recruitingRouter.post(
   "/posts",
@@ -486,7 +507,9 @@ recruitingRouter.post(
       contractor_id: contractor_obj.contractor_id,
     })
     if (last_post) {
-      res.status(400).json(createErrorResponse({ message: "Cannot create multiple posts" }))
+      res
+        .status(400)
+        .json(createErrorResponse({ message: "Cannot create multiple posts" }))
       return
     }
 
@@ -606,8 +629,8 @@ recruitingRouter.get(
   },
 )
 
-recruitingRouter.post(
-  "/post/:post_id/update",
+recruitingRouter.put(
+  "/posts/:post_id",
   verifiedUser,
   requireRecruitingWrite,
   async function (req, res) {
@@ -616,7 +639,7 @@ recruitingRouter.post(
     const post = await database.getRecruitingPost({ post_id })
 
     if (!post) {
-      res.status(400).json({ message: "Invalid post" })
+      res.status(400).json(createErrorResponse({ message: "Invalid post" }))
       return
     }
 
@@ -630,7 +653,9 @@ recruitingRouter.post(
         "manage_recruiting",
       ))
     ) {
-      res.status(400).json({ message: "Missing permissions" })
+      res
+        .status(400)
+        .json(createErrorResponse({ message: "Missing permissions" }))
       return
     }
 
@@ -643,7 +668,9 @@ recruitingRouter.post(
     } = req.body
 
     if (!title && !body) {
-      res.status(400).json({ error: "Missing required fields" })
+      res
+        .status(400)
+        .json(createErrorResponse({ message: "Missing required fields" }))
       return
     }
 
@@ -651,14 +678,14 @@ recruitingRouter.post(
     if (title) newValues.title = title
     if (body) newValues.body = body
 
-    const results = await database.updateRecruitingPost({ post_id }, newValues)
+    const [result] = await database.updateRecruitingPost({ post_id }, newValues)
 
-    res.json(results[0])
+    res.json(createResponse(result))
   },
 )
 
 recruitingRouter.post(
-  "/post/:post_id/upvote",
+  "/posts/:post_id/upvote",
   verifiedUser,
   requireRecruitingWrite,
   async function (req, res) {
@@ -688,7 +715,7 @@ recruitingRouter.post(
 )
 
 recruitingRouter.post(
-  "/post/:post_id/comment",
+  "/posts/:post_id/comment",
   verifiedUser,
   requireRecruitingWrite,
   async function (req, res) {

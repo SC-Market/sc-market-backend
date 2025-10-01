@@ -3,7 +3,13 @@ import { userAuthorized, requireOrdersWrite } from "../../../middleware/auth.js"
 import { User } from "../api-models.js"
 import { database } from "../../../../clients/database/knex-db.js"
 import { has_permission } from "../util/permissions.js"
-import { oapi, Response400, Response401, Response403, Response500 } from "../openapi.js"
+import {
+  oapi,
+  Response400,
+  Response401,
+  Response403,
+  Response500,
+} from "../openapi.js"
 
 export const deliveryRouter = express.Router()
 
@@ -13,10 +19,16 @@ oapi.schema("CreateDeliveryRequest", {
   properties: {
     start: { type: "string", description: "Departure location" },
     end: { type: "string", description: "Destination location" },
-    order_id: { type: "string", description: "ID of the order being delivered" },
-    ship_id: { type: "string", description: "ID of the ship used for delivery" }
+    order_id: {
+      type: "string",
+      description: "ID of the order being delivered",
+    },
+    ship_id: {
+      type: "string",
+      description: "ID of the ship used for delivery",
+    },
   },
-  required: ["start", "end", "order_id", "ship_id"]
+  required: ["start", "end", "order_id", "ship_id"],
 })
 
 oapi.schema("Delivery", {
@@ -28,11 +40,22 @@ oapi.schema("Delivery", {
     order_id: { type: "string" },
     ship_id: { type: "string" },
     progress: { type: "number", minimum: 0, maximum: 100 },
-    status: { type: "string", enum: ["pending", "in_progress", "completed", "cancelled"] },
+    status: {
+      type: "string",
+      enum: ["pending", "in_progress", "completed", "cancelled"],
+    },
     created_at: { type: "string", format: "date-time" },
-    updated_at: { type: "string", format: "date-time" }
+    updated_at: { type: "string", format: "date-time" },
   },
-  required: ["delivery_id", "departure", "destination", "order_id", "ship_id", "progress", "status"]
+  required: [
+    "delivery_id",
+    "departure",
+    "destination",
+    "order_id",
+    "ship_id",
+    "progress",
+    "status",
+  ],
 })
 
 oapi.schema("DeliveryWithDetails", {
@@ -42,10 +65,10 @@ oapi.schema("DeliveryWithDetails", {
       type: "object",
       properties: {
         order: { $ref: "#/components/schemas/Order" },
-        ship: { $ref: "#/components/schemas/Ship" }
-      }
-    }
-  ]
+        ship: { $ref: "#/components/schemas/Ship" },
+      },
+    },
+  ],
 })
 
 /* TODO:
@@ -69,9 +92,9 @@ deliveryRouter.post(
     requestBody: {
       content: {
         "application/json": {
-          schema: { $ref: "#/components/schemas/CreateDeliveryRequest" }
-        }
-      }
+          schema: { $ref: "#/components/schemas/CreateDeliveryRequest" },
+        },
+      },
     },
     responses: {
       "200": {
@@ -81,18 +104,18 @@ deliveryRouter.post(
             schema: {
               type: "object",
               properties: {
-                result: { type: "string", example: "Success" }
-              }
-            }
-          }
-        }
+                result: { type: "string", example: "Success" },
+              },
+            },
+          },
+        },
       },
       "400": Response400,
       "401": Response401,
       "403": Response403,
-      "500": Response500
+      "500": Response500,
     },
-    security: [{ bearerAuth: [] }]
+    security: [{ bearerAuth: [] }],
   }),
   userAuthorized,
   requireOrdersWrite,
@@ -165,7 +188,8 @@ deliveryRouter.post(
 
 export const deliveriesRouter = express.Router()
 
-deliveriesRouter.get("/mine", 
+deliveriesRouter.get(
+  "/mine",
   oapi.validPath({
     summary: "Get user's deliveries",
     description: "Get all deliveries for the authenticated user",
@@ -178,28 +202,29 @@ deliveriesRouter.get("/mine",
           "application/json": {
             schema: {
               type: "array",
-              items: { $ref: "#/components/schemas/DeliveryWithDetails" }
-            }
-          }
-        }
+              items: { $ref: "#/components/schemas/DeliveryWithDetails" },
+            },
+          },
+        },
       },
       "401": Response401,
-      "500": Response500
+      "500": Response500,
     },
-    security: [{ bearerAuth: [] }]
+    security: [{ bearerAuth: [] }],
   }),
-  userAuthorized, 
+  userAuthorized,
   async (req, res, next) => {
-  const user = req.user as User
-  const orders = await database.getDeliveries({ customer_id: user.user_id })
+    const user = req.user as User
+    const orders = await database.getDeliveries({ customer_id: user.user_id })
 
-  res.json(
-    await Promise.all(
-      orders.map(async (delivery) => ({
-        ...delivery,
-        order: await database.getOrder({ order_id: delivery.order_id }),
-        ship: await database.getShip({ ship_id: delivery.ship_id }),
-      })),
-    ),
-  )
-})
+    res.json(
+      await Promise.all(
+        orders.map(async (delivery) => ({
+          ...delivery,
+          order: await database.getOrder({ order_id: delivery.order_id }),
+          ship: await database.getShip({ ship_id: delivery.ship_id }),
+        })),
+      ),
+    )
+  },
+)

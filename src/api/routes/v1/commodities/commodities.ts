@@ -35,18 +35,20 @@ oapi.schema("Commodity", {
           location: { type: "string" },
           price: { type: "number" },
           supply: { type: "number", nullable: true },
-          demand: { type: "number", nullable: true }
-        }
-      }
-    }
+          demand: { type: "number", nullable: true },
+        },
+      },
+    },
   },
-  required: ["id", "name"]
+  required: ["id", "name"],
 })
 
-commodityRouter.get("", 
+commodityRouter.get(
+  "",
   oapi.validPath({
     summary: "Get commodities data",
-    description: "Get current commodities pricing and market data from UEX Corp",
+    description:
+      "Get current commodities pricing and market data from UEX Corp",
     operationId: "getCommodities",
     tags: ["Commodities"],
     responses: {
@@ -56,15 +58,16 @@ commodityRouter.get("",
           "application/json": {
             schema: {
               type: "array",
-              items: { $ref: "#/components/schemas/Commodity" }
-            }
-          }
-        }
+              items: { $ref: "#/components/schemas/Commodity" },
+            },
+          },
+        },
       },
-      "500": Response500
-    }
+      "500": Response500,
+    },
   }),
   async function (req, res) {
-  const route = await getCommodities()
-  res.json(route)
-})
+    const route = await getCommodities()
+    res.json(route)
+  },
+)

@@ -106,13 +106,13 @@ oapi.schema("StarmapRoute", {
             properties: {
               x: { type: "number" },
               y: { type: "number" },
-              z: { type: "number" }
-            }
-          }
-        }
-      }
-    }
-  }
+              z: { type: "number" },
+            },
+          },
+        },
+      },
+    },
+  },
 })
 
 oapi.schema("StarmapObject", {
@@ -126,11 +126,11 @@ oapi.schema("StarmapObject", {
       properties: {
         x: { type: "number" },
         y: { type: "number" },
-        z: { type: "number" }
-      }
+        z: { type: "number" },
+      },
     },
-    description: { type: "string", nullable: true }
-  }
+    description: { type: "string", nullable: true },
+  },
 })
 
 oapi.schema("StarmapSearchResult", {
@@ -138,12 +138,13 @@ oapi.schema("StarmapSearchResult", {
   properties: {
     results: {
       type: "array",
-      items: { $ref: "#/components/schemas/StarmapObject" }
-    }
-  }
+      items: { $ref: "#/components/schemas/StarmapObject" },
+    },
+  },
 })
 
-starmapRouter.get("/route/:from/:to", 
+starmapRouter.get(
+  "/route/:from/:to",
   oapi.validPath({
     summary: "Get route between locations",
     description: "Get a route between two starmap locations",
@@ -155,35 +156,37 @@ starmapRouter.get("/route/:from/:to",
         in: "path",
         required: true,
         schema: { type: "string" },
-        description: "Starting location"
+        description: "Starting location",
       },
       {
         name: "to",
         in: "path",
         required: true,
         schema: { type: "string" },
-        description: "Destination location"
-      }
+        description: "Destination location",
+      },
     ],
     responses: {
       "200": {
         description: "Route retrieved successfully",
         content: {
           "application/json": {
-            schema: { $ref: "#/components/schemas/StarmapRoute" }
-          }
-        }
+            schema: { $ref: "#/components/schemas/StarmapRoute" },
+          },
+        },
       },
       "400": Response400,
-      "500": Response500
-    }
+      "500": Response500,
+    },
   }),
   async function (req, res) {
-  const route = await getRoute(req.params.from, req.params.to)
-  res.json(route)
-})
+    const route = await getRoute(req.params.from, req.params.to)
+    res.json(route)
+  },
+)
 
-starmapRouter.get("/route/:identifier", 
+starmapRouter.get(
+  "/route/:identifier",
   oapi.validPath({
     summary: "Get celestial object",
     description: "Get information about a celestial object by identifier",
@@ -195,28 +198,30 @@ starmapRouter.get("/route/:identifier",
         in: "path",
         required: true,
         schema: { type: "string" },
-        description: "Celestial object identifier"
-      }
+        description: "Celestial object identifier",
+      },
     ],
     responses: {
       "200": {
         description: "Celestial object retrieved successfully",
         content: {
           "application/json": {
-            schema: { $ref: "#/components/schemas/StarmapObject" }
-          }
-        }
+            schema: { $ref: "#/components/schemas/StarmapObject" },
+          },
+        },
       },
       "400": Response400,
-      "500": Response500
-    }
+      "500": Response500,
+    },
   }),
   async function (req, res) {
-  const route = await getObject(req.params.identifier)
-  res.json(route)
-})
+    const route = await getObject(req.params.identifier)
+    res.json(route)
+  },
+)
 
-starmapRouter.get("/search/:query", 
+starmapRouter.get(
+  "/search/:query",
   oapi.validPath({
     summary: "Search starmap",
     description: "Search for locations in the starmap",
@@ -228,23 +233,24 @@ starmapRouter.get("/search/:query",
         in: "path",
         required: true,
         schema: { type: "string" },
-        description: "Search query"
-      }
+        description: "Search query",
+      },
     ],
     responses: {
       "200": {
         description: "Search results retrieved successfully",
         content: {
           "application/json": {
-            schema: { $ref: "#/components/schemas/StarmapSearchResult" }
-          }
-        }
+            schema: { $ref: "#/components/schemas/StarmapSearchResult" },
+          },
+        },
       },
       "400": Response400,
-      "500": Response500
-    }
+      "500": Response500,
+    },
   }),
   async function (req, res) {
-  const results = await search(req.params.query)
-  res.json(results)
-})
+    const results = await search(req.params.query)
+    res.json(results)
+  },
+)

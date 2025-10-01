@@ -11,8 +11,10 @@ import { database } from "../../../../clients/database/knex-db.js"
 import {
   DBContractor,
   DBMarketListing,
+  DBMarketListingComplete,
   DBMultipleListingComplete,
   DBUniqueListing,
+  DBUniqueListingComplete,
 } from "../../../../clients/database/db-models.js"
 import { User } from "../api-models.js"
 import {
@@ -29,6 +31,10 @@ import { createOffer } from "../orders/helpers.js"
 import { serializeOrderDetails } from "../orders/serializers.js"
 import { has_permission, is_member } from "../util/permissions.js"
 import {
+  can_manage_market_listing,
+  valid_market_listing,
+} from "./middleware.js"
+import {
   org_authorized,
   org_permission,
   valid_contractor,
@@ -44,6 +50,7 @@ import {
   isImageAlreadyAssociated,
   validateMarketListingPhotos,
 } from "./helpers.js"
+import { serializeListingStats } from "../util/formatting.js"
 import { DEFAULT_PLACEHOLDER_PHOTO_URL } from "./constants.js"
 import {
   oapi,
@@ -61,9 +68,125 @@ import logger from "../../../../logger/logger.js"
 
 export const marketRouter = express.Router()
 
+// ============================================================================
+// REUSABLE BASE TYPES
+// ============================================================================
+
+// Common field types
+oapi.schema("UUID", {
+  type: "string",
+  format: "uuid",
+  description: "A universally unique identifier",
+})
+
+oapi.schema("Timestamp", {
+  type: "string",
+  format: "date-time",
+  description: "ISO 8601 timestamp",
+})
+
+oapi.schema("Price", {
+  type: "number",
+  minimum: 0,
+  description: "Price in the smallest currency unit (e.g., cents)",
+})
+
+oapi.schema("Quantity", {
+  type: "integer",
+  minimum: 0,
+  description: "Available quantity",
+})
+
+oapi.schema("ListingTitle", {
+  type: "string",
+  minLength: 1,
+  maxLength: 200,
+  description: "Listing title",
+})
+
+oapi.schema("ListingDescription", {
+  type: "string",
+  minLength: 1,
+  maxLength: 2000,
+  description: "Listing description",
+})
+
+oapi.schema("ItemType", {
+  type: "string",
+  description: "Type of game item",
+})
+
+oapi.schema("GameItemId", {
+  type: "string",
+  nullable: true,
+  description: "Game item identifier",
+})
+
+// Enums
+oapi.schema("SaleType", {
+  type: "string",
+  enum: ["unique", "aggregate", "multiple", "auction"],
+  description: "Type of sale",
+})
+
+oapi.schema("ListingStatus", {
+  type: "string",
+  enum: ["active", "inactive", "archived"],
+  description: "Listing status",
+})
+
+oapi.schema("ListingType", {
+  type: "string",
+  enum: ["unique", "aggregate", "multiple"],
+  description: "Type of listing",
+})
+
+// Rating information
+oapi.schema("RatingInfo", {
+  type: "object",
+  properties: {
+    total_rating: {
+      type: "number",
+      description: "Total rating points",
+    },
+    avg_rating: {
+      type: "number",
+      description: "Average rating",
+    },
+    rating_count: {
+      type: "integer",
+      nullable: true,
+      description: "Number of ratings",
+    },
+    rating_streak: {
+      type: "integer",
+      nullable: true,
+      description: "Current rating streak",
+    },
+  },
+  required: ["total_rating", "avg_rating"],
+})
+
+// Seller information
+oapi.schema("SellerInfo", {
+  type: "object",
+  properties: {
+    user_seller: {
+      type: "string",
+      nullable: true,
+      description: "Username of the user seller",
+    },
+    contractor_seller: {
+      type: "string",
+      nullable: true,
+      description: "Spectrum ID of the contractor seller",
+    },
+  },
+})
+
+// Order statistics
 oapi.schema("OrderStats", {
   type: "object",
-  title: "OrderStats",
   properties: {
     total_orders: {
       type: "number",
@@ -77,189 +200,210 @@ oapi.schema("OrderStats", {
   required: ["total_orders", "total_order_value"],
 })
 
-// Market Listing Schemas
+// ============================================================================
+// MARKET LISTING SCHEMAS
+// ============================================================================
+
 oapi.schema("MarketListing", {
   type: "object",
-  title: "MarketListing",
+  description: "A market listing with complete information",
   properties: {
     listing_id: {
-      type: "string",
-      format: "uuid",
-      title: "MarketListing.listing_id",
+      $ref: "#/components/schemas/UUID",
+      description: "Unique identifier for the listing",
     },
     sale_type: {
-      type: "string",
-      enum: ["unique", "aggregate", "multiple", "auction"],
-      title: "MarketListing.sale_type",
+      $ref: "#/components/schemas/SaleType",
+      description: "Type of sale for this listing",
     },
     price: {
-      type: "number",
-      minimum: 0,
-      title: "MarketListing.price",
+      $ref: "#/components/schemas/Price",
+      description: "Current price of the listing",
     },
     quantity_available: {
-      type: "integer",
-      minimum: 0,
-      title: "MarketListing.quantity_available",
+      $ref: "#/components/schemas/Quantity",
+      description: "Number of items available for sale",
     },
     status: {
-      type: "string",
-      enum: ["active", "inactive", "archived"],
-      title: "MarketListing.status",
+      $ref: "#/components/schemas/ListingStatus",
+      description: "Current status of the listing",
     },
     internal: {
       type: "boolean",
-      title: "MarketListing.internal",
+      description:
+        "Whether this is an internal listing (only visible to organization members)",
     },
     user_seller_id: {
-      type: "string",
+      $ref: "#/components/schemas/UUID",
       nullable: true,
-      title: "MarketListing.user_seller_id",
+      description: "ID of the user seller (if sold by a user)",
     },
     contractor_seller_id: {
-      type: "string",
+      $ref: "#/components/schemas/UUID",
       nullable: true,
-      title: "MarketListing.contractor_seller_id",
+      description: "ID of the contractor seller (if sold by a contractor)",
     },
     timestamp: {
-      type: "string",
-      format: "date-time",
-      title: "MarketListing.timestamp",
+      $ref: "#/components/schemas/Timestamp",
+      description: "When the listing was created",
     },
     expiration: {
-      type: "string",
-      format: "date-time",
-      title: "MarketListing.expiration",
+      $ref: "#/components/schemas/Timestamp",
+      nullable: true,
+      description: "When the listing expires",
     },
     title: {
-      type: "string",
-      maxLength: 200,
-      title: "MarketListing.title",
+      $ref: "#/components/schemas/ListingTitle",
+      description: "Title of the listing",
     },
     description: {
-      type: "string",
-      maxLength: 2000,
-      title: "MarketListing.description",
+      $ref: "#/components/schemas/ListingDescription",
+      description: "Detailed description of the listing",
     },
     item_type: {
-      type: "string",
-      title: "MarketListing.item_type",
+      $ref: "#/components/schemas/ItemType",
+      description: "Type of game item being sold",
     },
     game_item_id: {
-      type: "string",
-      nullable: true,
-      title: "MarketListing.game_item_id",
+      $ref: "#/components/schemas/GameItemId",
+      description: "Specific game item identifier",
     },
     photos: {
       type: "array",
       items: {
         type: "string",
+        description: "URL to a photo",
       },
-      title: "MarketListing.photos",
+      maxItems: 10,
+      description: "Array of photo URLs for the listing",
     },
   },
-  required: ["listing_id", "sale_type", "price", "quantity_available", "status", "internal", "timestamp", "expiration", "title", "description", "item_type"],
+  required: [
+    "listing_id",
+    "sale_type",
+    "price",
+    "quantity_available",
+    "status",
+    "internal",
+    "timestamp",
+    "title",
+    "description",
+    "item_type",
+  ],
   additionalProperties: false,
 })
 
 oapi.schema("CreateMarketListingRequest", {
   type: "object",
-  title: "CreateMarketListingRequest",
+  description: "Request to create a new market listing",
   properties: {
     sale_type: {
-      type: "string",
-      enum: ["unique", "aggregate", "multiple", "auction"],
-      title: "CreateMarketListingRequest.sale_type",
+      $ref: "#/components/schemas/SaleType",
+      description: "Type of sale for the new listing",
     },
     price: {
-      type: "number",
-      minimum: 0,
-      title: "CreateMarketListingRequest.price",
+      $ref: "#/components/schemas/Price",
+      description: "Price for the listing",
     },
     quantity_available: {
       type: "integer",
       minimum: 1,
-      title: "CreateMarketListingRequest.quantity_available",
+      description: "Number of items available for sale",
     },
     title: {
-      type: "string",
-      maxLength: 200,
-      minLength: 1,
-      title: "CreateMarketListingRequest.title",
+      $ref: "#/components/schemas/ListingTitle",
+      description: "Title for the listing",
     },
     description: {
-      type: "string",
-      maxLength: 2000,
-      minLength: 1,
-      title: "CreateMarketListingRequest.description",
+      $ref: "#/components/schemas/ListingDescription",
+      description: "Detailed description of the listing",
     },
     item_type: {
-      type: "string",
-      title: "CreateMarketListingRequest.item_type",
+      $ref: "#/components/schemas/ItemType",
+      description: "Type of game item being sold",
     },
     game_item_id: {
-      type: "string",
-      nullable: true,
-      title: "CreateMarketListingRequest.game_item_id",
+      $ref: "#/components/schemas/GameItemId",
+      description: "Specific game item identifier",
     },
     photos: {
       type: "array",
       items: {
         type: "string",
+        description: "URL to a photo",
       },
       maxItems: 10,
-      title: "CreateMarketListingRequest.photos",
+      description: "Array of photo URLs for the listing",
     },
     expiration_days: {
       type: "integer",
       minimum: 1,
       maximum: 30,
       default: 7,
-      title: "CreateMarketListingRequest.expiration_days",
+      description: "Number of days until the listing expires",
     },
   },
-  required: ["sale_type", "price", "quantity_available", "title", "description", "item_type"],
+  required: [
+    "sale_type",
+    "price",
+    "quantity_available",
+    "title",
+    "description",
+    "item_type",
+  ],
   additionalProperties: false,
 })
 
 oapi.schema("UpdateMarketListingRequest", {
   type: "object",
-  title: "UpdateMarketListingRequest",
+  description: "Request to update an existing market listing",
   properties: {
     price: {
-      type: "number",
-      minimum: 0,
-      title: "UpdateMarketListingRequest.price",
+      $ref: "#/components/schemas/Price",
+      description: "New price for the listing",
     },
     quantity_available: {
-      type: "integer",
-      minimum: 0,
-      title: "UpdateMarketListingRequest.quantity_available",
+      $ref: "#/components/schemas/Quantity",
+      description: "New available quantity",
     },
     title: {
-      type: "string",
-      maxLength: 200,
-      minLength: 1,
-      title: "UpdateMarketListingRequest.title",
+      $ref: "#/components/schemas/ListingTitle",
+      description: "New title for the listing",
     },
     description: {
-      type: "string",
-      maxLength: 2000,
-      minLength: 1,
-      title: "UpdateMarketListingRequest.description",
+      $ref: "#/components/schemas/ListingDescription",
+      description: "New description for the listing",
     },
     status: {
-      type: "string",
-      enum: ["active", "inactive", "archived"],
-      title: "UpdateMarketListingRequest.status",
+      $ref: "#/components/schemas/ListingStatus",
+      description: "New status for the listing",
     },
     photos: {
       type: "array",
       items: {
         type: "string",
+        description: "URL to a photo",
       },
       maxItems: 10,
-      title: "UpdateMarketListingRequest.photos",
+      description: "New array of photo URLs for the listing",
+    },
+    item_type: {
+      type: "string",
+      description: "New item type for the listing",
+    },
+    item_name: {
+      type: "string",
+      nullable: true,
+      description: "New item name for the listing",
+    },
+    minimum_bid_increment: {
+      type: "number",
+      minimum: 0,
+      description: "New minimum bid increment for auction listings",
+    },
+    internal: {
+      type: "boolean",
+      description: "Whether the listing is internal (contractor only)",
     },
   },
   additionalProperties: false,
@@ -350,6 +494,10 @@ oapi.schema("MarketSearchParams", {
       type: "string",
       title: "MarketSearchParams.item_type",
     },
+    quantity_available: {
+      type: "string",
+      title: "MarketSearchParams.quantity_available",
+    },
     min_price: {
       type: "number",
       minimum: 0,
@@ -409,6 +557,169 @@ marketRouter.get(
     const order_stats = await database.getOrderStats()
     res.json(order_stats)
     return
+  },
+)
+
+marketRouter.post(
+  "/listings/stats",
+  oapi.validPath({
+    tags: ["Market"],
+    summary: "Get stats for multiple market listings",
+    description:
+      "Get statistics for multiple market listings. User must have permission to view stats for all requested listings.",
+    operationId: "getMarketListingsStats",
+    requestBody: {
+      content: {
+        "application/json": {
+          schema: {
+            type: "object",
+            properties: {
+              listing_ids: {
+                type: "array",
+                items: { type: "string" },
+                description: "Array of market listing IDs to get stats for",
+              },
+            },
+            required: ["listing_ids"],
+          },
+        },
+      },
+    },
+    responses: {
+      "200": {
+        description: "Successfully retrieved listing statistics",
+        content: {
+          "application/json": {
+            schema: {
+              type: "object",
+              properties: {
+                stats: {
+                  type: "array",
+                  items: {
+                    type: "object",
+                    properties: {
+                      listing_id: { type: "string" },
+                      order_count: {
+                        type: "number",
+                        description: "Number of active orders for this listing",
+                      },
+                      offer_count: {
+                        type: "number",
+                        description: "Number of active offers for this listing",
+                      },
+                      view_count: {
+                        type: "number",
+                        description: "Number of views for this listing",
+                      },
+                    },
+                    required: [
+                      "listing_id",
+                      "order_count",
+                      "offer_count",
+                      "view_count",
+                    ],
+                  },
+                },
+              },
+              required: ["stats"],
+            },
+          },
+        },
+      },
+      "400": Response400,
+      "401": Response401,
+      "403": Response403,
+      "500": Response500,
+    },
+    security: [{ bearerAuth: [] }],
+  }),
+  userAuthorized,
+  async (req, res) => {
+    try {
+      const user = req.user as User
+      const { listing_ids } = req.body as { listing_ids: string[] }
+
+      if (
+        !listing_ids ||
+        !Array.isArray(listing_ids) ||
+        listing_ids.length === 0
+      ) {
+        res.status(400).json({
+          error: "listing_ids array is required and must not be empty",
+        })
+        return
+      }
+
+      if (listing_ids.length > 50) {
+        res
+          .status(400)
+          .json({ error: "Maximum 50 listing IDs allowed per request" })
+        return
+      }
+
+      const stats = []
+
+      for (const listing_id of listing_ids) {
+        try {
+          // Get the listing
+          const listing = await database.getMarketListing({ listing_id })
+
+          if (!listing) {
+            res.status(400).json({ error: `Listing ${listing_id} not found` })
+            return
+          }
+
+          // Check permissions
+          let hasPermission = false
+
+          // Check if user owns the listing
+          if (
+            listing.user_seller_id &&
+            listing.user_seller_id === user.user_id
+          ) {
+            hasPermission = true
+          }
+
+          // Check contractor permissions
+          if (listing.contractor_seller_id) {
+            const contractor = await database.getContractor({
+              contractor_id: listing.contractor_seller_id,
+            })
+            if (
+              contractor &&
+              (await is_member(contractor.contractor_id, user.user_id))
+            ) {
+              hasPermission = true
+            }
+          }
+
+          if (!hasPermission) {
+            res.status(403).json({
+              error: `You don't have permission to view stats for listing ${listing_id}`,
+            })
+            return
+          }
+
+          // Get stats for this listing
+          const listingStats = await serializeListingStats(listing)
+          stats.push({
+            listing_id,
+            ...listingStats,
+          })
+        } catch (error) {
+          console.error(`Error processing listing ${listing_id}:`, error)
+          res
+            .status(500)
+            .json({ error: `Error processing listing ${listing_id}` })
+          return
+        }
+      }
+
+      res.json({ stats })
+    } catch (error) {
+      console.error("Error in /listings/stats:", error)
+      res.status(500).json({ error: "Internal server error" })
+    }
   },
 )
 
@@ -485,8 +796,9 @@ oapi.schema("ErrorResponse", {
   required: ["error"],
 })
 
-marketRouter.post(
-  "/listing/:listing_id/update",
+marketRouter.put(
+  "/listing/:listing_id",
+  can_manage_market_listing,
   oapi.validPath({
     summary: "Update a market listing",
     description: "Update various properties of a market listing",
@@ -600,43 +912,7 @@ marketRouter.post(
   async (req, res) => {
     const listing_id = req.params["listing_id"]
     const user = req.user as User
-
-    let listing
-    try {
-      listing = await database.getMarketListing({ listing_id })
-    } catch {
-      res.status(400).json({ error: "Invalid listing" })
-      return
-    }
-
-    if (user.role !== "admin") {
-      if (listing.contractor_seller_id) {
-        const contractor = await database.getContractor({
-          contractor_id: listing.contractor_seller_id,
-        })
-
-        if (
-          !(await has_permission(
-            contractor.contractor_id,
-            user.user_id,
-            "manage_market",
-          ))
-        ) {
-          res.status(403).json({
-            error:
-              "You are not authorized to update listings on behalf of this contractor!",
-          })
-          return
-        }
-      } else {
-        if (listing.user_seller_id !== user.user_id) {
-          res
-            .status(403)
-            .json({ error: "You are not authorized to update this listing!" })
-          return
-        }
-      }
-    }
+    const listing = req.market_listing!
 
     if (listing.status === "archived") {
       res.status(400).json({ error: "Cannot update archived listing" })
@@ -858,6 +1134,7 @@ marketRouter.post(
   "/listing/:listing_id/update_quantity",
   userAuthorized,
   requireMarketWrite,
+  can_manage_market_listing,
   oapi.validPath({
     summary: "Update listing quantity",
     description: "Update the available quantity of a market listing",
@@ -944,7 +1221,6 @@ marketRouter.post(
     },
   }),
   async (req, res) => {
-    const listing_id = req.params["listing_id"]
     const user = req.user as User
 
     const {
@@ -953,13 +1229,7 @@ marketRouter.post(
       quantity_available: number
     } = req.body
 
-    let listing
-    try {
-      listing = await database.getMarketListing({ listing_id })
-    } catch {
-      res.status(400).json({ error: "Invalid listing" })
-      return
-    }
+    const listing = req.market_listing!
 
     await handle_quantity_update(res, user, listing, quantity_available)
   },
@@ -981,6 +1251,7 @@ marketRouter.post(
   "/listing/:listing_id/refresh",
   userAuthorized,
   requireMarketWrite,
+  can_manage_market_listing,
   oapi.validPath({
     summary: "Refresh listing expiration",
     description:
@@ -1057,43 +1328,7 @@ marketRouter.post(
   async (req, res) => {
     const listing_id = req.params["listing_id"]
     const user = req.user as User
-
-    let listing
-    try {
-      listing = await database.getMarketListing({ listing_id })
-    } catch {
-      res.status(400).json({ error: "Invalid listing" })
-      return
-    }
-
-    if (user.role !== "admin") {
-      if (listing.contractor_seller_id) {
-        const contractor = await database.getContractor({
-          contractor_id: listing.contractor_seller_id,
-        })
-
-        if (
-          !(await has_permission(
-            contractor.contractor_id,
-            user.user_id,
-            "manage_market",
-          ))
-        ) {
-          res.status(403).json({
-            error:
-              "You are not authorized to update listings on behalf of this contractor!",
-          })
-          return
-        }
-      } else {
-        if (listing.user_seller_id !== user.user_id) {
-          res
-            .status(403)
-            .json({ error: "You are not authorized to update this listing!" })
-          return
-        }
-      }
-    }
+    const listing = req.market_listing!
 
     if (listing.status === "archived") {
       res.status(400).json({ error: "Cannot update archived listing" })
@@ -1363,6 +1598,7 @@ oapi.schema("MarketListingComplete", {
 
 marketRouter.get(
   "/listings/:listing_id",
+  valid_market_listing,
   oapi.validPath({
     summary: "Get market listing details",
     description: "Returns detailed information about a specific market listing",
@@ -1407,14 +1643,7 @@ marketRouter.get(
   }),
   async (req, res) => {
     const user = req.user as User | null | undefined
-    const listing_id = req.params["listing_id"]
-    let listing: DBMarketListing
-    try {
-      listing = await database.getMarketListing({ listing_id: listing_id })
-    } catch (e) {
-      res.status(400).json(createErrorResponse("Invalid listing"))
-      return
-    }
+    const listing = req.market_listing!
 
     if (user) {
       if (listing.contractor_seller_id) {
@@ -1481,6 +1710,7 @@ oapi.schema("ListingOrdersResponse", {
 
 marketRouter.get(
   "/listing/:listing_id/orders",
+  can_manage_market_listing,
   oapi.validPath({
     summary: "Get paginated orders for a market listing",
     description:
@@ -1513,11 +1743,8 @@ marketRouter.get(
         in: "query",
         required: false,
         schema: {
-          type: "array",
-          items: {
-            type: "string",
-            enum: ["not-started", "in-progress", "fulfilled", "cancelled"],
-          },
+          type: "string",
+          enum: ["not-started,in-progress", "fulfilled,cancelled"],
         },
         description: "Filter orders by status",
       },
@@ -1576,33 +1803,10 @@ marketRouter.get(
     const listing_id = req.params["listing_id"]
     const page = parseInt(req.query["page"] as string) || 1
     const pageSize = parseInt(req.query["pageSize"] as string) || 20
-    const status = req.query["status"] as string[] | undefined
+    const status = req.query["status"] as string | undefined
     const sortBy = (req.query["sortBy"] as string) || "timestamp"
     const sortOrder = (req.query["sortOrder"] as string) || "desc"
-
-    // Validate listing exists
-    let listing: DBMarketListing
-    try {
-      listing = await database.getMarketListing({ listing_id: listing_id })
-    } catch (e) {
-      res.status(400).json({ error: "Invalid listing" })
-      return
-    }
-
-    if (!listing) {
-      res.status(404).json({ error: "Listing not found" })
-      return
-    }
-
-    // Parse status array if provided as comma-separated string
-    let statusArray: string[] | undefined
-    if (status) {
-      if (Array.isArray(status)) {
-        statusArray = status
-      } else if (typeof status === "string") {
-        statusArray = (status as string).split(",").map((s: string) => s.trim())
-      }
-    }
+    const statusArray: string[] | undefined = status ? status.split(",") : []
 
     try {
       const result = await database.getOrdersForListingPaginated({
@@ -1817,6 +2021,7 @@ marketRouter.post(
   "/listings/:listing_id/bids",
   verifiedUser,
   requireMarketWrite,
+  valid_market_listing,
   oapi.validPath({
     summary: "Place a bid on an auction listing",
     description: "Place or update a bid on an auction listing",
@@ -1917,13 +2122,7 @@ marketRouter.post(
       return
     }
 
-    let listing
-    try {
-      listing = await database.getMarketListing({ listing_id })
-    } catch {
-      res.status(400).json({ error: "Invalid listing" })
-      return
-    }
+    const listing = req.market_listing!
 
     let price = +listing.price
     if (listing.sale_type !== "auction") {
@@ -2112,7 +2311,32 @@ marketRouter.post(
         minimum_bid_increment,
         status,
         end_time,
+        spectrum_id,
       } = req.body
+
+      let contractor
+      if (spectrum_id) {
+        // Validate contractor exists and user has permissions
+        contractor = await database.getContractor({ spectrum_id })
+        if (!contractor) {
+          res.status(400).json({ message: "Invalid contractor" })
+          return
+        }
+
+        if (
+          !(await has_permission(
+            contractor.contractor_id,
+            user.user_id,
+            "manage_market",
+          ))
+        ) {
+          res.status(403).json({
+            message:
+              "You are not authorized to create listings on behalf of this contractor!",
+          })
+          return
+        }
+      }
 
       // Handle empty photos by using default placeholder
       const photosToProcess =
@@ -2152,25 +2376,26 @@ marketRouter.post(
         })
       )[0]
 
-      const listings = await database.createMarketListing({
+      const [listing] = await database.createMarketListing({
         price,
         sale_type,
         quantity_available,
-        user_seller_id: user.user_id,
+        user_seller_id: contractor ? null : user.user_id,
+        contractor_seller_id: contractor ? contractor.contractor_id : null,
         status,
       })
 
       await database.createUniqueListing({
         accept_offers: false,
         details_id: details.details_id,
-        listing_id: listings[0].listing_id,
+        listing_id: listing.listing_id,
       })
 
       if (sale_type === "auction") {
         await database.createAuctionDetails({
           minimum_bid_increment,
           end_time,
-          listing_id: listings[0].listing_id,
+          listing_id: listing.listing_id,
           status: "active",
         })
       }
@@ -2182,17 +2407,17 @@ marketRouter.post(
             async (p: string, i: number) =>
               await cdn.createExternalResource(
                 p,
-                listings[0].listing_id + `_photo_${i}`,
+                listing.listing_id + `_photo_${i}`,
               ),
           ),
       )
 
       await database.insertMarketListingPhoto(
-        listings[0],
+        listing,
         resources.map((r) => ({ resource_id: r.resource_id })),
       )
 
-      res.json(listings[0])
+      res.json(createResponse(await formatListing(listing)))
     } catch (e) {
       console.error(e)
       res.status(500).json({ message: "Internal server error" })
@@ -2235,6 +2460,11 @@ oapi.schema("ContractorMarketListingCreateRequest", {
       type: "string",
       nullable: true,
       title: "ContractorMarketListingCreateRequest.item_name",
+    },
+    spectrum_id: {
+      type: "string",
+      nullable: true,
+      title: "ContractorMarketListingCreateRequest.spectrum_id",
     },
     quantity_available: {
       type: "integer",
@@ -2414,7 +2644,7 @@ marketRouter.post(
         })
       )[0]
 
-      const listings = await database.createMarketListing({
+      const [listing] = await database.createMarketListing({
         price,
         sale_type,
         quantity_available,
@@ -2426,14 +2656,14 @@ marketRouter.post(
       await database.createUniqueListing({
         accept_offers: false,
         details_id: details.details_id,
-        listing_id: listings[0].listing_id,
+        listing_id: listing.listing_id,
       })
 
       if (sale_type === "auction") {
         await database.createAuctionDetails({
           minimum_bid_increment,
           end_time,
-          listing_id: listings[0].listing_id,
+          listing_id: listing.listing_id,
           status: "active",
         })
       }
@@ -2445,17 +2675,17 @@ marketRouter.post(
             async (p: string, i: number) =>
               await cdn.createExternalResource(
                 p,
-                listings[0].listing_id + `_photo_${i}`,
+                listing.listing_id + `_photo_${i}`,
               ),
           ),
       )
 
       await database.insertMarketListingPhoto(
-        listings[0],
+        listing,
         resources.map((r) => ({ resource_id: r.resource_id })),
       )
 
-      res.json(listings[0])
+      res.json(createResponse(await formatListing(listing)))
     } catch (e) {
       console.error(e)
       res.status(500).json({ message: "Internal server error" })
@@ -2469,6 +2699,7 @@ marketRouter.post(
   "/listing/:listing_id/photos",
   userAuthorized,
   requireMarketWrite,
+  can_manage_market_listing,
   multiplePhotoUpload.array("photos", 5),
   oapi.validPath({
     summary: "Upload photos for a market listing",
@@ -2523,39 +2754,7 @@ marketRouter.post(
         return
       }
 
-      // Validate listing exists
-      const listing = await database.getMarketListing({ listing_id })
-      if (!listing) {
-        res.status(404).json({ message: "Listing not found" })
-        return
-      }
-
-      // Check if user has permission to modify this listing
-      if (listing.user_seller_id && listing.user_seller_id !== user.user_id) {
-        res
-          .status(403)
-          .json({ message: "You are not authorized to modify this listing" })
-        return
-      }
-
-      if (listing.contractor_seller_id) {
-        const contractor = await database.getContractor({
-          contractor_id: listing.contractor_seller_id,
-        })
-        if (
-          !contractor ||
-          !(await has_permission(
-            contractor.contractor_id,
-            user.user_id,
-            "manage_market",
-          ))
-        ) {
-          res
-            .status(403)
-            .json({ message: "You are not authorized to modify this listing" })
-          return
-        }
-      }
+      const listing = req.market_listing!
 
       // Get existing photos to check count
       const existing_photos =
@@ -2720,6 +2919,7 @@ marketRouter.post(
 // Track a view on a market listing
 marketRouter.post(
   "/listings/:listing_id/views",
+  valid_market_listing,
   oapi.validPath({
     summary: "Track a view on a market listing",
     description: "Records a view on a market listing for analytics purposes",
@@ -2762,14 +2962,6 @@ marketRouter.post(
     try {
       const { listing_id } = req.params
       const user = req.user
-
-      // Verify listing exists and is active
-      const listing = await database.getMarketListing({ listing_id })
-      if (!listing || listing.status !== "active") {
-        return res
-          .status(404)
-          .json({ message: "Listing not found or inactive" })
-      }
 
       // Track the view
       await database.trackListingView({
@@ -2847,32 +3039,129 @@ marketRouter.get(
 
 oapi.schema("MarketListingSearchResult", {
   type: "object",
-  title: "MarketListingSearchResult",
+  description: "A market listing as returned in search results",
   properties: {
-    listing_id: { type: "string" },
-    listing_type: { type: "string" },
-    item_type: { type: "string" },
-    item_name: { type: "string", nullable: true },
-    game_item_id: { type: "string", nullable: true },
-    sale_type: { type: "string" },
-    price: { type: "number" },
-    expiration: { type: "string", format: "date-time", nullable: true },
-    minimum_price: { type: "number" },
-    maximum_price: { type: "number" },
-    quantity_available: { type: "integer" },
-    timestamp: { type: "string", format: "date-time" },
-    total_rating: { type: "number" },
-    avg_rating: { type: "number" },
-    details_id: { type: "string" },
-    status: { type: "string" },
-    user_seller: { type: "object", nullable: true },
-    contractor_seller: { type: "object", nullable: true },
-    auction_end_time: { type: "string", format: "date-time", nullable: true },
-    rating_count: { type: "integer", nullable: true },
-    rating_streak: { type: "integer", nullable: true },
-    total_orders: { type: "integer", nullable: true },
-    title: { type: "string" },
-    photo: { type: "string" },
+    listing_id: {
+      $ref: "#/components/schemas/UUID",
+      description: "Unique identifier for the listing",
+    },
+    listing_type: {
+      $ref: "#/components/schemas/ListingType",
+      description: "Type of listing",
+    },
+    item_type: {
+      $ref: "#/components/schemas/ItemType",
+      description: "Type of game item",
+    },
+    item_name: {
+      type: "string",
+      nullable: true,
+      description: "Name of the specific game item",
+    },
+    game_item_id: {
+      $ref: "#/components/schemas/GameItemId",
+      description: "Specific game item identifier",
+    },
+    sale_type: {
+      $ref: "#/components/schemas/SaleType",
+      description: "Type of sale",
+    },
+    price: {
+      $ref: "#/components/schemas/Price",
+      description: "Current price",
+    },
+    expiration: {
+      $ref: "#/components/schemas/Timestamp",
+      nullable: true,
+      description: "When the listing expires",
+    },
+    minimum_price: {
+      $ref: "#/components/schemas/Price",
+      description: "Minimum price (for auctions)",
+    },
+    maximum_price: {
+      $ref: "#/components/schemas/Price",
+      description: "Maximum price (for auctions)",
+    },
+    quantity_available: {
+      $ref: "#/components/schemas/Quantity",
+      description: "Available quantity",
+    },
+    timestamp: {
+      $ref: "#/components/schemas/Timestamp",
+      description: "When the listing was created",
+    },
+    details_id: {
+      $ref: "#/components/schemas/UUID",
+      description: "ID of the listing details",
+    },
+    status: {
+      $ref: "#/components/schemas/ListingStatus",
+      description: "Current status",
+    },
+    title: {
+      $ref: "#/components/schemas/ListingTitle",
+      description: "Listing title",
+    },
+    photo: {
+      type: "string",
+      description: "URL to the primary photo",
+    },
+    internal: {
+      type: "boolean",
+      description: "Whether this is an internal listing",
+    },
+    auction_end_time: {
+      $ref: "#/components/schemas/Timestamp",
+      nullable: true,
+      description: "When the auction ends (for auction listings)",
+    },
+    // Rating information (from seller)
+    total_rating: {
+      type: "number",
+      description: "Total rating points for the seller",
+    },
+    avg_rating: {
+      type: "number",
+      description: "Average rating for the seller",
+    },
+    rating_count: {
+      type: "integer",
+      nullable: true,
+      description: "Number of ratings for the seller",
+    },
+    rating_streak: {
+      type: "integer",
+      nullable: true,
+      description: "Current rating streak for the seller",
+    },
+    // Seller information
+    user_seller: {
+      type: "string",
+      nullable: true,
+      description: "Username of the user seller",
+    },
+    contractor_seller: {
+      type: "string",
+      nullable: true,
+      description: "Spectrum ID of the contractor seller",
+    },
+    // Performance metrics
+    total_orders: {
+      type: "integer",
+      nullable: true,
+      description: "Total number of orders for the seller",
+    },
+    total_assignments: {
+      type: "integer",
+      nullable: true,
+      description: "Total number of assignments for the seller",
+    },
+    response_rate: {
+      type: "number",
+      nullable: true,
+      description: "Response rate percentage for the seller",
+    },
   },
   required: [
     "listing_id",
@@ -2885,7 +3174,11 @@ oapi.schema("MarketListingSearchResult", {
     "status",
     "title",
     "photo",
+    "internal",
+    "total_rating",
+    "avg_rating",
   ],
+  additionalProperties: false,
 })
 
 marketRouter.get(
@@ -3036,42 +3329,46 @@ marketRouter.get(
         ...(includeInternal ? {} : { internal: "false" }), // Only filter internal when we don't want to include them
       })
 
-      res.json(createResponse({
-        total: searchResults[0] ? searchResults[0].full_count : 0,
-        listings: searchResults.map((r) => ({
-          listing_id: r.listing_id,
-          listing_type: r.listing_type,
-          item_type: r.item_type,
-          item_name: r.item_name,
-          game_item_id: r.game_item_id,
-          sale_type: r.sale_type,
-          price: r.price,
-          expiration: r.expiration,
-          minimum_price: r.minimum_price,
-          maximum_price: r.maximum_price,
-          quantity_available: r.quantity_available,
-          timestamp: r.timestamp,
-          total_rating: r.total_rating,
-          avg_rating: r.avg_rating,
-          details_id: r.details_id,
-          status: r.status,
-          user_seller: r.user_seller,
-          contractor_seller: r.contractor_seller,
-          auction_end_time: r.auction_end_time,
-          rating_count: r.rating_count,
-          rating_streak: r.rating_streak,
-          total_orders: r.total_orders,
-          // Add responsive badge data
-          total_assignments: r.total_assignments,
-          response_rate: r.response_rate,
-          title: r.title,
-          photo: r.photo,
-          internal: r.internal,
-        })),
-      }))
+      res.json(
+        createResponse({
+          total: searchResults[0] ? searchResults[0].full_count : 0,
+          listings: searchResults.map((r) => ({
+            listing_id: r.listing_id,
+            listing_type: r.listing_type,
+            item_type: r.item_type,
+            item_name: r.item_name,
+            game_item_id: r.game_item_id,
+            sale_type: r.sale_type === "sale" ? r.listing_type : r.sale_type, // Map 'sale' to listing_type
+            price: Number(r.price), // Convert string to number
+            expiration: r.expiration,
+            minimum_price: Number(r.minimum_price), // Convert string to number
+            maximum_price: Number(r.maximum_price), // Convert string to number
+            quantity_available: Number(r.quantity_available), // Convert string to number
+            timestamp: r.timestamp,
+            total_rating: r.total_rating,
+            avg_rating: r.avg_rating,
+            details_id: r.details_id,
+            status: r.status,
+            user_seller: r.user_seller,
+            contractor_seller: r.contractor_seller,
+            auction_end_time: r.auction_end_time,
+            rating_count: r.rating_count,
+            rating_streak: r.rating_streak,
+            total_orders: r.total_orders,
+            // Add responsive badge data
+            total_assignments: r.total_assignments,
+            response_rate: r.response_rate,
+            title: r.title,
+            photo: r.photo,
+            internal: r.internal,
+          })),
+        }),
+      )
     } catch (e) {
       console.error(e)
-      res.status(500).json(createErrorResponse({ message: "Internal server error" }))
+      res
+        .status(500)
+        .json(createErrorResponse({ message: "Internal server error" }))
     }
   },
 )
@@ -4384,21 +4681,13 @@ marketRouter.get(
 marketRouter.get("/category/:category", async (req: Request, res) => {
   const { category } = req.params
   const items = await database.getMarketItemsBySubcategory(category)
-  res.json(items)
+  res.json(createResponse(items))
 })
 
 marketRouter.get("/categories", async (req: Request, res) => {
   const raw_categories = await database.getMarketCategories()
-  // const categories: { [key: string]: string[] } = {}
-  // raw_categories.forEach((c) => {
-  //   if (categories[c.category]) {
-  //     categories[c.category].push(c.subcategory)
-  //   } else {
-  //     categories[c.category] = [c.subcategory]
-  //   }
-  // })
 
-  res.json(raw_categories)
+  res.json(createResponse(raw_categories))
 })
 
 // First register the schema for game item description

@@ -9,17 +9,21 @@ export async function valid_recruiting_post(
   next: NextFunction,
 ) {
   const post_id = req.params["post_id"]
-  
+
   if (!post_id) {
-    res.status(400).json(createErrorResponse({ message: "Missing post_id parameter" }))
+    res
+      .status(400)
+      .json(createErrorResponse({ message: "Missing post_id parameter" }))
     return
   }
 
   try {
     const post = await database.getRecruitingPost({ post_id })
-    
+
     if (!post) {
-      res.status(404).json(createErrorResponse({ message: "Recruiting post not found" }))
+      res
+        .status(404)
+        .json(createErrorResponse({ message: "Recruiting post not found" }))
       return
     }
 
@@ -28,9 +32,11 @@ export async function valid_recruiting_post(
   } catch (error) {
     logger.error("Failed to validate recruiting post", {
       post_id,
-      error: error instanceof Error ? error.message : String(error)
+      error: error instanceof Error ? error.message : String(error),
     })
-    res.status(500).json(createErrorResponse({ message: "Internal server error" }))
+    res
+      .status(500)
+      .json(createErrorResponse({ message: "Internal server error" }))
     return
   }
 }
@@ -41,18 +47,22 @@ export async function valid_recruiting_post_by_contractor(
   next: NextFunction,
 ) {
   const spectrum_id = req.params["spectrum_id"]
-  
+
   if (!spectrum_id) {
-    res.status(400).json(createErrorResponse({ message: "Missing spectrum_id parameter" }))
+    res
+      .status(400)
+      .json(createErrorResponse({ message: "Missing spectrum_id parameter" }))
     return
   }
 
   try {
     // First get the contractor
     const contractor = await database.getContractor({ spectrum_id })
-    
+
     if (!contractor) {
-      res.status(404).json(createErrorResponse({ message: "Contractor not found" }))
+      res
+        .status(404)
+        .json(createErrorResponse({ message: "Contractor not found" }))
       return
     }
 
@@ -60,9 +70,13 @@ export async function valid_recruiting_post_by_contractor(
     const post = await database.getRecruitingPost({
       contractor_id: contractor.contractor_id,
     })
-    
+
     if (!post) {
-      res.status(404).json(createErrorResponse({ message: "No recruiting post found for this contractor" }))
+      res.status(404).json(
+        createErrorResponse({
+          message: "No recruiting post found for this contractor",
+        }),
+      )
       return
     }
 
@@ -72,9 +86,11 @@ export async function valid_recruiting_post_by_contractor(
   } catch (error) {
     logger.error("Failed to validate recruiting post by contractor", {
       spectrum_id,
-      error: error instanceof Error ? error.message : String(error)
+      error: error instanceof Error ? error.message : String(error),
     })
-    res.status(500).json(createErrorResponse({ message: "Internal server error" }))
+    res
+      .status(500)
+      .json(createErrorResponse({ message: "Internal server error" }))
     return
   }
 }

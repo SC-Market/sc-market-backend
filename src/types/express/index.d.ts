@@ -7,6 +7,7 @@ import {
   DBRecruitingPost,
   DBUser,
   DBMarketListingComplete,
+  DBMarketListing,
 } from "../../clients/database/db-models.js"
 import { DBPublicContract } from "../../api/routes/v1/contracts/types.js"
 
@@ -20,7 +21,7 @@ declare global {
       contract?: DBPublicContract
       chat?: DBChat
       recruiting_post?: DBRecruitingPost
-      market_listing?: DBMarketListingComplete
+      market_listing?: DBMarketListing
       user_listings?: DBMarketListingComplete[]
       contractor_listings?: DBMarketListingComplete[]
       users?: Map<string, DBUser>

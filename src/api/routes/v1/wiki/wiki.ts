@@ -118,8 +118,8 @@ oapi.schema("WikiImageSearchResult", {
         width: { type: "number" },
         height: { type: "number" },
         duration: { type: "number", nullable: true },
-        url: { type: "string" }
-      }
+        url: { type: "string" },
+      },
     },
     images: {
       type: "object",
@@ -136,17 +136,17 @@ oapi.schema("WikiImageSearchResult", {
                   type: "object",
                   properties: {
                     url: { type: "string" },
-                    thumburl: { type: "string" }
-                  }
-                }
-              }
-            }
-          }
-        }
-      }
-    }
+                    thumburl: { type: "string" },
+                  },
+                },
+              },
+            },
+          },
+        },
+      },
+    },
   },
-  required: ["id", "key", "title"]
+  required: ["id", "key", "title"],
 })
 
 oapi.schema("WikiItemSearchResult", {
@@ -167,27 +167,28 @@ oapi.schema("WikiItemSearchResult", {
                 type: "object",
                 nullable: true,
                 properties: {
-                  source: { type: "string" }
-                }
+                  source: { type: "string" },
+                },
               },
               categories: {
                 type: "array",
                 items: {
                   type: "object",
                   properties: {
-                    title: { type: "string" }
-                  }
-                }
-              }
-            }
-          }
-        }
-      }
-    }
-  }
+                    title: { type: "string" },
+                  },
+                },
+              },
+            },
+          },
+        },
+      },
+    },
+  },
 })
 
-wikiRouter.get("/imagesearch/:query", 
+wikiRouter.get(
+  "/imagesearch/:query",
   oapi.validPath({
     summary: "Search wiki images",
     description: "Search for images in the Star Citizen wiki",
@@ -199,8 +200,8 @@ wikiRouter.get("/imagesearch/:query",
         in: "path",
         required: true,
         schema: { type: "string", minLength: 3 },
-        description: "Search query (minimum 3 characters)"
-      }
+        description: "Search query (minimum 3 characters)",
+      },
     ],
     responses: {
       "200": {
@@ -209,42 +210,44 @@ wikiRouter.get("/imagesearch/:query",
           "application/json": {
             schema: {
               type: "array",
-              items: { $ref: "#/components/schemas/WikiImageSearchResult" }
-            }
-          }
-        }
+              items: { $ref: "#/components/schemas/WikiImageSearchResult" },
+            },
+          },
+        },
       },
       "400": Response400,
-      "500": Response500
-    }
+      "500": Response500,
+    },
   }),
   async function (req, res) {
-  try {
-    const query = req.params["query"]
+    try {
+      const query = req.params["query"]
 
-    if (query.length < 3) {
-      res.status(400).json({ error: "Too short" })
-      return
+      if (query.length < 3) {
+        res.status(400).json({ error: "Too short" })
+        return
+      }
+
+      const { pages } = await wikiImageSearch(query)
+      const result = await Promise.all(
+        pages
+          .filter((p) => p.thumbnail)
+          .map(async (p) => ({
+            ...p,
+            images: await wikiImageDetails(p.thumbnail.url),
+          })),
+      )
+
+      res.json(result)
+    } catch (e) {
+      console.error(e)
+      res.json({ pages: [] })
     }
+  },
+)
 
-    const { pages } = await wikiImageSearch(query)
-    const result = await Promise.all(
-      pages
-        .filter((p) => p.thumbnail)
-        .map(async (p) => ({
-          ...p,
-          images: await wikiImageDetails(p.thumbnail.url),
-        })),
-    )
-
-    res.json(result)
-  } catch (e) {
-    console.error(e)
-    res.json({ pages: [] })
-  }
-})
-
-wikiRouter.get("/itemsearch/:query", 
+wikiRouter.get(
+  "/itemsearch/:query",
   oapi.validPath({
     summary: "Search wiki items",
     description: "Search for items and pages in the Star Citizen wiki",
@@ -256,30 +259,31 @@ wikiRouter.get("/itemsearch/:query",
         in: "path",
         required: true,
         schema: { type: "string", minLength: 3 },
-        description: "Search query (minimum 3 characters)"
-      }
+        description: "Search query (minimum 3 characters)",
+      },
     ],
     responses: {
       "200": {
         description: "Item search results retrieved successfully",
         content: {
           "application/json": {
-            schema: { $ref: "#/components/schemas/WikiItemSearchResult" }
-          }
-        }
+            schema: { $ref: "#/components/schemas/WikiItemSearchResult" },
+          },
+        },
       },
       "400": Response400,
-      "500": Response500
-    }
+      "500": Response500,
+    },
   }),
   async function (req, res) {
-  const query = req.params["query"]
+    const query = req.params["query"]
 
-  if (query.length < 3) {
-    res.status(400).json({ error: "Too short" })
-    return
-  }
+    if (query.length < 3) {
+      res.status(400).json({ error: "Too short" })
+      return
+    }
 
-  const result = await wikiItemSearch(query)
-  res.json(result)
-})
+    const result = await wikiItemSearch(query)
+    res.json(result)
+  },
+)

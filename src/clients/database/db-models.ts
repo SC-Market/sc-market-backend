@@ -672,6 +672,15 @@ export interface DBMarketSearchResult {
   contractor_seller_id: string | null
   user_seller_id: string | null
   auction_end_time: Date | null
+  // Seller information from the database view
+  user_seller: string | null
+  contractor_seller: string | null
+  // Additional fields from the view
+  item_name: string | null
+  game_item_id: string | null
+  expiration: Date | null
+  details_id: string | null
+  internal: boolean
 }
 
 export interface DBMarketCategory {

@@ -8,7 +8,13 @@ import { database } from "../../../../clients/database/knex-db.js"
 import { DBShip } from "../../../../clients/database/db-models.js"
 import { validate } from "jsonschema"
 import { shipData } from "../../../../config/fallback/ship-data.js"
-import { oapi, Response400, Response401, Response403, Response500 } from "../openapi.js"
+import {
+  oapi,
+  Response400,
+  Response401,
+  Response403,
+  Response500,
+} from "../openapi.js"
 
 async function formatUserShip(ship: DBShip) {
   const owner = await database.getMinimalUser({ user_id: ship.owner })
@@ -37,10 +43,10 @@ oapi.schema("ShipImportRequest", {
     type: "object",
     properties: {
       name: { type: "string", description: "Ship name" },
-      ship_code: { type: "string", description: "Ship identifier code" }
+      ship_code: { type: "string", description: "Ship identifier code" },
     },
-    required: ["name", "ship_code"]
-  }
+    required: ["name", "ship_code"],
+  },
 })
 
 oapi.schema("Ship", {
@@ -54,9 +60,9 @@ oapi.schema("Ship", {
     size: { type: "string", nullable: true },
     manufacturer: { type: "string", nullable: true },
     created_at: { type: "string", format: "date-time" },
-    updated_at: { type: "string", format: "date-time" }
+    updated_at: { type: "string", format: "date-time" },
   },
-  required: ["ship_id", "name", "kind", "owner"]
+  required: ["ship_id", "name", "kind", "owner"],
 })
 
 /*
@@ -75,9 +81,9 @@ shipRouter.post(
     requestBody: {
       content: {
         "application/json": {
-          schema: { $ref: "#/components/schemas/ShipImportRequest" }
-        }
-      }
+          schema: { $ref: "#/components/schemas/ShipImportRequest" },
+        },
+      },
     },
     responses: {
       "200": {
@@ -87,18 +93,18 @@ shipRouter.post(
             schema: {
               type: "object",
               properties: {
-                result: { type: "string", example: "Success!" }
-              }
-            }
-          }
-        }
+                result: { type: "string", example: "Success!" },
+              },
+            },
+          },
+        },
       },
       "400": Response400,
       "401": Response401,
       "403": Response403,
-      "500": Response500
+      "500": Response500,
     },
-    security: [{ bearerAuth: [] }]
+    security: [{ bearerAuth: [] }],
   }),
   userAuthorized,
   requireProfileWrite,
@@ -137,7 +143,8 @@ shipRouter.post(
 
 export const shipsRouter = express.Router()
 
-shipsRouter.get("/mine", 
+shipsRouter.get(
+  "/mine",
   oapi.validPath({
     summary: "Get user's ships",
     description: "Get all ships owned by the authenticated user",
@@ -150,20 +157,21 @@ shipsRouter.get("/mine",
           "application/json": {
             schema: {
               type: "array",
-              items: { $ref: "#/components/schemas/Ship" }
-            }
-          }
-        }
+              items: { $ref: "#/components/schemas/Ship" },
+            },
+          },
+        },
       },
       "401": Response401,
-      "500": Response500
+      "500": Response500,
     },
-    security: [{ bearerAuth: [] }]
+    security: [{ bearerAuth: [] }],
   }),
-  userAuthorized, 
+  userAuthorized,
   async (req, res) => {
-  const user = req.user as User
-  const ships = await database.getShips({ owner: user.user_id })
+    const user = req.user as User
+    const ships = await database.getShips({ owner: user.user_id })
 
-  res.json(await Promise.all(ships.map(formatUserShip)))
-})
+    res.json(await Promise.all(ships.map(formatUserShip)))
+  },
+)

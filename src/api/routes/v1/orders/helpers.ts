@@ -1142,6 +1142,32 @@ export async function sendCustomOfferMessage(
           author: null, // System message
         })
 
+        // Also send to Discord if thread exists
+        if (session.thread_id) {
+          try {
+            const { sendUserChatMessage } = await import("../util/discord.js")
+            // Send as system message to Discord
+            await sendUserChatMessage(
+              session,
+              { username: "System" } as any,
+              setting.message_content,
+            )
+            logger.debug("Successfully sent custom offer message to Discord", {
+              sessionId: session.id,
+              threadId: session.thread_id,
+            })
+          } catch (discordError) {
+            logger.warn("Failed to send custom offer message to Discord", {
+              sessionId: session.id,
+              threadId: session.thread_id,
+              error:
+                discordError instanceof Error
+                  ? discordError.message
+                  : String(discordError),
+            })
+          }
+        }
+
         logger.info("Successfully sent custom offer message", {
           sessionId: session.id,
           chatId: chat.chat_id,
@@ -1209,6 +1235,32 @@ export async function sendCustomOrderMessage(
           content: setting.message_content,
           author: null, // System message
         })
+
+        // Also send to Discord if thread exists
+        if (order.thread_id) {
+          try {
+            const { sendUserChatMessage } = await import("../util/discord.js")
+            // Send as system message to Discord
+            await sendUserChatMessage(
+              order,
+              { username: "System" } as any,
+              setting.message_content,
+            )
+            logger.debug("Successfully sent custom order message to Discord", {
+              orderId: order.order_id,
+              threadId: order.thread_id,
+            })
+          } catch (discordError) {
+            logger.warn("Failed to send custom order message to Discord", {
+              orderId: order.order_id,
+              threadId: order.thread_id,
+              error:
+                discordError instanceof Error
+                  ? discordError.message
+                  : String(discordError),
+            })
+          }
+        }
 
         logger.info("Successfully sent custom order message", {
           orderId: order.order_id,

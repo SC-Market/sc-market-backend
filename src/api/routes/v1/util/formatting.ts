@@ -221,7 +221,7 @@ export async function formatListing(
  *
  * @param listing The listing to fetch and format stats for
  */
-async function serializeListingStats(listing: DBMarketListing) {
+export async function serializeListingStats(listing: DBMarketListing) {
   const [{ order_count }] = await database
     .knex<{ order_count: number }>("orders")
     .rightJoin(

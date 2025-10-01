@@ -4,7 +4,13 @@ import { User } from "../api-models.js"
 import { formatComment } from "../util/formatting.js"
 import { verifiedUser, requireCommentsWrite } from "../../../middleware/auth.js"
 import { rate_limit } from "../../../middleware/ratelimiting.js"
-import { oapi, Response400, Response401, Response403, Response500 } from "../openapi.js"
+import {
+  oapi,
+  Response400,
+  Response401,
+  Response403,
+  Response500,
+} from "../openapi.js"
 
 export const commentRouter = express.Router()
 
@@ -12,17 +18,17 @@ export const commentRouter = express.Router()
 oapi.schema("CommentReplyRequest", {
   type: "object",
   properties: {
-    content: { type: "string", description: "Comment content" }
+    content: { type: "string", description: "Comment content" },
   },
-  required: ["content"]
+  required: ["content"],
 })
 
 oapi.schema("CommentUpdateRequest", {
   type: "object",
   properties: {
-    content: { type: "string", description: "Updated comment content" }
+    content: { type: "string", description: "Updated comment content" },
   },
-  required: ["content"]
+  required: ["content"],
 })
 
 oapi.schema("Comment", {
@@ -36,9 +42,18 @@ oapi.schema("Comment", {
     updated_at: { type: "string", format: "date-time" },
     deleted: { type: "boolean" },
     upvotes: { type: "number" },
-    downvotes: { type: "number" }
+    downvotes: { type: "number" },
   },
-  required: ["comment_id", "author", "content", "created_at", "updated_at", "deleted", "upvotes", "downvotes"]
+  required: [
+    "comment_id",
+    "author",
+    "content",
+    "created_at",
+    "updated_at",
+    "deleted",
+    "upvotes",
+    "downvotes",
+  ],
 })
 
 // TODO: Use verifiedUser everywhere
@@ -56,31 +71,31 @@ commentRouter.post(
         in: "path",
         required: true,
         schema: { type: "string" },
-        description: "Comment ID to reply to"
-      }
+        description: "Comment ID to reply to",
+      },
     ],
     requestBody: {
       content: {
         "application/json": {
-          schema: { $ref: "#/components/schemas/CommentReplyRequest" }
-        }
-      }
+          schema: { $ref: "#/components/schemas/CommentReplyRequest" },
+        },
+      },
     },
     responses: {
       "200": {
         description: "Reply created successfully",
         content: {
           "application/json": {
-            schema: { $ref: "#/components/schemas/Comment" }
-          }
-        }
+            schema: { $ref: "#/components/schemas/Comment" },
+          },
+        },
       },
       "400": Response400,
       "401": Response401,
       "403": Response403,
-      "500": Response500
+      "500": Response500,
     },
-    security: [{ bearerAuth: [] }]
+    security: [{ bearerAuth: [] }],
   }),
   rate_limit(15),
   verifiedUser,
@@ -124,8 +139,8 @@ commentRouter.post(
         in: "path",
         required: true,
         schema: { type: "string" },
-        description: "Comment ID to delete"
-      }
+        description: "Comment ID to delete",
+      },
     ],
     responses: {
       "200": {
@@ -135,18 +150,18 @@ commentRouter.post(
             schema: {
               type: "object",
               properties: {
-                message: { type: "string", example: "Success" }
-              }
-            }
-          }
-        }
+                message: { type: "string", example: "Success" },
+              },
+            },
+          },
+        },
       },
       "400": Response400,
       "401": Response401,
       "403": Response403,
-      "500": Response500
+      "500": Response500,
     },
-    security: [{ bearerAuth: [] }]
+    security: [{ bearerAuth: [] }],
   }),
   verifiedUser,
   async function (req, res) {
@@ -182,15 +197,15 @@ commentRouter.post(
         in: "path",
         required: true,
         schema: { type: "string" },
-        description: "Comment ID to update"
-      }
+        description: "Comment ID to update",
+      },
     ],
     requestBody: {
       content: {
         "application/json": {
-          schema: { $ref: "#/components/schemas/CommentUpdateRequest" }
-        }
-      }
+          schema: { $ref: "#/components/schemas/CommentUpdateRequest" },
+        },
+      },
     },
     responses: {
       "200": {
@@ -200,18 +215,18 @@ commentRouter.post(
             schema: {
               type: "object",
               properties: {
-                message: { type: "string", example: "Success" }
-              }
-            }
-          }
-        }
+                message: { type: "string", example: "Success" },
+              },
+            },
+          },
+        },
       },
       "400": Response400,
       "401": Response401,
       "403": Response403,
-      "500": Response500
+      "500": Response500,
     },
-    security: [{ bearerAuth: [] }]
+    security: [{ bearerAuth: [] }],
   }),
   rate_limit(15),
   verifiedUser,
@@ -259,8 +274,8 @@ commentRouter.post(
         in: "path",
         required: true,
         schema: { type: "string" },
-        description: "Comment ID to upvote"
-      }
+        description: "Comment ID to upvote",
+      },
     ],
     responses: {
       "200": {
@@ -270,17 +285,17 @@ commentRouter.post(
             schema: {
               type: "object",
               properties: {
-                message: { type: "string", example: "Success" }
-              }
-            }
-          }
-        }
+                message: { type: "string", example: "Success" },
+              },
+            },
+          },
+        },
       },
       "400": Response400,
       "401": Response401,
-      "500": Response500
+      "500": Response500,
     },
-    security: [{ bearerAuth: [] }]
+    security: [{ bearerAuth: [] }],
   }),
   rate_limit(1),
   verifiedUser,
@@ -324,8 +339,8 @@ commentRouter.post(
         in: "path",
         required: true,
         schema: { type: "string" },
-        description: "Comment ID to downvote"
-      }
+        description: "Comment ID to downvote",
+      },
     ],
     responses: {
       "200": {
@@ -335,17 +350,17 @@ commentRouter.post(
             schema: {
               type: "object",
               properties: {
-                message: { type: "string", example: "Success" }
-              }
-            }
-          }
-        }
+                message: { type: "string", example: "Success" },
+              },
+            },
+          },
+        },
       },
       "400": Response400,
       "401": Response401,
-      "500": Response500
+      "500": Response500,
     },
-    security: [{ bearerAuth: [] }]
+    security: [{ bearerAuth: [] }],
   }),
   rate_limit(1),
   verifiedUser,
