@@ -2,7 +2,7 @@ import express from "express"
 import { database } from "../../../../clients/database/knex-db.js"
 import { User } from "../api-models.js"
 import { formatComment } from "../util/formatting.js"
-import { verifiedUser, requireCommentsWrite } from "../../../middleware/auth.js"
+import { requireCommentsWrite } from "../../../middleware/auth.js"
 import { rate_limit } from "../../../middleware/ratelimiting.js"
 import {
   oapi,
@@ -98,7 +98,7 @@ commentRouter.post(
     security: [{ bearerAuth: [] }],
   }),
   rate_limit(15),
-  verifiedUser,
+
   requireCommentsWrite,
   async function (req, res) {
     const comment_id = req.params["comment_id"]
@@ -163,7 +163,7 @@ commentRouter.post(
     },
     security: [{ bearerAuth: [] }],
   }),
-  verifiedUser,
+
   async function (req, res) {
     const comment_id = req.params["comment_id"]
     const comment = await database.getComment({ comment_id })
@@ -229,7 +229,7 @@ commentRouter.post(
     security: [{ bearerAuth: [] }],
   }),
   rate_limit(15),
-  verifiedUser,
+
   async function (req, res) {
     const comment_id = req.params["comment_id"]
     const comment = await database.getComment({ comment_id })
@@ -298,7 +298,7 @@ commentRouter.post(
     security: [{ bearerAuth: [] }],
   }),
   rate_limit(1),
-  verifiedUser,
+
   async function (req, res) {
     const comment_id = req.params["comment_id"]
     const comment = await database.getComment({ comment_id })
@@ -363,7 +363,7 @@ commentRouter.post(
     security: [{ bearerAuth: [] }],
   }),
   rate_limit(1),
-  verifiedUser,
+
   async function (req, res) {
     const comment_id = req.params["comment_id"]
     const comment = await database.getComment({ comment_id })

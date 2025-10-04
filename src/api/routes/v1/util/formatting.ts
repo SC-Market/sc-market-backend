@@ -29,7 +29,12 @@ import { User } from "../api-models.js"
 import { is_member } from "./permissions.js"
 import moment from "moment"
 import { serializeOrderDetails } from "../orders/serializers.js"
-import { ListingBase } from "../market/types.js"
+import {
+  FormattedAggregateListing,
+  FormattedListing,
+  FormattedMultipleListing,
+  ListingBase,
+} from "../market/types.js"
 
 export async function formatSearchResult(listing: DBMarketSearchResult) {
   if (listing.listing_type === "unique") {
@@ -66,7 +71,7 @@ export async function formatListingComplete(
     | DBMultipleComplete
     | DBMultipleListingCompositeComplete,
   isPrivate = false,
-) {
+): Promise<FormattedListing> {
   const aggregate = listing as DBAggregateComplete
   const aggregate_listing = listing as DBAggregateListingComplete
   const multiple = listing as DBMultipleComplete
@@ -336,60 +341,64 @@ export async function formatBuyOrder(buy_order: DBBuyOrder) {
 
 export async function formatMarketAggregateComplete(
   complete: DBAggregateComplete,
-) {
-  const photos = []
-  for (const photo of complete.images) {
-    photos.push(await cdn.getFileLinkResource(photo.resource_id))
-  }
-
+): Promise<FormattedAggregateListing> {
   return {
     type: "aggregate",
-    details: complete.details,
-    aggregate_id: complete.game_item_id,
-    photos: photos,
-    buy_orders: await Promise.all(
-      complete.buy_orders.map((o) => formatBuyOrder(o)),
-    ),
-    listings: await Promise.all(
-      complete.listings.map((l) => formatListingBase(l)),
-    ),
+    listing: {
+      listing_id: complete.listings[0]?.listing_id || "",
+      sale_type: "aggregate",
+      price: complete.listings[0]?.price || 0,
+      quantity_available: complete.listings[0]?.quantity_available || 0,
+      status: complete.listings[0]?.status || "active",
+      timestamp: complete.listings[0]?.timestamp || new Date(),
+      expiration: complete.listings[0]?.expiration || new Date(),
+    },
+    details: {
+      item_type: complete.details.item_type,
+    },
+    stats: {
+      order_count: 0,
+      offer_count: 0,
+      view_count: 0,
+    },
   }
 }
 
 export async function formatMarketMultipleComplete(
   complete: DBMultipleComplete,
   isPrivate: boolean = false,
-) {
-  let listings = await Promise.all(
-    complete.listings.map((l) => formatMultipleListingComplete(l, isPrivate)),
+): Promise<FormattedMultipleListing> {
+  const defaultListing = complete.listings.find(
+    (l) => l.listing.listing_id === complete.default_listing_id,
   )
-  if (!isPrivate) {
-    listings = listings.filter(
-      (l) => l.listing.status === "active" && l.listing.expiration > new Date(),
-    )
-  }
 
-  const photos =
-    listings.find((l) => complete.default_listing_id === l.listing.listing_id)
-      ?.photos || []
+  const photos: string[] = []
+  for (const photo of complete.default_listing.images) {
+    photos.push((await cdn.getFileLinkResource(photo.resource_id))!)
+  }
 
   return {
     type: "multiple",
-    details: complete.details,
-    multiple_id: complete.multiple_id,
-    photos: photos,
-    listings,
-    default_listing: listings.find(
-      (l) => l.listing.listing_id === complete.default_listing_id,
-    )!,
-    user_seller:
-      complete.user_seller_id &&
-      (await database.getMinimalUser({ user_id: complete.user_seller_id })),
-    contractor_seller:
-      complete.contractor_seller_id &&
-      (await database.getMinimalContractor({
-        contractor_id: complete.contractor_seller_id,
-      })),
+    listing: {
+      listing_id: complete.multiple_id,
+      sale_type: "multiple",
+      price: defaultListing?.listing.price || 0,
+      quantity_available: defaultListing?.listing.quantity_available || 0,
+      status: defaultListing?.listing.status || "active",
+      timestamp: defaultListing?.listing.timestamp || new Date(),
+      expiration: defaultListing?.listing.expiration || new Date(),
+    },
+    details: {
+      title: complete.details.title,
+      description: complete.details.description,
+      item_type: complete.details.item_type,
+    },
+    photos,
+    stats: {
+      order_count: 0,
+      offer_count: 0,
+      view_count: 0,
+    },
   }
 }
 
@@ -399,9 +408,9 @@ export async function formatMultipleListingComplete(
 ) {
   const base = await formatListingBase(complete.listing)
 
-  const photos = []
+  const photos: string[] = []
   for (const photo of complete.images) {
-    photos.push(await cdn.getFileLinkResource(photo.resource_id))
+    photos.push((await cdn.getFileLinkResource(photo.resource_id))!)
   }
 
   return {
@@ -415,23 +424,33 @@ export async function formatMultipleListingComplete(
 export async function formatMultipleListingCompleteComposite(
   complete: DBMultipleListingCompositeComplete,
   isPrivate: boolean = false,
-) {
-  const base = await formatListingBase(complete.listing)
-
-  const photos = []
+): Promise<FormattedMultipleListing> {
+  const photos: string[] = []
   for (const photo of complete.images) {
-    photos.push(await cdn.getFileLinkResource(photo.resource_id))
+    photos.push((await cdn.getFileLinkResource(photo.resource_id))!)
   }
 
   return {
-    type: "multiple_listing",
-    listing: base,
-    details: complete.details,
+    type: "multiple",
+    listing: {
+      listing_id: complete.listing.listing_id,
+      sale_type: "multiple",
+      price: complete.listing.price,
+      quantity_available: complete.listing.quantity_available,
+      status: complete.listing.status,
+      timestamp: complete.listing.timestamp,
+      expiration: complete.listing.expiration,
+    },
+    details: {
+      title: complete.details.title,
+      description: complete.details.description,
+      item_type: complete.details.item_type,
+    },
     photos,
-    multiple: {
-      multiple_id: complete.multiple.multiple_id,
-      default_listing_id: complete.multiple.default_listing_id,
-      details: complete.details,
+    stats: {
+      order_count: 0,
+      offer_count: 0,
+      view_count: 0,
     },
   }
 }
@@ -497,19 +516,26 @@ export async function formatMarketAggregateListingComposite(
 export async function formatMarketAggregateListingCompositeComplete(
   complete: DBAggregateListingComplete,
   isPrivate: boolean = false,
-) {
-  const photos = []
-  for (const photo of complete.images) {
-    photos.push(await cdn.getFileLinkResource(photo.resource_id))
-  }
-
+): Promise<FormattedAggregateListing> {
   return {
-    type: "aggregate_composite",
-    listing: await formatListingBase(complete.listing, isPrivate),
-    aggregate_id: complete.aggregate.game_item_id,
-    aggregate: complete.aggregate,
-    details: complete.details,
-    photos,
+    type: "aggregate",
+    listing: {
+      listing_id: complete.listing.listing_id,
+      sale_type: "aggregate",
+      price: complete.listing.price,
+      quantity_available: complete.listing.quantity_available,
+      status: complete.listing.status,
+      timestamp: complete.listing.timestamp,
+      expiration: complete.listing.expiration,
+    },
+    details: {
+      item_type: complete.details.item_type,
+    },
+    stats: {
+      order_count: 0,
+      offer_count: 0,
+      view_count: 0,
+    },
   }
 }
 

@@ -187,8 +187,7 @@ export async function userAuthorized(
 export async function verifiedUser(
   req: Request,
   res: Response,
-  next: NextFunction,
-): Promise<void> {
+): Promise<boolean> {
   try {
     // Check for token authentication first
     const authHeader = req.headers.authorization
@@ -205,18 +204,17 @@ export async function verifiedUser(
         // Apply same verification logic
         if (authResult.user.banned) {
           res.status(418).json({ error: "Internal server error" })
-          return
+          return false
         }
         if (!authResult.user.rsi_confirmed) {
           res.status(401).json({ error: "Your account is not verified." })
-          return
+          return false
         } else {
-          next()
-          return
+          return true
         }
       } else {
         res.status(401).json({ error: "Invalid or expired token" })
-        return
+        return false
       }
     }
 
@@ -228,23 +226,22 @@ export async function verifiedUser(
 
       if (user.banned) {
         res.status(418).json({ error: "Internal server error" })
-        return
+        return false
       }
       if (!user.rsi_confirmed) {
         res.status(401).json({ error: "Your account is not verified." })
-        return
+        return false
       } else {
-        next()
-        return
+        return true
       }
     } else {
       res.status(401).json({ error: "Unauthenticated" })
-      return
+      return false
     }
   } catch (e) {
     console.error(e)
     res.status(400).json({ error: "Bad request" })
-    return
+    return false
   }
 }
 
@@ -316,7 +313,14 @@ export async function adminAuthorized(
 // This middleware should ONLY be used on private/authenticated endpoints
 // Public endpoints should remain public regardless of token permissions
 export function requireScopes(...requiredScopes: string[]) {
-  return (req: Request, res: Response, next: NextFunction): void => {
+  return async (
+    req: Request,
+    res: Response,
+    next: NextFunction,
+  ): Promise<void> => {
+    if (!(await verifiedUser(req, res))) {
+      return
+    }
     const authReq = req as AuthRequest
 
     // Skip validation for session-based auth (full access)
@@ -386,7 +390,14 @@ export const requireAdmin = requireScopes("admin")
 
 // Contractor access control middleware
 export function requireContractorAccess(contractorId: string) {
-  return (req: Request, res: Response, next: NextFunction): void => {
+  return async (
+    req: Request,
+    res: Response,
+    next: NextFunction,
+  ): Promise<void> => {
+    if (!(await verifiedUser(req, res))) {
+      return
+    }
     const authReq = req as AuthRequest
 
     // Skip validation for session-based auth (full access)
@@ -420,7 +431,14 @@ export function requireContractorAccess(contractorId: string) {
 export function requireContractorAccessFromParam(
   paramName: string = "spectrum_id",
 ) {
-  return (req: Request, res: Response, next: NextFunction): void => {
+  return async (
+    req: Request,
+    res: Response,
+    next: NextFunction,
+  ): Promise<void> => {
+    if (!(await verifiedUser(req, res))) {
+      return
+    }
     const contractorParam = req.params[paramName]
     if (!contractorParam) {
       res.status(400).json({

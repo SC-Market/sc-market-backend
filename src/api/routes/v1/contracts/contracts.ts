@@ -7,7 +7,6 @@ import {
   Response404,
 } from "../openapi.js"
 import {
-  verifiedUser,
   requireOrdersWrite,
   requireOrdersRead,
 } from "../../../middleware/auth.js"
@@ -88,7 +87,7 @@ oapi.schema("PublicContractBody", {
 
 contractsRouter.post(
   "",
-  verifiedUser,
+
   requireOrdersWrite,
   oapi.validPath({
     summary: "Create a public contract",
@@ -137,7 +136,7 @@ contractsRouter.post(
     },
     security: [],
   }),
-  verifiedUser,
+
   async (req, res) => {
     const [contract] = await database.insertPublicContract({
       title: req.body.title,
@@ -220,7 +219,7 @@ oapi.schema("PublicContractOfferBody", {
 
 contractsRouter.post(
   "/:contract_id/offers",
-  verifiedUser,
+
   requireOrdersWrite,
   valid_public_contract,
   oapi.validPath({

@@ -1,4 +1,4 @@
-import express, { NextFunction, Request, Response } from "express"
+import express from "express"
 import { database } from "../../../../clients/database/knex-db.js"
 import {
   formatComment,
@@ -7,11 +7,7 @@ import {
 } from "../util/formatting.js"
 import { DBRecruitingPost } from "../../../../clients/database/db-models.js"
 import { User } from "../api-models.js"
-import {
-  verifiedUser,
-  requireRecruitingRead,
-  requireRecruitingWrite,
-} from "../../../middleware/auth.js"
+import { requireRecruitingWrite } from "../../../middleware/auth.js"
 import { has_permission } from "../util/permissions.js"
 import {
   oapi,
@@ -20,51 +16,12 @@ import {
   Response403,
   Response404,
 } from "../openapi.js"
-import { createResponse, createErrorResponse } from "../util/response.js"
+import { createErrorResponse, createResponse } from "../util/response.js"
 import {
+  contractorRecruiting,
   valid_recruiting_post,
   valid_recruiting_post_by_contractor,
 } from "./middleware.js"
-
-export async function contractorRecruiting(
-  req: Request,
-  res: Response,
-  next: NextFunction,
-) {
-  if (req.isAuthenticated()) {
-    const {
-      contractor: spectrum_id,
-    }: {
-      contractor: string
-    } = req.body
-
-    const user = req.user as User
-
-    let contractor
-    try {
-      contractor = await database.getContractor({ spectrum_id })
-    } catch (e) {
-      res.status(400).json({ error: "Invalid contractor" })
-      return
-    }
-
-    req.contractor = contractor
-
-    const success = await has_permission(
-      contractor.contractor_id,
-      user.user_id,
-      "manage_recruiting",
-    )
-    if (!success) {
-      res.status(400).json({ error: "Missing permissions" })
-      return
-    }
-
-    next()
-  } else {
-    res.status(401).json({ error: "Unauthenticated" })
-  }
-}
 
 export const recruitingRouter = express.Router()
 
@@ -631,7 +588,7 @@ recruitingRouter.get(
 
 recruitingRouter.put(
   "/posts/:post_id",
-  verifiedUser,
+
   requireRecruitingWrite,
   async function (req, res) {
     const user = req.user as User
@@ -686,7 +643,7 @@ recruitingRouter.put(
 
 recruitingRouter.post(
   "/posts/:post_id/upvote",
-  verifiedUser,
+
   requireRecruitingWrite,
   async function (req, res) {
     const post_id = req.params["post_id"]
@@ -716,7 +673,7 @@ recruitingRouter.post(
 
 recruitingRouter.post(
   "/posts/:post_id/comment",
-  verifiedUser,
+
   requireRecruitingWrite,
   async function (req, res) {
     const post_id = req.params["post_id"]

@@ -2,7 +2,6 @@ import express from "express"
 import {
   adminAuthorized,
   userAuthorized,
-  verifiedUser,
   requireContractorAccessFromSpectrumId,
   requireContractorsRead,
   requireContractorsWrite,
@@ -625,7 +624,7 @@ contractorsRouter.post(
     },
     security: [],
   }),
-  verifiedUser,
+
   async (req, res, next) => {
     const user = req.user as User
 

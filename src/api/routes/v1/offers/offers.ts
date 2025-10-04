@@ -1,6 +1,5 @@
 import {
   userAuthorized,
-  verifiedUser,
   requireOffersRead,
   requireOffersWrite,
 } from "../../../middleware/auth.js"
@@ -787,7 +786,7 @@ offersRouter.post(
     },
     security: [],
   }),
-  verifiedUser,
+
   userAuthorized,
   related_to_offer,
   async (req, res) => {

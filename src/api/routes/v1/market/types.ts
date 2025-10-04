@@ -3,15 +3,6 @@ import {
   MinimalUser,
 } from "../../../../clients/database/db-models.js"
 
-export interface MarketListingBody {
-  price: number
-  title: string
-  description: string
-  sale_type: string
-  item_type: string
-  quantity_available: number
-}
-
 export const sortingMethods = [
   "title",
   "timestamp",
@@ -21,6 +12,38 @@ export const sortingMethods = [
   "total_rating",
   "expiration",
 ]
+
+export interface UserListingsQuery {
+  user_id: string
+  query?: string
+  statuses?: string[]
+  sale_type?: string
+  item_type?: string
+  listing_type?: string
+  minCost?: number
+  maxCost?: number
+  quantityAvailable?: number
+  sort: string
+  reverseSort: boolean
+  index: number
+  page_size: number
+}
+
+export interface ContractorListingsQuery {
+  contractor_id: string
+  query?: string
+  statuses?: string[]
+  sale_type?: string
+  item_type?: string
+  listing_type?: string
+  minCost?: number
+  maxCost?: number
+  quantityAvailable?: number
+  sort: string
+  reverseSort: boolean
+  index: number
+  page_size: number
+}
 
 export interface MarketSearchQueryArguments {
   item_type: string | null
@@ -77,4 +100,78 @@ export interface ListingBase {
   // Omitted for now
   orders?: any[]
   bids?: any[]
+}
+
+export type FormattedListing =
+  | FormattedUniqueListing
+  | FormattedAggregateListing
+  | FormattedMultipleListing
+
+export interface FormattedUniqueListing {
+  type: "unique"
+  listing: {
+    listing_id: string
+    sale_type: string
+    price: number
+    quantity_available: number
+    status: string
+    timestamp: Date
+    expiration: Date
+  }
+  details: {
+    title: string
+    description: string
+    item_type: string
+  }
+  photos: string[]
+  stats: {
+    order_count: number
+    offer_count: number
+    view_count: number
+  }
+}
+
+export interface FormattedAggregateListing {
+  type: "aggregate"
+  listing: {
+    listing_id: string
+    sale_type: string
+    price: number
+    quantity_available: number
+    status: string
+    timestamp: Date
+    expiration: Date
+  }
+  details: {
+    item_type: string
+  }
+  stats: {
+    order_count: number
+    offer_count: number
+    view_count: number
+  }
+}
+
+export interface FormattedMultipleListing {
+  type: "multiple"
+  listing: {
+    listing_id: string
+    sale_type: string
+    price: number
+    quantity_available: number
+    status: string
+    timestamp: Date
+    expiration: Date
+  }
+  details: {
+    title: string
+    description: string
+    item_type: string
+  }
+  photos: string[]
+  stats: {
+    order_count: number
+    offer_count: number
+    view_count: number
+  }
 }

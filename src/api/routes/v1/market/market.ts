@@ -2,7 +2,6 @@ import express, { Request } from "express"
 import {
   adminAuthorized,
   userAuthorized,
-  verifiedUser,
   requireMarketRead,
   requireMarketWrite,
   requireMarketAdmin,
@@ -65,6 +64,14 @@ import { multiplePhotoUpload } from "../util/upload.js"
 import { randomUUID } from "node:crypto"
 import fs from "node:fs"
 import logger from "../../../../logger/logger.js"
+import {
+  MarketSearchQueryArguments,
+  MarketSearchQuery,
+  UserListingsQuery,
+  ContractorListingsQuery,
+  FormattedListing,
+} from "./types.js"
+import { formatSearchResult } from "../util/formatting.js"
 
 export const marketRouter = express.Router()
 
@@ -1245,7 +1252,18 @@ marketRouter.post(
 
     const listing = req.market_listing!
 
-    await handle_quantity_update(res, user, listing, quantity_available)
+    if (listing.status === "archived") {
+      res
+        .status(400)
+        .json(createErrorResponse({ error: "Cannot update archived listing" }))
+      return
+    }
+
+    await database.updateMarketListing(listing.listing_id, {
+      quantity_available,
+    })
+
+    res.json(createResponse({ result: "Success" }))
   },
 )
 
@@ -1876,7 +1894,7 @@ oapi.schema("PurchaseRequest", {
 
 marketRouter.post(
   "/purchase",
-  verifiedUser,
+
   requireMarketWrite,
   oapi.validPath({
     summary: "Purchase market listings",
@@ -2033,7 +2051,7 @@ oapi.schema("MarketBidRequest", {
 
 marketRouter.post(
   "/listings/:listing_id/bids",
-  verifiedUser,
+
   requireMarketWrite,
   valid_market_listing,
   oapi.validPath({
@@ -2271,7 +2289,7 @@ oapi.schema("MarketListingCreateRequest", {
 
 marketRouter.post(
   "/listings",
-  verifiedUser,
+
   requireMarketWrite,
   oapi.validPath({
     summary: "Create a new market listing",
@@ -2531,7 +2549,7 @@ oapi.schema("ContractorMarketListingCreateRequest", {
 
 marketRouter.post(
   "/contractor/:spectrum_id/create",
-  verifiedUser,
+
   requireMarketWrite,
   oapi.validPath({
     summary: "Create a new contractor market listing",
@@ -3004,49 +3022,184 @@ marketRouter.get(
   userAuthorized,
   requireMarketRead,
   oapi.validPath({
-    summary: "Get user's market listings",
-    description: "Returns all market listings owned by the authenticated user",
-    operationId: "getMyMarketListings",
-    tags: ["Market"],
+    summary: "Get my market listings",
+    description:
+      "Get all market listings created by the authenticated user or their organization with optional search and filtering",
+    tags: ["Market", "Market Listing"],
+    parameters: [
+      {
+        name: "contractor_id",
+        in: "query",
+        required: false,
+        schema: { type: "string" },
+        description:
+          "Contractor ID to get listings for (user must be a member)",
+      },
+      {
+        name: "query",
+        in: "query",
+        required: false,
+        schema: { type: "string" },
+        description: "Search query to filter listings by title or description",
+      },
+      {
+        name: "statuses",
+        in: "query",
+        required: false,
+        schema: { type: "string" },
+        description: "Comma-separated list of statuses",
+      },
+      {
+        name: "sale_type",
+        in: "query",
+        required: false,
+        schema: {
+          type: "string",
+          enum: ["unique", "aggregate", "multiple", "auction"],
+        },
+        description: "Filter by sale type",
+      },
+      {
+        name: "item_type",
+        in: "query",
+        required: false,
+        schema: { type: "string" },
+        description: "Filter by item type",
+      },
+      {
+        name: "listing_type",
+        in: "query",
+        required: false,
+        schema: {
+          type: "string",
+          enum: ["unique", "aggregate", "multiple"],
+        },
+        description: "Filter by listing type",
+      },
+      {
+        name: "sort",
+        in: "query",
+        required: false,
+        schema: { type: "string" },
+        description: "Sort method",
+      },
+      {
+        name: "index",
+        in: "query",
+        required: false,
+        schema: { type: "integer", minimum: 0, default: 0 },
+        description: "Starting index for pagination",
+      },
+      {
+        name: "page_size",
+        in: "query",
+        required: false,
+        schema: { type: "integer", minimum: 1, maximum: 96, default: 16 },
+        description: "Number of results per page",
+      },
+      {
+        name: "minCost",
+        in: "query",
+        required: false,
+        schema: { type: "string" },
+        description: "Minimum price filter",
+      },
+      {
+        name: "maxCost",
+        in: "query",
+        required: false,
+        schema: { type: "string" },
+        description: "Maximum price filter",
+      },
+      {
+        name: "quantityAvailable",
+        in: "query",
+        required: false,
+        schema: { type: "string" },
+        description: "Minimum quantity available",
+      },
+    ],
     responses: {
       "200": {
-        description: "User's listings retrieved successfully",
-        content: {
-          "application/json": {
-            schema: {
-              type: "array",
-              items: oapi.schema("MarketListingComplete"),
-            },
-          },
-        },
-      },
-      "401": Response401,
-      "500": {
-        description: "Internal server error",
+        description: "Successfully retrieved listings",
         content: {
           "application/json": {
             schema: {
               type: "object",
               properties: {
-                error: {
-                  type: "string",
+                listings: {
+                  type: "array",
+                  items: { type: "object" },
+                },
+                total: {
+                  type: "integer",
                 },
               },
-              required: ["error"],
             },
           },
         },
       },
+      "401": Response401,
+      "403": Response403,
+      "500": Response500,
     },
+    security: [{ bearerAuth: [] }],
   }),
   async (req, res) => {
     try {
       const user = req.user as User
-      res.json(await get_my_listings(user))
-    } catch (e) {
-      console.error(e)
-      res.status(500).json({ error: "Internal server error" })
-      return
+      const contractorId = req.query.contractor_id as string
+      const searchQuery = await convertQuery(
+        req.query as Partial<MarketSearchQueryArguments>,
+      )
+
+      // Use the unified market search approach
+      const marketSearchQuery: MarketSearchQuery = {
+        query: searchQuery.query || "",
+        statuses: searchQuery.statuses || null,
+        sale_type: searchQuery.sale_type || null,
+        item_type: searchQuery.item_type || null,
+        listing_type: searchQuery.listing_type || null,
+        minCost: searchQuery.minCost || 0,
+        maxCost: searchQuery.maxCost || null,
+        quantityAvailable: searchQuery.quantityAvailable || 0,
+        sort: searchQuery.sort,
+        reverseSort: searchQuery.reverseSort,
+        index: searchQuery.index,
+        page_size: searchQuery.page_size,
+        rating: null,
+        seller_rating: 0,
+      }
+
+      // Add seller filter
+      if (contractorId) {
+        // Look up contractor_id from spectrum_id
+        const contractor = await database.getContractor({
+          spectrum_id: contractorId,
+        })
+        marketSearchQuery.contractor_seller_id = contractor.contractor_id
+      } else {
+        marketSearchQuery.user_seller_id = user.user_id
+      }
+
+      // Get unified results from unmaterialized view for real-time data
+      const searchResults =
+        await database.searchMarketUnmaterialized(marketSearchQuery)
+
+      // Format listings using the same approach as market search
+      const formattedListings = await Promise.all(
+        searchResults.map((listing) => formatSearchResult(listing)),
+      )
+
+      // Extract total count from the first result (if any)
+      const total = searchResults.length > 0 ? searchResults[0].full_count : 0
+
+      res.json(createResponse({ listings: formattedListings, total }))
+    } catch (error) {
+      logger.error("Error in /mine:", error)
+      res
+        .status(500)
+        .json(createErrorResponse({ error: "Internal server error" }))
     }
   },
 )
@@ -3540,105 +3693,6 @@ marketRouter.get(
 )
 
 marketRouter.get(
-  "/contractor/:spectrum_id/mine",
-  userAuthorized,
-  requireMarketRead,
-  org_authorized,
-  oapi.validPath({
-    summary: "Get contractor's market listings",
-    description:
-      "Returns all market listings for a specific contractor (requires contractor member authorization)",
-    operationId: "getContractorListings",
-    tags: ["Market"],
-    parameters: [
-      {
-        name: "spectrum_id",
-        in: "path",
-        required: true,
-        schema: {
-          type: "string",
-        },
-        description: "Spectrum ID of the contractor organization",
-      },
-    ],
-    responses: {
-      "200": {
-        description: "Contractor listings retrieved successfully",
-        content: {
-          "application/json": {
-            schema: {
-              type: "array",
-              items: oapi.schema("MarketListingComplete"),
-            },
-          },
-        },
-      },
-      "400": {
-        description: "Invalid contractor ID provided",
-        content: {
-          "application/json": {
-            schema: {
-              type: "object",
-              properties: {
-                error: {
-                  type: "string",
-                },
-              },
-              required: ["error"],
-            },
-          },
-        },
-      },
-      "401": Response401,
-      "403": {
-        description: "User is not authorized to view these listings",
-        content: {
-          "application/json": {
-            schema: {
-              type: "object",
-              properties: {
-                error: {
-                  type: "string",
-                },
-              },
-              required: ["error"],
-            },
-          },
-        },
-      },
-      "500": {
-        description: "Internal server error",
-        content: {
-          "application/json": {
-            schema: {
-              type: "object",
-              properties: {
-                error: {
-                  type: "string",
-                },
-              },
-              required: ["error"],
-            },
-          },
-        },
-      },
-    },
-  }),
-  async (req, res) => {
-    try {
-      const contractor = req.contractor
-
-      const user = req.user as User
-
-      res.json(await get_org_listings(contractor))
-    } catch (e) {
-      console.error(e)
-      res.status(500).json({ error: "Internal server error" })
-    }
-  },
-)
-
-marketRouter.get(
   "/contractor/:spectrum_id",
   valid_contractor,
   oapi.validPath({
@@ -4097,7 +4151,7 @@ marketRouter.get("/multiple/:multiple_id", async (req, res) => {
 
 marketRouter.post(
   "/multiple/contractor/:spectrum_id/create",
-  verifiedUser,
+
   requireMarketWrite,
   org_permission("manage_market"),
   async (req: Request, res) => {
@@ -4207,7 +4261,7 @@ marketRouter.post(
 
 marketRouter.post(
   "/multiple/create",
-  verifiedUser,
+
   requireMarketWrite,
   async (req: Request, res) => {
     try {
@@ -4493,7 +4547,7 @@ marketRouter.post(
 
 marketRouter.post(
   "/buyorder/create",
-  verifiedUser,
+
   requireMarketWrite,
   async (req: Request, res) => {
     try {
@@ -4550,7 +4604,7 @@ marketRouter.post(
 
 marketRouter.post(
   "/buyorder/:buy_order_id/fulfill",
-  verifiedUser,
+
   requireMarketWrite,
   async (req: Request, res) => {
     try {
@@ -4801,14 +4855,18 @@ marketRouter.get(
       const item_name = req.params["name"]
 
       if (!item_name) {
-        res.status(400).json({ error: "Item name is required" })
+        res
+          .status(400)
+          .json(createErrorResponse({ error: "Item name is required" }))
         return
       }
 
       const game_item = await database.getGameItem({ name: item_name })
 
       if (!game_item) {
-        res.status(400).json({ error: "Game item not found" })
+        res
+          .status(400)
+          .json(createErrorResponse({ error: "Game item not found" }))
         return
       }
 
@@ -4822,13 +4880,15 @@ marketRouter.get(
         details_id: game_item.details_id,
       })
 
-      res.json({
-        id: game_item.id,
-        name: game_item.name,
-        type: game_item.type,
-        description: details.description,
-        image_url: images.length > 0 ? images[0] : null,
-      })
+      res.json(
+        createResponse({
+          id: game_item.id,
+          name: game_item.name,
+          type: game_item.type,
+          description: details.description,
+          image_url: images.length > 0 ? images[0] : null,
+        }),
+      )
     } catch (e) {
       console.error(e)
       res.status(500).json({ error: "Internal server error" })

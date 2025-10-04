@@ -1,7 +1,6 @@
 import express from "express"
 import {
   userAuthorized,
-  verifiedUser,
   requireServicesRead,
   requireServicesWrite,
 } from "../../../middleware/auth.js"
@@ -131,7 +130,7 @@ oapi.schema("ServiceBody", {
 
 servicesRouter.post(
   "",
-  verifiedUser,
+
   requireServicesWrite,
   oapi.validPath({
     summary: "Create a new service",

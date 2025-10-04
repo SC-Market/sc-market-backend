@@ -2,7 +2,6 @@ import express from "express"
 import {
   adminAuthorized,
   userAuthorized,
-  verifiedUser,
   requireOrdersRead,
   requireOrdersWrite,
 } from "../../../middleware/auth.js"
@@ -200,7 +199,7 @@ ordersRouter.post(
     },
     security: [],
   }),
-  verifiedUser,
+
   async (req, res, next) => {
     const user = req.user as User // TODO: Handle order service
 
@@ -1500,7 +1499,7 @@ ordersRouter.post(
     security: [],
   }),
   rate_limit(5),
-  verifiedUser,
+
   async (req, res, next) => {
     const order_id = req.params["order_id"]
     let order: DBOrder
@@ -2142,7 +2141,7 @@ ordersRouter.post(
     },
     security: [],
   }),
-  verifiedUser,
+
   userAuthorized,
   related_to_order,
   async (req, res) => {

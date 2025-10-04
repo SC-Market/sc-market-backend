@@ -103,8 +103,10 @@ import {
 import { serializeOfferSession } from "../../api/routes/v1/offers/serializers.js"
 import { env } from "../../config/env.js"
 import {
+  ContractorListingsQuery,
   MarketSearchQuery,
   OrderStats,
+  UserListingsQuery,
 } from "../../api/routes/v1/market/types.js"
 
 pg.types.setTypeParser(1114, (s: string) => new Date(s.replace(" ", "T") + "Z"))
@@ -4041,6 +4043,388 @@ export class KnexDatabase implements Database {
     await this.knex.raw("CALL upsert_daily_price_history()")
   }
 
+  async getUserMarketListingsFiltered(query: UserListingsQuery): Promise<{
+    listings: (DBUniqueListingComplete | DBMultipleListingCompositeComplete)[]
+    multiples: DBMultipleComplete[]
+    total: number
+  }> {
+    const knex = this.knex
+
+    // Build base queries for unique listings
+    let uniqueQuery = knex("market_unique_listings")
+      .join(
+        "market_listings",
+        "market_unique_listings.listing_id",
+        "market_listings.listing_id",
+      )
+      .join(
+        "market_listing_details",
+        "market_unique_listings.details_id",
+        "market_listing_details.details_id",
+      )
+      .where("market_listings.user_seller_id", query.user_id)
+      .select(
+        "market_unique_listings.*",
+        "market_listings.*",
+        "market_listing_details.*",
+      )
+
+    // Apply filters
+    if (query.statuses && query.statuses.length > 0) {
+      uniqueQuery = uniqueQuery.whereIn(
+        "market_listings.status",
+        query.statuses,
+      )
+    }
+
+    if (query.sale_type) {
+      uniqueQuery = uniqueQuery.where(
+        "market_listings.sale_type",
+        query.sale_type,
+      )
+    }
+
+    if (query.item_type) {
+      uniqueQuery = uniqueQuery.where(
+        "market_listing_details.item_type",
+        query.item_type,
+      )
+    }
+
+    if (query.query) {
+      uniqueQuery = uniqueQuery.where(function () {
+        this.whereRaw("LOWER(market_listing_details.title) LIKE ?", [
+          `%${query.query!.toLowerCase()}%`,
+        ]).orWhereRaw("LOWER(market_listing_details.description) LIKE ?", [
+          `%${query.query!.toLowerCase()}%`,
+        ])
+      })
+    }
+
+    if (query.minCost && query.minCost > 0) {
+      uniqueQuery = uniqueQuery.where(
+        "market_listings.price",
+        ">=",
+        query.minCost,
+      )
+    }
+
+    if (query.maxCost) {
+      uniqueQuery = uniqueQuery.where(
+        "market_listings.price",
+        "<=",
+        query.maxCost,
+      )
+    }
+
+    if (query.quantityAvailable && query.quantityAvailable > 0) {
+      uniqueQuery = uniqueQuery.where(
+        "market_listings.quantity_available",
+        ">=",
+        query.quantityAvailable,
+      )
+    }
+
+    // Build query for multiples
+    let multiplesQuery = knex("market_multiples").where(
+      "market_multiples.user_seller_id",
+      query.user_id,
+    )
+
+    if (query.statuses && query.statuses.length > 0) {
+      multiplesQuery = multiplesQuery.whereIn(
+        "market_multiples.status",
+        query.statuses,
+      )
+    }
+
+    // Apply same filters to multiples query
+    if (query.sale_type) {
+      multiplesQuery = multiplesQuery.where(
+        "market_multiples.sale_type",
+        query.sale_type,
+      )
+    }
+
+    if (query.item_type) {
+      multiplesQuery = multiplesQuery.join(
+        "market_listing_details",
+        "market_multiples.details_id",
+        "market_listing_details.details_id",
+      ).where("market_listing_details.item_type", query.item_type)
+    }
+
+    if (query.query) {
+      if (!query.item_type) {
+        multiplesQuery = multiplesQuery.join(
+          "market_listing_details",
+          "market_multiples.details_id",
+          "market_listing_details.details_id",
+        )
+      }
+      multiplesQuery = multiplesQuery.where(function () {
+        this.whereRaw("LOWER(market_listing_details.title) LIKE ?", [
+          `%${query.query!.toLowerCase()}%`,
+        ]).orWhereRaw("LOWER(market_listing_details.description) LIKE ?", [
+          `%${query.query!.toLowerCase()}%`,
+        ])
+      })
+    }
+
+    if (query.minCost && query.minCost > 0) {
+      multiplesQuery = multiplesQuery.where(
+        "market_multiples.price",
+        ">=",
+        query.minCost,
+      )
+    }
+
+    if (query.maxCost) {
+      multiplesQuery = multiplesQuery.where(
+        "market_multiples.price",
+        "<=",
+        query.maxCost,
+      )
+    }
+
+    if (query.quantityAvailable && query.quantityAvailable > 0) {
+      multiplesQuery = multiplesQuery.where(
+        "market_multiples.quantity_available",
+        ">=",
+        query.quantityAvailable,
+      )
+    }
+
+    // Get counts
+    const uniqueCount = await uniqueQuery.clone().count("* as count").first()
+    const multiplesCount = await multiplesQuery.clone().count("* as count").first()
+    const total = Number(uniqueCount?.count || 0) + Number(multiplesCount?.count || 0)
+
+    // Apply sorting
+    const sortColumn =
+      query.sort === "title"
+        ? "market_listing_details.title"
+        : query.sort === "minimum_price"
+          ? "market_listings.price"
+          : query.sort === "quantity_available"
+            ? "market_listings.quantity_available"
+            : query.sort === "expiration"
+              ? "market_listings.expiration"
+              : "market_listings.timestamp"
+
+    uniqueQuery = uniqueQuery.orderBy(
+      sortColumn,
+      query.reverseSort ? "desc" : "asc",
+    )
+
+    // Apply pagination to unique listings
+    uniqueQuery = uniqueQuery.limit(query.page_size).offset(query.index)
+
+    const listings = await uniqueQuery
+    const multiples = await multiplesQuery
+
+    return {
+      listings: listings as (
+        | DBUniqueListingComplete
+        | DBMultipleListingCompositeComplete
+      )[],
+      multiples: multiples as DBMultipleComplete[],
+      total,
+    }
+  }
+
+  async getContractorMarketListingsFiltered(
+    query: ContractorListingsQuery,
+  ): Promise<{
+    listings: (DBUniqueListingComplete | DBMultipleListingCompositeComplete)[]
+    multiples: DBMultipleComplete[]
+    total: number
+  }> {
+    const knex = this.knex
+
+    // Build base queries for unique listings
+    let uniqueQuery = knex("market_unique_listings")
+      .join(
+        "market_listings",
+        "market_unique_listings.listing_id",
+        "market_listings.listing_id",
+      )
+      .join(
+        "market_listing_details",
+        "market_unique_listings.details_id",
+        "market_listing_details.details_id",
+      )
+      .where("market_listings.contractor_seller_id", query.contractor_id)
+      .select(
+        "market_unique_listings.*",
+        "market_listings.*",
+        "market_listing_details.*",
+      )
+
+    // Apply filters
+    if (query.statuses && query.statuses.length > 0) {
+      uniqueQuery = uniqueQuery.whereIn(
+        "market_listings.status",
+        query.statuses,
+      )
+    }
+
+    if (query.sale_type) {
+      uniqueQuery = uniqueQuery.where(
+        "market_listings.sale_type",
+        query.sale_type,
+      )
+    }
+
+    if (query.item_type) {
+      uniqueQuery = uniqueQuery.where(
+        "market_listing_details.item_type",
+        query.item_type,
+      )
+    }
+
+    if (query.query) {
+      uniqueQuery = uniqueQuery.where(function () {
+        this.whereRaw("LOWER(market_listing_details.title) LIKE ?", [
+          `%${query.query!.toLowerCase()}%`,
+        ]).orWhereRaw("LOWER(market_listing_details.description) LIKE ?", [
+          `%${query.query!.toLowerCase()}%`,
+        ])
+      })
+    }
+
+    if (query.minCost && query.minCost > 0) {
+      uniqueQuery = uniqueQuery.where(
+        "market_listings.price",
+        ">=",
+        query.minCost,
+      )
+    }
+
+    if (query.maxCost) {
+      uniqueQuery = uniqueQuery.where(
+        "market_listings.price",
+        "<=",
+        query.maxCost,
+      )
+    }
+
+    if (query.quantityAvailable && query.quantityAvailable > 0) {
+      uniqueQuery = uniqueQuery.where(
+        "market_listings.quantity_available",
+        ">=",
+        query.quantityAvailable,
+      )
+    }
+
+    // Build query for multiples
+    let multiplesQuery = knex("market_multiples").where(
+      "market_multiples.contractor_seller_id",
+      query.contractor_id,
+    )
+
+    if (query.statuses && query.statuses.length > 0) {
+      multiplesQuery = multiplesQuery.whereIn(
+        "market_multiples.status",
+        query.statuses,
+      )
+    }
+
+    // Apply same filters to multiples query
+    if (query.sale_type) {
+      multiplesQuery = multiplesQuery.where(
+        "market_multiples.sale_type",
+        query.sale_type,
+      )
+    }
+
+    if (query.item_type) {
+      multiplesQuery = multiplesQuery.join(
+        "market_listing_details",
+        "market_multiples.details_id",
+        "market_listing_details.details_id",
+      ).where("market_listing_details.item_type", query.item_type)
+    }
+
+    if (query.query) {
+      if (!query.item_type) {
+        multiplesQuery = multiplesQuery.join(
+          "market_listing_details",
+          "market_multiples.details_id",
+          "market_listing_details.details_id",
+        )
+      }
+      multiplesQuery = multiplesQuery.where(function () {
+        this.whereRaw("LOWER(market_listing_details.title) LIKE ?", [
+          `%${query.query!.toLowerCase()}%`,
+        ]).orWhereRaw("LOWER(market_listing_details.description) LIKE ?", [
+          `%${query.query!.toLowerCase()}%`,
+        ])
+      })
+    }
+
+    if (query.minCost && query.minCost > 0) {
+      multiplesQuery = multiplesQuery.where(
+        "market_multiples.price",
+        ">=",
+        query.minCost,
+      )
+    }
+
+    if (query.maxCost) {
+      multiplesQuery = multiplesQuery.where(
+        "market_multiples.price",
+        "<=",
+        query.maxCost,
+      )
+    }
+
+    if (query.quantityAvailable && query.quantityAvailable > 0) {
+      multiplesQuery = multiplesQuery.where(
+        "market_multiples.quantity_available",
+        ">=",
+        query.quantityAvailable,
+      )
+    }
+
+    // Get counts
+    const uniqueCount = await uniqueQuery.clone().count("* as count").first()
+    const multiplesCount = await multiplesQuery.clone().count("* as count").first()
+    const total = Number(uniqueCount?.count || 0) + Number(multiplesCount?.count || 0)
+
+    // Apply sorting
+    const sortColumn =
+      query.sort === "title"
+        ? "market_listing_details.title"
+        : query.sort === "minimum_price"
+          ? "market_listings.price"
+          : query.sort === "quantity_available"
+            ? "market_listings.quantity_available"
+            : query.sort === "expiration"
+              ? "market_listings.expiration"
+              : "market_listings.timestamp"
+
+    uniqueQuery = uniqueQuery.orderBy(
+      sortColumn,
+      query.reverseSort ? "desc" : "asc",
+    )
+
+    // Apply pagination to unique listings
+    uniqueQuery = uniqueQuery.limit(query.page_size).offset(query.index)
+
+    const listings = await uniqueQuery
+    const multiples = await multiplesQuery
+
+    return {
+      listings: listings as (
+        | DBUniqueListingComplete
+        | DBMultipleListingCompositeComplete
+      )[],
+      multiples: multiples as DBMultipleComplete[],
+      total,
+    }
+  }
+
   async searchMarket(searchQuery: MarketSearchQuery, andWhere?: any) {
     // ['rating', 'name', 'activity', 'all-time']
     const knex = this.knex
@@ -4137,6 +4521,104 @@ export class KnexDatabase implements Database {
     }
 
     return query.select("*", knex.raw("count(*) OVER() AS full_count"))
+  }
+
+  async searchMarketUnmaterialized(searchQuery: MarketSearchQuery, andWhere?: any) {
+    // Query underlying tables directly to get all statuses, not just active
+    const knex = this.knex
+    
+    // Build a query that mimics the market_search_complete view but includes all statuses
+    let query = knex
+      .select([
+        "market_listings.listing_id",
+        "market_listings.sale_type",
+        "market_listings.price",
+        "market_listings.price as minimum_price", 
+        "market_listings.price as maximum_price",
+        "market_listings.quantity_available",
+        "market_listings.timestamp",
+        "market_listings.expiration",
+        "market_listings.status",
+        "market_listings.internal",
+        "market_listings.user_seller_id",
+        "market_listings.contractor_seller_id",
+        "market_listing_details.details_id",
+        "market_listing_details.title",
+        "market_listing_details.item_type",
+        "market_listing_details.game_item_id",
+        knex.raw("'unique' as listing_type"),
+        knex.raw("to_tsvector('english', market_listing_details.title || ' ' || market_listing_details.description) as textsearch"),
+        knex.raw("to_tsvector('english', market_listing_details.item_type) as item_type_ts"),
+        knex.raw("0 as total_rating"),
+        knex.raw("0 as avg_rating"),
+        knex.raw("0 as rating_count"),
+        knex.raw("0 as rating_streak"),
+        knex.raw("0 as total_orders"),
+        knex.raw("0 as total_assignments"),
+        knex.raw("0 as response_rate"),
+        knex.raw("null as photo_details"),
+        knex.raw("null as photo"),
+        knex.raw("null as item_name"),
+        knex.raw("null as auction_end_time"),
+        knex.raw("null as user_seller"),
+        knex.raw("null as contractor_seller")
+      ])
+      .from("market_listings")
+      .join("market_unique_listings", "market_listings.listing_id", "market_unique_listings.listing_id")
+      .join("market_listing_details", "market_unique_listings.details_id", "market_listing_details.details_id")
+      .orderBy(searchQuery.sort, searchQuery.reverseSort ? "asc" : "desc")
+
+    // Apply filters
+    if (searchQuery.sale_type) {
+      query = query.where("market_listings.sale_type", searchQuery.sale_type)
+    }
+
+    if (searchQuery.item_type) {
+      query = query.where("market_listing_details.item_type", searchQuery.item_type)
+    }
+
+    if (searchQuery.minCost) {
+      query = query.where("market_listings.price", ">=", searchQuery.minCost)
+    }
+
+    if (searchQuery.maxCost) {
+      query = query.where("market_listings.price", "<=", searchQuery.maxCost)
+    }
+
+    if (searchQuery.quantityAvailable) {
+      query = query.where("market_listings.quantity_available", ">=", searchQuery.quantityAvailable)
+    }
+
+    if (searchQuery.query) {
+      query = query.where(function() {
+        this.whereRaw("LOWER(market_listing_details.title) LIKE ?", [`%${searchQuery.query!.toLowerCase()}%`])
+          .orWhereRaw("LOWER(market_listing_details.description) LIKE ?", [`%${searchQuery.query!.toLowerCase()}%`])
+      })
+    }
+
+    if (searchQuery.user_seller_id) {
+      query = query.where("market_listings.user_seller_id", searchQuery.user_seller_id)
+    }
+
+    if (searchQuery.contractor_seller_id) {
+      query = query.where("market_listings.contractor_seller_id", searchQuery.contractor_seller_id)
+    }
+
+    if (searchQuery.statuses && searchQuery.statuses.length > 0) {
+      query = query.whereIn("market_listings.status", searchQuery.statuses)
+    }
+
+    if (andWhere) {
+      query = query.andWhere(andWhere)
+    }
+
+    if (searchQuery.page_size) {
+      query = query
+        .limit(searchQuery.page_size)
+        .offset(searchQuery.page_size * searchQuery.index)
+    }
+
+    return query.select(knex.raw("count(*) OVER() AS full_count"))
   }
 
   async getOrderStats() {
