@@ -4565,22 +4565,26 @@ marketRouter.post(
       })
 
       if (!aggregate) {
-        res.status(400).json({ error: "Invalid listing" })
+        res
+          .status(400)
+          .json(createErrorResponse({ message: "Invalid listing" }))
         return
       }
 
       if (quantity < 1) {
-        res.status(400).json({ error: "Invalid quantity" })
+        res
+          .status(400)
+          .json(createErrorResponse({ message: "Invalid quantity" }))
         return
       }
 
       if (price < 1) {
-        res.status(400).json({ error: "Invalid price" })
+        res.status(400).json(createErrorResponse({ message: "Invalid price" }))
         return
       }
 
       if (new Date(expiry) < new Date()) {
-        res.status(400).json({ error: "Invalid expiry" })
+        res.status(400).json(createErrorResponse({ message: "Invalid expiry" }))
         return
       }
 
@@ -4592,11 +4596,13 @@ marketRouter.post(
         buyer_id: user.user_id,
       })
 
-      res.json(orders[0])
+      res.json(createResponse(orders[0]))
       return
     } catch (e) {
       console.error(e)
-      res.status(500).json({ error: "Internal server error" })
+      res
+        .status(500)
+        .json(createErrorResponse({ message: "Internal server error" }))
       return
     }
   },

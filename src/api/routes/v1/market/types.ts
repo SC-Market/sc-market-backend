@@ -123,17 +123,20 @@ export interface FormattedUniqueListing {
   }
   accept_offers: boolean
   auction_details?: DBAuctionDetails
-  details: {
-    title: string
-    description: string
-    item_type: string
-  }
+  details: FormattedDetails
   photos: string[]
   stats: {
     order_count?: number
     offer_count?: number
     view_count: number | string
   }
+}
+
+export interface FormattedDetails {
+  title: string
+  description: string
+  item_type: string
+  game_item_id: string | null
 }
 
 export interface FormattedBuyOrder {
@@ -157,9 +160,8 @@ export interface FormattedAggregateListing {
     expiration: Date
   }
   buy_orders?: FormattedBuyOrder[]
-  details: {
-    item_type: string
-  }
+  details: FormattedDetails
+  listings?: ListingBase[]
   photos: string[]
   stats: {
     order_count: number
@@ -179,11 +181,7 @@ export interface FormattedMultipleListing {
     timestamp: Date
     expiration: Date
   }
-  details: {
-    title: string
-    description: string
-    item_type: string
-  }
+  details: FormattedDetails
   photos: string[]
   stats: {
     order_count: number

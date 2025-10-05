@@ -358,8 +358,14 @@ export async function formatMarketAggregateComplete(
       timestamp: complete.listings[0]?.timestamp || new Date(),
       expiration: complete.listings[0]?.expiration || new Date(),
     },
+    listings: await Promise.all(
+      complete.listings.map((l) => formatListingBase(l)),
+    ),
     details: {
       item_type: complete.details.item_type,
+      game_item_id: complete.details.game_item_id,
+      description: complete.details.description,
+      title: complete.details.title,
     },
     photos: photos,
     buy_orders: await Promise.all(complete.buy_orders.map(formatBuyOrder)),
@@ -396,9 +402,10 @@ export async function formatMarketMultipleComplete(
       expiration: defaultListing?.listing.expiration || new Date(),
     },
     details: {
-      title: complete.details.title,
-      description: complete.details.description,
       item_type: complete.details.item_type,
+      game_item_id: complete.details.game_item_id,
+      description: complete.details.description,
+      title: complete.details.title,
     },
     photos,
     stats: {
@@ -449,9 +456,10 @@ export async function formatMultipleListingCompleteComposite(
       expiration: complete.listing.expiration,
     },
     details: {
-      title: complete.details.title,
-      description: complete.details.description,
       item_type: complete.details.item_type,
+      game_item_id: complete.details.game_item_id,
+      description: complete.details.description,
+      title: complete.details.title,
     },
     photos,
     stats: {
@@ -542,6 +550,9 @@ export async function formatMarketAggregateListingCompositeComplete(
     },
     details: {
       item_type: complete.details.item_type,
+      game_item_id: complete.details.game_item_id,
+      description: complete.details.description,
+      title: complete.details.title,
     },
     photos,
     stats: {
