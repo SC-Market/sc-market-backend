@@ -562,7 +562,7 @@ marketRouter.get(
   }),
   async (req, res) => {
     const order_stats = await database.getOrderStats()
-    res.json(order_stats)
+    res.json(createResponse(order_stats))
     return
   },
 )
