@@ -31,6 +31,7 @@ import moment from "moment"
 import { serializeOrderDetails } from "../orders/serializers.js"
 import {
   FormattedAggregateListing,
+  FormattedBuyOrder,
   FormattedListing,
   FormattedMultipleListing,
   ListingBase,
@@ -328,7 +329,9 @@ export async function formatUniqueListingComplete(
   }
 }
 
-export async function formatBuyOrder(buy_order: DBBuyOrder) {
+export async function formatBuyOrder(
+  buy_order: DBBuyOrder,
+): Promise<FormattedBuyOrder> {
   return {
     buy_order_id: buy_order.buy_order_id,
     aggregate_id: buy_order.game_item_id,
@@ -356,6 +359,7 @@ export async function formatMarketAggregateComplete(
     details: {
       item_type: complete.details.item_type,
     },
+    buy_orders: await Promise.all(complete.buy_orders.map(formatBuyOrder)),
     stats: {
       order_count: 0,
       offer_count: 0,

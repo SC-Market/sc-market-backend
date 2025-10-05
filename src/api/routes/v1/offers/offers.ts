@@ -639,12 +639,13 @@ offerRouter.put(
     ])
 
     if (["accepted", "rejected"].includes(status)) {
+      const user = req.user as User
       await database.updateOfferSession(session.id, { status: "closed" })
       await database.updateOrderOffer(req.most_recent_offer!.id, {
         status,
       })
 
-      await sendOfferStatusNotification(session, nameMap.get(status)!)
+      await sendOfferStatusNotification(session, nameMap.get(status)!, user)
 
       if (status === "accepted") {
         const order = await initiateOrder(session)
@@ -725,7 +726,8 @@ offerRouter.put(
       })
 
       try {
-        await dispatchOfferNotifications(session, "counteroffer")
+        const user = req.user as User
+        await dispatchOfferNotifications(session, "counteroffer", user)
       } catch (e) {
         console.error(e)
       }

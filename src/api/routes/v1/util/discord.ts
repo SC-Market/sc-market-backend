@@ -301,6 +301,7 @@ export async function manageOrderStatusUpdateDiscord(
 export async function manageOfferStatusUpdateDiscord(
   offer: DBOfferSession,
   newStatus: "Rejected" | "Accepted" | "Counter-Offered",
+  user?: DBUser,
 ) {
   if (!offer.thread_id) {
     return
@@ -308,7 +309,7 @@ export async function manageOfferStatusUpdateDiscord(
 
   try {
     await rest.post(Routes.channelMessages(offer.thread_id), {
-      body: await generateOfferStatusUpdateMessage(offer, newStatus),
+      body: await generateOfferStatusUpdateMessage(offer, newStatus, user),
     })
   } catch (error) {
     logger.debug(
@@ -413,7 +414,7 @@ export async function createDiscordInvite(
   } = {},
 ): Promise<string | null> {
   try {
-    logger.info(`Creating Discord invite for channel ${channelId}`)
+    logger.debug(`Creating Discord invite for channel ${channelId}`)
 
     const invite = (await rest.post(Routes.channelInvites(channelId), {
       body: {
@@ -424,7 +425,7 @@ export async function createDiscordInvite(
       } as RESTPostAPIChannelInviteJSONBody,
     })) as APIInvite
 
-    logger.info(`Successfully created Discord invite: ${invite.code}`)
+    logger.debug(`Successfully created Discord invite: ${invite.code}`)
     return invite.code
   } catch (error) {
     logger.error(

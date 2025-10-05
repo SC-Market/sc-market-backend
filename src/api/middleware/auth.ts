@@ -189,6 +189,19 @@ export async function verifiedUser(
   res: Response,
 ): Promise<boolean> {
   try {
+    if (req.isAuthenticated()) {
+      const user = req.user as User
+      const authReq = req as AuthRequest
+      authReq.authMethod = "session"
+
+      if (user.banned) {
+        res.status(418).json({ error: "Internal server error" })
+        return false
+      }
+
+      return true
+    }
+
     // Check for token authentication first
     const authHeader = req.headers.authorization
     if (authHeader && authHeader.startsWith("Bearer ")) {
@@ -215,24 +228,6 @@ export async function verifiedUser(
       } else {
         res.status(401).json({ error: "Invalid or expired token" })
         return false
-      }
-    }
-
-    // Fall back to session authentication
-    if (req.isAuthenticated()) {
-      const user = req.user as User
-      const authReq = req as AuthRequest
-      authReq.authMethod = "session"
-
-      if (user.banned) {
-        res.status(418).json({ error: "Internal server error" })
-        return false
-      }
-      if (!user.rsi_confirmed) {
-        res.status(401).json({ error: "Your account is not verified." })
-        return false
-      } else {
-        return true
       }
     } else {
       res.status(401).json({ error: "Unauthenticated" })

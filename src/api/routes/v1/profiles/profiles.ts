@@ -687,6 +687,7 @@ profileRouter.get(
   "",
   rate_limit(1),
   userAuthorized,
+  requireProfileRead,
   oapi.validPath({
     summary: "Get current user profile",
     deprecated: false,

@@ -10,6 +10,7 @@ import {
   DBOrder,
   DBOrderComment,
   DBReview,
+  DBUser,
 } from "../../../../clients/database/db-models.js"
 import { database } from "../../../../clients/database/knex-db.js"
 import logger from "../../../../logger/logger.js"
@@ -60,6 +61,7 @@ export async function createOfferSiteNotifications(
 export async function dispatchOfferNotifications(
   offer: DBOfferSession,
   type: "create" | "counteroffer",
+  user?: DBUser,
 ) {
   try {
     // 1 Send DMS
@@ -90,7 +92,7 @@ export async function dispatchOfferNotifications(
 
   try {
     if (type === "counteroffer") {
-      await sendOfferStatusNotification(offer, "Counter-Offered")
+      await sendOfferStatusNotification(offer, "Counter-Offered", user)
     }
   } catch (e) {
     logger.debug(`Failed to send offer status notification: ${e}`)
@@ -657,8 +659,22 @@ export async function createContractorInviteNotification(
 export async function sendOfferStatusNotification(
   offer: DBOfferSession,
   status: "Rejected" | "Accepted" | "Counter-Offered",
+  user?: DBUser,
 ) {
-  await manageOfferStatusUpdateDiscord(offer, status)
+  // Send Discord embed
+  await manageOfferStatusUpdateDiscord(offer, status, user)
+
+  // Send chat message
+  try {
+    const chat = await database.getChat({ session_id: offer.id })
+    const actionBy = user ? ` by ${user.username}` : ""
+    const content = `Offer status updated to **${status}**${actionBy}`
+    await sendSystemMessage(chat.chat_id, content, false)
+  } catch (error) {
+    logger.debug(
+      `Failed to send offer status update chat message for session ${offer.id}: ${error}`,
+    )
+  }
 }
 
 export async function createAdminAlertNotifications(alert: DBAdminAlert) {

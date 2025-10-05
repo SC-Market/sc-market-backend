@@ -1,7 +1,9 @@
 import {
+  DBBuyOrder,
   MinimalContractor,
   MinimalUser,
 } from "../../../../clients/database/db-models.js"
+import { database } from "../../../../clients/database/knex-db.js"
 
 export const sortingMethods = [
   "title",
@@ -131,6 +133,15 @@ export interface FormattedUniqueListing {
   }
 }
 
+export interface FormattedBuyOrder {
+  buy_order_id: string
+  aggregate_id: string
+  quantity: number
+  price: number
+  buyer: MinimalUser
+  expiry: Date
+}
+
 export interface FormattedAggregateListing {
   type: "aggregate"
   listing: {
@@ -142,6 +153,7 @@ export interface FormattedAggregateListing {
     timestamp: Date
     expiration: Date
   }
+  buy_orders?: FormattedBuyOrder[]
   details: {
     item_type: string
   }

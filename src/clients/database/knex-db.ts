@@ -2929,15 +2929,6 @@ export class KnexDatabase implements Database {
       .offset(offset)
       .select("orders.*")
 
-    console.log(
-      query
-        .orderBy(`orders.${sortBy}`, sortOrder)
-        .limit(pageSize)
-        .offset(offset)
-        .select("orders.*")
-        .toQuery(),
-    )
-
     return {
       orders,
       pagination: {
@@ -4147,11 +4138,13 @@ export class KnexDatabase implements Database {
     }
 
     if (query.item_type) {
-      multiplesQuery = multiplesQuery.join(
-        "market_listing_details",
-        "market_multiples.details_id",
-        "market_listing_details.details_id",
-      ).where("market_listing_details.item_type", query.item_type)
+      multiplesQuery = multiplesQuery
+        .join(
+          "market_listing_details",
+          "market_multiples.details_id",
+          "market_listing_details.details_id",
+        )
+        .where("market_listing_details.item_type", query.item_type)
     }
 
     if (query.query) {
@@ -4197,8 +4190,12 @@ export class KnexDatabase implements Database {
 
     // Get counts
     const uniqueCount = await uniqueQuery.clone().count("* as count").first()
-    const multiplesCount = await multiplesQuery.clone().count("* as count").first()
-    const total = Number(uniqueCount?.count || 0) + Number(multiplesCount?.count || 0)
+    const multiplesCount = await multiplesQuery
+      .clone()
+      .count("* as count")
+      .first()
+    const total =
+      Number(uniqueCount?.count || 0) + Number(multiplesCount?.count || 0)
 
     // Apply sorting
     const sortColumn =
@@ -4339,11 +4336,13 @@ export class KnexDatabase implements Database {
     }
 
     if (query.item_type) {
-      multiplesQuery = multiplesQuery.join(
-        "market_listing_details",
-        "market_multiples.details_id",
-        "market_listing_details.details_id",
-      ).where("market_listing_details.item_type", query.item_type)
+      multiplesQuery = multiplesQuery
+        .join(
+          "market_listing_details",
+          "market_multiples.details_id",
+          "market_listing_details.details_id",
+        )
+        .where("market_listing_details.item_type", query.item_type)
     }
 
     if (query.query) {
@@ -4389,8 +4388,12 @@ export class KnexDatabase implements Database {
 
     // Get counts
     const uniqueCount = await uniqueQuery.clone().count("* as count").first()
-    const multiplesCount = await multiplesQuery.clone().count("* as count").first()
-    const total = Number(uniqueCount?.count || 0) + Number(multiplesCount?.count || 0)
+    const multiplesCount = await multiplesQuery
+      .clone()
+      .count("* as count")
+      .first()
+    const total =
+      Number(uniqueCount?.count || 0) + Number(multiplesCount?.count || 0)
 
     // Apply sorting
     const sortColumn =
@@ -4523,17 +4526,20 @@ export class KnexDatabase implements Database {
     return query.select("*", knex.raw("count(*) OVER() AS full_count"))
   }
 
-  async searchMarketUnmaterialized(searchQuery: MarketSearchQuery, andWhere?: any) {
+  async searchMarketUnmaterialized(
+    searchQuery: MarketSearchQuery,
+    andWhere?: any,
+  ) {
     // Query underlying tables directly to get all statuses, not just active
     const knex = this.knex
-    
+
     // Build a query that mimics the market_search_complete view but includes all statuses
     let query = knex
       .select([
         "market_listings.listing_id",
         "market_listings.sale_type",
         "market_listings.price",
-        "market_listings.price as minimum_price", 
+        "market_listings.price as minimum_price",
         "market_listings.price as maximum_price",
         "market_listings.quantity_available",
         "market_listings.timestamp",
@@ -4547,8 +4553,12 @@ export class KnexDatabase implements Database {
         "market_listing_details.item_type",
         "market_listing_details.game_item_id",
         knex.raw("'unique' as listing_type"),
-        knex.raw("to_tsvector('english', market_listing_details.title || ' ' || market_listing_details.description) as textsearch"),
-        knex.raw("to_tsvector('english', market_listing_details.item_type) as item_type_ts"),
+        knex.raw(
+          "to_tsvector('english', market_listing_details.title || ' ' || market_listing_details.description) as textsearch",
+        ),
+        knex.raw(
+          "to_tsvector('english', market_listing_details.item_type) as item_type_ts",
+        ),
         knex.raw("0 as total_rating"),
         knex.raw("0 as avg_rating"),
         knex.raw("0 as rating_count"),
@@ -4561,11 +4571,19 @@ export class KnexDatabase implements Database {
         knex.raw("null as item_name"),
         knex.raw("null as auction_end_time"),
         knex.raw("null as user_seller"),
-        knex.raw("null as contractor_seller")
+        knex.raw("null as contractor_seller"),
       ])
       .from("market_listings")
-      .join("market_unique_listings", "market_listings.listing_id", "market_unique_listings.listing_id")
-      .join("market_listing_details", "market_unique_listings.details_id", "market_listing_details.details_id")
+      .join(
+        "market_unique_listings",
+        "market_listings.listing_id",
+        "market_unique_listings.listing_id",
+      )
+      .join(
+        "market_listing_details",
+        "market_unique_listings.details_id",
+        "market_listing_details.details_id",
+      )
       .orderBy(searchQuery.sort, searchQuery.reverseSort ? "asc" : "desc")
 
     // Apply filters
@@ -4574,7 +4592,10 @@ export class KnexDatabase implements Database {
     }
 
     if (searchQuery.item_type) {
-      query = query.where("market_listing_details.item_type", searchQuery.item_type)
+      query = query.where(
+        "market_listing_details.item_type",
+        searchQuery.item_type,
+      )
     }
 
     if (searchQuery.minCost) {
@@ -4586,22 +4607,35 @@ export class KnexDatabase implements Database {
     }
 
     if (searchQuery.quantityAvailable) {
-      query = query.where("market_listings.quantity_available", ">=", searchQuery.quantityAvailable)
+      query = query.where(
+        "market_listings.quantity_available",
+        ">=",
+        searchQuery.quantityAvailable,
+      )
     }
 
     if (searchQuery.query) {
-      query = query.where(function() {
-        this.whereRaw("LOWER(market_listing_details.title) LIKE ?", [`%${searchQuery.query!.toLowerCase()}%`])
-          .orWhereRaw("LOWER(market_listing_details.description) LIKE ?", [`%${searchQuery.query!.toLowerCase()}%`])
+      query = query.where(function () {
+        this.whereRaw("LOWER(market_listing_details.title) LIKE ?", [
+          `%${searchQuery.query!.toLowerCase()}%`,
+        ]).orWhereRaw("LOWER(market_listing_details.description) LIKE ?", [
+          `%${searchQuery.query!.toLowerCase()}%`,
+        ])
       })
     }
 
     if (searchQuery.user_seller_id) {
-      query = query.where("market_listings.user_seller_id", searchQuery.user_seller_id)
+      query = query.where(
+        "market_listings.user_seller_id",
+        searchQuery.user_seller_id,
+      )
     }
 
     if (searchQuery.contractor_seller_id) {
-      query = query.where("market_listings.contractor_seller_id", searchQuery.contractor_seller_id)
+      query = query.where(
+        "market_listings.contractor_seller_id",
+        searchQuery.contractor_seller_id,
+      )
     }
 
     if (searchQuery.statuses && searchQuery.statuses.length > 0) {

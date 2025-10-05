@@ -275,24 +275,36 @@ export async function generateStatusUpdateMessage(
 export async function generateOfferStatusUpdateMessage(
   session: DBOfferSession,
   newStatus: string,
+  user?: DBUser,
 ) {
   const offer = await database.getMostRecentOrderOffer(session.id)
+
+  const embed: any = {
+    color: status_colors.get(newStatus) || 0x111828,
+    author: {
+      name: offer.title,
+    },
+    title: `Offer Status Updated - ${newStatus}`,
+    url: `https://sc-market.space/offer/${session.id}`,
+    timestamp: offer.timestamp.toISOString(),
+  }
+
+  // Add user information if provided
+  if (user) {
+    embed.fields = [
+      {
+        name: "Updated by",
+        value: user.username,
+        inline: true,
+      },
+    ]
+  }
 
   return {
     allowed_mentions: {
       parse: [],
     },
-    embeds: [
-      {
-        color: status_colors.get(newStatus) || 0x111828,
-        author: {
-          name: offer.title,
-        },
-        title: `Offer Status Updated - ${newStatus}`,
-        url: `https://sc-market.space/offer/${session.id}`,
-        timestamp: offer.timestamp.toISOString(),
-      },
-    ],
+    embeds: [embed],
   }
 }
 
