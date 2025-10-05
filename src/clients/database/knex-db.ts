@@ -4965,7 +4965,11 @@ export class KnexDatabase implements Database {
     listing_type: "market" | "service",
     listing_id: string,
   ) {
-    return this.knex("listing_view_stats")
+    return this.knex<{
+      total_views: string
+      listing_type: string
+      listing_id: string
+    }>("listing_view_stats")
       .where({ listing_type, listing_id })
       .first()
   }

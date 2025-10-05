@@ -1,4 +1,5 @@
 import {
+  DBAuctionDetails,
   DBBuyOrder,
   MinimalContractor,
   MinimalUser,
@@ -120,6 +121,8 @@ export interface FormattedUniqueListing {
     timestamp: Date
     expiration: Date
   }
+  accept_offers: boolean
+  auction_details?: DBAuctionDetails
   details: {
     title: string
     description: string
@@ -127,9 +130,9 @@ export interface FormattedUniqueListing {
   }
   photos: string[]
   stats: {
-    order_count: number
-    offer_count: number
-    view_count: number
+    order_count?: number
+    offer_count?: number
+    view_count: number | string
   }
 }
 
@@ -157,6 +160,7 @@ export interface FormattedAggregateListing {
   details: {
     item_type: string
   }
+  photos: string[]
   stats: {
     order_count: number
     offer_count: number

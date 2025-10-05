@@ -71,7 +71,7 @@ import {
   ContractorListingsQuery,
   FormattedListing,
 } from "./types.js"
-import { formatSearchResult } from "../util/formatting.js"
+import { formatPrivateSearchResult } from "../util/formatting.js"
 
 export const marketRouter = express.Router()
 
@@ -3188,7 +3188,7 @@ marketRouter.get(
 
       // Format listings using the same approach as market search
       const formattedListings = await Promise.all(
-        searchResults.map((listing) => formatSearchResult(listing)),
+        searchResults.map((listing) => formatPrivateSearchResult(listing)),
       )
 
       // Extract total count from the first result (if any)

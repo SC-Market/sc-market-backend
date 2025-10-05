@@ -34,15 +34,16 @@ import {
   FormattedBuyOrder,
   FormattedListing,
   FormattedMultipleListing,
+  FormattedUniqueListing,
   ListingBase,
 } from "../market/types.js"
 
-export async function formatSearchResult(listing: DBMarketSearchResult) {
+export async function formatPrivateSearchResult(listing: DBMarketSearchResult) {
   if (listing.listing_type === "unique") {
     const complete = await database.getMarketUniqueListingComplete(
       listing.listing_id,
     )
-    return formatUniqueListingComplete(complete)
+    return formatUniqueListingComplete(complete, true)
   } else if (listing.listing_type === "aggregate") {
     const complete = await database.getMarketAggregateComplete(
       listing.listing_id,
@@ -262,10 +263,16 @@ export async function serializeListingStats(listing: DBMarketListing) {
     .countDistinct("order_offers.session_id as offer_count")
     .select()
 
+  // Get view count for unique listings only
+  const viewStats = await database.getListingViewStats(
+    "market",
+    listing.listing_id,
+  )
+
   return {
-    order_count: order_count,
-    offer_count: offer_count,
-    view_count: 0,
+    order_count: +order_count,
+    offer_count: +offer_count,
+    view_count: +(viewStats?.total_views || 0),
   }
 }
 
@@ -278,11 +285,11 @@ export async function serializeListingStats(listing: DBMarketListing) {
 export async function formatUniqueListingComplete(
   complete: DBUniqueListingComplete,
   isPrivate: boolean = false,
-): Promise<any> {
+): Promise<FormattedUniqueListing> {
   const listing = complete.listing
   const photos = []
   for (const photo of complete.images) {
-    photos.push(await cdn.getFileLinkResource(photo.resource_id))
+    photos.push((await cdn.getFileLinkResource(photo.resource_id))!)
   }
 
   let price = +listing.price
@@ -295,13 +302,6 @@ export async function formatUniqueListingComplete(
       price = Math.max(...bids.map((bid) => bid.bid))
     }
   }
-
-  // Get view count for unique listings only
-  const viewStats = await database.getListingViewStats(
-    "market",
-    listing.listing_id,
-  )
-  const viewCount = viewStats ? parseInt(viewStats.total_views) : 0
 
   return {
     type: "unique",
@@ -316,16 +316,13 @@ export async function formatUniqueListingComplete(
         ? await database.getAuctionDetail({ listing_id: listing.listing_id })
         : undefined,
     photos: photos,
-    user_seller: listing.user_seller_id
-      ? await database.getMinimalUser({ user_id: listing.user_seller_id })
-      : null,
-    contractor_seller: listing.contractor_seller_id
-      ? await database.getMinimalContractor({
-          contractor_id: listing.contractor_seller_id,
-        })
-      : null,
-    stats: isPrivate ? await serializeListingStats(listing) : null,
-    view_count: viewCount,
+    stats: isPrivate
+      ? await serializeListingStats(listing)
+      : {
+          view_count:
+            (await database.getListingViewStats("market", listing.listing_id))
+              ?.total_views || 0,
+        },
   }
 }
 
@@ -345,6 +342,11 @@ export async function formatBuyOrder(
 export async function formatMarketAggregateComplete(
   complete: DBAggregateComplete,
 ): Promise<FormattedAggregateListing> {
+  const photos: string[] = []
+  for (const photo of complete.images) {
+    photos.push((await cdn.getFileLinkResource(photo.resource_id))!)
+  }
+
   return {
     type: "aggregate",
     listing: {
@@ -359,6 +361,7 @@ export async function formatMarketAggregateComplete(
     details: {
       item_type: complete.details.item_type,
     },
+    photos: photos,
     buy_orders: await Promise.all(complete.buy_orders.map(formatBuyOrder)),
     stats: {
       order_count: 0,
@@ -521,6 +524,11 @@ export async function formatMarketAggregateListingCompositeComplete(
   complete: DBAggregateListingComplete,
   isPrivate: boolean = false,
 ): Promise<FormattedAggregateListing> {
+  const photos = []
+  for (const photo of complete.images) {
+    photos.push((await cdn.getFileLinkResource(photo.resource_id))!)
+  }
+
   return {
     type: "aggregate",
     listing: {
@@ -535,6 +543,7 @@ export async function formatMarketAggregateListingCompositeComplete(
     details: {
       item_type: complete.details.item_type,
     },
+    photos,
     stats: {
       order_count: 0,
       offer_count: 0,
