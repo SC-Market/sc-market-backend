@@ -58,6 +58,12 @@ export async function can_manage_market_listing(
 ) {
   const listing_id = req.params["listing_id"]
   const user = req.user as User
+  if (!user) {
+    res
+      .status(401)
+      .json(createErrorResponse({ message: "User not authenticated" }))
+    return
+  }
 
   if (!listing_id) {
     res

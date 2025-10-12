@@ -33,11 +33,7 @@ import {
   can_manage_market_listing,
   valid_market_listing,
 } from "./middleware.js"
-import {
-  org_authorized,
-  org_permission,
-  valid_contractor,
-} from "../contractors/middleware.js"
+import { org_permission, valid_contractor } from "../contractors/middleware.js"
 import moment from "moment"
 import {
   convertQuery,
@@ -819,6 +815,8 @@ oapi.schema("ErrorResponse", {
 
 marketRouter.put(
   "/listing/:listing_id",
+  userAuthorized,
+  requireMarketWrite,
   can_manage_market_listing,
   oapi.validPath({
     summary: "Update a market listing",
@@ -929,7 +927,6 @@ marketRouter.put(
       },
     },
   }),
-  userAuthorized,
   async (req, res) => {
     const listing_id = req.params["listing_id"]
     const user = req.user as User
