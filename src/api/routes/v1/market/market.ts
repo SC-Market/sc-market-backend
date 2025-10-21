@@ -1965,13 +1965,15 @@ marketRouter.post(
       } = req.body
 
       if (!items || !items.length) {
-        res.status(400).json({ error: "Missing required fields" })
+        res
+          .status(400)
+          .json(createErrorResponse({ message: "Missing required fields" }))
         return
       }
 
       const listings = await verify_listings(res, items, user)
       if (listings === undefined) {
-        return
+        return // Response handled by verify_listings
       }
 
       let total = 0
@@ -1996,29 +1998,38 @@ marketRouter.post(
 
       // Check if user is blocked by the seller (all items are from same seller)
       const firstListing = listings[0].listing.listing
-      
+
       // Check contractor blocking
       if (firstListing.contractor_seller_id) {
         const isBlockedByContractor = await database.isUserBlocked(
           firstListing.contractor_seller_id,
           user.user_id,
-          "contractor"
+          "contractor",
         )
         if (isBlockedByContractor) {
-          res.status(403).json({ error: "You are blocked from creating offers with this contractor" })
+          res.status(403).json(
+            createErrorResponse({
+              message:
+                "You are blocked from creating offers with this contractor",
+            }),
+          )
           return
         }
       }
-      
+
       // Check user blocking
       if (firstListing.user_seller_id) {
         const isBlockedByUser = await database.isUserBlocked(
           firstListing.user_seller_id,
           user.user_id,
-          "user"
+          "user",
         )
         if (isBlockedByUser) {
-          res.status(403).json({ error: "You are blocked from creating offers with this user" })
+          res.status(403).json(
+            createErrorResponse({
+              message: "You are blocked from creating offers with this user",
+            }),
+          )
           return
         }
       }
