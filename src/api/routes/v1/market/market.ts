@@ -1891,7 +1891,6 @@ oapi.schema("PurchaseRequest", {
 
 marketRouter.post(
   "/purchase",
-
   requireMarketWrite,
   oapi.validPath({
     summary: "Purchase market listings",
@@ -1993,6 +1992,35 @@ marketRouter.post(
       )} aUEC\n`
       if (note) {
         message += `\nNote from buyer:\n> ${note || "None"}`
+      }
+
+      // Check if user is blocked by the seller (all items are from same seller)
+      const firstListing = listings[0].listing.listing
+      
+      // Check contractor blocking
+      if (firstListing.contractor_seller_id) {
+        const isBlockedByContractor = await database.isUserBlocked(
+          firstListing.contractor_seller_id,
+          user.user_id,
+          "contractor"
+        )
+        if (isBlockedByContractor) {
+          res.status(403).json({ error: "You are blocked from creating offers with this contractor" })
+          return
+        }
+      }
+      
+      // Check user blocking
+      if (firstListing.user_seller_id) {
+        const isBlockedByUser = await database.isUserBlocked(
+          firstListing.user_seller_id,
+          user.user_id,
+          "user"
+        )
+        if (isBlockedByUser) {
+          res.status(403).json({ error: "You are blocked from creating offers with this user" })
+          return
+        }
       }
 
       const {
