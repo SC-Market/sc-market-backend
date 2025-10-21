@@ -18,7 +18,8 @@ tokensRouter.post(
   userAuthorized,
   oapi.validPath({
     summary: "Create a new API token",
-    description: "Create a new API token with specified scopes and contractor access. Users must have manage org permissions for any contractors specified.",
+    description:
+      "Create a new API token with specified scopes and contractor access. Users must have manage org permissions for any contractors specified.",
     operationId: "createApiToken",
     tags: ["Tokens"],
     requestBody: {
@@ -93,7 +94,8 @@ tokensRouter.post(
                 items: {
                   type: "string",
                 },
-                description: "Array of contractor Spectrum IDs that this token can access",
+                description:
+                  "Array of contractor Spectrum IDs that this token can access",
                 example: ["123456789", "987654321"],
               },
             },
@@ -112,7 +114,8 @@ tokensRouter.post(
               properties: {
                 token: {
                   type: "string",
-                  description: "The actual token value (only shown on creation)",
+                  description:
+                    "The actual token value (only shown on creation)",
                   example: "scm_live_abc123def456...",
                 },
                 data: {
@@ -122,7 +125,10 @@ tokensRouter.post(
                     name: { type: "string" },
                     description: { type: "string" },
                     scopes: { type: "array", items: { type: "string" } },
-                    contractor_spectrum_ids: { type: "array", items: { type: "string" } },
+                    contractor_spectrum_ids: {
+                      type: "array",
+                      items: { type: "string" },
+                    },
                     expires_at: { type: "string", format: "date-time" },
                     created_at: { type: "string", format: "date-time" },
                     updated_at: { type: "string", format: "date-time" },
@@ -151,7 +157,7 @@ tokensRouter.post(
       },
     },
   }),
-  tokensController.createToken
+  tokensController.createToken,
 )
 
 // List user's tokens
@@ -177,7 +183,10 @@ tokensRouter.get(
                   name: { type: "string" },
                   description: { type: "string" },
                   scopes: { type: "array", items: { type: "string" } },
-                  contractor_spectrum_ids: { type: "array", items: { type: "string" } },
+                  contractor_spectrum_ids: {
+                    type: "array",
+                    items: { type: "string" },
+                  },
                   expires_at: { type: "string", format: "date-time" },
                   last_used_at: { type: "string", format: "date-time" },
                   created_at: { type: "string", format: "date-time" },
@@ -204,7 +213,7 @@ tokensRouter.get(
       },
     },
   }),
-  tokensController.listTokens
+  tokensController.listTokens,
 )
 
 // Get specific token details
@@ -213,7 +222,8 @@ tokensRouter.get(
   userAuthorized,
   oapi.validPath({
     summary: "Get specific API token details",
-    description: "Retrieve details for a specific API token belonging to the authenticated user",
+    description:
+      "Retrieve details for a specific API token belonging to the authenticated user",
     operationId: "getApiToken",
     tags: ["Tokens"],
     parameters: [
@@ -240,7 +250,10 @@ tokensRouter.get(
                 name: { type: "string" },
                 description: { type: "string" },
                 scopes: { type: "array", items: { type: "string" } },
-                contractor_spectrum_ids: { type: "array", items: { type: "string" } },
+                contractor_spectrum_ids: {
+                  type: "array",
+                  items: { type: "string" },
+                },
                 expires_at: { type: "string", format: "date-time" },
                 last_used_at: { type: "string", format: "date-time" },
                 created_at: { type: "string", format: "date-time" },
@@ -267,7 +280,7 @@ tokensRouter.get(
       },
     },
   }),
-  tokensController.getToken
+  tokensController.getToken,
 )
 
 // Update token (scopes, expiration, etc.)
@@ -276,7 +289,8 @@ tokensRouter.put(
   userAuthorized,
   oapi.validPath({
     summary: "Update API token",
-    description: "Update an existing API token's properties including scopes, expiration, and contractor access",
+    description:
+      "Update an existing API token's properties including scopes, expiration, and contractor access",
     operationId: "updateApiToken",
     tags: ["Tokens"],
     parameters: [
@@ -363,7 +377,8 @@ tokensRouter.put(
                 items: {
                   type: "string",
                 },
-                description: "Array of contractor Spectrum IDs that this token can access",
+                description:
+                  "Array of contractor Spectrum IDs that this token can access",
                 example: ["123456789", "987654321"],
               },
             },
@@ -383,7 +398,10 @@ tokensRouter.put(
                 name: { type: "string" },
                 description: { type: "string" },
                 scopes: { type: "array", items: { type: "string" } },
-                contractor_spectrum_ids: { type: "array", items: { type: "string" } },
+                contractor_spectrum_ids: {
+                  type: "array",
+                  items: { type: "string" },
+                },
                 expires_at: { type: "string", format: "date-time" },
                 last_used_at: { type: "string", format: "date-time" },
                 created_at: { type: "string", format: "date-time" },
@@ -412,7 +430,7 @@ tokensRouter.put(
       },
     },
   }),
-  tokensController.updateToken
+  tokensController.updateToken,
 )
 
 // Revoke token
@@ -467,7 +485,7 @@ tokensRouter.delete(
       },
     },
   }),
-  tokensController.revokeToken
+  tokensController.revokeToken,
 )
 
 // Extend token expiration
@@ -545,7 +563,7 @@ tokensRouter.post(
       },
     },
   }),
-  tokensController.extendToken
+  tokensController.extendToken,
 )
 
 // Get token usage statistics
@@ -608,5 +626,5 @@ tokensRouter.get(
       },
     },
   }),
-  tokensController.getTokenStats
+  tokensController.getTokenStats,
 )

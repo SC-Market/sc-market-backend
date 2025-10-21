@@ -18,7 +18,9 @@ function hashToken(token: string): string {
 }
 
 // Helper function to convert internal contractor IDs back to Spectrum IDs
-async function convertContractorIdsToSpectrumIds(contractorIds: string[]): Promise<string[]> {
+async function convertContractorIdsToSpectrumIds(
+  contractorIds: string[],
+): Promise<string[]> {
   if (!contractorIds || contractorIds.length === 0) {
     return []
   }
@@ -26,10 +28,15 @@ async function convertContractorIdsToSpectrumIds(contractorIds: string[]): Promi
   const spectrumIds: string[] = []
   for (const contractorId of contractorIds) {
     try {
-      const contractor = await database.getContractor({ contractor_id: contractorId })
+      const contractor = await database.getContractor({
+        contractor_id: contractorId,
+      })
       spectrumIds.push(contractor.spectrum_id)
     } catch (error) {
-      console.warn(`Failed to convert contractor ID ${contractorId} to Spectrum ID:`, error)
+      console.warn(
+        `Failed to convert contractor ID ${contractorId} to Spectrum ID:`,
+        error,
+      )
     }
   }
   return spectrumIds
@@ -39,7 +46,8 @@ async function convertContractorIdsToSpectrumIds(contractorIds: string[]): Promi
 export async function createToken(req: Request, res: Response): Promise<void> {
   try {
     const user = req.user! as User
-    const { name, description, scopes, expires_at, contractor_spectrum_ids } = req.body
+    const { name, description, scopes, expires_at, contractor_spectrum_ids } =
+      req.body
 
     // Validate required fields
     if (!name || !scopes || !Array.isArray(scopes)) {
@@ -89,9 +97,11 @@ export async function createToken(req: Request, res: Response): Promise<void> {
       (scope: string) => !validScopes.includes(scope),
     )
     if (invalidScopes.length > 0) {
-      res.status(400).json(
-        createErrorResponse(`Invalid scopes: ${invalidScopes.join(", ")}`),
-      )
+      res
+        .status(400)
+        .json(
+          createErrorResponse(`Invalid scopes: ${invalidScopes.join(", ")}`),
+        )
       return
     }
 
@@ -100,11 +110,13 @@ export async function createToken(req: Request, res: Response): Promise<void> {
       (scope: string) => scope.startsWith("admin:") || scope === "admin",
     )
     if (hasAdminScopes && user.role !== "admin") {
-      res.status(403).json(
-        createErrorResponse(
-          "Only admins can create tokens with admin scopes",
-        ),
-      )
+      res
+        .status(403)
+        .json(
+          createErrorResponse(
+            "Only admins can create tokens with admin scopes",
+          ),
+        )
       return
     }
 
@@ -112,38 +124,46 @@ export async function createToken(req: Request, res: Response): Promise<void> {
     let validatedContractorIds: string[] = []
     if (contractor_spectrum_ids) {
       if (!Array.isArray(contractor_spectrum_ids)) {
-        res.status(400).json(createErrorResponse("contractor_spectrum_ids must be an array"))
+        res
+          .status(400)
+          .json(createErrorResponse("contractor_spectrum_ids must be an array"))
         return
       }
 
       // Convert Spectrum IDs to internal contractor IDs and validate permissions
       for (const spectrumId of contractor_spectrum_ids) {
         try {
-          const contractor = await database.getContractor({ spectrum_id: spectrumId })
-          
+          const contractor = await database.getContractor({
+            spectrum_id: spectrumId,
+          })
+
           // Check if user has manage org permissions for this contractor
           const hasManagePermission = await has_permission(
             contractor.contractor_id,
             user.user_id,
-            "manage_org_details"
+            "manage_org_details",
           )
-          
+
           if (!hasManagePermission) {
-            res.status(403).json(
-              createErrorResponse(
-                `You do not have manage org permissions for contractor with Spectrum ID: ${spectrumId}`,
-              ),
-            )
+            res
+              .status(403)
+              .json(
+                createErrorResponse(
+                  `You do not have manage org permissions for contractor with Spectrum ID: ${spectrumId}`,
+                ),
+              )
             return
           }
-          
+
           validatedContractorIds.push(contractor.contractor_id)
         } catch (error) {
-          res.status(400).json(
-            createErrorResponse(
-              `Invalid contractor Spectrum ID: ${spectrumId}`,
-            ),
-          )
+          res
+            .status(400)
+            .json(
+              createErrorResponse(
+                `Invalid contractor Spectrum ID: ${spectrumId}`,
+              ),
+            )
           return
         }
       }
@@ -171,7 +191,9 @@ export async function createToken(req: Request, res: Response): Promise<void> {
 
       // Ensure the date is in the future
       if (expiresAt <= new Date()) {
-        res.status(400).json(createErrorResponse("Expiration date must be in the future"))
+        res
+          .status(400)
+          .json(createErrorResponse("Expiration date must be in the future"))
         return
       }
     }
@@ -193,7 +215,9 @@ export async function createToken(req: Request, res: Response): Promise<void> {
       .returning("*")
 
     // Convert contractor IDs back to Spectrum IDs for response
-    const contractorSpectrumIds = await convertContractorIdsToSpectrumIds(tokenRecord.contractor_ids || [])
+    const contractorSpectrumIds = await convertContractorIdsToSpectrumIds(
+      tokenRecord.contractor_ids || [],
+    )
 
     res.status(201).json(
       createResponse({
@@ -240,12 +264,14 @@ export async function listTokens(req: Request, res: Response): Promise<void> {
     // Convert contractor IDs to Spectrum IDs for each token
     const tokensWithSpectrumIds = await Promise.all(
       tokens.map(async (token) => {
-        const contractorSpectrumIds = await convertContractorIdsToSpectrumIds(token.contractor_ids || [])
+        const contractorSpectrumIds = await convertContractorIdsToSpectrumIds(
+          token.contractor_ids || [],
+        )
         return {
           ...token,
           contractor_spectrum_ids: contractorSpectrumIds,
         }
-      })
+      }),
     )
 
     res.json(createResponse(tokensWithSpectrumIds))
@@ -284,12 +310,16 @@ export async function getToken(req: Request, res: Response): Promise<void> {
     }
 
     // Convert contractor IDs to Spectrum IDs
-    const contractorSpectrumIds = await convertContractorIdsToSpectrumIds(token.contractor_ids || [])
+    const contractorSpectrumIds = await convertContractorIdsToSpectrumIds(
+      token.contractor_ids || [],
+    )
 
-    res.json(createResponse({
-      ...token,
-      contractor_spectrum_ids: contractorSpectrumIds,
-    }))
+    res.json(
+      createResponse({
+        ...token,
+        contractor_spectrum_ids: contractorSpectrumIds,
+      }),
+    )
   } catch (error) {
     console.error("Error fetching token:", error)
     res.status(500).json(createErrorResponse("Internal server error"))
@@ -301,7 +331,8 @@ export async function updateToken(req: Request, res: Response): Promise<void> {
   try {
     const user = req.user! as User
     const { tokenId } = req.params
-    const { name, description, scopes, expires_at, contractor_spectrum_ids } = req.body
+    const { name, description, scopes, expires_at, contractor_spectrum_ids } =
+      req.body
 
     // Check if token exists and belongs to user
     const existingToken = await database
@@ -358,9 +389,11 @@ export async function updateToken(req: Request, res: Response): Promise<void> {
         (scope: string) => !validScopes.includes(scope),
       )
       if (invalidScopes.length > 0) {
-        res.status(400).json(
-          createErrorResponse(`Invalid scopes: ${invalidScopes.join(", ")}`),
-        )
+        res
+          .status(400)
+          .json(
+            createErrorResponse(`Invalid scopes: ${invalidScopes.join(", ")}`),
+          )
         return
       }
 
@@ -369,11 +402,13 @@ export async function updateToken(req: Request, res: Response): Promise<void> {
         (scope: string) => scope.startsWith("admin:") || scope === "admin",
       )
       if (hasAdminScopes && user.role !== "admin") {
-        res.status(403).json(
-          createErrorResponse(
-            "Only admins can create tokens with admin scopes",
-          ),
-        )
+        res
+          .status(403)
+          .json(
+            createErrorResponse(
+              "Only admins can create tokens with admin scopes",
+            ),
+          )
         return
       }
     }
@@ -387,36 +422,48 @@ export async function updateToken(req: Request, res: Response): Promise<void> {
         // Convert Spectrum IDs to internal contractor IDs and validate permissions
         for (const spectrumId of contractor_spectrum_ids) {
           try {
-            const contractor = await database.getContractor({ spectrum_id: spectrumId })
-            
+            const contractor = await database.getContractor({
+              spectrum_id: spectrumId,
+            })
+
             // Check if user has manage org permissions for this contractor
             const hasManagePermission = await has_permission(
               contractor.contractor_id,
               user.user_id,
-              "manage_org_details"
+              "manage_org_details",
             )
-            
+
             if (!hasManagePermission) {
-              res.status(403).json(
-                createErrorResponse(
-                  `You do not have manage org permissions for contractor with Spectrum ID: ${spectrumId}`,
-                ),
-              )
+              res
+                .status(403)
+                .json(
+                  createErrorResponse(
+                    `You do not have manage org permissions for contractor with Spectrum ID: ${spectrumId}`,
+                  ),
+                )
               return
             }
-            
+
             validatedContractorIds.push(contractor.contractor_id)
           } catch (error) {
-            res.status(400).json(
-              createErrorResponse(
-                `Invalid contractor Spectrum ID: ${spectrumId}`,
-              ),
-            )
+            res
+              .status(400)
+              .json(
+                createErrorResponse(
+                  `Invalid contractor Spectrum ID: ${spectrumId}`,
+                ),
+              )
             return
           }
         }
       } else {
-        res.status(400).json(createErrorResponse("contractor_spectrum_ids must be an array or null"))
+        res
+          .status(400)
+          .json(
+            createErrorResponse(
+              "contractor_spectrum_ids must be an array or null",
+            ),
+          )
         return
       }
     }
@@ -442,7 +489,9 @@ export async function updateToken(req: Request, res: Response): Promise<void> {
 
         // Ensure the date is in the future
         if (expiresAt <= new Date()) {
-          res.status(400).json(createErrorResponse("Expiration date must be in the future"))
+          res
+            .status(400)
+            .json(createErrorResponse("Expiration date must be in the future"))
           return
         }
       }
@@ -468,7 +517,9 @@ export async function updateToken(req: Request, res: Response): Promise<void> {
       .returning("*")
 
     // Convert contractor IDs back to Spectrum IDs for response
-    const contractorSpectrumIds = await convertContractorIdsToSpectrumIds(updatedToken.contractor_ids || [])
+    const contractorSpectrumIds = await convertContractorIdsToSpectrumIds(
+      updatedToken.contractor_ids || [],
+    )
 
     res.json(
       createResponse({
@@ -538,7 +589,9 @@ export async function extendToken(req: Request, res: Response): Promise<void> {
 
     // Ensure the date is in the future
     if (newExpiration <= new Date()) {
-      res.status(400).json(createErrorResponse("Expiration date must be in the future"))
+      res
+        .status(400)
+        .json(createErrorResponse("Expiration date must be in the future"))
       return
     }
 
@@ -580,7 +633,10 @@ export async function extendToken(req: Request, res: Response): Promise<void> {
 }
 
 // Get token usage statistics
-export async function getTokenStats(req: Request, res: Response): Promise<void> {
+export async function getTokenStats(
+  req: Request,
+  res: Response,
+): Promise<void> {
   try {
     const user = req.user! as User
     const { tokenId } = req.params

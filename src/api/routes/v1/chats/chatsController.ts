@@ -14,7 +14,11 @@ import { chatServer } from "../../../../clients/messaging/websocket.js"
 import logger from "../../../../logger/logger.js"
 
 // Get a chat by order ID
-export async function getChatByOrderId(req: Request, res: Response, next: NextFunction): Promise<void> {
+export async function getChatByOrderId(
+  req: Request,
+  res: Response,
+  next: NextFunction,
+): Promise<void> {
   let chat
   try {
     chat = await database.getChat({ order_id: req.params.order_id })
@@ -31,7 +35,11 @@ export async function getChatByOrderId(req: Request, res: Response, next: NextFu
 }
 
 // Get a chat by offer session ID
-export async function getChatByOfferSessionId(req: Request, res: Response, next: NextFunction): Promise<void> {
+export async function getChatByOfferSessionId(
+  req: Request,
+  res: Response,
+  next: NextFunction,
+): Promise<void> {
   const session_id = req.params.session_id
 
   let chat
@@ -52,7 +60,11 @@ export async function getChatByOfferSessionId(req: Request, res: Response, next:
 }
 
 // Send a message
-export async function sendMessage(req: Request, res: Response, next: NextFunction): Promise<void> {
+export async function sendMessage(
+  req: Request,
+  res: Response,
+  next: NextFunction,
+): Promise<void> {
   const user = req.user as User
   const { content } = req.body as {
     content: string
@@ -109,7 +121,11 @@ export async function sendMessage(req: Request, res: Response, next: NextFunctio
 }
 
 // Create a chat
-export async function createChat(req: Request, res: Response, next: NextFunction): Promise<void> {
+export async function createChat(
+  req: Request,
+  res: Response,
+  next: NextFunction,
+): Promise<void> {
   const body: {
     users: string[]
   } = req.body as {
@@ -149,7 +165,11 @@ export async function createChat(req: Request, res: Response, next: NextFunction
 }
 
 // Get a chat by ID
-export async function getChatById(req: Request, res: Response, next: NextFunction): Promise<void> {
+export async function getChatById(
+  req: Request,
+  res: Response,
+  next: NextFunction,
+): Promise<void> {
   const chat = req.chat!
 
   const msg_entries = await database.getMessages({ chat_id: chat!.chat_id })
@@ -178,7 +198,11 @@ export async function getChatById(req: Request, res: Response, next: NextFunctio
 }
 
 // Get my chats
-export async function getChats(req: Request, res: Response, next: NextFunction): Promise<void> {
+export async function getChats(
+  req: Request,
+  res: Response,
+  next: NextFunction,
+): Promise<void> {
   const user = req.user as User
   const chats = await database.getChatByParticipant(user.user_id)
   const newchats = await Promise.all(
@@ -205,9 +229,8 @@ export async function getChats(req: Request, res: Response, next: NextFunction):
           ? [
               {
                 ...mostRecent,
-                author: (
-                  await database.getUser({ user_id: mostRecent.author })
-                ).username,
+                author: (await database.getUser({ user_id: mostRecent.author }))
+                  .username,
               },
             ]
           : [],
