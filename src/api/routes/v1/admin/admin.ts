@@ -1,15 +1,8 @@
 import express from "express"
 import { database } from "../../../../clients/database/knex-db.js"
-import { adminAuthorized, requireAdmin } from "../../../middleware/auth.js"
+import { adminAuthorized } from "../../../middleware/auth.js"
 import { createResponse } from "../util/response.js"
-import {
-  adminOapi,
-  oapi,
-  Response400,
-  Response401,
-  Response403,
-  Response500,
-} from "../openapi.js"
+import { adminOapi, Response401, Response403, Response500 } from "../openapi.js"
 import { spectrumMigrationRouter } from "./spectrum-migration.js"
 import { adminAlertsRouter } from "./alerts.js"
 

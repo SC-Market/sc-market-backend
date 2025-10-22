@@ -14,7 +14,7 @@
     "@aws-sdk/client-sts": "^3.873.0",
     "@aws-sdk/cloudfront-signer": "^3.775.0",
     "@scalar/express-api-reference": "^0.8.22",
-    "@wesleytodd/openapi": "git+https://github.com/erikjuhani/express-openapi.git#express-openapi-types",
+    "@wesleytodd/openapi": "git+https://github.com/henry232323/express-openapi.git",
     "async-lock": "^1.3.1",
     "bson": "^6.2.0",
     "cheerio": "^1.0.0-rc.12",
