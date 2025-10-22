@@ -3,6 +3,7 @@ import { database } from "../../../../clients/database/knex-db.js"
 import { adminAuthorized } from "../../../middleware/auth.js"
 import { createResponse, createErrorResponse } from "../util/response.js"
 import {
+  adminOapi,
   oapi,
   Response400,
   Response401,
@@ -45,7 +46,7 @@ async function formatAlertForAPI(alert: any) {
 }
 
 // Define schemas for admin alerts API
-oapi.schema("AdminAlert", {
+adminOapi.schema("AdminAlert", {
   type: "object",
   title: "AdminAlert",
   description: "An admin-created alert that is sent to users as notifications",
@@ -119,7 +120,7 @@ oapi.schema("AdminAlert", {
   ],
 })
 
-oapi.schema("AdminAlertCreate", {
+adminOapi.schema("AdminAlertCreate", {
   type: "object",
   title: "AdminAlertCreate",
   description: "Request body for creating a new admin alert",
@@ -165,7 +166,7 @@ oapi.schema("AdminAlertCreate", {
   required: ["title", "content", "target_type"],
 })
 
-oapi.schema("AdminAlertUpdate", {
+adminOapi.schema("AdminAlertUpdate", {
   type: "object",
   title: "AdminAlertUpdate",
   description: "Request body for updating an admin alert",
@@ -214,7 +215,7 @@ oapi.schema("AdminAlertUpdate", {
 adminAlertsRouter.post(
   "/",
   adminAuthorized,
-  oapi.validPath({
+  adminOapi.validPath({
     summary: "Create a new admin alert",
     description:
       "Create a new admin alert and send notifications to target users",
@@ -224,7 +225,7 @@ adminAlertsRouter.post(
       required: true,
       content: {
         "application/json": {
-          schema: oapi.schema("AdminAlertCreate"),
+          schema: adminOapi.schema("AdminAlertCreate"),
         },
       },
     },
@@ -367,7 +368,7 @@ adminAlertsRouter.post(
 adminAlertsRouter.get(
   "/",
   adminAuthorized,
-  oapi.validPath({
+  adminOapi.validPath({
     summary: "Get paginated admin alerts",
     description: "Retrieve paginated admin alerts with optional filtering",
     operationId: "getAdminAlerts",
@@ -518,7 +519,7 @@ adminAlertsRouter.get(
 adminAlertsRouter.get(
   "/:alert_id",
   adminAuthorized,
-  oapi.validPath({
+  adminOapi.validPath({
     summary: "Get a specific admin alert",
     description: "Retrieve details of a specific admin alert",
     operationId: "getAdminAlert",
@@ -592,7 +593,7 @@ adminAlertsRouter.get(
 adminAlertsRouter.patch(
   "/:alert_id",
   adminAuthorized,
-  oapi.validPath({
+  adminOapi.validPath({
     summary: "Update an admin alert",
     description: "Update an existing admin alert",
     operationId: "updateAdminAlert",
@@ -613,7 +614,7 @@ adminAlertsRouter.patch(
       required: true,
       content: {
         "application/json": {
-          schema: oapi.schema("AdminAlertUpdate"),
+          schema: adminOapi.schema("AdminAlertUpdate"),
         },
       },
     },
@@ -746,7 +747,7 @@ adminAlertsRouter.patch(
 adminAlertsRouter.delete(
   "/:alert_id",
   adminAuthorized,
-  oapi.validPath({
+  adminOapi.validPath({
     summary: "Delete an admin alert",
     description: "Delete an admin alert",
     operationId: "deleteAdminAlert",

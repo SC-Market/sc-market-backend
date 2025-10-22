@@ -1,6 +1,6 @@
 import express from "express"
 import { env } from "../../../../config/env.js"
-import { oapi, Response500 } from "../openapi.js"
+import { adminOapi, oapi, Response500 } from "../openapi.js"
 
 async function getCommodities() {
   const resp = await fetch("https://api.uexcorp.space/commodities/", {
@@ -17,7 +17,7 @@ async function getCommodities() {
 export const commodityRouter = express.Router()
 
 // OpenAPI Schema Definitions
-oapi.schema("Commodity", {
+adminOapi.schema("Commodity", {
   type: "object",
   properties: {
     id: { type: "string" },
@@ -45,7 +45,7 @@ oapi.schema("Commodity", {
 
 commodityRouter.get(
   "",
-  oapi.validPath({
+  adminOapi.validPath({
     summary: "Get commodities data",
     description:
       "Get current commodities pricing and market data from UEX Corp",

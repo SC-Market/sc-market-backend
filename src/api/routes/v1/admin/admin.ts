@@ -3,6 +3,7 @@ import { database } from "../../../../clients/database/knex-db.js"
 import { adminAuthorized, requireAdmin } from "../../../middleware/auth.js"
 import { createResponse } from "../util/response.js"
 import {
+  adminOapi,
   oapi,
   Response400,
   Response401,
@@ -21,7 +22,7 @@ adminRouter.use("/spectrum-migration", spectrumMigrationRouter)
 adminRouter.use("/alerts", adminAlertsRouter)
 
 // Define schemas
-oapi.schema("OrderAnalyticsTimeSeries", {
+adminOapi.schema("OrderAnalyticsTimeSeries", {
   type: "object",
   title: "OrderAnalyticsTimeSeries",
   properties: {
@@ -72,7 +73,7 @@ oapi.schema("OrderAnalyticsTimeSeries", {
   ],
 })
 
-oapi.schema("OrderAnalyticsTopContractor", {
+adminOapi.schema("OrderAnalyticsTopContractor", {
   type: "object",
   title: "OrderAnalyticsTopContractor",
   properties: {
@@ -97,7 +98,7 @@ oapi.schema("OrderAnalyticsTopContractor", {
   required: ["name", "fulfilled_orders", "total_orders"],
 })
 
-oapi.schema("OrderAnalyticsTopUser", {
+adminOapi.schema("OrderAnalyticsTopUser", {
   type: "object",
   title: "OrderAnalyticsTopUser",
   properties: {
@@ -122,7 +123,7 @@ oapi.schema("OrderAnalyticsTopUser", {
   required: ["username", "fulfilled_orders", "total_orders"],
 })
 
-oapi.schema("OrderAnalyticsSummary", {
+adminOapi.schema("OrderAnalyticsSummary", {
   type: "object",
   title: "OrderAnalyticsSummary",
   properties: {
@@ -159,7 +160,7 @@ oapi.schema("OrderAnalyticsSummary", {
   ],
 })
 
-oapi.schema("OrderAnalyticsResponse", {
+adminOapi.schema("OrderAnalyticsResponse", {
   type: "object",
   title: "OrderAnalyticsResponse",
   properties: {
@@ -213,7 +214,7 @@ oapi.schema("OrderAnalyticsResponse", {
   ],
 })
 
-oapi.schema("MembershipAnalyticsTimeSeries", {
+adminOapi.schema("MembershipAnalyticsTimeSeries", {
   type: "object",
   title: "MembershipAnalyticsTimeSeries",
   properties: {
@@ -271,7 +272,7 @@ oapi.schema("MembershipAnalyticsTimeSeries", {
   ],
 })
 
-oapi.schema("MembershipAnalyticsSummary", {
+adminOapi.schema("MembershipAnalyticsSummary", {
   type: "object",
   title: "MembershipAnalyticsSummary",
   properties: {
@@ -329,7 +330,7 @@ oapi.schema("MembershipAnalyticsSummary", {
   ],
 })
 
-oapi.schema("MembershipAnalyticsResponse", {
+adminOapi.schema("MembershipAnalyticsResponse", {
   type: "object",
   title: "MembershipAnalyticsResponse",
   properties: {
@@ -364,7 +365,7 @@ oapi.schema("MembershipAnalyticsResponse", {
 
 adminRouter.get(
   "/activity",
-  oapi.validPath({
+  adminOapi.validPath({
     summary: "Get platform activity statistics",
     description:
       "Returns daily, weekly, and monthly activity counts for the platform",
@@ -455,7 +456,7 @@ adminRouter.get(
 
 adminRouter.get(
   "/orders/analytics",
-  oapi.validPath({
+  adminOapi.validPath({
     summary: "Get comprehensive order analytics",
     description:
       "Returns detailed order statistics including time-series data, top performers, and summary metrics for the admin panel",
@@ -502,7 +503,7 @@ adminRouter.get(
 
 adminRouter.get(
   "/users",
-  oapi.validPath({
+  adminOapi.validPath({
     summary: "Get all users with pagination",
     description:
       "Retrieve all users with pagination support. Only accessible by administrators.",
@@ -722,7 +723,7 @@ adminRouter.get(
 
 adminRouter.get(
   "/membership/analytics",
-  oapi.validPath({
+  adminOapi.validPath({
     summary: "Get membership analytics over time",
     description:
       "Returns detailed membership growth statistics including time-series data and summary metrics for the admin panel",

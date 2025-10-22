@@ -10,6 +10,7 @@ import { database } from "../../../../clients/database/knex-db.js"
 import { DBContentReport } from "../../../../clients/database/db-models.js"
 import { createErrorResponse, createResponse } from "../util/response.js"
 import {
+  adminOapi,
   oapi,
   Response400,
   Response401,
@@ -24,7 +25,7 @@ export const moderationRouter = express.Router()
 moderationRouter.post(
   "/report",
   userAuthorized,
-  oapi.validPath({
+  adminOapi.validPath({
     summary: "Report content for moderation",
     description:
       "Report content that violates community guidelines. Users can report any content by providing the relative URL path and optional details.",
@@ -221,7 +222,7 @@ moderationRouter.post(
 moderationRouter.get(
   "/reports",
   userAuthorized,
-  oapi.validPath({
+  adminOapi.validPath({
     summary: "Get user's own content reports",
     description:
       "Retrieve a list of content reports submitted by the authenticated user.",
@@ -301,7 +302,7 @@ moderationRouter.get(
 moderationRouter.get(
   "/admin/reports",
   adminAuthorized,
-  oapi.validPath({
+  adminOapi.validPath({
     summary: "Get all unprocessed reports (Admin only)",
     description:
       "Retrieve all unprocessed content reports with pagination. Only accessible by administrators.",
@@ -366,7 +367,7 @@ moderationRouter.get(
                     type: "object",
                     properties: {
                       report_id: { type: "string", format: "uuid" },
-                      reporter: oapi.schema("MinimalUser"),
+                      reporter: adminOapi.schema("MinimalUser"),
                       reported_url: { type: "string" },
                       report_reason: { type: "string" },
                       report_details: { type: "string" },
@@ -375,7 +376,7 @@ moderationRouter.get(
                       handled_at: { type: "string", format: "date-time" },
                       handled_by: {
                         nullable: true,
-                        ...oapi.schema("MinimalUser"),
+                        ...adminOapi.schema("MinimalUser"),
                       },
                       notes: { type: "string" },
                     },
@@ -487,7 +488,7 @@ moderationRouter.get(
 moderationRouter.put(
   "/admin/reports/:report_id",
   adminAuthorized,
-  oapi.validPath({
+  adminOapi.validPath({
     summary: "Update report status and moderation details (Admin only)",
     description:
       "Update the status of a content report and add moderation notes. Only accessible by administrators.",
@@ -544,7 +545,7 @@ moderationRouter.put(
                   type: "object",
                   properties: {
                     report_id: { type: "string", format: "uuid" },
-                    reporter: oapi.schema("MinimalUser"),
+                    reporter: adminOapi.schema("MinimalUser"),
                     reported_url: { type: "string" },
                     report_reason: { type: "string" },
                     report_details: { type: "string" },
@@ -553,7 +554,7 @@ moderationRouter.put(
                     handled_at: { type: "string", format: "date-time" },
                     handled_by: {
                       nullable: true,
-                      ...oapi.schema("MinimalUser"),
+                      ...adminOapi.schema("MinimalUser"),
                     },
                     notes: { type: "string" },
                   },

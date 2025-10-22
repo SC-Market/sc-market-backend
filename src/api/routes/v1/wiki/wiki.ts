@@ -1,5 +1,5 @@
 import express from "express"
-import { oapi, Response400, Response500 } from "../openapi.js"
+import { adminOapi, oapi, Response400, Response500 } from "../openapi.js"
 
 const example_image_resp = {
   pages: [
@@ -100,7 +100,7 @@ async function wikiImageDetails(url: string) {
 export const wikiRouter = express.Router()
 
 // OpenAPI Schema Definitions
-oapi.schema("WikiImageSearchResult", {
+adminOapi.schema("WikiImageSearchResult", {
   type: "object",
   properties: {
     id: { type: "number" },
@@ -149,7 +149,7 @@ oapi.schema("WikiImageSearchResult", {
   required: ["id", "key", "title"],
 })
 
-oapi.schema("WikiItemSearchResult", {
+adminOapi.schema("WikiItemSearchResult", {
   type: "object",
   properties: {
     query: {
@@ -189,7 +189,7 @@ oapi.schema("WikiItemSearchResult", {
 
 wikiRouter.get(
   "/imagesearch/:query",
-  oapi.validPath({
+  adminOapi.validPath({
     summary: "Search wiki images",
     description: "Search for images in the Star Citizen wiki",
     operationId: "searchWikiImages",
@@ -248,7 +248,7 @@ wikiRouter.get(
 
 wikiRouter.get(
   "/itemsearch/:query",
-  oapi.validPath({
+  adminOapi.validPath({
     summary: "Search wiki items",
     description: "Search for items and pages in the Star Citizen wiki",
     operationId: "searchWikiItems",

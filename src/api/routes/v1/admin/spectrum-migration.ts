@@ -1,15 +1,14 @@
 import express from "express"
-import { adminAuthorized, AuthRequest } from "../../../middleware/auth.js"
+import { adminAuthorized } from "../../../middleware/auth.js"
 import {
   migrateExistingUsersToSpectrumIds,
   simulateSpectrumMigration,
   getMigrationStatus,
   rollbackSpectrumMigration,
-  MigrationResult,
 } from "../util/spectrum-migration.js"
 import { createResponse, createErrorResponse } from "../util/response.js"
 import {
-  oapi,
+  adminOapi,
   Response400,
   Response401,
   Response403,
@@ -22,7 +21,7 @@ export const spectrumMigrationRouter = express.Router()
 // Get migration status
 spectrumMigrationRouter.get(
   "/status",
-  oapi.validPath({
+  adminOapi.validPath({
     summary: "Get Spectrum migration status",
     deprecated: false,
     description: "Get the current status of Spectrum user ID migration",
@@ -77,7 +76,7 @@ spectrumMigrationRouter.get(
 // Run migration simulation (dry run)
 spectrumMigrationRouter.post(
   "/simulate",
-  oapi.validPath({
+  adminOapi.validPath({
     summary: "Simulate Spectrum migration",
     deprecated: false,
     description:
@@ -197,7 +196,7 @@ spectrumMigrationRouter.post(
 // Run actual migration
 spectrumMigrationRouter.post(
   "/migrate",
-  oapi.validPath({
+  adminOapi.validPath({
     summary: "Run Spectrum migration",
     deprecated: false,
     description:
@@ -340,7 +339,7 @@ spectrumMigrationRouter.post(
 // Rollback migration (destructive!)
 spectrumMigrationRouter.post(
   "/rollback",
-  oapi.validPath({
+  adminOapi.validPath({
     summary: "Rollback Spectrum migration",
     deprecated: false,
     description:

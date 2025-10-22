@@ -1935,12 +1935,7 @@ export const get_seller_analytics: RequestHandler = async (req, res) => {
       time_period: period,
     })
 
-    // If user is part of a contractor, also get contractor analytics
-    const contractorAnalytics = null
-    if (user.role === "admin" || user.role === "user") {
-      // This could be enhanced to check if user has contractor permissions
-      // For now, we'll just return user analytics
-    }
+    // TODO: Add seller analytics using org data
 
     res.json(
       createResponse({
@@ -1953,6 +1948,8 @@ export const get_seller_analytics: RequestHandler = async (req, res) => {
       error,
       user_id: (req.user as User)?.user_id,
     })
-    res.status(500).json({ message: "Internal server error" })
+    res
+      .status(500)
+      .json(createErrorResponse({ message: "Internal server error" }))
   }
 }

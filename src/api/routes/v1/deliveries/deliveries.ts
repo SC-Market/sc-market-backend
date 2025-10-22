@@ -4,6 +4,7 @@ import { User } from "../api-models.js"
 import { database } from "../../../../clients/database/knex-db.js"
 import { has_permission } from "../util/permissions.js"
 import {
+  adminOapi,
   oapi,
   Response400,
   Response401,
@@ -14,7 +15,7 @@ import {
 export const deliveryRouter = express.Router()
 
 // OpenAPI Schema Definitions
-oapi.schema("CreateDeliveryRequest", {
+adminOapi.schema("CreateDeliveryRequest", {
   type: "object",
   properties: {
     start: { type: "string", description: "Departure location" },
@@ -31,7 +32,7 @@ oapi.schema("CreateDeliveryRequest", {
   required: ["start", "end", "order_id", "ship_id"],
 })
 
-oapi.schema("Delivery", {
+adminOapi.schema("Delivery", {
   type: "object",
   properties: {
     delivery_id: { type: "string" },
@@ -58,7 +59,7 @@ oapi.schema("Delivery", {
   ],
 })
 
-oapi.schema("DeliveryWithDetails", {
+adminOapi.schema("DeliveryWithDetails", {
   allOf: [
     { $ref: "#/components/schemas/Delivery" },
     {
@@ -84,7 +85,7 @@ oapi.schema("DeliveryWithDetails", {
 
 deliveryRouter.post(
   "/create",
-  oapi.validPath({
+  adminOapi.validPath({
     summary: "Create a new delivery",
     description: "Create a delivery for an order using a user's ship",
     operationId: "createDelivery",
@@ -190,7 +191,7 @@ export const deliveriesRouter = express.Router()
 
 deliveriesRouter.get(
   "/mine",
-  oapi.validPath({
+  adminOapi.validPath({
     summary: "Get user's deliveries",
     description: "Get all deliveries for the authenticated user",
     operationId: "getMyDeliveries",

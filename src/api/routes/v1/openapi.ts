@@ -6,7 +6,7 @@ const document: OpenAPIV3.Document = {
   openapi: "3.1.0",
   info: {
     title: "SC Market OpenAPI Definition",
-    description: "The internal API for the SC Market site",
+    description: "The API for the SC Market site",
     version: "1.0.0",
   },
   paths: {},
@@ -449,7 +449,105 @@ const document: OpenAPIV3.Document = {
     },
   ],
 }
+
+const adminDocument: OpenAPIV3.Document = {
+  openapi: "3.1.0",
+  info: {
+    title: "SC Market OpenAPI Definition",
+    description: "The internal API for the SC Market site",
+    version: "1.0.0",
+  },
+  paths: {},
+  components: {
+    schemas: {
+      MinimalUser: {
+        properties: {
+          username: {
+            title: "MinimalUser.username",
+            type: "string",
+            minLength: 3,
+            maxLength: 30,
+          },
+          display_name: {
+            title: "MinimalUser.display_name",
+            type: "string",
+            minLength: 3,
+            maxLength: 50,
+          },
+          avatar: {
+            title: "MinimalUser.avatar",
+            type: "string",
+          },
+          rating: {
+            $ref: "#/components/schemas/Rating",
+            title: "Contractor.rating",
+          },
+          discord_profile: {
+            properties: {
+              id: {
+                title: "MinimalUser.discord_profile.id",
+                type: "string",
+              },
+              discriminator: {
+                title: "MinimalUser.discord_profile.discriminator",
+                type: "string",
+              },
+              username: {
+                title: "MinimalUser.discord_profile.username",
+                type: "string",
+              },
+            },
+            required: ["id", "discriminator", "username"],
+            additionalProperties: false,
+            title: "MinimalUser.discord_profile",
+            type: "object",
+            nullable: true,
+          },
+        },
+        required: ["username", "display_name", "avatar", "rating"],
+        additionalProperties: false,
+        title: "MinimalUser",
+        type: "object",
+      },
+      MinimalContractor: {
+        properties: {
+          avatar: {
+            title: "MinimalContractor.avatar",
+            type: "string",
+          },
+          name: {
+            title: "MinimalContractor.name",
+            type: "string",
+            minLength: 3,
+            maxLength: 50,
+          },
+          spectrum_id: {
+            title: "MinimalContractor.spectrum_id",
+            type: "string",
+            minLength: 3,
+          },
+          rating: {
+            $ref: "#/components/schemas/Rating",
+            title: "Contractor.rating",
+          },
+        },
+        required: ["avatar", "name", "spectrum_id", "rating"],
+        additionalProperties: false,
+        title: "MinimalContractor",
+        type: "object",
+      },
+    },
+  },
+  servers: [
+    {
+      url: "https://api.sc-market.space",
+      description: "Prod Env",
+    },
+  ],
+}
+
 export const oapi = openapi(document)
+export const adminOapi = openapi(adminDocument)
 
 export const Response400 = {
   description:

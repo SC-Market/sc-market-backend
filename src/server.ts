@@ -38,6 +38,7 @@ import {
   SUPPORTED_LOCALES,
 } from "./api/routes/v1/util/i18n.js"
 import { adminOverride } from "./api/routes/v1/admin/middleware.js"
+import { apiReference } from "@scalar/express-api-reference"
 
 const SessionPool = pg.Pool
 
@@ -435,6 +436,13 @@ app.get("/sitemap.xml", async function (req, res) {
 
 app.use(oapi)
 app.use("/swaggerui", userAuthorized, oapi.swaggerui())
+
+app.use(
+  "/docs",
+  apiReference({
+    url: "/openapi.json",
+  }),
+)
 
 app.use(addTranslationToRequestWithUser)
 
