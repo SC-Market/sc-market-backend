@@ -7,7 +7,6 @@ import { User } from "../api-models.js"
 import { database } from "../../../../clients/database/knex-db.js"
 import {
   serializeOfferSession,
-  serializeOfferSessionStub,
   serializeOfferSessionStubOptimized,
 } from "./serializers.js"
 
@@ -35,14 +34,10 @@ import { createErrorResponse, createResponse } from "../util/response.js"
 import { createThread } from "../util/discord.js"
 import logger from "../../../../logger/logger.js"
 import { can_respond_to_offer, related_to_offer } from "./middleware.js"
-import {
-  org_authorized,
-  validate_optional_spectrum_id,
-} from "../contractors/middleware.js"
+import { validate_optional_spectrum_id } from "../contractors/middleware.js"
 import { validate_optional_username } from "../profiles/middleware.js"
 import {
   convert_offer_search_query,
-  search_offer_sessions,
   search_offer_sessions_optimized,
 } from "./helpers.js"
 import { is_member } from "../util/permissions.js"
@@ -386,177 +381,6 @@ offerRouter.get(
   related_to_offer,
   async (req, res) => {
     res.json(createResponse(await serializeOfferSession(req.offer_session!)))
-  },
-)
-
-offersRouter.get(
-  "/received",
-  userAuthorized,
-  requireOffersRead,
-  oapi.validPath({
-    summary: "Get received offers",
-    deprecated: false,
-    description: "",
-    operationId: "getReceivedOffers",
-    tags: ["Offers"],
-    parameters: [],
-    responses: {
-      "200": {
-        description: "OK - Successful request with response body",
-        content: {
-          "application/json": {
-            schema: {
-              properties: {
-                data: {
-                  type: "array",
-                  items: oapi.schema("OfferSessionStub"),
-                },
-              },
-              required: ["data"],
-              type: "object",
-              title: "GetOffersReceivedOk",
-            },
-          },
-        },
-        headers: {},
-      },
-      "401": Response401,
-    },
-    security: [],
-  }),
-  userAuthorized,
-  async (req, res) => {
-    const user = req.user as User
-    const offers = await database.getOfferSessions({
-      assigned_id: user.user_id,
-    })
-
-    res.json(
-      createResponse(await Promise.all(offers.map(serializeOfferSessionStub))),
-    )
-  },
-)
-
-offersRouter.get(
-  "/contractor/:spectrum_id/received",
-  userAuthorized,
-  requireOffersRead,
-  oapi.validPath({
-    summary: "Get received offers for a contractor",
-    deprecated: false,
-    description: "",
-    operationId: "getReceivedOffersOrg",
-    tags: ["Offers"],
-    parameters: [
-      {
-        name: "spectrum_id",
-        in: "path",
-        description: "The Spectrum ID of the contractor",
-        required: true,
-        example: "SCMARKET",
-        schema: {
-          type: "string",
-        },
-      },
-      {
-        name: "assigned",
-        in: "query",
-        description: "Filter by assigned user's username",
-        required: false,
-        schema: {
-          type: "string",
-          minLength: 3,
-          maxLength: 50,
-        },
-      },
-    ],
-    responses: {
-      "200": {
-        description: "OK - Successful request with response body",
-        content: {
-          "application/json": {
-            schema: {
-              properties: {
-                data: {
-                  type: "array",
-                  items: oapi.schema("OfferSessionStub"),
-                },
-              },
-              required: ["data"],
-              type: "object",
-              title: "GetOffersReceivedOrgOk",
-            },
-          },
-        },
-        headers: {},
-      },
-      "401": Response401,
-      "403": Response403,
-    },
-    security: [],
-  }),
-  userAuthorized,
-  validate_optional_username("assigned"),
-  org_authorized,
-  async (req, res) => {
-    const assigned = req.query.assigned ? req.users!.get("assigned") : null
-
-    const offers = await database.getOfferSessions({
-      contractor_id: req.contractor!.contractor_id,
-      assigned_id: assigned?.user_id,
-    })
-
-    res.json(
-      createResponse(await Promise.all(offers.map(serializeOfferSessionStub))),
-    )
-  },
-)
-
-offersRouter.get(
-  "/sent",
-  userAuthorized,
-  requireOffersRead,
-  oapi.validPath({
-    summary: "Get sent offers",
-    deprecated: false,
-    description: "",
-    operationId: "getSentOffers",
-    tags: ["Offers"],
-    parameters: [],
-    responses: {
-      "200": {
-        description: "OK - Successful request with response body",
-        content: {
-          "application/json": {
-            schema: {
-              properties: {
-                data: {
-                  type: "array",
-                  items: oapi.schema("OfferSessionStub"),
-                },
-              },
-              required: ["data"],
-              type: "object",
-              title: "GetOffersSentOk",
-            },
-          },
-        },
-        headers: {},
-      },
-      "401": Response401,
-    },
-    security: [],
-  }),
-  userAuthorized,
-  async (req, res) => {
-    const user = req.user as User
-    const offers = await database.getOfferSessions({
-      customer_id: user.user_id,
-    })
-
-    res.json(
-      createResponse(await Promise.all(offers.map(serializeOfferSessionStub))),
-    )
   },
 )
 
