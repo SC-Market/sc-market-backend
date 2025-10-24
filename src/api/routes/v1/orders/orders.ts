@@ -1,6 +1,5 @@
 import express from "express"
 import {
-  adminAuthorized,
   userAuthorized,
   requireOrdersRead,
   requireOrdersWrite,
@@ -8,12 +7,10 @@ import {
 import { database } from "../../../../clients/database/knex-db.js"
 import { DBOrder } from "../../../../clients/database/db-models.js"
 import { User } from "../api-models.js"
-import {
-  formatOrderStub,
-  formatOrderStubOptimized,
-} from "../util/formatting.js"
+import { formatOrderStubOptimized } from "../util/formatting.js"
 import { createOrderReviewNotification } from "../util/notifications.js"
 import { requestReviewRevision, updateOrderReview } from "./reviews.js"
+import { getUserOrderDataController } from "./user-data.js"
 import { rate_limit } from "../../../middleware/ratelimiting.js"
 import { has_permission, is_member } from "../util/permissions.js"
 import {
@@ -26,7 +23,6 @@ import {
   handleStatusUpdate,
   is_related_to_order,
   orderTypes,
-  search_orders,
   search_orders_optimized,
 } from "./helpers.js"
 import { PAYMENT_TYPES } from "../types/payment-types.js"
@@ -39,7 +35,7 @@ import {
   Response404,
   Response409,
 } from "../openapi.js"
-import { serializeOrderDetails, serializePublicOrder } from "./serializers.js"
+import { serializeOrderDetails } from "./serializers.js"
 import { related_to_order } from "./middleware.js"
 import { createThread } from "../util/discord.js"
 import logger from "../../../../logger/logger.js"
@@ -47,7 +43,6 @@ import { validate_optional_username } from "../profiles/middleware.js"
 import {
   validate_optional_spectrum_id,
   org_authorized,
-  valid_contractor,
 } from "../contractors/middleware.js"
 import { ORDER_SEARCH_SORT_METHODS, ORDER_SEARCH_STATUS } from "./types.js"
 import orderSettingsRouter from "./order-settings.js"
@@ -390,61 +385,6 @@ oapi.schema("OrderStub", {
   additionalProperties: false,
   title: "OrderStub",
   type: "object",
-})
-
-ordersRouter.get(
-  "/assigned",
-  userAuthorized,
-  requireOrdersRead,
-  oapi.validPath({
-    summary: "Get orders assigned to you",
-    deprecated: false,
-    description: "",
-    operationId: "getOrdersAssignedToYou",
-    tags: ["Orders"],
-    parameters: [],
-    responses: {
-      "200": {
-        description: "OK - Successful request with response body",
-        content: {
-          "application/json": {
-            schema: {
-              properties: {
-                data: {
-                  type: "array",
-                  items: oapi.schema("OrderStub"),
-                },
-              },
-              required: ["data"],
-              type: "object",
-              title: "GetOrdersAssignedToYouOk",
-            },
-          },
-        },
-        headers: {},
-      },
-      "401": Response401,
-    },
-  }),
-  async (req, res, next) => {
-    const user = req.user as User
-    const orders = await database.getOrders({ assigned_id: user.user_id })
-    res.json(createResponse(await Promise.all(orders.map(formatOrderStub))))
-  },
-)
-
-ordersRouter.get("/public", async (req, res, next) => {
-  const orders = await database.getOrders({
-    assigned_id: null,
-    contractor_id: null,
-    status: "not-started",
-  })
-
-  res.json(
-    createResponse(
-      await Promise.all(orders.map((o) => serializePublicOrder(o))),
-    ),
-  )
 })
 
 ordersRouter.get(
@@ -976,6 +916,176 @@ ordersRouter.get(
 
     res.json(createResponse(data))
   },
+)
+
+ordersRouter.get(
+  "/user/data",
+  userAuthorized,
+  requireOrdersRead,
+  oapi.validPath({
+    summary: "Get comprehensive user order data",
+    deprecated: false,
+    description:
+      "Returns comprehensive order data including metrics, trend data, and recent orders for the current user's assigned orders",
+    operationId: "getUserOrderData",
+    tags: ["Orders"],
+    parameters: [
+      {
+        name: "include_trends",
+        in: "query",
+        description: "Whether to include pre-computed trend data",
+        required: false,
+        schema: {
+          type: "boolean",
+          default: true,
+        },
+      },
+    ],
+    responses: {
+      200: {
+        description: "Comprehensive user order data",
+        content: {
+          "application/json": {
+            schema: {
+              type: "object",
+              properties: {
+                success: { type: "boolean" },
+                data: {
+                  type: "object",
+                  properties: {
+                    metrics: {
+                      type: "object",
+                      properties: {
+                        total_orders: { type: "number" },
+                        total_value: { type: "number" },
+                        active_value: { type: "number" },
+                        completed_value: { type: "number" },
+                        status_counts: {
+                          type: "object",
+                          properties: {
+                            "not-started": { type: "number" },
+                            "in-progress": { type: "number" },
+                            fulfilled: { type: "number" },
+                            cancelled: { type: "number" },
+                          },
+                        },
+                        recent_activity: {
+                          type: "object",
+                          properties: {
+                            orders_last_7_days: { type: "number" },
+                            orders_last_30_days: { type: "number" },
+                            value_last_7_days: { type: "number" },
+                            value_last_30_days: { type: "number" },
+                          },
+                        },
+                        top_customers: {
+                          type: "array",
+                          items: {
+                            type: "object",
+                            properties: {
+                              username: { type: "string" },
+                              order_count: { type: "number" },
+                              total_value: { type: "number" },
+                            },
+                          },
+                        },
+                        trend_data: {
+                          type: "object",
+                          properties: {
+                            daily_orders: {
+                              type: "array",
+                              items: {
+                                type: "object",
+                                properties: {
+                                  date: { type: "string" },
+                                  count: { type: "number" },
+                                },
+                              },
+                            },
+                            daily_value: {
+                              type: "array",
+                              items: {
+                                type: "object",
+                                properties: {
+                                  date: { type: "string" },
+                                  value: { type: "number" },
+                                },
+                              },
+                            },
+                            status_trends: {
+                              type: "object",
+                              properties: {
+                                "not-started": {
+                                  type: "array",
+                                  items: {
+                                    type: "object",
+                                    properties: {
+                                      date: { type: "string" },
+                                      count: { type: "number" },
+                                    },
+                                  },
+                                },
+                                "in-progress": {
+                                  type: "array",
+                                  items: {
+                                    type: "object",
+                                    properties: {
+                                      date: { type: "string" },
+                                      count: { type: "number" },
+                                    },
+                                  },
+                                },
+                                fulfilled: {
+                                  type: "array",
+                                  items: {
+                                    type: "object",
+                                    properties: {
+                                      date: { type: "string" },
+                                      count: { type: "number" },
+                                    },
+                                  },
+                                },
+                                cancelled: {
+                                  type: "array",
+                                  items: {
+                                    type: "object",
+                                    properties: {
+                                      date: { type: "string" },
+                                      count: { type: "number" },
+                                    },
+                                  },
+                                },
+                              },
+                            },
+                          },
+                        },
+                      },
+                    },
+                    recent_orders: {
+                      type: "array",
+                      items: {
+                        type: "object",
+                        properties: {
+                          order_id: { type: "string" },
+                          timestamp: { type: "string" },
+                          status: { type: "string" },
+                          cost: { type: "number" },
+                          title: { type: "string" },
+                        },
+                      },
+                    },
+                  },
+                },
+              },
+            },
+          },
+        },
+      },
+      401: Response401,
+      403: Response403,
+    },
+  }),
+  getUserOrderDataController,
 )
 
 ordersRouter.post(

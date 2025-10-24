@@ -1019,6 +1019,210 @@ export async function getContractorOrderData(
   }
 }
 
+// Get user order metrics for assigned orders
+export async function getUserOrderMetrics(
+  user_id: string,
+): Promise<ContractorOrderMetrics> {
+  const now = new Date()
+  const sevenDaysAgo = new Date(now.getTime() - 7 * 24 * 60 * 60 * 1000)
+  const thirtyDaysAgo = new Date(now.getTime() - 30 * 24 * 60 * 60 * 1000)
+
+  // Get all assigned orders for the user
+  const orders = await database.getOrders({ assigned_id: user_id })
+
+  // Calculate basic metrics
+  const total_orders = orders.length
+  const total_value = orders.reduce((sum, order) => sum + parseFloat(String(order.cost)), 0)
+  
+  const active_value = orders
+    .filter((order) => ["not-started", "in-progress"].includes(order.status))
+    .reduce((sum, order) => sum + parseFloat(String(order.cost)), 0)
+  
+  const completed_value = orders
+    .filter((order) => order.status === "fulfilled")
+    .reduce((sum, order) => sum + parseFloat(String(order.cost)), 0)
+
+  // Status counts
+  const status_counts = {
+    "not-started": orders.filter((order) => order.status === "not-started").length,
+    "in-progress": orders.filter((order) => order.status === "in-progress").length,
+    fulfilled: orders.filter((order) => order.status === "fulfilled").length,
+    cancelled: orders.filter((order) => order.status === "cancelled").length,
+  }
+
+  // Recent activity
+  const orders_last_7_days = orders.filter(
+    (order) => new Date(order.timestamp) >= sevenDaysAgo,
+  ).length
+  const orders_last_30_days = orders.filter(
+    (order) => new Date(order.timestamp) >= thirtyDaysAgo,
+  ).length
+
+  const value_last_7_days = orders
+    .filter((order) => new Date(order.timestamp) >= sevenDaysAgo)
+    .reduce((sum, order) => sum + parseFloat(String(order.cost)), 0)
+  
+  const value_last_30_days = orders
+    .filter((order) => new Date(order.timestamp) >= thirtyDaysAgo)
+    .reduce((sum, order) => sum + parseFloat(String(order.cost)), 0)
+
+  // Top customers (by order count and value)
+  const customerStats = new Map<string, { order_count: number; total_value: number }>()
+  
+  for (const order of orders) {
+    const customer_id = order.customer_id
+    if (!customerStats.has(customer_id)) {
+      customerStats.set(customer_id, { order_count: 0, total_value: 0 })
+    }
+    const stats = customerStats.get(customer_id)!
+    stats.order_count++
+    stats.total_value += parseFloat(String(order.cost))
+  }
+
+  // Get customer usernames and sort by total value
+  const top_customers = await Promise.all(
+    Array.from(customerStats.entries())
+      .sort(([, a], [, b]) => b.total_value - a.total_value)
+      .slice(0, 10)
+      .map(async ([customer_id, stats]) => {
+        const customer = await database.getUser({ user_id: customer_id })
+        return {
+          username: customer?.username || "Unknown",
+          order_count: stats.order_count,
+          total_value: stats.total_value,
+        }
+      })
+  )
+
+  return {
+    total_orders,
+    total_value,
+    active_value,
+    completed_value,
+    status_counts,
+    recent_activity: {
+      orders_last_7_days,
+      orders_last_30_days,
+      value_last_7_days,
+      value_last_30_days,
+    },
+    top_customers,
+  }
+}
+
+// Get comprehensive user order data including metrics and trend data
+export async function getUserOrderData(
+  user_id: string,
+  options: { include_trends?: boolean } = {},
+): Promise<ContractorOrderData> {
+  const { include_trends = true } = options
+
+  // Get basic metrics for user's assigned orders
+  const metrics = await getUserOrderMetrics(user_id)
+
+  let trend_data = undefined
+  let recent_orders = undefined
+
+  // Get trend data if requested
+  if (include_trends) {
+    const thirtyDaysAgo = new Date(Date.now() - 30 * 24 * 60 * 60 * 1000)
+
+    // Get daily order counts for assigned orders
+    const dailyOrders = await database
+      .knex("orders")
+      .where({ assigned_id: user_id })
+      .where("timestamp", ">=", thirtyDaysAgo)
+      .select(
+        database.knex.raw("DATE(timestamp) as date"),
+        database.knex.raw("COUNT(*) as count"),
+      )
+      .groupBy(database.knex.raw("DATE(timestamp)"))
+      .orderBy("date")
+
+    // Get daily order values for assigned orders
+    const dailyValue = await database
+      .knex("orders")
+      .where({ assigned_id: user_id })
+      .where("timestamp", ">=", thirtyDaysAgo)
+      .select(
+        database.knex.raw("DATE(timestamp) as date"),
+        database.knex.raw("COALESCE(SUM(cost), 0) as value"),
+      )
+      .groupBy(database.knex.raw("DATE(timestamp)"))
+      .orderBy("date")
+
+    // Get status trends for assigned orders
+    const statusTrends = await database
+      .knex("orders")
+      .where({ assigned_id: user_id })
+      .where("timestamp", ">=", thirtyDaysAgo)
+      .select(
+        "status",
+        database.knex.raw("DATE(timestamp) as date"),
+        database.knex.raw("COUNT(*) as count"),
+      )
+      .groupBy("status", database.knex.raw("DATE(timestamp)"))
+      .orderBy("date")
+
+    // Organize status trends by status
+    const status_trends = {
+      "not-started": [] as Array<{ date: string; count: number }>,
+      "in-progress": [] as Array<{ date: string; count: number }>,
+      fulfilled: [] as Array<{ date: string; count: number }>,
+      cancelled: [] as Array<{ date: string; count: number }>,
+    }
+
+    statusTrends.forEach(({ status, date, count }) => {
+      if (status in status_trends) {
+        status_trends[status as keyof typeof status_trends].push({
+          date: date.toISOString().split("T")[0],
+          count: +count,
+        })
+      }
+    })
+
+    trend_data = {
+      daily_orders: dailyOrders.map(
+        ({ date, count }: { date: Date; count: number }) => ({
+          date: date.toISOString().split("T")[0],
+          count: +count,
+        }),
+      ),
+      daily_value: dailyValue.map(
+        ({ date, value }: { date: Date; value: number }) => ({
+          date: date.toISOString().split("T")[0],
+          value: +value,
+        }),
+      ),
+      status_trends,
+    }
+  }
+
+  // Get recent orders for fallback
+  const recentOrdersData = await database
+    .knex("orders")
+    .where({ assigned_id: user_id })
+    .select("order_id", "timestamp", "status", "cost", "title")
+    .orderBy("timestamp", "desc")
+    .limit(50)
+
+  recent_orders = recentOrdersData.map((order) => ({
+    order_id: order.order_id,
+    timestamp: order.timestamp.toISOString(),
+    status: order.status,
+    cost: +order.cost,
+    title: order.title,
+  }))
+
+  return {
+    metrics: {
+      ...metrics,
+      trend_data,
+    },
+    recent_orders,
+  }
+}
+
 // =============================================================================
 // ORDER SETTINGS HELPER FUNCTIONS
 // =============================================================================
