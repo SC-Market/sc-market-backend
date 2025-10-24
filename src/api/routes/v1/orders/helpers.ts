@@ -1032,20 +1032,25 @@ export async function getUserOrderMetrics(
 
   // Calculate basic metrics
   const total_orders = orders.length
-  const total_value = orders.reduce((sum, order) => sum + parseFloat(String(order.cost)), 0)
-  
+  const total_value = orders.reduce(
+    (sum, order) => sum + parseFloat(String(order.cost)),
+    0,
+  )
+
   const active_value = orders
     .filter((order) => ["not-started", "in-progress"].includes(order.status))
     .reduce((sum, order) => sum + parseFloat(String(order.cost)), 0)
-  
+
   const completed_value = orders
     .filter((order) => order.status === "fulfilled")
     .reduce((sum, order) => sum + parseFloat(String(order.cost)), 0)
 
   // Status counts
   const status_counts = {
-    "not-started": orders.filter((order) => order.status === "not-started").length,
-    "in-progress": orders.filter((order) => order.status === "in-progress").length,
+    "not-started": orders.filter((order) => order.status === "not-started")
+      .length,
+    "in-progress": orders.filter((order) => order.status === "in-progress")
+      .length,
     fulfilled: orders.filter((order) => order.status === "fulfilled").length,
     cancelled: orders.filter((order) => order.status === "cancelled").length,
   }
@@ -1061,14 +1066,17 @@ export async function getUserOrderMetrics(
   const value_last_7_days = orders
     .filter((order) => new Date(order.timestamp) >= sevenDaysAgo)
     .reduce((sum, order) => sum + parseFloat(String(order.cost)), 0)
-  
+
   const value_last_30_days = orders
     .filter((order) => new Date(order.timestamp) >= thirtyDaysAgo)
     .reduce((sum, order) => sum + parseFloat(String(order.cost)), 0)
 
   // Top customers (by order count and value)
-  const customerStats = new Map<string, { order_count: number; total_value: number }>()
-  
+  const customerStats = new Map<
+    string,
+    { order_count: number; total_value: number }
+  >()
+
   for (const order of orders) {
     const customer_id = order.customer_id
     if (!customerStats.has(customer_id)) {
@@ -1091,7 +1099,7 @@ export async function getUserOrderMetrics(
           order_count: stats.order_count,
           total_value: stats.total_value,
         }
-      })
+      }),
   )
 
   return {

@@ -9,7 +9,11 @@ import { DBOrder } from "../../../../clients/database/db-models.js"
 import { User } from "../api-models.js"
 import { formatOrderStubOptimized } from "../util/formatting.js"
 import { createOrderReviewNotification } from "../util/notifications.js"
-import { requestReviewRevision, updateOrderReview } from "./reviews.js"
+import {
+  post_order_review,
+  requestReviewRevision,
+  updateOrderReview,
+} from "./reviews.js"
 import { getUserOrderDataController } from "./user-data.js"
 import { rate_limit } from "../../../middleware/ratelimiting.js"
 import { has_permission, is_member } from "../util/permissions.js"
@@ -46,6 +50,15 @@ import {
 } from "../contractors/middleware.js"
 import { ORDER_SEARCH_SORT_METHODS, ORDER_SEARCH_STATUS } from "./types.js"
 import orderSettingsRouter from "./order-settings.js"
+import {
+  accept_contractor_applicant,
+  accept_user_applicant,
+  apply_to_order,
+  get_contractor_order_data,
+  get_order_metrics,
+  search_orders,
+  update_order,
+} from "./controller.js"
 
 export const ordersRouter = express.Router()
 
@@ -524,38 +537,7 @@ ordersRouter.get(
   validate_optional_username("customer"),
   validate_optional_username("assigned"),
   validate_optional_spectrum_id("contractor"),
-  async (req, res) => {
-    const user = req.user as User
-    const args = await convert_order_search_query(req)
-    if (!(args.contractor_id || args.assigned_id || args.customer_id)) {
-      if (user.role !== "admin") {
-        res.status(400).json(createErrorResponse("Missing permissions."))
-        return
-      }
-    }
-
-    if (args.contractor_id) {
-      if (!(await is_member(args.contractor_id, user.user_id))) {
-        res.status(400).json(createErrorResponse("Missing permissions."))
-        return
-      }
-    }
-
-    if (args.assigned_id && args.assigned_id !== user.user_id) {
-      if (!args.contractor_id) {
-        res.status(400).json(createErrorResponse("Missing permissions."))
-        return
-      }
-    }
-
-    const result = await search_orders_optimized(args)
-    res.json(
-      createResponse({
-        item_counts: result.item_counts,
-        items: await Promise.all(result.items.map(formatOrderStubOptimized)),
-      }),
-    )
-  },
+  search_orders,
 )
 
 ordersRouter.get(
@@ -671,40 +653,7 @@ ordersRouter.get(
     security: [],
   }),
   userAuthorized,
-  async (req, res) => {
-    const spectrum_id = req.params["spectrum_id"]
-    const contractor = await database.getContractor({
-      spectrum_id: spectrum_id,
-    })
-    if (!contractor) {
-      res
-        .status(404)
-        .json(createErrorResponse({ message: "Invalid contractor" }))
-      return
-    }
-
-    const user = req.user as User
-    const contractors = await database.getUserContractors({
-      "contractor_members.user_id": user.user_id,
-    })
-
-    if (
-      contractors.filter((c) => c.contractor_id === contractor.contractor_id)
-        .length === 0
-    ) {
-      res.status(403).json(
-        createErrorResponse({
-          message: "You are not authorized to view these metrics",
-        }),
-      )
-      return
-    }
-
-    // Get contractor order metrics using optimized query
-    const metrics = await getContractorOrderMetrics(contractor.contractor_id)
-
-    res.json(createResponse(metrics))
-  },
+  get_order_metrics,
 )
 
 ordersRouter.get(
@@ -897,23 +846,7 @@ ordersRouter.get(
     },
   }),
   org_authorized,
-  async (req, res) => {
-    const { include_trends, assigned_only } = req.query
-    const contractor = req.contractor!
-
-    // Parse query parameters
-    const includeTrends =
-      include_trends === "true" || include_trends === undefined
-    const assignedOnly = assigned_only === "true"
-
-    // Get comprehensive contractor order data
-    const data = await getContractorOrderData(contractor.contractor_id, {
-      include_trends: includeTrends,
-      assigned_only: assignedOnly,
-    })
-
-    res.json(createResponse(data))
-  },
+  get_contractor_order_data,
 )
 
 ordersRouter.get(
@@ -1165,88 +1098,7 @@ ordersRouter.post(
   }),
   rate_limit(1),
   userAuthorized,
-  async (req, res, next) => {
-    const order_id = req.params["order_id"]
-    let order: DBOrder
-    try {
-      order = await database.getOrder({ order_id: order_id })
-    } catch (e) {
-      res.status(404).json({ message: "Invalid order" })
-      return
-    }
-    const user = req.user as User
-
-    const {
-      content,
-      rating,
-      role,
-    }: {
-      content: string
-      rating: number
-      role: string
-    } = req.body
-
-    if (!["customer", "contractor"].includes(role)) {
-      res.status(400).json({ message: "Invalid role" })
-      return
-    }
-
-    const amCustomer = order.customer_id === user.user_id
-    const amContractor =
-      order.assigned_id === user.user_id ||
-      (order.contractor_id &&
-        (await has_permission(
-          order.contractor_id,
-          user.user_id,
-          "manage_orders",
-        )))
-
-    if (role === "customer" && !amCustomer) {
-      res
-        .status(403)
-        .json({ message: "You are not authorized to review this order!" })
-      return
-    }
-    if (role === "contractor" && !amContractor) {
-      res
-        .status(403)
-        .json({ message: "You are not authorized to review this order!" })
-      return
-    }
-
-    if (!content) {
-      res.status(400).json({ message: "Message content cannot be empty!" })
-      return
-    }
-
-    if (!rating || rating > 5 || rating <= 0 || rating % 0.5 !== 0) {
-      res.status(400).json({ message: "Invalid rating!" })
-      return
-    }
-
-    const existing = await database.getOrderReview({
-      order_id: order.order_id,
-      role: role as "customer" | "contractor",
-    })
-    if (existing) {
-      res
-        .status(409)
-        .json({ message: "A review has already been left on this order" })
-      return
-    }
-
-    const review = await database.createOrderReview({
-      order_id: order.order_id,
-      content: content,
-      user_author: user.user_id,
-      rating: rating,
-      role: role as "customer" | "contractor",
-    })
-
-    await createOrderReviewNotification(review[0])
-
-    res.status(200).json(createResponse({ result: "Success" }))
-  },
+  post_order_review,
 )
 
 ordersRouter.post(
@@ -1478,26 +1330,7 @@ ordersRouter.put(
   rate_limit(5),
   userAuthorized,
   related_to_order,
-  async (req, res) => {
-    const {
-      status,
-      assigned_to,
-      contractor,
-    }: {
-      status?: string
-      assigned_to?: string
-      contractor?: string
-      applied?: boolean
-    } = req.body
-
-    if (status) {
-      await handleStatusUpdate(req, res, status)
-    }
-
-    if (assigned_to !== undefined || contractor !== undefined) {
-      await handleAssignedUpdate(req, res)
-    }
-  },
+  update_order,
 )
 
 ordersRouter.post(
@@ -1566,172 +1399,8 @@ ordersRouter.post(
     security: [],
   }),
   rate_limit(5),
-
-  async (req, res, next) => {
-    const order_id = req.params["order_id"]
-    let order: DBOrder
-    try {
-      order = await database.getOrder({ order_id: order_id })
-    } catch (e) {
-      res.status(400).json(createErrorResponse({ message: "Invalid order" }))
-      return
-    }
-    const user = req.user as User
-
-    if (order.assigned_id || order.contractor_id) {
-      res
-        .status(409)
-        .json(createErrorResponse({ message: "Order is already assigned" }))
-      return
-    }
-
-    const {
-      contractor,
-      message,
-    }: {
-      contractor?: string
-      message?: string
-    } = req.body
-
-    if (!contractor) {
-      const apps = await database.getOrderApplicants({
-        user_applicant_id: user.user_id,
-        order_id: order.order_id,
-      })
-      if (apps.length > 0) {
-        res.status(409).json(
-          createErrorResponse({
-            message: "You have already applied to this order",
-          }),
-        )
-        return
-      }
-
-      await database.createOrderApplication({
-        order_id: order.order_id,
-        user_applicant_id: user.user_id,
-        message: message || "",
-      })
-    } else {
-      let contractor_obj
-      try {
-        contractor_obj = await database.getContractor({
-          spectrum_id: contractor,
-        })
-      } catch {
-        res
-          .status(400)
-          .json(createErrorResponse({ message: "Invalid contractor" }))
-        return
-      }
-
-      if (
-        !(await has_permission(
-          contractor_obj.contractor_id,
-          user.user_id,
-          "manage_orders",
-        ))
-      ) {
-        res.status(403).json(
-          createErrorResponse({
-            message: "You are not authorized to apply to this order",
-          }),
-        )
-        return
-      }
-
-      const apps = await database.getOrderApplicants({
-        org_applicant_id: contractor_obj.contractor_id,
-        order_id: order.order_id,
-      })
-      if (apps.length > 0) {
-        res.status(409).json(
-          createErrorResponse({
-            message: "You have already applied to this order",
-          }),
-        )
-        return
-      }
-
-      await database.createOrderApplication({
-        order_id: order.order_id,
-        org_applicant_id: contractor_obj.contractor_id,
-        message: message || "",
-      })
-    }
-
-    // TODO: Submit the application
-    res.status(201).json(createResponse({ result: "Success" }))
-  },
+  apply_to_order,
 )
-
-async function updateAssigned(
-  req: any,
-  res: any,
-  {
-    target_username,
-    contractor_spectrum_id,
-  }: { target_username?: string; contractor_spectrum_id?: string },
-) {
-  const order_id = req.params["order_id"]
-  let order: DBOrder
-  try {
-    order = await database.getOrder({ order_id: order_id })
-  } catch (e) {
-    res.status(404).json(createErrorResponse({ message: "Invalid order" }))
-    return
-  }
-
-  const user = req.user as User
-
-  if (order.customer_id !== user.user_id) {
-    res.status(403).json(
-      createErrorResponse({
-        message: "You are not authorized to accept this application",
-      }),
-    )
-    return
-  }
-
-  if (order.assigned_id || order.contractor_id) {
-    res
-      .status(409)
-      .json(createErrorResponse({ message: "Order is already assigned" }))
-    return
-  }
-
-  if (contractor_spectrum_id) {
-    let target_contractor
-    try {
-      target_contractor = await database.getContractor({
-        spectrum_id: contractor_spectrum_id,
-      })
-    } catch {
-      res
-        .status(400)
-        .json(createErrorResponse({ message: "Invalid contractor" }))
-      return
-    }
-
-    await database.updateOrder(order.order_id, {
-      contractor_id: target_contractor?.contractor_id,
-    })
-  } else {
-    let target_user
-    try {
-      target_user = await database.getUser({ username: target_username })
-    } catch {
-      res.status(400).json(createErrorResponse({ message: "Invalid user" }))
-      return
-    }
-
-    await database.updateOrder(order.order_id, {
-      assigned_id: target_user?.user_id,
-    })
-  }
-
-  res.status(201).json(createResponse({ result: "Success" }))
-}
 
 ordersRouter.post(
   "/:order_id/applicants/contractors/:spectrum_id",
@@ -1804,12 +1473,7 @@ ordersRouter.post(
   }),
   rate_limit(1),
   userAuthorized,
-  async (req, res, next) => {
-    const { spectrum_id } = req.params
-
-    await acceptApplicant(req, res, { target_contractor: spectrum_id })
-    // TODO: Make apps into their own objects
-  },
+  accept_contractor_applicant,
 ) // TODO
 
 ordersRouter.post(
@@ -1883,11 +1547,7 @@ ordersRouter.post(
   rate_limit(1),
   userAuthorized,
   related_to_order,
-  async (req, res, next) => {
-    const { username } = req.params
-
-    await acceptApplicant(req, res, { target_username: username })
-  },
+  accept_user_applicant,
 )
 
 oapi.schema("OrderApplicant", {

@@ -35,7 +35,7 @@ export async function getUserOrderDataController(req: Request, res: Response) {
       user_id: user.user_id,
       error: error instanceof Error ? error.message : "Unknown error",
     })
-    
+
     res.status(500).json(
       createResponse({
         error: "Failed to retrieve user order data",

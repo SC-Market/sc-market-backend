@@ -1,4 +1,4 @@
-import { Request, Response } from "express"
+import { Request, RequestHandler, Response } from "express"
 import { User } from "../api-models.js"
 import { database } from "../../../../clients/database/knex-db.js"
 import { createOrderReviewRevisionNotification } from "../util/notifications.js"
@@ -235,4 +235,87 @@ async function canEditReview(review: DBReview, user: User): Promise<boolean> {
   }
 
   return false
+}
+
+export const post_order_review: RequestHandler = async (req, res, next) => {
+  const order_id = req.params["order_id"]
+  let order: DBOrder
+  try {
+    order = await database.getOrder({ order_id: order_id })
+  } catch (e) {
+    res.status(404).json({ message: "Invalid order" })
+    return
+  }
+  const user = req.user as User
+
+  const {
+    content,
+    rating,
+    role,
+  }: {
+    content: string
+    rating: number
+    role: string
+  } = req.body
+
+  if (!["customer", "contractor"].includes(role)) {
+    res.status(400).json({ message: "Invalid role" })
+    return
+  }
+
+  const amCustomer = order.customer_id === user.user_id
+  const amContractor =
+    order.assigned_id === user.user_id ||
+    (order.contractor_id &&
+      (await has_permission(
+        order.contractor_id,
+        user.user_id,
+        "manage_orders",
+      )))
+
+  if (role === "customer" && !amCustomer) {
+    res
+      .status(403)
+      .json({ message: "You are not authorized to review this order!" })
+    return
+  }
+  if (role === "contractor" && !amContractor) {
+    res
+      .status(403)
+      .json({ message: "You are not authorized to review this order!" })
+    return
+  }
+
+  if (!content) {
+    res.status(400).json({ message: "Message content cannot be empty!" })
+    return
+  }
+
+  if (!rating || rating > 5 || rating <= 0 || rating % 0.5 !== 0) {
+    res.status(400).json({ message: "Invalid rating!" })
+    return
+  }
+
+  const existing = await database.getOrderReview({
+    order_id: order.order_id,
+    role: role as "customer" | "contractor",
+  })
+  if (existing) {
+    res
+      .status(409)
+      .json({ message: "A review has already been left on this order" })
+    return
+  }
+
+  const review = await database.createOrderReview({
+    order_id: order.order_id,
+    content: content,
+    user_author: user.user_id,
+    rating: rating,
+    role: role as "customer" | "contractor",
+  })
+
+  await createOrderReviewNotification(review[0])
+
+  res.status(200).json(createResponse({ result: "Success" }))
 }
