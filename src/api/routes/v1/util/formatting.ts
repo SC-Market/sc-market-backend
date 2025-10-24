@@ -640,6 +640,7 @@ export async function formatReview(
     revision_requested: order_review.revision_requested,
     revision_requested_at: order_review.revision_requested_at,
     last_modified_at: order_review.last_modified_at,
+    revision_message: order_review.revision_message,
   }
 }
 

@@ -1433,6 +1433,7 @@ export class KnexDatabase implements Database {
   async requestReviewRevision(
     review_id: string,
     requester_id: string,
+    message?: string,
   ): Promise<DBReview> {
     const now = new Date()
     const [review] = await this.knex<DBReview>("order_reviews")
@@ -1440,6 +1441,7 @@ export class KnexDatabase implements Database {
       .update({
         revision_requested: true,
         revision_requested_at: now,
+        revision_message: message || null,
       })
       .returning("*")
 

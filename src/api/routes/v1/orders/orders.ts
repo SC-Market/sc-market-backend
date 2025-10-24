@@ -1358,6 +1358,22 @@ ordersRouter.post(
         schema: { type: "string" },
       },
     ],
+    requestBody: {
+      content: {
+        "application/json": {
+          schema: {
+            type: "object",
+            properties: {
+              message: {
+                type: "string",
+                maxLength: 500,
+                description: "Optional message explaining why the revision is requested",
+              },
+            },
+          },
+        },
+      },
+    },
     responses: {
       "200": {
         description: "Revision requested successfully",
@@ -1374,6 +1390,10 @@ ordersRouter.post(
                     revision_requested_at: {
                       type: "string",
                       format: "date-time",
+                    },
+                    revision_message: {
+                      type: "string",
+                      nullable: true,
                     },
                   },
                 },

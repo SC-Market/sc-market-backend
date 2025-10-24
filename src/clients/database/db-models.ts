@@ -65,6 +65,7 @@ export interface DBReview {
   revision_requested: boolean
   revision_requested_at: Date | null
   last_modified_at: Date
+  revision_message: string | null
 }
 
 export interface DBOrderApplicant {

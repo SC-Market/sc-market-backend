@@ -9,13 +9,28 @@ import logger from "../../../../logger/logger.js"
 
 export async function requestReviewRevision(req: Request, res: Response) {
   const { order_id, review_id } = req.params
+  const { message } = req.body
   const user = req.user as User
 
   try {
+    // Validate message length if provided
+    if (message && message.length > 500) {
+      logger.warn("Message too long for revision request", {
+        review_id,
+        message_length: message.length,
+      })
+      return res.status(400).json(
+        createErrorResponse({
+          error: "Message cannot exceed 500 characters",
+        }),
+      )
+    }
+
     logger.info("Review revision requested", {
       review_id,
       order_id,
       user_id: user.user_id,
+      has_message: !!message,
     })
 
     // Get review and verify it exists
@@ -61,6 +76,7 @@ export async function requestReviewRevision(req: Request, res: Response) {
     const updatedReview = await database.requestReviewRevision(
       review_id,
       user.user_id,
+      message,
     )
 
     // Send notification to review author
@@ -76,6 +92,7 @@ export async function requestReviewRevision(req: Request, res: Response) {
         review_id: updatedReview.review_id,
         revision_requested: updatedReview.revision_requested,
         revision_requested_at: updatedReview.revision_requested_at,
+        revision_message: updatedReview.revision_message,
       }),
     )
   } catch (error: unknown) {
