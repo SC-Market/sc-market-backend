@@ -1367,7 +1367,8 @@ ordersRouter.post(
               message: {
                 type: "string",
                 maxLength: 500,
-                description: "Optional message explaining why the revision is requested",
+                description:
+                  "Optional message explaining why the revision is requested",
               },
             },
           },

@@ -738,8 +738,6 @@ export async function createOrderReviewRevisionNotification(
   requester: User,
 ) {
   try {
-    const order = await database.getOrder({ order_id: review.order_id })
-
     // Determine notification recipients
     const recipients: string[] = []
 
@@ -783,6 +781,13 @@ export async function createOrderReviewRevisionNotification(
       {
         action_type_id: action.action_type_id,
         entity_id: review.review_id,
+      },
+    ])
+
+    await database.insertNotificationChange([
+      {
+        notification_object_id: notif_objects[0].notification_object_id,
+        actor_id: requester.user_id,
       },
     ])
 
