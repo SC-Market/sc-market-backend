@@ -397,7 +397,7 @@ ordersRouter.get(
     tags: ["Orders"],
     parameters: [
       {
-        name: "spectrum_id",
+        name: "contractor",
         in: "query",
         description: "The Spectrum ID of the contracting org",
         required: false,
@@ -542,7 +542,6 @@ ordersRouter.get(
     }
 
     if (args.assigned_id && args.assigned_id !== user.user_id) {
-      // Allow searching by assigned user if user is a member of the specified contractor
       if (!args.contractor_id) {
         res.status(400).json(createErrorResponse("Missing permissions."))
         return
@@ -556,7 +555,6 @@ ordersRouter.get(
         items: await Promise.all(result.items.map(formatOrderStubOptimized)),
       }),
     )
-    return
   },
 )
 

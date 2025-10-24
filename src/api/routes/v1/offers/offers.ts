@@ -680,7 +680,7 @@ offersRouter.get(
     tags: ["Offers"],
     parameters: [
       {
-        name: "spectrum_id",
+        name: "contractor",
         in: "query",
         description: "The Spectrum ID of the contracting org",
         required: false,
