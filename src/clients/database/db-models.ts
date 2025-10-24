@@ -62,6 +62,9 @@ export interface DBReview {
   timestamp: Date
   rating: number
   role: "customer" | "contractor"
+  revision_requested: boolean
+  revision_requested_at: Date | null
+  last_modified_at: Date
 }
 
 export interface DBOrderApplicant {

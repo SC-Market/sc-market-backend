@@ -1430,6 +1430,51 @@ export class KnexDatabase implements Database {
     return this.knex<DBReview>("order_reviews").insert(data).returning("*")
   }
 
+  async requestReviewRevision(
+    review_id: string,
+    requester_id: string,
+  ): Promise<DBReview> {
+    const now = new Date()
+    const [review] = await this.knex<DBReview>("order_reviews")
+      .where({ review_id })
+      .update({
+        revision_requested: true,
+        revision_requested_at: now,
+      })
+      .returning("*")
+
+    return review
+  }
+
+  async updateOrderReview(
+    review_id: string,
+    updates: Partial<DBReview>,
+  ): Promise<DBReview> {
+    const [review] = await this.knex<DBReview>("order_reviews")
+      .where({ review_id })
+      .update({
+        ...updates,
+        last_modified_at: new Date(),
+      })
+      .returning("*")
+
+    return review
+  }
+
+  async getOrderReviewWithRevisionStatus(
+    review_id: string,
+  ): Promise<(DBReview & { can_edit: boolean }) | null> {
+    const review = await this.getOrderReview({ review_id })
+    if (!review) return null
+
+    // This method will be enhanced with permission logic in the controller
+    // For now, we'll return a placeholder that will be updated based on user context
+    return {
+      ...review,
+      can_edit: false, // Placeholder - will be determined by controller based on user permissions
+    }
+  }
+
   async createOrderApplication(data: Partial<DBOrderApplicant>): Promise<void> {
     await this.knex<DBOrderApplicant>("order_applicants").insert(data)
   }
@@ -3247,7 +3292,7 @@ export class KnexDatabase implements Database {
   }
 
   // Notifications
-  async insertNotificationObjects(items: any[]) {
+  async insertNotificationObjects(items: Partial<DBNotificationObject>[]) {
     return this.knex<DBNotificationObject>("notification_object")
       .insert(items)
       .returning("*")
@@ -3260,46 +3305,51 @@ export class KnexDatabase implements Database {
       .returning("*")
   }
 
-  async insertNotifications(items: any[]) {
+  async insertNotifications(items: Partial<DBNotification>[]) {
     return this.knex<DBNotification>("notification")
       .insert(items)
       .returning("*")
   }
 
-  async insertNotificationChange(items: any[]) {
+  async insertNotificationChange(items: Partial<DBNotificationChange>[]) {
     return this.knex<DBNotificationChange>("notification_change")
       .insert(items)
       .returning("*")
   }
 
-  async getNotifications(where: any) {
+  async getNotifications(where: Partial<DBNotification>) {
     return this.knex<DBNotification>("notification").select("*").where(where)
   }
 
-  async updateNotifications(where: any, values: any) {
+  async updateNotifications(
+    where: Partial<DBNotification>,
+    values: Partial<DBNotification>,
+  ) {
     return this.knex<DBNotification>("notification").update(values).where(where)
   }
 
-  async deleteNotifications(where: any) {
+  async deleteNotifications(where: Partial<DBNotification>) {
     return this.knex<DBNotification>("notification")
       .where(where)
       .delete()
       .returning("*")
   }
 
-  async getNotificationObject(where: any) {
+  async getNotificationObject(where: Partial<DBNotificationObject>) {
     return this.knex<DBNotificationObject>("notification_object")
       .select("*")
       .where(where)
   }
 
-  async getNotificationAction(where: any): Promise<DBNotificationActions[]> {
+  async getNotificationAction(
+    where: Partial<DBNotificationActions>,
+  ): Promise<DBNotificationActions[]> {
     return this.knex<DBNotificationActions>("notification_actions")
       .select("*")
       .where(where)
   }
 
-  async getNotificationChange(where: any) {
+  async getNotificationChange(where: Partial<DBNotificationChange>) {
     return this.knex<DBNotificationChange>("notification_change")
       .select("*")
       .where(where)

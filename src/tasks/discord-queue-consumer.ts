@@ -5,6 +5,8 @@ import { Routes } from "discord-api-types/v10"
 import { database } from "../clients/database/knex-db.js"
 import { rest } from "../api/routes/v1/util/discord.js"
 import { checkSQSConfiguration } from "../clients/aws/sqs-config.js"
+import { chatServer } from "../clients/messaging/websocket.js"
+import { serializeMessage } from "../api/routes/v1/chats/serializers.js"
 
 // Types for messages from Discord bot
 interface BackendQueueMessage {
@@ -109,14 +111,11 @@ async function handleMessageReceived(payload: any) {
   const { author_id, thread_id, name, content } = payload
 
   try {
-    logger.info(
+    logger.debug(
       `Processing message from Discord - Thread: ${thread_id}, Author: ${name}`,
     )
 
-    // TODO: Implement message handling logic
-    // This will need to integrate with existing chat system
-    // For now, just log the message
-    logger.info(
+    logger.debug(
       `Message received - Thread: ${thread_id}, Author: ${name}, Content: ${content}`,
     )
   } catch (error) {

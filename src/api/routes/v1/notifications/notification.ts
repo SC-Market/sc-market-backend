@@ -211,6 +211,7 @@ oapi.schema("NotificationActionType", {
     "order_status_cancelled",
     "order_comment",
     "order_review",
+    "order_review_revision_requested",
     "order_contractor_applied",
     "public_order_create",
     "order_message",

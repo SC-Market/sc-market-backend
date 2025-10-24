@@ -1,6 +1,7 @@
 import { NextFunction, Request, Response } from "express"
 import { User } from "../routes/v1/api-models.js"
 import crypto from "crypto"
+import { createErrorResponse } from "../routes/v1/util/response.js"
 
 // Extended Request interface for token support
 export interface AuthRequest extends Request {
@@ -137,7 +138,9 @@ export async function userAuthorized(
 
         // Apply same user validation logic
         if (authResult.user.banned) {
-          res.status(418).json({ error: "Internal server error" })
+          res
+            .status(418)
+            .json(createErrorResponse({ message: "Internal server error" }))
           return
         }
         if (
@@ -163,7 +166,9 @@ export async function userAuthorized(
       authReq.authMethod = "session"
 
       if (user.banned) {
-        res.status(418).json({ error: "Internal server error" })
+        res
+          .status(418)
+          .json(createErrorResponse({ message: "Internal server error" }))
         return
       }
       if (user.role === "user" || user.role === "admin") {
@@ -195,7 +200,9 @@ export async function verifiedUser(
       authReq.authMethod = "session"
 
       if (user.banned) {
-        res.status(418).json({ error: "Internal server error" })
+        res
+          .status(418)
+          .json(createErrorResponse({ message: "Internal server error" }))
         return false
       }
 
@@ -216,26 +223,34 @@ export async function verifiedUser(
 
         // Apply same verification logic
         if (authResult.user.banned) {
-          res.status(418).json({ error: "Internal server error" })
+          res
+            .status(418)
+            .json(createErrorResponse({ message: "Internal server error" }))
           return false
         }
         if (!authResult.user.rsi_confirmed) {
-          res.status(401).json({ error: "Your account is not verified." })
+          res
+            .status(401)
+            .json(
+              createErrorResponse({ message: "Your account is not verified." }),
+            )
           return false
         } else {
           return true
         }
       } else {
-        res.status(401).json({ error: "Invalid or expired token" })
+        res
+          .status(401)
+          .json(createErrorResponse({ message: "Invalid or expired token" }))
         return false
       }
     } else {
-      res.status(401).json({ error: "Unauthenticated" })
+      res.status(401).json(createErrorResponse({ message: "Unauthenticated" }))
       return false
     }
   } catch (e) {
     console.error(e)
-    res.status(400).json({ error: "Bad request" })
+    res.status(400).json(createErrorResponse({ message: "Bad request" }))
     return false
   }
 }
@@ -260,18 +275,26 @@ export async function adminAuthorized(
 
         // Apply same admin validation logic
         if (authResult.user.banned) {
-          res.status(418).json({ error: "Internal server error" })
+          res
+            .status(418)
+            .json(
+              createErrorResponse(
+                createErrorResponse({ message: "Internal server error" }),
+              ),
+            )
           return
         }
         if (authResult.user.role === "admin") {
           next()
           return
         } else {
-          res.status(403).json({ error: "Unauthorized" })
+          res.status(403).json(createErrorResponse({ message: "Unauthorized" }))
           return
         }
       } else {
-        res.status(401).json({ error: "Invalid or expired token" })
+        res
+          .status(401)
+          .json(createErrorResponse({ message: "Invalid or expired token" }))
         return
       }
     }
@@ -283,23 +306,25 @@ export async function adminAuthorized(
       authReq.authMethod = "session"
 
       if (user.banned) {
-        res.status(418).json({ error: "Internal server error" })
+        res
+          .status(418)
+          .json(createErrorResponse({ message: "Internal server error" }))
         return
       }
       if (user.role === "admin") {
         next()
         return
       } else {
-        res.status(403).json({ error: "Unauthorized" })
+        res.status(403).json(createErrorResponse({ message: "Unauthorized" }))
         return
       }
     } else {
-      res.status(401).json({ error: "Unauthenticated" })
+      res.status(401).json(createErrorResponse({ message: "Unauthenticated" }))
       return
     }
   } catch (e) {
     console.error(e)
-    res.status(400).json({ error: "Bad request" })
+    res.status(400).json(createErrorResponse({ message: "Bad request" }))
     return
   }
 }

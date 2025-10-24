@@ -567,7 +567,9 @@ export const get_linked_orders: RequestHandler = async (req, res) => {
     })
   } catch (error) {
     logger.error("Error fetching listing orders:", error)
-    res.status(500).json({ error: "Internal server error" })
+    res
+      .status(500)
+      .json(createErrorResponse({ message: "Internal server error" }))
   }
 }
 
@@ -723,7 +725,9 @@ export const get_listing_bids: RequestHandler = async (req, res) => {
 
   const details = await database.getAuctionDetail({ listing_id })
   if (!details) {
-    res.status(500).json({ error: "Internal server error" })
+    res
+      .status(500)
+      .json(createErrorResponse({ message: "Internal server error" }))
     return
   }
 
@@ -1156,7 +1160,9 @@ export const get_active_listings_by_org: RequestHandler = async (req, res) => {
     )
   } catch (e) {
     console.error(e)
-    res.status(500).json({ error: "Internal server error" }) // Fixed status code from 400 to 500
+    res
+      .status(500)
+      .json(createErrorResponse({ message: "Internal server error" })) // Fixed status code from 400 to 500
   }
 }
 
@@ -1170,7 +1176,9 @@ export const get_buy_orders: RequestHandler = async (req, res) => {
     )
   } catch (e) {
     console.error(e)
-    res.status(500).json({ error: "Internal server error" })
+    res
+      .status(500)
+      .json(createErrorResponse({ message: "Internal server error" }))
   }
 }
 
@@ -1409,7 +1417,9 @@ export const create_contractor_multiple: RequestHandler = async (req, res) => {
     )
   } catch (e) {
     console.error(e)
-    res.status(500).json({ error: "Internal server error" })
+    res
+      .status(500)
+      .json(createErrorResponse({ message: "Internal server error" }))
   }
 }
 
@@ -1507,7 +1517,9 @@ export const create_multiple: RequestHandler = async (req, res) => {
     return
   } catch (e) {
     console.error(e)
-    res.status(500).json({ error: "Internal server error" })
+    res
+      .status(500)
+      .json(createErrorResponse({ message: "Internal server error" }))
     return
   }
 }
@@ -1679,7 +1691,9 @@ export const update_multiple: RequestHandler = async (req, res) => {
     return
   } catch (e) {
     console.error(e)
-    res.status(500).json({ error: "Internal server error" })
+    res
+      .status(500)
+      .json(createErrorResponse({ message: "Internal server error" }))
     return
   }
 }
@@ -1822,7 +1836,9 @@ export const fulfill_buy_order: RequestHandler = async (req, res) => {
     return
   } catch (e) {
     console.error(e)
-    res.status(500).json({ error: "Internal server error" })
+    res
+      .status(500)
+      .json(createErrorResponse({ message: "Internal server error" }))
     return
   }
 }
@@ -1858,7 +1874,9 @@ export const cancel_buy_order: RequestHandler = async (req, res) => {
     return
   } catch (e) {
     console.error(e)
-    res.status(500).json({ error: "Internal server error" })
+    res
+      .status(500)
+      .json(createErrorResponse({ message: "Internal server error" }))
     return
   }
 }
@@ -1920,7 +1938,9 @@ export const get_game_item: RequestHandler = async (req, res) => {
     )
   } catch (e) {
     console.error(e)
-    res.status(500).json({ error: "Internal server error" })
+    res
+      .status(500)
+      .json(createErrorResponse({ message: "Internal server error" }))
   }
 }
 

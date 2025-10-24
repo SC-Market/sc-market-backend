@@ -13,6 +13,7 @@ import {
   formatOrderStubOptimized,
 } from "../util/formatting.js"
 import { createOrderReviewNotification } from "../util/notifications.js"
+import { requestReviewRevision, updateOrderReview } from "./reviews.js"
 import { rate_limit } from "../../../middleware/ratelimiting.js"
 import { has_permission, is_member } from "../util/permissions.js"
 import {
@@ -1333,6 +1334,138 @@ ordersRouter.post(
 
     res.status(200).json(createResponse({ result: "Success" }))
   },
+)
+
+ordersRouter.post(
+  "/:order_id/reviews/:review_id/request-revision",
+  userAuthorized,
+  requireOrdersWrite,
+  oapi.validPath({
+    summary: "Request revision for a review",
+    operationId: "requestReviewRevision",
+    tags: ["Order Reviews"],
+    parameters: [
+      {
+        name: "order_id",
+        in: "path",
+        required: true,
+        schema: { type: "string" },
+      },
+      {
+        name: "review_id",
+        in: "path",
+        required: true,
+        schema: { type: "string" },
+      },
+    ],
+    responses: {
+      "200": {
+        description: "Revision requested successfully",
+        content: {
+          "application/json": {
+            schema: {
+              type: "object",
+              properties: {
+                data: {
+                  type: "object",
+                  properties: {
+                    review_id: { type: "string" },
+                    revision_requested: { type: "boolean" },
+                    revision_requested_at: {
+                      type: "string",
+                      format: "date-time",
+                    },
+                  },
+                },
+              },
+            },
+          },
+        },
+      },
+      "400": Response400,
+      "401": Response401,
+      "403": Response403,
+      "404": Response404,
+      "409": Response409,
+    },
+  }),
+  rate_limit(1),
+  requestReviewRevision,
+)
+
+ordersRouter.put(
+  "/:order_id/reviews/:review_id",
+  userAuthorized,
+  requireOrdersWrite,
+  oapi.validPath({
+    summary: "Update a review after revision request",
+    operationId: "updateOrderReview",
+    tags: ["Order Reviews"],
+    parameters: [
+      {
+        name: "order_id",
+        in: "path",
+        required: true,
+        schema: { type: "string" },
+      },
+      {
+        name: "review_id",
+        in: "path",
+        required: true,
+        schema: { type: "string" },
+      },
+    ],
+    requestBody: {
+      content: {
+        "application/json": {
+          schema: {
+            type: "object",
+            properties: {
+              content: {
+                type: "string",
+                minLength: 10,
+                maxLength: 2000,
+              },
+              rating: {
+                type: "number",
+                minimum: 0.5,
+                maximum: 5.0,
+                multipleOf: 0.5,
+              },
+            },
+            required: ["content", "rating"],
+          },
+        },
+      },
+    },
+    responses: {
+      "200": {
+        description: "Review updated successfully",
+        content: {
+          "application/json": {
+            schema: {
+              type: "object",
+              properties: {
+                data: {
+                  type: "object",
+                  properties: {
+                    review_id: { type: "string" },
+                    last_modified_at: { type: "string", format: "date-time" },
+                    revision_requested: { type: "boolean" },
+                  },
+                },
+              },
+            },
+          },
+        },
+      },
+      "400": Response400,
+      "401": Response401,
+      "403": Response403,
+      "404": Response404,
+    },
+  }),
+  updateOrderReview,
 )
 
 ordersRouter.put(

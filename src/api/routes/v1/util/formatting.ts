@@ -28,7 +28,6 @@ import { cdn } from "../../../../clients/cdn/cdn.js"
 import { User } from "../api-models.js"
 import { is_member } from "./permissions.js"
 import moment from "moment"
-import { serializeOrderDetails } from "../orders/serializers.js"
 import {
   FormattedAggregateListing,
   FormattedBuyOrder,
@@ -624,6 +623,7 @@ export async function formatReview(
     return null
   }
   return {
+    review_id: order_review.review_id,
     user_author: order_review.user_author
       ? await database.getMinimalUser({ user_id: order_review.user_author })
       : null,
@@ -636,6 +636,10 @@ export async function formatReview(
     content: order_review.content,
     timestamp: order_review.timestamp,
     order_id: order_review.order_id,
+    role: order_review.role,
+    revision_requested: order_review.revision_requested,
+    revision_requested_at: order_review.revision_requested_at,
+    last_modified_at: order_review.last_modified_at,
   }
 }
 

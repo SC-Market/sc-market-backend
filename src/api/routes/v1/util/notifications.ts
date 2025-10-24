@@ -12,8 +12,10 @@ import {
   DBReview,
   DBUser,
 } from "../../../../clients/database/db-models.js"
+import { User } from "../api-models.js"
 import { database } from "../../../../clients/database/knex-db.js"
 import logger from "../../../../logger/logger.js"
+import { has_permission } from "../util/permissions.js"
 import {
   sendAssignedWebhook,
   sendBidWebhooks,
@@ -263,7 +265,7 @@ export async function createOrderMessageNotification(
     logger.debug(`Found notification action: ${action.action_type_id}`)
 
     // Check if there's already a notification object for this order and action type
-    let existingNotificationObject =
+    const existingNotificationObject =
       await database.getNotificationObjectByEntityAndAction(
         order.order_id,
         action.action_type_id,
@@ -294,7 +296,7 @@ export async function createOrderMessageNotification(
     await database.insertNotificationChange([
       {
         notification_object_id: notificationObjectId,
-        actor_id: message.author,
+        actor_id: message.author!,
       },
     ])
     logger.debug(`Created notification change for actor: ${message.author}`)
@@ -352,7 +354,7 @@ export async function createOfferMessageNotification(
     logger.debug(`Found notification action: ${action.action_type_id}`)
 
     // Check if there's already a notification object for this session and action type
-    let existingNotificationObject =
+    const existingNotificationObject =
       await database.getNotificationObjectByEntityAndAction(
         session.id,
         action.action_type_id,
@@ -383,7 +385,7 @@ export async function createOfferMessageNotification(
     await database.insertNotificationChange([
       {
         notification_object_id: notificationObjectId,
-        actor_id: message.author,
+        actor_id: message.author!,
       },
     ])
     logger.debug(`Created notification change for actor: ${message.author}`)
@@ -727,6 +729,78 @@ export async function createAdminAlertNotifications(alert: DBAdminAlert) {
     )
   } catch (error) {
     logger.error("Failed to create admin alert notifications:", error)
+    throw error
+  }
+}
+
+export async function createOrderReviewRevisionNotification(
+  review: DBReview,
+  requester: User,
+) {
+  try {
+    const order = await database.getOrder({ order_id: review.order_id })
+
+    // Determine notification recipients
+    const recipients: string[] = []
+
+    if (review.user_author) {
+      // Individual review author
+      recipients.push(review.user_author)
+    } else if (review.contractor_author) {
+      // Organization review - notify all members with manage_orders permission
+      const members = await database.getContractorMembers({
+        contractor_id: review.contractor_author,
+      })
+
+      for (const member of members) {
+        const hasPermission = await has_permission(
+          review.contractor_author,
+          member.user_id,
+          "manage_orders",
+        )
+        if (hasPermission) {
+          recipients.push(member.user_id)
+        }
+      }
+    }
+
+    if (recipients.length === 0) {
+      logger.warn("No recipients found for review revision notification", {
+        review_id: review.review_id,
+        user_author: review.user_author,
+        contractor_author: review.contractor_author,
+      })
+      return
+    }
+
+    // Get notification action
+    const action = await database.getNotificationActionByName(
+      "order_review_revision_requested",
+    )
+
+    // Create notification object
+    const notif_objects = await database.insertNotificationObjects([
+      {
+        action_type_id: action.action_type_id,
+        entity_id: review.review_id,
+      },
+    ])
+
+    // Create notifications for all recipients
+    const notifications = recipients.map((recipient_id) => ({
+      notification_object_id: notif_objects[0].notification_object_id,
+      notifier_id: recipient_id,
+    }))
+
+    await database.insertNotifications(notifications)
+
+    logger.info("Created review revision notifications", {
+      review_id: review.review_id,
+      recipient_count: recipients.length,
+      requester_id: requester.user_id,
+    })
+  } catch (error) {
+    logger.error("Failed to create review revision notification:", error)
     throw error
   }
 }

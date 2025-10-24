@@ -96,7 +96,7 @@ tokensRouter.post(
                 },
                 description:
                   "Array of contractor Spectrum IDs that this token can access",
-                example: ["123456789", "987654321"],
+                example: ["SCMARKET", "EVOCATI"],
               },
             },
             required: ["name", "scopes"],
@@ -379,7 +379,7 @@ tokensRouter.put(
                 },
                 description:
                   "Array of contractor Spectrum IDs that this token can access",
-                example: ["123456789", "987654321"],
+                example: ["SCMARKET", "EVOCATI"],
               },
             },
           },
