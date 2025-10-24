@@ -393,49 +393,6 @@ oapi.schema("OrderStub", {
 })
 
 ordersRouter.get(
-  "/mine",
-  userAuthorized,
-  requireOrdersRead,
-  oapi.validPath({
-    summary: "Get orders you've placed",
-    deprecated: false,
-    description: "",
-    operationId: "getOrdersYouvePlaced",
-    tags: ["Orders"],
-    parameters: [],
-    responses: {
-      "200": {
-        description: "OK - Successful request with response body",
-        content: {
-          "application/json": {
-            schema: {
-              properties: {
-                data: {
-                  type: "array",
-                  items: oapi.schema("OrderStub"),
-                },
-              },
-              required: ["data"],
-              type: "object",
-              title: "GetOrdersYouvePlacedOk",
-            },
-          },
-        },
-        headers: {},
-      },
-      "401": Response401,
-    },
-  }),
-  userAuthorized,
-  async (req, res, next) => {
-    const user = req.user as User
-    const orders = await database.getOrders({ customer_id: user.user_id })
-
-    res.json(createResponse(await Promise.all(orders.map(formatOrderStub))))
-  },
-)
-
-ordersRouter.get(
   "/assigned",
   userAuthorized,
   requireOrdersRead,
@@ -472,150 +429,6 @@ ordersRouter.get(
   async (req, res, next) => {
     const user = req.user as User
     const orders = await database.getOrders({ assigned_id: user.user_id })
-    res.json(createResponse(await Promise.all(orders.map(formatOrderStub))))
-  },
-)
-
-ordersRouter.get(
-  "/contractor/:spectrum_id/assigned",
-  org_authorized,
-  requireOrdersRead,
-  oapi.validPath({
-    summary: "Get orders assigned to you for a given contractor",
-    deprecated: false,
-    description: "",
-    operationId: "getOrdersAssignedToYouForAGivenContractor",
-    tags: ["Orders"],
-    parameters: [
-      {
-        name: "spectrum_id",
-        in: "path",
-        description: "The Spectrum ID of the contractor",
-        required: true,
-        example: "SCMARKET",
-        schema: {
-          type: "string",
-        },
-      },
-    ],
-    responses: {
-      "200": {
-        description: "OK - Successful request with response body",
-        content: {
-          "application/json": {
-            schema: {
-              properties: {
-                data: {
-                  type: "array",
-                  items: oapi.schema("OrderStub"),
-                },
-              },
-              required: ["data"],
-              type: "object",
-              title: "GetOrdersAssignedToYouForAGivenContractorOk",
-            },
-          },
-        },
-        headers: {},
-      },
-      "401": Response401,
-      "403": Response403,
-    },
-    security: [],
-  }),
-  async (req, res, next) => {
-    const user = req.user as User
-    const contractor = req.contractor!
-    const orders = await database.getOrders({
-      assigned_id: user.user_id,
-      contractor_id: contractor.contractor_id,
-    })
-
-    res.json(createResponse(await Promise.all(orders.map(formatOrderStub))))
-  },
-)
-
-ordersRouter.get(
-  "/contractor/:spectrum_id",
-  userAuthorized,
-  requireOrdersRead,
-  oapi.validPath({
-    summary: "Get orders placed with the given contractor",
-    deprecated: false,
-    description: "",
-    operationId: "getOrdersPlacedWithTheGivenContractor",
-    tags: ["Orders"],
-    parameters: [
-      {
-        name: "spectrum_id",
-        in: "path",
-        description: "",
-        required: true,
-        example: "",
-        schema: {
-          type: "string",
-          minLength: 3,
-          maxLength: 50,
-        },
-      },
-    ],
-    responses: {
-      "200": {
-        description: "OK - Successful request with response body",
-        content: {
-          "application/json": {
-            schema: {
-              properties: {
-                data: {
-                  type: "array",
-                  items: oapi.schema("OrderStub"),
-                },
-              },
-              required: ["data"],
-              type: "object",
-              title: "GetOrdersPlacedWithTheGivenContractorOk",
-            },
-          },
-        },
-        headers: {},
-      },
-      "400": Response400,
-      "401": Response401,
-      "403": Response403,
-      "404": Response404,
-    },
-    security: [],
-  }),
-  userAuthorized,
-  async (req, res, next) => {
-    const spectrum_id = req.params["spectrum_id"]
-    const contractor = await database.getContractor({
-      spectrum_id: spectrum_id,
-    })
-    if (!contractor) {
-      res.status(404).json({ message: "Invalid contractor" })
-      return
-    }
-
-    const user = req.user as User
-    const contractors = await database.getUserContractors({
-      "contractor_members.user_id": user.user_id,
-    })
-
-    if (
-      contractors.filter((c) => c.contractor_id === contractor.contractor_id)
-        .length === 0
-    ) {
-      res
-        .status(403)
-        .json({ message: "You are not authorized to view these orders" })
-      return
-    }
-
-    const orders = await database.getOrders({
-      contractor_id: contractor.contractor_id,
-    })
-
     res.json(createResponse(await Promise.all(orders.map(formatOrderStub))))
   },
 )
@@ -789,8 +602,11 @@ ordersRouter.get(
     }
 
     if (args.assigned_id && args.assigned_id !== user.user_id) {
-      res.status(400).json(createErrorResponse("Missing permissions."))
-      return
+      // Allow searching by assigned user if user is a member of the specified contractor
+      if (!args.contractor_id) {
+        res.status(400).json(createErrorResponse("Missing permissions."))
+        return
+      }
     }
 
     const result = await search_orders_optimized(args)
@@ -801,17 +617,6 @@ ordersRouter.get(
       }),
     )
     return
-  },
-)
-
-ordersRouter.get(
-  "/all",
-  adminAuthorized,
-  requireOrdersRead,
-  async (req, res, next) => {
-    const orders = await database.getOrders({})
-
-    res.json(createResponse(await Promise.all(orders.map(formatOrderStub))))
   },
 )
 

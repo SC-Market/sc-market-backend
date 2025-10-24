@@ -458,6 +458,17 @@ offersRouter.get(
           type: "string",
         },
       },
+      {
+        name: "assigned",
+        in: "query",
+        description: "Filter by assigned user's username",
+        required: false,
+        schema: {
+          type: "string",
+          minLength: 3,
+          maxLength: 50,
+        },
+      },
     ],
     responses: {
       "200": {
@@ -485,10 +496,14 @@ offersRouter.get(
     security: [],
   }),
   userAuthorized,
+  validate_optional_username("assigned"),
   org_authorized,
   async (req, res) => {
+    const assigned = req.query.assigned ? req.users!.get("assigned") : null
+
     const offers = await database.getOfferSessions({
       contractor_id: req.contractor!.contractor_id,
+      assigned_id: assigned?.user_id,
     })
 
     res.json(
@@ -985,7 +1000,11 @@ offersRouter.get(
       }
     }
 
-    if (args.assigned_id && args.assigned_id !== user.user_id) {
+    if (
+      args.assigned_id &&
+      args.assigned_id !== user.user_id &&
+      !args.contractor_id
+    ) {
       res.status(400).json(createErrorResponse("Missing permissions."))
       return
     }
