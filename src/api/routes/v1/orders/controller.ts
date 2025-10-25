@@ -5,15 +5,20 @@ import { User } from "../api-models.js"
 import {
   acceptApplicant,
   convert_order_search_query,
+  createOffer,
   getContractorOrderData,
   getContractorOrderMetrics,
   handleAssignedUpdate,
   handleStatusUpdate,
+  is_related_to_order,
   search_orders_optimized,
 } from "./helpers.js"
 import { formatOrderStubOptimized } from "../util/formatting.js"
 import { has_permission, is_member } from "../util/permissions.js"
 import { DBOrder } from "../../../../clients/database/db-models.js"
+import logger from "../../../../logger/logger.js"
+import { serializeOrderDetails } from "./serializers.js"
+import { createThread } from "../util/discord.js"
 
 export const search_orders: RequestHandler = async (req, res) => {
   const user = req.user as User
@@ -232,4 +237,198 @@ export const accept_user_applicant: RequestHandler = async (req, res, next) => {
   const { username } = req.params
 
   await acceptApplicant(req, res, { target_username: username })
+}
+
+export const post_root: RequestHandler = async (req, res, next) => {
+  const user = req.user as User // TODO: Handle order service
+
+  const {
+    kind,
+    description,
+    cost,
+    title,
+    contractor,
+    assigned_to,
+    collateral,
+    payment_type,
+    service_id,
+  }: {
+    kind: string
+    cost: string
+    title: string
+    description: string
+    contractor: string | null
+    assigned_to: string | null
+    rush: boolean
+    departure: string | null
+    destination: string | null
+    collateral: number
+    service_id?: string
+    payment_type: string
+  } = req.body
+
+  let contractor_id
+  if (contractor) {
+    const contractor_obj = await database.getContractor({
+      spectrum_id: contractor,
+    })
+    if (!contractor_obj) {
+      res
+        .status(400)
+        .json(createErrorResponse({ message: "Invalid contractor" }))
+      return
+    }
+    contractor_id = contractor_obj.contractor_id
+  } else {
+    contractor_id = null
+  }
+
+  let assigned_user
+  if (assigned_to) {
+    assigned_user = await database.getUser({ username: assigned_to })
+    if (!assigned_user) {
+      res.status(400).json(createErrorResponse({ message: "Invalid assignee" }))
+      return
+    }
+
+    if (contractor_id) {
+      const role = await database.getContractorRoleLegacy(
+        assigned_user.user_id,
+        contractor_id,
+      )
+      if (!role) {
+        res
+          .status(400)
+          .json(createErrorResponse({ message: "Invalid assignee" }))
+        return
+      }
+    }
+  } else {
+    assigned_user = null
+  }
+
+  // Check if customer is blocked by contractor or assigned user
+  const isBlocked = await database.checkIfBlockedForOrder(
+    user.user_id,
+    contractor_id,
+    assigned_user?.user_id || null,
+  )
+  if (isBlocked) {
+    res.status(403).json(
+      createErrorResponse({
+        message:
+          "You are blocked from creating orders with this contractor or user",
+      }),
+    )
+    return
+  }
+
+  // TODO: Allow for public contracts again
+  const { session, discord_invite } = await createOffer(
+    {
+      assigned_id: assigned_user?.user_id,
+      contractor_id: contractor_id,
+      customer_id: user.user_id,
+    },
+    {
+      actor_id: user.user_id,
+      kind: kind,
+      description: description,
+      cost: cost,
+      title: title,
+      // rush: rush || false,
+      // TODO: Departure / destination
+      // departure: departure,
+      // destination: destination,
+      collateral: collateral || 0,
+      service_id,
+      payment_type: payment_type as "one-time" | "hourly" | "daily",
+    },
+  )
+
+  res.status(201).json(
+    createResponse({
+      discord_invite: discord_invite,
+      session_id: session.id,
+    }),
+  )
+}
+
+export const get_order_id: RequestHandler = async (req, res) => {
+  try {
+    const order_id = req.params["order_id"]
+    let order: DBOrder
+    try {
+      order = await database.getOrder({ order_id: order_id })
+    } catch (e) {
+      res.status(404).json(createErrorResponse({ message: "Invalid order" }))
+      return
+    }
+    const user = req.user as User | null | undefined
+
+    if (user) {
+      const unrelated = !(await is_related_to_order(order, user))
+
+      if (unrelated) {
+        res.status(403).json(
+          createErrorResponse({
+            message: "You are not authorized to view this order",
+          }),
+        )
+        return
+      }
+    }
+
+    if (!user) {
+      res.status(403).json(
+        createErrorResponse({
+          message: "You are not authorized to view this order",
+        }),
+      )
+      return
+    }
+
+    // TODO: Factor order details into another function
+    res.json(
+      createResponse(
+        await serializeOrderDetails(order, null, true, true, true),
+      ),
+    )
+  } catch (e) {
+    logger.error(e)
+  }
+}
+
+export const post_order_id_thread: RequestHandler = async (req, res) => {
+  if (req.order!.thread_id) {
+    res
+      .status(409)
+      .json(createErrorResponse({ message: "Order already has a thread!" }))
+    return
+  }
+
+  try {
+    const bot_response = await createThread(req.order!)
+    if (bot_response.result.failed) {
+      logger.error("Failed to create thread", bot_response)
+      res.status(500).json({ message: bot_response.result.message })
+      return
+    }
+
+    // Thread creation is now queued asynchronously
+    // The Discord bot will process the queue and create the thread
+    // We'll update the thread_id later when we receive the response from the bot
+    logger.info(
+      `Thread creation queued successfully for order ${req.order!.order_id}. Thread will be created asynchronously.`,
+    )
+  } catch (e) {
+    logger.error("Failed to create thread", e)
+    res.status(500).json({ message: "An unknown error occurred" })
+    return
+  }
+  res.status(201).json(
+    createResponse({
+      result: "Success",
+    }),
+  )
 }

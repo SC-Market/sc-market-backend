@@ -1,10 +1,13 @@
 import { Request, RequestHandler, Response } from "express"
 import { User } from "../api-models.js"
 import { database } from "../../../../clients/database/knex-db.js"
-import { createOrderReviewRevisionNotification } from "../util/notifications.js"
+import {
+  createOrderReviewNotification,
+  createOrderReviewRevisionNotification,
+} from "../util/notifications.js"
 import { has_permission } from "../util/permissions.js"
 import { createResponse, createErrorResponse } from "../util/response.js"
-import { DBReview } from "../../../../clients/database/db-models.js"
+import { DBOrder, DBReview } from "../../../../clients/database/db-models.js"
 import logger from "../../../../logger/logger.js"
 
 export async function requestReviewRevision(req: Request, res: Response) {
