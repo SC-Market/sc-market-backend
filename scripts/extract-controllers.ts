@@ -384,7 +384,7 @@ class ControllerExtractor {
         node.type === "CallExpression" &&
         node.callee.type === "MemberExpression" &&
         node.callee.object.type === "Identifier" &&
-        node.callee.object.name === "oapi" &&
+        (node.callee.object.name === "oapi" || node.callee.object.name === "adminOapi") &&
         node.callee.property.type === "Identifier" &&
         node.callee.property.name === "schema" &&
         node.arguments.length >= 2 &&
@@ -435,14 +435,14 @@ class ControllerExtractor {
         
         if (path === null) return
 
-        // Look for oapi.validPath calls in the arguments
+        // Look for oapi.validPath or adminOapi.validPath calls in the arguments
         for (let i = 1; i < node.arguments.length; i++) {
           const arg = node.arguments[i]
           if (
             arg.type === "CallExpression" &&
             arg.callee.type === "MemberExpression" &&
             arg.callee.object.type === "Identifier" &&
-            arg.callee.object.name === "oapi" &&
+            (arg.callee.object.name === "oapi" || arg.callee.object.name === "adminOapi") &&
             arg.callee.property.type === "Identifier" &&
             arg.callee.property.name === "validPath"
           ) {
