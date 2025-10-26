@@ -645,20 +645,10 @@ class ControllerExtractor {
   }
 
   private generateControllerFile(routeInfo: RouteFileInfo): string {
-    // Default imports for controller files
-    const defaultImports = `import { RequestHandler } from "express"
-import { database } from "../../../../clients/database/knex-db.js"
-import {
-  formatComment,
-  formatRecruitingPost,
-  FormattedComment,
-} from "../util/formatting.js"
-import { DBRecruitingPost } from "../../../../clients/database/db-models.js"
-import { User } from "../api-models.js"
-import { has_permission } from "../util/permissions.js"
-import { createErrorResponse, createResponse } from "../util/response.js"
-`
-
+    // Copy all imports from the route file, plus RequestHandler
+    const routeImports = routeInfo.imports.join("\n")
+    const requestHandlerImport = `import { RequestHandler } from "express"`
+    
     // Only generate the new handler exports
     const handlerExports = routeInfo.handlers
       .map((handler) => {
@@ -669,13 +659,12 @@ import { createErrorResponse, createResponse } from "../util/response.js"
       })
       .join("\n\n")
 
-    return `${defaultImports}\n\n${handlerExports}\n`
+    return `${requestHandlerImport}\n${routeImports}\n\n${handlerExports}\n`
   }
 
   private generateOpenApiFile(routeInfo: RouteFileInfo): string {
-    // Default imports for OpenAPI files - use relative paths from the route file
-    const defaultImports = `import { oapi } from "../openapi.js"
-import { Response400, Response401, Response403, Response404, Response409 } from "../openapi.js"`
+    // Copy all imports from the route file
+    const routeImports = routeInfo.imports.join("\n")
 
     // Generate schema exports
     const schemaExports = routeInfo.schemas
@@ -694,7 +683,7 @@ import { Response400, Response401, Response403, Response404, Response409 } from 
       })
       .join("\n\n")
 
-    return `${defaultImports}\n\n${schemaExports}\n\n${openApiExports}\n`
+    return `${routeImports}\n\n${schemaExports}\n\n${openApiExports}\n`
   }
 
   private updateRouteFile(routeInfo: RouteFileInfo): string {

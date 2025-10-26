@@ -1,0 +1,44 @@
+import express from "express"
+
+import { requireOrdersWrite } from "../../../middleware/auth.js"
+import { valid_public_contract } from "./middleware.js"
+
+import {
+  contracts_post_root,
+  contracts_post_contract_id_offers,
+  contracts_get_contract_id,
+  contracts_get_root,
+} from "./controller.js"
+
+import {
+  contracts_post_root_spec,
+  contracts_post_contract_id_offers_spec,
+  contracts_get_contract_id_spec,
+  contracts_get_root_spec,
+} from "./openapi.js"
+
+export const contractsRouter = express.Router()
+
+contractsRouter.post(
+  "",
+  requireOrdersWrite,
+  contracts_post_root_spec,
+  contracts_post_root,
+)
+
+contractsRouter.post(
+  "/:contract_id/offers",
+  requireOrdersWrite,
+  valid_public_contract,
+  contracts_post_contract_id_offers_spec,
+  contracts_post_contract_id_offers,
+)
+
+contractsRouter.get(
+  "/:contract_id",
+  valid_public_contract,
+  contracts_get_contract_id_spec,
+  contracts_get_contract_id,
+)
+
+contractsRouter.get("", contracts_get_root_spec, contracts_get_root)
