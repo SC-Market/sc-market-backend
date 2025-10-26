@@ -413,78 +413,67 @@ class ControllerExtractor {
     ast: TSESTree.Node,
     routeInfo: RouteFileInfo,
   ): void {
-    // First, find all oapi.validPath calls and their parent route context
-    const openApiCalls: Array<{
-      node: TSESTree.CallExpression
-      method: string
-      path: string
-    }> = []
-
+    // Find all router method calls and extract OpenAPI specs from them
     const visitor = (node: TSESTree.Node) => {
       if (
         node.type === "CallExpression" &&
         node.callee.type === "MemberExpression" &&
         node.callee.object.type === "Identifier" &&
-        node.callee.object.name === "oapi" &&
+        node.callee.object.name === routeInfo.routerName &&
         node.callee.property.type === "Identifier" &&
-        node.callee.property.name === "validPath"
+        ["get", "post", "put", "patch", "delete"].includes(
+          node.callee.property.name,
+        )
       ) {
-        // Find the parent route call to get method and path
-        let current = node.parent
-        while (current) {
-          if (
-            current.type === "CallExpression" &&
-            current.callee.type === "MemberExpression" &&
-            current.callee.object.type === "Identifier" &&
-            current.callee.object.name === routeInfo.routerName &&
-            current.callee.property.type === "Identifier" &&
-            ["get", "post", "put", "patch", "delete"].includes(
-              current.callee.property.name,
-            )
-          ) {
-            const method = current.callee.property.name
-            const path = this.extractStringLiteral(current.arguments[0])
+        const method = node.callee.property.name
+        const path = this.extractStringLiteral(node.arguments[0])
+        
+        if (path === null) return
 
-            if (path !== null) {
-              openApiCalls.push({ node, method, path })
+        // Look for oapi.validPath calls in the arguments
+        for (let i = 1; i < node.arguments.length; i++) {
+          const arg = node.arguments[i]
+          if (
+            arg.type === "CallExpression" &&
+            arg.callee.type === "MemberExpression" &&
+            arg.callee.object.type === "Identifier" &&
+            arg.callee.object.name === "oapi" &&
+            arg.callee.property.type === "Identifier" &&
+            arg.callee.property.name === "validPath"
+          ) {
+            // Found an OpenAPI spec
+            const openApiConfigSource = this.extractOpenApiConfigSource(
+              arg,
+              routeInfo.originalContent,
+            )
+            if (openApiConfigSource) {
+              // Generate meaningful name based on method and path
+              const openApiConfigName = this.generateOpenApiConfigName(method, path)
+
+              const handlerInfo: HandlerInfo = {
+                method,
+                path,
+                middleware: [],
+                openApiConfig: { placeholder: true },
+                openApiConfigSource,
+                openApiConfigName,
+                handlerFunction: null as any,
+                handlerName: "",
+                startLine: arg.loc?.start.line || 0,
+                endLine: arg.loc?.end.line || 0,
+                functionSource: "",
+                handlerSource: "",
+              }
+
+              routeInfo.openApiSpecs.push(handlerInfo)
             }
-            break
+            break // Only process the first oapi.validPath call per route
           }
-          current = current.parent!
         }
       }
     }
 
     this.traverseAST(ast, visitor)
-
-    // Process each OpenAPI call with meaningful names
-    for (const { node, method, path } of openApiCalls) {
-      const openApiConfigSource = this.extractOpenApiConfigSource(
-        node,
-        routeInfo.originalContent,
-      )
-      if (openApiConfigSource) {
-        // Generate meaningful name based on method and path
-        const openApiConfigName = this.generateOpenApiConfigName(method, path)
-
-        const handlerInfo: HandlerInfo = {
-          method,
-          path,
-          middleware: [],
-          openApiConfig: { placeholder: true },
-          openApiConfigSource,
-          openApiConfigName,
-          handlerFunction: null as any,
-          handlerName: "",
-          startLine: node.loc?.start.line || 0,
-          endLine: node.loc?.end.line || 0,
-          functionSource: "",
-          handlerSource: "",
-        }
-
-        routeInfo.openApiSpecs.push(handlerInfo)
-      }
-    }
   }
 
   private extractOpenApiConfig(node: TSESTree.CallExpression): any {
@@ -661,8 +650,9 @@ import { Response400, Response401, Response403, Response404, Response409 } from 
       return content
     }
 
-    // Add import for new controller functions
-    const newHandlerNames = routeInfo.handlers.map((h) => h.handlerName)
+    // Add import for new controller functions (only if there are handlers)
+    if (routeInfo.handlers.length > 0) {
+      const newHandlerNames = routeInfo.handlers.map((h) => h.handlerName)
 
     // Find the existing controller import and add to it
     const controllerImportRegex =
@@ -694,6 +684,7 @@ import { Response400, Response401, Response403, Response404, Response409 } from 
 
       lines.splice(insertIndex, 0, "", controllerImport)
       content = lines.join("\n")
+    }
     }
 
     // Add import for new OpenAPI specs
@@ -745,6 +736,10 @@ import { Response400, Response401, Response403, Response404, Response409 } from 
         content = content.replace(spec.openApiConfigSource, replacement)
       }
     }
+
+    // Clean up duplicate middleware calls that might have been created
+    // This is a simple cleanup for common patterns
+    content = content.replace(/userAuthorized,\\s*userAuthorized,/g, 'userAuthorized,')
 
     // Remove schema definitions from route file
     for (const schema of routeInfo.schemas) {

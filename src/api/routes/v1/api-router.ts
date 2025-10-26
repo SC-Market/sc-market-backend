@@ -1,6 +1,6 @@
 import express from "express"
 import { starmapRouter } from "./starmap/starmap.js"
-import { chatsRouter } from "./chats/chats.js"
+import { chatsRouter } from "./chats/routes.js"
 import { profileRouter } from "./profiles/profiles.js"
 import { commodityRouter } from "./commodities/commodities.js"
 import { contractorsRouter } from "./contractors/routes.js"
