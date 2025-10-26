@@ -16,6 +16,6 @@ RUN yarn build
 # Create logs directory
 RUN mkdir -p /app/logs
 
-CMD ["node", "dist/server.js"]
+CMD ["node", "dist/src/server.js"]
 EXPOSE 80:80
 EXPOSE 443:443
