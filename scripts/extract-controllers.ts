@@ -1,7 +1,7 @@
 #!/usr/bin/env tsx
 
 import { readFileSync, writeFileSync, existsSync } from "fs"
-import { join, dirname, basename, extname } from "path"
+import { join, dirname } from "path"
 import { parse } from "@typescript-eslint/typescript-estree"
 import { TSESTree } from "@typescript-eslint/typescript-estree"
 import { execSync } from "child_process"
@@ -95,8 +95,10 @@ class ControllerExtractor {
 
     // Generate OpenAPI specs file content to append (if specs or schemas exist)
     if (routeInfo.openApiSpecs.length > 0 || routeInfo.schemas.length > 0) {
-      console.log(`Found ${routeInfo.openApiSpecs.length} OpenAPI specs and ${routeInfo.schemas.length} schemas to extract`)
-      
+      console.log(
+        `Found ${routeInfo.openApiSpecs.length} OpenAPI specs and ${routeInfo.schemas.length} schemas to extract`,
+      )
+
       const openApiContent = this.generateOpenApiFile(routeInfo)
       const openApiPath = join(this.outputDir, "openapi.ts")
 
@@ -247,9 +249,9 @@ class ControllerExtractor {
         if (args.length < 2) return
 
         const path = this.extractStringLiteral(args[0])
-        if (!path) return
+        if (path === null) return
 
-        // Find the handler function (last argument that's a function)
+        // Find the handler function and OpenAPI config
         let handlerFunction:
           | TSESTree.FunctionExpression
           | TSESTree.ArrowFunctionExpression
@@ -270,22 +272,53 @@ class ControllerExtractor {
             openApiConfig = arg
           } else if (arg.type === "Identifier") {
             // This could be middleware or a handler function
-            if (i === args.length - 1) {
-              // Last argument - likely the handler
+            // Check if it's the last argument or if the next argument is a function
+            const isLastArg = i === args.length - 1
+            const nextArgIsFunction = i < args.length - 1 && 
+              (args[i + 1].type === "FunctionExpression" || 
+               args[i + 1].type === "ArrowFunctionExpression")
+            
+            if (isLastArg && !nextArgIsFunction) {
+              // Last argument and not followed by a function - likely the handler
               handlerIdentifier = arg.name
             } else {
               // Middleware
               middleware.push(arg.name)
             }
           } else if (
-            (arg.type === "FunctionExpression" ||
-              arg.type === "ArrowFunctionExpression") &&
-            i === args.length - 1
+            arg.type === "FunctionExpression" ||
+            arg.type === "ArrowFunctionExpression"
           ) {
             // This is the handler function
             handlerFunction = arg
           }
         }
+
+        // If we found an OpenAPI config but no handler function yet, 
+        // look for the handler function that comes after it
+        if (openApiConfig && !handlerFunction && !handlerIdentifier) {
+          for (let i = 1; i < args.length; i++) {
+            const arg = args[i]
+            if (arg === openApiConfig) {
+              // Found the OpenAPI config, look for the next function
+              for (let j = i + 1; j < args.length; j++) {
+                const nextArg = args[j]
+                if (
+                  nextArg.type === "FunctionExpression" ||
+                  nextArg.type === "ArrowFunctionExpression"
+                ) {
+                  handlerFunction = nextArg
+                  break
+                } else if (nextArg.type === "Identifier") {
+                  handlerIdentifier = nextArg.name
+                  break
+                }
+              }
+              break
+            }
+          }
+        }
+
 
         // Only extract if it's an inline function (not an imported identifier)
         if (handlerFunction && !handlerIdentifier) {
@@ -376,43 +409,82 @@ class ControllerExtractor {
     this.traverseAST(ast, visitor)
   }
 
-  private extractOpenApiSpecs(ast: TSESTree.Node, routeInfo: RouteFileInfo): void {
+  private extractOpenApiSpecs(
+    ast: TSESTree.Node,
+    routeInfo: RouteFileInfo,
+  ): void {
+    // First, find all oapi.validPath calls and their parent route context
+    const openApiCalls: Array<{
+      node: TSESTree.CallExpression
+      method: string
+      path: string
+    }> = []
+
     const visitor = (node: TSESTree.Node) => {
-      if (node.type === "CallExpression" &&
-          node.callee.type === "MemberExpression" &&
-          node.callee.object.type === "Identifier" &&
-          node.callee.object.name === "oapi" &&
-          node.callee.property.type === "Identifier" &&
-          node.callee.property.name === "validPath") {
-        
-        // Extract OpenAPI config source
-        const openApiConfigSource = this.extractOpenApiConfigSource(node, routeInfo.originalContent)
-        if (openApiConfigSource) {
-          // Generate a simple name based on line number
-          const lineNumber = node.loc?.start.line || 0
-          const openApiConfigName = `openapi_spec_${lineNumber}`
-          
-          const handlerInfo: HandlerInfo = {
-            method: "unknown",
-            path: "unknown",
-            middleware: [],
-            openApiConfig: { placeholder: true },
-            openApiConfigSource,
-            openApiConfigName,
-            handlerFunction: null as any,
-            handlerName: "",
-            startLine: node.loc?.start.line || 0,
-            endLine: node.loc?.end.line || 0,
-            functionSource: "",
-            handlerSource: ""
+      if (
+        node.type === "CallExpression" &&
+        node.callee.type === "MemberExpression" &&
+        node.callee.object.type === "Identifier" &&
+        node.callee.object.name === "oapi" &&
+        node.callee.property.type === "Identifier" &&
+        node.callee.property.name === "validPath"
+      ) {
+        // Find the parent route call to get method and path
+        let current = node.parent
+        while (current) {
+          if (
+            current.type === "CallExpression" &&
+            current.callee.type === "MemberExpression" &&
+            current.callee.object.type === "Identifier" &&
+            current.callee.object.name === routeInfo.routerName &&
+            current.callee.property.type === "Identifier" &&
+            ["get", "post", "put", "patch", "delete"].includes(
+              current.callee.property.name,
+            )
+          ) {
+            const method = current.callee.property.name
+            const path = this.extractStringLiteral(current.arguments[0])
+
+            if (path !== null) {
+              openApiCalls.push({ node, method, path })
+            }
+            break
           }
-          
-          routeInfo.openApiSpecs.push(handlerInfo)
+          current = current.parent!
         }
       }
     }
 
     this.traverseAST(ast, visitor)
+
+    // Process each OpenAPI call with meaningful names
+    for (const { node, method, path } of openApiCalls) {
+      const openApiConfigSource = this.extractOpenApiConfigSource(
+        node,
+        routeInfo.originalContent,
+      )
+      if (openApiConfigSource) {
+        // Generate meaningful name based on method and path
+        const openApiConfigName = this.generateOpenApiConfigName(method, path)
+
+        const handlerInfo: HandlerInfo = {
+          method,
+          path,
+          middleware: [],
+          openApiConfig: { placeholder: true },
+          openApiConfigSource,
+          openApiConfigName,
+          handlerFunction: null as any,
+          handlerName: "",
+          startLine: node.loc?.start.line || 0,
+          endLine: node.loc?.end.line || 0,
+          functionSource: "",
+          handlerSource: "",
+        }
+
+        routeInfo.openApiSpecs.push(handlerInfo)
+      }
+    }
   }
 
   private extractOpenApiConfig(node: TSESTree.CallExpression): any {
@@ -502,7 +574,6 @@ class ControllerExtractor {
     return lines.slice(startLine, endLine + 1).join("\n")
   }
 
-
   private extractOpenApiConfigSource(
     node: TSESTree.CallExpression,
     originalContent: string,
@@ -528,6 +599,78 @@ class ControllerExtractor {
   }
 
   private generateControllerFile(routeInfo: RouteFileInfo): string {
+    // Default imports for controller files
+    const defaultImports = `import { RequestHandler } from "express"
+import { database } from "../../../../clients/database/knex-db.js"
+import {
+  formatComment,
+  formatRecruitingPost,
+  FormattedComment,
+} from "../util/formatting.js"
+import { DBRecruitingPost } from "../../../../clients/database/db-models.js"
+import { User } from "../api-models.js"
+import { has_permission } from "../util/permissions.js"
+import { createErrorResponse, createResponse } from "../util/response.js"
+
+// Types
+interface RecruitingSearchQuery {
+  index: number
+  reverseSort: boolean
+  sorting: string
+  searchQuery: string
+  fields: string[]
+  rating: number
+  pageSize: number
+}
+
+// Utility functions and constants
+const sortingMethods = [
+  "rating",
+  "name",
+  "activity",
+  "all-time",
+  "members",
+  "rating-reverse",
+  "name-reverse",
+  "activity-reverse",
+  "all-time-reverse",
+  "members-reverse",
+]
+
+export function convertQuery(query: {
+  index?: string
+  sorting?: string
+  query?: string
+  fields?: string
+  rating?: string
+  pageSize?: string
+}): RecruitingSearchQuery {
+  const index = +(query.index || 0)
+  let sorting = (query.sorting || "name").toLowerCase()
+  const reverseSort = sorting.endsWith("-reverse")
+  if (reverseSort) {
+    sorting = sorting.slice(0, sorting.length - "-reverse".length)
+  }
+
+  if (sortingMethods.indexOf(sorting) === -1) {
+    sorting = "name"
+  }
+
+  const searchQuery = (query.query || "").toLowerCase()
+  const fields = query.fields ? query.fields.toLowerCase().split(",") : []
+  const rating = +(query.rating || 0)
+  const pageSize = +(query.pageSize || 15)
+  return {
+    index,
+    reverseSort,
+    sorting,
+    searchQuery,
+    fields,
+    rating,
+    pageSize,
+  }
+}`
+
     // Only generate the new handler exports
     const handlerExports = routeInfo.handlers
       .map((handler) => {
@@ -538,10 +681,14 @@ class ControllerExtractor {
       })
       .join("\n\n")
 
-    return `\n${handlerExports}\n`
+    return `${defaultImports}\n\n${handlerExports}\n`
   }
 
   private generateOpenApiFile(routeInfo: RouteFileInfo): string {
+    // Default imports for OpenAPI files - use relative paths from the route file
+    const defaultImports = `import { oapi } from "../openapi.js"
+import { Response400, Response401, Response403, Response404, Response409 } from "../openapi.js"`
+
     // Generate schema exports
     const schemaExports = routeInfo.schemas
       .map((schema) => {
@@ -559,13 +706,16 @@ class ControllerExtractor {
       })
       .join("\n\n")
 
-    return `\n${schemaExports}\n\n${openApiExports}\n`
+    return `${defaultImports}\n\n${schemaExports}\n\n${openApiExports}\n`
   }
 
   private updateRouteFile(routeInfo: RouteFileInfo): string {
     let content = routeInfo.originalContent
 
-    if (routeInfo.handlers.length === 0 && routeInfo.openApiSpecs.length === 0) {
+    if (
+      routeInfo.handlers.length === 0 &&
+      routeInfo.openApiSpecs.length === 0
+    ) {
       return content
     }
 
@@ -592,10 +742,10 @@ class ControllerExtractor {
       const lines = content.split("\n")
       let insertIndex = 0
 
-      for (let i = 0; i < lines.length; i++) {
-        if (lines[i].startsWith("import ")) {
+      // Find the last complete import statement (ending with "from" and ".js")
+      for (let i = lines.length - 1; i >= 0; i--) {
+        if (lines[i].includes("from ") && lines[i].includes(".js")) {
           insertIndex = i + 1
-        } else if (lines[i].trim() === "" && insertIndex > 0) {
           break
         }
       }
@@ -609,22 +759,29 @@ class ControllerExtractor {
       (s) => s.openApiConfigName,
     )
     if (newOpenApiNames.length > 0) {
-      const openApiImport = `import {\n  ${newOpenApiNames.join(
-        ",\n  ",
-      )}\n} from "./openapi.js"`
-      const lines = content.split("\n")
-      let insertIndex = 0
+      // Check if openapi import already exists
+      const openApiImportRegex =
+        /import\s*\{[^}]*\}\s*from\s*["']\.\/openapi\.js["']/
+      if (!content.match(openApiImportRegex)) {
+        const openApiImport = `import {\n  ${newOpenApiNames.join(
+          ",\n  ",
+        )}\n} from "./openapi.js"`
 
-      for (let i = 0; i < lines.length; i++) {
-        if (lines[i].startsWith("import ")) {
-          insertIndex = i + 1
-        } else if (lines[i].trim() === "" && insertIndex > 0) {
-          break
+        // Find a safe place to insert the import - after the last complete import
+        const lines = content.split("\n")
+        let insertIndex = 0
+
+        // Find the last line that contains "from" (indicating end of an import)
+        for (let i = lines.length - 1; i >= 0; i--) {
+          if (lines[i].includes("from ") && lines[i].includes(".js")) {
+            insertIndex = i + 1
+            break
+          }
         }
-      }
 
-      lines.splice(insertIndex, 0, "", openApiImport)
-      content = lines.join("\n")
+        lines.splice(insertIndex, 0, "", openApiImport)
+        content = lines.join("\n")
+      }
     }
 
     // Replace only the handler functions, preserving all middleware and configuration
@@ -634,7 +791,7 @@ class ControllerExtractor {
         handler.handlerFunction,
         routeInfo.originalContent,
       )
-      content = content.replace(handlerSource, handler.handlerName)
+      content = content.replace(handlerSource, handler.handlerName + ",")
     }
 
     // Replace OpenAPI configs with imported specs
