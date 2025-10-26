@@ -32,7 +32,7 @@ interface SchemaInfo {
 
 interface RouteFileInfo {
   filePath: string
-  routerName: string
+  routerNames: string[]
   imports: string[]
   existingControllerImports: string[]
   handlers: HandlerInfo[]
@@ -146,7 +146,7 @@ class ControllerExtractor {
 
     const routeInfo: RouteFileInfo = {
       filePath: this.routeFile,
-      routerName: "",
+      routerNames: [],
       imports: [],
       existingControllerImports: [],
       handlers: [],
@@ -166,6 +166,9 @@ class ControllerExtractor {
 
     // Extract OpenAPI specs (even if no handlers)
     this.extractOpenApiSpecs(ast, routeInfo)
+
+    // Deduplicate results
+    this.deduplicateResults(routeInfo)
 
     return routeInfo
   }
@@ -218,7 +221,7 @@ class ControllerExtractor {
               declarator.init.callee.object.type === "Identifier" &&
               declarator.init.callee.object.name === "express"
             ) {
-              routeInfo.routerName = declarator.id.name
+              routeInfo.routerNames.push(declarator.id.name)
             }
           }
         }
@@ -234,7 +237,7 @@ class ControllerExtractor {
         node.type === "CallExpression" &&
         node.callee.type === "MemberExpression" &&
         node.callee.object.type === "Identifier" &&
-        node.callee.object.name === routeInfo.routerName &&
+        routeInfo.routerNames.includes(node.callee.object.name) &&
         node.callee.property.type === "Identifier" &&
         ["get", "post", "put", "patch", "delete"].includes(
           node.callee.property.name,
@@ -322,8 +325,9 @@ class ControllerExtractor {
 
         // Only extract if it's an inline function (not an imported identifier)
         if (handlerFunction && !handlerIdentifier) {
-          const handlerName = this.generateHandlerName(method, path)
-          const openApiConfigName = this.generateOpenApiConfigName(method, path)
+          const routerName = node.callee.object.name
+          const handlerName = this.generateHandlerName(method, path, routerName)
+          const openApiConfigName = this.generateOpenApiConfigName(method, path, routerName)
 
           const startLine = handlerFunction.loc?.start.line || 0
           const endLine = handlerFunction.loc?.end.line || 0
@@ -419,7 +423,7 @@ class ControllerExtractor {
         node.type === "CallExpression" &&
         node.callee.type === "MemberExpression" &&
         node.callee.object.type === "Identifier" &&
-        node.callee.object.name === routeInfo.routerName &&
+        routeInfo.routerNames.includes(node.callee.object.name) &&
         node.callee.property.type === "Identifier" &&
         ["get", "post", "put", "patch", "delete"].includes(
           node.callee.property.name,
@@ -427,6 +431,7 @@ class ControllerExtractor {
       ) {
         const method = node.callee.property.name
         const path = this.extractStringLiteral(node.arguments[0])
+        const routerName = node.callee.object.name
         
         if (path === null) return
 
@@ -448,7 +453,11 @@ class ControllerExtractor {
             )
             if (openApiConfigSource) {
               // Generate meaningful name based on method and path
-              const openApiConfigName = this.generateOpenApiConfigName(method, path)
+              const openApiConfigName = this.generateOpenApiConfigName(
+                method,
+                path,
+                routerName,
+              )
 
               const handlerInfo: HandlerInfo = {
                 method,
@@ -476,6 +485,38 @@ class ControllerExtractor {
     this.traverseAST(ast, visitor)
   }
 
+  private deduplicateResults(routeInfo: RouteFileInfo): void {
+    // Deduplicate handlers by handlerName
+    const seenHandlers = new Set<string>()
+    routeInfo.handlers = routeInfo.handlers.filter(handler => {
+      if (seenHandlers.has(handler.handlerName)) {
+        return false
+      }
+      seenHandlers.add(handler.handlerName)
+      return true
+    })
+
+    // Deduplicate OpenAPI specs by openApiConfigName
+    const seenSpecs = new Set<string>()
+    routeInfo.openApiSpecs = routeInfo.openApiSpecs.filter(spec => {
+      if (seenSpecs.has(spec.openApiConfigName)) {
+        return false
+      }
+      seenSpecs.add(spec.openApiConfigName)
+      return true
+    })
+
+    // Deduplicate schemas by schemaName
+    const seenSchemas = new Set<string>()
+    routeInfo.schemas = routeInfo.schemas.filter(schema => {
+      if (seenSchemas.has(schema.schemaName)) {
+        return false
+      }
+      seenSchemas.add(schema.schemaName)
+      return true
+    })
+  }
+
   private extractOpenApiConfig(node: TSESTree.CallExpression): any {
     // For now, just return a placeholder - we'll extract the source code directly
     return { placeholder: true }
@@ -488,7 +529,7 @@ class ControllerExtractor {
     return null
   }
 
-  private generateHandlerName(method: string, path: string): string {
+  private generateHandlerName(method: string, path: string, routerName?: string): string {
     // Convert path to function name
     let name = path
       .replace(/[^a-zA-Z0-9]/g, "_")
@@ -505,10 +546,18 @@ class ControllerExtractor {
 
     // Add method prefix in snake_case
     const methodPrefix = method.toLowerCase()
-    return `${methodPrefix}_${name}`
+    const baseName = `${methodPrefix}_${name}`
+    
+    // Add router prefix if there are multiple routers to avoid conflicts
+    if (routerName && routerName !== "offersRouter") {
+      const routerPrefix = routerName.replace("Router", "").toLowerCase()
+      return `${routerPrefix}_${baseName}`
+    }
+    
+    return baseName
   }
 
-  private generateOpenApiConfigName(method: string, path: string): string {
+  private generateOpenApiConfigName(method: string, path: string, routerName?: string): string {
     // Convert path to function name using snake_case
     let name = path
       .replace(/[^a-zA-Z0-9]/g, "_")
@@ -525,7 +574,15 @@ class ControllerExtractor {
 
     // Add method prefix in snake_case
     const methodPrefix = method.toLowerCase()
-    return `${methodPrefix}_${name}_spec`
+    const baseName = `${methodPrefix}_${name}_spec`
+    
+    // Add router prefix if there are multiple routers to avoid conflicts
+    if (routerName && routerName !== "offersRouter") {
+      const routerPrefix = routerName.replace("Router", "").toLowerCase()
+      return `${routerPrefix}_${baseName}`
+    }
+    
+    return baseName
   }
 
   private extractFunctionSource(
@@ -654,37 +711,37 @@ import { Response400, Response401, Response403, Response404, Response409 } from 
     if (routeInfo.handlers.length > 0) {
       const newHandlerNames = routeInfo.handlers.map((h) => h.handlerName)
 
-    // Find the existing controller import and add to it
-    const controllerImportRegex =
-      /import\s*\{\s*([^}]+)\s*\}\s*from\s*["']\.\/controller\.js["']/
-    const match = content.match(controllerImportRegex)
+      // Find the existing controller import and add to it
+      const controllerImportRegex =
+        /import\s*\{\s*([^}]+)\s*\}\s*from\s*["']\.\/controller\.js["']/
+      const match = content.match(controllerImportRegex)
 
-    if (match) {
-      // Add to existing import
-      const existingImports = match[1]
-        .split(",")
-        .map((imp) => imp.trim())
-        .filter((imp) => imp)
-      const allImports = [...existingImports, ...newHandlerNames]
-      const updatedImport = `import {\n  ${allImports.join(",\n  ")}\n} from "./controller.js"`
-      content = content.replace(controllerImportRegex, updatedImport)
-    } else {
-      // Add new import
-      const controllerImport = `import {\n  ${newHandlerNames.join(",\n  ")}\n} from "./controller.js"`
-      const lines = content.split("\n")
-      let insertIndex = 0
+      if (match) {
+        // Add to existing import
+        const existingImports = match[1]
+          .split(",")
+          .map((imp) => imp.trim())
+          .filter((imp) => imp)
+        const allImports = [...existingImports, ...newHandlerNames]
+        const updatedImport = `import {\n  ${allImports.join(",\n  ")}\n} from "./controller.js"`
+        content = content.replace(controllerImportRegex, updatedImport)
+      } else {
+        // Add new import
+        const controllerImport = `import {\n  ${newHandlerNames.join(",\n  ")}\n} from "./controller.js"`
+        const lines = content.split("\n")
+        let insertIndex = 0
 
-      // Find the last complete import statement (ending with "from" and ".js")
-      for (let i = lines.length - 1; i >= 0; i--) {
-        if (lines[i].includes("from ") && lines[i].includes(".js")) {
-          insertIndex = i + 1
-          break
+        // Find the last complete import statement (ending with "from" and ".js")
+        for (let i = lines.length - 1; i >= 0; i--) {
+          if (lines[i].includes("from ") && lines[i].includes(".js")) {
+            insertIndex = i + 1
+            break
+          }
         }
-      }
 
-      lines.splice(insertIndex, 0, "", controllerImport)
-      content = lines.join("\n")
-    }
+        lines.splice(insertIndex, 0, "", controllerImport)
+        content = lines.join("\n")
+      }
     }
 
     // Add import for new OpenAPI specs
@@ -736,10 +793,6 @@ import { Response400, Response401, Response403, Response404, Response409 } from 
         content = content.replace(spec.openApiConfigSource, replacement)
       }
     }
-
-    // Clean up duplicate middleware calls that might have been created
-    // This is a simple cleanup for common patterns
-    content = content.replace(/userAuthorized,\\s*userAuthorized,/g, 'userAuthorized,')
 
     // Remove schema definitions from route file
     for (const schema of routeInfo.schemas) {
