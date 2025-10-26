@@ -274,10 +274,11 @@ class ControllerExtractor {
             // This could be middleware or a handler function
             // Check if it's the last argument or if the next argument is a function
             const isLastArg = i === args.length - 1
-            const nextArgIsFunction = i < args.length - 1 && 
-              (args[i + 1].type === "FunctionExpression" || 
-               args[i + 1].type === "ArrowFunctionExpression")
-            
+            const nextArgIsFunction =
+              i < args.length - 1 &&
+              (args[i + 1].type === "FunctionExpression" ||
+                args[i + 1].type === "ArrowFunctionExpression")
+
             if (isLastArg && !nextArgIsFunction) {
               // Last argument and not followed by a function - likely the handler
               handlerIdentifier = arg.name
@@ -294,7 +295,7 @@ class ControllerExtractor {
           }
         }
 
-        // If we found an OpenAPI config but no handler function yet, 
+        // If we found an OpenAPI config but no handler function yet,
         // look for the handler function that comes after it
         if (openApiConfig && !handlerFunction && !handlerIdentifier) {
           for (let i = 1; i < args.length; i++) {
@@ -318,7 +319,6 @@ class ControllerExtractor {
             }
           }
         }
-
 
         // Only extract if it's an inline function (not an imported identifier)
         if (handlerFunction && !handlerIdentifier) {
@@ -611,65 +611,7 @@ import { DBRecruitingPost } from "../../../../clients/database/db-models.js"
 import { User } from "../api-models.js"
 import { has_permission } from "../util/permissions.js"
 import { createErrorResponse, createResponse } from "../util/response.js"
-
-// Types
-interface RecruitingSearchQuery {
-  index: number
-  reverseSort: boolean
-  sorting: string
-  searchQuery: string
-  fields: string[]
-  rating: number
-  pageSize: number
-}
-
-// Utility functions and constants
-const sortingMethods = [
-  "rating",
-  "name",
-  "activity",
-  "all-time",
-  "members",
-  "rating-reverse",
-  "name-reverse",
-  "activity-reverse",
-  "all-time-reverse",
-  "members-reverse",
-]
-
-export function convertQuery(query: {
-  index?: string
-  sorting?: string
-  query?: string
-  fields?: string
-  rating?: string
-  pageSize?: string
-}): RecruitingSearchQuery {
-  const index = +(query.index || 0)
-  let sorting = (query.sorting || "name").toLowerCase()
-  const reverseSort = sorting.endsWith("-reverse")
-  if (reverseSort) {
-    sorting = sorting.slice(0, sorting.length - "-reverse".length)
-  }
-
-  if (sortingMethods.indexOf(sorting) === -1) {
-    sorting = "name"
-  }
-
-  const searchQuery = (query.query || "").toLowerCase()
-  const fields = query.fields ? query.fields.toLowerCase().split(",") : []
-  const rating = +(query.rating || 0)
-  const pageSize = +(query.pageSize || 15)
-  return {
-    index,
-    reverseSort,
-    sorting,
-    searchQuery,
-    fields,
-    rating,
-    pageSize,
-  }
-}`
+`
 
     // Only generate the new handler exports
     const handlerExports = routeInfo.handlers
