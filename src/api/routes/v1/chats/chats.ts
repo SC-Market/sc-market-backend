@@ -1,7 +1,6 @@
 import express from "express"
 import {
   userAuthorized,
-  AuthRequest,
   requireChatsRead,
   requireChatsWrite,
 } from "../../../middleware/auth.js"
@@ -16,7 +15,7 @@ import {
   Response403,
   Response404,
 } from "../openapi.js"
-import * as chatsController from "./chatsController.js"
+import * as chatsController from "./controller.js"
 
 export const chatsRouter = express.Router()
 
