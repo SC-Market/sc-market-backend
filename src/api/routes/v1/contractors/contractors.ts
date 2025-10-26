@@ -18,7 +18,6 @@ import { SUPPORTED_LOCALES } from "../util/i18n.js"
 import { createContractorInviteNotification } from "../util/notifications.js"
 import { createNotificationWebhook } from "../util/webhooks.js"
 import { rate_limit } from "../../../middleware/ratelimiting.js"
-import { convertQuery } from "../recruiting/recruiting.js"
 import {
   can_manage_role,
   get_min_position,
@@ -44,6 +43,7 @@ import {
   org_permission,
   valid_contractor,
 } from "./middleware.js"
+import { convertQuery } from "../recruiting/controller.js"
 
 export const contractorsRouter = express.Router()
 

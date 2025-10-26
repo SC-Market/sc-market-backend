@@ -90,7 +90,6 @@ import {
   getContractorRating,
   getUserRating,
 } from "../../api/routes/v1/util/formatting.js"
-import { RecruitingSearchQuery } from "../../api/routes/v1/recruiting/recruiting.js"
 import { RateLimiterPostgres } from "rate-limiter-flexible"
 import { RESTGetAPIUserResult, Routes } from "discord-api-types/v10"
 import { rest } from "../../api/routes/v1/util/discord.js"
@@ -108,6 +107,7 @@ import {
   OrderStats,
   UserListingsQuery,
 } from "../../api/routes/v1/market/types.js"
+import { RecruitingSearchQuery } from "../../api/routes/v1/recruiting/controller.js"
 
 pg.types.setTypeParser(1114, (s: string) => new Date(s.replace(" ", "T") + "Z"))
 
