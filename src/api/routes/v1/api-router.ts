@@ -15,9 +15,9 @@ import { adminRouter } from "./admin/routes.js"
 import { offerRouter, offersRouter } from "./offers/routes.js"
 import { servicesRouter } from "./services/routes.js"
 import { contractsRouter } from "./contracts/routes.js"
-import { shopRouter } from "./shops/shops.js"
+import { shopRouter } from "./shops/routes.js"
 import { moderationRouter } from "./moderation/routes.js"
-import { tokensRouter } from "./tokens/tokens.js"
+import { tokensRouter } from "./tokens/routes.js"
 
 export const apiRouter = express.Router()
 
