@@ -10,6 +10,7 @@ import { rate_limit } from "../../../middleware/ratelimiting.js"
 import {
   profile_post_auth_link,
   profile_post_auth_sync_handle,
+  profile_post_auth_unlink,
   profile_get_auth_ident,
   profile_get_search_query,
   profile_put_root,
@@ -35,6 +36,7 @@ import {
 
 import {
   profile_post_auth_sync_handle_spec,
+  profile_post_auth_unlink_spec,
   profile_put_root_spec,
   profile_get_root_spec,
   profile_get_blocklist_spec,
@@ -54,6 +56,14 @@ profileRouter.post(
   userAuthorized,
   profile_post_auth_sync_handle_spec,
   profile_post_auth_sync_handle,
+)
+
+profileRouter.post(
+  "/auth/unlink",
+  rate_limit(10),
+  userAuthorized,
+  profile_post_auth_unlink_spec,
+  profile_post_auth_unlink,
 )
 
 profileRouter.get(

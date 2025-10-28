@@ -85,6 +85,56 @@ export const profile_post_auth_sync_handle: RequestHandler = async (
   }
 }
 
+export const profile_post_auth_unlink: RequestHandler = async (
+  req,
+  res,
+  next,
+) => {
+  try {
+    const user = req.user as User
+
+    // Check if user is currently verified
+    if (!user.rsi_confirmed || !user.spectrum_user_id) {
+      res.status(400).json(
+        createErrorResponse({
+          message: "User is not currently verified with a Star Citizen account",
+          status: "error",
+        }),
+      )
+      return
+    }
+
+    // Generate default username from Discord ID
+    const defaultUsername = `new_user${user.discord_id}`
+    const defaultDisplayName = `new_user${user.discord_id}`
+
+    // Update user to unverified state with default usernames
+    await database.updateUser(
+      { user_id: user.user_id },
+      {
+        rsi_confirmed: false,
+        spectrum_user_id: null,
+        username: defaultUsername,
+        display_name: defaultDisplayName,
+      },
+    )
+
+    logger.info(
+      `User ${user.user_id} unlinked Star Citizen account. Reset to default usernames.`,
+    )
+
+    res.json(createResponse(await serializeDetailedProfile(user)))
+  } catch (e) {
+    logger.error("Error during Star Citizen account unlink:", e)
+    res.status(500).json(
+      createErrorResponse({
+        message: "Internal server error during account unlink",
+        status: "error",
+      }),
+    )
+  }
+}
+
 export const profile_get_auth_ident: RequestHandler = async (
   req,
   res,

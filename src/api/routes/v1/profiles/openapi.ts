@@ -104,6 +104,69 @@ export const profile_post_auth_sync_handle_spec = oapi.validPath({
   security: [],
 })
 
+export const profile_post_auth_unlink_spec = oapi.validPath({
+  summary: "Unlink Star Citizen account",
+  deprecated: false,
+  description:
+    "Unlink the user's Star Citizen account, returning them to unverified status and resetting usernames to default values based on their Discord ID.",
+  operationId: "unlinkStarCitizenAccount",
+  tags: ["Profiles"],
+  parameters: [],
+  requestBody: {
+    content: {
+      "application/json": {
+        schema: {
+          type: "object",
+          properties: {},
+          required: [],
+        },
+      },
+    },
+  },
+  responses: {
+    "200": {
+      description: "Star Citizen account successfully unlinked",
+      content: {
+        "application/json": {
+          schema: {
+            properties: {
+              data: {
+                $ref: "#/components/schemas/GetCurrentUserProfileSuccess",
+              },
+            },
+            required: ["data"],
+            type: "object",
+          },
+        },
+      },
+    },
+    "400": {
+      description: "User not eligible for account unlink",
+      content: {
+        "application/json": {
+          schema: {
+            properties: {
+              message: {
+                type: "string",
+                example: "User is not currently verified with a Star Citizen account",
+              },
+              status: {
+                type: "string",
+                example: "error",
+              },
+            },
+            required: ["message", "status"],
+            type: "object",
+          },
+        },
+      },
+    },
+    "401": Response401,
+    "500": Response500,
+  },
+  security: [],
+})
+
 export const profile_put_root_spec = oapi.validPath({
   summary: "Update user profile",
   deprecated: false,
