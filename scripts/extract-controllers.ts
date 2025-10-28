@@ -38,7 +38,15 @@ interface RouteFileInfo {
   handlers: HandlerInfo[]
   openApiSpecs: HandlerInfo[]
   schemas: SchemaInfo[]
+  nonRouteExports: NonRouteExportInfo[]
   originalContent: string
+}
+
+interface NonRouteExportInfo {
+  exportName: string
+  exportSource: string
+  startLine: number
+  endLine: number
 }
 
 /**
@@ -75,6 +83,13 @@ class ControllerExtractor {
     routeInfo.handlers.forEach((h) =>
       console.log(`  - ${h.handlerName} (${h.method} ${h.path})`),
     )
+    
+    if (routeInfo.nonRouteExports.length > 0) {
+      console.log(`Found ${routeInfo.nonRouteExports.length} non-route exports to move:`)
+      routeInfo.nonRouteExports.forEach((exportInfo) =>
+        console.log(`  - ${exportInfo.exportName}`),
+      )
+    }
 
     // Generate controller file content to append (only if handlers exist)
     if (routeInfo.handlers.length > 0) {
@@ -152,6 +167,7 @@ class ControllerExtractor {
       handlers: [],
       openApiSpecs: [],
       schemas: [],
+      nonRouteExports: [],
       originalContent: content,
     }
 
@@ -166,6 +182,9 @@ class ControllerExtractor {
 
     // Extract OpenAPI specs (even if no handlers)
     this.extractOpenApiSpecs(ast, routeInfo)
+
+    // Extract non-route exports (interfaces, types, constants, etc.)
+    this.extractNonRouteExports(ast, routeInfo)
 
     // Deduplicate results
     this.deduplicateResults(routeInfo)
@@ -213,16 +232,16 @@ class ControllerExtractor {
       } else if (node.type === "VariableDeclaration") {
         if (node.declarations) {
           for (const declarator of node.declarations) {
-            if (
-              declarator.id.type === "Identifier" &&
-              declarator.id.name.includes("Router") &&
-              declarator.init?.type === "CallExpression" &&
-              declarator.init.callee.type === "MemberExpression" &&
-              declarator.init.callee.object.type === "Identifier" &&
-              declarator.init.callee.object.name === "express"
-            ) {
-              routeInfo.routerNames.push(declarator.id.name)
-            }
+        if (
+          declarator.id.type === "Identifier" &&
+          declarator.id.name.includes("Router") &&
+          declarator.init?.type === "CallExpression" &&
+          declarator.init.callee.type === "MemberExpression" &&
+          declarator.init.callee.object.type === "Identifier" &&
+          declarator.init.callee.object.name === "express"
+        ) {
+          routeInfo.routerNames.push(declarator.id.name)
+        }
           }
         }
       }
@@ -248,8 +267,6 @@ class ControllerExtractor {
             ? node.callee.property.name
             : ""
         const args = node.arguments
-
-        if (args.length < 2) return
 
         const path = this.extractStringLiteral(args[0])
         if (path === null) return
@@ -485,6 +502,78 @@ class ControllerExtractor {
     this.traverseAST(ast, visitor)
   }
 
+  private extractNonRouteExports(ast: TSESTree.Node, routeInfo: RouteFileInfo): void {
+    const visitor = (node: TSESTree.Node) => {
+      // Extract export interface declarations
+      if (node.type === "ExportNamedDeclaration" && node.declaration?.type === "TSInterfaceDeclaration") {
+        const interfaceName = node.declaration.id.name
+        const startLine = node.loc?.start.line || 0
+        const endLine = node.loc?.end.line || 0
+        
+        const exportSource = this.extractNonRouteExportSource(node, routeInfo.originalContent)
+        
+        routeInfo.nonRouteExports.push({
+          exportName: interfaceName,
+          exportSource,
+          startLine,
+          endLine,
+        })
+      }
+      
+      // Extract export type declarations
+      if (node.type === "ExportNamedDeclaration" && node.declaration?.type === "TSTypeAliasDeclaration") {
+        const typeName = node.declaration.id.name
+        const startLine = node.loc?.start.line || 0
+        const endLine = node.loc?.end.line || 0
+        
+        const exportSource = this.extractNonRouteExportSource(node, routeInfo.originalContent)
+        
+        routeInfo.nonRouteExports.push({
+          exportName: typeName,
+          exportSource,
+          startLine,
+          endLine,
+        })
+      }
+      
+      // Extract export const declarations (but not router exports)
+      if (node.type === "ExportNamedDeclaration" && node.declaration?.type === "VariableDeclaration") {
+        for (const declarator of node.declaration.declarations) {
+          if (declarator.id.type === "Identifier" && !declarator.id.name.includes("Router")) {
+            const constName = declarator.id.name
+            const startLine = node.loc?.start.line || 0
+            const endLine = node.loc?.end.line || 0
+            
+            const exportSource = this.extractNonRouteExportSource(node, routeInfo.originalContent)
+            
+            routeInfo.nonRouteExports.push({
+              exportName: constName,
+              exportSource,
+              startLine,
+              endLine,
+            })
+          }
+        }
+      }
+    }
+
+    this.traverseAST(ast, visitor)
+  }
+
+  private extractNonRouteExportSource(node: TSESTree.Node, originalContent: string): string {
+    // Use AST source range for exact extraction
+    if (node.range) {
+      const [start, end] = node.range
+      return originalContent.slice(start, end)
+    }
+    
+    // Fallback to line-based extraction if range is not available
+    const lines = originalContent.split("\n")
+    const startLine = (node.loc?.start.line || 1) - 1
+    const endLine = (node.loc?.end.line || 1) - 1
+    return lines.slice(startLine, endLine + 1).join("\n")
+  }
+
   private deduplicateResults(routeInfo: RouteFileInfo): void {
     // Deduplicate handlers by handlerName
     const seenHandlers = new Set<string>()
@@ -513,6 +602,16 @@ class ControllerExtractor {
         return false
       }
       seenSchemas.add(schema.schemaName)
+      return true
+    })
+
+    // Deduplicate non-route exports by exportName
+    const seenExports = new Set<string>()
+    routeInfo.nonRouteExports = routeInfo.nonRouteExports.filter(exportInfo => {
+      if (seenExports.has(exportInfo.exportName)) {
+        return false
+      }
+      seenExports.add(exportInfo.exportName)
       return true
     })
   }
@@ -591,19 +690,17 @@ class ControllerExtractor {
       | TSESTree.ArrowFunctionExpression,
     originalContent: string,
   ): string {
-    // Extract the function source from the original content
+    // Use AST source range for exact extraction
+    if (handlerFunction.range) {
+      const [start, end] = handlerFunction.range
+      return originalContent.slice(start, end)
+    }
+    
+    // Fallback to line-based extraction if range is not available
     const lines = originalContent.split("\n")
     const startLine = (handlerFunction.loc?.start.line || 1) - 1
     const endLine = (handlerFunction.loc?.end.line || 1) - 1
-
-    const functionLines = lines.slice(startLine, endLine + 1)
-
-    // Clean up the function declaration
-    if (functionLines[0].includes("async (req, res, next) => {")) {
-      functionLines[0] = "async (req, res, next) => {"
-    }
-
-    return functionLines.join("\n")
+    return lines.slice(startLine, endLine + 1).join("\n")
   }
 
   private extractHandlerSource(
@@ -612,11 +709,16 @@ class ControllerExtractor {
       | TSESTree.ArrowFunctionExpression,
     originalContent: string,
   ): string {
-    // Extract just the handler function part for replacement
+    // Use AST source range for exact extraction
+    if (handlerFunction.range) {
+      const [start, end] = handlerFunction.range
+      return originalContent.slice(start, end)
+    }
+    
+    // Fallback to line-based extraction if range is not available
     const lines = originalContent.split("\n")
     const startLine = (handlerFunction.loc?.start.line || 1) - 1
     const endLine = (handlerFunction.loc?.end.line || 1) - 1
-
     return lines.slice(startLine, endLine + 1).join("\n")
   }
 
@@ -626,10 +728,16 @@ class ControllerExtractor {
   ): string {
     if (!node) return ""
 
+    // Use AST source range for exact extraction
+    if (node.range) {
+      const [start, end] = node.range
+      return originalContent.slice(start, end)
+    }
+    
+    // Fallback to line-based extraction if range is not available
     const lines = originalContent.split("\n")
     const startLine = (node.loc?.start.line || 1) - 1
     const endLine = (node.loc?.end.line || 1) - 1
-
     return lines.slice(startLine, endLine + 1).join("\n")
   }
 
@@ -637,10 +745,16 @@ class ControllerExtractor {
     schemaNode: TSESTree.CallExpression,
     originalContent: string,
   ): string {
+    // Use AST source range for exact extraction
+    if (schemaNode.range) {
+      const [start, end] = schemaNode.range
+      return originalContent.slice(start, end)
+    }
+    
+    // Fallback to line-based extraction if range is not available
     const lines = originalContent.split("\n")
     const startLine = (schemaNode.loc?.start.line || 1) - 1
     const endLine = (schemaNode.loc?.end.line || 1) - 1
-
     return lines.slice(startLine, endLine + 1).join("\n")
   }
 
@@ -649,7 +763,7 @@ class ControllerExtractor {
     const routeImports = routeInfo.imports.join("\n")
     const requestHandlerImport = `import { RequestHandler } from "express"`
     
-    // Only generate the new handler exports
+    // Generate handler exports
     const handlerExports = routeInfo.handlers
       .map((handler) => {
         const functionName = handler.handlerName
@@ -659,7 +773,16 @@ class ControllerExtractor {
       })
       .join("\n\n")
 
-    return `${requestHandlerImport}\n${routeImports}\n\n${handlerExports}\n`
+    // Generate non-route exports (interfaces, types, constants, etc.)
+    const nonRouteExports = routeInfo.nonRouteExports
+      .map((exportInfo) => {
+        return exportInfo.exportSource
+      })
+      .join("\n\n")
+
+    const allExports = [handlerExports, nonRouteExports].filter(Boolean).join("\n\n")
+
+    return `${requestHandlerImport}\n${routeImports}\n\n${allExports}\n`
   }
 
   private generateOpenApiFile(routeInfo: RouteFileInfo): string {
@@ -770,16 +893,23 @@ class ControllerExtractor {
         handler.handlerFunction,
         routeInfo.originalContent,
       )
-      content = content.replace(handlerSource, handler.handlerName + ",")
+      
+      // Check if this is the last argument in the route call by looking for the pattern
+      // If the handler source ends with "})" or "}", it's likely the last argument
+      const isLastArgument = handlerSource.trim().endsWith("})") || handlerSource.trim().endsWith("}")
+      const replacement = isLastArgument ? handler.handlerName : handler.handlerName + ","
+      
+      content = content.replace(handlerSource, replacement)
     }
 
     // Replace OpenAPI configs with imported specs
     for (const spec of routeInfo.openApiSpecs) {
       if (spec.openApiConfigSource) {
         // Replace the specific oapi.validPath(...) call with just the spec name
-        // Ensure proper comma structure
-        const replacement = spec.openApiConfigName + ","
-        content = content.replace(spec.openApiConfigSource, replacement)
+        // Use regex to handle the comma context properly
+        const escapedSource = spec.openApiConfigSource.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')
+        const regex = new RegExp(escapedSource + '\\s*,?', 'g')
+        content = content.replace(regex, spec.openApiConfigName + ',')
       }
     }
 
@@ -787,6 +917,13 @@ class ControllerExtractor {
     for (const schema of routeInfo.schemas) {
       if (schema.schemaSource) {
         content = content.replace(schema.schemaSource, "")
+      }
+    }
+
+    // Remove non-route exports from route file
+    for (const exportInfo of routeInfo.nonRouteExports) {
+      if (exportInfo.exportSource) {
+        content = content.replace(exportInfo.exportSource, "")
       }
     }
 

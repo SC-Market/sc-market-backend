@@ -1,4 +1,4 @@
-import { PaymentTypes } from "../profiles/profiles.js"
+import { PaymentTypes } from "../profiles/types.js"
 
 export interface DBPublicContract {
   id: string
