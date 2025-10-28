@@ -1,7 +1,4 @@
-import express from "express"
-import { oapi } from "../openapi.js"
-
-export const shopRouter = express.Router()
+import { oapi as oapi } from "../openapi.js"
 
 oapi.schema("Shop", {
   properties: {
