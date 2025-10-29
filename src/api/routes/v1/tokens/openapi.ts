@@ -2,7 +2,12 @@ import { oapi as oapi } from "../openapi.js"
 import { Response400 as Response400 } from "../openapi.js"
 import { Response401 as Response401 } from "../openapi.js"
 import { Response403 as Response403 } from "../openapi.js"
-import { Response404 as Response404, Response429Write, Response429Read, RateLimitHeaders } from "../openapi.js"
+import {
+  Response404 as Response404,
+  Response429Write,
+  Response429Read,
+  RateLimitHeaders,
+} from "../openapi.js"
 
 export const tokens_post_root_spec = oapi.validPath({
   summary: "Create a new API token",

@@ -8,7 +8,12 @@ import {
 } from "../../../middleware/auth.js"
 
 import { rate_limit } from "../../../middleware/ratelimiting.js"
-import { criticalRateLimit, writeRateLimit, readRateLimit, bulkRateLimit } from "../../../middleware/enhanced-ratelimiting.js"
+import {
+  criticalRateLimit,
+  writeRateLimit,
+  readRateLimit,
+  bulkRateLimit,
+} from "../../../middleware/enhanced-ratelimiting.js"
 
 import {
   org_authorized,

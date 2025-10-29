@@ -9,16 +9,19 @@ API tokens support optional expiration dates to enhance security and provide aut
 ## Expiration Features
 
 ### 1. **Optional Expiration**
+
 - Tokens can be created with or without expiration dates
 - `expires_at` field in database can be `NULL` for non-expiring tokens
 - Expiration is enforced during token validation
 
 ### 2. **Automatic Validation**
+
 - Every API request with a token checks expiration
 - Expired tokens return `401 Unauthorized` with "Invalid or expired token"
 - No additional middleware needed - built into authentication
 
 ### 3. **Flexible Expiration Management**
+
 - Extend expiration dates for existing tokens
 - View expiration status and statistics
 - Bulk cleanup of expired tokens
@@ -26,6 +29,7 @@ API tokens support optional expiration dates to enhance security and provide aut
 ## API Endpoints
 
 ### Create Token with Expiration
+
 ```http
 POST /api/tokens
 Authorization: Bearer <session_token>
@@ -40,6 +44,7 @@ Content-Type: application/json
 ```
 
 ### Create Non-Expiring Token
+
 ```http
 POST /api/tokens
 Authorization: Bearer <session_token>
@@ -54,6 +59,7 @@ Content-Type: application/json
 ```
 
 ### Extend Token Expiration
+
 ```http
 POST /api/tokens/{token_id}/extend
 Authorization: Bearer <session_token>
@@ -65,12 +71,14 @@ Content-Type: application/json
 ```
 
 ### Get Token Statistics
+
 ```http
 GET /api/tokens/{token_id}/stats
 Authorization: Bearer <session_token>
 ```
 
 **Response:**
+
 ```json
 {
   "data": {
@@ -90,17 +98,20 @@ Authorization: Bearer <session_token>
 ## Expiration Policies
 
 ### 1. **Default Expiration Recommendations**
+
 - **Short-term tokens**: 30-90 days (testing, temporary access)
 - **Medium-term tokens**: 6-12 months (production integrations)
 - **Long-term tokens**: 1-2 years (trusted partners)
 - **Non-expiring**: Only for critical system integrations
 
 ### 2. **Security Considerations**
+
 - Shorter expiration = better security
 - Longer expiration = better user experience
 - Balance based on use case and risk tolerance
 
 ### 3. **Admin Token Expiration**
+
 - Admin tokens should have shorter expiration periods
 - Consider 30-90 days maximum for admin access
 - Require regular renewal for admin privileges
@@ -125,6 +136,7 @@ CREATE TABLE api_tokens (
 ## Cleanup and Maintenance
 
 ### 1. **Automatic Cleanup Script**
+
 ```bash
 # Run cleanup manually
 node scripts/cleanup-expired-tokens.js
@@ -134,12 +146,14 @@ node scripts/cleanup-expired-tokens.js --dry-run
 ```
 
 ### 2. **Scheduled Cleanup (Cron)**
+
 ```bash
 # Add to crontab for daily cleanup at 2 AM
 0 2 * * * cd /path/to/sc-market-backend && node scripts/cleanup-expired-tokens.js
 ```
 
 ### 3. **What Gets Cleaned Up**
+
 - Expired tokens (past `expires_at` date)
 - Very old unused tokens (created >1 year ago, never used)
 - Orphaned tokens (user deleted but tokens remain)
@@ -147,6 +161,7 @@ node scripts/cleanup-expired-tokens.js --dry-run
 ## Error Handling
 
 ### 1. **Expired Token Response**
+
 ```json
 {
   "error": "Invalid or expired token"
@@ -154,6 +169,7 @@ node scripts/cleanup-expired-tokens.js --dry-run
 ```
 
 ### 2. **Invalid Expiration Date**
+
 ```json
 {
   "error": "Invalid expiration date"
@@ -161,6 +177,7 @@ node scripts/cleanup-expired-tokens.js --dry-run
 ```
 
 ### 3. **Missing Expiration for Extension**
+
 ```json
 {
   "error": "expires_at is required"
@@ -170,21 +187,25 @@ node scripts/cleanup-expired-tokens.js --dry-run
 ## Best Practices
 
 ### 1. **Token Creation**
+
 - Always set reasonable expiration dates
 - Document expiration policy for your application
 - Use shorter expiration for sensitive operations
 
 ### 2. **Token Management**
+
 - Monitor token usage statistics
 - Extend expiration before tokens expire
 - Revoke unused tokens promptly
 
 ### 3. **Application Integration**
+
 - Handle expiration errors gracefully
 - Implement token refresh logic
 - Notify users before tokens expire
 
 ### 4. **Security**
+
 - Use shorter expiration for admin tokens
 - Regularly audit token usage
 - Implement rate limiting on token creation
@@ -192,6 +213,7 @@ node scripts/cleanup-expired-tokens.js --dry-run
 ## Example Integration
 
 ### JavaScript Token Management
+
 ```javascript
 class TokenManager {
   constructor(baseUrl, sessionToken) {
@@ -202,62 +224,68 @@ class TokenManager {
   async createToken(name, scopes, expiresInDays = 90) {
     const expiresAt = new Date()
     expiresAt.setDate(expiresAt.getDate() + expiresInDays)
-    
+
     const response = await fetch(`${this.baseUrl}/api/tokens`, {
-      method: 'POST',
+      method: "POST",
       headers: {
-        'Authorization': `Bearer ${this.sessionToken}`,
-        'Content-Type': 'application/json'
+        Authorization: `Bearer ${this.sessionToken}`,
+        "Content-Type": "application/json",
       },
       body: JSON.stringify({
         name,
         scopes,
-        expires_at: expiresAt.toISOString()
-      })
+        expires_at: expiresAt.toISOString(),
+      }),
     })
-    
+
     return response.json()
   }
 
   async extendToken(tokenId, expiresInDays = 90) {
     const expiresAt = new Date()
     expiresAt.setDate(expiresAt.getDate() + expiresInDays)
-    
-    const response = await fetch(`${this.baseUrl}/api/tokens/${tokenId}/extend`, {
-      method: 'POST',
-      headers: {
-        'Authorization': `Bearer ${this.sessionToken}`,
-        'Content-Type': 'application/json'
+
+    const response = await fetch(
+      `${this.baseUrl}/api/tokens/${tokenId}/extend`,
+      {
+        method: "POST",
+        headers: {
+          Authorization: `Bearer ${this.sessionToken}`,
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          expires_at: expiresAt.toISOString(),
+        }),
       },
-      body: JSON.stringify({
-        expires_at: expiresAt.toISOString()
-      })
-    })
-    
+    )
+
     return response.json()
   }
 
   async checkTokenStatus(tokenId) {
-    const response = await fetch(`${this.baseUrl}/api/tokens/${tokenId}/stats`, {
-      headers: {
-        'Authorization': `Bearer ${this.sessionToken}`
-      }
-    })
-    
+    const response = await fetch(
+      `${this.baseUrl}/api/tokens/${tokenId}/stats`,
+      {
+        headers: {
+          Authorization: `Bearer ${this.sessionToken}`,
+        },
+      },
+    )
+
     return response.json()
   }
 
   async makeApiCall(endpoint, token) {
     const response = await fetch(`${this.baseUrl}${endpoint}`, {
       headers: {
-        'Authorization': `Bearer ${token}`
-      }
+        Authorization: `Bearer ${token}`,
+      },
     })
-    
+
     if (response.status === 401) {
-      throw new Error('Token expired or invalid')
+      throw new Error("Token expired or invalid")
     }
-    
+
     return response.json()
   }
 }
@@ -266,16 +294,19 @@ class TokenManager {
 ## Monitoring and Alerts
 
 ### 1. **Token Expiration Monitoring**
+
 - Track tokens expiring in next 7 days
 - Alert users about upcoming expirations
 - Monitor token usage patterns
 
 ### 2. **Cleanup Monitoring**
+
 - Log cleanup operations
 - Track cleanup statistics
 - Monitor for cleanup failures
 
 ### 3. **Security Monitoring**
+
 - Alert on unusual token creation patterns
 - Monitor for expired token usage attempts
 - Track token revocation events
@@ -283,16 +314,19 @@ class TokenManager {
 ## Future Enhancements
 
 ### 1. **Automatic Renewal**
+
 - Implement automatic token renewal
 - Background job to extend active tokens
 - User notification system for renewals
 
 ### 2. **Expiration Policies**
+
 - Per-user expiration policies
 - Per-scope expiration rules
 - Organization-level token policies
 
 ### 3. **Advanced Cleanup**
+
 - Soft deletion of expired tokens
 - Token archival system
 - Detailed cleanup reporting

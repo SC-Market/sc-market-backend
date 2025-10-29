@@ -1,10 +1,14 @@
 import { NextFunction, Request, Response } from "express"
-import { RateLimiterPostgres, RateLimiterMemory, RateLimiterRes } from "rate-limiter-flexible"
+import {
+  RateLimiterPostgres,
+  RateLimiterMemory,
+  RateLimiterRes,
+} from "rate-limiter-flexible"
 import { database } from "../../clients/database/knex-db.js"
 import { User } from "../routes/v1/api-models.js"
 
 // User tier types
-export type UserTier = 'anonymous' | 'authenticated' | 'premium' | 'admin'
+export type UserTier = "anonymous" | "authenticated" | "premium" | "admin"
 
 // Rate limiter configuration interface
 export interface RateLimiterConfig {
@@ -27,7 +31,7 @@ export interface TieredRateLimit {
 
 // Rate limit response interface
 export interface RateLimitResponse {
-  error: 'RATE_LIMIT_EXCEEDED'
+  error: "RATE_LIMIT_EXCEEDED"
   message: string
   retryAfter: number
   limit: number
@@ -38,17 +42,19 @@ export interface RateLimitResponse {
 }
 
 // Create a rate limiter using library's built-in features
-export function createRateLimiter(config: RateLimiterConfig): RateLimiterPostgres {
+export function createRateLimiter(
+  config: RateLimiterConfig,
+): RateLimiterPostgres {
   return new RateLimiterPostgres({
     storeClient: database.knex,
-    storeType: 'knex',
+    storeType: "knex",
     points: config.points,
     duration: config.duration,
     blockDuration: config.blockDuration || 0,
     execEvenly: config.execEvenly || false,
     inMemoryBlockOnConsumed: config.inMemoryBlockOnConsumed || 0,
-    keyPrefix: config.keyPrefix || 'scmarket',
-    insuranceLimiter: config.insuranceLimiter || createMemoryFallback()
+    keyPrefix: config.keyPrefix || "scmarket",
+    insuranceLimiter: config.insuranceLimiter || createMemoryFallback(),
   })
 }
 
@@ -57,7 +63,7 @@ export function createMemoryFallback(): RateLimiterMemory {
   return new RateLimiterMemory({
     points: 10,
     duration: 60,
-    keyPrefix: 'scmarket:insurance'
+    keyPrefix: "scmarket:insurance",
   })
 }
 
@@ -68,58 +74,58 @@ export const rateLimiters = {
     duration: 60,
     blockDuration: 300, // 5 minutes
     inMemoryBlockOnConsumed: 10, // Block in memory after 10 violations (same as points)
-    keyPrefix: 'scmarket:anon'
+    keyPrefix: "scmarket:anon",
   }),
   authenticated: createRateLimiter({
     points: 60,
     duration: 60,
     blockDuration: 600, // 10 minutes
     inMemoryBlockOnConsumed: 60, // Block in memory after 60 violations (same as points)
-    keyPrefix: 'scmarket:auth'
+    keyPrefix: "scmarket:auth",
   }),
   premium: createRateLimiter({
     points: 120,
     duration: 60,
     blockDuration: 300,
     inMemoryBlockOnConsumed: 120, // Block in memory after 120 violations (same as points)
-    keyPrefix: 'scmarket:premium'
+    keyPrefix: "scmarket:premium",
   }),
   admin: createRateLimiter({
     points: 300,
     duration: 60,
     blockDuration: 0, // No blocking for admins
     inMemoryBlockOnConsumed: 300, // Block in memory after 300 violations (same as points)
-    keyPrefix: 'scmarket:admin'
-  })
+    keyPrefix: "scmarket:admin",
+  }),
 }
 
 // Detect user tier from request
 export function detectUserTier(req: Request): UserTier {
   const user = req.user as User
-  
+
   if (!user) {
-    return 'anonymous'
+    return "anonymous"
   }
-  
+
   // Check if user is admin based on role
-  if (user.role === 'admin') {
-    return 'admin'
+  if (user.role === "admin") {
+    return "admin"
   }
-  
+
   // For now, all authenticated users are treated as regular users
   // Premium tier can be added later when the feature is implemented
-  return 'authenticated'
+  return "authenticated"
 }
 
 // Generate rate limit key
 export function generateRateLimitKey(req: Request, userTier: UserTier): string {
   const user = req.user as User
   const ip = req.ip
-  
-  if (userTier === 'anonymous') {
+
+  if (userTier === "anonymous") {
     return `ip:${ip}`
   }
-  
+
   return `user:${user?.user_id}:ip:${ip}`
 }
 
@@ -128,30 +134,35 @@ export function createRateLimitResponse(
   rateLimiterRes: RateLimiterRes,
   userTier: UserTier,
   endpoint: string,
-  limit: number
+  limit: number,
 ): RateLimitResponse {
   const resetTime = Math.ceil((Date.now() + rateLimiterRes.msBeforeNext) / 1000)
-  
+
   return {
-    error: 'RATE_LIMIT_EXCEEDED',
-    message: 'Rate limit exceeded. Too many requests in the specified time window.',
+    error: "RATE_LIMIT_EXCEEDED",
+    message:
+      "Rate limit exceeded. Too many requests in the specified time window.",
     retryAfter: Math.ceil(rateLimiterRes.msBeforeNext / 1000),
     limit,
     remaining: rateLimiterRes.remainingPoints,
     resetTime,
     userTier,
-    endpoint
+    endpoint,
   }
 }
 
 // Set rate limit headers
-export function setRateLimitHeaders(res: Response, rateLimiterRes: RateLimiterRes, limit: number): void {
+export function setRateLimitHeaders(
+  res: Response,
+  rateLimiterRes: RateLimiterRes,
+  limit: number,
+): void {
   const resetTime = Math.ceil((Date.now() + rateLimiterRes.msBeforeNext) / 1000)
-  
+
   res.set({
-    'X-RateLimit-Limit': limit.toString(),
-    'X-RateLimit-Remaining': rateLimiterRes.remainingPoints.toString(),
-    'X-RateLimit-Reset': resetTime.toString()
+    "X-RateLimit-Limit": limit.toString(),
+    "X-RateLimit-Remaining": rateLimiterRes.remainingPoints.toString(),
+    "X-RateLimit-Reset": resetTime.toString(),
   })
 }
 
@@ -161,16 +172,16 @@ export function createRateLimit(tieredConfig: TieredRateLimit) {
     const userTier = detectUserTier(req)
     const key = generateRateLimitKey(req, userTier)
     const endpoint = req.path
-    
+
     // Get the appropriate rate limiter for the user tier
     const rateLimiter = rateLimiters[userTier]
     const config = tieredConfig[userTier]
-    
+
     if (!rateLimiter || !config) {
       // If no rate limiter configured for this tier, allow the request
       return next()
     }
-    
+
     rateLimiter
       .consume(key, config.points)
       .then((rateLimiterRes: RateLimiterRes) => {
@@ -184,13 +195,16 @@ export function createRateLimit(tieredConfig: TieredRateLimit) {
           rateLimiterRes,
           userTier,
           endpoint,
-          config.points
+          config.points,
         )
-        
+
         // Set rate limit headers including retry-after
         setRateLimitHeaders(res, rateLimiterRes, config.points)
-        res.set('X-RateLimit-Retry-After', rateLimitResponse.retryAfter.toString())
-        
+        res.set(
+          "X-RateLimit-Retry-After",
+          rateLimitResponse.retryAfter.toString(),
+        )
+
         // Send 429 response
         res.status(429).json(rateLimitResponse)
       })
@@ -201,37 +215,37 @@ export function createRateLimit(tieredConfig: TieredRateLimit) {
 export const criticalRateLimit = createRateLimit({
   anonymous: { points: 1, duration: 60, blockDuration: 900 },
   authenticated: { points: 2, duration: 60, blockDuration: 600 },
-  admin: { points: 5, duration: 60, blockDuration: 0 }
+  admin: { points: 5, duration: 60, blockDuration: 0 },
 })
 
 export const writeRateLimit = createRateLimit({
   anonymous: { points: 5, duration: 60, blockDuration: 300 },
   authenticated: { points: 10, duration: 60, blockDuration: 300 },
-  admin: { points: 30, duration: 60, blockDuration: 0 }
+  admin: { points: 30, duration: 60, blockDuration: 0 },
 })
 
 export const readRateLimit = createRateLimit({
   anonymous: { points: 60, duration: 60, blockDuration: 180 },
   authenticated: { points: 60, duration: 60, blockDuration: 180 },
-  admin: { points: 100, duration: 60, blockDuration: 0 }
+  admin: { points: 100, duration: 60, blockDuration: 0 },
 })
 
 export const bulkRateLimit = createRateLimit({
   anonymous: { points: 2, duration: 60, blockDuration: 600 },
   authenticated: { points: 5, duration: 60, blockDuration: 300 },
-  admin: { points: 20, duration: 60, blockDuration: 0 }
+  admin: { points: 20, duration: 60, blockDuration: 0 },
 })
 
 // Specialized rate limit for notification operations (marking as read, etc.)
 export const notificationRateLimit = createRateLimit({
   anonymous: { points: 10, duration: 60, blockDuration: 300 },
   authenticated: { points: 30, duration: 60, blockDuration: 180 },
-  admin: { points: 100, duration: 60, blockDuration: 0 }
+  admin: { points: 100, duration: 60, blockDuration: 0 },
 })
 
 // Generic rate limit for common write operations (messages, acknowledgments, etc.)
 export const commonWriteRateLimit = createRateLimit({
   anonymous: { points: 15, duration: 60, blockDuration: 300 },
   authenticated: { points: 40, duration: 60, blockDuration: 180 },
-  admin: { points: 100, duration: 60, blockDuration: 0 }
+  admin: { points: 100, duration: 60, blockDuration: 0 },
 })

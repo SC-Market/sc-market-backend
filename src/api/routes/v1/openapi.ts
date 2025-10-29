@@ -448,46 +448,56 @@ const document: OpenAPIV3.Document = {
             type: "string",
             enum: ["RATE_LIMIT_EXCEEDED"],
             description: "Error type identifier",
-            example: "RATE_LIMIT_EXCEEDED"
+            example: "RATE_LIMIT_EXCEEDED",
           },
           message: {
             type: "string",
             description: "Human-readable error message",
-            example: "Rate limit exceeded. Too many requests in the specified time window."
+            example:
+              "Rate limit exceeded. Too many requests in the specified time window.",
           },
           retryAfter: {
             type: "integer",
             description: "Seconds to wait before retrying",
-            example: 30
+            example: 30,
           },
           limit: {
             type: "integer",
             description: "Maximum requests allowed per time window",
-            example: 60
+            example: 60,
           },
           remaining: {
             type: "integer",
             description: "Requests remaining in current window",
-            example: 0
+            example: 0,
           },
           resetTime: {
             type: "integer",
             description: "Unix timestamp when rate limit resets",
-            example: 1640995200
+            example: 1640995200,
           },
           userTier: {
             type: "string",
             enum: ["anonymous", "authenticated", "premium", "admin"],
             description: "User tier that triggered the rate limit",
-            example: "authenticated"
+            example: "authenticated",
           },
           endpoint: {
             type: "string",
             description: "Endpoint that was rate limited",
-            example: "/api/orders"
-          }
+            example: "/api/orders",
+          },
         },
-        required: ["error", "message", "retryAfter", "limit", "remaining", "resetTime", "userTier", "endpoint"]
+        required: [
+          "error",
+          "message",
+          "retryAfter",
+          "limit",
+          "remaining",
+          "resetTime",
+          "userTier",
+          "endpoint",
+        ],
       },
     },
   },
@@ -666,110 +676,119 @@ export const Response409 = {
 
 // Rate Limiting Headers
 export const RateLimitHeaders = {
-  'X-RateLimit-Limit': {
-    description: 'Maximum number of requests allowed per time window',
-    schema: { type: 'integer' as const, example: 60 }
+  "X-RateLimit-Limit": {
+    description: "Maximum number of requests allowed per time window",
+    schema: { type: "integer" as const, example: 60 },
   },
-  'X-RateLimit-Remaining': {
-    description: 'Number of requests remaining in current time window',
-    schema: { type: 'integer' as const, example: 45 }
+  "X-RateLimit-Remaining": {
+    description: "Number of requests remaining in current time window",
+    schema: { type: "integer" as const, example: 45 },
   },
-  'X-RateLimit-Reset': {
-    description: 'Unix timestamp when the rate limit resets',
-    schema: { type: 'integer' as const, example: 1640995200 }
+  "X-RateLimit-Reset": {
+    description: "Unix timestamp when the rate limit resets",
+    schema: { type: "integer" as const, example: 1640995200 },
   },
-  'X-RateLimit-Retry-After': {
-    description: 'Seconds to wait before retrying (only present when rate limited)',
-    schema: { type: 'integer' as const, example: 30 }
-  }
+  "X-RateLimit-Retry-After": {
+    description:
+      "Seconds to wait before retrying (only present when rate limited)",
+    schema: { type: "integer" as const, example: 30 },
+  },
 }
 
 // Specialized 429 responses for different rate limit types
 export const Response429Critical = {
-  description: "Rate limit exceeded for critical operations. Anonymous users: 1 req/min, Authenticated users: 2 req/min, Admin users: 5 req/min.",
+  description:
+    "Rate limit exceeded for critical operations. Anonymous users: 1 req/min, Authenticated users: 2 req/min, Admin users: 5 req/min.",
   headers: RateLimitHeaders,
   content: {
     "application/json": {
-      schema: oapi.schema("RateLimitError")
-    }
-  }
+      schema: oapi.schema("RateLimitError"),
+    },
+  },
 }
 
 export const Response429Write = {
-  description: "Rate limit exceeded for write operations. Anonymous users: 5 req/min, Authenticated users: 10 req/min, Admin users: 30 req/min.",
+  description:
+    "Rate limit exceeded for write operations. Anonymous users: 5 req/min, Authenticated users: 10 req/min, Admin users: 30 req/min.",
   headers: RateLimitHeaders,
   content: {
     "application/json": {
-      schema: oapi.schema("RateLimitError")
-    }
-  }
+      schema: oapi.schema("RateLimitError"),
+    },
+  },
 }
 
 export const Response429Read = {
-  description: "Rate limit exceeded for read operations. Anonymous users: 60 req/min, Authenticated users: 60 req/min, Admin users: 100 req/min.",
+  description:
+    "Rate limit exceeded for read operations. Anonymous users: 60 req/min, Authenticated users: 60 req/min, Admin users: 100 req/min.",
   headers: RateLimitHeaders,
   content: {
     "application/json": {
-      schema: oapi.schema("RateLimitError")
-    }
-  }
+      schema: oapi.schema("RateLimitError"),
+    },
+  },
 }
 
 export const Response429Bulk = {
-  description: "Rate limit exceeded for bulk operations. Anonymous users: 2 req/min, Authenticated users: 5 req/min, Admin users: 20 req/min.",
+  description:
+    "Rate limit exceeded for bulk operations. Anonymous users: 2 req/min, Authenticated users: 5 req/min, Admin users: 20 req/min.",
   headers: RateLimitHeaders,
   content: {
     "application/json": {
-      schema: oapi.schema("RateLimitError")
-    }
-  }
+      schema: oapi.schema("RateLimitError"),
+    },
+  },
 }
 
 export const Response429Notification = {
-  description: "Rate limit exceeded for notification operations. Anonymous users: 10 req/min, Authenticated users: 30 req/min, Admin users: 100 req/min.",
+  description:
+    "Rate limit exceeded for notification operations. Anonymous users: 10 req/min, Authenticated users: 30 req/min, Admin users: 100 req/min.",
   headers: RateLimitHeaders,
   content: {
     "application/json": {
-      schema: oapi.schema("RateLimitError")
-    }
-  }
+      schema: oapi.schema("RateLimitError"),
+    },
+  },
 }
 
 export const Response429CommonWrite = {
-  description: "Rate limit exceeded for common write operations. Anonymous users: 15 req/min, Authenticated users: 40 req/min, Admin users: 100 req/min.",
+  description:
+    "Rate limit exceeded for common write operations. Anonymous users: 15 req/min, Authenticated users: 40 req/min, Admin users: 100 req/min.",
   headers: RateLimitHeaders,
   content: {
     "application/json": {
-      schema: oapi.schema("RateLimitError")
-    }
-  }
+      schema: oapi.schema("RateLimitError"),
+    },
+  },
 }
 
 // Rate Limit Helper Functions
 export const createRateLimitResponse = (description: string, schema?: any) => ({
   description,
   headers: RateLimitHeaders,
-  content: schema ? {
-    "application/json": {
-      schema: oapi.schema(schema)
-    }
-  } : undefined
+  content: schema
+    ? {
+        "application/json": {
+          schema: oapi.schema(schema),
+        },
+      }
+    : undefined,
 })
 
 export const addRateLimitHeaders = (response: any) => ({
   ...response,
   headers: {
     ...response.headers,
-    ...RateLimitHeaders
-  }
+    ...RateLimitHeaders,
+  },
 })
 
 export const createRateLimitEndpoint = (endpoint: any) => ({
   ...endpoint,
   responses: {
     ...endpoint.responses,
-    429: Response429Read
-  }
+    429: Response429Read,
+  },
 })
 
 const deployEnvironment = env.DEPLOY_ENVIRONMENT

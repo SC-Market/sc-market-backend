@@ -7,18 +7,22 @@ Replace the old contractor orders endpoint with the new metrics endpoint for bet
 ## What Changed
 
 ### Old Endpoint (Deprecated for Metrics)
+
 ```
 GET /api/orders/contractor/:spectrum_id
 ```
+
 - Returns ALL order data
 - Frontend must calculate metrics
 - Slow with large datasets
 - Large response payload
 
 ### New Metrics Endpoint (Recommended)
+
 ```
 GET /api/orders/contractor/:spectrum_id/metrics
 ```
+
 - Returns pre-calculated metrics only
 - Fast response times
 - Small payload
@@ -29,71 +33,79 @@ GET /api/orders/contractor/:spectrum_id/metrics
 ### 1. Update API Calls
 
 **Before:**
+
 ```typescript
 // Old way
-const ordersResponse = await fetch('/api/orders/contractor/SCMARKET');
-const orders = await ordersResponse.json();
+const ordersResponse = await fetch("/api/orders/contractor/SCMARKET")
+const orders = await ordersResponse.json()
 
 // Calculate metrics manually
-const totalOrders = orders.data.length;
-const totalValue = orders.data.reduce((sum, order) => sum + order.cost, 0);
+const totalOrders = orders.data.length
+const totalValue = orders.data.reduce((sum, order) => sum + order.cost, 0)
 const statusCounts = orders.data.reduce((counts, order) => {
-  counts[order.status] = (counts[order.status] || 0) + 1;
-  return counts;
-}, {});
+  counts[order.status] = (counts[order.status] || 0) + 1
+  return counts
+}, {})
 ```
 
 **After:**
+
 ```typescript
 // New way
-const metricsResponse = await fetch('/api/orders/contractor/SCMARKET/metrics');
-const metrics = await metricsResponse.json();
+const metricsResponse = await fetch("/api/orders/contractor/SCMARKET/metrics")
+const metrics = await metricsResponse.json()
 
 // Metrics are pre-calculated
-const { total_orders, total_value, status_counts } = metrics.data;
+const { total_orders, total_value, status_counts } = metrics.data
 ```
 
 ### 2. Update Component State
 
 **Before:**
+
 ```typescript
-const [orders, setOrders] = useState([]);
-const [loading, setLoading] = useState(true);
+const [orders, setOrders] = useState([])
+const [loading, setLoading] = useState(true)
 
 // Calculate derived metrics
-const totalOrders = orders.length;
-const totalValue = orders.reduce((sum, order) => sum + order.cost, 0);
+const totalOrders = orders.length
+const totalValue = orders.reduce((sum, order) => sum + order.cost, 0)
 ```
 
 **After:**
+
 ```typescript
-const [metrics, setMetrics] = useState(null);
-const [loading, setLoading] = useState(true);
+const [metrics, setMetrics] = useState(null)
+const [loading, setLoading] = useState(true)
 
 // Use pre-calculated metrics
-const totalOrders = metrics?.total_orders || 0;
-const totalValue = metrics?.total_value || 0;
+const totalOrders = metrics?.total_orders || 0
+const totalValue = metrics?.total_value || 0
 ```
 
 ### 3. Update UI Components
 
 **Before:**
+
 ```jsx
 <div>
   <h2>Contractor Dashboard</h2>
   <p>Total Orders: {orders.length}</p>
   <p>Total Value: ${orders.reduce((sum, order) => sum + order.cost, 0)}</p>
-  <p>Active Orders: {orders.filter(o => o.status === 'in-progress').length}</p>
+  <p>
+    Active Orders: {orders.filter((o) => o.status === "in-progress").length}
+  </p>
 </div>
 ```
 
 **After:**
+
 ```jsx
 <div>
   <h2>Contractor Dashboard</h2>
   <p>Total Orders: {metrics.total_orders}</p>
   <p>Total Value: ${metrics.total_value}</p>
-  <p>Active Orders: {metrics.status_counts['in-progress']}</p>
+  <p>Active Orders: {metrics.status_counts["in-progress"]}</p>
   <p>Orders Last 7 Days: {metrics.recent_activity.orders_last_7_days}</p>
 </div>
 ```
@@ -109,6 +121,7 @@ const totalValue = metrics?.total_value || 0;
 ## When to Use Each Endpoint
 
 ### Use Metrics Endpoint For:
+
 - Dashboard widgets
 - Analytics pages
 - Summary statistics
@@ -116,12 +129,14 @@ const totalValue = metrics?.total_value || 0;
 - Business intelligence
 
 ### Use Search Endpoint For:
+
 - Order listings with pagination
 - Detailed order management
 - Filtering and sorting orders
 - Order history views
 
 ### Use Old Contractor Endpoint For:
+
 - Legacy compatibility (if needed)
 - Full order data when metrics aren't sufficient
 
@@ -141,6 +156,7 @@ const totalValue = metrics?.total_value || 0;
 Here's a complete example of migrating a React component:
 
 **Before:**
+
 ```typescript
 function ContractorDashboard({ spectrumId }: { spectrumId: string }) {
   const [orders, setOrders] = useState([]);
@@ -182,6 +198,7 @@ function ContractorDashboard({ spectrumId }: { spectrumId: string }) {
 ```
 
 **After:**
+
 ```typescript
 function ContractorDashboard({ spectrumId }: { spectrumId: string }) {
   const [metrics, setMetrics] = useState(null);
@@ -215,7 +232,7 @@ function ContractorDashboard({ spectrumId }: { spectrumId: string }) {
         <p>Active Orders: {metrics.status_counts['in-progress']}</p>
         <p>Orders Last 7 Days: {metrics.recent_activity.orders_last_7_days}</p>
       </div>
-      
+
       <h3>Top Customers</h3>
       <ul>
         {metrics.top_customers.map((customer, index) => (

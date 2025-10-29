@@ -1,6 +1,9 @@
 import express, { NextFunction, Request, Response } from "express"
 import { userAuthorized, requireOrdersRead } from "../../../middleware/auth.js"
-import { writeRateLimit, readRateLimit } from "../../../middleware/enhanced-ratelimiting.js"
+import {
+  writeRateLimit,
+  readRateLimit,
+} from "../../../middleware/enhanced-ratelimiting.js"
 
 import { User } from "../api-models.js"
 import AsyncLock from "async-lock"

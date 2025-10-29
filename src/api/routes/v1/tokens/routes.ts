@@ -1,6 +1,9 @@
 import express from "express"
 import { userAuthorized } from "../../../middleware/auth.js"
-import { writeRateLimit, readRateLimit } from "../../../middleware/enhanced-ratelimiting.js"
+import {
+  writeRateLimit,
+  readRateLimit,
+} from "../../../middleware/enhanced-ratelimiting.js"
 
 import * as tokensController from "./controller.js"
 

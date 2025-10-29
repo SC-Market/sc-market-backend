@@ -2,7 +2,12 @@ import { oapi as oapi } from "../openapi.js"
 import { Response400 as Response400 } from "../openapi.js"
 import { Response401 as Response401 } from "../openapi.js"
 import { Response403 as Response403 } from "../openapi.js"
-import { Response500 as Response500, Response429Write, Response429Read, RateLimitHeaders } from "../openapi.js"
+import {
+  Response500 as Response500,
+  Response429Write,
+  Response429Read,
+  RateLimitHeaders,
+} from "../openapi.js"
 
 oapi.schema("CreateTransactionRequest", {
   type: "object",
@@ -161,18 +166,18 @@ export const transaction_post_contractor_spectrum_id_create_spec =
             schema: {
               type: "object",
               properties: {
-                result: { type: "string", example: "Success"               },
+                result: { type: "string", example: "Success" },
+              },
             },
           },
         },
+        headers: RateLimitHeaders,
       },
-      headers: RateLimitHeaders,
-    },
-    "400": Response400,
-    "401": Response401,
-    "403": Response403,
-    "500": Response500,
-    "429": Response429Write,
+      "400": Response400,
+      "401": Response401,
+      "403": Response403,
+      "500": Response500,
+      "429": Response429Write,
     },
     security: [{ bearerAuth: [] }],
   })

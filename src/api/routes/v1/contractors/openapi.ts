@@ -6,9 +6,7 @@ import {
   Response404,
   Response409,
   Response429Critical,
-  Response429Write,
   Response429Read,
-  Response429Bulk,
   RateLimitHeaders,
 } from "../openapi.js"
 import { SUPPORTED_LOCALES } from "../util/i18n.js"

@@ -6,7 +6,12 @@ import {
   requireMarketWrite,
   requireMarketAdmin,
 } from "../../../middleware/auth.js"
-import { criticalRateLimit, writeRateLimit, readRateLimit, bulkRateLimit } from "../../../middleware/enhanced-ratelimiting.js"
+import {
+  criticalRateLimit,
+  writeRateLimit,
+  readRateLimit,
+  bulkRateLimit,
+} from "../../../middleware/enhanced-ratelimiting.js"
 import {
   can_manage_market_listing,
   valid_market_listing,
@@ -75,7 +80,12 @@ import {
 
 export const marketRouter = express.Router()
 
-marketRouter.get("/stats", market_get_stats_spec, readRateLimit, get_order_stats)
+marketRouter.get(
+  "/stats",
+  market_get_stats_spec,
+  readRateLimit,
+  get_order_stats,
+)
 
 marketRouter.post(
   "/listings/stats",
@@ -188,7 +198,12 @@ marketRouter.get(
   get_my_listings,
 )
 
-marketRouter.get("/listings", market_get_listings_spec, readRateLimit, search_listings)
+marketRouter.get(
+  "/listings",
+  market_get_listings_spec,
+  readRateLimit,
+  search_listings,
+)
 
 marketRouter.get(
   "/user/:username",
@@ -225,7 +240,11 @@ marketRouter.get(
   get_buy_order_chart,
 )
 
-marketRouter.get("/aggregate/:game_item_id/history", readRateLimit, get_aggregate_history)
+marketRouter.get(
+  "/aggregate/:game_item_id/history",
+  readRateLimit,
+  get_aggregate_history,
+)
 
 // TODO: Redo
 marketRouter.post(
@@ -236,7 +255,11 @@ marketRouter.post(
   update_aggregate,
 )
 
-marketRouter.get("/aggregate/:game_item_id", readRateLimit, get_aggregate_details)
+marketRouter.get(
+  "/aggregate/:game_item_id",
+  readRateLimit,
+  get_aggregate_details,
+)
 
 marketRouter.get("/multiple/:multiple_id", readRateLimit, get_multiple_details)
 
@@ -248,7 +271,12 @@ marketRouter.post(
   create_contractor_multiple,
 )
 
-marketRouter.post("/multiple/create", requireMarketWrite, writeRateLimit, create_multiple)
+marketRouter.post(
+  "/multiple/create",
+  requireMarketWrite,
+  writeRateLimit,
+  create_multiple,
+)
 
 marketRouter.post(
   "/multiple/:multiple_id/update",
@@ -258,7 +286,12 @@ marketRouter.post(
   update_multiple,
 )
 
-marketRouter.post("/buyorder/create", requireMarketWrite, criticalRateLimit, create_buy_order)
+marketRouter.post(
+  "/buyorder/create",
+  requireMarketWrite,
+  criticalRateLimit,
+  create_buy_order,
+)
 
 marketRouter.post(
   "/buyorder/:buy_order_id/fulfill",
@@ -275,7 +308,13 @@ marketRouter.post(
   cancel_buy_order,
 )
 
-marketRouter.get("/export", userAuthorized, requireMarketRead, bulkRateLimit, export_Listings)
+marketRouter.get(
+  "/export",
+  userAuthorized,
+  requireMarketRead,
+  bulkRateLimit,
+  export_Listings,
+)
 
 marketRouter.get("/category/:category", readRateLimit, get_category_details)
 
@@ -283,7 +322,12 @@ marketRouter.get("/categories", readRateLimit, get_categories)
 
 // First register the schema for game item description
 
-marketRouter.get("/item/:name", market_get_item_name_spec, readRateLimit, get_game_item)
+marketRouter.get(
+  "/item/:name",
+  market_get_item_name_spec,
+  readRateLimit,
+  get_game_item,
+)
 
 // Get view analytics for a seller's listings
 marketRouter.get(

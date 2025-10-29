@@ -1,5 +1,8 @@
 import express from "express"
-import { writeRateLimit, readRateLimit } from "../../../middleware/enhanced-ratelimiting.js"
+import {
+  writeRateLimit,
+  readRateLimit,
+} from "../../../middleware/enhanced-ratelimiting.js"
 import {
   userAuthorized,
   requireServicesRead,
@@ -50,7 +53,12 @@ servicesRouter.get(
   services_get_user_username,
 )
 
-servicesRouter.get("/public", services_get_public_spec, readRateLimit, services_get_public)
+servicesRouter.get(
+  "/public",
+  services_get_public_spec,
+  readRateLimit,
+  services_get_public,
+)
 
 servicesRouter.get(
   "/contractor/:spectrum_id",

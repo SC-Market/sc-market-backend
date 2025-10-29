@@ -1,5 +1,8 @@
 import express from "express"
-import { writeRateLimit, readRateLimit } from "../../../middleware/enhanced-ratelimiting.js"
+import {
+  writeRateLimit,
+  readRateLimit,
+} from "../../../middleware/enhanced-ratelimiting.js"
 
 import { requireRecruitingWrite } from "../../../middleware/auth.js"
 

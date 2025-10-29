@@ -4,7 +4,11 @@ import {
   requireNotificationsRead,
   requireNotificationsWrite,
 } from "../../../middleware/auth.js"
-import { notificationRateLimit, readRateLimit, commonWriteRateLimit } from "../../../middleware/enhanced-ratelimiting.js"
+import {
+  notificationRateLimit,
+  readRateLimit,
+  commonWriteRateLimit,
+} from "../../../middleware/enhanced-ratelimiting.js"
 
 import {
   notification_patch_notification_id,

@@ -7,4 +7,9 @@ import { commodity_get_root_spec } from "./openapi.js"
 
 export const commodityRouter = express.Router()
 
-commodityRouter.get("", commodity_get_root_spec, readRateLimit, commodity_get_root)
+commodityRouter.get(
+  "",
+  commodity_get_root_spec,
+  readRateLimit,
+  commodity_get_root,
+)

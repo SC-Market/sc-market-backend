@@ -1079,7 +1079,8 @@ export const post_order_id_review_spec = oapi.validPath({
 export const post_order_id_reviews_review_id_request_revision_spec =
   oapi.validPath({
     summary: "Request revision for a review",
-    description: "Request a revision for an existing review. Rate limited to prevent spam.",
+    description:
+      "Request a revision for an existing review. Rate limited to prevent spam.",
     operationId: "requestReviewRevision",
     tags: ["Order Reviews"],
     parameters: [
@@ -1152,7 +1153,8 @@ export const post_order_id_reviews_review_id_request_revision_spec =
 
 export const put_order_id_reviews_review_id_spec = oapi.validPath({
   summary: "Update a review after revision request",
-  description: "Update a review after a revision has been requested. Rate limited to prevent spam.",
+  description:
+    "Update a review after a revision has been requested. Rate limited to prevent spam.",
   operationId: "updateOrderReview",
   tags: ["Order Reviews"],
   parameters: [
@@ -1293,7 +1295,8 @@ export const put_order_id_spec = oapi.validPath({
 export const post_order_id_applicants_spec = oapi.validPath({
   summary: "Apply to an open contract",
   deprecated: true,
-  description: "Deprecated - Use public contract offers. Rate limited to prevent spam.",
+  description:
+    "Deprecated - Use public contract offers. Rate limited to prevent spam.",
   operationId: "postApply",
   tags: ["Order Applicants"],
   parameters: [
@@ -1356,7 +1359,8 @@ export const post_order_id_applicants_contractors_spectrum_id_spec =
   oapi.validPath({
     summary: "Accept an application on an order",
     deprecated: true,
-    description: "Deprecated - Use public contract offers. Rate limited to prevent spam.",
+    description:
+      "Deprecated - Use public contract offers. Rate limited to prevent spam.",
     operationId: "acceptAnApplicationOnOrder",
     tags: ["Order Applicants"],
     parameters: [
@@ -1421,7 +1425,8 @@ export const post_order_id_applicants_contractors_spectrum_id_spec =
 export const post_order_id_applicants_users_username_spec = oapi.validPath({
   summary: "Accept an application on an order",
   deprecated: true,
-  description: "Deprecated - Use public contract offers. Rate limited to prevent spam.",
+  description:
+    "Deprecated - Use public contract offers. Rate limited to prevent spam.",
   operationId: "acceptAnApplicationOnOrder",
   tags: ["Order Applicants"],
   parameters: [
@@ -1486,7 +1491,8 @@ export const post_order_id_applicants_users_username_spec = oapi.validPath({
 export const get_order_id_spec = oapi.validPath({
   summary: "Get an order by ID",
   deprecated: false,
-  description: "Retrieve a specific order by its ID. Rate limited to prevent abuse.",
+  description:
+    "Retrieve a specific order by its ID. Rate limited to prevent abuse.",
   operationId: "getOrderById",
   tags: ["Orders"],
   parameters: [
@@ -1522,7 +1528,8 @@ export const get_order_id_spec = oapi.validPath({
 export const post_order_id_thread_spec = oapi.validPath({
   summary: "Create a new thread for the order",
   deprecated: false,
-  description: "Creates a new thread if the order doesn't already have one. Rate limited to prevent spam.",
+  description:
+    "Creates a new thread if the order doesn't already have one. Rate limited to prevent spam.",
   operationId: "createANewOrderThread",
   tags: ["Order Threads"],
   parameters: [

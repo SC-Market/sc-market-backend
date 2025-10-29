@@ -110,7 +110,8 @@ oapi.schema("ChatBody", {
 export const get_orders_order_id_spec = oapi.validPath({
   summary: "Get a chat by order ID",
   deprecated: false,
-  description: "Retrieve chat details for a specific order. Rate limited: Anonymous users (10 req/min), Authenticated users (30 req/min), Admin users (100 req/min).",
+  description:
+    "Retrieve chat details for a specific order. Rate limited: Anonymous users (10 req/min), Authenticated users (30 req/min), Admin users (100 req/min).",
   operationId: "getChatByOrderId",
   tags: ["Chats"],
   parameters: [

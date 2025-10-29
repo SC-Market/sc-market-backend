@@ -45,7 +45,7 @@ GET /api/orders/contractor/:spectrum_id/metrics
         "total_value": 300000
       },
       {
-        "username": "CustomerB", 
+        "username": "CustomerB",
         "order_count": 12,
         "total_value": 250000
       }
@@ -57,10 +57,12 @@ GET /api/orders/contractor/:spectrum_id/metrics
 ## Field Descriptions
 
 ### Basic Metrics
+
 - `total_orders`: Total number of orders placed with this contractor
 - `total_value`: Total value of all orders (sum of all order costs)
 
 ### Status Breakdown
+
 - `status_counts`: Object containing count of orders by status
   - `not-started`: Orders that haven't been started yet
   - `in-progress`: Orders currently being worked on
@@ -68,12 +70,14 @@ GET /api/orders/contractor/:spectrum_id/metrics
   - `cancelled`: Cancelled orders
 
 ### Recent Activity
+
 - `orders_last_7_days`: Number of orders created in the last 7 days
 - `orders_last_30_days`: Number of orders created in the last 30 days
 - `value_last_7_days`: Total value of orders created in the last 7 days
 - `value_last_30_days`: Total value of orders created in the last 30 days
 
 ### Top Customers
+
 - `top_customers`: Array of top customers by order count (max 10)
   - `username`: Customer's username
   - `order_count`: Number of orders placed with this contractor
@@ -87,32 +91,35 @@ GET /api/orders/contractor/:spectrum_id/metrics
 // Fetch contractor metrics
 async function getContractorMetrics(spectrumId: string) {
   try {
-    const response = await fetch(`/api/orders/contractor/${spectrumId}/metrics`, {
-      method: 'GET',
-      credentials: 'include', // Include session cookie
-      headers: {
-        'Accept': 'application/json',
-        'Content-Type': 'application/json'
-      }
-    });
+    const response = await fetch(
+      `/api/orders/contractor/${spectrumId}/metrics`,
+      {
+        method: "GET",
+        credentials: "include", // Include session cookie
+        headers: {
+          Accept: "application/json",
+          "Content-Type": "application/json",
+        },
+      },
+    )
 
     if (!response.ok) {
-      throw new Error(`HTTP error! status: ${response.status}`);
+      throw new Error(`HTTP error! status: ${response.status}`)
     }
 
-    const data = await response.json();
-    return data.data;
+    const data = await response.json()
+    return data.data
   } catch (error) {
-    console.error('Error fetching contractor metrics:', error);
-    throw error;
+    console.error("Error fetching contractor metrics:", error)
+    throw error
   }
 }
 
 // Usage example
-const metrics = await getContractorMetrics('SCMARKET');
-console.log(`Total orders: ${metrics.total_orders}`);
-console.log(`Total value: ${metrics.total_value}`);
-console.log(`Active orders: ${metrics.status_counts['in-progress']}`);
+const metrics = await getContractorMetrics("SCMARKET")
+console.log(`Total orders: ${metrics.total_orders}`)
+console.log(`Total value: ${metrics.total_value}`)
+console.log(`Active orders: ${metrics.status_counts["in-progress"]}`)
 ```
 
 ### React Hook Example
@@ -152,11 +159,11 @@ function useContractorMetrics(spectrumId: string) {
       try {
         setLoading(true);
         const response = await fetch(`/api/orders/contractor/${spectrumId}/metrics`);
-        
+
         if (!response.ok) {
           throw new Error(`HTTP error! status: ${response.status}`);
         }
-        
+
         const data = await response.json();
         setMetrics(data.data);
         setError(null);
@@ -193,7 +200,7 @@ function ContractorDashboard({ spectrumId }: { spectrumId: string }) {
         <p>Active Orders: {metrics.status_counts['in-progress']}</p>
         <p>Orders Last 7 Days: {metrics.recent_activity.orders_last_7_days}</p>
       </div>
-      
+
       <h3>Top Customers</h3>
       <ul>
         {metrics.top_customers.map((customer, index) => (
@@ -218,61 +225,65 @@ function ContractorDashboard({ spectrumId }: { spectrumId: string }) {
     <div>
       <p>Total Orders: {{ metrics.total_orders }}</p>
       <p>Total Value: {{ metrics.total_value }}</p>
-      <p>Active Orders: {{ metrics.status_counts['in-progress'] }}</p>
+      <p>Active Orders: {{ metrics.status_counts["in-progress"] }}</p>
     </div>
   </div>
 </template>
 
 <script setup lang="ts">
-import { ref, onMounted } from 'vue';
+import { ref, onMounted } from "vue"
 
 const props = defineProps<{
-  spectrumId: string;
-}>();
+  spectrumId: string
+}>()
 
-const metrics = ref(null);
-const loading = ref(true);
-const error = ref(null);
+const metrics = ref(null)
+const loading = ref(true)
+const error = ref(null)
 
 onMounted(async () => {
   try {
-    const response = await fetch(`/api/orders/contractor/${props.spectrumId}/metrics`);
-    const data = await response.json();
-    metrics.value = data.data;
+    const response = await fetch(
+      `/api/orders/contractor/${props.spectrumId}/metrics`,
+    )
+    const data = await response.json()
+    metrics.value = data.data
   } catch (err) {
-    error.value = err.message;
+    error.value = err.message
   } finally {
-    loading.value = false;
+    loading.value = false
   }
-});
+})
 </script>
 ```
 
 ## Migration from Old Endpoint
 
 ### Before (Old Endpoint)
+
 ```typescript
 // Old way - inefficient
-const response = await fetch('/api/orders/contractor/SCMARKET');
-const orders = await response.json();
+const response = await fetch("/api/orders/contractor/SCMARKET")
+const orders = await response.json()
 
 // Frontend had to calculate metrics
-const totalOrders = orders.data.length;
-const totalValue = orders.data.reduce((sum, order) => sum + order.cost, 0);
+const totalOrders = orders.data.length
+const totalValue = orders.data.reduce((sum, order) => sum + order.cost, 0)
 const statusCounts = orders.data.reduce((counts, order) => {
-  counts[order.status] = (counts[order.status] || 0) + 1;
-  return counts;
-}, {});
+  counts[order.status] = (counts[order.status] || 0) + 1
+  return counts
+}, {})
 ```
 
 ### After (New Metrics Endpoint)
+
 ```typescript
 // New way - efficient
-const response = await fetch('/api/orders/contractor/SCMARKET/metrics');
-const metrics = await response.json();
+const response = await fetch("/api/orders/contractor/SCMARKET/metrics")
+const metrics = await response.json()
 
 // Metrics are pre-calculated
-const { total_orders, total_value, status_counts } = metrics.data;
+const { total_orders, total_value, status_counts } = metrics.data
 ```
 
 ## Performance Benefits

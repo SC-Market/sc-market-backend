@@ -5,8 +5,6 @@ import {
   requireChatsWrite,
 } from "../../../middleware/auth.js"
 import {
-  criticalRateLimit,
-  writeRateLimit,
   readRateLimit,
   commonWriteRateLimit,
 } from "../../../middleware/enhanced-ratelimiting.js"
@@ -94,4 +92,11 @@ chatsRouter.get(
 )
 
 // Get my chats
-chatsRouter.get("", userAuthorized, requireChatsRead, get_root_spec, readRateLimit, getChats)
+chatsRouter.get(
+  "",
+  userAuthorized,
+  requireChatsRead,
+  get_root_spec,
+  readRateLimit,
+  getChats,
+)

@@ -1,6 +1,10 @@
 import express from "express"
 import { userAuthorized, adminAuthorized } from "../../../middleware/auth.js"
-import { writeRateLimit, readRateLimit, criticalRateLimit } from "../../../middleware/enhanced-ratelimiting.js"
+import {
+  writeRateLimit,
+  readRateLimit,
+  criticalRateLimit,
+} from "../../../middleware/enhanced-ratelimiting.js"
 
 import {
   moderation_post_report,

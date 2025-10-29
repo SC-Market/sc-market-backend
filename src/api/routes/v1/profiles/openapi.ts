@@ -2,7 +2,11 @@ import { oapi as oapi } from "../openapi.js"
 import { Response400 as Response400 } from "../openapi.js"
 import { Response401 as Response401 } from "../openapi.js"
 import { Response500 as Response500 } from "../openapi.js"
-import { Response429Read, Response429Write, Response429Critical } from "../openapi.js"
+import {
+  Response429Read,
+  Response429Write,
+  Response429Critical,
+} from "../openapi.js"
 import { SUPPORTED_LOCALES as SUPPORTED_LOCALES } from "../util/i18n.js"
 
 oapi.schema("ProfileUpdateBody", {
@@ -150,7 +154,8 @@ export const profile_post_auth_unlink_spec = oapi.validPath({
             properties: {
               message: {
                 type: "string",
-                example: "User is not currently verified with a Star Citizen account",
+                example:
+                  "User is not currently verified with a Star Citizen account",
               },
               status: {
                 type: "string",

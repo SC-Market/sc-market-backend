@@ -4,7 +4,13 @@ import { Response401 as Response401 } from "../openapi.js"
 import { Response403 as Response403 } from "../openapi.js"
 import { Response404 as Response404 } from "../openapi.js"
 import { Response500 as Response500 } from "../openapi.js"
-import { Response429Critical, Response429Write, Response429Read, Response429Bulk, RateLimitHeaders } from "../openapi.js"
+import {
+  Response429Critical,
+  Response429Write,
+  Response429Read,
+  Response429Bulk,
+  RateLimitHeaders,
+} from "../openapi.js"
 
 oapi.schema("UUID", {
   type: "string",

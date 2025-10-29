@@ -1,6 +1,10 @@
 import { adminOapi as adminOapi } from "../openapi.js"
 import { Response400 as Response400 } from "../openapi.js"
-import { Response500 as Response500, Response429Read, RateLimitHeaders } from "../openapi.js"
+import {
+  Response500 as Response500,
+  Response429Read,
+  RateLimitHeaders,
+} from "../openapi.js"
 
 adminOapi.schema("WikiImageSearchResult", {
   type: "object",

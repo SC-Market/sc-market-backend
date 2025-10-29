@@ -1,4 +1,9 @@
-import { oapi, Response500, Response429Write, RateLimitHeaders } from "../openapi.js"
+import {
+  oapi,
+  Response500,
+  Response429Write,
+  RateLimitHeaders,
+} from "../openapi.js"
 import { Response400, Response401, Response403 } from "../openapi.js"
 
 oapi.schema("CommentReplyRequest", {
