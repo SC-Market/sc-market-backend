@@ -355,10 +355,6 @@ export const profile_get_webhooks: RequestHandler = async (req, res, next) => {
   res.json(webhooks)
 }
 
-export const profile_get_allusers: RequestHandler = async (req, res, next) => {
-  res.json(await database.getMinimalUsersAdmin({}))
-}
-
 export const profile_get_user_username_reviews: RequestHandler = async (
   req,
   res,

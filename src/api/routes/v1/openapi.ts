@@ -440,6 +440,55 @@ const document: OpenAPIV3.Document = {
         },
         required: ["error"],
       },
+      RateLimitError: {
+        type: "object",
+        title: "RateLimitError",
+        properties: {
+          error: {
+            type: "string",
+            enum: ["RATE_LIMIT_EXCEEDED"],
+            description: "Error type identifier",
+            example: "RATE_LIMIT_EXCEEDED"
+          },
+          message: {
+            type: "string",
+            description: "Human-readable error message",
+            example: "Rate limit exceeded. Too many requests in the specified time window."
+          },
+          retryAfter: {
+            type: "integer",
+            description: "Seconds to wait before retrying",
+            example: 30
+          },
+          limit: {
+            type: "integer",
+            description: "Maximum requests allowed per time window",
+            example: 60
+          },
+          remaining: {
+            type: "integer",
+            description: "Requests remaining in current window",
+            example: 0
+          },
+          resetTime: {
+            type: "integer",
+            description: "Unix timestamp when rate limit resets",
+            example: 1640995200
+          },
+          userTier: {
+            type: "string",
+            enum: ["anonymous", "authenticated", "premium", "admin"],
+            description: "User tier that triggered the rate limit",
+            example: "authenticated"
+          },
+          endpoint: {
+            type: "string",
+            description: "Endpoint that was rate limited",
+            example: "/api/orders"
+          }
+        },
+        required: ["error", "message", "retryAfter", "limit", "remaining", "resetTime", "userTier", "endpoint"]
+      },
     },
   },
   servers: [
@@ -614,6 +663,64 @@ export const Response409 = {
   },
   headers: {},
 }
+
+// Rate Limiting Headers
+export const RateLimitHeaders = {
+  'X-RateLimit-Limit': {
+    description: 'Maximum number of requests allowed per time window',
+    schema: { type: 'integer' as const, example: 60 }
+  },
+  'X-RateLimit-Remaining': {
+    description: 'Number of requests remaining in current time window',
+    schema: { type: 'integer' as const, example: 45 }
+  },
+  'X-RateLimit-Reset': {
+    description: 'Unix timestamp when the rate limit resets',
+    schema: { type: 'integer' as const, example: 1640995200 }
+  },
+  'X-RateLimit-Retry-After': {
+    description: 'Seconds to wait before retrying (only present when rate limited)',
+    schema: { type: 'integer' as const, example: 30 }
+  }
+}
+
+// Standardized 429 Response
+export const Response429 = {
+  description: "Rate limit exceeded. Too many requests in the specified time window.",
+  headers: RateLimitHeaders,
+  content: {
+    "application/json": {
+      schema: oapi.schema("RateLimitError")
+    }
+  }
+}
+
+// Rate Limit Helper Functions
+export const createRateLimitResponse = (description: string, schema?: any) => ({
+  description,
+  headers: RateLimitHeaders,
+  content: schema ? {
+    "application/json": {
+      schema: oapi.schema(schema)
+    }
+  } : undefined
+})
+
+export const addRateLimitHeaders = (response: any) => ({
+  ...response,
+  headers: {
+    ...response.headers,
+    ...RateLimitHeaders
+  }
+})
+
+export const createRateLimitEndpoint = (endpoint: any) => ({
+  ...endpoint,
+  responses: {
+    ...endpoint.responses,
+    429: Response429
+  }
+})
 
 const deployEnvironment = env.DEPLOY_ENVIRONMENT
 

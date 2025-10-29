@@ -2,6 +2,7 @@ import { oapi as oapi } from "../openapi.js"
 import { Response400 as Response400 } from "../openapi.js"
 import { Response401 as Response401 } from "../openapi.js"
 import { Response500 as Response500 } from "../openapi.js"
+import { Response429 as Response429 } from "../openapi.js"
 import { SUPPORTED_LOCALES as SUPPORTED_LOCALES } from "../util/i18n.js"
 
 oapi.schema("ProfileUpdateBody", {
@@ -99,6 +100,7 @@ export const profile_post_auth_sync_handle_spec = oapi.validPath({
       },
     },
     "401": Response401,
+    "429": Response429,
     "500": Response500,
   },
   security: [],
@@ -162,6 +164,7 @@ export const profile_post_auth_unlink_spec = oapi.validPath({
       },
     },
     "401": Response401,
+    "429": Response429,
     "500": Response500,
   },
   security: [],
@@ -218,6 +221,7 @@ export const profile_put_root_spec = oapi.validPath({
     },
     "400": Response400,
     "401": Response401,
+    "429": Response429,
     "500": Response500,
   },
   security: [],
@@ -408,6 +412,7 @@ export const profile_get_root_spec = oapi.validPath({
       headers: {},
     },
     "401": Response401,
+    "429": Response429,
     "500": Response500,
   },
   security: [],
@@ -452,6 +457,7 @@ export const profile_get_blocklist_spec = oapi.validPath({
       },
     },
     "401": Response401,
+    "429": Response429,
   },
   security: [{ userAuth: [] }],
 })
@@ -515,6 +521,7 @@ export const profile_post_blocklist_block_spec = oapi.validPath({
         },
       },
     },
+    "429": Response429,
   },
   security: [{ userAuth: [] }],
 })
@@ -567,6 +574,7 @@ export const profile_delete_blocklist_unblock_username_spec = oapi.validPath({
         },
       },
     },
+    "429": Response429,
   },
   security: [{ userAuth: [] }],
 })

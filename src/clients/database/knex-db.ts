@@ -453,26 +453,6 @@ export class KnexDatabase implements Database {
     }
   }
 
-  async getMinimalUsersAdmin(
-    where: any,
-    options: {
-      noBalance: boolean
-    } = { noBalance: false },
-  ) {
-    const users = await this.knex<DBUser>("accounts").where(where).select()
-
-    return await Promise.all(
-      users.map(async (user) => ({
-        username: user.username,
-        avatar: (await cdn.getFileLinkResource(user.avatar))!,
-        display_name: user.display_name,
-        role: user.role,
-        rating: await getUserRating(user.user_id),
-        created_at: user.created_at.getTime(),
-      })),
-    )
-  }
-
   async getAllMinimalUsers(
     options: {
       noBalance: boolean
