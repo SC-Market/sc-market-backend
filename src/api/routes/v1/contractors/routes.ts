@@ -8,6 +8,7 @@ import {
 } from "../../../middleware/auth.js"
 
 import { rate_limit } from "../../../middleware/ratelimiting.js"
+import { criticalRateLimit, writeRateLimit, readRateLimit, bulkRateLimit } from "../../../middleware/enhanced-ratelimiting.js"
 
 import {
   org_authorized,
@@ -100,6 +101,7 @@ contractorsRouter.post(
   userAuthorized,
   requireContractorsWrite,
   post_auth_link_spec,
+  criticalRateLimit,
   post_auth_link,
 )
 
@@ -108,6 +110,7 @@ contractorsRouter.post(
   userAuthorized,
   requireContractorsWrite,
   post_root_spec,
+  criticalRateLimit,
   post_root,
 )
 
@@ -116,7 +119,7 @@ contractorsRouter.get(
   userAuthorized,
   requireContractorsRead,
   get_search_query_spec,
-  rate_limit(2),
+  readRateLimit,
   get_search_query,
 )
 
@@ -125,6 +128,7 @@ contractorsRouter.get(
   userAuthorized,
   requireContractorsRead,
   get_invites_invite_id_spec,
+  readRateLimit,
   get_invites_invite_id,
 )
 
@@ -133,6 +137,7 @@ contractorsRouter.post(
   userAuthorized,
   requireContractorsWrite,
   post_invites_invite_id_accept_spec,
+  criticalRateLimit,
   post_invites_invite_id_accept,
 )
 
@@ -141,7 +146,7 @@ contractorsRouter.get(
   userAuthorized,
   requireContractorsRead,
   get_spectrum_id_members_search_query_spec,
-  rate_limit(2),
+  readRateLimit,
   valid_contractor,
   requireContractorAccessFromSpectrumId(),
   get_spectrum_id_members_search_query,
@@ -152,7 +157,7 @@ contractorsRouter.get(
   userAuthorized,
   requireContractorsRead,
   get_spectrum_id_members_csv_spec,
-  rate_limit(2),
+  bulkRateLimit,
   valid_contractor,
   requireContractorAccessFromSpectrumId(),
   get_spectrum_id_members_csv,
@@ -163,6 +168,7 @@ contractorsRouter.get(
   userAuthorized,
   requireContractorsRead,
   get_spectrum_id_customers_spec,
+  readRateLimit,
   valid_contractor,
   get_spectrum_id_customers,
 )
@@ -171,6 +177,7 @@ contractorsRouter.get(
   "/:spectrum_id/reviews",
   valid_contractor,
   get_spectrum_id_reviews_spec,
+  readRateLimit,
   get_spectrum_id_reviews,
 )
 
@@ -178,6 +185,7 @@ contractorsRouter.get(
   "/:spectrum_id",
   get_spectrum_id_spec,
   valid_contractor,
+  readRateLimit,
   get_spectrum_id,
 )
 
@@ -185,6 +193,7 @@ contractorsRouter.get(
   "/:spectrum_id/members/:username",
   get_spectrum_id_members_username_spec,
   valid_contractor,
+  readRateLimit,
   get_spectrum_id_members_username,
 )
 
@@ -192,6 +201,7 @@ contractorsRouter.get(
   "/:spectrum_id/members",
   get_spectrum_id_members_spec,
   valid_contractor,
+  readRateLimit,
   get_spectrum_id_members,
 )
 
@@ -201,6 +211,7 @@ contractorsRouter.post(
   requireContractorsWrite,
   post_spectrum_id_roles_spec,
   org_permission("manage_roles"),
+  writeRateLimit,
   post_spectrum_id_roles,
 )
 
@@ -210,6 +221,7 @@ contractorsRouter.put(
   requireContractorsWrite,
   put_spectrum_id_roles_role_id_spec,
   org_permission("manage_roles"),
+  writeRateLimit,
   put_spectrum_id_roles_role_id,
 )
 
@@ -219,6 +231,7 @@ contractorsRouter.delete(
   requireContractorsWrite,
   delete_spectrum_id_roles_role_id_spec,
   org_permission("manage_roles"),
+  writeRateLimit,
   delete_spectrum_id_roles_role_id,
 )
 
@@ -228,6 +241,7 @@ contractorsRouter.post(
   requireContractorsWrite,
   post_spectrum_id_roles_role_id_members_username_spec,
   org_permission("manage_roles"),
+  writeRateLimit,
   post_spectrum_id_roles_role_id_members_username,
 )
 
@@ -237,6 +251,7 @@ contractorsRouter.delete(
   requireContractorsWrite,
   delete_spectrum_id_roles_role_id_members_username_spec,
   org_permission("manage_roles"),
+  writeRateLimit,
   delete_spectrum_id_roles_role_id_members_username,
 )
 
@@ -246,6 +261,7 @@ contractorsRouter.delete(
   requireContractorsWrite,
   delete_spectrum_id_members_username_spec,
   org_permission("kick_members"),
+  writeRateLimit,
   delete_spectrum_id_members_username,
 )
 
@@ -255,6 +271,7 @@ contractorsRouter.put(
   requireContractorsWrite,
   put_spectrum_id_spec,
   org_permission("manage_org_details"),
+  writeRateLimit,
   put_spectrum_id,
 )
 
@@ -264,6 +281,7 @@ contractorsRouter.post(
   requireContractorsWrite,
   post_spectrum_id_webhooks_spec,
   org_permission("manage_webhooks"),
+  writeRateLimit,
   post_spectrum_id_webhooks,
 )
 
@@ -273,6 +291,7 @@ contractorsRouter.delete(
   requireContractorsWrite,
   delete_spectrum_id_webhooks_webhook_id_spec,
   org_permission("manage_webhooks"),
+  writeRateLimit,
   delete_spectrum_id_webhooks_webhook_id,
 )
 
@@ -282,6 +301,7 @@ contractorsRouter.get(
   requireContractorsRead,
   get_spectrum_id_webhooks_spec,
   org_permission("manage_webhooks"),
+  readRateLimit,
   get_spectrum_id_webhooks,
 )
 
@@ -291,6 +311,7 @@ contractorsRouter.post(
   requireContractorsWrite,
   post_spectrum_id_invites_spec,
   org_permission("manage_invites"),
+  writeRateLimit,
   post_spectrum_id_invites,
 )
 
@@ -300,6 +321,7 @@ contractorsRouter.delete(
   requireContractorsWrite,
   delete_spectrum_id_invites_invite_id_spec,
   org_permission("manage_invites"),
+  writeRateLimit,
   delete_spectrum_id_invites_invite_id,
 )
 
@@ -309,6 +331,7 @@ contractorsRouter.get(
   requireContractorsRead,
   get_spectrum_id_invites_spec,
   org_permission("manage_invites"),
+  readRateLimit,
   get_spectrum_id_invites,
 )
 
@@ -318,12 +341,14 @@ contractorsRouter.post(
   requireContractorsWrite,
   post_spectrum_id_members_spec,
   org_permission("manage_invites"),
+  writeRateLimit,
   post_spectrum_id_members,
 )
 
 contractorsRouter.post(
   "/:spectrum_id/refetch",
   adminAuthorized,
+  bulkRateLimit,
   post_spectrum_id_refetch,
 )
 
@@ -332,6 +357,7 @@ contractorsRouter.post(
   post_spectrum_id_accept_spec,
   userAuthorized,
   valid_contractor,
+  criticalRateLimit,
   post_spectrum_id_accept,
 )
 
@@ -340,22 +366,25 @@ contractorsRouter.post(
   post_spectrum_id_decline_spec,
   userAuthorized,
   valid_contractor,
+  criticalRateLimit,
   post_spectrum_id_decline,
 )
 
 contractorsRouter.post(
   "/admin/express_verify",
   adminAuthorized,
+  bulkRateLimit,
   post_admin_express_verify,
 )
 
-contractorsRouter.get("", get_root_spec, get_root)
+contractorsRouter.get("", get_root_spec, readRateLimit, get_root)
 
 contractorsRouter.get(
   "/:spectrum_id/settings/discord",
   get_spectrum_id_settings_discord_spec,
   userAuthorized,
   org_permission("manage_webhooks"),
+  readRateLimit,
   get_spectrum_id_settings_discord,
 )
 
@@ -364,6 +393,7 @@ contractorsRouter.post(
   post_spectrum_id_settings_discord_use_official_spec,
   userAuthorized,
   org_permission("manage_webhooks"),
+  writeRateLimit,
   post_spectrum_id_settings_discord_use_official,
 )
 
@@ -371,6 +401,7 @@ contractorsRouter.post(
   "/:spectrum_id/leave",
   post_spectrum_id_leave_spec,
   org_authorized,
+  writeRateLimit,
   post_spectrum_id_leave,
 )
 
@@ -380,6 +411,7 @@ contractorsRouter.get(
   org_authorized,
   org_permission("manage_blocklist"),
   get_spectrum_id_blocklist_spec,
+  readRateLimit,
   get_spectrum_id_blocklist,
 )
 
@@ -388,6 +420,7 @@ contractorsRouter.post(
   org_authorized,
   org_permission("manage_blocklist"),
   post_spectrum_id_blocklist_block_spec,
+  criticalRateLimit,
   post_spectrum_id_blocklist_block,
 )
 
@@ -396,5 +429,6 @@ contractorsRouter.delete(
   org_authorized,
   org_permission("manage_blocklist"),
   delete_spectrum_id_blocklist_unblock_username_spec,
+  criticalRateLimit,
   delete_spectrum_id_blocklist_unblock_username,
 )

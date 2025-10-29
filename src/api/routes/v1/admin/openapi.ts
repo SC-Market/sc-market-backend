@@ -2,6 +2,7 @@ import { adminOapi as adminOapi } from "../openapi.js"
 import { Response401 as Response401 } from "../openapi.js"
 import { Response403 as Response403 } from "../openapi.js"
 import { Response500 as Response500 } from "../openapi.js"
+import { Response429Critical, Response429Read, RateLimitHeaders } from "../openapi.js"
 
 adminOapi.schema("OrderAnalyticsTimeSeries", {
   type: "object",
@@ -417,9 +418,11 @@ export const admin_get_activity_spec = adminOapi.validPath({
           },
         },
       },
+      headers: RateLimitHeaders,
     },
     "401": Response401,
     "403": Response403,
+    "429": Response429Read,
   },
   security: [{ adminAuth: [] }],
 })
@@ -447,9 +450,11 @@ export const admin_get_orders_analytics_spec = adminOapi.validPath({
           },
         },
       },
+      headers: RateLimitHeaders,
     },
     "401": Response401,
     "403": Response403,
+    "429": Response429Read,
     "500": Response500,
   },
   security: [{ adminAuth: [] }],
@@ -605,9 +610,11 @@ export const admin_get_users_spec = adminOapi.validPath({
           },
         },
       },
+      headers: RateLimitHeaders,
     },
     "401": Response401,
     "403": Response403,
+    "429": Response429Read,
     "500": Response500,
   },
   security: [{ adminAuth: [] }],
@@ -636,9 +643,11 @@ export const admin_get_membership_analytics_spec = adminOapi.validPath({
           },
         },
       },
+      headers: RateLimitHeaders,
     },
     "401": Response401,
     "403": Response403,
+    "429": Response429Read,
     "500": Response500,
   },
   security: [{ adminAuth: [] }],

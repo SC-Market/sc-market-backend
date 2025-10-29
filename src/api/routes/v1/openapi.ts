@@ -684,9 +684,39 @@ export const RateLimitHeaders = {
   }
 }
 
-// Standardized 429 Response
-export const Response429 = {
-  description: "Rate limit exceeded. Too many requests in the specified time window.",
+// Specialized 429 responses for different rate limit types
+export const Response429Critical = {
+  description: "Rate limit exceeded for critical operations. Anonymous users: 1 req/min, Authenticated users: 2 req/min, Admin users: 5 req/min.",
+  headers: RateLimitHeaders,
+  content: {
+    "application/json": {
+      schema: oapi.schema("RateLimitError")
+    }
+  }
+}
+
+export const Response429Write = {
+  description: "Rate limit exceeded for write operations. Anonymous users: 5 req/min, Authenticated users: 10 req/min, Admin users: 30 req/min.",
+  headers: RateLimitHeaders,
+  content: {
+    "application/json": {
+      schema: oapi.schema("RateLimitError")
+    }
+  }
+}
+
+export const Response429Read = {
+  description: "Rate limit exceeded for read operations. Anonymous users: 60 req/min, Authenticated users: 60 req/min, Admin users: 100 req/min.",
+  headers: RateLimitHeaders,
+  content: {
+    "application/json": {
+      schema: oapi.schema("RateLimitError")
+    }
+  }
+}
+
+export const Response429Bulk = {
+  description: "Rate limit exceeded for bulk operations. Anonymous users: 2 req/min, Authenticated users: 5 req/min, Admin users: 20 req/min.",
   headers: RateLimitHeaders,
   content: {
     "application/json": {
@@ -718,7 +748,7 @@ export const createRateLimitEndpoint = (endpoint: any) => ({
   ...endpoint,
   responses: {
     ...endpoint.responses,
-    429: Response429
+    429: Response429Read
   }
 })
 

@@ -5,6 +5,9 @@ import {
   Response403,
   Response404,
   Response409,
+  Response429Read,
+  Response429Write,
+  RateLimitHeaders,
 } from "../openapi.js"
 import { PAYMENT_TYPES } from "../types/payment-types.js"
 import { ORDER_SEARCH_SORT_METHODS, ORDER_SEARCH_STATUS } from "./types.js"
@@ -355,7 +358,7 @@ oapi.schema("Order", {
 export const post_root_spec = oapi.validPath({
   summary: "Create a new order",
   deprecated: false,
-  description: "",
+  description: "Create a new order with the specified details.",
   operationId: "createANewOrder",
   tags: ["Orders", "Offers"],
   parameters: [],
@@ -396,11 +399,12 @@ export const post_root_spec = oapi.validPath({
           },
         },
       },
-      headers: {},
+      headers: RateLimitHeaders,
     },
     "400": Response400,
     "401": Response401,
     "403": Response403,
+    "429": Response429Write,
   },
   security: [],
 })
@@ -408,7 +412,7 @@ export const post_root_spec = oapi.validPath({
 export const get_search_spec = oapi.validPath({
   summary: "Search orders",
   deprecated: false,
-  description: "",
+  description: "Search orders with various filters.",
   operationId: "searchOrders",
   tags: ["Orders"],
   parameters: [
@@ -527,12 +531,13 @@ export const get_search_spec = oapi.validPath({
           },
         },
       },
-      headers: {},
+      headers: RateLimitHeaders,
     },
     "400": Response400,
     "401": Response401,
     "403": Response403,
     "404": Response404,
+    "429": Response429Write,
   },
   security: [],
 })
@@ -541,7 +546,7 @@ export const get_contractor_spectrum_id_metrics_spec = oapi.validPath({
   summary: "Get contractor order metrics",
   deprecated: false,
   description:
-    "Returns aggregated metrics for orders placed with a specific contractor",
+    "Returns aggregated metrics for orders placed with a specific contractor.",
   operationId: "getContractorOrderMetrics",
   tags: ["Orders"],
   parameters: [
@@ -635,12 +640,13 @@ export const get_contractor_spectrum_id_metrics_spec = oapi.validPath({
           },
         },
       },
-      headers: {},
+      headers: RateLimitHeaders,
     },
     "400": Response400,
     "401": Response401,
     "403": Response403,
     "404": Response404,
+    "429": Response429Write,
   },
   security: [],
 })
@@ -649,7 +655,7 @@ export const get_contractor_spectrum_id_data_spec = oapi.validPath({
   summary: "Get comprehensive contractor order data",
   deprecated: false,
   description:
-    "Returns comprehensive order data including metrics, trend data, and recent orders for a specific contractor",
+    "Returns comprehensive order data including metrics, trend data, and recent orders for a specific contractor.",
   operationId: "getContractorOrderData",
   tags: ["Orders"],
   parameters: [
@@ -827,6 +833,7 @@ export const get_contractor_spectrum_id_data_spec = oapi.validPath({
     401: Response401,
     403: Response403,
     404: Response404,
+    429: Response429Read,
   },
 })
 
@@ -834,7 +841,7 @@ export const get_user_data_spec = oapi.validPath({
   summary: "Get comprehensive user order data",
   deprecated: false,
   description:
-    "Returns comprehensive order data including metrics, trend data, and recent orders for the current user's assigned orders",
+    "Returns comprehensive order data including metrics, trend data, and recent orders for the current user's assigned orders.",
   operationId: "getUserOrderData",
   tags: ["Orders"],
   parameters: [
@@ -991,13 +998,14 @@ export const get_user_data_spec = oapi.validPath({
     },
     401: Response401,
     403: Response403,
+    429: Response429Read,
   },
 })
 
 export const post_order_id_review_spec = oapi.validPath({
   summary: "Leave a review on an order",
   deprecated: false,
-  description: "",
+  description: "Leave a review on a completed order.",
   operationId: "postReview",
   tags: ["Order Reviews"],
   parameters: [
@@ -1071,6 +1079,7 @@ export const post_order_id_review_spec = oapi.validPath({
 export const post_order_id_reviews_review_id_request_revision_spec =
   oapi.validPath({
     summary: "Request revision for a review",
+    description: "Request a revision for an existing review. Rate limited to prevent spam.",
     operationId: "requestReviewRevision",
     tags: ["Order Reviews"],
     parameters: [
@@ -1137,11 +1146,13 @@ export const post_order_id_reviews_review_id_request_revision_spec =
       "403": Response403,
       "404": Response404,
       "409": Response409,
+      "429": Response429Write,
     },
   })
 
 export const put_order_id_reviews_review_id_spec = oapi.validPath({
   summary: "Update a review after revision request",
+  description: "Update a review after a revision has been requested. Rate limited to prevent spam.",
   operationId: "updateOrderReview",
   tags: ["Order Reviews"],
   parameters: [
@@ -1212,7 +1223,7 @@ export const put_order_id_reviews_review_id_spec = oapi.validPath({
 export const put_order_id_spec = oapi.validPath({
   summary: "Update an order",
   deprecated: false,
-  description: "",
+  description: "Update an existing order. Rate limited to prevent abuse.",
   operationId: "updateOrder",
   tags: ["Orders"],
   parameters: [
@@ -1282,7 +1293,7 @@ export const put_order_id_spec = oapi.validPath({
 export const post_order_id_applicants_spec = oapi.validPath({
   summary: "Apply to an open contract",
   deprecated: true,
-  description: "Deprecated - Use public contract offers",
+  description: "Deprecated - Use public contract offers. Rate limited to prevent spam.",
   operationId: "postApply",
   tags: ["Order Applicants"],
   parameters: [
@@ -1345,7 +1356,7 @@ export const post_order_id_applicants_contractors_spectrum_id_spec =
   oapi.validPath({
     summary: "Accept an application on an order",
     deprecated: true,
-    description: "Deprecated - Use public contract offers",
+    description: "Deprecated - Use public contract offers. Rate limited to prevent spam.",
     operationId: "acceptAnApplicationOnOrder",
     tags: ["Order Applicants"],
     parameters: [
@@ -1410,7 +1421,7 @@ export const post_order_id_applicants_contractors_spectrum_id_spec =
 export const post_order_id_applicants_users_username_spec = oapi.validPath({
   summary: "Accept an application on an order",
   deprecated: true,
-  description: "Deprecated - Use public contract offers",
+  description: "Deprecated - Use public contract offers. Rate limited to prevent spam.",
   operationId: "acceptAnApplicationOnOrder",
   tags: ["Order Applicants"],
   parameters: [
@@ -1475,7 +1486,7 @@ export const post_order_id_applicants_users_username_spec = oapi.validPath({
 export const get_order_id_spec = oapi.validPath({
   summary: "Get an order by ID",
   deprecated: false,
-  description: "",
+  description: "Retrieve a specific order by its ID. Rate limited to prevent abuse.",
   operationId: "getOrderById",
   tags: ["Orders"],
   parameters: [
@@ -1511,7 +1522,7 @@ export const get_order_id_spec = oapi.validPath({
 export const post_order_id_thread_spec = oapi.validPath({
   summary: "Create a new thread for the order",
   deprecated: false,
-  description: "Creates a new thread if the order doesn't already have one.",
+  description: "Creates a new thread if the order doesn't already have one. Rate limited to prevent spam.",
   operationId: "createANewOrderThread",
   tags: ["Order Threads"],
   parameters: [

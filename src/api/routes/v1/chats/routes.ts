@@ -4,6 +4,11 @@ import {
   requireChatsRead,
   requireChatsWrite,
 } from "../../../middleware/auth.js"
+import {
+  criticalRateLimit,
+  writeRateLimit,
+  readRateLimit,
+} from "../../../middleware/enhanced-ratelimiting.js"
 import { related_to_order } from "../orders/middleware.js"
 import { related_to_offer } from "../offers/middleware.js"
 import { related_to_chat, valid_chat } from "./middleware.js"
@@ -35,6 +40,7 @@ chatsRouter.get(
   userAuthorized,
   requireChatsRead,
   get_orders_order_id_spec,
+  readRateLimit,
   related_to_order,
   getChatByOrderId,
   handle_chat_response,
@@ -46,6 +52,7 @@ chatsRouter.get(
   userAuthorized,
   requireChatsRead,
   get_offers_session_id_spec,
+  readRateLimit,
   related_to_offer,
   getChatByOfferSessionId,
   handle_chat_response,
@@ -57,6 +64,7 @@ chatsRouter.post(
   userAuthorized,
   requireChatsWrite,
   post_chat_id_messages_spec,
+  writeRateLimit,
   valid_chat,
   related_to_chat,
   sendMessage,
@@ -68,6 +76,7 @@ chatsRouter.post(
   userAuthorized,
   requireChatsWrite,
   post_root_spec,
+  writeRateLimit,
   createChat,
 )
 
@@ -77,10 +86,11 @@ chatsRouter.get(
   userAuthorized,
   requireChatsRead,
   get_chat_id_spec,
+  readRateLimit,
   valid_chat,
   related_to_chat,
   getChatById,
 )
 
 // Get my chats
-chatsRouter.get("", userAuthorized, requireChatsRead, get_root_spec, getChats)
+chatsRouter.get("", userAuthorized, requireChatsRead, get_root_spec, readRateLimit, getChats)

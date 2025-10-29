@@ -6,6 +6,7 @@ import {
   requireMarketWrite,
   requireMarketAdmin,
 } from "../../../middleware/auth.js"
+import { criticalRateLimit, writeRateLimit, readRateLimit, bulkRateLimit } from "../../../middleware/enhanced-ratelimiting.js"
 import {
   can_manage_market_listing,
   valid_market_listing,
@@ -74,12 +75,13 @@ import {
 
 export const marketRouter = express.Router()
 
-marketRouter.get("/stats", market_get_stats_spec, get_order_stats)
+marketRouter.get("/stats", market_get_stats_spec, readRateLimit, get_order_stats)
 
 marketRouter.post(
   "/listings/stats",
   market_post_listings_stats_spec,
   userAuthorized,
+  bulkRateLimit,
   get_listing_stats,
 )
 
@@ -89,6 +91,7 @@ marketRouter.put(
   requireMarketWrite,
   can_manage_market_listing,
   market_put_listing_listing_id_spec,
+  writeRateLimit,
   update_listing,
 )
 
@@ -98,6 +101,7 @@ marketRouter.post(
   requireMarketWrite,
   can_manage_market_listing,
   market_post_listing_listing_id_update_quantity_spec,
+  writeRateLimit,
   update_listing_quantity,
 )
 
@@ -107,6 +111,7 @@ marketRouter.post(
   requireMarketWrite,
   can_manage_market_listing,
   market_post_listing_listing_id_refresh_spec,
+  writeRateLimit,
   refresh_listing,
 )
 
@@ -114,6 +119,7 @@ marketRouter.get(
   "/listings/:listing_id",
   valid_market_listing,
   market_get_listings_listing_id_spec,
+  readRateLimit,
   get_listing_details,
 )
 
@@ -123,6 +129,7 @@ marketRouter.get(
   "/listing/:listing_id/orders",
   can_manage_market_listing,
   market_get_listing_listing_id_orders_spec,
+  readRateLimit,
   get_linked_orders,
 )
 
@@ -130,6 +137,7 @@ marketRouter.post(
   "/purchase",
   requireMarketWrite,
   market_post_purchase_spec,
+  criticalRateLimit,
   purchase_listings,
 )
 
@@ -138,6 +146,7 @@ marketRouter.post(
   requireMarketWrite,
   valid_market_listing,
   market_post_listings_listing_id_bids_spec,
+  criticalRateLimit,
   get_listing_bids,
 )
 
@@ -145,6 +154,7 @@ marketRouter.post(
   "/listings",
   requireMarketWrite,
   market_post_listings_spec,
+  criticalRateLimit,
   create_listing,
 )
 
@@ -156,6 +166,7 @@ marketRouter.post(
   can_manage_market_listing,
   multiplePhotoUpload.array("photos", 5),
   market_post_listing_listing_id_photos_spec,
+  writeRateLimit,
   add_listing_photos,
 )
 
@@ -164,6 +175,7 @@ marketRouter.post(
   "/listings/:listing_id/views",
   valid_market_listing,
   market_post_listings_listing_id_views_spec,
+  writeRateLimit,
   handle_listing_view,
 )
 
@@ -172,14 +184,16 @@ marketRouter.get(
   userAuthorized,
   requireMarketRead,
   market_get_mine_spec,
+  readRateLimit,
   get_my_listings,
 )
 
-marketRouter.get("/listings", market_get_listings_spec, search_listings)
+marketRouter.get("/listings", market_get_listings_spec, readRateLimit, search_listings)
 
 marketRouter.get(
   "/user/:username",
   market_get_user_username_spec,
+  readRateLimit,
   get_active_listings_by_user,
 )
 
@@ -187,6 +201,7 @@ marketRouter.get(
   "/contractor/:spectrum_id",
   valid_contractor,
   market_get_contractor_spectrum_id_spec,
+  readRateLimit,
   get_active_listings_by_org,
 )
 
@@ -196,6 +211,7 @@ marketRouter.get(
 marketRouter.get(
   "/aggregates/buyorders",
   market_get_aggregates_buyorders_spec,
+  readRateLimit,
   get_buy_orders,
 )
 
@@ -205,44 +221,49 @@ marketRouter.get(
 marketRouter.get(
   "/aggregate/:game_item_id/chart",
   market_get_aggregate_game_item_id_chart_spec,
+  readRateLimit,
   get_buy_order_chart,
 )
 
-marketRouter.get("/aggregate/:game_item_id/history", get_aggregate_history)
+marketRouter.get("/aggregate/:game_item_id/history", readRateLimit, get_aggregate_history)
 
 // TODO: Redo
 marketRouter.post(
   "/aggregate/:game_item_id/update",
   adminAuthorized,
   requireMarketAdmin,
+  bulkRateLimit,
   update_aggregate,
 )
 
-marketRouter.get("/aggregate/:game_item_id", get_aggregate_details)
+marketRouter.get("/aggregate/:game_item_id", readRateLimit, get_aggregate_details)
 
-marketRouter.get("/multiple/:multiple_id", get_multiple_details)
+marketRouter.get("/multiple/:multiple_id", readRateLimit, get_multiple_details)
 
 marketRouter.post(
   "/multiple/contractor/:spectrum_id/create",
   requireMarketWrite,
   org_permission("manage_market"),
+  writeRateLimit,
   create_contractor_multiple,
 )
 
-marketRouter.post("/multiple/create", requireMarketWrite, create_multiple)
+marketRouter.post("/multiple/create", requireMarketWrite, writeRateLimit, create_multiple)
 
 marketRouter.post(
   "/multiple/:multiple_id/update",
   userAuthorized,
   requireMarketWrite,
+  writeRateLimit,
   update_multiple,
 )
 
-marketRouter.post("/buyorder/create", requireMarketWrite, create_buy_order)
+marketRouter.post("/buyorder/create", requireMarketWrite, criticalRateLimit, create_buy_order)
 
 marketRouter.post(
   "/buyorder/:buy_order_id/fulfill",
   requireMarketWrite,
+  criticalRateLimit,
   fulfill_buy_order,
 )
 
@@ -250,18 +271,19 @@ marketRouter.post(
   "/buyorder/:buy_order_id/cancel",
   userAuthorized,
   requireMarketWrite,
+  criticalRateLimit,
   cancel_buy_order,
 )
 
-marketRouter.get("/export", userAuthorized, requireMarketRead, export_Listings)
+marketRouter.get("/export", userAuthorized, requireMarketRead, bulkRateLimit, export_Listings)
 
-marketRouter.get("/category/:category", get_category_details)
+marketRouter.get("/category/:category", readRateLimit, get_category_details)
 
-marketRouter.get("/categories", get_categories)
+marketRouter.get("/categories", readRateLimit, get_categories)
 
 // First register the schema for game item description
 
-marketRouter.get("/item/:name", market_get_item_name_spec, get_game_item)
+marketRouter.get("/item/:name", market_get_item_name_spec, readRateLimit, get_game_item)
 
 // Get view analytics for a seller's listings
 marketRouter.get(
@@ -269,6 +291,7 @@ marketRouter.get(
   userAuthorized,
   requireMarketRead,
   market_get_seller_analytics_spec,
+  bulkRateLimit,
   get_seller_analytics,
 )
 

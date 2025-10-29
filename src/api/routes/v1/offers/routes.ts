@@ -4,6 +4,12 @@ import {
   requireOffersWrite,
 } from "../../../middleware/auth.js"
 
+import {
+  criticalRateLimit,
+  writeRateLimit,
+  readRateLimit,
+} from "../../../middleware/enhanced-ratelimiting.js"
+
 import express from "express"
 
 import { can_respond_to_offer, related_to_offer } from "./middleware.js"
@@ -32,6 +38,7 @@ offerRouter.get(
   userAuthorized,
   requireOffersRead,
   offer_get_session_id_spec,
+  readRateLimit,
   userAuthorized,
   related_to_offer,
   offer_get_session_id,
@@ -43,6 +50,7 @@ offerRouter.put(
   requireOffersWrite,
   related_to_offer,
   offer_put_session_id_spec,
+  writeRateLimit,
   can_respond_to_offer,
   offer_put_session_id,
 )
@@ -52,7 +60,7 @@ offersRouter.post(
   userAuthorized,
   requireOffersWrite,
   post_session_id_thread_spec,
-
+  writeRateLimit,
   userAuthorized,
   related_to_offer,
   post_session_id_thread,
@@ -63,6 +71,7 @@ offersRouter.get(
   userAuthorized,
   requireOffersRead,
   get_search_spec,
+  readRateLimit,
   userAuthorized,
   validate_optional_username("customer"),
   validate_optional_username("assigned"),

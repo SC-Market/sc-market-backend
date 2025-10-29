@@ -1,5 +1,9 @@
 import express from "express"
 import { adminAuthorized } from "../../../middleware/auth.js"
+import {
+  criticalRateLimit,
+  readRateLimit,
+} from "../../../middleware/enhanced-ratelimiting.js"
 import { spectrumMigrationRouter } from "./spectrum-migration.js"
 import { adminAlertsRouter } from "./alerts.js"
 
@@ -31,6 +35,7 @@ adminRouter.get(
   "/activity",
   admin_get_activity_spec,
   adminAuthorized,
+  criticalRateLimit,
   admin_get_activity,
 )
 
@@ -38,6 +43,7 @@ adminRouter.get(
   "/orders/analytics",
   admin_get_orders_analytics_spec,
   adminAuthorized,
+  readRateLimit,
   admin_get_orders_analytics,
 )
 
@@ -45,6 +51,7 @@ adminRouter.get(
   "/users",
   admin_get_users_spec,
   adminAuthorized,
+  criticalRateLimit,
   admin_get_users,
 )
 
@@ -52,5 +59,6 @@ adminRouter.get(
   "/membership/analytics",
   admin_get_membership_analytics_spec,
   adminAuthorized,
+  readRateLimit,
   admin_get_membership_analytics,
 )

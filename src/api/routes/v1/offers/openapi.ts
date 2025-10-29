@@ -5,6 +5,9 @@ import {
   Response403,
   Response404,
   Response409,
+  Response429Read,
+  Response429Write,
+  RateLimitHeaders,
 } from "../openapi.js"
 import { PAYMENT_TYPES } from "../types/payment-types.js"
 import { OFFER_SEARCH_SORT_METHODS, OFFER_SEARCH_STATUS } from "./types.js"
@@ -304,7 +307,7 @@ oapi.schema("OfferSessionStub", {
 export const offer_get_session_id_spec = oapi.validPath({
   summary: "Get an offer by ID",
   deprecated: false,
-  description: "",
+  description: "Retrieve offer session details by ID.",
   operationId: "getOfferById",
   tags: ["Offers"],
   parameters: [
@@ -327,12 +330,13 @@ export const offer_get_session_id_spec = oapi.validPath({
           schema: oapi.schema("OfferSessionDetails"),
         },
       },
-      headers: {},
+      headers: RateLimitHeaders,
     },
     "400": Response400,
     "401": Response401,
     "403": Response403,
     "404": Response404,
+    "429": Response429Read,
   },
   security: [],
 })
@@ -340,7 +344,7 @@ export const offer_get_session_id_spec = oapi.validPath({
 export const offer_put_session_id_spec = oapi.validPath({
   summary: "Update an offer",
   deprecated: false,
-  description: "",
+  description: "Update offer details or status.",
   operationId: "updateAnOffer",
   tags: ["Offers"],
   parameters: [
@@ -397,12 +401,13 @@ export const offer_put_session_id_spec = oapi.validPath({
           },
         },
       },
-      headers: {},
+      headers: RateLimitHeaders,
     },
     "400": Response400,
     "401": Response401,
     "403": Response403,
     "404": Response404,
+    "429": Response429Write,
   },
 })
 
@@ -443,12 +448,13 @@ export const post_session_id_thread_spec = oapi.validPath({
           },
         },
       },
-      headers: {},
+      headers: RateLimitHeaders,
     },
     "400": Response400,
     "401": Response401,
     "403": Response403,
     "409": Response409,
+    "429": Response429Write,
   },
   security: [],
 })
@@ -456,7 +462,7 @@ export const post_session_id_thread_spec = oapi.validPath({
 export const get_search_spec = oapi.validPath({
   summary: "Search offers",
   deprecated: false,
-  description: "",
+  description: "Search offers with various filters.",
   operationId: "searchOffers",
   tags: ["Offers"],
   parameters: [
@@ -575,12 +581,13 @@ export const get_search_spec = oapi.validPath({
           },
         },
       },
-      headers: {},
+      headers: RateLimitHeaders,
     },
     "400": Response400,
     "401": Response401,
     "403": Response403,
     "404": Response404,
+    "429": Response429Read,
   },
   security: [],
 })

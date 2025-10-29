@@ -200,7 +200,7 @@ export function createRateLimit(tieredConfig: TieredRateLimit) {
 // Predefined rate limit configurations for different endpoint types
 export const criticalRateLimit = createRateLimit({
   anonymous: { points: 1, duration: 60, blockDuration: 900 },
-  authenticated: { points: 1, duration: 60, blockDuration: 600 },
+  authenticated: { points: 2, duration: 60, blockDuration: 600 },
   admin: { points: 5, duration: 60, blockDuration: 0 }
 })
 
@@ -211,8 +211,8 @@ export const writeRateLimit = createRateLimit({
 })
 
 export const readRateLimit = createRateLimit({
-  anonymous: { points: 10, duration: 60, blockDuration: 180 },
-  authenticated: { points: 30, duration: 60, blockDuration: 180 },
+  anonymous: { points: 60, duration: 60, blockDuration: 180 },
+  authenticated: { points: 60, duration: 60, blockDuration: 180 },
   admin: { points: 100, duration: 60, blockDuration: 0 }
 })
 
