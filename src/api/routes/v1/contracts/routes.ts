@@ -1,6 +1,7 @@
 import express from "express"
 
 import { requireOrdersWrite } from "../../../middleware/auth.js"
+import { writeRateLimit, readRateLimit } from "../../../middleware/enhanced-ratelimiting.js"
 import { valid_public_contract } from "./middleware.js"
 
 import {
@@ -23,6 +24,7 @@ contractsRouter.post(
   "",
   requireOrdersWrite,
   contracts_post_root_spec,
+  writeRateLimit,
   contracts_post_root,
 )
 
@@ -31,6 +33,7 @@ contractsRouter.post(
   requireOrdersWrite,
   valid_public_contract,
   contracts_post_contract_id_offers_spec,
+  writeRateLimit,
   contracts_post_contract_id_offers,
 )
 
@@ -38,7 +41,8 @@ contractsRouter.get(
   "/:contract_id",
   valid_public_contract,
   contracts_get_contract_id_spec,
+  readRateLimit,
   contracts_get_contract_id,
 )
 
-contractsRouter.get("", contracts_get_root_spec, contracts_get_root)
+contractsRouter.get("", contracts_get_root_spec, readRateLimit, contracts_get_root)

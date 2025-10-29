@@ -5,7 +5,7 @@ import {
   Response403,
   Response404,
   Response429Read,
-  Response429Write,
+  Response429CommonWrite,
   RateLimitHeaders,
 } from "../openapi.js"
 
@@ -230,7 +230,7 @@ export const post_chat_id_messages_spec = oapi.validPath({
     "400": Response400,
     "401": Response401,
     "403": Response403,
-    "429": Response429Write,
+    "429": Response429CommonWrite,
   },
   security: [],
 })
@@ -273,7 +273,7 @@ export const post_root_spec = oapi.validPath({
     "400": Response400,
     "401": Response401,
     "403": Response403,
-    "429": Response429Write,
+    "429": Response429CommonWrite,
   },
   security: [],
 })

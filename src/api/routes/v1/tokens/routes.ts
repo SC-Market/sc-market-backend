@@ -1,5 +1,6 @@
 import express from "express"
 import { userAuthorized } from "../../../middleware/auth.js"
+import { writeRateLimit, readRateLimit } from "../../../middleware/enhanced-ratelimiting.js"
 
 import * as tokensController from "./controller.js"
 
@@ -20,6 +21,7 @@ tokensRouter.post(
   "/",
   userAuthorized,
   tokens_post_root_spec,
+  writeRateLimit,
   tokensController.createToken,
 )
 
@@ -28,6 +30,7 @@ tokensRouter.get(
   "/",
   userAuthorized,
   tokens_get_root_spec,
+  readRateLimit,
   tokensController.listTokens,
 )
 
@@ -36,6 +39,7 @@ tokensRouter.get(
   "/:tokenId",
   userAuthorized,
   tokens_get_tokenId_spec,
+  readRateLimit,
   tokensController.getToken,
 )
 
@@ -44,6 +48,7 @@ tokensRouter.put(
   "/:tokenId",
   userAuthorized,
   tokens_put_tokenId_spec,
+  writeRateLimit,
   tokensController.updateToken,
 )
 
@@ -52,6 +57,7 @@ tokensRouter.delete(
   "/:tokenId",
   userAuthorized,
   tokens_delete_tokenId_spec,
+  writeRateLimit,
   tokensController.revokeToken,
 )
 
@@ -60,6 +66,7 @@ tokensRouter.post(
   "/:tokenId/extend",
   userAuthorized,
   tokens_post_tokenId_extend_spec,
+  writeRateLimit,
   tokensController.extendToken,
 )
 
@@ -68,5 +75,6 @@ tokensRouter.get(
   "/:tokenId/stats",
   userAuthorized,
   tokens_get_tokenId_stats_spec,
+  readRateLimit,
   tokensController.getTokenStats,
 )

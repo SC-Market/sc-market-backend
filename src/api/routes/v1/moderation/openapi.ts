@@ -3,7 +3,7 @@ import { Response400 as Response400 } from "../openapi.js"
 import { Response401 as Response401 } from "../openapi.js"
 import { Response403 as Response403 } from "../openapi.js"
 import { Response404 as Response404 } from "../openapi.js"
-import { Response500 as Response500 } from "../openapi.js"
+import { Response500 as Response500, Response429Write, Response429Read, Response429Critical, RateLimitHeaders } from "../openapi.js"
 
 export const moderation_post_report_spec = adminOapi.validPath({
   summary: "Report content for moderation",
@@ -54,6 +54,7 @@ export const moderation_post_report_spec = adminOapi.validPath({
   responses: {
     "200": {
       description: "Content reported successfully",
+      headers: RateLimitHeaders,
       content: {
         "application/json": {
           schema: {
@@ -93,22 +94,7 @@ export const moderation_post_report_spec = adminOapi.validPath({
         },
       },
     },
-    "429": {
-      description: "Too many reports. Rate limit exceeded.",
-      content: {
-        "application/json": {
-          schema: {
-            type: "object",
-            properties: {
-              message: {
-                type: "string",
-                example: "Too many reports. Please try again later.",
-              },
-            },
-          },
-        },
-      },
-    },
+    "429": Response429Write,
     "500": Response500,
   },
 })
@@ -122,6 +108,7 @@ export const moderation_get_reports_spec = adminOapi.validPath({
   responses: {
     "200": {
       description: "User's reports retrieved successfully",
+      headers: RateLimitHeaders,
       content: {
         "application/json": {
           schema: {
@@ -149,9 +136,7 @@ export const moderation_get_reports_spec = adminOapi.validPath({
       },
     },
     "401": Response401,
-    "429": {
-      description: "Too many requests. Rate limit exceeded.",
-    },
+    "429": Response429Read,
     "500": Response500,
   },
 })
@@ -210,6 +195,7 @@ export const moderation_get_admin_reports_spec = adminOapi.validPath({
   responses: {
     "200": {
       description: "Reports retrieved successfully",
+      headers: RateLimitHeaders,
       content: {
         "application/json": {
           schema: {
@@ -254,6 +240,7 @@ export const moderation_get_admin_reports_spec = adminOapi.validPath({
     },
     "401": Response401,
     "403": Response403,
+    "429": Response429Critical,
     "500": Response500,
   },
 })
@@ -302,6 +289,7 @@ export const moderation_put_admin_reports_report_id_spec = adminOapi.validPath({
   responses: {
     "200": {
       description: "Report updated successfully",
+      headers: RateLimitHeaders,
       content: {
         "application/json": {
           schema: {
@@ -338,6 +326,7 @@ export const moderation_put_admin_reports_report_id_spec = adminOapi.validPath({
     "401": Response401,
     "403": Response403,
     "404": Response404,
+    "429": Response429Critical,
     "500": Response500,
   },
 })

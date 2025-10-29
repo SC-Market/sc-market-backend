@@ -4,6 +4,7 @@ import { Response401 as Response401 } from "../openapi.js"
 import { Response403 as Response403 } from "../openapi.js"
 import { Response404 as Response404 } from "../openapi.js"
 import { Response500 as Response500 } from "../openapi.js"
+import { Response429Critical, Response429Write, Response429Read, Response429Bulk, RateLimitHeaders } from "../openapi.js"
 
 oapi.schema("UUID", {
   type: "string",
@@ -1775,6 +1776,7 @@ export const market_post_purchase_spec = oapi.validPath({
       },
     },
     "400": Response400,
+    "429": Response429Critical,
   },
 })
 
@@ -1888,6 +1890,7 @@ export const market_post_listings_spec = oapi.validPath({
       },
     },
     "400": Response400,
+    "429": Response429Critical,
     "500": {
       description: "Internal server error",
       content: {
@@ -2218,6 +2221,7 @@ export const market_get_listings_spec = oapi.validPath({
       },
     },
     "400": Response400,
+    "429": Response429Read,
     "500": Response500,
   },
 })

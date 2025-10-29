@@ -1,6 +1,6 @@
 import { adminOapi as adminOapi } from "../openapi.js"
 import { Response400 as Response400 } from "../openapi.js"
-import { Response500 as Response500 } from "../openapi.js"
+import { Response500 as Response500, Response429Read, RateLimitHeaders } from "../openapi.js"
 
 adminOapi.schema("WikiImageSearchResult", {
   type: "object",
@@ -114,9 +114,11 @@ export const wiki_get_imagesearch_query_spec = adminOapi.validPath({
           },
         },
       },
+      headers: RateLimitHeaders,
     },
     "400": Response400,
     "500": Response500,
+    "429": Response429Read,
   },
 })
 
@@ -142,8 +144,10 @@ export const wiki_get_itemsearch_query_spec = adminOapi.validPath({
           schema: { $ref: "#/components/schemas/WikiItemSearchResult" },
         },
       },
+      headers: RateLimitHeaders,
     },
     "400": Response400,
     "500": Response500,
+    "429": Response429Read,
   },
 })

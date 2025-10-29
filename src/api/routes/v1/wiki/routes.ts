@@ -1,4 +1,5 @@
 import express from "express"
+import { readRateLimit } from "../../../middleware/enhanced-ratelimiting.js"
 
 import {
   wiki_get_imagesearch_query,
@@ -17,11 +18,13 @@ export const wikiRouter = express.Router()
 wikiRouter.get(
   "/imagesearch/:query",
   wiki_get_imagesearch_query_spec,
+  readRateLimit,
   wiki_get_imagesearch_query,
 )
 
 wikiRouter.get(
   "/itemsearch/:query",
   wiki_get_itemsearch_query_spec,
+  readRateLimit,
   wiki_get_itemsearch_query,
 )

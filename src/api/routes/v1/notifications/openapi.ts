@@ -2,7 +2,7 @@ import { oapi as oapi } from "../openapi.js"
 import { Response400 as Response400 } from "../openapi.js"
 import { Response401 as Response401 } from "../openapi.js"
 import { Response404 as Response404 } from "../openapi.js"
-import { Response500 as Response500 } from "../openapi.js"
+import { Response500 as Response500, Response429Notification, Response429Read, Response429CommonWrite, RateLimitHeaders } from "../openapi.js"
 
 oapi.schema("Notification", {
   type: "object",
@@ -266,6 +266,7 @@ export const notification_patch_notification_id_spec = oapi.validPath({
   responses: {
     "200": {
       description: "Notification updated successfully",
+      headers: RateLimitHeaders,
       content: {
         "application/json": {
           schema: oapi.schema("SuccessResponse"),
@@ -275,6 +276,7 @@ export const notification_patch_notification_id_spec = oapi.validPath({
     "400": Response400,
     "401": Response401,
     "404": Response404,
+    "429": Response429Notification,
     "500": Response500,
   },
 })
@@ -296,6 +298,7 @@ export const notification_patch_root_spec = oapi.validPath({
   responses: {
     "200": {
       description: "Notifications updated successfully",
+      headers: RateLimitHeaders,
       content: {
         "application/json": {
           schema: oapi.schema("BulkActionResponse"),
@@ -304,6 +307,7 @@ export const notification_patch_root_spec = oapi.validPath({
     },
     "400": Response400,
     "401": Response401,
+    "429": Response429CommonWrite,
     "500": Response500,
   },
 })
@@ -327,6 +331,7 @@ export const notification_delete_notification_id_spec = oapi.validPath({
   responses: {
     "200": {
       description: "Notification deleted successfully",
+      headers: RateLimitHeaders,
       content: {
         "application/json": {
           schema: oapi.schema("SuccessResponse"),
@@ -335,6 +340,7 @@ export const notification_delete_notification_id_spec = oapi.validPath({
     },
     "401": Response401,
     "404": Response404,
+    "429": Response429Notification,
     "500": Response500,
   },
 })
@@ -366,6 +372,7 @@ export const notification_delete_root_spec = oapi.validPath({
   responses: {
     "200": {
       description: "Notifications deleted successfully",
+      headers: RateLimitHeaders,
       content: {
         "application/json": {
           schema: oapi.schema("BulkActionResponse"),
@@ -374,6 +381,7 @@ export const notification_delete_root_spec = oapi.validPath({
     },
     "400": Response400,
     "401": Response401,
+    "429": Response429CommonWrite,
     "500": Response500,
   },
 })
@@ -432,6 +440,7 @@ export const notification_get_page_spec = oapi.validPath({
   responses: {
     "200": {
       description: "Paginated notifications retrieved successfully",
+      headers: RateLimitHeaders,
       content: {
         "application/json": {
           schema: oapi.schema("PaginatedNotificationsResponse"),
@@ -440,6 +449,7 @@ export const notification_get_page_spec = oapi.validPath({
     },
     "400": Response400,
     "401": Response401,
+    "429": Response429Read,
     "500": Response500,
   },
 })

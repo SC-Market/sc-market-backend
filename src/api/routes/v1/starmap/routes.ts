@@ -1,4 +1,5 @@
 import express from "express"
+import { readRateLimit } from "../../../middleware/enhanced-ratelimiting.js"
 
 import {
   starmap_get_route_from_to,
@@ -17,17 +18,20 @@ export const starmapRouter = express.Router()
 starmapRouter.get(
   "/route/:from/:to",
   starmap_get_route_from_to_spec,
+  readRateLimit,
   starmap_get_route_from_to,
 )
 
 starmapRouter.get(
   "/route/:identifier",
   starmap_get_route_identifier_spec,
+  readRateLimit,
   starmap_get_route_identifier,
 )
 
 starmapRouter.get(
   "/search/:query",
   starmap_get_search_query_spec,
+  readRateLimit,
   starmap_get_search_query,
 )

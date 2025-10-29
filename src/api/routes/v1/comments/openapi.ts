@@ -1,4 +1,4 @@
-import { oapi, Response500 } from "../openapi.js"
+import { oapi, Response500, Response429Write, RateLimitHeaders } from "../openapi.js"
 import { Response400, Response401, Response403 } from "../openapi.js"
 
 oapi.schema("CommentReplyRequest", {
@@ -66,6 +66,7 @@ export const post_comment_id_reply_spec = oapi.validPath({
   responses: {
     "200": {
       description: "Reply created successfully",
+      headers: RateLimitHeaders,
       content: {
         "application/json": {
           schema: { $ref: "#/components/schemas/Comment" },
@@ -75,6 +76,7 @@ export const post_comment_id_reply_spec = oapi.validPath({
     "400": Response400,
     "401": Response401,
     "403": Response403,
+    "429": Response429Write,
     "500": Response500,
   },
   security: [{ bearerAuth: [] }],
@@ -97,6 +99,7 @@ export const post_comment_id_delete_spec = oapi.validPath({
   responses: {
     "200": {
       description: "Comment deleted successfully",
+      headers: RateLimitHeaders,
       content: {
         "application/json": {
           schema: {
@@ -111,6 +114,7 @@ export const post_comment_id_delete_spec = oapi.validPath({
     "400": Response400,
     "401": Response401,
     "403": Response403,
+    "429": Response429Write,
     "500": Response500,
   },
   security: [{ bearerAuth: [] }],
@@ -140,6 +144,7 @@ export const post_comment_id_update_spec = oapi.validPath({
   responses: {
     "200": {
       description: "Comment updated successfully",
+      headers: RateLimitHeaders,
       content: {
         "application/json": {
           schema: {
@@ -154,6 +159,7 @@ export const post_comment_id_update_spec = oapi.validPath({
     "400": Response400,
     "401": Response401,
     "403": Response403,
+    "429": Response429Write,
     "500": Response500,
   },
   security: [{ bearerAuth: [] }],
@@ -176,6 +182,7 @@ export const post_comment_id_upvote_spec = oapi.validPath({
   responses: {
     "200": {
       description: "Comment upvoted successfully",
+      headers: RateLimitHeaders,
       content: {
         "application/json": {
           schema: {
@@ -189,6 +196,7 @@ export const post_comment_id_upvote_spec = oapi.validPath({
     },
     "400": Response400,
     "401": Response401,
+    "429": Response429Write,
     "500": Response500,
   },
   security: [{ bearerAuth: [] }],
@@ -211,6 +219,7 @@ export const post_comment_id_downvote_spec = oapi.validPath({
   responses: {
     "200": {
       description: "Comment downvoted successfully",
+      headers: RateLimitHeaders,
       content: {
         "application/json": {
           schema: {
@@ -224,6 +233,7 @@ export const post_comment_id_downvote_spec = oapi.validPath({
     },
     "400": Response400,
     "401": Response401,
+    "429": Response429Write,
     "500": Response500,
   },
   security: [{ bearerAuth: [] }],

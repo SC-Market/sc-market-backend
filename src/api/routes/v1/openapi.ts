@@ -725,6 +725,26 @@ export const Response429Bulk = {
   }
 }
 
+export const Response429Notification = {
+  description: "Rate limit exceeded for notification operations. Anonymous users: 10 req/min, Authenticated users: 30 req/min, Admin users: 100 req/min.",
+  headers: RateLimitHeaders,
+  content: {
+    "application/json": {
+      schema: oapi.schema("RateLimitError")
+    }
+  }
+}
+
+export const Response429CommonWrite = {
+  description: "Rate limit exceeded for common write operations. Anonymous users: 15 req/min, Authenticated users: 40 req/min, Admin users: 100 req/min.",
+  headers: RateLimitHeaders,
+  content: {
+    "application/json": {
+      schema: oapi.schema("RateLimitError")
+    }
+  }
+}
+
 // Rate Limit Helper Functions
 export const createRateLimitResponse = (description: string, schema?: any) => ({
   description,

@@ -3,6 +3,7 @@ import {
   userAuthorized,
   requireProfileWrite,
 } from "../../../middleware/auth.js"
+import { writeRateLimit, readRateLimit } from "../../../middleware/enhanced-ratelimiting.js"
 
 import { ship_post_import, ships_get_mine } from "./controller.js"
 
@@ -23,9 +24,10 @@ shipRouter.post(
   ship_post_import_spec,
   userAuthorized,
   requireProfileWrite,
+  writeRateLimit,
   ship_post_import,
 )
 
 export const shipsRouter = express.Router()
 
-shipsRouter.get("/mine", ships_get_mine_spec, userAuthorized, ships_get_mine)
+shipsRouter.get("/mine", ships_get_mine_spec, userAuthorized, readRateLimit, ships_get_mine)

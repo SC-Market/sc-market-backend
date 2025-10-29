@@ -5,6 +5,11 @@ import {
   Response403,
   Response404,
   Response409,
+  Response429Critical,
+  Response429Write,
+  Response429Read,
+  Response429Bulk,
+  RateLimitHeaders,
 } from "../openapi.js"
 import { SUPPORTED_LOCALES } from "../util/i18n.js"
 import { VALID_ORG_TAGS } from "./controller.js"
@@ -555,12 +560,13 @@ export const post_auth_link_spec = oapi.validPath({
           },
         },
       },
-      headers: {},
+      headers: RateLimitHeaders,
     },
     "400": Response400,
     "401": Response401,
     "403": Response403,
     "409": Response409,
+    "429": Response429Critical,
   },
   security: [],
 })
@@ -598,12 +604,13 @@ export const post_root_spec = oapi.validPath({
           },
         },
       },
-      headers: {},
+      headers: RateLimitHeaders,
     },
     "400": Response400,
     "401": Response401,
     "403": Response403,
     "409": Response409,
+    "429": Response429Critical,
   },
   security: [],
 })
@@ -646,9 +653,10 @@ export const get_search_query_spec = oapi.validPath({
           },
         },
       },
-      headers: {},
+      headers: RateLimitHeaders,
     },
     "404": Response404,
+    "429": Response429Read,
   },
 })
 

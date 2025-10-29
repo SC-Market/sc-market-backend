@@ -4,6 +4,7 @@ import {
   requireNotificationsRead,
   requireNotificationsWrite,
 } from "../../../middleware/auth.js"
+import { notificationRateLimit, readRateLimit, commonWriteRateLimit } from "../../../middleware/enhanced-ratelimiting.js"
 
 import {
   notification_patch_notification_id,
@@ -40,6 +41,7 @@ notificationRouter.patch(
   "/:notification_id",
   userAuthorized,
   notification_patch_notification_id_spec,
+  notificationRateLimit,
   notification_patch_notification_id,
 )
 
@@ -50,6 +52,7 @@ notificationRouter.patch(
   "/",
   userAuthorized,
   notification_patch_root_spec,
+  notificationRateLimit,
   notification_patch_root,
 )
 
@@ -60,6 +63,7 @@ notificationRouter.delete(
   userAuthorized,
   requireNotificationsWrite,
   notification_delete_notification_id_spec,
+  commonWriteRateLimit,
   notification_delete_notification_id,
 )
 
@@ -71,6 +75,7 @@ notificationRouter.delete(
   userAuthorized,
   requireNotificationsWrite,
   notification_delete_root_spec,
+  commonWriteRateLimit,
   notification_delete_root,
 )
 
@@ -83,5 +88,6 @@ notificationRouter.get(
   userAuthorized,
   requireNotificationsRead,
   notification_get_page_spec,
+  readRateLimit,
   notification_get_page,
 )

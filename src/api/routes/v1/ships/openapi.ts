@@ -2,7 +2,7 @@ import { oapi as oapi } from "../openapi.js"
 import { Response400 as Response400 } from "../openapi.js"
 import { Response401 as Response401 } from "../openapi.js"
 import { Response403 as Response403 } from "../openapi.js"
-import { Response500 as Response500 } from "../openapi.js"
+import { Response500 as Response500, Response429Write, Response429Read, RateLimitHeaders } from "../openapi.js"
 
 oapi.schema("ShipImportRequest", {
   type: "array",
@@ -57,11 +57,13 @@ export const ship_post_import_spec = oapi.validPath({
           },
         },
       },
+      headers: RateLimitHeaders,
     },
     "400": Response400,
     "401": Response401,
     "403": Response403,
     "500": Response500,
+    "429": Response429Write,
   },
   security: [{ bearerAuth: [] }],
 })
@@ -82,9 +84,11 @@ export const ships_get_mine_spec = oapi.validPath({
           },
         },
       },
+      headers: RateLimitHeaders,
     },
     "401": Response401,
     "500": Response500,
+    "429": Response429Read,
   },
   security: [{ bearerAuth: [] }],
 })

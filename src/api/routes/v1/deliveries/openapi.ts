@@ -2,7 +2,7 @@ import { adminOapi as adminOapi } from "../openapi.js"
 import { Response400 as Response400 } from "../openapi.js"
 import { Response401 as Response401 } from "../openapi.js"
 import { Response403 as Response403 } from "../openapi.js"
-import { Response500 as Response500 } from "../openapi.js"
+import { Response500 as Response500, Response429Write, Response429Read, RateLimitHeaders } from "../openapi.js"
 
 adminOapi.schema("CreateDeliveryRequest", {
   type: "object",
@@ -76,6 +76,7 @@ export const delivery_post_create_spec = adminOapi.validPath({
   responses: {
     "200": {
       description: "Delivery created successfully",
+      headers: RateLimitHeaders,
       content: {
         "application/json": {
           schema: {
@@ -90,6 +91,7 @@ export const delivery_post_create_spec = adminOapi.validPath({
     "400": Response400,
     "401": Response401,
     "403": Response403,
+    "429": Response429Write,
     "500": Response500,
   },
   security: [{ bearerAuth: [] }],
@@ -103,6 +105,7 @@ export const deliveries_get_mine_spec = adminOapi.validPath({
   responses: {
     "200": {
       description: "User's deliveries retrieved successfully",
+      headers: RateLimitHeaders,
       content: {
         "application/json": {
           schema: {
@@ -113,6 +116,7 @@ export const deliveries_get_mine_spec = adminOapi.validPath({
       },
     },
     "401": Response401,
+    "429": Response429Read,
     "500": Response500,
   },
   security: [{ bearerAuth: [] }],

@@ -4,6 +4,9 @@ import {
   Response401,
   Response403,
   Response404,
+  Response429Write,
+  Response429Read,
+  RateLimitHeaders,
 } from "../openapi.js"
 import { sortingMethods } from "../market/types.js"
 
@@ -267,6 +270,7 @@ export const get_posts_spec = oapi.validPath({
   responses: {
     "200": {
       description: "OK - Successfully retrieved recruiting posts",
+      headers: RateLimitHeaders,
       content: {
         "application/json": {
           schema: {
@@ -291,6 +295,7 @@ export const get_posts_spec = oapi.validPath({
     "400": Response400,
     "401": Response401,
     "403": Response403,
+    "429": Response429Read,
   },
 })
 
@@ -311,6 +316,7 @@ export const post_posts_spec = oapi.validPath({
   responses: {
     "201": {
       description: "Created - Recruiting post successfully created",
+      headers: RateLimitHeaders,
       content: {
         "application/json": {
           schema: {
@@ -326,6 +332,7 @@ export const post_posts_spec = oapi.validPath({
     "400": Response400,
     "401": Response401,
     "403": Response403,
+    "429": Response429Write,
   },
 })
 
@@ -350,6 +357,7 @@ export const get_posts_post_id_spec = oapi.validPath({
   responses: {
     "200": {
       description: "OK - Successfully retrieved recruiting post",
+      headers: RateLimitHeaders,
       content: {
         "application/json": {
           schema: {
@@ -364,6 +372,7 @@ export const get_posts_post_id_spec = oapi.validPath({
     },
     "400": Response400,
     "404": Response404,
+    "429": Response429Read,
   },
 })
 
@@ -388,6 +397,7 @@ export const get_posts_post_id_comments_spec = oapi.validPath({
   responses: {
     "200": {
       description: "OK - Successfully retrieved comments",
+      headers: RateLimitHeaders,
       content: {
         "application/json": {
           schema: {
@@ -405,6 +415,7 @@ export const get_posts_post_id_comments_spec = oapi.validPath({
     },
     "400": Response400,
     "404": Response404,
+    "429": Response429Read,
   },
 })
 
@@ -430,6 +441,7 @@ export const get_contractors_spectrum_id_posts_spec = oapi.validPath({
   responses: {
     "200": {
       description: "OK - Successfully retrieved recruiting post",
+      headers: RateLimitHeaders,
       content: {
         "application/json": {
           schema: {
@@ -444,5 +456,6 @@ export const get_contractors_spectrum_id_posts_spec = oapi.validPath({
     },
     "400": Response400,
     "404": Response404,
+    "429": Response429Read,
   },
 })

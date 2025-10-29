@@ -8,6 +8,7 @@ import {
   criticalRateLimit,
   writeRateLimit,
   readRateLimit,
+  commonWriteRateLimit,
 } from "../../../middleware/enhanced-ratelimiting.js"
 import { related_to_order } from "../orders/middleware.js"
 import { related_to_offer } from "../offers/middleware.js"
@@ -64,7 +65,7 @@ chatsRouter.post(
   userAuthorized,
   requireChatsWrite,
   post_chat_id_messages_spec,
-  writeRateLimit,
+  commonWriteRateLimit,
   valid_chat,
   related_to_chat,
   sendMessage,
@@ -76,7 +77,7 @@ chatsRouter.post(
   userAuthorized,
   requireChatsWrite,
   post_root_spec,
-  writeRateLimit,
+  commonWriteRateLimit,
   createChat,
 )
 

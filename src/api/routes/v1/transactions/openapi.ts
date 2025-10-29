@@ -2,7 +2,7 @@ import { oapi as oapi } from "../openapi.js"
 import { Response400 as Response400 } from "../openapi.js"
 import { Response401 as Response401 } from "../openapi.js"
 import { Response403 as Response403 } from "../openapi.js"
-import { Response500 as Response500 } from "../openapi.js"
+import { Response500 as Response500, Response429Write, Response429Read, RateLimitHeaders } from "../openapi.js"
 
 oapi.schema("CreateTransactionRequest", {
   type: "object",
@@ -65,11 +65,13 @@ export const transaction_get_transaction_id_spec = oapi.validPath({
           schema: { $ref: "#/components/schemas/Transaction" },
         },
       },
+      headers: RateLimitHeaders,
     },
     "400": Response400,
     "401": Response401,
     "403": Response403,
     "500": Response500,
+    "429": Response429Read,
   },
   security: [{ bearerAuth: [] }],
 })
@@ -99,10 +101,12 @@ export const transaction_post_create_spec = oapi.validPath({
           },
         },
       },
+      headers: RateLimitHeaders,
     },
     "400": Response400,
     "401": Response401,
     "500": Response500,
+    "429": Response429Write,
   },
   security: [{ bearerAuth: [] }],
 })
@@ -157,16 +161,18 @@ export const transaction_post_contractor_spectrum_id_create_spec =
             schema: {
               type: "object",
               properties: {
-                result: { type: "string", example: "Success" },
-              },
+                result: { type: "string", example: "Success"               },
             },
           },
         },
       },
-      "400": Response400,
-      "401": Response401,
-      "403": Response403,
-      "500": Response500,
+      headers: RateLimitHeaders,
+    },
+    "400": Response400,
+    "401": Response401,
+    "403": Response403,
+    "500": Response500,
+    "429": Response429Write,
     },
     security: [{ bearerAuth: [] }],
   })
@@ -187,9 +193,11 @@ export const transactions_get_mine_spec = oapi.validPath({
           },
         },
       },
+      headers: RateLimitHeaders,
     },
     "401": Response401,
     "500": Response500,
+    "429": Response429Read,
   },
   security: [{ bearerAuth: [] }],
 })
@@ -220,11 +228,13 @@ export const transactions_get_contractor_spectrum_id_spec = oapi.validPath({
           },
         },
       },
+      headers: RateLimitHeaders,
     },
     "400": Response400,
     "401": Response401,
     "403": Response403,
     "500": Response500,
+    "429": Response429Read,
   },
   security: [{ bearerAuth: [] }],
 })

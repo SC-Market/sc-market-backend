@@ -1,4 +1,5 @@
 import express from "express"
+import { writeRateLimit, readRateLimit } from "../../../middleware/enhanced-ratelimiting.js"
 
 import { requireRecruitingWrite } from "../../../middleware/auth.js"
 
@@ -29,13 +30,14 @@ import {
 
 export const recruitingRouter = express.Router()
 
-recruitingRouter.get("/posts", get_posts_spec, get_posts)
+recruitingRouter.get("/posts", get_posts_spec, readRateLimit, get_posts)
 
 recruitingRouter.post(
   "/posts",
   contractorRecruiting,
   requireRecruitingWrite,
   post_posts_spec,
+  writeRateLimit,
   post_posts,
 )
 
@@ -45,6 +47,7 @@ recruitingRouter.get(
   "/posts/:post_id",
   valid_recruiting_post,
   get_posts_post_id_spec,
+  readRateLimit,
   get_posts_post_id,
 )
 
@@ -52,24 +55,28 @@ recruitingRouter.get(
   "/posts/:post_id/comments",
   valid_recruiting_post,
   get_posts_post_id_comments_spec,
+  readRateLimit,
   get_posts_post_id_comments,
 )
 
 recruitingRouter.put(
   "/posts/:post_id",
   requireRecruitingWrite,
+  writeRateLimit,
   put_posts_post_id,
 )
 
 recruitingRouter.post(
   "/posts/:post_id/upvote",
   requireRecruitingWrite,
+  writeRateLimit,
   post_posts_post_id_upvote,
 )
 
 recruitingRouter.post(
   "/posts/:post_id/comment",
   requireRecruitingWrite,
+  writeRateLimit,
   post_posts_post_id_comment,
 )
 
@@ -77,5 +84,6 @@ recruitingRouter.get(
   "/contractors/:spectrum_id/posts",
   valid_recruiting_post_by_contractor,
   get_contractors_spectrum_id_posts_spec,
+  readRateLimit,
   get_contractors_spectrum_id_posts,
 )

@@ -1,5 +1,5 @@
 import { adminOapi as adminOapi } from "../openapi.js"
-import { Response500 as Response500 } from "../openapi.js"
+import { Response500 as Response500, Response429Read, RateLimitHeaders } from "../openapi.js"
 
 adminOapi.schema("Commodity", {
   type: "object",
@@ -35,6 +35,7 @@ export const commodity_get_root_spec = adminOapi.validPath({
   responses: {
     "200": {
       description: "Commodities data retrieved successfully",
+      headers: RateLimitHeaders,
       content: {
         "application/json": {
           schema: {
@@ -44,6 +45,7 @@ export const commodity_get_root_spec = adminOapi.validPath({
         },
       },
     },
+    "429": Response429Read,
     "500": Response500,
   },
 })

@@ -3,6 +3,7 @@ import { Response400 as Response400 } from "../openapi.js"
 import { Response401 as Response401 } from "../openapi.js"
 import { Response403 as Response403 } from "../openapi.js"
 import { Response404 as Response404 } from "../openapi.js"
+import { Response429Write, Response429Read, RateLimitHeaders } from "../openapi.js"
 import { orderTypes as orderTypes } from "../orders/helpers.js"
 import { PAYMENT_TYPES as PAYMENT_TYPES } from "../types/payment-types.js"
 

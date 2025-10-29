@@ -221,3 +221,17 @@ export const bulkRateLimit = createRateLimit({
   authenticated: { points: 5, duration: 60, blockDuration: 300 },
   admin: { points: 20, duration: 60, blockDuration: 0 }
 })
+
+// Specialized rate limit for notification operations (marking as read, etc.)
+export const notificationRateLimit = createRateLimit({
+  anonymous: { points: 10, duration: 60, blockDuration: 300 },
+  authenticated: { points: 30, duration: 60, blockDuration: 180 },
+  admin: { points: 100, duration: 60, blockDuration: 0 }
+})
+
+// Generic rate limit for common write operations (messages, acknowledgments, etc.)
+export const commonWriteRateLimit = createRateLimit({
+  anonymous: { points: 15, duration: 60, blockDuration: 300 },
+  authenticated: { points: 40, duration: 60, blockDuration: 180 },
+  admin: { points: 100, duration: 60, blockDuration: 0 }
+})

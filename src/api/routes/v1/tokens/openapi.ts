@@ -2,7 +2,7 @@ import { oapi as oapi } from "../openapi.js"
 import { Response400 as Response400 } from "../openapi.js"
 import { Response401 as Response401 } from "../openapi.js"
 import { Response403 as Response403 } from "../openapi.js"
-import { Response404 as Response404 } from "../openapi.js"
+import { Response404 as Response404, Response429Write, Response429Read, RateLimitHeaders } from "../openapi.js"
 
 export const tokens_post_root_spec = oapi.validPath({
   summary: "Create a new API token",
@@ -125,10 +125,12 @@ export const tokens_post_root_spec = oapi.validPath({
           },
         },
       },
+      headers: RateLimitHeaders,
     },
     "400": Response400,
     "401": Response401,
     "403": Response403,
+    "429": Response429Write,
     "500": {
       description: "Internal server error",
       content: {
@@ -177,8 +179,10 @@ export const tokens_get_root_spec = oapi.validPath({
           },
         },
       },
+      headers: RateLimitHeaders,
     },
     "401": Response401,
+    "429": Response429Read,
     "500": {
       description: "Internal server error",
       content: {
@@ -237,9 +241,11 @@ export const tokens_get_tokenId_spec = oapi.validPath({
           },
         },
       },
+      headers: RateLimitHeaders,
     },
     "401": Response401,
     "404": Response404,
+    "429": Response429Read,
     "500": {
       description: "Internal server error",
       content: {
@@ -379,11 +385,13 @@ export const tokens_put_tokenId_spec = oapi.validPath({
           },
         },
       },
+      headers: RateLimitHeaders,
     },
     "400": Response400,
     "401": Response401,
     "403": Response403,
     "404": Response404,
+    "429": Response429Write,
     "500": {
       description: "Internal server error",
       content: {
@@ -430,9 +438,11 @@ export const tokens_delete_tokenId_spec = oapi.validPath({
           },
         },
       },
+      headers: RateLimitHeaders,
     },
     "401": Response401,
     "404": Response404,
+    "429": Response429Write,
     "500": {
       description: "Internal server error",
       content: {
@@ -501,10 +511,12 @@ export const tokens_post_tokenId_extend_spec = oapi.validPath({
           },
         },
       },
+      headers: RateLimitHeaders,
     },
     "400": Response400,
     "401": Response401,
     "404": Response404,
+    "429": Response429Write,
     "500": {
       description: "Internal server error",
       content: {
@@ -559,9 +571,11 @@ export const tokens_get_tokenId_stats_spec = oapi.validPath({
           },
         },
       },
+      headers: RateLimitHeaders,
     },
     "401": Response401,
     "404": Response404,
+    "429": Response429Read,
     "500": {
       description: "Internal server error",
       content: {

@@ -1,5 +1,6 @@
 import express from "express"
 import { userAuthorized, requireOrdersWrite } from "../../../middleware/auth.js"
+import { writeRateLimit, readRateLimit } from "../../../middleware/enhanced-ratelimiting.js"
 
 import { delivery_post_create, deliveries_get_mine } from "./controller.js"
 
@@ -28,6 +29,7 @@ deliveryRouter.post(
   delivery_post_create_spec,
   userAuthorized,
   requireOrdersWrite,
+  writeRateLimit,
   delivery_post_create,
 )
 
@@ -37,5 +39,6 @@ deliveriesRouter.get(
   "/mine",
   deliveries_get_mine_spec,
   userAuthorized,
+  readRateLimit,
   deliveries_get_mine,
 )

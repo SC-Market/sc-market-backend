@@ -1,5 +1,6 @@
 import express from "express"
 import { userAuthorized, adminAuthorized } from "../../../middleware/auth.js"
+import { writeRateLimit, readRateLimit, criticalRateLimit } from "../../../middleware/enhanced-ratelimiting.js"
 
 import {
   moderation_post_report,
@@ -22,6 +23,7 @@ moderationRouter.post(
   "/report",
   userAuthorized,
   moderation_post_report_spec,
+  writeRateLimit,
   moderation_post_report,
 )
 
@@ -30,6 +32,7 @@ moderationRouter.get(
   "/reports",
   userAuthorized,
   moderation_get_reports_spec,
+  readRateLimit,
   moderation_get_reports,
 )
 
@@ -38,6 +41,7 @@ moderationRouter.get(
   "/admin/reports",
   adminAuthorized,
   moderation_get_admin_reports_spec,
+  criticalRateLimit,
   moderation_get_admin_reports,
 )
 
@@ -46,5 +50,6 @@ moderationRouter.put(
   "/admin/reports/:report_id",
   adminAuthorized,
   moderation_put_admin_reports_report_id_spec,
+  criticalRateLimit,
   moderation_put_admin_reports_report_id,
 )

@@ -1,5 +1,6 @@
 import express, { NextFunction, Request, Response } from "express"
 import { userAuthorized, requireOrdersRead } from "../../../middleware/auth.js"
+import { writeRateLimit, readRateLimit } from "../../../middleware/enhanced-ratelimiting.js"
 
 import { User } from "../api-models.js"
 import AsyncLock from "async-lock"
@@ -27,6 +28,7 @@ transactionRouter.get(
   transaction_get_transaction_id_spec,
   userAuthorized,
   requireOrdersRead,
+  readRateLimit,
   transaction_get_transaction_id,
 )
 
@@ -55,6 +57,7 @@ transactionRouter.post(
   "/create",
   transaction_post_create_spec,
   userAuthorized,
+  writeRateLimit,
   transaction_post_create,
 )
 
@@ -62,6 +65,7 @@ transactionRouter.post(
   "/contractor/:spectrum_id/create",
   transaction_post_contractor_spectrum_id_create_spec,
   userAuthorized,
+  writeRateLimit,
   transaction_post_contractor_spectrum_id_create,
 )
 
@@ -71,6 +75,7 @@ transactionsRouter.get(
   "/mine",
   transactions_get_mine_spec,
   userAuthorized,
+  readRateLimit,
   transactions_get_mine,
 )
 
@@ -78,5 +83,6 @@ transactionsRouter.get(
   "/contractor/:spectrum_id",
   transactions_get_contractor_spectrum_id_spec,
   userAuthorized,
+  readRateLimit,
   transactions_get_contractor_spectrum_id,
 )

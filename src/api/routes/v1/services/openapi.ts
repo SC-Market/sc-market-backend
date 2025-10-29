@@ -5,7 +5,7 @@ import { Response400 as Response400 } from "../openapi.js"
 import { Response401 as Response401 } from "../openapi.js"
 import { Response403 as Response403 } from "../openapi.js"
 import { Response404 as Response404 } from "../openapi.js"
-import { Response500 as Response500 } from "../openapi.js"
+import { Response500 as Response500, Response429Write, Response429Read, RateLimitHeaders } from "../openapi.js"
 
 oapi.schema("ServiceBody", {
   properties: {
@@ -127,11 +127,12 @@ export const services_post_root_spec = oapi.validPath({
           },
         },
       },
-      headers: {},
+      headers: RateLimitHeaders,
     },
     "400": Response400,
     "401": Response401,
     "403": Response403,
+    "429": Response429Write,
   },
   security: [],
 })
@@ -172,9 +173,10 @@ export const services_get_user_username_spec = oapi.validPath({
           },
         },
       },
-      headers: {},
+      headers: RateLimitHeaders,
     },
     "404": Response404,
+    "429": Response429Read,
   },
 })
 
@@ -317,8 +319,9 @@ export const services_get_public_spec = oapi.validPath({
           },
         },
       },
-      headers: {},
+      headers: RateLimitHeaders,
     },
+    "429": Response429Read,
   },
 })
 
@@ -358,9 +361,10 @@ export const services_get_contractor_spectrum_id_spec = oapi.validPath({
           },
         },
       },
-      headers: {},
+      headers: RateLimitHeaders,
     },
     "404": Response404,
+    "429": Response429Read,
   },
 })
 
@@ -401,11 +405,12 @@ export const services_put_service_id_spec = oapi.validPath({
           },
         },
       },
-      headers: {},
+      headers: RateLimitHeaders,
     },
     "400": Response400,
     "401": Response401,
     "403": Response403,
+    "429": Response429Write,
   },
   security: [],
 })
@@ -436,10 +441,11 @@ export const services_get_service_id_spec = oapi.validPath({
           schema: oapi.schema("Service"),
         },
       },
-      headers: {},
+      headers: RateLimitHeaders,
     },
     "400": Response400,
     "404": Response404,
+    "429": Response429Read,
   },
   security: [],
 })
@@ -477,6 +483,7 @@ export const services_post_service_id_photos_spec = oapi.validPath({
     "403": Response403,
     "404": Response404,
     "500": Response500,
+    "429": Response429Write,
   },
 })
 
@@ -515,6 +522,7 @@ export const services_post_service_id_view_spec = oapi.validPath({
     "400": Response400,
     "404": Response404,
     "500": Response500,
+    "429": Response429Write,
   },
   security: [],
 })
@@ -567,6 +575,7 @@ export const services_get_seller_analytics_spec = oapi.validPath({
     },
     "401": Response401,
     "500": Response500,
+    "429": Response429Read,
   },
   security: [],
 })
