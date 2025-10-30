@@ -72,7 +72,7 @@ export const rateLimiters = {
     points: 60,
     duration: 60,
     blockDuration: 300, // 5 minutes
-    inMemoryBlockOnConsumed: 10, // Block in memory after 10 violations (same as points)
+    inMemoryBlockOnConsumed: 60, // Block in memory after 10 violations (same as points)
     keyPrefix: "scmarket:anon",
   }),
   authenticated: createRateLimiter({
