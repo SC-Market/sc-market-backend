@@ -91,7 +91,7 @@ marketRouter.post(
   "/listings/stats",
   market_post_listings_stats_spec,
   userAuthorized,
-  bulkRateLimit,
+  readRateLimit,
   get_listing_stats,
 )
 
