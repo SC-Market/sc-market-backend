@@ -478,7 +478,7 @@ const document: OpenAPIV3.Document = {
           },
           userTier: {
             type: "string",
-            enum: ["anonymous", "authenticated", "premium", "admin"],
+            enum: ["anonymous", "authenticated", "admin"],
             description: "User tier that triggered the rate limit",
             example: "authenticated",
           },

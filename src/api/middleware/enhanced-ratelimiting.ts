@@ -8,7 +8,7 @@ import { database } from "../../clients/database/knex-db.js"
 import { User } from "../routes/v1/api-models.js"
 
 // User tier types
-export type UserTier = "anonymous" | "authenticated" | "premium" | "admin"
+export type UserTier = "anonymous" | "authenticated" | "admin"
 
 // Rate limiter configuration interface
 export interface RateLimiterConfig {
@@ -25,7 +25,6 @@ export interface RateLimiterConfig {
 export interface TieredRateLimit {
   anonymous: RateLimiterConfig
   authenticated: RateLimiterConfig
-  premium?: RateLimiterConfig
   admin?: RateLimiterConfig
 }
 
@@ -70,7 +69,7 @@ export function createMemoryFallback(): RateLimiterMemory {
 // Create rate limiters for each tier
 export const rateLimiters = {
   anonymous: createRateLimiter({
-    points: 10,
+    points: 60,
     duration: 60,
     blockDuration: 300, // 5 minutes
     inMemoryBlockOnConsumed: 10, // Block in memory after 10 violations (same as points)
@@ -82,13 +81,6 @@ export const rateLimiters = {
     blockDuration: 600, // 10 minutes
     inMemoryBlockOnConsumed: 60, // Block in memory after 60 violations (same as points)
     keyPrefix: "scmarket:auth",
-  }),
-  premium: createRateLimiter({
-    points: 120,
-    duration: 60,
-    blockDuration: 300,
-    inMemoryBlockOnConsumed: 120, // Block in memory after 120 violations (same as points)
-    keyPrefix: "scmarket:premium",
   }),
   admin: createRateLimiter({
     points: 300,
@@ -213,27 +205,27 @@ export function createRateLimit(tieredConfig: TieredRateLimit) {
 
 // Predefined rate limit configurations for different endpoint types
 export const criticalRateLimit = createRateLimit({
-  anonymous: { points: 1, duration: 60, blockDuration: 900 },
-  authenticated: { points: 2, duration: 60, blockDuration: 600 },
-  admin: { points: 5, duration: 60, blockDuration: 0 },
+  anonymous: { points: 15, duration: 60, blockDuration: 900 },
+  authenticated: { points: 15, duration: 60, blockDuration: 600 },
+  admin: { points: 1, duration: 60, blockDuration: 0 },
 })
 
 export const writeRateLimit = createRateLimit({
-  anonymous: { points: 5, duration: 60, blockDuration: 300 },
-  authenticated: { points: 10, duration: 60, blockDuration: 300 },
-  admin: { points: 30, duration: 60, blockDuration: 0 },
+  anonymous: { points: 3, duration: 60, blockDuration: 300 },
+  authenticated: { points: 2, duration: 60, blockDuration: 300 },
+  admin: { points: 1, duration: 60, blockDuration: 0 },
 })
 
 export const readRateLimit = createRateLimit({
-  anonymous: { points: 60, duration: 60, blockDuration: 180 },
-  authenticated: { points: 60, duration: 60, blockDuration: 180 },
-  admin: { points: 100, duration: 60, blockDuration: 0 },
+  anonymous: { points: 1, duration: 60, blockDuration: 180 },
+  authenticated: { points: 1, duration: 60, blockDuration: 180 },
+  admin: { points: 1, duration: 60, blockDuration: 0 },
 })
 
 export const bulkRateLimit = createRateLimit({
-  anonymous: { points: 2, duration: 60, blockDuration: 600 },
-  authenticated: { points: 5, duration: 60, blockDuration: 300 },
-  admin: { points: 20, duration: 60, blockDuration: 0 },
+  anonymous: { points: 15, duration: 60, blockDuration: 600 },
+  authenticated: { points: 15, duration: 60, blockDuration: 300 },
+  admin: { points: 1, duration: 60, blockDuration: 0 },
 })
 
 // Specialized rate limit for notification operations (marking as read, etc.)
