@@ -4709,22 +4709,43 @@ export class KnexDatabase implements Database {
     }
   }
 
-  async getDailyActivity() {
-    return this.knex<{ date: Date; count: number }>("daily_activity")
-      .orderBy("date", "ASC")
-      .select()
+  async getDailyActivity(options?: { startTime?: number; endTime?: number }) {
+    let query = this.knex<{ date: Date; count: number }>("daily_activity")
+    
+    if (options?.startTime) {
+      query = query.where("date", ">=", new Date(options.startTime * 1000))
+    }
+    if (options?.endTime) {
+      query = query.where("date", "<=", new Date(options.endTime * 1000))
+    }
+    
+    return query.orderBy("date", "ASC").select()
   }
 
-  async getWeeklyActivity() {
-    return this.knex<{ date: Date; count: number }>("weekly_activity")
-      .orderBy("date", "ASC")
-      .select()
+  async getWeeklyActivity(options?: { startTime?: number; endTime?: number }) {
+    let query = this.knex<{ date: Date; count: number }>("weekly_activity")
+    
+    if (options?.startTime) {
+      query = query.where("date", ">=", new Date(options.startTime * 1000))
+    }
+    if (options?.endTime) {
+      query = query.where("date", "<=", new Date(options.endTime * 1000))
+    }
+    
+    return query.orderBy("date", "ASC").select()
   }
 
-  async getMonthlyActivity() {
-    return this.knex<{ date: Date; count: number }>("monthly_activity")
-      .orderBy("date", "ASC")
-      .select()
+  async getMonthlyActivity(options?: { startTime?: number; endTime?: number }) {
+    let query = this.knex<{ date: Date; count: number }>("monthly_activity")
+    
+    if (options?.startTime) {
+      query = query.where("date", ">=", new Date(options.startTime * 1000))
+    }
+    if (options?.endTime) {
+      query = query.where("date", "<=", new Date(options.endTime * 1000))
+    }
+    
+    return query.orderBy("date", "ASC").select()
   }
 
   async getMarketItemsByCategory(category: string): Promise<DBMarketItem[]> {
@@ -5080,161 +5101,333 @@ export class KnexDatabase implements Database {
     }
   }
 
-  async getMembershipAnalytics() {
-    // Get daily new members for the last 30 days with RSI verification breakdown
-    const dailyMembers = await this.knex.raw(`
-      SELECT 
-        DATE(created_at) as date,
-        COUNT(*) as new_members,
-        COUNT(CASE WHEN rsi_confirmed = true THEN 1 END) as new_members_rsi_verified,
-        COUNT(CASE WHEN rsi_confirmed = false THEN 1 END) as new_members_rsi_unverified,
-        SUM(COUNT(*)) OVER (ORDER BY DATE(created_at)) as cumulative_members,
-        SUM(COUNT(CASE WHEN rsi_confirmed = true THEN 1 END)) OVER (ORDER BY DATE(created_at)) as cumulative_members_rsi_verified,
-        SUM(COUNT(CASE WHEN rsi_confirmed = false THEN 1 END)) OVER (ORDER BY DATE(created_at)) as cumulative_members_rsi_unverified
-      FROM accounts 
-      WHERE created_at >= NOW() - INTERVAL '30 days'
-      GROUP BY DATE(created_at)
-      ORDER BY date ASC
-    `)
+  async getMembershipAnalytics(options?: { startTime?: number; endTime?: number }) {
+    // Build time filter query builder
+    const buildTimeFilter = (query: any) => {
+      if (options?.startTime && options?.endTime) {
+        return query
+          .where("created_at", ">=", new Date(options.startTime * 1000))
+          .where("created_at", "<=", new Date(options.endTime * 1000))
+      } else if (options?.startTime) {
+        return query.where(
+          "created_at",
+          ">=",
+          new Date(options.startTime * 1000),
+        )
+      } else if (options?.endTime) {
+        return query.where(
+          "created_at",
+          "<=",
+          new Date(options.endTime * 1000),
+        )
+      }
+      return query
+    }
 
-    // Get weekly new members for the last 12 weeks with RSI verification breakdown
-    const weeklyMembers = await this.knex.raw(`
-      SELECT 
-        DATE_TRUNC('week', created_at) as date,
-        COUNT(*) as new_members,
-        COUNT(CASE WHEN rsi_confirmed = true THEN 1 END) as new_members_rsi_verified,
-        COUNT(CASE WHEN rsi_confirmed = false THEN 1 END) as new_members_rsi_unverified,
-        SUM(COUNT(*)) OVER (ORDER BY DATE_TRUNC('week', created_at)) as cumulative_members,
-        SUM(COUNT(CASE WHEN rsi_confirmed = true THEN 1 END)) OVER (ORDER BY DATE_TRUNC('week', created_at)) as cumulative_members_rsi_verified,
-        SUM(COUNT(CASE WHEN rsi_confirmed = false THEN 1 END)) OVER (ORDER BY DATE_TRUNC('week', created_at)) as cumulative_members_rsi_unverified
-      FROM accounts 
-      WHERE created_at >= NOW() - INTERVAL '12 weeks'
-      GROUP BY DATE_TRUNC('week', created_at)
-      ORDER BY date ASC
-    `)
+    // Get daily new members
+    // If no time range provided, default to last 30 days for backward compatibility
+    let dailyQuery = this.knex("accounts")
+      .select(
+        this.knex.raw("DATE(created_at) as date"),
+        this.knex.raw("COUNT(*) as new_members"),
+        this.knex.raw(
+          "COUNT(CASE WHEN rsi_confirmed = true THEN 1 END) as new_members_rsi_verified",
+        ),
+        this.knex.raw(
+          "COUNT(CASE WHEN rsi_confirmed = false THEN 1 END) as new_members_rsi_unverified",
+        ),
+        this.knex.raw(
+          "SUM(COUNT(*)) OVER (ORDER BY DATE(created_at)) as cumulative_members",
+        ),
+        this.knex.raw(
+          "SUM(COUNT(CASE WHEN rsi_confirmed = true THEN 1 END)) OVER (ORDER BY DATE(created_at)) as cumulative_members_rsi_verified",
+        ),
+        this.knex.raw(
+          "SUM(COUNT(CASE WHEN rsi_confirmed = false THEN 1 END)) OVER (ORDER BY DATE(created_at)) as cumulative_members_rsi_unverified",
+        ),
+      )
+      .groupBy(this.knex.raw("DATE(created_at)"))
+      .orderBy("date", "asc")
 
-    // Get monthly new members for the last 12 months with RSI verification breakdown
-    const monthlyMembers = await this.knex.raw(`
-      SELECT 
-        DATE_TRUNC('month', created_at) as date,
-        COUNT(*) as new_members,
-        COUNT(CASE WHEN rsi_confirmed = true THEN 1 END) as new_members_rsi_verified,
-        COUNT(CASE WHEN rsi_confirmed = false THEN 1 END) as new_members_rsi_unverified,
-        SUM(COUNT(*)) OVER (ORDER BY DATE_TRUNC('month', created_at)) as cumulative_members,
-        SUM(COUNT(CASE WHEN rsi_confirmed = true THEN 1 END)) OVER (ORDER BY DATE_TRUNC('month', created_at)) as cumulative_members_rsi_verified,
-        SUM(COUNT(CASE WHEN rsi_confirmed = false THEN 1 END)) OVER (ORDER BY DATE_TRUNC('month', created_at)) as cumulative_members_rsi_unverified
-      FROM accounts 
-      WHERE created_at >= NOW() - INTERVAL '12 months'
-      GROUP BY DATE_TRUNC('month', created_at)
-      ORDER BY date ASC
-    `)
+    if (!options?.startTime && !options?.endTime) {
+      dailyQuery = dailyQuery.where(
+        "created_at",
+        ">=",
+        this.knex.raw("NOW() - INTERVAL '30 days'"),
+      )
+    } else {
+      dailyQuery = buildTimeFilter(dailyQuery)
+    }
+    const dailyMembers = await dailyQuery
+
+    // Get weekly new members
+    // If no time range provided, default to last 12 weeks for backward compatibility
+    let weeklyQuery = this.knex("accounts")
+      .select(
+        this.knex.raw("DATE_TRUNC('week', created_at) as date"),
+        this.knex.raw("COUNT(*) as new_members"),
+        this.knex.raw(
+          "COUNT(CASE WHEN rsi_confirmed = true THEN 1 END) as new_members_rsi_verified",
+        ),
+        this.knex.raw(
+          "COUNT(CASE WHEN rsi_confirmed = false THEN 1 END) as new_members_rsi_unverified",
+        ),
+        this.knex.raw(
+          "SUM(COUNT(*)) OVER (ORDER BY DATE_TRUNC('week', created_at)) as cumulative_members",
+        ),
+        this.knex.raw(
+          "SUM(COUNT(CASE WHEN rsi_confirmed = true THEN 1 END)) OVER (ORDER BY DATE_TRUNC('week', created_at)) as cumulative_members_rsi_verified",
+        ),
+        this.knex.raw(
+          "SUM(COUNT(CASE WHEN rsi_confirmed = false THEN 1 END)) OVER (ORDER BY DATE_TRUNC('week', created_at)) as cumulative_members_rsi_unverified",
+        ),
+      )
+      .groupBy(this.knex.raw("DATE_TRUNC('week', created_at)"))
+      .orderBy("date", "asc")
+
+    if (!options?.startTime && !options?.endTime) {
+      weeklyQuery = weeklyQuery.where(
+        "created_at",
+        ">=",
+        this.knex.raw("NOW() - INTERVAL '12 weeks'"),
+      )
+    } else {
+      weeklyQuery = buildTimeFilter(weeklyQuery)
+    }
+    const weeklyMembers = await weeklyQuery
+
+    // Get monthly new members
+    // If no time range provided, default to last 12 months for backward compatibility
+    let monthlyQuery = this.knex("accounts")
+      .select(
+        this.knex.raw("DATE_TRUNC('month', created_at) as date"),
+        this.knex.raw("COUNT(*) as new_members"),
+        this.knex.raw(
+          "COUNT(CASE WHEN rsi_confirmed = true THEN 1 END) as new_members_rsi_verified",
+        ),
+        this.knex.raw(
+          "COUNT(CASE WHEN rsi_confirmed = false THEN 1 END) as new_members_rsi_unverified",
+        ),
+        this.knex.raw(
+          "SUM(COUNT(*)) OVER (ORDER BY DATE_TRUNC('month', created_at)) as cumulative_members",
+        ),
+        this.knex.raw(
+          "SUM(COUNT(CASE WHEN rsi_confirmed = true THEN 1 END)) OVER (ORDER BY DATE_TRUNC('month', created_at)) as cumulative_members_rsi_verified",
+        ),
+        this.knex.raw(
+          "SUM(COUNT(CASE WHEN rsi_confirmed = false THEN 1 END)) OVER (ORDER BY DATE_TRUNC('month', created_at)) as cumulative_members_rsi_unverified",
+        ),
+      )
+      .groupBy(this.knex.raw("DATE_TRUNC('month', created_at)"))
+      .orderBy("date", "asc")
+
+    if (!options?.startTime && !options?.endTime) {
+      monthlyQuery = monthlyQuery.where(
+        "created_at",
+        ">=",
+        this.knex.raw("NOW() - INTERVAL '12 months'"),
+      )
+    } else {
+      monthlyQuery = buildTimeFilter(monthlyQuery)
+    }
+    const monthlyMembers = await monthlyQuery
 
     // Get overall membership statistics
-    const totalMembers = await this.knex.raw(`
-      SELECT 
-        COUNT(*) as total_members,
-        COUNT(CASE WHEN role = 'admin' THEN 1 END) as admin_members,
-        COUNT(CASE WHEN role = 'user' THEN 1 END) as regular_members,
-        COUNT(CASE WHEN rsi_confirmed = true THEN 1 END) as rsi_confirmed_members,
-        COUNT(CASE WHEN banned = true THEN 1 END) as banned_members,
-        COUNT(CASE WHEN created_at >= NOW() - INTERVAL '30 days' THEN 1 END) as new_members_30d,
-        COUNT(CASE WHEN created_at >= NOW() - INTERVAL '7 days' THEN 1 END) as new_members_7d
-      FROM accounts
-    `)
+    const totalMembers = await this.knex("accounts")
+      .select(
+        this.knex.raw("COUNT(*) as total_members"),
+        this.knex.raw(
+          "COUNT(CASE WHEN role = 'admin' THEN 1 END) as admin_members",
+        ),
+        this.knex.raw(
+          "COUNT(CASE WHEN role = 'user' THEN 1 END) as regular_members",
+        ),
+        this.knex.raw(
+          "COUNT(CASE WHEN rsi_confirmed = true THEN 1 END) as rsi_confirmed_members",
+        ),
+        this.knex.raw(
+          "COUNT(CASE WHEN banned = true THEN 1 END) as banned_members",
+        ),
+        this.knex.raw(
+          "COUNT(CASE WHEN created_at >= NOW() - INTERVAL '30 days' THEN 1 END) as new_members_30d",
+        ),
+        this.knex.raw(
+          "COUNT(CASE WHEN created_at >= NOW() - INTERVAL '7 days' THEN 1 END) as new_members_7d",
+        ),
+      )
+      .first()
 
     return {
-      daily_totals: dailyMembers.rows || [],
-      weekly_totals: weeklyMembers.rows || [],
-      monthly_totals: monthlyMembers.rows || [],
-      summary: totalMembers.rows?.[0] || {},
+      daily_totals: dailyMembers || [],
+      weekly_totals: weeklyMembers || [],
+      monthly_totals: monthlyMembers || [],
+      summary: totalMembers || {},
     }
   }
 
-  async getOrderAnalytics() {
-    // Get daily totals for the last 30 days
-    const dailyTotals = await this.knex.raw(`
-      SELECT 
-        DATE(timestamp) as date,
-        COUNT(*) as total,
-        COUNT(CASE WHEN status = 'in-progress' THEN 1 END) as in_progress,
-        COUNT(CASE WHEN status = 'fulfilled' THEN 1 END) as fulfilled,
-        COUNT(CASE WHEN status = 'cancelled' THEN 1 END) as cancelled,
-        COUNT(CASE WHEN status = 'not-started' THEN 1 END) as not_started
-      FROM orders 
-      WHERE timestamp >= NOW() - INTERVAL '30 days'
-      GROUP BY DATE(timestamp)
-      ORDER BY date ASC
-    `)
+  async getOrderAnalytics(options?: { startTime?: number; endTime?: number }) {
+    // Build time filter query builder
+    const buildTimeFilter = (query: any) => {
+      if (options?.startTime && options?.endTime) {
+        return query
+          .where("timestamp", ">=", new Date(options.startTime * 1000))
+          .where("timestamp", "<=", new Date(options.endTime * 1000))
+      } else if (options?.startTime) {
+        return query.where("timestamp", ">=", new Date(options.startTime * 1000))
+      } else if (options?.endTime) {
+        return query.where("timestamp", "<=", new Date(options.endTime * 1000))
+      }
+      return query
+    }
 
-    // Get weekly totals for the last 12 weeks
-    const weeklyTotals = await this.knex.raw(`
-      SELECT 
-        DATE_TRUNC('week', timestamp) as date,
-        COUNT(*) as total,
-        COUNT(CASE WHEN status = 'in-progress' THEN 1 END) as in_progress,
-        COUNT(CASE WHEN status = 'fulfilled' THEN 1 END) as fulfilled,
-        COUNT(CASE WHEN status = 'cancelled' THEN 1 END) as cancelled,
-        COUNT(CASE WHEN status = 'not-started' THEN 1 END) as not_started
-      FROM orders 
-      WHERE timestamp >= NOW() - INTERVAL '12 weeks'
-      GROUP BY DATE_TRUNC('week', timestamp)
-      ORDER BY date ASC
-    `)
+    // Get daily totals
+    // If no time range provided, default to last 30 days for backward compatibility
+    let dailyQuery = this.knex("orders")
+      .select(
+        this.knex.raw("DATE(timestamp) as date"),
+        this.knex.raw("COUNT(*) as total"),
+        this.knex.raw(
+          "COUNT(CASE WHEN status = 'in-progress' THEN 1 END) as in_progress",
+        ),
+        this.knex.raw(
+          "COUNT(CASE WHEN status = 'fulfilled' THEN 1 END) as fulfilled",
+        ),
+        this.knex.raw(
+          "COUNT(CASE WHEN status = 'cancelled' THEN 1 END) as cancelled",
+        ),
+        this.knex.raw(
+          "COUNT(CASE WHEN status = 'not-started' THEN 1 END) as not_started",
+        ),
+      )
+      .groupBy(this.knex.raw("DATE(timestamp)"))
+      .orderBy("date", "asc")
 
-    // Get monthly totals for the last 12 months
-    const monthlyTotals = await this.knex.raw(`
-      SELECT 
-        DATE_TRUNC('month', timestamp) as date,
-        COUNT(*) as total,
-        COUNT(CASE WHEN status = 'in-progress' THEN 1 END) as in_progress,
-        COUNT(CASE WHEN status = 'fulfilled' THEN 1 END) as fulfilled,
-        COUNT(CASE WHEN status = 'cancelled' THEN 1 END) as cancelled,
-        COUNT(CASE WHEN status = 'not-started' THEN 1 END) as not_started
-      FROM orders 
-      WHERE timestamp >= NOW() - INTERVAL '12 months'
-      GROUP BY DATE_TRUNC('month', timestamp)
-      ORDER BY date ASC
-    `)
+    if (!options?.startTime && !options?.endTime) {
+      dailyQuery = dailyQuery.where(
+        "timestamp",
+        ">=",
+        this.knex.raw("NOW() - INTERVAL '30 days'"),
+      )
+    } else {
+      dailyQuery = buildTimeFilter(dailyQuery)
+    }
+    const dailyTotals = await dailyQuery
+
+    // Get weekly totals
+    // If no time range provided, default to last 12 weeks for backward compatibility
+    let weeklyQuery = this.knex("orders")
+      .select(
+        this.knex.raw("DATE_TRUNC('week', timestamp) as date"),
+        this.knex.raw("COUNT(*) as total"),
+        this.knex.raw(
+          "COUNT(CASE WHEN status = 'in-progress' THEN 1 END) as in_progress",
+        ),
+        this.knex.raw(
+          "COUNT(CASE WHEN status = 'fulfilled' THEN 1 END) as fulfilled",
+        ),
+        this.knex.raw(
+          "COUNT(CASE WHEN status = 'cancelled' THEN 1 END) as cancelled",
+        ),
+        this.knex.raw(
+          "COUNT(CASE WHEN status = 'not-started' THEN 1 END) as not_started",
+        ),
+      )
+      .groupBy(this.knex.raw("DATE_TRUNC('week', timestamp)"))
+      .orderBy("date", "asc")
+
+    if (!options?.startTime && !options?.endTime) {
+      weeklyQuery = weeklyQuery.where(
+        "timestamp",
+        ">=",
+        this.knex.raw("NOW() - INTERVAL '12 weeks'"),
+      )
+    } else {
+      weeklyQuery = buildTimeFilter(weeklyQuery)
+    }
+    const weeklyTotals = await weeklyQuery
+
+    // Get monthly totals
+    // If no time range provided, default to last 12 months for backward compatibility
+    let monthlyQuery = this.knex("orders")
+      .select(
+        this.knex.raw("DATE_TRUNC('month', timestamp) as date"),
+        this.knex.raw("COUNT(*) as total"),
+        this.knex.raw(
+          "COUNT(CASE WHEN status = 'in-progress' THEN 1 END) as in_progress",
+        ),
+        this.knex.raw(
+          "COUNT(CASE WHEN status = 'fulfilled' THEN 1 END) as fulfilled",
+        ),
+        this.knex.raw(
+          "COUNT(CASE WHEN status = 'cancelled' THEN 1 END) as cancelled",
+        ),
+        this.knex.raw(
+          "COUNT(CASE WHEN status = 'not-started' THEN 1 END) as not_started",
+        ),
+      )
+      .groupBy(this.knex.raw("DATE_TRUNC('month', timestamp)"))
+      .orderBy("date", "asc")
+
+    if (!options?.startTime && !options?.endTime) {
+      monthlyQuery = monthlyQuery.where(
+        "timestamp",
+        ">=",
+        this.knex.raw("NOW() - INTERVAL '12 months'"),
+      )
+    } else {
+      monthlyQuery = buildTimeFilter(monthlyQuery)
+    }
+    const monthlyTotals = await monthlyQuery
 
     // Get top contractors by fulfilled orders
-    const topContractors = await this.knex.raw(`
-      SELECT 
-        c.name,
-        COUNT(CASE WHEN o.status = 'fulfilled' THEN 1 END) as fulfilled_orders,
-        COUNT(*) as total_orders
-      FROM orders o
-      JOIN contractors c ON o.contractor_id = c.contractor_id
-      WHERE o.contractor_id IS NOT NULL
-      GROUP BY c.contractor_id, c.name
-      ORDER BY fulfilled_orders DESC, total_orders DESC
-      LIMIT 10
-    `)
+    const topContractors = await this.knex("orders as o")
+      .join("contractors as c", "o.contractor_id", "c.contractor_id")
+      .whereNotNull("o.contractor_id")
+      .select(
+        "c.name",
+        this.knex.raw(
+          "COUNT(CASE WHEN o.status = 'fulfilled' THEN 1 END) as fulfilled_orders",
+        ),
+        this.knex.raw("COUNT(*) as total_orders"),
+      )
+      .groupBy("c.contractor_id", "c.name")
+      .orderBy("fulfilled_orders", "desc")
+      .orderBy("total_orders", "desc")
+      .limit(10)
 
     // Get top users by fulfilled orders
-    const topUsers = await this.knex.raw(`
-      SELECT 
-        a.username,
-        COUNT(CASE WHEN o.status = 'fulfilled' THEN 1 END) as fulfilled_orders,
-        COUNT(*) as total_orders
-      FROM orders o
-      JOIN accounts a ON o.customer_id = a.user_id
-      GROUP BY a.user_id, a.username
-      ORDER BY fulfilled_orders DESC, total_orders DESC
-      LIMIT 10
-    `)
+    const topUsers = await this.knex("orders as o")
+      .join("accounts as a", "o.customer_id", "a.user_id")
+      .select(
+        "a.username",
+        this.knex.raw(
+          "COUNT(CASE WHEN o.status = 'fulfilled' THEN 1 END) as fulfilled_orders",
+        ),
+        this.knex.raw("COUNT(*) as total_orders"),
+      )
+      .groupBy("a.user_id", "a.username")
+      .orderBy("fulfilled_orders", "desc")
+      .orderBy("total_orders", "desc")
+      .limit(10)
 
     // Get summary stats
-    const summary = await this.knex.raw(`
-      SELECT 
-        COUNT(*) as total_orders,
-        COUNT(CASE WHEN status IN ('in-progress', 'not-started') THEN 1 END) as active_orders,
-        COUNT(CASE WHEN status = 'fulfilled' THEN 1 END) as completed_orders,
-        COALESCE(SUM(CASE WHEN status = 'fulfilled' THEN cost ELSE 0 END), 0) as total_value
-      FROM orders
-    `)
+    const summary = await this.knex("orders")
+      .select(
+        this.knex.raw("COUNT(*) as total_orders"),
+        this.knex.raw(
+          "COUNT(CASE WHEN status IN ('in-progress', 'not-started') THEN 1 END) as active_orders",
+        ),
+        this.knex.raw(
+          "COUNT(CASE WHEN status = 'fulfilled' THEN 1 END) as completed_orders",
+        ),
+        this.knex.raw(
+          "COALESCE(SUM(CASE WHEN status = 'fulfilled' THEN cost ELSE 0 END), 0) as total_value",
+        ),
+      )
+      .first()
 
     return {
-      daily_totals: dailyTotals.rows.map((row: any) => ({
+      daily_totals: dailyTotals.map((row: any) => ({
         date: row.date.toISOString().split("T")[0],
         total: parseInt(row.total),
         in_progress: parseInt(row.in_progress),
@@ -5242,7 +5435,7 @@ export class KnexDatabase implements Database {
         cancelled: parseInt(row.cancelled),
         not_started: parseInt(row.not_started),
       })),
-      weekly_totals: weeklyTotals.rows.map((row: any) => ({
+      weekly_totals: weeklyTotals.map((row: any) => ({
         date: row.date.toISOString().split("T")[0],
         total: parseInt(row.total),
         in_progress: parseInt(row.in_progress),
@@ -5250,7 +5443,7 @@ export class KnexDatabase implements Database {
         cancelled: parseInt(row.cancelled),
         not_started: parseInt(row.not_started),
       })),
-      monthly_totals: monthlyTotals.rows.map((row: any) => ({
+      monthly_totals: monthlyTotals.map((row: any) => ({
         date: row.date.toISOString().split("T")[0],
         total: parseInt(row.total),
         in_progress: parseInt(row.in_progress),
@@ -5258,21 +5451,21 @@ export class KnexDatabase implements Database {
         cancelled: parseInt(row.cancelled),
         not_started: parseInt(row.not_started),
       })),
-      top_contractors: topContractors.rows.map((row: any) => ({
+      top_contractors: topContractors.map((row: any) => ({
         name: row.name,
         fulfilled_orders: parseInt(row.fulfilled_orders),
         total_orders: parseInt(row.total_orders),
       })),
-      top_users: topUsers.rows.map((row: any) => ({
+      top_users: topUsers.map((row: any) => ({
         username: row.username,
         fulfilled_orders: parseInt(row.fulfilled_orders),
         total_orders: parseInt(row.total_orders),
       })),
       summary: {
-        total_orders: parseInt(summary.rows[0].total_orders),
-        active_orders: parseInt(summary.rows[0].active_orders),
-        completed_orders: parseInt(summary.rows[0].completed_orders),
-        total_value: parseInt(summary.rows[0].total_value),
+        total_orders: parseInt(summary.total_orders),
+        active_orders: parseInt(summary.active_orders),
+        completed_orders: parseInt(summary.completed_orders),
+        total_value: parseInt(summary.total_value),
       },
     }
   }
