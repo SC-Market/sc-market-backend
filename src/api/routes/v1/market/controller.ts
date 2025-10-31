@@ -371,6 +371,27 @@ export const refresh_listing: RequestHandler = async (req, res) => {
 
 export const get_order_stats: RequestHandler = async (req, res) => {
   const order_stats = await database.getOrderStats()
+
+  // Check if Grafana format is requested
+  if (req.query.format === "grafana") {
+    const { convertStatsToGrafana } = await import(
+      "../admin/grafana-formatter.js"
+    )
+    const grafanaData = convertStatsToGrafana(order_stats)
+    res.json(grafanaData)
+    return
+  }
+
+  // Check if Prometheus format is requested
+  if (req.query.format === "prometheus") {
+    const { convertStatsToPrometheus } = await import(
+      "../admin/grafana-formatter.js"
+    )
+    const prometheusData = convertStatsToPrometheus(order_stats)
+    res.json(prometheusData)
+    return
+  }
+
   res.json(createResponse(order_stats))
   return
 }

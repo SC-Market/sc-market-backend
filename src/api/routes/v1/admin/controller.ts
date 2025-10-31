@@ -1,11 +1,48 @@
 import { RequestHandler } from "express"
 import { database as database } from "../../../../clients/database/knex-db.js"
 import { createResponse as createResponse } from "../util/response.js"
+import {
+  convertActivityToGrafana,
+  convertOrderAnalyticsToGrafana,
+  convertMembershipAnalyticsToGrafana,
+  convertActivityToPrometheus,
+  convertOrderAnalyticsToPrometheus,
+  convertMembershipAnalyticsToPrometheus,
+} from "./grafana-formatter.js"
 
 export const admin_get_activity: RequestHandler = async (req, res) => {
   const daily = await database.getDailyActivity()
   const weekly = await database.getWeeklyActivity()
   const monthly = await database.getMonthlyActivity()
+
+  // Check if Grafana format is requested
+  if (req.query.format === "grafana") {
+    const grafanaData = [
+      ...convertActivityToGrafana(daily, "daily_activity"),
+      ...convertActivityToGrafana(weekly, "weekly_activity"),
+      ...convertActivityToGrafana(monthly, "monthly_activity"),
+    ]
+    res.json(grafanaData)
+    return
+  }
+
+  // Check if Prometheus format is requested
+  if (req.query.format === "prometheus") {
+    const prometheusData = {
+      status: "success",
+      data: {
+        resultType: "matrix",
+        result: [
+          ...convertActivityToPrometheus(daily, "daily_activity").data.result,
+          ...convertActivityToPrometheus(weekly, "weekly_activity").data.result,
+          ...convertActivityToPrometheus(monthly, "monthly_activity").data.result,
+        ],
+      },
+    }
+    res.json(prometheusData)
+    return
+  }
+
   res.json(createResponse({ daily, weekly, monthly }))
   return
 }
@@ -13,6 +50,53 @@ export const admin_get_activity: RequestHandler = async (req, res) => {
 export const admin_get_orders_analytics: RequestHandler = async (req, res) => {
   try {
     const analytics = await database.getOrderAnalytics()
+
+    // Check if Grafana format is requested
+    if (req.query.format === "grafana") {
+      const grafanaData = [
+        ...convertOrderAnalyticsToGrafana(
+          analytics.daily_totals,
+          "daily",
+        ),
+        ...convertOrderAnalyticsToGrafana(
+          analytics.weekly_totals,
+          "weekly",
+        ),
+        ...convertOrderAnalyticsToGrafana(
+          analytics.monthly_totals,
+          "monthly",
+        ),
+      ]
+      res.json(grafanaData)
+      return
+    }
+
+    // Check if Prometheus format is requested
+    if (req.query.format === "prometheus") {
+      const prometheusData = {
+        status: "success",
+        data: {
+          resultType: "matrix",
+          result: [
+            ...convertOrderAnalyticsToPrometheus(
+              analytics.daily_totals,
+              "daily",
+            ).data.result,
+            ...convertOrderAnalyticsToPrometheus(
+              analytics.weekly_totals,
+              "weekly",
+            ).data.result,
+            ...convertOrderAnalyticsToPrometheus(
+              analytics.monthly_totals,
+              "monthly",
+            ).data.result,
+          ],
+        },
+      }
+      res.json(prometheusData)
+      return
+    }
+
     res.json(createResponse(analytics))
   } catch (error) {
     console.error("Error fetching order analytics:", error)
@@ -88,6 +172,53 @@ export const admin_get_membership_analytics: RequestHandler = async (
 ) => {
   try {
     const analytics = await database.getMembershipAnalytics()
+
+    // Check if Grafana format is requested
+    if (req.query.format === "grafana") {
+      const grafanaData = [
+        ...convertMembershipAnalyticsToGrafana(
+          analytics.daily_totals,
+          "daily",
+        ),
+        ...convertMembershipAnalyticsToGrafana(
+          analytics.weekly_totals,
+          "weekly",
+        ),
+        ...convertMembershipAnalyticsToGrafana(
+          analytics.monthly_totals,
+          "monthly",
+        ),
+      ]
+      res.json(grafanaData)
+      return
+    }
+
+    // Check if Prometheus format is requested
+    if (req.query.format === "prometheus") {
+      const prometheusData = {
+        status: "success",
+        data: {
+          resultType: "matrix",
+          result: [
+            ...convertMembershipAnalyticsToPrometheus(
+              analytics.daily_totals,
+              "daily",
+            ).data.result,
+            ...convertMembershipAnalyticsToPrometheus(
+              analytics.weekly_totals,
+              "weekly",
+            ).data.result,
+            ...convertMembershipAnalyticsToPrometheus(
+              analytics.monthly_totals,
+              "monthly",
+            ).data.result,
+          ],
+        },
+      }
+      res.json(prometheusData)
+      return
+    }
+
     res.json(createResponse(analytics))
   } catch (error) {
     console.error("Error fetching membership analytics:", error)

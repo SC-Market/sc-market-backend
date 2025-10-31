@@ -21,6 +21,7 @@ export const tokens_post_root_spec = oapi.validPath({
       "application/json": {
         schema: {
           type: "object",
+          required: ["name", "scopes"],
           properties: {
             name: {
               type: "string",
@@ -30,7 +31,7 @@ export const tokens_post_root_spec = oapi.validPath({
             description: {
               type: "string",
               description: "Optional description for the API token",
-              example: "Token for accessing market data",
+              example: "Token for automated market operations",
             },
             scopes: {
               type: "array",
@@ -68,12 +69,13 @@ export const tokens_post_root_spec = oapi.validPath({
                   "admin:read",
                   "admin:write",
                   "admin:spectrum",
+                  "admin:stats",
                   "readonly",
                   "full",
                   "admin",
                 ],
               },
-              description: "Array of scopes for the token",
+              description: "Array of scopes for the token. Admin scopes (admin:*, admin) and moderation scopes (moderation:*) are only available to admin users.",
               example: ["market:read", "orders:write"],
             },
             expires_at: {
@@ -88,11 +90,10 @@ export const tokens_post_root_spec = oapi.validPath({
                 type: "string",
               },
               description:
-                "Array of contractor Spectrum IDs that this token can access",
-              example: ["SCMARKET", "EVOCATI"],
+                "Optional array of contractor Spectrum IDs that this token can access",
+              example: ["ORG-12345", "ORG-67890"],
             },
           },
-          required: ["name", "scopes"],
         },
       },
     },
@@ -105,51 +106,47 @@ export const tokens_post_root_spec = oapi.validPath({
           schema: {
             type: "object",
             properties: {
-              token: {
-                type: "string",
-                description: "The actual token value (only shown on creation)",
-                example: "scm_live_abc123def456...",
-              },
               data: {
                 type: "object",
                 properties: {
-                  id: { type: "string", format: "uuid" },
-                  name: { type: "string" },
-                  description: { type: "string" },
-                  scopes: { type: "array", items: { type: "string" } },
-                  contractor_spectrum_ids: {
-                    type: "array",
-                    items: { type: "string" },
+                  token: {
+                    type: "string",
+                    description:
+                      "The actual token value (only shown on creation)",
+                    example: "scm_live_abc123...",
                   },
-                  expires_at: { type: "string", format: "date-time" },
-                  created_at: { type: "string", format: "date-time" },
-                  updated_at: { type: "string", format: "date-time" },
+                  data: {
+                    type: "object",
+                    properties: {
+                      id: { type: "string" },
+                      name: { type: "string" },
+                      description: { type: "string", nullable: true },
+                      scopes: {
+                        type: "array",
+                        items: { type: "string" },
+                      },
+                      contractor_spectrum_ids: {
+                        type: "array",
+                        items: { type: "string" },
+                      },
+                      expires_at: { type: "string", nullable: true },
+                      created_at: { type: "string" },
+                      updated_at: { type: "string" },
+                    },
+                  },
                 },
               },
             },
           },
         },
       },
-      headers: RateLimitHeaders,
     },
     "400": Response400,
     "401": Response401,
     "403": Response403,
     "429": Response429Write,
-    "500": {
-      description: "Internal server error",
-      content: {
-        "application/json": {
-          schema: {
-            type: "object",
-            properties: {
-              error: { type: "string" },
-            },
-          },
-        },
-      },
-    },
   },
+  ...RateLimitHeaders,
 })
 
 export const tokens_get_root_spec = oapi.validPath({
@@ -159,49 +156,44 @@ export const tokens_get_root_spec = oapi.validPath({
   tags: ["Tokens"],
   responses: {
     "200": {
-      description: "Tokens retrieved successfully",
-      content: {
-        "application/json": {
-          schema: {
-            type: "array",
-            items: {
-              type: "object",
-              properties: {
-                id: { type: "string", format: "uuid" },
-                name: { type: "string" },
-                description: { type: "string" },
-                scopes: { type: "array", items: { type: "string" } },
-                contractor_spectrum_ids: {
-                  type: "array",
-                  items: { type: "string" },
-                },
-                expires_at: { type: "string", format: "date-time" },
-                last_used_at: { type: "string", format: "date-time" },
-                created_at: { type: "string", format: "date-time" },
-                updated_at: { type: "string", format: "date-time" },
-              },
-            },
-          },
-        },
-      },
-      headers: RateLimitHeaders,
-    },
-    "401": Response401,
-    "429": Response429Read,
-    "500": {
-      description: "Internal server error",
+      description: "List of tokens",
       content: {
         "application/json": {
           schema: {
             type: "object",
             properties: {
-              error: { type: "string" },
+              data: {
+                type: "array",
+                items: {
+                  type: "object",
+                  properties: {
+                    id: { type: "string" },
+                    name: { type: "string" },
+                    description: { type: "string", nullable: true },
+                    scopes: {
+                      type: "array",
+                      items: { type: "string" },
+                    },
+                    contractor_spectrum_ids: {
+                      type: "array",
+                      items: { type: "string" },
+                    },
+                    expires_at: { type: "string", nullable: true },
+                    created_at: { type: "string" },
+                    updated_at: { type: "string" },
+                    last_used_at: { type: "string", nullable: true },
+                  },
+                },
+              },
             },
           },
         },
       },
     },
+    "401": Response401,
+    "429": Response429Read,
   },
+  ...RateLimitHeaders,
 })
 
 export const tokens_get_tokenId_spec = oapi.validPath({
@@ -215,56 +207,48 @@ export const tokens_get_tokenId_spec = oapi.validPath({
       name: "tokenId",
       in: "path",
       required: true,
-      schema: {
-        type: "string",
-        format: "uuid",
-      },
+      schema: { type: "string" },
       description: "ID of the token to retrieve",
     },
   ],
   responses: {
     "200": {
-      description: "Token details retrieved successfully",
+      description: "Token details",
       content: {
         "application/json": {
           schema: {
             type: "object",
             properties: {
-              id: { type: "string", format: "uuid" },
-              name: { type: "string" },
-              description: { type: "string" },
-              scopes: { type: "array", items: { type: "string" } },
-              contractor_spectrum_ids: {
-                type: "array",
-                items: { type: "string" },
+              data: {
+                type: "object",
+                properties: {
+                  id: { type: "string" },
+                  name: { type: "string" },
+                  description: { type: "string", nullable: true },
+                  scopes: {
+                    type: "array",
+                    items: { type: "string" },
+                  },
+                  contractor_spectrum_ids: {
+                    type: "array",
+                    items: { type: "string" },
+                  },
+                  expires_at: { type: "string", nullable: true },
+                  created_at: { type: "string" },
+                  updated_at: { type: "string" },
+                  last_used_at: { type: "string", nullable: true },
+                },
               },
-              expires_at: { type: "string", format: "date-time" },
-              last_used_at: { type: "string", format: "date-time" },
-              created_at: { type: "string", format: "date-time" },
-              updated_at: { type: "string", format: "date-time" },
             },
           },
         },
       },
-      headers: RateLimitHeaders,
     },
     "401": Response401,
     "404": Response404,
     "429": Response429Read,
-    "500": {
-      description: "Internal server error",
-      content: {
-        "application/json": {
-          schema: {
-            type: "object",
-            properties: {
-              error: { type: "string" },
-            },
-          },
-        },
-      },
-    },
   },
+  ...RateLimitHeaders,
 })
 
 export const tokens_put_tokenId_spec = oapi.validPath({
@@ -278,10 +262,7 @@ export const tokens_put_tokenId_spec = oapi.validPath({
       name: "tokenId",
       in: "path",
       required: true,
-      schema: {
-        type: "string",
-        format: "uuid",
-      },
+      schema: { type: "string" },
       description: "ID of the token to update",
     },
   ],
@@ -300,7 +281,7 @@ export const tokens_put_tokenId_spec = oapi.validPath({
             description: {
               type: "string",
               description: "Optional description for the API token",
-              example: "Updated token for accessing market data",
+              example: "Updated token description",
             },
             scopes: {
               type: "array",
@@ -338,12 +319,13 @@ export const tokens_put_tokenId_spec = oapi.validPath({
                   "admin:read",
                   "admin:write",
                   "admin:spectrum",
+                  "admin:stats",
                   "readonly",
                   "full",
                   "admin",
                 ],
               },
-              description: "Array of scopes for the token",
+              description: "Array of scopes for the token. Admin scopes (admin:*, admin) and moderation scopes (moderation:*) are only available to admin users.",
               example: ["market:read", "orders:write"],
             },
             expires_at: {
@@ -358,8 +340,8 @@ export const tokens_put_tokenId_spec = oapi.validPath({
                 type: "string",
               },
               description:
-                "Array of contractor Spectrum IDs that this token can access",
-              example: ["SCMARKET", "EVOCATI"],
+                "Optional array of contractor Spectrum IDs that this token can access. Set to null to remove all contractor access.",
+              example: ["ORG-12345", "ORG-67890"],
             },
           },
         },
@@ -374,43 +356,37 @@ export const tokens_put_tokenId_spec = oapi.validPath({
           schema: {
             type: "object",
             properties: {
-              id: { type: "string", format: "uuid" },
-              name: { type: "string" },
-              description: { type: "string" },
-              scopes: { type: "array", items: { type: "string" } },
-              contractor_spectrum_ids: {
-                type: "array",
-                items: { type: "string" },
+              data: {
+                type: "object",
+                properties: {
+                  id: { type: "string" },
+                  name: { type: "string" },
+                  description: { type: "string", nullable: true },
+                  scopes: {
+                    type: "array",
+                    items: { type: "string" },
+                  },
+                  contractor_spectrum_ids: {
+                    type: "array",
+                    items: { type: "string" },
+                  },
+                  expires_at: { type: "string", nullable: true },
+                  created_at: { type: "string" },
+                  updated_at: { type: "string" },
+                },
               },
-              expires_at: { type: "string", format: "date-time" },
-              last_used_at: { type: "string", format: "date-time" },
-              created_at: { type: "string", format: "date-time" },
-              updated_at: { type: "string", format: "date-time" },
             },
           },
         },
       },
-      headers: RateLimitHeaders,
     },
     "400": Response400,
     "401": Response401,
     "403": Response403,
     "404": Response404,
     "429": Response429Write,
-    "500": {
-      description: "Internal server error",
-      content: {
-        "application/json": {
-          schema: {
-            type: "object",
-            properties: {
-              error: { type: "string" },
-            },
-          },
-        },
-      },
-    },
   },
+  ...RateLimitHeaders,
 })
 
 export const tokens_delete_tokenId_spec = oapi.validPath({
@@ -423,10 +399,7 @@ export const tokens_delete_tokenId_spec = oapi.validPath({
       name: "tokenId",
       in: "path",
       required: true,
-      schema: {
-        type: "string",
-        format: "uuid",
-      },
+      schema: { type: "string" },
       description: "ID of the token to revoke",
     },
   ],
@@ -438,34 +411,26 @@ export const tokens_delete_tokenId_spec = oapi.validPath({
           schema: {
             type: "object",
             properties: {
-              message: { type: "string" },
+              data: {
+                type: "object",
+                properties: {
+                  message: { type: "string", example: "Token revoked successfully" },
+                },
+              },
             },
           },
         },
       },
-      headers: RateLimitHeaders,
     },
     "401": Response401,
     "404": Response404,
     "429": Response429Write,
-    "500": {
-      description: "Internal server error",
-      content: {
-        "application/json": {
-          schema: {
-            type: "object",
-            properties: {
-              error: { type: "string" },
-            },
-          },
-        },
-      },
-    },
   },
+  ...RateLimitHeaders,
 })
 
 export const tokens_post_tokenId_extend_spec = oapi.validPath({
-  summary: "Extend token expiration",
+  summary: "Extend API token expiration",
   description: "Extend the expiration date of an existing API token",
   operationId: "extendApiToken",
   tags: ["Tokens"],
@@ -474,10 +439,7 @@ export const tokens_post_tokenId_extend_spec = oapi.validPath({
       name: "tokenId",
       in: "path",
       required: true,
-      schema: {
-        type: "string",
-        format: "uuid",
-      },
+      schema: { type: "string" },
       description: "ID of the token to extend",
     },
   ],
@@ -487,15 +449,15 @@ export const tokens_post_tokenId_extend_spec = oapi.validPath({
       "application/json": {
         schema: {
           type: "object",
+          required: ["expires_at"],
           properties: {
             expires_at: {
               type: "string",
               format: "date-time",
               description: "New expiration date for the token",
-              example: "2024-12-31T23:59:59Z",
+              example: "2025-12-31T23:59:59Z",
             },
           },
-          required: ["expires_at"],
         },
       },
     },
@@ -508,38 +470,30 @@ export const tokens_post_tokenId_extend_spec = oapi.validPath({
           schema: {
             type: "object",
             properties: {
-              id: { type: "string", format: "uuid" },
-              name: { type: "string" },
-              expires_at: { type: "string", format: "date-time" },
-              updated_at: { type: "string", format: "date-time" },
+              data: {
+                type: "object",
+                properties: {
+                  message: {
+                    type: "string",
+                    example: "Token expiration extended",
+                  },
+                },
+              },
             },
           },
         },
       },
-      headers: RateLimitHeaders,
     },
     "400": Response400,
     "401": Response401,
     "404": Response404,
     "429": Response429Write,
-    "500": {
-      description: "Internal server error",
-      content: {
-        "application/json": {
-          schema: {
-            type: "object",
-            properties: {
-              error: { type: "string" },
-            },
-          },
-        },
-      },
-    },
   },
+  ...RateLimitHeaders,
 })
 
 export const tokens_get_tokenId_stats_spec = oapi.validPath({
-  summary: "Get token usage statistics",
+  summary: "Get API token usage statistics",
   description: "Retrieve usage statistics for a specific API token",
   operationId: "getApiTokenStats",
   tags: ["Tokens"],
@@ -548,51 +502,72 @@ export const tokens_get_tokenId_stats_spec = oapi.validPath({
       name: "tokenId",
       in: "path",
       required: true,
-      schema: {
-        type: "string",
-        format: "uuid",
-      },
-      description: "ID of the token to get statistics for",
+      schema: { type: "string" },
+      description: "ID of the token to get stats for",
     },
   ],
   responses: {
     "200": {
-      description: "Token statistics retrieved successfully",
+      description: "Token statistics",
       content: {
         "application/json": {
           schema: {
             type: "object",
             properties: {
-              id: { type: "string", format: "uuid" },
-              name: { type: "string" },
-              created_at: { type: "string", format: "date-time" },
-              last_used_at: { type: "string", format: "date-time" },
-              expires_at: { type: "string", format: "date-time" },
-              is_expired: { type: "boolean" },
-              days_since_creation: { type: "number" },
-              days_since_last_use: { type: "number" },
-              days_until_expiration: { type: "number" },
+              data: {
+                type: "object",
+                properties: {
+                  id: { type: "string" },
+                  name: { type: "string" },
+                  created_at: { type: "string" },
+                  last_used_at: { type: "string", nullable: true },
+                  expires_at: { type: "string", nullable: true },
+                },
+              },
             },
           },
         },
       },
-      headers: RateLimitHeaders,
     },
     "401": Response401,
     "404": Response404,
     "429": Response429Read,
-    "500": {
-      description: "Internal server error",
+  },
+  ...RateLimitHeaders,
+})
+
+export const tokens_get_scopes_spec = oapi.validPath({
+  summary: "Get available scopes",
+  description:
+    "Retrieve list of available scopes for the authenticated user. Scopes are automatically filtered based on user role (admin-only scopes are excluded for non-admin users).",
+  operationId: "getAvailableScopes",
+  tags: ["Tokens"],
+  responses: {
+    "200": {
+      description: "List of available scopes",
       content: {
         "application/json": {
           schema: {
             type: "object",
             properties: {
-              error: { type: "string" },
+              data: {
+                type: "object",
+                properties: {
+                  scopes: {
+                    type: "array",
+                    items: { type: "string" },
+                    description:
+                      "Array of scope names available to the current user",
+                  },
+                },
+              },
             },
           },
         },
       },
     },
+    "401": Response401,
+    "429": Response429Read,
   },
+  ...RateLimitHeaders,
 })

@@ -1,23 +1,33 @@
 import { Request, Response } from "express"
+import crypto from "crypto"
 import { User } from "../api-models.js"
 import { database } from "../../../../clients/database/knex-db.js"
-import crypto from "crypto"
-import { createResponse, createErrorResponse } from "../util/response.js"
-import { has_permission } from "../util/permissions.js"
+import {
+  createResponse,
+  createErrorResponse,
+} from "../util/response.js"
 
-// Generate a secure token
-function generateToken(): string {
-  const randomBytes = crypto.randomBytes(32)
-  const prefix = process.env.NODE_ENV === "production" ? "scm_live" : "scm_test"
-  return `${prefix}_${randomBytes.toString("hex")}`
+/**
+ * Helper function to convert contractor Spectrum IDs to database contractor IDs
+ */
+async function convertSpectrumIdsToContractorIds(
+  spectrumIds: string[],
+): Promise<string[]> {
+  if (!spectrumIds || spectrumIds.length === 0) {
+    return []
+  }
+
+  const contractors = await database
+    .knex("contractors")
+    .whereIn("spectrum_id", spectrumIds)
+    .select("contractor_id")
+
+  return contractors.map((c) => c.contractor_id)
 }
 
-// Hash a token for storage
-function hashToken(token: string): string {
-  return crypto.createHash("sha256").update(token).digest("hex")
-}
-
-// Helper function to convert internal contractor IDs back to Spectrum IDs
+/**
+ * Helper function to convert contractor IDs back to Spectrum IDs
+ */
 async function convertContractorIdsToSpectrumIds(
   contractorIds: string[],
 ): Promise<string[]> {
@@ -25,21 +35,27 @@ async function convertContractorIdsToSpectrumIds(
     return []
   }
 
-  const spectrumIds: string[] = []
-  for (const contractorId of contractorIds) {
-    try {
-      const contractor = await database.getContractor({
-        contractor_id: contractorId,
-      })
-      spectrumIds.push(contractor.spectrum_id)
-    } catch (error) {
-      console.warn(
-        `Failed to convert contractor ID ${contractorId} to Spectrum ID:`,
-        error,
-      )
-    }
-  }
-  return spectrumIds
+  const contractors = await database
+    .knex("contractors")
+    .whereIn("contractor_id", contractorIds)
+    .select("spectrum_id")
+
+  return contractors.map((c) => c.spectrum_id)
+}
+
+/**
+ * Generate a secure random token
+ */
+function generateToken(): string {
+  const randomBytes = crypto.randomBytes(32)
+  return `scm_live_${randomBytes.toString("hex")}`
+}
+
+/**
+ * Hash a token for storage
+ */
+function hashToken(token: string): string {
+  return crypto.createHash("sha256").update(token).digest("hex")
 }
 
 // Create a new API token
@@ -88,6 +104,7 @@ export async function createToken(req: Request, res: Response): Promise<void> {
       "admin:read",
       "admin:write",
       "admin:spectrum",
+      "admin:stats",
       "readonly",
       "full",
       "admin",
@@ -120,52 +137,48 @@ export async function createToken(req: Request, res: Response): Promise<void> {
       return
     }
 
+    // Check for moderation scopes (only admins can create moderation tokens)
+    const hasModerationScopes = scopes.some(
+      (scope: string) =>
+        scope === "moderation:read" || scope === "moderation:write",
+    )
+    if (hasModerationScopes && user.role !== "admin") {
+      res
+        .status(403)
+        .json(
+          createErrorResponse(
+            "Only admins can create tokens with moderation scopes",
+          ),
+        )
+      return
+    }
+
     // Validate contractor_spectrum_ids if provided
     let validatedContractorIds: string[] = []
     if (contractor_spectrum_ids) {
       if (!Array.isArray(contractor_spectrum_ids)) {
         res
           .status(400)
-          .json(createErrorResponse("contractor_spectrum_ids must be an array"))
+          .json(
+            createErrorResponse(
+              "contractor_spectrum_ids must be an array",
+            ),
+          )
         return
       }
 
-      // Convert Spectrum IDs to internal contractor IDs and validate permissions
-      for (const spectrumId of contractor_spectrum_ids) {
-        try {
-          const contractor = await database.getContractor({
-            spectrum_id: spectrumId,
-          })
+      validatedContractorIds =
+        await convertSpectrumIdsToContractorIds(contractor_spectrum_ids)
 
-          // Check if user has manage org permissions for this contractor
-          const hasManagePermission = await has_permission(
-            contractor.contractor_id,
-            user.user_id,
-            "manage_org_details",
+      if (validatedContractorIds.length !== contractor_spectrum_ids.length) {
+        res
+          .status(400)
+          .json(
+            createErrorResponse(
+              "One or more contractor spectrum IDs are invalid",
+            ),
           )
-
-          if (!hasManagePermission) {
-            res
-              .status(403)
-              .json(
-                createErrorResponse(
-                  `You do not have manage org permissions for contractor with Spectrum ID: ${spectrumId}`,
-                ),
-              )
-            return
-          }
-
-          validatedContractorIds.push(contractor.contractor_id)
-        } catch (error) {
-          res
-            .status(400)
-            .json(
-              createErrorResponse(
-                `Invalid contractor Spectrum ID: ${spectrumId}`,
-              ),
-            )
-          return
-        }
+        return
       }
     }
 
@@ -173,8 +186,9 @@ export async function createToken(req: Request, res: Response): Promise<void> {
     const token = generateToken()
     const tokenHash = hashToken(token)
 
-    // Parse expiration date if provided
-    let expiresAt = null
+    // Parse expiration date
+    let expiresAt: Date | null = null
+
     if (expires_at) {
       // datetime-local sends format like "2024-01-15T14:30" (local time)
       // We need to treat this as UTC to avoid timezone issues
@@ -248,17 +262,7 @@ export async function listTokens(req: Request, res: Response): Promise<void> {
     const tokens = await database
       .knex("api_tokens")
       .where("user_id", user.user_id)
-      .select(
-        "id",
-        "name",
-        "description",
-        "scopes",
-        "contractor_ids",
-        "expires_at",
-        "last_used_at",
-        "created_at",
-        "updated_at",
-      )
+      .select("*")
       .orderBy("created_at", "desc")
 
     // Convert contractor IDs to Spectrum IDs for each token
@@ -268,15 +272,22 @@ export async function listTokens(req: Request, res: Response): Promise<void> {
           token.contractor_ids || [],
         )
         return {
-          ...token,
+          id: token.id,
+          name: token.name,
+          description: token.description,
+          scopes: token.scopes,
           contractor_spectrum_ids: contractorSpectrumIds,
+          expires_at: token.expires_at,
+          created_at: token.created_at,
+          updated_at: token.updated_at,
+          last_used_at: token.last_used_at,
         }
       }),
     )
 
     res.json(createResponse(tokensWithSpectrumIds))
   } catch (error) {
-    console.error("Error fetching tokens:", error)
+    console.error("Error listing tokens:", error)
     res.status(500).json(createErrorResponse("Internal server error"))
   }
 }
@@ -291,17 +302,6 @@ export async function getToken(req: Request, res: Response): Promise<void> {
       .knex("api_tokens")
       .where("id", tokenId)
       .where("user_id", user.user_id)
-      .select(
-        "id",
-        "name",
-        "description",
-        "scopes",
-        "contractor_ids",
-        "expires_at",
-        "last_used_at",
-        "created_at",
-        "updated_at",
-      )
       .first()
 
     if (!token) {
@@ -309,19 +309,25 @@ export async function getToken(req: Request, res: Response): Promise<void> {
       return
     }
 
-    // Convert contractor IDs to Spectrum IDs
     const contractorSpectrumIds = await convertContractorIdsToSpectrumIds(
       token.contractor_ids || [],
     )
 
     res.json(
       createResponse({
-        ...token,
+        id: token.id,
+        name: token.name,
+        description: token.description,
+        scopes: token.scopes,
         contractor_spectrum_ids: contractorSpectrumIds,
+        expires_at: token.expires_at,
+        created_at: token.created_at,
+        updated_at: token.updated_at,
+        last_used_at: token.last_used_at,
       }),
     )
   } catch (error) {
-    console.error("Error fetching token:", error)
+    console.error("Error getting token:", error)
     res.status(500).json(createErrorResponse("Internal server error"))
   }
 }
@@ -380,6 +386,7 @@ export async function updateToken(req: Request, res: Response): Promise<void> {
         "admin:read",
         "admin:write",
         "admin:spectrum",
+        "admin:stats",
         "readonly",
         "full",
         "admin",
@@ -411,6 +418,22 @@ export async function updateToken(req: Request, res: Response): Promise<void> {
           )
         return
       }
+
+      // Check for moderation scopes (only admins can create moderation tokens)
+      const hasModerationScopes = scopes.some(
+        (scope: string) =>
+          scope === "moderation:read" || scope === "moderation:write",
+      )
+      if (hasModerationScopes && user.role !== "admin") {
+        res
+          .status(403)
+          .json(
+            createErrorResponse(
+              "Only admins can create tokens with moderation scopes",
+            ),
+          )
+        return
+      }
     }
 
     // Validate contractor_spectrum_ids if provided
@@ -418,45 +441,7 @@ export async function updateToken(req: Request, res: Response): Promise<void> {
     if (contractor_spectrum_ids !== undefined) {
       if (contractor_spectrum_ids === null) {
         validatedContractorIds = []
-      } else if (Array.isArray(contractor_spectrum_ids)) {
-        // Convert Spectrum IDs to internal contractor IDs and validate permissions
-        for (const spectrumId of contractor_spectrum_ids) {
-          try {
-            const contractor = await database.getContractor({
-              spectrum_id: spectrumId,
-            })
-
-            // Check if user has manage org permissions for this contractor
-            const hasManagePermission = await has_permission(
-              contractor.contractor_id,
-              user.user_id,
-              "manage_org_details",
-            )
-
-            if (!hasManagePermission) {
-              res
-                .status(403)
-                .json(
-                  createErrorResponse(
-                    `You do not have manage org permissions for contractor with Spectrum ID: ${spectrumId}`,
-                  ),
-                )
-              return
-            }
-
-            validatedContractorIds.push(contractor.contractor_id)
-          } catch (error) {
-            res
-              .status(400)
-              .json(
-                createErrorResponse(
-                  `Invalid contractor Spectrum ID: ${spectrumId}`,
-                ),
-              )
-            return
-          }
-        }
-      } else {
+      } else if (!Array.isArray(contractor_spectrum_ids)) {
         res
           .status(400)
           .json(
@@ -465,18 +450,29 @@ export async function updateToken(req: Request, res: Response): Promise<void> {
             ),
           )
         return
+      } else {
+        validatedContractorIds =
+          await convertSpectrumIdsToContractorIds(contractor_spectrum_ids)
+
+        if (validatedContractorIds.length !== contractor_spectrum_ids.length) {
+          res
+            .status(400)
+            .json(
+              createErrorResponse(
+                "One or more contractor spectrum IDs are invalid",
+              ),
+            )
+          return
+        }
       }
     }
 
     // Parse expiration date if provided
-    let expiresAt = existingToken.expires_at
+    let expiresAt: Date | null = existingToken.expires_at
     if (expires_at !== undefined) {
       if (expires_at === null) {
         expiresAt = null
       } else {
-        // datetime-local sends format like "2024-01-15T14:30" (local time)
-        // We need to treat this as UTC to avoid timezone issues
-        // If the string doesn't end with 'Z', we'll treat it as UTC
         const dateString = expires_at.endsWith("Z")
           ? expires_at
           : `${expires_at}Z`
@@ -487,7 +483,7 @@ export async function updateToken(req: Request, res: Response): Promise<void> {
           return
         }
 
-        // Ensure the date is in the future
+        // Ensure the date is in the future (if being set)
         if (expiresAt <= new Date()) {
           res
             .status(400)
@@ -498,25 +494,21 @@ export async function updateToken(req: Request, res: Response): Promise<void> {
     }
 
     // Update token
-    const updateData: any = {
-      updated_at: new Date(),
-    }
-
-    if (name !== undefined) updateData.name = name
-    if (description !== undefined) updateData.description = description
-    if (scopes !== undefined) updateData.scopes = scopes
-    if (contractor_spectrum_ids !== undefined)
-      updateData.contractor_ids = validatedContractorIds
-    if (expires_at !== undefined) updateData.expires_at = expiresAt
-
     const [updatedToken] = await database
       .knex("api_tokens")
       .where("id", tokenId)
-      .where("user_id", user.user_id)
-      .update(updateData)
+      .update({
+        ...(name !== undefined && { name }),
+        ...(description !== undefined && { description }),
+        ...(scopes !== undefined && { scopes }),
+        ...(contractor_spectrum_ids !== undefined && {
+          contractor_ids: validatedContractorIds,
+        }),
+        ...(expires_at !== undefined && { expires_at: expiresAt }),
+        updated_at: new Date(),
+      })
       .returning("*")
 
-    // Convert contractor IDs back to Spectrum IDs for response
     const contractorSpectrumIds = await convertContractorIdsToSpectrumIds(
       updatedToken.contractor_ids || [],
     )
@@ -529,7 +521,6 @@ export async function updateToken(req: Request, res: Response): Promise<void> {
         scopes: updatedToken.scopes,
         contractor_spectrum_ids: contractorSpectrumIds,
         expires_at: updatedToken.expires_at,
-        last_used_at: updatedToken.last_used_at,
         created_at: updatedToken.created_at,
         updated_at: updatedToken.updated_at,
       }),
@@ -546,16 +537,18 @@ export async function revokeToken(req: Request, res: Response): Promise<void> {
     const user = req.user! as User
     const { tokenId } = req.params
 
-    const deletedCount = await database
+    const token = await database
       .knex("api_tokens")
       .where("id", tokenId)
       .where("user_id", user.user_id)
-      .del()
+      .first()
 
-    if (deletedCount === 0) {
+    if (!token) {
       res.status(404).json(createErrorResponse("Token not found"))
       return
     }
+
+    await database.knex("api_tokens").where("id", tokenId).delete()
 
     res.json(createResponse({ message: "Token revoked successfully" }))
   } catch (error) {
@@ -565,67 +558,55 @@ export async function revokeToken(req: Request, res: Response): Promise<void> {
 }
 
 // Extend token expiration
-export async function extendToken(req: Request, res: Response): Promise<void> {
+export async function extendToken(
+  req: Request,
+  res: Response,
+): Promise<void> {
   try {
     const user = req.user! as User
     const { tokenId } = req.params
     const { expires_at } = req.body
+
+    const token = await database
+      .knex("api_tokens")
+      .where("id", tokenId)
+      .where("user_id", user.user_id)
+      .first()
+
+    if (!token) {
+      res.status(404).json(createErrorResponse("Token not found"))
+      return
+    }
 
     if (!expires_at) {
       res.status(400).json(createErrorResponse("expires_at is required"))
       return
     }
 
-    // datetime-local sends format like "2024-01-15T14:30" (local time)
-    // We need to treat this as UTC to avoid timezone issues
-    // If the string doesn't end with 'Z', we'll treat it as UTC
     const dateString = expires_at.endsWith("Z") ? expires_at : `${expires_at}Z`
-    const newExpiration = new Date(dateString)
+    const expiresAt = new Date(dateString)
 
-    if (isNaN(newExpiration.getTime())) {
+    if (isNaN(expiresAt.getTime())) {
       res.status(400).json(createErrorResponse("Invalid expiration date"))
       return
     }
 
-    // Ensure the date is in the future
-    if (newExpiration <= new Date()) {
+    if (expiresAt <= new Date()) {
       res
         .status(400)
         .json(createErrorResponse("Expiration date must be in the future"))
       return
     }
 
-    // Check if token exists and belongs to user
-    const existingToken = await database
+    await database
       .knex("api_tokens")
       .where("id", tokenId)
-      .where("user_id", user.user_id)
-      .first()
-
-    if (!existingToken) {
-      res.status(404).json(createErrorResponse("Token not found"))
-      return
-    }
-
-    // Update expiration
-    const [updatedToken] = await database
-      .knex("api_tokens")
-      .where("id", tokenId)
-      .where("user_id", user.user_id)
       .update({
-        expires_at: newExpiration,
+        expires_at: expiresAt,
         updated_at: new Date(),
       })
-      .returning("*")
 
-    res.json(
-      createResponse({
-        id: updatedToken.id,
-        name: updatedToken.name,
-        expires_at: updatedToken.expires_at,
-        updated_at: updatedToken.updated_at,
-      }),
-    )
+    res.json(createResponse({ message: "Token expiration extended" }))
   } catch (error) {
     console.error("Error extending token:", error)
     res.status(500).json(createErrorResponse("Internal server error"))
@@ -645,7 +626,6 @@ export async function getTokenStats(
       .knex("api_tokens")
       .where("id", tokenId)
       .where("user_id", user.user_id)
-      .select("id", "name", "created_at", "last_used_at", "expires_at")
       .first()
 
     if (!token) {
@@ -653,30 +633,7 @@ export async function getTokenStats(
       return
     }
 
-    // Calculate days since creation and last use
-    const now = new Date()
-    const daysSinceCreation = Math.floor(
-      (now.getTime() - new Date(token.created_at).getTime()) /
-        (1000 * 60 * 60 * 24),
-    )
-    const daysSinceLastUse = token.last_used_at
-      ? Math.floor(
-          (now.getTime() - new Date(token.last_used_at).getTime()) /
-            (1000 * 60 * 60 * 24),
-        )
-      : null
-
-    // Check if token is expired
-    const isExpired = token.expires_at
-      ? new Date(token.expires_at) < now
-      : false
-    const daysUntilExpiration = token.expires_at
-      ? Math.floor(
-          (new Date(token.expires_at).getTime() - now.getTime()) /
-            (1000 * 60 * 60 * 24),
-        )
-      : null
-
+    // Get usage stats (last_used_at, created_at, etc.)
     res.json(
       createResponse({
         id: token.id,
@@ -684,14 +641,78 @@ export async function getTokenStats(
         created_at: token.created_at,
         last_used_at: token.last_used_at,
         expires_at: token.expires_at,
-        is_expired: isExpired,
-        days_since_creation: daysSinceCreation,
-        days_since_last_use: daysSinceLastUse,
-        days_until_expiration: daysUntilExpiration,
       }),
     )
   } catch (error) {
-    console.error("Error fetching token stats:", error)
+    console.error("Error getting token stats:", error)
+    res.status(500).json(createErrorResponse("Internal server error"))
+  }
+}
+
+/**
+ * Get available scopes for the current user
+ * Returns scopes filtered based on user role
+ */
+export async function getAvailableScopes(
+  req: Request,
+  res: Response,
+): Promise<void> {
+  try {
+    const user = req.user! as User
+
+    const allScopes = [
+      "profile:read",
+      "profile:write",
+      "market:read",
+      "market:write",
+      "market:purchase",
+      "market:photos",
+      "orders:read",
+      "orders:write",
+      "orders:reviews",
+      "contractors:read",
+      "contractors:write",
+      "contractors:members",
+      "contractors:webhooks",
+      "contractors:blocklist",
+      "orgs:read",
+      "orgs:write",
+      "orgs:manage",
+      "services:read",
+      "services:write",
+      "services:photos",
+      "offers:read",
+      "offers:write",
+      "chats:read",
+      "chats:write",
+      "notifications:read",
+      "notifications:write",
+      "moderation:read",
+      "moderation:write",
+      "admin:read",
+      "admin:write",
+      "admin:spectrum",
+      "admin:stats",
+      "readonly",
+      "full",
+      "admin",
+    ]
+
+    // Filter scopes based on user role
+    const availableScopes =
+      user.role === "admin"
+        ? allScopes
+        : allScopes.filter(
+            (scope) =>
+              !scope.startsWith("admin:") &&
+              scope !== "admin" &&
+              scope !== "moderation:read" &&
+              scope !== "moderation:write",
+          )
+
+    res.json(createResponse({ scopes: availableScopes }))
+  } catch (error) {
+    console.error("Error getting available scopes:", error)
     res.status(500).json(createErrorResponse("Internal server error"))
   }
 }

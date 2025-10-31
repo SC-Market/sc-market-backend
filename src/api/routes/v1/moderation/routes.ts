@@ -1,5 +1,10 @@
 import express from "express"
-import { userAuthorized, adminAuthorized } from "../../../middleware/auth.js"
+import {
+  userAuthorized,
+  adminAuthorized,
+  requireModerationRead,
+  requireModerationWrite,
+} from "../../../middleware/auth.js"
 import {
   writeRateLimit,
   readRateLimit,
@@ -44,6 +49,7 @@ moderationRouter.get(
 moderationRouter.get(
   "/admin/reports",
   adminAuthorized,
+  requireModerationRead,
   moderation_get_admin_reports_spec,
   criticalRateLimit,
   moderation_get_admin_reports,
@@ -53,6 +59,7 @@ moderationRouter.get(
 moderationRouter.put(
   "/admin/reports/:report_id",
   adminAuthorized,
+  requireModerationWrite,
   moderation_put_admin_reports_report_id_spec,
   criticalRateLimit,
   moderation_put_admin_reports_report_id,
