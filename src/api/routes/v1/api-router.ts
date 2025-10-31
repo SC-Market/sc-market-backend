@@ -23,6 +23,7 @@ import { tokensRouter } from "./tokens/routes.js"
 export const apiRouter = express.Router()
 
 apiRouter.use("/admin", adminRouter)
+apiRouter.use("/prometheus/api/v1", prometheusRouter)
 apiRouter.use("/prometheus", prometheusRouter)
 apiRouter.use("/starmap", starmapRouter)
 apiRouter.use("/commodities", commodityRouter)

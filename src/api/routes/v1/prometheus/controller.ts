@@ -320,9 +320,214 @@ export const prometheus_query: RequestHandler = async (req, res) => {
 }
 
 /**
+ * Range query endpoint - returns time series data over a time range
+ * Used by grafterm for graph widgets
+ */
+export const prometheus_query_range: RequestHandler = async (req, res) => {
+  console.log(`[prometheus_query_range] Called with query=${req.query.query}, start=${req.query.start}, end=${req.query.end}`)
+  const query = req.query.query as string | undefined
+  const start = req.query.start as string | undefined
+  const end = req.query.end as string | undefined
+  const step = req.query.step as string | undefined
+
+  if (!query) {
+    res.status(400).json({
+      status: "error",
+      errorType: "bad_data",
+      error: "Missing query parameter",
+    })
+    return
+  }
+
+  if (!start || !end) {
+    res.status(400).json({
+      status: "error",
+      errorType: "bad_data",
+      error: "Missing start or end parameter",
+    })
+    return
+  }
+
+  const metricName = extractMetricName(query)
+  const metricSource = METRIC_SOURCES[metricName]
+
+  if (!metricSource) {
+    res.status(200).json({
+      status: "success",
+      data: {
+        resultType: "matrix",
+        result: [],
+      },
+    })
+    return
+  }
+
+  try {
+    const startTime = parseFloat(start)
+    const endTime = parseFloat(end)
+    const stepSeconds = step ? parseFloat(step) : 60 // Default 60s step
+
+    let prometheusData: {
+      status: string
+      data: {
+        resultType: string
+        result: Array<{
+          metric: { __name__: string }
+          values: Array<[number, string]>
+        }>
+      }
+    } | null = null
+
+    // Get the base data (same as instant query)
+    if (metricSource.type === "activity") {
+      const daily = await database.getDailyActivity()
+      const weekly = await database.getWeeklyActivity()
+      const monthly = await database.getMonthlyActivity()
+
+      const allData = {
+        status: "success",
+        data: {
+          resultType: "matrix" as const,
+          result: [
+            ...convertActivityToPrometheus(daily, "daily_activity").data.result,
+            ...convertActivityToPrometheus(weekly, "weekly_activity").data
+              .result,
+            ...convertActivityToPrometheus(monthly, "monthly_activity").data
+              .result,
+          ],
+        },
+      }
+
+      // Filter to requested metric
+      const filtered = filterMetricResult(allData.data.result, metricName)
+      
+      // Filter values by time range
+      const filteredByTime = filtered.map((series) => ({
+        ...series,
+        values: series.values.filter(
+          ([timestamp]) => timestamp >= startTime && timestamp <= endTime,
+        ),
+      }))
+
+      prometheusData = {
+        status: "success",
+        data: {
+          resultType: "matrix",
+          result: filteredByTime,
+        },
+      }
+      
+      console.log(`[prometheus_query_range] Returning ${filteredByTime.length} series with ${filteredByTime.reduce((sum, s) => sum + s.values.length, 0)} total values`)
+    } else if (metricSource.type === "orders") {
+      const analytics = await database.getOrderAnalytics()
+      const totals =
+        metricSource.period === "daily"
+          ? analytics.daily_totals
+          : metricSource.period === "weekly"
+            ? analytics.weekly_totals
+            : analytics.monthly_totals
+
+      const allData = convertOrderAnalyticsToPrometheus(
+        totals,
+        metricSource.period!,
+      )
+      const filtered = filterMetricResult(allData.data.result, metricName)
+      
+      // Filter values by time range
+      const filteredByTime = filtered.map((series) => ({
+        ...series,
+        values: series.values.filter(
+          ([timestamp]) => timestamp >= startTime && timestamp <= endTime,
+        ),
+      }))
+
+      prometheusData = {
+        status: "success",
+        data: {
+          resultType: "matrix",
+          result: filteredByTime,
+        },
+      }
+    } else if (metricSource.type === "membership") {
+      const analytics = await database.getMembershipAnalytics()
+      const totals =
+        metricSource.period === "daily"
+          ? analytics.daily_totals
+          : metricSource.period === "weekly"
+            ? analytics.weekly_totals
+            : analytics.monthly_totals
+
+      const allData = convertMembershipAnalyticsToPrometheus(
+        totals,
+        metricSource.period!,
+      )
+      const filtered = filterMetricResult(allData.data.result, metricName)
+      
+      // Filter values by time range
+      const filteredByTime = filtered.map((series) => ({
+        ...series,
+        values: series.values.filter(
+          ([timestamp]) => timestamp >= startTime && timestamp <= endTime,
+        ),
+      }))
+
+      prometheusData = {
+        status: "success",
+        data: {
+          resultType: "matrix",
+          result: filteredByTime,
+        },
+      }
+    } else if (metricSource.type === "stats") {
+      // For stats metrics (instant values), convert to range format
+      // by creating a single point at the end time
+      const stats = await database.getOrderStats()
+      const allData = convertStatsToPrometheus(stats)
+      const filtered = allData.data.result.filter(
+        (r) => r.metric.__name__ === metricName,
+      )
+
+      // Convert instant vector to matrix format with single point
+      // Use end time from range query for the timestamp
+      prometheusData = {
+        status: "success",
+        data: {
+          resultType: "matrix",
+          result: filtered.map((series) => ({
+            metric: series.metric,
+            values: series.value
+              ? [[endTime, series.value[1]]]
+              : [[endTime, "0"]],
+          })),
+        },
+      }
+    }
+
+    if (prometheusData) {
+      console.log(`[prometheus_query_range] Sending response: status=${prometheusData.status}, resultType=${prometheusData.data.resultType}, seriesCount=${prometheusData.data.result.length}`)
+      res.json(prometheusData)
+    } else {
+      res.status(500).json({
+        status: "error",
+        errorType: "internal",
+        error: "Failed to fetch metric",
+      })
+    }
+  } catch (error) {
+    console.error("Error querying Prometheus range metric:", error)
+    res.status(500).json({
+      status: "error",
+      errorType: "internal",
+      error: "Internal server error",
+    })
+  }
+}
+
+/**
  * List all available metric names
  */
 export const prometheus_label_values: RequestHandler = async (req, res) => {
+  console.log(`[prometheus_label_values] Called with label_name=${req.params.label_name}`)
   const labelName = req.params.label_name as string
 
   if (labelName === "__name__") {
