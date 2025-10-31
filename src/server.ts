@@ -15,11 +15,7 @@ import pg from "pg"
 import { apiRouter } from "./api/routes/v1/api-router.js"
 import { database } from "./clients/database/knex-db.js"
 import { hostname } from "os"
-import {
-  adminAuthorized,
-  errorHandler,
-  userAuthorized,
-} from "./api/middleware/auth.js"
+import { errorHandler, userAuthorized } from "./api/middleware/auth.js"
 import { SitemapStream, streamToPromise } from "sitemap"
 import { createGzip } from "zlib"
 import { registrationRouter } from "./clients/discord_api/registration.js"
@@ -447,6 +443,7 @@ app.use(
 app.use(addTranslationToRequestWithUser)
 
 app.use(adminOverride)
+
 app.use("/api", apiRouter)
 
 app.use(errorHandler)

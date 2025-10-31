@@ -324,11 +324,11 @@ export const prometheus_query: RequestHandler = async (req, res) => {
  * Used by grafterm for graph widgets
  */
 export const prometheus_query_range: RequestHandler = async (req, res) => {
-  console.log(`[prometheus_query_range] Called with query=${req.query.query}, start=${req.query.start}, end=${req.query.end}`)
-  const query = req.query.query as string | undefined
-  const start = req.query.start as string | undefined
-  const end = req.query.end as string | undefined
-  const step = req.query.step as string | undefined
+  // Handle both GET (query params) and POST (form data in body)
+  const query = (req.query.query as string | undefined) || (req.body?.query as string | undefined)
+  const start = (req.query.start as string | undefined) || (req.body?.start as string | undefined)
+  const end = (req.query.end as string | undefined) || (req.body?.end as string | undefined)
+  const step = (req.query.step as string | undefined) || (req.body?.step as string | undefined)
 
   if (!query) {
     res.status(400).json({
@@ -416,8 +416,6 @@ export const prometheus_query_range: RequestHandler = async (req, res) => {
           result: filteredByTime,
         },
       }
-      
-      console.log(`[prometheus_query_range] Returning ${filteredByTime.length} series with ${filteredByTime.reduce((sum, s) => sum + s.values.length, 0)} total values`)
     } else if (metricSource.type === "orders") {
       const analytics = await database.getOrderAnalytics()
       const totals =
@@ -504,7 +502,6 @@ export const prometheus_query_range: RequestHandler = async (req, res) => {
     }
 
     if (prometheusData) {
-      console.log(`[prometheus_query_range] Sending response: status=${prometheusData.status}, resultType=${prometheusData.data.resultType}, seriesCount=${prometheusData.data.result.length}`)
       res.json(prometheusData)
     } else {
       res.status(500).json({
@@ -527,7 +524,6 @@ export const prometheus_query_range: RequestHandler = async (req, res) => {
  * List all available metric names
  */
 export const prometheus_label_values: RequestHandler = async (req, res) => {
-  console.log(`[prometheus_label_values] Called with label_name=${req.params.label_name}`)
   const labelName = req.params.label_name as string
 
   if (labelName === "__name__") {
