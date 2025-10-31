@@ -2,6 +2,7 @@ import express from "express"
 import { adminAuthorized, requireScopes } from "../../../middleware/auth.js"
 import {
   prometheus_query,
+  prometheus_query_range,
   prometheus_label_values,
   prometheus_series,
 } from "./controller.js"
@@ -15,6 +16,12 @@ prometheusRouter.get(
   adminAuthorized,
   requireScopes("admin:stats", "admin"),
   prometheus_query,
+)
+prometheusRouter.get(
+  "/query_range",
+  adminAuthorized,
+  requireScopes("admin:stats", "admin"),
+  prometheus_query_range,
 )
 prometheusRouter.get(
   "/label/:label_name/values",
