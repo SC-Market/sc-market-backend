@@ -1,0 +1,110 @@
+{
+  "version": "v1",
+  "datasources": {
+      "sc-market-api-local": {
+        "prometheus": {
+          "address": "http://localhost:9090/api/prometheus"
+        }
+      }
+  },
+  "dashboard": {
+    "widgets": [
+      {
+        "title": "Daily Activity",
+        "gridpos": { "x": 0, "y": 0, "w": 100, "h": 8 },
+        "graph": {
+          "queries": [
+            {
+              "datasourceID": "sc-market-api-local",
+              "expr": "daily_activity"
+            }
+          ]
+        }
+      },
+      {
+        "title": "Weekly Activity",
+        "gridpos": { "x": 0, "y": 8, "w": 100, "h": 8 },
+        "graph": {
+          "queries": [
+            {
+              "datasourceID": "sc-market-api-local",
+              "expr": "weekly_activity"
+            }
+          ]
+        }
+      },
+      {
+        "title": "Monthly Activity",
+        "gridpos": { "x": 0, "y": 16, "w": 100, "h": 8 },
+        "graph": {
+          "queries": [
+            {
+              "datasourceID": "sc-market-api-local",
+              "expr": "monthly_activity"
+            }
+          ]
+        }
+      },
+      {
+        "title": "Daily Fulfilled Orders",
+        "gridpos": { "x": 0, "y": 24, "w": 50, "h": 8 },
+        "graph": {
+          "queries": [
+            {
+              "datasourceID": "sc-market-api-local",
+              "expr": "daily_orders_fulfilled"
+            }
+          ]
+        }
+      },
+      {
+        "title": "Daily In Progress Orders",
+        "gridpos": { "x": 50, "y": 24, "w": 50, "h": 8 },
+        "graph": {
+          "queries": [
+            {
+              "datasourceID": "sc-market-api-local",
+              "expr": "daily_orders_in_progress"
+            }
+          ]
+        }
+      },
+      {
+        "title": "Total Orders",
+        "gridpos": { "x": 0, "y": 32, "w": 33, "h": 4 },
+        "graph": {
+          "queries": [
+            {
+              "datasourceID": "sc-market-api-local",
+              "expr": "total_orders"
+            }
+          ]
+        }
+      },
+      {
+        "title": "Total Order Value",
+        "gridpos": { "x": 33, "y": 32, "w": 33, "h": 4 },
+        "graph": {
+          "queries": [
+            {
+              "datasourceID": "sc-market-api-local",
+              "expr": "total_order_value"
+            }
+          ]
+        }
+      },
+      {
+        "title": "Week Orders",
+        "gridpos": { "x": 66, "y": 32, "w": 34, "h": 4 },
+        "graph": {
+          "queries": [
+            {
+              "datasourceID": "sc-market-api-local",
+              "expr": "week_orders"
+            }
+          ]
+        }
+      }
+    ]
+  }
+}

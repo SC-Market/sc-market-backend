@@ -23,6 +23,12 @@ prometheusRouter.get(
   requireScopes("admin:stats", "admin"),
   prometheus_query_range,
 )
+prometheusRouter.post(
+  "/query_range",
+  adminAuthorized,
+  requireScopes("admin:stats", "admin"),
+  prometheus_query_range,
+)
 prometheusRouter.get(
   "/label/:label_name/values",
   adminAuthorized,
