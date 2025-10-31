@@ -15,6 +15,7 @@ import {
   tokens_delete_tokenId_spec,
   tokens_post_tokenId_extend_spec,
   tokens_get_tokenId_stats_spec,
+  tokens_get_scopes_spec,
 } from "./openapi.js"
 
 export const tokensRouter = express.Router()
@@ -80,4 +81,13 @@ tokensRouter.get(
   tokens_get_tokenId_stats_spec,
   readRateLimit,
   tokensController.getTokenStats,
+)
+
+// Get available scopes for current user
+tokensRouter.get(
+  "/scopes",
+  userAuthorized,
+  tokens_get_scopes_spec,
+  readRateLimit,
+  tokensController.getAvailableScopes,
 )
