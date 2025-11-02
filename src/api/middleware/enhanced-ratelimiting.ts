@@ -21,11 +21,15 @@ export interface RateLimiterConfig {
   insuranceLimiter?: RateLimiterMemory
 }
 
+export interface RateLimitConfig {
+  points: number
+}
+
 // Tiered rate limit configuration
 export interface TieredRateLimit {
-  anonymous: RateLimiterConfig
-  authenticated: RateLimiterConfig
-  admin?: RateLimiterConfig
+  anonymous: RateLimitConfig
+  authenticated: RateLimitConfig
+  admin?: RateLimitConfig
 }
 
 // Rate limit response interface
@@ -205,39 +209,39 @@ export function createRateLimit(tieredConfig: TieredRateLimit) {
 
 // Predefined rate limit configurations for different endpoint types
 export const criticalRateLimit = createRateLimit({
-  anonymous: { points: 15, duration: 60, blockDuration: 900 },
-  authenticated: { points: 15, duration: 60, blockDuration: 600 },
-  admin: { points: 1, duration: 60, blockDuration: 0 },
+  anonymous: { points: 15 },
+  authenticated: { points: 15 },
+  admin: { points: 1 },
 })
 
 export const writeRateLimit = createRateLimit({
-  anonymous: { points: 3, duration: 60, blockDuration: 300 },
-  authenticated: { points: 2, duration: 60, blockDuration: 300 },
-  admin: { points: 1, duration: 60, blockDuration: 0 },
+  anonymous: { points: 3 },
+  authenticated: { points: 2 },
+  admin: { points: 1 },
 })
 
 export const readRateLimit = createRateLimit({
-  anonymous: { points: 1, duration: 60, blockDuration: 180 },
-  authenticated: { points: 1, duration: 60, blockDuration: 180 },
-  admin: { points: 1, duration: 60, blockDuration: 0 },
+  anonymous: { points: 1 },
+  authenticated: { points: 1 },
+  admin: { points: 1 },
 })
 
 export const bulkRateLimit = createRateLimit({
-  anonymous: { points: 15, duration: 60, blockDuration: 600 },
-  authenticated: { points: 15, duration: 60, blockDuration: 300 },
-  admin: { points: 1, duration: 60, blockDuration: 0 },
+  anonymous: { points: 15 },
+  authenticated: { points: 15 },
+  admin: { points: 1 },
 })
 
 // Specialized rate limit for notification operations (marking as read, etc.)
 export const notificationRateLimit = createRateLimit({
-  anonymous: { points: 10, duration: 60, blockDuration: 300 },
-  authenticated: { points: 30, duration: 60, blockDuration: 180 },
-  admin: { points: 100, duration: 60, blockDuration: 0 },
+  anonymous: { points: 1 },
+  authenticated: { points: 1 },
+  admin: { points: 1 },
 })
 
 // Generic rate limit for common write operations (messages, acknowledgments, etc.)
 export const commonWriteRateLimit = createRateLimit({
-  anonymous: { points: 15, duration: 60, blockDuration: 300 },
-  authenticated: { points: 40, duration: 60, blockDuration: 180 },
-  admin: { points: 100, duration: 60, blockDuration: 0 },
+  anonymous: { points: 5 },
+  authenticated: { points: 5 },
+  admin: { points: 1 },
 })

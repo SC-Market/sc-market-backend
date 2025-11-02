@@ -35,7 +35,8 @@ export const admin_get_activity: RequestHandler = async (req, res) => {
         result: [
           ...convertActivityToPrometheus(daily, "daily_activity").data.result,
           ...convertActivityToPrometheus(weekly, "weekly_activity").data.result,
-          ...convertActivityToPrometheus(monthly, "monthly_activity").data.result,
+          ...convertActivityToPrometheus(monthly, "monthly_activity").data
+            .result,
         ],
       },
     }
@@ -54,18 +55,9 @@ export const admin_get_orders_analytics: RequestHandler = async (req, res) => {
     // Check if Grafana format is requested
     if (req.query.format === "grafana") {
       const grafanaData = [
-        ...convertOrderAnalyticsToGrafana(
-          analytics.daily_totals,
-          "daily",
-        ),
-        ...convertOrderAnalyticsToGrafana(
-          analytics.weekly_totals,
-          "weekly",
-        ),
-        ...convertOrderAnalyticsToGrafana(
-          analytics.monthly_totals,
-          "monthly",
-        ),
+        ...convertOrderAnalyticsToGrafana(analytics.daily_totals, "daily"),
+        ...convertOrderAnalyticsToGrafana(analytics.weekly_totals, "weekly"),
+        ...convertOrderAnalyticsToGrafana(analytics.monthly_totals, "monthly"),
       ]
       res.json(grafanaData)
       return
@@ -176,10 +168,7 @@ export const admin_get_membership_analytics: RequestHandler = async (
     // Check if Grafana format is requested
     if (req.query.format === "grafana") {
       const grafanaData = [
-        ...convertMembershipAnalyticsToGrafana(
-          analytics.daily_totals,
-          "daily",
-        ),
+        ...convertMembershipAnalyticsToGrafana(analytics.daily_totals, "daily"),
         ...convertMembershipAnalyticsToGrafana(
           analytics.weekly_totals,
           "weekly",

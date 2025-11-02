@@ -17,11 +17,7 @@ import { createErrorResponse as createErrorResponse } from "../util/response.js"
 import { createResponse as createResponse } from "../util/response.js"
 import logger from "../../../../logger/logger.js"
 
-export const profile_post_auth_link: RequestHandler = async (
-  req,
-  res,
-  next,
-) => {
+export const profile_post_auth_link: RequestHandler = async (req, res) => {
   try {
     const user = req.user as User
     const username = req.body.username || ""
@@ -45,7 +41,6 @@ export const profile_post_auth_link: RequestHandler = async (
 export const profile_post_auth_sync_handle: RequestHandler = async (
   req,
   res,
-  next,
 ) => {
   try {
     const user = req.user as User
@@ -85,11 +80,7 @@ export const profile_post_auth_sync_handle: RequestHandler = async (
   }
 }
 
-export const profile_post_auth_unlink: RequestHandler = async (
-  req,
-  res,
-  next,
-) => {
+export const profile_post_auth_unlink: RequestHandler = async (req, res) => {
   try {
     const user = req.user as User
 
@@ -135,20 +126,12 @@ export const profile_post_auth_unlink: RequestHandler = async (
   }
 }
 
-export const profile_get_auth_ident: RequestHandler = async (
-  req,
-  res,
-  next,
-) => {
+export const profile_get_auth_ident: RequestHandler = async (req, res) => {
   const user = req.user as User
   res.json({ identifier: get_sentinel(user.user_id) })
 }
 
-export const profile_get_search_query: RequestHandler = async (
-  req,
-  res,
-  next,
-) => {
+export const profile_get_search_query: RequestHandler = async (req, res) => {
   const query = req.params["query"]
 
   // if (query.length < 3) {
@@ -276,11 +259,7 @@ export const profile_post_update: RequestHandler = async (req, res, next) => {
   res.json({ result: "Success", ...newUsers[0] })
 }
 
-export const profile_post_webhook_create: RequestHandler = async (
-  req,
-  res,
-  next,
-) => {
+export const profile_post_webhook_create: RequestHandler = async (req, res) => {
   const user = req.user as User
 
   const {
@@ -314,11 +293,7 @@ export const profile_post_webhook_create: RequestHandler = async (
   res.json({ result: "Success" })
 }
 
-export const profile_post_webhook_delete: RequestHandler = async (
-  req,
-  res,
-  next,
-) => {
+export const profile_post_webhook_delete: RequestHandler = async (req, res) => {
   const user = req.user as User
 
   const {
@@ -358,7 +333,6 @@ export const profile_get_webhooks: RequestHandler = async (req, res, next) => {
 export const profile_get_user_username_reviews: RequestHandler = async (
   req,
   res,
-  next,
 ) => {
   const username = req.params["username"]
   let user
@@ -389,11 +363,7 @@ export const profile_get_user_username_reviews: RequestHandler = async (
   )
 }
 
-export const profile_get_user_username: RequestHandler = async (
-  req,
-  res,
-  next,
-) => {
+export const profile_get_user_username: RequestHandler = async (req, res) => {
   try {
     const requester = req.user as User
     const username = req.params["username"]
@@ -416,7 +386,6 @@ export const profile_get_user_username: RequestHandler = async (
 export const profile_post_settings_update: RequestHandler = async (
   req,
   res,
-  next,
 ) => {
   const user = req.user as User
 
@@ -439,7 +408,6 @@ export const profile_post_settings_update: RequestHandler = async (
 export const profile_post_availability_update: RequestHandler = async (
   req,
   res,
-  next,
 ) => {
   try {
     const user = req.user as User
@@ -505,7 +473,6 @@ export const profile_get_availability_contractor_spectrum_id: RequestHandler =
 export const profile_get_settings_discord: RequestHandler = async (
   req,
   res,
-  next,
 ) => {
   const user = req.user as User
   let guild
@@ -544,11 +511,7 @@ export const profile_post_settings_discord_use_official: RequestHandler =
     return
   }
 
-export const profile_get_availability: RequestHandler = async (
-  req,
-  res,
-  next,
-) => {
+export const profile_get_availability: RequestHandler = async (req, res) => {
   const user = req.user as User
 
   res.json({

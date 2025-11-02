@@ -1,7 +1,7 @@
 /**
  * Utility functions to convert time series data to Grafana-compatible format
  * and Prometheus-compatible format
- * 
+ *
  * Grafana JSON datasource expects data in the format:
  * [
  *   {
@@ -9,7 +9,7 @@
  *     "datapoints": [[value, timestamp_in_ms], ...]
  *   }
  * ]
- * 
+ *
  * Prometheus query API expects data in the format:
  * {
  *   "status": "success",
@@ -32,7 +32,12 @@ function dateToTimestamp(date: string | Date | null | undefined): number {
   if (!date) {
     return Date.now()
   }
-  if (typeof date === 'string') {
+  if (typeof date === "string") {
+    // If it's a date-only string (YYYY-MM-DD), treat it as UTC midnight
+    // Otherwise parse normally
+    if (/^\d{4}-\d{2}-\d{2}$/.test(date)) {
+      return new Date(date + "T00:00:00Z").getTime()
+    }
     return new Date(date).getTime()
   }
   if (date instanceof Date) {
@@ -45,7 +50,9 @@ function dateToTimestamp(date: string | Date | null | undefined): number {
 /**
  * Convert a date string or Date object to Unix timestamp in seconds (for Prometheus)
  */
-function dateToTimestampSeconds(date: string | Date | null | undefined): number {
+function dateToTimestampSeconds(
+  date: string | Date | null | undefined,
+): number {
   return Math.floor(dateToTimestamp(date) / 1000)
 }
 
@@ -53,10 +60,10 @@ function dateToTimestampSeconds(date: string | Date | null | undefined): number 
  * Convert value to number, handling BigInt and string numbers
  */
 function toNumericValue(value: any): number {
-  if (typeof value === 'number') {
+  if (typeof value === "number") {
     return value
   }
-  if (typeof value === 'bigint') {
+  if (typeof value === "bigint") {
     return Number(value)
   }
   if (value !== null && value !== undefined) {
@@ -76,14 +83,15 @@ export function convertToGrafanaFormat<T extends { date: string | Date }>(
   data: T[],
   metrics: Record<string, keyof T>,
 ): Array<{ target: string; datapoints: Array<[number, number]> }> {
-  const result: Array<{ target: string; datapoints: Array<[number, number]> }> = []
+  const result: Array<{ target: string; datapoints: Array<[number, number]> }> =
+    []
 
   for (const [metricName, valueKey] of Object.entries(metrics)) {
     const datapoints: Array<[number, number]> = data.map((item) => {
       const value = item[valueKey]
       const timestamp = dateToTimestamp(item.date)
       const numericValue = toNumericValue(value)
-      
+
       return [numericValue, timestamp]
     })
 
@@ -103,7 +111,7 @@ export function convertActivityToGrafana(
   data: Array<{ date: string | Date; count: number }>,
   seriesName: string,
 ): Array<{ target: string; datapoints: Array<[number, number]> }> {
-  return convertToGrafanaFormat(data, { [seriesName]: 'count' })
+  return convertToGrafanaFormat(data, { [seriesName]: "count" })
 }
 
 /**
@@ -118,15 +126,15 @@ export function convertOrderAnalyticsToGrafana(
     cancelled: number
     not_started: number
   }>,
-  period: 'daily' | 'weekly' | 'monthly',
+  period: "daily" | "weekly" | "monthly",
 ): Array<{ target: string; datapoints: Array<[number, number]> }> {
   const prefix = `${period}_orders`
   return convertToGrafanaFormat(data, {
-    [`${prefix}_total`]: 'total',
-    [`${prefix}_in_progress`]: 'in_progress',
-    [`${prefix}_fulfilled`]: 'fulfilled',
-    [`${prefix}_cancelled`]: 'cancelled',
-    [`${prefix}_not_started`]: 'not_started',
+    [`${prefix}_total`]: "total",
+    [`${prefix}_in_progress`]: "in_progress",
+    [`${prefix}_fulfilled`]: "fulfilled",
+    [`${prefix}_cancelled`]: "cancelled",
+    [`${prefix}_not_started`]: "not_started",
   })
 }
 
@@ -143,16 +151,17 @@ export function convertMembershipAnalyticsToGrafana(
     cumulative_members_rsi_verified: number
     cumulative_members_rsi_unverified: number
   }>,
-  period: 'daily' | 'weekly' | 'monthly',
+  period: "daily" | "weekly" | "monthly",
 ): Array<{ target: string; datapoints: Array<[number, number]> }> {
   const prefix = `${period}_membership`
   return convertToGrafanaFormat(data, {
-    [`${prefix}_new`]: 'new_members',
-    [`${prefix}_new_rsi_verified`]: 'new_members_rsi_verified',
-    [`${prefix}_new_rsi_unverified`]: 'new_members_rsi_unverified',
-    [`${prefix}_cumulative`]: 'cumulative_members',
-    [`${prefix}_cumulative_rsi_verified`]: 'cumulative_members_rsi_verified',
-    [`${prefix}_cumulative_rsi_unverified`]: 'cumulative_members_rsi_unverified',
+    [`${prefix}_new`]: "new_members",
+    [`${prefix}_new_rsi_verified`]: "new_members_rsi_verified",
+    [`${prefix}_new_rsi_unverified`]: "new_members_rsi_unverified",
+    [`${prefix}_cumulative`]: "cumulative_members",
+    [`${prefix}_cumulative_rsi_verified`]: "cumulative_members_rsi_verified",
+    [`${prefix}_cumulative_rsi_unverified`]:
+      "cumulative_members_rsi_unverified",
   })
 }
 
@@ -164,7 +173,8 @@ export function convertMembershipAnalyticsToGrafana(
 export function convertStatsToGrafana(
   stats: Record<string, number | string | null | undefined>,
 ): Array<{ target: string; datapoints: Array<[number, number]> }> {
-  const result: Array<{ target: string; datapoints: Array<[number, number]> }> = []
+  const result: Array<{ target: string; datapoints: Array<[number, number]> }> =
+    []
   const timestamp = Date.now()
 
   for (const [metricName, value] of Object.entries(stats)) {
@@ -218,9 +228,9 @@ export function convertToPrometheusFormat<T extends { date: string | Date }>(
   }
 
   return {
-    status: 'success',
+    status: "success",
     data: {
-      resultType: 'matrix',
+      resultType: "matrix",
       result,
     },
   }
@@ -256,9 +266,9 @@ export function convertStatsToPrometheus(
   }
 
   return {
-    status: 'success',
+    status: "success",
     data: {
-      resultType: 'vector',
+      resultType: "vector",
       result,
     },
   }
@@ -280,7 +290,7 @@ export function convertActivityToPrometheus(
     }>
   }
 } {
-  return convertToPrometheusFormat(data, { [seriesName]: 'count' })
+  return convertToPrometheusFormat(data, { [seriesName]: "count" })
 }
 
 /**
@@ -295,7 +305,7 @@ export function convertOrderAnalyticsToPrometheus(
     cancelled: number
     not_started: number
   }>,
-  period: 'daily' | 'weekly' | 'monthly',
+  period: "daily" | "weekly" | "monthly",
 ): {
   status: string
   data: {
@@ -308,11 +318,11 @@ export function convertOrderAnalyticsToPrometheus(
 } {
   const prefix = `${period}_orders`
   return convertToPrometheusFormat(data, {
-    [`${prefix}_total`]: 'total',
-    [`${prefix}_in_progress`]: 'in_progress',
-    [`${prefix}_fulfilled`]: 'fulfilled',
-    [`${prefix}_cancelled`]: 'cancelled',
-    [`${prefix}_not_started`]: 'not_started',
+    [`${prefix}_total`]: "total",
+    [`${prefix}_in_progress`]: "in_progress",
+    [`${prefix}_fulfilled`]: "fulfilled",
+    [`${prefix}_cancelled`]: "cancelled",
+    [`${prefix}_not_started`]: "not_started",
   })
 }
 
@@ -329,7 +339,7 @@ export function convertMembershipAnalyticsToPrometheus(
     cumulative_members_rsi_verified: number
     cumulative_members_rsi_unverified: number
   }>,
-  period: 'daily' | 'weekly' | 'monthly',
+  period: "daily" | "weekly" | "monthly",
 ): {
   status: string
   data: {
@@ -342,11 +352,12 @@ export function convertMembershipAnalyticsToPrometheus(
 } {
   const prefix = `${period}_membership`
   return convertToPrometheusFormat(data, {
-    [`${prefix}_new`]: 'new_members',
-    [`${prefix}_new_rsi_verified`]: 'new_members_rsi_verified',
-    [`${prefix}_new_rsi_unverified`]: 'new_members_rsi_unverified',
-    [`${prefix}_cumulative`]: 'cumulative_members',
-    [`${prefix}_cumulative_rsi_verified`]: 'cumulative_members_rsi_verified',
-    [`${prefix}_cumulative_rsi_unverified`]: 'cumulative_members_rsi_unverified',
+    [`${prefix}_new`]: "new_members",
+    [`${prefix}_new_rsi_verified`]: "new_members_rsi_verified",
+    [`${prefix}_new_rsi_unverified`]: "new_members_rsi_unverified",
+    [`${prefix}_cumulative`]: "cumulative_members",
+    [`${prefix}_cumulative_rsi_verified`]: "cumulative_members_rsi_verified",
+    [`${prefix}_cumulative_rsi_unverified`]:
+      "cumulative_members_rsi_unverified",
   })
 }
