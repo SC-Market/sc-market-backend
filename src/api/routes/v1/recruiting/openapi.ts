@@ -8,7 +8,7 @@ import {
   Response429Read,
   RateLimitHeaders,
 } from "../openapi.js"
-import { sortingMethods } from "../market/types.js"
+import { sortingMethods } from "./controller.js"
 
 oapi.schema("RecruitingPost", {
   type: "object",
