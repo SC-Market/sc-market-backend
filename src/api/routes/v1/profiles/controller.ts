@@ -2,7 +2,6 @@ import { RequestHandler } from "express"
 import { User as User } from "../api-models.js"
 import { database as database } from "../../../../clients/database/knex-db.js"
 import { cdn as cdn } from "../../../../clients/cdn/cdn.js"
-import { external_resource_regex as external_resource_regex } from "../../../../clients/cdn/cdn.js"
 import { AvailabilityBody as AvailabilityBody } from "../../../../clients/database/db-models.js"
 import { getUserRating as getUserRating } from "../util/formatting.js"
 import { createNotificationWebhook as createNotificationWebhook } from "../util/webhooks.js"
@@ -87,7 +86,7 @@ export const profile_post_auth_unlink: RequestHandler = async (req, res) => {
     const user = req.user as User
 
     // Check if user is currently verified
-    if (!user.rsi_confirmed || !user.spectrum_user_id) {
+    if (!user.rsi_confirmed) {
       res.status(400).json(
         createErrorResponse({
           message: "User is not currently verified with a Star Citizen account",
@@ -235,9 +234,9 @@ export const profile_post_avatar: RequestHandler = async (req, res) => {
     const file = req.file as Express.Multer.File
 
     if (!file) {
-      res.status(400).json(
-        createErrorResponse({ error: "No avatar file provided" }),
-      )
+      res
+        .status(400)
+        .json(createErrorResponse({ error: "No avatar file provided" }))
       return
     }
 
@@ -272,12 +271,29 @@ export const profile_post_avatar: RequestHandler = async (req, res) => {
     if (old_avatar) {
       try {
         await cdn.removeResource(old_avatar)
-      } catch (deleteError) {
-        logger.warn("Failed to delete old avatar resource:", {
-          resource_id: old_avatar,
-          user_id: user.user_id,
-          error: deleteError,
-        })
+      } catch (deleteError: any) {
+        // Check for foreign key constraint violations - these are expected
+        // if the resource is still referenced elsewhere (e.g., accounts table)
+        const isForeignKeyError =
+          deleteError?.message?.includes("foreign key") ||
+          deleteError?.code === "23503" ||
+          deleteError?.constraint?.includes("fkey")
+
+        if (isForeignKeyError) {
+          logger.debug(
+            "Old avatar resource still referenced elsewhere, skipping deletion:",
+            {
+              resource_id: old_avatar,
+              user_id: user.user_id,
+            },
+          )
+        } else {
+          logger.warn("Failed to delete old avatar resource:", {
+            resource_id: old_avatar,
+            user_id: user.user_id,
+            error: deleteError?.message || deleteError,
+          })
+        }
         // Continue even if deletion fails - new resource is already active
       }
     }
@@ -370,9 +386,9 @@ export const profile_post_banner: RequestHandler = async (req, res) => {
     const file = req.file as Express.Multer.File
 
     if (!file) {
-      res.status(400).json(
-        createErrorResponse({ error: "No banner file provided" }),
-      )
+      res
+        .status(400)
+        .json(createErrorResponse({ error: "No banner file provided" }))
       return
     }
 
@@ -407,12 +423,29 @@ export const profile_post_banner: RequestHandler = async (req, res) => {
     if (old_banner) {
       try {
         await cdn.removeResource(old_banner)
-      } catch (deleteError) {
-        logger.warn("Failed to delete old banner resource:", {
-          resource_id: old_banner,
-          user_id: user.user_id,
-          error: deleteError,
-        })
+      } catch (deleteError: any) {
+        // Check for foreign key constraint violations - these are expected
+        // if the resource is still referenced elsewhere (e.g., accounts table)
+        const isForeignKeyError =
+          deleteError?.message?.includes("foreign key") ||
+          deleteError?.code === "23503" ||
+          deleteError?.constraint?.includes("fkey")
+
+        if (isForeignKeyError) {
+          logger.debug(
+            "Old banner resource still referenced elsewhere, skipping deletion:",
+            {
+              resource_id: old_banner,
+              user_id: user.user_id,
+            },
+          )
+        } else {
+          logger.warn("Failed to delete old banner resource:", {
+            resource_id: old_banner,
+            user_id: user.user_id,
+            error: deleteError?.message || deleteError,
+          })
+        }
         // Continue even if deletion fails - new resource is already active
       }
     }

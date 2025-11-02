@@ -819,9 +819,9 @@ export const contractors_post_spectrum_id_avatar: RequestHandler = async (
     const file = req.file as Express.Multer.File
 
     if (!file) {
-      res.status(400).json(
-        createErrorResponse({ error: "No avatar file provided" }),
-      )
+      res
+        .status(400)
+        .json(createErrorResponse({ error: "No avatar file provided" }))
       return
     }
 
@@ -856,12 +856,29 @@ export const contractors_post_spectrum_id_avatar: RequestHandler = async (
     if (old_avatar) {
       try {
         await cdn.removeResource(old_avatar)
-      } catch (deleteError) {
-        logger.warn("Failed to delete old organization avatar resource:", {
-          resource_id: old_avatar,
-          contractor_id: contractor.contractor_id,
-          error: deleteError,
-        })
+      } catch (deleteError: any) {
+        // Check for foreign key constraint violations - these are expected
+        // if the resource is still referenced elsewhere (e.g., accounts table)
+        const isForeignKeyError =
+          deleteError?.message?.includes("foreign key") ||
+          deleteError?.code === "23503" ||
+          deleteError?.constraint?.includes("fkey")
+
+        if (isForeignKeyError) {
+          logger.debug(
+            "Old organization avatar resource still referenced elsewhere, skipping deletion:",
+            {
+              resource_id: old_avatar,
+              contractor_id: contractor.contractor_id,
+            },
+          )
+        } else {
+          logger.warn("Failed to delete old organization avatar resource:", {
+            resource_id: old_avatar,
+            contractor_id: contractor.contractor_id,
+            error: deleteError?.message || deleteError,
+          })
+        }
         // Continue even if deletion fails - new resource is already active
       }
     }
@@ -958,9 +975,9 @@ export const contractors_post_spectrum_id_banner: RequestHandler = async (
     const file = req.file as Express.Multer.File
 
     if (!file) {
-      res.status(400).json(
-        createErrorResponse({ error: "No banner file provided" }),
-      )
+      res
+        .status(400)
+        .json(createErrorResponse({ error: "No banner file provided" }))
       return
     }
 
@@ -995,12 +1012,29 @@ export const contractors_post_spectrum_id_banner: RequestHandler = async (
     if (old_banner) {
       try {
         await cdn.removeResource(old_banner)
-      } catch (deleteError) {
-        logger.warn("Failed to delete old organization banner resource:", {
-          resource_id: old_banner,
-          contractor_id: contractor.contractor_id,
-          error: deleteError,
-        })
+      } catch (deleteError: any) {
+        // Check for foreign key constraint violations - these are expected
+        // if the resource is still referenced elsewhere (e.g., accounts table)
+        const isForeignKeyError =
+          deleteError?.message?.includes("foreign key") ||
+          deleteError?.code === "23503" ||
+          deleteError?.constraint?.includes("fkey")
+
+        if (isForeignKeyError) {
+          logger.debug(
+            "Old organization banner resource still referenced elsewhere, skipping deletion:",
+            {
+              resource_id: old_banner,
+              contractor_id: contractor.contractor_id,
+            },
+          )
+        } else {
+          logger.warn("Failed to delete old organization banner resource:", {
+            resource_id: old_banner,
+            contractor_id: contractor.contractor_id,
+            error: deleteError?.message || deleteError,
+          })
+        }
         // Continue even if deletion fails - new resource is already active
       }
     }
