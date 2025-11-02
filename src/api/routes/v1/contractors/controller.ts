@@ -5,6 +5,9 @@ import { Contractor, User } from "../api-models.js"
 import { createErrorResponse, createResponse } from "../util/response.js"
 import { authorizeContractor, createContractor } from "./helpers.js"
 import { cdn, external_resource_regex } from "../../../../clients/cdn/cdn.js"
+import { randomUUID } from "node:crypto"
+import fs from "node:fs"
+import logger from "../../../../logger/logger.js"
 import {
   DBContractor,
   DBContractorMemberRole,
@@ -752,61 +755,37 @@ export const delete_spectrum_id_members_username: RequestHandler = async (
 export const put_spectrum_id: RequestHandler = async (req, res, next) => {
   const contractor = req.contractor!
 
+  // Reject if URL parameters are provided
+  if (req.body.avatar_url || req.body.banner_url) {
+    res.status(400).json(
+      createErrorResponse({
+        error: "Invalid parameters",
+        message:
+          "avatar_url and banner_url are no longer supported. Use /avatar and /banner upload endpoints instead.",
+      }),
+    )
+    return
+  }
+
   const {
     description,
     tags,
-    avatar_url,
     site_url,
     name,
-    banner_url,
     market_order_template,
     locale,
   }: {
     description?: string
     tags?: string[]
-    avatar_url?: string
     site_url?: string
     name?: string
-    banner_url?: string
     market_order_template?: string
     locale?: string
   } = req.body
 
-  // Do checks first
-  if (avatar_url && !avatar_url.match(external_resource_regex)) {
-    res.status(400).json(createErrorResponse({ message: "Invalid URL" }))
-    return
-  }
-
-  if (banner_url && !banner_url.match(external_resource_regex)) {
-    res.status(400).json(createErrorResponse({ message: "Invalid URL" }))
-    return
-  }
-
-  const old_avatar = contractor.avatar
-  const old_banner = contractor.banner
-
-  // Then insert
-  let avatar_resource = undefined
-  if (avatar_url) {
-    avatar_resource = await cdn.createExternalResource(
-      avatar_url,
-      contractor.contractor_id + "_org_avatar",
-    )
-  }
-
-  let banner_resource = undefined
-  if (banner_url) {
-    banner_resource = await cdn.createExternalResource(
-      banner_url,
-      contractor.contractor_id + "_org_banner",
-    )
-  }
-
+  // Update only non-image fields
   if (
     description !== undefined ||
-    avatar_resource !== undefined ||
-    banner_resource !== undefined ||
     name !== undefined ||
     market_order_template !== undefined ||
     locale !== undefined
@@ -815,8 +794,6 @@ export const put_spectrum_id: RequestHandler = async (req, res, next) => {
       { contractor_id: contractor.contractor_id },
       {
         description: description !== undefined ? description || "" : undefined,
-        avatar: avatar_resource ? avatar_resource.resource_id : undefined,
-        banner: banner_resource ? banner_resource.resource_id : undefined,
         name: name || undefined,
         market_order_template: market_order_template,
         locale: locale || undefined,
@@ -824,19 +801,290 @@ export const put_spectrum_id: RequestHandler = async (req, res, next) => {
     )
   }
 
+  // Handle tags separately
   if (tags && tags.length) {
     await database.setContractorFields(contractor.contractor_id, tags)
   }
 
-  if (avatar_url) {
-    await cdn.removeResource(old_avatar)
-  }
-
-  if (banner_url) {
-    await cdn.removeResource(old_banner)
-  }
-
   res.json(createResponse({ result: "Success" }))
+}
+
+export const contractors_post_spectrum_id_avatar: RequestHandler = async (
+  req,
+  res,
+) => {
+  try {
+    const contractor = req.contractor!
+    const user = req.user as User
+    const file = req.file as Express.Multer.File
+
+    if (!file) {
+      res.status(400).json(
+        createErrorResponse({ error: "No avatar file provided" }),
+      )
+      return
+    }
+
+    // Validate file size (1MB limit for avatars)
+    if (file.size > 1 * 1000 * 1000) {
+      res.status(400).json(
+        createErrorResponse({
+          error: "File too large",
+          message: "Avatar must be less than 1MB",
+        }),
+      )
+      return
+    }
+
+    const old_avatar = contractor.avatar
+
+    // Upload to CDN (includes moderation)
+    const fileExtension = file.mimetype.split("/")[1] || "png"
+    const resource = await cdn.uploadFile(
+      `${contractor.contractor_id}_org_avatar_${randomUUID()}.${fileExtension}`,
+      file.path,
+      file.mimetype,
+    )
+
+    // Update contractor record
+    await database.updateContractor(
+      { contractor_id: contractor.contractor_id },
+      { avatar: resource.resource_id },
+    )
+
+    // Delete old avatar (best effort - don't fail request if deletion fails)
+    if (old_avatar) {
+      try {
+        await cdn.removeResource(old_avatar)
+      } catch (deleteError) {
+        logger.warn("Failed to delete old organization avatar resource:", {
+          resource_id: old_avatar,
+          contractor_id: contractor.contractor_id,
+          error: deleteError,
+        })
+        // Continue even if deletion fails - new resource is already active
+      }
+    }
+
+    // Get CDN URL for response
+    const avatarUrl = await cdn.getFileLinkResource(resource.resource_id)
+
+    res.json(
+      createResponse({
+        result: "Avatar uploaded successfully",
+        resource_id: resource.resource_id,
+        url: avatarUrl,
+      }),
+    )
+  } catch (error) {
+    // Handle moderation failures
+    if (error instanceof Error) {
+      if (error.message.includes("Image failed moderation checks")) {
+        logger.debug("Organization avatar upload failed content moderation:", {
+          error: error.message,
+        })
+        res.status(400).json(
+          createErrorResponse({
+            error: "Content Moderation Failed",
+            message: "Avatar failed content moderation checks",
+            details:
+              "The avatar image contains inappropriate content and cannot be uploaded.",
+          }),
+        )
+        return
+      }
+
+      if (
+        error.message.includes("Missing required fields") ||
+        error.message.includes("VALIDATION_ERROR") ||
+        error.message.includes("UNSUPPORTED_FORMAT")
+      ) {
+        logger.debug("Organization avatar upload failed validation:", {
+          error: error.message,
+        })
+        res.status(400).json(
+          createErrorResponse({
+            error: "Validation Failed",
+            message: `Avatar failed validation: ${error.message}`,
+            details: "Please check the file format and try again.",
+          }),
+        )
+        return
+      }
+
+      if (error.message.includes("Unsupported MIME type")) {
+        logger.debug("Organization avatar has unsupported format:", {
+          error: error.message,
+        })
+        res.status(400).json(
+          createErrorResponse({
+            error: "Unsupported File Type",
+            message:
+              "Avatar has an unsupported file type. Only PNG, JPG, and WEBP images are allowed.",
+            details: "Please ensure the avatar is in a supported format.",
+          }),
+        )
+        return
+      }
+    }
+
+    // Log unexpected server errors as error level
+    logger.error("Failed to upload organization avatar:", error)
+    res.status(500).json(
+      createErrorResponse({
+        error: "Upload Failed",
+        message: "Failed to upload avatar. Please try again.",
+      }),
+    )
+  } finally {
+    // Clean up temp file
+    if (req.file?.path && fs.existsSync(req.file.path)) {
+      try {
+        fs.unlinkSync(req.file.path)
+      } catch (cleanupError) {
+        logger.error("Failed to cleanup temp file:", cleanupError)
+      }
+    }
+  }
+}
+
+export const contractors_post_spectrum_id_banner: RequestHandler = async (
+  req,
+  res,
+) => {
+  try {
+    const contractor = req.contractor!
+    const user = req.user as User
+    const file = req.file as Express.Multer.File
+
+    if (!file) {
+      res.status(400).json(
+        createErrorResponse({ error: "No banner file provided" }),
+      )
+      return
+    }
+
+    // Validate file size (2.5MB limit for banners)
+    if (file.size > 2.5 * 1000 * 1000) {
+      res.status(400).json(
+        createErrorResponse({
+          error: "File too large",
+          message: "Banner must be less than 2.5MB",
+        }),
+      )
+      return
+    }
+
+    const old_banner = contractor.banner
+
+    // Upload to CDN (includes moderation)
+    const fileExtension = file.mimetype.split("/")[1] || "png"
+    const resource = await cdn.uploadFile(
+      `${contractor.contractor_id}_org_banner_${randomUUID()}.${fileExtension}`,
+      file.path,
+      file.mimetype,
+    )
+
+    // Update contractor record
+    await database.updateContractor(
+      { contractor_id: contractor.contractor_id },
+      { banner: resource.resource_id },
+    )
+
+    // Delete old banner (best effort - don't fail request if deletion fails)
+    if (old_banner) {
+      try {
+        await cdn.removeResource(old_banner)
+      } catch (deleteError) {
+        logger.warn("Failed to delete old organization banner resource:", {
+          resource_id: old_banner,
+          contractor_id: contractor.contractor_id,
+          error: deleteError,
+        })
+        // Continue even if deletion fails - new resource is already active
+      }
+    }
+
+    // Get CDN URL for response
+    const bannerUrl = await cdn.getFileLinkResource(resource.resource_id)
+
+    res.json(
+      createResponse({
+        result: "Banner uploaded successfully",
+        resource_id: resource.resource_id,
+        url: bannerUrl,
+      }),
+    )
+  } catch (error) {
+    // Handle moderation failures
+    if (error instanceof Error) {
+      if (error.message.includes("Image failed moderation checks")) {
+        logger.debug("Organization banner upload failed content moderation:", {
+          error: error.message,
+        })
+        res.status(400).json(
+          createErrorResponse({
+            error: "Content Moderation Failed",
+            message: "Banner failed content moderation checks",
+            details:
+              "The banner image contains inappropriate content and cannot be uploaded.",
+          }),
+        )
+        return
+      }
+
+      if (
+        error.message.includes("Missing required fields") ||
+        error.message.includes("VALIDATION_ERROR") ||
+        error.message.includes("UNSUPPORTED_FORMAT")
+      ) {
+        logger.debug("Organization banner upload failed validation:", {
+          error: error.message,
+        })
+        res.status(400).json(
+          createErrorResponse({
+            error: "Validation Failed",
+            message: `Banner failed validation: ${error.message}`,
+            details: "Please check the file format and try again.",
+          }),
+        )
+        return
+      }
+
+      if (error.message.includes("Unsupported MIME type")) {
+        logger.debug("Organization banner has unsupported format:", {
+          error: error.message,
+        })
+        res.status(400).json(
+          createErrorResponse({
+            error: "Unsupported File Type",
+            message:
+              "Banner has an unsupported file type. Only PNG, JPG, and WEBP images are allowed.",
+            details: "Please ensure the banner is in a supported format.",
+          }),
+        )
+        return
+      }
+    }
+
+    // Log unexpected server errors as error level
+    logger.error("Failed to upload organization banner:", error)
+    res.status(500).json(
+      createErrorResponse({
+        error: "Upload Failed",
+        message: "Failed to upload banner. Please try again.",
+      }),
+    )
+  } finally {
+    // Clean up temp file
+    if (req.file?.path && fs.existsSync(req.file.path)) {
+      try {
+        fs.unlinkSync(req.file.path)
+      } catch (cleanupError) {
+        logger.error("Failed to cleanup temp file:", cleanupError)
+      }
+    }
+  }
 }
 
 export const post_spectrum_id_webhooks: RequestHandler = async (

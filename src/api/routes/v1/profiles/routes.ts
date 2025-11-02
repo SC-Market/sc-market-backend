@@ -9,6 +9,7 @@ import {
   writeRateLimit,
   readRateLimit,
 } from "../../../middleware/enhanced-ratelimiting.js"
+import { singlePhotoUpload, photoUpload } from "../util/upload.js"
 
 import {
   profile_post_auth_link,
@@ -18,6 +19,8 @@ import {
   profile_get_search_query,
   profile_put_root,
   profile_post_update,
+  profile_post_avatar,
+  profile_post_banner,
   profile_post_webhook_create,
   profile_post_webhook_delete,
   profile_get_webhooks,
@@ -40,6 +43,8 @@ import {
   profile_post_auth_sync_handle_spec,
   profile_post_auth_unlink_spec,
   profile_put_root_spec,
+  profile_post_avatar_spec,
+  profile_post_banner_spec,
   profile_get_root_spec,
   profile_get_blocklist_spec,
   profile_post_blocklist_block_spec,
@@ -96,6 +101,26 @@ profileRouter.post(
   writeRateLimit,
   userAuthorized,
   profile_post_update,
+)
+
+profileRouter.post(
+  "/avatar",
+  userAuthorized,
+  requireProfileWrite,
+  singlePhotoUpload.single("avatar"),
+  profile_post_avatar_spec,
+  writeRateLimit,
+  profile_post_avatar,
+)
+
+profileRouter.post(
+  "/banner",
+  userAuthorized,
+  requireProfileWrite,
+  photoUpload.single("banner"),
+  profile_post_banner_spec,
+  writeRateLimit,
+  profile_post_banner,
 )
 
 profileRouter.post(
