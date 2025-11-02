@@ -443,14 +443,6 @@ oapi.schema("ContractorBody", {
 
 oapi.schema("ContractorUpdateBody", {
   properties: {
-    avatar_url: {
-      title: "ContractorUpdateBody.avatar_url",
-      type: "string",
-    },
-    banner_url: {
-      title: "ContractorUpdateBody.banner_url",
-      type: "string",
-    },
     site_url: {
       title: "ContractorUpdateBody.site_url",
       type: "string",
@@ -1544,10 +1536,103 @@ export const delete_spectrum_id_members_username_spec = oapi.validPath({
   security: [],
 })
 
+export const contractors_post_spectrum_id_avatar_spec = oapi.validPath({
+  summary: "Upload organization avatar",
+  deprecated: false,
+  description:
+    "Upload a new avatar image for the organization. The image must be in PNG, JPG, or WEBP format and less than 1MB. The image will be processed through content moderation. User must have manage_org_details permission. Send multipart/form-data with 'avatar' field containing the image file.",
+  operationId: "uploadOrganizationAvatar",
+  tags: ["Contractors"],
+  parameters: [
+    {
+      name: "spectrum_id",
+      in: "path",
+      required: true,
+      schema: { type: "string" },
+      description: "Organization spectrum ID",
+    },
+  ],
+  responses: {
+    "200": {
+      description: "Avatar uploaded successfully",
+      content: {
+        "application/json": {
+          schema: {
+            type: "object",
+            properties: {
+              result: {
+                type: "string",
+                example: "Avatar uploaded successfully",
+              },
+              resource_id: { type: "string" },
+              url: { type: "string", format: "uri" },
+            },
+            required: ["result", "resource_id", "url"],
+          },
+        },
+      },
+    },
+    "400": Response400,
+    "401": Response401,
+    "403": Response403,
+    "404": Response404,
+    "429": Response429Read,
+    "500": Response500,
+  },
+  security: [{ userAuth: [] }],
+})
+
+export const contractors_post_spectrum_id_banner_spec = oapi.validPath({
+  summary: "Upload organization banner",
+  deprecated: false,
+  description:
+    "Upload a new banner image for the organization. The image must be in PNG, JPG, or WEBP format and less than 2.5MB. The image will be processed through content moderation. User must have manage_org_details permission. Send multipart/form-data with 'banner' field containing the image file.",
+  operationId: "uploadOrganizationBanner",
+  tags: ["Contractors"],
+  parameters: [
+    {
+      name: "spectrum_id",
+      in: "path",
+      required: true,
+      schema: { type: "string" },
+      description: "Organization spectrum ID",
+    },
+  ],
+  responses: {
+    "200": {
+      description: "Banner uploaded successfully",
+      content: {
+        "application/json": {
+          schema: {
+            type: "object",
+            properties: {
+              result: {
+                type: "string",
+                example: "Banner uploaded successfully",
+              },
+              resource_id: { type: "string" },
+              url: { type: "string", format: "uri" },
+            },
+            required: ["result", "resource_id", "url"],
+          },
+        },
+      },
+    },
+    "400": Response400,
+    "401": Response401,
+    "403": Response403,
+    "404": Response404,
+    "429": Response429Read,
+    "500": Response500,
+  },
+  security: [{ userAuth: [] }],
+})
+
 export const put_spectrum_id_spec = oapi.validPath({
   summary: "Update a contractor",
   deprecated: false,
-  description: "",
+  description:
+    "Update contractor details. Note: avatar_url and banner_url are no longer supported. Use /avatar and /banner upload endpoints instead.",
   operationId: "updateContractor",
   tags: ["Contractors"],
   parameters: [],

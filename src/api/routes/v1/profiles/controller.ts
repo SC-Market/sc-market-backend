@@ -15,6 +15,8 @@ import { serializeDetailedProfile as serializeDetailedProfile } from "./serializ
 import { serializePublicProfile as serializePublicProfile } from "./serializers.js"
 import { createErrorResponse as createErrorResponse } from "../util/response.js"
 import { createResponse as createResponse } from "../util/response.js"
+import { randomUUID as randomUUID } from "node:crypto"
+import fs from "node:fs"
 import logger from "../../../../logger/logger.js"
 
 export const profile_post_auth_link: RequestHandler = async (req, res) => {
@@ -187,76 +189,314 @@ export const profile_put_root: RequestHandler = async (req, res) => {
 export const profile_post_update: RequestHandler = async (req, res, next) => {
   const user = req.user as User
 
+  // Reject if URL parameters are provided
+  if (req.body.avatar_url || req.body.banner_url) {
+    res.status(400).json(
+      createErrorResponse({
+        error: "Invalid parameters",
+        message:
+          "avatar_url and banner_url are no longer supported. Use /avatar and /banner upload endpoints instead.",
+      }),
+    )
+    return
+  }
+
   const {
     about,
-    avatar_url,
-    banner_url,
     display_name,
     market_order_template,
   }: {
     about?: string
-    avatar_url?: string
-    banner_url?: string
     display_name?: string
     market_order_template?: string
   } = req.body
 
-  // Do checks first
-  if (avatar_url && !avatar_url.match(external_resource_regex)) {
-    res.status(400).json({ error: "Invalid URL" })
-    return
-  }
-
-  if (banner_url && !banner_url.match(external_resource_regex)) {
-    res.status(400).json({ error: "Invalid URL" })
-    return
-  }
-
   if (display_name && (display_name.length > 30 || display_name.length === 0)) {
-    res.status(400).json({ error: "Invalid display name" })
+    res.status(400).json(createErrorResponse({ error: "Invalid display name" }))
     return
   }
 
-  const old_avatar = user.avatar
-  const old_banner = user.banner
-
-  // Then insert
-  let avatar_resource = undefined
-  if (avatar_url) {
-    avatar_resource = await cdn.createExternalResource(
-      avatar_url,
-      user.user_id + "_avatar",
-    )
-  }
-
-  let banner_resource = undefined
-  if (banner_url) {
-    banner_resource = await cdn.createExternalResource(
-      banner_url,
-      user.user_id + "_banner",
-    )
-  }
-
+  // Update only non-image fields
   const newUsers = await database.updateUser(
     { user_id: user.user_id },
     {
       profile_description: about || "",
-      banner: banner_resource ? banner_resource.resource_id : undefined,
-      avatar: avatar_resource ? avatar_resource.resource_id : undefined,
       display_name: display_name || undefined,
       market_order_template: market_order_template,
     },
   )
 
-  if (avatar_url) {
-    await cdn.removeResource(old_avatar)
-  }
-
-  if (banner_url) {
-    await cdn.removeResource(old_banner)
-  }
-
   res.json({ result: "Success", ...newUsers[0] })
+}
+
+export const profile_post_avatar: RequestHandler = async (req, res) => {
+  try {
+    const user = req.user as User
+    const file = req.file as Express.Multer.File
+
+    if (!file) {
+      res.status(400).json(
+        createErrorResponse({ error: "No avatar file provided" }),
+      )
+      return
+    }
+
+    // Validate file size (1MB limit for avatars)
+    if (file.size > 1 * 1000 * 1000) {
+      res.status(400).json(
+        createErrorResponse({
+          error: "File too large",
+          message: "Avatar must be less than 1MB",
+        }),
+      )
+      return
+    }
+
+    const old_avatar = user.avatar
+
+    // Upload to CDN (includes moderation)
+    const fileExtension = file.mimetype.split("/")[1] || "png"
+    const resource = await cdn.uploadFile(
+      `${user.user_id}_avatar_${randomUUID()}.${fileExtension}`,
+      file.path,
+      file.mimetype,
+    )
+
+    // Update user record
+    await database.updateUser(
+      { user_id: user.user_id },
+      { avatar: resource.resource_id },
+    )
+
+    // Delete old avatar (best effort - don't fail request if deletion fails)
+    if (old_avatar) {
+      try {
+        await cdn.removeResource(old_avatar)
+      } catch (deleteError) {
+        logger.warn("Failed to delete old avatar resource:", {
+          resource_id: old_avatar,
+          user_id: user.user_id,
+          error: deleteError,
+        })
+        // Continue even if deletion fails - new resource is already active
+      }
+    }
+
+    // Get CDN URL for response
+    const avatarUrl = await cdn.getFileLinkResource(resource.resource_id)
+
+    res.json(
+      createResponse({
+        result: "Avatar uploaded successfully",
+        resource_id: resource.resource_id,
+        url: avatarUrl,
+      }),
+    )
+  } catch (error) {
+    // Handle moderation failures
+    if (error instanceof Error) {
+      if (error.message.includes("Image failed moderation checks")) {
+        logger.debug("Avatar upload failed content moderation check:", {
+          error: error.message,
+        })
+        res.status(400).json(
+          createErrorResponse({
+            error: "Content Moderation Failed",
+            message: "Avatar failed content moderation checks",
+            details:
+              "The avatar image contains inappropriate content and cannot be uploaded.",
+          }),
+        )
+        return
+      }
+
+      if (
+        error.message.includes("Missing required fields") ||
+        error.message.includes("VALIDATION_ERROR") ||
+        error.message.includes("UNSUPPORTED_FORMAT")
+      ) {
+        logger.debug("Avatar upload failed validation:", {
+          error: error.message,
+        })
+        res.status(400).json(
+          createErrorResponse({
+            error: "Validation Failed",
+            message: `Avatar failed validation: ${error.message}`,
+            details: "Please check the file format and try again.",
+          }),
+        )
+        return
+      }
+
+      if (error.message.includes("Unsupported MIME type")) {
+        logger.debug("Avatar has unsupported format:", {
+          error: error.message,
+        })
+        res.status(400).json(
+          createErrorResponse({
+            error: "Unsupported File Type",
+            message:
+              "Avatar has an unsupported file type. Only PNG, JPG, and WEBP images are allowed.",
+            details: "Please ensure the avatar is in a supported format.",
+          }),
+        )
+        return
+      }
+    }
+
+    // Log unexpected server errors as error level
+    logger.error("Failed to upload avatar:", error)
+    res.status(500).json(
+      createErrorResponse({
+        error: "Upload Failed",
+        message: "Failed to upload avatar. Please try again.",
+      }),
+    )
+  } finally {
+    // Clean up temp file
+    if (req.file?.path && fs.existsSync(req.file.path)) {
+      try {
+        fs.unlinkSync(req.file.path)
+      } catch (cleanupError) {
+        logger.error("Failed to cleanup temp file:", cleanupError)
+      }
+    }
+  }
+}
+
+export const profile_post_banner: RequestHandler = async (req, res) => {
+  try {
+    const user = req.user as User
+    const file = req.file as Express.Multer.File
+
+    if (!file) {
+      res.status(400).json(
+        createErrorResponse({ error: "No banner file provided" }),
+      )
+      return
+    }
+
+    // Validate file size (2.5MB limit for banners)
+    if (file.size > 2.5 * 1000 * 1000) {
+      res.status(400).json(
+        createErrorResponse({
+          error: "File too large",
+          message: "Banner must be less than 2.5MB",
+        }),
+      )
+      return
+    }
+
+    const old_banner = user.banner
+
+    // Upload to CDN (includes moderation)
+    const fileExtension = file.mimetype.split("/")[1] || "png"
+    const resource = await cdn.uploadFile(
+      `${user.user_id}_banner_${randomUUID()}.${fileExtension}`,
+      file.path,
+      file.mimetype,
+    )
+
+    // Update user record
+    await database.updateUser(
+      { user_id: user.user_id },
+      { banner: resource.resource_id },
+    )
+
+    // Delete old banner (best effort - don't fail request if deletion fails)
+    if (old_banner) {
+      try {
+        await cdn.removeResource(old_banner)
+      } catch (deleteError) {
+        logger.warn("Failed to delete old banner resource:", {
+          resource_id: old_banner,
+          user_id: user.user_id,
+          error: deleteError,
+        })
+        // Continue even if deletion fails - new resource is already active
+      }
+    }
+
+    // Get CDN URL for response
+    const bannerUrl = await cdn.getFileLinkResource(resource.resource_id)
+
+    res.json(
+      createResponse({
+        result: "Banner uploaded successfully",
+        resource_id: resource.resource_id,
+        url: bannerUrl,
+      }),
+    )
+  } catch (error) {
+    // Handle moderation failures
+    if (error instanceof Error) {
+      if (error.message.includes("Image failed moderation checks")) {
+        logger.debug("Banner upload failed content moderation check:", {
+          error: error.message,
+        })
+        res.status(400).json(
+          createErrorResponse({
+            error: "Content Moderation Failed",
+            message: "Banner failed content moderation checks",
+            details:
+              "The banner image contains inappropriate content and cannot be uploaded.",
+          }),
+        )
+        return
+      }
+
+      if (
+        error.message.includes("Missing required fields") ||
+        error.message.includes("VALIDATION_ERROR") ||
+        error.message.includes("UNSUPPORTED_FORMAT")
+      ) {
+        logger.debug("Banner upload failed validation:", {
+          error: error.message,
+        })
+        res.status(400).json(
+          createErrorResponse({
+            error: "Validation Failed",
+            message: `Banner failed validation: ${error.message}`,
+            details: "Please check the file format and try again.",
+          }),
+        )
+        return
+      }
+
+      if (error.message.includes("Unsupported MIME type")) {
+        logger.debug("Banner has unsupported format:", {
+          error: error.message,
+        })
+        res.status(400).json(
+          createErrorResponse({
+            error: "Unsupported File Type",
+            message:
+              "Banner has an unsupported file type. Only PNG, JPG, and WEBP images are allowed.",
+            details: "Please ensure the banner is in a supported format.",
+          }),
+        )
+        return
+      }
+    }
+
+    // Log unexpected server errors as error level
+    logger.error("Failed to upload banner:", error)
+    res.status(500).json(
+      createErrorResponse({
+        error: "Upload Failed",
+        message: "Failed to upload banner. Please try again.",
+      }),
+    )
+  } finally {
+    // Clean up temp file
+    if (req.file?.path && fs.existsSync(req.file.path)) {
+      try {
+        fs.unlinkSync(req.file.path)
+      } catch (cleanupError) {
+        logger.error("Failed to cleanup temp file:", cleanupError)
+      }
+    }
+  }
 }
 
 export const profile_post_webhook_create: RequestHandler = async (req, res) => {

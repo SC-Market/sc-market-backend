@@ -19,6 +19,7 @@ import {
   org_permission,
   valid_contractor,
 } from "./middleware.js"
+import { singlePhotoUpload, photoUpload } from "../util/upload.js"
 
 import {
   delete_spectrum_id_blocklist_unblock_username,
@@ -56,6 +57,8 @@ import {
   post_spectrum_id_roles_role_id_members_username,
   post_spectrum_id_settings_discord_use_official,
   post_spectrum_id_webhooks,
+  contractors_post_spectrum_id_avatar,
+  contractors_post_spectrum_id_banner,
   put_spectrum_id,
   put_spectrum_id_roles_role_id,
 } from "./controller.js"
@@ -94,6 +97,8 @@ import {
   post_spectrum_id_roles_spec,
   post_spectrum_id_settings_discord_use_official_spec,
   post_spectrum_id_webhooks_spec,
+  contractors_post_spectrum_id_avatar_spec,
+  contractors_post_spectrum_id_banner_spec,
   put_spectrum_id_roles_role_id_spec,
   put_spectrum_id_spec,
 } from "./openapi.js"
@@ -277,6 +282,30 @@ contractorsRouter.put(
   org_permission("manage_org_details"),
   writeRateLimit,
   put_spectrum_id,
+)
+
+contractorsRouter.post(
+  "/:spectrum_id/avatar",
+  userAuthorized,
+  requireContractorsWrite,
+  valid_contractor,
+  org_permission("manage_org_details"),
+  singlePhotoUpload.single("avatar"),
+  contractors_post_spectrum_id_avatar_spec,
+  writeRateLimit,
+  contractors_post_spectrum_id_avatar,
+)
+
+contractorsRouter.post(
+  "/:spectrum_id/banner",
+  userAuthorized,
+  requireContractorsWrite,
+  valid_contractor,
+  org_permission("manage_org_details"),
+  photoUpload.single("banner"),
+  contractors_post_spectrum_id_banner_spec,
+  writeRateLimit,
+  contractors_post_spectrum_id_banner,
 )
 
 contractorsRouter.post(
