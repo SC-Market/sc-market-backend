@@ -1278,7 +1278,8 @@ export const market_get_stats_spec = oapi.validPath({
     {
       name: "format",
       in: "query",
-      description: "Response format - use 'grafana' for Grafana JSON datasource format",
+      description:
+        "Response format - use 'grafana' for Grafana JSON datasource format",
       required: false,
       schema: {
         type: "string",
@@ -1288,7 +1289,8 @@ export const market_get_stats_spec = oapi.validPath({
   ],
   responses: {
     "200": {
-      description: "Successfully retrieved order statistics. Returns Grafana format if format=grafana is specified.",
+      description:
+        "Successfully retrieved order statistics. Returns Grafana format if format=grafana is specified.",
       content: {
         "application/json": {
           schema: {

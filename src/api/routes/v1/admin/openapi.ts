@@ -365,7 +365,10 @@ adminOapi.schema("GrafanaTimeSeries", {
         minItems: 2,
         maxItems: 2,
       },
-      example: [[10, 1704067200000], [15, 1704153600000]],
+      example: [
+        [10, 1704067200000],
+        [15, 1704153600000],
+      ],
     },
   },
   required: ["target", "datapoints"],
@@ -381,7 +384,8 @@ export const admin_get_activity_spec = adminOapi.validPath({
     {
       name: "format",
       in: "query",
-      description: "Response format - use 'grafana' for Grafana JSON datasource format",
+      description:
+        "Response format - use 'grafana' for Grafana JSON datasource format",
       required: false,
       schema: {
         type: "string",
@@ -474,7 +478,8 @@ export const admin_get_orders_analytics_spec = adminOapi.validPath({
     {
       name: "format",
       in: "query",
-      description: "Response format - use 'grafana' for Grafana JSON datasource format",
+      description:
+        "Response format - use 'grafana' for Grafana JSON datasource format",
       required: false,
       schema: {
         type: "string",
@@ -678,7 +683,8 @@ export const admin_get_membership_analytics_spec = adminOapi.validPath({
     {
       name: "format",
       in: "query",
-      description: "Response format - use 'grafana' for Grafana JSON datasource format",
+      description:
+        "Response format - use 'grafana' for Grafana JSON datasource format",
       required: false,
       schema: {
         type: "string",
@@ -688,7 +694,8 @@ export const admin_get_membership_analytics_spec = adminOapi.validPath({
   ],
   responses: {
     "200": {
-      description: "Membership analytics data retrieved successfully. Returns Grafana format if format=grafana is specified.",
+      description:
+        "Membership analytics data retrieved successfully. Returns Grafana format if format=grafana is specified.",
       content: {
         "application/json": {
           schema: {

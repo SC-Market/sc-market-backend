@@ -539,5 +539,4 @@ export function requireContractorAccessFromSpectrumId() {
   }
 }
 
-
 // Don't try to make this file depend on `database` or everything will break

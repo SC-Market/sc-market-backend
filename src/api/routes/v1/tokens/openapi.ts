@@ -75,7 +75,8 @@ export const tokens_post_root_spec = oapi.validPath({
                   "admin",
                 ],
               },
-              description: "Array of scopes for the token. Admin scopes (admin:*, admin) and moderation scopes (moderation:*) are only available to admin users.",
+              description:
+                "Array of scopes for the token. Admin scopes (admin:*, admin) and moderation scopes (moderation:*) are only available to admin users.",
               example: ["market:read", "orders:write"],
             },
             expires_at: {
@@ -325,7 +326,8 @@ export const tokens_put_tokenId_spec = oapi.validPath({
                   "admin",
                 ],
               },
-              description: "Array of scopes for the token. Admin scopes (admin:*, admin) and moderation scopes (moderation:*) are only available to admin users.",
+              description:
+                "Array of scopes for the token. Admin scopes (admin:*, admin) and moderation scopes (moderation:*) are only available to admin users.",
               example: ["market:read", "orders:write"],
             },
             expires_at: {
@@ -414,7 +416,10 @@ export const tokens_delete_tokenId_spec = oapi.validPath({
               data: {
                 type: "object",
                 properties: {
-                  message: { type: "string", example: "Token revoked successfully" },
+                  message: {
+                    type: "string",
+                    example: "Token revoked successfully",
+                  },
                 },
               },
             },

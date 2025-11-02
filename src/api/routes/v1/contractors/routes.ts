@@ -7,7 +7,6 @@ import {
   userAuthorized,
 } from "../../../middleware/auth.js"
 
-import { rate_limit } from "../../../middleware/ratelimiting.js"
 import {
   criticalRateLimit,
   writeRateLimit,
