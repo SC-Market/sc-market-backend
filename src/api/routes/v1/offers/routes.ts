@@ -5,7 +5,6 @@ import {
 } from "../../../middleware/auth.js"
 
 import {
-  criticalRateLimit,
   writeRateLimit,
   readRateLimit,
 } from "../../../middleware/enhanced-ratelimiting.js"

@@ -10,12 +10,9 @@ import {
   updateOrderReview,
 } from "./reviews.js"
 import { getUserOrderDataController } from "./user-data.js"
-import { rate_limit } from "../../../middleware/ratelimiting.js"
 import {
-  criticalRateLimit,
   writeRateLimit,
   readRateLimit,
-  bulkRateLimit,
 } from "../../../middleware/enhanced-ratelimiting.js"
 
 import { related_to_order } from "./middleware.js"

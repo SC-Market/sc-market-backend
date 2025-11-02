@@ -346,9 +346,15 @@ async function handleActivityMetric(
     }>
   }
 }> {
+  console.log(
+    `[handleActivityMetric] Querying database: startTime=${startTime} (${new Date(startTime * 1000).toISOString()}), endTime=${endTime} (${new Date(endTime * 1000).toISOString()})`,
+  )
   const daily = await database.getDailyActivity({ startTime, endTime })
   const weekly = await database.getWeeklyActivity({ startTime, endTime })
   const monthly = await database.getMonthlyActivity({ startTime, endTime })
+  console.log(
+    `[handleActivityMetric] Database returned: daily=${daily.length}, weekly=${weekly.length}, monthly=${monthly.length} records`,
+  )
 
   const allData = {
     status: "success",
@@ -357,8 +363,7 @@ async function handleActivityMetric(
       result: [
         ...convertActivityToPrometheus(daily, "daily_activity").data.result,
         ...convertActivityToPrometheus(weekly, "weekly_activity").data.result,
-        ...convertActivityToPrometheus(monthly, "monthly_activity").data
-          .result,
+        ...convertActivityToPrometheus(monthly, "monthly_activity").data.result,
       ],
     },
   }
@@ -572,9 +577,56 @@ export const prometheus_query_range: RequestHandler = async (req, res) => {
   }
 
   try {
-    const startTime = parseFloat(start)
-    const endTime = parseFloat(end)
+    // Parse start and end times - handle both Unix timestamps and ISO 8601 dates
+    let startTime: number
+    let endTime: number
+
+    // Try parsing as Unix timestamp first (numbers)
+    const startNum = parseFloat(start)
+    const endNum = parseFloat(end)
+
+    // Check if the parsed values are reasonable Unix timestamps
+    // Unix timestamps should be > 1000000000 (year 2001) and < 9999999999 (year 2286)
+    if (!isNaN(startNum) && startNum > 1000000000 && startNum < 9999999999) {
+      startTime = startNum
+    } else {
+      // Try parsing as ISO 8601 date string
+      const startDate = new Date(start)
+      if (isNaN(startDate.getTime())) {
+        res.status(400).json({
+          status: "error",
+          errorType: "bad_data",
+          error: `Invalid start time format: ${start}. Expected Unix timestamp or ISO 8601 date.`,
+        })
+        return
+      }
+      startTime = Math.floor(startDate.getTime() / 1000)
+    }
+
+    if (!isNaN(endNum) && endNum > 1000000000 && endNum < 9999999999) {
+      endTime = endNum
+    } else {
+      const endDate = new Date(end)
+      if (isNaN(endDate.getTime())) {
+        res.status(400).json({
+          status: "error",
+          errorType: "bad_data",
+          error: `Invalid end time format: ${end}. Expected Unix timestamp or ISO 8601 date.`,
+        })
+        return
+      }
+      endTime = Math.floor(endDate.getTime() / 1000)
+    }
+
     const stepSeconds = step ? parseFloat(step) : 60 // Default 60s step
+
+    // Debug logging for time range
+    const startDate = new Date(startTime * 1000).toISOString()
+    const endDate = new Date(endTime * 1000).toISOString()
+    const durationHours = (endTime - startTime) / 3600
+    console.log(
+      `[Prometheus query_range] ${metricName}: start=${startTime} (${startDate}), end=${endTime} (${endDate}), duration=${durationHours.toFixed(2)}h, step=${stepSeconds}s`,
+    )
 
     let prometheusData: {
       status: string
@@ -613,11 +665,7 @@ export const prometheus_query_range: RequestHandler = async (req, res) => {
         )
         break
       case "stats":
-        prometheusData = await handleStatsMetric(
-          metricName,
-          startTime,
-          endTime,
-        )
+        prometheusData = await handleStatsMetric(metricName, startTime, endTime)
         break
       default:
         res.status(500).json({

@@ -2,10 +2,7 @@ import { Request, Response } from "express"
 import crypto from "crypto"
 import { User } from "../api-models.js"
 import { database } from "../../../../clients/database/knex-db.js"
-import {
-  createResponse,
-  createErrorResponse,
-} from "../util/response.js"
+import { createResponse, createErrorResponse } from "../util/response.js"
 
 /**
  * Helper function to convert contractor Spectrum IDs to database contractor IDs
@@ -159,16 +156,13 @@ export async function createToken(req: Request, res: Response): Promise<void> {
       if (!Array.isArray(contractor_spectrum_ids)) {
         res
           .status(400)
-          .json(
-            createErrorResponse(
-              "contractor_spectrum_ids must be an array",
-            ),
-          )
+          .json(createErrorResponse("contractor_spectrum_ids must be an array"))
         return
       }
 
-      validatedContractorIds =
-        await convertSpectrumIdsToContractorIds(contractor_spectrum_ids)
+      validatedContractorIds = await convertSpectrumIdsToContractorIds(
+        contractor_spectrum_ids,
+      )
 
       if (validatedContractorIds.length !== contractor_spectrum_ids.length) {
         res
@@ -451,8 +445,9 @@ export async function updateToken(req: Request, res: Response): Promise<void> {
           )
         return
       } else {
-        validatedContractorIds =
-          await convertSpectrumIdsToContractorIds(contractor_spectrum_ids)
+        validatedContractorIds = await convertSpectrumIdsToContractorIds(
+          contractor_spectrum_ids,
+        )
 
         if (validatedContractorIds.length !== contractor_spectrum_ids.length) {
           res
@@ -558,10 +553,7 @@ export async function revokeToken(req: Request, res: Response): Promise<void> {
 }
 
 // Extend token expiration
-export async function extendToken(
-  req: Request,
-  res: Response,
-): Promise<void> {
+export async function extendToken(req: Request, res: Response): Promise<void> {
   try {
     const user = req.user! as User
     const { tokenId } = req.params
@@ -598,13 +590,10 @@ export async function extendToken(
       return
     }
 
-    await database
-      .knex("api_tokens")
-      .where("id", tokenId)
-      .update({
-        expires_at: expiresAt,
-        updated_at: new Date(),
-      })
+    await database.knex("api_tokens").where("id", tokenId).update({
+      expires_at: expiresAt,
+      updated_at: new Date(),
+    })
 
     res.json(createResponse({ message: "Token expiration extended" }))
   } catch (error) {

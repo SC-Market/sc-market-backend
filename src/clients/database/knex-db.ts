@@ -4711,40 +4711,40 @@ export class KnexDatabase implements Database {
 
   async getDailyActivity(options?: { startTime?: number; endTime?: number }) {
     let query = this.knex<{ date: Date; count: number }>("daily_activity")
-    
+
     if (options?.startTime) {
       query = query.where("date", ">=", new Date(options.startTime * 1000))
     }
     if (options?.endTime) {
       query = query.where("date", "<=", new Date(options.endTime * 1000))
     }
-    
+
     return query.orderBy("date", "ASC").select()
   }
 
   async getWeeklyActivity(options?: { startTime?: number; endTime?: number }) {
     let query = this.knex<{ date: Date; count: number }>("weekly_activity")
-    
+
     if (options?.startTime) {
       query = query.where("date", ">=", new Date(options.startTime * 1000))
     }
     if (options?.endTime) {
       query = query.where("date", "<=", new Date(options.endTime * 1000))
     }
-    
+
     return query.orderBy("date", "ASC").select()
   }
 
   async getMonthlyActivity(options?: { startTime?: number; endTime?: number }) {
     let query = this.knex<{ date: Date; count: number }>("monthly_activity")
-    
+
     if (options?.startTime) {
       query = query.where("date", ">=", new Date(options.startTime * 1000))
     }
     if (options?.endTime) {
       query = query.where("date", "<=", new Date(options.endTime * 1000))
     }
-    
+
     return query.orderBy("date", "ASC").select()
   }
 
@@ -5101,7 +5101,10 @@ export class KnexDatabase implements Database {
     }
   }
 
-  async getMembershipAnalytics(options?: { startTime?: number; endTime?: number }) {
+  async getMembershipAnalytics(options?: {
+    startTime?: number
+    endTime?: number
+  }) {
     // Build time filter query builder
     const buildTimeFilter = (query: any) => {
       if (options?.startTime && options?.endTime) {
@@ -5115,11 +5118,7 @@ export class KnexDatabase implements Database {
           new Date(options.startTime * 1000),
         )
       } else if (options?.endTime) {
-        return query.where(
-          "created_at",
-          "<=",
-          new Date(options.endTime * 1000),
-        )
+        return query.where("created_at", "<=", new Date(options.endTime * 1000))
       }
       return query
     }
@@ -5273,7 +5272,11 @@ export class KnexDatabase implements Database {
           .where("timestamp", ">=", new Date(options.startTime * 1000))
           .where("timestamp", "<=", new Date(options.endTime * 1000))
       } else if (options?.startTime) {
-        return query.where("timestamp", ">=", new Date(options.startTime * 1000))
+        return query.where(
+          "timestamp",
+          ">=",
+          new Date(options.startTime * 1000),
+        )
       } else if (options?.endTime) {
         return query.where("timestamp", "<=", new Date(options.endTime * 1000))
       }
