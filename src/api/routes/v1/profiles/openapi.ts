@@ -232,6 +232,78 @@ export const profile_put_root_spec = oapi.validPath({
   security: [],
 })
 
+export const profile_post_avatar_spec = oapi.validPath({
+  summary: "Upload user profile avatar",
+  deprecated: false,
+  description:
+    "Upload a new avatar image for the authenticated user's profile. The image must be in PNG, JPG, or WEBP format and less than 1MB. The image will be processed through content moderation. Send multipart/form-data with 'avatar' field containing the image file.",
+  operationId: "uploadProfileAvatar",
+  tags: ["Profiles"],
+  parameters: [],
+  responses: {
+    "200": {
+      description: "Avatar uploaded successfully",
+      content: {
+        "application/json": {
+          schema: {
+            type: "object",
+            properties: {
+              result: {
+                type: "string",
+                example: "Avatar uploaded successfully",
+              },
+              resource_id: { type: "string" },
+              url: { type: "string", format: "uri" },
+            },
+            required: ["result", "resource_id", "url"],
+          },
+        },
+      },
+    },
+    "400": Response400,
+    "401": Response401,
+    "429": Response429Write,
+    "500": Response500,
+  },
+  security: [{ userAuth: [] }],
+})
+
+export const profile_post_banner_spec = oapi.validPath({
+  summary: "Upload user profile banner",
+  deprecated: false,
+  description:
+    "Upload a new banner image for the authenticated user's profile. The image must be in PNG, JPG, or WEBP format and less than 2.5MB. The image will be processed through content moderation. Send multipart/form-data with 'banner' field containing the image file.",
+  operationId: "uploadProfileBanner",
+  tags: ["Profiles"],
+  parameters: [],
+  responses: {
+    "200": {
+      description: "Banner uploaded successfully",
+      content: {
+        "application/json": {
+          schema: {
+            type: "object",
+            properties: {
+              result: {
+                type: "string",
+                example: "Banner uploaded successfully",
+              },
+              resource_id: { type: "string" },
+              url: { type: "string", format: "uri" },
+            },
+            required: ["result", "resource_id", "url"],
+          },
+        },
+      },
+    },
+    "400": Response400,
+    "401": Response401,
+    "429": Response429Write,
+    "500": Response500,
+  },
+  security: [{ userAuth: [] }],
+})
+
 export const profile_get_root_spec = oapi.validPath({
   summary: "Get current user profile",
   deprecated: false,
