@@ -95,6 +95,31 @@ export const rateLimiters = {
   }),
 }
 
+// Create hour-based rate limiters for listing updates (600 requests per hour)
+export const hourBasedRateLimiters = {
+  anonymous: createRateLimiter({
+    points: 600,
+    duration: 3600, // 1 hour in seconds
+    blockDuration: 600, // 10 minutes
+    inMemoryBlockOnConsumed: 600,
+    keyPrefix: "scmarket:anon:hour",
+  }),
+  authenticated: createRateLimiter({
+    points: 600,
+    duration: 3600, // 1 hour in seconds
+    blockDuration: 600, // 10 minutes
+    inMemoryBlockOnConsumed: 600,
+    keyPrefix: "scmarket:auth:hour",
+  }),
+  admin: createRateLimiter({
+    points: 600,
+    duration: 3600, // 1 hour in seconds
+    blockDuration: 0, // No blocking for admins
+    inMemoryBlockOnConsumed: 600,
+    keyPrefix: "scmarket:admin:hour",
+  }),
+}
+
 // Detect user tier from request
 export function detectUserTier(req: Request): UserTier {
   const user = req.user as User
@@ -207,6 +232,51 @@ export function createRateLimit(tieredConfig: TieredRateLimit) {
   }
 }
 
+// Enhanced rate limiting middleware factory for hour-based rate limits
+export function createHourBasedRateLimit(tieredConfig: TieredRateLimit) {
+  return (req: Request, res: Response, next: NextFunction) => {
+    const userTier = detectUserTier(req)
+    const key = generateRateLimitKey(req, userTier)
+    const endpoint = req.path
+
+    // Get the appropriate hour-based rate limiter for the user tier
+    const rateLimiter = hourBasedRateLimiters[userTier]
+    const config = tieredConfig[userTier]
+
+    if (!rateLimiter || !config) {
+      // If no rate limiter configured for this tier, allow the request
+      return next()
+    }
+
+    rateLimiter
+      .consume(key, config.points)
+      .then((rateLimiterRes: RateLimiterRes) => {
+        // Set rate limit headers
+        setRateLimitHeaders(res, rateLimiterRes, config.points)
+        next()
+      })
+      .catch((rateLimiterRes: RateLimiterRes) => {
+        // Rate limit exceeded
+        const rateLimitResponse = createRateLimitResponse(
+          rateLimiterRes,
+          userTier,
+          endpoint,
+          config.points,
+        )
+
+        // Set rate limit headers including retry-after
+        setRateLimitHeaders(res, rateLimiterRes, config.points)
+        res.set(
+          "X-RateLimit-Retry-After",
+          rateLimitResponse.retryAfter.toString(),
+        )
+
+        // Send 429 response
+        res.status(429).json(rateLimitResponse)
+      })
+  }
+}
+
 // Predefined rate limit configurations for different endpoint types
 export const criticalRateLimit = createRateLimit({
   anonymous: { points: 15 },
@@ -243,5 +313,13 @@ export const notificationRateLimit = createRateLimit({
 export const commonWriteRateLimit = createRateLimit({
   anonymous: { points: 5 },
   authenticated: { points: 5 },
+  admin: { points: 1 },
+})
+
+// Hour-based rate limit for listing updates (600 requests per hour)
+// Each request consumes 1 point, so 600 points = 600 requests per hour
+export const listingUpdateRateLimit = createHourBasedRateLimit({
+  anonymous: { points: 1 },
+  authenticated: { points: 1 },
   admin: { points: 1 },
 })
