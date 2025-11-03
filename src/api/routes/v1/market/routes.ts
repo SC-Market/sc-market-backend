@@ -11,6 +11,7 @@ import {
   writeRateLimit,
   readRateLimit,
   bulkRateLimit,
+  listingUpdateRateLimit,
 } from "../../../middleware/enhanced-ratelimiting.js"
 import {
   can_manage_market_listing,
@@ -101,7 +102,7 @@ marketRouter.put(
   requireMarketWrite,
   can_manage_market_listing,
   market_put_listing_listing_id_spec,
-  writeRateLimit,
+  listingUpdateRateLimit,
   update_listing,
 )
 
