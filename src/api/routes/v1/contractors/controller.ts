@@ -1593,22 +1593,21 @@ export const post_spectrum_id_leave: RequestHandler = async (
 ) => {
   const user = req.user as User
   const contractor = req.contractor!
-  // TODO: Check not org owner
-  const owner_role = await database.getContractorRole({
-    contractor_id: contractor.contractor_id,
-    priority: 0,
-  })
-  const roles = await database.getUserContractorRoles({
-    role_id: owner_role?.role_id,
-    user_id: user.user_id,
-  })
-  if (roles.length) {
-    res.status(400).json(
-      createErrorResponse({
-        message: "You cannot leave a contractor you own",
-      }),
-    )
-    return
+  // Prevent owners from leaving their own contractor
+  const ownerRoleId = contractor.owner_role
+  if (ownerRoleId) {
+    const ownerRoles = await database.getUserContractorRoles({
+      "contractor_member_roles.role_id": ownerRoleId,
+      "contractor_member_roles.user_id": user.user_id,
+    })
+    if (ownerRoles.length) {
+      res.status(400).json(
+        createErrorResponse({
+          message: "You cannot leave a contractor you own",
+        }),
+      )
+      return
+    }
   }
 
   await database.removeContractorMember({
