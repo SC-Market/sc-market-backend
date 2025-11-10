@@ -1,11 +1,11 @@
 {
   "version": "v1",
   "datasources": {
-      "sc-market-api-local": {
-        "prometheus": {
-          "address": "http://localhost:9090/api/prometheus"
-        }
+    "sc-market-api-local": {
+      "prometheus": {
+        "address": "http://localhost:9090/api/prometheus"
       }
+    }
   },
   "dashboard": {
     "widgets": [
