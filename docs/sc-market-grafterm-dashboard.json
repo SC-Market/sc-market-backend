@@ -3,10 +3,7 @@
   "datasources": {
     "sc-market-api": {
       "prometheus": {
-        "address": "https://api.sc-market.space/api/prometheus",
-        "headers": {
-          "Authorization": "Bearer scm_live_c02effafffaf21333c62915939217b150cc5e8e7401791242e21bf02a1283673"
-        }
+        "address": "http://localhost:9090/api/prometheus"
       }
     }
   },

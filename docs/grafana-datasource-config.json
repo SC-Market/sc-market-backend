@@ -1,0 +1,16 @@
+{
+  "name": "SC Market API",
+  "type": "marcusolsson-json-datasource",
+  "access": "proxy",
+  "url": "https://api.sc-market.space",
+  "jsonData": {
+    "httpMethod": "GET",
+    "timeField": "datapoints[1]",
+    "valuesField": "datapoints[0]"
+  },
+  "secureJsonData": {
+    "httpHeaderName1": "Authorization",
+    "httpHeaderValue1": "Bearer YOUR_ADMIN_TOKEN_HERE"
+  },
+  "editable": true
+}
