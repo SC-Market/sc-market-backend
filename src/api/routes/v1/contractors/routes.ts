@@ -23,6 +23,7 @@ import { singlePhotoUpload, photoUpload } from "../util/upload.js"
 
 import {
   delete_spectrum_id_blocklist_unblock_username,
+  delete_spectrum_id,
   delete_spectrum_id_invites_invite_id,
   delete_spectrum_id_members_username,
   delete_spectrum_id_roles_role_id,
@@ -65,6 +66,7 @@ import {
 
 import {
   delete_spectrum_id_blocklist_unblock_username_spec,
+  delete_spectrum_id_spec,
   delete_spectrum_id_invites_invite_id_spec,
   delete_spectrum_id_members_username_spec,
   delete_spectrum_id_roles_role_id_members_username_spec,
@@ -196,6 +198,17 @@ contractorsRouter.get(
   valid_contractor,
   readRateLimit,
   get_spectrum_id,
+)
+
+contractorsRouter.delete(
+  "/:spectrum_id",
+  userAuthorized,
+  requireContractorsWrite,
+  delete_spectrum_id_spec,
+  criticalRateLimit,
+  valid_contractor,
+  requireContractorAccessFromSpectrumId(),
+  delete_spectrum_id,
 )
 
 contractorsRouter.get(

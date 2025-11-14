@@ -187,6 +187,18 @@ export interface DBContractor {
   banner: string
   market_order_template: string
   locale: string
+  archived: boolean
+}
+
+export interface DBContractorArchiveDetails {
+  contractor_id: string
+  archived_at: Date
+  archived_by: string
+  archived_label: string
+  original_name: string
+  original_spectrum_id: string | null
+  reason: string | null
+  member_count_removed: number
 }
 
 export interface Rating {

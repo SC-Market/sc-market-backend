@@ -183,13 +183,22 @@ export const apply_to_order: RequestHandler = async (req, res, next) => {
       return
     }
 
-    if (
-      !(await has_permission(
-        contractor_obj.contractor_id,
-        user.user_id,
-        "manage_orders",
-      ))
-    ) {
+      if (contractor_obj.archived) {
+        res.status(409).json(
+          createErrorResponse({
+            message: "Cannot apply on behalf of an archived contractor",
+          }),
+        )
+        return
+      }
+
+      if (
+        !(await has_permission(
+          contractor_obj.contractor_id,
+          user.user_id,
+          "manage_orders",
+        ))
+      ) {
       res.status(403).json(
         createErrorResponse({
           message: "You are not authorized to apply to this order",
@@ -276,6 +285,16 @@ export const post_root: RequestHandler = async (req, res, next) => {
       res
         .status(400)
         .json(createErrorResponse({ message: "Invalid contractor" }))
+      return
+    }
+    if (contractor_obj.archived) {
+      res
+        .status(409)
+        .json(
+          createErrorResponse({
+            message: "Cannot create orders for an archived contractor",
+          }),
+        )
       return
     }
     contractor_id = contractor_obj.contractor_id

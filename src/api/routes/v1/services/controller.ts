@@ -105,7 +105,7 @@ export const services_post_root: RequestHandler = async (req, res) => {
     return
   }
 
-  res.json(createResponse({ result: "Success" }))
+  res.json(createResponse({ service_id: service.service_id }))
 }
 
 export const services_get_user_username: RequestHandler = async (

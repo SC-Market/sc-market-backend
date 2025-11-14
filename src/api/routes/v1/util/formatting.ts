@@ -869,6 +869,7 @@ export async function contractorDetails(
     rating: await getContractorRating(contractor.contractor_id),
     avatar: await cdn.getFileLinkResource(contractor.avatar),
     banner: await cdn.getFileLinkResource(contractor.banner),
+    archived: contractor.archived,
     roles:
       user && (await is_member(contractor.contractor_id, user.user_id))
         ? await database.getContractorRoles({

@@ -92,6 +92,17 @@ export const get_listing_stats: RequestHandler = async (req, res) => {
           const contractor = await database.getContractor({
             contractor_id: listing.contractor_seller_id,
           })
+
+          if (contractor.archived) {
+            res.status(409).json(
+              createErrorResponse({
+                error:
+                  "This contractor has been archived; stats are unavailable.",
+              }),
+            )
+            return
+          }
+
           if (
             contractor &&
             (await is_member(contractor.contractor_id, user.user_id))
@@ -422,6 +433,12 @@ export const create_listing: RequestHandler = async (req, res) => {
         res.status(400).json({ message: "Invalid contractor" })
         return
       }
+    if (contractor.archived) {
+      res.status(409).json({
+        message: "Archived contractors cannot create listings",
+      })
+      return
+    }
 
       if (
         !(await has_permission(
@@ -1053,10 +1070,8 @@ export const search_listings: RequestHandler = async (req, res) => {
   }
 
   try {
-    // Determine if we should include internal listings
     let includeInternal = false
 
-    // If contractor_seller_id is specified and user is authenticated, check if user is a member
     if (query.contractor_seller_id && req.user) {
       const user = req.user as User
       if (await is_member(query.contractor_seller_id, user.user_id)) {
@@ -1065,24 +1080,25 @@ export const search_listings: RequestHandler = async (req, res) => {
     }
 
     const searchResults = await database.searchMarket(query, {
-      ...(includeInternal ? {} : { internal: "false" }), // Only filter internal when we don't want to include them
+      ...(includeInternal ? {} : { internal: "false" }),
     })
 
     res.json(
       createResponse({
-        total: searchResults[0] ? searchResults[0].full_count : 0,
+        total:
+          searchResults.length > 0 ? Number(searchResults[0].full_count) : 0,
         listings: searchResults.map((r) => ({
           listing_id: r.listing_id,
           listing_type: r.listing_type,
           item_type: r.item_type,
           item_name: r.item_name,
           game_item_id: r.game_item_id,
-          sale_type: r.sale_type === "sale" ? r.listing_type : r.sale_type, // Map 'sale' to listing_type
-          price: Number(r.price), // Convert string to number
+          sale_type: r.sale_type === "sale" ? r.listing_type : r.sale_type,
+          price: Number(r.price),
           expiration: r.expiration,
-          minimum_price: Number(r.minimum_price), // Convert string to number
-          maximum_price: Number(r.maximum_price), // Convert string to number
-          quantity_available: Number(r.quantity_available), // Convert string to number
+          minimum_price: Number(r.minimum_price),
+          maximum_price: Number(r.maximum_price),
+          quantity_available: Number(r.quantity_available),
           timestamp: r.timestamp,
           total_rating: r.total_rating,
           avg_rating: r.avg_rating,
@@ -1094,7 +1110,6 @@ export const search_listings: RequestHandler = async (req, res) => {
           rating_count: r.rating_count,
           rating_streak: r.rating_streak,
           total_orders: r.total_orders,
-          // Add responsive badge data
           total_assignments: r.total_assignments,
           response_rate: r.response_rate,
           title: r.title,
