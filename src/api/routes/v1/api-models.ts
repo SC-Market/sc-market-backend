@@ -32,6 +32,7 @@ export interface Contractor {
   size: number
   name: string
   description: string
+  archived: boolean
 }
 
 export interface ShipsFileEntry {

@@ -55,6 +55,14 @@ export const contracts_post_contract_id_offers: RequestHandler = async (
         .json(createErrorResponse({ message: "Invalid contractor" }))
       return
     }
+    if (contractor.archived) {
+      res.status(409).json(
+        createErrorResponse({
+          message: "Cannot create offers for an archived contractor",
+        }),
+      )
+      return
+    }
     if (
       !(await has_permission(
         contractor.contractor_id,

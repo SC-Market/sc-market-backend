@@ -21,6 +21,7 @@ import {
   DBCommentVote,
   DBContentReport,
   DBContractor,
+  DBContractorArchiveDetails,
   DBContractorInvite,
   DBContractorInviteCode,
   DBContractorMember,
@@ -527,6 +528,17 @@ export class KnexDatabase implements Database {
     return contractor
   }
 
+  async getContractorsByIds(contractorIds: string[]): Promise<DBContractor[]> {
+    if (!contractorIds.length) {
+      return []
+    }
+
+    return this.knex<DBContractor>("contractors").whereIn(
+      "contractor_id",
+      contractorIds,
+    )
+  }
+
   async getMinimalContractor(where: any): Promise<MinimalContractor> {
     const contractor = await this.knex<DBContractor>("contractors")
       .where(where)
@@ -612,7 +624,8 @@ export class KnexDatabase implements Database {
   async deleteInviteCodes(where: any): Promise<DBContractorInviteCode[]> {
     return this.knex<DBContractorInviteCode>("contractor_invite_codes")
       .where(where)
-      .delete("*")
+      .delete()
+      .returning("*")
   }
 
   async getInviteCode(where: any): Promise<DBContractorInviteCode | null> {
@@ -627,6 +640,47 @@ export class KnexDatabase implements Database {
     return this.knex<DBContractorInviteCode>("contractor_invite_codes")
       .insert(body)
       .returning("*")
+  }
+
+  async removeAllContractorInvites(
+    contractor_id: string,
+  ): Promise<DBContractorInvite[]> {
+    const invites = await this.knex<DBContractorInvite>("contractor_invites")
+      .where({ contractor_id })
+      .delete()
+      .returning("*")
+
+    if (!invites.length) {
+      return invites
+    }
+
+    const action = await this.getNotificationActionByName("contractor_invite")
+
+    await this.knex<DBNotificationObject>("notification_object")
+      .whereIn(
+        "entity_id",
+        invites.map((invite) => invite.invite_id),
+      )
+      .andWhere("action_type_id", action.action_type_id)
+      .delete()
+
+    return invites
+  }
+
+  async upsertContractorArchiveDetails(
+    values: Partial<DBContractorArchiveDetails>,
+  ): Promise<DBContractorArchiveDetails[]> {
+    return this.knex<DBContractorArchiveDetails>("contractor_archive_details")
+      .insert(values)
+      .onConflict("contractor_id")
+      .merge(values)
+      .returning("*")
+  }
+
+  async getContractorArchiveDetails(where: Partial<DBContractorArchiveDetails>) {
+    return this.knex<DBContractorArchiveDetails>("contractor_archive_details")
+      .where(where)
+      .first()
   }
 
   async getImageResource(where: any): Promise<DBImageResource> {
@@ -940,6 +994,7 @@ export class KnexDatabase implements Database {
       .join("orders", "orders.order_id", "=", "order_reviews.order_id")
       .where({ "orders.contractor_id": contractor_id, role: "customer" })
       .select("order_reviews.*")
+      .orderBy("order_reviews.timestamp", "desc")
   }
 
   async getUserReviews(user_id: string): Promise<DBReview[]> {
@@ -956,6 +1011,7 @@ export class KnexDatabase implements Database {
       })
       .orWhere({ "orders.customer_id": user_id, role: "contractor" })
       .select("order_reviews.*")
+      .orderBy("order_reviews.timestamp", "desc")
   }
 
   async getOrderCount(where: Partial<DBOrder>): Promise<number> {
@@ -2050,8 +2106,14 @@ export class KnexDatabase implements Database {
 
   searchContractors(query: string): Promise<DBContractor[]> {
     return this.knex<DBContractor>("contractors")
-      .where(this.knex.raw("spectrum_id::citext"), "like", `%${query}%`)
-      .or.where(this.knex.raw("name::citext"), "like", `%${query}%`)
+      .where({ archived: false })
+      .andWhere((qb) => {
+        qb.where(this.knex.raw("spectrum_id::citext"), "like", `%${query}%`).orWhere(
+          this.knex.raw("name::citext"),
+          "like",
+          `%${query}%`,
+        )
+      })
       .select()
   }
 
@@ -3606,7 +3668,12 @@ export class KnexDatabase implements Database {
   async getAllRecruitingPostsPaginated(searchQuery: RecruitingSearchQuery) {
     // ['rating', 'name', 'activity', 'all-time']
     const knex = this.knex
-    let query = this.knex<DBRecruitingPost>("recruiting_posts")
+    let query = this.knex<DBRecruitingPost>("recruiting_posts").whereIn(
+      "recruiting_posts.contractor_id",
+      this.knex("contractors")
+        .select("contractor_id")
+        .where("contractors.archived", false),
+    )
 
     switch (searchQuery.sorting) {
       case "name":
@@ -3739,6 +3806,7 @@ export class KnexDatabase implements Database {
     // ['rating', 'name', 'activity', 'all-time']
     const knex = this.knex
     let query = this.knex<DBContractor>("contractors")
+      .where("contractors.archived", false)
 
     switch (searchQuery.sorting) {
       case "name":
@@ -3818,7 +3886,10 @@ export class KnexDatabase implements Database {
   > {
     // ['rating', 'name', 'activity', 'all-time']
     const knex = this.knex
-    let query = this.knex<DBContractor>("contractors")
+    let query = this.knex<DBContractor>("contractors").where(
+      "contractors.archived",
+      false,
+    )
 
     if (searchQuery.rating) {
       query = query.where(
@@ -3864,7 +3935,14 @@ export class KnexDatabase implements Database {
   async getRecruitingPostCount() {
     return this.knex<{
       count: number
-    }>("recruiting_posts").count()
+    }>("recruiting_posts")
+      .whereIn(
+        "recruiting_posts.contractor_id",
+        this.knex("contractors")
+          .select("contractor_id")
+          .where("contractors.archived", false),
+      )
+      .count()
   }
 
   async getContractorCount(where: any) {
@@ -4541,6 +4619,15 @@ export class KnexDatabase implements Database {
       )
     }
 
+    query = query.andWhere((qb) => {
+      qb.whereNull("contractor_seller_id").orWhereIn(
+        "contractor_seller_id",
+        this.knex("contractors")
+          .select("contractor_id")
+          .where({ archived: false }),
+      )
+    })
+
     if (searchQuery.statuses && searchQuery.statuses.length > 0) {
       query = query.andWhere("status", "in", searchQuery.statuses)
     }
@@ -4669,6 +4756,15 @@ export class KnexDatabase implements Database {
         searchQuery.contractor_seller_id,
       )
     }
+
+    query = query.where((qb) => {
+      qb.whereNull("market_listings.contractor_seller_id").orWhereIn(
+        "market_listings.contractor_seller_id",
+        this.knex("contractors")
+          .select("contractor_id")
+          .where({ archived: false }),
+      )
+    })
 
     if (searchQuery.statuses && searchQuery.statuses.length > 0) {
       query = query.whereIn("market_listings.status", searchQuery.statuses)

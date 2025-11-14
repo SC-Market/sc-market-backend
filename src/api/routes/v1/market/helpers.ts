@@ -73,6 +73,8 @@ export async function verify_listings(
       | DBMultipleListingCompositeComplete
     quantity: number
   }[] = []
+  const contractorCache = new Map<string, DBContractor>()
+
   for (const { listing_id, quantity } of items) {
     let listing
     try {
@@ -100,6 +102,22 @@ export async function verify_listings(
     if (listing.listing.user_seller_id === user.user_id) {
       res.status(400).json({ error: "You cannot buy your own item!" })
       return
+    }
+
+    if (listing.listing.contractor_seller_id) {
+      const contractorId = listing.listing.contractor_seller_id
+      let contractor = contractorCache.get(contractorId)
+      if (!contractor) {
+        contractor = await database.getContractor({ contractor_id: contractorId })
+        contractorCache.set(contractorId, contractor)
+      }
+
+      if (contractor.archived) {
+        res
+          .status(409)
+          .json({ error: "Cannot purchase from an archived organization" })
+        return
+      }
     }
 
     listings.push({ quantity, listing })

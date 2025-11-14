@@ -25,6 +25,7 @@ import { fetchRSIOrgSCAPI } from "../../../../clients/scapi/scapi.js"
 import { authorizeProfile } from "../profiles/helpers.js"
 import { convertQuery } from "../recruiting/controller.js"
 import { fetchChannel, fetchGuild } from "../util/discord.js"
+import { archiveContractor } from "../../../../services/contractors/archive-contractor.service.js"
 
 export const post_auth_link: RequestHandler = async (req, res) => {
   const user = req.user as User
@@ -97,6 +98,70 @@ export const post_root: RequestHandler = async (req, res) => {
   return
 }
 
+export const delete_spectrum_id: RequestHandler = async (req, res) => {
+  const contractor = req.contractor!
+  const user = req.user as User
+
+  if (!contractor) {
+    res.status(404).json(createErrorResponse({ message: "Organization not found" }))
+    return
+  }
+
+  if (contractor.archived) {
+    res.status(204).send()
+    return
+  }
+
+  if (user.role !== "admin") {
+    const roles = await database.getMemberRoles(
+      contractor.contractor_id,
+      user.user_id,
+    )
+    const isOwner = roles.some((role) => role.role_id === contractor.owner_role)
+    if (!isOwner) {
+      res
+        .status(403)
+        .json(
+          createErrorResponse({
+            message: "Only organization owners can archive this contractor",
+          }),
+        )
+      return
+    }
+  }
+
+  try {
+    const result = await archiveContractor({
+      contractor,
+      actorId: user.user_id,
+      reason: req.body?.reason,
+    })
+
+    if (!result.alreadyArchived) {
+      req.contractor = {
+        ...contractor,
+        archived: true,
+        name: result.archivedLabel ?? contractor.name,
+      }
+    }
+
+    res.status(204).send()
+  } catch (error) {
+    logger.error("Failed to archive contractor", {
+      contractorId: contractor.contractor_id,
+      error,
+    })
+    res
+      .status(500)
+      .json(
+        createErrorResponse({
+          message: "Failed to archive organization",
+          status: "error",
+        }),
+      )
+  }
+}
+
 export const get_search_query: RequestHandler = async (req, res, next) => {
   const query = req.params["query"]
 
@@ -159,6 +224,18 @@ export const post_invites_invite_id_accept: RequestHandler = async (
   const contractor: DBContractor = await database.getContractor({
     contractor_id: invite.contractor_id,
   })
+
+  if (contractor.archived) {
+    res
+      .status(409)
+      .json(
+        createErrorResponse({
+          message: "Organization has been archived",
+          status: "error",
+        }),
+      )
+    return
+  }
 
   const role = await database.getContractorRoleLegacy(
     user.user_id,
@@ -1371,6 +1448,18 @@ export const post_spectrum_id_accept: RequestHandler = async (
     const { invite_id }: { invite_id?: string } = req.body
 
     const contractor = req.contractor!
+
+    if (contractor.archived) {
+      res
+        .status(409)
+        .json(
+          createErrorResponse({
+            message: "Organization has been archived",
+            status: "error",
+          }),
+        )
+      return
+    }
 
     if (invite_id) {
       // Invite Code

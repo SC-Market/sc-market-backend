@@ -29,10 +29,22 @@ export async function valid_market_listing(
       return
     }
 
+    if (listing.contractor_seller_id) {
+      const contractor = await database.getContractor({
+        contractor_id: listing.contractor_seller_id,
+      })
+
+      if (contractor.archived) {
+        res
+          .status(404)
+          .json(createErrorResponse({ message: "Market listing not found" }))
+        return
+      }
+    }
+
     req.market_listing = listing
     next()
   } catch (error) {
-    // Handle the specific case where listing is not found
     if (error instanceof Error && error.message === "Invalid listing!") {
       res
         .status(404)
@@ -47,7 +59,6 @@ export async function valid_market_listing(
     res
       .status(500)
       .json(createErrorResponse({ message: "Internal server error" }))
-    return
   }
 }
 
@@ -88,6 +99,16 @@ export async function can_manage_market_listing(
           contractor_id: listing.contractor_seller_id,
         })
 
+        if (contractor.archived) {
+          res.status(409).json(
+            createErrorResponse({
+              message:
+                "This contractor has been archived; listing cannot be modified.",
+            }),
+          )
+          return
+        }
+
         if (
           !(await has_permission(
             contractor.contractor_id,
@@ -101,20 +122,17 @@ export async function can_manage_market_listing(
           })
           return
         }
-      } else {
-        if (listing.user_seller_id !== user.user_id) {
-          res
-            .status(403)
-            .json({ error: "You are not authorized to update this listing!" })
-          return
-        }
+      } else if (listing.user_seller_id !== user.user_id) {
+        res
+          .status(403)
+          .json({ error: "You are not authorized to update this listing!" })
+        return
       }
     }
 
     req.market_listing = listing
     next()
   } catch (error) {
-    // Handle the specific case where listing is not found
     if (error instanceof Error && error.message === "Invalid listing!") {
       res
         .status(404)
@@ -129,7 +147,6 @@ export async function can_manage_market_listing(
     res
       .status(500)
       .json(createErrorResponse({ message: "Internal server error" }))
-    return
   }
 }
 
@@ -202,45 +219,41 @@ export async function valid_market_listing_by_contractor(
     return
   }
 
-  try {
-    // First get the contractor
-    const contractor = await database.getContractor({ spectrum_id })
+    try {
+      const contractor = await database.getContractor({ spectrum_id })
 
-    if (!contractor) {
+      if (!contractor || contractor.archived) {
+        res
+          .status(404)
+          .json(createErrorResponse({ message: "Contractor not found" }))
+        return
+      }
+
+      const listings = await database.getMarketListings({
+        contractor_seller_id: contractor.contractor_id,
+        status: "active",
+      })
+
+      const completeListings = await Promise.all(
+        listings.map(async (listing) => {
+          try {
+            return await database.getMarketListingComplete(listing.listing_id)
+          } catch {
+            return null
+          }
+        }),
+      )
+
+      req.contractor_listings = completeListings.filter(Boolean) as any[]
+      req.contractor = contractor
+      next()
+    } catch (error) {
+      logger.error("Failed to validate market listings by contractor", {
+        spectrum_id,
+        error: error instanceof Error ? error.message : String(error),
+      })
       res
-        .status(404)
-        .json(createErrorResponse({ message: "Contractor not found" }))
-      return
+        .status(500)
+        .json(createErrorResponse({ message: "Internal server error" }))
     }
-
-    // Get contractor's listings
-    const listings = await database.getMarketListings({
-      contractor_seller_id: contractor.contractor_id,
-      status: "active",
-    })
-
-    // Convert to complete listings
-    const completeListings = await Promise.all(
-      listings.map(async (listing) => {
-        try {
-          return await database.getMarketListingComplete(listing.listing_id)
-        } catch {
-          return null
-        }
-      }),
-    )
-
-    req.contractor_listings = completeListings.filter(Boolean) as any[]
-    req.contractor = contractor
-    next()
-  } catch (error) {
-    logger.error("Failed to validate market listings by contractor", {
-      spectrum_id,
-      error: error instanceof Error ? error.message : String(error),
-    })
-    res
-      .status(500)
-      .json(createErrorResponse({ message: "Internal server error" }))
-    return
-  }
 }

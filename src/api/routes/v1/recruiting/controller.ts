@@ -122,6 +122,16 @@ export const post_posts: RequestHandler = async function (req, res) {
   const contractor_obj = await database.getContractor({
     spectrum_id: spectrum_id,
   })
+  if (contractor_obj.archived) {
+    res
+      .status(409)
+      .json(
+        createErrorResponse({
+          message: "Archived organizations cannot create recruiting posts",
+        }),
+      )
+    return
+  }
   const last_post = await database.getRecruitingPost({
     contractor_id: contractor_obj.contractor_id,
   })
@@ -176,6 +186,16 @@ export const put_posts_post_id: RequestHandler = async function (req, res) {
   const contractor = await database.getContractor({
     contractor_id: post.contractor_id,
   })
+  if (contractor.archived) {
+    res
+      .status(409)
+      .json(
+        createErrorResponse({
+          message: "Archived organizations cannot update recruiting posts",
+        }),
+      )
+    return
+  }
   if (
     !(await has_permission(
       contractor.contractor_id,

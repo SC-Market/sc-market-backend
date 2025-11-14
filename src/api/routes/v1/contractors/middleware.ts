@@ -14,6 +14,9 @@ export async function valid_contractor(
   const spectrum_id = req.params["spectrum_id"]
   try {
     req.contractor = await database.getContractor({ spectrum_id })
+    if (!req.contractor) {
+      throw new Error("Invalid contractor")
+    }
     next()
   } catch {
     res.status(400).json(createErrorResponse({ error: "Invalid contractor" }))
@@ -41,6 +44,16 @@ export async function org_authorized(
       contractor = await database.getContractor({ spectrum_id })
     } catch (e) {
       res.status(400).json(createErrorResponse({ error: "Invalid contractor" }))
+      return
+    }
+
+    if (contractor.archived) {
+      res.status(409).json(
+        createErrorResponse({
+          error: "Organization archived",
+          message: "This organization has been archived and is no longer editable.",
+        }),
+      )
       return
     }
 
@@ -97,6 +110,21 @@ export function org_permission(permission_name: keyof DBContractorRole) {
         res
           .status(400)
           .json(createErrorResponse({ error: "Invalid contractor" }))
+        return
+      }
+
+      if (contractor.archived) {
+        logger.warn("Attempt to mutate archived contractor", {
+          username: user.username,
+          permission: permission_name,
+          contractorName: contractor.name,
+        })
+        res.status(409).json(
+          createErrorResponse({
+            error: "Organization archived",
+            message: "This organization has been archived and is read-only.",
+          }),
+        )
         return
       }
 
