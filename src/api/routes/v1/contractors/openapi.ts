@@ -998,6 +998,60 @@ export const get_spectrum_id_spec = oapi.validPath({
   },
 })
 
+export const delete_spectrum_id_spec = oapi.validPath({
+  summary: "Archive a contractor",
+  deprecated: false,
+  description:
+    "Archive the specified contractor. This action removes members, revokes invites, cancels open orders, and hides the contractor from discovery while preserving historical data.",
+  operationId: "archiveContractor",
+  tags: ["Contractors"],
+  parameters: [
+    {
+      name: "spectrum_id",
+      in: "path",
+      description: "Contractor spectrum ID",
+      required: true,
+      schema: {
+        type: "string",
+        minLength: 3,
+        maxLength: 50,
+      },
+    },
+  ],
+  requestBody: {
+    required: false,
+    content: {
+      "application/json": {
+        schema: {
+          type: "object",
+          additionalProperties: false,
+          properties: {
+            reason: {
+              type: "string",
+              maxLength: 500,
+              description: "Optional reason describing why the contractor was archived.",
+            },
+          },
+        },
+      },
+    },
+  },
+  responses: {
+    "204": {
+      description: "Contractor archived successfully",
+      headers: RateLimitHeaders,
+    },
+    "400": Response400,
+    "401": Response401,
+    "403": Response403,
+    "404": Response404,
+    "409": Response409,
+    "429": Response429Critical,
+    "500": Response500,
+  },
+  security: [],
+})
+
 export const get_spectrum_id_members_username_spec = oapi.validPath({
   summary: "Check if user is member of contractor",
   deprecated: false,
