@@ -44,6 +44,8 @@ export async function archiveContractor({
   let orderIds: string[] = []
   let listingIds: string[] = []
   let offerSessionIds: string[] = []
+  let originalSpectrumId: string = ""
+  let archivedSpectrumId: string = ""
 
   await database.knex.transaction(async (trx) => {
     const currentContractor = await trx<DBContractor>("contractors")
@@ -58,6 +60,10 @@ export async function archiveContractor({
     if (currentContractor.archived) {
       throw new Error("Contractor already archived")
     }
+
+    // Change spectrum_id to ~ARCHIVE~{ORIGINALID} format
+    originalSpectrumId = currentContractor.spectrum_id
+    archivedSpectrumId = `~ARCHIVE~${originalSpectrumId.replace(/^~/, "")}`
 
     const members = await trx("contractor_members")
       .where({ contractor_id: contractor.contractor_id })
@@ -116,10 +122,6 @@ export async function archiveContractor({
       .select("id")
     offerSessionIds = openOfferSessions.map((session) => session.id)
 
-    // Change spectrum_id to ~ARCHIVE~{ORIGINALID} format
-    const originalSpectrumId = currentContractor.spectrum_id
-    const archivedSpectrumId = `~ARCHIVE~${originalSpectrumId.replace(/^~/, "")}`
-
     await trx("contractors")
       .where({ contractor_id: contractor.contractor_id })
       .update({
@@ -155,6 +157,20 @@ export async function archiveContractor({
       if (order.status !== "cancelled") {
         await database.updateOrder(order.order_id, { status: "cancelled" })
         await cancelOrderMarketItems(order)
+
+        // Log order cancellation
+        await auditLogService.record({
+          action: "order.cancelled",
+          actorId,
+          subjectType: "order",
+          subjectId: orderId,
+          metadata: {
+            contractor_id: contractor.contractor_id,
+            spectrum_id: contractor.spectrum_id,
+            reason: "contractor_archived",
+            order_title: order.title,
+          },
+        })
       }
     } catch (error) {
       logger.error("Failed to cancel order during contractor archive", {
@@ -179,6 +195,12 @@ export async function archiveContractor({
   // Reject all open offers for this contractor
   for (const sessionId of offerSessionIds) {
     try {
+      // Get active offers before rejecting
+      const activeOffers = await database.knex("order_offers")
+        .where({ session_id: sessionId })
+        .where("status", "active")
+        .select("offer_id")
+
       // Reject all active offers in the session
       await database.knex("order_offers")
         .where({ session_id: sessionId })
@@ -187,6 +209,22 @@ export async function archiveContractor({
 
       // Mark the offer session as rejected
       await database.updateOfferSession(sessionId, { status: "rejected" })
+
+      // Log offer rejections
+      for (const offer of activeOffers) {
+            await auditLogService.record({
+              action: "offer.rejected",
+              actorId,
+              subjectType: "offer",
+              subjectId: offer.offer_id,
+              metadata: {
+                contractor_id: contractor.contractor_id,
+                spectrum_id: contractor.spectrum_id,
+                session_id: sessionId,
+                reason: "contractor_archived",
+              },
+            })
+      }
     } catch (error) {
       logger.error("Failed to reject offer session during contractor archive", {
         sessionId,
@@ -214,10 +252,14 @@ export async function archiveContractor({
     subjectType: "contractor",
     subjectId: contractor.contractor_id,
     metadata: {
+      contractor_id: contractor.contractor_id,
+      spectrum_id: archivedSpectrumId, // Use archived spectrum_id
       archivedAt: now.toISOString(),
       archivedLabel,
       memberCountRemoved,
       reason: reason ?? null,
+      original_spectrum_id: originalSpectrumId,
+      archived_spectrum_id: archivedSpectrumId,
     },
   })
 
