@@ -26,6 +26,8 @@ import { authorizeProfile } from "../profiles/helpers.js"
 import { convertQuery } from "../recruiting/controller.js"
 import { fetchChannel, fetchGuild } from "../util/discord.js"
 import { archiveContractor } from "../../../../services/contractors/archive-contractor.service.js"
+import { MinimalUser } from "../../../../clients/database/db-models.js"
+import { auditLogService } from "../../../../services/audit-log/audit-log.service.js"
 
 export const post_auth_link: RequestHandler = async (req, res) => {
   const user = req.user as User
@@ -162,6 +164,124 @@ export const delete_spectrum_id: RequestHandler = async (req, res) => {
   }
 }
 
+export const get_spectrum_id_audit_logs: RequestHandler = async (
+  req,
+  res,
+  next,
+) => {
+  try {
+    const contractor = req.contractor!
+    const page = Math.max(1, parseInt(req.query.page as string) || 1)
+    const pageSize = Math.min(
+      100,
+      Math.max(1, parseInt(req.query.page_size as string) || 20),
+    )
+    const action = req.query.action as string | undefined
+    const actorId = req.query.actor_id as string | undefined
+    const startDate = req.query.start_date as string | undefined
+    const endDate = req.query.end_date as string | undefined
+
+    // Build query - automatically filter by this contractor
+    // Include events where:
+    // 1. Subject is the contractor itself (subject_type = "contractor" AND subject_id = contractor_id)
+    // 2. OR metadata contains contractor_id matching this contractor (for member, role, invite, etc. events)
+    let query = database.knex("audit_logs").where((builder) => {
+      builder
+        .where((subBuilder) => {
+          subBuilder
+            .where("subject_type", "contractor")
+            .where("subject_id", contractor.contractor_id)
+        })
+        .orWhere((subBuilder) => {
+          // Check if metadata JSON contains contractor_id matching this contractor
+          subBuilder.whereRaw(
+            "metadata->>'contractor_id' = ?",
+            [contractor.contractor_id],
+          )
+        })
+    })
+
+    // Apply additional filters
+    if (action) {
+      query = query.where("action", action)
+    }
+    if (actorId) {
+      query = query.where("actor_id", actorId)
+    }
+    if (startDate) {
+      query = query.where("created_at", ">=", startDate)
+    }
+    if (endDate) {
+      query = query.where("created_at", "<=", endDate)
+    }
+
+    // Get total count
+    const countQuery = query.clone().clearSelect().count("* as count").first()
+    const totalResult = await countQuery
+    const total = totalResult ? parseInt(totalResult.count as string) : 0
+
+    // Apply pagination and ordering
+    const offset = (page - 1) * pageSize
+    const logs = await query
+      .select("audit_logs.*")
+      .orderBy("created_at", "desc")
+      .limit(pageSize)
+      .offset(offset)
+
+    // Fetch actor information for logs that have actor_id
+    const actorIds = logs
+      .map((log) => log.actor_id)
+      .filter((id): id is string => id !== null)
+    const actorsMap = new Map<string, MinimalUser>()
+
+    if (actorIds.length > 0) {
+      const actors = await Promise.all(
+        actorIds.map(async (id) => {
+          try {
+            const user = await database.getMinimalUser({ user_id: id })
+            return { id, user }
+          } catch {
+            return null
+          }
+        }),
+      )
+
+      actors.forEach((result) => {
+        if (result) {
+          actorsMap.set(result.id, result.user)
+        }
+      })
+    }
+
+    // Format response
+    const items = logs.map((log) => ({
+      audit_log_id: log.audit_log_id,
+      action: log.action,
+      actor_id: log.actor_id,
+      actor: log.actor_id ? actorsMap.get(log.actor_id) || null : null,
+      subject_type: log.subject_type,
+      subject_id: log.subject_id,
+      metadata: log.metadata,
+      created_at: log.created_at,
+    }))
+
+    res.json(
+      createResponse({
+        items,
+        total,
+        page,
+        page_size: pageSize,
+      }),
+    )
+  } catch (error) {
+    console.error("Error fetching contractor audit logs:", error)
+    res
+      .status(500)
+      .json(createErrorResponse({ message: "Failed to fetch audit logs" }))
+  }
+  return
+}
+
 export const get_search_query: RequestHandler = async (req, res, next) => {
   const query = req.params["query"]
 
@@ -266,6 +386,32 @@ export const post_invites_invite_id_accept: RequestHandler = async (
   await database.insertContractorMemberRole({
     user_id: user.user_id,
     role_id: contractor.default_role,
+  })
+
+  // Log invite acceptance and member addition
+  await auditLogService.record({
+    action: "invite.accepted",
+    actorId: user.user_id,
+    subjectType: "contractor_invite",
+    subjectId: invite_id,
+    metadata: {
+      contractor_id: contractor.contractor_id,
+      spectrum_id: contractor.spectrum_id,
+      invite_id,
+    },
+  })
+
+  await auditLogService.record({
+    action: "member.added",
+    actorId: user.user_id,
+    subjectType: "contractor_member",
+    subjectId: user.user_id,
+    metadata: {
+      contractor_id: contractor.contractor_id,
+      spectrum_id: contractor.spectrum_id,
+      method: "invite_code",
+      invite_id,
+    },
   })
 
   res.json(createResponse({ result: "Success" }))
@@ -516,7 +662,8 @@ export const post_spectrum_id_roles: RequestHandler = async (
     contractor_id: contractor.contractor_id,
   })
 
-  await database.insertContractorRole({
+  const user = req.user as User
+  const newRoles = await database.insertContractorRole({
     contractor_id: contractor.contractor_id,
     manage_roles: manage_roles,
     manage_orders: manage_orders,
@@ -530,6 +677,33 @@ export const post_spectrum_id_roles: RequestHandler = async (
     manage_blocklist: manage_blocklist,
     position: Math.max(...roles.map((r) => r.position)) + 1,
     name: name,
+  })
+  const newRole = newRoles[0]
+
+  // Log role creation
+  await auditLogService.record({
+    action: "role.created",
+    actorId: user.user_id,
+    subjectType: "contractor_role",
+    subjectId: newRole.role_id,
+    metadata: {
+      contractor_id: contractor.contractor_id,
+      spectrum_id: contractor.spectrum_id,
+      name,
+      position: newRole.position,
+      permissions: {
+        manage_roles,
+        manage_orders,
+        kick_members,
+        manage_invites,
+        manage_org_details,
+        manage_stock,
+        manage_market,
+        manage_webhooks,
+        manage_recruiting,
+        manage_blocklist,
+      },
+    },
   })
 
   res.json(createResponse({ result: "Success" }))
@@ -589,6 +763,8 @@ export const put_spectrum_id_roles_role_id: RequestHandler = async (
     ) {
       return
     }
+
+    const oldRole = { ...role }
     await database.updateContractorRole(
       { contractor_id: contractor.contractor_id, role_id },
       {
@@ -607,6 +783,58 @@ export const put_spectrum_id_roles_role_id: RequestHandler = async (
         position: position,
       },
     )
+
+    // Log role update
+    const changes: Record<string, unknown> = {}
+    if (name !== oldRole.name) changes.name = { old: oldRole.name, new: name }
+    if (position !== oldRole.position)
+      changes.position = { old: oldRole.position, new: position }
+    const permissionChanges: Record<string, unknown> = {}
+    if (manage_roles !== oldRole.manage_roles)
+      permissionChanges.manage_roles = { old: oldRole.manage_roles, new: manage_roles }
+    if (manage_orders !== oldRole.manage_orders)
+      permissionChanges.manage_orders = { old: oldRole.manage_orders, new: manage_orders }
+    if (kick_members !== oldRole.kick_members)
+      permissionChanges.kick_members = { old: oldRole.kick_members, new: kick_members }
+    if (manage_invites !== oldRole.manage_invites)
+      permissionChanges.manage_invites = { old: oldRole.manage_invites, new: manage_invites }
+    if (manage_org_details !== oldRole.manage_org_details)
+      permissionChanges.manage_org_details = {
+        old: oldRole.manage_org_details,
+        new: manage_org_details,
+      }
+    if (manage_stock !== oldRole.manage_stock)
+      permissionChanges.manage_stock = { old: oldRole.manage_stock, new: manage_stock }
+    if (manage_market !== oldRole.manage_market)
+      permissionChanges.manage_market = { old: oldRole.manage_market, new: manage_market }
+    if (manage_webhooks !== oldRole.manage_webhooks)
+      permissionChanges.manage_webhooks = { old: oldRole.manage_webhooks, new: manage_webhooks }
+    if (manage_recruiting !== oldRole.manage_recruiting)
+      permissionChanges.manage_recruiting = {
+        old: oldRole.manage_recruiting,
+        new: manage_recruiting,
+      }
+    if (manage_blocklist !== oldRole.manage_blocklist)
+      permissionChanges.manage_blocklist = {
+        old: oldRole.manage_blocklist,
+        new: manage_blocklist,
+      }
+    if (Object.keys(permissionChanges).length > 0) changes.permissions = permissionChanges
+
+    if (Object.keys(changes).length > 0) {
+      await auditLogService.record({
+        action: "role.updated",
+        actorId: user.user_id,
+        subjectType: "contractor_role",
+        subjectId: role_id,
+        metadata: {
+          contractor_id: contractor.contractor_id,
+          spectrum_id: contractor.spectrum_id,
+          ...changes,
+        },
+      })
+    }
+
     res.json(createResponse({ result: "Success" }))
   } else {
     res.status(403).json(createErrorResponse({ message: "No permissions." }))
@@ -646,6 +874,20 @@ export const delete_spectrum_id_roles_role_id: RequestHandler = async (
       .json(createErrorResponse({ message: "This role cannot be removed." }))
     return
   }
+
+  // Log role deletion before deleting
+  await auditLogService.record({
+    action: "role.deleted",
+    actorId: user.user_id,
+    subjectType: "contractor_role",
+    subjectId: role_id,
+    metadata: {
+      contractor_id: contractor.contractor_id,
+      spectrum_id: contractor.spectrum_id,
+      role_name: role.name,
+      position: role.position,
+    },
+  })
 
   await database.deleteContractorRole({
     role_id,
@@ -704,6 +946,21 @@ export const post_spectrum_id_roles_role_id_members_username: RequestHandler =
     await database.insertContractorMemberRole({
       user_id: target.user_id,
       role_id,
+    })
+
+    // Log role assignment
+    await auditLogService.record({
+      action: "member.role_assigned",
+      actorId: user.user_id,
+      subjectType: "contractor_member",
+      subjectId: target.user_id,
+      metadata: {
+        contractor_id: contractor.contractor_id,
+        spectrum_id: contractor.spectrum_id,
+        target_username: target.username,
+        role_id,
+        role_name: role.name,
+      },
     })
 
     res.json(createResponse({ result: "Success" }))
@@ -766,6 +1023,21 @@ export const delete_spectrum_id_roles_role_id_members_username: RequestHandler =
       role_id,
     })
 
+    // Log role removal
+    await auditLogService.record({
+      action: "member.role_removed",
+      actorId: user.user_id,
+      subjectType: "contractor_member",
+      subjectId: target.user_id,
+      metadata: {
+        contractor_id: contractor.contractor_id,
+        spectrum_id: contractor.spectrum_id,
+        target_username: target.username,
+        role_id,
+        role_name: role.name,
+      },
+    })
+
     res.json(createErrorResponse({ result: "Success" }))
   }
 
@@ -819,6 +1091,20 @@ export const delete_spectrum_id_members_username: RequestHandler = async (
       target.user_id,
     )
 
+    // Log member removal
+    await auditLogService.record({
+      action: "member.removed",
+      actorId: user.user_id,
+      subjectType: "contractor_member",
+      subjectId: target.user_id,
+      metadata: {
+        contractor_id: contractor.contractor_id,
+        spectrum_id: contractor.spectrum_id,
+        target_username: target.username,
+        target_user_id: target.user_id,
+      },
+    })
+
     res.json(createResponse({ result: "Success" }))
   } catch (e) {
     console.error(e)
@@ -860,6 +1146,9 @@ export const put_spectrum_id: RequestHandler = async (req, res, next) => {
     locale?: string
   } = req.body
 
+  const user = req.user as User
+  const changes: Record<string, unknown> = {}
+
   // Update only non-image fields
   if (
     description !== undefined ||
@@ -867,6 +1156,10 @@ export const put_spectrum_id: RequestHandler = async (req, res, next) => {
     market_order_template !== undefined ||
     locale !== undefined
   ) {
+    const oldContractor = await database.getContractor({
+      contractor_id: contractor.contractor_id,
+    })
+
     await database.updateContractor(
       { contractor_id: contractor.contractor_id },
       {
@@ -876,11 +1169,50 @@ export const put_spectrum_id: RequestHandler = async (req, res, next) => {
         locale: locale || undefined,
       },
     )
+
+    // Track what changed
+    if (description !== undefined && description !== oldContractor.description) {
+      changes.description = { old: oldContractor.description, new: description }
+    }
+    if (name !== undefined && name !== oldContractor.name) {
+      changes.name = { old: oldContractor.name, new: name }
+    }
+    if (
+      market_order_template !== undefined &&
+      market_order_template !== oldContractor.market_order_template
+    ) {
+      changes.market_order_template = {
+        old: oldContractor.market_order_template,
+        new: market_order_template,
+      }
+    }
+    if (locale !== undefined && locale !== oldContractor.locale) {
+      changes.locale = { old: oldContractor.locale, new: locale }
+    }
   }
 
   // Handle tags separately
   if (tags && tags.length) {
+    const oldTags = contractor.fields || []
     await database.setContractorFields(contractor.contractor_id, tags)
+    if (JSON.stringify(oldTags.sort()) !== JSON.stringify(tags.sort())) {
+      changes.tags = { old: oldTags, new: tags }
+    }
+  }
+
+  // Log organization update if there were changes
+  if (Object.keys(changes).length > 0) {
+    await auditLogService.record({
+      action: "org.updated",
+      actorId: user.user_id,
+      subjectType: "contractor",
+      subjectId: contractor.contractor_id,
+      metadata: {
+        ...changes,
+        contractor_id: contractor.contractor_id,
+        spectrum_id: contractor.spectrum_id,
+      },
+    })
   }
 
   res.json(createResponse({ result: "Success" }))
@@ -1221,14 +1553,30 @@ export const post_spectrum_id_webhooks: RequestHandler = async (
     return
   }
 
+  const user = req.user as User
   try {
-    await createNotificationWebhook(
+    const webhook = await createNotificationWebhook(
       name,
       webhook_url,
       actions,
       contractor.contractor_id,
       undefined,
     )
+
+    // Log webhook creation
+    await auditLogService.record({
+      action: "settings.updated",
+      actorId: user.user_id,
+      subjectType: "notification_webhook",
+      subjectId: webhook.webhook_id,
+      metadata: {
+        contractor_id: contractor.contractor_id,
+        spectrum_id: contractor.spectrum_id,
+        setting_type: "webhook_created",
+        webhook_name: name,
+        actions,
+      },
+    })
   } catch (e) {
     res.status(400).json(createErrorResponse({ message: "Invalid actions" }))
     return
@@ -1246,11 +1594,26 @@ export const delete_spectrum_id_webhooks_webhook_id: RequestHandler = async (
 
   const { webhook_id } = req.params
 
+  const user = req.user as User
   const webhook = await database.getNotificationWebhook({ webhook_id })
-  if (webhook?.contractor_id !== contractor.contractor_id) {
+  if (!webhook || webhook.contractor_id !== contractor.contractor_id) {
     res.status(403).json(createErrorResponse({ message: "Unauthorized" }))
     return
   }
+
+  // Log webhook deletion before deleting
+  await auditLogService.record({
+    action: "settings.updated",
+    actorId: user.user_id,
+    subjectType: "notification_webhook",
+    subjectId: webhook_id,
+    metadata: {
+      contractor_id: contractor.contractor_id,
+      spectrum_id: contractor.spectrum_id,
+      setting_type: "webhook_deleted",
+      webhook_name: webhook.name,
+    },
+  })
 
   await database.deleteNotificationWebhook({
     webhook_id,
@@ -1292,10 +1655,25 @@ export const post_spectrum_id_invites: RequestHandler = async (
     return
   }
 
-  await database.createInviteCode({
+  const user = req.user as User
+  const inviteCodes = await database.createInviteCode({
     max_uses,
     contractor_id: contractor.contractor_id,
   })
+  const inviteCode = inviteCodes[0]
+
+  // Log invite creation
+    await auditLogService.record({
+      action: "invite.created",
+      actorId: user.user_id,
+      subjectType: "contractor_invite",
+      subjectId: inviteCode.invite_id,
+      metadata: {
+        contractor_id: contractor.contractor_id,
+        spectrum_id: contractor.spectrum_id,
+        max_uses,
+      },
+    })
 
   res.json(createResponse({ result: "Success" }))
 }
@@ -1315,11 +1693,26 @@ export const delete_spectrum_id_invites_invite_id: RequestHandler = async (
     return
   }
 
+  const user = req.user as User
   const inviteCode = await database.getInviteCode({ invite_id })
-  if (inviteCode?.contractor_id !== contractor.contractor_id) {
+  if (!inviteCode || inviteCode.contractor_id !== contractor.contractor_id) {
     res.status(403).json(createErrorResponse({ message: "Unauthorized" }))
     return
   }
+
+  // Log invite deletion before deleting
+  await auditLogService.record({
+    action: "invite.deleted",
+    actorId: user.user_id,
+    subjectType: "contractor_invite",
+    subjectId: invite_id,
+    metadata: {
+      contractor_id: contractor.contractor_id,
+      spectrum_id: contractor.spectrum_id,
+      max_uses: inviteCode.max_uses,
+      times_used: inviteCode.times_used,
+    },
+  })
 
   await database.deleteInviteCodes({
     invite_id,
@@ -1374,6 +1767,7 @@ export const post_spectrum_id_members: RequestHandler = async (req, res) => {
     }
   }
 
+  const user = req.user as User
   const invites = await database.insertContractorInvites(
     users.map((u) => ({
       user_id: u.user_id,
@@ -1381,6 +1775,23 @@ export const post_spectrum_id_members: RequestHandler = async (req, res) => {
       contractor_id: contractor.contractor_id,
     })),
   )
+
+  // Log direct invites sent
+  for (const invite of invites) {
+    await auditLogService.record({
+      action: "invite.created",
+      actorId: user.user_id,
+      subjectType: "contractor_invite",
+      subjectId: invite.invite_id,
+      metadata: {
+        contractor_id: contractor.contractor_id,
+        spectrum_id: contractor.spectrum_id,
+        target_user_id: invite.user_id,
+        method: "direct",
+        message,
+      },
+    })
+  }
 
   await createContractorInviteNotification(invites[0])
 
@@ -1448,6 +1859,7 @@ export const post_spectrum_id_accept: RequestHandler = async (
     const { invite_id }: { invite_id?: string } = req.body
 
     const contractor = req.contractor!
+    let acceptedInviteId: string | undefined
 
     if (contractor.archived) {
       res
@@ -1496,6 +1908,8 @@ export const post_spectrum_id_accept: RequestHandler = async (
           contractor_id: contractor.contractor_id,
         })
       }
+
+      acceptedInviteId = invite_id
     } else {
       // Direct Invite
       const invites = await database.getContractorInvites({
@@ -1509,6 +1923,9 @@ export const post_spectrum_id_accept: RequestHandler = async (
           .json(createErrorResponse({ message: "Invalid contractor" }))
         return
       }
+
+      // Store invite_id before removal for audit log
+      acceptedInviteId = invites[0].invite_id
     }
 
     await database.removeContractorInvites(
@@ -1525,6 +1942,35 @@ export const post_spectrum_id_accept: RequestHandler = async (
     await database.insertContractorMemberRole({
       user_id: user.user_id,
       role_id: contractor.default_role,
+    })
+
+    // Log direct invite acceptance and member addition
+    if (acceptedInviteId) {
+      await auditLogService.record({
+        action: "invite.accepted",
+        actorId: user.user_id,
+        subjectType: "contractor_invite",
+        subjectId: acceptedInviteId,
+        metadata: {
+          contractor_id: contractor.contractor_id,
+          spectrum_id: contractor.spectrum_id,
+          invite_id: acceptedInviteId,
+          method: invite_id ? "invite_code" : "direct",
+        },
+      })
+    }
+
+    await auditLogService.record({
+      action: "member.added",
+      actorId: user.user_id,
+      subjectType: "contractor_member",
+      subjectId: user.user_id,
+      metadata: {
+        contractor_id: contractor.contractor_id,
+        spectrum_id: contractor.spectrum_id,
+        method: invite_id ? "invite_code" : "direct_invite",
+        invite_id: acceptedInviteId,
+      },
     })
 
     res.json(createResponse({ result: "Success" }))
@@ -1665,13 +2111,37 @@ export const get_spectrum_id_settings_discord: RequestHandler = async (
 
 export const post_spectrum_id_settings_discord_use_official: RequestHandler =
   async (req, res, next) => {
+    const user = req.user as User
+    const contractor = req.contractor!
+    const oldContractor = await database.getContractor({
+      contractor_id: contractor.contractor_id,
+    })
+
     await database.updateContractor(
-      { contractor_id: req.contractor!.contractor_id },
+      { contractor_id: contractor.contractor_id },
       {
         official_server_id: "1003056231591727264",
         discord_thread_channel_id: "1072580369251041330",
       },
     )
+
+    // Log Discord linking
+    await auditLogService.record({
+      action: "discord.linked",
+      actorId: user.user_id,
+      subjectType: "contractor",
+      subjectId: contractor.contractor_id,
+      metadata: {
+        contractor_id: contractor.contractor_id,
+        spectrum_id: contractor.spectrum_id,
+        official_server_id: "1003056231591727264",
+        discord_thread_channel_id: "1072580369251041330",
+        previous_official_server_id: oldContractor.official_server_id || null,
+        previous_discord_thread_channel_id:
+          oldContractor.discord_thread_channel_id || null,
+      },
+    })
+
     res.json(createResponse({ result: "Success" }))
   }
 

@@ -513,6 +513,202 @@ export const admin_get_orders_analytics_spec = adminOapi.validPath({
   security: [{ adminAuth: [] }],
 })
 
+// Define AuditLogEntry schema
+adminOapi.schema("AuditLogEntry", {
+  type: "object",
+  title: "AuditLogEntry",
+  properties: {
+    audit_log_id: {
+      type: "string",
+      format: "uuid",
+      description: "Unique identifier for the audit log entry",
+    },
+    action: {
+      type: "string",
+      description: "Action that was performed (e.g., 'org.archived')",
+      example: "org.archived",
+    },
+    actor_id: {
+      type: "string",
+      format: "uuid",
+      nullable: true,
+      description: "User ID of the actor who performed the action",
+    },
+    actor: {
+      $ref: "#/components/schemas/MinimalUser",
+      nullable: true,
+      description: "User details of the actor (if actor_id exists)",
+    },
+    subject_type: {
+      type: "string",
+      description: "Type of entity the action was performed on",
+      example: "contractor",
+    },
+    subject_id: {
+      type: "string",
+      description: "ID of the entity the action was performed on",
+    },
+    metadata: {
+      type: "object",
+      description: "Additional metadata about the action",
+      additionalProperties: true,
+    },
+    created_at: {
+      type: "string",
+      format: "date-time",
+      description: "Timestamp when the action was performed",
+    },
+  },
+  required: [
+    "audit_log_id",
+    "action",
+    "subject_type",
+    "subject_id",
+    "metadata",
+    "created_at",
+  ],
+})
+
+adminOapi.schema("AuditLogsResponse", {
+  type: "object",
+  title: "AuditLogsResponse",
+  properties: {
+    items: {
+      type: "array",
+      items: {
+        $ref: "#/components/schemas/AuditLogEntry",
+      },
+    },
+    total: {
+      type: "integer",
+      description: "Total number of audit log entries matching the filters",
+    },
+    page: {
+      type: "integer",
+      description: "Current page number",
+    },
+    page_size: {
+      type: "integer",
+      description: "Number of items per page",
+    },
+  },
+  required: ["items", "total", "page", "page_size"],
+})
+
+export const admin_get_audit_logs_spec = adminOapi.validPath({
+  summary: "Get audit logs",
+  description:
+    "Retrieve a paginated list of audit log entries with optional filtering by action, subject type, actor, and date range. Admin only.",
+  operationId: "getAuditLogs",
+  tags: ["Admin"],
+  parameters: [
+    {
+      name: "page",
+      in: "query",
+      description: "Page number (1-based)",
+      required: false,
+      schema: {
+        type: "integer",
+        minimum: 1,
+        default: 1,
+      },
+    },
+    {
+      name: "page_size",
+      in: "query",
+      description: "Number of audit log entries per page",
+      required: false,
+      schema: {
+        type: "integer",
+        minimum: 1,
+        maximum: 100,
+        default: 20,
+      },
+    },
+    {
+      name: "action",
+      in: "query",
+      description: "Filter by action type (e.g., 'org.archived')",
+      required: false,
+      schema: {
+        type: "string",
+      },
+    },
+    {
+      name: "subject_type",
+      in: "query",
+      description: "Filter by subject type (e.g., 'contractor')",
+      required: false,
+      schema: {
+        type: "string",
+      },
+    },
+    {
+      name: "subject_id",
+      in: "query",
+      description: "Filter by specific subject ID",
+      required: false,
+      schema: {
+        type: "string",
+      },
+    },
+    {
+      name: "actor_id",
+      in: "query",
+      description: "Filter by actor user ID",
+      required: false,
+      schema: {
+        type: "string",
+        format: "uuid",
+      },
+    },
+    {
+      name: "start_date",
+      in: "query",
+      description: "Filter logs after this date (ISO 8601 format)",
+      required: false,
+      schema: {
+        type: "string",
+        format: "date-time",
+      },
+    },
+    {
+      name: "end_date",
+      in: "query",
+      description: "Filter logs before this date (ISO 8601 format)",
+      required: false,
+      schema: {
+        type: "string",
+        format: "date-time",
+      },
+    },
+  ],
+  responses: {
+    "200": {
+      description: "Audit logs retrieved successfully",
+      content: {
+        "application/json": {
+          schema: {
+            type: "object",
+            properties: {
+              data: {
+                $ref: "#/components/schemas/AuditLogsResponse",
+              },
+            },
+            required: ["data"],
+          },
+        },
+      },
+      headers: RateLimitHeaders,
+    },
+    "401": Response401,
+    "403": Response403,
+    "429": Response429Read,
+    "500": Response500,
+  },
+  security: [{ adminAuth: [] }],
+})
+
 export const admin_get_users_spec = adminOapi.validPath({
   summary: "Get all users with pagination",
   description:

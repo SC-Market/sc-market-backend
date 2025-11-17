@@ -12,6 +12,88 @@ import {
 import { SUPPORTED_LOCALES } from "../util/i18n.js"
 import { VALID_ORG_TAGS } from "./controller.js"
 
+// Define AuditLogEntry schema for contractor audit logs
+oapi.schema("AuditLogEntry", {
+  type: "object",
+  title: "AuditLogEntry",
+  properties: {
+    audit_log_id: {
+      type: "string",
+      format: "uuid",
+      description: "Unique identifier for the audit log entry",
+    },
+    action: {
+      type: "string",
+      description: "Action that was performed (e.g., 'org.archived')",
+      example: "org.archived",
+    },
+    actor_id: {
+      type: "string",
+      format: "uuid",
+      nullable: true,
+      description: "User ID of the actor who performed the action",
+    },
+    actor: {
+      $ref: "#/components/schemas/MinimalUser",
+      nullable: true,
+      description: "User details of the actor (if actor_id exists)",
+    },
+    subject_type: {
+      type: "string",
+      description: "Type of entity the action was performed on",
+      example: "contractor",
+    },
+    subject_id: {
+      type: "string",
+      description: "ID of the entity the action was performed on",
+    },
+    metadata: {
+      type: "object",
+      description: "Additional metadata about the action",
+      additionalProperties: true,
+    },
+    created_at: {
+      type: "string",
+      format: "date-time",
+      description: "Timestamp when the action was performed",
+    },
+  },
+  required: [
+    "audit_log_id",
+    "action",
+    "subject_type",
+    "subject_id",
+    "metadata",
+    "created_at",
+  ],
+})
+
+oapi.schema("AuditLogsResponse", {
+  type: "object",
+  title: "AuditLogsResponse",
+  properties: {
+    items: {
+      type: "array",
+      items: {
+        $ref: "#/components/schemas/AuditLogEntry",
+      },
+    },
+    total: {
+      type: "integer",
+      description: "Total number of audit log entries matching the filters",
+    },
+    page: {
+      type: "integer",
+      description: "Current page number",
+    },
+    page_size: {
+      type: "integer",
+      description: "Number of items per page",
+    },
+  },
+  required: ["items", "total", "page", "page_size"],
+})
+
 oapi.schema("ContractorInviteCode", {
   properties: {
     invite_id: {
@@ -1047,6 +1129,116 @@ export const delete_spectrum_id_spec = oapi.validPath({
     "404": Response404,
     "409": Response409,
     "429": Response429Critical,
+    "500": Response500,
+  },
+  security: [],
+})
+
+export const get_spectrum_id_audit_logs_spec = oapi.validPath({
+  summary: "Get contractor audit logs",
+  deprecated: false,
+  description:
+    "Retrieve a paginated list of audit log entries for this contractor. Only accessible by contractor members. Automatically filtered to show only logs for this contractor.",
+  operationId: "getContractorAuditLogs",
+  tags: ["Contractors"],
+  parameters: [
+    {
+      name: "spectrum_id",
+      in: "path",
+      description: "Contractor spectrum ID",
+      required: true,
+      schema: {
+        type: "string",
+        minLength: 3,
+        maxLength: 50,
+      },
+    },
+    {
+      name: "page",
+      in: "query",
+      description: "Page number (1-based)",
+      required: false,
+      schema: {
+        type: "integer",
+        minimum: 1,
+        default: 1,
+      },
+    },
+    {
+      name: "page_size",
+      in: "query",
+      description: "Number of audit log entries per page",
+      required: false,
+      schema: {
+        type: "integer",
+        minimum: 1,
+        maximum: 100,
+        default: 20,
+      },
+    },
+    {
+      name: "action",
+      in: "query",
+      description: "Filter by action type (e.g., 'org.archived')",
+      required: false,
+      schema: {
+        type: "string",
+      },
+    },
+    {
+      name: "actor_id",
+      in: "query",
+      description: "Filter by actor user ID",
+      required: false,
+      schema: {
+        type: "string",
+        format: "uuid",
+      },
+    },
+    {
+      name: "start_date",
+      in: "query",
+      description: "Filter logs after this date (ISO 8601 format)",
+      required: false,
+      schema: {
+        type: "string",
+        format: "date-time",
+      },
+    },
+    {
+      name: "end_date",
+      in: "query",
+      description: "Filter logs before this date (ISO 8601 format)",
+      required: false,
+      schema: {
+        type: "string",
+        format: "date-time",
+      },
+    },
+  ],
+  responses: {
+    "200": {
+      description: "Audit logs retrieved successfully",
+      content: {
+        "application/json": {
+          schema: {
+            type: "object",
+            properties: {
+              data: {
+                $ref: "#/components/schemas/AuditLogsResponse",
+              },
+            },
+            required: ["data"],
+          },
+        },
+      },
+      headers: RateLimitHeaders,
+    },
+    "400": Response400,
+    "401": Response401,
+    "403": Response403,
+    "404": Response404,
+    "429": Response429Read,
     "500": Response500,
   },
   security: [],
