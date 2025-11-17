@@ -12,6 +12,7 @@ import {
   admin_get_orders_analytics,
   admin_get_users,
   admin_get_membership_analytics,
+  admin_get_audit_logs,
 } from "./controller.js"
 
 import {
@@ -19,6 +20,7 @@ import {
   admin_get_orders_analytics_spec,
   admin_get_users_spec,
   admin_get_membership_analytics_spec,
+  admin_get_audit_logs_spec,
 } from "./openapi.js"
 
 export const adminRouter = express.Router()
@@ -61,4 +63,12 @@ adminRouter.get(
   adminAuthorized,
   readRateLimit,
   admin_get_membership_analytics,
+)
+
+adminRouter.get(
+  "/audit-logs",
+  admin_get_audit_logs_spec,
+  adminAuthorized,
+  readRateLimit,
+  admin_get_audit_logs,
 )

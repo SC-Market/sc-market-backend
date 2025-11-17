@@ -33,6 +33,7 @@ import {
   get_root,
   get_search_query,
   get_spectrum_id,
+  get_spectrum_id_audit_logs,
   get_spectrum_id_blocklist,
   get_spectrum_id_customers,
   get_spectrum_id_invites,
@@ -75,6 +76,7 @@ import {
   get_invites_invite_id_spec,
   get_root_spec,
   get_search_query_spec,
+  get_spectrum_id_audit_logs_spec,
   get_spectrum_id_blocklist_spec,
   get_spectrum_id_customers_spec,
   get_spectrum_id_invites_spec,
@@ -190,6 +192,17 @@ contractorsRouter.get(
   get_spectrum_id_reviews_spec,
   readRateLimit,
   get_spectrum_id_reviews,
+)
+
+contractorsRouter.get(
+  "/:spectrum_id/audit-logs",
+  userAuthorized,
+  requireContractorsRead,
+  get_spectrum_id_audit_logs_spec,
+  readRateLimit,
+  valid_contractor,
+  requireContractorAccessFromSpectrumId(),
+  get_spectrum_id_audit_logs,
 )
 
 contractorsRouter.get(

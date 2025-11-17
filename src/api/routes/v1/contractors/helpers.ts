@@ -3,6 +3,7 @@ import { database } from "../../../../clients/database/knex-db.js"
 import { get_sentinel } from "../profiles/helpers.js"
 import { fetchRSIOrgSCAPI } from "../../../../clients/scapi/scapi.js"
 import { User } from "../api-models.js"
+import { auditLogService } from "../../../../services/audit-log/audit-log.service.js"
 
 export async function createContractor(options: {
   owner_id: string
@@ -70,6 +71,20 @@ export async function createContractor(options: {
     owner_id,
     "owner",
   )
+
+  // Log organization creation
+  await auditLogService.record({
+    action: "org.created",
+    actorId: owner_id,
+    subjectType: "contractor",
+    subjectId: contractor.contractor_id,
+    metadata: {
+      name,
+      spectrum_id,
+      description: description.trim(),
+    },
+  })
+
   const owner_role = await database.insertContractorRole({
     contractor_id: contractor.contractor_id,
     position: 0,
