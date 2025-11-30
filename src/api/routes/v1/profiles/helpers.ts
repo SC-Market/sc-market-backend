@@ -1,11 +1,6 @@
-import { DBUser } from "../../../../clients/database/db-models.js"
-import { User } from "../api-models.js"
 import { database } from "../../../../clients/database/knex-db.js"
 import { cdn } from "../../../../clients/cdn/cdn.js"
-import { getUserRating } from "../util/formatting.js"
 import { fetchRSIProfileDirect } from "../../../../clients/rsi/scraper.js"
-import winston from "winston"
-import { fetchRSIProfileNydoo } from "../../../../clients/nydoo/nydoo.js"
 import { fetchRSIProfileCommunityHub } from "../../../../clients/rsi/community_hub.js"
 import { fetchRSIProfileSCAPI } from "../../../../clients/scapi/scapi.js"
 import logger from "../../../../logger/logger.js"
@@ -13,7 +8,7 @@ import { getSpectrumUserIdByHandle } from "../util/spectrum.js"
 import { spectrumAPI } from "../../../../clients/spectrum/index.js"
 
 export function get_sentinel(user_id: string) {
-  return `[SCMKT:${user_id.substring(0, 8).toUpperCase()}]`
+  return `[sc-market.space:${user_id.substring(0, 8).toUpperCase()}]`
 }
 
 async function fetchProfile(spectrum_id: string) {
