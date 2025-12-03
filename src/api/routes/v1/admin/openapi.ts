@@ -1,6 +1,7 @@
 import { adminOapi as adminOapi } from "../openapi.js"
 import { Response401 as Response401 } from "../openapi.js"
 import { Response403 as Response403 } from "../openapi.js"
+import { Response400 as Response400 } from "../openapi.js"
 import { Response500 as Response500 } from "../openapi.js"
 import { Response429Read, RateLimitHeaders } from "../openapi.js"
 
@@ -913,4 +914,29 @@ export const admin_get_membership_analytics_spec = adminOapi.validPath({
     "500": Response500,
   },
   security: [{ adminAuth: [] }],
+})
+
+export const admin_post_users_username_unlink_spec = adminOapi.validPath({
+  summary: "Unlink user's Star Citizen account",
+  description: "Admin endpoint to unlink a user's Star Citizen account, returning them to unverified status and resetting usernames to default values based on their Discord ID.",
+  operationId: "adminUnlinkUserAccount",
+  tags: ["Admin"],
+  parameters: [{
+    name: "username",
+    in: "path",
+    required: true,
+    schema: { type: "string" },
+    description: "Username of the user to unlink",
+  }],
+  responses: {
+    "200": { description: "User account successfully unlinked", content: { "application/json": { schema: { type: "object", properties: { message: { type: "string", example: "User account successfully unlinked" }, username: { type: "string", example: "new_user123456789" } } } } } },
+    "400": { description: "User is not currently verified", content: { "application/json": { schema: Response400 } } },
+    "401": Response401,
+    "403": Response403,
+    "404": { description: "User not found", content: { "application/json": { schema: Response400 } } },
+    "429": Response429Read,
+    "500": Response500,
+  },
+  security: [{ adminAuth: [] }],
+  ...RateLimitHeaders,
 })

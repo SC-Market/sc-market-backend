@@ -63,6 +63,7 @@ export async function serializePublicProfile(
         }
       : undefined,
     market_order_template: user.market_order_template,
+    rsi_confirmed: user.rsi_confirmed,
   }
 }
 
