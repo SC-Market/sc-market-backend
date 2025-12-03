@@ -13,6 +13,7 @@ import {
   admin_get_users,
   admin_get_membership_analytics,
   admin_get_audit_logs,
+  admin_post_users_username_unlink,
 } from "./controller.js"
 
 import {
@@ -21,6 +22,7 @@ import {
   admin_get_users_spec,
   admin_get_membership_analytics_spec,
   admin_get_audit_logs_spec,
+  admin_post_users_username_unlink_spec,
 } from "./openapi.js"
 
 export const adminRouter = express.Router()
@@ -71,4 +73,12 @@ adminRouter.get(
   adminAuthorized,
   readRateLimit,
   admin_get_audit_logs,
+)
+
+adminRouter.post(
+  "/users/:username/unlink",
+  admin_post_users_username_unlink_spec,
+  adminAuthorized,
+  criticalRateLimit,
+  admin_post_users_username_unlink,
 )
