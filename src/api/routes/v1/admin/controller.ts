@@ -1,6 +1,9 @@
 import { RequestHandler } from "express"
 import { database as database } from "../../../../clients/database/knex-db.js"
 import { createResponse as createResponse } from "../util/response.js"
+import { createErrorResponse } from "../util/response.js"
+import { User } from "../api-models.js"
+import logger from "../../../../logger/logger.js"
 import {
   convertActivityToGrafana,
   convertOrderAnalyticsToGrafana,
@@ -381,4 +384,71 @@ export const admin_get_audit_logs: RequestHandler = async (req, res) => {
     res.status(500).json(createResponse({ error: "Failed to fetch audit logs" }))
   }
   return
+}
+
+export const admin_post_users_username_unlink: RequestHandler = async (
+  req,
+  res,
+) => {
+  try {
+    const { username } = req.params
+    const adminUser = req.user as User
+
+    // Get the target user
+    const user = await database.getUser({ username })
+    if (!user) {
+      res.status(404).json(
+        createErrorResponse({
+          message: "User not found",
+          status: "error",
+        }),
+      )
+      return
+    }
+
+    // Check if user is currently verified
+    if (!user.rsi_confirmed) {
+      res.status(400).json(
+        createErrorResponse({
+          message: "User is not currently verified with a Star Citizen account",
+          status: "error",
+        }),
+      )
+      return
+    }
+
+    // Generate default username from Discord ID
+    const defaultUsername = `new_user${user.discord_id}`
+    const defaultDisplayName = `new_user${user.discord_id}`
+
+    // Update user to unverified state with default usernames
+    await database.updateUser(
+      { user_id: user.user_id },
+      {
+        rsi_confirmed: false,
+        spectrum_user_id: null,
+        username: defaultUsername,
+        display_name: defaultDisplayName,
+      },
+    )
+
+    logger.info(
+      `Admin ${adminUser.user_id} unlinked Star Citizen account for user ${user.user_id} (${username}). Reset to default usernames.`,
+    )
+
+    res.json(
+      createResponse({
+        message: "User account successfully unlinked",
+        username: defaultUsername,
+      }),
+    )
+  } catch (e) {
+    logger.error("Error during admin Star Citizen account unlink:", e)
+    res.status(500).json(
+      createErrorResponse({
+        message: "Internal server error during account unlink",
+        status: "error",
+      }),
+    )
+  }
 }
