@@ -99,7 +99,7 @@ export async function authorizeProfile(
 
   const profileDetails = await fetchProfile(username)
 
-  const sentinel = get_sentinel(user_id)
+  const sentinel = get_sentinel(user_id).toUpperCase()
 
   if (
     profileDetails &&
