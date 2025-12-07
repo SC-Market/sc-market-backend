@@ -1782,6 +1782,81 @@ export const delete_spectrum_id_members_username_spec = oapi.validPath({
   security: [],
 })
 
+export const post_spectrum_id_transfer_ownership_spec = oapi.validPath({
+  summary: "Transfer organization ownership",
+  deprecated: false,
+  description:
+    "Transfer ownership of an organization to another member. Only the current owner can perform this action.",
+  operationId: "transferOwnership",
+  tags: ["Contractors"],
+  parameters: [
+    {
+      name: "spectrum_id",
+      in: "path",
+      description: "Contractor spectrum ID",
+      required: true,
+      schema: {
+        type: "string",
+        minLength: 3,
+        maxLength: 50,
+      },
+    },
+  ],
+  requestBody: {
+    content: {
+      "application/json": {
+        schema: {
+          type: "object",
+          properties: {
+            username: {
+              type: "string",
+              description: "Username of the member to transfer ownership to",
+              example: "newowner",
+            },
+          },
+          required: ["username"],
+        },
+      },
+    },
+  },
+  responses: {
+    "200": {
+      description: "OK - Ownership successfully transferred",
+      content: {
+        "application/json": {
+          schema: {
+            type: "object",
+            properties: {
+              data: {
+                type: "object",
+                properties: {
+                  result: {
+                    type: "string",
+                    example: "Success",
+                  },
+                  message: {
+                    type: "string",
+                    example: "Ownership transferred to newowner",
+                  },
+                },
+                required: ["result", "message"],
+              },
+            },
+            required: ["data"],
+          },
+        },
+      },
+    },
+    "400": Response400,
+    "401": Response401,
+    "403": Response403,
+    "404": Response404,
+    "409": Response409,
+    "500": Response500,
+  },
+  security: [],
+})
+
 export const contractors_post_spectrum_id_avatar_spec = oapi.validPath({
   summary: "Upload organization avatar",
   deprecated: false,

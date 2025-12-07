@@ -1041,6 +1041,152 @@ export const delete_spectrum_id_roles_role_id_members_username: RequestHandler =
     res.json(createErrorResponse({ result: "Success" }))
   }
 
+export const post_spectrum_id_transfer_ownership: RequestHandler = async (
+  req,
+  res,
+  next,
+) => {
+  const user = req.user as User
+  const contractor = req.contractor!
+
+  const { username } = req.body as { username: string }
+
+  if (!username || typeof username !== "string") {
+    res.status(400).json(
+      createErrorResponse({ message: "Username is required" }),
+    )
+    return
+  }
+
+  // Verify requester is the current owner
+  if (user.role !== "admin") {
+    const roles = await database.getMemberRoles(
+      contractor.contractor_id,
+      user.user_id,
+    )
+    const isOwner = roles.some((role) => role.role_id === contractor.owner_role)
+    if (!isOwner) {
+      res.status(403).json(
+        createErrorResponse({
+          message: "Only organization owners can transfer ownership",
+        }),
+      )
+      return
+    }
+  }
+
+  // Get the target user
+  let target
+  try {
+    target = await database.getUser({ username })
+  } catch (e) {
+    res.status(404).json(createErrorResponse({ message: "User not found" }))
+    return
+  }
+
+  // Verify target is not the same as current owner
+  if (target.user_id === user.user_id) {
+    res.status(400).json(
+      createErrorResponse({
+        message: "Cannot transfer ownership to yourself",
+      }),
+    )
+    return
+  }
+
+  // Verify target is a member of the organization
+  const target_is_member = await is_member(
+    contractor.contractor_id,
+    target.user_id,
+  )
+  if (!target_is_member) {
+    res.status(400).json(
+      createErrorResponse({
+        message: "Target user must be a member of the organization",
+      }),
+    )
+    return
+  }
+
+  // Verify owner_role exists
+  if (!contractor.owner_role) {
+    res.status(500).json(
+      createErrorResponse({
+        message: "Organization owner role not found",
+      }),
+    )
+    return
+  }
+
+  // Perform the transfer in a transaction
+  const trx = await database.knex.transaction()
+  try {
+    // Remove owner role from old owner
+    await trx<DBContractorMemberRole>("contractor_member_roles")
+      .where({
+        user_id: user.user_id,
+        role_id: contractor.owner_role,
+      })
+      .delete()
+
+    // Add owner role to new owner (check if they already have it to avoid duplicate)
+    const existingOwnerRole = await trx<DBContractorMemberRole>(
+      "contractor_member_roles",
+    )
+      .where({
+        user_id: target.user_id,
+        role_id: contractor.owner_role,
+      })
+      .first()
+
+    if (!existingOwnerRole) {
+      await trx<DBContractorMemberRole>("contractor_member_roles").insert({
+        user_id: target.user_id,
+        role_id: contractor.owner_role,
+      })
+    }
+
+    // Commit transaction before audit log (audit log is separate)
+    await trx.commit()
+
+    // Log the ownership transfer (outside transaction)
+    await auditLogService.record({
+      action: "org.ownership_transferred",
+      actorId: user.user_id,
+      subjectType: "contractor",
+      subjectId: contractor.contractor_id,
+      metadata: {
+        contractor_id: contractor.contractor_id,
+        spectrum_id: contractor.spectrum_id,
+        old_owner_username: user.username,
+        old_owner_user_id: user.user_id,
+        new_owner_username: target.username,
+        new_owner_user_id: target.user_id,
+      },
+    })
+
+    res.json(
+      createResponse({
+        result: "Success",
+        message: `Ownership transferred to ${target.username}`,
+      }),
+    )
+  } catch (error) {
+    await trx.rollback()
+    logger.error("Error transferring ownership", {
+      error: error instanceof Error ? error.message : String(error),
+      contractor_id: contractor.contractor_id,
+      old_owner_id: user.user_id,
+      new_owner_id: target.user_id,
+    })
+    res.status(500).json(
+      createErrorResponse({
+        message: "Failed to transfer ownership",
+      }),
+    )
+  }
+}
+
 export const delete_spectrum_id_members_username: RequestHandler = async (
   req,
   res,

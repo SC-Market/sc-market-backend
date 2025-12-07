@@ -58,6 +58,7 @@ import {
   post_spectrum_id_roles,
   post_spectrum_id_roles_role_id_members_username,
   post_spectrum_id_settings_discord_use_official,
+  post_spectrum_id_transfer_ownership,
   post_spectrum_id_webhooks,
   contractors_post_spectrum_id_avatar,
   contractors_post_spectrum_id_banner,
@@ -100,6 +101,7 @@ import {
   post_spectrum_id_roles_role_id_members_username_spec,
   post_spectrum_id_roles_spec,
   post_spectrum_id_settings_discord_use_official_spec,
+  post_spectrum_id_transfer_ownership_spec,
   post_spectrum_id_webhooks_spec,
   contractors_post_spectrum_id_avatar_spec,
   contractors_post_spectrum_id_banner_spec,
@@ -298,6 +300,16 @@ contractorsRouter.delete(
   org_permission("kick_members"),
   writeRateLimit,
   delete_spectrum_id_members_username,
+)
+
+contractorsRouter.post(
+  "/:spectrum_id/transfer-ownership",
+  userAuthorized,
+  requireContractorsWrite,
+  post_spectrum_id_transfer_ownership_spec,
+  org_authorized,
+  writeRateLimit,
+  post_spectrum_id_transfer_ownership,
 )
 
 contractorsRouter.put(
