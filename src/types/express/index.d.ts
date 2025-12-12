@@ -17,6 +17,7 @@ declare global {
       contractor?: DBContractor
       order?: DBOrder
       offer_session?: DBOfferSession
+      offer_sessions?: DBOfferSession[]
       most_recent_offer?: DBOffer
       contract?: DBPublicContract
       chat?: DBChat
