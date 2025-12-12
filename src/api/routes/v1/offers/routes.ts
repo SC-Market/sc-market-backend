@@ -7,6 +7,7 @@ import {
 import {
   writeRateLimit,
   readRateLimit,
+  commonWriteRateLimit,
 } from "../../../middleware/enhanced-ratelimiting.js"
 
 import express from "express"
@@ -49,7 +50,7 @@ offerRouter.put(
   requireOffersWrite,
   related_to_offer,
   offer_put_session_id_spec,
-  writeRateLimit,
+  commonWriteRateLimit,
   can_respond_to_offer,
   offer_put_session_id,
 )

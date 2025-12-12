@@ -311,8 +311,8 @@ export const notificationRateLimit = createRateLimit({
 
 // Generic rate limit for common write operations (messages, acknowledgments, etc.)
 export const commonWriteRateLimit = createRateLimit({
-  anonymous: { points: 5 },
-  authenticated: { points: 5 },
+  anonymous: { points: 1 },
+  authenticated: { points: 1 },
   admin: { points: 1 },
 })
 
