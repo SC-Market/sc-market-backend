@@ -591,3 +591,87 @@ export const get_search_spec = oapi.validPath({
   },
   security: [],
 })
+
+export const post_merge_spec = oapi.validPath({
+  summary: "Merge offer sessions",
+  deprecated: false,
+  description:
+    "Merge multiple offer sessions from the same customer into a single new merged offer session. All source offer sessions will be closed.",
+  operationId: "mergeOfferSessions",
+  tags: ["Offers"],
+  requestBody: {
+    content: {
+      "application/json": {
+        schema: {
+          type: "object",
+          properties: {
+            offer_session_ids: {
+              type: "array",
+              items: {
+                type: "string",
+                format: "uuid",
+              },
+              description: "Array of offer session IDs to merge (minimum 2)",
+              minItems: 2,
+            },
+          },
+          required: ["offer_session_ids"],
+        },
+      },
+    },
+  },
+  responses: {
+    "200": {
+      description: "OK - Offer sessions successfully merged",
+      content: {
+        "application/json": {
+          schema: {
+            type: "object",
+            properties: {
+              data: {
+                type: "object",
+                properties: {
+                  result: {
+                    type: "string",
+                    example: "Success",
+                  },
+                  merged_offer_session: {
+                    type: "object",
+                    description: "The new merged offer session",
+                  },
+                  source_offer_session_ids: {
+                    type: "array",
+                    items: {
+                      type: "string",
+                      format: "uuid",
+                    },
+                    description: "IDs of the offer sessions that were merged",
+                  },
+                  message: {
+                    type: "string",
+                    example:
+                      "Successfully merged 3 offer sessions into new merged offer",
+                  },
+                },
+                required: [
+                  "result",
+                  "merged_offer_session",
+                  "source_offer_session_ids",
+                  "message",
+                ],
+              },
+            },
+            required: ["data"],
+          },
+        },
+      },
+    },
+    "400": Response400,
+    "401": Response401,
+    "403": Response403,
+    "404": Response404,
+    "409": Response409,
+    "429": Response429Write,
+  },
+  security: [],
+})

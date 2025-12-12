@@ -12,6 +12,12 @@ import {
   OfferSearchSortMethod,
   OfferSearchStatus,
 } from "./types.js"
+import { createOffer } from "../orders/helpers.js"
+import {
+  OfferNotFoundError,
+  OfferNotActiveError,
+  OfferValidationError,
+} from "./errors.js"
 
 export async function is_related_to_offer(
   user_id: string,
@@ -385,4 +391,180 @@ export async function search_offer_sessions_optimized(
     )
 
   return { item_counts, items }
+}
+
+export async function mergeOfferSessions(
+  offer_session_ids: string[],
+  customer_id: string,
+  customer_username: string,
+): Promise<{
+  merged_session: DBOfferSession
+  merged_offer: DBOffer
+  source_session_ids: string[]
+}> {
+  // Get all offer sessions (validation - can be outside transaction)
+  const sessions = await Promise.all(
+    offer_session_ids.map((id) =>
+      database.getOfferSessions({ id }).then((s) => s[0]),
+    ),
+  )
+
+  // Validate all sessions exist
+  if (sessions.some((s) => !s)) {
+    throw new OfferNotFoundError("One or more offer sessions not found")
+  }
+
+  // Validate all sessions belong to the same customer
+  if (sessions.some((s) => s!.customer_id !== customer_id)) {
+    throw new OfferValidationError(
+      "All offer sessions must belong to the same customer",
+      "DIFFERENT_CUSTOMER",
+    )
+  }
+
+  // Validate all sessions are active
+  if (sessions.some((s) => s!.status !== "active")) {
+    throw new OfferNotActiveError("All offer sessions must be active")
+  }
+
+  // Get most recent offer from each session
+  const mostRecentOffers = await Promise.all(
+    sessions.map((s) => database.getMostRecentOrderOffer(s!.id)),
+  )
+
+  // Validate all offers exist
+  if (mostRecentOffers.some((o) => !o)) {
+    throw new OfferNotFoundError("One or more offers not found")
+  }
+
+  // Validate no offers have service_id
+  if (mostRecentOffers.some((o) => o!.service_id)) {
+    throw new OfferValidationError(
+      "Offers with services cannot be merged",
+      "HAS_SERVICES",
+    )
+  }
+
+  // Validate all sessions have same contractor_id
+  const contractor_id = sessions[0]!.contractor_id
+  if (sessions.some((s) => s!.contractor_id !== contractor_id)) {
+    throw new OfferValidationError(
+      "All offer sessions must have the same contractor",
+      "DIFFERENT_CONTRACTOR",
+    )
+  }
+
+  // Validate all sessions have same assigned_id if contractor_id is null
+  if (!contractor_id) {
+    const assigned_id = sessions[0]!.assigned_id
+    if (sessions.some((s) => s!.assigned_id !== assigned_id)) {
+      throw new OfferValidationError(
+        "All offer sessions must have the same assigned user when no contractor is set",
+        "DIFFERENT_ASSIGNED",
+      )
+    }
+  }
+
+  // Validate all offers have same payment_type
+  const payment_type = mostRecentOffers[0]!.payment_type
+  if (mostRecentOffers.some((o) => o!.payment_type !== payment_type)) {
+    throw new OfferValidationError(
+      "All offers must have the same payment type",
+      "DIFFERENT_PAYMENT_TYPE",
+    )
+  }
+
+  // Combine costs and collaterals
+  const totalCost = mostRecentOffers.reduce(
+    (sum, o) => sum + Number(o!.cost),
+    0,
+  )
+  const totalCollateral = mostRecentOffers.reduce(
+    (sum, o) => sum + Number(o!.collateral || 0),
+    0,
+  )
+
+  // Build merged description with links to source sessions
+  const descriptionParts = mostRecentOffers.map((offer, index) => {
+    const session = sessions[index]!
+    const sessionLink = `/offers/${session.id}` // Frontend URL format
+    return `${offer!.description}\n\n[View original offer session](${sessionLink})`
+  })
+  const mergedDescription = descriptionParts.join("\n\n---\n\n")
+
+  // Get all market listings from source offers
+  const allMarketListings: {
+    listing_id: string
+    quantity: number
+  }[] = []
+  for (const offer of mostRecentOffers) {
+    const listings = await database.getOfferMarketListings(offer!.id)
+    for (const listing of listings) {
+      const existing = allMarketListings.find(
+        (l) => l.listing_id === listing.listing_id,
+      )
+      if (existing) {
+        existing.quantity += listing.quantity
+      } else {
+        allMarketListings.push({
+          listing_id: listing.listing_id,
+          quantity: listing.quantity,
+        })
+      }
+    }
+  }
+
+  // Create new merged offer using existing createOffer helper
+  // This handles session creation, offer creation, chat creation, notifications, Discord threads
+  const { session: merged_session, offer: merged_offer } = await createOffer(
+    {
+      customer_id: customer_id,
+      contractor_id: contractor_id,
+      assigned_id: contractor_id ? null : sessions[0]!.assigned_id,
+      status: "active",
+    },
+      {
+        actor_id: customer_id,
+        kind: mostRecentOffers[0]!.kind,
+        cost: totalCost.toString(),
+        title: `Merged order from ${customer_username}`,
+        description: mergedDescription,
+        collateral: totalCollateral.toString(),
+        payment_type: payment_type,
+        service_id: undefined,
+      },
+    [], // Market listings will be added separately since we only have listing_ids
+  )
+
+  // Link all market listings to merged offer
+  for (const listing of allMarketListings) {
+    await database.insertOfferMarketListing({
+      listing_id: listing.listing_id,
+      offer_id: merged_offer.id,
+      quantity: listing.quantity,
+    })
+  }
+
+  // Close all source offer sessions
+  // Wrap in transaction to ensure atomicity
+  const trx = await database.knex.transaction()
+  try {
+    await trx<DBOfferSession>("offer_sessions")
+      .whereIn(
+        "id",
+        sessions.map((s) => s!.id),
+      )
+      .update({ status: "closed" })
+
+    await trx.commit()
+  } catch (error) {
+    await trx.rollback()
+    throw error
+  }
+
+  return {
+    merged_session,
+    merged_offer,
+    source_session_ids: offer_session_ids,
+  }
 }
