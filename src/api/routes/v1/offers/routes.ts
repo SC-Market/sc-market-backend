@@ -12,7 +12,11 @@ import {
 
 import express from "express"
 
-import { can_respond_to_offer, related_to_offer } from "./middleware.js"
+import {
+  can_respond_to_offer,
+  related_to_offer,
+  can_merge_offers,
+} from "./middleware.js"
 import { validate_optional_spectrum_id } from "../contractors/middleware.js"
 import { validate_optional_username } from "../profiles/middleware.js"
 
@@ -21,6 +25,7 @@ import {
   offer_put_session_id,
   post_session_id_thread,
   get_search,
+  post_merge,
 } from "./controller.js"
 
 import {
@@ -28,6 +33,7 @@ import {
   offer_put_session_id_spec,
   post_session_id_thread_spec,
   get_search_spec,
+  post_merge_spec,
 } from "./openapi.js"
 
 export const offersRouter = express.Router()
@@ -77,4 +83,14 @@ offersRouter.get(
   validate_optional_username("assigned"),
   validate_optional_spectrum_id("contractor"),
   get_search,
+)
+
+offersRouter.post(
+  "/merge",
+  userAuthorized,
+  requireOffersWrite,
+  post_merge_spec,
+  writeRateLimit,
+  can_merge_offers,
+  post_merge,
 )

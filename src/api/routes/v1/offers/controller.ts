@@ -1,5 +1,6 @@
 import { RequestHandler } from "express"
 import { database } from "../../../../clients/database/knex-db.js"
+import { DBOfferSession } from "../../../../clients/database/db-models.js"
 
 import { User } from "../api-models.js"
 import { createErrorResponse, createResponse } from "../util/response.js"
@@ -19,8 +20,16 @@ import { createThread } from "../util/discord.js"
 import {
   convert_offer_search_query,
   search_offer_sessions_optimized,
+  mergeOfferSessions,
 } from "./helpers.js"
 import { is_member } from "../util/permissions.js"
+import { auditLogService } from "../../../../services/audit-log/audit-log.service.js"
+import {
+  OfferMergeError,
+  OfferNotFoundError,
+  OfferNotActiveError,
+  OfferValidationError,
+} from "./errors.js"
 
 export const offer_get_session_id: RequestHandler = async (req, res) => {
   res.json(createResponse(await serializeOfferSession(req.offer_session!)))
@@ -208,4 +217,101 @@ export const get_search: RequestHandler = async (req, res) => {
     }),
   )
   return
+}
+
+export const post_merge: RequestHandler = async (req, res) => {
+  const user = req.user as User
+  const { offer_session_ids } = req.body as { offer_session_ids: string[] }
+
+  // Note: Basic validation is done in middleware, but we keep these checks
+  // as a safety net in case middleware is not used
+  if (!offer_session_ids || !Array.isArray(offer_session_ids)) {
+    res.status(400).json(
+      createErrorResponse({ message: "offer_session_ids array is required" }),
+    )
+    return
+  }
+
+  if (offer_session_ids.length < 2) {
+    res.status(400).json(
+      createErrorResponse({
+        message: "At least 2 offer sessions are required to merge",
+      }),
+    )
+    return
+  }
+
+  try {
+    // Get the customer from the first offer session (all should have same customer)
+    // The middleware has already validated the sessions and stored them in req
+    const sessions = (req as any).offer_sessions as DBOfferSession[]
+    if (!sessions || sessions.length === 0) {
+      res.status(400).json(
+        createErrorResponse({
+          message: "Offer sessions not found in request",
+        }),
+      )
+      return
+    }
+
+    const customer_id = sessions[0].customer_id
+    const customer = await database.getUser({ user_id: customer_id })
+
+    const result = await mergeOfferSessions(
+      offer_session_ids,
+      customer_id,
+      customer.username,
+    )
+
+    // Log the merge (actor is the contractor/seller performing the merge)
+    await auditLogService.record({
+      action: "offers.merged",
+      actorId: user.user_id, // Contractor/seller performing the merge
+      subjectType: "offer_session",
+      subjectId: result.merged_session.id,
+      metadata: {
+        source_offer_session_ids: offer_session_ids,
+        merged_offer_session_id: result.merged_session.id,
+        merged_offer_id: result.merged_offer.id,
+        customer_id: customer_id, // Customer who owns the offers
+        customer_username: customer.username,
+        merged_by_contractor: true,
+        combined_cost: Number(result.merged_offer.cost),
+        session_count: offer_session_ids.length,
+      },
+    })
+
+    res.json(
+      createResponse({
+        result: "Success",
+        merged_offer_session: await serializeOfferSession(result.merged_session),
+        source_offer_session_ids: result.source_session_ids,
+        message: `Successfully merged ${offer_session_ids.length} offer sessions into new merged offer`,
+      }),
+    )
+  } catch (error) {
+    logger.error("Error merging offer sessions", {
+      error: error instanceof Error ? error.message : String(error),
+      offer_session_ids,
+      customer_id: user.user_id,
+    })
+
+    // Handle typed errors
+    if (error instanceof OfferMergeError) {
+      res.status(error.statusCode).json(
+        createErrorResponse({
+          message: error.message,
+          code: error.code,
+        }),
+      )
+      return
+    }
+
+    // Fallback for unexpected errors
+    const errorMessage =
+      error instanceof Error ? error.message : "Failed to merge offer sessions"
+    res.status(500).json(
+      createErrorResponse({ message: errorMessage }),
+    )
+  }
 }
