@@ -93,6 +93,20 @@ export async function convert_offer_search_query(
     ? req.contractors!.get("contractor")
     : null
 
+  // Parse boolean filters
+  const has_market_listings =
+    query.has_market_listings !== undefined
+      ? query.has_market_listings === "true"
+      : undefined
+  const has_service =
+    query.has_service !== undefined
+      ? query.has_service === "true"
+      : undefined
+
+  // Parse cost range
+  const cost_min = query.cost_min ? +query.cost_min : undefined
+  const cost_max = query.cost_max ? +query.cost_max : undefined
+
   return {
     assigned_id: assigned?.user_id || undefined,
     contractor_id: contractor?.contractor_id || undefined,
@@ -102,6 +116,14 @@ export async function convert_offer_search_query(
     sort_method: (query.sort_method as OfferSearchSortMethod) || "timestamp",
     status: (query.status as OfferSearchStatus) || undefined,
     reverse_sort: query.reverse_sort == "true",
+    buyer_username: query.buyer_username,
+    seller_username: query.seller_username,
+    has_market_listings,
+    has_service,
+    cost_min: cost_min && !isNaN(cost_min) ? cost_min : undefined,
+    cost_max: cost_max && !isNaN(cost_max) ? cost_max : undefined,
+    date_from: query.date_from,
+    date_to: query.date_to,
   }
 }
 
@@ -242,29 +264,136 @@ export async function search_offer_sessions_optimized(
   items: OptimizedOfferSessionRow[]
   item_counts: { [k: string]: number }
 }> {
-  const base = database.knex("offer_sessions").where((qd) => {
-    if (args.customer_id) qd = qd.where("customer_id", args.customer_id)
-    if (args.assigned_id) qd = qd.where("assigned_id", args.assigned_id)
-    if (args.contractor_id) qd = qd.where("contractor_id", args.contractor_id)
-    return qd
-  })
-
-  // Get totals (same as before)
-  const totals: { offer_status: string; count: number }[] = await base
-    .clone()
-    .groupByRaw("offer_status")
-    .select(
-      database.knex.raw(
-        "get_offer_status(id, customer_id, status) as offer_status",
-      ),
-      database.knex.raw("COUNT(*) as count"),
+  // Build filtered sessions query to get matching session IDs
+  let filteredSessionsQuery = database
+    .knex("offer_sessions")
+    .leftJoin(
+      "order_offers as most_recent_offer",
+      "offer_sessions.id",
+      "=",
+      "most_recent_offer.session_id",
     )
-
-  const item_counts = Object.fromEntries(
-    totals.map(({ offer_status, count }) => [offer_status, +count]),
-  )
+    .leftJoin(
+      "offer_market_items",
+      "most_recent_offer.id",
+      "=",
+      "offer_market_items.offer_id",
+    )
+    // Join accounts for buyer username filtering
+    .leftJoin(
+      "accounts as buyer_account",
+      "offer_sessions.customer_id",
+      "=",
+      "buyer_account.user_id",
+    )
+    // Join accounts for assigned username filtering (seller)
+    .leftJoin(
+      "accounts as assigned_account_filter",
+      "offer_sessions.assigned_id",
+      "=",
+      "assigned_account_filter.user_id",
+    )
+    // Join contractors for spectrum_id filtering (seller)
+    .leftJoin(
+      "contractors as seller_contractor",
+      "offer_sessions.contractor_id",
+      "=",
+      "seller_contractor.contractor_id",
+    )
+    .where((qd) => {
+      if (args.customer_id) qd = qd.where("offer_sessions.customer_id", args.customer_id)
+      if (args.assigned_id) qd = qd.where("offer_sessions.assigned_id", args.assigned_id)
+      if (args.contractor_id) qd = qd.where("offer_sessions.contractor_id", args.contractor_id)
+      
+      // Buyer username filter (partial match)
+      if (args.buyer_username) {
+        qd = qd.where("buyer_account.username", "ILIKE", `%${args.buyer_username}%`)
+      }
+      
+      // Seller username filter (partial match on spectrum_id or assigned username)
+      if (args.seller_username) {
+        qd = qd.where((subQd) => {
+          subQd = subQd
+            .where("seller_contractor.spectrum_id", "ILIKE", `%${args.seller_username}%`)
+            .orWhere("assigned_account_filter.username", "ILIKE", `%${args.seller_username}%`)
+          return subQd
+        })
+      }
+      
+      // Date range filters
+      if (args.date_from) {
+        qd = qd.where("offer_sessions.timestamp", ">=", args.date_from)
+      }
+      if (args.date_to) {
+        qd = qd.where("offer_sessions.timestamp", "<=", args.date_to)
+      }
+      
+      // Service filter
+      if (args.has_service !== undefined) {
+        if (args.has_service) {
+          qd = qd.whereNotNull("most_recent_offer.service_id")
+        } else {
+          qd = qd.whereNull("most_recent_offer.service_id")
+        }
+      }
+      
+      // Cost range filters
+      if (args.cost_min !== undefined) {
+        qd = qd.where("most_recent_offer.cost", ">=", args.cost_min.toString())
+      }
+      if (args.cost_max !== undefined) {
+        qd = qd.where("most_recent_offer.cost", "<=", args.cost_max.toString())
+      }
+      
+      return qd
+    })
+    .groupBy("offer_sessions.id", "offer_sessions.customer_id", "offer_sessions.status")
+    
+  // Apply market listings filter (must be after GROUP BY for HAVING)
+  if (args.has_market_listings !== undefined) {
+    if (args.has_market_listings) {
+      filteredSessionsQuery = filteredSessionsQuery.havingRaw("COUNT(offer_market_items.offer_id) > 0")
+    } else {
+      filteredSessionsQuery = filteredSessionsQuery.havingRaw("COUNT(offer_market_items.offer_id) = 0")
+    }
+  }
+  
+  // Get filtered sessions
+  const filteredSessions = await filteredSessionsQuery
+    .select("offer_sessions.id", "offer_sessions.customer_id", "offer_sessions.status")
+  
+  // Calculate totals from filtered sessions
+  let item_counts: { [k: string]: number }
+  if (filteredSessions.length === 0) {
+    item_counts = {
+      "to-seller": 0,
+      "to-customer": 0,
+      accepted: 0,
+      rejected: 0,
+    }
+  } else {
+    const filteredIds = filteredSessions.map((s: any) => s.id)
+    const totals: { offer_status: string; count: number }[] = await database.knex("offer_sessions")
+      .whereIn("id", filteredIds)
+      .groupByRaw("get_offer_status(id, customer_id, status)")
+      .select(
+        database.knex.raw(
+          "get_offer_status(id, customer_id, status) as offer_status",
+        ),
+        database.knex.raw("COUNT(*) as count"),
+      )
+    
+    item_counts = Object.fromEntries(
+      totals.map(({ offer_status, count }) => [offer_status, +count]),
+    ) as { [k: string]: number }
+  }
 
   // Build optimized query with JOINs to get all related data
+  // Only query sessions that passed the filters
+  const filteredIds = filteredSessions.length > 0 
+    ? filteredSessions.map((s: any) => s.id)
+    : []
+  
   let optimizedQuery = database
     .knex("offer_sessions")
     .leftJoin(
@@ -304,14 +433,46 @@ export async function search_offer_sessions_optimized(
       "contractors.contractor_id",
     )
     .where((qd) => {
-      if (args.customer_id)
-        qd = qd.where("offer_sessions.customer_id", args.customer_id)
-      if (args.assigned_id)
-        qd = qd.where("offer_sessions.assigned_id", args.assigned_id)
-      if (args.contractor_id)
-        qd = qd.where("offer_sessions.contractor_id", args.contractor_id)
+      // Only include filtered session IDs
+      if (filteredIds.length > 0) {
+        qd = qd.whereIn("offer_sessions.id", filteredIds)
+      } else {
+        // If no filtered sessions, return empty result
+        qd = qd.whereRaw("1 = 0")
+      }
       return qd
     })
+    
+    // Apply service filter
+    if (args.has_service !== undefined) {
+      if (args.has_service) {
+        // Has service - service_id must not be null
+        optimizedQuery = optimizedQuery.whereNotNull(
+          "most_recent_offer.service_id",
+        )
+      } else {
+        // No service - service_id must be null
+        optimizedQuery = optimizedQuery.whereNull(
+          "most_recent_offer.service_id",
+        )
+      }
+    }
+    
+    // Apply cost range filter
+    if (args.cost_min !== undefined) {
+      optimizedQuery = optimizedQuery.where(
+        "most_recent_offer.cost",
+        ">=",
+        args.cost_min.toString(),
+      )
+    }
+    if (args.cost_max !== undefined) {
+      optimizedQuery = optimizedQuery.where(
+        "most_recent_offer.cost",
+        "<=",
+        args.cost_max.toString(),
+      )
+    }
 
   // Apply sorting
   switch (args.sort_method) {
@@ -389,6 +550,21 @@ export async function search_offer_sessions_optimized(
       "assigned_account.user_id",
       "contractors.contractor_id",
     )
+    
+    // Apply market listings filter (must be after GROUP BY for HAVING)
+    if (args.has_market_listings !== undefined) {
+      if (args.has_market_listings) {
+        // Has market listings - must have at least one
+        optimizedQuery = optimizedQuery.havingRaw(
+          "COUNT(offer_market_items.offer_id) > 0",
+        )
+      } else {
+        // No market listings - must have zero
+        optimizedQuery = optimizedQuery.havingRaw(
+          "COUNT(offer_market_items.offer_id) = 0",
+        )
+      }
+    }
 
   return { item_counts, items }
 }
@@ -545,16 +721,23 @@ export async function mergeOfferSessions(
     })
   }
 
-  // Close all source offer sessions
+  // Close all source offer sessions and mark their offers as rejected
   // Wrap in transaction to ensure atomicity
   const trx = await database.knex.transaction()
   try {
+    // Update session status to closed
     await trx<DBOfferSession>("offer_sessions")
       .whereIn(
         "id",
         sessions.map((s) => s!.id),
       )
       .update({ status: "closed" })
+
+    // Update all order_offers to rejected status
+    const offerIds = mostRecentOffers.map((o) => o!.id)
+    await trx("order_offers")
+      .whereIn("id", offerIds)
+      .update({ status: "rejected" })
 
     await trx.commit()
   } catch (error) {
