@@ -99,9 +99,7 @@ export async function convert_offer_search_query(
       ? query.has_market_listings === "true"
       : undefined
   const has_service =
-    query.has_service !== undefined
-      ? query.has_service === "true"
-      : undefined
+    query.has_service !== undefined ? query.has_service === "true" : undefined
 
   // Parse cost range
   const cost_min = query.cost_min ? +query.cost_min : undefined
@@ -301,25 +299,40 @@ export async function search_offer_sessions_optimized(
       "seller_contractor.contractor_id",
     )
     .where((qd) => {
-      if (args.customer_id) qd = qd.where("offer_sessions.customer_id", args.customer_id)
-      if (args.assigned_id) qd = qd.where("offer_sessions.assigned_id", args.assigned_id)
-      if (args.contractor_id) qd = qd.where("offer_sessions.contractor_id", args.contractor_id)
-      
+      if (args.customer_id)
+        qd = qd.where("offer_sessions.customer_id", args.customer_id)
+      if (args.assigned_id)
+        qd = qd.where("offer_sessions.assigned_id", args.assigned_id)
+      if (args.contractor_id)
+        qd = qd.where("offer_sessions.contractor_id", args.contractor_id)
+
       // Buyer username filter (partial match)
       if (args.buyer_username) {
-        qd = qd.where("buyer_account.username", "ILIKE", `%${args.buyer_username}%`)
+        qd = qd.where(
+          "buyer_account.username",
+          "ILIKE",
+          `%${args.buyer_username}%`,
+        )
       }
-      
+
       // Seller username filter (partial match on spectrum_id or assigned username)
       if (args.seller_username) {
         qd = qd.where((subQd) => {
           subQd = subQd
-            .where("seller_contractor.spectrum_id", "ILIKE", `%${args.seller_username}%`)
-            .orWhere("assigned_account_filter.username", "ILIKE", `%${args.seller_username}%`)
+            .where(
+              "seller_contractor.spectrum_id",
+              "ILIKE",
+              `%${args.seller_username}%`,
+            )
+            .orWhere(
+              "assigned_account_filter.username",
+              "ILIKE",
+              `%${args.seller_username}%`,
+            )
           return subQd
         })
       }
-      
+
       // Date range filters
       if (args.date_from) {
         qd = qd.where("offer_sessions.timestamp", ">=", args.date_from)
@@ -327,7 +340,7 @@ export async function search_offer_sessions_optimized(
       if (args.date_to) {
         qd = qd.where("offer_sessions.timestamp", "<=", args.date_to)
       }
-      
+
       // Service filter
       if (args.has_service !== undefined) {
         if (args.has_service) {
@@ -336,7 +349,7 @@ export async function search_offer_sessions_optimized(
           qd = qd.whereNull("most_recent_offer.service_id")
         }
       }
-      
+
       // Cost range filters
       if (args.cost_min !== undefined) {
         qd = qd.where("most_recent_offer.cost", ">=", args.cost_min.toString())
@@ -344,24 +357,35 @@ export async function search_offer_sessions_optimized(
       if (args.cost_max !== undefined) {
         qd = qd.where("most_recent_offer.cost", "<=", args.cost_max.toString())
       }
-      
+
       return qd
     })
-    .groupBy("offer_sessions.id", "offer_sessions.customer_id", "offer_sessions.status")
-    
+    .groupBy(
+      "offer_sessions.id",
+      "offer_sessions.customer_id",
+      "offer_sessions.status",
+    )
+
   // Apply market listings filter (must be after GROUP BY for HAVING)
   if (args.has_market_listings !== undefined) {
     if (args.has_market_listings) {
-      filteredSessionsQuery = filteredSessionsQuery.havingRaw("COUNT(offer_market_items.offer_id) > 0")
+      filteredSessionsQuery = filteredSessionsQuery.havingRaw(
+        "COUNT(offer_market_items.offer_id) > 0",
+      )
     } else {
-      filteredSessionsQuery = filteredSessionsQuery.havingRaw("COUNT(offer_market_items.offer_id) = 0")
+      filteredSessionsQuery = filteredSessionsQuery.havingRaw(
+        "COUNT(offer_market_items.offer_id) = 0",
+      )
     }
   }
-  
+
   // Get filtered sessions
-  const filteredSessions = await filteredSessionsQuery
-    .select("offer_sessions.id", "offer_sessions.customer_id", "offer_sessions.status")
-  
+  const filteredSessions = await filteredSessionsQuery.select(
+    "offer_sessions.id",
+    "offer_sessions.customer_id",
+    "offer_sessions.status",
+  )
+
   // Calculate totals from filtered sessions
   let item_counts: { [k: string]: number }
   if (filteredSessions.length === 0) {
@@ -373,7 +397,8 @@ export async function search_offer_sessions_optimized(
     }
   } else {
     const filteredIds = filteredSessions.map((s: any) => s.id)
-    const totals: { offer_status: string; count: number }[] = await database.knex("offer_sessions")
+    const totals: { offer_status: string; count: number }[] = await database
+      .knex("offer_sessions")
       .whereIn("id", filteredIds)
       .groupByRaw("get_offer_status(id, customer_id, status)")
       .select(
@@ -382,7 +407,7 @@ export async function search_offer_sessions_optimized(
         ),
         database.knex.raw("COUNT(*) as count"),
       )
-    
+
     item_counts = Object.fromEntries(
       totals.map(({ offer_status, count }) => [offer_status, +count]),
     ) as { [k: string]: number }
@@ -390,10 +415,9 @@ export async function search_offer_sessions_optimized(
 
   // Build optimized query with JOINs to get all related data
   // Only query sessions that passed the filters
-  const filteredIds = filteredSessions.length > 0 
-    ? filteredSessions.map((s: any) => s.id)
-    : []
-  
+  const filteredIds =
+    filteredSessions.length > 0 ? filteredSessions.map((s: any) => s.id) : []
+
   let optimizedQuery = database
     .knex("offer_sessions")
     .leftJoin(
@@ -442,37 +466,35 @@ export async function search_offer_sessions_optimized(
       }
       return qd
     })
-    
-    // Apply service filter
-    if (args.has_service !== undefined) {
-      if (args.has_service) {
-        // Has service - service_id must not be null
-        optimizedQuery = optimizedQuery.whereNotNull(
-          "most_recent_offer.service_id",
-        )
-      } else {
-        // No service - service_id must be null
-        optimizedQuery = optimizedQuery.whereNull(
-          "most_recent_offer.service_id",
-        )
-      }
-    }
-    
-    // Apply cost range filter
-    if (args.cost_min !== undefined) {
-      optimizedQuery = optimizedQuery.where(
-        "most_recent_offer.cost",
-        ">=",
-        args.cost_min.toString(),
+
+  // Apply service filter
+  if (args.has_service !== undefined) {
+    if (args.has_service) {
+      // Has service - service_id must not be null
+      optimizedQuery = optimizedQuery.whereNotNull(
+        "most_recent_offer.service_id",
       )
+    } else {
+      // No service - service_id must be null
+      optimizedQuery = optimizedQuery.whereNull("most_recent_offer.service_id")
     }
-    if (args.cost_max !== undefined) {
-      optimizedQuery = optimizedQuery.where(
-        "most_recent_offer.cost",
-        "<=",
-        args.cost_max.toString(),
-      )
-    }
+  }
+
+  // Apply cost range filter
+  if (args.cost_min !== undefined) {
+    optimizedQuery = optimizedQuery.where(
+      "most_recent_offer.cost",
+      ">=",
+      args.cost_min.toString(),
+    )
+  }
+  if (args.cost_max !== undefined) {
+    optimizedQuery = optimizedQuery.where(
+      "most_recent_offer.cost",
+      "<=",
+      args.cost_max.toString(),
+    )
+  }
 
   // Apply sorting
   switch (args.sort_method) {
@@ -550,21 +572,21 @@ export async function search_offer_sessions_optimized(
       "assigned_account.user_id",
       "contractors.contractor_id",
     )
-    
-    // Apply market listings filter (must be after GROUP BY for HAVING)
-    if (args.has_market_listings !== undefined) {
-      if (args.has_market_listings) {
-        // Has market listings - must have at least one
-        optimizedQuery = optimizedQuery.havingRaw(
-          "COUNT(offer_market_items.offer_id) > 0",
-        )
-      } else {
-        // No market listings - must have zero
-        optimizedQuery = optimizedQuery.havingRaw(
-          "COUNT(offer_market_items.offer_id) = 0",
-        )
-      }
+
+  // Apply market listings filter (must be after GROUP BY for HAVING)
+  if (args.has_market_listings !== undefined) {
+    if (args.has_market_listings) {
+      // Has market listings - must have at least one
+      optimizedQuery = optimizedQuery.havingRaw(
+        "COUNT(offer_market_items.offer_id) > 0",
+      )
+    } else {
+      // No market listings - must have zero
+      optimizedQuery = optimizedQuery.havingRaw(
+        "COUNT(offer_market_items.offer_id) = 0",
+      )
     }
+  }
 
   return { item_counts, items }
 }
@@ -611,6 +633,17 @@ export async function mergeOfferSessions(
   // Validate all offers exist
   if (mostRecentOffers.some((o) => !o)) {
     throw new OfferNotFoundError("One or more offers not found")
+  }
+
+  // Validate no offers are already accepted or rejected (only pending offers can be merged)
+  if (
+    mostRecentOffers.some(
+      (o) => o!.status === "accepted" || o!.status === "rejected",
+    )
+  ) {
+    throw new OfferNotActiveError(
+      "Cannot merge offers that are already accepted or rejected. Only pending offers can be merged.",
+    )
   }
 
   // Validate no offers have service_id
@@ -663,7 +696,7 @@ export async function mergeOfferSessions(
   // Build merged description with links to source sessions
   const descriptionParts = mostRecentOffers.map((offer, index) => {
     const session = sessions[index]!
-    const sessionLink = `/offers/${session.id}` // Frontend URL format
+    const sessionLink = `/offer/${session.id}` // Frontend URL format
     return `${offer!.description}\n\n[View original offer session](${sessionLink})`
   })
   const mergedDescription = descriptionParts.join("\n\n---\n\n")
@@ -699,16 +732,16 @@ export async function mergeOfferSessions(
       assigned_id: contractor_id ? null : sessions[0]!.assigned_id,
       status: "active",
     },
-      {
-        actor_id: customer_id,
-        kind: mostRecentOffers[0]!.kind,
-        cost: totalCost.toString(),
-        title: `Merged order from ${customer_username}`,
-        description: mergedDescription,
-        collateral: totalCollateral.toString(),
-        payment_type: payment_type,
-        service_id: undefined,
-      },
+    {
+      actor_id: customer_id,
+      kind: mostRecentOffers[0]!.kind,
+      cost: totalCost.toString(),
+      title: `Merged order from ${customer_username}`,
+      description: mergedDescription,
+      collateral: totalCollateral.toString(),
+      payment_type: payment_type,
+      service_id: undefined,
+    },
     [], // Market listings will be added separately since we only have listing_ids
   )
 

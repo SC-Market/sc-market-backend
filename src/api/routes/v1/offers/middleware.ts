@@ -93,9 +93,11 @@ export async function can_merge_offers(
   const { offer_session_ids } = req.body as { offer_session_ids?: string[] }
 
   if (!offer_session_ids || !Array.isArray(offer_session_ids)) {
-    res.status(400).json(
-      createErrorResponse({ message: "offer_session_ids array is required" }),
-    )
+    res
+      .status(400)
+      .json(
+        createErrorResponse({ message: "offer_session_ids array is required" }),
+      )
     return
   }
 
@@ -130,7 +132,7 @@ export async function can_merge_offers(
     // Only contractors/sellers can merge offers (not customers/buyers)
     // User must have permission on behalf of the contractor/assigned user for ALL sessions
     // Customers cannot merge offers - only the receiving party (contractor/assigned) can merge
-    
+
     const permissionChecks = await Promise.all(
       sessions.map(async (session) => {
         if (!session) return false
@@ -166,8 +168,7 @@ export async function can_merge_offers(
       return
     }
 
-    // Store sessions in request for use in controller
-    ;(req as any).offer_sessions = sessions as DBOfferSession[]
+    req.offer_sessions = sessions as DBOfferSession[]
     next()
   } catch (error) {
     res.status(500).json(
