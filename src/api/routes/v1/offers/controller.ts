@@ -24,12 +24,7 @@ import {
 } from "./helpers.js"
 import { is_member } from "../util/permissions.js"
 import { auditLogService } from "../../../../services/audit-log/audit-log.service.js"
-import {
-  OfferMergeError,
-  OfferNotFoundError,
-  OfferNotActiveError,
-  OfferValidationError,
-} from "./errors.js"
+import { OfferMergeError } from "./errors.js"
 
 export const offer_get_session_id: RequestHandler = async (req, res) => {
   res.json(createResponse(await serializeOfferSession(req.offer_session!)))
@@ -226,9 +221,11 @@ export const post_merge: RequestHandler = async (req, res) => {
   // Note: Basic validation is done in middleware, but we keep these checks
   // as a safety net in case middleware is not used
   if (!offer_session_ids || !Array.isArray(offer_session_ids)) {
-    res.status(400).json(
-      createErrorResponse({ message: "offer_session_ids array is required" }),
-    )
+    res
+      .status(400)
+      .json(
+        createErrorResponse({ message: "offer_session_ids array is required" }),
+      )
     return
   }
 
@@ -284,7 +281,9 @@ export const post_merge: RequestHandler = async (req, res) => {
     res.json(
       createResponse({
         result: "Success",
-        merged_offer_session: await serializeOfferSession(result.merged_session),
+        merged_offer_session: await serializeOfferSession(
+          result.merged_session,
+        ),
         source_offer_session_ids: result.source_session_ids,
         message: `Successfully merged ${offer_session_ids.length} offer sessions into new merged offer`,
       }),
@@ -310,8 +309,6 @@ export const post_merge: RequestHandler = async (req, res) => {
     // Fallback for unexpected errors
     const errorMessage =
       error instanceof Error ? error.message : "Failed to merge offer sessions"
-    res.status(500).json(
-      createErrorResponse({ message: errorMessage }),
-    )
+    res.status(500).json(createErrorResponse({ message: errorMessage }))
   }
 }

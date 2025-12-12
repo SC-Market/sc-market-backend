@@ -677,7 +677,9 @@ export class KnexDatabase implements Database {
       .returning("*")
   }
 
-  async getContractorArchiveDetails(where: Partial<DBContractorArchiveDetails>) {
+  async getContractorArchiveDetails(
+    where: Partial<DBContractorArchiveDetails>,
+  ) {
     return this.knex<DBContractorArchiveDetails>("contractor_archive_details")
       .where(where)
       .first()
@@ -1347,14 +1349,14 @@ export class KnexDatabase implements Database {
     if (search) {
       const searchTerm = `%${search.toLowerCase()}%`
       query = query.where(function () {
-        this.whereRaw("LOWER(service_name) LIKE ?", [searchTerm]).orWhereRaw(
-          "LOWER(service_description) LIKE ?",
+        this.whereRaw("service_name ILIKE ?", [searchTerm]).orWhereRaw(
+          "service_description ILIKE ?",
           [searchTerm],
         )
       })
       countQuery = countQuery.where(function () {
-        this.whereRaw("LOWER(service_name) LIKE ?", [searchTerm]).orWhereRaw(
-          "LOWER(service_description) LIKE ?",
+        this.whereRaw("service_name ILIKE ?", [searchTerm]).orWhereRaw(
+          "service_description ILIKE ?",
           [searchTerm],
         )
       })
@@ -2068,8 +2070,8 @@ export class KnexDatabase implements Database {
 
   searchUsers(query: string): Promise<DBUser[]> {
     return this.knex<DBUser>("accounts")
-      .where(this.knex.raw("username::citext"), "like", `%${query}%`)
-      .or.where(this.knex.raw("display_name::citext"), "like", `%${query}%`)
+      .where("username", "ilike", `%${query}%`)
+      .or.where("display_name", "ilike", `%${query}%`)
       .limit(25)
       .select()
   }
@@ -2099,8 +2101,8 @@ export class KnexDatabase implements Database {
         "contractor_members.user_id",
       )
       .where("contractor_members.contractor_id", contractor_id)
-      .where("username", "like", `%${query}%`)
-      .or.where(this.knex.raw("display_name::citext"), "like", `%${query}%`)
+      .where("username", "ilike", `%${query}%`)
+      .or.where("display_name", "ilike", `%${query}%`)
       .select("accounts.*", "contractor_members.role")
   }
 
@@ -2108,9 +2110,9 @@ export class KnexDatabase implements Database {
     return this.knex<DBContractor>("contractors")
       .where({ archived: false })
       .andWhere((qb) => {
-        qb.where(this.knex.raw("spectrum_id::citext"), "like", `%${query}%`).orWhere(
-          this.knex.raw("name::citext"),
-          "like",
+        qb.where("spectrum_id", "ilike", `%${query}%`).orWhere(
+          "name",
+          "ilike",
           `%${query}%`,
         )
       })
@@ -3782,13 +3784,9 @@ export class KnexDatabase implements Database {
 
     if (searchQuery.query) {
       query = query.where(function () {
-        this.where(
-          knex.raw("LOWER(body)"),
-          "LIKE",
-          "%" + searchQuery.query + "%",
-        ).orWhere(
-          knex.raw("LOWER(title)"),
-          "LIKE",
+        this.where("body", "ILIKE", "%" + searchQuery.query + "%").orWhere(
+          "title",
+          "ILIKE",
           "%" + searchQuery.query + "%",
         )
       })
@@ -3805,8 +3803,10 @@ export class KnexDatabase implements Database {
   ): Promise<DBContractor[]> {
     // ['rating', 'name', 'activity', 'all-time']
     const knex = this.knex
-    let query = this.knex<DBContractor>("contractors")
-      .where("contractors.archived", false)
+    let query = this.knex<DBContractor>("contractors").where(
+      "contractors.archived",
+      false,
+    )
 
     switch (searchQuery.sorting) {
       case "name":
@@ -3855,21 +3855,9 @@ export class KnexDatabase implements Database {
 
     if (searchQuery.query) {
       query = query.where(function () {
-        this.where(
-          knex.raw("LOWER(description)"),
-          "LIKE",
-          "%" + searchQuery.query + "%",
-        )
-          .orWhere(
-            knex.raw("LOWER(name)"),
-            "LIKE",
-            "%" + searchQuery.query + "%",
-          )
-          .orWhere(
-            knex.raw("LOWER(spectrum_id)"),
-            "LIKE",
-            "%" + searchQuery.query + "%",
-          )
+        this.where("description", "ILIKE", "%" + searchQuery.query + "%")
+          .orWhere("name", "ILIKE", "%" + searchQuery.query + "%")
+          .orWhere("spectrum_id", "ILIKE", "%" + searchQuery.query + "%")
       })
     }
 
@@ -3911,21 +3899,9 @@ export class KnexDatabase implements Database {
 
     if (searchQuery.query) {
       query = query.where(function () {
-        this.where(
-          knex.raw("LOWER(description)"),
-          "LIKE",
-          "%" + searchQuery.query + "%",
-        )
-          .orWhere(
-            knex.raw("LOWER(name)"),
-            "LIKE",
-            "%" + searchQuery.query + "%",
-          )
-          .orWhere(
-            knex.raw("LOWER(spectrum_id)"),
-            "LIKE",
-            "%" + searchQuery.query + "%",
-          )
+        this.where("description", "ILIKE", "%" + searchQuery.query + "%")
+          .orWhere("name", "ILIKE", "%" + searchQuery.query + "%")
+          .orWhere("spectrum_id", "ILIKE", "%" + searchQuery.query + "%")
       })
     }
 
@@ -4194,10 +4170,10 @@ export class KnexDatabase implements Database {
 
     if (query.query) {
       uniqueQuery = uniqueQuery.where(function () {
-        this.whereRaw("LOWER(market_listing_details.title) LIKE ?", [
-          `%${query.query!.toLowerCase()}%`,
-        ]).orWhereRaw("LOWER(market_listing_details.description) LIKE ?", [
-          `%${query.query!.toLowerCase()}%`,
+        this.whereRaw("market_listing_details.title ILIKE ?", [
+          `%${query.query}%`,
+        ]).orWhereRaw("market_listing_details.description ILIKE ?", [
+          `%${query.query}%`,
         ])
       })
     }
@@ -4266,10 +4242,10 @@ export class KnexDatabase implements Database {
         )
       }
       multiplesQuery = multiplesQuery.where(function () {
-        this.whereRaw("LOWER(market_listing_details.title) LIKE ?", [
-          `%${query.query!.toLowerCase()}%`,
-        ]).orWhereRaw("LOWER(market_listing_details.description) LIKE ?", [
-          `%${query.query!.toLowerCase()}%`,
+        this.whereRaw("market_listing_details.title ILIKE ?", [
+          `%${query.query}%`,
+        ]).orWhereRaw("market_listing_details.description ILIKE ?", [
+          `%${query.query}%`,
         ])
       })
     }
@@ -4392,10 +4368,10 @@ export class KnexDatabase implements Database {
 
     if (query.query) {
       uniqueQuery = uniqueQuery.where(function () {
-        this.whereRaw("LOWER(market_listing_details.title) LIKE ?", [
-          `%${query.query!.toLowerCase()}%`,
-        ]).orWhereRaw("LOWER(market_listing_details.description) LIKE ?", [
-          `%${query.query!.toLowerCase()}%`,
+        this.whereRaw("market_listing_details.title ILIKE ?", [
+          `%${query.query}%`,
+        ]).orWhereRaw("market_listing_details.description ILIKE ?", [
+          `%${query.query}%`,
         ])
       })
     }
@@ -4464,10 +4440,10 @@ export class KnexDatabase implements Database {
         )
       }
       multiplesQuery = multiplesQuery.where(function () {
-        this.whereRaw("LOWER(market_listing_details.title) LIKE ?", [
-          `%${query.query!.toLowerCase()}%`,
-        ]).orWhereRaw("LOWER(market_listing_details.description) LIKE ?", [
-          `%${query.query!.toLowerCase()}%`,
+        this.whereRaw("market_listing_details.title ILIKE ?", [
+          `%${query.query}%`,
+        ]).orWhereRaw("market_listing_details.description ILIKE ?", [
+          `%${query.query}%`,
         ])
       })
     }
@@ -4735,10 +4711,10 @@ export class KnexDatabase implements Database {
 
     if (searchQuery.query) {
       query = query.where(function () {
-        this.whereRaw("LOWER(market_listing_details.title) LIKE ?", [
-          `%${searchQuery.query!.toLowerCase()}%`,
-        ]).orWhereRaw("LOWER(market_listing_details.description) LIKE ?", [
-          `%${searchQuery.query!.toLowerCase()}%`,
+        this.whereRaw("market_listing_details.title ILIKE ?", [
+          `%${searchQuery.query}%`,
+        ]).orWhereRaw("market_listing_details.description ILIKE ?", [
+          `%${searchQuery.query}%`,
         ])
       })
     }

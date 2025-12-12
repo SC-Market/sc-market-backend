@@ -718,15 +718,19 @@ export const purchase_listings: RequestHandler = async (req, res) => {
       listings,
     )
 
-    res.json({
-      result: "Success",
-      offer_id: offer_obj.id,
-      session_id: session.id,
-      discord_invite: discord_invite,
-    })
+    res.json(
+      createResponse({
+        result: "Success",
+        offer_id: offer_obj.id,
+        session_id: session.id,
+        discord_invite: discord_invite,
+      }),
+    )
   } catch (e) {
-    console.error(e)
-    res.status(400).json({ error: "Invalid formatting!" })
+    logger.error("Error in purchase_listings:", e)
+    const errorMessage =
+      e instanceof Error ? e.message : "Failed to create purchase offer"
+    res.status(500).json(createErrorResponse({ message: errorMessage }))
   }
 }
 
