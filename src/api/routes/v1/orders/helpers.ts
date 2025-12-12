@@ -103,8 +103,12 @@ export async function initiateOrder(session: DBOfferSession) {
 
     const listing = await database.getMarketListing({ listing_id })
 
+    // Calculate new quantity, but ensure it doesn't go below 0
+    // This handles race conditions where quantities changed between offer creation and acceptance
+    const newQuantity = Math.max(0, listing.quantity_available - quantity)
+
     await database.updateMarketListing(listing_id, {
-      quantity_available: listing.quantity_available - quantity,
+      quantity_available: newQuantity,
     })
   }
 
@@ -507,6 +511,23 @@ export async function convert_order_search_query(
     ? req.contractors!.get("contractor")
     : null
 
+  // Note: buyer_username and seller_username are now filtered directly in SQL
+  // using ILIKE for partial matching, so we don't need to resolve them here
+
+  // Parse boolean filters
+  const has_market_listings =
+    query.has_market_listings !== undefined
+      ? query.has_market_listings === "true"
+      : undefined
+  const has_service =
+    query.has_service !== undefined
+      ? query.has_service === "true"
+      : undefined
+
+  // Parse cost range
+  const cost_min = query.cost_min ? +query.cost_min : undefined
+  const cost_max = query.cost_max ? +query.cost_max : undefined
+
   return {
     assigned_id: assigned?.user_id || undefined,
     contractor_id: contractor?.contractor_id || undefined,
@@ -516,6 +537,14 @@ export async function convert_order_search_query(
     sort_method: (query.sort_method as OrderSearchSortMethod) || "timestamp",
     status: (query.status as OrderSearchStatus) || undefined,
     reverse_sort: query.reverse_sort == "true",
+    buyer_username: query.buyer_username,
+    seller_username: query.seller_username,
+    has_market_listings,
+    has_service,
+    cost_min: cost_min && !isNaN(cost_min) ? cost_min : undefined,
+    cost_max: cost_max && !isNaN(cost_max) ? cost_max : undefined,
+    date_from: query.date_from,
+    date_to: query.date_to,
   }
 }
 
@@ -630,16 +659,109 @@ export async function search_orders_optimized(
   items: OptimizedOrderRow[]
   item_counts: { [k: string]: number }
 }> {
-  let base = database.knex("orders").where((qd) => {
-    if (args.customer_id) qd = qd.where("customer_id", args.customer_id)
-    if (args.assigned_id) qd = qd.where("assigned_id", args.assigned_id)
-    if (args.contractor_id) qd = qd.where("contractor_id", args.contractor_id)
-    return qd
-  })
-
-  // Get totals (same as before)
-  const totals = await base
-    .clone()
+  // Build filtered orders query to get matching order IDs
+  let filteredOrdersQuery = database.knex("orders")
+    .leftJoin("market_orders", "orders.order_id", "=", "market_orders.order_id")
+    // Join accounts for buyer username filtering
+    .leftJoin(
+      "accounts as buyer_account",
+      "orders.customer_id",
+      "=",
+      "buyer_account.user_id",
+    )
+    // Join accounts for assigned username filtering (seller)
+    .leftJoin(
+      "accounts as assigned_account_filter",
+      "orders.assigned_id",
+      "=",
+      "assigned_account_filter.user_id",
+    )
+    // Join contractors for spectrum_id filtering (seller)
+    .leftJoin(
+      "contractors as seller_contractor",
+      "orders.contractor_id",
+      "=",
+      "seller_contractor.contractor_id",
+    )
+    .where((qd) => {
+      if (args.customer_id) qd = qd.where("orders.customer_id", args.customer_id)
+      if (args.assigned_id) qd = qd.where("orders.assigned_id", args.assigned_id)
+      if (args.contractor_id) qd = qd.where("orders.contractor_id", args.contractor_id)
+      
+      // Buyer username filter (partial match)
+      if (args.buyer_username) {
+        qd = qd.where("buyer_account.username", "ILIKE", `%${args.buyer_username}%`)
+      }
+      
+      // Seller username filter (partial match on spectrum_id or assigned username)
+      if (args.seller_username) {
+        qd = qd.where((subQd) => {
+          subQd = subQd
+            .where("seller_contractor.spectrum_id", "ILIKE", `%${args.seller_username}%`)
+            .orWhere("assigned_account_filter.username", "ILIKE", `%${args.seller_username}%`)
+          return subQd
+        })
+      }
+      
+      // Date range filters
+      if (args.date_from) {
+        qd = qd.where("orders.timestamp", ">=", args.date_from)
+      }
+      if (args.date_to) {
+        qd = qd.where("orders.timestamp", "<=", args.date_to)
+      }
+      
+      // Service filter
+      if (args.has_service !== undefined) {
+        if (args.has_service) {
+          qd = qd.whereNotNull("orders.service_id")
+        } else {
+          qd = qd.whereNull("orders.service_id")
+        }
+      }
+      
+      // Cost range filters
+      if (args.cost_min !== undefined) {
+        qd = qd.where("orders.cost", ">=", args.cost_min.toString())
+      }
+      if (args.cost_max !== undefined) {
+        qd = qd.where("orders.cost", "<=", args.cost_max.toString())
+      }
+      
+      return qd
+    })
+    .groupBy("orders.order_id", "orders.status")
+    
+  // Apply market listings filter (must be after GROUP BY for HAVING)
+  if (args.has_market_listings !== undefined) {
+    if (args.has_market_listings) {
+      filteredOrdersQuery = filteredOrdersQuery.havingRaw("COUNT(market_orders.order_id) > 0")
+    } else {
+      filteredOrdersQuery = filteredOrdersQuery.havingRaw("COUNT(market_orders.order_id) = 0")
+    }
+  }
+  
+  // Get filtered order IDs
+  const filteredOrders = await filteredOrdersQuery
+    .select("orders.order_id", "orders.status")
+  
+  // If no filtered orders, return empty counts
+  if (filteredOrders.length === 0) {
+    return {
+      items: [],
+      item_counts: {
+        fulfilled: 0,
+        "in-progress": 0,
+        "not-started": 0,
+        cancelled: 0,
+      },
+    }
+  }
+  
+  // Calculate totals from filtered orders and get filtered order IDs
+  const filteredOrderIds = filteredOrders.map((o: any) => o.order_id)
+  const totals = await database.knex("orders")
+    .whereIn("order_id", filteredOrderIds)
     .groupByRaw("status")
     .select("status", database.knex.raw("COUNT(*) as count"))
 
@@ -648,6 +770,8 @@ export async function search_orders_optimized(
   )
 
   // Build optimized query with JOINs to get all related data
+  // Only query orders that passed the filters
+  
   let optimizedQuery = database
     .knex("orders")
     .leftJoin("market_orders", "orders.order_id", "=", "market_orders.order_id")
@@ -671,12 +795,13 @@ export async function search_orders_optimized(
       "contractors.contractor_id",
     )
     .where((qd) => {
-      if (args.customer_id)
-        qd = qd.where("orders.customer_id", args.customer_id)
-      if (args.assigned_id)
-        qd = qd.where("orders.assigned_id", args.assigned_id)
-      if (args.contractor_id)
-        qd = qd.where("orders.contractor_id", args.contractor_id)
+      // Only include filtered order IDs
+      if (filteredOrderIds.length > 0) {
+        qd = qd.whereIn("orders.order_id", filteredOrderIds)
+      } else {
+        // If no filtered orders, return empty result
+        qd = qd.whereRaw("1 = 0")
+      }
       return qd
     })
 
@@ -747,6 +872,21 @@ export async function search_orders_optimized(
       "assigned_account.user_id",
       "contractors.contractor_id",
     )
+    
+    // Apply market listings filter (must be after GROUP BY for HAVING)
+    if (args.has_market_listings !== undefined) {
+      if (args.has_market_listings) {
+        // Has market listings - must have at least one
+        optimizedQuery = optimizedQuery.havingRaw(
+          "COUNT(market_orders.order_id) > 0",
+        )
+      } else {
+        // No market listings - must have zero
+        optimizedQuery = optimizedQuery.havingRaw(
+          "COUNT(market_orders.order_id) = 0",
+        )
+      }
+    }
 
   return { item_counts, items }
 }

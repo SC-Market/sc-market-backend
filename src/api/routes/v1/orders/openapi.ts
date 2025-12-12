@@ -503,6 +503,86 @@ export const get_search_spec = oapi.validPath({
         default: false,
       },
     },
+    {
+      name: "buyer_username",
+      in: "query",
+      description: "Filter by buyer (customer) username (for seller view)",
+      required: false,
+      schema: {
+        type: "string",
+        minLength: 3,
+        maxLength: 50,
+      },
+    },
+    {
+      name: "seller_username",
+      in: "query",
+      description: "Filter by seller username (contractor spectrum_id or assigned user username) (for buyer view)",
+      required: false,
+      schema: {
+        type: "string",
+        minLength: 3,
+        maxLength: 50,
+      },
+    },
+    {
+      name: "has_market_listings",
+      in: "query",
+      description: "Filter orders that have market listings attached",
+      required: false,
+      schema: {
+        type: "boolean",
+      },
+    },
+    {
+      name: "has_service",
+      in: "query",
+      description: "Filter orders that have a service attached",
+      required: false,
+      schema: {
+        type: "boolean",
+      },
+    },
+    {
+      name: "cost_min",
+      in: "query",
+      description: "Minimum cost filter",
+      required: false,
+      schema: {
+        type: "integer",
+        minimum: 0,
+      },
+    },
+    {
+      name: "cost_max",
+      in: "query",
+      description: "Maximum cost filter",
+      required: false,
+      schema: {
+        type: "integer",
+        minimum: 0,
+      },
+    },
+    {
+      name: "date_from",
+      in: "query",
+      description: "Filter orders created after this date (ISO 8601 format)",
+      required: false,
+      schema: {
+        type: "string",
+        format: "date-time",
+      },
+    },
+    {
+      name: "date_to",
+      in: "query",
+      description: "Filter orders created before this date (ISO 8601 format)",
+      required: false,
+      schema: {
+        type: "string",
+        format: "date-time",
+      },
+    },
   ],
   responses: {
     "200": {
