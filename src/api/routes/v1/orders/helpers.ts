@@ -35,6 +35,72 @@ import {
   OrderSearchStatus,
 } from "./types.js"
 
+// =============================================================================
+// AVAILABILITY REQUIREMENT HELPER FUNCTIONS
+// =============================================================================
+
+/**
+ * Check if availability is required for the given seller(s)
+ * @param contractor_id - Seller contractor ID (if applicable)
+ * @param user_id - Seller user ID (if applicable)
+ * @returns true if availability is required, false otherwise
+ */
+export async function isAvailabilityRequired(
+  contractor_id: string | null,
+  user_id: string | null,
+): Promise<boolean> {
+  return await database.getAvailabilityRequirement(contractor_id, user_id)
+}
+
+/**
+ * Check if user has availability set for the given context
+ * @param user_id - Buyer user ID
+ * @param seller_contractor_id - Seller's contractor ID (for contractor-specific check)
+ * @returns true if availability is set, false otherwise
+ */
+export async function hasAvailabilitySet(
+  user_id: string,
+  seller_contractor_id: string | null,
+): Promise<boolean> {
+  return await database.hasAvailabilitySet(user_id, seller_contractor_id)
+}
+
+/**
+ * Validate availability requirement before offer creation
+ * @param customer_id - Buyer user ID
+ * @param seller_contractor_id - Seller contractor ID
+ * @param seller_user_id - Seller user ID
+ * @throws Error with message if requirement not met
+ */
+export async function validateAvailabilityRequirement(
+  customer_id: string,
+  seller_contractor_id: string | null,
+  seller_user_id: string | null,
+): Promise<void> {
+  const required = await isAvailabilityRequired(
+    seller_contractor_id,
+    seller_user_id,
+  )
+
+  if (!required) {
+    return // No requirement, validation passes
+  }
+
+  // Check if user has availability set
+  // For contractor sellers, check contractor-specific availability
+  // For user sellers, check global availability (contractor_id = null)
+  const hasAvailability = await hasAvailabilitySet(
+    customer_id,
+    seller_contractor_id,
+  )
+
+  if (!hasAvailability) {
+    throw new Error(
+      "Availability is required to submit this offer. Please set your availability first.",
+    )
+  }
+}
+
 export const orderTypes = [
   "Escort",
   "Transport",
@@ -520,9 +586,7 @@ export async function convert_order_search_query(
       ? query.has_market_listings === "true"
       : undefined
   const has_service =
-    query.has_service !== undefined
-      ? query.has_service === "true"
-      : undefined
+    query.has_service !== undefined ? query.has_service === "true" : undefined
 
   // Parse cost range
   const cost_min = query.cost_min ? +query.cost_min : undefined
@@ -660,7 +724,8 @@ export async function search_orders_optimized(
   item_counts: { [k: string]: number }
 }> {
   // Build filtered orders query to get matching order IDs
-  let filteredOrdersQuery = database.knex("orders")
+  let filteredOrdersQuery = database
+    .knex("orders")
     .leftJoin("market_orders", "orders.order_id", "=", "market_orders.order_id")
     // Join accounts for buyer username filtering
     .leftJoin(
@@ -684,25 +749,40 @@ export async function search_orders_optimized(
       "seller_contractor.contractor_id",
     )
     .where((qd) => {
-      if (args.customer_id) qd = qd.where("orders.customer_id", args.customer_id)
-      if (args.assigned_id) qd = qd.where("orders.assigned_id", args.assigned_id)
-      if (args.contractor_id) qd = qd.where("orders.contractor_id", args.contractor_id)
-      
+      if (args.customer_id)
+        qd = qd.where("orders.customer_id", args.customer_id)
+      if (args.assigned_id)
+        qd = qd.where("orders.assigned_id", args.assigned_id)
+      if (args.contractor_id)
+        qd = qd.where("orders.contractor_id", args.contractor_id)
+
       // Buyer username filter (partial match)
       if (args.buyer_username) {
-        qd = qd.where("buyer_account.username", "ILIKE", `%${args.buyer_username}%`)
+        qd = qd.where(
+          "buyer_account.username",
+          "ILIKE",
+          `%${args.buyer_username}%`,
+        )
       }
-      
+
       // Seller username filter (partial match on spectrum_id or assigned username)
       if (args.seller_username) {
         qd = qd.where((subQd) => {
           subQd = subQd
-            .where("seller_contractor.spectrum_id", "ILIKE", `%${args.seller_username}%`)
-            .orWhere("assigned_account_filter.username", "ILIKE", `%${args.seller_username}%`)
+            .where(
+              "seller_contractor.spectrum_id",
+              "ILIKE",
+              `%${args.seller_username}%`,
+            )
+            .orWhere(
+              "assigned_account_filter.username",
+              "ILIKE",
+              `%${args.seller_username}%`,
+            )
           return subQd
         })
       }
-      
+
       // Date range filters
       if (args.date_from) {
         qd = qd.where("orders.timestamp", ">=", args.date_from)
@@ -710,7 +790,7 @@ export async function search_orders_optimized(
       if (args.date_to) {
         qd = qd.where("orders.timestamp", "<=", args.date_to)
       }
-      
+
       // Service filter
       if (args.has_service !== undefined) {
         if (args.has_service) {
@@ -719,7 +799,7 @@ export async function search_orders_optimized(
           qd = qd.whereNull("orders.service_id")
         }
       }
-      
+
       // Cost range filters
       if (args.cost_min !== undefined) {
         qd = qd.where("orders.cost", ">=", args.cost_min.toString())
@@ -727,24 +807,30 @@ export async function search_orders_optimized(
       if (args.cost_max !== undefined) {
         qd = qd.where("orders.cost", "<=", args.cost_max.toString())
       }
-      
+
       return qd
     })
     .groupBy("orders.order_id", "orders.status")
-    
+
   // Apply market listings filter (must be after GROUP BY for HAVING)
   if (args.has_market_listings !== undefined) {
     if (args.has_market_listings) {
-      filteredOrdersQuery = filteredOrdersQuery.havingRaw("COUNT(market_orders.order_id) > 0")
+      filteredOrdersQuery = filteredOrdersQuery.havingRaw(
+        "COUNT(market_orders.order_id) > 0",
+      )
     } else {
-      filteredOrdersQuery = filteredOrdersQuery.havingRaw("COUNT(market_orders.order_id) = 0")
+      filteredOrdersQuery = filteredOrdersQuery.havingRaw(
+        "COUNT(market_orders.order_id) = 0",
+      )
     }
   }
-  
+
   // Get filtered order IDs
-  const filteredOrders = await filteredOrdersQuery
-    .select("orders.order_id", "orders.status")
-  
+  const filteredOrders = await filteredOrdersQuery.select(
+    "orders.order_id",
+    "orders.status",
+  )
+
   // If no filtered orders, return empty counts
   if (filteredOrders.length === 0) {
     return {
@@ -757,10 +843,11 @@ export async function search_orders_optimized(
       },
     }
   }
-  
+
   // Calculate totals from filtered orders and get filtered order IDs
   const filteredOrderIds = filteredOrders.map((o: any) => o.order_id)
-  const totals = await database.knex("orders")
+  const totals = await database
+    .knex("orders")
     .whereIn("order_id", filteredOrderIds)
     .groupByRaw("status")
     .select("status", database.knex.raw("COUNT(*) as count"))
@@ -771,7 +858,7 @@ export async function search_orders_optimized(
 
   // Build optimized query with JOINs to get all related data
   // Only query orders that passed the filters
-  
+
   let optimizedQuery = database
     .knex("orders")
     .leftJoin("market_orders", "orders.order_id", "=", "market_orders.order_id")
@@ -872,21 +959,21 @@ export async function search_orders_optimized(
       "assigned_account.user_id",
       "contractors.contractor_id",
     )
-    
-    // Apply market listings filter (must be after GROUP BY for HAVING)
-    if (args.has_market_listings !== undefined) {
-      if (args.has_market_listings) {
-        // Has market listings - must have at least one
-        optimizedQuery = optimizedQuery.havingRaw(
-          "COUNT(market_orders.order_id) > 0",
-        )
-      } else {
-        // No market listings - must have zero
-        optimizedQuery = optimizedQuery.havingRaw(
-          "COUNT(market_orders.order_id) = 0",
-        )
-      }
+
+  // Apply market listings filter (must be after GROUP BY for HAVING)
+  if (args.has_market_listings !== undefined) {
+    if (args.has_market_listings) {
+      // Has market listings - must have at least one
+      optimizedQuery = optimizedQuery.havingRaw(
+        "COUNT(market_orders.order_id) > 0",
+      )
+    } else {
+      // No market listings - must have zero
+      optimizedQuery = optimizedQuery.havingRaw(
+        "COUNT(market_orders.order_id) = 0",
+      )
     }
+  }
 
   return { item_counts, items }
 }
@@ -1380,7 +1467,7 @@ export async function getUserOrderData(
  */
 export async function getRelevantOrderSetting(
   session: DBOfferSession,
-  settingType: "offer_message" | "order_message",
+  settingType: "offer_message" | "order_message" | "require_availability",
 ): Promise<DBOrderSetting | null> {
   logger.debug("Looking for relevant order setting", {
     sessionId: session.id,

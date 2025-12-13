@@ -54,7 +54,7 @@ export interface OrderSetting {
   id: string
   entity_type: "user" | "contractor"
   entity_id: string
-  setting_type: "offer_message" | "order_message"
+  setting_type: "offer_message" | "order_message" | "require_availability"
   message_content: string
   enabled: boolean
   created_at: string
@@ -62,8 +62,8 @@ export interface OrderSetting {
 }
 
 export interface CreateOrderSettingRequest {
-  setting_type: "offer_message" | "order_message"
-  message_content: string
+  setting_type: "offer_message" | "order_message" | "require_availability"
+  message_content?: string // Optional for require_availability
   enabled?: boolean
 }
 

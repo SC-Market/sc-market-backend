@@ -183,22 +183,22 @@ export const apply_to_order: RequestHandler = async (req, res, next) => {
       return
     }
 
-      if (contractor_obj.archived) {
-        res.status(409).json(
-          createErrorResponse({
-            message: "Cannot apply on behalf of an archived contractor",
-          }),
-        )
-        return
-      }
+    if (contractor_obj.archived) {
+      res.status(409).json(
+        createErrorResponse({
+          message: "Cannot apply on behalf of an archived contractor",
+        }),
+      )
+      return
+    }
 
-      if (
-        !(await has_permission(
-          contractor_obj.contractor_id,
-          user.user_id,
-          "manage_orders",
-        ))
-      ) {
+    if (
+      !(await has_permission(
+        contractor_obj.contractor_id,
+        user.user_id,
+        "manage_orders",
+      ))
+    ) {
       res.status(403).json(
         createErrorResponse({
           message: "You are not authorized to apply to this order",
@@ -288,13 +288,11 @@ export const post_root: RequestHandler = async (req, res, next) => {
       return
     }
     if (contractor_obj.archived) {
-      res
-        .status(409)
-        .json(
-          createErrorResponse({
-            message: "Cannot create orders for an archived contractor",
-          }),
-        )
+      res.status(409).json(
+        createErrorResponse({
+          message: "Cannot create orders for an archived contractor",
+        }),
+      )
       return
     }
     contractor_id = contractor_obj.contractor_id
@@ -337,6 +335,28 @@ export const post_root: RequestHandler = async (req, res, next) => {
       createErrorResponse({
         message:
           "You are blocked from creating orders with this contractor or user",
+      }),
+    )
+    return
+  }
+
+  // Check availability requirement
+  // Check both contractor and assigned user - if either requires, enforce it
+  try {
+    const { validateAvailabilityRequirement } = await import("./helpers.js")
+    await validateAvailabilityRequirement(
+      user.user_id,
+      contractor_id,
+      assigned_user?.user_id || null,
+    )
+  } catch (error) {
+    res.status(400).json(
+      createErrorResponse({
+        message:
+          error instanceof Error
+            ? error.message
+            : "Availability is required to submit this offer. Please set your availability first.",
+        code: "AVAILABILITY_REQUIRED",
       }),
     )
     return

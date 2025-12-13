@@ -25,7 +25,10 @@ import moment from "moment/moment.js"
 import { serializeOrderDetails } from "../orders/serializers.js"
 import logger from "../../../../logger/logger.js"
 import { marketBidNotification } from "../util/notifications.js"
-import { createOffer } from "../orders/helpers.js"
+import {
+  createOffer,
+  validateAvailabilityRequirement,
+} from "../orders/helpers.js"
 import { DEFAULT_PLACEHOLDER_PHOTO_URL } from "./constants.js"
 import { randomUUID } from "node:crypto"
 import fs from "node:fs"
@@ -433,12 +436,12 @@ export const create_listing: RequestHandler = async (req, res) => {
         res.status(400).json({ message: "Invalid contractor" })
         return
       }
-    if (contractor.archived) {
-      res.status(409).json({
-        message: "Archived contractors cannot create listings",
-      })
-      return
-    }
+      if (contractor.archived) {
+        res.status(409).json({
+          message: "Archived contractors cannot create listings",
+        })
+        return
+      }
 
       if (
         !(await has_permission(
@@ -696,6 +699,29 @@ export const purchase_listings: RequestHandler = async (req, res) => {
         )
         return
       }
+    }
+
+    // Check availability requirement
+    const seller_contractor_id = firstListing.contractor_seller_id ?? null
+    const seller_user_id = firstListing.user_seller_id ?? null
+
+    try {
+      await validateAvailabilityRequirement(
+        user.user_id,
+        seller_contractor_id,
+        seller_user_id,
+      )
+    } catch (error) {
+      res.status(400).json(
+        createErrorResponse({
+          message:
+            error instanceof Error
+              ? error.message
+              : "Availability is required to submit this offer. Please set your availability first.",
+          code: "AVAILABILITY_REQUIRED",
+        }),
+      )
+      return
     }
 
     const {

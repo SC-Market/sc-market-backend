@@ -105,7 +105,9 @@ export const delete_spectrum_id: RequestHandler = async (req, res) => {
   const user = req.user as User
 
   if (!contractor) {
-    res.status(404).json(createErrorResponse({ message: "Organization not found" }))
+    res
+      .status(404)
+      .json(createErrorResponse({ message: "Organization not found" }))
     return
   }
 
@@ -121,13 +123,11 @@ export const delete_spectrum_id: RequestHandler = async (req, res) => {
     )
     const isOwner = roles.some((role) => role.role_id === contractor.owner_role)
     if (!isOwner) {
-      res
-        .status(403)
-        .json(
-          createErrorResponse({
-            message: "Only organization owners can archive this contractor",
-          }),
-        )
+      res.status(403).json(
+        createErrorResponse({
+          message: "Only organization owners can archive this contractor",
+        }),
+      )
       return
     }
   }
@@ -153,14 +153,12 @@ export const delete_spectrum_id: RequestHandler = async (req, res) => {
       contractorId: contractor.contractor_id,
       error,
     })
-    res
-      .status(500)
-      .json(
-        createErrorResponse({
-          message: "Failed to archive organization",
-          status: "error",
-        }),
-      )
+    res.status(500).json(
+      createErrorResponse({
+        message: "Failed to archive organization",
+        status: "error",
+      }),
+    )
   }
 }
 
@@ -194,10 +192,9 @@ export const get_spectrum_id_audit_logs: RequestHandler = async (
         })
         .orWhere((subBuilder) => {
           // Check if metadata JSON contains contractor_id matching this contractor
-          subBuilder.whereRaw(
-            "metadata->>'contractor_id' = ?",
-            [contractor.contractor_id],
-          )
+          subBuilder.whereRaw("metadata->>'contractor_id' = ?", [
+            contractor.contractor_id,
+          ])
         })
     })
 
@@ -346,14 +343,12 @@ export const post_invites_invite_id_accept: RequestHandler = async (
   })
 
   if (contractor.archived) {
-    res
-      .status(409)
-      .json(
-        createErrorResponse({
-          message: "Organization has been archived",
-          status: "error",
-        }),
-      )
+    res.status(409).json(
+      createErrorResponse({
+        message: "Organization has been archived",
+        status: "error",
+      }),
+    )
     return
   }
 
@@ -791,24 +786,45 @@ export const put_spectrum_id_roles_role_id: RequestHandler = async (
       changes.position = { old: oldRole.position, new: position }
     const permissionChanges: Record<string, unknown> = {}
     if (manage_roles !== oldRole.manage_roles)
-      permissionChanges.manage_roles = { old: oldRole.manage_roles, new: manage_roles }
+      permissionChanges.manage_roles = {
+        old: oldRole.manage_roles,
+        new: manage_roles,
+      }
     if (manage_orders !== oldRole.manage_orders)
-      permissionChanges.manage_orders = { old: oldRole.manage_orders, new: manage_orders }
+      permissionChanges.manage_orders = {
+        old: oldRole.manage_orders,
+        new: manage_orders,
+      }
     if (kick_members !== oldRole.kick_members)
-      permissionChanges.kick_members = { old: oldRole.kick_members, new: kick_members }
+      permissionChanges.kick_members = {
+        old: oldRole.kick_members,
+        new: kick_members,
+      }
     if (manage_invites !== oldRole.manage_invites)
-      permissionChanges.manage_invites = { old: oldRole.manage_invites, new: manage_invites }
+      permissionChanges.manage_invites = {
+        old: oldRole.manage_invites,
+        new: manage_invites,
+      }
     if (manage_org_details !== oldRole.manage_org_details)
       permissionChanges.manage_org_details = {
         old: oldRole.manage_org_details,
         new: manage_org_details,
       }
     if (manage_stock !== oldRole.manage_stock)
-      permissionChanges.manage_stock = { old: oldRole.manage_stock, new: manage_stock }
+      permissionChanges.manage_stock = {
+        old: oldRole.manage_stock,
+        new: manage_stock,
+      }
     if (manage_market !== oldRole.manage_market)
-      permissionChanges.manage_market = { old: oldRole.manage_market, new: manage_market }
+      permissionChanges.manage_market = {
+        old: oldRole.manage_market,
+        new: manage_market,
+      }
     if (manage_webhooks !== oldRole.manage_webhooks)
-      permissionChanges.manage_webhooks = { old: oldRole.manage_webhooks, new: manage_webhooks }
+      permissionChanges.manage_webhooks = {
+        old: oldRole.manage_webhooks,
+        new: manage_webhooks,
+      }
     if (manage_recruiting !== oldRole.manage_recruiting)
       permissionChanges.manage_recruiting = {
         old: oldRole.manage_recruiting,
@@ -819,7 +835,8 @@ export const put_spectrum_id_roles_role_id: RequestHandler = async (
         old: oldRole.manage_blocklist,
         new: manage_blocklist,
       }
-    if (Object.keys(permissionChanges).length > 0) changes.permissions = permissionChanges
+    if (Object.keys(permissionChanges).length > 0)
+      changes.permissions = permissionChanges
 
     if (Object.keys(changes).length > 0) {
       await auditLogService.record({
@@ -1052,9 +1069,9 @@ export const post_spectrum_id_transfer_ownership: RequestHandler = async (
   const { username } = req.body as { username: string }
 
   if (!username || typeof username !== "string") {
-    res.status(400).json(
-      createErrorResponse({ message: "Username is required" }),
-    )
+    res
+      .status(400)
+      .json(createErrorResponse({ message: "Username is required" }))
     return
   }
 
@@ -1317,7 +1334,10 @@ export const put_spectrum_id: RequestHandler = async (req, res, next) => {
     )
 
     // Track what changed
-    if (description !== undefined && description !== oldContractor.description) {
+    if (
+      description !== undefined &&
+      description !== oldContractor.description
+    ) {
       changes.description = { old: oldContractor.description, new: description }
     }
     if (name !== undefined && name !== oldContractor.name) {
@@ -1809,17 +1829,17 @@ export const post_spectrum_id_invites: RequestHandler = async (
   const inviteCode = inviteCodes[0]
 
   // Log invite creation
-    await auditLogService.record({
-      action: "invite.created",
-      actorId: user.user_id,
-      subjectType: "contractor_invite",
-      subjectId: inviteCode.invite_id,
-      metadata: {
-        contractor_id: contractor.contractor_id,
-        spectrum_id: contractor.spectrum_id,
-        max_uses,
-      },
-    })
+  await auditLogService.record({
+    action: "invite.created",
+    actorId: user.user_id,
+    subjectType: "contractor_invite",
+    subjectId: inviteCode.invite_id,
+    metadata: {
+      contractor_id: contractor.contractor_id,
+      spectrum_id: contractor.spectrum_id,
+      max_uses,
+    },
+  })
 
   res.json(createResponse({ result: "Success" }))
 }
@@ -2008,14 +2028,12 @@ export const post_spectrum_id_accept: RequestHandler = async (
     let acceptedInviteId: string | undefined
 
     if (contractor.archived) {
-      res
-        .status(409)
-        .json(
-          createErrorResponse({
-            message: "Organization has been archived",
-            status: "error",
-          }),
-        )
+      res.status(409).json(
+        createErrorResponse({
+          message: "Organization has been archived",
+          status: "error",
+        }),
+      )
       return
     }
 

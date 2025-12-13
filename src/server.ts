@@ -35,6 +35,11 @@ import {
 } from "./api/routes/v1/util/i18n.js"
 import { adminOverride } from "./api/routes/v1/admin/middleware.js"
 import { apiReference } from "@scalar/express-api-reference"
+import {
+  validateRedirectPath,
+  createSignedStateToken,
+  verifySignedStateToken,
+} from "./api/util/oauth-state.js"
 
 const SessionPool = pg.Pool
 
@@ -203,21 +208,48 @@ app.use(trackActivity)
 // Connect passport to express/connect/etc
 app.get("/auth/discord", async (req, res, next) => {
   const query = req.query as { path?: string }
-  const path = query.path
+  const path = query.path || ""
 
-  return passport.authenticate("discord", { session: true, state: path })(
-    req,
-    res,
-    next,
-  )
-})
-app.get("/auth/discord/callback", async (req, res, next) => {
-  const query = req.query as { state?: string }
-  const state = query.state
+  // Validate the redirect path
+  if (!validateRedirectPath(path)) {
+    return res.status(400).json({ error: "Invalid redirect path" })
+  }
+
+  // Create a signed state token that includes both CSRF protection and the redirect path
+  const sessionSecret = env.SESSION_SECRET || "set this var"
+  let signedStateToken: string
+  try {
+    signedStateToken = createSignedStateToken(path, sessionSecret)
+  } catch (error) {
+    return res.status(400).json({ error: "Failed to create state token" })
+  }
 
   return passport.authenticate("discord", {
+    session: true,
+    state: signedStateToken,
+  })(req, res, next)
+})
+
+app.get("/auth/discord/callback", async (req, res, next) => {
+  const query = req.query as { state?: string }
+  const receivedState = query.state
+
+  // Verify the signed state token and extract the redirect path
+  const sessionSecret = env.SESSION_SECRET || "set this var"
+  const verified = verifySignedStateToken(receivedState || "", sessionSecret)
+
+  if (!verified) {
+    // Invalid or missing state - potential CSRF attack or tampering
+    // Redirect to frontend home page on failure
+    return res.redirect(frontend_url.toString())
+  }
+
+  const { path: redirectPath } = verified
+
+  // State is valid, proceed with authentication
+  return passport.authenticate("discord", {
     failureRedirect: frontend_url.toString(),
-    successRedirect: new URL(state || "", frontend_url).toString(),
+    successRedirect: new URL(redirectPath, frontend_url).toString(),
     session: true,
   })(req, res, next)
 })
