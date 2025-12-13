@@ -1111,7 +1111,8 @@ export const delete_spectrum_id_spec = oapi.validPath({
             reason: {
               type: "string",
               maxLength: 500,
-              description: "Optional reason describing why the contractor was archived.",
+              description:
+                "Optional reason describing why the contractor was archived.",
             },
           },
         },

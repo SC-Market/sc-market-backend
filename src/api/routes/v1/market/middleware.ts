@@ -219,41 +219,41 @@ export async function valid_market_listing_by_contractor(
     return
   }
 
-    try {
-      const contractor = await database.getContractor({ spectrum_id })
+  try {
+    const contractor = await database.getContractor({ spectrum_id })
 
-      if (!contractor || contractor.archived) {
-        res
-          .status(404)
-          .json(createErrorResponse({ message: "Contractor not found" }))
-        return
-      }
-
-      const listings = await database.getMarketListings({
-        contractor_seller_id: contractor.contractor_id,
-        status: "active",
-      })
-
-      const completeListings = await Promise.all(
-        listings.map(async (listing) => {
-          try {
-            return await database.getMarketListingComplete(listing.listing_id)
-          } catch {
-            return null
-          }
-        }),
-      )
-
-      req.contractor_listings = completeListings.filter(Boolean) as any[]
-      req.contractor = contractor
-      next()
-    } catch (error) {
-      logger.error("Failed to validate market listings by contractor", {
-        spectrum_id,
-        error: error instanceof Error ? error.message : String(error),
-      })
+    if (!contractor || contractor.archived) {
       res
-        .status(500)
-        .json(createErrorResponse({ message: "Internal server error" }))
+        .status(404)
+        .json(createErrorResponse({ message: "Contractor not found" }))
+      return
     }
+
+    const listings = await database.getMarketListings({
+      contractor_seller_id: contractor.contractor_id,
+      status: "active",
+    })
+
+    const completeListings = await Promise.all(
+      listings.map(async (listing) => {
+        try {
+          return await database.getMarketListingComplete(listing.listing_id)
+        } catch {
+          return null
+        }
+      }),
+    )
+
+    req.contractor_listings = completeListings.filter(Boolean) as any[]
+    req.contractor = contractor
+    next()
+  } catch (error) {
+    logger.error("Failed to validate market listings by contractor", {
+      spectrum_id,
+      error: error instanceof Error ? error.message : String(error),
+    })
+    res
+      .status(500)
+      .json(createErrorResponse({ message: "Internal server error" }))
+  }
 }

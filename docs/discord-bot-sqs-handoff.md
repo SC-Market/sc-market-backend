@@ -202,13 +202,11 @@ DISCORD_BOT_TOKEN=your_bot_token
 ## Next Steps for Discord Bot Team
 
 1. **Immediate (This Week)**:
-
    - Set up SQS consumer for `DISCORD_QUEUE_URL`
    - Implement `create_thread` message handler
    - Test thread creation end-to-end
 
 2. **Short Term (Next Week)**:
-
    - Add response queue integration
    - Implement error handling and retries
    - Add monitoring and logging

@@ -2,7 +2,8 @@ import { Router } from "express"
 import { database } from "../../../../clients/database/knex-db.js"
 import { createResponse, createErrorResponse } from "../util/response.js"
 import { userAuthorized } from "../../../middleware/auth.js"
-import { org_authorized, org_permission } from "../contractors/middleware.js"
+import { org_permission, valid_contractor } from "../contractors/middleware.js"
+import { validate_username } from "../profiles/middleware.js"
 import {
   OrderSetting,
   CreateOrderSettingRequest,
@@ -59,16 +60,31 @@ orderSettingsRouter.post("/settings", userAuthorized, async (req, res) => {
     enabled = true,
   }: CreateOrderSettingRequest = req.body
 
-  if (!setting_type || !message_content) {
+  if (!setting_type) {
     res.status(400).json(
       createErrorResponse({
-        error: "setting_type and message_content are required",
+        error: "setting_type is required",
       }),
     )
     return
   }
 
-  if (!["offer_message", "order_message"].includes(setting_type)) {
+  // For require_availability, message_content is not needed (can be empty)
+  // For other setting types, message_content is required
+  if (setting_type !== "require_availability" && !message_content) {
+    res.status(400).json(
+      createErrorResponse({
+        error: "message_content is required for this setting_type",
+      }),
+    )
+    return
+  }
+
+  if (
+    !["offer_message", "order_message", "require_availability"].includes(
+      setting_type,
+    )
+  ) {
     res.status(400).json(createErrorResponse({ error: "Invalid setting_type" }))
     return
   }
@@ -89,7 +105,7 @@ orderSettingsRouter.post("/settings", userAuthorized, async (req, res) => {
       })
 
       const updated = await database.updateOrderSetting(existing.id, {
-        message_content,
+        message_content: message_content || "", // Empty string for require_availability
         enabled,
       })
       res
@@ -108,7 +124,7 @@ orderSettingsRouter.post("/settings", userAuthorized, async (req, res) => {
       entity_type: "user",
       entity_id: user.user_id,
       setting_type,
-      message_content,
+      message_content: message_content || "", // Empty string for require_availability
       enabled,
     })
 
@@ -270,21 +286,38 @@ orderSettingsRouter.post(
       enabled,
     })
 
-    if (!setting_type || !message_content) {
-      logger.warn("Missing required fields for order setting", {
+    if (!setting_type) {
+      logger.warn("Missing setting_type for order setting", {
         spectrum_id,
-        setting_type,
-        hasMessageContent: !!message_content,
       })
       res.status(400).json(
         createErrorResponse({
-          error: "setting_type and message_content are required",
+          error: "setting_type is required",
         }),
       )
       return
     }
 
-    if (!["offer_message", "order_message"].includes(setting_type)) {
+    // For require_availability, message_content is not needed (can be empty)
+    // For other setting types, message_content is required
+    if (setting_type !== "require_availability" && !message_content) {
+      logger.warn("Missing message_content for order setting", {
+        spectrum_id,
+        setting_type,
+      })
+      res.status(400).json(
+        createErrorResponse({
+          error: "message_content is required for this setting_type",
+        }),
+      )
+      return
+    }
+
+    if (
+      !["offer_message", "order_message", "require_availability"].includes(
+        setting_type,
+      )
+    ) {
       logger.warn("Invalid setting type for order setting", {
         spectrum_id,
         setting_type,
@@ -312,7 +345,7 @@ orderSettingsRouter.post(
         })
 
         const updated = await database.updateOrderSetting(existing.id, {
-          message_content,
+          message_content: message_content || "", // Empty string for require_availability
           enabled,
         })
         res
@@ -332,7 +365,7 @@ orderSettingsRouter.post(
         entity_type: "contractor",
         entity_id: contractor.contractor_id,
         setting_type,
-        message_content,
+        message_content: message_content || "", // Empty string for require_availability
         enabled,
       })
 
@@ -443,6 +476,100 @@ orderSettingsRouter.delete(
       res.status(500).json(
         createErrorResponse({
           error: "Failed to delete contractor order setting",
+        }),
+      )
+    }
+  },
+)
+
+// =============================================================================
+// AVAILABILITY REQUIREMENT CHECK ENDPOINTS
+// =============================================================================
+import { isAvailabilityRequired, hasAvailabilitySet } from "./helpers.js"
+
+// GET /api/v1/orders/availability/contractor/:spectrum_id/check - Check if availability is required for contractor
+orderSettingsRouter.get(
+  "/availability/contractor/:spectrum_id/check",
+  userAuthorized,
+  valid_contractor,
+  async (req, res) => {
+    const user = req.user as User
+    const contractor = req.contractor!
+
+    try {
+      // Check if availability is required
+      const required = await isAvailabilityRequired(
+        contractor.contractor_id,
+        null,
+      )
+
+      // If required, check if user has availability set
+      let hasAvailability = false
+      if (required) {
+        hasAvailability = await hasAvailabilitySet(
+          user.user_id,
+          contractor.contractor_id,
+        )
+      }
+
+      res.json(
+        createResponse({
+          required,
+          hasAvailability,
+        }),
+      )
+    } catch (error) {
+      logger.error("Error checking availability requirement", {
+        userId: user.user_id,
+        contractorId: contractor.contractor_id,
+        error: error instanceof Error ? error.message : String(error),
+        stack: error instanceof Error ? error.stack : undefined,
+      })
+      res.status(500).json(
+        createErrorResponse({
+          error: "Failed to check availability requirement",
+        }),
+      )
+    }
+  },
+)
+
+// GET /api/v1/orders/availability/user/:username/check - Check if availability is required for user
+orderSettingsRouter.get(
+  "/availability/user/:username/check",
+  userAuthorized,
+  validate_username("username"),
+  async (req, res) => {
+    const user = req.user as User
+    const sellerUser = req.users!.get("username")!
+
+    try {
+      // Check if availability is required
+      const required = await isAvailabilityRequired(null, sellerUser.user_id)
+
+      // If required, check if user has availability set
+      // For user sellers, check global availability (contractor_id = null)
+      let hasAvailability = false
+      if (required) {
+        hasAvailability = await hasAvailabilitySet(user.user_id, null)
+      }
+
+      res.json(
+        createResponse({
+          required,
+          hasAvailability,
+        }),
+      )
+    } catch (error) {
+      logger.error("Error checking availability requirement", {
+        userId: user.user_id,
+        sellerUserId: sellerUser.user_id,
+        error: error instanceof Error ? error.message : String(error),
+        stack: error instanceof Error ? error.stack : undefined,
+      })
+      res.status(500).json(
+        createErrorResponse({
+          error: "Failed to check availability requirement",
         }),
       )
     }

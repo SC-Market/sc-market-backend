@@ -101,7 +101,9 @@ export async function verify_listings(
     }
 
     if (listing.listing.user_seller_id === user.user_id) {
-      res.status(400).json(createErrorResponse({ message: "You cannot buy your own item!" }))
+      res
+        .status(400)
+        .json(createErrorResponse({ message: "You cannot buy your own item!" }))
       return
     }
 
@@ -109,14 +111,18 @@ export async function verify_listings(
       const contractorId = listing.listing.contractor_seller_id
       let contractor = contractorCache.get(contractorId)
       if (!contractor) {
-        contractor = await database.getContractor({ contractor_id: contractorId })
+        contractor = await database.getContractor({
+          contractor_id: contractorId,
+        })
         contractorCache.set(contractorId, contractor)
       }
 
       if (contractor.archived) {
-        res
-          .status(409)
-          .json(createErrorResponse({ message: "Cannot purchase from an archived organization" }))
+        res.status(409).json(
+          createErrorResponse({
+            message: "Cannot purchase from an archived organization",
+          }),
+        )
         return
       }
     }
@@ -125,7 +131,11 @@ export async function verify_listings(
   }
 
   if (!sameSeller(listings.map((u) => u.listing.listing))) {
-    res.status(400).json(createErrorResponse({ message: "All items must be from same seller" }))
+    res
+      .status(400)
+      .json(
+        createErrorResponse({ message: "All items must be from same seller" }),
+      )
     return
   }
 

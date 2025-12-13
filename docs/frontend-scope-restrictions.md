@@ -26,7 +26,6 @@ The following scopes can only be assigned by admin users:
 The backend enforces these restrictions:
 
 1. **Token Creation** (`POST /api/v1/tokens`):
-
    - Returns `403 Forbidden` if non-admin tries to create token with admin/moderation scopes
    - Error message: "Only admins can create tokens with admin scopes" or "Only admins can create tokens with moderation scopes"
 

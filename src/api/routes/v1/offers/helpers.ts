@@ -725,6 +725,7 @@ export async function mergeOfferSessions(
 
   // Create new merged offer using existing createOffer helper
   // This handles session creation, offer creation, chat creation, notifications, Discord threads
+  // Use the oldest offer's timestamp for the merged offer
   const { session: merged_session, offer: merged_offer } = await createOffer(
     {
       customer_id: customer_id,

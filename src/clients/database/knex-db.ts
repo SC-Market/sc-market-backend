@@ -5815,7 +5815,7 @@ export class KnexDatabase implements Database {
   async getOrderSetting(
     entityType: "user" | "contractor",
     entityId: string,
-    settingType: "offer_message" | "order_message",
+    settingType: "offer_message" | "order_message" | "require_availability",
   ): Promise<DBOrderSetting | null> {
     return (
       (await this.knex<DBOrderSetting>("order_settings")
@@ -5859,6 +5859,65 @@ export class KnexDatabase implements Database {
 
   async deleteOrderSetting(id: string): Promise<void> {
     await this.knex("order_settings").where({ id }).del()
+  }
+
+  // =============================================================================
+  // AVAILABILITY REQUIREMENT METHODS
+  // =============================================================================
+
+  /**
+   * Check if availability is required for the given seller(s)
+   * Priority: contractor setting > user setting
+   * @param contractor_id - Seller contractor ID (if applicable)
+   * @param user_id - Seller user ID (if applicable)
+   * @returns true if availability is required, false otherwise
+   */
+  async getAvailabilityRequirement(
+    contractor_id: string | null,
+    user_id: string | null,
+  ): Promise<boolean> {
+    // Check contractor setting first (higher priority)
+    if (contractor_id) {
+      const contractorSetting = await this.getOrderSetting(
+        "contractor",
+        contractor_id,
+        "require_availability",
+      )
+      if (contractorSetting && contractorSetting.enabled) {
+        return true
+      }
+    }
+
+    // Check user setting if no contractor setting found
+    if (user_id) {
+      const userSetting = await this.getOrderSetting(
+        "user",
+        user_id,
+        "require_availability",
+      )
+      if (userSetting && userSetting.enabled) {
+        return true
+      }
+    }
+
+    return false
+  }
+
+  /**
+   * Check if user has availability set for the given context
+   * @param user_id - Buyer user ID
+   * @param seller_contractor_id - Seller's contractor ID (for contractor-specific check)
+   * @returns true if availability is set, false otherwise
+   */
+  async hasAvailabilitySet(
+    user_id: string,
+    seller_contractor_id: string | null,
+  ): Promise<boolean> {
+    const availability = await this.getUserAvailability(
+      user_id,
+      seller_contractor_id,
+    )
+    return availability.length > 0
   }
 }
 
