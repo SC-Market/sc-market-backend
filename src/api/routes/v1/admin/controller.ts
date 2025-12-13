@@ -300,7 +300,11 @@ export const admin_get_audit_logs: RequestHandler = async (req, res) => {
     const contractorIds = new Set<string>()
     logs.forEach((log) => {
       const metadata = log.metadata as Record<string, unknown> | null
-      if (metadata && typeof metadata === "object" && "contractor_id" in metadata) {
+      if (
+        metadata &&
+        typeof metadata === "object" &&
+        "contractor_id" in metadata
+      ) {
         const contractorId = metadata.contractor_id
         if (typeof contractorId === "string") {
           contractorIds.add(contractorId)
@@ -313,7 +317,10 @@ export const admin_get_audit_logs: RequestHandler = async (req, res) => {
     })
 
     // Fetch contractor information
-    const contractorsMap = new Map<string, { contractor_id: string; name: string; spectrum_id: string }>()
+    const contractorsMap = new Map<
+      string,
+      { contractor_id: string; name: string; spectrum_id: string }
+    >()
     if (contractorIds.size > 0) {
       const contractors = await Promise.all(
         Array.from(contractorIds).map(async (contractorId) => {
@@ -346,7 +353,11 @@ export const admin_get_audit_logs: RequestHandler = async (req, res) => {
       let contractor = null
 
       // Try to get contractor from metadata first
-      if (metadata && typeof metadata === "object" && "contractor_id" in metadata) {
+      if (
+        metadata &&
+        typeof metadata === "object" &&
+        "contractor_id" in metadata
+      ) {
         const contractorId = metadata.contractor_id
         if (typeof contractorId === "string") {
           contractor = contractorsMap.get(contractorId) || null
@@ -381,7 +392,9 @@ export const admin_get_audit_logs: RequestHandler = async (req, res) => {
     )
   } catch (error) {
     console.error("Error fetching audit logs:", error)
-    res.status(500).json(createResponse({ error: "Failed to fetch audit logs" }))
+    res
+      .status(500)
+      .json(createResponse({ error: "Failed to fetch audit logs" }))
   }
   return
 }

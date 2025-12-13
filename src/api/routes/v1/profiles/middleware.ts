@@ -28,3 +28,31 @@ export function validate_optional_username(path: string) {
     next()
   }
 }
+
+export function validate_username(path: string) {
+  return async (req: Request, res: Response, next: NextFunction) => {
+    // Check params first, then fall back to query
+    const username = req.params[path] as string
+
+    if (!username) {
+      res.status(400).json(createErrorResponse({ error: `Missing ${path}` }))
+      return
+    }
+
+    let user
+    try {
+      user = await database.getUser({ username })
+    } catch {
+      res
+        .status(404)
+        .json(createErrorResponse({ error: "User not found", username }))
+      return
+    }
+
+    if (!req.users) {
+      req.users = new Map<string, User>()
+    }
+    req.users.set(path, user)
+    next()
+  }
+}

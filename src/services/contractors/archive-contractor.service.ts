@@ -36,9 +36,8 @@ export async function archiveContractor({
   const archiveDate = now.toISOString().slice(0, 10)
   const archivedLabel = `${ARCHIVE_LABEL_PREFIX} ${archiveDate}] ${contractor.name}`
 
-  const inviteAction = await database.getNotificationActionByName(
-    "contractor_invite",
-  )
+  const inviteAction =
+    await database.getNotificationActionByName("contractor_invite")
 
   let memberCountRemoved = 0
   let orderIds: string[] = []
@@ -196,13 +195,15 @@ export async function archiveContractor({
   for (const sessionId of offerSessionIds) {
     try {
       // Get active offers before rejecting
-      const activeOffers = await database.knex("order_offers")
+      const activeOffers = await database
+        .knex("order_offers")
         .where({ session_id: sessionId })
         .where("status", "active")
         .select("offer_id")
 
       // Reject all active offers in the session
-      await database.knex("order_offers")
+      await database
+        .knex("order_offers")
         .where({ session_id: sessionId })
         .where("status", "active")
         .update({ status: "rejected" })
@@ -212,18 +213,18 @@ export async function archiveContractor({
 
       // Log offer rejections
       for (const offer of activeOffers) {
-            await auditLogService.record({
-              action: "offer.rejected",
-              actorId,
-              subjectType: "offer",
-              subjectId: offer.offer_id,
-              metadata: {
-                contractor_id: contractor.contractor_id,
-                spectrum_id: contractor.spectrum_id,
-                session_id: sessionId,
-                reason: "contractor_archived",
-              },
-            })
+        await auditLogService.record({
+          action: "offer.rejected",
+          actorId,
+          subjectType: "offer",
+          subjectId: offer.offer_id,
+          metadata: {
+            contractor_id: contractor.contractor_id,
+            spectrum_id: contractor.spectrum_id,
+            session_id: sessionId,
+            reason: "contractor_archived",
+          },
+        })
       }
     } catch (error) {
       logger.error("Failed to reject offer session during contractor archive", {
@@ -235,7 +236,8 @@ export async function archiveContractor({
 
   // Deactivate all services for this contractor
   try {
-    await database.knex("services")
+    await database
+      .knex("services")
       .where({ contractor_id: contractor.contractor_id })
       .where("status", "active")
       .update({ status: "inactive" })

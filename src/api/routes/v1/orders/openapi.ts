@@ -517,7 +517,8 @@ export const get_search_spec = oapi.validPath({
     {
       name: "seller_username",
       in: "query",
-      description: "Filter by seller username (contractor spectrum_id or assigned user username) (for buyer view)",
+      description:
+        "Filter by seller username (contractor spectrum_id or assigned user username) (for buyer view)",
       required: false,
       schema: {
         type: "string",

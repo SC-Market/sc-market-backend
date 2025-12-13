@@ -51,7 +51,8 @@ export async function org_authorized(
       res.status(409).json(
         createErrorResponse({
           error: "Organization archived",
-          message: "This organization has been archived and is no longer editable.",
+          message:
+            "This organization has been archived and is no longer editable.",
         }),
       )
       return
