@@ -294,6 +294,10 @@ export interface DBOffer {
   actor_id: string
 }
 
+export type DBOfferWithTimestamp = Omit<DBOffer, "timestamp"> & {
+  timestamp: Date | string
+}
+
 export interface DBOfferMarketListing {
   listing_id: string
   offer_id: string

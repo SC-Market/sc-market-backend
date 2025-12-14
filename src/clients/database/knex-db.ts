@@ -140,7 +140,13 @@ export class KnexDatabase implements Database {
           (dbConfig.port as unknown as number) ||
           (env.DATABASE_PORT ? +env.DATABASE_PORT : 5431),
       },
-      pool: { min: 0, max: 5 },
+      pool: {
+        min: 0,
+        max: 5,
+        afterCreate: (conn: any, done: (err?: Error) => void) => {
+          conn.query(`SET TIME ZONE 'UTC'`, done)
+        },
+      },
     },
   ) {
     this.knex = Knex(databaseConfig)
@@ -3297,15 +3303,21 @@ export class KnexDatabase implements Database {
   }
 
   async createOrderOfferSession(
-    data: Partial<DBOfferSession>,
+    data: Partial<
+      Omit<DBOfferSession, "timestamp"> & { timestamp: string | Date }
+    >,
   ): Promise<DBOfferSession[]> {
     return this.knex<DBOfferSession>("offer_sessions")
-      .insert(data)
+      .insert(data as DBOfferSession)
       .returning("*")
   }
 
-  async createOrderOffer(data: Partial<DBOffer>): Promise<DBOffer[]> {
-    return this.knex<DBOffer>("order_offers").insert(data).returning("*")
+  async createOrderOffer(
+    data: Partial<Omit<DBOffer, "timestamp"> & { timestamp: string | Date }>,
+  ): Promise<DBOffer[]> {
+    return this.knex<DBOffer>("order_offers")
+      .insert(data as DBOffer)
+      .returning("*")
   }
 
   async insertMarketDetailsPhoto(value: Partial<DBMarketListingImage>) {

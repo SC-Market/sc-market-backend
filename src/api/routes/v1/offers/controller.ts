@@ -241,7 +241,7 @@ export const post_merge: RequestHandler = async (req, res) => {
   try {
     // Get the customer from the first offer session (all should have same customer)
     // The middleware has already validated the sessions and stored them in req
-    const sessions = (req as any).offer_sessions as DBOfferSession[]
+    const sessions = req.offer_sessions as DBOfferSession[]
     if (!sessions || sessions.length === 0) {
       res.status(400).json(
         createErrorResponse({

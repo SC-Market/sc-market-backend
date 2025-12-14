@@ -191,8 +191,14 @@ export async function initiateOrder(session: DBOfferSession) {
 }
 
 export async function createOffer(
-  session_details: Partial<DBOfferSession>,
-  offer_details: Partial<DBOffer> & { actor_id: string },
+  session_details: Partial<
+    Omit<DBOfferSession, "timestamp"> & { timestamp: string | Date }
+  >,
+  offer_details: Partial<
+    Omit<DBOffer, "timestamp"> & { timestamp: string | Date }
+  > & {
+    actor_id: string
+  },
   market_listings: {
     quantity: number
     listing:
