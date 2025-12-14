@@ -607,6 +607,10 @@ export async function mergeOfferSessions(
     ),
   )
 
+  // Also query timestamps as raw strings to avoid timezone conversion issues
+  // Use PostgreSQL's to_char to get the timestamp as a string in the exact format it's stored
+  const sessionTimestamps = sessions.map((s) => s.timestamp)
+
   // Validate all sessions exist
   if (sessions.some((s) => !s)) {
     throw new OfferNotFoundError("One or more offer sessions not found")
@@ -684,12 +688,16 @@ export async function mergeOfferSessions(
   }
 
   // Find the minimum session timestamp (oldest session)
-  const oldestSessionTimestamp = sessions.reduce((min, session) => {
-    if (!session) return min
-    const sessionTime = new Date(session.timestamp).getTime()
-    const minTime = new Date(min).getTime()
-    return sessionTime < minTime ? session.timestamp : min
-  }, sessions[0]!.timestamp)
+  // Compare raw timestamp strings to avoid any Date/timezone conversion issues
+  // PostgreSQL 'timestamp without time zone' values are compared as strings
+  const oldestSessionTimestamp = sessionTimestamps.reduce((min, ts) => {
+    if (!ts) return min
+    // Compare as strings - PostgreSQL timestamps without time zone compare correctly as strings
+    return ts < min ? ts : min
+  }, sessionTimestamps[0]!)
+
+  console.log("Session timestamps", sessionTimestamps)
+  console.log("Oldest session timestamp", oldestSessionTimestamp)
 
   // Combine costs and collaterals
   const totalCost = mostRecentOffers.reduce(
@@ -740,7 +748,7 @@ export async function mergeOfferSessions(
       contractor_id: contractor_id,
       assigned_id: contractor_id ? null : sessions[0]!.assigned_id,
       status: "active",
-      timestamp: oldestSessionTimestamp,
+      timestamp: oldestSessionTimestamp.toUTCString(),
     },
     {
       actor_id: customer_id,
@@ -751,7 +759,7 @@ export async function mergeOfferSessions(
       collateral: totalCollateral.toString(),
       payment_type: payment_type,
       service_id: undefined,
-      timestamp: oldestSessionTimestamp,
+      timestamp: oldestSessionTimestamp.toUTCString(),
     },
     [], // Market listings will be added separately since we only have listing_ids
   )
