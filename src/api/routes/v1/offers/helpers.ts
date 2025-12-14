@@ -683,6 +683,14 @@ export async function mergeOfferSessions(
     )
   }
 
+  // Find the minimum session timestamp (oldest session)
+  const oldestSessionTimestamp = sessions.reduce((min, session) => {
+    if (!session) return min
+    const sessionTime = new Date(session.timestamp).getTime()
+    const minTime = new Date(min).getTime()
+    return sessionTime < minTime ? session.timestamp : min
+  }, sessions[0]!.timestamp)
+
   // Combine costs and collaterals
   const totalCost = mostRecentOffers.reduce(
     (sum, o) => sum + Number(o!.cost),
@@ -725,13 +733,14 @@ export async function mergeOfferSessions(
 
   // Create new merged offer using existing createOffer helper
   // This handles session creation, offer creation, chat creation, notifications, Discord threads
-  // Use the oldest offer's timestamp for the merged offer
+  // Use the oldest offer's timestamp for the merged offer and oldest session timestamp for the merged session
   const { session: merged_session, offer: merged_offer } = await createOffer(
     {
       customer_id: customer_id,
       contractor_id: contractor_id,
       assigned_id: contractor_id ? null : sessions[0]!.assigned_id,
       status: "active",
+      timestamp: oldestSessionTimestamp,
     },
     {
       actor_id: customer_id,
@@ -742,6 +751,7 @@ export async function mergeOfferSessions(
       collateral: totalCollateral.toString(),
       payment_type: payment_type,
       service_id: undefined,
+      timestamp: oldestSessionTimestamp,
     },
     [], // Market listings will be added separately since we only have listing_ids
   )
