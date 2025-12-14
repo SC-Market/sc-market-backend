@@ -4099,7 +4099,11 @@ export class KnexDatabase implements Database {
       .where({ user_id, contractor_id })
       .delete()
 
-    return this.knex<DBAvailabilityEntry>("user_availability").insert(entries)
+    // Only insert if there are entries to insert (allows clearing availability)
+    if (entries.length > 0) {
+      return this.knex<DBAvailabilityEntry>("user_availability").insert(entries)
+    }
+    return []
   }
 
   async updateUserSettings(user_id: string, settings: any) {
