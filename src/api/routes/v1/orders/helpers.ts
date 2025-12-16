@@ -577,8 +577,8 @@ export async function convert_order_search_query(
 ): Promise<OrderSearchQueryArguments> {
   const query = req.query as OrderSearchQuery
 
-  const customer = query.customer ? req.users!.get("customer") : null
-  const assigned = query.assigned ? req.users!.get("assigned") : null
+  const customer = query.customer ? req.users!.get("customer") || null : null
+  const assigned = query.assigned ? req.users!.get("assigned") || null : null
   const contractor = query.contractor
     ? req.contractors!.get("contractor")
     : null

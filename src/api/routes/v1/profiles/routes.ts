@@ -37,6 +37,9 @@ import {
   profile_get_blocklist,
   profile_post_blocklist_block,
   profile_delete_blocklist_unblock_username,
+  profile_get_links,
+  profile_delete_links_provider_type,
+  profile_put_links_provider_type_primary,
 } from "./controller.js"
 
 import {
@@ -232,4 +235,21 @@ profileRouter.delete(
   userAuthorized,
   profile_delete_blocklist_unblock_username_spec,
   profile_delete_blocklist_unblock_username,
+)
+
+// Account linking endpoints
+profileRouter.get("/links", readRateLimit, userAuthorized, profile_get_links)
+
+profileRouter.delete(
+  "/links/:provider_type",
+  writeRateLimit,
+  userAuthorized,
+  profile_delete_links_provider_type,
+)
+
+profileRouter.put(
+  "/links/:provider_type/primary",
+  writeRateLimit,
+  userAuthorized,
+  profile_put_links_provider_type_primary,
 )

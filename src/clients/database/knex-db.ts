@@ -5,6 +5,8 @@ import { LRUCache } from "lru-cache"
 import logger from "../../logger/logger.js"
 import {
   AvailabilitySpan,
+  DBAccountIntegration,
+  DBAccountProvider,
   DBAccountSettings,
   DBAdminAlert,
   DBAggregateComplete,
@@ -200,12 +202,16 @@ export class KnexDatabase implements Database {
             ),
           )
         } catch (e) {
-          try {
-            profile = (await rest.get(
-              Routes.user(user.discord_id),
-            )) as RESTGetAPIUserResult
-          } catch (error) {
-            console.error(error)
+          // Try to get Discord ID from provider system as fallback
+          const discordProvider = await this.getUserProvider(user.user_id, "discord")
+          if (discordProvider?.provider_id) {
+            try {
+              profile = (await rest.get(
+                Routes.user(discordProvider.provider_id),
+              )) as RESTGetAPIUserResult
+            } catch (error) {
+              console.error(error)
+            }
           }
         }
 
@@ -237,27 +243,46 @@ export class KnexDatabase implements Database {
     access_token: string,
     refresh_token: string,
   ): Promise<User> {
-    let user = await this.knex<DBUser>("accounts")
-      .where("discord_id", profile.id)
-      .first()
+    // Check if user exists by Discord provider
+    let user = await this.getUserByProvider("discord", profile.id)
 
     if (user == null) {
-      user = (
-        await this.knex<DBUser>("accounts")
-          .insert({
-            discord_id: profile.id,
-            display_name: profile.username,
+      // Create new user with Discord provider
+      user = await this.createUserWithProvider(
+        {
+          provider_type: "discord",
+          provider_id: profile.id,
+          access_token: access_token,
+          refresh_token: refresh_token,
+          metadata: {
             username: profile.username,
-            discord_access_token: access_token,
-            discord_refresh_token: refresh_token,
-          })
-          .returning("*")
-      )[0]
-
-      await this.knex<DBAccountSettings>("account_settings").insert({
-        user_id: user.user_id,
-      })
+          },
+          is_primary: true,
+        },
+        "en",
+      )
+      
+      // Also set discord_id for backward compatibility
+      await this.knex<DBUser>("accounts")
+        .where("user_id", user.user_id)
+        .update({
+          discord_id: profile.id,
+          discord_access_token: access_token,
+          discord_refresh_token: refresh_token,
+        })
+      
+      // Refresh user to get updated discord_id
+      user = await this.getUser({ user_id: user.user_id })
+      
+      // Account settings are created by createUserWithProvider, so no need to insert again
     } else {
+      // Update tokens for existing user
+      await this.updateProviderTokens(user.user_id, "discord", {
+        access_token: access_token,
+        refresh_token: refresh_token,
+      })
+      
+      // Also update legacy columns for backward compatibility
       await this.updateUser(
         { user_id: user.user_id },
         {
@@ -265,16 +290,12 @@ export class KnexDatabase implements Database {
           discord_refresh_token: refresh_token,
         },
       )
+      
+      // Refresh user
+      user = await this.getUser({ user_id: user.user_id })
     }
 
-    return {
-      // discord_data: profile,
-      discord_id: profile.id,
-      user_id: user!.user_id,
-      display_name: user!.display_name,
-      role: user!.role,
-      username: user!.display_name,
-    } as User
+    return user
   }
 
   async insertUserWithLocale(
@@ -283,31 +304,440 @@ export class KnexDatabase implements Database {
     refresh_token: string,
     preferredLocale: string,
   ): Promise<User> {
-    const [user] = await this.knex<DBUser>("accounts")
-      .insert({
-        discord_id: profile.id,
-        display_name: profile.username,
-        username: profile.username,
-        discord_access_token: access_token,
-        discord_refresh_token: refresh_token,
-        locale: preferredLocale,
+    // Check if user exists by Discord provider
+    let user = await this.getUserByProvider("discord", profile.id)
+
+    if (user == null) {
+      // Create new user with Discord provider
+      user = await this.createUserWithProvider(
+        {
+          provider_type: "discord",
+          provider_id: profile.id,
+          access_token: access_token,
+          refresh_token: refresh_token,
+          metadata: {
+            username: profile.username,
+          },
+          is_primary: true,
+        },
+        preferredLocale,
+      )
+      
+      // Also set discord_id for backward compatibility
+      await this.knex<DBUser>("accounts")
+        .where("user_id", user.user_id)
+        .update({
+          discord_id: profile.id,
+          discord_access_token: access_token,
+          discord_refresh_token: refresh_token,
+        })
+      
+      // Refresh user to get updated discord_id
+      user = await this.getUser({ user_id: user.user_id })
+    } else {
+      // Update tokens and locale for existing user
+      await this.updateProviderTokens(user.user_id, "discord", {
+        access_token: access_token,
+        refresh_token: refresh_token,
       })
-      .onConflict("discord_id")
+      
+      // Also update legacy columns for backward compatibility
+      await this.updateUser(
+        { user_id: user.user_id },
+        {
+          discord_access_token: access_token,
+          discord_refresh_token: refresh_token,
+          locale: preferredLocale,
+        },
+      )
+      
+      // Refresh user
+      user = await this.getUser({ user_id: user.user_id })
+    }
+
+    return user
+  }
+
+  // Provider Management Methods
+
+  /**
+   * Get user by provider (replaces direct discord_id lookup)
+   */
+  async getUserByProvider(
+    providerType: string,
+    providerId: string,
+  ): Promise<User | null> {
+    const provider = await this.knex<DBAccountProvider>("account_providers")
+      .where("provider_type", providerType)
+      .where("provider_id", providerId)
+      .first()
+
+    if (!provider) {
+      return null
+    }
+
+    return this.getUser({ user_id: provider.user_id })
+  }
+
+  /**
+   * Get a specific provider for a user
+   */
+  async getUserProvider(
+    userId: string,
+    providerType: string,
+  ): Promise<DBAccountProvider | null> {
+    const provider = await this.knex<DBAccountProvider>("account_providers")
+      .where("user_id", userId)
+      .where("provider_type", providerType)
+      .first()
+    return provider || null
+  }
+
+  /**
+   * Get Discord provider ID for a user
+   * Returns null if Discord is not linked
+   */
+  async getUserDiscordId(userId: string): Promise<string | null> {
+    const provider = await this.getUserProvider(userId, "discord")
+    return provider?.provider_id || null
+  }
+
+  /**
+   * Get user by Discord ID
+   */
+  async getUserByDiscordId(discordId: string): Promise<User | null> {
+    return await this.getUserByProvider("discord", discordId)
+  }
+
+  /**
+   * Get all providers for a user
+   */
+  async getUserProviders(userId: string): Promise<DBAccountProvider[]> {
+    return this.knex<DBAccountProvider>("account_providers")
+      .where("user_id", userId)
+      .select("*")
+  }
+
+  /**
+   * Get primary provider for a user
+   */
+  async getPrimaryProvider(userId: string): Promise<DBAccountProvider | null> {
+    const result = await this.knex<DBAccountProvider>("account_providers")
+      .where("user_id", userId)
+      .where("is_primary", true)
+      .first()
+    return result || null
+  }
+
+  /**
+   * Link a provider to a user account
+   * Note: For Citizen ID, validation should be done before calling this
+   */
+  async linkProvider(
+    userId: string,
+    providerData: {
+      provider_type: string
+      provider_id: string
+      access_token?: string | null
+      refresh_token?: string | null
+      token_expires_at?: Date | null
+      metadata?: Record<string, any>
+      is_primary?: boolean
+    },
+  ): Promise<DBAccountProvider> {
+    // Check if provider already linked to different account
+    const existingProvider = await this.knex<DBAccountProvider>(
+      "account_providers",
+    )
+      .where("provider_type", providerData.provider_type)
+      .where("provider_id", providerData.provider_id)
+      .first()
+
+    if (existingProvider && existingProvider.user_id !== userId) {
+      throw new Error(
+        `This ${providerData.provider_type} account is already linked to another user`,
+      )
+    }
+
+    const [provider] = await this.knex<DBAccountProvider>("account_providers")
+      .insert({
+        user_id: userId,
+        provider_type: providerData.provider_type,
+        provider_id: providerData.provider_id,
+        access_token: providerData.access_token || null,
+        refresh_token: providerData.refresh_token || null,
+        token_expires_at: providerData.token_expires_at || null,
+        metadata: providerData.metadata || null, // JSONB column handles JSON automatically
+        is_primary: providerData.is_primary ?? false,
+        linked_at: new Date(),
+      })
+      .onConflict(["user_id", "provider_type"])
       .merge({
-        discord_access_token: access_token,
-        discord_refresh_token: refresh_token,
-        locale: preferredLocale,
+        access_token: providerData.access_token || null,
+        refresh_token: providerData.refresh_token || null,
+        token_expires_at: providerData.token_expires_at || null,
+        metadata: providerData.metadata || null, // JSONB column handles JSON automatically
+        last_used_at: new Date(),
       })
       .returning("*")
 
+    return provider
+  }
+
+  /**
+   * Unlink a provider from a user account
+   */
+  async unlinkProvider(userId: string, providerType: string): Promise<void> {
+    // Prevent unlinking if it's the only primary provider
+    const providers = await this.getUserProviders(userId)
+    const primaryProviders = providers.filter((p) => p.is_primary)
+
+    if (
+      primaryProviders.length === 1 &&
+      primaryProviders[0].provider_type === providerType
+    ) {
+      throw new Error("Cannot unlink the only primary authentication provider")
+    }
+
+    await this.knex<DBAccountProvider>("account_providers")
+      .where("user_id", userId)
+      .where("provider_type", providerType)
+      .delete()
+  }
+
+  /**
+   * Update provider tokens
+   */
+  async updateProviderTokens(
+    userId: string,
+    providerType: string,
+    tokens: {
+      access_token?: string
+      refresh_token?: string
+      token_expires_at?: Date
+    },
+  ): Promise<void> {
+    await this.knex<DBAccountProvider>("account_providers")
+      .where("user_id", userId)
+      .where("provider_type", providerType)
+      .update({
+        ...tokens,
+        last_used_at: new Date(),
+      })
+  }
+
+  /**
+   * Set primary provider
+   */
+  async setPrimaryProvider(
+    userId: string,
+    providerType: string,
+  ): Promise<void> {
+    // First, unset all primary providers
+    await this.knex<DBAccountProvider>("account_providers")
+      .where("user_id", userId)
+      .update({ is_primary: false })
+
+    // Then set the new primary
+    await this.knex<DBAccountProvider>("account_providers")
+      .where("user_id", userId)
+      .where("provider_type", providerType)
+      .update({ is_primary: true })
+  }
+
+  /**
+   * Create user with provider (replaces insertUserWithLocale for new providers)
+   * Note: For Citizen ID, verification must be checked before calling this
+   */
+  async createUserWithProvider(
+    providerData: {
+      provider_type: string
+      provider_id: string
+      access_token?: string | null
+      refresh_token?: string | null
+      token_expires_at?: Date | null
+      metadata?: Record<string, any>
+      is_primary?: boolean
+    },
+    locale: string = "en",
+  ): Promise<User> {
+    // Check if provider already exists
+    const existingProvider = await this.knex<DBAccountProvider>(
+      "account_providers",
+    )
+      .where("provider_type", providerData.provider_type)
+      .where("provider_id", providerData.provider_id)
+      .first()
+
+    if (existingProvider) {
+      // Update tokens and return existing user
+      await this.updateProviderTokens(
+        existingProvider.user_id,
+        providerData.provider_type,
+        {
+          access_token: providerData.access_token || undefined,
+          refresh_token: providerData.refresh_token || undefined,
+          token_expires_at: providerData.token_expires_at || undefined,
+        },
+      )
+      return this.getUser({ user_id: existingProvider.user_id })
+    }
+
+    // Create new user
+    const username =
+      providerData.metadata?.username ||
+      `user_${providerData.provider_id.substring(0, 8)}`
+    const displayName =
+      providerData.metadata?.displayName ||
+      providerData.metadata?.username ||
+      username
+
+    const [user] = await this.knex<DBUser>("accounts")
+      .insert({
+        username: username,
+        display_name: displayName,
+        locale: locale,
+        rsi_confirmed: false, // Will be updated to true for Citizen ID after creation
+        discord_id: null, // Can be null now
+      })
+      .returning("*")
+
+    // Link provider
+    await this.linkProvider(user.user_id, {
+      ...providerData,
+      is_primary: providerData.is_primary ?? true, // First provider is always primary
+    })
+
+    // Create account settings
+    await this.knex<DBAccountSettings>("account_settings").insert({
+      user_id: user.user_id,
+    })
+
+    return this.getUser({ user_id: user.user_id })
+  }
+
+  /**
+   * Validate if Citizen ID can be linked to an existing account
+   * Rules:
+   * - Account must be unverified (rsi_confirmed = false), OR
+   * - Account must be verified AND usernames must match
+   */
+  async validateCitizenIDLinking(
+    userId: string,
+    citizenIDSpectrumId: string,
+  ): Promise<{
+    canLink: boolean
+    reason?: string
+    accountSpectrumId?: string
+    citizenIDSpectrumId?: string
+  }> {
+    const user = await this.getUser({ user_id: userId })
+
+    // If account is unverified, can always link
+    if (!user.rsi_confirmed) {
+      return { canLink: true }
+    }
+
+    // If account is verified, spectrum IDs must match
+    if (user.spectrum_user_id && user.spectrum_user_id === citizenIDSpectrumId) {
+      return { canLink: true }
+    }
+
     return {
-      // discord_data: profile,
-      discord_id: profile.id,
-      user_id: user!.user_id,
-      display_name: user!.display_name,
-      role: user!.role,
-      username: user!.display_name,
-    } as User
+      canLink: false,
+      reason: "Account is verified but spectrum IDs do not match",
+      accountSpectrumId: user.spectrum_user_id || undefined,
+      citizenIDSpectrumId: citizenIDSpectrumId,
+    }
+  }
+
+  // Integration Management Methods
+
+  /**
+   * Get integration settings for a user
+   */
+  async getUserIntegration(
+    userId: string,
+    integrationType: string,
+  ): Promise<DBAccountIntegration | null> {
+    const result = await this.knex<DBAccountIntegration>("account_integrations")
+      .where("user_id", userId)
+      .where("integration_type", integrationType)
+      .first()
+    return result || null
+  }
+
+  /**
+   * Update or create integration settings
+   */
+  async upsertIntegration(
+    userId: string,
+    integration: {
+      integration_type: string
+      settings: Record<string, any>
+      enabled?: boolean
+    },
+  ): Promise<void> {
+    await this.knex<DBAccountIntegration>("account_integrations")
+      .insert({
+        user_id: userId,
+        integration_type: integration.integration_type,
+        settings: integration.settings,
+        enabled: integration.enabled ?? true,
+        configured_at: new Date(),
+      })
+      .onConflict(["user_id", "integration_type"])
+      .merge({
+        settings: this.knex.raw("settings || ?::jsonb", [
+          JSON.stringify(integration.settings),
+        ]),
+        enabled: integration.enabled ?? true,
+        last_used_at: new Date(),
+      })
+  }
+
+  /**
+   * Get all integrations for a user
+   */
+  async getUserIntegrations(userId: string): Promise<DBAccountIntegration[]> {
+    return this.knex<DBAccountIntegration>("account_integrations")
+      .where("user_id", userId)
+      .select("*")
+  }
+
+  /**
+   * Get Discord integration settings with fallback to old columns
+   * This provides backward compatibility during migration
+   */
+  async getDiscordIntegrationSettings(userId: string): Promise<{
+    official_server_id: string | null
+    discord_thread_channel_id: string | null
+  }> {
+    // Try new integration table first
+    const integration = await this.getUserIntegration(userId, "discord")
+    if (integration && integration.settings) {
+      return {
+        official_server_id:
+          integration.settings.official_server_id?.toString() || null,
+        discord_thread_channel_id:
+          integration.settings.discord_thread_channel_id?.toString() || null,
+      }
+    }
+
+    // Fallback to old columns
+    const user = await this.getUser({ user_id: userId })
+    if (user) {
+      return {
+        official_server_id: user.official_server_id?.toString() || null,
+        discord_thread_channel_id:
+          user.discord_thread_channel_id?.toString() || null,
+      }
+    }
+
+    return {
+      official_server_id: null,
+      discord_thread_channel_id: null,
+    }
   }
 
   async insertContractor(
@@ -407,7 +837,6 @@ export class KnexDatabase implements Database {
       banner: user.banner,
       rsi_confirmed: user.rsi_confirmed,
       spectrum_user_id: user.spectrum_user_id,
-      discord_id: user.discord_id,
       discord_access_token: user.discord_access_token,
       discord_refresh_token: user.discord_refresh_token,
       official_server_id: user.official_server_id,
@@ -434,7 +863,6 @@ export class KnexDatabase implements Database {
       banner: user.banner,
       rsi_confirmed: user.rsi_confirmed,
       spectrum_user_id: user.spectrum_user_id,
-      discord_id: user.discord_id,
     } as User
   }
 
@@ -3572,15 +4000,9 @@ export class KnexDatabase implements Database {
 
       let entity
       try {
-        logger.debug(
-          `Processing notification ${notif.notification_id}: entity_type=${notif_action[0].entity}, entity_id=${notif_object[0].entity_id}`,
-        )
         entity = await this.getEntityByType(
           notif_action[0].entity,
           notif_object[0].entity_id,
-        )
-        logger.debug(
-          `Entity serialization result: ${entity ? "success" : "null"}`,
         )
       } catch (e) {
         logger.error(

@@ -7,7 +7,7 @@ export type OrderStatus =
   | "cancelled"
 
 export interface DBUser {
-  discord_id: string
+  discord_id: string | null
   user_id: string
   display_name: string
   profile_description: string
@@ -727,4 +727,28 @@ export interface DBContentReport {
   handled_at?: Date
   handled_by?: string
   notes?: string
+}
+
+export interface DBAccountProvider {
+  id: string
+  user_id: string
+  provider_type: string
+  provider_id: string
+  access_token: string | null
+  refresh_token: string | null
+  token_expires_at: Date | null
+  metadata: Record<string, any> | null
+  is_primary: boolean
+  linked_at: Date
+  last_used_at: Date | null
+}
+
+export interface DBAccountIntegration {
+  id: string
+  user_id: string
+  integration_type: string
+  settings: Record<string, any>
+  enabled: boolean
+  configured_at: Date
+  last_used_at: Date | null
 }
