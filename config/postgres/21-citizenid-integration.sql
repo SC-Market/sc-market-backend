@@ -45,6 +45,7 @@ COMMENT ON COLUMN account_providers.provider_type IS 'Type of provider: discord,
 COMMENT ON COLUMN account_providers.provider_id IS 'The unique identifier from the provider';
 COMMENT ON COLUMN account_providers.is_primary IS 'Whether this is the primary authentication method for the user';
 COMMENT ON COLUMN account_providers.metadata IS 'Provider-specific metadata stored as JSON';
+COMMENT ON COLUMN account_providers.token_expires_at IS 'When the access token expires. NULL means expiration unknown (will be set on first refresh). Tokens are automatically refreshed when expired or expiring soon.';
 
 -- Create account_integrations table for integration settings
 CREATE TABLE IF NOT EXISTS account_integrations (
@@ -86,13 +87,16 @@ ALTER TABLE accounts ALTER COLUMN discord_id DROP NOT NULL;
 ALTER TABLE accounts ALTER COLUMN discord_id SET DEFAULT NULL;
 
 -- Migrate existing Discord authentication data to account_providers
-INSERT INTO account_providers (user_id, provider_type, provider_id, access_token, refresh_token, is_primary, linked_at)
+-- Note: token_expires_at is set to NULL for migrated tokens since we don't know when they were issued.
+-- They will be updated with proper expiration times when refreshed or on next login.
+INSERT INTO account_providers (user_id, provider_type, provider_id, access_token, refresh_token, token_expires_at, is_primary, linked_at)
 SELECT 
     user_id,
     'discord',
     discord_id::text,
     discord_access_token,
     discord_refresh_token,
+    NULL,  -- Expiration unknown for existing tokens, will be set on refresh
     true,  -- All existing Discord accounts are primary
     COALESCE(created_at, NOW())
 FROM accounts
