@@ -35,3 +35,7 @@ docker-compose.override.yml
 # Log files
 /logs
 *.log
+
+# Database backups
+/backups
+*.sql.gz

@@ -244,18 +244,6 @@ export const notification_get_page: RequestHandler = async (req, res, next) => {
       unread_count: unreadCount,
     }
 
-    // Log pagination details for debugging
-    logger.debug("Notification pagination result", {
-      userId: user.user_id,
-      page,
-      pageSize,
-      actionFilter,
-      entityIdFilter,
-      totalNotifications: result.pagination.total,
-      currentPageCount: result.notifications.length,
-      unreadCount,
-    })
-
     res.json(responseWithUnreadCount)
   } catch (error) {
     logger.error("Failed to fetch paginated notifications:", error)

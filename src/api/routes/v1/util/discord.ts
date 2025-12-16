@@ -13,6 +13,7 @@ import {
   DBOrder,
   DBUser,
 } from "../../../../clients/database/db-models.js"
+import { User } from "../api-models.js"
 import { database } from "../../../../clients/database/knex-db.js"
 import {
   generateAssignedMessage,
@@ -104,12 +105,20 @@ export async function queueThreadCreation(
     ? await database.getUser({ user_id: object.customer_id })
     : null
 
-  const server_id = contractor
-    ? contractor?.official_server_id
-    : assigned?.official_server_id
-  const channel_id = contractor
-    ? contractor?.discord_thread_channel_id
-    : assigned?.discord_thread_channel_id
+  // Get Discord integration settings with fallback to old columns
+  let server_id: string | null = null
+  let channel_id: string | null = null
+
+  if (contractor) {
+    server_id = contractor.official_server_id?.toString() || null
+    channel_id = contractor.discord_thread_channel_id?.toString() || null
+  } else if (assigned) {
+    const discordSettings = await database.getDiscordIntegrationSettings(
+      assigned.user_id,
+    )
+    server_id = discordSettings.official_server_id
+    channel_id = discordSettings.discord_thread_channel_id
+  }
 
   if (!server_id || !channel_id) {
     const entityId = "order_id" in object ? object.order_id : object.id
@@ -122,20 +131,30 @@ export async function queueThreadCreation(
     }
   }
 
+  // Get Discord IDs from providers
+  const customerDiscordId = customer
+    ? await database.getUserDiscordId(customer.user_id)
+    : null
+  const assignedDiscordId = assigned
+    ? await database.getUserDiscordId(assigned.user_id)
+    : null
+
   const messageBody = {
     type: "create_thread",
     payload: {
       server_id: server_id,
       channel_id: channel_id,
-      members: [assigned?.discord_id, customer?.discord_id].filter((o) => o),
+      members: [assignedDiscordId, customerDiscordId].filter(
+        (o): o is string => o !== null && o !== undefined,
+      ),
       order: object,
-      customer_discord_id: customer?.discord_id,
+      customer_discord_id: customerDiscordId,
       // Store the entity info so we can post initialization messages after thread creation
       entity_info: {
         type: "order_id" in object ? "order" : "offer_session",
         id: "order_id" in object ? object.order_id : object.id,
-        customer_discord_id: customer?.discord_id,
-        assigned_discord_id: assigned?.discord_id || null,
+        customer_discord_id: customerDiscordId,
+        assigned_discord_id: assignedDiscordId || null,
       },
     },
     metadata: {
@@ -235,12 +254,19 @@ export async function createOfferThread(session: DBOfferSession): Promise<{
 }
 
 export async function assignToThread(order: DBOrder, user: DBUser) {
-  if (order.thread_id) {
+  if (!order.thread_id) {
+    return
+  }
+  
+  // Get Discord ID from provider system
+  const discordId = await database.getUserDiscordId(user.user_id)
+  
+  if (discordId) {
     try {
-      await rest.put(Routes.threadMembers(order.thread_id, user.discord_id), {})
+      await rest.put(Routes.threadMembers(order.thread_id, discordId), {})
     } catch (error) {
       logger.debug(
-        `Failed to assign user ${user.discord_id} to Discord thread ${order.thread_id}: ${error}`,
+        `Failed to assign user ${discordId} to Discord thread ${order.thread_id}: ${error}`,
       )
     }
   }
@@ -301,7 +327,7 @@ export async function manageOrderStatusUpdateDiscord(
 export async function manageOfferStatusUpdateDiscord(
   offer: DBOfferSession,
   newStatus: "Rejected" | "Accepted" | "Counter-Offered",
-  user?: DBUser,
+  user?: User,
 ) {
   if (!offer.thread_id) {
     return
@@ -334,7 +360,7 @@ export async function manageOfferStatusUpdateDiscord(
 
 export async function sendUserChatMessage(
   order: DBOrder | DBOfferSession,
-  author: DBUser,
+  author: User,
   content: string,
 ) {
   if (!order.thread_id) {
@@ -364,7 +390,7 @@ export async function sendUserChatMessage(
 
 export async function manageOrderAssignedDiscord(
   order: DBOrder,
-  assigned: DBUser,
+  assigned: User,
 ) {
   if (!order.thread_id) {
     return
@@ -380,15 +406,20 @@ export async function manageOrderAssignedDiscord(
     )
   }
 
-  try {
-    await rest.put(
-      Routes.threadMembers(order.thread_id, assigned.discord_id),
-      {},
-    )
-  } catch (error) {
-    logger.debug(
-      `Failed to add assigned user ${assigned.discord_id} to Discord thread ${order.thread_id}: ${error}`,
-    )
+  // Get Discord ID from provider system
+  const assignedDiscordId = await database.getUserDiscordId(assigned.user_id)
+  
+  if (assignedDiscordId) {
+    try {
+      await rest.put(
+        Routes.threadMembers(order.thread_id, assignedDiscordId),
+        {},
+      )
+    } catch (error) {
+      logger.debug(
+        `Failed to add assigned user ${assignedDiscordId} to Discord thread ${order.thread_id}: ${error}`,
+      )
+    }
   }
 
   return

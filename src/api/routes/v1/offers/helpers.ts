@@ -4,7 +4,7 @@ import {
 } from "../../../../clients/database/db-models.js"
 import { has_permission } from "../util/permissions.js"
 import { User } from "../api-models.js"
-import { Request } from "express"
+import type { Request } from "express"
 import { database } from "../../../../clients/database/knex-db.js"
 import {
   OfferSearchQuery,
@@ -87,8 +87,8 @@ export async function convert_offer_search_query(
 ): Promise<OfferSearchQueryArguments> {
   const query = req.query as OfferSearchQuery
 
-  const customer = query.customer ? req.users!.get("customer") : null
-  const assigned = query.assigned ? req.users!.get("assigned") : null
+  const customer = query.customer ? req.users!.get("customer") || null : null
+  const assigned = query.assigned ? req.users!.get("assigned") || null : null
   const contractor = query.contractor
     ? req.contractors!.get("contractor")
     : null

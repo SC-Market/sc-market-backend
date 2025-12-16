@@ -1115,8 +1115,9 @@ export const post_order_id_review_spec = oapi.validPath({
             rating: {
               title: "rating",
               type: "number",
-              minimum: 0,
-              multipleOf: 0.5,
+              minimum: 1,
+              maximum: 5,
+              multipleOf: 1,
             },
             role: {
               title: "role",
@@ -1265,9 +1266,9 @@ export const put_order_id_reviews_review_id_spec = oapi.validPath({
             },
             rating: {
               type: "number",
-              minimum: 0.5,
-              maximum: 5.0,
-              multipleOf: 0.5,
+              minimum: 1,
+              maximum: 5,
+              multipleOf: 1,
             },
           },
           required: ["content", "rating"],

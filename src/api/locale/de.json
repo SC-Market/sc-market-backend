@@ -19,5 +19,8 @@
     "confirm": "Bestätigen",
     "yes": "Ja",
     "no": "Nein"
+  },
+  "profile": {
+    "viewUserProfile": "Benutzerprofil"
   }
 }

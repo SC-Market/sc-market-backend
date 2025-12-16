@@ -10,9 +10,14 @@ import {
   DBMarketListing,
 } from "../../clients/database/db-models.js"
 import { DBPublicContract } from "../../api/routes/v1/contracts/types.js"
+import { User as AppUser } from "../../api/routes/v1/api-models.js"
 
 declare global {
   declare namespace Express {
+    // Extend Express.User to use our custom User type
+    // This makes req.user typed as our User interface instead of Express's default User
+    interface User extends AppUser {}
+
     interface Request {
       contractor?: DBContractor
       order?: DBOrder
@@ -25,7 +30,7 @@ declare global {
       market_listing?: DBMarketListing
       user_listings?: DBMarketListingComplete[]
       contractor_listings?: DBMarketListingComplete[]
-      users?: Map<string, DBUser>
+      users?: Map<string, AppUser>
       contractors?: Map<string, DBContractor>
     }
   }

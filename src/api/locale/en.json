@@ -19,5 +19,8 @@
     "confirm": "Confirm",
     "yes": "Yes",
     "no": "No"
+  },
+  "profile": {
+    "viewUserProfile": "User Profile"
   }
 }

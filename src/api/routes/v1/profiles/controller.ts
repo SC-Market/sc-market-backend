@@ -96,9 +96,26 @@ export const profile_post_auth_unlink: RequestHandler = async (req, res) => {
       return
     }
 
-    // Generate default username from Discord ID
-    const defaultUsername = `new_user${user.discord_id}`
-    const defaultDisplayName = `new_user${user.discord_id}`
+    // Check if Citizen ID is linked - if so, disallow unlinking
+    // Citizen ID is the authoritative source for RSI details when linked
+    const providers = await database.getUserProviders(user.user_id)
+    const hasCitizenID = providers.some((p) => p.provider_type === "citizenid")
+    
+    if (hasCitizenID) {
+      res.status(400).json(
+        createErrorResponse({
+          message: "Cannot unlink Star Citizen account while Citizen ID is linked. Citizen ID is the authoritative source for RSI details. Please unlink Citizen ID first if you wish to unlink your Star Citizen account.",
+          status: "error",
+        }),
+      )
+      return
+    }
+
+    // Generate default username from Discord ID or user ID
+    const discordProvider = await database.getUserProvider(user.user_id, "discord")
+    const discordId = discordProvider?.provider_id || user.user_id.substring(0, 8)
+    const defaultUsername = `new_user${discordId}`
+    const defaultDisplayName = `new_user${discordId}`
 
     // Update user to unverified state with default usernames
     await database.updateUser(
@@ -773,13 +790,28 @@ export const profile_get_settings_discord: RequestHandler = async (
 export const profile_post_settings_discord_use_official: RequestHandler =
   async (req, res, next) => {
     const user = req.user as User
+    const serverId = "1003056231591727264"
+    const channelId = "1072580369251041330"
+
+    // Update using new integration system
+    await database.upsertIntegration(user.user_id, {
+      integration_type: "discord",
+      settings: {
+        official_server_id: serverId,
+        discord_thread_channel_id: channelId,
+      },
+      enabled: true,
+    })
+
+    // Also update old columns for backward compatibility
     await database.updateUser(
       { user_id: user.user_id },
       {
-        official_server_id: "1003056231591727264",
-        discord_thread_channel_id: "1072580369251041330",
+        official_server_id: serverId,
+        discord_thread_channel_id: channelId,
       },
     )
+
     res.json({ result: "Success" })
     return
   }
@@ -802,9 +834,16 @@ export const profile_get_root: RequestHandler = async (req, res, next) => {
     const contractors = await database.getUserContractorRoles({
       user_id: user.user_id,
     })
-    const discord_profile = await database.discord_profile_cache.fetch(
-      user.user_id,
-    )
+
+    // Get all providers
+    const providers = await database.getUserProviders(user.user_id)
+
+    // Get Discord profile if Discord provider exists
+    const discordProvider = providers.find((p) => p.provider_type === "discord")
+    let discord_profile = null
+    if (discordProvider) {
+      discord_profile = await database.discord_profile_cache.fetch(user.user_id)
+    }
 
     res.json({
       ...user,
@@ -844,17 +883,96 @@ export const profile_get_root: RequestHandler = async (req, res, next) => {
       // notifications: await database.getCompleteNotificationsByUser(user.user_id),
       settings: await database.getUserSettings(user.user_id),
       rating: await getUserRating(user.user_id),
-      discord_profile: {
-        username: discord_profile?.username,
-        discriminator: discord_profile?.discriminator,
-        id: discord_profile?.id,
-      },
+      discord_profile: discord_profile
+        ? {
+            username: discord_profile?.username,
+            discriminator: discord_profile?.discriminator,
+            id: discord_profile?.id,
+          }
+        : null,
+      providers: providers.map((p) => ({
+        type: p.provider_type,
+        is_primary: p.is_primary,
+        linked_at: p.linked_at,
+        last_used_at: p.last_used_at,
+      })),
       market_order_template: user.market_order_template,
     })
-  } catch (e) {
-    logger.error("Error fetching user profile:", e)
-    res.status(500)
-    return
+  } catch (error) {
+    next(error)
+  }
+}
+
+/**
+ * Get all linked accounts/providers
+ */
+export const profile_get_links: RequestHandler = async (req, res, next) => {
+  try {
+    const user = req.user as User
+    const providers = await database.getUserProviders(user.user_id)
+
+    res.json(
+      createResponse({
+        providers: providers.map((p) => ({
+          provider_type: p.provider_type,
+          provider_id: p.provider_id,
+          is_primary: p.is_primary,
+          linked_at: p.linked_at,
+          last_used_at: p.last_used_at,
+        })),
+      }),
+    )
+  } catch (error) {
+    next(error)
+  }
+}
+
+/**
+ * Unlink a provider
+ */
+export const profile_delete_links_provider_type: RequestHandler = async (
+  req,
+  res,
+  next,
+) => {
+  try {
+    const user = req.user as User
+    const { provider_type } = req.params
+
+    await database.unlinkProvider(user.user_id, provider_type)
+
+    res.json(createResponse({ success: true }))
+  } catch (error: any) {
+    if (error.message?.includes("only primary")) {
+      res.status(400).json(
+        createErrorResponse({
+          message: error.message,
+          status: "error",
+        }),
+      )
+    } else {
+      next(error)
+    }
+  }
+}
+
+/**
+ * Set primary provider
+ */
+export const profile_put_links_provider_type_primary: RequestHandler = async (
+  req,
+  res,
+  next,
+) => {
+  try {
+    const user = req.user as User
+    const { provider_type } = req.params
+
+    await database.setPrimaryProvider(user.user_id, provider_type)
+
+    res.json(createResponse({ success: true }))
+  } catch (error) {
+    next(error)
   }
 }
 
@@ -863,7 +981,10 @@ export const profile_get_my_data: RequestHandler = async (req, res) => {
   res.set({ "Content-Disposition": 'attachment; filename="data.txt"' })
   let content = ""
   content += `RSI Handle: ${user.username}\n`
-  content += `Discord ID: ${user.discord_id}\n`
+  const discordId = await database.getUserDiscordId(user.user_id)
+  if (discordId) {
+    content += `Discord ID: ${discordId}\n`
+  }
   content += `Display Name: ${user.display_name}\n`
   content += `Profile Description: ${user.profile_description}\n`
   content += `Avatar URL: ${await cdn.getFileLinkResource(user.avatar)}\n`

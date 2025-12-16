@@ -3,52 +3,36 @@ import compression from "compression"
 import passport from "passport"
 import cors, { CorsOptions } from "cors"
 import session from "express-session"
-
-import { Profile, Strategy, StrategyOptionsWithRequest } from "passport-discord"
-import refresh from "passport-oauth2-refresh"
-
-import * as oauth2 from "passport-oauth2"
-import { User } from "./api/routes/v1/api-models.js"
 import enableWS from "express-ws"
 import wrapPGSession from "connect-pg-simple"
 import pg from "pg"
-import { apiRouter } from "./api/routes/v1/api-router.js"
-import { database } from "./clients/database/knex-db.js"
 import { hostname } from "os"
-import { errorHandler, userAuthorized } from "./api/middleware/auth.js"
 import { SitemapStream, streamToPromise } from "sitemap"
 import { createGzip } from "zlib"
+import { createServer } from "node:http"
+import { Server } from "socket.io"
+import { apiReference } from "@scalar/express-api-reference"
+
+import { apiRouter } from "./api/routes/v1/api-router.js"
+import { database } from "./clients/database/knex-db.js"
+import { errorHandler, userAuthorized } from "./api/middleware/auth.js"
 import { registrationRouter } from "./clients/discord_api/registration.js"
 import { threadRouter } from "./clients/discord_api/threads.js"
 import { trackActivity } from "./api/middleware/activity.js"
-import { createServer } from "node:http"
 import { oapi } from "./api/routes/v1/openapi.js"
 import { env } from "./config/env.js"
 import { formatListingSlug } from "./api/routes/v1/market/helpers.js"
-import { Server } from "socket.io"
 import { chatServer } from "./clients/messaging/websocket.js"
 import { start_tasks } from "./tasks/tasks.js"
 import {
   i18nMiddleware,
   addTranslationToRequestWithUser,
-  SUPPORTED_LOCALES,
 } from "./api/routes/v1/util/i18n.js"
 import { adminOverride } from "./api/routes/v1/admin/middleware.js"
-import { apiReference } from "@scalar/express-api-reference"
-import {
-  validateRedirectPath,
-  createSignedStateToken,
-  verifySignedStateToken,
-} from "./api/util/oauth-state.js"
+import { setupPassportStrategies } from "./api/util/passport-strategies.js"
+import { setupAuthRoutes } from "./api/routes/auth-routes.js"
 
 const SessionPool = pg.Pool
-
-// Helper function to validate locale and fallback to 'en' if not supported
-function getValidLocale(requestedLocale: string): string {
-  return SUPPORTED_LOCALES.includes(requestedLocale as any)
-    ? requestedLocale
-    : "en"
-}
 
 const deployEnvironment = env.NODE_ENV
 const backend_url = new URL(env.BACKEND_URL || "http://localhost:7000")
@@ -84,24 +68,6 @@ const corsOptions = function (
   callback(null, corsOptions) // callback expects two parameters: error and options
 }
 
-const passportConfig: StrategyOptionsWithRequest = {
-  // The Client Id for your discord application (See "Discord Application Setup")
-  clientID: env.DISCORD_CLIENT_ID || "wumpus",
-
-  // The Client Secret for your discord application (See "Discord Application Setup")
-  clientSecret: env.DISCORD_CLIENT_SECRET || "supmuw",
-
-  // The callback URL - Your app should be accessible on this domain. You can use
-  // localhost for testing, just makes sure it's set as a Redirect URL (See "Discord Application Setup")
-  callbackURL: new URL("auth/discord/callback", backend_url).toString(),
-
-  /* Optional items: */
-
-  // The scope for your OAuth request - You can use strings or Scope values
-  // The default scope is Scope.IDENTIFY which gives basic profile information
-  scope: ["identify"], // 'email', 'guilds'
-  passReqToCallback: true,
-}
 
 const app = enableWS(express()).app
 
@@ -152,107 +118,36 @@ app.use(i18nMiddleware)
 
 // Set up passport
 passport.serializeUser((user: Express.User, done) => {
-  done(null, (user as User).user_id) // user.id
+  done(null, user.user_id) // Express.User now extends our User type, so user_id is available
 })
 passport.deserializeUser(async (id: string, done) => {
   try {
     const user = await database.getUser({ user_id: id })
     return done(null, user)
   } catch (e) {
-    return done(e as Error)
+    const error = e as Error
+    // If user doesn't exist, gracefully invalidate the session
+    // This prevents unnecessary error logging for legitimate session cleanup
+    if (error.message === "Invalid user!") {
+      console.warn(`[Session] User ${id} not found during deserialization - invalidating session`)
+      return done(null, false)
+    }
+    // For other errors (database connection issues, etc.), log and invalidate
+    console.error(`[Session] Error deserializing user ${id}:`, error)
+    return done(null, false)
   }
 })
 
-// Set up the Discord Strategy
-const strategy = new Strategy(
-  passportConfig,
-  async (
-    req: Request,
-    accessToken: string,
-    refreshToken: string,
-    profile: Profile,
-    cb: oauth2.VerifyCallback,
-  ) => {
-    profile.username = "new_user" + profile.id
-    profile.displayName = "new_user" + profile.id
-
-    cb(
-      null,
-      await database.insertUserWithLocale(
-        profile,
-        accessToken,
-        refreshToken,
-        getValidLocale(req.language),
-      ),
-    )
-  },
-)
-
-database.setStrategy(strategy)
-
-passport.use(strategy)
-refresh.use(strategy)
+// Setup passport strategies
+setupPassportStrategies(backend_url)
 
 app.use(passport.initialize())
 app.use(passport.session())
 
-app.get("/logout", function (req, res) {
-  req.logout({ keepSessionInfo: false }, (err) => {
-    console.log(err)
-  })
-  res.redirect(frontend_url.toString() || "/")
-})
-
 app.use(trackActivity)
 
-// Connect passport to express/connect/etc
-app.get("/auth/discord", async (req, res, next) => {
-  const query = req.query as { path?: string }
-  const path = query.path || ""
-
-  // Validate the redirect path
-  if (!validateRedirectPath(path)) {
-    return res.status(400).json({ error: "Invalid redirect path" })
-  }
-
-  // Create a signed state token that includes both CSRF protection and the redirect path
-  const sessionSecret = env.SESSION_SECRET || "set this var"
-  let signedStateToken: string
-  try {
-    signedStateToken = createSignedStateToken(path, sessionSecret)
-  } catch (error) {
-    return res.status(400).json({ error: "Failed to create state token" })
-  }
-
-  return passport.authenticate("discord", {
-    session: true,
-    state: signedStateToken,
-  })(req, res, next)
-})
-
-app.get("/auth/discord/callback", async (req, res, next) => {
-  const query = req.query as { state?: string }
-  const receivedState = query.state
-
-  // Verify the signed state token and extract the redirect path
-  const sessionSecret = env.SESSION_SECRET || "set this var"
-  const verified = verifySignedStateToken(receivedState || "", sessionSecret)
-
-  if (!verified) {
-    // Invalid or missing state - potential CSRF attack or tampering
-    // Redirect to frontend home page on failure
-    return res.redirect(frontend_url.toString())
-  }
-
-  const { path: redirectPath } = verified
-
-  // State is valid, proceed with authentication
-  return passport.authenticate("discord", {
-    failureRedirect: frontend_url.toString(),
-    successRedirect: new URL(redirectPath, frontend_url).toString(),
-    session: true,
-  })(req, res, next)
-})
+// Setup authentication routes
+setupAuthRoutes(app, frontend_url)
 
 let sitemap: Buffer
 

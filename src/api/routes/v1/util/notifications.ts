@@ -63,7 +63,7 @@ export async function createOfferSiteNotifications(
 export async function dispatchOfferNotifications(
   offer: DBOfferSession,
   type: "create" | "counteroffer",
-  user?: DBUser,
+  user?: User,
 ) {
   try {
     // 1 Send DMS
@@ -661,7 +661,7 @@ export async function createContractorInviteNotification(
 export async function sendOfferStatusNotification(
   offer: DBOfferSession,
   status: "Rejected" | "Accepted" | "Counter-Offered",
-  user?: DBUser,
+  user?: User,
 ) {
   // Send Discord embed
   await manageOfferStatusUpdateDiscord(offer, status, user)

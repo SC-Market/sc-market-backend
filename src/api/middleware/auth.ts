@@ -45,11 +45,8 @@ async function authenticateToken(
       return null
     }
 
-    // Get user information
-    const user = await database
-      .knex("accounts")
-      .where("user_id", tokenRecord.user_id)
-      .first()
+    // Get user information using getUser to ensure correct User type (excludes discord_id)
+    const user = await database.getUser({ user_id: tokenRecord.user_id })
 
     if (!user || user.banned) {
       return null
@@ -62,7 +59,7 @@ async function authenticateToken(
       .update({ last_used_at: new Date() })
 
     return {
-      user: user as User,
+      user: user,
       tokenInfo: {
         id: tokenRecord.id,
         name: tokenRecord.name,
@@ -161,7 +158,7 @@ export async function userAuthorized(
 
     // Fall back to session authentication
     if (req.isAuthenticated()) {
-      const user = req.user as User
+      const user = req.user // Express.User now extends our User type
       const authReq = req as AuthRequest
       authReq.authMethod = "session"
 
@@ -301,7 +298,7 @@ export async function adminAuthorized(
 
     // Fall back to session authentication
     if (req.isAuthenticated()) {
-      const user = req.user as User
+      const user = req.user // Express.User now extends our User type
       const authReq = req as AuthRequest
       authReq.authMethod = "session"
 
