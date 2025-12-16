@@ -171,11 +171,11 @@ export async function updateOrderReview(req: Request, res: Response) {
       )
     }
 
-    if (!rating || rating < 0.5 || rating > 5 || rating % 0.5 !== 0) {
+    if (!rating || rating < 1 || rating > 5 || rating % 1 !== 0) {
       logger.warn("Invalid rating for review update", { rating })
       return res.status(400).json(
         createErrorResponse({
-          error: "Rating must be between 0.5 and 5.0 in 0.5 increments",
+          error: "Rating must be a whole number between 1 and 5",
         }),
       )
     }
@@ -294,8 +294,8 @@ export const post_order_review: RequestHandler = async (req, res, next) => {
     return
   }
 
-  if (!rating || rating > 5 || rating <= 0 || rating % 0.5 !== 0) {
-    res.status(400).json({ message: "Invalid rating!" })
+  if (!rating || rating > 5 || rating < 1 || rating % 1 !== 0) {
+    res.status(400).json({ message: "Rating must be a whole number between 1 and 5" })
     return
   }
 

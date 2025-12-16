@@ -10,7 +10,28 @@ export interface ProfileBody {
   // profile_link?: string,
 }
 
-export type User = DBUser
+// User type excludes discord_id - use provider system instead
+// Explicitly define to avoid TypeScript resolution issues with Omit
+export interface User {
+  user_id: string
+  display_name: string
+  profile_description: string
+  role: "user" | "admin"
+  banned: boolean
+  username: string
+  avatar: string
+  banner: string
+  balance: string
+  created_at: Date
+  locale: string
+  rsi_confirmed: boolean
+  spectrum_user_id: string | null
+  discord_access_token?: string | null
+  discord_refresh_token?: string | null
+  official_server_id: string | null
+  discord_thread_channel_id: string | null
+  market_order_template: string
+}
 
 export interface PostBody {
   user_id: string

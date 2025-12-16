@@ -37,7 +37,11 @@ threadRouter.post("/message", async (req, res) => {
   let finalContent = content
   let user = null
   try {
-    user = await database.getUser({ discord_id: author_id })
+    user = await database.getUserByDiscordId(author_id)
+    if (!user) {
+      res.status(404).json({ error: "User not found" })
+      return
+    }
   } catch (e) {
     finalContent = `[${name}]: ${content}`
   }
@@ -108,7 +112,11 @@ threadRouter.post("/order/status", async (req, res) => {
     return
   }
 
-  const user = await database.getUser({ discord_id })
+  const user = await database.getUserByDiscordId(discord_id)
+  if (!user) {
+    res.status(404).json({ error: "User not found" })
+    return
+  }
   req.order = order
   req.user = user
 
@@ -128,10 +136,8 @@ threadRouter.post("/market/quantity/:opt", async (req, res) => {
     quantity: number
   } = req.body
 
-  let user
-  try {
-    user = await database.getUser({ discord_id: discord_id })
-  } catch (e) {
+  const user = await database.getUserByDiscordId(discord_id)
+  if (!user) {
     res.json({ result: "Success", thread_ids: [] })
     return
   }
@@ -161,10 +167,8 @@ threadRouter.post("/market/quantity/:opt", async (req, res) => {
 threadRouter.get("/user/:discord_id/assigned", async (req, res) => {
   const discord_id = req.params.discord_id
 
-  let user
-  try {
-    user = await database.getUser({ discord_id: discord_id })
-  } catch (e) {
+  const user = await database.getUserByDiscordId(discord_id)
+  if (!user) {
     res.json({ result: "Success", thread_ids: [] })
     return
   }
@@ -186,10 +190,8 @@ threadRouter.get("/user/:discord_id/assigned", async (req, res) => {
 threadRouter.get("/user/:discord_id/contractors", async (req, res) => {
   const discord_id = req.params.discord_id
 
-  let user
-  try {
-    user = await database.getUser({ discord_id: discord_id })
-  } catch (e) {
+  const user = await database.getUserByDiscordId(discord_id)
+  if (!user) {
     res.json({ result: "Success", thread_ids: [] })
     return
   }
@@ -220,10 +222,8 @@ threadRouter.get("/user/:discord_id/contractors", async (req, res) => {
 threadRouter.get("/user/:discord_id/listings", async (req, res) => {
   const discord_id = req.params.discord_id
 
-  let user: User
-  try {
-    user = await database.getUser({ discord_id: discord_id })
-  } catch (e) {
+  const user = await database.getUserByDiscordId(discord_id)
+  if (!user) {
     res.json({ result: "Success", thread_ids: [] })
     return
   }
@@ -249,7 +249,11 @@ threadRouter.get(
 
     let user
     try {
-      user = await database.getUser({ discord_id: discord_id })
+      user = await database.getUserByDiscordId(discord_id)
+      if (!user) {
+        res.status(404).json({ error: "User not found" })
+        return
+      }
     } catch (e) {
       res.json({ result: "Success", thread_ids: [] })
       return
@@ -296,10 +300,8 @@ threadRouter.get(
 threadRouter.get("/user/:discord_id", async (req, res) => {
   const discord_id = req.params.discord_id
 
-  let user
-  try {
-    user = await database.getUser({ discord_id: discord_id })
-  } catch (e) {
+  const user = await database.getUserByDiscordId(discord_id)
+  if (!user) {
     res.json({ result: "Success", thread_ids: [] })
     return
   }

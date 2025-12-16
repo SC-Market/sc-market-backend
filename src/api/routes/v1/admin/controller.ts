@@ -430,9 +430,11 @@ export const admin_post_users_username_unlink: RequestHandler = async (
       return
     }
 
-    // Generate default username from Discord ID
-    const defaultUsername = `new_user${user.discord_id}`
-    const defaultDisplayName = `new_user${user.discord_id}`
+    // Generate default username from Discord ID or user ID
+    const discordProvider = await database.getUserProvider(user.user_id, "discord")
+    const discordId = discordProvider?.provider_id || user.user_id.substring(0, 8)
+    const defaultUsername = `new_user${discordId}`
+    const defaultDisplayName = `new_user${discordId}`
 
     // Update user to unverified state with default usernames
     await database.updateUser(

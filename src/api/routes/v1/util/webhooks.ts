@@ -7,6 +7,7 @@ import {
   DBOrderComment,
   DBUser,
 } from "../../../../clients/database/db-models.js"
+import { User } from "../api-models.js"
 import { database } from "../../../../clients/database/knex-db.js"
 import { sendDM } from "./discord.js"
 import { cdn } from "../../../../clients/cdn/cdn.js"
@@ -119,10 +120,16 @@ export async function sendOfferWebhooks(
 
 export async function generateNewOfferMessage(
   session: DBOfferSession,
-  customer: DBUser,
-  assigned: DBUser | null,
+  customer: User,
+  assigned: User | null,
 ) {
   const lastOffer = await database.getMostRecentOrderOffer(session.id)
+
+  // Get Discord IDs from provider system
+  const customerDiscordId = await database.getUserDiscordId(customer.user_id)
+  const assignedDiscordId = assigned
+    ? await database.getUserDiscordId(assigned.user_id)
+    : null
 
   return {
     // author: {
@@ -132,8 +139,8 @@ export async function generateNewOfferMessage(
     // the username to be displayed
     // the avatar to be displayed
     content:
-      `<@${customer.discord_id}> ` +
-      (assigned ? `<@${assigned.discord_id}>` : ""),
+      (customerDiscordId ? `<@${customerDiscordId}> ` : "") +
+      (assignedDiscordId ? `<@${assignedDiscordId}>` : ""),
 
     // // enable mentioning of individual users or roles, but not @everyone/@here
     allowed_mentions: {
@@ -157,9 +164,8 @@ export async function generateNewOfferMessage(
         url: `https://sc-market.space/offer/${session.id}`,
         // embed description
         // - text on 3rd row
-        description: `Discord User Details: <@${customer.discord_id}>
-                        
-                        ${lastOffer.description}`,
+        description: (customerDiscordId ? `Discord User Details: <@${customerDiscordId}>\n\n` : "") +
+                        `${lastOffer.description}`,
         // custom embed fields: bold title/name, normal content/value below title
         // - located below description, above image.
         fields: [
@@ -188,9 +194,15 @@ export async function generateNewOfferMessage(
 
 export async function generateNewOrderMessage(
   order: DBOrder,
-  customer: DBUser,
-  assigned: DBUser | null,
+  customer: User,
+  assigned: User | null,
 ) {
+  // Get Discord IDs from provider system
+  const customerDiscordId = await database.getUserDiscordId(customer.user_id)
+  const assignedDiscordId = assigned
+    ? await database.getUserDiscordId(assigned.user_id)
+    : null
+
   return {
     // author: {
     //     username: 'SC Market - Order Placed',
@@ -221,9 +233,8 @@ export async function generateNewOrderMessage(
         url: `https://sc-market.space/contract/${order.order_id}`,
         // embed description
         // - text on 3rd row
-        description: `Discord User Details: <@${customer.discord_id}>
-                        
-                        ${order.description}`,
+        description: (customerDiscordId ? `Discord User Details: <@${customerDiscordId}>\n\n` : "") +
+                        `${order.description}`,
         // custom embed fields: bold title/name, normal content/value below title
         // - located below description, above image.
         fields: [
@@ -275,7 +286,7 @@ export async function generateStatusUpdateMessage(
 export async function generateOfferStatusUpdateMessage(
   session: DBOfferSession,
   newStatus: string,
-  user?: DBUser,
+  user?: User,
 ) {
   const offer = await database.getMostRecentOrderOffer(session.id)
 
@@ -310,7 +321,7 @@ export async function generateOfferStatusUpdateMessage(
 
 export async function generateAssignedMessage(
   order: DBOrder,
-  assigned: DBUser,
+  assigned: User,
 ) {
   return {
     allowed_mentions: {
@@ -347,10 +358,13 @@ export async function sendOrderDM(order: DBOrder) {
 
   for (const person of people) {
     if (person) {
-      await sendDM(
-        person.discord_id,
-        await generateNewOrderMessage(order, customer, assigned),
-      )
+      const discordId = await database.getUserDiscordId(person.user_id)
+      if (discordId) {
+        await sendDM(
+          discordId,
+          await generateNewOrderMessage(order, customer, assigned),
+        )
+      }
     }
   }
 }
@@ -371,10 +385,13 @@ export async function sendOfferDM(offer: DBOfferSession) {
 
   for (const person of people) {
     if (person) {
-      await sendDM(
-        person.discord_id,
-        await generateNewOfferMessage(offer, customer, assigned),
-      )
+      const discordId = await database.getUserDiscordId(person.user_id)
+      if (discordId) {
+        await sendDM(
+          discordId,
+          await generateNewOfferMessage(offer, customer, assigned),
+        )
+      }
     }
   }
 }
