@@ -68,11 +68,14 @@ export function createDiscordStrategy(
           const currentUser = req.user as User
 
           // Link Discord to existing account
+          // Discord tokens typically expire in 7 days (604800 seconds)
+          const discordExpiresAt = new Date(Date.now() + 7 * 24 * 60 * 60 * 1000)
           await database.linkProvider(currentUser.user_id, {
             provider_type: "discord",
             provider_id: profile.id,
             access_token: accessToken,
             refresh_token: refreshToken,
+            token_expires_at: discordExpiresAt,
             metadata: {
               username: profile.username,
               discriminator: profile.discriminator,
@@ -92,12 +95,15 @@ export function createDiscordStrategy(
 
         if (!user) {
           // Create new user using new provider system
+          // Discord tokens typically expire in 7 days (604800 seconds)
+          const discordExpiresAt = new Date(Date.now() + 7 * 24 * 60 * 60 * 1000)
           user = await database.createUserWithProvider(
             {
               provider_type: "discord",
               provider_id: profile.id,
               access_token: accessToken,
               refresh_token: refreshToken,
+              token_expires_at: discordExpiresAt,
               metadata: {
                 username: profile.username,
                 displayName: profile.displayName || profile.username,
@@ -118,9 +124,12 @@ export function createDiscordStrategy(
           user = await database.getUser({ user_id: user.user_id })
         } else {
           // Update tokens for existing user
+          // Discord tokens typically expire in 7 days
+          const discordExpiresAt = new Date(Date.now() + 7 * 24 * 60 * 60 * 1000)
           await database.updateProviderTokens(user.user_id, "discord", {
             access_token: accessToken,
             refresh_token: refreshToken,
+            token_expires_at: discordExpiresAt,
           })
 
           // Ensure discord_id is set for backward compatibility
@@ -246,11 +255,13 @@ export function createCitizenIDVerifyCallback(
         }
 
         // Link Citizen ID to existing account
+        // Token expiration will be set when we refresh (we don't have expires_in in callback)
         await database.linkProvider(currentUser.user_id, {
           provider_type: "citizenid",
           provider_id: profile.id,
           access_token: accessToken,
           refresh_token: refreshToken,
+          token_expires_at: null, // Will be updated on first refresh
           metadata: {
             username: citizenIDUsername,
             rsiUsername: rsiUsername,
@@ -325,12 +336,14 @@ export function createCitizenIDVerifyCallback(
 
       if (!user) {
         // Create new user (Citizen ID is verified, so we can create)
+        // Token expiration will be set when we refresh (we don't have expires_in in callback)
         user = await database.createUserWithProvider(
           {
             provider_type: "citizenid",
             provider_id: profile.id,
             access_token: accessToken,
             refresh_token: refreshToken,
+            token_expires_at: null, // Will be updated on first refresh
             metadata: {
               username: citizenIDUsername,
               rsiUsername: rsiUsername,
@@ -381,9 +394,11 @@ export function createCitizenIDVerifyCallback(
         }
       } else {
         // Update tokens for existing user
+        // Token expiration will be updated on next refresh
         await database.updateProviderTokens(user.user_id, "citizenid", {
           access_token: accessToken,
           refresh_token: refreshToken,
+          token_expires_at: null, // Will be updated on next refresh
         })
       }
 

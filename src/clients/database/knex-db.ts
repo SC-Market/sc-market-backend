@@ -193,11 +193,21 @@ export class KnexDatabase implements Database {
           return staleValue
         }
 
+        // Get valid access token (will refresh if needed)
+        const { getValidAccessToken } = await import(
+          "../../api/util/token-refresh.js"
+        )
+        const validAccessToken = await getValidAccessToken(user.user_id, "discord")
+
+        if (!validAccessToken) {
+          return staleValue
+        }
+
         let profile: CachedDiscordUser | undefined = staleValue
         try {
           profile = await new Promise((resolve, reject) =>
             this.strategy!.userProfile(
-              user.discord_access_token!,
+              validAccessToken,
               (err, profile: Profile) => (err ? reject(err) : resolve(profile)),
             ),
           )
@@ -234,6 +244,10 @@ export class KnexDatabase implements Database {
     this.strategy = strategy
   }
 
+  getStrategy(): Strategy | undefined {
+    return this.strategy
+  }
+
   async insertUserRaw(data: Partial<DBUser> | Partial<DBUser>[]) {
     return (await this.knex<DBUser>("accounts").insert(data).returning("*"))[0]
   }
@@ -248,12 +262,15 @@ export class KnexDatabase implements Database {
 
     if (user == null) {
       // Create new user with Discord provider
+      // Discord tokens typically expire in 7 days
+      const discordExpiresAt = new Date(Date.now() + 7 * 24 * 60 * 60 * 1000)
       user = await this.createUserWithProvider(
         {
           provider_type: "discord",
           provider_id: profile.id,
           access_token: access_token,
           refresh_token: refresh_token,
+          token_expires_at: discordExpiresAt,
           metadata: {
             username: profile.username,
           },
@@ -277,9 +294,12 @@ export class KnexDatabase implements Database {
       // Account settings are created by createUserWithProvider, so no need to insert again
     } else {
       // Update tokens for existing user
+      // Discord tokens typically expire in 7 days
+      const discordExpiresAt = new Date(Date.now() + 7 * 24 * 60 * 60 * 1000)
       await this.updateProviderTokens(user.user_id, "discord", {
         access_token: access_token,
         refresh_token: refresh_token,
+        token_expires_at: discordExpiresAt,
       })
       
       // Also update legacy columns for backward compatibility
@@ -309,12 +329,15 @@ export class KnexDatabase implements Database {
 
     if (user == null) {
       // Create new user with Discord provider
+      // Discord tokens typically expire in 7 days
+      const discordExpiresAt = new Date(Date.now() + 7 * 24 * 60 * 60 * 1000)
       user = await this.createUserWithProvider(
         {
           provider_type: "discord",
           provider_id: profile.id,
           access_token: access_token,
           refresh_token: refresh_token,
+          token_expires_at: discordExpiresAt,
           metadata: {
             username: profile.username,
           },
@@ -336,9 +359,12 @@ export class KnexDatabase implements Database {
       user = await this.getUser({ user_id: user.user_id })
     } else {
       // Update tokens and locale for existing user
+      // Discord tokens typically expire in 7 days
+      const discordExpiresAt = new Date(Date.now() + 7 * 24 * 60 * 60 * 1000)
       await this.updateProviderTokens(user.user_id, "discord", {
         access_token: access_token,
         refresh_token: refresh_token,
+        token_expires_at: discordExpiresAt,
       })
       
       // Also update legacy columns for backward compatibility
@@ -514,7 +540,7 @@ export class KnexDatabase implements Database {
     tokens: {
       access_token?: string
       refresh_token?: string
-      token_expires_at?: Date
+      token_expires_at?: Date | null
     },
   ): Promise<void> {
     await this.knex<DBAccountProvider>("account_providers")
