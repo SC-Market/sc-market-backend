@@ -164,6 +164,8 @@ export async function userAuthorized(
       userId: req.user?.user_id,
       sessionID: req.sessionID,
       hasSession: !!req.session,
+      passportUser: (req.session as any)?.passport?.user,
+      sessionKeys: req.session ? Object.keys(req.session) : [],
     })
 
     if (isAuth) {
