@@ -131,9 +131,13 @@ export function setupAuthRoutes(
         return res.redirect(redirectTo.toString())
       }
 
-      // Get redirect path from session
+      // Get redirect path from session BEFORE authenticate (which might create new session)
       const redirectPath =
         (req.session as any)?.citizenid_redirect_path || "/market"
+      
+      // Store original session ID to check if it changes
+      const originalSessionID = req.sessionID
+      console.log("[CitizenID] Callback - original session ID:", originalSessionID)
 
       // Clear it from session after retrieving
       if (req.session) {
@@ -218,8 +222,12 @@ export function setupAuthRoutes(
             }
 
             console.log("[CitizenID] User logged in, session ID:", req.sessionID)
+            console.log("[CitizenID] Original session ID was:", originalSessionID)
+            console.log("[CitizenID] Session ID changed:", req.sessionID !== originalSessionID)
             console.log("[CitizenID] Session user:", req.user?.user_id)
+            console.log("[CitizenID] Passport user in session:", (req.session as any)?.passport?.user)
 
+            // If session ID changed, we need to ensure the new cookie is set
             // Save session before redirect to ensure cookie is set
             req.session.save((saveErr) => {
               if (saveErr) {
@@ -227,6 +235,7 @@ export function setupAuthRoutes(
                 // Continue with redirect even if save fails
               } else {
                 console.log("[CitizenID] Session saved successfully, cookie should be set")
+                console.log("[CitizenID] Passport user after save:", (req.session as any)?.passport?.user)
               }
               const successRedirect = new URL(redirectPath, frontendUrl).toString()
               return res.redirect(successRedirect)

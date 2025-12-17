@@ -123,6 +123,7 @@ app.use(i18nMiddleware)
 
 // Set up passport
 passport.serializeUser((user: Express.User, done) => {
+  console.log(`[Session] Serializing user ${user.user_id}`)
   done(null, user.user_id) // Express.User now extends our User type, so user_id is available
 })
 passport.deserializeUser(async (id: string, done) => {
