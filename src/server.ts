@@ -127,7 +127,13 @@ passport.serializeUser((user: Express.User, done) => {
 })
 passport.deserializeUser(async (id: string, done) => {
   try {
+    console.log(`[Session] Deserializing user ${id}`)
     const user = await database.getUser({ user_id: id })
+    console.log(`[Session] Successfully deserialized user ${id}:`, {
+      userId: user.user_id,
+      username: user.username,
+      role: user.role,
+    })
     return done(null, user)
   } catch (e) {
     const error = e as Error
