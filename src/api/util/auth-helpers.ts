@@ -104,9 +104,7 @@ export function extractRSIData(profile: CitizenIDProfile): {
   // RSI profile data is available in both ID token and access token
   // RSI username and spectrum ID are REQUIRED - if not available, user cannot sign in
   // Access via claim key since RSIProfileClaims uses index signatures with claim keys
-  const rsiUsername = profile.rsi?.[RSIClaimKeys.USERNAME] as
-    | string
-    | undefined
+  const rsiUsername = profile.rsi?.[RSIClaimKeys.USERNAME] as string | undefined
   const rsiSpectrumId = profile.rsi?.[RSIClaimKeys.SPECTRUM_ID] as
     | string
     | undefined

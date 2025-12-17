@@ -798,7 +798,7 @@ export async function getContractorRating(
 ): Promise<Rating> {
   // Try to get badges from materialized view first
   const badgeData = await database.getContractorBadges(contractor_id)
-  
+
   if (badgeData && badgeData.metadata) {
     const metadata = badgeData.metadata
     return {
@@ -846,7 +846,7 @@ export async function getContractorRating(
 export async function getUserRating(user_id: string): Promise<Rating> {
   // Try to get badges from materialized view first
   const badgeData = await database.getUserBadges(user_id)
-  
+
   if (badgeData && badgeData.metadata) {
     const metadata = badgeData.metadata
     return {
