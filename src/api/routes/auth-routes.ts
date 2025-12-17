@@ -201,6 +201,14 @@ export function setupAuthRoutes(
             return res.redirect(redirectTo.toString())
           }
 
+          // Ensure session is initialized before logging in
+          if (!req.session) {
+            console.error("[CitizenID] No session available during login")
+            const redirectTo = new URL("/", frontendUrl)
+            redirectTo.searchParams.set("error", CitizenIDErrorCodes.LOGIN_FAILED)
+            return res.redirect(redirectTo.toString())
+          }
+
           req.logIn(user, (loginErr) => {
             if (loginErr) {
               console.error("Citizen ID login error:", loginErr)
@@ -209,11 +217,16 @@ export function setupAuthRoutes(
               return res.redirect(redirectTo.toString())
             }
 
+            console.log("[CitizenID] User logged in, session ID:", req.sessionID)
+            console.log("[CitizenID] Session user:", req.user?.user_id)
+
             // Save session before redirect to ensure cookie is set
             req.session.save((saveErr) => {
               if (saveErr) {
                 console.error("Citizen ID session save error:", saveErr)
                 // Continue with redirect even if save fails
+              } else {
+                console.log("[CitizenID] Session saved successfully, cookie should be set")
               }
               const successRedirect = new URL(redirectPath, frontendUrl).toString()
               return res.redirect(successRedirect)
