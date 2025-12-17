@@ -95,7 +95,11 @@ const sessionMiddleware = session({
   cookie: {
     secure: app.get("env") === "production",
     maxAge: 3600000 * 24 * 60,
+    httpOnly: true,
+    sameSite: app.get("env") === "production" ? "none" : "lax",
   }, // Set to false, 60 days login
+  resave: false,
+  saveUninitialized: false,
   store: new pgSession({
     pool: sessionDBaccess,
     tableName: "login_sessions",
