@@ -209,8 +209,15 @@ export function setupAuthRoutes(
               return res.redirect(redirectTo.toString())
             }
 
-            const successRedirect = new URL(redirectPath, frontendUrl).toString()
-            return res.redirect(successRedirect)
+            // Save session before redirect to ensure cookie is set
+            req.session.save((saveErr) => {
+              if (saveErr) {
+                console.error("Citizen ID session save error:", saveErr)
+                // Continue with redirect even if save fails
+              }
+              const successRedirect = new URL(redirectPath, frontendUrl).toString()
+              return res.redirect(successRedirect)
+            })
           })
         },
       )(req, res, next)
@@ -307,8 +314,15 @@ export function setupAuthRoutes(
               redirectTo.searchParams.set("error", CitizenIDErrorCodes.LOGIN_FAILED)
               return res.redirect(redirectTo.toString())
             }
-            // Success - redirect to settings
-            return res.redirect(new URL("/settings", frontendUrl).toString())
+            // Save session before redirect to ensure cookie is set
+            req.session.save((saveErr) => {
+              if (saveErr) {
+                console.error("Citizen ID linking session save error:", saveErr)
+                // Continue with redirect even if save fails
+              }
+              // Success - redirect to settings
+              return res.redirect(new URL("/settings", frontendUrl).toString())
+            })
           })
         },
       )(req, res, next)
