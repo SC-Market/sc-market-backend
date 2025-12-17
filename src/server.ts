@@ -97,9 +97,10 @@ const sessionMiddleware = session({
     maxAge: 3600000 * 24 * 60,
     httpOnly: true,
     sameSite: app.get("env") === "production" ? "none" : "lax",
+    // Don't set domain - let browser handle it based on request origin
   }, // Set to false, 60 days login
   resave: false,
-  saveUninitialized: false,
+  saveUninitialized: true, // Changed to true - need to create session for OAuth callbacks
   store: new pgSession({
     pool: sessionDBaccess,
     tableName: "login_sessions",
