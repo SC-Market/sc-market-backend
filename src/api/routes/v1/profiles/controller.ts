@@ -883,6 +883,7 @@ export const profile_get_root: RequestHandler = async (req, res, next) => {
       // notifications: await database.getCompleteNotificationsByUser(user.user_id),
       settings: await database.getUserSettings(user.user_id),
       rating: await getUserRating(user.user_id),
+      badges: await database.getUserBadges(user.user_id),
       discord_profile: discord_profile
         ? {
             username: discord_profile?.username,

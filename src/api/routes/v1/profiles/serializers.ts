@@ -55,6 +55,7 @@ export async function serializePublicProfile(
       })),
     ),
     rating: await getUserRating(user.user_id),
+    badges: await database.getUserBadges(user.user_id),
     discord_profile: discord_profile
       ? {
           username: discord_profile.username,

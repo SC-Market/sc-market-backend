@@ -2787,7 +2787,7 @@ __metadata:
     multer: "npm:^2.0.2"
     node-fetch: "npm:^3.3.2"
     passport: "https://github.com/jaredhanson/passport.git"
-    passport-citizenid: "file:../../citizenid-passport/CitizenId-passport-auth"
+    passport-citizenid: "https://github.com/henry232323/CitizenId-passport-auth.git"
     passport-discord: "https://github.com/tonestrike/passport-discord.git"
     passport-oauth2-refresh: "npm:^2.2.0"
     pg: "npm:^8.16.0"
@@ -5176,15 +5176,15 @@ __metadata:
   languageName: node
   linkType: hard
 
-"passport-citizenid@file:../../citizenid-passport/CitizenId-passport-auth::locator=backend%40workspace%3A.":
+"passport-citizenid@https://github.com/henry232323/CitizenId-passport-auth.git":
   version: 1.0.0
-  resolution: "passport-citizenid@file:../../citizenid-passport/CitizenId-passport-auth#../../citizenid-passport/CitizenId-passport-auth::hash=95184b&locator=backend%40workspace%3A."
+  resolution: "passport-citizenid@https://github.com/henry232323/CitizenId-passport-auth.git#commit=12e0f6f2ce0b263504eeeeea88b0101a0cad7d0b"
   dependencies:
     jsonwebtoken: "npm:^9.0.2"
     passport-oauth2: "npm:^1.8.0"
   peerDependencies:
     passport: ^0.6.0 || ^0.7.0
-  checksum: 10c0/b8e80a92807b1b789c0545259d808e3ddca50bd2216d85ca24c2cf2bc644ce06d3f1bd410e08db48651f35de8c9935480f88555f9b169da0ab9d67bb7e3f78d7
+  checksum: 10c0/cb9940612dcc1b237c745e22049f80313fc2ed1dca0c319b69bc14677661df4e3b423f29a5f157db543bc468bc64a2cd2f906879ae5109843a63faaabc8ff1a1
   languageName: node
   linkType: hard
 

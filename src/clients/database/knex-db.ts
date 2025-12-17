@@ -82,6 +82,8 @@ import {
   MinimalContractor,
   MinimalUser,
   OrderApplicantResponse,
+  BadgeData,
+  BadgeMetadata,
 } from "./db-models.js"
 import { Database } from "./db-driver.js"
 import { cdn } from "../cdn/cdn.js"
@@ -911,6 +913,7 @@ export class KnexDatabase implements Database {
       avatar: (await cdn.getFileLinkResource(user.avatar))!,
       display_name: user.display_name,
       rating: await getUserRating(user.user_id),
+      badges: await this.getUserBadges(user.user_id),
     }
   }
 
@@ -930,7 +933,7 @@ export class KnexDatabase implements Database {
           avg_rating: 0,
           rating_count: 0,
           streak: 0,
-          total_orders: 0,
+          total_rating: 0,
         },
       })),
     )
@@ -1013,6 +1016,7 @@ export class KnexDatabase implements Database {
       avatar: (await cdn.getFileLinkResource(contractor.avatar))!,
       name: contractor.name,
       rating: await getContractorRating(contractor.contractor_id),
+      badges: await this.getContractorBadges(contractor.contractor_id),
     }
   }
 
@@ -4580,6 +4584,13 @@ export class KnexDatabase implements Database {
     )
   }
 
+  async refreshBadgeView() {
+    await this.knex.schema.refreshMaterializedView(
+      "user_badges_materialized",
+      true,
+    )
+  }
+
   async updatePriceHistpry() {
     await this.knex.raw("CALL upsert_daily_price_history()")
   }
@@ -4983,12 +4994,46 @@ export class KnexDatabase implements Database {
     const knex = this.knex
     let query = this.knex<DBMarketSearchResult>(
       "market_search_materialized",
-    ).orderBy(searchQuery.sort, searchQuery.reverseSort ? "asc" : "desc")
+    )
+      .leftJoin("user_badges_materialized", function () {
+        this.on(function () {
+          this.on(
+            "market_search_materialized.user_seller_id",
+            "=",
+            "user_badges_materialized.user_id",
+          ).andOn(
+            "user_badges_materialized.entity_type",
+            "=",
+            knex.raw("'user'"),
+          )
+        }).orOn(function () {
+          this.on(
+            "market_search_materialized.contractor_seller_id",
+            "=",
+            "user_badges_materialized.contractor_id",
+          ).andOn(
+            "user_badges_materialized.entity_type",
+            "=",
+            knex.raw("'contractor'"),
+          )
+        })
+      })
+      .select(
+        knex.raw("market_search_materialized.*"),
+        knex.raw(
+          "COALESCE(user_badges_materialized.badge_ids, ARRAY[]::text[]) as badge_ids",
+        ),
+      )
+      .orderBy(
+        `market_search_materialized.${searchQuery.sort}`,
+        searchQuery.reverseSort ? "asc" : "desc",
+      )
 
     if (searchQuery.sale_type) {
-      query = query.where({
-        sale_type: searchQuery.sale_type || undefined,
-      })
+      query = query.where(
+        "market_search_materialized.sale_type",
+        searchQuery.sale_type || undefined,
+      )
     }
 
     if (searchQuery.item_type) {
@@ -4998,28 +5043,40 @@ export class KnexDatabase implements Database {
           searchQuery.item_type,
         ),
         "@@",
-        knex.raw("item_type_ts"),
+        knex.raw("market_search_materialized.item_type_ts"),
       )
     }
 
     if (searchQuery.minCost) {
-      query = query.andWhere("minimum_price", ">=", searchQuery.minCost)
+      query = query.andWhere(
+        "market_search_materialized.minimum_price",
+        ">=",
+        searchQuery.minCost,
+      )
     }
 
     if (searchQuery.maxCost) {
-      query = query.andWhere("maximum_price", "<=", searchQuery.maxCost)
+      query = query.andWhere(
+        "market_search_materialized.maximum_price",
+        "<=",
+        searchQuery.maxCost,
+      )
     }
 
     if (searchQuery.quantityAvailable) {
       query = query.andWhere(
-        "quantity_available",
+        "market_search_materialized.quantity_available",
         ">=",
         searchQuery.quantityAvailable,
       )
     }
 
     if (searchQuery.rating) {
-      query = query.andWhere("avg_rating", ">", searchQuery.seller_rating)
+      query = query.andWhere(
+        "market_search_materialized.avg_rating",
+        ">",
+        searchQuery.seller_rating,
+      )
     }
 
     if (searchQuery.query) {
@@ -5028,12 +5085,12 @@ export class KnexDatabase implements Database {
         .andWhere(
           knex.raw("websearch_to_tsquery('english', ?)", searchQuery.query),
           "@@",
-          knex.raw("textsearch"),
+          knex.raw("market_search_materialized.textsearch"),
         )
         .orderBy(
           // @ts-ignore
           knex.raw(
-            "ts_rank_cd(textsearch, websearch_to_tsquery('english', ?))",
+            "ts_rank_cd(market_search_materialized.textsearch, websearch_to_tsquery('english', ?))",
             searchQuery.query,
           ),
           "desc",
@@ -5042,26 +5099,36 @@ export class KnexDatabase implements Database {
 
     if (searchQuery.listing_type) {
       if (searchQuery.listing_type === "not-aggregate") {
-        query = query.andWhere("listing_type", "!=", "aggregate")
+        query = query.andWhere(
+          "market_search_materialized.listing_type",
+          "!=",
+          "aggregate",
+        )
       } else {
-        query = query.andWhere("listing_type", searchQuery.listing_type)
+        query = query.andWhere(
+          "market_search_materialized.listing_type",
+          searchQuery.listing_type,
+        )
       }
     }
 
     if (searchQuery.user_seller_id) {
-      query = query.andWhere("user_seller_id", searchQuery.user_seller_id)
+      query = query.andWhere(
+        "market_search_materialized.user_seller_id",
+        searchQuery.user_seller_id,
+      )
     }
 
     if (searchQuery.contractor_seller_id) {
       query = query.andWhere(
-        "contractor_seller_id",
+        "market_search_materialized.contractor_seller_id",
         searchQuery.contractor_seller_id,
       )
     }
 
     query = query.andWhere((qb) => {
-      qb.whereNull("contractor_seller_id").orWhereIn(
-        "contractor_seller_id",
+      qb.whereNull("market_search_materialized.contractor_seller_id").orWhereIn(
+        "market_search_materialized.contractor_seller_id",
         this.knex("contractors")
           .select("contractor_id")
           .where({ archived: false }),
@@ -5069,7 +5136,11 @@ export class KnexDatabase implements Database {
     })
 
     if (searchQuery.statuses && searchQuery.statuses.length > 0) {
-      query = query.andWhere("status", "in", searchQuery.statuses)
+      query = query.andWhere(
+        "market_search_materialized.status",
+        "in",
+        searchQuery.statuses,
+      )
     }
 
     if (andWhere) {
@@ -5082,7 +5153,15 @@ export class KnexDatabase implements Database {
         .offset(searchQuery.page_size * searchQuery.index)
     }
 
-    return query.select("*", knex.raw("count(*) OVER() AS full_count"))
+    const results = await query
+    return results.map((r: any) => ({
+      ...r,
+      badges: r.badge_ids && r.badge_ids.length > 0
+        ? {
+            badge_ids: r.badge_ids,
+          }
+        : null,
+    })) as DBMarketSearchResult[]
   }
 
   async searchMarketUnmaterialized(
@@ -6261,6 +6340,88 @@ export class KnexDatabase implements Database {
       responded_within_24h: within24h,
       response_rate: total > 0 ? (within24h / total) * 100 : 0,
     }
+  }
+
+  async getUserBadges(user_id: string): Promise<{
+    badge_ids: string[]
+    metadata: any
+  } | null> {
+    const badge = await this.knex("user_badges_materialized")
+      .where("user_id", user_id)
+      .where("entity_type", "user")
+      .first()
+
+    if (!badge) {
+      return null
+    }
+
+    return {
+      badge_ids: badge.badge_ids || [],
+      metadata: badge.badge_metadata || {},
+    }
+  }
+
+  async getContractorBadges(contractor_id: string): Promise<{
+    badge_ids: string[]
+    metadata: any
+  } | null> {
+    const badge = await this.knex("user_badges_materialized")
+      .where("contractor_id", contractor_id)
+      .where("entity_type", "contractor")
+      .first()
+
+    if (!badge) {
+      return null
+    }
+
+    return {
+      badge_ids: badge.badge_ids || [],
+      metadata: badge.badge_metadata || {},
+    }
+  }
+
+  async getBadgesForEntities(
+    entities: Array<{ user_id?: string; contractor_id?: string }>,
+  ): Promise<Map<string, { badge_ids: string[]; metadata: any }>> {
+    const badgeMap = new Map<
+      string,
+      { badge_ids: string[]; metadata: any }
+    >()
+
+    if (entities.length === 0) {
+      return badgeMap
+    }
+
+    // Build query for all entities
+    const userIds = entities
+      .filter((e) => e.user_id)
+      .map((e) => e.user_id!)
+    const contractorIds = entities
+      .filter((e) => e.contractor_id)
+      .map((e) => e.contractor_id!)
+
+    const badges = await this.knex("user_badges_materialized")
+      .where((builder) => {
+        if (userIds.length > 0) {
+          builder.orWhereIn("user_id", userIds)
+        }
+        if (contractorIds.length > 0) {
+          builder.orWhereIn("contractor_id", contractorIds)
+        }
+      })
+      .select("*")
+
+    for (const badge of badges) {
+      const key = badge.user_id || badge.contractor_id
+      if (key) {
+        badgeMap.set(key, {
+          badge_ids: badge.badge_ids || [],
+          metadata: badge.badge_metadata || {},
+        })
+      }
+    }
+
+    return badgeMap
   }
 
   // =============================================================================
