@@ -68,7 +68,6 @@ const corsOptions = function (
   callback(null, corsOptions) // callback expects two parameters: error and options
 }
 
-
 const app = enableWS(express()).app
 
 app.use(compression())
@@ -138,13 +137,6 @@ passport.deserializeUser(async (id: string, done) => {
     return done(null, user)
   } catch (e) {
     const error = e as Error
-    // If user doesn't exist, gracefully invalidate the session
-    // This prevents unnecessary error logging for legitimate session cleanup
-    if (error.message === "Invalid user!") {
-      console.warn(`[Session] User ${id} not found during deserialization - invalidating session`)
-      return done(null, false)
-    }
-    // For other errors (database connection issues, etc.), log and invalidate
     console.error(`[Session] Error deserializing user ${id}:`, error)
     return done(null, false)
   }

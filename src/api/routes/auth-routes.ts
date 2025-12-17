@@ -16,34 +16,34 @@ import {
 /**
  * Setup authentication routes
  */
-export function setupAuthRoutes(
-  app: any,
-  frontendUrl: URL,
-): void {
+export function setupAuthRoutes(app: any, frontendUrl: URL): void {
   // Discord authentication routes
-  app.get("/auth/discord", async (req: Request, res: Response, next: NextFunction) => {
-    const query = req.query as { path?: string }
-    const path = query.path || ""
+  app.get(
+    "/auth/discord",
+    async (req: Request, res: Response, next: NextFunction) => {
+      const query = req.query as { path?: string }
+      const path = query.path || ""
 
-    // Validate the redirect path
-    if (!validateRedirectPath(path)) {
-      return res.status(400).json({ error: "Invalid redirect path" })
-    }
+      // Validate the redirect path
+      if (!validateRedirectPath(path)) {
+        return res.status(400).json({ error: "Invalid redirect path" })
+      }
 
-    // Create a signed state token that includes both CSRF protection and the redirect path
-    const sessionSecret = env.SESSION_SECRET || "set this var"
-    let signedStateToken: string
-    try {
-      signedStateToken = createSignedStateToken(path, sessionSecret)
-    } catch (error) {
-      return res.status(400).json({ error: "Failed to create state token" })
-    }
+      // Create a signed state token that includes both CSRF protection and the redirect path
+      const sessionSecret = env.SESSION_SECRET || "set this var"
+      let signedStateToken: string
+      try {
+        signedStateToken = createSignedStateToken(path, sessionSecret)
+      } catch (error) {
+        return res.status(400).json({ error: "Failed to create state token" })
+      }
 
-    return passport.authenticate("discord", {
-      session: true,
-      state: signedStateToken,
-    })(req, res, next)
-  })
+      return passport.authenticate("discord", {
+        session: true,
+        state: signedStateToken,
+      })(req, res, next)
+    },
+  )
 
   app.get(
     "/auth/discord/callback",
@@ -53,7 +53,10 @@ export function setupAuthRoutes(
 
       // Verify the signed state token and extract the redirect path
       const sessionSecret = env.SESSION_SECRET || "set this var"
-      const verified = verifySignedStateToken(receivedState || "", sessionSecret)
+      const verified = verifySignedStateToken(
+        receivedState || "",
+        sessionSecret,
+      )
 
       if (!verified) {
         // Invalid or missing state - potential CSRF attack or tampering
@@ -73,25 +76,28 @@ export function setupAuthRoutes(
   )
 
   // Citizen ID authentication routes
-  app.get("/auth/citizenid", async (req: Request, res: Response, next: NextFunction) => {
-    const query = req.query as { path?: string }
-    const path = query.path || "/market"
+  app.get(
+    "/auth/citizenid",
+    async (req: Request, res: Response, next: NextFunction) => {
+      const query = req.query as { path?: string }
+      const path = query.path || "/market"
 
-    // Validate the redirect path
-    if (!validateRedirectPath(path)) {
-      return res.status(400).json({ error: "Invalid redirect path" })
-    }
+      // Validate the redirect path
+      if (!validateRedirectPath(path)) {
+        return res.status(400).json({ error: "Invalid redirect path" })
+      }
 
-    // Store the redirect path in session for later retrieval
-    if (!req.session) {
-      return res.status(500).json({ error: "Session not available" })
-    }
-    ;(req.session as any).citizenid_redirect_path = path
+      // Store the redirect path in session for later retrieval
+      if (!req.session) {
+        return res.status(500).json({ error: "Session not available" })
+      }
+      ;(req.session as any).citizenid_redirect_path = path
 
-    return passport.authenticate("citizenid", {
-      session: true,
-    })(req, res, next)
-  })
+      return passport.authenticate("citizenid", {
+        session: true,
+      })(req, res, next)
+    },
+  )
 
   // Linking route (for existing users)
   app.get(
@@ -126,7 +132,10 @@ export function setupAuthRoutes(
         const redirectTo = new URL("/", frontendUrl)
         redirectTo.searchParams.set("error", errorCode)
         if (query.error_description) {
-          redirectTo.searchParams.set("error_description", query.error_description)
+          redirectTo.searchParams.set(
+            "error_description",
+            query.error_description,
+          )
         }
         return res.redirect(redirectTo.toString())
       }
@@ -134,10 +143,18 @@ export function setupAuthRoutes(
       // Get redirect path from session BEFORE authenticate (which might create new session)
       const redirectPath =
         (req.session as any)?.citizenid_redirect_path || "/market"
-      
-      // Store original session ID to check if it changes
+
+      // Store original session ID and data to preserve it
       const originalSessionID = req.sessionID
-      console.log("[CitizenID] Callback - original session ID:", originalSessionID)
+      const originalSessionData = req.session ? { ...req.session } : null
+      console.log(
+        "[CitizenID] Callback - original session ID:",
+        originalSessionID,
+      )
+      console.log(
+        "[CitizenID] Callback - has original session:",
+        !!originalSessionData,
+      )
 
       // Clear it from session after retrieving
       if (req.session) {
@@ -161,16 +178,18 @@ export function setupAuthRoutes(
             })
             console.error("Citizen ID login error:", err)
             const errorCode = mapErrorCodeToFrontend(err.code)
-            
+
             // If username is taken, redirect to Discord login with settings path
             if (errorCode === CitizenIDErrorCodes.USERNAME_TAKEN) {
               // Use backend URL for auth endpoint
-              const backendUrl = new URL(env.BACKEND_URL || "http://localhost:7000")
+              const backendUrl = new URL(
+                env.BACKEND_URL || "http://localhost:7000",
+              )
               const discordLoginUrl = new URL("/auth/discord", backendUrl)
               discordLoginUrl.searchParams.set("path", "/settings")
               return res.redirect(discordLoginUrl.toString())
             }
-            
+
             const redirectTo = new URL("/", frontendUrl)
             redirectTo.searchParams.set("error", errorCode)
             if (err.message && err.message !== errorCode) {
@@ -201,7 +220,10 @@ export function setupAuthRoutes(
             })
             console.error("Citizen ID login: No user returned", err, user, info)
             const redirectTo = new URL("/", frontendUrl)
-            redirectTo.searchParams.set("error", CitizenIDErrorCodes.AUTH_FAILED)
+            redirectTo.searchParams.set(
+              "error",
+              CitizenIDErrorCodes.AUTH_FAILED,
+            )
             return res.redirect(redirectTo.toString())
           }
 
@@ -209,7 +231,136 @@ export function setupAuthRoutes(
           if (!req.session) {
             console.error("[CitizenID] No session available during login")
             const redirectTo = new URL("/", frontendUrl)
-            redirectTo.searchParams.set("error", CitizenIDErrorCodes.LOGIN_FAILED)
+            redirectTo.searchParams.set(
+              "error",
+              CitizenIDErrorCodes.LOGIN_FAILED,
+            )
+            return res.redirect(redirectTo.toString())
+          }
+
+          // If session ID changed, we need to restore the original session
+          // This can happen if passport.authenticate() created a new session
+          if (req.sessionID !== originalSessionID && originalSessionData) {
+            console.log(
+              "[CitizenID] Session ID changed during OAuth callback, restoring original session",
+            )
+            console.log("[CitizenID] Old session ID:", originalSessionID)
+            console.log("[CitizenID] New session ID:", req.sessionID)
+
+            // Regenerate to get back to the original session ID
+            req.session.regenerate((regenErr) => {
+              if (regenErr) {
+                console.error(
+                  "[CitizenID] Error regenerating session:",
+                  regenErr,
+                )
+                // Continue with new session if regeneration fails
+              } else {
+                console.log(
+                  "[CitizenID] Session regenerated, new ID:",
+                  req.sessionID,
+                )
+                // Restore original session data
+                if (originalSessionData) {
+                  Object.assign(req.session, originalSessionData)
+                }
+              }
+
+              // Now log in the user
+              if (!user) {
+                console.error("[CitizenID] User is false or undefined after regenerate")
+                const redirectTo = new URL("/", frontendUrl)
+                redirectTo.searchParams.set(
+                  "error",
+                  CitizenIDErrorCodes.AUTH_FAILED,
+                )
+                return res.redirect(redirectTo.toString())
+              }
+
+              req.logIn(user, (loginErr) => {
+                if (loginErr) {
+                  console.error("Citizen ID login error:", loginErr)
+                  const redirectTo = new URL("/", frontendUrl)
+                  redirectTo.searchParams.set(
+                    "error",
+                    CitizenIDErrorCodes.LOGIN_FAILED,
+                  )
+                  return res.redirect(redirectTo.toString())
+                }
+
+                console.log(
+                  "[CitizenID] User logged in, session ID:",
+                  req.sessionID,
+                )
+                console.log(
+                  "[CitizenID] Original session ID was:",
+                  originalSessionID,
+                )
+                console.log(
+                  "[CitizenID] Session ID changed:",
+                  req.sessionID !== originalSessionID,
+                )
+                console.log("[CitizenID] Session user:", req.user?.user_id)
+                console.log(
+                  "[CitizenID] Passport user in session:",
+                  (req.session as any)?.passport?.user,
+                )
+
+                // Mark session as modified to ensure it gets saved (needed when resave: false)
+                req.session.touch()
+
+                // Save session before redirect to ensure cookie is set
+                req.session.save((saveErr) => {
+                  if (saveErr) {
+                    console.error("Citizen ID session save error:", saveErr)
+                  } else {
+                    console.log(
+                      "[CitizenID] Session saved successfully, cookie should be set",
+                    )
+                    console.log(
+                      "[CitizenID] Passport user after save:",
+                      (req.session as any)?.passport?.user,
+                    )
+                    console.log("[CitizenID] Session cookie will be set:", {
+                      sessionID: req.sessionID,
+                      cookiePath: req.session.cookie.path,
+                      cookieDomain: req.session.cookie.domain,
+                      cookieSecure: req.session.cookie.secure,
+                      cookieSameSite: req.session.cookie.sameSite,
+                    })
+                    const setCookieHeader = res.getHeader("Set-Cookie")
+                    console.log("[CitizenID] Set-Cookie header:", setCookieHeader)
+                    if (!setCookieHeader) {
+                      console.warn(
+                        "[CitizenID] WARNING: No Set-Cookie header found after session save!",
+                      )
+                    }
+                  }
+
+                  const successRedirect = new URL(
+                    redirectPath,
+                    frontendUrl,
+                  ).toString()
+                  console.log("[CitizenID] Redirecting to:", successRedirect)
+                  console.log(
+                    "[CitizenID] Final Set-Cookie header before redirect:",
+                    res.getHeader("Set-Cookie"),
+                  )
+                  return res.redirect(302, successRedirect)
+                })
+              })
+            })
+            return
+          }
+
+          // Type guard: user should be User at this point, but TypeScript doesn't know
+          if (!user) {
+            console.error("[CitizenID] User is false or undefined in callback")
+            const redirectTo = new URL("/", frontendUrl)
+            redirectTo.searchParams.set(
+              "error",
+              CitizenIDErrorCodes.AUTH_FAILED,
+            )
             return res.redirect(redirectTo.toString())
           }
 
@@ -217,15 +368,33 @@ export function setupAuthRoutes(
             if (loginErr) {
               console.error("Citizen ID login error:", loginErr)
               const redirectTo = new URL("/", frontendUrl)
-              redirectTo.searchParams.set("error", CitizenIDErrorCodes.LOGIN_FAILED)
+              redirectTo.searchParams.set(
+                "error",
+                CitizenIDErrorCodes.LOGIN_FAILED,
+              )
               return res.redirect(redirectTo.toString())
             }
 
-            console.log("[CitizenID] User logged in, session ID:", req.sessionID)
-            console.log("[CitizenID] Original session ID was:", originalSessionID)
-            console.log("[CitizenID] Session ID changed:", req.sessionID !== originalSessionID)
+            console.log(
+              "[CitizenID] User logged in, session ID:",
+              req.sessionID,
+            )
+            console.log(
+              "[CitizenID] Original session ID was:",
+              originalSessionID,
+            )
+            console.log(
+              "[CitizenID] Session ID changed:",
+              req.sessionID !== originalSessionID,
+            )
             console.log("[CitizenID] Session user:", req.user?.user_id)
-            console.log("[CitizenID] Passport user in session:", (req.session as any)?.passport?.user)
+            console.log(
+              "[CitizenID] Passport user in session:",
+              (req.session as any)?.passport?.user,
+            )
+
+            // Mark session as modified to ensure it gets saved (needed when resave: false)
+            req.session.touch()
 
             // If session ID changed, we need to ensure the new cookie is set
             // Save session before redirect to ensure cookie is set
@@ -234,11 +403,44 @@ export function setupAuthRoutes(
                 console.error("Citizen ID session save error:", saveErr)
                 // Continue with redirect even if save fails
               } else {
-                console.log("[CitizenID] Session saved successfully, cookie should be set")
-                console.log("[CitizenID] Passport user after save:", (req.session as any)?.passport?.user)
+                console.log(
+                  "[CitizenID] Session saved successfully, cookie should be set",
+                )
+                console.log(
+                  "[CitizenID] Passport user after save:",
+                  (req.session as any)?.passport?.user,
+                )
+                console.log("[CitizenID] Session cookie will be set:", {
+                  sessionID: req.sessionID,
+                  cookiePath: req.session.cookie.path,
+                  cookieDomain: req.session.cookie.domain,
+                  cookieSecure: req.session.cookie.secure,
+                  cookieSameSite: req.session.cookie.sameSite,
+                })
+                // Log the Set-Cookie header that will be sent
+                const setCookieHeader = res.getHeader("Set-Cookie")
+                console.log("[CitizenID] Set-Cookie header:", setCookieHeader)
+
+                // Ensure the cookie is actually set in the response
+                // The session middleware should handle this, but let's verify
+                if (!setCookieHeader) {
+                  console.warn(
+                    "[CitizenID] WARNING: No Set-Cookie header found after session save!",
+                  )
+                }
               }
-              const successRedirect = new URL(redirectPath, frontendUrl).toString()
-              return res.redirect(successRedirect)
+
+              // Use a 302 redirect to ensure the cookie is sent with the redirect response
+              const successRedirect = new URL(
+                redirectPath,
+                frontendUrl,
+              ).toString()
+              console.log("[CitizenID] Redirecting to:", successRedirect)
+              console.log(
+                "[CitizenID] Final Set-Cookie header before redirect:",
+                res.getHeader("Set-Cookie"),
+              )
+              return res.redirect(302, successRedirect)
             })
           })
         },
@@ -323,9 +525,17 @@ export function setupAuthRoutes(
               user,
               info,
             })
-            console.error("Citizen ID linking: No user returned", err, user, info)
+            console.error(
+              "Citizen ID linking: No user returned",
+              err,
+              user,
+              info,
+            )
             const redirectTo = new URL("/settings", frontendUrl)
-            redirectTo.searchParams.set("error", CitizenIDErrorCodes.AUTH_FAILED)
+            redirectTo.searchParams.set(
+              "error",
+              CitizenIDErrorCodes.AUTH_FAILED,
+            )
             return res.redirect(redirectTo.toString())
           }
 
@@ -333,7 +543,10 @@ export function setupAuthRoutes(
             if (loginErr) {
               console.error("Citizen ID linking login error:", loginErr)
               const redirectTo = new URL("/settings", frontendUrl)
-              redirectTo.searchParams.set("error", CitizenIDErrorCodes.LOGIN_FAILED)
+              redirectTo.searchParams.set(
+                "error",
+                CitizenIDErrorCodes.LOGIN_FAILED,
+              )
               return res.redirect(redirectTo.toString())
             }
             // Save session before redirect to ensure cookie is set

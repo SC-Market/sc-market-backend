@@ -295,7 +295,9 @@ export const post_order_review: RequestHandler = async (req, res, next) => {
   }
 
   if (!rating || rating > 5 || rating < 1 || rating % 1 !== 0) {
-    res.status(400).json({ message: "Rating must be a whole number between 1 and 5" })
+    res
+      .status(400)
+      .json({ message: "Rating must be a whole number between 1 and 5" })
     return
   }
 

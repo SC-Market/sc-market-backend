@@ -48,9 +48,7 @@ export function getDiscordConfig(backendUrl: URL): StrategyOptionsWithRequest {
 /**
  * Create Discord passport strategy
  */
-export function createDiscordStrategy(
-  backendUrl: URL,
-): Strategy {
+export function createDiscordStrategy(backendUrl: URL): Strategy {
   const passportConfig = getDiscordConfig(backendUrl)
 
   const strategy = new Strategy(
@@ -69,7 +67,9 @@ export function createDiscordStrategy(
 
           // Link Discord to existing account
           // Discord tokens typically expire in 7 days (604800 seconds)
-          const discordExpiresAt = new Date(Date.now() + 7 * 24 * 60 * 60 * 1000)
+          const discordExpiresAt = new Date(
+            Date.now() + 7 * 24 * 60 * 60 * 1000,
+          )
           await database.linkProvider(currentUser.user_id, {
             provider_type: "discord",
             provider_id: profile.id,
@@ -96,7 +96,9 @@ export function createDiscordStrategy(
         if (!user) {
           // Create new user using new provider system
           // Discord tokens typically expire in 7 days (604800 seconds)
-          const discordExpiresAt = new Date(Date.now() + 7 * 24 * 60 * 60 * 1000)
+          const discordExpiresAt = new Date(
+            Date.now() + 7 * 24 * 60 * 60 * 1000,
+          )
           user = await database.createUserWithProvider(
             {
               provider_type: "discord",
@@ -125,7 +127,9 @@ export function createDiscordStrategy(
         } else {
           // Update tokens for existing user
           // Discord tokens typically expire in 7 days
-          const discordExpiresAt = new Date(Date.now() + 7 * 24 * 60 * 60 * 1000)
+          const discordExpiresAt = new Date(
+            Date.now() + 7 * 24 * 60 * 60 * 1000,
+          )
           await database.updateProviderTokens(user.user_id, "discord", {
             access_token: accessToken,
             refresh_token: refreshToken,
@@ -290,10 +294,7 @@ export function createCitizenIDVerifyCallback(
         if (discordAccountId && !discordProvider) {
           updateData.discord_id = discordAccountId
         }
-        await database.updateUser(
-          { user_id: currentUser.user_id },
-          updateData,
-        )
+        await database.updateUser({ user_id: currentUser.user_id }, updateData)
 
         // Auto-link Discord as a provider if available and not already linked
         if (discordAccountId) {

@@ -199,7 +199,10 @@ export class KnexDatabase implements Database {
         const { getValidAccessToken } = await import(
           "../../api/util/token-refresh.js"
         )
-        const validAccessToken = await getValidAccessToken(user.user_id, "discord")
+        const validAccessToken = await getValidAccessToken(
+          user.user_id,
+          "discord",
+        )
 
         if (!validAccessToken) {
           return staleValue
@@ -215,7 +218,10 @@ export class KnexDatabase implements Database {
           )
         } catch (e) {
           // Try to get Discord ID from provider system as fallback
-          const discordProvider = await this.getUserProvider(user.user_id, "discord")
+          const discordProvider = await this.getUserProvider(
+            user.user_id,
+            "discord",
+          )
           if (discordProvider?.provider_id) {
             try {
               profile = (await rest.get(
@@ -280,7 +286,7 @@ export class KnexDatabase implements Database {
         },
         "en",
       )
-      
+
       // Also set discord_id for backward compatibility
       await this.knex<DBUser>("accounts")
         .where("user_id", user.user_id)
@@ -289,10 +295,10 @@ export class KnexDatabase implements Database {
           discord_access_token: access_token,
           discord_refresh_token: refresh_token,
         })
-      
+
       // Refresh user to get updated discord_id
       user = await this.getUser({ user_id: user.user_id })
-      
+
       // Account settings are created by createUserWithProvider, so no need to insert again
     } else {
       // Update tokens for existing user
@@ -303,7 +309,7 @@ export class KnexDatabase implements Database {
         refresh_token: refresh_token,
         token_expires_at: discordExpiresAt,
       })
-      
+
       // Also update legacy columns for backward compatibility
       await this.updateUser(
         { user_id: user.user_id },
@@ -312,7 +318,7 @@ export class KnexDatabase implements Database {
           discord_refresh_token: refresh_token,
         },
       )
-      
+
       // Refresh user
       user = await this.getUser({ user_id: user.user_id })
     }
@@ -347,7 +353,7 @@ export class KnexDatabase implements Database {
         },
         preferredLocale,
       )
-      
+
       // Also set discord_id for backward compatibility
       await this.knex<DBUser>("accounts")
         .where("user_id", user.user_id)
@@ -356,7 +362,7 @@ export class KnexDatabase implements Database {
           discord_access_token: access_token,
           discord_refresh_token: refresh_token,
         })
-      
+
       // Refresh user to get updated discord_id
       user = await this.getUser({ user_id: user.user_id })
     } else {
@@ -368,7 +374,7 @@ export class KnexDatabase implements Database {
         refresh_token: refresh_token,
         token_expires_at: discordExpiresAt,
       })
-      
+
       // Also update legacy columns for backward compatibility
       await this.updateUser(
         { user_id: user.user_id },
@@ -378,7 +384,7 @@ export class KnexDatabase implements Database {
           locale: preferredLocale,
         },
       )
-      
+
       // Refresh user
       user = await this.getUser({ user_id: user.user_id })
     }
@@ -667,7 +673,10 @@ export class KnexDatabase implements Database {
     }
 
     // If account is verified, spectrum IDs must match
-    if (user.spectrum_user_id && user.spectrum_user_id === citizenIDSpectrumId) {
+    if (
+      user.spectrum_user_id &&
+      user.spectrum_user_id === citizenIDSpectrumId
+    ) {
       return { canLink: true }
     }
 
@@ -4584,12 +4593,15 @@ export class KnexDatabase implements Database {
         true,
       )
     } catch (error) {
-      logger.error("Failed to refresh materialized view 'market_search_materialized' concurrently", {
-        error: error instanceof Error ? error : new Error(String(error)),
-        message: error instanceof Error ? error.message : String(error),
-        code: (error as any)?.code,
-        hint: (error as any)?.hint,
-      })
+      logger.error(
+        "Failed to refresh materialized view 'market_search_materialized' concurrently",
+        {
+          error: error instanceof Error ? error : new Error(String(error)),
+          message: error instanceof Error ? error.message : String(error),
+          code: (error as any)?.code,
+          hint: (error as any)?.hint,
+        },
+      )
       // Wait for next scheduled run (already scheduled every 5 minutes)
     }
   }
@@ -5002,9 +5014,7 @@ export class KnexDatabase implements Database {
   async searchMarket(searchQuery: MarketSearchQuery, andWhere?: any) {
     // ['rating', 'name', 'activity', 'all-time']
     const knex = this.knex
-    let query = this.knex<DBMarketSearchResult>(
-      "market_search_materialized",
-    )
+    let query = this.knex<DBMarketSearchResult>("market_search_materialized")
       .leftJoin("user_badges_materialized", function () {
         this.on(function () {
           this.on(
@@ -5166,11 +5176,12 @@ export class KnexDatabase implements Database {
     const results = await query
     return results.map((r: any) => ({
       ...r,
-      badges: r.badge_ids && r.badge_ids.length > 0
-        ? {
-            badge_ids: r.badge_ids,
-          }
-        : null,
+      badges:
+        r.badge_ids && r.badge_ids.length > 0
+          ? {
+              badge_ids: r.badge_ids,
+            }
+          : null,
     })) as DBMarketSearchResult[]
   }
 
@@ -6393,19 +6404,14 @@ export class KnexDatabase implements Database {
   async getBadgesForEntities(
     entities: Array<{ user_id?: string; contractor_id?: string }>,
   ): Promise<Map<string, { badge_ids: string[]; metadata: any }>> {
-    const badgeMap = new Map<
-      string,
-      { badge_ids: string[]; metadata: any }
-    >()
+    const badgeMap = new Map<string, { badge_ids: string[]; metadata: any }>()
 
     if (entities.length === 0) {
       return badgeMap
     }
 
     // Build query for all entities
-    const userIds = entities
-      .filter((e) => e.user_id)
-      .map((e) => e.user_id!)
+    const userIds = entities.filter((e) => e.user_id).map((e) => e.user_id!)
     const contractorIds = entities
       .filter((e) => e.contractor_id)
       .map((e) => e.contractor_id!)
