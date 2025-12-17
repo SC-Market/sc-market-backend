@@ -157,6 +157,16 @@ export function setupAuthRoutes(
             })
             console.error("Citizen ID login error:", err)
             const errorCode = mapErrorCodeToFrontend(err.code)
+            
+            // If username is taken, redirect to Discord login with settings path
+            if (errorCode === CitizenIDErrorCodes.USERNAME_TAKEN) {
+              // Use backend URL for auth endpoint
+              const backendUrl = new URL(env.BACKEND_URL || "http://localhost:7000")
+              const discordLoginUrl = new URL("/auth/discord", backendUrl)
+              discordLoginUrl.searchParams.set("path", "/settings")
+              return res.redirect(discordLoginUrl.toString())
+            }
+            
             const redirectTo = new URL("/", frontendUrl)
             redirectTo.searchParams.set("error", errorCode)
             if (err.message && err.message !== errorCode) {

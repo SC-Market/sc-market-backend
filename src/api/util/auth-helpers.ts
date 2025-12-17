@@ -22,6 +22,7 @@ export const CitizenIDErrorCodes = {
   // Linking validation errors
   USERNAME_MISMATCH: "citizenid_username_mismatch",
   ALREADY_LINKED: "citizenid_already_linked",
+  USERNAME_TAKEN: "citizenid_username_taken", // Username already exists, need to login with Discord first
 
   // General errors
   AUTH_FAILED: "citizenid_auth_failed",
@@ -41,6 +42,8 @@ export function mapErrorCodeToFrontend(code: string | undefined): string {
     return CitizenIDErrorCodes.USERNAME_MISMATCH
   if (code === CitizenIDErrorCodes.ALREADY_LINKED)
     return CitizenIDErrorCodes.ALREADY_LINKED
+  if (code === CitizenIDErrorCodes.USERNAME_TAKEN)
+    return CitizenIDErrorCodes.USERNAME_TAKEN
   if (code === CitizenIDErrorCodes.AUTH_FAILED)
     return CitizenIDErrorCodes.AUTH_FAILED
   if (code === CitizenIDErrorCodes.LOGIN_FAILED)
