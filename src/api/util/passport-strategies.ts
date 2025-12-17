@@ -335,26 +335,70 @@ export function createCitizenIDVerifyCallback(
       let user = await database.getUserByProvider("citizenid", profile.id)
 
       if (!user) {
+        // Check if username already exists (might be registered with Discord)
+        let existingUser: User | null = null
+        try {
+          existingUser = await database.getUser({ username: citizenIDUsername })
+        } catch (e) {
+          // User doesn't exist, which is fine - we'll create a new one
+        }
+
+        // If username exists and account is verified, user needs to login with Discord first
+        if (existingUser && existingUser.rsi_confirmed) {
+          const error = new Error(
+            `Username "${citizenIDUsername}" is already registered. Please log in with Discord first, then link your Citizen ID account in settings.`,
+          ) as Error & { code?: string }
+          error.code = CitizenIDErrorCodes.USERNAME_TAKEN
+          return done(error, undefined)
+        }
+
         // Create new user (Citizen ID is verified, so we can create)
         // Token expiration will be set when we refresh (we don't have expires_in in callback)
-        user = await database.createUserWithProvider(
-          {
-            provider_type: "citizenid",
-            provider_id: profile.id,
-            access_token: accessToken,
-            refresh_token: refreshToken,
-            token_expires_at: null, // Will be updated on first refresh
-            metadata: {
-              username: citizenIDUsername,
-              rsiUsername: rsiUsername,
-              rsiSpectrumId: rsiSpectrumId,
-              displayName: displayName,
-              roles: profile.roles,
+        try {
+          user = await database.createUserWithProvider(
+            {
+              provider_type: "citizenid",
+              provider_id: profile.id,
+              access_token: accessToken,
+              refresh_token: refreshToken,
+              token_expires_at: null, // Will be updated on first refresh
+              metadata: {
+                username: citizenIDUsername,
+                rsiUsername: rsiUsername,
+                rsiSpectrumId: rsiSpectrumId,
+                displayName: displayName,
+                roles: profile.roles,
+              },
+              is_primary: true,
             },
-            is_primary: true,
-          },
-          getValidLocale(req.language),
-        )
+            getValidLocale(req.language),
+          )
+        } catch (createError: any) {
+          // Handle duplicate username constraint error
+          if (
+            createError?.code === "23505" &&
+            createError?.constraint === "accounts_username_key"
+          ) {
+            // Username was taken between check and create (race condition)
+            // Check if it's a verified account
+            try {
+              const conflictingUser = await database.getUser({
+                username: citizenIDUsername,
+              })
+              if (conflictingUser && conflictingUser.rsi_confirmed) {
+                const error = new Error(
+                  `Username "${citizenIDUsername}" is already registered. Please log in with Discord first, then link your Citizen ID account in settings.`,
+                ) as Error & { code?: string }
+                error.code = CitizenIDErrorCodes.USERNAME_TAKEN
+                return done(error, undefined)
+              }
+            } catch (lookupError) {
+              // If we can't look up the user, just pass through the original error
+            }
+          }
+          // Re-throw if it's not a duplicate username error
+          throw createError
+        }
 
         // Set RSI verification status, spectrum_user_id, and discord_id from Citizen ID
         const updateData: {
