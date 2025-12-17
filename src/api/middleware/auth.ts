@@ -157,7 +157,16 @@ export async function userAuthorized(
     }
 
     // Fall back to session authentication
-    if (req.isAuthenticated()) {
+    const isAuth = req.isAuthenticated()
+    console.log("[Auth] Session check:", {
+      isAuthenticated: isAuth,
+      hasUser: !!req.user,
+      userId: req.user?.user_id,
+      sessionID: req.sessionID,
+      hasSession: !!req.session,
+    })
+
+    if (isAuth) {
       const user = req.user // Express.User now extends our User type
       const authReq = req as AuthRequest
       authReq.authMethod = "session"
@@ -176,6 +185,7 @@ export async function userAuthorized(
         return
       }
     } else {
+      console.log("[Auth] User not authenticated, returning 401")
       res.status(401).json({ error: "Unauthenticated" })
       return
     }
