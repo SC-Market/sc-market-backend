@@ -4595,20 +4595,10 @@ export class KnexDatabase implements Database {
   }
 
   async refreshBadgeView() {
-    try {
-      await this.knex.schema.refreshMaterializedView(
-        "user_badges_materialized",
-        true,
-      )
-    } catch (error) {
-      logger.error("Failed to refresh materialized view 'user_badges_materialized' concurrently", {
-        error: error instanceof Error ? error : new Error(String(error)),
-        message: error instanceof Error ? error.message : String(error),
-        code: (error as any)?.code,
-        hint: (error as any)?.hint,
-      })
-      // Wait for next scheduled run (already scheduled every 2 hours)
-    }
+    await this.knex.schema.refreshMaterializedView(
+      "user_badges_materialized",
+      true,
+    )
   }
 
   async updatePriceHistpry() {
