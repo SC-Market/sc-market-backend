@@ -266,6 +266,8 @@ export class KnexDatabase implements Database {
       // Create new user with Discord provider
       // Discord tokens typically expire in 7 days
       const discordExpiresAt = new Date(Date.now() + 7 * 24 * 60 * 60 * 1000)
+      // Generate username in format: new_user{discord_id}
+      const generatedUsername = `new_user${profile.id}`
       user = await this.createUserWithProvider(
         {
           provider_type: "discord",
@@ -274,7 +276,8 @@ export class KnexDatabase implements Database {
           refresh_token: refresh_token,
           token_expires_at: discordExpiresAt,
           metadata: {
-            username: profile.username,
+            username: generatedUsername,
+            displayName: generatedUsername,
           },
           is_primary: true,
         },
