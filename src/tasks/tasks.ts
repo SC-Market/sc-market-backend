@@ -27,7 +27,7 @@ export function start_tasks() {
   setInterval(rebuild_search_view, 5 * 60 * 1000) // 5 minutes
 
   refresh_badge_view()
-  setInterval(refresh_badge_view, 2 * 60 * 60 * 1000) // 2 hours
+  setInterval(refresh_badge_view, 5 * 60 * 1000) // 5 minutes
 
   update_price_history()
   setInterval(update_price_history, 6 * 60 * 60 * 1000) // 6 hours, twice as long as needed
