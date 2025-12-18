@@ -98,6 +98,8 @@ export function createDiscordStrategy(
           // Create new user using new provider system
           // Discord tokens typically expire in 7 days (604800 seconds)
           const discordExpiresAt = new Date(Date.now() + 7 * 24 * 60 * 60 * 1000)
+          // Generate username in format: new_user{discord_id}
+          const generatedUsername = `new_user${profile.id}`
           user = await database.createUserWithProvider(
             {
               provider_type: "discord",
@@ -106,8 +108,8 @@ export function createDiscordStrategy(
               refresh_token: refreshToken,
               token_expires_at: discordExpiresAt,
               metadata: {
-                username: profile.username,
-                displayName: profile.displayName || profile.username,
+                username: generatedUsername,
+                displayName: generatedUsername,
                 discriminator: profile.discriminator,
               },
               is_primary: true,
