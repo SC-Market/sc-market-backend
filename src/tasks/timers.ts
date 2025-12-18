@@ -78,6 +78,10 @@ export async function rebuild_search_view() {
   await database.rebuildMarket()
 }
 
+export async function refresh_badge_view() {
+  await database.refreshBadgeView()
+}
+
 export async function update_price_history() {
   await database.updatePriceHistpry()
 }
