@@ -833,7 +833,7 @@ export async function getContractorRating(
   const total_rating = ratings.reduce((a, b) => a + b, 0)
 
   return {
-    avg_rating: (total_rating * 10) / ratings.length || 0,
+    avg_rating: total_rating / ratings.length || 0, // Use 0-5 scale to match SQL functions
     rating_count: ratings.length,
     streak,
     total_rating,
@@ -881,7 +881,7 @@ export async function getUserRating(user_id: string): Promise<Rating> {
   const total_rating = ratings.reduce((a, b) => a + b, 0)
 
   return {
-    avg_rating: (total_rating * 10) / ratings.length || 0,
+    avg_rating: total_rating / ratings.length || 0, // Use 0-5 scale to match SQL functions
     rating_count: ratings.length,
     streak,
     total_rating,
