@@ -344,11 +344,11 @@ SELECT
   
   -- Array of badge identifiers (only highest tier per category)
   ARRAY_REMOVE(ARRAY[
-    -- Rating badges - only highest tier applies
-    CASE WHEN avg_rating >= 49.95 AND total_orders >= 25 THEN 'rating_99_9' END,
-    CASE WHEN avg_rating >= 49.5 AND avg_rating < 49.95 AND total_orders >= 25 THEN 'rating_99' END,
-    CASE WHEN avg_rating >= 47.5 AND avg_rating < 49.5 AND total_orders >= 25 THEN 'rating_95' END,
-    CASE WHEN avg_rating >= 45 AND avg_rating < 47.5 AND total_orders >= 25 THEN 'rating_90' END,
+    -- Rating badges - only highest tier applies (using 0-5 scale: 4.995 = 99.9%, 4.95 = 99%, 4.75 = 95%, 4.5 = 90%)
+    CASE WHEN avg_rating >= 4.995 AND total_orders >= 25 THEN 'rating_99_9' END,
+    CASE WHEN avg_rating >= 4.95 AND avg_rating < 4.995 AND total_orders >= 25 THEN 'rating_99' END,
+    CASE WHEN avg_rating >= 4.75 AND avg_rating < 4.95 AND total_orders >= 25 THEN 'rating_95' END,
+    CASE WHEN avg_rating >= 4.5 AND avg_rating < 4.75 AND total_orders >= 25 THEN 'rating_90' END,
     -- Streak badges - only highest tier applies
     CASE WHEN rating_streak >= 50 THEN 'streak_pro' END,
     CASE WHEN rating_streak >= 25 AND rating_streak < 50 THEN 'streak_gold' END,
