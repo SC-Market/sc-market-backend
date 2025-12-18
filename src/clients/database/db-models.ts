@@ -42,7 +42,6 @@ export interface MinimalUser {
   avatar: string
   display_name: string
   rating: Rating
-  badges?: BadgeData | null
   // discord_profile?: any
 }
 
@@ -206,32 +205,9 @@ export interface Rating {
   avg_rating: number
   rating_count: number
   streak: number
-  total_rating: number
-  total_orders?: number // Optional - available in badge metadata
-  response_rate?: number // Optional - available in badge metadata
-  total_assignments?: number // Optional - available in badge metadata
-}
-
-export interface BadgeMetadata {
-  avg_rating: number
-  rating_count: number
-  rating_streak: number
   total_orders: number
-  fulfilled_orders: number
-  total_assignments: number
-  response_rate: number
-  total_rating: number
-  orders_last_30_days: number
-  orders_last_90_days: number
-  avg_completion_time_hours: number | null
-  account_age_months: number
-  account_created_at: string | null
-  calculated_at: string
-}
-
-export interface BadgeData {
-  badge_ids: string[]
-  metadata?: BadgeMetadata // Optional - only included in profile responses, not search results
+  response_rate?: number
+  total_assignments?: number
 }
 
 export interface MinimalContractor {
@@ -239,7 +215,6 @@ export interface MinimalContractor {
   name: string
   avatar: string
   rating: Rating
-  badges?: BadgeData | null
 }
 
 export interface DBImageResource {
@@ -726,8 +701,6 @@ export interface DBMarketSearchResult {
   expiration: Date | null
   details_id: string | null
   internal: boolean
-  // Badge data (optional, added via join)
-  badges?: BadgeData | null
 }
 
 export interface DBMarketCategory {
