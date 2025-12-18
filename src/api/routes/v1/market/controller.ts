@@ -1145,7 +1145,6 @@ export const search_listings: RequestHandler = async (req, res) => {
           title: r.title,
           photo: r.photo,
           internal: r.internal,
-          badges: r.badges || null,
         })),
       }),
     )
