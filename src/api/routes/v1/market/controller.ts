@@ -1116,7 +1116,9 @@ export const search_listings: RequestHandler = async (req, res) => {
     res.json(
       createResponse({
         total:
-          searchResults.length > 0 ? Number(searchResults[0].full_count) : 0,
+          searchResults.length > 0 && searchResults[0].full_count != null
+            ? Number(searchResults[0].full_count)
+            : 0,
         listings: searchResults.map((r) => ({
           listing_id: r.listing_id,
           listing_type: r.listing_type,

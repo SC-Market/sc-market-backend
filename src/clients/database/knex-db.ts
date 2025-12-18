@@ -5044,6 +5044,7 @@ export class KnexDatabase implements Database {
         knex.raw(
           "COALESCE(user_badges_materialized.badge_ids, ARRAY[]::text[]) as badge_ids",
         ),
+        knex.raw("count(*) OVER() AS full_count"),
       )
       .orderBy(
         `market_search_materialized.${searchQuery.sort}`,
