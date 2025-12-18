@@ -97,6 +97,7 @@ export function getValidLocale(requestedLocale: string): string {
 export function extractRSIData(profile: CitizenIDProfile): {
   rsiUsername: string | undefined
   rsiSpectrumId: string | undefined
+  rsiAvatar: string | undefined
   discordAccountId: string | undefined
   discordUsername: string | undefined
 } {
@@ -111,6 +112,12 @@ export function extractRSIData(profile: CitizenIDProfile): {
     | string
     | undefined
 
+  // Extract RSI avatar/profile picture if available
+  // Use AVATAR_URL claim key from RSIClaimKeys
+  const rsiAvatar = profile.rsi?.[RSIClaimKeys.AVATAR_URL] as
+    | string
+    | undefined
+
   // Extract Discord information if available (optional - for auto-linking)
   const discordAccountId = profile.discord?.[DiscordClaimKeys.ACCOUNT_ID] as
     | string
@@ -122,6 +129,7 @@ export function extractRSIData(profile: CitizenIDProfile): {
   return {
     rsiUsername,
     rsiSpectrumId,
+    rsiAvatar,
     discordAccountId,
     discordUsername,
   }

@@ -6450,7 +6450,7 @@ export class KnexDatabase implements Database {
   async getOrderSetting(
     entityType: "user" | "contractor",
     entityId: string,
-    settingType: "offer_message" | "order_message" | "require_availability",
+    settingType: "offer_message" | "order_message" | "require_availability" | "stock_subtraction_timing",
   ): Promise<DBOrderSetting | null> {
     return (
       (await this.knex<DBOrderSetting>("order_settings")
