@@ -70,8 +70,23 @@ orderSettingsRouter.post("/settings", userAuthorized, async (req, res) => {
   }
 
   // For require_availability, message_content is not needed (can be empty)
+  // For stock_subtraction_timing, message_content must be "on_received" or "dont_subtract"
+  // (on_accepted is the default when no setting exists, so we don't store it)
   // For other setting types, message_content is required
-  if (setting_type !== "require_availability" && !message_content) {
+  if (setting_type === "stock_subtraction_timing") {
+    if (
+      message_content !== "on_received" &&
+      message_content !== "dont_subtract"
+    ) {
+      res.status(400).json(
+        createErrorResponse({
+          error:
+            "message_content must be 'on_received' or 'dont_subtract' for stock_subtraction_timing",
+        }),
+      )
+      return
+    }
+  } else if (setting_type !== "require_availability" && !message_content) {
     res.status(400).json(
       createErrorResponse({
         error: "message_content is required for this setting_type",
@@ -81,9 +96,12 @@ orderSettingsRouter.post("/settings", userAuthorized, async (req, res) => {
   }
 
   if (
-    !["offer_message", "order_message", "require_availability"].includes(
-      setting_type,
-    )
+    ![
+      "offer_message",
+      "order_message",
+      "require_availability",
+      "stock_subtraction_timing",
+    ].includes(setting_type)
   ) {
     res.status(400).json(createErrorResponse({ error: "Invalid setting_type" }))
     return
@@ -299,8 +317,23 @@ orderSettingsRouter.post(
     }
 
     // For require_availability, message_content is not needed (can be empty)
+    // For stock_subtraction_timing, message_content must be "on_received" or "dont_subtract"
+    // (on_accepted is the default when no setting exists, so we don't store it)
     // For other setting types, message_content is required
-    if (setting_type !== "require_availability" && !message_content) {
+    if (setting_type === "stock_subtraction_timing") {
+      if (
+        message_content !== "on_received" &&
+        message_content !== "dont_subtract"
+      ) {
+        res.status(400).json(
+          createErrorResponse({
+            error:
+              "message_content must be 'on_received' or 'dont_subtract' for stock_subtraction_timing",
+          }),
+        )
+        return
+      }
+    } else if (setting_type !== "require_availability" && !message_content) {
       logger.warn("Missing message_content for order setting", {
         spectrum_id,
         setting_type,
@@ -314,9 +347,12 @@ orderSettingsRouter.post(
     }
 
     if (
-      !["offer_message", "order_message", "require_availability"].includes(
-        setting_type,
-      )
+      ![
+        "offer_message",
+        "order_message",
+        "require_availability",
+        "stock_subtraction_timing",
+      ].includes(setting_type)
     ) {
       logger.warn("Invalid setting type for order setting", {
         spectrum_id,

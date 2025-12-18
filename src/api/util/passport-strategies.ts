@@ -12,6 +12,7 @@ import {
 } from "passport-citizenid"
 import { User } from "../routes/v1/api-models.js"
 import { database } from "../../clients/database/knex-db.js"
+import { cdn } from "../../clients/cdn/cdn.js"
 import { env } from "../../config/env.js"
 import {
   isCitizenIDVerified,
@@ -171,7 +172,7 @@ export function createCitizenIDVerifyCallback(
   ): Promise<void> => {
     try {
       // Extract RSI data from profile
-      const { rsiUsername, rsiSpectrumId, discordAccountId, discordUsername } =
+      const { rsiUsername, rsiSpectrumId, rsiAvatar, discordAccountId, discordUsername } =
         extractRSIData(profile)
 
       // RSI username and spectrum ID are required - no fallback
@@ -373,6 +374,28 @@ export function createCitizenIDVerifyCallback(
             },
             getValidLocale(req.language),
           )
+
+          // Set avatar from RSI if available
+          if (rsiAvatar) {
+            try {
+              const avatarResource = await cdn.createExternalResource(
+                rsiAvatar,
+                `${user.user_id}_rsi_avatar`,
+              )
+              await database.updateUser(
+                { user_id: user.user_id },
+                { avatar: avatarResource.resource_id },
+              )
+              // Refresh user to get updated avatar
+              user = await database.getUser({ user_id: user.user_id })
+            } catch (error) {
+              // If external resource creation fails (e.g., URL not whitelisted), log and continue
+              console.warn(
+                `[CitizenID] Failed to create external resource for RSI avatar:`,
+                error,
+              )
+            }
+          }
         } catch (createError: any) {
           // Handle duplicate username constraint error
           if (
@@ -444,6 +467,28 @@ export function createCitizenIDVerifyCallback(
           refresh_token: refreshToken,
           token_expires_at: null, // Will be updated on next refresh
         })
+
+        // Update avatar from RSI if available and user doesn't have one
+        if (rsiAvatar && !user.avatar) {
+          try {
+            const avatarResource = await cdn.createExternalResource(
+              rsiAvatar,
+              `${user.user_id}_rsi_avatar`,
+            )
+            await database.updateUser(
+              { user_id: user.user_id },
+              { avatar: avatarResource.resource_id },
+            )
+            // Refresh user to get updated avatar
+            user = await database.getUser({ user_id: user.user_id })
+          } catch (error) {
+            // If external resource creation fails (e.g., URL not whitelisted), log and continue
+            console.warn(
+              `[CitizenID] Failed to create external resource for RSI avatar:`,
+              error,
+            )
+          }
+        }
       }
 
       console.log("Citizen ID login successful", {

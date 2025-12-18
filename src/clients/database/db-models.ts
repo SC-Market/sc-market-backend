@@ -252,7 +252,7 @@ export interface DBOrderSetting {
   id: string
   entity_type: "user" | "contractor"
   entity_id: string
-  setting_type: "offer_message" | "order_message" | "require_availability"
+  setting_type: "offer_message" | "order_message" | "require_availability" | "stock_subtraction_timing"
   message_content: string
   enabled: boolean
   created_at: Date
