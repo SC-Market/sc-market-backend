@@ -4596,9 +4596,10 @@ export class KnexDatabase implements Database {
 
   async refreshBadgeView() {
     try {
-      await this.knex.schema.refreshMaterializedView(
-        "user_badges_materialized",
-        true,
+      // Use CONCURRENTLY to allow reads during refresh (requires unique index)
+      // This is slower than non-concurrent but doesn't block reads
+      await this.knex.raw(
+        "REFRESH MATERIALIZED VIEW CONCURRENTLY user_badges_materialized",
       )
     } catch (error) {
       logger.error("Failed to refresh materialized view 'user_badges_materialized' concurrently", {
