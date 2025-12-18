@@ -160,22 +160,38 @@ export async function initiateOrder(session: DBOfferSession) {
   } catch (e) {}
 
   const market_listings = await database.getOfferMarketListings(most_recent.id)
-  for (const { quantity, listing_id } of market_listings) {
-    await database.insertMarketListingOrder({
-      listing_id,
-      order_id: order.order_id,
-      quantity,
-    })
+  
+  // Check stock subtraction timing setting
+  // Default is "on_accepted" (when no setting exists) - subtract stock when offer is accepted
+  const stockSetting = await getRelevantOrderSetting(
+    session,
+    "stock_subtraction_timing",
+  )
+  const settingValue = stockSetting?.message_content
 
-    const listing = await database.getMarketListing({ listing_id })
-
-    // Calculate new quantity, but ensure it doesn't go below 0
-    // This handles race conditions where quantities changed between offer creation and acceptance
-    const newQuantity = Math.max(0, listing.quantity_available - quantity)
-
-    await database.updateMarketListing(listing_id, {
-      quantity_available: newQuantity,
-    })
+  if (settingValue === "dont_subtract") {
+    // Don't subtract stock at all
+    // Still create the market_listing_order records
+    for (const { quantity, listing_id } of market_listings) {
+      await database.insertMarketListingOrder({
+        listing_id,
+        order_id: order.order_id,
+        quantity,
+      })
+    }
+  } else if (settingValue === "on_received") {
+    // Stock was already subtracted when offer was received (in createOffer)
+    // Just create the market_listing_order records
+    for (const { quantity, listing_id } of market_listings) {
+      await database.insertMarketListingOrder({
+        listing_id,
+        order_id: order.order_id,
+        quantity,
+      })
+    }
+  } else {
+    // Default: "on_accepted" - subtract stock now (offer is being accepted)
+    await subtractStockForMarketListings(market_listings, order.order_id)
   }
 
   try {
@@ -224,6 +240,43 @@ export async function createOffer(
       offer_id: offer.id,
       quantity,
     })
+  }
+
+  // Check stock subtraction timing setting
+  // Default is "on_accepted" (when no setting exists)
+  // "on_received" means subtract stock when offer is received (now)
+  const stockSetting = await getRelevantOrderSetting(
+    session,
+    "stock_subtraction_timing",
+  )
+  const settingValue = stockSetting?.message_content
+
+  if (settingValue === "on_received") {
+    // Subtract stock when offer is received
+    logger.info("Subtracting stock on offer received", {
+      session_id: session.id,
+      listingCount: market_listings.length,
+    })
+
+    for (const { quantity, listing } of market_listings) {
+      const listingData = await database.getMarketListing({
+        listing_id: listing.listing.listing_id,
+      })
+      const oldQuantity = listingData.quantity_available
+      const newQuantity = Math.max(0, listingData.quantity_available - quantity)
+
+      await database.updateMarketListing(listing.listing.listing_id, {
+        quantity_available: newQuantity,
+      })
+
+      logger.info("Stock subtracted on offer received", {
+        session_id: session.id,
+        listing_id: listing.listing.listing_id,
+        quantity_subtracted: quantity,
+        old_quantity: oldQuantity,
+        new_quantity: newQuantity,
+      })
+    }
   }
 
   try {
@@ -297,15 +350,69 @@ export async function createOffer(
 }
 
 export async function cancelOrderMarketItems(order: DBOrder) {
+  // Check if stock was actually subtracted
+  // If setting is "dont_subtract", stock was never subtracted, so don't restore it
+  let shouldRestoreStock = true
+
+  if (order.offer_session_id) {
+    try {
+      const sessions = await database.getOfferSessions({
+        id: order.offer_session_id,
+      })
+      if (sessions.length > 0) {
+        const session = sessions[0]
+        const stockSetting = await getRelevantOrderSetting(
+          session,
+          "stock_subtraction_timing",
+        )
+        const settingValue = stockSetting?.message_content
+
+        if (settingValue === "dont_subtract") {
+          shouldRestoreStock = false
+          logger.info("Not restoring stock on order cancellation - setting is dont_subtract", {
+            order_id: order.order_id,
+          })
+        }
+      }
+    } catch (e) {
+      logger.error(
+        `Failed to check stock setting on order cancellation: ${e}`,
+        { order_id: order.order_id },
+      )
+      // On error, default to restoring stock (safer)
+    }
+  }
+
+  if (!shouldRestoreStock) {
+    return
+  }
+
   const marketOrders = await database.getMarketListingOrders({
     order_id: order.order_id,
   })
+
+  logger.info("Restoring stock on order cancellation", {
+    order_id: order.order_id,
+    listingCount: marketOrders.length,
+  })
+
   for (const marketOrder of marketOrders) {
     const listing = await database.getMarketListing({
       listing_id: marketOrder.listing_id,
     })
+    const oldQuantity = listing.quantity_available
+    const newQuantity = listing.quantity_available + marketOrder.quantity
+
     await database.updateMarketListing(marketOrder.listing_id, {
-      quantity_available: listing.quantity_available + marketOrder.quantity,
+      quantity_available: newQuantity,
+    })
+
+    logger.info("Stock restored on order cancellation", {
+      order_id: order.order_id,
+      listing_id: marketOrder.listing_id,
+      quantity_restored: marketOrder.quantity,
+      old_quantity: oldQuantity,
+      new_quantity: newQuantity,
     })
   }
 }
@@ -393,6 +500,7 @@ export async function handleStatusUpdate(req: any, res: any, status: string) {
     }
 
     if (status === "in-progress") {
+
       await database.updateOrder(order.order_id, {
         status,
         assigned_id: req.user.user_id,
@@ -1469,11 +1577,13 @@ export async function getUserOrderData(
 // =============================================================================
 
 /**
- * Get the relevant order setting for a session (contractor takes priority over user)
+ * Get the relevant order setting for a session
+ * - Offers to contractors use contractor settings
+ * - Offers to users (no contractor) use assignee settings
  */
 export async function getRelevantOrderSetting(
   session: DBOfferSession,
-  settingType: "offer_message" | "order_message" | "require_availability",
+  settingType: "offer_message" | "order_message" | "require_availability" | "stock_subtraction_timing",
 ): Promise<DBOrderSetting | null> {
   logger.debug("Looking for relevant order setting", {
     sessionId: session.id,
@@ -1482,7 +1592,7 @@ export async function getRelevantOrderSetting(
     assignedId: session.assigned_id,
   })
 
-  // Priority: contractor setting > assigned user setting
+  // If there's a contractor, use contractor settings only
   if (session.contractor_id) {
     logger.debug("Checking contractor order setting", {
       contractorId: session.contractor_id,
@@ -1508,10 +1618,13 @@ export async function getRelevantOrderSetting(
         enabled: contractorSetting?.enabled,
       })
     }
+    // Don't check assigned user if there's a contractor
+    return null
   }
 
+  // If no contractor, use assignee (assigned user) settings
   if (session.assigned_id) {
-    logger.debug("Checking user order setting", {
+    logger.debug("Checking assigned user order setting", {
       assignedId: session.assigned_id,
       settingType,
     })
@@ -1543,6 +1656,46 @@ export async function getRelevantOrderSetting(
   })
 
   return null
+}
+
+/**
+ * Subtract stock for market listings associated with an order
+ */
+async function subtractStockForMarketListings(
+  market_listings: { quantity: number; listing_id: string }[],
+  order_id: string,
+): Promise<void> {
+  logger.info("Subtracting stock for market listings", {
+    order_id,
+    listingCount: market_listings.length,
+  })
+
+  for (const { quantity, listing_id } of market_listings) {
+    await database.insertMarketListingOrder({
+      listing_id,
+      order_id,
+      quantity,
+    })
+
+    const listing = await database.getMarketListing({ listing_id })
+    const oldQuantity = listing.quantity_available
+
+    // Calculate new quantity, but ensure it doesn't go below 0
+    // This handles race conditions where quantities changed between offer creation and acceptance
+    const newQuantity = Math.max(0, listing.quantity_available - quantity)
+
+    await database.updateMarketListing(listing_id, {
+      quantity_available: newQuantity,
+    })
+
+    logger.info("Stock subtracted for listing", {
+      order_id,
+      listing_id,
+      quantity_subtracted: quantity,
+      old_quantity: oldQuantity,
+      new_quantity: newQuantity,
+    })
+  }
 }
 
 /**
