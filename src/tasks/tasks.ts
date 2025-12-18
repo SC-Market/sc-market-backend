@@ -2,6 +2,7 @@ import {
   process_auctions,
   process_expiring_market_listings,
   rebuild_search_view,
+  refresh_badge_view,
   update_price_history,
   clear_uploads_folder,
 } from "./timers.js"
@@ -24,6 +25,9 @@ export function start_tasks() {
 
   rebuild_search_view()
   setInterval(rebuild_search_view, 5 * 60 * 1000) // 5 minutes
+
+  refresh_badge_view()
+  setInterval(refresh_badge_view, 5 * 60 * 1000) // 5 minutes
 
   update_price_history()
   setInterval(update_price_history, 6 * 60 * 60 * 1000) // 6 hours, twice as long as needed

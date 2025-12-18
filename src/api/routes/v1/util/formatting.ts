@@ -796,6 +796,22 @@ export async function formatOrderStubOptimized(
 export async function getContractorRating(
   contractor_id: string,
 ): Promise<Rating> {
+  // Try to get badges from materialized view first
+  const badgeData = await database.getContractorBadges(contractor_id)
+  
+  if (badgeData && badgeData.metadata) {
+    const metadata = badgeData.metadata
+    return {
+      avg_rating: metadata.avg_rating || 0,
+      rating_count: metadata.rating_count || 0,
+      streak: metadata.rating_streak || 0,
+      total_rating: metadata.total_rating || 0,
+      // Don't include response_rate, total_assignments, total_orders in Rating
+      // These are available in badge metadata if needed
+    }
+  }
+
+  // Fallback to current calculation if badge data missing
   const reviews = await database.getContractorReviews(contractor_id)
   const count = await database.getOrderCount({
     contractor_id: contractor_id,
@@ -814,11 +830,13 @@ export async function getContractorRating(
 
   const ratings = reviews.filter((r) => r.rating).map((r) => +r.rating)
   const responseStats = await database.getContractorResponseStats(contractor_id)
+  const total_rating = ratings.reduce((a, b) => a + b, 0)
 
   return {
-    avg_rating: (ratings.reduce((a, b) => a + b, 0) * 10) / ratings.length || 0,
+    avg_rating: (total_rating * 10) / ratings.length || 0,
     rating_count: ratings.length,
     streak,
+    total_rating,
     total_orders: count,
     response_rate: responseStats.response_rate,
     total_assignments: responseStats.total_assignments,
@@ -826,6 +844,22 @@ export async function getContractorRating(
 }
 
 export async function getUserRating(user_id: string): Promise<Rating> {
+  // Try to get badges from materialized view first
+  const badgeData = await database.getUserBadges(user_id)
+  
+  if (badgeData && badgeData.metadata) {
+    const metadata = badgeData.metadata
+    return {
+      avg_rating: metadata.avg_rating || 0,
+      rating_count: metadata.rating_count || 0,
+      streak: metadata.rating_streak || 0,
+      total_rating: metadata.total_rating || 0,
+      // Don't include response_rate, total_assignments, total_orders in Rating
+      // These are available in badge metadata if needed
+    }
+  }
+
+  // Fallback to current calculation if badge data missing
   const reviews = await database.getUserReviews(user_id)
   const count = await database.getOrderCount({
     assigned_id: user_id,
@@ -844,11 +878,13 @@ export async function getUserRating(user_id: string): Promise<Rating> {
 
   const ratings = reviews.filter((r) => r.rating).map((r) => +r.rating)
   const responseStats = await database.getUserResponseStats(user_id)
+  const total_rating = ratings.reduce((a, b) => a + b, 0)
 
   return {
-    avg_rating: (ratings.reduce((a, b) => a + b, 0) * 10) / ratings.length || 0,
+    avg_rating: (total_rating * 10) / ratings.length || 0,
     rating_count: ratings.length,
     streak,
+    total_rating,
     total_orders: count,
     response_rate: responseStats.response_rate,
     total_assignments: responseStats.total_assignments,
@@ -867,6 +903,7 @@ export async function contractorDetails(
     ...contractor,
     fields: fields.map((f) => f.field),
     rating: await getContractorRating(contractor.contractor_id),
+    badges: await database.getContractorBadges(contractor.contractor_id),
     avatar: await cdn.getFileLinkResource(contractor.avatar),
     banner: await cdn.getFileLinkResource(contractor.banner),
     archived: contractor.archived,

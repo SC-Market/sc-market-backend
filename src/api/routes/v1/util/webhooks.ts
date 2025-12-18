@@ -13,6 +13,19 @@ import { sendDM } from "./discord.js"
 import { cdn } from "../../../../clients/cdn/cdn.js"
 import logger from "../../../../logger/logger.js"
 import { formatMarketUrl } from "./urls.js"
+import { env } from "../../../../config/env.js"
+
+/**
+ * Get the SC Market logo URL based on environment
+ * Uses red-shifted DEV logo in development mode, production logo otherwise
+ */
+function getLogoUrl(): string {
+  const isDev = env.NODE_ENV === "development" || env.NODE_ENV === "dev"
+  const logoFilename = isDev
+    ? "BG0TEXT1SHADOW1_DEV.png"
+    : "BG0TEXT1SHADOW1.png"
+  return `https://raw.githubusercontent.com/SC-Market/sc-market-frontend/refs/heads/main/src/assets/${logoFilename}`
+}
 
 export async function createNotificationWebhook(
   name: string,
@@ -448,8 +461,7 @@ async function sendOrderWebhook(
       // the username to be displayed
       username: "SC Market - Order Placed",
       // the avatar to be displayed
-      avatar_url:
-        "https://raw.githubusercontent.com/SC-Market/sc-market-frontend/refs/heads/main/src/assets/BG0TEXT1SHADOW1.png",
+      avatar_url: getLogoUrl(),
 
       // // enable mentioning of individual users or roles, but not @everyone/@here
       allowed_mentions: {
@@ -522,8 +534,7 @@ async function sendOfferWebhook(
         type === "offer_create" ? "Offer Received" : "Counter Offer Received"
       }`,
       // the avatar to be displayed
-      avatar_url:
-        "https://raw.githubusercontent.com/SC-Market/sc-market-frontend/refs/heads/main/src/assets/BG0TEXT1SHADOW1.png",
+      avatar_url: getLogoUrl(),
 
       // // enable mentioning of individual users or roles, but not @everyone/@here
       allowed_mentions: {
@@ -605,8 +616,7 @@ async function marketBidWebhook(
     {
       username: "SC Market - Bid Received",
       // the avatar to be displayed
-      avatar_url:
-        "https://raw.githubusercontent.com/SC-Market/sc-market-frontend/refs/heads/main/src/assets/BG0TEXT1SHADOW1.png",
+      avatar_url: getLogoUrl(),
       // // enable mentioning of individual users or roles, but not @everyone/@here
       allowed_mentions: {
         parse: [],
@@ -692,8 +702,7 @@ async function orderCommentWebhook(
     {
       username: "SC Market - Order Comment Received",
       // the avatar to be displayed
-      avatar_url:
-        "https://raw.githubusercontent.com/SC-Market/sc-market-frontend/refs/heads/main/src/assets/BG0TEXT1SHADOW1.png",
+      avatar_url: getLogoUrl(),
       // // enable mentioning of individual users or roles, but not @everyone/@here
       allowed_mentions: {
         parse: [],
@@ -800,8 +809,7 @@ async function orderStatusWebhook(
     {
       username: "SC Market - Order Status Updated",
       // the avatar to be displayed
-      avatar_url:
-        "https://raw.githubusercontent.com/SC-Market/sc-market-frontend/refs/heads/main/src/assets/BG0TEXT1SHADOW1.png",
+      avatar_url: getLogoUrl(),
       // // enable mentioning of individual users or roles, but not @everyone/@here
       allowed_mentions: {
         parse: [],
