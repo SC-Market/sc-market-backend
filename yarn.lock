@@ -2787,7 +2787,7 @@ __metadata:
     multer: "npm:^2.0.2"
     node-fetch: "npm:^3.3.2"
     passport: "https://github.com/jaredhanson/passport.git"
-    passport-citizenid: "https://github.com/henry232323/CitizenId-passport-auth.git"
+    passport-citizenid: "https://github.com/henry232323/CitizenId-passport-auth"
     passport-discord: "https://github.com/tonestrike/passport-discord.git"
     passport-oauth2-refresh: "npm:^2.2.0"
     pg: "npm:^8.16.0"
@@ -5176,7 +5176,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"passport-citizenid@https://github.com/henry232323/CitizenId-passport-auth.git":
+"passport-citizenid@https://github.com/henry232323/CitizenId-passport-auth":
   version: 1.0.0
   resolution: "passport-citizenid@https://github.com/henry232323/CitizenId-passport-auth.git#commit=12e0f6f2ce0b263504eeeeea88b0101a0cad7d0b"
   dependencies:
