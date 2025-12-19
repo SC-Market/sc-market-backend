@@ -37,7 +37,7 @@
     "multer": "^2.0.2",
     "node-fetch": "^3.3.2",
     "passport": "https://github.com/jaredhanson/passport.git",
-    "passport-citizenid": "https://github.com/henry232323/CitizenId-passport-auth",
+    "passport-citizenid": "https://github.com/henry232323/CitizenId-passport-auth.git",
     "passport-discord": "https://github.com/tonestrike/passport-discord.git",
     "passport-oauth2-refresh": "^2.2.0",
     "pg": "^8.16.0",
