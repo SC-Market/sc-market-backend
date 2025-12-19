@@ -4,6 +4,11 @@
     <file url="file://$PROJECT_DIR$/config/postgres/0-schema.sql" dialect="PostgreSQL" />
     <file url="file://$PROJECT_DIR$/config/postgres/17-archive-contractors.sql" dialect="PostgreSQL" />
     <file url="file://$PROJECT_DIR$/config/postgres/18-add-original-spectrum-id-to-archive.sql" dialect="PostgreSQL" />
+    <file url="file://$PROJECT_DIR$/config/postgres/21-citizenid-integration.sql" dialect="PostgreSQL" />
+    <file url="file://$PROJECT_DIR$/config/postgres/24-badge-optimization-indices.sql" dialect="PostgreSQL" />
+    <file url="file://$PROJECT_DIR$/config/postgres/25-badge-views-optimized.sql" dialect="PostgreSQL" />
+    <file url="file://$PROJECT_DIR$/config/postgres/26-add-stock-subtraction-timing-setting-type.sql" dialect="PostgreSQL" />
+    <file url="file://$PROJECT_DIR$/config/postgres/27-fix-badge-tier-exclusivity.sql" dialect="PostgreSQL" />
     <file url="file://$PROJECT_DIR$/config/postgres/3-accounts.sql" dialect="PostgreSQL" />
     <file url="file://$PROJECT_DIR$/scripts/game_item_details.sql" dialect="PostgreSQL" />
     <file url="file://$PROJECT_DIR$/scripts/load_new_items.sql" dialect="PostgreSQL" />
