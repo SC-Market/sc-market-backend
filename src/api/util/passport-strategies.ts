@@ -257,6 +257,19 @@ export function createCitizenIDVerifyCallback(
           return done(error, undefined)
         }
 
+        // Check if Spectrum ID is already in use by another account
+        // This prevents duplicate key violations when updating spectrum_user_id
+        const userWithSpectrumId = await database.findUser({
+          spectrum_user_id: rsiSpectrumId,
+        })
+        if (userWithSpectrumId && userWithSpectrumId.user_id !== currentUser.user_id) {
+          const error = new Error(
+            `This Spectrum ID (${rsiSpectrumId}) is already associated with another account. Please use a different Citizen ID account or contact support if you believe this is an error.`,
+          ) as Error & { code?: string }
+          error.code = CitizenIDErrorCodes.ALREADY_LINKED
+          return done(error, undefined)
+        }
+
         // Link Citizen ID to existing account
         // Token expiration will be set when we refresh (we don't have expires_in in callback)
         await database.linkProvider(currentUser.user_id, {
@@ -339,12 +352,7 @@ export function createCitizenIDVerifyCallback(
 
       if (!user) {
         // Check if username already exists (might be registered with Discord)
-        let existingUser: User | null = null
-        try {
-          existingUser = await database.getUser({ username: citizenIDUsername })
-        } catch (e) {
-          // User doesn't exist, which is fine - we'll create a new one
-        }
+        const existingUser = await database.findUser({ username: citizenIDUsername })
 
         // If username exists and account is verified, user needs to login with Discord first
         if (existingUser && existingUser.rsi_confirmed) {
@@ -352,6 +360,19 @@ export function createCitizenIDVerifyCallback(
             `Username "${citizenIDUsername}" is already registered. Please log in with Discord first, then link your Citizen ID account in settings.`,
           ) as Error & { code?: string }
           error.code = CitizenIDErrorCodes.USERNAME_TAKEN
+          return done(error, undefined)
+        }
+
+        // Check if Spectrum ID is already in use by another account
+        // This prevents duplicate key violations when creating a new user
+        const userWithSpectrumId = await database.findUser({
+          spectrum_user_id: rsiSpectrumId,
+        })
+        if (userWithSpectrumId) {
+          const error = new Error(
+            `This Spectrum ID (${rsiSpectrumId}) is already associated with another account. Please log in with that account first, then link your Citizen ID account in settings.`,
+          ) as Error & { code?: string }
+          error.code = CitizenIDErrorCodes.ALREADY_LINKED
           return done(error, undefined)
         }
 
@@ -404,7 +425,7 @@ export function createCitizenIDVerifyCallback(
             createError?.code === "23505" &&
             createError?.constraint === "accounts_username_key"
           ) {
-            // Username was taken between check and create (race condition)
+            // Username was taken between check and create
             // Check if it's a verified account
             try {
               const conflictingUser = await database.getUser({
