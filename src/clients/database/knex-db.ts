@@ -877,6 +877,38 @@ export class KnexDatabase implements Database {
     } as User
   }
 
+  async findUser(
+    where: any,
+    options: {
+      noBalance: boolean
+    } = { noBalance: false },
+  ): Promise<User | null> {
+    const user = await this.knex<DBUser>("accounts").where(where).first()
+
+    if (!user) {
+      return null
+    }
+
+    return {
+      ...(options.noBalance ? {} : { balance: user.balance }),
+      user_id: user.user_id!,
+      display_name: user!.display_name,
+      profile_description: user.profile_description,
+      role: user.role,
+      username: user.username,
+      avatar: user.avatar,
+      banner: user.banner,
+      rsi_confirmed: user.rsi_confirmed,
+      spectrum_user_id: user.spectrum_user_id,
+      discord_access_token: user.discord_access_token,
+      discord_refresh_token: user.discord_refresh_token,
+      official_server_id: user.official_server_id,
+      discord_thread_channel_id: user.discord_thread_channel_id,
+      market_order_template: user.market_order_template,
+      locale: user.locale,
+    } as User
+  }
+
   async getLogin(where: any): Promise<User> {
     const user = await this.knex<DBUser>("accounts").where(where).first()
 
