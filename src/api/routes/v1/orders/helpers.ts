@@ -160,7 +160,7 @@ export async function initiateOrder(session: DBOfferSession) {
   } catch (e) {}
 
   const market_listings = await database.getOfferMarketListings(most_recent.id)
-  
+
   // Check stock subtraction timing setting
   // Default is "on_accepted" (when no setting exists) - subtract stock when offer is accepted
   const stockSetting = await getRelevantOrderSetting(
@@ -369,9 +369,12 @@ export async function cancelOrderMarketItems(order: DBOrder) {
 
         if (settingValue === "dont_subtract") {
           shouldRestoreStock = false
-          logger.info("Not restoring stock on order cancellation - setting is dont_subtract", {
-            order_id: order.order_id,
-          })
+          logger.info(
+            "Not restoring stock on order cancellation - setting is dont_subtract",
+            {
+              order_id: order.order_id,
+            },
+          )
         }
       }
     } catch (e) {
@@ -500,7 +503,6 @@ export async function handleStatusUpdate(req: any, res: any, status: string) {
     }
 
     if (status === "in-progress") {
-
       await database.updateOrder(order.order_id, {
         status,
         assigned_id: req.user.user_id,
@@ -1583,7 +1585,11 @@ export async function getUserOrderData(
  */
 export async function getRelevantOrderSetting(
   session: DBOfferSession,
-  settingType: "offer_message" | "order_message" | "require_availability" | "stock_subtraction_timing",
+  settingType:
+    | "offer_message"
+    | "order_message"
+    | "require_availability"
+    | "stock_subtraction_timing",
 ): Promise<DBOrderSetting | null> {
   logger.debug("Looking for relevant order setting", {
     sessionId: session.id,
