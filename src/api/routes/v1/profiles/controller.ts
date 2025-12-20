@@ -100,11 +100,12 @@ export const profile_post_auth_unlink: RequestHandler = async (req, res) => {
     // Citizen ID is the authoritative source for RSI details when linked
     const providers = await database.getUserProviders(user.user_id)
     const hasCitizenID = providers.some((p) => p.provider_type === "citizenid")
-    
+
     if (hasCitizenID) {
       res.status(400).json(
         createErrorResponse({
-          message: "Cannot unlink Star Citizen account while Citizen ID is linked. Citizen ID is the authoritative source for RSI details. Please unlink Citizen ID first if you wish to unlink your Star Citizen account.",
+          message:
+            "Cannot unlink Star Citizen account while Citizen ID is linked. Citizen ID is the authoritative source for RSI details. Please unlink Citizen ID first if you wish to unlink your Star Citizen account.",
           status: "error",
         }),
       )
@@ -112,8 +113,12 @@ export const profile_post_auth_unlink: RequestHandler = async (req, res) => {
     }
 
     // Generate default username from Discord ID or user ID
-    const discordProvider = await database.getUserProvider(user.user_id, "discord")
-    const discordId = discordProvider?.provider_id || user.user_id.substring(0, 8)
+    const discordProvider = await database.getUserProvider(
+      user.user_id,
+      "discord",
+    )
+    const discordId =
+      discordProvider?.provider_id || user.user_id.substring(0, 8)
     const defaultUsername = `new_user${discordId}`
     const defaultDisplayName = `new_user${discordId}`
 

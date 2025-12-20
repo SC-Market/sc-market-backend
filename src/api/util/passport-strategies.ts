@@ -49,9 +49,7 @@ export function getDiscordConfig(backendUrl: URL): StrategyOptionsWithRequest {
 /**
  * Create Discord passport strategy
  */
-export function createDiscordStrategy(
-  backendUrl: URL,
-): Strategy {
+export function createDiscordStrategy(backendUrl: URL): Strategy {
   const passportConfig = getDiscordConfig(backendUrl)
 
   const strategy = new Strategy(
@@ -70,7 +68,9 @@ export function createDiscordStrategy(
 
           // Link Discord to existing account
           // Discord tokens typically expire in 7 days (604800 seconds)
-          const discordExpiresAt = new Date(Date.now() + 7 * 24 * 60 * 60 * 1000)
+          const discordExpiresAt = new Date(
+            Date.now() + 7 * 24 * 60 * 60 * 1000,
+          )
           await database.linkProvider(currentUser.user_id, {
             provider_type: "discord",
             provider_id: profile.id,
@@ -97,7 +97,9 @@ export function createDiscordStrategy(
         if (!user) {
           // Create new user using new provider system
           // Discord tokens typically expire in 7 days (604800 seconds)
-          const discordExpiresAt = new Date(Date.now() + 7 * 24 * 60 * 60 * 1000)
+          const discordExpiresAt = new Date(
+            Date.now() + 7 * 24 * 60 * 60 * 1000,
+          )
           // Generate username in format: new_user{discord_id}
           const generatedUsername = `new_user${profile.id}`
           user = await database.createUserWithProvider(
@@ -128,7 +130,9 @@ export function createDiscordStrategy(
         } else {
           // Update tokens for existing user
           // Discord tokens typically expire in 7 days
-          const discordExpiresAt = new Date(Date.now() + 7 * 24 * 60 * 60 * 1000)
+          const discordExpiresAt = new Date(
+            Date.now() + 7 * 24 * 60 * 60 * 1000,
+          )
           await database.updateProviderTokens(user.user_id, "discord", {
             access_token: accessToken,
             refresh_token: refreshToken,
@@ -174,8 +178,13 @@ export function createCitizenIDVerifyCallback(
   ): Promise<void> => {
     try {
       // Extract RSI data from profile
-      const { rsiUsername, rsiSpectrumId, rsiAvatar, discordAccountId, discordUsername } =
-        extractRSIData(profile)
+      const {
+        rsiUsername,
+        rsiSpectrumId,
+        rsiAvatar,
+        discordAccountId,
+        discordUsername,
+      } = extractRSIData(profile)
 
       // RSI username and spectrum ID are required - no fallback
       // If RSI data is not available, the user is not properly verified/linked to RSI
@@ -262,7 +271,10 @@ export function createCitizenIDVerifyCallback(
         const userWithSpectrumId = await database.findUser({
           spectrum_user_id: rsiSpectrumId,
         })
-        if (userWithSpectrumId && userWithSpectrumId.user_id !== currentUser.user_id) {
+        if (
+          userWithSpectrumId &&
+          userWithSpectrumId.user_id !== currentUser.user_id
+        ) {
           const error = new Error(
             `This Spectrum ID (${rsiSpectrumId}) is already associated with another account. Please use a different Citizen ID account or contact support if you believe this is an error.`,
           ) as Error & { code?: string }
@@ -306,10 +318,7 @@ export function createCitizenIDVerifyCallback(
         if (discordAccountId && !discordProvider) {
           updateData.discord_id = discordAccountId
         }
-        await database.updateUser(
-          { user_id: currentUser.user_id },
-          updateData,
-        )
+        await database.updateUser({ user_id: currentUser.user_id }, updateData)
 
         // Auto-link Discord as a provider if available and not already linked
         if (discordAccountId) {
@@ -352,7 +361,9 @@ export function createCitizenIDVerifyCallback(
 
       if (!user) {
         // Check if username already exists (might be registered with Discord)
-        const existingUser = await database.findUser({ username: citizenIDUsername })
+        const existingUser = await database.findUser({
+          username: citizenIDUsername,
+        })
 
         // If username exists and account is verified, user needs to login with Discord first
         if (existingUser && existingUser.rsi_confirmed) {

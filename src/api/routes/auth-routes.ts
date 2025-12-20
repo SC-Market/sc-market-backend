@@ -16,34 +16,34 @@ import {
 /**
  * Setup authentication routes
  */
-export function setupAuthRoutes(
-  app: any,
-  frontendUrl: URL,
-): void {
+export function setupAuthRoutes(app: any, frontendUrl: URL): void {
   // Discord authentication routes
-  app.get("/auth/discord", async (req: Request, res: Response, next: NextFunction) => {
-    const query = req.query as { path?: string }
-    const path = query.path || ""
+  app.get(
+    "/auth/discord",
+    async (req: Request, res: Response, next: NextFunction) => {
+      const query = req.query as { path?: string }
+      const path = query.path || ""
 
-    // Validate the redirect path
-    if (!validateRedirectPath(path)) {
-      return res.status(400).json({ error: "Invalid redirect path" })
-    }
+      // Validate the redirect path
+      if (!validateRedirectPath(path)) {
+        return res.status(400).json({ error: "Invalid redirect path" })
+      }
 
-    // Create a signed state token that includes both CSRF protection and the redirect path
-    const sessionSecret = env.SESSION_SECRET || "set this var"
-    let signedStateToken: string
-    try {
-      signedStateToken = createSignedStateToken(path, sessionSecret)
-    } catch (error) {
-      return res.status(400).json({ error: "Failed to create state token" })
-    }
+      // Create a signed state token that includes both CSRF protection and the redirect path
+      const sessionSecret = env.SESSION_SECRET || "set this var"
+      let signedStateToken: string
+      try {
+        signedStateToken = createSignedStateToken(path, sessionSecret)
+      } catch (error) {
+        return res.status(400).json({ error: "Failed to create state token" })
+      }
 
-    return passport.authenticate("discord", {
-      session: true,
-      state: signedStateToken,
-    })(req, res, next)
-  })
+      return passport.authenticate("discord", {
+        session: true,
+        state: signedStateToken,
+      })(req, res, next)
+    },
+  )
 
   app.get(
     "/auth/discord/callback",
@@ -53,7 +53,10 @@ export function setupAuthRoutes(
 
       // Verify the signed state token and extract the redirect path
       const sessionSecret = env.SESSION_SECRET || "set this var"
-      const verified = verifySignedStateToken(receivedState || "", sessionSecret)
+      const verified = verifySignedStateToken(
+        receivedState || "",
+        sessionSecret,
+      )
 
       if (!verified) {
         // Invalid or missing state - potential CSRF attack or tampering
@@ -73,25 +76,28 @@ export function setupAuthRoutes(
   )
 
   // Citizen ID authentication routes
-  app.get("/auth/citizenid", async (req: Request, res: Response, next: NextFunction) => {
-    const query = req.query as { path?: string }
-    const path = query.path || "/market"
+  app.get(
+    "/auth/citizenid",
+    async (req: Request, res: Response, next: NextFunction) => {
+      const query = req.query as { path?: string }
+      const path = query.path || "/market"
 
-    // Validate the redirect path
-    if (!validateRedirectPath(path)) {
-      return res.status(400).json({ error: "Invalid redirect path" })
-    }
+      // Validate the redirect path
+      if (!validateRedirectPath(path)) {
+        return res.status(400).json({ error: "Invalid redirect path" })
+      }
 
-    // Store the redirect path in session for later retrieval
-    if (!req.session) {
-      return res.status(500).json({ error: "Session not available" })
-    }
-    ;(req.session as any).citizenid_redirect_path = path
+      // Store the redirect path in session for later retrieval
+      if (!req.session) {
+        return res.status(500).json({ error: "Session not available" })
+      }
+      ;(req.session as any).citizenid_redirect_path = path
 
-    return passport.authenticate("citizenid", {
-      session: true,
-    })(req, res, next)
-  })
+      return passport.authenticate("citizenid", {
+        session: true,
+      })(req, res, next)
+    },
+  )
 
   // Linking route (for existing users)
   app.get(
@@ -126,7 +132,10 @@ export function setupAuthRoutes(
         const redirectTo = new URL("/", frontendUrl)
         redirectTo.searchParams.set("error", errorCode)
         if (query.error_description) {
-          redirectTo.searchParams.set("error_description", query.error_description)
+          redirectTo.searchParams.set(
+            "error_description",
+            query.error_description,
+          )
         }
         return res.redirect(redirectTo.toString())
       }
@@ -157,16 +166,18 @@ export function setupAuthRoutes(
             })
             console.error("Citizen ID login error:", err)
             const errorCode = mapErrorCodeToFrontend(err.code)
-            
+
             // If username is taken, redirect to Discord login with settings path
             if (errorCode === CitizenIDErrorCodes.USERNAME_TAKEN) {
               // Use backend URL for auth endpoint
-              const backendUrl = new URL(env.BACKEND_URL || "http://localhost:7000")
+              const backendUrl = new URL(
+                env.BACKEND_URL || "http://localhost:7000",
+              )
               const discordLoginUrl = new URL("/auth/discord", backendUrl)
               discordLoginUrl.searchParams.set("path", "/settings")
               return res.redirect(discordLoginUrl.toString())
             }
-            
+
             const redirectTo = new URL("/", frontendUrl)
             redirectTo.searchParams.set("error", errorCode)
             if (err.message && err.message !== errorCode) {
@@ -197,7 +208,10 @@ export function setupAuthRoutes(
             })
             console.error("Citizen ID login: No user returned", err, user, info)
             const redirectTo = new URL("/", frontendUrl)
-            redirectTo.searchParams.set("error", CitizenIDErrorCodes.AUTH_FAILED)
+            redirectTo.searchParams.set(
+              "error",
+              CitizenIDErrorCodes.AUTH_FAILED,
+            )
             return res.redirect(redirectTo.toString())
           }
 
@@ -205,11 +219,17 @@ export function setupAuthRoutes(
             if (loginErr) {
               console.error("Citizen ID login error:", loginErr)
               const redirectTo = new URL("/", frontendUrl)
-              redirectTo.searchParams.set("error", CitizenIDErrorCodes.LOGIN_FAILED)
+              redirectTo.searchParams.set(
+                "error",
+                CitizenIDErrorCodes.LOGIN_FAILED,
+              )
               return res.redirect(redirectTo.toString())
             }
 
-            const successRedirect = new URL(redirectPath, frontendUrl).toString()
+            const successRedirect = new URL(
+              redirectPath,
+              frontendUrl,
+            ).toString()
             return res.redirect(successRedirect)
           })
         },
@@ -294,9 +314,17 @@ export function setupAuthRoutes(
               user,
               info,
             })
-            console.error("Citizen ID linking: No user returned", err, user, info)
+            console.error(
+              "Citizen ID linking: No user returned",
+              err,
+              user,
+              info,
+            )
             const redirectTo = new URL("/settings", frontendUrl)
-            redirectTo.searchParams.set("error", CitizenIDErrorCodes.AUTH_FAILED)
+            redirectTo.searchParams.set(
+              "error",
+              CitizenIDErrorCodes.AUTH_FAILED,
+            )
             return res.redirect(redirectTo.toString())
           }
 
@@ -304,7 +332,10 @@ export function setupAuthRoutes(
             if (loginErr) {
               console.error("Citizen ID linking login error:", loginErr)
               const redirectTo = new URL("/settings", frontendUrl)
-              redirectTo.searchParams.set("error", CitizenIDErrorCodes.LOGIN_FAILED)
+              redirectTo.searchParams.set(
+                "error",
+                CitizenIDErrorCodes.LOGIN_FAILED,
+              )
               return res.redirect(redirectTo.toString())
             }
             // Success - redirect to settings
