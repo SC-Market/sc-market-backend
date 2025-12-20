@@ -21,9 +21,7 @@ import { env } from "../../../../config/env.js"
  */
 function getLogoUrl(): string {
   const isDev = env.NODE_ENV === "development" || env.NODE_ENV === "dev"
-  const logoFilename = isDev
-    ? "BG0TEXT1SHADOW1_DEV.png"
-    : "BG0TEXT1SHADOW1.png"
+  const logoFilename = isDev ? "BG0TEXT1SHADOW1_DEV.png" : "BG0TEXT1SHADOW1.png"
   return `https://raw.githubusercontent.com/SC-Market/sc-market-frontend/refs/heads/main/src/assets/${logoFilename}`
 }
 
@@ -177,8 +175,10 @@ export async function generateNewOfferMessage(
         url: `https://sc-market.space/offer/${session.id}`,
         // embed description
         // - text on 3rd row
-        description: (customerDiscordId ? `Discord User Details: <@${customerDiscordId}>\n\n` : "") +
-                        `${lastOffer.description}`,
+        description:
+          (customerDiscordId
+            ? `Discord User Details: <@${customerDiscordId}>\n\n`
+            : "") + `${lastOffer.description}`,
         // custom embed fields: bold title/name, normal content/value below title
         // - located below description, above image.
         fields: [
@@ -246,8 +246,10 @@ export async function generateNewOrderMessage(
         url: `https://sc-market.space/contract/${order.order_id}`,
         // embed description
         // - text on 3rd row
-        description: (customerDiscordId ? `Discord User Details: <@${customerDiscordId}>\n\n` : "") +
-                        `${order.description}`,
+        description:
+          (customerDiscordId
+            ? `Discord User Details: <@${customerDiscordId}>\n\n`
+            : "") + `${order.description}`,
         // custom embed fields: bold title/name, normal content/value below title
         // - located below description, above image.
         fields: [
@@ -332,10 +334,7 @@ export async function generateOfferStatusUpdateMessage(
   }
 }
 
-export async function generateAssignedMessage(
-  order: DBOrder,
-  assigned: User,
-) {
+export async function generateAssignedMessage(order: DBOrder, assigned: User) {
   return {
     allowed_mentions: {
       parse: [],

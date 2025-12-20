@@ -10,12 +10,18 @@ import logger from "../../logger/logger.js"
 export async function refreshDiscordToken(
   userId: string,
   refreshToken: string,
-): Promise<{ accessToken: string; refreshToken: string; expiresAt: Date | null } | null> {
+): Promise<{
+  accessToken: string
+  refreshToken: string
+  expiresAt: Date | null
+} | null> {
   try {
     // Get the Discord strategy from database (set during passport setup)
     const strategy = database.getStrategy()
     if (!strategy) {
-      logger.warn(`[Token Refresh] Discord strategy not available for user ${userId}`)
+      logger.warn(
+        `[Token Refresh] Discord strategy not available for user ${userId}`,
+      )
       return null
     }
 
@@ -28,9 +34,18 @@ export async function refreshDiscordToken(
       refresh.requestNewAccessToken(
         "discord",
         refreshToken,
-        (err: any, access_token?: string, refresh_token?: string, results?: any) => {
+        (
+          err: any,
+          access_token?: string,
+          refresh_token?: string,
+          results?: any,
+        ) => {
           if (err) {
-            reject(err instanceof Error ? err : new Error(`Token refresh failed: ${JSON.stringify(err)}`))
+            reject(
+              err instanceof Error
+                ? err
+                : new Error(`Token refresh failed: ${JSON.stringify(err)}`),
+            )
             return
           }
           if (!access_token || !refresh_token) {
@@ -67,7 +82,9 @@ export async function refreshDiscordToken(
       },
     )
 
-    logger.info(`[Token Refresh] Successfully refreshed Discord token for user ${userId}`)
+    logger.info(
+      `[Token Refresh] Successfully refreshed Discord token for user ${userId}`,
+    )
 
     return {
       accessToken: newTokens.access_token,
@@ -75,7 +92,10 @@ export async function refreshDiscordToken(
       expiresAt,
     }
   } catch (error) {
-    logger.warn(`[Token Refresh] Failed to refresh Discord token for user ${userId}:`, error)
+    logger.warn(
+      `[Token Refresh] Failed to refresh Discord token for user ${userId}:`,
+      error,
+    )
     return null
   }
 }
@@ -86,7 +106,11 @@ export async function refreshDiscordToken(
 export async function refreshCitizenIDToken(
   userId: string,
   refreshToken: string,
-): Promise<{ accessToken: string; refreshToken: string; expiresAt: Date | null } | null> {
+): Promise<{
+  accessToken: string
+  refreshToken: string
+  expiresAt: Date | null
+} | null> {
   try {
     const config = getCitizenIDConfig()
 
@@ -106,7 +130,9 @@ export async function refreshCitizenIDToken(
 
     if (!tokenResponse.ok) {
       const errorText = await tokenResponse.text()
-      throw new Error(`Citizen ID token refresh failed: ${tokenResponse.status} ${errorText}`)
+      throw new Error(
+        `Citizen ID token refresh failed: ${tokenResponse.status} ${errorText}`,
+      )
     }
 
     const tokenData = await tokenResponse.json()
@@ -124,7 +150,9 @@ export async function refreshCitizenIDToken(
       token_expires_at: expiresAt,
     })
 
-    logger.info(`[Token Refresh] Successfully refreshed Citizen ID token for user ${userId}`)
+    logger.info(
+      `[Token Refresh] Successfully refreshed Citizen ID token for user ${userId}`,
+    )
 
     return {
       accessToken: tokenData.access_token,
@@ -132,7 +160,10 @@ export async function refreshCitizenIDToken(
       expiresAt,
     }
   } catch (error) {
-    logger.warn(`[Token Refresh] Failed to refresh Citizen ID token for user ${userId}:`, error)
+    logger.warn(
+      `[Token Refresh] Failed to refresh Citizen ID token for user ${userId}:`,
+      error,
+    )
     return null
   }
 }
@@ -178,9 +209,10 @@ export async function getValidAccessToken(
         )
 
         try {
-          const refreshed = providerType === "discord"
-            ? await refreshDiscordToken(userId, provider.refresh_token)
-            : await refreshCitizenIDToken(userId, provider.refresh_token)
+          const refreshed =
+            providerType === "discord"
+              ? await refreshDiscordToken(userId, provider.refresh_token)
+              : await refreshCitizenIDToken(userId, provider.refresh_token)
 
           if (refreshed) {
             return refreshed.accessToken
@@ -214,7 +246,7 @@ export async function getValidAccessToken(
       `[Token Refresh] Error getting valid access token for ${providerType} provider of user ${userId}:`,
       error,
     )
-    
+
     // Try to get token from legacy columns as fallback (for Discord only)
     if (providerType === "discord") {
       try {
@@ -229,7 +261,7 @@ export async function getValidAccessToken(
         // Ignore fallback errors
       }
     }
-    
+
     return null
   }
 }

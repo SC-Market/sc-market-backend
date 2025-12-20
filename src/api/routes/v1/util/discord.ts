@@ -257,10 +257,10 @@ export async function assignToThread(order: DBOrder, user: DBUser) {
   if (!order.thread_id) {
     return
   }
-  
+
   // Get Discord ID from provider system
   const discordId = await database.getUserDiscordId(user.user_id)
-  
+
   if (discordId) {
     try {
       await rest.put(Routes.threadMembers(order.thread_id, discordId), {})
@@ -408,7 +408,7 @@ export async function manageOrderAssignedDiscord(
 
   // Get Discord ID from provider system
   const assignedDiscordId = await database.getUserDiscordId(assigned.user_id)
-  
+
   if (assignedDiscordId) {
     try {
       await rest.put(
