@@ -1,4 +1,6 @@
 import { database } from "../clients/database/knex-db.js"
+import * as profileDb from "../api/routes/v1/profiles/database.js"
+import * as marketDb from "../api/routes/v1/market/database.js"
 import { createOffer } from "../api/routes/v1/orders/helpers.js"
 import {
   DBAuctionDetails,
@@ -8,16 +10,16 @@ import fs from "node:fs"
 import path from "node:path"
 
 export async function process_auction(auction: DBAuctionDetails) {
-  const complete = await database.getMarketListingComplete(auction.listing_id)
+  const complete = await marketDb.getMarketListingComplete(auction.listing_id)
   if (complete.listing.status === "archived") {
     return
   }
 
-  const bids = await database.getMarketBids({ listing_id: auction.listing_id })
+  const bids = await marketDb.getMarketBids({ listing_id: auction.listing_id })
 
   if (bids.length) {
     const winning_bid = bids.reduce((a, b) => (a.bid > b.bid ? a : b))
-    const winner = await database.getUser({
+    const winner = await profileDb.getUser({
       user_id: winning_bid.user_bidder_id,
     })
 
@@ -40,15 +42,15 @@ export async function process_auction(auction: DBAuctionDetails) {
     )
   }
 
-  await database.updateAuctionDetails(
+  await marketDb.updateAuctionDetails(
     { listing_id: auction.listing_id },
     { status: "concluded" },
   )
-  await database.updateMarketListing(auction.listing_id, { status: "archived" })
+  await marketDb.updateMarketListing(auction.listing_id, { status: "archived" })
 }
 
 export async function process_auctions() {
-  const auctions = await database.getExpiringAuctions()
+  const auctions = await marketDb.getExpiringAuctions()
   auctions.forEach((a) =>
     setTimeout(
       () => process_auction(a),
@@ -61,11 +63,11 @@ export async function process_expiring_market_listing(
   listing: DBMarketListing,
 ) {
   console.log(`Expiring listing ${listing.listing_id}`)
-  await database.updateMarketListing(listing.listing_id, { status: "inactive" })
+  await marketDb.updateMarketListing(listing.listing_id, { status: "inactive" })
 }
 
 export async function process_expiring_market_listings() {
-  const listings = await database.getExpiringMarketListings()
+  const listings = await marketDb.getExpiringMarketListings()
   listings.forEach((a) =>
     setTimeout(
       () => process_expiring_market_listing(a),
@@ -75,15 +77,15 @@ export async function process_expiring_market_listings() {
 }
 
 export async function rebuild_search_view() {
-  await database.rebuildMarket()
+  await marketDb.rebuildMarket()
 }
 
 export async function refresh_badge_view() {
-  await database.refreshBadgeView()
+  await marketDb.refreshBadgeView()
 }
 
 export async function update_price_history() {
-  await database.updatePriceHistpry()
+  await marketDb.updatePriceHistpry()
 }
 
 export async function clear_uploads_folder() {

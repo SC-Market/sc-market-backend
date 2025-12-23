@@ -2,7 +2,10 @@ import {
   DBContractor,
   DBOrder,
 } from "../../../../clients/database/db-models.js"
-import { database } from "../../../../clients/database/knex-db.js"
+import * as orderDb from "./database.js"
+import * as marketDb from "../market/database.js"
+import * as profileDb from "../profiles/database.js"
+import * as contractorDb from "../contractors/database.js"
 import {
   formatListingComplete,
   formatOrderAvailability,
@@ -23,9 +26,10 @@ export async function serializeAssignedOrder(
     cost: +order.cost,
     title: order.title,
     assigned_to: order.assigned_id
-      ? (await database.getUser({ user_id: order.assigned_id }))?.username
+      ? (await profileDb.getUser({ user_id: order.assigned_id }))?.username
       : null,
-    customer: (await database.getUser({ user_id: order.customer_id })).username,
+    customer: (await profileDb.getUser({ user_id: order.customer_id }))
+      .username,
     timestamp: +order.timestamp,
   }
 }
@@ -40,7 +44,8 @@ export async function serializePublicOrder(order: DBOrder) {
     title: order.title,
     payment_type: order.payment_type,
     assigned_to: null,
-    customer: (await database.getUser({ user_id: order.customer_id })).username,
+    customer: (await profileDb.getUser({ user_id: order.customer_id }))
+      .username,
     timestamp: +order.timestamp,
   }
 }
@@ -52,13 +57,13 @@ export async function serializeOrderDetails(
   applicants = false,
   review = false,
 ) {
-  const listings = await database.getMarketListingOrders({
+  const listings = await marketDb.getMarketListingOrders({
     order_id: order.order_id,
   })
 
   const market_listings = []
   for (const listing of listings) {
-    const complete = await database.getMarketListingComplete(listing.listing_id)
+    const complete = await marketDb.getMarketListingComplete(listing.listing_id)
     market_listings.push({
       listing: await formatListingComplete(complete),
       quantity: listing.quantity,
@@ -67,14 +72,16 @@ export async function serializeOrderDetails(
   }
 
   const assigned_to_minimal = order.assigned_id
-    ? await database.getMinimalUser({ user_id: order.assigned_id })
+    ? await profileDb.getMinimalUser({ user_id: order.assigned_id })
     : null
 
-  const customer = await database.getMinimalUser({ user_id: order.customer_id })
+  const customer = await profileDb.getMinimalUser({
+    user_id: order.customer_id,
+  })
 
   // Get full assigned user data for discord_server_id (only if needed)
   const assigned_to_full = order.assigned_id
-    ? await database.getUser({ user_id: order.assigned_id })
+    ? await profileDb.getUser({ user_id: order.assigned_id })
     : null
 
   return {
@@ -85,8 +92,11 @@ export async function serializeOrderDetails(
     contractor:
       contractor ||
       (order.contractor_id &&
-        (await database.getContractor({ contractor_id: order.contractor_id }))
-          .spectrum_id),
+        (
+          await contractorDb.getContractor({
+            contractor_id: order.contractor_id,
+          })
+        ).spectrum_id),
     cost: +order.cost,
     title: order.title,
     assigned_to: assigned_to_minimal?.username,
@@ -97,7 +107,7 @@ export async function serializeOrderDetails(
     // comments: !comments ? [] : await fetchOrderComments(order.order_id), // TODO: Get order comments, but not for public orders / orders w/o perms
     applicants: !applicants
       ? []
-      : await database.getOrderApplicantsPublicIds({
+      : await orderDb.getOrderApplicantsPublicIds({
           order_id: order.order_id,
         }),
     market_listings: market_listings,

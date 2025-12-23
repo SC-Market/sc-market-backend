@@ -6,6 +6,8 @@ import { has_permission } from "../util/permissions.js"
 import { User } from "../api-models.js"
 import type { Request } from "express"
 import { database } from "../../../../clients/database/knex-db.js"
+import * as offerDb from "./database.js"
+import * as marketDb from "../market/database.js"
 import {
   OfferSearchQuery,
   OfferSearchQueryArguments,
@@ -603,7 +605,7 @@ export async function mergeOfferSessions(
   // Get all offer sessions (validation - can be outside transaction)
   const sessions = await Promise.all(
     offer_session_ids.map((id) =>
-      database.getOfferSessions({ id }).then((s) => s[0]),
+      offerDb.getOfferSessions({ id }).then((s) => s[0]),
     ),
   )
 
@@ -631,7 +633,7 @@ export async function mergeOfferSessions(
 
   // Get most recent offer from each session
   const mostRecentOffers = await Promise.all(
-    sessions.map((s) => database.getMostRecentOrderOffer(s!.id)),
+    sessions.map((s) => offerDb.getMostRecentOrderOffer(s!.id)),
   )
 
   // Validate all offers exist
@@ -723,7 +725,7 @@ export async function mergeOfferSessions(
     quantity: number
   }[] = []
   for (const offer of mostRecentOffers) {
-    const listings = await database.getOfferMarketListings(offer!.id)
+    const listings = await marketDb.getOfferMarketListings(offer!.id)
     for (const listing of listings) {
       const existing = allMarketListings.find(
         (l) => l.listing_id === listing.listing_id,
@@ -766,7 +768,7 @@ export async function mergeOfferSessions(
 
   // Link all market listings to merged offer
   for (const listing of allMarketListings) {
-    await database.insertOfferMarketListing({
+    await marketDb.insertOfferMarketListing({
       listing_id: listing.listing_id,
       offer_id: merged_offer.id,
       quantity: listing.quantity,

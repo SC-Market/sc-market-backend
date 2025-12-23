@@ -12,6 +12,7 @@ import {
 } from "passport-citizenid"
 import { User } from "../routes/v1/api-models.js"
 import { database } from "../../clients/database/knex-db.js"
+import * as profileDb from "../routes/v1/profiles/database.js"
 import { cdn } from "../../clients/cdn/cdn.js"
 import { env } from "../../config/env.js"
 import {
@@ -71,7 +72,7 @@ export function createDiscordStrategy(backendUrl: URL): Strategy {
           const discordExpiresAt = new Date(
             Date.now() + 7 * 24 * 60 * 60 * 1000,
           )
-          await database.linkProvider(currentUser.user_id, {
+          await profileDb.linkProvider(currentUser.user_id, {
             provider_type: "discord",
             provider_id: profile.id,
             access_token: accessToken,
@@ -85,14 +86,14 @@ export function createDiscordStrategy(backendUrl: URL): Strategy {
           })
 
           // Refresh user data
-          const updatedUser = await database.getUser({
+          const updatedUser = await profileDb.getUser({
             user_id: currentUser.user_id,
           })
           return cb(null, updatedUser)
         }
 
         // New login - find or create user
-        let user = await database.getUserByProvider("discord", profile.id)
+        let user = await profileDb.getUserByProvider("discord", profile.id)
 
         if (!user) {
           // Create new user using new provider system
@@ -102,7 +103,7 @@ export function createDiscordStrategy(backendUrl: URL): Strategy {
           )
           // Generate username in format: new_user{discord_id}
           const generatedUsername = `new_user${profile.id}`
-          user = await database.createUserWithProvider(
+          user = await profileDb.createUserWithProvider(
             {
               provider_type: "discord",
               provider_id: profile.id,
@@ -121,35 +122,35 @@ export function createDiscordStrategy(backendUrl: URL): Strategy {
 
           // Also set discord_id for backward compatibility
           // (createUserWithProvider sets it to null, but Discord users should have it)
-          await database.updateUser(
+          await profileDb.updateUser(
             { user_id: user.user_id },
             { discord_id: profile.id },
           )
           // Refresh user to get updated discord_id
-          user = await database.getUser({ user_id: user.user_id })
+          user = await profileDb.getUser({ user_id: user.user_id })
         } else {
           // Update tokens for existing user
           // Discord tokens typically expire in 7 days
           const discordExpiresAt = new Date(
             Date.now() + 7 * 24 * 60 * 60 * 1000,
           )
-          await database.updateProviderTokens(user.user_id, "discord", {
+          await profileDb.updateProviderTokens(user.user_id, "discord", {
             access_token: accessToken,
             refresh_token: refreshToken,
             token_expires_at: discordExpiresAt,
           })
 
           // Ensure discord_id is set for backward compatibility
-          const discordProvider = await database.getUserProvider(
+          const discordProvider = await profileDb.getUserProvider(
             user.user_id,
             "discord",
           )
           if (!discordProvider) {
-            await database.updateUser(
+            await profileDb.updateUser(
               { user_id: user.user_id },
               { discord_id: profile.id },
             )
-            user = await database.getUser({ user_id: user.user_id })
+            user = await profileDb.getUser({ user_id: user.user_id })
           }
         }
 
@@ -227,7 +228,7 @@ export function createCitizenIDVerifyCallback(
         // STEP 3: Validate linking rules
         // - Account must be unverified OR
         // - Account must be verified AND spectrum IDs must match
-        const validation = await database.validateCitizenIDLinking(
+        const validation = await profileDb.validateCitizenIDLinking(
           currentUser.user_id,
           rsiSpectrumId,
         )
@@ -253,7 +254,7 @@ export function createCitizenIDVerifyCallback(
         }
 
         // Check if Citizen ID already linked to another account
-        const existingUser = await database.getUserByProvider(
+        const existingUser = await profileDb.getUserByProvider(
           "citizenid",
           profile.id,
         )
@@ -268,7 +269,7 @@ export function createCitizenIDVerifyCallback(
 
         // Check if Spectrum ID is already in use by another account
         // This prevents duplicate key violations when updating spectrum_user_id
-        const userWithSpectrumId = await database.findUser({
+        const userWithSpectrumId = await profileDb.findUser({
           spectrum_user_id: rsiSpectrumId,
         })
         if (
@@ -284,7 +285,7 @@ export function createCitizenIDVerifyCallback(
 
         // Link Citizen ID to existing account
         // Token expiration will be set when we refresh (we don't have expires_in in callback)
-        await database.linkProvider(currentUser.user_id, {
+        await profileDb.linkProvider(currentUser.user_id, {
           provider_type: "citizenid",
           provider_id: profile.id,
           access_token: accessToken,
@@ -311,24 +312,26 @@ export function createCitizenIDVerifyCallback(
           spectrum_user_id: rsiSpectrumId,
         }
         // Only update discord_id if available and not already set
-        const discordProvider = await database.getUserProvider(
+        const discordProvider = await profileDb.getUserProvider(
           currentUser.user_id,
           "discord",
         )
         if (discordAccountId && !discordProvider) {
           updateData.discord_id = discordAccountId
         }
-        await database.updateUser({ user_id: currentUser.user_id }, updateData)
+        await profileDb.updateUser({ user_id: currentUser.user_id }, updateData)
 
         // Auto-link Discord as a provider if available and not already linked
         if (discordAccountId) {
-          const providers = await database.getUserProviders(currentUser.user_id)
+          const providers = await profileDb.getUserProviders(
+            currentUser.user_id,
+          )
           const existingDiscordProvider = providers.find(
             (p) => p.provider_type === "discord",
           )
 
           if (!existingDiscordProvider) {
-            await database.linkProvider(currentUser.user_id, {
+            await profileDb.linkProvider(currentUser.user_id, {
               provider_type: "discord",
               provider_id: discordAccountId,
               access_token: null, // No tokens from Citizen ID - user can authenticate with Discord later to get tokens
@@ -342,7 +345,7 @@ export function createCitizenIDVerifyCallback(
           }
         }
 
-        const updatedUser = await database.getUser({
+        const updatedUser = await profileDb.getUser({
           user_id: currentUser.user_id,
         })
 
@@ -357,11 +360,11 @@ export function createCitizenIDVerifyCallback(
       }
 
       // STEP 4: New login - find or create user
-      let user = await database.getUserByProvider("citizenid", profile.id)
+      let user = await profileDb.getUserByProvider("citizenid", profile.id)
 
       if (!user) {
         // Check if username already exists (might be registered with Discord)
-        const existingUser = await database.findUser({
+        const existingUser = await profileDb.findUser({
           username: citizenIDUsername,
         })
 
@@ -376,7 +379,7 @@ export function createCitizenIDVerifyCallback(
 
         // Check if Spectrum ID is already in use by another account
         // This prevents duplicate key violations when creating a new user
-        const userWithSpectrumId = await database.findUser({
+        const userWithSpectrumId = await profileDb.findUser({
           spectrum_user_id: rsiSpectrumId,
         })
         if (userWithSpectrumId) {
@@ -390,7 +393,7 @@ export function createCitizenIDVerifyCallback(
         // Create new user (Citizen ID is verified, so we can create)
         // Token expiration will be set when we refresh (we don't have expires_in in callback)
         try {
-          user = await database.createUserWithProvider(
+          user = await profileDb.createUserWithProvider(
             {
               provider_type: "citizenid",
               provider_id: profile.id,
@@ -416,12 +419,12 @@ export function createCitizenIDVerifyCallback(
                 rsiAvatar,
                 `${user.user_id}_rsi_avatar`,
               )
-              await database.updateUser(
+              await profileDb.updateUser(
                 { user_id: user.user_id },
                 { avatar: avatarResource.resource_id },
               )
               // Refresh user to get updated avatar
-              user = await database.getUser({ user_id: user.user_id })
+              user = await profileDb.getUser({ user_id: user.user_id })
             } catch (error) {
               // If external resource creation fails (e.g., URL not whitelisted), log and continue
               console.warn(
@@ -439,7 +442,7 @@ export function createCitizenIDVerifyCallback(
             // Username was taken between check and create
             // Check if it's a verified account
             try {
-              const conflictingUser = await database.getUser({
+              const conflictingUser = await profileDb.getUser({
                 username: citizenIDUsername,
               })
               if (conflictingUser && conflictingUser.rsi_confirmed) {
@@ -470,17 +473,17 @@ export function createCitizenIDVerifyCallback(
         if (discordAccountId) {
           updateData.discord_id = discordAccountId
         }
-        await database.updateUser({ user_id: user.user_id }, updateData)
+        await profileDb.updateUser({ user_id: user.user_id }, updateData)
 
         // Auto-link Discord as a provider if available
         if (discordAccountId) {
-          const providers = await database.getUserProviders(user.user_id)
+          const providers = await profileDb.getUserProviders(user.user_id)
           const existingDiscordProvider = providers.find(
             (p) => p.provider_type === "discord",
           )
 
           if (!existingDiscordProvider) {
-            await database.linkProvider(user.user_id, {
+            await profileDb.linkProvider(user.user_id, {
               provider_type: "discord",
               provider_id: discordAccountId,
               access_token: null, // No tokens from Citizen ID - user can authenticate with Discord later to get tokens
@@ -496,7 +499,7 @@ export function createCitizenIDVerifyCallback(
       } else {
         // Update tokens for existing user
         // Token expiration will be updated on next refresh
-        await database.updateProviderTokens(user.user_id, "citizenid", {
+        await profileDb.updateProviderTokens(user.user_id, "citizenid", {
           access_token: accessToken,
           refresh_token: refreshToken,
           token_expires_at: null, // Will be updated on next refresh
@@ -509,12 +512,12 @@ export function createCitizenIDVerifyCallback(
               rsiAvatar,
               `${user.user_id}_rsi_avatar`,
             )
-            await database.updateUser(
+            await profileDb.updateUser(
               { user_id: user.user_id },
               { avatar: avatarResource.resource_id },
             )
             // Refresh user to get updated avatar
-            user = await database.getUser({ user_id: user.user_id })
+            user = await profileDb.getUser({ user_id: user.user_id })
           } catch (error) {
             // If external resource creation fails (e.g., URL not whitelisted), log and continue
             console.warn(

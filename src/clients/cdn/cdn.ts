@@ -1,6 +1,7 @@
 import { database } from "../database/knex-db.js"
 import { DBImageResource } from "../database/db-models.js"
 import { BackBlazeCDN } from "../backblaze/backblaze.js"
+import * as contractorDb from "../../api/routes/v1/contractors/database.js"
 
 export const external_resource_pattern =
   /^https?:\/\/(www\.)?((((media)|(cdn)\.)?robertsspaceindustries\.com)|((media\.)?starcitizen.tools)|(i\.imgur\.com)|(cstone\.space))\b([-a-zA-Z0-9()@:%_\+.~#?&//=]*)$/
@@ -56,7 +57,7 @@ export class ExternalCDN implements CDN {
     if (!resource_id) {
       return null
     }
-    const avatar = await database.getImageResource({ resource_id: resource_id })
+    const avatar = await contractorDb.getImageResource({ resource_id: resource_id })
     return avatar.external_url || null
   }
 
@@ -74,22 +75,22 @@ export class ExternalCDN implements CDN {
       throw new CDNError("Invalid external URL")
     }
 
-    return await database.insertImageResource({
+    return await contractorDb.insertImageResource({
       filename,
       external_url,
     })
   }
 
   async removeResource(resource_id: string): Promise<void> {
-    const resource = await database.getImageResource({
+    const resource = await contractorDb.getImageResource({
       resource_id: resource_id,
     })
 
     if (resource.external_url) {
-      await database.removeImageResource({ resource_id })
+      await contractorDb.removeImageResource({ resource_id })
     } else {
       try {
-        await database.removeImageResource({ resource_id })
+        await contractorDb.removeImageResource({ resource_id })
       } catch {
         // Other rows depend on this entry, so we can't delete it yet
         return

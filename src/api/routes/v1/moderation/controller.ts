@@ -1,6 +1,8 @@
 import { RequestHandler } from "express"
+import * as profileDb from "../profiles/database.js"
 import { User as User } from "../api-models.js"
 import { database as database } from "../../../../clients/database/knex-db.js"
+import * as adminDb from "../admin/database.js"
 import { DBContentReport as DBContentReport } from "../../../../clients/database/db-models.js"
 import { createErrorResponse as createErrorResponse } from "../util/response.js"
 import { createResponse as createResponse } from "../util/response.js"
@@ -64,7 +66,7 @@ export const moderation_post_report: RequestHandler = async (req, res) => {
     }
 
     // Insert the report into the database
-    const [report] = await database.insertContentReport({
+    const [report] = await adminDb.insertContentReport({
       reporter_id: user.user_id,
       reported_url,
       report_reason: report_reason || null,
@@ -94,7 +96,7 @@ export const moderation_get_reports: RequestHandler = async (req, res) => {
     const user = req.user as User
 
     // Get reports for the authenticated user
-    const reports = await database.getContentReports({
+    const reports = await adminDb.getContentReports({
       reporter_id: user.user_id,
     })
 
@@ -143,7 +145,7 @@ export const moderation_get_admin_reports: RequestHandler = async (
     }
 
     // Get total count for pagination
-    const allReports = await database.getContentReports(whereClause)
+    const allReports = await adminDb.getContentReports(whereClause)
     const totalReports = allReports.length
 
     // Calculate pagination
@@ -158,11 +160,11 @@ export const moderation_get_admin_reports: RequestHandler = async (
     // Fetch user information for reporter and handler
     const reportsWithUsers = await Promise.all(
       reports.map(async (report) => {
-        const reporter = await database.getMinimalUser({
+        const reporter = await profileDb.getMinimalUser({
           user_id: report.reporter_id,
         })
-        const handledBy = report.handled_by
-          ? await database.getMinimalUser({ user_id: report.handled_by })
+          const handledBy = report.handled_by
+          ? await profileDb.getMinimalUser({ user_id: report.handled_by })
           : null
 
         return {
@@ -240,7 +242,7 @@ export const moderation_put_admin_reports_report_id: RequestHandler = async (
     }
 
     // Check if report exists
-    const existingReports = await database.getContentReports({
+    const existingReports = await adminDb.getContentReports({
       report_id: reportId,
     })
     if (existingReports.length === 0) {
@@ -259,17 +261,17 @@ export const moderation_put_admin_reports_report_id: RequestHandler = async (
     }
 
     // Update the report
-    const [updatedReport] = await database.updateContentReport(
+    const [updatedReport] = await adminDb.updateContentReport(
       { report_id: reportId },
       updateData,
     )
 
     // Get the updated report with user information
-    const reporter = await database.getMinimalUser({
+    const reporter = await profileDb.getMinimalUser({
       user_id: updatedReport.reporter_id,
     })
     const handledBy = updatedReport.handled_by
-      ? await database.getMinimalUser({ user_id: updatedReport.handled_by })
+      ? await profileDb.getMinimalUser({ user_id: updatedReport.handled_by })
       : null
 
     res.json(

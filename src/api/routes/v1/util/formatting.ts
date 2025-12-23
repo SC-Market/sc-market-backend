@@ -24,6 +24,13 @@ import {
   Rating,
 } from "../../../../clients/database/db-models.js"
 import { database } from "../../../../clients/database/knex-db.js"
+import * as marketDb from "../market/database.js"
+import * as orderDb from "../orders/database.js"
+import * as profileDb from "../profiles/database.js"
+import * as contractorDb from "../contractors/database.js"
+import * as serviceDb from "../services/database.js"
+import * as commentDb from "../comments/database.js"
+import * as recruitingDb from "../recruiting/database.js"
 import { cdn } from "../../../../clients/cdn/cdn.js"
 import { User } from "../api-models.js"
 import { is_member } from "./permissions.js"
@@ -39,12 +46,12 @@ import {
 
 export async function formatPrivateSearchResult(listing: DBMarketSearchResult) {
   if (listing.listing_type === "unique") {
-    const complete = await database.getMarketUniqueListingComplete(
+    const complete = await marketDb.getMarketUniqueListingComplete(
       listing.listing_id,
     )
     return formatUniqueListingComplete(complete, true)
   } else if (listing.listing_type === "aggregate") {
-    const complete = await database.getMarketAggregateComplete(
+    const complete = await marketDb.getMarketAggregateComplete(
       listing.listing_id,
       {
         status: "active",
@@ -53,7 +60,7 @@ export async function formatPrivateSearchResult(listing: DBMarketSearchResult) {
     )
     return formatMarketAggregateComplete(complete)
   } else {
-    const complete = await database.getMarketMultipleComplete(
+    const complete = await marketDb.getMarketMultipleComplete(
       listing.listing_id,
       {
         status: "active",
@@ -203,17 +210,17 @@ export async function formatListing(
   isPrivate: boolean = false,
 ) {
   if (listing.sale_type === "aggregate") {
-    const complete = await database.getMarketAggregateListingComplete(
+    const complete = await marketDb.getMarketAggregateListingComplete(
       listing.listing_id,
     )
     return formatListingComplete(complete, isPrivate)
   } else if (listing.sale_type === "multiple") {
-    const complete = await database.getMarketMultipleListingComplete(
+    const complete = await marketDb.getMarketMultipleListingComplete(
       listing.listing_id,
     )
     return formatListingComplete(complete, isPrivate)
   } else {
-    const complete = await database.getMarketUniqueListingComplete(
+    const complete = await marketDb.getMarketUniqueListingComplete(
       listing.listing_id,
     )
     return formatListingComplete(complete, isPrivate)
@@ -263,7 +270,7 @@ export async function serializeListingStats(listing: DBMarketListing) {
     .select()
 
   // Get view count for unique listings only
-  const viewStats = await database.getListingViewStats(
+  const viewStats = await marketDb.getListingViewStats(
     "market",
     listing.listing_id,
   )
@@ -294,7 +301,7 @@ export async function formatUniqueListingComplete(
   let price = +listing.price
 
   if (listing.sale_type === "auction") {
-    const bids = await database.getMarketBids({
+    const bids = await marketDb.getMarketBids({
       listing_id: listing.listing_id,
     })
     if (bids.length) {
@@ -312,14 +319,14 @@ export async function formatUniqueListingComplete(
     accept_offers: complete.accept_offers,
     auction_details:
       listing.sale_type === "auction"
-        ? await database.getAuctionDetail({ listing_id: listing.listing_id })
+        ? await marketDb.getAuctionDetail({ listing_id: listing.listing_id })
         : undefined,
     photos: photos,
     stats: isPrivate
       ? await serializeListingStats(listing)
       : {
           view_count:
-            (await database.getListingViewStats("market", listing.listing_id))
+            (await marketDb.getListingViewStats("market", listing.listing_id))
               ?.total_views || 0,
         },
   }
@@ -333,7 +340,7 @@ export async function formatBuyOrder(
     aggregate_id: buy_order.game_item_id,
     quantity: buy_order.quantity,
     price: buy_order.price,
-    buyer: await database.getMinimalUser({ user_id: buy_order.buyer_id }),
+    buyer: await profileDb.getMinimalUser({ user_id: buy_order.buyer_id }),
     expiry: buy_order.expiry,
   }
 }
@@ -479,10 +486,10 @@ export async function formatListingBase(
     quantity_available: listing.quantity_available,
     listing_id: listing.listing_id,
     user_seller: listing.user_seller_id
-      ? await database.getMinimalUser({ user_id: listing.user_seller_id })
+      ? await profileDb.getMinimalUser({ user_id: listing.user_seller_id })
       : null,
     contractor_seller: listing.contractor_seller_id
-      ? await database.getMinimalContractor({
+      ? await contractorDb.getMinimalContractor({
           contractor_id: listing.contractor_seller_id,
         })
       : null,
@@ -502,7 +509,7 @@ export async function formatListingBase(
 
   let bids: any | undefined = []
   if (listing.sale_type === "auction") {
-    const bid_objects = await database.getMarketBids({
+    const bid_objects = await marketDb.getMarketBids({
       listing_id: listing.listing_id,
     })
     for (const bid of bid_objects) {
@@ -521,7 +528,7 @@ export async function formatListingBase(
 export async function formatMarketAggregateListingComposite(
   listing: DBMarketAggregateListing,
 ) {
-  const complete = await database.getMarketAggregateListingComplete(
+  const complete = await marketDb.getMarketAggregateListingComplete(
     listing.aggregate_listing_id,
   )
   return formatMarketAggregateListingCompositeComplete(complete)
@@ -566,10 +573,10 @@ export async function formatBid(bid: DBMarketBid) {
   return {
     user_bidder:
       bid.user_bidder_id &&
-      (await database.getMinimalUser({ user_id: bid.user_bidder_id })),
+      (await profileDb.getMinimalUser({ user_id: bid.user_bidder_id })),
     contractor_bidder:
       bid.contractor_bidder_id &&
-      (await database.getMinimalContractor({
+      (await contractorDb.getMinimalContractor({
         contractor_id: bid.contractor_bidder_id,
       })),
     bid: bid.bid,
@@ -583,10 +590,10 @@ export async function formatBid(bid: DBMarketBid) {
 //   return {
 //     user:
 //       offer.buyer_user_id &&
-//       (await database.getMinimalUser({ user_id: offer.buyer_user_id })),
+//       (await (await import("../profiles/database.js")).getMinimalUser({ user_id: offer.buyer_user_id })),
 //     contractor:
 //       offer.buyer_contractor_id &&
-//       (await database.getMinimalContractor({
+//       (await contractorDb.getMinimalContractor({
 //         contractor_id: offer.buyer_contractor_id,
 //       })),
 //     offer: offer.offer,
@@ -599,12 +606,12 @@ export async function formatBid(bid: DBMarketBid) {
 
 export async function formatPrivateListing(listing: DBMarketListing) {
   if (listing.sale_type === "aggregate") {
-    const complete = await database.getMarketAggregateListingComplete(
+    const complete = await marketDb.getMarketAggregateListingComplete(
       listing.listing_id,
     )
     return formatMarketAggregateListingCompositeComplete(complete, true)
   } else {
-    const complete = await database.getMarketUniqueListingComplete(
+    const complete = await marketDb.getMarketUniqueListingComplete(
       listing.listing_id,
     )
     return formatUniqueListingComplete(complete, true)
@@ -615,7 +622,7 @@ export async function formatReview(
   order: DBOrder,
   role?: "customer" | "contractor",
 ) {
-  const order_review = await database.getOrderReview({
+  const order_review = await orderDb.getOrderReview({
     order_id: order.order_id,
     role,
   })
@@ -625,10 +632,10 @@ export async function formatReview(
   return {
     review_id: order_review.review_id,
     user_author: order_review.user_author
-      ? await database.getMinimalUser({ user_id: order_review.user_author })
+      ? await profileDb.getMinimalUser({ user_id: order_review.user_author })
       : null,
     contractor_author: order_review.contractor_author
-      ? await database.getMinimalContractor({
+      ? await contractorDb.getMinimalContractor({
           contractor_id: order_review.contractor_author,
         })
       : null,
@@ -651,14 +658,14 @@ export async function formatOrderAvailability(order: DBOrder | DBOfferSession) {
   } = { customer: null, assigned: null }
 
   if (order.customer_id) {
-    availabilities.customer = await database.getUserAvailability(
+    availabilities.customer = await profileDb.getUserAvailability(
       order.customer_id,
       null,
     )
   }
 
   if (order.assigned_id) {
-    availabilities.assigned = await database.getUserAvailability(
+    availabilities.assigned = await profileDb.getUserAvailability(
       order.assigned_id,
       order.contractor_id,
     )
@@ -668,10 +675,10 @@ export async function formatOrderAvailability(order: DBOrder | DBOfferSession) {
 }
 
 export async function formatOrderStub(order: DBOrder): Promise<OrderStub> {
-  const itemCount = await database.getOrderMarketListingCount(order.order_id)
+  const itemCount = await marketDb.getOrderMarketListingCount(order.order_id)
   let service_name = null
   if (order.service_id) {
-    const service = await database.getService({
+    const service = await serviceDb.getService({
       service_id: order.service_id,
     })
     service_name = service!.title
@@ -680,14 +687,14 @@ export async function formatOrderStub(order: DBOrder): Promise<OrderStub> {
   return {
     order_id: order.order_id,
     contractor: order.contractor_id
-      ? await database.getMinimalContractor({
+      ? await contractorDb.getMinimalContractor({
           contractor_id: order.contractor_id,
         })
       : null,
     assigned_to: order.assigned_id
-      ? await database.getMinimalUser({ user_id: order.assigned_id })
+      ? await profileDb.getMinimalUser({ user_id: order.assigned_id })
       : null,
-    customer: await database.getMinimalUser({ user_id: order.customer_id }),
+    customer: await profileDb.getMinimalUser({ user_id: order.customer_id }),
     status: order.status as OrderStatus,
     timestamp: order.timestamp.toISOString(),
     cost: order.cost.toString(),
@@ -797,7 +804,7 @@ export async function getContractorRating(
   contractor_id: string,
 ): Promise<Rating> {
   // Try to get badges from materialized view first
-  const badgeData = await database.getContractorBadges(contractor_id)
+  const badgeData = await contractorDb.getContractorBadges(contractor_id)
 
   if (badgeData && badgeData.metadata) {
     const metadata = badgeData.metadata
@@ -812,8 +819,8 @@ export async function getContractorRating(
   }
 
   // Fallback to current calculation if badge data missing
-  const reviews = await database.getContractorReviews(contractor_id)
-  const count = await database.getOrderCount({
+  const reviews = await contractorDb.getContractorReviews(contractor_id)
+  const count = await orderDb.getOrderCount({
     contractor_id: contractor_id,
     status: "fulfilled",
   })
@@ -829,7 +836,8 @@ export async function getContractorRating(
   }
 
   const ratings = reviews.filter((r) => r.rating).map((r) => +r.rating)
-  const responseStats = await database.getContractorResponseStats(contractor_id)
+  const responseStats =
+    await contractorDb.getContractorResponseStats(contractor_id)
   const total_rating = ratings.reduce((a, b) => a + b, 0)
 
   return {
@@ -845,7 +853,7 @@ export async function getContractorRating(
 
 export async function getUserRating(user_id: string): Promise<Rating> {
   // Try to get badges from materialized view first
-  const badgeData = await database.getUserBadges(user_id)
+  const badgeData = await profileDb.getUserBadges(user_id)
 
   if (badgeData && badgeData.metadata) {
     const metadata = badgeData.metadata
@@ -860,8 +868,8 @@ export async function getUserRating(user_id: string): Promise<Rating> {
   }
 
   // Fallback to current calculation if badge data missing
-  const reviews = await database.getUserReviews(user_id)
-  const count = await database.getOrderCount({
+  const reviews = await profileDb.getUserReviews(user_id)
+  const count = await orderDb.getOrderCount({
     assigned_id: user_id,
     contractor_id: null,
     status: "fulfilled",
@@ -877,7 +885,7 @@ export async function getUserRating(user_id: string): Promise<Rating> {
   }
 
   const ratings = reviews.filter((r) => r.rating).map((r) => +r.rating)
-  const responseStats = await database.getUserResponseStats(user_id)
+  const responseStats = await profileDb.getUserResponseStats(user_id)
   const total_rating = ratings.reduce((a, b) => a + b, 0)
 
   return {
@@ -895,7 +903,7 @@ export async function contractorDetails(
   contractor: DBContractor,
   user: User | null,
 ) {
-  const fields = await database.getContractorFields({
+  const fields = await contractorDb.getContractorFields({
     "contractors.contractor_id": contractor.contractor_id,
   })
 
@@ -903,16 +911,16 @@ export async function contractorDetails(
     ...contractor,
     fields: fields.map((f) => f.field),
     rating: await getContractorRating(contractor.contractor_id),
-    badges: await database.getContractorBadges(contractor.contractor_id),
+    badges: await contractorDb.getContractorBadges(contractor.contractor_id),
     avatar: await cdn.getFileLinkResource(contractor.avatar),
     banner: await cdn.getFileLinkResource(contractor.banner),
     archived: contractor.archived,
     roles:
       user && (await is_member(contractor.contractor_id, user.user_id))
-        ? await database.getContractorRoles({
+        ? await contractorDb.getContractorRoles({
             contractor_id: contractor.contractor_id,
           })
-        : await database.getContractorRolesPublic({
+        : await contractorDb.getContractorRolesPublic({
             contractor_id: contractor.contractor_id,
           }),
     market_order_template: contractor.market_order_template,
@@ -921,7 +929,7 @@ export async function contractorDetails(
 }
 
 export async function formatInvite(invite: DBContractorInvite) {
-  const cont = await database.getContractor({
+  const cont = await contractorDb.getContractor({
     contractor_id: invite.contractor_id,
   })
   return { spectrum_id: cont.spectrum_id, message: invite.message }
@@ -940,8 +948,8 @@ export interface FormattedComment {
 export async function formatComment(
   comment: DBComment,
 ): Promise<FormattedComment> {
-  const replied = await database.getComments({ reply_to: comment.comment_id })
-  const votes = await database.getCommentVoteCounts({
+  const replied = await commentDb.getComments({ reply_to: comment.comment_id })
+  const votes = await commentDb.getCommentVoteCounts({
     comment_id: comment.comment_id,
   })
 
@@ -956,7 +964,7 @@ export async function formatComment(
     content: comment.deleted ? "[deleted]" : comment.content,
     author: comment.deleted
       ? null
-      : await database.getMinimalUser({ user_id: comment.author }),
+      : await profileDb.getMinimalUser({ user_id: comment.author }),
     replies: formatted_replies,
     upvotes: +(votes.find((v) => v.upvote)?.count || 0),
     downvotes: +(votes.find((v) => !v.upvote)?.count || 0),
@@ -964,11 +972,11 @@ export async function formatComment(
 }
 
 export async function formatRecruitingPost(post: DBRecruitingPost) {
-  const cont = await database.getContractor({
+  const cont = await contractorDb.getContractor({
     contractor_id: post.contractor_id,
   })
   const contractor = await contractorDetails(cont, null)
-  const votes = await database.getRecruitingPostVoteCounts({
+  const votes = await recruitingDb.getRecruitingPostVoteCounts({
     post_id: post.post_id,
   })
 
@@ -984,12 +992,12 @@ export async function formatRecruitingPost(post: DBRecruitingPost) {
 }
 
 export async function adminCheck(spectrum_id: string, user: User) {
-  const contractor = await database.getContractorSafe({ spectrum_id })
+  const contractor = await contractorDb.getContractorSafe({ spectrum_id })
   if (!contractor) {
     return false
   }
 
-  const isAdmin = await database.isContractorAdmin(
+  const isAdmin = await contractorDb.isContractorAdmin(
     user.user_id,
     contractor.contractor_id,
   )

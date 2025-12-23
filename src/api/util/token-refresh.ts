@@ -3,6 +3,7 @@ import { database } from "../../clients/database/knex-db.js"
 import { env } from "../../config/env.js"
 import { getCitizenIDConfig } from "./auth-helpers.js"
 import logger from "../../logger/logger.js"
+import * as profileDb from "../routes/v1/profiles/database.js"
 
 /**
  * Refresh Discord access token using refresh token
@@ -67,14 +68,14 @@ export async function refreshDiscordToken(
       : new Date(Date.now() + 7 * 24 * 60 * 60 * 1000) // Default to 7 days if not provided
 
     // Update tokens in database
-    await database.updateProviderTokens(userId, "discord", {
+    await profileDb.updateProviderTokens(userId, "discord", {
       access_token: newTokens.access_token,
       refresh_token: newTokens.refresh_token,
       token_expires_at: expiresAt,
     })
 
     // Also update legacy columns for backward compatibility
-    await database.updateUser(
+    await profileDb.updateUser(
       { user_id: userId },
       {
         discord_access_token: newTokens.access_token,
@@ -144,7 +145,7 @@ export async function refreshCitizenIDToken(
       : null // If no expiration info, store as null
 
     // Update tokens in database
-    await database.updateProviderTokens(userId, "citizenid", {
+    await profileDb.updateProviderTokens(userId, "citizenid", {
       access_token: tokenData.access_token,
       refresh_token: tokenData.refresh_token || refreshToken, // Use new refresh token if provided, otherwise keep old one
       token_expires_at: expiresAt,
@@ -182,7 +183,7 @@ export async function getValidAccessToken(
   providerType: "discord" | "citizenid",
 ): Promise<string | null> {
   try {
-    const provider = await database.getUserProvider(userId, providerType)
+    const provider = await profileDb.getUserProvider(userId, providerType)
     if (!provider || !provider.access_token) {
       return null
     }
@@ -250,7 +251,7 @@ export async function getValidAccessToken(
     // Try to get token from legacy columns as fallback (for Discord only)
     if (providerType === "discord") {
       try {
-        const user = await database.getUser({ user_id: userId })
+        const user = await profileDb.getUser({ user_id: userId })
         if (user.discord_access_token) {
           logger.warn(
             `[Token Refresh] Using legacy Discord token as fallback for user ${userId}`,

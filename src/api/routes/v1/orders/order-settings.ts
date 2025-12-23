@@ -1,5 +1,6 @@
 import { Router } from "express"
 import { database } from "../../../../clients/database/knex-db.js"
+import * as orderDb from "./database.js"
 import { createResponse, createErrorResponse } from "../util/response.js"
 import { userAuthorized } from "../../../middleware/auth.js"
 import { org_permission, valid_contractor } from "../contractors/middleware.js"
@@ -41,7 +42,7 @@ orderSettingsRouter.get("/settings", userAuthorized, async (req, res) => {
   const user = req.user as User
 
   try {
-    const settings = await database.getOrderSettings("user", user.user_id)
+    const settings = await orderDb.getOrderSettings("user", user.user_id)
     res.json(createResponse({ settings: settings.map(serializeOrderSetting) }))
   } catch (error) {
     console.error("Error fetching user order settings:", error)
@@ -109,7 +110,7 @@ orderSettingsRouter.post("/settings", userAuthorized, async (req, res) => {
 
   try {
     // Check if setting already exists
-    const existing = await database.getOrderSetting(
+    const existing = await orderDb.getOrderSetting(
       "user",
       user.user_id,
       setting_type,
@@ -122,7 +123,7 @@ orderSettingsRouter.post("/settings", userAuthorized, async (req, res) => {
         setting_type,
       })
 
-      const updated = await database.updateOrderSetting(existing.id, {
+      const updated = await orderDb.updateOrderSetting(existing.id, {
         message_content: message_content || "", // Empty string for require_availability
         enabled,
       })
@@ -138,7 +139,7 @@ orderSettingsRouter.post("/settings", userAuthorized, async (req, res) => {
       setting_type,
     })
 
-    const setting = await database.createOrderSetting({
+    const setting = await orderDb.createOrderSetting({
       entity_type: "user",
       entity_id: user.user_id,
       setting_type,
@@ -191,7 +192,7 @@ orderSettingsRouter.put("/settings/:id", userAuthorized, async (req, res) => {
       return
     }
 
-    const updated = await database.updateOrderSetting(id, {
+    const updated = await orderDb.updateOrderSetting(id, {
       message_content,
       enabled,
     })
@@ -226,7 +227,7 @@ orderSettingsRouter.delete(
         return
       }
 
-      await database.deleteOrderSetting(id)
+      await orderDb.deleteOrderSetting(id)
       res.status(204).send()
     } catch (error) {
       console.error("Error deleting order setting:", error)
@@ -255,7 +256,7 @@ orderSettingsRouter.get(
     })
 
     try {
-      const settings = await database.getOrderSettings(
+      const settings = await orderDb.getOrderSettings(
         "contractor",
         contractor.contractor_id,
       )
@@ -366,7 +367,7 @@ orderSettingsRouter.post(
 
     try {
       // Check if setting already exists
-      const existing = await database.getOrderSetting(
+      const existing = await orderDb.getOrderSetting(
         "contractor",
         contractor.contractor_id,
         setting_type,
@@ -380,7 +381,7 @@ orderSettingsRouter.post(
           setting_type,
         })
 
-        const updated = await database.updateOrderSetting(existing.id, {
+        const updated = await orderDb.updateOrderSetting(existing.id, {
           message_content: message_content || "", // Empty string for require_availability
           enabled,
         })
@@ -397,7 +398,7 @@ orderSettingsRouter.post(
         setting_type,
       })
 
-      const setting = await database.createOrderSetting({
+      const setting = await orderDb.createOrderSetting({
         entity_type: "contractor",
         entity_id: contractor.contractor_id,
         setting_type,
@@ -462,7 +463,7 @@ orderSettingsRouter.put(
         return
       }
 
-      const updated = await database.updateOrderSetting(id, {
+      const updated = await orderDb.updateOrderSetting(id, {
         message_content,
         enabled,
       })
@@ -505,7 +506,7 @@ orderSettingsRouter.delete(
         return
       }
 
-      await database.deleteOrderSetting(id)
+      await orderDb.deleteOrderSetting(id)
       res.status(204).send()
     } catch (error) {
       console.error("Error deleting contractor order setting:", error)

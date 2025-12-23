@@ -1,4 +1,10 @@
 import { database } from "../database/knex-db.js"
+import * as orderDb from "../../api/routes/v1/orders/database.js"
+import * as chatDb from "../../api/routes/v1/chats/database.js"
+import * as profileDb from "../../api/routes/v1/profiles/database.js"
+import * as contractorDb from "../../api/routes/v1/contractors/database.js"
+import * as marketDb from "../../api/routes/v1/market/database.js"
+import * as offerDb from "../../api/routes/v1/offers/database.js"
 import express from "express"
 import { serializeMessage } from "../../api/routes/v1/chats/serializers.js"
 import { handleStatusUpdate } from "../../api/routes/v1/orders/helpers.js"
@@ -14,7 +20,7 @@ import { chatServer } from "../messaging/websocket.js"
 export const threadRouter = express.Router()
 
 threadRouter.get("/all", async (req, res) => {
-  const thread_ids = await database.getAllThreads()
+  const thread_ids = await orderDb.getAllThreads()
   res.json({
     result: "Success",
     thread_ids: thread_ids.map((t) => t.thread_id),
@@ -37,7 +43,7 @@ threadRouter.post("/message", async (req, res) => {
   let finalContent = content
   let user = null
   try {
-    user = await database.getUserByDiscordId(author_id)
+    user = await profileDb.getUserByDiscordId(author_id)
     if (!user) {
       res.status(404).json({ error: "User not found" })
       return
@@ -50,19 +56,19 @@ threadRouter.post("/message", async (req, res) => {
 
   let order
   try {
-    order = await database.getOrder({ thread_id })
-    chat = await database.getChat({ order_id: order.order_id })
+    order = await orderDb.getOrder({ thread_id })
+    chat = await chatDb.getChat({ order_id: order.order_id })
   } catch (e) {
-    const [session] = await database.getOfferSessions({ thread_id })
+    const [session] = await offerDb.getOfferSessions({ thread_id })
     if (!session) {
       res.json({ result: "Success" })
       return
     }
 
-    chat = await database.getChat({ session_id: session.id })
+    chat = await chatDb.getChat({ session_id: session.id })
   }
 
-  const message = await database.insertMessage({
+  const message = await chatDb.insertMessage({
     author: user?.user_id || null,
     chat_id: chat.chat_id,
     content: finalContent,
@@ -71,7 +77,7 @@ threadRouter.post("/message", async (req, res) => {
   chatServer.emitMessage(await serializeMessage(message))
 
   if (user) {
-    database.upsertDailyActivity(user.user_id)
+    marketDb.upsertDailyActivity(user.user_id)
   }
 
   res.json({ result: "Success" })
@@ -102,9 +108,9 @@ threadRouter.post("/order/status", async (req, res) => {
   let order
   try {
     if (thread_id) {
-      order = await database.getOrder({ thread_id })
+      order = await orderDb.getOrder({ thread_id })
     } else {
-      order = await database.getOrder({ order_id })
+      order = await orderDb.getOrder({ order_id })
     }
   } catch (e) {
     console.error(e)
@@ -112,7 +118,7 @@ threadRouter.post("/order/status", async (req, res) => {
     return
   }
 
-  const user = await database.getUserByDiscordId(discord_id)
+  const user = await profileDb.getUserByDiscordId(discord_id)
   if (!user) {
     res.status(404).json({ error: "User not found" })
     return
@@ -136,7 +142,7 @@ threadRouter.post("/market/quantity/:opt", async (req, res) => {
     quantity: number
   } = req.body
 
-  const user = await database.getUserByDiscordId(discord_id)
+  const user = await profileDb.getUserByDiscordId(discord_id)
   if (!user) {
     res.json({ result: "Success", thread_ids: [] })
     return
@@ -144,7 +150,7 @@ threadRouter.post("/market/quantity/:opt", async (req, res) => {
 
   let listing
   try {
-    listing = await database.getMarketListing({ listing_id })
+    listing = await marketDb.getMarketListing({ listing_id })
   } catch {
     res.status(400).json({ error: "Invalid listing" })
     return
@@ -167,15 +173,15 @@ threadRouter.post("/market/quantity/:opt", async (req, res) => {
 threadRouter.get("/user/:discord_id/assigned", async (req, res) => {
   const discord_id = req.params.discord_id
 
-  const user = await database.getUserByDiscordId(discord_id)
+  const user = await profileDb.getUserByDiscordId(discord_id)
   if (!user) {
     res.json({ result: "Success", thread_ids: [] })
     return
   }
 
-  const orders = await database.getRelatedActiveOrders(user.user_id)
+  const orders = await orderDb.getRelatedActiveOrders(user.user_id)
 
-  const contractors = await database.getUserContractors({
+  const contractors = await contractorDb.getUserContractors({
     "contractor_members.user_id": user.user_id,
   })
 
@@ -190,13 +196,13 @@ threadRouter.get("/user/:discord_id/assigned", async (req, res) => {
 threadRouter.get("/user/:discord_id/contractors", async (req, res) => {
   const discord_id = req.params.discord_id
 
-  const user = await database.getUserByDiscordId(discord_id)
+  const user = await profileDb.getUserByDiscordId(discord_id)
   if (!user) {
     res.json({ result: "Success", thread_ids: [] })
     return
   }
 
-  const contractors = await database.getUserContractors({
+  const contractors = await contractorDb.getUserContractors({
     user_id: user.user_id,
   })
 
@@ -222,13 +228,13 @@ threadRouter.get("/user/:discord_id/contractors", async (req, res) => {
 threadRouter.get("/user/:discord_id/listings", async (req, res) => {
   const discord_id = req.params.discord_id
 
-  const user = await database.getUserByDiscordId(discord_id)
+  const user = await profileDb.getUserByDiscordId(discord_id)
   if (!user) {
     res.json({ result: "Success", thread_ids: [] })
     return
   }
 
-  const listings = await database.searchMarket(
+  const listings = await marketDb.searchMarket(
     await convertQuery({ page_size: "100" }),
     (qb: any) =>
       qb
@@ -249,7 +255,7 @@ threadRouter.get(
 
     let user
     try {
-      user = await database.getUserByDiscordId(discord_id)
+      user = await profileDb.getUserByDiscordId(discord_id)
       if (!user) {
         res.status(404).json({ error: "User not found" })
         return
@@ -260,7 +266,7 @@ threadRouter.get(
     }
 
     const spectrum_id = req.params["spectrum_id"]
-    const contractor = await database.getContractor({
+    const contractor = await contractorDb.getContractor({
       spectrum_id: spectrum_id,
     })
     if (!contractor) {
@@ -268,7 +274,7 @@ threadRouter.get(
       return
     }
 
-    const contractors = await database.getUserContractors({
+    const contractors = await contractorDb.getUserContractors({
       "contractor_members.user_id": user.user_id,
     })
 
@@ -282,7 +288,7 @@ threadRouter.get(
       return
     }
 
-    const listings = await database.searchMarket(
+    const listings = await marketDb.searchMarket(
       await convertQuery({ page_size: "100" }),
       (qb: any) =>
         qb
@@ -300,14 +306,14 @@ threadRouter.get(
 threadRouter.get("/user/:discord_id", async (req, res) => {
   const discord_id = req.params.discord_id
 
-  const user = await database.getUserByDiscordId(discord_id)
+  const user = await profileDb.getUserByDiscordId(discord_id)
   if (!user) {
     res.json({ result: "Success", thread_ids: [] })
     return
   }
 
-  const orders = await database.getRelatedOrders(user.user_id)
-  const offers = await database.getRelatedOffers(user.user_id)
+  const orders = await orderDb.getRelatedOrders(user.user_id)
+  const offers = await offerDb.getRelatedOffers(user.user_id)
   const thread_ids = orders
     .map((o) => o.thread_id)
     .filter((o) => o)

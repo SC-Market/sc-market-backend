@@ -6,6 +6,7 @@ import { env } from "../../config/env.js"
 import { S3, S3ClientConfig } from "@aws-sdk/client-s3"
 import logger from "../../logger/logger.js"
 import { ImageLambdaClient } from "../image-lambda/image-lambda.js"
+import * as contractorDb from "../../api/routes/v1/contractors/database.js"
 
 export class BackBlazeCDN implements CDN {
   // Implements Singleton
@@ -81,7 +82,7 @@ export class BackBlazeCDN implements CDN {
 
       // Store the image resource in the database using the filename returned from Lambda
       // The Lambda already provides the complete filename with the correct extension
-      const imageResource = await database.insertImageResource({
+      const imageResource = await contractorDb.insertImageResource({
         filename: result.data!.filename,
       })
 
@@ -124,7 +125,7 @@ export class BackBlazeCDN implements CDN {
     if (!resource_id) {
       return null
     }
-    const resource = await database.getImageResource({
+    const resource = await contractorDb.getImageResource({
       resource_id: resource_id,
     })
     if (resource.external_url) {
@@ -152,18 +153,18 @@ export class BackBlazeCDN implements CDN {
       throw new CDNError("Invalid external URL")
     }
 
-    return await database.insertImageResource({
+    return await contractorDb.insertImageResource({
       filename,
       external_url,
     })
   }
 
   async removeResource(resource_id: string) {
-    const resource = await database.getImageResource({ resource_id })
+    const resource = await contractorDb.getImageResource({ resource_id })
     if (!resource.external_url) {
       await this.deleteFile(resource.filename)
     }
 
-    await database.removeImageResource({ resource_id })
+    await contractorDb.removeImageResource({ resource_id })
   }
 }

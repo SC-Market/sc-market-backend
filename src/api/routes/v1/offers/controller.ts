@@ -1,5 +1,9 @@
 import { RequestHandler } from "express"
 import { database } from "../../../../clients/database/knex-db.js"
+import * as profileDb from "../profiles/database.js"
+import * as offerDb from "./database.js"
+import * as marketDb from "../market/database.js"
+import * as serviceDb from "../services/database.js"
 import { DBOfferSession } from "../../../../clients/database/db-models.js"
 
 import { User } from "../api-models.js"
@@ -51,8 +55,8 @@ export const offer_put_session_id: RequestHandler = async (req, res) => {
 
   if (["accepted", "rejected"].includes(status)) {
     const user = req.user as User
-    await database.updateOfferSession(session.id, { status: "closed" })
-    await database.updateOrderOffer(req.most_recent_offer!.id, {
+    await offerDb.updateOfferSession(session.id, { status: "closed" })
+    await offerDb.updateOrderOffer(req.most_recent_offer!.id, {
       status,
     })
 
@@ -69,16 +73,16 @@ export const offer_put_session_id: RequestHandler = async (req, res) => {
     }
   } else {
     const user = req.user as User
-    const customer = await database.getUser({ user_id: session.customer_id })
+    const customer = await profileDb.getUser({ user_id: session.customer_id })
     const body = req.body as CounterOfferBody
 
     const listings = await verify_listings(res, body.market_listings, customer)
-    if (listings === undefined) {
+    if (listings === undefined || listings === null) {
       return
     }
 
     if (body.service_id) {
-      const service = await database.getService({
+      const service = await serviceDb.getService({
         service_id: body.service_id,
       })
 
@@ -101,7 +105,7 @@ export const offer_put_session_id: RequestHandler = async (req, res) => {
       }
     }
 
-    const [offer] = await database.createOrderOffer({
+    const [offer] = await offerDb.createOrderOffer({
       session_id: session.id,
       actor_id: user.user_id,
       kind: body.kind,
@@ -113,7 +117,7 @@ export const offer_put_session_id: RequestHandler = async (req, res) => {
     })
 
     if (listings.length) {
-      await database.insertOfferMarketListing(
+      await marketDb.insertOfferMarketListing(
         listings.map((l) => ({
           listing_id: l.listing.listing.listing_id,
           quantity: l.quantity,
@@ -122,7 +126,7 @@ export const offer_put_session_id: RequestHandler = async (req, res) => {
       )
     }
 
-    await database.updateOrderOffer(req.most_recent_offer!.id, {
+    await offerDb.updateOrderOffer(req.most_recent_offer!.id, {
       status: "counteroffered",
     })
 
@@ -252,7 +256,7 @@ export const post_merge: RequestHandler = async (req, res) => {
     }
 
     const customer_id = sessions[0].customer_id
-    const customer = await database.getUser({ user_id: customer_id })
+    const customer = await profileDb.getUser({ user_id: customer_id })
 
     const result = await mergeOfferSessions(
       offer_session_ids,

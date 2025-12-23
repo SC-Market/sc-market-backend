@@ -3,6 +3,10 @@ import { env } from "../config/env.js"
 import logger from "../logger/logger.js"
 import { Routes } from "discord-api-types/v10"
 import { database } from "../clients/database/knex-db.js"
+import * as profileDb from "../api/routes/v1/profiles/database.js"
+import * as orderDb from "../api/routes/v1/orders/database.js"
+import * as offerDb from "../api/routes/v1/offers/database.js"
+import * as webhookUtil from "../api/routes/v1/util/webhooks.js"
 import { rest } from "../api/routes/v1/util/discord.js"
 import { checkSQSConfiguration } from "../clients/aws/sqs-config.js"
 import { chatServer } from "../clients/messaging/websocket.js"
@@ -136,12 +140,12 @@ async function handleThreadCreated(payload: any, metadata: any) {
     // Update the database with the thread_id
     try {
       if (entity_type === "order") {
-        await database.updateOrder(original_order_id, { thread_id: thread_id })
+        await orderDb.updateOrder(original_order_id, { thread_id: thread_id })
         logger.info(
           `Updated order ${original_order_id} with thread_id: ${thread_id}`,
         )
       } else if (entity_type === "offer_session") {
-        await database.updateOfferSession(original_order_id, {
+        await offerDb.updateOfferSession(original_order_id, {
           thread_id: thread_id,
         })
         logger.info(
@@ -184,32 +188,30 @@ async function postThreadInitializationMessages(
   try {
     logger.info(`Posting initialization messages to thread ${threadId}`)
 
-    // Import the message generation functions
-    const { generateNewOrderMessage, generateNewOfferMessage } = await import(
-      "../api/routes/v1/util/webhooks.js"
-    )
+    // Use the message generation functions
+    const { generateNewOrderMessage, generateNewOfferMessage } = webhookUtil
 
     let message
     if (entityInfo.type === "order") {
       // Get order and user data
-      const order = await database.getOrder({ order_id: entityInfo.id })
-      const customer = await database.getUser({ user_id: order.customer_id })
+      const order = await orderDb.getOrder({ order_id: entityInfo.id })
+      const customer = await profileDb.getUser({ user_id: order.customer_id })
       const assigned = order.assigned_id
-        ? await database.getUser({ user_id: order.assigned_id })
+        ? await profileDb.getUser({ user_id: order.assigned_id })
         : null
 
       message = await generateNewOrderMessage(order, customer, assigned)
     } else if (entityInfo.type === "offer_session") {
       // Get offer session and user data
-      const sessions = await database.getOfferSessions({ id: entityInfo.id })
+      const sessions = await offerDb.getOfferSessions({ id: entityInfo.id })
       if (sessions.length === 0) {
         logger.warn(`No offer session found for id ${entityInfo.id}`)
         return
       }
       const session = sessions[0]
-      const customer = await database.getUser({ user_id: session.customer_id })
+      const customer = await profileDb.getUser({ user_id: session.customer_id })
       const assigned = session.assigned_id
-        ? await database.getUser({ user_id: session.assigned_id })
+        ? await profileDb.getUser({ user_id: session.assigned_id })
         : null
 
       message = await generateNewOfferMessage(session, customer, assigned)
