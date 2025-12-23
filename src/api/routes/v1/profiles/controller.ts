@@ -1,6 +1,12 @@
 import { RequestHandler } from "express"
 import { User as User } from "../api-models.js"
 import { database as database } from "../../../../clients/database/knex-db.js"
+import * as profileDb from "./database.js"
+import * as contractorDb from "../contractors/database.js"
+import * as notificationDb from "../notifications/database.js"
+import * as orderDb from "../orders/database.js"
+import * as chatDb from "../chats/database.js"
+import * as commentDb from "../comments/database.js"
 import { cdn as cdn } from "../../../../clients/cdn/cdn.js"
 import { AvailabilityBody as AvailabilityBody } from "../../../../clients/database/db-models.js"
 import { getUserRating as getUserRating } from "../util/formatting.js"
@@ -98,7 +104,7 @@ export const profile_post_auth_unlink: RequestHandler = async (req, res) => {
 
     // Check if Citizen ID is linked - if so, disallow unlinking
     // Citizen ID is the authoritative source for RSI details when linked
-    const providers = await database.getUserProviders(user.user_id)
+    const providers = await profileDb.getUserProviders(user.user_id)
     const hasCitizenID = providers.some((p) => p.provider_type === "citizenid")
 
     if (hasCitizenID) {
@@ -113,7 +119,7 @@ export const profile_post_auth_unlink: RequestHandler = async (req, res) => {
     }
 
     // Generate default username from Discord ID or user ID
-    const discordProvider = await database.getUserProvider(
+    const discordProvider = await profileDb.getUserProvider(
       user.user_id,
       "discord",
     )
@@ -123,7 +129,7 @@ export const profile_post_auth_unlink: RequestHandler = async (req, res) => {
     const defaultDisplayName = `new_user${discordId}`
 
     // Update user to unverified state with default usernames
-    await database.updateUser(
+    await profileDb.updateUser(
       { user_id: user.user_id },
       {
         rsi_confirmed: false,
@@ -164,7 +170,7 @@ export const profile_get_search_query: RequestHandler = async (req, res) => {
   //   return
   // }
 
-  const users = await database.searchUsers(query)
+  const users = await profileDb.searchUsers(query)
 
   res.json(await Promise.all(users.map((u) => serializePublicProfile(u))))
 }
@@ -175,7 +181,7 @@ export const profile_put_root: RequestHandler = async (req, res) => {
     const { locale }: { locale: string } = req.body
 
     // Update user locale in database
-    const updatedUsers = await database.updateUser(
+    const updatedUsers = await profileDb.updateUser(
       { user_id: user.user_id },
       { locale },
     )
@@ -238,7 +244,7 @@ export const profile_post_update: RequestHandler = async (req, res, next) => {
   }
 
   // Update only non-image fields
-  const newUsers = await database.updateUser(
+  const newUsers = await profileDb.updateUser(
     { user_id: user.user_id },
     {
       profile_description: about || "",
@@ -284,7 +290,7 @@ export const profile_post_avatar: RequestHandler = async (req, res) => {
     )
 
     // Update user record
-    await database.updateUser(
+    await profileDb.updateUser(
       { user_id: user.user_id },
       { avatar: resource.resource_id },
     )
@@ -436,7 +442,7 @@ export const profile_post_banner: RequestHandler = async (req, res) => {
     )
 
     // Update user record
-    await database.updateUser(
+    await profileDb.updateUser(
       { user_id: user.user_id },
       { banner: resource.resource_id },
     )
@@ -603,13 +609,13 @@ export const profile_post_webhook_delete: RequestHandler = async (req, res) => {
     return
   }
 
-  const webhook = await database.getNotificationWebhook({ webhook_id })
+  const webhook = await notificationDb.getNotificationWebhook({ webhook_id })
   if (webhook?.user_id !== user.user_id) {
     res.status(403).json({ error: "Unauthorized" })
     return
   }
 
-  await database.deleteNotificationWebhook({
+  await notificationDb.deleteNotificationWebhook({
     webhook_id,
     user_id: user.user_id,
   })
@@ -619,7 +625,7 @@ export const profile_post_webhook_delete: RequestHandler = async (req, res) => {
 export const profile_get_webhooks: RequestHandler = async (req, res, next) => {
   const user = req.user as User
 
-  const webhooks = await database.getNotificationWebhooks({
+  const webhooks = await notificationDb.getNotificationWebhooks({
     user_id: user.user_id,
   })
   res.json(webhooks)
@@ -632,23 +638,23 @@ export const profile_get_user_username_reviews: RequestHandler = async (
   const username = req.params["username"]
   let user
   try {
-    user = await database.getUser({ username: username }, { noBalance: true })
+    user = await profileDb.getUser({ username: username }, { noBalance: true })
   } catch (e) {
     res.status(400).json({ error: "Invalid user" })
     return
   }
 
-  const reviews = await database.getUserReviews(user.user_id)
+  const reviews = await profileDb.getUserReviews(user.user_id)
   res.json(
     await Promise.all(
       reviews.map(async (review) => {
         return {
           ...review,
           user_author: review.user_author
-            ? await database.getMinimalUser({ user_id: review.user_author })
+            ? await profileDb.getMinimalUser({ user_id: review.user_author })
             : null,
           contractor_author: review.contractor_author
-            ? await database.getMinimalContractor({
+            ? await contractorDb.getMinimalContractor({
                 contractor_id: review.contractor_author,
               })
             : null,
@@ -664,7 +670,10 @@ export const profile_get_user_username: RequestHandler = async (req, res) => {
     const username = req.params["username"]
     let user
     try {
-      user = await database.getUser({ username: username }, { noBalance: true })
+      user = await profileDb.getUser(
+        { username: username },
+        { noBalance: true },
+      )
     } catch (e) {
       res.status(400).json({ error: "Invalid user" })
       return
@@ -691,7 +700,7 @@ export const profile_post_settings_update: RequestHandler = async (
     return
   }
 
-  await database.updateUserSettings(user.user_id, {
+  await profileDb.updateUserSettings(user.user_id, {
     discord_order_share,
     discord_public,
   })
@@ -712,27 +721,27 @@ export const profile_post_availability_update: RequestHandler = async (
     if (contractor != null) {
       let cobj
       try {
-        cobj = await database.getContractor({ spectrum_id: contractor })
+        cobj = await contractorDb.getContractor({ spectrum_id: contractor })
       } catch {
         res.status(403).json({ error: "Invalid contractor" })
         return
       }
 
       if (
-        !(await database.getMemberRoles(cobj.contractor_id, user.user_id))
+        !(await contractorDb.getMemberRoles(cobj.contractor_id, user.user_id))
           .length
       ) {
         res.status(403).json({ error: "Invalid contractor" })
         return
       }
 
-      await database.updateUserAvailability(
+      await profileDb.updateUserAvailability(
         user.user_id,
         cobj.contractor_id,
         selections,
       )
     } else {
-      await database.updateUserAvailability(user.user_id, null, selections)
+      await profileDb.updateUserAvailability(user.user_id, null, selections)
     }
 
     res.json({ result: "Success" })
@@ -749,7 +758,7 @@ export const profile_get_availability_contractor_spectrum_id: RequestHandler =
 
     let cobj
     try {
-      cobj = await database.getContractor({ spectrum_id })
+      cobj = await contractorDb.getContractor({ spectrum_id })
     } catch {
       res.status(403).json({ error: "Invalid contractor" })
       return
@@ -757,7 +766,7 @@ export const profile_get_availability_contractor_spectrum_id: RequestHandler =
 
     res.json({
       contractor: spectrum_id,
-      selections: await database.getUserAvailability(
+      selections: await profileDb.getUserAvailability(
         user.user_id,
         cobj.contractor_id,
       ),
@@ -799,7 +808,7 @@ export const profile_post_settings_discord_use_official: RequestHandler =
     const channelId = "1072580369251041330"
 
     // Update using new integration system
-    await database.upsertIntegration(user.user_id, {
+    await profileDb.upsertIntegration(user.user_id, {
       integration_type: "discord",
       settings: {
         official_server_id: serverId,
@@ -809,7 +818,7 @@ export const profile_post_settings_discord_use_official: RequestHandler =
     })
 
     // Also update old columns for backward compatibility
-    await database.updateUser(
+    await profileDb.updateUser(
       { user_id: user.user_id },
       {
         official_server_id: serverId,
@@ -826,7 +835,7 @@ export const profile_get_availability: RequestHandler = async (req, res) => {
 
   res.json({
     contractor: null,
-    selections: await database.getUserAvailability(user.user_id, null),
+    selections: await profileDb.getUserAvailability(user.user_id, null),
   })
   return
 }
@@ -836,12 +845,12 @@ export const profile_get_root: RequestHandler = async (req, res, next) => {
     const { discord_access_token, discord_refresh_token, ...user } =
       req.user as User
 
-    const contractors = await database.getUserContractorRoles({
+    const contractors = await contractorDb.getUserContractorRoles({
       user_id: user.user_id,
     })
 
     // Get all providers
-    const providers = await database.getUserProviders(user.user_id)
+    const providers = await profileDb.getUserProviders(user.user_id)
 
     // Get Discord profile if Discord provider exists
     const discordProvider = providers.find((p) => p.provider_type === "discord")
@@ -853,12 +862,18 @@ export const profile_get_root: RequestHandler = async (req, res, next) => {
     res.json({
       ...user,
       balance: +user.balance!,
-      contractors: await Promise.all(
-        (() => {
-          // Group contractors by spectrum_id to collect all roles with details
-          const contractorMap = new Map()
+      contractors: await (async () => {
+        // Group contractors by spectrum_id to collect all roles with details
+        const contractorMap = new Map()
 
-          contractors.forEach((s) => {
+        contractors.forEach(
+          (s: {
+            spectrum_id: string
+            role: string
+            role_id: string
+            name: string
+            position: number
+          }) => {
             if (!contractorMap.has(s.spectrum_id)) {
               contractorMap.set(s.spectrum_id, {
                 spectrum_id: s.spectrum_id,
@@ -873,22 +888,25 @@ export const profile_get_root: RequestHandler = async (req, res, next) => {
               role_name: s.role,
               position: s.position,
             })
-          })
+          },
+        )
 
-          return Array.from(contractorMap.values())
-        })().map(async (contractor) => ({
-          ...contractor,
-          ...(await database.getMinimalContractor({
-            spectrum_id: contractor.spectrum_id,
+        const contractorList = Array.from(contractorMap.values())
+        return Promise.all(
+          contractorList.map(async (contractor) => ({
+            ...contractor,
+            ...(await contractorDb.getMinimalContractor({
+              spectrum_id: contractor.spectrum_id,
+            })),
           })),
-        })),
-      ),
+        )
+      })(),
       avatar: await cdn.getFileLinkResource(user.avatar),
       banner: await cdn.getFileLinkResource(user.banner),
       // notifications: await database.getCompleteNotificationsByUser(user.user_id),
-      settings: await database.getUserSettings(user.user_id),
+      settings: await profileDb.getUserSettings(user.user_id),
       rating: await getUserRating(user.user_id),
-      badges: await database.getUserBadges(user.user_id),
+      badges: await profileDb.getUserBadges(user.user_id),
       discord_profile: discord_profile
         ? {
             username: discord_profile?.username,
@@ -915,7 +933,7 @@ export const profile_get_root: RequestHandler = async (req, res, next) => {
 export const profile_get_links: RequestHandler = async (req, res, next) => {
   try {
     const user = req.user as User
-    const providers = await database.getUserProviders(user.user_id)
+    const providers = await profileDb.getUserProviders(user.user_id)
 
     res.json(
       createResponse({
@@ -945,7 +963,7 @@ export const profile_delete_links_provider_type: RequestHandler = async (
     const user = req.user as User
     const { provider_type } = req.params
 
-    await database.unlinkProvider(user.user_id, provider_type)
+    await profileDb.unlinkProvider(user.user_id, provider_type)
 
     res.json(createResponse({ success: true }))
   } catch (error: any) {
@@ -974,7 +992,7 @@ export const profile_put_links_provider_type_primary: RequestHandler = async (
     const user = req.user as User
     const { provider_type } = req.params
 
-    await database.setPrimaryProvider(user.user_id, provider_type)
+    await profileDb.setPrimaryProvider(user.user_id, provider_type)
 
     res.json(createResponse({ success: true }))
   } catch (error) {
@@ -987,7 +1005,7 @@ export const profile_get_my_data: RequestHandler = async (req, res) => {
   res.set({ "Content-Disposition": 'attachment; filename="data.txt"' })
   let content = ""
   content += `RSI Handle: ${user.username}\n`
-  const discordId = await database.getUserDiscordId(user.user_id)
+  const discordId = await profileDb.getUserDiscordId(user.user_id)
   if (discordId) {
     content += `Discord ID: ${discordId}\n`
   }
@@ -1000,11 +1018,11 @@ export const profile_get_my_data: RequestHandler = async (req, res) => {
   content += "Contractors:\n"
 
   content += "Orders:\n"
-  const orders = await database.getOrders({
+  const orders = await orderDb.getOrders({
     customer_id: user.user_id,
   })
   orders.push(
-    ...(await database.getOrders({
+    ...(await orderDb.getOrders({
       assigned_id: user.user_id,
     })),
   )
@@ -1023,13 +1041,13 @@ export const profile_get_my_data: RequestHandler = async (req, res) => {
     content += `Discord Thread: ${order.thread_id}\n`
   }
 
-  const contractors = await database.getUserContractorRoles({
+  const contractors = await contractorDb.getUserContractorRoles({
     user_id: user.user_id,
   })
   for (const role_details of contractors) {
     content += `${role_details.spectrum_id}: ${role_details.role}\n`
     if (role_details.role === "owner") {
-      const contractor = await database.getContractor({
+      const contractor = await contractorDb.getContractor({
         spectrum_id: role_details.spectrum_id,
       })
       content += `Spectrum ID: ${contractor.spectrum_id}\n`
@@ -1044,13 +1062,13 @@ export const profile_get_my_data: RequestHandler = async (req, res) => {
       content += `Size: ${contractor.size}\n`
       content += `Linked Discord Server ID: ${contractor.official_server_id}\n`
       content += `Linked Discord Thread ID: ${contractor.discord_thread_channel_id}\n`
-      const fields = await database.getContractorFields({
+      const fields = await contractorDb.getContractorFields({
         "contractors.contractor_id": contractor.contractor_id,
       })
       content += `Fields: ${fields.map((f) => f.field).join(", ")}\n`
       content += `Roles:\n\n`
 
-      const roles = await database.getContractorRoles({
+      const roles = await contractorDb.getContractorRoles({
         contractor_id: contractor.contractor_id,
       })
       for (const role of roles) {
@@ -1068,7 +1086,7 @@ export const profile_get_my_data: RequestHandler = async (req, res) => {
       }
 
       content += "Orders:\n\n"
-      const orders = await database.getOrders({
+      const orders = await orderDb.getOrders({
         contractor_id: contractor.contractor_id,
       })
 
@@ -1087,7 +1105,7 @@ export const profile_get_my_data: RequestHandler = async (req, res) => {
       }
 
       content += "Reviews:\n\n"
-      const reviews = await database.getOrderReviews({
+      const reviews = await orderDb.getOrderReviews({
         contractor_author: contractor.contractor_id,
       })
       for (const review of reviews) {
@@ -1098,21 +1116,21 @@ export const profile_get_my_data: RequestHandler = async (req, res) => {
   }
 
   content += "Messages:\n\n"
-  const messages = await database.getMessages({ author: user.user_id })
+  const messages = await chatDb.getMessages({ author: user.user_id })
   for (const message of messages) {
     content += `${message.message_id}: \`${message.content}\` in ${message.chat_id} at ${message.timestamp}\n`
   }
   content += "\n"
 
   content += "Comments:\n\n"
-  const comments = await database.getComments({ author: user.user_id })
+  const comments = await commentDb.getComments({ author: user.user_id })
   for (const comment of comments) {
     content += `${comment.comment_id}: \`${comment.content}\` at ${comment.timestamp}\n`
   }
   content += "\n"
 
   content += "Reviews:\n\n"
-  const reviews = await database.getOrderReviews({
+  const reviews = await orderDb.getOrderReviews({
     user_author: user.user_id,
   })
   for (const review of reviews) {
@@ -1126,13 +1144,13 @@ export const profile_get_my_data: RequestHandler = async (req, res) => {
 export const profile_get_blocklist: RequestHandler = async (req, res) => {
   try {
     const user = req.user as User
-    const blocklist = await database.getUserBlocklist(user.user_id, "user")
+    const blocklist = await profileDb.getUserBlocklist(user.user_id, "user")
 
     // Get user details for each blocked user
     const blocklistWithUsers = await Promise.all(
       blocklist.map(async (block) => {
         try {
-          const blockedUser = await database.getMinimalUser({
+          const blockedUser = await profileDb.getMinimalUser({
             user_id: block.blocked_id,
           })
           return {
@@ -1179,7 +1197,7 @@ export const profile_post_blocklist_block: RequestHandler = async (
     }
 
     // Get the user to block
-    const userToBlock = await database.getUser({ username })
+    const userToBlock = await profileDb.getUser({ username })
     if (!userToBlock) {
       res.status(404).json(createErrorResponse({ message: "User not found" }))
       return
@@ -1194,7 +1212,7 @@ export const profile_post_blocklist_block: RequestHandler = async (
     }
 
     // Check if already blocked
-    const isBlocked = await database.isUserBlocked(
+    const isBlocked = await profileDb.isUserBlocked(
       user.user_id,
       userToBlock.user_id,
       "user",
@@ -1207,7 +1225,7 @@ export const profile_post_blocklist_block: RequestHandler = async (
     }
 
     // Block the user
-    await database.blockUser(user.user_id, userToBlock.user_id, "user", reason)
+    await profileDb.blockUser(user.user_id, userToBlock.user_id, "user", reason)
 
     res.json(createResponse({ message: "User blocked successfully" }))
   } catch (error) {
@@ -1227,14 +1245,14 @@ export const profile_delete_blocklist_unblock_username: RequestHandler = async (
     const { username } = req.params
 
     // Get the user to unblock
-    const userToUnblock = await database.getUser({ username })
+    const userToUnblock = await profileDb.getUser({ username })
     if (!userToUnblock) {
       res.status(404).json(createErrorResponse({ message: "User not found" }))
       return
     }
 
     // Check if user is blocked
-    const isBlocked = await database.isUserBlocked(
+    const isBlocked = await profileDb.isUserBlocked(
       user.user_id,
       userToUnblock.user_id,
       "user",
@@ -1247,7 +1265,7 @@ export const profile_delete_blocklist_unblock_username: RequestHandler = async (
     }
 
     // Unblock the user
-    await database.unblockUser(user.user_id, userToUnblock.user_id, "user")
+    await profileDb.unblockUser(user.user_id, userToUnblock.user_id, "user")
 
     res.json(createResponse({ message: "User unblocked successfully" }))
   } catch (error) {

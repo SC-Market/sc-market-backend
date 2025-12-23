@@ -1,5 +1,7 @@
 import { NextFunction, Request, Response } from "express"
-import { database } from "../../../../clients/database/knex-db.js"
+import * as contractorDb from "../contractors/database.js"
+import * as marketDb from "./database.js"
+import * as profileDb from "../profiles/database.js"
 import { createErrorResponse } from "../util/response.js"
 import logger from "../../../../logger/logger.js"
 import { has_permission } from "../util/permissions.js"
@@ -20,7 +22,7 @@ export async function valid_market_listing(
   }
 
   try {
-    const listing = await database.getMarketListing({ listing_id })
+    const listing = await marketDb.getMarketListing({ listing_id })
 
     if (!listing) {
       res
@@ -30,7 +32,7 @@ export async function valid_market_listing(
     }
 
     if (listing.contractor_seller_id) {
-      const contractor = await database.getContractor({
+      const contractor = await contractorDb.getContractor({
         contractor_id: listing.contractor_seller_id,
       })
 
@@ -84,7 +86,7 @@ export async function can_manage_market_listing(
   }
 
   try {
-    const listing = await database.getMarketListing({ listing_id })
+    const listing = await marketDb.getMarketListing({ listing_id })
 
     if (!listing) {
       res
@@ -95,7 +97,7 @@ export async function can_manage_market_listing(
 
     if (user.role !== "admin") {
       if (listing.contractor_seller_id) {
-        const contractor = await database.getContractor({
+        const contractor = await contractorDb.getContractor({
           contractor_id: listing.contractor_seller_id,
         })
 
@@ -166,7 +168,7 @@ export async function valid_market_listing_by_user(
 
   try {
     // Get user by username
-    const user = await database.getUser({ username })
+    const user = await profileDb.getUser({ username })
 
     if (!user) {
       res.status(404).json(createErrorResponse({ message: "User not found" }))
@@ -174,7 +176,7 @@ export async function valid_market_listing_by_user(
     }
 
     // Get user's listings
-    const listings = await database.getMarketListings({
+    const listings = await marketDb.getMarketListings({
       user_seller_id: user.user_id,
       status: "active",
     })
@@ -183,7 +185,7 @@ export async function valid_market_listing_by_user(
     const completeListings = await Promise.all(
       listings.map(async (listing) => {
         try {
-          return await database.getMarketListingComplete(listing.listing_id)
+          return await marketDb.getMarketListingComplete(listing.listing_id)
         } catch {
           return null
         }
@@ -220,7 +222,7 @@ export async function valid_market_listing_by_contractor(
   }
 
   try {
-    const contractor = await database.getContractor({ spectrum_id })
+    const contractor = await contractorDb.getContractor({ spectrum_id })
 
     if (!contractor || contractor.archived) {
       res
@@ -229,7 +231,7 @@ export async function valid_market_listing_by_contractor(
       return
     }
 
-    const listings = await database.getMarketListings({
+    const listings = await marketDb.getMarketListings({
       contractor_seller_id: contractor.contractor_id,
       status: "active",
     })
@@ -237,7 +239,7 @@ export async function valid_market_listing_by_contractor(
     const completeListings = await Promise.all(
       listings.map(async (listing) => {
         try {
-          return await database.getMarketListingComplete(listing.listing_id)
+          return await marketDb.getMarketListingComplete(listing.listing_id)
         } catch {
           return null
         }

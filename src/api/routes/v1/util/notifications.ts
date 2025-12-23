@@ -14,6 +14,12 @@ import {
 } from "../../../../clients/database/db-models.js"
 import { User } from "../api-models.js"
 import { database } from "../../../../clients/database/knex-db.js"
+import * as orderDb from "../orders/database.js"
+import * as notificationDb from "../notifications/database.js"
+import * as contractorDb from "../contractors/database.js"
+import * as profileDb from "../profiles/database.js"
+import * as chatDb from "../chats/database.js"
+import * as adminDb from "../admin/database.js"
 import logger from "../../../../logger/logger.js"
 import { has_permission } from "../util/permissions.js"
 import {
@@ -102,27 +108,28 @@ export async function dispatchOfferNotifications(
 }
 
 async function createOrderContractorNotification(object: DBOrder) {
-  const action = await database.getNotificationActionByName("order_create")
-  const notif_objects = await database.insertNotificationObjects([
+  const action =
+    await notificationDb.getNotificationActionByName("order_create")
+  const notif_objects = await notificationDb.insertNotificationObjects([
     {
       action_type_id: action.action_type_id,
       entity_id: object.order_id,
     },
   ])
 
-  await database.insertNotificationChange([
+  await notificationDb.insertNotificationChange([
     {
       notification_object_id: notif_objects[0].notification_object_id,
       actor_id: object.customer_id,
     },
   ])
 
-  const admins = await database.getMembersWithMatchingRole(
+  const admins = await contractorDb.getMembersWithMatchingRole(
     object.contractor_id!,
     { manage_orders: true },
   )
 
-  await database.insertNotifications(
+  await notificationDb.insertNotifications(
     admins.map((u) => ({
       notification_object_id: notif_objects[0].notification_object_id,
       notifier_id: u.user_id,
@@ -134,27 +141,27 @@ async function createOfferContractorNotification(
   object: DBOfferSession,
   type: "offer_create" | "counter_offer_create" = "offer_create",
 ) {
-  const action = await database.getNotificationActionByName(type)
-  const notif_objects = await database.insertNotificationObjects([
+  const action = await notificationDb.getNotificationActionByName(type)
+  const notif_objects = await notificationDb.insertNotificationObjects([
     {
       action_type_id: action.action_type_id,
       entity_id: object.id,
     },
   ])
 
-  await database.insertNotificationChange([
+  await notificationDb.insertNotificationChange([
     {
       notification_object_id: notif_objects[0].notification_object_id,
       actor_id: object.customer_id,
     },
   ])
 
-  const admins = await database.getMembersWithMatchingRole(
+  const admins = await contractorDb.getMembersWithMatchingRole(
     object.contractor_id!,
     { manage_orders: true },
   )
 
-  await database.insertNotifications(
+  await notificationDb.insertNotifications(
     admins.map((u) => ({
       notification_object_id: notif_objects[0].notification_object_id,
       notifier_id: u.user_id,
@@ -163,14 +170,14 @@ async function createOfferContractorNotification(
 }
 
 export async function sendAssignedMessage(order: DBOrder) {
-  const assigned = await database.getUser({ user_id: order.assigned_id })
-  const chat = await database.getChat({ order_id: order.order_id })
+  const assigned = await profileDb.getUser({ user_id: order.assigned_id })
+  const chat = await chatDb.getChat({ order_id: order.order_id })
   const content = `Order has been assigned to ${assigned.username}`
   await sendSystemMessage(chat.chat_id, content, false)
 }
 export async function sendOfferChatMessage(order: DBOfferSession) {
   try {
-    const chat = await database.getChat({ session_id: order.id })
+    const chat = await chatDb.getChat({ session_id: order.id })
     const content = `An offer has been submitted`
     await sendSystemMessage(chat.chat_id, content, false)
   } catch (error) {
@@ -182,7 +189,7 @@ export async function sendOfferChatMessage(order: DBOfferSession) {
 }
 
 export async function sendUnassignedMessage(order: DBOrder) {
-  const chat = await database.getChat({ order_id: order.order_id })
+  const chat = await chatDb.getChat({ order_id: order.order_id })
   const content = `Order has been unassigned`
   await sendSystemMessage(chat.chat_id, content, false)
 }
@@ -192,22 +199,23 @@ export async function createOrderAssignedNotification(order: DBOrder) {
     return
   }
 
-  const action = await database.getNotificationActionByName("order_assigned")
-  const notif_objects = await database.insertNotificationObjects([
+  const action =
+    await notificationDb.getNotificationActionByName("order_assigned")
+  const notif_objects = await notificationDb.insertNotificationObjects([
     {
       action_type_id: action.action_type_id,
       entity_id: order.order_id,
     },
   ])
 
-  await database.insertNotificationChange([
+  await notificationDb.insertNotificationChange([
     {
       notification_object_id: notif_objects[0].notification_object_id,
       actor_id: order.customer_id,
     },
   ])
 
-  await database.insertNotifications([
+  await notificationDb.insertNotifications([
     {
       notification_object_id: notif_objects[0].notification_object_id,
       notifier_id: order.assigned_id!,
@@ -227,24 +235,24 @@ export async function createOfferAssignedNotification(
     return
   }
 
-  const action = await database.getNotificationActionByName(
+  const action = await notificationDb.getNotificationActionByName(
     type === "offer_created" ? "offer_create" : "counter_offer_create",
   )
-  const notif_objects = await database.insertNotificationObjects([
+  const notif_objects = await notificationDb.insertNotificationObjects([
     {
       action_type_id: action.action_type_id,
       entity_id: session.id,
     },
   ])
 
-  await database.insertNotificationChange([
+  await notificationDb.insertNotificationChange([
     {
       notification_object_id: notif_objects[0].notification_object_id,
       actor_id: session.customer_id,
     },
   ])
 
-  await database.insertNotifications([
+  await notificationDb.insertNotifications([
     {
       notification_object_id: notif_objects[0].notification_object_id,
       notifier_id: session.assigned_id!,
@@ -261,12 +269,13 @@ export async function createOrderMessageNotification(
   )
 
   try {
-    const action = await database.getNotificationActionByName("order_message")
+    const action =
+      await notificationDb.getNotificationActionByName("order_message")
     logger.debug(`Found notification action: ${action.action_type_id}`)
 
     // Check if there's already a notification object for this order and action type
     const existingNotificationObject =
-      await database.getNotificationObjectByEntityAndAction(
+      await notificationDb.getNotificationObjectByEntityAndAction(
         order.order_id,
         action.action_type_id,
       )
@@ -276,13 +285,15 @@ export async function createOrderMessageNotification(
     if (existingNotificationObject) {
       // Reuse existing notification object and update timestamp
       notificationObjectId = existingNotificationObject.notification_object_id
-      await database.updateNotificationObjectTimestamp(notificationObjectId)
+      await notificationDb.updateNotificationObjectTimestamp(
+        notificationObjectId,
+      )
       logger.debug(
         `Reusing existing notification object: ${notificationObjectId}`,
       )
     } else {
       // Create new notification object
-      const notif_objects = await database.insertNotificationObjects([
+      const notif_objects = await notificationDb.insertNotificationObjects([
         {
           action_type_id: action.action_type_id,
           entity_id: order.order_id,
@@ -293,7 +304,7 @@ export async function createOrderMessageNotification(
     }
 
     // Add notification change for this message
-    await database.insertNotificationChange([
+    await notificationDb.insertNotificationChange([
       {
         notification_object_id: notificationObjectId,
         actor_id: message.author!,
@@ -310,7 +321,7 @@ export async function createOrderMessageNotification(
 
       // Check if user already has an unread notification for this order
       const existingNotification =
-        await database.getUnreadNotificationByUserAndObject(
+        await notificationDb.getUnreadNotificationByUserAndObject(
           notified,
           notificationObjectId,
         )
@@ -322,7 +333,7 @@ export async function createOrderMessageNotification(
         continue
       }
 
-      await database.insertNotifications([
+      await notificationDb.insertNotifications([
         {
           notification_object_id: notificationObjectId,
           notifier_id: notified!,
@@ -350,12 +361,13 @@ export async function createOfferMessageNotification(
   )
 
   try {
-    const action = await database.getNotificationActionByName("offer_message")
+    const action =
+      await notificationDb.getNotificationActionByName("offer_message")
     logger.debug(`Found notification action: ${action.action_type_id}`)
 
     // Check if there's already a notification object for this session and action type
     const existingNotificationObject =
-      await database.getNotificationObjectByEntityAndAction(
+      await notificationDb.getNotificationObjectByEntityAndAction(
         session.id,
         action.action_type_id,
       )
@@ -365,13 +377,15 @@ export async function createOfferMessageNotification(
     if (existingNotificationObject) {
       // Reuse existing notification object and update timestamp
       notificationObjectId = existingNotificationObject.notification_object_id
-      await database.updateNotificationObjectTimestamp(notificationObjectId)
+      await notificationDb.updateNotificationObjectTimestamp(
+        notificationObjectId,
+      )
       logger.debug(
         `Reusing existing notification object: ${notificationObjectId}`,
       )
     } else {
       // Create new notification object
-      const notif_objects = await database.insertNotificationObjects([
+      const notif_objects = await notificationDb.insertNotificationObjects([
         {
           action_type_id: action.action_type_id,
           entity_id: session.id,
@@ -382,7 +396,7 @@ export async function createOfferMessageNotification(
     }
 
     // Add notification change for this message
-    await database.insertNotificationChange([
+    await notificationDb.insertNotificationChange([
       {
         notification_object_id: notificationObjectId,
         actor_id: message.author!,
@@ -399,7 +413,7 @@ export async function createOfferMessageNotification(
 
       // Check if user already has an unread notification for this session
       const existingNotification =
-        await database.getUnreadNotificationByUserAndObject(
+        await notificationDb.getUnreadNotificationByUserAndObject(
           notified,
           notificationObjectId,
         )
@@ -411,7 +425,7 @@ export async function createOfferMessageNotification(
         continue
       }
 
-      await database.insertNotifications([
+      await notificationDb.insertNotifications([
         {
           notification_object_id: notificationObjectId,
           notifier_id: notified!,
@@ -435,7 +449,7 @@ export async function marketBidNotification(
   bid: DBMarketBid,
 ) {
   if (listing.listing.contractor_seller_id) {
-    const admins = await database.getMembersWithMatchingRole(
+    const admins = await contractorDb.getMembersWithMatchingRole(
       listing.listing.contractor_seller_id,
       { manage_market: true },
     )
@@ -469,7 +483,7 @@ export async function marketOfferNotification(
   offer: DBMarketOffer,
 ) {
   if (listing.contractor_seller_id) {
-    const admins = await database.getMembersWithMatchingRole(
+    const admins = await contractorDb.getMembersWithMatchingRole(
       listing.contractor_seller_id,
       { manage_market: true },
     )
@@ -502,22 +516,22 @@ async function marketUpdateNotification(
   action_name: string,
   users: string[],
 ) {
-  const action = await database.getNotificationActionByName(action_name)
-  const notif_objects = await database.insertNotificationObjects([
+  const action = await notificationDb.getNotificationActionByName(action_name)
+  const notif_objects = await notificationDb.insertNotificationObjects([
     {
       action_type_id: action.action_type_id,
       entity_id: entity_id,
     },
   ])
 
-  await database.insertNotificationChange([
+  await notificationDb.insertNotificationChange([
     {
       notification_object_id: notif_objects[0].notification_object_id,
       actor_id: actor_id,
     },
   ])
 
-  await database.insertNotifications(
+  await notificationDb.insertNotifications(
     users.map((u) => ({
       notification_object_id: notif_objects[0].notification_object_id,
       notifier_id: u,
@@ -529,17 +543,18 @@ export async function createOrderCommentNotification(
   comment: DBOrderComment,
   actor_id: string,
 ) {
-  const order = await database.getOrder({ order_id: comment.order_id })
+  const order = await orderDb.getOrder({ order_id: comment.order_id })
 
-  const action = await database.getNotificationActionByName("order_comment")
-  const notif_objects = await database.insertNotificationObjects([
+  const action =
+    await notificationDb.getNotificationActionByName("order_comment")
+  const notif_objects = await notificationDb.insertNotificationObjects([
     {
       action_type_id: action.action_type_id,
       entity_id: comment.comment_id,
     },
   ])
 
-  await database.insertNotificationChange([
+  await notificationDb.insertNotificationChange([
     {
       notification_object_id: notif_objects[0].notification_object_id,
       actor_id,
@@ -547,7 +562,7 @@ export async function createOrderCommentNotification(
   ])
 
   if (order.assigned_id && actor_id !== order.assigned_id) {
-    await database.insertNotifications([
+    await notificationDb.insertNotifications([
       {
         notification_object_id: notif_objects[0].notification_object_id,
         notifier_id: order.assigned_id!,
@@ -556,7 +571,7 @@ export async function createOrderCommentNotification(
   }
 
   if (actor_id !== order.customer_id) {
-    await database.insertNotifications([
+    await notificationDb.insertNotifications([
       {
         notification_object_id: notif_objects[0].notification_object_id,
         notifier_id: order.customer_id!,
@@ -568,28 +583,29 @@ export async function createOrderCommentNotification(
 }
 
 export async function createOrderReviewNotification(review: DBReview) {
-  const order = await database.getOrder({ order_id: review.order_id })
+  const order = await orderDb.getOrder({ order_id: review.order_id })
 
   if (!order.assigned_id) {
     return
   }
 
-  const action = await database.getNotificationActionByName("order_review")
-  const notif_objects = await database.insertNotificationObjects([
+  const action =
+    await notificationDb.getNotificationActionByName("order_review")
+  const notif_objects = await notificationDb.insertNotificationObjects([
     {
       action_type_id: action.action_type_id,
       entity_id: review.review_id,
     },
   ])
 
-  await database.insertNotificationChange([
+  await notificationDb.insertNotificationChange([
     {
       notification_object_id: notif_objects[0].notification_object_id,
       actor_id: order.customer_id,
     },
   ])
 
-  await database.insertNotifications([
+  await notificationDb.insertNotifications([
     {
       notification_object_id: notif_objects[0].notification_object_id,
       notifier_id: order.assigned_id!,
@@ -603,15 +619,15 @@ export async function createOrderStatusNotification(
   actor_id: string,
 ) {
   const action_name = `order_status_${new_status.replace("-", "_")}`
-  const action = await database.getNotificationActionByName(action_name)
-  const notif_objects = await database.insertNotificationObjects([
+  const action = await notificationDb.getNotificationActionByName(action_name)
+  const notif_objects = await notificationDb.insertNotificationObjects([
     {
       action_type_id: action.action_type_id,
       entity_id: order.order_id,
     },
   ])
 
-  await database.insertNotificationChange([
+  await notificationDb.insertNotificationChange([
     {
       notification_object_id: notif_objects[0].notification_object_id,
       actor_id: actor_id,
@@ -619,7 +635,7 @@ export async function createOrderStatusNotification(
   ])
 
   if (order.assigned_id && order.assigned_id !== actor_id) {
-    await database.insertNotifications([
+    await notificationDb.insertNotifications([
       {
         notification_object_id: notif_objects[0].notification_object_id,
         notifier_id: order.assigned_id!,
@@ -628,7 +644,7 @@ export async function createOrderStatusNotification(
   }
 
   if (order.customer_id !== actor_id) {
-    await database.insertNotifications([
+    await notificationDb.insertNotifications([
       {
         notification_object_id: notif_objects[0].notification_object_id,
         notifier_id: order.customer_id,
@@ -642,15 +658,16 @@ export async function createOrderStatusNotification(
 export async function createContractorInviteNotification(
   invite: DBContractorInvite,
 ) {
-  const action = await database.getNotificationActionByName("contractor_invite")
-  const notif_objects = await database.insertNotificationObjects([
+  const action =
+    await notificationDb.getNotificationActionByName("contractor_invite")
+  const notif_objects = await notificationDb.insertNotificationObjects([
     {
       action_type_id: action.action_type_id,
       entity_id: invite.invite_id,
     },
   ])
 
-  await database.insertNotifications([
+  await notificationDb.insertNotifications([
     {
       notification_object_id: notif_objects[0].notification_object_id,
       notifier_id: invite.user_id,
@@ -668,7 +685,7 @@ export async function sendOfferStatusNotification(
 
   // Send chat message
   try {
-    const chat = await database.getChat({ session_id: offer.id })
+    const chat = await chatDb.getChat({ session_id: offer.id })
     const actionBy = user ? ` by ${user.username}` : ""
     const content = `Offer status updated to **${status}**${actionBy}`
     await sendSystemMessage(chat.chat_id, content, false)
@@ -682,10 +699,11 @@ export async function sendOfferStatusNotification(
 export async function createAdminAlertNotifications(alert: DBAdminAlert) {
   try {
     // Get the admin_alert notification action
-    const action = await database.getNotificationActionByName("admin_alert")
+    const action =
+      await notificationDb.getNotificationActionByName("admin_alert")
 
     // Create notification object
-    const notif_objects = await database.insertNotificationObjects([
+    const notif_objects = await notificationDb.insertNotificationObjects([
       {
         action_type_id: action.action_type_id,
         entity_id: alert.alert_id,
@@ -693,7 +711,7 @@ export async function createAdminAlertNotifications(alert: DBAdminAlert) {
     ])
 
     // Add the admin who created the alert as the actor
-    await database.insertNotificationChange([
+    await notificationDb.insertNotificationChange([
       {
         notification_object_id: notif_objects[0].notification_object_id,
         actor_id: alert.created_by,
@@ -701,7 +719,7 @@ export async function createAdminAlertNotifications(alert: DBAdminAlert) {
     ])
 
     // Get target users based on alert target type
-    const targetUserIds = await database.getUsersForAlertTarget(
+    const targetUserIds = await adminDb.getUsersForAlertTarget(
       alert.target_type,
       alert.target_contractor_id || undefined,
     )
@@ -712,12 +730,12 @@ export async function createAdminAlertNotifications(alert: DBAdminAlert) {
     }
 
     // Create notifications for all target users
-    const notifications = targetUserIds.map((userId) => ({
+    const notifications = targetUserIds.map((userId: string) => ({
       notification_object_id: notif_objects[0].notification_object_id,
       notifier_id: userId,
     }))
 
-    await database.insertNotifications(notifications)
+    await notificationDb.insertNotifications(notifications)
 
     logger.info(
       `Created admin alert notifications for ${targetUserIds.length} users`,
@@ -746,7 +764,7 @@ export async function createOrderReviewRevisionNotification(
       recipients.push(review.user_author)
     } else if (review.contractor_author) {
       // Organization review - notify all members with manage_orders permission
-      const members = await database.getContractorMembers({
+      const members = await contractorDb.getContractorMembers({
         contractor_id: review.contractor_author,
       })
 
@@ -772,19 +790,19 @@ export async function createOrderReviewRevisionNotification(
     }
 
     // Get notification action
-    const action = await database.getNotificationActionByName(
+    const action = await notificationDb.getNotificationActionByName(
       "order_review_revision_requested",
     )
 
     // Create notification object
-    const notif_objects = await database.insertNotificationObjects([
+    const notif_objects = await notificationDb.insertNotificationObjects([
       {
         action_type_id: action.action_type_id,
         entity_id: review.review_id,
       },
     ])
 
-    await database.insertNotificationChange([
+    await notificationDb.insertNotificationChange([
       {
         notification_object_id: notif_objects[0].notification_object_id,
         actor_id: requester.user_id,
@@ -797,7 +815,7 @@ export async function createOrderReviewRevisionNotification(
       notifier_id: recipient_id,
     }))
 
-    await database.insertNotifications(notifications)
+    await notificationDb.insertNotifications(notifications)
 
     logger.info("Created review revision notifications", {
       review_id: review.review_id,

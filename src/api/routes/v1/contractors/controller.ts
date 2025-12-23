@@ -1,5 +1,8 @@
 import { RequestHandler } from "express"
 import { database } from "../../../../clients/database/knex-db.js"
+import * as notificationDb from "../notifications/database.js"
+import * as profileDb from "../profiles/database.js"
+import * as contractorDb from "../contractors/database.js"
 
 import { Contractor, User } from "../api-models.js"
 import { createErrorResponse, createResponse } from "../util/response.js"
@@ -35,7 +38,7 @@ export const post_auth_link: RequestHandler = async (req, res) => {
   const spectrum_id = req.body.contractor || ""
 
   try {
-    const cobj = await database.getContractor({ spectrum_id: spectrum_id })
+    const cobj = await contractorDb.getContractor({ spectrum_id: spectrum_id })
     if (cobj) {
       res.status(409).json(
         createErrorResponse({
@@ -48,7 +51,7 @@ export const post_auth_link: RequestHandler = async (req, res) => {
   } catch {}
 
   if (await authorizeContractor(spectrum_id, user)) {
-    const contractor = await database.getContractor({ spectrum_id })
+    const contractor = await contractorDb.getContractor({ spectrum_id })
     res.json(createResponse(contractorDetails(contractor, user)))
   } else {
     res.status(403).json(
@@ -72,7 +75,7 @@ export const post_root: RequestHandler = async (req, res) => {
   }
 
   try {
-    const cobj = await database.getContractor({
+    const cobj = await contractorDb.getContractor({
       spectrum_id: `~${identifier.toUpperCase()}`,
     })
     if (cobj) {
@@ -117,7 +120,7 @@ export const delete_spectrum_id: RequestHandler = async (req, res) => {
   }
 
   if (user.role !== "admin") {
-    const roles = await database.getMemberRoles(
+    const roles = await contractorDb.getMemberRoles(
       contractor.contractor_id,
       user.user_id,
     )
@@ -235,7 +238,7 @@ export const get_spectrum_id_audit_logs: RequestHandler = async (
       const actors = await Promise.all(
         actorIds.map(async (id) => {
           try {
-            const user = await database.getMinimalUser({ user_id: id })
+            const user = await profileDb.getMinimalUser({ user_id: id })
             return { id, user }
           } catch {
             return null
@@ -282,7 +285,7 @@ export const get_spectrum_id_audit_logs: RequestHandler = async (
 export const get_search_query: RequestHandler = async (req, res, next) => {
   const query = req.params["query"]
 
-  const contractors = await database.searchContractors(query)
+  const contractors = await contractorDb.searchContractors(query)
 
   res.json(
     createResponse(
@@ -303,7 +306,7 @@ export const get_invites_invite_id: RequestHandler = async (req, res, next) => {
   const { invite_id } = req.params
 
   // Invite Code
-  const [invite] = await database.getInviteCodes({
+  const [invite] = await contractorDb.getInviteCodes({
     invite_id,
   })
 
@@ -312,7 +315,7 @@ export const get_invites_invite_id: RequestHandler = async (req, res, next) => {
     return
   }
 
-  const contractor: DBContractor = await database.getContractor({
+  const contractor: DBContractor = await contractorDb.getContractor({
     contractor_id: invite.contractor_id,
   })
 
@@ -329,7 +332,7 @@ export const post_invites_invite_id_accept: RequestHandler = async (
   const { invite_id } = req.params
 
   // Invite Code
-  const [invite] = await database.getInviteCodes({
+  const [invite] = await contractorDb.getInviteCodes({
     invite_id,
   })
 
@@ -338,7 +341,7 @@ export const post_invites_invite_id_accept: RequestHandler = async (
     return
   }
 
-  const contractor: DBContractor = await database.getContractor({
+  const contractor: DBContractor = await contractorDb.getContractor({
     contractor_id: invite.contractor_id,
   })
 
@@ -352,7 +355,7 @@ export const post_invites_invite_id_accept: RequestHandler = async (
     return
   }
 
-  const role = await database.getContractorRoleLegacy(
+  const role = await contractorDb.getContractorRoleLegacy(
     user.user_id,
     contractor.contractor_id,
   )
@@ -362,7 +365,7 @@ export const post_invites_invite_id_accept: RequestHandler = async (
     return
   }
 
-  await database.updateInviteCodes(
+  await contractorDb.updateInviteCodes(
     {
       invite_id,
       contractor_id: contractor.contractor_id,
@@ -370,15 +373,18 @@ export const post_invites_invite_id_accept: RequestHandler = async (
     { times_used: invite.times_used + 1 },
   )
 
-  await database.removeContractorInvites(user.user_id, contractor.contractor_id)
+  await contractorDb.removeContractorInvites(
+    user.user_id,
+    contractor.contractor_id,
+  )
 
-  await database.insertContractorMember(
+  await contractorDb.insertContractorMember(
     contractor.contractor_id,
     user.user_id,
     "member",
   )
 
-  await database.insertContractorMemberRole({
+  await contractorDb.insertContractorMemberRole({
     user_id: user.user_id,
     role_id: contractor.default_role,
   })
@@ -419,7 +425,7 @@ export const get_spectrum_id_members_search_query: RequestHandler = async (
 ) => {
   const query = req.params["query"]
 
-  const users = await database.searchOrgMembers(
+  const users = await contractorDb.searchOrgMembers(
     query,
     req.contractor!.contractor_id,
   )
@@ -428,7 +434,7 @@ export const get_spectrum_id_members_search_query: RequestHandler = async (
     createResponse(
       await Promise.all(
         users.map(async (user) => {
-          const pubProf = await database.getMinimalUser({
+          const pubProf = await profileDb.getMinimalUser({
             user_id: user.user_id,
           })
 
@@ -444,7 +450,7 @@ export const get_spectrum_id_members_csv: RequestHandler = async (
   res,
   next,
 ) => {
-  const members = await database.getContractorMembersUsernamesAndID({
+  const members = await contractorDb.getContractorMembersUsernamesAndID({
     "contractor_members.contractor_id": req.contractor!.contractor_id,
   })
 
@@ -461,7 +467,7 @@ export const get_spectrum_id_customers: RequestHandler = async (req, res) => {
   const user = req.user as User
   const contractor: Contractor = req.contractor!
 
-  const contractors = await database.getUserContractors({
+  const contractors = await contractorDb.getUserContractors({
     "contractor_members.user_id": user.user_id,
   })
 
@@ -477,13 +483,13 @@ export const get_spectrum_id_customers: RequestHandler = async (req, res) => {
     return
   }
 
-  const customers = await database.getContractorCustomers(
+  const customers = await contractorDb.getContractorCustomers(
     contractor.contractor_id,
   )
   res.json(
     await Promise.all(
       customers.map(async (customer) => {
-        const prof = await database.getMinimalUser({
+        const prof = await profileDb.getMinimalUser({
           user_id: customer.user_id,
         })
         return {
@@ -502,7 +508,9 @@ export const get_spectrum_id_reviews: RequestHandler = async (
 ) => {
   const contractor: Contractor = req.contractor!
 
-  const reviews = await database.getContractorReviews(contractor.contractor_id)
+  const reviews = await contractorDb.getContractorReviews(
+    contractor.contractor_id,
+  )
   res.json(
     createResponse(
       await Promise.all(
@@ -510,10 +518,10 @@ export const get_spectrum_id_reviews: RequestHandler = async (
           return {
             ...review,
             user_author: review.user_author
-              ? await database.getMinimalUser({ user_id: review.user_author })
+              ? await profileDb.getMinimalUser({ user_id: review.user_author })
               : null,
             contractor_author: review.contractor_author
-              ? await database.getMinimalContractor({
+              ? await contractorDb.getMinimalContractor({
                   contractor_id: review.contractor_author,
                 })
               : null,
@@ -540,7 +548,7 @@ export const get_spectrum_id_members_username: RequestHandler = async (
 
   try {
     // Get user by username
-    const user = await database.getUser({ username })
+    const user = await profileDb.getUser({ username })
 
     // Check if user is a member using the contractor_member_roles table
     const memberRoles = await database
@@ -590,7 +598,7 @@ export const get_spectrum_id_members: RequestHandler = async (
   const role_filter = (req.query.role_filter as string) || ""
 
   try {
-    const result = await database.getContractorMembersPaginated(
+    const result = await contractorDb.getContractorMembersPaginated(
       contractor.contractor_id,
       {
         page,
@@ -653,12 +661,12 @@ export const post_spectrum_id_roles: RequestHandler = async (
     name: string
   } = req.body
 
-  const roles = await database.getContractorRoles({
+  const roles = await contractorDb.getContractorRoles({
     contractor_id: contractor.contractor_id,
   })
 
   const user = req.user as User
-  const newRoles = await database.insertContractorRole({
+  const newRoles = await contractorDb.insertContractorRole({
     contractor_id: contractor.contractor_id,
     manage_roles: manage_roles,
     manage_orders: manage_orders,
@@ -741,7 +749,7 @@ export const put_spectrum_id_roles_role_id: RequestHandler = async (
     position: number
   } = req.body
 
-  const role = await database.getContractorRole({
+  const role = await contractorDb.getContractorRole({
     role_id,
     contractor_id: contractor.contractor_id,
   })
@@ -760,7 +768,7 @@ export const put_spectrum_id_roles_role_id: RequestHandler = async (
     }
 
     const oldRole = { ...role }
-    await database.updateContractorRole(
+    await contractorDb.updateContractorRole(
       { contractor_id: contractor.contractor_id, role_id },
       {
         contractor_id: contractor.contractor_id,
@@ -868,7 +876,7 @@ export const delete_spectrum_id_roles_role_id: RequestHandler = async (
   const user = req.user as User
   const contractor = req.contractor!
 
-  const role = await database.getContractorRole({
+  const role = await contractorDb.getContractorRole({
     role_id,
     contractor_id: contractor.contractor_id,
   })
@@ -906,7 +914,7 @@ export const delete_spectrum_id_roles_role_id: RequestHandler = async (
     },
   })
 
-  await database.deleteContractorRole({
+  await contractorDb.deleteContractorRole({
     role_id,
     contractor_id: contractor.contractor_id,
   })
@@ -924,13 +932,13 @@ export const post_spectrum_id_roles_role_id_members_username: RequestHandler =
     // Do checks first
     let target
     try {
-      target = await database.getUser({ username })
+      target = await profileDb.getUser({ username })
     } catch (e) {
       res.status(404).json(createErrorResponse({ message: "Invalid user" }))
       return
     }
 
-    const role = await database.getContractorRole({
+    const role = await contractorDb.getContractorRole({
       role_id,
       contractor_id: contractor.contractor_id,
     })
@@ -960,7 +968,7 @@ export const post_spectrum_id_roles_role_id_members_username: RequestHandler =
       return
     }
 
-    await database.insertContractorMemberRole({
+    await contractorDb.insertContractorMemberRole({
       user_id: target.user_id,
       role_id,
     })
@@ -992,13 +1000,13 @@ export const delete_spectrum_id_roles_role_id_members_username: RequestHandler =
     // Do checks first
     let target
     try {
-      target = await database.getUser({ username })
+      target = await profileDb.getUser({ username })
     } catch (e) {
       res.status(400).json(createErrorResponse({ message: "Invalid user" }))
       return
     }
 
-    const role = await database.getContractorRole({
+    const role = await contractorDb.getContractorRole({
       role_id,
       contractor_id: contractor.contractor_id,
     })
@@ -1035,7 +1043,7 @@ export const delete_spectrum_id_roles_role_id_members_username: RequestHandler =
       return
     }
 
-    await database.removeContractorMemberRoles({
+    await contractorDb.removeContractorMemberRoles({
       user_id: target.user_id,
       role_id,
     })
@@ -1077,7 +1085,7 @@ export const post_spectrum_id_transfer_ownership: RequestHandler = async (
 
   // Verify requester is the current owner
   if (user.role !== "admin") {
-    const roles = await database.getMemberRoles(
+    const roles = await contractorDb.getMemberRoles(
       contractor.contractor_id,
       user.user_id,
     )
@@ -1095,7 +1103,7 @@ export const post_spectrum_id_transfer_ownership: RequestHandler = async (
   // Get the target user
   let target
   try {
-    target = await database.getUser({ username })
+    target = await profileDb.getUser({ username })
   } catch (e) {
     res.status(404).json(createErrorResponse({ message: "User not found" }))
     return
@@ -1218,7 +1226,7 @@ export const delete_spectrum_id_members_username: RequestHandler = async (
     // Do checks first
     let target
     try {
-      target = await database.getUser({ username })
+      target = await profileDb.getUser({ username })
     } catch (e) {
       res.status(400).json(createErrorResponse({ message: "Invalid user" }))
       return
@@ -1245,11 +1253,11 @@ export const delete_spectrum_id_members_username: RequestHandler = async (
       return
     }
 
-    await database.removeContractorMember({
+    await contractorDb.removeContractorMember({
       user_id: target.user_id,
       contractor_id: contractor.contractor_id,
     })
-    await database.removeUserContractorRoles(
+    await contractorDb.removeUserContractorRoles(
       contractor.contractor_id,
       target.user_id,
     )
@@ -1319,11 +1327,11 @@ export const put_spectrum_id: RequestHandler = async (req, res, next) => {
     market_order_template !== undefined ||
     locale !== undefined
   ) {
-    const oldContractor = await database.getContractor({
+    const oldContractor = await contractorDb.getContractor({
       contractor_id: contractor.contractor_id,
     })
 
-    await database.updateContractor(
+    await contractorDb.updateContractor(
       { contractor_id: contractor.contractor_id },
       {
         description: description !== undefined ? description || "" : undefined,
@@ -1360,7 +1368,7 @@ export const put_spectrum_id: RequestHandler = async (req, res, next) => {
   // Handle tags separately
   if (tags && tags.length) {
     const oldTags = contractor.fields || []
-    await database.setContractorFields(contractor.contractor_id, tags)
+    await contractorDb.setContractorFields(contractor.contractor_id, tags)
     if (JSON.stringify(oldTags.sort()) !== JSON.stringify(tags.sort())) {
       changes.tags = { old: oldTags, new: tags }
     }
@@ -1422,7 +1430,7 @@ export const contractors_post_spectrum_id_avatar: RequestHandler = async (
     )
 
     // Update contractor record
-    await database.updateContractor(
+    await contractorDb.updateContractor(
       { contractor_id: contractor.contractor_id },
       { avatar: resource.resource_id },
     )
@@ -1578,7 +1586,7 @@ export const contractors_post_spectrum_id_banner: RequestHandler = async (
     )
 
     // Update contractor record
-    await database.updateContractor(
+    await contractorDb.updateContractor(
       { contractor_id: contractor.contractor_id },
       { banner: resource.resource_id },
     )
@@ -1761,7 +1769,7 @@ export const delete_spectrum_id_webhooks_webhook_id: RequestHandler = async (
   const { webhook_id } = req.params
 
   const user = req.user as User
-  const webhook = await database.getNotificationWebhook({ webhook_id })
+  const webhook = await notificationDb.getNotificationWebhook({ webhook_id })
   if (!webhook || webhook.contractor_id !== contractor.contractor_id) {
     res.status(403).json(createErrorResponse({ message: "Unauthorized" }))
     return
@@ -1781,7 +1789,7 @@ export const delete_spectrum_id_webhooks_webhook_id: RequestHandler = async (
     },
   })
 
-  await database.deleteNotificationWebhook({
+  await notificationDb.deleteNotificationWebhook({
     webhook_id,
     contractor_id: contractor.contractor_id,
   })
@@ -1796,7 +1804,7 @@ export const get_spectrum_id_webhooks: RequestHandler = async (
 ) => {
   const contractor = req.contractor!
 
-  const webhooks = await database.getNotificationWebhooks({
+  const webhooks = await notificationDb.getNotificationWebhooks({
     contractor_id: contractor.contractor_id,
   })
   res.json(createResponse(webhooks))
@@ -1822,7 +1830,7 @@ export const post_spectrum_id_invites: RequestHandler = async (
   }
 
   const user = req.user as User
-  const inviteCodes = await database.createInviteCode({
+  const inviteCodes = await contractorDb.createInviteCode({
     max_uses,
     contractor_id: contractor.contractor_id,
   })
@@ -1860,7 +1868,7 @@ export const delete_spectrum_id_invites_invite_id: RequestHandler = async (
   }
 
   const user = req.user as User
-  const inviteCode = await database.getInviteCode({ invite_id })
+  const inviteCode = await contractorDb.getInviteCode({ invite_id })
   if (!inviteCode || inviteCode.contractor_id !== contractor.contractor_id) {
     res.status(403).json(createErrorResponse({ message: "Unauthorized" }))
     return
@@ -1880,7 +1888,7 @@ export const delete_spectrum_id_invites_invite_id: RequestHandler = async (
     },
   })
 
-  await database.deleteInviteCodes({
+  await contractorDb.deleteInviteCodes({
     invite_id,
     contractor_id: contractor.contractor_id,
   })
@@ -1894,7 +1902,7 @@ export const get_spectrum_id_invites: RequestHandler = async (
 ) => {
   const contractor = req.contractor!
 
-  const invites = await database.getInviteCodes({
+  const invites = await contractorDb.getInviteCodes({
     contractor_id: contractor.contractor_id,
   })
   res.json(createResponse(invites))
@@ -1915,7 +1923,7 @@ export const post_spectrum_id_members: RequestHandler = async (req, res) => {
   const users = []
   for (const username of usernames) {
     try {
-      users.push(await database.getUser({ username }))
+      users.push(await profileDb.getUser({ username }))
     } catch {
       res.status(400).json(createErrorResponse({ message: "Invalid user!" }))
       return
@@ -1923,7 +1931,7 @@ export const post_spectrum_id_members: RequestHandler = async (req, res) => {
   }
 
   for (const target of users) {
-    const role = await database.getContractorRoleLegacy(
+    const role = await contractorDb.getContractorRoleLegacy(
       target.user_id,
       contractor.contractor_id,
     )
@@ -1934,7 +1942,7 @@ export const post_spectrum_id_members: RequestHandler = async (req, res) => {
   }
 
   const user = req.user as User
-  const invites = await database.insertContractorInvites(
+  const invites = await contractorDb.insertContractorInvites(
     users.map((u) => ({
       user_id: u.user_id,
       message: message,
@@ -1970,7 +1978,7 @@ export const post_spectrum_id_refetch: RequestHandler = async (req, res) => {
 
     let contractor, data
     try {
-      contractor = await database.getContractor({ spectrum_id })
+      contractor = await contractorDb.getContractor({ spectrum_id })
       data = await fetchRSIOrgSCAPI(spectrum_id)
     } catch (e) {
       res
@@ -1979,7 +1987,7 @@ export const post_spectrum_id_refetch: RequestHandler = async (req, res) => {
       return
     }
 
-    const banner_resource = await database.getImageResource({
+    const banner_resource = await contractorDb.getImageResource({
       resource_id: contractor.banner,
     })
     if (banner_resource.filename === "default_profile_banner.png") {
@@ -1992,7 +2000,7 @@ export const post_spectrum_id_refetch: RequestHandler = async (req, res) => {
           contractor.contractor_id + "_org_banner",
         )
 
-        await database.updateContractor(
+        await contractorDb.updateContractor(
           { contractor_id: contractor.contractor_id },
           {
             banner: banner_resource ? banner_resource.resource_id : undefined,
@@ -2003,7 +2011,7 @@ export const post_spectrum_id_refetch: RequestHandler = async (req, res) => {
       }
     }
 
-    await database.updateContractor(
+    await contractorDb.updateContractor(
       { contractor_id: contractor.contractor_id },
       { size: data.data.members },
     )
@@ -2039,7 +2047,7 @@ export const post_spectrum_id_accept: RequestHandler = async (
 
     if (invite_id) {
       // Invite Code
-      const invites = await database.getInviteCodes({
+      const invites = await contractorDb.getInviteCodes({
         invite_id,
         contractor_id: contractor.contractor_id,
       })
@@ -2049,7 +2057,7 @@ export const post_spectrum_id_accept: RequestHandler = async (
         return
       }
 
-      const role = await database.getContractorRoleLegacy(
+      const role = await contractorDb.getContractorRoleLegacy(
         user.user_id,
         contractor.contractor_id,
       )
@@ -2058,7 +2066,7 @@ export const post_spectrum_id_accept: RequestHandler = async (
         return
       }
 
-      const codes = await database.updateInviteCodes(
+      const codes = await contractorDb.updateInviteCodes(
         {
           invite_id,
           contractor_id: contractor.contractor_id,
@@ -2067,7 +2075,7 @@ export const post_spectrum_id_accept: RequestHandler = async (
       )
 
       if (codes[0].times_used >= codes[0].max_uses) {
-        await database.deleteInviteCodes({
+        await contractorDb.deleteInviteCodes({
           invite_id,
           contractor_id: contractor.contractor_id,
         })
@@ -2076,7 +2084,7 @@ export const post_spectrum_id_accept: RequestHandler = async (
       acceptedInviteId = invite_id
     } else {
       // Direct Invite
-      const invites = await database.getContractorInvites({
+      const invites = await contractorDb.getContractorInvites({
         user_id: user.user_id,
         contractor_id: contractor.contractor_id,
       })
@@ -2092,18 +2100,18 @@ export const post_spectrum_id_accept: RequestHandler = async (
       acceptedInviteId = invites[0].invite_id
     }
 
-    await database.removeContractorInvites(
+    await contractorDb.removeContractorInvites(
       user.user_id,
       contractor.contractor_id,
     )
 
-    await database.insertContractorMember(
+    await contractorDb.insertContractorMember(
       contractor.contractor_id,
       user.user_id,
       "member",
     )
 
-    await database.insertContractorMemberRole({
+    await contractorDb.insertContractorMemberRole({
       user_id: user.user_id,
       role_id: contractor.default_role,
     })
@@ -2157,7 +2165,7 @@ export const post_spectrum_id_decline: RequestHandler = async (
 
   const contractor = req.contractor!
 
-  const invites = await database.getContractorInvites({
+  const invites = await contractorDb.getContractorInvites({
     user_id: user.user_id,
     contractor_id: contractor.contractor_id,
   })
@@ -2167,7 +2175,10 @@ export const post_spectrum_id_decline: RequestHandler = async (
     return
   }
 
-  await database.removeContractorInvites(user.user_id, contractor.contractor_id)
+  await contractorDb.removeContractorInvites(
+    user.user_id,
+    contractor.contractor_id,
+  )
 
   res.json({ result: "Success" })
 }
@@ -2186,9 +2197,9 @@ export const post_admin_express_verify: RequestHandler = async (
 
     let user
     try {
-      user = await database.getUser({ username: owner_username })
+      user = await profileDb.getUser({ username: owner_username })
     } catch (e) {
-      user = await database.insertUserRaw({
+      user = await profileDb.insertUserRaw({
         discord_id: owner_discord_id,
         username: `user_${owner_discord_id}`,
         display_name: `user_${owner_discord_id}`,
@@ -2224,12 +2235,12 @@ export const get_root: RequestHandler = async (req, res, next) => {
 
     let contractor: DBContractor[] = []
     try {
-      contractor = await database.getAllContractorsPaginated(searchData)
+      contractor = await contractorDb.getAllContractorsPaginated(searchData)
     } catch (e) {
       console.error(e)
     }
     const user = req.user as User
-    const counts = await database.getAllContractorsCount(searchData)
+    const counts = await contractorDb.getAllContractorsCount(searchData)
     const formatted = await Promise.all(
       contractor.map((c) => contractorDetails(c, user)),
     )
@@ -2277,11 +2288,11 @@ export const post_spectrum_id_settings_discord_use_official: RequestHandler =
   async (req, res, next) => {
     const user = req.user as User
     const contractor = req.contractor!
-    const oldContractor = await database.getContractor({
+    const oldContractor = await contractorDb.getContractor({
       contractor_id: contractor.contractor_id,
     })
 
-    await database.updateContractor(
+    await contractorDb.updateContractor(
       { contractor_id: contractor.contractor_id },
       {
         official_server_id: "1003056231591727264",
@@ -2319,7 +2330,7 @@ export const post_spectrum_id_leave: RequestHandler = async (
   // Prevent owners from leaving their own contractor
   const ownerRoleId = contractor.owner_role
   if (ownerRoleId) {
-    const ownerRoles = await database.getUserContractorRoles({
+    const ownerRoles = await contractorDb.getUserContractorRoles({
       "contractor_member_roles.role_id": ownerRoleId,
       "contractor_member_roles.user_id": user.user_id,
     })
@@ -2333,7 +2344,7 @@ export const post_spectrum_id_leave: RequestHandler = async (
     }
   }
 
-  await database.removeContractorMember({
+  await contractorDb.removeContractorMember({
     user_id: user.user_id,
     contractor_id: contractor.contractor_id,
   })
@@ -2359,7 +2370,7 @@ export const post_spectrum_id_leave: RequestHandler = async (
 export const get_spectrum_id_blocklist: RequestHandler = async (req, res) => {
   try {
     const contractor = req.contractor as DBContractor
-    const blocklist = await database.getUserBlocklist(
+    const blocklist = await profileDb.getUserBlocklist(
       contractor.contractor_id,
       "contractor",
     )
@@ -2368,7 +2379,7 @@ export const get_spectrum_id_blocklist: RequestHandler = async (req, res) => {
     const blocklistWithUsers = await Promise.all(
       blocklist.map(async (block) => {
         try {
-          const blockedUser = await database.getMinimalUser({
+          const blockedUser = await profileDb.getMinimalUser({
             user_id: block.blocked_id,
           })
           return {
@@ -2415,7 +2426,7 @@ export const post_spectrum_id_blocklist_block: RequestHandler = async (
     }
 
     // Get the user to block
-    const userToBlock = await database.getUser({ username })
+    const userToBlock = await profileDb.getUser({ username })
     if (!userToBlock) {
       res.status(404).json(createErrorResponse({ message: "User not found" }))
       return
@@ -2431,7 +2442,7 @@ export const post_spectrum_id_blocklist_block: RequestHandler = async (
     }
 
     // Check if already blocked
-    const isBlocked = await database.isUserBlocked(
+    const isBlocked = await profileDb.isUserBlocked(
       contractor.contractor_id,
       userToBlock.user_id,
       "contractor",
@@ -2444,7 +2455,7 @@ export const post_spectrum_id_blocklist_block: RequestHandler = async (
     }
 
     // Block the user
-    await database.blockUser(
+    await profileDb.blockUser(
       contractor.contractor_id,
       userToBlock.user_id,
       "contractor",
@@ -2467,14 +2478,14 @@ export const delete_spectrum_id_blocklist_unblock_username: RequestHandler =
       const { username } = req.params
 
       // Get the user to unblock
-      const userToUnblock = await database.getUser({ username })
+      const userToUnblock = await profileDb.getUser({ username })
       if (!userToUnblock) {
         res.status(404).json(createErrorResponse({ message: "User not found" }))
         return
       }
 
       // Check if user is blocked
-      const isBlocked = await database.isUserBlocked(
+      const isBlocked = await profileDb.isUserBlocked(
         contractor.contractor_id,
         userToUnblock.user_id,
         "contractor",
@@ -2487,7 +2498,7 @@ export const delete_spectrum_id_blocklist_unblock_username: RequestHandler =
       }
 
       // Unblock the user
-      await database.unblockUser(
+      await profileDb.unblockUser(
         contractor.contractor_id,
         userToUnblock.user_id,
         "contractor",

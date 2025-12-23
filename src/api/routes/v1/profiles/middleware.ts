@@ -1,7 +1,7 @@
 import { NextFunction, Request, Response } from "express"
-import { database } from "../../../../clients/database/knex-db.js"
 import { createErrorResponse } from "../util/response.js"
 import { User } from "../api-models.js"
+import * as profileDb from "./database.js"
 
 export function validate_optional_username(path: string) {
   return async (req: Request, res: Response, next: NextFunction) => {
@@ -13,7 +13,7 @@ export function validate_optional_username(path: string) {
 
     let user
     try {
-      user = await database.getUser({ username })
+      user = await profileDb.getUser({ username })
     } catch {
       res
         .status(404)
@@ -41,7 +41,7 @@ export function validate_username(path: string) {
 
     let user
     try {
-      user = await database.getUser({ username })
+      user = await profileDb.getUser({ username })
     } catch {
       res
         .status(404)

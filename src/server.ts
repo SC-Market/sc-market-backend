@@ -15,6 +15,10 @@ import { apiReference } from "@scalar/express-api-reference"
 
 import { apiRouter } from "./api/routes/v1/api-router.js"
 import { database } from "./clients/database/knex-db.js"
+import * as profileDb from "./api/routes/v1/profiles/database.js"
+import * as contractorDb from "./api/routes/v1/contractors/database.js"
+import * as recruitingDb from "./api/routes/v1/recruiting/database.js"
+import * as marketDb from "./api/routes/v1/market/database.js"
 import { errorHandler, userAuthorized } from "./api/middleware/auth.js"
 import { registrationRouter } from "./clients/discord_api/registration.js"
 import { threadRouter } from "./clients/discord_api/threads.js"
@@ -121,7 +125,7 @@ passport.serializeUser((user: Express.User, done) => {
 })
 passport.deserializeUser(async (id: string, done) => {
   try {
-    const user = await database.getUser({ user_id: id })
+    const user = await profileDb.getUser({ user_id: id })
     return done(null, user)
   } catch (e) {
     const error = e as Error
@@ -162,10 +166,10 @@ app.get("/sitemap.xml", async function (req, res) {
       return
     }
 
-    const contractors = await database.getContractorListings({})
-    const users = await database.getUsersWhere({ rsi_confirmed: true })
-    const recruit_posts = await database.getAllRecruitingPosts()
-    const market_listings = await database.searchMarket(
+    const contractors = await contractorDb.getContractorListings({})
+    const users = await profileDb.getUsersWhere({ rsi_confirmed: true })
+    const recruit_posts = await recruitingDb.getAllRecruitingPosts()
+    const market_listings = await marketDb.searchMarket(
       {
         sale_type: null,
         maxCost: null,

@@ -1,5 +1,6 @@
 import { cdn } from "../../../../clients/cdn/cdn.js"
 import { database } from "../../../../clients/database/knex-db.js"
+import * as serviceDb from "./database.js"
 import { DBService } from "../../../../clients/database/db-models.js"
 
 export async function createServicePhotos(
@@ -21,7 +22,7 @@ export async function createServicePhotos(
         service_id + `_photo_${0}`,
       )
 
-      await database.insertServiceImage({
+      await serviceDb.insertServiceImage({
         resource_id: resource.resource_id,
         service_id,
       })
@@ -65,7 +66,7 @@ export const isImageAlreadyAssociated = async (
 ): Promise<boolean> => {
   try {
     // Get all images associated with this service
-    const serviceImages = await database.getServiceListingImages({
+    const serviceImages = await serviceDb.getServiceListingImages({
       service_id: service.service_id,
     })
 

@@ -1,8 +1,13 @@
 import { createErrorResponse, createResponse } from "../util/response.js"
 import { User } from "../api-models.js"
-import { Request, RequestHandler } from "express"
+import { RequestHandler } from "express"
 import { has_permission, is_member } from "../util/permissions.js"
 import { database } from "../../../../clients/database/knex-db.js"
+import * as marketDb from "./database.js"
+import * as orderDb from "../orders/database.js"
+import * as profileDb from "../profiles/database.js"
+import * as contractorDb from "../contractors/database.js"
+import * as adminUtil from "../admin/grafana-formatter.js"
 import {
   formatBuyOrderChartDetails,
   formatListing,
@@ -71,7 +76,7 @@ export const get_listing_stats: RequestHandler = async (req, res) => {
     for (const listing_id of listing_ids) {
       try {
         // Get the listing
-        const listing = await database.getMarketListing({ listing_id })
+        const listing = await marketDb.getMarketListing({ listing_id })
 
         if (!listing) {
           res.status(400).json(
@@ -92,7 +97,7 @@ export const get_listing_stats: RequestHandler = async (req, res) => {
 
         // Check contractor permissions
         if (listing.contractor_seller_id) {
-          const contractor = await database.getContractor({
+          const contractor = await contractorDb.getContractor({
             contractor_id: listing.contractor_seller_id,
           })
 
@@ -216,7 +221,7 @@ export const update_listing: RequestHandler = async (req, res) => {
     if (item_name === null) {
       game_item_id = null
     } else {
-      const item = await database.getGameItem({ name: item_name })
+      const item = await marketDb.getGameItem({ name: item_name })
       if (!item) {
         res.status(400).json({ error: "Invalid item name" })
         return
@@ -240,7 +245,7 @@ export const update_listing: RequestHandler = async (req, res) => {
       return
     }
 
-    await database.updateMarketListing(listing_id, {
+    await marketDb.updateMarketListing(listing_id, {
       status,
       price,
       quantity_available,
@@ -249,15 +254,15 @@ export const update_listing: RequestHandler = async (req, res) => {
   }
 
   if (minimum_bid_increment) {
-    await database.updateAuctionDetails(
+    await marketDb.updateAuctionDetails(
       { listing_id },
       { minimum_bid_increment },
     )
   }
 
   if (title || description || item_type || item_name) {
-    const unique = await database.getMarketUniqueListing({ listing_id })
-    await database.updateListingDetails(
+    const unique = await marketDb.getMarketUniqueListing({ listing_id })
+    await marketDb.updateListingDetails(
       { details_id: unique.details_id },
       { title, description, item_type, game_item_id },
     )
@@ -265,7 +270,7 @@ export const update_listing: RequestHandler = async (req, res) => {
 
   // Handle photo updates
   if (photos !== undefined) {
-    const old_photos = await database.getMarketListingImagesByListingID(listing)
+    const old_photos = await marketDb.getMarketListingImagesByListingID(listing)
 
     // Validate photos using the helper function
     const photoValidation = await validateMarketListingPhotos(photos, listing)
@@ -316,7 +321,7 @@ export const update_listing: RequestHandler = async (req, res) => {
           photo,
           listing_id + `_photo_${0}`,
         )
-        await database.insertMarketListingPhoto(listing, [
+        await marketDb.insertMarketListingPhoto(listing, [
           { resource_id: resource.resource_id },
         ])
       } catch {
@@ -328,7 +333,7 @@ export const update_listing: RequestHandler = async (req, res) => {
     // Remove any old photos that are not being preserved
     for (const p of old_photos) {
       if (!photosToPreserve.has(p.resource_id)) {
-        await database.deleteMarketListingImages(p)
+        await marketDb.deleteMarketListingImages(p)
         try {
           // Use CDN removeResource to ensure both database and CDN cleanup
           await cdn.removeResource(p.resource_id)
@@ -356,7 +361,7 @@ export const update_listing_quantity: RequestHandler = async (req, res) => {
     return
   }
 
-  await database.updateMarketListing(listing.listing_id, {
+  await marketDb.updateMarketListing(listing.listing_id, {
     quantity_available,
   })
 
@@ -378,30 +383,24 @@ export const refresh_listing: RequestHandler = async (req, res) => {
     return
   } // If expiration is at least 1 month - 3 days in the future
 
-  await database.updateMarketListing(listing_id, { expiration: new Date() })
+  await marketDb.updateMarketListing(listing_id, { expiration: new Date() })
 
   res.json({ result: "Success" })
 }
 
 export const get_order_stats: RequestHandler = async (req, res) => {
-  const order_stats = await database.getOrderStats()
+  const order_stats = await orderDb.getOrderStats()
 
   // Check if Grafana format is requested
   if (req.query.format === "grafana") {
-    const { convertStatsToGrafana } = await import(
-      "../admin/grafana-formatter.js"
-    )
-    const grafanaData = convertStatsToGrafana(order_stats)
+    const grafanaData = adminUtil.convertStatsToGrafana(order_stats)
     res.json(grafanaData)
     return
   }
 
   // Check if Prometheus format is requested
   if (req.query.format === "prometheus") {
-    const { convertStatsToPrometheus } = await import(
-      "../admin/grafana-formatter.js"
-    )
-    const prometheusData = convertStatsToPrometheus(order_stats)
+    const prometheusData = adminUtil.convertStatsToPrometheus(order_stats)
     res.json(prometheusData)
     return
   }
@@ -431,7 +430,7 @@ export const create_listing: RequestHandler = async (req, res) => {
     let contractor
     if (spectrum_id) {
       // Validate contractor exists and user has permissions
-      contractor = await database.getContractor({ spectrum_id })
+      contractor = await contractorDb.getContractor({ spectrum_id })
       if (!contractor) {
         res.status(400).json({ message: "Invalid contractor" })
         return
@@ -479,7 +478,7 @@ export const create_listing: RequestHandler = async (req, res) => {
     // Validate game item if provided
     let game_item_id: string | null = null
     if (item_name) {
-      const item = await database.getGameItem({ name: item_name })
+      const item = await marketDb.getGameItem({ name: item_name })
       if (!item) {
         res.status(400).json({ message: "Invalid item name" })
         return
@@ -488,7 +487,7 @@ export const create_listing: RequestHandler = async (req, res) => {
     }
 
     const details = (
-      await database.createListingDetails({
+      await marketDb.createListingDetails({
         title,
         description,
         item_type,
@@ -496,7 +495,7 @@ export const create_listing: RequestHandler = async (req, res) => {
       })
     )[0]
 
-    const [listing] = await database.createMarketListing({
+    const [listing] = await marketDb.createMarketListing({
       price,
       sale_type,
       quantity_available,
@@ -505,14 +504,14 @@ export const create_listing: RequestHandler = async (req, res) => {
       status,
     })
 
-    await database.createUniqueListing({
+    await marketDb.createUniqueListing({
       accept_offers: false,
       details_id: details.details_id,
       listing_id: listing.listing_id,
     })
 
     if (sale_type === "auction") {
-      await database.createAuctionDetails({
+      await marketDb.createAuctionDetails({
         minimum_bid_increment,
         end_time,
         listing_id: listing.listing_id,
@@ -532,7 +531,7 @@ export const create_listing: RequestHandler = async (req, res) => {
         ),
     )
 
-    await database.insertMarketListingPhoto(
+    await marketDb.insertMarketListingPhoto(
       listing,
       resources.map((r) => ({ resource_id: r.resource_id })),
     )
@@ -551,7 +550,7 @@ export const get_listing_details: RequestHandler = async (req, res) => {
 
   if (user) {
     if (listing.contractor_seller_id) {
-      const contractors = await database.getUserContractors({
+      const contractors = await contractorDb.getUserContractors({
         user_id: user.user_id,
       })
 
@@ -586,7 +585,7 @@ export const get_linked_orders: RequestHandler = async (req, res) => {
   const statusArray: string[] | undefined = status ? status.split(",") : []
 
   try {
-    const result = await database.getOrdersForListingPaginated({
+    const result = await marketDb.getOrdersForListingPaginated({
       listing_id,
       page,
       pageSize,
@@ -639,7 +638,7 @@ export const purchase_listings: RequestHandler = async (req, res) => {
     }
 
     const listings = await verify_listings(res, items, user)
-    if (listings === undefined) {
+    if (listings === undefined || listings === null) {
       return // Response handled by verify_listings
     }
 
@@ -668,7 +667,7 @@ export const purchase_listings: RequestHandler = async (req, res) => {
 
     // Check contractor blocking
     if (firstListing.contractor_seller_id) {
-      const isBlockedByContractor = await database.isUserBlocked(
+      const isBlockedByContractor = await profileDb.isUserBlocked(
         firstListing.contractor_seller_id,
         user.user_id,
         "contractor",
@@ -686,7 +685,7 @@ export const purchase_listings: RequestHandler = async (req, res) => {
 
     // Check user blocking
     if (firstListing.user_seller_id) {
-      const isBlockedByUser = await database.isUserBlocked(
+      const isBlockedByUser = await profileDb.isUserBlocked(
         firstListing.user_seller_id,
         user.user_id,
         "user",
@@ -784,14 +783,14 @@ export const get_listing_bids: RequestHandler = async (req, res) => {
     return
   }
 
-  const bids = await database.getMarketBids({
+  const bids = await marketDb.getMarketBids({
     listing_id: listing.listing_id,
   })
   if (bids.length) {
     price = Math.max(...bids.map((bid) => bid.bid))
   }
 
-  const details = await database.getAuctionDetail({ listing_id })
+  const details = await marketDb.getAuctionDetail({ listing_id })
   if (!details) {
     res
       .status(500)
@@ -814,18 +813,18 @@ export const get_listing_bids: RequestHandler = async (req, res) => {
     return
   }
 
-  await database.deleteMarketBids({
+  await marketDb.deleteMarketBids({
     listing_id: listing.listing_id,
     user_bidder_id: user.user_id,
   })
 
-  const bid_results = await database.createMarketBid({
+  const bid_results = await marketDb.createMarketBid({
     listing_id: listing.listing_id,
     bid: bid,
     user_bidder_id: user.user_id,
   })
 
-  const complete = await database.getMarketListingComplete(listing.listing_id)
+  const complete = await marketDb.getMarketListingComplete(listing.listing_id)
   await marketBidNotification(complete, bid_results[0])
 
   res.json({ result: "Success" })
@@ -852,7 +851,7 @@ export const add_listing_photos: RequestHandler = async (req, res) => {
 
     // Get existing photos to check count
     const existing_photos =
-      await database.getMarketListingImagesByListingID(listing)
+      await marketDb.getMarketListingImagesByListingID(listing)
 
     // Check if any existing photos are the default placeholder and should be removed
     const photosToRemove: any[] = []
@@ -895,7 +894,7 @@ export const add_listing_photos: RequestHandler = async (req, res) => {
     // Remove identified photos
     for (const photo of photosToRemove) {
       try {
-        await database.deleteMarketListingImages(photo)
+        await marketDb.deleteMarketListingImages(photo)
         // Use CDN removeResource to ensure both database and CDN cleanup
         await cdn.removeResource(photo.resource_id)
       } catch (error) {
@@ -970,7 +969,7 @@ export const add_listing_photos: RequestHandler = async (req, res) => {
     const uploadedResources = uploadResults.map((result) => result.resource)
 
     // Insert new photos into database
-    await database.insertMarketListingPhoto(
+    await marketDb.insertMarketListingPhoto(
       listing,
       uploadedResources.map((r) => ({ resource_id: r.resource_id })),
     )
@@ -1012,7 +1011,7 @@ export const handle_listing_view: RequestHandler = async (req, res) => {
     const user = req.user
 
     // Track the view
-    await database.trackListingView({
+    await marketDb.trackListingView({
       listing_type: "market",
       listing_id,
       viewer_id: user ? (user as User).user_id : null,
@@ -1061,7 +1060,7 @@ export const get_my_listings: RequestHandler = async (req, res) => {
     // Add seller filter
     if (contractorId) {
       // Look up contractor_id from spectrum_id
-      const contractor = await database.getContractor({
+      const contractor = await contractorDb.getContractor({
         spectrum_id: contractorId,
       })
       marketSearchQuery.contractor_seller_id = contractor.contractor_id
@@ -1071,7 +1070,7 @@ export const get_my_listings: RequestHandler = async (req, res) => {
 
     // Get unified results from unmaterialized view for real-time data
     const searchResults =
-      await database.searchMarketUnmaterialized(marketSearchQuery)
+      await marketDb.searchMarketUnmaterialized(marketSearchQuery)
 
     // Format listings using the same approach as market search
     const formattedListings = await Promise.all(
@@ -1109,7 +1108,7 @@ export const search_listings: RequestHandler = async (req, res) => {
       }
     }
 
-    const searchResults = await database.searchMarket(query, {
+    const searchResults = await marketDb.searchMarket(query, {
       ...(includeInternal ? {} : { internal: "false" }),
     })
 
@@ -1161,17 +1160,17 @@ export const search_listings: RequestHandler = async (req, res) => {
 
 export const get_active_listings_by_user: RequestHandler = async (req, res) => {
   const username = req.params["username"]
-  const user = await database.getUser({ username: username })
+  const user = await profileDb.getUser({ username: username })
   if (!user) {
     res.status(400).json({ error: "Invalid user" })
     return
   }
 
-  const listings = await database.getMarketUniqueListingsComplete({
+  const listings = await marketDb.getMarketUniqueListingsComplete({
     status: "active",
     user_seller_id: user.user_id,
   })
-  const multiples = await database.getMarketMultipleListingsComplete({
+  const multiples = await marketDb.getMarketMultipleListingsComplete({
     "market_multiples.user_seller_id": user.user_id,
     status: "active",
   })
@@ -1191,11 +1190,11 @@ export const get_active_listings_by_org: RequestHandler = async (req, res) => {
     if (req.user) {
       const user = req.user as User
       if (await is_member(contractor.contractor_id, user.user_id)) {
-        const listings = await database.getMarketUniqueListingsComplete({
+        const listings = await marketDb.getMarketUniqueListingsComplete({
           status: "active",
           contractor_seller_id: contractor.contractor_id,
         })
-        const multiples = await database.getMarketMultipleListingsComplete({
+        const multiples = await marketDb.getMarketMultipleListingsComplete({
           status: "active",
           "market_multiples.contractor_seller_id": contractor.contractor_id,
         })
@@ -1211,12 +1210,12 @@ export const get_active_listings_by_org: RequestHandler = async (req, res) => {
       }
     }
 
-    const listings = await database.getMarketUniqueListingsComplete({
+    const listings = await marketDb.getMarketUniqueListingsComplete({
       status: "active",
       internal: false,
       contractor_seller_id: contractor.contractor_id,
     })
-    const multiples = await database.getMarketMultipleListingsComplete({
+    const multiples = await marketDb.getMarketMultipleListingsComplete({
       status: "active",
       internal: false,
       "market_multiples.contractor_seller_id": contractor.contractor_id,
@@ -1237,7 +1236,7 @@ export const get_active_listings_by_org: RequestHandler = async (req, res) => {
 
 export const get_buy_orders: RequestHandler = async (req, res) => {
   try {
-    const aggregates = await database.getMarketBuyOrdersComplete()
+    const aggregates = await marketDb.getMarketBuyOrdersComplete()
     res.json(
       await Promise.all(
         aggregates.map((a) => formatMarketAggregateComplete(a)),
@@ -1254,7 +1253,7 @@ export const get_buy_orders: RequestHandler = async (req, res) => {
 export const get_buy_order_chart: RequestHandler = async (req, res) => {
   try {
     const game_item_id = req.params["game_item_id"]
-    const buy_orders = await database.getBuyOrdersByGameItemID(
+    const buy_orders = await marketDb.getBuyOrdersByGameItemID(
       game_item_id,
       true,
     )
@@ -1269,7 +1268,7 @@ export const get_buy_order_chart: RequestHandler = async (req, res) => {
 export const get_aggregate_history: RequestHandler = async (req, res) => {
   try {
     const game_item_id = req.params["game_item_id"]
-    const price_history = await database.getPriceHistory({ game_item_id })
+    const price_history = await marketDb.getPriceHistory({ game_item_id })
     res.json(await formatPriceHistory(price_history))
   } catch (e) {
     console.error(e)
@@ -1281,7 +1280,7 @@ export const get_aggregate_history: RequestHandler = async (req, res) => {
 export const update_aggregate: RequestHandler = async (req, res) => {
   try {
     const game_item_id = req.params["game_item_id"]
-    const game_item = await database.getGameItem({
+    const game_item = await marketDb.getGameItem({
       id: game_item_id,
     })
 
@@ -1299,7 +1298,7 @@ export const update_aggregate: RequestHandler = async (req, res) => {
     }
 
     if (title || description) {
-      await database.updateListingDetails(
+      await marketDb.updateListingDetails(
         { details_id },
         { title, description },
       )
@@ -1317,16 +1316,16 @@ export const update_aggregate: RequestHandler = async (req, res) => {
         return
       }
 
-      const photos = await database.getMarketListingImages({ details_id })
+      const photos = await marketDb.getMarketListingImages({ details_id })
       for (const p of photos) {
-        await database.deleteMarketListingImages(p)
+        await marketDb.deleteMarketListingImages(p)
         try {
           // Use CDN removeResource to ensure both database and CDN cleanup
           await cdn.removeResource(p.resource_id)
         } catch {}
       }
 
-      await database.insertMarketDetailsPhoto({
+      await marketDb.insertMarketDetailsPhoto({
         details_id,
         resource_id: resource.resource_id,
       })
@@ -1343,7 +1342,7 @@ export const update_aggregate: RequestHandler = async (req, res) => {
 export const get_aggregate_details: RequestHandler = async (req, res) => {
   try {
     const game_item_id = req.params["game_item_id"]
-    const aggregate = await database.getMarketAggregateComplete(game_item_id, {
+    const aggregate = await marketDb.getMarketAggregateComplete(game_item_id, {
       status: "active",
       internal: false,
     })
@@ -1365,7 +1364,7 @@ export const get_multiple_details: RequestHandler = async (req, res) => {
   try {
     const user = req.user as User | undefined | null
     const multiple_id = req.params["multiple_id"]
-    const multiple = await database.getMarketMultipleComplete(multiple_id, {})
+    const multiple = await marketDb.getMarketMultipleComplete(multiple_id, {})
 
     if (multiple === null) {
       res.status(400).json({ error: "Invalid item" })
@@ -1422,10 +1421,10 @@ export const create_contractor_multiple: RequestHandler = async (req, res) => {
     const listingObjects: DBUniqueListing[] = []
     for (const listing of listings) {
       try {
-        const listingObject = await database.getMarketListing({
+        const listingObject = await marketDb.getMarketListing({
           listing_id: listing,
         })
-        const listingObjectUnique = await database.getMarketUniqueListing({
+        const listingObjectUnique = await marketDb.getMarketUniqueListing({
           listing_id: listing,
         })
         listingObjects.push(listingObjectUnique)
@@ -1447,19 +1446,19 @@ export const create_contractor_multiple: RequestHandler = async (req, res) => {
       }
     }
 
-    const details = await database.createListingDetails({
+    const details = await marketDb.createListingDetails({
       item_type,
       title,
       description,
     })
 
-    const multiples = await database.createMarketMultiple({
+    const multiples = await marketDb.createMarketMultiple({
       contractor_seller_id: req.contractor.contractor_id,
       details_id: details[0].details_id,
       default_listing_id: default_listing_id,
     })
 
-    await database.createMarketMultipleListing(
+    await marketDb.createMarketMultipleListing(
       listingObjects.map((l) => ({
         multiple_listing_id: l.listing_id,
         multiple_id: multiples[0].multiple_id,
@@ -1469,11 +1468,11 @@ export const create_contractor_multiple: RequestHandler = async (req, res) => {
 
     for (const listingObject of listingObjects) {
       // Set it to type multiple
-      await database.updateMarketListing(listingObject.listing_id, {
+      await marketDb.updateMarketListing(listingObject.listing_id, {
         sale_type: "multiple",
       })
       // Remove unique listing
-      await database.removeUniqueListing({
+      await marketDb.removeUniqueListing({
         listing_id: listingObject.listing_id,
       })
       // Make multiples compatible with unique/aggregate listing lookup by ID
@@ -1481,7 +1480,7 @@ export const create_contractor_multiple: RequestHandler = async (req, res) => {
 
     res.json(
       await formatListingComplete(
-        await database.getMarketMultipleComplete(multiples[0].multiple_id, {}),
+        await marketDb.getMarketMultipleComplete(multiples[0].multiple_id, {}),
       ),
     )
   } catch (e) {
@@ -1524,10 +1523,10 @@ export const create_multiple: RequestHandler = async (req, res) => {
     const listingObjects: DBUniqueListing[] = []
     for (const listing of listings) {
       try {
-        const listingObject = await database.getMarketListing({
+        const listingObject = await marketDb.getMarketListing({
           listing_id: listing,
         })
-        const listingObjectUnique = await database.getMarketUniqueListing({
+        const listingObjectUnique = await marketDb.getMarketUniqueListing({
           listing_id: listing,
         })
         listingObjects.push(listingObjectUnique)
@@ -1551,19 +1550,19 @@ export const create_multiple: RequestHandler = async (req, res) => {
       }
     }
 
-    const details = await database.createListingDetails({
+    const details = await marketDb.createListingDetails({
       item_type,
       title,
       description,
     })
 
-    const multiples = await database.createMarketMultiple({
+    const multiples = await marketDb.createMarketMultiple({
       user_seller_id: user.user_id,
       details_id: details[0].details_id,
       default_listing_id: default_listing_id,
     })
 
-    const response = await database.createMarketMultipleListing(
+    const response = await marketDb.createMarketMultipleListing(
       listingObjects.map((l) => ({
         multiple_listing_id: l.listing_id,
         multiple_id: multiples[0].multiple_id,
@@ -1573,11 +1572,11 @@ export const create_multiple: RequestHandler = async (req, res) => {
 
     for (const listingObject of listingObjects) {
       // Set it to type multiple
-      await database.updateMarketListing(listingObject.listing_id, {
+      await marketDb.updateMarketListing(listingObject.listing_id, {
         sale_type: "multiple",
       })
       // Remove unique listing
-      await database.removeUniqueListing({
+      await marketDb.removeUniqueListing({
         listing_id: listingObject.listing_id,
       })
     }
@@ -1607,7 +1606,7 @@ export const update_multiple: RequestHandler = async (req, res) => {
         description: string
       }
 
-    const multiple = await database.getMarketMultipleComplete(multiple_id, {})
+    const multiple = await marketDb.getMarketMultipleComplete(multiple_id, {})
     if (multiple.contractor_seller_id) {
       if (
         !(await has_permission(
@@ -1648,17 +1647,17 @@ export const update_multiple: RequestHandler = async (req, res) => {
     const multipleListingObjects: DBMultipleListingComplete[] = []
     for (const listing of added) {
       try {
-        const listingObject = await database.getMarketListing({
+        const listingObject = await marketDb.getMarketListing({
           listing_id: listing,
         })
         if (listingObject.sale_type === "sale") {
-          const listingObjectUnique = await database.getMarketUniqueListing({
+          const listingObjectUnique = await marketDb.getMarketUniqueListing({
             listing_id: listing,
           })
           uniqueListingObjects.push(listingObjectUnique)
         } else {
           const listingObject =
-            await database.getMarketMultipleListingComplete(listing)
+            await marketDb.getMarketMultipleListingComplete(listing)
           multipleListingObjects.push(listingObject)
         }
 
@@ -1692,24 +1691,24 @@ export const update_multiple: RequestHandler = async (req, res) => {
 
     for (const listingObject of uniqueListingObjects) {
       // Set it to type multiple
-      await database.updateMarketListing(listingObject.listing_id, {
+      await marketDb.updateMarketListing(listingObject.listing_id, {
         sale_type: "multiple",
       })
       // Remove unique listing
-      await database.removeUniqueListing({
+      await marketDb.removeUniqueListing({
         listing_id: listingObject.listing_id,
       })
     }
 
     for (const listingObject of multipleListingObjects) {
       // Remove old multiple listing
-      await database.removeMultipleListing({
+      await marketDb.removeMultipleListing({
         multiple_listing_id: listingObject.listing.listing_id,
       })
     }
 
     if (uniqueListingObjects.length) {
-      await database.createMarketMultipleListing(
+      await marketDb.createMarketMultipleListing(
         uniqueListingObjects.map((l) => ({
           multiple_listing_id: l.listing_id,
           multiple_id: multiple_id,
@@ -1719,7 +1718,7 @@ export const update_multiple: RequestHandler = async (req, res) => {
     }
 
     if (multipleListingObjects.length) {
-      await database.createMarketMultipleListing(
+      await marketDb.createMarketMultipleListing(
         multipleListingObjects.map((l) => ({
           multiple_listing_id: l.listing.listing_id,
           multiple_id: multiple_id,
@@ -1730,15 +1729,15 @@ export const update_multiple: RequestHandler = async (req, res) => {
 
     for (const listing_id of removed) {
       const listing =
-        await database.getMarketMultipleListingComplete(listing_id)
+        await marketDb.getMarketMultipleListingComplete(listing_id)
       // Set it to type multiple
-      await database.updateMarketListing(listing_id, { sale_type: "sale" })
+      await marketDb.updateMarketListing(listing_id, { sale_type: "sale" })
       // Remove old multiple listing
-      await database.removeMultipleListing({
+      await marketDb.removeMultipleListing({
         multiple_listing_id: listing_id,
       })
       // Create unique listing
-      await database.createUniqueListing({
+      await marketDb.createUniqueListing({
         listing_id: listing_id,
         accept_offers: true,
         details_id: listing.details.details_id,
@@ -1746,14 +1745,14 @@ export const update_multiple: RequestHandler = async (req, res) => {
     }
 
     if (title || description || item_type) {
-      await database.updateListingDetails(
+      await marketDb.updateListingDetails(
         { details_id: multiple.details_id },
         { title, description, item_type },
       )
     }
 
     if (default_listing_id) {
-      await database.updateMarketMultiple(multiple_id, { default_listing_id })
+      await marketDb.updateMarketMultiple(multiple_id, { default_listing_id })
     }
 
     res.json({ result: "Success" })
@@ -1778,7 +1777,7 @@ export const create_buy_order: RequestHandler = async (req, res) => {
       game_item_id: string
     }
 
-    const aggregate = await database.getGameItem({
+    const aggregate = await marketDb.getGameItem({
       id: game_item_id,
     })
 
@@ -1802,7 +1801,7 @@ export const create_buy_order: RequestHandler = async (req, res) => {
       return
     }
 
-    const orders = await database.createBuyOrder({
+    const orders = await orderDb.createBuyOrder({
       quantity,
       price,
       expiry,
@@ -1832,9 +1831,12 @@ export const fulfill_buy_order: RequestHandler = async (req, res) => {
 
     let contractor: DBContractor | null = null
     if (contractor_spectrum_id) {
-      contractor = await database.getContractor({
+      contractor = await contractorDb.getContractor({
         spectrum_id: contractor_spectrum_id,
       })
+      if (!contractor) {
+        throw new Error("Invalid contractor!")
+      }
       if (
         !(await has_permission(
           contractor.contractor_id,
@@ -1847,7 +1849,7 @@ export const fulfill_buy_order: RequestHandler = async (req, res) => {
       }
     }
 
-    const buy_order = await database.getBuyOrder({ buy_order_id })
+    const buy_order = await marketDb.getBuyOrder({ buy_order_id })
     if (
       !buy_order ||
       buy_order.fulfilled_timestamp ||
@@ -1862,13 +1864,13 @@ export const fulfill_buy_order: RequestHandler = async (req, res) => {
       return
     }
 
-    const buyer = await database.getUser({ user_id: buy_order.buyer_id })
-    const listing = await database.getMarketAggregateComplete(
+    const buyer = await profileDb.getUser({ user_id: buy_order.buyer_id })
+    const listing = await marketDb.getMarketAggregateComplete(
       buy_order.game_item_id,
       {},
     )
 
-    await database.updateBuyOrder(
+    await marketDb.updateBuyOrder(
       {
         buy_order_id,
       },
@@ -1917,7 +1919,7 @@ export const cancel_buy_order: RequestHandler = async (req, res) => {
     const user = req.user as User
     const buy_order_id = req.params["buy_order_id"]
 
-    const buy_order = await database.getBuyOrder({ buy_order_id })
+    const buy_order = await marketDb.getBuyOrder({ buy_order_id })
     if (
       !buy_order ||
       buy_order.fulfilled_timestamp ||
@@ -1932,7 +1934,7 @@ export const cancel_buy_order: RequestHandler = async (req, res) => {
       return
     }
 
-    await database.updateBuyOrder(
+    await marketDb.updateBuyOrder(
       {
         buy_order_id,
       },
@@ -1956,12 +1958,12 @@ export const export_Listings: RequestHandler = async (req, res) => {
 
 export const get_category_details: RequestHandler = async (req, res) => {
   const { category } = req.params
-  const items = await database.getMarketItemsBySubcategory(category)
+  const items = await marketDb.getMarketItemsBySubcategory(category)
   res.json(createResponse(items))
 }
 
 export const get_categories: RequestHandler = async (req, res) => {
-  const raw_categories = await database.getMarketCategories()
+  const raw_categories = await marketDb.getMarketCategories()
 
   res.json(createResponse(raw_categories))
 }
@@ -1977,7 +1979,7 @@ export const get_game_item: RequestHandler = async (req, res) => {
       return
     }
 
-    const game_item = await database.getGameItem({ name: item_name })
+    const game_item = await marketDb.getGameItem({ name: item_name })
 
     if (!game_item) {
       res
@@ -1987,12 +1989,12 @@ export const get_game_item: RequestHandler = async (req, res) => {
     }
 
     // Fetch the details from market_listing_details using the details_id
-    const details = await database.getMarketListingDetails({
+    const details = await marketDb.getMarketListingDetails({
       details_id: game_item.details_id,
     })
 
     // Get the image URL from the market listing images
-    const images = await database.getMarketListingImagesResolved({
+    const images = await marketDb.getMarketListingImagesResolved({
       details_id: game_item.details_id,
     })
 
@@ -2019,7 +2021,7 @@ export const get_seller_analytics: RequestHandler = async (req, res) => {
     const period = (req.query.period as string) || "30d"
 
     // Get analytics for user's listings
-    const userAnalytics = await database.getSellerListingAnalytics({
+    const userAnalytics = await marketDb.getSellerListingAnalytics({
       user_id: user.user_id,
       time_period: period,
     })

@@ -1,5 +1,5 @@
 import { cdn } from "../../../../clients/cdn/cdn.js"
-import { database } from "../../../../clients/database/knex-db.js"
+import * as contractorDb from "./database.js"
 import { get_sentinel } from "../profiles/helpers.js"
 import { fetchRSIOrgSCAPI } from "../../../../clients/scapi/scapi.js"
 import { User } from "../api-models.js"
@@ -55,7 +55,7 @@ export async function createContractor(options: {
     }
   }
 
-  const contractor = await database.insertContractor({
+  const contractor = await contractorDb.insertContractor({
     spectrum_id: spectrum_id.toUpperCase(),
     name: name || spectrum_id.toUpperCase(),
     kind: "contractor",
@@ -66,7 +66,7 @@ export async function createContractor(options: {
     locale,
   })
 
-  await database.insertContractorMember(
+  await contractorDb.insertContractorMember(
     contractor.contractor_id,
     owner_id,
     "owner",
@@ -85,7 +85,7 @@ export async function createContractor(options: {
     },
   })
 
-  const owner_role = await database.insertContractorRole({
+  const owner_role = await contractorDb.insertContractorRole({
     contractor_id: contractor.contractor_id,
     position: 0,
     manage_roles: true,
@@ -101,7 +101,7 @@ export async function createContractor(options: {
     name: "Owner",
   })
 
-  const default_role = await database.insertContractorRole({
+  const default_role = await contractorDb.insertContractorRole({
     contractor_id: contractor.contractor_id,
     position: 10,
     manage_roles: false,
@@ -117,7 +117,7 @@ export async function createContractor(options: {
     name: "Member",
   })
 
-  await database.insertContractorRole({
+  await contractorDb.insertContractorRole({
     contractor_id: contractor.contractor_id,
     position: 1,
     manage_roles: true,
@@ -132,15 +132,15 @@ export async function createContractor(options: {
     manage_blocklist: true,
     name: "Admin",
   })
-  await database.insertContractorMemberRole({
+  await contractorDb.insertContractorMemberRole({
     user_id: owner_id,
     role_id: owner_role[0].role_id,
   })
-  await database.insertContractorMemberRole({
+  await contractorDb.insertContractorMemberRole({
     user_id: owner_id,
     role_id: default_role[0].role_id,
   })
-  await database.updateContractor(
+  await contractorDb.updateContractor(
     {
       contractor_id: contractor.contractor_id,
     },

@@ -5,10 +5,11 @@ import {
   DBOfferSession,
   DBOrder,
   DBOrderComment,
-  DBUser,
 } from "../../../../clients/database/db-models.js"
 import { User } from "../api-models.js"
-import { database } from "../../../../clients/database/knex-db.js"
+import * as profileDb from "../profiles/database.js"
+import * as notificationDb from "../notifications/database.js"
+import * as offerDb from "../offers/database.js"
 import { sendDM } from "./discord.js"
 import { cdn } from "../../../../clients/cdn/cdn.js"
 import logger from "../../../../logger/logger.js"
@@ -34,13 +35,13 @@ export async function createNotificationWebhook(
 ) {
   let webhooks
   if (contractor_id && !user_id) {
-    webhooks = await database.createNotificationWebhook({
+    webhooks = await notificationDb.createNotificationWebhook({
       webhook_url,
       name,
       contractor_id,
     })
   } else if (user_id && !contractor_id) {
-    webhooks = await database.createNotificationWebhook({
+    webhooks = await notificationDb.createNotificationWebhook({
       webhook_url,
       name,
       user_id,
@@ -60,12 +61,12 @@ export async function createNotificationWebhook(
   }
 
   for (const action of actions_set) {
-    const action_obj = await database.getNotificationActionByName(action)
+    const action_obj = await notificationDb.getNotificationActionByName(action)
     if (!action_obj) {
       throw Error("Invalid object")
     }
 
-    await database.insertWebhookAction({
+    await notificationDb.insertWebhookAction({
       webhook_id: webhook.webhook_id,
       action_type_id: action_obj.action_type_id,
     })
@@ -77,17 +78,17 @@ export async function createNotificationWebhook(
 export async function sendOrderWebhooks(order: DBOrder) {
   let webhooks
   if (order.contractor_id) {
-    webhooks = await database.getNotificationWebhooksByAction(
+    webhooks = await notificationDb.getNotificationWebhooksByAction(
       { contractor_id: order.contractor_id },
       "order_create",
     )
   } else if (order.assigned_id) {
-    webhooks = await database.getNotificationWebhooksByAction(
+    webhooks = await notificationDb.getNotificationWebhooksByAction(
       { user_id: order.assigned_id },
       "order_create",
     )
   } else {
-    webhooks = await database.getNotificationWebhooksByAction(
+    webhooks = await notificationDb.getNotificationWebhooksByAction(
       {},
       "public_order_create",
     )
@@ -111,12 +112,12 @@ export async function sendOfferWebhooks(
   logger.debug("Sending offer webhooks!")
   let webhooks
   if (offer.contractor_id) {
-    webhooks = await database.getNotificationWebhooksByAction(
+    webhooks = await notificationDb.getNotificationWebhooksByAction(
       { contractor_id: offer.contractor_id },
       "order_create",
     )
   } else if (offer.assigned_id) {
-    webhooks = await database.getNotificationWebhooksByAction(
+    webhooks = await notificationDb.getNotificationWebhooksByAction(
       { user_id: offer.assigned_id },
       "order_create",
     )
@@ -134,12 +135,12 @@ export async function generateNewOfferMessage(
   customer: User,
   assigned: User | null,
 ) {
-  const lastOffer = await database.getMostRecentOrderOffer(session.id)
+  const lastOffer = await offerDb.getMostRecentOrderOffer(session.id)
 
   // Get Discord IDs from provider system
-  const customerDiscordId = await database.getUserDiscordId(customer.user_id)
+  const customerDiscordId = await profileDb.getUserDiscordId(customer.user_id)
   const assignedDiscordId = assigned
-    ? await database.getUserDiscordId(assigned.user_id)
+    ? await profileDb.getUserDiscordId(assigned.user_id)
     : null
 
   return {
@@ -211,9 +212,9 @@ export async function generateNewOrderMessage(
   assigned: User | null,
 ) {
   // Get Discord IDs from provider system
-  const customerDiscordId = await database.getUserDiscordId(customer.user_id)
+  const customerDiscordId = await profileDb.getUserDiscordId(customer.user_id)
   const assignedDiscordId = assigned
-    ? await database.getUserDiscordId(assigned.user_id)
+    ? await profileDb.getUserDiscordId(assigned.user_id)
     : null
 
   return {
@@ -303,7 +304,7 @@ export async function generateOfferStatusUpdateMessage(
   newStatus: string,
   user?: User,
 ) {
-  const offer = await database.getMostRecentOrderOffer(session.id)
+  const offer = await offerDb.getMostRecentOrderOffer(session.id)
 
   const embed: any = {
     color: status_colors.get(newStatus) || 0x111828,
@@ -356,21 +357,21 @@ export async function generateAssignedMessage(order: DBOrder, assigned: User) {
 
 export async function sendOrderDM(order: DBOrder) {
   const customer = order.customer_id
-    ? await database.getUser({ user_id: order.customer_id })
+    ? await profileDb.getUser({ user_id: order.customer_id })
     : null
   if (!customer) {
     return
   }
 
   const assigned = order.assigned_id
-    ? await database.getUser({ user_id: order.assigned_id })
+    ? await profileDb.getUser({ user_id: order.assigned_id })
     : null
 
   const people = [assigned]
 
   for (const person of people) {
     if (person) {
-      const discordId = await database.getUserDiscordId(person.user_id)
+      const discordId = await profileDb.getUserDiscordId(person.user_id)
       if (discordId) {
         await sendDM(
           discordId,
@@ -383,21 +384,21 @@ export async function sendOrderDM(order: DBOrder) {
 
 export async function sendOfferDM(offer: DBOfferSession) {
   const customer = offer.customer_id
-    ? await database.getUser({ user_id: offer.customer_id })
+    ? await profileDb.getUser({ user_id: offer.customer_id })
     : null
   if (!customer) {
     return
   }
 
   const assigned = offer.assigned_id
-    ? await database.getUser({ user_id: offer.assigned_id })
+    ? await profileDb.getUser({ user_id: offer.assigned_id })
     : null
 
   const people = [assigned]
 
   for (const person of people) {
     if (person) {
-      const discordId = await database.getUserDiscordId(person.user_id)
+      const discordId = await profileDb.getUserDiscordId(person.user_id)
       if (discordId) {
         await sendDM(
           discordId,
@@ -411,7 +412,7 @@ export async function sendOfferDM(offer: DBOfferSession) {
 export async function sendAssignedWebhook(order: DBOrder) {
   let webhooks
   if (order.assigned_id) {
-    webhooks = await database.getNotificationWebhooksByAction(
+    webhooks = await notificationDb.getNotificationWebhooksByAction(
       { user_id: order.assigned_id },
       "order_assigned",
     )
@@ -427,7 +428,7 @@ export async function sendAssignedWebhook(order: DBOrder) {
 export async function sendUserOfferWebhook(order: DBOfferSession) {
   let webhooks
   if (order.assigned_id) {
-    webhooks = await database.getNotificationWebhooksByAction(
+    webhooks = await notificationDb.getNotificationWebhooksByAction(
       { user_id: order.assigned_id },
       "order_assigned",
     )
@@ -454,7 +455,9 @@ async function sendOrderWebhook(
   order: DBOrder,
   webhook: DBNotificationWebhook,
 ) {
-  const customer = await database.getMinimalUser({ user_id: order.customer_id })
+  const customer = await profileDb.getMinimalUser({
+    user_id: order.customer_id,
+  })
   return await sendWebhook(
     {
       // the username to be displayed
@@ -522,10 +525,10 @@ async function sendOfferWebhook(
   webhook: DBNotificationWebhook,
   type: "offer_create" | "counter_offer_create" = "offer_create",
 ) {
-  const customer = await database.getMinimalUser({
+  const customer = await profileDb.getMinimalUser({
     user_id: session.customer_id,
   })
-  const most_recent = await database.getMostRecentOrderOffer(session.id)
+  const most_recent = await offerDb.getMostRecentOrderOffer(session.id)
   return await sendWebhook(
     {
       // the username to be displayed
@@ -584,7 +587,7 @@ export async function sendBidWebhooks(
 ) {
   let webhooks
   if (listing.listing.contractor_seller_id) {
-    webhooks = await database.getNotificationWebhooksByAction(
+    webhooks = await notificationDb.getNotificationWebhooksByAction(
       {
         "notification_webhooks.contractor_id":
           listing.listing.contractor_seller_id,
@@ -592,7 +595,7 @@ export async function sendBidWebhooks(
       "market_item_bid",
     )
   } else if (listing.listing.user_seller_id) {
-    webhooks = await database.getNotificationWebhooksByAction(
+    webhooks = await notificationDb.getNotificationWebhooksByAction(
       { "notification_webhooks.user_id": listing.listing.user_seller_id },
       "market_item_bid",
     )
@@ -610,7 +613,7 @@ async function marketBidWebhook(
   bid: DBMarketBid,
   webhook: DBNotificationWebhook,
 ) {
-  const bidder = await database.getMinimalUser({ user_id: bid.user_bidder_id })
+  const bidder = await profileDb.getMinimalUser({ user_id: bid.user_bidder_id })
   return await sendWebhook(
     {
       username: "SC Market - Bid Received",
@@ -661,7 +664,7 @@ export async function sendOrderCommentWebhooks(
   const webhooks = []
   if (order.contractor_id) {
     webhooks.push(
-      ...(await database.getNotificationWebhooksByAction(
+      ...(await notificationDb.getNotificationWebhooksByAction(
         { "notification_webhooks.contractor_id": order.contractor_id },
         "order_comment",
       )),
@@ -670,7 +673,7 @@ export async function sendOrderCommentWebhooks(
 
   if (order.assigned_id) {
     webhooks.push(
-      ...(await database.getNotificationWebhooksByAction(
+      ...(await notificationDb.getNotificationWebhooksByAction(
         { "notification_webhooks.user_id": order.assigned_id },
         "order_comment",
       )),
@@ -679,7 +682,7 @@ export async function sendOrderCommentWebhooks(
 
   if (order.customer_id) {
     webhooks.push(
-      ...(await database.getNotificationWebhooksByAction(
+      ...(await notificationDb.getNotificationWebhooksByAction(
         { "notification_webhooks.user_id": order.customer_id },
         "order_comment",
       )),
@@ -696,7 +699,7 @@ async function orderCommentWebhook(
   comment: DBOrderComment,
   webhook: DBNotificationWebhook,
 ) {
-  const author = await database.getMinimalUser({ user_id: comment.author })
+  const author = await profileDb.getMinimalUser({ user_id: comment.author })
   return await sendWebhook(
     {
       username: "SC Market - Order Comment Received",
@@ -754,7 +757,7 @@ export async function sendOrderStatusWebhooks(
   const webhooks = []
   if (order.contractor_id) {
     webhooks.push(
-      ...(await database.getNotificationWebhooksByAction(
+      ...(await notificationDb.getNotificationWebhooksByAction(
         { "notification_webhooks.contractor_id": order.contractor_id },
         status_actions.get(new_status) || "order_status_not_started",
       )),
@@ -763,7 +766,7 @@ export async function sendOrderStatusWebhooks(
 
   if (order.assigned_id) {
     webhooks.push(
-      ...(await database.getNotificationWebhooksByAction(
+      ...(await notificationDb.getNotificationWebhooksByAction(
         { "notification_webhooks.user_id": order.assigned_id },
         status_actions.get(new_status) || "order_status_not_started",
       )),
@@ -772,7 +775,7 @@ export async function sendOrderStatusWebhooks(
 
   if (order.customer_id) {
     webhooks.push(
-      ...(await database.getNotificationWebhooksByAction(
+      ...(await notificationDb.getNotificationWebhooksByAction(
         { "notification_webhooks.user_id": order.customer_id },
         status_actions.get(new_status) || "order_status_not_started",
       )),
@@ -803,7 +806,7 @@ async function orderStatusWebhook(
   actor_id: string,
   webhook: DBNotificationWebhook,
 ) {
-  const actor = await database.getMinimalUser({ user_id: actor_id })
+  const actor = await profileDb.getMinimalUser({ user_id: actor_id })
   return await sendWebhook(
     {
       username: "SC Market - Order Status Updated",

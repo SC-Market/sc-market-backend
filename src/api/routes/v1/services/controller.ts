@@ -1,6 +1,10 @@
 import { RequestHandler } from "express"
 import { User as User } from "../api-models.js"
 import { database as database } from "../../../../clients/database/knex-db.js"
+import * as serviceDb from "./database.js"
+import * as contractorDb from "../contractors/database.js"
+import * as profileDb from "../profiles/database.js"
+import * as marketDb from "../market/database.js"
 import { has_permission as has_permission } from "../util/permissions.js"
 import { cdn as cdn } from "../../../../clients/cdn/cdn.js"
 import { serializeService as serializeService } from "./serializers.js"
@@ -52,7 +56,7 @@ export const services_post_root: RequestHandler = async (req, res) => {
 
   let contractor_id
   if (contractor) {
-    const contractor_obj = await database.getContractor({
+    const contractor_obj = await contractorDb.getContractor({
       spectrum_id: contractor,
     })
     if (!contractor_obj) {
@@ -69,7 +73,7 @@ export const services_post_root: RequestHandler = async (req, res) => {
     contractor_id = null
   }
 
-  const [service] = await database.createService({
+  const [service] = await serviceDb.createService({
     service_name: service_name,
     service_description: service_description,
     kind: kind || null,
@@ -118,7 +122,10 @@ export const services_get_user_username: RequestHandler = async (
 
   let target
   try {
-    target = await database.getUser({ username: username }, { noBalance: true })
+    target = await profileDb.getUser(
+      { username: username },
+      { noBalance: true },
+    )
   } catch {
     res.status(400).json(createErrorResponse({ error: "Invalid user" }))
     return
@@ -127,12 +134,12 @@ export const services_get_user_username: RequestHandler = async (
   const isOwner = user && username === user.username
 
   if (isOwner) {
-    const services = await database.getServices({
+    const services = await serviceDb.getServices({
       user_id: target.user_id,
     })
     res.json(createResponse(await Promise.all(services.map(serializeService))))
   } else {
-    const services = await database.getServices({
+    const services = await serviceDb.getServices({
       user_id: target.user_id,
       status: "active",
     })
@@ -166,7 +173,7 @@ export const services_get_public: RequestHandler = async (req, res, next) => {
     sortOrder: sortOrder as "asc" | "desc",
   }
 
-  const result = await database.getServicesPaginated(params)
+  const result = await serviceDb.getServicesPaginated(params)
 
   // Serialize services
   const serializedServices = await Promise.all(
@@ -195,12 +202,12 @@ export const services_get_contractor_spectrum_id: RequestHandler = async (
       "manage_orders",
     ))
   if (isAdmin) {
-    const services = await database.getServices({
+    const services = await serviceDb.getServices({
       contractor_id: req.contractor!.contractor_id,
     })
     res.json(createResponse(await Promise.all(services.map(serializeService))))
   } else {
-    const services = await database.getServices({
+    const services = await serviceDb.getServices({
       contractor_id: req.contractor!.contractor_id,
       status: "active",
     })
@@ -214,7 +221,7 @@ export const services_put_service_id: RequestHandler = async (req, res) => {
 
   let service
   try {
-    service = await database.getService({ service_id })
+    service = await serviceDb.getService({ service_id })
   } catch {
     res.status(400).json(createErrorResponse({ error: "Invalid service" }))
     return
@@ -256,7 +263,7 @@ export const services_put_service_id: RequestHandler = async (req, res) => {
   } = req.body
 
   if (service.contractor_id) {
-    const contractor = await database.getContractor({
+    const contractor = await contractorDb.getContractor({
       contractor_id: service.contractor_id,
     })
 
@@ -277,7 +284,7 @@ export const services_put_service_id: RequestHandler = async (req, res) => {
     }
   }
 
-  await database.updateService(
+  await serviceDb.updateService(
     { service_id },
     {
       service_name,
@@ -297,7 +304,7 @@ export const services_put_service_id: RequestHandler = async (req, res) => {
 
   // Handle photo updates
   if (photos !== undefined) {
-    const old_photos = await database.getServiceListingImages({ service_id })
+    const old_photos = await serviceDb.getServiceListingImages({ service_id })
 
     // Validate photos using the helper function
     const photoValidation = await validateServicePhotos(photos, service)
@@ -352,7 +359,7 @@ export const services_put_service_id: RequestHandler = async (req, res) => {
           photo,
           service_id + `_photo_${0}`,
         )
-        await database.insertServiceImage({
+        await serviceDb.insertServiceImage({
           resource_id: resource.resource_id,
           service_id,
         })
@@ -365,7 +372,7 @@ export const services_put_service_id: RequestHandler = async (req, res) => {
     // Remove any old photos that are not being preserved
     for (const p of old_photos) {
       if (!photosToPreserve.has(p.resource_id)) {
-        await database.deleteServiceImages(p)
+        await serviceDb.deleteServiceImages(p)
         try {
           // Use CDN removeResource to ensure both database and CDN cleanup
           await cdn.removeResource(p.resource_id)
@@ -386,7 +393,7 @@ export const services_get_service_id: RequestHandler = async (
 
   let service
   try {
-    service = await database.getService({ service_id })
+    service = await serviceDb.getService({ service_id })
   } catch {
     res.status(400).json(createErrorResponse({ error: "Invalid service" }))
     return
@@ -424,7 +431,7 @@ export const services_post_service_id_photos: RequestHandler = async (
     }
 
     // Validate service exists
-    const service = await database.getService({ service_id })
+    const service = await serviceDb.getService({ service_id })
     if (!service) {
       res.status(404).json(createErrorResponse({ error: "Service not found" }))
       return
@@ -432,7 +439,7 @@ export const services_post_service_id_photos: RequestHandler = async (
 
     // Check if user has permission to modify this service
     if (service.contractor_id) {
-      const contractor = await database.getContractor({
+      const contractor = await contractorDb.getContractor({
         contractor_id: service.contractor_id,
       })
       if (
@@ -463,7 +470,7 @@ export const services_post_service_id_photos: RequestHandler = async (
     }
 
     // Get existing photos to check count
-    const existing_photos = await database.getServiceListingImages({
+    const existing_photos = await serviceDb.getServiceListingImages({
       service_id,
     })
 
@@ -479,8 +486,8 @@ export const services_post_service_id_photos: RequestHandler = async (
 
       for (const photo of photosToRemove) {
         try {
-          await database.deleteServiceImages(photo)
-          await database.removeImageResource({
+          await serviceDb.deleteServiceImages(photo)
+          await contractorDb.removeImageResource({
             resource_id: photo.resource_id,
           })
         } catch (error) {
@@ -565,7 +572,7 @@ export const services_post_service_id_photos: RequestHandler = async (
 
     // Insert new photos into database
     for (const resource of uploadedResources) {
-      await database.insertServiceImage({
+      await serviceDb.insertServiceImage({
         resource_id: resource.resource_id,
         service_id,
       })
@@ -655,13 +662,13 @@ export const services_post_service_id_view: RequestHandler = async (
     const user = req.user
 
     // Verify service exists and is active
-    const service = await database.getService({ service_id })
+    const service = await serviceDb.getService({ service_id })
     if (!service || service.status !== "active") {
       return res.status(404).json({ message: "Service not found or inactive" })
     }
 
     // Track the view
-    await database.trackListingView({
+    await marketDb.trackListingView({
       listing_type: "service",
       listing_id: service_id,
       viewer_id: user ? (user as User).user_id : null,
@@ -690,7 +697,7 @@ export const services_get_seller_analytics: RequestHandler = async (
     const period = (req.query.period as string) || "30d"
 
     // Get analytics for user's services
-    const userAnalytics = await database.getSellerListingAnalytics({
+    const userAnalytics = await marketDb.getSellerListingAnalytics({
       user_id: user.user_id,
       time_period: period,
     })

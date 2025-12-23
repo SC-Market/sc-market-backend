@@ -1,6 +1,10 @@
 import { RequestHandler } from "express"
 import { createOffer as createOffer } from "../orders/helpers.js"
 import { database as database } from "../../../../clients/database/knex-db.js"
+import * as contractDb from "./database.js"
+import * as offerDb from "../offers/database.js"
+import * as profileDb from "../profiles/database.js"
+import * as contractorDb from "../contractors/database.js"
 import { User as User } from "../api-models.js"
 import { createErrorResponse as createErrorResponse } from "../util/response.js"
 import { createResponse as createResponse } from "../util/response.js"
@@ -10,7 +14,7 @@ import { DBContractor as DBContractor } from "../../../../clients/database/db-mo
 import { serializePublicContract as serializePublicContract } from "./serializers.js"
 
 export const contracts_post_root: RequestHandler = async (req, res) => {
-  const [contract] = await database.insertPublicContract({
+  const [contract] = await contractDb.insertPublicContract({
     title: req.body.title,
     description: req.body.description,
     // rush: req.body.rush,
@@ -46,7 +50,7 @@ export const contracts_post_contract_id_offers: RequestHandler = async (
   let contractor: DBContractor | null = null
   if (req.body.contractor) {
     try {
-      contractor = await database.getContractor({
+      contractor = await contractorDb.getContractor({
         spectrum_id: req.body.contractor,
       })
     } catch {
@@ -81,10 +85,11 @@ export const contracts_post_contract_id_offers: RequestHandler = async (
   }
 
   // Check if customer is blocked by contractor
-  const isBlocked = await database.checkIfBlockedForOrder(
+  const isBlocked = await profileDb.checkIfBlockedForOrder(
     req.contract!.customer_id,
     contractor?.contractor_id || null,
     contractor ? null : user?.user_id,
+    user?.user_id || "",
   )
   if (isBlocked) {
     res.status(403).json(
@@ -117,7 +122,7 @@ export const contracts_post_contract_id_offers: RequestHandler = async (
     },
   )
 
-  await database.insertContractOffers({
+  await offerDb.insertContractOffers({
     contract_id: req.contract!.id,
     session_id: session.id,
   })

@@ -1,5 +1,7 @@
 import { RequestHandler } from "express"
-import { database as database } from "../../../../clients/database/knex-db.js"
+import * as profileDb from "../profiles/database.js"
+import * as contractorDb from "../contractors/database.js"
+import * as transactionDb from "./database.js"
 import { DBContractor as DBContractor } from "../../../../clients/database/db-models.js"
 import { DBTransaction as DBTransaction } from "../../../../clients/database/db-models.js"
 import { User as User } from "../api-models.js"
@@ -13,7 +15,7 @@ export const transaction_get_transaction_id: RequestHandler = async (
   const transaction_id = req.params["transaction_id"]
   let transaction: DBTransaction
   try {
-    transaction = await database.getTransaction({
+    transaction = await transactionDb.getTransaction({
       transaction_id: transaction_id,
     })
   } catch (e) {
@@ -43,24 +45,24 @@ export const transaction_get_transaction_id: RequestHandler = async (
     contractor_sender_id:
       transaction.contractor_sender_id &&
       (
-        await database.getContractor({
+        await contractorDb.getContractor({
           contractor_id: transaction.contractor_sender_id,
         })
       ).spectrum_id,
     contractor_recipient_id:
       transaction.contractor_recipient_id &&
       (
-        await database.getContractor({
+        await contractorDb.getContractor({
           contractor_id: transaction.contractor_recipient_id,
         })
       ).spectrum_id,
     user_sender_id:
       transaction.user_sender_id &&
-      (await database.getUser({ user_id: transaction.user_sender_id }))
+      (await profileDb.getUser({ user_id: transaction.user_sender_id }))
         .username,
     user_recipient_id:
       transaction.user_recipient_id &&
-      (await database.getUser({ user_id: transaction.user_recipient_id }))
+      (await profileDb.getUser({ user_id: transaction.user_recipient_id }))
         .username,
   })
 }
@@ -104,7 +106,7 @@ export const transaction_post_create: RequestHandler = async (
   let target_contractor: DBContractor | null | undefined
   if (contractor_recipient_id) {
     try {
-      target_contractor = await database.getContractor({
+      target_contractor = await contractorDb.getContractor({
         spectrum_id: contractor_recipient_id,
       })
     } catch {
@@ -116,7 +118,7 @@ export const transaction_post_create: RequestHandler = async (
   let target_user: User | null | undefined
   if (user_recipient_id) {
     try {
-      target_user = await database.getUser({ username: user_recipient_id })
+      target_user = await profileDb.getUser({ username: user_recipient_id })
     } catch {
       res.status(400).json({ error: "Invalid contractor" })
       return
@@ -132,18 +134,18 @@ export const transaction_post_create: RequestHandler = async (
     res.status(400).json({ error: "Insufficient funds" })
     return
   }
-  await database.decrementUserBalance(user.user_id, amount)
+  await profileDb.decrementUserBalance(user.user_id, amount)
 
   if (contractor_recipient_id) {
-    await database.incrementContractorBalance(
+    await contractorDb.incrementContractorBalance(
       target_contractor!.contractor_id,
       amount,
     )
   } else if (user_recipient_id) {
-    await database.incrementUserBalance(target_user!.user_id, amount)
+    await profileDb.incrementUserBalance(target_user!.user_id, amount)
   }
 
-  await database.createTransaction({
+  await transactionDb.createTransaction({
     amount: amount,
     note: note || "",
     kind: "Payment",
@@ -163,7 +165,7 @@ export const transaction_post_contractor_spectrum_id_create: RequestHandler =
     const spectrum_id = req.params["spectrum_id"]
     const user = req.user as User
 
-    const contractor = await database.getContractor({
+    const contractor = await contractorDb.getContractor({
       spectrum_id: spectrum_id,
     })
     if (!contractor) {
@@ -216,7 +218,7 @@ export const transaction_post_contractor_spectrum_id_create: RequestHandler =
     let target_contractor: DBContractor | null | undefined
     if (contractor_recipient_id) {
       try {
-        target_contractor = await database.getContractor({
+        target_contractor = await contractorDb.getContractor({
           spectrum_id: contractor_recipient_id,
         })
       } catch {
@@ -233,7 +235,7 @@ export const transaction_post_contractor_spectrum_id_create: RequestHandler =
     let target_user: User | null | undefined
     if (user_recipient_id) {
       try {
-        target_user = await database.getUser({ username: user_recipient_id })
+        target_user = await profileDb.getUser({ username: user_recipient_id })
       } catch {
         res.status(400).json({ error: "Invalid contractor" })
         return
@@ -245,18 +247,21 @@ export const transaction_post_contractor_spectrum_id_create: RequestHandler =
       return
     }
 
-    await database.decrementContractorBalance(contractor.contractor_id, amount)
+    await contractorDb.decrementContractorBalance(
+      contractor.contractor_id,
+      amount,
+    )
 
     if (contractor_recipient_id) {
-      await database.incrementContractorBalance(
+      await contractorDb.incrementContractorBalance(
         target_contractor!.contractor_id,
         amount,
       )
     } else if (user_recipient_id) {
-      await database.incrementUserBalance(target_user!.user_id, amount)
+      await profileDb.incrementUserBalance(target_user!.user_id, amount)
     }
 
-    await database.createTransaction({
+    await transactionDb.createTransaction({
       amount: amount,
       kind: "Payment",
       status: "Completed",
@@ -272,7 +277,7 @@ export const transaction_post_contractor_spectrum_id_create: RequestHandler =
 
 export const transactions_get_mine: RequestHandler = async (req, res, next) => {
   const user = req.user as User
-  const transactions = await database.getUserTransactions(user.user_id)
+  const transactions = await transactionDb.getUserTransactions(user.user_id)
 
   res.json(
     await Promise.all(
@@ -285,24 +290,24 @@ export const transactions_get_mine: RequestHandler = async (req, res, next) => {
         contractor_sender_id:
           transaction.contractor_sender_id &&
           (
-            await database.getContractor({
+            await contractorDb.getContractor({
               contractor_id: transaction.contractor_sender_id,
             })
           ).spectrum_id,
         contractor_recipient_id:
           transaction.contractor_recipient_id &&
           (
-            await database.getContractor({
+            await contractorDb.getContractor({
               contractor_id: transaction.contractor_recipient_id,
             })
           ).spectrum_id,
         user_sender_id:
           transaction.user_sender_id &&
-          (await database.getUser({ user_id: transaction.user_sender_id }))
+          (await profileDb.getUser({ user_id: transaction.user_sender_id }))
             .username,
         user_recipient_id:
           transaction.user_recipient_id &&
-          (await database.getUser({ user_id: transaction.user_recipient_id }))
+          (await profileDb.getUser({ user_id: transaction.user_recipient_id }))
             .username,
       })),
     ),
@@ -315,7 +320,7 @@ export const transactions_get_contractor_spectrum_id: RequestHandler = async (
   next,
 ) => {
   const spectrum_id = req.params["spectrum_id"]
-  const contractor = await database.getContractor({
+  const contractor = await contractorDb.getContractor({
     spectrum_id: spectrum_id,
   })
   if (!contractor) {
@@ -324,13 +329,14 @@ export const transactions_get_contractor_spectrum_id: RequestHandler = async (
   }
 
   const user = req.user as User
-  const contractors = await database.getUserContractors({
+  const contractors = await contractorDb.getUserContractors({
     "contractor_members.user_id": user.user_id,
   })
 
   if (
-    contractors.filter((c) => c.contractor_id === contractor.contractor_id)
-      .length === 0
+    contractors.filter(
+      (c: DBContractor) => c.contractor_id === contractor.contractor_id,
+    ).length === 0
   ) {
     res
       .status(403)
@@ -338,7 +344,7 @@ export const transactions_get_contractor_spectrum_id: RequestHandler = async (
     return
   }
 
-  const transactions = await database.getContractorTransactions(
+  const transactions = await transactionDb.getContractorTransactions(
     contractor.contractor_id,
   )
 
@@ -353,24 +359,24 @@ export const transactions_get_contractor_spectrum_id: RequestHandler = async (
         contractor_sender_id:
           transaction.contractor_sender_id &&
           (
-            await database.getContractor({
+            await contractorDb.getContractor({
               contractor_id: transaction.contractor_sender_id,
             })
           ).spectrum_id,
         contractor_recipient_id:
           transaction.contractor_recipient_id &&
           (
-            await database.getContractor({
+            await contractorDb.getContractor({
               contractor_id: transaction.contractor_recipient_id,
             })
           ).spectrum_id,
         user_sender_id:
           transaction.user_sender_id &&
-          (await database.getUser({ user_id: transaction.user_sender_id }))
+          (await profileDb.getUser({ user_id: transaction.user_sender_id }))
             .username,
         user_recipient_id:
           transaction.user_recipient_id &&
-          (await database.getUser({ user_id: transaction.user_recipient_id }))
+          (await profileDb.getUser({ user_id: transaction.user_recipient_id }))
             .username,
       })),
     ),

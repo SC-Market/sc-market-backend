@@ -1,5 +1,9 @@
 import { RequestHandler } from "express"
 import { database as database } from "../../../../clients/database/knex-db.js"
+import * as orderDb from "../orders/database.js"
+import * as adminDb from "./database.js"
+import * as profileDb from "../profiles/database.js"
+import * as contractorDb from "../contractors/database.js"
 import { createResponse as createResponse } from "../util/response.js"
 import { createErrorResponse } from "../util/response.js"
 import { User } from "../api-models.js"
@@ -15,9 +19,9 @@ import {
 import { MinimalUser } from "../../../../clients/database/db-models.js"
 
 export const admin_get_activity: RequestHandler = async (req, res) => {
-  const daily = await database.getDailyActivity()
-  const weekly = await database.getWeeklyActivity()
-  const monthly = await database.getMonthlyActivity()
+  const daily = await adminDb.getDailyActivity()
+  const weekly = await adminDb.getWeeklyActivity()
+  const monthly = await adminDb.getMonthlyActivity()
 
   // Check if Grafana format is requested
   if (req.query.format === "grafana") {
@@ -54,7 +58,7 @@ export const admin_get_activity: RequestHandler = async (req, res) => {
 
 export const admin_get_orders_analytics: RequestHandler = async (req, res) => {
   try {
-    const analytics = await database.getOrderAnalytics()
+    const analytics = await orderDb.getOrderAnalytics()
 
     // Check if Grafana format is requested
     if (req.query.format === "grafana") {
@@ -146,7 +150,7 @@ export const admin_get_users: RequestHandler = async (req, res) => {
       whereClause.rsi_confirmed = rsiConfirmed
     }
 
-    const result = await database.getUsersPaginated(
+    const result = await profileDb.getUsersPaginated(
       page,
       pageSize,
       whereClause,
@@ -167,7 +171,7 @@ export const admin_get_membership_analytics: RequestHandler = async (
   res,
 ) => {
   try {
-    const analytics = await database.getMembershipAnalytics()
+    const analytics = await adminDb.getMembershipAnalytics()
 
     // Check if Grafana format is requested
     if (req.query.format === "grafana") {
@@ -281,7 +285,7 @@ export const admin_get_audit_logs: RequestHandler = async (req, res) => {
       const actors = await Promise.all(
         actorIds.map(async (id) => {
           try {
-            const user = await database.getMinimalUser({ user_id: id })
+            const user = await profileDb.getMinimalUser({ user_id: id })
             return { id, user }
           } catch {
             return null
@@ -325,7 +329,7 @@ export const admin_get_audit_logs: RequestHandler = async (req, res) => {
       const contractors = await Promise.all(
         Array.from(contractorIds).map(async (contractorId) => {
           try {
-            const contractor = await database.getMinimalContractor({
+            const contractor = await contractorDb.getMinimalContractor({
               contractor_id: contractorId,
             })
             return { contractor_id: contractorId, contractor }
@@ -408,7 +412,7 @@ export const admin_post_users_username_unlink: RequestHandler = async (
     const adminUser = req.user as User
 
     // Get the target user
-    const user = await database.getUser({ username })
+    const user = await profileDb.getUser({ username })
     if (!user) {
       res.status(404).json(
         createErrorResponse({
@@ -431,17 +435,14 @@ export const admin_post_users_username_unlink: RequestHandler = async (
     }
 
     // Generate default username from Discord ID or user ID
-    const discordProvider = await database.getUserProvider(
-      user.user_id,
-      "discord",
-    )
+    const discordProvider = await profileDb.getUserProvider(user.user_id, "discord")
     const discordId =
       discordProvider?.provider_id || user.user_id.substring(0, 8)
     const defaultUsername = `new_user${discordId}`
     const defaultDisplayName = `new_user${discordId}`
 
     // Update user to unverified state with default usernames
-    await database.updateUser(
+    await profileDb.updateUser(
       { user_id: user.user_id },
       {
         rsi_confirmed: false,

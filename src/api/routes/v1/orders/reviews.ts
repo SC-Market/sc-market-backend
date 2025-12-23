@@ -1,6 +1,8 @@
 import { Request, RequestHandler, Response } from "express"
 import { User } from "../api-models.js"
 import { database } from "../../../../clients/database/knex-db.js"
+import * as orderDb from "./database.js"
+import * as contractorDb from "../contractors/database.js"
 import {
   createOrderReviewNotification,
   createOrderReviewRevisionNotification,
@@ -37,7 +39,7 @@ export async function requestReviewRevision(req: Request, res: Response) {
     })
 
     // Get review and verify it exists
-    const review = await database.getOrderReview({ review_id })
+    const review = await orderDb.getOrderReview({ review_id })
     if (!review) {
       logger.warn("Review not found for revision request", { review_id })
       return res
@@ -46,7 +48,7 @@ export async function requestReviewRevision(req: Request, res: Response) {
     }
 
     // Verify user is the recipient of the review
-    const order = await database.getOrder({ order_id })
+    const order = await orderDb.getOrder({ order_id })
     const isRecipient =
       (review.role === "customer" && order.customer_id === user.user_id) ||
       (review.role === "contractor" && order.assigned_id === user.user_id)
@@ -76,7 +78,7 @@ export async function requestReviewRevision(req: Request, res: Response) {
     }
 
     // Request revision
-    const updatedReview = await database.requestReviewRevision(
+    const updatedReview = await orderDb.requestReviewRevision(
       review_id,
       user.user_id,
       message,
@@ -124,7 +126,7 @@ export async function updateOrderReview(req: Request, res: Response) {
     })
 
     // Get review and verify it exists
-    const review = await database.getOrderReview({ review_id })
+    const review = await orderDb.getOrderReview({ review_id })
     if (!review) {
       logger.warn("Review not found for update", { review_id })
       return res
@@ -181,7 +183,7 @@ export async function updateOrderReview(req: Request, res: Response) {
     }
 
     // Update review
-    const updatedReview = await database.updateOrderReview(review_id, {
+    const updatedReview = await orderDb.updateOrderReview(review_id, {
       content: content.trim(),
       rating,
       revision_requested: false, // Mark revision as resolved
@@ -221,10 +223,10 @@ async function canEditReview(review: DBReview, user: User): Promise<boolean> {
 
   // Organization member can edit org review if they have permission
   if (review.contractor_author) {
-    const order = await database.getOrder({ order_id: review.order_id })
+    const order = await orderDb.getOrder({ order_id: review.order_id })
     if (order.contractor_id) {
       // Check if the contractor_author matches the order's contractor
-      const contractor = await database.getContractor({
+      const contractor = await contractorDb.getContractor({
         contractor_id: order.contractor_id,
       })
       if (contractor.spectrum_id === review.contractor_author) {
@@ -244,7 +246,7 @@ export const post_order_review: RequestHandler = async (req, res, next) => {
   const order_id = req.params["order_id"]
   let order: DBOrder
   try {
-    order = await database.getOrder({ order_id: order_id })
+    order = await orderDb.getOrder({ order_id: order_id })
   } catch (e) {
     res.status(404).json({ message: "Invalid order" })
     return
@@ -301,7 +303,7 @@ export const post_order_review: RequestHandler = async (req, res, next) => {
     return
   }
 
-  const existing = await database.getOrderReview({
+  const existing = await orderDb.getOrderReview({
     order_id: order.order_id,
     role: role as "customer" | "contractor",
   })
@@ -312,7 +314,7 @@ export const post_order_review: RequestHandler = async (req, res, next) => {
     return
   }
 
-  const review = await database.createOrderReview({
+  const review = await orderDb.createOrderReview({
     order_id: order.order_id,
     content: content,
     user_author: user.user_id,

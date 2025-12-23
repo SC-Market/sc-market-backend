@@ -1,4 +1,8 @@
 import { database } from "../../clients/database/knex-db.js"
+import * as marketDb from "../../api/routes/v1/market/database.js"
+import * as orderDb from "../../api/routes/v1/orders/database.js"
+import * as offerDb from "../../api/routes/v1/offers/database.js"
+import * as notificationDb from "../../api/routes/v1/notifications/database.js"
 import {
   DBContractor,
   DBOrder,
@@ -36,8 +40,7 @@ export async function archiveContractor({
   const archiveDate = now.toISOString().slice(0, 10)
   const archivedLabel = `${ARCHIVE_LABEL_PREFIX} ${archiveDate}] ${contractor.name}`
 
-  const inviteAction =
-    await database.getNotificationActionByName("contractor_invite")
+  const inviteAction = await notificationDb.getNotificationActionByName("contractor_invite")
 
   let memberCountRemoved = 0
   let orderIds: string[] = []
@@ -152,9 +155,9 @@ export async function archiveContractor({
   // Cancel open orders and release inventory
   for (const orderId of orderIds) {
     try {
-      const order = await database.getOrder({ order_id: orderId })
+      const order = await orderDb.getOrder({ order_id: orderId })
       if (order.status !== "cancelled") {
-        await database.updateOrder(order.order_id, { status: "cancelled" })
+        await orderDb.updateOrder(order.order_id, { status: "cancelled" })
         await cancelOrderMarketItems(order)
 
         // Log order cancellation
@@ -182,7 +185,7 @@ export async function archiveContractor({
   // Archive related market listings
   for (const listingId of listingIds) {
     try {
-      await database.updateMarketListing(listingId, {
+      await marketDb.updateMarketListing(listingId, {
         status: "archived",
         internal: true,
       })
@@ -209,7 +212,7 @@ export async function archiveContractor({
         .update({ status: "rejected" })
 
       // Mark the offer session as rejected
-      await database.updateOfferSession(sessionId, { status: "rejected" })
+      await offerDb.updateOfferSession(sessionId, { status: "rejected" })
 
       // Log offer rejections
       for (const offer of activeOffers) {

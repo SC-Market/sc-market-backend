@@ -2,6 +2,9 @@ import { NextFunction, Request, Response } from "express"
 import { User } from "../routes/v1/api-models.js"
 import crypto from "crypto"
 import { createErrorResponse } from "../routes/v1/util/response.js"
+import { database } from "../../clients/database/knex-db.js"
+import * as profileDb from "../routes/v1/profiles/database.js"
+import * as contractorDb from "../routes/v1/contractors/database.js"
 
 // Extended Request interface for token support
 export interface AuthRequest extends Request {
@@ -21,9 +24,6 @@ async function authenticateToken(
   token: string,
 ): Promise<{ user: User; tokenInfo: any } | null> {
   try {
-    // Dynamic import to avoid circular dependency
-    const { database } = await import("../../clients/database/knex-db.js")
-
     // Validate token format
     if (!token.startsWith("scm_")) {
       return null
@@ -36,7 +36,7 @@ async function authenticateToken(
     const tokenRecord = await database
       .knex("api_tokens")
       .where("token_hash", tokenHash)
-      .where(function () {
+      .where(function (this: any) {
         this.whereNull("expires_at").orWhere("expires_at", ">", new Date())
       })
       .first()
@@ -46,7 +46,7 @@ async function authenticateToken(
     }
 
     // Get user information using getUser to ensure correct User type (excludes discord_id)
-    const user = await database.getUser({ user_id: tokenRecord.user_id })
+    const user = await profileDb.getUser({ user_id: tokenRecord.user_id })
 
     if (!user || user.banned) {
       return null
@@ -495,11 +495,9 @@ export function requireContractorAccessFromSpectrumId() {
     // For token auth, we need to get the contractor ID from spectrum_id
     if (authReq.token) {
       try {
-        // Dynamic import to avoid circular dependency
-        const { database } = await import("../../clients/database/knex-db.js")
         let contractor
         try {
-          contractor = await database.getContractor({ spectrum_id })
+          contractor = await contractorDb.getContractor({ spectrum_id })
         } catch (error) {
           res.status(404).json({
             error: "Contractor not found",

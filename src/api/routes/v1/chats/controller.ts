@@ -1,6 +1,8 @@
 import { Request, Response, NextFunction } from "express"
 import { User } from "../api-models.js"
 import { database } from "../../../../clients/database/knex-db.js"
+import * as chatDb from "./database.js"
+import * as profileDb from "../profiles/database.js"
 import { cdn } from "../../../../clients/cdn/cdn.js"
 import { sendUserChatMessage } from "../util/discord.js"
 import {
@@ -21,7 +23,7 @@ export async function getChatByOrderId(
 ): Promise<void> {
   let chat
   try {
-    chat = await database.getChat({ order_id: req.params.order_id })
+    chat = await chatDb.getChat({ order_id: req.params.order_id })
   } catch (error) {
     logger.debug(`Chat not found for order ID: ${req.params.order_id}`)
     res
@@ -44,7 +46,7 @@ export async function getChatByOfferSessionId(
 
   let chat
   try {
-    chat = await database.getChat({ session_id: session_id })
+    chat = await chatDb.getChat({ session_id: session_id })
   } catch (error) {
     logger.debug(`Chat not found for session ID: ${session_id}`)
     res.status(404).json(
@@ -77,7 +79,7 @@ export async function sendMessage(
 
   const chat = req.chat!
 
-  const message = await database.insertMessage({
+  const message = await chatDb.insertMessage({
     chat_id: chat.chat_id,
     content,
     author: user.user_id,
@@ -134,9 +136,7 @@ export async function createChat(
   const user = req.user as User
 
   const users = await Promise.all(
-    body.users.map((user) => {
-      return database.getUser({ username: user })
-    }),
+    body.users.map((user) => profileDb.getUser({ username: user })),
   )
 
   // TODO: Process blocked users and user access settings
@@ -147,10 +147,10 @@ export async function createChat(
 
   users.push(user)
 
-  const chats = await database.getChatByParticipant(user.user_id)
+  const chats = await chatDb.getChatByParticipant(user.user_id)
 
   for (const chat of chats) {
-    const participants = await database.getChatParticipants({
+    const participants = await chatDb.getChatParticipants({
       chat_id: chat!.chat_id,
     })
     if (eqSet(new Set(participants), new Set(users.map((u) => u?.user_id)))) {
@@ -159,7 +159,7 @@ export async function createChat(
     }
   }
 
-  await database.insertChat(Array.from(new Set(users.map((x) => x!.user_id))))
+  await chatDb.insertChat(Array.from(new Set(users.map((x) => x!.user_id))))
 
   res.json(createResponse({ result: "Success" }))
 }
@@ -172,8 +172,8 @@ export async function getChatById(
 ): Promise<void> {
   const chat = req.chat!
 
-  const msg_entries = await database.getMessages({ chat_id: chat!.chat_id })
-  const participants = await database.getChatParticipants({
+  const msg_entries = await chatDb.getMessages({ chat_id: chat!.chat_id })
+  const participants = await chatDb.getChatParticipants({
     chat_id: chat!.chat_id,
   })
 
@@ -184,7 +184,7 @@ export async function getChatById(
       chat_id: chat.chat_id,
       participants: await Promise.all(
         participants.map(async (user_id) => {
-          const u = await database.getUser({ user_id: user_id })
+          const u = await profileDb.getUser({ user_id: user_id })
           return {
             username: u!.username,
             avatar: await cdn.getFileLinkResource(u.avatar),
@@ -204,20 +204,20 @@ export async function getChats(
   next: NextFunction,
 ): Promise<void> {
   const user = req.user as User
-  const chats = await database.getChatByParticipant(user.user_id)
+  const chats = await chatDb.getChatByParticipant(user.user_id)
   const newchats = await Promise.all(
     chats.map(async (chat) => {
-      const participants = await database.getChatParticipants({
+      const participants = await chatDb.getChatParticipants({
         chat_id: chat!.chat_id,
       })
-      const mostRecent = await database.getMostRecentMessage({
+      const mostRecent = await chatDb.getMostRecentMessage({
         chat_id: chat.chat_id,
       })
       return {
         chat_id: chat.chat_id,
         participants: await Promise.all(
           participants.map(async (user_id) => {
-            const u = await database.getUser({ user_id: user_id })
+            const u = await profileDb.getUser({ user_id: user_id })
 
             return {
               username: u!.username,
@@ -229,8 +229,9 @@ export async function getChats(
           ? [
               {
                 ...mostRecent,
-                author: (await database.getUser({ user_id: mostRecent.author }))
-                  .username,
+                author: (
+                  await profileDb.getUser({ user_id: mostRecent.author })
+                ).username,
               },
             ]
           : [],

@@ -1,5 +1,8 @@
 import express from "express"
 import { database } from "../database/knex-db.js"
+import * as profileDb from "../../api/routes/v1/profiles/database.js"
+import * as contractorDb from "../../api/routes/v1/contractors/database.js"
+import * as marketDb from "../../api/routes/v1/market/database.js"
 import { has_permission } from "../../api/routes/v1/util/permissions.js"
 
 export const registrationRouter = express.Router()
@@ -20,7 +23,7 @@ registrationRouter.post("/contractor/:spectrum_id", async (req, res) => {
 
     let user
     try {
-      user = await database.getUserByDiscordId(discord_id)
+      user = await profileDb.getUserByDiscordId(discord_id)
       if (!user) {
         res.status(403).json({
           error:
@@ -28,7 +31,7 @@ registrationRouter.post("/contractor/:spectrum_id", async (req, res) => {
         })
         return
       }
-      database.upsertDailyActivity(user.user_id)
+      marketDb.upsertDailyActivity(user.user_id)
     } catch (e) {
       res.status(403).json({
         error:
@@ -39,7 +42,7 @@ registrationRouter.post("/contractor/:spectrum_id", async (req, res) => {
 
     let contractor
     try {
-      contractor = await database.getContractor({ spectrum_id: spectrum_id })
+      contractor = await contractorDb.getContractor({ spectrum_id: spectrum_id })
     } catch (e) {
       res.status(400).json({ error: "Invalid contractor Spectrum ID" })
       return
@@ -61,14 +64,14 @@ registrationRouter.post("/contractor/:spectrum_id", async (req, res) => {
     }
 
     if (server_id) {
-      await database.updateContractor(
+      await contractorDb.updateContractor(
         { spectrum_id: spectrum_id },
         { official_server_id: server_id },
       )
     }
 
     if (channel_id) {
-      await database.updateContractor(
+      await contractorDb.updateContractor(
         { spectrum_id: spectrum_id },
         { discord_thread_channel_id: channel_id },
       )
@@ -95,7 +98,7 @@ registrationRouter.post("/user", async (req, res) => {
 
   let user
   try {
-    user = await database.getUserByDiscordId(discord_id)
+    user = await profileDb.getUserByDiscordId(discord_id)
     if (!user) {
       res.status(403).json({
         error:
@@ -103,7 +106,7 @@ registrationRouter.post("/user", async (req, res) => {
       })
       return
     }
-    database.upsertDailyActivity(user.user_id)
+    marketDb.upsertDailyActivity(user.user_id)
   } catch (e) {
     res.status(403).json({
       error:
@@ -114,10 +117,7 @@ registrationRouter.post("/user", async (req, res) => {
 
   // Update Discord integration settings using new system
   // Also update old columns for backward compatibility during transition
-  const currentIntegration = await database.getUserIntegration(
-    user.user_id,
-    "discord",
-  )
+  const currentIntegration = await profileDb.getUserIntegration(user.user_id, "discord")
   const currentSettings = currentIntegration?.settings || {}
 
   const newSettings = {
@@ -126,7 +126,7 @@ registrationRouter.post("/user", async (req, res) => {
     ...(channel_id && { discord_thread_channel_id: channel_id }),
   }
 
-  await database.upsertIntegration(user.user_id, {
+  await profileDb.upsertIntegration(user.user_id, {
     integration_type: "discord",
     settings: newSettings,
     enabled: true,
@@ -141,7 +141,7 @@ registrationRouter.post("/user", async (req, res) => {
   if (channel_id) updateData.discord_thread_channel_id = channel_id
 
   if (Object.keys(updateData).length > 0) {
-    await database.updateUser({ user_id: user.user_id }, updateData)
+    await profileDb.updateUser({ user_id: user.user_id }, updateData)
   }
 
   res.json({ result: "Success" })

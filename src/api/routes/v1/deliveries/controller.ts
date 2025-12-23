@@ -1,6 +1,10 @@
 import { RequestHandler } from "express"
 import { User as User } from "../api-models.js"
 import { database as database } from "../../../../clients/database/knex-db.js"
+import * as deliveryDb from "./database.js"
+import * as shipDb from "../ships/database.js"
+import * as orderDb from "../orders/database.js"
+import * as contractorDb from "../contractors/database.js"
 import { has_permission as has_permission } from "../util/permissions.js"
 
 export const delivery_post_create: RequestHandler = async (req, res, next) => {
@@ -23,10 +27,10 @@ export const delivery_post_create: RequestHandler = async (req, res, next) => {
     return
   }
 
-  const contractors = await database.getUserContractors({
+  const contractors = await contractorDb.getUserContractors({
     user_id: user.user_id,
   })
-  const order = await database.getOrder({ order_id })
+  const order = await orderDb.getOrder({ order_id })
   let contractor
   let manageOrders
   if (order.contractor_id) {
@@ -48,7 +52,7 @@ export const delivery_post_create: RequestHandler = async (req, res, next) => {
     return
   }
 
-  const ship = await database.getShip({ ship_id })
+  const ship = await shipDb.getShip({ ship_id })
 
   if (!ship || ship.owner !== user.user_id) {
     res.status(403).json({
@@ -57,7 +61,7 @@ export const delivery_post_create: RequestHandler = async (req, res, next) => {
     return
   }
 
-  await database.createDelivery({
+  await deliveryDb.createDelivery({
     departure: start,
     destination: end,
     order_id: order_id,
@@ -71,14 +75,14 @@ export const delivery_post_create: RequestHandler = async (req, res, next) => {
 
 export const deliveries_get_mine: RequestHandler = async (req, res, next) => {
   const user = req.user as User
-  const orders = await database.getDeliveries({ customer_id: user.user_id })
+  const orders = await deliveryDb.getDeliveries({ customer_id: user.user_id })
 
   res.json(
     await Promise.all(
-      orders.map(async (delivery) => ({
+      orders.map(async (delivery: any) => ({
         ...delivery,
-        order: await database.getOrder({ order_id: delivery.order_id }),
-        ship: await database.getShip({ ship_id: delivery.ship_id }),
+        order: await orderDb.getOrder({ order_id: delivery.order_id }),
+        ship: await shipDb.getShip({ ship_id: delivery.ship_id }),
       })),
     ),
   )

@@ -1,4 +1,4 @@
-import { database } from "../../../../clients/database/knex-db.js"
+import * as profileDb from "./database.js"
 import { cdn } from "../../../../clients/cdn/cdn.js"
 import { fetchRSIProfileDirect } from "../../../../clients/rsi/scraper.js"
 import { fetchRSIProfileCommunityHub } from "../../../../clients/rsi/community_hub.js"
@@ -91,7 +91,7 @@ export async function authorizeProfile(
   override = false,
 ) {
   try {
-    const user = await database.getUser({ username })
+    const user = await profileDb.getUser({ username })
     if (user.user_id !== user_id) {
       return { success: false, error: "User already registered" }
     }
@@ -124,7 +124,7 @@ export async function authorizeProfile(
     // Check if this Spectrum user ID is already in use by another account
     if (spectrum_user_id) {
       try {
-        const existingUser = await database.getUser({ spectrum_user_id })
+        const existingUser = await profileDb.getUser({ spectrum_user_id })
         if (existingUser && existingUser.user_id !== user_id) {
           logger.debug(
             `Spectrum user ID ${spectrum_user_id} is already in use by user ${existingUser.user_id}`,
@@ -159,7 +159,7 @@ export async function authorizeProfile(
       }
     }
 
-    await database.updateUser(
+    await profileDb.updateUser(
       { user_id },
       {
         username: profileDetails.handle,
@@ -220,7 +220,7 @@ async function fetchProfileBySpectrumId(spectrum_id: string) {
 export async function syncRSIHandle(user_id: string) {
   try {
     // Get the user's current information
-    const user = await database.getUser({ user_id })
+    const user = await profileDb.getUser({ user_id })
     if (!user) {
       return { success: false, error: "User not found" }
     }
@@ -272,7 +272,7 @@ export async function syncRSIHandle(user_id: string) {
     }
 
     // Update user profile with current information
-    await database.updateUser(
+    await profileDb.updateUser(
       { user_id },
       {
         username: profileDetails.handle,

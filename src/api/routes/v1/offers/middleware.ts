@@ -2,6 +2,7 @@ import { NextFunction, Request, Response } from "express"
 import { User } from "../api-models.js"
 import { DBOfferSession } from "../../../../clients/database/db-models.js"
 import { database } from "../../../../clients/database/knex-db.js"
+import * as offerDb from "./database.js"
 import { createErrorResponse } from "../util/response.js"
 import { has_permission } from "../util/permissions.js"
 import { can_respond_to_offer_helper } from "./helpers.js"
@@ -15,7 +16,7 @@ export async function related_to_offer(
   const id = req.params["session_id"]
   let offer: DBOfferSession
   try {
-    ;[offer] = await database.getOfferSessions({ id: id })
+    ;[offer] = await offerDb.getOfferSessions({ id: id })
   } catch (e) {
     res.status(404).json(createErrorResponse({ error: "Invalid offer" }))
     return
@@ -53,7 +54,7 @@ export async function can_respond_to_offer(
   res: Response,
   next: NextFunction,
 ) {
-  const mostRecent = await database.getMostRecentOrderOffer(
+  const mostRecent = await offerDb.getMostRecentOrderOffer(
     req.offer_session!.id,
   )
   req.most_recent_offer = mostRecent
@@ -114,7 +115,7 @@ export async function can_merge_offers(
     // Get all offer sessions
     const sessions = await Promise.all(
       offer_session_ids.map((id) =>
-        database.getOfferSessions({ id }).then((s) => s[0]),
+        offerDb.getOfferSessions({ id }).then((s) => s[0]),
       ),
     )
 

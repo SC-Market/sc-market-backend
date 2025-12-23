@@ -60,7 +60,7 @@ export async function createAdminUser(
 
   // Set admin flag or role
   // Adjust this based on your actual admin logic
-  const db = (await import("./testDb.js")).getTestDatabase()
+  const db = getTestDatabase()
   await db
     .knex("accounts")
     .where({ user_id: user.user_id })
@@ -80,7 +80,7 @@ export async function createOwnerUser(
 
   // Assign owner role
   // Adjust this based on your actual role assignment logic
-  const db = (await import("./testDb.js")).getTestDatabase()
+  const db = getTestDatabase()
   const contractor = await db
     .knex("contractors")
     .where({ contractor_id: contractorId })

@@ -1,6 +1,7 @@
 import { RequestHandler } from "express"
 import { User as User } from "../api-models.js"
 import { database as database } from "../../../../clients/database/knex-db.js"
+import * as notificationDb from "./database.js"
 import logger from "../../../../logger/logger.js"
 
 export const notification_patch_notification_id: RequestHandler = async (
@@ -20,7 +21,7 @@ export const notification_patch_notification_id: RequestHandler = async (
   }
 
   try {
-    const notifications = await database.getNotifications({
+    const notifications = await notificationDb.getNotifications({
       notifier_id: user.user_id,
       notification_id,
     })
@@ -30,7 +31,7 @@ export const notification_patch_notification_id: RequestHandler = async (
       return
     }
 
-    await database.updateNotifications(
+    await notificationDb.updateNotifications(
       { notifier_id: user.user_id, notification_id },
       { read },
     )
@@ -59,13 +60,13 @@ export const notification_patch_root: RequestHandler = async (
 
   try {
     // Get all notifications that would be affected by this update
-    const targetNotifications = await database.getNotifications({
+    const targetNotifications = await notificationDb.getNotifications({
       notifier_id: user.user_id,
       read: !read, // If marking as read, get unread ones; if marking as unread, get read ones
     })
 
     // Update all notifications with the opposite read status
-    await database.updateNotifications(
+    await notificationDb.updateNotifications(
       { notifier_id: user.user_id, read: !read },
       { read },
     )
@@ -99,7 +100,7 @@ export const notification_delete_notification_id: RequestHandler = async (
   const notification_id = req.params.notification_id
 
   try {
-    const notifications = await database.getNotifications({
+    const notifications = await notificationDb.getNotifications({
       notifier_id: user.user_id,
       notification_id,
     })
@@ -109,7 +110,7 @@ export const notification_delete_notification_id: RequestHandler = async (
       return
     }
 
-    await database.deleteNotifications({
+    await notificationDb.deleteNotifications({
       notifier_id: user.user_id,
       notification_id,
     })
@@ -135,12 +136,12 @@ export const notification_delete_root: RequestHandler = async (
     // If no notification_ids provided or empty array, delete all notifications
     if (!notification_ids || notification_ids.length === 0) {
       // Get all notifications for the user to count them
-      const allNotifications = await database.getNotifications({
+      const allNotifications = await notificationDb.getNotifications({
         notifier_id: user.user_id,
       })
 
       // Delete all notifications for the user
-      await database.deleteNotifications({
+      await notificationDb.deleteNotifications({
         notifier_id: user.user_id,
       })
 
@@ -170,13 +171,13 @@ export const notification_delete_root: RequestHandler = async (
 
     // Delete specific notifications
     for (const notification_id of notification_ids) {
-      const notifications = await database.getNotifications({
+      const notifications = await notificationDb.getNotifications({
         notifier_id: user.user_id,
         notification_id,
       })
 
       if (notifications.length > 0) {
-        await database.deleteNotifications({
+        await notificationDb.deleteNotifications({
           notifier_id: user.user_id,
           notification_id,
         })
@@ -223,7 +224,7 @@ export const notification_get_page: RequestHandler = async (req, res, next) => {
   }
 
   try {
-    const result = await database.getCompleteNotificationsByUserPaginated(
+    const result = await notificationDb.getCompleteNotificationsByUserPaginated(
       user.user_id,
       page,
       pageSize,
@@ -232,7 +233,7 @@ export const notification_get_page: RequestHandler = async (req, res, next) => {
     )
 
     // Get unread count with the same filters
-    const unreadCount = await database.getUnreadNotificationCount(
+    const unreadCount = await notificationDb.getUnreadNotificationCount(
       user.user_id,
       actionFilter,
       entityIdFilter,

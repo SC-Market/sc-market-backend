@@ -4,7 +4,9 @@
  */
 
 import { RequestHandler, Request, Response, NextFunction } from "express"
-import { database } from "../../../../clients/database/knex-db.js"
+import * as adminDb from "../admin/database.js"
+import * as orderDb from "../orders/database.js"
+import { adminAuthorized } from "../../../middleware/auth.js"
 import {
   convertActivityToPrometheus,
   convertOrderAnalyticsToPrometheus,
@@ -167,8 +169,6 @@ export async function prometheusAuthMiddleware(
   }
 
   // Otherwise, require admin auth
-  // Import dynamically to avoid circular dependency
-  const { adminAuthorized } = await import("../../../middleware/auth.js")
   return adminAuthorized(req, res, next)
 }
 
@@ -216,9 +216,9 @@ export const prometheus_query: RequestHandler = async (req, res) => {
     // Route to appropriate handler based on metric type
     switch (metricSource.type) {
       case "activity": {
-        const daily = await database.getDailyActivity()
-        const weekly = await database.getWeeklyActivity()
-        const monthly = await database.getMonthlyActivity()
+        const daily = await adminDb.getDailyActivity()
+        const weekly = await adminDb.getWeeklyActivity()
+        const monthly = await adminDb.getMonthlyActivity()
 
         const allData = {
           status: "success",
@@ -247,7 +247,7 @@ export const prometheus_query: RequestHandler = async (req, res) => {
         break
       }
       case "orders": {
-        const analytics = await database.getOrderAnalytics()
+        const analytics = await orderDb.getOrderAnalytics()
         const totals =
           metricSource.period === "daily"
             ? analytics.daily_totals
@@ -270,7 +270,7 @@ export const prometheus_query: RequestHandler = async (req, res) => {
         break
       }
       case "membership": {
-        const analytics = await database.getMembershipAnalytics()
+        const analytics = await adminDb.getMembershipAnalytics()
         const totals =
           metricSource.period === "daily"
             ? analytics.daily_totals
@@ -293,7 +293,7 @@ export const prometheus_query: RequestHandler = async (req, res) => {
         break
       }
       case "stats": {
-        const stats = await database.getOrderStats()
+        const stats = await orderDb.getOrderStats()
         const allData = convertStatsToPrometheus(stats)
         const filtered = allData.data.result.filter(
           (r) => r.metric.__name__ === metricName,
@@ -349,9 +349,9 @@ async function handleActivityMetric(
   console.log(
     `[handleActivityMetric] Querying database: startTime=${startTime} (${new Date(startTime * 1000).toISOString()}), endTime=${endTime} (${new Date(endTime * 1000).toISOString()})`,
   )
-  const daily = await database.getDailyActivity({ startTime, endTime })
-  const weekly = await database.getWeeklyActivity({ startTime, endTime })
-  const monthly = await database.getMonthlyActivity({ startTime, endTime })
+  const daily = await adminDb.getDailyActivity({ startTime, endTime })
+  const weekly = await adminDb.getWeeklyActivity({ startTime, endTime })
+  const monthly = await adminDb.getMonthlyActivity({ startTime, endTime })
   console.log(
     `[handleActivityMetric] Database returned: daily=${daily.length}, weekly=${weekly.length}, monthly=${monthly.length} records`,
   )
@@ -405,7 +405,7 @@ async function handleOrderMetric(
     }>
   }
 }> {
-  const analytics = await database.getOrderAnalytics({ startTime, endTime })
+  const analytics = await orderDb.getOrderAnalytics({ startTime, endTime })
   const totals =
     period === "daily"
       ? analytics.daily_totals
@@ -450,7 +450,7 @@ async function handleMembershipMetric(
     }>
   }
 }> {
-  const analytics = await database.getMembershipAnalytics({
+  const analytics = await adminDb.getMembershipAnalytics({
     startTime,
     endTime,
   })
@@ -499,7 +499,7 @@ async function handleStatsMetric(
 }> {
   // For stats metrics (instant values), convert to range format
   // by creating points at start and end time so the graph shows a flat line
-  const stats = await database.getOrderStats()
+  const stats = await orderDb.getOrderStats()
   const allData = convertStatsToPrometheus(stats)
   const filtered = allData.data.result.filter(
     (r) => r.metric.__name__ === metricName,

@@ -1,6 +1,7 @@
 import { NextFunction, Request, Response } from "express"
 import { database } from "../../../../clients/database/knex-db.js"
 import { User } from "../api-models.js"
+import * as profileDb from "../profiles/database.js"
 
 export async function adminOverride(
   req: Request,
@@ -13,7 +14,7 @@ export async function adminOverride(
       const override = req.query.admin_override as string | undefined
       if (override) {
         try {
-          req.user = await database.getUser({ username: override })
+          req.user = await profileDb.getUser({ username: override })
         } catch {
           /* empty */
         }
