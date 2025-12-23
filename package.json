@@ -69,23 +69,33 @@
     "@types/passport-discord": "^0.1.14",
     "@types/passport-oauth2-refresh": "^1.1.4",
     "@types/pg": "^8.15.4",
+    "@types/supertest": "^6.0.3",
     "@types/uuid": "^10.0.0",
     "@types/ws": "^8.18.1",
+    "@vitest/coverage-v8": "^4.0.16",
+    "@vitest/ui": "^4.0.16",
     "eslint": "^9.19.0",
     "eslint-config-prettier": "^9.1.0",
     "eslint-plugin-prettier": "^5.5.1",
     "eslint-plugin-unused-imports": "^4.3.0",
     "prettier": "^3.5.3",
     "prettier-config-nick": "^1.0.8",
+    "supertest": "^7.1.4",
     "tsx": "^4.7.2",
     "typescript": "^5.2.2",
-    "typescript-eslint": "^8.41.0"
+    "typescript-eslint": "^8.41.0",
+    "vitest": "^4.0.16"
   },
   "scripts": {
     "dev": "tsx watch src/server.ts",
     "buildrun": "build && start",
     "start": "tsx watch src/server.ts",
-    "build": "tsc"
+    "build": "tsc",
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "test:ui": "vitest --ui",
+    "test:coverage": "vitest run --coverage",
+    "test:ci": "vitest run --coverage --reporter=verbose"
   },
   "eslintConfig": {
     "root": true,
