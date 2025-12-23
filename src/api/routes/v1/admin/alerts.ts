@@ -1,10 +1,10 @@
 import express from "express"
-import { database } from "../../../../clients/database/knex-db.js"
+import * as adminDb from "./database.js"
+import * as contractorDb from "../contractors/database.js"
 import { adminAuthorized } from "../../../middleware/auth.js"
 import { createResponse, createErrorResponse } from "../util/response.js"
 import {
   adminOapi,
-  oapi,
   Response400,
   Response401,
   Response403,
@@ -24,7 +24,7 @@ async function formatAlertForAPI(alert: any) {
   // Convert contractor ID back to Spectrum ID for API response
   if (alert.target_contractor_id) {
     try {
-      const contractor = await database.getContractor({
+      const contractor = await contractorDb.getContractor({
         contractor_id: alert.target_contractor_id,
       })
       target_spectrum_id = contractor.spectrum_id
@@ -315,7 +315,7 @@ adminAlertsRouter.post(
     let target_contractor_id: string | null = null
     if (target_spectrum_id) {
       try {
-        const contractor = await database.getContractor({
+        const contractor = await contractorDb.getContractor({
           spectrum_id: target_spectrum_id,
         })
         target_contractor_id = contractor.contractor_id
@@ -331,7 +331,7 @@ adminAlertsRouter.post(
 
     try {
       // Create the alert
-      const alert = await database.createAdminAlert({
+      const alert = await adminDb.createAdminAlert({
         title,
         content,
         link,
@@ -486,7 +486,7 @@ adminAlertsRouter.get(
     }
 
     try {
-      const result = await database.getAdminAlertsPaginated(
+      const result = await adminDb.getAdminAlertsPaginated(
         page,
         pageSize,
         whereClause,
@@ -564,7 +564,7 @@ adminAlertsRouter.get(
     const alertId = req.params.alert_id
 
     try {
-      const alerts = await database.getAdminAlerts({ alert_id: alertId })
+      const alerts = await adminDb.getAdminAlerts({ alert_id: alertId })
 
       if (alerts.length === 0) {
         res.status(404).json(
@@ -696,7 +696,7 @@ adminAlertsRouter.patch(
     // Convert Spectrum ID to contractor ID if provided
     if (updates.target_spectrum_id) {
       try {
-        const contractor = await database.getContractor({
+        const contractor = await contractorDb.getContractor({
           spectrum_id: updates.target_spectrum_id,
         })
         updates.target_contractor_id = contractor.contractor_id
@@ -713,7 +713,7 @@ adminAlertsRouter.patch(
     }
 
     try {
-      const updatedAlert = await database.updateAdminAlert(alertId, updates)
+      const updatedAlert = await adminDb.updateAdminAlert(alertId, updates)
 
       if (!updatedAlert) {
         res.status(404).json(
@@ -796,7 +796,7 @@ adminAlertsRouter.delete(
     const alertId = req.params.alert_id
 
     try {
-      const deleted = await database.deleteAdminAlert(alertId)
+      const deleted = await adminDb.deleteAdminAlert(alertId)
 
       if (!deleted) {
         res.status(404).json(

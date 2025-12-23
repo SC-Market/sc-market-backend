@@ -3,15 +3,17 @@ import { User } from "../api-models.js"
 import { database } from "../../../../clients/database/knex-db.js"
 import { cdn } from "../../../../clients/cdn/cdn.js"
 import { getUserRating } from "../util/formatting.js"
+import * as profileDb from "./database.js"
+import * as contractorDb from "../contractors/database.js"
 
 export async function serializePublicProfile(
   user: DBUser | User,
   opts: { discord: boolean } = { discord: false },
 ) {
-  const contractors = await database.getUserContractorRoles({
+  const contractors = await contractorDb.getUserContractorRoles({
     user_id: user.user_id,
   })
-  const settings = await database.getUserSettings(user.user_id)
+  const settings = await profileDb.getUserSettings(user.user_id)
 
   let discord_profile
   if (settings.discord_public && opts.discord) {
@@ -49,13 +51,13 @@ export async function serializePublicProfile(
         return Array.from(contractorMap.values())
       })().map(async (contractor) => ({
         ...contractor,
-        ...(await database.getMinimalContractor({
+        ...(await contractorDb.getMinimalContractor({
           spectrum_id: contractor.spectrum_id,
         })),
       })),
     ),
     rating: await getUserRating(user.user_id),
-    badges: await database.getUserBadges(user.user_id),
+    badges: await profileDb.getUserBadges(user.user_id),
     discord_profile: discord_profile
       ? {
           username: discord_profile.username,
@@ -69,7 +71,7 @@ export async function serializePublicProfile(
 }
 
 export async function serializeDetailedProfile(user: User) {
-  const contractors = await database.getUserContractors({
+  const contractors = await contractorDb.getUserContractors({
     user_id: user.user_id,
   })
 

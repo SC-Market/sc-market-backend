@@ -3,6 +3,11 @@ import {
   DBOfferSession,
 } from "../../../../clients/database/db-models.js"
 import { database } from "../../../../clients/database/knex-db.js"
+import * as offerDb from "./database.js"
+import * as marketDb from "../market/database.js"
+import * as profileDb from "../profiles/database.js"
+import * as contractorDb from "../contractors/database.js"
+import * as serviceDb from "../services/database.js"
 import {
   formatListingComplete,
   formatOrderAvailability,
@@ -12,7 +17,7 @@ import { DBContractOffer } from "../contracts/types.js"
 import { cdn } from "../../../../clients/cdn/cdn.js"
 
 export async function serializeOfferSessionStub(session: DBOfferSession) {
-  const mostRecent = await database.getMostRecentOrderOffer(session.id)
+  const mostRecent = await offerDb.getMostRecentOrderOffer(session.id)
 
   let status
   if (session.status === "active") {
@@ -31,10 +36,10 @@ export async function serializeOfferSessionStub(session: DBOfferSession) {
     }
   }
 
-  const itemCount = await database.getOfferMarketListingCount(mostRecent.id)
+  const itemCount = await marketDb.getOfferMarketListingCount(mostRecent.id)
   let service_name = null
   if (mostRecent.service_id) {
-    const service = await database.getService({
+    const service = await serviceDb.getService({
       service_id: mostRecent.service_id,
     })
     service_name = service!.title
@@ -43,14 +48,14 @@ export async function serializeOfferSessionStub(session: DBOfferSession) {
   return {
     id: session.id,
     contractor: session.contractor_id
-      ? await database.getMinimalContractor({
+      ? await contractorDb.getMinimalContractor({
           contractor_id: session.contractor_id,
         })
       : null,
     assigned_to: session.assigned_id
-      ? await database.getMinimalUser({ user_id: session.assigned_id })
+      ? await profileDb.getMinimalUser({ user_id: session.assigned_id })
       : null,
-    customer: await database.getMinimalUser({ user_id: session.customer_id }),
+    customer: await profileDb.getMinimalUser({ user_id: session.customer_id }),
     status: status,
     timestamp: +mostRecent.timestamp,
     most_recent_offer: {
@@ -169,7 +174,7 @@ export async function serializeOfferSessionStubOptimized(
 }
 
 export async function serializeOfferSession(session: DBOfferSession) {
-  const offers = await database.getOrderOffers({ session_id: session.id })
+  const offers = await offerDb.getOrderOffers({ session_id: session.id })
 
   const stub = await serializeOfferSessionStub(session)
   const contract_offer = await database
@@ -178,10 +183,10 @@ export async function serializeOfferSession(session: DBOfferSession) {
     .first()
 
   const contractor = session.contractor_id
-    ? await database.getContractor({ contractor_id: session.contractor_id })
+    ? await contractorDb.getContractor({ contractor_id: session.contractor_id })
     : null
   const assignee = session.assigned_id
-    ? await database.getUser({ user_id: session.assigned_id })
+    ? await profileDb.getUser({ user_id: session.assigned_id })
     : null
 
   // Check if there's an order associated with this offer session (when status is "Accepted")
@@ -209,10 +214,10 @@ export async function serializeOfferSession(session: DBOfferSession) {
 }
 
 export async function serializeOffer(offer: DBOffer) {
-  const listings = await database.getOfferMarketListings(offer.id)
+  const listings = await marketDb.getOfferMarketListings(offer.id)
   const market_listings = []
   for (const listing of listings) {
-    const complete = await database.getMarketListingComplete(listing.listing_id)
+    const complete = await marketDb.getMarketListingComplete(listing.listing_id)
     market_listings.push({
       listing: await formatListingComplete(complete),
       quantity: listing.quantity,
@@ -222,7 +227,7 @@ export async function serializeOffer(offer: DBOffer) {
 
   let service = null
   if (offer.service_id) {
-    const service_obj = await database.getService({
+    const service_obj = await serviceDb.getService({
       service_id: offer.service_id,
     })
     service = await serializeService(service_obj!)

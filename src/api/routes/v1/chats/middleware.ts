@@ -1,5 +1,8 @@
 import express from "express"
 import { database } from "../../../../clients/database/knex-db.js"
+import * as chatDb from "./database.js"
+import * as orderDb from "../orders/database.js"
+import * as offerDb from "../offers/database.js"
 import { createErrorResponse } from "../util/response.js"
 import { is_related_to_order } from "../orders/helpers.js"
 import { is_related_to_offer } from "../offers/helpers.js"
@@ -19,7 +22,7 @@ export async function valid_chat(
 ) {
   let chat
   try {
-    chat = await database.getChat({ chat_id: req.params.chat_id })
+    chat = await chatDb.getChat({ chat_id: req.params.chat_id })
   } catch (error) {
     logger.debug(`Chat not found for ID: ${req.params.chat_id}`)
     res.status(404).json(createErrorResponse({ error: "Chat not found" }))
@@ -38,17 +41,17 @@ export async function can_view_chat(
   order?: DBOrder
   offer_session?: DBOfferSession
 }> {
-  const participants = await database.getChatParticipants({
+  const participants = await chatDb.getChatParticipants({
     chat_id: chat.chat_id,
   })
 
   let order = undefined
   if (chat.order_id) {
-    order = await database.getOrder({ order_id: chat.order_id })
+    order = await orderDb.getOrder({ order_id: chat.order_id })
   }
   let session = undefined
   if (chat.session_id) {
-    ;[session] = await database.getOfferSessions({ id: chat.session_id })
+    ;[session] = await offerDb.getOfferSessions({ id: chat.session_id })
   }
 
   if (!participants.includes(user.user_id)) {

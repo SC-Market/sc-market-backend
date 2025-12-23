@@ -3,6 +3,8 @@ import { ShipsFileEntry as ShipsFileEntry } from "../api-models.js"
 import { ShipsFileSchema as ShipsFileSchema } from "../api-models.js"
 import { User as User } from "../api-models.js"
 import { database as database } from "../../../../clients/database/knex-db.js"
+import * as shipDb from "./database.js"
+import * as profileDb from "../profiles/database.js"
 import { validate as validate } from "jsonschema"
 import { DBShip } from "../../../../clients/database/db-models.js"
 import { shipData } from "../../../../config/fallback/ship-data.js"
@@ -27,7 +29,7 @@ export const ship_post_import: RequestHandler = async (req, res) => {
 
   await Promise.all(
     ships.map((ship) => {
-      return database.createShip({
+      return shipDb.createShip({
         owner: user.user_id,
         name: ship.name,
         kind: ship.ship_code,
@@ -41,13 +43,13 @@ export const ship_post_import: RequestHandler = async (req, res) => {
 
 export const ships_get_mine: RequestHandler = async (req, res) => {
   const user = req.user as User
-  const ships = await database.getShips({ owner: user.user_id })
+  const ships = await shipDb.getShips({ owner: user.user_id })
 
   res.json(await Promise.all(ships.map(formatUserShip)))
 }
 
 async function formatUserShip(ship: DBShip) {
-  const owner = await database.getMinimalUser({ user_id: ship.owner })
+  const owner = await profileDb.getMinimalUser({ user_id: ship.owner })
   const shipInfo = shipData.find(
     (s) =>
       s.scIdentifier.toLowerCase() === ship.kind.toLowerCase() ||

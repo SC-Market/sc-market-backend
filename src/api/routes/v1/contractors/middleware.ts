@@ -1,7 +1,7 @@
 import { NextFunction, Request, Response } from "express"
 import { User } from "../api-models.js"
-import { database } from "../../../../clients/database/knex-db.js"
 import { has_permission, is_member } from "../util/permissions.js"
+import * as contractorDb from "./database.js"
 import { DBContractorRole } from "../../../../clients/database/db-models.js"
 import { createErrorResponse } from "../util/response.js"
 import logger from "../../../../logger/logger.js"
@@ -13,7 +13,7 @@ export async function valid_contractor(
 ) {
   const spectrum_id = req.params["spectrum_id"]
   try {
-    req.contractor = await database.getContractor({ spectrum_id })
+    req.contractor = await contractorDb.getContractor({ spectrum_id })
     if (!req.contractor) {
       throw new Error("Invalid contractor")
     }
@@ -41,7 +41,7 @@ export async function org_authorized(
     const spectrum_id = req.params["spectrum_id"]
     let contractor
     try {
-      contractor = await database.getContractor({ spectrum_id })
+      contractor = await contractorDb.getContractor({ spectrum_id })
     } catch (e) {
       res.status(400).json(createErrorResponse({ error: "Invalid contractor" }))
       return
@@ -98,7 +98,7 @@ export function org_permission(permission_name: keyof DBContractorRole) {
       })
       let contractor
       try {
-        contractor = await database.getContractor({ spectrum_id })
+        contractor = await contractorDb.getContractor({ spectrum_id })
         logger.debug("Found contractor for permission check", {
           contractorName: contractor.name,
           contractorId: contractor.contractor_id,
@@ -171,7 +171,7 @@ export function validate_optional_spectrum_id(path: string) {
 
     let contractor
     try {
-      contractor = await database.getContractor({ spectrum_id })
+      contractor = await contractorDb.getContractor({ spectrum_id })
     } catch {
       res
         .status(404)

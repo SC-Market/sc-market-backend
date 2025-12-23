@@ -1,5 +1,6 @@
 import express from "express"
-import { database } from "../../../../clients/database/knex-db.js"
+import * as chatDb from "./database.js"
+import * as profileDb from "../profiles/database.js"
 import { cdn } from "../../../../clients/cdn/cdn.js"
 import { serializeMessage } from "./serializers.js"
 import { createResponse } from "../util/response.js"
@@ -16,15 +17,15 @@ export async function handle_chat_response(
   res: express.Response,
 ) {
   const chat = req.chat!
-  const msg_entries = await database.getMessages({ chat_id: chat!.chat_id })
-  const participants = await database.getChatParticipants({
+  const msg_entries = await chatDb.getMessages({ chat_id: chat!.chat_id })
+  const participants = await chatDb.getChatParticipants({
     chat_id: chat!.chat_id,
   })
 
   const messages = await Promise.all(
     msg_entries.map(async (msg) => {
       if (msg.author) {
-        const user = await database.getUser({ user_id: msg.author })
+        const user = await profileDb.getUser({ user_id: msg.author })
         return {
           ...msg,
           author: user!.username,
@@ -43,7 +44,7 @@ export async function handle_chat_response(
       chat_id: chat.chat_id,
       participants: await Promise.all(
         participants.map(async (user_id) => {
-          const u = await database.getUser({ user_id: user_id })
+          const u = await profileDb.getUser({ user_id: user_id })
           return {
             username: u!.username,
             avatar: await cdn.getFileLinkResource(u.avatar),
@@ -62,7 +63,7 @@ export async function sendSystemMessage(
   content: string,
   forward: boolean = false,
 ) {
-  const message = await database.insertMessage({
+  const message = await chatDb.insertMessage({
     chat_id: chat_id,
     content,
     author: null,

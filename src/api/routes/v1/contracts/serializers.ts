@@ -1,8 +1,9 @@
 import { DBPublicContract } from "./types.js"
 import { database } from "../../../../clients/database/knex-db.js"
+import * as profileDb from "../profiles/database.js"
 
 export async function serializePublicContract(contract: DBPublicContract) {
-  const customer = await database.getMinimalUser({
+  const customer = await profileDb.getMinimalUser({
     user_id: contract.customer_id,
   })
 

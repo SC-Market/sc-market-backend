@@ -2,6 +2,7 @@ import { Server } from "socket.io"
 import { Request } from "express"
 import { MessageBody, User } from "../../api/routes/v1/api-models.js"
 import { database } from "../database/knex-db.js"
+import * as chatDb from "../../api/routes/v1/chats/database.js"
 import { can_view_chat } from "../../api/routes/v1/chats/middleware.js"
 import logger from "../../logger/logger.js"
 
@@ -17,7 +18,7 @@ export class WebsocketMessagingServer {
       const user_id = user.user_id
 
       try {
-        const chats = await database.getChatByParticipant(user_id)
+        const chats = await chatDb.getChatByParticipant(user_id)
 
         chats.forEach((chat) => {
           socket.join(chat.chat_id)
@@ -28,7 +29,7 @@ export class WebsocketMessagingServer {
 
       socket.on("clientJoinRoom", async (chatInfo: { chat_id: string }) => {
         try {
-          const chat = await database.getChat({ chat_id: chatInfo.chat_id })
+          const chat = await chatDb.getChat({ chat_id: chatInfo.chat_id })
           const { result: can_view } = await can_view_chat(user, chat)
           if (can_view) socket.join(chatInfo.chat_id)
         } catch (error) {

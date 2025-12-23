@@ -1,9 +1,10 @@
 import { NextFunction, Request, Response } from "express"
-import { database } from "../../../../clients/database/knex-db.js"
 import { createErrorResponse } from "../util/response.js"
 import logger from "../../../../logger/logger.js"
 import { User } from "../api-models.js"
 import { has_permission } from "../util/permissions.js"
+import * as recruitingDb from "./database.js"
+import * as contractorDb from "../contractors/database.js"
 
 export async function valid_recruiting_post(
   req: Request,
@@ -20,7 +21,7 @@ export async function valid_recruiting_post(
   }
 
   try {
-    const post = await database.getRecruitingPost({ post_id })
+    const post = await recruitingDb.getRecruitingPost({ post_id })
 
     if (!post) {
       res
@@ -59,7 +60,7 @@ export async function valid_recruiting_post_by_contractor(
 
   try {
     // First get the contractor
-    const contractor = await database.getContractor({ spectrum_id })
+    const contractor = await contractorDb.getContractor({ spectrum_id })
 
     if (!contractor) {
       res
@@ -69,7 +70,7 @@ export async function valid_recruiting_post_by_contractor(
     }
 
     // Then get the recruiting post for this contractor
-    const post = await database.getRecruitingPost({
+    const post = await recruitingDb.getRecruitingPost({
       contractor_id: contractor.contractor_id,
     })
 
@@ -112,7 +113,7 @@ export async function contractorRecruiting(
 
     let contractor
     try {
-      contractor = await database.getContractor({ spectrum_id })
+      contractor = await contractorDb.getContractor({ spectrum_id })
     } catch (e) {
       res.status(400).json({ error: "Invalid contractor" })
       return

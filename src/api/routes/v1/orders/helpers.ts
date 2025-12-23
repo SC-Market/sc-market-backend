@@ -9,6 +9,13 @@ import {
   DBUniqueListingComplete,
 } from "../../../../clients/database/db-models.js"
 import { database } from "../../../../clients/database/knex-db.js"
+import * as chatDb from "../chats/database.js"
+import * as contractorDb from "../contractors/database.js"
+import * as profileDb from "../profiles/database.js"
+import * as discordUtil from "../util/discord.js"
+import * as orderDb from "./database.js"
+import * as offerDb from "../offers/database.js"
+import * as marketDb from "../market/database.js"
 import {
   createOrderAssignedNotification,
   createOrderNotifications,
@@ -49,7 +56,7 @@ export async function isAvailabilityRequired(
   contractor_id: string | null,
   user_id: string | null,
 ): Promise<boolean> {
-  return await database.getAvailabilityRequirement(contractor_id, user_id)
+  return await orderDb.getAvailabilityRequirement(contractor_id, user_id)
 }
 
 /**
@@ -62,7 +69,7 @@ export async function hasAvailabilitySet(
   user_id: string,
   seller_contractor_id: string | null,
 ): Promise<boolean> {
-  return await database.hasAvailabilitySet(user_id, seller_contractor_id)
+  return await orderDb.hasAvailabilitySet(user_id, seller_contractor_id)
 }
 
 /**
@@ -126,9 +133,9 @@ export const paymentTypes = [
 ]
 
 export async function initiateOrder(session: DBOfferSession) {
-  const most_recent = await database.getMostRecentOrderOffer(session.id)
+  const most_recent = await offerDb.getMostRecentOrderOffer(session.id)
 
-  const [order] = await database.createOrder({
+  const [order] = await orderDb.createOrder({
     kind: most_recent.kind,
     cost: most_recent.cost,
     title: most_recent.title,
@@ -145,21 +152,21 @@ export async function initiateOrder(session: DBOfferSession) {
   })
 
   try {
-    const chat = await database.getChat({ session_id: session.id })
+    const chat = await chatDb.getChat({ session_id: session.id })
 
-    await database.updateChat(
+    await chatDb.updateChat(
       { chat_id: chat.chat_id },
       { order_id: order.order_id },
     )
   } catch {
-    await database.insertChat([], order.order_id, session.id)
+    await chatDb.insertChat([], order.order_id, session.id)
   }
 
   try {
     await createOrderNotifications(order)
   } catch (e) {}
 
-  const market_listings = await database.getOfferMarketListings(most_recent.id)
+  const market_listings = await marketDb.getOfferMarketListings(most_recent.id)
 
   // Check stock subtraction timing setting
   // Default is "on_accepted" (when no setting exists) - subtract stock when offer is accepted
@@ -173,7 +180,7 @@ export async function initiateOrder(session: DBOfferSession) {
     // Don't subtract stock at all
     // Still create the market_listing_order records
     for (const { quantity, listing_id } of market_listings) {
-      await database.insertMarketListingOrder({
+      await marketDb.insertMarketListingOrder({
         listing_id,
         order_id: order.order_id,
         quantity,
@@ -183,7 +190,7 @@ export async function initiateOrder(session: DBOfferSession) {
     // Stock was already subtracted when offer was received (in createOffer)
     // Just create the market_listing_order records
     for (const { quantity, listing_id } of market_listings) {
-      await database.insertMarketListingOrder({
+      await marketDb.insertMarketListingOrder({
         listing_id,
         order_id: order.order_id,
         quantity,
@@ -223,19 +230,19 @@ export async function createOffer(
       | DBMultipleListingCompositeComplete
   }[] = [],
 ) {
-  const [session] = await database.createOrderOfferSession(session_details)
+  const [session] = await offerDb.createOrderOfferSession(session_details)
 
-  const [offer] = await database.createOrderOffer({
+  const [offer] = await offerDb.createOrderOffer({
     ...offer_details,
     session_id: session.id,
   })
 
   // Create chat first before dispatching notifications
-  await database.insertChat([], undefined, session.id)
+  await chatDb.insertChat([], undefined, session.id)
 
   // Modifiable
   for (const { quantity, listing } of market_listings) {
-    await database.insertOfferMarketListing({
+    await marketDb.insertOfferMarketListing({
       listing_id: listing.listing.listing_id,
       offer_id: offer.id,
       quantity,
@@ -259,13 +266,13 @@ export async function createOffer(
     })
 
     for (const { quantity, listing } of market_listings) {
-      const listingData = await database.getMarketListing({
+      const listingData = await marketDb.getMarketListing({
         listing_id: listing.listing.listing_id,
       })
       const oldQuantity = listingData.quantity_available
       const newQuantity = Math.max(0, listingData.quantity_available - quantity)
 
-      await database.updateMarketListing(listing.listing.listing_id, {
+      await marketDb.updateMarketListing(listing.listing.listing_id, {
         quantity_available: newQuantity,
       })
 
@@ -291,10 +298,12 @@ export async function createOffer(
   if (session.contractor_id || session.assigned_id) {
     try {
       const contractor = session.contractor_id
-        ? await database.getContractor({ contractor_id: session.contractor_id })
+        ? await contractorDb.getContractor({
+            contractor_id: session.contractor_id,
+          })
         : null
       const assigned = session.assigned_id
-        ? await database.getUser({ user_id: session.assigned_id })
+        ? await profileDb.getUser({ user_id: session.assigned_id })
         : null
 
       const channel_id = contractor
@@ -302,8 +311,7 @@ export async function createOffer(
         : assigned?.discord_thread_channel_id
 
       if (channel_id) {
-        const { createDiscordInvite } = await import("../util/discord.js")
-        discord_invite = await createDiscordInvite(channel_id)
+        discord_invite = await discordUtil.createDiscordInvite(channel_id)
         if (discord_invite) {
           logger.info(
             `Created Discord invite for session ${session.id}: ${discord_invite}`,
@@ -356,7 +364,7 @@ export async function cancelOrderMarketItems(order: DBOrder) {
 
   if (order.offer_session_id) {
     try {
-      const sessions = await database.getOfferSessions({
+      const sessions = await offerDb.getOfferSessions({
         id: order.offer_session_id,
       })
       if (sessions.length > 0) {
@@ -390,7 +398,7 @@ export async function cancelOrderMarketItems(order: DBOrder) {
     return
   }
 
-  const marketOrders = await database.getMarketListingOrders({
+  const marketOrders = await marketDb.getMarketListingOrders({
     order_id: order.order_id,
   })
 
@@ -400,13 +408,13 @@ export async function cancelOrderMarketItems(order: DBOrder) {
   })
 
   for (const marketOrder of marketOrders) {
-    const listing = await database.getMarketListing({
+    const listing = await marketDb.getMarketListing({
       listing_id: marketOrder.listing_id,
     })
     const oldQuantity = listing.quantity_available
     const newQuantity = listing.quantity_available + marketOrder.quantity
 
-    await database.updateMarketListing(marketOrder.listing_id, {
+    await marketDb.updateMarketListing(marketOrder.listing_id, {
       quantity_available: newQuantity,
     })
 
@@ -421,7 +429,7 @@ export async function cancelOrderMarketItems(order: DBOrder) {
 }
 
 export async function is_related_to_order(order: DBOrder, user: User) {
-  const contractors = await database.getUserContractors({
+  const contractors = await contractorDb.getUserContractors({
     "contractor_members.user_id": user.user_id,
   })
 
@@ -436,7 +444,7 @@ export async function is_related_to_order(order: DBOrder, user: User) {
 
 export async function sendStatusUpdateMessage(order: DBOrder, status: string) {
   try {
-    const chat = await database.getChat({ order_id: order.order_id })
+    const chat = await chatDb.getChat({ order_id: order.order_id })
     const content = `Order status has been updated to ${status} from ${order.status}`
     await sendSystemMessage(chat.chat_id, content, false)
   } catch (e) {
@@ -503,13 +511,13 @@ export async function handleStatusUpdate(req: any, res: any, status: string) {
     }
 
     if (status === "in-progress") {
-      await database.updateOrder(order.order_id, {
+      await orderDb.updateOrder(order.order_id, {
         status,
         assigned_id: req.user.user_id,
       })
 
       // Track order response for responsive badge
-      await database.trackOrderResponse(
+      await orderDb.trackOrderResponse(
         order.order_id,
         order.assigned_id || undefined,
         order.contractor_id || undefined,
@@ -517,7 +525,7 @@ export async function handleStatusUpdate(req: any, res: any, status: string) {
 
       await assignToThread(order, req.user)
     } else {
-      await database.updateOrder(order.order_id, { status: status })
+      await orderDb.updateOrder(order.order_id, { status: status })
     }
     await createOrderStatusNotification(order, status, req.user.user_id)
     await manageOrderStatusUpdateDiscord(order, status)
@@ -543,7 +551,7 @@ export async function handleAssignedUpdate(req: any, res: any) {
   } = req.body
 
   // Contractor order
-  const contractorObj = await database.getContractor({
+  const contractorObj = await contractorDb.getContractor({
     contractor_id: req.order.contractor_id,
   })
 
@@ -565,13 +573,13 @@ export async function handleAssignedUpdate(req: any, res: any) {
   if (targetUser) {
     let targetUserObj
     try {
-      targetUserObj = await database.getUser({ username: targetUser })
+      targetUserObj = await profileDb.getUser({ username: targetUser })
     } catch {
       res.status(400).json(createErrorResponse({ message: "Invalid user" }))
       return
     }
 
-    const targetUserRole = await database.getContractorRoleLegacy(
+    const targetUserRole = await contractorDb.getContractorRoleLegacy(
       req.user.user_id,
       contractorObj.contractor_id,
     )
@@ -581,14 +589,14 @@ export async function handleAssignedUpdate(req: any, res: any) {
         .json(createErrorResponse({ message: "Invalid user!" }))
     }
 
-    const newOrders = await database.updateOrder(req.order.order_id, {
+    const newOrders = await orderDb.updateOrder(req.order.order_id, {
       assigned_id: targetUserObj?.user_id || undefined,
     })
 
     await createOrderAssignedNotification(newOrders[0])
     await manageOrderAssignedDiscord(newOrders[0], targetUserObj)
   } else {
-    await database.updateOrder(req.order.order_id, {
+    await orderDb.updateOrder(req.order.order_id, {
       assigned_id: null,
     })
   }
@@ -624,7 +632,7 @@ export async function acceptApplicant(
   let targetUserObj: undefined | null | User
   if (target_contractor) {
     try {
-      targetContractorObj = await database.getContractor({
+      targetContractorObj = await contractorDb.getContractor({
         spectrum_id: target_contractor,
       })
     } catch {
@@ -634,7 +642,7 @@ export async function acceptApplicant(
     }
   } else if (target_username) {
     try {
-      targetUserObj = await database.getUser({ username: target_username })
+      targetUserObj = await profileDb.getUser({ username: target_username })
     } catch {
       return res
         .status(400)
@@ -646,7 +654,7 @@ export async function acceptApplicant(
       .json(createErrorResponse({ message: "Invalid target" }))
   }
 
-  const applicants = await database.getOrderApplicants({
+  const applicants = await orderDb.getOrderApplicants({
     order_id: req.order.order_id,
   })
   if (
@@ -664,19 +672,19 @@ export async function acceptApplicant(
     return
   }
 
-  const newOrders = await database.updateOrder(req.order.order_id, {
+  const newOrders = await orderDb.updateOrder(req.order.order_id, {
     assigned_id: targetUserObj?.user_id || undefined,
     contractor_id: targetContractorObj?.contractor_id || undefined,
   })
 
   // Track order assignment for responsive badge
-  await database.trackOrderAssignment(
+  await orderDb.trackOrderAssignment(
     req.order.order_id,
     targetUserObj?.user_id,
     targetContractorObj?.contractor_id,
   )
 
-  await database.clearOrderApplications(req.order.order_id)
+  await orderDb.clearOrderApplications(req.order.order_id)
   await createOrderNotifications(newOrders[0])
 
   res.status(201).json(createResponse({ result: "Success" }))
@@ -1371,7 +1379,7 @@ export async function getUserOrderMetrics(
   const thirtyDaysAgo = new Date(now.getTime() - 30 * 24 * 60 * 60 * 1000)
 
   // Get all assigned orders for the user
-  const orders = await database.getOrders({ assigned_id: user_id })
+  const orders = await orderDb.getOrders({ assigned_id: user_id })
 
   // Calculate basic metrics
   const total_orders = orders.length
@@ -1436,7 +1444,7 @@ export async function getUserOrderMetrics(
       .sort(([, a], [, b]) => b.total_value - a.total_value)
       .slice(0, 10)
       .map(async ([customer_id, stats]) => {
-        const customer = await database.getUser({ user_id: customer_id })
+        const customer = await profileDb.getUser({ user_id: customer_id })
         return {
           username: customer?.username || "Unknown",
           order_count: stats.order_count,
@@ -1605,7 +1613,7 @@ export async function getRelevantOrderSetting(
       settingType,
     })
 
-    const contractorSetting = await database.getOrderSetting(
+    const contractorSetting = await orderDb.getOrderSetting(
       "contractor",
       session.contractor_id,
       settingType,
@@ -1635,7 +1643,7 @@ export async function getRelevantOrderSetting(
       settingType,
     })
 
-    const userSetting = await database.getOrderSetting(
+    const userSetting = await orderDb.getOrderSetting(
       "user",
       session.assigned_id,
       settingType,
@@ -1677,20 +1685,20 @@ async function subtractStockForMarketListings(
   })
 
   for (const { quantity, listing_id } of market_listings) {
-    await database.insertMarketListingOrder({
+    await marketDb.insertMarketListingOrder({
       listing_id,
       order_id,
       quantity,
     })
 
-    const listing = await database.getMarketListing({ listing_id })
+    const listing = await marketDb.getMarketListing({ listing_id })
     const oldQuantity = listing.quantity_available
 
     // Calculate new quantity, but ensure it doesn't go below 0
     // This handles race conditions where quantities changed between offer creation and acceptance
     const newQuantity = Math.max(0, listing.quantity_available - quantity)
 
-    await database.updateMarketListing(listing_id, {
+    await marketDb.updateMarketListing(listing_id, {
       quantity_available: newQuantity,
     })
 
@@ -1728,7 +1736,7 @@ export async function sendCustomOfferMessage(
       })
 
       // Get the chat for this session
-      const chat = await database.getChat({ session_id: session.id })
+      const chat = await chatDb.getChat({ session_id: session.id })
 
       if (chat) {
         logger.debug("Found chat for session", { chatId: chat.chat_id })
@@ -1740,7 +1748,7 @@ export async function sendCustomOfferMessage(
         })
 
         // Send message to chat on behalf of the system
-        await database.insertMessage({
+        await chatDb.insertMessage({
           chat_id: chat.chat_id,
           content: setting.message_content,
           author: null, // System message
@@ -1749,9 +1757,8 @@ export async function sendCustomOfferMessage(
         // Also send to Discord if thread exists
         if (session.thread_id) {
           try {
-            const { sendUserChatMessage } = await import("../util/discord.js")
             // Send as system message to Discord
-            await sendUserChatMessage(
+            await discordUtil.sendUserChatMessage(
               session,
               { username: "System" } as any,
               setting.message_content,
@@ -1822,7 +1829,7 @@ export async function sendCustomOrderMessage(
       })
 
       // Get the chat for this order
-      const chat = await database.getChat({ order_id: order.order_id })
+      const chat = await chatDb.getChat({ order_id: order.order_id })
 
       if (chat) {
         logger.debug("Found chat for order", { chatId: chat.chat_id })
@@ -1834,7 +1841,7 @@ export async function sendCustomOrderMessage(
         })
 
         // Send message to chat on behalf of the system
-        await database.insertMessage({
+        await chatDb.insertMessage({
           chat_id: chat.chat_id,
           content: setting.message_content,
           author: null, // System message
@@ -1843,9 +1850,8 @@ export async function sendCustomOrderMessage(
         // Also send to Discord if thread exists
         if (order.thread_id) {
           try {
-            const { sendUserChatMessage } = await import("../util/discord.js")
             // Send as system message to Discord
-            await sendUserChatMessage(
+            await discordUtil.sendUserChatMessage(
               order,
               { username: "System" } as any,
               setting.message_content,

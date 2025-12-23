@@ -10,6 +10,9 @@ import {
   DBUniqueListingComplete,
 } from "../../../../clients/database/db-models.js"
 import { database } from "../../../../clients/database/knex-db.js"
+import * as contractorDb from "../contractors/database.js"
+import * as marketDb from "./database.js"
+import * as profileDb from "../profiles/database.js"
 import { formatListingComplete } from "../util/formatting.js"
 import {
   MarketSearchQuery,
@@ -79,7 +82,7 @@ export async function verify_listings(
   for (const { listing_id, quantity } of items) {
     let listing
     try {
-      listing = await database.getMarketListingComplete(listing_id)
+      listing = await marketDb.getMarketListingComplete(listing_id)
     } catch {
       res.status(400).json(createErrorResponse({ message: "Invalid listing" }))
       return
@@ -111,13 +114,18 @@ export async function verify_listings(
       const contractorId = listing.listing.contractor_seller_id
       let contractor = contractorCache.get(contractorId)
       if (!contractor) {
-        contractor = await database.getContractor({
+        const fetchedContractor = await contractorDb.getContractor({
           contractor_id: contractorId,
         })
-        contractorCache.set(contractorId, contractor)
+        if (fetchedContractor) {
+          contractor = fetchedContractor
+          contractorCache.set(contractorId, contractor)
+        } else {
+          return null
+        }
       }
 
-      if (contractor.archived) {
+      if (contractor && contractor.archived) {
         res.status(409).json(
           createErrorResponse({
             message: "Cannot purchase from an archived organization",
@@ -143,17 +151,17 @@ export async function verify_listings(
 }
 
 export async function get_my_listings(user: User) {
-  const listings = await database.getMarketUniqueListingsComplete({
+  const listings = await marketDb.getMarketUniqueListingsComplete({
     user_seller_id: user.user_id,
   })
-  const multiples = await database.getMarketMultiplesComplete(
+  const multiples = await marketDb.getMarketMultiplesComplete(
     {
       "market_multiples.user_seller_id": user.user_id,
     },
     {},
   )
 
-  const multiple_listings = await database.getMarketMultipleListingsComplete({
+  const multiple_listings = await marketDb.getMarketMultipleListingsComplete({
     "market_multiples.user_seller_id": user.user_id,
   })
 
@@ -217,12 +225,12 @@ export async function convertQuery(
   let contractor_seller_id = undefined
 
   if (query.user_seller) {
-    const user = await database.getUser({ username: query.user_seller })
+    const user = await profileDb.getUser({ username: query.user_seller })
     user_seller_id = user.user_id
   }
 
   if (query.contractor_seller) {
-    const contractor = await database.getContractor({
+    const contractor = await contractorDb.getContractor({
       spectrum_id: query.contractor_seller,
     })
     contractor_seller_id = contractor.contractor_id
@@ -254,16 +262,16 @@ export async function convertQuery(
 }
 
 export async function get_org_listings(contractor: DBContractor) {
-  const listings = await database.getMarketUniqueListingsComplete({
+  const listings = await marketDb.getMarketUniqueListingsComplete({
     contractor_seller_id: contractor.contractor_id,
   })
-  const multiples = await database.getMarketMultiplesComplete(
+  const multiples = await marketDb.getMarketMultiplesComplete(
     {
       "market_multiples.contractor_seller_id": contractor.contractor_id,
     },
     {},
   )
-  const multiple_listings = await database.getMarketMultipleListingsComplete({
+  const multiple_listings = await marketDb.getMarketMultipleListingsComplete({
     "market_multiples.contractor_seller_id": contractor.contractor_id,
   })
 
@@ -282,7 +290,7 @@ export async function handle_quantity_update(
 ) {
   if (user.role !== "admin") {
     if (listing.contractor_seller_id) {
-      const contractor = await database.getContractor({
+      const contractor = await contractorDb.getContractor({
         contractor_id: listing.contractor_seller_id,
       })
 
@@ -323,7 +331,7 @@ export async function handle_quantity_update(
     return
   }
 
-  await database.updateMarketListing(listing.listing_id, { quantity_available })
+  await marketDb.updateMarketListing(listing.listing_id, { quantity_available })
 
   res.json({ result: "Success" })
 }
@@ -369,7 +377,7 @@ export const isImageAlreadyAssociated = async (
   try {
     // Get all current images for this listing
     const currentImages =
-      await database.getMarketListingImagesByListingID(listing)
+      await marketDb.getMarketListingImagesByListingID(listing)
 
     // Check if any of the current images match this URL
     for (const image of currentImages) {

@@ -1,4 +1,5 @@
 import { database } from "../../../../clients/database/knex-db.js"
+import * as profileDb from "../profiles/database.js"
 import { getSpectrumUserIdByHandle } from "./spectrum.js"
 import logger from "../../../../logger/logger.js"
 
@@ -100,7 +101,7 @@ export async function migrateExistingUsersToSpectrumIds(
           if (spectrumUserId) {
             // Check if this Spectrum ID is already in use by another user
             try {
-              const existingUser = await database.getUser({
+              const existingUser = await profileDb.getUser({
                 spectrum_user_id: spectrumUserId,
               })
               if (existingUser && existingUser.user_id !== user.user_id) {
@@ -127,7 +128,7 @@ export async function migrateExistingUsersToSpectrumIds(
             }
 
             // Update user with Spectrum user ID
-            await database.updateUser(
+            await profileDb.updateUser(
               { user_id: user.user_id },
               { spectrum_user_id: spectrumUserId },
             )
@@ -280,7 +281,7 @@ export async function simulateSpectrumMigration(
           if (spectrumUserId) {
             // Check if this Spectrum ID is already in use by another user
             try {
-              const existingUser = await database.getUser({
+              const existingUser = await profileDb.getUser({
                 spectrum_user_id: spectrumUserId,
               })
               if (existingUser && existingUser.user_id !== user.user_id) {

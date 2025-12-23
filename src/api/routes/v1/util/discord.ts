@@ -15,6 +15,8 @@ import {
 } from "../../../../clients/database/db-models.js"
 import { User } from "../api-models.js"
 import { database } from "../../../../clients/database/knex-db.js"
+import * as profileDb from "../profiles/database.js"
+import * as contractorDb from "../contractors/database.js"
 import {
   generateAssignedMessage,
   generateOfferStatusUpdateMessage,
@@ -96,13 +98,13 @@ export async function queueThreadCreation(
   object: DBOfferSession | DBOrder,
 ): Promise<{ status: string; message: string }> {
   const contractor = object.contractor_id
-    ? await database.getContractor({ contractor_id: object.contractor_id })
+    ? await contractorDb.getContractor({ contractor_id: object.contractor_id })
     : null
   const assigned = object.assigned_id
-    ? await database.getUser({ user_id: object.assigned_id })
+    ? await profileDb.getUser({ user_id: object.assigned_id })
     : null
   const customer = object.customer_id
-    ? await database.getUser({ user_id: object.customer_id })
+    ? await profileDb.getUser({ user_id: object.customer_id })
     : null
 
   // Get Discord integration settings with fallback to old columns
@@ -113,7 +115,7 @@ export async function queueThreadCreation(
     server_id = contractor.official_server_id?.toString() || null
     channel_id = contractor.discord_thread_channel_id?.toString() || null
   } else if (assigned) {
-    const discordSettings = await database.getDiscordIntegrationSettings(
+    const discordSettings = await profileDb.getDiscordIntegrationSettings(
       assigned.user_id,
     )
     server_id = discordSettings.official_server_id
@@ -133,10 +135,10 @@ export async function queueThreadCreation(
 
   // Get Discord IDs from providers
   const customerDiscordId = customer
-    ? await database.getUserDiscordId(customer.user_id)
+    ? await profileDb.getUserDiscordId(customer.user_id)
     : null
   const assignedDiscordId = assigned
-    ? await database.getUserDiscordId(assigned.user_id)
+    ? await profileDb.getUserDiscordId(assigned.user_id)
     : null
 
   const messageBody = {
@@ -227,10 +229,10 @@ export async function createOfferThread(session: DBOfferSession): Promise<{
   }
 }> {
   const assigned = session.assigned_id
-    ? await database.getUser({ user_id: session.assigned_id })
+    ? await profileDb.getUser({ user_id: session.assigned_id })
     : null
   const customer = session.customer_id
-    ? await database.getUser({ user_id: session.customer_id })
+    ? await profileDb.getUser({ user_id: session.customer_id })
     : null
 
   const bot_response = await createThread(session)
@@ -259,7 +261,7 @@ export async function assignToThread(order: DBOrder, user: DBUser) {
   }
 
   // Get Discord ID from provider system
-  const discordId = await database.getUserDiscordId(user.user_id)
+  const discordId = await profileDb.getUserDiscordId(user.user_id)
 
   if (discordId) {
     try {
@@ -407,7 +409,7 @@ export async function manageOrderAssignedDiscord(
   }
 
   // Get Discord ID from provider system
-  const assignedDiscordId = await database.getUserDiscordId(assigned.user_id)
+  const assignedDiscordId = await profileDb.getUserDiscordId(assigned.user_id)
 
   if (assignedDiscordId) {
     try {

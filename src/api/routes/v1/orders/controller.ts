@@ -1,5 +1,9 @@
 import { RequestHandler } from "express"
 import { database } from "../../../../clients/database/knex-db.js"
+import * as profileDb from "../profiles/database.js"
+import * as contractorDb from "../contractors/database.js"
+import * as orderDb from "./database.js"
+import * as orderHelpers from "./helpers.js"
 import { createErrorResponse, createResponse } from "../util/response.js"
 import { User } from "../api-models.js"
 import {
@@ -55,7 +59,7 @@ export const search_orders: RequestHandler = async (req, res) => {
 
 export const get_order_metrics: RequestHandler = async (req, res) => {
   const spectrum_id = req.params["spectrum_id"]
-  const contractor = await database.getContractor({
+  const contractor = await contractorDb.getContractor({
     spectrum_id: spectrum_id,
   })
   if (!contractor) {
@@ -64,7 +68,7 @@ export const get_order_metrics: RequestHandler = async (req, res) => {
   }
 
   const user = req.user as User
-  const contractors = await database.getUserContractors({
+  const contractors = await contractorDb.getUserContractors({
     "contractor_members.user_id": user.user_id,
   })
 
@@ -129,7 +133,7 @@ export const apply_to_order: RequestHandler = async (req, res, next) => {
   const order_id = req.params["order_id"]
   let order: DBOrder
   try {
-    order = await database.getOrder({ order_id: order_id })
+    order = await orderDb.getOrder({ order_id: order_id })
   } catch (e) {
     res.status(400).json(createErrorResponse({ message: "Invalid order" }))
     return
@@ -152,7 +156,7 @@ export const apply_to_order: RequestHandler = async (req, res, next) => {
   } = req.body
 
   if (!contractor) {
-    const apps = await database.getOrderApplicants({
+    const apps = await orderDb.getOrderApplicants({
       user_applicant_id: user.user_id,
       order_id: order.order_id,
     })
@@ -165,7 +169,7 @@ export const apply_to_order: RequestHandler = async (req, res, next) => {
       return
     }
 
-    await database.createOrderApplication({
+    await orderDb.createOrderApplication({
       order_id: order.order_id,
       user_applicant_id: user.user_id,
       message: message || "",
@@ -173,7 +177,7 @@ export const apply_to_order: RequestHandler = async (req, res, next) => {
   } else {
     let contractor_obj
     try {
-      contractor_obj = await database.getContractor({
+      contractor_obj = await contractorDb.getContractor({
         spectrum_id: contractor,
       })
     } catch {
@@ -207,7 +211,7 @@ export const apply_to_order: RequestHandler = async (req, res, next) => {
       return
     }
 
-    const apps = await database.getOrderApplicants({
+    const apps = await orderDb.getOrderApplicants({
       org_applicant_id: contractor_obj.contractor_id,
       order_id: order.order_id,
     })
@@ -220,7 +224,7 @@ export const apply_to_order: RequestHandler = async (req, res, next) => {
       return
     }
 
-    await database.createOrderApplication({
+    await orderDb.createOrderApplication({
       order_id: order.order_id,
       org_applicant_id: contractor_obj.contractor_id,
       message: message || "",
@@ -278,7 +282,7 @@ export const post_root: RequestHandler = async (req, res, next) => {
 
   let contractor_id
   if (contractor) {
-    const contractor_obj = await database.getContractor({
+    const contractor_obj = await contractorDb.getContractor({
       spectrum_id: contractor,
     })
     if (!contractor_obj) {
@@ -302,14 +306,14 @@ export const post_root: RequestHandler = async (req, res, next) => {
 
   let assigned_user
   if (assigned_to) {
-    assigned_user = await database.getUser({ username: assigned_to })
+    assigned_user = await profileDb.getUser({ username: assigned_to })
     if (!assigned_user) {
       res.status(400).json(createErrorResponse({ message: "Invalid assignee" }))
       return
     }
 
     if (contractor_id) {
-      const role = await database.getContractorRoleLegacy(
+      const role = await contractorDb.getContractorRoleLegacy(
         assigned_user.user_id,
         contractor_id,
       )
@@ -325,10 +329,11 @@ export const post_root: RequestHandler = async (req, res, next) => {
   }
 
   // Check if customer is blocked by contractor or assigned user
-  const isBlocked = await database.checkIfBlockedForOrder(
+  const isBlocked = await profileDb.checkIfBlockedForOrder(
     user.user_id,
     contractor_id,
     assigned_user?.user_id || null,
+    user.user_id,
   )
   if (isBlocked) {
     res.status(403).json(
@@ -343,8 +348,7 @@ export const post_root: RequestHandler = async (req, res, next) => {
   // Check availability requirement
   // Check both contractor and assigned user - if either requires, enforce it
   try {
-    const { validateAvailabilityRequirement } = await import("./helpers.js")
-    await validateAvailabilityRequirement(
+    await orderHelpers.validateAvailabilityRequirement(
       user.user_id,
       contractor_id,
       assigned_user?.user_id || null,
@@ -398,7 +402,7 @@ export const get_order_id: RequestHandler = async (req, res) => {
     const order_id = req.params["order_id"]
     let order: DBOrder
     try {
-      order = await database.getOrder({ order_id: order_id })
+      order = await orderDb.getOrder({ order_id: order_id })
     } catch (e) {
       res.status(404).json(createErrorResponse({ message: "Invalid order" }))
       return

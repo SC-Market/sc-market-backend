@@ -1,5 +1,8 @@
 import { RequestHandler } from "express"
 import { database } from "../../../../clients/database/knex-db.js"
+import * as recruitingDb from "./database.js"
+import * as contractorDb from "../contractors/database.js"
+import * as commentDb from "../comments/database.js"
 import {
   formatComment,
   formatRecruitingPost,
@@ -93,11 +96,11 @@ export const get_posts: RequestHandler = async function (req, res) {
 
   let posts: DBRecruitingPost[] = []
   try {
-    posts = await database.getAllRecruitingPostsPaginated(searchData)
+    posts = await recruitingDb.getAllRecruitingPostsPaginated(searchData)
   } catch (e) {
     console.error(e)
   }
-  const counts = await database.getRecruitingPostCount()
+  const counts = await recruitingDb.getRecruitingPostCount()
   const formatted = await Promise.all(posts.map(formatRecruitingPost))
 
   res.json(createResponse({ total: +counts[0].count, items: formatted }))
@@ -119,7 +122,7 @@ export const post_posts: RequestHandler = async function (req, res) {
     return
   }
 
-  const contractor_obj = await database.getContractor({
+  const contractor_obj = await contractorDb.getContractor({
     spectrum_id: spectrum_id,
   })
   if (contractor_obj.archived) {
@@ -130,7 +133,7 @@ export const post_posts: RequestHandler = async function (req, res) {
     )
     return
   }
-  const last_post = await database.getRecruitingPost({
+  const last_post = await recruitingDb.getRecruitingPost({
     contractor_id: contractor_obj.contractor_id,
   })
   if (last_post) {
@@ -158,7 +161,7 @@ export const get_posts_post_id_comments: RequestHandler = async function (
   req,
   res,
 ) {
-  const comments_raw = await database.getRecruitingPostComments({
+  const comments_raw = await recruitingDb.getRecruitingPostComments({
     "recruiting_comments.post_id": req.recruiting_post!.post_id,
     reply_to: null,
   })
@@ -174,14 +177,14 @@ export const get_posts_post_id_comments: RequestHandler = async function (
 export const put_posts_post_id: RequestHandler = async function (req, res) {
   const user = req.user as User
   const post_id = req.params["post_id"]
-  const post = await database.getRecruitingPost({ post_id })
+  const post = await recruitingDb.getRecruitingPost({ post_id })
 
   if (!post) {
     res.status(400).json(createErrorResponse({ message: "Invalid post" }))
     return
   }
 
-  const contractor = await database.getContractor({
+  const contractor = await contractorDb.getContractor({
     contractor_id: post.contractor_id,
   })
   if (contractor.archived) {
@@ -224,7 +227,10 @@ export const put_posts_post_id: RequestHandler = async function (req, res) {
   if (title) newValues.title = title
   if (body) newValues.body = body
 
-  const [result] = await database.updateRecruitingPost({ post_id }, newValues)
+  const [result] = await recruitingDb.updateRecruitingPost(
+    { post_id },
+    newValues,
+  )
 
   res.json(createResponse(result))
 }
@@ -234,7 +240,7 @@ export const post_posts_post_id_upvote: RequestHandler = async function (
   res,
 ) {
   const post_id = req.params["post_id"]
-  const post = await database.getRecruitingPost({ post_id })
+  const post = await recruitingDb.getRecruitingPost({ post_id })
   const user = req.user as User
 
   if (!post) {
@@ -242,12 +248,12 @@ export const post_posts_post_id_upvote: RequestHandler = async function (
     return
   }
 
-  const vote = await database.getRecruitingPostVoteWithinWeek({
+  const vote = await recruitingDb.getRecruitingPostVoteWithinWeek({
     actor_id: user.user_id,
     post_id,
   })
   if (!vote) {
-    await database.addRecruitingPostVote({
+    await recruitingDb.addRecruitingPostVote({
       actor_id: user.user_id,
       post_id,
       upvote: true,
@@ -262,7 +268,7 @@ export const post_posts_post_id_comment: RequestHandler = async function (
   res,
 ) {
   const post_id = req.params["post_id"]
-  const post = await database.getRecruitingPost({ post_id })
+  const post = await recruitingDb.getRecruitingPost({ post_id })
   const user = req.user as User
 
   if (!post) {
@@ -280,27 +286,27 @@ export const post_posts_post_id_comment: RequestHandler = async function (
 
   let comments
   if (reply_to) {
-    const comment = await database.getComment({ comment_id: reply_to })
+    const comment = await commentDb.getComment({ comment_id: reply_to })
 
     if (!comment) {
       res.status(400).json({ message: "Invalid comment" })
       return
     }
 
-    comments = await database.insertComment({
+    comments = await recruitingDb.insertComment({
       author: user.user_id,
       content,
       reply_to,
     })
   } else {
-    comments = await database.insertComment({
+    comments = await recruitingDb.insertComment({
       author: user.user_id,
       content,
       reply_to,
     })
   }
 
-  await database.insertRecruitingComment({
+  await recruitingDb.insertRecruitingComment({
     post_id,
     comment_id: comments[0].comment_id,
   })
