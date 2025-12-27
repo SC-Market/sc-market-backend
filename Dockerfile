@@ -3,6 +3,11 @@ FROM node:24-slim AS release
 RUN apt update
 RUN apt install -y git
 
+# Configure Git to rewrite SSH URLs to HTTPS for Docker builds
+# This allows yarn.lock with SSH URLs to work without SSH keys
+RUN git config --global url."https://github.com/".insteadOf "ssh://git@github.com/" && \
+    git config --global url."https://github.com/".insteadOf "git@github.com:"
+
 # Enable corepack for managing yarn version
 RUN corepack enable
 
