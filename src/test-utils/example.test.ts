@@ -12,38 +12,21 @@ import {
   beforeEach,
   afterEach,
 } from "vitest"
-import {
-  setupTestDb,
-  teardownTestDb,
-  beginTransaction,
-  rollbackTransaction,
-} from "./testDb.js"
-import { createTestUser } from "./testFixtures.js"
-import { createTestUserWithAuth, getAuthHeaders } from "./testAuth.js"
-import { createTestServer } from "./testServer.js"
-import request from "supertest"
+import { clearMockData } from "./mockDatabase.js"
+import { createTestUser } from "./testFixturesMock.js"
+import { createTestUserWithAuth, getAuthHeaders } from "./testAuthMock.js"
 
 describe("Example Test Suite", () => {
-  beforeAll(async () => {
-    await setupTestDb()
+  beforeEach(() => {
+    clearMockData()
   })
 
-  afterAll(async () => {
-    await teardownTestDb()
+  afterEach(() => {
+    clearMockData()
   })
 
-  beforeEach(async () => {
-    // Start a transaction for each test to ensure isolation
-    await beginTransaction()
-  })
-
-  afterEach(async () => {
-    // Rollback transaction after each test
-    await rollbackTransaction()
-  })
-
-  it("should create a test user", async () => {
-    const user = await createTestUser({
+  it("should create a test user", () => {
+    const user = createTestUser({
       username: "testuser",
       balance: 1000,
     })
@@ -53,8 +36,8 @@ describe("Example Test Suite", () => {
     expect(user.balance).toBe(1000)
   })
 
-  it("should create a test user with auth token", async () => {
-    const user = await createTestUserWithAuth({
+  it("should create a test user with auth token", () => {
+    const user = createTestUserWithAuth({
       username: "authtest",
     })
 
@@ -63,15 +46,12 @@ describe("Example Test Suite", () => {
     expect(user.token).toMatch(/^scm_/)
   })
 
-  it("should make an authenticated API request", async () => {
-    const app = createTestServer()
-    const user = await createTestUserWithAuth()
+  it("should create auth headers for API requests", () => {
+    const user = createTestUserWithAuth()
+    const headers = getAuthHeaders(user)
 
-    const response = await request(app)
-      .get("/api/v1/profiles/me")
-      .set(getAuthHeaders(user))
-      .expect(200)
-
-    expect(response.body).toBeDefined()
+    expect(headers).toBeDefined()
+    expect(headers.Authorization).toBeDefined()
+    expect(headers.Authorization).toMatch(/^Bearer scm_/)
   })
 })

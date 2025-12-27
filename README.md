@@ -17,20 +17,20 @@ docker-compose up -d postgres
 
 ### Backend Server
 
-This project uses yarn to manage dependencies. You can install dependencies using the `yarn` command.
+This project uses npm to manage dependencies. You can install dependencies using the `npm` command.
 
 ```shell
-yarn install
+npm install
 ```
 
 Running the project is simple and can be done with
 
 ```shell
-yarn dev
+npm run dev
 ```
 
 You can ensure your changes build with
 
 ```shell
-yarn build
+npm run build
 ```
