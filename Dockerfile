@@ -18,7 +18,7 @@ COPY package.json yarn.lock* ./
 
 # Corepack will automatically use the yarn version specified in packageManager
 # Install dependencies using the version managed by corepack
-RUN yarn install --immutable
+RUN yarn install
 
 # Install typescript globally using the corepack-managed yarn
 RUN yarn global add typescript
