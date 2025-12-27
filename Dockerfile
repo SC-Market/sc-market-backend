@@ -3,20 +3,16 @@ FROM node:24-slim AS release
 RUN apt update
 RUN apt install -y git
 
-# Enable corepack for managing yarn version
-RUN corepack enable
-
 WORKDIR /app
 
-# Copy package.json first so corepack can read packageManager field
-COPY package.json yarn.lock* ./
+# Copy package files for dependency installation
+COPY package.json package-lock.json* ./
 
-# Corepack will automatically use the yarn version specified in packageManager
-# Install dependencies using the version managed by corepack
-RUN yarn install
+# Install dependencies using npm
+RUN npm ci
 
 COPY . .
-RUN yarn build
+RUN npm run build
 
 # Create logs directory
 RUN mkdir -p /app/logs
