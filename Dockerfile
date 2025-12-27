@@ -3,12 +3,20 @@ FROM node:24-slim AS release
 RUN apt update
 RUN apt install -y git
 
+# Enable corepack for managing yarn version
+RUN corepack enable
+
 WORKDIR /app
 
-RUN yarn global add typescript
+# Copy package.json first so corepack can read packageManager field
 COPY package.json yarn.lock* ./
 
-RUN yarn install
+# Corepack will automatically use the yarn version specified in packageManager
+# Install dependencies using the version managed by corepack
+RUN yarn install --immutable
+
+# Install typescript globally using the corepack-managed yarn
+RUN yarn global add typescript
 
 COPY . .
 RUN yarn build
