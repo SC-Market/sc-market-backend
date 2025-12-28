@@ -99,7 +99,7 @@ export const admin_get_orders_analytics: RequestHandler = async (req, res) => {
 
     res.json(createResponse(analytics))
   } catch (error) {
-    console.error("Error fetching order analytics:", error)
+    logger.error("Error fetching order analytics", { error })
     res
       .status(500)
       .json(createResponse({ error: "Failed to fetch order analytics" }))
@@ -160,7 +160,7 @@ export const admin_get_users: RequestHandler = async (req, res) => {
 
     res.json(createResponse(result))
   } catch (error) {
-    console.error("Error fetching users:", error)
+    logger.error("Error fetching users", { error })
     res.status(500).json(createResponse({ error: "Failed to fetch users" }))
   }
   return
@@ -218,7 +218,7 @@ export const admin_get_membership_analytics: RequestHandler = async (
 
     res.json(createResponse(analytics))
   } catch (error) {
-    console.error("Error fetching membership analytics:", error)
+    logger.error("Error fetching membership analytics", { error })
     res
       .status(500)
       .json(createResponse({ error: "Failed to fetch membership analytics" }))
@@ -395,7 +395,7 @@ export const admin_get_audit_logs: RequestHandler = async (req, res) => {
       }),
     )
   } catch (error) {
-    console.error("Error fetching audit logs:", error)
+    logger.error("Error fetching audit logs", { error })
     res
       .status(500)
       .json(createResponse({ error: "Failed to fetch audit logs" }))

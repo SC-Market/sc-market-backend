@@ -6,6 +6,7 @@ import * as adminDb from "../admin/database.js"
 import { DBContentReport as DBContentReport } from "../../../../clients/database/db-models.js"
 import { createErrorResponse as createErrorResponse } from "../util/response.js"
 import { createResponse as createResponse } from "../util/response.js"
+import logger from "../../../../logger/logger.js"
 
 export const moderation_post_report: RequestHandler = async (req, res) => {
   try {
@@ -115,7 +116,7 @@ export const moderation_get_reports: RequestHandler = async (req, res) => {
       }),
     )
   } catch (error) {
-    console.error("Failed to retrieve user reports:", error)
+    logger.error("Failed to retrieve user reports", { error })
     res
       .status(500)
       .json(createErrorResponse({ message: "Failed to retrieve user reports" }))
@@ -196,7 +197,7 @@ export const moderation_get_admin_reports: RequestHandler = async (
       }),
     )
   } catch (error) {
-    console.error("Failed to retrieve admin reports:", error)
+    logger.error("Failed to retrieve admin reports", { error })
     res
       .status(500)
       .json(createErrorResponse({ error: "Failed to retrieve admin reports" }))
@@ -292,7 +293,7 @@ export const moderation_put_admin_reports_report_id: RequestHandler = async (
       }),
     )
   } catch (error) {
-    console.error("Failed to update report:", error)
+    logger.error("Failed to update report", { error })
     res
       .status(500)
       .json(createErrorResponse({ error: "Failed to update report" }))

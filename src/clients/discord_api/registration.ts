@@ -4,6 +4,7 @@ import * as profileDb from "../../api/routes/v1/profiles/database.js"
 import * as contractorDb from "../../api/routes/v1/contractors/database.js"
 import * as marketDb from "../../api/routes/v1/market/database.js"
 import { has_permission } from "../../api/routes/v1/util/permissions.js"
+import logger from "../../logger/logger.js"
 
 export const registrationRouter = express.Router()
 
@@ -57,7 +58,10 @@ registrationRouter.post("/contractor/:spectrum_id", async (req, res) => {
         "manage_webhooks",
       ))
     ) {
-      console.log(contractor, user)
+      logger.warn("Permission denied for contractor registration", {
+        contractor_id: contractor.contractor_id,
+        user_id: user.user_id,
+      })
       res.status(403).json({
         error:
           "You do not have permission to register on behalf of this contractor",
@@ -81,7 +85,7 @@ registrationRouter.post("/contractor/:spectrum_id", async (req, res) => {
 
     res.json({ result: "Success" })
   } catch (e) {
-    console.error(e)
+    logger.error("Error in contractor registration", { error: e })
     return
   }
 })

@@ -1,4 +1,5 @@
 import { RequestHandler } from "express"
+import logger from "../../../../logger/logger.js"
 
 export const wiki_get_imagesearch_query: RequestHandler = async function (
   req,
@@ -24,7 +25,7 @@ export const wiki_get_imagesearch_query: RequestHandler = async function (
 
     res.json(result)
   } catch (e) {
-    console.error(e)
+    logger.error("Error in wiki image search", { error: e })
     res.json({ pages: [] })
   }
 }

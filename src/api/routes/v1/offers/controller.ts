@@ -174,7 +174,7 @@ export const offer_put_session_id: RequestHandler = async (req, res) => {
       const user = req.user as User
       await dispatchOfferNotifications(session, "counteroffer", user)
     } catch (e) {
-      console.error(e)
+      logger.error("Error in offers operation", { error: e })
     }
 
     res.json(createResponse({ status: "Success" }))

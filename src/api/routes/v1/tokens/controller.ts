@@ -3,6 +3,7 @@ import crypto from "crypto"
 import { User } from "../api-models.js"
 import { database } from "../../../../clients/database/knex-db.js"
 import { createResponse, createErrorResponse } from "../util/response.js"
+import logger from "../../../../logger/logger.js"
 
 /**
  * Helper function to convert contractor Spectrum IDs to database contractor IDs
@@ -243,7 +244,7 @@ export async function createToken(req: Request, res: Response): Promise<void> {
       }),
     )
   } catch (error) {
-    console.error("Error creating token:", error)
+    logger.error("Error creating token", { error })
     res.status(500).json(createErrorResponse("Internal server error"))
   }
 }
@@ -281,7 +282,7 @@ export async function listTokens(req: Request, res: Response): Promise<void> {
 
     res.json(createResponse(tokensWithSpectrumIds))
   } catch (error) {
-    console.error("Error listing tokens:", error)
+    logger.error("Error listing tokens", { error })
     res.status(500).json(createErrorResponse("Internal server error"))
   }
 }
@@ -321,7 +322,7 @@ export async function getToken(req: Request, res: Response): Promise<void> {
       }),
     )
   } catch (error) {
-    console.error("Error getting token:", error)
+    logger.error("Error getting token", { error })
     res.status(500).json(createErrorResponse("Internal server error"))
   }
 }
@@ -521,7 +522,7 @@ export async function updateToken(req: Request, res: Response): Promise<void> {
       }),
     )
   } catch (error) {
-    console.error("Error updating token:", error)
+    logger.error("Error updating token", { error })
     res.status(500).json(createErrorResponse("Internal server error"))
   }
 }
@@ -547,7 +548,7 @@ export async function revokeToken(req: Request, res: Response): Promise<void> {
 
     res.json(createResponse({ message: "Token revoked successfully" }))
   } catch (error) {
-    console.error("Error revoking token:", error)
+    logger.error("Error revoking token", { error })
     res.status(500).json(createErrorResponse("Internal server error"))
   }
 }
@@ -597,7 +598,7 @@ export async function extendToken(req: Request, res: Response): Promise<void> {
 
     res.json(createResponse({ message: "Token expiration extended" }))
   } catch (error) {
-    console.error("Error extending token:", error)
+    logger.error("Error extending token", { error })
     res.status(500).json(createErrorResponse("Internal server error"))
   }
 }
@@ -633,7 +634,7 @@ export async function getTokenStats(
       }),
     )
   } catch (error) {
-    console.error("Error getting token stats:", error)
+    logger.error("Error getting token stats", { error })
     res.status(500).json(createErrorResponse("Internal server error"))
   }
 }
@@ -701,7 +702,7 @@ export async function getAvailableScopes(
 
     res.json(createResponse({ scopes: availableScopes }))
   } catch (error) {
-    console.error("Error getting available scopes:", error)
+    logger.error("Error getting available scopes", { error })
     res.status(500).json(createErrorResponse("Internal server error"))
   }
 }

@@ -281,7 +281,7 @@ export const get_spectrum_id_audit_logs: RequestHandler = async (
       }),
     )
   } catch (error) {
-    console.error("Error fetching contractor audit logs:", error)
+    logger.error("Error fetching contractor audit logs", { error })
     res
       .status(500)
       .json(createErrorResponse({ message: "Failed to fetch audit logs" }))
@@ -589,7 +589,7 @@ export const get_spectrum_id_members_username: RequestHandler = async (
       }),
     )
   } catch (error) {
-    console.error("Error checking contractor membership:", error)
+    logger.error("Error checking contractor membership", { error })
     res.status(500).json(
       createErrorResponse({
         message: "Internal server error",
@@ -633,7 +633,7 @@ export const get_spectrum_id_members: RequestHandler = async (
       }),
     )
   } catch (error) {
-    console.error("Error fetching contractor members:", error)
+    logger.error("Error fetching contractor members", { error })
     res.status(500).json(
       createErrorResponse({
         message: "Internal server error",
@@ -1293,7 +1293,7 @@ export const delete_spectrum_id_members_username: RequestHandler = async (
 
     res.json(createResponse({ result: "Success" }))
   } catch (e) {
-    console.error(e)
+    logger.error("Error in contractor operation", { error: e })
     res
       .status(500)
       .json(createErrorResponse({ message: "Internal server error" }))
@@ -2033,7 +2033,7 @@ export const post_spectrum_id_refetch: RequestHandler = async (req, res) => {
 
     res.json(createResponse({ result: "Success" }))
   } catch (e) {
-    console.error(e)
+    logger.error("Error in contractor operation", { error: e })
   }
 }
 
@@ -2162,7 +2162,7 @@ export const post_spectrum_id_accept: RequestHandler = async (
 
     res.json(createResponse({ result: "Success" }))
   } catch (e) {
-    console.error(e)
+    logger.error("Error in contractor operation", { error: e })
     res
       .status(500)
       .json(createErrorResponse({ message: "Internal server error" }))
@@ -2226,7 +2226,7 @@ export const post_admin_express_verify: RequestHandler = async (
 
     res.json(createResponse({ result: "Success" }))
   } catch (e) {
-    console.error(e)
+    logger.error("Error in contractor operation", { error: e })
     res
       .status(500)
       .json(createErrorResponse({ message: "Internal server error" }))
@@ -2253,7 +2253,7 @@ export const get_root: RequestHandler = async (req, res, next) => {
     try {
       contractor = await contractorDb.getAllContractorsPaginated(searchData)
     } catch (e) {
-      console.error(e)
+      logger.error("Error fetching contractors", { error: e })
     }
     const user = req.user as User
     const counts = await contractorDb.getAllContractorsCount(searchData)
@@ -2263,7 +2263,7 @@ export const get_root: RequestHandler = async (req, res, next) => {
 
     res.json(createResponse({ total: counts[0].count, items: formatted }))
   } catch (e) {
-    console.error(e)
+    logger.error("Error in get_root", { error: e })
   }
 }
 
@@ -2419,7 +2419,7 @@ export const get_spectrum_id_blocklist: RequestHandler = async (req, res) => {
 
     res.json(createResponse(blocklistWithUsers))
   } catch (error) {
-    console.error("Error fetching org blocklist:", error)
+    logger.error("Error fetching org blocklist", { error })
     res
       .status(500)
       .json(createErrorResponse({ message: "Failed to fetch blocklist" }))
@@ -2480,7 +2480,7 @@ export const post_spectrum_id_blocklist_block: RequestHandler = async (
 
     res.json(createResponse({ message: "User blocked successfully" }))
   } catch (error) {
-    console.error("Error blocking user for org:", error)
+    logger.error("Error blocking user for org", { error })
     res
       .status(500)
       .json(createErrorResponse({ message: "Failed to block user" }))
@@ -2522,7 +2522,7 @@ export const delete_spectrum_id_blocklist_unblock_username: RequestHandler =
 
       res.json(createResponse({ message: "User unblocked successfully" }))
     } catch (error) {
-      console.error("Error unblocking user for org:", error)
+      logger.error("Error unblocking user for org", { error })
       res
         .status(500)
         .json(createErrorResponse({ message: "Failed to unblock user" }))

@@ -16,6 +16,7 @@ import {
   handle_quantity_update,
 } from "../../api/routes/v1/market/helpers.js"
 import { chatServer } from "../messaging/websocket.js"
+import logger from "../../logger/logger.js"
 
 export const threadRouter = express.Router()
 
@@ -113,7 +114,7 @@ threadRouter.post("/order/status", async (req, res) => {
       order = await orderDb.getOrder({ order_id })
     }
   } catch (e) {
-    console.error(e)
+    logger.error("Error fetching order by thread_id or order_id", { error: e })
     res.status(400).json({ error: "Invalid order" })
     return
   }

@@ -12,6 +12,7 @@ import {
   logSQSConfigurationStatus,
   checkSQSConfiguration,
 } from "../clients/aws/sqs-config.js"
+import logger from "../logger/logger.js"
 
 export function start_tasks() {
   // Log SQS configuration status
@@ -44,6 +45,6 @@ export function start_tasks() {
     processDiscordQueue()
     setInterval(processDiscordQueue, 5 * 1000) // 5 seconds
   } else {
-    console.log("⚠️  Discord queue processing disabled - SQS not configured")
+    logger.warn("Discord queue processing disabled - SQS not configured")
   }
 }

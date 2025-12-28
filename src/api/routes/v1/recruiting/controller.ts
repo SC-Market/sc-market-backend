@@ -12,6 +12,7 @@ import { DBRecruitingPost } from "../../../../clients/database/db-models.js"
 import { User } from "../api-models.js"
 import { has_permission } from "../util/permissions.js"
 import { createErrorResponse, createResponse } from "../util/response.js"
+import logger from "../../../../logger/logger.js"
 
 // Types
 export interface RecruitingSearchQuery {
@@ -105,7 +106,7 @@ export const get_posts: RequestHandler = async function (req, res) {
   try {
     posts = await recruitingDb.getAllRecruitingPostsPaginated(searchData)
   } catch (e) {
-    console.error(e)
+    logger.error("Error fetching recruiting posts", { error: e })
   }
   const counts = await recruitingDb.getRecruitingPostCount()
   const formatted = await Promise.all(posts.map(formatRecruitingPost))
