@@ -30,6 +30,7 @@ export interface DBUser {
 
   market_order_template: string
   donor_start_date?: Date | null
+  supported_languages: string | null // JSON array of language codes (default '[]', can be NULL for backwards compatibility)
 }
 
 export interface DBAccountSettings {
@@ -190,6 +191,7 @@ export interface DBContractor {
   market_order_template: string
   locale: string
   archived: boolean
+  supported_languages: string | null // JSON array of language codes (default '[]', can be NULL for backwards compatibility)
 }
 
 export interface DBContractorArchiveDetails {

@@ -32,6 +32,7 @@ import * as serviceDb from "../services/database.js"
 import * as commentDb from "../comments/database.js"
 import * as recruitingDb from "../recruiting/database.js"
 import { cdn } from "../../../../clients/cdn/cdn.js"
+import { getLanguageName } from "../../../../constants/languages.js"
 import { User } from "../api-models.js"
 import { is_member } from "./permissions.js"
 import moment from "moment"
@@ -480,6 +481,18 @@ export async function formatListingBase(
   listing: DBMarketListing,
   isPrivate: boolean = false,
 ): Promise<ListingBase> {
+  // Get languages from seller (contractor or user)
+  const languageCodes = listing.contractor_seller_id
+    ? await contractorDb.getContractorLanguages(listing.contractor_seller_id)
+    : listing.user_seller_id
+      ? await profileDb.getUserLanguages(listing.user_seller_id)
+      : []
+
+  const languages = languageCodes.map((code) => ({
+    code,
+    name: getLanguageName(code) || code,
+  }))
+
   const public_details = {
     price: +listing.price,
     timestamp: listing.timestamp,
@@ -497,6 +510,7 @@ export async function formatListingBase(
     sale_type: listing.sale_type,
     expiration: listing.expiration,
     internal: listing.internal,
+    languages,
     // aggregate: await
   }
 
@@ -907,6 +921,15 @@ export async function contractorDetails(
     "contractors.contractor_id": contractor.contractor_id,
   })
 
+  // Get languages
+  const languageCodes = await contractorDb.getContractorLanguages(
+    contractor.contractor_id,
+  )
+  const languages = languageCodes.map((code) => ({
+    code,
+    name: getLanguageName(code) || code,
+  }))
+
   return {
     ...contractor,
     fields: fields.map((f) => f.field),
@@ -924,6 +947,7 @@ export async function contractorDetails(
             contractor_id: contractor.contractor_id,
           }),
     market_order_template: contractor.market_order_template,
+    languages,
     // balance: ['admin', 'owner'].includes(members.find(m => m.username === user?.username)?.role || '') ? Number.parseInt(contractor.balance) : undefined,
   }
 }

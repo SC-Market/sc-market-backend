@@ -3,11 +3,24 @@ import { database } from "../../../../clients/database/knex-db.js"
 import * as serviceDb from "./database.js"
 import * as profileDb from "../profiles/database.js"
 import * as contractorDb from "../contractors/database.js"
+import { getLanguageName } from "../../../../constants/languages.js"
 
 export async function serializeService(service: DBService) {
   const photos = await serviceDb.getServiceListingImagesResolved({
     service_id: service.service_id,
   })
+
+  // Get languages from contractor or user
+  const languageCodes = service.contractor_id
+    ? await contractorDb.getContractorLanguages(service.contractor_id)
+    : service.user_id
+      ? await profileDb.getUserLanguages(service.user_id)
+      : []
+
+  const languages = languageCodes.map((code) => ({
+    code,
+    name: getLanguageName(code) || code,
+  }))
 
   return {
     service_id: service.service_id,
@@ -34,5 +47,6 @@ export async function serializeService(service: DBService) {
         })
       : null,
     photos,
+    languages,
   }
 }

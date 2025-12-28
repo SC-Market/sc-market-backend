@@ -64,6 +64,8 @@ import {
   contractors_post_spectrum_id_banner,
   put_spectrum_id,
   put_spectrum_id_roles_role_id,
+  get_spectrum_id_languages,
+  put_spectrum_id_languages,
 } from "./controller.js"
 
 import {
@@ -320,6 +322,24 @@ contractorsRouter.put(
   org_permission("manage_org_details"),
   writeRateLimit,
   put_spectrum_id,
+)
+
+// Language endpoints
+contractorsRouter.get(
+  "/:spectrum_id/languages",
+  userAuthorized,
+  valid_contractor,
+  readRateLimit,
+  get_spectrum_id_languages,
+)
+
+contractorsRouter.put(
+  "/:spectrum_id/languages",
+  userAuthorized,
+  valid_contractor,
+  org_permission("manage_org_details"),
+  writeRateLimit,
+  put_spectrum_id_languages,
 )
 
 contractorsRouter.post(

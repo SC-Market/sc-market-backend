@@ -121,7 +121,8 @@ export const offer_put_session_id: RequestHandler = async (req, res) => {
     // Only validate if buyer is making counter offer (not seller)
     // Seller counter offers can exceed limits to allow negotiation flexibility
     if (!isSellerCounterOffer) {
-      const offerSize = listings?.reduce((sum, item) => sum + item.quantity, 0) || 0
+      const offerSize =
+        listings?.reduce((sum, item) => sum + item.quantity, 0) || 0
       try {
         const { validateOrderLimits } = await import("../orders/helpers.js")
         await validateOrderLimits(

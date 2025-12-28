@@ -85,6 +85,7 @@ export function createTestUser(overrides?: Partial<TestUser>): TestUser {
     official_server_id: null,
     discord_thread_channel_id: null,
     market_order_template: "",
+    supported_languages: '["en"]',
   }
   const accounts = getMockTableData("accounts")
   accounts.push(dbUser)
@@ -127,6 +128,7 @@ export function createTestContractor(
     market_order_template: "",
     locale: "en",
     archived: false,
+    supported_languages: '["en"]',
   }
   const contractors = getMockTableData("contractors")
   contractors.push(dbContractor)

@@ -382,7 +382,8 @@ orderSettingsRouter.post(
         })
         res.status(400).json(
           createErrorResponse({
-            error: "message_content must be a valid number for this setting_type",
+            error:
+              "message_content must be a valid number for this setting_type",
           }),
         )
         return
@@ -737,7 +738,10 @@ orderSettingsRouter.get(
     const sellerUser = req.users!.get("username")!
 
     try {
-      const settings = await orderDb.getOrderSettings("user", sellerUser.user_id)
+      const settings = await orderDb.getOrderSettings(
+        "user",
+        sellerUser.user_id,
+      )
 
       const limits = {
         min_order_size: settings.find(

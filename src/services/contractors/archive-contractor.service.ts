@@ -40,7 +40,8 @@ export async function archiveContractor({
   const archiveDate = now.toISOString().slice(0, 10)
   const archivedLabel = `${ARCHIVE_LABEL_PREFIX} ${archiveDate}] ${contractor.name}`
 
-  const inviteAction = await notificationDb.getNotificationActionByName("contractor_invite")
+  const inviteAction =
+    await notificationDb.getNotificationActionByName("contractor_invite")
 
   let memberCountRemoved = 0
   let orderIds: string[] = []

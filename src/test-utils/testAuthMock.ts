@@ -73,9 +73,7 @@ export function createAdminUser(
 
   // Update mock data
   const accounts = getMockTableData("accounts")
-  const accountIndex = accounts.findIndex(
-    (a) => a.user_id === user.user_id,
-  )
+  const accountIndex = accounts.findIndex((a) => a.user_id === user.user_id)
   if (accountIndex >= 0) {
     accounts[accountIndex].role = "admin"
     setupMockTableData("accounts", accounts)

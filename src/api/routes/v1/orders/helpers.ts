@@ -171,12 +171,7 @@ export async function validateOrderLimits(
   const settings = await getRelevantOrderSettings(
     seller_contractor_id,
     seller_user_id,
-    [
-      "min_order_size",
-      "max_order_size",
-      "min_order_value",
-      "max_order_value",
-    ],
+    ["min_order_size", "max_order_size", "min_order_value", "max_order_value"],
   )
 
   // Convert offer_value to number for comparison

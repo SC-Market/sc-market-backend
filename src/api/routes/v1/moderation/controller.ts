@@ -163,7 +163,7 @@ export const moderation_get_admin_reports: RequestHandler = async (
         const reporter = await profileDb.getMinimalUser({
           user_id: report.reporter_id,
         })
-          const handledBy = report.handled_by
+        const handledBy = report.handled_by
           ? await profileDb.getMinimalUser({ user_id: report.handled_by })
           : null
 

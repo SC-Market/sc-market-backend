@@ -23,6 +23,11 @@ import { createResponse as createResponse } from "../util/response.js"
 import { randomUUID as randomUUID } from "node:crypto"
 import fs from "node:fs"
 import logger from "../../../../logger/logger.js"
+import {
+  SUPPORTED_LANGUAGES,
+  validateLanguageCodes,
+  getLanguageName,
+} from "../../../../constants/languages.js"
 
 export const profile_post_auth_link: RequestHandler = async (req, res) => {
   try {
@@ -1279,4 +1284,73 @@ export const profile_delete_blocklist_unblock_username: RequestHandler = async (
 export interface AccountSettingsBody {
   discord_order_share?: boolean
   discord_public?: boolean
+}
+
+/**
+ * Get current user's supported languages
+ */
+export const profile_get_languages: RequestHandler = async (req, res) => {
+  try {
+    const user = req.user as User
+    const languageCodes = await profileDb.getUserLanguages(user.user_id)
+
+    const languages = languageCodes.map((code) => ({
+      code,
+      name: getLanguageName(code) || code,
+    }))
+
+    res.json(createResponse({ languages }))
+  } catch (error) {
+    logger.error("Error getting user languages:", error)
+    res
+      .status(500)
+      .json(createErrorResponse({ message: "Failed to get languages" }))
+  }
+}
+
+/**
+ * Set current user's supported languages
+ */
+export const profile_put_languages: RequestHandler = async (req, res) => {
+  try {
+    const user = req.user as User
+    const { language_codes } = req.body
+
+    if (!Array.isArray(language_codes)) {
+      res.status(400).json(
+        createErrorResponse({
+          message: "language_codes must be an array",
+        }),
+      )
+      return
+    }
+
+    // Validate language codes
+    const validation = validateLanguageCodes(language_codes)
+    if (!validation.valid) {
+      res.status(400).json(
+        createErrorResponse({
+          message: `Invalid language codes: ${validation.invalid.join(", ")}`,
+        }),
+      )
+      return
+    }
+
+    // Set languages
+    await profileDb.setUserLanguages(user.user_id, language_codes)
+
+    // Return updated languages
+    const updatedCodes = await profileDb.getUserLanguages(user.user_id)
+    const languages = updatedCodes.map((code) => ({
+      code,
+      name: getLanguageName(code) || code,
+    }))
+
+    res.json(createResponse({ languages }))
+  } catch (error) {
+    logger.error("Error setting user languages:", error)
+    res
+      .status(500)
+      .json(createErrorResponse({ message: "Failed to set languages" }))
+  }
 }
