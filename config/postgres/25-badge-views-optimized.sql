@@ -1,6 +1,18 @@
 -- Migration 25: Optimize badge views by consolidating queries
 -- Replaces function calls with consolidated CTEs for 66-75% performance improvement
 -- This migration replaces the user_badge_data view with an optimized version
+--
+-- IMPORTANT: Architecture for adding new badges (see migration 28-donor-badge.sql):
+-- 1. user_badge_data (regular view) - raw badge calculation data
+-- 2. user_badges_view (regular view) - badge calculation logic (intermediate view)
+-- 3. user_badges_materialized (materialized view) - selects FROM user_badges_view
+--
+-- When adding new badges:
+-- - Add new data column to user_badge_data at the END (after calculated_at)
+-- - Use CREATE OR REPLACE VIEW on user_badge_data (no DROP needed)
+-- - Use CREATE OR REPLACE VIEW on user_badges_view to add badge logic (no DROP needed)
+-- - Just REFRESH MATERIALIZED VIEW user_badges_materialized (no DROP needed!)
+-- - This allows non-destructive badge additions
 
 BEGIN;
 

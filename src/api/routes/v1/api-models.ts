@@ -80,6 +80,10 @@ export interface OrderSetting {
     | "order_message"
     | "require_availability"
     | "stock_subtraction_timing"
+    | "min_order_size"
+    | "max_order_size"
+    | "min_order_value"
+    | "max_order_value"
   message_content: string
   enabled: boolean
   created_at: string
@@ -92,6 +96,10 @@ export interface CreateOrderSettingRequest {
     | "order_message"
     | "require_availability"
     | "stock_subtraction_timing"
+    | "min_order_size"
+    | "max_order_size"
+    | "min_order_value"
+    | "max_order_value"
   message_content?: string // Optional for require_availability and stock_subtraction_timing
   enabled?: boolean
 }

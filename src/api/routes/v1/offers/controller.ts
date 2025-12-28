@@ -26,7 +26,7 @@ import {
   search_offer_sessions_optimized,
   mergeOfferSessions,
 } from "./helpers.js"
-import { is_member } from "../util/permissions.js"
+import { is_member, has_permission } from "../util/permissions.js"
 import { auditLogService } from "../../../../services/audit-log/audit-log.service.js"
 import { OfferMergeError } from "./errors.js"
 
@@ -101,6 +101,45 @@ export const offer_put_session_id: RequestHandler = async (req, res) => {
         service.contractor_id !== session.contractor_id
       ) {
         res.status(400).json(createErrorResponse({ error: "Invalid service" }))
+        return
+      }
+    }
+
+    // Determine if this is a seller counter offer or buyer counter offer
+    // Seller is the one who receives the offer (contractor_id or assigned_id in session)
+    // Buyer is the one who creates the offer (customer_id in session)
+    // If the current user is the seller (has contractor_id or assigned_id matching), it's a seller counter offer
+    const isSellerCounterOffer =
+      (session.contractor_id &&
+        (await has_permission(
+          session.contractor_id,
+          user.user_id,
+          "manage_orders",
+        ))) ||
+      (session.assigned_id && session.assigned_id === user.user_id)
+
+    // Only validate if buyer is making counter offer (not seller)
+    // Seller counter offers can exceed limits to allow negotiation flexibility
+    if (!isSellerCounterOffer) {
+      const offerSize = listings?.reduce((sum, item) => sum + item.quantity, 0) || 0
+      try {
+        const { validateOrderLimits } = await import("../orders/helpers.js")
+        await validateOrderLimits(
+          session.contractor_id,
+          session.assigned_id,
+          offerSize,
+          body.cost,
+        )
+      } catch (error) {
+        res.status(400).json(
+          createErrorResponse({
+            message:
+              error instanceof Error
+                ? error.message
+                : "Order does not meet size or value requirements",
+            code: "ORDER_LIMIT_VIOLATION",
+          }),
+        )
         return
       }
     }

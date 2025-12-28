@@ -366,6 +366,28 @@ export const post_root: RequestHandler = async (req, res, next) => {
     return
   }
 
+  // Validate order limits
+  // For service orders, size is 0 (no market listings)
+  try {
+    await orderHelpers.validateOrderLimits(
+      contractor_id,
+      assigned_user?.user_id || null,
+      0, // No market listings for service orders
+      cost,
+    )
+  } catch (error) {
+    res.status(400).json(
+      createErrorResponse({
+        message:
+          error instanceof Error
+            ? error.message
+            : "Order does not meet size or value requirements",
+        code: "ORDER_LIMIT_VIOLATION",
+      }),
+    )
+    return
+  }
+
   // TODO: Allow for public contracts again
   const { session, discord_invite } = await createOffer(
     {
