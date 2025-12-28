@@ -37,6 +37,7 @@ export async function getServicesPaginated(params: {
   sortBy?: "timestamp" | "cost" | "service_name"
   sortOrder?: "asc" | "desc"
   status?: string
+  language_codes?: string[]
 }): Promise<{
   services: DBService[]
   pagination: {
@@ -59,6 +60,7 @@ export async function getServicesPaginated(params: {
     sortBy = "timestamp",
     sortOrder = "desc",
     status = "active",
+    language_codes,
   } = params
 
   // Build base query with filters
@@ -106,6 +108,43 @@ export async function getServicesPaginated(params: {
   if (paymentType) {
     query = query.where("payment_type", paymentType)
     countQuery = countQuery.where("payment_type", paymentType)
+  }
+
+  // Language filtering: filter by provider's supported languages (OR logic)
+  if (language_codes && language_codes.length > 0) {
+    // Build array expression using knex().raw() with safe parameter binding
+    // Create placeholders for each language code and bind them as parameters
+    const placeholders = language_codes.map(() => '?').join(',')
+    const languageArrayRaw = knex().raw(
+      'ARRAY[' + placeholders + ']::text[]',
+      language_codes,
+    )
+    
+    const languageFilter = (qb: any) => {
+      qb.where((subQb: any) => {
+        // For user providers: check if user's supported_languages contains any of the selected languages
+        subQb
+          .whereNotNull("services.user_id")
+          .andWhereRaw(
+            knex().raw(
+              'EXISTS (SELECT 1 FROM accounts WHERE accounts.user_id = services.user_id AND COALESCE(accounts.supported_languages, ARRAY[\'en\']) && ?)',
+              [languageArrayRaw],
+            ),
+          )
+      }).orWhere((subQb: any) => {
+        // For contractor providers: check if contractor's supported_languages contains any of the selected languages
+        subQb
+          .whereNotNull("services.contractor_id")
+          .andWhereRaw(
+            knex().raw(
+              'EXISTS (SELECT 1 FROM contractors WHERE contractors.contractor_id = services.contractor_id AND COALESCE(contractors.supported_languages, ARRAY[\'en\']) && ?)',
+              [languageArrayRaw],
+            ),
+          )
+      })
+    }
+    query = query.andWhere(languageFilter)
+    countQuery = countQuery.andWhere(languageFilter)
   }
 
   // Get total count

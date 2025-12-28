@@ -22,6 +22,7 @@ export interface RecruitingSearchQuery {
   fields: string[]
   reverseSort: boolean
   pageSize: number
+  language_codes?: string[]
 }
 
 // Utility functions and constants
@@ -45,6 +46,7 @@ export function convertQuery(query: {
   fields?: string
   rating?: string
   pageSize?: string
+  language_codes?: string
 }): RecruitingSearchQuery {
   const index = +(query.index || 0)
   let sorting = (query.sorting || "name").toLowerCase()
@@ -61,6 +63,9 @@ export function convertQuery(query: {
   const fields = query.fields ? query.fields.toLowerCase().split(",") : []
   const rating = +(query.rating || 0)
   const pageSize = +(query.pageSize || 15)
+  const language_codes = query.language_codes
+    ? query.language_codes.split(",").map((s) => s.trim()).filter(Boolean)
+    : undefined
   return {
     index,
     reverseSort,
@@ -69,6 +74,7 @@ export function convertQuery(query: {
     fields,
     rating,
     pageSize,
+    language_codes: language_codes && language_codes.length > 0 ? language_codes : undefined,
   }
 }
 
@@ -82,6 +88,7 @@ export const get_posts: RequestHandler = async function (req, res) {
     fields: string
     rating: string
     pageSize: string
+    language_codes?: string
   }
 
   const searchData = convertQuery(query)
