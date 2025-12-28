@@ -57,7 +57,9 @@ export class ExternalCDN implements CDN {
     if (!resource_id) {
       return null
     }
-    const avatar = await contractorDb.getImageResource({ resource_id: resource_id })
+    const avatar = await contractorDb.getImageResource({
+      resource_id: resource_id,
+    })
     return avatar.external_url || null
   }
 

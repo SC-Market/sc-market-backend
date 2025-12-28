@@ -5,6 +5,7 @@ import { cdn } from "../../../../clients/cdn/cdn.js"
 import { getUserRating } from "../util/formatting.js"
 import * as profileDb from "./database.js"
 import * as contractorDb from "../contractors/database.js"
+import { getLanguageName } from "../../../../constants/languages.js"
 
 export async function serializePublicProfile(
   user: DBUser | User,
@@ -67,6 +68,10 @@ export async function serializePublicProfile(
       : undefined,
     market_order_template: user.market_order_template,
     rsi_confirmed: user.rsi_confirmed,
+    languages: (await profileDb.getUserLanguages(user.user_id)).map((code) => ({
+      code,
+      name: getLanguageName(code) || code,
+    })),
   }
 }
 

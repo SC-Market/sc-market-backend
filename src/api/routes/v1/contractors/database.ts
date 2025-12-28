@@ -1237,3 +1237,51 @@ export async function searchOrgMembers(
     .or.where("display_name", "ilike", `%${query}%`)
     .select("accounts.*", "contractor_members.role")
 }
+
+/**
+ * Get contractor's supported languages.
+ * Returns array of language codes, defaults to ['en'] if none specified.
+ */
+export async function getContractorLanguages(
+  contractor_id: string,
+): Promise<string[]> {
+  const contractor = await knex()<DBContractor>("contractors")
+    .where({ contractor_id })
+    .select("supported_languages")
+    .first()
+
+  if (!contractor || !contractor.supported_languages) {
+    return ["en"] // Default to English
+  }
+
+  try {
+    const languages = JSON.parse(contractor.supported_languages)
+    if (Array.isArray(languages) && languages.length > 0) {
+      return languages
+    }
+    // Empty array or invalid, default to English
+    return ["en"]
+  } catch {
+    // Invalid JSON, default to English
+    return ["en"]
+  }
+}
+
+/**
+ * Set contractor's supported languages.
+ * Stores as JSON array string. English is default but not required.
+ */
+export async function setContractorLanguages(
+  contractor_id: string,
+  language_codes: string[],
+): Promise<void> {
+  // Deduplicate
+  const uniqueCodes = [...new Set(language_codes)]
+
+  // Store as JSON array (empty array is allowed)
+  const valueToStore = JSON.stringify(uniqueCodes)
+
+  await knex()<DBContractor>("contractors")
+    .where({ contractor_id })
+    .update({ supported_languages: valueToStore })
+}

@@ -1109,3 +1109,49 @@ export async function searchUsers(query: string): Promise<DBUser[]> {
     .limit(25)
     .select()
 }
+
+/**
+ * Get user's supported languages.
+ * Returns array of language codes, defaults to ['en'] if none specified.
+ */
+export async function getUserLanguages(user_id: string): Promise<string[]> {
+  const user = await knex()<DBUser>("accounts")
+    .where({ user_id })
+    .select("supported_languages")
+    .first()
+
+  if (!user || !user.supported_languages) {
+    return ["en"] // Default to English
+  }
+
+  try {
+    const languages = JSON.parse(user.supported_languages)
+    if (Array.isArray(languages) && languages.length > 0) {
+      return languages
+    }
+    // Empty array or invalid, default to English
+    return ["en"]
+  } catch {
+    // Invalid JSON, default to English
+    return ["en"]
+  }
+}
+
+/**
+ * Set user's supported languages.
+ * Stores as JSON array string. English is default but not required.
+ */
+export async function setUserLanguages(
+  user_id: string,
+  language_codes: string[],
+): Promise<void> {
+  // Deduplicate
+  const uniqueCodes = [...new Set(language_codes)]
+
+  // Store as JSON array (empty array is allowed)
+  const valueToStore = JSON.stringify(uniqueCodes)
+
+  await knex()<DBUser>("accounts")
+    .where({ user_id })
+    .update({ supported_languages: valueToStore })
+}

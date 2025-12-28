@@ -40,6 +40,8 @@ import {
   profile_get_links,
   profile_delete_links_provider_type,
   profile_put_links_provider_type_primary,
+  profile_get_languages,
+  profile_put_languages,
 } from "./controller.js"
 
 import {
@@ -252,4 +254,19 @@ profileRouter.put(
   writeRateLimit,
   userAuthorized,
   profile_put_links_provider_type_primary,
+)
+
+// Language endpoints
+profileRouter.get(
+  "/languages",
+  readRateLimit,
+  userAuthorized,
+  profile_get_languages,
+)
+
+profileRouter.put(
+  "/languages",
+  writeRateLimit,
+  userAuthorized,
+  profile_put_languages,
 )

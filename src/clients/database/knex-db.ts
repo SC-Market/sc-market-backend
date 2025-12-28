@@ -111,7 +111,10 @@ export class KnexDatabase implements Database {
           )
         } catch (e) {
           // Try to get Discord ID from provider system as fallback
-          const discordProvider = await profileDb.getUserProvider(user.user_id, "discord")
+          const discordProvider = await profileDb.getUserProvider(
+            user.user_id,
+            "discord",
+          )
           if (discordProvider?.provider_id) {
             try {
               profile = (await rest.get(

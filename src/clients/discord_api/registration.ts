@@ -42,7 +42,9 @@ registrationRouter.post("/contractor/:spectrum_id", async (req, res) => {
 
     let contractor
     try {
-      contractor = await contractorDb.getContractor({ spectrum_id: spectrum_id })
+      contractor = await contractorDb.getContractor({
+        spectrum_id: spectrum_id,
+      })
     } catch (e) {
       res.status(400).json({ error: "Invalid contractor Spectrum ID" })
       return
@@ -117,7 +119,10 @@ registrationRouter.post("/user", async (req, res) => {
 
   // Update Discord integration settings using new system
   // Also update old columns for backward compatibility during transition
-  const currentIntegration = await profileDb.getUserIntegration(user.user_id, "discord")
+  const currentIntegration = await profileDb.getUserIntegration(
+    user.user_id,
+    "discord",
+  )
   const currentSettings = currentIntegration?.settings || {}
 
   const newSettings = {
