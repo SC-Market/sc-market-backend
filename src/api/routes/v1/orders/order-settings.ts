@@ -45,7 +45,7 @@ orderSettingsRouter.get("/settings", userAuthorized, async (req, res) => {
     const settings = await orderDb.getOrderSettings("user", user.user_id)
     res.json(createResponse({ settings: settings.map(serializeOrderSetting) }))
   } catch (error) {
-    console.error("Error fetching user order settings:", error)
+    logger.error("Error fetching user order settings", { error })
     res
       .status(500)
       .json(createErrorResponse({ error: "Failed to fetch order settings" }))
@@ -229,7 +229,7 @@ orderSettingsRouter.put("/settings/:id", userAuthorized, async (req, res) => {
     })
     res.json(createResponse({ setting: serializeOrderSetting(updated) }))
   } catch (error) {
-    console.error("Error updating order setting:", error)
+    logger.error("Error updating order setting", { error })
     res
       .status(500)
       .json(createErrorResponse({ error: "Failed to update order setting" }))
@@ -261,7 +261,7 @@ orderSettingsRouter.delete(
       await orderDb.deleteOrderSetting(id)
       res.status(204).send()
     } catch (error) {
-      console.error("Error deleting order setting:", error)
+      logger.error("Error deleting order setting", { error })
       res
         .status(500)
         .json(createErrorResponse({ error: "Failed to delete order setting" }))
@@ -536,7 +536,7 @@ orderSettingsRouter.put(
       })
       res.json(createResponse({ setting: serializeOrderSetting(updated) }))
     } catch (error) {
-      console.error("Error updating contractor order setting:", error)
+      logger.error("Error updating contractor order setting", { error })
       res.status(500).json(
         createErrorResponse({
           error: "Failed to update contractor order setting",
@@ -576,7 +576,7 @@ orderSettingsRouter.delete(
       await orderDb.deleteOrderSetting(id)
       res.status(204).send()
     } catch (error) {
-      console.error("Error deleting contractor order setting:", error)
+      logger.error("Error deleting contractor order setting", { error })
       res.status(500).json(
         createErrorResponse({
           error: "Failed to delete contractor order setting",

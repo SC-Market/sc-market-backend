@@ -8,6 +8,7 @@ import {
 } from "../clients/database/db-models.js"
 import fs from "node:fs"
 import path from "node:path"
+import logger from "../logger/logger.js"
 
 export async function process_auction(auction: DBAuctionDetails) {
   const complete = await marketDb.getMarketListingComplete(auction.listing_id)
@@ -62,7 +63,7 @@ export async function process_auctions() {
 export async function process_expiring_market_listing(
   listing: DBMarketListing,
 ) {
-  console.log(`Expiring listing ${listing.listing_id}`)
+  logger.info(`Expiring listing ${listing.listing_id}`)
   await marketDb.updateMarketListing(listing.listing_id, { status: "inactive" })
 }
 
@@ -100,15 +101,15 @@ export async function clear_uploads_folder() {
           const stat = fs.statSync(filePath)
           if (stat.isFile()) {
             fs.unlinkSync(filePath)
-            console.log(`Cleaned up upload file: ${file}`)
+            logger.info(`Cleaned up upload file: ${file}`)
           }
         } catch (error) {
-          console.error(`Failed to delete file ${file}:`, error)
+          logger.error(`Failed to delete file ${file}`, { file, error })
         }
       }
-      console.log("Uploads folder cleared on server start")
+      logger.info("Uploads folder cleared on server start")
     }
   } catch (error) {
-    console.error("Failed to clear uploads folder:", error)
+    logger.error("Failed to clear uploads folder", { error })
   }
 }

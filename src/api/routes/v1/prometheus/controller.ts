@@ -13,6 +13,7 @@ import {
   convertMembershipAnalyticsToPrometheus,
   convertStatsToPrometheus,
 } from "../admin/grafana-formatter.js"
+import logger from "../../../../logger/logger.js"
 
 // Metric name to endpoint mapping
 const METRIC_SOURCES: Record<
@@ -320,7 +321,7 @@ export const prometheus_query: RequestHandler = async (req, res) => {
 
     res.json(prometheusData)
   } catch (error) {
-    console.error("Error querying Prometheus metric:", error)
+    logger.error("Error querying Prometheus metric", { error })
     res.status(500).json({
       status: "error",
       errorType: "internal",
@@ -346,13 +347,13 @@ async function handleActivityMetric(
     }>
   }
 }> {
-  console.log(
+  logger.debug(
     `[handleActivityMetric] Querying database: startTime=${startTime} (${new Date(startTime * 1000).toISOString()}), endTime=${endTime} (${new Date(endTime * 1000).toISOString()})`,
   )
   const daily = await adminDb.getDailyActivity({ startTime, endTime })
   const weekly = await adminDb.getWeeklyActivity({ startTime, endTime })
   const monthly = await adminDb.getMonthlyActivity({ startTime, endTime })
-  console.log(
+  logger.debug(
     `[handleActivityMetric] Database returned: daily=${daily.length}, weekly=${weekly.length}, monthly=${monthly.length} records`,
   )
 
@@ -624,7 +625,7 @@ export const prometheus_query_range: RequestHandler = async (req, res) => {
     const startDate = new Date(startTime * 1000).toISOString()
     const endDate = new Date(endTime * 1000).toISOString()
     const durationHours = (endTime - startTime) / 3600
-    console.log(
+    logger.debug(
       `[Prometheus query_range] ${metricName}: start=${startTime} (${startDate}), end=${endTime} (${endDate}), duration=${durationHours.toFixed(2)}h, step=${stepSeconds}s`,
     )
 
@@ -678,7 +679,7 @@ export const prometheus_query_range: RequestHandler = async (req, res) => {
 
     res.json(prometheusData)
   } catch (error) {
-    console.error("Error querying Prometheus range metric:", error)
+    logger.error("Error querying Prometheus range metric", { error })
     res.status(500).json({
       status: "error",
       errorType: "internal",

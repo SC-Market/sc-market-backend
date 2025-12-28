@@ -2,6 +2,7 @@ import { cdn } from "../../../../clients/cdn/cdn.js"
 import { database } from "../../../../clients/database/knex-db.js"
 import * as serviceDb from "./database.js"
 import { DBService } from "../../../../clients/database/db-models.js"
+import logger from "../../../../logger/logger.js"
 
 export async function createServicePhotos(
   service_id: string,
@@ -27,7 +28,7 @@ export async function createServicePhotos(
         service_id,
       })
     } catch (error) {
-      console.error(`Failed to create service photo for ${photo}:`, error)
+      logger.error(`Failed to create service photo for ${photo}`, { photo, error })
       throw error
     }
   }

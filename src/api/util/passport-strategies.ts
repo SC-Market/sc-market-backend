@@ -22,6 +22,7 @@ import {
   CitizenIDErrorCodes,
   getCitizenIDConfig,
 } from "./auth-helpers.js"
+import logger from "../../logger/logger.js"
 
 /**
  * Get Discord passport configuration
@@ -427,9 +428,9 @@ export function createCitizenIDVerifyCallback(
               user = await profileDb.getUser({ user_id: user.user_id })
             } catch (error) {
               // If external resource creation fails (e.g., URL not whitelisted), log and continue
-              console.warn(
-                `[CitizenID] Failed to create external resource for RSI avatar:`,
-                error,
+              logger.warn(
+                `[CitizenID] Failed to create external resource for RSI avatar`,
+                { error },
               )
             }
           }
@@ -520,27 +521,27 @@ export function createCitizenIDVerifyCallback(
             user = await profileDb.getUser({ user_id: user.user_id })
           } catch (error) {
             // If external resource creation fails (e.g., URL not whitelisted), log and continue
-            console.warn(
-              `[CitizenID] Failed to create external resource for RSI avatar:`,
-              error,
+            logger.warn(
+              `[CitizenID] Failed to create external resource for RSI avatar`,
+              { error },
             )
           }
         }
       }
 
-      console.log("Citizen ID login successful", {
+      logger.info("Citizen ID login successful", {
         userId: user.user_id,
         username: user.username,
         displayName: user.display_name,
       })
       return done(null, user)
     } catch (error) {
-      console.error("[CitizenID verify callback] Error:", {
+      logger.error("[CitizenID verify callback] Error", {
         error,
         errorMessage: (error as Error)?.message,
         errorStack: (error as Error)?.stack,
       })
-      console.error("Citizen ID verify callback error:", error)
+      logger.error("Citizen ID verify callback error", { error })
       return done(error as Error)
     }
   }

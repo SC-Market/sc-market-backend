@@ -136,7 +136,7 @@ export const get_listing_stats: RequestHandler = async (req, res) => {
           ...listingStats,
         })
       } catch (error) {
-        console.error(`Error processing listing ${listing_id}:`, error)
+        logger.error(`Error processing listing ${listing_id}`, { listing_id, error })
         res.status(500).json(
           createErrorResponse({
             error: `Error processing listing ${listing_id}`,
@@ -148,7 +148,7 @@ export const get_listing_stats: RequestHandler = async (req, res) => {
 
     res.json(createResponse({ stats }))
   } catch (error) {
-    console.error("Error in /listings/stats:", error)
+    logger.error("Error in /listings/stats", { error })
     res
       .status(500)
       .json(createErrorResponse({ error: "Internal server error" }))
@@ -539,7 +539,7 @@ export const create_listing: RequestHandler = async (req, res) => {
 
     res.json(createResponse(await formatListing(listing)))
   } catch (e) {
-    console.error(e)
+    logger.error("Error in market operation", { error: e })
     res.status(500).json({ message: "Internal server error" })
     return
   }
@@ -890,7 +890,7 @@ export const add_listing_photos: RequestHandler = async (req, res) => {
           photosToRemove.push(photo)
         }
       } catch (error) {
-        console.error("Failed to resolve photo URL:", error)
+        logger.error("Failed to resolve photo URL", { error })
         // Continue processing other photos
       }
     }
@@ -924,7 +924,7 @@ export const add_listing_photos: RequestHandler = async (req, res) => {
         // Use CDN removeResource to ensure both database and CDN cleanup
         await cdn.removeResource(photo.resource_id)
       } catch (error) {
-        console.error("Failed to delete old photo:", error)
+        logger.error("Failed to delete old photo", { error })
         // Continue with new photo insertion even if deletion fails
       }
     }
@@ -1177,7 +1177,7 @@ export const search_listings: RequestHandler = async (req, res) => {
       }),
     )
   } catch (e) {
-    console.error(e)
+    logger.error("Error in market operation", { error: e })
     res
       .status(500)
       .json(createErrorResponse({ message: "Internal server error" }))
@@ -1253,7 +1253,7 @@ export const get_active_listings_by_org: RequestHandler = async (req, res) => {
       ),
     )
   } catch (e) {
-    console.error(e)
+    logger.error("Error in market operation", { error: e })
     res
       .status(500)
       .json(createErrorResponse({ message: "Internal server error" })) // Fixed status code from 400 to 500
@@ -1269,7 +1269,7 @@ export const get_buy_orders: RequestHandler = async (req, res) => {
       ),
     )
   } catch (e) {
-    console.error(e)
+    logger.error("Error in market operation", { error: e })
     res
       .status(500)
       .json(createErrorResponse({ message: "Internal server error" }))
@@ -1285,7 +1285,7 @@ export const get_buy_order_chart: RequestHandler = async (req, res) => {
     )
     res.json(await formatBuyOrderChartDetails(buy_orders))
   } catch (e) {
-    console.error(e)
+    logger.error("Error in market operation", { error: e })
     res.status(400).json({ error: "Invalid item" })
     return
   }
@@ -1297,7 +1297,7 @@ export const get_aggregate_history: RequestHandler = async (req, res) => {
     const price_history = await marketDb.getPriceHistory({ game_item_id })
     res.json(await formatPriceHistory(price_history))
   } catch (e) {
-    console.error(e)
+    logger.error("Error in market operation", { error: e })
     res.status(400).json({ error: "Invalid item" })
     return
   }
@@ -1359,7 +1359,7 @@ export const update_aggregate: RequestHandler = async (req, res) => {
 
     res.json({ result: "Success" })
   } catch (e) {
-    console.error(e)
+    logger.error("Error in market operation", { error: e })
     res.status(400).json({ error: "Invalid item" })
     return
   }
@@ -1380,7 +1380,7 @@ export const get_aggregate_details: RequestHandler = async (req, res) => {
 
     res.json(await formatMarketAggregateComplete(aggregate))
   } catch (e) {
-    console.error(e)
+    logger.error("Error in market operation", { error: e })
     res.status(400).json({ error: "Invalid item" })
     return
   }
@@ -1411,7 +1411,7 @@ export const get_multiple_details: RequestHandler = async (req, res) => {
 
     res.json(await formatMarketMultipleComplete(multiple, show_private))
   } catch (e) {
-    console.error(e)
+    logger.error("Error in market operation", { error: e })
     res.status(400).json({ error: "Invalid item" })
     return
   }
@@ -1510,7 +1510,7 @@ export const create_contractor_multiple: RequestHandler = async (req, res) => {
       ),
     )
   } catch (e) {
-    console.error(e)
+    logger.error("Error in market operation", { error: e })
     res
       .status(500)
       .json(createErrorResponse({ message: "Internal server error" }))
@@ -1570,7 +1570,7 @@ export const create_multiple: RequestHandler = async (req, res) => {
           return
         }
       } catch (e) {
-        console.error(e)
+        logger.error("Error in market operation", { error: e })
         res.status(400).json({ error: "Invalid listing" })
         return
       }
@@ -1610,7 +1610,7 @@ export const create_multiple: RequestHandler = async (req, res) => {
     res.json(response[0])
     return
   } catch (e) {
-    console.error(e)
+    logger.error("Error in market operation", { error: e })
     res
       .status(500)
       .json(createErrorResponse({ message: "Internal server error" }))
@@ -1709,7 +1709,7 @@ export const update_multiple: RequestHandler = async (req, res) => {
           return
         }
       } catch (e) {
-        console.error(e)
+        logger.error("Error in market operation", { error: e })
         res.status(400).json({ error: "Invalid listing" })
         return
       }
@@ -1784,7 +1784,7 @@ export const update_multiple: RequestHandler = async (req, res) => {
     res.json({ result: "Success" })
     return
   } catch (e) {
-    console.error(e)
+    logger.error("Error in market operation", { error: e })
     res
       .status(500)
       .json(createErrorResponse({ message: "Internal server error" }))
@@ -1838,7 +1838,7 @@ export const create_buy_order: RequestHandler = async (req, res) => {
     res.json(createResponse(orders[0]))
     return
   } catch (e) {
-    console.error(e)
+    logger.error("Error in market operation", { error: e })
     res
       .status(500)
       .json(createErrorResponse({ message: "Internal server error" }))
@@ -1932,7 +1932,7 @@ export const fulfill_buy_order: RequestHandler = async (req, res) => {
     res.json({ offer, session, discord_invite })
     return
   } catch (e) {
-    console.error(e)
+    logger.error("Error in market operation", { error: e })
     res
       .status(500)
       .json(createErrorResponse({ message: "Internal server error" }))
@@ -1970,7 +1970,7 @@ export const cancel_buy_order: RequestHandler = async (req, res) => {
     res.json({ result: "Success" })
     return
   } catch (e) {
-    console.error(e)
+    logger.error("Error in market operation", { error: e })
     res
       .status(500)
       .json(createErrorResponse({ message: "Internal server error" }))
@@ -2034,7 +2034,7 @@ export const get_game_item: RequestHandler = async (req, res) => {
       }),
     )
   } catch (e) {
-    console.error(e)
+    logger.error("Error in market operation", { error: e })
     res
       .status(500)
       .json(createErrorResponse({ message: "Internal server error" }))

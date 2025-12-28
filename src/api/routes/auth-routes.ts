@@ -12,6 +12,7 @@ import {
   mapErrorCodeToFrontend,
   CitizenIDErrorCodes,
 } from "../util/auth-helpers.js"
+import logger from "../../logger/logger.js"
 
 /**
  * Setup authentication routes
@@ -157,14 +158,14 @@ export function setupAuthRoutes(app: any, frontendUrl: URL): void {
         },
         (err: any, user: User | false, info: any) => {
           if (err) {
-            console.error("[CitizenID login callback] Error:", {
+            logger.error("[CitizenID login callback] Error", {
               error: err,
               errorMessage: err?.message,
               errorCode: err?.code,
               hasUser: !!user,
               info,
             })
-            console.error("Citizen ID login error:", err)
+            logger.error("Citizen ID login error", { error: err })
             const errorCode = mapErrorCodeToFrontend(err.code)
 
             // If username is taken, redirect to Discord login with settings path
@@ -200,13 +201,13 @@ export function setupAuthRoutes(app: any, frontendUrl: URL): void {
           }
 
           if (!user) {
-            console.error("[CitizenID login callback] No user returned:", {
+            logger.error("[CitizenID login callback] No user returned", {
               hasErr: !!err,
               err,
               user,
               info,
             })
-            console.error("Citizen ID login: No user returned", err, user, info)
+            logger.error("Citizen ID login: No user returned", { err, user, info })
             const redirectTo = new URL("/", frontendUrl)
             redirectTo.searchParams.set(
               "error",
@@ -217,7 +218,7 @@ export function setupAuthRoutes(app: any, frontendUrl: URL): void {
 
           req.logIn(user, (loginErr) => {
             if (loginErr) {
-              console.error("Citizen ID login error:", loginErr)
+              logger.error("Citizen ID login error", { error: loginErr })
               const redirectTo = new URL("/", frontendUrl)
               redirectTo.searchParams.set(
                 "error",
@@ -277,14 +278,14 @@ export function setupAuthRoutes(app: any, frontendUrl: URL): void {
         },
         (err: any, user: User | false, info: any) => {
           if (err) {
-            console.error("[CitizenID link callback] Error:", {
+            logger.error("[CitizenID link callback] Error", {
               error: err,
               errorMessage: err?.message,
               errorCode: err?.code,
               hasUser: !!user,
               info,
             })
-            console.error("Citizen ID linking error:", err)
+            logger.error("Citizen ID linking error", { error: err })
             const errorCode = mapErrorCodeToFrontend(err.code)
             const redirectTo = new URL("/settings", frontendUrl)
             redirectTo.searchParams.set("error", errorCode)
@@ -308,17 +309,15 @@ export function setupAuthRoutes(app: any, frontendUrl: URL): void {
           }
 
           if (!user) {
-            console.error("[CitizenID link callback] No user returned:", {
+            logger.error("[CitizenID link callback] No user returned", {
               hasErr: !!err,
               err,
               user,
               info,
             })
-            console.error(
+            logger.error(
               "Citizen ID linking: No user returned",
-              err,
-              user,
-              info,
+              { err, user, info },
             )
             const redirectTo = new URL("/settings", frontendUrl)
             redirectTo.searchParams.set(
@@ -330,7 +329,7 @@ export function setupAuthRoutes(app: any, frontendUrl: URL): void {
 
           req.logIn(user, (loginErr) => {
             if (loginErr) {
-              console.error("Citizen ID linking login error:", loginErr)
+              logger.error("Citizen ID linking login error", { error: loginErr })
               const redirectTo = new URL("/settings", frontendUrl)
               redirectTo.searchParams.set(
                 "error",
@@ -349,7 +348,7 @@ export function setupAuthRoutes(app: any, frontendUrl: URL): void {
   // Logout route
   app.get("/logout", function (req: Request, res: Response) {
     req.logout({ keepSessionInfo: false }, (err) => {
-      console.log(err)
+      logger.error("Error in auth route", { error: err })
     })
     res.redirect(frontendUrl.toString() || "/")
   })

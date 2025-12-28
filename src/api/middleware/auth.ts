@@ -5,6 +5,7 @@ import { createErrorResponse } from "../routes/v1/util/response.js"
 import { database } from "../../clients/database/knex-db.js"
 import * as profileDb from "../routes/v1/profiles/database.js"
 import * as contractorDb from "../routes/v1/contractors/database.js"
+import logger from "../../logger/logger.js"
 
 // Extended Request interface for token support
 export interface AuthRequest extends Request {
@@ -69,7 +70,7 @@ async function authenticateToken(
       },
     }
   } catch (error) {
-    console.error("Token authentication error:", error)
+    logger.error("Token authentication error", { error })
     return null
   }
 }
@@ -180,7 +181,7 @@ export async function userAuthorized(
       return
     }
   } catch (e) {
-    console.error(e)
+    logger.error("Error in userAuthorized", { error: e })
     res.status(400).json({ error: "Bad request" })
     return
   }
@@ -246,7 +247,7 @@ export async function verifiedUser(
       return false
     }
   } catch (e) {
-    console.error(e)
+    logger.error("Error in adminAuthorized", { error: e })
     res.status(400).json(createErrorResponse({ message: "Bad request" }))
     return false
   }
@@ -320,7 +321,7 @@ export async function adminAuthorized(
       return
     }
   } catch (e) {
-    console.error(e)
+    logger.error("Error in verifiedUser", { error: e })
     res.status(400).json(createErrorResponse({ message: "Bad request" }))
     return
   }
@@ -522,7 +523,7 @@ export function requireContractorAccessFromSpectrumId() {
           return
         }
       } catch (error) {
-        console.error("Contractor access validation error:", error)
+        logger.error("Contractor access validation error", { error })
         res.status(500).json({
           error: "Failed to validate contractor access",
         })
