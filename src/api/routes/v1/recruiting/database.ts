@@ -145,6 +145,23 @@ export async function getAllRecruitingPostsPaginated(
     })
   }
 
+  // Language filtering: filter by contractor's supported languages (OR logic)
+  if (searchQuery.language_codes && searchQuery.language_codes.length > 0) {
+    // Build array expression using knex().raw() with safe parameter binding
+    // Create placeholders for each language code and bind them as parameters
+    const placeholders = searchQuery.language_codes.map(() => '?').join(',')
+    const languageArrayRaw = knex().raw(
+      'ARRAY[' + placeholders + ']::text[]',
+      searchQuery.language_codes,
+    )
+    query = query.andWhereRaw(
+      knex().raw(
+        'EXISTS (SELECT 1 FROM contractors WHERE contractors.contractor_id = recruiting_posts.contractor_id AND COALESCE(contractors.supported_languages, ARRAY[\'en\']) && ?)',
+        [languageArrayRaw],
+      ),
+    )
+  }
+
   return query
     .limit(searchQuery.pageSize)
     .offset(searchQuery.pageSize * searchQuery.index)

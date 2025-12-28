@@ -1042,6 +1042,23 @@ export async function getAllContractorsPaginated(
     })
   }
 
+  // Language filtering: filter by contractor's supported languages (OR logic)
+  if (searchQuery.language_codes && searchQuery.language_codes.length > 0) {
+    // Build array expression using knex().raw() with safe parameter binding
+    // Create placeholders for each language code and bind them as parameters
+    const placeholders = searchQuery.language_codes.map(() => '?').join(',')
+    const languageArrayRaw = knex().raw(
+      'ARRAY[' + placeholders + ']::text[]',
+      searchQuery.language_codes,
+    )
+    query = query.andWhereRaw(
+      knex().raw(
+        'COALESCE(supported_languages, ARRAY[\'en\']) && ?',
+        [languageArrayRaw],
+      ),
+    )
+  }
+
   return query
     .limit(searchQuery.pageSize)
     .offset(searchQuery.pageSize * searchQuery.index)
@@ -1084,6 +1101,23 @@ export async function getAllContractorsCount(
         .orWhere("name", "ILIKE", "%" + searchQuery.query + "%")
         .orWhere("spectrum_id", "ILIKE", "%" + searchQuery.query + "%")
     })
+  }
+
+  // Language filtering: filter by contractor's supported languages (OR logic)
+  if (searchQuery.language_codes && searchQuery.language_codes.length > 0) {
+    // Build array expression using knex().raw() with safe parameter binding
+    // Create placeholders for each language code and bind them as parameters
+    const placeholders = searchQuery.language_codes.map(() => '?').join(',')
+    const languageArrayRaw = knex().raw(
+      'ARRAY[' + placeholders + ']::text[]',
+      searchQuery.language_codes,
+    )
+    query = query.andWhereRaw(
+      knex().raw(
+        'COALESCE(supported_languages, ARRAY[\'en\']) && ?',
+        [languageArrayRaw],
+      ),
+    )
   }
 
   return query.count()
@@ -1196,8 +1230,9 @@ export async function getContractorBadges(contractor_id: string): Promise<{
  */
 export async function searchContractors(
   query: string,
+  language_codes?: string[],
 ): Promise<DBContractor[]> {
-  return knex()<DBContractor>("contractors")
+  let dbQuery = knex()<DBContractor>("contractors")
     .where({ archived: false })
     .andWhere((qb) => {
       qb.where("spectrum_id", "ilike", `%${query}%`).orWhere(
@@ -1206,7 +1241,25 @@ export async function searchContractors(
         `%${query}%`,
       )
     })
-    .select()
+
+  // Language filtering: filter by contractor's supported languages (OR logic)
+  if (language_codes && language_codes.length > 0) {
+    // Build array expression using knex().raw() with safe parameter binding
+    // Create placeholders for each language code and bind them as parameters
+    const placeholders = language_codes.map(() => '?').join(',')
+    const languageArrayRaw = knex().raw(
+      'ARRAY[' + placeholders + ']::text[]',
+      language_codes,
+    )
+    dbQuery = dbQuery.andWhereRaw(
+      knex().raw(
+        'COALESCE(supported_languages, ARRAY[\'en\']) && ?',
+        [languageArrayRaw],
+      ),
+    )
+  }
+
+  return dbQuery.select()
 }
 
 /**
@@ -1250,26 +1303,16 @@ export async function getContractorLanguages(
     .select("supported_languages")
     .first()
 
-  if (!contractor || !contractor.supported_languages) {
+  if (!contractor || !contractor.supported_languages || contractor.supported_languages.length === 0) {
     return ["en"] // Default to English
   }
 
-  try {
-    const languages = JSON.parse(contractor.supported_languages)
-    if (Array.isArray(languages) && languages.length > 0) {
-      return languages
-    }
-    // Empty array or invalid, default to English
-    return ["en"]
-  } catch {
-    // Invalid JSON, default to English
-    return ["en"]
-  }
+  return contractor.supported_languages
 }
 
 /**
  * Set contractor's supported languages.
- * Stores as JSON array string. English is default but not required.
+ * Stores as PostgreSQL array. English is default but not required.
  */
 export async function setContractorLanguages(
   contractor_id: string,
@@ -1278,10 +1321,7 @@ export async function setContractorLanguages(
   // Deduplicate
   const uniqueCodes = [...new Set(language_codes)]
 
-  // Store as JSON array (empty array is allowed)
-  const valueToStore = JSON.stringify(uniqueCodes)
-
   await knex()<DBContractor>("contractors")
     .where({ contractor_id })
-    .update({ supported_languages: valueToStore })
+    .update({ supported_languages: uniqueCodes })
 }

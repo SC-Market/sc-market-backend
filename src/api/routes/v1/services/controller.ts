@@ -158,6 +158,7 @@ export const services_get_public: RequestHandler = async (req, res, next) => {
     paymentType,
     sortBy,
     sortOrder,
+    language_codes,
   } = req.query
 
   // Parse and validate parameters
@@ -171,6 +172,9 @@ export const services_get_public: RequestHandler = async (req, res, next) => {
     paymentType: paymentType as string,
     sortBy: sortBy as "timestamp" | "cost" | "service_name",
     sortOrder: sortOrder as "asc" | "desc",
+    language_codes: language_codes
+      ? (language_codes as string).split(",").map((s) => s.trim()).filter(Boolean)
+      : undefined,
   }
 
   const result = await serviceDb.getServicesPaginated(params)

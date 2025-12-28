@@ -292,7 +292,15 @@ export const get_spectrum_id_audit_logs: RequestHandler = async (
 export const get_search_query: RequestHandler = async (req, res, next) => {
   const query = req.params["query"]
 
-  const contractors = await contractorDb.searchContractors(query)
+  // Parse language_codes from query params if provided
+  const language_codes = req.query.language_codes
+    ? (req.query.language_codes as string)
+        .split(",")
+        .map((s) => s.trim())
+        .filter(Boolean)
+    : undefined
+
+  const contractors = await contractorDb.searchContractors(query, language_codes)
 
   res.json(
     createResponse(
@@ -2236,6 +2244,7 @@ export const get_root: RequestHandler = async (req, res, next) => {
       fields: string
       rating: string
       pageSize: string
+      language_codes?: string
     }
 
     const searchData = convertQuery(query)

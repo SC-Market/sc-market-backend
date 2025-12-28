@@ -2235,6 +2235,41 @@ export async function searchMarket(
     )
   }
 
+  // Language filtering: filter by seller's supported languages (OR logic)
+  if (searchQuery.language_codes && searchQuery.language_codes.length > 0) {
+    // Build array expression using knex().raw() with safe parameter binding
+    // Create placeholders for each language code and bind them as parameters
+    const placeholders = searchQuery.language_codes.map(() => '?').join(',')
+    const languageArrayRaw = knex().raw(
+      'ARRAY[' + placeholders + ']::text[]',
+      searchQuery.language_codes,
+    )
+    
+    query = query.andWhere((qb) => {
+      qb.where((subQb) => {
+        // For user sellers: check if user's supported_languages contains any of the selected languages
+        subQb
+          .whereNotNull("market_search_materialized.user_seller_id")
+          .andWhereRaw(
+            knex().raw(
+              'EXISTS (SELECT 1 FROM accounts WHERE accounts.user_id = market_search_materialized.user_seller_id AND COALESCE(accounts.supported_languages, ARRAY[\'en\']) && ?)',
+              [languageArrayRaw],
+            ),
+          )
+      }).orWhere((subQb) => {
+        // For contractor sellers: check if contractor's supported_languages contains any of the selected languages
+        subQb
+          .whereNotNull("market_search_materialized.contractor_seller_id")
+          .andWhereRaw(
+            knex().raw(
+              'EXISTS (SELECT 1 FROM contractors WHERE contractors.contractor_id = market_search_materialized.contractor_seller_id AND COALESCE(contractors.supported_languages, ARRAY[\'en\']) && ?)',
+              [languageArrayRaw],
+            ),
+          )
+      })
+    })
+  }
+
   if (andWhere) {
     query = query.andWhere(andWhere)
   }
@@ -2379,6 +2414,41 @@ export async function searchMarketUnmaterialized(
 
   if (searchQuery.statuses && searchQuery.statuses.length > 0) {
     query = query.whereIn("market_listings.status", searchQuery.statuses)
+  }
+
+  // Language filtering: filter by seller's supported languages (OR logic)
+  if (searchQuery.language_codes && searchQuery.language_codes.length > 0) {
+    // Build array expression using knex().raw() with safe parameter binding
+    // Create placeholders for each language code and bind them as parameters
+    const placeholders = searchQuery.language_codes.map(() => '?').join(',')
+    const languageArrayRaw = knex().raw(
+      'ARRAY[' + placeholders + ']::text[]',
+      searchQuery.language_codes,
+    )
+    
+    query = query.andWhere((qb) => {
+      qb.where((subQb) => {
+        // For user sellers: check if user's supported_languages contains any of the selected languages
+        subQb
+          .whereNotNull("market_listings.user_seller_id")
+          .andWhereRaw(
+            knex().raw(
+              'EXISTS (SELECT 1 FROM accounts WHERE accounts.user_id = market_listings.user_seller_id AND COALESCE(accounts.supported_languages, ARRAY[\'en\']) && ?)',
+              [languageArrayRaw],
+            ),
+          )
+      }).orWhere((subQb) => {
+        // For contractor sellers: check if contractor's supported_languages contains any of the selected languages
+        subQb
+          .whereNotNull("market_listings.contractor_seller_id")
+          .andWhereRaw(
+            knex().raw(
+              'EXISTS (SELECT 1 FROM contractors WHERE contractors.contractor_id = market_listings.contractor_seller_id AND COALESCE(contractors.supported_languages, ARRAY[\'en\']) && ?)',
+              [languageArrayRaw],
+            ),
+          )
+      })
+    })
   }
 
   if (andWhere) {

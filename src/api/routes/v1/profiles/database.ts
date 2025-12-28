@@ -1120,26 +1120,16 @@ export async function getUserLanguages(user_id: string): Promise<string[]> {
     .select("supported_languages")
     .first()
 
-  if (!user || !user.supported_languages) {
+  if (!user || !user.supported_languages || user.supported_languages.length === 0) {
     return ["en"] // Default to English
   }
 
-  try {
-    const languages = JSON.parse(user.supported_languages)
-    if (Array.isArray(languages) && languages.length > 0) {
-      return languages
-    }
-    // Empty array or invalid, default to English
-    return ["en"]
-  } catch {
-    // Invalid JSON, default to English
-    return ["en"]
-  }
+  return user.supported_languages
 }
 
 /**
  * Set user's supported languages.
- * Stores as JSON array string. English is default but not required.
+ * Stores as PostgreSQL array. English is default but not required.
  */
 export async function setUserLanguages(
   user_id: string,
@@ -1148,10 +1138,7 @@ export async function setUserLanguages(
   // Deduplicate
   const uniqueCodes = [...new Set(language_codes)]
 
-  // Store as JSON array (empty array is allowed)
-  const valueToStore = JSON.stringify(uniqueCodes)
-
   await knex()<DBUser>("accounts")
     .where({ user_id })
-    .update({ supported_languages: valueToStore })
+    .update({ supported_languages: uniqueCodes })
 }
