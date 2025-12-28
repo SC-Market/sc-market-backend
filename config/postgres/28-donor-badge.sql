@@ -1,29 +1,27 @@
--- Migration 25: Optimize badge views by consolidating queries
--- Replaces function calls with consolidated CTEs for 66-75% performance improvement
--- This migration replaces the user_badge_data view with an optimized version
---
--- IMPORTANT: Architecture for adding new badges (see migration 28-donor-badge.sql):
--- 1. user_badge_data (regular view) - raw badge calculation data
--- 2. user_badges_view (regular view) - badge calculation logic (intermediate view)
--- 3. user_badges_materialized (materialized view) - selects FROM user_badges_view
---
--- When adding new badges:
--- - Add new data column to user_badge_data at the END (after calculated_at)
--- - Use CREATE OR REPLACE VIEW on user_badge_data (no DROP needed)
--- - Use CREATE OR REPLACE VIEW on user_badges_view to add badge logic (no DROP needed)
--- - Just REFRESH MATERIALIZED VIEW user_badges_materialized (no DROP needed!)
--- - This allows non-destructive badge additions
+-- Migration 28: Add donor/patron badge system
+-- Adds donor_start_date column to accounts table and integrates donor badges into badge system
+-- Uses CREATE OR REPLACE VIEW pattern: Add new column at END of SELECT list (after calculated_at)
+-- This allows updating base view without dropping it (materialized view still needs drop/recreate)
+-- Tested in 28-donor-badge-test.sql - pattern verified to work
 
 BEGIN;
 
--- Drop the materialized view first (it depends on the regular view)
+-- Step 1: Add donor_start_date column to accounts table
+ALTER TABLE public.accounts
+ADD COLUMN donor_start_date timestamp without time zone NULL;
+
+COMMENT ON COLUMN public.accounts.donor_start_date IS
+  'Timestamp when user became a donor/patron. NULL if not a donor. Used to calculate donor badge tiers.';
+
+-- Step 2: Update base view to include donor duration calculation
+-- Strategy: Add new column at the END of SELECT list to allow CREATE OR REPLACE VIEW
+-- This allows us to update the base view without dropping it (tested in 28-donor-badge-test.sql)
+-- Only modify the account_data CTE to add donor_duration_months
+-- Note: We'll create an intermediate view so materialized view can be refreshed instead of dropped
 DROP MATERIALIZED VIEW IF EXISTS public.user_badges_materialized;
 
--- Drop the old view
-DROP VIEW IF EXISTS public.user_badge_data;
-
--- Create optimized view using CTEs to consolidate queries
-CREATE VIEW public.user_badge_data AS
+-- Use CREATE OR REPLACE VIEW - works because new column is added at the end
+CREATE OR REPLACE VIEW public.user_badge_data AS
 WITH entities AS (
   -- Users
   SELECT user_id, NULL::uuid AS contractor_id
@@ -260,6 +258,7 @@ contractor_account_dates AS (
   GROUP BY contractor_id
 ),
 -- Account age and creation date (optimized with pre-calculated contractor dates)
+-- MODIFIED: Added donor_duration_months calculation
 account_data AS (
   SELECT 
     e.user_id,
@@ -275,7 +274,13 @@ account_data AS (
     CASE 
       WHEN e.user_id IS NOT NULL THEN a.created_at
       ELSE NULL
-    END AS account_created_at
+    END AS account_created_at,
+    -- Donor duration in months (only for users, NULL if not a donor)
+    CASE 
+      WHEN e.user_id IS NOT NULL AND a.donor_start_date IS NOT NULL THEN
+        (EXTRACT(EPOCH FROM (NOW() - a.donor_start_date)) / 2592000)::int
+      ELSE NULL
+    END AS donor_duration_months
   FROM entities e
   LEFT JOIN accounts a ON e.user_id = a.user_id
   WHERE e.user_id IS NOT NULL
@@ -289,7 +294,9 @@ account_data AS (
     (EXTRACT(YEAR FROM AGE(NOW(), cad.oldest_created_at)) * 12 + 
      EXTRACT(MONTH FROM AGE(NOW(), cad.oldest_created_at)))::int AS account_age_months,
     -- Contractor account creation date
-    cad.oldest_created_at AS account_created_at
+    cad.oldest_created_at AS account_created_at,
+    -- Contractors don't have donor status
+    NULL::int AS donor_duration_months
   FROM entities e
   INNER JOIN contractor_account_dates cad ON e.contractor_id = cad.contractor_id
   WHERE e.contractor_id IS NOT NULL
@@ -329,7 +336,10 @@ SELECT
   ad.account_created_at,
   
   -- Timestamps for refresh tracking
-  NOW() AS calculated_at
+  NOW() AS calculated_at,
+  
+  -- Donor duration (new - added at end to allow CREATE OR REPLACE VIEW)
+  ad.donor_duration_months
 FROM entities e
 LEFT JOIN user_rating_aggregated ura ON e.user_id = ura.user_id
 LEFT JOIN contractor_rating_aggregated cra ON e.contractor_id = cra.contractor_id
@@ -344,10 +354,12 @@ LEFT JOIN completion_time_metrics ctm ON (e.user_id IS NOT NULL AND e.user_id = 
 LEFT JOIN account_data ad ON (e.user_id IS NOT NULL AND e.user_id = ad.user_id)
                           OR (e.contractor_id IS NOT NULL AND e.contractor_id = ad.contractor_id);
 
-COMMENT ON VIEW public.user_badge_data IS 'Optimized base view containing all raw data needed for badge calculations. Uses consolidated CTEs instead of individual function calls for 66-75% performance improvement.';
+COMMENT ON VIEW public.user_badge_data IS 'Optimized base view containing all raw data needed for badge calculations. Includes donor duration calculation for donor badges. When adding new badge data columns, always add them at the END of the SELECT list to allow CREATE OR REPLACE VIEW updates.';
 
--- Recreate the materialized view (same structure as before, but now uses optimized base view)
-CREATE MATERIALIZED VIEW public.user_badges_materialized AS
+-- Step 3: Create intermediate view for badge calculations
+-- This allows us to update badge logic with CREATE OR REPLACE VIEW without dropping materialized view
+-- The materialized view will select FROM this view, so we can just refresh it after updates
+CREATE OR REPLACE VIEW public.user_badges_view AS
 SELECT 
   entity_id,
   entity_type,
@@ -355,36 +367,56 @@ SELECT
   contractor_id,
   
   -- Array of badge identifiers (only highest tier per category)
+  -- Using nested CASE statements to ensure mutual exclusivity (following migration 27 pattern)
   ARRAY_REMOVE(ARRAY[
     -- Rating badges - only highest tier applies (using 0-5 scale: 4.995 = 99.9%, 4.95 = 99%, 4.75 = 95%, 4.5 = 90%)
-    CASE WHEN avg_rating >= 4.995 AND total_orders >= 25 THEN 'rating_99_9' END,
-    CASE WHEN avg_rating >= 4.95 AND avg_rating < 4.995 AND total_orders >= 25 THEN 'rating_99' END,
-    CASE WHEN avg_rating >= 4.75 AND avg_rating < 4.95 AND total_orders >= 25 THEN 'rating_95' END,
-    CASE WHEN avg_rating >= 4.5 AND avg_rating < 4.75 AND total_orders >= 25 THEN 'rating_90' END,
+    CASE 
+      WHEN avg_rating >= 4.995 AND total_orders >= 25 THEN 'rating_99_9'
+      WHEN avg_rating >= 4.95 AND total_orders >= 25 THEN 'rating_99'
+      WHEN avg_rating >= 4.75 AND total_orders >= 25 THEN 'rating_95'
+      WHEN avg_rating >= 4.5 AND total_orders >= 25 THEN 'rating_90'
+    END,
     -- Streak badges - only highest tier applies
-    CASE WHEN rating_streak >= 50 THEN 'streak_pro' END,
-    CASE WHEN rating_streak >= 25 AND rating_streak < 50 THEN 'streak_gold' END,
-    CASE WHEN rating_streak >= 15 AND rating_streak < 25 THEN 'streak_silver' END,
-    CASE WHEN rating_streak >= 5 AND rating_streak < 15 THEN 'streak_copper' END,
+    CASE 
+      WHEN rating_streak >= 50 THEN 'streak_pro'
+      WHEN rating_streak >= 25 THEN 'streak_gold'
+      WHEN rating_streak >= 15 THEN 'streak_silver'
+      WHEN rating_streak >= 5 THEN 'streak_copper'
+    END,
     -- Volume badges - only highest tier applies
-    CASE WHEN fulfilled_orders >= 5000 THEN 'volume_pro' END,
-    CASE WHEN fulfilled_orders >= 1000 AND fulfilled_orders < 5000 THEN 'volume_gold' END,
-    CASE WHEN fulfilled_orders >= 500 AND fulfilled_orders < 1000 THEN 'volume_silver' END,
-    CASE WHEN fulfilled_orders >= 100 AND fulfilled_orders < 500 THEN 'volume_copper' END,
+    CASE 
+      WHEN fulfilled_orders >= 5000 THEN 'volume_pro'
+      WHEN fulfilled_orders >= 1000 THEN 'volume_gold'
+      WHEN fulfilled_orders >= 500 THEN 'volume_silver'
+      WHEN fulfilled_orders >= 100 THEN 'volume_copper'
+    END,
     -- Activity badges - only highest applicable
-    CASE WHEN orders_last_30_days >= 20 THEN 'power_seller' END,
-    CASE WHEN orders_last_30_days >= 10 AND orders_last_30_days < 20 THEN 'busy_seller' END,
-    CASE WHEN orders_last_30_days >= 5 AND orders_last_30_days < 10 THEN 'active_seller' END,
-    -- Speed badges - only highest tier applies
-    CASE WHEN avg_completion_time_hours IS NOT NULL AND avg_completion_time_hours < 3 AND fulfilled_orders >= 100 THEN 'speed_pro' END,
-    CASE WHEN avg_completion_time_hours IS NOT NULL AND avg_completion_time_hours < 6 AND fulfilled_orders >= 50 THEN 'speed_gold' END,
-    CASE WHEN avg_completion_time_hours IS NOT NULL AND avg_completion_time_hours < 12 AND fulfilled_orders >= 25 THEN 'speed_silver' END,
-    CASE WHEN avg_completion_time_hours IS NOT NULL AND avg_completion_time_hours < 24 AND fulfilled_orders >= 10 THEN 'speed_copper' END,
+    CASE 
+      WHEN orders_last_30_days >= 20 THEN 'power_seller'
+      WHEN orders_last_30_days >= 10 THEN 'busy_seller'
+      WHEN orders_last_30_days >= 5 THEN 'active_seller'
+    END,
+    -- Speed badges - only highest tier applies (mutually exclusive conditions)
+    CASE 
+      WHEN avg_completion_time_hours IS NOT NULL AND avg_completion_time_hours < 3 AND fulfilled_orders >= 100 THEN 'speed_pro'
+      WHEN avg_completion_time_hours IS NOT NULL AND avg_completion_time_hours < 6 AND fulfilled_orders >= 50 THEN 'speed_gold'
+      WHEN avg_completion_time_hours IS NOT NULL AND avg_completion_time_hours < 12 AND fulfilled_orders >= 25 THEN 'speed_silver'
+      WHEN avg_completion_time_hours IS NOT NULL AND avg_completion_time_hours < 24 AND fulfilled_orders >= 10 THEN 'speed_copper'
+    END,
     -- Consistency badges - only highest tier applies
-    CASE WHEN account_age_months >= 36 AND orders_last_90_days >= 20 AND fulfilled_orders >= 200 THEN 'consistency_pro' END,
-    CASE WHEN account_age_months >= 24 AND account_age_months < 36 AND orders_last_90_days >= 15 AND fulfilled_orders >= 100 THEN 'consistency_gold' END,
-    CASE WHEN account_age_months >= 12 AND account_age_months < 24 AND orders_last_90_days >= 10 AND fulfilled_orders >= 50 THEN 'consistency_silver' END,
-    CASE WHEN account_age_months >= 6 AND account_age_months < 12 AND orders_last_90_days >= 5 AND fulfilled_orders >= 25 THEN 'consistency_copper' END,
+    CASE 
+      WHEN account_age_months >= 36 AND orders_last_90_days >= 20 AND fulfilled_orders >= 200 THEN 'consistency_pro'
+      WHEN account_age_months >= 24 AND orders_last_90_days >= 15 AND fulfilled_orders >= 100 THEN 'consistency_gold'
+      WHEN account_age_months >= 12 AND orders_last_90_days >= 10 AND fulfilled_orders >= 50 THEN 'consistency_silver'
+      WHEN account_age_months >= 6 AND orders_last_90_days >= 5 AND fulfilled_orders >= 25 THEN 'consistency_copper'
+    END,
+    -- Donor badges - only highest tier applies (new)
+    CASE 
+      WHEN donor_duration_months IS NOT NULL AND donor_duration_months >= 12 THEN 'donor_pro'
+      WHEN donor_duration_months IS NOT NULL AND donor_duration_months >= 6 THEN 'donor_gold'
+      WHEN donor_duration_months IS NOT NULL AND donor_duration_months >= 3 THEN 'donor_silver'
+      WHEN donor_duration_months IS NOT NULL AND donor_duration_months >= 1 THEN 'donor_copper'
+    END,
     -- Early adopter badge (special, can display with others)
     CASE WHEN account_age_months >= 24 THEN 'early_adopter' END,
     -- Responsive badge
@@ -406,11 +438,20 @@ SELECT
     'avg_completion_time_hours', avg_completion_time_hours,
     'account_age_months', account_age_months,
     'account_created_at', account_created_at,
+    'donor_duration_months', donor_duration_months,
     'calculated_at', calculated_at
   ) AS badge_metadata,
   
   calculated_at
 FROM public.user_badge_data;
+
+COMMENT ON VIEW public.user_badges_view IS 'Intermediate view for badge calculations. Can be updated with CREATE OR REPLACE VIEW when adding new badges. The materialized view selects from this, allowing non-destructive badge updates.';
+
+-- Step 4: Recreate materialized view to select from intermediate view
+-- This is a one-time migration - future badge additions won't need to drop/recreate
+-- The materialized view now selects FROM user_badges_view, so we can just refresh it
+CREATE MATERIALIZED VIEW public.user_badges_materialized AS
+SELECT * FROM public.user_badges_view;
 
 -- Recreate indexes on materialized view
 CREATE UNIQUE INDEX user_badges_materialized_entity_idx 
@@ -424,10 +465,9 @@ CREATE INDEX user_badges_materialized_contractor_id_idx
   ON public.user_badges_materialized(contractor_id) 
   WHERE contractor_id IS NOT NULL;
 
-COMMENT ON MATERIALIZED VIEW public.user_badges_materialized IS 'Materialized view with pre-calculated badge identifiers and metadata for fast lookups. Now uses optimized base view for 66-75% faster refresh times.';
+COMMENT ON MATERIALIZED VIEW public.user_badges_materialized IS 'Materialized view with pre-calculated badge identifiers and metadata. Selects from user_badges_view. Can be refreshed (not dropped) when badge logic changes in the intermediate view.';
 
 -- Populate the materialized view
--- Note: This may take some time on first run, but subsequent refreshes will be much faster
 REFRESH MATERIALIZED VIEW public.user_badges_materialized;
 
 COMMIT;

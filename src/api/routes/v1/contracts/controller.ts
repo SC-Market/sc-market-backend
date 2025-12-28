@@ -101,6 +101,32 @@ export const contracts_post_contract_id_offers: RequestHandler = async (
     return
   }
 
+  // Validate order limits
+  // For contract offers, size is 0 (no market listings)
+  const seller_contractor_id = contractor?.contractor_id || null
+  const seller_user_id = contractor ? null : user?.user_id || null
+
+  try {
+    const { validateOrderLimits } = await import("../orders/helpers.js")
+    await validateOrderLimits(
+      seller_contractor_id,
+      seller_user_id,
+      0, // No market listings for contract offers
+      req.body.cost,
+    )
+  } catch (error) {
+    res.status(400).json(
+      createErrorResponse({
+        message:
+          error instanceof Error
+            ? error.message
+            : "Order does not meet size or value requirements",
+        code: "ORDER_LIMIT_VIOLATION",
+      }),
+    )
+    return
+  }
+
   const { session } = await createOffer(
     {
       assigned_id: contractor ? null : user?.user_id,

@@ -73,6 +73,7 @@ orderSettingsRouter.post("/settings", userAuthorized, async (req, res) => {
   // For require_availability, message_content is not needed (can be empty)
   // For stock_subtraction_timing, message_content must be "on_received" or "dont_subtract"
   // (on_accepted is the default when no setting exists, so we don't store it)
+  // For order limit setting types, message_content must be a valid non-negative integer
   // For other setting types, message_content is required
   if (setting_type === "stock_subtraction_timing") {
     if (
@@ -83,6 +84,32 @@ orderSettingsRouter.post("/settings", userAuthorized, async (req, res) => {
         createErrorResponse({
           error:
             "message_content must be 'on_received' or 'dont_subtract' for stock_subtraction_timing",
+        }),
+      )
+      return
+    }
+  } else if (
+    [
+      "min_order_size",
+      "max_order_size",
+      "min_order_value",
+      "max_order_value",
+    ].includes(setting_type)
+  ) {
+    // Validate numeric values for order limit settings
+    if (!message_content || isNaN(parseInt(message_content, 10))) {
+      res.status(400).json(
+        createErrorResponse({
+          error: "message_content must be a valid number for this setting_type",
+        }),
+      )
+      return
+    }
+    const numValue = parseInt(message_content, 10)
+    if (numValue < 0) {
+      res.status(400).json(
+        createErrorResponse({
+          error: "Value must be non-negative",
         }),
       )
       return
@@ -102,6 +129,10 @@ orderSettingsRouter.post("/settings", userAuthorized, async (req, res) => {
       "order_message",
       "require_availability",
       "stock_subtraction_timing",
+      "min_order_size",
+      "max_order_size",
+      "min_order_value",
+      "max_order_value",
     ].includes(setting_type)
   ) {
     res.status(400).json(createErrorResponse({ error: "Invalid setting_type" }))
@@ -320,6 +351,7 @@ orderSettingsRouter.post(
     // For require_availability, message_content is not needed (can be empty)
     // For stock_subtraction_timing, message_content must be "on_received" or "dont_subtract"
     // (on_accepted is the default when no setting exists, so we don't store it)
+    // For order limit setting types, message_content must be a valid non-negative integer
     // For other setting types, message_content is required
     if (setting_type === "stock_subtraction_timing") {
       if (
@@ -330,6 +362,36 @@ orderSettingsRouter.post(
           createErrorResponse({
             error:
               "message_content must be 'on_received' or 'dont_subtract' for stock_subtraction_timing",
+          }),
+        )
+        return
+      }
+    } else if (
+      [
+        "min_order_size",
+        "max_order_size",
+        "min_order_value",
+        "max_order_value",
+      ].includes(setting_type)
+    ) {
+      // Validate numeric values for order limit settings
+      if (!message_content || isNaN(parseInt(message_content, 10))) {
+        logger.warn("Invalid message_content for order limit setting", {
+          spectrum_id,
+          setting_type,
+        })
+        res.status(400).json(
+          createErrorResponse({
+            error: "message_content must be a valid number for this setting_type",
+          }),
+        )
+        return
+      }
+      const numValue = parseInt(message_content, 10)
+      if (numValue < 0) {
+        res.status(400).json(
+          createErrorResponse({
+            error: "Value must be non-negative",
           }),
         )
         return
@@ -353,6 +415,10 @@ orderSettingsRouter.post(
         "order_message",
         "require_availability",
         "stock_subtraction_timing",
+        "min_order_size",
+        "max_order_size",
+        "min_order_value",
+        "max_order_value",
       ].includes(setting_type)
     ) {
       logger.warn("Invalid setting type for order setting", {
@@ -607,6 +673,97 @@ orderSettingsRouter.get(
       res.status(500).json(
         createErrorResponse({
           error: "Failed to check availability requirement",
+        }),
+      )
+    }
+  },
+)
+
+// =============================================================================
+// ORDER LIMITS CHECK ENDPOINTS
+// =============================================================================
+
+// GET /api/v1/orders/limits/contractor/:spectrum_id/check - Get order limits for contractor
+orderSettingsRouter.get(
+  "/limits/contractor/:spectrum_id/check",
+  userAuthorized,
+  valid_contractor,
+  async (req, res) => {
+    const contractor = req.contractor!
+
+    try {
+      const settings = await orderDb.getOrderSettings(
+        "contractor",
+        contractor.contractor_id,
+      )
+
+      const limits = {
+        min_order_size: settings.find(
+          (s) => s.setting_type === "min_order_size" && s.enabled,
+        )?.message_content,
+        max_order_size: settings.find(
+          (s) => s.setting_type === "max_order_size" && s.enabled,
+        )?.message_content,
+        min_order_value: settings.find(
+          (s) => s.setting_type === "min_order_value" && s.enabled,
+        )?.message_content,
+        max_order_value: settings.find(
+          (s) => s.setting_type === "max_order_value" && s.enabled,
+        )?.message_content,
+      }
+
+      res.json(createResponse({ limits }))
+    } catch (error) {
+      logger.error("Error fetching contractor order limits", {
+        contractorId: contractor.contractor_id,
+        error: error instanceof Error ? error.message : String(error),
+        stack: error instanceof Error ? error.stack : undefined,
+      })
+      res.status(500).json(
+        createErrorResponse({
+          error: "Failed to fetch order limits",
+        }),
+      )
+    }
+  },
+)
+
+// GET /api/v1/orders/limits/user/:username/check - Get order limits for user
+orderSettingsRouter.get(
+  "/limits/user/:username/check",
+  userAuthorized,
+  validate_username("username"),
+  async (req, res) => {
+    const sellerUser = req.users!.get("username")!
+
+    try {
+      const settings = await orderDb.getOrderSettings("user", sellerUser.user_id)
+
+      const limits = {
+        min_order_size: settings.find(
+          (s) => s.setting_type === "min_order_size" && s.enabled,
+        )?.message_content,
+        max_order_size: settings.find(
+          (s) => s.setting_type === "max_order_size" && s.enabled,
+        )?.message_content,
+        min_order_value: settings.find(
+          (s) => s.setting_type === "min_order_value" && s.enabled,
+        )?.message_content,
+        max_order_value: settings.find(
+          (s) => s.setting_type === "max_order_value" && s.enabled,
+        )?.message_content,
+      }
+
+      res.json(createResponse({ limits }))
+    } catch (error) {
+      logger.error("Error fetching user order limits", {
+        userId: sellerUser.user_id,
+        error: error instanceof Error ? error.message : String(error),
+        stack: error instanceof Error ? error.stack : undefined,
+      })
+      res.status(500).json(
+        createErrorResponse({
+          error: "Failed to fetch order limits",
         }),
       )
     }

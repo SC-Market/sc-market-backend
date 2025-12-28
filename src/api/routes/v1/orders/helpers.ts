@@ -108,6 +108,156 @@ export async function validateAvailabilityRequirement(
   }
 }
 
+// =============================================================================
+// ORDER LIMITS VALIDATION HELPER FUNCTIONS
+// =============================================================================
+
+/**
+ * Get relevant order settings for a seller (contractor or user)
+ * @param contractor_id - Seller contractor ID (null if user seller)
+ * @param user_id - Seller user ID (null if contractor seller)
+ * @param setting_types - Array of setting types to fetch
+ * @returns Array of enabled order settings
+ */
+async function getRelevantOrderSettings(
+  contractor_id: string | null,
+  user_id: string | null,
+  setting_types: string[],
+): Promise<DBOrderSetting[]> {
+  const settings: DBOrderSetting[] = []
+
+  // If there's a contractor, use contractor settings only
+  if (contractor_id) {
+    const contractorSettings = await orderDb.getOrderSettings(
+      "contractor",
+      contractor_id,
+    )
+    settings.push(
+      ...contractorSettings.filter(
+        (s) => setting_types.includes(s.setting_type) && s.enabled,
+      ),
+    )
+    return settings
+  }
+
+  // If no contractor, use user settings
+  if (user_id) {
+    const userSettings = await orderDb.getOrderSettings("user", user_id)
+    settings.push(
+      ...userSettings.filter(
+        (s) => setting_types.includes(s.setting_type) && s.enabled,
+      ),
+    )
+  }
+
+  return settings
+}
+
+/**
+ * Validate order size and value against seller's limits
+ * @param seller_contractor_id - Seller contractor ID (null if user seller)
+ * @param seller_user_id - Seller user ID (null if contractor seller)
+ * @param offer_size - Total quantity of items (sum of market_listings quantities)
+ * @param offer_value - Offer cost in smallest currency unit
+ * @throws Error with message if validation fails
+ */
+export async function validateOrderLimits(
+  seller_contractor_id: string | null,
+  seller_user_id: string | null,
+  offer_size: number,
+  offer_value: bigint | string | number,
+): Promise<void> {
+  // Get relevant order settings
+  const settings = await getRelevantOrderSettings(
+    seller_contractor_id,
+    seller_user_id,
+    [
+      "min_order_size",
+      "max_order_size",
+      "min_order_value",
+      "max_order_value",
+    ],
+  )
+
+  // Convert offer_value to number for comparison
+  const value =
+    typeof offer_value === "bigint"
+      ? Number(offer_value)
+      : typeof offer_value === "string"
+        ? parseInt(offer_value, 10)
+        : offer_value
+
+  // Check size limits
+  const minSize = settings.find(
+    (s) => s.setting_type === "min_order_size" && s.enabled,
+  )
+  if (minSize) {
+    const minSizeValue = parseInt(minSize.message_content, 10)
+    if (isNaN(minSizeValue)) {
+      logger.warn("Invalid min_order_size value", {
+        settingId: minSize.id,
+        messageContent: minSize.message_content,
+      })
+    } else if (offer_size < minSizeValue) {
+      throw new Error(
+        `Order size (${offer_size}) is below the minimum required (${minSizeValue} items)`,
+      )
+    }
+  }
+
+  const maxSize = settings.find(
+    (s) => s.setting_type === "max_order_size" && s.enabled,
+  )
+  if (maxSize) {
+    const maxSizeValue = parseInt(maxSize.message_content, 10)
+    if (isNaN(maxSizeValue)) {
+      logger.warn("Invalid max_order_size value", {
+        settingId: maxSize.id,
+        messageContent: maxSize.message_content,
+      })
+    } else if (offer_size > maxSizeValue) {
+      throw new Error(
+        `Order size (${offer_size}) exceeds the maximum allowed (${maxSizeValue} items)`,
+      )
+    }
+  }
+
+  // Check value limits
+  const minValue = settings.find(
+    (s) => s.setting_type === "min_order_value" && s.enabled,
+  )
+  if (minValue) {
+    const minValueValue = parseInt(minValue.message_content, 10)
+    if (isNaN(minValueValue)) {
+      logger.warn("Invalid min_order_value value", {
+        settingId: minValue.id,
+        messageContent: minValue.message_content,
+      })
+    } else if (value < minValueValue) {
+      throw new Error(
+        `Order value (${value}) is below the minimum required (${minValueValue})`,
+      )
+    }
+  }
+
+  const maxValue = settings.find(
+    (s) => s.setting_type === "max_order_value" && s.enabled,
+  )
+  if (maxValue) {
+    const maxValueValue = parseInt(maxValue.message_content, 10)
+    if (isNaN(maxValueValue)) {
+      logger.warn("Invalid max_order_value value", {
+        settingId: maxValue.id,
+        messageContent: maxValue.message_content,
+      })
+    } else if (value > maxValueValue) {
+      throw new Error(
+        `Order value (${value}) exceeds the maximum allowed (${maxValueValue})`,
+      )
+    }
+  }
+}
+
 export const orderTypes = [
   "Escort",
   "Transport",
@@ -1597,7 +1747,11 @@ export async function getRelevantOrderSetting(
     | "offer_message"
     | "order_message"
     | "require_availability"
-    | "stock_subtraction_timing",
+    | "stock_subtraction_timing"
+    | "min_order_size"
+    | "max_order_size"
+    | "min_order_value"
+    | "max_order_value",
 ): Promise<DBOrderSetting | null> {
   logger.debug("Looking for relevant order setting", {
     sessionId: session.id,

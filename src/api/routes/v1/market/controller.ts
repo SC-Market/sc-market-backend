@@ -33,6 +33,7 @@ import { marketBidNotification } from "../util/notifications.js"
 import {
   createOffer,
   validateAvailabilityRequirement,
+  validateOrderLimits,
 } from "../orders/helpers.js"
 import { DEFAULT_PLACEHOLDER_PHOTO_URL } from "./constants.js"
 import { randomUUID } from "node:crypto"
@@ -718,6 +719,34 @@ export const purchase_listings: RequestHandler = async (req, res) => {
               ? error.message
               : "Availability is required to submit this offer. Please set your availability first.",
           code: "AVAILABILITY_REQUIRED",
+        }),
+      )
+      return
+    }
+
+    // Validate order limits
+    // Calculate offer size (sum of quantities)
+    const offerSize = listings.reduce(
+      (sum, item) => sum + item.quantity,
+      0,
+    )
+    const offerValue = offer || total
+
+    try {
+      await validateOrderLimits(
+        seller_contractor_id,
+        seller_user_id,
+        offerSize,
+        offerValue,
+      )
+    } catch (error) {
+      res.status(400).json(
+        createErrorResponse({
+          message:
+            error instanceof Error
+              ? error.message
+              : "Order does not meet size or value requirements",
+          code: "ORDER_LIMIT_VIOLATION",
         }),
       )
       return

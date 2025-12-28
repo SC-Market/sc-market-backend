@@ -29,6 +29,7 @@ export interface DBUser {
   // discord_invite: string | null,
 
   market_order_template: string
+  donor_start_date?: Date | null
 }
 
 export interface DBAccountSettings {
@@ -226,6 +227,7 @@ export interface BadgeMetadata {
   avg_completion_time_hours: number | null
   account_age_months: number
   account_created_at: string | null
+  donor_duration_months: number | null
   calculated_at: string
 }
 
@@ -257,6 +259,10 @@ export interface DBOrderSetting {
     | "order_message"
     | "require_availability"
     | "stock_subtraction_timing"
+    | "min_order_size"
+    | "max_order_size"
+    | "min_order_value"
+    | "max_order_value"
   message_content: string
   enabled: boolean
   created_at: Date
