@@ -102,7 +102,7 @@ export const services_post_root: RequestHandler = async (req, res) => {
 
     await createServicePhotos(service.service_id, photos)
   } catch (error) {
-    console.error("Failed to create service photos:", error)
+    logger.error("Failed to create service photos", { error })
     res
       .status(500)
       .json(createErrorResponse({ error: "Failed to create service photos" }))
@@ -495,7 +495,7 @@ export const services_post_service_id_photos: RequestHandler = async (
             resource_id: photo.resource_id,
           })
         } catch (error) {
-          console.error("Failed to delete old photo:", error)
+          logger.error("Failed to delete old photo", { error })
           // Continue with new photo insertion even if deletion fails
         }
       }

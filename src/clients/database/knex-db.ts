@@ -9,6 +9,7 @@ import { env } from "../../config/env.js"
 import { Database } from "./db-driver.js"
 import * as profileDb from "../../api/routes/v1/profiles/database.js"
 import * as tokenRefreshUtil from "../../api/util/token-refresh.js"
+import logger from "../../logger/logger.js"
 
 pg.types.setTypeParser(1114, (s: string) => new Date(s.replace(" ", "T") + "Z"))
 
@@ -121,7 +122,7 @@ export class KnexDatabase implements Database {
                 Routes.user(discordProvider.provider_id),
               )) as RESTGetAPIUserResult
             } catch (error) {
-              console.error(error)
+              logger.error("Error fetching Discord profile", { error })
             }
           }
         }
@@ -137,7 +138,7 @@ export class KnexDatabase implements Database {
         points: 60, // Number of points
         duration: 60, // Per 60 seconds
       },
-      (error) => error && console.log(error),
+      (error) => error && logger.error("Rate limiter error", { error }),
     )
   }
 

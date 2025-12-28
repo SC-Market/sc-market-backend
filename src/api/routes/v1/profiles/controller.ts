@@ -46,7 +46,7 @@ export const profile_post_auth_link: RequestHandler = async (req, res) => {
       )
     }
   } catch (e) {
-    console.error(e)
+    logger.error("Error in profile operation", { error: e })
   }
 }
 
@@ -686,7 +686,7 @@ export const profile_get_user_username: RequestHandler = async (req, res) => {
 
     res.json(await serializePublicProfile(user, { discord: !!requester }))
   } catch (e) {
-    console.error(e)
+    logger.error("Error fetching user profile", { error: e })
     res.status(400).json({ error: "Invalid user" })
     return
   }
@@ -752,7 +752,7 @@ export const profile_post_availability_update: RequestHandler = async (
     res.json({ result: "Success" })
     return
   } catch (e) {
-    console.error(e)
+    logger.error("Error in profile operation", { error: e })
   }
 }
 
@@ -1179,7 +1179,7 @@ export const profile_get_blocklist: RequestHandler = async (req, res) => {
 
     res.json(createResponse(blocklistWithUsers))
   } catch (error) {
-    console.error("Error fetching user blocklist:", error)
+    logger.error("Error fetching user blocklist", { error })
     res
       .status(500)
       .json(createErrorResponse({ message: "Failed to fetch blocklist" }))
@@ -1234,7 +1234,7 @@ export const profile_post_blocklist_block: RequestHandler = async (
 
     res.json(createResponse({ message: "User blocked successfully" }))
   } catch (error) {
-    console.error("Error blocking user:", error)
+    logger.error("Error blocking user", { error })
     res
       .status(500)
       .json(createErrorResponse({ message: "Failed to block user" }))
@@ -1274,7 +1274,7 @@ export const profile_delete_blocklist_unblock_username: RequestHandler = async (
 
     res.json(createResponse({ message: "User unblocked successfully" }))
   } catch (error) {
-    console.error("Error unblocking user:", error)
+    logger.error("Error unblocking user", { error })
     res
       .status(500)
       .json(createErrorResponse({ message: "Failed to unblock user" }))

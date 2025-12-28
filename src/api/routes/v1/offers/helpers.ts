@@ -20,6 +20,7 @@ import {
   OfferNotActiveError,
   OfferValidationError,
 } from "./errors.js"
+import logger from "../../../../logger/logger.js"
 
 export async function is_related_to_offer(
   user_id: string,
@@ -698,8 +699,8 @@ export async function mergeOfferSessions(
     return ts < min ? ts : min
   }, sessionTimestamps[0]!)
 
-  console.log("Session timestamps", sessionTimestamps)
-  console.log("Oldest session timestamp", oldestSessionTimestamp)
+  logger.debug("Session timestamps", { sessionTimestamps })
+  logger.debug("Oldest session timestamp", { oldestSessionTimestamp })
 
   // Combine costs and collaterals
   const totalCost = mostRecentOffers.reduce(

@@ -35,6 +35,7 @@ import {
 import { adminOverride } from "./api/routes/v1/admin/middleware.js"
 import { setupPassportStrategies } from "./api/util/passport-strategies.js"
 import { setupAuthRoutes } from "./api/routes/auth-routes.js"
+import logger from "./logger/logger.js"
 
 const SessionPool = pg.Pool
 
@@ -132,13 +133,13 @@ passport.deserializeUser(async (id: string, done) => {
     // If user doesn't exist, gracefully invalidate the session
     // This prevents unnecessary error logging for legitimate session cleanup
     if (error.message === "Invalid user!") {
-      console.warn(
+      logger.warn(
         `[Session] User ${id} not found during deserialization - invalidating session`,
       )
       return done(null, false)
     }
     // For other errors (database connection issues, etc.), log and invalidate
-    console.error(`[Session] Error deserializing user ${id}:`, error)
+    logger.error(`[Session] Error deserializing user ${id}:`, { error })
     return done(null, false)
   }
 })
@@ -353,11 +354,11 @@ app.get("/sitemap.xml", async function (req, res) {
         throw e
       })
     } catch (e) {
-      console.error(e)
+      logger.error("Error generating sitemap stream", { error: e })
       res.status(500).json({ error: "Big error" }).end()
     }
   } catch (e) {
-    console.error(e)
+    logger.error("Error generating sitemap", { error: e })
     res.status(400).json({ error: "Big error 2" }).end()
   }
 })
@@ -415,7 +416,7 @@ io.engine.use(
 chatServer.initialize(io)
 
 // Start the app
-console.log(`server up on port ${hostname()}:${env.BACKEND_PORT || 7000}`)
+logger.info(`server up on port ${hostname()}:${env.BACKEND_PORT || 7000}`)
 httpServer.listen(env.BACKEND_PORT || 7000)
 
 const discord_app = express()
@@ -429,7 +430,7 @@ discord_app.use(express.json({ limit: "2.5mb" }))
 discord_app.use("/register", registrationRouter)
 discord_app.use("/threads", threadRouter)
 discord_app.listen(discord_backend_url.port || 8081)
-console.log(
+logger.info(
   `discord backend up on port ${hostname()}:${
     discord_backend_url.port || 8081
   }`,

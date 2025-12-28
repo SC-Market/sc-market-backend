@@ -2471,7 +2471,7 @@ export async function upsertDailyActivity(user_id: string): Promise<void> {
   try {
     await knex().raw("CALL upsert_daily_activity(?)", [user_id])
   } catch (e) {
-    console.error(e)
+    logger.error("Error upserting daily activity", { user_id, error: e })
   }
 }
 
