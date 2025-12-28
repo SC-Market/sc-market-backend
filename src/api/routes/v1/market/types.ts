@@ -100,6 +100,7 @@ export interface ListingBase {
   status: string
   sale_type: string
   expiration: Date
+  languages: Array<{ code: string; name: string }>
   // Omitted for now
   orders?: any[]
   bids?: any[]

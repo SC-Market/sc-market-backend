@@ -56,3 +56,11 @@ apiRouter.use("/wiki", wikiRouter)
 apiRouter.use("/moderation", moderationRouter)
 apiRouter.use("/shops", shopRouter)
 apiRouter.use("/tokens", tokensRouter)
+
+// Languages reference endpoint
+import { SUPPORTED_LANGUAGES } from "../../../constants/languages.js"
+import { createResponse } from "./util/response.js"
+
+apiRouter.get("/languages", (req, res) => {
+  res.json(createResponse({ languages: SUPPORTED_LANGUAGES }))
+})

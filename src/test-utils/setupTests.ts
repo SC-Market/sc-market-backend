@@ -58,21 +58,24 @@ vi.mock("../clients/database/knex-db.js", () => {
                 }),
                 orWhere: vi
                   .fn()
-                  .mockImplementation((col: string, op: string, val: unknown) => {
-                    // For expires_at > new Date(), include non-expired tokens
-                    if (op === ">") {
-                      filteredData = filteredData.filter((row) => {
-                        const colValue = col in row ? row[col] : null
-                        return (
-                          colValue === null ||
-                          (colValue instanceof Date && colValue > (val as Date)) ||
-                          (typeof colValue === "string" &&
-                            new Date(colValue) > (val as Date))
-                        )
-                      })
-                    }
-                    return callbackBuilder
-                  }),
+                  .mockImplementation(
+                    (col: string, op: string, val: unknown) => {
+                      // For expires_at > new Date(), include non-expired tokens
+                      if (op === ">") {
+                        filteredData = filteredData.filter((row) => {
+                          const colValue = col in row ? row[col] : null
+                          return (
+                            colValue === null ||
+                            (colValue instanceof Date &&
+                              colValue > (val as Date)) ||
+                            (typeof colValue === "string" &&
+                              new Date(colValue) > (val as Date))
+                          )
+                        })
+                      }
+                      return callbackBuilder
+                    },
+                  ),
               }
               columnOrFn.call(callbackBuilder, callbackBuilder)
             } else if (value !== undefined) {
@@ -110,23 +113,23 @@ vi.mock("../clients/database/knex-db.js", () => {
         ),
       first: vi.fn().mockImplementation(() => {
         const result = filteredData[0] || null
-        filteredData = (
-          getMockTableDataGeneric(table) as unknown[]
-        ).map((item) => item as Record<string, unknown>) // Reset for next query
+        filteredData = (getMockTableDataGeneric(table) as unknown[]).map(
+          (item) => item as Record<string, unknown>,
+        ) // Reset for next query
         return Promise.resolve(result)
       }),
       returning: vi.fn().mockImplementation((cols?: string) => {
         const result = filteredData
-        filteredData = (
-          getMockTableDataGeneric(table) as unknown[]
-        ).map((item) => item as Record<string, unknown>) // Reset for next query
+        filteredData = (getMockTableDataGeneric(table) as unknown[]).map(
+          (item) => item as Record<string, unknown>,
+        ) // Reset for next query
         return Promise.resolve(result)
       }),
     }
     // Reset filtered data when builder is created
-    filteredData = (
-      getMockTableDataGeneric(table) as unknown[]
-    ).map((item) => item as Record<string, unknown>)
+    filteredData = (getMockTableDataGeneric(table) as unknown[]).map(
+      (item) => item as Record<string, unknown>,
+    )
     return builder
   }
 
@@ -189,9 +192,8 @@ vi.mock("../api/routes/v1/transactions/database.js", () => {
     getTransaction: vi.fn(async (query: { transaction_id: string }) => {
       const transactions = getMockTableData("transactions")
       return (
-        transactions.find(
-          (t) => t.transaction_id === query.transaction_id,
-        ) || null
+        transactions.find((t) => t.transaction_id === query.transaction_id) ||
+        null
       )
     }),
     createTransaction: vi.fn(async (data: Partial<DBTransaction>) => {
@@ -222,15 +224,13 @@ vi.mock("../api/routes/v1/contractors/database.js", () => {
         const contractors = getMockTableData("contractors")
         if (query.contractor_id) {
           return (
-            contractors.find(
-              (c) => c.contractor_id === query.contractor_id,
-            ) || null
+            contractors.find((c) => c.contractor_id === query.contractor_id) ||
+            null
           )
         }
         if (query.spectrum_id) {
           return (
-            contractors.find((c) => c.spectrum_id === query.spectrum_id) ||
-            null
+            contractors.find((c) => c.spectrum_id === query.spectrum_id) || null
           )
         }
         return null

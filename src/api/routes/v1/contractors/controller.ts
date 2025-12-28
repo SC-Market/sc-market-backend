@@ -31,6 +31,10 @@ import { fetchChannel, fetchGuild } from "../util/discord.js"
 import { archiveContractor } from "../../../../services/contractors/archive-contractor.service.js"
 import { MinimalUser } from "../../../../clients/database/db-models.js"
 import { auditLogService } from "../../../../services/audit-log/audit-log.service.js"
+import {
+  validateLanguageCodes,
+  getLanguageName,
+} from "../../../../constants/languages.js"
 
 export const post_auth_link: RequestHandler = async (req, res) => {
   const user = req.user as User
@@ -66,13 +70,15 @@ export const post_auth_link: RequestHandler = async (req, res) => {
 export const post_root: RequestHandler = async (req, res) => {
   const user = req.user as User
 
-  const { description, name, identifier, logo, banner } = req.body as {
-    description: string
-    name: string
-    identifier: string
-    logo: string
-    banner: string
-  }
+  const { description, name, identifier, logo, banner, language_codes } =
+    req.body as {
+      description: string
+      name: string
+      identifier: string
+      logo: string
+      banner: string
+      language_codes?: string[]
+    }
 
   try {
     const cobj = await contractorDb.getContractor({
@@ -98,6 +104,7 @@ export const post_root: RequestHandler = async (req, res) => {
     banner,
     member_count: 1,
     locale: user.locale,
+    language_codes: language_codes || ["en"], // Default to English if not provided
   })
   res.status(201).json(createResponse({ result: "Success" }))
   return
@@ -2530,3 +2537,80 @@ export const VALID_ORG_TAGS = [
   "medical",
   "intelligence",
 ]
+
+/**
+ * Get contractor's supported languages
+ */
+export const get_spectrum_id_languages: RequestHandler = async (req, res) => {
+  try {
+    const contractor = req.contractor as Contractor
+    const languageCodes = await contractorDb.getContractorLanguages(
+      contractor.contractor_id,
+    )
+
+    const languages = languageCodes.map((code) => ({
+      code,
+      name: getLanguageName(code) || code,
+    }))
+
+    res.json(createResponse({ languages }))
+  } catch (error) {
+    logger.error("Error getting contractor languages:", error)
+    res
+      .status(500)
+      .json(createErrorResponse({ message: "Failed to get languages" }))
+  }
+}
+
+/**
+ * Set contractor's supported languages
+ * Requires manage_org_details permission
+ */
+export const put_spectrum_id_languages: RequestHandler = async (req, res) => {
+  try {
+    const contractor = req.contractor as Contractor
+    const { language_codes } = req.body
+
+    if (!Array.isArray(language_codes)) {
+      res.status(400).json(
+        createErrorResponse({
+          message: "language_codes must be an array",
+        }),
+      )
+      return
+    }
+
+    // Validate language codes
+    const validation = validateLanguageCodes(language_codes)
+    if (!validation.valid) {
+      res.status(400).json(
+        createErrorResponse({
+          message: `Invalid language codes: ${validation.invalid.join(", ")}`,
+        }),
+      )
+      return
+    }
+
+    // Set languages
+    await contractorDb.setContractorLanguages(
+      contractor.contractor_id,
+      language_codes,
+    )
+
+    // Return updated languages
+    const updatedCodes = await contractorDb.getContractorLanguages(
+      contractor.contractor_id,
+    )
+    const languages = updatedCodes.map((code) => ({
+      code,
+      name: getLanguageName(code) || code,
+    }))
+
+    res.json(createResponse({ languages }))
+  } catch (error) {
+    logger.error("Error setting contractor languages:", error)
+    res
+      .status(500)
+      .json(createErrorResponse({ message: "Failed to set languages" }))
+  }
+}

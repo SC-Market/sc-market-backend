@@ -79,9 +79,9 @@ function createMockQueryBuilder() {
  */
 export function createMockKnex(): Knex {
   const mockQueryBuilder = createMockQueryBuilder()
-  
+
   const mockKnexFn = vi.fn((table: string) => mockQueryBuilder)
-  
+
   // Add Knex methods to the function
   Object.assign(mockKnexFn, {
     raw: vi.fn().mockResolvedValue({ rows: [] }),
@@ -215,7 +215,7 @@ export function createMockDatabase() {
   }
 
   const mockKnexFn = vi.fn((table: string) => createTableBuilder(table))
-  
+
   // Add Knex methods to the function
   Object.assign(mockKnexFn, {
     raw: vi.fn().mockResolvedValue({ rows: [] }),

@@ -726,10 +726,7 @@ export const purchase_listings: RequestHandler = async (req, res) => {
 
     // Validate order limits
     // Calculate offer size (sum of quantities)
-    const offerSize = listings.reduce(
-      (sum, item) => sum + item.quantity,
-      0,
-    )
+    const offerSize = listings.reduce((sum, item) => sum + item.quantity, 0)
     const offerValue = offer || total
 
     try {

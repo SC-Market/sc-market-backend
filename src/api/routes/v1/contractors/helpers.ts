@@ -4,6 +4,7 @@ import { get_sentinel } from "../profiles/helpers.js"
 import { fetchRSIOrgSCAPI } from "../../../../clients/scapi/scapi.js"
 import { User } from "../api-models.js"
 import { auditLogService } from "../../../../services/audit-log/audit-log.service.js"
+import { validateLanguageCodes } from "../../../../constants/languages.js"
 
 export async function createContractor(options: {
   owner_id: string
@@ -14,6 +15,7 @@ export async function createContractor(options: {
   banner: string
   member_count: number
   locale: string
+  language_codes?: string[] // Optional: languages to set during creation
 }) {
   const {
     owner_id,
@@ -149,6 +151,17 @@ export async function createContractor(options: {
       owner_role: owner_role[0].role_id,
     },
   )
+
+  // Set languages if provided
+  if (options.language_codes && options.language_codes.length > 0) {
+    // Validate language codes
+    const validation = validateLanguageCodes(options.language_codes)
+    if (validation.valid) {
+      const codes = [...new Set(options.language_codes)]
+      await contractorDb.setContractorLanguages(contractor.contractor_id, codes)
+    }
+    // If invalid, just use default (English) - don't fail creation
+  }
 }
 
 export async function authorizeContractor(
