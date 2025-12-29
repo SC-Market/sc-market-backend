@@ -204,6 +204,15 @@ export async function verifiedUser(
         return false
       }
 
+      if (!user.rsi_confirmed) {
+        res
+          .status(401)
+          .json(
+            createErrorResponse({ message: "Your account is not verified." }),
+          )
+        return false
+      }
+
       return true
     }
 
