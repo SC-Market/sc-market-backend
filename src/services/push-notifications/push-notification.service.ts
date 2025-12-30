@@ -109,8 +109,10 @@ class WebPushNotificationService implements PushNotificationService {
       user_agent: subscription.userAgent,
     })
 
-    logger.debug(`Created push subscription for user ${userId}`, {
+    logger.info(`Push subscription created successfully for user ${userId}`, {
       subscription_id: result.subscription_id,
+      endpoint: subscription.endpoint.substring(0, 50) + "...", // Log partial endpoint for debugging
+      user_agent: subscription.userAgent || "unknown",
     })
 
     return result.subscription_id
@@ -138,7 +140,9 @@ class WebPushNotificationService implements PushNotificationService {
 
     await pushNotificationDb.deletePushSubscription(subscriptionId)
 
-    logger.debug(`Deleted push subscription ${subscriptionId} for user ${userId}`)
+    logger.info(`Push subscription deleted for user ${userId}`, {
+      subscription_id: subscriptionId,
+    })
   }
 
   /**
@@ -194,7 +198,8 @@ class WebPushNotificationService implements PushNotificationService {
       enabled,
     })
 
-    logger.debug(`Updated push preference for user ${userId}`, {
+    logger.info(`Push notification preference updated for user ${userId}`, {
+      user_id: userId,
       action_type: actionType,
       enabled,
     })
@@ -263,6 +268,9 @@ class WebPushNotificationService implements PushNotificationService {
             },
             payload,
           )
+          logger.debug(
+            `Push notification delivered successfully to subscription ${subscription.subscription_id}`,
+          )
           return { subscription_id: subscription.subscription_id, success: true }
         } catch (error: unknown) {
           // Handle invalid subscriptions and other error codes
@@ -278,8 +286,13 @@ class WebPushNotificationService implements PushNotificationService {
             // 403 Forbidden - subscription revoked or unauthorized
             // These all mean the subscription is invalid and should be removed
             if (statusCode === 410 || statusCode === 404 || statusCode === 403) {
-              logger.debug(
-                `Removing invalid subscription ${subscription.subscription_id} (status: ${statusCode})`,
+              logger.info(
+                `Removing invalid push subscription ${subscription.subscription_id} (HTTP ${statusCode})`,
+                {
+                  subscription_id: subscription.subscription_id,
+                  status_code: statusCode,
+                  endpoint: subscription.endpoint.substring(0, 50) + "...",
+                },
               )
               await pushNotificationDb.deletePushSubscription(
                 subscription.subscription_id,
@@ -294,8 +307,12 @@ class WebPushNotificationService implements PushNotificationService {
 
             // 429 Too Many Requests - rate limited, log but don't remove
             if (statusCode === 429) {
-              logger.warn(
-                `Rate limited for subscription ${subscription.subscription_id}`,
+              logger.info(
+                `Push notification rate limited for subscription ${subscription.subscription_id}`,
+                {
+                  subscription_id: subscription.subscription_id,
+                  status_code: statusCode,
+                },
               )
               // Don't throw - rate limiting is temporary
               return {
@@ -307,8 +324,12 @@ class WebPushNotificationService implements PushNotificationService {
 
             // 413 Payload Too Large - notification too big, log but don't remove
             if (statusCode === 413) {
-              logger.warn(
-                `Notification payload too large for subscription ${subscription.subscription_id}`,
+              logger.info(
+                `Push notification payload too large for subscription ${subscription.subscription_id}`,
+                {
+                  subscription_id: subscription.subscription_id,
+                  status_code: statusCode,
+                },
               )
               return {
                 subscription_id: subscription.subscription_id,
@@ -328,18 +349,83 @@ class WebPushNotificationService implements PushNotificationService {
       }),
     )
 
-    // Log results
-    const successful = results.filter((r) => r.status === "fulfilled").length
-    const failed = results.filter((r) => r.status === "rejected").length
+    // Log results - analyze Promise.allSettled results
+    const successful = results.filter((r) => {
+      if (r.status === "fulfilled") {
+        // Check if the returned value indicates success
+        const value = r.value as { subscription_id: string; success: boolean; error?: string }
+        return value.success === true
+      }
+      return false
+    }).length
 
-    logger.debug(`Sent push notification to user ${userId}`, {
-      successful,
-      failed,
-      total_subscriptions: subscriptions.length,
-    })
+    const failed = results.filter((r) => {
+      if (r.status === "rejected") {
+        return true
+      }
+      if (r.status === "fulfilled") {
+        const value = r.value as { subscription_id: string; success: boolean; error?: string }
+        return value.success === false
+      }
+      return false
+    }).length
+
+    // Get detailed failure information
+    const failures = results
+      .filter((r) => {
+        if (r.status === "rejected") {
+          return true
+        }
+        if (r.status === "fulfilled") {
+          const value = r.value as { subscription_id: string; success: boolean; error?: string }
+          return value.success === false
+        }
+        return false
+      })
+      .map((r) => {
+        if (r.status === "rejected") {
+          return {
+            error: r.reason instanceof Error ? r.reason.message : String(r.reason) || "Unknown error",
+          }
+        }
+        const value = r.value as { subscription_id: string; success: boolean; error?: string }
+        return { subscription_id: value.subscription_id, error: value.error || "Unknown error" }
+      })
+
+    if (successful > 0) {
+      logger.info(`Push notification sent successfully to user ${userId}`, {
+        user_id: userId,
+        action_type: actionType || "unknown",
+        successful,
+        failed,
+        total_subscriptions: subscriptions.length,
+        notification_title: notification.title,
+      })
+    }
 
     if (failed > 0) {
-      logger.warn(`Failed to send push notification to ${failed} subscriptions`)
+      logger.info(`Push notification delivery failed for user ${userId}`, {
+        user_id: userId,
+        action_type: actionType || "unknown",
+        successful,
+        failed,
+        total_subscriptions: subscriptions.length,
+        failures: failures.slice(0, 5), // Log first 5 failures to avoid log spam
+        notification_title: notification.title,
+      })
+    }
+
+    // If all failed, log at warn level
+    if (failed > 0 && successful === 0) {
+      logger.warn(
+        `All push notification deliveries failed for user ${userId}`,
+        {
+          user_id: userId,
+          action_type: actionType || "unknown",
+          total_subscriptions: subscriptions.length,
+          failures,
+        },
+      )
     }
   }
 
@@ -357,8 +443,14 @@ class WebPushNotificationService implements PushNotificationService {
       return
     }
 
+    logger.info(`Sending push notifications to ${userIds.length} users`, {
+      user_count: userIds.length,
+      action_type: actionType || "unknown",
+      notification_title: notification.title,
+    })
+
     // Send to all users in parallel
-    await Promise.allSettled(
+    const results = await Promise.allSettled(
       userIds.map((userId) =>
         this.sendPushNotification(userId, notification, actionType).catch(
           (error) => {
@@ -366,10 +458,22 @@ class WebPushNotificationService implements PushNotificationService {
               `Failed to send push notification to user ${userId}:`,
               error,
             )
+            throw error
           },
         ),
       ),
     )
+
+    const successful = results.filter((r) => r.status === "fulfilled").length
+    const failed = results.filter((r) => r.status === "rejected").length
+
+    logger.info(`Batch push notification delivery completed`, {
+      total_users: userIds.length,
+      successful,
+      failed,
+      action_type: actionType || "unknown",
+      notification_title: notification.title,
+    })
   }
 
   /**
