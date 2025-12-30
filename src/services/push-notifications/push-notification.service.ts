@@ -560,6 +560,10 @@ class WebPushNotificationService implements PushNotificationService {
             title: "Test",
             body: "Test notification",
             silent: true,
+            data: {
+              silent: true,
+              test: true,
+            },
           }),
         )
         valid++
