@@ -6,6 +6,7 @@ import {
   DBAuctionDetails,
   DBMarketListing,
 } from "../clients/database/db-models.js"
+import { pushNotificationService } from "../services/push-notifications/push-notification.service.js"
 import fs from "node:fs"
 import path from "node:path"
 import logger from "../logger/logger.js"
@@ -111,5 +112,18 @@ export async function clear_uploads_folder() {
     }
   } catch (error) {
     logger.error("Failed to clear uploads folder", { error })
+  }
+}
+
+/**
+ * Clean up invalid push notification subscriptions
+ * Removes subscriptions that have been revoked, expired, or are otherwise invalid
+ * This runs periodically to keep the subscription database clean
+ */
+export async function cleanup_push_subscriptions() {
+  try {
+    await pushNotificationService.cleanupInvalidSubscriptions()
+  } catch (error) {
+    logger.error("Failed to cleanup push subscriptions", { error })
   }
 }

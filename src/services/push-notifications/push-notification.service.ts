@@ -265,19 +265,62 @@ class WebPushNotificationService implements PushNotificationService {
           )
           return { subscription_id: subscription.subscription_id, success: true }
         } catch (error: unknown) {
-          // Handle invalid subscriptions
+          // Handle invalid subscriptions and other error codes
           if (
             error &&
             typeof error === "object" &&
-            "statusCode" in error &&
-            (error.statusCode === 410 || error.statusCode === 404)
+            "statusCode" in error
           ) {
-            // Subscription is invalid, remove it
-            logger.debug(
-              `Removing invalid subscription ${subscription.subscription_id}`,
-            )
-            await pushNotificationDb.deletePushSubscription(
-              subscription.subscription_id,
+            const statusCode = error.statusCode as number
+
+            // 410 Gone - subscription expired or invalid
+            // 404 Not Found - subscription doesn't exist
+            // 403 Forbidden - subscription revoked or unauthorized
+            // These all mean the subscription is invalid and should be removed
+            if (statusCode === 410 || statusCode === 404 || statusCode === 403) {
+              logger.debug(
+                `Removing invalid subscription ${subscription.subscription_id} (status: ${statusCode})`,
+              )
+              await pushNotificationDb.deletePushSubscription(
+                subscription.subscription_id,
+              )
+              // Don't throw - we've handled it by removing the subscription
+              return {
+                subscription_id: subscription.subscription_id,
+                success: false,
+                error: `Subscription invalid (${statusCode})`,
+              }
+            }
+
+            // 429 Too Many Requests - rate limited, log but don't remove
+            if (statusCode === 429) {
+              logger.warn(
+                `Rate limited for subscription ${subscription.subscription_id}`,
+              )
+              // Don't throw - rate limiting is temporary
+              return {
+                subscription_id: subscription.subscription_id,
+                success: false,
+                error: "Rate limited",
+              }
+            }
+
+            // 413 Payload Too Large - notification too big, log but don't remove
+            if (statusCode === 413) {
+              logger.warn(
+                `Notification payload too large for subscription ${subscription.subscription_id}`,
+              )
+              return {
+                subscription_id: subscription.subscription_id,
+                success: false,
+                error: "Payload too large",
+              }
+            }
+
+            // Other errors - log and throw
+            logger.warn(
+              `Unexpected error sending to subscription ${subscription.subscription_id}:`,
+              error,
             )
           }
           throw error
@@ -369,18 +412,34 @@ class WebPushNotificationService implements PushNotificationService {
         if (
           error &&
           typeof error === "object" &&
-          "statusCode" in error &&
-          (error.statusCode === 410 || error.statusCode === 404)
+          "statusCode" in error
         ) {
-          await pushNotificationDb.deletePushSubscription(
-            subscription.subscription_id,
-          )
-          removed++
-          logger.debug(
-            `Removed invalid subscription ${subscription.subscription_id}`,
-          )
+          const statusCode = error.statusCode as number
+
+          // 410 Gone, 404 Not Found, 403 Forbidden - subscription is invalid
+          if (statusCode === 410 || statusCode === 404 || statusCode === 403) {
+            await pushNotificationDb.deletePushSubscription(
+              subscription.subscription_id,
+            )
+            removed++
+            logger.debug(
+              `Removed invalid subscription ${subscription.subscription_id} (status: ${statusCode})`,
+            )
+          } else if (statusCode === 429) {
+            // 429 Too Many Requests - rate limited, skip for now
+            logger.debug(
+              `Rate limited for subscription ${subscription.subscription_id}, skipping cleanup`,
+            )
+            valid++ // Count as valid since it's just rate limited
+          } else {
+            // Other errors - log but don't remove
+            logger.warn(
+              `Error testing subscription ${subscription.subscription_id} (status: ${statusCode}):`,
+              error,
+            )
+          }
         } else {
-          // Other errors - log but don't remove
+          // Non-HTTP errors - log but don't remove
           logger.warn(
             `Error testing subscription ${subscription.subscription_id}:`,
             error,
