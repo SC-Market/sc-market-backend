@@ -5,6 +5,7 @@ import {
   refresh_badge_view,
   update_price_history,
   clear_uploads_folder,
+  cleanup_push_subscriptions,
 } from "./timers.js"
 import { fetchAndInsertCommodities } from "./commodities.js"
 import { processDiscordQueue } from "./discord-queue-consumer.js"
@@ -47,4 +48,9 @@ export function start_tasks() {
   } else {
     logger.warn("Discord queue processing disabled - SQS not configured")
   }
+
+  // Clean up invalid push subscriptions daily
+  // This removes subscriptions that have been revoked, expired, or are invalid
+  cleanup_push_subscriptions()
+  setInterval(cleanup_push_subscriptions, 24 * 60 * 60 * 1000) // 24 hours
 }
