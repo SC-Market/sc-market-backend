@@ -95,6 +95,15 @@ export async function getNotificationActionByName(
 }
 
 /**
+ * Get all notification actions.
+ */
+export async function getAllNotificationActions(): Promise<
+  DBNotificationActions[]
+> {
+  return knex()<DBNotificationActions>("notification_actions").select("*")
+}
+
+/**
  * Get notification webhooks by action type name.
  */
 export async function getNotificationWebhooksByAction(

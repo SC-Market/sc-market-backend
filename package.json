@@ -46,6 +46,7 @@
     "socket.io": "^4.8.1",
     "typescript": "^5.2.2",
     "uuid": "^11.1.0",
+    "web-push": "^3.6.7",
     "winston": "^3.17.0",
     "ws": "^8.18.1"
   },
@@ -71,6 +72,7 @@
     "@types/pg": "^8.15.4",
     "@types/supertest": "^6.0.3",
     "@types/uuid": "^10.0.0",
+    "@types/web-push": "^3.6.4",
     "@types/ws": "^8.18.1",
     "@vitest/coverage-v8": "^4.0.16",
     "@vitest/ui": "^4.0.16",
