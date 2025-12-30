@@ -20,6 +20,8 @@ import * as chatDb from "../../api/routes/v1/chats/database.js"
 import * as adminDb from "../../api/routes/v1/admin/database.js"
 import logger from "../../logger/logger.js"
 import { has_permission } from "../../api/routes/v1/util/permissions.js"
+import { pushNotificationService } from "../push-notifications/push-notification.service.js"
+import * as payloadFormatters from "./notification-payload-formatters.js"
 
 /**
  * Service interface for notification creation and management.
@@ -167,11 +169,24 @@ class DatabaseNotificationService implements NotificationService {
       },
     ])
 
-    // TODO: Phase 5 - Coordinate with delivery services
-    // await discordService.sendOrderDM(order)
-    // await webhookService.sendAssignedWebhook(order)
-    // await pushNotificationService.sendPushNotification(order.assigned_id, ...)
-    // await sendAssignedMessage(order) // Chat message
+    // Send push notification to assigned user
+    try {
+      const payload = payloadFormatters.formatOrderNotificationPayload(
+        order,
+        "order_assigned",
+      )
+      await pushNotificationService.sendPushNotification(
+        order.assigned_id,
+        payload,
+        "order_assigned",
+      )
+    } catch (error) {
+      // Log but don't fail notification creation if push fails
+      logger.debug(
+        `Failed to send push notification for order assignment:`,
+        error,
+      )
+    }
   }
 
   async createOrderMessageNotification(
@@ -298,8 +313,23 @@ class DatabaseNotificationService implements NotificationService {
         },
       ])
 
-      // TODO: Phase 5 - Send push notification
-      // await pushNotificationService.sendPushNotification(order.assigned_id, ...)
+      // Send push notification
+      try {
+        const payload = payloadFormatters.formatOrderCommentNotificationPayload(
+          order,
+          comment,
+        )
+        await pushNotificationService.sendPushNotification(
+          order.assigned_id,
+          payload,
+          "order_comment",
+        )
+      } catch (error) {
+        logger.debug(
+          `Failed to send push notification for order comment:`,
+          error,
+        )
+      }
     }
 
     if (actorId !== order.customer_id) {
@@ -310,8 +340,23 @@ class DatabaseNotificationService implements NotificationService {
         },
       ])
 
-      // TODO: Phase 5 - Send push notification
-      // await pushNotificationService.sendPushNotification(order.customer_id, ...)
+      // Send push notification
+      try {
+        const payload = payloadFormatters.formatOrderCommentNotificationPayload(
+          order,
+          comment,
+        )
+        await pushNotificationService.sendPushNotification(
+          order.customer_id,
+          payload,
+          "order_comment",
+        )
+      } catch (error) {
+        logger.debug(
+          `Failed to send push notification for order comment:`,
+          error,
+        )
+      }
     }
 
     // TODO: Phase 5 - Send webhooks
@@ -348,8 +393,22 @@ class DatabaseNotificationService implements NotificationService {
       },
     ])
 
-    // TODO: Phase 5 - Send push notification
-    // await pushNotificationService.sendPushNotification(order.assigned_id, ...)
+    // Send push notification
+    try {
+      const payload = payloadFormatters.formatOrderReviewNotificationPayload(
+        review,
+      )
+      await pushNotificationService.sendPushNotification(
+        order.assigned_id,
+        payload,
+        "order_review",
+      )
+    } catch (error) {
+      logger.debug(
+        `Failed to send push notification for order review:`,
+        error,
+      )
+    }
   }
 
   async createOrderStatusNotification(
@@ -381,8 +440,23 @@ class DatabaseNotificationService implements NotificationService {
         },
       ])
 
-      // TODO: Phase 5 - Send push notification
-      // await pushNotificationService.sendPushNotification(order.assigned_id, ...)
+      // Send push notification
+      try {
+        const payload = payloadFormatters.formatOrderNotificationPayload(
+          order,
+          action_name,
+        )
+        await pushNotificationService.sendPushNotification(
+          order.assigned_id,
+          payload,
+          action_name,
+        )
+      } catch (error) {
+        logger.debug(
+          `Failed to send push notification for order status:`,
+          error,
+        )
+      }
     }
 
     if (order.customer_id !== actorId) {
@@ -393,8 +467,23 @@ class DatabaseNotificationService implements NotificationService {
         },
       ])
 
-      // TODO: Phase 5 - Send push notification
-      // await pushNotificationService.sendPushNotification(order.customer_id, ...)
+      // Send push notification
+      try {
+        const payload = payloadFormatters.formatOrderNotificationPayload(
+          order,
+          action_name,
+        )
+        await pushNotificationService.sendPushNotification(
+          order.customer_id,
+          payload,
+          action_name,
+        )
+      } catch (error) {
+        logger.debug(
+          `Failed to send push notification for order status:`,
+          error,
+        )
+      }
     }
 
     // TODO: Phase 5 - Send webhooks
@@ -504,8 +593,23 @@ class DatabaseNotificationService implements NotificationService {
       },
     ])
 
-    // TODO: Phase 5 - Send push notification
-    // await pushNotificationService.sendPushNotification(session.assigned_id, ...)
+    // Send push notification
+    try {
+      const payload = payloadFormatters.formatOfferNotificationPayload(
+        session,
+        type === "offer_created" ? "create" : "counteroffer",
+      )
+      await pushNotificationService.sendPushNotification(
+        session.assigned_id,
+        payload,
+        type === "offer_created" ? "offer_create" : "counter_offer_create",
+      )
+    } catch (error) {
+      logger.debug(
+        `Failed to send push notification for offer assignment:`,
+        error,
+      )
+    }
   }
 
   async createOfferMessageNotification(
@@ -589,8 +693,23 @@ class DatabaseNotificationService implements NotificationService {
         ])
         notificationCount++
 
-        // TODO: Phase 5 - Send push notification
-        // await pushNotificationService.sendPushNotification(notified, ...)
+        // Send push notification
+        try {
+          const payload = payloadFormatters.formatOfferMessageNotificationPayload(
+            session,
+            message,
+          )
+          await pushNotificationService.sendPushNotification(
+            notified,
+            payload,
+            "offer_message",
+          )
+        } catch (error) {
+          logger.debug(
+            `Failed to send push notification to user ${notified}:`,
+            error,
+          )
+        }
       }
 
       logger.debug(
@@ -606,6 +725,8 @@ class DatabaseNotificationService implements NotificationService {
     listing: DBMarketListingComplete,
     bid: DBMarketBid,
   ): Promise<void> {
+    const recipients: string[] = []
+
     if (listing.listing.contractor_seller_id) {
       const admins = await contractorDb.getMembersWithMatchingRole(
         listing.listing.contractor_seller_id,
@@ -613,6 +734,7 @@ class DatabaseNotificationService implements NotificationService {
       )
 
       if (bid.user_bidder_id) {
+        recipients.push(...admins.map((u) => u.user_id))
         await this.createMarketUpdateNotification(
           bid.user_bidder_id,
           bid.bid_id,
@@ -624,12 +746,30 @@ class DatabaseNotificationService implements NotificationService {
 
     if (listing.listing.user_seller_id) {
       if (bid.user_bidder_id) {
+        recipients.push(listing.listing.user_seller_id)
         await this.createMarketUpdateNotification(
           bid.user_bidder_id,
           bid.bid_id,
           "market_item_bid",
           [listing.listing.user_seller_id],
         )
+      }
+    }
+
+    // Send push notifications to all recipients
+    if (recipients.length > 0) {
+      try {
+        const payload = payloadFormatters.formatMarketBidNotificationPayload(
+          listing,
+          bid,
+        )
+        await pushNotificationService.sendPushNotifications(
+          recipients,
+          payload,
+          "market_item_bid",
+        )
+      } catch (error) {
+        logger.debug(`Failed to send push notifications for market bid:`, error)
       }
     }
 
@@ -641,6 +781,8 @@ class DatabaseNotificationService implements NotificationService {
     listing: DBMarketListing,
     offer: DBMarketOffer,
   ): Promise<void> {
+    const recipients: string[] = []
+
     if (listing.contractor_seller_id) {
       const admins = await contractorDb.getMembersWithMatchingRole(
         listing.contractor_seller_id,
@@ -648,6 +790,7 @@ class DatabaseNotificationService implements NotificationService {
       )
 
       if (offer.buyer_user_id) {
+        recipients.push(...admins.map((u) => u.user_id))
         await this.createMarketUpdateNotification(
           offer.buyer_user_id,
           offer.offer_id,
@@ -659,11 +802,32 @@ class DatabaseNotificationService implements NotificationService {
 
     if (listing.user_seller_id) {
       if (offer.buyer_user_id) {
+        recipients.push(listing.user_seller_id)
         await this.createMarketUpdateNotification(
           offer.buyer_user_id,
           offer.offer_id,
           "market_item_offer",
           [listing.user_seller_id],
+        )
+      }
+    }
+
+    // Send push notifications to all recipients
+    if (recipients.length > 0) {
+      try {
+        const payload = payloadFormatters.formatMarketOfferNotificationPayload(
+          listing,
+          offer,
+        )
+        await pushNotificationService.sendPushNotifications(
+          recipients,
+          payload,
+          "market_item_offer",
+        )
+      } catch (error) {
+        logger.debug(
+          `Failed to send push notifications for market offer:`,
+          error,
         )
       }
     }
@@ -729,8 +893,21 @@ class DatabaseNotificationService implements NotificationService {
       },
     ])
 
-    // TODO: Phase 5 - Send push notification
-    // await pushNotificationService.sendPushNotification(invite.user_id, ...)
+    // Send push notification
+    try {
+      const payload =
+        payloadFormatters.formatContractorInviteNotificationPayload(invite)
+      await pushNotificationService.sendPushNotification(
+        invite.user_id,
+        payload,
+        "contractor_invite",
+      )
+    } catch (error) {
+      logger.debug(
+        `Failed to send push notification for contractor invite:`,
+        error,
+      )
+    }
   }
 
   async createAdminAlertNotification(alert: DBAdminAlert): Promise<void> {
@@ -783,10 +960,21 @@ class DatabaseNotificationService implements NotificationService {
         },
       )
 
-      // TODO: Phase 5 - Send push notifications
-      // for (const userId of targetUserIds) {
-      //   await pushNotificationService.sendPushNotification(userId, ...)
-      // }
+      // Send push notifications to all target users
+      try {
+        const payload =
+          payloadFormatters.formatAdminAlertNotificationPayload(alert)
+        await pushNotificationService.sendPushNotifications(
+          targetUserIds,
+          payload,
+          "admin_alert",
+        )
+      } catch (error) {
+        logger.debug(
+          `Failed to send push notifications for admin alert:`,
+          error,
+        )
+      }
     } catch (error) {
       logger.error("Failed to create admin alert notifications:", error)
       throw error
@@ -865,10 +1053,23 @@ class DatabaseNotificationService implements NotificationService {
         requester_id: requester.user_id,
       })
 
-      // TODO: Phase 5 - Send push notifications
-      // for (const recipient of recipients) {
-      //   await pushNotificationService.sendPushNotification(recipient, ...)
-      // }
+      // Send push notifications to all recipients
+      try {
+        const payload =
+          payloadFormatters.formatOrderReviewRevisionNotificationPayload(
+            review,
+          )
+        await pushNotificationService.sendPushNotifications(
+          recipients,
+          payload,
+          "order_review_revision_requested",
+        )
+      } catch (error) {
+        logger.debug(
+          `Failed to send push notifications for review revision:`,
+          error,
+        )
+      }
     } catch (error) {
       logger.error("Failed to create review revision notification:", error)
       throw error
