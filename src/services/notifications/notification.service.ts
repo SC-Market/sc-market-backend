@@ -171,6 +171,11 @@ class DatabaseNotificationService implements NotificationService {
 
     // Send push notification to assigned user
     try {
+      logger.info(`Sending push notification for order assignment`, {
+        order_id: order.order_id,
+        assigned_id: order.assigned_id,
+        action_type: "order_assigned",
+      })
       const payload = payloadFormatters.formatOrderNotificationPayload(
         order,
         "order_assigned",
@@ -182,9 +187,13 @@ class DatabaseNotificationService implements NotificationService {
       )
     } catch (error) {
       // Log but don't fail notification creation if push fails
-      logger.debug(
+      logger.info(
         `Failed to send push notification for order assignment:`,
-        error,
+        {
+          order_id: order.order_id,
+          assigned_id: order.assigned_id,
+          error: error instanceof Error ? error.message : String(error),
+        },
       )
     }
   }

@@ -222,15 +222,28 @@ class WebPushNotificationService implements PushNotificationService {
     notification: PushNotificationPayload,
     actionType?: string,
   ): Promise<void> {
+    logger.info(`Attempting to send push notification to user ${userId}`, {
+      user_id: userId,
+      action_type: actionType,
+      notification_title: notification.title,
+    })
+
     // Check if VAPID keys are configured - silently fail if not
     if (!this.isConfigured()) {
-      logger.debug(
+      logger.info(
         `Push notification not sent to user ${userId}: VAPID keys not configured`,
+        {
+          user_id: userId,
+          action_type: actionType,
+        },
       )
       return
     }
     if (!this.initialized) {
-      logger.debug("Push notifications not initialized, skipping")
+      logger.info("Push notifications not initialized, skipping", {
+        user_id: userId,
+        action_type: actionType,
+      })
       return
     }
 
@@ -238,26 +251,58 @@ class WebPushNotificationService implements PushNotificationService {
     if (actionType) {
       const preferences = await this.getPreferences(userId)
       if (preferences[actionType] === false) {
-        logger.debug(
+        logger.info(
           `Push notifications disabled for user ${userId}, action ${actionType}`,
+          {
+            user_id: userId,
+            action_type: actionType,
+            preference_enabled: false,
+          },
         )
         return
       }
+      logger.debug(`Push notification preference check passed for user ${userId}`, {
+        user_id: userId,
+        action_type: actionType,
+        preference_enabled: true,
+      })
     }
 
     // Get user subscriptions
     const subscriptions = await this.getUserSubscriptions(userId)
 
     if (subscriptions.length === 0) {
-      logger.debug(`No push subscriptions found for user ${userId}`)
+      logger.info(`No push subscriptions found for user ${userId}`, {
+        user_id: userId,
+        action_type: actionType,
+      })
       return
     }
 
+    logger.info(`Found ${subscriptions.length} subscription(s) for user ${userId}`, {
+      user_id: userId,
+      action_type: actionType,
+      subscription_count: subscriptions.length,
+    })
+
     // Send to all subscriptions
     const payload = JSON.stringify(notification)
+    logger.info(`Sending push notification to ${subscriptions.length} device(s) for user ${userId}`, {
+      user_id: userId,
+      action_type: actionType,
+      subscription_count: subscriptions.length,
+      payload_size: payload.length,
+    })
+
     const results = await Promise.allSettled(
       subscriptions.map(async (subscription) => {
         try {
+          logger.debug(`Sending push notification to subscription ${subscription.subscription_id}`, {
+            subscription_id: subscription.subscription_id,
+            endpoint: subscription.endpoint.substring(0, 50) + "...",
+            user_agent: subscription.user_agent,
+          })
+
           await webpush.sendNotification(
             {
               endpoint: subscription.endpoint,
@@ -268,8 +313,15 @@ class WebPushNotificationService implements PushNotificationService {
             },
             payload,
           )
-          logger.debug(
+
+          logger.info(
             `Push notification delivered successfully to subscription ${subscription.subscription_id}`,
+            {
+              subscription_id: subscription.subscription_id,
+              user_id: userId,
+              action_type: actionType,
+              endpoint: subscription.endpoint.substring(0, 50) + "...",
+            },
           )
           return { subscription_id: subscription.subscription_id, success: true }
         } catch (error: unknown) {
