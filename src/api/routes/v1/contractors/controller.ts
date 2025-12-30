@@ -23,11 +23,11 @@ import {
   outranks,
 } from "../util/permissions.js"
 import { createNotificationWebhook } from "../util/webhooks.js"
-import { createContractorInviteNotification } from "../util/notifications.js"
+import { notificationService } from "../../../../services/notifications/notification.service.js"
 import { fetchRSIOrgSCAPI } from "../../../../clients/scapi/scapi.js"
 import { authorizeProfile } from "../profiles/helpers.js"
 import { convertQuery } from "../recruiting/controller.js"
-import { fetchChannel, fetchGuild } from "../util/discord.js"
+import { discordService } from "../../../../services/discord/discord.service.js"
 import { archiveContractor } from "../../../../services/contractors/archive-contractor.service.js"
 import { MinimalUser } from "../../../../clients/database/db-models.js"
 import { auditLogService } from "../../../../services/audit-log/audit-log.service.js"
@@ -1982,7 +1982,7 @@ export const post_spectrum_id_members: RequestHandler = async (req, res) => {
     })
   }
 
-  await createContractorInviteNotification(invites[0])
+  await notificationService.createContractorInviteNotification(invites[0])
 
   res.json(createResponse({ result: "Success" }))
 }
@@ -2280,13 +2280,13 @@ export const get_spectrum_id_settings_discord: RequestHandler = async (
   let guild
   let avatar
   if (contractor.official_server_id) {
-    guild = await fetchGuild(contractor.official_server_id)
+    guild = await discordService.fetchGuild(contractor.official_server_id)
     avatar = `https://cdn.discordapp.com/icons/${guild.id}/${guild.icon}.webp?size=240`
   }
 
   let channel
   if (contractor.discord_thread_channel_id) {
-    channel = await fetchChannel(contractor.discord_thread_channel_id)
+    channel = await discordService.fetchChannel(contractor.discord_thread_channel_id)
   }
 
   res.json(

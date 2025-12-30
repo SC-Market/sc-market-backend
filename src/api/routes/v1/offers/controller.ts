@@ -12,15 +12,14 @@ import {
   serializeOfferSession,
   serializeOfferSessionStubOptimized,
 } from "./serializers.js"
-import {
-  dispatchOfferNotifications,
-  sendOfferStatusNotification,
-} from "../util/notifications.js"
 import { initiateOrder } from "../orders/helpers.js"
 import { CounterOfferBody } from "./types.js"
 import { verify_listings } from "../market/helpers.js"
 import logger from "../../../../logger/logger.js"
-import { createThread } from "../util/discord.js"
+import { notificationService } from "../../../../services/notifications/notification.service.js"
+import { discordService } from "../../../../services/discord/discord.service.js"
+import { sendSystemMessage } from "../chats/helpers.js"
+import * as chatDb from "../chats/database.js"
 import {
   convert_offer_search_query,
   search_offer_sessions_optimized,
@@ -60,7 +59,24 @@ export const offer_put_session_id: RequestHandler = async (req, res) => {
       status,
     })
 
-    await sendOfferStatusNotification(session, nameMap.get(status)!, user)
+    // Send Discord embed
+    await discordService.sendOfferStatusUpdate(
+      session,
+      nameMap.get(status)!,
+      user,
+    )
+
+    // Send chat message
+    try {
+      const chat = await chatDb.getChat({ session_id: session.id })
+      const actionBy = user ? ` by ${user.username}` : ""
+      const content = `Offer status updated to **${nameMap.get(status)!}**${actionBy}`
+      await sendSystemMessage(chat.chat_id, content, false)
+    } catch (error) {
+      logger.debug(
+        `Failed to send offer status update chat message for session ${session.id}: ${error}`,
+      )
+    }
 
     if (status === "accepted") {
       const order = await initiateOrder(session)
@@ -172,7 +188,18 @@ export const offer_put_session_id: RequestHandler = async (req, res) => {
 
     try {
       const user = req.user as User
-      await dispatchOfferNotifications(session, "counteroffer", user)
+      await notificationService.createOfferNotification(session, "counteroffer")
+      // Send Discord and chat message for counteroffer
+      await discordService.sendOfferStatusUpdate(session, "Counter-Offered", user)
+      try {
+        const chat = await chatDb.getChat({ session_id: session.id })
+        const content = `Offer status updated to **Counter-Offered** by ${user.username}`
+        await sendSystemMessage(chat.chat_id, content, false)
+      } catch (error) {
+        logger.debug(
+          `Failed to send offer status update chat message for session ${session.id}: ${error}`,
+        )
+      }
     } catch (e) {
       logger.error("Error in offers operation", { error: e })
     }
@@ -191,11 +218,11 @@ export const post_session_id_thread: RequestHandler = async (req, res) => {
   }
 
   try {
-    const bot_response = await createThread(req.offer_session!)
-    if (bot_response.result.failed) {
+    const result = await discordService.queueThreadCreation(req.offer_session!)
+    if (result.status === "failed") {
       res
         .status(500)
-        .json(createErrorResponse({ message: bot_response.result.message }))
+        .json(createErrorResponse({ message: result.message }))
       return
     }
 

@@ -11,7 +11,7 @@ import {
   Response404,
   Response500,
 } from "../openapi.js"
-import { createAdminAlertNotifications } from "../util/notifications.js"
+import { notificationService } from "../../../../services/notifications/notification.service.js"
 import { User } from "../api-models.js"
 import logger from "../../../../logger/logger.js"
 
@@ -342,7 +342,7 @@ adminAlertsRouter.post(
       })
 
       // Send notifications to target users
-      await createAdminAlertNotifications(alert)
+      await notificationService.createAdminAlertNotification(alert)
 
       logger.info("Admin alert created successfully", {
         alertId: alert.alert_id,
