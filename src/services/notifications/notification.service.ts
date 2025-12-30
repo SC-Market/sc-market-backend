@@ -1,0 +1,884 @@
+import {
+  DBAdminAlert,
+  DBContractorInvite,
+  DBMarketBid,
+  DBMarketListing,
+  DBMarketListingComplete,
+  DBMarketOffer,
+  DBMessage,
+  DBOfferSession,
+  DBOrder,
+  DBOrderComment,
+  DBReview,
+} from "../../clients/database/db-models.js"
+import { User } from "../../api/routes/v1/api-models.js"
+import * as notificationDb from "../../api/routes/v1/notifications/database.js"
+import * as orderDb from "../../api/routes/v1/orders/database.js"
+import * as contractorDb from "../../api/routes/v1/contractors/database.js"
+import * as profileDb from "../../api/routes/v1/profiles/database.js"
+import * as chatDb from "../../api/routes/v1/chats/database.js"
+import * as adminDb from "../../api/routes/v1/admin/database.js"
+import logger from "../../logger/logger.js"
+import { has_permission } from "../../api/routes/v1/util/permissions.js"
+
+/**
+ * Service interface for notification creation and management.
+ * This service handles creating in-app notifications and coordinates
+ * with delivery services (Discord, webhooks, push notifications).
+ */
+export interface NotificationService {
+  // Order notifications
+  createOrderNotification(order: DBOrder): Promise<void>
+  createOrderAssignedNotification(order: DBOrder): Promise<void>
+  createOrderMessageNotification(
+    order: DBOrder,
+    message: DBMessage,
+  ): Promise<void>
+  createOrderCommentNotification(
+    comment: DBOrderComment,
+    actorId: string,
+  ): Promise<void>
+  createOrderReviewNotification(review: DBReview): Promise<void>
+  createOrderStatusNotification(
+    order: DBOrder,
+    newStatus: string,
+    actorId: string,
+  ): Promise<void>
+
+  // Offer notifications
+  createOfferNotification(
+    offer: DBOfferSession,
+    type: "create" | "counteroffer",
+  ): Promise<void>
+  createOfferMessageNotification(
+    session: DBOfferSession,
+    message: DBMessage,
+  ): Promise<void>
+
+  // Market notifications
+  createMarketBidNotification(
+    listing: DBMarketListingComplete,
+    bid: DBMarketBid,
+  ): Promise<void>
+  createMarketOfferNotification(
+    listing: DBMarketListing,
+    offer: DBMarketOffer,
+  ): Promise<void>
+
+  // Other notifications
+  createContractorInviteNotification(
+    invite: DBContractorInvite,
+  ): Promise<void>
+  createAdminAlertNotification(alert: DBAdminAlert): Promise<void>
+  createOrderReviewRevisionNotification(
+    review: DBReview,
+    requester: User,
+  ): Promise<void>
+}
+
+/**
+ * Database-backed implementation of NotificationService.
+ * This implementation creates notifications in the database and coordinates
+ * with delivery services. Delivery services (Discord, webhooks, push) will
+ * be integrated in later phases.
+ */
+class DatabaseNotificationService implements NotificationService {
+  async createOrderNotification(order: DBOrder): Promise<void> {
+    // Handle contractor notifications
+    if (order.contractor_id) {
+      await this.createOrderContractorNotification(order)
+    }
+
+    // Handle assigned user notifications
+    if (order.assigned_id) {
+      await this.createOrderAssignedNotification(order)
+    } else {
+      // TODO: Phase 5 - Send webhooks for unassigned orders
+      // await webhookService.sendOrderWebhooks(order)
+    }
+  }
+
+  /**
+   * Creates notification for contractor members when an order is created.
+   * Notifies all contractor members with manage_orders permission.
+   */
+  private async createOrderContractorNotification(order: DBOrder): Promise<void> {
+    const action =
+      await notificationDb.getNotificationActionByName("order_create")
+    const notif_objects = await notificationDb.insertNotificationObjects([
+      {
+        action_type_id: action.action_type_id,
+        entity_id: order.order_id,
+      },
+    ])
+
+    await notificationDb.insertNotificationChange([
+      {
+        notification_object_id: notif_objects[0].notification_object_id,
+        actor_id: order.customer_id,
+      },
+    ])
+
+    const admins = await contractorDb.getMembersWithMatchingRole(
+      order.contractor_id!,
+      { manage_orders: true },
+    )
+
+    if (admins.length > 0) {
+      await notificationDb.insertNotifications(
+        admins.map((u) => ({
+          notification_object_id: notif_objects[0].notification_object_id,
+          notifier_id: u.user_id,
+        })),
+      )
+
+      // TODO: Phase 5 - Send push notifications to contractor members
+      // for (const admin of admins) {
+      //   await pushNotificationService.sendPushNotification(admin.user_id, ...)
+      // }
+    }
+  }
+
+  async createOrderAssignedNotification(order: DBOrder): Promise<void> {
+    if (!order.assigned_id) {
+      return
+    }
+
+    const action =
+      await notificationDb.getNotificationActionByName("order_assigned")
+    const notif_objects = await notificationDb.insertNotificationObjects([
+      {
+        action_type_id: action.action_type_id,
+        entity_id: order.order_id,
+      },
+    ])
+
+    await notificationDb.insertNotificationChange([
+      {
+        notification_object_id: notif_objects[0].notification_object_id,
+        actor_id: order.customer_id,
+      },
+    ])
+
+    await notificationDb.insertNotifications([
+      {
+        notification_object_id: notif_objects[0].notification_object_id,
+        notifier_id: order.assigned_id,
+      },
+    ])
+
+    // TODO: Phase 5 - Coordinate with delivery services
+    // await discordService.sendOrderDM(order)
+    // await webhookService.sendAssignedWebhook(order)
+    // await pushNotificationService.sendPushNotification(order.assigned_id, ...)
+    // await sendAssignedMessage(order) // Chat message
+  }
+
+  async createOrderMessageNotification(
+    order: DBOrder,
+    message: DBMessage,
+  ): Promise<void> {
+    logger.debug(
+      `Creating order message notification for order ${order.order_id}, message ${message.message_id}`,
+    )
+
+    try {
+      const action =
+        await notificationDb.getNotificationActionByName("order_message")
+      logger.debug(`Found notification action: ${action.action_type_id}`)
+
+      // Check if there's already a notification object for this order and action type
+      const existingNotificationObject =
+        await notificationDb.getNotificationObjectByEntityAndAction(
+          order.order_id,
+          action.action_type_id,
+        )
+
+      let notificationObjectId: string
+
+      if (existingNotificationObject) {
+        // Reuse existing notification object and update timestamp
+        notificationObjectId = existingNotificationObject.notification_object_id
+        await notificationDb.updateNotificationObjectTimestamp(
+          notificationObjectId,
+        )
+        logger.debug(
+          `Reusing existing notification object: ${notificationObjectId}`,
+        )
+      } else {
+        // Create new notification object
+        const notif_objects = await notificationDb.insertNotificationObjects([
+          {
+            action_type_id: action.action_type_id,
+            entity_id: order.order_id,
+          },
+        ])
+        notificationObjectId = notif_objects[0].notification_object_id
+        logger.debug(`Created new notification object: ${notificationObjectId}`)
+      }
+
+      // Add notification change for this message
+      await notificationDb.insertNotificationChange([
+        {
+          notification_object_id: notificationObjectId,
+          actor_id: message.author!,
+        },
+      ])
+      logger.debug(`Created notification change for actor: ${message.author}`)
+
+      let notificationCount = 0
+      for (const notified of [order.assigned_id, order.customer_id]) {
+        if (!notified || notified === message.author) {
+          logger.debug(`Skipping notification for ${notified} (author or null)`)
+          continue
+        }
+
+        // Check if user already has an unread notification for this order
+        const existingNotification =
+          await notificationDb.getUnreadNotificationByUserAndObject(
+            notified,
+            notificationObjectId,
+          )
+
+        if (existingNotification) {
+          logger.debug(
+            `User ${notified} already has unread notification, skipping`,
+          )
+          continue
+        }
+
+        await notificationDb.insertNotifications([
+          {
+            notification_object_id: notificationObjectId,
+            notifier_id: notified,
+          },
+        ])
+        notificationCount++
+
+        // TODO: Phase 5 - Send push notification
+        // await pushNotificationService.sendPushNotification(notified, ...)
+      }
+
+      logger.debug(
+        `Successfully created ${notificationCount} order message notifications`,
+      )
+    } catch (error) {
+      logger.error(`Error creating order message notification:`, error)
+      throw error
+    }
+  }
+
+  async createOrderCommentNotification(
+    comment: DBOrderComment,
+    actorId: string,
+  ): Promise<void> {
+    const order = await orderDb.getOrder({ order_id: comment.order_id })
+
+    const action =
+      await notificationDb.getNotificationActionByName("order_comment")
+    const notif_objects = await notificationDb.insertNotificationObjects([
+      {
+        action_type_id: action.action_type_id,
+        entity_id: comment.comment_id,
+      },
+    ])
+
+    await notificationDb.insertNotificationChange([
+      {
+        notification_object_id: notif_objects[0].notification_object_id,
+        actor_id: actorId,
+      },
+    ])
+
+    if (order.assigned_id && actorId !== order.assigned_id) {
+      await notificationDb.insertNotifications([
+        {
+          notification_object_id: notif_objects[0].notification_object_id,
+          notifier_id: order.assigned_id,
+        },
+      ])
+
+      // TODO: Phase 5 - Send push notification
+      // await pushNotificationService.sendPushNotification(order.assigned_id, ...)
+    }
+
+    if (actorId !== order.customer_id) {
+      await notificationDb.insertNotifications([
+        {
+          notification_object_id: notif_objects[0].notification_object_id,
+          notifier_id: order.customer_id,
+        },
+      ])
+
+      // TODO: Phase 5 - Send push notification
+      // await pushNotificationService.sendPushNotification(order.customer_id, ...)
+    }
+
+    // TODO: Phase 5 - Send webhooks
+    // await webhookService.sendOrderCommentWebhooks(order, comment)
+  }
+
+  async createOrderReviewNotification(review: DBReview): Promise<void> {
+    const order = await orderDb.getOrder({ order_id: review.order_id })
+
+    if (!order.assigned_id) {
+      return
+    }
+
+    const action =
+      await notificationDb.getNotificationActionByName("order_review")
+    const notif_objects = await notificationDb.insertNotificationObjects([
+      {
+        action_type_id: action.action_type_id,
+        entity_id: review.review_id,
+      },
+    ])
+
+    await notificationDb.insertNotificationChange([
+      {
+        notification_object_id: notif_objects[0].notification_object_id,
+        actor_id: order.customer_id,
+      },
+    ])
+
+    await notificationDb.insertNotifications([
+      {
+        notification_object_id: notif_objects[0].notification_object_id,
+        notifier_id: order.assigned_id,
+      },
+    ])
+
+    // TODO: Phase 5 - Send push notification
+    // await pushNotificationService.sendPushNotification(order.assigned_id, ...)
+  }
+
+  async createOrderStatusNotification(
+    order: DBOrder,
+    newStatus: string,
+    actorId: string,
+  ): Promise<void> {
+    const action_name = `order_status_${newStatus.replace("-", "_")}`
+    const action = await notificationDb.getNotificationActionByName(action_name)
+    const notif_objects = await notificationDb.insertNotificationObjects([
+      {
+        action_type_id: action.action_type_id,
+        entity_id: order.order_id,
+      },
+    ])
+
+    await notificationDb.insertNotificationChange([
+      {
+        notification_object_id: notif_objects[0].notification_object_id,
+        actor_id: actorId,
+      },
+    ])
+
+    if (order.assigned_id && order.assigned_id !== actorId) {
+      await notificationDb.insertNotifications([
+        {
+          notification_object_id: notif_objects[0].notification_object_id,
+          notifier_id: order.assigned_id,
+        },
+      ])
+
+      // TODO: Phase 5 - Send push notification
+      // await pushNotificationService.sendPushNotification(order.assigned_id, ...)
+    }
+
+    if (order.customer_id !== actorId) {
+      await notificationDb.insertNotifications([
+        {
+          notification_object_id: notif_objects[0].notification_object_id,
+          notifier_id: order.customer_id,
+        },
+      ])
+
+      // TODO: Phase 5 - Send push notification
+      // await pushNotificationService.sendPushNotification(order.customer_id, ...)
+    }
+
+    // TODO: Phase 5 - Send webhooks
+    // await webhookService.sendOrderStatusWebhooks(order, newStatus, actorId)
+  }
+
+  async createOfferNotification(
+    offer: DBOfferSession,
+    type: "create" | "counteroffer",
+  ): Promise<void> {
+    // Handle contractor notifications
+    if (offer.contractor_id) {
+      await this.createOfferContractorNotification(
+        offer,
+        type === "create" ? "offer_create" : "counter_offer_create",
+      )
+    }
+
+    // Handle assigned user notifications
+    if (offer.assigned_id) {
+      await this.createOfferAssignedNotification(
+        offer,
+        type === "create" ? "offer_created" : "counter_offer_created",
+      )
+    }
+
+    // TODO: Phase 5 - Coordinate with delivery services
+    // await discordService.sendOfferDM(offer)
+    // await webhookService.sendOfferWebhooks(offer, type)
+  }
+
+  /**
+   * Creates notification for contractor members when an offer is created.
+   * Notifies all contractor members with manage_orders permission.
+   */
+  private async createOfferContractorNotification(
+    offer: DBOfferSession,
+    actionType: "offer_create" | "counter_offer_create",
+  ): Promise<void> {
+    const action = await notificationDb.getNotificationActionByName(actionType)
+    const notif_objects = await notificationDb.insertNotificationObjects([
+      {
+        action_type_id: action.action_type_id,
+        entity_id: offer.id,
+      },
+    ])
+
+    await notificationDb.insertNotificationChange([
+      {
+        notification_object_id: notif_objects[0].notification_object_id,
+        actor_id: offer.customer_id,
+      },
+    ])
+
+    const admins = await contractorDb.getMembersWithMatchingRole(
+      offer.contractor_id!,
+      { manage_orders: true },
+    )
+
+    if (admins.length > 0) {
+      await notificationDb.insertNotifications(
+        admins.map((u) => ({
+          notification_object_id: notif_objects[0].notification_object_id,
+          notifier_id: u.user_id,
+        })),
+      )
+
+      // TODO: Phase 5 - Send push notifications to contractor members
+      // for (const admin of admins) {
+      //   await pushNotificationService.sendPushNotification(admin.user_id, ...)
+      // }
+    }
+  }
+
+  /**
+   * Creates notification for assigned user when an offer is created.
+   */
+  private async createOfferAssignedNotification(
+    session: DBOfferSession,
+    type: "offer_created" | "counter_offer_created",
+  ): Promise<void> {
+    if (!session.assigned_id) {
+      return
+    }
+
+    const action = await notificationDb.getNotificationActionByName(
+      type === "offer_created" ? "offer_create" : "counter_offer_create",
+    )
+    const notif_objects = await notificationDb.insertNotificationObjects([
+      {
+        action_type_id: action.action_type_id,
+        entity_id: session.id,
+      },
+    ])
+
+    await notificationDb.insertNotificationChange([
+      {
+        notification_object_id: notif_objects[0].notification_object_id,
+        actor_id: session.customer_id,
+      },
+    ])
+
+    await notificationDb.insertNotifications([
+      {
+        notification_object_id: notif_objects[0].notification_object_id,
+        notifier_id: session.assigned_id,
+      },
+    ])
+
+    // TODO: Phase 5 - Send push notification
+    // await pushNotificationService.sendPushNotification(session.assigned_id, ...)
+  }
+
+  async createOfferMessageNotification(
+    session: DBOfferSession,
+    message: DBMessage,
+  ): Promise<void> {
+    logger.debug(
+      `Creating offer message notification for session ${session.id}, message ${message.message_id}`,
+    )
+
+    try {
+      const action =
+        await notificationDb.getNotificationActionByName("offer_message")
+      logger.debug(`Found notification action: ${action.action_type_id}`)
+
+      // Check if there's already a notification object for this session and action type
+      const existingNotificationObject =
+        await notificationDb.getNotificationObjectByEntityAndAction(
+          session.id,
+          action.action_type_id,
+        )
+
+      let notificationObjectId: string
+
+      if (existingNotificationObject) {
+        // Reuse existing notification object and update timestamp
+        notificationObjectId = existingNotificationObject.notification_object_id
+        await notificationDb.updateNotificationObjectTimestamp(
+          notificationObjectId,
+        )
+        logger.debug(
+          `Reusing existing notification object: ${notificationObjectId}`,
+        )
+      } else {
+        // Create new notification object
+        const notif_objects = await notificationDb.insertNotificationObjects([
+          {
+            action_type_id: action.action_type_id,
+            entity_id: session.id,
+          },
+        ])
+        notificationObjectId = notif_objects[0].notification_object_id
+        logger.debug(`Created new notification object: ${notificationObjectId}`)
+      }
+
+      // Add notification change for this message
+      await notificationDb.insertNotificationChange([
+        {
+          notification_object_id: notificationObjectId,
+          actor_id: message.author!,
+        },
+      ])
+      logger.debug(`Created notification change for actor: ${message.author}`)
+
+      let notificationCount = 0
+      for (const notified of [session.assigned_id, session.customer_id]) {
+        if (!notified || notified === message.author) {
+          logger.debug(`Skipping notification for ${notified} (author or null)`)
+          continue
+        }
+
+        // Check if user already has an unread notification for this session
+        const existingNotification =
+          await notificationDb.getUnreadNotificationByUserAndObject(
+            notified,
+            notificationObjectId,
+          )
+
+        if (existingNotification) {
+          logger.debug(
+            `User ${notified} already has unread notification, skipping`,
+          )
+          continue
+        }
+
+        await notificationDb.insertNotifications([
+          {
+            notification_object_id: notificationObjectId,
+            notifier_id: notified,
+          },
+        ])
+        notificationCount++
+
+        // TODO: Phase 5 - Send push notification
+        // await pushNotificationService.sendPushNotification(notified, ...)
+      }
+
+      logger.debug(
+        `Successfully created ${notificationCount} offer message notifications`,
+      )
+    } catch (error) {
+      logger.error(`Error creating offer message notification:`, error)
+      throw error
+    }
+  }
+
+  async createMarketBidNotification(
+    listing: DBMarketListingComplete,
+    bid: DBMarketBid,
+  ): Promise<void> {
+    if (listing.listing.contractor_seller_id) {
+      const admins = await contractorDb.getMembersWithMatchingRole(
+        listing.listing.contractor_seller_id,
+        { manage_market: true },
+      )
+
+      if (bid.user_bidder_id) {
+        await this.createMarketUpdateNotification(
+          bid.user_bidder_id,
+          bid.bid_id,
+          "market_item_bid",
+          admins.map((u) => u.user_id),
+        )
+      }
+    }
+
+    if (listing.listing.user_seller_id) {
+      if (bid.user_bidder_id) {
+        await this.createMarketUpdateNotification(
+          bid.user_bidder_id,
+          bid.bid_id,
+          "market_item_bid",
+          [listing.listing.user_seller_id],
+        )
+      }
+    }
+
+    // TODO: Phase 5 - Send webhooks
+    // await webhookService.sendBidWebhooks(listing, bid)
+  }
+
+  async createMarketOfferNotification(
+    listing: DBMarketListing,
+    offer: DBMarketOffer,
+  ): Promise<void> {
+    if (listing.contractor_seller_id) {
+      const admins = await contractorDb.getMembersWithMatchingRole(
+        listing.contractor_seller_id,
+        { manage_market: true },
+      )
+
+      if (offer.buyer_user_id) {
+        await this.createMarketUpdateNotification(
+          offer.buyer_user_id,
+          offer.offer_id,
+          "market_item_offer",
+          admins.map((u) => u.user_id),
+        )
+      }
+    }
+
+    if (listing.user_seller_id) {
+      if (offer.buyer_user_id) {
+        await this.createMarketUpdateNotification(
+          offer.buyer_user_id,
+          offer.offer_id,
+          "market_item_offer",
+          [listing.user_seller_id],
+        )
+      }
+    }
+  }
+
+  /**
+   * Helper method to create market update notifications (bids/offers).
+   */
+  private async createMarketUpdateNotification(
+    actorId: string,
+    entityId: string,
+    actionName: string,
+    recipients: string[],
+  ): Promise<void> {
+    if (recipients.length === 0) {
+      return
+    }
+
+    const action = await notificationDb.getNotificationActionByName(actionName)
+    const notif_objects = await notificationDb.insertNotificationObjects([
+      {
+        action_type_id: action.action_type_id,
+        entity_id: entityId,
+      },
+    ])
+
+    await notificationDb.insertNotificationChange([
+      {
+        notification_object_id: notif_objects[0].notification_object_id,
+        actor_id: actorId,
+      },
+    ])
+
+    await notificationDb.insertNotifications(
+      recipients.map((u) => ({
+        notification_object_id: notif_objects[0].notification_object_id,
+        notifier_id: u,
+      })),
+    )
+
+    // TODO: Phase 5 - Send push notifications
+    // for (const recipient of recipients) {
+    //   await pushNotificationService.sendPushNotification(recipient, ...)
+    // }
+  }
+
+  async createContractorInviteNotification(
+    invite: DBContractorInvite,
+  ): Promise<void> {
+    const action =
+      await notificationDb.getNotificationActionByName("contractor_invite")
+    const notif_objects = await notificationDb.insertNotificationObjects([
+      {
+        action_type_id: action.action_type_id,
+        entity_id: invite.invite_id,
+      },
+    ])
+
+    await notificationDb.insertNotifications([
+      {
+        notification_object_id: notif_objects[0].notification_object_id,
+        notifier_id: invite.user_id,
+      },
+    ])
+
+    // TODO: Phase 5 - Send push notification
+    // await pushNotificationService.sendPushNotification(invite.user_id, ...)
+  }
+
+  async createAdminAlertNotification(alert: DBAdminAlert): Promise<void> {
+    try {
+      // Get the admin_alert notification action
+      const action =
+        await notificationDb.getNotificationActionByName("admin_alert")
+
+      // Create notification object
+      const notif_objects = await notificationDb.insertNotificationObjects([
+        {
+          action_type_id: action.action_type_id,
+          entity_id: alert.alert_id,
+        },
+      ])
+
+      // Add the admin who created the alert as the actor
+      await notificationDb.insertNotificationChange([
+        {
+          notification_object_id: notif_objects[0].notification_object_id,
+          actor_id: alert.created_by,
+        },
+      ])
+
+      // Get target users based on alert target type
+      const targetUserIds = await adminDb.getUsersForAlertTarget(
+        alert.target_type,
+        alert.target_contractor_id || undefined,
+      )
+
+      if (targetUserIds.length === 0) {
+        logger.warn(`No users found for admin alert target: ${alert.target_type}`)
+        return
+      }
+
+      // Create notifications for all target users
+      const notifications = targetUserIds.map((userId: string) => ({
+        notification_object_id: notif_objects[0].notification_object_id,
+        notifier_id: userId,
+      }))
+
+      await notificationDb.insertNotifications(notifications)
+
+      logger.info(
+        `Created admin alert notifications for ${targetUserIds.length} users`,
+        {
+          alertId: alert.alert_id,
+          targetType: alert.target_type,
+          targetContractorId: alert.target_contractor_id,
+        },
+      )
+
+      // TODO: Phase 5 - Send push notifications
+      // for (const userId of targetUserIds) {
+      //   await pushNotificationService.sendPushNotification(userId, ...)
+      // }
+    } catch (error) {
+      logger.error("Failed to create admin alert notifications:", error)
+      throw error
+    }
+  }
+
+  async createOrderReviewRevisionNotification(
+    review: DBReview,
+    requester: User,
+  ): Promise<void> {
+    try {
+      // Determine notification recipients
+      const recipients: string[] = []
+
+      if (review.user_author) {
+        // Individual review author
+        recipients.push(review.user_author)
+      } else if (review.contractor_author) {
+        // Organization review - notify all members with manage_orders permission
+        const members = await contractorDb.getContractorMembers({
+          contractor_id: review.contractor_author,
+        })
+
+        for (const member of members) {
+          const hasPermission = await has_permission(
+            review.contractor_author,
+            member.user_id,
+            "manage_orders",
+          )
+          if (hasPermission) {
+            recipients.push(member.user_id)
+          }
+        }
+      }
+
+      if (recipients.length === 0) {
+        logger.warn("No recipients found for review revision notification", {
+          review_id: review.review_id,
+          user_author: review.user_author,
+          contractor_author: review.contractor_author,
+        })
+        return
+      }
+
+      // Get notification action
+      const action = await notificationDb.getNotificationActionByName(
+        "order_review_revision_requested",
+      )
+
+      // Create notification object
+      const notif_objects = await notificationDb.insertNotificationObjects([
+        {
+          action_type_id: action.action_type_id,
+          entity_id: review.review_id,
+        },
+      ])
+
+      await notificationDb.insertNotificationChange([
+        {
+          notification_object_id: notif_objects[0].notification_object_id,
+          actor_id: requester.user_id,
+        },
+      ])
+
+      // Create notifications for all recipients
+      const notifications = recipients.map((recipient_id) => ({
+        notification_object_id: notif_objects[0].notification_object_id,
+        notifier_id: recipient_id,
+      }))
+
+      await notificationDb.insertNotifications(notifications)
+
+      logger.info("Created review revision notifications", {
+        review_id: review.review_id,
+        recipient_count: recipients.length,
+        requester_id: requester.user_id,
+      })
+
+      // TODO: Phase 5 - Send push notifications
+      // for (const recipient of recipients) {
+      //   await pushNotificationService.sendPushNotification(recipient, ...)
+      // }
+    } catch (error) {
+      logger.error("Failed to create review revision notification:", error)
+      throw error
+    }
+  }
+}
+
+/**
+ * Singleton instance of NotificationService.
+ * This is the service that should be imported and used throughout the application.
+ */
+export const notificationService: NotificationService =
+  new DatabaseNotificationService()

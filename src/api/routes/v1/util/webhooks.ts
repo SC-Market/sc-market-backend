@@ -10,7 +10,7 @@ import { User } from "../api-models.js"
 import * as profileDb from "../profiles/database.js"
 import * as notificationDb from "../notifications/database.js"
 import * as offerDb from "../offers/database.js"
-import { sendDM } from "./discord.js"
+import { discordService } from "../../../../services/discord/discord.service.js"
 import { cdn } from "../../../../clients/cdn/cdn.js"
 import logger from "../../../../logger/logger.js"
 import { formatMarketUrl } from "./urls.js"
@@ -373,7 +373,7 @@ export async function sendOrderDM(order: DBOrder) {
     if (person) {
       const discordId = await profileDb.getUserDiscordId(person.user_id)
       if (discordId) {
-        await sendDM(
+        await discordService.sendDirectMessage(
           discordId,
           await generateNewOrderMessage(order, customer, assigned),
         )
@@ -400,7 +400,7 @@ export async function sendOfferDM(offer: DBOfferSession) {
     if (person) {
       const discordId = await profileDb.getUserDiscordId(person.user_id)
       if (discordId) {
-        await sendDM(
+        await discordService.sendDirectMessage(
           discordId,
           await generateNewOfferMessage(offer, customer, assigned),
         )

@@ -22,7 +22,7 @@ import { has_permission, is_member } from "../util/permissions.js"
 import { DBOrder } from "../../../../clients/database/db-models.js"
 import logger from "../../../../logger/logger.js"
 import { serializeOrderDetails } from "./serializers.js"
-import { createThread } from "../util/discord.js"
+import { discordService } from "../../../../services/discord/discord.service.js"
 
 export const search_orders: RequestHandler = async (req, res) => {
   const user = req.user as User
@@ -473,10 +473,10 @@ export const post_order_id_thread: RequestHandler = async (req, res) => {
   }
 
   try {
-    const bot_response = await createThread(req.order!)
-    if (bot_response.result.failed) {
-      logger.error("Failed to create thread", bot_response)
-      res.status(500).json({ message: bot_response.result.message })
+    const result = await discordService.queueThreadCreation(req.order!)
+    if (result.status === "failed") {
+      logger.error("Failed to create thread", result)
+      res.status(500).json({ message: result.message })
       return
     }
 

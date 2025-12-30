@@ -3,10 +3,7 @@ import { User } from "../api-models.js"
 import { database } from "../../../../clients/database/knex-db.js"
 import * as orderDb from "./database.js"
 import * as contractorDb from "../contractors/database.js"
-import {
-  createOrderReviewNotification,
-  createOrderReviewRevisionNotification,
-} from "../util/notifications.js"
+import { notificationService } from "../../../../services/notifications/notification.service.js"
 import { has_permission } from "../util/permissions.js"
 import { createResponse, createErrorResponse } from "../util/response.js"
 import { DBOrder, DBReview } from "../../../../clients/database/db-models.js"
@@ -85,7 +82,10 @@ export async function requestReviewRevision(req: Request, res: Response) {
     )
 
     // Send notification to review author
-    await createOrderReviewRevisionNotification(updatedReview, user)
+    await notificationService.createOrderReviewRevisionNotification(
+      updatedReview,
+      user,
+    )
 
     logger.info("Review revision requested successfully", {
       review_id,
@@ -322,7 +322,7 @@ export const post_order_review: RequestHandler = async (req, res, next) => {
     role: role as "customer" | "contractor",
   })
 
-  await createOrderReviewNotification(review[0])
+  await notificationService.createOrderReviewNotification(review[0])
 
   res.status(200).json(createResponse({ result: "Success" }))
 }

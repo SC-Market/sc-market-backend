@@ -29,7 +29,7 @@ import {
 import moment from "moment/moment.js"
 import { serializeOrderDetails } from "../orders/serializers.js"
 import logger from "../../../../logger/logger.js"
-import { marketBidNotification } from "../util/notifications.js"
+import { notificationService } from "../../../../services/notifications/notification.service.js"
 import {
   createOffer,
   validateAvailabilityRequirement,
@@ -851,7 +851,7 @@ export const get_listing_bids: RequestHandler = async (req, res) => {
   })
 
   const complete = await marketDb.getMarketListingComplete(listing.listing_id)
-  await marketBidNotification(complete, bid_results[0])
+  await notificationService.createMarketBidNotification(complete, bid_results[0])
 
   res.json({ result: "Success" })
 }
