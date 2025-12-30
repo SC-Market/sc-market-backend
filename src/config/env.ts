@@ -46,6 +46,12 @@ interface Environment {
   RSI_TOKEN?: string
   RSI_DEVICE_ID?: string
 
+  // Push Notifications (Web Push Protocol)
+  // Generate VAPID keys using: npx web-push generate-vapid-keys
+  VAPID_PUBLIC_KEY?: string
+  VAPID_PRIVATE_KEY?: string
+  VAPID_SUBJECT?: string // Usually a mailto: URL or website URL (e.g., "mailto:admin@sc-market.space")
+
   // Other
   NODE_ENV?: string
   PORT?: string
