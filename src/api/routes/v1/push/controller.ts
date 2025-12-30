@@ -6,7 +6,7 @@ import logger from "../../../../logger/logger.js"
 import { env } from "../../../../config/env.js"
 
 /**
- * POST /api/v1/push/subscribe
+ * POST /api/push/subscribe
  * Subscribe to push notifications
  */
 export const push_subscribe: RequestHandler = async (req, res) => {
@@ -52,8 +52,12 @@ export const push_subscribe: RequestHandler = async (req, res) => {
       },
     )
 
-    logger.debug(`User ${user.user_id} subscribed to push notifications`, {
+    logger.info(`User successfully subscribed to push notifications`, {
+      user_id: user.user_id,
+      username: user.username,
       subscription_id: subscriptionId,
+      endpoint: endpoint.substring(0, 50) + "...", // Log partial endpoint
+      user_agent: userAgent || "unknown",
     })
 
     res.status(201).json(
@@ -73,7 +77,40 @@ export const push_subscribe: RequestHandler = async (req, res) => {
 }
 
 /**
- * DELETE /api/v1/push/subscribe/:subscription_id
+ * GET /api/push/subscribe
+ * Get all push subscriptions for the authenticated user
+ */
+export const push_get_subscriptions: RequestHandler = async (req, res) => {
+  const user = req.user as User
+
+  try {
+    const subscriptions = await pushNotificationService.getUserSubscriptions(
+      user.user_id,
+    )
+
+    logger.info(`User retrieved push subscriptions`, {
+      user_id: user.user_id,
+      username: user.username,
+      subscription_count: subscriptions.length,
+    })
+
+    res.json(
+      createResponse({
+        subscriptions,
+      }),
+    )
+  } catch (error) {
+    logger.error("Failed to get push subscriptions:", error)
+    res.status(500).json(
+      createErrorResponse({
+        message: "Failed to get push subscriptions",
+      }),
+    )
+  }
+}
+
+/**
+ * DELETE /api/push/subscribe/:subscription_id
  * Unsubscribe from push notifications
  */
 export const push_unsubscribe: RequestHandler = async (req, res) => {
@@ -92,12 +129,11 @@ export const push_unsubscribe: RequestHandler = async (req, res) => {
   try {
     await pushNotificationService.deleteSubscription(user.user_id, subscription_id)
 
-    logger.debug(
-      `User ${user.user_id} unsubscribed from push notifications`,
-      {
-        subscription_id,
-      },
-    )
+    logger.info(`User unsubscribed from push notifications`, {
+      user_id: user.user_id,
+      username: user.username,
+      subscription_id,
+    })
 
     res.json(
       createResponse({
@@ -133,7 +169,7 @@ export const push_unsubscribe: RequestHandler = async (req, res) => {
 }
 
 /**
- * GET /api/v1/push/preferences
+ * GET /api/push/preferences
  * Get push notification preferences
  */
 export const push_get_preferences: RequestHandler = async (req, res) => {
@@ -168,7 +204,7 @@ export const push_get_preferences: RequestHandler = async (req, res) => {
 }
 
 /**
- * PATCH /api/v1/push/preferences
+ * PATCH /api/push/preferences
  * Update push notification preferences
  */
 export const push_update_preference: RequestHandler = async (req, res) => {
@@ -195,7 +231,9 @@ export const push_update_preference: RequestHandler = async (req, res) => {
       enabled,
     )
 
-    logger.debug(`User ${user.user_id} updated push preference`, {
+    logger.info(`User updated push notification preference`, {
+      user_id: user.user_id,
+      username: user.username,
       action,
       enabled,
     })
