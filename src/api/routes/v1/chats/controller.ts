@@ -4,11 +4,8 @@ import { database } from "../../../../clients/database/knex-db.js"
 import * as chatDb from "./database.js"
 import * as profileDb from "../profiles/database.js"
 import { cdn } from "../../../../clients/cdn/cdn.js"
-import { sendUserChatMessage } from "../util/discord.js"
-import {
-  createOfferMessageNotification,
-  createOrderMessageNotification,
-} from "../util/notifications.js"
+import { discordService } from "../../../../services/discord/discord.service.js"
+import { notificationService } from "../../../../services/notifications/notification.service.js"
 import { eqSet, handle_chat_response } from "./helpers.js"
 import { serializeMessage } from "./serializers.js"
 import { createErrorResponse, createResponse } from "../util/response.js"
@@ -99,21 +96,21 @@ export async function sendMessage(
       logger.debug(
         `Sending user chat message for ${order ? "order" : "session"}: ${(order || session)!.thread_id}`,
       )
-      await sendUserChatMessage(order || session!, user, content)
+      await discordService.sendUserChatMessage(order || session!, user, content)
     }
 
     if (order) {
       logger.debug(
         `Creating order message notification for order: ${order.order_id}`,
       )
-      await createOrderMessageNotification(order, message)
+      await notificationService.createOrderMessageNotification(order, message)
     }
 
     if (session) {
       logger.debug(
         `Creating offer message notification for session: ${session.id}`,
       )
-      await createOfferMessageNotification(session, message)
+      await notificationService.createOfferMessageNotification(session, message)
     }
   } else {
     logger.debug("No order or session found for this chat message")

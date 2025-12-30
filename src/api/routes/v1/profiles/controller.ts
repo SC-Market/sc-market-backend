@@ -11,8 +11,7 @@ import { cdn as cdn } from "../../../../clients/cdn/cdn.js"
 import { AvailabilityBody as AvailabilityBody } from "../../../../clients/database/db-models.js"
 import { getUserRating as getUserRating } from "../util/formatting.js"
 import { createNotificationWebhook as createNotificationWebhook } from "../util/webhooks.js"
-import { fetchChannel as fetchChannel } from "../util/discord.js"
-import { fetchGuild as fetchGuild } from "../util/discord.js"
+import { discordService } from "../../../../services/discord/discord.service.js"
 import { authorizeProfile as authorizeProfile } from "./helpers.js"
 import { get_sentinel as get_sentinel } from "./helpers.js"
 import { syncRSIHandle as syncRSIHandle } from "./helpers.js"
@@ -787,13 +786,13 @@ export const profile_get_settings_discord: RequestHandler = async (
   let guild
   let avatar
   if (user.official_server_id) {
-    guild = await fetchGuild(user.official_server_id)
+    guild = await discordService.fetchGuild(user.official_server_id)
     avatar = `https://cdn.discordapp.com/icons/${guild.id}/${guild.icon}.webp?size=240`
   }
 
   let channel
   if (user.discord_thread_channel_id) {
-    channel = await fetchChannel(user.discord_thread_channel_id)
+    channel = await discordService.fetchChannel(user.discord_thread_channel_id)
   }
 
   res.json({

@@ -12,23 +12,13 @@ import { database } from "../../../../clients/database/knex-db.js"
 import * as chatDb from "../chats/database.js"
 import * as contractorDb from "../contractors/database.js"
 import * as profileDb from "../profiles/database.js"
-import * as discordUtil from "../util/discord.js"
 import * as orderDb from "./database.js"
 import * as offerDb from "../offers/database.js"
 import * as marketDb from "../market/database.js"
+import { notificationService } from "../../../../services/notifications/notification.service.js"
 import {
-  createOrderAssignedNotification,
-  createOrderNotifications,
-  createOrderStatusNotification,
-  dispatchOfferNotifications,
-} from "../util/notifications.js"
-import {
-  assignToThread,
-  createOfferThread,
-  manageOrderAssignedDiscord,
-  manageOrderStatusUpdateDiscord,
-  rename_offer_thread,
-} from "../util/discord.js"
+  discordService,
+} from "../../../../services/discord/discord.service.js"
 import { User } from "../api-models.js"
 import { sendSystemMessage } from "../chats/helpers.js"
 import { has_permission } from "../util/permissions.js"
@@ -308,7 +298,7 @@ export async function initiateOrder(session: DBOfferSession) {
   }
 
   try {
-    await createOrderNotifications(order)
+    await notificationService.createOrderNotification(order)
   } catch (e) {}
 
   const market_listings = await marketDb.getOfferMarketListings(most_recent.id)
@@ -347,7 +337,10 @@ export async function initiateOrder(session: DBOfferSession) {
   }
 
   try {
-    await rename_offer_thread(session, order)
+    await discordService.renameThread(
+      session.thread_id!,
+      `order-${order.order_id.substring(0, 8)}`,
+    )
   } catch (e) {
     logger.error(`Failed to rename thread: ${e}`)
   }
@@ -432,8 +425,7 @@ export async function createOffer(
   }
 
   try {
-    // TODO
-    await dispatchOfferNotifications(session, "create")
+    await notificationService.createOfferNotification(session, "create")
   } catch (e) {
     logger.error(`Failed to dispatch offer notifications: ${e}`)
   }
@@ -456,7 +448,7 @@ export async function createOffer(
         : assigned?.discord_thread_channel_id
 
       if (channel_id) {
-        discord_invite = await discordUtil.createDiscordInvite(channel_id)
+        discord_invite = await discordService.createInvite(channel_id)
         if (discord_invite) {
           logger.info(
             `Created Discord invite for session ${session.id}: ${discord_invite}`,
@@ -477,11 +469,11 @@ export async function createOffer(
 
     // Still queue thread creation for Discord bot (but without invite creation)
     try {
-      const bot_response = await createOfferThread(session)
+      const result = await discordService.queueThreadCreation(session)
 
-      if (bot_response.result.failed) {
+      if (result.status === "failed") {
         logger.debug(
-          `Discord thread creation failed for session ${session.id}: ${bot_response.result.message}`,
+          `Discord thread creation failed for session ${session.id}: ${result.message}`,
         )
       } else {
         logger.info(
@@ -668,12 +660,19 @@ export async function handleStatusUpdate(req: any, res: any, status: string) {
         order.contractor_id || undefined,
       )
 
-      await assignToThread(order, req.user)
+      await discordService.assignUserToThread(
+        order.thread_id!,
+        req.user.user_id,
+      )
     } else {
       await orderDb.updateOrder(order.order_id, { status: status })
     }
-    await createOrderStatusNotification(order, status, req.user.user_id)
-    await manageOrderStatusUpdateDiscord(order, status)
+    await notificationService.createOrderStatusNotification(
+      order,
+      status,
+      req.user.user_id,
+    )
+    await discordService.sendOrderStatusUpdate(order, status)
     await sendStatusUpdateMessage(order, status)
 
     res.status(200).json(createResponse({ result: "Success" }))
@@ -738,8 +737,8 @@ export async function handleAssignedUpdate(req: any, res: any) {
       assigned_id: targetUserObj?.user_id || undefined,
     })
 
-    await createOrderAssignedNotification(newOrders[0])
-    await manageOrderAssignedDiscord(newOrders[0], targetUserObj)
+    await notificationService.createOrderAssignedNotification(newOrders[0])
+    await discordService.sendOrderAssignedMessage(newOrders[0], targetUserObj)
   } else {
     await orderDb.updateOrder(req.order.order_id, {
       assigned_id: null,
@@ -830,7 +829,7 @@ export async function acceptApplicant(
   )
 
   await orderDb.clearOrderApplications(req.order.order_id)
-  await createOrderNotifications(newOrders[0])
+  await notificationService.createOrderNotification(newOrders[0])
 
   res.status(201).json(createResponse({ result: "Success" }))
 }
@@ -1907,7 +1906,7 @@ export async function sendCustomOfferMessage(
         if (session.thread_id) {
           try {
             // Send as system message to Discord
-            await discordUtil.sendUserChatMessage(
+            await discordService.sendUserChatMessage(
               session,
               { username: "System" } as any,
               setting.message_content,
@@ -2000,7 +1999,7 @@ export async function sendCustomOrderMessage(
         if (order.thread_id) {
           try {
             // Send as system message to Discord
-            await discordUtil.sendUserChatMessage(
+            await discordService.sendUserChatMessage(
               order,
               { username: "System" } as any,
               setting.message_content,
