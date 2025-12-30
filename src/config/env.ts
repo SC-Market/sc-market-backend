@@ -37,6 +37,9 @@ interface Environment {
   // CDN
   CDN_URL?: string
 
+  // Frontend URL (for notification links and assets)
+  FRONTEND_URL?: string
+
   // API Keys
   SCAPI_KEY?: string
   NYDOO_KEY?: string

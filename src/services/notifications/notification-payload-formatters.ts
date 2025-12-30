@@ -21,10 +21,32 @@ import { PushNotificationPayload } from "../push-notifications/push-notification
 import { env } from "../../config/env.js"
 
 /**
- * Base URL for the application (for notification links)
+ * Base URL for the application (for notification links and assets)
  */
 const getBaseUrl = (): string => {
-  return env.CDN_URL || "https://scmarket.app"
+  return env.FRONTEND_URL || env.CDN_URL || "https://sc-market.space"
+}
+
+/**
+ * Get notification icon URL
+ * Android requires proper PNG icons (not favicon.ico)
+ * Use the Android Chrome icon which is optimized for notifications
+ */
+const getNotificationIcon = (): string => {
+  const baseUrl = getBaseUrl()
+  // Use Android Chrome 192x192 icon - perfect size for Android notifications
+  return `${baseUrl}/android-chrome-192x192.png`
+}
+
+/**
+ * Get notification badge URL
+ * Android badges should be monochrome and small (24x24 or 48x48)
+ * Using the 192x192 icon works, but ideally should be a monochrome badge
+ */
+const getNotificationBadge = (): string => {
+  const baseUrl = getBaseUrl()
+  // Use Android Chrome 192x192 icon as badge (Android will handle it)
+  return `${baseUrl}/android-chrome-192x192.png`
 }
 
 /**
@@ -69,8 +91,8 @@ export function formatOrderNotificationPayload(
   return {
     title,
     body,
-    icon: `${getBaseUrl()}/favicon.ico`,
-    badge: `${getBaseUrl()}/favicon.ico`,
+    icon: getNotificationIcon(),
+    badge: getNotificationBadge(),
     data: {
       url,
       type: "order",
@@ -199,8 +221,8 @@ export function formatOfferNotificationPayload(
   return {
     title,
     body,
-    icon: `${getBaseUrl()}/favicon.ico`,
-    badge: `${getBaseUrl()}/favicon.ico`,
+    icon: getNotificationIcon(),
+    badge: getNotificationBadge(),
     data: {
       url,
       type: "offer",
