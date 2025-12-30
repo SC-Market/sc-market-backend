@@ -6,12 +6,14 @@ import {
 } from "../../../middleware/enhanced-ratelimiting.js"
 import {
   push_subscribe,
+  push_get_subscriptions,
   push_unsubscribe,
   push_get_preferences,
   push_update_preference,
 } from "./controller.js"
 import {
   push_subscribe_spec,
+  push_get_subscriptions_spec,
   push_unsubscribe_spec,
   push_get_preferences_spec,
   push_update_preference_spec,
@@ -23,6 +25,7 @@ export const pushRouter = express.Router()
  * Push Notification API
  *
  * POST   /subscribe              - Subscribe to push notifications
+ * GET    /subscribe              - Get all push subscriptions for user
  * DELETE /subscribe/:subscription_id - Unsubscribe from push notifications
  * GET    /preferences            - Get push notification preferences
  * PATCH  /preferences            - Update push notification preferences
@@ -36,6 +39,16 @@ pushRouter.post(
   push_subscribe_spec,
   commonWriteRateLimit,
   push_subscribe,
+)
+
+// Get all push subscriptions for user
+// GET /push/subscribe
+pushRouter.get(
+  "/subscribe",
+  userAuthorized,
+  push_get_subscriptions_spec,
+  readRateLimit,
+  push_get_subscriptions,
 )
 
 // Unsubscribe from push notifications

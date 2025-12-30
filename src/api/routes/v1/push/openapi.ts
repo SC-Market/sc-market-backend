@@ -139,6 +139,87 @@ export const push_subscribe_spec = oapi.validPath({
   },
 })
 
+// GET /push/subscribe
+export const push_get_subscriptions_spec = oapi.validPath({
+  summary: "Get push subscriptions",
+  description:
+    "Get all push subscriptions for the authenticated user. Returns a list of all active push subscriptions associated with the user's account.",
+  operationId: "getPushSubscriptions",
+  tags: ["Push Notifications"],
+  responses: {
+    "200": {
+      description: "Successfully retrieved push subscriptions",
+      headers: RateLimitHeaders,
+      content: {
+        "application/json": {
+          schema: {
+            type: "object",
+            properties: {
+              subscriptions: {
+                type: "array",
+                items: {
+                  type: "object",
+                  properties: {
+                    subscription_id: {
+                      type: "string",
+                      format: "uuid",
+                      description: "Unique identifier for the subscription",
+                    },
+                    user_id: {
+                      type: "string",
+                      format: "uuid",
+                      description: "User ID that owns this subscription",
+                    },
+                    endpoint: {
+                      type: "string",
+                      description: "Push service endpoint URL",
+                    },
+                    p256dh: {
+                      type: "string",
+                      description: "P-256 ECDH public key (base64 encoded)",
+                    },
+                    auth: {
+                      type: "string",
+                      description: "Authentication secret (base64 encoded)",
+                    },
+                    user_agent: {
+                      type: "string",
+                      nullable: true,
+                      description: "User agent string when subscription was created",
+                    },
+                    created_at: {
+                      type: "string",
+                      format: "date-time",
+                      description: "When the subscription was created",
+                    },
+                    updated_at: {
+                      type: "string",
+                      format: "date-time",
+                      description: "When the subscription was last updated",
+                    },
+                  },
+                  required: [
+                    "subscription_id",
+                    "user_id",
+                    "endpoint",
+                    "p256dh",
+                    "auth",
+                    "created_at",
+                    "updated_at",
+                  ],
+                },
+              },
+            },
+          },
+        },
+      },
+    },
+    "401": Response401,
+    "429": Response429Read,
+    "500": Response500,
+  },
+})
+
 // DELETE /push/subscribe/:subscription_id
 export const push_unsubscribe_spec = oapi.validPath({
   summary: "Unsubscribe from push notifications",
