@@ -416,12 +416,18 @@ export async function createUserWithProvider(
     providerData.metadata?.username ||
     username
 
+  // For Citizen ID, set rsi_confirmed to true and spectrum_user_id during creation
+  // since verification is checked before calling this function
+  const isCitizenID = providerData.provider_type === "citizenid"
+  const rsiSpectrumId = providerData.metadata?.rsiSpectrumId
+
   const [user] = await knex()<DBUser>("accounts")
     .insert({
       username: username,
       display_name: displayName,
       locale: locale,
-      rsi_confirmed: false, // Will be updated to true for Citizen ID after creation
+      rsi_confirmed: isCitizenID ? true : false, // Citizen ID users are verified before creation
+      spectrum_user_id: isCitizenID && rsiSpectrumId ? rsiSpectrumId : null,
       discord_id: null, // Can be null now
     })
     .returning("*")
