@@ -461,7 +461,9 @@ export function createCitizenIDVerifyCallback(
           throw createError
         }
 
-        // Set RSI verification status, spectrum_user_id, and discord_id from Citizen ID
+        // Update RSI verification status, spectrum_user_id, and discord_id from Citizen ID
+        // Note: rsi_confirmed and spectrum_user_id are already set during user creation,
+        // but we update them here as well to ensure consistency and handle discord_id
         const updateData: {
           rsi_confirmed: boolean
           spectrum_user_id: string
