@@ -51,7 +51,7 @@ export async function processDiscordQueue() {
       return
     }
 
-    logger.info(
+    logger.debug(
       `Processing ${response.Messages.length} messages from Discord queue`,
     )
 
