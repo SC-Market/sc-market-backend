@@ -56,7 +56,7 @@ export function formatOrderNotificationPayload(
   order: DBOrder,
   action: string,
 ): PushNotificationPayload {
-  const url = `${getBaseUrl()}/orders/${order.order_id}`
+  const url = `${getBaseUrl()}/contract/${order.order_id}`
   
   let title = "New Order"
   let body = `Order: ${order.title || "Untitled Order"}`
@@ -111,7 +111,7 @@ export function formatOrderMessageNotificationPayload(
   order: DBOrder,
   message: DBMessage,
 ): PushNotificationPayload {
-  const url = `${getBaseUrl()}/orders/${order.order_id}`
+  const url = `${getBaseUrl()}/contract/${order.order_id}`
   
   return {
     title: "New Message",
@@ -136,7 +136,7 @@ export function formatOrderCommentNotificationPayload(
   order: DBOrder,
   comment: DBOrderComment,
 ): PushNotificationPayload {
-  const url = `${getBaseUrl()}/orders/${order.order_id}`
+  const url = `${getBaseUrl()}/contract/${order.order_id}`
   
   return {
     title: "New Comment",
@@ -161,7 +161,7 @@ export function formatOrderCommentNotificationPayload(
 export function formatOrderReviewNotificationPayload(
   review: DBReview,
 ): PushNotificationPayload {
-  const url = `${getBaseUrl()}/orders/${review.order_id}`
+  const url = `${getBaseUrl()}/contract/${review.order_id}`
   
   return {
     title: "New Review",
@@ -185,7 +185,7 @@ export function formatOrderReviewNotificationPayload(
 export function formatOrderReviewRevisionNotificationPayload(
   review: DBReview,
 ): PushNotificationPayload {
-  const url = `${getBaseUrl()}/orders/${review.order_id}`
+  const url = `${getBaseUrl()}/contract/${review.order_id}`
   
   return {
     title: "Review Revision Requested",
@@ -210,7 +210,7 @@ export function formatOfferNotificationPayload(
   offer: DBOfferSession,
   type: "create" | "counteroffer",
 ): PushNotificationPayload {
-  const url = `${getBaseUrl()}/offers/${offer.id}`
+  const url = `${getBaseUrl()}/offer/${offer.id}`
   
   const title = type === "create" ? "New Offer" : "Counter-Offer"
   const body =
@@ -241,7 +241,7 @@ export function formatOfferMessageNotificationPayload(
   session: DBOfferSession,
   message: DBMessage,
 ): PushNotificationPayload {
-  const url = `${getBaseUrl()}/offers/${session.id}`
+  const url = `${getBaseUrl()}/offer/${session.id}`
   
   return {
     title: "New Message",
