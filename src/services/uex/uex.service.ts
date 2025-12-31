@@ -10,6 +10,13 @@ import { UEXCommodity } from "./uex.service.types.js"
 const UEX_BASE_URL = "https://api.uexcorp.uk/2.0"
 const UEX_COMMODITIES_ENDPOINT = `${UEX_BASE_URL}/commodities`
 
+interface UEXResponse {
+  status: string
+  http_code: number
+  data: UEXCommodity[]
+  message?: string
+}
+
 /**
  * Fetches all commodities from the UEX API
  * @returns Array of UEX commodities
@@ -66,7 +73,7 @@ export async function fetchCommodities(): Promise<UEXCommodity[]> {
     )
   }
 
-  let data: UEXCommodity[]
+  let responseData: UEXResponse | UEXCommodity[]
   try {
     const responseText = await response.text()
     logger.debug("UEX API response received", {
@@ -74,10 +81,13 @@ export async function fetchCommodities(): Promise<UEXCommodity[]> {
       contentPreview: responseText.substring(0, 200), // First 200 chars for debugging
     })
 
-    data = JSON.parse(responseText) as UEXCommodity[]
+    responseData = JSON.parse(responseText) as UEXResponse | UEXCommodity[]
     logger.debug("UEX API JSON parsing successful", {
-      dataLength: data?.length || 0,
-      hasValidStructure: Array.isArray(data),
+      isArray: Array.isArray(responseData),
+      hasWrappedStructure:
+        typeof responseData === "object" &&
+        !Array.isArray(responseData) &&
+        "data" in responseData,
     })
   } catch (error) {
     logger.error("Failed to parse UEX API JSON response", {
@@ -87,15 +97,47 @@ export async function fetchCommodities(): Promise<UEXCommodity[]> {
     throw error
   }
 
-  // Validate the response structure
-  if (!Array.isArray(data)) {
+  // Handle both wrapped response format and direct array format
+  let data: UEXCommodity[]
+  if (Array.isArray(responseData)) {
+    // Direct array format (as per documentation)
+    data = responseData
+  } else if (
+    typeof responseData === "object" &&
+    responseData !== null &&
+    "data" in responseData &&
+    Array.isArray(responseData.data)
+  ) {
+    // Wrapped response format (actual API behavior)
+    const wrappedResponse = responseData as UEXResponse
+    data = wrappedResponse.data
+
+    // Log if there's a message
+    if (wrappedResponse.message) {
+      logger.debug("UEX API response message", {
+        message: wrappedResponse.message,
+      })
+    }
+
+    // Check response status
+    if (wrappedResponse.status !== "ok") {
+      logger.warn("UEX API returned non-ok status", {
+        status: wrappedResponse.status,
+        http_code: wrappedResponse.http_code,
+        message: wrappedResponse.message,
+      })
+    }
+  } else {
     logger.error("Invalid UEX API response structure", {
-      dataType: typeof data,
-      isArray: Array.isArray(data),
-      responseKeys: data && typeof data === "object" ? Object.keys(data) : [],
+      dataType: typeof responseData,
+      isArray: Array.isArray(responseData),
+      responseKeys:
+        responseData && typeof responseData === "object"
+          ? Object.keys(responseData)
+          : [],
     })
     throw new Error(
-      "Invalid UEX API response structure: expected array of commodities",
+      "Invalid UEX API response structure: expected array or wrapped response with data array",
     )
   }
 
