@@ -45,6 +45,12 @@ adminOapi.schema("OrderAnalyticsTimeSeries", {
       minimum: 0,
       example: 1,
     },
+    average_fulfilled_value: {
+      type: "number",
+      description: "Average value of fulfilled orders for this period (monthly totals only)",
+      minimum: 0,
+      example: 12500.5,
+    },
   },
   required: [
     "date",

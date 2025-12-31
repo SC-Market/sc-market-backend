@@ -353,6 +353,9 @@ export async function getOrderAnalytics(options?: {
       knex().raw(
         "COUNT(CASE WHEN status = 'not-started' THEN 1 END) as not_started",
       ),
+      knex().raw(
+        "COALESCE(AVG(CASE WHEN status = 'fulfilled' THEN cost END), 0) as average_fulfilled_value",
+      ),
     )
     .groupBy(knex().raw("DATE_TRUNC('month', timestamp)"))
     .orderBy("date", "asc")
@@ -439,6 +442,7 @@ export async function getOrderAnalytics(options?: {
       fulfilled: parseInt(row.fulfilled),
       cancelled: parseInt(row.cancelled),
       not_started: parseInt(row.not_started),
+      average_fulfilled_value: parseFloat(row.average_fulfilled_value) || 0,
     })),
     top_contractors: topContractors.map((row: any) => ({
       name: row.name,
