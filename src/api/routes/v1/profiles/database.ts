@@ -516,7 +516,7 @@ export async function upsertIntegration(
     })
     .onConflict(["user_id", "integration_type"])
     .merge({
-      settings: knex().raw("settings || ?::jsonb", [
+      settings: knex().raw("account_integrations.settings || ?::jsonb", [
         JSON.stringify(integration.settings),
       ]),
       enabled: integration.enabled ?? true,
