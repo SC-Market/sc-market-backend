@@ -88,7 +88,7 @@ export const push_get_subscriptions: RequestHandler = async (req, res) => {
       user.user_id,
     )
 
-    logger.info(`User retrieved push subscriptions`, {
+    logger.debug(`User retrieved push subscriptions`, {
       user_id: user.user_id,
       username: user.username,
       subscription_count: subscriptions.length,
