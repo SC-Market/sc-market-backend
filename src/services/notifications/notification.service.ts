@@ -171,7 +171,7 @@ class DatabaseNotificationService implements NotificationService {
 
     // Send push notification to assigned user
     try {
-      logger.info(`Sending push notification for order assignment`, {
+      logger.debug(`Sending push notification for order assignment`, {
         order_id: order.order_id,
         assigned_id: order.assigned_id,
         action_type: "order_assigned",

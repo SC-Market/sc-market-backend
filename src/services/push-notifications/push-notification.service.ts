@@ -222,7 +222,7 @@ class WebPushNotificationService implements PushNotificationService {
     notification: PushNotificationPayload,
     actionType?: string,
   ): Promise<void> {
-    logger.info(`Attempting to send push notification to user ${userId}`, {
+    logger.debug(`Attempting to send push notification to user ${userId}`, {
       user_id: userId,
       action_type: actionType,
       notification_title: notification.title,
@@ -230,7 +230,7 @@ class WebPushNotificationService implements PushNotificationService {
 
     // Check if VAPID keys are configured - silently fail if not
     if (!this.isConfigured()) {
-      logger.info(
+      logger.debug(
         `Push notification not sent to user ${userId}: VAPID keys not configured`,
         {
           user_id: userId,
@@ -240,7 +240,7 @@ class WebPushNotificationService implements PushNotificationService {
       return
     }
     if (!this.initialized) {
-      logger.info("Push notifications not initialized, skipping", {
+      logger.debug("Push notifications not initialized, skipping", {
         user_id: userId,
         action_type: actionType,
       })
@@ -251,7 +251,7 @@ class WebPushNotificationService implements PushNotificationService {
     if (actionType) {
       const preferences = await this.getPreferences(userId)
       if (preferences[actionType] === false) {
-        logger.info(
+        logger.debug(
           `Push notifications disabled for user ${userId}, action ${actionType}`,
           {
             user_id: userId,
@@ -272,14 +272,14 @@ class WebPushNotificationService implements PushNotificationService {
     const subscriptions = await this.getUserSubscriptions(userId)
 
     if (subscriptions.length === 0) {
-      logger.info(`No push subscriptions found for user ${userId}`, {
+      logger.debug(`No push subscriptions found for user ${userId}`, {
         user_id: userId,
         action_type: actionType,
       })
       return
     }
 
-    logger.info(`Found ${subscriptions.length} subscription(s) for user ${userId}`, {
+    logger.debug(`Found ${subscriptions.length} subscription(s) for user ${userId}`, {
       user_id: userId,
       action_type: actionType,
       subscription_count: subscriptions.length,
@@ -287,7 +287,7 @@ class WebPushNotificationService implements PushNotificationService {
 
     // Send to all subscriptions
     const payload = JSON.stringify(notification)
-    logger.info(`Sending push notification to ${subscriptions.length} device(s) for user ${userId}`, {
+    logger.debug(`Sending push notification to ${subscriptions.length} device(s) for user ${userId}`, {
       user_id: userId,
       action_type: actionType,
       subscription_count: subscriptions.length,
@@ -314,7 +314,7 @@ class WebPushNotificationService implements PushNotificationService {
             payload,
           )
 
-          logger.info(
+          logger.debug(
             `Push notification delivered successfully to subscription ${subscription.subscription_id}`,
             {
               subscription_id: subscription.subscription_id,
@@ -338,7 +338,7 @@ class WebPushNotificationService implements PushNotificationService {
             // 403 Forbidden - subscription revoked or unauthorized
             // These all mean the subscription is invalid and should be removed
             if (statusCode === 410 || statusCode === 404 || statusCode === 403) {
-              logger.info(
+              logger.debug(
                 `Removing invalid push subscription ${subscription.subscription_id} (HTTP ${statusCode})`,
                 {
                   subscription_id: subscription.subscription_id,
@@ -359,7 +359,7 @@ class WebPushNotificationService implements PushNotificationService {
 
             // 429 Too Many Requests - rate limited, log but don't remove
             if (statusCode === 429) {
-              logger.info(
+              logger.warn(
                 `Push notification rate limited for subscription ${subscription.subscription_id}`,
                 {
                   subscription_id: subscription.subscription_id,
@@ -376,7 +376,7 @@ class WebPushNotificationService implements PushNotificationService {
 
             // 413 Payload Too Large - notification too big, log but don't remove
             if (statusCode === 413) {
-              logger.info(
+              logger.warn(
                 `Push notification payload too large for subscription ${subscription.subscription_id}`,
                 {
                   subscription_id: subscription.subscription_id,
@@ -456,7 +456,7 @@ class WebPushNotificationService implements PushNotificationService {
     }
 
     if (failed > 0) {
-      logger.info(`Push notification delivery failed for user ${userId}`, {
+      logger.warn(`Push notification delivery failed for user ${userId}`, {
         user_id: userId,
         action_type: actionType || "unknown",
         successful,
@@ -495,7 +495,7 @@ class WebPushNotificationService implements PushNotificationService {
       return
     }
 
-    logger.info(`Sending push notifications to ${userIds.length} users`, {
+    logger.debug(`Sending push notifications to ${userIds.length} users`, {
       user_count: userIds.length,
       action_type: actionType || "unknown",
       notification_title: notification.title,
@@ -539,7 +539,7 @@ class WebPushNotificationService implements PushNotificationService {
       return
     }
 
-    logger.info("Starting push subscription cleanup")
+    logger.debug("Starting push subscription cleanup")
 
     const allSubscriptions = await pushNotificationDb.getAllPushSubscriptions()
     let removed = 0
