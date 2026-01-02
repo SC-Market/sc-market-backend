@@ -10,19 +10,23 @@ export interface AuditLogRecordInput {
 }
 
 export interface AuditLogService {
-  record(entry: AuditLogRecordInput): Promise<void>
+  record(entry: AuditLogRecordInput, trx?: any): Promise<void>
 }
 
 class DatabaseAuditLogService implements AuditLogService {
-  async record({
-    action,
-    actorId,
-    subjectType,
-    subjectId,
-    metadata,
-  }: AuditLogRecordInput): Promise<void> {
+  async record(
+    {
+      action,
+      actorId,
+      subjectType,
+      subjectId,
+      metadata,
+    }: AuditLogRecordInput,
+    trx?: any,
+  ): Promise<void> {
     try {
-      await database.knex("audit_logs").insert({
+      const query = trx ? trx("audit_logs") : database.knex("audit_logs")
+      await query.insert({
         action,
         actor_id: actorId ?? null,
         subject_type: subjectType,
