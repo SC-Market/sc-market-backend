@@ -49,7 +49,9 @@ export async function createOrderOfferSession(
   trx?: any,
 ): Promise<DBOfferSession[]> {
   if (trx) {
-    return trx("offer_sessions").insert(data as DBOfferSession).returning("*")
+    return trx("offer_sessions")
+      .insert(data as DBOfferSession)
+      .returning("*")
   }
   return knex()<DBOfferSession>("offer_sessions")
     .insert(data as DBOfferSession)
@@ -88,7 +90,9 @@ export async function createOrderOffer(
   trx?: any,
 ): Promise<DBOffer[]> {
   if (trx) {
-    return trx("order_offers").insert(data as DBOffer).returning("*")
+    return trx("order_offers")
+      .insert(data as DBOffer)
+      .returning("*")
   }
   return knex()<DBOffer>("order_offers")
     .insert(data as DBOffer)

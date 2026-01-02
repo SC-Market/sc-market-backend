@@ -20,12 +20,14 @@ export const notification_patch_notification_id: RequestHandler = async (
   const { read } = req.body as { read: boolean }
 
   if (typeof read !== "boolean") {
-    res.status(400).json(
-      createErrorResponse(
-        ErrorCode.VALIDATION_ERROR,
-        "Invalid request body. 'read' field must be a boolean"
+    res
+      .status(400)
+      .json(
+        createErrorResponse(
+          ErrorCode.VALIDATION_ERROR,
+          "Invalid request body. 'read' field must be a boolean",
+        ),
       )
-    )
     return
   }
 
@@ -36,7 +38,9 @@ export const notification_patch_notification_id: RequestHandler = async (
     })
 
     if (!notifications.length) {
-      res.status(404).json(createNotFoundErrorResponse("Notification not found"))
+      res
+        .status(404)
+        .json(createNotFoundErrorResponse("Notification not found"))
       return
     }
 
@@ -46,13 +50,21 @@ export const notification_patch_notification_id: RequestHandler = async (
     )
 
     res.json(
-      createResponse({ success: true, message: "Notification updated successfully" })
+      createResponse({
+        success: true,
+        message: "Notification updated successfully",
+      }),
     )
   } catch (error) {
     logger.error("Failed to update notification:", error)
-    res.status(500).json(
-      createErrorResponse(ErrorCode.INTERNAL_SERVER_ERROR, "Failed to update notification")
-    )
+    res
+      .status(500)
+      .json(
+        createErrorResponse(
+          ErrorCode.INTERNAL_SERVER_ERROR,
+          "Failed to update notification",
+        ),
+      )
   }
 }
 
@@ -98,13 +110,18 @@ export const notification_patch_root: RequestHandler = async (
         success: true,
         message: `Successfully ${action} ${affectedCount} notification(s)`,
         affected_count: affectedCount,
-      })
+      }),
     )
   } catch (error) {
     logger.error("Failed to bulk update notifications:", error)
-    res.status(500).json(
-      createErrorResponse(ErrorCode.INTERNAL_SERVER_ERROR, "Failed to update notifications")
-    )
+    res
+      .status(500)
+      .json(
+        createErrorResponse(
+          ErrorCode.INTERNAL_SERVER_ERROR,
+          "Failed to update notifications",
+        ),
+      )
   }
 }
 
@@ -123,7 +140,9 @@ export const notification_delete_notification_id: RequestHandler = async (
     })
 
     if (!notifications.length) {
-      res.status(404).json(createNotFoundErrorResponse("Notification not found"))
+      res
+        .status(404)
+        .json(createNotFoundErrorResponse("Notification not found"))
       return
     }
 
@@ -133,13 +152,21 @@ export const notification_delete_notification_id: RequestHandler = async (
     })
 
     res.json(
-      createResponse({ success: true, message: "Notification deleted successfully" })
+      createResponse({
+        success: true,
+        message: "Notification deleted successfully",
+      }),
     )
   } catch (error) {
     logger.error("Failed to delete notification:", error)
-    res.status(500).json(
-      createErrorResponse(ErrorCode.INTERNAL_SERVER_ERROR, "Failed to delete notification")
-    )
+    res
+      .status(500)
+      .json(
+        createErrorResponse(
+          ErrorCode.INTERNAL_SERVER_ERROR,
+          "Failed to delete notification",
+        ),
+      )
   }
 }
 
@@ -178,19 +205,21 @@ export const notification_delete_root: RequestHandler = async (
           success: true,
           message: `Successfully deleted all ${deletedCount} notification(s)`,
           affected_count: deletedCount,
-        })
+        }),
       )
       return
     }
 
     // Validate notification_ids array
     if (!Array.isArray(notification_ids)) {
-      res.status(400).json(
-        createErrorResponse(
-          ErrorCode.VALIDATION_ERROR,
-          "Invalid request body. 'notification_ids' must be an array or omitted for delete all"
+      res
+        .status(400)
+        .json(
+          createErrorResponse(
+            ErrorCode.VALIDATION_ERROR,
+            "Invalid request body. 'notification_ids' must be an array or omitted for delete all",
+          ),
         )
-      )
       return
     }
 
@@ -221,13 +250,18 @@ export const notification_delete_root: RequestHandler = async (
         success: true,
         message: `Successfully deleted ${deletedCount} of ${notification_ids.length} requested notification(s)`,
         affected_count: deletedCount,
-      })
+      }),
     )
   } catch (error) {
     logger.error("Failed to bulk delete notifications:", error)
-    res.status(500).json(
-      createErrorResponse(ErrorCode.INTERNAL_SERVER_ERROR, "Failed to delete notifications")
-    )
+    res
+      .status(500)
+      .json(
+        createErrorResponse(
+          ErrorCode.INTERNAL_SERVER_ERROR,
+          "Failed to delete notifications",
+        ),
+      )
   }
 }
 
@@ -240,20 +274,24 @@ export const notification_get_page: RequestHandler = async (req, res, next) => {
 
   // Validate page parameter
   if (page < 0 || isNaN(page)) {
-    res.status(400).json(
-      createErrorResponse(ErrorCode.VALIDATION_ERROR, "Invalid page number")
-    )
+    res
+      .status(400)
+      .json(
+        createErrorResponse(ErrorCode.VALIDATION_ERROR, "Invalid page number"),
+      )
     return
   }
 
   // Validate page size parameter
   if (pageSize < 1 || pageSize > 100 || isNaN(pageSize)) {
-    res.status(400).json(
-      createErrorResponse(
-        ErrorCode.VALIDATION_ERROR,
-        "Invalid page size. Must be between 1 and 100"
+    res
+      .status(400)
+      .json(
+        createErrorResponse(
+          ErrorCode.VALIDATION_ERROR,
+          "Invalid page size. Must be between 1 and 100",
+        ),
       )
-    )
     return
   }
 
@@ -282,9 +320,14 @@ export const notification_get_page: RequestHandler = async (req, res, next) => {
     res.json(createResponse(responseWithUnreadCount))
   } catch (error) {
     logger.error("Failed to fetch paginated notifications:", error)
-    res.status(500).json(
-      createErrorResponse(ErrorCode.INTERNAL_SERVER_ERROR, "Failed to fetch notifications")
-    )
+    res
+      .status(500)
+      .json(
+        createErrorResponse(
+          ErrorCode.INTERNAL_SERVER_ERROR,
+          "Failed to fetch notifications",
+        ),
+      )
     return
   }
 }

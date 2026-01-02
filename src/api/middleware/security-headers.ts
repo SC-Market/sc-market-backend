@@ -1,6 +1,6 @@
 /**
  * Security Headers Middleware
- * 
+ *
  * Implements comprehensive HTTP security headers using Helmet.js.
  * Protects against common web vulnerabilities (XSS, clickjacking, etc.)
  */
@@ -37,17 +37,8 @@ export function securityHeaders() {
           "'unsafe-inline'", // Required for Material-UI
           "https://fonts.googleapis.com",
         ],
-        fontSrc: [
-          "'self'",
-          "https://fonts.gstatic.com",
-          "data:",
-        ],
-        imgSrc: [
-          "'self'",
-          "data:",
-          "https:",
-          "blob:",
-        ],
+        fontSrc: ["'self'", "https://fonts.gstatic.com", "data:"],
+        imgSrc: ["'self'", "data:", "https:", "blob:"],
         connectSrc: [
           "'self'",
           backend_url.toString(),
@@ -70,39 +61,41 @@ export function securityHeaders() {
         reportURI: isProduction ? "/api/csp-report" : null,
       },
     },
-    
+
     // X-Frame-Options (redundant with CSP but kept for older browsers)
     frameguard: {
       action: "deny",
     },
-    
+
     // X-Content-Type-Options
     noSniff: true,
-    
+
     // Strict-Transport-Security (HSTS)
-    hsts: isProduction ? {
-      maxAge: 31536000, // 1 year
-      includeSubDomains: true,
-      preload: false, // Set to true after testing
-    } : false, // Disable in development
-    
+    hsts: isProduction
+      ? {
+          maxAge: 31536000, // 1 year
+          includeSubDomains: true,
+          preload: false, // Set to true after testing
+        }
+      : false, // Disable in development
+
     // Referrer-Policy
     referrerPolicy: {
       policy: "strict-origin-when-cross-origin",
     },
-    
+
     // Permissions-Policy (formerly Feature-Policy)
     // Note: Helmet v8 uses a different API - using direct header setting if needed
     // For now, we'll rely on CSP and other headers for security
-    
+
     // X-DNS-Prefetch-Control
     dnsPrefetchControl: {
       allow: false,
     },
-    
+
     // X-Download-Options
     ieNoOpen: true,
-    
+
     // X-Permitted-Cross-Domain-Policies
     permittedCrossDomainPolicies: false,
   })
@@ -121,7 +114,7 @@ export function securityHeaders() {
             group: "csp-endpoint",
             max_age: 10886400, // 126 days
             endpoints: [{ url: reportToUrl }],
-          })
+          }),
         )
       }
       next()

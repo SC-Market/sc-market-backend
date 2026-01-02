@@ -147,10 +147,7 @@ export async function contractorRecruiting(
       res
         .status(400)
         .json(
-          createErrorResponse(
-            ErrorCode.VALIDATION_ERROR,
-            "Invalid contractor",
-          ),
+          createErrorResponse(ErrorCode.VALIDATION_ERROR, "Invalid contractor"),
         )
       return
     }
@@ -175,8 +172,6 @@ export async function contractorRecruiting(
 
     next()
   } else {
-    res
-      .status(401)
-      .json(createUnauthorizedErrorResponse("Unauthenticated"))
+    res.status(401).json(createUnauthorizedErrorResponse("Unauthenticated"))
   }
 }

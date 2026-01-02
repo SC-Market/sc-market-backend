@@ -722,9 +722,7 @@ export async function incrementUserBalance(
   trx?: any,
 ): Promise<void> {
   const query = trx ? trx("accounts") : knex()("accounts")
-  await query
-    .where({ user_id: user_id })
-    .increment("balance", amount)
+  await query.where({ user_id: user_id }).increment("balance", amount)
 }
 
 /**
@@ -736,9 +734,7 @@ export async function decrementUserBalance(
   trx?: any,
 ): Promise<void> {
   const query = trx ? trx("accounts") : knex()("accounts")
-  await query
-    .where({ user_id: user_id })
-    .decrement("balance", amount)
+  await query.where({ user_id: user_id }).decrement("balance", amount)
 }
 
 /**

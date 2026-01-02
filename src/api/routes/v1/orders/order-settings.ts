@@ -162,10 +162,7 @@ orderSettingsRouter.post("/settings", userAuthorized, async (req, res) => {
     res
       .status(400)
       .json(
-        createErrorResponse(
-          ErrorCode.VALIDATION_ERROR,
-          "Invalid setting_type",
-        ),
+        createErrorResponse(ErrorCode.VALIDATION_ERROR, "Invalid setting_type"),
       )
     return
   }

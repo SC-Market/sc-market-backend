@@ -418,20 +418,20 @@ export const admin_post_users_username_unlink: RequestHandler = async (
     // Get the target user
     const user = await profileDb.getUser({ username })
     if (!user) {
-      res.status(404).json(
-        createNotFoundErrorResponse("User not found")
-      )
+      res.status(404).json(createNotFoundErrorResponse("User not found"))
       return
     }
 
     // Check if user is currently verified
     if (!user.rsi_confirmed) {
-      res.status(400).json(
-        createErrorResponse(
-          ErrorCode.VALIDATION_ERROR,
-          "User is not currently verified with a Star Citizen account"
-        ),
-      )
+      res
+        .status(400)
+        .json(
+          createErrorResponse(
+            ErrorCode.VALIDATION_ERROR,
+            "User is not currently verified with a Star Citizen account",
+          ),
+        )
       return
     }
 
@@ -468,11 +468,13 @@ export const admin_post_users_username_unlink: RequestHandler = async (
     )
   } catch (e) {
     logger.error("Error during admin Star Citizen account unlink:", e)
-    res.status(500).json(
-      createErrorResponse(
-        ErrorCode.INTERNAL_SERVER_ERROR,
-        "Internal server error during account unlink"
+    res
+      .status(500)
+      .json(
+        createErrorResponse(
+          ErrorCode.INTERNAL_SERVER_ERROR,
+          "Internal server error during account unlink",
+        ),
       )
-    )
   }
 }

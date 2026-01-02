@@ -18,7 +18,9 @@ export const ship_post_import: RequestHandler = async (req, res) => {
   if (!ships) {
     res
       .status(400)
-      .json(createErrorResponse(ErrorCode.VALIDATION_ERROR, "No ships provided"))
+      .json(
+        createErrorResponse(ErrorCode.VALIDATION_ERROR, "No ships provided"),
+      )
     return
   }
 

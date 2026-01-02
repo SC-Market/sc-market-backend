@@ -15,13 +15,7 @@ export interface AuditLogService {
 
 class DatabaseAuditLogService implements AuditLogService {
   async record(
-    {
-      action,
-      actorId,
-      subjectType,
-      subjectId,
-      metadata,
-    }: AuditLogRecordInput,
+    { action, actorId, subjectType, subjectId, metadata }: AuditLogRecordInput,
     trx?: any,
   ): Promise<void> {
     try {

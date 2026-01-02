@@ -1,6 +1,6 @@
 /**
  * Transaction Utilities
- * 
+ *
  * Provides standardized transaction handling with automatic timeout and cleanup.
  * Ensures atomic operations and prevents transaction leaks.
  */
@@ -10,19 +10,23 @@ import { database } from "./knex-db.js"
 import logger from "../../logger/logger.js"
 
 export interface TransactionOptions {
-  isolationLevel?: "READ UNCOMMITTED" | "READ COMMITTED" | "REPEATABLE READ" | "SERIALIZABLE"
+  isolationLevel?:
+    | "READ UNCOMMITTED"
+    | "READ COMMITTED"
+    | "REPEATABLE READ"
+    | "SERIALIZABLE"
   timeout?: number // milliseconds
 }
 
 /**
  * Execute a function within a database transaction
  * Automatically handles commit/rollback and timeout
- * 
+ *
  * @param callback Function to execute within transaction
  * @param options Transaction options (isolation level, timeout)
  * @returns Result of callback function
  * @throws Error if transaction fails or times out
- * 
+ *
  * @example
  * ```typescript
  * await withTransaction(async (trx) => {
@@ -33,7 +37,7 @@ export interface TransactionOptions {
  */
 export async function withTransaction<T>(
   callback: (trx: Knex.Transaction) => Promise<T>,
-  options: TransactionOptions = {}
+  options: TransactionOptions = {},
 ): Promise<T> {
   const {
     isolationLevel = "READ COMMITTED",
@@ -41,7 +45,7 @@ export async function withTransaction<T>(
   } = options
 
   const trx = await database.knex.transaction()
-  
+
   // Set isolation level if supported and different from default
   if (isolationLevel !== "READ COMMITTED") {
     try {
@@ -73,38 +77,41 @@ export async function withTransaction<T>(
   try {
     const result = await callback(trx)
     transactionCompleted = true
-    
+
     if (timeoutId) {
       clearTimeout(timeoutId)
     }
-    
+
     await trx.commit()
     return result
   } catch (error) {
     transactionCompleted = true
-    
+
     if (timeoutId) {
       clearTimeout(timeoutId)
     }
-    
+
     try {
       await trx.rollback()
       logger.error("Transaction error - rolled back", { error })
     } catch (rollbackError) {
-      logger.error("Error during transaction rollback", { rollbackError, originalError: error })
+      logger.error("Error during transaction rollback", {
+        rollbackError,
+        originalError: error,
+      })
     }
-    
+
     throw error
   }
 }
 
 /**
  * Execute multiple operations in a single transaction
- * 
+ *
  * @param operations Array of functions to execute in sequence
  * @param options Transaction options
  * @returns Array of results from each operation
- * 
+ *
  * @example
  * ```typescript
  * const results = await transactionBatch([
@@ -115,7 +122,7 @@ export async function withTransaction<T>(
  */
 export async function transactionBatch<T>(
   operations: Array<(trx: Knex.Transaction) => Promise<T>>,
-  options: TransactionOptions = {}
+  options: TransactionOptions = {},
 ): Promise<T[]> {
   return withTransaction(async (trx) => {
     const results: T[] = []

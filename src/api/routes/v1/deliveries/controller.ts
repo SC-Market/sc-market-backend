@@ -29,9 +29,14 @@ export const delivery_post_create: RequestHandler = async (req, res, next) => {
   } = req.body
 
   if (!start || !end || !order_id || !ship_id) {
-    res.status(400).json(
-      createErrorResponse(ErrorCode.VALIDATION_ERROR, "Missing required fields")
-    )
+    res
+      .status(400)
+      .json(
+        createErrorResponse(
+          ErrorCode.VALIDATION_ERROR,
+          "Missing required fields",
+        ),
+      )
     return
   }
 
@@ -54,22 +59,26 @@ export const delivery_post_create: RequestHandler = async (req, res, next) => {
   const unrelated = !(order.assigned_id === user.user_id || manageOrders)
 
   if (unrelated) {
-    res.status(403).json(
-      createForbiddenErrorResponse(
-        "You are not allowed to create a delivery for this order"
+    res
+      .status(403)
+      .json(
+        createForbiddenErrorResponse(
+          "You are not allowed to create a delivery for this order",
+        ),
       )
-    )
     return
   }
 
   const ship = await shipDb.getShip({ ship_id })
 
   if (!ship || ship.owner !== user.user_id) {
-    res.status(403).json(
-      createForbiddenErrorResponse(
-        "You are not allowed to create a delivery for this ship"
+    res
+      .status(403)
+      .json(
+        createForbiddenErrorResponse(
+          "You are not allowed to create a delivery for this ship",
+        ),
       )
-    )
     return
   }
 
