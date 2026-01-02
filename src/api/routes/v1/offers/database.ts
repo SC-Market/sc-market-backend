@@ -46,7 +46,11 @@ export async function createOrderOfferSession(
   data: Partial<
     Omit<DBOfferSession, "timestamp"> & { timestamp: string | Date }
   >,
+  trx?: any,
 ): Promise<DBOfferSession[]> {
+  if (trx) {
+    return trx("offer_sessions").insert(data as DBOfferSession).returning("*")
+  }
   return knex()<DBOfferSession>("offer_sessions")
     .insert(data as DBOfferSession)
     .returning("*")
@@ -81,7 +85,11 @@ export async function getMostRecentOrderOffer(id: string): Promise<DBOffer> {
  */
 export async function createOrderOffer(
   data: Partial<Omit<DBOffer, "timestamp"> & { timestamp: string | Date }>,
+  trx?: any,
 ): Promise<DBOffer[]> {
+  if (trx) {
+    return trx("order_offers").insert(data as DBOffer).returning("*")
+  }
   return knex()<DBOffer>("order_offers")
     .insert(data as DBOffer)
     .returning("*")

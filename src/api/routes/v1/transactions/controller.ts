@@ -6,6 +6,7 @@ import { DBContractor as DBContractor } from "../../../../clients/database/db-mo
 import { DBTransaction as DBTransaction } from "../../../../clients/database/db-models.js"
 import { User as User } from "../api-models.js"
 import { has_permission as has_permission } from "../util/permissions.js"
+import logger from "../../../../logger/logger.js"
 
 export const transaction_get_transaction_id: RequestHandler = async (
   req,
@@ -134,30 +135,59 @@ export const transaction_post_create: RequestHandler = async (
     res.status(400).json({ error: "Insufficient funds" })
     return
   }
-  await profileDb.decrementUserBalance(user.user_id, amount)
 
-  if (contractor_recipient_id) {
-    await contractorDb.incrementContractorBalance(
-      target_contractor!.contractor_id,
-      amount,
+  // Wrap all balance operations in a transaction for atomicity
+  const { withTransaction } = await import(
+    "../../../../clients/database/transaction.js"
+  )
+
+  try {
+    await withTransaction(
+      async (trx) => {
+        // Decrement sender balance
+        await profileDb.decrementUserBalance(user.user_id, amount, trx)
+
+        // Increment recipient balance
+        if (contractor_recipient_id) {
+          await contractorDb.incrementContractorBalance(
+            target_contractor!.contractor_id,
+            amount,
+            trx,
+          )
+        } else if (user_recipient_id) {
+          await profileDb.incrementUserBalance(
+            target_user!.user_id,
+            amount,
+            trx,
+          )
+        }
+
+        // Create transaction record
+        await transactionDb.createTransaction(
+          {
+            amount: amount,
+            note: note || "",
+            kind: "Payment",
+            status: "Completed",
+            contractor_sender_id: null,
+            contractor_recipient_id:
+              target_contractor && target_contractor.contractor_id,
+            user_sender_id: user.user_id,
+            user_recipient_id: target_user && target_user.user_id,
+          },
+          trx,
+        )
+      },
+      {
+        isolationLevel: "SERIALIZABLE", // Use highest isolation for financial operations
+      },
     )
-  } else if (user_recipient_id) {
-    await profileDb.incrementUserBalance(target_user!.user_id, amount)
+
+    res.json({ result: "Success" })
+  } catch (error) {
+    logger.error("Transaction creation failed", { error, user_id: user.user_id })
+    res.status(500).json({ error: "Transaction failed" })
   }
-
-  await transactionDb.createTransaction({
-    amount: amount,
-    note: note || "",
-    kind: "Payment",
-    status: "Completed",
-    contractor_sender_id: null,
-    contractor_recipient_id:
-      target_contractor && target_contractor.contractor_id,
-    user_sender_id: user.user_id,
-    user_recipient_id: target_user && target_user.user_id,
-  })
-
-  res.json({ result: "Success" })
 }
 
 export const transaction_post_contractor_spectrum_id_create: RequestHandler =
@@ -247,32 +277,64 @@ export const transaction_post_contractor_spectrum_id_create: RequestHandler =
       return
     }
 
-    await contractorDb.decrementContractorBalance(
-      contractor.contractor_id,
-      amount,
+    // Wrap all balance operations in a transaction for atomicity
+    const { withTransaction } = await import(
+      "../../../../clients/database/transaction.js"
     )
 
-    if (contractor_recipient_id) {
-      await contractorDb.incrementContractorBalance(
-        target_contractor!.contractor_id,
-        amount,
-      )
-    } else if (user_recipient_id) {
-      await profileDb.incrementUserBalance(target_user!.user_id, amount)
-    }
+    try {
+      await withTransaction(
+        async (trx) => {
+          // Decrement sender balance
+          await contractorDb.decrementContractorBalance(
+            contractor.contractor_id,
+            amount,
+            trx,
+          )
 
-    await transactionDb.createTransaction({
-      amount: amount,
-      kind: "Payment",
-      status: "Completed",
-      contractor_sender_id: contractor.contractor_id,
-      contractor_recipient_id:
-        target_contractor && target_contractor.contractor_id,
-      user_sender_id: null,
-      user_recipient_id: target_user && target_user.user_id,
-    })
-    // TODO: Make the above an atomic function in PSQL, so that the same dollar isn't spent twice
-    res.json({ result: "Success" })
+          // Increment recipient balance
+          if (contractor_recipient_id) {
+            await contractorDb.incrementContractorBalance(
+              target_contractor!.contractor_id,
+              amount,
+              trx,
+            )
+          } else if (user_recipient_id) {
+            await profileDb.incrementUserBalance(
+              target_user!.user_id,
+              amount,
+              trx,
+            )
+          }
+
+          // Create transaction record
+          await transactionDb.createTransaction(
+            {
+              amount: amount,
+              kind: "Payment",
+              status: "Completed",
+              contractor_sender_id: contractor.contractor_id,
+              contractor_recipient_id:
+                target_contractor && target_contractor.contractor_id,
+              user_sender_id: null,
+              user_recipient_id: target_user && target_user.user_id,
+            },
+            trx,
+          )
+        },
+        {
+          isolationLevel: "SERIALIZABLE", // Use highest isolation for financial operations
+        },
+      )
+
+      res.json({ result: "Success" })
+    } catch (error) {
+      logger.error("Contractor transaction creation failed", {
+        error,
+        contractor_id: contractor.contractor_id,
+      })
+      res.status(500).json({ error: "Transaction failed" })
+    }
   }
 
 export const transactions_get_mine: RequestHandler = async (req, res, next) => {
