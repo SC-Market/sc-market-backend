@@ -6,6 +6,12 @@ import * as shipDb from "../ships/database.js"
 import * as orderDb from "../orders/database.js"
 import * as contractorDb from "../contractors/database.js"
 import { has_permission as has_permission } from "../util/permissions.js"
+import {
+  createErrorResponse,
+  createResponse,
+  createForbiddenErrorResponse,
+} from "../util/response.js"
+import { ErrorCode } from "../util/error-codes.js"
 
 export const delivery_post_create: RequestHandler = async (req, res, next) => {
   const user = req.user as User
@@ -23,7 +29,9 @@ export const delivery_post_create: RequestHandler = async (req, res, next) => {
   } = req.body
 
   if (!start || !end || !order_id || !ship_id) {
-    res.status(400).json({ error: "Missing required fields" })
+    res.status(400).json(
+      createErrorResponse(ErrorCode.VALIDATION_ERROR, "Missing required fields")
+    )
     return
   }
 
@@ -46,18 +54,22 @@ export const delivery_post_create: RequestHandler = async (req, res, next) => {
   const unrelated = !(order.assigned_id === user.user_id || manageOrders)
 
   if (unrelated) {
-    res.status(403).json({
-      error: "You are not allowed to create a delivery for this order",
-    })
+    res.status(403).json(
+      createForbiddenErrorResponse(
+        "You are not allowed to create a delivery for this order"
+      )
+    )
     return
   }
 
   const ship = await shipDb.getShip({ ship_id })
 
   if (!ship || ship.owner !== user.user_id) {
-    res.status(403).json({
-      error: "You are not allowed to create a delivery for this ship",
-    })
+    res.status(403).json(
+      createForbiddenErrorResponse(
+        "You are not allowed to create a delivery for this ship"
+      )
+    )
     return
   }
 
@@ -70,7 +82,7 @@ export const delivery_post_create: RequestHandler = async (req, res, next) => {
     status: "pending",
   })
 
-  res.json({ result: "Success" })
+  res.json(createResponse({ result: "Success" }))
 }
 
 export const deliveries_get_mine: RequestHandler = async (req, res, next) => {

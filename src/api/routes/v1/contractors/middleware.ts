@@ -3,7 +3,14 @@ import { User } from "../api-models.js"
 import { has_permission, is_member } from "../util/permissions.js"
 import * as contractorDb from "./database.js"
 import { DBContractorRole } from "../../../../clients/database/db-models.js"
-import { createErrorResponse } from "../util/response.js"
+import {
+  createErrorResponse,
+  createUnauthorizedErrorResponse,
+  createForbiddenErrorResponse,
+  createConflictErrorResponse,
+  createNotFoundErrorResponse,
+} from "../util/response.js"
+import { ErrorCode } from "../util/error-codes.js"
 import logger from "../../../../logger/logger.js"
 
 export async function valid_contractor(
@@ -19,7 +26,14 @@ export async function valid_contractor(
     }
     next()
   } catch {
-    res.status(400).json(createErrorResponse({ error: "Invalid contractor" }))
+    res
+      .status(400)
+      .json(
+        createErrorResponse(
+          ErrorCode.VALIDATION_ERROR,
+          "Invalid contractor",
+        ),
+      )
     return
   }
 }
@@ -34,7 +48,12 @@ export async function org_authorized(
     if (user.banned) {
       res
         .status(418)
-        .json(createErrorResponse({ error: "Internal server error" }))
+        .json(
+          createErrorResponse(
+            ErrorCode.INTERNAL_SERVER_ERROR,
+            "Internal server error",
+          ),
+        )
       return
     }
 
@@ -43,30 +62,37 @@ export async function org_authorized(
     try {
       contractor = await contractorDb.getContractor({ spectrum_id })
     } catch (e) {
-      res.status(400).json(createErrorResponse({ error: "Invalid contractor" }))
+      res
+        .status(400)
+        .json(
+          createErrorResponse(
+            ErrorCode.VALIDATION_ERROR,
+            "Invalid contractor",
+          ),
+        )
       return
     }
 
     if (contractor.archived) {
-      res.status(409).json(
-        createErrorResponse({
-          error: "Organization archived",
-          message:
+      res
+        .status(409)
+        .json(
+          createConflictErrorResponse(
             "This organization has been archived and is no longer editable.",
-        }),
-      )
+          ),
+        )
       return
     }
 
     if (!(await is_member(contractor.contractor_id, user.user_id))) {
-      res.status(403).json(createErrorResponse({ error: "Unauthorized" }))
+      res.status(403).json(createForbiddenErrorResponse("Unauthorized"))
       return
     } else {
       req.contractor = contractor
       next()
     }
   } else {
-    res.status(401).json(createErrorResponse({ error: "Unauthenticated" }))
+    res.status(401).json(createUnauthorizedErrorResponse("Unauthenticated"))
     return
   }
 }
@@ -88,7 +114,12 @@ export function org_permission(permission_name: keyof DBContractorRole) {
         })
         res
           .status(418)
-          .json(createErrorResponse({ error: "Internal server error" }))
+          .json(
+            createErrorResponse(
+              ErrorCode.INTERNAL_SERVER_ERROR,
+              "Internal server error",
+            ),
+          )
         return
       }
 
@@ -110,7 +141,12 @@ export function org_permission(permission_name: keyof DBContractorRole) {
         })
         res
           .status(400)
-          .json(createErrorResponse({ error: "Invalid contractor" }))
+          .json(
+            createErrorResponse(
+              ErrorCode.VALIDATION_ERROR,
+              "Invalid contractor",
+            ),
+          )
         return
       }
 
@@ -120,12 +156,13 @@ export function org_permission(permission_name: keyof DBContractorRole) {
           permission: permission_name,
           contractorName: contractor.name,
         })
-        res.status(409).json(
-          createErrorResponse({
-            error: "Organization archived",
-            message: "This organization has been archived and is read-only.",
-          }),
-        )
+        res
+          .status(409)
+          .json(
+            createConflictErrorResponse(
+              "This organization has been archived and is read-only.",
+            ),
+          )
         return
       }
 
@@ -146,7 +183,7 @@ export function org_permission(permission_name: keyof DBContractorRole) {
           permission: permission_name,
           contractorName: contractor.name,
         })
-        res.status(403).json(createErrorResponse({ error: "Unauthorized" }))
+        res.status(403).json(createForbiddenErrorResponse("Unauthorized"))
         return
       }
 
@@ -157,7 +194,7 @@ export function org_permission(permission_name: keyof DBContractorRole) {
       logger.warn(
         "Unauthenticated user attempted to access contractor resource",
       )
-      res.status(401).json(createErrorResponse({ error: "Unauthenticated" }))
+      res.status(401).json(createUnauthorizedErrorResponse("Unauthenticated"))
     }
   }
 }
@@ -173,11 +210,11 @@ export function validate_optional_spectrum_id(path: string) {
     try {
       contractor = await contractorDb.getContractor({ spectrum_id })
     } catch {
-      res
-        .status(404)
-        .json(
-          createErrorResponse({ error: "Contractor not found", contractor }),
-        )
+        res
+          .status(404)
+          .json(
+            createNotFoundErrorResponse("Contractor", spectrum_id),
+          )
       return
     }
 

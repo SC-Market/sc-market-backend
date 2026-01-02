@@ -1,5 +1,11 @@
 import { NextFunction, Request, Response } from "express"
-import { createErrorResponse } from "../util/response.js"
+import {
+  createErrorResponse,
+  createUnauthorizedErrorResponse,
+  createForbiddenErrorResponse,
+  createNotFoundErrorResponse,
+} from "../util/response.js"
+import { ErrorCode } from "../util/error-codes.js"
 import logger from "../../../../logger/logger.js"
 import { User } from "../api-models.js"
 import { has_permission } from "../util/permissions.js"
@@ -16,7 +22,12 @@ export async function valid_recruiting_post(
   if (!post_id) {
     res
       .status(400)
-      .json(createErrorResponse({ message: "Missing post_id parameter" }))
+      .json(
+        createErrorResponse(
+          ErrorCode.VALIDATION_ERROR,
+          "Missing post_id parameter",
+        ),
+      )
     return
   }
 
@@ -26,7 +37,7 @@ export async function valid_recruiting_post(
     if (!post) {
       res
         .status(404)
-        .json(createErrorResponse({ message: "Recruiting post not found" }))
+        .json(createNotFoundErrorResponse("Recruiting post", post_id))
       return
     }
 
@@ -39,7 +50,12 @@ export async function valid_recruiting_post(
     })
     res
       .status(500)
-      .json(createErrorResponse({ message: "Internal server error" }))
+      .json(
+        createErrorResponse(
+          ErrorCode.INTERNAL_SERVER_ERROR,
+          "Internal server error",
+        ),
+      )
     return
   }
 }
@@ -54,7 +70,12 @@ export async function valid_recruiting_post_by_contractor(
   if (!spectrum_id) {
     res
       .status(400)
-      .json(createErrorResponse({ message: "Missing spectrum_id parameter" }))
+      .json(
+        createErrorResponse(
+          ErrorCode.VALIDATION_ERROR,
+          "Missing spectrum_id parameter",
+        ),
+      )
     return
   }
 
@@ -65,7 +86,7 @@ export async function valid_recruiting_post_by_contractor(
     if (!contractor) {
       res
         .status(404)
-        .json(createErrorResponse({ message: "Contractor not found" }))
+        .json(createNotFoundErrorResponse("Contractor", spectrum_id))
       return
     }
 
@@ -75,11 +96,14 @@ export async function valid_recruiting_post_by_contractor(
     })
 
     if (!post) {
-      res.status(404).json(
-        createErrorResponse({
-          message: "No recruiting post found for this contractor",
-        }),
-      )
+      res
+        .status(404)
+        .json(
+          createNotFoundErrorResponse(
+            "Recruiting post",
+            `contractor: ${spectrum_id}`,
+          ),
+        )
       return
     }
 
@@ -93,7 +117,12 @@ export async function valid_recruiting_post_by_contractor(
     })
     res
       .status(500)
-      .json(createErrorResponse({ message: "Internal server error" }))
+      .json(
+        createErrorResponse(
+          ErrorCode.INTERNAL_SERVER_ERROR,
+          "Internal server error",
+        ),
+      )
     return
   }
 }
@@ -115,7 +144,14 @@ export async function contractorRecruiting(
     try {
       contractor = await contractorDb.getContractor({ spectrum_id })
     } catch (e) {
-      res.status(400).json({ error: "Invalid contractor" })
+      res
+        .status(400)
+        .json(
+          createErrorResponse(
+            ErrorCode.VALIDATION_ERROR,
+            "Invalid contractor",
+          ),
+        )
       return
     }
 
@@ -127,12 +163,20 @@ export async function contractorRecruiting(
       "manage_recruiting",
     )
     if (!success) {
-      res.status(400).json({ error: "Missing permissions" })
+      res
+        .status(403)
+        .json(
+          createForbiddenErrorResponse(
+            "Missing permissions to manage recruiting",
+          ),
+        )
       return
     }
 
     next()
   } else {
-    res.status(401).json({ error: "Unauthenticated" })
+    res
+      .status(401)
+      .json(createUnauthorizedErrorResponse("Unauthenticated"))
   }
 }

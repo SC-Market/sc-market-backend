@@ -4,8 +4,12 @@ import * as orderDb from "../orders/database.js"
 import * as adminDb from "./database.js"
 import * as profileDb from "../profiles/database.js"
 import * as contractorDb from "../contractors/database.js"
-import { createResponse as createResponse } from "../util/response.js"
-import { createErrorResponse } from "../util/response.js"
+import {
+  createResponse,
+  createErrorResponse,
+  createNotFoundErrorResponse,
+} from "../util/response.js"
+import { ErrorCode } from "../util/error-codes.js"
 import { User } from "../api-models.js"
 import logger from "../../../../logger/logger.js"
 import {
@@ -415,10 +419,7 @@ export const admin_post_users_username_unlink: RequestHandler = async (
     const user = await profileDb.getUser({ username })
     if (!user) {
       res.status(404).json(
-        createErrorResponse({
-          message: "User not found",
-          status: "error",
-        }),
+        createNotFoundErrorResponse("User not found")
       )
       return
     }
@@ -426,10 +427,10 @@ export const admin_post_users_username_unlink: RequestHandler = async (
     // Check if user is currently verified
     if (!user.rsi_confirmed) {
       res.status(400).json(
-        createErrorResponse({
-          message: "User is not currently verified with a Star Citizen account",
-          status: "error",
-        }),
+        createErrorResponse(
+          ErrorCode.VALIDATION_ERROR,
+          "User is not currently verified with a Star Citizen account"
+        ),
       )
       return
     }
@@ -468,10 +469,10 @@ export const admin_post_users_username_unlink: RequestHandler = async (
   } catch (e) {
     logger.error("Error during admin Star Citizen account unlink:", e)
     res.status(500).json(
-      createErrorResponse({
-        message: "Internal server error during account unlink",
-        status: "error",
-      }),
+      createErrorResponse(
+        ErrorCode.INTERNAL_SERVER_ERROR,
+        "Internal server error during account unlink"
+      )
     )
   }
 }

@@ -1,5 +1,7 @@
 import { RequestHandler } from "express"
 import logger from "../../../../logger/logger.js"
+import { createErrorResponse, createResponse } from "../util/response.js"
+import { ErrorCode } from "../util/error-codes.js"
 
 export const wiki_get_imagesearch_query: RequestHandler = async function (
   req,
@@ -9,7 +11,14 @@ export const wiki_get_imagesearch_query: RequestHandler = async function (
     const query = req.params["query"]
 
     if (query.length < 3) {
-      res.status(400).json({ error: "Too short" })
+      res
+        .status(400)
+        .json(
+          createErrorResponse(
+            ErrorCode.VALIDATION_ERROR,
+            "Query must be at least 3 characters long",
+          ),
+        )
       return
     }
 
@@ -23,10 +32,10 @@ export const wiki_get_imagesearch_query: RequestHandler = async function (
         })),
     )
 
-    res.json(result)
+    res.json(createResponse(result))
   } catch (e) {
     logger.error("Error in wiki image search", { error: e })
-    res.json({ pages: [] })
+    res.json(createResponse({ pages: [] }))
   }
 }
 
@@ -37,12 +46,19 @@ export const wiki_get_itemsearch_query: RequestHandler = async function (
   const query = req.params["query"]
 
   if (query.length < 3) {
-    res.status(400).json({ error: "Too short" })
+    res
+      .status(400)
+      .json(
+        createErrorResponse(
+          ErrorCode.VALIDATION_ERROR,
+          "Query must be at least 3 characters long",
+        ),
+      )
     return
   }
 
   const result = await wikiItemSearch(query)
-  res.json(result)
+  res.json(createResponse(result))
 }
 const example_image_resp = {
   pages: [

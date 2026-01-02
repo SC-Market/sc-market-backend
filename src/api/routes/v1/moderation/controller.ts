@@ -4,8 +4,12 @@ import { User as User } from "../api-models.js"
 import { database as database } from "../../../../clients/database/knex-db.js"
 import * as adminDb from "../admin/database.js"
 import { DBContentReport as DBContentReport } from "../../../../clients/database/db-models.js"
-import { createErrorResponse as createErrorResponse } from "../util/response.js"
-import { createResponse as createResponse } from "../util/response.js"
+import {
+  createErrorResponse,
+  createResponse,
+  createNotFoundErrorResponse,
+} from "../util/response.js"
+import { ErrorCode } from "../util/error-codes.js"
 import logger from "../../../../logger/logger.js"
 
 export const moderation_post_report: RequestHandler = async (req, res) => {
@@ -16,9 +20,10 @@ export const moderation_post_report: RequestHandler = async (req, res) => {
     // Validate required fields
     if (!reported_url || typeof reported_url !== "string") {
       res.status(400).json(
-        createErrorResponse({
-          message: "reported_url is required and must be a string",
-        }),
+        createErrorResponse(
+          ErrorCode.VALIDATION_ERROR,
+          "reported_url is required and must be a string"
+        ),
       )
       return
     }
@@ -26,9 +31,10 @@ export const moderation_post_report: RequestHandler = async (req, res) => {
     // Validate URL format (should be a relative path)
     if (!reported_url.startsWith("/") || reported_url.length < 2) {
       res.status(400).json(
-        createErrorResponse({
-          message: "reported_url must be a valid relative path starting with /",
-        }),
+        createErrorResponse(
+          ErrorCode.VALIDATION_ERROR,
+          "reported_url must be a valid relative path starting with /"
+        ),
       )
       return
     }
@@ -47,7 +53,10 @@ export const moderation_post_report: RequestHandler = async (req, res) => {
       res
         .status(400)
         .json(
-          createErrorResponse({ message: "Invalid report_reason provided" }),
+          createErrorResponse(
+            ErrorCode.VALIDATION_ERROR,
+            "Invalid report_reason provided"
+          ),
         )
       return
     }
@@ -59,9 +68,10 @@ export const moderation_post_report: RequestHandler = async (req, res) => {
       report_details.length > 1000
     ) {
       res.status(400).json(
-        createErrorResponse({
-          message: "report_details must be 1000 characters or less",
-        }),
+        createErrorResponse(
+          ErrorCode.VALIDATION_ERROR,
+          "report_details must be 1000 characters or less"
+        ),
       )
       return
     }
@@ -119,7 +129,12 @@ export const moderation_get_reports: RequestHandler = async (req, res) => {
     logger.error("Failed to retrieve user reports", { error })
     res
       .status(500)
-      .json(createErrorResponse({ message: "Failed to retrieve user reports" }))
+      .json(
+        createErrorResponse(
+          ErrorCode.INTERNAL_SERVER_ERROR,
+          "Failed to retrieve user reports"
+        )
+      )
   }
 }
 
@@ -200,7 +215,12 @@ export const moderation_get_admin_reports: RequestHandler = async (
     logger.error("Failed to retrieve admin reports", { error })
     res
       .status(500)
-      .json(createErrorResponse({ error: "Failed to retrieve admin reports" }))
+      .json(
+        createErrorResponse(
+          ErrorCode.INTERNAL_SERVER_ERROR,
+          "Failed to retrieve admin reports"
+        )
+      )
   }
 }
 
@@ -216,9 +236,10 @@ export const moderation_put_admin_reports_report_id: RequestHandler = async (
     // Validate required fields
     if (!status || typeof status !== "string") {
       res.status(400).json(
-        createErrorResponse({
-          error: "status is required and must be a string",
-        }),
+        createErrorResponse(
+          ErrorCode.VALIDATION_ERROR,
+          "status is required and must be a string"
+        ),
       )
       return
     }
@@ -228,16 +249,19 @@ export const moderation_put_admin_reports_report_id: RequestHandler = async (
     if (!validStatuses.includes(status)) {
       res
         .status(400)
-        .json(createErrorResponse({ error: "Invalid status provided" }))
+        .json(
+          createErrorResponse(ErrorCode.VALIDATION_ERROR, "Invalid status provided")
+        )
       return
     }
 
     // Validate notes length if provided
     if (notes && typeof notes === "string" && notes.length > 2000) {
       res.status(400).json(
-        createErrorResponse({
-          error: "notes must be 2000 characters or less",
-        }),
+        createErrorResponse(
+          ErrorCode.VALIDATION_ERROR,
+          "notes must be 2000 characters or less"
+        ),
       )
       return
     }
@@ -247,7 +271,7 @@ export const moderation_put_admin_reports_report_id: RequestHandler = async (
       report_id: reportId,
     })
     if (existingReports.length === 0) {
-      res.status(404).json(createErrorResponse({ error: "Report not found" }))
+      res.status(404).json(createNotFoundErrorResponse("Report not found"))
       return
     }
 
@@ -296,6 +320,8 @@ export const moderation_put_admin_reports_report_id: RequestHandler = async (
     logger.error("Failed to update report", { error })
     res
       .status(500)
-      .json(createErrorResponse({ error: "Failed to update report" }))
+      .json(
+        createErrorResponse(ErrorCode.INTERNAL_SERVER_ERROR, "Failed to update report")
+      )
   }
 }
