@@ -284,11 +284,7 @@ export async function adminAuthorized(
         if (authResult.user.banned) {
           res
             .status(418)
-            .json(
-              createErrorResponse(
-                createErrorResponse({ message: "Internal server error" }),
-              ),
-            )
+            .json(createErrorResponse({ message: "Internal server error" }))
           return
         }
         if (authResult.user.role === "admin") {
