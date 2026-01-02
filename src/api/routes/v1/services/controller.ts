@@ -173,7 +173,10 @@ export const services_get_public: RequestHandler = async (req, res, next) => {
     sortBy: sortBy as "timestamp" | "cost" | "service_name",
     sortOrder: sortOrder as "asc" | "desc",
     language_codes: language_codes
-      ? (language_codes as string).split(",").map((s) => s.trim()).filter(Boolean)
+      ? (language_codes as string)
+          .split(",")
+          .map((s) => s.trim())
+          .filter(Boolean)
       : undefined,
   }
 

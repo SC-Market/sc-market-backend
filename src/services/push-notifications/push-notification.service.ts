@@ -1,6 +1,6 @@
 /**
  * PushNotificationService - Web Push Protocol service for sending push notifications
- * 
+ *
  * This service handles:
  * - Managing push subscriptions (stored in database)
  * - Managing user preferences for push notifications
@@ -126,9 +126,8 @@ class WebPushNotificationService implements PushNotificationService {
     subscriptionId: string,
   ): Promise<void> {
     // Verify user owns the subscription
-    const subscription = await pushNotificationDb.getPushSubscription(
-      subscriptionId,
-    )
+    const subscription =
+      await pushNotificationDb.getPushSubscription(subscriptionId)
 
     if (!subscription) {
       throw new Error(`Subscription ${subscriptionId} not found`)
@@ -261,11 +260,14 @@ class WebPushNotificationService implements PushNotificationService {
         )
         return
       }
-      logger.debug(`Push notification preference check passed for user ${userId}`, {
-        user_id: userId,
-        action_type: actionType,
-        preference_enabled: true,
-      })
+      logger.debug(
+        `Push notification preference check passed for user ${userId}`,
+        {
+          user_id: userId,
+          action_type: actionType,
+          preference_enabled: true,
+        },
+      )
     }
 
     // Get user subscriptions
@@ -279,29 +281,38 @@ class WebPushNotificationService implements PushNotificationService {
       return
     }
 
-    logger.debug(`Found ${subscriptions.length} subscription(s) for user ${userId}`, {
-      user_id: userId,
-      action_type: actionType,
-      subscription_count: subscriptions.length,
-    })
+    logger.debug(
+      `Found ${subscriptions.length} subscription(s) for user ${userId}`,
+      {
+        user_id: userId,
+        action_type: actionType,
+        subscription_count: subscriptions.length,
+      },
+    )
 
     // Send to all subscriptions
     const payload = JSON.stringify(notification)
-    logger.debug(`Sending push notification to ${subscriptions.length} device(s) for user ${userId}`, {
-      user_id: userId,
-      action_type: actionType,
-      subscription_count: subscriptions.length,
-      payload_size: payload.length,
-    })
+    logger.debug(
+      `Sending push notification to ${subscriptions.length} device(s) for user ${userId}`,
+      {
+        user_id: userId,
+        action_type: actionType,
+        subscription_count: subscriptions.length,
+        payload_size: payload.length,
+      },
+    )
 
     const results = await Promise.allSettled(
       subscriptions.map(async (subscription) => {
         try {
-          logger.debug(`Sending push notification to subscription ${subscription.subscription_id}`, {
-            subscription_id: subscription.subscription_id,
-            endpoint: subscription.endpoint.substring(0, 50) + "...",
-            user_agent: subscription.user_agent,
-          })
+          logger.debug(
+            `Sending push notification to subscription ${subscription.subscription_id}`,
+            {
+              subscription_id: subscription.subscription_id,
+              endpoint: subscription.endpoint.substring(0, 50) + "...",
+              user_agent: subscription.user_agent,
+            },
+          )
 
           await webpush.sendNotification(
             {
@@ -323,21 +334,24 @@ class WebPushNotificationService implements PushNotificationService {
               endpoint: subscription.endpoint.substring(0, 50) + "...",
             },
           )
-          return { subscription_id: subscription.subscription_id, success: true }
+          return {
+            subscription_id: subscription.subscription_id,
+            success: true,
+          }
         } catch (error: unknown) {
           // Handle invalid subscriptions and other error codes
-          if (
-            error &&
-            typeof error === "object" &&
-            "statusCode" in error
-          ) {
+          if (error && typeof error === "object" && "statusCode" in error) {
             const statusCode = error.statusCode as number
 
             // 410 Gone - subscription expired or invalid
             // 404 Not Found - subscription doesn't exist
             // 403 Forbidden - subscription revoked or unauthorized
             // These all mean the subscription is invalid and should be removed
-            if (statusCode === 410 || statusCode === 404 || statusCode === 403) {
+            if (
+              statusCode === 410 ||
+              statusCode === 404 ||
+              statusCode === 403
+            ) {
               logger.debug(
                 `Removing invalid push subscription ${subscription.subscription_id} (HTTP ${statusCode})`,
                 {
@@ -405,7 +419,11 @@ class WebPushNotificationService implements PushNotificationService {
     const successful = results.filter((r) => {
       if (r.status === "fulfilled") {
         // Check if the returned value indicates success
-        const value = r.value as { subscription_id: string; success: boolean; error?: string }
+        const value = r.value as {
+          subscription_id: string
+          success: boolean
+          error?: string
+        }
         return value.success === true
       }
       return false
@@ -416,7 +434,11 @@ class WebPushNotificationService implements PushNotificationService {
         return true
       }
       if (r.status === "fulfilled") {
-        const value = r.value as { subscription_id: string; success: boolean; error?: string }
+        const value = r.value as {
+          subscription_id: string
+          success: boolean
+          error?: string
+        }
         return value.success === false
       }
       return false
@@ -429,7 +451,11 @@ class WebPushNotificationService implements PushNotificationService {
           return true
         }
         if (r.status === "fulfilled") {
-          const value = r.value as { subscription_id: string; success: boolean; error?: string }
+          const value = r.value as {
+            subscription_id: string
+            success: boolean
+            error?: string
+          }
           return value.success === false
         }
         return false
@@ -437,11 +463,21 @@ class WebPushNotificationService implements PushNotificationService {
       .map((r) => {
         if (r.status === "rejected") {
           return {
-            error: r.reason instanceof Error ? r.reason.message : String(r.reason) || "Unknown error",
+            error:
+              r.reason instanceof Error
+                ? r.reason.message
+                : String(r.reason) || "Unknown error",
           }
         }
-        const value = r.value as { subscription_id: string; success: boolean; error?: string }
-        return { subscription_id: value.subscription_id, error: value.error || "Unknown error" }
+        const value = r.value as {
+          subscription_id: string
+          success: boolean
+          error?: string
+        }
+        return {
+          subscription_id: value.subscription_id,
+          error: value.error || "Unknown error",
+        }
       })
 
     if (successful > 0) {
@@ -569,11 +605,7 @@ class WebPushNotificationService implements PushNotificationService {
         valid++
       } catch (error: unknown) {
         // Remove invalid subscriptions
-        if (
-          error &&
-          typeof error === "object" &&
-          "statusCode" in error
-        ) {
+        if (error && typeof error === "object" && "statusCode" in error) {
           const statusCode = error.statusCode as number
 
           // 410 Gone, 404 Not Found, 403 Forbidden - subscription is invalid

@@ -1,13 +1,16 @@
 /**
  * Notification utility functions.
- * 
+ *
  * Most notification creation functions have been moved to NotificationService.
  * This file now only contains helper functions for chat messages.
- * 
+ *
  * @see ../../../../services/notifications/notification.service.ts for notification creation
  */
 
-import { DBOfferSession, DBOrder } from "../../../../clients/database/db-models.js"
+import {
+  DBOfferSession,
+  DBOrder,
+} from "../../../../clients/database/db-models.js"
 import * as profileDb from "../profiles/database.js"
 import * as chatDb from "../chats/database.js"
 import { sendSystemMessage } from "../chats/helpers.js"

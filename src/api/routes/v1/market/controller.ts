@@ -136,7 +136,10 @@ export const get_listing_stats: RequestHandler = async (req, res) => {
           ...listingStats,
         })
       } catch (error) {
-        logger.error(`Error processing listing ${listing_id}`, { listing_id, error })
+        logger.error(`Error processing listing ${listing_id}`, {
+          listing_id,
+          error,
+        })
         res.status(500).json(
           createErrorResponse({
             error: `Error processing listing ${listing_id}`,
@@ -851,7 +854,10 @@ export const get_listing_bids: RequestHandler = async (req, res) => {
   })
 
   const complete = await marketDb.getMarketListingComplete(listing.listing_id)
-  await notificationService.createMarketBidNotification(complete, bid_results[0])
+  await notificationService.createMarketBidNotification(
+    complete,
+    bid_results[0],
+  )
 
   res.json({ result: "Success" })
 }
