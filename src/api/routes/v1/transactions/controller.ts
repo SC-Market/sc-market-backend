@@ -7,6 +7,7 @@ import { DBTransaction as DBTransaction } from "../../../../clients/database/db-
 import { User as User } from "../api-models.js"
 import { has_permission as has_permission } from "../util/permissions.js"
 import logger from "../../../../logger/logger.js"
+import { withTransaction } from "../../../../clients/database/transaction.js"
 
 export const transaction_get_transaction_id: RequestHandler = async (
   req,
@@ -137,10 +138,6 @@ export const transaction_post_create: RequestHandler = async (
   }
 
   // Wrap all balance operations in a transaction for atomicity
-  const { withTransaction } = await import(
-    "../../../../clients/database/transaction.js"
-  )
-
   try {
     await withTransaction(
       async (trx) => {
@@ -278,10 +275,6 @@ export const transaction_post_contractor_spectrum_id_create: RequestHandler =
     }
 
     // Wrap all balance operations in a transaction for atomicity
-    const { withTransaction } = await import(
-      "../../../../clients/database/transaction.js"
-    )
-
     try {
       await withTransaction(
         async (trx) => {

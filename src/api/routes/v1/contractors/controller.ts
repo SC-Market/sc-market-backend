@@ -31,6 +31,7 @@ import { discordService } from "../../../../services/discord/discord.service.js"
 import { archiveContractor } from "../../../../services/contractors/archive-contractor.service.js"
 import { MinimalUser } from "../../../../clients/database/db-models.js"
 import { auditLogService } from "../../../../services/audit-log/audit-log.service.js"
+import { withTransaction } from "../../../../clients/database/transaction.js"
 import {
   validateLanguageCodes,
   getLanguageName,
@@ -986,24 +987,33 @@ export const post_spectrum_id_roles_role_id_members_username: RequestHandler =
       return
     }
 
-    await contractorDb.insertContractorMemberRole({
-      user_id: target.user_id,
-      role_id,
-    })
+    // Wrap role assignment and audit log in a transaction
+    await withTransaction(async (trx) => {
+      await contractorDb.insertContractorMemberRole(
+        {
+          user_id: target.user_id,
+          role_id,
+        },
+        trx,
+      )
 
-    // Log role assignment
-    await auditLogService.record({
-      action: "member.role_assigned",
-      actorId: user.user_id,
-      subjectType: "contractor_member",
-      subjectId: target.user_id,
-      metadata: {
-        contractor_id: contractor.contractor_id,
-        spectrum_id: contractor.spectrum_id,
-        target_username: target.username,
-        role_id,
-        role_name: role.name,
-      },
+      // Log role assignment (within transaction for atomicity)
+      await auditLogService.record(
+        {
+          action: "member.role_assigned",
+          actorId: user.user_id,
+          subjectType: "contractor_member",
+          subjectId: target.user_id,
+          metadata: {
+            contractor_id: contractor.contractor_id,
+            spectrum_id: contractor.spectrum_id,
+            target_username: target.username,
+            role_id,
+            role_name: role.name,
+          },
+        },
+        trx,
+      )
     })
 
     res.json(createResponse({ result: "Success" }))
@@ -1061,27 +1071,36 @@ export const delete_spectrum_id_roles_role_id_members_username: RequestHandler =
       return
     }
 
-    await contractorDb.removeContractorMemberRoles({
-      user_id: target.user_id,
-      role_id,
+    // Wrap role removal and audit log in a transaction
+    await withTransaction(async (trx) => {
+      await contractorDb.removeContractorMemberRoles(
+        {
+          user_id: target.user_id,
+          role_id,
+        },
+        trx,
+      )
+
+      // Log role removal (within transaction for atomicity)
+      await auditLogService.record(
+        {
+          action: "member.role_removed",
+          actorId: user.user_id,
+          subjectType: "contractor_member",
+          subjectId: target.user_id,
+          metadata: {
+            contractor_id: contractor.contractor_id,
+            spectrum_id: contractor.spectrum_id,
+            target_username: target.username,
+            role_id,
+            role_name: role.name,
+          },
+        },
+        trx,
+      )
     })
 
-    // Log role removal
-    await auditLogService.record({
-      action: "member.role_removed",
-      actorId: user.user_id,
-      subjectType: "contractor_member",
-      subjectId: target.user_id,
-      metadata: {
-        contractor_id: contractor.contractor_id,
-        spectrum_id: contractor.spectrum_id,
-        target_username: target.username,
-        role_id,
-        role_name: role.name,
-      },
-    })
-
-    res.json(createErrorResponse({ result: "Success" }))
+    res.json(createResponse({ result: "Success" }))
   }
 
 export const post_spectrum_id_transfer_ownership: RequestHandler = async (
@@ -1162,10 +1181,6 @@ export const post_spectrum_id_transfer_ownership: RequestHandler = async (
   }
 
   // Perform the transfer in a transaction
-  const { withTransaction } = await import(
-    "../../../../clients/database/transaction.js"
-  )
-
   try {
     await withTransaction(
       async (trx) => {
@@ -2127,49 +2142,66 @@ export const post_spectrum_id_accept: RequestHandler = async (
       acceptedInviteId = invites[0].invite_id
     }
 
-    await contractorDb.removeContractorInvites(
-      user.user_id,
-      contractor.contractor_id,
-    )
+    // Wrap all contractor acceptance operations in a transaction
+    await withTransaction(async (trx) => {
+      // Remove invite
+      await contractorDb.removeContractorInvites(
+        user.user_id,
+        contractor.contractor_id,
+        trx,
+      )
 
-    await contractorDb.insertContractorMember(
-      contractor.contractor_id,
-      user.user_id,
-      "member",
-    )
+      // Add member
+      await contractorDb.insertContractorMember(
+        contractor.contractor_id,
+        user.user_id,
+        "member",
+        trx,
+      )
 
-    await contractorDb.insertContractorMemberRole({
-      user_id: user.user_id,
-      role_id: contractor.default_role,
-    })
-
-    // Log direct invite acceptance and member addition
-    if (acceptedInviteId) {
-      await auditLogService.record({
-        action: "invite.accepted",
-        actorId: user.user_id,
-        subjectType: "contractor_invite",
-        subjectId: acceptedInviteId,
-        metadata: {
-          contractor_id: contractor.contractor_id,
-          spectrum_id: contractor.spectrum_id,
-          invite_id: acceptedInviteId,
-          method: invite_id ? "invite_code" : "direct",
+      // Assign default role
+      await contractorDb.insertContractorMemberRole(
+        {
+          user_id: user.user_id,
+          role_id: contractor.default_role,
         },
-      })
-    }
+        trx,
+      )
 
-    await auditLogService.record({
-      action: "member.added",
-      actorId: user.user_id,
-      subjectType: "contractor_member",
-      subjectId: user.user_id,
-      metadata: {
-        contractor_id: contractor.contractor_id,
-        spectrum_id: contractor.spectrum_id,
-        method: invite_id ? "invite_code" : "direct_invite",
-        invite_id: acceptedInviteId,
-      },
+      // Log direct invite acceptance and member addition (within transaction)
+      if (acceptedInviteId) {
+        await auditLogService.record(
+          {
+            action: "invite.accepted",
+            actorId: user.user_id,
+            subjectType: "contractor_invite",
+            subjectId: acceptedInviteId,
+            metadata: {
+              contractor_id: contractor.contractor_id,
+              spectrum_id: contractor.spectrum_id,
+              invite_id: acceptedInviteId,
+              method: invite_id ? "invite_code" : "direct",
+            },
+          },
+          trx,
+        )
+      }
+
+      await auditLogService.record(
+        {
+          action: "member.added",
+          actorId: user.user_id,
+          subjectType: "contractor_member",
+          subjectId: user.user_id,
+          metadata: {
+            contractor_id: contractor.contractor_id,
+            spectrum_id: contractor.spectrum_id,
+            method: invite_id ? "invite_code" : "direct_invite",
+            invite_id: acceptedInviteId,
+          },
+        },
+        trx,
+      )
     })
 
     res.json(createResponse({ result: "Success" }))
