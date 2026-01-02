@@ -51,7 +51,14 @@ export async function insertContractorMember(
   contractor_id: string,
   user_id: string,
   role: string,
+  trx?: any,
 ): Promise<DBContractorMember> {
+  if (trx) {
+    const result = await trx("contractor_members")
+      .insert({ contractor_id, user_id, role })
+      .returning("*")
+    return result[0]
+  }
   return (
     await knex()<DBContractorMember>("contractor_members")
       .insert({ contractor_id, user_id, role })
@@ -225,8 +232,12 @@ export async function insertContractorInvites(
 export async function removeContractorInvites(
   user_id: string,
   contractor_id: string,
+  trx?: any,
 ) {
-  const invites = await knex()<DBContractorInvite>("contractor_invites")
+  const query = trx
+    ? trx("contractor_invites")
+    : knex()<DBContractorInvite>("contractor_invites")
+  const invites = await query
     .where({ user_id, contractor_id })
     .delete()
     .returning("*")
@@ -792,7 +803,11 @@ export async function getContractorRole(
  */
 export async function insertContractorMemberRole(
   values: any,
+  trx?: any,
 ): Promise<DBContractorMemberRole[]> {
+  if (trx) {
+    return trx("contractor_member_roles").insert(values).returning("*")
+  }
   return knex()<DBContractorMemberRole>("contractor_member_roles")
     .insert(values)
     .returning("*")
@@ -839,7 +854,11 @@ export async function deleteContractorRole(
  */
 export async function removeContractorMemberRoles(
   where: Partial<DBContractorMemberRole>,
+  trx?: any,
 ): Promise<DBContractorMemberRole[]> {
+  if (trx) {
+    return trx("contractor_member_roles").where(where).delete().returning("*")
+  }
   return knex()<DBContractorMemberRole>("contractor_member_roles")
     .where(where)
     .delete()

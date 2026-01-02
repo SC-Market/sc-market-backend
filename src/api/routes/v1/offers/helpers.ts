@@ -22,6 +22,7 @@ import {
   OfferValidationError,
 } from "./errors.js"
 import logger from "../../../../logger/logger.js"
+import { withTransaction } from "../../../../clients/database/transaction.js"
 
 export async function is_related_to_offer(
   user_id: string,
@@ -810,10 +811,6 @@ export async function mergeOfferSessions(
 
   // Close all source offer sessions and mark their offers as rejected
   // Wrap in transaction to ensure atomicity
-  const { withTransaction } = await import(
-    "../../../../clients/database/transaction.js"
-  )
-
   await withTransaction(async (trx) => {
     // Update session status to closed
     await trx<DBOfferSession>("offer_sessions")
