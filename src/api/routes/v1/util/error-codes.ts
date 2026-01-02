@@ -1,6 +1,6 @@
 /**
  * Error Code Definitions
- * 
+ *
  * Standardized error codes for API responses.
  * Maps to HTTP status codes and provides machine-readable error identification.
  */
@@ -13,12 +13,12 @@ export enum ErrorCode {
   NOT_FOUND = "NOT_FOUND",
   CONFLICT = "CONFLICT",
   RATE_LIMIT_EXCEEDED = "RATE_LIMIT_EXCEEDED",
-  
+
   // Server errors (5xx)
   INTERNAL_SERVER_ERROR = "INTERNAL_SERVER_ERROR",
   SERVICE_UNAVAILABLE = "SERVICE_UNAVAILABLE",
   DATABASE_ERROR = "DATABASE_ERROR",
-  
+
   // Business logic errors
   INSUFFICIENT_BALANCE = "INSUFFICIENT_BALANCE",
   ORDER_ALREADY_COMPLETED = "ORDER_ALREADY_COMPLETED",

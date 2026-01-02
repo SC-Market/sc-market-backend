@@ -54,9 +54,11 @@ export async function getChatByOfferSessionId(
     chat = await chatDb.getChat({ session_id: session_id })
   } catch (error) {
     logger.debug(`Chat not found for session ID: ${session_id}`)
-    res.status(404).json(
-      createNotFoundErrorResponse("Chat not found for this offer session")
-    )
+    res
+      .status(404)
+      .json(
+        createNotFoundErrorResponse("Chat not found for this offer session"),
+      )
     return
   }
 
@@ -76,9 +78,9 @@ export async function sendMessage(
   }
 
   if (!content) {
-    res.status(400).json(
-      createErrorResponse(ErrorCode.VALIDATION_ERROR, "Invalid content")
-    )
+    res
+      .status(400)
+      .json(createErrorResponse(ErrorCode.VALIDATION_ERROR, "Invalid content"))
     return
   }
 
@@ -146,9 +148,9 @@ export async function createChat(
 
   // TODO: Process blocked users and user access settings
   if (!users.every(Boolean)) {
-    res.status(400).json(
-      createErrorResponse(ErrorCode.VALIDATION_ERROR, "Invalid user")
-    )
+    res
+      .status(400)
+      .json(createErrorResponse(ErrorCode.VALIDATION_ERROR, "Invalid user"))
     return
   }
 
