@@ -70,9 +70,14 @@ export async function createToken(req: Request, res: Response): Promise<void> {
 
     // Validate required fields
     if (!name || !scopes || !Array.isArray(scopes)) {
-      res.status(400).json(
-        createErrorResponse(ErrorCode.VALIDATION_ERROR, "Name and scopes are required")
-      )
+      res
+        .status(400)
+        .json(
+          createErrorResponse(
+            ErrorCode.VALIDATION_ERROR,
+            "Name and scopes are required",
+          ),
+        )
       return
     }
 
@@ -124,7 +129,7 @@ export async function createToken(req: Request, res: Response): Promise<void> {
         .json(
           createErrorResponse(
             ErrorCode.VALIDATION_ERROR,
-            `Invalid scopes: ${invalidScopes.join(", ")}`
+            `Invalid scopes: ${invalidScopes.join(", ")}`,
           ),
         )
       return
@@ -140,7 +145,7 @@ export async function createToken(req: Request, res: Response): Promise<void> {
         .json(
           createErrorResponse(
             ErrorCode.FORBIDDEN,
-            "Only admins can create tokens with admin scopes"
+            "Only admins can create tokens with admin scopes",
           ),
         )
       return
@@ -157,7 +162,7 @@ export async function createToken(req: Request, res: Response): Promise<void> {
         .json(
           createErrorResponse(
             ErrorCode.FORBIDDEN,
-            "Only admins can create tokens with moderation scopes"
+            "Only admins can create tokens with moderation scopes",
           ),
         )
       return
@@ -172,8 +177,8 @@ export async function createToken(req: Request, res: Response): Promise<void> {
           .json(
             createErrorResponse(
               ErrorCode.VALIDATION_ERROR,
-              "contractor_spectrum_ids must be an array"
-            )
+              "contractor_spectrum_ids must be an array",
+            ),
           )
         return
       }
@@ -188,7 +193,7 @@ export async function createToken(req: Request, res: Response): Promise<void> {
           .json(
             createErrorResponse(
               ErrorCode.VALIDATION_ERROR,
-              "One or more contractor spectrum IDs are invalid"
+              "One or more contractor spectrum IDs are invalid",
             ),
           )
         return
@@ -212,9 +217,14 @@ export async function createToken(req: Request, res: Response): Promise<void> {
       expiresAt = new Date(dateString)
 
       if (isNaN(expiresAt.getTime())) {
-        res.status(400).json(
-          createErrorResponse(ErrorCode.VALIDATION_ERROR, "Invalid expiration date")
-        )
+        res
+          .status(400)
+          .json(
+            createErrorResponse(
+              ErrorCode.VALIDATION_ERROR,
+              "Invalid expiration date",
+            ),
+          )
         return
       }
 
@@ -225,8 +235,8 @@ export async function createToken(req: Request, res: Response): Promise<void> {
           .json(
             createErrorResponse(
               ErrorCode.VALIDATION_ERROR,
-              "Expiration date must be in the future"
-            )
+              "Expiration date must be in the future",
+            ),
           )
         return
       }
@@ -270,9 +280,14 @@ export async function createToken(req: Request, res: Response): Promise<void> {
     )
   } catch (error) {
     logger.error("Error creating token", { error })
-    res.status(500).json(
-      createErrorResponse(ErrorCode.INTERNAL_SERVER_ERROR, "Internal server error")
-    )
+    res
+      .status(500)
+      .json(
+        createErrorResponse(
+          ErrorCode.INTERNAL_SERVER_ERROR,
+          "Internal server error",
+        ),
+      )
   }
 }
 
@@ -310,9 +325,14 @@ export async function listTokens(req: Request, res: Response): Promise<void> {
     res.json(createResponse(tokensWithSpectrumIds))
   } catch (error) {
     logger.error("Error listing tokens", { error })
-    res.status(500).json(
-      createErrorResponse(ErrorCode.INTERNAL_SERVER_ERROR, "Internal server error")
-    )
+    res
+      .status(500)
+      .json(
+        createErrorResponse(
+          ErrorCode.INTERNAL_SERVER_ERROR,
+          "Internal server error",
+        ),
+      )
   }
 }
 
@@ -352,9 +372,14 @@ export async function getToken(req: Request, res: Response): Promise<void> {
     )
   } catch (error) {
     logger.error("Error getting token", { error })
-    res.status(500).json(
-      createErrorResponse(ErrorCode.INTERNAL_SERVER_ERROR, "Internal server error")
-    )
+    res
+      .status(500)
+      .json(
+        createErrorResponse(
+          ErrorCode.INTERNAL_SERVER_ERROR,
+          "Internal server error",
+        ),
+      )
   }
 }
 
@@ -426,9 +451,9 @@ export async function updateToken(req: Request, res: Response): Promise<void> {
           .status(400)
           .json(
             createErrorResponse(
-            ErrorCode.VALIDATION_ERROR,
-            `Invalid scopes: ${invalidScopes.join(", ")}`
-          ),
+              ErrorCode.VALIDATION_ERROR,
+              `Invalid scopes: ${invalidScopes.join(", ")}`,
+            ),
           )
         return
       }
@@ -443,7 +468,7 @@ export async function updateToken(req: Request, res: Response): Promise<void> {
           .json(
             createErrorResponse(
               ErrorCode.FORBIDDEN,
-              "Only admins can create tokens with admin scopes"
+              "Only admins can create tokens with admin scopes",
             ),
           )
         return
@@ -460,7 +485,7 @@ export async function updateToken(req: Request, res: Response): Promise<void> {
           .json(
             createErrorResponse(
               ErrorCode.FORBIDDEN,
-              "Only admins can create tokens with moderation scopes"
+              "Only admins can create tokens with moderation scopes",
             ),
           )
         return
@@ -478,7 +503,7 @@ export async function updateToken(req: Request, res: Response): Promise<void> {
           .json(
             createErrorResponse(
               ErrorCode.VALIDATION_ERROR,
-              "contractor_spectrum_ids must be an array or null"
+              "contractor_spectrum_ids must be an array or null",
             ),
           )
         return
@@ -512,9 +537,14 @@ export async function updateToken(req: Request, res: Response): Promise<void> {
         expiresAt = new Date(dateString)
 
         if (isNaN(expiresAt.getTime())) {
-          res.status(400).json(
-          createErrorResponse(ErrorCode.VALIDATION_ERROR, "Invalid expiration date")
-        )
+          res
+            .status(400)
+            .json(
+              createErrorResponse(
+                ErrorCode.VALIDATION_ERROR,
+                "Invalid expiration date",
+              ),
+            )
           return
         }
 
@@ -523,11 +553,11 @@ export async function updateToken(req: Request, res: Response): Promise<void> {
           res
             .status(400)
             .json(
-            createErrorResponse(
-              ErrorCode.VALIDATION_ERROR,
-              "Expiration date must be in the future"
+              createErrorResponse(
+                ErrorCode.VALIDATION_ERROR,
+                "Expiration date must be in the future",
+              ),
             )
-          )
           return
         }
       }
@@ -567,9 +597,14 @@ export async function updateToken(req: Request, res: Response): Promise<void> {
     )
   } catch (error) {
     logger.error("Error updating token", { error })
-    res.status(500).json(
-      createErrorResponse(ErrorCode.INTERNAL_SERVER_ERROR, "Internal server error")
-    )
+    res
+      .status(500)
+      .json(
+        createErrorResponse(
+          ErrorCode.INTERNAL_SERVER_ERROR,
+          "Internal server error",
+        ),
+      )
   }
 }
 
@@ -595,9 +630,14 @@ export async function revokeToken(req: Request, res: Response): Promise<void> {
     res.json(createResponse({ message: "Token revoked successfully" }))
   } catch (error) {
     logger.error("Error revoking token", { error })
-    res.status(500).json(
-      createErrorResponse(ErrorCode.INTERNAL_SERVER_ERROR, "Internal server error")
-    )
+    res
+      .status(500)
+      .json(
+        createErrorResponse(
+          ErrorCode.INTERNAL_SERVER_ERROR,
+          "Internal server error",
+        ),
+      )
   }
 }
 
@@ -620,9 +660,14 @@ export async function extendToken(req: Request, res: Response): Promise<void> {
     }
 
     if (!expires_at) {
-      res.status(400).json(
-        createErrorResponse(ErrorCode.VALIDATION_ERROR, "expires_at is required")
-      )
+      res
+        .status(400)
+        .json(
+          createErrorResponse(
+            ErrorCode.VALIDATION_ERROR,
+            "expires_at is required",
+          ),
+        )
       return
     }
 
@@ -649,9 +694,14 @@ export async function extendToken(req: Request, res: Response): Promise<void> {
     res.json(createResponse({ message: "Token expiration extended" }))
   } catch (error) {
     logger.error("Error extending token", { error })
-    res.status(500).json(
-      createErrorResponse(ErrorCode.INTERNAL_SERVER_ERROR, "Internal server error")
-    )
+    res
+      .status(500)
+      .json(
+        createErrorResponse(
+          ErrorCode.INTERNAL_SERVER_ERROR,
+          "Internal server error",
+        ),
+      )
   }
 }
 
@@ -687,9 +737,14 @@ export async function getTokenStats(
     )
   } catch (error) {
     logger.error("Error getting token stats", { error })
-    res.status(500).json(
-      createErrorResponse(ErrorCode.INTERNAL_SERVER_ERROR, "Internal server error")
-    )
+    res
+      .status(500)
+      .json(
+        createErrorResponse(
+          ErrorCode.INTERNAL_SERVER_ERROR,
+          "Internal server error",
+        ),
+      )
   }
 }
 
@@ -757,8 +812,13 @@ export async function getAvailableScopes(
     res.json(createResponse({ scopes: availableScopes }))
   } catch (error) {
     logger.error("Error getting available scopes", { error })
-    res.status(500).json(
-      createErrorResponse(ErrorCode.INTERNAL_SERVER_ERROR, "Internal server error")
-    )
+    res
+      .status(500)
+      .json(
+        createErrorResponse(
+          ErrorCode.INTERNAL_SERVER_ERROR,
+          "Internal server error",
+        ),
+      )
   }
 }

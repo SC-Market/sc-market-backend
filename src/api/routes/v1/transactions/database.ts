@@ -62,10 +62,7 @@ export async function getContractorTransactions(
 /**
  * Create a new transaction.
  */
-export async function createTransaction(
-  data: any,
-  trx?: any,
-): Promise<void> {
+export async function createTransaction(data: any, trx?: any): Promise<void> {
   if (trx) {
     await trx("transactions").insert(data)
   } else {

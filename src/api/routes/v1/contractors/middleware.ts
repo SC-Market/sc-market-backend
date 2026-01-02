@@ -29,10 +29,7 @@ export async function valid_contractor(
     res
       .status(400)
       .json(
-        createErrorResponse(
-          ErrorCode.VALIDATION_ERROR,
-          "Invalid contractor",
-        ),
+        createErrorResponse(ErrorCode.VALIDATION_ERROR, "Invalid contractor"),
       )
     return
   }
@@ -65,10 +62,7 @@ export async function org_authorized(
       res
         .status(400)
         .json(
-          createErrorResponse(
-            ErrorCode.VALIDATION_ERROR,
-            "Invalid contractor",
-          ),
+          createErrorResponse(ErrorCode.VALIDATION_ERROR, "Invalid contractor"),
         )
       return
     }
@@ -210,11 +204,9 @@ export function validate_optional_spectrum_id(path: string) {
     try {
       contractor = await contractorDb.getContractor({ spectrum_id })
     } catch {
-        res
-          .status(404)
-          .json(
-            createNotFoundErrorResponse("Contractor", spectrum_id),
-          )
+      res
+        .status(404)
+        .json(createNotFoundErrorResponse("Contractor", spectrum_id))
       return
     }
 

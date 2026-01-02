@@ -641,8 +641,7 @@ export async function updateMarketListing(
   const query = trx
     ? trx("market_listings")
     : knex()<DBMarketListing>("market_listings")
-  await query.where({ listing_id })
-    .update(data)
+  await query.where({ listing_id }).update(data)
 }
 
 /**

@@ -64,9 +64,11 @@ export const services_post_root: RequestHandler = async (req, res) => {
       spectrum_id: contractor,
     })
     if (!contractor_obj) {
-      res.status(400).json(
-        createErrorResponse(ErrorCode.VALIDATION_ERROR, "Invalid contractor")
-      )
+      res
+        .status(400)
+        .json(
+          createErrorResponse(ErrorCode.VALIDATION_ERROR, "Invalid contractor"),
+        )
       return
     }
     contractor_id = contractor_obj.contractor_id
@@ -114,8 +116,8 @@ export const services_post_root: RequestHandler = async (req, res) => {
       .json(
         createErrorResponse(
           ErrorCode.INTERNAL_SERVER_ERROR,
-          "Failed to create service photos"
-        )
+          "Failed to create service photos",
+        ),
       )
     return
   }
@@ -138,9 +140,9 @@ export const services_get_user_username: RequestHandler = async (
       { noBalance: true },
     )
   } catch {
-    res.status(400).json(
-      createErrorResponse(ErrorCode.VALIDATION_ERROR, "Invalid user")
-    )
+    res
+      .status(400)
+      .json(createErrorResponse(ErrorCode.VALIDATION_ERROR, "Invalid user"))
     return
   }
 
@@ -243,16 +245,16 @@ export const services_put_service_id: RequestHandler = async (req, res) => {
   try {
     service = await serviceDb.getService({ service_id })
   } catch {
-    res.status(400).json(
-      createErrorResponse(ErrorCode.VALIDATION_ERROR, "Invalid service")
-    )
+    res
+      .status(400)
+      .json(createErrorResponse(ErrorCode.VALIDATION_ERROR, "Invalid service"))
     return
   }
 
   if (!service) {
-    res.status(400).json(
-      createErrorResponse(ErrorCode.VALIDATION_ERROR, "Invalid service")
-    )
+    res
+      .status(400)
+      .json(createErrorResponse(ErrorCode.VALIDATION_ERROR, "Invalid service"))
     return
   }
 
@@ -368,12 +370,14 @@ export const services_put_service_id: RequestHandler = async (req, res) => {
         }
         // If we reach here, the image is not associated, but validation should have caught this
         // This is a safety check
-        res.status(400).json(
-          createErrorResponse(
-            ErrorCode.VALIDATION_ERROR,
-            "Cannot use image from SC markets CDN that is not already associated with this service"
+        res
+          .status(400)
+          .json(
+            createErrorResponse(
+              ErrorCode.VALIDATION_ERROR,
+              "Cannot use image from SC markets CDN that is not already associated with this service",
+            ),
           )
-        )
         return
       }
 
@@ -388,9 +392,11 @@ export const services_put_service_id: RequestHandler = async (req, res) => {
           service_id,
         })
       } catch (e: any) {
-        res.status(400).json(
-          createErrorResponse(ErrorCode.VALIDATION_ERROR, "Invalid photo!")
-        )
+        res
+          .status(400)
+          .json(
+            createErrorResponse(ErrorCode.VALIDATION_ERROR, "Invalid photo!"),
+          )
         return
       }
     }
@@ -421,16 +427,16 @@ export const services_get_service_id: RequestHandler = async (
   try {
     service = await serviceDb.getService({ service_id })
   } catch {
-    res.status(400).json(
-      createErrorResponse(ErrorCode.VALIDATION_ERROR, "Invalid service")
-    )
+    res
+      .status(400)
+      .json(createErrorResponse(ErrorCode.VALIDATION_ERROR, "Invalid service"))
     return
   }
 
   if (!service) {
-    res.status(400).json(
-      createErrorResponse(ErrorCode.VALIDATION_ERROR, "Invalid service")
-    )
+    res
+      .status(400)
+      .json(createErrorResponse(ErrorCode.VALIDATION_ERROR, "Invalid service"))
     return
   }
 
@@ -447,28 +453,32 @@ export const services_post_service_id_photos: RequestHandler = async (
     const photos = req.files as unknown as Express.Multer.File[]
 
     if (!photos || photos.length === 0) {
-      res.status(400).json(
-        createErrorResponse(ErrorCode.VALIDATION_ERROR, "No photos provided")
-      )
+      res
+        .status(400)
+        .json(
+          createErrorResponse(ErrorCode.VALIDATION_ERROR, "No photos provided"),
+        )
       return
     }
 
     if (photos.length > 5) {
-      res.status(400).json(
-        createErrorResponse(
-          ErrorCode.VALIDATION_ERROR,
-          "Maximum 5 photos can be uploaded at once"
-        ),
-      )
+      res
+        .status(400)
+        .json(
+          createErrorResponse(
+            ErrorCode.VALIDATION_ERROR,
+            "Maximum 5 photos can be uploaded at once",
+          ),
+        )
       return
     }
 
     // Validate service exists
     const service = await serviceDb.getService({ service_id })
     if (!service) {
-      res.status(404).json(
-        createErrorResponse(ErrorCode.NOT_FOUND, "Service not found")
-      )
+      res
+        .status(404)
+        .json(createErrorResponse(ErrorCode.NOT_FOUND, "Service not found"))
       return
     }
 
@@ -485,21 +495,25 @@ export const services_post_service_id_photos: RequestHandler = async (
           "manage_orders",
         ))
       ) {
-        res.status(403).json(
-          createForbiddenErrorResponse(
-            "You are not authorized to modify this service"
-          ),
-        )
+        res
+          .status(403)
+          .json(
+            createForbiddenErrorResponse(
+              "You are not authorized to modify this service",
+            ),
+          )
         return
       }
     } else {
       // If no contractor, check if user owns the service
       if (service.user_id !== user.user_id) {
-        res.status(403).json(
-          createForbiddenErrorResponse(
-            "You are not authorized to modify this service"
-          ),
-        )
+        res
+          .status(403)
+          .json(
+            createForbiddenErrorResponse(
+              "You are not authorized to modify this service",
+            ),
+          )
         return
       }
     }
@@ -550,13 +564,18 @@ export const services_post_service_id_photos: RequestHandler = async (
         if (error instanceof Error) {
           if (error.message.includes("Image failed moderation checks")) {
             logger.debug(`Photo ${index + 1} failed content moderation:`, error)
-            res.status(400).json(
-              createErrorResponse(
-                ErrorCode.VALIDATION_ERROR,
-                `Photo ${index + 1} failed content moderation checks and cannot be uploaded.`,
-                { details: "One or more photos contain inappropriate content." }
+            res
+              .status(400)
+              .json(
+                createErrorResponse(
+                  ErrorCode.VALIDATION_ERROR,
+                  `Photo ${index + 1} failed content moderation checks and cannot be uploaded.`,
+                  {
+                    details:
+                      "One or more photos contain inappropriate content.",
+                  },
+                ),
               )
-            )
             return
           }
 
@@ -566,38 +585,50 @@ export const services_post_service_id_photos: RequestHandler = async (
             error.message.includes("UNSUPPORTED_FORMAT")
           ) {
             logger.debug(`Photo ${index + 1} failed validation:`, error)
-            res.status(400).json(
-              createErrorResponse(
-                ErrorCode.VALIDATION_ERROR,
-                `Photo ${index + 1} failed validation: ${error.message}`,
-                { details: "Please check the file format and try again." }
+            res
+              .status(400)
+              .json(
+                createErrorResponse(
+                  ErrorCode.VALIDATION_ERROR,
+                  `Photo ${index + 1} failed validation: ${error.message}`,
+                  { details: "Please check the file format and try again." },
+                ),
               )
-            )
             return
           }
 
           if (error.message.includes("Unsupported MIME type")) {
             logger.debug(`Photo ${index + 1} has unsupported format:`, error)
-            res.status(400).json(
-              createErrorResponse(
-                ErrorCode.VALIDATION_ERROR,
-                `Photo ${index + 1} has an unsupported file type. Only PNG, JPG, and WEBP images are allowed.`,
-                { details: "Please ensure all photos are in supported formats." }
+            res
+              .status(400)
+              .json(
+                createErrorResponse(
+                  ErrorCode.VALIDATION_ERROR,
+                  `Photo ${index + 1} has an unsupported file type. Only PNG, JPG, and WEBP images are allowed.`,
+                  {
+                    details:
+                      "Please ensure all photos are in supported formats.",
+                  },
+                ),
               )
-            )
             return
           }
         }
 
         // Log unexpected errors as error level
         logger.error(`Failed to upload photo ${index + 1}:`, error)
-        res.status(500).json(
-          createErrorResponse(
-            ErrorCode.INTERNAL_SERVER_ERROR,
-            `Failed to upload photo ${index + 1}`,
-            { details: "An unexpected error occurred during upload. Please try again." }
+        res
+          .status(500)
+          .json(
+            createErrorResponse(
+              ErrorCode.INTERNAL_SERVER_ERROR,
+              `Failed to upload photo ${index + 1}`,
+              {
+                details:
+                  "An unexpected error occurred during upload. Please try again.",
+              },
+            ),
           )
-        )
         return
       }
     }
@@ -633,13 +664,14 @@ export const services_post_service_id_photos: RequestHandler = async (
         logger.debug("Photo upload failed content moderation check:", {
           error: error.message,
         })
-        res.status(400).json(
-          createErrorResponse(
-            ErrorCode.VALIDATION_ERROR,
-            error.message,
-            { details: "One or more photos contain inappropriate content and cannot be uploaded." }
+        res
+          .status(400)
+          .json(
+            createErrorResponse(ErrorCode.VALIDATION_ERROR, error.message, {
+              details:
+                "One or more photos contain inappropriate content and cannot be uploaded.",
+            }),
           )
-        )
         return
       }
 
@@ -647,25 +679,28 @@ export const services_post_service_id_photos: RequestHandler = async (
         logger.debug("Photo upload failed due to unsupported file type:", {
           error: error.message,
         })
-        res.status(400).json(
-          createErrorResponse(
-            ErrorCode.VALIDATION_ERROR,
-            error.message,
-            { details: "Please ensure all photos are in PNG, JPG, GIF, or WEBP format." }
+        res
+          .status(400)
+          .json(
+            createErrorResponse(ErrorCode.VALIDATION_ERROR, error.message, {
+              details:
+                "Please ensure all photos are in PNG, JPG, GIF, or WEBP format.",
+            }),
           )
-        )
         return
       }
     }
 
     // Log unexpected server errors as error level
     logger.error("Unexpected error uploading photos:", error)
-    res.status(500).json(
-      createErrorResponse(
-        ErrorCode.INTERNAL_SERVER_ERROR,
-        "Failed to upload photos. Please try again."
+    res
+      .status(500)
+      .json(
+        createErrorResponse(
+          ErrorCode.INTERNAL_SERVER_ERROR,
+          "Failed to upload photos. Please try again.",
+        ),
       )
-    )
   } finally {
     // Clean up uploaded files regardless of success/failure
     if (req.files && Array.isArray(req.files)) {
@@ -696,9 +731,14 @@ export const services_post_service_id_view: RequestHandler = async (
     // Verify service exists and is active
     const service = await serviceDb.getService({ service_id })
     if (!service || service.status !== "active") {
-      return res.status(404).json(
-        createErrorResponse(ErrorCode.NOT_FOUND, "Service not found or inactive")
-      )
+      return res
+        .status(404)
+        .json(
+          createErrorResponse(
+            ErrorCode.NOT_FOUND,
+            "Service not found or inactive",
+          ),
+        )
     }
 
     // Track the view
@@ -718,9 +758,14 @@ export const services_post_service_id_view: RequestHandler = async (
       error,
       service_id: req.params.service_id,
     })
-    res.status(500).json(
-      createErrorResponse(ErrorCode.INTERNAL_SERVER_ERROR, "Internal server error")
-    )
+    res
+      .status(500)
+      .json(
+        createErrorResponse(
+          ErrorCode.INTERNAL_SERVER_ERROR,
+          "Internal server error",
+        ),
+      )
   }
 }
 
@@ -751,8 +796,13 @@ export const services_get_seller_analytics: RequestHandler = async (
       error,
       user_id: (req.user as User)?.user_id,
     })
-    res.status(500).json(
-      createErrorResponse(ErrorCode.INTERNAL_SERVER_ERROR, "Internal server error")
-    )
+    res
+      .status(500)
+      .json(
+        createErrorResponse(
+          ErrorCode.INTERNAL_SERVER_ERROR,
+          "Internal server error",
+        ),
+      )
   }
 }

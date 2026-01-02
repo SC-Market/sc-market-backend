@@ -10,17 +10,15 @@ export const commodity_get_root: RequestHandler = async function (req, res) {
     res.json(createResponse(commodities))
   } catch (error) {
     logger.error("Error in commodity_get_root", { error })
-    res
-      .status(500)
-      .json(
-        createErrorResponse(
-          ErrorCode.INTERNAL_SERVER_ERROR,
-          "Failed to fetch commodities",
-          {
-            message:
-              error instanceof Error ? error.message : "Unknown error occurred",
-          },
-        ),
-      )
+    res.status(500).json(
+      createErrorResponse(
+        ErrorCode.INTERNAL_SERVER_ERROR,
+        "Failed to fetch commodities",
+        {
+          message:
+            error instanceof Error ? error.message : "Unknown error occurred",
+        },
+      ),
+    )
   }
 }

@@ -108,16 +108,20 @@ export const offer_put_session_id: RequestHandler = async (req, res) => {
       })
 
       if (!service) {
-        res.status(400).json(
-          createErrorResponse(ErrorCode.VALIDATION_ERROR, "Invalid service")
-        )
+        res
+          .status(400)
+          .json(
+            createErrorResponse(ErrorCode.VALIDATION_ERROR, "Invalid service"),
+          )
         return
       }
 
       if (service.user_id && service.user_id !== session.assigned_id) {
-        res.status(400).json(
-          createErrorResponse(ErrorCode.VALIDATION_ERROR, "Invalid service")
-        )
+        res
+          .status(400)
+          .json(
+            createErrorResponse(ErrorCode.VALIDATION_ERROR, "Invalid service"),
+          )
         return
       }
 
@@ -125,9 +129,11 @@ export const offer_put_session_id: RequestHandler = async (req, res) => {
         service.contractor_id &&
         service.contractor_id !== session.contractor_id
       ) {
-        res.status(400).json(
-          createErrorResponse(ErrorCode.VALIDATION_ERROR, "Invalid service")
-        )
+        res
+          .status(400)
+          .json(
+            createErrorResponse(ErrorCode.VALIDATION_ERROR, "Invalid service"),
+          )
         return
       }
     }
@@ -226,18 +232,20 @@ export const offer_put_session_id: RequestHandler = async (req, res) => {
 
 export const post_session_id_thread: RequestHandler = async (req, res) => {
   if (req.offer_session!.thread_id) {
-    res.status(409).json(
-      createConflictErrorResponse("Offer already has a thread!")
-    )
+    res
+      .status(409)
+      .json(createConflictErrorResponse("Offer already has a thread!"))
     return
   }
 
   try {
     const result = await discordService.queueThreadCreation(req.offer_session!)
     if (result.status === "failed") {
-      res.status(500).json(
-        createErrorResponse(ErrorCode.INTERNAL_SERVER_ERROR, result.message)
-      )
+      res
+        .status(500)
+        .json(
+          createErrorResponse(ErrorCode.INTERNAL_SERVER_ERROR, result.message),
+        )
       return
     }
 
@@ -249,12 +257,14 @@ export const post_session_id_thread: RequestHandler = async (req, res) => {
     )
   } catch (e) {
     logger.error("Failed to create thread", e)
-    res.status(500).json(
-      createErrorResponse(
-        ErrorCode.INTERNAL_SERVER_ERROR,
-        "An unknown error occurred"
+    res
+      .status(500)
+      .json(
+        createErrorResponse(
+          ErrorCode.INTERNAL_SERVER_ERROR,
+          "An unknown error occurred",
+        ),
       )
-    )
     return
   }
   res.status(201).json(
@@ -269,18 +279,18 @@ export const get_search: RequestHandler = async (req, res) => {
   const args = await convert_offer_search_query(req)
   if (!(args.contractor_id || args.assigned_id || args.customer_id)) {
     if (user.role !== "admin") {
-      res.status(403).json(
-        createErrorResponse(ErrorCode.FORBIDDEN, "Missing permissions.")
-      )
+      res
+        .status(403)
+        .json(createErrorResponse(ErrorCode.FORBIDDEN, "Missing permissions."))
       return
     }
   }
 
   if (args.contractor_id) {
     if (!(await is_member(args.contractor_id, user.user_id))) {
-      res.status(403).json(
-        createErrorResponse(ErrorCode.FORBIDDEN, "Missing permissions.")
-      )
+      res
+        .status(403)
+        .json(createErrorResponse(ErrorCode.FORBIDDEN, "Missing permissions."))
       return
     }
   }
@@ -319,7 +329,7 @@ export const post_merge: RequestHandler = async (req, res) => {
       .json(
         createErrorResponse(
           ErrorCode.VALIDATION_ERROR,
-          "offer_session_ids array is required"
+          "offer_session_ids array is required",
         ),
       )
     return
