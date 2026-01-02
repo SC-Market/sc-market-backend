@@ -19,23 +19,27 @@ export const moderation_post_report: RequestHandler = async (req, res) => {
 
     // Validate required fields
     if (!reported_url || typeof reported_url !== "string") {
-      res.status(400).json(
-        createErrorResponse(
-          ErrorCode.VALIDATION_ERROR,
-          "reported_url is required and must be a string"
-        ),
-      )
+      res
+        .status(400)
+        .json(
+          createErrorResponse(
+            ErrorCode.VALIDATION_ERROR,
+            "reported_url is required and must be a string",
+          ),
+        )
       return
     }
 
     // Validate URL format (should be a relative path)
     if (!reported_url.startsWith("/") || reported_url.length < 2) {
-      res.status(400).json(
-        createErrorResponse(
-          ErrorCode.VALIDATION_ERROR,
-          "reported_url must be a valid relative path starting with /"
-        ),
-      )
+      res
+        .status(400)
+        .json(
+          createErrorResponse(
+            ErrorCode.VALIDATION_ERROR,
+            "reported_url must be a valid relative path starting with /",
+          ),
+        )
       return
     }
 
@@ -55,7 +59,7 @@ export const moderation_post_report: RequestHandler = async (req, res) => {
         .json(
           createErrorResponse(
             ErrorCode.VALIDATION_ERROR,
-            "Invalid report_reason provided"
+            "Invalid report_reason provided",
           ),
         )
       return
@@ -67,12 +71,14 @@ export const moderation_post_report: RequestHandler = async (req, res) => {
       typeof report_details === "string" &&
       report_details.length > 1000
     ) {
-      res.status(400).json(
-        createErrorResponse(
-          ErrorCode.VALIDATION_ERROR,
-          "report_details must be 1000 characters or less"
-        ),
-      )
+      res
+        .status(400)
+        .json(
+          createErrorResponse(
+            ErrorCode.VALIDATION_ERROR,
+            "report_details must be 1000 characters or less",
+          ),
+        )
       return
     }
 
@@ -132,8 +138,8 @@ export const moderation_get_reports: RequestHandler = async (req, res) => {
       .json(
         createErrorResponse(
           ErrorCode.INTERNAL_SERVER_ERROR,
-          "Failed to retrieve user reports"
-        )
+          "Failed to retrieve user reports",
+        ),
       )
   }
 }
@@ -218,8 +224,8 @@ export const moderation_get_admin_reports: RequestHandler = async (
       .json(
         createErrorResponse(
           ErrorCode.INTERNAL_SERVER_ERROR,
-          "Failed to retrieve admin reports"
-        )
+          "Failed to retrieve admin reports",
+        ),
       )
   }
 }
@@ -235,12 +241,14 @@ export const moderation_put_admin_reports_report_id: RequestHandler = async (
 
     // Validate required fields
     if (!status || typeof status !== "string") {
-      res.status(400).json(
-        createErrorResponse(
-          ErrorCode.VALIDATION_ERROR,
-          "status is required and must be a string"
-        ),
-      )
+      res
+        .status(400)
+        .json(
+          createErrorResponse(
+            ErrorCode.VALIDATION_ERROR,
+            "status is required and must be a string",
+          ),
+        )
       return
     }
 
@@ -250,19 +258,24 @@ export const moderation_put_admin_reports_report_id: RequestHandler = async (
       res
         .status(400)
         .json(
-          createErrorResponse(ErrorCode.VALIDATION_ERROR, "Invalid status provided")
+          createErrorResponse(
+            ErrorCode.VALIDATION_ERROR,
+            "Invalid status provided",
+          ),
         )
       return
     }
 
     // Validate notes length if provided
     if (notes && typeof notes === "string" && notes.length > 2000) {
-      res.status(400).json(
-        createErrorResponse(
-          ErrorCode.VALIDATION_ERROR,
-          "notes must be 2000 characters or less"
-        ),
-      )
+      res
+        .status(400)
+        .json(
+          createErrorResponse(
+            ErrorCode.VALIDATION_ERROR,
+            "notes must be 2000 characters or less",
+          ),
+        )
       return
     }
 
@@ -321,7 +334,10 @@ export const moderation_put_admin_reports_report_id: RequestHandler = async (
     res
       .status(500)
       .json(
-        createErrorResponse(ErrorCode.INTERNAL_SERVER_ERROR, "Failed to update report")
+        createErrorResponse(
+          ErrorCode.INTERNAL_SERVER_ERROR,
+          "Failed to update report",
+        ),
       )
   }
 }

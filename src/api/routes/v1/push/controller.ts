@@ -1,10 +1,7 @@
 import { RequestHandler } from "express"
 import { User } from "../api-models.js"
 import { pushNotificationService } from "../../../../services/push-notifications/push-notification.service.js"
-import {
-  createErrorResponse,
-  createResponse,
-} from "../util/response.js"
+import { createErrorResponse, createResponse } from "../util/response.js"
 import { ErrorCode } from "../util/error-codes.js"
 import logger from "../../../../logger/logger.js"
 import { env } from "../../../../config/env.js"
@@ -23,23 +20,27 @@ export const push_subscribe: RequestHandler = async (req, res) => {
 
   // Check if push notifications are configured
   if (!env.VAPID_PUBLIC_KEY || !env.VAPID_PRIVATE_KEY) {
-    res.status(503).json(
-      createErrorResponse(
-        ErrorCode.SERVICE_UNAVAILABLE,
-        "Push notifications are not configured on this server. Please contact support."
+    res
+      .status(503)
+      .json(
+        createErrorResponse(
+          ErrorCode.SERVICE_UNAVAILABLE,
+          "Push notifications are not configured on this server. Please contact support.",
+        ),
       )
-    )
     return
   }
 
   // Validate request body
   if (!endpoint || !keys || !keys.p256dh || !keys.auth) {
-    res.status(400).json(
-      createErrorResponse(
-        ErrorCode.VALIDATION_ERROR,
-        "Invalid request body. Required fields: endpoint, keys.p256dh, keys.auth"
+    res
+      .status(400)
+      .json(
+        createErrorResponse(
+          ErrorCode.VALIDATION_ERROR,
+          "Invalid request body. Required fields: endpoint, keys.p256dh, keys.auth",
+        ),
       )
-    )
     return
   }
 
@@ -72,12 +73,14 @@ export const push_subscribe: RequestHandler = async (req, res) => {
     )
   } catch (error) {
     logger.error("Failed to create push subscription:", error)
-    res.status(500).json(
-      createErrorResponse(
-        ErrorCode.INTERNAL_SERVER_ERROR,
-        "Failed to create push subscription"
+    res
+      .status(500)
+      .json(
+        createErrorResponse(
+          ErrorCode.INTERNAL_SERVER_ERROR,
+          "Failed to create push subscription",
+        ),
       )
-    )
   }
 }
 
@@ -106,12 +109,14 @@ export const push_get_subscriptions: RequestHandler = async (req, res) => {
     )
   } catch (error) {
     logger.error("Failed to get push subscriptions:", error)
-    res.status(500).json(
-      createErrorResponse(
-        ErrorCode.INTERNAL_SERVER_ERROR,
-        "Failed to get push subscriptions"
+    res
+      .status(500)
+      .json(
+        createErrorResponse(
+          ErrorCode.INTERNAL_SERVER_ERROR,
+          "Failed to get push subscriptions",
+        ),
       )
-    )
   }
 }
 
@@ -124,12 +129,14 @@ export const push_unsubscribe: RequestHandler = async (req, res) => {
   const { subscription_id } = req.params
 
   if (!subscription_id) {
-    res.status(400).json(
-      createErrorResponse(
-        ErrorCode.VALIDATION_ERROR,
-        "subscription_id is required"
+    res
+      .status(400)
+      .json(
+        createErrorResponse(
+          ErrorCode.VALIDATION_ERROR,
+          "subscription_id is required",
+        ),
       )
-    )
     return
   }
 
@@ -152,32 +159,35 @@ export const push_unsubscribe: RequestHandler = async (req, res) => {
     )
   } catch (error) {
     if (error instanceof Error && error.message.includes("not found")) {
-      res.status(404).json(
-        createErrorResponse(
-          ErrorCode.NOT_FOUND,
-          "Subscription not found"
+      res
+        .status(404)
+        .json(
+          createErrorResponse(ErrorCode.NOT_FOUND, "Subscription not found"),
         )
-      )
       return
     }
 
     if (error instanceof Error && error.message.includes("does not own")) {
-      res.status(403).json(
-        createErrorResponse(
-          ErrorCode.FORBIDDEN,
-          "You do not own this subscription"
+      res
+        .status(403)
+        .json(
+          createErrorResponse(
+            ErrorCode.FORBIDDEN,
+            "You do not own this subscription",
+          ),
         )
-      )
       return
     }
 
     logger.error("Failed to delete push subscription:", error)
-    res.status(500).json(
-      createErrorResponse(
-        ErrorCode.INTERNAL_SERVER_ERROR,
-        "Failed to delete push subscription"
+    res
+      .status(500)
+      .json(
+        createErrorResponse(
+          ErrorCode.INTERNAL_SERVER_ERROR,
+          "Failed to delete push subscription",
+        ),
       )
-    )
   }
 }
 
@@ -208,12 +218,14 @@ export const push_get_preferences: RequestHandler = async (req, res) => {
     )
   } catch (error) {
     logger.error("Failed to get push preferences:", error)
-    res.status(500).json(
-      createErrorResponse(
-        ErrorCode.INTERNAL_SERVER_ERROR,
-        "Failed to get push preferences"
+    res
+      .status(500)
+      .json(
+        createErrorResponse(
+          ErrorCode.INTERNAL_SERVER_ERROR,
+          "Failed to get push preferences",
+        ),
       )
-    )
   }
 }
 
@@ -230,12 +242,14 @@ export const push_update_preference: RequestHandler = async (req, res) => {
 
   // Validate request body
   if (!action || typeof enabled !== "boolean") {
-    res.status(400).json(
-      createErrorResponse(
-        ErrorCode.VALIDATION_ERROR,
-        "Invalid request body. Required fields: action (string), enabled (boolean)"
+    res
+      .status(400)
+      .json(
+        createErrorResponse(
+          ErrorCode.VALIDATION_ERROR,
+          "Invalid request body. Required fields: action (string), enabled (boolean)",
+        ),
       )
-    )
     return
   }
 
@@ -263,21 +277,20 @@ export const push_update_preference: RequestHandler = async (req, res) => {
       error instanceof Error &&
       error.message.includes("Invalid action type")
     ) {
-      res.status(400).json(
-        createErrorResponse(
-          ErrorCode.VALIDATION_ERROR,
-          error.message
-        )
-      )
+      res
+        .status(400)
+        .json(createErrorResponse(ErrorCode.VALIDATION_ERROR, error.message))
       return
     }
 
     logger.error("Failed to update push preference:", error)
-    res.status(500).json(
-      createErrorResponse(
-        ErrorCode.INTERNAL_SERVER_ERROR,
-        "Failed to update push preference"
+    res
+      .status(500)
+      .json(
+        createErrorResponse(
+          ErrorCode.INTERNAL_SERVER_ERROR,
+          "Failed to update push preference",
+        ),
       )
-    )
   }
 }

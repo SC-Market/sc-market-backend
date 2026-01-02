@@ -1,6 +1,6 @@
 /**
  * Custom Error Classes
- * 
+ *
  * Custom error classes for different error types.
  * These can be thrown in route handlers and will be automatically
  * handled by the error handler middleware.
@@ -15,7 +15,7 @@ import { ValidationError as ValidationErrorType } from "./response.js"
 export class ValidationError extends Error {
   constructor(
     public message: string,
-    public validationErrors: ValidationErrorType[]
+    public validationErrors: ValidationErrorType[],
   ) {
     super(message)
     this.name = "ValidationError"
@@ -29,7 +29,7 @@ export class ValidationError extends Error {
 export class NotFoundError extends Error {
   constructor(
     public resource: string,
-    public identifier?: string
+    public identifier?: string,
   ) {
     super(`${resource} not found${identifier ? `: ${identifier}` : ""}`)
     this.name = "NotFoundError"
@@ -44,7 +44,7 @@ export class BusinessLogicError extends Error {
   constructor(
     public code: ErrorCode,
     public message: string,
-    public details?: Record<string, any>
+    public details?: Record<string, any>,
   ) {
     super(message)
     this.name = "BusinessLogicError"

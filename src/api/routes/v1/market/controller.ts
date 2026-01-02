@@ -437,18 +437,25 @@ export const create_listing: RequestHandler = async (req, res) => {
       // Validate contractor exists and user has permissions
       contractor = await contractorDb.getContractor({ spectrum_id })
       if (!contractor) {
-        res.status(400).json(
-          createErrorResponse(ErrorCode.VALIDATION_ERROR, "Invalid contractor")
-        )
+        res
+          .status(400)
+          .json(
+            createErrorResponse(
+              ErrorCode.VALIDATION_ERROR,
+              "Invalid contractor",
+            ),
+          )
         return
       }
       if (contractor.archived) {
-        res.status(409).json(
-          createErrorResponse(
-            ErrorCode.CONFLICT,
-            "Archived contractors cannot create listings"
+        res
+          .status(409)
+          .json(
+            createErrorResponse(
+              ErrorCode.CONFLICT,
+              "Archived contractors cannot create listings",
+            ),
           )
-        )
         return
       }
 
@@ -459,12 +466,14 @@ export const create_listing: RequestHandler = async (req, res) => {
           "manage_market",
         ))
       ) {
-        res.status(403).json(
-          createErrorResponse(
-            ErrorCode.FORBIDDEN,
-            "You are not authorized to create listings on behalf of this contractor!"
+        res
+          .status(403)
+          .json(
+            createErrorResponse(
+              ErrorCode.FORBIDDEN,
+              "You are not authorized to create listings on behalf of this contractor!",
+            ),
           )
-        )
         return
       }
     }
@@ -475,18 +484,22 @@ export const create_listing: RequestHandler = async (req, res) => {
 
     // Validate urls are valid
     if (photosToProcess.find((p: string) => !cdn.verifyExternalResource(p))) {
-      res.status(400).json(
-        createErrorResponse(ErrorCode.VALIDATION_ERROR, "Invalid photo URL")
-      )
+      res
+        .status(400)
+        .json(
+          createErrorResponse(ErrorCode.VALIDATION_ERROR, "Invalid photo URL"),
+        )
       return
     }
 
     // Validate auction end time
     if (sale_type === "auction") {
       if (new Date(end_time) < new Date()) {
-        res.status(400).json(
-          createErrorResponse(ErrorCode.VALIDATION_ERROR, "Invalid end time")
-        )
+        res
+          .status(400)
+          .json(
+            createErrorResponse(ErrorCode.VALIDATION_ERROR, "Invalid end time"),
+          )
         return
       }
     }
@@ -496,9 +509,14 @@ export const create_listing: RequestHandler = async (req, res) => {
     if (item_name) {
       const item = await marketDb.getGameItem({ name: item_name })
       if (!item) {
-        res.status(400).json(
-          createErrorResponse(ErrorCode.VALIDATION_ERROR, "Invalid item name")
-        )
+        res
+          .status(400)
+          .json(
+            createErrorResponse(
+              ErrorCode.VALIDATION_ERROR,
+              "Invalid item name",
+            ),
+          )
         return
       }
       game_item_id = item.id
@@ -557,9 +575,14 @@ export const create_listing: RequestHandler = async (req, res) => {
     res.json(createResponse(await formatListing(listing)))
   } catch (e) {
     logger.error("Error in market operation", { error: e })
-    res.status(500).json(
-      createErrorResponse(ErrorCode.INTERNAL_SERVER_ERROR, "Internal server error")
-    )
+    res
+      .status(500)
+      .json(
+        createErrorResponse(
+          ErrorCode.INTERNAL_SERVER_ERROR,
+          "Internal server error",
+        ),
+      )
     return
   }
 }

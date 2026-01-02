@@ -157,7 +157,9 @@ export async function userAuthorized(
           return
         }
       } else {
-        res.status(401).json(createUnauthorizedErrorResponse("Invalid or expired token"))
+        res
+          .status(401)
+          .json(createUnauthorizedErrorResponse("Invalid or expired token"))
         return
       }
     }
@@ -187,9 +189,9 @@ export async function userAuthorized(
     }
   } catch (e) {
     logger.error("Error in userAuthorized", { error: e })
-    res.status(400).json(
-      createErrorResponse(ErrorCode.VALIDATION_ERROR, "Bad request")
-    )
+    res
+      .status(400)
+      .json(createErrorResponse(ErrorCode.VALIDATION_ERROR, "Bad request"))
     return
   }
 }

@@ -15,9 +15,9 @@ export const post_comment_id_reply: RequestHandler = async function (req, res) {
   const user = req.user as User
 
   if (!comment) {
-    res.status(400).json(
-      createErrorResponse(ErrorCode.VALIDATION_ERROR, "Invalid comment")
-    )
+    res
+      .status(400)
+      .json(createErrorResponse(ErrorCode.VALIDATION_ERROR, "Invalid comment"))
     return
   }
 
@@ -45,9 +45,9 @@ export const post_comment_id_delete: RequestHandler = async function (
   const user = req.user as User
 
   if (!comment) {
-    res.status(400).json(
-      createErrorResponse(ErrorCode.VALIDATION_ERROR, "Invalid comment")
-    )
+    res
+      .status(400)
+      .json(createErrorResponse(ErrorCode.VALIDATION_ERROR, "Invalid comment"))
     return
   }
 
@@ -69,9 +69,9 @@ export const post_comment_id_update: RequestHandler = async function (
   const user = req.user as User
 
   if (!comment) {
-    res.status(400).json(
-      createErrorResponse(ErrorCode.VALIDATION_ERROR, "Invalid comment")
-    )
+    res
+      .status(400)
+      .json(createErrorResponse(ErrorCode.VALIDATION_ERROR, "Invalid comment"))
     return
   }
 
@@ -87,9 +87,9 @@ export const post_comment_id_update: RequestHandler = async function (
   } = req.body
 
   if (!content) {
-    res.status(400).json(
-      createErrorResponse(ErrorCode.VALIDATION_ERROR, "Invalid argument")
-    )
+    res
+      .status(400)
+      .json(createErrorResponse(ErrorCode.VALIDATION_ERROR, "Invalid argument"))
     return
   }
 
@@ -106,9 +106,9 @@ export const post_comment_id_upvote: RequestHandler = async function (
   const user = req.user as User
 
   if (!comment) {
-    res.status(400).json(
-      createErrorResponse(ErrorCode.VALIDATION_ERROR, "Invalid comment")
-    )
+    res
+      .status(400)
+      .json(createErrorResponse(ErrorCode.VALIDATION_ERROR, "Invalid comment"))
     return
   }
 
@@ -137,9 +137,9 @@ export const post_comment_id_downvote: RequestHandler = async function (
   const user = req.user as User
 
   if (!comment) {
-    res.status(400).json(
-      createErrorResponse(ErrorCode.VALIDATION_ERROR, "Invalid comment")
-    )
+    res
+      .status(400)
+      .json(createErrorResponse(ErrorCode.VALIDATION_ERROR, "Invalid comment"))
     return
   }
 

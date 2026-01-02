@@ -292,18 +292,22 @@ export const post_root: RequestHandler = async (req, res, next) => {
       spectrum_id: contractor,
     })
     if (!contractor_obj) {
-      res.status(400).json(
-        createErrorResponse(ErrorCode.VALIDATION_ERROR, "Invalid contractor")
-      )
+      res
+        .status(400)
+        .json(
+          createErrorResponse(ErrorCode.VALIDATION_ERROR, "Invalid contractor"),
+        )
       return
     }
     if (contractor_obj.archived) {
-      res.status(409).json(
-        createErrorResponse(
-          ErrorCode.CONFLICT,
-          "Cannot create orders for an archived contractor"
+      res
+        .status(409)
+        .json(
+          createErrorResponse(
+            ErrorCode.CONFLICT,
+            "Cannot create orders for an archived contractor",
+          ),
         )
-      )
       return
     }
     contractor_id = contractor_obj.contractor_id
@@ -315,9 +319,11 @@ export const post_root: RequestHandler = async (req, res, next) => {
   if (assigned_to) {
     assigned_user = await profileDb.getUser({ username: assigned_to })
     if (!assigned_user) {
-      res.status(400).json(
-        createErrorResponse(ErrorCode.VALIDATION_ERROR, "Invalid assignee")
-      )
+      res
+        .status(400)
+        .json(
+          createErrorResponse(ErrorCode.VALIDATION_ERROR, "Invalid assignee"),
+        )
       return
     }
 
@@ -327,9 +333,11 @@ export const post_root: RequestHandler = async (req, res, next) => {
         contractor_id,
       )
       if (!role) {
-        res.status(400).json(
-          createErrorResponse(ErrorCode.VALIDATION_ERROR, "Invalid assignee")
-        )
+        res
+          .status(400)
+          .json(
+            createErrorResponse(ErrorCode.VALIDATION_ERROR, "Invalid assignee"),
+          )
         return
       }
     }
@@ -345,11 +353,13 @@ export const post_root: RequestHandler = async (req, res, next) => {
     user.user_id,
   )
   if (isBlocked) {
-    res.status(403).json(
-      createForbiddenErrorResponse(
-        "You are blocked from creating orders with this contractor or user"
+    res
+      .status(403)
+      .json(
+        createForbiddenErrorResponse(
+          "You are blocked from creating orders with this contractor or user",
+        ),
       )
-    )
     return
   }
 

@@ -1,14 +1,14 @@
 /**
  * CSP Reporting Endpoint
- * 
+ *
  * Handles Content Security Policy violation reports from browsers.
  * Supports both legacy report-uri format and modern report-to (Reporting API) format.
- * 
+ *
  * POST /api/csp-report
- * 
+ *
  * Legacy format (report-uri):
  *   Body: { "csp-report": { ... } }
- * 
+ *
  * Modern format (report-to / Reporting API):
  *   Body: [{ type: "csp-violation", body: { ... } }, ...]
  */
@@ -21,7 +21,7 @@ import logger from "../../../../logger/logger.js"
  */
 export function cspReportHandler(req: Request, res: Response) {
   const body = req.body
-  
+
   // Handle legacy report-uri format: { "csp-report": { ... } }
   if (body && typeof body === "object" && "csp-report" in body) {
     logger.warn("CSP violation reported (legacy format)", {
@@ -54,7 +54,7 @@ export function cspReportHandler(req: Request, res: Response) {
       referer: req.headers.referer,
     })
   }
-  
+
   // Return 204 No Content (standard for CSP reporting endpoints)
   res.status(204).send()
 }

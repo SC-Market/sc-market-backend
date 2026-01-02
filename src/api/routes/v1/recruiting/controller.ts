@@ -135,9 +135,14 @@ export const post_posts: RequestHandler = async function (req, res) {
   } = req.body
 
   if (!title || !body || !spectrum_id) {
-    res.status(400).json(
-      createErrorResponse(ErrorCode.VALIDATION_ERROR, "Missing required fields")
-    )
+    res
+      .status(400)
+      .json(
+        createErrorResponse(
+          ErrorCode.VALIDATION_ERROR,
+          "Missing required fields",
+        ),
+      )
     return
   }
 
@@ -145,12 +150,14 @@ export const post_posts: RequestHandler = async function (req, res) {
     spectrum_id: spectrum_id,
   })
   if (contractor_obj.archived) {
-    res.status(409).json(
-      createErrorResponse(
-        ErrorCode.CONFLICT,
-        "Archived organizations cannot create recruiting posts"
-      ),
-    )
+    res
+      .status(409)
+      .json(
+        createErrorResponse(
+          ErrorCode.CONFLICT,
+          "Archived organizations cannot create recruiting posts",
+        ),
+      )
     return
   }
   const last_post = await recruitingDb.getRecruitingPost({
@@ -160,7 +167,7 @@ export const post_posts: RequestHandler = async function (req, res) {
     res
       .status(400)
       .json(
-        createErrorResponse(ErrorCode.CONFLICT, "Cannot create multiple posts")
+        createErrorResponse(ErrorCode.CONFLICT, "Cannot create multiple posts"),
       )
     return
   }
@@ -202,9 +209,9 @@ export const put_posts_post_id: RequestHandler = async function (req, res) {
   const post = await recruitingDb.getRecruitingPost({ post_id })
 
   if (!post) {
-    res.status(400).json(
-      createErrorResponse(ErrorCode.VALIDATION_ERROR, "Invalid post")
-    )
+    res
+      .status(400)
+      .json(createErrorResponse(ErrorCode.VALIDATION_ERROR, "Invalid post"))
     return
   }
 
@@ -212,12 +219,14 @@ export const put_posts_post_id: RequestHandler = async function (req, res) {
     contractor_id: post.contractor_id,
   })
   if (contractor.archived) {
-    res.status(409).json(
-      createErrorResponse(
-        ErrorCode.CONFLICT,
-        "Archived organizations cannot update recruiting posts"
-      ),
-    )
+    res
+      .status(409)
+      .json(
+        createErrorResponse(
+          ErrorCode.CONFLICT,
+          "Archived organizations cannot update recruiting posts",
+        ),
+      )
     return
   }
   if (
@@ -227,9 +236,7 @@ export const put_posts_post_id: RequestHandler = async function (req, res) {
       "manage_recruiting",
     ))
   ) {
-    res
-      .status(400)
-      .json(createForbiddenErrorResponse("Missing permissions"))
+    res.status(400).json(createForbiddenErrorResponse("Missing permissions"))
     return
   }
 
@@ -245,7 +252,10 @@ export const put_posts_post_id: RequestHandler = async function (req, res) {
     res
       .status(400)
       .json(
-        createErrorResponse(ErrorCode.VALIDATION_ERROR, "Missing required fields")
+        createErrorResponse(
+          ErrorCode.VALIDATION_ERROR,
+          "Missing required fields",
+        ),
       )
     return
   }
@@ -271,9 +281,9 @@ export const post_posts_post_id_upvote: RequestHandler = async function (
   const user = req.user as User
 
   if (!post) {
-    res.status(400).json(
-      createErrorResponse(ErrorCode.VALIDATION_ERROR, "Invalid post")
-    )
+    res
+      .status(400)
+      .json(createErrorResponse(ErrorCode.VALIDATION_ERROR, "Invalid post"))
     return
   }
 
@@ -301,9 +311,9 @@ export const post_posts_post_id_comment: RequestHandler = async function (
   const user = req.user as User
 
   if (!post) {
-    res.status(400).json(
-      createErrorResponse(ErrorCode.VALIDATION_ERROR, "Invalid post")
-    )
+    res
+      .status(400)
+      .json(createErrorResponse(ErrorCode.VALIDATION_ERROR, "Invalid post"))
     return
   }
 
@@ -320,9 +330,11 @@ export const post_posts_post_id_comment: RequestHandler = async function (
     const comment = await commentDb.getComment({ comment_id: reply_to })
 
     if (!comment) {
-      res.status(400).json(
-        createErrorResponse(ErrorCode.VALIDATION_ERROR, "Invalid comment")
-      )
+      res
+        .status(400)
+        .json(
+          createErrorResponse(ErrorCode.VALIDATION_ERROR, "Invalid comment"),
+        )
       return
     }
 
