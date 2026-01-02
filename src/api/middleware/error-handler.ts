@@ -79,6 +79,23 @@ export function errorHandler(
     return next(err)
   }
 
+  // Handle OpenAPI validation errors
+  // These come from @wesleytodd/openapi validation middleware
+  if (
+    err.message === "Request validation failed" ||
+    err.message?.includes("Request validation failed")
+  ) {
+    return res
+      .status(400)
+      .json(
+        createErrorResponse(
+          ErrorCode.VALIDATION_ERROR,
+          "Request validation failed",
+          { originalError: err.message },
+        ),
+      )
+  }
+
   // Handle known error types
   if (err instanceof ValidationError) {
     return res
