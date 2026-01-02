@@ -1162,51 +1162,61 @@ export const post_spectrum_id_transfer_ownership: RequestHandler = async (
   }
 
   // Perform the transfer in a transaction
-  const trx = await database.knex.transaction()
+  const { withTransaction } = await import(
+    "../../../../clients/database/transaction.js"
+  )
+
   try {
-    // Remove owner role from old owner
-    await trx<DBContractorMemberRole>("contractor_member_roles")
-      .where({
-        user_id: user.user_id,
-        role_id: contractor.owner_role,
-      })
-      .delete()
+    await withTransaction(
+      async (trx) => {
+        // Remove owner role from old owner
+        await trx<DBContractorMemberRole>("contractor_member_roles")
+          .where({
+            user_id: user.user_id,
+            role_id: contractor.owner_role,
+          })
+          .delete()
 
-    // Add owner role to new owner (check if they already have it to avoid duplicate)
-    const existingOwnerRole = await trx<DBContractorMemberRole>(
-      "contractor_member_roles",
-    )
-      .where({
-        user_id: target.user_id,
-        role_id: contractor.owner_role,
-      })
-      .first()
+        // Add owner role to new owner (check if they already have it to avoid duplicate)
+        const existingOwnerRole = await trx<DBContractorMemberRole>(
+          "contractor_member_roles",
+        )
+          .where({
+            user_id: target.user_id,
+            role_id: contractor.owner_role,
+          })
+          .first()
 
-    if (!existingOwnerRole) {
-      await trx<DBContractorMemberRole>("contractor_member_roles").insert({
-        user_id: target.user_id,
-        role_id: contractor.owner_role,
-      })
-    }
+        if (!existingOwnerRole) {
+          await trx<DBContractorMemberRole>("contractor_member_roles").insert({
+            user_id: target.user_id,
+            role_id: contractor.owner_role,
+          })
+        }
 
-    // Commit transaction before audit log (audit log is separate)
-    await trx.commit()
-
-    // Log the ownership transfer (outside transaction)
-    await auditLogService.record({
-      action: "org.ownership_transferred",
-      actorId: user.user_id,
-      subjectType: "contractor",
-      subjectId: contractor.contractor_id,
-      metadata: {
-        contractor_id: contractor.contractor_id,
-        spectrum_id: contractor.spectrum_id,
-        old_owner_username: user.username,
-        old_owner_user_id: user.user_id,
-        new_owner_username: target.username,
-        new_owner_user_id: target.user_id,
+        // Log the ownership transfer (within transaction for atomicity)
+        await auditLogService.record(
+          {
+            action: "org.ownership_transferred",
+            actorId: user.user_id,
+            subjectType: "contractor",
+            subjectId: contractor.contractor_id,
+            metadata: {
+              contractor_id: contractor.contractor_id,
+              spectrum_id: contractor.spectrum_id,
+              old_owner_username: user.username,
+              old_owner_user_id: user.user_id,
+              new_owner_username: target.username,
+              new_owner_user_id: target.user_id,
+            },
+          },
+          trx,
+        )
       },
-    })
+      {
+        isolationLevel: "SERIALIZABLE", // Use highest isolation for ownership transfers
+      },
+    )
 
     res.json(
       createResponse({
@@ -1215,7 +1225,6 @@ export const post_spectrum_id_transfer_ownership: RequestHandler = async (
       }),
     )
   } catch (error) {
-    await trx.rollback()
     logger.error("Error transferring ownership", {
       error: error instanceof Error ? error.message : String(error),
       contractor_id: contractor.contractor_id,

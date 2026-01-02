@@ -810,8 +810,11 @@ export async function mergeOfferSessions(
 
   // Close all source offer sessions and mark their offers as rejected
   // Wrap in transaction to ensure atomicity
-  const trx = await database.knex.transaction()
-  try {
+  const { withTransaction } = await import(
+    "../../../../clients/database/transaction.js"
+  )
+
+  await withTransaction(async (trx) => {
     // Update session status to closed
     await trx<DBOfferSession>("offer_sessions")
       .whereIn(
@@ -825,12 +828,7 @@ export async function mergeOfferSessions(
     await trx("order_offers")
       .whereIn("id", offerIds)
       .update({ status: "rejected" })
-
-    await trx.commit()
-  } catch (error) {
-    await trx.rollback()
-    throw error
-  }
+  })
 
   return {
     merged_session,
