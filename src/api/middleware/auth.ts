@@ -190,6 +190,7 @@ export async function userAuthorized(
 export async function verifiedUser(
   req: Request,
   res: Response,
+  allowUnverified?: boolean,
 ): Promise<boolean> {
   try {
     if (req.isAuthenticated()) {
@@ -204,7 +205,7 @@ export async function verifiedUser(
         return false
       }
 
-      if (!user.rsi_confirmed) {
+      if (!allowUnverified && !user.rsi_confirmed) {
         res
           .status(401)
           .json(
@@ -235,16 +236,15 @@ export async function verifiedUser(
             .json(createErrorResponse({ message: "Internal server error" }))
           return false
         }
-        if (!authResult.user.rsi_confirmed) {
+        if (!allowUnverified && !authResult.user.rsi_confirmed) {
           res
             .status(401)
             .json(
               createErrorResponse({ message: "Your account is not verified." }),
             )
           return false
-        } else {
-          return true
         }
+        return true
       } else {
         res
           .status(401)
@@ -256,7 +256,7 @@ export async function verifiedUser(
       return false
     }
   } catch (e) {
-    logger.error("Error in adminAuthorized", { error: e })
+    logger.error("Error in verifiedUser", { error: e })
     res.status(400).json(createErrorResponse({ message: "Bad request" }))
     return false
   }
@@ -336,6 +336,21 @@ export async function adminAuthorized(
   }
 }
 
+// Middleware wrapper for verifiedUser that can be used in routes
+// This is the default middleware that requires verification
+export async function requireVerifiedUser(
+  req: Request,
+  res: Response,
+  next: NextFunction,
+): Promise<void> {
+  if (await verifiedUser(req, res, false)) {
+    next()
+  }
+}
+
+// Alias for backward compatibility - verifiedUser can be used as middleware
+export const verifiedUserMiddleware = requireVerifiedUser
+
 // Enhanced scope validation middleware
 // This middleware should ONLY be used on private/authenticated endpoints
 // Public endpoints should remain public regardless of token permissions
@@ -345,7 +360,9 @@ export function requireScopes(...requiredScopes: string[]) {
     res: Response,
     next: NextFunction,
   ): Promise<void> => {
-    if (!(await verifiedUser(req, res))) {
+    // Allow unverified users for read-only scopes (they can view their own data)
+    const isReadOnly = requiredScopes.every(scope => scope.endsWith(":read"))
+    if (!(await verifiedUser(req, res, isReadOnly))) {
       return
     }
     const authReq = req as AuthRequest
