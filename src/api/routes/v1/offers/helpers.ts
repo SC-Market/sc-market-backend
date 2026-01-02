@@ -6,6 +6,7 @@ import { has_permission } from "../util/permissions.js"
 import { User } from "../api-models.js"
 import type { Request } from "express"
 import { database } from "../../../../clients/database/knex-db.js"
+import type { Knex } from "knex"
 import * as offerDb from "./database.js"
 import * as marketDb from "../market/database.js"
 import {
@@ -266,14 +267,25 @@ export async function search_offer_sessions_optimized(
   item_counts: { [k: string]: number }
 }> {
   // Build filtered sessions query to get matching session IDs
+  // Use a subquery to get only the most recent offer per session
+  const mostRecentOfferSubquery = database.knex.raw(
+    `(
+      SELECT DISTINCT ON (session_id) 
+        id, session_id, cost, title, payment_type, timestamp, actor_id, status, service_id
+      FROM order_offers
+      ORDER BY session_id, timestamp DESC
+    ) as most_recent_offer`,
+  )
+
   let filteredSessionsQuery = database
     .knex("offer_sessions")
-    .leftJoin(
-      "order_offers as most_recent_offer",
-      "offer_sessions.id",
-      "=",
-      "most_recent_offer.session_id",
-    )
+    .leftJoin(mostRecentOfferSubquery, function () {
+      this.on(
+        "offer_sessions.id",
+        "=",
+        database.knex.raw("most_recent_offer.session_id"),
+      )
+    })
     .leftJoin(
       "offer_market_items",
       "most_recent_offer.id",
@@ -301,7 +313,7 @@ export async function search_offer_sessions_optimized(
       "=",
       "seller_contractor.contractor_id",
     )
-    .where((qd) => {
+    .where((qd: Knex.QueryBuilder) => {
       if (args.customer_id)
         qd = qd.where("offer_sessions.customer_id", args.customer_id)
       if (args.assigned_id)
@@ -320,7 +332,7 @@ export async function search_offer_sessions_optimized(
 
       // Seller username filter (partial match on spectrum_id or assigned username)
       if (args.seller_username) {
-        qd = qd.where((subQd) => {
+        qd = qd.where((subQd: Knex.QueryBuilder) => {
           subQd = subQd
             .where(
               "seller_contractor.spectrum_id",
@@ -419,16 +431,29 @@ export async function search_offer_sessions_optimized(
   // Build optimized query with JOINs to get all related data
   // Only query sessions that passed the filters
   const filteredIds =
-    filteredSessions.length > 0 ? filteredSessions.map((s: any) => s.id) : []
+    filteredSessions.length > 0
+      ? filteredSessions.map((s: { id: string }) => s.id)
+      : []
+
+  // Use a subquery to get only the most recent offer per session
+  const mostRecentOfferSubqueryOptimized = database.knex.raw(
+    `(
+      SELECT DISTINCT ON (session_id) 
+        id, session_id, cost, title, payment_type, timestamp, actor_id, status, service_id
+      FROM order_offers
+      ORDER BY session_id, timestamp DESC
+    ) as most_recent_offer`,
+  )
 
   let optimizedQuery = database
     .knex("offer_sessions")
-    .leftJoin(
-      "order_offers as most_recent_offer",
-      "offer_sessions.id",
-      "=",
-      "most_recent_offer.session_id",
-    )
+    .leftJoin(mostRecentOfferSubqueryOptimized, function () {
+      this.on(
+        "offer_sessions.id",
+        "=",
+        database.knex.raw("most_recent_offer.session_id"),
+      )
+    })
     .leftJoin(
       "offer_market_items",
       "most_recent_offer.id",
@@ -459,7 +484,7 @@ export async function search_offer_sessions_optimized(
       "=",
       "contractors.contractor_id",
     )
-    .where((qd) => {
+    .where((qd: Knex.QueryBuilder) => {
       // Only include filtered session IDs
       if (filteredIds.length > 0) {
         qd = qd.whereIn("offer_sessions.id", filteredIds)
@@ -533,7 +558,7 @@ export async function search_offer_sessions_optimized(
 
   // Apply status filter
   if (args.status) {
-    optimizedQuery = optimizedQuery.andWhere((qb) => {
+    optimizedQuery = optimizedQuery.andWhere((qb: Knex.QueryBuilder) => {
       return qb.whereRaw(
         "get_offer_status(offer_sessions.id, offer_sessions.customer_id, offer_sessions.status) = ?",
         [args.status],
@@ -570,6 +595,13 @@ export async function search_offer_sessions_optimized(
     .groupBy(
       "offer_sessions.id",
       "most_recent_offer.id",
+      "most_recent_offer.cost",
+      "most_recent_offer.title",
+      "most_recent_offer.payment_type",
+      "most_recent_offer.timestamp",
+      "most_recent_offer.actor_id",
+      "most_recent_offer.status",
+      "most_recent_offer.service_id",
       "services.service_id",
       "customer_account.user_id",
       "assigned_account.user_id",

@@ -1,5 +1,8 @@
 import express from "express"
-import { requireCommentsWrite, requireVerifiedUser } from "../../../middleware/auth.js"
+import {
+  requireCommentsWrite,
+  requireVerifiedUser,
+} from "../../../middleware/auth.js"
 import { writeRateLimit } from "../../../middleware/enhanced-ratelimiting.js"
 
 import {

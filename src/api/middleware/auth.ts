@@ -361,7 +361,7 @@ export function requireScopes(...requiredScopes: string[]) {
     next: NextFunction,
   ): Promise<void> => {
     // Allow unverified users for read-only scopes (they can view their own data)
-    const isReadOnly = requiredScopes.every(scope => scope.endsWith(":read"))
+    const isReadOnly = requiredScopes.every((scope) => scope.endsWith(":read"))
     if (!(await verifiedUser(req, res, isReadOnly))) {
       return
     }
