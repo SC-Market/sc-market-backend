@@ -28,7 +28,10 @@ export async function createServicePhotos(
         service_id,
       })
     } catch (error) {
-      logger.error(`Failed to create service photo for ${photo}`, { photo, error })
+      logger.error(`Failed to create service photo for ${photo}`, {
+        photo,
+        error,
+      })
       throw error
     }
   }

@@ -65,7 +65,10 @@ export function convertQuery(query: {
   const rating = +(query.rating || 0)
   const pageSize = +(query.pageSize || 15)
   const language_codes = query.language_codes
-    ? query.language_codes.split(",").map((s) => s.trim()).filter(Boolean)
+    ? query.language_codes
+        .split(",")
+        .map((s) => s.trim())
+        .filter(Boolean)
     : undefined
   return {
     index,
@@ -75,7 +78,8 @@ export function convertQuery(query: {
     fields,
     rating,
     pageSize,
-    language_codes: language_codes && language_codes.length > 0 ? language_codes : undefined,
+    language_codes:
+      language_codes && language_codes.length > 0 ? language_codes : undefined,
   }
 }
 

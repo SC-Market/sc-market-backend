@@ -120,12 +120,9 @@ export async function fetchAndInsertCommodities(): Promise<void> {
     return
   }
 
-  logger.debug(
-    `Fetched ${commodities.length} commodities. Processing...`,
-    {
-      totalCommodities: commodities.length,
-    },
-  )
+  logger.debug(`Fetched ${commodities.length} commodities. Processing...`, {
+    totalCommodities: commodities.length,
+  })
 
   // Track success and failure counts
   let successCount = 0

@@ -240,7 +240,10 @@ export async function convertQuery(
   const seller_rating = +(query.seller_rating || 0)
   const page_size = Math.max(Math.min(+(query.page_size || 16), 96), 0)
   const language_codes = query.language_codes
-    ? query.language_codes.split(",").map((s) => s.trim()).filter(Boolean)
+    ? query.language_codes
+        .split(",")
+        .map((s) => s.trim())
+        .filter(Boolean)
     : null
   return {
     sale_type: query.sale_type || null,
@@ -261,7 +264,8 @@ export async function convertQuery(
     statuses: query.statuses
       ? query.statuses.split(",").map((s) => s.trim())
       : ["active"], // Default to active only
-    language_codes: language_codes && language_codes.length > 0 ? language_codes : null,
+    language_codes:
+      language_codes && language_codes.length > 0 ? language_codes : null,
   }
 }
 

@@ -17,15 +17,13 @@ const knex = () => getKnex()
 /**
  * Insert a push subscription.
  */
-export async function insertPushSubscription(
-  data: {
-    user_id: string
-    endpoint: string
-    p256dh: string
-    auth: string
-    user_agent?: string | null
-  },
-): Promise<PushSubscription[]> {
+export async function insertPushSubscription(data: {
+  user_id: string
+  endpoint: string
+  p256dh: string
+  auth: string
+  user_agent?: string | null
+}): Promise<PushSubscription[]> {
   return knex()<PushSubscription>("push_subscriptions")
     .insert({
       user_id: data.user_id,
@@ -106,13 +104,11 @@ export async function deletePushSubscriptionByEndpoint(
  * Insert or update a push notification preference.
  * Note: action_type_id is stored as INTEGER in database, but Knex returns it as string
  */
-export async function upsertPushPreference(
-  data: {
-    user_id: string
-    action_type_id: string | number // Accept both, convert to string for consistency
-    enabled: boolean
-  },
-): Promise<PushNotificationPreference[]> {
+export async function upsertPushPreference(data: {
+  user_id: string
+  action_type_id: string | number // Accept both, convert to string for consistency
+  enabled: boolean
+}): Promise<PushNotificationPreference[]> {
   return knex()<PushNotificationPreference>("push_notification_preferences")
     .insert({
       user_id: data.user_id,

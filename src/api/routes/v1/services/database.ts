@@ -114,12 +114,12 @@ export async function getServicesPaginated(params: {
   if (language_codes && language_codes.length > 0) {
     // Build array expression using knex().raw() with safe parameter binding
     // Create placeholders for each language code and bind them as parameters
-    const placeholders = language_codes.map(() => '?').join(',')
+    const placeholders = language_codes.map(() => "?").join(",")
     const languageArrayRaw = knex().raw(
-      'ARRAY[' + placeholders + ']::text[]',
+      "ARRAY[" + placeholders + "]::text[]",
       language_codes,
     )
-    
+
     const languageFilter = (qb: any) => {
       qb.where((subQb: any) => {
         // For user providers: check if user's supported_languages contains any of the selected languages
@@ -127,7 +127,7 @@ export async function getServicesPaginated(params: {
           .whereNotNull("services.user_id")
           .andWhereRaw(
             knex().raw(
-              'EXISTS (SELECT 1 FROM accounts WHERE accounts.user_id = services.user_id AND COALESCE(accounts.supported_languages, ARRAY[\'en\']) && ?)',
+              "EXISTS (SELECT 1 FROM accounts WHERE accounts.user_id = services.user_id AND COALESCE(accounts.supported_languages, ARRAY['en']) && ?)",
               [languageArrayRaw],
             ),
           )
@@ -137,7 +137,7 @@ export async function getServicesPaginated(params: {
           .whereNotNull("services.contractor_id")
           .andWhereRaw(
             knex().raw(
-              'EXISTS (SELECT 1 FROM contractors WHERE contractors.contractor_id = services.contractor_id AND COALESCE(contractors.supported_languages, ARRAY[\'en\']) && ?)',
+              "EXISTS (SELECT 1 FROM contractors WHERE contractors.contractor_id = services.contractor_id AND COALESCE(contractors.supported_languages, ARRAY['en']) && ?)",
               [languageArrayRaw],
             ),
           )

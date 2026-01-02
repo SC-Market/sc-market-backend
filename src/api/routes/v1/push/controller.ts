@@ -127,7 +127,10 @@ export const push_unsubscribe: RequestHandler = async (req, res) => {
   }
 
   try {
-    await pushNotificationService.deleteSubscription(user.user_id, subscription_id)
+    await pushNotificationService.deleteSubscription(
+      user.user_id,
+      subscription_id,
+    )
 
     logger.info(`User unsubscribed from push notifications`, {
       user_id: user.user_id,
@@ -218,7 +221,8 @@ export const push_update_preference: RequestHandler = async (req, res) => {
   if (!action || typeof enabled !== "boolean") {
     res.status(400).json(
       createErrorResponse({
-        message: "Invalid request body. Required fields: action (string), enabled (boolean)",
+        message:
+          "Invalid request body. Required fields: action (string), enabled (boolean)",
       }),
     )
     return
@@ -244,7 +248,10 @@ export const push_update_preference: RequestHandler = async (req, res) => {
       }),
     )
   } catch (error) {
-    if (error instanceof Error && error.message.includes("Invalid action type")) {
+    if (
+      error instanceof Error &&
+      error.message.includes("Invalid action type")
+    ) {
       res.status(400).json(
         createErrorResponse({
           message: error.message,
