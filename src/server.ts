@@ -19,7 +19,9 @@ import * as profileDb from "./api/routes/v1/profiles/database.js"
 import * as contractorDb from "./api/routes/v1/contractors/database.js"
 import * as recruitingDb from "./api/routes/v1/recruiting/database.js"
 import * as marketDb from "./api/routes/v1/market/database.js"
-import { errorHandler, userAuthorized } from "./api/middleware/auth.js"
+import { userAuthorized } from "./api/middleware/auth.js"
+import { errorHandler } from "./api/middleware/error-handler.js"
+import { securityHeaders } from "./api/middleware/security-headers.js"
 import { registrationRouter } from "./clients/discord_api/registration.js"
 import { threadRouter } from "./clients/discord_api/threads.js"
 import { trackActivity } from "./api/middleware/activity.js"
@@ -76,6 +78,7 @@ const corsOptions = function (
 const app = enableWS(express()).app
 
 app.use(compression())
+app.use(securityHeaders())
 
 const pgSession = wrapPGSession(session)
 
