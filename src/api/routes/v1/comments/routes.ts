@@ -1,5 +1,5 @@
 import express from "express"
-import { requireCommentsWrite, verifiedUser } from "../../../middleware/auth.js"
+import { requireCommentsWrite, requireVerifiedUser } from "../../../middleware/auth.js"
 import { writeRateLimit } from "../../../middleware/enhanced-ratelimiting.js"
 
 import {
@@ -24,7 +24,7 @@ export const commentRouter = express.Router()
 
 commentRouter.post(
   "/:comment_id/reply",
-  verifiedUser,
+  requireVerifiedUser,
   post_comment_id_reply_spec,
   writeRateLimit,
   requireCommentsWrite,
@@ -33,7 +33,7 @@ commentRouter.post(
 
 commentRouter.post(
   "/:comment_id/delete",
-  verifiedUser,
+  requireVerifiedUser,
   post_comment_id_delete_spec,
   writeRateLimit,
   post_comment_id_delete,
@@ -41,7 +41,7 @@ commentRouter.post(
 
 commentRouter.post(
   "/:comment_id/update",
-  verifiedUser,
+  requireVerifiedUser,
   post_comment_id_update_spec,
   writeRateLimit,
   post_comment_id_update,
@@ -49,7 +49,7 @@ commentRouter.post(
 
 commentRouter.post(
   "/:comment_id/upvote",
-  verifiedUser,
+  requireVerifiedUser,
   post_comment_id_upvote_spec,
   writeRateLimit,
   post_comment_id_upvote,
@@ -57,7 +57,7 @@ commentRouter.post(
 
 commentRouter.post(
   "/:comment_id/downvote",
-  verifiedUser,
+  requireVerifiedUser,
   post_comment_id_downvote_spec,
   writeRateLimit,
   post_comment_id_downvote,

@@ -202,7 +202,7 @@ profileRouter.get(
   "",
   readRateLimit,
   userAuthorized,
-  requireProfileRead,
+  // Allow unverified users to read their own profile (needed for Discord login)
   profile_get_root_spec,
   profile_get_root,
 )
