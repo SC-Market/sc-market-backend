@@ -130,19 +130,23 @@ export function convertOrderAnalyticsToGrafana(
   period: "daily" | "weekly" | "monthly",
 ): Array<{ target: string; datapoints: Array<[number, number]> }> {
   const prefix = `${period}_orders`
-  const metrics: Record<string, keyof typeof data[0]> = {
+  const metrics: Record<string, keyof (typeof data)[0]> = {
     [`${prefix}_total`]: "total",
     [`${prefix}_in_progress`]: "in_progress",
     [`${prefix}_fulfilled`]: "fulfilled",
     [`${prefix}_cancelled`]: "cancelled",
     [`${prefix}_not_started`]: "not_started",
   }
-  
+
   // Add average_fulfilled_value only for monthly data
-  if (period === "monthly" && data.length > 0 && "average_fulfilled_value" in data[0]) {
+  if (
+    period === "monthly" &&
+    data.length > 0 &&
+    "average_fulfilled_value" in data[0]
+  ) {
     metrics[`${prefix}_average_fulfilled_value`] = "average_fulfilled_value"
   }
-  
+
   return convertToGrafanaFormat(data, metrics)
 }
 
@@ -326,19 +330,23 @@ export function convertOrderAnalyticsToPrometheus(
   }
 } {
   const prefix = `${period}_orders`
-  const metrics: Record<string, keyof typeof data[0]> = {
+  const metrics: Record<string, keyof (typeof data)[0]> = {
     [`${prefix}_total`]: "total",
     [`${prefix}_in_progress`]: "in_progress",
     [`${prefix}_fulfilled`]: "fulfilled",
     [`${prefix}_cancelled`]: "cancelled",
     [`${prefix}_not_started`]: "not_started",
   }
-  
+
   // Add average_fulfilled_value only for monthly data
-  if (period === "monthly" && data.length > 0 && "average_fulfilled_value" in data[0]) {
+  if (
+    period === "monthly" &&
+    data.length > 0 &&
+    "average_fulfilled_value" in data[0]
+  ) {
     metrics[`${prefix}_average_fulfilled_value`] = "average_fulfilled_value"
   }
-  
+
   return convertToPrometheusFormat(data, metrics)
 }
 

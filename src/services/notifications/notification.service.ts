@@ -68,9 +68,7 @@ export interface NotificationService {
   ): Promise<void>
 
   // Other notifications
-  createContractorInviteNotification(
-    invite: DBContractorInvite,
-  ): Promise<void>
+  createContractorInviteNotification(invite: DBContractorInvite): Promise<void>
   createAdminAlertNotification(alert: DBAdminAlert): Promise<void>
   createOrderReviewRevisionNotification(
     review: DBReview,
@@ -104,7 +102,9 @@ class DatabaseNotificationService implements NotificationService {
    * Creates notification for contractor members when an order is created.
    * Notifies all contractor members with manage_orders permission.
    */
-  private async createOrderContractorNotification(order: DBOrder): Promise<void> {
+  private async createOrderContractorNotification(
+    order: DBOrder,
+  ): Promise<void> {
     const action =
       await notificationDb.getNotificationActionByName("order_create")
     const notif_objects = await notificationDb.insertNotificationObjects([
@@ -187,14 +187,11 @@ class DatabaseNotificationService implements NotificationService {
       )
     } catch (error) {
       // Log but don't fail notification creation if push fails
-      logger.info(
-        `Failed to send push notification for order assignment:`,
-        {
-          order_id: order.order_id,
-          assigned_id: order.assigned_id,
-          error: error instanceof Error ? error.message : String(error),
-        },
-      )
+      logger.info(`Failed to send push notification for order assignment:`, {
+        order_id: order.order_id,
+        assigned_id: order.assigned_id,
+        error: error instanceof Error ? error.message : String(error),
+      })
     }
   }
 
@@ -279,8 +276,35 @@ class DatabaseNotificationService implements NotificationService {
         ])
         notificationCount++
 
-        // TODO: Phase 5 - Send push notification
-        // await pushNotificationService.sendPushNotification(notified, ...)
+        // Send push notification with enhanced payload
+        try {
+          // Get chat_id for the order
+          let chatId: string | undefined
+          try {
+            const chat = await chatDb.getChat({ order_id: order.order_id })
+            chatId = chat.chat_id
+          } catch {
+            // Chat not found, continue without chatId
+          }
+
+          const payload =
+            await payloadFormatters.formatOrderMessageNotificationPayload(
+              order,
+              message,
+              chatId,
+            )
+          await pushNotificationService.sendPushNotification(
+            notified,
+            payload,
+            "order_message",
+          )
+        } catch (error) {
+          // Log but don't fail notification creation if push fails
+          logger.debug(
+            `Failed to send push notification for order message to user ${notified}:`,
+            error,
+          )
+        }
       }
 
       logger.debug(
@@ -404,19 +428,15 @@ class DatabaseNotificationService implements NotificationService {
 
     // Send push notification
     try {
-      const payload = payloadFormatters.formatOrderReviewNotificationPayload(
-        review,
-      )
+      const payload =
+        payloadFormatters.formatOrderReviewNotificationPayload(review)
       await pushNotificationService.sendPushNotification(
         order.assigned_id,
         payload,
         "order_review",
       )
     } catch (error) {
-      logger.debug(
-        `Failed to send push notification for order review:`,
-        error,
-      )
+      logger.debug(`Failed to send push notification for order review:`, error)
     }
   }
 
@@ -702,12 +722,23 @@ class DatabaseNotificationService implements NotificationService {
         ])
         notificationCount++
 
-        // Send push notification
+        // Send push notification with enhanced payload
         try {
-          const payload = payloadFormatters.formatOfferMessageNotificationPayload(
-            session,
-            message,
-          )
+          // Get chat_id for the offer session
+          let chatId: string | undefined
+          try {
+            const chat = await chatDb.getChat({ session_id: session.id })
+            chatId = chat.chat_id
+          } catch {
+            // Chat not found, continue without chatId
+          }
+
+          const payload =
+            await payloadFormatters.formatOfferMessageNotificationPayload(
+              session,
+              message,
+              chatId,
+            )
           await pushNotificationService.sendPushNotification(
             notified,
             payload,
@@ -948,7 +979,9 @@ class DatabaseNotificationService implements NotificationService {
       )
 
       if (targetUserIds.length === 0) {
-        logger.warn(`No users found for admin alert target: ${alert.target_type}`)
+        logger.warn(
+          `No users found for admin alert target: ${alert.target_type}`,
+        )
         return
       }
 
@@ -1065,9 +1098,7 @@ class DatabaseNotificationService implements NotificationService {
       // Send push notifications to all recipients
       try {
         const payload =
-          payloadFormatters.formatOrderReviewRevisionNotificationPayload(
-            review,
-          )
+          payloadFormatters.formatOrderReviewRevisionNotificationPayload(review)
         await pushNotificationService.sendPushNotifications(
           recipients,
           payload,

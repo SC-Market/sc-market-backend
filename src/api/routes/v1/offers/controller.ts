@@ -190,7 +190,11 @@ export const offer_put_session_id: RequestHandler = async (req, res) => {
       const user = req.user as User
       await notificationService.createOfferNotification(session, "counteroffer")
       // Send Discord and chat message for counteroffer
-      await discordService.sendOfferStatusUpdate(session, "Counter-Offered", user)
+      await discordService.sendOfferStatusUpdate(
+        session,
+        "Counter-Offered",
+        user,
+      )
       try {
         const chat = await chatDb.getChat({ session_id: session.id })
         const content = `Offer status updated to **Counter-Offered** by ${user.username}`
@@ -220,9 +224,7 @@ export const post_session_id_thread: RequestHandler = async (req, res) => {
   try {
     const result = await discordService.queueThreadCreation(req.offer_session!)
     if (result.status === "failed") {
-      res
-        .status(500)
-        .json(createErrorResponse({ message: result.message }))
+      res.status(500).json(createErrorResponse({ message: result.message }))
       return
     }
 

@@ -1046,16 +1046,15 @@ export async function getAllContractorsPaginated(
   if (searchQuery.language_codes && searchQuery.language_codes.length > 0) {
     // Build array expression using knex().raw() with safe parameter binding
     // Create placeholders for each language code and bind them as parameters
-    const placeholders = searchQuery.language_codes.map(() => '?').join(',')
+    const placeholders = searchQuery.language_codes.map(() => "?").join(",")
     const languageArrayRaw = knex().raw(
-      'ARRAY[' + placeholders + ']::text[]',
+      "ARRAY[" + placeholders + "]::text[]",
       searchQuery.language_codes,
     )
     query = query.andWhereRaw(
-      knex().raw(
-        'COALESCE(supported_languages, ARRAY[\'en\']) && ?',
-        [languageArrayRaw],
-      ),
+      knex().raw("COALESCE(supported_languages, ARRAY['en']) && ?", [
+        languageArrayRaw,
+      ]),
     )
   }
 
@@ -1107,16 +1106,15 @@ export async function getAllContractorsCount(
   if (searchQuery.language_codes && searchQuery.language_codes.length > 0) {
     // Build array expression using knex().raw() with safe parameter binding
     // Create placeholders for each language code and bind them as parameters
-    const placeholders = searchQuery.language_codes.map(() => '?').join(',')
+    const placeholders = searchQuery.language_codes.map(() => "?").join(",")
     const languageArrayRaw = knex().raw(
-      'ARRAY[' + placeholders + ']::text[]',
+      "ARRAY[" + placeholders + "]::text[]",
       searchQuery.language_codes,
     )
     query = query.andWhereRaw(
-      knex().raw(
-        'COALESCE(supported_languages, ARRAY[\'en\']) && ?',
-        [languageArrayRaw],
-      ),
+      knex().raw("COALESCE(supported_languages, ARRAY['en']) && ?", [
+        languageArrayRaw,
+      ]),
     )
   }
 
@@ -1246,16 +1244,15 @@ export async function searchContractors(
   if (language_codes && language_codes.length > 0) {
     // Build array expression using knex().raw() with safe parameter binding
     // Create placeholders for each language code and bind them as parameters
-    const placeholders = language_codes.map(() => '?').join(',')
+    const placeholders = language_codes.map(() => "?").join(",")
     const languageArrayRaw = knex().raw(
-      'ARRAY[' + placeholders + ']::text[]',
+      "ARRAY[" + placeholders + "]::text[]",
       language_codes,
     )
     dbQuery = dbQuery.andWhereRaw(
-      knex().raw(
-        'COALESCE(supported_languages, ARRAY[\'en\']) && ?',
-        [languageArrayRaw],
-      ),
+      knex().raw("COALESCE(supported_languages, ARRAY['en']) && ?", [
+        languageArrayRaw,
+      ]),
     )
   }
 
@@ -1303,7 +1300,11 @@ export async function getContractorLanguages(
     .select("supported_languages")
     .first()
 
-  if (!contractor || !contractor.supported_languages || contractor.supported_languages.length === 0) {
+  if (
+    !contractor ||
+    !contractor.supported_languages ||
+    contractor.supported_languages.length === 0
+  ) {
     return ["en"] // Default to English
   }
 

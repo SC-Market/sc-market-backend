@@ -19,6 +19,8 @@ import {
 import { User } from "../../api/routes/v1/api-models.js"
 import { PushNotificationPayload } from "../push-notifications/push-notification.service.types.js"
 import { env } from "../../config/env.js"
+import * as profileDb from "../../api/routes/v1/profiles/database.js"
+import { cdn } from "../../clients/cdn/cdn.js"
 
 /**
  * Base URL for the application (for notification links and assets)
@@ -57,7 +59,7 @@ export function formatOrderNotificationPayload(
   action: string,
 ): PushNotificationPayload {
   const url = `${getBaseUrl()}/contract/${order.order_id}`
-  
+
   let title = "New Order"
   let body = `Order: ${order.title || "Untitled Order"}`
 
@@ -105,26 +107,77 @@ export function formatOrderNotificationPayload(
 }
 
 /**
- * Format order message notification payload
+ * Get sender information (username and avatar) for notifications
  */
-export function formatOrderMessageNotificationPayload(
+async function getSenderInfo(
+  userId: string | null,
+): Promise<{ username: string; avatar: string }> {
+  if (!userId) {
+    return {
+      username: "System",
+      avatar: getNotificationIcon(),
+    }
+  }
+
+  try {
+    const user = await profileDb.getUser({ user_id: userId })
+    if (!user) {
+      return {
+        username: "Unknown",
+        avatar: getNotificationIcon(),
+      }
+    }
+
+    const avatarUrl = await cdn.getFileLinkResource(user.avatar)
+
+    return {
+      username: user.username,
+      avatar: avatarUrl || getNotificationIcon(),
+    }
+  } catch (error) {
+    // Fallback if user lookup fails
+    return {
+      username: "Unknown",
+      avatar: getNotificationIcon(),
+    }
+  }
+}
+
+/**
+ * Format order message notification payload
+ * Now includes sender name and message preview
+ */
+export async function formatOrderMessageNotificationPayload(
   order: DBOrder,
   message: DBMessage,
-): PushNotificationPayload {
-  const url = `${getBaseUrl()}/contract/${order.order_id}`
-  
+  chatId?: string,
+): Promise<PushNotificationPayload> {
+  const url = chatId
+    ? `${getBaseUrl()}/messages?chat_id=${chatId}`
+    : `${getBaseUrl()}/contract/${order.order_id}`
+
+  // Get sender information
+  const sender = await getSenderInfo(message.author)
+
+  // Truncate message preview to 100 characters
+  const messagePreview =
+    message.content.length > 100
+      ? message.content.substring(0, 97) + "..."
+      : message.content
+
   return {
-    title: "New Message",
-    body: `New message in order "${order.title || "Untitled"}"`,
-    icon: `${getBaseUrl()}/favicon.ico`,
-    badge: `${getBaseUrl()}/favicon.ico`,
+    title: `${sender.username}: ${messagePreview}`,
+    body: messagePreview,
+    icon: sender.avatar,
+    badge: getNotificationBadge(),
     data: {
       url,
       type: "order",
       entityId: order.order_id,
       action: "order_message",
+      chatId: chatId || undefined,
     },
-    tag: `order-message-${order.order_id}`,
+    tag: chatId ? `chat-${chatId}` : `order-message-${order.order_id}`,
     requireInteraction: false,
   }
 }
@@ -137,7 +190,7 @@ export function formatOrderCommentNotificationPayload(
   comment: DBOrderComment,
 ): PushNotificationPayload {
   const url = `${getBaseUrl()}/contract/${order.order_id}`
-  
+
   return {
     title: "New Comment",
     body: `New comment on order "${order.title || "Untitled"}"`,
@@ -162,7 +215,7 @@ export function formatOrderReviewNotificationPayload(
   review: DBReview,
 ): PushNotificationPayload {
   const url = `${getBaseUrl()}/contract/${review.order_id}`
-  
+
   return {
     title: "New Review",
     body: `You have received a new review`,
@@ -186,7 +239,7 @@ export function formatOrderReviewRevisionNotificationPayload(
   review: DBReview,
 ): PushNotificationPayload {
   const url = `${getBaseUrl()}/contract/${review.order_id}`
-  
+
   return {
     title: "Review Revision Requested",
     body: `A revision has been requested for your review`,
@@ -211,7 +264,7 @@ export function formatOfferNotificationPayload(
   type: "create" | "counteroffer",
 ): PushNotificationPayload {
   const url = `${getBaseUrl()}/offer/${offer.id}`
-  
+
   const title = type === "create" ? "New Offer" : "Counter-Offer"
   const body =
     type === "create"
@@ -236,25 +289,39 @@ export function formatOfferNotificationPayload(
 
 /**
  * Format offer message notification payload
+ * Now includes sender name and message preview
  */
-export function formatOfferMessageNotificationPayload(
+export async function formatOfferMessageNotificationPayload(
   session: DBOfferSession,
   message: DBMessage,
-): PushNotificationPayload {
-  const url = `${getBaseUrl()}/offer/${session.id}`
-  
+  chatId?: string,
+): Promise<PushNotificationPayload> {
+  const url = chatId
+    ? `${getBaseUrl()}/messages?chat_id=${chatId}`
+    : `${getBaseUrl()}/offer/${session.id}`
+
+  // Get sender information
+  const sender = await getSenderInfo(message.author)
+
+  // Truncate message preview to 100 characters
+  const messagePreview =
+    message.content.length > 100
+      ? message.content.substring(0, 97) + "..."
+      : message.content
+
   return {
-    title: "New Message",
-    body: `New message in offer session`,
-    icon: `${getBaseUrl()}/favicon.ico`,
-    badge: `${getBaseUrl()}/favicon.ico`,
+    title: `${sender.username}: ${messagePreview}`,
+    body: messagePreview,
+    icon: sender.avatar,
+    badge: getNotificationBadge(),
     data: {
       url,
       type: "offer",
       entityId: session.id,
       action: "offer_message",
+      chatId: chatId || undefined,
     },
-    tag: `offer-message-${session.id}`,
+    tag: chatId ? `chat-${chatId}` : `offer-message-${session.id}`,
     requireInteraction: false,
   }
 }
@@ -267,15 +334,18 @@ export function formatMarketBidNotificationPayload(
   bid: DBMarketBid,
 ): PushNotificationPayload {
   // All DBMarketListingComplete types have a listing property
-  const listingId = "listing" in listing ? listing.listing.listing_id : (listing as any).listing_id
+  const listingId =
+    "listing" in listing
+      ? listing.listing.listing_id
+      : (listing as any).listing_id
   const url = `${getBaseUrl()}/market/${listingId}`
-  
+
   // Extract title from details (all types have details)
   let title = "your listing"
   if ("details" in listing) {
     title = listing.details.title
   }
-  
+
   return {
     title: "New Bid",
     body: `A new bid has been placed on "${title}"`,
@@ -302,7 +372,7 @@ export function formatMarketOfferNotificationPayload(
   offer: DBMarketOffer,
 ): PushNotificationPayload {
   const url = `${getBaseUrl()}/market/${listing.listing_id}`
-  
+
   return {
     title: "New Offer",
     body: `A new offer has been made on your listing`,
@@ -327,7 +397,7 @@ export function formatContractorInviteNotificationPayload(
   invite: DBContractorInvite,
 ): PushNotificationPayload {
   const url = `${getBaseUrl()}/contractors`
-  
+
   return {
     title: "Contractor Invitation",
     body: `You have been invited to join a contractor organization`,
@@ -351,7 +421,7 @@ export function formatAdminAlertNotificationPayload(
   alert: DBAdminAlert,
 ): PushNotificationPayload {
   const url = alert.link || `${getBaseUrl()}/admin`
-  
+
   return {
     title: alert.title,
     body: alert.content,

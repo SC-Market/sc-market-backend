@@ -1126,7 +1126,11 @@ export async function getUserLanguages(user_id: string): Promise<string[]> {
     .select("supported_languages")
     .first()
 
-  if (!user || !user.supported_languages || user.supported_languages.length === 0) {
+  if (
+    !user ||
+    !user.supported_languages ||
+    user.supported_languages.length === 0
+  ) {
     return ["en"] // Default to English
   }
 
