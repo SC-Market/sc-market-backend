@@ -70,3 +70,12 @@ apiRouter.get("/languages", (req, res) => {
 // CSP reporting endpoint (optional - for monitoring CSP violations)
 import { cspReportHandler } from "./util/csp-report.js"
 apiRouter.post("/csp-report", cspReportHandler)
+
+// Test endpoint for error handler and CORS verification (development/testing only)
+// Note: This endpoint is only available in non-production environments
+// Access via: GET /api/test-error-handler?type=<error_type>
+// Error types: unhandled, validation, notfound, business, database, normal
+import { testErrorHandler } from "./util/test-error-handler.js"
+if (process.env.NODE_ENV !== "production") {
+  apiRouter.get("/test-error-handler", testErrorHandler)
+}

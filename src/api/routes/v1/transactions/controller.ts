@@ -8,6 +8,13 @@ import { User as User } from "../api-models.js"
 import { has_permission as has_permission } from "../util/permissions.js"
 import logger from "../../../../logger/logger.js"
 import { withTransaction } from "../../../../clients/database/transaction.js"
+import {
+  createErrorResponse,
+  createResponse,
+  createNotFoundErrorResponse,
+  createForbiddenErrorResponse,
+} from "../util/response.js"
+import { ErrorCode } from "../util/error-codes.js"
 
 export const transaction_get_transaction_id: RequestHandler = async (
   req,
@@ -21,7 +28,9 @@ export const transaction_get_transaction_id: RequestHandler = async (
       transaction_id: transaction_id,
     })
   } catch (e) {
-    res.status(400).json({ error: "Invalid transaction" })
+    res.status(400).json(
+      createErrorResponse(ErrorCode.VALIDATION_ERROR, "Invalid transaction")
+    )
     return
   }
   const user = req.user as User
@@ -31,9 +40,11 @@ export const transaction_get_transaction_id: RequestHandler = async (
     transaction.user_recipient_id,
   ].includes(user.user_id)
   if (!related) {
-    res
-      .status(403)
-      .json({ error: "You are not authorized to view this transaction" })
+    res.status(403).json(
+      createForbiddenErrorResponse(
+        "You are not authorized to view this transaction"
+      )
+    )
     return
   }
 
@@ -89,19 +100,29 @@ export const transaction_post_create: RequestHandler = async (
   } = req.body
 
   if (!amount || (!contractor_recipient_id && !user_recipient_id)) {
-    res.status(400).json({ error: "Missing required fields" })
+    res.status(400).json(
+      createErrorResponse(ErrorCode.VALIDATION_ERROR, "Missing required fields")
+    )
     return
   }
 
   if (contractor_recipient_id && user_recipient_id) {
-    res.status(400).json({
-      error: "Must provide either contractor_recipient_id or user_recipient_id",
-    })
+    res.status(400).json(
+      createErrorResponse(
+        ErrorCode.VALIDATION_ERROR,
+        "Must provide either contractor_recipient_id or user_recipient_id"
+      )
+    )
     return
   }
 
   if (amount < 1) {
-    res.status(400).json({ error: "Invalid transaction amount" })
+    res.status(400).json(
+      createErrorResponse(
+        ErrorCode.VALIDATION_ERROR,
+        "Invalid transaction amount"
+      )
+    )
     return
   }
 
@@ -112,7 +133,9 @@ export const transaction_post_create: RequestHandler = async (
         spectrum_id: contractor_recipient_id,
       })
     } catch {
-      res.status(400).json({ error: "Invalid contractor" })
+      res.status(400).json(
+        createErrorResponse(ErrorCode.VALIDATION_ERROR, "Invalid contractor")
+      )
       return
     }
   }
@@ -122,18 +145,27 @@ export const transaction_post_create: RequestHandler = async (
     try {
       target_user = await profileDb.getUser({ username: user_recipient_id })
     } catch {
-      res.status(400).json({ error: "Invalid contractor" })
+      res.status(400).json(
+        createErrorResponse(ErrorCode.VALIDATION_ERROR, "Invalid user")
+      )
       return
     }
   }
 
   if (target_user?.user_id === user.user_id) {
-    res.status(400).json({ error: "Cannot send money to yourself" })
+    res.status(400).json(
+      createErrorResponse(
+        ErrorCode.VALIDATION_ERROR,
+        "Cannot send money to yourself"
+      )
+    )
     return
   }
 
   if (+user!.balance! < amount) {
-    res.status(400).json({ error: "Insufficient funds" })
+    res.status(400).json(
+      createErrorResponse(ErrorCode.INSUFFICIENT_BALANCE, "Insufficient funds")
+    )
     return
   }
 
@@ -180,10 +212,15 @@ export const transaction_post_create: RequestHandler = async (
       },
     )
 
-    res.json({ result: "Success" })
+    res.json(createResponse({ result: "Success" }))
   } catch (error) {
     logger.error("Transaction creation failed", { error, user_id: user.user_id })
-    res.status(500).json({ error: "Transaction failed" })
+    res.status(500).json(
+      createErrorResponse(
+        ErrorCode.INTERNAL_SERVER_ERROR,
+        "Transaction failed"
+      )
+    )
   }
 }
 
@@ -196,21 +233,24 @@ export const transaction_post_contractor_spectrum_id_create: RequestHandler =
       spectrum_id: spectrum_id,
     })
     if (!contractor) {
-      res.status(400).json({ error: "Invalid contractor" })
+      res.status(400).json(
+        createErrorResponse(ErrorCode.VALIDATION_ERROR, "Invalid contractor")
+      )
       return
     }
 
     if (
-      await has_permission(
+      !(await has_permission(
         contractor.contractor_id,
         user.user_id,
         "manage_market",
-      )
+      ))
     ) {
-      res.status(403).json({
-        error:
-          "You are not authorized to create transactions on behalf of this contractor!",
-      })
+      res.status(403).json(
+        createForbiddenErrorResponse(
+          "You are not authorized to create transactions on behalf of this contractor!"
+        )
+      )
       return
     }
 
@@ -225,20 +265,29 @@ export const transaction_post_contractor_spectrum_id_create: RequestHandler =
     } = req.body
 
     if (!amount || (!contractor_recipient_id && !user_recipient_id)) {
-      res.status(400).json({ error: "Missing required fields" })
+      res.status(400).json(
+        createErrorResponse(ErrorCode.VALIDATION_ERROR, "Missing required fields")
+      )
       return
     }
 
     if (contractor_recipient_id && user_recipient_id) {
-      res.status(400).json({
-        error:
-          "Must provide either contractor_recipient_id or user_recipient_id",
-      })
+      res.status(400).json(
+        createErrorResponse(
+          ErrorCode.VALIDATION_ERROR,
+          "Must provide either contractor_recipient_id or user_recipient_id"
+        )
+      )
       return
     }
 
     if (amount < 1) {
-      res.status(400).json({ error: "Invalid transaction amount" })
+      res.status(400).json(
+        createErrorResponse(
+          ErrorCode.VALIDATION_ERROR,
+          "Invalid transaction amount"
+        )
+      )
       return
     }
 
@@ -249,13 +298,20 @@ export const transaction_post_contractor_spectrum_id_create: RequestHandler =
           spectrum_id: contractor_recipient_id,
         })
       } catch {
-        res.status(400).json({ error: "Invalid contractor" })
+        res.status(400).json(
+          createErrorResponse(ErrorCode.VALIDATION_ERROR, "Invalid contractor")
+        )
         return
       }
     }
 
     if (target_contractor?.contractor_id === contractor.contractor_id) {
-      res.status(400).json({ error: "Cannot send money to yourself" })
+      res.status(400).json(
+        createErrorResponse(
+          ErrorCode.VALIDATION_ERROR,
+          "Cannot send money to yourself"
+        )
+      )
       return
     }
 
@@ -264,13 +320,17 @@ export const transaction_post_contractor_spectrum_id_create: RequestHandler =
       try {
         target_user = await profileDb.getUser({ username: user_recipient_id })
       } catch {
-        res.status(400).json({ error: "Invalid contractor" })
+        res.status(400).json(
+          createErrorResponse(ErrorCode.VALIDATION_ERROR, "Invalid user")
+        )
         return
       }
     }
 
     if (+contractor.balance < amount) {
-      res.status(400).json({ error: "Insufficient funds" })
+      res.status(400).json(
+        createErrorResponse(ErrorCode.INSUFFICIENT_BALANCE, "Insufficient funds")
+      )
       return
     }
 
@@ -320,13 +380,18 @@ export const transaction_post_contractor_spectrum_id_create: RequestHandler =
         },
       )
 
-      res.json({ result: "Success" })
+      res.json(createResponse({ result: "Success" }))
     } catch (error) {
       logger.error("Contractor transaction creation failed", {
         error,
         contractor_id: contractor.contractor_id,
       })
-      res.status(500).json({ error: "Transaction failed" })
+      res.status(500).json(
+        createErrorResponse(
+          ErrorCode.INTERNAL_SERVER_ERROR,
+          "Transaction failed"
+        )
+      )
     }
   }
 
@@ -379,7 +444,9 @@ export const transactions_get_contractor_spectrum_id: RequestHandler = async (
     spectrum_id: spectrum_id,
   })
   if (!contractor) {
-    res.status(400).json({ error: "Invalid contractor" })
+    res.status(400).json(
+      createErrorResponse(ErrorCode.VALIDATION_ERROR, "Invalid contractor")
+    )
     return
   }
 
@@ -393,9 +460,11 @@ export const transactions_get_contractor_spectrum_id: RequestHandler = async (
       (c: DBContractor) => c.contractor_id === contractor.contractor_id,
     ).length === 0
   ) {
-    res
-      .status(403)
-      .json({ error: "You are not authorized to view these transactions" })
+    res.status(403).json(
+      createForbiddenErrorResponse(
+        "You are not authorized to view these transactions"
+      )
+    )
     return
   }
 

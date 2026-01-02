@@ -1,7 +1,12 @@
 import { NextFunction, Request, Response } from "express"
 import { User } from "../routes/v1/api-models.js"
 import crypto from "crypto"
-import { createErrorResponse } from "../routes/v1/util/response.js"
+import {
+  createErrorResponse,
+  createUnauthorizedErrorResponse,
+  createForbiddenErrorResponse,
+} from "../routes/v1/util/response.js"
+import { ErrorCode } from "../routes/v1/util/error-codes.js"
 import { database } from "../../clients/database/knex-db.js"
 import * as profileDb from "../routes/v1/profiles/database.js"
 import * as contractorDb from "../routes/v1/contractors/database.js"
@@ -148,11 +153,11 @@ export async function userAuthorized(
           next()
           return
         } else {
-          res.status(403).json({ error: "Unauthorized" })
+          res.status(403).json(createForbiddenErrorResponse())
           return
         }
       } else {
-        res.status(401).json({ error: "Invalid or expired token" })
+        res.status(401).json(createUnauthorizedErrorResponse("Invalid or expired token"))
         return
       }
     }
@@ -173,16 +178,18 @@ export async function userAuthorized(
         next()
         return
       } else {
-        res.status(403).json({ error: "Unauthorized" })
+        res.status(403).json(createForbiddenErrorResponse())
         return
       }
     } else {
-      res.status(401).json({ error: "Unauthenticated" })
+      res.status(401).json(createUnauthorizedErrorResponse())
       return
     }
   } catch (e) {
     logger.error("Error in userAuthorized", { error: e })
-    res.status(400).json({ error: "Bad request" })
+    res.status(400).json(
+      createErrorResponse(ErrorCode.VALIDATION_ERROR, "Bad request")
+    )
     return
   }
 }

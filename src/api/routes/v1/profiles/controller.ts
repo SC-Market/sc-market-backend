@@ -17,8 +17,11 @@ import { get_sentinel as get_sentinel } from "./helpers.js"
 import { syncRSIHandle as syncRSIHandle } from "./helpers.js"
 import { serializeDetailedProfile as serializeDetailedProfile } from "./serializers.js"
 import { serializePublicProfile as serializePublicProfile } from "./serializers.js"
-import { createErrorResponse as createErrorResponse } from "../util/response.js"
-import { createResponse as createResponse } from "../util/response.js"
+import {
+  createErrorResponse,
+  createResponse,
+} from "../util/response.js"
+import { ErrorCode } from "../util/error-codes.js"
 import { randomUUID as randomUUID } from "node:crypto"
 import fs from "node:fs"
 import logger from "../../../../logger/logger.js"
@@ -223,11 +226,10 @@ export const profile_post_update: RequestHandler = async (req, res, next) => {
   // Reject if URL parameters are provided
   if (req.body.avatar_url || req.body.banner_url) {
     res.status(400).json(
-      createErrorResponse({
-        error: "Invalid parameters",
-        message:
-          "avatar_url and banner_url are no longer supported. Use /avatar and /banner upload endpoints instead.",
-      }),
+      createErrorResponse(
+        ErrorCode.VALIDATION_ERROR,
+        "avatar_url and banner_url are no longer supported. Use /avatar and /banner upload endpoints instead."
+      )
     )
     return
   }
@@ -243,7 +245,9 @@ export const profile_post_update: RequestHandler = async (req, res, next) => {
   } = req.body
 
   if (display_name && (display_name.length > 30 || display_name.length === 0)) {
-    res.status(400).json(createErrorResponse({ error: "Invalid display name" }))
+    res.status(400).json(
+      createErrorResponse(ErrorCode.VALIDATION_ERROR, "Invalid display name")
+    )
     return
   }
 
