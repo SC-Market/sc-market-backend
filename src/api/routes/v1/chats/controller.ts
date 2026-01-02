@@ -11,7 +11,12 @@ import { discordService } from "../../../../services/discord/discord.service.js"
 import { notificationService } from "../../../../services/notifications/notification.service.js"
 import { eqSet, handle_chat_response } from "./helpers.js"
 import { serializeMessage } from "./serializers.js"
-import { createErrorResponse, createResponse } from "../util/response.js"
+import {
+  createErrorResponse,
+  createResponse,
+  createNotFoundErrorResponse,
+} from "../util/response.js"
+import { ErrorCode } from "../util/error-codes.js"
 import { chatServer } from "../../../../clients/messaging/websocket.js"
 import logger from "../../../../logger/logger.js"
 
@@ -28,7 +33,7 @@ export async function getChatByOrderId(
     logger.debug(`Chat not found for order ID: ${req.params.order_id}`)
     res
       .status(404)
-      .json(createErrorResponse({ error: "Chat not found for this order" }))
+      .json(createNotFoundErrorResponse("Chat not found for this order"))
     return
   }
 
@@ -50,9 +55,7 @@ export async function getChatByOfferSessionId(
   } catch (error) {
     logger.debug(`Chat not found for session ID: ${session_id}`)
     res.status(404).json(
-      createErrorResponse({
-        error: "Chat not found for this offer session",
-      }),
+      createNotFoundErrorResponse("Chat not found for this offer session")
     )
     return
   }
@@ -73,7 +76,9 @@ export async function sendMessage(
   }
 
   if (!content) {
-    res.status(400).json(createErrorResponse({ error: "Invalid content" }))
+    res.status(400).json(
+      createErrorResponse(ErrorCode.VALIDATION_ERROR, "Invalid content")
+    )
     return
   }
 
@@ -141,7 +146,9 @@ export async function createChat(
 
   // TODO: Process blocked users and user access settings
   if (!users.every(Boolean)) {
-    res.status(400).json(createErrorResponse({ error: "Invalid user!" }))
+    res.status(400).json(
+      createErrorResponse(ErrorCode.VALIDATION_ERROR, "Invalid user")
+    )
     return
   }
 
