@@ -5,7 +5,14 @@ import * as profileDb from "../profiles/database.js"
 import * as contractorDb from "../contractors/database.js"
 
 import { Contractor, User } from "../api-models.js"
-import { createErrorResponse, createResponse } from "../util/response.js"
+import {
+  createErrorResponse,
+  createResponse,
+  createNotFoundErrorResponse,
+  createForbiddenErrorResponse,
+  createConflictErrorResponse,
+} from "../util/response.js"
+import { ErrorCode } from "../util/error-codes.js"
 import { authorizeContractor, createContractor } from "./helpers.js"
 import { cdn, external_resource_regex } from "../../../../clients/cdn/cdn.js"
 import { randomUUID } from "node:crypto"
@@ -46,10 +53,7 @@ export const post_auth_link: RequestHandler = async (req, res) => {
     const cobj = await contractorDb.getContractor({ spectrum_id: spectrum_id })
     if (cobj) {
       res.status(409).json(
-        createErrorResponse({
-          message: "Org is already registered!",
-          status: "error",
-        }),
+        createConflictErrorResponse("Org is already registered!")
       )
       return
     }
@@ -60,10 +64,7 @@ export const post_auth_link: RequestHandler = async (req, res) => {
     res.json(createResponse(contractorDetails(contractor, user)))
   } else {
     res.status(403).json(
-      createErrorResponse({
-        message: "Failed to authenticate, code not found",
-        status: "error",
-      }),
+      createForbiddenErrorResponse("Failed to authenticate, code not found")
     )
   }
 }
@@ -87,10 +88,7 @@ export const post_root: RequestHandler = async (req, res) => {
     })
     if (cobj) {
       res.status(409).json(
-        createErrorResponse({
-          message: "Org is already registered!",
-          status: "error",
-        }),
+        createConflictErrorResponse("Org is already registered!")
       )
       return
     }
@@ -118,7 +116,7 @@ export const delete_spectrum_id: RequestHandler = async (req, res) => {
   if (!contractor) {
     res
       .status(404)
-      .json(createErrorResponse({ message: "Organization not found" }))
+      .json(createNotFoundErrorResponse("Organization not found"))
     return
   }
 
@@ -165,10 +163,10 @@ export const delete_spectrum_id: RequestHandler = async (req, res) => {
       error,
     })
     res.status(500).json(
-      createErrorResponse({
-        message: "Failed to archive organization",
-        status: "error",
-      }),
+      createErrorResponse(
+        ErrorCode.INTERNAL_SERVER_ERROR,
+        "Failed to archive organization"
+      )
     )
   }
 }
@@ -330,7 +328,7 @@ export const get_invites_invite_id: RequestHandler = async (req, res, next) => {
   })
 
   if (!invite) {
-    res.status(404).json(createErrorResponse({ message: "Invalid invite" }))
+    res.status(404).json(createNotFoundErrorResponse("Invalid invite"))
     return
   }
 
@@ -356,7 +354,7 @@ export const post_invites_invite_id_accept: RequestHandler = async (
   })
 
   if (!invite) {
-    res.status(404).json(createErrorResponse({ message: "Invalid invite" }))
+    res.status(404).json(createNotFoundErrorResponse("Invalid invite"))
     return
   }
 
@@ -380,7 +378,7 @@ export const post_invites_invite_id_accept: RequestHandler = async (
   )
 
   if (role) {
-    res.status(409).json(createErrorResponse({ message: "Already member" }))
+    res.status(409).json(createConflictErrorResponse("Already member"))
     return
   }
 
@@ -495,9 +493,7 @@ export const get_spectrum_id_customers: RequestHandler = async (req, res) => {
       .length === 0
   if (unrelated) {
     res.status(403).json(
-      createErrorResponse({
-        message: "You are not authorized to view this data",
-      }),
+      createForbiddenErrorResponse("You are not authorized to view this data")
     )
     return
   }
@@ -595,10 +591,10 @@ export const get_spectrum_id_members_username: RequestHandler = async (
   } catch (error) {
     logger.error("Error checking contractor membership", { error })
     res.status(500).json(
-      createErrorResponse({
-        message: "Internal server error",
-        status: "error",
-      }),
+      createErrorResponse(
+        ErrorCode.INTERNAL_SERVER_ERROR,
+        "Internal server error"
+      )
     )
   }
 }
@@ -639,10 +635,10 @@ export const get_spectrum_id_members: RequestHandler = async (
   } catch (error) {
     logger.error("Error fetching contractor members", { error })
     res.status(500).json(
-      createErrorResponse({
-        message: "Internal server error",
-        status: "error",
-      }),
+      createErrorResponse(
+        ErrorCode.INTERNAL_SERVER_ERROR,
+        "Internal server error"
+      )
     )
   }
 }
@@ -1173,9 +1169,10 @@ export const post_spectrum_id_transfer_ownership: RequestHandler = async (
   // Verify owner_role exists
   if (!contractor.owner_role) {
     res.status(500).json(
-      createErrorResponse({
-        message: "Organization owner role not found",
-      }),
+      createErrorResponse(
+        ErrorCode.INTERNAL_SERVER_ERROR,
+        "Organization owner role not found"
+      )
     )
     return
   }
@@ -1247,9 +1244,10 @@ export const post_spectrum_id_transfer_ownership: RequestHandler = async (
       new_owner_id: target.user_id,
     })
     res.status(500).json(
-      createErrorResponse({
-        message: "Failed to transfer ownership",
-      }),
+      createErrorResponse(
+        ErrorCode.INTERNAL_SERVER_ERROR,
+        "Failed to transfer ownership"
+      )
     )
   }
 }
@@ -1321,9 +1319,9 @@ export const delete_spectrum_id_members_username: RequestHandler = async (
     res.json(createResponse({ result: "Success" }))
   } catch (e) {
     logger.error("Error in contractor operation", { error: e })
-    res
-      .status(500)
-      .json(createErrorResponse({ message: "Internal server error" }))
+    res.status(500).json(
+      createErrorResponse(ErrorCode.INTERNAL_SERVER_ERROR, "Internal server error")
+    )
     return
   }
 }
@@ -1573,10 +1571,10 @@ export const contractors_post_spectrum_id_avatar: RequestHandler = async (
     // Log unexpected server errors as error level
     logger.error("Failed to upload organization avatar:", error)
     res.status(500).json(
-      createErrorResponse({
-        error: "Upload Failed",
-        message: "Failed to upload avatar. Please try again.",
-      }),
+      createErrorResponse(
+        ErrorCode.INTERNAL_SERVER_ERROR,
+        "Failed to upload avatar. Please try again."
+      )
     )
   } finally {
     // Clean up temp file
@@ -1729,10 +1727,10 @@ export const contractors_post_spectrum_id_banner: RequestHandler = async (
     // Log unexpected server errors as error level
     logger.error("Failed to upload organization banner:", error)
     res.status(500).json(
-      createErrorResponse({
-        error: "Upload Failed",
-        message: "Failed to upload banner. Please try again.",
-      }),
+      createErrorResponse(
+        ErrorCode.INTERNAL_SERVER_ERROR,
+        "Failed to upload banner. Please try again."
+      )
     )
   } finally {
     // Clean up temp file
@@ -2079,10 +2077,7 @@ export const post_spectrum_id_accept: RequestHandler = async (
 
     if (contractor.archived) {
       res.status(409).json(
-        createErrorResponse({
-          message: "Organization has been archived",
-          status: "error",
-        }),
+        createConflictErrorResponse("Organization has been archived")
       )
       return
     }
@@ -2207,9 +2202,9 @@ export const post_spectrum_id_accept: RequestHandler = async (
     res.json(createResponse({ result: "Success" }))
   } catch (e) {
     logger.error("Error in contractor operation", { error: e })
-    res
-      .status(500)
-      .json(createErrorResponse({ message: "Internal server error" }))
+    res.status(500).json(
+      createErrorResponse(ErrorCode.INTERNAL_SERVER_ERROR, "Internal server error")
+    )
     return
   }
 }
@@ -2271,9 +2266,9 @@ export const post_admin_express_verify: RequestHandler = async (
     res.json(createResponse({ result: "Success" }))
   } catch (e) {
     logger.error("Error in contractor operation", { error: e })
-    res
-      .status(500)
-      .json(createErrorResponse({ message: "Internal server error" }))
+    res.status(500).json(
+      createErrorResponse(ErrorCode.INTERNAL_SERVER_ERROR, "Internal server error")
+    )
     return
   }
 }
