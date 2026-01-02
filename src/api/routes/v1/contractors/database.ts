@@ -109,8 +109,10 @@ export async function removeUserContractorRoles(
 export async function incrementContractorBalance(
   contractor_id: string,
   amount: number,
+  trx?: any,
 ): Promise<void> {
-  await knex()("contractors")
+  const query = trx ? trx("contractors") : knex()("contractors")
+  await query
     .where({ contractor_id: contractor_id })
     .increment("balance", amount)
 }
@@ -121,8 +123,10 @@ export async function incrementContractorBalance(
 export async function decrementContractorBalance(
   contractor_id: string,
   amount: number,
+  trx?: any,
 ): Promise<void> {
-  await knex()("contractors")
+  const query = trx ? trx("contractors") : knex()("contractors")
+  await query
     .where({ contractor_id: contractor_id })
     .decrement("balance", amount)
 }

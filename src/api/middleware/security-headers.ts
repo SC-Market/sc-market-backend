@@ -12,6 +12,8 @@ import { env } from "../../config/env.js"
 const isProduction = env.NODE_ENV === "production"
 const backend_url = new URL(env.BACKEND_URL || "http://localhost:7000")
 const frontend_url = new URL(env.FRONTEND_URL || "http://localhost:5173")
+// CDN URL for serving images and assets
+const cdn_url = env.CDN_URL ? new URL(env.CDN_URL) : null
 
 /**
  * Security headers middleware configuration

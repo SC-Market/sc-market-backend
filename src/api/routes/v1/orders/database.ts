@@ -55,7 +55,13 @@ export async function getOrder(where: any): Promise<DBOrder> {
 /**
  * Create a new order.
  */
-export async function createOrder(data: Partial<DBOrder>): Promise<DBOrder[]> {
+export async function createOrder(
+  data: Partial<DBOrder>,
+  trx?: any,
+): Promise<DBOrder[]> {
+  if (trx) {
+    return trx("orders").insert(data).returning("*")
+  }
   return knex()<DBOrder>("orders").insert(data).returning("*")
 }
 
