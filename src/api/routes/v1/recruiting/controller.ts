@@ -11,7 +11,12 @@ import {
 import { DBRecruitingPost } from "../../../../clients/database/db-models.js"
 import { User } from "../api-models.js"
 import { has_permission } from "../util/permissions.js"
-import { createErrorResponse, createResponse } from "../util/response.js"
+import {
+  createErrorResponse,
+  createResponse,
+  createForbiddenErrorResponse,
+} from "../util/response.js"
+import { ErrorCode } from "../util/error-codes.js"
 import logger from "../../../../logger/logger.js"
 
 // Types
@@ -130,7 +135,9 @@ export const post_posts: RequestHandler = async function (req, res) {
   } = req.body
 
   if (!title || !body || !spectrum_id) {
-    res.status(400).json({ error: "Missing required fields" })
+    res.status(400).json(
+      createErrorResponse(ErrorCode.VALIDATION_ERROR, "Missing required fields")
+    )
     return
   }
 
@@ -139,9 +146,10 @@ export const post_posts: RequestHandler = async function (req, res) {
   })
   if (contractor_obj.archived) {
     res.status(409).json(
-      createErrorResponse({
-        message: "Archived organizations cannot create recruiting posts",
-      }),
+      createErrorResponse(
+        ErrorCode.CONFLICT,
+        "Archived organizations cannot create recruiting posts"
+      ),
     )
     return
   }
@@ -151,7 +159,9 @@ export const post_posts: RequestHandler = async function (req, res) {
   if (last_post) {
     res
       .status(400)
-      .json(createErrorResponse({ message: "Cannot create multiple posts" }))
+      .json(
+        createErrorResponse(ErrorCode.CONFLICT, "Cannot create multiple posts")
+      )
     return
   }
 
@@ -192,7 +202,9 @@ export const put_posts_post_id: RequestHandler = async function (req, res) {
   const post = await recruitingDb.getRecruitingPost({ post_id })
 
   if (!post) {
-    res.status(400).json(createErrorResponse({ message: "Invalid post" }))
+    res.status(400).json(
+      createErrorResponse(ErrorCode.VALIDATION_ERROR, "Invalid post")
+    )
     return
   }
 
@@ -201,9 +213,10 @@ export const put_posts_post_id: RequestHandler = async function (req, res) {
   })
   if (contractor.archived) {
     res.status(409).json(
-      createErrorResponse({
-        message: "Archived organizations cannot update recruiting posts",
-      }),
+      createErrorResponse(
+        ErrorCode.CONFLICT,
+        "Archived organizations cannot update recruiting posts"
+      ),
     )
     return
   }
@@ -216,7 +229,7 @@ export const put_posts_post_id: RequestHandler = async function (req, res) {
   ) {
     res
       .status(400)
-      .json(createErrorResponse({ message: "Missing permissions" }))
+      .json(createForbiddenErrorResponse("Missing permissions"))
     return
   }
 
@@ -231,7 +244,9 @@ export const put_posts_post_id: RequestHandler = async function (req, res) {
   if (!title && !body) {
     res
       .status(400)
-      .json(createErrorResponse({ message: "Missing required fields" }))
+      .json(
+        createErrorResponse(ErrorCode.VALIDATION_ERROR, "Missing required fields")
+      )
     return
   }
 
@@ -256,7 +271,9 @@ export const post_posts_post_id_upvote: RequestHandler = async function (
   const user = req.user as User
 
   if (!post) {
-    res.status(400).json({ message: "Invalid post" })
+    res.status(400).json(
+      createErrorResponse(ErrorCode.VALIDATION_ERROR, "Invalid post")
+    )
     return
   }
 
@@ -284,7 +301,9 @@ export const post_posts_post_id_comment: RequestHandler = async function (
   const user = req.user as User
 
   if (!post) {
-    res.status(400).json({ message: "Invalid post" })
+    res.status(400).json(
+      createErrorResponse(ErrorCode.VALIDATION_ERROR, "Invalid post")
+    )
     return
   }
 
@@ -301,7 +320,9 @@ export const post_posts_post_id_comment: RequestHandler = async function (
     const comment = await commentDb.getComment({ comment_id: reply_to })
 
     if (!comment) {
-      res.status(400).json({ message: "Invalid comment" })
+      res.status(400).json(
+        createErrorResponse(ErrorCode.VALIDATION_ERROR, "Invalid comment")
+      )
       return
     }
 

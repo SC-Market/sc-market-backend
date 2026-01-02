@@ -21,7 +21,12 @@ import { chatParticipantService } from "../../../../services/chats/chat-particip
 import { User } from "../api-models.js"
 import { sendSystemMessage } from "../chats/helpers.js"
 import { has_permission } from "../util/permissions.js"
-import { createErrorResponse, createResponse } from "../util/response.js"
+import {
+  createErrorResponse,
+  createResponse,
+  createForbiddenErrorResponse,
+} from "../util/response.js"
+import { ErrorCode } from "../util/error-codes.js"
 import logger from "../../../../logger/logger.js"
 import { Request } from "express"
 import { withTransaction } from "../../../../clients/database/transaction.js"
@@ -657,7 +662,7 @@ export async function handleStatusUpdate(req: any, res: any, status: string) {
     ) {
       return res
         .status(400)
-        .json(createErrorResponse({ message: "Invalid status!" }))
+        .json(createErrorResponse(ErrorCode.VALIDATION_ERROR, "Invalid status!"))
     }
 
     if (
@@ -665,9 +670,10 @@ export async function handleStatusUpdate(req: any, res: any, status: string) {
       (order.status.includes("cancelled") || order.status.includes("fulfilled"))
     ) {
       res.status(400).json(
-        createErrorResponse({
-          message: "Cannot change status for closed order",
-        }),
+        createErrorResponse(
+          ErrorCode.VALIDATION_ERROR,
+          "Cannot change status for closed order"
+        ),
       )
       return
     }
@@ -679,9 +685,9 @@ export async function handleStatusUpdate(req: any, res: any, status: string) {
         user.role !== "admin"
       ) {
         res.status(403).json(
-          createErrorResponse({
-            message: `Only the assigned user may set the status of this order to ${status}`,
-          }),
+          createForbiddenErrorResponse(
+            `Only the assigned user may set the status of this order to ${status}`
+          ),
         )
         return
       }
@@ -698,7 +704,7 @@ export async function handleStatusUpdate(req: any, res: any, status: string) {
       ) {
         return res
           .status(400)
-          .json(createErrorResponse({ message: "Invalid status!" }))
+          .json(createErrorResponse(ErrorCode.VALIDATION_ERROR, "Invalid status!"))
       }
     }
 
@@ -744,7 +750,9 @@ export async function handleAssignedUpdate(req: any, res: any) {
   if (!req.order.contractor_id) {
     return res
       .status(400)
-      .json(createErrorResponse({ message: "This order cannot be assigned" }))
+      .json(
+        createErrorResponse(ErrorCode.VALIDATION_ERROR, "This order cannot be assigned")
+      )
   }
 
   const {
@@ -766,9 +774,7 @@ export async function handleAssignedUpdate(req: any, res: any) {
     ))
   ) {
     res.status(403).json(
-      createErrorResponse({
-        message: "No permission to assign this order",
-      }),
+      createForbiddenErrorResponse("No permission to assign this order"),
     )
     return
   }
@@ -778,7 +784,9 @@ export async function handleAssignedUpdate(req: any, res: any) {
     try {
       targetUserObj = await profileDb.getUser({ username: targetUser })
     } catch {
-      res.status(400).json(createErrorResponse({ message: "Invalid user" }))
+      res.status(400).json(
+        createErrorResponse(ErrorCode.VALIDATION_ERROR, "Invalid user")
+      )
       return
     }
 
@@ -789,7 +797,9 @@ export async function handleAssignedUpdate(req: any, res: any) {
     if (!targetUserRole) {
       return res
         .status(400)
-        .json(createErrorResponse({ message: "Invalid user!" }))
+        .json(
+          createErrorResponse(ErrorCode.VALIDATION_ERROR, "Invalid user")
+        )
     }
 
     const newOrders = await orderDb.updateOrder(req.order.order_id, {
@@ -824,18 +834,17 @@ export async function acceptApplicant(
 
   if (req.user.user_id !== req.order.customer_id) {
     res.status(403).json(
-      createErrorResponse({
-        message: "You are not authorized to assign this order",
-      }),
+      createForbiddenErrorResponse("You are not authorized to assign this order"),
     )
     return
   }
 
   if (req.order.contractor_id || req.order.assigned_id) {
     res.status(400).json(
-      createErrorResponse({
-        message: "This order is already assigned",
-      }),
+      createErrorResponse(
+        ErrorCode.CONFLICT,
+        "This order is already assigned"
+      ),
     )
     return
   }
@@ -850,7 +859,9 @@ export async function acceptApplicant(
     } catch {
       return res
         .status(400)
-        .json(createErrorResponse({ message: "Invalid contractor" }))
+        .json(
+          createErrorResponse(ErrorCode.VALIDATION_ERROR, "Invalid contractor")
+        )
     }
   } else if (target_username) {
     try {
@@ -863,7 +874,9 @@ export async function acceptApplicant(
   } else {
     return res
       .status(400)
-      .json(createErrorResponse({ message: "Invalid target" }))
+      .json(
+        createErrorResponse(ErrorCode.VALIDATION_ERROR, "Invalid target")
+      )
   }
 
   const applicants = await orderDb.getOrderApplicants({

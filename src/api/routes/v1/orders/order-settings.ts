@@ -1,7 +1,12 @@
 import { Router } from "express"
 import { database } from "../../../../clients/database/knex-db.js"
 import * as orderDb from "./database.js"
-import { createResponse, createErrorResponse } from "../util/response.js"
+import {
+  createResponse,
+  createErrorResponse,
+  createNotFoundErrorResponse,
+} from "../util/response.js"
+import { ErrorCode } from "../util/error-codes.js"
 import { userAuthorized } from "../../../middleware/auth.js"
 import { org_permission, valid_contractor } from "../contractors/middleware.js"
 import { validate_username } from "../profiles/middleware.js"
@@ -48,7 +53,12 @@ orderSettingsRouter.get("/settings", userAuthorized, async (req, res) => {
     logger.error("Error fetching user order settings", { error })
     res
       .status(500)
-      .json(createErrorResponse({ error: "Failed to fetch order settings" }))
+      .json(
+        createErrorResponse(
+          ErrorCode.INTERNAL_SERVER_ERROR,
+          "Failed to fetch order settings",
+        ),
+      )
   }
 })
 
@@ -62,11 +72,14 @@ orderSettingsRouter.post("/settings", userAuthorized, async (req, res) => {
   }: CreateOrderSettingRequest = req.body
 
   if (!setting_type) {
-    res.status(400).json(
-      createErrorResponse({
-        error: "setting_type is required",
-      }),
-    )
+    res
+      .status(400)
+      .json(
+        createErrorResponse(
+          ErrorCode.VALIDATION_ERROR,
+          "setting_type is required",
+        ),
+      )
     return
   }
 
@@ -80,12 +93,14 @@ orderSettingsRouter.post("/settings", userAuthorized, async (req, res) => {
       message_content !== "on_received" &&
       message_content !== "dont_subtract"
     ) {
-      res.status(400).json(
-        createErrorResponse({
-          error:
+      res
+        .status(400)
+        .json(
+          createErrorResponse(
+            ErrorCode.VALIDATION_ERROR,
             "message_content must be 'on_received' or 'dont_subtract' for stock_subtraction_timing",
-        }),
-      )
+          ),
+        )
       return
     }
   } else if (
@@ -98,28 +113,37 @@ orderSettingsRouter.post("/settings", userAuthorized, async (req, res) => {
   ) {
     // Validate numeric values for order limit settings
     if (!message_content || isNaN(parseInt(message_content, 10))) {
-      res.status(400).json(
-        createErrorResponse({
-          error: "message_content must be a valid number for this setting_type",
-        }),
-      )
+      res
+        .status(400)
+        .json(
+          createErrorResponse(
+            ErrorCode.VALIDATION_ERROR,
+            "message_content must be a valid number for this setting_type",
+          ),
+        )
       return
     }
     const numValue = parseInt(message_content, 10)
     if (numValue < 0) {
-      res.status(400).json(
-        createErrorResponse({
-          error: "Value must be non-negative",
-        }),
-      )
+      res
+        .status(400)
+        .json(
+          createErrorResponse(
+            ErrorCode.VALIDATION_ERROR,
+            "Value must be non-negative",
+          ),
+        )
       return
     }
   } else if (setting_type !== "require_availability" && !message_content) {
-    res.status(400).json(
-      createErrorResponse({
-        error: "message_content is required for this setting_type",
-      }),
-    )
+    res
+      .status(400)
+      .json(
+        createErrorResponse(
+          ErrorCode.VALIDATION_ERROR,
+          "message_content is required for this setting_type",
+        ),
+      )
     return
   }
 
@@ -135,7 +159,14 @@ orderSettingsRouter.post("/settings", userAuthorized, async (req, res) => {
       "max_order_value",
     ].includes(setting_type)
   ) {
-    res.status(400).json(createErrorResponse({ error: "Invalid setting_type" }))
+    res
+      .status(400)
+      .json(
+        createErrorResponse(
+          ErrorCode.VALIDATION_ERROR,
+          "Invalid setting_type",
+        ),
+      )
     return
   }
 
@@ -190,7 +221,12 @@ orderSettingsRouter.post("/settings", userAuthorized, async (req, res) => {
     })
     res
       .status(500)
-      .json(createErrorResponse({ error: "Failed to create order setting" }))
+      .json(
+        createErrorResponse(
+          ErrorCode.INTERNAL_SERVER_ERROR,
+          "Failed to create order setting",
+        ),
+      )
   }
 })
 
@@ -217,9 +253,7 @@ orderSettingsRouter.put("/settings/:id", userAuthorized, async (req, res) => {
       .first()
 
     if (!existing) {
-      res
-        .status(404)
-        .json(createErrorResponse({ error: "Order setting not found" }))
+      res.status(404).json(createNotFoundErrorResponse("Order setting", id))
       return
     }
 
@@ -232,7 +266,12 @@ orderSettingsRouter.put("/settings/:id", userAuthorized, async (req, res) => {
     logger.error("Error updating order setting", { error })
     res
       .status(500)
-      .json(createErrorResponse({ error: "Failed to update order setting" }))
+      .json(
+        createErrorResponse(
+          ErrorCode.INTERNAL_SERVER_ERROR,
+          "Failed to update order setting",
+        ),
+      )
   }
 })
 
@@ -264,7 +303,12 @@ orderSettingsRouter.delete(
       logger.error("Error deleting order setting", { error })
       res
         .status(500)
-        .json(createErrorResponse({ error: "Failed to delete order setting" }))
+        .json(
+          createErrorResponse(
+            ErrorCode.INTERNAL_SERVER_ERROR,
+            "Failed to delete order setting",
+          ),
+        )
     }
   },
 )
@@ -306,11 +350,14 @@ orderSettingsRouter.get(
         error: error instanceof Error ? error.message : String(error),
         stack: error instanceof Error ? error.stack : undefined,
       })
-      res.status(500).json(
-        createErrorResponse({
-          error: "Failed to fetch contractor order settings",
-        }),
-      )
+      res
+        .status(500)
+        .json(
+          createErrorResponse(
+            ErrorCode.INTERNAL_SERVER_ERROR,
+            "Failed to fetch contractor order settings",
+          ),
+        )
     }
   },
 )
@@ -340,11 +387,14 @@ orderSettingsRouter.post(
       logger.warn("Missing setting_type for order setting", {
         spectrum_id,
       })
-      res.status(400).json(
-        createErrorResponse({
-          error: "setting_type is required",
-        }),
-      )
+      res
+        .status(400)
+        .json(
+          createErrorResponse(
+            ErrorCode.VALIDATION_ERROR,
+            "setting_type is required",
+          ),
+        )
       return
     }
 
@@ -358,12 +408,14 @@ orderSettingsRouter.post(
         message_content !== "on_received" &&
         message_content !== "dont_subtract"
       ) {
-        res.status(400).json(
-          createErrorResponse({
-            error:
+        res
+          .status(400)
+          .json(
+            createErrorResponse(
+              ErrorCode.VALIDATION_ERROR,
               "message_content must be 'on_received' or 'dont_subtract' for stock_subtraction_timing",
-          }),
-        )
+            ),
+          )
         return
       }
     } else if (
@@ -380,21 +432,26 @@ orderSettingsRouter.post(
           spectrum_id,
           setting_type,
         })
-        res.status(400).json(
-          createErrorResponse({
-            error:
+        res
+          .status(400)
+          .json(
+            createErrorResponse(
+              ErrorCode.VALIDATION_ERROR,
               "message_content must be a valid number for this setting_type",
-          }),
-        )
+            ),
+          )
         return
       }
       const numValue = parseInt(message_content, 10)
       if (numValue < 0) {
-        res.status(400).json(
-          createErrorResponse({
-            error: "Value must be non-negative",
-          }),
-        )
+        res
+          .status(400)
+          .json(
+            createErrorResponse(
+              ErrorCode.VALIDATION_ERROR,
+              "Value must be non-negative",
+            ),
+          )
         return
       }
     } else if (setting_type !== "require_availability" && !message_content) {
@@ -402,11 +459,14 @@ orderSettingsRouter.post(
         spectrum_id,
         setting_type,
       })
-      res.status(400).json(
-        createErrorResponse({
-          error: "message_content is required for this setting_type",
-        }),
-      )
+      res
+        .status(400)
+        .json(
+          createErrorResponse(
+            ErrorCode.VALIDATION_ERROR,
+            "message_content is required for this setting_type",
+          ),
+        )
       return
     }
 
@@ -428,7 +488,12 @@ orderSettingsRouter.post(
       })
       res
         .status(400)
-        .json(createErrorResponse({ error: "Invalid setting_type" }))
+        .json(
+          createErrorResponse(
+            ErrorCode.VALIDATION_ERROR,
+            "Invalid setting_type",
+          ),
+        )
       return
     }
 
@@ -484,11 +549,14 @@ orderSettingsRouter.post(
         error: error instanceof Error ? error.message : String(error),
         stack: error instanceof Error ? error.stack : undefined,
       })
-      res.status(500).json(
-        createErrorResponse({
-          error: "Failed to create contractor order setting",
-        }),
-      )
+      res
+        .status(500)
+        .json(
+          createErrorResponse(
+            ErrorCode.INTERNAL_SERVER_ERROR,
+            "Failed to create contractor order setting",
+          ),
+        )
     }
   },
 )
@@ -504,11 +572,14 @@ orderSettingsRouter.put(
     const { message_content, enabled }: UpdateOrderSettingRequest = req.body
 
     if (message_content === undefined && enabled === undefined) {
-      res.status(400).json(
-        createErrorResponse({
-          error: "At least one field must be provided for update",
-        }),
-      )
+      res
+        .status(400)
+        .json(
+          createErrorResponse(
+            ErrorCode.VALIDATION_ERROR,
+            "At least one field must be provided for update",
+          ),
+        )
       return
     }
 
@@ -537,11 +608,14 @@ orderSettingsRouter.put(
       res.json(createResponse({ setting: serializeOrderSetting(updated) }))
     } catch (error) {
       logger.error("Error updating contractor order setting", { error })
-      res.status(500).json(
-        createErrorResponse({
-          error: "Failed to update contractor order setting",
-        }),
-      )
+      res
+        .status(500)
+        .json(
+          createErrorResponse(
+            ErrorCode.INTERNAL_SERVER_ERROR,
+            "Failed to update contractor order setting",
+          ),
+        )
     }
   },
 )
@@ -629,11 +703,14 @@ orderSettingsRouter.get(
         error: error instanceof Error ? error.message : String(error),
         stack: error instanceof Error ? error.stack : undefined,
       })
-      res.status(500).json(
-        createErrorResponse({
-          error: "Failed to check availability requirement",
-        }),
-      )
+      res
+        .status(500)
+        .json(
+          createErrorResponse(
+            ErrorCode.INTERNAL_SERVER_ERROR,
+            "Failed to check availability requirement",
+          ),
+        )
     }
   },
 )
@@ -671,11 +748,14 @@ orderSettingsRouter.get(
         error: error instanceof Error ? error.message : String(error),
         stack: error instanceof Error ? error.stack : undefined,
       })
-      res.status(500).json(
-        createErrorResponse({
-          error: "Failed to check availability requirement",
-        }),
-      )
+      res
+        .status(500)
+        .json(
+          createErrorResponse(
+            ErrorCode.INTERNAL_SERVER_ERROR,
+            "Failed to check availability requirement",
+          ),
+        )
     }
   },
 )
@@ -720,11 +800,14 @@ orderSettingsRouter.get(
         error: error instanceof Error ? error.message : String(error),
         stack: error instanceof Error ? error.stack : undefined,
       })
-      res.status(500).json(
-        createErrorResponse({
-          error: "Failed to fetch order limits",
-        }),
-      )
+      res
+        .status(500)
+        .json(
+          createErrorResponse(
+            ErrorCode.INTERNAL_SERVER_ERROR,
+            "Failed to fetch order limits",
+          ),
+        )
     }
   },
 )
@@ -765,11 +848,14 @@ orderSettingsRouter.get(
         error: error instanceof Error ? error.message : String(error),
         stack: error instanceof Error ? error.stack : undefined,
       })
-      res.status(500).json(
-        createErrorResponse({
-          error: "Failed to fetch order limits",
-        }),
-      )
+      res
+        .status(500)
+        .json(
+          createErrorResponse(
+            ErrorCode.INTERNAL_SERVER_ERROR,
+            "Failed to fetch order limits",
+          ),
+        )
     }
   },
 )

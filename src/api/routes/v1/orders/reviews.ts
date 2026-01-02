@@ -5,7 +5,14 @@ import * as orderDb from "./database.js"
 import * as contractorDb from "../contractors/database.js"
 import { notificationService } from "../../../../services/notifications/notification.service.js"
 import { has_permission } from "../util/permissions.js"
-import { createResponse, createErrorResponse } from "../util/response.js"
+import {
+  createResponse,
+  createErrorResponse,
+  createNotFoundErrorResponse,
+  createForbiddenErrorResponse,
+  createConflictErrorResponse,
+} from "../util/response.js"
+import { ErrorCode } from "../util/error-codes.js"
 import { DBOrder, DBReview } from "../../../../clients/database/db-models.js"
 import logger from "../../../../logger/logger.js"
 
@@ -21,11 +28,14 @@ export async function requestReviewRevision(req: Request, res: Response) {
         review_id,
         message_length: message.length,
       })
-      return res.status(400).json(
-        createErrorResponse({
-          error: "Message cannot exceed 500 characters",
-        }),
-      )
+      return res
+        .status(400)
+        .json(
+          createErrorResponse(
+            ErrorCode.VALIDATION_ERROR,
+            "Message cannot exceed 500 characters",
+          ),
+        )
     }
 
     logger.info("Review revision requested", {
@@ -41,7 +51,7 @@ export async function requestReviewRevision(req: Request, res: Response) {
       logger.warn("Review not found for revision request", { review_id })
       return res
         .status(404)
-        .json(createErrorResponse({ error: "Review not found" }))
+        .json(createNotFoundErrorResponse("Review", review_id))
     }
 
     // Verify user is the recipient of the review
@@ -57,21 +67,25 @@ export async function requestReviewRevision(req: Request, res: Response) {
         order_customer_id: order.customer_id,
         order_assigned_id: order.assigned_id,
       })
-      return res.status(403).json(
-        createErrorResponse({
-          error: "You can only request revisions for reviews you received",
-        }),
-      )
+      return res
+        .status(403)
+        .json(
+          createForbiddenErrorResponse(
+            "You can only request revisions for reviews you received",
+          ),
+        )
     }
 
     // Check if revision already requested
     if (review.revision_requested) {
       logger.warn("Revision already requested for review", { review_id })
-      return res.status(409).json(
-        createErrorResponse({
-          error: "Revision already requested for this review",
-        }),
-      )
+      return res
+        .status(409)
+        .json(
+          createConflictErrorResponse(
+            "Revision already requested for this review",
+          ),
+        )
     }
 
     // Request revision
@@ -109,7 +123,12 @@ export async function requestReviewRevision(req: Request, res: Response) {
     })
     res
       .status(500)
-      .json(createErrorResponse({ error: "Internal server error" }))
+      .json(
+        createErrorResponse(
+          ErrorCode.INTERNAL_SERVER_ERROR,
+          "Internal server error",
+        ),
+      )
   }
 }
 
@@ -131,7 +150,7 @@ export async function updateOrderReview(req: Request, res: Response) {
       logger.warn("Review not found for update", { review_id })
       return res
         .status(404)
-        .json(createErrorResponse({ error: "Review not found" }))
+        .json(createNotFoundErrorResponse("Review", review_id))
     }
 
     // Check if revision was requested
@@ -139,11 +158,14 @@ export async function updateOrderReview(req: Request, res: Response) {
       logger.warn("Attempt to edit review without revision request", {
         review_id,
       })
-      return res.status(400).json(
-        createErrorResponse({
-          error: "Review can only be edited after revision request",
-        }),
-      )
+      return res
+        .status(400)
+        .json(
+          createErrorResponse(
+            ErrorCode.VALIDATION_ERROR,
+            "Review can only be edited after revision request",
+          ),
+        )
     }
 
     // Check permissions
@@ -154,11 +176,13 @@ export async function updateOrderReview(req: Request, res: Response) {
         review_user_author: review.user_author,
         review_contractor_author: review.contractor_author,
       })
-      return res.status(403).json(
-        createErrorResponse({
-          error: "You don't have permission to edit this review",
-        }),
-      )
+      return res
+        .status(403)
+        .json(
+          createForbiddenErrorResponse(
+            "You don't have permission to edit this review",
+          ),
+        )
     }
 
     // Validate input
@@ -166,20 +190,26 @@ export async function updateOrderReview(req: Request, res: Response) {
       logger.warn("Invalid content length for review update", {
         content_length: content?.length || 0,
       })
-      return res.status(400).json(
-        createErrorResponse({
-          error: "Content must be between 10 and 2000 characters",
-        }),
-      )
+      return res
+        .status(400)
+        .json(
+          createErrorResponse(
+            ErrorCode.VALIDATION_ERROR,
+            "Content must be between 10 and 2000 characters",
+          ),
+        )
     }
 
     if (!rating || rating < 1 || rating > 5 || rating % 1 !== 0) {
       logger.warn("Invalid rating for review update", { rating })
-      return res.status(400).json(
-        createErrorResponse({
-          error: "Rating must be a whole number between 1 and 5",
-        }),
-      )
+      return res
+        .status(400)
+        .json(
+          createErrorResponse(
+            ErrorCode.VALIDATION_ERROR,
+            "Rating must be a whole number between 1 and 5",
+          ),
+        )
     }
 
     // Update review
@@ -211,7 +241,12 @@ export async function updateOrderReview(req: Request, res: Response) {
     })
     res
       .status(500)
-      .json(createErrorResponse({ error: "Internal server error" }))
+      .json(
+        createErrorResponse(
+          ErrorCode.INTERNAL_SERVER_ERROR,
+          "Internal server error",
+        ),
+      )
   }
 }
 
@@ -248,7 +283,7 @@ export const post_order_review: RequestHandler = async (req, res, next) => {
   try {
     order = await orderDb.getOrder({ order_id: order_id })
   } catch (e) {
-    res.status(404).json({ message: "Invalid order" })
+    res.status(404).json(createNotFoundErrorResponse("Order", order_id))
     return
   }
   const user = req.user as User
@@ -264,7 +299,14 @@ export const post_order_review: RequestHandler = async (req, res, next) => {
   } = req.body
 
   if (!["customer", "contractor"].includes(role)) {
-    res.status(400).json({ message: "Invalid role" })
+    res
+      .status(400)
+      .json(
+        createErrorResponse(
+          ErrorCode.VALIDATION_ERROR,
+          "Invalid role. Must be 'customer' or 'contractor'",
+        ),
+      )
     return
   }
 
@@ -281,25 +323,45 @@ export const post_order_review: RequestHandler = async (req, res, next) => {
   if (role === "customer" && !amCustomer) {
     res
       .status(403)
-      .json({ message: "You are not authorized to review this order!" })
+      .json(
+        createForbiddenErrorResponse(
+          "You are not authorized to review this order!",
+        ),
+      )
     return
   }
   if (role === "contractor" && !amContractor) {
     res
       .status(403)
-      .json({ message: "You are not authorized to review this order!" })
+      .json(
+        createForbiddenErrorResponse(
+          "You are not authorized to review this order!",
+        ),
+      )
     return
   }
 
   if (!content) {
-    res.status(400).json({ message: "Message content cannot be empty!" })
+    res
+      .status(400)
+      .json(
+        createErrorResponse(
+          ErrorCode.VALIDATION_ERROR,
+          "Message content cannot be empty!",
+        ),
+      )
     return
   }
 
   if (!rating || rating > 5 || rating < 1 || rating % 1 !== 0) {
     res
       .status(400)
-      .json({ message: "Rating must be a whole number between 1 and 5" })
+      .json(
+        createErrorResponse(
+          ErrorCode.VALIDATION_ERROR,
+          "Rating must be a whole number between 1 and 5",
+        ),
+      )
     return
   }
 
@@ -310,7 +372,11 @@ export const post_order_review: RequestHandler = async (req, res, next) => {
   if (existing) {
     res
       .status(409)
-      .json({ message: "A review has already been left on this order" })
+      .json(
+        createConflictErrorResponse(
+          "A review has already been left on this order",
+        ),
+      )
     return
   }
 

@@ -2,6 +2,12 @@ import { RequestHandler } from "express"
 import * as commentDb from "./database.js"
 import { formatComment } from "../util/formatting.js"
 import { User } from "../api-models.js"
+import {
+  createErrorResponse,
+  createResponse,
+  createForbiddenErrorResponse,
+} from "../util/response.js"
+import { ErrorCode } from "../util/error-codes.js"
 
 export const post_comment_id_reply: RequestHandler = async function (req, res) {
   const comment_id = req.params["comment_id"]
@@ -9,7 +15,9 @@ export const post_comment_id_reply: RequestHandler = async function (req, res) {
   const user = req.user as User
 
   if (!comment) {
-    res.status(400).json({ message: "Invalid comment" })
+    res.status(400).json(
+      createErrorResponse(ErrorCode.VALIDATION_ERROR, "Invalid comment")
+    )
     return
   }
 
@@ -25,7 +33,7 @@ export const post_comment_id_reply: RequestHandler = async function (req, res) {
     reply_to: comment.comment_id,
   })
 
-  res.json(await formatComment(comments[0]))
+  res.json(createResponse(await formatComment(comments[0])))
 }
 
 export const post_comment_id_delete: RequestHandler = async function (
@@ -37,17 +45,19 @@ export const post_comment_id_delete: RequestHandler = async function (
   const user = req.user as User
 
   if (!comment) {
-    res.status(400).json({ message: "Invalid comment" })
+    res.status(400).json(
+      createErrorResponse(ErrorCode.VALIDATION_ERROR, "Invalid comment")
+    )
     return
   }
 
   if (comment.author !== user.user_id && user.role !== "admin") {
-    res.status(400).json({ message: "No permissions" })
+    res.status(403).json(createForbiddenErrorResponse("No permissions"))
     return
   }
 
   await commentDb.updateComments({ comment_id }, { deleted: true })
-  res.json({ message: "Success" })
+  res.json(createResponse({ message: "Success" }))
 }
 
 export const post_comment_id_update: RequestHandler = async function (
@@ -59,12 +69,14 @@ export const post_comment_id_update: RequestHandler = async function (
   const user = req.user as User
 
   if (!comment) {
-    res.status(400).json({ message: "Invalid comment" })
+    res.status(400).json(
+      createErrorResponse(ErrorCode.VALIDATION_ERROR, "Invalid comment")
+    )
     return
   }
 
   if (comment.author !== user.user_id && user.role !== "admin") {
-    res.status(400).json({ message: "No permissions" })
+    res.status(403).json(createForbiddenErrorResponse("No permissions"))
     return
   }
 
@@ -75,12 +87,14 @@ export const post_comment_id_update: RequestHandler = async function (
   } = req.body
 
   if (!content) {
-    res.status(400).json({ message: "Invalid argument" })
+    res.status(400).json(
+      createErrorResponse(ErrorCode.VALIDATION_ERROR, "Invalid argument")
+    )
     return
   }
 
   await commentDb.updateComments({ comment_id }, { content })
-  res.json({ message: "Success" })
+  res.json(createResponse({ message: "Success" }))
 }
 
 export const post_comment_id_upvote: RequestHandler = async function (
@@ -92,7 +106,9 @@ export const post_comment_id_upvote: RequestHandler = async function (
   const user = req.user as User
 
   if (!comment) {
-    res.status(400).json({ message: "Invalid comment" })
+    res.status(400).json(
+      createErrorResponse(ErrorCode.VALIDATION_ERROR, "Invalid comment")
+    )
     return
   }
 
@@ -109,7 +125,7 @@ export const post_comment_id_upvote: RequestHandler = async function (
     })
   }
 
-  res.json({ message: "Success" })
+  res.json(createResponse({ message: "Success" }))
 }
 
 export const post_comment_id_downvote: RequestHandler = async function (
@@ -121,7 +137,9 @@ export const post_comment_id_downvote: RequestHandler = async function (
   const user = req.user as User
 
   if (!comment) {
-    res.status(400).json({ message: "Invalid comment" })
+    res.status(400).json(
+      createErrorResponse(ErrorCode.VALIDATION_ERROR, "Invalid comment")
+    )
     return
   }
 
@@ -138,5 +156,5 @@ export const post_comment_id_downvote: RequestHandler = async function (
     })
   }
 
-  res.json({ message: "Success" })
+  res.json(createResponse({ message: "Success" }))
 }

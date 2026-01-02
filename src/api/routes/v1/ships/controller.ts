@@ -8,22 +8,29 @@ import * as profileDb from "../profiles/database.js"
 import { validate as validate } from "jsonschema"
 import { DBShip } from "../../../../clients/database/db-models.js"
 import { shipData } from "../../../../config/fallback/ship-data.js"
+import { createErrorResponse, createResponse } from "../util/response.js"
+import { ErrorCode } from "../util/error-codes.js"
 
 export const ship_post_import: RequestHandler = async (req, res) => {
   const user = req.user as User
   const ships = req.body as ShipsFileEntry[]
 
   if (!ships) {
-    res.status(400).json({
-      error: "No ships provided",
-    })
+    res
+      .status(400)
+      .json(createErrorResponse(ErrorCode.VALIDATION_ERROR, "No ships provided"))
     return
   }
 
   if (!validate(ships, ShipsFileSchema).valid) {
-    res.status(400).json({
-      error: "Invalid ships provided",
-    })
+    res
+      .status(400)
+      .json(
+        createErrorResponse(
+          ErrorCode.VALIDATION_ERROR,
+          "Invalid ships provided",
+        ),
+      )
     return
   }
 
@@ -37,7 +44,7 @@ export const ship_post_import: RequestHandler = async (req, res) => {
     }),
   )
 
-  res.status(200).json({ result: "Success!" })
+  res.status(200).json(createResponse({ result: "Success!" }))
   return
 }
 
@@ -45,7 +52,7 @@ export const ships_get_mine: RequestHandler = async (req, res) => {
   const user = req.user as User
   const ships = await shipDb.getShips({ owner: user.user_id })
 
-  res.json(await Promise.all(ships.map(formatUserShip)))
+  res.json(createResponse(await Promise.all(ships.map(formatUserShip))))
 }
 
 async function formatUserShip(ship: DBShip) {
