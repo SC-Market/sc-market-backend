@@ -16,9 +16,8 @@ import * as orderDb from "./database.js"
 import * as offerDb from "../offers/database.js"
 import * as marketDb from "../market/database.js"
 import { notificationService } from "../../../../services/notifications/notification.service.js"
-import {
-  discordService,
-} from "../../../../services/discord/discord.service.js"
+import { discordService } from "../../../../services/discord/discord.service.js"
+import { chatParticipantService } from "../../../../services/chats/chat-participant.service.js"
 import { User } from "../api-models.js"
 import { sendSystemMessage } from "../chats/helpers.js"
 import { has_permission } from "../util/permissions.js"
@@ -297,6 +296,13 @@ export async function initiateOrder(session: DBOfferSession) {
     await chatDb.insertChat([], order.order_id, session.id)
   }
 
+  // Ensure chat participants are added (customer and assigned user)
+  try {
+    await chatParticipantService.ensureOrderChatParticipants(order)
+  } catch (e) {
+    logger.error(`Failed to ensure order chat participants: ${e}`)
+  }
+
   try {
     await notificationService.createOrderNotification(order)
   } catch (e) {}
@@ -377,6 +383,13 @@ export async function createOffer(
 
   // Create chat first before dispatching notifications
   await chatDb.insertChat([], undefined, session.id)
+
+  // Ensure chat participants are added (customer and assigned user)
+  try {
+    await chatParticipantService.ensureOfferChatParticipants(session)
+  } catch (e) {
+    logger.error(`Failed to ensure offer chat participants: ${e}`)
+  }
 
   // Modifiable
   for (const { quantity, listing } of market_listings) {
@@ -737,6 +750,15 @@ export async function handleAssignedUpdate(req: any, res: any) {
       assigned_id: targetUserObj?.user_id || undefined,
     })
 
+    // Ensure assigned user is added to chat
+    try {
+      await chatParticipantService.ensureOrderChatParticipants(newOrders[0])
+    } catch (e) {
+      logger.error(
+        `Failed to ensure order chat participants after assignment: ${e}`,
+      )
+    }
+
     await notificationService.createOrderAssignedNotification(newOrders[0])
     await discordService.sendOrderAssignedMessage(newOrders[0], targetUserObj)
   } else {
@@ -829,6 +851,16 @@ export async function acceptApplicant(
   )
 
   await orderDb.clearOrderApplications(req.order.order_id)
+
+  // Ensure chat participants are added (customer and assigned user)
+  try {
+    await chatParticipantService.ensureOrderChatParticipants(newOrders[0])
+  } catch (e) {
+    logger.error(
+      `Failed to ensure order chat participants after applicant acceptance: ${e}`,
+    )
+  }
+
   await notificationService.createOrderNotification(newOrders[0])
 
   res.status(201).json(createResponse({ result: "Success" }))

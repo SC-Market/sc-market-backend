@@ -66,11 +66,13 @@ oapi.schema("PushPreference", {
   properties: {
     action: {
       type: "string",
-      description: "Notification action type (e.g., 'order_create', 'order_message')",
+      description:
+        "Notification action type (e.g., 'order_create', 'order_message')",
     },
     enabled: {
       type: "boolean",
-      description: "Whether push notifications are enabled for this action type",
+      description:
+        "Whether push notifications are enabled for this action type",
     },
   },
   required: ["action", "enabled"],
@@ -101,7 +103,8 @@ oapi.schema("PushPreferenceUpdateBody", {
     },
     enabled: {
       type: "boolean",
-      description: "Whether to enable or disable push notifications for this action",
+      description:
+        "Whether to enable or disable push notifications for this action",
     },
   },
   required: ["action", "enabled"],
@@ -185,7 +188,8 @@ export const push_get_subscriptions_spec = oapi.validPath({
                     user_agent: {
                       type: "string",
                       nullable: true,
-                      description: "User agent string when subscription was created",
+                      description:
+                        "User agent string when subscription was created",
                     },
                     created_at: {
                       type: "string",

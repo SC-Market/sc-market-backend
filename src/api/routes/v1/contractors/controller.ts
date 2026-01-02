@@ -300,7 +300,10 @@ export const get_search_query: RequestHandler = async (req, res, next) => {
         .filter(Boolean)
     : undefined
 
-  const contractors = await contractorDb.searchContractors(query, language_codes)
+  const contractors = await contractorDb.searchContractors(
+    query,
+    language_codes,
+  )
 
   res.json(
     createResponse(
@@ -2286,7 +2289,9 @@ export const get_spectrum_id_settings_discord: RequestHandler = async (
 
   let channel
   if (contractor.discord_thread_channel_id) {
-    channel = await discordService.fetchChannel(contractor.discord_thread_channel_id)
+    channel = await discordService.fetchChannel(
+      contractor.discord_thread_channel_id,
+    )
   }
 
   res.json(

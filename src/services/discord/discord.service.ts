@@ -8,10 +8,7 @@ import {
   RESTPostAPIChannelInviteJSONBody,
   Routes,
 } from "discord-api-types/v10"
-import {
-  DBOfferSession,
-  DBOrder,
-} from "../../clients/database/db-models.js"
+import { DBOfferSession, DBOrder } from "../../clients/database/db-models.js"
 import { User } from "../../api/routes/v1/api-models.js"
 import * as profileDb from "../../api/routes/v1/profiles/database.js"
 import * as contractorDb from "../../api/routes/v1/contractors/database.js"
@@ -103,14 +100,11 @@ class RestDiscordService implements DiscordService {
     message: RESTPostAPIChannelMessageJSONBody,
   ): Promise<void> {
     try {
-      const channel: APIChannel = (await this.rest.post(
-        Routes.userChannels(),
-        {
-          body: {
-            recipient_id: userId,
-          },
+      const channel: APIChannel = (await this.rest.post(Routes.userChannels(), {
+        body: {
+          recipient_id: userId,
         },
-      )) as APIChannel
+      })) as APIChannel
 
       await this.rest.post(Routes.channelMessages(channel.id), {
         body: message,
@@ -125,7 +119,9 @@ class RestDiscordService implements DiscordService {
     object: DBOfferSession | DBOrder,
   ): Promise<ThreadCreationResult> {
     const contractor = object.contractor_id
-      ? await contractorDb.getContractor({ contractor_id: object.contractor_id })
+      ? await contractorDb.getContractor({
+          contractor_id: object.contractor_id,
+        })
       : null
     const assigned = object.assigned_id
       ? await profileDb.getUser({ user_id: object.assigned_id })

@@ -123,3 +123,63 @@ export async function getChatByParticipant(
     })
     .select("chats.*")
 }
+
+/**
+ * Add a participant to a chat if they don't already exist.
+ * This function is idempotent - safe to call multiple times.
+ */
+export async function addChatParticipant(
+  chat_id: string,
+  user_id: string,
+): Promise<void> {
+  // Check if participant already exists
+  const existing = await knex()<DBChatParticipant>("chat_participants")
+    .where({
+      chat_id,
+      user_id,
+    })
+    .first()
+
+  if (!existing) {
+    await knex()<DBChatParticipant>("chat_participants").insert({
+      chat_id,
+      user_id,
+    })
+  }
+}
+
+/**
+ * Add multiple participants to a chat.
+ * This function is idempotent - safe to call multiple times.
+ */
+export async function addChatParticipants(
+  chat_id: string,
+  user_ids: string[],
+): Promise<void> {
+  // Filter out null/undefined values
+  const validUserIds = user_ids.filter(
+    (id): id is string => id !== null && id !== undefined,
+  )
+
+  if (validUserIds.length === 0) {
+    return
+  }
+
+  // Get existing participants to avoid duplicates
+  const existing = await knex()<DBChatParticipant>("chat_participants")
+    .where({ chat_id })
+    .whereIn("user_id", validUserIds)
+    .select("user_id")
+
+  const existingUserIds = new Set(existing.map((p) => p.user_id))
+  const newUserIds = validUserIds.filter((id) => !existingUserIds.has(id))
+
+  if (newUserIds.length > 0) {
+    await knex()<DBChatParticipant>("chat_participants").insert(
+      newUserIds.map((user_id) => ({
+        chat_id,
+        user_id,
+      })),
+    )
+  }
+}

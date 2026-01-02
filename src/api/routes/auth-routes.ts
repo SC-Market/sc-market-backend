@@ -207,7 +207,11 @@ export function setupAuthRoutes(app: any, frontendUrl: URL): void {
               user,
               info,
             })
-            logger.error("Citizen ID login: No user returned", { err, user, info })
+            logger.error("Citizen ID login: No user returned", {
+              err,
+              user,
+              info,
+            })
             const redirectTo = new URL("/", frontendUrl)
             redirectTo.searchParams.set(
               "error",
@@ -315,10 +319,11 @@ export function setupAuthRoutes(app: any, frontendUrl: URL): void {
               user,
               info,
             })
-            logger.error(
-              "Citizen ID linking: No user returned",
-              { err, user, info },
-            )
+            logger.error("Citizen ID linking: No user returned", {
+              err,
+              user,
+              info,
+            })
             const redirectTo = new URL("/settings", frontendUrl)
             redirectTo.searchParams.set(
               "error",
@@ -329,7 +334,9 @@ export function setupAuthRoutes(app: any, frontendUrl: URL): void {
 
           req.logIn(user, (loginErr) => {
             if (loginErr) {
-              logger.error("Citizen ID linking login error", { error: loginErr })
+              logger.error("Citizen ID linking login error", {
+                error: loginErr,
+              })
               const redirectTo = new URL("/settings", frontendUrl)
               redirectTo.searchParams.set(
                 "error",
