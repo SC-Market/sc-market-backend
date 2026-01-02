@@ -269,22 +269,82 @@ export const paymentTypes = [
 export async function initiateOrder(session: DBOfferSession) {
   const most_recent = await offerDb.getMostRecentOrderOffer(session.id)
 
-  const [order] = await orderDb.createOrder({
-    kind: most_recent.kind,
-    cost: most_recent.cost,
-    title: most_recent.title,
-    description: most_recent.description,
-    assigned_id: session.assigned_id,
-    customer_id: session.customer_id,
-    contractor_id: session.contractor_id,
-    collateral: most_recent.collateral,
-    service_id: most_recent.service_id,
-    rush: false,
-    payment_type: most_recent.payment_type,
-    thread_id: session.thread_id,
-    offer_session_id: session.id,
+  const market_listings = await marketDb.getOfferMarketListings(most_recent.id)
+
+  // Check stock subtraction timing setting
+  // Default is "on_accepted" (when no setting exists) - subtract stock when offer is accepted
+  const stockSetting = await getRelevantOrderSetting(
+    session,
+    "stock_subtraction_timing",
+  )
+  const settingValue = stockSetting?.message_content
+
+  // Wrap critical database operations in a transaction
+  const { withTransaction } = await import(
+    "../../../../clients/database/transaction.js"
+  )
+
+  const order = await withTransaction(async (trx) => {
+    // Create order
+    const [createdOrder] = await orderDb.createOrder(
+      {
+        kind: most_recent.kind,
+        cost: most_recent.cost,
+        title: most_recent.title,
+        description: most_recent.description,
+        assigned_id: session.assigned_id,
+        customer_id: session.customer_id,
+        contractor_id: session.contractor_id,
+        collateral: most_recent.collateral,
+        service_id: most_recent.service_id,
+        rush: false,
+        payment_type: most_recent.payment_type,
+        thread_id: session.thread_id,
+        offer_session_id: session.id,
+      },
+      trx,
+    )
+
+    // Create market listing orders and handle stock subtraction
+    if (settingValue === "dont_subtract") {
+      // Don't subtract stock at all
+      // Still create the market_listing_order records
+      for (const { quantity, listing_id } of market_listings) {
+        await marketDb.insertMarketListingOrder(
+          {
+            listing_id,
+            order_id: createdOrder.order_id,
+            quantity,
+          },
+          trx,
+        )
+      }
+    } else if (settingValue === "on_received") {
+      // Stock was already subtracted when offer was received (in createOffer)
+      // Just create the market_listing_order records
+      for (const { quantity, listing_id } of market_listings) {
+        await marketDb.insertMarketListingOrder(
+          {
+            listing_id,
+            order_id: createdOrder.order_id,
+            quantity,
+          },
+          trx,
+        )
+      }
+    } else {
+      // Default: "on_accepted" - subtract stock now (offer is being accepted)
+      await subtractStockForMarketListings(
+        market_listings,
+        createdOrder.order_id,
+        trx,
+      )
+    }
+
+    return createdOrder
   })
 
+  // Non-critical operations outside transaction (can fail without breaking order creation)
   try {
     const chat = await chatDb.getChat({ session_id: session.id })
 
@@ -306,41 +366,6 @@ export async function initiateOrder(session: DBOfferSession) {
   try {
     await notificationService.createOrderNotification(order)
   } catch (e) {}
-
-  const market_listings = await marketDb.getOfferMarketListings(most_recent.id)
-
-  // Check stock subtraction timing setting
-  // Default is "on_accepted" (when no setting exists) - subtract stock when offer is accepted
-  const stockSetting = await getRelevantOrderSetting(
-    session,
-    "stock_subtraction_timing",
-  )
-  const settingValue = stockSetting?.message_content
-
-  if (settingValue === "dont_subtract") {
-    // Don't subtract stock at all
-    // Still create the market_listing_order records
-    for (const { quantity, listing_id } of market_listings) {
-      await marketDb.insertMarketListingOrder({
-        listing_id,
-        order_id: order.order_id,
-        quantity,
-      })
-    }
-  } else if (settingValue === "on_received") {
-    // Stock was already subtracted when offer was received (in createOffer)
-    // Just create the market_listing_order records
-    for (const { quantity, listing_id } of market_listings) {
-      await marketDb.insertMarketListingOrder({
-        listing_id,
-        order_id: order.order_id,
-        quantity,
-      })
-    }
-  } else {
-    // Default: "on_accepted" - subtract stock now (offer is being accepted)
-    await subtractStockForMarketListings(market_listings, order.order_id)
-  }
 
   try {
     await discordService.renameThread(
@@ -374,13 +399,87 @@ export async function createOffer(
       | DBMultipleListingCompositeComplete
   }[] = [],
 ) {
-  const [session] = await offerDb.createOrderOfferSession(session_details)
+  // Wrap critical database operations in a transaction
+  const { withTransaction } = await import(
+    "../../../../clients/database/transaction.js"
+  )
 
-  const [offer] = await offerDb.createOrderOffer({
-    ...offer_details,
-    session_id: session.id,
+  const { session, offer } = await withTransaction(async (trx) => {
+    // Create session
+    const [createdSession] = await offerDb.createOrderOfferSession(
+      session_details,
+      trx,
+    )
+
+    // Create offer
+    const [createdOffer] = await offerDb.createOrderOffer(
+      {
+        ...offer_details,
+        session_id: createdSession.id,
+      },
+      trx,
+    )
+
+    // Insert offer market listings
+    for (const { quantity, listing } of market_listings) {
+      await marketDb.insertOfferMarketListing(
+        {
+          listing_id: listing.listing.listing_id,
+          offer_id: createdOffer.id,
+          quantity,
+        },
+        trx,
+      )
+    }
+
+    // Check stock subtraction timing setting
+    // Default is "on_accepted" (when no setting exists)
+    // "on_received" means subtract stock when offer is received (now)
+    const stockSetting = await getRelevantOrderSetting(
+      createdSession,
+      "stock_subtraction_timing",
+    )
+    const settingValue = stockSetting?.message_content
+
+    // Subtract stock if setting is "on_received"
+    if (settingValue === "on_received") {
+      logger.info("Subtracting stock on offer received", {
+        session_id: createdSession.id,
+        listingCount: market_listings.length,
+      })
+
+      for (const { quantity, listing } of market_listings) {
+        const listingData = await marketDb.getMarketListing({
+          listing_id: listing.listing.listing_id,
+        })
+        const oldQuantity = listingData.quantity_available
+        const newQuantity = Math.max(
+          0,
+          listingData.quantity_available - quantity,
+        )
+
+        await marketDb.updateMarketListing(
+          listing.listing.listing_id,
+          {
+            quantity_available: newQuantity,
+          },
+          trx,
+        )
+
+        logger.info("Stock subtracted on offer received", {
+          session_id: createdSession.id,
+          listing_id: listing.listing.listing_id,
+          quantity_subtracted: quantity,
+          old_quantity: oldQuantity,
+          new_quantity: newQuantity,
+        })
+      }
+    }
+
+    return { session: createdSession, offer: createdOffer }
   })
 
+  // Non-critical operations outside transaction (can fail without breaking offer creation)
   // Create chat first before dispatching notifications
   await chatDb.insertChat([], undefined, session.id)
 
@@ -389,52 +488,6 @@ export async function createOffer(
     await chatParticipantService.ensureOfferChatParticipants(session)
   } catch (e) {
     logger.error(`Failed to ensure offer chat participants: ${e}`)
-  }
-
-  // Modifiable
-  for (const { quantity, listing } of market_listings) {
-    await marketDb.insertOfferMarketListing({
-      listing_id: listing.listing.listing_id,
-      offer_id: offer.id,
-      quantity,
-    })
-  }
-
-  // Check stock subtraction timing setting
-  // Default is "on_accepted" (when no setting exists)
-  // "on_received" means subtract stock when offer is received (now)
-  const stockSetting = await getRelevantOrderSetting(
-    session,
-    "stock_subtraction_timing",
-  )
-  const settingValue = stockSetting?.message_content
-
-  if (settingValue === "on_received") {
-    // Subtract stock when offer is received
-    logger.info("Subtracting stock on offer received", {
-      session_id: session.id,
-      listingCount: market_listings.length,
-    })
-
-    for (const { quantity, listing } of market_listings) {
-      const listingData = await marketDb.getMarketListing({
-        listing_id: listing.listing.listing_id,
-      })
-      const oldQuantity = listingData.quantity_available
-      const newQuantity = Math.max(0, listingData.quantity_available - quantity)
-
-      await marketDb.updateMarketListing(listing.listing.listing_id, {
-        quantity_available: newQuantity,
-      })
-
-      logger.info("Stock subtracted on offer received", {
-        session_id: session.id,
-        listing_id: listing.listing.listing_id,
-        quantity_subtracted: quantity,
-        old_quantity: oldQuantity,
-        new_quantity: newQuantity,
-      })
-    }
   }
 
   try {
@@ -1858,6 +1911,7 @@ export async function getRelevantOrderSetting(
 async function subtractStockForMarketListings(
   market_listings: { quantity: number; listing_id: string }[],
   order_id: string,
+  trx?: any,
 ): Promise<void> {
   logger.info("Subtracting stock for market listings", {
     order_id,
@@ -1865,11 +1919,14 @@ async function subtractStockForMarketListings(
   })
 
   for (const { quantity, listing_id } of market_listings) {
-    await marketDb.insertMarketListingOrder({
-      listing_id,
-      order_id,
-      quantity,
-    })
+    await marketDb.insertMarketListingOrder(
+      {
+        listing_id,
+        order_id,
+        quantity,
+      },
+      trx,
+    )
 
     const listing = await marketDb.getMarketListing({ listing_id })
     const oldQuantity = listing.quantity_available
@@ -1878,9 +1935,13 @@ async function subtractStockForMarketListings(
     // This handles race conditions where quantities changed between offer creation and acceptance
     const newQuantity = Math.max(0, listing.quantity_available - quantity)
 
-    await marketDb.updateMarketListing(listing_id, {
-      quantity_available: newQuantity,
-    })
+    await marketDb.updateMarketListing(
+      listing_id,
+      {
+        quantity_available: newQuantity,
+      },
+      trx,
+    )
 
     logger.info("Stock subtracted for listing", {
       order_id,

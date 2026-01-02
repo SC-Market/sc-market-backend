@@ -719,8 +719,10 @@ export async function getAllMinimalUsers(
 export async function incrementUserBalance(
   user_id: string,
   amount: number,
+  trx?: any,
 ): Promise<void> {
-  await knex()("accounts")
+  const query = trx ? trx("accounts") : knex()("accounts")
+  await query
     .where({ user_id: user_id })
     .increment("balance", amount)
 }
@@ -731,8 +733,10 @@ export async function incrementUserBalance(
 export async function decrementUserBalance(
   user_id: string,
   amount: number,
+  trx?: any,
 ): Promise<void> {
-  await knex()("accounts")
+  const query = trx ? trx("accounts") : knex()("accounts")
+  await query
     .where({ user_id: user_id })
     .decrement("balance", amount)
 }

@@ -636,9 +636,12 @@ export async function getOrdersForListingPaginated(params: {
 export async function updateMarketListing(
   listing_id: string,
   data: Partial<DBMarketListing>,
+  trx?: any,
 ): Promise<void> {
-  await knex()<DBMarketListing>("market_listings")
-    .where({ listing_id })
+  const query = trx
+    ? trx("market_listings")
+    : knex()<DBMarketListing>("market_listings")
+  await query.where({ listing_id })
     .update(data)
 }
 
@@ -1019,7 +1022,11 @@ export async function removeMarketBids(where: any): Promise<DBMarketBid[]> {
  */
 export async function insertMarketListingOrder(
   data: Partial<DBMarketOrder>,
+  trx?: any,
 ): Promise<DBMarketOrder[]> {
+  if (trx) {
+    return trx("market_orders").insert(data).returning("*")
+  }
   return knex()<DBMarketOrder>("market_orders").insert(data).returning("*")
 }
 
@@ -1250,7 +1257,11 @@ export async function insertMarketListingPhoto(
  */
 export async function insertOfferMarketListing(
   data: Partial<DBOfferMarketListing> | Partial<DBOfferMarketListing>[],
+  trx?: any,
 ): Promise<DBOfferMarketListing[]> {
+  if (trx) {
+    return trx("offer_market_items").insert(data).returning("*")
+  }
   return knex()<DBOfferMarketListing>("offer_market_items")
     .insert(data)
     .returning("*")

@@ -62,6 +62,13 @@ export async function getContractorTransactions(
 /**
  * Create a new transaction.
  */
-export async function createTransaction(data: any): Promise<void> {
-  await knex()<DBTransaction>("transactions").insert(data)
+export async function createTransaction(
+  data: any,
+  trx?: any,
+): Promise<void> {
+  if (trx) {
+    await trx("transactions").insert(data)
+  } else {
+    await knex()<DBTransaction>("transactions").insert(data)
+  }
 }
