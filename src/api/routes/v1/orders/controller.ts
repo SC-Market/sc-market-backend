@@ -4,7 +4,13 @@ import * as profileDb from "../profiles/database.js"
 import * as contractorDb from "../contractors/database.js"
 import * as orderDb from "./database.js"
 import * as orderHelpers from "./helpers.js"
-import { createErrorResponse, createResponse } from "../util/response.js"
+import {
+  createErrorResponse,
+  createResponse,
+  createNotFoundErrorResponse,
+  createForbiddenErrorResponse,
+} from "../util/response.js"
+import { ErrorCode } from "../util/error-codes.js"
 import { User } from "../api-models.js"
 import {
   acceptApplicant,
@@ -286,16 +292,17 @@ export const post_root: RequestHandler = async (req, res, next) => {
       spectrum_id: contractor,
     })
     if (!contractor_obj) {
-      res
-        .status(400)
-        .json(createErrorResponse({ message: "Invalid contractor" }))
+      res.status(400).json(
+        createErrorResponse(ErrorCode.VALIDATION_ERROR, "Invalid contractor")
+      )
       return
     }
     if (contractor_obj.archived) {
       res.status(409).json(
-        createErrorResponse({
-          message: "Cannot create orders for an archived contractor",
-        }),
+        createErrorResponse(
+          ErrorCode.CONFLICT,
+          "Cannot create orders for an archived contractor"
+        )
       )
       return
     }
@@ -308,7 +315,9 @@ export const post_root: RequestHandler = async (req, res, next) => {
   if (assigned_to) {
     assigned_user = await profileDb.getUser({ username: assigned_to })
     if (!assigned_user) {
-      res.status(400).json(createErrorResponse({ message: "Invalid assignee" }))
+      res.status(400).json(
+        createErrorResponse(ErrorCode.VALIDATION_ERROR, "Invalid assignee")
+      )
       return
     }
 
@@ -318,9 +327,9 @@ export const post_root: RequestHandler = async (req, res, next) => {
         contractor_id,
       )
       if (!role) {
-        res
-          .status(400)
-          .json(createErrorResponse({ message: "Invalid assignee" }))
+        res.status(400).json(
+          createErrorResponse(ErrorCode.VALIDATION_ERROR, "Invalid assignee")
+        )
         return
       }
     }
@@ -337,10 +346,9 @@ export const post_root: RequestHandler = async (req, res, next) => {
   )
   if (isBlocked) {
     res.status(403).json(
-      createErrorResponse({
-        message:
-          "You are blocked from creating orders with this contractor or user",
-      }),
+      createForbiddenErrorResponse(
+        "You are blocked from creating orders with this contractor or user"
+      )
     )
     return
   }

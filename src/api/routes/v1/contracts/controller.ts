@@ -6,7 +6,12 @@ import * as offerDb from "../offers/database.js"
 import * as profileDb from "../profiles/database.js"
 import * as contractorDb from "../contractors/database.js"
 import { User as User } from "../api-models.js"
-import { createErrorResponse as createErrorResponse } from "../util/response.js"
+import {
+  createErrorResponse,
+  createForbiddenErrorResponse,
+  createConflictErrorResponse,
+} from "../util/response.js"
+import { ErrorCode } from "../util/error-codes.js"
 import { createResponse as createResponse } from "../util/response.js"
 import { DBPublicContract as DBPublicContract } from "./types.js"
 import { has_permission as has_permission } from "../util/permissions.js"
@@ -40,9 +45,10 @@ export const contracts_post_contract_id_offers: RequestHandler = async (
 
   if (req.contract!.customer_id === user.user_id && !req.body.contractor) {
     res.status(400).json(
-      createErrorResponse({
-        message: "You cannot create an offer on your own contract",
-      }),
+      createErrorResponse(
+        ErrorCode.VALIDATION_ERROR,
+        "You cannot create an offer on your own contract"
+      )
     )
     return
   }
@@ -56,14 +62,16 @@ export const contracts_post_contract_id_offers: RequestHandler = async (
     } catch {
       res
         .status(400)
-        .json(createErrorResponse({ message: "Invalid contractor" }))
+        .json(
+          createErrorResponse(ErrorCode.VALIDATION_ERROR, "Invalid contractor")
+        )
       return
     }
     if (contractor.archived) {
       res.status(409).json(
-        createErrorResponse({
-          message: "Cannot create offers for an archived contractor",
-        }),
+        createConflictErrorResponse(
+          "Cannot create offers for an archived contractor"
+        )
       )
       return
     }
@@ -75,10 +83,9 @@ export const contracts_post_contract_id_offers: RequestHandler = async (
       ))
     ) {
       res.status(403).json(
-        createErrorResponse({
-          message:
-            "You do not have permission to make offers on behalf of this contractor",
-        }),
+        createForbiddenErrorResponse(
+          "You do not have permission to make offers on behalf of this contractor"
+        )
       )
       return
     }
@@ -93,10 +100,9 @@ export const contracts_post_contract_id_offers: RequestHandler = async (
   )
   if (isBlocked) {
     res.status(403).json(
-      createErrorResponse({
-        message:
-          "You are blocked from creating offers with this contractor or user",
-      }),
+      createForbiddenErrorResponse(
+        "You are blocked from creating offers with this contractor or user"
+      )
     )
     return
   }
@@ -116,13 +122,12 @@ export const contracts_post_contract_id_offers: RequestHandler = async (
     )
   } catch (error) {
     res.status(400).json(
-      createErrorResponse({
-        message:
-          error instanceof Error
-            ? error.message
-            : "Order does not meet size or value requirements",
-        code: "ORDER_LIMIT_VIOLATION",
-      }),
+      createErrorResponse(
+        ErrorCode.VALIDATION_ERROR,
+        error instanceof Error
+          ? error.message
+          : "Order does not meet size or value requirements"
+      )
     )
     return
   }
