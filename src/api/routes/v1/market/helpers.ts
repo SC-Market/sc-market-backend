@@ -1,6 +1,10 @@
 import AsyncLock from "async-lock"
 import { NextFunction, Request, Response } from "express"
-import { createErrorResponse } from "../util/response.js"
+import {
+  createErrorResponse,
+  createForbiddenErrorResponse,
+} from "../util/response.js"
+import { ErrorCode } from "../util/error-codes.js"
 import { User } from "../api-models.js"
 import {
   DBAggregateListingComplete,
@@ -84,29 +88,39 @@ export async function verify_listings(
     try {
       listing = await marketDb.getMarketListingComplete(listing_id)
     } catch {
-      res.status(400).json(createErrorResponse({ message: "Invalid listing" }))
+      res.status(400).json(
+        createErrorResponse(ErrorCode.VALIDATION_ERROR, "Invalid listing")
+      )
       return
     }
 
     if (!listing) {
-      res.status(400).json(createErrorResponse({ message: "Invalid listing" }))
+      res.status(400).json(
+        createErrorResponse(ErrorCode.VALIDATION_ERROR, "Invalid listing")
+      )
       return
     }
 
     if (listing.listing.status !== "active") {
-      res.status(404).json(createErrorResponse({ message: "Invalid listing" }))
+      res.status(404).json(
+        createErrorResponse(ErrorCode.NOT_FOUND, "Invalid listing")
+      )
       return
     }
 
     if (listing.listing.quantity_available < quantity || quantity < 1) {
-      res.status(400).json(createErrorResponse({ message: "Invalid quantity" }))
+      res.status(400).json(
+        createErrorResponse(ErrorCode.VALIDATION_ERROR, "Invalid quantity")
+      )
       return
     }
 
     if (listing.listing.user_seller_id === user.user_id) {
       res
         .status(400)
-        .json(createErrorResponse({ message: "You cannot buy your own item!" }))
+        .json(
+          createErrorResponse(ErrorCode.VALIDATION_ERROR, "You cannot buy your own item!")
+        )
       return
     }
 
@@ -127,9 +141,10 @@ export async function verify_listings(
 
       if (contractor && contractor.archived) {
         res.status(409).json(
-          createErrorResponse({
-            message: "Cannot purchase from an archived organization",
-          }),
+          createErrorResponse(
+            ErrorCode.CONFLICT,
+            "Cannot purchase from an archived organization"
+          ),
         )
         return
       }
@@ -309,28 +324,35 @@ export async function handle_quantity_update(
           "manage_market",
         ))
       ) {
-        res.status(403).json({
-          error:
-            "You are not authorized to update listings on behalf of this contractor!",
-        })
+        res.status(403).json(
+          createForbiddenErrorResponse(
+            "You are not authorized to update listings on behalf of this contractor!"
+          )
+        )
         return
       }
     } else {
       if (listing.user_seller_id !== user.user_id) {
         return res
           .status(403)
-          .json({ error: "You are not authorized to update this listing!" })
+          .json(
+            createForbiddenErrorResponse("You are not authorized to update this listing!")
+          )
       }
     }
   }
 
   if (listing.status === "archived") {
-    res.status(400).json({ error: "Cannot update archived listing" })
+    res.status(400).json(
+      createErrorResponse(ErrorCode.VALIDATION_ERROR, "Cannot update archived listing")
+    )
     return
   }
 
   if (quantity_available === undefined) {
-    res.status(400).json({ error: "Missing required fields" })
+    res.status(400).json(
+      createErrorResponse(ErrorCode.VALIDATION_ERROR, "Missing required fields")
+    )
     return
   }
 
