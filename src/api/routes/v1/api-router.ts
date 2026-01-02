@@ -66,3 +66,7 @@ import { createResponse } from "./util/response.js"
 apiRouter.get("/languages", (req, res) => {
   res.json(createResponse({ languages: SUPPORTED_LANGUAGES }))
 })
+
+// CSP reporting endpoint (optional - for monitoring CSP violations)
+import { cspReportHandler } from "./util/csp-report.js"
+apiRouter.post("/csp-report", cspReportHandler)
