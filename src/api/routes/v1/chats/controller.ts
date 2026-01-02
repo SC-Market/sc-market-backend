@@ -207,10 +207,15 @@ export async function getChatById(
       if (session) {
         // Get title from most recent offer
         try {
-          const mostRecentOffer = await offerDb.getMostRecentOrderOffer(session.id)
+          const mostRecentOffer = await offerDb.getMostRecentOrderOffer(
+            session.id,
+          )
           chatTitle = mostRecentOffer.title
         } catch (error) {
-          logger.debug(`Failed to get most recent offer for session ${session.id}`, error)
+          logger.debug(
+            `Failed to get most recent offer for session ${session.id}`,
+            error,
+          )
         }
         if (session.contractor_id) {
           const contractor = await contractorDb.getMinimalContractor({
@@ -308,10 +313,15 @@ export async function getChats(
           if (session) {
             // Get title from most recent offer
             try {
-              const mostRecentOffer = await offerDb.getMostRecentOrderOffer(session.id)
+              const mostRecentOffer = await offerDb.getMostRecentOrderOffer(
+                session.id,
+              )
               chatTitle = mostRecentOffer.title
             } catch (error) {
-              logger.debug(`Failed to get most recent offer for session ${session.id}`, error)
+              logger.debug(
+                `Failed to get most recent offer for session ${session.id}`,
+                error,
+              )
             }
             if (session.contractor_id) {
               const contractor = await contractorDb.getMinimalContractor({
