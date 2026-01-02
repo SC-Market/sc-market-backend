@@ -24,6 +24,7 @@ import { has_permission } from "../util/permissions.js"
 import { createErrorResponse, createResponse } from "../util/response.js"
 import logger from "../../../../logger/logger.js"
 import { Request } from "express"
+import { withTransaction } from "../../../../clients/database/transaction.js"
 import {
   OrderSearchQuery,
   OrderSearchQueryArguments,
@@ -280,10 +281,6 @@ export async function initiateOrder(session: DBOfferSession) {
   const settingValue = stockSetting?.message_content
 
   // Wrap critical database operations in a transaction
-  const { withTransaction } = await import(
-    "../../../../clients/database/transaction.js"
-  )
-
   const order = await withTransaction(async (trx) => {
     // Create order
     const [createdOrder] = await orderDb.createOrder(
@@ -400,10 +397,6 @@ export async function createOffer(
   }[] = [],
 ) {
   // Wrap critical database operations in a transaction
-  const { withTransaction } = await import(
-    "../../../../clients/database/transaction.js"
-  )
-
   const { session, offer } = await withTransaction(async (trx) => {
     // Create session
     const [createdSession] = await offerDb.createOrderOfferSession(
