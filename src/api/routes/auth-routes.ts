@@ -11,6 +11,7 @@ import {
 import {
   mapErrorCodeToFrontend,
   CitizenIDErrorCodes,
+  AuthErrorCodes,
 } from "../util/auth-helpers.js"
 import logger from "../../logger/logger.js"
 
@@ -22,19 +23,26 @@ export function setupAuthRoutes(app: any, frontendUrl: URL): void {
   app.get(
     "/auth/discord",
     async (req: Request, res: Response, next: NextFunction) => {
-      const query = req.query as { path?: string }
+      const query = req.query as { path?: string; action?: string }
       const path = query.path || ""
+      const action = query.action === "signup" ? "signup" : "signin"
 
       // Validate the redirect path
       if (!validateRedirectPath(path)) {
         return res.status(400).json({ error: "Invalid redirect path" })
       }
 
+      // Store action in session for use in strategy callback
+      if (!req.session) {
+        return res.status(500).json({ error: "Session not available" })
+      }
+      ;(req.session as any).discord_auth_action = action
+
       // Create a signed state token that includes both CSRF protection and the redirect path
       const sessionSecret = env.SESSION_SECRET || "set this var"
       let signedStateToken: string
       try {
-        signedStateToken = createSignedStateToken(path, sessionSecret)
+        signedStateToken = createSignedStateToken(path, sessionSecret, action)
       } catch (error) {
         return res.status(400).json({ error: "Failed to create state token" })
       }
@@ -52,7 +60,7 @@ export function setupAuthRoutes(app: any, frontendUrl: URL): void {
       const query = req.query as { state?: string }
       const receivedState = query.state
 
-      // Verify the signed state token and extract the redirect path
+      // Verify the signed state token and extract the redirect path and action
       const sessionSecret = env.SESSION_SECRET || "set this var"
       const verified = verifySignedStateToken(
         receivedState || "",
@@ -65,14 +73,68 @@ export function setupAuthRoutes(app: any, frontendUrl: URL): void {
         return res.redirect(frontendUrl.toString())
       }
 
-      const { path: redirectPath } = verified
+      const { path: redirectPath, action } = verified
+
+      // Ensure action is stored in session (should already be there, but ensure it)
+      if (req.session) {
+        ;(req.session as any).discord_auth_action = action
+      }
 
       // State is valid, proceed with authentication
-      return passport.authenticate("discord", {
-        failureRedirect: frontendUrl.toString(),
-        successRedirect: new URL(redirectPath, frontendUrl).toString(),
-        session: true,
-      })(req, res, next)
+      return passport.authenticate(
+        "discord",
+        {
+          session: true,
+          failWithError: true,
+        },
+        (err: any, user: User | false, info: any) => {
+          if (err) {
+            logger.error("[Discord callback] Error", {
+              error: err,
+              errorMessage: err?.message,
+              errorCode: err?.code,
+              hasUser: !!user,
+              info,
+            })
+            const errorCode = mapErrorCodeToFrontend(err.code)
+
+            // Build redirect URL with error
+            const redirectTo = new URL("/", frontendUrl)
+            redirectTo.searchParams.set("error", errorCode)
+            if (err.message && err.message !== errorCode) {
+              redirectTo.searchParams.set("error_description", err.message)
+            }
+            return res.redirect(redirectTo.toString())
+          }
+
+          if (!user) {
+            logger.error("[Discord callback] No user returned", {
+              hasErr: !!err,
+              err,
+              user,
+              info,
+            })
+            const redirectTo = new URL("/", frontendUrl)
+            redirectTo.searchParams.set("error", AuthErrorCodes.ACCOUNT_NOT_FOUND)
+            return res.redirect(redirectTo.toString())
+          }
+
+          req.logIn(user, (loginErr) => {
+            if (loginErr) {
+              logger.error("Discord login error", { error: loginErr })
+              const redirectTo = new URL("/", frontendUrl)
+              redirectTo.searchParams.set("error", AuthErrorCodes.ACCOUNT_NOT_FOUND)
+              return res.redirect(redirectTo.toString())
+            }
+
+            const successRedirect = new URL(
+              redirectPath,
+              frontendUrl,
+            ).toString()
+            return res.redirect(successRedirect)
+          })
+        },
+      )(req, res, next)
     },
   )
 
@@ -80,19 +142,21 @@ export function setupAuthRoutes(app: any, frontendUrl: URL): void {
   app.get(
     "/auth/citizenid",
     async (req: Request, res: Response, next: NextFunction) => {
-      const query = req.query as { path?: string }
+      const query = req.query as { path?: string; action?: string }
       const path = query.path || "/market"
+      const action = query.action === "signup" ? "signup" : "signin"
 
       // Validate the redirect path
       if (!validateRedirectPath(path)) {
         return res.status(400).json({ error: "Invalid redirect path" })
       }
 
-      // Store the redirect path in session for later retrieval
+      // Store the redirect path and action in session for later retrieval
       if (!req.session) {
         return res.status(500).json({ error: "Session not available" })
       }
       ;(req.session as any).citizenid_redirect_path = path
+      ;(req.session as any).citizenid_auth_action = action
 
       return passport.authenticate("citizenid", {
         session: true,
@@ -177,6 +241,19 @@ export function setupAuthRoutes(app: any, frontendUrl: URL): void {
               const discordLoginUrl = new URL("/auth/discord", backendUrl)
               discordLoginUrl.searchParams.set("path", "/settings")
               return res.redirect(discordLoginUrl.toString())
+            }
+
+            // Handle new error codes
+            if (
+              errorCode === AuthErrorCodes.ACCOUNT_NOT_FOUND ||
+              errorCode === AuthErrorCodes.ACCOUNT_ALREADY_EXISTS
+            ) {
+              const redirectTo = new URL("/", frontendUrl)
+              redirectTo.searchParams.set("error", errorCode)
+              if (err.message && err.message !== errorCode) {
+                redirectTo.searchParams.set("error_description", err.message)
+              }
+              return res.redirect(redirectTo.toString())
             }
 
             const redirectTo = new URL("/", frontendUrl)
@@ -353,9 +430,14 @@ export function setupAuthRoutes(app: any, frontendUrl: URL): void {
   )
 
   // Logout route
+  // Note: This route works for all authenticated users regardless of verification status
+  // No authentication or verification middleware is applied - logout should always be accessible
   app.get("/logout", function (req: Request, res: Response) {
+    // Logout destroys the session - works for both verified and unverified users
     req.logout({ keepSessionInfo: false }, (err) => {
-      logger.error("Error in auth route", { error: err })
+      if (err) {
+        logger.error("Error in logout route", { error: err })
+      }
     })
     res.redirect(frontendUrl.toString() || "/")
   })

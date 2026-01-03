@@ -30,6 +30,15 @@ export const CitizenIDErrorCodes = {
 } as const
 
 /**
+ * General authentication error codes
+ * Used for both Discord and Citizen ID
+ */
+export const AuthErrorCodes = {
+  ACCOUNT_NOT_FOUND: "account_not_found", // User tried to sign in but account doesn't exist
+  ACCOUNT_ALREADY_EXISTS: "account_already_exists", // User tried to sign up but account already exists
+} as const
+
+/**
  * Map internal error codes to frontend error codes
  */
 export function mapErrorCodeToFrontend(code: string | undefined): string {
@@ -49,6 +58,12 @@ export function mapErrorCodeToFrontend(code: string | undefined): string {
   if (code === CitizenIDErrorCodes.LOGIN_FAILED)
     return CitizenIDErrorCodes.LOGIN_FAILED
 
+  // General auth error codes
+  if (code === AuthErrorCodes.ACCOUNT_NOT_FOUND)
+    return AuthErrorCodes.ACCOUNT_NOT_FOUND
+  if (code === AuthErrorCodes.ACCOUNT_ALREADY_EXISTS)
+    return AuthErrorCodes.ACCOUNT_ALREADY_EXISTS
+
   // Legacy code mappings
   if (code === "account_not_verified")
     return CitizenIDErrorCodes.ACCOUNT_NOT_VERIFIED
@@ -57,6 +72,9 @@ export function mapErrorCodeToFrontend(code: string | undefined): string {
   if (code === "already_linked") return CitizenIDErrorCodes.ALREADY_LINKED
   if (code === "auth_failed") return CitizenIDErrorCodes.AUTH_FAILED
   if (code === "login_failed") return CitizenIDErrorCodes.LOGIN_FAILED
+  if (code === "account_not_found") return AuthErrorCodes.ACCOUNT_NOT_FOUND
+  if (code === "account_already_exists")
+    return AuthErrorCodes.ACCOUNT_ALREADY_EXISTS
 
   // OAuth provider error mappings
   if (
