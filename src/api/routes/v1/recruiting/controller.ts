@@ -32,17 +32,21 @@ export interface RecruitingSearchQuery {
 }
 
 // Utility functions and constants
-export const sortingMethods = [
+// Base sorting methods (without -reverse suffix)
+const baseSortingMethods = [
   "rating",
   "name",
   "activity",
   "all-time",
   "members",
-  "rating-reverse",
-  "name-reverse",
-  "activity-reverse",
-  "all-time-reverse",
-  "members-reverse",
+  "date",
+  "post-date",
+]
+
+// All valid sorting methods including reverse variants (for OpenAPI enum)
+export const sortingMethods = [
+  ...baseSortingMethods,
+  ...baseSortingMethods.map((method) => `${method}-reverse`),
 ]
 
 export function convertQuery(query: {
@@ -61,7 +65,8 @@ export function convertQuery(query: {
     sorting = sorting.slice(0, sorting.length - "-reverse".length)
   }
 
-  if (sortingMethods.indexOf(sorting) === -1) {
+  // Validate against base sorting methods (without -reverse)
+  if (baseSortingMethods.indexOf(sorting) === -1) {
     sorting = "name"
   }
 
