@@ -748,9 +748,18 @@ export async function handleStatusUpdate(req: any, res: any, status: string) {
     await discordService.sendOrderStatusUpdate(order, status)
     await sendStatusUpdateMessage(order, status)
 
-    res.status(200).json(createResponse({ result: "Success" }))
+    // Don't send response here - let the controller handle it
+    // This allows multiple operations to be performed in one request
   } catch (e) {
     logger.error(`Failed to update order status: ${e}`)
+    // Only send error response if headers haven't been sent yet
+    // (in case this is the only operation)
+    if (!res.headersSent) {
+      res.status(500).json(
+        createErrorResponse(ErrorCode.INTERNAL_SERVER_ERROR, "Failed to update order status"),
+      )
+    }
+    throw e // Re-throw so controller knows it failed
   }
 }
 
@@ -831,7 +840,8 @@ export async function handleAssignedUpdate(req: any, res: any) {
       assigned_id: null,
     })
   }
-  res.status(200).json(createResponse({ result: "Success" }))
+  // Don't send response here - let the controller handle it
+  // This allows multiple operations to be performed in one request
 }
 
 export async function acceptApplicant(
