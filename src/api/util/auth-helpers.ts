@@ -35,7 +35,7 @@ export const CitizenIDErrorCodes = {
  */
 export const AuthErrorCodes = {
   ACCOUNT_NOT_FOUND: "account_not_found", // User tried to sign in but account doesn't exist
-  ACCOUNT_ALREADY_EXISTS: "account_already_exists", // User tried to sign up but account already exists
+  ACCOUNT_ALREADY_EXISTS: "account_already_exists", // Legacy: No longer used (sign up now signs in if account exists)
 } as const
 
 /**

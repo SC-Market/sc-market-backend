@@ -109,7 +109,7 @@ export function createDiscordStrategy(backendUrl: URL): Strategy {
         if (!user) {
           // User doesn't exist
           if (action === "signin") {
-            // Sign in requested but account doesn't exist
+            // Sign in requested but account doesn't exist - error
             const error = new Error(
               "No account found with this Discord account. Please sign up first.",
             ) as Error & { code?: string }
@@ -150,17 +150,8 @@ export function createDiscordStrategy(backendUrl: URL): Strategy {
           // Refresh user to get updated discord_id
           user = await profileDb.getUser({ user_id: user.user_id })
         } else {
-          // User exists
-          if (action === "signup") {
-            // Sign up requested but account already exists
-            const error = new Error(
-              "An account with this Discord account already exists. Please sign in instead.",
-            ) as Error & { code?: string }
-            error.code = AuthErrorCodes.ACCOUNT_ALREADY_EXISTS
-            return cb(error)
-          }
-
-          // Sign in - update tokens for existing user
+          // User exists - update tokens and sign in (works for both signup and signin)
+          // Sign up with existing account just signs them in
           // Discord tokens typically expire in 7 days
           const discordExpiresAt = new Date(
             Date.now() + 7 * 24 * 60 * 60 * 1000,
@@ -550,17 +541,8 @@ export function createCitizenIDVerifyCallback(
           }
         }
       } else {
-        // User exists
-        if (action === "signup") {
-          // Sign up requested but account already exists
-          const error = new Error(
-            "An account with this Citizen ID already exists. Please sign in instead.",
-          ) as Error & { code?: string }
-          error.code = AuthErrorCodes.ACCOUNT_ALREADY_EXISTS
-          return done(error, undefined)
-        }
-
-        // Sign in - update tokens for existing user
+        // User exists - update tokens and sign in (works for both signup and signin)
+        // Sign up with existing account just signs them in
         // Token expiration will be updated on next refresh
         await profileDb.updateProviderTokens(user.user_id, "citizenid", {
           access_token: accessToken,
