@@ -10,7 +10,7 @@
  */
 
 import { Request, Response, NextFunction } from "express"
-import { createErrorResponse } from "../routes/v1/util/response.js"
+import { createErrorResponse, ValidationError as ValidationErrorType } from "../routes/v1/util/response.js"
 import { ErrorCode } from "../routes/v1/util/error-codes.js"
 import {
   ValidationError,
@@ -19,6 +19,82 @@ import {
 } from "../routes/v1/util/errors.js"
 import { applyCorsHeaders } from "./cors-helper.js"
 import logger from "../../logger/logger.js"
+
+/**
+ * AJV validation error structure
+ */
+interface AjvValidationError {
+  instancePath: string
+  schemaPath: string
+  keyword: string
+  params: Record<string, any>
+  message: string
+}
+
+/**
+ * Convert AJV validation errors to frontend-friendly format
+ */
+function convertAjvErrorsToValidationErrors(
+  ajvErrors: AjvValidationError[] | undefined,
+): ValidationErrorType[] {
+  if (!ajvErrors || !Array.isArray(ajvErrors)) {
+    return []
+  }
+
+  return ajvErrors.map((ajvError) => {
+    // Extract field name from instancePath
+    // instancePath format: "/query/index" or "/params/post_id" or "/body/title"
+    // We want to extract the field name in a user-friendly way
+    const pathParts = ajvError.instancePath.split("/").filter(Boolean)
+    
+    if (pathParts.length === 0) {
+      // Root level error (e.g., missing required property at root)
+      const missingProperty = ajvError.params?.missingProperty
+      return {
+        field: missingProperty || "request",
+        message: ajvError.message,
+        code: ajvError.keyword,
+      }
+    }
+
+    const location = pathParts[0] // query, params, body, headers
+    const fieldPath = pathParts.slice(1)
+    
+    // For query/params, use just the parameter name
+    // For body, use the full path if nested
+    let field: string
+    if (location === "query" || location === "params") {
+      field = fieldPath[0] || location
+    } else if (location === "body") {
+      field = fieldPath.length > 0 ? fieldPath.join(".") : "body"
+    } else {
+      field = fieldPath.length > 0 ? `${location}.${fieldPath.join(".")}` : location
+    }
+
+    // Enhance message with field context and additional details
+    let message = ajvError.message
+    
+    // Add field context first if not already present
+    if (!message.toLowerCase().includes(field.toLowerCase())) {
+      message = `${field}: ${message}`
+    }
+    
+    // For enum errors, include the allowed values after the field context
+    if (ajvError.keyword === "enum" && ajvError.params?.allowedValues) {
+      const allowedValues = ajvError.params.allowedValues as any[]
+      const valuesList = allowedValues.length <= 10
+        ? allowedValues.map((v: any) => `"${v}"`).join(", ")
+        : `${allowedValues.slice(0, 10).map((v: any) => `"${v}"`).join(", ")}, ... (${allowedValues.length} total)`
+      message = `${message}. Allowed values: ${valuesList}`
+    }
+
+    return {
+      field,
+      message,
+      code: ajvError.keyword,
+    }
+  })
+}
 
 /**
  * Get HTTP status code for error code
@@ -81,17 +157,39 @@ export function errorHandler(
 
   // Handle OpenAPI validation errors
   // These come from @wesleytodd/openapi validation middleware
+  // The validation errors are attached to the error object as err.validationErrors
+  // Note: http-errors may wrap the original error, so we check both the error and its cause
   if (
     err.message === "Request validation failed" ||
     err.message?.includes("Request validation failed")
   ) {
+    // Extract AJV validation errors from the error object
+    // @ts-ignore - validationErrors is attached by the OpenAPI middleware
+    let ajvErrors = (err as any).validationErrors as
+      | AjvValidationError[]
+      | undefined
+
+    // If not found, check the cause (http-errors may wrap the original error)
+    if (!ajvErrors && (err as any).cause) {
+      // @ts-ignore
+      ajvErrors = (err as any).cause?.validationErrors as
+        | AjvValidationError[]
+        | undefined
+    }
+
+    // Convert AJV errors to frontend-friendly format
+    const validationErrors = convertAjvErrorsToValidationErrors(ajvErrors)
+
     return res
       .status(400)
       .json(
         createErrorResponse(
           ErrorCode.VALIDATION_ERROR,
-          "Request validation failed",
-          { originalError: err.message },
+          validationErrors.length > 0
+            ? `Request validation failed: ${validationErrors.map((e) => e.message).join("; ")}`
+            : "Request validation failed",
+          undefined,
+          validationErrors,
         ),
       )
   }
