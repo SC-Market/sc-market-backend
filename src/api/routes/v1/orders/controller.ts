@@ -126,12 +126,37 @@ export const update_order: RequestHandler = async (req, res) => {
     applied?: boolean
   } = req.body
 
-  if (status) {
-    await handleStatusUpdate(req, res, status)
-  }
+  try {
+    // Execute operations (they may send error responses, but not success responses)
+    if (status) {
+      await handleStatusUpdate(req, res, status)
+      // If an error response was sent, return early
+      if (res.headersSent) {
+        return
+      }
+    }
 
-  if (assigned_to !== undefined || contractor !== undefined) {
-    await handleAssignedUpdate(req, res)
+    if (assigned_to !== undefined || contractor !== undefined) {
+      await handleAssignedUpdate(req, res)
+      // If an error response was sent, return early
+      if (res.headersSent) {
+        return
+      }
+    }
+
+    // Send a single success response for all operations
+    // (only if no error responses were sent)
+    if (!res.headersSent) {
+      res.status(200).json(createResponse({ result: "Success" }))
+    }
+  } catch (e) {
+    logger.error(`Failed to update order: ${e}`)
+    // Only send error if no response has been sent yet
+    if (!res.headersSent) {
+      res.status(500).json(
+        createErrorResponse(ErrorCode.INTERNAL_SERVER_ERROR, "Failed to update order"),
+      )
+    }
   }
 }
 
