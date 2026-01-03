@@ -30,20 +30,32 @@ export function validateRedirectPath(path: string): boolean {
 }
 
 /**
- * Creates a signed state token that includes both CSRF protection and redirect path
- * Format: base64(csrfToken:path):signature
+ * Creates a signed state token that includes CSRF protection, redirect path, and action
+ * Format: base64(csrfToken:path:action):signature
+ * @param path - Redirect path after authentication
+ * @param secret - Secret key for signing
+ * @param action - Optional action: "signup" or "signin" (defaults to "signin")
  */
-export function createSignedStateToken(path: string, secret: string): string {
+export function createSignedStateToken(
+  path: string,
+  secret: string,
+  action: "signup" | "signin" = "signin",
+): string {
   // Validate the path is safe
   if (!validateRedirectPath(path)) {
     throw new Error("Invalid redirect path")
   }
 
+  // Validate action
+  if (action !== "signup" && action !== "signin") {
+    throw new Error("Invalid action, must be 'signup' or 'signin'")
+  }
+
   // Generate a cryptographically random CSRF token
   const csrfToken = randomBytes(32).toString("hex")
 
-  // Create the payload: csrfToken:path
-  const payload = `${csrfToken}:${path}`
+  // Create the payload: csrfToken:path:action
+  const payload = `${csrfToken}:${path}:${action}`
 
   // Create HMAC signature
   const hmac = createHmac("sha256", secret)
@@ -56,13 +68,14 @@ export function createSignedStateToken(path: string, secret: string): string {
 }
 
 /**
- * Verifies and extracts the redirect path from a signed state token
- * Returns the path if valid, null if invalid
+ * Verifies and extracts the redirect path and action from a signed state token
+ * Returns the path and action if valid, null if invalid
+ * Supports both old format (without action) and new format (with action)
  */
 export function verifySignedStateToken(
   signedToken: string,
   secret: string,
-): { csrfToken: string; path: string } | null {
+): { csrfToken: string; path: string; action: "signup" | "signin" } | null {
   if (!signedToken) {
     return null
   }
@@ -95,18 +108,22 @@ export function verifySignedStateToken(
     return null
   }
 
-  // Extract csrfToken and path from payload
+  // Extract csrfToken, path, and optionally action from payload
   const payloadParts = payload.split(":")
-  if (payloadParts.length !== 2) {
+  if (payloadParts.length < 2 || payloadParts.length > 3) {
     return null
   }
 
-  const [csrfToken, path] = payloadParts
+  const [csrfToken, path, action] = payloadParts
 
   // Validate the extracted path is still safe
   if (!validateRedirectPath(path)) {
     return null
   }
 
-  return { csrfToken, path }
+  // Default to "signin" for backward compatibility (old tokens without action)
+  const validatedAction: "signup" | "signin" =
+    action === "signup" || action === "signin" ? action : "signin"
+
+  return { csrfToken, path, action: validatedAction }
 }
