@@ -21,6 +21,7 @@ import * as adminDb from "../../api/routes/v1/admin/database.js"
 import logger from "../../logger/logger.js"
 import { has_permission } from "../../api/routes/v1/util/permissions.js"
 import { pushNotificationService } from "../push-notifications/push-notification.service.js"
+import { webhookService } from "../webhooks/webhook.service.js"
 import * as payloadFormatters from "./notification-payload-formatters.js"
 
 /**
@@ -93,8 +94,8 @@ class DatabaseNotificationService implements NotificationService {
     if (order.assigned_id) {
       await this.createOrderAssignedNotification(order)
     } else {
-      // TODO: Phase 5 - Send webhooks for unassigned orders
-      // await webhookService.sendOrderWebhooks(order)
+      // Send webhooks for unassigned orders
+      await webhookService.sendOrderWebhooks(order)
     }
   }
 
@@ -392,8 +393,8 @@ class DatabaseNotificationService implements NotificationService {
       }
     }
 
-    // TODO: Phase 5 - Send webhooks
-    // await webhookService.sendOrderCommentWebhooks(order, comment)
+    // Send webhooks for order comments
+    await webhookService.sendOrderCommentWebhooks(order, comment)
   }
 
   async createOrderReviewNotification(review: DBReview): Promise<void> {
@@ -515,8 +516,8 @@ class DatabaseNotificationService implements NotificationService {
       }
     }
 
-    // TODO: Phase 5 - Send webhooks
-    // await webhookService.sendOrderStatusWebhooks(order, newStatus, actorId)
+    // Send webhooks for order status changes
+    await webhookService.sendOrderStatusWebhooks(order, newStatus, actorId)
   }
 
   async createOfferNotification(
@@ -539,9 +540,12 @@ class DatabaseNotificationService implements NotificationService {
       )
     }
 
-    // TODO: Phase 5 - Coordinate with delivery services
-    // await discordService.sendOfferDM(offer)
-    // await webhookService.sendOfferWebhooks(offer, type)
+    // Coordinate with delivery services
+    // await discordService.sendOfferDM(offer) // TODO: Re-enable when ready
+    await webhookService.sendOfferWebhooks(
+      offer,
+      type === "create" ? "offer_create" : "counter_offer_create",
+    )
   }
 
   /**
@@ -813,8 +817,8 @@ class DatabaseNotificationService implements NotificationService {
       }
     }
 
-    // TODO: Phase 5 - Send webhooks
-    // await webhookService.sendBidWebhooks(listing, bid)
+    // Send webhooks for market bids
+    await webhookService.sendBidWebhooks(listing, bid)
   }
 
   async createMarketOfferNotification(
