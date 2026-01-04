@@ -126,7 +126,11 @@ export async function sendOfferWebhooks(
   }
 
   for (const webhook of webhooks) {
-    await sendOfferWebhook(offer, webhook, type)
+    try {
+      await sendOfferWebhook(offer, webhook, type)
+    } catch (e) {
+      logger.error(`Failed to send offer webhook ${webhook.webhook_id}: ${e}`)
+    }
   }
 }
 
@@ -421,7 +425,11 @@ export async function sendAssignedWebhook(order: DBOrder) {
   }
 
   for (const webhook of webhooks) {
-    await sendOrderWebhook(order, webhook)
+    try {
+      await sendOrderWebhook(order, webhook)
+    } catch (e) {
+      logger.error(`Failed to send assigned webhook ${webhook.webhook_id}: ${e}`)
+    }
   }
 }
 
@@ -437,18 +445,63 @@ export async function sendUserOfferWebhook(order: DBOfferSession) {
   }
 
   for (const webhook of webhooks) {
-    await sendOfferWebhook(order, webhook)
+    try {
+      await sendOfferWebhook(order, webhook)
+    } catch (e) {
+      logger.error(`Failed to send user offer webhook ${webhook.webhook_id}: ${e}`)
+    }
   }
 }
 
 async function sendWebhook(body: any, webhook: DBNotificationWebhook) {
-  return fetch(webhook.webhook_url, {
-    method: "post",
-    headers: {
-      "Content-Type": "application/json",
-    },
-    body: JSON.stringify(body),
-  })
+  // Validate webhook URL format (webhook_url is guaranteed to exist by type)
+  let url: URL
+  try {
+    url = new URL(webhook.webhook_url)
+    if (url.protocol !== "https:" && url.protocol !== "http:") {
+      throw new Error(`Invalid webhook URL protocol: ${url.protocol}`)
+    }
+  } catch (e) {
+    if (e instanceof Error) {
+      throw new Error(`Invalid webhook URL format: ${webhook.webhook_url} - ${e.message}`)
+    }
+    throw new Error(`Invalid webhook URL format: ${webhook.webhook_url}`)
+  }
+
+  // Create AbortController for timeout
+  const controller = new AbortController()
+  const timeoutId = setTimeout(() => controller.abort(), 10000) // 10 second timeout
+
+  try {
+    const response = await fetch(webhook.webhook_url, {
+      method: "post",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(body),
+      signal: controller.signal,
+    })
+
+    // Clear timeout if request completes
+    clearTimeout(timeoutId)
+
+    // Check response status
+    if (!response.ok) {
+      const statusText = await response.text().catch(() => response.statusText)
+      throw new Error(
+        `Webhook request failed with status ${response.status}: ${statusText}`,
+      )
+    }
+
+    return response
+  } catch (error) {
+    clearTimeout(timeoutId)
+    // Check if it's an AbortError (timeout)
+    if (error instanceof Error && error.name === "AbortError") {
+      throw new Error(`Webhook request timed out after 10 seconds`)
+    }
+    throw error
+  }
 }
 
 async function sendOrderWebhook(
@@ -604,7 +657,11 @@ export async function sendBidWebhooks(
   }
 
   for (const webhook of webhooks) {
-    await marketBidWebhook(listing, bid, webhook)
+    try {
+      await marketBidWebhook(listing, bid, webhook)
+    } catch (e) {
+      logger.error(`Failed to send bid webhook ${webhook.webhook_id}: ${e}`)
+    }
   }
 }
 
@@ -690,7 +747,11 @@ export async function sendOrderCommentWebhooks(
   }
 
   for (const webhook of webhooks) {
-    await orderCommentWebhook(order, comment, webhook)
+    try {
+      await orderCommentWebhook(order, comment, webhook)
+    } catch (e) {
+      logger.error(`Failed to send order comment webhook ${webhook.webhook_id}: ${e}`)
+    }
   }
 }
 
