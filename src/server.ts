@@ -77,7 +77,22 @@ const corsOptions = function (
 
 const app = enableWS(express()).app
 
-app.use(compression())
+// Configure response compression
+// Compression is enabled with optimized settings:
+// - threshold: Only compress responses larger than 1KB (saves CPU on small responses)
+// - level: Compression level 6 (balanced between speed and compression ratio)
+// - filter: Uses default compression filter which compresses text-based content types
+//   (JSON, HTML, CSS, JS, XML, SVG, etc.) and skips already-compressed content
+app.use(
+  compression({
+    threshold: 1024, // Only compress responses > 1KB (default is 1KB)
+    level: 6, // Compression level 1-9 (6 is balanced, default is -1 which uses zlib default)
+    // Default filter already handles:
+    // - Text-based content types (JSON, HTML, CSS, JS, XML, SVG, etc.)
+    // - Skips already-compressed content (gzip, deflate, br)
+    // - Respects no-transform cache-control
+  }),
+)
 app.use(securityHeaders())
 
 const pgSession = wrapPGSession(session)
