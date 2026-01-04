@@ -99,14 +99,31 @@ app.use(
 app.use(securityHeaders())
 
 // Serve favicon from src/public
-import { readFileSync } from "node:fs"
+import { readFileSync, existsSync } from "node:fs"
 const __filename = fileURLToPath(import.meta.url)
 const __dirname = dirname(__filename)
 app.get("/favicon.ico", (req, res) => {
   try {
-    // Path to favicon in src/public
-    // Works in both development (from src/) and production (from dist/, but we'll use project root)
-    const faviconPath = join(process.cwd(), "src", "public", "favicon.ico")
+    // Try multiple paths: src/public (development) or dist/public (if copied during build)
+    const possiblePaths = [
+      join(__dirname, "public", "favicon.ico"), // dist/public if copied
+      join(process.cwd(), "src", "public", "favicon.ico"), // src/public from project root
+      join(__dirname, "..", "src", "public", "favicon.ico"), // src/public from dist/
+    ]
+    
+    let faviconPath: string | null = null
+    for (const path of possiblePaths) {
+      if (existsSync(path)) {
+        faviconPath = path
+        break
+      }
+    }
+    
+    if (!faviconPath) {
+      res.status(404).send("Favicon not found")
+      return
+    }
+    
     const favicon = readFileSync(faviconPath)
     res.setHeader("Content-Type", "image/x-icon")
     res.setHeader("Cache-Control", "public, max-age=31536000") // Cache for 1 year
