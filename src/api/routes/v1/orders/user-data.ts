@@ -13,7 +13,7 @@ export async function getUserOrderDataController(req: Request, res: Response) {
     const includeTrends =
       include_trends === "true" || include_trends === undefined
 
-    logger.info("Getting user order data", {
+    logger.debug("Getting user order data", {
       user_id: user.user_id,
       include_trends: includeTrends,
     })
@@ -23,7 +23,7 @@ export async function getUserOrderDataController(req: Request, res: Response) {
       include_trends: includeTrends,
     })
 
-    logger.info("User order data retrieved successfully", {
+    logger.debug("User order data retrieved successfully", {
       user_id: user.user_id,
       total_orders: data.metrics.total_orders,
       total_value: data.metrics.total_value,
