@@ -1942,7 +1942,7 @@ async function subtractStockForMarketListings(
   order_id: string,
   trx?: any,
 ): Promise<void> {
-  logger.info("Subtracting stock for market listings", {
+  logger.debug("Subtracting stock for market listings", {
     order_id,
     listingCount: market_listings.length,
   })
@@ -1972,7 +1972,7 @@ async function subtractStockForMarketListings(
       trx,
     )
 
-    logger.info("Stock subtracted for listing", {
+    logger.debug("Stock subtracted for listing", {
       order_id,
       listing_id,
       quantity_subtracted: quantity,
