@@ -31,11 +31,13 @@ export function securityHeaders() {
           "https://cdn.robertsspaceindustries.com",
           "https://www.googletagmanager.com",
           "https://www.google-analytics.com",
+          "https://cdn.jsdelivr.net", // Required for Scalar API reference
         ],
         styleSrc: [
           "'self'",
           "'unsafe-inline'", // Required for Material-UI
           "https://fonts.googleapis.com",
+          "https://cdn.jsdelivr.net", // Required for Scalar API reference
         ],
         fontSrc: ["'self'", "https://fonts.gstatic.com", "data:"],
         imgSrc: ["'self'", "data:", "https:", "blob:"],
