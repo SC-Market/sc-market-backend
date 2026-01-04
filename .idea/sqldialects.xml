@@ -15,6 +15,7 @@
     <file url="file://$PROJECT_DIR$/config/postgres/30-add-supported-languages-columns.sql" dialect="PostgreSQL" />
     <file url="file://$PROJECT_DIR$/config/postgres/31-push-notifications.sql" dialect="PostgreSQL" />
     <file url="file://$PROJECT_DIR$/config/postgres/32-add-chat-participants.sql" dialect="PostgreSQL" />
+    <file url="file://$PROJECT_DIR$/config/postgres/33-add-accounts-cascade-delete.sql" dialect="PostgreSQL" />
     <file url="file://$PROJECT_DIR$/scripts/game_item_details.sql" dialect="PostgreSQL" />
     <file url="file://$PROJECT_DIR$/scripts/load_new_items.sql" dialect="PostgreSQL" />
     <file url="file://$PROJECT_DIR$/scripts/market_search.sql" dialect="PostgreSQL" />

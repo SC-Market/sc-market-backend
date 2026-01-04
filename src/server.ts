@@ -12,6 +12,9 @@ import { createGzip } from "zlib"
 import { createServer } from "node:http"
 import { Server } from "socket.io"
 import { apiReference } from "@scalar/express-api-reference"
+import { join } from "node:path"
+import { fileURLToPath } from "node:url"
+import { dirname } from "node:path"
 
 import { apiRouter } from "./api/routes/v1/api-router.js"
 import { database } from "./clients/database/knex-db.js"
@@ -94,6 +97,24 @@ app.use(
   }),
 )
 app.use(securityHeaders())
+
+// Serve favicon from src/public
+import { readFileSync } from "node:fs"
+const __filename = fileURLToPath(import.meta.url)
+const __dirname = dirname(__filename)
+app.get("/favicon.ico", (req, res) => {
+  try {
+    // Path to favicon in src/public
+    // Works in both development (from src/) and production (from dist/, but we'll use project root)
+    const faviconPath = join(process.cwd(), "src", "public", "favicon.ico")
+    const favicon = readFileSync(faviconPath)
+    res.setHeader("Content-Type", "image/x-icon")
+    res.setHeader("Cache-Control", "public, max-age=31536000") // Cache for 1 year
+    res.send(favicon)
+  } catch (error) {
+    res.status(404).send("Favicon not found")
+  }
+})
 
 const pgSession = wrapPGSession(session)
 

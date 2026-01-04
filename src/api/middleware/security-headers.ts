@@ -32,6 +32,7 @@ export function securityHeaders() {
           "https://www.googletagmanager.com",
           "https://www.google-analytics.com",
           "https://cdn.jsdelivr.net", // Required for Scalar API reference
+          "https://static.cloudflareinsights.com", // Cloudflare Web Analytics
         ],
         styleSrc: [
           "'self'",
@@ -46,6 +47,7 @@ export function securityHeaders() {
           backend_url.toString(),
           frontend_url.toString(),
           "https://www.google-analytics.com",
+          "https://cloudflareinsights.com", // Cloudflare Web Analytics
           "wss:", // WebSocket connections
           "ws:",
         ],
