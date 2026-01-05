@@ -1,11 +1,11 @@
-New Order Created Hello
-{{userDisplayName}}, A new order has been created:
+Contractor Applied to Order
+
+Hello {{userDisplayName}},
+
+A contractor has applied to your order:
 
 {{order.title}}
 {{#if order.description}}{{order.description}}{{/if}}
 {{#if order.cost}}Value: {{formatCurrency order.cost}} aUEC{{/if}}
-Status:
-{{order.status}}
 
-View Order:
-{{actionUrl}}
+View Order: {{actionUrl}}

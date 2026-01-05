@@ -1,0 +1,13 @@
+New Order Review
+
+Hello {{userDisplayName}},
+
+A new review has been submitted for your order:
+
+{{order.title}}
+
+Rating: {{review.rating}}/5
+{{#if review.content}}{{review.content}}{{/if}}
+{{#if review.author}}By: {{review.author}}{{/if}}
+
+View Order: {{actionUrl}}

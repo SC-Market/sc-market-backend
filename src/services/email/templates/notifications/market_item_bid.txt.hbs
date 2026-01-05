@@ -1,0 +1,12 @@
+New Bid on Market Listing
+
+Hello {{userDisplayName}},
+
+Someone placed a bid on your market listing:
+
+{{listing.title}}
+{{#if listing.description}}{{listing.description}}{{/if}}
+
+Bid Amount: {{formatCurrency bid.bid}} aUEC
+
+View Listing: {{actionUrl}}

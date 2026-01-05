@@ -11,9 +11,9 @@
   {{#if order.description}}
     <p style="color: #b7b7b7;">{{order.description}}</p>
   {{/if}}
-  {{#if order.value}}
+  {{#if order.cost}}
     <p style="color: #b7b7b7;"><strong>Value:</strong>
-      {{formatCurrency order.value}}
+      {{formatCurrency order.cost}}
       aUEC</p>
   {{/if}}
   <p style="color: #b7b7b7;"><strong>Status:</strong> {{order.status}}</p>

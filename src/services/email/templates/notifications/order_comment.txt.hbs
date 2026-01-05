@@ -1,0 +1,13 @@
+New Order Comment
+
+Hello {{userDisplayName}},
+
+A new comment has been added to order "{{order.title}}":
+
+{{order.title}}
+{{#if order.description}}{{order.description}}{{/if}}
+
+{{comment.author}} commented:
+{{comment.content}}
+
+View Order: {{actionUrl}}

@@ -1,0 +1,18 @@
+<h1 style="color: #e8e8e8;">Admin Alert</h1>
+
+<p style="color: #b7b7b7;">Hello {{userDisplayName}},</p>
+
+<p style="color: #b7b7b7;">You have a new admin alert:</p>
+
+<div
+  style="background-color: rgba(45, 55, 72, 0.5); padding: 20px; border-radius: 8px; margin: 20px 0; border: 1px solid rgb(45, 55, 72);"
+>
+  <h2 style="margin-top: 0; color: #e8e8e8;">{{alert.title}}</h2>
+  {{#if alert.content}}
+    <p style="color: #b7b7b7;">{{alert.content}}</p>
+  {{/if}}
+</div>
+
+<p style="text-align: center;">
+  <a href="{{actionUrl}}" class="button">View Alert</a>
+</p>

@@ -112,7 +112,7 @@ async function getBaseTemplateData(
     notificationType: notificationType,
     siteName: getSiteName(),
     siteUrl: getBaseUrl(),
-    logoUrl: `${getBaseUrl()}/android-chrome-192x192.png`,
+    logoUrl: `${getBaseUrl()}/scmarket-logo.png`,
     unsubscribeUrl,
     preferencesUrl: getPreferencesUrl(),
   }
@@ -252,17 +252,26 @@ export async function formatOrderReviewEmailData(
     : null
   const authorName = author?.display_name || author?.username || "Unknown"
 
+  // Get order for template
+  const orderDb = await import("../../api/routes/v1/orders/database.js")
+  const order = await orderDb.getOrder({ order_id: review.order_id })
+
   return {
     ...baseData,
     notificationTitle: "New Review on Order",
     notificationBody: `${authorName} left a review on your order`,
     actionUrl: url,
+    order: {
+      order_id: order.order_id,
+      title: order.title,
+    },
     review: {
       review_id: review.review_id,
       rating: review.rating,
       content: review.content,
       author: authorName,
       timestamp: review.timestamp,
+      revision_message: review.revision_message,
     },
   } as EmailTemplateData
 }
@@ -397,14 +406,25 @@ export async function formatContractorInviteEmailData(
   const baseData = await getBaseTemplateData(userId, "contractor_invite")
   const url = `${getBaseUrl()}/contractors`
 
+  // Get contractor details
+  const contractorDb = await import("../../api/routes/v1/contractors/database.js")
+  const contractor = await contractorDb.getContractor({
+    contractor_id: invite.contractor_id,
+  })
+
   return {
     ...baseData,
     notificationTitle: "Contractor Invitation",
-    notificationBody: `You have been invited to join a contractor organization`,
+    notificationBody: `You have been invited to join "${contractor.name}"`,
     actionUrl: url,
+    contractor: {
+      contractor_id: contractor.contractor_id,
+      name: contractor.name,
+      description: contractor.description,
+    },
     invite: {
       invite_id: invite.invite_id,
-      contractor_id: invite.contractor_id,
+      message: invite.message,
     },
   } as EmailTemplateData
 }

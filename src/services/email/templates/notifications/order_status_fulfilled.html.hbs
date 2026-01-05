@@ -8,9 +8,9 @@
   style="background-color: rgba(45, 55, 72, 0.5); padding: 20px; border-radius: 8px; margin: 20px 0; border: 1px solid rgb(45, 55, 72);"
 >
   <h2 style="margin-top: 0; color: #e8e8e8;">{{order.title}}</h2>
-  {{#if order.value}}
+  {{#if order.cost}}
     <p style="color: #b7b7b7;"><strong>Value:</strong>
-      {{formatCurrency order.value}}
+      {{formatCurrency order.cost}}
       aUEC</p>
   {{/if}}
 </div>
