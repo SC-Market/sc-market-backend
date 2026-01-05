@@ -1,0 +1,22 @@
+<h1 style="color: #e8e8e8;">New Offer Created</h1>
+
+<p style="color: #b7b7b7;">Hello {{userDisplayName}},</p>
+
+<p style="color: #b7b7b7;">A new offer has been created:</p>
+
+<div
+  style="background-color: rgba(45, 55, 72, 0.5); padding: 20px; border-radius: 8px; margin: 20px 0; border: 1px solid rgb(45, 55, 72);"
+>
+  {{#if offer.description}}
+    <p style="color: #b7b7b7;">{{offer.description}}</p>
+  {{/if}}
+  {{#if offer.value}}
+    <p style="color: #b7b7b7;"><strong>Value:</strong>
+      {{formatCurrency offer.value}}
+      aUEC</p>
+  {{/if}}
+</div>
+
+<p style="text-align: center;">
+  <a href="{{actionUrl}}" class="button">View Offer</a>
+</p>

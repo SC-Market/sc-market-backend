@@ -22,6 +22,7 @@ import logger from "../../logger/logger.js"
 import { has_permission } from "../../api/routes/v1/util/permissions.js"
 import { pushNotificationService } from "../push-notifications/push-notification.service.js"
 import { webhookService } from "../webhooks/webhook.service.js"
+import { emailService } from "../email/email.service.js"
 import * as payloadFormatters from "./notification-payload-formatters.js"
 
 /**
@@ -194,6 +195,24 @@ class DatabaseNotificationService implements NotificationService {
         error: error instanceof Error ? error.message : String(error),
       })
     }
+
+    // Send email notification to assigned user
+    try {
+      await emailService.sendNotificationEmail(
+        order.assigned_id,
+        "order_assigned",
+        {
+          order,
+        },
+      )
+    } catch (error) {
+      // Log but don't fail notification creation if email fails
+      logger.debug(`Failed to send email notification for order assignment:`, {
+        order_id: order.order_id,
+        assigned_id: order.assigned_id,
+        error: error instanceof Error ? error.message : String(error),
+      })
+    }
   }
 
   async createOrderMessageNotification(
@@ -306,6 +325,19 @@ class DatabaseNotificationService implements NotificationService {
             error,
           )
         }
+
+        // Send email notification
+        try {
+          await emailService.sendNotificationEmail(notified, "order_message", {
+            order,
+            message,
+          })
+        } catch (error) {
+          logger.debug(
+            `Failed to send email notification for order message to user ${notified}:`,
+            error,
+          )
+        }
       }
 
       logger.debug(
@@ -364,6 +396,23 @@ class DatabaseNotificationService implements NotificationService {
           error,
         )
       }
+
+      // Send email notification
+      try {
+        await emailService.sendNotificationEmail(
+          order.assigned_id,
+          "order_comment",
+          {
+            order,
+            comment,
+          },
+        )
+      } catch (error) {
+        logger.debug(
+          `Failed to send email notification for order comment:`,
+          error,
+        )
+      }
     }
 
     if (actorId !== order.customer_id) {
@@ -388,6 +437,23 @@ class DatabaseNotificationService implements NotificationService {
       } catch (error) {
         logger.debug(
           `Failed to send push notification for order comment:`,
+          error,
+        )
+      }
+
+      // Send email notification
+      try {
+        await emailService.sendNotificationEmail(
+          order.customer_id,
+          "order_comment",
+          {
+            order,
+            comment,
+          },
+        )
+      } catch (error) {
+        logger.debug(
+          `Failed to send email notification for order comment:`,
           error,
         )
       }
@@ -439,6 +505,19 @@ class DatabaseNotificationService implements NotificationService {
     } catch (error) {
       logger.debug(`Failed to send push notification for order review:`, error)
     }
+
+    // Send email notification
+    try {
+      await emailService.sendNotificationEmail(
+        order.assigned_id,
+        "order_review",
+        {
+          review,
+        },
+      )
+    } catch (error) {
+      logger.debug(`Failed to send email notification for order review:`, error)
+    }
   }
 
   async createOrderStatusNotification(
@@ -487,6 +566,22 @@ class DatabaseNotificationService implements NotificationService {
           error,
         )
       }
+
+      // Send email notification
+      try {
+        await emailService.sendNotificationEmail(
+          order.assigned_id,
+          action_name,
+          {
+            order,
+          },
+        )
+      } catch (error) {
+        logger.debug(
+          `Failed to send email notification for order status:`,
+          error,
+        )
+      }
     }
 
     if (order.customer_id !== actorId) {
@@ -511,6 +606,22 @@ class DatabaseNotificationService implements NotificationService {
       } catch (error) {
         logger.debug(
           `Failed to send push notification for order status:`,
+          error,
+        )
+      }
+
+      // Send email notification
+      try {
+        await emailService.sendNotificationEmail(
+          order.customer_id,
+          action_name,
+          {
+            order,
+          },
+        )
+      } catch (error) {
+        logger.debug(
+          `Failed to send email notification for order status:`,
           error,
         )
       }
@@ -584,10 +695,19 @@ class DatabaseNotificationService implements NotificationService {
         })),
       )
 
-      // TODO: Phase 5 - Send push notifications to contractor members
-      // for (const admin of admins) {
-      //   await pushNotificationService.sendPushNotification(admin.user_id, ...)
-      // }
+      // Send email notifications to contractor members
+      for (const admin of admins) {
+        try {
+          await emailService.sendNotificationEmail(admin.user_id, actionType, {
+            offer,
+          })
+        } catch (error) {
+          logger.debug(
+            `Failed to send email notification to contractor member ${admin.user_id}:`,
+            error,
+          )
+        }
+      }
     }
   }
 
@@ -640,6 +760,22 @@ class DatabaseNotificationService implements NotificationService {
     } catch (error) {
       logger.debug(
         `Failed to send push notification for offer assignment:`,
+        error,
+      )
+    }
+
+    // Send email notification
+    try {
+      await emailService.sendNotificationEmail(
+        session.assigned_id,
+        type === "offer_created" ? "offer_create" : "counter_offer_create",
+        {
+          offer: session,
+        },
+      )
+    } catch (error) {
+      logger.debug(
+        `Failed to send email notification for offer assignment:`,
         error,
       )
     }
@@ -751,6 +887,19 @@ class DatabaseNotificationService implements NotificationService {
         } catch (error) {
           logger.debug(
             `Failed to send push notification to user ${notified}:`,
+            error,
+          )
+        }
+
+        // Send email notification
+        try {
+          await emailService.sendNotificationEmail(notified, "offer_message", {
+            offer: session,
+            message,
+          })
+        } catch (error) {
+          logger.debug(
+            `Failed to send email notification for offer message to user ${notified}:`,
             error,
           )
         }

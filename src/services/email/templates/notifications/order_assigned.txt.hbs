@@ -1,0 +1,13 @@
+Order Assigned to You Hello
+{{userDisplayName}}, You have been assigned to a new order:
+
+{{order.title}}
+{{#if order.description}}{{order.description}}{{/if}}
+{{#if order.value}}Value: {{formatCurrency order.value}} aUEC{{/if}}
+Status:
+{{order.status}}
+
+View Order:
+{{actionUrl}}
+
+Please review the order details and begin work when ready.
