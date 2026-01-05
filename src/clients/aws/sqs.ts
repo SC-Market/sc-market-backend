@@ -6,17 +6,23 @@ import {
 } from "@aws-sdk/client-sqs"
 import { STSClient, AssumeRoleCommand } from "@aws-sdk/client-sts"
 import { env } from "../../config/env.js"
-import { checkSQSConfiguration } from "./sqs-config.js"
 import logger from "../../logger/logger.js"
 
 // Function to get temporary credentials by assuming the IAM role
 async function getTemporaryCredentials() {
-  const config = checkSQSConfiguration()
-
-  if (!config.hasCredentials) {
+  // Only check for AWS credentials, not specific queue URLs
+  if (
+    !env.BACKEND_ACCESS_KEY_ID ||
+    !env.BACKEND_SECRET_ACCESS_KEY ||
+    !env.BACKEND_ROLE_ARN
+  ) {
+    const missing = []
+    if (!env.BACKEND_ACCESS_KEY_ID) missing.push("BACKEND_ACCESS_KEY_ID")
+    if (!env.BACKEND_SECRET_ACCESS_KEY)
+      missing.push("BACKEND_SECRET_ACCESS_KEY")
+    if (!env.BACKEND_ROLE_ARN) missing.push("BACKEND_ROLE_ARN")
     throw new Error(
-      "SQS credentials not configured. Missing: " +
-        config.missingConfig.join(", "),
+      "AWS credentials not configured. Missing: " + missing.join(", "),
     )
   }
 
@@ -59,17 +65,8 @@ export async function createSQSClient() {
 }
 
 export async function sendMessage(queueUrl: string, messageBody: any) {
-  const config = checkSQSConfiguration()
-
-  if (!config.isConfigured) {
-    logger.warn("SQS not configured - skipping message send", {
-      queueUrl,
-      messageType: messageBody?.type,
-      missingConfig: config.missingConfig,
-    })
-    return { MessageId: "disabled", $metadata: { httpStatusCode: 200 } }
-  }
-
+  // No configuration check here - callers should check their own configuration
+  // This function will fail if credentials aren't configured (thrown by getTemporaryCredentials)
   try {
     const sqsClient = await createSQSClient()
     const command = new SendMessageCommand({
@@ -88,16 +85,8 @@ export async function receiveMessage(
   queueUrl: string,
   maxMessages: number = 10,
 ) {
-  const config = checkSQSConfiguration()
-
-  if (!config.isConfigured) {
-    logger.debug("SQS not configured - skipping message receive", {
-      queueUrl,
-      missingConfig: config.missingConfig,
-    })
-    return { Messages: [], $metadata: { httpStatusCode: 200 } }
-  }
-
+  // No configuration check here - callers should check their own configuration
+  // This function will fail if credentials aren't configured (thrown by getTemporaryCredentials)
   try {
     const sqsClient = await createSQSClient()
     const command = new ReceiveMessageCommand({
@@ -114,17 +103,8 @@ export async function receiveMessage(
 }
 
 export async function deleteMessage(queueUrl: string, receiptHandle: string) {
-  const config = checkSQSConfiguration()
-
-  if (!config.isConfigured) {
-    logger.debug("SQS not configured - skipping message delete", {
-      queueUrl,
-      receiptHandle: receiptHandle.substring(0, 20) + "...",
-      missingConfig: config.missingConfig,
-    })
-    return { $metadata: { httpStatusCode: 200 } }
-  }
-
+  // No configuration check here - callers should check their own configuration
+  // This function will fail if credentials aren't configured (thrown by getTemporaryCredentials)
   try {
     const sqsClient = await createSQSClient()
     const command = new DeleteMessageCommand({

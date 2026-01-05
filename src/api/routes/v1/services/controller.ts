@@ -564,18 +564,15 @@ export const services_post_service_id_photos: RequestHandler = async (
         if (error instanceof Error) {
           if (error.message.includes("Image failed moderation checks")) {
             logger.debug(`Photo ${index + 1} failed content moderation:`, error)
-            res
-              .status(400)
-              .json(
-                createErrorResponse(
-                  ErrorCode.VALIDATION_ERROR,
-                  `Photo ${index + 1} failed content moderation checks and cannot be uploaded.`,
-                  {
-                    details:
-                      "One or more photos contain inappropriate content.",
-                  },
-                ),
-              )
+            res.status(400).json(
+              createErrorResponse(
+                ErrorCode.VALIDATION_ERROR,
+                `Photo ${index + 1} failed content moderation checks and cannot be uploaded.`,
+                {
+                  details: "One or more photos contain inappropriate content.",
+                },
+              ),
+            )
             return
           }
 
@@ -599,36 +596,31 @@ export const services_post_service_id_photos: RequestHandler = async (
 
           if (error.message.includes("Unsupported MIME type")) {
             logger.debug(`Photo ${index + 1} has unsupported format:`, error)
-            res
-              .status(400)
-              .json(
-                createErrorResponse(
-                  ErrorCode.VALIDATION_ERROR,
-                  `Photo ${index + 1} has an unsupported file type. Only PNG, JPG, and WEBP images are allowed.`,
-                  {
-                    details:
-                      "Please ensure all photos are in supported formats.",
-                  },
-                ),
-              )
+            res.status(400).json(
+              createErrorResponse(
+                ErrorCode.VALIDATION_ERROR,
+                `Photo ${index + 1} has an unsupported file type. Only PNG, JPG, and WEBP images are allowed.`,
+                {
+                  details: "Please ensure all photos are in supported formats.",
+                },
+              ),
+            )
             return
           }
         }
 
         // Log unexpected errors as error level
         logger.error(`Failed to upload photo ${index + 1}:`, error)
-        res
-          .status(500)
-          .json(
-            createErrorResponse(
-              ErrorCode.INTERNAL_SERVER_ERROR,
-              `Failed to upload photo ${index + 1}`,
-              {
-                details:
-                  "An unexpected error occurred during upload. Please try again.",
-              },
-            ),
-          )
+        res.status(500).json(
+          createErrorResponse(
+            ErrorCode.INTERNAL_SERVER_ERROR,
+            `Failed to upload photo ${index + 1}`,
+            {
+              details:
+                "An unexpected error occurred during upload. Please try again.",
+            },
+          ),
+        )
         return
       }
     }
@@ -664,14 +656,12 @@ export const services_post_service_id_photos: RequestHandler = async (
         logger.debug("Photo upload failed content moderation check:", {
           error: error.message,
         })
-        res
-          .status(400)
-          .json(
-            createErrorResponse(ErrorCode.VALIDATION_ERROR, error.message, {
-              details:
-                "One or more photos contain inappropriate content and cannot be uploaded.",
-            }),
-          )
+        res.status(400).json(
+          createErrorResponse(ErrorCode.VALIDATION_ERROR, error.message, {
+            details:
+              "One or more photos contain inappropriate content and cannot be uploaded.",
+          }),
+        )
         return
       }
 
@@ -679,14 +669,12 @@ export const services_post_service_id_photos: RequestHandler = async (
         logger.debug("Photo upload failed due to unsupported file type:", {
           error: error.message,
         })
-        res
-          .status(400)
-          .json(
-            createErrorResponse(ErrorCode.VALIDATION_ERROR, error.message, {
-              details:
-                "Please ensure all photos are in PNG, JPG, GIF, or WEBP format.",
-            }),
-          )
+        res.status(400).json(
+          createErrorResponse(ErrorCode.VALIDATION_ERROR, error.message, {
+            details:
+              "Please ensure all photos are in PNG, JPG, GIF, or WEBP format.",
+          }),
+        )
         return
       }
     }

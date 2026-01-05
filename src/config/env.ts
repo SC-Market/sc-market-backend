@@ -55,6 +55,13 @@ interface Environment {
   VAPID_PRIVATE_KEY?: string
   VAPID_SUBJECT?: string // Usually a mailto: URL or website URL (e.g., "mailto:admin@sc-market.space")
 
+  // Email Notifications (AWS SES)
+  EMAIL_QUEUE_URL?: string // SQS queue URL for email processing
+  AWS_SES_REGION?: string // AWS region for SES (defaults to AWS_REGION)
+  EMAIL_FROM_NAME?: string // From name for emails (e.g., "SC Market")
+  EMAIL_FROM_ADDRESS?: string // From email address (must be verified in SES)
+  EMAIL_REPLY_TO?: string // Reply-to email address (optional)
+
   // Other
   NODE_ENV?: string
   PORT?: string

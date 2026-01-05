@@ -270,3 +270,55 @@ profileRouter.put(
   userAuthorized,
   profile_put_languages,
 )
+
+// Email management endpoints
+import { emailManagementRoutes } from "../email/routes.js"
+import { commonWriteRateLimit } from "../../../middleware/enhanced-ratelimiting.js"
+
+// Add email address
+// POST /api/v1/profile/email
+profileRouter.post(
+  "/email",
+  userAuthorized,
+  emailManagementRoutes.add_email_spec,
+  commonWriteRateLimit,
+  emailManagementRoutes.addEmail,
+)
+
+// Update email address
+// PATCH /api/v1/profile/email
+profileRouter.patch(
+  "/email",
+  userAuthorized,
+  emailManagementRoutes.update_email_spec,
+  commonWriteRateLimit,
+  emailManagementRoutes.updateEmail,
+)
+
+// Remove email address
+// DELETE /api/v1/profile/email
+profileRouter.delete(
+  "/email",
+  userAuthorized,
+  emailManagementRoutes.delete_email_spec,
+  commonWriteRateLimit,
+  emailManagementRoutes.deleteEmail,
+)
+
+// Request verification email
+// POST /api/v1/profile/email/verify
+profileRouter.post(
+  "/email/verify",
+  userAuthorized,
+  emailManagementRoutes.request_verification_spec,
+  commonWriteRateLimit,
+  emailManagementRoutes.requestVerification,
+)
+
+// Verify email address (redirects to frontend)
+// GET /api/v1/profile/email/verify/:token
+profileRouter.get(
+  "/email/verify/:token",
+  emailManagementRoutes.verify_email_spec,
+  emailManagementRoutes.verifyEmail,
+)

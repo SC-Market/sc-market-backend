@@ -115,7 +115,10 @@ export function setupAuthRoutes(app: any, frontendUrl: URL): void {
               info,
             })
             const redirectTo = new URL("/", frontendUrl)
-            redirectTo.searchParams.set("error", AuthErrorCodes.ACCOUNT_NOT_FOUND)
+            redirectTo.searchParams.set(
+              "error",
+              AuthErrorCodes.ACCOUNT_NOT_FOUND,
+            )
             return res.redirect(redirectTo.toString())
           }
 
@@ -123,7 +126,10 @@ export function setupAuthRoutes(app: any, frontendUrl: URL): void {
             if (loginErr) {
               logger.error("Discord login error", { error: loginErr })
               const redirectTo = new URL("/", frontendUrl)
-              redirectTo.searchParams.set("error", AuthErrorCodes.ACCOUNT_NOT_FOUND)
+              redirectTo.searchParams.set(
+                "error",
+                AuthErrorCodes.ACCOUNT_NOT_FOUND,
+              )
               return res.redirect(redirectTo.toString())
             }
 

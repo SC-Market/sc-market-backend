@@ -8,7 +8,7 @@ import * as orderDb from "../api/routes/v1/orders/database.js"
 import * as offerDb from "../api/routes/v1/offers/database.js"
 import * as webhookUtil from "../api/routes/v1/util/webhooks.js"
 import { rest } from "../services/discord/discord.service.js"
-import { checkSQSConfiguration } from "../clients/aws/sqs-config.js"
+import { checkDiscordSQSConfiguration } from "../clients/aws/sqs-config.js"
 import { chatServer } from "../clients/messaging/websocket.js"
 import { serializeMessage } from "../api/routes/v1/chats/serializers.js"
 
@@ -28,9 +28,9 @@ interface BackendQueueMessage {
 let lastConfigWarning = 0
 
 export async function processDiscordQueue() {
-  const config = checkSQSConfiguration()
+  const config = checkDiscordSQSConfiguration()
 
-  if (!config.isConfigured) {
+  if (!config.isDiscordConfigured) {
     // Only log this once per minute to avoid spam
     const now = Date.now()
     if (!lastConfigWarning || now - lastConfigWarning > 60000) {
