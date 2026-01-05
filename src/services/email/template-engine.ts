@@ -96,22 +96,50 @@ async function loadTemplate(
   }
 
   // Load template file
-  const templatePath = path.join(
-    __dirname,
-    "templates",
-    "notifications",
-    `${name}.${type}.hbs`,
-  )
+  // Try multiple paths to handle both dev and production environments
+  const possiblePaths = [
+    // Standard path (works in dev and if templates are copied to dist)
+    path.join(__dirname, "templates", "notifications", `${name}.${type}.hbs`),
+    // Production path if templates are in dist
+    path.join(
+      process.cwd(),
+      "dist",
+      "src",
+      "services",
+      "email",
+      "templates",
+      "notifications",
+      `${name}.${type}.hbs`,
+    ),
+    // Alternative: relative to source (for dev)
+    path.join(
+      process.cwd(),
+      "src",
+      "services",
+      "email",
+      "templates",
+      "notifications",
+      `${name}.${type}.hbs`,
+    ),
+  ]
 
-  try {
-    const templateContent = await fs.readFile(templatePath, "utf-8")
-    const template = Handlebars.compile(templateContent)
-    templateCache.set(cacheKey, template)
-    return template
-  } catch (error) {
-    logger.error(`Failed to load email template: ${templatePath}`, { error })
-    throw new Error(`Email template not found: ${name}.${type}`)
+  for (const templatePath of possiblePaths) {
+    try {
+      const templateContent = await fs.readFile(templatePath, "utf-8")
+      const template = Handlebars.compile(templateContent)
+      templateCache.set(cacheKey, template)
+      return template
+    } catch (error) {
+      // Try next path
+      continue
+    }
   }
+
+  // If all paths failed, log and throw error
+  logger.error(`Failed to load email template: ${name}.${type}`, {
+    attemptedPaths: possiblePaths,
+  })
+  throw new Error(`Email template not found: ${name}.${type}`)
 }
 
 /**
@@ -126,22 +154,50 @@ async function loadBaseLayout(
     return templateCache.get(cacheKey)!
   }
 
-  const templatePath = path.join(
-    __dirname,
-    "templates",
-    "layouts",
-    `base.${type}.hbs`,
-  )
+  // Try multiple paths to handle both dev and production environments
+  const possiblePaths = [
+    // Standard path (works in dev and if templates are copied to dist)
+    path.join(__dirname, "templates", "layouts", `base.${type}.hbs`),
+    // Production path if templates are in dist
+    path.join(
+      process.cwd(),
+      "dist",
+      "src",
+      "services",
+      "email",
+      "templates",
+      "layouts",
+      `base.${type}.hbs`,
+    ),
+    // Alternative: relative to source (for dev)
+    path.join(
+      process.cwd(),
+      "src",
+      "services",
+      "email",
+      "templates",
+      "layouts",
+      `base.${type}.hbs`,
+    ),
+  ]
 
-  try {
-    const templateContent = await fs.readFile(templatePath, "utf-8")
-    const template = Handlebars.compile(templateContent)
-    templateCache.set(cacheKey, template)
-    return template
-  } catch (error) {
-    logger.error(`Failed to load base layout: ${templatePath}`, { error })
-    throw new Error(`Base layout template not found: base.${type}`)
+  for (const templatePath of possiblePaths) {
+    try {
+      const templateContent = await fs.readFile(templatePath, "utf-8")
+      const template = Handlebars.compile(templateContent)
+      templateCache.set(cacheKey, template)
+      return template
+    } catch (error) {
+      // Try next path
+      continue
+    }
   }
+
+  // If all paths failed, log and throw error
+  logger.error(`Failed to load base layout: base.${type}`, {
+    attemptedPaths: possiblePaths,
+  })
+  throw new Error(`Base layout template not found: base.${type}`)
 }
 
 /**

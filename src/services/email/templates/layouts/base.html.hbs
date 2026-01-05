@@ -27,12 +27,20 @@
       }
       .email-header {
         background: linear-gradient(135deg, #10b881 0%, #7a7efe 100%);
-        padding: 30px 20px;
-        text-align: center;
+        padding: 20px 30px;
+        display: flex;
+        align-items: center;
       }
       .email-header img {
-        max-width: 120px;
-        height: auto;
+        width: 48px;
+        height: 48px;
+        border-radius: 50%;
+        object-fit: cover;
+        display: block;
+      }
+      .email-header h1 {
+        color: #ffffff;
+        margin: 0 0 0 16px;
       }
       .email-body {
         padding: 40px 30px;
@@ -89,9 +97,8 @@
       <div class="email-header">
         {{#if logoUrl}}
           <img src="{{logoUrl}}" alt="{{siteName}}" />
-        {{else}}
-          <h1 style="color: #ffffff; margin: 0;">{{siteName}}</h1>
         {{/if}}
+        <h1>{{siteName}}</h1>
       </div>
       <div class="email-body">
         {{{body}}}
