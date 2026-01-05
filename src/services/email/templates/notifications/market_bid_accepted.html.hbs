@@ -1,0 +1,21 @@
+<h1 style="color: #e8e8e8;">Market Bid Accepted</h1>
+
+<p style="color: #b7b7b7;">Hello {{userDisplayName}},</p>
+
+<p style="color: #b7b7b7;">Your bid on "{{listing.title}}" has been accepted!</p>
+
+<div
+  style="background-color: rgba(45, 55, 72, 0.5); padding: 20px; border-radius: 8px; margin: 20px 0; border: 1px solid rgb(45, 55, 72);"
+>
+  <h2 style="margin-top: 0; color: #e8e8e8;">{{listing.title}}</h2>
+  {{#if listing.description}}
+    <p style="color: #b7b7b7;">{{listing.description}}</p>
+  {{/if}}
+  <div style="margin-top: 15px; padding-top: 15px; border-top: 1px solid rgb(45, 55, 72);">
+    <p style="color: #b7b7b7; margin: 0;"><strong>Accepted Bid:</strong> {{formatCurrency bid.bid}} aUEC</p>
+  </div>
+</div>
+
+<p style="text-align: center;">
+  <a href="{{actionUrl}}" class="button">View Listing</a>
+</p>

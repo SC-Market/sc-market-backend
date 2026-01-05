@@ -204,6 +204,7 @@ class SESEmailService implements EmailService {
         actionUrl: verificationUrl,
         siteName: "SC Market",
         siteUrl: baseUrl,
+        logoUrl: `${baseUrl}/scmarket-logo.png`,
         verificationUrl: verificationUrl,
         unsubscribeUrl: `${baseUrl}/settings?tab=email`, // Verification emails don't need unsubscribe tokens
         preferencesUrl: `${baseUrl}/settings?tab=email`,
@@ -515,6 +516,80 @@ class SESEmailService implements EmailService {
             userId,
           )
           break
+
+        case "public_order_create":
+          // Same as order_create
+          templateData =
+            await payloadFormatters.formatOrderNotificationEmailData(
+              data.order as DBOrder,
+              "order_create",
+              userId,
+            )
+          break
+
+        case "order_contractor_applied":
+          // Same as order_create (entity is the order)
+          templateData =
+            await payloadFormatters.formatOrderNotificationEmailData(
+              data.order as DBOrder,
+              "order_create",
+              userId,
+            )
+          break
+
+        case "market_bid_accepted":
+        case "market_bid_declined":
+          if (!data.listing || !data.bid) {
+            logger.warn(
+              `Missing listing or bid data for email notification: ${notificationType}`,
+              { userId, notificationType },
+            )
+            return
+          }
+          templateData = await payloadFormatters.formatMarketBidEmailData(
+            data.listing as DBMarketListingComplete,
+            data.bid as DBMarketBid,
+            userId,
+          )
+          break
+
+        case "market_offer_accepted":
+        case "market_offer_declined":
+          if (!data.listing || !data.offer) {
+            logger.warn(
+              `Missing listing or offer data for email notification: ${notificationType}`,
+              { userId, notificationType },
+            )
+            return
+          }
+          templateData = await payloadFormatters.formatMarketOfferEmailData(
+            data.listing as DBMarketListing,
+            data.offer as DBMarketOffer,
+            userId,
+          )
+          break
+
+        case "order_review_revision_requested":
+          if (!data.review) {
+            logger.warn(
+              `Missing review data for email notification: ${notificationType}`,
+              { userId, notificationType },
+            )
+            return
+          }
+          templateData = await payloadFormatters.formatOrderReviewEmailData(
+            data.review as DBReview,
+            userId,
+          )
+          break
+
+        case "order_comment":
+          // Obsolete but handle gracefully
+          logger.debug(
+            `order_comment notification type is obsolete, skipping email`,
+            { userId, notificationType },
+          )
+          return
 
         default:
           logger.warn(
