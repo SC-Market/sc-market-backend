@@ -1,8 +1,8 @@
-<h1 style="color: #e8e8e8;">Order Assigned to You</h1>
+<h1 style="color: #e8e8e8;">Order In Progress</h1>
 
 <p style="color: #b7b7b7;">Hello {{userDisplayName}},</p>
 
-<p style="color: #b7b7b7;">You have been assigned to a new order:</p>
+<p style="color: #b7b7b7;">Order "{{order.title}}" is now in progress.</p>
 
 <div
   style="background-color: rgba(45, 55, 72, 0.5); padding: 20px; border-radius: 8px; margin: 20px 0; border: 1px solid rgb(45, 55, 72);"
@@ -16,12 +16,9 @@
       {{formatCurrency order.cost}}
       aUEC</p>
   {{/if}}
-  <p style="color: #b7b7b7;"><strong>Status:</strong> {{order.status}}</p>
+  <p style="color: #b7b7b7;"><strong>Status:</strong> In Progress</p>
 </div>
 
 <p style="text-align: center;">
   <a href="{{actionUrl}}" class="button">View Order</a>
 </p>
-
-<p style="color: #b7b7b7;">Please review the order details and begin work when
-  ready.</p>

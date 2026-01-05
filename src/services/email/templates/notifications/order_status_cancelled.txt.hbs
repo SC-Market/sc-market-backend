@@ -1,11 +1,12 @@
-New Order Created Hello
-{{userDisplayName}}, A new order has been created:
+Order Cancelled
+
+Hello {{userDisplayName}},
+
+Order "{{order.title}}" has been cancelled.
 
 {{order.title}}
 {{#if order.description}}{{order.description}}{{/if}}
 {{#if order.cost}}Value: {{formatCurrency order.cost}} aUEC{{/if}}
-Status:
-{{order.status}}
+Status: Cancelled
 
-View Order:
-{{actionUrl}}
+View Order: {{actionUrl}}

@@ -354,6 +354,15 @@ export async function getEntityByType(
       const order = await orderDb.getOrder({ order_id: review!.order_id })
       return await formatReview(order, review!.role)
     }
+    case "order_comments": {
+      const comments = await orderDb.getOrderComments({ comment_id: entity_id })
+      if (!comments || comments.length === 0) {
+        throw new Error(`Order comment not found: ${entity_id}`)
+      }
+      const comment = comments[0]
+      const order = await orderDb.getOrder({ order_id: comment.order_id })
+      return serializeOrderDetails(order, null)
+    }
     case "contractors": {
       return await contractorDb.getMinimalContractor({
         contractor_id: entity_id,
@@ -372,6 +381,25 @@ export async function getEntityByType(
     case "market_bids": {
       const bids = await marketDb.getMarketBids({ bid_id: entity_id })
       return await formatBid(bids[0])
+    }
+    case "market_offers": {
+      const offers = await marketDb.getMarketOffers({ offer_id: entity_id })
+      if (!offers || offers.length === 0) {
+        throw new Error(`Market offer not found: ${entity_id}`)
+      }
+      const offer = offers[0]
+      const listing = await marketDb.getMarketListing({ listing_id: offer.listing_id })
+      return await formatListing(listing)
+    }
+    case "order_applicants": {
+      // For order_contractor_applied, entity_id is the order_id
+      const order = await orderDb.getOrder({ order_id: entity_id })
+      return serializeOrderDetails(order, null)
+    }
+    case "order": {
+      // Same as orders (for public_order_create)
+      const order = await orderDb.getOrder({ order_id: entity_id })
+      return serializeOrderDetails(order, null)
     }
     case "offer_sessions": {
       const offers = await offerDb.getOfferSessions({ id: entity_id })
