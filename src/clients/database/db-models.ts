@@ -791,3 +791,14 @@ export interface DBAccountIntegration {
   configured_at: Date
   last_used_at: Date | null
 }
+
+export interface DBUserEmail {
+  email_id: string
+  user_id: string
+  email: string
+  email_verified: boolean
+  is_primary: boolean
+  created_at: Date
+  updated_at: Date
+  verified_at: Date | null
+}

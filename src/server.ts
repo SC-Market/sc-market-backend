@@ -110,7 +110,7 @@ app.get("/favicon.ico", (req, res) => {
       join(process.cwd(), "src", "public", "favicon.ico"), // src/public from project root
       join(__dirname, "..", "src", "public", "favicon.ico"), // src/public from dist/
     ]
-    
+
     let faviconPath: string | null = null
     for (const path of possiblePaths) {
       if (existsSync(path)) {
@@ -118,12 +118,12 @@ app.get("/favicon.ico", (req, res) => {
         break
       }
     }
-    
+
     if (!faviconPath) {
       res.status(404).send("Favicon not found")
       return
     }
-    
+
     const favicon = readFileSync(faviconPath)
     res.setHeader("Content-Type", "image/x-icon")
     res.setHeader("Cache-Control", "public, max-age=31536000") // Cache for 1 year

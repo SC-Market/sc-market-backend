@@ -128,7 +128,7 @@ threadRouter.post("/order/status", async (req, res) => {
   req.user = user
 
   await handleStatusUpdate(req, res, status)
-  
+
   // Send response if handleStatusUpdate didn't send one (no error occurred)
   if (!res.headersSent) {
     res.status(200).json({ result: "Success" })

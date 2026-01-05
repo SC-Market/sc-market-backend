@@ -9,6 +9,7 @@ import { deliveriesRouter, deliveryRouter } from "./deliveries/routes.js"
 import { marketRouter } from "./market/routes.js"
 import { notificationRouter } from "./notifications/routes.js"
 import { pushRouter } from "./push/routes.js"
+import { emailRouter } from "./email/routes.js"
 import { recruitingRouter } from "./recruiting/routes.js"
 import { commentRouter } from "./comments/routes.js"
 import { wikiRouter } from "./wiki/routes.js"
@@ -31,6 +32,7 @@ apiRouter.use("/commodities", commodityRouter)
 apiRouter.use("/profile", profileRouter)
 apiRouter.use("/notification", notificationRouter)
 apiRouter.use("/push", pushRouter)
+apiRouter.use("/email", emailRouter)
 apiRouter.use("/market", marketRouter)
 apiRouter.use("/recruiting", recruitingRouter)
 apiRouter.use("/comments", commentRouter)

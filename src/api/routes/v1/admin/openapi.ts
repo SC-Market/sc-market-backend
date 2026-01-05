@@ -972,3 +972,93 @@ export const admin_post_users_username_unlink_spec = adminOapi.validPath({
   security: [{ adminAuth: [] }],
   ...RateLimitHeaders,
 })
+
+adminOapi.schema("TestNotificationRequest", {
+  type: "object",
+  title: "TestNotificationRequest",
+  required: ["notification_type", "target_username"],
+  properties: {
+    notification_type: {
+      type: "string",
+      enum: [
+        "order_create",
+        "order_assigned",
+        "order_message",
+        "order_comment",
+        "order_review",
+        "order_status_fulfilled",
+        "order_status_in_progress",
+        "order_status_not_started",
+        "order_status_cancelled",
+        "offer_create",
+        "counter_offer_create",
+        "offer_message",
+        "market_item_bid",
+        "market_item_offer",
+        "contractor_invite",
+        "admin_alert",
+        "order_review_revision_requested",
+      ],
+      description: "Type of notification to test",
+    },
+    target_username: {
+      type: "string",
+      description: "Username to send the test notification to",
+    },
+  },
+})
+
+export const admin_post_test_notification_spec = adminOapi.validPath({
+  summary: "Test notification with real data",
+  description:
+    "Admin endpoint to test any notification type using real data from the database. Finds the first available entity of the required type and triggers the notification.",
+  operationId: "adminTestNotification",
+  tags: ["Admin"],
+  requestBody: {
+    required: true,
+    content: {
+      "application/json": {
+        schema: {
+          $ref: "#/components/schemas/TestNotificationRequest",
+        },
+      },
+    },
+  },
+  responses: {
+    "200": {
+      description: "Notification test completed successfully",
+      content: {
+        "application/json": {
+          schema: {
+            type: "object",
+            properties: {
+              data: {
+                type: "object",
+                properties: {
+                  message: {
+                    type: "string",
+                    example: "Notification test completed",
+                  },
+                  data: {
+                    type: "object",
+                    description: "Entity data used for the notification",
+                  },
+                },
+              },
+            },
+          },
+        },
+      },
+    },
+    "400": Response400,
+    "401": Response401,
+    "403": Response403,
+    "404": {
+      description: "Required entity not found in database",
+      content: { "application/json": { schema: Response400 } },
+    },
+    "429": Response429Read,
+    "500": Response500,
+  },
+  security: [{ adminAuth: [] }],
+})

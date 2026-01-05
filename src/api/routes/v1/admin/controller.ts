@@ -21,6 +21,17 @@ import {
   convertMembershipAnalyticsToPrometheus,
 } from "./grafana-formatter.js"
 import { MinimalUser } from "../../../../clients/database/db-models.js"
+import { notificationService } from "../../../../services/notifications/notification.service.js"
+import * as notificationDb from "../notifications/database.js"
+import { pushNotificationService } from "../../../../services/push-notifications/push-notification.service.js"
+import { emailService } from "../../../../services/email/email.service.js"
+import * as payloadFormatters from "../../../../services/notifications/notification-payload-formatters.js"
+import { webhookService } from "../../../../services/webhooks/webhook.service.js"
+import * as marketDb from "../market/database.js"
+import * as offerDb from "../offers/database.js"
+import * as commentDb from "../orders/database.js"
+import * as messageDb from "../chats/database.js"
+import * as chatDb from "../chats/database.js"
 
 export const admin_get_activity: RequestHandler = async (req, res) => {
   const daily = await adminDb.getDailyActivity()
@@ -474,6 +485,675 @@ export const admin_post_users_username_unlink: RequestHandler = async (
         createErrorResponse(
           ErrorCode.INTERNAL_SERVER_ERROR,
           "Internal server error during account unlink",
+        ),
+      )
+  }
+}
+
+/**
+ * Helper function to create a test notification directly to a target user
+ */
+async function createTestNotification(
+  actionName: string,
+  entityId: string,
+  targetUserId: string,
+  actorId: string,
+  payloadData: any,
+  pushPayload?: any,
+): Promise<void> {
+  const action = await notificationDb.getNotificationActionByName(actionName)
+  const notif_objects = await notificationDb.insertNotificationObjects([
+    {
+      action_type_id: action.action_type_id,
+      entity_id: entityId,
+    },
+  ])
+
+  await notificationDb.insertNotificationChange([
+    {
+      notification_object_id: notif_objects[0].notification_object_id,
+      actor_id: actorId,
+    },
+  ])
+
+  await notificationDb.insertNotifications([
+    {
+      notification_object_id: notif_objects[0].notification_object_id,
+      notifier_id: targetUserId,
+    },
+  ])
+
+  // Send push notification if payload provided
+  if (pushPayload) {
+    try {
+      await pushNotificationService.sendPushNotification(
+        targetUserId,
+        pushPayload,
+        actionName,
+      )
+    } catch (error) {
+      logger.debug(`Failed to send push notification for test:`, error)
+    }
+  }
+
+  // Send email notification
+  try {
+    await emailService.sendNotificationEmail(
+      targetUserId,
+      actionName,
+      payloadData,
+    )
+  } catch (error) {
+    logger.debug(`Failed to send email notification for test:`, error)
+  }
+
+  // Send webhooks based on notification type
+  // Note: Webhooks are sent based on entity type, not notification type
+  try {
+    if (payloadData.order && actionName.startsWith("order_")) {
+      if (actionName === "order_comment" && payloadData.comment) {
+        await webhookService.sendOrderCommentWebhooks(
+          payloadData.order,
+          payloadData.comment,
+        )
+      } else if (actionName.startsWith("order_status_")) {
+        const status = actionName.replace("order_status_", "").replace("_", "-")
+        await webhookService.sendOrderStatusWebhooks(
+          payloadData.order,
+          status,
+          actorId,
+        )
+      } else if (actionName === "order_create") {
+        await webhookService.sendOrderWebhooks(payloadData.order)
+      }
+    } else if (payloadData.offer && actionName.startsWith("offer_")) {
+      const offerType =
+        actionName === "offer_create" ? "offer_create" : "counter_offer_create"
+      await webhookService.sendOfferWebhooks(payloadData.offer, offerType)
+    } else if (
+      payloadData.listing &&
+      payloadData.bid &&
+      actionName === "market_item_bid"
+    ) {
+      await webhookService.sendBidWebhooks(payloadData.listing, payloadData.bid)
+    }
+  } catch (error) {
+    logger.debug(`Failed to send webhooks for test:`, error)
+  }
+}
+
+export const admin_post_test_notification: RequestHandler = async (
+  req,
+  res,
+) => {
+  try {
+    const { notification_type, target_username } = req.body
+    const user = req.user as User
+
+    if (!notification_type) {
+      res
+        .status(400)
+        .json(
+          createErrorResponse(
+            ErrorCode.VALIDATION_ERROR,
+            "notification_type is required",
+          ),
+        )
+      return
+    }
+
+    if (!target_username) {
+      res
+        .status(400)
+        .json(
+          createErrorResponse(
+            ErrorCode.VALIDATION_ERROR,
+            "target_username is required",
+          ),
+        )
+      return
+    }
+
+    // Verify target user exists and get user_id
+    const targetUser = await profileDb.getUser({ username: target_username })
+    if (!targetUser) {
+      res.status(404).json(createNotFoundErrorResponse("Target user not found"))
+      return
+    }
+
+    const target_user_id = targetUser.user_id
+
+    let result: { message: string; data?: any } = {
+      message: "Notification test completed",
+    }
+
+    // Find real data and trigger notification based on type
+    switch (notification_type) {
+      case "order_create": {
+        const orders = await orderDb.getOrders({})
+        if (orders.length === 0) {
+          res
+            .status(404)
+            .json(
+              createErrorResponse(
+                ErrorCode.NOT_FOUND,
+                "No orders found in database",
+              ),
+            )
+          return
+        }
+        const order = orders[0]
+        const payload = payloadFormatters.formatOrderNotificationPayload(
+          order,
+          "order_create",
+        )
+        await createTestNotification(
+          "order_create",
+          order.order_id,
+          target_user_id,
+          user.user_id,
+          { order },
+          payload,
+        )
+        result.data = { order_id: order.order_id }
+        break
+      }
+
+      case "order_assigned": {
+        const orders = await orderDb.getOrders({})
+        if (orders.length === 0) {
+          res
+            .status(404)
+            .json(
+              createErrorResponse(
+                ErrorCode.NOT_FOUND,
+                "No orders found in database",
+              ),
+            )
+          return
+        }
+        const order = orders[0]
+        const payload = payloadFormatters.formatOrderNotificationPayload(
+          order,
+          "order_assigned",
+        )
+        await createTestNotification(
+          "order_assigned",
+          order.order_id,
+          target_user_id,
+          user.user_id,
+          { order },
+          payload,
+        )
+        result.data = { order_id: order.order_id }
+        break
+      }
+
+      case "order_message": {
+        const orders = await orderDb.getOrders({})
+        if (orders.length === 0) {
+          res
+            .status(404)
+            .json(
+              createErrorResponse(
+                ErrorCode.NOT_FOUND,
+                "No orders found in database",
+              ),
+            )
+          return
+        }
+        // Get chat for the order, then get messages from that chat
+        let chat
+        try {
+          chat = await chatDb.getChat({ order_id: orders[0].order_id })
+        } catch {
+          res
+            .status(404)
+            .json(
+              createErrorResponse(
+                ErrorCode.NOT_FOUND,
+                "No chat found for order",
+              ),
+            )
+          return
+        }
+        const messages = await messageDb.getMessages({
+          chat_id: chat.chat_id,
+        })
+        if (messages.length === 0) {
+          res
+            .status(404)
+            .json(
+              createErrorResponse(
+                ErrorCode.NOT_FOUND,
+                "No messages found for order chat",
+              ),
+            )
+          return
+        }
+        const order = orders[0]
+        const message = messages[0]
+        const payload =
+          await payloadFormatters.formatOrderMessageNotificationPayload(
+            order,
+            message,
+            chat.chat_id,
+          )
+        await createTestNotification(
+          "order_message",
+          order.order_id,
+          target_user_id,
+          user.user_id,
+          { order, message },
+          payload,
+        )
+        result.data = {
+          order_id: order.order_id,
+          message_id: message.message_id,
+        }
+        break
+      }
+
+      case "order_comment": {
+        const comments = await commentDb.getOrderComments({})
+        if (comments.length === 0) {
+          res
+            .status(404)
+            .json(
+              createErrorResponse(
+                ErrorCode.NOT_FOUND,
+                "No order comments found in database",
+              ),
+            )
+          return
+        }
+        const comment = comments[0]
+        const order = await orderDb.getOrder({ order_id: comment.order_id })
+        const payload = payloadFormatters.formatOrderCommentNotificationPayload(
+          order,
+          comment,
+        )
+        await createTestNotification(
+          "order_comment",
+          comment.comment_id,
+          target_user_id,
+          user.user_id,
+          { order, comment },
+          payload,
+        )
+        result.data = { comment_id: comment.comment_id }
+        break
+      }
+
+      case "order_review": {
+        const reviews = await orderDb.getOrderReviews({})
+        if (reviews.length === 0) {
+          res
+            .status(404)
+            .json(
+              createErrorResponse(
+                ErrorCode.NOT_FOUND,
+                "No reviews found in database",
+              ),
+            )
+          return
+        }
+        const review = reviews[0]
+        const payload =
+          payloadFormatters.formatOrderReviewNotificationPayload(review)
+        await createTestNotification(
+          "order_review",
+          review.review_id,
+          target_user_id,
+          user.user_id,
+          { review },
+          payload,
+        )
+        result.data = { review_id: review.review_id }
+        break
+      }
+
+      case "order_status_fulfilled":
+      case "order_status_in_progress":
+      case "order_status_not_started":
+      case "order_status_cancelled": {
+        const orders = await orderDb.getOrders({})
+        if (orders.length === 0) {
+          res
+            .status(404)
+            .json(
+              createErrorResponse(
+                ErrorCode.NOT_FOUND,
+                "No orders found in database",
+              ),
+            )
+          return
+        }
+        const order = orders[0]
+        const status = notification_type.replace("order_status_", "")
+        const actionName = `order_status_${status.replace("-", "_")}`
+        const payload = payloadFormatters.formatOrderNotificationPayload(
+          order,
+          actionName,
+        )
+        await createTestNotification(
+          actionName,
+          order.order_id,
+          target_user_id,
+          user.user_id,
+          { order },
+          payload,
+        )
+        result.data = { order_id: order.order_id, status }
+        break
+      }
+
+      case "offer_create":
+      case "counter_offer_create": {
+        const offers = await offerDb.getOfferSessions({})
+        if (offers.length === 0) {
+          res
+            .status(404)
+            .json(
+              createErrorResponse(
+                ErrorCode.NOT_FOUND,
+                "No offers found in database",
+              ),
+            )
+          return
+        }
+        const offer = offers[0]
+        const offerType =
+          notification_type === "offer_create" ? "create" : "counteroffer"
+        const payload = payloadFormatters.formatOfferNotificationPayload(
+          offer,
+          offerType,
+        )
+        await createTestNotification(
+          notification_type,
+          offer.id,
+          target_user_id,
+          user.user_id,
+          { offer },
+          payload,
+        )
+        result.data = { offer_id: offer.id }
+        break
+      }
+
+      case "offer_message": {
+        const offers = await offerDb.getOfferSessions({})
+        if (offers.length === 0) {
+          res
+            .status(404)
+            .json(
+              createErrorResponse(
+                ErrorCode.NOT_FOUND,
+                "No offers found in database",
+              ),
+            )
+          return
+        }
+        // Get chat for the offer session, then get messages from that chat
+        let chat
+        try {
+          chat = await chatDb.getChat({ session_id: offers[0].id })
+        } catch {
+          res
+            .status(404)
+            .json(
+              createErrorResponse(
+                ErrorCode.NOT_FOUND,
+                "No chat found for offer session",
+              ),
+            )
+          return
+        }
+        const messages = await messageDb.getMessages({
+          chat_id: chat.chat_id,
+        })
+        if (messages.length === 0) {
+          res
+            .status(404)
+            .json(
+              createErrorResponse(
+                ErrorCode.NOT_FOUND,
+                "No messages found for offer chat",
+              ),
+            )
+          return
+        }
+        const offer = offers[0]
+        const message = messages[0]
+        const payload =
+          await payloadFormatters.formatOfferMessageNotificationPayload(
+            offer,
+            message,
+            chat.chat_id,
+          )
+        await createTestNotification(
+          "offer_message",
+          offer.id,
+          target_user_id,
+          user.user_id,
+          { offer, message },
+          payload,
+        )
+        result.data = {
+          offer_id: offer.id,
+          message_id: message.message_id,
+        }
+        break
+      }
+
+      case "market_item_bid": {
+        const listings = await marketDb.getMarketListings({})
+        if (listings.length === 0) {
+          res
+            .status(404)
+            .json(
+              createErrorResponse(
+                ErrorCode.NOT_FOUND,
+                "No market listings found in database",
+              ),
+            )
+          return
+        }
+        const listing = await marketDb.getMarketListingComplete(
+          listings[0].listing_id,
+        )
+        const bids = await marketDb.getMarketBids({
+          listing_id: listing.listing.listing_id,
+        })
+        if (bids.length === 0) {
+          res
+            .status(404)
+            .json(
+              createErrorResponse(
+                ErrorCode.NOT_FOUND,
+                "No bids found for listing",
+              ),
+            )
+          return
+        }
+        const bid = bids[0]
+        const payload = payloadFormatters.formatMarketBidNotificationPayload(
+          listing,
+          bid,
+        )
+        await createTestNotification(
+          "market_item_bid",
+          bid.bid_id,
+          target_user_id,
+          user.user_id,
+          { listing, bid },
+          payload,
+        )
+        result.data = {
+          listing_id: listing.listing.listing_id,
+          bid_id: bid.bid_id,
+        }
+        break
+      }
+
+      case "market_item_offer": {
+        const listings = await marketDb.getMarketListings({})
+        if (listings.length === 0) {
+          res
+            .status(404)
+            .json(
+              createErrorResponse(
+                ErrorCode.NOT_FOUND,
+                "No market listings found in database",
+              ),
+            )
+          return
+        }
+        const offers = await marketDb.getMarketOffers({
+          listing_id: listings[0].listing_id,
+        })
+        if (offers.length === 0) {
+          res
+            .status(404)
+            .json(
+              createErrorResponse(
+                ErrorCode.NOT_FOUND,
+                "No offers found for listing",
+              ),
+            )
+          return
+        }
+        const listing = listings[0]
+        const offer = offers[0]
+        const payload = payloadFormatters.formatMarketOfferNotificationPayload(
+          listing,
+          offer,
+        )
+        await createTestNotification(
+          "market_item_offer",
+          offer.offer_id,
+          target_user_id,
+          user.user_id,
+          { listing, offer },
+          payload,
+        )
+        result.data = {
+          listing_id: listing.listing_id,
+          offer_id: offer.offer_id,
+        }
+        break
+      }
+
+      case "contractor_invite": {
+        const invites = await contractorDb.getContractorInvites({})
+        if (invites.length === 0) {
+          res
+            .status(404)
+            .json(
+              createErrorResponse(
+                ErrorCode.NOT_FOUND,
+                "No contractor invites found in database",
+              ),
+            )
+          return
+        }
+        const invite = invites[0]
+        const payload =
+          payloadFormatters.formatContractorInviteNotificationPayload(invite)
+        await createTestNotification(
+          "contractor_invite",
+          invite.invite_id,
+          target_user_id,
+          user.user_id,
+          { invite },
+          payload,
+        )
+        result.data = { invite_id: invite.invite_id }
+        break
+      }
+
+      case "admin_alert": {
+        const alerts = await adminDb.getAdminAlerts({})
+        if (alerts.length === 0) {
+          res
+            .status(404)
+            .json(
+              createErrorResponse(
+                ErrorCode.NOT_FOUND,
+                "No admin alerts found in database",
+              ),
+            )
+          return
+        }
+        const alert = alerts[0]
+        const payload =
+          payloadFormatters.formatAdminAlertNotificationPayload(alert)
+        await createTestNotification(
+          "admin_alert",
+          alert.alert_id,
+          target_user_id,
+          user.user_id,
+          { alert },
+          payload,
+        )
+        result.data = { alert_id: alert.alert_id }
+        break
+      }
+
+      case "order_review_revision_requested": {
+        const reviews = await orderDb.getOrderReviews({})
+        if (reviews.length === 0) {
+          res
+            .status(404)
+            .json(
+              createErrorResponse(
+                ErrorCode.NOT_FOUND,
+                "No reviews found in database",
+              ),
+            )
+          return
+        }
+        const review = reviews[0]
+        const payload =
+          payloadFormatters.formatOrderReviewRevisionNotificationPayload(review)
+        await createTestNotification(
+          "order_review_revision_requested",
+          review.review_id,
+          target_user_id,
+          user.user_id,
+          { review },
+          payload,
+        )
+        result.data = { review_id: review.review_id }
+        break
+      }
+
+      default:
+        res
+          .status(400)
+          .json(
+            createErrorResponse(
+              ErrorCode.VALIDATION_ERROR,
+              `Unknown notification type: ${notification_type}`,
+            ),
+          )
+        return
+    }
+
+    logger.info(
+      `Admin ${user.user_id} tested notification type: ${notification_type}`,
+      { target_username, target_user_id, result },
+    )
+
+    res.json(createResponse(result))
+  } catch (error) {
+    logger.error("Error testing notification:", error)
+    res
+      .status(500)
+      .json(
+        createErrorResponse(
+          ErrorCode.INTERNAL_SERVER_ERROR,
+          "Failed to test notification",
         ),
       )
   }

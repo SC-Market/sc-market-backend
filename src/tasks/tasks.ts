@@ -9,10 +9,13 @@ import {
 } from "./timers.js"
 import { fetchAndInsertCommodities } from "./commodities.js"
 import { processDiscordQueue } from "./discord-queue-consumer.js"
+import { processEmailQueue } from "./email-queue-consumer.js"
 import {
   logSQSConfigurationStatus,
-  checkSQSConfiguration,
+  checkDiscordSQSConfiguration,
+  checkEmailSQSConfiguration,
 } from "../clients/aws/sqs-config.js"
+import { env } from "../config/env.js"
 import logger from "../logger/logger.js"
 
 export function start_tasks() {
@@ -40,13 +43,27 @@ export function start_tasks() {
   // Clear uploads folder on server start
   clear_uploads_folder()
 
-  // Process Discord queue every 5 seconds (only if SQS is configured)
-  const sqsConfig = checkSQSConfiguration()
-  if (sqsConfig.isConfigured) {
+  // Process Discord queue every 5 seconds (only if Discord SQS is configured)
+  const discordConfig = checkDiscordSQSConfiguration()
+  if (discordConfig.isDiscordConfigured) {
     processDiscordQueue()
     setInterval(processDiscordQueue, 5 * 1000) // 5 seconds
   } else {
-    logger.warn("Discord queue processing disabled - SQS not configured")
+    logger.debug(
+      "Discord queue processing disabled - Discord SQS not configured",
+      { missingConfig: discordConfig.missingConfig },
+    )
+  }
+
+  // Process Email queue every 5 seconds (only if Email SQS is configured)
+  const emailConfig = checkEmailSQSConfiguration()
+  if (emailConfig.isEmailConfigured) {
+    processEmailQueue()
+    setInterval(processEmailQueue, 5 * 1000) // 5 seconds
+  } else {
+    logger.debug("Email queue processing disabled - Email SQS not configured", {
+      missingConfig: emailConfig.missingConfig,
+    })
   }
 
   // Clean up invalid push subscriptions daily
