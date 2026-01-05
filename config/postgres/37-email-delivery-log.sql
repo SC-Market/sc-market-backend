@@ -39,7 +39,4 @@ COMMENT ON COLUMN public.email_delivery_log.status IS 'Delivery status: sent, de
 COMMENT ON COLUMN public.email_delivery_log.provider_message_id IS 'Message ID from email provider (e.g., AWS SES message ID)';
 COMMENT ON COLUMN public.email_delivery_log.error_message IS 'Error message if delivery failed';
 
--- Set table owner
-ALTER TABLE public.email_delivery_log OWNER TO scmarket;
-
 COMMIT;

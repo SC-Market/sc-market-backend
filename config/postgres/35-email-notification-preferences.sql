@@ -40,7 +40,4 @@ COMMENT ON COLUMN public.email_notification_preferences.enabled IS 'Whether emai
 COMMENT ON COLUMN public.email_notification_preferences.frequency IS 'Email frequency: immediate, daily digest, or weekly digest';
 COMMENT ON COLUMN public.email_notification_preferences.digest_time IS 'Time of day for daily/weekly digest emails (user timezone)';
 
--- Set table owner
-ALTER TABLE public.email_notification_preferences OWNER TO scmarket;
-
 COMMIT;
