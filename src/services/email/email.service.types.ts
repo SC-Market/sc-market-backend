@@ -75,7 +75,7 @@ export interface EmailService {
     notificationType: string,
     data: NotificationEmailData,
     skipQueue?: boolean,
-  ): Promise<void>
+  ): Promise<boolean>
 
   // Email verification
   generateVerificationToken(userId: string, email: string): Promise<string>
