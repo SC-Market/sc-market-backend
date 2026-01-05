@@ -156,17 +156,24 @@ async function handleNotificationEmail(payload: {
     })
 
     // Skip queue check since we're already processing from the queue
-    await emailService.sendNotificationEmail(
+    const sent = await emailService.sendNotificationEmail(
       userId,
       notificationType,
       data,
       true,
     )
 
-    logger.info("Notification email sent successfully", {
-      userId,
-      notificationType,
-    })
+    if (sent) {
+      logger.info("Notification email sent successfully", {
+        userId,
+        notificationType,
+      })
+    } else {
+      logger.debug("Notification email skipped (no email, unverified, or disabled)", {
+        userId,
+        notificationType,
+      })
+    }
   } catch (error) {
     logger.error("Failed to send notification email", {
       error,

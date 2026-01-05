@@ -25,29 +25,24 @@
         background-color: #111828;
         border: 1px solid rgb(45, 55, 72);
       }
-      .email-logo {
-        background-color: #111828;
+      .email-header {
+        background: linear-gradient(135deg, #10b881 0%, #7a7efe 100%);
         padding: 20px 30px;
         display: flex;
         align-items: center;
       }
-      .email-logo img {
+      .email-header img {
         width: 48px;
         height: 48px;
         border-radius: 50%;
         object-fit: contain;
         display: block;
-        background-color: #ffffff;
+        background-color: #111828;
         padding: 4px;
-      }
-      .email-header {
-        background: linear-gradient(135deg, #10b881 0%, #7a7efe 100%);
-        padding: 20px 30px;
-        text-align: center;
       }
       .email-header h1 {
         color: #ffffff;
-        margin: 0;
+        margin: 0 0 0 16px;
       }
       .email-body {
         padding: 40px 30px;
@@ -101,12 +96,10 @@
   </head>
   <body>
     <div class="email-container">
-      {{#if logoUrl}}
-        <div class="email-logo">
-          <img src="{{logoUrl}}" alt="{{siteName}}" />
-        </div>
-      {{/if}}
       <div class="email-header">
+        {{#if logoUrl}}
+          <img src="{{logoUrl}}" alt="{{siteName}}" />
+        {{/if}}
         <h1>{{siteName}}</h1>
       </div>
       <div class="email-body">
