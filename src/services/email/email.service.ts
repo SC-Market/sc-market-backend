@@ -313,7 +313,7 @@ class SESEmailService implements EmailService {
     notificationType: string,
     data: NotificationEmailData,
     skipQueue: boolean = false,
-  ): Promise<void> {
+  ): Promise<boolean> {
     // If queue is enabled and not skipping queue, queue the email instead of sending directly
     if (this.isQueueEnabled() && !skipQueue) {
       try {
@@ -327,7 +327,7 @@ class SESEmailService implements EmailService {
           userId,
           notificationType,
         })
-        return
+        return true // Return true because email was queued successfully
       } catch (error) {
         logger.error(
           "Failed to queue notification email, falling back to direct send",
@@ -349,7 +349,7 @@ class SESEmailService implements EmailService {
         logger.debug(
           `No email found for user ${userId}, skipping email notification`,
         )
-        return
+        return false
       }
 
       // Check if email is verified
@@ -357,7 +357,7 @@ class SESEmailService implements EmailService {
         logger.debug(
           `Email not verified for user ${userId}, skipping email notification`,
         )
-        return
+        return false
       }
 
       // Get notification action to check preferences
@@ -382,7 +382,7 @@ class SESEmailService implements EmailService {
           logger.debug(
             `Email notifications disabled for user ${userId}, type ${notificationType}`,
           )
-          return
+          return false
         }
       }
 
@@ -433,7 +433,7 @@ class SESEmailService implements EmailService {
               `Missing offer data for email notification: ${notificationType}`,
               { userId, notificationType },
             )
-            return
+            return false
           }
           templateData =
             await payloadFormatters.formatOfferNotificationEmailData(
@@ -449,7 +449,7 @@ class SESEmailService implements EmailService {
               `Missing offer or message data for email notification: ${notificationType}`,
               { userId, notificationType },
             )
-            return
+            return false
           }
           templateData = await payloadFormatters.formatOfferMessageEmailData(
             data.offer as DBOfferSession,
@@ -464,7 +464,7 @@ class SESEmailService implements EmailService {
               `Missing listing or bid data for email notification: ${notificationType}`,
               { userId, notificationType },
             )
-            return
+            return false
           }
           templateData = await payloadFormatters.formatMarketBidEmailData(
             data.listing as DBMarketListingComplete,
@@ -479,7 +479,7 @@ class SESEmailService implements EmailService {
               `Missing listing or offer data for email notification: ${notificationType}`,
               { userId, notificationType },
             )
-            return
+            return false
           }
           templateData = await payloadFormatters.formatMarketOfferEmailData(
             data.listing as DBMarketListing,
@@ -494,7 +494,7 @@ class SESEmailService implements EmailService {
               `Missing invite data for email notification: ${notificationType}`,
               { userId, notificationType },
             )
-            return
+            return false
           }
           templateData =
             await payloadFormatters.formatContractorInviteEmailData(
@@ -509,7 +509,7 @@ class SESEmailService implements EmailService {
               `Missing alert data for email notification: ${notificationType}`,
               { userId, notificationType },
             )
-            return
+            return false
           }
           templateData = await payloadFormatters.formatAdminAlertEmailData(
             data.alert as DBAdminAlert,
@@ -544,7 +544,7 @@ class SESEmailService implements EmailService {
               `Missing listing or bid data for email notification: ${notificationType}`,
               { userId, notificationType },
             )
-            return
+            return false
           }
           templateData = await payloadFormatters.formatMarketBidEmailData(
             data.listing as DBMarketListingComplete,
@@ -560,7 +560,7 @@ class SESEmailService implements EmailService {
               `Missing listing or offer data for email notification: ${notificationType}`,
               { userId, notificationType },
             )
-            return
+            return false
           }
           templateData = await payloadFormatters.formatMarketOfferEmailData(
             data.listing as DBMarketListing,
@@ -575,7 +575,7 @@ class SESEmailService implements EmailService {
               `Missing review data for email notification: ${notificationType}`,
               { userId, notificationType },
             )
-            return
+            return false
           }
           templateData = await payloadFormatters.formatOrderReviewEmailData(
             data.review as DBReview,
@@ -589,14 +589,14 @@ class SESEmailService implements EmailService {
             `order_comment notification type is obsolete, skipping email`,
             { userId, notificationType },
           )
-          return
+          return false
 
         default:
           logger.warn(
             `Unknown notification type for email: ${notificationType}`,
             { userId, notificationType },
           )
-          return
+          return false
       }
 
       // Render email templates
@@ -626,6 +626,7 @@ class SESEmailService implements EmailService {
           notificationType,
           error: result.error,
         })
+        return false
       } else {
         logger.info("Notification email sent successfully", {
           userId,
@@ -633,6 +634,7 @@ class SESEmailService implements EmailService {
           notificationType,
           messageId: result.messageId,
         })
+        return true
       }
     } catch (error) {
       // Log but don't throw - email failures shouldn't break notification creation
@@ -641,6 +643,7 @@ class SESEmailService implements EmailService {
         userId,
         notificationType,
       })
+      return false
     }
   }
 
