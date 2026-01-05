@@ -43,6 +43,4 @@ COMMENT ON CONSTRAINT unique_email ON public.user_emails IS 'Ensures each email 
 COMMENT ON CONSTRAINT unique_user_primary_email ON public.user_emails IS 'Ensures each user can only have one primary email address';
 
 -- Set table owner
-ALTER TABLE public.user_emails OWNER TO scmarket;
-
 COMMIT;

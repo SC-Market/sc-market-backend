@@ -50,7 +50,4 @@ $$;
 
 COMMENT ON FUNCTION public.cleanup_old_email_unsubscribe_tokens() IS 'Cleans up old used unsubscribe tokens (older than 30 days). Returns count of deleted tokens.';
 
--- Set table owner
-ALTER TABLE public.email_unsubscribe_tokens OWNER TO scmarket;
-
 COMMIT;

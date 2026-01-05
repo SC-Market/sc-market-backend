@@ -54,7 +54,4 @@ $$;
 
 COMMENT ON FUNCTION public.cleanup_expired_email_verification_tokens() IS 'Cleans up expired and old used email verification tokens. Returns count of deleted tokens.';
 
--- Set table owner
-ALTER TABLE public.email_verification_tokens OWNER TO scmarket;
-
 COMMIT;
