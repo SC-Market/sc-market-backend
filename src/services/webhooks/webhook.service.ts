@@ -56,9 +56,12 @@ class DatabaseWebhookService implements WebhookService {
     try {
       await webhookUtil.sendOrderWebhooks(order)
     } catch (error) {
-      logger.error(`Failed to send order webhooks for order ${order.order_id}:`, {
-        error,
-      })
+      logger.error(
+        `Failed to send order webhooks for order ${order.order_id}:`,
+        {
+          error,
+        },
+      )
       // Don't throw - webhook failures shouldn't break the main flow
     }
   }

@@ -14,6 +14,7 @@ import {
   admin_get_membership_analytics,
   admin_get_audit_logs,
   admin_post_users_username_unlink,
+  admin_post_test_notification,
 } from "./controller.js"
 
 import {
@@ -23,6 +24,7 @@ import {
   admin_get_membership_analytics_spec,
   admin_get_audit_logs_spec,
   admin_post_users_username_unlink_spec,
+  admin_post_test_notification_spec,
 } from "./openapi.js"
 
 export const adminRouter = express.Router()
@@ -81,4 +83,12 @@ adminRouter.post(
   adminAuthorized,
   criticalRateLimit,
   admin_post_users_username_unlink,
+)
+
+adminRouter.post(
+  "/notifications/test",
+  admin_post_test_notification_spec,
+  adminAuthorized,
+  criticalRateLimit,
+  admin_post_test_notification,
 )

@@ -1,0 +1,11 @@
+New Order Created Hello
+{{userDisplayName}}, A new order has been created:
+
+{{order.title}}
+{{#if order.description}}{{order.description}}{{/if}}
+{{#if order.value}}Value: {{formatCurrency order.value}} aUEC{{/if}}
+Status:
+{{order.status}}
+
+View Order:
+{{actionUrl}}

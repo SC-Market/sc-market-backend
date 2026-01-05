@@ -20,7 +20,7 @@ import {
 import logger from "../../logger/logger.js"
 import { env } from "../../config/env.js"
 import { sendMessage } from "../../clients/aws/sqs.js"
-import { checkSQSConfiguration } from "../../clients/aws/sqs-config.js"
+import { checkDiscordSQSConfiguration } from "../../clients/aws/sqs-config.js"
 import {
   DiscordIntegrationSettings,
   DiscordInviteOptions,
@@ -190,9 +190,9 @@ class RestDiscordService implements DiscordService {
     }
 
     try {
-      const config = checkSQSConfiguration()
+      const config = checkDiscordSQSConfiguration()
 
-      if (!config.isConfigured) {
+      if (!config.isDiscordConfigured) {
         logger.warn(
           "SQS not configured - Discord thread creation will be skipped",
           {

@@ -755,9 +755,14 @@ export async function handleStatusUpdate(req: any, res: any, status: string) {
     // Only send error response if headers haven't been sent yet
     // (in case this is the only operation)
     if (!res.headersSent) {
-      res.status(500).json(
-        createErrorResponse(ErrorCode.INTERNAL_SERVER_ERROR, "Failed to update order status"),
-      )
+      res
+        .status(500)
+        .json(
+          createErrorResponse(
+            ErrorCode.INTERNAL_SERVER_ERROR,
+            "Failed to update order status",
+          ),
+        )
     }
     throw e // Re-throw so controller knows it failed
   }

@@ -40,7 +40,12 @@ export function securityHeaders() {
           "https://fonts.googleapis.com",
           "https://cdn.jsdelivr.net", // Required for Scalar API reference
         ],
-        fontSrc: ["'self'", "https://fonts.gstatic.com", "https://fonts.scalar.com", "data:"],
+        fontSrc: [
+          "'self'",
+          "https://fonts.gstatic.com",
+          "https://fonts.scalar.com",
+          "data:",
+        ],
         imgSrc: ["'self'", "data:", "https:", "blob:"],
         connectSrc: [
           "'self'",

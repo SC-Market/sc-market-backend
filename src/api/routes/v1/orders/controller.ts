@@ -153,9 +153,14 @@ export const update_order: RequestHandler = async (req, res) => {
     logger.error(`Failed to update order: ${e}`)
     // Only send error if no response has been sent yet
     if (!res.headersSent) {
-      res.status(500).json(
-        createErrorResponse(ErrorCode.INTERNAL_SERVER_ERROR, "Failed to update order"),
-      )
+      res
+        .status(500)
+        .json(
+          createErrorResponse(
+            ErrorCode.INTERNAL_SERVER_ERROR,
+            "Failed to update order",
+          ),
+        )
     }
   }
 }

@@ -1,0 +1,112 @@
+<html lang="{{locale}}">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>{{notificationTitle}}</title>
+    <style>
+      body {
+        font-family:
+          Inter,
+          -apple-system,
+          BlinkMacSystemFont,
+          "Segoe UI",
+          Helvetica,
+          Arial,
+          sans-serif;
+        line-height: 1.6;
+        color: #b7b7b7;
+        background-color: #0b0f1a;
+        margin: 0;
+        padding: 0;
+      }
+      .email-container {
+        max-width: 600px;
+        margin: 0 auto;
+        background-color: #111828;
+        border: 1px solid rgb(45, 55, 72);
+      }
+      .email-header {
+        background: linear-gradient(135deg, #10b881 0%, #7a7efe 100%);
+        padding: 30px 20px;
+        text-align: center;
+      }
+      .email-header img {
+        max-width: 120px;
+        height: auto;
+      }
+      .email-body {
+        padding: 40px 30px;
+        color: #b7b7b7;
+      }
+      .email-body h1,
+      .email-body h2,
+      .email-body h3 {
+        color: #e8e8e8;
+      }
+      .email-footer {
+        background-color: #111828;
+        padding: 30px;
+        text-align: center;
+        font-size: 12px;
+        color: #929ca1;
+        border-top: 1px solid rgb(45, 55, 72);
+      }
+      .button {
+        display: inline-block;
+        padding: 12px 24px;
+        background-color: #10b881;
+        color: #ffffff !important;
+        text-decoration: none;
+        border-radius: 8px;
+        margin: 20px 0;
+        font-weight: 600;
+      }
+      .button:hover {
+        background-color: #0ea371;
+      }
+      .unsubscribe-link {
+        color: #929ca1;
+        text-decoration: none;
+        font-size: 12px;
+      }
+      .unsubscribe-link:hover {
+        color: #b7b7b7;
+        text-decoration: underline;
+      }
+      @media only screen and (max-width: 600px) {
+        .email-body {
+          padding: 20px 15px;
+        }
+        .button {
+          display: block;
+          text-align: center;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="email-container">
+      <div class="email-header">
+        {{#if logoUrl}}
+          <img src="{{logoUrl}}" alt="{{siteName}}" />
+        {{else}}
+          <h1 style="color: #ffffff; margin: 0;">{{siteName}}</h1>
+        {{/if}}
+      </div>
+      <div class="email-body">
+        {{{body}}}
+      </div>
+      <div class="email-footer">
+        <p style="margin: 0 0 10px 0;">
+          <a href="{{siteUrl}}" class="unsubscribe-link">{{siteName}}</a>
+        </p>
+        <p style="margin: 0;">
+          <a href="{{unsubscribeUrl}}" class="unsubscribe-link">Unsubscribe</a>
+          |
+          <a href="{{preferencesUrl}}" class="unsubscribe-link">Manage
+            Preferences</a>
+        </p>
+      </div>
+    </div>
+  </body>
+</html>

@@ -428,7 +428,9 @@ export async function sendAssignedWebhook(order: DBOrder) {
     try {
       await sendOrderWebhook(order, webhook)
     } catch (e) {
-      logger.error(`Failed to send assigned webhook ${webhook.webhook_id}: ${e}`)
+      logger.error(
+        `Failed to send assigned webhook ${webhook.webhook_id}: ${e}`,
+      )
     }
   }
 }
@@ -448,7 +450,9 @@ export async function sendUserOfferWebhook(order: DBOfferSession) {
     try {
       await sendOfferWebhook(order, webhook)
     } catch (e) {
-      logger.error(`Failed to send user offer webhook ${webhook.webhook_id}: ${e}`)
+      logger.error(
+        `Failed to send user offer webhook ${webhook.webhook_id}: ${e}`,
+      )
     }
   }
 }
@@ -463,7 +467,9 @@ async function sendWebhook(body: any, webhook: DBNotificationWebhook) {
     }
   } catch (e) {
     if (e instanceof Error) {
-      throw new Error(`Invalid webhook URL format: ${webhook.webhook_url} - ${e.message}`)
+      throw new Error(
+        `Invalid webhook URL format: ${webhook.webhook_url} - ${e.message}`,
+      )
     }
     throw new Error(`Invalid webhook URL format: ${webhook.webhook_url}`)
   }
@@ -750,7 +756,9 @@ export async function sendOrderCommentWebhooks(
     try {
       await orderCommentWebhook(order, comment, webhook)
     } catch (e) {
-      logger.error(`Failed to send order comment webhook ${webhook.webhook_id}: ${e}`)
+      logger.error(
+        `Failed to send order comment webhook ${webhook.webhook_id}: ${e}`,
+      )
     }
   }
 }

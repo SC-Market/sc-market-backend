@@ -374,8 +374,11 @@ export async function getEntityByType(
       return await formatBid(bids[0])
     }
     case "offer_sessions": {
-      const [offers] = await offerDb.getOfferSessions({ id: entity_id })
-      return await serializeOfferSession(offers)
+      const offers = await offerDb.getOfferSessions({ id: entity_id })
+      if (!offers || offers.length === 0) {
+        throw new Error(`Offer session not found: ${entity_id}`)
+      }
+      return await serializeOfferSession(offers[0])
     }
     case "admin_alerts": {
       const alerts = await adminDb.getAdminAlerts({ alert_id: entity_id })

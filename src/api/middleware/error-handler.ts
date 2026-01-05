@@ -10,7 +10,10 @@
  */
 
 import { Request, Response, NextFunction } from "express"
-import { createErrorResponse, ValidationError as ValidationErrorType } from "../routes/v1/util/response.js"
+import {
+  createErrorResponse,
+  ValidationError as ValidationErrorType,
+} from "../routes/v1/util/response.js"
 import { ErrorCode } from "../routes/v1/util/error-codes.js"
 import {
   ValidationError,
@@ -46,7 +49,7 @@ function convertAjvErrorsToValidationErrors(
     // instancePath format: "/query/index" or "/params/post_id" or "/body/title"
     // We want to extract the field name in a user-friendly way
     const pathParts = ajvError.instancePath.split("/").filter(Boolean)
-    
+
     if (pathParts.length === 0) {
       // Root level error (e.g., missing required property at root)
       const missingProperty = ajvError.params?.missingProperty
@@ -59,7 +62,7 @@ function convertAjvErrorsToValidationErrors(
 
     const location = pathParts[0] // query, params, body, headers
     const fieldPath = pathParts.slice(1)
-    
+
     // For query/params, use just the parameter name
     // For body, use the full path if nested
     let field: string
@@ -68,23 +71,28 @@ function convertAjvErrorsToValidationErrors(
     } else if (location === "body") {
       field = fieldPath.length > 0 ? fieldPath.join(".") : "body"
     } else {
-      field = fieldPath.length > 0 ? `${location}.${fieldPath.join(".")}` : location
+      field =
+        fieldPath.length > 0 ? `${location}.${fieldPath.join(".")}` : location
     }
 
     // Enhance message with field context and additional details
     let message = ajvError.message
-    
+
     // Add field context first if not already present
     if (!message.toLowerCase().includes(field.toLowerCase())) {
       message = `${field}: ${message}`
     }
-    
+
     // For enum errors, include the allowed values after the field context
     if (ajvError.keyword === "enum" && ajvError.params?.allowedValues) {
       const allowedValues = ajvError.params.allowedValues as any[]
-      const valuesList = allowedValues.length <= 10
-        ? allowedValues.map((v: any) => `"${v}"`).join(", ")
-        : `${allowedValues.slice(0, 10).map((v: any) => `"${v}"`).join(", ")}, ... (${allowedValues.length} total)`
+      const valuesList =
+        allowedValues.length <= 10
+          ? allowedValues.map((v: any) => `"${v}"`).join(", ")
+          : `${allowedValues
+              .slice(0, 10)
+              .map((v: any) => `"${v}"`)
+              .join(", ")}, ... (${allowedValues.length} total)`
       message = `${message}. Allowed values: ${valuesList}`
     }
 
@@ -209,14 +217,12 @@ export function errorHandler(
   }
 
   if (err instanceof NotFoundError) {
-    return res
-      .status(404)
-      .json(
-        createErrorResponse(ErrorCode.NOT_FOUND, err.message, {
-          resource: err.resource,
-          identifier: err.identifier,
-        }),
-      )
+    return res.status(404).json(
+      createErrorResponse(ErrorCode.NOT_FOUND, err.message, {
+        resource: err.resource,
+        identifier: err.identifier,
+      }),
+    )
   }
 
   if (err instanceof BusinessLogicError) {
