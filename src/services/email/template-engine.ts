@@ -97,13 +97,17 @@ async function loadTemplate(
 
   // Load template file
   // Try multiple paths to handle both dev and production environments
+  // In Docker/production, templates should be copied to dist, but we also check source
   const possiblePaths = [
     // Standard path (works in dev and if templates are copied to dist)
     path.join(__dirname, "templates", "notifications", `${name}.${type}.hbs`),
-    // Production path if templates are in dist
+    // Production path if templates are in dist (relative to compiled JS file)
     path.join(
-      process.cwd(),
-      "dist",
+      __dirname,
+      "..",
+      "..",
+      "..",
+      "..",
       "src",
       "services",
       "email",
@@ -111,9 +115,19 @@ async function loadTemplate(
       "notifications",
       `${name}.${type}.hbs`,
     ),
-    // Alternative: relative to source (for dev)
+    // Alternative: relative to source (for dev and Docker if source is mounted)
     path.join(
       process.cwd(),
+      "src",
+      "services",
+      "email",
+      "templates",
+      "notifications",
+      `${name}.${type}.hbs`,
+    ),
+    // Docker path (if running from /app)
+    path.join(
+      "/app",
       "src",
       "services",
       "email",
@@ -155,13 +169,17 @@ async function loadBaseLayout(
   }
 
   // Try multiple paths to handle both dev and production environments
+  // In Docker/production, templates should be copied to dist, but we also check source
   const possiblePaths = [
     // Standard path (works in dev and if templates are copied to dist)
     path.join(__dirname, "templates", "layouts", `base.${type}.hbs`),
-    // Production path if templates are in dist
+    // Production path if templates are in dist (relative to compiled JS file)
     path.join(
-      process.cwd(),
-      "dist",
+      __dirname,
+      "..",
+      "..",
+      "..",
+      "..",
       "src",
       "services",
       "email",
@@ -169,9 +187,19 @@ async function loadBaseLayout(
       "layouts",
       `base.${type}.hbs`,
     ),
-    // Alternative: relative to source (for dev)
+    // Alternative: relative to source (for dev and Docker if source is mounted)
     path.join(
       process.cwd(),
+      "src",
+      "services",
+      "email",
+      "templates",
+      "layouts",
+      `base.${type}.hbs`,
+    ),
+    // Docker path (if running from /app)
+    path.join(
+      "/app",
       "src",
       "services",
       "email",
