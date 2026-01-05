@@ -51,20 +51,6 @@ export const addEmail: RequestHandler = async (req, res) => {
     return
   }
 
-  // Check if email already exists
-  const existingEmail = await userEmailDb.getUserEmailByAddress(email)
-  if (existingEmail) {
-    res
-      .status(409)
-      .json(
-        createErrorResponse(
-          ErrorCode.VALIDATION_ERROR,
-          "This email address is already in use",
-        ),
-      )
-    return
-  }
-
   // Check if user already has an email
   const existingUserEmail = await userEmailDb.getPrimaryEmail(user.user_id)
   if (existingUserEmail) {
@@ -79,9 +65,25 @@ export const addEmail: RequestHandler = async (req, res) => {
     return
   }
 
+  // Check if email already exists (globally - any user)
+  const existingEmail = await userEmailDb.getUserEmailByAddress(email)
+  if (existingEmail) {
+    res
+      .status(409)
+      .json(
+        createErrorResponse(
+          ErrorCode.VALIDATION_ERROR,
+          "This email address is already in use",
+        ),
+      )
+    return
+  }
+
+  let userEmail: Awaited<ReturnType<typeof userEmailDb.createUserEmail>> | null = null
+
   try {
     // Create user email (will be primary since it's the first)
-    const userEmail = await userEmailDb.createUserEmail(
+    userEmail = await userEmailDb.createUserEmail(
       user.user_id,
       email,
       true,
@@ -101,22 +103,35 @@ export const addEmail: RequestHandler = async (req, res) => {
       )
 
       if (validTypeIds.length > 0) {
-        const preferences = validTypeIds.map((actionTypeId) => ({
-          action_type_id: actionTypeId,
-          enabled: true,
-          frequency: "immediate" as const,
-        }))
-
-        await emailPreferenceDb.createEmailPreferences(
-          user.user_id,
-          preferences,
+        // Use upsert to handle case where preferences might already exist
+        // (e.g., if user previously had an email and deleted it, preferences may still exist)
+        const preferencePromises = validTypeIds.map((actionTypeId) =>
+          emailPreferenceDb.upsertEmailPreference(
+            user.user_id,
+            actionTypeId,
+            true, // enabled
+            "immediate", // frequency
+            null, // digest_time
+          ),
         )
-        preferencesCreated = preferences.length
+        await Promise.all(preferencePromises)
+        preferencesCreated = validTypeIds.length
       }
     }
 
-    // Send verification email
-    await emailService.sendVerificationEmail(user.user_id, email)
+    // Send verification email (this can fail, but email is already created)
+    // If this fails, we still return success since email was added
+    try {
+      await emailService.sendVerificationEmail(user.user_id, email)
+    } catch (emailError) {
+      logger.warn("Failed to send verification email after adding email", {
+        error: emailError,
+        user_id: user.user_id,
+        email,
+        email_id: userEmail.email_id,
+      })
+      // Continue - email was added successfully, verification can be resent
+    }
 
     logger.info("User email added successfully", {
       user_id: user.user_id,
@@ -134,7 +149,45 @@ export const addEmail: RequestHandler = async (req, res) => {
         message: "Email address added. Please check your email to verify.",
       }),
     )
-  } catch (error) {
+  } catch (error: any) {
+    // If email was created but something else failed, clean up the email
+    if (userEmail?.email_id) {
+      try {
+        await userEmailDb.deleteUserEmail(userEmail.email_id)
+        logger.info("Cleaned up email after failed add", {
+          user_id: user.user_id,
+          email_id: userEmail.email_id,
+          email,
+        })
+      } catch (cleanupError) {
+        logger.error("Failed to clean up email after error", {
+          cleanupError,
+          user_id: user.user_id,
+          email_id: userEmail.email_id,
+          email,
+          originalError: error,
+        })
+      }
+    }
+
+    // Check if error is a duplicate key violation (shouldn't happen with upsert, but handle gracefully)
+    if (error?.code === "23505" || error?.message?.includes("duplicate key")) {
+      logger.error("Duplicate key error when adding email preferences", {
+        error,
+        user_id: user.user_id,
+        email,
+      })
+      res
+        .status(409)
+        .json(
+          createErrorResponse(
+            ErrorCode.VALIDATION_ERROR,
+            "Email preferences conflict. Please try again.",
+          ),
+        )
+      return
+    }
+
     logger.error("Failed to add email address", {
       error,
       user_id: user.user_id,
@@ -730,12 +783,23 @@ export const unsubscribe: RequestHandler = async (req, res) => {
       tokenRecord.user_id,
     )
 
-    // Disable all preferences
-    for (const pref of preferences) {
-      await emailPreferenceDb.updateEmailPreference(pref.preference_id, {
+    // Count how many were enabled before disabling
+    const enabledCount = preferences.filter((p) => p.enabled).length
+
+    // Disable all preferences (even if already disabled, to ensure consistency)
+    const updatePromises = preferences.map((pref) =>
+      emailPreferenceDb.updateEmailPreference(pref.preference_id, {
         enabled: false,
-      })
-    }
+      }),
+    )
+    await Promise.all(updatePromises)
+
+    logger.info("Disabled all email preferences for user", {
+      user_id: tokenRecord.user_id,
+      email: tokenRecord.email,
+      total_preferences: preferences.length,
+      previously_enabled_count: enabledCount,
+    })
 
     logger.info("User unsubscribed from email notifications", {
       user_id: tokenRecord.user_id,
