@@ -136,10 +136,46 @@ class DatabaseNotificationService implements NotificationService {
         })),
       )
 
-      // TODO: Phase 5 - Send push notifications to contractor members
-      // for (const admin of admins) {
-      //   await pushNotificationService.sendPushNotification(admin.user_id, ...)
-      // }
+      // Send push notifications to contractor members
+      const payload = payloadFormatters.formatOrderNotificationPayload(
+        order,
+        "order_create",
+      )
+      for (const admin of admins) {
+        try {
+          await pushNotificationService.sendPushNotification(
+            admin.user_id,
+            payload,
+            "order_create",
+            order.contractor_id, // contractorId for org-scoped preferences
+          )
+        } catch (error) {
+          logger.debug(
+            `Failed to send push notification to contractor member ${admin.user_id}:`,
+            error,
+          )
+        }
+      }
+
+      // Send email notifications to contractor members
+      for (const admin of admins) {
+        try {
+          await emailService.sendNotificationEmail(
+            admin.user_id,
+            "order_create",
+            {
+              order,
+            },
+            false, // skipQueue
+            order.contractor_id, // contractorId for org-scoped preferences
+          )
+        } catch (error) {
+          logger.debug(
+            `Failed to send email notification to contractor member ${admin.user_id}:`,
+            error,
+          )
+        }
+      }
     }
   }
 
