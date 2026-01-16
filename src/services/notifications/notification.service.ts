@@ -128,6 +128,15 @@ class DatabaseNotificationService implements NotificationService {
       { manage_orders: true },
     )
 
+    logger.debug(
+      `Found ${admins.length} contractor members with manage_orders role for contractor ${order.contractor_id}`,
+      {
+        contractor_id: order.contractor_id,
+        admin_count: admins.length,
+        admin_user_ids: admins.map((a) => a.user_id),
+      },
+    )
+
     if (admins.length > 0) {
       await notificationDb.insertNotifications(
         admins.map((u) => ({
@@ -143,16 +152,36 @@ class DatabaseNotificationService implements NotificationService {
       )
       for (const admin of admins) {
         try {
+          logger.debug(
+            `Sending order_create push notification to contractor member ${admin.user_id}`,
+            {
+              user_id: admin.user_id,
+              contractor_id: order.contractor_id,
+              notification_type: "order_create",
+            },
+          )
           await pushNotificationService.sendPushNotification(
             admin.user_id,
             payload,
             "order_create",
             order.contractor_id, // contractorId for org-scoped preferences
           )
-        } catch (error) {
           logger.debug(
+            `Successfully sent push notification to contractor member ${admin.user_id}`,
+            {
+              user_id: admin.user_id,
+              contractor_id: order.contractor_id,
+            },
+          )
+        } catch (error) {
+          logger.error(
             `Failed to send push notification to contractor member ${admin.user_id}:`,
-            error,
+            {
+              error,
+              user_id: admin.user_id,
+              contractor_id: order.contractor_id,
+              notification_type: "order_create",
+            },
           )
         }
       }
@@ -160,7 +189,15 @@ class DatabaseNotificationService implements NotificationService {
       // Send email notifications to contractor members
       for (const admin of admins) {
         try {
-          await emailService.sendNotificationEmail(
+          logger.debug(
+            `Sending order_create email notification to contractor member ${admin.user_id}`,
+            {
+              user_id: admin.user_id,
+              contractor_id: order.contractor_id,
+              notification_type: "order_create",
+            },
+          )
+          const emailSent = await emailService.sendNotificationEmail(
             admin.user_id,
             "order_create",
             {
@@ -169,10 +206,32 @@ class DatabaseNotificationService implements NotificationService {
             false, // skipQueue
             order.contractor_id, // contractorId for org-scoped preferences
           )
+          if (emailSent) {
+            logger.debug(
+              `Successfully sent email notification to contractor member ${admin.user_id}`,
+              {
+                user_id: admin.user_id,
+                contractor_id: order.contractor_id,
+              },
+            )
+          } else {
+            logger.debug(
+              `Email notification not sent to contractor member ${admin.user_id} (preference disabled or no email)`,
+              {
+                user_id: admin.user_id,
+                contractor_id: order.contractor_id,
+              },
+            )
+          }
         } catch (error) {
-          logger.debug(
+          logger.error(
             `Failed to send email notification to contractor member ${admin.user_id}:`,
-            error,
+            {
+              error,
+              user_id: admin.user_id,
+              contractor_id: order.contractor_id,
+              notification_type: "order_create",
+            },
           )
         }
       }
@@ -226,9 +285,10 @@ class DatabaseNotificationService implements NotificationService {
       )
     } catch (error) {
       // Log but don't fail notification creation if push fails
-      logger.info(`Failed to send push notification for order assignment:`, {
+      logger.error(`Failed to send push notification for order assignment:`, {
         order_id: order.order_id,
         assigned_id: order.assigned_id,
+        contractor_id: order.contractor_id,
         error: error instanceof Error ? error.message : String(error),
       })
     }
@@ -246,9 +306,10 @@ class DatabaseNotificationService implements NotificationService {
       )
     } catch (error) {
       // Log but don't fail notification creation if email fails
-      logger.debug(`Failed to send email notification for order assignment:`, {
+      logger.error(`Failed to send email notification for order assignment:`, {
         order_id: order.order_id,
         assigned_id: order.assigned_id,
+        contractor_id: order.contractor_id,
         error: error instanceof Error ? error.message : String(error),
       })
     }
@@ -360,9 +421,14 @@ class DatabaseNotificationService implements NotificationService {
           )
         } catch (error) {
           // Log but don't fail notification creation if push fails
-          logger.debug(
+          logger.error(
             `Failed to send push notification for order message to user ${notified}:`,
-            error,
+            {
+              error,
+              user_id: notified,
+              order_id: order.order_id,
+              contractor_id: order.contractor_id,
+            },
           )
         }
 
@@ -379,9 +445,14 @@ class DatabaseNotificationService implements NotificationService {
             order.contractor_id ?? null, // contractorId for org-scoped preferences
           )
         } catch (error) {
-          logger.debug(
+          logger.error(
             `Failed to send email notification for order message to user ${notified}:`,
-            error,
+            {
+              error,
+              user_id: notified,
+              order_id: order.order_id,
+              contractor_id: order.contractor_id,
+            },
           )
         }
       }
@@ -556,7 +627,12 @@ class DatabaseNotificationService implements NotificationService {
         order.contractor_id ?? null, // contractorId for org-scoped preferences
       )
     } catch (error) {
-      logger.debug(`Failed to send push notification for order review:`, error)
+      logger.error(`Failed to send push notification for order review:`, {
+        error,
+        user_id: order.assigned_id,
+        order_id: order.order_id,
+        contractor_id: order.contractor_id,
+      })
     }
 
     // Send email notification
@@ -571,7 +647,12 @@ class DatabaseNotificationService implements NotificationService {
         order.contractor_id ?? null, // contractorId for org-scoped preferences
       )
     } catch (error) {
-      logger.debug(`Failed to send email notification for order review:`, error)
+      logger.error(`Failed to send email notification for order review:`, {
+        error,
+        user_id: order.assigned_id,
+        order_id: order.order_id,
+        contractor_id: order.contractor_id,
+      })
     }
   }
 
@@ -617,9 +698,15 @@ class DatabaseNotificationService implements NotificationService {
           order.contractor_id ?? null, // contractorId for org-scoped preferences
         )
       } catch (error) {
-        logger.debug(
+        logger.error(
           `Failed to send push notification for order status:`,
-          error,
+          {
+            error,
+            user_id: order.assigned_id,
+            order_id: order.order_id,
+            contractor_id: order.contractor_id,
+            action_name,
+          },
         )
       }
 
@@ -635,9 +722,15 @@ class DatabaseNotificationService implements NotificationService {
           order.contractor_id ?? null, // contractorId for org-scoped preferences
         )
       } catch (error) {
-        logger.debug(
+        logger.error(
           `Failed to send email notification for order status:`,
-          error,
+          {
+            error,
+            user_id: order.assigned_id,
+            order_id: order.order_id,
+            contractor_id: order.contractor_id,
+            action_name,
+          },
         )
       }
     }
@@ -663,9 +756,15 @@ class DatabaseNotificationService implements NotificationService {
           order.contractor_id ?? null, // contractorId for org-scoped preferences
         )
       } catch (error) {
-        logger.debug(
+        logger.error(
           `Failed to send push notification for order status:`,
-          error,
+          {
+            error,
+            user_id: order.customer_id,
+            order_id: order.order_id,
+            contractor_id: order.contractor_id,
+            action_name,
+          },
         )
       }
 
@@ -681,9 +780,15 @@ class DatabaseNotificationService implements NotificationService {
           order.contractor_id ?? null, // contractorId for org-scoped preferences
         )
       } catch (error) {
-        logger.debug(
+        logger.error(
           `Failed to send email notification for order status:`,
-          error,
+          {
+            error,
+            user_id: order.customer_id,
+            order_id: order.order_id,
+            contractor_id: order.contractor_id,
+            action_name,
+          },
         )
       }
     }
@@ -748,6 +853,15 @@ class DatabaseNotificationService implements NotificationService {
       { manage_orders: true },
     )
 
+    logger.debug(
+      `Found ${admins.length} contractor members with manage_orders role for contractor ${offer.contractor_id}`,
+      {
+        contractor_id: offer.contractor_id,
+        admin_count: admins.length,
+        admin_user_ids: admins.map((a) => a.user_id),
+      },
+    )
+
     if (admins.length > 0) {
       await notificationDb.insertNotifications(
         admins.map((u) => ({
@@ -759,7 +873,15 @@ class DatabaseNotificationService implements NotificationService {
       // Send email notifications to contractor members
       for (const admin of admins) {
         try {
-          await emailService.sendNotificationEmail(
+          logger.debug(
+            `Sending ${actionType} email notification to contractor member ${admin.user_id}`,
+            {
+              user_id: admin.user_id,
+              contractor_id: offer.contractor_id,
+              notification_type: actionType,
+            },
+          )
+          const emailSent = await emailService.sendNotificationEmail(
             admin.user_id,
             actionType,
             {
@@ -768,10 +890,32 @@ class DatabaseNotificationService implements NotificationService {
             false, // skipQueue
             offer.contractor_id, // contractorId for org-scoped preferences
           )
+          if (emailSent) {
+            logger.debug(
+              `Successfully sent email notification to contractor member ${admin.user_id}`,
+              {
+                user_id: admin.user_id,
+                contractor_id: offer.contractor_id,
+              },
+            )
+          } else {
+            logger.debug(
+              `Email notification not sent to contractor member ${admin.user_id} (preference disabled or no email)`,
+              {
+                user_id: admin.user_id,
+                contractor_id: offer.contractor_id,
+              },
+            )
+          }
         } catch (error) {
-          logger.debug(
+          logger.error(
             `Failed to send email notification to contractor member ${admin.user_id}:`,
-            error,
+            {
+              error,
+              user_id: admin.user_id,
+              contractor_id: offer.contractor_id,
+              notification_type: actionType,
+            },
           )
         }
       }
@@ -826,9 +970,14 @@ class DatabaseNotificationService implements NotificationService {
         session.contractor_id ?? null, // contractorId for org-scoped preferences
       )
     } catch (error) {
-      logger.debug(
+      logger.error(
         `Failed to send push notification for offer assignment:`,
-        error,
+        {
+          error,
+          user_id: session.assigned_id,
+          offer_id: session.id,
+          contractor_id: session.contractor_id,
+        },
       )
     }
 
@@ -844,9 +993,14 @@ class DatabaseNotificationService implements NotificationService {
         session.contractor_id ?? null, // contractorId for org-scoped preferences
       )
     } catch (error) {
-      logger.debug(
+      logger.error(
         `Failed to send email notification for offer assignment:`,
-        error,
+        {
+          error,
+          user_id: session.assigned_id,
+          offer_id: session.id,
+          contractor_id: session.contractor_id,
+        },
       )
     }
   }
@@ -956,9 +1110,14 @@ class DatabaseNotificationService implements NotificationService {
             session.contractor_id ?? null, // contractorId for org-scoped preferences
           )
         } catch (error) {
-          logger.debug(
+          logger.error(
             `Failed to send push notification to user ${notified}:`,
-            error,
+            {
+              error,
+              user_id: notified,
+              offer_id: session.id,
+              contractor_id: session.contractor_id,
+            },
           )
         }
 
@@ -975,9 +1134,14 @@ class DatabaseNotificationService implements NotificationService {
             session.contractor_id ?? null, // contractorId for org-scoped preferences
           )
         } catch (error) {
-          logger.debug(
+          logger.error(
             `Failed to send email notification for offer message to user ${notified}:`,
-            error,
+            {
+              error,
+              user_id: notified,
+              offer_id: session.id,
+              contractor_id: session.contractor_id,
+            },
           )
         }
       }
@@ -1039,7 +1203,11 @@ class DatabaseNotificationService implements NotificationService {
           "market_item_bid",
         )
       } catch (error) {
-        logger.debug(`Failed to send push notifications for market bid:`, error)
+        logger.error(`Failed to send push notifications for market bid:`, {
+          error,
+          listing_id: listing.listing.listing_id,
+          bid_id: bid.bid_id,
+        })
       }
     }
 
