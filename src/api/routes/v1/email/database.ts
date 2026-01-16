@@ -17,6 +17,7 @@ export interface DBEmailNotificationPreference {
   preference_id: string
   user_id: string
   action_type_id: number
+  contractor_id: string | null // NULL for individual preferences, UUID for org preferences
   enabled: boolean
   frequency: "immediate" | "daily" | "weekly"
   digest_time: string | null // TIME format (HH:MM:SS)
@@ -36,25 +37,76 @@ export async function getEmailPreferences(
     "email_notification_preferences",
   )
     .where("user_id", userId)
+    .orderBy("contractor_id", "asc")
     .orderBy("action_type_id", "asc")
+}
+
+/**
+ * Get email preferences grouped by contractor_id (individual and organizations).
+ * @param userId - User ID
+ * @returns Object with individual preferences and organization preferences
+ */
+export async function getEmailPreferencesGrouped(userId: string): Promise<{
+  individual: DBEmailNotificationPreference[]
+  organizations: Array<{
+    contractor_id: string
+    preferences: DBEmailNotificationPreference[]
+  }>
+}> {
+  const allPreferences = await getEmailPreferences(userId)
+
+  const individual = allPreferences.filter((p) => p.contractor_id === null)
+  const orgPreferences = allPreferences.filter((p) => p.contractor_id !== null)
+
+  // Group by contractor_id
+  const orgMap = new Map<string, DBEmailNotificationPreference[]>()
+  for (const pref of orgPreferences) {
+    if (pref.contractor_id) {
+      if (!orgMap.has(pref.contractor_id)) {
+        orgMap.set(pref.contractor_id, [])
+      }
+      orgMap.get(pref.contractor_id)!.push(pref)
+    }
+  }
+
+  const organizations = Array.from(orgMap.entries()).map(
+    ([contractor_id, preferences]) => ({
+      contractor_id,
+      preferences,
+    }),
+  )
+
+  return {
+    individual,
+    organizations,
+  }
 }
 
 /**
  * Get email preference for a specific user and notification type.
  * @param userId - User ID
  * @param actionTypeId - Notification action type ID
+ * @param contractorId - Optional contractor ID (null for individual preferences)
  * @returns Preference record or null if not found
  */
 export async function getEmailPreference(
   userId: string,
   actionTypeId: number,
+  contractorId: string | null = null,
 ): Promise<DBEmailNotificationPreference | null> {
-  const result = await knex()<DBEmailNotificationPreference>(
+  const query = knex()<DBEmailNotificationPreference>(
     "email_notification_preferences",
   )
     .where("user_id", userId)
     .where("action_type_id", actionTypeId)
-    .first()
+
+  if (contractorId === null) {
+    query.whereNull("contractor_id")
+  } else {
+    query.where("contractor_id", contractorId)
+  }
+
+  const result = await query.first()
 
   return result || null
 }
@@ -63,13 +115,19 @@ export async function getEmailPreference(
  * Check if email notifications are enabled for a specific notification type.
  * @param userId - User ID
  * @param actionTypeId - Notification action type ID
+ * @param contractorId - Optional contractor ID (null for individual preferences)
  * @returns True if enabled, false if disabled or preference doesn't exist
  */
 export async function isEmailEnabled(
   userId: string,
   actionTypeId: number,
+  contractorId: string | null = null,
 ): Promise<boolean> {
-  const preference = await getEmailPreference(userId, actionTypeId)
+  const preference = await getEmailPreference(
+    userId,
+    actionTypeId,
+    contractorId,
+  )
   return preference?.enabled ?? false
 }
 
@@ -80,6 +138,7 @@ export async function isEmailEnabled(
  * @param enabled - Whether email notifications are enabled
  * @param frequency - Email frequency (default: 'immediate')
  * @param digestTime - Time for daily/weekly digests (optional)
+ * @param contractorId - Optional contractor ID (null for individual preferences)
  * @returns Created or updated preference record
  */
 export async function upsertEmailPreference(
@@ -88,6 +147,7 @@ export async function upsertEmailPreference(
   enabled: boolean,
   frequency: "immediate" | "daily" | "weekly" = "immediate",
   digestTime: string | null = null,
+  contractorId: string | null = null,
 ): Promise<DBEmailNotificationPreference> {
   const [preference] = await knex()<DBEmailNotificationPreference>(
     "email_notification_preferences",
@@ -95,13 +155,14 @@ export async function upsertEmailPreference(
     .insert({
       user_id: userId,
       action_type_id: actionTypeId,
+      contractor_id: contractorId,
       enabled: enabled,
       frequency: frequency,
       digest_time: digestTime,
       created_at: new Date(),
       updated_at: new Date(),
     })
-    .onConflict(["user_id", "action_type_id"])
+    .onConflict(["user_id", "action_type_id", "contractor_id"])
     .merge({
       enabled: enabled,
       frequency: frequency,
@@ -118,6 +179,7 @@ export async function upsertEmailPreference(
  * Used when user adds email and selects which types to enable.
  * @param userId - User ID
  * @param preferences - Array of preferences to create
+ * @param contractorId - Optional contractor ID (null for individual preferences)
  * @returns Array of created preference records
  */
 export async function createEmailPreferences(
@@ -128,6 +190,7 @@ export async function createEmailPreferences(
     frequency?: "immediate" | "daily" | "weekly"
     digest_time?: string | null
   }>,
+  contractorId: string | null = null,
 ): Promise<DBEmailNotificationPreference[]> {
   if (preferences.length === 0) {
     return []
@@ -136,6 +199,7 @@ export async function createEmailPreferences(
   const insertData = preferences.map((pref) => ({
     user_id: userId,
     action_type_id: pref.action_type_id,
+    contractor_id: contractorId,
     enabled: pref.enabled,
     frequency: pref.frequency ?? "immediate",
     digest_time: pref.digest_time ?? null,
@@ -215,17 +279,44 @@ export async function deleteAllEmailPreferences(
 /**
  * Get all notification types that have email preferences enabled for a user.
  * @param userId - User ID
+ * @param contractorId - Optional contractor ID (null for individual preferences)
  * @returns Array of action type IDs that are enabled
  */
 export async function getEnabledEmailNotificationTypes(
   userId: string,
+  contractorId: string | null = null,
 ): Promise<number[]> {
-  const preferences = await knex()<DBEmailNotificationPreference>(
+  const query = knex()<DBEmailNotificationPreference>(
     "email_notification_preferences",
   )
     .where("user_id", userId)
     .where("enabled", true)
-    .select("action_type_id")
+
+  if (contractorId === null) {
+    query.whereNull("contractor_id")
+  } else {
+    query.where("contractor_id", contractorId)
+  }
+
+  const preferences = await query.select("action_type_id")
 
   return preferences.map((p) => p.action_type_id)
+}
+
+/**
+ * Get email preferences for a specific contractor/organization.
+ * @param userId - User ID
+ * @param contractorId - Contractor ID
+ * @returns Array of preference records for the contractor
+ */
+export async function getEmailPreferencesByContractor(
+  userId: string,
+  contractorId: string,
+): Promise<DBEmailNotificationPreference[]> {
+  return await knex()<DBEmailNotificationPreference>(
+    "email_notification_preferences",
+  )
+    .where("user_id", userId)
+    .where("contractor_id", contractorId)
+    .orderBy("action_type_id", "asc")
 }

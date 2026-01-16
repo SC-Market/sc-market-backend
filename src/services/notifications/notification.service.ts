@@ -698,9 +698,15 @@ class DatabaseNotificationService implements NotificationService {
       // Send email notifications to contractor members
       for (const admin of admins) {
         try {
-          await emailService.sendNotificationEmail(admin.user_id, actionType, {
-            offer,
-          })
+          await emailService.sendNotificationEmail(
+            admin.user_id,
+            actionType,
+            {
+              offer,
+            },
+            false, // skipQueue
+            offer.contractor_id, // contractorId for org-scoped preferences
+          )
         } catch (error) {
           logger.debug(
             `Failed to send email notification to contractor member ${admin.user_id}:`,

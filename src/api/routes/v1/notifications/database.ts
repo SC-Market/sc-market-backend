@@ -294,6 +294,8 @@ export async function getUnreadNotificationCount(
   user_id: string,
   actionFilter?: string,
   entityIdFilter?: string,
+  scopeFilter?: "individual" | "organization" | "all",
+  contractorIdFilter?: string,
 ): Promise<number> {
   // Build base query for filtering unread notifications
   let baseQuery = knex()<DBNotification>("notification").where({
@@ -388,7 +390,9 @@ export async function getEntityByType(
         throw new Error(`Market offer not found: ${entity_id}`)
       }
       const offer = offers[0]
-      const listing = await marketDb.getMarketListing({ listing_id: offer.listing_id })
+      const listing = await marketDb.getMarketListing({
+        listing_id: offer.listing_id,
+      })
       return await formatListing(listing)
     }
     case "order_applicants": {
@@ -426,6 +430,8 @@ export async function getCompleteNotificationsByUserPaginated(
   pageSize: number = 20,
   actionFilter?: string,
   entityIdFilter?: string,
+  scopeFilter?: "individual" | "organization" | "all",
+  contractorIdFilter?: string,
 ): Promise<{
   notifications: any[]
   pagination: {
@@ -509,6 +515,86 @@ export async function getCompleteNotificationsByUserPaginated(
       )
       continue
     }
+    // Determine notification scope (individual vs organizational)
+    let scope: "individual" | "organization" = "individual"
+    let contractor_id: string | null = null
+
+    // Check if notification is for an organization
+    // We need to check the raw entity data before serialization
+    let orderIdToCheck: string | null = null
+
+    if (
+      notif_action[0].entity === "orders" ||
+      notif_action[0].entity === "order"
+    ) {
+      orderIdToCheck = notif_object[0].entity_id
+    } else if (notif_action[0].entity === "order_comments") {
+      // For order comments, get the comment to find the order_id
+      const comments = await orderDb.getOrderComments({
+        comment_id: notif_object[0].entity_id,
+      })
+      if (comments && comments.length > 0) {
+        orderIdToCheck = comments[0].order_id
+      }
+    } else if (notif_action[0].entity === "order_reviews") {
+      // For order reviews, get the review to find the order_id
+      const review = await orderDb.getOrderReview({
+        review_id: notif_object[0].entity_id,
+      })
+      if (review) {
+        orderIdToCheck = review.order_id
+      }
+    } else if (notif_action[0].entity === "order_applicants") {
+      // For order applicants, entity_id is the order_id
+      orderIdToCheck = notif_object[0].entity_id
+    }
+
+    if (orderIdToCheck) {
+      const rawOrder = await orderDb.getOrder({ order_id: orderIdToCheck })
+      if (rawOrder?.contractor_id) {
+        // Check if user is a member of this contractor
+        const { isUserContractorMember } =
+          await import("../contractors/database.js")
+        const isMember = await isUserContractorMember(
+          user_id,
+          rawOrder.contractor_id,
+        )
+        if (isMember) {
+          scope = "organization"
+          contractor_id = rawOrder.contractor_id
+        }
+      }
+    } else if (notif_action[0].entity === "offer_sessions") {
+      // Get the raw offer session to check contractor_id
+      const rawOffers = await offerDb.getOfferSessions({
+        id: notif_object[0].entity_id,
+      })
+      if (rawOffers && rawOffers.length > 0 && rawOffers[0]?.contractor_id) {
+        // Check if user is a member of this contractor
+        const { isUserContractorMember } =
+          await import("../contractors/database.js")
+        const isMember = await isUserContractorMember(
+          user_id,
+          rawOffers[0].contractor_id,
+        )
+        if (isMember) {
+          scope = "organization"
+          contractor_id = rawOffers[0].contractor_id
+        }
+      }
+    }
+
+    // Apply scope filter if provided
+    if (scopeFilter === "individual" && scope !== "individual") {
+      continue
+    }
+    if (scopeFilter === "organization" && scope !== "organization") {
+      continue
+    }
+    if (contractorIdFilter && contractor_id !== contractorIdFilter) {
+      continue
+    }
+
     complete_notifs.push({
       read: notif.read,
       notification_id: notif.notification_id,
@@ -517,6 +603,8 @@ export async function getCompleteNotificationsByUserPaginated(
       entity_type: notif_action[0].entity,
       entity: entity,
       timestamp: notif_object[0].timestamp,
+      scope: scope,
+      contractor_id: contractor_id,
     })
   }
 

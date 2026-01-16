@@ -45,6 +45,7 @@ export interface PushNotificationService {
     userId: string,
     notification: PushNotificationPayload,
     actionType?: string,
+    contractorId?: string | null,
   ): Promise<void>
 
   // Batch operations
@@ -220,6 +221,7 @@ class WebPushNotificationService implements PushNotificationService {
     userId: string,
     notification: PushNotificationPayload,
     actionType?: string,
+    contractorId?: string | null,
   ): Promise<void> {
     logger.debug(`Attempting to send push notification to user ${userId}`, {
       user_id: userId,
@@ -248,26 +250,42 @@ class WebPushNotificationService implements PushNotificationService {
 
     // Check user preferences if action type is provided
     if (actionType) {
-      const preferences = await this.getPreferences(userId)
-      if (preferences[actionType] === false) {
+      // Get action type ID for preference lookup
+      const { getNotificationActionByName } =
+        await import("../../api/routes/v1/notifications/database.js")
+      const action = await getNotificationActionByName(actionType)
+      if (action) {
+        const { getPushPreference } =
+          await import("./push-notification.database.js")
+        const preference = await getPushPreference(
+          userId,
+          action.action_type_id,
+          contractorId ?? null,
+        )
+        // Default to enabled if no preference exists (current behavior)
+        const isEnabled = preference?.enabled ?? true
+        if (!isEnabled) {
+          logger.debug(
+            `Push notifications disabled for user ${userId}, action ${actionType}, contractor_id: ${contractorId}`,
+            {
+              user_id: userId,
+              action_type: actionType,
+              contractor_id: contractorId,
+              preference_enabled: false,
+            },
+          )
+          return
+        }
         logger.debug(
-          `Push notifications disabled for user ${userId}, action ${actionType}`,
+          `Push notification preference check passed for user ${userId}`,
           {
             user_id: userId,
             action_type: actionType,
-            preference_enabled: false,
+            contractor_id: contractorId,
+            preference_enabled: true,
           },
         )
-        return
       }
-      logger.debug(
-        `Push notification preference check passed for user ${userId}`,
-        {
-          user_id: userId,
-          action_type: actionType,
-          preference_enabled: true,
-        },
-      )
     }
 
     // Get user subscriptions

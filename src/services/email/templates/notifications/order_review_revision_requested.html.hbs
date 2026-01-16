@@ -2,20 +2,25 @@
 
 <p style="color: #b7b7b7;">Hello {{userDisplayName}},</p>
 
-<p style="color: #b7b7b7;">A revision has been requested for your review on order "{{order.title}}":</p>
+<p style="color: #b7b7b7;">A revision has been requested for your review on
+  order "{{order.title}}":</p>
 
 <div
   style="background-color: rgba(45, 55, 72, 0.5); padding: 20px; border-radius: 8px; margin: 20px 0; border: 1px solid rgb(45, 55, 72);"
 >
   <h2 style="margin-top: 0; color: #e8e8e8;">{{order.title}}</h2>
-  <div style="margin-top: 15px; padding-top: 15px; border-top: 1px solid rgb(45, 55, 72);">
+  <div
+    style="margin-top: 15px; padding-top: 15px; border-top: 1px solid rgb(45, 55, 72);"
+  >
     <p style="color: #b7b7b7; margin: 0;"><strong>Your Review:</strong></p>
-    <p style="color: #b7b7b7; margin: 5px 0;"><strong>Rating:</strong> {{review.rating}}/5</p>
+    <p style="color: #b7b7b7; margin: 5px 0;"><strong>Rating:</strong>
+      {{review.rating}}/5</p>
     {{#if review.content}}
       <p style="color: #b7b7b7; margin: 10px 0 0 0;">{{review.content}}</p>
     {{/if}}
     {{#if review.revision_message}}
-      <p style="color: #b7b7b7; margin: 15px 0 0 0;"><strong>Revision Request:</strong> {{review.revision_message}}</p>
+      <p style="color: #b7b7b7; margin: 15px 0 0 0;"><strong>Revision Request:</strong>
+        {{review.revision_message}}</p>
     {{/if}}
   </div>
 </div>

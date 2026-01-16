@@ -1,11 +1,9 @@
-Contractor Applied to Order
-
-Hello {{userDisplayName}},
-
-A contractor has applied to your order:
+Contractor Applied to Order Hello
+{{userDisplayName}}, A contractor has applied to your order:
 
 {{order.title}}
 {{#if order.description}}{{order.description}}{{/if}}
 {{#if order.cost}}Value: {{formatCurrency order.cost}} aUEC{{/if}}
 
-View Order: {{actionUrl}}
+View Order:
+{{actionUrl}}
