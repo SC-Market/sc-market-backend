@@ -96,6 +96,7 @@ oapi.schema("PushPreferencesResponse", {
 oapi.schema("PushPreferenceUpdateBody", {
   type: "object",
   title: "PushPreferenceUpdateBody",
+  description: "Single preference update (for backwards compatibility)",
   properties: {
     action: {
       type: "string",
@@ -106,8 +107,54 @@ oapi.schema("PushPreferenceUpdateBody", {
       description:
         "Whether to enable or disable push notifications for this action",
     },
+    contractor_id: {
+      type: "string",
+      format: "uuid",
+      nullable: true,
+      description: "Optional contractor ID for organization-scoped preferences",
+    },
   },
   required: ["action", "enabled"],
+})
+
+oapi.schema("PushPreferenceUpdateItem", {
+  type: "object",
+  title: "PushPreferenceUpdateItem",
+  properties: {
+    action: {
+      type: "string",
+      description: "Notification action type to update",
+    },
+    enabled: {
+      type: "boolean",
+      description:
+        "Whether to enable or disable push notifications for this action",
+    },
+    contractor_id: {
+      type: "string",
+      format: "uuid",
+      nullable: true,
+      description: "Optional contractor ID for organization-scoped preferences",
+    },
+  },
+  required: ["action", "enabled"],
+})
+
+oapi.schema("PushPreferencesBatchUpdateBody", {
+  type: "object",
+  title: "PushPreferencesBatchUpdateBody",
+  description: "Batch update multiple preferences at once",
+  properties: {
+    preferences: {
+      type: "array",
+      description: "Array of preferences to update",
+      items: {
+        $ref: "#/components/schemas/PushPreferenceUpdateItem",
+      },
+      minItems: 1,
+    },
+  },
+  required: ["preferences"],
 })
 
 // POST /push/subscribe
@@ -310,22 +357,27 @@ export const push_get_preferences_spec = oapi.validPath({
 
 // PATCH /push/preferences
 export const push_update_preference_spec = oapi.validPath({
-  summary: "Update push notification preference",
+  summary: "Update push notification preferences",
   description:
-    "Update a push notification preference for a specific action type. This allows users to enable or disable push notifications for specific notification types.",
+    "Update push notification preferences. Supports both single preference updates (for backwards compatibility) and batch updates via a preferences array. This allows users to enable or disable push notifications for specific notification types, and update multiple preferences atomically to avoid race conditions.",
   operationId: "updatePushPreference",
   tags: ["Push Notifications"],
   requestBody: {
     required: true,
     content: {
       "application/json": {
-        schema: oapi.schema("PushPreferenceUpdateBody"),
+        schema: {
+          oneOf: [
+            oapi.schema("PushPreferenceUpdateBody"),
+            oapi.schema("PushPreferencesBatchUpdateBody"),
+          ],
+        },
       },
     },
   },
   responses: {
     "200": {
-      description: "Successfully updated push notification preference",
+      description: "Successfully updated push notification preferences",
       headers: RateLimitHeaders,
       content: {
         "application/json": {
@@ -334,7 +386,19 @@ export const push_update_preference_spec = oapi.validPath({
             properties: {
               message: {
                 type: "string",
-                example: "Successfully updated push notification preference",
+                example: "Successfully updated 5 push notification preferences",
+              },
+              preferences: {
+                type: "array",
+                description: "Array of updated preferences (for batch updates)",
+                items: {
+                  type: "object",
+                  properties: {
+                    action: { type: "string" },
+                    enabled: { type: "boolean" },
+                    contractor_id: { type: "string", format: "uuid", nullable: true },
+                  },
+                },
               },
             },
           },

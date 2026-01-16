@@ -39,6 +39,8 @@ export async function getEmailPreferences(
     .where("user_id", userId)
     .orderBy("contractor_id", "asc")
     .orderBy("action_type_id", "asc")
+    // Ensure we're getting actual database values, not cached/stale data
+    .orderBy("updated_at", "desc")
 }
 
 /**
@@ -55,24 +57,40 @@ export async function getEmailPreferencesGrouped(userId: string): Promise<{
 }> {
   const allPreferences = await getEmailPreferences(userId)
 
-  const individual = allPreferences.filter((p) => p.contractor_id === null)
-  const orgPreferences = allPreferences.filter((p) => p.contractor_id !== null)
-
-  // Group by contractor_id
-  const orgMap = new Map<string, DBEmailNotificationPreference[]>()
-  for (const pref of orgPreferences) {
-    if (pref.contractor_id) {
-      if (!orgMap.has(pref.contractor_id)) {
-        orgMap.set(pref.contractor_id, [])
+  // Filter individual preferences - must be explicitly null (not undefined, not empty string)
+  // If there are duplicates, take the most recently updated one
+  const individualMap = new Map<number, DBEmailNotificationPreference>()
+  for (const pref of allPreferences) {
+    if (pref.contractor_id === null || pref.contractor_id === undefined) {
+      const existing = individualMap.get(pref.action_type_id)
+      if (!existing || pref.updated_at > existing.updated_at) {
+        individualMap.set(pref.action_type_id, pref)
       }
-      orgMap.get(pref.contractor_id)!.push(pref)
+    }
+  }
+  const individual = Array.from(individualMap.values())
+
+  // Filter org preferences - must have a non-null contractor_id
+  // Group by contractor_id and action_type_id, taking the most recent for each
+  const orgPrefsByContractor = new Map<string, Map<number, DBEmailNotificationPreference>>()
+  for (const pref of allPreferences) {
+    if (pref.contractor_id !== null && pref.contractor_id !== undefined) {
+      if (!orgPrefsByContractor.has(pref.contractor_id)) {
+        orgPrefsByContractor.set(pref.contractor_id, new Map())
+      }
+      const contractorPrefs = orgPrefsByContractor.get(pref.contractor_id)!
+      const existing = contractorPrefs.get(pref.action_type_id)
+      if (!existing || pref.updated_at > existing.updated_at) {
+        contractorPrefs.set(pref.action_type_id, pref)
+      }
     }
   }
 
-  const organizations = Array.from(orgMap.entries()).map(
-    ([contractor_id, preferences]) => ({
+  // Convert to the expected format
+  const organizations = Array.from(orgPrefsByContractor.entries()).map(
+    ([contractor_id, prefsMap]) => ({
       contractor_id,
-      preferences,
+      preferences: Array.from(prefsMap.values()),
     }),
   )
 
