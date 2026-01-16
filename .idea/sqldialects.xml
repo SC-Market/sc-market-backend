@@ -21,6 +21,8 @@
     <file url="file://$PROJECT_DIR$/config/postgres/36-email-verification-tokens.sql" dialect="PostgreSQL" />
     <file url="file://$PROJECT_DIR$/config/postgres/37-email-delivery-log.sql" dialect="PostgreSQL" />
     <file url="file://$PROJECT_DIR$/config/postgres/38-email-unsubscribe-tokens.sql" dialect="PostgreSQL" />
+    <file url="file://$PROJECT_DIR$/config/postgres/39-email-preferences-org-support.sql" dialect="PostgreSQL" />
+    <file url="file://$PROJECT_DIR$/config/postgres/40-push-preferences-org-support.sql" dialect="PostgreSQL" />
     <file url="file://$PROJECT_DIR$/scripts/game_item_details.sql" dialect="PostgreSQL" />
     <file url="file://$PROJECT_DIR$/scripts/load_new_items.sql" dialect="PostgreSQL" />
     <file url="file://$PROJECT_DIR$/scripts/market_search.sql" dialect="PostgreSQL" />

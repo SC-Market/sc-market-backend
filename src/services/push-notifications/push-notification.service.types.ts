@@ -65,6 +65,7 @@ export interface PushNotificationPreference {
   preference_id: string
   user_id: string
   action_type_id: string // Knex converts INTEGER to string
+  contractor_id: string | null // NULL for individual preferences, UUID for org preferences
   enabled: boolean
   created_at: Date
   updated_at: Date

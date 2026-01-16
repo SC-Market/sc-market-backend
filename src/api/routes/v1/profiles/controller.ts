@@ -961,6 +961,38 @@ export const profile_get_links: RequestHandler = async (req, res, next) => {
 }
 
 /**
+ * GET /api/v1/profile/organizations
+ * Get list of organizations user is a member of (for notification preferences)
+ */
+export const profile_get_organizations: RequestHandler = async (
+  req,
+  res,
+  next,
+) => {
+  try {
+    const user = req.user as User
+    const organizations = await contractorDb.getUserOrganizationsForPreferences(
+      user.user_id,
+    )
+
+    res.json(
+      createResponse({
+        organizations: organizations.map((org) => ({
+          contractor_id: org.contractor_id,
+          name: org.name,
+        })),
+      }),
+    )
+  } catch (error) {
+    logger.error("Failed to get user organizations", {
+      error,
+      user_id: (req.user as User).user_id,
+    })
+    next(error)
+  }
+}
+
+/**
  * Unlink a provider
  */
 export const profile_delete_links_provider_type: RequestHandler = async (

@@ -442,6 +442,29 @@ export const notification_get_page_spec = oapi.validPath({
         format: "uuid",
       },
     },
+    {
+      name: "scope",
+      in: "query",
+      required: false,
+      description:
+        "Filter notifications by scope: 'individual' for personal notifications, 'organization' for org notifications, 'all' for all notifications.",
+      schema: {
+        type: "string",
+        enum: ["individual", "organization", "all"],
+        default: "all",
+      },
+    },
+    {
+      name: "contractorId",
+      in: "query",
+      required: false,
+      description:
+        "Filter notifications by specific organization/contractor ID. Only applies when scope is 'organization'.",
+      schema: {
+        type: "string",
+        format: "uuid",
+      },
+    },
   ],
   responses: {
     "200": {

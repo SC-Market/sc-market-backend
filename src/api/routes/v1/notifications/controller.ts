@@ -271,6 +271,12 @@ export const notification_get_page: RequestHandler = async (req, res, next) => {
   const pageSize = req.query.pageSize ? +req.query.pageSize : 20
   const actionFilter = req.query.action as string | undefined
   const entityIdFilter = req.query.entityId as string | undefined
+  const scopeFilter = req.query.scope as
+    | "individual"
+    | "organization"
+    | "all"
+    | undefined
+  const contractorIdFilter = req.query.contractorId as string | undefined
 
   // Validate page parameter
   if (page < 0 || isNaN(page)) {
@@ -295,6 +301,22 @@ export const notification_get_page: RequestHandler = async (req, res, next) => {
     return
   }
 
+  // Validate scope filter
+  if (
+    scopeFilter &&
+    !["individual", "organization", "all"].includes(scopeFilter)
+  ) {
+    res
+      .status(400)
+      .json(
+        createErrorResponse(
+          ErrorCode.VALIDATION_ERROR,
+          "Invalid scope filter. Must be 'individual', 'organization', or 'all'",
+        ),
+      )
+    return
+  }
+
   try {
     const result = await notificationDb.getCompleteNotificationsByUserPaginated(
       user.user_id,
@@ -302,6 +324,8 @@ export const notification_get_page: RequestHandler = async (req, res, next) => {
       pageSize,
       actionFilter,
       entityIdFilter,
+      scopeFilter || "all",
+      contractorIdFilter,
     )
 
     // Get unread count with the same filters
@@ -309,6 +333,8 @@ export const notification_get_page: RequestHandler = async (req, res, next) => {
       user.user_id,
       actionFilter,
       entityIdFilter,
+      scopeFilter || "all",
+      contractorIdFilter,
     )
 
     // Add unread count to the response

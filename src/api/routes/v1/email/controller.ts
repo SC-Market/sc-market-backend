@@ -9,6 +9,7 @@ import * as userEmailDb from "./user-email-database.js"
 import * as emailPreferenceDb from "./database.js"
 import * as emailVerificationDb from "./verification-database.js"
 import * as notificationDb from "../notifications/database.js"
+import * as contractorDb from "../contractors/database.js"
 import { createErrorResponse, createResponse } from "../util/response.js"
 import { ErrorCode } from "../util/error-codes.js"
 import logger from "../../../../logger/logger.js"
@@ -79,15 +80,13 @@ export const addEmail: RequestHandler = async (req, res) => {
     return
   }
 
-  let userEmail: Awaited<ReturnType<typeof userEmailDb.createUserEmail>> | null = null
+  let userEmail: Awaited<
+    ReturnType<typeof userEmailDb.createUserEmail>
+  > | null = null
 
   try {
     // Create user email (will be primary since it's the first)
-    userEmail = await userEmailDb.createUserEmail(
-      user.user_id,
-      email,
-      true,
-    )
+    userEmail = await userEmailDb.createUserEmail(user.user_id, email, true)
 
     // Create email preferences for selected notification types
     let preferencesCreated = 0
@@ -559,15 +558,14 @@ export const getNotificationTypes: RequestHandler = async (req, res) => {
 
 /**
  * GET /api/email/preferences
- * Get email notification preferences
+ * Get email notification preferences (grouped by individual and organizations)
  */
 export const getEmailPreferences: RequestHandler = async (req, res) => {
   const user = req.user as User
 
   try {
-    const preferences = await emailPreferenceDb.getEmailPreferences(
-      user.user_id,
-    )
+    const groupedPreferences =
+      await emailPreferenceDb.getEmailPreferencesGrouped(user.user_id)
 
     // Get user's email information
     const userEmail = await userEmailDb.getPrimaryEmail(user.user_id)
@@ -578,23 +576,100 @@ export const getEmailPreferences: RequestHandler = async (req, res) => {
       allActions.map((a) => [parseInt(a.action_type_id, 10), a]),
     )
 
-    const preferencesWithNames = preferences.map((pref) => {
-      const action = actionMap.get(pref.action_type_id)
-      return {
+    // Create a map of existing individual preferences by action_type_id
+    const individualPrefMap = new Map<
+      number,
+      {
+        preference_id: string
+        enabled: boolean
+        frequency: "immediate" | "daily" | "weekly"
+        digest_time: string | null
+        created_at: Date
+        updated_at: Date
+      }
+    >()
+    for (const pref of groupedPreferences.individual) {
+      individualPrefMap.set(pref.action_type_id, {
         preference_id: pref.preference_id,
-        action_type_id: pref.action_type_id,
-        action_name: action?.action || null,
         enabled: pref.enabled,
         frequency: pref.frequency,
         digest_time: pref.digest_time,
         created_at: pref.created_at,
         updated_at: pref.updated_at,
+      })
+    }
+
+    // Format individual preferences - include all actions with defaults
+    const individualPreferences = allActions.map((action) => {
+      const actionTypeId = parseInt(action.action_type_id, 10)
+      const existingPref = individualPrefMap.get(actionTypeId)
+      return {
+        preference_id: existingPref?.preference_id || "",
+        action_type_id: actionTypeId,
+        action_name: action.action,
+        enabled: existingPref?.enabled ?? false, // Default to disabled for email (opt-in)
+        frequency: existingPref?.frequency || "immediate",
+        digest_time: existingPref?.digest_time || null,
+        created_at: existingPref?.created_at?.toISOString() || "",
+        updated_at: existingPref?.updated_at?.toISOString() || "",
       }
     })
 
+    // Format organization preferences
+    const organizationPreferences = groupedPreferences.organizations.map(
+      (org) => {
+        // Create a map of existing preferences for this org
+        const orgPrefMap = new Map<
+          number,
+          {
+            preference_id: string
+            enabled: boolean
+            frequency: "immediate" | "daily" | "weekly"
+            digest_time: string | null
+            created_at: Date
+            updated_at: Date
+          }
+        >()
+        for (const pref of org.preferences) {
+          orgPrefMap.set(pref.action_type_id, {
+            preference_id: pref.preference_id,
+            enabled: pref.enabled,
+            frequency: pref.frequency,
+            digest_time: pref.digest_time,
+            created_at: pref.created_at,
+            updated_at: pref.updated_at,
+          })
+        }
+
+        // Include all actions with defaults
+        const orgPrefs = allActions.map((action) => {
+          const actionTypeId = parseInt(action.action_type_id, 10)
+          const existingPref = orgPrefMap.get(actionTypeId)
+          return {
+            preference_id: existingPref?.preference_id || "",
+            action_type_id: actionTypeId,
+            action_name: action.action,
+            enabled: existingPref?.enabled ?? false, // Default to disabled for email (opt-in)
+            frequency: existingPref?.frequency || "immediate",
+            digest_time: existingPref?.digest_time || null,
+            created_at: existingPref?.created_at?.toISOString() || "",
+            updated_at: existingPref?.updated_at?.toISOString() || "",
+          }
+        })
+
+        return {
+          contractor_id: org.contractor_id,
+          preferences: orgPrefs,
+        }
+      },
+    )
+
     res.json(
       createResponse({
-        preferences: preferencesWithNames,
+        preferences: {
+          individual: individualPreferences,
+          organizations: organizationPreferences,
+        },
         email: userEmail
           ? {
               email_id: userEmail.email_id,
@@ -633,6 +708,7 @@ export const updateEmailPreferences: RequestHandler = async (req, res) => {
       enabled?: boolean
       frequency?: "immediate" | "daily" | "weekly"
       digest_time?: string | null
+      contractor_id?: string | null // Optional: null for individual, UUID for org
     }>
   }
 
@@ -670,6 +746,26 @@ export const updateEmailPreferences: RequestHandler = async (req, res) => {
         continue
       }
 
+      // Validate contractor_id if provided
+      let contractorId: string | null = pref.contractor_id ?? null
+      if (contractorId !== null) {
+        // Verify user is a member of this contractor
+        const isMember = await contractorDb.isUserContractorMember(
+          user.user_id,
+          contractorId,
+        )
+        if (!isMember) {
+          logger.warn(
+            "User attempted to set preference for non-member contractor",
+            {
+              user_id: user.user_id,
+              contractor_id: contractorId,
+            },
+          )
+          continue // Skip this preference
+        }
+      }
+
       // Upsert preference
       const updated = await emailPreferenceDb.upsertEmailPreference(
         user.user_id,
@@ -677,6 +773,7 @@ export const updateEmailPreferences: RequestHandler = async (req, res) => {
         pref.enabled ?? true,
         pref.frequency ?? "immediate",
         pref.digest_time ?? null,
+        contractorId,
       )
 
       updatedPreferences.push(updated)
