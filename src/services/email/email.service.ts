@@ -395,9 +395,25 @@ class SESEmailService implements EmailService {
         if (!isEnabled) {
           logger.debug(
             `Email notifications disabled for user ${userId}, type ${notificationType}, contractor_id: ${contractorIdToCheck}`,
+            {
+              user_id: userId,
+              notification_type: notificationType,
+              action_type_id: actionTypeId,
+              contractor_id: contractorIdToCheck,
+            },
           )
           return false
         }
+        logger.debug(
+          `Email notification preference check passed for user ${userId}`,
+          {
+            user_id: userId,
+            notification_type: notificationType,
+            action_type_id: actionTypeId,
+            contractor_id: contractorIdToCheck,
+            preference_enabled: true,
+          },
+        )
       }
 
       // Format email template data based on notification type
