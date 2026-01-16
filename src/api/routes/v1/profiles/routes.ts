@@ -38,6 +38,7 @@ import {
   profile_post_blocklist_block,
   profile_delete_blocklist_unblock_username,
   profile_get_links,
+  profile_get_organizations,
   profile_delete_links_provider_type,
   profile_put_links_provider_type_primary,
   profile_get_languages,
@@ -241,6 +242,14 @@ profileRouter.delete(
 
 // Account linking endpoints
 profileRouter.get("/links", readRateLimit, userAuthorized, profile_get_links)
+
+// Organizations endpoint
+profileRouter.get(
+  "/organizations",
+  readRateLimit,
+  userAuthorized,
+  profile_get_organizations,
+)
 
 profileRouter.delete(
   "/links/:provider_type",

@@ -307,12 +307,14 @@ class SESEmailService implements EmailService {
    * Checks user preferences and email verification status before sending
    * If EMAIL_QUEUE_URL is configured, queues the email; otherwise sends directly
    * @param skipQueue - If true, skip queueing and send directly (used by queue consumer)
+   * @param contractorId - Optional contractor ID if notification is for an organization
    */
   async sendNotificationEmail(
     userId: string,
     notificationType: string,
     data: NotificationEmailData,
     skipQueue: boolean = false,
+    contractorId?: string | null,
   ): Promise<boolean> {
     // If queue is enabled and not skipping queue, queue the email instead of sending directly
     if (this.isQueueEnabled() && !skipQueue) {
@@ -374,13 +376,25 @@ class SESEmailService implements EmailService {
 
       // Check email preferences if action type is known
       if (actionTypeId !== null) {
+        // Determine contractor_id from data if not provided
+        let contractorIdToCheck: string | null = contractorId ?? null
+        if (contractorIdToCheck === null || contractorIdToCheck === undefined) {
+          // Try to extract from notification data
+          if (data.order?.contractor_id) {
+            contractorIdToCheck = data.order.contractor_id
+          } else if (data.offer?.contractor_id) {
+            contractorIdToCheck = data.offer.contractor_id
+          }
+        }
+
         const isEnabled = await emailPreferenceDb.isEmailEnabled(
           userId,
           actionTypeId,
+          contractorIdToCheck,
         )
         if (!isEnabled) {
           logger.debug(
-            `Email notifications disabled for user ${userId}, type ${notificationType}`,
+            `Email notifications disabled for user ${userId}, type ${notificationType}, contractor_id: ${contractorIdToCheck}`,
           )
           return false
         }

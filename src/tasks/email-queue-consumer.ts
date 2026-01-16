@@ -169,10 +169,13 @@ async function handleNotificationEmail(payload: {
         notificationType,
       })
     } else {
-      logger.debug("Notification email skipped (no email, unverified, or disabled)", {
-        userId,
-        notificationType,
-      })
+      logger.debug(
+        "Notification email skipped (no email, unverified, or disabled)",
+        {
+          userId,
+          notificationType,
+        },
+      )
     }
   } catch (error) {
     logger.error("Failed to send notification email", {

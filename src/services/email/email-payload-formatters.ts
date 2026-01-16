@@ -407,7 +407,8 @@ export async function formatContractorInviteEmailData(
   const url = `${getBaseUrl()}/contractors`
 
   // Get contractor details
-  const contractorDb = await import("../../api/routes/v1/contractors/database.js")
+  const contractorDb =
+    await import("../../api/routes/v1/contractors/database.js")
   const contractor = await contractorDb.getContractor({
     contractor_id: invite.contractor_id,
   })

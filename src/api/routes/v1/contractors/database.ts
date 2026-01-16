@@ -456,6 +456,61 @@ export async function getUserContractors(where: any): Promise<DBContractor[]> {
 }
 
 /**
+ * Get user organizations with basic info (for notification preferences).
+ * Returns contractor_id and name, ordered alphabetically by name.
+ * @param userId - User ID
+ * @returns Array of organizations with contractor_id and name
+ */
+export async function getUserOrganizationsForPreferences(
+  userId: string,
+): Promise<Array<{ contractor_id: string; name: string }>> {
+  return knex()<{ contractor_id: string; name: string }>(
+    "contractor_member_roles",
+  )
+    .join(
+      "contractor_roles",
+      "contractor_member_roles.role_id",
+      "=",
+      "contractor_roles.role_id",
+    )
+    .join(
+      "contractors",
+      "contractor_roles.contractor_id",
+      "=",
+      "contractors.contractor_id",
+    )
+    .where("contractor_member_roles.user_id", userId)
+    .where("contractors.archived", false)
+    .select("contractors.contractor_id", "contractors.name")
+    .distinct()
+    .orderBy("contractors.name", "asc")
+}
+
+/**
+ * Check if user is a member of a contractor/organization.
+ * @param userId - User ID
+ * @param contractorId - Contractor ID
+ * @returns True if user is a member, false otherwise
+ */
+export async function isUserContractorMember(
+  userId: string,
+  contractorId: string,
+): Promise<boolean> {
+  const result = await knex()("contractor_member_roles")
+    .join(
+      "contractor_roles",
+      "contractor_member_roles.role_id",
+      "=",
+      "contractor_roles.role_id",
+    )
+    .where("contractor_member_roles.user_id", userId)
+    .where("contractor_roles.contractor_id", contractorId)
+    .first()
+
+  return !!result
+}
+
+/**
  * Get user contractor roles.
  */
 export async function getUserContractorRoles(where: any): Promise<

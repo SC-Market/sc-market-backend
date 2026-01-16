@@ -75,6 +75,7 @@ export interface EmailService {
     notificationType: string,
     data: NotificationEmailData,
     skipQueue?: boolean,
+    contractorId?: string | null,
   ): Promise<boolean>
 
   // Email verification
