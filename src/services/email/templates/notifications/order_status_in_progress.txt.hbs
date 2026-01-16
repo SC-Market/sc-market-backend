@@ -1,12 +1,8 @@
-Order In Progress
-
-Hello {{userDisplayName}},
-
-Order "{{order.title}}" is now in progress.
+Order In Progress Hello
+{{userDisplayName}}, Order "{{order.title}}" is now in progress.
 
 {{order.title}}
 {{#if order.description}}{{order.description}}{{/if}}
 {{#if order.cost}}Value: {{formatCurrency order.cost}} aUEC{{/if}}
-Status: In Progress
-
-View Order: {{actionUrl}}
+Status: In Progress View Order:
+{{actionUrl}}

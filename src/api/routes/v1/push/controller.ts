@@ -193,27 +193,72 @@ export const push_unsubscribe: RequestHandler = async (req, res) => {
 
 /**
  * GET /api/push/preferences
- * Get push notification preferences
+ * Get push notification preferences (grouped by individual and organizations)
  */
 export const push_get_preferences: RequestHandler = async (req, res) => {
   const user = req.user as User
 
   try {
-    const preferences = await pushNotificationService.getPreferences(
-      user.user_id,
+    const { getPushPreferencesGrouped } =
+      await import("../../../../services/push-notifications/push-notification.database.js")
+    const groupedPreferences = await getPushPreferencesGrouped(user.user_id)
+
+    // Get all notification action types
+    const { getAllNotificationActions } =
+      await import("../notifications/database.js")
+    const allActions = await getAllNotificationActions()
+    const actionMap = new Map(
+      allActions.map((a) => [parseInt(a.action_type_id, 10), a]),
     )
 
-    // Convert to array format for easier frontend consumption
-    const preferencesArray = Object.entries(preferences).map(
-      ([action, enabled]) => ({
-        action,
-        enabled,
-      }),
+    // Create a map of existing preferences by action_type_id for individual
+    const individualPrefMap = new Map<number, boolean>()
+    for (const pref of groupedPreferences.individual) {
+      const actionTypeId = parseInt(pref.action_type_id, 10)
+      individualPrefMap.set(actionTypeId, pref.enabled)
+    }
+
+    // Format individual preferences - include all actions with defaults
+    const individualPreferences = allActions.map((action) => {
+      const actionTypeId = parseInt(action.action_type_id, 10)
+      return {
+        action: action.action,
+        enabled: individualPrefMap.get(actionTypeId) ?? true, // Default to enabled for push
+      }
+    })
+
+    // Format organization preferences
+    const organizationPreferences = groupedPreferences.organizations.map(
+      (org) => {
+        // Create a map of existing preferences for this org
+        const orgPrefMap = new Map<number, boolean>()
+        for (const pref of org.preferences) {
+          const actionTypeId = parseInt(pref.action_type_id, 10)
+          orgPrefMap.set(actionTypeId, pref.enabled)
+        }
+
+        // Include all actions with defaults
+        const orgPrefs = allActions.map((action) => {
+          const actionTypeId = parseInt(action.action_type_id, 10)
+          return {
+            action: action.action,
+            enabled: orgPrefMap.get(actionTypeId) ?? true, // Default to enabled for push
+          }
+        })
+
+        return {
+          contractor_id: org.contractor_id,
+          preferences: orgPrefs,
+        }
+      },
     )
 
     res.json(
       createResponse({
-        preferences: preferencesArray,
+        preferences: {
+          individual: individualPreferences,
+          organizations: organizationPreferences,
+        },
       }),
     )
   } catch (error) {
@@ -235,9 +280,10 @@ export const push_get_preferences: RequestHandler = async (req, res) => {
  */
 export const push_update_preference: RequestHandler = async (req, res) => {
   const user = req.user as User
-  const { action, enabled } = req.body as {
+  const { action, enabled, contractor_id } = req.body as {
     action?: string
     enabled?: boolean
+    contractor_id?: string | null
   }
 
   // Validate request body
@@ -254,17 +300,61 @@ export const push_update_preference: RequestHandler = async (req, res) => {
   }
 
   try {
-    await pushNotificationService.updatePreference(
-      user.user_id,
-      action,
+    // Validate contractor_id if provided
+    let contractorId: string | null = contractor_id ?? null
+    if (contractorId !== null) {
+      const contractorDbModule = await import("../contractors/database.js")
+      // Verify user is a member of this contractor
+      const isMember = await contractorDbModule.isUserContractorMember(
+        user.user_id,
+        contractorId,
+      )
+      if (!isMember) {
+        res
+          .status(403)
+          .json(
+            createErrorResponse(
+              ErrorCode.FORBIDDEN,
+              "You are not a member of this organization",
+            ),
+          )
+        return
+      }
+    }
+
+    // Get action type ID
+    const { getNotificationActionByName } =
+      await import("../notifications/database.js")
+    const actionType = await getNotificationActionByName(action)
+
+    if (!actionType) {
+      res
+        .status(400)
+        .json(
+          createErrorResponse(
+            ErrorCode.VALIDATION_ERROR,
+            `Invalid action type: ${action}`,
+          ),
+        )
+      return
+    }
+
+    // Update preference
+    const { upsertPushPreference } =
+      await import("../../../../services/push-notifications/push-notification.database.js")
+    await upsertPushPreference({
+      user_id: user.user_id,
+      action_type_id: actionType.action_type_id,
       enabled,
-    )
+      contractor_id: contractorId,
+    })
 
     logger.info(`User updated push notification preference`, {
       user_id: user.user_id,
       username: user.username,
       action,
       enabled,
+      contractor_id: contractorId,
     })
 
     res.json(
