@@ -276,90 +276,147 @@ export const push_get_preferences: RequestHandler = async (req, res) => {
 
 /**
  * PATCH /api/push/preferences
- * Update push notification preferences
+ * Update push notification preferences (supports single or batch updates)
  */
 export const push_update_preference: RequestHandler = async (req, res) => {
   const user = req.user as User
-  const { action, enabled, contractor_id } = req.body as {
-    action?: string
-    enabled?: boolean
-    contractor_id?: string | null
-  }
+  const body = req.body as
+    | {
+        action?: string
+        enabled?: boolean
+        contractor_id?: string | null
+      }
+    | {
+        preferences?: Array<{
+          action: string
+          enabled: boolean
+          contractor_id?: string | null
+        }>
+      }
 
-  // Validate request body
-  if (!action || typeof enabled !== "boolean") {
+  // Check if this is a batch update (has preferences array) or single update
+  const isBatchUpdate = Array.isArray((body as any).preferences)
+  const preferences = isBatchUpdate
+    ? (body as { preferences?: Array<{ action: string; enabled: boolean; contractor_id?: string | null }> }).preferences
+    : [
+        {
+          action: (body as { action?: string; enabled?: boolean; contractor_id?: string | null }).action!,
+          enabled: (body as { action?: string; enabled?: boolean; contractor_id?: string | null }).enabled!,
+          contractor_id: (body as { action?: string; enabled?: boolean; contractor_id?: string | null }).contractor_id,
+        },
+      ]
+
+  if (!preferences || preferences.length === 0) {
     res
       .status(400)
       .json(
         createErrorResponse(
           ErrorCode.VALIDATION_ERROR,
-          "Invalid request body. Required fields: action (string), enabled (boolean)",
+          isBatchUpdate
+            ? "Preferences array is required and cannot be empty"
+            : "Invalid request body. Required fields: action (string), enabled (boolean), or preferences array",
         ),
       )
     return
   }
 
-  try {
-    // Validate contractor_id if provided
-    let contractorId: string | null = contractor_id ?? null
-    if (contractorId !== null) {
-      const contractorDbModule = await import("../contractors/database.js")
-      // Verify user is a member of this contractor
-      const isMember = await contractorDbModule.isUserContractorMember(
-        user.user_id,
-        contractorId,
-      )
-      if (!isMember) {
+  // Validate batch request format
+  if (isBatchUpdate) {
+    for (const pref of preferences) {
+      if (!pref.action || typeof pref.enabled !== "boolean") {
         res
-          .status(403)
+          .status(400)
           .json(
             createErrorResponse(
-              ErrorCode.FORBIDDEN,
-              "You are not a member of this organization",
+              ErrorCode.VALIDATION_ERROR,
+              "Each preference must have action (string) and enabled (boolean)",
             ),
           )
         return
       }
     }
-
-    // Get action type ID
-    const { getNotificationActionByName } =
-      await import("../notifications/database.js")
-    const actionType = await getNotificationActionByName(action)
-
-    if (!actionType) {
+  } else {
+    // Single update validation
+    if (!preferences[0].action || typeof preferences[0].enabled !== "boolean") {
       res
         .status(400)
         .json(
           createErrorResponse(
             ErrorCode.VALIDATION_ERROR,
-            `Invalid action type: ${action}`,
+            "Invalid request body. Required fields: action (string), enabled (boolean)",
           ),
         )
       return
     }
+  }
 
-    // Update preference
+  try {
+    const { getNotificationActionByName } =
+      await import("../notifications/database.js")
     const { upsertPushPreference } =
       await import("../../../../services/push-notifications/push-notification.database.js")
-    await upsertPushPreference({
-      user_id: user.user_id,
-      action_type_id: actionType.action_type_id,
-      enabled,
-      contractor_id: contractorId,
-    })
+    const contractorDbModule = await import("../contractors/database.js")
 
-    logger.info(`User updated push notification preference`, {
+    const updatedPreferences = []
+
+    for (const pref of preferences) {
+      // Validate contractor_id if provided
+      let contractorId: string | null = pref.contractor_id ?? null
+      if (contractorId !== null) {
+        // Verify user is a member of this contractor
+        const isMember = await contractorDbModule.isUserContractorMember(
+          user.user_id,
+          contractorId,
+        )
+        if (!isMember) {
+          logger.warn(
+            "User attempted to set preference for non-member contractor",
+            {
+              user_id: user.user_id,
+              contractor_id: contractorId,
+            },
+          )
+          continue // Skip this preference
+        }
+      }
+
+      // Get action type ID
+      const actionType = await getNotificationActionByName(pref.action)
+
+      if (!actionType) {
+        logger.warn("Invalid action type in preference update", {
+          user_id: user.user_id,
+          action: pref.action,
+        })
+        continue // Skip invalid action types
+      }
+
+      // Update preference
+      await upsertPushPreference({
+        user_id: user.user_id,
+        action_type_id: actionType.action_type_id,
+        enabled: pref.enabled,
+        contractor_id: contractorId,
+      })
+
+      updatedPreferences.push({
+        action: pref.action,
+        enabled: pref.enabled,
+        contractor_id: contractorId,
+      })
+    }
+
+    logger.info(`User updated push notification preferences`, {
       user_id: user.user_id,
       username: user.username,
-      action,
-      enabled,
-      contractor_id: contractorId,
+      preferences_updated: updatedPreferences.length,
+      preferences: updatedPreferences,
     })
 
     res.json(
       createResponse({
-        message: "Successfully updated push notification preference",
+        message: `Successfully updated ${updatedPreferences.length} push notification preference${updatedPreferences.length !== 1 ? "s" : ""}`,
+        preferences: updatedPreferences,
       }),
     )
   } catch (error) {
@@ -373,13 +430,13 @@ export const push_update_preference: RequestHandler = async (req, res) => {
       return
     }
 
-    logger.error("Failed to update push preference:", error)
+    logger.error("Failed to update push preferences:", error)
     res
       .status(500)
       .json(
         createErrorResponse(
           ErrorCode.INTERNAL_SERVER_ERROR,
-          "Failed to update push preference",
+          "Failed to update push preferences",
         ),
       )
   }

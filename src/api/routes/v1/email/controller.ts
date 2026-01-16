@@ -14,6 +14,8 @@ import { createErrorResponse, createResponse } from "../util/response.js"
 import { ErrorCode } from "../util/error-codes.js"
 import logger from "../../../../logger/logger.js"
 import { env } from "../../../../config/env.js"
+import { getKnex } from "../../../../clients/database/knex-db.js"
+import type { DBEmailNotificationPreference } from "./database.js"
 
 /**
  * POST /api/v1/profile/email
@@ -577,6 +579,7 @@ export const getEmailPreferences: RequestHandler = async (req, res) => {
     )
 
     // Create a map of existing individual preferences by action_type_id
+    // Only include preferences where contractor_id is explicitly null (individual preferences)
     const individualPrefMap = new Map<
       number,
       {
@@ -589,14 +592,28 @@ export const getEmailPreferences: RequestHandler = async (req, res) => {
       }
     >()
     for (const pref of groupedPreferences.individual) {
-      individualPrefMap.set(pref.action_type_id, {
-        preference_id: pref.preference_id,
-        enabled: pref.enabled,
-        frequency: pref.frequency,
-        digest_time: pref.digest_time,
-        created_at: pref.created_at,
-        updated_at: pref.updated_at,
-      })
+      // Double-check that this is truly an individual preference (no contractor_id)
+      if (pref.contractor_id !== null && pref.contractor_id !== undefined) {
+        logger.warn("Found contractor-scoped preference in individual array", {
+          user_id: user.user_id,
+          preference_id: pref.preference_id,
+          contractor_id: pref.contractor_id,
+          action_type_id: pref.action_type_id,
+        })
+        continue // Skip contractor-scoped preferences
+      }
+      // If there are multiple preferences for the same action_type_id, keep the most recent one
+      const existing = individualPrefMap.get(pref.action_type_id)
+      if (!existing || pref.updated_at > existing.updated_at) {
+        individualPrefMap.set(pref.action_type_id, {
+          preference_id: pref.preference_id,
+          enabled: pref.enabled,
+          frequency: pref.frequency,
+          digest_time: pref.digest_time,
+          created_at: pref.created_at,
+          updated_at: pref.updated_at,
+        })
+      }
     }
 
     // Format individual preferences - include all actions with defaults
@@ -612,6 +629,7 @@ export const getEmailPreferences: RequestHandler = async (req, res) => {
         digest_time: existingPref?.digest_time || null,
         created_at: existingPref?.created_at?.toISOString() || "",
         updated_at: existingPref?.updated_at?.toISOString() || "",
+        contractor_id: null, // Explicitly set to null for individual preferences
       }
     })
 
@@ -654,6 +672,7 @@ export const getEmailPreferences: RequestHandler = async (req, res) => {
             digest_time: existingPref?.digest_time || null,
             created_at: existingPref?.created_at?.toISOString() || "",
             updated_at: existingPref?.updated_at?.toISOString() || "",
+            contractor_id: org.contractor_id, // Include contractor_id for org preferences
           }
         })
 
@@ -725,20 +744,28 @@ export const updateEmailPreferences: RequestHandler = async (req, res) => {
   }
 
   try {
-    const updatedPreferences = []
+    // Validate all action types exist once, outside the loop
+    const allActions = await notificationDb.getAllNotificationActions()
+    const actionTypeSet = new Set(
+      allActions.map((a) => parseInt(a.action_type_id, 10)),
+    )
 
-    for (const pref of preferences) {
-      if (typeof pref.action_type_id !== "number" || pref.action_type_id <= 0) {
+    // Wrap all updates in a transaction to ensure atomicity and proper commit order
+    const knexInstance = getKnex()
+    const updatedPreferences = await knexInstance.transaction(async (trx) => {
+      const results: DBEmailNotificationPreference[] = []
+
+      for (const pref of preferences) {
+        if (typeof pref.action_type_id !== "number" || pref.action_type_id <= 0) {
+        logger.warn("Invalid action_type_id in preference update", {
+          user_id: user.user_id,
+          action_type_id: pref.action_type_id,
+        })
         continue // Skip invalid action type IDs
       }
 
       // Validate action type exists
-      const allActions = await notificationDb.getAllNotificationActions()
-      const actionExists = allActions.some(
-        (a) => parseInt(a.action_type_id, 10) === pref.action_type_id,
-      )
-
-      if (!actionExists) {
+      if (!actionTypeSet.has(pref.action_type_id)) {
         logger.warn("Invalid action_type_id in preference update", {
           user_id: user.user_id,
           action_type_id: pref.action_type_id,
@@ -767,17 +794,45 @@ export const updateEmailPreferences: RequestHandler = async (req, res) => {
       }
 
       // Upsert preference
-      const updated = await emailPreferenceDb.upsertEmailPreference(
-        user.user_id,
-        pref.action_type_id,
-        pref.enabled ?? true,
-        pref.frequency ?? "immediate",
-        pref.digest_time ?? null,
-        contractorId,
-      )
+      // Ensure enabled is explicitly a boolean - default to false for email (opt-in)
+      const enabled = typeof pref.enabled === "boolean" ? pref.enabled : false
+      
+      logger.debug("Updating email preference", {
+        user_id: user.user_id,
+        action_type_id: pref.action_type_id,
+        enabled,
+        contractor_id: contractorId,
+      })
+      
+        const [updated] = await trx<DBEmailNotificationPreference>(
+          "email_notification_preferences",
+        )
+          .insert({
+            user_id: user.user_id,
+            action_type_id: pref.action_type_id,
+            contractor_id: contractorId,
+            enabled: enabled,
+            frequency: pref.frequency ?? "immediate",
+            digest_time: pref.digest_time ?? null,
+            created_at: new Date(),
+            updated_at: new Date(),
+          })
+          .onConflict(["user_id", "action_type_id", "contractor_id"])
+          .merge({
+            enabled: enabled,
+            frequency: pref.frequency ?? "immediate",
+            digest_time: pref.digest_time ?? null,
+            updated_at: new Date(),
+          })
+          .returning("*")
 
-      updatedPreferences.push(updated)
-    }
+        if (updated) {
+          results.push(updated)
+        }
+      }
+
+      return results
+    })
 
     logger.info("Email preferences updated", {
       user_id: user.user_id,
