@@ -17,7 +17,6 @@ import { fileURLToPath } from "node:url"
 import { dirname } from "node:path"
 
 import { apiRouter } from "./api/routes/v1/api-router.js"
-import { database } from "./clients/database/knex-db.js"
 import * as profileDb from "./api/routes/v1/profiles/database.js"
 import * as contractorDb from "./api/routes/v1/contractors/database.js"
 import * as recruitingDb from "./api/routes/v1/recruiting/database.js"
@@ -41,6 +40,14 @@ import { adminOverride } from "./api/routes/v1/admin/middleware.js"
 import { setupPassportStrategies } from "./api/util/passport-strategies.js"
 import { setupAuthRoutes } from "./api/routes/auth-routes.js"
 import logger from "./logger/logger.js"
+
+const Bugsnag = require("@bugsnag/js")
+const BugsnagPluginExpress = require("@bugsnag/plugin-express")
+
+Bugsnag.start({
+  apiKey: "1afd2ebc6ddc15b3ead4106cfda39141",
+  plugins: [BugsnagPluginExpress],
+})
 
 const SessionPool = pg.Pool
 
@@ -78,7 +85,12 @@ const corsOptions = function (
   callback(null, corsOptions) // callback expects two parameters: error and options
 }
 
-const app = enableWS(express()).app
+const rootApp = express()
+const bugsnagMiddleware = Bugsnag.getPlugin("express")
+rootApp.use(bugsnagMiddleware.requestHandler)
+rootApp.use(bugsnagMiddleware.errorHandler)
+
+const app = enableWS(rootApp).app
 
 // Configure response compression
 // Compression is enabled with optimized settings:
