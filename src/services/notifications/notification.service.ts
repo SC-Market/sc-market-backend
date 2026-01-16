@@ -222,6 +222,7 @@ class DatabaseNotificationService implements NotificationService {
         order.assigned_id,
         payload,
         "order_assigned",
+        order.contractor_id ?? null, // contractorId for org-scoped preferences
       )
     } catch (error) {
       // Log but don't fail notification creation if push fails
@@ -240,6 +241,8 @@ class DatabaseNotificationService implements NotificationService {
         {
           order,
         },
+        false, // skipQueue
+        order.contractor_id ?? null, // contractorId for org-scoped preferences
       )
     } catch (error) {
       // Log but don't fail notification creation if email fails
@@ -353,6 +356,7 @@ class DatabaseNotificationService implements NotificationService {
             notified,
             payload,
             "order_message",
+            order.contractor_id ?? null, // contractorId for org-scoped preferences
           )
         } catch (error) {
           // Log but don't fail notification creation if push fails
@@ -364,10 +368,16 @@ class DatabaseNotificationService implements NotificationService {
 
         // Send email notification
         try {
-          await emailService.sendNotificationEmail(notified, "order_message", {
-            order,
-            message,
-          })
+          await emailService.sendNotificationEmail(
+            notified,
+            "order_message",
+            {
+              order,
+              message,
+            },
+            false, // skipQueue
+            order.contractor_id ?? null, // contractorId for org-scoped preferences
+          )
         } catch (error) {
           logger.debug(
             `Failed to send email notification for order message to user ${notified}:`,
@@ -425,6 +435,7 @@ class DatabaseNotificationService implements NotificationService {
           order.assigned_id,
           payload,
           "order_comment",
+          order.contractor_id ?? null, // contractorId for org-scoped preferences
         )
       } catch (error) {
         logger.debug(
@@ -442,6 +453,8 @@ class DatabaseNotificationService implements NotificationService {
             order,
             comment,
           },
+          false, // skipQueue
+          order.contractor_id ?? null, // contractorId for org-scoped preferences
         )
       } catch (error) {
         logger.debug(
@@ -469,6 +482,7 @@ class DatabaseNotificationService implements NotificationService {
           order.customer_id,
           payload,
           "order_comment",
+          order.contractor_id ?? null, // contractorId for org-scoped preferences
         )
       } catch (error) {
         logger.debug(
@@ -486,6 +500,8 @@ class DatabaseNotificationService implements NotificationService {
             order,
             comment,
           },
+          false, // skipQueue
+          order.contractor_id ?? null, // contractorId for org-scoped preferences
         )
       } catch (error) {
         logger.debug(
@@ -537,6 +553,7 @@ class DatabaseNotificationService implements NotificationService {
         order.assigned_id,
         payload,
         "order_review",
+        order.contractor_id ?? null, // contractorId for org-scoped preferences
       )
     } catch (error) {
       logger.debug(`Failed to send push notification for order review:`, error)
@@ -550,6 +567,8 @@ class DatabaseNotificationService implements NotificationService {
         {
           review,
         },
+        false, // skipQueue
+        order.contractor_id ?? null, // contractorId for org-scoped preferences
       )
     } catch (error) {
       logger.debug(`Failed to send email notification for order review:`, error)
@@ -595,6 +614,7 @@ class DatabaseNotificationService implements NotificationService {
           order.assigned_id,
           payload,
           action_name,
+          order.contractor_id ?? null, // contractorId for org-scoped preferences
         )
       } catch (error) {
         logger.debug(
@@ -611,6 +631,8 @@ class DatabaseNotificationService implements NotificationService {
           {
             order,
           },
+          false, // skipQueue
+          order.contractor_id ?? null, // contractorId for org-scoped preferences
         )
       } catch (error) {
         logger.debug(
@@ -638,6 +660,7 @@ class DatabaseNotificationService implements NotificationService {
           order.customer_id,
           payload,
           action_name,
+          order.contractor_id ?? null, // contractorId for org-scoped preferences
         )
       } catch (error) {
         logger.debug(
@@ -654,6 +677,8 @@ class DatabaseNotificationService implements NotificationService {
           {
             order,
           },
+          false, // skipQueue
+          order.contractor_id ?? null, // contractorId for org-scoped preferences
         )
       } catch (error) {
         logger.debug(
@@ -798,6 +823,7 @@ class DatabaseNotificationService implements NotificationService {
         session.assigned_id,
         payload,
         type === "offer_created" ? "offer_create" : "counter_offer_create",
+        session.contractor_id ?? null, // contractorId for org-scoped preferences
       )
     } catch (error) {
       logger.debug(
@@ -814,6 +840,8 @@ class DatabaseNotificationService implements NotificationService {
         {
           offer: session,
         },
+        false, // skipQueue
+        session.contractor_id ?? null, // contractorId for org-scoped preferences
       )
     } catch (error) {
       logger.debug(
@@ -925,6 +953,7 @@ class DatabaseNotificationService implements NotificationService {
             notified,
             payload,
             "offer_message",
+            session.contractor_id ?? null, // contractorId for org-scoped preferences
           )
         } catch (error) {
           logger.debug(
@@ -935,10 +964,16 @@ class DatabaseNotificationService implements NotificationService {
 
         // Send email notification
         try {
-          await emailService.sendNotificationEmail(notified, "offer_message", {
-            offer: session,
-            message,
-          })
+          await emailService.sendNotificationEmail(
+            notified,
+            "offer_message",
+            {
+              offer: session,
+              message,
+            },
+            false, // skipQueue
+            session.contractor_id ?? null, // contractorId for org-scoped preferences
+          )
         } catch (error) {
           logger.debug(
             `Failed to send email notification for offer message to user ${notified}:`,
