@@ -5,6 +5,8 @@ import { createErrorResponse, createResponse } from "../util/response.js"
 import { ErrorCode } from "../util/error-codes.js"
 import logger from "../../../../logger/logger.js"
 import { env } from "../../../../config/env.js"
+import { getKnex } from "../../../../clients/database/knex-db.js"
+import type { PushNotificationPreference } from "../../../../services/push-notifications/push-notification.service.types.js"
 
 /**
  * POST /api/push/subscribe
@@ -351,62 +353,99 @@ export const push_update_preference: RequestHandler = async (req, res) => {
   }
 
   try {
-    const { getNotificationActionByName } =
+    // Validate all action types exist once, outside the loop
+    const { getAllNotificationActions } =
       await import("../notifications/database.js")
-    const { upsertPushPreference } =
-      await import("../../../../services/push-notifications/push-notification.database.js")
-    const contractorDbModule = await import("../contractors/database.js")
+    const allActions = await getAllNotificationActions()
+    const actionMap = new Map(
+      allActions.map((a) => [a.action, parseInt(a.action_type_id, 10)]),
+    )
 
-    const updatedPreferences = []
+    // Get knex instance for transaction
+    const knexInstance = getKnex()
 
-    for (const pref of preferences) {
-      // Validate contractor_id if provided
-      let contractorId: string | null = pref.contractor_id ?? null
-      if (contractorId !== null) {
-        // Verify user is a member of this contractor
-        const isMember = await contractorDbModule.isUserContractorMember(
-          user.user_id,
-          contractorId,
-        )
-        if (!isMember) {
-          logger.warn(
-            "User attempted to set preference for non-member contractor",
-            {
-              user_id: user.user_id,
-              contractor_id: contractorId,
-            },
+    // Wrap all updates in a transaction to ensure atomicity and proper commit order
+    const updatedPreferences = await knexInstance.transaction(async (trx) => {
+      const results: Array<{
+        action: string
+        enabled: boolean
+        contractor_id: string | null
+      }> = []
+
+      const contractorDbModule = await import("../contractors/database.js")
+
+      for (const pref of preferences) {
+        // Validate contractor_id if provided
+        let contractorId: string | null = pref.contractor_id ?? null
+        if (contractorId !== null) {
+          // Verify user is a member of this contractor
+          const isMember = await contractorDbModule.isUserContractorMember(
+            user.user_id,
+            contractorId,
           )
-          continue // Skip this preference
+          if (!isMember) {
+            logger.warn(
+              "User attempted to set preference for non-member contractor",
+              {
+                user_id: user.user_id,
+                contractor_id: contractorId,
+              },
+            )
+            continue // Skip this preference
+          }
+        }
+
+        // Validate action type exists
+        const actionTypeId = actionMap.get(pref.action)
+        if (!actionTypeId) {
+          logger.warn("Invalid action type in preference update", {
+            user_id: user.user_id,
+            action: pref.action,
+          })
+          continue // Skip invalid action types
+        }
+
+        // Ensure enabled is explicitly a boolean - default to true for push (opt-out)
+        const enabled = typeof pref.enabled === "boolean" ? pref.enabled : true
+
+        logger.debug("Updating push preference", {
+          user_id: user.user_id,
+          action: pref.action,
+          action_type_id: actionTypeId,
+          enabled,
+          contractor_id: contractorId,
+        })
+
+        // Upsert preference within transaction
+        const [updated] = await trx<PushNotificationPreference>(
+          "push_notification_preferences",
+        )
+          .insert({
+            user_id: user.user_id,
+            action_type_id: String(actionTypeId),
+            contractor_id: contractorId,
+            enabled: enabled,
+          })
+          .onConflict(["user_id", "action_type_id", "contractor_id"])
+          .merge({
+            enabled: enabled,
+            updated_at: new Date(),
+          })
+          .returning("*")
+
+        if (updated) {
+          results.push({
+            action: pref.action,
+            enabled: enabled,
+            contractor_id: contractorId,
+          })
         }
       }
 
-      // Get action type ID
-      const actionType = await getNotificationActionByName(pref.action)
+      return results
+    })
 
-      if (!actionType) {
-        logger.warn("Invalid action type in preference update", {
-          user_id: user.user_id,
-          action: pref.action,
-        })
-        continue // Skip invalid action types
-      }
-
-      // Update preference
-      await upsertPushPreference({
-        user_id: user.user_id,
-        action_type_id: actionType.action_type_id,
-        enabled: pref.enabled,
-        contractor_id: contractorId,
-      })
-
-      updatedPreferences.push({
-        action: pref.action,
-        enabled: pref.enabled,
-        contractor_id: contractorId,
-      })
-    }
-
-    logger.info(`User updated push notification preferences`, {
+    logger.debug(`User updated push notification preferences`, {
       user_id: user.user_id,
       username: user.username,
       preferences_updated: updatedPreferences.length,
