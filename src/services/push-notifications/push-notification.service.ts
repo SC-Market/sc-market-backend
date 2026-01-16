@@ -270,6 +270,7 @@ class WebPushNotificationService implements PushNotificationService {
             {
               user_id: userId,
               action_type: actionType,
+              action_type_id: action.action_type_id,
               contractor_id: contractorId,
               preference_enabled: false,
             },
@@ -281,6 +282,7 @@ class WebPushNotificationService implements PushNotificationService {
           {
             user_id: userId,
             action_type: actionType,
+            action_type_id: action.action_type_id,
             contractor_id: contractorId,
             preference_enabled: true,
           },
