@@ -41,8 +41,8 @@ import { setupPassportStrategies } from "./api/util/passport-strategies.js"
 import { setupAuthRoutes } from "./api/routes/auth-routes.js"
 import logger from "./logger/logger.js"
 
-const Bugsnag = require("@bugsnag/js")
-const BugsnagPluginExpress = require("@bugsnag/plugin-express")
+import Bugsnag from "@bugsnag/js"
+import BugsnagPluginExpress from "@bugsnag/plugin-express"
 
 Bugsnag.start({
   apiKey: "1afd2ebc6ddc15b3ead4106cfda39141",
