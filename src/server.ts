@@ -41,10 +41,13 @@ import { setupPassportStrategies } from "./api/util/passport-strategies.js"
 import { setupAuthRoutes } from "./api/routes/auth-routes.js"
 import logger from "./logger/logger.js"
 
-import Bugsnag from "@bugsnag/js"
+import { createRequire } from "module"
+const require = createRequire(import.meta.url)
+
+const Bugsnag = require("@bugsnag/js")
 import BugsnagPluginExpress from "@bugsnag/plugin-express"
 
-Bugsnag.start({
+const bugsnag = Bugsnag.start({
   apiKey: "1afd2ebc6ddc15b3ead4106cfda39141",
   plugins: [BugsnagPluginExpress],
 })
@@ -86,7 +89,7 @@ const corsOptions = function (
 }
 
 const rootApp = express()
-const bugsnagMiddleware = Bugsnag.getPlugin("express")
+const bugsnagMiddleware = bugsnag.getPlugin("express")
 rootApp.use(bugsnagMiddleware.requestHandler)
 rootApp.use(bugsnagMiddleware.errorHandler)
 
