@@ -834,7 +834,7 @@ export const updateEmailPreferences: RequestHandler = async (req, res) => {
       return results
     })
 
-    logger.info("Email preferences updated", {
+    logger.debug("Email preferences updated", {
       user_id: user.user_id,
       preferences_updated: updatedPreferences.length,
     })
