@@ -1005,6 +1005,12 @@ adminOapi.schema("TestNotificationRequest", {
       type: "string",
       description: "Username to send the test notification to",
     },
+    contractor_id: {
+      type: "string",
+      format: "uuid",
+      nullable: true,
+      description: "Optional contractor ID to test organization-scoped notification preferences. If not provided, will be extracted from order/offer data if available.",
+    },
   },
 })
 

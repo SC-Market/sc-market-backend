@@ -500,6 +500,7 @@ async function createTestNotification(
   actorId: string,
   payloadData: any,
   pushPayload?: any,
+  contractorId?: string | null,
 ): Promise<void> {
   const action = await notificationDb.getNotificationActionByName(actionName)
   const notif_objects = await notificationDb.insertNotificationObjects([
@@ -530,6 +531,7 @@ async function createTestNotification(
         targetUserId,
         pushPayload,
         actionName,
+        contractorId ?? null, // Pass contractor_id for org-scoped preferences
       )
     } catch (error) {
       logger.debug(`Failed to send push notification for test:`, error)
@@ -542,6 +544,8 @@ async function createTestNotification(
       targetUserId,
       actionName,
       payloadData,
+      false, // skipQueue
+      contractorId ?? null, // Pass contractor_id for org-scoped preferences
     )
   } catch (error) {
     logger.debug(`Failed to send email notification for test:`, error)
@@ -587,7 +591,7 @@ export const admin_post_test_notification: RequestHandler = async (
   res,
 ) => {
   try {
-    const { notification_type, target_username } = req.body
+    const { notification_type, target_username, contractor_id } = req.body
     const user = req.user as User
 
     if (!notification_type) {
@@ -647,6 +651,8 @@ export const admin_post_test_notification: RequestHandler = async (
           order,
           "order_create",
         )
+        // Use provided contractor_id or extract from order
+        const contractorId = contractor_id ?? order.contractor_id ?? null
         await createTestNotification(
           "order_create",
           order.order_id,
@@ -654,8 +660,9 @@ export const admin_post_test_notification: RequestHandler = async (
           user.user_id,
           { order },
           payload,
+          contractorId,
         )
-        result.data = { order_id: order.order_id }
+        result.data = { order_id: order.order_id, contractor_id: contractorId }
         break
       }
 
@@ -677,6 +684,7 @@ export const admin_post_test_notification: RequestHandler = async (
           order,
           "order_assigned",
         )
+        const contractorId = contractor_id ?? order.contractor_id ?? null
         await createTestNotification(
           "order_assigned",
           order.order_id,
@@ -684,6 +692,7 @@ export const admin_post_test_notification: RequestHandler = async (
           user.user_id,
           { order },
           payload,
+          contractorId,
         )
         result.data = { order_id: order.order_id }
         break
@@ -739,6 +748,7 @@ export const admin_post_test_notification: RequestHandler = async (
             message,
             chat.chat_id,
           )
+        const contractorId = contractor_id ?? order.contractor_id ?? null
         await createTestNotification(
           "order_message",
           order.order_id,
@@ -746,6 +756,7 @@ export const admin_post_test_notification: RequestHandler = async (
           user.user_id,
           { order, message },
           payload,
+          contractorId,
         )
         result.data = {
           order_id: order.order_id,
@@ -773,6 +784,7 @@ export const admin_post_test_notification: RequestHandler = async (
           order,
           comment,
         )
+        const contractorId = contractor_id ?? order.contractor_id ?? null
         await createTestNotification(
           "order_comment",
           comment.comment_id,
@@ -780,6 +792,7 @@ export const admin_post_test_notification: RequestHandler = async (
           user.user_id,
           { order, comment },
           payload,
+          contractorId,
         )
         result.data = { comment_id: comment.comment_id }
         break
@@ -836,6 +849,7 @@ export const admin_post_test_notification: RequestHandler = async (
           order,
           actionName,
         )
+        const contractorId = contractor_id ?? order.contractor_id ?? null
         await createTestNotification(
           actionName,
           order.order_id,
@@ -843,6 +857,7 @@ export const admin_post_test_notification: RequestHandler = async (
           user.user_id,
           { order },
           payload,
+          contractorId,
         )
         result.data = { order_id: order.order_id, status }
         break
@@ -869,6 +884,7 @@ export const admin_post_test_notification: RequestHandler = async (
           offer,
           offerType,
         )
+        const contractorId = contractor_id ?? offer.contractor_id ?? null
         await createTestNotification(
           notification_type,
           offer.id,
@@ -876,6 +892,7 @@ export const admin_post_test_notification: RequestHandler = async (
           user.user_id,
           { offer },
           payload,
+          contractorId,
         )
         result.data = { offer_id: offer.id }
         break
@@ -931,6 +948,7 @@ export const admin_post_test_notification: RequestHandler = async (
             message,
             chat.chat_id,
           )
+        const contractorId = contractor_id ?? offer.contractor_id ?? null
         await createTestNotification(
           "offer_message",
           offer.id,
@@ -938,6 +956,7 @@ export const admin_post_test_notification: RequestHandler = async (
           user.user_id,
           { offer, message },
           payload,
+          contractorId,
         )
         result.data = {
           offer_id: offer.id,
