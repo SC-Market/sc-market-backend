@@ -443,10 +443,10 @@ export function setupAuthRoutes(app: any, frontendUrl: URL): void {
         req.session.destroy((err) => {
           if (err) return next(err)
           res.clearCookie("connect.sid", {
-            httpOnly: true,
-            secure: true,
-            sameSite: "none",
-            path: "/",
+            path: "/", // must match
+            httpOnly: true, // optional but good practice
+            sameSite: "none", // must match original
+            secure: app.get("env") === "production", // must match original
           })
           res.redirect("/")
         })
