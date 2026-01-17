@@ -440,11 +440,28 @@ export function setupAuthRoutes(app: any, frontendUrl: URL): void {
   // No authentication or verification middleware is applied - logout should always be accessible
   app.get("/logout", function (req: Request, res: Response) {
     // Logout destroys the session - works for both verified and unverified users
-    req.logout({ keepSessionInfo: true }, (err) => {
+    // keepSessionInfo: false ensures the session is properly destroyed
+    req.logout({ keepSessionInfo: false }, (err) => {
       if (err) {
         logger.error("Error in logout route", { error: err })
+        // Still redirect even on error
+        return res.redirect(frontendUrl.toString() || "/")
+      }
+      // Destroy the session completely to ensure clean logout
+      if (req.session) {
+        req.session.destroy((destroyErr) => {
+          if (destroyErr) {
+            logger.error("Error destroying session during logout", {
+              error: destroyErr,
+            })
+          }
+          // Redirect after session is destroyed
+          res.redirect(frontendUrl.toString() || "/")
+        })
+      } else {
+        // No session to destroy, just redirect
+        res.redirect(frontendUrl.toString() || "/")
       }
     })
-    res.redirect(frontendUrl.toString() || "/")
   })
 }

@@ -223,18 +223,7 @@ export function createCitizenIDVerifyCallback(
       const citizenIDUsername = rsiUsername
       const displayName = rsiUsername
 
-      // STEP 1: Verify Citizen ID account is verified (required for all operations)
-      const verified = isCitizenIDVerified(profile)
-
-      if (!verified) {
-        const error = new Error(
-          "Citizen ID account must be verified to sign up or log in",
-        ) as Error & { code?: string }
-        error.code = CitizenIDErrorCodes.ACCOUNT_NOT_VERIFIED
-        return done(error, undefined)
-      }
-
-      // STEP 2: Handle linking vs login based on callback URL
+      // STEP 1: Handle linking vs login/signup based on callback URL
       if (isLinking) {
         // Linking scenario - user is already authenticated (enforced by route middleware)
         const currentUser = req.user as User
@@ -247,7 +236,17 @@ export function createCitizenIDVerifyCallback(
           return done(error, undefined)
         }
 
-        // STEP 3: Validate linking rules
+        // Linking requires verification (users must link verified Citizen ID accounts)
+        const verified = isCitizenIDVerified(profile)
+        if (!verified) {
+          const error = new Error(
+            "Citizen ID account must be verified to link to your account",
+          ) as Error & { code?: string }
+          error.code = CitizenIDErrorCodes.ACCOUNT_NOT_VERIFIED
+          return done(error, undefined)
+        }
+
+        // STEP 2: Validate linking rules
         // - Account must be unverified OR
         // - Account must be verified AND spectrum IDs must match
         const validation = await profileDb.validateCitizenIDLinking(
@@ -381,7 +380,7 @@ export function createCitizenIDVerifyCallback(
         return done(null, updatedUser)
       }
 
-      // STEP 4: New login/signup - find or create user based on action
+      // STEP 2: New login/signup - find or create user based on action
       // Get action from session (set by route handler)
       const action: "signup" | "signin" =
         (req.session as any)?.citizenid_auth_action || "signin"
@@ -390,6 +389,10 @@ export function createCitizenIDVerifyCallback(
       if (req.session) {
         delete (req.session as any).citizenid_auth_action
       }
+
+      // STEP 2a: Verify Citizen ID account is verified (required for signup only)
+      // Login is allowed for existing users even if Citizen ID account becomes unverified
+      const verified = isCitizenIDVerified(profile)
 
       let user = await profileDb.getUserByProvider("citizenid", profile.id)
 
@@ -401,6 +404,15 @@ export function createCitizenIDVerifyCallback(
             "No account found with this Citizen ID. Please sign up first.",
           ) as Error & { code?: string }
           error.code = AuthErrorCodes.ACCOUNT_NOT_FOUND
+          return done(error, undefined)
+        }
+
+        // Sign up - verification is required for new signups
+        if (!verified) {
+          const error = new Error(
+            "Citizen ID account must be verified to sign up",
+          ) as Error & { code?: string }
+          error.code = CitizenIDErrorCodes.ACCOUNT_NOT_VERIFIED
           return done(error, undefined)
         }
 
@@ -541,8 +553,8 @@ export function createCitizenIDVerifyCallback(
           }
         }
       } else {
-        // User exists - update tokens and sign in (works for both signup and signin)
-        // Sign up with existing account just signs them in
+        // User exists - allow login even if Citizen ID account is unverified
+        // (User may have been created via Discord and linked Citizen ID later)
         // Token expiration will be updated on next refresh
         await profileDb.updateProviderTokens(user.user_id, "citizenid", {
           access_token: accessToken,
