@@ -299,12 +299,38 @@ export const push_update_preference: RequestHandler = async (req, res) => {
   // Check if this is a batch update (has preferences array) or single update
   const isBatchUpdate = Array.isArray((body as any).preferences)
   const preferences = isBatchUpdate
-    ? (body as { preferences?: Array<{ action: string; enabled: boolean; contractor_id?: string | null }> }).preferences
+    ? (
+        body as {
+          preferences?: Array<{
+            action: string
+            enabled: boolean
+            contractor_id?: string | null
+          }>
+        }
+      ).preferences
     : [
         {
-          action: (body as { action?: string; enabled?: boolean; contractor_id?: string | null }).action!,
-          enabled: (body as { action?: string; enabled?: boolean; contractor_id?: string | null }).enabled!,
-          contractor_id: (body as { action?: string; enabled?: boolean; contractor_id?: string | null }).contractor_id,
+          action: (
+            body as {
+              action?: string
+              enabled?: boolean
+              contractor_id?: string | null
+            }
+          ).action!,
+          enabled: (
+            body as {
+              action?: string
+              enabled?: boolean
+              contractor_id?: string | null
+            }
+          ).enabled!,
+          contractor_id: (
+            body as {
+              action?: string
+              enabled?: boolean
+              contractor_id?: string | null
+            }
+          ).contractor_id,
         },
       ]
 

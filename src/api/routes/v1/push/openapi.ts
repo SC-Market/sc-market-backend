@@ -396,7 +396,11 @@ export const push_update_preference_spec = oapi.validPath({
                   properties: {
                     action: { type: "string" },
                     enabled: { type: "boolean" },
-                    contractor_id: { type: "string", format: "uuid", nullable: true },
+                    contractor_id: {
+                      type: "string",
+                      format: "uuid",
+                      nullable: true,
+                    },
                   },
                 },
               },

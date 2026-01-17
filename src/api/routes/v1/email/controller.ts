@@ -756,54 +756,57 @@ export const updateEmailPreferences: RequestHandler = async (req, res) => {
       const results: DBEmailNotificationPreference[] = []
 
       for (const pref of preferences) {
-        if (typeof pref.action_type_id !== "number" || pref.action_type_id <= 0) {
-        logger.warn("Invalid action_type_id in preference update", {
-          user_id: user.user_id,
-          action_type_id: pref.action_type_id,
-        })
-        continue // Skip invalid action type IDs
-      }
-
-      // Validate action type exists
-      if (!actionTypeSet.has(pref.action_type_id)) {
-        logger.warn("Invalid action_type_id in preference update", {
-          user_id: user.user_id,
-          action_type_id: pref.action_type_id,
-        })
-        continue
-      }
-
-      // Validate contractor_id if provided
-      let contractorId: string | null = pref.contractor_id ?? null
-      if (contractorId !== null) {
-        // Verify user is a member of this contractor
-        const isMember = await contractorDb.isUserContractorMember(
-          user.user_id,
-          contractorId,
-        )
-        if (!isMember) {
-          logger.warn(
-            "User attempted to set preference for non-member contractor",
-            {
-              user_id: user.user_id,
-              contractor_id: contractorId,
-            },
-          )
-          continue // Skip this preference
+        if (
+          typeof pref.action_type_id !== "number" ||
+          pref.action_type_id <= 0
+        ) {
+          logger.warn("Invalid action_type_id in preference update", {
+            user_id: user.user_id,
+            action_type_id: pref.action_type_id,
+          })
+          continue // Skip invalid action type IDs
         }
-      }
 
-      // Upsert preference
-      // Ensure enabled is explicitly a boolean - default to false for email (opt-in)
-      const enabled = typeof pref.enabled === "boolean" ? pref.enabled : false
-      
-      logger.debug("Updating email preference", {
-        user_id: user.user_id,
-        action_type_id: pref.action_type_id,
-        enabled,
-        contractor_id: contractorId,
-      })
-      
+        // Validate action type exists
+        if (!actionTypeSet.has(pref.action_type_id)) {
+          logger.warn("Invalid action_type_id in preference update", {
+            user_id: user.user_id,
+            action_type_id: pref.action_type_id,
+          })
+          continue
+        }
+
+        // Validate contractor_id if provided
+        let contractorId: string | null = pref.contractor_id ?? null
+        if (contractorId !== null) {
+          // Verify user is a member of this contractor
+          const isMember = await contractorDb.isUserContractorMember(
+            user.user_id,
+            contractorId,
+          )
+          if (!isMember) {
+            logger.warn(
+              "User attempted to set preference for non-member contractor",
+              {
+                user_id: user.user_id,
+                contractor_id: contractorId,
+              },
+            )
+            continue // Skip this preference
+          }
+        }
+
+        // Upsert preference
+        // Ensure enabled is explicitly a boolean - default to false for email (opt-in)
+        const enabled = typeof pref.enabled === "boolean" ? pref.enabled : false
+
+        logger.debug("Updating email preference", {
+          user_id: user.user_id,
+          action_type_id: pref.action_type_id,
+          enabled,
+          contractor_id: contractorId,
+        })
+
         const [updated] = await trx<DBEmailNotificationPreference>(
           "email_notification_preferences",
         )
