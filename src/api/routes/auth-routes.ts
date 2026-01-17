@@ -448,7 +448,7 @@ export function setupAuthRoutes(app: any, frontendUrl: URL): void {
             sameSite: "none",
             path: "/",
           })
-          res.send({ success: true })
+          res.redirect("/")
         })
       })
     },
