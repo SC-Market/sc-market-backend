@@ -439,30 +439,34 @@ export function setupAuthRoutes(app: any, frontendUrl: URL): void {
     },
   )
 
-  app.get(
-    "/logout",
-    function (req: Request, res: Response, next: NextFunction) {
-      console.log("Before logout:", {
-        user: req.user,
-        sessionID: req.sessionID,
-        cookies: req.cookies,
-      })
-
-      req.logout((err) => {
+  // Logout route - supports both GET (for backwards compatibility) and POST
+  const logoutHandler = function (
+    req: Request,
+    res: Response,
+    next: NextFunction,
+  ) {
+    req.logout((err) => {
+      if (err) return next(err)
+      req.session.destroy((err) => {
         if (err) return next(err)
-        req.session.destroy((err) => {
-          if (err) return next(err)
-          req.user = undefined
-          res.clearCookie("connect.sid", {
-            path: "/", // must match
-            httpOnly: true, // optional but good practice
-            sameSite: "none", // must match original
-            secure: app.get("env") === "production", // must match original
-            domain: env.BACKEND_HOST,
-          })
-          res.redirect(frontendUrl.toString())
+        req.user = undefined
+        res.clearCookie("connect.sid", {
+          path: "/", // must match
+          httpOnly: true, // optional but good practice
+          sameSite: "none", // must match original
+          secure: app.get("env") === "production", // must match original
+          domain: env.BACKEND_HOST,
         })
+        // For POST requests, return JSON. For GET, redirect (backwards compatibility)
+        if (req.method === "POST") {
+          res.json({ success: true, message: "Logged out successfully" })
+        } else {
+          res.redirect(frontendUrl.toString())
+        }
       })
-    },
-  )
+    })
+  }
+
+  app.get("/logout", logoutHandler)
+  app.post("/logout", logoutHandler)
 }
