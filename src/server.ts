@@ -2,6 +2,7 @@ import express, { Request, RequestHandler } from "express"
 import compression from "compression"
 import passport from "passport"
 import cors, { CorsOptions } from "cors"
+import cookieParser from "cookie-parser"
 import session from "express-session"
 import enableWS from "express-ws"
 import wrapPGSession from "connect-pg-simple"
@@ -170,6 +171,9 @@ const sessionDBaccess = new SessionPool({
 if (app.get("env") === "production") {
   app.set("trust proxy", 2) // trust first and second proxy
 }
+
+// Cookie parser middleware - must be before session middleware
+app.use(cookieParser())
 
 const sessionMiddleware = session({
   secret: env.SESSION_SECRET || "set this var",
