@@ -698,16 +698,13 @@ class DatabaseNotificationService implements NotificationService {
           order.contractor_id ?? null, // contractorId for org-scoped preferences
         )
       } catch (error) {
-        logger.error(
-          `Failed to send push notification for order status:`,
-          {
-            error,
-            user_id: order.assigned_id,
-            order_id: order.order_id,
-            contractor_id: order.contractor_id,
-            action_name,
-          },
-        )
+        logger.error(`Failed to send push notification for order status:`, {
+          error,
+          user_id: order.assigned_id,
+          order_id: order.order_id,
+          contractor_id: order.contractor_id,
+          action_name,
+        })
       }
 
       // Send email notification
@@ -722,16 +719,13 @@ class DatabaseNotificationService implements NotificationService {
           order.contractor_id ?? null, // contractorId for org-scoped preferences
         )
       } catch (error) {
-        logger.error(
-          `Failed to send email notification for order status:`,
-          {
-            error,
-            user_id: order.assigned_id,
-            order_id: order.order_id,
-            contractor_id: order.contractor_id,
-            action_name,
-          },
-        )
+        logger.error(`Failed to send email notification for order status:`, {
+          error,
+          user_id: order.assigned_id,
+          order_id: order.order_id,
+          contractor_id: order.contractor_id,
+          action_name,
+        })
       }
     }
 
@@ -756,16 +750,13 @@ class DatabaseNotificationService implements NotificationService {
           order.contractor_id ?? null, // contractorId for org-scoped preferences
         )
       } catch (error) {
-        logger.error(
-          `Failed to send push notification for order status:`,
-          {
-            error,
-            user_id: order.customer_id,
-            order_id: order.order_id,
-            contractor_id: order.contractor_id,
-            action_name,
-          },
-        )
+        logger.error(`Failed to send push notification for order status:`, {
+          error,
+          user_id: order.customer_id,
+          order_id: order.order_id,
+          contractor_id: order.contractor_id,
+          action_name,
+        })
       }
 
       // Send email notification
@@ -780,16 +771,13 @@ class DatabaseNotificationService implements NotificationService {
           order.contractor_id ?? null, // contractorId for org-scoped preferences
         )
       } catch (error) {
-        logger.error(
-          `Failed to send email notification for order status:`,
-          {
-            error,
-            user_id: order.customer_id,
-            order_id: order.order_id,
-            contractor_id: order.contractor_id,
-            action_name,
-          },
-        )
+        logger.error(`Failed to send email notification for order status:`, {
+          error,
+          user_id: order.customer_id,
+          order_id: order.order_id,
+          contractor_id: order.contractor_id,
+          action_name,
+        })
       }
     }
 
@@ -970,15 +958,12 @@ class DatabaseNotificationService implements NotificationService {
         session.contractor_id ?? null, // contractorId for org-scoped preferences
       )
     } catch (error) {
-      logger.error(
-        `Failed to send push notification for offer assignment:`,
-        {
-          error,
-          user_id: session.assigned_id,
-          offer_id: session.id,
-          contractor_id: session.contractor_id,
-        },
-      )
+      logger.error(`Failed to send push notification for offer assignment:`, {
+        error,
+        user_id: session.assigned_id,
+        offer_id: session.id,
+        contractor_id: session.contractor_id,
+      })
     }
 
     // Send email notification
@@ -993,15 +978,12 @@ class DatabaseNotificationService implements NotificationService {
         session.contractor_id ?? null, // contractorId for org-scoped preferences
       )
     } catch (error) {
-      logger.error(
-        `Failed to send email notification for offer assignment:`,
-        {
-          error,
-          user_id: session.assigned_id,
-          offer_id: session.id,
-          contractor_id: session.contractor_id,
-        },
-      )
+      logger.error(`Failed to send email notification for offer assignment:`, {
+        error,
+        user_id: session.assigned_id,
+        offer_id: session.id,
+        contractor_id: session.contractor_id,
+      })
     }
   }
 

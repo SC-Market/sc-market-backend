@@ -435,60 +435,33 @@ export function setupAuthRoutes(app: any, frontendUrl: URL): void {
     },
   )
 
-  // Logout route
-  // Note: This route works for all authenticated users regardless of verification status
-  // No authentication or verification middleware is applied - logout should always be accessible
-  app.get("/logout", function (req: Request, res: Response) {
-    // Store the user ID for logging before logout
-    const userId = req.user ? (req.user as User).user_id : null
+  app.get(
+    "/logout",
+    function (req: Request, res: Response, next: NextFunction) {
+      req.logout((err) => {
+        if (err) {
+          return next(err)
+        }
 
-    // First, logout the user (clears req.user)
-    req.logout((logoutErr) => {
-      if (logoutErr) {
-        logger.error("Error in logout route", {
-          error: logoutErr,
-          userId,
-        })
-      }
-
-      // Then destroy the session to clear the session cookie
-      if (req.session) {
-        req.session.destroy((destroyErr) => {
+        // Destroy session in store (Postgres)
+        req.session?.destroy((destroyErr) => {
           if (destroyErr) {
-            logger.error("Error destroying session during logout", {
+            logger.error("Session destroy error during logout", {
               error: destroyErr,
-              userId,
             })
           }
 
-          logger.info("User logged out successfully", { userId })
+          // Clear the session cookie
+          res.clearCookie("connect.sid", {
+            path: "/",
+            sameSite: "lax",
+            secure: app.get("env") === "production",
+          })
 
-          // Clear the session cookie explicitly (default name for express-session)
-          // The cookie name might be different if configured, but connect.sid is the default
-          // res.clearCookie("connect.sid", {
-          //   path: "/",
-          //   httpOnly: true,
-          //   secure: process.env.NODE_ENV === "production",
-          //   sameSite: "lax",
-          // })
-          // // Also try clearing without options in case cookie was set differently
-          // res.clearCookie("connect.sid")
-
-          // Redirect to frontend after logout
-          res.redirect(frontendUrl.toString() || "/")
+          // Redirect to frontend (or send 204 if this is an API-only logout)
+          return res.redirect(frontendUrl.toString())
         })
-      } else {
-        // No session to destroy, just clear cookie and redirect
-        // res.clearCookie("connect.sid", {
-        //   path: "/",
-        //   httpOnly: true,
-        //   secure: process.env.NODE_ENV === "production",
-        //   sameSite: "lax",
-        // })
-        // res.clearCookie("connect.sid")
-        logger.info("User logged out successfully (no session)", { userId })
-        res.redirect(frontendUrl.toString() || "/")
-      }
-    })
-  })
+      })
+    },
+  )
 }
