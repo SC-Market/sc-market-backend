@@ -390,9 +390,17 @@ export function createCitizenIDVerifyCallback(
         delete (req.session as any).citizenid_auth_action
       }
 
-      // STEP 2a: Verify Citizen ID account is verified (required for signup only)
-      // Login is allowed for existing users even if Citizen ID account becomes unverified
+      // STEP 2a: Verify Citizen ID account is verified (required for ALL Citizen ID operations)
+      // All Citizen ID operations (login, signup, linking) require Citizen ID account verification
       const verified = isCitizenIDVerified(profile)
+
+      if (!verified) {
+        const error = new Error(
+          "Citizen ID account must be verified to sign up or log in",
+        ) as Error & { code?: string }
+        error.code = CitizenIDErrorCodes.ACCOUNT_NOT_VERIFIED
+        return done(error, undefined)
+      }
 
       let user = await profileDb.getUserByProvider("citizenid", profile.id)
 
@@ -407,14 +415,7 @@ export function createCitizenIDVerifyCallback(
           return done(error, undefined)
         }
 
-        // Sign up - verification is required for new signups
-        if (!verified) {
-          const error = new Error(
-            "Citizen ID account must be verified to sign up",
-          ) as Error & { code?: string }
-          error.code = CitizenIDErrorCodes.ACCOUNT_NOT_VERIFIED
-          return done(error, undefined)
-        }
+        // Sign up - verification already checked above
 
         // Sign up - check for conflicts before creating
         // Check if username already exists (might be registered with Discord)
@@ -553,8 +554,9 @@ export function createCitizenIDVerifyCallback(
           }
         }
       } else {
-        // User exists - allow login even if Citizen ID account is unverified
-        // (User may have been created via Discord and linked Citizen ID later)
+        // User exists - update tokens and sign in (works for both signup and signin)
+        // Sign up with existing account just signs them in
+        // Verification already checked above - all Citizen ID operations require verification
         // Token expiration will be updated on next refresh
         await profileDb.updateProviderTokens(user.user_id, "citizenid", {
           access_token: accessToken,
