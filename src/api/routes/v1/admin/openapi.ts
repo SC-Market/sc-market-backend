@@ -1009,7 +1009,8 @@ adminOapi.schema("TestNotificationRequest", {
       type: "string",
       format: "uuid",
       nullable: true,
-      description: "Optional contractor ID to test organization-scoped notification preferences. If not provided, will be extracted from order/offer data if available.",
+      description:
+        "Optional contractor ID to test organization-scoped notification preferences. If not provided, will be extracted from order/offer data if available.",
     },
   },
 })
