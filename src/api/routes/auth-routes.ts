@@ -39,7 +39,11 @@ export function setupAuthRoutes(app: any, frontendUrl: URL): void {
       ;(req.session as any).discord_auth_action = action
 
       // Create a signed state token that includes both CSRF protection and the redirect path
-      const sessionSecret = env.SESSION_SECRET || "set this var"
+      if (!env.SESSION_SECRET) {
+        throw Error("Session secret must be set")
+      }
+
+      const sessionSecret = env.SESSION_SECRET
       let signedStateToken: string
       try {
         signedStateToken = createSignedStateToken(path, sessionSecret, action)
@@ -442,13 +446,15 @@ export function setupAuthRoutes(app: any, frontendUrl: URL): void {
         if (err) return next(err)
         req.session.destroy((err) => {
           if (err) return next(err)
+          req.user = undefined
           res.clearCookie("connect.sid", {
             path: "/", // must match
             httpOnly: true, // optional but good practice
             sameSite: "none", // must match original
             secure: app.get("env") === "production", // must match original
+            domain: env.BACKEND_HOST,
           })
-          res.redirect("/")
+          res.redirect(frontendUrl.toString())
         })
       })
     },

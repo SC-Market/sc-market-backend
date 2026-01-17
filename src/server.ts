@@ -50,6 +50,12 @@ import BugsnagPluginExpress from "@bugsnag/plugin-express"
 const bugsnag = Bugsnag.start({
   apiKey: "1afd2ebc6ddc15b3ead4106cfda39141",
   plugins: [BugsnagPluginExpress],
+  logger: {
+    debug: () => {}, // ignore debug (session info goes here)
+    info: console.info,
+    warn: console.warn,
+    error: console.error,
+  },
 })
 
 const SessionPool = pg.Pool
@@ -173,6 +179,7 @@ const sessionMiddleware = session({
     httpOnly: true, // Explicitly set httpOnly
     sameSite: "none",
     path: "/",
+    domain: env.BACKEND_HOST,
   }, // Set to false, 60 days login
   store: new pgSession({
     pool: sessionDBaccess,
