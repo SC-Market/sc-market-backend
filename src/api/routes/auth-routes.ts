@@ -439,27 +439,16 @@ export function setupAuthRoutes(app: any, frontendUrl: URL): void {
     "/logout",
     function (req: Request, res: Response, next: NextFunction) {
       req.logout((err) => {
-        if (err) {
-          return next(err)
-        }
-
-        // Destroy session in store (Postgres)
-        req.session?.destroy((destroyErr) => {
-          if (destroyErr) {
-            logger.error("Session destroy error during logout", {
-              error: destroyErr,
-            })
-          }
-
-          // Clear the session cookie
+        if (err) return next(err)
+        req.session.destroy((err) => {
+          if (err) return next(err)
           res.clearCookie("connect.sid", {
+            httpOnly: true,
+            secure: true,
+            sameSite: "none",
             path: "/",
-            sameSite: "lax",
-            secure: app.get("env") === "production",
           })
-
-          // Redirect to frontend (or send 204 if this is an API-only logout)
-          return res.redirect(frontendUrl.toString())
+          res.send({ success: true })
         })
       })
     },
