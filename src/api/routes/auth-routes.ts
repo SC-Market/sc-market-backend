@@ -14,6 +14,7 @@ import {
   AuthErrorCodes,
 } from "../util/auth-helpers.js"
 import logger from "../../logger/logger.js"
+import cookie from "cookie"
 
 /**
  * Setup authentication routes
@@ -439,34 +440,81 @@ export function setupAuthRoutes(app: any, frontendUrl: URL): void {
     },
   )
 
-  // Logout route - supports both GET (for backwards compatibility) and POST
-  const logoutHandler = function (
+  const logoutHandler = async (
     req: Request,
     res: Response,
     next: NextFunction,
-  ) {
-    console.log("Request headers:", req.headers.cookie, req.cookies)
+  ) => {
+    try {
+      console.log("Request headers:", req.headers.cookie)
+      console.log("Request cookies (parsed):", req.cookies)
 
-    req.logout((err) => {
-      if (err) return next(err)
-      req.session.destroy((err) => {
-        if (err) return next(err)
-        req.user = undefined
-        res.clearCookie("connect.sid", {
-          path: "/", // must match
-          httpOnly: true, // optional but good practice
-          sameSite: "none", // must match original
-          secure: app.get("env") === "production", // must match original
-          domain: env.BACKEND_HOST,
+      // Parse cookies from header
+      const parsedCookies = cookie.parse(req.headers.cookie || "")
+
+      // Get all connect.sid session IDs (handle duplicates)
+      const sessionIds = Object.entries(parsedCookies)
+        .filter(([name]) => name === "connect.sid")
+        .map(([_, value]: [string, string]) => {
+          if (typeof value !== "string") return null
+          return value.replace(/^s:/, "").split(".")[0]
         })
-        // For POST requests, return JSON. For GET, redirect (backwards compatibility)
-        if (req.method === "POST") {
-          res.json({ success: true, message: "Logged out successfully" })
-        } else {
-          res.redirect(frontendUrl.toString())
-        }
+        .filter(Boolean) as string[]
+
+      // Destroy all sessions in the store
+      await Promise.all(
+        sessionIds.map(
+          (sid) =>
+            new Promise<void>((resolve) => {
+              req.sessionStore.destroy(sid, (err) => {
+                if (err)
+                  logger.error("Failed to destroy session", { sid, error: err })
+                else logger.info("Destroyed session", { sid })
+                resolve()
+              })
+            }),
+        ),
+      )
+
+      // Destroy current session
+      if (req.session) {
+        await new Promise<void>((resolve) =>
+          req.session!.destroy((err) => {
+            if (err) logger.error("Error destroying current session", { err })
+            resolve()
+          }),
+        )
+      }
+
+      // Call req.logout (for Passport)
+      await new Promise<void>((resolve, reject) => {
+        req.logout((err) => {
+          if (err) reject(err)
+          else resolve()
+        })
       })
-    })
+
+      // Clear cookies (multiple variants for safety)
+      const cookieOptionsVariants = [
+        { path: "/", httpOnly: true, sameSite: "none" as const, secure: true },
+        { path: "/", httpOnly: true, sameSite: "lax" as const, secure: true },
+      ]
+      cookieOptionsVariants.forEach((opts) =>
+        res.clearCookie("connect.sid", opts),
+      )
+
+      req.user = undefined
+
+      // Respond based on request method
+      if (req.method === "POST") {
+        return res.json({ success: true, message: "Logged out successfully" })
+      } else {
+        return res.redirect(frontendUrl.toString())
+      }
+    } catch (err) {
+      logger.error("Error in logoutHandler", { error: err })
+      next(err)
+    }
   }
 
   app.get("/logout", logoutHandler)
