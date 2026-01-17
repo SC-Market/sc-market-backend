@@ -171,15 +171,14 @@ const sessionMiddleware = session({
     secure: app.get("env") === "production",
     maxAge: 3600000 * 24 * 60,
     httpOnly: true, // Explicitly set httpOnly
-    sameSite: "lax", // Explicitly set sameSite so destroy() can clear it properly
-    path: "/", // Explicitly set path
-    // Note: domain is intentionally not set - let browser handle it
-    // Setting domain can cause issues with cookie clearing if not matched exactly
+    sameSite: "none",
+    path: "/",
   }, // Set to false, 60 days login
   store: new pgSession({
     pool: sessionDBaccess,
     tableName: "login_sessions",
     createTableIfMissing: true,
+    pruneSessionInterval: 60 * 60, // prune expired sessions every hour
   }),
 })
 
