@@ -442,6 +442,12 @@ export function setupAuthRoutes(app: any, frontendUrl: URL): void {
   app.get(
     "/logout",
     function (req: Request, res: Response, next: NextFunction) {
+      console.log("Before logout:", {
+        user: req.user,
+        sessionID: req.sessionID,
+        cookies: req.cookies,
+      })
+
       req.logout((err) => {
         if (err) return next(err)
         req.session.destroy((err) => {
