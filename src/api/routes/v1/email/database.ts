@@ -72,7 +72,10 @@ export async function getEmailPreferencesGrouped(userId: string): Promise<{
 
   // Filter org preferences - must have a non-null contractor_id
   // Group by contractor_id and action_type_id, taking the most recent for each
-  const orgPrefsByContractor = new Map<string, Map<number, DBEmailNotificationPreference>>()
+  const orgPrefsByContractor = new Map<
+    string,
+    Map<number, DBEmailNotificationPreference>
+  >()
   for (const pref of allPreferences) {
     if (pref.contractor_id !== null && pref.contractor_id !== undefined) {
       if (!orgPrefsByContractor.has(pref.contractor_id)) {

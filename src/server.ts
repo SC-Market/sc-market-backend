@@ -170,6 +170,11 @@ const sessionMiddleware = session({
   cookie: {
     secure: app.get("env") === "production",
     maxAge: 3600000 * 24 * 60,
+    httpOnly: true, // Explicitly set httpOnly
+    sameSite: "lax", // Explicitly set sameSite so destroy() can clear it properly
+    path: "/", // Explicitly set path
+    // Note: domain is intentionally not set - let browser handle it
+    // Setting domain can cause issues with cookie clearing if not matched exactly
   }, // Set to false, 60 days login
   store: new pgSession({
     pool: sessionDBaccess,
