@@ -445,6 +445,8 @@ export function setupAuthRoutes(app: any, frontendUrl: URL): void {
     res: Response,
     next: NextFunction,
   ) {
+    console.log("Request headers:", req.headers.cookie, req.cookies)
+
     req.logout((err) => {
       if (err) return next(err)
       req.session.destroy((err) => {
