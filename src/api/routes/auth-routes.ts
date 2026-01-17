@@ -439,27 +439,54 @@ export function setupAuthRoutes(app: any, frontendUrl: URL): void {
   // Note: This route works for all authenticated users regardless of verification status
   // No authentication or verification middleware is applied - logout should always be accessible
   app.get("/logout", function (req: Request, res: Response) {
-    // Logout destroys the session - works for both verified and unverified users
-    // keepSessionInfo: false ensures the session is properly destroyed
-    req.logout({ keepSessionInfo: false }, (err) => {
-      if (err) {
-        logger.error("Error in logout route", { error: err })
-        // Still redirect even on error
-        return res.redirect(frontendUrl.toString() || "/")
+    // Store the user ID for logging before logout
+    const userId = req.user ? (req.user as User).user_id : null
+
+    // First, logout the user (clears req.user)
+    req.logout((logoutErr) => {
+      if (logoutErr) {
+        logger.error("Error in logout route", {
+          error: logoutErr,
+          userId,
+        })
       }
-      // Destroy the session completely to ensure clean logout
+
+      // Then destroy the session to clear the session cookie
       if (req.session) {
         req.session.destroy((destroyErr) => {
           if (destroyErr) {
             logger.error("Error destroying session during logout", {
               error: destroyErr,
+              userId,
             })
           }
-          // Redirect after session is destroyed
+
+          logger.info("User logged out successfully", { userId })
+
+          // Clear the session cookie explicitly (default name for express-session)
+          // The cookie name might be different if configured, but connect.sid is the default
+          // res.clearCookie("connect.sid", {
+          //   path: "/",
+          //   httpOnly: true,
+          //   secure: process.env.NODE_ENV === "production",
+          //   sameSite: "lax",
+          // })
+          // // Also try clearing without options in case cookie was set differently
+          // res.clearCookie("connect.sid")
+
+          // Redirect to frontend after logout
           res.redirect(frontendUrl.toString() || "/")
         })
       } else {
-        // No session to destroy, just redirect
+        // No session to destroy, just clear cookie and redirect
+        // res.clearCookie("connect.sid", {
+        //   path: "/",
+        //   httpOnly: true,
+        //   secure: process.env.NODE_ENV === "production",
+        //   sameSite: "lax",
+        // })
+        // res.clearCookie("connect.sid")
+        logger.info("User logged out successfully (no session)", { userId })
         res.redirect(frontendUrl.toString() || "/")
       }
     })
