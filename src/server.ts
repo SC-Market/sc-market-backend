@@ -165,11 +165,19 @@ if (app.get("env") === "production") {
   app.set("trust proxy", 2) // trust first and second proxy
 }
 
+if (!env.SESSION_SECRET) {
+  throw new Error("SESSION_SECRET must be set in .env")
+}
+
 const sessionMiddleware = session({
-  secret: env.SESSION_SECRET || "set this var",
+  secret: env.SESSION_SECRET!,
+  name: "scmarket.sid",
   cookie: {
     secure: app.get("env") === "production",
     maxAge: 3600000 * 24 * 60,
+    domain: env.BACKEND_HOST,
+    sameSite: "none",
+    path: "/",
   }, // Set to false, 60 days login
   store: new pgSession({
     pool: sessionDBaccess,
