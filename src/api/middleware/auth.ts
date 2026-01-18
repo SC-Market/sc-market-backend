@@ -11,7 +11,6 @@ import { database } from "../../clients/database/knex-db.js"
 import * as profileDb from "../routes/v1/profiles/database.js"
 import * as contractorDb from "../routes/v1/contractors/database.js"
 import logger from "../../logger/logger.js"
-import { env } from "../../config/env.js"
 
 // Extended Request interface for token support
 export interface AuthRequest extends Request {
@@ -590,7 +589,7 @@ export function sessionCleanupMiddleware(
       httpOnly: true,
     })
 
-    return res.redirect(`${env.FRONTEND_URL}/login?reason=session_reset`)
+    return res.redirect("/login?reason=session_reset")
   }
 
   next()
