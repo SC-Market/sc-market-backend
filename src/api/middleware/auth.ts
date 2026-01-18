@@ -165,10 +165,38 @@ export async function userAuthorized(
     }
 
     // Fall back to session authentication
-    if (req.isAuthenticated()) {
+    // Check both req.isAuthenticated() and req.user to ensure session is valid
+    // req.isAuthenticated() can return true even if session was destroyed
+    // if req.user was set before the session was destroyed
+    if (req.isAuthenticated() && req.user) {
       const user = req.user // Express.User now extends our User type
       const authReq = req as AuthRequest
       authReq.authMethod = "session"
+
+      // Additional validation: ensure session actually exists in store
+      // This prevents issues where session cookie exists but session was destroyed
+      if (req.session && req.sessionID) {
+        // Verify session exists in store (async check)
+        const sessionExists = await new Promise<boolean>((resolve) => {
+          req.sessionStore.get(req.sessionID, (err, session) => {
+            if (err || !session) {
+              resolve(false)
+            } else {
+              resolve(true)
+            }
+          })
+        })
+
+        if (!sessionExists) {
+          // Session was destroyed but cookie still exists - clear it
+          logger.warn("Session not found in store but user authenticated", {
+            sessionID: req.sessionID,
+            userId: user.user_id,
+          })
+          res.status(401).json(createUnauthorizedErrorResponse())
+          return
+        }
+      }
 
       if (user.banned) {
         res
