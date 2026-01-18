@@ -566,33 +566,4 @@ export function requireContractorAccessFromSpectrumId() {
   }
 }
 
-export function sessionCleanupMiddleware(
-  req: Request,
-  res: Response,
-  next: NextFunction,
-) {
-  const rawCookie = req.headers.cookie || ""
-  const matches = rawCookie.match(/connect\.sid=/g) || []
-
-  // If multiple session cookies exist, force cleanup once
-  if (matches.length > 1 && req.cookies?.session_cleanup !== "1") {
-    const paths = ["/", "/api"]
-
-    for (const path of paths) {
-      res.clearCookie("connect.sid", { path })
-      res.clearCookie("connect.sid", { path, secure: true })
-    }
-
-    res.cookie("session_cleanup", "1", {
-      maxAge: 60 * 1000, // 1 minute
-      path: "/",
-      httpOnly: true,
-    })
-
-    return res.redirect("/login?reason=session_reset")
-  }
-
-  next()
-}
-
 // Don't try to make this file depend on `database` or everything will break

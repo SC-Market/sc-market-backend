@@ -15,17 +15,13 @@ import { apiReference } from "@scalar/express-api-reference"
 import { join } from "node:path"
 import { fileURLToPath } from "node:url"
 import { dirname } from "node:path"
-import cookieParser from "cookie-parser"
 
 import { apiRouter } from "./api/routes/v1/api-router.js"
 import * as profileDb from "./api/routes/v1/profiles/database.js"
 import * as contractorDb from "./api/routes/v1/contractors/database.js"
 import * as recruitingDb from "./api/routes/v1/recruiting/database.js"
 import * as marketDb from "./api/routes/v1/market/database.js"
-import {
-  sessionCleanupMiddleware,
-  userAuthorized,
-} from "./api/middleware/auth.js"
+import { userAuthorized } from "./api/middleware/auth.js"
 import { errorHandler } from "./api/middleware/error-handler.js"
 import { securityHeaders } from "./api/middleware/security-headers.js"
 import { registrationRouter } from "./clients/discord_api/registration.js"
@@ -98,7 +94,6 @@ rootApp.use(bugsnagMiddleware.requestHandler)
 rootApp.use(bugsnagMiddleware.errorHandler)
 
 const app = enableWS(rootApp).app
-app.use(cookieParser())
 
 // Configure response compression
 // Compression is enabled with optimized settings:
@@ -174,10 +169,7 @@ const sessionMiddleware = session({
   secret: env.SESSION_SECRET || "set this var",
   cookie: {
     secure: app.get("env") === "production",
-    maxAge: 1000 * 60 * 60 * 24 * 60,
-    sameSite: "none",
-    httpOnly: true,
-    path: "/",
+    maxAge: 3600000 * 24 * 60,
   }, // Set to false, 60 days login
   store: new pgSession({
     pool: sessionDBaccess,
@@ -186,7 +178,6 @@ const sessionMiddleware = session({
   }),
 })
 
-app.use(sessionCleanupMiddleware)
 app.use(sessionMiddleware)
 
 app.use(express.json({ limit: "2.5mb" }))
