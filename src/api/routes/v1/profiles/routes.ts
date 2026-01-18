@@ -1,6 +1,5 @@
 import express from "express"
 import {
-  requireProfileRead,
   requireProfileWrite,
   userAuthorized,
 } from "../../../middleware/auth.js"
@@ -201,9 +200,9 @@ profileRouter.get(
 
 profileRouter.get(
   "",
-  readRateLimit,
   userAuthorized,
   // Allow unverified users to read their own profile (needed for Discord login)
+  readRateLimit,
   profile_get_root_spec,
   profile_get_root,
 )
