@@ -2,7 +2,6 @@ import express, { Request, RequestHandler } from "express"
 import compression from "compression"
 import passport from "passport"
 import cors, { CorsOptions } from "cors"
-import cookieParser from "cookie-parser"
 import session from "express-session"
 import enableWS from "express-ws"
 import wrapPGSession from "connect-pg-simple"
@@ -51,12 +50,6 @@ import BugsnagPluginExpress from "@bugsnag/plugin-express"
 const bugsnag = Bugsnag.start({
   apiKey: "1afd2ebc6ddc15b3ead4106cfda39141",
   plugins: [BugsnagPluginExpress],
-  logger: {
-    debug: () => {}, // ignore debug (session info goes here)
-    info: console.info,
-    warn: console.warn,
-    error: console.error,
-  },
 })
 
 const SessionPool = pg.Pool
@@ -172,24 +165,16 @@ if (app.get("env") === "production") {
   app.set("trust proxy", 2) // trust first and second proxy
 }
 
-// Cookie parser middleware - must be before session middleware
-app.use(cookieParser())
-
 const sessionMiddleware = session({
   secret: env.SESSION_SECRET || "set this var",
   cookie: {
     secure: app.get("env") === "production",
     maxAge: 3600000 * 24 * 60,
-    httpOnly: true, // Explicitly set httpOnly
-    sameSite: "none",
-    path: "/",
-    domain: env.BACKEND_HOST,
   }, // Set to false, 60 days login
   store: new pgSession({
     pool: sessionDBaccess,
     tableName: "login_sessions",
     createTableIfMissing: true,
-    pruneSessionInterval: 60 * 60, // prune expired sessions every hour
   }),
 })
 
