@@ -452,7 +452,7 @@ export function setupAuthRoutes(app: any, frontendUrl: URL): void {
       await new Promise<void>((resolve, reject) => {
         if (req.logout.length === 0) {
           // req.logout() may not accept callback in new Passport types
-          req.logout()
+          ;(req.logout as any)()
           resolve()
         } else {
           req.logout((err) => {
