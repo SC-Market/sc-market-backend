@@ -14,7 +14,6 @@ import {
   AuthErrorCodes,
 } from "../util/auth-helpers.js"
 import logger from "../../logger/logger.js"
-import cookie from "cookie"
 
 /**
  * Setup authentication routes
@@ -439,100 +438,17 @@ export function setupAuthRoutes(app: any, frontendUrl: URL): void {
       )(req, res, next)
     },
   )
-  const logoutHandler = async (
-    req: Request,
-    res: Response,
-    next: NextFunction,
-  ) => {
-    try {
-      console.log("Request headers:", req.headers.cookie)
-      console.log("Request cookies (parsed):", req.cookies)
 
-      // 1️⃣ Call Passport logout first
-      await new Promise<void>((resolve, reject) => {
-        if (req.logout.length === 0) {
-          // req.logout() may not accept callback in new Passport types
-          ;(req.logout as any)()
-          resolve()
-        } else {
-          req.logout((err) => {
-            if (err) reject(err)
-            else resolve()
-          })
-        }
-      })
-
-      req.user = undefined
-
-      // 2️⃣ Parse cookies from header
-      const parsedCookies = cookie.parse(req.headers.cookie || "")
-
-      // 3️⃣ Get all connect.sid session IDs (handle duplicates)
-      const sessionIds = Object.entries(parsedCookies)
-        .filter(([name]) => name === "connect.sid")
-        .map(([_, value]: [string, string]) => {
-          if (typeof value !== "string") return null
-          // Strip 's:' prefix and signature
-          return value.replace(/^s:/, "").split(".")[0]
-        })
-        .filter(Boolean) as string[]
-
-      // 4️⃣ Destroy all sessions in store
-      await Promise.all(
-        sessionIds.map(
-          (sid) =>
-            new Promise<void>((resolve) => {
-              req.sessionStore.destroy(sid, (err) => {
-                if (err)
-                  logger.error("Failed to destroy session", { sid, error: err })
-                else logger.info("Destroyed session", { sid })
-                resolve()
-              })
-            }),
-        ),
-      )
-
-      // 5️⃣ Destroy current session (just in case)
-      if (req.session) {
-        await new Promise<void>((resolve) =>
-          req.session!.destroy((err) => {
-            if (err) logger.error("Error destroying current session", { err })
-            resolve()
-          }),
-        )
+  // Logout route
+  // Note: This route works for all authenticated users regardless of verification status
+  // No authentication or verification middleware is applied - logout should always be accessible
+  app.get("/logout", function (req: Request, res: Response) {
+    // Logout destroys the session - works for both verified and unverified users
+    req.logout({ keepSessionInfo: true }, (err) => {
+      if (err) {
+        logger.error("Error in logout route", { error: err })
       }
-
-      // 6️⃣ Clear cookies (multiple variants for safety)
-      const cookieOptionsVariants = [
-        {
-          path: "/",
-          httpOnly: true,
-          sameSite: "none" as const,
-          secure: app.get("env") === "production",
-        },
-        {
-          path: "/",
-          httpOnly: true,
-          sameSite: "lax" as const,
-          secure: app.get("env") === "production",
-        },
-      ]
-      cookieOptionsVariants.forEach((opts) =>
-        res.clearCookie("connect.sid", opts),
-      )
-
-      // 7️⃣ Respond
-      if (req.method === "POST") {
-        return res.json({ success: true, message: "Logged out successfully" })
-      } else {
-        return res.redirect(frontendUrl.toString())
-      }
-    } catch (err) {
-      logger.error("Error in logoutHandler", { error: err })
-      next(err)
-    }
-  }
-
-  app.get("/logout", logoutHandler)
-  app.post("/logout", logoutHandler)
+    })
+    res.redirect(frontendUrl.toString() || "/")
+  })
 }
