@@ -439,10 +439,10 @@ export function setupAuthRoutes(app: any, frontendUrl: URL): void {
     },
   )
 
-  // Logout route
+  // Logout route - POST only
   // Note: This route works for all authenticated users regardless of verification status
   // No authentication or verification middleware is applied - logout should always be accessible
-  app.get("/logout", (req: Request, res: Response, next: NextFunction) => {
+  app.post("/logout", (req: Request, res: Response, next: NextFunction) => {
     // Step 1: Log out Passport user
     req.logout((err) => {
       if (err) {
@@ -466,8 +466,8 @@ export function setupAuthRoutes(app: any, frontendUrl: URL): void {
           domain: env.BACKEND_HOST, // must match cookie.domain if set
         })
 
-        // Step 4: Redirect user to frontend
-        res.redirect(frontendUrl.toString() || "/")
+        // Step 4: Return JSON response for POST requests
+        res.json({ success: true, message: "Logged out successfully" })
       })
     })
   })
