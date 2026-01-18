@@ -442,13 +442,33 @@ export function setupAuthRoutes(app: any, frontendUrl: URL): void {
   // Logout route
   // Note: This route works for all authenticated users regardless of verification status
   // No authentication or verification middleware is applied - logout should always be accessible
-  app.get("/logout", function (req: Request, res: Response) {
-    // Logout destroys the session - works for both verified and unverified users
-    req.logout({ keepSessionInfo: false }, (err) => {
+  app.get("/logout", (req: Request, res: Response, next: NextFunction) => {
+    // Step 1: Log out Passport user
+    req.logout((err) => {
       if (err) {
-        logger.error("Error in logout route", { error: err })
+        logger.error("Error during Passport logout", { error: err })
+        return next(err)
       }
+
+      // Step 2: Destroy session in Postgres
+      req.session.destroy((err) => {
+        if (err) {
+          logger.error("Error destroying session on logout", { error: err })
+          // We continue to clear the cookie even if destroy fails
+        }
+
+        // Step 3: Clear the cookie with the exact same options as sessionMiddleware
+        res.clearCookie("scmarket.sid", {
+          path: "/", // must match your session cookie path
+          httpOnly: true, // matches default for express-session
+          secure: app.get("env") === "production", // must match cookie.secure
+          sameSite: "none", // must match cookie.sameSite
+          domain: env.BACKEND_HOST, // must match cookie.domain if set
+        })
+
+        // Step 4: Redirect user to frontend
+        res.redirect(frontendUrl.toString() || "/")
+      })
     })
-    res.redirect(frontendUrl.toString() || "/")
   })
 }
