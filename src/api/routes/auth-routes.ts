@@ -439,7 +439,6 @@ export function setupAuthRoutes(app: any, frontendUrl: URL): void {
       )(req, res, next)
     },
   )
-
   const logoutHandler = async (
     req: Request,
     res: Response,
@@ -449,19 +448,36 @@ export function setupAuthRoutes(app: any, frontendUrl: URL): void {
       console.log("Request headers:", req.headers.cookie)
       console.log("Request cookies (parsed):", req.cookies)
 
-      // Parse cookies from header
+      // 1️⃣ Call Passport logout first
+      await new Promise<void>((resolve, reject) => {
+        if (req.logout.length === 0) {
+          // req.logout() may not accept callback in new Passport types
+          req.logout()
+          resolve()
+        } else {
+          req.logout((err) => {
+            if (err) reject(err)
+            else resolve()
+          })
+        }
+      })
+
+      req.user = undefined
+
+      // 2️⃣ Parse cookies from header
       const parsedCookies = cookie.parse(req.headers.cookie || "")
 
-      // Get all connect.sid session IDs (handle duplicates)
+      // 3️⃣ Get all connect.sid session IDs (handle duplicates)
       const sessionIds = Object.entries(parsedCookies)
         .filter(([name]) => name === "connect.sid")
         .map(([_, value]: [string, string]) => {
           if (typeof value !== "string") return null
+          // Strip 's:' prefix and signature
           return value.replace(/^s:/, "").split(".")[0]
         })
         .filter(Boolean) as string[]
 
-      // Destroy all sessions in the store
+      // 4️⃣ Destroy all sessions in store
       await Promise.all(
         sessionIds.map(
           (sid) =>
@@ -476,7 +492,7 @@ export function setupAuthRoutes(app: any, frontendUrl: URL): void {
         ),
       )
 
-      // Destroy current session
+      // 5️⃣ Destroy current session (just in case)
       if (req.session) {
         await new Promise<void>((resolve) =>
           req.session!.destroy((err) => {
@@ -486,26 +502,26 @@ export function setupAuthRoutes(app: any, frontendUrl: URL): void {
         )
       }
 
-      // Call req.logout (for Passport)
-      await new Promise<void>((resolve, reject) => {
-        req.logout((err) => {
-          if (err) reject(err)
-          else resolve()
-        })
-      })
-
-      // Clear cookies (multiple variants for safety)
+      // 6️⃣ Clear cookies (multiple variants for safety)
       const cookieOptionsVariants = [
-        { path: "/", httpOnly: true, sameSite: "none" as const, secure: true },
-        { path: "/", httpOnly: true, sameSite: "lax" as const, secure: true },
+        {
+          path: "/",
+          httpOnly: true,
+          sameSite: "none" as const,
+          secure: app.get("env") === "production",
+        },
+        {
+          path: "/",
+          httpOnly: true,
+          sameSite: "lax" as const,
+          secure: app.get("env") === "production",
+        },
       ]
       cookieOptionsVariants.forEach((opts) =>
         res.clearCookie("connect.sid", opts),
       )
 
-      req.user = undefined
-
-      // Respond based on request method
+      // 7️⃣ Respond
       if (req.method === "POST") {
         return res.json({ success: true, message: "Logged out successfully" })
       } else {
