@@ -285,6 +285,11 @@ oapi.schema("Order", {
       type: "string",
       nullable: true,
     },
+    discord_invite: {
+      title: "Order.discord_invite",
+      type: "string",
+      nullable: true,
+    },
     timestamp: {
       title: "Order.timestamp",
       type: "string",
