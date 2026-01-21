@@ -314,6 +314,7 @@ export interface DBOfferSession {
   thread_id: string | null
   timestamp: Date
   status: string
+  discord_invite: string | null
 }
 
 export interface DBOffer {

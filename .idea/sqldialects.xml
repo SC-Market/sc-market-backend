@@ -23,6 +23,7 @@
     <file url="file://$PROJECT_DIR$/config/postgres/38-email-unsubscribe-tokens.sql" dialect="PostgreSQL" />
     <file url="file://$PROJECT_DIR$/config/postgres/39-email-preferences-org-support.sql" dialect="PostgreSQL" />
     <file url="file://$PROJECT_DIR$/config/postgres/40-push-preferences-org-support.sql" dialect="PostgreSQL" />
+    <file url="file://$PROJECT_DIR$/config/postgres/41-add-discord-invite-to-offer-sessions.sql" dialect="PostgreSQL" />
     <file url="file://$PROJECT_DIR$/scripts/game_item_details.sql" dialect="PostgreSQL" />
     <file url="file://$PROJECT_DIR$/scripts/load_new_items.sql" dialect="PostgreSQL" />
     <file url="file://$PROJECT_DIR$/scripts/market_search.sql" dialect="PostgreSQL" />
