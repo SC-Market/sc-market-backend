@@ -6,6 +6,7 @@ import * as orderDb from "./database.js"
 import * as marketDb from "../market/database.js"
 import * as profileDb from "../profiles/database.js"
 import * as contractorDb from "../contractors/database.js"
+import * as offerDb from "../offers/database.js"
 import {
   formatListingComplete,
   formatOrderAvailability,
@@ -84,6 +85,17 @@ export async function serializeOrderDetails(
     ? await profileDb.getUser({ user_id: order.assigned_id })
     : null
 
+  // Get discord_invite from offer_session if available
+  let discord_invite: string | null = null
+  if (order.offer_session_id) {
+    const offerSessions = await offerDb.getOfferSessions({
+      id: order.offer_session_id,
+    })
+    if (offerSessions.length > 0) {
+      discord_invite = offerSessions[0].discord_invite || null
+    }
+  }
+
   return {
     order_id: order.order_id,
     status: order.status,
@@ -124,5 +136,6 @@ export async function serializeOrderDetails(
     offer_session_id: order.offer_session_id,
     discord_thread_id: order.thread_id,
     discord_server_id: assigned_to_full?.official_server_id,
+    discord_invite: discord_invite,
   }
 }

@@ -210,6 +210,7 @@ export async function serializeOfferSession(session: DBOfferSession) {
     discord_thread_id: session.thread_id,
     discord_server_id:
       contractor?.official_server_id || assignee?.official_server_id || null,
+    discord_invite: session.discord_invite || null,
   }
 }
 

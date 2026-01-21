@@ -517,6 +517,10 @@ export async function createOffer(
           logger.info(
             `Created Discord invite for session ${session.id}: ${discord_invite}`,
           )
+          // Store the invite in the database for later retrieval
+          await offerDb.updateOfferSession(session.id, {
+            discord_invite: discord_invite,
+          })
         } else {
           logger.warn(
             `Failed to create Discord invite for session ${session.id}`,
