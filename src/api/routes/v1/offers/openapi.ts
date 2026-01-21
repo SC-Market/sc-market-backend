@@ -204,6 +204,10 @@ oapi.schema("OfferSessionDetails", {
       type: "string",
       nullable: true,
     },
+    discord_invite: {
+      type: "string",
+      nullable: true,
+    },
     contract_id: {
       type: "string",
       nullable: true,
