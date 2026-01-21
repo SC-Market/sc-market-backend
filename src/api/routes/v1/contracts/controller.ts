@@ -142,7 +142,7 @@ export const contracts_post_contract_id_offers: RequestHandler = async (
     return
   }
 
-  const { session } = await createOffer(
+  const { session, discord_invite } = await createOffer(
     {
       assigned_id: contractor ? null : user?.user_id,
       contractor_id: contractor?.contractor_id,
@@ -171,6 +171,7 @@ export const contracts_post_contract_id_offers: RequestHandler = async (
   res.status(201).json(
     createResponse({
       session_id: session.id,
+      discord_invite: discord_invite,
     }),
   )
 }
