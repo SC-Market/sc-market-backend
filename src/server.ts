@@ -169,14 +169,17 @@ if (!env.SESSION_SECRET) {
   throw new Error("SESSION_SECRET must be set in .env")
 }
 
+const isProduction = app.get("env") === "production"
 const sessionMiddleware = session({
   secret: env.SESSION_SECRET!,
   name: "scmarket.sid",
   cookie: {
-    secure: app.get("env") === "production",
+    secure: isProduction, // Only secure in production (HTTPS required)
     maxAge: 3600000 * 24 * 60,
     domain: env.BACKEND_HOST,
-    sameSite: "none",
+    // In production: SameSite=None requires Secure=true for cross-site cookies
+    // In development: Use SameSite=Lax since we're on localhost (same-site)
+    sameSite: isProduction ? ("none" as const) : ("lax" as const),
     path: "/",
   }, // Set to false, 60 days login
   store: new pgSession({

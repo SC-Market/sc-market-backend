@@ -458,11 +458,12 @@ export function setupAuthRoutes(app: any, frontendUrl: URL): void {
         }
 
         // Step 3: Clear the cookie with the exact same options as sessionMiddleware
+        const isProduction = app.get("env") === "production"
         res.clearCookie("scmarket.sid", {
           path: "/", // must match your session cookie path
           httpOnly: true, // matches default for express-session
-          secure: app.get("env") === "production", // must match cookie.secure
-          sameSite: "none", // must match cookie.sameSite
+          secure: isProduction, // must match cookie.secure
+          sameSite: isProduction ? ("none" as const) : ("lax" as const), // must match cookie.sameSite
           domain: env.BACKEND_HOST, // must match cookie.domain if set
         })
 
