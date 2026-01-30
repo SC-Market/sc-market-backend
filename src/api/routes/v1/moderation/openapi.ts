@@ -16,7 +16,7 @@ export const moderation_post_report_spec = adminOapi.validPath({
   description:
     "Report content that violates community guidelines. Users can report any content by providing the relative URL path and optional details.",
   operationId: "reportContent",
-  tags: ["Moderation"],
+  tags: ["ModerationReports", "Moderation"],
   requestBody: {
     required: true,
     content: {
@@ -110,7 +110,7 @@ export const moderation_get_reports_spec = adminOapi.validPath({
   description:
     "Retrieve a list of content reports submitted by the authenticated user.",
   operationId: "getUserReports",
-  tags: ["Moderation"],
+  tags: ["ModerationReports", "Moderation"],
   responses: {
     "200": {
       description: "User's reports retrieved successfully",
@@ -152,7 +152,7 @@ export const moderation_get_admin_reports_spec = adminOapi.validPath({
   description:
     "Retrieve all unprocessed content reports with pagination. Only accessible by administrators.",
   operationId: "getAdminReports",
-  tags: ["Moderation"],
+  tags: ["ModerationReports", "Moderation"],
   parameters: [
     {
       name: "page",
@@ -256,7 +256,7 @@ export const moderation_put_admin_reports_report_id_spec = adminOapi.validPath({
   description:
     "Update the status of a content report and add moderation notes. Only accessible by administrators.",
   operationId: "updateReportStatus",
-  tags: ["Moderation"],
+  tags: ["ModerationReports", "Moderation"],
   parameters: [
     {
       name: "report_id",

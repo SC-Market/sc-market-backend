@@ -419,7 +419,7 @@ export const post_session_id_thread_spec = oapi.validPath({
   summary: "Create a new thread for the offer",
   deprecated: false,
   description: "Creates a new thread if the offer doesn't already have one.",
-  operationId: "createANewOrderThread",
+  operationId: "createOfferThread",
   tags: ["Offers"],
   parameters: [
     {

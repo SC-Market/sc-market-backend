@@ -1156,6 +1156,28 @@ oapi.schema("MarketListingSearchResult", {
   additionalProperties: false,
 })
 
+oapi.schema("BuyOrder", {
+  type: "object",
+  title: "BuyOrder",
+  description: "Market buy order for an aggregate listing",
+  properties: {
+    buy_order_id: { type: "string", description: "Unique buy order ID" },
+    aggregate_id: { type: "string", description: "Game item ID (aggregate)" },
+    quantity: { type: "number", description: "Requested quantity" },
+    price: { type: "number", description: "Price per unit" },
+    buyer: {
+      $ref: "#/components/schemas/MinimalUser",
+      description: "Buyer user summary",
+    },
+    expiry: {
+      type: "string",
+      format: "date-time",
+      description: "Order expiry timestamp",
+    },
+  },
+  required: ["buy_order_id", "aggregate_id", "quantity", "price", "buyer", "expiry"],
+})
+
 oapi.schema("MarketAggregateComplete", {
   type: "object",
   properties: {
@@ -1189,7 +1211,7 @@ oapi.schema("MarketAggregateComplete", {
     listings: {
       type: "array",
       items: {
-        $ref: "#/components/schemas/ListingBase",
+        $ref: "#/components/schemas/MarketListingBase",
       },
       description: "List of related listings",
     },

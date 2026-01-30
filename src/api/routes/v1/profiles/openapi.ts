@@ -24,6 +24,139 @@ oapi.schema("ProfileUpdateBody", {
   type: "object",
 })
 
+oapi.schema("GetCurrentUserProfileSuccess", {
+  type: "object",
+  title: "GetCurrentUserProfileSuccess",
+  description: "Current user profile returned by getCurrentUserProfile, syncRSIHandle, and unlinkStarCitizenAccount",
+  properties: {
+    user_id: {
+      type: "string",
+      format: "uuid",
+      description: "Unique identifier for the user",
+    },
+    username: {
+      type: "string",
+      description: "Username",
+    },
+    display_name: {
+      type: "string",
+      description: "Display name",
+    },
+    profile_description: {
+      type: "string",
+      description: "User profile description",
+    },
+    role: {
+      type: "string",
+      enum: ["user", "admin"],
+      description: "User role",
+    },
+    banned: {
+      type: "boolean",
+      description: "Whether the user is banned",
+    },
+    balance: {
+      type: "number",
+      description: "User balance",
+    },
+    created_at: {
+      type: "string",
+      format: "date-time",
+      description: "Account creation timestamp",
+    },
+    official_server_id: {
+      type: "string",
+      nullable: true,
+      description: "Discord official server ID",
+    },
+    discord_thread_channel_id: {
+      type: "string",
+      nullable: true,
+      description: "Discord thread channel ID",
+    },
+    market_order_template: {
+      type: "string",
+      description: "Default market order template",
+    },
+    locale: {
+      type: "string",
+      enum: [...SUPPORTED_LOCALES],
+      description: "Preferred locale",
+    },
+    contractors: {
+      type: "array",
+      description: "Contractors the user belongs to",
+      items: {
+        type: "object",
+        properties: {
+          contractor_id: { type: "string", format: "uuid" },
+          spectrum_id: { type: "string" },
+          name: { type: "string" },
+          description: { type: "string" },
+          avatar: { type: "string" },
+          banner: { type: "string" },
+          size: { type: "number" },
+          role: { type: "string" },
+        },
+      },
+    },
+    avatar: {
+      type: "string",
+      format: "uri",
+      description: "Avatar URL",
+    },
+    banner: {
+      type: "string",
+      format: "uri",
+      description: "Banner URL",
+    },
+    settings: {
+      type: "object",
+      description: "User settings",
+      properties: {
+        discord_order_share: { type: "boolean" },
+        discord_public: { type: "boolean" },
+      },
+    },
+    rating: {
+      type: "object",
+      description: "User rating summary",
+      properties: {
+        average: { type: "number" },
+        count: { type: "number" },
+      },
+    },
+    discord_profile: {
+      type: "object",
+      nullable: true,
+      description: "Linked Discord profile",
+      properties: {
+        username: { type: "string", nullable: true },
+        discriminator: { type: "string", nullable: true },
+        id: { type: "string", nullable: true },
+      },
+    },
+  },
+  required: [
+    "user_id",
+    "username",
+    "display_name",
+    "profile_description",
+    "role",
+    "banned",
+    "balance",
+    "created_at",
+    "locale",
+    "contractors",
+    "avatar",
+    "banner",
+    "settings",
+    "rating",
+    "discord_profile",
+    "market_order_template",
+  ],
+})
+
 export const profile_post_auth_sync_handle_spec = oapi.validPath({
   summary: "Sync RSI handle from Spectrum profile",
   deprecated: false,
@@ -318,171 +451,7 @@ export const profile_get_root_spec = oapi.validPath({
       content: {
         "application/json": {
           schema: {
-            properties: {
-              user_id: {
-                type: "string",
-                format: "uuid",
-                example: "123e4567-e89b-12d3-a456-426614174000",
-              },
-              username: {
-                type: "string",
-                example: "example_user",
-              },
-              display_name: {
-                type: "string",
-                example: "Example User",
-              },
-              profile_description: {
-                type: "string",
-                example: "A brief description about the user",
-              },
-              role: {
-                type: "string",
-                enum: ["user", "admin"],
-                example: "user",
-              },
-              banned: {
-                type: "boolean",
-                example: false,
-              },
-              balance: {
-                type: "number",
-                example: 1000,
-              },
-              created_at: {
-                type: "string",
-                format: "date-time",
-                example: "2023-01-01T00:00:00Z",
-              },
-              official_server_id: {
-                type: "string",
-                nullable: true,
-                example: "1003056231591727264",
-              },
-              discord_thread_channel_id: {
-                type: "string",
-                nullable: true,
-                example: "1072580369251041330",
-              },
-              market_order_template: {
-                type: "string",
-                example: "Default order template",
-              },
-              locale: {
-                type: "string",
-                enum: [...SUPPORTED_LOCALES],
-                example: "en",
-              },
-              contractors: {
-                type: "array",
-                items: {
-                  type: "object",
-                  properties: {
-                    contractor_id: {
-                      type: "string",
-                      format: "uuid",
-                    },
-                    spectrum_id: {
-                      type: "string",
-                    },
-                    name: {
-                      type: "string",
-                    },
-                    description: {
-                      type: "string",
-                    },
-                    avatar: {
-                      type: "string",
-                    },
-                    banner: {
-                      type: "string",
-                    },
-                    size: {
-                      type: "number",
-                    },
-                    role: {
-                      type: "string",
-                    },
-                  },
-                },
-              },
-              avatar: {
-                type: "string",
-                format: "uri",
-                example: "https://cdn.example.com/avatar.jpg",
-              },
-              banner: {
-                type: "string",
-                format: "uri",
-                example: "https://cdn.example.com/banner.jpg",
-              },
-              settings: {
-                type: "object",
-                properties: {
-                  discord_order_share: {
-                    type: "boolean",
-                    example: true,
-                  },
-                  discord_public: {
-                    type: "boolean",
-                    example: false,
-                  },
-                },
-              },
-              rating: {
-                type: "object",
-                properties: {
-                  average: {
-                    type: "number",
-                    example: 4.5,
-                  },
-                  count: {
-                    type: "number",
-                    example: 10,
-                  },
-                },
-              },
-              discord_profile: {
-                type: "object",
-                properties: {
-                  username: {
-                    type: "string",
-                    nullable: true,
-                    example: "discord_user",
-                  },
-                  discriminator: {
-                    type: "string",
-                    nullable: true,
-                    example: "1234",
-                  },
-                  id: {
-                    type: "string",
-                    nullable: true,
-                    example: "123456789012345678",
-                  },
-                },
-              },
-            },
-            required: [
-              "user_id",
-              "username",
-              "display_name",
-              "profile_description",
-              "role",
-              "banned",
-              "balance",
-              "created_at",
-              "locale",
-              "contractors",
-              "avatar",
-              "banner",
-              "settings",
-              "rating",
-              "discord_profile",
-              "market_order_template",
-            ],
-            type: "object",
-            title: "GetCurrentUserProfileSuccess",
+            $ref: "#/components/schemas/GetCurrentUserProfileSuccess",
           },
         },
       },

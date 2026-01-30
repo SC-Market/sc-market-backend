@@ -364,6 +364,13 @@ oapi.schema("ContractorRoleUpdateBody", {
   type: "object",
 })
 
+oapi.schema("ContractorKindIconKey", {
+  type: "string",
+  title: "ContractorKindIconKey",
+  enum: [...VALID_ORG_TAGS],
+  description: "Contractor specialization/field key used for icons and filtering",
+})
+
 oapi.schema("Contractor", {
   properties: {
     kind: {
@@ -594,7 +601,7 @@ export const post_auth_link_spec = oapi.validPath({
   deprecated: false,
   description: "",
   operationId: "authLink",
-  tags: ["Contractors"],
+  tags: ["Contractor", "Contractors"],
   parameters: [],
   requestBody: {
     content: {
@@ -648,7 +655,7 @@ export const post_root_spec = oapi.validPath({
   deprecated: false,
   description: "",
   operationId: "createContractor",
-  tags: ["Contractors"],
+  tags: ["Contractor", "Contractors"],
   parameters: [],
   requestBody: {
     content: {
@@ -692,7 +699,7 @@ export const get_search_query_spec = oapi.validPath({
   deprecated: false,
   description: "",
   operationId: "searchContractors",
-  tags: ["Contractors"],
+  tags: ["Contractor", "Contractors"],
   parameters: [
     {
       name: "query",
@@ -737,7 +744,7 @@ export const get_invites_invite_id_spec = oapi.validPath({
   deprecated: false,
   description: "",
   operationId: "getInviteCode",
-  tags: ["Contractor Invites"],
+  tags: ["ContractorInvite", "Contractor Invites"],
   parameters: [
     {
       name: "invite_id",
@@ -788,7 +795,7 @@ export const post_invites_invite_id_accept_spec = oapi.validPath({
   deprecated: false,
   description: "",
   operationId: "acceptCodeInvite",
-  tags: ["Contractor Invites"],
+  tags: ["ContractorInvite", "Contractor Invites"],
   parameters: [
     {
       name: "invite_id",
@@ -834,7 +841,7 @@ export const get_spectrum_id_members_search_query_spec = oapi.validPath({
   deprecated: false,
   description: "",
   operationId: "searchContractorMembers",
-  tags: ["Contractors"],
+  tags: ["Contractor", "Contractors", "Contractor Members"],
   parameters: [
     {
       name: "spectrum_id",
@@ -886,11 +893,11 @@ export const get_spectrum_id_members_search_query_spec = oapi.validPath({
 })
 
 export const get_spectrum_id_members_csv_spec = oapi.validPath({
-  summary: "Create a new contractor",
+  summary: "Export contractor members as CSV",
   deprecated: false,
-  description: "",
-  operationId: "createContractor",
-  tags: ["Contractors"],
+  description: "Download contractor members list as CSV",
+  operationId: "getContractorMembersCsv",
+  tags: ["Contractor", "Contractors", "Contractor Members"],
   parameters: [
     {
       name: "spectrum_id",
@@ -924,7 +931,7 @@ export const get_spectrum_id_customers_spec = oapi.validPath({
   deprecated: false,
   description: "",
   operationId: "getContractorCustomers",
-  tags: ["Contractors"],
+  tags: ["Contractor", "Contractors"],
   parameters: [
     {
       name: "spectrum_id",
@@ -1043,7 +1050,7 @@ export const get_spectrum_id_spec = oapi.validPath({
   deprecated: false,
   description: "",
   operationId: "getContractor",
-  tags: ["Contractors"],
+  tags: ["Contractor", "Contractors"],
   parameters: [
     {
       name: "spectrum_id",
@@ -1086,7 +1093,7 @@ export const delete_spectrum_id_spec = oapi.validPath({
   description:
     "Archive the specified contractor. This action removes members, revokes invites, cancels open orders, and hides the contractor from discovery while preserving historical data.",
   operationId: "archiveContractor",
-  tags: ["Contractors"],
+  tags: ["Contractor", "Contractors"],
   parameters: [
     {
       name: "spectrum_id",
@@ -1141,7 +1148,7 @@ export const get_spectrum_id_audit_logs_spec = oapi.validPath({
   description:
     "Retrieve a paginated list of audit log entries for this contractor. Only accessible by contractor members. Automatically filtered to show only logs for this contractor.",
   operationId: "getContractorAuditLogs",
-  tags: ["Contractors"],
+  tags: ["Contractor", "Contractors"],
   parameters: [
     {
       name: "spectrum_id",
@@ -1250,7 +1257,7 @@ export const get_spectrum_id_members_username_spec = oapi.validPath({
   deprecated: false,
   description: "Check if a specific user is a member of the contractor",
   operationId: "checkContractorMembership",
-  tags: ["Contractors"],
+  tags: ["Contractor", "Contractors"],
   parameters: [
     {
       name: "spectrum_id",
@@ -1312,7 +1319,7 @@ export const get_spectrum_id_members_spec = oapi.validPath({
   description:
     "Get a paginated list of contractor members with search and filtering capabilities",
   operationId: "getContractorMembers",
-  tags: ["Contractors"],
+  tags: ["Contractor", "Contractors", "Contractor Members"],
   parameters: [
     {
       name: "spectrum_id",
@@ -1428,7 +1435,7 @@ export const post_spectrum_id_roles_spec = oapi.validPath({
   deprecated: false,
   description: "",
   operationId: "createContractorRole",
-  tags: ["Contractor Roles"],
+  tags: ["Contractor", "Contractors", "Contractor Roles"],
   parameters: [
     {
       name: "spectrum_id",
@@ -1482,7 +1489,7 @@ export const put_spectrum_id_roles_role_id_spec = oapi.validPath({
   deprecated: false,
   description: "",
   operationId: "updateContractorRole",
-  tags: ["Contractor Roles"],
+  tags: ["Contractor", "Contractors", "Contractor Roles"],
   parameters: [
     {
       name: "spectrum_id",
@@ -1546,7 +1553,7 @@ export const delete_spectrum_id_roles_role_id_spec = oapi.validPath({
   deprecated: false,
   description: "",
   operationId: "deleteContractorRole",
-  tags: ["Contractor Roles"],
+  tags: ["Contractor", "Contractors", "Contractor Roles"],
   parameters: [
     {
       name: "spectrum_id",
@@ -1602,7 +1609,7 @@ export const post_spectrum_id_roles_role_id_members_username_spec =
     deprecated: false,
     description: "",
     operationId: "giveContractorRole",
-    tags: ["Contractor Roles"],
+    tags: ["Contractor", "Contractors", "Contractor Roles"],
     parameters: [
       {
         name: "spectrum_id",
@@ -1668,7 +1675,7 @@ export const delete_spectrum_id_roles_role_id_members_username_spec =
     deprecated: false,
     description: "",
     operationId: "removeContractorRole",
-    tags: ["Contractor Roles"],
+    tags: ["Contractor", "Contractors", "Contractor Roles"],
     parameters: [
       {
         name: "spectrum_id",
@@ -1733,7 +1740,7 @@ export const delete_spectrum_id_members_username_spec = oapi.validPath({
   deprecated: false,
   description: "",
   operationId: "kickContractorMember",
-  tags: ["Contractor Members"],
+  tags: ["Contractor", "Contractors", "Contractor Members"],
   parameters: [
     {
       name: "spectrum_id",
@@ -1789,7 +1796,7 @@ export const post_spectrum_id_transfer_ownership_spec = oapi.validPath({
   description:
     "Transfer ownership of an organization to another member. Only the current owner can perform this action.",
   operationId: "transferOwnership",
-  tags: ["Contractors"],
+  tags: ["Contractor", "Contractors"],
   parameters: [
     {
       name: "spectrum_id",
@@ -1864,7 +1871,7 @@ export const contractors_post_spectrum_id_avatar_spec = oapi.validPath({
   description:
     "Upload a new avatar image for the organization. The image must be in PNG, JPG, or WEBP format and less than 1MB. The image will be processed through content moderation. User must have manage_org_details permission. Send multipart/form-data with 'avatar' field containing the image file.",
   operationId: "uploadOrganizationAvatar",
-  tags: ["Contractors"],
+  tags: ["Contractor", "Contractors"],
   parameters: [
     {
       name: "spectrum_id",
@@ -1910,7 +1917,7 @@ export const contractors_post_spectrum_id_banner_spec = oapi.validPath({
   description:
     "Upload a new banner image for the organization. The image must be in PNG, JPG, or WEBP format and less than 2.5MB. The image will be processed through content moderation. User must have manage_org_details permission. Send multipart/form-data with 'banner' field containing the image file.",
   operationId: "uploadOrganizationBanner",
-  tags: ["Contractors"],
+  tags: ["Contractor", "Contractors"],
   parameters: [
     {
       name: "spectrum_id",
@@ -1956,7 +1963,7 @@ export const put_spectrum_id_spec = oapi.validPath({
   description:
     "Update contractor details. Note: avatar_url and banner_url are no longer supported. Use /avatar and /banner upload endpoints instead.",
   operationId: "updateContractor",
-  tags: ["Contractors"],
+  tags: ["Contractor", "Contractors"],
   parameters: [],
   requestBody: {
     content: {
@@ -2000,7 +2007,7 @@ export const post_spectrum_id_webhooks_spec = oapi.validPath({
   deprecated: false,
   description: "",
   operationId: "createContractorWebhook",
-  tags: ["Contractor Webhooks"],
+  tags: ["OrderWebhook", "Contractor Webhooks"],
   parameters: [
     {
       name: "spectrum_id",
@@ -2051,11 +2058,11 @@ export const post_spectrum_id_webhooks_spec = oapi.validPath({
 })
 
 export const delete_spectrum_id_webhooks_webhook_id_spec = oapi.validPath({
-  summary: "Create a webhook for a contractor",
+  summary: "Delete a contractor webhook",
   deprecated: false,
-  description: "",
-  operationId: "createContractorWebhook",
-  tags: ["Contractor Webhooks"],
+  description: "Remove a webhook from the contractor",
+  operationId: "deleteContractorWebhook",
+  tags: ["OrderWebhook", "Contractor Webhooks"],
   parameters: [
     {
       name: "spectrum_id",
@@ -2110,7 +2117,7 @@ export const get_spectrum_id_webhooks_spec = oapi.validPath({
   deprecated: false,
   description: "",
   operationId: "getContractorWebhooks",
-  tags: ["Contractor Webhooks"],
+  tags: ["OrderWebhook", "Contractor Webhooks"],
   parameters: [
     {
       name: "spectrum_id",
@@ -2155,7 +2162,7 @@ export const post_spectrum_id_invites_spec = oapi.validPath({
   deprecated: false,
   description: "",
   operationId: "createContractorInvite",
-  tags: ["Contractor Invites"],
+  tags: ["ContractorInvite", "Contractor Invites"],
   parameters: [
     {
       name: "spectrum_id",
@@ -2216,7 +2223,7 @@ export const delete_spectrum_id_invites_invite_id_spec = oapi.validPath({
   deprecated: false,
   description: "",
   operationId: "getContractorInviteByID",
-  tags: ["Contractor Invites"],
+  tags: ["ContractorInvite", "Contractor Invites"],
   parameters: [
     {
       name: "spectrum_id",
@@ -2271,7 +2278,7 @@ export const get_spectrum_id_invites_spec = oapi.validPath({
   deprecated: false,
   description: "",
   operationId: "getContractorInvites",
-  tags: ["Contractor Invites"],
+  tags: ["ContractorInvite", "Contractor Invites"],
   parameters: [
     {
       name: "spectrum_id",
@@ -2316,7 +2323,7 @@ export const post_spectrum_id_members_spec = oapi.validPath({
   deprecated: false,
   description: "",
   operationId: "contractorInviteMembers",
-  tags: ["Contractor Members"],
+  tags: ["Contractor", "Contractors", "Contractor Members"],
   parameters: [
     {
       name: "spectrum_id",
@@ -2382,7 +2389,7 @@ export const post_spectrum_id_accept_spec = oapi.validPath({
   deprecated: false,
   description: "",
   operationId: "acceptContractorInvite",
-  tags: ["Contractor Invites"],
+  tags: ["ContractorInvite", "Contractor Invites"],
   parameters: [
     {
       name: "spectrum_id",
@@ -2428,7 +2435,7 @@ export const post_spectrum_id_decline_spec = oapi.validPath({
   deprecated: false,
   description: "",
   operationId: "declineContractorInvite",
-  tags: ["Contractor Invites"],
+  tags: ["ContractorInvite", "Contractor Invites"],
   parameters: [
     {
       name: "spectrum_id",
@@ -2474,7 +2481,7 @@ export const get_root_spec = oapi.validPath({
   description:
     "Get a paginated list of contractors with search, filtering, and sorting capabilities",
   operationId: "getContractors",
-  tags: ["Contractors"],
+  tags: ["Contractor", "Contractors"],
   parameters: [
     {
       name: "index",
@@ -2620,7 +2627,7 @@ export const get_spectrum_id_settings_discord_spec = oapi.validPath({
   summary: "Get Discord settings for contractor",
   description: "Get Discord server and channel settings for a contractor",
   operationId: "getContractorDiscordSettings",
-  tags: ["Contractors", "Discord"],
+  tags: ["Contractor", "Contractors", "Discord"],
   parameters: [
     {
       name: "spectrum_id",
@@ -2682,7 +2689,7 @@ export const post_spectrum_id_settings_discord_use_official_spec =
     deprecated: false,
     description: "",
     operationId: "useOfficialDiscordContractor",
-    tags: ["Contractor Webhooks"],
+    tags: ["OrderWebhook", "Contractor Webhooks", "Discord"],
     parameters: [
       {
         name: "spectrum_id",
@@ -2727,7 +2734,7 @@ export const post_spectrum_id_leave_spec = oapi.validPath({
   deprecated: false,
   description: "",
   operationId: "leaveContractor",
-  tags: ["Contractors"],
+  tags: ["Contractor", "Contractors"],
   parameters: [
     {
       name: "spectrum_id",
@@ -2770,7 +2777,7 @@ export const get_spectrum_id_blocklist_spec = oapi.validPath({
   summary: "Get organization's blocklist",
   description: "Retrieve the list of users blocked by the organization",
   operationId: "getOrgBlocklist",
-  tags: ["Contractors"],
+  tags: ["Contractor", "Contractors"],
   parameters: [
     {
       name: "spectrum_id",
@@ -2824,7 +2831,7 @@ export const post_spectrum_id_blocklist_block_spec = oapi.validPath({
   summary: "Block a user for organization",
   description: "Add a user to the organization's blocklist",
   operationId: "blockUserForOrg",
-  tags: ["Contractors"],
+  tags: ["Contractor", "Contractors"],
   parameters: [
     {
       name: "spectrum_id",
@@ -2886,7 +2893,7 @@ export const delete_spectrum_id_blocklist_unblock_username_spec =
     summary: "Unblock a user for organization",
     description: "Remove a user from the organization's blocklist",
     operationId: "unblockUserForOrg",
-    tags: ["Contractors"],
+    tags: ["Contractor", "Contractors"],
     parameters: [
       {
         name: "spectrum_id",
