@@ -146,21 +146,25 @@ export async function formatBuyOrderChartDetails(orders: DBBuyOrder[]) {
       )
     })
 
-    const high = day_listings.reduce(
-      (current, next) => (current > next.price ? current : next.price),
+    const priced_day = day_listings.filter((o) => o.price != null)
+    const priced_start = start_listings.filter((o) => o.price != null)
+    const priced_end = end_listings.filter((o) => o.price != null)
+
+    const high = priced_day.reduce(
+      (current, next) => (current > next.price! ? current : next.price!),
       0,
     )
-    const low = day_listings.reduce(
-      (current, next) => (current < next.price ? current : next.price),
-      day_listings[0]?.price || 0,
+    const low = priced_day.reduce(
+      (current, next) => (current < next.price! ? current : next.price!),
+      priced_day[0]?.price ?? 0,
     )
 
-    const open = start_listings.reduce(
-      (current, next) => (current > next.price ? current : next.price),
+    const open = priced_start.reduce(
+      (current, next) => (current > next.price! ? current : next.price!),
       0,
     )
-    const close = end_listings.reduce(
-      (current, next) => (current > next.price ? current : next.price),
+    const close = priced_end.reduce(
+      (current, next) => (current > next.price! ? current : next.price!),
       0,
     )
 
@@ -341,6 +345,7 @@ export async function formatBuyOrder(
     aggregate_id: buy_order.game_item_id,
     quantity: buy_order.quantity,
     price: buy_order.price,
+    negotiable: buy_order.negotiable ?? false,
     buyer: await profileDb.getMinimalUser({ user_id: buy_order.buyer_id }),
     expiry: buy_order.expiry,
   }
