@@ -1930,7 +1930,7 @@ export const fulfill_buy_order: RequestHandler = async (req, res) => {
       return
     }
 
-    if (buy_order.buyer_id === user.user_id) {
+    if (buy_order.buyer_id === user.user_id && !contractor) {
       res.status(400).json({ error: "Can't fulfill own order" })
       return
     }
