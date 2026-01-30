@@ -1841,12 +1841,15 @@ export const create_buy_order: RequestHandler = async (req, res) => {
   try {
     const user = req.user as User
 
-    const { quantity, price, expiry, game_item_id } = req.body as {
+    const { quantity, price, expiry, game_item_id, negotiable } = req.body as {
       quantity: number
-      price: number
+      price?: number
       expiry: string
       game_item_id: string
+      negotiable?: boolean
     }
+
+    const isNegotiable = Boolean(negotiable)
 
     const aggregate = await marketDb.getGameItem({
       id: game_item_id,
@@ -1862,8 +1865,19 @@ export const create_buy_order: RequestHandler = async (req, res) => {
       return
     }
 
-    if (price < 1) {
-      res.status(400).json(createErrorResponse({ message: "Invalid price" }))
+    if (!isNegotiable) {
+      if (price == null || typeof price !== "number" || price < 1) {
+        res
+          .status(400)
+          .json(createErrorResponse({ message: "Invalid price" }))
+        return
+      }
+    }
+    // When negotiable, price is optional (suggested price); must be >= 1 if provided
+    if (isNegotiable && price != null && (typeof price !== "number" || price < 1)) {
+      res
+        .status(400)
+        .json(createErrorResponse({ message: "Suggested price must be at least 1 if provided" }))
       return
     }
 
@@ -1874,7 +1888,8 @@ export const create_buy_order: RequestHandler = async (req, res) => {
 
     const orders = await orderDb.createBuyOrder({
       quantity,
-      price,
+      price: isNegotiable ? (price != null && price >= 1 ? price : null) : price!,
+      negotiable: isNegotiable,
       expiry,
       game_item_id,
       buyer_id: user.user_id,
@@ -1893,8 +1908,9 @@ export const create_buy_order: RequestHandler = async (req, res) => {
 
 export const fulfill_buy_order: RequestHandler = async (req, res) => {
   try {
-    const { contractor_spectrum_id } = req.body as {
+    const { contractor_spectrum_id, agreed_price } = req.body as {
       contractor_spectrum_id?: string | null
+      agreed_price?: number | null
     }
 
     const user = req.user as User
@@ -1935,6 +1951,23 @@ export const fulfill_buy_order: RequestHandler = async (req, res) => {
       return
     }
 
+    const pricePerUnit =
+      buy_order.negotiable && agreed_price != null && agreed_price >= 1
+        ? agreed_price
+        : buy_order.price
+    if (pricePerUnit == null || pricePerUnit < 1) {
+      res
+        .status(400)
+        .json(
+          createErrorResponse({
+            message: buy_order.negotiable
+              ? "Negotiable orders require an agreed_price when fulfilling"
+              : "Invalid buy order price",
+          }),
+        )
+      return
+    }
+
     const buyer = await profileDb.getUser({ user_id: buy_order.buyer_id })
     const listing = await marketDb.getMarketAggregateComplete(
       buy_order.game_item_id,
@@ -1948,12 +1981,12 @@ export const fulfill_buy_order: RequestHandler = async (req, res) => {
       { fulfilled_timestamp: new Date() },
     )
 
-    const total = buy_order.quantity * buy_order.price
+    const total = buy_order.quantity * pricePerUnit
     let message = `Complete buy order for [${buyer.username}](https://sc-market.space/user/${buyer.username})\n`
 
     message += `- [${listing.details.title}](https://sc-market.space/market/${
       listing.game_item_id
-    }) (${(+buy_order.price).toLocaleString(
+    }) (${(+pricePerUnit).toLocaleString(
       "en-us",
     )} aUEC x${buy_order.quantity.toLocaleString("en-us")})\n`
     message += `- Total: ${total.toLocaleString("en-us")} aUEC\n`
@@ -1967,7 +2000,7 @@ export const fulfill_buy_order: RequestHandler = async (req, res) => {
       {
         actor_id: user.user_id,
         kind: "Delivery",
-        cost: (buy_order.quantity * buy_order.price).toString(),
+        cost: total.toString(),
         title: `Complete Buy Order for ${buyer.username}`,
         description: message,
       },
