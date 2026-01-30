@@ -201,7 +201,7 @@ export const get_posts_spec = oapi.validPath({
   description:
     "Retrieve a paginated list of recruiting posts with search and filtering capabilities",
   operationId: "getRecruitingPosts",
-  tags: ["Recruiting"],
+  tags: ["RecruitingPosts", "Recruiting"],
   parameters: [
     {
       name: "index",
@@ -304,7 +304,7 @@ export const post_posts_spec = oapi.validPath({
   deprecated: false,
   description: "Create a new recruiting post for a contractor",
   operationId: "createRecruitingPost",
-  tags: ["Recruiting"],
+  tags: ["RecruitingPosts", "Recruiting"],
   parameters: [],
   requestBody: {
     content: {
@@ -341,7 +341,7 @@ export const get_posts_post_id_spec = oapi.validPath({
   deprecated: false,
   description: "Retrieve a specific recruiting post by its ID",
   operationId: "getRecruitingPostById",
-  tags: ["Recruiting"],
+  tags: ["RecruitingPosts", "Recruiting"],
   parameters: [
     {
       name: "post_id",
@@ -381,7 +381,7 @@ export const get_posts_post_id_comments_spec = oapi.validPath({
   deprecated: false,
   description: "Retrieve all comments for a specific recruiting post",
   operationId: "getRecruitingPostComments",
-  tags: ["Recruiting"],
+  tags: ["RecruitingPosts", "RecruitingPostComments", "Recruiting"],
   parameters: [
     {
       name: "post_id",
@@ -424,7 +424,7 @@ export const get_contractors_spectrum_id_posts_spec = oapi.validPath({
   deprecated: false,
   description: "Retrieve the recruiting post for a specific contractor",
   operationId: "getRecruitingPostByContractor",
-  tags: ["Recruiting"],
+  tags: ["RecruitingPosts", "Recruiting"],
   parameters: [
     {
       name: "spectrum_id",

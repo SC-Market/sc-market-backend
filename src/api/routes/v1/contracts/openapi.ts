@@ -205,7 +205,7 @@ export const contracts_post_root_spec = oapi.validPath({
   deprecated: false,
   description: "",
   operationId: "createPublicContract",
-  tags: ["Public Contracts"],
+  tags: ["PublicContracts", "Public Contracts"],
   parameters: [],
   requestBody: {
     content: {
@@ -253,7 +253,7 @@ export const contracts_post_contract_id_offers_spec = oapi.validPath({
   deprecated: false,
   description: "",
   operationId: "createContractOffer",
-  tags: ["Public Contracts", "Offers"],
+  tags: ["PublicContracts", "Public Contracts", "Offers"],
   parameters: [],
   requestBody: {
     content: {
@@ -301,7 +301,7 @@ export const contracts_get_contract_id_spec = oapi.validPath({
   deprecated: false,
   description: "",
   operationId: "getPublicContract",
-  tags: ["Public Contracts"],
+  tags: ["PublicContracts", "Public Contracts"],
   parameters: [
     {
       name: "contract_id",
@@ -333,7 +333,7 @@ export const contracts_get_root_spec = oapi.validPath({
   deprecated: false,
   description: "",
   operationId: "getPublicContracts",
-  tags: ["Public Contracts"],
+  tags: ["PublicContracts", "Public Contracts"],
   parameters: [],
   responses: {
     "200": {
