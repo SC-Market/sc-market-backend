@@ -1444,11 +1444,11 @@ export const post_order_id_applicants_spec = oapi.validPath({
 
 export const post_order_id_applicants_contractors_spectrum_id_spec =
   oapi.validPath({
-    summary: "Accept an application on an order",
+    summary: "Accept a contractor application on an order",
     deprecated: true,
     description:
       "Deprecated - Use public contract offers. Rate limited to prevent spam.",
-    operationId: "acceptAnApplicationOnOrder",
+    operationId: "acceptContractorApplicationOnOrder",
     tags: ["Order Applicants"],
     parameters: [
       {
@@ -1510,11 +1510,11 @@ export const post_order_id_applicants_contractors_spectrum_id_spec =
   })
 
 export const post_order_id_applicants_users_username_spec = oapi.validPath({
-  summary: "Accept an application on an order",
+  summary: "Accept a user application on an order",
   deprecated: true,
   description:
     "Deprecated - Use public contract offers. Rate limited to prevent spam.",
-  operationId: "acceptAnApplicationOnOrder",
+  operationId: "acceptUserApplicationOnOrder",
   tags: ["Order Applicants"],
   parameters: [
     {
@@ -1617,7 +1617,7 @@ export const post_order_id_thread_spec = oapi.validPath({
   deprecated: false,
   description:
     "Creates a new thread if the order doesn't already have one. Rate limited to prevent spam.",
-  operationId: "createANewOrderThread",
+  operationId: "createOrderThread",
   tags: ["Order Threads"],
   parameters: [
     {

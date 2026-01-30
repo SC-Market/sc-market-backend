@@ -220,7 +220,7 @@ adminAlertsRouter.post(
     description:
       "Create a new admin alert and send notifications to target users",
     operationId: "createAdminAlert",
-    tags: ["Admin Alerts"],
+    tags: ["AdminAlerts", "Admin"],
     requestBody: {
       required: true,
       content: {
@@ -372,7 +372,7 @@ adminAlertsRouter.get(
     summary: "Get paginated admin alerts",
     description: "Retrieve paginated admin alerts with optional filtering",
     operationId: "getAdminAlerts",
-    tags: ["Admin Alerts"],
+    tags: ["AdminAlerts", "Admin"],
     parameters: [
       {
         name: "page",
@@ -523,7 +523,7 @@ adminAlertsRouter.get(
     summary: "Get a specific admin alert",
     description: "Retrieve details of a specific admin alert",
     operationId: "getAdminAlert",
-    tags: ["Admin Alerts"],
+    tags: ["AdminAlerts", "Admin"],
     parameters: [
       {
         name: "alert_id",
@@ -597,7 +597,7 @@ adminAlertsRouter.patch(
     summary: "Update an admin alert",
     description: "Update an existing admin alert",
     operationId: "updateAdminAlert",
-    tags: ["Admin Alerts"],
+    tags: ["AdminAlerts", "Admin"],
     parameters: [
       {
         name: "alert_id",
@@ -751,7 +751,7 @@ adminAlertsRouter.delete(
     summary: "Delete an admin alert",
     description: "Delete an admin alert",
     operationId: "deleteAdminAlert",
-    tags: ["Admin Alerts"],
+    tags: ["AdminAlerts", "Admin"],
     parameters: [
       {
         name: "alert_id",
