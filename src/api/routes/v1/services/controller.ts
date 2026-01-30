@@ -174,7 +174,23 @@ export const services_get_public: RequestHandler = async (req, res, next) => {
     sortBy,
     sortOrder,
     language_codes,
+    contractor: contractorSpectrumId,
+    user: username,
   } = req.query
+
+  // Resolve optional contractor (spectrum_id) and user (username) to DB IDs
+  let contractor_id: string | undefined
+  let user_id: string | undefined
+  if (contractorSpectrumId && typeof contractorSpectrumId === "string") {
+    const contractor = await contractorDb.getContractorSafe({
+      spectrum_id: contractorSpectrumId,
+    })
+    if (contractor) contractor_id = contractor.contractor_id
+  }
+  if (username && typeof username === "string") {
+    const user = await profileDb.findUser({ username })
+    if (user) user_id = user.user_id
+  }
 
   // Parse and validate parameters
   const params = {
@@ -193,6 +209,8 @@ export const services_get_public: RequestHandler = async (req, res, next) => {
           .map((s) => s.trim())
           .filter(Boolean)
       : undefined,
+    contractor_id,
+    user_id,
   }
 
   const result = await serviceDb.getServicesPaginated(params)

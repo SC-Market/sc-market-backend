@@ -38,6 +38,8 @@ export async function getServicesPaginated(params: {
   sortOrder?: "asc" | "desc"
   status?: string
   language_codes?: string[]
+  contractor_id?: string
+  user_id?: string
 }): Promise<{
   services: DBService[]
   pagination: {
@@ -61,6 +63,8 @@ export async function getServicesPaginated(params: {
     sortOrder = "desc",
     status = "active",
     language_codes,
+    contractor_id,
+    user_id,
   } = params
 
   // Build base query with filters
@@ -70,6 +74,16 @@ export async function getServicesPaginated(params: {
   // Apply status filter
   query = query.where("status", status)
   countQuery = countQuery.where("status", status)
+
+  // Filter by contractor (org) or user when viewing a profile/org services tab
+  if (contractor_id) {
+    query = query.where("contractor_id", contractor_id)
+    countQuery = countQuery.where("contractor_id", contractor_id)
+  }
+  if (user_id) {
+    query = query.where("user_id", user_id)
+    countQuery = countQuery.where("user_id", user_id)
+  }
 
   // Apply search filter (search in service_name and service_description)
   if (search) {

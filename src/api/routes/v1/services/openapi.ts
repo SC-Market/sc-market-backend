@@ -286,6 +286,22 @@ export const services_get_public_spec = oapi.validPath({
         default: "desc",
       },
     },
+    {
+      name: "contractor",
+      in: "query",
+      description:
+        "Filter by contractor (organization) spectrum ID. Only services offered by this org are returned.",
+      required: false,
+      schema: { type: "string" },
+    },
+    {
+      name: "user",
+      in: "query",
+      description:
+        "Filter by user username. Only services offered by this user are returned.",
+      required: false,
+      schema: { type: "string" },
+    },
   ],
   responses: {
     "200": {
