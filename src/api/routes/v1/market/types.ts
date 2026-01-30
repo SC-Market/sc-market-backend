@@ -146,7 +146,8 @@ export interface FormattedBuyOrder {
   buy_order_id: string
   aggregate_id: string
   quantity: number
-  price: number
+  price: number | null
+  negotiable: boolean
   buyer: MinimalUser
   expiry: Date
 }
