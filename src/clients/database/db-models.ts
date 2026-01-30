@@ -346,7 +346,8 @@ export interface DBBuyOrder {
   buy_order_id: string
   game_item_id: string
   quantity: number
-  price: number
+  price: number | null
+  negotiable: boolean
   buyer_id: string
   expiry: Date
   fulfilled_timestamp: Date | null

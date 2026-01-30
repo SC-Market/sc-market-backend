@@ -1164,7 +1164,15 @@ oapi.schema("BuyOrder", {
     buy_order_id: { type: "string", description: "Unique buy order ID" },
     aggregate_id: { type: "string", description: "Game item ID (aggregate)" },
     quantity: { type: "number", description: "Requested quantity" },
-    price: { type: "number", description: "Price per unit" },
+    price: {
+      type: "number",
+      nullable: true,
+      description: "Price per unit; null when negotiable",
+    },
+    negotiable: {
+      type: "boolean",
+      description: "Whether price is negotiable (no fixed price offered)",
+    },
     buyer: {
       $ref: "#/components/schemas/MinimalUser",
       description: "Buyer user summary",
@@ -1175,7 +1183,14 @@ oapi.schema("BuyOrder", {
       description: "Order expiry timestamp",
     },
   },
-  required: ["buy_order_id", "aggregate_id", "quantity", "price", "buyer", "expiry"],
+  required: [
+    "buy_order_id",
+    "aggregate_id",
+    "quantity",
+    "negotiable",
+    "buyer",
+    "expiry",
+  ],
 })
 
 oapi.schema("MarketAggregateComplete", {
