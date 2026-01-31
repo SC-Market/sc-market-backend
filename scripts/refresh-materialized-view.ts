@@ -49,7 +49,7 @@ async function refreshMaterializedView() {
 
     logger.info("Game item ID column statistics", {
       rowsWithGameItemId: gameItemIdPopulated,
-      percentagePopulated: count > 0 ? ((Number(gameItemIdPopulated) / Number(count)) * 100).toFixed(2) + "%" : "0%",
+      percentagePopulated: Number(count) > 0 ? ((Number(gameItemIdPopulated) / Number(count)) * 100).toFixed(2) + "%" : "0%",
     })
 
     if (Number(gameItemIdPopulated) === 0 && Number(count) > 0) {

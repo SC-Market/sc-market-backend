@@ -14,7 +14,7 @@ import {
 export async function getAttributeDefinitions(
   applicableItemTypes?: string[],
 ): Promise<AttributeDefinition[]> {
-  let query = database("attribute_definitions").select("*")
+  let query = database.knex("attribute_definitions").select("*")
 
   if (applicableItemTypes && applicableItemTypes.length > 0) {
     // Filter by applicable_item_types using array overlap operator
@@ -34,7 +34,7 @@ export async function getAttributeDefinitions(
 export async function getAttributeDefinition(
   attributeName: string,
 ): Promise<AttributeDefinition | null> {
-  const result = await database("attribute_definitions")
+  const result = await database.knex("attribute_definitions")
     .where({ attribute_name: attributeName })
     .first()
 
@@ -47,7 +47,7 @@ export async function getAttributeDefinition(
 export async function createAttributeDefinition(
   payload: CreateAttributeDefinitionPayload,
 ): Promise<AttributeDefinition> {
-  const [result] = await database("attribute_definitions")
+  const [result] = await database.knex("attribute_definitions")
     .insert({
       attribute_name: payload.attribute_name,
       display_name: payload.display_name,
@@ -90,7 +90,7 @@ export async function updateAttributeDefinition(
     updateData.display_order = payload.display_order
   }
 
-  const [result] = await database("attribute_definitions")
+  const [result] = await database.knex("attribute_definitions")
     .where({ attribute_name: attributeName })
     .update(updateData)
     .returning("*")
@@ -107,12 +107,12 @@ export async function deleteAttributeDefinition(
 ): Promise<boolean> {
   // If cascade delete is requested, delete all game_item_attributes with this name first
   if (cascadeDelete) {
-    await database("game_item_attributes")
+    await database.knex("game_item_attributes")
       .where({ attribute_name: attributeName })
       .delete()
   }
 
-  const deletedCount = await database("attribute_definitions")
+  const deletedCount = await database.knex("attribute_definitions")
     .where({ attribute_name: attributeName })
     .delete()
 
@@ -125,7 +125,7 @@ export async function deleteAttributeDefinition(
 export async function getGameItemAttributes(
   gameItemId: string,
 ): Promise<GameItemAttributeWithDefinition[]> {
-  const results = await database("game_item_attributes")
+  const results = await database.knex("game_item_attributes")
     .select(
       "game_item_attributes.*",
       "attribute_definitions.display_name",
@@ -152,7 +152,7 @@ export async function upsertGameItemAttribute(
 ): Promise<GameItemAttribute> {
   const now = new Date()
 
-  const [result] = await database("game_item_attributes")
+  const [result] = await database.knex("game_item_attributes")
     .insert({
       game_item_id: gameItemId,
       attribute_name: payload.attribute_name,
@@ -177,7 +177,7 @@ export async function deleteGameItemAttribute(
   gameItemId: string,
   attributeName: string,
 ): Promise<boolean> {
-  const deletedCount = await database("game_item_attributes")
+  const deletedCount = await database.knex("game_item_attributes")
     .where({
       game_item_id: gameItemId,
       attribute_name: attributeName,

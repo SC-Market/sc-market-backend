@@ -1,5 +1,5 @@
 import { describe, it, expect, vi, beforeAll } from 'vitest'
-import { AttributeFilter } from './types.js'
+import { AttributeFilter, type MarketSearchQueryArguments } from './types.js'
 
 // Set required environment variables before any imports
 beforeAll(() => {
@@ -39,7 +39,6 @@ describe('Attribute Filter Parsing', () => {
   it('should parse valid attribute filters from JSON string', async () => {
     // Import after mocks are set up
     const { convertQuery } = await import('./helpers.js')
-    const { MarketSearchQueryArguments } = await import('./types.js')
     
     const queryArgs: Partial<MarketSearchQueryArguments> = {
       attributes: JSON.stringify([
@@ -73,7 +72,6 @@ describe('Attribute Filter Parsing', () => {
 
   it('should return null for invalid JSON', async () => {
     const { convertQuery } = await import('./helpers.js')
-    const { MarketSearchQueryArguments } = await import('./types.js')
     
     const queryArgs: Partial<MarketSearchQueryArguments> = {
       attributes: 'invalid json',
@@ -93,7 +91,6 @@ describe('Attribute Filter Parsing', () => {
 
   it('should return null for empty attributes', async () => {
     const { convertQuery } = await import('./helpers.js')
-    const { MarketSearchQueryArguments } = await import('./types.js')
     
     const queryArgs: Partial<MarketSearchQueryArguments> = {
       attributes: null,
@@ -113,7 +110,6 @@ describe('Attribute Filter Parsing', () => {
 
   it('should filter out invalid attribute filters', async () => {
     const { convertQuery } = await import('./helpers.js')
-    const { MarketSearchQueryArguments } = await import('./types.js')
     
     const queryArgs: Partial<MarketSearchQueryArguments> = {
       attributes: JSON.stringify([
@@ -144,7 +140,6 @@ describe('Attribute Filter Parsing', () => {
 
   it('should handle single value filters', async () => {
     const { convertQuery } = await import('./helpers.js')
-    const { MarketSearchQueryArguments } = await import('./types.js')
     
     const queryArgs: Partial<MarketSearchQueryArguments> = {
       attributes: JSON.stringify([

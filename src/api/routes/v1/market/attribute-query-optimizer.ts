@@ -16,7 +16,7 @@ import { AttributeFilter } from "./types.js"
  * @param gameItemIdColumn - The column name containing game_item_id (e.g., 'game_items.id' or 'market_search_materialized.game_item_id')
  * @returns Modified query with attribute filters applied
  */
-export function applyAttributeFilters<T>(
+export function applyAttributeFilters<T extends {}>(
   query: Knex.QueryBuilder<T>,
   attributes: AttributeFilter[],
   gameItemIdColumn: string,
