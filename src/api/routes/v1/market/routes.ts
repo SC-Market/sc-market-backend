@@ -54,6 +54,8 @@ import {
   get_categories,
   get_game_item,
   get_seller_analytics,
+  get_component_filter_options,
+  get_item_attributes,
 } from "./controller.js"
 
 import {
@@ -320,6 +322,19 @@ marketRouter.get(
 marketRouter.get("/category/:category", readRateLimit, get_category_details)
 
 marketRouter.get("/categories", readRateLimit, get_categories)
+
+marketRouter.get(
+  "/filter-options",
+  readRateLimit,
+  get_component_filter_options,
+)
+
+// Get all attributes for a specific game item
+marketRouter.get(
+  "/game-item/:game_item_id/attributes",
+  readRateLimit,
+  get_item_attributes,
+)
 
 // First register the schema for game item description
 

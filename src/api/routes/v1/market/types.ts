@@ -65,6 +65,13 @@ export interface MarketSearchQueryArguments {
   listing_type: string | null
   statuses: string | null
   language_codes: string | null
+  component_size?: string | string[]
+  component_grade?: string | string[]
+  component_class?: string | string[]
+  manufacturer?: string | string[]
+  component_type?: string | string[]
+  armor_class?: string | string[]
+  color?: string | string[]
 }
 
 export interface MarketSearchQuery {
@@ -85,6 +92,13 @@ export interface MarketSearchQuery {
   listing_type?: string | null
   statuses?: string[] | null
   language_codes?: string[] | null
+  component_size?: number[]
+  component_grade?: string[]
+  component_class?: string[]
+  manufacturer?: string[]
+  component_type?: string[]
+  armor_class?: string[]
+  color?: string[]
 }
 
 export interface OrderStats {
