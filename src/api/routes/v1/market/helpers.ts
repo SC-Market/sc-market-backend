@@ -198,6 +198,42 @@ export async function get_my_listings(user: User) {
   )
 }
 
+/**
+ * Parse component attributes from search text
+ * Extracts size and grade patterns and returns remaining text for full-text search
+ * @param searchText - The search query text
+ * @returns Object containing parsed size, grade, and remaining text
+ */
+export function parseComponentAttributes(searchText: string): {
+  size?: number
+  grade?: string
+  remainingText: string
+} {
+  const result: { size?: number; grade?: string; remainingText: string } = {
+    remainingText: searchText,
+  }
+
+  // Parse "size X" or "size class X" patterns (case-insensitive)
+  const sizeMatch = searchText.match(/\bsize\s+(?:class\s+)?(\d+)\b/i)
+  if (sizeMatch) {
+    result.size = parseInt(sizeMatch[1], 10)
+    result.remainingText = result.remainingText.replace(sizeMatch[0], "")
+  }
+
+  // Parse "grade X" or "class X" patterns (case-insensitive)
+  // Only match single letter grades A-D
+  const gradeMatch = result.remainingText.match(/\b(?:grade|class)\s+([A-D])\b/i)
+  if (gradeMatch) {
+    result.grade = gradeMatch[1].toUpperCase()
+    result.remainingText = result.remainingText.replace(gradeMatch[0], "")
+  }
+
+  // Clean up extra whitespace and trim
+  result.remainingText = result.remainingText.replace(/\s+/g, " ").trim()
+
+  return result
+}
+
 export async function convertQuery(
   query: Partial<MarketSearchQueryArguments>,
 ): Promise<MarketSearchQuery> {
@@ -262,7 +298,10 @@ export async function convertQuery(
     contractor_seller_id = contractor.contractor_id
   }
 
+  // Parse component attributes from search text
   const searchQuery = (query.query || "").toLowerCase()
+  const parsedAttributes = parseComponentAttributes(searchQuery)
+
   const seller_rating = +(query.seller_rating || 0)
   const page_size = Math.max(Math.min(+(query.page_size || 16), 96), 0)
   const language_codes = query.language_codes
@@ -271,6 +310,72 @@ export async function convertQuery(
         .map((s) => s.trim())
         .filter(Boolean)
     : null
+
+  // Parse component_size as integer array
+  // If size was parsed from search text, add it to the filter
+  let component_size: number[] | undefined = undefined
+  if (query.component_size) {
+    const sizes = Array.isArray(query.component_size)
+      ? query.component_size
+      : [query.component_size]
+    component_size = sizes.map((s) => parseInt(s, 10)).filter((n) => !isNaN(n))
+  }
+  // Add parsed size from search text if present
+  if (parsedAttributes.size !== undefined) {
+    if (component_size) {
+      // Add to existing sizes if not already present
+      if (!component_size.includes(parsedAttributes.size)) {
+        component_size.push(parsedAttributes.size)
+      }
+    } else {
+      component_size = [parsedAttributes.size]
+    }
+  }
+
+  // Parse component_grade as string array
+  // If grade was parsed from search text, add it to the filter
+  let component_grade: string[] | undefined = undefined
+  if (query.component_grade) {
+    component_grade = Array.isArray(query.component_grade)
+      ? query.component_grade
+      : [query.component_grade]
+  }
+  // Add parsed grade from search text if present
+  if (parsedAttributes.grade) {
+    if (component_grade) {
+      // Add to existing grades if not already present
+      if (!component_grade.includes(parsedAttributes.grade)) {
+        component_grade.push(parsedAttributes.grade)
+      }
+    } else {
+      component_grade = [parsedAttributes.grade]
+    }
+  }
+
+  // Parse component_class as string array
+  let component_class: string[] | undefined = undefined
+  if (query.component_class) {
+    component_class = Array.isArray(query.component_class)
+      ? query.component_class
+      : [query.component_class]
+  }
+
+  // Parse manufacturer as string array
+  let manufacturer: string[] | undefined = undefined
+  if (query.manufacturer) {
+    manufacturer = Array.isArray(query.manufacturer)
+      ? query.manufacturer
+      : [query.manufacturer]
+  }
+
+  // Parse component_type as string array
+  let component_type: string[] | undefined = undefined
+  if (query.component_type) {
+    component_type = Array.isArray(query.component_type)
+      ? query.component_type
+      : [query.component_type]
+  }
+
   return {
     sale_type: query.sale_type || null,
     maxCost: query.maxCost && query.maxCost !== "null" ? +query.maxCost : null,
@@ -281,7 +386,7 @@ export async function convertQuery(
     rating: +(query.rating || 0),
     reverseSort,
     sort: sorting,
-    query: searchQuery,
+    query: parsedAttributes.remainingText, // Use remaining text after parsing attributes
     seller_rating,
     page_size: page_size,
     user_seller_id,
@@ -292,6 +397,11 @@ export async function convertQuery(
       : ["active"], // Default to active only
     language_codes:
       language_codes && language_codes.length > 0 ? language_codes : null,
+    component_size,
+    component_grade,
+    component_class,
+    manufacturer,
+    component_type,
   }
 }
 
