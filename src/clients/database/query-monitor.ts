@@ -91,7 +91,7 @@ export async function analyzeQueryPlan(
     // Use EXPLAIN ANALYZE to get actual execution statistics
     const explainQuery = `EXPLAIN (ANALYZE, BUFFERS, FORMAT JSON) ${sql}`
     
-    const result = await knex.raw(explainQuery, bindings)
+    const result = await knex.raw(explainQuery, bindings || [])
     const plan = result.rows[0]["QUERY PLAN"]
 
     // Log the execution plan

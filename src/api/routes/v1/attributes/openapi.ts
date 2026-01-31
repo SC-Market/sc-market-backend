@@ -1,4 +1,5 @@
 import { OpenAPIV3_1 } from "openapi-types"
+import { oapi } from "../openapi.js"
 
 const AttributeDefinitionSchema: OpenAPIV3_1.SchemaObject = {
   type: "object",
