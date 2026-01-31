@@ -6,6 +6,7 @@
 
 import { getKnex } from "../../../../clients/database/knex-db.js"
 import { getService } from "../services/database.js"
+import { applyAttributeFilters } from "./attribute-query-optimizer.js"
 import {
   DBMarketListing,
   DBMarketListingDetails,
@@ -44,6 +45,7 @@ import {
   UserListingsQuery,
   ContractorListingsQuery,
   MarketSearchQuery,
+  AttributeFilter,
 } from "./types.js"
 import logger from "../../../../logger/logger.js"
 
@@ -372,12 +374,12 @@ export async function getMarketAggregatesComplete(
 }
 
 /**
- * Get all market buy orders complete.
+ * Get all market buy orders complete with optional attribute filtering.
  */
-export async function getMarketBuyOrdersComplete(): Promise<
-  DBAggregateComplete[]
-> {
-  const q = knex()<DBAggregateRaw>("game_items")
+export async function getMarketBuyOrdersComplete(
+  attributes?: AttributeFilter[] | null
+): Promise<DBAggregateComplete[]> {
+  let q = knex()<DBAggregateRaw>("game_items")
     .join(
       "market_listing_details",
       "game_items.details_id",
@@ -393,6 +395,11 @@ export async function getMarketBuyOrdersComplete(): Promise<
         )
         .select(),
     )
+
+  // Attribute filtering: filter by game item attributes (AND logic across attributes, OR within)
+  if (attributes && attributes.length > 0) {
+    q = applyAttributeFilters(q, attributes, "game_items.id", knex())
+  }
 
   return Promise.all(
     (await q).map((listing) =>
@@ -2278,6 +2285,16 @@ export async function searchMarket(
           )
       })
     })
+  }
+
+  // Attribute filtering: filter by game item attributes (AND logic across attributes, OR within)
+  if (searchQuery.attributes && searchQuery.attributes.length > 0) {
+    query = applyAttributeFilters(
+      query,
+      searchQuery.attributes,
+      "market_search_materialized.game_item_id",
+      knex()
+    )
   }
 
   if (andWhere) {

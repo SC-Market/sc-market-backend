@@ -21,10 +21,12 @@ import { formatListingComplete } from "../util/formatting.js"
 import {
   MarketSearchQuery,
   MarketSearchQueryArguments,
+  AttributeFilter,
   sortingMethods,
 } from "./types.js"
 import { has_permission } from "../util/permissions.js"
 import { cdn } from "../../../../clients/cdn/cdn.js"
+import logger from "../../../../logger/logger.js"
 
 const userListingLock = new AsyncLock()
 const contractorListingLock = new AsyncLock()
@@ -271,6 +273,35 @@ export async function convertQuery(
         .map((s) => s.trim())
         .filter(Boolean)
     : null
+  
+  // Parse attribute filters from query string
+  let attributes: AttributeFilter[] | null = null
+  if (query.attributes) {
+    try {
+      const parsed = JSON.parse(query.attributes)
+      if (Array.isArray(parsed)) {
+        // Validate each attribute filter
+        attributes = parsed.filter((attr: any) => {
+          return (
+            attr &&
+            typeof attr.name === 'string' &&
+            Array.isArray(attr.values) &&
+            attr.values.length > 0 &&
+            attr.values.every((v: any) => typeof v === 'string') &&
+            (attr.operator === 'in' || attr.operator === 'eq')
+          )
+        })
+        if (attributes.length === 0) {
+          attributes = null
+        }
+      }
+    } catch (error) {
+      // Invalid JSON, ignore attribute filters
+      logger.warn('Invalid attribute filter JSON', { attributes: query.attributes, error })
+      attributes = null
+    }
+  }
+  
   return {
     sale_type: query.sale_type || null,
     maxCost: query.maxCost && query.maxCost !== "null" ? +query.maxCost : null,
@@ -292,6 +323,7 @@ export async function convertQuery(
       : ["active"], // Default to active only
     language_codes:
       language_codes && language_codes.length > 0 ? language_codes : null,
+    attributes,
   }
 }
 

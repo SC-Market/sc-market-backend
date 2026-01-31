@@ -105,6 +105,8 @@
     "start": "tsx watch src/server.ts",
     "build": "tsc && npm run copy-templates",
     "copy-templates": "mkdir -p dist/src/services/email/templates/notifications dist/src/services/email/templates/layouts && cp -r src/services/email/templates/notifications/* dist/src/services/email/templates/notifications/ && cp -r src/services/email/templates/layouts/* dist/src/services/email/templates/layouts/",
+    "import-attributes": "tsx scripts/import-all-attributes.ts",
+    "refresh-view": "tsx scripts/refresh-materialized-view.ts",
     "test": "vitest run",
     "test:watch": "vitest",
     "test:ui": "vitest --ui",

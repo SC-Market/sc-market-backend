@@ -497,6 +497,12 @@ io.engine.use(
 
 chatServer.initialize(io)
 
+// Warm up caches before starting the server
+import { attributeDefinitionCache } from "./api/routes/v1/attributes/cache.js"
+attributeDefinitionCache.warmUp().catch((error) => {
+  logger.error("Failed to warm up attribute definition cache", { error })
+})
+
 // Start the app
 logger.info(`server up on port ${hostname()}:${env.BACKEND_PORT || 7000}`)
 httpServer.listen(env.BACKEND_PORT || 7000)

@@ -39,7 +39,7 @@ import {
 import { DEFAULT_PLACEHOLDER_PHOTO_URL } from "./constants.js"
 import { randomUUID } from "node:crypto"
 import fs from "node:fs"
-import { MarketSearchQuery, MarketSearchQueryArguments } from "./types.js"
+import { MarketSearchQuery, MarketSearchQueryArguments, AttributeFilter } from "./types.js"
 import {
   DBContractor,
   DBMultipleListingComplete,
@@ -1307,7 +1307,35 @@ export const get_active_listings_by_org: RequestHandler = async (req, res) => {
 
 export const get_buy_orders: RequestHandler = async (req, res) => {
   try {
-    const aggregates = await marketDb.getMarketBuyOrdersComplete()
+    // Parse attribute filters from query string
+    let attributes: AttributeFilter[] | null = null
+    if (req.query.attributes && typeof req.query.attributes === 'string') {
+      try {
+        const parsed = JSON.parse(req.query.attributes)
+        if (Array.isArray(parsed)) {
+          // Validate each attribute filter
+          attributes = parsed.filter((attr: any) => {
+            return (
+              attr &&
+              typeof attr.name === 'string' &&
+              Array.isArray(attr.values) &&
+              attr.values.length > 0 &&
+              attr.values.every((v: any) => typeof v === 'string') &&
+              (attr.operator === 'in' || attr.operator === 'eq')
+            )
+          })
+          if (attributes.length === 0) {
+            attributes = null
+          }
+        }
+      } catch (error) {
+        // Invalid JSON, ignore attribute filters
+        logger.warn('Invalid attribute filter JSON', { attributes: req.query.attributes, error })
+        attributes = null
+      }
+    }
+
+    const aggregates = await marketDb.getMarketBuyOrdersComplete(attributes)
     res.json(
       await Promise.all(
         aggregates.map((a) => formatMarketAggregateComplete(a)),
