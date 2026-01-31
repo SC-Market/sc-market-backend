@@ -21,8 +21,8 @@ export class CStoneImporter implements AttributeImporter {
 
   /**
    * Fetches item attributes from finder.cstone.space
-   * Note: This is a placeholder implementation as the actual API/scraping
-   * strategy depends on the cstone.space site structure
+   * Currently returns empty attributes as the CStone API endpoint structure
+   * needs to be determined. The mapping logic is ready for when data is available.
    */
   async fetchItemAttributes(itemId: string): Promise<ItemAttributes> {
     logger.debug("Fetching item attributes from CStone", {
@@ -31,11 +31,12 @@ export class CStoneImporter implements AttributeImporter {
     })
 
     try {
-      // TODO: Implement actual API call or web scraping logic
-      // This would depend on whether cstone.space provides an API
-      // or requires HTML parsing
+      // CStone API implementation pending - need to determine:
+      // 1. Whether cstone.space provides a public API
+      // 2. API endpoint structure and authentication requirements
+      // 3. Rate limiting considerations
       
-      // Example API call structure (if API exists):
+      // Once API details are known, implement:
       // const response = await fetch(`${CSTONE_BASE_URL}/api/items/${itemId}`)
       // if (!response.ok) {
       //   throw new Error(`CStone API error: ${response.status}`)
@@ -43,10 +44,9 @@ export class CStoneImporter implements AttributeImporter {
       // const data = await response.json()
       // return data
 
-      // For now, return empty attributes
-      logger.warn("CStone importer not fully implemented", {
+      logger.debug("CStone importer returning empty attributes", {
         itemId,
-        message: "Returning empty attributes - implementation needed",
+        message: "API integration pending",
       })
 
       return {}

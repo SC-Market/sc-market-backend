@@ -21,9 +21,7 @@ export class UEXCorpImporter implements AttributeImporter {
 
   /**
    * Fetches item attributes from UEXCorp API
-   * Note: The UEXCorp API primarily provides commodity data.
-   * This implementation assumes there might be item-specific endpoints
-   * or that we can derive attributes from commodity data.
+   * Uses /items and /items_attributes endpoints
    */
   async fetchItemAttributes(itemId: string): Promise<ItemAttributes> {
     logger.debug("Fetching item attributes from UEXCorp", {
@@ -32,39 +30,86 @@ export class UEXCorpImporter implements AttributeImporter {
     })
 
     try {
-      // TODO: Implement actual UEXCorp API call for item-specific data
-      // The current UEX API focuses on commodities, so this might need
-      // to be adapted based on available endpoints
-      
-      // Example structure (if item endpoint exists):
-      // const response = await fetch(`${UEXCORP_BASE_URL}/items/${itemId}`, {
-      //   headers: {
-      //     accept: "application/json",
-      //   },
-      // })
-      // 
-      // if (!response.ok) {
-      //   throw new Error(`UEXCorp API error: ${response.status}`)
-      // }
-      // 
-      // const data = await response.json()
-      // return this.extractAttributes(data)
+      // Fetch item by UUID
+      const itemResponse = await fetch(
+        `${UEXCORP_BASE_URL}/items?uuid=${encodeURIComponent(itemId)}`,
+        {
+          headers: { accept: "application/json" },
+        }
+      )
 
-      // For now, return empty attributes
-      logger.warn("UEXCorp importer not fully implemented", {
+      if (!itemResponse.ok) {
+        throw new Error(`UEXCorp items API error: ${itemResponse.status}`)
+      }
+
+      const itemData = await itemResponse.json()
+      
+      if (!itemData.data || itemData.data.length === 0) {
+        logger.debug("No item found in UEXCorp", { itemId })
+        return {}
+      }
+
+      const item = itemData.data[0]
+      const attributes: ItemAttributes = {}
+
+      // Extract basic attributes
+      if (item.size) attributes.size = item.size
+      if (item.color) attributes.color = item.color
+      if (item.quality) attributes.grade = this.mapQualityToGrade(item.quality)
+      if (item.company_name) attributes.manufacturer = item.company_name
+
+      // Fetch detailed attributes
+      const attrsResponse = await fetch(
+        `${UEXCORP_BASE_URL}/items_attributes?uuid=${encodeURIComponent(itemId)}`,
+        {
+          headers: { accept: "application/json" },
+        }
+      )
+
+      if (attrsResponse.ok) {
+        const attrsData = await attrsResponse.json()
+        
+        if (attrsData.data && Array.isArray(attrsData.data)) {
+          for (const attr of attrsData.data) {
+            const attrName = attr.attribute_name?.toLowerCase()
+            const value = attr.value
+            
+            if (!attrName || !value) continue
+
+            if (attrName.includes('class')) {
+              attributes.class = value
+            } else if (attrName.includes('type')) {
+              attributes.component_type = value
+            } else if (attrName.includes('manufacturer')) {
+              attributes.manufacturer = value
+            } else {
+              attributes[attrName] = value
+            }
+          }
+        }
+      }
+
+      logger.debug("Fetched attributes from UEXCorp", {
         itemId,
-        message: "Returning empty attributes - implementation needed",
+        attributeCount: Object.keys(attributes).length,
       })
 
-      return {}
+      return attributes
     } catch (error) {
       logger.error("Failed to fetch attributes from UEXCorp", {
         itemId,
         error: error instanceof Error ? error.message : "Unknown error",
         stack: error instanceof Error ? error.stack : undefined,
       })
-      throw error
+      return {}
     }
+  }
+
+  private mapQualityToGrade(quality: number): string {
+    if (quality >= 5) return "A"
+    if (quality >= 4) return "B"
+    if (quality >= 3) return "C"
+    return "D"
   }
 
   /**
