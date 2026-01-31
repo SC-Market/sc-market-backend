@@ -21,7 +21,7 @@ export class UEXCorpImporter implements AttributeImporter {
 
   /**
    * Fetches item attributes from UEXCorp API
-   * Uses /items and /items_attributes endpoints
+   * Searches by item name since UUIDs don't match between systems
    */
   async fetchItemAttributes(itemId: string): Promise<ItemAttributes> {
     logger.debug("Fetching item attributes from UEXCorp", {
@@ -30,13 +30,23 @@ export class UEXCorpImporter implements AttributeImporter {
     })
 
     try {
-      // Fetch item by UUID
-      const itemResponse = await fetch(
-        `${UEXCORP_BASE_URL}/items?uuid=${encodeURIComponent(itemId)}`,
-        {
-          headers: { accept: "application/json" },
-        }
-      )
+      // Get item name from our database
+      const { database } = await import("../../clients/database/knex-db.js")
+      const gameItem = await database.knex("game_items")
+        .where("id", itemId)
+        .first("name")
+
+      if (!gameItem || !gameItem.name) {
+        logger.debug("Game item not found in database", { itemId })
+        return {}
+      }
+
+      const itemName = gameItem.name
+
+      // Fetch all items from UEX (cached for 1 day per their API)
+      const itemResponse = await fetch(`${UEXCORP_BASE_URL}/items`, {
+        headers: { accept: "application/json" },
+      })
 
       if (!itemResponse.ok) {
         throw new Error(`UEXCorp items API error: ${itemResponse.status}`)
@@ -44,12 +54,21 @@ export class UEXCorpImporter implements AttributeImporter {
 
       const itemData = await itemResponse.json()
       
-      if (!itemData.data || itemData.data.length === 0) {
-        logger.debug("No item found in UEXCorp", { itemId })
+      if (!itemData.data || !Array.isArray(itemData.data)) {
+        logger.debug("No items returned from UEXCorp", { itemName })
         return {}
       }
 
-      const item = itemData.data[0]
+      // Find by name (case-insensitive)
+      const item = itemData.data.find(
+        (i: any) => i.name?.toLowerCase() === itemName.toLowerCase()
+      )
+
+      if (!item) {
+        logger.debug("No matching item in UEXCorp", { itemName })
+        return {}
+      }
+
       const attributes: ItemAttributes = {}
 
       // Extract basic attributes
@@ -58,32 +77,34 @@ export class UEXCorpImporter implements AttributeImporter {
       if (item.quality) attributes.grade = this.mapQualityToGrade(item.quality)
       if (item.company_name) attributes.manufacturer = item.company_name
 
-      // Fetch detailed attributes
-      const attrsResponse = await fetch(
-        `${UEXCORP_BASE_URL}/items_attributes?uuid=${encodeURIComponent(itemId)}`,
-        {
-          headers: { accept: "application/json" },
-        }
-      )
+      // Fetch detailed attributes using UEX's item ID
+      if (item.id) {
+        const attrsResponse = await fetch(
+          `${UEXCORP_BASE_URL}/items_attributes?id_item=${item.id}`,
+          {
+            headers: { accept: "application/json" },
+          }
+        )
 
-      if (attrsResponse.ok) {
-        const attrsData = await attrsResponse.json()
-        
-        if (attrsData.data && Array.isArray(attrsData.data)) {
-          for (const attr of attrsData.data) {
-            const attrName = attr.attribute_name?.toLowerCase()
-            const value = attr.value
-            
-            if (!attrName || !value) continue
+        if (attrsResponse.ok) {
+          const attrsData = await attrsResponse.json()
+          
+          if (attrsData.data && Array.isArray(attrsData.data)) {
+            for (const attr of attrsData.data) {
+              const attrName = attr.attribute_name?.toLowerCase()
+              const value = attr.value
+              
+              if (!attrName || !value) continue
 
-            if (attrName.includes('class')) {
-              attributes.class = value
-            } else if (attrName.includes('type')) {
-              attributes.component_type = value
-            } else if (attrName.includes('manufacturer')) {
-              attributes.manufacturer = value
-            } else {
-              attributes[attrName] = value
+              if (attrName.includes('class')) {
+                attributes.class = value
+              } else if (attrName.includes('type')) {
+                attributes.component_type = value
+              } else if (attrName.includes('manufacturer')) {
+                attributes.manufacturer = value
+              } else {
+                attributes[attrName] = value
+              }
             }
           }
         }
@@ -91,6 +112,7 @@ export class UEXCorpImporter implements AttributeImporter {
 
       logger.debug("Fetched attributes from UEXCorp", {
         itemId,
+        itemName,
         attributeCount: Object.keys(attributes).length,
       })
 
