@@ -31,6 +31,7 @@ import moment from "moment/moment.js"
 import { serializeOrderDetails } from "../orders/serializers.js"
 import logger from "../../../../logger/logger.js"
 import { notificationService } from "../../../../services/notifications/notification.service.js"
+import { gameItemAttributesService } from "../../../../services/game-items/game-item-attributes.service.js"
 import {
   createOffer,
   validateAvailabilityRequirement,
@@ -2146,5 +2147,129 @@ export const get_seller_analytics: RequestHandler = async (req, res) => {
     res
       .status(500)
       .json(createErrorResponse({ message: "Internal server error" }))
+  }
+}
+
+export const get_component_filter_options: RequestHandler = async (
+  req,
+  res,
+) => {
+  try {
+    // Query distinct values for each attribute from game_item_attributes table
+    const [
+      sizes,
+      grades,
+      classes,
+      manufacturers,
+      types,
+      armorClasses,
+      colors,
+    ] = await Promise.all([
+      database.knex("game_item_attributes")
+        .distinct("attribute_value")
+        .where("attribute_key", "component_size")
+        .whereNotNull("attribute_value")
+        .orderBy("attribute_value"),
+      database.knex("game_item_attributes")
+        .distinct("attribute_value")
+        .where("attribute_key", "component_grade")
+        .whereNotNull("attribute_value")
+        .orderBy("attribute_value"),
+      database.knex("game_item_attributes")
+        .distinct("attribute_value")
+        .where("attribute_key", "component_class")
+        .whereNotNull("attribute_value")
+        .orderBy("attribute_value"),
+      database.knex("game_item_attributes")
+        .distinct("attribute_value")
+        .where("attribute_key", "manufacturer")
+        .whereNotNull("attribute_value")
+        .orderBy("attribute_value"),
+      database.knex("game_item_attributes")
+        .distinct("attribute_value")
+        .where("attribute_key", "component_type")
+        .whereNotNull("attribute_value")
+        .orderBy("attribute_value"),
+      database.knex("game_item_attributes")
+        .distinct("attribute_value")
+        .where("attribute_key", "armor_class")
+        .whereNotNull("attribute_value")
+        .orderBy("attribute_value"),
+      database.knex("game_item_attributes")
+        .distinct("attribute_value")
+        .where("attribute_key", "color")
+        .whereNotNull("attribute_value")
+        .orderBy("attribute_value"),
+    ])
+
+    res.json(
+      createResponse({
+        component_size: sizes.map((row: any) => row.attribute_value),
+        component_grade: grades.map((row: any) => row.attribute_value),
+        component_class: classes.map((row: any) => row.attribute_value),
+        manufacturer: manufacturers.map((row: any) => row.attribute_value),
+        component_type: types.map((row: any) => row.attribute_value),
+        armor_class: armorClasses.map((row: any) => row.attribute_value),
+        color: colors.map((row: any) => row.attribute_value),
+      }),
+    )
+  } catch (error) {
+    logger.error("Error fetching component filter options", { error })
+    res
+      .status(500)
+      .json(createErrorResponse({ message: "Internal server error" }))
+  }
+}
+
+/**
+ * Get all attributes for a specific game item
+ * Returns attributes as a key-value object
+ */
+export const get_item_attributes: RequestHandler = async (req, res) => {
+  try {
+    const { game_item_id } = req.params
+
+    // Validate game_item_id
+    const gameItemId = parseInt(game_item_id, 10)
+    if (isNaN(gameItemId) || gameItemId <= 0) {
+      res.status(400).json(
+        createErrorResponse({
+          message: "Invalid game_item_id parameter",
+          code: ErrorCode.VALIDATION_ERROR,
+        }),
+      )
+      return
+    }
+
+    // Check if game item exists
+    const gameItem = await database.knex("game_items")
+      .where({ id: gameItemId })
+      .first()
+
+    if (!gameItem) {
+      res.status(404).json(
+        createErrorResponse({
+          message: "Game item not found",
+          code: ErrorCode.NOT_FOUND,
+        }),
+      )
+      return
+    }
+
+    // Get all attributes for the game item
+    const attributes = await gameItemAttributesService.getAttributes(gameItemId)
+
+    res.json(createResponse(attributes))
+  } catch (error) {
+    logger.error("Error fetching game item attributes", {
+      error,
+      game_item_id: req.params.game_item_id,
+    })
+    res.status(500).json(
+      createErrorResponse({
+        message: "Internal server error",
+        code: ErrorCode.INTERNAL_SERVER_ERROR,
+      }),
+    )
   }
 }

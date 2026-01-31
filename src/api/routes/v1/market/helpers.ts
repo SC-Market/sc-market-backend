@@ -271,6 +271,65 @@ export async function convertQuery(
         .map((s) => s.trim())
         .filter(Boolean)
     : null
+
+  // Parse component_size as integer array
+  let component_size: number[] | undefined = undefined
+  if (query.component_size) {
+    const sizes = Array.isArray(query.component_size)
+      ? query.component_size
+      : [query.component_size]
+    component_size = sizes.map((s) => parseInt(s, 10)).filter((n) => !isNaN(n))
+    if (component_size.length === 0) {
+      component_size = undefined
+    }
+  }
+
+  // Parse component_grade as string array
+  let component_grade: string[] | undefined = undefined
+  if (query.component_grade) {
+    component_grade = Array.isArray(query.component_grade)
+      ? query.component_grade
+      : [query.component_grade]
+  }
+
+  // Parse component_class as string array
+  let component_class: string[] | undefined = undefined
+  if (query.component_class) {
+    component_class = Array.isArray(query.component_class)
+      ? query.component_class
+      : [query.component_class]
+  }
+
+  // Parse manufacturer as string array
+  let manufacturer: string[] | undefined = undefined
+  if (query.manufacturer) {
+    manufacturer = Array.isArray(query.manufacturer)
+      ? query.manufacturer
+      : [query.manufacturer]
+  }
+
+  // Parse component_type as string array
+  let component_type: string[] | undefined = undefined
+  if (query.component_type) {
+    component_type = Array.isArray(query.component_type)
+      ? query.component_type
+      : [query.component_type]
+  }
+
+  // Parse armor_class as string array
+  let armor_class: string[] | undefined = undefined
+  if (query.armor_class) {
+    armor_class = Array.isArray(query.armor_class)
+      ? query.armor_class
+      : [query.armor_class]
+  }
+
+  // Parse color as string array
+  let color: string[] | undefined = undefined
+  if (query.color) {
+    color = Array.isArray(query.color) ? query.color : [query.color]
+  }
+
   return {
     sale_type: query.sale_type || null,
     maxCost: query.maxCost && query.maxCost !== "null" ? +query.maxCost : null,
@@ -292,6 +351,13 @@ export async function convertQuery(
       : ["active"], // Default to active only
     language_codes:
       language_codes && language_codes.length > 0 ? language_codes : null,
+    component_size,
+    component_grade,
+    component_class,
+    manufacturer,
+    component_type,
+    armor_class,
+    color,
   }
 }
 

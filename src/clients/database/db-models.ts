@@ -742,6 +742,8 @@ export interface DBMarketSearchResult {
   internal: boolean
   // Badge data (optional, added via join)
   badges?: BadgeData | null
+  // Game item attributes (optional, added via subquery)
+  attributes?: Record<string, string> | null
 }
 
 export interface DBMarketCategory {

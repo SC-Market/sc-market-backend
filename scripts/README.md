@@ -68,3 +68,46 @@ The scripts use the following configuration (from docker-compose.yml):
 - Port: `5432`
 
 If your database uses different credentials, update the variables at the top of each script.
+
+
+## Import Scripts
+
+### import-component-attributes.ts
+
+Imports game item attributes from external data sources (UEX Corp Space API and cstone.space).
+
+#### Usage
+
+```bash
+# Import from all sources (default)
+tsx scripts/import-component-attributes.ts
+
+# Import only from UEX Corp Space API
+tsx scripts/import-component-attributes.ts --source=uex
+
+# Import only from cstone.space
+tsx scripts/import-component-attributes.ts --source=cstone
+```
+
+#### What it does
+
+- Fetches item data from UEX Corp Space API (structured data - PRIMARY SOURCE)
+- Fetches item data from cstone.space (parsed descriptions - SECONDARY SOURCE)
+- Stores all attributes in the `game_item_attributes` table
+- Provides comprehensive logging and error handling
+
+#### Import Strategy
+
+1. **UEX Corp Space API** provides structured data:
+   - Size class (component_size)
+   - Manufacturer
+   - Component type
+
+2. **cstone.space** fills gaps and adds:
+   - Quality grade (component_grade)
+   - Component class
+   - Armor class
+   - Color
+   - Custom attributes (weight, durability, etc.)
+
+The `--source=all` option (default) runs both imports in sequence, using UEX as the primary source and CStone to fill in missing attributes.

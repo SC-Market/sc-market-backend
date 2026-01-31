@@ -2121,12 +2121,26 @@ export async function searchMarket(
         )
       })
     })
+    .leftJoin("market_listing_details as mld_attrs", function () {
+      this.on(
+        "market_search_materialized.details_id",
+        "=",
+        "mld_attrs.details_id",
+      )
+    })
     .select(
       knex().raw("market_search_materialized.*"),
       knex().raw(
         "COALESCE(user_badges_materialized.badge_ids, ARRAY[]::text[]) as badge_ids",
       ),
       knex().raw("count(*) OVER() AS full_count"),
+      knex().raw(`
+        (
+          SELECT json_object_agg(attribute_key, attribute_value)
+          FROM game_item_attributes
+          WHERE game_item_attributes.game_item_id = mld_attrs.game_item_id
+        ) as attributes
+      `),
     )
     .orderBy(
       `market_search_materialized.${searchQuery.sort}`,
@@ -2278,6 +2292,66 @@ export async function searchMarket(
           )
       })
     })
+  }
+
+  // Helper function to add attribute filter using EXISTS subquery
+  // Uses AND logic between different filter types, OR logic within same filter type
+  const addAttributeFilter = (
+    attributeKey: string,
+    values: (string | number)[],
+  ) => {
+    query = query.whereExists(function () {
+      this.select("*")
+        .from("game_item_attributes")
+        .join(
+          "market_listing_details",
+          "game_item_attributes.game_item_id",
+          "market_listing_details.game_item_id",
+        )
+        .whereRaw(
+          "market_listing_details.details_id = market_search_materialized.details_id",
+        )
+        .where("game_item_attributes.attribute_key", attributeKey)
+        .whereIn(
+          "game_item_attributes.attribute_value",
+          values.map((v) => String(v)),
+        )
+    })
+  }
+
+  // Apply component size filter
+  if (searchQuery.component_size && searchQuery.component_size.length > 0) {
+    addAttributeFilter("component_size", searchQuery.component_size)
+  }
+
+  // Apply component grade filter
+  if (searchQuery.component_grade && searchQuery.component_grade.length > 0) {
+    addAttributeFilter("component_grade", searchQuery.component_grade)
+  }
+
+  // Apply component class filter
+  if (searchQuery.component_class && searchQuery.component_class.length > 0) {
+    addAttributeFilter("component_class", searchQuery.component_class)
+  }
+
+  // Apply manufacturer filter
+  if (searchQuery.manufacturer && searchQuery.manufacturer.length > 0) {
+    addAttributeFilter("manufacturer", searchQuery.manufacturer)
+  }
+
+  // Apply component type filter
+  if (searchQuery.component_type && searchQuery.component_type.length > 0) {
+    addAttributeFilter("component_type", searchQuery.component_type)
+  }
+
+  // Apply armor class filter
+  if (searchQuery.armor_class && searchQuery.armor_class.length > 0) {
+    addAttributeFilter("armor_class", searchQuery.armor_class)
+  }
+
+  // Apply color filter
+  if (searchQuery.color && searchQuery.color.length > 0) {
+    addAttributeFilter("color", searchQuery.color)
   }
 
   if (andWhere) {
