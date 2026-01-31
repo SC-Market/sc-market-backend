@@ -10,6 +10,7 @@ import { Database } from "./db-driver.js"
 import * as profileDb from "../../api/routes/v1/profiles/database.js"
 import * as tokenRefreshUtil from "../../api/util/token-refresh.js"
 import logger from "../../logger/logger.js"
+import { enableQueryMonitoring } from "./query-monitor.js"
 
 pg.types.setTypeParser(1114, (s: string) => new Date(s.replace(" ", "T") + "Z"))
 
@@ -51,6 +52,10 @@ export class KnexDatabase implements Database {
     },
   ) {
     this.knex = Knex(databaseConfig)
+    
+    // Enable query performance monitoring
+    enableQueryMonitoring(this.knex)
+    
     this.discord_profile_cache = new LRUCache({
       max: 500,
 
