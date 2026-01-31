@@ -2280,6 +2280,46 @@ export async function searchMarket(
     })
   }
 
+  // Component size filtering (OR logic within filter, AND logic between filters)
+  if (searchQuery.component_size && searchQuery.component_size.length > 0) {
+    query = query.whereIn(
+      "market_search_materialized.component_size",
+      searchQuery.component_size,
+    )
+  }
+
+  // Component grade filtering (OR logic within filter, AND logic between filters)
+  if (searchQuery.component_grade && searchQuery.component_grade.length > 0) {
+    query = query.whereIn(
+      "market_search_materialized.component_grade",
+      searchQuery.component_grade,
+    )
+  }
+
+  // Component class filtering (OR logic within filter, AND logic between filters)
+  if (searchQuery.component_class && searchQuery.component_class.length > 0) {
+    query = query.whereIn(
+      "market_search_materialized.component_class",
+      searchQuery.component_class,
+    )
+  }
+
+  // Manufacturer filtering (OR logic within filter, AND logic between filters)
+  if (searchQuery.manufacturer && searchQuery.manufacturer.length > 0) {
+    query = query.whereIn(
+      "market_search_materialized.manufacturer",
+      searchQuery.manufacturer,
+    )
+  }
+
+  // Component type filtering (OR logic within filter, AND logic between filters)
+  if (searchQuery.component_type && searchQuery.component_type.length > 0) {
+    query = query.whereIn(
+      "market_search_materialized.component_type",
+      searchQuery.component_type,
+    )
+  }
+
   if (andWhere) {
     query = query.andWhere(andWhere)
   }
@@ -2349,6 +2389,11 @@ export async function searchMarketUnmaterialized(
       knex().raw("null as auction_end_time"),
       knex().raw("null as user_seller"),
       knex().raw("null as contractor_seller"),
+      "game_items.component_size",
+      "game_items.component_grade",
+      "game_items.component_class",
+      "game_items.manufacturer",
+      "game_items.component_type",
     ])
     .from("market_listings")
     .join(
@@ -2360,6 +2405,11 @@ export async function searchMarketUnmaterialized(
       "market_listing_details",
       "market_unique_listings.details_id",
       "market_listing_details.details_id",
+    )
+    .leftJoin(
+      "game_items",
+      "market_listing_details.game_item_id",
+      "game_items.id",
     )
     .orderBy(searchQuery.sort, searchQuery.reverseSort ? "asc" : "desc")
 
@@ -2459,6 +2509,37 @@ export async function searchMarketUnmaterialized(
           )
       })
     })
+  }
+
+  // Component size filtering (OR logic within filter, AND logic between filters)
+  if (searchQuery.component_size && searchQuery.component_size.length > 0) {
+    query = query.whereIn("game_items.component_size", searchQuery.component_size)
+  }
+
+  // Component grade filtering (OR logic within filter, AND logic between filters)
+  if (searchQuery.component_grade && searchQuery.component_grade.length > 0) {
+    query = query.whereIn(
+      "game_items.component_grade",
+      searchQuery.component_grade,
+    )
+  }
+
+  // Component class filtering (OR logic within filter, AND logic between filters)
+  if (searchQuery.component_class && searchQuery.component_class.length > 0) {
+    query = query.whereIn(
+      "game_items.component_class",
+      searchQuery.component_class,
+    )
+  }
+
+  // Manufacturer filtering (OR logic within filter, AND logic between filters)
+  if (searchQuery.manufacturer && searchQuery.manufacturer.length > 0) {
+    query = query.whereIn("game_items.manufacturer", searchQuery.manufacturer)
+  }
+
+  // Component type filtering (OR logic within filter, AND logic between filters)
+  if (searchQuery.component_type && searchQuery.component_type.length > 0) {
+    query = query.whereIn("game_items.component_type", searchQuery.component_type)
   }
 
   if (andWhere) {

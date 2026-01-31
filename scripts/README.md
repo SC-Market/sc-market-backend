@@ -1,4 +1,54 @@
-# Database Backup and Restore Scripts
+# Scripts
+
+This directory contains utility scripts for database management and data import.
+
+## Component Attributes Import Script
+
+The `import-component-attributes.ts` script imports ship component attribute data from external APIs and updates the database.
+
+### Usage
+
+```bash
+tsx scripts/import-component-attributes.ts
+```
+
+This will:
+
+1. Import component attributes from CStone API (cstone.space)
+   - Parses size, grade, component class, manufacturer, and type from descriptions
+   - Updates game_items records using cstone_uuid as the matching key
+
+2. Import component attributes from UEX Corp Space API
+   - Fetches structured data for size, manufacturer, and component type
+   - Updates game_items records by matching item names
+
+3. Refresh the materialized view
+   - Runs `REFRESH MATERIALIZED VIEW CONCURRENTLY market_search_materialized`
+   - Makes the imported data available for market search queries
+
+### Output
+
+The script provides detailed logging and a summary:
+
+```
+=== Import Summary ===
+CStone: 150 successful, 0 failed, 50 skipped
+UEX: 120 successful, 0 failed, 80 skipped
+Total duration: 5432ms
+=====================
+```
+
+### Error Handling
+
+- Network errors are logged and the script exits with code 1
+- Individual item failures are logged but don't stop the import
+- Unhandled promise rejections and uncaught exceptions are caught and logged
+
+### Requirements
+
+This script implements requirements 7.1, 7.2, and 7.5 from the ship-component-attributes feature spec.
+
+## Database Backup and Restore Scripts
 
 ## Backup Script
 
