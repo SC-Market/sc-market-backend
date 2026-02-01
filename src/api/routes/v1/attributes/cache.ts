@@ -43,11 +43,12 @@ class AttributeDefinitionCache {
    * Results are cached to reduce database queries.
    */
   async getAttributeDefinitions(
-    applicableItemTypes?: string[]
+    applicableItemTypes?: string[],
+    includeHidden?: boolean,
   ): Promise<AttributeDefinition[]> {
     const cacheKey = applicableItemTypes && applicableItemTypes.length > 0
-      ? `${CACHE_KEY_BY_TYPES}${applicableItemTypes.sort().join(",")}`
-      : CACHE_KEY_ALL
+      ? `${CACHE_KEY_BY_TYPES}${applicableItemTypes.sort().join(",")}_${includeHidden ? 'all' : 'visible'}`
+      : `${CACHE_KEY_ALL}_${includeHidden ? 'all' : 'visible'}`
 
     // Check cache first
     const cached = this.cache.get(cacheKey)
@@ -58,7 +59,7 @@ class AttributeDefinitionCache {
 
     // Cache miss - fetch from database
     logger.debug("Attribute definitions cache miss", { cacheKey })
-    const definitions = await db.getAttributeDefinitions(applicableItemTypes)
+    const definitions = await db.getAttributeDefinitions(applicableItemTypes, includeHidden)
 
     // Store in cache
     this.cache.set(cacheKey, definitions)
@@ -209,8 +210,8 @@ export const cachedDb = {
   /**
    * Get all attribute definitions with caching
    */
-  getAttributeDefinitions: (applicableItemTypes?: string[]) =>
-    attributeDefinitionCache.getAttributeDefinitions(applicableItemTypes),
+  getAttributeDefinitions: (applicableItemTypes?: string[], includeHidden?: boolean) =>
+    attributeDefinitionCache.getAttributeDefinitions(applicableItemTypes, includeHidden),
 
   /**
    * Get a single attribute definition with caching
