@@ -47,10 +47,14 @@ const require = createRequire(import.meta.url)
 const Bugsnag = require("@bugsnag/js")
 import BugsnagPluginExpress from "@bugsnag/plugin-express"
 
-const bugsnag = Bugsnag.start({
-  apiKey: process.env.BUGSNAG_API_KEY || "",
-  plugins: [BugsnagPluginExpress],
-})
+const isDevelopment = process.env.NODE_ENV === "development"
+
+const bugsnag = isDevelopment
+  ? null
+  : Bugsnag.start({
+      apiKey: process.env.BUGSNAG_API_KEY || "",
+      plugins: [BugsnagPluginExpress],
+    })
 
 const SessionPool = pg.Pool
 
@@ -89,9 +93,12 @@ const corsOptions = function (
 }
 
 const rootApp = express()
-const bugsnagMiddleware = bugsnag.getPlugin("express")
-rootApp.use(bugsnagMiddleware.requestHandler)
-rootApp.use(bugsnagMiddleware.errorHandler)
+
+if (!isDevelopment && bugsnag) {
+  const bugsnagMiddleware = bugsnag.getPlugin("express")
+  rootApp.use(bugsnagMiddleware.requestHandler)
+  rootApp.use(bugsnagMiddleware.errorHandler)
+}
 
 const app = enableWS(rootApp).app
 
@@ -496,6 +503,12 @@ io.engine.use(
 )
 
 chatServer.initialize(io)
+
+// Warm up caches before starting the server
+import { attributeDefinitionCache } from "./api/routes/v1/attributes/cache.js"
+attributeDefinitionCache.warmUp().catch((error) => {
+  logger.error("Failed to warm up attribute definition cache", { error })
+})
 
 // Start the app
 logger.info(`server up on port ${hostname()}:${env.BACKEND_PORT || 7000}`)
