@@ -25,10 +25,9 @@ export async function getAttributeDefinitions(
 
   if (applicableItemTypes && applicableItemTypes.length > 0) {
     // Filter by applicable_item_types using array overlap operator
-    query = query.whereRaw(
-      "applicable_item_types && ?::varchar[]",
-      [applicableItemTypes],
-    )
+    query = query.whereRaw("applicable_item_types && ?::varchar[]", [
+      applicableItemTypes,
+    ])
   }
 
   const results = await query.orderBy("display_order", "asc")
@@ -41,7 +40,8 @@ export async function getAttributeDefinitions(
 export async function getAttributeDefinition(
   attributeName: string,
 ): Promise<AttributeDefinition | null> {
-  const result = await database.knex("attribute_definitions")
+  const result = await database
+    .knex("attribute_definitions")
     .where({ attribute_name: attributeName })
     .first()
 
@@ -54,7 +54,8 @@ export async function getAttributeDefinition(
 export async function createAttributeDefinition(
   payload: CreateAttributeDefinitionPayload,
 ): Promise<AttributeDefinition> {
-  const [result] = await database.knex("attribute_definitions")
+  const [result] = await database
+    .knex("attribute_definitions")
     .insert({
       attribute_name: payload.attribute_name,
       display_name: payload.display_name,
@@ -97,7 +98,8 @@ export async function updateAttributeDefinition(
     updateData.display_order = payload.display_order
   }
 
-  const [result] = await database.knex("attribute_definitions")
+  const [result] = await database
+    .knex("attribute_definitions")
     .where({ attribute_name: attributeName })
     .update(updateData)
     .returning("*")
@@ -114,12 +116,14 @@ export async function deleteAttributeDefinition(
 ): Promise<boolean> {
   // If cascade delete is requested, delete all game_item_attributes with this name first
   if (cascadeDelete) {
-    await database.knex("game_item_attributes")
+    await database
+      .knex("game_item_attributes")
       .where({ attribute_name: attributeName })
       .delete()
   }
 
-  const deletedCount = await database.knex("attribute_definitions")
+  const deletedCount = await database
+    .knex("attribute_definitions")
     .where({ attribute_name: attributeName })
     .delete()
 
@@ -132,7 +136,8 @@ export async function deleteAttributeDefinition(
 export async function getGameItemAttributes(
   gameItemId: string,
 ): Promise<GameItemAttributeWithDefinition[]> {
-  const results = await database.knex("game_item_attributes")
+  const results = await database
+    .knex("game_item_attributes")
     .select(
       "game_item_attributes.*",
       "attribute_definitions.display_name",
@@ -159,7 +164,8 @@ export async function upsertGameItemAttribute(
 ): Promise<GameItemAttribute> {
   const now = new Date()
 
-  const [result] = await database.knex("game_item_attributes")
+  const [result] = await database
+    .knex("game_item_attributes")
     .insert({
       game_item_id: gameItemId,
       attribute_name: payload.attribute_name,
@@ -184,7 +190,8 @@ export async function deleteGameItemAttribute(
   gameItemId: string,
   attributeName: string,
 ): Promise<boolean> {
-  const deletedCount = await database.knex("game_item_attributes")
+  const deletedCount = await database
+    .knex("game_item_attributes")
     .where({
       game_item_id: gameItemId,
       attribute_name: attributeName,
@@ -192,4 +199,31 @@ export async function deleteGameItemAttribute(
     .delete()
 
   return deletedCount > 0
+}
+
+/**
+ * Search for distinct attribute values matching a query
+ */
+export async function searchAttributeValues(
+  attributeName: string,
+  searchQuery: string,
+  itemType?: string,
+  limit: number = 20,
+): Promise<string[]> {
+  let query = database
+    .knex("game_item_attributes")
+    .distinct("attribute_value")
+    .where("attribute_name", attributeName)
+    .whereRaw("LOWER(attribute_value) LIKE LOWER(?)", [`%${searchQuery}%`])
+
+  // Filter by item type if provided
+  if (itemType) {
+    query = query
+      .join("game_items", "game_item_attributes.game_item_id", "game_items.id")
+      .where("game_items.type", itemType)
+  }
+
+  const results = await query.orderBy("attribute_value", "asc").limit(limit)
+
+  return results.map((r) => r.attribute_value)
 }

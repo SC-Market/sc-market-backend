@@ -14,16 +14,13 @@ import {
   game_items_put_attributes,
   game_items_delete_attributes_name,
   attributes_post_import_game_item,
+  attributes_get_values_search,
 } from "./controller.js"
 
 export const attributesRouter = express.Router()
 
 // GET /api/v1/attributes/definitions - Get all attribute definitions
-attributesRouter.get(
-  "/definitions",
-  readRateLimit,
-  attributes_get_definitions,
-)
+attributesRouter.get("/definitions", readRateLimit, attributes_get_definitions)
 
 // POST /api/v1/attributes/definitions - Create new attribute definition (admin only)
 attributesRouter.post(
@@ -80,4 +77,11 @@ attributesRouter.post(
   adminAuthorized,
   writeRateLimit,
   attributes_post_import_game_item,
+)
+
+// GET /api/v1/attributes/values/search - Search attribute values
+attributesRouter.get(
+  "/values/search",
+  readRateLimit,
+  attributes_get_values_search,
 )

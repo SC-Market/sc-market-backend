@@ -22,7 +22,7 @@ export const attributes_get_definitions: RequestHandler = async function (
       | string
       | string[]
       | undefined
-    const includeHidden = req.query.include_hidden === 'true'
+    const includeHidden = req.query.include_hidden === "true"
 
     let itemTypesArray: string[] | undefined
     if (applicableItemTypes) {
@@ -64,24 +64,32 @@ export const attributes_post_definitions: RequestHandler = async function (
     const payload = req.body as CreateAttributeDefinitionPayload
 
     // Validate required fields
-    if (!payload.attribute_name || !payload.display_name || !payload.attribute_type) {
-      return res.status(400).json(
-        createErrorResponse(
-          ErrorCode.VALIDATION_ERROR,
-          "Missing required fields: attribute_name, display_name, attribute_type",
-        ),
-      )
+    if (
+      !payload.attribute_name ||
+      !payload.display_name ||
+      !payload.attribute_type
+    ) {
+      return res
+        .status(400)
+        .json(
+          createErrorResponse(
+            ErrorCode.VALIDATION_ERROR,
+            "Missing required fields: attribute_name, display_name, attribute_type",
+          ),
+        )
     }
 
     // Validate attribute_type
     const validTypes = ["select", "multiselect", "range", "text"]
     if (!validTypes.includes(payload.attribute_type)) {
-      return res.status(400).json(
-        createErrorResponse(
-          ErrorCode.VALIDATION_ERROR,
-          `Invalid attribute_type. Must be one of: ${validTypes.join(", ")}`,
-        ),
-      )
+      return res
+        .status(400)
+        .json(
+          createErrorResponse(
+            ErrorCode.VALIDATION_ERROR,
+            `Invalid attribute_type. Must be one of: ${validTypes.join(", ")}`,
+          ),
+        )
     }
 
     // Check if attribute_name already exists
@@ -89,12 +97,14 @@ export const attributes_post_definitions: RequestHandler = async function (
       payload.attribute_name,
     )
     if (existing) {
-      return res.status(409).json(
-        createErrorResponse(
-          ErrorCode.CONFLICT,
-          `Attribute definition with name '${payload.attribute_name}' already exists`,
-        ),
-      )
+      return res
+        .status(409)
+        .json(
+          createErrorResponse(
+            ErrorCode.CONFLICT,
+            `Attribute definition with name '${payload.attribute_name}' already exists`,
+          ),
+        )
     }
 
     const definition = await cachedDb.createAttributeDefinition(payload)
@@ -130,36 +140,45 @@ export const attributes_put_definitions_name: RequestHandler = async function (
     // Check if attribute definition exists
     const existing = await cachedDb.getAttributeDefinition(attributeName)
     if (!existing) {
-      return res.status(404).json(
-        createErrorResponse(
-          ErrorCode.NOT_FOUND,
-          `Attribute definition '${attributeName}' not found`,
-        ),
-      )
+      return res
+        .status(404)
+        .json(
+          createErrorResponse(
+            ErrorCode.NOT_FOUND,
+            `Attribute definition '${attributeName}' not found`,
+          ),
+        )
     }
 
     // Validate attribute_type if provided
     if (payload.attribute_type) {
       const validTypes = ["select", "multiselect", "range", "text"]
       if (!validTypes.includes(payload.attribute_type)) {
-        return res.status(400).json(
-          createErrorResponse(
-            ErrorCode.VALIDATION_ERROR,
-            `Invalid attribute_type. Must be one of: ${validTypes.join(", ")}`,
-          ),
-        )
+        return res
+          .status(400)
+          .json(
+            createErrorResponse(
+              ErrorCode.VALIDATION_ERROR,
+              `Invalid attribute_type. Must be one of: ${validTypes.join(", ")}`,
+            ),
+          )
       }
     }
 
     // Validate allowed_values format if provided
-    if (payload.allowed_values !== undefined && payload.allowed_values !== null) {
+    if (
+      payload.allowed_values !== undefined &&
+      payload.allowed_values !== null
+    ) {
       if (!Array.isArray(payload.allowed_values)) {
-        return res.status(400).json(
-          createErrorResponse(
-            ErrorCode.VALIDATION_ERROR,
-            "allowed_values must be an array or null",
-          ),
-        )
+        return res
+          .status(400)
+          .json(
+            createErrorResponse(
+              ErrorCode.VALIDATION_ERROR,
+              "allowed_values must be an array or null",
+            ),
+          )
       }
     }
 
@@ -197,12 +216,14 @@ export const attributes_delete_definitions_name: RequestHandler =
       // Check if attribute definition exists
       const existing = await cachedDb.getAttributeDefinition(attributeName)
       if (!existing) {
-        return res.status(404).json(
-          createErrorResponse(
-            ErrorCode.NOT_FOUND,
-            `Attribute definition '${attributeName}' not found`,
-          ),
-        )
+        return res
+          .status(404)
+          .json(
+            createErrorResponse(
+              ErrorCode.NOT_FOUND,
+              `Attribute definition '${attributeName}' not found`,
+            ),
+          )
       }
 
       const deleted = await cachedDb.deleteAttributeDefinition(
@@ -218,12 +239,14 @@ export const attributes_delete_definitions_name: RequestHandler =
           }),
         )
       } else {
-        res.status(500).json(
-          createErrorResponse(
-            ErrorCode.INTERNAL_SERVER_ERROR,
-            "Failed to delete attribute definition",
-          ),
-        )
+        res
+          .status(500)
+          .json(
+            createErrorResponse(
+              ErrorCode.INTERNAL_SERVER_ERROR,
+              "Failed to delete attribute definition",
+            ),
+          )
       }
     } catch (error) {
       logger.error("Error in attributes_delete_definitions_name", { error })
@@ -286,12 +309,14 @@ export const game_items_put_attributes: RequestHandler = async function (
 
     // Validate required fields
     if (!payload.attribute_name || !payload.attribute_value) {
-      return res.status(400).json(
-        createErrorResponse(
-          ErrorCode.VALIDATION_ERROR,
-          "Missing required fields: attribute_name, attribute_value",
-        ),
-      )
+      return res
+        .status(400)
+        .json(
+          createErrorResponse(
+            ErrorCode.VALIDATION_ERROR,
+            "Missing required fields: attribute_name, attribute_value",
+          ),
+        )
     }
 
     // Validate that attribute_name exists in attribute_definitions
@@ -299,23 +324,27 @@ export const game_items_put_attributes: RequestHandler = async function (
       payload.attribute_name,
     )
     if (!definition) {
-      return res.status(400).json(
-        createErrorResponse(
-          ErrorCode.VALIDATION_ERROR,
-          `Attribute '${payload.attribute_name}' is not defined in attribute_definitions`,
-        ),
-      )
+      return res
+        .status(400)
+        .json(
+          createErrorResponse(
+            ErrorCode.VALIDATION_ERROR,
+            `Attribute '${payload.attribute_name}' is not defined in attribute_definitions`,
+          ),
+        )
     }
 
     // Validate attribute_value against allowed_values if defined
     if (definition.allowed_values && definition.allowed_values.length > 0) {
       if (!definition.allowed_values.includes(payload.attribute_value)) {
-        return res.status(400).json(
-          createErrorResponse(
-            ErrorCode.VALIDATION_ERROR,
-            `Invalid attribute_value '${payload.attribute_value}'. Must be one of: ${definition.allowed_values.join(", ")}`,
-          ),
-        )
+        return res
+          .status(400)
+          .json(
+            createErrorResponse(
+              ErrorCode.VALIDATION_ERROR,
+              `Invalid attribute_value '${payload.attribute_value}'. Must be one of: ${definition.allowed_values.join(", ")}`,
+            ),
+          )
       }
     }
 
@@ -362,12 +391,14 @@ export const game_items_delete_attributes_name: RequestHandler =
           }),
         )
       } else {
-        res.status(404).json(
-          createErrorResponse(
-            ErrorCode.NOT_FOUND,
-            `Attribute '${attributeName}' not found for game item '${gameItemId}'`,
-          ),
-        )
+        res
+          .status(404)
+          .json(
+            createErrorResponse(
+              ErrorCode.NOT_FOUND,
+              `Attribute '${attributeName}' not found for game item '${gameItemId}'`,
+            ),
+          )
       }
     } catch (error) {
       logger.error("Error in game_items_delete_attributes_name", { error })
@@ -396,18 +427,19 @@ export const attributes_post_import_game_item: RequestHandler = async function (
     const gameItemId = req.params.gameItemId
 
     if (!gameItemId) {
-      return res.status(400).json(
-        createErrorResponse(
-          ErrorCode.VALIDATION_ERROR,
-          "Game item ID is required",
-        ),
-      )
+      return res
+        .status(400)
+        .json(
+          createErrorResponse(
+            ErrorCode.VALIDATION_ERROR,
+            "Game item ID is required",
+          ),
+        )
     }
 
     // Import the service dynamically to avoid circular dependencies
-    const { AttributeImportService } = await import(
-      "../../../../services/attribute-import/attribute-import.service.js"
-    )
+    const { AttributeImportService } =
+      await import("../../../../services/attribute-import/attribute-import.service.js")
 
     const importService = new AttributeImportService()
 
@@ -463,5 +495,52 @@ export const attributes_post_import_game_item: RequestHandler = async function (
         },
       ),
     )
+  }
+}
+
+/**
+ * GET /api/v1/attributes/values/search
+ * Search for distinct attribute values
+ */
+export const attributes_get_values_search: RequestHandler = async function (
+  req,
+  res,
+) {
+  try {
+    const { attribute_name, q, item_type, limit } = req.query
+
+    if (!attribute_name || typeof attribute_name !== "string") {
+      return res
+        .status(400)
+        .json(
+          createErrorResponse(
+            ErrorCode.VALIDATION_ERROR,
+            "attribute_name query parameter is required",
+          ),
+        )
+    }
+
+    const searchQuery = typeof q === "string" ? q : ""
+    const itemType = typeof item_type === "string" ? item_type : undefined
+    const maxLimit = limit ? Math.min(parseInt(limit as string, 10), 50) : 20
+
+    const values = await attributeDb.searchAttributeValues(
+      attribute_name,
+      searchQuery,
+      itemType,
+      maxLimit,
+    )
+
+    res.json(createResponse({ values }))
+  } catch (error) {
+    logger.error("Error in attributes_get_values_search", { error })
+    res
+      .status(500)
+      .json(
+        createErrorResponse(
+          ErrorCode.INTERNAL_SERVER_ERROR,
+          "Failed to search attribute values",
+        ),
+      )
   }
 }
