@@ -238,6 +238,7 @@ async function importAllAttributes() {
                 attribute_type: "text",
                 applicable_item_types: item.type ? [item.type] : [],
                 display_order: 999, // Put auto-created ones at the end
+                show_in_filters: false, // Require manual enable
               })
             } else if (
               item.type &&
