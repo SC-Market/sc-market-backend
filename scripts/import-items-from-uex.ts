@@ -94,6 +94,7 @@ async function importItemsFromUEX() {
           description: `${item.section || ""} ${item.category || ""}`.trim() || null,
           image_url: item.screenshot || null,
           cstone_uuid: item.uuid || null,
+          uex_uuid: item.uuid || null,
         })
 
         imported++
