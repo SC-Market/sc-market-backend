@@ -83,13 +83,35 @@ async function importItemsFromUEX() {
 
     logger.info(`Fetched ${allItems.length} total items from UEX`)
 
-    // Deduplicate items by UEX UUID (some items appear in multiple categories)
+    // Deduplicate by name (lowercase) so we only process each item once.
+    // game_items has a unique constraint on name, so inserting the same name twice causes an error.
+    // Prefer the entry with a uuid when the same name appears in multiple categories.
     const uniqueItems = new Map<string, UEXItem>()
     for (const item of allItems) {
-      const key = item.uuid || item.name.toLowerCase()
-      if (!uniqueItems.has(key)) {
-        uniqueItems.set(key, item)
+      const key = item.name?.toLowerCase()
+      if (!key) continue
+      const existing = uniqueItems.get(key)
+      if (existing) {
+        const sameNameDifferentUuid =
+          item.uuid &&
+          existing.uuid &&
+          item.uuid !== existing.uuid
+        if (sameNameDifferentUuid) {
+          logger.info("Same name with different UEX UUIDs, keeping first", {
+            name: item.name,
+            keptUuid: existing.uuid,
+            skippedUuid: item.uuid,
+          })
+        } else if (item.uuid && !existing.uuid) {
+          logger.debug("Same name in multiple categories, preferring entry with uex_uuid", {
+            name: item.name,
+            uuid: item.uuid,
+          })
+          uniqueItems.set(key, item)
+        }
+        continue
       }
+      uniqueItems.set(key, item)
     }
 
     logger.info(`After deduplication: ${uniqueItems.size} unique items`)
