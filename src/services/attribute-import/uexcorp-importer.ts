@@ -30,12 +30,12 @@ export class UEXCorpImporter implements AttributeImporter {
     })
 
     try {
-      // Get item name from our database
+      // Get item from our database
       const { database } = await import("../../clients/database/knex-db.js")
       const gameItem = await database
         .knex("game_items")
         .where("id", itemId)
-        .first("name")
+        .first("name", "uex_uuid")
 
       if (!gameItem || !gameItem.name) {
         logger.debug("Game item not found in database", { itemId })
@@ -43,7 +43,38 @@ export class UEXCorpImporter implements AttributeImporter {
       }
 
       const itemName = gameItem.name
+      const uexUuid = gameItem.uex_uuid
 
+      // If we have a UEX UUID, try to fetch directly first
+      if (uexUuid) {
+        try {
+          const directResponse = await fetch(
+            `${UEXCORP_BASE_URL}/items/${uexUuid}`,
+            {
+              headers: { accept: "application/json" },
+            },
+          )
+
+          if (directResponse.ok) {
+            const directData = await directResponse.json()
+            if (directData.data) {
+              logger.debug("Found item by UEX UUID", { itemId, uexUuid })
+              return this.extractAttributes(directData.data)
+            }
+          }
+        } catch (error) {
+          logger.debug(
+            "Failed to fetch by UEX UUID, falling back to name search",
+            {
+              itemId,
+              uexUuid,
+              error: error instanceof Error ? error.message : "Unknown error",
+            },
+          )
+        }
+      }
+
+      // Fall back to name-based search
       // Fetch categories
       const categoriesResponse = await fetch(`${UEXCORP_BASE_URL}/categories`, {
         headers: { accept: "application/json" },
@@ -101,62 +132,63 @@ export class UEXCorpImporter implements AttributeImporter {
         return {}
       }
 
-      const attributes: ItemAttributes = {}
-
-      // Extract basic attributes
-      if (item.size) attributes.size = item.size
-      if (item.color) attributes.color = item.color
-      if (item.quality) attributes.grade = this.mapQualityToGrade(item.quality)
-      if (item.company_name) attributes.manufacturer = item.company_name
-
-      // Fetch detailed attributes using UEX's item ID
-      if (item.id) {
-        const attrsResponse = await fetch(
-          `${UEXCORP_BASE_URL}/items_attributes?id_item=${item.id}`,
-          {
-            headers: { accept: "application/json" },
-          },
-        )
-
-        if (attrsResponse.ok) {
-          const attrsData = await attrsResponse.json()
-
-          if (attrsData.data && Array.isArray(attrsData.data)) {
-            for (const attr of attrsData.data) {
-              const attrName = attr.attribute_name?.toLowerCase()
-              const value = attr.value
-
-              if (!attrName || !value) continue
-
-              if (attrName.includes("class")) {
-                attributes.class = value
-              } else if (attrName.includes("type")) {
-                attributes.component_type = value
-              } else if (attrName.includes("manufacturer")) {
-                attributes.manufacturer = value
-              } else {
-                attributes[attrName] = value
-              }
-            }
-          }
-        }
-      }
-
-      logger.debug("Fetched attributes from UEXCorp", {
-        itemId,
-        itemName,
-        attributeCount: Object.keys(attributes).length,
-      })
-
-      return attributes
+      return this.extractAttributes(item)
     } catch (error) {
-      logger.error("Failed to fetch attributes from UEXCorp", {
+      logger.error("Error fetching item attributes from UEXCorp", {
         itemId,
         error: error instanceof Error ? error.message : "Unknown error",
         stack: error instanceof Error ? error.stack : undefined,
       })
       return {}
     }
+  }
+
+  /**
+   * Extract attributes from UEX item data
+   */
+  private async extractAttributes(item: any): Promise<ItemAttributes> {
+    const attributes: ItemAttributes = {}
+
+    // Extract basic attributes
+    if (item.size) attributes.size = item.size
+    if (item.color) attributes.color = item.color
+    if (item.quality) attributes.grade = this.mapQualityToGrade(item.quality)
+    if (item.company_name) attributes.manufacturer = item.company_name
+
+    // Fetch detailed attributes using UEX's item ID
+    if (item.id) {
+      const attrsResponse = await fetch(
+        `${UEXCORP_BASE_URL}/items_attributes?id_item=${item.id}`,
+        {
+          headers: { accept: "application/json" },
+        },
+      )
+
+      if (attrsResponse.ok) {
+        const attrsData = await attrsResponse.json()
+
+        if (attrsData.data && Array.isArray(attrsData.data)) {
+          for (const attr of attrsData.data) {
+            const attrName = attr.attribute_name?.toLowerCase()
+            const value = attr.value
+
+            if (!attrName || !value) continue
+
+            if (attrName.includes("class")) {
+              attributes.class = value
+            } else if (attrName.includes("type")) {
+              attributes.component_type = value
+            } else if (attrName.includes("manufacturer")) {
+              attributes.manufacturer = value
+            } else {
+              attributes[attrName] = value
+            }
+          }
+        }
+      }
+    }
+
+    return attributes
   }
 
   private mapQualityToGrade(quality: number): string {
