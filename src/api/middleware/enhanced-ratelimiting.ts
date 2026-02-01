@@ -286,7 +286,7 @@ export const criticalRateLimit = createRateLimit({
 
 export const writeRateLimit = createRateLimit({
   anonymous: { points: 3 },
-  authenticated: { points: 2 },
+  authenticated: { points: 1 }, // 60 writes per minute
   admin: { points: 1 },
 })
 
@@ -312,7 +312,7 @@ export const notificationRateLimit = createRateLimit({
 // Generic rate limit for common write operations (messages, acknowledgments, etc.)
 export const commonWriteRateLimit = createRateLimit({
   anonymous: { points: 1 },
-  authenticated: { points: 1 },
+  authenticated: { points: 0.5 }, // 120 messages per minute
   admin: { points: 1 },
 })
 
