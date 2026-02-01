@@ -219,22 +219,8 @@ async function importAllAttributes() {
             uniqueRecords.set(record.attribute_name, record.value)
           }
 
-          // Insert new attributes
+          // Insert new attributes (only into game_item_attributes, not definitions)
           for (const [attribute_name, value] of uniqueRecords) {
-            const attrDef = await database
-              .knex<AttributeDefinition>("attribute_definitions")
-              .where("attribute_name", attribute_name)
-              .first()
-
-            if (!attrDef) {
-              await database.knex("attribute_definitions").insert({
-                attribute_name,
-                display_name: attribute_name,
-                attribute_type: "text",
-                display_order: 0,
-              })
-            }
-
             await database
               .knex<GameItemAttribute>("game_item_attributes")
               .insert({
