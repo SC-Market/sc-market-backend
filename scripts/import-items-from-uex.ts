@@ -24,24 +24,22 @@ async function importItemsFromUEX() {
   logger.info("Starting UEX item import")
 
   try {
-    // Fetch all items from UEX
-    const response = await fetch(`${UEXCORP_BASE_URL}/items`, {
+    // Fetch all categories first
+    const categoriesResponse = await fetch(`${UEXCORP_BASE_URL}/categories`, {
       headers: { accept: "application/json" },
     })
 
-    if (!response.ok) {
-      throw new Error(`UEX API error: ${response.status}`)
+    if (!categoriesResponse.ok) {
+      throw new Error(`UEX categories API error: ${categoriesResponse.status}`)
     }
 
-    const data = await response.json()
+    const categoriesData = await categoriesResponse.json()
 
-    if (!data.data || !Array.isArray(data.data)) {
-      throw new Error("Invalid response from UEX API")
+    if (!categoriesData.data || !Array.isArray(categoriesData.data)) {
+      throw new Error("Invalid categories response from UEX API")
     }
 
-    const uexItems: UEXItem[] = data.data
-
-    logger.info(`Fetched ${uexItems.length} items from UEX`)
+    logger.info(`Found ${categoriesData.data.length} categories`)
 
     // Get existing items from our database
     const existingItems = await database.knex("game_items")
@@ -50,8 +48,31 @@ async function importItemsFromUEX() {
 
     let imported = 0
     let skipped = 0
+    const allItems: UEXItem[] = []
 
-    for (const item of uexItems) {
+    // Fetch items from each category
+    for (const category of categoriesData.data) {
+      const response = await fetch(
+        `${UEXCORP_BASE_URL}/items?id_category=${category.id}`,
+        {
+          headers: { accept: "application/json" },
+        }
+      )
+
+      if (!response.ok) {
+        logger.warn(`Failed to fetch items for category ${category.id}`)
+        continue
+      }
+
+      const data = await response.json()
+      if (data.data && Array.isArray(data.data)) {
+        allItems.push(...data.data)
+      }
+    }
+
+    logger.info(`Fetched ${allItems.length} total items from UEX`)
+
+    for (const item of allItems) {
       if (!item.name) {
         skipped++
         continue
@@ -85,7 +106,7 @@ async function importItemsFromUEX() {
     }
 
     logger.info("UEX item import completed", {
-      total: uexItems.length,
+      total: allItems.length,
       imported,
       skipped,
     })
