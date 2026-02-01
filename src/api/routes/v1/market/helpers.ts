@@ -273,35 +273,34 @@ export async function convertQuery(
         .map((s) => s.trim())
         .filter(Boolean)
     : null
-  
+
   // Parse attribute filters from query string
+  // Format: ?attr_size=4,5&attr_class=Military
   let attributes: AttributeFilter[] | null = null
-  if (query.attributes) {
-    try {
-      const parsed = JSON.parse(query.attributes)
-      if (Array.isArray(parsed)) {
-        // Validate each attribute filter
-        attributes = parsed.filter((attr: any) => {
-          return (
-            attr &&
-            typeof attr.name === 'string' &&
-            Array.isArray(attr.values) &&
-            attr.values.length > 0 &&
-            attr.values.every((v: any) => typeof v === 'string') &&
-            (attr.operator === 'in' || attr.operator === 'eq')
-          )
+  const attributeFilters: AttributeFilter[] = []
+
+  for (const [key, value] of Object.entries(query)) {
+    if (key.startsWith("attr_") && typeof value === "string") {
+      const attrName = key.substring(5) // Remove 'attr_' prefix
+      const values = value
+        .split(",")
+        .map((v) => v.trim())
+        .filter(Boolean)
+
+      if (values.length > 0) {
+        attributeFilters.push({
+          name: attrName,
+          values,
+          operator: "in" as const,
         })
-        if (attributes.length === 0) {
-          attributes = null
-        }
       }
-    } catch (error) {
-      // Invalid JSON, ignore attribute filters
-      logger.warn('Invalid attribute filter JSON', { attributes: query.attributes, error })
-      attributes = null
     }
   }
-  
+
+  if (attributeFilters.length > 0) {
+    attributes = attributeFilters
+  }
+
   return {
     sale_type: query.sale_type || null,
     maxCost: query.maxCost && query.maxCost !== "null" ? +query.maxCost : null,
