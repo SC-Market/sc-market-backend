@@ -219,20 +219,41 @@ async function importAllAttributes() {
             uniqueRecords.set(record.attribute_name, record.value)
           }
 
-          // Insert new attributes
+          // Insert new attributes and auto-create definitions
           for (const [attribute_name, value] of uniqueRecords) {
+            // Check if attribute definition exists
             const attrDef = await database
               .knex<AttributeDefinition>("attribute_definitions")
               .where("attribute_name", attribute_name)
               .first()
 
+            // Auto-create definition if it doesn't exist
             if (!attrDef) {
               await database.knex("attribute_definitions").insert({
                 attribute_name,
-                display_name: attribute_name,
+                display_name: attribute_name
+                  .split("_")
+                  .map((w) => w.charAt(0).toUpperCase() + w.slice(1))
+                  .join(" "),
                 attribute_type: "text",
-                display_order: 0,
+                applicable_item_types: item.type ? [item.type] : [],
+                display_order: 999, // Put auto-created ones at the end
               })
+            } else if (
+              item.type &&
+              attrDef.applicable_item_types &&
+              !attrDef.applicable_item_types.includes(item.type)
+            ) {
+              // Add current item type to applicable types if not already there
+              await database
+                .knex("attribute_definitions")
+                .where("attribute_name", attribute_name)
+                .update({
+                  applicable_item_types: database.knex.raw(
+                    "array_append(applicable_item_types, ?)",
+                    [item.type],
+                  ),
+                })
             }
 
             await database
