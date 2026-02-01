@@ -25,6 +25,11 @@
     <file url="file://$PROJECT_DIR$/config/postgres/40-push-preferences-org-support.sql" dialect="PostgreSQL" />
     <file url="file://$PROJECT_DIR$/config/postgres/41-add-discord-invite-to-offer-sessions.sql" dialect="PostgreSQL" />
     <file url="file://$PROJECT_DIR$/config/postgres/42-add-buy-order-negotiable.sql" dialect="PostgreSQL" />
+    <file url="file://$PROJECT_DIR$/config/postgres/43-game-item-attributes.sql" dialect="PostgreSQL" />
+    <file url="file://$PROJECT_DIR$/config/postgres/44-attribute-definitions-seed.sql" dialect="PostgreSQL" />
+    <file url="file://$PROJECT_DIR$/config/postgres/45-attribute-composite-indexes.sql" dialect="PostgreSQL" />
+    <file url="file://$PROJECT_DIR$/config/postgres/46-game-items-uex-uuid.sql" dialect="PostgreSQL" />
+    <file url="file://$PROJECT_DIR$/config/postgres/47-game-items-last-attribute-fetch.sql" dialect="PostgreSQL" />
     <file url="file://$PROJECT_DIR$/scripts/game_item_details.sql" dialect="PostgreSQL" />
     <file url="file://$PROJECT_DIR$/scripts/load_new_items.sql" dialect="PostgreSQL" />
     <file url="file://$PROJECT_DIR$/scripts/market_search.sql" dialect="PostgreSQL" />

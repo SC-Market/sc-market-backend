@@ -21,6 +21,7 @@ import { contractsRouter } from "./contracts/routes.js"
 import { shopRouter } from "./shops/routes.js"
 import { moderationRouter } from "./moderation/routes.js"
 import { tokensRouter } from "./tokens/routes.js"
+import { attributesRouter } from "./attributes/routes.js"
 
 export const apiRouter = express.Router()
 
@@ -60,6 +61,7 @@ apiRouter.use("/wiki", wikiRouter)
 apiRouter.use("/moderation", moderationRouter)
 apiRouter.use("/shops", shopRouter)
 apiRouter.use("/tokens", tokensRouter)
+apiRouter.use("/attributes", attributesRouter)
 
 // Languages reference endpoint
 import { SUPPORTED_LANGUAGES } from "../../../constants/languages.js"

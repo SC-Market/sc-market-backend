@@ -21,10 +21,12 @@ import { formatListingComplete } from "../util/formatting.js"
 import {
   MarketSearchQuery,
   MarketSearchQueryArguments,
+  AttributeFilter,
   sortingMethods,
 } from "./types.js"
 import { has_permission } from "../util/permissions.js"
 import { cdn } from "../../../../clients/cdn/cdn.js"
+import logger from "../../../../logger/logger.js"
 
 const userListingLock = new AsyncLock()
 const contractorListingLock = new AsyncLock()
@@ -271,6 +273,40 @@ export async function convertQuery(
         .map((s) => s.trim())
         .filter(Boolean)
     : null
+
+  // Parse attribute filters from query string
+  // Format: ?attr_size=4,5&attr_class=Military
+  let attributes: AttributeFilter[] | null = null
+  const attributeFilters: AttributeFilter[] = []
+
+  console.log('[CONVERT QUERY] Raw query params:', JSON.stringify(query, null, 2))
+
+  for (const [key, value] of Object.entries(query)) {
+    if (key.startsWith("attr_") && typeof value === "string") {
+      const attrName = key.substring(5) // Remove 'attr_' prefix
+      const values = value
+        .split(",")
+        .map((v) => v.trim())
+        .filter(Boolean)
+
+      console.log('[CONVERT QUERY] Found attr:', key, '=', value, 'parsed:', values)
+
+      if (values.length > 0) {
+        attributeFilters.push({
+          name: attrName,
+          values,
+          operator: "in" as const,
+        })
+      }
+    }
+  }
+
+  if (attributeFilters.length > 0) {
+    attributes = attributeFilters
+  }
+
+  console.log('[CONVERT QUERY] Final attributes:', JSON.stringify(attributes, null, 2))
+
   return {
     sale_type: query.sale_type || null,
     maxCost: query.maxCost && query.maxCost !== "null" ? +query.maxCost : null,
@@ -292,6 +328,7 @@ export async function convertQuery(
       : ["active"], // Default to active only
     language_codes:
       language_codes && language_codes.length > 0 ? language_codes : null,
+    attributes,
   }
 }
 

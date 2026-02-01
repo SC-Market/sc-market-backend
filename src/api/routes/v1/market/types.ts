@@ -48,6 +48,12 @@ export interface ContractorListingsQuery {
   page_size: number
 }
 
+export interface AttributeFilter {
+  name: string          // e.g., "size", "class", "manufacturer"
+  values: string[]      // e.g., ["4", "5"], ["Military", "Stealth"]
+  operator: 'in' | 'eq' // 'in' for multiple values (OR), 'eq' for single
+}
+
 export interface MarketSearchQueryArguments {
   item_type: string | null
   sale_type: string | null
@@ -65,6 +71,7 @@ export interface MarketSearchQueryArguments {
   listing_type: string | null
   statuses: string | null
   language_codes: string | null
+  attributes: string | null // JSON string of AttributeFilter[]
 }
 
 export interface MarketSearchQuery {
@@ -85,6 +92,7 @@ export interface MarketSearchQuery {
   listing_type?: string | null
   statuses?: string[] | null
   language_codes?: string[] | null
+  attributes?: AttributeFilter[] | null
 }
 
 export interface OrderStats {

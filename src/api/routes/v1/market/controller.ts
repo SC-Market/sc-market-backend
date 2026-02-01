@@ -39,7 +39,11 @@ import {
 import { DEFAULT_PLACEHOLDER_PHOTO_URL } from "./constants.js"
 import { randomUUID } from "node:crypto"
 import fs from "node:fs"
-import { MarketSearchQuery, MarketSearchQueryArguments } from "./types.js"
+import {
+  MarketSearchQuery,
+  MarketSearchQueryArguments,
+  AttributeFilter,
+} from "./types.js"
 import {
   DBContractor,
   DBMultipleListingComplete,
@@ -1307,7 +1311,34 @@ export const get_active_listings_by_org: RequestHandler = async (req, res) => {
 
 export const get_buy_orders: RequestHandler = async (req, res) => {
   try {
-    const aggregates = await marketDb.getMarketBuyOrdersComplete()
+    // Parse attribute filters from query string
+    // Format: ?attr_size=4,5&attr_class=Military
+    let attributes: AttributeFilter[] | null = null
+    const attributeFilters: AttributeFilter[] = []
+
+    for (const [key, value] of Object.entries(req.query)) {
+      if (key.startsWith("attr_") && typeof value === "string") {
+        const attrName = key.substring(5) // Remove 'attr_' prefix
+        const values = value
+          .split(",")
+          .map((v) => v.trim())
+          .filter(Boolean)
+
+        if (values.length > 0) {
+          attributeFilters.push({
+            name: attrName,
+            values,
+            operator: "in" as const,
+          })
+        }
+      }
+    }
+
+    if (attributeFilters.length > 0) {
+      attributes = attributeFilters
+    }
+
+    const aggregates = await marketDb.getMarketBuyOrdersComplete(attributes)
     res.json(
       await Promise.all(
         aggregates.map((a) => formatMarketAggregateComplete(a)),
@@ -1867,17 +1898,23 @@ export const create_buy_order: RequestHandler = async (req, res) => {
 
     if (!isNegotiable) {
       if (price == null || typeof price !== "number" || price < 1) {
-        res
-          .status(400)
-          .json(createErrorResponse({ message: "Invalid price" }))
+        res.status(400).json(createErrorResponse({ message: "Invalid price" }))
         return
       }
     }
     // When negotiable, price is optional (suggested price); must be >= 1 if provided
-    if (isNegotiable && price != null && (typeof price !== "number" || price < 1)) {
+    if (
+      isNegotiable &&
+      price != null &&
+      (typeof price !== "number" || price < 1)
+    ) {
       res
         .status(400)
-        .json(createErrorResponse({ message: "Suggested price must be at least 1 if provided" }))
+        .json(
+          createErrorResponse({
+            message: "Suggested price must be at least 1 if provided",
+          }),
+        )
       return
     }
 
@@ -1888,7 +1925,11 @@ export const create_buy_order: RequestHandler = async (req, res) => {
 
     const orders = await orderDb.createBuyOrder({
       quantity,
-      price: isNegotiable ? (price != null && price >= 1 ? price : null) : price!,
+      price: isNegotiable
+        ? price != null && price >= 1
+          ? price
+          : null
+        : price!,
       negotiable: isNegotiable,
       expiry,
       game_item_id,
@@ -1956,15 +1997,13 @@ export const fulfill_buy_order: RequestHandler = async (req, res) => {
         ? agreed_price
         : buy_order.price
     if (pricePerUnit == null || pricePerUnit < 1) {
-      res
-        .status(400)
-        .json(
-          createErrorResponse({
-            message: buy_order.negotiable
-              ? "Negotiable orders require an agreed_price when fulfilling"
-              : "Invalid buy order price",
-          }),
-        )
+      res.status(400).json(
+        createErrorResponse({
+          message: buy_order.negotiable
+            ? "Negotiable orders require an agreed_price when fulfilling"
+            : "Invalid buy order price",
+        }),
+      )
       return
     }
 
