@@ -1,11 +1,12 @@
 #!/usr/bin/env ts-node
 /**
- * Script to import attributes for all existing game items
- * Fetches UEX data in bulk once, then matches items by name
+ * Script to import attributes for game items from UEXCorp
+ * Supports incremental updates with rate limiting
  *
  * Usage:
- *   npm run import-attributes           # Normal mode
- *   npm run import-attributes -- --dry  # Dry run mode
+ *   npm run import-attributes              # Fetch only outdated items (>7 days)
+ *   npm run import-attributes -- --fetch-all  # Fetch all items
+ *   npm run import-attributes -- --dry     # Dry run mode
  */
 
 import { database } from "../src/clients/database/knex-db.js"
@@ -17,12 +18,16 @@ import type {
 
 const DRY_RUN =
   process.argv.includes("--dry") || process.argv.includes("--dry-run")
+const FETCH_ALL = process.argv.includes("--fetch-all")
 const UEXCORP_BASE_URL = "https://api.uexcorp.uk/2.0"
+const RATE_LIMIT_MS = 100 // 100ms between requests = 10 req/sec
+const STALE_DAYS = 7 // Consider attributes stale after 7 days
 
 interface GameItem {
   id: string
   name: string
   type: string
+  last_attribute_fetch?: Date
 }
 
 interface UEXItem {
@@ -39,24 +44,44 @@ interface UEXAttribute {
   value: string
 }
 
+async function sleep(ms: number) {
+  return new Promise((resolve) => setTimeout(resolve, ms))
+}
+
 async function importAllAttributes() {
-  logger.info("Starting bulk attribute import", { dryRun: DRY_RUN })
+  logger.info("Starting attribute import", {
+    dryRun: DRY_RUN,
+    fetchAll: FETCH_ALL,
+  })
 
   if (DRY_RUN) {
     logger.info("DRY RUN MODE - No database changes will be made")
   }
 
   try {
-    // Fetch all game items
-    const gameItems = await database
+    // Fetch game items to process
+    let query = database
       .knex<GameItem>("game_items")
       .select("id", "name", "type")
-      .orderBy("name")
 
-    logger.info(`Found ${gameItems.length} game items`)
+    if (!FETCH_ALL) {
+      // Only fetch items that are stale or never fetched
+      const staleDate = new Date()
+      staleDate.setDate(staleDate.getDate() - STALE_DAYS)
+
+      query = query.where((builder) => {
+        builder
+          .whereNull("last_attribute_fetch")
+          .orWhere("last_attribute_fetch", "<", staleDate)
+      })
+    }
+
+    const gameItems = await query.orderBy("name")
+
+    logger.info(`Found ${gameItems.length} items to process`)
 
     if (gameItems.length === 0) {
-      logger.warn("No game items found")
+      logger.info("No items need updating")
       return
     }
 
@@ -103,7 +128,7 @@ async function importAllAttributes() {
     let totalAttributesImported = 0
     let noMatchCount = 0
 
-    // Process each game item
+    // Process each game item with rate limiting
     for (let i = 0; i < gameItems.length; i++) {
       const item = gameItems[i]
       const progress = `[${i + 1}/${gameItems.length}]`
@@ -117,6 +142,11 @@ async function importAllAttributes() {
       }
 
       try {
+        // Rate limit: wait between requests
+        if (i > 0) {
+          await sleep(RATE_LIMIT_MS)
+        }
+
         // Fetch attributes
         const attrsResponse = await fetch(
           `${UEXCORP_BASE_URL}/items_attributes?id_item=${uexItem.id}`,
@@ -177,26 +207,26 @@ async function importAllAttributes() {
           successCount++
           totalAttributesImported += records.length
         } else {
+          // Delete existing attributes
           await database
             .knex("game_item_attributes")
             .where("game_item_id", item.id)
             .delete()
 
-          // Deduplicate records by attribute_name (keep last occurrence)
+          // Deduplicate records
           const uniqueRecords = new Map<string, string>()
           for (const record of records) {
             uniqueRecords.set(record.attribute_name, record.value)
           }
 
+          // Insert new attributes
           for (const [attribute_name, value] of uniqueRecords) {
-            // Check if attribute definition exists
             let attrDef = await database
               .knex<AttributeDefinition>("attribute_definitions")
               .where("attribute_name", attribute_name)
               .first()
 
             if (!attrDef) {
-              // Create new attribute definition
               await database.knex("attribute_definitions").insert({
                 attribute_name,
                 display_name: attribute_name,
@@ -205,7 +235,6 @@ async function importAllAttributes() {
               })
             }
 
-            // Insert attribute value
             await database
               .knex<GameItemAttribute>("game_item_attributes")
               .insert({
@@ -214,6 +243,12 @@ async function importAllAttributes() {
                 attribute_value: value,
               })
           }
+
+          // Update last_attribute_fetch timestamp
+          await database
+            .knex("game_items")
+            .where("id", item.id)
+            .update({ last_attribute_fetch: new Date() })
 
           successCount++
           totalAttributesImported += uniqueRecords.size
@@ -229,6 +264,7 @@ async function importAllAttributes() {
 
     logger.info("Import completed", {
       dryRun: DRY_RUN,
+      fetchAll: FETCH_ALL,
       total: gameItems.length,
       success: successCount,
       failure: failureCount,
