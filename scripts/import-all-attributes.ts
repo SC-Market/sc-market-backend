@@ -20,7 +20,7 @@ const DRY_RUN =
   process.argv.includes("--dry") || process.argv.includes("--dry-run")
 const FETCH_ALL = process.argv.includes("--fetch-all")
 const UEXCORP_BASE_URL = "https://api.uexcorp.uk/2.0"
-const RATE_LIMIT_MS = 100 // 100ms between requests = 10 req/sec
+const RATE_LIMIT_MS = 300 // 100ms between requests = 10 req/sec
 const STALE_DAYS = 7 // Consider attributes stale after 7 days
 
 interface GameItem {
@@ -221,7 +221,7 @@ async function importAllAttributes() {
 
           // Insert new attributes
           for (const [attribute_name, value] of uniqueRecords) {
-            let attrDef = await database
+            const attrDef = await database
               .knex<AttributeDefinition>("attribute_definitions")
               .where("attribute_name", attribute_name)
               .first()
