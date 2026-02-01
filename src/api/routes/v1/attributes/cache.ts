@@ -46,9 +46,10 @@ class AttributeDefinitionCache {
     applicableItemTypes?: string[],
     includeHidden?: boolean,
   ): Promise<AttributeDefinition[]> {
-    const cacheKey = applicableItemTypes && applicableItemTypes.length > 0
-      ? `${CACHE_KEY_BY_TYPES}${applicableItemTypes.sort().join(",")}_${includeHidden ? 'all' : 'visible'}`
-      : `${CACHE_KEY_ALL}_${includeHidden ? 'all' : 'visible'}`
+    const cacheKey =
+      applicableItemTypes && applicableItemTypes.length > 0
+        ? `${CACHE_KEY_BY_TYPES}${applicableItemTypes.sort().join(",")}_${includeHidden ? "all" : "visible"}`
+        : `${CACHE_KEY_ALL}_${includeHidden ? "all" : "visible"}`
 
     // Check cache first
     const cached = this.cache.get(cacheKey)
@@ -59,7 +60,10 @@ class AttributeDefinitionCache {
 
     // Cache miss - fetch from database
     logger.debug("Attribute definitions cache miss", { cacheKey })
-    const definitions = await db.getAttributeDefinitions(applicableItemTypes, includeHidden)
+    const definitions = await db.getAttributeDefinitions(
+      applicableItemTypes,
+      includeHidden,
+    )
 
     // Store in cache
     this.cache.set(cacheKey, definitions)
@@ -72,7 +76,7 @@ class AttributeDefinitionCache {
    * Results are cached to reduce database queries.
    */
   async getAttributeDefinition(
-    attributeName: string
+    attributeName: string,
   ): Promise<AttributeDefinition | null> {
     const cacheKey = `${CACHE_KEY_BY_NAME}${attributeName}`
 
@@ -188,7 +192,7 @@ class AttributeDefinitionCache {
       ]
 
       await Promise.all(
-        commonItemTypes.map((types) => this.getAttributeDefinitions(types))
+        commonItemTypes.map((types) => this.getAttributeDefinitions(types)),
       )
 
       logger.info("Attribute definition cache warmed up successfully")
@@ -210,8 +214,14 @@ export const cachedDb = {
   /**
    * Get all attribute definitions with caching
    */
-  getAttributeDefinitions: (applicableItemTypes?: string[], includeHidden?: boolean) =>
-    attributeDefinitionCache.getAttributeDefinitions(applicableItemTypes, includeHidden),
+  getAttributeDefinitions: (
+    applicableItemTypes?: string[],
+    includeHidden?: boolean,
+  ) =>
+    attributeDefinitionCache.getAttributeDefinitions(
+      applicableItemTypes,
+      includeHidden,
+    ),
 
   /**
    * Get a single attribute definition with caching
@@ -222,7 +232,9 @@ export const cachedDb = {
   /**
    * Create attribute definition and invalidate cache
    */
-  createAttributeDefinition: async (payload: Parameters<typeof db.createAttributeDefinition>[0]) => {
+  createAttributeDefinition: async (
+    payload: Parameters<typeof db.createAttributeDefinition>[0],
+  ) => {
     const result = await db.createAttributeDefinition(payload)
     attributeDefinitionCache.invalidateOnCreate(result.attribute_name)
     return result
@@ -233,7 +245,7 @@ export const cachedDb = {
    */
   updateAttributeDefinition: async (
     attributeName: string,
-    payload: Parameters<typeof db.updateAttributeDefinition>[1]
+    payload: Parameters<typeof db.updateAttributeDefinition>[1],
   ) => {
     const result = await db.updateAttributeDefinition(attributeName, payload)
     if (result) {
@@ -245,8 +257,14 @@ export const cachedDb = {
   /**
    * Delete attribute definition and invalidate cache
    */
-  deleteAttributeDefinition: async (attributeName: string, cascadeDelete?: boolean) => {
-    const result = await db.deleteAttributeDefinition(attributeName, cascadeDelete)
+  deleteAttributeDefinition: async (
+    attributeName: string,
+    cascadeDelete?: boolean,
+  ) => {
+    const result = await db.deleteAttributeDefinition(
+      attributeName,
+      cascadeDelete,
+    )
     if (result) {
       attributeDefinitionCache.invalidateOnDelete(attributeName)
     }

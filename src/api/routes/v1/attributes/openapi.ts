@@ -30,7 +30,8 @@ const AttributeDefinitionSchema: OpenAPIV3_1.SchemaObject = {
           type: "null",
         },
       ],
-      description: "Array of valid values for enum-type attributes, null for free-form",
+      description:
+        "Array of valid values for enum-type attributes, null for free-form",
       example: ["0", "1", "2", "3", "4"],
     },
     applicable_item_types: {
@@ -279,7 +280,8 @@ export const attributes_put_definitions_name_spec: OpenAPIV3_1.OperationObject =
                     type: "null",
                   },
                 ],
-                description: "Array of game item types this attribute applies to",
+                description:
+                  "Array of game item types this attribute applies to",
                 example: ["Quantum Drive", "Cooler"],
               },
               display_order: {
@@ -458,8 +460,7 @@ const GameItemAttributeWithDefinitionSchema: OpenAPIV3_1.SchemaObject = {
 
 export const game_items_get_attributes_spec: OpenAPIV3_1.OperationObject = {
   summary: "Get game item attributes",
-  description:
-    "Retrieve all attributes for a game item with their definitions",
+  description: "Retrieve all attributes for a game item with their definitions",
   tags: ["Game Items"],
   parameters: [
     {
@@ -681,7 +682,8 @@ export const attributes_post_import_game_item_spec = {
                   errors: {
                     type: "array",
                     items: { type: "string" },
-                    description: "Array of error messages if any sources failed",
+                    description:
+                      "Array of error messages if any sources failed",
                   },
                   message: {
                     type: "string",
@@ -704,7 +706,8 @@ export const attributes_post_import_game_item_spec = {
       },
     },
     207: {
-      description: "Partial success - some sources failed but some attributes were imported",
+      description:
+        "Partial success - some sources failed but some attributes were imported",
       content: {
         "application/json": {
           schema: {
@@ -730,9 +733,7 @@ export const attributes_post_import_game_item_spec = {
               gameItemId: "550e8400-e29b-41d4-a716-446655440000",
               success: false,
               attributesImported: 2,
-              errors: [
-                "Failed to import from cstone: Network timeout",
-              ],
+              errors: ["Failed to import from cstone: Network timeout"],
               message: "Import completed with errors. Imported 2 attributes",
             },
           },
