@@ -83,6 +83,17 @@ async function importItemsFromUEX() {
 
     logger.info(`Fetched ${allItems.length} total items from UEX`)
 
+    // Deduplicate items by UEX UUID (some items appear in multiple categories)
+    const uniqueItems = new Map<string, UEXItem>()
+    for (const item of allItems) {
+      const key = item.uuid || item.name.toLowerCase()
+      if (!uniqueItems.has(key)) {
+        uniqueItems.set(key, item)
+      }
+    }
+
+    logger.info(`After deduplication: ${uniqueItems.size} unique items`)
+
     // Get existing items with their IDs for updating
     const existingItemsMap = await database
       .knex("game_items")
@@ -99,7 +110,7 @@ async function importItemsFromUEX() {
 
     let updated = 0
 
-    for (const item of allItems) {
+    for (const item of uniqueItems.values()) {
       if (!item.name) {
         skipped++
         continue
@@ -167,7 +178,8 @@ async function importItemsFromUEX() {
 
     logger.info("UEX item import completed", {
       dryRun: DRY_RUN,
-      total: allItems.length,
+      totalFetched: allItems.length,
+      uniqueItems: uniqueItems.size,
       imported,
       updated,
       skipped,
