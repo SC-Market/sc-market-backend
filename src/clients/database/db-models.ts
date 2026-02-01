@@ -695,6 +695,7 @@ export interface DBMarketListingDetailsBase {
   game_item_id: string | null
   title: string
   description: string
+  delivery_preference?: string | null
 }
 
 export interface DBMarketListingDetails {
@@ -704,6 +705,7 @@ export interface DBMarketListingDetails {
   game_item_id: string | null
   title: string
   description: string
+  delivery_preference?: string | null
 }
 
 export interface DBMarketSearchResult {
