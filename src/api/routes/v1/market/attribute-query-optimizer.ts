@@ -26,20 +26,22 @@ export function applyAttributeFilters<T extends {}>(
     return query
   }
 
+  console.log('[ATTR FILTER] Applying filters:', JSON.stringify(attributes, null, 2))
+
   // Apply each attribute filter as an EXISTS subquery
   // This ensures AND logic across different attributes
   for (const attributeFilter of attributes) {
-    query = query.andWhereRaw(
-      knex.raw(
-        `EXISTS (
+    const sql = `EXISTS (
           SELECT 1 
           FROM game_item_attributes 
           WHERE game_item_attributes.game_item_id = ${gameItemIdColumn}
             AND game_item_attributes.attribute_name = ?
             AND game_item_attributes.attribute_value IN (${attributeFilter.values.map(() => "?").join(",")})
-        )`,
-        [attributeFilter.name, ...attributeFilter.values],
-      ),
+        )`
+    console.log('[ATTR FILTER] SQL:', sql, 'Params:', [attributeFilter.name, ...attributeFilter.values])
+    
+    query = query.andWhereRaw(
+      knex.raw(sql, [attributeFilter.name, ...attributeFilter.values]),
     )
   }
 

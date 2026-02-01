@@ -32,7 +32,8 @@ export class UEXCorpImporter implements AttributeImporter {
     try {
       // Get item name from our database
       const { database } = await import("../../clients/database/knex-db.js")
-      const gameItem = await database.knex("game_items")
+      const gameItem = await database
+        .knex("game_items")
         .where("id", itemId)
         .first("name")
 
@@ -49,11 +50,13 @@ export class UEXCorpImporter implements AttributeImporter {
       })
 
       if (!categoriesResponse.ok) {
-        throw new Error(`UEXCorp categories API error: ${categoriesResponse.status}`)
+        throw new Error(
+          `UEXCorp categories API error: ${categoriesResponse.status}`,
+        )
       }
 
       const categoriesData = await categoriesResponse.json()
-      
+
       if (!categoriesData.data || !Array.isArray(categoriesData.data)) {
         logger.debug("No categories returned from UEXCorp")
         return {}
@@ -67,18 +70,28 @@ export class UEXCorpImporter implements AttributeImporter {
           `${UEXCORP_BASE_URL}/items?id_category=${category.id}`,
           {
             headers: { accept: "application/json" },
-          }
+          },
         )
 
         if (!itemResponse.ok) continue
 
         const itemData = await itemResponse.json()
-        
+
         if (itemData.data && Array.isArray(itemData.data)) {
+          // Try exact match first
           item = itemData.data.find(
-            (i: any) => i.name?.toLowerCase() === itemName.toLowerCase()
+            (i: any) => i.name?.toLowerCase() === itemName.toLowerCase(),
           )
-          
+
+          // If no exact match, try fuzzy match (normalize special chars)
+          if (!item) {
+            item = itemData.data.find(
+              (i: any) =>
+                this.normalizeItemName(i.name) ===
+                this.normalizeItemName(itemName),
+            )
+          }
+
           if (item) break
         }
       }
@@ -102,24 +115,24 @@ export class UEXCorpImporter implements AttributeImporter {
           `${UEXCORP_BASE_URL}/items_attributes?id_item=${item.id}`,
           {
             headers: { accept: "application/json" },
-          }
+          },
         )
 
         if (attrsResponse.ok) {
           const attrsData = await attrsResponse.json()
-          
+
           if (attrsData.data && Array.isArray(attrsData.data)) {
             for (const attr of attrsData.data) {
               const attrName = attr.attribute_name?.toLowerCase()
               const value = attr.value
-              
+
               if (!attrName || !value) continue
 
-              if (attrName.includes('class')) {
+              if (attrName.includes("class")) {
                 attributes.class = value
-              } else if (attrName.includes('type')) {
+              } else if (attrName.includes("type")) {
                 attributes.component_type = value
-              } else if (attrName.includes('manufacturer')) {
+              } else if (attrName.includes("manufacturer")) {
                 attributes.manufacturer = value
               } else {
                 attributes[attrName] = value
@@ -238,5 +251,19 @@ export class UEXCorpImporter implements AttributeImporter {
     })
 
     return records
+  }
+
+  /**
+   * Normalize item name for fuzzy matching
+   * Removes special characters, extra spaces, and normalizes case
+   */
+  private normalizeItemName(name: string | undefined): string {
+    if (!name) return ""
+
+    return name
+      .toLowerCase()
+      .replace(/[^\w\s]/g, "") // Remove special chars
+      .replace(/\s+/g, " ") // Normalize spaces
+      .trim()
   }
 }
