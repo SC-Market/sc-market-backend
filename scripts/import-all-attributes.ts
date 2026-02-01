@@ -182,18 +182,24 @@ async function importAllAttributes() {
             .where("game_item_id", item.id)
             .delete()
 
+          // Deduplicate records by attribute_name (keep last occurrence)
+          const uniqueRecords = new Map<string, string>()
           for (const record of records) {
+            uniqueRecords.set(record.attribute_name, record.value)
+          }
+
+          for (const [attribute_name, value] of uniqueRecords) {
             // Check if attribute definition exists
             let attrDef = await database
               .knex<AttributeDefinition>("attribute_definitions")
-              .where("attribute_name", record.attribute_name)
+              .where("attribute_name", attribute_name)
               .first()
 
             if (!attrDef) {
               // Create new attribute definition
               await database.knex("attribute_definitions").insert({
-                attribute_name: record.attribute_name,
-                display_name: record.attribute_name,
+                attribute_name,
+                display_name: attribute_name,
                 attribute_type: "text",
                 display_order: 0,
               })
@@ -204,14 +210,14 @@ async function importAllAttributes() {
               .knex<GameItemAttribute>("game_item_attributes")
               .insert({
                 game_item_id: item.id,
-                attribute_name: record.attribute_name,
-                attribute_value: record.value,
+                attribute_name,
+                attribute_value: value,
               })
           }
 
           successCount++
-          totalAttributesImported += records.length
-          logger.info(`${progress} ✓ ${records.length} attrs: ${item.name}`)
+          totalAttributesImported += uniqueRecords.size
+          logger.info(`${progress} ✓ ${uniqueRecords.size} attrs: ${item.name}`)
         }
       } catch (error) {
         failureCount++
