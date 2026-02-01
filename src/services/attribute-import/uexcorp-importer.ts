@@ -43,26 +43,45 @@ export class UEXCorpImporter implements AttributeImporter {
 
       const itemName = gameItem.name
 
-      // Fetch all items from UEX (cached for 1 day per their API)
-      const itemResponse = await fetch(`${UEXCORP_BASE_URL}/items`, {
+      // Fetch categories
+      const categoriesResponse = await fetch(`${UEXCORP_BASE_URL}/categories`, {
         headers: { accept: "application/json" },
       })
 
-      if (!itemResponse.ok) {
-        throw new Error(`UEXCorp items API error: ${itemResponse.status}`)
+      if (!categoriesResponse.ok) {
+        throw new Error(`UEXCorp categories API error: ${categoriesResponse.status}`)
       }
 
-      const itemData = await itemResponse.json()
+      const categoriesData = await categoriesResponse.json()
       
-      if (!itemData.data || !Array.isArray(itemData.data)) {
-        logger.debug("No items returned from UEXCorp", { itemName })
+      if (!categoriesData.data || !Array.isArray(categoriesData.data)) {
+        logger.debug("No categories returned from UEXCorp")
         return {}
       }
 
-      // Find by name (case-insensitive)
-      const item = itemData.data.find(
-        (i: any) => i.name?.toLowerCase() === itemName.toLowerCase()
-      )
+      // Search for item across all categories
+      let item: any = null
+
+      for (const category of categoriesData.data) {
+        const itemResponse = await fetch(
+          `${UEXCORP_BASE_URL}/items?id_category=${category.id}`,
+          {
+            headers: { accept: "application/json" },
+          }
+        )
+
+        if (!itemResponse.ok) continue
+
+        const itemData = await itemResponse.json()
+        
+        if (itemData.data && Array.isArray(itemData.data)) {
+          item = itemData.data.find(
+            (i: any) => i.name?.toLowerCase() === itemName.toLowerCase()
+          )
+          
+          if (item) break
+        }
+      }
 
       if (!item) {
         logger.debug("No matching item in UEXCorp", { itemName })
