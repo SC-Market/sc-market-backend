@@ -1,7 +1,7 @@
 /**
  * Import Game Items from UEXCorp
  * Fetches items from UEX API and adds new ones to game_items table
- * 
+ *
  * Usage:
  *   npm run import-uex-items           # Normal mode
  *   npm run import-uex-items -- --dry  # Dry run mode
@@ -11,7 +11,8 @@ import { database } from "../src/clients/database/knex-db.js"
 import logger from "../src/logger/logger.js"
 
 const UEXCORP_BASE_URL = "https://api.uexcorp.uk/2.0"
-const DRY_RUN = process.argv.includes("--dry") || process.argv.includes("--dry-run")
+const DRY_RUN =
+  process.argv.includes("--dry") || process.argv.includes("--dry-run")
 
 interface UEXItem {
   id: number
@@ -51,7 +52,8 @@ async function importItemsFromUEX() {
     logger.info(`Found ${categoriesData.data.length} categories`)
 
     // Get existing items from our database
-    const existingItems = await database.knex("game_items")
+    const existingItems = await database
+      .knex("game_items")
       .select("name")
       .then((rows) => new Set(rows.map((r) => r.name.toLowerCase())))
 
@@ -65,7 +67,7 @@ async function importItemsFromUEX() {
         `${UEXCORP_BASE_URL}/items?id_category=${category.id}`,
         {
           headers: { accept: "application/json" },
-        }
+        },
       )
 
       if (!response.ok) {
@@ -108,9 +110,9 @@ async function importItemsFromUEX() {
           await database.knex("game_items").insert({
             name: item.name,
             type: itemType,
-            description: `${item.section || ""} ${item.category || ""}`.trim() || null,
+            description:
+              `${item.section || ""} ${item.category || ""}`.trim() || null,
             image_url: item.screenshot || null,
-            cstone_uuid: item.uuid || null,
             uex_uuid: item.uuid || null,
           })
 
@@ -146,13 +148,14 @@ async function importItemsFromUEX() {
  */
 function mapUEXCategoryToType(
   category: string | null,
-  section: string | null
+  section: string | null,
 ): string | null {
   const cat = category?.toLowerCase()
   const sec = section?.toLowerCase()
 
   // Ship components
-  if (sec?.includes("quantum") || cat?.includes("quantum")) return "Quantum Drive"
+  if (sec?.includes("quantum") || cat?.includes("quantum"))
+    return "Quantum Drive"
   if (sec?.includes("cooler") || cat?.includes("cooler")) return "Cooler"
   if (sec?.includes("power") || cat?.includes("power")) return "Power Plant"
   if (sec?.includes("shield") || cat?.includes("shield")) return "Shield"
@@ -168,7 +171,8 @@ function mapUEXCategoryToType(
   if (sec?.includes("salvage")) return "Salvage Head"
 
   // Commodities
-  if (sec?.includes("commodity") || cat?.includes("commodity")) return "Commodity"
+  if (sec?.includes("commodity") || cat?.includes("commodity"))
+    return "Commodity"
 
   // Default to category or section
   return category || section || null
