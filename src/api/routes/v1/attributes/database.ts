@@ -10,11 +10,14 @@ import {
 
 /**
  * Get all attribute definitions, optionally filtered by applicable item types
+ * Only returns attributes with show_in_filters=true for filter queries
  */
 export async function getAttributeDefinitions(
   applicableItemTypes?: string[],
 ): Promise<AttributeDefinition[]> {
-  let query = database.knex("attribute_definitions").select("*")
+  let query = database.knex("attribute_definitions")
+    .select("*")
+    .where("show_in_filters", true)
 
   if (applicableItemTypes && applicableItemTypes.length > 0) {
     // Filter by applicable_item_types using array overlap operator
