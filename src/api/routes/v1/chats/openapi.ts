@@ -101,9 +101,9 @@ oapi.schema("ChatBody", {
       type: "array",
     },
   },
-  required: ["chat_id", "participants", "messages", "order_id"],
+  required: ["users"],
   additionalProperties: false,
-  title: "Chat",
+  title: "ChatBody",
   type: "object",
 })
 
