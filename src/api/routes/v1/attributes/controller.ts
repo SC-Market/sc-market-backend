@@ -22,6 +22,7 @@ export const attributes_get_definitions: RequestHandler = async function (
       | string
       | string[]
       | undefined
+    const includeHidden = req.query.include_hidden === 'true'
 
     let itemTypesArray: string[] | undefined
     if (applicableItemTypes) {
@@ -32,6 +33,7 @@ export const attributes_get_definitions: RequestHandler = async function (
 
     const definitions = await cachedDb.getAttributeDefinitions(
       itemTypesArray,
+      includeHidden,
     )
 
     res.json(createResponse({ definitions }))
