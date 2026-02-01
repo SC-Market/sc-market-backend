@@ -1,12 +1,17 @@
 /**
  * Import Game Items from UEXCorp
  * Fetches items from UEX API and adds new ones to game_items table
+ * 
+ * Usage:
+ *   npm run import-uex-items           # Normal mode
+ *   npm run import-uex-items -- --dry  # Dry run mode
  */
 
 import { database } from "../src/clients/database/knex-db.js"
 import logger from "../src/logger/logger.js"
 
 const UEXCORP_BASE_URL = "https://api.uexcorp.uk/2.0"
+const DRY_RUN = process.argv.includes("--dry") || process.argv.includes("--dry-run")
 
 interface UEXItem {
   id: number
@@ -21,7 +26,11 @@ interface UEXItem {
 }
 
 async function importItemsFromUEX() {
-  logger.info("Starting UEX item import")
+  logger.info("Starting UEX item import", { dryRun: DRY_RUN })
+
+  if (DRY_RUN) {
+    logger.info("DRY RUN MODE - No database changes will be made")
+  }
 
   try {
     // Fetch all categories first
@@ -88,17 +97,26 @@ async function importItemsFromUEX() {
       const itemType = mapUEXCategoryToType(item.category, item.section)
 
       try {
-        await database.knex("game_items").insert({
-          name: item.name,
-          type: itemType,
-          description: `${item.section || ""} ${item.category || ""}`.trim() || null,
-          image_url: item.screenshot || null,
-          cstone_uuid: item.uuid || null,
-          uex_uuid: item.uuid || null,
-        })
+        if (DRY_RUN) {
+          logger.info(`[DRY RUN] Would import: ${item.name}`, {
+            type: itemType,
+            category: item.category,
+            section: item.section,
+          })
+          imported++
+        } else {
+          await database.knex("game_items").insert({
+            name: item.name,
+            type: itemType,
+            description: `${item.section || ""} ${item.category || ""}`.trim() || null,
+            image_url: item.screenshot || null,
+            cstone_uuid: item.uuid || null,
+            uex_uuid: item.uuid || null,
+          })
 
-        imported++
-        logger.debug(`Imported item: ${item.name}`)
+          imported++
+          logger.debug(`Imported item: ${item.name}`)
+        }
       } catch (error) {
         logger.warn(`Failed to import item: ${item.name}`, {
           error: error instanceof Error ? error.message : "Unknown error",
@@ -107,6 +125,7 @@ async function importItemsFromUEX() {
     }
 
     logger.info("UEX item import completed", {
+      dryRun: DRY_RUN,
       total: allItems.length,
       imported,
       skipped,

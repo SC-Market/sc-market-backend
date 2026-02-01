@@ -39,10 +39,11 @@ export class AttributeImportService {
    * @param gameItemId - The game item UUID to import attributes for
    * @returns Import result with success status and error details
    */
-  async importAttributesForItem(gameItemId: string): Promise<ImportResult> {
+  async importAttributesForItem(gameItemId: string, dryRun = false): Promise<ImportResult> {
     logger.info("Starting attribute import for game item", {
       gameItemId,
       importerCount: this.importers.length,
+      dryRun,
     })
 
     const result: ImportResult = {
@@ -58,6 +59,7 @@ export class AttributeImportService {
         logger.debug("Attempting import from source", {
           gameItemId,
           source: importer.source,
+          dryRun,
         })
 
         // Fetch attributes from external source
@@ -72,19 +74,30 @@ export class AttributeImportService {
           game_item_id: gameItemId,
         }))
 
-        // Upsert attributes into database
-        const importedCount = await this.upsertAttributes(
-          gameItemId,
-          recordsWithId,
-        )
+        if (dryRun) {
+          // In dry run mode, just count what would be imported
+          result.attributesImported += recordsWithId.length
+          logger.info("[DRY RUN] Would import attributes from source", {
+            gameItemId,
+            source: importer.source,
+            attributesCount: recordsWithId.length,
+            attributes: recordsWithId,
+          })
+        } else {
+          // Upsert attributes into database
+          const importedCount = await this.upsertAttributes(
+            gameItemId,
+            recordsWithId,
+          )
 
-        result.attributesImported += importedCount
+          result.attributesImported += importedCount
 
-        logger.info("Successfully imported attributes from source", {
-          gameItemId,
-          source: importer.source,
-          attributesImported: importedCount,
-        })
+          logger.info("Successfully imported attributes from source", {
+            gameItemId,
+            source: importer.source,
+            attributesImported: importedCount,
+          })
+        }
       } catch (error) {
         const errorMessage = `Failed to import from ${importer.source}: ${error instanceof Error ? error.message : "Unknown error"}`
 
@@ -110,6 +123,7 @@ export class AttributeImportService {
       success: result.success,
       totalAttributesImported: result.attributesImported,
       errorCount: result.errors.length,
+      dryRun,
     })
 
     return result

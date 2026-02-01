@@ -4,14 +4,15 @@
  * This script triggers the attribute import service for each game item in the database
  * 
  * Usage:
- *   npm run import-attributes
- *   or
- *   ts-node scripts/import-all-attributes.ts
+ *   npm run import-attributes           # Normal mode
+ *   npm run import-attributes -- --dry  # Dry run mode
  */
 
 import { database } from "../src/clients/database/knex-db.js"
 import { AttributeImportService } from "../src/services/attribute-import/attribute-import.service.js"
 import logger from "../src/logger/logger.js"
+
+const DRY_RUN = process.argv.includes("--dry") || process.argv.includes("--dry-run")
 
 interface GameItem {
   id: string
@@ -20,7 +21,11 @@ interface GameItem {
 }
 
 async function importAllAttributes() {
-  logger.info("Starting bulk attribute import for all game items")
+  logger.info("Starting bulk attribute import for all game items", { dryRun: DRY_RUN })
+
+  if (DRY_RUN) {
+    logger.info("DRY RUN MODE - No database changes will be made")
+  }
 
   try {
     // Fetch all game items from the database
@@ -54,15 +59,16 @@ async function importAllAttributes() {
       })
 
       try {
-        const result = await importService.importAttributesForItem(item.id)
+        const result = await importService.importAttributesForItem(item.id, DRY_RUN)
 
         if (result.success) {
           successCount++
           totalAttributesImported += result.attributesImported
 
           if (result.attributesImported > 0) {
+            const prefix = DRY_RUN ? "[DRY RUN]" : "✓"
             logger.info(
-              `${progress} ✓ Imported ${result.attributesImported} attributes for: ${item.name}`,
+              `${progress} ${prefix} ${DRY_RUN ? "Would import" : "Imported"} ${result.attributesImported} attributes for: ${item.name}`,
             )
           } else {
             logger.debug(
