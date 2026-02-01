@@ -83,14 +83,53 @@ async function importItemsFromUEX() {
 
     logger.info(`Fetched ${allItems.length} total items from UEX`)
 
+    // Get existing items with their IDs for updating
+    const existingItemsMap = await database
+      .knex("game_items")
+      .select("id", "name", "uex_uuid")
+      .then(
+        (rows) =>
+          new Map(
+            rows.map((r) => [
+              r.name.toLowerCase(),
+              { id: r.id, uex_uuid: r.uex_uuid },
+            ]),
+          ),
+      )
+
+    let updated = 0
+
     for (const item of allItems) {
       if (!item.name) {
         skipped++
         continue
       }
 
-      // Skip if already exists (case-insensitive)
-      if (existingItems.has(item.name.toLowerCase())) {
+      const existingItem = existingItemsMap.get(item.name.toLowerCase())
+
+      // If item exists and doesn't have uex_uuid, update it
+      if (existingItem && !existingItem.uex_uuid && item.uuid) {
+        try {
+          if (DRY_RUN) {
+            logger.info(`[DRY RUN] Would update uex_uuid for: ${item.name}`)
+            updated++
+          } else {
+            await database
+              .knex("game_items")
+              .where("id", existingItem.id)
+              .update({ uex_uuid: item.uuid })
+
+            updated++
+            logger.debug(`Updated uex_uuid for: ${item.name}`)
+          }
+        } catch (error) {
+          logger.warn(`Failed to update uex_uuid for: ${item.name}`)
+        }
+        continue
+      }
+
+      // Skip if already exists
+      if (existingItem) {
         skipped++
         continue
       }
@@ -130,6 +169,7 @@ async function importItemsFromUEX() {
       dryRun: DRY_RUN,
       total: allItems.length,
       imported,
+      updated,
       skipped,
     })
 
