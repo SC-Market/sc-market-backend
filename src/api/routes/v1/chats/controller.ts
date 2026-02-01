@@ -1,6 +1,5 @@
 import { Request, Response, NextFunction } from "express"
 import { User } from "../api-models.js"
-import { database } from "../../../../clients/database/knex-db.js"
 import * as chatDb from "./database.js"
 import * as profileDb from "../profiles/database.js"
 import * as contractorDb from "../contractors/database.js"
@@ -9,7 +8,7 @@ import * as offerDb from "../offers/database.js"
 import { cdn } from "../../../../clients/cdn/cdn.js"
 import { discordService } from "../../../../services/discord/discord.service.js"
 import { notificationService } from "../../../../services/notifications/notification.service.js"
-import { eqSet, handle_chat_response } from "./helpers.js"
+import { eqSet } from "./helpers.js"
 import { serializeMessage } from "./serializers.js"
 import {
   createErrorResponse,
@@ -140,35 +139,63 @@ export async function createChat(
   } = req.body as {
     users: string[]
   }
-  const user = req.user as User
+  const selfUser = req.user as User
 
-  const users = await Promise.all(
-    body.users.map((user) => profileDb.getUser({ username: user })),
+  const otherUsers = await Promise.all(
+    body.users.map((username) => profileDb.getUser({ username })),
   )
 
   // TODO: Process blocked users and user access settings
-  if (!users.every(Boolean)) {
+  if (!otherUsers.every(Boolean)) {
     res
       .status(400)
       .json(createErrorResponse(ErrorCode.VALIDATION_ERROR, "Invalid user"))
     return
   }
 
-  users.push(user)
+  // Disallow creating chats if you have blocked any of them or they have blocked you
+  const [blockedBy, myBlocklist] = await Promise.all([
+    profileDb.getBlockedByUsers(selfUser.user_id),
+    profileDb.getUserBlocklist(selfUser.user_id, "user"),
+  ])
+  const blockedYouUserIds = new Set(
+    blockedBy
+      .filter((b) => b.blocker_user_id != null)
+      .map((b) => b.blocker_user_id!),
+  )
+  const blockedByMeUserIds = new Set(myBlocklist.map((b) => b.blocked_id))
+  const blockedRequestedUser = otherUsers.find(
+    (u) => blockedYouUserIds.has(u!.user_id) || blockedByMeUserIds.has(u!.user_id),
+  )
+  if (blockedRequestedUser) {
+    res.status(403).json(
+      createErrorResponse({
+        message:
+          "Cannot create chat: one or more users are blocked (either you have blocked them or they have blocked you).",
+      }),
+    )
+    return
+  }
 
-  const chats = await chatDb.getChatByParticipant(user.user_id)
+  // Always include self in created chats (dedupe if request already contained self)
+  const allUserIds = new Set([
+    selfUser.user_id,
+    ...otherUsers.map((u) => u!.user_id),
+  ])
+
+  const chats = await chatDb.getChatByParticipant(selfUser.user_id)
 
   for (const chat of chats) {
     const participants = await chatDb.getChatParticipants({
       chat_id: chat!.chat_id,
     })
-    if (eqSet(new Set(participants), new Set(users.map((u) => u?.user_id)))) {
+    if (eqSet(new Set(participants), allUserIds)) {
       res.json(createResponse({ result: "Success" }))
       return
     }
   }
 
-  await chatDb.insertChat(Array.from(new Set(users.map((x) => x!.user_id))))
+  await chatDb.insertChat(Array.from(allUserIds))
 
   res.json(createResponse({ result: "Success" }))
 }
