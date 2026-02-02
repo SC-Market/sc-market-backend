@@ -43,6 +43,26 @@ async function findDuplicates() {
     normalizedDuplicates.get(key)!.push(item)
   }
 
+  // Find fuzzy matches using various patterns
+  const fuzzyDuplicates = new Map<string, typeof allItems>()
+  for (const item of allItems) {
+    // Remove common suffixes/prefixes and extra words
+    let fuzzyKey = item.name
+      .toLowerCase()
+      .replace(
+        /\s+(livery|paint|skin|edition|version|mk\s*\d+|mark\s*\d+)$/i,
+        "",
+      )
+      .replace(/^(rsi|origin|anvil|aegis|crusader|drake|misc|argo)\s+/i, "")
+      .replace(/\s+/g, " ")
+      .trim()
+
+    if (!fuzzyDuplicates.has(fuzzyKey)) {
+      fuzzyDuplicates.set(fuzzyKey, [])
+    }
+    fuzzyDuplicates.get(fuzzyKey)!.push(item)
+  }
+
   // Find exact duplicates
   const exactDups = Array.from(exactDuplicates.entries())
     .filter(([, items]) => items.length > 1)
@@ -55,6 +75,23 @@ async function findDuplicates() {
       // Exclude if all items have exact same name
       const uniqueNames = new Set(items.map((i) => i.name.toLowerCase()))
       return uniqueNames.size > 1
+    })
+    .sort((a, b) => b[1].length - a[1].length)
+
+  // Find fuzzy duplicates (excluding exact and normalized matches)
+  const fuzzyDups = Array.from(fuzzyDuplicates.entries())
+    .filter(([key, items]) => {
+      if (items.length <= 1) return false
+      // Exclude if all items have exact same name
+      const uniqueNames = new Set(items.map((i) => i.name.toLowerCase()))
+      if (uniqueNames.size <= 1) return false
+      // Exclude if already caught by normalized duplicates
+      const normalizedKey = normalizeItemName(items[0].name)
+      const normalizedGroup = normalizedDuplicates.get(normalizedKey)
+      if (normalizedGroup && normalizedGroup.length === items.length) {
+        return false
+      }
+      return true
     })
     .sort((a, b) => b[1].length - a[1].length)
 
@@ -83,6 +120,22 @@ async function findDuplicates() {
       console.log(
         `Normalized: "${normalizedName}" (${items.length} variations)`,
       )
+      items.forEach((item) => {
+        console.log(
+          `  - "${item.name}" (ID: ${item.id}, UEX: ${item.uex_uuid || "none"}, CStone: ${item.cstone_uuid || "none"})`,
+        )
+      })
+      console.log()
+    }
+  }
+
+  if (fuzzyDups.length > 0) {
+    foundIssues = true
+    console.log(
+      `⚠️  Found ${fuzzyDups.length} fuzzy duplicates (possible variations):\n`,
+    )
+    for (const [fuzzyKey, items] of fuzzyDups) {
+      console.log(`Fuzzy match: "${fuzzyKey}" (${items.length} variations)`)
       items.forEach((item) => {
         console.log(
           `  - "${item.name}" (ID: ${item.id}, UEX: ${item.uex_uuid || "none"}, CStone: ${item.cstone_uuid || "none"})`,
