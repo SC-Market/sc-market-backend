@@ -516,23 +516,38 @@ async function importItemsFromCStone(
     if (knex) {
       logger.info("Fixing bad armor types in database...")
       const badTypeItems = await knex("game_items")
-        .select("id", "name", "type")
+        .select("id", "name", "type", "cstone_uuid")
         .where("type", "like", "Armor %")
+        .orWhere("type", "=", "FPS Armor")
 
       let fixed = 0
       for (const item of badTypeItems) {
-        const correctType = item.type.replace("Armor ", "")
-        if (dryRun) {
-          logger.info(
-            `[DRY RUN] Would fix ${item.name}: ${item.type} → ${correctType}`,
-          )
-          fixed++
-        } else {
-          await knex("game_items")
-            .where("id", item.id)
-            .update({ type: correctType })
-          logger.debug(`Fixed ${item.name}: ${item.type} → ${correctType}`)
-          fixed++
+        // Skip if no cstone_uuid to look up correct type
+        if (!item.cstone_uuid) {
+          continue
+        }
+
+        const details = await fetchItemDetails(item.cstone_uuid, logger)
+        if (!details?.cstoneType) {
+          continue
+        }
+
+        const correctType =
+          CSTONE_TYPE_MAP[details.cstoneType] || details.cstoneType
+
+        if (item.type !== correctType) {
+          if (dryRun) {
+            logger.info(
+              `[DRY RUN] Would fix ${item.name}: ${item.type} → ${correctType}`,
+            )
+            fixed++
+          } else {
+            await knex("game_items")
+              .where("id", item.id)
+              .update({ type: correctType })
+            logger.debug(`Fixed ${item.name}: ${item.type} → ${correctType}`)
+            fixed++
+          }
         }
       }
       logger.info(`Fixed ${fixed} items with bad armor types`)
