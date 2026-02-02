@@ -1,6 +1,6 @@
 /**
  * Stock Lot Repository
- * 
+ *
  * Provides database access methods for stock lots.
  */
 
@@ -116,9 +116,7 @@ export class StockLotRepository {
    * Delete a stock lot
    */
   async delete(lotId: string): Promise<void> {
-    await this.knex<DBStockLot>("stock_lots")
-      .where({ lot_id: lotId })
-      .delete()
+    await this.knex<DBStockLot>("stock_lots").where({ lot_id: lotId }).delete()
   }
 
   /**

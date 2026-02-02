@@ -723,22 +723,25 @@ export async function handleStatusUpdate(req: any, res: any, status: string) {
 
     if (status === "cancelled") {
       await cancelOrderMarketItems(order)
-      
+
       // Release stock allocations when order is cancelled
       // Requirements: 6.4
       try {
         const orderLifecycleService = new OrderLifecycleService()
         await orderLifecycleService.releaseAllocationsForOrder(order.order_id)
-        
-        logger.info('Stock allocations released for cancelled order', {
+
+        logger.info("Stock allocations released for cancelled order", {
           order_id: order.order_id,
         })
       } catch (error) {
         // Log error but don't fail the cancellation
-        logger.error('Failed to release stock allocations for cancelled order', {
-          order_id: order.order_id,
-          error: error instanceof Error ? error.message : String(error),
-        })
+        logger.error(
+          "Failed to release stock allocations for cancelled order",
+          {
+            order_id: order.order_id,
+            error: error instanceof Error ? error.message : String(error),
+          },
+        )
       }
     }
 
@@ -765,18 +768,21 @@ export async function handleStatusUpdate(req: any, res: any, status: string) {
       try {
         const orderLifecycleService = new OrderLifecycleService()
         await orderLifecycleService.consumeAllocationsForOrder(order.order_id)
-        
-        logger.info('Stock allocations consumed for fulfilled order', {
+
+        logger.info("Stock allocations consumed for fulfilled order", {
           order_id: order.order_id,
         })
       } catch (error) {
         // Log error but don't fail the fulfillment
-        logger.error('Failed to consume stock allocations for fulfilled order', {
-          order_id: order.order_id,
-          error: error instanceof Error ? error.message : String(error),
-        })
+        logger.error(
+          "Failed to consume stock allocations for fulfilled order",
+          {
+            order_id: order.order_id,
+            error: error instanceof Error ? error.message : String(error),
+          },
+        )
       }
-      
+
       await orderDb.updateOrder(order.order_id, { status: status })
     } else {
       await orderDb.updateOrder(order.order_id, { status: status })

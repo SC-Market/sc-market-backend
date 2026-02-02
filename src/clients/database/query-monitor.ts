@@ -19,7 +19,7 @@ export interface QueryMetrics {
 /**
  * Enable query performance monitoring on a Knex instance.
  * Logs slow queries (>2 seconds) and provides query execution plan analysis.
- * 
+ *
  * @param knex - The Knex instance to monitor
  */
 export function enableQueryMonitoring(knex: Knex): void {
@@ -27,57 +27,72 @@ export function enableQueryMonitoring(knex: Knex): void {
   const queryStartTimes = new Map<string, number>()
 
   knex
-    .on("query", (query: { sql: string; bindings?: any[]; __knexQueryUid?: string }) => {
-      const queryId = query.__knexQueryUid || generateQueryId()
-      queryStartTimes.set(queryId, Date.now())
-      
-      // Store query ID for response handler
-      if (query.__knexQueryUid === undefined) {
-        (query as any).__knexQueryUid = queryId
-      }
-    })
-    .on("query-response", (response: any, query: { sql: string; bindings?: any[]; __knexQueryUid?: string }) => {
-      const queryId = query.__knexQueryUid
-      if (!queryId) return
+    .on(
+      "query",
+      (query: { sql: string; bindings?: any[]; __knexQueryUid?: string }) => {
+        const queryId = query.__knexQueryUid || generateQueryId()
+        queryStartTimes.set(queryId, Date.now())
 
-      const startTime = queryStartTimes.get(queryId)
-      if (!startTime) return
+        // Store query ID for response handler
+        if (query.__knexQueryUid === undefined) {
+          ;(query as any).__knexQueryUid = queryId
+        }
+      },
+    )
+    .on(
+      "query-response",
+      (
+        response: any,
+        query: { sql: string; bindings?: any[]; __knexQueryUid?: string },
+      ) => {
+        const queryId = query.__knexQueryUid
+        if (!queryId) return
 
-      const duration = Date.now() - startTime
-      queryStartTimes.delete(queryId)
+        const startTime = queryStartTimes.get(queryId)
+        if (!startTime) return
 
-      // Log slow queries
-      if (duration >= SLOW_QUERY_THRESHOLD_MS) {
-        logger.warn("Slow query detected", {
-          duration: `${duration}ms`,
+        const duration = Date.now() - startTime
+        queryStartTimes.delete(queryId)
+
+        // Log slow queries
+        if (duration >= SLOW_QUERY_THRESHOLD_MS) {
+          logger.warn("Slow query detected", {
+            duration: `${duration}ms`,
+            sql: query.sql,
+            bindings: query.bindings,
+            threshold: `${SLOW_QUERY_THRESHOLD_MS}ms`,
+          })
+
+          // Automatically analyze slow queries
+          analyzeQueryPlan(knex, query.sql, query.bindings).catch((error) => {
+            logger.error("Failed to analyze slow query", { error })
+          })
+        }
+      },
+    )
+    .on(
+      "query-error",
+      (
+        error: Error,
+        query: { sql: string; bindings?: any[]; __knexQueryUid?: string },
+      ) => {
+        const queryId = query.__knexQueryUid
+        if (queryId) {
+          queryStartTimes.delete(queryId)
+        }
+
+        logger.error("Query error", {
+          error: error.message,
           sql: query.sql,
           bindings: query.bindings,
-          threshold: `${SLOW_QUERY_THRESHOLD_MS}ms`,
         })
-
-        // Automatically analyze slow queries
-        analyzeQueryPlan(knex, query.sql, query.bindings).catch((error) => {
-          logger.error("Failed to analyze slow query", { error })
-        })
-      }
-    })
-    .on("query-error", (error: Error, query: { sql: string; bindings?: any[]; __knexQueryUid?: string }) => {
-      const queryId = query.__knexQueryUid
-      if (queryId) {
-        queryStartTimes.delete(queryId)
-      }
-
-      logger.error("Query error", {
-        error: error.message,
-        sql: query.sql,
-        bindings: query.bindings,
-      })
-    })
+      },
+    )
 }
 
 /**
  * Analyze query execution plan to identify performance issues
- * 
+ *
  * @param knex - The Knex instance
  * @param sql - The SQL query to analyze
  * @param bindings - Query parameter bindings
@@ -85,12 +100,12 @@ export function enableQueryMonitoring(knex: Knex): void {
 export async function analyzeQueryPlan(
   knex: Knex,
   sql: string,
-  bindings?: any[]
+  bindings?: any[],
 ): Promise<void> {
   try {
     // Use EXPLAIN ANALYZE to get actual execution statistics
     const explainQuery = `EXPLAIN (ANALYZE, BUFFERS, FORMAT JSON) ${sql}`
-    
+
     const result = await knex.raw(explainQuery, bindings || [])
     const plan = result.rows[0]["QUERY PLAN"]
 
@@ -118,7 +133,7 @@ export async function analyzeQueryPlan(
 
 /**
  * Identify common performance issues from query execution plan
- * 
+ *
  * @param plan - PostgreSQL query execution plan
  * @returns Array of identified issues
  */
@@ -133,7 +148,7 @@ function identifyPerformanceIssues(plan: any[]): string[] {
       const rows = node["Plan Rows"] || 0
       if (rows > 1000) {
         issues.push(
-          `Sequential scan on large table (${rows} rows). Consider adding an index.`
+          `Sequential scan on large table (${rows} rows). Consider adding an index.`,
         )
       }
     }
@@ -143,7 +158,7 @@ function identifyPerformanceIssues(plan: any[]): string[] {
       const innerNode = node["Plans"]?.[1]
       if (innerNode && innerNode["Node Type"] === "Seq Scan") {
         issues.push(
-          `Nested loop join using sequential scan. Consider adding an index on join column.`
+          `Nested loop join using sequential scan. Consider adding an index on join column.`,
         )
       }
     }
@@ -154,7 +169,7 @@ function identifyPerformanceIssues(plan: any[]): string[] {
       const estimatedCost = node["Total Cost"]
       if (actualTime > estimatedCost * 10) {
         issues.push(
-          `Actual execution time (${actualTime}ms) significantly exceeds estimated cost (${estimatedCost}). Statistics may be outdated.`
+          `Actual execution time (${actualTime}ms) significantly exceeds estimated cost (${estimatedCost}). Statistics may be outdated.`,
         )
       }
     }
@@ -184,7 +199,11 @@ export class QueryMetricsCollector {
   private metrics: QueryMetrics[] = []
   private maxMetrics = 1000 // Keep last 1000 queries
 
-  recordQuery(sql: string, bindings: any[] | undefined, duration: number): void {
+  recordQuery(
+    sql: string,
+    bindings: any[] | undefined,
+    duration: number,
+  ): void {
     this.metrics.push({
       sql,
       bindings,
@@ -198,7 +217,9 @@ export class QueryMetricsCollector {
     }
   }
 
-  getSlowQueries(thresholdMs: number = SLOW_QUERY_THRESHOLD_MS): QueryMetrics[] {
+  getSlowQueries(
+    thresholdMs: number = SLOW_QUERY_THRESHOLD_MS,
+  ): QueryMetrics[] {
     return this.metrics.filter((m) => m.duration >= thresholdMs)
   }
 

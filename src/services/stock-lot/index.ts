@@ -1,6 +1,6 @@
 /**
  * Stock Lot Service Module
- * 
+ *
  * Exports the stock lot service and related types.
  */
 

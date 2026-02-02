@@ -1,6 +1,6 @@
 /**
  * Location Types and Interfaces
- * 
+ *
  * Defines the data structures for location management in the stock tracking system.
  */
 
@@ -9,10 +9,10 @@
  */
 export interface DBLocation {
   location_id: string
-  name: string                 // max 255 chars
-  is_preset: boolean           // true for verse locations, false for custom
+  name: string // max 255 chars
+  is_preset: boolean // true for verse locations, false for custom
   display_order: number | null // for sorting preset locations
-  created_by: string | null    // user who created custom location
+  created_by: string | null // user who created custom location
   created_at: Date
 }
 
@@ -28,7 +28,7 @@ export interface CreateLocationInput {
  * Filters for searching locations
  */
 export interface LocationSearchFilters {
-  search?: string              // partial match on name
-  preset_only?: boolean        // only return preset locations
-  user_id?: string             // include custom locations for this user
+  search?: string // partial match on name
+  preset_only?: boolean // only return preset locations
+  user_id?: string // include custom locations for this user
 }

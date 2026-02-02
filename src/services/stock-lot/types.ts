@@ -1,6 +1,6 @@
 /**
  * Stock Lot Types and Interfaces
- * 
+ *
  * Defines the data structures for granular stock tracking system.
  */
 
@@ -11,10 +11,10 @@ export interface DBStockLot {
   lot_id: string
   listing_id: string
   quantity_total: number
-  location_id: string | null  // null = "Unspecified"
-  owner_id: string | null      // null = "Unassigned"
-  listed: boolean              // true = counts toward listing, false = reserve
-  notes: string | null         // max 1000 chars
+  location_id: string | null // null = "Unspecified"
+  owner_id: string | null // null = "Unassigned"
+  listed: boolean // true = counts toward listing, false = reserve
+  notes: string | null // max 1000 chars
   created_at: Date
   updated_at: Date
 }
@@ -24,10 +24,10 @@ export interface DBStockLot {
  */
 export interface DBLocation {
   location_id: string
-  name: string                 // max 255 chars
-  is_preset: boolean           // true for verse locations, false for custom
+  name: string // max 255 chars
+  is_preset: boolean // true for verse locations, false for custom
   display_order: number | null // for sorting preset locations
-  created_by: string | null    // user who created custom location
+  created_by: string | null // user who created custom location
   created_at: Date
 }
 

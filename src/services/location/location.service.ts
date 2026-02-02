@@ -1,6 +1,6 @@
 /**
  * Location Service
- * 
+ *
  * Provides business logic for location management in the stock tracking system.
  */
 
@@ -22,13 +22,13 @@ export class LocationService {
    * Search locations with partial match
    * Returns preset locations first, then custom locations
    * Filters by user ownership for custom locations
-   * 
+   *
    * Requirements: 15.1, 15.2, 15.3, 15.4
    */
   async searchLocations(
     search?: string,
     userId?: string,
-    presetOnly?: boolean
+    presetOnly?: boolean,
   ): Promise<DBLocation[]> {
     const filters: LocationSearchFilters = {
       search,
@@ -64,12 +64,12 @@ export class LocationService {
    * Create a custom location
    * Validates name length (max 255 chars)
    * Associates with creating user
-   * 
+   *
    * Requirements: 2.4, 15.6
    */
   async createCustomLocation(
     name: string,
-    userId: string
+    userId: string,
   ): Promise<DBLocation> {
     // Validate name length
     if (!name || name.trim().length === 0) {
@@ -83,23 +83,21 @@ export class LocationService {
     const trimmedName = name.trim()
 
     // Check if a preset location with this name already exists
-    const presetExists = await this.repository.presetLocationExists(
-      trimmedName
-    )
+    const presetExists = await this.repository.presetLocationExists(trimmedName)
     if (presetExists) {
       throw new Error(
-        "A preset location with this name already exists. Please use a different name."
+        "A preset location with this name already exists. Please use a different name.",
       )
     }
 
     // Check if user already has a custom location with this name
     const userLocationExists = await this.repository.locationExistsForUser(
       trimmedName,
-      userId
+      userId,
     )
     if (userLocationExists) {
       throw new Error(
-        "You already have a custom location with this name. Please use a different name."
+        "You already have a custom location with this name. Please use a different name.",
       )
     }
 

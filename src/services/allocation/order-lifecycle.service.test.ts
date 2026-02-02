@@ -1,8 +1,8 @@
 /**
  * Order Lifecycle Service Tests
- * 
+ *
  * Tests for order lifecycle integration with stock allocation
- * 
+ *
  * Note: These are integration tests that require database setup.
  * Run with: npm test -- order-lifecycle.service.test.ts
  */
@@ -26,4 +26,3 @@ describe("OrderLifecycleService", () => {
   // These should be run in a test environment with proper database configuration
   // See docs/order-lifecycle-integration.md for manual testing instructions
 })
-

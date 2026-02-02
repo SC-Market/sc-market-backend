@@ -274,7 +274,7 @@ export async function can_manage_stock_lot(
 ) {
   const lot_id = req.params["lot_id"]
   const user = req.user as User
-  
+
   if (!user) {
     res
       .status(401)
@@ -292,7 +292,7 @@ export async function can_manage_stock_lot(
   try {
     // Get the lot
     const lot = await stockLotRepo.getById(lot_id)
-    
+
     if (!lot) {
       res
         .status(404)
@@ -301,8 +301,10 @@ export async function can_manage_stock_lot(
     }
 
     // Get the listing to check ownership
-    const listing = await marketDb.getMarketListing({ listing_id: lot.listing_id })
-    
+    const listing = await marketDb.getMarketListing({
+      listing_id: lot.listing_id,
+    })
+
     if (!listing) {
       res
         .status(404)
@@ -335,8 +337,7 @@ export async function can_manage_stock_lot(
           ))
         ) {
           res.status(403).json({
-            error:
-              "You are not authorized to manage lots for this contractor!",
+            error: "You are not authorized to manage lots for this contractor!",
           })
           return
         }

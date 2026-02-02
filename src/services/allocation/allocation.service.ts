@@ -1,6 +1,6 @@
 /**
  * Allocation Service
- * 
+ *
  * Manages stock allocation for orders, including automatic FIFO allocation,
  * manual allocation, release, and consumption.
  */
@@ -26,10 +26,10 @@ export class InsufficientStockError extends Error {
   constructor(
     public requested: number,
     public available: number,
-    public listingId: string
+    public listingId: string,
   ) {
     super(`Insufficient stock: requested ${requested}, available ${available}`)
-    this.name = 'InsufficientStockError'
+    this.name = "InsufficientStockError"
   }
 }
 
@@ -39,7 +39,7 @@ export class InsufficientStockError extends Error {
 export class AllocationValidationError extends Error {
   constructor(message: string) {
     super(message)
-    this.name = 'AllocationValidationError'
+    this.name = "AllocationValidationError"
   }
 }
 
@@ -56,9 +56,9 @@ export class AllocationService {
 
   /**
    * Automatically allocate stock to an order using FIFO strategy
-   * 
+   *
    * Requirements: 6.1, 6.2, 6.3
-   * 
+   *
    * @param orderId - The order to allocate stock for
    * @param listingId - The listing to allocate stock from
    * @param quantity - The quantity to allocate
@@ -67,7 +67,7 @@ export class AllocationService {
   async autoAllocate(
     orderId: string,
     listingId: string,
-    quantity: number
+    quantity: number,
   ): Promise<AllocationResult> {
     return await this.knex.transaction(async (trx) => {
       const allocationRepo = new AllocationRepository(trx)
@@ -80,24 +80,32 @@ export class AllocationService {
       })
 
       // Lock the lots for update to prevent concurrent allocation issues
-      await trx('stock_lots')
-        .whereIn('lot_id', lots.map(l => l.lot_id))
+      await trx("stock_lots")
+        .whereIn(
+          "lot_id",
+          lots.map((l) => l.lot_id),
+        )
         .forUpdate()
 
       // Calculate available quantity for each lot
       const lotsWithAvailable = await Promise.all(
         lots.map(async (lot) => {
-          const allocated = await allocationRepo.getAllocatedQuantity(lot.lot_id)
+          const allocated = await allocationRepo.getAllocatedQuantity(
+            lot.lot_id,
+          )
           const available = lot.quantity_total - allocated
           return { lot, available }
-        })
+        }),
       )
 
       // Filter to only lots with available stock
-      const availableLots = lotsWithAvailable.filter(l => l.available > 0)
+      const availableLots = lotsWithAvailable.filter((l) => l.available > 0)
 
       // Calculate total available stock
-      const totalAvailable = availableLots.reduce((sum, l) => sum + l.available, 0)
+      const totalAvailable = availableLots.reduce(
+        (sum, l) => sum + l.available,
+        0,
+      )
 
       // Check if we have enough stock
       if (totalAvailable === 0) {
@@ -117,7 +125,7 @@ export class AllocationService {
           lot_id: lot.lot_id,
           order_id: orderId,
           quantity: allocateQuantity,
-          status: 'active',
+          status: "active",
         })
 
         allocations.push(allocation)
@@ -137,31 +145,29 @@ export class AllocationService {
 
   /**
    * Manually allocate specific lots to an order
-   * 
+   *
    * Requirements: 7.1, 7.2, 7.3, 7.4
-   * 
+   *
    * @param orderId - The order to allocate stock for
    * @param allocations - Array of lot selections with quantities
    * @returns Allocation result with created allocations
    */
   async manualAllocate(
     orderId: string,
-    allocations: ManualAllocationInput[]
+    allocations: ManualAllocationInput[],
   ): Promise<AllocationResult> {
     return await this.knex.transaction(async (trx) => {
       const allocationRepo = new AllocationRepository(trx)
       const stockLotRepo = new StockLotRepository(trx)
 
       // Validate all lots exist and have sufficient available quantity
-      const lotIds = allocations.map(a => a.lot_id)
+      const lotIds = allocations.map((a) => a.lot_id)
       const lots = await Promise.all(
-        lotIds.map(id => stockLotRepo.getById(id))
+        lotIds.map((id) => stockLotRepo.getById(id)),
       )
 
       // Lock the lots for update
-      await trx('stock_lots')
-        .whereIn('lot_id', lotIds)
-        .forUpdate()
+      await trx("stock_lots").whereIn("lot_id", lotIds).forUpdate()
 
       // Validate each allocation
       for (let i = 0; i < allocations.length; i++) {
@@ -177,28 +183,31 @@ export class AllocationService {
 
         if (input.quantity > available) {
           throw new AllocationValidationError(
-            `Cannot allocate ${input.quantity} from lot ${lot.lot_id}. Only ${available} available.`
+            `Cannot allocate ${input.quantity} from lot ${lot.lot_id}. Only ${available} available.`,
           )
         }
 
         if (input.quantity <= 0) {
           throw new AllocationValidationError(
-            `Allocation quantity must be positive. Got ${input.quantity} for lot ${lot.lot_id}`
+            `Allocation quantity must be positive. Got ${input.quantity} for lot ${lot.lot_id}`,
           )
         }
       }
 
       // Create all allocations
       const createdAllocations = await allocationRepo.createMany(
-        allocations.map(a => ({
+        allocations.map((a) => ({
           lot_id: a.lot_id,
           order_id: orderId,
           quantity: a.quantity,
-          status: 'active',
-        }))
+          status: "active",
+        })),
       )
 
-      const totalAllocated = createdAllocations.reduce((sum, a) => sum + a.quantity, 0)
+      const totalAllocated = createdAllocations.reduce(
+        (sum, a) => sum + a.quantity,
+        0,
+      )
 
       return {
         allocations: createdAllocations,
@@ -210,9 +219,9 @@ export class AllocationService {
 
   /**
    * Release all allocations for an order (e.g., when order is cancelled)
-   * 
+   *
    * Requirements: 6.4, 7.5
-   * 
+   *
    * @param orderId - The order to release allocations for
    */
   async releaseAllocations(orderId: string): Promise<void> {
@@ -220,15 +229,15 @@ export class AllocationService {
       const allocationRepo = new AllocationRepository(trx)
 
       // Update all active allocations to released status
-      await allocationRepo.updateStatusByOrderId(orderId, 'released')
+      await allocationRepo.updateStatusByOrderId(orderId, "released")
     })
   }
 
   /**
    * Consume allocations for an order (e.g., when order is fulfilled)
-   * 
+   *
    * Requirements: 6.5, 10.5
-   * 
+   *
    * @param orderId - The order to consume allocations for
    */
   async consumeAllocations(orderId: string): Promise<void> {
@@ -240,10 +249,8 @@ export class AllocationService {
       const allocations = await allocationRepo.getActiveByOrderId(orderId)
 
       // Lock the lots for update
-      const lotIds = [...new Set(allocations.map(a => a.lot_id))]
-      await trx('stock_lots')
-        .whereIn('lot_id', lotIds)
-        .forUpdate()
+      const lotIds = [...new Set(allocations.map((a) => a.lot_id))]
+      await trx("stock_lots").whereIn("lot_id", lotIds).forUpdate()
 
       // Reduce lot quantities
       for (const allocation of allocations) {
@@ -255,7 +262,7 @@ export class AllocationService {
         const newQuantity = lot.quantity_total - allocation.quantity
         if (newQuantity < 0) {
           throw new Error(
-            `Cannot consume ${allocation.quantity} from lot ${lot.lot_id}. Only ${lot.quantity_total} available.`
+            `Cannot consume ${allocation.quantity} from lot ${lot.lot_id}. Only ${lot.quantity_total} available.`,
           )
         }
 
@@ -265,13 +272,13 @@ export class AllocationService {
       }
 
       // Update allocation status to fulfilled
-      await allocationRepo.updateStatusByOrderId(orderId, 'fulfilled')
+      await allocationRepo.updateStatusByOrderId(orderId, "fulfilled")
     })
   }
 
   /**
    * Get all allocations for an order
-   * 
+   *
    * @param orderId - The order to get allocations for
    * @returns Array of allocations
    */
@@ -281,7 +288,7 @@ export class AllocationService {
 
   /**
    * Get the total allocated quantity for a lot
-   * 
+   *
    * @param lotId - The lot to get allocated quantity for
    * @returns Total allocated quantity
    */
@@ -291,33 +298,37 @@ export class AllocationService {
 
   /**
    * Get allocation strategy for a contractor
-   * 
+   *
    * Requirements: 12.1, 12.2, 12.4, 12.5
-   * 
+   *
    * @param contractorId - The contractor to get strategy for
    * @returns Allocation strategy or null if not set (defaults to FIFO)
    */
-  async getAllocationStrategy(contractorId: string): Promise<DBAllocationStrategy | null> {
+  async getAllocationStrategy(
+    contractorId: string,
+  ): Promise<DBAllocationStrategy | null> {
     return this.allocationRepo.getStrategy(contractorId)
   }
 
   /**
    * Set allocation strategy for a contractor
-   * 
+   *
    * Requirements: 12.1, 12.2, 12.4, 12.5
-   * 
+   *
    * @param input - Strategy configuration
    * @returns Created or updated strategy
    */
-  async setAllocationStrategy(input: AllocationStrategyInput): Promise<DBAllocationStrategy> {
+  async setAllocationStrategy(
+    input: AllocationStrategyInput,
+  ): Promise<DBAllocationStrategy> {
     return this.allocationRepo.upsertStrategy(input)
   }
 
   /**
    * Allocate stock using the configured strategy for a contractor
-   * 
+   *
    * Requirements: 12.1, 12.2, 12.4, 12.5
-   * 
+   *
    * @param orderId - The order to allocate stock for
    * @param listingId - The listing to allocate stock from
    * @param quantity - The quantity to allocate
@@ -328,19 +339,19 @@ export class AllocationService {
     orderId: string,
     listingId: string,
     quantity: number,
-    contractorId: string
+    contractorId: string,
   ): Promise<AllocationResult> {
     const strategy = await this.getAllocationStrategy(contractorId)
-    const strategyType = strategy?.strategy_type ?? 'fifo'
+    const strategyType = strategy?.strategy_type ?? "fifo"
 
-    if (strategyType === 'fifo') {
+    if (strategyType === "fifo") {
       return this.autoAllocate(orderId, listingId, quantity)
-    } else if (strategyType === 'location_priority') {
+    } else if (strategyType === "location_priority") {
       return this.allocateWithLocationPriority(
         orderId,
         listingId,
         quantity,
-        strategy!.location_priority_order ?? []
+        strategy!.location_priority_order ?? [],
       )
     }
 
@@ -350,9 +361,9 @@ export class AllocationService {
 
   /**
    * Allocate stock using location priority strategy
-   * 
+   *
    * Requirements: 12.2, 12.3
-   * 
+   *
    * @param orderId - The order to allocate stock for
    * @param listingId - The listing to allocate stock from
    * @param quantity - The quantity to allocate
@@ -363,7 +374,7 @@ export class AllocationService {
     orderId: string,
     listingId: string,
     quantity: number,
-    locationPriority: string[]
+    locationPriority: string[],
   ): Promise<AllocationResult> {
     return await this.knex.transaction(async (trx) => {
       const allocationRepo = new AllocationRepository(trx)
@@ -376,21 +387,26 @@ export class AllocationService {
       })
 
       // Lock the lots for update
-      await trx('stock_lots')
-        .whereIn('lot_id', allLots.map(l => l.lot_id))
+      await trx("stock_lots")
+        .whereIn(
+          "lot_id",
+          allLots.map((l) => l.lot_id),
+        )
         .forUpdate()
 
       // Calculate available quantity for each lot
       const lotsWithAvailable = await Promise.all(
         allLots.map(async (lot) => {
-          const allocated = await allocationRepo.getAllocatedQuantity(lot.lot_id)
+          const allocated = await allocationRepo.getAllocatedQuantity(
+            lot.lot_id,
+          )
           const available = lot.quantity_total - allocated
           return { lot, available }
-        })
+        }),
       )
 
       // Filter to only lots with available stock
-      const availableLots = lotsWithAvailable.filter(l => l.available > 0)
+      const availableLots = lotsWithAvailable.filter((l) => l.available > 0)
 
       // Sort lots by location priority, then by created_at (FIFO within same priority)
       const sortedLots = availableLots.sort((a, b) => {
@@ -437,7 +453,7 @@ export class AllocationService {
           lot_id: lot.lot_id,
           order_id: orderId,
           quantity: allocateQuantity,
-          status: 'active',
+          status: "active",
         })
 
         allocations.push(allocation)

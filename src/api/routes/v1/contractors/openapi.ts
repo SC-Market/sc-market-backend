@@ -368,7 +368,8 @@ oapi.schema("ContractorKindIconKey", {
   type: "string",
   title: "ContractorKindIconKey",
   enum: [...VALID_ORG_TAGS],
-  description: "Contractor specialization/field key used for icons and filtering",
+  description:
+    "Contractor specialization/field key used for icons and filtering",
 })
 
 oapi.schema("Contractor", {

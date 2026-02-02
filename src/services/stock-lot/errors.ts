@@ -1,6 +1,6 @@
 /**
  * Stock Lot Error Classes
- * 
+ *
  * Custom error classes for stock lot management operations.
  * Requirements: 13.1, 13.2, 13.3, 13.4
  */
@@ -13,7 +13,7 @@ import { ErrorCode } from "../../api/routes/v1/util/error-codes.js"
  */
 export class InsufficientStockError extends Error {
   public readonly code = ErrorCode.INSUFFICIENT_STOCK
-  
+
   constructor(
     public readonly requested: number,
     public readonly available: number,
@@ -23,11 +23,9 @@ export class InsufficientStockError extends Error {
       canAllocateUnlisted?: boolean
       canReduceOrder?: boolean
       unlistedStock?: number
-    }
+    },
   ) {
-    super(
-      `Insufficient stock: requested ${requested}, available ${available}`
-    )
+    super(`Insufficient stock: requested ${requested}, available ${available}`)
     this.name = "InsufficientStockError"
     Object.setPrototypeOf(this, InsufficientStockError.prototype)
   }
@@ -51,10 +49,10 @@ export class InsufficientStockError extends Error {
  */
 export class InvalidQuantityError extends Error {
   public readonly code = ErrorCode.INVALID_QUANTITY
-  
+
   constructor(
     public readonly quantity: number,
-    public readonly reason: string = "Quantity must be non-negative"
+    public readonly reason: string = "Quantity must be non-negative",
   ) {
     super(`Invalid quantity: ${quantity}. ${reason}`)
     this.name = "InvalidQuantityError"
@@ -77,14 +75,14 @@ export class InvalidQuantityError extends Error {
  */
 export class OverAllocationError extends Error {
   public readonly code = ErrorCode.OVER_ALLOCATION
-  
+
   constructor(
     public readonly lotId: string,
     public readonly requested: number,
-    public readonly available: number
+    public readonly available: number,
   ) {
     super(
-      `Cannot allocate ${requested} from lot ${lotId}. Only ${available} available.`
+      `Cannot allocate ${requested} from lot ${lotId}. Only ${available} available.`,
     )
     this.name = "OverAllocationError"
     Object.setPrototypeOf(this, OverAllocationError.prototype)
@@ -108,14 +106,14 @@ export class OverAllocationError extends Error {
  */
 export class CharacterLimitError extends Error {
   public readonly code = ErrorCode.CHARACTER_LIMIT_EXCEEDED
-  
+
   constructor(
     public readonly field: string,
     public readonly currentLength: number,
-    public readonly maxLength: number
+    public readonly maxLength: number,
   ) {
     super(
-      `${field} exceeds character limit: ${currentLength}/${maxLength} characters`
+      `${field} exceeds character limit: ${currentLength}/${maxLength} characters`,
     )
     this.name = "CharacterLimitError"
     Object.setPrototypeOf(this, CharacterLimitError.prototype)
@@ -138,14 +136,14 @@ export class CharacterLimitError extends Error {
  */
 export class ConcurrentModificationError extends Error {
   public readonly code = ErrorCode.CONCURRENT_MODIFICATION
-  
+
   constructor(
     public readonly resourceId: string,
     public readonly resourceType: string = "resource",
-    public readonly latestData?: any
+    public readonly latestData?: any,
   ) {
     super(
-      `${resourceType} ${resourceId} was modified by another operation. Please retry with latest data.`
+      `${resourceType} ${resourceId} was modified by another operation. Please retry with latest data.`,
     )
     this.name = "ConcurrentModificationError"
     Object.setPrototypeOf(this, ConcurrentModificationError.prototype)

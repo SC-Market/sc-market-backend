@@ -1,6 +1,6 @@
 /**
  * Allocation Repository
- * 
+ *
  * Provides database access methods for stock allocations.
  */
 
@@ -31,7 +31,7 @@ export class AllocationRepository {
         lot_id: input.lot_id,
         order_id: input.order_id,
         quantity: input.quantity,
-        status: input.status ?? 'active',
+        status: input.status ?? "active",
       })
       .returning("*")
 
@@ -44,12 +44,12 @@ export class AllocationRepository {
   async createMany(inputs: CreateAllocationInput[]): Promise<DBAllocation[]> {
     const allocations = await this.knex<DBAllocation>("stock_allocations")
       .insert(
-        inputs.map(input => ({
+        inputs.map((input) => ({
           lot_id: input.lot_id,
           order_id: input.order_id,
           quantity: input.quantity,
-          status: input.status ?? 'active',
-        }))
+          status: input.status ?? "active",
+        })),
       )
       .returning("*")
 
@@ -101,7 +101,7 @@ export class AllocationRepository {
    * Get all active allocations for an order
    */
   async getActiveByOrderId(orderId: string): Promise<DBAllocation[]> {
-    return this.getAllocations({ order_id: orderId, status: 'active' })
+    return this.getAllocations({ order_id: orderId, status: "active" })
   }
 
   /**
@@ -115,17 +115,17 @@ export class AllocationRepository {
    * Get all active allocations for a lot
    */
   async getActiveByLotId(lotId: string): Promise<DBAllocation[]> {
-    return this.getAllocations({ lot_id: lotId, status: 'active' })
+    return this.getAllocations({ lot_id: lotId, status: "active" })
   }
 
   /**
    * Get the total allocated quantity for a lot
    */
   async getAllocatedQuantity(lotId: string): Promise<number> {
-    const result = await this.knex<DBAllocation>("stock_allocations")
-      .where({ lot_id: lotId, status: 'active' })
-      .sum('quantity as total')
-      .first() as { total?: string | number } | undefined
+    const result = (await this.knex<DBAllocation>("stock_allocations")
+      .where({ lot_id: lotId, status: "active" })
+      .sum("quantity as total")
+      .first()) as { total?: string | number } | undefined
 
     return result?.total ? Number(result.total) : 0
   }
@@ -133,7 +133,10 @@ export class AllocationRepository {
   /**
    * Update an allocation
    */
-  async update(allocationId: string, updates: UpdateAllocationInput): Promise<DBAllocation> {
+  async update(
+    allocationId: string,
+    updates: UpdateAllocationInput,
+  ): Promise<DBAllocation> {
     const updateData: Partial<DBAllocation> = {
       updated_at: new Date(),
     }
@@ -157,7 +160,10 @@ export class AllocationRepository {
   /**
    * Update all allocations for an order with a new status
    */
-  async updateStatusByOrderId(orderId: string, status: 'active' | 'released' | 'fulfilled'): Promise<DBAllocation[]> {
+  async updateStatusByOrderId(
+    orderId: string,
+    status: "active" | "released" | "fulfilled",
+  ): Promise<DBAllocation[]> {
     const allocations = await this.knex<DBAllocation>("stock_allocations")
       .where({ order_id: orderId })
       .update({
@@ -181,8 +187,12 @@ export class AllocationRepository {
   /**
    * Get allocation strategy for a contractor
    */
-  async getStrategy(contractorId: string): Promise<DBAllocationStrategy | null> {
-    const strategy = await this.knex<DBAllocationStrategy>("allocation_strategies")
+  async getStrategy(
+    contractorId: string,
+  ): Promise<DBAllocationStrategy | null> {
+    const strategy = await this.knex<DBAllocationStrategy>(
+      "allocation_strategies",
+    )
       .where({ contractor_id: contractorId })
       .first()
 
@@ -192,11 +202,15 @@ export class AllocationRepository {
   /**
    * Create or update allocation strategy for a contractor
    */
-  async upsertStrategy(input: AllocationStrategyInput): Promise<DBAllocationStrategy> {
+  async upsertStrategy(
+    input: AllocationStrategyInput,
+  ): Promise<DBAllocationStrategy> {
     const existing = await this.getStrategy(input.contractor_id)
 
     if (existing) {
-      const [strategy] = await this.knex<DBAllocationStrategy>("allocation_strategies")
+      const [strategy] = await this.knex<DBAllocationStrategy>(
+        "allocation_strategies",
+      )
         .where({ contractor_id: input.contractor_id })
         .update({
           strategy_type: input.strategy_type,
@@ -207,7 +221,9 @@ export class AllocationRepository {
 
       return strategy
     } else {
-      const [strategy] = await this.knex<DBAllocationStrategy>("allocation_strategies")
+      const [strategy] = await this.knex<DBAllocationStrategy>(
+        "allocation_strategies",
+      )
         .insert({
           contractor_id: input.contractor_id,
           strategy_type: input.strategy_type,

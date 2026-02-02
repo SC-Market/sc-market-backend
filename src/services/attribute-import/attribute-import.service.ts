@@ -6,10 +6,7 @@
 import logger from "../../logger/logger.js"
 import { database } from "../../clients/database/knex-db.js"
 import { upsertGameItemAttribute } from "../../api/routes/v1/attributes/database.js"
-import {
-  AttributeImporter,
-  AttributeRecord,
-} from "./attribute-import.types.js"
+import { AttributeImporter, AttributeRecord } from "./attribute-import.types.js"
 import { CStoneImporter } from "./cstone-importer.js"
 import { UEXCorpImporter } from "./uexcorp-importer.js"
 
@@ -39,7 +36,10 @@ export class AttributeImportService {
    * @param gameItemId - The game item UUID to import attributes for
    * @returns Import result with success status and error details
    */
-  async importAttributesForItem(gameItemId: string, dryRun = false): Promise<ImportResult> {
+  async importAttributesForItem(
+    gameItemId: string,
+    dryRun = false,
+  ): Promise<ImportResult> {
     logger.info("Starting attribute import for game item", {
       gameItemId,
       importerCount: this.importers.length,
@@ -203,7 +203,9 @@ export class AttributeImportService {
     logger.info("Refreshing market search materialized view")
 
     try {
-      await database.knex.raw("REFRESH MATERIALIZED VIEW market_search_materialized")
+      await database.knex.raw(
+        "REFRESH MATERIALIZED VIEW market_search_materialized",
+      )
 
       logger.info("Successfully refreshed materialized view")
     } catch (error) {

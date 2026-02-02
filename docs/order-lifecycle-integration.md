@@ -26,6 +26,7 @@ This service provides the integration layer between orders and stock allocations
 **Location**: `src/api/routes/v1/orders/helpers.ts` - `createOffer` function
 
 When an order is created with market listings:
+
 1. The order and offer are created in a transaction
 2. After successful creation, stock is automatically allocated using FIFO strategy
 3. If a contractor is specified, their allocation strategy is used
@@ -33,6 +34,7 @@ When an order is created with market listings:
 5. Allocation failures are logged but don't prevent order creation
 
 **Behavior**:
+
 - Uses FIFO (First In, First Out) allocation by default
 - Respects contractor allocation strategies (FIFO or location priority)
 - Handles insufficient stock gracefully with partial allocations
@@ -43,12 +45,14 @@ When an order is created with market listings:
 **Location**: `src/api/routes/v1/orders/helpers.ts` - `handleStatusUpdate` function
 
 When an order status is changed to "cancelled":
+
 1. Existing cancellation logic runs (restore legacy stock if needed)
 2. All active allocations for the order are released
 3. Stock becomes available again for other orders
 4. Allocation records are updated to "released" status for audit trail
 
 **Behavior**:
+
 - Releases all active allocations
 - Stock immediately becomes available for new orders
 - Maintains allocation records with "released" status
@@ -59,12 +63,14 @@ When an order status is changed to "cancelled":
 **Location**: `src/api/routes/v1/orders/helpers.ts` - `handleStatusUpdate` function
 
 When an order status is changed to "fulfilled":
+
 1. All active allocations are consumed
 2. Lot quantities are reduced by the allocated amounts
 3. Allocation records are updated to "fulfilled" status
 4. Order status is updated to fulfilled
 
 **Behavior**:
+
 - Consumes stock from allocated lots
 - Reduces lot `quantity_total` by allocated amounts
 - Maintains allocation records with "fulfilled" status for audit
@@ -77,14 +83,16 @@ When an order status is changed to "fulfilled":
 Location: `src/features/market/components/allocation/AllocationStatusDisplay.tsx`
 
 A compact component that displays allocation status for an order:
+
 - Shows total allocated quantity
 - Indicates partial allocations with warning
 - Displays different states: active, fulfilled, released
 - Provides optional link to detailed allocation view
 
 **Usage**:
+
 ```tsx
-<AllocationStatusDisplay 
+<AllocationStatusDisplay
   orderId={order.order_id}
   orderQuantity={totalQuantity}
   compact={true}
@@ -123,6 +131,7 @@ Key log messages to monitor:
 ### Transactions
 
 All allocation operations use database transactions to ensure consistency:
+
 - Row-level locking prevents concurrent allocation conflicts
 - Rollback on failure ensures data integrity
 
@@ -167,4 +176,3 @@ Potential improvements:
 - [Stock Lot Service](../src/services/stock-lot/README.md)
 - [Allocation Service](../src/services/allocation/README.md)
 - [Granular Stock Tracking Spec](../../.kiro/specs/granular-stock-tracking/)
-

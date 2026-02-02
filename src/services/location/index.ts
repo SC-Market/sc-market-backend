@@ -1,6 +1,6 @@
 /**
  * Location Service Module
- * 
+ *
  * Exports the location service and related types.
  */
 

@@ -1,6 +1,6 @@
 /**
  * Location Service Tests
- * 
+ *
  * Unit tests for location service functionality.
  */
 
@@ -68,21 +68,21 @@ describe("LocationService", () => {
       },
       searchLocations: async (filters) => {
         let results = [...mockPresetLocations]
-        
+
         if (filters.user_id && !filters.preset_only) {
           const userLocs = mockCustomLocations.filter(
-            (loc) => loc.created_by === filters.user_id
+            (loc) => loc.created_by === filters.user_id,
           )
           results = [...results, ...userLocs]
         }
-        
+
         if (filters.search) {
           const searchLower = filters.search.toLowerCase()
           results = results.filter((loc) =>
-            loc.name.toLowerCase().includes(searchLower)
+            loc.name.toLowerCase().includes(searchLower),
           )
         }
-        
+
         return results
       },
       createCustomLocation: async (input) => {
@@ -98,7 +98,7 @@ describe("LocationService", () => {
       },
       locationExistsForUser: async (name: string, userId: string) => {
         return mockCustomLocations.some(
-          (loc) => loc.name === name && loc.created_by === userId
+          (loc) => loc.name === name && loc.created_by === userId,
         )
       },
       presetLocationExists: async (name: string) => {
@@ -112,14 +112,14 @@ describe("LocationService", () => {
   describe("searchLocations", () => {
     it("should return preset locations when no user specified", async () => {
       const results = await service.searchLocations()
-      
+
       expect(results).toHaveLength(3)
       expect(results.every((loc) => loc.is_preset)).toBe(true)
     })
 
     it("should return preset and user custom locations when user specified", async () => {
       const results = await service.searchLocations(undefined, "user-1")
-      
+
       expect(results).toHaveLength(4)
       expect(results.filter((loc) => loc.is_preset)).toHaveLength(3)
       expect(results.filter((loc) => !loc.is_preset)).toHaveLength(1)
@@ -127,14 +127,14 @@ describe("LocationService", () => {
 
     it("should filter locations by search term", async () => {
       const results = await service.searchLocations("oris", "user-1")
-      
+
       expect(results).toHaveLength(1) // Only Orison
       expect(results[0].name).toBe("Orison")
     })
 
     it("should return only preset locations when presetOnly is true", async () => {
       const results = await service.searchLocations(undefined, "user-1", true)
-      
+
       expect(results).toHaveLength(3)
       expect(results.every((loc) => loc.is_preset)).toBe(true)
     })
@@ -143,7 +143,7 @@ describe("LocationService", () => {
   describe("createCustomLocation", () => {
     it("should create a custom location with valid name", async () => {
       const result = await service.createCustomLocation("My Storage", "user-2")
-      
+
       expect(result.name).toBe("My Storage")
       expect(result.is_preset).toBe(false)
       expect(result.created_by).toBe("user-2")
@@ -151,33 +151,33 @@ describe("LocationService", () => {
 
     it("should trim whitespace from location name", async () => {
       const result = await service.createCustomLocation("  Spaced  ", "user-2")
-      
+
       expect(result.name).toBe("Spaced")
     })
 
     it("should reject empty location name", async () => {
-      await expect(
-        service.createCustomLocation("", "user-2")
-      ).rejects.toThrow("Location name cannot be empty")
+      await expect(service.createCustomLocation("", "user-2")).rejects.toThrow(
+        "Location name cannot be empty",
+      )
     })
 
     it("should reject location name exceeding 255 characters", async () => {
       const longName = "a".repeat(256)
-      
+
       await expect(
-        service.createCustomLocation(longName, "user-2")
+        service.createCustomLocation(longName, "user-2"),
       ).rejects.toThrow("Location name cannot exceed 255 characters")
     })
 
     it("should reject duplicate preset location name", async () => {
       await expect(
-        service.createCustomLocation("Orison", "user-2")
+        service.createCustomLocation("Orison", "user-2"),
       ).rejects.toThrow("A preset location with this name already exists")
     })
 
     it("should reject duplicate custom location name for same user", async () => {
       await expect(
-        service.createCustomLocation("My Warehouse", "user-1")
+        service.createCustomLocation("My Warehouse", "user-1"),
       ).rejects.toThrow("You already have a custom location with this name")
     })
   })
@@ -185,7 +185,7 @@ describe("LocationService", () => {
   describe("getPresetLocations", () => {
     it("should return all preset locations", async () => {
       const results = await service.getPresetLocations()
-      
+
       expect(results).toHaveLength(3)
       expect(results.every((loc) => loc.is_preset)).toBe(true)
     })
@@ -194,7 +194,7 @@ describe("LocationService", () => {
   describe("getUserLocations", () => {
     it("should return custom locations for specified user", async () => {
       const results = await service.getUserLocations("user-1")
-      
+
       expect(results).toHaveLength(1)
       expect(results[0].name).toBe("My Warehouse")
       expect(results[0].created_by).toBe("user-1")
@@ -202,7 +202,7 @@ describe("LocationService", () => {
 
     it("should return empty array for user with no custom locations", async () => {
       const results = await service.getUserLocations("user-2")
-      
+
       expect(results).toHaveLength(0)
     })
   })
@@ -210,7 +210,7 @@ describe("LocationService", () => {
   describe("getUnspecifiedLocation", () => {
     it("should return the Unspecified location", async () => {
       const result = await service.getUnspecifiedLocation()
-      
+
       expect(result).not.toBeNull()
       expect(result?.name).toBe("Unspecified")
       expect(result?.is_preset).toBe(true)

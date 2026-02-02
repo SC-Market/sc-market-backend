@@ -35,7 +35,7 @@ export class CStoneImporter implements AttributeImporter {
       // 1. Whether cstone.space provides a public API
       // 2. API endpoint structure and authentication requirements
       // 3. Rate limiting considerations
-      
+
       // Once API details are known, implement:
       // const response = await fetch(`${CSTONE_BASE_URL}/api/items/${itemId}`)
       // if (!response.ok) {

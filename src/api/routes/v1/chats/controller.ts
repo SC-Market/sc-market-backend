@@ -165,7 +165,8 @@ export async function createChat(
   )
   const blockedByMeUserIds = new Set(myBlocklist.map((b) => b.blocked_id))
   const blockedRequestedUser = otherUsers.find(
-    (u) => blockedYouUserIds.has(u!.user_id) || blockedByMeUserIds.has(u!.user_id),
+    (u) =>
+      blockedYouUserIds.has(u!.user_id) || blockedByMeUserIds.has(u!.user_id),
   )
   if (blockedRequestedUser) {
     res.status(403).json(

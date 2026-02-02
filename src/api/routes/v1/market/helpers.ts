@@ -279,7 +279,10 @@ export async function convertQuery(
   let attributes: AttributeFilter[] | null = null
   const attributeFilters: AttributeFilter[] = []
 
-  console.log('[CONVERT QUERY] Raw query params:', JSON.stringify(query, null, 2))
+  console.log(
+    "[CONVERT QUERY] Raw query params:",
+    JSON.stringify(query, null, 2),
+  )
 
   for (const [key, value] of Object.entries(query)) {
     if (key.startsWith("attr_") && typeof value === "string") {
@@ -289,7 +292,14 @@ export async function convertQuery(
         .map((v) => v.trim())
         .filter(Boolean)
 
-      console.log('[CONVERT QUERY] Found attr:', key, '=', value, 'parsed:', values)
+      console.log(
+        "[CONVERT QUERY] Found attr:",
+        key,
+        "=",
+        value,
+        "parsed:",
+        values,
+      )
 
       if (values.length > 0) {
         attributeFilters.push({
@@ -305,7 +315,10 @@ export async function convertQuery(
     attributes = attributeFilters
   }
 
-  console.log('[CONVERT QUERY] Final attributes:', JSON.stringify(attributes, null, 2))
+  console.log(
+    "[CONVERT QUERY] Final attributes:",
+    JSON.stringify(attributes, null, 2),
+  )
 
   return {
     sale_type: query.sale_type || null,
