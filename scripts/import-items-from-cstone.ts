@@ -421,11 +421,12 @@ async function importItemsFromCStone(
 
       // Update existing item if:
       // 1. It has a cstone_uuid (came from CStone before)
-      // 2. It has a bad type that needs fixing (Armor Arms, Armor Torso, etc.)
+      // 2. It has a bad type that needs fixing (Armor Arms, Armor Torso, FPS Armor, etc.)
       const needsTypeUpdate =
         existingByName &&
         (existingByName.cstone_uuid ||
-          existingByName.type?.startsWith("Armor "))
+          existingByName.type?.startsWith("Armor ") ||
+          existingByName.type === "FPS Armor")
 
       if (needsTypeUpdate) {
         try {
