@@ -12,6 +12,8 @@ import * as cheerio from "cheerio"
 import { normalizeAttributes } from "./attribute-normalizer.js"
 
 const CSTONE_API_URL = "https://finder.cstone.space/GetSearch"
+import { normalizeItemName } from "./name-normalizer.js"
+
 const CSTONE_BASE_URL = "https://finder.cstone.space"
 
 // Canonical type names from CStone (from package_data.py)
@@ -93,42 +95,6 @@ interface Logger {
   debug: (message: string, meta?: any) => void
   warn: (message: string, meta?: any) => void
   error: (message: string, meta?: any) => void
-}
-
-/**
- * Normalize armor piece names for fuzzy matching
- * Handles variations like:
- * - "Palatino Deadlock Armor Arms" vs "Palatino Arms Deadlock"
- * - "Quirinus Necropolis Heavy Armor Legs" vs "Palatino Legs Necropolis"
- */
-function normalizeArmorName(name: string): string {
-  let normalized = name.toLowerCase().trim()
-
-  // Remove common armor keywords
-  normalized = normalized
-    .replace(/\s+armor\s+/g, " ")
-    .replace(/\s+heavy\s+/g, " ")
-    .replace(/\s+medium\s+/g, " ")
-    .replace(/\s+light\s+/g, " ")
-
-  // Extract parts: manufacturer, piece type, variant
-  const pieces = normalized.split(/\s+/).filter((p) => p.length > 0)
-
-  // Armor piece types
-  const pieceTypes = ["arms", "legs", "helmet", "torso", "core", "backpack"]
-  const pieceType = pieces.find((p) => pieceTypes.includes(p))
-
-  if (!pieceType) {
-    return normalized.replace(/\s+/g, " ")
-  }
-
-  // Separate manufacturer/variant from piece type
-  const otherParts = pieces.filter((p) => p !== pieceType)
-
-  // Canonical order: manufacturer + piece + variant
-  return [otherParts[0], pieceType, ...otherParts.slice(1)]
-    .filter(Boolean)
-    .join(" ")
 }
 
 /**
@@ -269,7 +235,7 @@ async function importItemsFromCStone(
             (rows) =>
               new Map(
                 rows.map((r) => [
-                  normalizeArmorName(r.name),
+                  normalizeItemName(r.name),
                   { id: r.id, name: r.name, cstone_uuid: r.cstone_uuid },
                 ]),
               ),
@@ -289,7 +255,7 @@ async function importItemsFromCStone(
     // Deduplicate by name (lowercase)
     const uniqueItems = new Map<string, CStoneItem>()
     for (const item of allItems) {
-      const key = normalizeArmorName(item.name || "")
+      const key = normalizeItemName(item.name || "")
       if (!key) continue
       const existing = uniqueItems.get(key)
       if (existing) {
@@ -314,7 +280,7 @@ async function importItemsFromCStone(
           `Progress: ${processed}/${uniqueItems.size} items processed`,
         )
       }
-      const normalizedName = normalizeArmorName(item.name)
+      const normalizedName = normalizeItemName(item.name)
       const existingByName = existingItemsMap.get(normalizedName)
       const existingByUuid = existingByUuidMap.get(item.id)
 
