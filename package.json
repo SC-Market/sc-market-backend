@@ -109,6 +109,7 @@
     "import-uex-items": "tsx scripts/import-items-from-uex.ts",
     "import-cstone-items": "tsx scripts/import-items-from-cstone.ts",
     "find-duplicates": "tsx scripts/find-duplicate-items.ts",
+    "merge-duplicates": "tsx scripts/merge-duplicate-items.ts",
     "refresh-view": "tsx scripts/refresh-materialized-view.ts",
     "test": "vitest run",
     "test:watch": "vitest",
