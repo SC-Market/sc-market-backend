@@ -221,9 +221,13 @@ async function importItemsFromCStone(
 
     logger.info(`Fetched ${allItems.length} total items from CStone`)
 
-    // Get existing items from database (or empty map in dry run)
-    const existingItemsMap = knex
-      ? await knex("game_items")
+    // Get existing items from database (or empty map if no database)
+    let existingItemsMap = new Map()
+    let existingByUuidMap = new Map()
+
+    if (knex) {
+      try {
+        existingItemsMap = await knex("game_items")
           .select("id", "name", "cstone_uuid")
           .then(
             (rows) =>
@@ -234,15 +238,17 @@ async function importItemsFromCStone(
                 ]),
               ),
           )
-      : new Map()
 
-    // Also create a map by cstone_uuid for quick lookup
-    const existingByUuidMap = knex
-      ? await knex("game_items")
+        existingByUuidMap = await knex("game_items")
           .select("id", "name", "cstone_uuid")
           .whereNotNull("cstone_uuid")
           .then((rows) => new Map(rows.map((r) => [r.cstone_uuid, r])))
-      : new Map()
+      } catch (error) {
+        logger.warn("Could not fetch existing items from database", {
+          error: error instanceof Error ? error.message : "Unknown error",
+        })
+      }
+    }
 
     // Deduplicate by name (lowercase)
     const uniqueItems = new Map<string, CStoneItem>()
@@ -388,24 +394,35 @@ if (import.meta.url === `file://${process.argv[1]}`) {
   const dryRun =
     process.argv.includes("--dry") || process.argv.includes("--dry-run")
 
-  let db = null
+  let knex = null
 
-  // Only connect to database if not in dry run mode
-  if (!dryRun) {
+  // Try to connect to database (works in both dry run and normal mode)
+  try {
     const knexModule = await import("knex")
-    const knex = knexModule.default
-    db = knex({
+    const knexFn = knexModule.default
+    knex = knexFn({
       client: "pg",
       connection: process.env.DATABASE_URL,
     })
+    // Test connection
+    await knex.raw("SELECT 1")
+    logger.info("Database connection established")
+  } catch (error) {
+    logger.warn(
+      "Could not connect to database - running without dupe checking",
+      {
+        error: error instanceof Error ? error.message : "Unknown error",
+      },
+    )
+    knex = null
   }
 
   try {
-    await importItemsFromCStone(db, logger, dryRun)
-    if (db) await db.destroy()
+    await importItemsFromCStone(knex, logger, dryRun)
+    if (knex) await knex.destroy()
     process.exit(0)
   } catch (error) {
-    if (db) await db.destroy()
+    if (knex) await knex.destroy()
     process.exit(1)
   }
 }
