@@ -16,6 +16,93 @@ import { normalizeItemName } from "./name-normalizer.js"
 
 const CSTONE_BASE_URL = "https://finder.cstone.space"
 
+/**
+ * Check if an item is a Core armor piece
+ */
+function isCoreItem(name: string): boolean {
+  const normalized = name.toLowerCase()
+  return (
+    normalized.includes(" core ") &&
+    !normalized.match(/\b(life|thermal|power|reactor)core\b/)
+  )
+}
+
+/**
+ * Generate Full Set items from Core items
+ */
+async function generateFullSets(
+  knex: any,
+  logger: any,
+  dryRun: boolean,
+): Promise<number> {
+  // Get all Core items from database
+  const allCores = await knex("game_items")
+    .select("id", "name", "cstone_uuid", "image_url")
+    .then((rows: any[]) => rows.filter((r) => isCoreItem(r.name)))
+
+  logger.info(`Found ${allCores.length} Core items in database`)
+
+  // Get existing items to check for duplicates
+  const existingItems = await knex("game_items")
+    .select("name")
+    .then((rows: any[]) => new Set(rows.map((r: any) => r.name.toLowerCase())))
+
+  let created = 0
+
+  for (const core of allCores) {
+    // Remove " Core" from name
+    const baseNameWithoutCore = core.name.replace(/\s+Core\s+/i, " ").trim()
+    const fullSetName = `${baseNameWithoutCore} - Full Set`
+
+    // Skip if already exists
+    if (existingItems.has(fullSetName.toLowerCase())) {
+      continue
+    }
+
+    if (dryRun) {
+      logger.info(`[DRY RUN] Would create Full Set: ${fullSetName}`)
+      created++
+    } else {
+      try {
+        // Insert full set
+        const [fullSetItem] = await knex("game_items")
+          .insert({
+            name: fullSetName,
+            type: "Full Set",
+            description: `Full armor set for ${baseNameWithoutCore}`,
+            image_url: core.image_url || null,
+            cstone_uuid: null,
+          })
+          .returning("id")
+
+        // Copy attributes from core
+        const coreAttrs = await knex("game_item_attributes")
+          .where("game_item_id", core.id)
+          .select("attribute_name", "attribute_value")
+
+        if (coreAttrs.length > 0) {
+          await knex("game_item_attributes").insert(
+            coreAttrs.map((attr: any) => ({
+              game_item_id: fullSetItem.id,
+              attribute_name: attr.attribute_name,
+              attribute_value: attr.attribute_value,
+            })),
+          )
+        }
+
+        logger.debug(`Created Full Set: ${fullSetName}`)
+        created++
+      } catch (error) {
+        logger.warn(`Failed to create Full Set: ${fullSetName}`, {
+          error: error instanceof Error ? error.message : "Unknown error",
+        })
+      }
+    }
+  }
+
+  return created
+}
+
 // Canonical type names from CStone (from package_data.py)
 const CSTONE_TYPE_MAP: Record<string, string> = {
   "FPS TOOL": "FPS Tool",
@@ -390,6 +477,13 @@ async function importItemsFromCStone(
       updated,
       skipped,
     })
+
+    // Generate Full Set items for Core items
+    if (knex) {
+      logger.info("Generating Full Set items from Core items...")
+      const fullSetsCreated = await generateFullSets(knex, logger, dryRun)
+      logger.info(`Full Sets created: ${fullSetsCreated}`)
+    }
 
     // Force flush logs
     await new Promise((resolve) => setTimeout(resolve, 100))
