@@ -108,6 +108,7 @@
     "import-attributes": "tsx scripts/import-all-attributes.ts",
     "import-uex-items": "tsx scripts/import-items-from-uex.ts",
     "import-cstone-items": "tsx scripts/import-items-from-cstone.ts",
+    "validate-cstone-uuids": "tsx scripts/validate-cstone-uuids.ts",
     "reimport-items": "tsx scripts/reimport-missing-items.ts",
     "find-duplicates": "tsx scripts/find-duplicate-items.ts",
     "merge-duplicates": "tsx scripts/merge-duplicate-items.ts",
