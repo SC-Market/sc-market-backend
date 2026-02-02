@@ -9,6 +9,7 @@
 
 import type { Knex } from "knex"
 import * as cheerio from "cheerio"
+import { normalizeAttributes } from "./attribute-normalizer.js"
 
 const CSTONE_API_URL = "https://finder.cstone.space/GetSearch"
 const CSTONE_BASE_URL = "https://finder.cstone.space"
@@ -257,7 +258,10 @@ async function importItemsFromCStone(
             details?.attributes &&
             Object.keys(details.attributes).length > 0
           ) {
-            const attributeRows = Object.entries(details.attributes).map(
+            // Normalize attribute names and values
+            const normalizedAttrs = normalizeAttributes(details.attributes)
+
+            const attributeRows = Object.entries(normalizedAttrs).map(
               ([name, value]) => ({
                 game_item_id: insertedItem.id,
                 attribute_name: name,
