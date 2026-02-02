@@ -8,8 +8,10 @@
  */
 
 import type { Knex } from "knex"
+import * as cheerio from "cheerio"
 
 const CSTONE_API_URL = "https://finder.cstone.space/GetSearch"
+const CSTONE_BASE_URL = "https://finder.cstone.space"
 
 interface CStoneItem {
   id: string
@@ -17,11 +19,86 @@ interface CStoneItem {
   Sold: number
 }
 
+interface CStoneItemDetails {
+  manufacturer?: string
+  armorType?: string
+  itemType?: string
+  attributes: Record<string, string>
+}
+
 interface Logger {
   info: (message: string, meta?: any) => void
   debug: (message: string, meta?: any) => void
   warn: (message: string, meta?: any) => void
   error: (message: string, meta?: any) => void
+}
+
+/**
+ * Fetch and parse item details from CStone item page
+ */
+async function fetchItemDetails(
+  itemId: string,
+  logger: Logger,
+): Promise<CStoneItemDetails | null> {
+  try {
+    // Try common page patterns
+    const patterns = [
+      "FPSArmors1",
+      "Ships",
+      "Vehicles",
+      "FPSWeapons",
+      "ShipWeapons",
+      "ShipComponents",
+    ]
+
+    for (const pattern of patterns) {
+      const url = `${CSTONE_BASE_URL}/${pattern}/${itemId}`
+      const response = await fetch(url)
+
+      if (response.ok) {
+        const html = await response.text()
+        const $ = cheerio.load(html)
+
+        const attributes: Record<string, string> = {}
+        let manufacturer: string | undefined
+        let armorType: string | undefined
+
+        // Parse table rows - label in right-aligned td, value in left-aligned td
+        $("td").each((i, elem) => {
+          const $td = $(elem)
+          const text = $td.text().trim()
+          const style = $td.attr("style") || ""
+
+          // Right-aligned = label
+          if (style.includes("text-align:right")) {
+            const $nextTd = $td.next("td")
+            if ($nextTd.length) {
+              const value = $nextTd.text().trim()
+              if (value) {
+                attributes[text] = value
+
+                // Extract key attributes
+                if (text === "MANUFACTURER") manufacturer = value
+                if (text === "ARMOR TYPE") armorType = value
+              }
+            }
+          }
+        })
+
+        return {
+          manufacturer,
+          armorType,
+          itemType: pattern,
+          attributes,
+        }
+      }
+    }
+
+    return null
+  } catch (error) {
+    logger.warn(`Failed to fetch details for item ${itemId}`)
+    return null
+  }
 }
 
 async function importItemsFromCStone(
@@ -137,22 +214,66 @@ async function importItemsFromCStone(
         continue
       }
 
-      // New item - insert it
+      // New item - fetch details and insert
       try {
         if (dryRun) {
           logger.info(`[DRY RUN] Would import: ${item.name}`)
           imported++
         } else {
-          await knex!("game_items").insert({
-            name: item.name,
-            type: "Item", // CStone doesn't provide type info
-            description: null,
-            image_url: null,
-            cstone_uuid: item.id,
-          })
+          // Fetch item details from HTML page
+          const details = await fetchItemDetails(item.id, logger)
+
+          // Determine item type
+          let itemType = "Item"
+          if (details?.itemType === "FPSArmors1") {
+            itemType = details.armorType || "FPS Armor"
+          } else if (details?.itemType === "FPSWeapons") {
+            itemType = "FPS Weapon"
+          } else if (details?.itemType === "Ships") {
+            itemType = "Ship"
+          } else if (details?.itemType === "Vehicles") {
+            itemType = "Vehicle"
+          } else if (details?.itemType === "ShipWeapons") {
+            itemType = "Ship Weapon"
+          } else if (details?.itemType === "ShipComponents") {
+            itemType = "Ship Component"
+          }
+
+          // Insert game item
+          const [insertedItem] = await knex!("game_items")
+            .insert({
+              name: item.name,
+              type: itemType,
+              description: details?.manufacturer
+                ? `Manufactured by ${details.manufacturer}`
+                : null,
+              image_url: null,
+              cstone_uuid: item.id,
+            })
+            .returning("id")
+
+          // Insert attributes if we have them
+          if (
+            details?.attributes &&
+            Object.keys(details.attributes).length > 0
+          ) {
+            const attributeRows = Object.entries(details.attributes).map(
+              ([name, value]) => ({
+                game_item_id: insertedItem.id,
+                attribute_name: name,
+                attribute_value: value,
+              }),
+            )
+
+            await knex!("game_item_attributes").insert(attributeRows)
+            logger.debug(
+              `Imported ${item.name} with ${attributeRows.length} attributes`,
+            )
+          } else {
+            logger.debug(`Imported item: ${item.name}`)
+          }
 
           imported++
-          logger.debug(`Imported item: ${item.name}`)
         }
       } catch (error) {
         logger.warn(`Failed to import item: ${item.name}`, {
