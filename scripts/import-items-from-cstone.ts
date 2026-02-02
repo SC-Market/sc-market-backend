@@ -392,8 +392,8 @@ async function importItemsFromCStone(
             itemType = CSTONE_TYPE_MAP[details.cstoneType] || details.cstoneType
           }
 
-          // Don't downgrade specific types to "Other" (CStone's catch-all for commodities, etc)
-          if (itemType === "Other" && existingByName.type !== "Other") {
+          // Don't downgrade Commodity to "Other" (commodities are fetched separately)
+          if (itemType === "Other" && existingByName.type === "Commodity") {
             skipped++
             continue
           }
