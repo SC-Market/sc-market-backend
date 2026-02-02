@@ -317,22 +317,53 @@ async function importItemsFromCStone(
 
     if (knex) {
       try {
-        existingItemsMap = await knex("game_items")
-          .select("id", "name", "cstone_uuid", "type")
-          .then(
-            (rows) =>
-              new Map(
-                rows.map((r) => [
-                  normalizeItemName(r.name),
-                  {
-                    id: r.id,
-                    name: r.name,
-                    cstone_uuid: r.cstone_uuid,
-                    type: r.type,
-                  },
-                ]),
-              ),
+        const rows = await knex("game_items").select(
+          "id",
+          "name",
+          "cstone_uuid",
+          "type",
+        )
+
+        // Check for normalization collisions while building map
+        const collisions: Array<{ key: string; items: string[] }> = []
+        const tempMap = new Map<string, string[]>()
+
+        for (const r of rows) {
+          const key = normalizeItemName(r.name)
+          if (!tempMap.has(key)) {
+            tempMap.set(key, [])
+          }
+          tempMap.get(key)!.push(r.name)
+        }
+
+        // Log collisions
+        for (const [key, items] of tempMap) {
+          if (items.length > 1) {
+            collisions.push({ key, items })
+          }
+        }
+
+        if (collisions.length > 0) {
+          logger.warn(
+            `Found ${collisions.length} name normalization collisions in database`,
           )
+          collisions.slice(0, 10).forEach((c) => {
+            logger.warn(`  Key "${c.key}" matches: ${c.items.join(", ")}`)
+          })
+        }
+
+        // Build the actual map (last item wins in case of collision)
+        existingItemsMap = new Map(
+          rows.map((r) => [
+            normalizeItemName(r.name),
+            {
+              id: r.id,
+              name: r.name,
+              cstone_uuid: r.cstone_uuid,
+              type: r.type,
+            },
+          ]),
+        )
 
         existingByUuidMap = await knex("game_items")
           .select("id", "name", "cstone_uuid")
