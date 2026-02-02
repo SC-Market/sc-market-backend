@@ -1,17 +1,4 @@
-b5d53e22-6399-45e4-975d-287c6bf41021,Palatino Arms,018cf498-5ff0-4382-9549-372dc92c6a9c,,FPS Armor,Armor Arms,,,
-0bd7c8f6-11c6-446b-8730-83cc0e92a477,Palatino Deadlock Armor Arms,8a3ac00f-58ab-4638-9022-0e026d350361,,FPS Armor,Armor Arms,,,
-c0b8161d-1363-4b26-9b3e-b69be1f68bb8,Palatino Shadow Gild Arms,34b01931-3eb1-4fea-b02a-d243d3474514,,FPS Armor,Armor Arms,,,
-8355448c-e0a9-428d-8c86-2490f0922330,Palatino Deadlock Armor Core,633c07d0-c6e7-4952-b2e3-e330df979552,,FPS Armor,Armor Torso,,,
-903dd827-fb9e-4e27-a5b0-2e9e331332c8,Palatino Shadow Gild Core,261904de-e9c4-43da-af2b-9b2b4c9afe7a,,FPS Armor,Armor Torso,,,
-151e1510-9944-4cba-a449-8cd5516b41c1,Palatino Backpack,3e79b1d5-d213-4c0d-b212-eba3399bcfa2,,FPS Armor,Armor Backpacks,,,
-25922002-f558-4079-8718-4e4ac2923bd2,Palatino Deadlock Armor Backpack,4974a180-0a7b-436f-9eae-bbb9ccfdd35c,,FPS Armor,Armor Backpacks,,,
-e268d869-9afe-4834-ad0e-bd38da9051fd,Palatino Shadow Gild Backpack,2146dce8-da07-4c37-adda-4ea98b5ab1d0,,FPS Armor,Armor Backpacks,,,
-53fccc6d-7408-4069-b877-c28481512010,Palatino Helmet,138ffa9b-26b2-4b6f-b831-425948234fb2,,FPS Armor,Armor Helmets,,,
-773cfbcb-7ee2-49ed-bfb6-a29e650b6b4c,Palatino Deadlock Armor Helmet,fa389812-e21d-4fed-86b2-9c251ca116fe,,FPS Armor,Armor Helmets,,,
-a0bac6fc-f19e-4779-8368-55a7c7e2d1ff,Palatino Shadow Gild Helmet,581c94cc-1502-4ccb-82cd-f36ec2a60f2c,,FPS Armor,Armor Helmets,,,
-71081363-d1c1-4b82-aed5-2af2b38efcf7,Palatino Legs,987c74f3-73bc-40fa-b3ba-71fc6379321d,,FPS Armor,Armor Legs,,,
-d97ddbf1-562e-413b-bbae-575dda08cbed,Palatino Deadlock Armor Legs,1195a275-41de-4b75-b141-929e17267af1,,FPS Armor,Armor Legs,,,
-2f7f5828-140a-4eef-9942-420dbeb6ac3c,Palatino Shadow Gild Legs,6bd54e97-7a6a-4daa-823b-491c031d7932,,FPS Armor,Armor Legs,,,
-c37039dd-3391-45bf-99dd-731d386c6c74,Palatino Core,cef54c0b-81d1-4ccb-a67f-f7304f198184,,FPS Armor,Armor Torso,,,
-19b2ce9e-d27c-4404-9b6f-35c348631ec7,Palatino Set,,,FPS Armor,Armor Full Set,,,2026-02-01 23:01:19.850000
-
+ Cardinal: already exists as "Survivalist Heavy Arms Dark Red" with cstone_uuid=4fda63e4-eb59-4c9e-8f5d-8de2a5db028b
+2026-02-02T05:15:24.710Z [debug]: [DRY RUN] Skip Overlord Core Cardinal: already exists as "Survivalist Heavy Dark Red" with cstone_uuid=7e600346-ac60-4feb-9fd6-354329d802cb
+2026-02-02T05:15:24.710Z [debug]: [DRY RUN] Skip Overlord Helmet Cardinal: already exists as "Survivalist Heavy Helmet Dark Red" with cstone_uuid=ef44127b-2751-41bf-98d0-25e886bb54b4
+2026-02-02T05:15:24.710Z [debug]: [DRY RUN] Skip Overlord Legs Cardinal: already exists as "Survivalist Heavy Legs Dark Red" with cstone_uuid=38ea3796-308f-4870-b128-6add12a032ed
