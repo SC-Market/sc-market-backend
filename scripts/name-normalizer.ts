@@ -5,7 +5,8 @@
  * - "Quirinus Necropolis Heavy Armor Legs" vs "Palatino Legs Necropolis"
  */
 export function normalizeItemName(name: string): string {
-  let normalized = name.toLowerCase().trim()
+  // Trim and normalize whitespace first
+  let normalized = name.trim().replace(/\s+/g, " ").toLowerCase()
 
   // Remove common armor keywords
   normalized = normalized
@@ -22,7 +23,7 @@ export function normalizeItemName(name: string): string {
   const pieceType = pieces.find((p) => pieceTypes.includes(p))
 
   if (!pieceType) {
-    return normalized.replace(/\s+/g, " ")
+    return normalized
   }
 
   // Separate manufacturer/variant from piece type
