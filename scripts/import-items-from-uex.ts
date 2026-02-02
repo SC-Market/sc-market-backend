@@ -9,6 +9,7 @@
 
 import { database } from "../src/clients/database/knex-db.js"
 import logger from "../src/logger/logger.js"
+import { normalizeItemName } from "./name-normalizer.js"
 
 const UEXCORP_BASE_URL = "https://api.uexcorp.uk/2.0"
 const DRY_RUN =
@@ -55,7 +56,7 @@ async function importItemsFromUEX() {
     const existingItems = await database
       .knex("game_items")
       .select("name")
-      .then((rows) => new Set(rows.map((r) => r.name.toLowerCase())))
+      .then((rows) => new Set(rows.map((r) => normalizeItemName(r.name))))
 
     let imported = 0
     let skipped = 0
@@ -88,7 +89,7 @@ async function importItemsFromUEX() {
     // Prefer the entry with a uuid when the same name appears in multiple categories.
     const uniqueItems = new Map<string, UEXItem>()
     for (const item of allItems) {
-      const key = item.name?.toLowerCase()
+      const key = normalizeItemName(item.name || "")
       if (!key) continue
       const existing = uniqueItems.get(key)
       if (existing) {
@@ -125,7 +126,7 @@ async function importItemsFromUEX() {
         (rows) =>
           new Map(
             rows.map((r) => [
-              r.name.toLowerCase(),
+              normalizeItemName(r.name),
               { id: r.id, uex_uuid: r.uex_uuid },
             ]),
           ),
@@ -145,7 +146,8 @@ async function importItemsFromUEX() {
         coreItems.push(item)
       }
 
-      const existingItem = existingItemsMap.get(item.name.toLowerCase())
+      const normalizedName = normalizeItemName(item.name)
+      const existingItem = existingItemsMap.get(normalizedName)
 
       // If item exists and doesn't have uex_uuid, update it
       if (existingItem && !existingItem.uex_uuid && item.uuid) {
