@@ -268,9 +268,14 @@ async function importItemsFromCStone(
     let imported = 0
     let updated = 0
     let skipped = 0
+    let processed = 0
 
     // Process each unique item
     for (const [, item] of uniqueItems) {
+      processed++
+      if (processed % 1000 === 0) {
+        logger.info(`Progress: ${processed}/${uniqueItems.size} items processed`)
+      }
       const existingByName = existingItemsMap.get(item.name.toLowerCase())
       const existingByUuid = existingByUuidMap.get(item.id)
 
@@ -371,10 +376,14 @@ async function importItemsFromCStone(
       dryRun,
       totalFetched: allItems.length,
       uniqueItems: uniqueItems.size,
+      processed,
       imported,
       updated,
       skipped,
     })
+
+    // Force flush logs
+    await new Promise((resolve) => setTimeout(resolve, 100))
 
     return { imported, updated, skipped }
   } catch (error) {
