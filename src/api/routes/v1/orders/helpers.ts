@@ -18,6 +18,7 @@ import * as marketDb from "../market/database.js"
 import { notificationService } from "../../../../services/notifications/notification.service.js"
 import { discordService } from "../../../../services/discord/discord.service.js"
 import { chatParticipantService } from "../../../../services/chats/chat-participant.service.js"
+import { OrderLifecycleService } from "../../../../services/allocation/order-lifecycle.service.js"
 import { User } from "../api-models.js"
 import { sendSystemMessage } from "../chats/helpers.js"
 import { has_permission } from "../util/permissions.js"
@@ -722,6 +723,23 @@ export async function handleStatusUpdate(req: any, res: any, status: string) {
 
     if (status === "cancelled") {
       await cancelOrderMarketItems(order)
+      
+      // Release stock allocations when order is cancelled
+      // Requirements: 6.4
+      try {
+        const orderLifecycleService = new OrderLifecycleService()
+        await orderLifecycleService.releaseAllocationsForOrder(order.order_id)
+        
+        logger.info('Stock allocations released for cancelled order', {
+          order_id: order.order_id,
+        })
+      } catch (error) {
+        // Log error but don't fail the cancellation
+        logger.error('Failed to release stock allocations for cancelled order', {
+          order_id: order.order_id,
+          error: error instanceof Error ? error.message : String(error),
+        })
+      }
     }
 
     if (status === "in-progress") {
@@ -741,6 +759,25 @@ export async function handleStatusUpdate(req: any, res: any, status: string) {
         order.thread_id!,
         req.user.user_id,
       )
+    } else if (status === "fulfilled") {
+      // Consume stock allocations when order is fulfilled
+      // Requirements: 6.5, 10.5
+      try {
+        const orderLifecycleService = new OrderLifecycleService()
+        await orderLifecycleService.consumeAllocationsForOrder(order.order_id)
+        
+        logger.info('Stock allocations consumed for fulfilled order', {
+          order_id: order.order_id,
+        })
+      } catch (error) {
+        // Log error but don't fail the fulfillment
+        logger.error('Failed to consume stock allocations for fulfilled order', {
+          order_id: order.order_id,
+          error: error instanceof Error ? error.message : String(error),
+        })
+      }
+      
+      await orderDb.updateOrder(order.order_id, { status: status })
     } else {
       await orderDb.updateOrder(order.order_id, { status: status })
     }

@@ -10,6 +10,13 @@ import { User } from "../api-models.js"
 import { StockLotService } from "../../../../services/stock-lot/stock-lot.service.js"
 import { LocationService } from "../../../../services/location/location.service.js"
 import { AllocationService } from "../../../../services/allocation/allocation.service.js"
+import {
+  InsufficientStockError,
+  InvalidQuantityError,
+  OverAllocationError,
+  CharacterLimitError,
+  ConcurrentModificationError,
+} from "../../../../services/stock-lot/errors.js"
 import logger from "../../../../logger/logger.js"
 
 const stockLotService = new StockLotService()
@@ -51,6 +58,18 @@ export const updateSimpleStock: RequestHandler = async (req, res) => {
     )
   } catch (error) {
     logger.error("Error updating simple stock", { error })
+    
+    if (error instanceof InvalidQuantityError) {
+      res.status(400).json(
+        createErrorResponse({
+          message: error.message,
+          code: error.code,
+          details: error.toJSON(),
+        }),
+      )
+      return
+    }
+    
     res.status(500).json(
       createErrorResponse({
         message: "Failed to update stock",
@@ -148,6 +167,29 @@ export const createLot: RequestHandler = async (req, res) => {
     res.status(201).json(createResponse({ lot }))
   } catch (error) {
     logger.error("Error creating lot", { error })
+    
+    if (error instanceof InvalidQuantityError) {
+      res.status(400).json(
+        createErrorResponse({
+          message: error.message,
+          code: error.code,
+          details: error.toJSON(),
+        }),
+      )
+      return
+    }
+    
+    if (error instanceof CharacterLimitError) {
+      res.status(400).json(
+        createErrorResponse({
+          message: error.message,
+          code: error.code,
+          details: error.toJSON(),
+        }),
+      )
+      return
+    }
+    
     res.status(500).json(
       createErrorResponse({
         message: "Failed to create lot",
@@ -195,11 +237,34 @@ export const updateLot: RequestHandler = async (req, res) => {
   } catch (error) {
     logger.error("Error updating lot", { error })
     
-    // Handle optimistic locking errors
-    if (error instanceof Error && error.message.includes("modified")) {
+    if (error instanceof InvalidQuantityError) {
+      res.status(400).json(
+        createErrorResponse({
+          message: error.message,
+          code: error.code,
+          details: error.toJSON(),
+        }),
+      )
+      return
+    }
+    
+    if (error instanceof CharacterLimitError) {
+      res.status(400).json(
+        createErrorResponse({
+          message: error.message,
+          code: error.code,
+          details: error.toJSON(),
+        }),
+      )
+      return
+    }
+    
+    if (error instanceof ConcurrentModificationError) {
       res.status(409).json(
         createErrorResponse({
-          message: "Lot was modified by another operation. Please retry.",
+          message: error.message,
+          code: error.code,
+          details: error.toJSON(),
         }),
       )
       return
@@ -292,15 +357,26 @@ export const transferLot: RequestHandler = async (req, res) => {
   } catch (error) {
     logger.error("Error transferring lot", { error })
     
-    if (error instanceof Error) {
-      if (error.message.includes("Insufficient quantity")) {
-        res.status(400).json(
-          createErrorResponse({
-            message: error.message,
-          }),
-        )
-        return
-      }
+    if (error instanceof InsufficientStockError) {
+      res.status(400).json(
+        createErrorResponse({
+          message: error.message,
+          code: error.code,
+          details: error.toJSON(),
+        }),
+      )
+      return
+    }
+    
+    if (error instanceof InvalidQuantityError) {
+      res.status(400).json(
+        createErrorResponse({
+          message: error.message,
+          code: error.code,
+          details: error.toJSON(),
+        }),
+      )
+      return
     }
 
     res.status(500).json(
@@ -373,6 +449,12 @@ export const createLocation: RequestHandler = async (req, res) => {
       res.status(400).json(
         createErrorResponse({
           message: "Name must be 255 characters or less",
+          code: "CHARACTER_LIMIT_EXCEEDED",
+          details: {
+            field: "name",
+            currentLength: name.length,
+            maxLength: 255,
+          },
         }),
       )
       return
@@ -384,6 +466,18 @@ export const createLocation: RequestHandler = async (req, res) => {
     res.status(201).json(createResponse({ location }))
   } catch (error) {
     logger.error("Error creating location", { error })
+    
+    if (error instanceof CharacterLimitError) {
+      res.status(400).json(
+        createErrorResponse({
+          message: error.message,
+          code: error.code,
+          details: error.toJSON(),
+        }),
+      )
+      return
+    }
+    
     res.status(500).json(
       createErrorResponse({
         message: "Failed to create location",

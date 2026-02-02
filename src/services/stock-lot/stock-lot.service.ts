@@ -17,6 +17,11 @@ import {
   TransferLotInput,
   TransferLotResult,
 } from "./types.js"
+import {
+  InsufficientStockError,
+  InvalidQuantityError,
+  CharacterLimitError,
+} from "./errors.js"
 import logger from "../../logger/logger.js"
 
 export class StockLotService {
@@ -36,7 +41,7 @@ export class StockLotService {
    */
   async updateSimpleStock(listingId: string, quantity: number): Promise<void> {
     if (quantity < 0) {
-      throw new Error("Quantity must be non-negative")
+      throw new InvalidQuantityError(quantity, "Quantity must be non-negative")
     }
 
     // Find or create Unspecified location lot
@@ -76,12 +81,12 @@ export class StockLotService {
   async createLot(input: CreateLotInput): Promise<DBStockLot> {
     // Validate quantity
     if (input.quantity < 0) {
-      throw new Error("Quantity must be non-negative")
+      throw new InvalidQuantityError(input.quantity, "Quantity must be non-negative")
     }
 
     // Validate notes length
     if (input.notes && input.notes.length > 1000) {
-      throw new Error("Notes must be 1000 characters or less")
+      throw new CharacterLimitError("notes", input.notes.length, 1000)
     }
 
     const lot = await this.repository.create(input)
@@ -106,12 +111,12 @@ export class StockLotService {
   ): Promise<DBStockLot> {
     // Validate quantity if provided
     if (updates.quantity !== undefined && updates.quantity < 0) {
-      throw new Error("Quantity must be non-negative")
+      throw new InvalidQuantityError(updates.quantity, "Quantity must be non-negative")
     }
 
     // Validate notes length if provided
     if (updates.notes && updates.notes.length > 1000) {
-      throw new Error("Notes must be 1000 characters or less")
+      throw new CharacterLimitError("notes", updates.notes.length, 1000)
     }
 
     const lot = await this.repository.update(lotId, updates)
@@ -244,12 +249,14 @@ export class StockLotService {
 
       // Validate transfer quantity
       if (input.quantity <= 0) {
-        throw new Error("Transfer quantity must be positive")
+        throw new InvalidQuantityError(input.quantity, "Transfer quantity must be positive")
       }
 
       if (input.quantity > sourceLot.quantity_total) {
-        throw new Error(
-          `Cannot transfer ${input.quantity}. Only ${sourceLot.quantity_total} available in source lot.`,
+        throw new InsufficientStockError(
+          input.quantity,
+          sourceLot.quantity_total,
+          sourceLot.listing_id,
         )
       }
 
