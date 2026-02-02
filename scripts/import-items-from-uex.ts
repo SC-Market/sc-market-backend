@@ -216,7 +216,11 @@ async function importItemsFromUEX() {
     let fullSetsCreated = 0
 
     for (const coreDbItem of allCoresInDb) {
-      const fullSetName = `${coreDbItem.name} - Full Set`
+      // Remove " Core" from the name before adding " - Full Set"
+      const baseNameWithoutCore = coreDbItem.name
+        .replace(/\s+Core\s+/i, " ")
+        .trim()
+      const fullSetName = `${baseNameWithoutCore} - Full Set`
 
       // Skip if full set already exists
       if (existingItemsMap.has(fullSetName.toLowerCase())) {
@@ -234,7 +238,7 @@ async function importItemsFromUEX() {
             .insert({
               name: fullSetName,
               type: "Full Set",
-              description: `Full armor set for ${coreDbItem.name}`,
+              description: `Full armor set for ${baseNameWithoutCore}`,
               image_url: coreDbItem.image_url || null,
               uex_uuid: null, // Full sets don't have UEX UUIDs
             })
