@@ -26,10 +26,12 @@ interface ApiGatewayResponse {
 }
 
 export class ImageLambdaClient {
-  private static lambdaClient: LambdaClient
-  private static functionName: string
+  private static lambdaClient: LambdaClient | null = null
+  private static functionName: string | null = null
 
-  static {
+  private static initialize() {
+    if (this.lambdaClient) return
+
     if (!env.AWS_REGION) {
       throw new Error("AWS_REGION environment variable is required")
     }
@@ -60,6 +62,8 @@ export class ImageLambdaClient {
     filename: string,
     contentType: string,
   ): Promise<ImageLambdaResponse> {
+    this.initialize()
+
     // Convert image to base64
     const base64Image = imageBuffer.toString("base64")
 
@@ -80,13 +84,13 @@ export class ImageLambdaClient {
     try {
       // Create the invoke command
       const command = new InvokeCommand({
-        FunctionName: this.functionName,
+        FunctionName: this.functionName!,
         Payload: JSON.stringify(payload),
         InvocationType: "RequestResponse", // Synchronous invocation
       })
 
       // Invoke the lambda function
-      const response = await this.lambdaClient.send(command)
+      const response = await this.lambdaClient!.send(command)
 
       logger.debug("Lambda response received", {
         statusCode: response.StatusCode,
@@ -195,14 +199,16 @@ export class ImageLambdaClient {
    * @returns Promise<boolean> - True if the lambda is available
    */
   static async isAvailable(): Promise<boolean> {
+    this.initialize()
+
     try {
       const command = new InvokeCommand({
-        FunctionName: this.functionName,
+        FunctionName: this.functionName!,
         Payload: JSON.stringify({ test: "health_check" }),
         InvocationType: "RequestResponse",
       })
 
-      const response = await this.lambdaClient.send(command)
+      const response = await this.lambdaClient!.send(command)
       return response.StatusCode === 200 && !response.FunctionError
     } catch (error) {
       logger.warn("Image lambda health check failed:", error)
