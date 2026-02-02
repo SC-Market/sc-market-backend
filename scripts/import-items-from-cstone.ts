@@ -183,6 +183,7 @@ async function importItemsFromCStone(
   knex: Knex | null,
   logger: Logger,
   dryRun: boolean,
+  limit?: number,
 ) {
   logger.info("Starting CStone item import", { dryRun })
 
@@ -220,32 +221,28 @@ async function importItemsFromCStone(
 
     logger.info(`Fetched ${allItems.length} total items from CStone`)
 
-    // In dry run without database, just show what we'd do
-    if (dryRun && !knex) {
-      logger.info("Dry run without database - showing sample items")
-      const sampleItems = allItems.slice(0, 10)
-      sampleItems.forEach((item) => {
-        logger.info(`Would import: ${item.name}`, { id: item.id })
-      })
-      logger.info("Import summary", {
-        totalItems: allItems.length,
-        sampleShown: sampleItems.length,
-      })
-      return { imported: 0, updated: 0, skipped: 0 }
-    }
+    // Get existing items from database (or empty map in dry run)
+    const existingItemsMap = knex
+      ? await knex("game_items")
+          .select("id", "name", "cstone_uuid")
+          .then(
+            (rows) =>
+              new Map(
+                rows.map((r) => [
+                  r.name.toLowerCase(),
+                  { id: r.id, name: r.name, cstone_uuid: r.cstone_uuid },
+                ]),
+              ),
+          )
+      : new Map()
 
-    // Get existing items from database
-    const existingItemsMap = await knex!("game_items")
-      .select("id", "name", "cstone_uuid")
-      .then(
-        (rows) =>
-          new Map(
-            rows.map((r) => [
-              r.name.toLowerCase(),
-              { id: r.id, name: r.name, cstone_uuid: r.cstone_uuid },
-            ]),
-          ),
-      )
+    // Also create a map by cstone_uuid for quick lookup
+    const existingByUuidMap = knex
+      ? await knex("game_items")
+          .select("id", "name", "cstone_uuid")
+          .whereNotNull("cstone_uuid")
+          .then((rows) => new Map(rows.map((r) => [r.cstone_uuid, r])))
+      : new Map()
 
     // Deduplicate by name (lowercase)
     const uniqueItems = new Map<string, CStoneItem>()
@@ -268,26 +265,36 @@ async function importItemsFromCStone(
 
     // Process each unique item
     for (const [, item] of uniqueItems) {
-      const existingItem = existingItemsMap.get(item.name.toLowerCase())
+      const existingByName = existingItemsMap.get(item.name.toLowerCase())
+      const existingByUuid = existingByUuidMap.get(item.id)
 
-      // Update cstone_uuid if item exists but doesn't have one
-      if (existingItem && !existingItem.cstone_uuid) {
+      // Skip if already exists with correct cstone_uuid
+      if (existingByUuid) {
+        skipped++
+        continue
+      }
+
+      // Update cstone_uuid if item exists by name but doesn't have uuid
+      if (existingByName && !existingByName.cstone_uuid) {
         if (!dryRun) {
           try {
             await knex!("game_items")
-              .where("id", existingItem.id)
+              .where("id", existingByName.id)
               .update({ cstone_uuid: item.id })
             updated++
             logger.debug(`Updated cstone_uuid for: ${item.name}`)
           } catch (error) {
             logger.warn(`Failed to update cstone_uuid for: ${item.name}`)
           }
+        } else {
+          logger.info(`[DRY RUN] Would update cstone_uuid for: ${item.name}`)
+          updated++
         }
         continue
       }
 
-      // Skip if already exists
-      if (existingItem) {
+      // Skip if already exists by name
+      if (existingByName) {
         skipped++
         continue
       }
