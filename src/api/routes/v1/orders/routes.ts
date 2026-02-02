@@ -22,6 +22,7 @@ import {
   org_authorized,
 } from "../contractors/middleware.js"
 import orderSettingsRouter from "./order-settings.js"
+import { allocationRouter } from "../market/stock-lots.routes.js"
 import {
   accept_contractor_applicant,
   accept_user_applicant,
@@ -56,6 +57,9 @@ export const ordersRouter = express.Router()
 
 // Mount order settings routes
 ordersRouter.use("/", orderSettingsRouter)
+
+// Mount allocation routes
+ordersRouter.use("/", allocationRouter)
 
 ordersRouter.post(
   "/",
