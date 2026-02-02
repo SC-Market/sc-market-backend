@@ -140,7 +140,7 @@ async function importItemsFromUEX() {
         continue
       }
 
-      // Track core items for generating full sets
+      // Track core items for generating full sets (both new and existing)
       if (isCoreItem(item.name)) {
         coreItems.push(item)
       }
@@ -206,11 +206,17 @@ async function importItemsFromUEX() {
     }
 
     // Generate Full Set items for each core
-    logger.info(`Generating Full Set items for ${coreItems.length} cores`)
+    // Check ALL existing cores in database, not just newly imported ones
+    const allCoresInDb = await database
+      .knex("game_items")
+      .select("id", "name", "uex_uuid", "image_url")
+      .then((rows) => rows.filter((r) => isCoreItem(r.name)))
+
+    logger.info(`Found ${allCoresInDb.length} total cores in database`)
     let fullSetsCreated = 0
 
-    for (const coreItem of coreItems) {
-      const fullSetName = `${coreItem.name} - Full Set`
+    for (const coreDbItem of allCoresInDb) {
+      const fullSetName = `${coreDbItem.name} - Full Set`
 
       // Skip if full set already exists
       if (existingItemsMap.has(fullSetName.toLowerCase())) {
@@ -228,38 +234,29 @@ async function importItemsFromUEX() {
             .insert({
               name: fullSetName,
               type: "Full Set",
-              description: `Full armor set for ${coreItem.name}`,
-              image_url: coreItem.screenshot || null,
+              description: `Full armor set for ${coreDbItem.name}`,
+              image_url: coreDbItem.image_url || null,
               uex_uuid: null, // Full sets don't have UEX UUIDs
             })
             .returning("id")
 
           // Copy attributes from core to full set
-          if (coreItem.uuid) {
-            const coreDbItem = await database
-              .knex("game_items")
-              .where("uex_uuid", coreItem.uuid)
-              .first()
+          const coreAttributes = await database
+            .knex("game_item_attributes")
+            .where("game_item_id", coreDbItem.id)
+            .select("attribute_name", "attribute_value")
 
-            if (coreDbItem) {
-              const coreAttributes = await database
-                .knex("game_item_attributes")
-                .where("game_item_id", coreDbItem.id)
-                .select("attribute_name", "attribute_value")
-
-              if (coreAttributes.length > 0) {
-                await database.knex("game_item_attributes").insert(
-                  coreAttributes.map((attr) => ({
-                    game_item_id: fullSetItem.id,
-                    attribute_name: attr.attribute_name,
-                    attribute_value: attr.attribute_value,
-                  })),
-                )
-                logger.debug(
-                  `Copied ${coreAttributes.length} attributes to Full Set: ${fullSetName}`,
-                )
-              }
-            }
+          if (coreAttributes.length > 0) {
+            await database.knex("game_item_attributes").insert(
+              coreAttributes.map((attr) => ({
+                game_item_id: fullSetItem.id,
+                attribute_name: attr.attribute_name,
+                attribute_value: attr.attribute_value,
+              })),
+            )
+            logger.debug(
+              `Copied ${coreAttributes.length} attributes to Full Set: ${fullSetName}`,
+            )
           }
 
           fullSetsCreated++
