@@ -410,30 +410,28 @@ if (import.meta.url === `file://${process.argv[1]}`) {
 
   let knex = null
 
-  // Try to connect to database (works in both dry run and normal mode)
+  // Try to import database module (fails gracefully if env vars missing)
   try {
-    const knexModule = await import("knex")
-    const knexFn = knexModule.default
-    knex = knexFn({
-      client: "pg",
-      connection: process.env.DATABASE_URL,
-    })
+    const dbModule = await import("../src/clients/database/knex-db.js")
+    knex = dbModule.database.knex
     // Test connection
     await knex.raw("SELECT 1")
     logger.info("Database connection established")
   } catch (error) {
-    logger.warn(
-      "Could not connect to database - running without dupe checking",
-      {
-        error: error instanceof Error ? error.message : "Unknown error",
-      },
-    )
+    // Silently continue without database
     knex = null
   }
 
   try {
     await importItemsFromCStone(knex, logger, dryRun)
     if (knex) await knex.destroy()
+
+    if (!knex) {
+      logger.warn(
+        "Ran without database connection - set DATABASE_URL and required env vars to check for duplicates",
+      )
+    }
+
     process.exit(0)
   } catch (error) {
     if (knex) await knex.destroy()
