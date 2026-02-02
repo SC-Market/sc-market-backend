@@ -1,6 +1,6 @@
 /**
  * Stock Lot Routes
- * 
+ *
  * Defines HTTP routes for stock lot management
  */
 
@@ -14,7 +14,10 @@ import {
   writeRateLimit,
   readRateLimit,
 } from "../../../middleware/enhanced-ratelimiting.js"
-import { can_manage_market_listing, can_manage_stock_lot } from "./middleware.js"
+import {
+  can_manage_market_listing,
+  can_manage_stock_lot,
+} from "./middleware.js"
 import {
   updateSimpleStock,
   getListingLots,
@@ -88,11 +91,7 @@ stockLotsRouter.post(
 )
 
 // Location management
-stockLotsRouter.get(
-  "/locations",
-  readRateLimit,
-  getLocations,
-)
+stockLotsRouter.get("/locations", readRateLimit, getLocations)
 
 stockLotsRouter.post(
   "/locations",

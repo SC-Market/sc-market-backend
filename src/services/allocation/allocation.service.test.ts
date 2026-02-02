@@ -1,20 +1,23 @@
 /**
  * Allocation Service Tests
- * 
+ *
  * Unit tests for allocation service functionality.
- * 
+ *
  * Note: These tests focus on the business logic and error handling.
  * Integration tests with real database transactions should be added separately.
  */
 
 import { describe, it, expect } from "vitest"
-import { InsufficientStockError, AllocationValidationError } from "./allocation.service.js"
+import {
+  InsufficientStockError,
+  AllocationValidationError,
+} from "./allocation.service.js"
 
 describe("AllocationService", () => {
   describe("Error Classes", () => {
     it("should create InsufficientStockError with correct properties", () => {
       const error = new InsufficientStockError(100, 50, "listing-1")
-      
+
       expect(error).toBeInstanceOf(Error)
       expect(error.name).toBe("InsufficientStockError")
       expect(error.requested).toBe(100)
@@ -27,7 +30,7 @@ describe("AllocationService", () => {
 
     it("should create AllocationValidationError with correct properties", () => {
       const error = new AllocationValidationError("Invalid allocation")
-      
+
       expect(error).toBeInstanceOf(Error)
       expect(error.name).toBe("AllocationValidationError")
       expect(error.message).toBe("Invalid allocation")
@@ -37,7 +40,7 @@ describe("AllocationService", () => {
   describe("Error Classes", () => {
     it("should create InsufficientStockError with correct properties", () => {
       const error = new InsufficientStockError(100, 50, "listing-1")
-      
+
       expect(error).toBeInstanceOf(Error)
       expect(error.name).toBe("InsufficientStockError")
       expect(error.requested).toBe(100)
@@ -50,7 +53,7 @@ describe("AllocationService", () => {
 
     it("should create AllocationValidationError with correct properties", () => {
       const error = new AllocationValidationError("Invalid allocation")
-      
+
       expect(error).toBeInstanceOf(Error)
       expect(error.name).toBe("AllocationValidationError")
       expect(error.message).toBe("Invalid allocation")

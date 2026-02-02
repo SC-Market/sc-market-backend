@@ -1,6 +1,6 @@
 /**
  * Stock Lot API Controllers
- * 
+ *
  * Handles HTTP requests for stock lot management endpoints
  */
 
@@ -58,7 +58,7 @@ export const updateSimpleStock: RequestHandler = async (req, res) => {
     )
   } catch (error) {
     logger.error("Error updating simple stock", { error })
-    
+
     if (error instanceof InvalidQuantityError) {
       res.status(400).json(
         createErrorResponse({
@@ -69,7 +69,7 @@ export const updateSimpleStock: RequestHandler = async (req, res) => {
       )
       return
     }
-    
+
     res.status(500).json(
       createErrorResponse({
         message: "Failed to update stock",
@@ -167,7 +167,7 @@ export const createLot: RequestHandler = async (req, res) => {
     res.status(201).json(createResponse({ lot }))
   } catch (error) {
     logger.error("Error creating lot", { error })
-    
+
     if (error instanceof InvalidQuantityError) {
       res.status(400).json(
         createErrorResponse({
@@ -178,7 +178,7 @@ export const createLot: RequestHandler = async (req, res) => {
       )
       return
     }
-    
+
     if (error instanceof CharacterLimitError) {
       res.status(400).json(
         createErrorResponse({
@@ -189,7 +189,7 @@ export const createLot: RequestHandler = async (req, res) => {
       )
       return
     }
-    
+
     res.status(500).json(
       createErrorResponse({
         message: "Failed to create lot",
@@ -236,7 +236,7 @@ export const updateLot: RequestHandler = async (req, res) => {
     res.json(createResponse({ lot }))
   } catch (error) {
     logger.error("Error updating lot", { error })
-    
+
     if (error instanceof InvalidQuantityError) {
       res.status(400).json(
         createErrorResponse({
@@ -247,7 +247,7 @@ export const updateLot: RequestHandler = async (req, res) => {
       )
       return
     }
-    
+
     if (error instanceof CharacterLimitError) {
       res.status(400).json(
         createErrorResponse({
@@ -258,7 +258,7 @@ export const updateLot: RequestHandler = async (req, res) => {
       )
       return
     }
-    
+
     if (error instanceof ConcurrentModificationError) {
       res.status(409).json(
         createErrorResponse({
@@ -288,7 +288,8 @@ export const deleteLot: RequestHandler = async (req, res) => {
     const { lot_id } = req.params
 
     // Check for active allocations
-    const allocatedQuantity = await allocationService.getAllocatedQuantity(lot_id)
+    const allocatedQuantity =
+      await allocationService.getAllocatedQuantity(lot_id)
     if (allocatedQuantity > 0) {
       res.status(400).json(
         createErrorResponse({
@@ -356,7 +357,7 @@ export const transferLot: RequestHandler = async (req, res) => {
     )
   } catch (error) {
     logger.error("Error transferring lot", { error })
-    
+
     if (error instanceof InsufficientStockError) {
       res.status(400).json(
         createErrorResponse({
@@ -367,7 +368,7 @@ export const transferLot: RequestHandler = async (req, res) => {
       )
       return
     }
-    
+
     if (error instanceof InvalidQuantityError) {
       res.status(400).json(
         createErrorResponse({
@@ -410,7 +411,7 @@ export const getLocations: RequestHandler = async (req, res) => {
       const userLocations = user
         ? await locationService.getUserLocations(user.user_id)
         : []
-      
+
       locations = [...presetLocations, ...userLocations]
     }
 
@@ -461,12 +462,15 @@ export const createLocation: RequestHandler = async (req, res) => {
     }
 
     // Create custom location
-    const location = await locationService.createCustomLocation(name, user.user_id)
+    const location = await locationService.createCustomLocation(
+      name,
+      user.user_id,
+    )
 
     res.status(201).json(createResponse({ location }))
   } catch (error) {
     logger.error("Error creating location", { error })
-    
+
     if (error instanceof CharacterLimitError) {
       res.status(400).json(
         createErrorResponse({
@@ -477,7 +481,7 @@ export const createLocation: RequestHandler = async (req, res) => {
       )
       return
     }
-    
+
     res.status(500).json(
       createErrorResponse({
         message: "Failed to create location",
@@ -544,10 +548,15 @@ export const manualAllocateOrder: RequestHandler = async (req, res) => {
 
     // Validate each allocation
     for (const alloc of allocations) {
-      if (!alloc.lot_id || typeof alloc.quantity !== "number" || alloc.quantity <= 0) {
+      if (
+        !alloc.lot_id ||
+        typeof alloc.quantity !== "number" ||
+        alloc.quantity <= 0
+      ) {
         res.status(400).json(
           createErrorResponse({
-            message: "Each allocation must have a valid lot_id and positive quantity",
+            message:
+              "Each allocation must have a valid lot_id and positive quantity",
           }),
         )
         return
@@ -560,9 +569,12 @@ export const manualAllocateOrder: RequestHandler = async (req, res) => {
     res.json(createResponse({ allocations: result }))
   } catch (error) {
     logger.error("Error manually allocating order", { error })
-    
+
     if (error instanceof Error) {
-      if (error.message.includes("Insufficient") || error.message.includes("available")) {
+      if (
+        error.message.includes("Insufficient") ||
+        error.message.includes("available")
+      ) {
         res.status(400).json(
           createErrorResponse({
             message: error.message,

@@ -1,6 +1,6 @@
 /**
  * Location Repository
- * 
+ *
  * Provides database access methods for locations.
  */
 
@@ -78,12 +78,10 @@ export class LocationRepository {
     } else if (filters.user_id) {
       // Include preset locations and user's custom locations
       query = query.where((builder) => {
-        builder
-          .where({ is_preset: true })
-          .orWhere({
-            is_preset: false,
-            created_by: filters.user_id,
-          })
+        builder.where({ is_preset: true }).orWhere({
+          is_preset: false,
+          created_by: filters.user_id,
+        })
       })
     } else {
       // Only preset locations if no user specified
@@ -97,7 +95,7 @@ export class LocationRepository {
 
     // Order by preset first (with display_order), then custom by created_at
     const locations = await query.orderByRaw(
-      "is_preset DESC, display_order ASC NULLS LAST, created_at ASC"
+      "is_preset DESC, display_order ASC NULLS LAST, created_at ASC",
     )
 
     return locations
@@ -121,10 +119,7 @@ export class LocationRepository {
   /**
    * Check if a location name already exists for a user
    */
-  async locationExistsForUser(
-    name: string,
-    userId: string
-  ): Promise<boolean> {
+  async locationExistsForUser(name: string, userId: string): Promise<boolean> {
     const location = await this.knex<DBLocation>("locations")
       .where({
         name,

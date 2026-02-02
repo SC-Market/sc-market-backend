@@ -1,6 +1,6 @@
 /**
  * Allocation Types and Interfaces
- * 
+ *
  * Defines the data structures for stock allocation management.
  */
 
@@ -12,7 +12,7 @@ export interface DBAllocation {
   lot_id: string
   order_id: string
   quantity: number
-  status: 'active' | 'released' | 'fulfilled'
+  status: "active" | "released" | "fulfilled"
   created_at: Date
   updated_at: Date
 }
@@ -24,7 +24,7 @@ export interface CreateAllocationInput {
   lot_id: string
   order_id: string
   quantity: number
-  status?: 'active' | 'released' | 'fulfilled'
+  status?: "active" | "released" | "fulfilled"
 }
 
 /**
@@ -32,7 +32,7 @@ export interface CreateAllocationInput {
  */
 export interface UpdateAllocationInput {
   quantity?: number
-  status?: 'active' | 'released' | 'fulfilled'
+  status?: "active" | "released" | "fulfilled"
 }
 
 /**
@@ -41,7 +41,7 @@ export interface UpdateAllocationInput {
 export interface AllocationFilters {
   order_id?: string
   lot_id?: string
-  status?: 'active' | 'released' | 'fulfilled'
+  status?: "active" | "released" | "fulfilled"
 }
 
 /**
@@ -64,7 +64,7 @@ export interface AllocationResult {
 /**
  * Allocation strategy types
  */
-export type AllocationStrategyType = 'fifo' | 'location_priority'
+export type AllocationStrategyType = "fifo" | "location_priority"
 
 /**
  * Database representation of an allocation strategy

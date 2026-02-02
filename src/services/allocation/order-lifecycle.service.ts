@@ -1,17 +1,20 @@
 /**
  * Order Lifecycle Integration Service
- * 
+ *
  * Integrates stock allocation with the order lifecycle:
  * - Auto-allocates stock when orders are created
  * - Releases allocations when orders are cancelled
  * - Consumes allocations when orders are fulfilled
- * 
+ *
  * Requirements: 6.1, 6.2, 6.3, 6.4, 6.5, 10.5
  */
 
 import { Knex } from "knex"
 import { getKnex } from "../../clients/database/knex-db.js"
-import { AllocationService, InsufficientStockError } from "./allocation.service.js"
+import {
+  AllocationService,
+  InsufficientStockError,
+} from "./allocation.service.js"
 import logger from "../../logger/logger.js"
 
 export interface OrderMarketListing {
@@ -45,9 +48,9 @@ export class OrderLifecycleService {
 
   /**
    * Allocate stock for an order when it's created
-   * 
+   *
    * Requirements: 6.1, 6.2, 6.3
-   * 
+   *
    * @param orderId - The order ID
    * @param marketListings - Array of listings with quantities
    * @param contractorId - Optional contractor ID for strategy-based allocation
@@ -56,7 +59,7 @@ export class OrderLifecycleService {
   async allocateStockForOrder(
     orderId: string,
     marketListings: OrderMarketListing[],
-    contractorId?: string | null
+    contractorId?: string | null,
   ): Promise<OrderAllocationResult> {
     const allocations: AllocationSummary[] = []
     let hasPartialAllocations = false
@@ -73,12 +76,12 @@ export class OrderLifecycleService {
               orderId,
               listing_id,
               quantity,
-              contractorId
+              contractorId,
             )
           : await this.allocationService.autoAllocate(
               orderId,
               listing_id,
-              quantity
+              quantity,
             )
 
         allocations.push({
@@ -92,7 +95,7 @@ export class OrderLifecycleService {
 
         if (result.is_partial) {
           hasPartialAllocations = true
-          logger.warn('Partial allocation for order', {
+          logger.warn("Partial allocation for order", {
             order_id: orderId,
             listing_id,
             requested: quantity,
@@ -110,7 +113,7 @@ export class OrderLifecycleService {
           })
           hasPartialAllocations = true
 
-          logger.warn('Insufficient stock for order allocation', {
+          logger.warn("Insufficient stock for order allocation", {
             order_id: orderId,
             listing_id,
             requested: quantity,
@@ -123,7 +126,7 @@ export class OrderLifecycleService {
       }
     }
 
-    logger.info('Stock allocated for order', {
+    logger.info("Stock allocated for order", {
       order_id: orderId,
       total_requested: totalRequested,
       total_allocated: totalAllocated,
@@ -141,20 +144,20 @@ export class OrderLifecycleService {
 
   /**
    * Release allocations when an order is cancelled
-   * 
+   *
    * Requirements: 6.4
-   * 
+   *
    * @param orderId - The order ID
    */
   async releaseAllocationsForOrder(orderId: string): Promise<void> {
     try {
       await this.allocationService.releaseAllocations(orderId)
 
-      logger.info('Allocations released for cancelled order', {
+      logger.info("Allocations released for cancelled order", {
         order_id: orderId,
       })
     } catch (error) {
-      logger.error('Failed to release allocations for order', {
+      logger.error("Failed to release allocations for order", {
         order_id: orderId,
         error: error instanceof Error ? error.message : String(error),
       })
@@ -164,20 +167,20 @@ export class OrderLifecycleService {
 
   /**
    * Consume allocations when an order is fulfilled
-   * 
+   *
    * Requirements: 6.5, 10.5
-   * 
+   *
    * @param orderId - The order ID
    */
   async consumeAllocationsForOrder(orderId: string): Promise<void> {
     try {
       await this.allocationService.consumeAllocations(orderId)
 
-      logger.info('Allocations consumed for fulfilled order', {
+      logger.info("Allocations consumed for fulfilled order", {
         order_id: orderId,
       })
     } catch (error) {
-      logger.error('Failed to consume allocations for order', {
+      logger.error("Failed to consume allocations for order", {
         order_id: orderId,
         error: error instanceof Error ? error.message : String(error),
       })
@@ -187,7 +190,7 @@ export class OrderLifecycleService {
 
   /**
    * Get allocation summary for an order
-   * 
+   *
    * @param orderId - The order ID
    * @returns Array of allocations with lot details
    */
@@ -196,11 +199,11 @@ export class OrderLifecycleService {
 
     // Group by listing_id
     const byListing = new Map<string, typeof allocations>()
-    
+
     for (const allocation of allocations) {
       // Get the lot to find the listing_id
-      const lot = await this.knex('stock_lots')
-        .where('lot_id', allocation.lot_id)
+      const lot = await this.knex("stock_lots")
+        .where("lot_id", allocation.lot_id)
         .first()
 
       if (lot) {
@@ -213,8 +216,7 @@ export class OrderLifecycleService {
       listing_id,
       allocations: allocs,
       total_quantity: allocs.reduce((sum, a) => sum + a.quantity, 0),
-      status: allocs[0]?.status || 'unknown',
+      status: allocs[0]?.status || "unknown",
     }))
   }
 }
-

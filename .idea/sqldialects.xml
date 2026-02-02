@@ -32,6 +32,7 @@
     <file url="file://$PROJECT_DIR$/config/postgres/47-game-items-last-attribute-fetch.sql" dialect="PostgreSQL" />
     <file url="file://$PROJECT_DIR$/config/postgres/48-attribute-definitions-show-in-filters.sql" dialect="PostgreSQL" />
     <file url="file://$PROJECT_DIR$/config/postgres/49-add-delivery-preference.sql" dialect="PostgreSQL" />
+    <file url="file://$PROJECT_DIR$/config/postgres/50-granular-stock-tracking.sql" dialect="PostgreSQL" />
     <file url="file://$PROJECT_DIR$/scripts/cleanup-duplicates.sql" dialect="PostgreSQL" />
     <file url="file://$PROJECT_DIR$/scripts/game_item_details.sql" dialect="PostgreSQL" />
     <file url="file://$PROJECT_DIR$/scripts/load_new_items.sql" dialect="PostgreSQL" />

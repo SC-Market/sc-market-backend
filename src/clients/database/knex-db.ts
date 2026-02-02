@@ -52,10 +52,10 @@ export class KnexDatabase implements Database {
     },
   ) {
     this.knex = Knex(databaseConfig)
-    
+
     // Enable query performance monitoring
     enableQueryMonitoring(this.knex)
-    
+
     this.discord_profile_cache = new LRUCache({
       max: 500,
 

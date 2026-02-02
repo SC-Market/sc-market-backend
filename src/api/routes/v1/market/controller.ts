@@ -1908,13 +1908,11 @@ export const create_buy_order: RequestHandler = async (req, res) => {
       price != null &&
       (typeof price !== "number" || price < 1)
     ) {
-      res
-        .status(400)
-        .json(
-          createErrorResponse({
-            message: "Suggested price must be at least 1 if provided",
-          }),
-        )
+      res.status(400).json(
+        createErrorResponse({
+          message: "Suggested price must be at least 1 if provided",
+        }),
+      )
       return
     }
 

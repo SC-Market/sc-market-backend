@@ -121,8 +121,7 @@ async function reimportMissingItems(
   const existingByName = await knex("game_items")
     .select("id", "name", "cstone_uuid")
     .then(
-      (rows: any[]) =>
-        new Map(rows.map((r) => [normalizeItemName(r.name), r])),
+      (rows: any[]) => new Map(rows.map((r) => [normalizeItemName(r.name), r])),
     )
 
   let imported = 0
@@ -156,12 +155,10 @@ async function reimportMissingItems(
         )
         updated++
       } else {
-        await knex("game_items")
-          .where("id", existingByNameItem.id)
-          .update({
-            cstone_uuid: item.id,
-            type: itemType,
-          })
+        await knex("game_items").where("id", existingByNameItem.id).update({
+          cstone_uuid: item.id,
+          type: itemType,
+        })
 
         // Update attributes
         await knex("game_item_attributes")
@@ -230,7 +227,8 @@ if (import.meta.url === `file://${process.argv[1]}`) {
     info: (msg: string, meta?: any) => console.log(`[INFO] ${msg}`, meta || ""),
     debug: (msg: string, meta?: any) =>
       console.log(`[DEBUG] ${msg}`, meta || ""),
-    warn: (msg: string, meta?: any) => console.warn(`[WARN] ${msg}`, meta || ""),
+    warn: (msg: string, meta?: any) =>
+      console.warn(`[WARN] ${msg}`, meta || ""),
     error: (msg: string, meta?: any) =>
       console.error(`[ERROR] ${msg}`, meta || ""),
   }
