@@ -381,7 +381,7 @@ async function importItemsFromCStone(
       if (existingByUuid) {
         if (dryRun) {
           logger.debug(
-            `[DRY RUN] Skip ${item.name}: already exists with correct cstone_uuid`,
+            `[DRY RUN] Skip ${item.name}: already exists as "${existingByUuid.name}" with cstone_uuid=${item.id}`,
           )
         }
         skipped++
@@ -444,7 +444,7 @@ async function importItemsFromCStone(
       if (existingByName) {
         if (dryRun) {
           logger.debug(
-            `[DRY RUN] Skip ${item.name}: already exists by name (no cstone_uuid, likely from UEX)`,
+            `[DRY RUN] Skip ${item.name}: already exists as "${existingByName.name}" (normalized: ${normalizedName}, no cstone_uuid)`,
           )
         }
         skipped++
