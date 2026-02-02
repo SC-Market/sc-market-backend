@@ -377,28 +377,35 @@ async function importItemsFromCStone(
         continue
       }
 
-      // Update cstone_uuid if item exists by name but doesn't have uuid
-      if (existingByName && !existingByName.cstone_uuid) {
+      // Update existing item (cstone_uuid and type)
+      if (existingByName) {
         if (!dryRun) {
           try {
+            // Fetch details to get correct type
+            const details = await fetchItemDetails(item.id, logger)
+            let itemType = "Item"
+            if (details?.cstoneType) {
+              itemType =
+                CSTONE_TYPE_MAP[details.cstoneType] || details.cstoneType
+            }
+
+            const updateData: any = { type: itemType }
+            if (!existingByName.cstone_uuid) {
+              updateData.cstone_uuid = item.id
+            }
+
             await knex!("game_items")
               .where("id", existingByName.id)
-              .update({ cstone_uuid: item.id })
+              .update(updateData)
             updated++
-            logger.debug(`Updated cstone_uuid for: ${item.name}`)
+            logger.debug(`Updated ${item.name}: type=${itemType}`)
           } catch (error) {
-            logger.warn(`Failed to update cstone_uuid for: ${item.name}`)
+            logger.warn(`Failed to update: ${item.name}`)
           }
         } else {
-          logger.info(`[DRY RUN] Would update cstone_uuid for: ${item.name}`)
+          logger.info(`[DRY RUN] Would update: ${item.name}`)
           updated++
         }
-        continue
-      }
-
-      // Skip if already exists by name
-      if (existingByName) {
-        skipped++
         continue
       }
 
