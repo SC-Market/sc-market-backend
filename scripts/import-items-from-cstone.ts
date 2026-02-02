@@ -25,7 +25,7 @@ interface Logger {
 }
 
 async function importItemsFromCStone(
-  knex: Knex,
+  knex: Knex | null,
   logger: Logger,
   dryRun: boolean,
 ) {
@@ -65,8 +65,22 @@ async function importItemsFromCStone(
 
     logger.info(`Fetched ${allItems.length} total items from CStone`)
 
+    // In dry run without database, just show what we'd do
+    if (dryRun && !knex) {
+      logger.info("Dry run without database - showing sample items")
+      const sampleItems = allItems.slice(0, 10)
+      sampleItems.forEach((item) => {
+        logger.info(`Would import: ${item.name}`, { id: item.id })
+      })
+      logger.info("Import summary", {
+        totalItems: allItems.length,
+        sampleShown: sampleItems.length,
+      })
+      return { imported: 0, updated: 0, skipped: 0 }
+    }
+
     // Get existing items from database
-    const existingItemsMap = await knex("game_items")
+    const existingItemsMap = await knex!("game_items")
       .select("id", "name", "cstone_uuid")
       .then(
         (rows) =>
@@ -105,7 +119,7 @@ async function importItemsFromCStone(
       if (existingItem && !existingItem.cstone_uuid) {
         if (!dryRun) {
           try {
-            await knex("game_items")
+            await knex!("game_items")
               .where("id", existingItem.id)
               .update({ cstone_uuid: item.id })
             updated++
@@ -129,7 +143,7 @@ async function importItemsFromCStone(
           logger.info(`[DRY RUN] Would import: ${item.name}`)
           imported++
         } else {
-          await knex("game_items").insert({
+          await knex!("game_items").insert({
             name: item.name,
             type: "Item", // CStone doesn't provide type info
             description: null,
@@ -168,26 +182,30 @@ async function importItemsFromCStone(
 
 // Main entrypoint
 if (import.meta.url === `file://${process.argv[1]}`) {
-  const knexModule = await import("knex")
-  const knex = knexModule.default
-
   const loggerModule = await import("../src/logger/logger.js")
   const logger = loggerModule.default
 
   const dryRun =
     process.argv.includes("--dry") || process.argv.includes("--dry-run")
 
-  const db = knex({
-    client: "pg",
-    connection: process.env.DATABASE_URL,
-  })
+  let db = null
+
+  // Only connect to database if not in dry run mode
+  if (!dryRun) {
+    const knexModule = await import("knex")
+    const knex = knexModule.default
+    db = knex({
+      client: "pg",
+      connection: process.env.DATABASE_URL,
+    })
+  }
 
   try {
     await importItemsFromCStone(db, logger, dryRun)
-    await db.destroy()
+    if (db) await db.destroy()
     process.exit(0)
   } catch (error) {
-    await db.destroy()
+    if (db) await db.destroy()
     process.exit(1)
   }
 }
