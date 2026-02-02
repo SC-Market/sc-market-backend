@@ -112,25 +112,14 @@ async function validateAndFixCstoneUuids(
 
 // Main
 if (import.meta.url === `file://${process.argv[1]}`) {
-  const logger = {
-    info: (msg: string, meta?: any) =>
-      console.log(`[INFO] ${msg}`, meta ? JSON.stringify(meta) : ""),
-    debug: (msg: string, meta?: any) =>
-      console.log(`[DEBUG] ${msg}`, meta ? JSON.stringify(meta) : ""),
-    warn: (msg: string, meta?: any) =>
-      console.warn(`[WARN] ${msg}`, meta ? JSON.stringify(meta) : ""),
-    error: (msg: string, meta?: any) =>
-      console.error(`[ERROR] ${msg}`, meta ? JSON.stringify(meta) : ""),
-  }
+  const loggerModule = await import("../src/logger/logger.js")
+  const logger = loggerModule.default
 
   const dryRun = process.argv.includes("--dry")
 
   try {
-    const knexLib = await import("knex")
-    const knex = knexLib.default({
-      client: "pg",
-      connection: process.env.DATABASE_URL,
-    })
+    const dbModule = await import("../src/clients/database/knex-db.js")
+    const knex = dbModule.database.knex
 
     await validateAndFixCstoneUuids(knex, logger, dryRun)
     await knex.destroy()
