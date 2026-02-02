@@ -14,6 +14,66 @@ import { normalizeAttributes } from "./attribute-normalizer.js"
 const CSTONE_API_URL = "https://finder.cstone.space/GetSearch"
 const CSTONE_BASE_URL = "https://finder.cstone.space"
 
+// Canonical type names from CStone (from package_data.py)
+const CSTONE_TYPE_MAP: Record<string, string> = {
+  "FPS TOOL": "FPS Tool",
+  "ARMOR - ARMS": "Arms",
+  "SOUVENIR/FLAIR": "Souvenir/Flair",
+  "ARMOR - UNDERSUIT": "Undersuit",
+  "CLOTHING - SHIRTS": "Shirts",
+  MOBIGLASS: "Mobiglass",
+  DRINK: "Food/Drink",
+  "MISSILE RACK": "Missile Rack",
+  EYEWEAR: "Eyewear",
+  EATABLE: "Food/Drink",
+  "CLOTHING - HAT": "Hat",
+  "HANDHELD MINING MODIFIER": "Handheld Mining Modifier",
+  "ARMOR - HELMET": "Helmet",
+  "FPS ATTACHMENT": "Weapon Attachment",
+  "SHIP FOR SALE/RENTAL": "Ship for Sale/Rental",
+  "CLOTHING - GLOVES": "Gloves",
+  "MINING HEAD": "Mining Head",
+  "SALVAGE MODIFIER": "Salvage Modifier",
+  "FPS MELEE WEAPON": "Melee Weapon",
+  SHIELD: "Shield",
+  CONTAINER: "Container",
+  "ARMOR - TORSO": "Torso",
+  "FPS MAGAZINE": "Weapon Magazine",
+  "QUANTUM DRIVE": "Quantum Drive",
+  "CLOTHING - LEGWEAR": "Legwear",
+  "MEDICAL PEN": "Medical Pen",
+  "FPS TOOL ATTACHMENT": "Tool Attachment",
+  "TRACTOR BEAM": "Tractor Beam",
+  "CLOTHING - FOOTWEAR": "Footwear",
+  "SHIP LIVERY": "Ship Livery",
+  "FPS THROWN WEAPON": "Thrown Weapon",
+  MISCELLANEOUS: "Other",
+  "MINING MODIFIER": "Mining Modifier",
+  "FPS FLARE": "Flare",
+  "ARMOR - LEGS": "Legs",
+  "SALVAGE HEAD": "Salvage Head",
+  MISSILE: "Missile",
+  "TOWING BEAM": "Towing Beam",
+  "FUEL POD": "Fuel Pod",
+  "SHIP TURRET OR GIMBAL": "Ship Turret or Gimbal",
+  "CLOTHING - JUMPSUITS": "Jumpsuits",
+  "SHIP WEAPON": "Ship Weapon",
+  "FPS RANGED WEAPON": "Ranged Weapon",
+  "FUEL NOZZLE": "Fuel Nozzle",
+  COOLER: "Cooler",
+  "ARMOR - BACKPACK": "Backpack",
+  "CLOTHING - BACKPACK": "Backpack (Clothing)",
+  "CLOTHING - JACKETS": "Jackets",
+  "POWER PLANT": "Power Plant",
+  BOMB: "Bomb",
+  "HACKING CHIP": "Hacking Chip",
+  DECORATION: "Decoration",
+  "SHIP MODULE": "Ship Module",
+  "JUMP DRIVE": "Jump Drive",
+  "FLIGHT BLADE": "Flight Blade",
+  "BOMB LAUNCHER": "Bomb Launcher",
+}
+
 interface CStoneItem {
   id: string
   name: string
@@ -24,6 +84,7 @@ interface CStoneItemDetails {
   manufacturer?: string
   armorType?: string
   itemType?: string
+  cstoneType?: string
   attributes: Record<string, string>
 }
 
@@ -53,6 +114,13 @@ async function fetchItemDetails(
       const attributes: Record<string, string> = {}
       let manufacturer: string | undefined
       let armorType: string | undefined
+      let cstoneType: string | undefined
+
+      // Extract type from page heading (h2)
+      const typeHeading = $("h2").first().text().trim()
+      if (typeHeading) {
+        cstoneType = typeHeading.split("\n")[0].trim() // Get first line only
+      }
 
       // Parse table rows - label in right-aligned td, value in left-aligned td
       $("td").each((i, elem) => {
@@ -78,19 +146,20 @@ async function fetchItemDetails(
 
       // Determine item type from URL (after redirect)
       let itemType = "Item"
-      if (response.url.includes("FPSArmors1")) {
+      const urlLower = response.url.toLowerCase()
+      if (urlLower.includes("fpsarmors")) {
         itemType = "FPSArmors1"
-      } else if (response.url.includes("FPSWeapons")) {
+      } else if (urlLower.includes("fpsweapons")) {
         itemType = "FPSWeapons"
-      } else if (response.url.includes("Ships")) {
+      } else if (urlLower.includes("ships")) {
         itemType = "Ships"
-      } else if (response.url.includes("Vehicles")) {
+      } else if (urlLower.includes("vehicles")) {
         itemType = "Vehicles"
-      } else if (response.url.includes("ShipWeapons")) {
+      } else if (urlLower.includes("shipweapons")) {
         itemType = "ShipWeapons"
-      } else if (response.url.includes("ShipComponents")) {
+      } else if (urlLower.includes("shipcomponents")) {
         itemType = "ShipComponents"
-      } else if (response.url.includes("ShipMiningHeads")) {
+      } else if (urlLower.includes("shipminingheads")) {
         itemType = "ShipMiningHeads"
       }
 
@@ -98,6 +167,7 @@ async function fetchItemDetails(
         manufacturer,
         armorType,
         itemType,
+        cstoneType,
         attributes,
       }
     }
@@ -231,22 +301,11 @@ async function importItemsFromCStone(
           // Fetch item details from HTML page
           const details = await fetchItemDetails(item.id, logger)
 
-          // Determine item type
+          // Determine item type using canonical CStone type map
           let itemType = "Item"
-          if (details?.itemType === "FPSArmors1") {
-            itemType = details.armorType || "FPS Armor"
-          } else if (details?.itemType === "FPSWeapons") {
-            itemType = "FPS Weapon"
-          } else if (details?.itemType === "Ships") {
-            itemType = "Ship"
-          } else if (details?.itemType === "Vehicles") {
-            itemType = "Vehicle"
-          } else if (details?.itemType === "ShipWeapons") {
-            itemType = "Ship Weapon"
-          } else if (details?.itemType === "ShipComponents") {
-            itemType = "Ship Component"
-          } else if (details?.itemType === "ShipMiningHeads") {
-            itemType = "Mining Head"
+          if (details?.cstoneType) {
+            // Use canonical type from map, or the raw type if not in map
+            itemType = CSTONE_TYPE_MAP[details.cstoneType] || details.cstoneType
           }
 
           // Insert game item
