@@ -93,9 +93,7 @@ async function importItemsFromUEX() {
       const existing = uniqueItems.get(key)
       if (existing) {
         const sameNameDifferentUuid =
-          item.uuid &&
-          existing.uuid &&
-          item.uuid !== existing.uuid
+          item.uuid && existing.uuid && item.uuid !== existing.uuid
         if (sameNameDifferentUuid) {
           logger.info("Same name with different UEX UUIDs, keeping first", {
             name: item.name,
@@ -103,10 +101,13 @@ async function importItemsFromUEX() {
             skippedUuid: item.uuid,
           })
         } else if (item.uuid && !existing.uuid) {
-          logger.debug("Same name in multiple categories, preferring entry with uex_uuid", {
-            name: item.name,
-            uuid: item.uuid,
-          })
+          logger.debug(
+            "Same name in multiple categories, preferring entry with uex_uuid",
+            {
+              name: item.name,
+              uuid: item.uuid,
+            },
+          )
           uniqueItems.set(key, item)
         }
         continue
@@ -131,11 +132,17 @@ async function importItemsFromUEX() {
       )
 
     let updated = 0
+    const coreItems: UEXItem[] = []
 
     for (const item of uniqueItems.values()) {
       if (!item.name) {
         skipped++
         continue
+      }
+
+      // Track core items for generating full sets
+      if (isCoreItem(item.name)) {
+        coreItems.push(item)
       }
 
       const existingItem = existingItemsMap.get(item.name.toLowerCase())
@@ -198,6 +205,73 @@ async function importItemsFromUEX() {
       }
     }
 
+    // Generate Full Set items for each core
+    logger.info(`Generating Full Set items for ${coreItems.length} cores`)
+    let fullSetsCreated = 0
+
+    for (const coreItem of coreItems) {
+      const fullSetName = `${coreItem.name} - Full Set`
+
+      // Skip if full set already exists
+      if (existingItemsMap.has(fullSetName.toLowerCase())) {
+        continue
+      }
+
+      try {
+        if (DRY_RUN) {
+          logger.info(`[DRY RUN] Would create Full Set: ${fullSetName}`)
+          fullSetsCreated++
+        } else {
+          // Insert the full set item
+          const [fullSetItem] = await database
+            .knex("game_items")
+            .insert({
+              name: fullSetName,
+              type: "Full Set",
+              description: `Full armor set for ${coreItem.name}`,
+              image_url: coreItem.screenshot || null,
+              uex_uuid: null, // Full sets don't have UEX UUIDs
+            })
+            .returning("id")
+
+          // Copy attributes from core to full set
+          if (coreItem.uuid) {
+            const coreDbItem = await database
+              .knex("game_items")
+              .where("uex_uuid", coreItem.uuid)
+              .first()
+
+            if (coreDbItem) {
+              const coreAttributes = await database
+                .knex("game_item_attributes")
+                .where("game_item_id", coreDbItem.id)
+                .select("attribute_name", "attribute_value")
+
+              if (coreAttributes.length > 0) {
+                await database.knex("game_item_attributes").insert(
+                  coreAttributes.map((attr) => ({
+                    game_item_id: fullSetItem.id,
+                    attribute_name: attr.attribute_name,
+                    attribute_value: attr.attribute_value,
+                  })),
+                )
+                logger.debug(
+                  `Copied ${coreAttributes.length} attributes to Full Set: ${fullSetName}`,
+                )
+              }
+            }
+          }
+
+          fullSetsCreated++
+          logger.debug(`Created Full Set: ${fullSetName}`)
+        }
+      } catch (error) {
+        logger.warn(`Failed to create Full Set: ${fullSetName}`, {
+          error: error instanceof Error ? error.message : "Unknown error",
+        })
+      }
+    }
+
     logger.info("UEX item import completed", {
       dryRun: DRY_RUN,
       totalFetched: allItems.length,
@@ -205,6 +279,7 @@ async function importItemsFromUEX() {
       imported,
       updated,
       skipped,
+      fullSetsCreated,
     })
 
     process.exit(0)
@@ -250,6 +325,21 @@ function mapUEXCategoryToType(
 
   // Default to category or section
   return category || section || null
+}
+
+/**
+ * Checks if an item is an armor core
+ * Examples: "Inquisitor Core Black Steel", "DCP Armor Core Hunter Camo", "ORC-mkX Core Iceborn"
+ */
+function isCoreItem(name: string): boolean {
+  const normalized = name.toLowerCase()
+
+  // Match patterns like "X Core Y" (includes "X Armor Core Y" as a subset)
+  // Exclude items with "LifeCore", "ThermalCore", etc. (single word cores)
+  return (
+    normalized.includes(" core ") &&
+    !normalized.match(/\b(life|thermal|power|reactor)core\b/)
+  )
 }
 
 importItemsFromUEX()
