@@ -512,6 +512,32 @@ async function importItemsFromCStone(
       skipped,
     })
 
+    // Fix bad armor types in database
+    if (knex) {
+      logger.info("Fixing bad armor types in database...")
+      const badTypeItems = await knex("game_items")
+        .select("id", "name", "type")
+        .where("type", "like", "Armor %")
+
+      let fixed = 0
+      for (const item of badTypeItems) {
+        const correctType = item.type.replace("Armor ", "")
+        if (dryRun) {
+          logger.info(
+            `[DRY RUN] Would fix ${item.name}: ${item.type} → ${correctType}`,
+          )
+          fixed++
+        } else {
+          await knex("game_items")
+            .where("id", item.id)
+            .update({ type: correctType })
+          logger.debug(`Fixed ${item.name}: ${item.type} → ${correctType}`)
+          fixed++
+        }
+      }
+      logger.info(`Fixed ${fixed} items with bad armor types`)
+    }
+
     // Generate Full Set items for Core items
     if (knex) {
       logger.info("Generating Full Set items from Core items...")
