@@ -379,6 +379,11 @@ async function importItemsFromCStone(
 
       // Skip if already exists with correct cstone_uuid
       if (existingByUuid) {
+        if (dryRun) {
+          logger.debug(
+            `[DRY RUN] Skip ${item.name}: already exists with correct cstone_uuid`,
+          )
+        }
         skipped++
         continue
       }
@@ -402,6 +407,11 @@ async function importItemsFromCStone(
 
           // Don't downgrade Commodity to "Other" (commodities are fetched separately)
           if (itemType === "Other" && existingByName.type === "Commodity") {
+            if (dryRun) {
+              logger.debug(
+                `[DRY RUN] Skip ${item.name}: would downgrade Commodity to Other`,
+              )
+            }
             skipped++
             continue
           }
@@ -432,6 +442,11 @@ async function importItemsFromCStone(
 
       // Skip if already exists by name (but has no cstone_uuid - came from UEX)
       if (existingByName) {
+        if (dryRun) {
+          logger.debug(
+            `[DRY RUN] Skip ${item.name}: already exists by name (no cstone_uuid, likely from UEX)`,
+          )
+        }
         skipped++
         continue
       }
