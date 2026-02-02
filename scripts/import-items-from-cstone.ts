@@ -42,56 +42,63 @@ async function fetchItemDetails(
   logger: Logger,
 ): Promise<CStoneItemDetails | null> {
   try {
-    // Try common page patterns
-    const patterns = [
-      "FPSArmors1",
-      "Ships",
-      "Vehicles",
-      "FPSWeapons",
-      "ShipWeapons",
-      "ShipComponents",
-    ]
+    // Use Search endpoint which auto-redirects to the correct category
+    const url = `${CSTONE_BASE_URL}/Search/${itemId}`
+    const response = await fetch(url)
 
-    for (const pattern of patterns) {
-      const url = `${CSTONE_BASE_URL}/${pattern}/${itemId}`
-      const response = await fetch(url)
+    if (response.ok) {
+      const html = await response.text()
+      const $ = cheerio.load(html)
 
-      if (response.ok) {
-        const html = await response.text()
-        const $ = cheerio.load(html)
+      const attributes: Record<string, string> = {}
+      let manufacturer: string | undefined
+      let armorType: string | undefined
 
-        const attributes: Record<string, string> = {}
-        let manufacturer: string | undefined
-        let armorType: string | undefined
+      // Parse table rows - label in right-aligned td, value in left-aligned td
+      $("td").each((i, elem) => {
+        const $td = $(elem)
+        const text = $td.text().trim()
+        const style = $td.attr("style") || ""
 
-        // Parse table rows - label in right-aligned td, value in left-aligned td
-        $("td").each((i, elem) => {
-          const $td = $(elem)
-          const text = $td.text().trim()
-          const style = $td.attr("style") || ""
+        // Right-aligned = label
+        if (style.includes("text-align:right")) {
+          const $nextTd = $td.next("td")
+          if ($nextTd.length) {
+            const value = $nextTd.text().trim()
+            if (value) {
+              attributes[text] = value
 
-          // Right-aligned = label
-          if (style.includes("text-align:right")) {
-            const $nextTd = $td.next("td")
-            if ($nextTd.length) {
-              const value = $nextTd.text().trim()
-              if (value) {
-                attributes[text] = value
-
-                // Extract key attributes
-                if (text === "MANUFACTURER") manufacturer = value
-                if (text === "ARMOR TYPE") armorType = value
-              }
+              // Extract key attributes
+              if (text === "MANUFACTURER") manufacturer = value
+              if (text === "ARMOR TYPE") armorType = value
             }
           }
-        })
-
-        return {
-          manufacturer,
-          armorType,
-          itemType: pattern,
-          attributes,
         }
+      })
+
+      // Determine item type from URL (after redirect)
+      let itemType = "Item"
+      if (response.url.includes("FPSArmors1")) {
+        itemType = "FPSArmors1"
+      } else if (response.url.includes("FPSWeapons")) {
+        itemType = "FPSWeapons"
+      } else if (response.url.includes("Ships")) {
+        itemType = "Ships"
+      } else if (response.url.includes("Vehicles")) {
+        itemType = "Vehicles"
+      } else if (response.url.includes("ShipWeapons")) {
+        itemType = "ShipWeapons"
+      } else if (response.url.includes("ShipComponents")) {
+        itemType = "ShipComponents"
+      } else if (response.url.includes("ShipMiningHeads")) {
+        itemType = "ShipMiningHeads"
+      }
+
+      return {
+        manufacturer,
+        armorType,
+        itemType,
+        attributes,
       }
     }
 
@@ -238,6 +245,8 @@ async function importItemsFromCStone(
             itemType = "Ship Weapon"
           } else if (details?.itemType === "ShipComponents") {
             itemType = "Ship Component"
+          } else if (details?.itemType === "ShipMiningHeads") {
+            itemType = "Mining Head"
           }
 
           // Insert game item
