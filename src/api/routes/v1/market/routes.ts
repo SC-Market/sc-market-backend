@@ -18,6 +18,7 @@ import {
   valid_market_listing,
 } from "./middleware.js"
 import { org_permission, valid_contractor } from "../contractors/middleware.js"
+import { stockLotsRouter } from "./stock-lots.routes.js"
 
 import { multiplePhotoUpload } from "../util/upload.js"
 import {
@@ -80,6 +81,9 @@ import {
 } from "./openapi.js"
 
 export const marketRouter = express.Router()
+
+// Mount stock lots routes
+marketRouter.use("/", stockLotsRouter)
 
 marketRouter.get(
   "/stats",

@@ -11,6 +11,7 @@ import {
 } from "../../clients/database/db-models.js"
 import { DBPublicContract } from "../../api/routes/v1/contracts/types.js"
 import { User as AppUser } from "../../api/routes/v1/api-models.js"
+import { DBStockLot } from "../../services/stock-lot/types.js"
 
 declare global {
   declare namespace Express {
@@ -28,6 +29,7 @@ declare global {
       chat?: DBChat
       recruiting_post?: DBRecruitingPost
       market_listing?: DBMarketListing
+      stock_lot?: DBStockLot
       user_listings?: DBMarketListingComplete[]
       contractor_listings?: DBMarketListingComplete[]
       users?: Map<string, AppUser>
