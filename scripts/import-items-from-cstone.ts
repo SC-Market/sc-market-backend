@@ -147,6 +147,7 @@ const CSTONE_TYPE_MAP: Record<string, string> = {
   "SHIP TURRET OR GIMBAL": "Ship Turret or Gimbal",
   "CLOTHING - JUMPSUITS": "Jumpsuits",
   "SHIP WEAPON": "Ship Weapon",
+  "VEHICLE WEAPON": "Ship Weapon",
   "FPS RANGED WEAPON": "Ranged Weapon",
   "FUEL NOZZLE": "Fuel Nozzle",
   COOLER: "Cooler",
@@ -382,8 +383,15 @@ async function importItemsFromCStone(
         continue
       }
 
-      // Update existing item ONLY if it already has a cstone_uuid (meaning it came from CStone before)
-      if (existingByName && existingByName.cstone_uuid) {
+      // Update existing item if:
+      // 1. It has a cstone_uuid (came from CStone before)
+      // 2. It has a bad type that needs fixing (Armor Arms, Armor Torso, etc.)
+      const needsTypeUpdate =
+        existingByName &&
+        (existingByName.cstone_uuid ||
+          existingByName.type?.startsWith("Armor "))
+
+      if (needsTypeUpdate) {
         try {
           // Fetch details to get correct type
           const details = await fetchItemDetails(item.id, logger)
