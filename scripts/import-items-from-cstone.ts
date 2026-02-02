@@ -317,13 +317,18 @@ async function importItemsFromCStone(
     if (knex) {
       try {
         existingItemsMap = await knex("game_items")
-          .select("id", "name", "cstone_uuid")
+          .select("id", "name", "cstone_uuid", "type")
           .then(
             (rows) =>
               new Map(
                 rows.map((r) => [
                   normalizeItemName(r.name),
-                  { id: r.id, name: r.name, cstone_uuid: r.cstone_uuid },
+                  {
+                    id: r.id,
+                    name: r.name,
+                    cstone_uuid: r.cstone_uuid,
+                    type: r.type,
+                  },
                 ]),
               ),
           )
@@ -379,16 +384,29 @@ async function importItemsFromCStone(
 
       // Update existing item (cstone_uuid and type)
       if (existingByName) {
-        if (!dryRun) {
-          try {
-            // Fetch details to get correct type
-            const details = await fetchItemDetails(item.id, logger)
-            let itemType = "Item"
-            if (details?.cstoneType) {
-              itemType =
-                CSTONE_TYPE_MAP[details.cstoneType] || details.cstoneType
-            }
+        try {
+          // Fetch details to get correct type
+          const details = await fetchItemDetails(item.id, logger)
+          let itemType = "Item"
+          if (details?.cstoneType) {
+            itemType = CSTONE_TYPE_MAP[details.cstoneType] || details.cstoneType
+          }
 
+          if (dryRun) {
+            const updates = []
+            if (existingByName.type !== itemType) {
+              updates.push(`type: ${existingByName.type} → ${itemType}`)
+            }
+            if (!existingByName.cstone_uuid) {
+              updates.push("add cstone_uuid")
+            }
+            if (updates.length > 0) {
+              logger.info(
+                `[DRY RUN] Would update ${item.name}: ${updates.join(", ")}`,
+              )
+            }
+            updated++
+          } else {
             const updateData: any = { type: itemType }
             if (!existingByName.cstone_uuid) {
               updateData.cstone_uuid = item.id
@@ -399,12 +417,9 @@ async function importItemsFromCStone(
               .update(updateData)
             updated++
             logger.debug(`Updated ${item.name}: type=${itemType}`)
-          } catch (error) {
-            logger.warn(`Failed to update: ${item.name}`)
           }
-        } else {
-          logger.info(`[DRY RUN] Would update: ${item.name}`)
-          updated++
+        } catch (error) {
+          logger.warn(`Failed to update: ${item.name}`)
         }
         continue
       }
