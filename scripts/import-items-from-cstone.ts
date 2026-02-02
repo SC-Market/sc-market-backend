@@ -360,10 +360,14 @@ async function importItemsFromCStone(
               }),
             )
 
-            await knex!("game_item_attributes").insert(attributeRows)
-            logger.debug(
-              `Imported ${item.name} with ${attributeRows.length} attributes`,
-            )
+            if (attributeRows.length > 0) {
+              await knex!("game_item_attributes").insert(attributeRows)
+              logger.debug(
+                `Imported ${item.name} with ${attributeRows.length} attributes`,
+              )
+            } else {
+              logger.debug(`Imported item: ${item.name} (no valid attributes)`)
+            }
           } else {
             logger.debug(`Imported item: ${item.name}`)
           }
