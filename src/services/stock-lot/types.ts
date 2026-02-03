@@ -47,6 +47,7 @@ export interface CreateLotInput {
  * Input for updating an existing stock lot
  */
 export interface UpdateLotInput {
+  listing_id?: string
   quantity?: number
   location_id?: string | null
   owner_id?: string | null
