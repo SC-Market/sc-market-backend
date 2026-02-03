@@ -18,6 +18,7 @@ import {
   ConcurrentModificationError,
 } from "../../../../services/stock-lot/errors.js"
 import logger from "../../../../logger/logger.js"
+import * as marketDb from "./database.js"
 
 const stockLotService = new StockLotService()
 const locationService = new LocationService()
@@ -73,6 +74,59 @@ export const updateSimpleStock: RequestHandler = async (req, res) => {
     res.status(500).json(
       createErrorResponse({
         message: "Failed to update stock",
+      }),
+    )
+  }
+}
+
+/**
+ * GET /api/market/lots
+ * Search all lots with filters and pagination
+ */
+export const searchLots: RequestHandler = async (req, res) => {
+  try {
+    const { user_id, contractor_id, location_id, listed, page_size = 100, offset = 0 } = req.query
+
+    // Build filters
+    const filters: any = {}
+    
+    if (user_id) filters.owner_id = user_id as string
+    if (location_id) filters.location_id = location_id as string
+    if (listed !== undefined) filters.listed = listed === "true"
+
+    // Get lots
+    let lots = await stockLotService.getLots(filters)
+
+    // Filter by contractor if provided
+    if (contractor_id) {
+      const listingIds = lots.map(l => l.listing_id)
+      // Get listings to check ownership
+      const listings = await marketDb.getMarketUniqueListingsComplete({
+        listing_id: listingIds,
+      })
+      const contractorListingIds = new Set(
+        listings
+          .filter((l: any) => l.contractor_seller_id === contractor_id)
+          .map((l: any) => l.listing_id)
+      )
+      lots = lots.filter((l: any) => contractorListingIds.has(l.listing_id))
+    }
+
+    // Paginate
+    const total = lots.length
+    const paginatedLots = lots.slice(Number(offset), Number(offset) + Number(page_size))
+
+    res.json(
+      createResponse({
+        lots: paginatedLots,
+        total,
+      }),
+    )
+  } catch (error) {
+    logger.error("Error searching lots", { error })
+    res.status(500).json(
+      createErrorResponse({
+        message: "Failed to search lots",
       }),
     )
   }
