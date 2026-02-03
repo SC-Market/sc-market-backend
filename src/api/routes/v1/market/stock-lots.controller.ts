@@ -86,7 +86,7 @@ export const updateSimpleStock: RequestHandler = async (req, res) => {
  */
 export const searchLots: RequestHandler = async (req, res) => {
   try {
-    const { user_id, contractor_id, location_id, listed, page_size = 100, offset = 0 } = req.query
+    const { user_id, contractor_spectrum_id, location_id, listed, page_size = 100, offset = 0 } = req.query
 
     // Build filters
     const filters: any = {}
@@ -99,14 +99,13 @@ export const searchLots: RequestHandler = async (req, res) => {
     let lots = await stockLotService.getLots(filters)
 
     // Filter by contractor if provided
-    if (contractor_id) {
-      if (lots.length === 0) {
-        // No lots to filter
-      } else {
+    if (contractor_spectrum_id && req.contractors?.has("contractor_spectrum_id")) {
+      const contractor = req.contractors.get("contractor_spectrum_id")!
+      if (lots.length > 0) {
         // Get all contractor listings
         const knex = getKnex()
         const listings = await knex("market_listings")
-          .where("contractor_seller_id", contractor_id)
+          .where("contractor_seller_id", contractor.contractor_id)
           .select("listing_id")
         
         const contractorListingIds = new Set(
@@ -193,10 +192,10 @@ export const createLot: RequestHandler = async (req, res) => {
     const { quantity, location_id, owner_username, listed, notes } = req.body
 
     // Validate required fields
-    if (typeof quantity !== "number" || quantity <= 0) {
+    if (typeof quantity !== "number" || quantity < 0) {
       res.status(400).json(
         createErrorResponse({
-          message: "Quantity must be a positive number",
+          message: "Quantity must be 0 or greater",
         }),
       )
       return
@@ -400,7 +399,7 @@ export const transferLot: RequestHandler = async (req, res) => {
     if (typeof quantity !== "number" || quantity <= 0) {
       res.status(400).json(
         createErrorResponse({
-          message: "Quantity must be a positive number",
+          message: "Transfer quantity must be greater than 0",
         }),
       )
       return
