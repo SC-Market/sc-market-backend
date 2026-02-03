@@ -122,6 +122,16 @@ export class StockLotService {
       throw new CharacterLimitError("notes", updates.notes.length, 1000)
     }
 
+    // Check for active allocations if changing listing
+    if (updates.listing_id) {
+      const hasAllocations = await this.repository.hasActiveAllocations(lotId)
+      if (hasAllocations) {
+        throw new Error(
+          "Cannot change listing for lot with active allocations. Release allocations first.",
+        )
+      }
+    }
+
     const lot = await this.repository.update(lotId, updates)
 
     logger.info("Stock lot updated", {
