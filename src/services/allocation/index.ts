@@ -11,3 +11,4 @@ export {
 } from "./allocation.service.js"
 export { AllocationRepository } from "./repository.js"
 export * from "./types.js"
+export * from "./allocation-mode.service.js"

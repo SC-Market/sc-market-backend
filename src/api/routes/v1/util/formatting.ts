@@ -28,6 +28,7 @@ import * as marketDb from "../market/database.js"
 import * as orderDb from "../orders/database.js"
 import * as profileDb from "../profiles/database.js"
 import * as contractorDb from "../contractors/database.js"
+// import { StockLotService } from "../../../services/stock-lot/stock-lot.service.js"
 import * as serviceDb from "../services/database.js"
 import * as commentDb from "../comments/database.js"
 import * as recruitingDb from "../recruiting/database.js"
@@ -538,9 +539,23 @@ export async function formatListingBase(
     bids = undefined
   }
 
+  // Add stock breakdown for private views (Requirements: 5.1, 5.7)
+  // TODO: Re-enable after fixing circular dependency
+  // const stockLotService = new StockLotService()
+  // const [available, reserved] = await Promise.all([
+  //   stockLotService.getAvailableStock(listing.listing_id),
+  //   stockLotService.getReservedStock(listing.listing_id),
+  // ])
+  const available = 0
+  const reserved = 0
+
   return {
     ...public_details,
     bids: bids,
+    stock_breakdown: {
+      available,
+      reserved,
+    },
   }
 }
 

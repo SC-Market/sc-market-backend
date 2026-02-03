@@ -495,7 +495,8 @@ export async function getOrderSetting(
     | "min_order_size"
     | "max_order_size"
     | "min_order_value"
-    | "max_order_value",
+    | "max_order_value"
+    | "allocation_mode",
 ): Promise<DBOrderSetting | null> {
   const setting = await knex()<DBOrderSetting>("order_settings")
     .where({

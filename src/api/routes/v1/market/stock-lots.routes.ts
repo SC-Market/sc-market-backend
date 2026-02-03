@@ -14,7 +14,10 @@ import {
   writeRateLimit,
   readRateLimit,
 } from "../../../middleware/enhanced-ratelimiting.js"
-import { can_manage_market_listing, can_manage_stock_lot } from "./middleware.js"
+import {
+  can_manage_market_listing,
+  can_manage_stock_lot,
+} from "./middleware.js"
 import { validate_optional_username_body } from "../profiles/middleware.js"
 import { validate_optional_spectrum_id } from "../contractors/middleware.js"
 import {
