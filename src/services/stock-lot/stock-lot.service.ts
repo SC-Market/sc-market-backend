@@ -79,11 +79,11 @@ export class StockLotService {
    * Requirements: 2.1, 2.2, 2.4, 3.1, 4.1, 8.1, 8.2
    */
   async createLot(input: CreateLotInput): Promise<DBStockLot> {
-    // Validate quantity
+    // Validate quantity (allow 0 or greater)
     if (input.quantity < 0) {
       throw new InvalidQuantityError(
         input.quantity,
-        "Quantity must be non-negative",
+        "Quantity must be 0 or greater",
       )
     }
 
