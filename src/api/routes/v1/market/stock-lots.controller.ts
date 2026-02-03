@@ -102,7 +102,7 @@ export const searchLots: RequestHandler = async (req, res) => {
       const listingIds = lots.map(l => l.listing_id)
       // Get listings to check ownership
       const listings = await marketDb.getMarketUniqueListingsComplete({
-        listing_id: listingIds,
+        "market_unique_listings.listing_id": listingIds,
       })
       const contractorListingIds = new Set(
         listings
