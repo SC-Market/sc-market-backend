@@ -14,10 +14,15 @@ import {
   writeRateLimit,
   readRateLimit,
 } from "../../../middleware/enhanced-ratelimiting.js"
+<<<<<<< HEAD
 import {
   can_manage_market_listing,
   can_manage_stock_lot,
 } from "./middleware.js"
+=======
+import { can_manage_market_listing, can_manage_stock_lot } from "./middleware.js"
+import { validate_optional_username_body } from "../profiles/middleware.js"
+>>>>>>> 2061c48 (Add username to user_id conversion for lot creation with body middleware)
 import {
   updateSimpleStock,
   getListingLots,
@@ -58,6 +63,7 @@ stockLotsRouter.post(
   userAuthorized,
   requireMarketWrite,
   can_manage_market_listing,
+  validate_optional_username_body("owner_username"),
   writeRateLimit,
   createLot,
 )

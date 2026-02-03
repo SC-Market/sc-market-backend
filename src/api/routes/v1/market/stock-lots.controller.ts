@@ -132,7 +132,7 @@ export const getListingLots: RequestHandler = async (req, res) => {
 export const createLot: RequestHandler = async (req, res) => {
   try {
     const { listing_id } = req.params
-    const { quantity, location_id, owner_id, listed, notes } = req.body
+    const { quantity, location_id, owner_username, listed, notes } = req.body
 
     // Validate required fields
     if (typeof quantity !== "number" || quantity <= 0) {
@@ -142,6 +142,12 @@ export const createLot: RequestHandler = async (req, res) => {
         }),
       )
       return
+    }
+
+    // Convert owner_username to owner_id if provided
+    let owner_id = null
+    if (owner_username && req.users?.has("owner_username")) {
+      owner_id = req.users.get("owner_username")!.user_id
     }
 
     // Validate notes length
