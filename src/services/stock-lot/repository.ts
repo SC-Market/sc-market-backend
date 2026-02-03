@@ -84,6 +84,10 @@ export class StockLotRepository {
       updated_at: new Date(),
     }
 
+    if (updates.listing_id !== undefined) {
+      updateData.listing_id = updates.listing_id
+    }
+
     if (updates.quantity !== undefined) {
       updateData.quantity_total = updates.quantity
     }
