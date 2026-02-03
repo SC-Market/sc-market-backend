@@ -12,6 +12,7 @@ import {
   formatOrderAvailability,
   formatReview,
 } from "../util/formatting.js"
+import { OrderLifecycleService } from "../../../../services/allocation/order-lifecycle.service.js"
 
 export async function serializeAssignedOrder(
   order: DBOrder,
@@ -96,6 +97,41 @@ export async function serializeOrderDetails(
     }
   }
 
+  // Get allocation summary for the order
+  // Requirements: 5.3, 7.1, 13.1
+  let allocation_summary = null
+  try {
+    const lifecycleService = new OrderLifecycleService()
+    const summary = await lifecycleService.getAllocationSummary(order.order_id)
+
+    // Calculate totals and check for partial allocations
+    const total_allocated = summary.reduce(
+      (sum, s) => sum + s.total_quantity,
+      0,
+    )
+    const total_requested = market_listings.reduce(
+      (sum, ml) => sum + ml.quantity,
+      0,
+    )
+    const has_partial_allocations = total_allocated < total_requested
+
+    allocation_summary = {
+      by_listing: summary.map((s) => ({
+        listing_id: s.listing_id,
+        total_quantity: s.total_quantity,
+        allocation_count: s.allocations.length,
+        status: s.status,
+      })),
+      total_allocated,
+      total_requested,
+      has_partial_allocations,
+    }
+  } catch {
+    // If allocation summary fails, don't break the entire response
+    // This maintains backward compatibility with orders created before allocation system
+    allocation_summary = null
+  }
+
   return {
     order_id: order.order_id,
     status: order.status,
@@ -137,5 +173,6 @@ export async function serializeOrderDetails(
     discord_thread_id: order.thread_id,
     discord_server_id: assigned_to_full?.official_server_id,
     discord_invite: discord_invite,
+    allocation_summary: allocation_summary,
   }
 }

@@ -114,6 +114,11 @@ export interface ListingBase {
   // Omitted for now
   orders?: any[]
   bids?: any[]
+  // Stock breakdown (only included in private views)
+  stock_breakdown?: {
+    available: number
+    reserved: number
+  }
 }
 
 export type FormattedListing =

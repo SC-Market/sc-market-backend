@@ -84,6 +84,7 @@ export interface OrderSetting {
     | "max_order_size"
     | "min_order_value"
     | "max_order_value"
+    | "allocation_mode"
   message_content: string
   enabled: boolean
   created_at: string
@@ -100,6 +101,7 @@ export interface CreateOrderSettingRequest {
     | "max_order_size"
     | "min_order_value"
     | "max_order_value"
+    | "allocation_mode"
   message_content?: string // Optional for require_availability and stock_subtraction_timing
   enabled?: boolean
 }

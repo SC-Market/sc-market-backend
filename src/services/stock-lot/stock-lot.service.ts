@@ -244,6 +244,29 @@ export class StockLotService {
   }
 
   /**
+   * Get public-facing quantity based on stock_subtraction_timing setting
+   * This controls what buyers see, independent of physical allocation
+   *
+   * Requirements: 5.7, 12.1
+   */
+  async getPublicQuantity(
+    listingId: string,
+    stockSubtractionTiming:
+      | "on_accepted"
+      | "on_received"
+      | "dont_subtract" = "on_accepted",
+  ): Promise<number> {
+    const result = await this.knex.raw<{
+      rows: Array<{ get_public_quantity: number }>
+    }>("SELECT get_public_quantity(?::uuid, ?) as get_public_quantity", [
+      listingId,
+      stockSubtractionTiming,
+    ])
+
+    return result.rows[0]?.get_public_quantity ?? 0
+  }
+
+  /**
    * Transfer stock from one lot to another location
    * Handles both partial and full transfers
    *

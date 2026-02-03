@@ -86,11 +86,18 @@ export const updateSimpleStock: RequestHandler = async (req, res) => {
  */
 export const searchLots: RequestHandler = async (req, res) => {
   try {
-    const { user_id, contractor_spectrum_id, location_id, listed, page_size = 100, offset = 0 } = req.query
+    const {
+      user_id,
+      contractor_spectrum_id,
+      location_id,
+      listed,
+      page_size = 100,
+      offset = 0,
+    } = req.query
 
     // Build filters
     const filters: any = {}
-    
+
     if (user_id) filters.owner_id = user_id as string
     if (location_id) filters.location_id = location_id as string
     if (listed !== undefined) filters.listed = listed === "true"
@@ -99,7 +106,10 @@ export const searchLots: RequestHandler = async (req, res) => {
     let lots = await stockLotService.getLots(filters)
 
     // Filter by contractor if provided
-    if (contractor_spectrum_id && req.contractors?.has("contractor_spectrum_id")) {
+    if (
+      contractor_spectrum_id &&
+      req.contractors?.has("contractor_spectrum_id")
+    ) {
       const contractor = req.contractors.get("contractor_spectrum_id")!
       if (lots.length > 0) {
         // Get all contractor listings
@@ -107,9 +117,9 @@ export const searchLots: RequestHandler = async (req, res) => {
         const listings = await knex("market_listings")
           .where("contractor_seller_id", contractor.contractor_id)
           .select("listing_id")
-        
+
         const contractorListingIds = new Set(
-          listings.map((l: any) => l.listing_id)
+          listings.map((l: any) => l.listing_id),
         )
         lots = lots.filter((l: any) => contractorListingIds.has(l.listing_id))
       }
@@ -117,7 +127,10 @@ export const searchLots: RequestHandler = async (req, res) => {
 
     // Paginate
     const total = lots.length
-    const paginatedLots = lots.slice(Number(offset), Number(offset) + Number(page_size))
+    const paginatedLots = lots.slice(
+      Number(offset),
+      Number(offset) + Number(page_size),
+    )
 
     res.json(
       createResponse({

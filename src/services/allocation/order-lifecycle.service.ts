@@ -6,7 +6,7 @@
  * - Releases allocations when orders are cancelled
  * - Consumes allocations when orders are fulfilled
  *
- * Requirements: 6.1, 6.2, 6.3, 6.4, 6.5, 10.5
+ * Requirements: 6.1, 6.2, 6.3, 6.4, 6.5, 10.5, 12.2, 12.3
  */
 
 import { Knex } from "knex"
@@ -15,6 +15,7 @@ import {
   AllocationService,
   InsufficientStockError,
 } from "./allocation.service.js"
+import { getAllocationMode, AllocationMode } from "./allocation-mode.service.js"
 import logger from "../../logger/logger.js"
 
 export interface OrderMarketListing {
@@ -35,6 +36,8 @@ export interface OrderAllocationResult {
   has_partial_allocations: boolean
   total_requested: number
   total_allocated: number
+  allocation_mode: AllocationMode
+  skipped_due_to_mode: boolean
 }
 
 export class OrderLifecycleService {
@@ -49,18 +52,55 @@ export class OrderLifecycleService {
   /**
    * Allocate stock for an order when it's created
    *
-   * Requirements: 6.1, 6.2, 6.3
+   * Requirements: 6.1, 6.2, 6.3, 12.2, 12.3
    *
    * @param orderId - The order ID
    * @param marketListings - Array of listings with quantities
    * @param contractorId - Optional contractor ID for strategy-based allocation
+   * @param userId - Optional user ID for allocation mode check
    * @returns Allocation result summary
    */
   async allocateStockForOrder(
     orderId: string,
     marketListings: OrderMarketListing[],
     contractorId?: string | null,
+    userId?: string | null,
   ): Promise<OrderAllocationResult> {
+    // Check allocation mode first
+    const allocationMode = await getAllocationMode(
+      contractorId ? "contractor" : "user",
+      contractorId || userId || "",
+    )
+
+    logger.info("Checking allocation mode for order", {
+      order_id: orderId,
+      allocation_mode: allocationMode,
+      contractor_id: contractorId,
+      user_id: userId,
+    })
+
+    // If mode is 'manual' or 'none', skip automatic allocation
+    if (allocationMode === "manual" || allocationMode === "none") {
+      logger.info("Skipping automatic allocation due to mode", {
+        order_id: orderId,
+        allocation_mode: allocationMode,
+      })
+
+      return {
+        order_id: orderId,
+        allocations: [],
+        has_partial_allocations: false,
+        total_requested: marketListings.reduce(
+          (sum, ml) => sum + ml.quantity,
+          0,
+        ),
+        total_allocated: 0,
+        allocation_mode: allocationMode,
+        skipped_due_to_mode: true,
+      }
+    }
+
+    // Proceed with automatic allocation
     const allocations: AllocationSummary[] = []
     let hasPartialAllocations = false
     let totalRequested = 0
@@ -131,6 +171,7 @@ export class OrderLifecycleService {
       total_requested: totalRequested,
       total_allocated: totalAllocated,
       has_partial: hasPartialAllocations,
+      allocation_mode: allocationMode,
     })
 
     return {
@@ -139,6 +180,8 @@ export class OrderLifecycleService {
       has_partial_allocations: hasPartialAllocations,
       total_requested: totalRequested,
       total_allocated: totalAllocated,
+      allocation_mode: allocationMode,
+      skipped_due_to_mode: false,
     }
   }
 
