@@ -27,9 +27,19 @@ import {
   createLocation,
   getOrderAllocations,
   manualAllocateOrder,
+  searchLots,
 } from "./stock-lots.controller.js"
 
 export const stockLotsRouter = express.Router()
+
+// Search all lots
+stockLotsRouter.get(
+  "/lots",
+  userAuthorized,
+  requireMarketRead,
+  readRateLimit,
+  searchLots,
+)
 
 // Simple stock management
 stockLotsRouter.put(
