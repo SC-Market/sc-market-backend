@@ -19,6 +19,7 @@ import {
 } from "../../../../services/stock-lot/errors.js"
 import logger from "../../../../logger/logger.js"
 import * as marketDb from "./database.js"
+import { getKnex } from "../../../../clients/database/knex-db.js"
 
 const stockLotService = new StockLotService()
 const locationService = new LocationService()
@@ -99,15 +100,15 @@ export const searchLots: RequestHandler = async (req, res) => {
 
     // Filter by contractor if provided
     if (contractor_id) {
-      const listingIds = lots.map(l => l.listing_id)
-      if (listingIds.length === 0) {
+      if (lots.length === 0) {
         // No lots to filter
-        lots = []
       } else {
-        // Get listings to check ownership
-        const listings = await marketDb.getMarketUniqueListingsComplete({
-          "market_listings.contractor_seller_id": contractor_id,
-        })
+        // Get all contractor listings
+        const knex = getKnex()
+        const listings = await knex("market_listings")
+          .where("contractor_seller_id", contractor_id)
+          .select("listing_id")
+        
         const contractorListingIds = new Set(
           listings.map((l: any) => l.listing_id)
         )
