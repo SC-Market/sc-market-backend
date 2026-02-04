@@ -5,7 +5,7 @@
 CREATE OR REPLACE FUNCTION update_listing_quantity_available()
 RETURNS TRIGGER AS $$
 DECLARE
-    affected_listing_id TEXT;
+    affected_listing_id UUID;
     total_stock BIGINT;
     allocated_stock BIGINT;
 BEGIN
