@@ -702,12 +702,20 @@ export const getOrderAllocations: RequestHandler = async (req, res) => {
   try {
     const { order_id } = req.params
 
-    // Get order market listings
-    const orderListings = await getKnex()("market_order_listings")
+    // Get order to check listing
+    const order = await getKnex()("market_orders")
       .where({ order_id })
-      .select("listing_id", "quantity")
+      .first()
 
-    const orderListingIds: string[] = orderListings.map((ol) => ol.listing_id)
+    if (!order) {
+      return res.status(404).json(
+        createErrorResponse({
+          message: "Order not found",
+        }),
+      )
+    }
+
+    const orderListingIds: string[] = [order.listing_id]
 
     // Get allocations
     const allocations = await allocationService.getAllocations(order_id)
