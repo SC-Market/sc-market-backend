@@ -50,8 +50,15 @@ END;
 $$ LANGUAGE plpgsql;
 
 -- Drop existing triggers if they exist
+DROP TRIGGER IF EXISTS trigger_sync_listing_quantity_on_lot_change ON stock_lots;
+DROP TRIGGER IF EXISTS trigger_sync_listing_quantity_on_allocation_change ON stock_allocations;
 DROP TRIGGER IF EXISTS trigger_update_quantity_on_lot_change ON stock_lots;
 DROP TRIGGER IF EXISTS trigger_update_quantity_on_allocation_change ON stock_allocations;
+
+-- Drop old functions
+DROP FUNCTION IF EXISTS sync_listing_quantity();
+DROP FUNCTION IF EXISTS sync_listing_quantity_on_allocation();
+DROP FUNCTION IF EXISTS get_available_stock(UUID);
 
 -- Trigger on stock_lots changes
 CREATE TRIGGER trigger_update_quantity_on_lot_change
