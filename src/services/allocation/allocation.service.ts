@@ -160,59 +160,72 @@ export class AllocationService {
       const allocationRepo = new AllocationRepository(trx)
       const stockLotRepo = new StockLotRepository(trx)
 
-      // Validate all lots exist and have sufficient available quantity
-      const lotIds = allocations.map((a) => a.lot_id)
-      const lots = await Promise.all(
-        lotIds.map((id) => stockLotRepo.getById(id)),
-      )
+      // Separate allocations to create vs delete
+      const toCreate = allocations.filter((a) => a.quantity > 0)
+      const toDelete = allocations.filter((a) => a.quantity === 0)
 
-      // Lock the lots for update
-      await trx("stock_lots").whereIn("lot_id", lotIds).forUpdate()
-
-      // Validate each allocation
-      for (let i = 0; i < allocations.length; i++) {
-        const input = allocations[i]
-        const lot = lots[i]
-
-        if (!lot) {
-          throw new AllocationValidationError(`Lot ${input.lot_id} not found`)
-        }
-
-        const allocated = await allocationRepo.getAllocatedQuantity(lot.lot_id)
-        const available = lot.quantity_total - allocated
-
-        if (input.quantity > available) {
-          throw new AllocationValidationError(
-            `Cannot allocate ${input.quantity} from lot ${lot.lot_id}. Only ${available} available.`,
-          )
-        }
-
-        if (input.quantity <= 0) {
-          throw new AllocationValidationError(
-            `Allocation quantity must be positive. Got ${input.quantity} for lot ${lot.lot_id}`,
-          )
-        }
+      // Delete allocations with quantity 0
+      if (toDelete.length > 0) {
+        const lotIds = toDelete.map((a) => a.lot_id)
+        await trx("allocations")
+          .where("order_id", orderId)
+          .whereIn("lot_id", lotIds)
+          .delete()
       }
 
-      // Create all allocations
-      const createdAllocations = await allocationRepo.createMany(
-        allocations.map((a) => ({
-          lot_id: a.lot_id,
-          order_id: orderId,
-          quantity: a.quantity,
-          status: "active",
-        })),
-      )
+      // Validate and create positive quantity allocations
+      if (toCreate.length > 0) {
+        const lotIds = toCreate.map((a) => a.lot_id)
+        const lots = await Promise.all(
+          lotIds.map((id) => stockLotRepo.getById(id)),
+        )
 
-      const totalAllocated = createdAllocations.reduce(
+        // Lock the lots for update
+        await trx("stock_lots").whereIn("lot_id", lotIds).forUpdate()
+
+        // Validate each allocation
+        for (let i = 0; i < toCreate.length; i++) {
+          const input = toCreate[i]
+          const lot = lots[i]
+
+          if (!lot) {
+            throw new AllocationValidationError(`Lot ${input.lot_id} not found`)
+          }
+
+          const allocated = await allocationRepo.getAllocatedQuantity(
+            lot.lot_id,
+          )
+          const available = lot.quantity_total - allocated
+
+          if (input.quantity > available) {
+            throw new AllocationValidationError(
+              `Cannot allocate ${input.quantity} from lot ${lot.lot_id}. Only ${available} available.`,
+            )
+          }
+        }
+
+        // Create all allocations
+        await allocationRepo.createMany(
+          toCreate.map((a) => ({
+            lot_id: a.lot_id,
+            order_id: orderId,
+            quantity: a.quantity,
+            status: "active",
+          })),
+        )
+      }
+
+      // Get all current allocations for the order
+      const allAllocations = await allocationRepo.getByOrderId(orderId)
+      const totalAllocated = allAllocations.reduce(
         (sum, a) => sum + a.quantity,
         0,
       )
 
       return {
-        allocations: createdAllocations,
+        allocations: allAllocations,
         total_allocated: totalAllocated,
-        is_partial: false, // Manual allocation is always complete or fails
+        is_partial: false,
       }
     })
   }

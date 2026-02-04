@@ -8,6 +8,10 @@ import {
 } from "../util/response.js"
 import { ErrorCode } from "../util/error-codes.js"
 import { userAuthorized } from "../../../middleware/auth.js"
+import {
+  readRateLimit,
+  writeRateLimit,
+} from "../../../middleware/enhanced-ratelimiting.js"
 import { org_permission, valid_contractor } from "../contractors/middleware.js"
 import { validate_username } from "../profiles/middleware.js"
 import {
@@ -43,57 +47,68 @@ function serializeOrderSetting(setting: DBOrderSetting): OrderSetting {
 // =============================================================================
 
 // GET /api/v1/orders/settings - Get current user's order settings
-orderSettingsRouter.get("/settings", userAuthorized, async (req, res) => {
-  const user = req.user as User
+orderSettingsRouter.get(
+  "/settings",
+  userAuthorized,
+  readRateLimit,
+  async (req, res) => {
+    const user = req.user as User
 
-  try {
-    const settings = await orderDb.getOrderSettings("user", user.user_id)
-    res.json(createResponse({ settings: settings.map(serializeOrderSetting) }))
-  } catch (error) {
-    logger.error("Error fetching user order settings", { error })
-    res
-      .status(500)
-      .json(
-        createErrorResponse(
-          ErrorCode.INTERNAL_SERVER_ERROR,
-          "Failed to fetch order settings",
-        ),
+    try {
+      const settings = await orderDb.getOrderSettings("user", user.user_id)
+      res.json(
+        createResponse({ settings: settings.map(serializeOrderSetting) }),
       )
-  }
-})
+    } catch (error) {
+      logger.error("Error fetching user order settings", { error })
+      res
+        .status(500)
+        .json(
+          createErrorResponse(
+            ErrorCode.INTERNAL_SERVER_ERROR,
+            "Failed to fetch order settings",
+          ),
+        )
+    }
+  },
+)
 
 // POST /api/v1/orders/settings - Create order setting for current user
-orderSettingsRouter.post("/settings", userAuthorized, async (req, res) => {
-  const user = req.user as User
-  const {
-    setting_type,
-    message_content,
-    enabled = true,
-  }: CreateOrderSettingRequest = req.body
+orderSettingsRouter.post(
+  "/settings",
+  userAuthorized,
+  writeRateLimit,
+  async (req, res) => {
+    const user = req.user as User
+    const {
+      setting_type,
+      message_content,
+      enabled = true,
+    }: CreateOrderSettingRequest = req.body
 
-  if (!setting_type) {
-    res
-      .status(400)
-      .json(
-        createErrorResponse(
-          ErrorCode.VALIDATION_ERROR,
-          "setting_type is required",
-        ),
-      )
-    return
-  }
-
-  // For require_availability, message_content is not needed (can be empty)
-  // For stock_subtraction_timing, message_content must be "on_received" or "dont_subtract"
-  // (on_accepted is the default when no setting exists, so we don't store it)
-  // For order limit setting types, message_content must be a valid non-negative integer
-  // For other setting types, message_content is required
-  if (setting_type === "stock_subtraction_timing") {
-    if (
-      message_content !== "on_received" &&
-      message_content !== "dont_subtract"
-    ) {
+    if (!setting_type) {
       res
+        .status(400)
+        .json(
+          createErrorResponse(
+            ErrorCode.VALIDATION_ERROR,
+            "setting_type is required",
+          ),
+        )
+      return
+    }
+
+    // For require_availability, message_content is not needed (can be empty)
+    // For stock_subtraction_timing, message_content must be "on_received" or "dont_subtract"
+    // (on_accepted is the default when no setting exists, so we don't store it)
+    // For order limit setting types, message_content must be a valid non-negative integer
+    // For other setting types, message_content is required
+    if (setting_type === "stock_subtraction_timing") {
+      if (
+        message_content !== "on_received" &&
+        message_content !== "dont_subtract"
+      ) {
+        res
         .status(400)
         .json(
           createErrorResponse(
@@ -228,54 +243,60 @@ orderSettingsRouter.post("/settings", userAuthorized, async (req, res) => {
 })
 
 // PUT /api/v1/orders/settings/:id - Update order setting
-orderSettingsRouter.put("/settings/:id", userAuthorized, async (req, res) => {
-  const user = req.user as User
-  const { id } = req.params
-  const { message_content, enabled }: UpdateOrderSettingRequest = req.body
+orderSettingsRouter.put(
+  "/settings/:id",
+  userAuthorized,
+  writeRateLimit,
+  async (req, res) => {
+    const user = req.user as User
+    const { id } = req.params
+    const { message_content, enabled }: UpdateOrderSettingRequest = req.body
 
-  if (message_content === undefined && enabled === undefined) {
-    res.status(400).json(
-      createErrorResponse({
-        error: "At least one field must be provided for update",
-      }),
-    )
-    return
-  }
-
-  try {
-    // First check if the setting exists and belongs to the user
-    const existing = await database
-      .knex<DBOrderSetting>("order_settings")
-      .where({ id, entity_type: "user", entity_id: user.user_id })
-      .first()
-
-    if (!existing) {
-      res.status(404).json(createNotFoundErrorResponse("Order setting", id))
+    if (message_content === undefined && enabled === undefined) {
+      res.status(400).json(
+        createErrorResponse({
+          error: "At least one field must be provided for update",
+        }),
+      )
       return
     }
 
-    const updated = await orderDb.updateOrderSetting(id, {
-      message_content,
-      enabled,
-    })
-    res.json(createResponse({ setting: serializeOrderSetting(updated) }))
-  } catch (error) {
-    logger.error("Error updating order setting", { error })
-    res
-      .status(500)
-      .json(
-        createErrorResponse(
-          ErrorCode.INTERNAL_SERVER_ERROR,
-          "Failed to update order setting",
-        ),
-      )
-  }
-})
+    try {
+      // First check if the setting exists and belongs to the user
+      const existing = await database
+        .knex<DBOrderSetting>("order_settings")
+        .where({ id, entity_type: "user", entity_id: user.user_id })
+        .first()
+
+      if (!existing) {
+        res.status(404).json(createNotFoundErrorResponse("Order setting", id))
+        return
+      }
+
+      const updated = await orderDb.updateOrderSetting(id, {
+        message_content,
+        enabled,
+      })
+      res.json(createResponse({ setting: serializeOrderSetting(updated) }))
+    } catch (error) {
+      logger.error("Error updating order setting", { error })
+      res
+        .status(500)
+        .json(
+          createErrorResponse(
+            ErrorCode.INTERNAL_SERVER_ERROR,
+            "Failed to update order setting",
+          ),
+        )
+    }
+  },
+)
 
 // DELETE /api/v1/orders/settings/:id - Delete order setting
 orderSettingsRouter.delete(
   "/settings/:id",
   userAuthorized,
+  writeRateLimit,
   async (req, res) => {
     const user = req.user as User
     const { id } = req.params
@@ -319,6 +340,7 @@ orderSettingsRouter.get(
   "/contractors/:spectrum_id/settings",
   userAuthorized,
   org_permission("manage_orders"),
+  readRateLimit,
   async (req, res) => {
     const { spectrum_id } = req.params
     const contractor = req.contractor!
@@ -364,6 +386,7 @@ orderSettingsRouter.post(
   "/contractors/:spectrum_id/settings",
   userAuthorized,
   org_permission("manage_orders"),
+  writeRateLimit,
   async (req, res) => {
     const { spectrum_id } = req.params
     const contractor = req.contractor!
@@ -563,6 +586,7 @@ orderSettingsRouter.put(
   "/contractors/:spectrum_id/settings/:id",
   userAuthorized,
   org_permission("manage_orders"),
+  writeRateLimit,
   async (req, res) => {
     const { spectrum_id, id } = req.params
     const contractor = req.contractor!
