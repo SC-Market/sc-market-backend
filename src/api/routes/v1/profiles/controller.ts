@@ -1349,15 +1349,6 @@ export const profile_get_languages: RequestHandler = async (req, res) => {
  */
 export const profile_put_languages: RequestHandler = async (req, res) => {
   try {
-    // Debug logging to track session state
-    logger.info("Language update request", {
-      hasUser: !!req.user,
-      isAuthenticated: req.isAuthenticated?.(),
-      sessionID: req.sessionID,
-      userId: req.user?.user_id,
-      ip: req.ip,
-    })
-    
     const user = req.user as User
     const { language_codes } = req.body
 

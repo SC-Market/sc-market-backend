@@ -127,18 +127,6 @@ export async function userAuthorized(
   next: NextFunction,
 ): Promise<void> {
   try {
-    // Debug logging for language endpoint
-    if (req.path.includes("languages") || req.originalUrl.includes("languages")) {
-      logger.info("userAuthorized check for languages endpoint", {
-        path: req.path,
-        originalUrl: req.originalUrl,
-        hasAuthHeader: !!req.headers.authorization,
-        hasUser: !!req.user,
-        isAuthenticated: req.isAuthenticated?.(),
-        sessionID: req.sessionID,
-      })
-    }
-    
     // Check for token authentication first
     const authHeader = req.headers.authorization
     if (authHeader && authHeader.startsWith("Bearer ")) {
