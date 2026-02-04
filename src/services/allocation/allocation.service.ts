@@ -167,7 +167,7 @@ export class AllocationService {
       // Delete allocations with quantity 0
       if (toDelete.length > 0) {
         const lotIds = toDelete.map((a) => a.lot_id)
-        await trx("allocations")
+        await trx("stock_allocations")
           .where("order_id", orderId)
           .whereIn("lot_id", lotIds)
           .delete()
