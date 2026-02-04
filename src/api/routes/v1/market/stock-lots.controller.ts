@@ -171,6 +171,12 @@ export const getListingLots: RequestHandler = async (req, res) => {
     // Get lots
     const lots = await stockLotService.getLots(filters)
 
+    // Enrich with listing data
+    const listingComplete = await marketDb.getMarketUniqueListingComplete(
+      listing_id,
+    )
+    const listing = await formatUniqueListingComplete(listingComplete)
+
     // Get aggregates
     const total = await stockLotService.getTotalStock(listing_id)
     const available = await stockLotService.getAvailableStock(listing_id)
@@ -179,6 +185,7 @@ export const getListingLots: RequestHandler = async (req, res) => {
     res.json(
       createResponse({
         lots,
+        listing,
         aggregates: {
           total,
           available,
