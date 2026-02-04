@@ -196,6 +196,17 @@ export async function userAuthorized(
         return
       }
     } else {
+      // Enhanced logging for debugging session issues
+      logger.warn("Authentication failed - no valid session", {
+        path: req.path,
+        originalUrl: req.originalUrl,
+        hasSessionID: !!req.sessionID,
+        sessionID: req.sessionID,
+        hasCookie: !!req.headers.cookie,
+        cookieHeader: req.headers.cookie?.substring(0, 50), // First 50 chars only
+        ip: req.ip,
+        userAgent: req.headers["user-agent"],
+      })
       res.status(401).json(createUnauthorizedErrorResponse())
       return
     }
