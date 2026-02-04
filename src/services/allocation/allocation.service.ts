@@ -170,16 +170,14 @@ export class AllocationService {
       const toCreate = allocations.filter((a) => a.quantity > 0)
       const toDelete = allocations.filter((a) => a.quantity === 0)
 
-      // Delete allocations with quantity 0
+      // Handle deallocations (merge back)
       if (toDelete.length > 0) {
-        const lotIds = toDelete.map((a) => a.lot_id)
-        await trx("stock_allocations")
-          .where("order_id", orderId)
-          .whereIn("lot_id", lotIds)
-          .delete()
+        for (const input of toDelete) {
+          await this.deallocateAndMerge(trx, orderId, input.lot_id)
+        }
       }
 
-      // Validate and create positive quantity allocations
+      // Validate and create allocations (split lots)
       if (toCreate.length > 0) {
         const lotIds = toCreate.map((a) => a.lot_id)
         const lots = await Promise.all(
@@ -202,7 +200,7 @@ export class AllocationService {
           }
         })
 
-        // Validate each allocation
+        // Validate and split each allocation
         for (let i = 0; i < toCreate.length; i++) {
           const input = toCreate[i]
           const lot = lots[i]
@@ -234,17 +232,10 @@ export class AllocationService {
               )
             }
           }
-        }
 
-        // Create all allocations
-        await allocationRepo.createMany(
-          toCreate.map((a) => ({
-            lot_id: a.lot_id,
-            order_id: orderId,
-            quantity: a.quantity,
-            status: "active",
-          })),
-        )
+          // Split lot and create allocation
+          await this.splitAndAllocate(trx, lot, orderId, input.quantity)
+        }
       }
 
       // Get all current allocations for the order
@@ -514,5 +505,109 @@ export class AllocationService {
         is_partial: isPartial,
       }
     })
+  }
+
+  /**
+   * Split a lot and create allocation on the new allocated lot
+   * 
+   * @param trx - Transaction
+   * @param sourceLot - Source lot to split from
+   * @param orderId - Order to allocate to
+   * @param quantity - Quantity to allocate
+   */
+  private async splitAndAllocate(
+    trx: Knex.Transaction,
+    sourceLot: DBStockLot,
+    orderId: string,
+    quantity: number,
+  ): Promise<void> {
+    // Create new allocated lot (hidden from stock view)
+    const [allocatedLot] = await trx<DBStockLot>("stock_lots")
+      .insert({
+        listing_id: sourceLot.listing_id,
+        quantity_total: quantity,
+        location_id: sourceLot.location_id,
+        owner_id: sourceLot.owner_id,
+        listed: false, // Hidden from main stock view
+        notes: `Allocated from lot ${sourceLot.lot_id}`,
+      })
+      .returning("*")
+
+    // Reduce source lot quantity
+    await trx<DBStockLot>("stock_lots")
+      .where({ lot_id: sourceLot.lot_id })
+      .update({
+        quantity_total: sourceLot.quantity_total - quantity,
+        updated_at: new Date(),
+      })
+
+    // Create allocation on new lot
+    await trx("stock_allocations").insert({
+      lot_id: allocatedLot.lot_id,
+      order_id: orderId,
+      quantity: quantity,
+      status: "active",
+    })
+  }
+
+  /**
+   * Deallocate and merge lot back to source if same location
+   * 
+   * @param trx - Transaction
+   * @param orderId - Order ID
+   * @param lotId - Allocated lot ID
+   */
+  private async deallocateAndMerge(
+    trx: Knex.Transaction,
+    orderId: string,
+    lotId: string,
+  ): Promise<void> {
+    // Get the allocated lot
+    const allocatedLot = await trx<DBStockLot>("stock_lots")
+      .where({ lot_id: lotId })
+      .first()
+
+    if (!allocatedLot) return
+
+    // Delete the allocation
+    await trx("stock_allocations")
+      .where({ order_id: orderId, lot_id: lotId })
+      .delete()
+
+    // Try to find a matching lot to merge back into
+    // Match: same listing, same location, listed=true, not deleted
+    const targetLot = await trx<DBStockLot>("stock_lots")
+      .where({
+        listing_id: allocatedLot.listing_id,
+        location_id: allocatedLot.location_id,
+        listed: true,
+      })
+      .whereNull("deleted_at")
+      .whereNot({ lot_id: lotId })
+      .first()
+
+    if (targetLot) {
+      // Merge: add quantity to target lot and delete allocated lot
+      await trx<DBStockLot>("stock_lots")
+        .where({ lot_id: targetLot.lot_id })
+        .update({
+          quantity_total: targetLot.quantity_total + allocatedLot.quantity_total,
+          updated_at: new Date(),
+        })
+
+      // Soft delete the allocated lot
+      await trx<DBStockLot>("stock_lots")
+        .where({ lot_id: lotId })
+        .update({ deleted_at: new Date() })
+    } else {
+      // No matching lot: make this lot visible again
+      await trx<DBStockLot>("stock_lots")
+        .where({ lot_id: lotId })
+        .update({
+          listed: true,
+          notes: null,
+          updated_at: new Date(),
+        })
+    }
   }
 }
