@@ -194,6 +194,18 @@ export function createRateLimit(tieredConfig: TieredRateLimit) {
     const key = generateRateLimitKey(req, userTier)
     const endpoint = req.path
 
+    // Debug logging for language endpoint
+    if (endpoint === "/languages") {
+      const user = req.user as User
+      logger.info("Rate limiter check for /languages", {
+        hasUser: !!req.user,
+        userId: user?.user_id,
+        userTier,
+        key,
+        isAuthenticated: req.isAuthenticated?.(),
+      })
+    }
+
     // Get the appropriate rate limiter for the user tier
     const rateLimiter = rateLimiters[userTier]
     const config = tieredConfig[userTier]
