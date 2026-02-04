@@ -191,7 +191,7 @@ export function setRateLimitHeaders(
 export function createRateLimit(tieredConfig: TieredRateLimit) {
   return async (req: Request, res: Response, next: NextFunction) => {
     // TEMPORARY: Add delay to reproduce race condition for /languages endpoint
-    if (req.path === "/languages" && process.env.NODE_ENV !== "production") {
+    if (req.path.includes("languages") && process.env.NODE_ENV !== "production") {
       await new Promise((resolve) => setTimeout(resolve, 100))
     }
     
@@ -200,9 +200,11 @@ export function createRateLimit(tieredConfig: TieredRateLimit) {
     const endpoint = req.path
 
     // Debug logging for language endpoint
-    if (endpoint === "/languages") {
+    if (endpoint.includes("languages")) {
       const user = req.user as User
-      logger.info("Rate limiter check for /languages", {
+      logger.info("Rate limiter check for languages endpoint", {
+        path: req.path,
+        originalUrl: req.originalUrl,
         hasUser: !!req.user,
         userId: user?.user_id,
         userTier,

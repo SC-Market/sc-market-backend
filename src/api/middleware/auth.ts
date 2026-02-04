@@ -128,8 +128,10 @@ export async function userAuthorized(
 ): Promise<void> {
   try {
     // Debug logging for language endpoint
-    if (req.path === "/languages") {
-      logger.info("userAuthorized check for /languages", {
+    if (req.path.includes("languages") || req.originalUrl.includes("languages")) {
+      logger.info("userAuthorized check for languages endpoint", {
+        path: req.path,
+        originalUrl: req.originalUrl,
         hasAuthHeader: !!req.headers.authorization,
         hasUser: !!req.user,
         isAuthenticated: req.isAuthenticated?.(),
