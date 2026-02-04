@@ -646,6 +646,7 @@ orderSettingsRouter.delete(
   "/contractors/:spectrum_id/settings/:id",
   userAuthorized,
   org_permission("manage_orders"),
+  writeRateLimit,
   async (req, res) => {
     const { spectrum_id, id } = req.params
     const contractor = req.contractor!
@@ -691,6 +692,7 @@ orderSettingsRouter.get(
   "/availability/contractor/:spectrum_id/check",
   userAuthorized,
   valid_contractor,
+  readRateLimit,
   async (req, res) => {
     const user = req.user as User
     const contractor = req.contractor!
@@ -741,6 +743,7 @@ orderSettingsRouter.get(
   "/availability/user/:username/check",
   userAuthorized,
   validate_username("username"),
+  readRateLimit,
   async (req, res) => {
     const user = req.user as User
     const sellerUser = req.users!.get("username")!
@@ -790,6 +793,7 @@ orderSettingsRouter.get(
   "/limits/contractor/:spectrum_id/check",
   userAuthorized,
   valid_contractor,
+  readRateLimit,
   async (req, res) => {
     const contractor = req.contractor!
 
@@ -838,6 +842,7 @@ orderSettingsRouter.get(
   "/limits/user/:username/check",
   userAuthorized,
   validate_username("username"),
+  readRateLimit,
   async (req, res) => {
     const sellerUser = req.users!.get("username")!
 
