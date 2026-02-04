@@ -160,6 +160,12 @@ export class AllocationService {
       const allocationRepo = new AllocationRepository(trx)
       const stockLotRepo = new StockLotRepository(trx)
 
+      // Get order to check required quantities
+      const order = await trx("market_orders").where({ order_id: orderId }).first()
+      if (!order) {
+        throw new AllocationValidationError(`Order ${orderId} not found`)
+      }
+
       // Separate allocations to create vs delete
       const toCreate = allocations.filter((a) => a.quantity > 0)
       const toDelete = allocations.filter((a) => a.quantity === 0)
@@ -183,6 +189,19 @@ export class AllocationService {
         // Lock the lots for update
         await trx("stock_lots").whereIn("lot_id", lotIds).forUpdate()
 
+        // Get current allocations to check total
+        const currentAllocations = await allocationRepo.getByOrderId(orderId)
+        const currentByListing = new Map<string, number>()
+        currentAllocations.forEach((alloc) => {
+          const lot = lots.find((l) => l?.lot_id === alloc.lot_id)
+          if (lot?.listing_id) {
+            currentByListing.set(
+              lot.listing_id,
+              (currentByListing.get(lot.listing_id) || 0) + alloc.quantity,
+            )
+          }
+        })
+
         // Validate each allocation
         for (let i = 0; i < toCreate.length; i++) {
           const input = toCreate[i]
@@ -192,6 +211,7 @@ export class AllocationService {
             throw new AllocationValidationError(`Lot ${input.lot_id} not found`)
           }
 
+          // Check available stock
           const allocated = await allocationRepo.getAllocatedQuantity(
             lot.lot_id,
           )
@@ -201,6 +221,18 @@ export class AllocationService {
             throw new AllocationValidationError(
               `Cannot allocate ${input.quantity} from lot ${lot.lot_id}. Only ${available} available.`,
             )
+          }
+
+          // Check order quantity limit
+          if (lot.listing_id) {
+            const currentForListing =
+              currentByListing.get(lot.listing_id) || 0
+            const newTotal = currentForListing + input.quantity
+            if (newTotal > order.quantity) {
+              throw new AllocationValidationError(
+                `Cannot allocate ${newTotal} units. Order only requires ${order.quantity}.`,
+              )
+            }
           }
         }
 
