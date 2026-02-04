@@ -276,6 +276,17 @@ profileRouter.put(
   "/languages",
   writeRateLimit,
   userAuthorized,
+  (req, res, next) => {
+    logger.info("=== LANGUAGE ENDPOINT HIT ===", {
+      method: req.method,
+      path: req.path,
+      originalUrl: req.originalUrl,
+      baseUrl: req.baseUrl,
+      hasUser: !!req.user,
+      userId: req.user?.user_id,
+    })
+    next()
+  },
   profile_put_languages,
 )
 
