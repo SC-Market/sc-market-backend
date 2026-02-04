@@ -696,15 +696,10 @@ export const manualAllocateOrder: RequestHandler = async (req, res) => {
 
     // Validate each allocation
     for (const alloc of allocations) {
-      if (
-        !alloc.lot_id ||
-        typeof alloc.quantity !== "number" ||
-        alloc.quantity <= 0
-      ) {
+      if (!alloc.lot_id || typeof alloc.quantity !== "number") {
         res.status(400).json(
           createErrorResponse({
-            message:
-              "Each allocation must have a valid lot_id and positive quantity",
+            message: "Each allocation must have a valid lot_id and quantity",
           }),
         )
         return
