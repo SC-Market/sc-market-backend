@@ -182,18 +182,29 @@ export class StockLotService {
 
   /**
    * Get available stock for a listing (not allocated)
-   * Calls database function for accurate calculation
    *
    * Requirements: 1.2, 4.2, 4.3, 5.2
    */
   async getAvailableStock(listingId: string): Promise<number> {
-    const result = await this.knex.raw<{
-      rows: Array<{ get_available_stock: number }>
-    }>("SELECT get_available_stock(?::uuid) as get_available_stock", [
-      listingId,
-    ])
+    // Get total stock
+    const totalResult = await this.knex("stock_lots")
+      .where({ listing_id: listingId })
+      .sum("quantity_total as total")
+      .first()
 
-    return result.rows[0]?.get_available_stock ?? 0
+    const total = Number(totalResult?.total || 0)
+
+    // Get allocated stock
+    const allocatedResult = await this.knex("stock_allocations as sa")
+      .join("stock_lots as sl", "sa.lot_id", "sl.lot_id")
+      .where("sl.listing_id", listingId)
+      .where("sa.status", "active")
+      .sum("sa.quantity as allocated")
+      .first()
+
+    const allocated = Number(allocatedResult?.allocated || 0)
+
+    return total - allocated
   }
 
   /**
