@@ -586,14 +586,21 @@ export const createLocation: RequestHandler = async (req, res) => {
  */
 export const getContractorAllocations: RequestHandler = async (req, res) => {
   try {
-    const { contractorId } = req.params
+    const contractor = req.contractor
+    if (!contractor) {
+      return res.status(400).json(
+        createErrorResponse({
+          message: "Contractor not found",
+        }),
+      )
+    }
 
     // Get all allocations for contractor's listings
     const allocations = await getKnex()("stock_allocations as sa")
       .join("stock_lots as sl", "sa.lot_id", "sl.lot_id")
       .join("market_listings as ml", "sl.listing_id", "ml.listing_id")
       .leftJoin("locations as loc", "sl.location_id", "loc.location_id")
-      .where("ml.contractor_seller_id", contractorId)
+      .where("ml.contractor_seller_id", contractor.contractor_id)
       .select(
         "sa.allocation_id",
         "sa.lot_id",

@@ -18,6 +18,7 @@ import {
   can_manage_market_listing,
   can_manage_stock_lot,
 } from "./middleware.js"
+import { valid_contractor } from "../contractors/middleware.js"
 import { validate_optional_username_body } from "../profiles/middleware.js"
 import { validate_optional_spectrum_id } from "../contractors/middleware.js"
 import {
@@ -139,9 +140,10 @@ allocationRouter.post(
 export const contractorAllocationsRouter = express.Router()
 
 contractorAllocationsRouter.get(
-  "/:contractorId/allocations",
+  "/:spectrum_id/allocations",
   userAuthorized,
   requireMarketRead,
   readRateLimit,
+  valid_contractor,
   getContractorAllocations,
 )

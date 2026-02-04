@@ -26,10 +26,10 @@ export class StockLotRepository {
   async create(input: CreateLotInput): Promise<DBStockLot> {
     const [lot] = await this.knex<DBStockLot>("stock_lots")
       .insert({
-        listing_id: input.listing_id,
+        listing_id: this.knex.raw("?::uuid", [input.listing_id]),
         quantity_total: input.quantity,
-        location_id: input.location_id ?? null,
-        owner_id: input.owner_id ?? null,
+        location_id: input.location_id ? this.knex.raw("?::uuid", [input.location_id]) : null,
+        owner_id: input.owner_id ? this.knex.raw("?::uuid", [input.owner_id]) : null,
         listed: input.listed ?? true,
         notes: input.notes ?? null,
       })
