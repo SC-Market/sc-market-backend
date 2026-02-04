@@ -62,31 +62,31 @@ export const profileRouter = express.Router()
 
 profileRouter.post(
   "/auth/link",
-  criticalRateLimit,
   userAuthorized,
+  criticalRateLimit,
   profile_post_auth_link,
 )
 
 profileRouter.post(
   "/auth/sync-handle",
-  criticalRateLimit,
   userAuthorized,
+  criticalRateLimit,
   profile_post_auth_sync_handle_spec,
   profile_post_auth_sync_handle,
 )
 
 profileRouter.post(
   "/auth/unlink",
-  criticalRateLimit,
   userAuthorized,
+  criticalRateLimit,
   profile_post_auth_unlink_spec,
   profile_post_auth_unlink,
 )
 
 profileRouter.get(
   "/auth/ident",
-  criticalRateLimit,
   userAuthorized,
+  criticalRateLimit,
   profile_get_auth_ident,
 )
 
