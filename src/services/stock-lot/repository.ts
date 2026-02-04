@@ -44,6 +44,7 @@ export class StockLotRepository {
   async getById(lotId: string): Promise<DBStockLot | null> {
     const lot = await this.knex<DBStockLot>("stock_lots")
       .where({ lot_id: lotId })
+      .whereNull("deleted_at")
       .first()
 
     return lot || null
@@ -53,7 +54,7 @@ export class StockLotRepository {
    * Get all lots for a listing with optional filters
    */
   async getLots(filters: LotFilters): Promise<DBStockLot[]> {
-    let query = this.knex<DBStockLot>("stock_lots")
+    let query = this.knex<DBStockLot>("stock_lots").whereNull("deleted_at")
 
     if (filters.listing_id) {
       query = query.where({ listing_id: filters.listing_id })
@@ -120,7 +121,10 @@ export class StockLotRepository {
    * Delete a stock lot
    */
   async delete(lotId: string): Promise<void> {
-    await this.knex<DBStockLot>("stock_lots").where({ lot_id: lotId }).delete()
+    // Soft delete: set deleted_at timestamp
+    await this.knex<DBStockLot>("stock_lots")
+      .where({ lot_id: lotId })
+      .update({ deleted_at: new Date() })
   }
 
   /**
@@ -133,6 +137,7 @@ export class StockLotRepository {
         location_id: null,
         listed: true,
       })
+      .whereNull("deleted_at")
       .first()
 
     return lot || null
