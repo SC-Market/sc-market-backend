@@ -189,7 +189,12 @@ export function setRateLimitHeaders(
 
 // Enhanced rate limiting middleware factory
 export function createRateLimit(tieredConfig: TieredRateLimit) {
-  return (req: Request, res: Response, next: NextFunction) => {
+  return async (req: Request, res: Response, next: NextFunction) => {
+    // TEMPORARY: Add delay to reproduce race condition for /languages endpoint
+    if (req.path === "/languages" && process.env.NODE_ENV !== "production") {
+      await new Promise((resolve) => setTimeout(resolve, 100))
+    }
+    
     const userTier = detectUserTier(req)
     const key = generateRateLimitKey(req, userTier)
     const endpoint = req.path
