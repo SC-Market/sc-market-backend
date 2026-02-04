@@ -150,26 +150,29 @@ marketRouter.get(
 
 marketRouter.post(
   "/purchase",
+  userAuthorized,
   requireMarketWrite,
-  market_post_purchase_spec,
   criticalRateLimit,
+  market_post_purchase_spec,
   purchase_listings,
 )
 
 marketRouter.post(
   "/listings/:listing_id/bids",
+  userAuthorized,
   requireMarketWrite,
   valid_market_listing,
-  market_post_listings_listing_id_bids_spec,
   criticalRateLimit,
+  market_post_listings_listing_id_bids_spec,
   get_listing_bids,
 )
 
 marketRouter.post(
   "/listings",
+  userAuthorized,
   requireMarketWrite,
-  market_post_listings_spec,
   criticalRateLimit,
+  market_post_listings_spec,
   create_listing,
 )
 
@@ -270,6 +273,7 @@ marketRouter.get("/multiple/:multiple_id", readRateLimit, get_multiple_details)
 
 marketRouter.post(
   "/multiple/contractor/:spectrum_id/create",
+  userAuthorized,
   requireMarketWrite,
   org_permission("manage_market"),
   writeRateLimit,
@@ -278,6 +282,7 @@ marketRouter.post(
 
 marketRouter.post(
   "/multiple/create",
+  userAuthorized,
   requireMarketWrite,
   writeRateLimit,
   create_multiple,
@@ -293,6 +298,7 @@ marketRouter.post(
 
 marketRouter.post(
   "/buyorder/create",
+  userAuthorized,
   requireMarketWrite,
   criticalRateLimit,
   create_buy_order,
@@ -300,6 +306,7 @@ marketRouter.post(
 
 marketRouter.post(
   "/buyorder/:buy_order_id/fulfill",
+  userAuthorized,
   requireMarketWrite,
   criticalRateLimit,
   fulfill_buy_order,
