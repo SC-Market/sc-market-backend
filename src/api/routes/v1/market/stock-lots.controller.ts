@@ -20,6 +20,7 @@ import {
 import logger from "../../../../logger/logger.js"
 import * as marketDb from "./database.js"
 import { getKnex } from "../../../../clients/database/knex-db.js"
+import { formatUniqueListingComplete } from "../util/formatting.js"
 
 const stockLotService = new StockLotService()
 const locationService = new LocationService()
@@ -612,9 +613,10 @@ export const getOrderAllocations: RequestHandler = async (req, res) => {
     // Fetch listing details for each group
     const groupedAllocations = await Promise.all(
       Array.from(byListing.entries()).map(async ([listing_id, allocs]) => {
-        const listing = await marketDb.getMarketUniqueListingComplete(
+        const listingComplete = await marketDb.getMarketUniqueListingComplete(
           listing_id,
         )
+        const listing = await formatUniqueListingComplete(listingComplete)
         const totalAllocated = allocs.reduce((sum, a) => sum + a.quantity, 0)
         return {
           listing_id,
