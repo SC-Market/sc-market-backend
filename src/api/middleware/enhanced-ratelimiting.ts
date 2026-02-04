@@ -6,7 +6,7 @@ import {
 } from "rate-limiter-flexible"
 import { database } from "../../clients/database/knex-db.js"
 import { User } from "../routes/v1/api-models.js"
-import { logger } from "../../logger/logger.js"
+import logger from "../../logger/logger.js"
 
 // User tier types
 export type UserTier = "anonymous" | "authenticated" | "admin"
