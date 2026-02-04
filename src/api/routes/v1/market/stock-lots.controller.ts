@@ -599,7 +599,33 @@ export const getOrderAllocations: RequestHandler = async (req, res) => {
       }),
     )
 
-    // Calculate total allocated
+    // Group by listing and fetch listing details
+    const byListing = new Map<string, typeof enrichedAllocations>()
+    enrichedAllocations.forEach((alloc) => {
+      if (alloc.listing_id) {
+        const existing = byListing.get(alloc.listing_id) || []
+        byListing.set(alloc.listing_id, [...existing, alloc])
+      }
+    })
+
+    // Fetch listing details for each group
+    const groupedAllocations = await Promise.all(
+      Array.from(byListing.entries()).map(async ([listing_id, allocs]) => {
+        const listing = await marketListingService.getListingById(listing_id)
+        const totalAllocated = allocs.reduce(
+          (sum, a) => sum + a.quantity,
+          0,
+        )
+        return {
+          listing_id,
+          listing,
+          allocations: allocs,
+          total_allocated: totalAllocated,
+        }
+      }),
+    )
+
+    // Calculate total allocated across all listings
     const totalAllocated = allocations.reduce(
       (sum, alloc) => sum + alloc.quantity,
       0,
@@ -607,7 +633,7 @@ export const getOrderAllocations: RequestHandler = async (req, res) => {
 
     res.json(
       createResponse({
-        allocations: enrichedAllocations,
+        grouped_allocations: groupedAllocations,
         total_allocated: totalAllocated,
       }),
     )
