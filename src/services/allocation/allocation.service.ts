@@ -575,14 +575,13 @@ export class AllocationService {
       .delete()
 
     // Try to find a matching lot to merge back into
-    // Match: same listing, same location, listed=true, not deleted
+    // Match: same listing, same location, listed=true
     const targetLot = await trx<DBStockLot>("stock_lots")
       .where({
         listing_id: allocatedLot.listing_id,
         location_id: allocatedLot.location_id,
         listed: true,
       })
-      .whereNull("deleted_at")
       .whereNot({ lot_id: lotId })
       .first()
 
@@ -595,10 +594,10 @@ export class AllocationService {
           updated_at: new Date(),
         })
 
-      // Soft delete the allocated lot
+      // Hard delete the allocated lot
       await trx<DBStockLot>("stock_lots")
         .where({ lot_id: lotId })
-        .update({ deleted_at: new Date() })
+        .delete()
     } else {
       // No matching lot: make this lot visible again
       await trx<DBStockLot>("stock_lots")
