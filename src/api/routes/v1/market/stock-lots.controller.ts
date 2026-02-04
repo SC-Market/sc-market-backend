@@ -584,10 +584,6 @@ export const getOrderAllocations: RequestHandler = async (req, res) => {
   try {
     const { order_id } = req.params
 
-    // Get order to fetch listing IDs
-    const order = await marketDb.getMarketOrder({ order_id })
-    const orderListingIds: string[] = order.listing_id ? [order.listing_id] : []
-
     // Get allocations
     const allocations = await allocationService.getAllocations(order_id)
 
@@ -623,14 +619,11 @@ export const getOrderAllocations: RequestHandler = async (req, res) => {
 
     // Fetch listing details for each group
     const groupedAllocations = await Promise.all(
-      orderListingIds.map(async (listing_id) => {
+      Array.from(byListing.entries()).map(async ([listing_id, allocs]) => {
         const listingComplete = await marketDb.getMarketUniqueListingComplete(
           listing_id,
         )
         const listing = await formatUniqueListingComplete(listingComplete)
-
-        // Get allocations for this listing
-        const allocs = byListing.get(listing_id) || []
 
         // Combine allocations for the same lot
         const combinedByLot = new Map<string, typeof allocs[0]>()
