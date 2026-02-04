@@ -54,8 +54,8 @@ emailRouter.get(
 emailRouter.get(
   "/preferences",
   userAuthorized,
-  get_email_preferences_spec,
   readRateLimit,
+  get_email_preferences_spec,
   getEmailPreferences,
 )
 
@@ -64,8 +64,8 @@ emailRouter.get(
 emailRouter.patch(
   "/preferences",
   userAuthorized,
-  update_email_preferences_spec,
   commonWriteRateLimit,
+  update_email_preferences_spec,
   updateEmailPreferences,
 )
 

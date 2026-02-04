@@ -39,56 +39,56 @@ adminRouter.use("/alerts", adminAlertsRouter)
 
 adminRouter.get(
   "/activity",
-  admin_get_activity_spec,
   adminAuthorized,
   criticalRateLimit,
+  admin_get_activity_spec,
   admin_get_activity,
 )
 
 adminRouter.get(
   "/orders/analytics",
-  admin_get_orders_analytics_spec,
   adminAuthorized,
   readRateLimit,
+  admin_get_orders_analytics_spec,
   admin_get_orders_analytics,
 )
 
 adminRouter.get(
   "/users",
-  admin_get_users_spec,
   adminAuthorized,
   criticalRateLimit,
+  admin_get_users_spec,
   admin_get_users,
 )
 
 adminRouter.get(
   "/membership/analytics",
-  admin_get_membership_analytics_spec,
   adminAuthorized,
   readRateLimit,
+  admin_get_membership_analytics_spec,
   admin_get_membership_analytics,
 )
 
 adminRouter.get(
   "/audit-logs",
-  admin_get_audit_logs_spec,
   adminAuthorized,
   readRateLimit,
+  admin_get_audit_logs_spec,
   admin_get_audit_logs,
 )
 
 adminRouter.post(
   "/users/:username/unlink",
-  admin_post_users_username_unlink_spec,
   adminAuthorized,
   criticalRateLimit,
+  admin_post_users_username_unlink_spec,
   admin_post_users_username_unlink,
 )
 
 adminRouter.post(
   "/notifications/test",
-  admin_post_test_notification_spec,
   adminAuthorized,
   criticalRateLimit,
+  admin_post_test_notification_spec,
   admin_post_test_notification,
 )
