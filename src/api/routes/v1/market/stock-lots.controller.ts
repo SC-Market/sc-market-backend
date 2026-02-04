@@ -588,6 +588,7 @@ export const getOrderAllocations: RequestHandler = async (req, res) => {
         }
         return {
           ...alloc,
+          listing_id: lot?.listing_id || null,
           lot: lot
             ? {
                 ...lot,
