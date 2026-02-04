@@ -28,40 +28,40 @@ export const commentRouter = express.Router()
 commentRouter.post(
   "/:comment_id/reply",
   requireVerifiedUser,
-  post_comment_id_reply_spec,
-  writeRateLimit,
   requireCommentsWrite,
+  writeRateLimit,
+  post_comment_id_reply_spec,
   post_comment_id_reply,
 )
 
 commentRouter.post(
   "/:comment_id/delete",
   requireVerifiedUser,
-  post_comment_id_delete_spec,
   writeRateLimit,
+  post_comment_id_delete_spec,
   post_comment_id_delete,
 )
 
 commentRouter.post(
   "/:comment_id/update",
   requireVerifiedUser,
-  post_comment_id_update_spec,
   writeRateLimit,
+  post_comment_id_update_spec,
   post_comment_id_update,
 )
 
 commentRouter.post(
   "/:comment_id/upvote",
   requireVerifiedUser,
-  post_comment_id_upvote_spec,
   writeRateLimit,
+  post_comment_id_upvote_spec,
   post_comment_id_upvote,
 )
 
 commentRouter.post(
   "/:comment_id/downvote",
   requireVerifiedUser,
-  post_comment_id_downvote_spec,
   writeRateLimit,
+  post_comment_id_downvote_spec,
   post_comment_id_downvote,
 )
