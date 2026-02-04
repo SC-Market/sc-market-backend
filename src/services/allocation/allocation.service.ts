@@ -254,42 +254,6 @@ export class AllocationService {
         0,
       )
 
-      // Update quantity_available for affected listings
-      const affectedListingIds = new Set<string>()
-      for (const alloc of toCreate) {
-        const lot = await stockLotRepo.getById(alloc.lot_id)
-        if (lot?.listing_id) {
-          affectedListingIds.add(lot.listing_id)
-        }
-      }
-      for (const alloc of toDelete) {
-        const lot = await stockLotRepo.getById(alloc.lot_id)
-        if (lot?.listing_id) {
-          affectedListingIds.add(lot.listing_id)
-        }
-      }
-
-      // Update each affected listing's quantity_available
-      for (const listingId of affectedListingIds) {
-        const totalStock = await trx("stock_lots")
-          .where({ listing_id: listingId })
-          .sum("quantity_total as total")
-          .first()
-
-        const allocatedStock = await trx("stock_allocations")
-          .join("stock_lots", "stock_allocations.lot_id", "stock_lots.lot_id")
-          .where("stock_lots.listing_id", listingId)
-          .sum("stock_allocations.quantity as allocated")
-          .first()
-
-        const available =
-          (totalStock?.total || 0) - (allocatedStock?.allocated || 0)
-
-        await trx("market_listings")
-          .where({ listing_id: listingId })
-          .update({ quantity_available: available })
-      }
-
       return {
         allocations: allAllocations,
         total_allocated: totalAllocated,
