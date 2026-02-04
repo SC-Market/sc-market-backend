@@ -624,11 +624,27 @@ export const getOrderAllocations: RequestHandler = async (req, res) => {
           listing_id,
         )
         const listing = await formatUniqueListingComplete(listingComplete)
-        const totalAllocated = allocs.reduce((sum, a) => sum + a.quantity, 0)
+
+        // Combine allocations for the same lot
+        const combinedByLot = new Map<string, typeof allocs[0]>()
+        allocs.forEach((alloc) => {
+          const existing = combinedByLot.get(alloc.lot_id)
+          if (existing) {
+            existing.quantity += alloc.quantity
+          } else {
+            combinedByLot.set(alloc.lot_id, { ...alloc })
+          }
+        })
+
+        const combinedAllocs = Array.from(combinedByLot.values())
+        const totalAllocated = combinedAllocs.reduce(
+          (sum, a) => sum + a.quantity,
+          0,
+        )
         return {
           listing_id,
           listing,
-          allocations: allocs,
+          allocations: combinedAllocs,
           total_allocated: totalAllocated,
         }
       }),
