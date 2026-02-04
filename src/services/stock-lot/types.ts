@@ -17,6 +17,7 @@ export interface DBStockLot {
   notes: string | null // max 1000 chars
   created_at: Date
   updated_at: Date
+  deleted_at: Date | null // null = active, timestamp = soft deleted
 }
 
 /**
