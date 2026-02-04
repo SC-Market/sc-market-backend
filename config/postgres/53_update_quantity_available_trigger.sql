@@ -21,11 +21,11 @@ BEGIN
         IF TG_OP = 'DELETE' THEN
             SELECT listing_id INTO affected_listing_id
             FROM stock_lots
-            WHERE lot_id = OLD.lot_id;
+            WHERE lot_id = OLD.lot_id::uuid;
         ELSE
             SELECT listing_id INTO affected_listing_id
             FROM stock_lots
-            WHERE lot_id = NEW.lot_id;
+            WHERE lot_id = NEW.lot_id::uuid;
         END IF;
     END IF;
 
