@@ -32,6 +32,7 @@ export class KnexDatabase implements Database {
 
   constructor(
     databaseConfig: KnexClass.Config | string = {
+      asyncStackTraces: true,
       client: "pg",
       connection: {
         host: dbConfig.host || env.DATABASE_HOST || "localhost",
