@@ -575,8 +575,28 @@ export const getOrderAllocations: RequestHandler = async (req, res) => {
   try {
     const { order_id } = req.params
 
-    // Get allocations with lot details
+    // Get allocations
     const allocations = await allocationService.getAllocations(order_id)
+
+    // Enrich with lot and location details
+    const enrichedAllocations = await Promise.all(
+      allocations.map(async (alloc) => {
+        const lot = await stockLotService.getLotById(alloc.lot_id)
+        let location = null
+        if (lot?.location_id) {
+          location = await locationService.getLocationById(lot.location_id)
+        }
+        return {
+          ...alloc,
+          lot: lot
+            ? {
+                ...lot,
+                location,
+              }
+            : null,
+        }
+      }),
+    )
 
     // Calculate total allocated
     const totalAllocated = allocations.reduce(
@@ -586,7 +606,7 @@ export const getOrderAllocations: RequestHandler = async (req, res) => {
 
     res.json(
       createResponse({
-        allocations,
+        allocations: enrichedAllocations,
         total_allocated: totalAllocated,
       }),
     )
