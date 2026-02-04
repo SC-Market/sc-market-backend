@@ -1,6 +1,3 @@
-import { Profile } from "passport-discord"
-import { DBUser } from "../../../clients/database/db-models.js"
-
 export interface ProfileBody {
   role?: "user" | "admin"
   user_id?: string
