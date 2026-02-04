@@ -115,7 +115,6 @@ export const searchLots: RequestHandler = async (req, res) => {
       const contractor = req.contractors.get("contractor_spectrum_id")!
       if (lots.length > 0) {
         // Get all contractor listings
-        const knex = getKnex()
         const listings = await knex("market_listings")
           .where("contractor_seller_id", contractor.contractor_id)
           .select("listing_id")
@@ -127,9 +126,34 @@ export const searchLots: RequestHandler = async (req, res) => {
       }
     }
 
+    // Enrich with allocation info
+    const lotsWithAllocations = await Promise.all(
+      lots.map(async (lot) => {
+        const allocations = await knex("stock_allocations")
+          .where({ lot_id: lot.lot_id, status: "active" })
+          .select("allocation_id", "order_id", "quantity")
+
+        const totalAllocated = allocations.reduce(
+          (sum, a) => sum + a.quantity,
+          0,
+        )
+
+        return {
+          ...lot,
+          is_allocated: allocations.length > 0,
+          allocated_quantity: totalAllocated,
+          allocations: allocations.map((a) => ({
+            allocation_id: a.allocation_id,
+            order_id: a.order_id,
+            quantity: a.quantity,
+          })),
+        }
+      }),
+    )
+
     // Paginate
-    const total = lots.length
-    const paginatedLots = lots.slice(
+    const total = lotsWithAllocations.length
+    const paginatedLots = lotsWithAllocations.slice(
       Number(offset),
       Number(offset) + Number(page_size),
     )
@@ -171,6 +195,31 @@ export const getListingLots: RequestHandler = async (req, res) => {
     // Get lots
     const lots = await stockLotService.getLots(filters)
 
+    // Enrich with allocation info
+    const lotsWithAllocations = await Promise.all(
+      lots.map(async (lot) => {
+        const allocations = await knex("stock_allocations")
+          .where({ lot_id: lot.lot_id, status: "active" })
+          .select("allocation_id", "order_id", "quantity")
+
+        const totalAllocated = allocations.reduce(
+          (sum, a) => sum + a.quantity,
+          0,
+        )
+
+        return {
+          ...lot,
+          is_allocated: allocations.length > 0,
+          allocated_quantity: totalAllocated,
+          allocations: allocations.map((a) => ({
+            allocation_id: a.allocation_id,
+            order_id: a.order_id,
+            quantity: a.quantity,
+          })),
+        }
+      }),
+    )
+
     // Enrich with listing data
     const listingComplete = await marketDb.getMarketUniqueListingComplete(
       listing_id,
@@ -184,7 +233,7 @@ export const getListingLots: RequestHandler = async (req, res) => {
 
     res.json(
       createResponse({
-        lots,
+        lots: lotsWithAllocations,
         listing,
         aggregates: {
           total,
