@@ -74,14 +74,14 @@ BEGIN
         (SELECT message_content 
          FROM public.order_settings 
          WHERE setting_type = 'stock_subtraction_timing'
-         AND contractor_id = v_contractor_id
-         AND user_id IS NULL
+         AND entity_type = 'contractor'
+         AND entity_id = v_contractor_id
          LIMIT 1),
         (SELECT message_content 
          FROM public.order_settings 
          WHERE setting_type = 'stock_subtraction_timing'
-         AND user_id = v_user_id
-         AND contractor_id IS NULL
+         AND entity_type = 'user'
+         AND entity_id = v_user_id
          LIMIT 1),
         'on_accepted'
     ) INTO v_stock_subtraction_timing;
@@ -111,14 +111,14 @@ BEGIN
         -- Update all listings for this user or contractor
         UPDATE public.market_listings
         SET quantity_available = public.get_public_quantity(listing_id, NEW.message_content)
-        WHERE (NEW.user_id IS NOT NULL AND user_seller_id = NEW.user_id)
-           OR (NEW.contractor_id IS NOT NULL AND contractor_seller_id = NEW.contractor_id);
+        WHERE (NEW.entity_type = 'user' AND user_seller_id = NEW.entity_id)
+           OR (NEW.entity_type = 'contractor' AND contractor_seller_id = NEW.entity_id);
     ELSIF TG_OP = 'DELETE' AND OLD.setting_type = 'stock_subtraction_timing' THEN
         -- Revert to default 'on_accepted' behavior
         UPDATE public.market_listings
         SET quantity_available = public.get_public_quantity(listing_id, 'on_accepted')
-        WHERE (OLD.user_id IS NOT NULL AND user_seller_id = OLD.user_id)
-           OR (OLD.contractor_id IS NOT NULL AND contractor_seller_id = OLD.contractor_id);
+        WHERE (OLD.entity_type = 'user' AND user_seller_id = OLD.entity_id)
+           OR (OLD.entity_type = 'contractor' AND contractor_seller_id = OLD.entity_id);
     END IF;
 
     IF TG_OP = 'DELETE' THEN
