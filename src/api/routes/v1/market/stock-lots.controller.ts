@@ -580,6 +580,68 @@ export const createLocation: RequestHandler = async (req, res) => {
  * Get allocations for an order
  * Requirements: 5.3, 7.1
  */
+/**
+ * GET /api/contractors/:contractorId/allocations
+ * Get all allocations for a contractor's listings
+ */
+export const getContractorAllocations: RequestHandler = async (req, res) => {
+  try {
+    const { contractorId } = req.params
+
+    // Get all allocations for contractor's listings
+    const allocations = await getKnex()("stock_allocations as sa")
+      .join("stock_lots as sl", "sa.lot_id", "sl.lot_id")
+      .join("market_listings as ml", "sl.listing_id", "ml.listing_id")
+      .leftJoin("locations as loc", "sl.location_id", "loc.location_id")
+      .where("ml.contractor_seller_id", contractorId)
+      .select(
+        "sa.allocation_id",
+        "sa.lot_id",
+        "sa.order_id",
+        "sa.quantity",
+        "sa.status",
+        "sa.created_at",
+        "sl.listing_id",
+        "loc.location_id",
+        "loc.name as location_name",
+      )
+      .orderBy("sa.created_at", "desc")
+
+    // Format response
+    const formattedAllocations = allocations.map((alloc) => ({
+      allocation_id: alloc.allocation_id,
+      lot_id: alloc.lot_id,
+      order_id: alloc.order_id,
+      quantity: alloc.quantity,
+      status: alloc.status,
+      created_at: alloc.created_at,
+      lot: {
+        lot_id: alloc.lot_id,
+        listing_id: alloc.listing_id,
+        location: alloc.location_id
+          ? {
+              location_id: alloc.location_id,
+              name: alloc.location_name,
+            }
+          : null,
+      },
+    }))
+
+    res.json(
+      createResponse({
+        allocations: formattedAllocations,
+      }),
+    )
+  } catch (error) {
+    logger.error("Error fetching contractor allocations", { error })
+    res.status(500).json(
+      createErrorResponse({
+        message: "Failed to fetch allocations",
+      }),
+    )
+  }
+}
+
 export const getOrderAllocations: RequestHandler = async (req, res) => {
   try {
     const { order_id } = req.params

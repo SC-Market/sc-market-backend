@@ -30,6 +30,7 @@ import {
   getLocations,
   createLocation,
   getOrderAllocations,
+  getContractorAllocations,
   manualAllocateOrder,
   searchLots,
 } from "./stock-lots.controller.js"
@@ -132,4 +133,15 @@ allocationRouter.post(
   requireMarketWrite,
   writeRateLimit,
   manualAllocateOrder,
+)
+
+// Contractor allocations router
+export const contractorAllocationsRouter = express.Router()
+
+contractorAllocationsRouter.get(
+  "/:contractorId/allocations",
+  userAuthorized,
+  requireMarketRead,
+  readRateLimit,
+  getContractorAllocations,
 )
