@@ -107,7 +107,13 @@ stockLotsRouter.post(
 )
 
 // Location management
-stockLotsRouter.get("/locations", readRateLimit, getLocations)
+stockLotsRouter.get(
+  "/locations",
+  userAuthorized,
+  requireMarketRead,
+  readRateLimit,
+  getLocations,
+)
 
 stockLotsRouter.post(
   "/locations",
