@@ -93,6 +93,10 @@ export const searchLots: RequestHandler = async (req, res) => {
       contractor_spectrum_id,
       location_id,
       listed,
+      search,
+      status,
+      min_quantity,
+      max_quantity,
       page_size = 100,
       offset = 0,
     } = req.query
@@ -126,6 +130,20 @@ export const searchLots: RequestHandler = async (req, res) => {
       }
     }
 
+    // Apply quantity filters
+    if (min_quantity) {
+      const minQty = parseInt(min_quantity as string, 10)
+      if (!isNaN(minQty)) {
+        lots = lots.filter((l: any) => l.quantity >= minQty)
+      }
+    }
+    if (max_quantity) {
+      const maxQty = parseInt(max_quantity as string, 10)
+      if (!isNaN(maxQty)) {
+        lots = lots.filter((l: any) => l.quantity <= maxQty)
+      }
+    }
+
     // Enrich with allocation info
     const lotsWithAllocations = await Promise.all(
       lots.map(async (lot) => {
@@ -151,9 +169,17 @@ export const searchLots: RequestHandler = async (req, res) => {
       }),
     )
 
+    // Apply status filter
+    let filteredLots = lotsWithAllocations
+    if (status === "available") {
+      filteredLots = lotsWithAllocations.filter((l) => !l.is_allocated)
+    } else if (status === "allocated") {
+      filteredLots = lotsWithAllocations.filter((l) => l.is_allocated)
+    }
+
     // Paginate
-    const total = lotsWithAllocations.length
-    const paginatedLots = lotsWithAllocations.slice(
+    const total = filteredLots.length
+    const paginatedLots = filteredLots.slice(
       Number(offset),
       Number(offset) + Number(page_size),
     )
