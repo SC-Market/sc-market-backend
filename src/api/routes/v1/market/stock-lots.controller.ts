@@ -663,7 +663,6 @@ export const getContractorAllocations: RequestHandler = async (req, res) => {
         "sl.listing_id",
         "loc.location_id",
         "loc.name as location_name",
-        "mo.title as order_title",
       )
       .orderBy("sa.created_at", "desc")
 
@@ -686,7 +685,6 @@ export const getContractorAllocations: RequestHandler = async (req, res) => {
       quantity: alloc.quantity,
       status: alloc.status,
       created_at: alloc.created_at,
-      order_title: alloc.order_title,
       lot: {
         lot_id: alloc.lot_id,
         listing_id: alloc.listing_id,
