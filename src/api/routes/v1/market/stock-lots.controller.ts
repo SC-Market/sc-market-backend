@@ -663,11 +663,20 @@ export const getContractorAllocations: RequestHandler = async (req, res) => {
         "sl.listing_id",
         "loc.location_id",
         "loc.name as location_name",
-        "ml.photos",
-        "ml.title",
         "mo.title as order_title",
       )
       .orderBy("sa.created_at", "desc")
+
+    // Fetch photos for each listing
+    const listingIds = [...new Set(allocations.map((a) => a.listing_id))]
+    const photosMap = new Map<string, string[]>()
+    
+    for (const listingId of listingIds) {
+      const photos = await marketDb.getMarketListingImagesResolved({
+        details_id: listingId,
+      })
+      photosMap.set(listingId, photos)
+    }
 
     // Format response
     const formattedAllocations = allocations.map((alloc) => ({
@@ -681,8 +690,7 @@ export const getContractorAllocations: RequestHandler = async (req, res) => {
       lot: {
         lot_id: alloc.lot_id,
         listing_id: alloc.listing_id,
-        title: alloc.title,
-        photos: alloc.photos,
+        photos: photosMap.get(alloc.listing_id) || [],
         location: alloc.location_id
           ? {
               location_id: alloc.location_id,
