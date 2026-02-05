@@ -177,6 +177,40 @@ export const searchLots: RequestHandler = async (req, res) => {
       filteredLots = lotsWithAllocations.filter((l) => l.is_allocated)
     }
 
+    // Apply search filter (notes and listing names)
+    if (search) {
+      const searchLower = (search as string).toLowerCase()
+
+      // Get listing titles for search
+      const listingIds = [...new Set(filteredLots.map((l) => l.listing_id))]
+      const listingTitles = await knex("market_listings")
+        .join(
+          "market_unique_listings",
+          "market_listings.listing_id",
+          "market_unique_listings.listing_id",
+        )
+        .join(
+          "market_listing_details",
+          "market_unique_listings.details_id",
+          "market_listing_details.details_id",
+        )
+        .whereIn("market_listings.listing_id", listingIds)
+        .select("market_listings.listing_id", "market_listing_details.title")
+
+      const titleMap = new Map(
+        listingTitles.map((l: any) => [l.listing_id, l.title]),
+      )
+
+      filteredLots = filteredLots.filter((lot) => {
+        const notesMatch = lot.notes?.toLowerCase().includes(searchLower)
+        const titleMatch = titleMap
+          .get(lot.listing_id)
+          ?.toLowerCase()
+          .includes(searchLower)
+        return notesMatch || titleMatch
+      })
+    }
+
     // Paginate
     const total = filteredLots.length
     const paginatedLots = filteredLots.slice(
