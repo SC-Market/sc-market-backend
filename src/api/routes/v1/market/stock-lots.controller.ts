@@ -649,10 +649,11 @@ export const getContractorAllocations: RequestHandler = async (req, res) => {
       .join("stock_lots as sl", "sa.lot_id", "sl.lot_id")
       .join("market_listings as ml", "sl.listing_id", "ml.listing_id")
       .join("market_orders as mo", "sa.order_id", "mo.order_id")
+      .join("orders as o", "mo.order_id", "o.order_id")
       .leftJoin("locations as loc", "sl.location_id", "loc.location_id")
       .where("ml.contractor_seller_id", contractor.contractor_id)
       .where("sa.status", "active")
-      .whereNotIn("mo.status", ["complete", "fulfilled"])
+      .whereNotIn("o.status", ["complete", "fulfilled"])
       .select(
         "sa.allocation_id",
         "sa.lot_id",
@@ -663,6 +664,7 @@ export const getContractorAllocations: RequestHandler = async (req, res) => {
         "sl.listing_id",
         "loc.location_id",
         "loc.name as location_name",
+        "o.title as order_title",
       )
       .orderBy("sa.created_at", "desc")
 
@@ -685,6 +687,7 @@ export const getContractorAllocations: RequestHandler = async (req, res) => {
       quantity: alloc.quantity,
       status: alloc.status,
       created_at: alloc.created_at,
+      order_title: alloc.order_title,
       lot: {
         lot_id: alloc.lot_id,
         listing_id: alloc.listing_id,
