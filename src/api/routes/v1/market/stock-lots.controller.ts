@@ -668,15 +668,21 @@ export const getContractorAllocations: RequestHandler = async (req, res) => {
       )
       .orderBy("sa.created_at", "desc")
 
-    // Fetch photos for each listing
+    // Fetch photos and listing details
     const listingIds = [...new Set(allocations.map((a) => a.listing_id))]
     const photosMap = new Map<string, string[]>()
+    const listingsMap = new Map<string, any>()
     
     for (const listingId of listingIds) {
       const photos = await marketDb.getMarketListingImagesResolved({
         details_id: listingId,
       })
       photosMap.set(listingId, photos)
+      
+      const listing = await getKnex()("market_listings")
+        .where({ listing_id: listingId })
+        .first()
+      listingsMap.set(listingId, listing)
     }
 
     // Format response
@@ -691,6 +697,7 @@ export const getContractorAllocations: RequestHandler = async (req, res) => {
       lot: {
         lot_id: alloc.lot_id,
         listing_id: alloc.listing_id,
+        title: listingsMap.get(alloc.listing_id)?.title,
         photos: photosMap.get(alloc.listing_id) || [],
         location: alloc.location_id
           ? {
