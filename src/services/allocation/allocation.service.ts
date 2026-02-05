@@ -264,8 +264,15 @@ export class AllocationService {
     await this.knex.transaction(async (trx) => {
       const allocationRepo = new AllocationRepository(trx)
 
-      // Update all active allocations to released status
-      await allocationRepo.updateStatusByOrderId(orderId, "released")
+      // Get all active allocations for the order
+      const allocations = await trx("stock_allocations")
+        .where({ order_id: orderId, status: "active" })
+        .select("allocation_id", "lot_id")
+
+      // Deallocate and merge each lot back
+      for (const alloc of allocations) {
+        await this.deallocateAndMerge(trx, orderId, alloc.lot_id)
+      }
     })
   }
 
