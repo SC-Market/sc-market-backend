@@ -205,10 +205,9 @@ export const searchLots: RequestHandler = async (req, res) => {
       const ownerIds = [
         ...new Set(filteredLots.map((l) => l.owner_id).filter(Boolean)),
       ]
-      const accounts = await knex("users")
-        .join("accounts", "users.user_id", "accounts.user_id")
-        .whereIn("users.user_id", ownerIds)
-        .select("users.user_id", "accounts.username")
+      const accounts = await knex("accounts")
+        .whereIn("user_id", ownerIds)
+        .select("user_id", "username")
 
       const usernameMap = new Map(
         accounts.map((a: any) => [a.user_id, a.username]),
