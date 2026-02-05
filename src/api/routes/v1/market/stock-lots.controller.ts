@@ -667,7 +667,12 @@ export const getContractorAllocations: RequestHandler = async (req, res) => {
     const withDetails = await getKnex()("stock_allocations as sa")
       .join("stock_lots as sl", "sa.lot_id", "sl.lot_id")
       .join("market_listings as ml", "sl.listing_id", "ml.listing_id")
-      .join("market_listing_details as mld", "ml.listing_id", "mld.details_id")
+      .leftJoin("market_unique_listings as mul", "ml.listing_id", "mul.listing_id")
+      .leftJoin(
+        "market_listing_details as mld",
+        "mul.details_id",
+        "mld.details_id",
+      )
       .where("sa.status", "active")
       .where("ml.contractor_seller_id", contractor.contractor_id)
       .select("sa.*", "mld.title")
@@ -677,7 +682,12 @@ export const getContractorAllocations: RequestHandler = async (req, res) => {
     const allocations = await getKnex()("stock_allocations as sa")
       .join("stock_lots as sl", "sa.lot_id", "sl.lot_id")
       .join("market_listings as ml", "sl.listing_id", "ml.listing_id")
-      .join("market_listing_details as mld", "ml.listing_id", "mld.details_id")
+      .leftJoin("market_unique_listings as mul", "ml.listing_id", "mul.listing_id")
+      .leftJoin(
+        "market_listing_details as mld",
+        "mul.details_id",
+        "mld.details_id",
+      )
       .leftJoin("market_orders as mo", "sa.order_id", "mo.order_id")
       .leftJoin("orders as o", "sa.order_id", "o.order_id")
       .leftJoin("locations as loc", "sl.location_id", "loc.location_id")
