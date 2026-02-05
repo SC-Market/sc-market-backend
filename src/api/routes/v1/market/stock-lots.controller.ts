@@ -177,7 +177,7 @@ export const searchLots: RequestHandler = async (req, res) => {
       filteredLots = lotsWithAllocations.filter((l) => l.is_allocated)
     }
 
-    // Apply search filter (notes and listing names)
+    // Apply search filter (notes, listing names, and usernames)
     if (search) {
       const searchLower = (search as string).toLowerCase()
 
@@ -201,13 +201,30 @@ export const searchLots: RequestHandler = async (req, res) => {
         listingTitles.map((l: any) => [l.listing_id, l.title]),
       )
 
+      // Get usernames for owner_id search
+      const ownerIds = [
+        ...new Set(filteredLots.map((l) => l.owner_id).filter(Boolean)),
+      ]
+      const accounts = await knex("users")
+        .join("accounts", "users.user_id", "accounts.user_id")
+        .whereIn("users.user_id", ownerIds)
+        .select("users.user_id", "accounts.username")
+
+      const usernameMap = new Map(
+        accounts.map((a: any) => [a.user_id, a.username]),
+      )
+
       filteredLots = filteredLots.filter((lot) => {
         const notesMatch = lot.notes?.toLowerCase().includes(searchLower)
         const titleMatch = titleMap
           .get(lot.listing_id)
           ?.toLowerCase()
           .includes(searchLower)
-        return notesMatch || titleMatch
+        const usernameMatch = usernameMap
+          .get(lot.owner_id)
+          ?.toLowerCase()
+          .includes(searchLower)
+        return notesMatch || titleMatch || usernameMatch
       })
     }
 
