@@ -446,13 +446,12 @@ export const updateLot: RequestHandler = async (req, res) => {
       // Check if it's a username (not a UUID)
       if (!updates.owner_id.match(/^[0-9a-f-]{36}$/i)) {
         // Look up user_id from username
-        const user = await knex("accounts")
-          .join("users", "accounts.user_id", "users.user_id")
-          .where("accounts.username", updates.owner_id)
-          .first("users.user_id")
+        const account = await knex("accounts")
+          .where("username", updates.owner_id)
+          .first("user_id")
 
-        if (user) {
-          updates.owner_id = user.user_id
+        if (account) {
+          updates.owner_id = account.user_id
         } else {
           res.status(400).json(
             createErrorResponse({
