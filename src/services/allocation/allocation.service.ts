@@ -262,8 +262,6 @@ export class AllocationService {
    */
   async releaseAllocations(orderId: string): Promise<void> {
     await this.knex.transaction(async (trx) => {
-      const allocationRepo = new AllocationRepository(trx)
-
       // Get all active allocations for the order
       const allocations = await trx("stock_allocations")
         .where({ order_id: orderId, status: "active" })
@@ -273,6 +271,12 @@ export class AllocationService {
       for (const alloc of allocations) {
         await this.deallocateAndMerge(trx, orderId, alloc.lot_id)
       }
+
+      // Mark remaining allocations as released (for audit trail)
+      await trx("stock_allocations")
+        .where({ order_id: orderId })
+        .whereIn("status", ["active"])
+        .update({ status: "released", updated_at: new Date() })
     })
   }
 
@@ -576,10 +580,10 @@ export class AllocationService {
 
     if (!allocatedLot) return
 
-    // Delete the allocation
+    // Mark allocation as released (preserve for history)
     await trx("stock_allocations")
       .where({ order_id: orderId, lot_id: lotId })
-      .delete()
+      .update({ status: "released", updated_at: new Date() })
 
     // Try to find a matching lot to merge back into
     // Match: same listing, same location, listed=true
