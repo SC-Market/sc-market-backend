@@ -441,6 +441,29 @@ export const updateLot: RequestHandler = async (req, res) => {
       return
     }
 
+    // Convert username to user_id if owner_id is provided as username
+    if (updates.owner_id && typeof updates.owner_id === "string") {
+      // Check if it's a username (not a UUID)
+      if (!updates.owner_id.match(/^[0-9a-f-]{36}$/i)) {
+        // Look up user_id from username
+        const user = await knex("accounts")
+          .join("users", "accounts.user_id", "users.user_id")
+          .where("accounts.username", updates.owner_id)
+          .first("users.user_id")
+
+        if (user) {
+          updates.owner_id = user.user_id
+        } else {
+          res.status(400).json(
+            createErrorResponse({
+              message: "User not found",
+            }),
+          )
+          return
+        }
+      }
+    }
+
     // Update lot
     const lot = await stockLotService.updateLot(lot_id, updates)
 
