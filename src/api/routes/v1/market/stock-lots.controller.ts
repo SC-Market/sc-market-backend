@@ -644,6 +644,35 @@ export const getContractorAllocations: RequestHandler = async (req, res) => {
       )
     }
 
+    // Debug: Check each step
+    const allAllocations = await getKnex()("stock_allocations as sa")
+      .where("sa.status", "active")
+      .select("*")
+    logger.info("Step 1 - All active allocations:", { count: allAllocations.length })
+
+    const withLots = await getKnex()("stock_allocations as sa")
+      .join("stock_lots as sl", "sa.lot_id", "sl.lot_id")
+      .where("sa.status", "active")
+      .select("sa.*", "sl.listing_id")
+    logger.info("Step 2 - After joining stock_lots:", { count: withLots.length })
+
+    const withListings = await getKnex()("stock_allocations as sa")
+      .join("stock_lots as sl", "sa.lot_id", "sl.lot_id")
+      .join("market_listings as ml", "sl.listing_id", "ml.listing_id")
+      .where("sa.status", "active")
+      .where("ml.contractor_seller_id", contractor.contractor_id)
+      .select("sa.*", "ml.listing_id")
+    logger.info("Step 3 - After joining market_listings:", { count: withListings.length })
+
+    const withDetails = await getKnex()("stock_allocations as sa")
+      .join("stock_lots as sl", "sa.lot_id", "sl.lot_id")
+      .join("market_listings as ml", "sl.listing_id", "ml.listing_id")
+      .join("market_listing_details as mld", "ml.listing_id", "mld.details_id")
+      .where("sa.status", "active")
+      .where("ml.contractor_seller_id", contractor.contractor_id)
+      .select("sa.*", "mld.title")
+    logger.info("Step 4 - After joining market_listing_details:", { count: withDetails.length })
+
     // Get all allocations for contractor's listings (only active orders)
     const allocations = await getKnex()("stock_allocations as sa")
       .join("stock_lots as sl", "sa.lot_id", "sl.lot_id")
@@ -675,6 +704,8 @@ export const getContractorAllocations: RequestHandler = async (req, res) => {
         "mld.title as listing_title",
       )
       .orderBy("sa.created_at", "desc")
+
+    logger.info("Final allocations:", { count: allocations.length })
 
     // Fetch photos for each listing
     const listingIds = [...new Set(allocations.map((a) => a.listing_id))]
