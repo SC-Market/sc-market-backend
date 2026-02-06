@@ -945,12 +945,7 @@ export const getOrderAllocations: RequestHandler = async (req, res) => {
             .select("user_id", "username", "display_name", "avatar")
             .first()
           if (ownerData) {
-            owner = {
-              user_id: ownerData.user_id,
-              username: ownerData.username,
-              display_name: ownerData.display_name,
-              avatar: ownerData.avatar,
-            }
+            owner = ownerData
           }
         }
         
@@ -959,7 +954,13 @@ export const getOrderAllocations: RequestHandler = async (req, res) => {
           listing_id: lot?.listing_id || null,
           lot: lot
             ? {
-                ...lot,
+                lot_id: lot.lot_id,
+                listing_id: lot.listing_id,
+                location_id: lot.location_id,
+                quantity_total: lot.quantity_total,
+                listed: lot.listed,
+                created_at: lot.created_at,
+                updated_at: lot.updated_at,
                 location,
                 owner,
               }
