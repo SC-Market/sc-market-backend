@@ -109,7 +109,7 @@ export const updateSimpleStock: RequestHandler = async (req, res) => {
 export const searchLots: RequestHandler = async (req, res) => {
   try {
     const {
-      user_id,
+      username,
       contractor_spectrum_id,
       location_id,
       listed,
@@ -126,10 +126,24 @@ export const searchLots: RequestHandler = async (req, res) => {
     // Build filters
     const filters: any = {}
 
-    // Default to current user if no user_id or contractor specified
-    if (user_id) {
-      filters.owner_id = user_id as string
+    // Handle username parameter
+    if (username) {
+      const account = await knex("accounts")
+        .where("username", username as string)
+        .first("user_id")
+      
+      if (account) {
+        filters.owner_id = account.user_id
+      } else {
+        res.status(404).json(
+          createErrorResponse({
+            message: "User not found",
+          }),
+        )
+        return
+      }
     } else if (!contractor_spectrum_id) {
+      // Default to current user if no username or contractor specified
       filters.owner_id = user.user_id
     }
 
