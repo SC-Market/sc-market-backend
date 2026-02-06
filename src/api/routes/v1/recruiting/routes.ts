@@ -4,7 +4,10 @@ import {
   readRateLimit,
 } from "../../../middleware/enhanced-ratelimiting.js"
 
-import { requireRecruitingWrite } from "../../../middleware/auth.js"
+import {
+  userAuthorized,
+  requireRecruitingWrite,
+} from "../../../middleware/auth.js"
 
 import {
   contractorRecruiting,
@@ -64,6 +67,7 @@ recruitingRouter.get(
 
 recruitingRouter.put(
   "/posts/:post_id",
+  userAuthorized,
   requireRecruitingWrite,
   writeRateLimit,
   put_posts_post_id,
@@ -71,6 +75,7 @@ recruitingRouter.put(
 
 recruitingRouter.post(
   "/posts/:post_id/upvote",
+  userAuthorized,
   requireRecruitingWrite,
   writeRateLimit,
   post_posts_post_id_upvote,
@@ -78,6 +83,7 @@ recruitingRouter.post(
 
 recruitingRouter.post(
   "/posts/:post_id/comment",
+  userAuthorized,
   requireRecruitingWrite,
   writeRateLimit,
   post_posts_post_id_comment,

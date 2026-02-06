@@ -45,10 +45,10 @@ So for automatic invalidation we only need: **correct, consistent `tags` on ever
 
 ## Summary
 
-| Goal | Backend action |
-|------|----------------|
-| Automatic `providesTags` for queries | Set `tags` on every cacheable GET (and other reads). |
-| Automatic `invalidatesTags` for mutations | Set `tags` on every mutation with the full list of cache groups to invalidate. |
-| Consistent behavior | Use the same tag names for “provides” and “invalidates”; keep a small, documented set of tag names. |
+| Goal                                      | Backend action                                                                                      |
+| ----------------------------------------- | --------------------------------------------------------------------------------------------------- |
+| Automatic `providesTags` for queries      | Set `tags` on every cacheable GET (and other reads).                                                |
+| Automatic `invalidatesTags` for mutations | Set `tags` on every mutation with the full list of cache groups to invalidate.                      |
+| Consistent behavior                       | Use the same tag names for “provides” and “invalidates”; keep a small, documented set of tag names. |
 
 With that, most invalidations can be generated automatically from the OpenAPI spec. Edge cases (e.g. ID-based invalidation or overrides) are handled on the frontend via codegen config or `enhanceEndpoints`.

@@ -28,10 +28,10 @@ export const transactionRouter = express.Router()
 
 transactionRouter.get(
   "/:transaction_id",
-  transaction_get_transaction_id_spec,
   userAuthorized,
   requireOrdersRead,
   readRateLimit,
+  transaction_get_transaction_id_spec,
   transaction_get_transaction_id,
 )
 
@@ -58,17 +58,17 @@ export async function lockContractorTransaction(
 
 transactionRouter.post(
   "/create",
-  transaction_post_create_spec,
   userAuthorized,
   writeRateLimit,
+  transaction_post_create_spec,
   transaction_post_create,
 )
 
 transactionRouter.post(
   "/contractor/:spectrum_id/create",
-  transaction_post_contractor_spectrum_id_create_spec,
   userAuthorized,
   writeRateLimit,
+  transaction_post_contractor_spectrum_id_create_spec,
   transaction_post_contractor_spectrum_id_create,
 )
 
@@ -76,16 +76,16 @@ export const transactionsRouter = express.Router()
 
 transactionsRouter.get(
   "/mine",
-  transactions_get_mine_spec,
   userAuthorized,
   readRateLimit,
+  transactions_get_mine_spec,
   transactions_get_mine,
 )
 
 transactionsRouter.get(
   "/contractor/:spectrum_id",
-  transactions_get_contractor_spectrum_id_spec,
   userAuthorized,
   readRateLimit,
+  transactions_get_contractor_spectrum_id_spec,
   transactions_get_contractor_spectrum_id,
 )

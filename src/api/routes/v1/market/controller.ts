@@ -27,6 +27,7 @@ import {
   validateMarketListingPhotos,
   verify_listings,
 } from "./helpers.js"
+import { StockLotService } from "../../../../services/stock-lot/stock-lot.service.js"
 import moment from "moment/moment.js"
 import { serializeOrderDetails } from "../orders/serializers.js"
 import logger from "../../../../logger/logger.js"
@@ -370,9 +371,9 @@ export const update_listing_quantity: RequestHandler = async (req, res) => {
     return
   }
 
-  await marketDb.updateMarketListing(listing.listing_id, {
-    quantity_available,
-  })
+  // Use stock lot service to update quantity
+  const stockLotService = new StockLotService()
+  await stockLotService.updateSimpleStock(listing.listing_id, quantity_available)
 
   res.json(createResponse({ result: "Success" }))
 }
@@ -1908,13 +1909,11 @@ export const create_buy_order: RequestHandler = async (req, res) => {
       price != null &&
       (typeof price !== "number" || price < 1)
     ) {
-      res
-        .status(400)
-        .json(
-          createErrorResponse({
-            message: "Suggested price must be at least 1 if provided",
-          }),
-        )
+      res.status(400).json(
+        createErrorResponse({
+          message: "Suggested price must be at least 1 if provided",
+        }),
+      )
       return
     }
 

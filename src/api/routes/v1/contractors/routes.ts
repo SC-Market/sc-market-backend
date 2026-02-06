@@ -20,6 +20,7 @@ import {
   valid_contractor,
 } from "./middleware.js"
 import { singlePhotoUpload, photoUpload } from "../util/upload.js"
+import { contractorAllocationsRouter } from "../market/stock-lots.routes.js"
 
 import {
   delete_spectrum_id_blocklist_unblock_username,
@@ -523,3 +524,5 @@ contractorsRouter.delete(
   criticalRateLimit,
   delete_spectrum_id_blocklist_unblock_username,
 )
+
+contractorsRouter.use("/", contractorAllocationsRouter)

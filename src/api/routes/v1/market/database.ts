@@ -377,7 +377,7 @@ export async function getMarketAggregatesComplete(
  * Get all market buy orders complete with optional attribute filtering.
  */
 export async function getMarketBuyOrdersComplete(
-  attributes?: AttributeFilter[] | null
+  attributes?: AttributeFilter[] | null,
 ): Promise<DBAggregateComplete[]> {
   let q = knex()<DBAggregateRaw>("game_items")
     .join(
@@ -2293,7 +2293,7 @@ export async function searchMarket(
       query,
       searchQuery.attributes,
       "market_search_materialized.game_item_id",
-      knex()
+      knex(),
     )
   }
 

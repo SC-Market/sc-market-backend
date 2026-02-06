@@ -6,6 +6,7 @@ import {
 } from "rate-limiter-flexible"
 import { database } from "../../clients/database/knex-db.js"
 import { User } from "../routes/v1/api-models.js"
+import logger from "../../logger/logger.js"
 
 // User tier types
 export type UserTier = "anonymous" | "authenticated" | "admin"
@@ -189,7 +190,7 @@ export function setRateLimitHeaders(
 
 // Enhanced rate limiting middleware factory
 export function createRateLimit(tieredConfig: TieredRateLimit) {
-  return (req: Request, res: Response, next: NextFunction) => {
+  return async (req: Request, res: Response, next: NextFunction) => {
     const userTier = detectUserTier(req)
     const key = generateRateLimitKey(req, userTier)
     const endpoint = req.path

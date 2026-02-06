@@ -27,7 +27,8 @@ oapi.schema("ProfileUpdateBody", {
 oapi.schema("GetCurrentUserProfileSuccess", {
   type: "object",
   title: "GetCurrentUserProfileSuccess",
-  description: "Current user profile returned by getCurrentUserProfile, syncRSIHandle, and unlinkStarCitizenAccount",
+  description:
+    "Current user profile returned by getCurrentUserProfile, syncRSIHandle, and unlinkStarCitizenAccount",
   properties: {
     user_id: {
       type: "string",

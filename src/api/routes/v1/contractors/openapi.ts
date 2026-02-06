@@ -368,7 +368,8 @@ oapi.schema("ContractorKindIconKey", {
   type: "string",
   title: "ContractorKindIconKey",
   enum: [...VALID_ORG_TAGS],
-  description: "Contractor specialization/field key used for icons and filtering",
+  description:
+    "Contractor specialization/field key used for icons and filtering",
 })
 
 oapi.schema("Contractor", {
@@ -863,7 +864,7 @@ export const get_spectrum_id_members_search_query_spec = oapi.validPath({
       example: "",
       schema: {
         type: "string",
-        minLength: 3,
+        minLength: 0,
         maxLength: 50,
       },
     },

@@ -29,10 +29,10 @@ export const deliveryRouter = express.Router()
 
 deliveryRouter.post(
   "/create",
-  delivery_post_create_spec,
   userAuthorized,
   requireOrdersWrite,
   writeRateLimit,
+  delivery_post_create_spec,
   delivery_post_create,
 )
 

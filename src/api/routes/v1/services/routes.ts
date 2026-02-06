@@ -40,9 +40,10 @@ export const servicesRouter = express.Router()
 
 servicesRouter.post(
   "",
+  userAuthorized,
   requireServicesWrite,
-  services_post_root_spec,
   writeRateLimit,
+  services_post_root_spec,
   services_post_root,
 )
 

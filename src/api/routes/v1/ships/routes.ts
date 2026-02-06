@@ -24,10 +24,10 @@ export const shipRouter = express.Router()
 
 shipRouter.post(
   "/import",
-  ship_post_import_spec,
   userAuthorized,
   requireProfileWrite,
   writeRateLimit,
+  ship_post_import_spec,
   ship_post_import,
 )
 
@@ -35,8 +35,8 @@ export const shipsRouter = express.Router()
 
 shipsRouter.get(
   "/mine",
-  ships_get_mine_spec,
   userAuthorized,
   readRateLimit,
+  ships_get_mine_spec,
   ships_get_mine,
 )

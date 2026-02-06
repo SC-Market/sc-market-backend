@@ -49,9 +49,9 @@ export interface ContractorListingsQuery {
 }
 
 export interface AttributeFilter {
-  name: string          // e.g., "size", "class", "manufacturer"
-  values: string[]      // e.g., ["4", "5"], ["Military", "Stealth"]
-  operator: 'in' | 'eq' // 'in' for multiple values (OR), 'eq' for single
+  name: string // e.g., "size", "class", "manufacturer"
+  values: string[] // e.g., ["4", "5"], ["Military", "Stealth"]
+  operator: "in" | "eq" // 'in' for multiple values (OR), 'eq' for single
 }
 
 export interface MarketSearchQueryArguments {
@@ -114,6 +114,11 @@ export interface ListingBase {
   // Omitted for now
   orders?: any[]
   bids?: any[]
+  // Stock breakdown (only included in private views)
+  stock_breakdown?: {
+    available: number
+    reserved: number
+  }
 }
 
 export type FormattedListing =

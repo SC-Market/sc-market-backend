@@ -11,12 +11,12 @@ import { handleStatusUpdate } from "../../api/routes/v1/orders/helpers.js"
 import { serializeAssignedOrder } from "../../api/routes/v1/orders/serializers.js"
 import { has_permission } from "../../api/routes/v1/util/permissions.js"
 import { User } from "../../api/routes/v1/api-models.js"
-import {
-  convertQuery,
-  handle_quantity_update,
-} from "../../api/routes/v1/market/helpers.js"
+import { convertQuery } from "../../api/routes/v1/market/helpers.js"
 import { chatServer } from "../messaging/websocket.js"
 import logger from "../../logger/logger.js"
+import { StockLotService } from "../../services/stock-lot/stock-lot.service.js"
+
+const stockLotService = new StockLotService()
 
 export const threadRouter = express.Router()
 
@@ -164,16 +164,19 @@ threadRouter.post("/market/quantity/:opt", async (req, res) => {
 
   let new_quantity = quantity
   if (opt === "add") {
-    new_quantity = listing.quantity_available + quantity
+    const currentStock = await stockLotService.getSimpleStock(listing.listing_id)
+    new_quantity = currentStock + quantity
   } else if (opt === "sub") {
-    new_quantity = listing.quantity_available - quantity
+    const currentStock = await stockLotService.getSimpleStock(listing.listing_id)
+    new_quantity = currentStock - quantity
     if (new_quantity < 0) {
       res.status(400).json({ error: "Invalid quantity" })
       return
     }
   }
 
-  await handle_quantity_update(res, user, listing, new_quantity)
+  await stockLotService.updateSimpleStock(listing.listing_id, new_quantity)
+  res.json({ result: "Success" })
 })
 
 threadRouter.get("/user/:discord_id/assigned", async (req, res) => {

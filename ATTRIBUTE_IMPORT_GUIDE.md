@@ -43,12 +43,13 @@ psql -U scmarket -d scmarket -f config/postgres/44-attribute-definitions-seed.sq
 Check that attribute definitions were created:
 
 ```sql
-SELECT attribute_name, display_name, attribute_type, applicable_item_types 
-FROM attribute_definitions 
+SELECT attribute_name, display_name, attribute_type, applicable_item_types
+FROM attribute_definitions
 ORDER BY display_order;
 ```
 
 You should see definitions for:
+
 - **size** - Component size (0-12)
 - **class** - Component class (Military, Stealth, Industrial, Civilian, Competition)
 - **grade** - Component grade (A, B, C, D)
@@ -69,6 +70,7 @@ npm run import-attributes
 ```
 
 This script will:
+
 1. Fetch all game items from the database
 2. For each item, attempt to import attributes from:
    - finder.cstone.space
@@ -80,6 +82,7 @@ This script will:
 **Expected Duration:** Several minutes depending on the number of game items and API response times.
 
 **Output:**
+
 - Progress updates for each game item
 - Success/failure counts
 - Total attributes imported
@@ -123,6 +126,7 @@ npm run refresh-view
 ```
 
 This ensures that:
+
 - Search results include the latest attribute data
 - The `game_item_id` column is properly populated
 - Attribute filters work correctly in the UI
@@ -136,7 +140,7 @@ This ensures that:
 See how many game items have attributes:
 
 ```sql
-SELECT 
+SELECT
   COUNT(DISTINCT game_item_id) as items_with_attributes,
   COUNT(*) as total_attributes,
   AVG(attr_count) as avg_attributes_per_item
@@ -152,7 +156,7 @@ FROM (
 See which attributes are most common:
 
 ```sql
-SELECT 
+SELECT
   attribute_name,
   COUNT(*) as count,
   COUNT(DISTINCT game_item_id) as unique_items
@@ -166,7 +170,7 @@ ORDER BY count DESC;
 View attributes for a specific game item:
 
 ```sql
-SELECT 
+SELECT
   gi.name as item_name,
   gi.item_type,
   gia.attribute_name,
@@ -184,7 +188,7 @@ ORDER BY ad.display_order;
 Check that the materialized view has game_item_id populated:
 
 ```sql
-SELECT 
+SELECT
   COUNT(*) as total_listings,
   COUNT(game_item_id) as listings_with_game_item_id,
   ROUND(COUNT(game_item_id)::numeric / COUNT(*)::numeric * 100, 2) as percentage
@@ -258,6 +262,7 @@ After populating attributes:
 ## Support
 
 For issues or questions:
+
 - Check the logs in `logs/combined.log` and `logs/error.log`
 - Review the import script source: `scripts/import-all-attributes.ts`
 - Check the import service: `src/services/attribute-import/`

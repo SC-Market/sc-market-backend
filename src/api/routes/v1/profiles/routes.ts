@@ -62,31 +62,31 @@ export const profileRouter = express.Router()
 
 profileRouter.post(
   "/auth/link",
-  criticalRateLimit,
   userAuthorized,
+  criticalRateLimit,
   profile_post_auth_link,
 )
 
 profileRouter.post(
   "/auth/sync-handle",
-  criticalRateLimit,
   userAuthorized,
+  criticalRateLimit,
   profile_post_auth_sync_handle_spec,
   profile_post_auth_sync_handle,
 )
 
 profileRouter.post(
   "/auth/unlink",
-  criticalRateLimit,
   userAuthorized,
+  criticalRateLimit,
   profile_post_auth_unlink_spec,
   profile_post_auth_unlink,
 )
 
 profileRouter.get(
   "/auth/ident",
-  criticalRateLimit,
   userAuthorized,
+  criticalRateLimit,
   profile_get_auth_ident,
 )
 
@@ -94,17 +94,18 @@ profileRouter.get("/search/:query", readRateLimit, profile_get_search_query)
 
 profileRouter.put(
   "",
-  writeRateLimit,
   userAuthorized,
   requireProfileWrite,
+  writeRateLimit,
   profile_put_root_spec,
   profile_put_root,
 )
 
 profileRouter.post(
   "/update",
-  writeRateLimit,
   userAuthorized,
+  requireProfileWrite,
+  writeRateLimit,
   profile_post_update,
 )
 
@@ -130,15 +131,17 @@ profileRouter.post(
 
 profileRouter.post(
   "/webhook/create",
-  writeRateLimit,
   userAuthorized,
+  requireProfileWrite,
+  writeRateLimit,
   profile_post_webhook_create,
 )
 
 profileRouter.post(
   "/webhook/delete",
-  writeRateLimit,
   userAuthorized,
+  requireProfileWrite,
+  writeRateLimit,
   profile_post_webhook_delete,
 )
 
@@ -159,15 +162,17 @@ profileRouter.get("/user/:username", readRateLimit, profile_get_user_username)
 
 profileRouter.post(
   "/settings/update",
-  writeRateLimit,
   userAuthorized,
+  requireProfileWrite,
+  writeRateLimit,
   profile_post_settings_update,
 )
 
 profileRouter.post(
   "/availability/update",
-  writeRateLimit,
   userAuthorized,
+  requireProfileWrite,
+  writeRateLimit,
   profile_post_availability_update,
 )
 
@@ -186,8 +191,9 @@ profileRouter.get(
 )
 profileRouter.post(
   "/settings/discord/use_official",
-  writeRateLimit,
   userAuthorized,
+  requireProfileWrite,
+  writeRateLimit,
   profile_post_settings_discord_use_official,
 )
 
@@ -225,16 +231,18 @@ profileRouter.get(
 
 profileRouter.post(
   "/blocklist/block",
-  writeRateLimit,
   userAuthorized,
+  requireProfileWrite,
+  writeRateLimit,
   profile_post_blocklist_block_spec,
   profile_post_blocklist_block,
 )
 
 profileRouter.delete(
   "/blocklist/unblock/:username",
-  writeRateLimit,
   userAuthorized,
+  requireProfileWrite,
+  writeRateLimit,
   profile_delete_blocklist_unblock_username_spec,
   profile_delete_blocklist_unblock_username,
 )
@@ -252,30 +260,33 @@ profileRouter.get(
 
 profileRouter.delete(
   "/links/:provider_type",
-  writeRateLimit,
   userAuthorized,
+  requireProfileWrite,
+  writeRateLimit,
   profile_delete_links_provider_type,
 )
 
 profileRouter.put(
   "/links/:provider_type/primary",
-  writeRateLimit,
   userAuthorized,
+  requireProfileWrite,
+  writeRateLimit,
   profile_put_links_provider_type_primary,
 )
 
 // Language endpoints
 profileRouter.get(
   "/languages",
-  readRateLimit,
   userAuthorized,
+  readRateLimit,
   profile_get_languages,
 )
 
 profileRouter.put(
   "/languages",
-  writeRateLimit,
   userAuthorized,
+  requireProfileWrite,
+  writeRateLimit,
   profile_put_languages,
 )
 

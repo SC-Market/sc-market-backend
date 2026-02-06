@@ -35,6 +35,7 @@ Created `src/clients/database/query-monitor.ts` which provides:
 ### Usage
 
 The monitoring is automatic. Slow queries will appear in logs with:
+
 ```
 [warn] Slow query detected
   duration: 2500ms
@@ -53,12 +54,14 @@ Followed by execution plan analysis with recommendations.
 Created `src/api/routes/v1/market/attribute-query-optimizer.ts` which provides:
 
 #### Optimized Query Builder
+
 - `applyAttributeFilters()`: Centralized function for applying attribute filters
 - Uses EXISTS subqueries (more efficient than IN for large datasets)
 - Leverages composite indexes on (attribute_name, attribute_value)
 - Maintains AND logic across attributes, OR logic within attribute values
 
 #### Performance Analysis Tools
+
 - `analyzeAttributeFilterPerformance()`: Analyzes query execution plans
 - `batchAnalyzeAttributeFilters()`: Tests multiple filter combinations
 - `generateCompositeIndexSQL()`: Suggests additional indexes for common patterns
@@ -97,6 +100,7 @@ These indexes optimize the most common attribute filter combinations based on ex
 Created `src/api/routes/v1/attributes/cache.ts` which provides:
 
 #### LRU Cache
+
 - **TTL**: 1 hour (attribute definitions change infrequently)
 - **Max size**: 500 entries
 - **Cache keys**:
@@ -105,11 +109,13 @@ Created `src/api/routes/v1/attributes/cache.ts` which provides:
   - By types: `definitions_by_types:{type1,type2}`
 
 #### Cache Invalidation
+
 - **On create**: Clear entire cache (new definition affects all queries)
 - **On update**: Clear specific definition + all list caches
 - **On delete**: Clear entire cache (deletion affects all queries)
 
 #### Cache Warm-up
+
 - Automatically warms cache on server startup
 - Pre-loads:
   - All definitions
@@ -137,20 +143,20 @@ To verify the optimizations meet requirements:
 ### 1. Query Performance Testing
 
 ```typescript
-import { analyzeAttributeFilterPerformance } from './attribute-query-optimizer'
+import { analyzeAttributeFilterPerformance } from "./attribute-query-optimizer"
 
 // Test common filter combinations
 const testCases = [
-  [{ name: 'size', values: ['4'], operator: 'in' }],
+  [{ name: "size", values: ["4"], operator: "in" }],
   [
-    { name: 'size', values: ['4'], operator: 'in' },
-    { name: 'class', values: ['Military'], operator: 'in' }
+    { name: "size", values: ["4"], operator: "in" },
+    { name: "class", values: ["Military"], operator: "in" },
   ],
   [
-    { name: 'size', values: ['4', '5'], operator: 'in' },
-    { name: 'class', values: ['Military', 'Stealth'], operator: 'in' },
-    { name: 'grade', values: ['A'], operator: 'in' }
-  ]
+    { name: "size", values: ["4", "5"], operator: "in" },
+    { name: "class", values: ["Military", "Stealth"], operator: "in" },
+    { name: "grade", values: ["A"], operator: "in" },
+  ],
 ]
 
 for (const filters of testCases) {
@@ -177,7 +183,7 @@ tail -f logs/combined.log | grep "Slow query"
 ### 3. Cache Performance Testing
 
 ```typescript
-import { attributeDefinitionCache } from './cache'
+import { attributeDefinitionCache } from "./cache"
 
 // Test cache hit rate
 const stats = attributeDefinitionCache.getStats()
@@ -227,6 +233,7 @@ All performance-related logs include structured metadata:
 ### Alerts
 
 Consider setting up alerts for:
+
 - Slow query count > 10/hour
 - Cache hit rate < 90%
 - Sequential scans on game_item_attributes table
