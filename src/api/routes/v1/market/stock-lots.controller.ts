@@ -269,9 +269,10 @@ export const getListingLots: RequestHandler = async (req, res) => {
     const { listing_id } = req.params
     const { location_id, owner_id, listed } = req.query
 
-    // Build base query with owner join
+    // Build base query with owner and location joins
     let query = knex("stock_lots as sl")
       .leftJoin("accounts as acc", "sl.owner_id", "acc.user_id")
+      .leftJoin("locations as loc", "sl.location_id", "loc.location_id")
       .where("sl.listing_id", listing_id)
       .select(
         "sl.*",
@@ -279,6 +280,8 @@ export const getListingLots: RequestHandler = async (req, res) => {
         "acc.username as owner_username",
         "acc.display_name as owner_display_name",
         "acc.avatar as owner_avatar",
+        "loc.location_id as location_location_id",
+        "loc.name as location_name",
       )
 
     if (location_id) query = query.where("sl.location_id", location_id as string)
@@ -308,6 +311,12 @@ export const getListingLots: RequestHandler = async (req, res) => {
           listed: lot.listed,
           created_at: lot.created_at,
           updated_at: lot.updated_at,
+          location: lot.location_location_id
+            ? {
+                location_id: lot.location_location_id,
+                name: lot.location_name,
+              }
+            : null,
           owner: lot.owner_user_id
             ? {
                 user_id: lot.owner_user_id,
