@@ -864,7 +864,7 @@ export const get_spectrum_id_members_search_query_spec = oapi.validPath({
       example: "",
       schema: {
         type: "string",
-        minLength: 3,
+        minLength: 0,
         maxLength: 50,
       },
     },
