@@ -606,10 +606,10 @@ export class AllocationService {
 
     if (!allocatedLot) return
 
-    // Mark allocation as released (preserve for history)
+    // Delete allocation
     await trx("stock_allocations")
       .where({ order_id: orderId, lot_id: lotId })
-      .update({ status: "released", updated_at: new Date() })
+      .delete()
 
     // Try to find a matching lot to merge back into
     // Match: same listing, same location, same owner, listed=false (unallocated)
