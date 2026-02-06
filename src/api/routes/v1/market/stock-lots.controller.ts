@@ -794,6 +794,7 @@ export const getContractorAllocations: RequestHandler = async (req, res) => {
       .leftJoin("market_orders as mo", "sa.order_id", "mo.order_id")
       .leftJoin("orders as o", "sa.order_id", "o.order_id")
       .leftJoin("locations as loc", "sl.location_id", "loc.location_id")
+      .leftJoin("accounts as acc", "sl.owner_id", "acc.user_id")
       .where("ml.contractor_seller_id", contractor.contractor_id)
       .where("sa.status", "active")
       .where(function () {
@@ -811,11 +812,16 @@ export const getContractorAllocations: RequestHandler = async (req, res) => {
         "sa.status",
         "sa.created_at",
         "sl.listing_id",
+        "sl.owner_id",
         "mul.details_id",
         "loc.location_id",
         "loc.name as location_name",
         "o.title as order_title",
         "mld.title as listing_title",
+        "acc.user_id as owner_user_id",
+        "acc.username as owner_username",
+        "acc.display_name as owner_display_name",
+        "acc.avatar as owner_avatar",
       )
       .orderBy("sa.created_at", "desc")
 
@@ -850,6 +856,14 @@ export const getContractorAllocations: RequestHandler = async (req, res) => {
           ? {
               location_id: alloc.location_id,
               name: alloc.location_name,
+            }
+          : null,
+        owner: alloc.owner_user_id
+          ? {
+              user_id: alloc.owner_user_id,
+              username: alloc.owner_username,
+              display_name: alloc.owner_display_name,
+              avatar: alloc.owner_avatar,
             }
           : null,
       },
