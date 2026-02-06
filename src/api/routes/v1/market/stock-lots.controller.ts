@@ -121,10 +121,18 @@ export const searchLots: RequestHandler = async (req, res) => {
       offset = 0,
     } = req.query
 
+    const user = req.user as User
+
     // Build filters
     const filters: any = {}
 
-    if (user_id) filters.owner_id = user_id as string
+    // Default to current user if no user_id or contractor specified
+    if (user_id) {
+      filters.owner_id = user_id as string
+    } else if (!contractor_spectrum_id) {
+      filters.owner_id = user.user_id
+    }
+
     if (location_id) filters.location_id = location_id as string
     if (listed !== undefined) filters.listed = listed === "true"
 
