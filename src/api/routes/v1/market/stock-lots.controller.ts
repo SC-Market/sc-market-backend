@@ -21,11 +21,31 @@ import logger from "../../../../logger/logger.js"
 import * as marketDb from "./database.js"
 import { getKnex } from "../../../../clients/database/knex-db.js"
 import { formatUniqueListingComplete } from "../util/formatting.js"
+import * as cdn from "../../../../clients/cdn/cdn.js"
 
 const stockLotService = new StockLotService()
 const locationService = new LocationService()
 const allocationService = new AllocationService()
 const knex = getKnex()
+
+/**
+ * Helper function to format owner details with avatar URL
+ */
+async function formatOwnerDetails(ownerData: {
+  user_id: string
+  username: string
+  display_name: string
+  avatar: string | null
+}) {
+  return {
+    user_id: ownerData.user_id,
+    username: ownerData.username,
+    display_name: ownerData.display_name,
+    avatar: ownerData.avatar
+      ? await cdn.getFileLinkResource(ownerData.avatar)
+      : null,
+  }
+}
 
 /**
  * PUT /api/v1/market/listings/:listingId/stock
@@ -164,7 +184,7 @@ export const searchLots: RequestHandler = async (req, res) => {
             .select("user_id", "username", "display_name", "avatar")
             .first()
           if (ownerData) {
-            owner = ownerData
+            owner = await formatOwnerDetails(ownerData)
           }
         }
 
@@ -318,12 +338,12 @@ export const getListingLots: RequestHandler = async (req, res) => {
               }
             : null,
           owner: lot.owner_user_id
-            ? {
+            ? await formatOwnerDetails({
                 user_id: lot.owner_user_id,
                 username: lot.owner_username,
                 display_name: lot.owner_display_name,
                 avatar: lot.owner_avatar,
-              }
+              })
             : null,
           is_allocated: allocations.length > 0,
           allocated_quantity: totalAllocated,
@@ -514,7 +534,7 @@ export const updateLot: RequestHandler = async (req, res) => {
         .select("user_id", "username", "display_name", "avatar")
         .first()
       if (ownerData) {
-        owner = ownerData
+        owner = await formatOwnerDetails(ownerData)
       }
     }
 
@@ -901,7 +921,8 @@ export const getContractorAllocations: RequestHandler = async (req, res) => {
     }
 
     // Format response
-    const formattedAllocations = allocations.map((alloc) => ({
+    const formattedAllocations = await Promise.all(
+      allocations.map(async (alloc) => ({
       allocation_id: alloc.allocation_id,
       lot_id: alloc.lot_id,
       order_id: alloc.order_id,
@@ -921,15 +942,16 @@ export const getContractorAllocations: RequestHandler = async (req, res) => {
             }
           : null,
         owner: alloc.owner_user_id
-          ? {
+          ? await formatOwnerDetails({
               user_id: alloc.owner_user_id,
               username: alloc.owner_username,
               display_name: alloc.owner_display_name,
               avatar: alloc.owner_avatar,
-            }
+            })
           : null,
       },
-    }))
+    })),
+    )
 
     res.json(
       createResponse({
@@ -985,7 +1007,7 @@ export const getOrderAllocations: RequestHandler = async (req, res) => {
             .select("user_id", "username", "display_name", "avatar")
             .first()
           if (ownerData) {
-            owner = ownerData
+            owner = await formatOwnerDetails(ownerData)
           }
         }
         
