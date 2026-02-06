@@ -320,7 +320,7 @@ export async function initiateOrder(session: DBOfferSession) {
       )
     }
 
-    // Always allocate stock when order is created, regardless of stock_subtraction_timing
+    // Allocate stock based on allocation_mode setting (auto/manual/none)
     // The stock_subtraction_timing setting controls PUBLIC visibility, not physical allocation
     // Requirements: 5.7, 6.1, 6.2, 6.3, 12.2, 12.3
     const lifecycleService = new OrderLifecycleService(trx)
