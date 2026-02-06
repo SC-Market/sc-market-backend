@@ -166,15 +166,41 @@ export class AllocationService {
         throw new AllocationValidationError(`Order ${orderId} not found`)
       }
 
-      // Separate allocations to create vs delete
-      const toCreate = allocations.filter((a) => a.quantity > 0)
-      const toDelete = allocations.filter((a) => a.quantity === 0)
+      // Get current allocations to determine what changed
+      const currentAllocations = await allocationRepo.getByOrderId(orderId)
+      const currentMap = new Map(currentAllocations.map(a => [a.lot_id, a]))
 
-      // Handle deallocations (merge back)
-      if (toDelete.length > 0) {
-        for (const input of toDelete) {
-          await this.deallocateAndMerge(trx, orderId, input.lot_id)
+      // Categorize changes
+      const toCreate: ManualAllocationInput[] = []
+      const toUpdate: Array<{ lot_id: string; old_qty: number; new_qty: number }> = []
+      const toDelete: string[] = []
+
+      for (const input of allocations) {
+        const current = currentMap.get(input.lot_id)
+        
+        if (!current) {
+          // New allocation
+          if (input.quantity > 0) toCreate.push(input)
+        } else if (input.quantity === 0) {
+          // Full deallocation
+          toDelete.push(input.lot_id)
+        } else if (input.quantity < current.quantity) {
+          // Partial deallocation
+          toUpdate.push({ lot_id: input.lot_id, old_qty: current.quantity, new_qty: input.quantity })
+        } else if (input.quantity > current.quantity) {
+          // Increase allocation
+          toCreate.push({ ...input, quantity: input.quantity - current.quantity })
         }
+      }
+
+      // Handle full deallocations
+      for (const lotId of toDelete) {
+        await this.deallocateAndMerge(trx, orderId, lotId)
+      }
+
+      // Handle partial deallocations
+      for (const { lot_id, old_qty, new_qty } of toUpdate) {
+        await this.partialDeallocate(trx, orderId, lot_id, old_qty - new_qty)
       }
 
       // Validate and create allocations (split lots)
@@ -619,6 +645,64 @@ export class AllocationService {
           notes: null,
           updated_at: new Date(),
         })
+    }
+  }
+
+  private async partialDeallocate(
+    trx: Knex.Transaction,
+    orderId: string,
+    lotId: string,
+    quantityToRemove: number,
+  ): Promise<void> {
+    const allocatedLot = await trx<DBStockLot>("stock_lots")
+      .where({ lot_id: lotId })
+      .first()
+
+    if (!allocatedLot || quantityToRemove <= 0) return
+
+    // Update allocation quantity
+    await trx("stock_allocations")
+      .where({ order_id: orderId, lot_id: lotId })
+      .decrement("quantity", quantityToRemove)
+      .update({ updated_at: new Date() })
+
+    // Reduce allocated lot quantity
+    await trx<DBStockLot>("stock_lots")
+      .where({ lot_id: lotId })
+      .update({
+        quantity_total: allocatedLot.quantity_total - quantityToRemove,
+        updated_at: new Date(),
+      })
+
+    // Find matching unallocated lot to merge removed quantity into
+    const targetLot = await trx<DBStockLot>("stock_lots")
+      .where({
+        listing_id: allocatedLot.listing_id,
+        location_id: allocatedLot.location_id,
+        owner_id: allocatedLot.owner_id,
+        listed: false,
+      })
+      .whereNot({ lot_id: lotId })
+      .first()
+
+    if (targetLot) {
+      // Merge into existing unallocated lot
+      await trx<DBStockLot>("stock_lots")
+        .where({ lot_id: targetLot.lot_id })
+        .update({
+          quantity_total: targetLot.quantity_total + quantityToRemove,
+          updated_at: new Date(),
+        })
+    } else {
+      // Create new unallocated lot with removed quantity
+      await trx<DBStockLot>("stock_lots").insert({
+        listing_id: allocatedLot.listing_id,
+        quantity_total: quantityToRemove,
+        location_id: allocatedLot.location_id,
+        owner_id: allocatedLot.owner_id,
+        listed: false,
+        notes: null,
+      })
     }
   }
 }
