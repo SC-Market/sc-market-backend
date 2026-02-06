@@ -43,7 +43,6 @@ BEGIN
 END;
 $$ LANGUAGE plpgsql STABLE;
 
-ALTER FUNCTION public.get_public_quantity(UUID, TEXT) OWNER TO scmarket;
 
 -- Update the sync trigger to look up the actual stock_subtraction_timing setting
 -- This ensures quantity_available reflects the correct public visibility for each listing
@@ -100,7 +99,6 @@ BEGIN
 END;
 $$ LANGUAGE plpgsql;
 
-ALTER FUNCTION public.sync_listing_quantity() OWNER TO scmarket;
 
 -- Trigger function to update all listing quantities when stock_subtraction_timing setting changes
 CREATE OR REPLACE FUNCTION public.sync_listings_on_setting_change()
@@ -129,7 +127,6 @@ BEGIN
 END;
 $$ LANGUAGE plpgsql;
 
-ALTER FUNCTION public.sync_listings_on_setting_change() OWNER TO scmarket;
 
 -- Create trigger on order_settings for stock_subtraction_timing changes
 DROP TRIGGER IF EXISTS sync_listings_on_setting_change_trigger ON public.order_settings;

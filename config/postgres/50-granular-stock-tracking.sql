@@ -71,8 +71,6 @@ CREATE TABLE IF NOT EXISTS public.stock_lots (
     updated_at TIMESTAMP NOT NULL DEFAULT NOW()
 );
 
-ALTER TABLE public.stock_lots OWNER TO scmarket;
-
 -- Create indexes on listing_id, location_id, owner_id, and listed columns
 CREATE INDEX idx_stock_lots_listing ON public.stock_lots(listing_id);
 CREATE INDEX idx_stock_lots_location ON public.stock_lots(location_id);
@@ -93,7 +91,6 @@ CREATE TABLE IF NOT EXISTS public.stock_allocations (
     updated_at TIMESTAMP NOT NULL DEFAULT NOW()
 );
 
-ALTER TABLE public.stock_allocations OWNER TO scmarket;
 
 -- Create indexes on lot_id, order_id, and status
 CREATE INDEX idx_allocations_lot ON public.stock_allocations(lot_id);
@@ -114,7 +111,6 @@ CREATE TABLE IF NOT EXISTS public.allocation_strategies (
     UNIQUE(contractor_id)
 );
 
-ALTER TABLE public.allocation_strategies OWNER TO scmarket;
 
 -- ============================================================================
 -- 1.5: Create database functions for stock aggregation
@@ -137,7 +133,6 @@ RETURNS INTEGER AS $$
     AND sl.listed = true;
 $$ LANGUAGE SQL STABLE;
 
-ALTER FUNCTION public.get_available_stock(UUID) OWNER TO scmarket;
 
 -- Function to get reserved stock (allocated) for a listing
 CREATE OR REPLACE FUNCTION public.get_reserved_stock(p_listing_id UUID) 
@@ -150,7 +145,6 @@ RETURNS INTEGER AS $$
     AND sl.listed = true;
 $$ LANGUAGE SQL STABLE;
 
-ALTER FUNCTION public.get_reserved_stock(UUID) OWNER TO scmarket;
 
 -- Function to get total stock for a listing (all lots)
 CREATE OR REPLACE FUNCTION public.get_total_stock(p_listing_id UUID) 
@@ -160,7 +154,6 @@ RETURNS INTEGER AS $$
     WHERE listing_id = p_listing_id;
 $$ LANGUAGE SQL STABLE;
 
-ALTER FUNCTION public.get_total_stock(UUID) OWNER TO scmarket;
 
 -- ============================================================================
 -- 1.6: Create triggers for backward compatibility
@@ -193,7 +186,6 @@ BEGIN
 END;
 $$ LANGUAGE plpgsql;
 
-ALTER FUNCTION public.sync_listing_quantity() OWNER TO scmarket;
 
 -- Create trigger on stock_lots INSERT/UPDATE/DELETE
 CREATE TRIGGER trigger_sync_listing_quantity_on_lot_change
@@ -234,7 +226,6 @@ BEGIN
 END;
 $$ LANGUAGE plpgsql;
 
-ALTER FUNCTION public.sync_listing_quantity_on_allocation() OWNER TO scmarket;
 
 -- Create trigger on stock_allocations INSERT/UPDATE/DELETE
 CREATE TRIGGER trigger_sync_listing_quantity_on_allocation_change
