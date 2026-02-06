@@ -124,9 +124,9 @@ export const searchLots: RequestHandler = async (req, res) => {
           .select("listing_id")
 
         const contractorListingIds = new Set(
-          listings.map((l: any) => l.listing_id),
+          listings.map((l: { listing_id: string }) => l.listing_id),
         )
-        lots = lots.filter((l: any) => contractorListingIds.has(l.listing_id))
+        lots = lots.filter((lot) => contractorListingIds.has(lot.listing_id))
       }
     }
 
@@ -134,13 +134,13 @@ export const searchLots: RequestHandler = async (req, res) => {
     if (min_quantity) {
       const minQty = parseInt(min_quantity as string, 10)
       if (!isNaN(minQty)) {
-        lots = lots.filter((l: any) => l.quantity >= minQty)
+        lots = lots.filter((lot) => lot.quantity_total >= minQty)
       }
     }
     if (max_quantity) {
       const maxQty = parseInt(max_quantity as string, 10)
       if (!isNaN(maxQty)) {
-        lots = lots.filter((l: any) => l.quantity <= maxQty)
+        lots = lots.filter((lot) => lot.quantity_total <= maxQty)
       }
     }
 
@@ -198,7 +198,10 @@ export const searchLots: RequestHandler = async (req, res) => {
         .select("market_listings.listing_id", "market_listing_details.title")
 
       const titleMap = new Map(
-        listingTitles.map((l: any) => [l.listing_id, l.title]),
+        listingTitles.map((l: { listing_id: string; title: string }) => [
+          l.listing_id,
+          l.title,
+        ]),
       )
 
       // Get usernames for owner_id search
@@ -210,7 +213,10 @@ export const searchLots: RequestHandler = async (req, res) => {
         .select("user_id", "username")
 
       const usernameMap = new Map(
-        accounts.map((a: any) => [a.user_id, a.username]),
+        accounts.map((a: { user_id: string; username: string }) => [
+          a.user_id,
+          a.username,
+        ]),
       )
 
       filteredLots = filteredLots.filter((lot) => {
@@ -219,10 +225,9 @@ export const searchLots: RequestHandler = async (req, res) => {
           .get(lot.listing_id)
           ?.toLowerCase()
           .includes(searchLower)
-        const usernameMatch = usernameMap
-          .get(lot.owner_id)
-          ?.toLowerCase()
-          .includes(searchLower)
+        const usernameMatch =
+          lot.owner_id &&
+          usernameMap.get(lot.owner_id)?.toLowerCase().includes(searchLower)
         return notesMatch || titleMatch || usernameMatch
       })
     }
