@@ -900,6 +900,24 @@ export const getOrderAllocations: RequestHandler = async (req, res) => {
         if (lot?.location_id) {
           location = await locationService.getLocationById(lot.location_id)
         }
+        
+        // Get owner details if owner_id exists
+        let owner = null
+        if (lot?.owner_id) {
+          const ownerData = await getKnex()("accounts")
+            .where({ user_id: lot.owner_id })
+            .select("user_id", "username", "display_name", "avatar")
+            .first()
+          if (ownerData) {
+            owner = {
+              user_id: ownerData.user_id,
+              username: ownerData.username,
+              display_name: ownerData.display_name,
+              avatar: ownerData.avatar,
+            }
+          }
+        }
+        
         return {
           ...alloc,
           listing_id: lot?.listing_id || null,
@@ -907,6 +925,7 @@ export const getOrderAllocations: RequestHandler = async (req, res) => {
             ? {
                 ...lot,
                 location,
+                owner,
               }
             : null,
         }
