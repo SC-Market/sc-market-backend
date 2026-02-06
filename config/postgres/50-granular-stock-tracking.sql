@@ -19,8 +19,6 @@ CREATE TABLE IF NOT EXISTS public.locations (
     created_at TIMESTAMP NOT NULL DEFAULT NOW()
 );
 
-ALTER TABLE public.locations OWNER TO scmarket;
-
 -- Add unique constraint on preset location names
 CREATE UNIQUE INDEX idx_locations_preset_name ON public.locations(name) WHERE is_preset = true;
 
