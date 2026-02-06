@@ -586,12 +586,13 @@ export class AllocationService {
       .update({ status: "released", updated_at: new Date() })
 
     // Try to find a matching lot to merge back into
-    // Match: same listing, same location, listed=true
+    // Match: same listing, same location, same owner, listed=false (unallocated)
     const targetLot = await trx<DBStockLot>("stock_lots")
       .where({
         listing_id: allocatedLot.listing_id,
         location_id: allocatedLot.location_id,
-        listed: true,
+        owner_id: allocatedLot.owner_id,
+        listed: false,
       })
       .whereNot({ lot_id: lotId })
       .first()
@@ -610,11 +611,11 @@ export class AllocationService {
         .where({ lot_id: lotId })
         .delete()
     } else {
-      // No matching lot: make this lot visible again
+      // No matching lot: make this lot unallocated
       await trx<DBStockLot>("stock_lots")
         .where({ lot_id: lotId })
         .update({
-          listed: true,
+          listed: false,
           notes: null,
           updated_at: new Date(),
         })
