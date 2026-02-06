@@ -118,6 +118,18 @@ orderSettingsRouter.post(
         )
       return
     }
+  } else if (setting_type === "allocation_mode") {
+    if (!message_content || !["auto", "manual", "none"].includes(message_content)) {
+      res
+        .status(400)
+        .json(
+          createErrorResponse(
+            ErrorCode.VALIDATION_ERROR,
+            "message_content must be 'auto', 'manual', or 'none' for allocation_mode",
+          ),
+        )
+      return
+    }
   } else if (
     [
       "min_order_size",
@@ -168,6 +180,7 @@ orderSettingsRouter.post(
       "order_message",
       "require_availability",
       "stock_subtraction_timing",
+      "allocation_mode",
       "min_order_size",
       "max_order_size",
       "min_order_value",
