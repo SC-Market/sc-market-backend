@@ -265,20 +265,27 @@ export const getListingLots: RequestHandler = async (req, res) => {
     const { listing_id } = req.params
     const { location_id, owner_id, listed } = req.query
 
-    // Build filters
-    const filters: any = {
-      listing_id,
-    }
-    if (location_id) filters.location_id = location_id as string
-    if (owner_id) filters.owner_id = owner_id as string
-    if (listed !== undefined) filters.listed = listed === "true"
+    // Build base query with owner join
+    let query = knex("stock_lots as sl")
+      .leftJoin("accounts as acc", "sl.owner_id", "acc.user_id")
+      .where("sl.listing_id", listing_id)
+      .select(
+        "sl.*",
+        "acc.user_id as owner_user_id",
+        "acc.username as owner_username",
+        "acc.display_name as owner_display_name",
+        "acc.avatar as owner_avatar",
+      )
 
-    // Get lots
-    const lots = await stockLotService.getLots(filters)
+    if (location_id) query = query.where("sl.location_id", location_id as string)
+    if (owner_id) query = query.where("sl.owner_id", owner_id as string)
+    if (listed !== undefined) query = query.where("sl.listed", listed === "true")
+
+    const lotsWithOwner = await query.orderBy("sl.created_at", "asc")
 
     // Enrich with allocation info
     const lotsWithAllocations = await Promise.all(
-      lots.map(async (lot) => {
+      lotsWithOwner.map(async (lot) => {
         const allocations = await knex("stock_allocations")
           .where({ lot_id: lot.lot_id, status: "active" })
           .select("allocation_id", "order_id", "quantity")
@@ -289,7 +296,22 @@ export const getListingLots: RequestHandler = async (req, res) => {
         )
 
         return {
-          ...lot,
+          lot_id: lot.lot_id,
+          listing_id: lot.listing_id,
+          location_id: lot.location_id,
+          owner_id: lot.owner_id,
+          quantity_total: lot.quantity_total,
+          listed: lot.listed,
+          created_at: lot.created_at,
+          updated_at: lot.updated_at,
+          owner: lot.owner_user_id
+            ? {
+                user_id: lot.owner_user_id,
+                username: lot.owner_username,
+                display_name: lot.owner_display_name,
+                avatar: lot.owner_avatar,
+              }
+            : null,
           is_allocated: allocations.length > 0,
           allocated_quantity: totalAllocated,
           allocations: allocations.map((a) => ({
