@@ -660,11 +660,28 @@ export class AllocationService {
 
     if (!allocatedLot || quantityToRemove <= 0) return
 
+    // Get current allocation
+    const allocation = await trx("stock_allocations")
+      .where({ order_id: orderId, lot_id: lotId })
+      .first()
+
+    if (!allocation) return
+
+    const newQuantity = allocation.quantity - quantityToRemove
+
+    if (newQuantity <= 0) {
+      // Full deallocation - use existing logic
+      await this.deallocateAndMerge(trx, orderId, lotId)
+      return
+    }
+
     // Update allocation quantity
     await trx("stock_allocations")
       .where({ order_id: orderId, lot_id: lotId })
-      .decrement("quantity", quantityToRemove)
-      .update({ updated_at: new Date() })
+      .update({ 
+        quantity: newQuantity,
+        updated_at: new Date() 
+      })
 
     // Reduce allocated lot quantity
     await trx<DBStockLot>("stock_lots")
