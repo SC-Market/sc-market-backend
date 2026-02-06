@@ -523,6 +523,46 @@ export const updateLot: RequestHandler = async (req, res) => {
       delete updates.owner_username
     }
 
+    // Validate listing ownership if changing listing
+    if (updates.listing_id) {
+      const currentLot = await knex("stock_lots")
+        .where({ lot_id })
+        .first("listing_id")
+      
+      if (currentLot) {
+        const currentListing = await knex("market_listings")
+          .where({ listing_id: currentLot.listing_id })
+          .first("user_seller_id", "contractor_seller_id")
+        
+        const newListing = await knex("market_listings")
+          .where({ listing_id: updates.listing_id })
+          .first("user_seller_id", "contractor_seller_id")
+        
+        if (!newListing) {
+          res.status(404).json(
+            createErrorResponse({
+              message: "New listing not found",
+            }),
+          )
+          return
+        }
+
+        // Check if ownership matches
+        const sameOwner = 
+          currentListing.user_seller_id === newListing.user_seller_id &&
+          currentListing.contractor_seller_id === newListing.contractor_seller_id
+
+        if (!sameOwner) {
+          res.status(403).json(
+            createErrorResponse({
+              message: "Cannot change listing to one with a different owner",
+            }),
+          )
+          return
+        }
+      }
+    }
+
     // Update lot
     const lot = await stockLotService.updateLot(lot_id, updates)
 
