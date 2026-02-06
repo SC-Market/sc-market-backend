@@ -1361,8 +1361,13 @@ export async function searchOrgMembers(
       "contractor_members.user_id",
     )
     .where("contractor_members.contractor_id", contractor_id)
-    .where("username", "ilike", `%${query}%`)
-    .or.where("display_name", "ilike", `%${query}%`)
+    .where(function () {
+      this.where("username", "ilike", `%${query}%`).orWhere(
+        "display_name",
+        "ilike",
+        `%${query}%`,
+      )
+    })
     .select("accounts.*", "contractor_members.role")
 }
 

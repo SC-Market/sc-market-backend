@@ -144,7 +144,7 @@ export const searchLots: RequestHandler = async (req, res) => {
       }
     }
 
-    // Enrich with allocation info
+    // Enrich with allocation info and owner details
     const lotsWithAllocations = await Promise.all(
       lots.map(async (lot) => {
         const allocations = await knex("stock_allocations")
@@ -156,8 +156,28 @@ export const searchLots: RequestHandler = async (req, res) => {
           0,
         )
 
+        // Get owner details
+        let owner = null
+        if (lot.owner_id) {
+          const ownerData = await knex("accounts")
+            .where({ user_id: lot.owner_id })
+            .select("user_id", "username", "display_name", "avatar")
+            .first()
+          if (ownerData) {
+            owner = ownerData
+          }
+        }
+
         return {
-          ...lot,
+          lot_id: lot.lot_id,
+          listing_id: lot.listing_id,
+          location_id: lot.location_id,
+          quantity_total: lot.quantity_total,
+          listed: lot.listed,
+          notes: lot.notes,
+          created_at: lot.created_at,
+          updated_at: lot.updated_at,
+          owner,
           is_allocated: allocations.length > 0,
           allocated_quantity: totalAllocated,
           allocations: allocations.map((a) => ({
@@ -204,21 +224,6 @@ export const searchLots: RequestHandler = async (req, res) => {
         ]),
       )
 
-      // Get usernames for owner_id search
-      const ownerIds = [
-        ...new Set(filteredLots.map((l) => l.owner_id).filter(Boolean)),
-      ]
-      const accounts = await knex("accounts")
-        .whereIn("user_id", ownerIds)
-        .select("user_id", "username")
-
-      const usernameMap = new Map(
-        accounts.map((a: { user_id: string; username: string }) => [
-          a.user_id,
-          a.username,
-        ]),
-      )
-
       filteredLots = filteredLots.filter((lot) => {
         const notesMatch = lot.notes?.toLowerCase().includes(searchLower)
         const titleMatch = titleMap
@@ -226,8 +231,7 @@ export const searchLots: RequestHandler = async (req, res) => {
           ?.toLowerCase()
           .includes(searchLower)
         const usernameMatch =
-          lot.owner_id &&
-          usernameMap.get(lot.owner_id)?.toLowerCase().includes(searchLower)
+          lot.owner?.username?.toLowerCase().includes(searchLower)
         return notesMatch || titleMatch || usernameMatch
       })
     }
@@ -493,7 +497,33 @@ export const updateLot: RequestHandler = async (req, res) => {
     // Update lot
     const lot = await stockLotService.updateLot(lot_id, updates)
 
-    res.json(createResponse({ lot }))
+    // Enrich with owner details
+    let owner = null
+    if (lot.owner_id) {
+      const ownerData = await knex("accounts")
+        .where({ user_id: lot.owner_id })
+        .select("user_id", "username", "display_name", "avatar")
+        .first()
+      if (ownerData) {
+        owner = ownerData
+      }
+    }
+
+    res.json(
+      createResponse({
+        lot: {
+          lot_id: lot.lot_id,
+          listing_id: lot.listing_id,
+          location_id: lot.location_id,
+          quantity_total: lot.quantity_total,
+          listed: lot.listed,
+          notes: lot.notes,
+          created_at: lot.created_at,
+          updated_at: lot.updated_at,
+          owner,
+        },
+      }),
+    )
   } catch (error) {
     logger.error("Error updating lot", { error })
 
