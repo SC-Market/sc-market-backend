@@ -467,13 +467,13 @@ export const updateLot: RequestHandler = async (req, res) => {
       return
     }
 
-    // Convert username to user_id if owner_id is provided as username
-    if (updates.owner_id && typeof updates.owner_id === "string") {
-      // Check if it's a username (not a UUID)
-      if (!updates.owner_id.match(/^[0-9a-f-]{36}$/i)) {
-        // Look up user_id from username
+    // Convert owner_username to owner_id if provided
+    if (updates.owner_username !== undefined) {
+      if (updates.owner_username === null) {
+        updates.owner_id = null
+      } else {
         const account = await knex("accounts")
-          .where("username", updates.owner_id)
+          .where("username", updates.owner_username)
           .first("user_id")
 
         if (account) {
@@ -487,6 +487,7 @@ export const updateLot: RequestHandler = async (req, res) => {
           return
         }
       }
+      delete updates.owner_username
     }
 
     // Update lot
