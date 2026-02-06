@@ -21,7 +21,7 @@ import logger from "../../../../logger/logger.js"
 import * as marketDb from "./database.js"
 import { getKnex } from "../../../../clients/database/knex-db.js"
 import { formatUniqueListingComplete } from "../util/formatting.js"
-import * as cdn from "../../../../clients/cdn/cdn.js"
+import { cdn } from "../../../../clients/cdn/cdn.js"
 
 const stockLotService = new StockLotService()
 const locationService = new LocationService()
