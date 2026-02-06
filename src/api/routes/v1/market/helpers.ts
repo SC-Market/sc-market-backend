@@ -279,7 +279,10 @@ export async function convertQuery(
   let attributes: AttributeFilter[] | null = null
   const attributeFilters: AttributeFilter[] = []
 
-  console.log('[CONVERT QUERY] Raw query params:', JSON.stringify(query, null, 2))
+  console.log(
+    "[CONVERT QUERY] Raw query params:",
+    JSON.stringify(query, null, 2),
+  )
 
   for (const [key, value] of Object.entries(query)) {
     if (key.startsWith("attr_") && typeof value === "string") {
@@ -289,7 +292,14 @@ export async function convertQuery(
         .map((v) => v.trim())
         .filter(Boolean)
 
-      console.log('[CONVERT QUERY] Found attr:', key, '=', value, 'parsed:', values)
+      console.log(
+        "[CONVERT QUERY] Found attr:",
+        key,
+        "=",
+        value,
+        "parsed:",
+        values,
+      )
 
       if (values.length > 0) {
         attributeFilters.push({
@@ -305,7 +315,10 @@ export async function convertQuery(
     attributes = attributeFilters
   }
 
-  console.log('[CONVERT QUERY] Final attributes:', JSON.stringify(attributes, null, 2))
+  console.log(
+    "[CONVERT QUERY] Final attributes:",
+    JSON.stringify(attributes, null, 2),
+  )
 
   return {
     sale_type: query.sale_type || null,
@@ -351,81 +364,6 @@ export async function get_org_listings(contractor: DBContractor) {
       formatListingComplete(l, true),
     ),
   )
-}
-
-export async function handle_quantity_update(
-  res: any,
-  user: User,
-  listing: DBMarketListing,
-  quantity_available: number,
-) {
-  if (user.role !== "admin") {
-    if (listing.contractor_seller_id) {
-      const contractor = await contractorDb.getContractor({
-        contractor_id: listing.contractor_seller_id,
-      })
-
-      if (
-        !(await has_permission(
-          contractor.contractor_id,
-          user.user_id,
-          "manage_market",
-        ))
-      ) {
-        res
-          .status(403)
-          .json(
-            createForbiddenErrorResponse(
-              "You are not authorized to update listings on behalf of this contractor!",
-            ),
-          )
-        return
-      }
-    } else {
-      if (listing.user_seller_id !== user.user_id) {
-        return res
-          .status(403)
-          .json(
-            createForbiddenErrorResponse(
-              "You are not authorized to update this listing!",
-            ),
-          )
-      }
-    }
-  }
-
-  if (listing.status === "archived") {
-    res
-      .status(400)
-      .json(
-        createErrorResponse(
-          ErrorCode.VALIDATION_ERROR,
-          "Cannot update archived listing",
-        ),
-      )
-    return
-  }
-
-  if (quantity_available === undefined) {
-    res
-      .status(400)
-      .json(
-        createErrorResponse(
-          ErrorCode.VALIDATION_ERROR,
-          "Missing required fields",
-        ),
-      )
-    return
-  }
-
-  if (quantity_available < 0) {
-    res.status(400).json({ error: "Invalid quantity" })
-    return
-  }
-
-  await marketDb.updateMarketListing(listing.listing_id, { quantity_available })
-
-  res.json({ result: "Success" })
 }
 
 export function formatListingSlug(title: string) {

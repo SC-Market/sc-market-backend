@@ -17,10 +17,10 @@ describe("UEXCorp API Integration", () => {
 
     expect(categoriesResponse.ok).toBe(true)
     const categoriesData = await categoriesResponse.json()
-    
+
     expect(categoriesData).toHaveProperty("data")
     expect(Array.isArray(categoriesData.data)).toBe(true)
-    
+
     if (categoriesData.data.length === 0) {
       console.log("No categories found, skipping test")
       return
@@ -34,12 +34,12 @@ describe("UEXCorp API Integration", () => {
       `${UEXCORP_BASE_URL}/items?id_category=${categoryId}`,
       {
         headers: { accept: "application/json" },
-      }
+      },
     )
 
     expect(itemsResponse.ok).toBe(true)
     const itemsData = await itemsResponse.json()
-    
+
     expect(itemsData).toHaveProperty("data")
     expect(Array.isArray(itemsData.data)).toBe(true)
 
@@ -69,7 +69,7 @@ describe("UEXCorp API Integration", () => {
       `${UEXCORP_BASE_URL}/items?id_category=${categoryId}`,
       {
         headers: { accept: "application/json" },
-      }
+      },
     )
 
     const itemsData = await itemsResponse.json()
@@ -86,12 +86,12 @@ describe("UEXCorp API Integration", () => {
       `${UEXCORP_BASE_URL}/items_attributes?id_item=${testItem.id}`,
       {
         headers: { accept: "application/json" },
-      }
+      },
     )
 
     expect(attrsResponse.ok).toBe(true)
     const attrsData = await attrsResponse.json()
-    
+
     expect(attrsData).toHaveProperty("data")
     expect(Array.isArray(attrsData.data)).toBe(true)
 
@@ -123,7 +123,7 @@ describe("UEXCorp API Integration", () => {
       `${UEXCORP_BASE_URL}/items?id_category=${categoryId}`,
       {
         headers: { accept: "application/json" },
-      }
+      },
     )
 
     const itemsData = await itemsResponse.json()
@@ -137,7 +137,7 @@ describe("UEXCorp API Integration", () => {
 
     // Simulate case-insensitive name search
     const found = itemsData.data.find(
-      (item: any) => item.name?.toLowerCase() === testName.toLowerCase()
+      (item: any) => item.name?.toLowerCase() === testName.toLowerCase(),
     )
 
     expect(found).toBeDefined()

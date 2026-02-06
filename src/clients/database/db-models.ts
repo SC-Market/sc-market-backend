@@ -265,6 +265,7 @@ export interface DBOrderSetting {
     | "max_order_size"
     | "min_order_value"
     | "max_order_value"
+    | "allocation_mode"
   message_content: string
   enabled: boolean
   created_at: Date

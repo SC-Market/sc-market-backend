@@ -1,6 +1,9 @@
 import express from "express"
 
-import { requireOrdersWrite } from "../../../middleware/auth.js"
+import {
+  userAuthorized,
+  requireOrdersWrite,
+} from "../../../middleware/auth.js"
 import {
   writeRateLimit,
   readRateLimit,
@@ -25,18 +28,20 @@ export const contractsRouter = express.Router()
 
 contractsRouter.post(
   "",
+  userAuthorized,
   requireOrdersWrite,
-  contracts_post_root_spec,
   writeRateLimit,
+  contracts_post_root_spec,
   contracts_post_root,
 )
 
 contractsRouter.post(
   "/:contract_id/offers",
+  userAuthorized,
   requireOrdersWrite,
   valid_public_contract,
-  contracts_post_contract_id_offers_spec,
   writeRateLimit,
+  contracts_post_contract_id_offers_spec,
   contracts_post_contract_id_offers,
 )
 

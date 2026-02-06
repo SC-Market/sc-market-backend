@@ -18,6 +18,7 @@ import * as marketDb from "../market/database.js"
 import { notificationService } from "../../../../services/notifications/notification.service.js"
 import { discordService } from "../../../../services/discord/discord.service.js"
 import { chatParticipantService } from "../../../../services/chats/chat-participant.service.js"
+import { OrderLifecycleService } from "../../../../services/allocation/order-lifecycle.service.js"
 import { User } from "../api-models.js"
 import { sendSystemMessage } from "../chats/helpers.js"
 import { has_permission } from "../util/permissions.js"
@@ -307,41 +308,41 @@ export async function initiateOrder(session: DBOfferSession) {
       trx,
     )
 
-    // Create market listing orders and handle stock subtraction
-    if (settingValue === "dont_subtract") {
-      // Don't subtract stock at all
-      // Still create the market_listing_order records
-      for (const { quantity, listing_id } of market_listings) {
-        await marketDb.insertMarketListingOrder(
-          {
-            listing_id,
-            order_id: createdOrder.order_id,
-            quantity,
-          },
-          trx,
-        )
-      }
-    } else if (settingValue === "on_received") {
-      // Stock was already subtracted when offer was received (in createOffer)
-      // Just create the market_listing_order records
-      for (const { quantity, listing_id } of market_listings) {
-        await marketDb.insertMarketListingOrder(
-          {
-            listing_id,
-            order_id: createdOrder.order_id,
-            quantity,
-          },
-          trx,
-        )
-      }
-    } else {
-      // Default: "on_accepted" - subtract stock now (offer is being accepted)
-      await subtractStockForMarketListings(
-        market_listings,
-        createdOrder.order_id,
+    // Create market listing orders
+    for (const { quantity, listing_id } of market_listings) {
+      await marketDb.insertMarketListingOrder(
+        {
+          listing_id,
+          order_id: createdOrder.order_id,
+          quantity,
+        },
         trx,
       )
     }
+
+    // Always allocate stock when order is created, regardless of stock_subtraction_timing
+    // The stock_subtraction_timing setting controls PUBLIC visibility, not physical allocation
+    // Requirements: 5.7, 6.1, 6.2, 6.3, 12.2, 12.3
+    const lifecycleService = new OrderLifecycleService(trx)
+    const allocationResult = await lifecycleService.allocateStockForOrder(
+      createdOrder.order_id,
+      market_listings,
+      session.contractor_id,
+      session.customer_id,
+    )
+
+    // Log allocation result
+    logger.info("Stock allocated for order", {
+      order_id: createdOrder.order_id,
+      total_requested: allocationResult.total_requested,
+      total_allocated: allocationResult.total_allocated,
+      has_partial: allocationResult.has_partial_allocations,
+      stock_subtraction_timing: settingValue || "on_accepted",
+    })
+
+    // Store allocation result on the order object for later use
+    // This allows the caller to check if there were partial allocations
+    ;(createdOrder as any).allocation_result = allocationResult
 
     return createdOrder
   })
@@ -431,47 +432,21 @@ export async function createOffer(
     }
 
     // Check stock subtraction timing setting
-    // Default is "on_accepted" (when no setting exists)
-    // "on_received" means subtract stock when offer is received (now)
+    // Note: This setting controls PUBLIC visibility of stock, not physical allocation
+    // Physical allocation happens when the order is created (in initiateOrder)
+    // We keep this check here for backward compatibility and logging
     const stockSetting = await getRelevantOrderSetting(
       createdSession,
       "stock_subtraction_timing",
     )
     const settingValue = stockSetting?.message_content
 
-    // Subtract stock if setting is "on_received"
     if (settingValue === "on_received") {
-      logger.info("Subtracting stock on offer received", {
+      logger.info("Stock will be allocated when order is created", {
         session_id: createdSession.id,
-        listingCount: market_listings.length,
+        stock_subtraction_timing: settingValue,
+        note: "Public visibility controlled by stock_subtraction_timing, physical allocation happens on order creation",
       })
-
-      for (const { quantity, listing } of market_listings) {
-        const listingData = await marketDb.getMarketListing({
-          listing_id: listing.listing.listing_id,
-        })
-        const oldQuantity = listingData.quantity_available
-        const newQuantity = Math.max(
-          0,
-          listingData.quantity_available - quantity,
-        )
-
-        await marketDb.updateMarketListing(
-          listing.listing.listing_id,
-          {
-            quantity_available: newQuantity,
-          },
-          trx,
-        )
-
-        logger.info("Stock subtracted on offer received", {
-          session_id: createdSession.id,
-          listing_id: listing.listing.listing_id,
-          quantity_subtracted: quantity,
-          old_quantity: oldQuantity,
-          new_quantity: newQuantity,
-        })
-      }
     }
 
     return { session: createdSession, offer: createdOffer }
@@ -722,6 +697,26 @@ export async function handleStatusUpdate(req: any, res: any, status: string) {
 
     if (status === "cancelled") {
       await cancelOrderMarketItems(order)
+
+      // Release stock allocations when order is cancelled
+      // Requirements: 6.4
+      try {
+        const orderLifecycleService = new OrderLifecycleService()
+        await orderLifecycleService.releaseAllocationsForOrder(order.order_id)
+
+        logger.info("Stock allocations released for cancelled order", {
+          order_id: order.order_id,
+        })
+      } catch (error) {
+        // Log error but don't fail the cancellation
+        logger.error(
+          "Failed to release stock allocations for cancelled order",
+          {
+            order_id: order.order_id,
+            error: error instanceof Error ? error.message : String(error),
+          },
+        )
+      }
     }
 
     if (status === "in-progress") {
@@ -741,6 +736,28 @@ export async function handleStatusUpdate(req: any, res: any, status: string) {
         order.thread_id!,
         req.user.user_id,
       )
+    } else if (status === "fulfilled") {
+      // Consume stock allocations when order is fulfilled
+      // Requirements: 6.5, 10.5
+      try {
+        const orderLifecycleService = new OrderLifecycleService()
+        await orderLifecycleService.consumeAllocationsForOrder(order.order_id)
+
+        logger.info("Stock allocations consumed for fulfilled order", {
+          order_id: order.order_id,
+        })
+      } catch (error) {
+        // Log error but don't fail the fulfillment
+        logger.error(
+          "Failed to consume stock allocations for fulfilled order",
+          {
+            order_id: order.order_id,
+            error: error instanceof Error ? error.message : String(error),
+          },
+        )
+      }
+
+      await orderDb.updateOrder(order.order_id, { status: status })
     } else {
       await orderDb.updateOrder(order.order_id, { status: status })
     }
@@ -1945,8 +1962,10 @@ export async function getRelevantOrderSetting(
 
 /**
  * Subtract stock for market listings associated with an order
+ * @deprecated This function is replaced by OrderLifecycleService.allocateStockForOrder()
+ * Kept for potential rollback purposes only.
  */
-async function subtractStockForMarketListings(
+async function _subtractStockForMarketListings(
   market_listings: { quantity: number; listing_id: string }[],
   order_id: string,
   trx?: any,
