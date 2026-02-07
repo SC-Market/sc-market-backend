@@ -37,7 +37,6 @@ export interface DBAccountSettings {
   user_id: string
   discord_order_share: boolean
   discord_public: boolean
-  mobile_nav_tabs?: string[]
 }
 
 export interface MinimalUser {
