@@ -266,7 +266,7 @@ export async function convertQuery(
 
   const searchQuery = (query.query || "").toLowerCase()
   const seller_rating = +(query.seller_rating || 0)
-  const page_size = Math.max(Math.min(+(query.page_size || 16), 96), 0)
+  const page_size = Math.max(Math.min(+(query.page_size || 16), 96), 12)
   const language_codes = query.language_codes
     ? query.language_codes
         .split(",")
