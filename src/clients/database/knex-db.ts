@@ -42,6 +42,7 @@ export class KnexDatabase implements Database {
         port:
           (dbConfig.port as unknown as number) ||
           (env.DATABASE_PORT ? +env.DATABASE_PORT : 5431),
+        ssl: env.NODE_ENV === "production" ? { rejectUnauthorized: false } : false,
       },
       pool: {
         min: 0,
