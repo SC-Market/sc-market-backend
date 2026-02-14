@@ -55,10 +55,11 @@ async function formatOwnerDetails(ownerData: {
 export const updateSimpleStock: RequestHandler = async (req, res) => {
   try {
     const { listing_id } = req.params
-    const { quantity } = req.body as { quantity: number }
+    const { quantity: rawQuantity } = req.body as { quantity: number | string }
 
-    // Validate input
-    if (typeof quantity !== "number" || quantity < 0) {
+    // Coerce to number and validate
+    const quantity = Number(rawQuantity)
+    if (isNaN(quantity) || quantity < 0) {
       res.status(400).json(
         createErrorResponse({
           message: "Quantity must be a non-negative number",
@@ -418,10 +419,11 @@ export const getListingLots: RequestHandler = async (req, res) => {
 export const createLot: RequestHandler = async (req, res) => {
   try {
     const { listing_id } = req.params
-    const { quantity, location_id, owner_username, listed, notes } = req.body
+    const { quantity: rawQuantity, location_id, owner_username, listed, notes } = req.body
 
-    // Validate required fields
-    if (typeof quantity !== "number" || quantity < 0) {
+    // Coerce to number and validate
+    const quantity = Number(rawQuantity)
+    if (isNaN(quantity) || quantity < 0) {
       res.status(400).json(
         createErrorResponse({
           message: "Quantity must be 0 or greater",
@@ -500,9 +502,10 @@ export const updateLot: RequestHandler = async (req, res) => {
     const { lot_id } = req.params
     const updates = req.body
 
-    // Validate quantity if provided
+    // Validate and coerce quantity if provided
     if (updates.quantity !== undefined) {
-      if (typeof updates.quantity !== "number" || updates.quantity < 0) {
+      const quantity = Number(updates.quantity)
+      if (isNaN(quantity) || quantity < 0) {
         res.status(400).json(
           createErrorResponse({
             message: "Quantity must be a non-negative number",
@@ -510,6 +513,7 @@ export const updateLot: RequestHandler = async (req, res) => {
         )
         return
       }
+      updates.quantity = quantity
     }
 
     // Validate notes length if provided
@@ -702,7 +706,7 @@ export const deleteLot: RequestHandler = async (req, res) => {
 export const transferLot: RequestHandler = async (req, res) => {
   try {
     const { lot_id } = req.params
-    const { destination_location_id, quantity } = req.body
+    const { destination_location_id, quantity: rawQuantity } = req.body
 
     // Validate inputs
     if (!destination_location_id) {
@@ -714,7 +718,8 @@ export const transferLot: RequestHandler = async (req, res) => {
       return
     }
 
-    if (typeof quantity !== "number" || quantity <= 0) {
+    const quantity = Number(rawQuantity)
+    if (isNaN(quantity) || quantity <= 0) {
       res.status(400).json(
         createErrorResponse({
           message: "Transfer quantity must be greater than 0",
