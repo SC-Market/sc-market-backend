@@ -19,6 +19,7 @@ jobs:
     permissions:
       contents: read
       packages: write
+      id-token: write
       attestations: write
       id-token: write
       #
@@ -50,14 +51,16 @@ jobs:
           tags: ${{ steps.meta.outputs.tags }}
           labels: ${{ steps.meta.outputs.labels }}
       
+      - name: Configure AWS credentials
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          role-to-assume: arn:aws:iam::272095582125:role/github-actions-lightsail-deploy
+          aws-region: us-east-2
+      
       - name: Force Lightsail redeployment
         run: |
           # Get current deployment and redeploy to pull latest images
           aws lightsail update-container-service \
-            --service-name sc-consolidated \
+            --service-name sc-market \
             --region us-east-2 \
             --is-disabled false
-        env:
-          AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
-          AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-          AWS_DEFAULT_REGION: us-east-2
