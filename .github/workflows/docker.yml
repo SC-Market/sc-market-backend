@@ -49,3 +49,15 @@ jobs:
           push: true
           tags: ${{ steps.meta.outputs.tags }}
           labels: ${{ steps.meta.outputs.labels }}
+      
+      - name: Force Lightsail redeployment
+        run: |
+          # Get current deployment and redeploy to pull latest images
+          aws lightsail update-container-service \
+            --service-name sc-consolidated \
+            --region us-east-2 \
+            --is-disabled false
+        env:
+          AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          AWS_DEFAULT_REGION: us-east-2
