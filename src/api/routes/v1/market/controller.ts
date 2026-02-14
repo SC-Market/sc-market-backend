@@ -422,6 +422,20 @@ export const get_order_stats: RequestHandler = async (req, res) => {
 export const create_listing: RequestHandler = async (req, res) => {
   try {
     const user = req.user as User
+    
+    // Require verified account
+    if (!user.verified) {
+      res
+        .status(403)
+        .json(
+          createErrorResponse(
+            ErrorCode.FORBIDDEN,
+            "Account must be verified to create listings",
+          ),
+        )
+      return
+    }
+    
     const {
       price,
       title,
@@ -1598,6 +1612,19 @@ export const create_multiple: RequestHandler = async (req, res) => {
   try {
     const user = req.user as User
 
+    // Require verified account
+    if (!user.verified) {
+      res
+        .status(403)
+        .json(
+          createErrorResponse(
+            ErrorCode.FORBIDDEN,
+            "Account must be verified to create listings",
+          ),
+        )
+      return
+    }
+
     const { listings, default_listing_id, title, item_type, description } =
       req.body as {
         listings: string[]
@@ -1872,6 +1899,19 @@ export const update_multiple: RequestHandler = async (req, res) => {
 export const create_buy_order: RequestHandler = async (req, res) => {
   try {
     const user = req.user as User
+
+    // Require verified account
+    if (!user.verified) {
+      res
+        .status(403)
+        .json(
+          createErrorResponse(
+            ErrorCode.FORBIDDEN,
+            "Account must be verified to create buy orders",
+          ),
+        )
+      return
+    }
 
     const { quantity, price, expiry, game_item_id, negotiable } = req.body as {
       quantity: number
