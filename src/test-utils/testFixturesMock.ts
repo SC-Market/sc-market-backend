@@ -75,6 +75,7 @@ export function createTestUser(overrides?: Partial<TestUser>): TestUser {
     profile_description: "",
     role: user.role || "user",
     banned: user.banned || false,
+    verified: true,
     avatar: "",
     banner: "",
     balance: (user.balance || 0).toString(),
