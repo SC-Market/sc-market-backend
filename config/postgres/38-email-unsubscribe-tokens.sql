@@ -36,6 +36,7 @@ COMMENT ON CONSTRAINT unique_unsubscribe_token ON public.email_unsubscribe_token
 CREATE OR REPLACE FUNCTION public.cleanup_old_email_unsubscribe_tokens()
 RETURNS INTEGER
 LANGUAGE plpgsql
+    SET search_path TO public
 AS $$
 DECLARE
   deleted_count INTEGER;

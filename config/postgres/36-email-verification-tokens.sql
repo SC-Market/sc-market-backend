@@ -39,6 +39,7 @@ COMMENT ON CONSTRAINT unique_token ON public.email_verification_tokens IS 'Ensur
 CREATE OR REPLACE FUNCTION public.cleanup_expired_email_verification_tokens()
 RETURNS INTEGER
 LANGUAGE plpgsql
+    SET search_path TO public
 AS $$
 DECLARE
   deleted_count INTEGER;
