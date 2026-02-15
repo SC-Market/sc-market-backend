@@ -57,25 +57,24 @@ jobs:
       
       - name: Force Lightsail redeployment
         run: |
-          # Create new deployment to pull latest images
+          # Get current deployment configuration
+          CURRENT_DEPLOYMENT=$(aws lightsail get-container-services \
+            --service-name sc-market \
+            --region us-east-2 \
+            --query 'containerServices[0].currentDeployment' \
+            --output json)
+          
+          # Extract containers config and update image tags to :main
+          CONTAINERS=$(echo $CURRENT_DEPLOYMENT | jq '.containers | 
+            .backend.image = "ghcr.io/sc-market/sc-market-backend:main" |
+            .discord.image = "ghcr.io/sc-market/scmarketbot:main"')
+          
+          # Extract public endpoint config
+          PUBLIC_ENDPOINT=$(echo $CURRENT_DEPLOYMENT | jq '.publicEndpoint')
+          
+          # Create new deployment with existing config but updated images
           aws lightsail create-container-service-deployment \
             --service-name sc-market \
             --region us-east-2 \
-            --containers '{
-              "backend": {
-                "image": "ghcr.io/sc-market/sc-market-backend:main",
-                "ports": {"8080": "HTTP"}
-              },
-              "discord": {
-                "image": "ghcr.io/sc-market/scmarketbot:main",
-                "ports": {"3000": "HTTP"}
-              }
-            }' \
-            --public-endpoint '{
-              "containerName": "backend",
-              "containerPort": 8080,
-              "healthCheck": {
-                "path": "/api/market/stats",
-                "intervalSeconds": 30
-              }
-            }'
+            --containers "$CONTAINERS" \
+            --public-endpoint "$PUBLIC_ENDPOINT"
