@@ -22,6 +22,7 @@ BEGIN
 END;
 $$
 LANGUAGE plpgsql
+    SET search_path TO public
 STABLE;
 
 COMMENT ON FUNCTION get_fulfilled_orders_count(UUID, UUID) IS 'Returns the total number of fulfilled orders for a user or contractor';
@@ -47,6 +48,7 @@ BEGIN
 END;
 $$
 LANGUAGE plpgsql
+    SET search_path TO public
 STABLE;
 
 COMMENT ON FUNCTION get_orders_last_30_days(UUID, UUID) IS 'Returns the number of orders created in the last 30 days for a user or contractor';
@@ -72,6 +74,7 @@ BEGIN
 END;
 $$
 LANGUAGE plpgsql
+    SET search_path TO public
 STABLE;
 
 COMMENT ON FUNCTION get_orders_last_90_days(UUID, UUID) IS 'Returns the number of orders created in the last 90 days for a user or contractor';
@@ -116,6 +119,7 @@ BEGIN
 END;
 $$
 LANGUAGE plpgsql
+    SET search_path TO public
 STABLE;
 
 COMMENT ON FUNCTION get_avg_completion_time_hours(UUID, UUID) IS 'Returns the average completion time in hours from order creation to fulfillment for a user or contractor';
@@ -131,6 +135,7 @@ BEGIN
 END;
 $$
 LANGUAGE plpgsql
+    SET search_path TO public
 STABLE;
 
 COMMENT ON FUNCTION get_account_age_months(UUID) IS 'Returns the age of a user account in months';
@@ -150,6 +155,7 @@ BEGIN
 END;
 $$
 LANGUAGE plpgsql
+    SET search_path TO public
 STABLE;
 
 COMMENT ON FUNCTION get_contractor_age_months(UUID) IS 'Returns the age of a contractor in months based on the oldest member account';

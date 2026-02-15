@@ -18,6 +18,7 @@ BEGIN
 END;
 $$
 LANGUAGE plpgsql
+    SET search_path TO public
 STABLE;
 
 CREATE OR REPLACE FUNCTION get_response_rate(UUID, UUID) RETURNS float AS
@@ -43,6 +44,7 @@ BEGIN
 END;
 $$
 LANGUAGE plpgsql
+    SET search_path TO public
 STABLE;
 
 -- Add comments for documentation
