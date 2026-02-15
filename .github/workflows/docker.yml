@@ -62,5 +62,4 @@ jobs:
           # Get current deployment and redeploy to pull latest images
           aws lightsail update-container-service \
             --service-name sc-market \
-            --region us-east-2 \
-            --is-disabled false
+            --region us-east-2
