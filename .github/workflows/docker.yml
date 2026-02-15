@@ -60,6 +60,27 @@ jobs:
       
       - name: Force Lightsail redeployment
         run: |
+          # Wait for any in-progress deployment to complete
+          echo "Checking for in-progress deployments..."
+          while true; do
+            STATE=$(aws lightsail get-container-services \
+              --service-name sc-market \
+              --region us-east-2 \
+              --query 'containerServices[0].state' \
+              --output text)
+            
+            if [ "$STATE" = "READY" ]; then
+              echo "Service is ready for new deployment"
+              break
+            elif [ "$STATE" = "DEPLOYING" ] || [ "$STATE" = "UPDATING" ]; then
+              echo "Service is $STATE, waiting 30 seconds..."
+              sleep 30
+            else
+              echo "Service state: $STATE"
+              break
+            fi
+          done
+          
           # Use the git SHA tag for this specific build
           IMAGE_TAG="${{ github.sha }}"
           IMAGE_TAG_SHORT="${IMAGE_TAG:0:7}"
@@ -79,6 +100,7 @@ jobs:
           PUBLIC_ENDPOINT=$(echo $CURRENT_DEPLOYMENT | jq '.publicEndpoint')
           
           # Create new deployment with specific image tag
+          echo "Creating deployment with image tag: $IMAGE_TAG_SHORT"
           aws lightsail create-container-service-deployment \
             --service-name sc-market \
             --region us-east-2 \
