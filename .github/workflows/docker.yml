@@ -59,7 +59,8 @@ jobs:
       
       - name: Force Lightsail redeployment
         run: |
-          # Get current deployment and redeploy to pull latest images
+          # Trigger redeployment by updating power (to same value)
           aws lightsail update-container-service \
             --service-name sc-market \
-            --region us-east-2
+            --region us-east-2 \
+            --power small
