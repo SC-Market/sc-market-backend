@@ -72,6 +72,7 @@ ALTER DOMAIN public.url OWNER TO scmarket;
 
 CREATE FUNCTION public.get_auction_end(uuid, character varying) RETURNS timestamp without time zone
     LANGUAGE plpgsql STABLE
+    SET search_path TO public
     AS $_$
 BEGIN
     IF $2 = 'auction' THEN
@@ -95,6 +96,7 @@ ALTER FUNCTION public.get_auction_end(uuid, character varying) OWNER TO scmarket
 
 CREATE FUNCTION public.get_average_rating(uuid, uuid) RETURNS integer
     LANGUAGE plpgsql STABLE
+    SET search_path TO public
     AS $_$
 BEGIN
     IF $1 IS NOT NULL THEN
@@ -128,6 +130,7 @@ ALTER FUNCTION public.get_average_rating(uuid, uuid) OWNER TO scmarket;
 
 CREATE FUNCTION public.get_average_rating_float(uuid, uuid) RETURNS double precision
     LANGUAGE plpgsql STABLE
+    SET search_path TO public
     AS $_$
 BEGIN
     IF $1 IS NOT NULL THEN
@@ -161,6 +164,7 @@ ALTER FUNCTION public.get_average_rating_float(uuid, uuid) OWNER TO scmarket;
 
 CREATE FUNCTION public.get_offer_status(uuid, uuid, character varying) RETURNS character varying
     LANGUAGE plpgsql STABLE
+    SET search_path TO public
     AS $_$
 BEGIN
     IF $3 = 'active' THEN
@@ -191,6 +195,7 @@ ALTER FUNCTION public.get_offer_status(uuid, uuid, character varying) OWNER TO s
 
 CREATE FUNCTION public.get_order_count() RETURNS integer
     LANGUAGE plpgsql STABLE
+    SET search_path TO public
     AS $$
 BEGIN
     RETURN (SELECT COUNT(*)                                                         as total_orders,
@@ -209,6 +214,7 @@ ALTER FUNCTION public.get_order_count() OWNER TO scmarket;
 
 CREATE FUNCTION public.get_order_count(uuid, uuid) RETURNS integer
     LANGUAGE plpgsql STABLE
+    SET search_path TO public
     AS $$
 BEGIN
     SELECT COUNT(*), (SELECT SUM(orders.cost) FROM orders WHERE status = 'fulfilled') FROM orders as t;
@@ -225,6 +231,7 @@ ALTER FUNCTION public.get_order_count(uuid, uuid) OWNER TO scmarket;
 
 CREATE FUNCTION public.get_rating_count(uuid, uuid) RETURNS integer
     LANGUAGE plpgsql STABLE
+    SET search_path TO public
     AS $_$
 BEGIN
     IF $1 IS NOT NULL THEN
@@ -258,6 +265,7 @@ ALTER FUNCTION public.get_rating_count(uuid, uuid) OWNER TO scmarket;
 
 CREATE FUNCTION public.get_rating_streak(uuid, uuid) RETURNS integer
     LANGUAGE plpgsql STABLE
+    SET search_path TO public
     AS $_$
 BEGIN
     IF $1 IS NOT NULL THEN
@@ -306,6 +314,7 @@ ALTER FUNCTION public.get_rating_streak(uuid, uuid) OWNER TO scmarket;
 
 CREATE FUNCTION public.get_total_orders(uuid, uuid) RETURNS integer
     LANGUAGE plpgsql STABLE
+    SET search_path TO public
     AS $_$
 BEGIN
     IF $1 IS NOT NULL THEN
@@ -331,6 +340,8 @@ ALTER FUNCTION public.get_total_orders(uuid, uuid) OWNER TO scmarket;
 
 CREATE FUNCTION public.get_total_rating(uuid, uuid) RETURNS integer
     LANGUAGE plpgsql STABLE
+    SET search_path TO public
+    SET search_path TO public
     AS $_$
 BEGIN
     IF $1 IS NOT NULL THEN
@@ -364,6 +375,7 @@ ALTER FUNCTION public.get_total_rating(uuid, uuid) OWNER TO scmarket;
 
 CREATE FUNCTION public.get_week_order_count() RETURNS integer
     LANGUAGE plpgsql STABLE
+    SET search_path TO public
     AS $$
 BEGIN
     RETURN (SELECT COUNT(*)                                                                 as week_orders,
@@ -385,6 +397,7 @@ ALTER FUNCTION public.get_week_order_count() OWNER TO scmarket;
 
 CREATE FUNCTION public.get_week_order_count(uuid, uuid) RETURNS integer
     LANGUAGE plpgsql STABLE
+    SET search_path TO public
     AS $$
 BEGIN
     SELECT COUNT(*),
@@ -404,6 +417,7 @@ ALTER FUNCTION public.get_week_order_count(uuid, uuid) OWNER TO scmarket;
 
 CREATE FUNCTION public.log_status_change() RETURNS trigger
     LANGUAGE plpgsql
+    SET search_path TO public
     AS $$
 BEGIN
     IF (NEW.status != OLD.status) THEN
@@ -423,6 +437,7 @@ ALTER FUNCTION public.log_status_change() OWNER TO scmarket;
 
 CREATE FUNCTION public.market_log_status_change() RETURNS trigger
     LANGUAGE plpgsql
+    SET search_path TO public
     AS $$
 BEGIN
     IF (NEW.status != OLD.status) THEN
@@ -442,6 +457,7 @@ ALTER FUNCTION public.market_log_status_change() OWNER TO scmarket;
 
 CREATE FUNCTION public.order_log_status_change() RETURNS trigger
     LANGUAGE plpgsql
+    SET search_path TO public
     AS $$
 BEGIN
     IF (NEW.status != OLD.status) THEN
@@ -461,6 +477,7 @@ ALTER FUNCTION public.order_log_status_change() OWNER TO scmarket;
 
 CREATE FUNCTION public.update_listing_expiration() RETURNS trigger
     LANGUAGE plpgsql
+    SET search_path TO public
     AS $$
 BEGIN
     NEW.expiration = now() + '1 month';
@@ -478,6 +495,7 @@ ALTER FUNCTION public.update_listing_expiration() OWNER TO scmarket;
 
 CREATE FUNCTION public.update_public_contract_expiration() RETURNS trigger
     LANGUAGE plpgsql
+    SET search_path TO public
     AS $$
 BEGIN
     NEW.expiration = now() + '1 month';
@@ -495,6 +513,7 @@ ALTER FUNCTION public.update_public_contract_expiration() OWNER TO scmarket;
 
 CREATE PROCEDURE public.upsert_daily_activity(uuid)
     LANGUAGE plpgsql
+    SET search_path TO public
     AS $_$
 BEGIN
     INSERT INTO activity_history(user_id) VALUES ($1) ON CONFLICT DO NOTHING;
@@ -511,6 +530,7 @@ ALTER PROCEDURE public.upsert_daily_activity(uuid) OWNER TO scmarket;
 
 CREATE PROCEDURE public.upsert_daily_price_history()
     LANGUAGE plpgsql
+    SET search_path TO public
     AS $$
 BEGIN
     WITH item_prices as (SELECT market_listing_details.game_item_id as game_item_id,
@@ -3969,6 +3989,7 @@ CREATE OR REPLACE FUNCTION public.create_contractor(
                      message TEXT
                  )
     LANGUAGE plpgsql
+    SET search_path TO public
     SECURITY DEFINER
 AS $$
 DECLARE
