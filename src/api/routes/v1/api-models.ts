@@ -15,7 +15,6 @@ export interface User {
   profile_description: string
   role: "user" | "admin"
   banned: boolean
-  verified: boolean
   username: string
   avatar: string
   banner: string

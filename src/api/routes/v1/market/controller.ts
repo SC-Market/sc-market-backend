@@ -373,7 +373,10 @@ export const update_listing_quantity: RequestHandler = async (req, res) => {
 
   // Use stock lot service to update quantity
   const stockLotService = new StockLotService()
-  await stockLotService.updateSimpleStock(listing.listing_id, quantity_available)
+  await stockLotService.updateSimpleStock(
+    listing.listing_id,
+    quantity_available,
+  )
 
   res.json(createResponse({ result: "Success" }))
 }
@@ -422,9 +425,9 @@ export const get_order_stats: RequestHandler = async (req, res) => {
 export const create_listing: RequestHandler = async (req, res) => {
   try {
     const user = req.user as User
-    
+
     // Require verified account
-    if (!user.verified) {
+    if (!user.rsi_confirmed) {
       res
         .status(403)
         .json(
@@ -435,7 +438,7 @@ export const create_listing: RequestHandler = async (req, res) => {
         )
       return
     }
-    
+
     const {
       price,
       title,
@@ -1613,7 +1616,7 @@ export const create_multiple: RequestHandler = async (req, res) => {
     const user = req.user as User
 
     // Require verified account
-    if (!user.verified) {
+    if (!user.rsi_confirmed) {
       res
         .status(403)
         .json(
@@ -1901,7 +1904,7 @@ export const create_buy_order: RequestHandler = async (req, res) => {
     const user = req.user as User
 
     // Require verified account
-    if (!user.verified) {
+    if (!user.rsi_confirmed) {
       res
         .status(403)
         .json(
