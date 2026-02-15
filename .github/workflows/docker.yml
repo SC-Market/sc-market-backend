@@ -59,8 +59,8 @@ jobs:
       
       - name: Force Lightsail redeployment
         run: |
-          # Trigger redeployment by updating power (to same value)
+          # Force new deployment by toggling scale
           aws lightsail update-container-service \
             --service-name sc-market \
             --region us-east-2 \
-            --power small
+            --scale 1
