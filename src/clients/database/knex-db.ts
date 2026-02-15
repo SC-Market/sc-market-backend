@@ -48,7 +48,7 @@ export class KnexDatabase implements Database {
         min: 0,
         max: 5,
         afterCreate: (conn: any, done: (err?: Error) => void) => {
-          conn.query(`SET TIME ZONE 'UTC'`, done)
+          conn.query(`SET TIME ZONE 'UTC'; SET search_path TO "$user", public;`, done)
         },
       },
     },
