@@ -42,6 +42,10 @@ describe("Feature: tsoa-migration, Property 14: Rollback API Contract Preservati
 
   it("should preserve route paths across builds", () => {
     // Verify that all expected routes are present
+    if (!generatedSpec.paths) {
+      throw new Error("OpenAPI spec has no paths defined")
+    }
+    
     const paths = Object.keys(generatedSpec.paths)
     
     // Check that we have routes (not empty)
@@ -60,9 +64,15 @@ describe("Feature: tsoa-migration, Property 14: Rollback API Contract Preservati
   })
 
   it("should preserve HTTP methods for each route", () => {
+    if (!generatedSpec.paths) {
+      throw new Error("OpenAPI spec has no paths defined")
+    }
+    
     const paths = generatedSpec.paths
     
-    Object.entries(paths).forEach(([path, pathItem]) => {
+    Object.entries(paths).forEach(([_path, pathItem]) => {
+      if (!pathItem) return
+      
       // Verify each path has at least one HTTP method
       const methods = Object.keys(pathItem).filter(key => 
         ["get", "post", "put", "delete", "patch"].includes(key)
@@ -72,7 +82,7 @@ describe("Feature: tsoa-migration, Property 14: Rollback API Contract Preservati
       
       // Verify each method has required properties
       methods.forEach(method => {
-        const operation = pathItem[method as keyof typeof pathItem]
+        const operation = (pathItem as any)[method]
         if (operation && typeof operation === "object") {
           expect(operation).toHaveProperty("responses")
         }
@@ -90,7 +100,7 @@ describe("Feature: tsoa-migration, Property 14: Rollback API Contract Preservati
     if (components?.schemas) {
       const schemas = Object.entries(components.schemas)
       
-      schemas.forEach(([schemaName, schema]) => {
+      schemas.forEach(([_schemaName, schema]) => {
         // Each schema should have a type, anyOf, oneOf, allOf, or be a reference
         if (typeof schema === "object" && !("$ref" in schema)) {
           const hasValidStructure = 
@@ -105,20 +115,26 @@ describe("Feature: tsoa-migration, Property 14: Rollback API Contract Preservati
   })
 
   it("should preserve authentication requirements", () => {
+    if (!generatedSpec.paths) {
+      throw new Error("OpenAPI spec has no paths defined")
+    }
+    
     const paths = generatedSpec.paths
     
-    Object.entries(paths).forEach(([path, pathItem]) => {
+    Object.entries(paths).forEach(([_path, pathItem]) => {
+      if (!pathItem) return
+      
       const methods = ["get", "post", "put", "delete", "patch"]
       
       methods.forEach(method => {
-        const operation = pathItem[method as keyof typeof pathItem]
+        const operation = (pathItem as any)[method]
         
         if (operation && typeof operation === "object" && "security" in operation) {
           // If security is defined, it should be an array
           expect(Array.isArray(operation.security)).toBe(true)
           
           // Each security requirement should have proper structure
-          operation.security?.forEach(securityReq => {
+          operation.security?.forEach((securityReq: any) => {
             expect(typeof securityReq).toBe("object")
           })
         }
@@ -127,14 +143,20 @@ describe("Feature: tsoa-migration, Property 14: Rollback API Contract Preservati
   })
 
   it("should preserve error response definitions", () => {
+    if (!generatedSpec.paths) {
+      throw new Error("OpenAPI spec has no paths defined")
+    }
+    
     const paths = generatedSpec.paths
     let hasErrorResponses = false
     
-    Object.entries(paths).forEach(([path, pathItem]) => {
+    Object.entries(paths).forEach(([_path, pathItem]) => {
+      if (!pathItem) return
+      
       const methods = ["get", "post", "put", "delete", "patch"]
       
       methods.forEach(method => {
-        const operation = pathItem[method as keyof typeof pathItem]
+        const operation = (pathItem as any)[method]
         
         if (operation && typeof operation === "object" && "responses" in operation) {
           const responses = operation.responses
@@ -147,7 +169,7 @@ describe("Feature: tsoa-migration, Property 14: Rollback API Contract Preservati
               const response = responses[code]
               
               // Verify error response has content
-              if (typeof response === "object" && "content" in response) {
+              if (response && typeof response === "object" && "content" in response) {
                 expect(response.content).toBeDefined()
               }
             }
@@ -161,13 +183,19 @@ describe("Feature: tsoa-migration, Property 14: Rollback API Contract Preservati
   })
 
   it("should maintain consistent parameter definitions", () => {
+    if (!generatedSpec.paths) {
+      throw new Error("OpenAPI spec has no paths defined")
+    }
+    
     const paths = generatedSpec.paths
     
-    Object.entries(paths).forEach(([path, pathItem]) => {
+    Object.entries(paths).forEach(([_path, pathItem]) => {
+      if (!pathItem) return
+      
       const methods = ["get", "post", "put", "delete", "patch"]
       
       methods.forEach(method => {
-        const operation = pathItem[method as keyof typeof pathItem]
+        const operation = (pathItem as any)[method]
         
         if (operation && typeof operation === "object" && "parameters" in operation) {
           const parameters = operation.parameters
@@ -190,6 +218,10 @@ describe("Feature: tsoa-migration, Property 14: Rollback API Contract Preservati
   })
 
   it("should preserve API versioning in paths", () => {
+    if (!generatedSpec.paths) {
+      throw new Error("OpenAPI spec has no paths defined")
+    }
+    
     const paths = Object.keys(generatedSpec.paths)
     
     // All paths should start with /api/
@@ -233,10 +265,17 @@ describe("Feature: tsoa-migration, Property 14: Rollback API Contract Preservati
     // Verify critical properties are preserved
     expect(deserialized.openapi).toBe(generatedSpec.openapi)
     expect(deserialized.info.title).toBe(generatedSpec.info.title)
-    expect(Object.keys(deserialized.paths)).toEqual(Object.keys(generatedSpec.paths))
+    
+    if (generatedSpec.paths) {
+      expect(Object.keys(deserialized.paths)).toEqual(Object.keys(generatedSpec.paths))
+    }
   })
 
   it("should maintain consistent route ordering", () => {
+    if (!generatedSpec.paths) {
+      throw new Error("OpenAPI spec has no paths defined")
+    }
+    
     // Get all route paths
     const paths = Object.keys(generatedSpec.paths)
     
@@ -250,14 +289,20 @@ describe("Feature: tsoa-migration, Property 14: Rollback API Contract Preservati
   })
 
   it("should preserve content-type definitions", () => {
+    if (!generatedSpec.paths) {
+      throw new Error("OpenAPI spec has no paths defined")
+    }
+    
     const paths = generatedSpec.paths
     let hasContentTypes = false
     
-    Object.entries(paths).forEach(([path, pathItem]) => {
+    Object.entries(paths).forEach(([_path, pathItem]) => {
+      if (!pathItem) return
+      
       const methods = ["post", "put", "patch"]
       
       methods.forEach(method => {
-        const operation = pathItem[method as keyof typeof pathItem]
+        const operation = (pathItem as any)[method]
         
         if (operation && typeof operation === "object") {
           // Check request body content types
@@ -277,7 +322,7 @@ describe("Feature: tsoa-migration, Property 14: Rollback API Contract Preservati
           // Check response content types
           if ("responses" in operation) {
             Object.values(operation.responses).forEach(response => {
-              if (typeof response === "object" && "content" in response) {
+              if (response && typeof response === "object" && "content" in response) {
                 hasContentTypes = true
                 expect(response.content).toBeDefined()
               }

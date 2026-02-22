@@ -98,32 +98,54 @@ describe("Common Models - Legacy Format Compatibility", () => {
         email: { message: "Invalid email format", value: "" },
         password: { message: "Password too short", value: "" },
       }
+      
+      // Convert FieldErrors to ValidationError[]
+      const validationErrorsArray1 = Object.entries(validationErrors).map(([field, error]) => ({
+        field,
+        message: error.message,
+      }))
+      
       const legacyResponse = createValidationErrorResponse(
         "Validation failed",
-        validationErrors,
+        validationErrorsArray1,
       )
+      
+      // Convert FieldErrors to ValidationErrorDetail[]
+      const validationErrorsArray2 = Object.entries(validationErrors).map(([field, error]) => ({
+        field,
+        message: error.message,
+      }))
+      
       const tsoaResponse: ValidationErrorResponse = {
         error: {
           code: "VALIDATION_ERROR",
           message: "Validation failed",
-          validationErrors,
+          validationErrors: validationErrorsArray2,
         },
       }
 
       expect(tsoaResponse).toEqual(legacyResponse)
       expect(tsoaResponse.error.code).toBe("VALIDATION_ERROR")
-      expect(tsoaResponse.error.validationErrors).toEqual(validationErrors)
+      expect(tsoaResponse.error.validationErrors).toEqual(validationErrorsArray2)
     })
 
     it("should support validation errors with codes", () => {
       const validationErrors: FieldErrors = {
-        email: { message: "Invalid email", value: "", code: "INVALID_FORMAT" },
+        email: { message: "Invalid email", value: "" },
       }
+      
+      // Convert FieldErrors to ValidationErrorDetail[]
+      const validationErrorsArray = Object.entries(validationErrors).map(([field, error]) => ({
+        field,
+        message: error.message,
+        code: "INVALID_FORMAT",
+      }))
+      
       const tsoaResponse: ValidationErrorResponse = {
         error: {
           code: "VALIDATION_ERROR",
           message: "Validation failed",
-          validationErrors,
+          validationErrors: validationErrorsArray,
         },
       }
 

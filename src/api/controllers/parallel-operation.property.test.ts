@@ -200,10 +200,10 @@ describe("Parallel Operation Routing - Property-Based Tests", () => {
           const handler = (req: Request, res: Response) => {
             legacyHandlerCalls.push({
               method: req.method,
-              path: req.route.path,
+              path: req.route?.path || req.path,
             })
             res.json({
-              data: { message: "Legacy handler", route: req.route.path },
+              data: { message: "Legacy handler", route: req.route?.path || req.path },
             })
           }
 
@@ -238,10 +238,10 @@ describe("Parallel Operation Routing - Property-Based Tests", () => {
           const handler = (req: Request, res: Response) => {
             tsoaHandlerCalls.push({
               method: req.method,
-              path: req.route.path,
+              path: req.route?.path || req.path,
             })
             res.json({
-              data: { message: "TSOA handler", route: req.route.path },
+              data: { message: "TSOA handler", route: req.route?.path || req.path },
             })
           }
 
@@ -383,7 +383,7 @@ describe("Parallel Operation Routing - Property-Based Tests", () => {
               .replace(/:attribute_name/g, "test_attr")
               .replace(/:listing_id/g, "test-listing-123")
 
-            let response
+            let response: any
             switch (route.method) {
               case "GET":
                 response = await request.get(testPath)
@@ -397,6 +397,8 @@ describe("Parallel Operation Routing - Property-Based Tests", () => {
               case "DELETE":
                 response = await request.delete(testPath)
                 break
+              default:
+                throw new Error(`Unsupported method: ${route.method}`)
             }
 
             // Verify TSOA handler was called
@@ -442,7 +444,7 @@ describe("Parallel Operation Routing - Property-Based Tests", () => {
               .replace(/:order_id/g, "test-order-456")
               .replace(/:contractor_id/g, "test-contractor-789")
 
-            let response
+            let response: any
             switch (route.method) {
               case "GET":
                 response = await request.get(testPath)
@@ -456,6 +458,8 @@ describe("Parallel Operation Routing - Property-Based Tests", () => {
               case "DELETE":
                 response = await request.delete(testPath)
                 break
+              default:
+                throw new Error(`Unsupported method: ${route.method}`)
             }
 
             // Verify legacy handler was called
@@ -538,7 +542,7 @@ describe("Parallel Operation Routing - Property-Based Tests", () => {
                 .replace(/:order_id/g, "test-order-456")
                 .replace(/:contractor_id/g, "test-contractor-789")
 
-              let response
+              let response: any
               switch (route.method) {
                 case "GET":
                   response = await request.get(testPath)
@@ -552,6 +556,8 @@ describe("Parallel Operation Routing - Property-Based Tests", () => {
                 case "DELETE":
                   response = await request.delete(testPath)
                   break
+                default:
+                  throw new Error(`Unsupported method: ${route.method}`)
               }
 
               responses.push(response.body.data.message)
@@ -615,7 +621,7 @@ describe("Parallel Operation Routing - Property-Based Tests", () => {
                 .replace(/:order_id/g, "test-order-456")
                 .replace(/:contractor_id/g, "test-contractor-789")
 
-              let response
+              let response: any
               switch (route.method) {
                 case "GET":
                   response = await request.get(testPath)
@@ -629,6 +635,8 @@ describe("Parallel Operation Routing - Property-Based Tests", () => {
                 case "DELETE":
                   response = await request.delete(testPath)
                   break
+                default:
+                  throw new Error(`Unsupported method: ${route.method}`)
               }
 
               // Verify exactly one handler was called
@@ -689,7 +697,7 @@ describe("Parallel Operation Routing - Property-Based Tests", () => {
               .replace(/:order_id/g, "test-order-456")
               .replace(/:contractor_id/g, "test-contractor-789")
 
-            let response
+            let response: any
             switch (route.method) {
               case "GET":
                 response = await request.get(testPath)
@@ -703,6 +711,8 @@ describe("Parallel Operation Routing - Property-Based Tests", () => {
               case "DELETE":
                 response = await request.delete(testPath)
                 break
+              default:
+                throw new Error(`Unsupported method: ${route.method}`)
             }
 
             // Verify correct handler was called based on current status
@@ -756,7 +766,7 @@ describe("Parallel Operation Routing - Property-Based Tests", () => {
               .replace(/:order_id/g, "test-order-456")
               .replace(/:contractor_id/g, "test-contractor-789")
 
-            let response
+            let response: any
             switch (route.method) {
               case "GET":
                 response = await request.get(testPath)
@@ -770,6 +780,8 @@ describe("Parallel Operation Routing - Property-Based Tests", () => {
               case "DELETE":
                 response = await request.delete(testPath)
                 break
+              default:
+                throw new Error(`Unsupported method: ${route.method}`)
             }
 
             // Verify correct handler was called (same as normal order)
@@ -878,7 +890,7 @@ describe("Parallel Operation Routing - Property-Based Tests", () => {
                 .replace(/:order_id/g, "test-order-456")
                 .replace(/:contractor_id/g, "test-contractor-789")
 
-              let response
+              let response: any
               switch (route.method) {
                 case "GET":
                   response = await request.get(testPath)
@@ -892,6 +904,8 @@ describe("Parallel Operation Routing - Property-Based Tests", () => {
                 case "DELETE":
                   response = await request.delete(testPath)
                   break
+                default:
+                  throw new Error(`Unsupported method: ${route.method}`)
               }
 
               return {

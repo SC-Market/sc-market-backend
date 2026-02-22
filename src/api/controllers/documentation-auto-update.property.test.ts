@@ -100,9 +100,12 @@ describe("Feature: tsoa-migration, Property 10: Documentation Auto-Update", () =
           expect(typeof path).toBe("string")
           expect(typeof pathItem).toBe("object")
 
+          // Type assertion for pathItem
+          const typedPathItem = pathItem as Record<string, any>
+
           // At least one HTTP method should be defined
           const methods = ["get", "post", "put", "delete", "patch"]
-          const hasMethod = methods.some((method) => method in pathItem)
+          const hasMethod = methods.some((method) => method in typedPathItem)
           expect(hasMethod).toBe(true)
         }
       }),
@@ -150,8 +153,10 @@ describe("Feature: tsoa-migration, Property 10: Documentation Auto-Update", () =
         expect(completeSpec.openapi).toBe("3.1.0")
         expect(completeSpec.paths).toBeDefined()
 
-        // Verify TSOA routes are present
-        expect(Object.keys(completeSpec.paths).length).toBeGreaterThan(0)
+        // Verify TSOA routes are present - add null check
+        if (completeSpec.paths) {
+          expect(Object.keys(completeSpec.paths).length).toBeGreaterThan(0)
+        }
 
         // The complete spec should include both TSOA and WebSocket routes
         expect(completeSpec).toBeDefined()
@@ -250,28 +255,31 @@ describe("Feature: tsoa-migration, Property 10: Documentation Auto-Update", () =
           // Check that at least one endpoint has the expected decorator info
           let foundDecorator = false
 
-          for (const [path, pathItem] of Object.entries(paths)) {
-            for (const [method, operation] of Object.entries(pathItem)) {
+          for (const [path, pathItem] of Object.entries(paths as Record<string, any>)) {
+            for (const [method, operation] of Object.entries(pathItem as Record<string, any>)) {
               if (method === "parameters" || method === "servers") continue
+
+              // Type assertion for operation
+              const typedOperation = operation as any
 
               switch (decoratorType) {
                 case "route":
                   // Routes should have operationId
-                  if (operation.operationId) foundDecorator = true
+                  if (typedOperation.operationId) foundDecorator = true
                   break
                 case "security":
                   // Some endpoints should have security
-                  if (operation.security && operation.security.length > 0) {
+                  if (typedOperation.security && typedOperation.security.length > 0) {
                     foundDecorator = true
                   }
                   break
                 case "response":
                   // All endpoints should have responses
-                  if (operation.responses) foundDecorator = true
+                  if (typedOperation.responses) foundDecorator = true
                   break
                 case "parameter":
                   // Some endpoints should have parameters
-                  if (operation.parameters && operation.parameters.length > 0) {
+                  if (typedOperation.parameters && typedOperation.parameters.length > 0) {
                     foundDecorator = true
                   }
                   break

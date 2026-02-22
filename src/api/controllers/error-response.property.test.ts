@@ -304,7 +304,7 @@ describe("Error Response Format - Property-Based Tests", () => {
             expect(mockResponse.json).toHaveBeenCalled()
 
             // Get the response body
-            const responseBody = vi.mocked(mockResponse.json).mock.calls[0][0]
+            const responseBody = vi.mocked(mockResponse.json!).mock.calls[0]?.[0]! as any
 
             // Verify response structure matches legacy format
             expect(responseBody).toBeDefined()
@@ -437,7 +437,7 @@ describe("Error Response Format - Property-Based Tests", () => {
               mockNext,
             )
 
-            const responseBody = vi.mocked(mockResponse.json).mock.calls[0][0]
+            const responseBody = vi.mocked(mockResponse.json!).mock.calls[0]?.[0]! as any
 
             // Verify error code is from ErrorCode enum
             const validErrorCodes = Object.values(ErrorCode)
@@ -496,8 +496,8 @@ describe("Error Response Format - Property-Based Tests", () => {
             // Verify status code matches
             expect(mockResponse.status).toHaveBeenCalledWith(expectedStatus)
 
-            const responseBody = vi.mocked(mockResponse.json).mock.calls[0][0]
-            expect(responseBody.error.code).toBe(params.errorCode)
+            const responseBody = vi.mocked(mockResponse.json!).mock.calls[0]?.[0]! as any
+            expect((responseBody).error.code).toBe(params.errorCode)
           },
         ),
         { numRuns: 30 },
@@ -536,7 +536,7 @@ describe("Error Response Format - Property-Based Tests", () => {
               mockNext,
             )
 
-            const responseBody = vi.mocked(mockResponse.json).mock.calls[0][0]
+            const responseBody = vi.mocked(mockResponse.json!).mock.calls[0]?.[0]! as any
 
             // Verify details field exists and contains fields
             expect(responseBody.error).toHaveProperty("details")
@@ -579,7 +579,7 @@ describe("Error Response Format - Property-Based Tests", () => {
               mockNext,
             )
 
-            const responseBody = vi.mocked(mockResponse.json).mock.calls[0][0]
+            const responseBody = vi.mocked(mockResponse.json!).mock.calls[0]?.[0]! as any
 
             // Verify message is a non-empty string
             expect(typeof responseBody.error.message).toBe("string")
@@ -687,8 +687,13 @@ describe("Error Response Format - Property-Based Tests", () => {
                 : vi.mocked(logger.error).mock.calls
 
             expect(logCalls.length).toBeGreaterThan(0)
-            expect(logCalls[0][1]).toHaveProperty("path")
-            expect(logCalls[0][1]).toHaveProperty("method")
+            // Add type assertion for log call arguments
+            const logCallArgs = logCalls[0] as unknown as [string, object]
+            expect(logCallArgs[0]).toBeDefined()
+            if (logCallArgs[1]) {
+              expect(logCallArgs[1]).toHaveProperty("path")
+              expect(logCallArgs[1]).toHaveProperty("method")
+            }
           },
         ),
         { numRuns: 30 },
@@ -735,11 +740,11 @@ describe("Error Response Format - Property-Based Tests", () => {
               mockNext,
             )
 
-            const responseBody = vi.mocked(mockResponse.json).mock.calls[0][0]
+            const responseBody = vi.mocked(mockResponse.json!).mock.calls[0]?.[0]! as any
 
             // Verify details are preserved
-            expect(responseBody.error).toHaveProperty("details")
-            expect(responseBody.error.details).toEqual(params.details)
+            expect(responseBody?.error).toHaveProperty("details")
+            expect(responseBody!.error!.details).toEqual(params.details)
           },
         ),
         { numRuns: 25 },
@@ -769,26 +774,30 @@ describe("Error Response Format - Property-Based Tests", () => {
             ),
           }),
           async (params) => {
-            mockRequest.path = params.path
-            mockRequest.method = params.method
+            // Create a new mock request with the path and method
+            const testRequest = {
+              ...mockRequest,
+              path: params.path,
+              method: params.method,
+            }
 
             vi.clearAllMocks()
 
             tsoaErrorHandler(
               params.error,
-              mockRequest as ExpressRequest,
+              testRequest as ExpressRequest,
               mockResponse as Response,
               mockNext,
             )
 
-            const responseBody = vi.mocked(mockResponse.json).mock.calls[0][0]
+            const responseBody = vi.mocked(mockResponse.json!).mock.calls[0]?.[0]! as any
 
             // Verify consistent structure regardless of path/method
             expect(responseBody).toHaveProperty("error")
-            expect(responseBody.error).toHaveProperty("code")
-            expect(responseBody.error).toHaveProperty("message")
-            expect(typeof responseBody.error.code).toBe("string")
-            expect(typeof responseBody.error.message).toBe("string")
+            expect(responseBody!.error).toHaveProperty("code")
+            expect(responseBody!.error).toHaveProperty("message")
+            expect(typeof responseBody!.error!.code).toBe("string")
+            expect(typeof responseBody!.error!.message).toBe("string")
           },
         ),
         { numRuns: 40 },

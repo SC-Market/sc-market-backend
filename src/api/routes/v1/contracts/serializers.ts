@@ -9,6 +9,7 @@ export async function serializePublicContract(contract: DBPublicContract) {
 
   return {
     customer,
+    customer_id: contract.customer_id,
     id: contract.id,
     // rush: boolean
     departure: contract.departure,
@@ -19,8 +20,8 @@ export async function serializePublicContract(contract: DBPublicContract) {
     collateral: contract.collateral,
     title: contract.title,
     description: contract.description,
-    timestamp: contract.timestamp,
+    timestamp: contract.timestamp.toISOString(),
     status: contract.status,
-    expiration: contract.expiration,
+    expiration: contract.expiration.toISOString(),
   }
 }

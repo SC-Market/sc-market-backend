@@ -463,8 +463,8 @@ app.use(
   apiReference({
     spec: {
       url: "/openapi.json",
-    } as any, // Type assertion needed for @scalar/express-api-reference compatibility
-  }),
+    },
+  } as any), // Type assertion needed for @scalar/express-api-reference compatibility
 )
 
 app.use(addTranslationToRequestWithUser)
