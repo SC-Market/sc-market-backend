@@ -52,7 +52,6 @@ import {
   cancel_buy_order,
   export_Listings,
   get_category_details,
-  search_game_items,
   get_categories,
   get_game_item,
   get_seller_analytics,
@@ -330,8 +329,6 @@ marketRouter.get(
 )
 
 marketRouter.get("/category/:category", readRateLimit, get_category_details)
-
-marketRouter.get("/items/search", readRateLimit, search_game_items)
 
 marketRouter.get("/categories", readRateLimit, get_categories)
 
