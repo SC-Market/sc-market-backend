@@ -310,7 +310,7 @@ describe("Request Validation - Property-Based Tests", () => {
             expect(typeof parsedLimit).toBe("number")
             
             // If it's a valid number, it should be within bounds
-            if (!isNaN(parsedLimit)) {
+            if (parsedLimit !== undefined && !isNaN(parsedLimit)) {
               expect(parsedLimit).toBeGreaterThan(0)
               expect(parsedLimit).toBeLessThanOrEqual(50)
             }
@@ -393,8 +393,8 @@ describe("Request Validation - Property-Based Tests", () => {
             bodyAttributeName: fc.constantFrom("color", "weight", "rarity"),
           }),
           async (params) => {
-            // Ensure they're different
-            if (params.pathAttributeName === params.bodyAttributeName) {
+            // Ensure they're different (they always will be due to disjoint sets)
+            if ((params.pathAttributeName as string) === (params.bodyAttributeName as string)) {
               return
             }
 

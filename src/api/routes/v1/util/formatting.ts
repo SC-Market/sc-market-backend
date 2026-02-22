@@ -37,6 +37,7 @@ import { getLanguageName } from "../../../../constants/languages.js"
 import { User } from "../api-models.js"
 import { is_member } from "./permissions.js"
 import moment from "moment"
+import { RecruitingPost } from "../../../models/recruiting.models.js"
 import {
   FormattedAggregateListing,
   FormattedBuyOrder,
@@ -1015,7 +1016,7 @@ export async function formatComment(
   }
 }
 
-export async function formatRecruitingPost(post: DBRecruitingPost) {
+export async function formatRecruitingPost(post: DBRecruitingPost): Promise<RecruitingPost> {
   const cont = await contractorDb.getContractor({
     contractor_id: post.contractor_id,
   })
@@ -1029,7 +1030,7 @@ export async function formatRecruitingPost(post: DBRecruitingPost) {
     post_id: post.post_id,
     title: post.title,
     body: post.body,
-    timestamp: post.timestamp,
+    timestamp: post.timestamp.toISOString(),
     upvotes: +(votes.find((v) => v.upvote)?.count || 0),
     downvotes: +(votes.find((v) => !v.upvote)?.count || 0),
   }

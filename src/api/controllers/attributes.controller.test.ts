@@ -193,7 +193,7 @@ describe("AttributesController", () => {
       // Act
       const result = await controller.getDefinitions(
         mockRequest as ExpressRequest,
-        ["ship", "vehicle"],
+        "ship,vehicle",
       )
 
       // Assert

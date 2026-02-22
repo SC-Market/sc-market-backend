@@ -7,14 +7,26 @@ import {
   rollbackSpectrumMigration,
 } from "../util/spectrum-migration.js"
 import { createResponse, createErrorResponse } from "../util/response.js"
-import {
-  adminOapi,
-  Response400,
-  Response401,
-  Response403,
-  Response500,
-} from "../openapi.js"
+// Legacy openapi.js has been removed - these routes need to be migrated to TSOA
+// import {
+//   adminOapi,
+//   Response400,
+//   Response401,
+//   Response403,
+//   Response500,
+// } from "../openapi.js"
 import logger from "../../../../logger/logger.js"
+
+// Temporary stub for adminOapi until migration to TSOA
+const adminOapi = {
+  validPath: (config: any) => (req: any, res: any, next: any) => next(),
+}
+
+// Temporary response type stubs
+const Response400 = {}
+const Response401 = {}
+const Response403 = {}
+const Response500 = {}
 
 export const spectrumMigrationRouter = express.Router()
 

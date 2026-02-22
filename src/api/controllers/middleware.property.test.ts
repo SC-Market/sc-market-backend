@@ -57,7 +57,7 @@ describe("Middleware Execution - Property-Based Tests", () => {
       headers: {},
       query: {},
       body: {},
-      isAuthenticated: vi.fn(() => false),
+      isAuthenticated: vi.fn(() => false) as any,
       user: undefined,
     }
     mockResponse = {
@@ -104,13 +104,13 @@ describe("Middleware Execution - Property-Based Tests", () => {
           }),
           async (scenario) => {
             // Reset request state for each scenario
-            mockRequest.isAuthenticated = vi.fn(() => false)
+            mockRequest.isAuthenticated = vi.fn(() => false) as any
             mockRequest.user = undefined
             mockRequest.headers = {}
             
             if (scenario.authType === "session") {
               // Session authentication
-              mockRequest.isAuthenticated = vi.fn(() => scenario.isValidUser)
+              mockRequest.isAuthenticated = vi.fn(() => scenario.isValidUser) as any
               if (scenario.isValidUser) {
                 mockRequest.user = {
                   user_id: "test-user-id",
@@ -170,13 +170,13 @@ describe("Middleware Execution - Property-Based Tests", () => {
                 // Mock user lookup
                 vi.mocked(profileDb.getUser).mockResolvedValue(
                   scenario.isValidUser && !scenario.isBanned
-                    ? {
+                    ? ({
                         user_id: "test-user-id",
                         username: "testuser",
                         role: "user",
                         rsi_confirmed: true,
                         banned: false,
-                      }
+                      } as any)
                     : null,
                 )
 
@@ -253,7 +253,7 @@ describe("Middleware Execution - Property-Based Tests", () => {
           }),
           async (scenario) => {
             // Session auth with role check
-            mockRequest.isAuthenticated = vi.fn(() => true)
+            mockRequest.isAuthenticated = vi.fn(() => true) as any
             mockRequest.user = {
               user_id: "test-user-id",
               username: "testuser",
@@ -262,14 +262,19 @@ describe("Middleware Execution - Property-Based Tests", () => {
               banned: false,
             } as any
 
-            if (scenario.requiredScopes.includes("admin")) {
+            // Convert readonly array to mutable array
+            const scopesArray = scenario.requiredScopes.length > 0 
+              ? ([...scenario.requiredScopes] as string[])
+              : undefined
+
+            if ((scenario.requiredScopes as readonly string[]).includes("admin")) {
               // Admin scope required
               if (scenario.userRole === "admin") {
                 // Should succeed
                 const result = await expressAuthentication(
                   mockRequest as ExpressRequest,
                   "sessionAuth",
-                  scenario.requiredScopes,
+                  scopesArray,
                 )
                 expect(result).toBeDefined()
               } else {
@@ -278,7 +283,7 @@ describe("Middleware Execution - Property-Based Tests", () => {
                   expressAuthentication(
                     mockRequest as ExpressRequest,
                     "sessionAuth",
-                    scenario.requiredScopes,
+                    scopesArray,
                   ),
                 ).rejects.toThrow("Admin access required")
               }
@@ -287,7 +292,7 @@ describe("Middleware Execution - Property-Based Tests", () => {
               const result = await expressAuthentication(
                 mockRequest as ExpressRequest,
                 "sessionAuth",
-                scenario.requiredScopes,
+                scopesArray,
               )
               expect(result).toBeDefined()
             }
@@ -306,7 +311,7 @@ describe("Middleware Execution - Property-Based Tests", () => {
                 id: "token-id",
                 user_id: "test-user-id",
                 name: "Test Token",
-                scopes: scenario.tokenScopes,
+                scopes: [...scenario.tokenScopes] as string[],
                 expires_at: null,
                 contractor_ids: [],
               }),
@@ -320,14 +325,16 @@ describe("Middleware Execution - Property-Based Tests", () => {
               role: "user",
               rsi_confirmed: true,
               banned: false,
-            })
+            } as any)
 
             // Check if token has required scopes
-            const hasAllScopes = scenario.requiredScopes.every(
-              (scope) =>
-                scenario.tokenScopes.includes(scope) ||
-                scenario.tokenScopes.includes("admin") ||
-                scenario.tokenScopes.includes("full"),
+            const tokenScopesArray = [...scenario.tokenScopes] as string[]
+            const requiredScopesArray = [...scenario.requiredScopes] as string[]
+            const hasAllScopes = requiredScopesArray.every(
+              (scope: string) =>
+                tokenScopesArray.includes(scope) ||
+                tokenScopesArray.includes("admin") ||
+                tokenScopesArray.includes("full"),
             )
 
             if (hasAllScopes || scenario.requiredScopes.length === 0) {
@@ -335,7 +342,7 @@ describe("Middleware Execution - Property-Based Tests", () => {
               const result = await expressAuthentication(
                 mockRequest as ExpressRequest,
                 "bearerAuth",
-                scenario.requiredScopes,
+                scopesArray,
               )
               expect(result).toBeDefined()
             } else {
@@ -344,7 +351,7 @@ describe("Middleware Execution - Property-Based Tests", () => {
                 expressAuthentication(
                   mockRequest as ExpressRequest,
                   "bearerAuth",
-                  scenario.requiredScopes,
+                  scopesArray,
                 ),
               ).rejects.toThrow("Insufficient permissions")
             }
@@ -443,12 +450,14 @@ describe("Middleware Execution - Property-Based Tests", () => {
             )
             expect(mockResponse.json).toHaveBeenCalled()
 
-            const jsonCall = vi.mocked(mockResponse.json).mock.calls[0][0]
-            expect(jsonCall).toHaveProperty("error")
-            expect(jsonCall.error).toHaveProperty("code")
-            expect(jsonCall.error).toHaveProperty("message")
-            expect(jsonCall.error.code).toBe(testCase.expectedCode)
-            expect(typeof jsonCall.error.message).toBe("string")
+            const jsonCall = vi.mocked(mockResponse.json!).mock.calls[0]?.[0]
+            if (jsonCall) {
+              expect(jsonCall).toHaveProperty("error")
+              expect(jsonCall.error).toHaveProperty("code")
+              expect(jsonCall.error).toHaveProperty("message")
+              expect(jsonCall.error.code).toBe(testCase.expectedCode)
+              expect(typeof jsonCall.error.message).toBe("string")
+            }
           },
         ),
         { numRuns: 30 },
@@ -526,7 +535,7 @@ describe("Middleware Execution - Property-Based Tests", () => {
               mockRequest.isAuthenticated = vi.fn(() => {
                 executionOrder.push("auth")
                 return true
-              })
+              }) as any
               mockRequest.user = {
                 user_id: "test-user-id",
                 username: "testuser",
@@ -538,7 +547,7 @@ describe("Middleware Execution - Property-Based Tests", () => {
               mockRequest.isAuthenticated = vi.fn(() => {
                 executionOrder.push("auth")
                 return false
-              })
+              }) as any
             }
 
             // Mock rate limiting
@@ -681,7 +690,7 @@ describe("Middleware Execution - Property-Based Tests", () => {
           fc.constantFrom("session", "bearer"),
           async (authMethod) => {
             if (authMethod === "session") {
-              mockRequest.isAuthenticated = vi.fn(() => true)
+              mockRequest.isAuthenticated = vi.fn(() => true) as any
               mockRequest.user = {
                 user_id: "test-user-id",
                 username: "testuser",
@@ -725,7 +734,7 @@ describe("Middleware Execution - Property-Based Tests", () => {
                 role: "user",
                 rsi_confirmed: true,
                 banned: false,
-              })
+              } as any)
 
               await expressAuthentication(
                 mockRequest as ExpressRequest,
@@ -823,10 +832,21 @@ describe("Middleware Execution - Property-Based Tests", () => {
             vi.mocked(profileDb.getUser).mockResolvedValue({
               user_id: "test-user-id",
               username: "testuser",
+              display_name: "Test User",
+              profile_description: "",
               role: "user",
               rsi_confirmed: true,
               banned: false,
-            })
+              avatar: "",
+              banner: "",
+              balance: "0",
+              created_at: new Date(),
+              locale: "en",
+              spectrum_user_id: null,
+              official_server_id: null,
+              discord_thread_channel_id: null,
+              market_order_template: "",
+            } as any)
 
             if (scenario.isExpired) {
               // Should fail
@@ -862,7 +882,7 @@ describe("Middleware Execution - Property-Based Tests", () => {
           }),
           async (scenario) => {
             if (scenario.authType === "session") {
-              mockRequest.isAuthenticated = vi.fn(() => true)
+              mockRequest.isAuthenticated = vi.fn(() => true) as any
               mockRequest.user = {
                 user_id: "test-user-id",
                 username: "testuser",
@@ -916,7 +936,7 @@ describe("Middleware Execution - Property-Based Tests", () => {
                       role: "user",
                       rsi_confirmed: true,
                       banned: false,
-                    },
+                    } as any,
               )
 
               if (scenario.isBanned) {

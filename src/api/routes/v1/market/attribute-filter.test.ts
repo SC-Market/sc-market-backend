@@ -35,7 +35,7 @@ vi.mock("../../../../clients/cdn/cdn.js", () => ({
   },
 }))
 
-describe.skip("Attribute Filter Parsing", () => {
+describe("Attribute Filter Parsing", () => {
   it("should parse valid attribute filters from JSON string", async () => {
     // Import after mocks are set up
     const { convertQuery } = await import("./helpers.js")
