@@ -2147,19 +2147,6 @@ export const get_category_details: RequestHandler = async (req, res) => {
   res.json(createResponse(items))
 }
 
-export const search_game_items: RequestHandler = async (req, res) => {
-  const query = req.query.query as string
-  
-  if (!query || query.length < 1) {
-    res.json(createResponse([]))
-    return
-  }
-  
-  const limit = query.length < 3 ? 10 : 50
-  const items = await marketDb.searchGameItems(query, limit)
-  res.json(createResponse(items))
-}
-
 export const get_categories: RequestHandler = async (req, res) => {
   const raw_categories = await marketDb.getMarketCategories()
 

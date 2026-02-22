@@ -1867,23 +1867,6 @@ export async function getMarketItemsBySubcategory(
 }
 
 /**
- * Search game items by name using PostgreSQL full-text search.
- */
-export async function searchGameItems(
-  query: string,
-  limit?: number,
-): Promise<DBMarketItem[]> {
-  // Use PostgreSQL full-text search with prefix matching
-  return knex()<DBMarketItem>("game_items")
-    .whereRaw("to_tsvector('english', name) @@ plainto_tsquery('english', ?)", [query])
-    .orWhere("name", "ilike", `${query}%`) // Also match prefix for short queries
-    .orderByRaw("ts_rank(to_tsvector('english', name), plainto_tsquery('english', ?)) DESC", [query])
-    .orderBy("name")
-    .limit(limit || 50)
-    .select("name", "type", "id")
-}
-
-/**
  * Get market categories.
  */
 export async function getMarketCategories(): Promise<DBMarketCategory[]> {
