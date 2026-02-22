@@ -1,3 +1,8 @@
+// DISABLED: This test file tests legacy controller functions that have been removed
+// during the TSOA migration. The transactions module was not migrated to TSOA.
+// TODO: Either migrate transactions module to TSOA or remove this test file entirely.
+
+/*
 import { describe, it, expect, beforeEach, afterEach } from "vitest"
 import { Request, Response } from "express"
 import {
@@ -354,3 +359,5 @@ describe.skip("Transaction Controller", () => {
     })
   })
 })
+
+*/

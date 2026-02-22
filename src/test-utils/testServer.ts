@@ -1,5 +1,5 @@
 import express, { Express } from "express"
-import { apiRouter } from "../api/routes/v1/api-router.js"
+import { RegisterRoutes } from "../api/generated/routes.js"
 import { setupAuthRoutes } from "../api/routes/auth-routes.js"
 
 /**
@@ -13,8 +13,9 @@ export function createTestServer(): Express {
   app.use(express.json())
   app.use(express.urlencoded({ extended: true }))
 
-  // Set up routes
-  app.use("/api", apiRouter)
+  // Register TSOA routes
+  RegisterRoutes(app)
+  
   // Setup auth routes with test frontend URL
   const frontendUrl = new URL("http://localhost:5173")
   setupAuthRoutes(app, frontendUrl)

@@ -6,7 +6,7 @@
 import { getKnex, database } from "../../../../clients/database/knex-db.js"
 import { getNotificationActionByName } from "../notifications/database.js"
 import { getContractorTransactions as getContractorTransactionsFromTransactions } from "../transactions/database.js"
-import { RecruitingSearchQuery } from "../recruiting/controller.js"
+import { RecruitingSearchQuery } from "../../../controllers/recruiting.controller.js"
 import {
   DBContractor,
   DBContractorMember,

@@ -9,6 +9,8 @@
     "moduleResolution": "nodenext",
     "outDir": "dist/",
     "resolveJsonModule": true,
-    "allowSyntheticDefaultImports": true
+    "allowSyntheticDefaultImports": true,
+    "experimentalDecorators": true,
+    "emitDecoratorMetadata": true
   }
 }

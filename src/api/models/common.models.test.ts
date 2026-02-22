@@ -5,6 +5,7 @@
  */
 
 import { describe, it, expect } from "vitest"
+import { FieldErrors } from "tsoa"
 import {
   ApiResponse,
   ErrorResponse,
@@ -93,10 +94,10 @@ describe("Common Models - Legacy Format Compatibility", () => {
 
   describe("ValidationErrorResponse", () => {
     it("should match legacy validation error format", () => {
-      const validationErrors: ValidationError[] = [
-        { field: "email", message: "Invalid email format" },
-        { field: "password", message: "Password too short" },
-      ]
+      const validationErrors: FieldErrors = {
+        email: { message: "Invalid email format", value: "" },
+        password: { message: "Password too short", value: "" },
+      }
       const legacyResponse = createValidationErrorResponse(
         "Validation failed",
         validationErrors,
@@ -115,9 +116,9 @@ describe("Common Models - Legacy Format Compatibility", () => {
     })
 
     it("should support validation errors with codes", () => {
-      const validationErrors: ValidationError[] = [
-        { field: "email", message: "Invalid email", code: "INVALID_FORMAT" },
-      ]
+      const validationErrors: FieldErrors = {
+        email: { message: "Invalid email", value: "", code: "INVALID_FORMAT" },
+      }
       const tsoaResponse: ValidationErrorResponse = {
         error: {
           code: "VALIDATION_ERROR",
@@ -282,14 +283,15 @@ describe("Common Models - Legacy Format Compatibility", () => {
       expect(response.error.message).toBe("Test message")
     })
 
-    it("should enforce ValidationError structure", () => {
-      const error: ValidationError = {
-        field: "email",
-        message: "Invalid email",
+    it("should enforce FieldErrors structure", () => {
+      const errors: FieldErrors = {
+        email: {
+          message: "Invalid email",
+          value: "",
+        },
       }
 
-      expect(error.field).toBe("email")
-      expect(error.message).toBe("Invalid email")
+      expect(errors.email.message).toBe("Invalid email")
     })
   })
 })

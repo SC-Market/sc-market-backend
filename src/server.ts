@@ -452,20 +452,20 @@ app.get("/sitemap.xml", async function (req, res) {
   }
 })
 
-// Use TSOA-generated OpenAPI spec for documentation
-app.use(
-  "/docs",
-  apiReference({
-    spec: {
-      content: loadTsoaSpec(),
-    },
-  }),
-)
-
 // Serve OpenAPI spec
 app.get("/openapi.json", (req, res) => {
   res.json(loadTsoaSpec())
 })
+
+// Use TSOA-generated OpenAPI spec for documentation  
+app.use(
+  "/docs",
+  apiReference({
+    spec: {
+      url: "/openapi.json",
+    } as any, // Type assertion needed for @scalar/express-api-reference compatibility
+  }),
+)
 
 app.use(addTranslationToRequestWithUser)
 

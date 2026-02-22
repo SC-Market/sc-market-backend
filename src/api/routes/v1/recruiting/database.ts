@@ -11,7 +11,7 @@ import {
   DBRecruitingVote,
   DBContractor,
 } from "../../../../clients/database/db-models.js"
-import { RecruitingSearchQuery } from "./controller.js"
+import { RecruitingSearchQuery } from "../../../controllers/recruiting.controller.js"
 
 /**
  * Get a Knex query builder instance.
