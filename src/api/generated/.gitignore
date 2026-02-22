@@ -1,0 +1,4 @@
+# TSOA generated files - do not commit
+*.ts
+*.json
+!.gitignore
