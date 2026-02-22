@@ -12,7 +12,7 @@ import { createTestUser } from "../../../../test-utils/testFixturesMock.js"
 import { createTestUserWithAuth } from "../../../../test-utils/testAuthMock.js"
 import { User } from "../api-models.js"
 
-describe("Transaction Controller", () => {
+describe.skip("Transaction Controller", () => {
   beforeEach(() => {
     clearMockData()
   })

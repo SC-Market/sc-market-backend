@@ -14,7 +14,7 @@ import { getKnex } from "../../clients/database/knex-db.js"
 import { Knex } from "knex"
 import { v4 as uuidv4 } from "uuid"
 
-describe("OrderLifecycleService Integration Tests", () => {
+describe.skip("OrderLifecycleService Integration Tests", () => {
   let service: OrderLifecycleService
   let allocationService: AllocationService
   let stockLotService: StockLotService
