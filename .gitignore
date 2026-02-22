@@ -39,3 +39,5 @@ docker-compose.override.yml
 # Database backups
 /backups
 *.sql.gz
+
+src/api/generated/
