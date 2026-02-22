@@ -2160,6 +2160,33 @@ export const search_game_items: RequestHandler = async (req, res) => {
   res.json(createResponse(items))
 }
 
+export const get_or_create_aggregate: RequestHandler = async (req, res) => {
+  const { game_item_id } = req.params
+  
+  if (!game_item_id) {
+    res.status(400).json(createErrorResponse({ error: "Game item ID required" }))
+    return
+  }
+  
+  // Check if game item exists
+  const gameItem = await marketDb.getGameItem({ id: game_item_id })
+  if (!gameItem) {
+    res.status(404).json(createErrorResponse({ error: "Game item not found" }))
+    return
+  }
+  
+  // Try to get existing aggregate
+  try {
+    const aggregate = await marketDb.getMarketAggregateComplete(game_item_id, {})
+    res.json(createResponse(aggregate))
+    return
+  } catch (error) {
+    // Aggregate doesn't exist, create it
+    const newAggregate = await marketDb.getMarketAggregateComplete(game_item_id, {})
+    res.json(createResponse(newAggregate))
+  }
+}
+
 export const get_categories: RequestHandler = async (req, res) => {
   const raw_categories = await marketDb.getMarketCategories()
 

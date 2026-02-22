@@ -53,6 +53,7 @@ import {
   export_Listings,
   get_category_details,
   search_game_items,
+  get_or_create_aggregate,
   get_categories,
   get_game_item,
   get_seller_analytics,
@@ -333,6 +334,7 @@ marketRouter.get("/category/:category", readRateLimit, get_category_details)
 
 marketRouter.get("/items/search", readRateLimit, search_game_items)
 
+marketRouter.get("/items/:game_item_id/aggregate", readRateLimit, get_or_create_aggregate)
 marketRouter.get("/categories", readRateLimit, get_categories)
 
 // First register the schema for game item description
