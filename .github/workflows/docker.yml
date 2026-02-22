@@ -132,25 +132,13 @@ jobs:
               --query 'containerServices[0].state' \
               --output text)
             
-            if [ "$STATE" = "READY" ]; then
-              echo "✓ Deployment completed successfully"
-              
-              # Verify health check
-              echo "Verifying health check..."
-              HEALTH=$(aws lightsail get-container-services \
-                --service-name sc-market \
-                --region us-east-2 \
-                --query 'containerServices[0].currentDeployment.publicEndpoint.healthCheck.healthyThreshold' \
-                --output text)
-              
-              if [ "$HEALTH" != "None" ]; then
-                echo "✓ Service is healthy"
-                exit 0
-              else
-                echo "⚠ Health check status unknown, but deployment completed"
-                exit 0
-              fi
-            elif [ "$STATE" = "DEPLOYING" ] || [ "$STATE" = "UPDATING" ] || [ "$STATE" = "RUNNING" ]; then
+            if [ "$STATE" = "RUNNING" ]; then
+              echo "✓ Deployment completed successfully - Service is RUNNING"
+              exit 0
+            elif [ "$STATE" = "READY" ]; then
+              echo "✓ Service is READY (no active deployment)"
+              exit 0
+            elif [ "$STATE" = "DEPLOYING" ] || [ "$STATE" = "UPDATING" ]; then
               echo "Deployment in progress... ($ELAPSED/$TIMEOUT seconds) - State: $STATE"
               sleep 30
               ELAPSED=$((ELAPSED + 30))
