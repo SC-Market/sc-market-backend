@@ -150,8 +150,8 @@ jobs:
                 echo "⚠ Health check status unknown, but deployment completed"
                 exit 0
               fi
-            elif [ "$STATE" = "DEPLOYING" ] || [ "$STATE" = "UPDATING" ]; then
-              echo "Deployment in progress... ($ELAPSED/$TIMEOUT seconds)"
+            elif [ "$STATE" = "DEPLOYING" ] || [ "$STATE" = "UPDATING" ] || [ "$STATE" = "RUNNING" ]; then
+              echo "Deployment in progress... ($ELAPSED/$TIMEOUT seconds) - State: $STATE"
               sleep 30
               ELAPSED=$((ELAPSED + 30))
             else
