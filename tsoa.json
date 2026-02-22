@@ -1,0 +1,51 @@
+{
+  "entryFile": "src/server.ts",
+  "noImplicitAdditionalProperties": "throw-on-extras",
+  "controllerPathGlobs": ["src/api/controllers/**/*.controller.ts"],
+  "compilerOptions": {
+    "skipLibCheck": true
+  },
+  "spec": {
+    "outputDirectory": "src/api/generated",
+    "specVersion": 3,
+    "specFileBaseName": "swagger",
+    "spec": {
+      "openapi": "3.1.0",
+      "info": {
+        "title": "SC Market API",
+        "version": "1.0.0",
+        "description": "The API for the SC Market site"
+      },
+      "servers": [
+        {
+          "url": "https://api.sc-market.space",
+          "description": "Production"
+        },
+        {
+          "url": "http://localhost",
+          "description": "Development"
+        }
+      ],
+      "securityDefinitions": {
+        "bearerAuth": {
+          "type": "http",
+          "scheme": "bearer",
+          "bearerFormat": "JWT"
+        },
+        "sessionAuth": {
+          "type": "apiKey",
+          "in": "cookie",
+          "name": "connect.sid"
+        }
+      }
+    }
+  },
+  "routes": {
+    "routesDir": "src/api/generated",
+    "middleware": "express",
+    "authenticationModule": "./src/api/middleware/tsoa-auth.ts",
+    "iocModule": "./src/api/ioc.ts",
+    "esm": true
+  },
+  "ignore": ["**/node_modules/**"]
+}
