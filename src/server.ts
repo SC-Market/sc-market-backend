@@ -16,7 +16,7 @@ import { join } from "node:path"
 import { fileURLToPath } from "node:url"
 import { dirname } from "node:path"
 
-import { apiRouter } from "./api/routes/v1/api-router.js"
+import { RegisterRoutes } from "./api/generated/routes.js"
 import * as profileDb from "./api/routes/v1/profiles/database.js"
 import * as contractorDb from "./api/routes/v1/contractors/database.js"
 import * as recruitingDb from "./api/routes/v1/recruiting/database.js"
@@ -27,7 +27,7 @@ import { securityHeaders } from "./api/middleware/security-headers.js"
 import { registrationRouter } from "./clients/discord_api/registration.js"
 import { threadRouter } from "./clients/discord_api/threads.js"
 import { trackActivity } from "./api/middleware/activity.js"
-import { oapi } from "./api/routes/v1/openapi.js"
+import { loadTsoaSpec } from "./api/websocket/spec-merger.js"
 import { env } from "./config/env.js"
 import { formatListingSlug } from "./api/routes/v1/market/helpers.js"
 import { chatServer } from "./clients/messaging/websocket.js"
@@ -452,21 +452,27 @@ app.get("/sitemap.xml", async function (req, res) {
   }
 })
 
-app.use(oapi)
-app.use("/swaggerui", userAuthorized, oapi.swaggerui())
-
+// Use TSOA-generated OpenAPI spec for documentation
 app.use(
   "/docs",
   apiReference({
-    url: "/openapi.json",
+    spec: {
+      content: loadTsoaSpec(),
+    },
   }),
 )
+
+// Serve OpenAPI spec
+app.get("/openapi.json", (req, res) => {
+  res.json(loadTsoaSpec())
+})
 
 app.use(addTranslationToRequestWithUser)
 
 app.use(adminOverride)
 
-app.use("/api", apiRouter)
+// Register TSOA-generated routes
+RegisterRoutes(app)
 
 app.use(errorHandler)
 const httpServer = createServer(app)

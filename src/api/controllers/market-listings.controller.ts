@@ -617,4 +617,43 @@ export class MarketListingsController extends BaseController {
       this.handleError(error, "trackView")
     }
   }
+
+  /**
+   * Search game items by name
+   *
+   * Search for game items using PostgreSQL full-text search.
+   * Returns matching items with their name, type, and ID.
+   *
+   * @summary Search game items
+   * @param query Search query string
+   * @returns List of matching game items
+   *
+   * @example query "Aegis"
+   */
+  @Get("items/search")
+  @Middlewares(tsoaReadRateLimit)
+  @Response<ErrorResponse>(500, "Internal Server Error")
+  public async searchGameItems(
+    @Query() query: string,
+  ): Promise<{ data: Array<{ name: string; type: string; id: string }> }> {
+    try {
+      if (!query || query.length < 1) {
+        return this.success([])
+      }
+
+      const limit = query.length < 3 ? 10 : 50
+      const items = await marketDb.searchGameItems(query, limit)
+
+      this.logInfo("searchGameItems", "Searching game items", {
+        query,
+        limit,
+        resultsCount: items.length,
+      })
+
+      return this.success(items)
+    } catch (error) {
+      this.logError("searchGameItems", error, { query })
+      this.handleError(error, "searchGameItems")
+    }
+  }
 }
