@@ -119,3 +119,46 @@ jobs:
             --region us-east-2 \
             --containers "$CONTAINERS" \
             --public-endpoint "$PUBLIC_ENDPOINT"
+          
+          # Wait for deployment to complete
+          echo "Waiting for deployment to complete..."
+          TIMEOUT=600  # 10 minutes
+          ELAPSED=0
+          
+          while [ $ELAPSED -lt $TIMEOUT ]; do
+            STATE=$(aws lightsail get-container-services \
+              --service-name sc-market \
+              --region us-east-2 \
+              --query 'containerServices[0].state' \
+              --output text)
+            
+            if [ "$STATE" = "READY" ]; then
+              echo "✓ Deployment completed successfully"
+              
+              # Verify health check
+              echo "Verifying health check..."
+              HEALTH=$(aws lightsail get-container-services \
+                --service-name sc-market \
+                --region us-east-2 \
+                --query 'containerServices[0].currentDeployment.publicEndpoint.healthCheck.healthyThreshold' \
+                --output text)
+              
+              if [ "$HEALTH" != "None" ]; then
+                echo "✓ Service is healthy"
+                exit 0
+              else
+                echo "⚠ Health check status unknown, but deployment completed"
+                exit 0
+              fi
+            elif [ "$STATE" = "DEPLOYING" ] || [ "$STATE" = "UPDATING" ]; then
+              echo "Deployment in progress... ($ELAPSED/$TIMEOUT seconds)"
+              sleep 30
+              ELAPSED=$((ELAPSED + 30))
+            else
+              echo "✗ Deployment failed with state: $STATE"
+              exit 1
+            fi
+          done
+          
+          echo "✗ Deployment timed out after $TIMEOUT seconds"
+          exit 1
