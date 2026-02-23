@@ -2221,23 +2221,33 @@ export const get_or_create_aggregate: RequestHandler = async (req, res) => {
       console.log('[Market] Successfully got existing aggregate')
       res.json(createResponse(aggregate))
     } catch (error) {
-      // Aggregate doesn't exist yet - return minimal aggregate from game item
-      console.log('[Market] No aggregate exists, returning game item as minimal aggregate')
-      const minimalAggregate = {
-        ...gameItem,
-        item_name: gameItem.name,
-        item_type: gameItem.type,
-        listings: [],
-        listing_count: 0,
-        min_price: null,
-        max_price: null,
-      }
-      res.json(createResponse(minimalAggregate))
+      // Aggregate doesn't exist - create it
+      console.log('[Market] No aggregate exists, creating one')
+      
+      // Create listing details for the aggregate
+      const [details] = await database.knex()('market_listing_details')
+        .insert({
+          title: gameItem.name,
+          description: `Aggregate listing for ${gameItem.name}`,
+          item_type: gameItem.type,
+          game_item_id: gameItem.id,
+        })
+        .returning('*')
+      
+      // Link game item to details
+      await database.knex()('game_items')
+        .where({ id: game_item_id })
+        .update({ details_id: details.details_id })
+      
+      // Now fetch the complete aggregate
+      const aggregate = await marketDb.getMarketAggregateComplete(game_item_id, {})
+      console.log('[Market] Successfully created aggregate')
+      res.json(createResponse(aggregate))
     }
   } catch (error) {
     console.error('[Market] Failed to get/create aggregate:', error)
     res.status(500).json(createErrorResponse({ 
-      error: "Failed to get aggregate for this item" 
+      error: "Failed to get/create aggregate for this item" 
     }))
   }
 }
