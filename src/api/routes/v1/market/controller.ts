@@ -2197,21 +2197,27 @@ export const search_game_items: RequestHandler = async (req, res) => {
 export const get_or_create_aggregate: RequestHandler = async (req, res) => {
   const { game_item_id } = req.params
   
+  console.log('[Market] get_or_create_aggregate called with:', game_item_id)
+  
   if (!game_item_id) {
     res.status(400).json(createErrorResponse({ error: "Game item ID required" }))
     return
   }
   
-  // Check if game item exists
-  const gameItem = await marketDb.getGameItem({ id: game_item_id })
-  if (!gameItem) {
-    res.status(404).json(createErrorResponse({ error: "Game item not found" }))
-    return
-  }
-  
-  // Get or create aggregate
   try {
+    // Check if game item exists
+    const gameItem = await marketDb.getGameItem({ id: game_item_id })
+    if (!gameItem) {
+      console.log('[Market] Game item not found:', game_item_id)
+      res.status(404).json(createErrorResponse({ error: "Game item not found" }))
+      return
+    }
+    
+    console.log('[Market] Found game item:', gameItem.name)
+    
+    // Get or create aggregate
     const aggregate = await marketDb.getMarketAggregateComplete(game_item_id, {})
+    console.log('[Market] Successfully got/created aggregate')
     res.json(createResponse(aggregate))
   } catch (error) {
     console.error('[Market] Failed to get/create aggregate:', error)
