@@ -169,114 +169,120 @@ export const update_listing: RequestHandler = async (req, res) => {
   const user = req.user as User
   const listing = req.market_listing!
 
-  if (listing.status === "archived") {
-    res.status(400).json({ error: "Cannot update archived listing" })
-    return
-  }
-
-  if (listing.sale_type === "auction" && user.role !== "admin") {
-    res.status(400).json({ error: "Cannot update auction listings" })
-    return
-  }
-
-  const {
-    status,
-    title,
-    description,
-    item_type,
-    item_name,
-    price,
-    quantity_available,
-    photos,
-    minimum_bid_increment,
-    internal,
-  }: {
-    title?: string
-    description?: string
-    item_type?: string
-    item_name?: string
-
-    status?: string
-    price?: number
-    quantity_available?: number
-
-    minimum_bid_increment?: number
-    internal?: boolean
-
-    photos?: string[]
-  } = req.body
-
-  if (
-    (title || description || item_type) &&
-    listing.sale_type === "aggregate"
-  ) {
-    res
-      .status(400)
-      .json({ error: "Can't update details for aggregate listing" })
-    return
-  }
-
-  if (listing.sale_type === "auction" && price) {
-    res.status(400).json({ error: "Cannot edit price of auction" })
-    return
-  }
-
-  if (minimum_bid_increment && listing.sale_type !== "auction") {
-    res.status(400).json({ error: "Cannot set bid increment for non auction" })
-    return
-  }
-
-  let game_item_id: string | null | undefined = undefined
-  if (item_name !== undefined) {
-    if (item_name === null) {
-      game_item_id = null
-    } else {
-      const item = await marketDb.getGameItem({ name: item_name })
-      if (!item) {
-        res.status(400).json({ error: "Invalid item name" })
-        return
-      }
-      game_item_id = item.id
-    }
-  }
-
-  if (
-    status ||
-    price !== undefined ||
-    quantity_available !== undefined ||
-    internal !== undefined
-  ) {
-    // Only allow internal=true for contractor listings
-    // User listings must always be public (internal=false)
-    if (internal && !listing.contractor_seller_id) {
-      res.status(400).json({
-        error: "Internal listings can only be created for contractor listings",
-      })
+  try {
+    if (listing.status === "archived") {
+      res.status(400).json({ error: "Cannot update archived listing" })
       return
     }
 
-    await marketDb.updateMarketListing(listing_id, {
+    if (listing.sale_type === "auction" && user.role !== "admin") {
+      res.status(400).json({ error: "Cannot update auction listings" })
+      return
+    }
+
+    const {
       status,
+      title,
+      description,
+      item_type,
+      item_name,
       price,
       quantity_available,
+      photos,
+      minimum_bid_increment,
       internal,
-    })
-  }
+    }: {
+      title?: string
+      description?: string
+      item_type?: string
+      item_name?: string
 
-  if (minimum_bid_increment) {
-    await marketDb.updateAuctionDetails(
-      { listing_id },
-      { minimum_bid_increment },
-    )
-  }
+      status?: string
+      price?: number
+      quantity_available?: number
 
-  if (title || description || item_type || item_name) {
-    const unique = await marketDb.getMarketUniqueListing({ listing_id })
-    await marketDb.updateListingDetails(
-      { details_id: unique.details_id },
-      { title, description, item_type, game_item_id },
-    )
-  }
+      minimum_bid_increment?: number
+      internal?: boolean
+
+      photos?: string[]
+    } = req.body
+
+    if (
+      (title || description || item_type) &&
+      listing.sale_type === "aggregate"
+    ) {
+      res
+        .status(400)
+        .json({ error: "Can't update details for aggregate listing" })
+      return
+    }
+
+    if (listing.sale_type === "auction" && price) {
+      res.status(400).json({ error: "Cannot edit price of auction" })
+      return
+    }
+
+    if (minimum_bid_increment && listing.sale_type !== "auction") {
+      res.status(400).json({ error: "Cannot set bid increment for non auction" })
+      return
+    }
+
+    let game_item_id: string | null | undefined = undefined
+    if (item_name !== undefined) {
+      if (item_name === null) {
+        game_item_id = null
+      } else {
+        const item = await marketDb.getGameItem({ name: item_name })
+        if (!item) {
+          console.error(`[Market Update] Invalid item name: ${item_name}`, {
+            listing_id,
+            user_id: user.user_id,
+            item_name,
+          })
+          res.status(400).json({ error: "Invalid item name" })
+          return
+        }
+        game_item_id = item.id
+      }
+    }
+
+    if (
+      status ||
+      price !== undefined ||
+      quantity_available !== undefined ||
+      internal !== undefined
+    ) {
+      // Only allow internal=true for contractor listings
+      // User listings must always be public (internal=false)
+      if (internal && !listing.contractor_seller_id) {
+        res.status(400).json({
+          error: "Internal listings can only be created for contractor listings",
+        })
+        return
+      }
+
+      await marketDb.updateMarketListing(listing_id, {
+        status,
+        price,
+        quantity_available,
+        internal,
+      })
+    }
+
+    if (minimum_bid_increment) {
+      await marketDb.updateAuctionDetails(
+        { listing_id },
+        { minimum_bid_increment },
+      )
+    }
+
+    if (title || description || item_type || item_name) {
+      const unique = await marketDb.getMarketUniqueListing({ listing_id })
+      await marketDb.updateListingDetails(
+        { details_id: unique.details_id },
+        { title, description, item_type, game_item_id },
+      )
+    }
 
   // Handle photo updates
   if (photos !== undefined) {
@@ -334,7 +340,12 @@ export const update_listing: RequestHandler = async (req, res) => {
         await marketDb.insertMarketListingPhoto(listing, [
           { resource_id: resource.resource_id },
         ])
-      } catch {
+      } catch (error) {
+        console.error(`[Market Update] Failed to process photo`, {
+          listing_id,
+          photo,
+          error: error instanceof Error ? error.message : String(error),
+        })
         res.status(400).json({ error: "Invalid photo!" })
         return
       }
@@ -347,12 +358,27 @@ export const update_listing: RequestHandler = async (req, res) => {
         try {
           // Use CDN removeResource to ensure both database and CDN cleanup
           await cdn.removeResource(p.resource_id)
-        } catch {}
+        } catch (error) {
+          console.error(`[Market Update] Failed to remove old photo`, {
+            listing_id,
+            resource_id: p.resource_id,
+            error: error instanceof Error ? error.message : String(error),
+          })
+        }
       }
     }
   }
 
   res.json({ result: "Success" })
+  } catch (error) {
+    console.error(`[Market Update] Unexpected error updating listing`, {
+      listing_id,
+      user_id: user.user_id,
+      error: error instanceof Error ? error.message : String(error),
+      stack: error instanceof Error ? error.stack : undefined,
+    })
+    res.status(500).json({ error: "Failed to update listing" })
+  }
 }
 
 export const update_listing_quantity: RequestHandler = async (req, res) => {
