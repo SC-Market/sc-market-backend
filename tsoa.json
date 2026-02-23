@@ -1,0 +1,22 @@
+{
+  "entryFile": "src/server.ts",
+  "noImplicitAdditionalProperties": "throw-on-extras",
+  "controllerPathGlobs": ["src/api/routes/v2/**/*Controller.ts"],
+  "spec": {
+    "outputDirectory": "src/api/routes/v2/generated",
+    "specVersion": 3,
+    "name": "SC Market API v2",
+    "description": "Star Citizen Market API v2 - TSOA-based with auto-generated routes and OpenAPI specification",
+    "version": "2.0.0",
+    "basePath": "/api/v2",
+    "schemes": ["https", "http"],
+    "consumes": ["application/json"],
+    "produces": ["application/json"]
+  },
+  "routes": {
+    "routesDir": "src/api/routes/v2/generated",
+    "middleware": "express",
+    "authenticationModule": "src/api/routes/v2/middleware/tsoa-auth.ts",
+    "esm": true
+  }
+}

@@ -17,6 +17,8 @@ import { fileURLToPath } from "node:url"
 import { dirname } from "node:path"
 
 import { apiRouter } from "./api/routes/v1/api-router.js"
+import { apiV1Router } from "./api/routes/v1/api-v1-router.js"
+import { apiV2Router } from "./api/routes/v2/api-router.js"
 import * as profileDb from "./api/routes/v1/profiles/database.js"
 import * as contractorDb from "./api/routes/v1/contractors/database.js"
 import * as recruitingDb from "./api/routes/v1/recruiting/database.js"
@@ -467,6 +469,8 @@ app.use(addTranslationToRequestWithUser)
 app.use(adminOverride)
 
 app.use("/api", apiRouter)
+app.use("/api/v1", apiV1Router)
+app.use("/api/v2", apiV2Router)
 
 app.use(errorHandler)
 const httpServer = createServer(app)
