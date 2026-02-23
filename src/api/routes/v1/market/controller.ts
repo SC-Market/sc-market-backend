@@ -283,14 +283,12 @@ export const update_listing: RequestHandler = async (req, res) => {
           { details_id: unique.details_id },
           { title, description, item_type, game_item_id },
         )
-      } catch (error: any) {
-        if (error.constraint === 'market_listing_details_game_item_categories_subcategory_fk') {
-          res.status(400).json({ 
-            error: "Invalid item type. The selected game item's type does not match any valid category." 
-          })
-          return
-        }
-        throw error
+      } catch (error) {
+        console.error('[Market Update] Failed to update listing details:', error)
+        res.status(400).json({ 
+          error: "Failed to update listing. Please check that the item type is valid." 
+        })
+        return
       }
     }
 
