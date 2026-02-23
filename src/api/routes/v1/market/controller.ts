@@ -2215,14 +2215,29 @@ export const get_or_create_aggregate: RequestHandler = async (req, res) => {
     
     console.log('[Market] Found game item:', gameItem.name)
     
-    // Get or create aggregate
-    const aggregate = await marketDb.getMarketAggregateComplete(game_item_id, {})
-    console.log('[Market] Successfully got/created aggregate')
-    res.json(createResponse(aggregate))
+    // Try to get existing aggregate
+    try {
+      const aggregate = await marketDb.getMarketAggregateComplete(game_item_id, {})
+      console.log('[Market] Successfully got existing aggregate')
+      res.json(createResponse(aggregate))
+    } catch (error) {
+      // Aggregate doesn't exist yet - return minimal aggregate from game item
+      console.log('[Market] No aggregate exists, returning game item as minimal aggregate')
+      const minimalAggregate = {
+        ...gameItem,
+        item_name: gameItem.name,
+        item_type: gameItem.type,
+        listings: [],
+        listing_count: 0,
+        min_price: null,
+        max_price: null,
+      }
+      res.json(createResponse(minimalAggregate))
+    }
   } catch (error) {
     console.error('[Market] Failed to get/create aggregate:', error)
     res.status(500).json(createErrorResponse({ 
-      error: "Failed to create aggregate for this item" 
+      error: "Failed to get aggregate for this item" 
     }))
   }
 }
