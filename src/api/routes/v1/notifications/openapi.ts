@@ -197,6 +197,7 @@ oapi.schema("NotificationActionType", {
     // Order notifications
     "order_create",
     "order_assigned",
+    "order_status", // Aggregate for all order status changes
     "order_status_fulfilled",
     "order_status_in_progress",
     "order_status_not_started",
