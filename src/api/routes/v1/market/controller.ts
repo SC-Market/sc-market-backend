@@ -2225,7 +2225,7 @@ export const get_or_create_aggregate: RequestHandler = async (req, res) => {
       console.log('[Market] No aggregate exists, creating one')
       
       // Create listing details for the aggregate
-      const [details] = await database.knex()('market_listing_details')
+      const [details] = await database.knex<any>('market_listing_details')
         .insert({
           title: gameItem.name,
           description: `Aggregate listing for ${gameItem.name}`,
@@ -2235,7 +2235,7 @@ export const get_or_create_aggregate: RequestHandler = async (req, res) => {
         .returning('*')
       
       // Link game item to details
-      await database.knex()('game_items')
+      await database.knex<any>('game_items')
         .where({ id: game_item_id })
         .update({ details_id: details.details_id })
       
