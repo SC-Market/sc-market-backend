@@ -313,14 +313,32 @@ export async function getUnreadNotificationCount(
     )
 
     if (actionFilter) {
-      baseQuery = baseQuery
-        .join(
-          "notification_actions",
-          "notification_object.action_type_id",
-          "=",
-          "notification_actions.action_type_id",
-        )
-        .where("notification_actions.action", actionFilter)
+      // Handle special aggregate action types
+      if (actionFilter === "order_status") {
+        // Aggregate all order status notifications
+        baseQuery = baseQuery
+          .join(
+            "notification_actions",
+            "notification_object.action_type_id",
+            "=",
+            "notification_actions.action_type_id",
+          )
+          .whereIn("notification_actions.action", [
+            "order_status_fulfilled",
+            "order_status_in_progress",
+            "order_status_not_started",
+            "order_status_cancelled",
+          ])
+      } else {
+        baseQuery = baseQuery
+          .join(
+            "notification_actions",
+            "notification_object.action_type_id",
+            "=",
+            "notification_actions.action_type_id",
+          )
+          .where("notification_actions.action", actionFilter)
+      }
     }
 
     if (entityIdFilter) {
@@ -458,14 +476,32 @@ export async function getCompleteNotificationsByUserPaginated(
 
   // Apply filters if provided
   if (actionFilter) {
-    baseQuery = baseQuery
-      .join(
-        "notification_actions",
-        "notification_object.action_type_id",
-        "=",
-        "notification_actions.action_type_id",
-      )
-      .where("notification_actions.action", actionFilter)
+    // Handle special aggregate action types
+    if (actionFilter === "order_status") {
+      // Aggregate all order status notifications
+      baseQuery = baseQuery
+        .join(
+          "notification_actions",
+          "notification_object.action_type_id",
+          "=",
+          "notification_actions.action_type_id",
+        )
+        .whereIn("notification_actions.action", [
+          "order_status_fulfilled",
+          "order_status_in_progress",
+          "order_status_not_started",
+          "order_status_cancelled",
+        ])
+    } else {
+      baseQuery = baseQuery
+        .join(
+          "notification_actions",
+          "notification_object.action_type_id",
+          "=",
+          "notification_actions.action_type_id",
+        )
+        .where("notification_actions.action", actionFilter)
+    }
   }
 
   if (entityIdFilter) {
