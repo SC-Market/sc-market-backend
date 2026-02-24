@@ -71,6 +71,22 @@ const models: TsoaRoute.Models = {
         "additionalProperties": false,
     },
     // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+    "StandardSuccessResponse_PaginatedListingsResponse_": {
+        "dataType": "refObject",
+        "properties": {
+            "data": {"ref":"PaginatedListingsResponse","required":true},
+        },
+        "additionalProperties": false,
+    },
+    // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+    "StandardSuccessResponse_ListingResponse_": {
+        "dataType": "refObject",
+        "properties": {
+            "data": {"ref":"ListingResponse","required":true},
+        },
+        "additionalProperties": false,
+    },
+    // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
     "CreateListingRequest": {
         "dataType": "refObject",
         "properties": {

@@ -26,12 +26,14 @@ import * as marketDb from "../../v1/market/database.js"
 import * as contractorDb from "../../v1/contractors/database.js"
 import { formatListing } from "../../v1/util/formatting.js"
 import { ErrorCode } from "../../v1/util/error-codes.js"
+import { createResponse } from "../../v1/util/response.js"
 import {
   CreateListingRequest,
   UpdateListingRequest,
   ListingFilters,
   ListingResponse,
   PaginatedListingsResponse,
+  StandardSuccessResponse,
 } from "./types.js"
 import { cdn } from "../../../../clients/cdn/cdn.js"
 import { DEFAULT_PLACEHOLDER_PHOTO_URL } from "../../v1/market/constants.js"
@@ -90,7 +92,7 @@ export class MarketController extends BaseController {
     @Query() offset: number = 0,
     @Query() sort?: string,
     @Query() reverse_sort?: boolean,
-  ): Promise<PaginatedListingsResponse> {
+  ): Promise<StandardSuccessResponse<PaginatedListingsResponse>> {
     // Validate and cap limit
     const safeLimit = Math.min(Math.max(1, limit), 100)
     const safeOffset = Math.max(0, offset)
@@ -217,12 +219,12 @@ export class MarketController extends BaseController {
       }),
     )
 
-    return {
+    return createResponse({
       listings: formattedListings,
       total,
       limit: safeLimit,
       offset: safeOffset,
-    }
+    })
   }
 
   /**
@@ -234,7 +236,7 @@ export class MarketController extends BaseController {
   @SuccessResponse("200", "Successfully retrieved listing")
   public async getListing(
     @Path() listing_id: string,
-  ): Promise<ListingResponse> {
+  ): Promise<StandardSuccessResponse<ListingResponse>> {
     const listing = await marketDb.getMarketListing({ listing_id })
 
     if (!listing) {
@@ -265,7 +267,7 @@ export class MarketController extends BaseController {
     }
 
     const formatted = await formatListing(listing, isPrivate)
-    return this.convertToListingResponse(formatted)
+    return createResponse(this.convertToListingResponse(formatted))
   }
 
   /**
@@ -278,7 +280,7 @@ export class MarketController extends BaseController {
   @SuccessResponse("201", "Successfully created listing")
   public async createListing(
     @Body() body: CreateListingRequest,
-  ): Promise<ListingResponse> {
+  ): Promise<StandardSuccessResponse<ListingResponse>> {
     const user = this.getUser()
 
     // Require verified account
@@ -404,7 +406,7 @@ export class MarketController extends BaseController {
 
     this.setStatus(201)
     const formatted = await formatListing(listing, true)
-    return this.convertToListingResponse(formatted)
+    return createResponse(this.convertToListingResponse(formatted))
   }
 
   /**
@@ -419,7 +421,7 @@ export class MarketController extends BaseController {
   public async updateListing(
     @Path() listing_id: string,
     @Body() body: UpdateListingRequest,
-  ): Promise<ListingResponse> {
+  ): Promise<StandardSuccessResponse<ListingResponse>> {
     const user = this.getUser()
     const listing = await marketDb.getMarketListing({ listing_id })
 
@@ -569,7 +571,7 @@ export class MarketController extends BaseController {
     // Fetch updated listing
     const updatedListing = await marketDb.getMarketListing({ listing_id })
     const formatted = await formatListing(updatedListing, true)
-    return this.convertToListingResponse(formatted)
+    return createResponse(this.convertToListingResponse(formatted))
   }
 
   /**

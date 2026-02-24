@@ -145,6 +145,13 @@ export interface ListingResponse {
 }
 
 /**
+ * Standard success response wrapper for v2 API
+ */
+export interface StandardSuccessResponse<T> {
+  data: T
+}
+
+/**
  * Paginated listings response
  */
 export interface PaginatedListingsResponse {
