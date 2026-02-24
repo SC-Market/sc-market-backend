@@ -17,72 +17,62 @@ const expressAuthenticationRecasted = expressAuthentication as (req: ExRequest, 
 // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
 
 const models: TsoaRoute.Models = {
-    "MinimalUser": {
-        "dataType": "refObject",
-        "properties": {
-            "user_id": {"dataType":"string","required":true},
-            "username": {"dataType":"string","required":true},
-            "avatar": {"dataType":"union","subSchemas":[{"dataType":"string"},{"dataType":"enum","enums":[null]}]},
-        },
-        "additionalProperties": false,
-    },
-    // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
-    "MinimalContractor": {
-        "dataType": "refObject",
-        "properties": {
-            "contractor_id": {"dataType":"string","required":true},
-            "spectrum_id": {"dataType":"string","required":true},
-            "name": {"dataType":"string","required":true},
-            "avatar": {"dataType":"union","subSchemas":[{"dataType":"string"},{"dataType":"enum","enums":[null]}]},
-        },
-        "additionalProperties": false,
-    },
-    // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
-    "ListingResponse": {
+    "ListingSearchResult": {
         "dataType": "refObject",
         "properties": {
             "listing_id": {"dataType":"string","required":true},
-            "title": {"dataType":"string","required":true},
-            "description": {"dataType":"string","required":true},
-            "price": {"dataType":"double","required":true},
-            "quantity_available": {"dataType":"double","required":true},
-            "status": {"dataType":"string","required":true},
-            "sale_type": {"dataType":"string","required":true},
+            "listing_type": {"dataType":"string","required":true},
             "item_type": {"dataType":"string","required":true},
+            "item_name": {"dataType":"union","subSchemas":[{"dataType":"string"},{"dataType":"enum","enums":[null]}],"required":true},
             "game_item_id": {"dataType":"union","subSchemas":[{"dataType":"string"},{"dataType":"enum","enums":[null]}],"required":true},
-            "user_seller": {"dataType":"union","subSchemas":[{"ref":"MinimalUser"},{"dataType":"enum","enums":[null]}],"required":true},
-            "contractor_seller": {"dataType":"union","subSchemas":[{"ref":"MinimalContractor"},{"dataType":"enum","enums":[null]}],"required":true},
+            "sale_type": {"dataType":"string","required":true},
+            "price": {"dataType":"double","required":true},
+            "expiration": {"dataType":"union","subSchemas":[{"dataType":"string"},{"dataType":"enum","enums":[null]}],"required":true},
+            "minimum_price": {"dataType":"double","required":true},
+            "maximum_price": {"dataType":"double","required":true},
+            "quantity_available": {"dataType":"double","required":true},
             "timestamp": {"dataType":"string","required":true},
-            "expiration": {"dataType":"string","required":true},
-            "photos": {"dataType":"array","array":{"dataType":"string"},"required":true},
+            "total_rating": {"dataType":"double","required":true},
+            "avg_rating": {"dataType":"double","required":true},
+            "details_id": {"dataType":"union","subSchemas":[{"dataType":"string"},{"dataType":"enum","enums":[null]}],"required":true},
+            "status": {"dataType":"union","subSchemas":[{"dataType":"enum","enums":["active"]},{"dataType":"enum","enums":["inactive"]},{"dataType":"enum","enums":["archived"]}],"required":true},
+            "user_seller": {"dataType":"union","subSchemas":[{"dataType":"string"},{"dataType":"enum","enums":[null]}],"required":true},
+            "contractor_seller": {"dataType":"union","subSchemas":[{"dataType":"string"},{"dataType":"enum","enums":[null]}],"required":true},
+            "auction_end_time": {"dataType":"union","subSchemas":[{"dataType":"string"},{"dataType":"enum","enums":[null]}],"required":true},
+            "rating_count": {"dataType":"union","subSchemas":[{"dataType":"double"},{"dataType":"enum","enums":[null]}],"required":true},
+            "rating_streak": {"dataType":"union","subSchemas":[{"dataType":"double"},{"dataType":"enum","enums":[null]}],"required":true},
+            "total_orders": {"dataType":"union","subSchemas":[{"dataType":"double"},{"dataType":"enum","enums":[null]}],"required":true},
+            "total_assignments": {"dataType":"union","subSchemas":[{"dataType":"double"},{"dataType":"enum","enums":[null]}],"required":true},
+            "response_rate": {"dataType":"union","subSchemas":[{"dataType":"double"},{"dataType":"enum","enums":[null]}],"required":true},
+            "title": {"dataType":"string","required":true},
+            "photo": {"dataType":"string","required":true},
             "internal": {"dataType":"boolean","required":true},
+            "badges": {"dataType":"union","subSchemas":[{"dataType":"any"},{"dataType":"enum","enums":[null]}],"required":true},
         },
         "additionalProperties": false,
     },
     // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
-    "PaginatedListingsResponse": {
+    "ListingSearchResponse": {
         "dataType": "refObject",
         "properties": {
-            "listings": {"dataType":"array","array":{"dataType":"refObject","ref":"ListingResponse"},"required":true},
             "total": {"dataType":"double","required":true},
-            "limit": {"dataType":"double","required":true},
-            "offset": {"dataType":"double","required":true},
+            "listings": {"dataType":"array","array":{"dataType":"refObject","ref":"ListingSearchResult"},"required":true},
         },
         "additionalProperties": false,
     },
     // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
-    "StandardSuccessResponse_PaginatedListingsResponse_": {
+    "ListingDetailResponse": {
         "dataType": "refObject",
         "properties": {
-            "data": {"ref":"PaginatedListingsResponse","required":true},
-        },
-        "additionalProperties": false,
-    },
-    // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
-    "StandardSuccessResponse_ListingResponse_": {
-        "dataType": "refObject",
-        "properties": {
-            "data": {"ref":"ListingResponse","required":true},
+            "type": {"dataType":"union","subSchemas":[{"dataType":"enum","enums":["unique"]},{"dataType":"enum","enums":["aggregate"]},{"dataType":"enum","enums":["multiple"]}],"required":true},
+            "listing": {"dataType":"nestedObjectLiteral","nestedProperties":{"expiration":{"dataType":"datetime","required":true},"timestamp":{"dataType":"datetime","required":true},"status":{"dataType":"string","required":true},"quantity_available":{"dataType":"double","required":true},"price":{"dataType":"double","required":true},"sale_type":{"dataType":"string","required":true},"listing_id":{"dataType":"string","required":true}},"required":true},
+            "details": {"dataType":"nestedObjectLiteral","nestedProperties":{"game_item_id":{"dataType":"union","subSchemas":[{"dataType":"string"},{"dataType":"enum","enums":[null]}],"required":true},"item_type":{"dataType":"string","required":true},"description":{"dataType":"string","required":true},"title":{"dataType":"string","required":true}},"required":true},
+            "photos": {"dataType":"array","array":{"dataType":"string"},"required":true},
+            "stats": {"dataType":"nestedObjectLiteral","nestedProperties":{"view_count":{"dataType":"union","subSchemas":[{"dataType":"double"},{"dataType":"string"}],"required":true},"offer_count":{"dataType":"double"},"order_count":{"dataType":"double"}},"required":true},
+            "accept_offers": {"dataType":"boolean"},
+            "auction_details": {"dataType":"any"},
+            "buy_orders": {"dataType":"array","array":{"dataType":"any"}},
+            "listings": {"dataType":"array","array":{"dataType":"any"}},
         },
         "additionalProperties": false,
     },
@@ -147,37 +137,37 @@ export function RegisterRoutes(app: Router) {
 
 
     
-        const argsMarketController_getListings: Record<string, TsoaRoute.ParameterSchema> = {
-                search: {"in":"query","name":"search","dataType":"string"},
-                game_item_id: {"in":"query","name":"game_item_id","dataType":"string"},
+        const argsMarketController_searchListings: Record<string, TsoaRoute.ParameterSchema> = {
+                query: {"in":"query","name":"query","dataType":"string"},
                 item_type: {"in":"query","name":"item_type","dataType":"string"},
                 sale_type: {"in":"query","name":"sale_type","dataType":"string"},
-                status: {"in":"query","name":"status","dataType":"string"},
                 min_price: {"in":"query","name":"min_price","dataType":"double"},
                 max_price: {"in":"query","name":"max_price","dataType":"double"},
+                quantity_available: {"in":"query","name":"quantity_available","dataType":"double"},
                 user_seller_id: {"in":"query","name":"user_seller_id","dataType":"string"},
                 contractor_seller_id: {"in":"query","name":"contractor_seller_id","dataType":"string"},
-                limit: {"default":50,"in":"query","name":"limit","dataType":"double"},
-                offset: {"default":0,"in":"query","name":"offset","dataType":"double"},
-                sort: {"in":"query","name":"sort","dataType":"string"},
-                reverse_sort: {"in":"query","name":"reverse_sort","dataType":"boolean"},
+                statuses: {"in":"query","name":"statuses","dataType":"string"},
+                listing_type: {"in":"query","name":"listing_type","dataType":"string"},
+                sort: {"default":"timestamp","in":"query","name":"sort","dataType":"string"},
+                page: {"default":0,"in":"query","name":"page","dataType":"double"},
+                pageSize: {"default":20,"in":"query","name":"pageSize","dataType":"double"},
         };
         app.get('/v2/market/listings',
             ...(fetchMiddlewares<RequestHandler>(MarketController)),
-            ...(fetchMiddlewares<RequestHandler>(MarketController.prototype.getListings)),
+            ...(fetchMiddlewares<RequestHandler>(MarketController.prototype.searchListings)),
 
-            async function MarketController_getListings(request: ExRequest, response: ExResponse, next: any) {
+            async function MarketController_searchListings(request: ExRequest, response: ExResponse, next: any) {
 
             // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
 
             let validatedArgs: any[] = [];
             try {
-                validatedArgs = templateService.getValidatedArgs({ args: argsMarketController_getListings, request, response });
+                validatedArgs = templateService.getValidatedArgs({ args: argsMarketController_searchListings, request, response });
 
                 const controller = new MarketController();
 
               await templateService.apiHandler({
-                methodName: 'getListings',
+                methodName: 'searchListings',
                 controller,
                 response,
                 next,
@@ -189,25 +179,25 @@ export function RegisterRoutes(app: Router) {
             }
         });
         // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
-        const argsMarketController_getListing: Record<string, TsoaRoute.ParameterSchema> = {
+        const argsMarketController_getListingDetails: Record<string, TsoaRoute.ParameterSchema> = {
                 listing_id: {"in":"path","name":"listing_id","required":true,"dataType":"string"},
         };
-        app.get('/v2/market/listings/:listing_id',
+        app.get('/v2/market/listings/:listing_id/details',
             ...(fetchMiddlewares<RequestHandler>(MarketController)),
-            ...(fetchMiddlewares<RequestHandler>(MarketController.prototype.getListing)),
+            ...(fetchMiddlewares<RequestHandler>(MarketController.prototype.getListingDetails)),
 
-            async function MarketController_getListing(request: ExRequest, response: ExResponse, next: any) {
+            async function MarketController_getListingDetails(request: ExRequest, response: ExResponse, next: any) {
 
             // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
 
             let validatedArgs: any[] = [];
             try {
-                validatedArgs = templateService.getValidatedArgs({ args: argsMarketController_getListing, request, response });
+                validatedArgs = templateService.getValidatedArgs({ args: argsMarketController_getListingDetails, request, response });
 
                 const controller = new MarketController();
 
               await templateService.apiHandler({
-                methodName: 'getListing',
+                methodName: 'getListingDetails',
                 controller,
                 response,
                 next,

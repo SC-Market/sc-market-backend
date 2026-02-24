@@ -1,7 +1,7 @@
 /**
  * TypeScript interfaces for v2 Market API
  *
- * These types define the request and response structures for market endpoints.
+ * These types match the v1 API response formats to maintain compatibility.
  * TSOA will use these to generate OpenAPI schemas and validate requests.
  */
 
@@ -58,111 +58,81 @@ export interface UpdateListingRequest {
 }
 
 /**
- * Query parameters for filtering listings
+ * Search result listing (flat format from materialized view)
+ * Matches v1 /api/market search response format
  */
-export interface ListingFilters {
-  /** Search query string */
-  search?: string
-  /** Filter by game item ID */
-  game_item_id?: string
-  /** Filter by item type */
-  item_type?: string
-  /** Filter by sale type */
-  sale_type?: string
-  /** Filter by status */
-  status?: string
-  /** Minimum price */
-  min_price?: number
-  /** Maximum price */
-  max_price?: number
-  /** Filter by seller user ID */
-  user_seller_id?: string
-  /** Filter by contractor seller ID */
-  contractor_seller_id?: string
-  /** Results limit */
-  limit?: number
-  /** Results offset for pagination */
-  offset?: number
-  /** Sort field */
-  sort?: string
-  /** Reverse sort order */
-  reverse_sort?: boolean
-}
-
-/**
- * Minimal user information
- */
-export interface MinimalUser {
-  user_id: string
-  username: string
-  avatar?: string | null
-}
-
-/**
- * Minimal contractor information
- */
-export interface MinimalContractor {
-  contractor_id: string
-  spectrum_id: string
-  name: string
-  avatar?: string | null
-}
-
-/**
- * Listing response structure
- */
-export interface ListingResponse {
-  /** Unique listing ID */
+export interface ListingSearchResult {
   listing_id: string
-  /** Listing title */
-  title: string
-  /** Listing description */
-  description: string
-  /** Price in aUEC */
-  price: number
-  /** Available quantity */
-  quantity_available: number
-  /** Listing status */
-  status: string
-  /** Sale type */
-  sale_type: string
-  /** Item type */
+  listing_type: string
   item_type: string
-  /** Game item ID */
+  item_name: string | null
   game_item_id: string | null
-  /** Seller user (if user listing) */
-  user_seller: MinimalUser | null
-  /** Seller contractor (if contractor listing) */
-  contractor_seller: MinimalContractor | null
-  /** Creation timestamp */
+  sale_type: string
+  price: number
+  expiration: string | null
+  minimum_price: number
+  maximum_price: number
+  quantity_available: number
   timestamp: string
-  /** Expiration timestamp */
-  expiration: string
-  /** Photo URLs */
-  photos: string[]
-  /** Whether listing is internal */
+  total_rating: number
+  avg_rating: number
+  details_id: string | null
+  status: "active" | "inactive" | "archived"
+  user_seller: string | null
+  contractor_seller: string | null
+  auction_end_time: string | null
+  rating_count: number | null
+  rating_streak: number | null
+  total_orders: number | null
+  total_assignments: number | null
+  response_rate: number | null
+  title: string
+  photo: string
   internal: boolean
+  badges: any | null
 }
 
 /**
- * Standard success response wrapper for v2 API
+ * Paginated search results response
+ * Matches v1 /api/market response format
  */
-export interface StandardSuccessResponse<T> {
-  data: T
-}
-
-/**
- * Paginated listings response
- */
-export interface PaginatedListingsResponse {
-  /** Array of listings */
-  listings: ListingResponse[]
-  /** Total count of listings matching filters */
+export interface ListingSearchResponse {
   total: number
-  /** Current limit */
-  limit: number
-  /** Current offset */
-  offset: number
+  listings: ListingSearchResult[]
+}
+
+/**
+ * Detailed listing response (nested format)
+ * Matches v1 /api/market/:id response format
+ * This is the exact return type from formatListing()
+ */
+export interface ListingDetailResponse {
+  type: "unique" | "aggregate" | "multiple"
+  listing: {
+    listing_id: string
+    sale_type: string
+    price: number
+    quantity_available: number
+    status: string
+    timestamp: Date
+    expiration: Date
+  }
+  details: {
+    title: string
+    description: string
+    item_type: string
+    game_item_id: string | null
+  }
+  photos: string[]
+  stats: {
+    order_count?: number
+    offer_count?: number
+    view_count: number | string
+  }
+  accept_offers?: boolean
+  auction_details?: any
+  buy_orders?: any[]
+  listings?: any[]
 }
 
 /**
