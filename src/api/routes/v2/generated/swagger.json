@@ -188,6 +188,32 @@
 				"type": "object",
 				"additionalProperties": false
 			},
+			"StandardSuccessResponse_PaginatedListingsResponse_": {
+				"description": "Standard success response wrapper for v2 API",
+				"properties": {
+					"data": {
+						"$ref": "#/components/schemas/PaginatedListingsResponse"
+					}
+				},
+				"required": [
+					"data"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
+			"StandardSuccessResponse_ListingResponse_": {
+				"description": "Standard success response wrapper for v2 API",
+				"properties": {
+					"data": {
+						"$ref": "#/components/schemas/ListingResponse"
+					}
+				},
+				"required": [
+					"data"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
 			"CreateListingRequest": {
 				"description": "Request body for creating a new listing",
 				"properties": {
@@ -339,7 +365,7 @@
 						"content": {
 							"application/json": {
 								"schema": {
-									"$ref": "#/components/schemas/PaginatedListingsResponse"
+									"$ref": "#/components/schemas/StandardSuccessResponse_PaginatedListingsResponse_"
 								}
 							}
 						}
@@ -485,7 +511,7 @@
 						"content": {
 							"application/json": {
 								"schema": {
-									"$ref": "#/components/schemas/ListingResponse"
+									"$ref": "#/components/schemas/StandardSuccessResponse_ListingResponse_"
 								}
 							}
 						}
@@ -525,7 +551,7 @@
 						"content": {
 							"application/json": {
 								"schema": {
-									"$ref": "#/components/schemas/ListingResponse"
+									"$ref": "#/components/schemas/StandardSuccessResponse_ListingResponse_"
 								}
 							}
 						}
@@ -557,7 +583,7 @@
 						"content": {
 							"application/json": {
 								"schema": {
-									"$ref": "#/components/schemas/ListingResponse"
+									"$ref": "#/components/schemas/StandardSuccessResponse_ListingResponse_"
 								}
 							}
 						}
