@@ -249,6 +249,8 @@ export interface MinimalContractor {
   avatar: string
   rating: Rating
   badges?: BadgeData | null
+  last_seen?: Date
+  members_online?: number
 }
 
 export interface DBImageResource {
