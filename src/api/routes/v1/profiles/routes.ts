@@ -42,6 +42,7 @@ import {
   profile_put_links_provider_type_primary,
   profile_get_languages,
   profile_put_languages,
+  profile_patch_in_game_status,
 } from "./controller.js"
 
 import {
@@ -340,4 +341,13 @@ profileRouter.get(
   "/email/verify/:token",
   emailManagementRoutes.verify_email_spec,
   emailManagementRoutes.verifyEmail,
+)
+
+// Update in-game status
+// PATCH /api/v1/profile/in-game
+profileRouter.patch(
+  "/in-game",
+  userAuthorized,
+  writeRateLimit,
+  profile_patch_in_game_status,
 )

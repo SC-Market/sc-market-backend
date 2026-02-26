@@ -1390,3 +1390,33 @@ export const profile_put_languages: RequestHandler = async (req, res) => {
       .json(createErrorResponse({ message: "Failed to set languages" }))
   }
 }
+
+export const profile_patch_in_game_status: RequestHandler = async (
+  req,
+  res,
+) => {
+  try {
+    const user = req.user as User
+    const { in_game } = req.body
+
+    if (typeof in_game !== "boolean") {
+      return res
+        .status(400)
+        .json(createErrorResponse({ message: "in_game must be boolean" }))
+    }
+
+    await database("accounts")
+      .where({ user_id: user.user_id })
+      .update({
+        in_game,
+        last_seen: database.fn.now(),
+      })
+
+    res.json(createResponse({ in_game }))
+  } catch (error) {
+    logger.error("Error updating in-game status:", error)
+    res
+      .status(500)
+      .json(createErrorResponse({ message: "Failed to update in-game status" }))
+  }
+}

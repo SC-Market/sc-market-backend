@@ -28,6 +28,8 @@ export interface User {
   official_server_id: string | null
   discord_thread_channel_id: string | null
   market_order_template: string
+  last_seen: Date
+  in_game: boolean
 }
 
 export interface PostBody {

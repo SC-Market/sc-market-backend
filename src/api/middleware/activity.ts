@@ -11,7 +11,12 @@ export async function trackActivity(
   try {
     if (req.isAuthenticated()) {
       const user = req.user as User
-      marketDb.upsertDailyActivity(user.user_id)
+      await Promise.all([
+        marketDb.upsertDailyActivity(user.user_id),
+        database("accounts")
+          .where({ user_id: user.user_id })
+          .update({ last_seen: database.fn.now() }),
+      ])
     }
   } finally {
     next()
