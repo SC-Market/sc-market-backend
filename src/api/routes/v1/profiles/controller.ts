@@ -1405,11 +1405,12 @@ export const profile_patch_in_game_status: RequestHandler = async (
         .json(createErrorResponse({ message: "in_game must be boolean" }))
     }
 
-    await database("accounts")
+    const knex = database.knex
+    await knex("accounts")
       .where({ user_id: user.user_id })
       .update({
         in_game,
-        last_seen: database.fn.now(),
+        last_seen: knex.fn.now(),
       })
 
     res.json(createResponse({ in_game }))
