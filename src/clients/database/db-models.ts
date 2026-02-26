@@ -49,6 +49,8 @@ export interface MinimalUser {
   rating: Rating
   badges?: BadgeData | null
   // discord_profile?: any
+  last_seen?: Date
+  in_game?: boolean
 }
 
 export interface DBOrderComment {
