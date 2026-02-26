@@ -197,12 +197,27 @@ export async function getMinimalContractor(
     throw new Error("Invalid contractor!")
   }
 
+  // Get aggregate presence data from all contractor members
+  const presenceData = await knex()
+    .select(
+      knex().raw("MAX(accounts.last_seen) as last_seen"),
+      knex().raw(
+        "COUNT(CASE WHEN accounts.in_game = true THEN 1 END) as members_online",
+      ),
+    )
+    .from("contractor_members")
+    .join("accounts", "contractor_members.user_id", "accounts.user_id")
+    .where("contractor_members.contractor_id", contractor.contractor_id)
+    .first()
+
   return {
     spectrum_id: contractor.spectrum_id,
     avatar: (await cdn.getFileLinkResource(contractor.avatar))!,
     name: contractor.name,
     rating: await getContractorRating(contractor.contractor_id),
     badges: await getContractorBadges(contractor.contractor_id),
+    last_seen: presenceData?.last_seen || undefined,
+    members_online: parseInt(presenceData?.members_online || "0"),
   }
 }
 
