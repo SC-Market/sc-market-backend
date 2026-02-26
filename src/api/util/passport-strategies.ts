@@ -398,7 +398,7 @@ export function createCitizenIDVerifyCallback(
         if (action === "signin") {
           // Sign in requested but account doesn't exist
           const error = new Error(
-            "No account found with this Citizen ID. Please sign up first.",
+            "No account found with this Citizen ID. If you don't have an account yet, please use the Sign Up button above to Sign up for SC Market",
           ) as Error & { code?: string }
           error.code = AuthErrorCodes.ACCOUNT_NOT_FOUND
           return done(error, undefined)
