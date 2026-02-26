@@ -72,6 +72,8 @@ export async function serializePublicProfile(
       code,
       name: getLanguageName(code) || code,
     })),
+    last_seen: user.last_seen,
+    in_game: user.in_game,
   }
 }
 
