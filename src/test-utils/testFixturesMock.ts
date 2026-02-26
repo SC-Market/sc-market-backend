@@ -87,6 +87,8 @@ export function createTestUser(overrides?: Partial<TestUser>): TestUser {
     discord_thread_channel_id: null,
     market_order_template: "",
     supported_languages: ["en"],
+    last_seen: new Date(),
+    in_game: false,
   }
   const accounts = getMockTableData("accounts")
   accounts.push(dbUser)

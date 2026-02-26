@@ -32,6 +32,8 @@ export interface DBUser {
   market_order_template: string
   donor_start_date?: Date | null
   supported_languages: string[] | null // Array of ISO 639-1 language codes (default ['en'])
+  last_seen: Date
+  in_game: boolean
 }
 
 export interface DBAccountSettings {
