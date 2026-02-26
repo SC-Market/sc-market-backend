@@ -685,6 +685,8 @@ export async function getMinimalUser(
     display_name: user.display_name,
     rating: await getUserRating(user.user_id),
     badges: await getUserBadges(user.user_id),
+    last_seen: user.last_seen,
+    in_game: user.in_game,
   }
 }
 
