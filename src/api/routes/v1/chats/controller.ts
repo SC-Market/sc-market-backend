@@ -5,6 +5,7 @@ import * as profileDb from "../profiles/database.js"
 import * as contractorDb from "../contractors/database.js"
 import * as orderDb from "../orders/database.js"
 import * as offerDb from "../offers/database.js"
+import * as notificationDb from "../notifications/database.js"
 import { cdn } from "../../../../clients/cdn/cdn.js"
 import { discordService } from "../../../../services/discord/discord.service.js"
 import { notificationService } from "../../../../services/notifications/notification.service.js"
@@ -311,6 +312,10 @@ export async function getChats(
 ): Promise<void> {
   const user = req.user as User
   const chats = await chatDb.getChatByParticipant(user.user_id)
+  
+  // Get unread message counts for all chats in one query
+  const unreadCounts = await notificationDb.getUnreadMessageCountsByEntity(user.user_id)
+  
   const newchats = await Promise.all(
     chats.map(async (chat) => {
       const participants = await chatDb.getChatParticipants({
@@ -323,7 +328,10 @@ export async function getChats(
       // Get order/offer information and contractor if chat is attached to order or offer
       let chatTitle: string | null = null
       let contractorParticipant = null
+      let entityId: string | null = null
+      
       if (chat.order_id) {
+        entityId = chat.order_id
         try {
           const order = await orderDb.getOrder({ order_id: chat.order_id })
           chatTitle = order.title
@@ -342,6 +350,7 @@ export async function getChats(
           logger.debug(`Failed to get order for chat: ${chat.order_id}`, error)
         }
       } else if (chat.session_id) {
+        entityId = chat.session_id
         try {
           const sessions = await offerDb.getOfferSessions({
             id: chat.session_id,
@@ -453,6 +462,7 @@ export async function getChats(
         order_id: chat.order_id,
         session_id: chat.session_id,
         title: chatTitle,
+        unread_count: entityId ? (unreadCounts[entityId] || 0) : 0,
       }
     }),
   )
