@@ -517,6 +517,7 @@ export async function formatListingBase(
     expiration: listing.expiration,
     internal: listing.internal,
     languages,
+    stock_locations: listing.stock_locations,
     // aggregate: await
   }
 

@@ -122,7 +122,7 @@ export async function getMarketListingImages(
 export async function formatUniqueRaw(
   listing: DBUniqueListingRaw,
 ): Promise<DBUniqueListingComplete> {
-  // Get stock locations for listed, available stock
+  // Get stock locations for listed, available stock (only if stock lots exist)
   const locations = await knex()("stock_lots as sl")
     .leftJoin("locations as loc", "sl.location_id", "loc.location_id")
     .where("sl.listing_id", listing.listing_id)
@@ -155,7 +155,7 @@ export async function formatUniqueRaw(
       contractor_seller_id: listing.contractor_seller_id,
       timestamp: listing.timestamp,
       expiration: listing.expiration,
-      stock_locations: locations,
+      stock_locations: locations.length > 0 ? locations : undefined,
     },
     images: await getMarketListingImages({
       details_id: listing.details_id,
