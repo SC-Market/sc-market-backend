@@ -358,6 +358,43 @@ export async function getUnreadNotificationCount(
 }
 
 /**
+ * Get unread notification counts grouped by entity_id for message notifications.
+ * Returns a map of entity_id -> unread count for order_message and offer_message actions.
+ */
+export async function getUnreadMessageCountsByEntity(
+  user_id: string,
+): Promise<Record<string, number>> {
+  const results = await knex()<DBNotification>("notification")
+    .select("notification_object.entity_id")
+    .count("notification.notification_id as count")
+    .join(
+      "notification_object",
+      "notification.notification_object_id",
+      "=",
+      "notification_object.notification_object_id",
+    )
+    .join(
+      "notification_actions",
+      "notification_object.action_type_id",
+      "=",
+      "notification_actions.action_type_id",
+    )
+    .where({
+      "notification.notifier_id": user_id,
+      "notification.read": false,
+    })
+    .whereIn("notification_actions.action", ["order_message", "offer_message"])
+    .groupBy("notification_object.entity_id")
+
+  const countMap: Record<string, number> = {}
+  for (const row of results) {
+    const entityId = (row as any).entity_id
+    countMap[entityId] = parseInt((row as any).count)
+  }
+  return countMap
+}
+
+/**
  * Get entity by type and ID (for notification serialization).
  */
 export async function getEntityByType(
