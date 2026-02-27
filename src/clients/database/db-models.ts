@@ -462,6 +462,7 @@ export interface DBMarketListing {
   contractor_seller_id?: string | null
   timestamp: Date
   expiration: Date
+  stock_locations?: string[]
 }
 
 export interface DBMarketAggregate {

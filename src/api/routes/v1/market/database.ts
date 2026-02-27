@@ -122,6 +122,16 @@ export async function getMarketListingImages(
 export async function formatUniqueRaw(
   listing: DBUniqueListingRaw,
 ): Promise<DBUniqueListingComplete> {
+  // Get stock locations for listed, available stock
+  const locations = await knex()("stock_lots as sl")
+    .leftJoin("locations as loc", "sl.location_id", "loc.location_id")
+    .where("sl.listing_id", listing.listing_id)
+    .where("sl.listed", true)
+    .whereRaw("sl.quantity_total > COALESCE((SELECT SUM(quantity) FROM stock_allocations WHERE lot_id = sl.lot_id AND status = 'active'), 0)")
+    .whereNotNull("sl.location_id")
+    .distinct("loc.name")
+    .pluck("loc.name")
+
   return {
     listing_id: listing.listing_id,
     accept_offers: listing.accept_offers,
@@ -145,6 +155,7 @@ export async function formatUniqueRaw(
       contractor_seller_id: listing.contractor_seller_id,
       timestamp: listing.timestamp,
       expiration: listing.expiration,
+      stock_locations: locations,
     },
     images: await getMarketListingImages({
       details_id: listing.details_id,
