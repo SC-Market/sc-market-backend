@@ -742,24 +742,12 @@ export const purchase_listings: RequestHandler = async (req, res) => {
     }
 
     let total = 0
-    let message = `Complete the delivery of sold items to [${user.username}](https://sc-market.space/user/${user.username})\n`
-
     for (const { quantity, listing } of listings) {
       total += quantity * +listing.listing.price
-      message += `- [${listing.details.title}](https://sc-market.space/market/${
-        listing.listing.listing_id
-      }) (${(+listing.listing.price).toLocaleString(
-        "en-us",
-      )} aUEC x${quantity.toLocaleString("en-us")})\n`
     }
 
-    message += `- Total: ${total.toLocaleString("en-us")} aUEC\n`
-    message += `- User Offer: ${(offer || total).toLocaleString(
-      "en-us",
-    )} aUEC\n`
-    if (note) {
-      message += `\nNote from buyer:\n> ${note || "None"}`
-    }
+    // Use only the buyer's note as the description
+    const message = note || ""
 
     // Check if user is blocked by the seller (all items are from same seller)
     const firstListing = listings[0].listing.listing
