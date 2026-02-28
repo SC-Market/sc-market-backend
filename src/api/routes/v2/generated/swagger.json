@@ -449,7 +449,7 @@
 		"contact": {}
 	},
 	"paths": {
-		"/v2/market/listings": {
+		"/market/listings": {
 			"get": {
 				"operationId": "SearchListings",
 				"responses": {
@@ -622,7 +622,7 @@
 				}
 			}
 		},
-		"/v2/market/listings/{listing_id}/details": {
+		"/market/listings/{listing_id}/details": {
 			"get": {
 				"operationId": "GetListingDetails",
 				"responses": {
@@ -655,7 +655,7 @@
 				]
 			}
 		},
-		"/v2/market/listings/{listing_id}": {
+		"/market/listings/{listing_id}": {
 			"put": {
 				"operationId": "UpdateListing",
 				"responses": {

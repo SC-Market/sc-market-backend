@@ -46,7 +46,7 @@ import type { MarketSearchQueryArguments } from "../../v1/market/types.js"
 /**
  * Controller for market listing operations
  */
-@Route("v2/market/listings")
+@Route("market/listings")
 @Tags("Market")
 export class MarketController extends BaseController {
   constructor() {
