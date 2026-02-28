@@ -152,7 +152,7 @@ export function RegisterRoutes(app: Router) {
                 page: {"default":0,"in":"query","name":"page","dataType":"double"},
                 pageSize: {"default":20,"in":"query","name":"pageSize","dataType":"double"},
         };
-        app.get('/v2/market/listings',
+        app.get('/market/listings',
             ...(fetchMiddlewares<RequestHandler>(MarketController)),
             ...(fetchMiddlewares<RequestHandler>(MarketController.prototype.searchListings)),
 
@@ -182,7 +182,7 @@ export function RegisterRoutes(app: Router) {
         const argsMarketController_getListingDetails: Record<string, TsoaRoute.ParameterSchema> = {
                 listing_id: {"in":"path","name":"listing_id","required":true,"dataType":"string"},
         };
-        app.get('/v2/market/listings/:listing_id/details',
+        app.get('/market/listings/:listing_id/details',
             ...(fetchMiddlewares<RequestHandler>(MarketController)),
             ...(fetchMiddlewares<RequestHandler>(MarketController.prototype.getListingDetails)),
 
@@ -212,7 +212,7 @@ export function RegisterRoutes(app: Router) {
         const argsMarketController_createListing: Record<string, TsoaRoute.ParameterSchema> = {
                 body: {"in":"body","name":"body","required":true,"ref":"CreateListingRequest"},
         };
-        app.post('/v2/market/listings',
+        app.post('/market/listings',
             authenticateMiddleware([{"jwt":[]}]),
             ...(fetchMiddlewares<RequestHandler>(MarketController)),
             ...(fetchMiddlewares<RequestHandler>(MarketController.prototype.createListing)),
@@ -244,7 +244,7 @@ export function RegisterRoutes(app: Router) {
                 listing_id: {"in":"path","name":"listing_id","required":true,"dataType":"string"},
                 body: {"in":"body","name":"body","required":true,"ref":"UpdateListingRequest"},
         };
-        app.put('/v2/market/listings/:listing_id',
+        app.put('/market/listings/:listing_id',
             authenticateMiddleware([{"jwt":[]}]),
             ...(fetchMiddlewares<RequestHandler>(MarketController)),
             ...(fetchMiddlewares<RequestHandler>(MarketController.prototype.updateListing)),
@@ -275,7 +275,7 @@ export function RegisterRoutes(app: Router) {
         const argsMarketController_deleteListing: Record<string, TsoaRoute.ParameterSchema> = {
                 listing_id: {"in":"path","name":"listing_id","required":true,"dataType":"string"},
         };
-        app.delete('/v2/market/listings/:listing_id',
+        app.delete('/market/listings/:listing_id',
             authenticateMiddleware([{"jwt":[]}]),
             ...(fetchMiddlewares<RequestHandler>(MarketController)),
             ...(fetchMiddlewares<RequestHandler>(MarketController.prototype.deleteListing)),
