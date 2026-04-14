@@ -1481,6 +1481,71 @@ export const market_post_listings_batch_update_spec = oapi.validPath({
   security: [{ bearerAuth: [] }],
 })
 
+export const market_post_listings_batch_update_quantity_spec = oapi.validPath({
+  tags: ["Market", "Market Listing"],
+  summary: "Batch-update listing quantity (simple stock, manage UI)",
+  description:
+    "Set quantity_available via simple stock for many listings in one request. Same authorization and rules as POST /listing/:id/update_quantity for each listing.",
+  operationId: "batchUpdateMarketListingQuantities",
+  requestBody: {
+    required: true,
+    content: {
+      "application/json": {
+        schema: {
+          type: "object",
+          properties: {
+            updates: {
+              type: "array",
+              description:
+                "One entry per listing; listing_id must be unique in the array",
+              items: {
+                type: "object",
+                properties: {
+                  listing_id: { type: "string" },
+                  quantity_available: {
+                    type: "integer",
+                    minimum: 0,
+                  },
+                },
+                required: ["listing_id", "quantity_available"],
+              },
+            },
+          },
+          required: ["updates"],
+        },
+      },
+    },
+  },
+  responses: {
+    "200": {
+      description: "All listing quantities updated",
+      content: {
+        "application/json": {
+          schema: {
+            type: "object",
+            properties: {
+              data: {
+                type: "object",
+                properties: {
+                  result: { type: "string" },
+                  updated: { type: "integer" },
+                },
+              },
+            },
+          },
+        },
+      },
+    },
+    "400": Response400,
+    "401": Response401,
+    "403": Response403,
+    "404": Response404,
+    "409": Response409,
+    "500": Response500,
+  },
+  security: [{ bearerAuth: [] }],
+})
+
 export const market_put_listing_listing_id_spec = oapi.validPath({
   summary: "Update a market listing",
   description: "Update various properties of a market listing",

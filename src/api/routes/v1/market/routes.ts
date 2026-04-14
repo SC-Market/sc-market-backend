@@ -28,6 +28,7 @@ import {
   get_listing_details,
   get_listing_stats,
   batch_update_listings,
+  batch_update_listings_quantity,
   get_order_stats,
   purchase_listings,
   refresh_listing,
@@ -64,6 +65,7 @@ import {
   market_get_stats_spec,
   market_post_listings_stats_spec,
   market_post_listings_batch_update_spec,
+  market_post_listings_batch_update_quantity_spec,
   market_put_listing_listing_id_spec,
   market_post_listing_listing_id_update_quantity_spec,
   market_post_listing_listing_id_refresh_spec,
@@ -111,6 +113,15 @@ marketRouter.post(
   requireMarketWrite,
   bulkRateLimit,
   batch_update_listings,
+)
+
+marketRouter.post(
+  "/listings/batch-update-quantity",
+  market_post_listings_batch_update_quantity_spec,
+  userAuthorized,
+  requireMarketWrite,
+  bulkRateLimit,
+  batch_update_listings_quantity,
 )
 
 marketRouter.put(
