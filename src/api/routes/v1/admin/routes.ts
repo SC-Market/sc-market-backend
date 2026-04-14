@@ -6,6 +6,7 @@ import {
 } from "../../../middleware/enhanced-ratelimiting.js"
 import { spectrumMigrationRouter } from "./spectrum-migration.js"
 import { adminAlertsRouter } from "./alerts.js"
+import { adminPremiumRouter } from "./premium.js"
 
 import {
   admin_get_activity,
@@ -34,6 +35,9 @@ adminRouter.use("/spectrum-migration", spectrumMigrationRouter)
 
 // Mount admin alerts routes
 adminRouter.use("/alerts", adminAlertsRouter)
+
+// Mount admin premium routes
+adminRouter.use("/premium", adminPremiumRouter)
 
 // Define schemas
 
