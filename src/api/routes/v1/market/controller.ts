@@ -3,7 +3,7 @@ import { ErrorCode } from "../util/error-codes.js"
 import { User } from "../api-models.js"
 import { RequestHandler } from "express"
 import { has_permission, is_member } from "../util/permissions.js"
-import { database } from "../../../../clients/database/knex-db.js"
+import { database, getKnex } from "../../../../clients/database/knex-db.js"
 import * as marketDb from "./database.js"
 import * as orderDb from "../orders/database.js"
 import * as profileDb from "../profiles/database.js"
@@ -46,6 +46,7 @@ import {
   AttributeFilter,
 } from "./types.js"
 import {
+  DBMarketListing,
   DBContractor,
   DBMultipleListingComplete,
   DBUniqueListing,
@@ -386,6 +387,160 @@ export const update_listing: RequestHandler = async (req, res) => {
       stack: error instanceof Error ? error.stack : undefined,
     })
     res.status(500).json({ error: "Failed to update listing" })
+  }
+}
+
+const BATCH_LISTING_STATUS_MAX = 200
+
+async function assertUserCanManageListingForBatch(
+  user: User,
+  listing: DBMarketListing,
+): Promise<{ ok: true } | { ok: false; status: number; message: string }> {
+  if (user.role === "admin") {
+    return { ok: true }
+  }
+
+  if (listing.contractor_seller_id) {
+    const contractor = await contractorDb.getContractor({
+      contractor_id: listing.contractor_seller_id,
+    })
+
+    if (!contractor) {
+      return { ok: false, status: 404, message: "Market listing not found" }
+    }
+
+    if (contractor.archived) {
+      return {
+        ok: false,
+        status: 409,
+        message:
+          "This contractor has been archived; listing cannot be modified.",
+      }
+    }
+
+    if (
+      !(await has_permission(
+        contractor.contractor_id,
+        user.user_id,
+        "manage_market",
+      ))
+    ) {
+      return {
+        ok: false,
+        status: 403,
+        message:
+          "You are not authorized to update listings on behalf of this contractor!",
+      }
+    }
+    return { ok: true }
+  }
+
+  if (listing.user_seller_id !== user.user_id) {
+    return {
+      ok: false,
+      status: 403,
+      message: "You are not authorized to update this listing!",
+    }
+  }
+
+  return { ok: true }
+}
+
+/**
+ * POST /listings/batch-update — set status on many listings in one request (manage UI).
+ */
+export const batch_update_listings: RequestHandler = async (req, res) => {
+  const user = req.user as User
+  const { listing_ids, status } = req.body as {
+    listing_ids?: unknown
+    status?: unknown
+  }
+
+  try {
+    if (!Array.isArray(listing_ids) || listing_ids.length === 0) {
+      res.status(400).json(
+        createErrorResponse({
+          message: "listing_ids must be a non-empty array",
+        }),
+      )
+      return
+    }
+
+    if (listing_ids.length > BATCH_LISTING_STATUS_MAX) {
+      res.status(400).json(
+        createErrorResponse({
+          message: `At most ${BATCH_LISTING_STATUS_MAX} listings per request`,
+        }),
+      )
+      return
+    }
+
+    const ids = [...new Set(listing_ids.map((id) => String(id)))]
+    if (ids.length !== listing_ids.length) {
+      res.status(400).json(
+        createErrorResponse({ message: "Duplicate listing_ids in request" }),
+      )
+      return
+    }
+
+    if (
+      status !== "active" &&
+      status !== "inactive" &&
+      status !== "archived"
+    ) {
+      res.status(400).json(
+        createErrorResponse({
+          message: "status must be active, inactive, or archived",
+        }),
+      )
+      return
+    }
+
+    const listings = await marketDb.getMarketListingsByIds(ids)
+    if (listings.length !== ids.length) {
+      res.status(404).json(
+        createErrorResponse({
+          message: "One or more listings were not found",
+        }),
+      )
+      return
+    }
+
+    for (const listing of listings) {
+      if (listing.status === "archived") {
+        res.status(400).json(
+          createErrorResponse({ message: "Cannot update archived listing" }),
+        )
+        return
+      }
+      if (listing.sale_type === "auction" && user.role !== "admin") {
+        res
+          .status(400)
+          .json(createErrorResponse({ message: "Cannot update auction listings" }))
+        return
+      }
+      const allowed = await assertUserCanManageListingForBatch(user, listing)
+      if (!allowed.ok) {
+        res
+          .status(allowed.status)
+          .json(createErrorResponse({ message: allowed.message }))
+        return
+      }
+    }
+
+    await getKnex().transaction(async (trx) => {
+      await marketDb.updateMarketListingsStatusBatch(ids, status, trx)
+    })
+
+    res.json(createResponse({ result: "Success", updated: ids.length }))
+  } catch (error) {
+    logger.error("batch_update_listings failed", {
+      user_id: user.user_id,
+      error: error instanceof Error ? error.message : String(error),
+    })
+    res
+      .status(500)
+      .json(createErrorResponse({ message: "Failed to update listings" }))
   }
 }
 
