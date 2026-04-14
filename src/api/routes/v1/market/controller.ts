@@ -28,6 +28,7 @@ import {
   verify_listings,
 } from "./helpers.js"
 import { StockLotService } from "../../../../services/stock-lot/stock-lot.service.js"
+import { InvalidQuantityError } from "../../../../services/stock-lot/errors.js"
 import moment from "moment/moment.js"
 import { serializeOrderDetails } from "../orders/serializers.js"
 import logger from "../../../../logger/logger.js"
@@ -390,7 +391,7 @@ export const update_listing: RequestHandler = async (req, res) => {
   }
 }
 
-const BATCH_LISTING_STATUS_MAX = 200
+const BATCH_LISTINGS_MAX = 200
 
 async function assertUserCanManageListingForBatch(
   user: User,
@@ -466,10 +467,10 @@ export const batch_update_listings: RequestHandler = async (req, res) => {
       return
     }
 
-    if (listing_ids.length > BATCH_LISTING_STATUS_MAX) {
+    if (listing_ids.length > BATCH_LISTINGS_MAX) {
       res.status(400).json(
         createErrorResponse({
-          message: `At most ${BATCH_LISTING_STATUS_MAX} listings per request`,
+          message: `At most ${BATCH_LISTINGS_MAX} listings per request`,
         }),
       )
       return
@@ -541,6 +542,151 @@ export const batch_update_listings: RequestHandler = async (req, res) => {
     res
       .status(500)
       .json(createErrorResponse({ message: "Failed to update listings" }))
+  }
+}
+
+type BatchQuantityUpdate = { listing_id: string; quantity_available: number }
+
+/**
+ * POST /listings/batch-update-quantity — set simple stock quantity on many listings in one request (manage UI).
+ */
+export const batch_update_listings_quantity: RequestHandler = async (
+  req,
+  res,
+) => {
+  const user = req.user as User
+  const { updates } = req.body as { updates?: unknown }
+
+  try {
+    if (!Array.isArray(updates) || updates.length === 0) {
+      res.status(400).json(
+        createErrorResponse({
+          message: "updates must be a non-empty array",
+        }),
+      )
+      return
+    }
+
+    if (updates.length > BATCH_LISTINGS_MAX) {
+      res.status(400).json(
+        createErrorResponse({
+          message: `At most ${BATCH_LISTINGS_MAX} listings per request`,
+        }),
+      )
+      return
+    }
+
+    const normalized: BatchQuantityUpdate[] = []
+    const seenIds = new Set<string>()
+
+    for (const raw of updates) {
+      if (!raw || typeof raw !== "object") {
+        res.status(400).json(
+          createErrorResponse({ message: "Each update must be an object" }),
+        )
+        return
+      }
+      const row = raw as Record<string, unknown>
+      const listing_id =
+        row.listing_id !== undefined && row.listing_id !== null
+          ? String(row.listing_id)
+          : ""
+      if (!listing_id) {
+        res.status(400).json(
+          createErrorResponse({
+            message: "Each update must include listing_id",
+          }),
+        )
+        return
+      }
+      if (seenIds.has(listing_id)) {
+        res.status(400).json(
+          createErrorResponse({ message: "Duplicate listing_id in request" }),
+        )
+        return
+      }
+      seenIds.add(listing_id)
+
+      const q = Number(row.quantity_available)
+      if (!Number.isFinite(q) || q < 0 || !Number.isInteger(q)) {
+        res.status(400).json(
+          createErrorResponse({
+            message: "quantity_available must be a non-negative integer",
+          }),
+        )
+        return
+      }
+      normalized.push({ listing_id, quantity_available: q })
+    }
+
+    const ids = normalized.map((u) => u.listing_id)
+    const listings = await marketDb.getMarketListingsByIds(ids)
+    if (listings.length !== ids.length) {
+      res.status(404).json(
+        createErrorResponse({
+          message: "One or more listings were not found",
+        }),
+      )
+      return
+    }
+
+    for (const listing of listings) {
+      if (listing.status === "archived") {
+        res.status(400).json(
+          createErrorResponse({ message: "Cannot update archived listing" }),
+        )
+        return
+      }
+      if (listing.sale_type === "auction" && user.role !== "admin") {
+        res
+          .status(400)
+          .json(createErrorResponse({ message: "Cannot update auction listings" }))
+        return
+      }
+      const allowed = await assertUserCanManageListingForBatch(user, listing)
+      if (!allowed.ok) {
+        res
+          .status(allowed.status)
+          .json(createErrorResponse({ message: allowed.message }))
+        return
+      }
+    }
+
+    try {
+      await getKnex().transaction(async (trx) => {
+        const stockLotService = new StockLotService(trx)
+        for (const u of normalized) {
+          await stockLotService.updateSimpleStock(
+            u.listing_id,
+            u.quantity_available,
+          )
+        }
+      })
+    } catch (error) {
+      if (error instanceof InvalidQuantityError) {
+        res.status(400).json(
+          createErrorResponse({
+            message: error.message,
+            code: error.code,
+            details: error.toJSON(),
+          }),
+        )
+        return
+      }
+      throw error
+    }
+
+    res.json(
+      createResponse({ result: "Success", updated: normalized.length }),
+    )
+  } catch (error) {
+    logger.error("batch_update_listings_quantity failed", {
+      user_id: user.user_id,
+      error: error instanceof Error ? error.message : String(error),
+    })
+    res
+      .status(500)
+      .json(createErrorResponse({ message: "Failed to update listing stock" }))
   }
 }
 
