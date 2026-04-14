@@ -662,6 +662,28 @@ export async function updateMarketListing(
   await query.where({ listing_id }).update(data)
 }
 
+export async function getMarketListingsByIds(
+  listing_ids: string[],
+): Promise<DBMarketListing[]> {
+  if (listing_ids.length === 0) {
+    return []
+  }
+  return knex()<DBMarketListing>("market_listings")
+    .whereIn("listing_id", listing_ids)
+    .select("*")
+}
+
+export async function updateMarketListingsStatusBatch(
+  listing_ids: string[],
+  status: string,
+  trx?: any,
+): Promise<void> {
+  const query = trx
+    ? trx("market_listings")
+    : knex()<DBMarketListing>("market_listings")
+  await query.whereIn("listing_id", listing_ids).update({ status })
+}
+
 /**
  * Update a market multiple.
  */

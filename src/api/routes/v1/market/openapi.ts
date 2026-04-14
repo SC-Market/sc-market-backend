@@ -3,6 +3,7 @@ import { Response400 as Response400 } from "../openapi.js"
 import { Response401 as Response401 } from "../openapi.js"
 import { Response403 as Response403 } from "../openapi.js"
 import { Response404 as Response404 } from "../openapi.js"
+import { Response409 as Response409 } from "../openapi.js"
 import { Response500 as Response500 } from "../openapi.js"
 import {
   Response429Critical,
@@ -1417,6 +1418,64 @@ export const market_post_listings_stats_spec = oapi.validPath({
     "400": Response400,
     "401": Response401,
     "403": Response403,
+    "500": Response500,
+  },
+  security: [{ bearerAuth: [] }],
+})
+
+export const market_post_listings_batch_update_spec = oapi.validPath({
+  tags: ["Market", "Market Listing"],
+  summary: "Batch-update listing status (manage UI)",
+  description:
+    "Set status to active, inactive, or archived for many listings in one request. Same authorization rules as PUT /listing/:id for each listing.",
+  operationId: "batchUpdateMarketListings",
+  requestBody: {
+    required: true,
+    content: {
+      "application/json": {
+        schema: {
+          type: "object",
+          properties: {
+            listing_ids: {
+              type: "array",
+              items: { type: "string" },
+              description: "Unique listing UUIDs (no duplicates)",
+            },
+            status: {
+              type: "string",
+              enum: ["active", "inactive", "archived"],
+            },
+          },
+          required: ["listing_ids", "status"],
+        },
+      },
+    },
+  },
+  responses: {
+    "200": {
+      description: "All listings updated",
+      content: {
+        "application/json": {
+          schema: {
+            type: "object",
+            properties: {
+              data: {
+                type: "object",
+                properties: {
+                  result: { type: "string" },
+                  updated: { type: "integer" },
+                },
+              },
+            },
+          },
+        },
+      },
+    },
+    "400": Response400,
+    "401": Response401,
+    "403": Response403,
+    "404": Response404,
+    "409": Response409,
     "500": Response500,
   },
   security: [{ bearerAuth: [] }],
