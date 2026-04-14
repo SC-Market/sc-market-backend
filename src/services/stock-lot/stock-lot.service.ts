@@ -34,6 +34,22 @@ export class StockLotService {
   }
 
   /**
+   * Sum of active allocations for all lots on a listing (matches quantity sync trigger).
+   */
+  private async getActiveAllocatedQuantityForListing(
+    listingId: string,
+  ): Promise<number> {
+    const row = (await this.knex("stock_allocations as sa")
+      .join("stock_lots as sl", "sa.lot_id", "sl.lot_id")
+      .where("sl.listing_id", listingId)
+      .where("sa.status", "active")
+      .sum("sa.quantity as total")
+      .first()) as { total?: string | number } | undefined
+
+    return row?.total ? Number(row.total) : 0
+  }
+
+  /**
    * Update stock using the simple interface (single number)
    * Creates or updates an Unspecified location lot with listed=true
    *
@@ -46,6 +62,18 @@ export class StockLotService {
 
     // Find or create Unspecified location lot
     const existingLot = await this.repository.getUnspecifiedLot(listingId)
+    const currentTotal = await this.getTotalStock(listingId)
+    const newTotal = existingLot
+      ? currentTotal - existingLot.quantity_total + quantity
+      : currentTotal + quantity
+
+    const allocated = await this.getActiveAllocatedQuantityForListing(listingId)
+    if (newTotal < allocated) {
+      throw new InvalidQuantityError(
+        quantity,
+        `Cannot reduce stock below ${allocated} (committed to active orders). Current total across all lots is ${currentTotal}.`,
+      )
+    }
 
     if (existingLot) {
       // Update existing Unspecified lot
@@ -128,6 +156,25 @@ export class StockLotService {
       if (hasAllocations) {
         throw new Error(
           "Cannot change listing for lot with active allocations. Release allocations first.",
+        )
+      }
+    }
+
+    if (updates.quantity !== undefined && !updates.listing_id) {
+      const existing = await this.repository.getById(lotId)
+      if (!existing) {
+        throw new Error(`Lot ${lotId} not found`)
+      }
+      const currentTotal = await this.getTotalStock(existing.listing_id)
+      const newTotal =
+        currentTotal - existing.quantity_total + updates.quantity
+      const allocated = await this.getActiveAllocatedQuantityForListing(
+        existing.listing_id,
+      )
+      if (newTotal < allocated) {
+        throw new InvalidQuantityError(
+          updates.quantity,
+          `Cannot reduce stock below ${allocated} (committed to active orders).`,
         )
       }
     }
