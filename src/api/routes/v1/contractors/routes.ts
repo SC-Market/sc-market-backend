@@ -21,6 +21,7 @@ import {
 } from "./middleware.js"
 import { singlePhotoUpload, photoUpload } from "../util/upload.js"
 import { contractorAllocationsRouter } from "../market/stock-lots.routes.js"
+import { contractorThemeRouter } from "./theme.js"
 
 import {
   delete_spectrum_id_blocklist_unblock_username,
@@ -526,3 +527,6 @@ contractorsRouter.delete(
 )
 
 contractorsRouter.use("/", contractorAllocationsRouter)
+
+// Mount org theme routes
+contractorsRouter.use("/:spectrum_id/theme", contractorThemeRouter)

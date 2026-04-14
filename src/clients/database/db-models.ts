@@ -815,3 +815,21 @@ export interface DBUserEmail {
   updated_at: Date
   verified_at: Date | null
 }
+
+export interface DBOrgPremiumTier {
+  id: string
+  contractor_id: string
+  tier: string
+  granted_by: string
+  granted_at: Date
+  revoked_at: Date | null
+}
+
+export interface DBOrgTheme {
+  id: string
+  contractor_id: string
+  theme_data: { light: Record<string, any>; dark: Record<string, any> }
+  favicon_url: string | null
+  updated_at: Date
+  updated_by: string
+}
