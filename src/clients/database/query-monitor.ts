@@ -54,9 +54,8 @@ export function enableQueryMonitoring(knex: Knex): void {
         const duration = Date.now() - startTime
         queryStartTimes.delete(queryId)
 
-        // Log slow queries (skip expected long-running maintenance operations)
-        const isMaintenance = query.sql?.includes("REFRESH MATERIALIZED VIEW")
-        if (duration >= SLOW_QUERY_THRESHOLD_MS && !isMaintenance) {
+        // Log slow queries
+        if (duration >= SLOW_QUERY_THRESHOLD_MS) {
           logger.warn("Slow query detected", {
             duration: `${duration}ms`,
             sql: query.sql,
