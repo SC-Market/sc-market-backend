@@ -32,6 +32,7 @@ const ALLOWED_THEME_KEYS = new Set([
   "palette",
   "navKind",
   "borderRadius",
+  "borderRadiusUnit",
   "components",
 ])
 
