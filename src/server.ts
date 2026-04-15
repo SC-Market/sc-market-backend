@@ -29,7 +29,7 @@ import { securityHeaders } from "./api/middleware/security-headers.js"
 import { registrationRouter } from "./clients/discord_api/registration.js"
 import { threadRouter } from "./clients/discord_api/threads.js"
 import { subscriptionRouter } from "./clients/discord_api/subscriptions.js"
-import { interactionsRouter } from "./clients/discord_api/interactions.js"
+import { claimRouter } from "./clients/discord_api/claim.js"
 import { trackActivity } from "./api/middleware/activity.js"
 import { oapi } from "./api/routes/v1/openapi.js"
 import { env } from "./config/env.js"
@@ -229,9 +229,6 @@ const sessionMiddleware = session({
 })
 
 app.use(sessionMiddleware)
-
-// Discord interactions endpoint — verifyKeyMiddleware handles raw body + ed25519 verification
-app.use("/interactions", interactionsRouter)
 
 app.use(express.json({ limit: "2.5mb" }))
 app.use(
@@ -562,6 +559,7 @@ discord_app.use(express.json({ limit: "2.5mb" }))
 discord_app.use("/register", registrationRouter)
 discord_app.use("/threads", threadRouter)
 discord_app.use("/alert-subscriptions", subscriptionRouter)
+discord_app.use("/claim", claimRouter)
 discord_app.listen(discord_backend_url.port || 8081)
 logger.info(
   `discord backend up on port ${hostname()}:${
