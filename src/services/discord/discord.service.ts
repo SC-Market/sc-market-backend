@@ -455,6 +455,24 @@ class RestDiscordService implements DiscordService {
       return null
     }
   }
+
+  /**
+   * Post a message to a Discord channel with optional components (buttons, etc.)
+   */
+  async postChannelMessage(
+    channelId: string,
+    body: RESTPostAPIChannelMessageJSONBody & { components?: any[] },
+  ): Promise<any> {
+    try {
+      const result = await this.rest.post(Routes.channelMessages(channelId), {
+        body,
+      })
+      return result
+    } catch (error) {
+      logger.error(`Failed to post message to channel ${channelId}`, { error })
+      return null
+    }
+  }
 }
 
 /**

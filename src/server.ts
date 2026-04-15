@@ -28,6 +28,7 @@ import { errorHandler } from "./api/middleware/error-handler.js"
 import { securityHeaders } from "./api/middleware/security-headers.js"
 import { registrationRouter } from "./clients/discord_api/registration.js"
 import { threadRouter } from "./clients/discord_api/threads.js"
+import { subscriptionRouter } from "./clients/discord_api/subscriptions.js"
 import { trackActivity } from "./api/middleware/activity.js"
 import { oapi } from "./api/routes/v1/openapi.js"
 import { env } from "./config/env.js"
@@ -556,6 +557,7 @@ discord_app.use(
 discord_app.use(express.json({ limit: "2.5mb" }))
 discord_app.use("/register", registrationRouter)
 discord_app.use("/threads", threadRouter)
+discord_app.use("/alert-subscriptions", subscriptionRouter)
 discord_app.listen(discord_backend_url.port || 8081)
 logger.info(
   `discord backend up on port ${hostname()}:${
