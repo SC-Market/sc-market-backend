@@ -951,12 +951,17 @@ export async function contractorDetails(
     name: getLanguageName(code) || code,
   }))
 
-  // Get premium tier
-  const premiumRow = await getKnex()("org_premium_tiers")
-    .where({ contractor_id: contractor.contractor_id })
-    .whereNull("revoked_at")
-    .select("tier", "custom_domain")
-    .first()
+  // Get premium tier (gracefully handle missing table if migration hasn't run)
+  let premiumRow: any = null
+  try {
+    premiumRow = await getKnex()("org_premium_tiers")
+      .where({ contractor_id: contractor.contractor_id })
+      .whereNull("revoked_at")
+      .select("tier", "custom_domain")
+      .first()
+  } catch {
+    // Table may not exist yet if migration 60 hasn't been applied
+  }
 
   return {
     ...contractor,
