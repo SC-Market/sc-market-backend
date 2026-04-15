@@ -26,34 +26,39 @@ export function start_tasks() {
     fn().catch((err) => logger.error(`Task ${name} failed`, { error: err }))
   }
 
-  // Stagger startup tasks to avoid memory spike (OOM risk on small containers)
-  safe(rebuild_search_view, "rebuild_search_view")
-  setInterval(() => safe(rebuild_search_view, "rebuild_search_view"), 5 * 60 * 1000)
+  // Stagger startup tasks — delay all heavy operations until 5+ minutes after startup
+  // to let the server stabilize and pass health checks first
+  const STARTUP_DELAY = 5 * 60 * 1000 // 5 minutes
+
+  setTimeout(() => {
+    safe(rebuild_search_view, "rebuild_search_view")
+    setInterval(() => safe(rebuild_search_view, "rebuild_search_view"), 5 * 60 * 1000)
+  }, STARTUP_DELAY)
 
   setTimeout(() => {
     safe(refresh_badge_view, "refresh_badge_view")
     setInterval(() => safe(refresh_badge_view, "refresh_badge_view"), 4 * 60 * 60 * 1000)
-  }, 30_000)
+  }, STARTUP_DELAY + 30_000)
 
   setTimeout(() => {
     safe(process_auctions, "process_auctions")
     setInterval(() => safe(process_auctions, "process_auctions"), 5 * 60 * 1000)
-  }, 10_000)
+  }, STARTUP_DELAY + 10_000)
 
   setTimeout(() => {
     safe(process_expiring_market_listings, "process_expiring_market_listings")
     setInterval(() => safe(process_expiring_market_listings, "process_expiring_market_listings"), 60 * 60 * 1000)
-  }, 15_000)
+  }, STARTUP_DELAY + 15_000)
 
   setTimeout(() => {
     safe(update_price_history, "update_price_history")
     setInterval(() => safe(update_price_history, "update_price_history"), 6 * 60 * 60 * 1000)
-  }, 45_000)
+  }, STARTUP_DELAY + 45_000)
 
   setTimeout(() => {
     safe(fetchAndInsertCommodities, "fetchAndInsertCommodities")
     setInterval(() => safe(fetchAndInsertCommodities, "fetchAndInsertCommodities"), 24 * 60 * 60 * 1000)
-  }, 60_000)
+  }, STARTUP_DELAY + 60_000)
 
   // Clear uploads folder on server start
   clear_uploads_folder()
