@@ -24,7 +24,7 @@ import * as contractorDb from "./api/routes/v1/contractors/database.js"
 import * as recruitingDb from "./api/routes/v1/recruiting/database.js"
 import * as marketDb from "./api/routes/v1/market/database.js"
 import { userAuthorized } from "./api/middleware/auth.js"
-import { errorHandler } from "./api/middleware/error-handler.js"
+import { errorHandler, track500Responses } from "./api/middleware/error-handler.js"
 import { securityHeaders } from "./api/middleware/security-headers.js"
 import { registrationRouter } from "./clients/discord_api/registration.js"
 import { threadRouter } from "./clients/discord_api/threads.js"
@@ -239,6 +239,7 @@ app.use(
 )
 
 app.use(cors(corsOptions))
+app.use(track500Responses)
 app.use(i18nMiddleware)
 
 // Set up passport

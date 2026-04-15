@@ -23,6 +23,58 @@ import {
 import { applyCorsHeaders } from "./cors-helper.js"
 import logger from "../../logger/logger.js"
 
+// Lazy-load Bugsnag to avoid circular deps and handle dev mode
+let Bugsnag: any = null
+try {
+  Bugsnag = require("@bugsnag/js")
+} catch {
+  // Bugsnag not available (dev mode or not installed)
+}
+
+function notifyBugsnag(err: Error, req: Request) {
+  if (!Bugsnag?.isStarted?.()) return
+  try {
+    Bugsnag.notify(err, (event: any) => {
+      event.addMetadata("request", {
+        path: req.path,
+        method: req.method,
+        user_id: (req.user as any)?.user_id,
+      })
+    })
+  } catch {
+    // Bugsnag notification failed — don't break error handling
+  }
+}
+
+/**
+ * Middleware that intercepts 500 responses to log them in Bugsnag.
+ * Mount before route handlers.
+ */
+export function track500Responses(req: Request, res: Response, next: NextFunction) {
+  const originalJson = res.json.bind(res)
+  res.json = function (body: any) {
+    if (res.statusCode >= 500 && Bugsnag?.isStarted?.()) {
+      const message = body?.error?.message || body?.error || "Internal Server Error"
+      try {
+        Bugsnag.notify(new Error(`[${res.statusCode}] ${req.method} ${req.path}: ${message}`), (event: any) => {
+          event.severity = "error"
+          event.addMetadata("request", {
+            path: req.path,
+            method: req.method,
+            user_id: (req.user as any)?.user_id,
+            statusCode: res.statusCode,
+          })
+          event.addMetadata("response", { body })
+        })
+      } catch {
+        // Don't break the response
+      }
+    }
+    return originalJson(body)
+  } as any
+  next()
+}
+
 /**
  * AJV validation error structure
  */
@@ -254,6 +306,7 @@ export async function errorHandler(
   }
 
   // Default to internal server error
+  notifyBugsnag(err, req)
   res
     .status(500)
     .json(
