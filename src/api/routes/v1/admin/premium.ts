@@ -17,6 +17,16 @@ import { auditLogService } from "../../../../services/audit-log/audit-log.servic
 
 const knex = () => getKnex()
 
+// Resolve param as either contractor_id (UUID) or spectrum_id
+async function resolveContractorId(param: string): Promise<string | null> {
+  // Try as UUID contractor_id first
+  const byId = await knex()("contractors").where({ contractor_id: param }).select("contractor_id").first()
+  if (byId) return byId.contractor_id
+  // Fall back to spectrum_id
+  const bySpectrum = await knex()("contractors").where({ spectrum_id: param }).select("contractor_id").first()
+  return bySpectrum?.contractor_id ?? null
+}
+
 export const adminPremiumRouter = express.Router()
 
 // GET /api/admin/premium — list all orgs with premium tiers
@@ -56,15 +66,20 @@ adminPremiumRouter.get("/", adminAuthorized, readRateLimit, async (req, res) => 
   }
 })
 
-// GET /api/admin/premium/:contractor_id
-adminPremiumRouter.get("/:contractor_id", adminAuthorized, readRateLimit, async (req, res) => {
+// GET /api/admin/premium/:id — get by contractor_id or spectrum_id
+adminPremiumRouter.get("/:id", adminAuthorized, readRateLimit, async (req, res) => {
   try {
+    const contractorId = await resolveContractorId(req.params.id)
+    if (!contractorId) {
+      res.status(404).json(createNotFoundErrorResponse("Contractor", req.params.id))
+      return
+    }
     const tier = await knex()<DBOrgPremiumTier>("org_premium_tiers")
-      .where({ contractor_id: req.params.contractor_id })
+      .where({ contractor_id: contractorId })
       .first()
 
     if (!tier) {
-      res.status(404).json(createNotFoundErrorResponse("Premium tier", req.params.contractor_id))
+      res.status(404).json(createNotFoundErrorResponse("Premium tier", req.params.id))
       return
     }
     res.json(createResponse(tier))
@@ -73,8 +88,8 @@ adminPremiumRouter.get("/:contractor_id", adminAuthorized, readRateLimit, async 
   }
 })
 
-// PUT /api/admin/premium/:contractor_id — set/update premium tier
-adminPremiumRouter.put("/:contractor_id", adminAuthorized, writeRateLimit, async (req, res) => {
+// PUT /api/admin/premium/:id — set/update premium tier
+adminPremiumRouter.put("/:id", adminAuthorized, writeRateLimit, async (req, res) => {
   try {
     const { tier, custom_domain } = req.body
     if (!tier || typeof tier !== "string") {
@@ -93,24 +108,20 @@ adminPremiumRouter.put("/:contractor_id", adminAuthorized, writeRateLimit, async
       return
     }
 
-    // Validate domain format if provided
     if (custom_domain && !/^[a-z0-9]([a-z0-9-]*[a-z0-9])?(\.[a-z0-9]([a-z0-9-]*[a-z0-9])?)*$/i.test(custom_domain)) {
       res.status(400).json(createErrorResponse(ErrorCode.VALIDATION_ERROR, "Invalid domain format"))
       return
     }
 
-    // Verify contractor exists
-    const contractor = await knex()("contractors")
-      .where({ contractor_id: req.params.contractor_id })
-      .first()
-    if (!contractor) {
-      res.status(404).json(createNotFoundErrorResponse("Contractor", req.params.contractor_id))
+    const contractorId = await resolveContractorId(req.params.id)
+    if (!contractorId) {
+      res.status(404).json(createNotFoundErrorResponse("Contractor", req.params.id))
       return
     }
 
     const user = req.user as User
     const existing = await knex()<DBOrgPremiumTier>("org_premium_tiers")
-      .where({ contractor_id: req.params.contractor_id })
+      .where({ contractor_id: contractorId })
       .first()
 
     const updateData: Record<string, any> = {
@@ -123,24 +134,24 @@ adminPremiumRouter.put("/:contractor_id", adminAuthorized, writeRateLimit, async
 
     if (existing) {
       await knex()("org_premium_tiers")
-        .where({ contractor_id: req.params.contractor_id })
+        .where({ contractor_id: contractorId })
         .update(updateData)
     } else {
       await knex()("org_premium_tiers").insert({
-        contractor_id: req.params.contractor_id,
+        contractor_id: contractorId,
         ...updateData,
       })
     }
 
     const result = await knex()<DBOrgPremiumTier>("org_premium_tiers")
-      .where({ contractor_id: req.params.contractor_id })
+      .where({ contractor_id: contractorId })
       .first()
 
     await auditLogService.record({
       action: "premium_tier_granted",
       actorId: user.user_id,
       subjectType: "contractor",
-      subjectId: req.params.contractor_id,
+      subjectId: contractorId,
       metadata: { tier, custom_domain: custom_domain ?? null },
     })
 
@@ -154,8 +165,8 @@ adminPremiumRouter.put("/:contractor_id", adminAuthorized, writeRateLimit, async
   }
 })
 
-// PATCH /api/admin/premium/:contractor_id/domain — update custom domain only
-adminPremiumRouter.patch("/:contractor_id/domain", adminAuthorized, writeRateLimit, async (req, res) => {
+// PATCH /api/admin/premium/:id/domain — update custom domain only
+adminPremiumRouter.patch("/:id/domain", adminAuthorized, writeRateLimit, async (req, res) => {
   try {
     const { custom_domain } = req.body
     if (custom_domain !== undefined && custom_domain !== null && typeof custom_domain !== "string") {
@@ -168,25 +179,31 @@ adminPremiumRouter.patch("/:contractor_id/domain", adminAuthorized, writeRateLim
       return
     }
 
+    const contractorId = await resolveContractorId(req.params.id)
+    if (!contractorId) {
+      res.status(404).json(createNotFoundErrorResponse("Contractor", req.params.id))
+      return
+    }
+
     const updated = await knex()("org_premium_tiers")
-      .where({ contractor_id: req.params.contractor_id })
+      .where({ contractor_id: contractorId })
       .whereNull("revoked_at")
       .update({ custom_domain: custom_domain ?? null })
 
     if (!updated) {
-      res.status(404).json(createNotFoundErrorResponse("Active premium tier", req.params.contractor_id))
+      res.status(404).json(createNotFoundErrorResponse("Active premium tier", req.params.id))
       return
     }
 
     const result = await knex()<DBOrgPremiumTier>("org_premium_tiers")
-      .where({ contractor_id: req.params.contractor_id })
+      .where({ contractor_id: contractorId })
       .first()
 
     await auditLogService.record({
       action: "premium_domain_updated",
       actorId: (req.user as User).user_id,
       subjectType: "contractor",
-      subjectId: req.params.contractor_id,
+      subjectId: contractorId,
       metadata: { custom_domain: custom_domain ?? null },
     })
 
@@ -200,16 +217,22 @@ adminPremiumRouter.patch("/:contractor_id/domain", adminAuthorized, writeRateLim
   }
 })
 
-// DELETE /api/admin/premium/:contractor_id — revoke premium tier
-adminPremiumRouter.delete("/:contractor_id", adminAuthorized, writeRateLimit, async (req, res) => {
+// DELETE /api/admin/premium/:id — revoke premium tier
+adminPremiumRouter.delete("/:id", adminAuthorized, writeRateLimit, async (req, res) => {
   try {
+    const contractorId = await resolveContractorId(req.params.id)
+    if (!contractorId) {
+      res.status(404).json(createNotFoundErrorResponse("Contractor", req.params.id))
+      return
+    }
+
     const updated = await knex()("org_premium_tiers")
-      .where({ contractor_id: req.params.contractor_id })
+      .where({ contractor_id: contractorId })
       .whereNull("revoked_at")
       .update({ revoked_at: new Date() })
 
     if (!updated) {
-      res.status(404).json(createNotFoundErrorResponse("Active premium tier", req.params.contractor_id))
+      res.status(404).json(createNotFoundErrorResponse("Active premium tier", req.params.id))
       return
     }
 
@@ -217,7 +240,7 @@ adminPremiumRouter.delete("/:contractor_id", adminAuthorized, writeRateLimit, as
       action: "premium_tier_revoked",
       actorId: (req.user as User).user_id,
       subjectType: "contractor",
-      subjectId: req.params.contractor_id,
+      subjectId: contractorId,
     })
 
     res.json(createResponse({ message: "Premium tier revoked" }))
