@@ -10,6 +10,7 @@ import { User } from "../api-models.js"
 import * as profileDb from "../profiles/database.js"
 import * as notificationDb from "../notifications/database.js"
 import * as offerDb from "../offers/database.js"
+import * as marketDb from "../market/database.js"
 import { discordService } from "../../../../services/discord/discord.service.js"
 import { cdn } from "../../../../clients/cdn/cdn.js"
 import logger from "../../../../logger/logger.js"
@@ -134,6 +135,41 @@ export async function sendOfferWebhooks(
   }
 }
 
+async function getOfferItemFields(offerId: string): Promise<{ name: string; value: string }[]> {
+  try {
+    const listings = await marketDb.getOfferMarketListings(offerId)
+    if (!listings.length) return []
+    const items: string[] = []
+    for (const listing of listings) {
+      const complete = await marketDb.getMarketListingComplete(listing.listing_id)
+      const name = (complete as any)?.details?.title || (complete as any)?.details?.item_name || "Item"
+      items.push(`${name} ×${listing.quantity}`)
+    }
+    return items.length ? [{ name: "Items", value: items.join("\n") }] : []
+  } catch {
+    return []
+  }
+}
+
+async function getOrderItemFields(orderId: string): Promise<{ name: string; value: string }[]> {
+  try {
+    const { getKnex } = await import("../../../../clients/database/knex-db.js")
+    const orderListings = await getKnex()("market_listing_orders")
+      .where({ order_id: orderId })
+      .select()
+    if (!orderListings.length) return []
+    const items: string[] = []
+    for (const ol of orderListings) {
+      const complete = await marketDb.getMarketListingComplete(ol.listing_id)
+      const name = (complete as any)?.details?.title || (complete as any)?.details?.item_name || "Item"
+      items.push(`${name} ×${ol.quantity}`)
+    }
+    return items.length ? [{ name: "Items", value: items.join("\n") }] : []
+  } catch {
+    return []
+  }
+}
+
 export async function generateNewOfferMessage(
   session: DBOfferSession,
   customer: User,
@@ -199,10 +235,11 @@ export async function generateNewOfferMessage(
             ? [
                 {
                   name: "Collateral",
-                  value: `${(+lastOffer.cost).toLocaleString("en-US")} aUEC`,
+                  value: `${(+lastOffer.collateral).toLocaleString("en-US")} aUEC`,
                 },
               ]
             : []),
+          ...(await getOfferItemFields(lastOffer.id)),
         ],
         timestamp: lastOffer.timestamp.toISOString(),
       },
@@ -270,10 +307,11 @@ export async function generateNewOrderMessage(
             ? [
                 {
                   name: "Collateral",
-                  value: `${(+order.cost).toLocaleString("en-US")} aUEC`,
+                  value: `${(+order.collateral).toLocaleString("en-US")} aUEC`,
                 },
               ]
             : []),
+          ...(await getOrderItemFields(order.order_id)),
         ],
         timestamp: order.timestamp.toISOString(),
       },

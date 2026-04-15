@@ -80,6 +80,12 @@ export interface DiscordService {
     channelId: string,
     options?: DiscordInviteOptions,
   ): Promise<string | null>
+
+  // Channel messages with components
+  postChannelMessage(
+    channelId: string,
+    body: RESTPostAPIChannelMessageJSONBody & { components?: any[] },
+  ): Promise<any>
 }
 
 /**
