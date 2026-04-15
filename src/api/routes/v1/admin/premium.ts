@@ -17,14 +17,28 @@ import { auditLogService } from "../../../../services/audit-log/audit-log.servic
 
 const knex = () => getKnex()
 
-// Resolve param as either contractor_id (UUID) or spectrum_id
-async function resolveContractorId(param: string): Promise<string | null> {
-  // Try as UUID contractor_id first
-  const byId = await knex()("contractors").where({ contractor_id: param }).select("contractor_id").first()
-  if (byId) return byId.contractor_id
-  // Fall back to spectrum_id
-  const bySpectrum = await knex()("contractors").where({ spectrum_id: param }).select("contractor_id").first()
-  return bySpectrum?.contractor_id ?? null
+// Resolve spectrum_id to contractor_id
+async function resolveContractorId(spectrumId: string): Promise<string | null> {
+  const row = await knex()("contractors").where({ spectrum_id: spectrumId }).select("contractor_id").first()
+  return row?.contractor_id ?? null
+}
+
+// Fetch premium tier row with spectrum_id (never expose contractor_id to frontend)
+async function getPremiumWithSpectrum(contractorId: string) {
+  return knex()("org_premium_tiers")
+    .join("contractors", "contractors.contractor_id", "org_premium_tiers.contractor_id")
+    .where("org_premium_tiers.contractor_id", contractorId)
+    .select(
+      "org_premium_tiers.id",
+      "org_premium_tiers.tier",
+      "org_premium_tiers.custom_domain",
+      "org_premium_tiers.granted_by",
+      "org_premium_tiers.granted_at",
+      "org_premium_tiers.revoked_at",
+      "contractors.name as contractor_name",
+      "contractors.spectrum_id",
+    )
+    .first()
 }
 
 export const adminPremiumRouter = express.Router()
@@ -43,7 +57,12 @@ adminPremiumRouter.get("/", adminAuthorized, readRateLimit, async (req, res) => 
       knex()<DBOrgPremiumTier>("org_premium_tiers")
         .join("contractors", "contractors.contractor_id", "org_premium_tiers.contractor_id")
         .select(
-          "org_premium_tiers.*",
+          "org_premium_tiers.id",
+          "org_premium_tiers.tier",
+          "org_premium_tiers.custom_domain",
+          "org_premium_tiers.granted_by",
+          "org_premium_tiers.granted_at",
+          "org_premium_tiers.revoked_at",
           "contractors.name as contractor_name",
           "contractors.spectrum_id",
         )
@@ -66,7 +85,7 @@ adminPremiumRouter.get("/", adminAuthorized, readRateLimit, async (req, res) => 
   }
 })
 
-// GET /api/admin/premium/:id — get by contractor_id or spectrum_id
+// GET /api/admin/premium/:id — get by spectrum_id
 adminPremiumRouter.get("/:id", adminAuthorized, readRateLimit, async (req, res) => {
   try {
     const contractorId = await resolveContractorId(req.params.id)
@@ -74,9 +93,7 @@ adminPremiumRouter.get("/:id", adminAuthorized, readRateLimit, async (req, res) 
       res.status(404).json(createNotFoundErrorResponse("Contractor", req.params.id))
       return
     }
-    const tier = await knex()<DBOrgPremiumTier>("org_premium_tiers")
-      .where({ contractor_id: contractorId })
-      .first()
+    const tier = await getPremiumWithSpectrum(contractorId)
 
     if (!tier) {
       res.status(404).json(createNotFoundErrorResponse("Premium tier", req.params.id))
@@ -143,9 +160,7 @@ adminPremiumRouter.put("/:id", adminAuthorized, writeRateLimit, async (req, res)
       })
     }
 
-    const result = await knex()<DBOrgPremiumTier>("org_premium_tiers")
-      .where({ contractor_id: contractorId })
-      .first()
+    const result = await getPremiumWithSpectrum(contractorId)
 
     await auditLogService.record({
       action: "premium_tier_granted",
@@ -195,9 +210,7 @@ adminPremiumRouter.patch("/:id/domain", adminAuthorized, writeRateLimit, async (
       return
     }
 
-    const result = await knex()<DBOrgPremiumTier>("org_premium_tiers")
-      .where({ contractor_id: contractorId })
-      .first()
+    const result = await getPremiumWithSpectrum(contractorId)
 
     await auditLogService.record({
       action: "premium_domain_updated",
