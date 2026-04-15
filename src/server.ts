@@ -230,8 +230,8 @@ const sessionMiddleware = session({
 
 app.use(sessionMiddleware)
 
-// Discord interactions endpoint — needs raw body for ed25519 signature verification, must be before json parser
-app.use("/interactions", express.raw({ type: "application/json" }), interactionsRouter)
+// Discord interactions endpoint — verifyKeyMiddleware handles raw body + ed25519 verification
+app.use("/interactions", interactionsRouter)
 
 app.use(express.json({ limit: "2.5mb" }))
 app.use(
