@@ -820,6 +820,7 @@ export interface DBOrgPremiumTier {
   id: string
   contractor_id: string
   tier: string
+  custom_domain: string | null
   granted_by: string
   granted_at: Date
   revoked_at: Date | null
