@@ -75,7 +75,7 @@ adminPremiumRouter.get("/:contractor_id", adminAuthorized, readRateLimit, async 
 // PUT /api/admin/premium/:contractor_id — set/update premium tier
 adminPremiumRouter.put("/:contractor_id", adminAuthorized, writeRateLimit, async (req, res) => {
   try {
-    const { tier } = req.body
+    const { tier, custom_domain } = req.body
     if (!tier || typeof tier !== "string") {
       res.status(400).json(createErrorResponse(ErrorCode.VALIDATION_ERROR, "tier is required"))
       return
@@ -84,6 +84,17 @@ adminPremiumRouter.put("/:contractor_id", adminAuthorized, writeRateLimit, async
     const validTiers = ["white_label"]
     if (!validTiers.includes(tier)) {
       res.status(400).json(createErrorResponse(ErrorCode.VALIDATION_ERROR, `Invalid tier. Must be one of: ${validTiers.join(", ")}`))
+      return
+    }
+
+    if (custom_domain !== undefined && custom_domain !== null && typeof custom_domain !== "string") {
+      res.status(400).json(createErrorResponse(ErrorCode.VALIDATION_ERROR, "custom_domain must be a string or null"))
+      return
+    }
+
+    // Validate domain format if provided
+    if (custom_domain && !/^[a-z0-9]([a-z0-9-]*[a-z0-9])?(\.[a-z0-9]([a-z0-9-]*[a-z0-9])?)*$/i.test(custom_domain)) {
+      res.status(400).json(createErrorResponse(ErrorCode.VALIDATION_ERROR, "Invalid domain format"))
       return
     }
 
@@ -101,15 +112,22 @@ adminPremiumRouter.put("/:contractor_id", adminAuthorized, writeRateLimit, async
       .where({ contractor_id: req.params.contractor_id })
       .first()
 
+    const updateData: Record<string, any> = {
+      tier,
+      granted_by: user.user_id,
+      granted_at: new Date(),
+      revoked_at: null,
+    }
+    if (custom_domain !== undefined) updateData.custom_domain = custom_domain
+
     if (existing) {
       await knex()("org_premium_tiers")
         .where({ contractor_id: req.params.contractor_id })
-        .update({ tier, granted_by: user.user_id, granted_at: new Date(), revoked_at: null })
+        .update(updateData)
     } else {
       await knex()("org_premium_tiers").insert({
         contractor_id: req.params.contractor_id,
-        tier,
-        granted_by: user.user_id,
+        ...updateData,
       })
     }
 
@@ -118,8 +136,50 @@ adminPremiumRouter.put("/:contractor_id", adminAuthorized, writeRateLimit, async
       .first()
 
     res.json(createResponse(result))
-  } catch (err) {
+  } catch (err: any) {
+    if (err?.constraint === "org_premium_tiers_custom_domain_key") {
+      res.status(409).json(createErrorResponse(ErrorCode.CONFLICT, "Domain is already in use by another organization"))
+      return
+    }
     res.status(500).json(createErrorResponse(ErrorCode.INTERNAL_SERVER_ERROR, "Failed to set premium tier"))
+  }
+})
+
+// PATCH /api/admin/premium/:contractor_id/domain — update custom domain only
+adminPremiumRouter.patch("/:contractor_id/domain", adminAuthorized, writeRateLimit, async (req, res) => {
+  try {
+    const { custom_domain } = req.body
+    if (custom_domain !== undefined && custom_domain !== null && typeof custom_domain !== "string") {
+      res.status(400).json(createErrorResponse(ErrorCode.VALIDATION_ERROR, "custom_domain must be a string or null"))
+      return
+    }
+
+    if (custom_domain && !/^[a-z0-9]([a-z0-9-]*[a-z0-9])?(\.[a-z0-9]([a-z0-9-]*[a-z0-9])?)*$/i.test(custom_domain)) {
+      res.status(400).json(createErrorResponse(ErrorCode.VALIDATION_ERROR, "Invalid domain format"))
+      return
+    }
+
+    const updated = await knex()("org_premium_tiers")
+      .where({ contractor_id: req.params.contractor_id })
+      .whereNull("revoked_at")
+      .update({ custom_domain: custom_domain ?? null })
+
+    if (!updated) {
+      res.status(404).json(createNotFoundErrorResponse("Active premium tier", req.params.contractor_id))
+      return
+    }
+
+    const result = await knex()<DBOrgPremiumTier>("org_premium_tiers")
+      .where({ contractor_id: req.params.contractor_id })
+      .first()
+
+    res.json(createResponse(result))
+  } catch (err: any) {
+    if (err?.constraint === "org_premium_tiers_custom_domain_key") {
+      res.status(409).json(createErrorResponse(ErrorCode.CONFLICT, "Domain is already in use by another organization"))
+      return
+    }
+    res.status(500).json(createErrorResponse(ErrorCode.INTERNAL_SERVER_ERROR, "Failed to update domain"))
   }
 })
 

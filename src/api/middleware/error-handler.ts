@@ -136,7 +136,7 @@ function getStatusCodeForErrorCode(code: ErrorCode | string): number {
  * Handles all unhandled errors and ensures CORS headers are present
  * in error responses so browsers don't block them.
  */
-export function errorHandler(
+export async function errorHandler(
   err: Error,
   req: Request,
   res: Response,
@@ -146,7 +146,7 @@ export function errorHandler(
   // This ensures browsers don't block error responses when routes crash
   // Only apply if headers haven't been sent yet
   if (!res.headersSent) {
-    applyCorsHeaders(req, res)
+    await applyCorsHeaders(req, res)
   }
 
   // Log error with context

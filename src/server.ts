@@ -74,24 +74,52 @@ const allowlist: string[] = [
   `http://${frontend_url.host}`,
   `https://${frontend_url.host}`,
   "https://discord.com",
-  ...(env.PREMIUM_HOSTS || "").split(",").map((h) => `https://${h}`),
+  ...(env.PREMIUM_HOSTS || "").split(",").filter((h: string) => h.trim()).map((h: string) => `https://${h.trim()}`),
 ]
+
+// Cache of custom domains from DB, refreshed periodically
+let customDomainAllowlist: string[] = []
+let customDomainLastFetch = 0
+const DOMAIN_CACHE_TTL = 60_000 // 1 minute
+
+async function refreshCustomDomains() {
+  try {
+    const { getKnex } = await import("./clients/database/knex-db.js")
+    const rows = await getKnex()("org_premium_tiers")
+      .whereNotNull("custom_domain")
+      .whereNull("revoked_at")
+      .select("custom_domain")
+    customDomainAllowlist = rows.flatMap((r: any) => [
+      `https://${r.custom_domain}`,
+      `http://${r.custom_domain}`,
+    ])
+    customDomainLastFetch = Date.now()
+  } catch {
+    // DB not ready yet — keep existing cache
+  }
+}
+
+function isOriginAllowed(origin: string): boolean {
+  if (allowlist.includes(origin)) return true
+  if (customDomainAllowlist.includes(origin)) return true
+  return false
+}
 
 const corsOptions = function (
   req: Request,
   callback: (arg0: Error | null, arg1: CorsOptions) => void,
 ) {
-  let corsOptions
-  const origin = req.header("Origin")
-  if (!origin || allowlist.indexOf(origin) !== -1) {
-    corsOptions = {
-      origin: true,
-      credentials: true,
-    } // reflect (enable) the requested origin in the CORS response
-  } else {
-    corsOptions = { origin: false } // disable CORS for this request
+  // Refresh domain cache if stale
+  if (Date.now() - customDomainLastFetch > DOMAIN_CACHE_TTL) {
+    refreshCustomDomains()
   }
-  callback(null, corsOptions) // callback expects two parameters: error and options
+
+  const origin = req.header("Origin")
+  if (!origin || isOriginAllowed(origin)) {
+    callback(null, { origin: true, credentials: true })
+  } else {
+    callback(null, { origin: false })
+  }
 }
 
 const rootApp = express()
