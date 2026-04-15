@@ -13,6 +13,7 @@ import {
 import { ErrorCode } from "../util/error-codes.js"
 import { User } from "../api-models.js"
 import { DBOrgPremiumTier } from "../../../../clients/database/db-models.js"
+import { auditLogService } from "../../../../services/audit-log/audit-log.service.js"
 
 const knex = () => getKnex()
 
@@ -135,6 +136,14 @@ adminPremiumRouter.put("/:contractor_id", adminAuthorized, writeRateLimit, async
       .where({ contractor_id: req.params.contractor_id })
       .first()
 
+    await auditLogService.record({
+      action: "premium_tier_granted",
+      actorId: user.user_id,
+      subjectType: "contractor",
+      subjectId: req.params.contractor_id,
+      metadata: { tier, custom_domain: custom_domain ?? null },
+    })
+
     res.json(createResponse(result))
   } catch (err: any) {
     if (err?.constraint === "org_premium_tiers_custom_domain_key") {
@@ -173,6 +182,14 @@ adminPremiumRouter.patch("/:contractor_id/domain", adminAuthorized, writeRateLim
       .where({ contractor_id: req.params.contractor_id })
       .first()
 
+    await auditLogService.record({
+      action: "premium_domain_updated",
+      actorId: (req.user as User).user_id,
+      subjectType: "contractor",
+      subjectId: req.params.contractor_id,
+      metadata: { custom_domain: custom_domain ?? null },
+    })
+
     res.json(createResponse(result))
   } catch (err: any) {
     if (err?.constraint === "org_premium_tiers_custom_domain_key") {
@@ -195,6 +212,13 @@ adminPremiumRouter.delete("/:contractor_id", adminAuthorized, writeRateLimit, as
       res.status(404).json(createNotFoundErrorResponse("Active premium tier", req.params.contractor_id))
       return
     }
+
+    await auditLogService.record({
+      action: "premium_tier_revoked",
+      actorId: (req.user as User).user_id,
+      subjectType: "contractor",
+      subjectId: req.params.contractor_id,
+    })
 
     res.json(createResponse({ message: "Premium tier revoked" }))
   } catch (err) {

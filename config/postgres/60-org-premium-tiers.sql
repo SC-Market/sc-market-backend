@@ -29,14 +29,3 @@ CREATE TABLE IF NOT EXISTS public.org_themes (
 );
 
 CREATE INDEX IF NOT EXISTS idx_org_themes_contractor ON public.org_themes(contractor_id);
-
--- Seed existing white-label orgs (contractor_id and granted_by must be filled with actual IDs)
--- These are placeholders; update with real contractor_ids and an admin user_id before running
--- INSERT INTO public.org_premium_tiers (contractor_id, tier, custom_domain, granted_by)
--- SELECT c.contractor_id, 'white_label', domain, (SELECT user_id FROM public.users WHERE role = 'admin' LIMIT 1)
--- FROM (VALUES
---   ('BWINCORP', 'bwsc.sc-market.space'),
---   ('MEDRUNNER', 'medrunner.sc-market.space'),
---   ('RSNM', 'redscar.sc-market.space')
--- ) AS v(spectrum_id, domain)
--- JOIN public.contractors c ON c.spectrum_id = v.spectrum_id;
