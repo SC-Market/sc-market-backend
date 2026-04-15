@@ -66,9 +66,6 @@ export function track500Responses(req: Request, res: Response, next: NextFunctio
   }
   next()
 }
-  } as any
-  next()
-}
 
 /**
  * AJV validation error structure
