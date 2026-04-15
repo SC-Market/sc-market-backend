@@ -29,6 +29,7 @@ import { securityHeaders } from "./api/middleware/security-headers.js"
 import { registrationRouter } from "./clients/discord_api/registration.js"
 import { threadRouter } from "./clients/discord_api/threads.js"
 import { subscriptionRouter } from "./clients/discord_api/subscriptions.js"
+import { interactionsRouter } from "./clients/discord_api/interactions.js"
 import { trackActivity } from "./api/middleware/activity.js"
 import { oapi } from "./api/routes/v1/openapi.js"
 import { env } from "./config/env.js"
@@ -548,6 +549,8 @@ logger.info(`server up on port ${hostname()}:${env.BACKEND_PORT || 7000}`)
 httpServer.listen(env.BACKEND_PORT || 7000)
 
 const discord_app = express()
+// Interactions endpoint needs raw body for signature verification — mount before global json parser
+discord_app.use("/interactions", express.raw({ type: "application/json" }), interactionsRouter)
 discord_app.use(
   express.urlencoded({
     extended: true,
