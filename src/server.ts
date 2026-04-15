@@ -1,9 +1,3 @@
-// Log uncaught exceptions to stderr before exit
-process.on("uncaughtException", (err) => {
-  console.error("Uncaught Exception:", err)
-  process.exit(1)
-})
-
 import express, { Request, RequestHandler } from "express"
 import compression from "compression"
 import passport from "passport"
@@ -119,7 +113,7 @@ const corsOptions = function (
 ) {
   // Refresh domain cache if stale
   if (Date.now() - customDomainLastFetch > DOMAIN_CACHE_TTL) {
-    refreshCustomDomains()
+    refreshCustomDomains().catch(() => {})
   }
 
   const origin = req.header("Origin")
