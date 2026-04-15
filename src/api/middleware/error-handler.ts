@@ -23,54 +23,49 @@ import {
 import { applyCorsHeaders } from "./cors-helper.js"
 import logger from "../../logger/logger.js"
 
-// Lazy-load Bugsnag to avoid circular deps and handle dev mode
+// Bugsnag reference — populated lazily
 let Bugsnag: any = null
-try {
-  Bugsnag = require("@bugsnag/js")
-} catch {
-  // Bugsnag not available (dev mode or not installed)
+
+async function ensureBugsnag() {
+  if (Bugsnag !== null) return Bugsnag
+  try {
+    const mod = await import("@bugsnag/js")
+    Bugsnag = mod.default || mod
+  } catch {
+    Bugsnag = false // mark as unavailable
+  }
+  return Bugsnag
 }
 
 function notifyBugsnag(err: Error, req: Request) {
-  if (!Bugsnag?.isStarted?.()) return
-  try {
-    Bugsnag.notify(err, (event: any) => {
-      event.addMetadata("request", {
-        path: req.path,
-        method: req.method,
-        user_id: (req.user as any)?.user_id,
+  ensureBugsnag().then((bs: any) => {
+    if (!bs || !bs.isStarted?.()) return
+    try {
+      bs.notify(err, (event: any) => {
+        event.addMetadata("request", {
+          path: req.path,
+          method: req.method,
+          user_id: (req.user as any)?.user_id,
+        })
       })
-    })
-  } catch {
-    // Bugsnag notification failed — don't break error handling
-  }
+    } catch { /* ignore */ }
+  }).catch(() => {})
 }
 
 /**
  * Middleware that intercepts 500 responses to log them in Bugsnag.
- * Mount before route handlers.
  */
 export function track500Responses(req: Request, res: Response, next: NextFunction) {
   const originalJson = res.json.bind(res)
-  res.json = function (body: any) {
-    if (res.statusCode >= 500 && Bugsnag?.isStarted?.()) {
+  res.json = function(this: Response, body: any) {
+    if (res.statusCode >= 500) {
       const message = body?.error?.message || body?.error || "Internal Server Error"
-      try {
-        Bugsnag.notify(new Error(`[${res.statusCode}] ${req.method} ${req.path}: ${message}`), (event: any) => {
-          event.severity = "error"
-          event.addMetadata("request", {
-            path: req.path,
-            method: req.method,
-            user_id: (req.user as any)?.user_id,
-            statusCode: res.statusCode,
-          })
-          event.addMetadata("response", { body })
-        })
-      } catch {
-        // Don't break the response
-      }
+      notifyBugsnag(new Error(`[${res.statusCode}] ${req.method} ${req.path}: ${message}`), req)
     }
     return originalJson(body)
+  }
+  next()
+}
   } as any
   next()
 }
