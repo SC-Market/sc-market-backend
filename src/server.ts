@@ -1,3 +1,12 @@
+// Global error listeners — log everything, don't exit
+process.on("uncaughtException", (err) => {
+  console.error("[UNCAUGHT EXCEPTION]", err?.message, err?.stack)
+})
+
+process.on("unhandledRejection", (reason) => {
+  console.error("[UNHANDLED REJECTION]", reason instanceof Error ? `${reason.message}\n${reason.stack}` : reason)
+})
+
 import express, { Request, RequestHandler } from "express"
 import compression from "compression"
 import passport from "passport"
