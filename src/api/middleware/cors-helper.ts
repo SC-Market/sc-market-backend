@@ -59,8 +59,20 @@ export async function applyCorsHeaders(req: Request, res: Response): Promise<voi
   const origin = req.header("Origin")
 
   if (origin) {
-    const dynamicDomains = await getCustomDomains()
-    if (allowlist.includes(origin) || dynamicDomains.includes(origin)) {
+    // Check static allowlist first (always works, no DB needed)
+    let allowed = allowlist.includes(origin)
+
+    // Try dynamic domains only if static didn't match
+    if (!allowed) {
+      try {
+        const dynamicDomains = await getCustomDomains()
+        allowed = dynamicDomains.includes(origin)
+      } catch {
+        // DB failure — fall back to static allowlist only
+      }
+    }
+
+    if (allowed) {
       res.setHeader("Access-Control-Allow-Origin", origin)
       res.setHeader("Access-Control-Allow-Credentials", "true")
     }

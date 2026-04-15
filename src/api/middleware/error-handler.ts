@@ -146,7 +146,11 @@ export async function errorHandler(
   // This ensures browsers don't block error responses when routes crash
   // Only apply if headers haven't been sent yet
   if (!res.headersSent) {
-    await applyCorsHeaders(req, res)
+    try {
+      await applyCorsHeaders(req, res)
+    } catch {
+      // CORS header application failed — continue to send error response anyway
+    }
   }
 
   // Log error with context
