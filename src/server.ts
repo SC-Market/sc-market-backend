@@ -1,9 +1,4 @@
-// Catch unhandled rejections before they crash the process
-process.on("unhandledRejection", (reason, promise) => {
-  console.error("Unhandled Rejection:", reason)
-  // Bugsnag notification happens after it's initialized below
-})
-
+// Log uncaught exceptions to stderr before exit
 process.on("uncaughtException", (err) => {
   console.error("Uncaught Exception:", err)
   process.exit(1)
@@ -70,15 +65,6 @@ const bugsnag = isDevelopment
       apiKey: process.env.BUGSNAG_API_KEY || "",
       plugins: [BugsnagPluginExpress],
     })
-
-// Now that Bugsnag is initialized, update the rejection handler to report to it
-process.removeAllListeners("unhandledRejection")
-process.on("unhandledRejection", (reason, promise) => {
-  console.error("Unhandled Rejection:", reason)
-  if (bugsnag) {
-    Bugsnag.notify(reason instanceof Error ? reason : new Error(String(reason)))
-  }
-})
 
 const SessionPool = pg.Pool
 
