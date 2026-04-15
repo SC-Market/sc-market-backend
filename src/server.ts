@@ -230,6 +230,9 @@ const sessionMiddleware = session({
 
 app.use(sessionMiddleware)
 
+// Discord interactions endpoint — needs raw body for ed25519 signature verification, must be before json parser
+app.use("/interactions", express.raw({ type: "application/json" }), interactionsRouter)
+
 app.use(express.json({ limit: "2.5mb" }))
 app.use(
   express.urlencoded({
@@ -549,8 +552,6 @@ logger.info(`server up on port ${hostname()}:${env.BACKEND_PORT || 7000}`)
 httpServer.listen(env.BACKEND_PORT || 7000)
 
 const discord_app = express()
-// Interactions endpoint needs raw body for signature verification — mount before global json parser
-discord_app.use("/interactions", express.raw({ type: "application/json" }), interactionsRouter)
 discord_app.use(
   express.urlencoded({
     extended: true,
