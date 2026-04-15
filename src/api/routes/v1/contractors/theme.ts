@@ -21,6 +21,7 @@ import {
   DBOrgTheme,
   DBOrgPremiumTier,
 } from "../../../../clients/database/db-models.js"
+import { auditLogService } from "../../../../services/audit-log/audit-log.service.js"
 
 const knex = () => getKnex()
 
@@ -177,6 +178,13 @@ contractorThemeRouter.put(
         .where({ contractor_id: contractor.contractor_id })
         .first()
 
+      await auditLogService.record({
+        action: "theme_updated",
+        actorId: user.user_id,
+        subjectType: "contractor",
+        subjectId: contractor.contractor_id,
+      })
+
       res.json(
         createResponse({
           theme_data: result!.theme_data,
@@ -208,6 +216,13 @@ contractorThemeRouter.delete(
         res.status(404).json(createNotFoundErrorResponse("Org theme", contractor.spectrum_id))
         return
       }
+
+      await auditLogService.record({
+        action: "theme_deleted",
+        actorId: (req.user as User).user_id,
+        subjectType: "contractor",
+        subjectId: contractor.contractor_id,
+      })
 
       res.json(createResponse({ message: "Theme reset to default" }))
     } catch (err) {
