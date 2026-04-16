@@ -80,3 +80,133 @@ export interface ValidationResult {
   valid: boolean
   errors: ValidationError[]
 }
+
+/**
+ * Database representation of a listing item lot (stock lot)
+ */
+export interface DBListingItemLot {
+  lot_id: string
+  item_id: string
+  variant_id: string
+  quantity_total: number
+  location_id: string | null
+  owner_id: string | null
+  listed: boolean
+  notes: string | null
+  crafted_by: string | null
+  crafted_at: Date | null
+  created_at: Date
+  updated_at: Date
+}
+
+/**
+ * Stock allocation record
+ */
+export interface StockAllocation {
+  lot_id: string
+  variant_id: string
+  quantity_allocated: number
+  allocated_at: Date
+}
+
+/**
+ * Stock allocation result
+ */
+export interface StockAllocationResult {
+  allocations: StockAllocation[]
+  total_allocated: number
+}
+
+/**
+ * Availability check result
+ */
+export interface AvailabilityCheckResult {
+  available: boolean
+  available_quantity: number
+  variant_id: string
+}
+
+/**
+ * Validation result for cart add operation
+ */
+export interface CartAddValidationResult {
+  valid: boolean
+  error_message?: string
+  alternative_variants?: AlternativeVariant[]
+}
+
+/**
+ * Alternative variant suggestion
+ */
+export interface AlternativeVariant {
+  variant_id: string
+  display_name: string
+  quality_tier: number
+  available_quantity: number
+  price: number
+}
+
+/**
+ * Validation result for order creation
+ */
+export interface OrderCreationValidationResult {
+  valid: boolean
+  item_errors: ItemValidationError[]
+}
+
+/**
+ * Per-item validation error
+ */
+export interface ItemValidationError {
+  item_id: string
+  variant_id: string
+  error_message: string
+  requested_quantity: number
+  available_quantity: number
+}
+
+/**
+ * Cart checkout validation result
+ */
+export interface CartCheckoutValidationResult {
+  valid_items: ValidCartItem[]
+  removed_items: RemovedCartItem[]
+  price_changes: CartItemPrice[]
+}
+
+/**
+ * Valid cart item for checkout
+ */
+export interface ValidCartItem {
+  cart_item_id: string
+  item_id: string
+  variant_id: string
+  listing_id: string
+  quantity: number
+  price_per_unit: number
+}
+
+/**
+ * Removed cart item (unavailable)
+ */
+export interface RemovedCartItem {
+  cart_item_id: string
+  item_id: string
+  variant_id: string
+  reason: string
+}
+
+/**
+ * Cart item with price information
+ */
+export interface CartItemPrice {
+  cart_item_id: string
+  item_id: string
+  variant_id: string
+  listing_id: string
+  price_per_unit: number
+  price_updated_at: Date
+  current_price: number
+  is_stale: boolean
+  percentage_change: number
+}

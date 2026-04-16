@@ -45,3 +45,22 @@ export class AttributeNormalizationError extends Error {
     this.attributes = attributes
   }
 }
+
+/**
+ * Error thrown when insufficient stock is available for allocation
+ */
+export class InsufficientStockError extends Error {
+  public readonly variantId: string
+  public readonly requestedQuantity: number
+  public readonly availableQuantity: number
+
+  constructor(variantId: string, requestedQuantity: number, availableQuantity: number) {
+    super(
+      `Insufficient stock for variant ${variantId}: requested ${requestedQuantity}, available ${availableQuantity}`
+    )
+    this.name = "InsufficientStockError"
+    this.variantId = variantId
+    this.requestedQuantity = requestedQuantity
+    this.availableQuantity = availableQuantity
+  }
+}
