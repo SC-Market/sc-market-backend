@@ -3,13 +3,13 @@
  *
  * TSOA controller for listing creation, search, and management in the V2 market system.
  *
- * Requirements: 10.1, 13.1, 13.2, 13.3, 13.4, 26.1, 26.2, 28.1, 28.4, 28.5, 28.6
+ * Requirements: 9.1, 10.1, 13.1, 13.2, 13.3, 13.4, 14.1, 14.2, 14.3, 14.4, 14.5, 14.6, 26.1, 26.2, 28.1, 28.4, 28.5, 28.6
  */
 
-import { Controller, Post, Route, Tags, Body, Request } from "tsoa"
+import { Controller, Get, Post, Route, Tags, Body, Query, Request } from "tsoa"
 import { Request as ExpressRequest } from "express"
 import { BaseController } from "../base/BaseController.js"
-import { CreateListingRequest, Listing } from "../types/market-v2-types.js"
+import { CreateListingRequest, Listing, SearchListingsResponse } from "../types/market-v2-types.js"
 import { ListingService } from "../../../../services/market-v2/listing.service.js"
 import logger from "../../../../logger/logger.js"
 
@@ -18,9 +18,79 @@ import logger from "../../../../logger/logger.js"
 export class ListingsV2Controller extends BaseController {
   private listingService: ListingService
 
-  constructor(@Request() request: ExpressRequest) {
-    super(request)
+  constructor(@Request() request?: ExpressRequest) {
+    super(request as ExpressRequest)
     this.listingService = new ListingService()
+  }
+
+  /**
+   * Search listings with filters
+   *
+   * Searches active listings using full-text search, quality tier filters, price filters,
+   * and game item filters. Results are paginated and include price/quality ranges.
+   *
+   * @summary Search market listings
+   * @param text Optional full-text search query
+   * @param game_item_id Optional game item ID filter
+   * @param quality_tier_min Optional minimum quality tier (1-5)
+   * @param quality_tier_max Optional maximum quality tier (1-5)
+   * @param price_min Optional minimum price filter
+   * @param price_max Optional maximum price filter
+   * @param page Page number (default: 1)
+   * @param page_size Results per page (default: 20, max: 100)
+   * @returns Search results with pagination metadata
+   */
+  @Get("search")
+  public async searchListings(
+    @Query() text?: string,
+    @Query() game_item_id?: string,
+    @Query() quality_tier_min?: number,
+    @Query() quality_tier_max?: number,
+    @Query() price_min?: number,
+    @Query() price_max?: number,
+    @Query() page: number = 1,
+    @Query() page_size: number = 20,
+  ): Promise<SearchListingsResponse> {
+    logger.info("Searching listings", {
+      text,
+      game_item_id,
+      quality_tier_min,
+      quality_tier_max,
+      price_min,
+      price_max,
+      page,
+      page_size,
+    })
+
+    try {
+      // Search listings using service
+      const results = await this.listingService.searchListings({
+        text,
+        game_item_id,
+        quality_tier_min,
+        quality_tier_max,
+        price_min,
+        price_max,
+        page,
+        page_size,
+      })
+
+      logger.info("Search completed", {
+        total: results.total,
+        returned: results.listings.length,
+        page: results.page,
+      })
+
+      return results
+    } catch (error) {
+      logger.error("Failed to search listings", {
+        error: error instanceof Error ? error.message : String(error),
+        stack: error instanceof Error ? error.stack : undefined,
+      })
+
+      // Re-throw to be handled by error middleware
+      throw error
+    }
   }
 
   /**
