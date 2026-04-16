@@ -285,6 +285,7 @@ export function RegisterRoutes(app: Router) {
         // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
         const argsListingsV2Controller_createListing: Record<string, TsoaRoute.ParameterSchema> = {
                 request: {"in":"body","name":"request","required":true,"ref":"CreateListingRequest"},
+                expressRequest: {"in":"request","name":"expressRequest","required":true,"dataType":"object"},
         };
         app.post('/listings',
             ...(fetchMiddlewares<RequestHandler>(ListingsV2Controller)),
@@ -373,6 +374,7 @@ export function RegisterRoutes(app: Router) {
         });
         // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
         const argsDebugV2Controller_getFeatureFlag: Record<string, TsoaRoute.ParameterSchema> = {
+                request: {"in":"request","name":"request","required":true,"dataType":"object"},
         };
         app.get('/debug/feature-flag',
             ...(fetchMiddlewares<RequestHandler>(DebugV2Controller)),
@@ -403,6 +405,7 @@ export function RegisterRoutes(app: Router) {
         // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
         const argsDebugV2Controller_setFeatureFlag: Record<string, TsoaRoute.ParameterSchema> = {
                 request: {"in":"body","name":"request","required":true,"ref":"SetFeatureFlagRequest"},
+                expressRequest: {"in":"request","name":"expressRequest","required":true,"dataType":"object"},
         };
         app.post('/debug/feature-flag',
             ...(fetchMiddlewares<RequestHandler>(DebugV2Controller)),

@@ -876,7 +876,7 @@
 						}
 					}
 				},
-				"description": "Get current feature flag setting\n\nReturns the current market version (V1 or V2) for the authenticated user.\nAlso indicates whether the user has developer privileges.\n\nRestricted to authenticated users only.",
+				"description": "Get current feature flag setting\n\nReturns the current market version (V1 or V2) for the authenticated user.\nAlso indicates whether the client should show debug / feature-flag tooling\n(admin users, or any user when NODE_ENV is development).\n\nRestricted to authenticated users only.",
 				"summary": "Get feature flag",
 				"tags": [
 					"Debug V2"
