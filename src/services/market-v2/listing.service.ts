@@ -18,6 +18,9 @@ import {
   SearchListingsRequest,
   SearchListingsResponse,
   ListingDetailResponse,
+  GetMyListingsRequest,
+  MyListingsResponse,
+  UpdateListingRequest,
 } from "../../api/routes/v2/types/market-v2-types.js"
 import {
   BusinessLogicError,
@@ -238,7 +241,7 @@ export class ListingService {
           })
 
           // Insert stock lot
-          await trx("stock_lots").insert({
+          await trx("listing_item_lots").insert({
             item_id: listingItemRow.item_id,
             variant_id: variant.variant_id,
             quantity_total: lot.quantity,
@@ -655,7 +658,7 @@ export class ListingService {
     }>
   > {
     // Query to get variant breakdown with quantities
-    const variantRows = await this.knex("stock_lots as sl")
+    const variantRows = await this.knex("listing_item_lots as sl")
       .join("item_variants as iv", "sl.variant_id", "iv.variant_id")
       .leftJoin("locations as loc", "sl.location_id", "loc.location_id")
       .where("sl.item_id", itemId)
@@ -706,5 +709,282 @@ export class ListingService {
         locations: row.location_names || undefined,
       }
     })
+  }
+
+  /**
+   * Get current user's listings with variant breakdown
+   *
+   * Fetches listings owned by the current user with aggregated variant information:
+   * - Variant count
+   * - Total quantity across all variants
+   * - Price range (min to max)
+   * - Quality tier range (min to max)
+   *
+   * Supports filtering by status and pagination with sorting.
+   *
+   * Requirements: 1.1, 1.2, 1.3, 1.4, 1.5, 1.6, 1.7, 1.8
+   */
+  async getMyListings(
+    userId: string,
+    request: GetMyListingsRequest,
+  ): Promise<MyListingsResponse> {
+    // Validate pagination parameters
+    const page = Math.max(1, request.page || 1)
+    const page_size = Math.min(100, Math.max(1, request.page_size || 20))
+    const sort_by = request.sort_by || "created_at"
+    const sort_order = request.sort_order || "desc"
+
+    try {
+      // Build query for user's listings with variant aggregation
+      let query = this.knex("listings as l")
+        .join("listing_items as li", "l.listing_id", "li.listing_id")
+        .leftJoin("listing_item_lots as sl", "li.item_id", "sl.item_id")
+        .leftJoin("item_variants as iv", "sl.variant_id", "iv.variant_id")
+        .leftJoin("variant_pricing as vp", function() {
+          this.on("vp.item_id", "=", "li.item_id")
+            .andOn("vp.variant_id", "=", "sl.variant_id")
+        })
+        .where("l.seller_id", this.knex.raw("?::uuid", [userId]))
+        .where("sl.listed", true)
+
+      // Apply status filter (Requirement 1.5)
+      if (request.status) {
+        query = query.where("l.status", request.status)
+      }
+
+      // Group by listing and aggregate variant information
+      query = query
+        .select(
+          "l.listing_id",
+          "l.title",
+          "l.status",
+          "l.created_at",
+          "l.updated_at",
+          this.knex.raw("COUNT(DISTINCT sl.variant_id) as variant_count"),
+          this.knex.raw("SUM(sl.quantity_total) as total_quantity"),
+          this.knex.raw(
+            "MIN(COALESCE(vp.price, li.base_price)) as price_min",
+          ),
+          this.knex.raw(
+            "MAX(COALESCE(vp.price, li.base_price)) as price_max",
+          ),
+          this.knex.raw(
+            "MIN((iv.attributes->>'quality_tier')::integer) as quality_tier_min",
+          ),
+          this.knex.raw(
+            "MAX((iv.attributes->>'quality_tier')::integer) as quality_tier_max",
+          ),
+        )
+        .groupBy("l.listing_id", "l.title", "l.status", "l.created_at", "l.updated_at")
+
+      // Get total count for pagination
+      const countQuery = this.knex
+        .from(query.clone().as("subquery"))
+        .count("* as count")
+      const [{ count }] = await countQuery
+      const total = parseInt(count as string, 10)
+
+      // Apply sorting (Requirement 1.7)
+      const sortColumn = sort_by === "price" ? "price_min" : sort_by
+      query = query.orderBy(sortColumn, sort_order)
+
+      // Apply pagination (Requirement 1.6)
+      const offset = (page - 1) * page_size
+      query = query.limit(page_size).offset(offset)
+
+      // Execute query
+      const listings = await query
+
+      logger.debug("My listings query executed", {
+        userId,
+        total,
+        returned: listings.length,
+        page,
+        page_size,
+      })
+
+      return {
+        listings: listings.map((row) => ({
+          listing_id: row.listing_id,
+          title: row.title,
+          status: row.status,
+          created_at: row.created_at,
+          variant_count: parseInt(row.variant_count, 10) || 0,
+          total_quantity: parseInt(row.total_quantity, 10) || 0,
+          price_min: parseInt(row.price_min, 10) || 0,
+          price_max: parseInt(row.price_max, 10) || 0,
+          quality_tier_min: row.quality_tier_min || 1,
+          quality_tier_max: row.quality_tier_max || 1,
+        })),
+        total,
+        page,
+        page_size,
+      }
+    } catch (error) {
+      logger.error("My listings query failed", {
+        userId,
+        error: error instanceof Error ? error.message : String(error),
+        request,
+      })
+
+      throw new BusinessLogicError(
+        ErrorCode.INTERNAL_SERVER_ERROR,
+        "Failed to fetch my listings",
+      )
+    }
+  }
+
+  /**
+   * Update listing
+   *
+   * Allows updating listing title, description, base_price, and per-variant prices.
+   * Validates ownership and prevents editing sold or cancelled listings.
+   * Logs all modifications to audit trail.
+   *
+   * Requirements: 3.1, 3.2, 3.3, 3.4, 3.5, 3.6, 3.7, 3.8
+   */
+  async updateListing(
+    userId: string,
+    listingId: string,
+    request: UpdateListingRequest,
+  ): Promise<ListingDetailResponse> {
+    try {
+      return await this.knex.transaction(async (trx) => {
+        // Fetch listing to validate ownership and status
+        const listing = await trx("listings")
+          .where({ listing_id: listingId })
+          .first()
+
+        if (!listing) {
+          throw new NotFoundError("Listing", listingId)
+        }
+
+        // Validate ownership (Requirement 3.6)
+        if (listing.seller_id !== userId) {
+          throw new BusinessLogicError(
+            ErrorCode.FORBIDDEN,
+            "You do not have permission to update this listing",
+          )
+        }
+
+        // Prevent editing sold or cancelled listings (Requirement 3.5)
+        if (listing.status === "sold" || listing.status === "cancelled") {
+          throw new BusinessLogicError(
+            ErrorCode.CONFLICT,
+            `Cannot update listing with status: ${listing.status}`,
+          )
+        }
+
+        // Build update object
+        const updates: any = {
+          updated_at: trx.fn.now(),
+        }
+
+        if (request.title !== undefined) {
+          updates.title = request.title
+        }
+
+        if (request.description !== undefined) {
+          updates.description = request.description
+        }
+
+        if (request.status !== undefined) {
+          updates.status = request.status
+        }
+
+        // Update listing (Requirements 3.1, 3.2)
+        await trx("listings")
+          .where({ listing_id: listingId })
+          .update(updates)
+
+        // Update base_price if provided (Requirement 3.3)
+        if (request.base_price !== undefined) {
+          await trx("listing_items")
+            .where({ listing_id: listingId })
+            .update({ base_price: request.base_price })
+        }
+
+        // Update per-variant prices if provided (Requirement 3.4)
+        if (request.variant_prices && request.variant_prices.length > 0) {
+          // Get listing item
+          const listingItem = await trx("listing_items")
+            .where({ listing_id: listingId })
+            .first()
+
+          if (!listingItem) {
+            throw new BusinessLogicError(
+              ErrorCode.INTERNAL_SERVER_ERROR,
+              "Listing item not found",
+            )
+          }
+
+          // Verify pricing mode is per_variant
+          if (listingItem.pricing_mode !== "per_variant") {
+            throw new ValidationError(
+              "Cannot update variant prices for unified pricing mode",
+              [
+                {
+                  field: "variant_prices",
+                  message: "Variant prices can only be updated for per_variant pricing mode",
+                },
+              ],
+            )
+          }
+
+          // Update each variant price
+          for (const variantPrice of request.variant_prices) {
+            await trx("variant_pricing")
+              .where({
+                item_id: listingItem.item_id,
+                variant_id: variantPrice.variant_id,
+              })
+              .update({
+                price: variantPrice.price,
+                updated_at: trx.fn.now(),
+              })
+          }
+        }
+
+        // Log modification to audit trail (Requirement 3.8)
+        await trx("audit_logs").insert({
+          actor_id: trx.raw("?::uuid", [userId]),
+          action: "listing.updated",
+          subject_type: "listing",
+          subject_id: listingId,
+          metadata: JSON.stringify(request),
+          created_at: trx.fn.now(),
+        })
+
+        logger.info("Listing updated successfully", {
+          listingId,
+          userId,
+          changes: request,
+        })
+
+        // Return updated listing detail (Requirement 3.7)
+        // Use the original knex instance, not the transaction
+        return await this.getListingDetail(listingId)
+      })
+    } catch (error) {
+      // Re-throw known errors
+      if (
+        error instanceof NotFoundError ||
+        error instanceof BusinessLogicError ||
+        error instanceof ValidationError
+      ) {
+        throw error
+      }
+
+      logger.error("Failed to update listing", {
+        listingId,
+        userId,
+        error: error instanceof Error ? error.message : String(error),
+      })
+
+      throw new BusinessLogicError(
+        ErrorCode.INTERNAL_SERVER_ERROR,
+        "Failed to update listing",
+      )
+    }
   }
 }

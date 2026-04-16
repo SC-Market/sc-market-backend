@@ -141,7 +141,8 @@ export class StockAllocationService {
       .sum("quantity_total as total")
       .first()
 
-    const availableQuantity = Number(result?.total || 0)
+    // Knex sum returns an object with the aggregate result
+    const availableQuantity = Number((result as any)?.total || 0)
 
     return {
       available: availableQuantity > 0,

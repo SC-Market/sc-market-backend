@@ -12,5 +12,5 @@ export * from "./feature-flag.service.js"
 export * from "./migration.service.js"
 export * from "./stock-allocation.service.js"
 export * from "./price-consistency.service.js"
-
-
+export * from "./availability-validation.service.js"
+export * from "./cart.service.js"

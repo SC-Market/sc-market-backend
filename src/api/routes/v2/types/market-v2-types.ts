@@ -190,6 +190,56 @@ export interface UpdateListingRequest {
   title?: string;
   description?: string;
   status?: 'active' | 'sold' | 'expired' | 'cancelled';
+  base_price?: number;
+  variant_prices?: Array<{
+    variant_id: string;
+    price: number;
+  }>;
+}
+
+/**
+ * Get my listings request
+ */
+export interface GetMyListingsRequest {
+  status?: 'active' | 'sold' | 'expired' | 'cancelled';
+  page: number;
+  page_size: number;
+  sort_by?: 'created_at' | 'updated_at' | 'price' | 'quantity';
+  sort_order?: 'asc' | 'desc';
+}
+
+/**
+ * Get stock lots request
+ */
+export interface GetStockLotsRequest {
+  listing_id?: string;
+  game_item_id?: string;
+  location_id?: string;
+  quality_tier_min?: number;
+  quality_tier_max?: number;
+  page: number;
+  page_size: number;
+}
+
+/**
+ * Update stock lot request
+ */
+export interface UpdateStockLotRequest {
+  quantity_total?: number;
+  listed?: boolean;
+  location_id?: string;
+  notes?: string;
+}
+
+/**
+ * Bulk stock update request
+ */
+export interface BulkStockUpdateRequest {
+  stock_lot_ids: string[];
+  operation: 'update_quantity' | 'list' | 'unlist' | 'transfer_location';
+  quantity_delta?: number;
+  listed?: boolean;
+  location_id?: string;
 }
 
 // ============================================================================
@@ -248,6 +298,79 @@ export interface ListingDetailResponse {
       price: number;
       locations?: string[];
     }>;
+  }>;
+}
+
+/**
+ * My listings response with pagination
+ */
+export interface MyListingsResponse {
+  listings: Array<{
+    listing_id: string;
+    title: string;
+    status: string;
+    created_at: Date;
+    variant_count: number;
+    total_quantity: number;
+    price_min: number;
+    price_max: number;
+    quality_tier_min: number;
+    quality_tier_max: number;
+  }>;
+  total: number;
+  page: number;
+  page_size: number;
+}
+
+/**
+ * Stock lot detail response
+ */
+export interface StockLotDetail {
+  lot_id: string;
+  item_id: string;
+  listing: {
+    listing_id: string;
+    title: string;
+  };
+  game_item: {
+    game_item_id: string;
+    name: string;
+    type: string;
+  };
+  variant: {
+    variant_id: string;
+    display_name: string;
+    short_name: string;
+    attributes: Record<string, any>;
+    quality_tier: number;
+  };
+  quantity_total: number;
+  location_id?: string;
+  listed: boolean;
+  notes?: string;
+  created_at: Date;
+  updated_at: Date;
+}
+
+/**
+ * Stock lots response with pagination
+ */
+export interface StockLotsResponse {
+  stock_lots: StockLotDetail[];
+  total: number;
+  page: number;
+  page_size: number;
+}
+
+/**
+ * Bulk stock update response
+ */
+export interface BulkStockUpdateResponse {
+  successful: number;
+  failed: number;
+  errors: Array<{
+    lot_id: string;
+    error: string;
   }>;
 }
 
@@ -319,4 +442,219 @@ export interface GameItemInfo {
   name: string;
   type: string;
   icon_url?: string;
+}
+
+// ============================================================================
+// Cart Types
+// ============================================================================
+
+/**
+ * Cart item in database
+ */
+export interface CartItemV2 {
+  cart_item_id: string;
+  user_id: string;
+  seller_id: string;              // NEW: For multi-seller support
+  listing_id: string;
+  item_id: string;
+  variant_id: string;
+  quantity: number;
+  price_per_unit: number;
+  price_updated_at: Date;
+  buyer_note?: string;             // NEW: Per-seller notes
+  created_at: Date;
+  updated_at: Date;
+}
+
+/**
+ * Cart seller grouping (for multi-seller carts)
+ */
+export interface CartSellerV2 {
+  seller_id: string;
+  seller_name: string;
+  seller_type: 'user' | 'contractor';
+  buyer_note?: string;
+  items: Array<{
+    cart_item_id: string;
+    listing: {
+      listing_id: string;
+      title: string;
+    };
+    game_item: {
+      game_item_id: string;
+      name: string;
+      type: string;
+    };
+    variant: {
+      variant_id: string;
+      display_name: string;
+      attributes: Record<string, any>;
+      quality_tier: number;
+    };
+    quantity: number;
+    price_per_unit: number;
+    current_price: number;
+    is_price_stale: boolean;
+    is_available: boolean;
+  }>;
+  subtotal: number;
+  stale_items_count: number;
+  unavailable_items_count: number;
+  availability_required?: boolean;
+  availability_set?: boolean;
+  order_limits?: {
+    min_order_size?: string;
+    max_order_size?: string;
+    min_order_value?: string;
+    max_order_value?: string;
+  };
+}
+
+/**
+ * Cart detail response with variant information and seller grouping
+ */
+export interface CartDetailV2 {
+  sellers: CartSellerV2[];         // NEW: Grouped by seller
+  total_price: number;
+  stale_items_count: number;
+  unavailable_items_count: number;
+}
+
+/**
+ * Add to cart request
+ */
+export interface AddToCartRequest {
+  listing_id: string;
+  variant_id: string;
+  quantity: number;
+}
+
+/**
+ * Update cart item request
+ */
+export interface UpdateCartItemRequest {
+  quantity: number;
+}
+
+/**
+ * Update cart notes request
+ */
+export interface UpdateCartNotesRequest {
+  seller_id: string;
+  buyer_note: string;
+}
+
+/**
+ * Checkout cart request
+ */
+export interface CheckoutCartRequest {
+  seller_id: string;               // NEW: Checkout specific seller
+  accept_price_changes?: boolean;
+  offer_amount?: number;           // NEW: Custom offer amount
+  buyer_note?: string;             // NEW: Buyer's notes for seller
+}
+
+/**
+ * Checkout cart response
+ */
+export interface CheckoutCartResponse {
+  order_id: string;
+  session_id: string;              // NEW: For navigation to offer page
+  discord_invite?: string;         // NEW: Discord invite code
+  order_details?: OrderDetailV2;   // NEW: Full order details
+  items_removed: string[];
+  price_changes: Array<{
+    cart_item_id: string;
+    old_price: number;
+    new_price: number;
+    percentage_change: number;
+  }>;
+}
+
+// ============================================================================
+// Order Types
+// ============================================================================
+
+/**
+ * Order item in database
+ */
+export interface OrderItemV2 {
+  order_item_id: string;
+  order_id: string;
+  listing_id: string;
+  item_id: string;
+  variant_id: string;
+  quantity: number;
+  price_per_unit: number;
+  fulfillment_status: 'pending' | 'fulfilled' | 'cancelled';
+  created_at: Date;
+}
+
+/**
+ * Order detail with variant information
+ */
+export interface OrderDetailV2 {
+  order: {
+    order_id: string;
+    buyer_id: string;
+    seller_id: string;
+    status: string;
+    total_price: number;
+    created_at: Date;
+  };
+  buyer: {
+    id: string;
+    name: string;
+    type: 'user' | 'contractor';
+    rating: number;
+  };
+  seller: {
+    id: string;
+    name: string;
+    type: 'user' | 'contractor';
+    rating: number;
+  };
+  items: Array<{
+    order_item_id: string;
+    game_item: {
+      game_item_id: string;
+      name: string;
+      type: string;
+    };
+    variant: {
+      variant_id: string;
+      display_name: string;
+      attributes: Record<string, any>;
+      quality_tier: number;
+    };
+    quantity: number;
+    price_per_unit: number;
+    fulfillment_status: string;
+  }>;
+}
+
+/**
+ * Create order request
+ */
+export interface CreateOrderRequest {
+  items: Array<{
+    listing_id: string;
+    variant_id: string;
+    quantity: number;
+  }>;
+}
+
+/**
+ * Get orders request
+ */
+export interface GetOrdersRequest {
+  role?: 'buyer' | 'seller';
+  status?: string;
+  quality_tier?: number;
+  date_from?: Date;
+  date_to?: Date;
+  page: number;
+  page_size: number;
+  sort_by?: 'created_at' | 'total_price' | 'quality_tier';
+  sort_order?: 'asc' | 'desc';
 }
