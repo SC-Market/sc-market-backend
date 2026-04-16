@@ -10,3 +10,7 @@ export * from "./repository.js"
 export * from "./variant.service.js"
 export * from "./feature-flag.service.js"
 export * from "./migration.service.js"
+export * from "./stock-allocation.service.js"
+export * from "./price-consistency.service.js"
+
+
