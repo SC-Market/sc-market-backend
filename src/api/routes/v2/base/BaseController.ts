@@ -20,9 +20,9 @@ import { ValidationError as ValidationErrorType } from "../../v1/util/response.j
  * Base controller class with common functionality
  */
 export abstract class BaseController extends Controller {
-  protected request: Request
+  protected request?: Request
 
-  constructor(request: Request) {
+  constructor(request?: Request) {
     super()
     this.request = request
   }
@@ -32,7 +32,7 @@ export abstract class BaseController extends Controller {
    * @throws {BusinessLogicError} If user is not authenticated
    */
   protected getUserId(): string {
-    const user = this.request.user as User | undefined
+    const user = this.request?.user as User | undefined
     if (!user?.user_id) {
       throw new BusinessLogicError(
         ErrorCode.UNAUTHORIZED,
@@ -47,7 +47,7 @@ export abstract class BaseController extends Controller {
    * @throws {BusinessLogicError} If user is not authenticated
    */
   protected getUser(): User {
-    const user = this.request.user as User | undefined
+    const user = this.request?.user as User | undefined
     if (!user) {
       throw new BusinessLogicError(
         ErrorCode.UNAUTHORIZED,
@@ -62,7 +62,7 @@ export abstract class BaseController extends Controller {
    * @throws {BusinessLogicError} If user is not authenticated
    */
   protected requireAuth(): void {
-    if (!this.request.user) {
+    if (!this.request?.user) {
       throw new BusinessLogicError(
         ErrorCode.UNAUTHORIZED,
         "Authentication required",
@@ -74,7 +74,7 @@ export abstract class BaseController extends Controller {
    * Check if the current user is an admin
    */
   protected isAdmin(): boolean {
-    const user = this.request.user as User | undefined
+    const user = this.request?.user as User | undefined
     return user?.role === "admin"
   }
 
@@ -96,7 +96,7 @@ export abstract class BaseController extends Controller {
    * Check if the current user owns a resource
    */
   protected isOwner(resourceUserId: string): boolean {
-    const user = this.request.user as User | undefined
+    const user = this.request?.user as User | undefined
     return user?.user_id === resourceUserId
   }
 
