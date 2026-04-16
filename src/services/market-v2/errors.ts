@@ -64,3 +64,49 @@ export class InsufficientStockError extends Error {
     this.availableQuantity = availableQuantity
   }
 }
+
+/**
+ * Error thrown when a resource is not found
+ */
+export class NotFoundError extends Error {
+  constructor(message: string) {
+    super(message)
+    this.name = "NotFoundError"
+  }
+}
+
+/**
+ * Error thrown when a resource already exists (conflict)
+ */
+export class ConflictError extends Error {
+  constructor(message: string) {
+    super(message)
+    this.name = "ConflictError"
+  }
+}
+
+/**
+ * Error thrown when validation fails
+ */
+export class CartValidationError extends Error {
+  public readonly details?: Record<string, any>
+
+  constructor(message: string, details?: Record<string, any>) {
+    super(message)
+    this.name = "CartValidationError"
+    this.details = details
+  }
+}
+
+/**
+ * Error thrown when order validation fails
+ */
+export class OrderValidationError extends Error {
+  public readonly details?: Record<string, any>
+
+  constructor(message: string, details?: Record<string, any>) {
+    super(message)
+    this.name = "OrderValidationError"
+    this.details = details
+  }
+}

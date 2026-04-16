@@ -6,10 +6,17 @@
  * Requirements: 9.1, 10.1, 13.1, 13.2, 13.3, 13.4, 14.1, 14.2, 14.3, 14.4, 14.5, 14.6, 26.1, 26.2, 28.1, 28.4, 28.5, 28.6
  */
 
-import { Controller, Get, Post, Route, Tags, Body, Query, Path, Request } from "tsoa"
+import { Controller, Get, Post, Route, Tags, Body, Query, Path, Request, Put } from "tsoa"
 import { Request as ExpressRequest } from "express"
 import { BaseController } from "../base/BaseController.js"
-import { CreateListingRequest, Listing, SearchListingsResponse, ListingDetailResponse } from "../types/market-v2-types.js"
+import { 
+  CreateListingRequest, 
+  Listing, 
+  SearchListingsResponse, 
+  ListingDetailResponse,
+  MyListingsResponse,
+  UpdateListingRequest,
+} from "../types/market-v2-types.js"
 import { ListingService } from "../../../../services/market-v2/listing.service.js"
 import logger from "../../../../logger/logger.js"
 
@@ -172,6 +179,129 @@ export class ListingsV2Controller extends BaseController {
     } catch (error) {
       logger.error("Failed to fetch listing detail", {
         listing_id,
+        error: error instanceof Error ? error.message : String(error),
+        stack: error instanceof Error ? error.stack : undefined,
+      })
+
+      // Re-throw to be handled by error middleware
+      throw error
+    }
+  }
+
+  /**
+   * Get current user's listings with variant breakdown
+   *
+   * Returns listings owned by the authenticated user with aggregated variant information
+   * including variant count, total quantity, price range, and quality tier range.
+   * Supports filtering by status and pagination with sorting.
+   *
+   * @summary Get my listings
+   * @param status Optional status filter (active, sold, expired, cancelled)
+   * @param page Page number (default: 1)
+   * @param page_size Results per page (default: 20, max: 100)
+   * @param sort_by Sort field (default: created_at)
+   * @param sort_order Sort order (default: desc)
+   * @returns My listings with pagination metadata
+   */
+  @Get("mine")
+  public async getMyListings(
+    @Request() expressRequest: ExpressRequest,
+    @Query() status?: "active" | "sold" | "expired" | "cancelled",
+    @Query() page: number = 1,
+    @Query() page_size: number = 20,
+    @Query() sort_by?: "created_at" | "updated_at" | "price" | "quantity",
+    @Query() sort_order?: "asc" | "desc",
+  ): Promise<MyListingsResponse> {
+    this.request = expressRequest
+    // Require authentication
+    this.requireAuth()
+    const userId = this.getUserId()
+
+    logger.info("Fetching my listings", {
+      userId,
+      status,
+      page,
+      page_size,
+      sort_by,
+      sort_order,
+    })
+
+    try {
+      // Get my listings using service
+      const results = await this.listingService.getMyListings(userId, {
+        status,
+        page,
+        page_size,
+        sort_by,
+        sort_order,
+      })
+
+      logger.info("My listings retrieved successfully", {
+        userId,
+        total: results.total,
+        returned: results.listings.length,
+      })
+
+      return results
+    } catch (error) {
+      logger.error("Failed to fetch my listings", {
+        userId,
+        error: error instanceof Error ? error.message : String(error),
+        stack: error instanceof Error ? error.stack : undefined,
+      })
+
+      // Re-throw to be handled by error middleware
+      throw error
+    }
+  }
+
+  /**
+   * Update listing
+   *
+   * Updates listing title, description, base_price, or per-variant prices.
+   * Validates ownership and prevents editing sold or cancelled listings.
+   * All modifications are logged to the audit trail.
+   *
+   * @summary Update listing
+   * @param listing_id Listing ID to update
+   * @param request Update request with fields to modify
+   * @returns Updated listing detail with variant breakdown
+   */
+  @Put("{listing_id}")
+  public async updateListing(
+    @Path() listing_id: string,
+    @Body() request: UpdateListingRequest,
+    @Request() expressRequest: ExpressRequest,
+  ): Promise<ListingDetailResponse> {
+    this.request = expressRequest
+    // Require authentication
+    this.requireAuth()
+    const userId = this.getUserId()
+
+    logger.info("Updating listing", {
+      userId,
+      listingId: listing_id,
+      updates: request,
+    })
+
+    try {
+      // Update listing using service
+      const detail = await this.listingService.updateListing(
+        userId,
+        listing_id,
+        request,
+      )
+
+      logger.info("Listing updated successfully", {
+        listingId: listing_id,
+        userId,
+      })
+
+      return detail
+    } catch (error) {
+      logger.error("Failed to update listing", {
+        userId,
+        listingId: listing_id,
         error: error instanceof Error ? error.message : String(error),
         stack: error instanceof Error ? error.stack : undefined,
       })

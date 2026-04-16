@@ -273,16 +273,24 @@ export class AvailabilityValidationService {
    *
    * @param userId - The user ID
    * @param trx - Transaction (required for locking)
+   * @param sellerId - Optional seller ID to filter cart items
    * @returns Cart checkout validation result
    */
   async validateCartForCheckout(
     userId: string,
-    trx: Knex.Transaction
+    trx: Knex.Transaction,
+    sellerId?: string
   ): Promise<CartCheckoutValidationResult> {
-    // Get all cart items for user
-    const cartItems = await trx("cart_items_v2")
+    // Get all cart items for user (optionally filtered by seller)
+    const query = trx("cart_items_v2")
       .where({ user_id: userId })
-      .select("cart_item_id", "item_id", "variant_id", "listing_id", "quantity", "price_per_unit")
+      .select("cart_item_id", "item_id", "variant_id", "listing_id", "quantity", "price_per_unit");
+    
+    if (sellerId) {
+      query.where({ seller_id: sellerId });
+    }
+
+    const cartItems = await query;
 
     const validItems: ValidCartItem[] = []
     const removedItems: RemovedCartItem[] = []

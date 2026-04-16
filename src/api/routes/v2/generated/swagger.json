@@ -109,6 +109,452 @@
 				"type": "object",
 				"additionalProperties": false
 			},
+			"Record_string.any_": {
+				"properties": {},
+				"additionalProperties": {},
+				"type": "object",
+				"description": "Construct a type with a set of properties K of type T"
+			},
+			"StockLotDetail": {
+				"description": "Stock lot detail response",
+				"properties": {
+					"lot_id": {
+						"type": "string"
+					},
+					"item_id": {
+						"type": "string"
+					},
+					"listing": {
+						"properties": {
+							"title": {
+								"type": "string"
+							},
+							"listing_id": {
+								"type": "string"
+							}
+						},
+						"required": [
+							"title",
+							"listing_id"
+						],
+						"type": "object"
+					},
+					"game_item": {
+						"properties": {
+							"type": {
+								"type": "string"
+							},
+							"name": {
+								"type": "string"
+							},
+							"game_item_id": {
+								"type": "string"
+							}
+						},
+						"required": [
+							"type",
+							"name",
+							"game_item_id"
+						],
+						"type": "object"
+					},
+					"variant": {
+						"properties": {
+							"quality_tier": {
+								"type": "number",
+								"format": "double"
+							},
+							"attributes": {
+								"$ref": "#/components/schemas/Record_string.any_"
+							},
+							"short_name": {
+								"type": "string"
+							},
+							"display_name": {
+								"type": "string"
+							},
+							"variant_id": {
+								"type": "string"
+							}
+						},
+						"required": [
+							"quality_tier",
+							"attributes",
+							"short_name",
+							"display_name",
+							"variant_id"
+						],
+						"type": "object"
+					},
+					"quantity_total": {
+						"type": "number",
+						"format": "double"
+					},
+					"location_id": {
+						"type": "string"
+					},
+					"listed": {
+						"type": "boolean"
+					},
+					"notes": {
+						"type": "string"
+					},
+					"created_at": {
+						"type": "string",
+						"format": "date-time"
+					},
+					"updated_at": {
+						"type": "string",
+						"format": "date-time"
+					}
+				},
+				"required": [
+					"lot_id",
+					"item_id",
+					"listing",
+					"game_item",
+					"variant",
+					"quantity_total",
+					"listed",
+					"created_at",
+					"updated_at"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
+			"StockLotsResponse": {
+				"description": "Stock lots response with pagination",
+				"properties": {
+					"stock_lots": {
+						"items": {
+							"$ref": "#/components/schemas/StockLotDetail"
+						},
+						"type": "array"
+					},
+					"total": {
+						"type": "number",
+						"format": "double"
+					},
+					"page": {
+						"type": "number",
+						"format": "double"
+					},
+					"page_size": {
+						"type": "number",
+						"format": "double"
+					}
+				},
+				"required": [
+					"stock_lots",
+					"total",
+					"page",
+					"page_size"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
+			"UpdateStockLotRequest": {
+				"description": "Update stock lot request",
+				"properties": {
+					"quantity_total": {
+						"type": "number",
+						"format": "double"
+					},
+					"listed": {
+						"type": "boolean"
+					},
+					"location_id": {
+						"type": "string"
+					},
+					"notes": {
+						"type": "string"
+					}
+				},
+				"type": "object",
+				"additionalProperties": false
+			},
+			"BulkStockUpdateResponse": {
+				"description": "Bulk stock update response",
+				"properties": {
+					"successful": {
+						"type": "number",
+						"format": "double"
+					},
+					"failed": {
+						"type": "number",
+						"format": "double"
+					},
+					"errors": {
+						"items": {
+							"properties": {
+								"error": {
+									"type": "string"
+								},
+								"lot_id": {
+									"type": "string"
+								}
+							},
+							"required": [
+								"error",
+								"lot_id"
+							],
+							"type": "object"
+						},
+						"type": "array"
+					}
+				},
+				"required": [
+					"successful",
+					"failed",
+					"errors"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
+			"BulkStockUpdateRequest": {
+				"description": "Bulk stock update request",
+				"properties": {
+					"stock_lot_ids": {
+						"items": {
+							"type": "string"
+						},
+						"type": "array"
+					},
+					"operation": {
+						"type": "string",
+						"enum": [
+							"update_quantity",
+							"list",
+							"unlist",
+							"transfer_location"
+						]
+					},
+					"quantity_delta": {
+						"type": "number",
+						"format": "double"
+					},
+					"listed": {
+						"type": "boolean"
+					},
+					"location_id": {
+						"type": "string"
+					}
+				},
+				"required": [
+					"stock_lot_ids",
+					"operation"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
+			"OrderDetailV2": {
+				"description": "Order detail with variant information",
+				"properties": {
+					"order": {
+						"properties": {
+							"created_at": {
+								"type": "string",
+								"format": "date-time"
+							},
+							"total_price": {
+								"type": "number",
+								"format": "double"
+							},
+							"status": {
+								"type": "string"
+							},
+							"seller_id": {
+								"type": "string"
+							},
+							"buyer_id": {
+								"type": "string"
+							},
+							"order_id": {
+								"type": "string"
+							}
+						},
+						"required": [
+							"created_at",
+							"total_price",
+							"status",
+							"seller_id",
+							"buyer_id",
+							"order_id"
+						],
+						"type": "object"
+					},
+					"buyer": {
+						"properties": {
+							"rating": {
+								"type": "number",
+								"format": "double"
+							},
+							"type": {
+								"type": "string",
+								"enum": [
+									"user",
+									"contractor"
+								]
+							},
+							"name": {
+								"type": "string"
+							},
+							"id": {
+								"type": "string"
+							}
+						},
+						"required": [
+							"rating",
+							"type",
+							"name",
+							"id"
+						],
+						"type": "object"
+					},
+					"seller": {
+						"properties": {
+							"rating": {
+								"type": "number",
+								"format": "double"
+							},
+							"type": {
+								"type": "string",
+								"enum": [
+									"user",
+									"contractor"
+								]
+							},
+							"name": {
+								"type": "string"
+							},
+							"id": {
+								"type": "string"
+							}
+						},
+						"required": [
+							"rating",
+							"type",
+							"name",
+							"id"
+						],
+						"type": "object"
+					},
+					"items": {
+						"items": {
+							"properties": {
+								"fulfillment_status": {
+									"type": "string"
+								},
+								"price_per_unit": {
+									"type": "number",
+									"format": "double"
+								},
+								"quantity": {
+									"type": "number",
+									"format": "double"
+								},
+								"variant": {
+									"properties": {
+										"quality_tier": {
+											"type": "number",
+											"format": "double"
+										},
+										"attributes": {
+											"$ref": "#/components/schemas/Record_string.any_"
+										},
+										"display_name": {
+											"type": "string"
+										},
+										"variant_id": {
+											"type": "string"
+										}
+									},
+									"required": [
+										"quality_tier",
+										"attributes",
+										"display_name",
+										"variant_id"
+									],
+									"type": "object"
+								},
+								"game_item": {
+									"properties": {
+										"type": {
+											"type": "string"
+										},
+										"name": {
+											"type": "string"
+										},
+										"game_item_id": {
+											"type": "string"
+										}
+									},
+									"required": [
+										"type",
+										"name",
+										"game_item_id"
+									],
+									"type": "object"
+								},
+								"order_item_id": {
+									"type": "string"
+								}
+							},
+							"required": [
+								"fulfillment_status",
+								"price_per_unit",
+								"quantity",
+								"variant",
+								"game_item",
+								"order_item_id"
+							],
+							"type": "object"
+						},
+						"type": "array"
+					}
+				},
+				"required": [
+					"order",
+					"buyer",
+					"seller",
+					"items"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
+			"CreateOrderRequest": {
+				"description": "Create order request",
+				"properties": {
+					"items": {
+						"items": {
+							"properties": {
+								"quantity": {
+									"type": "number",
+									"format": "double"
+								},
+								"variant_id": {
+									"type": "string"
+								},
+								"listing_id": {
+									"type": "string"
+								}
+							},
+							"required": [
+								"quantity",
+								"variant_id",
+								"listing_id"
+							],
+							"type": "object"
+						},
+						"type": "array"
+					}
+				},
+				"required": [
+					"items"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
 			"SearchListingsResponse": {
 				"description": "Search results with pagination",
 				"properties": {
@@ -368,12 +814,6 @@
 				"type": "object",
 				"additionalProperties": false
 			},
-			"Record_string.any_": {
-				"properties": {},
-				"additionalProperties": {},
-				"type": "object",
-				"description": "Construct a type with a set of properties K of type T"
-			},
 			"ListingDetailResponse": {
 				"description": "Listing detail with variant breakdown",
 				"properties": {
@@ -509,6 +949,133 @@
 				"type": "object",
 				"additionalProperties": false
 			},
+			"MyListingsResponse": {
+				"description": "My listings response with pagination",
+				"properties": {
+					"listings": {
+						"items": {
+							"properties": {
+								"quality_tier_max": {
+									"type": "number",
+									"format": "double"
+								},
+								"quality_tier_min": {
+									"type": "number",
+									"format": "double"
+								},
+								"price_max": {
+									"type": "number",
+									"format": "double"
+								},
+								"price_min": {
+									"type": "number",
+									"format": "double"
+								},
+								"total_quantity": {
+									"type": "number",
+									"format": "double"
+								},
+								"variant_count": {
+									"type": "number",
+									"format": "double"
+								},
+								"created_at": {
+									"type": "string",
+									"format": "date-time"
+								},
+								"status": {
+									"type": "string"
+								},
+								"title": {
+									"type": "string"
+								},
+								"listing_id": {
+									"type": "string"
+								}
+							},
+							"required": [
+								"quality_tier_max",
+								"quality_tier_min",
+								"price_max",
+								"price_min",
+								"total_quantity",
+								"variant_count",
+								"created_at",
+								"status",
+								"title",
+								"listing_id"
+							],
+							"type": "object"
+						},
+						"type": "array"
+					},
+					"total": {
+						"type": "number",
+						"format": "double"
+					},
+					"page": {
+						"type": "number",
+						"format": "double"
+					},
+					"page_size": {
+						"type": "number",
+						"format": "double"
+					}
+				},
+				"required": [
+					"listings",
+					"total",
+					"page",
+					"page_size"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
+			"UpdateListingRequest": {
+				"description": "Update listing",
+				"properties": {
+					"title": {
+						"type": "string"
+					},
+					"description": {
+						"type": "string"
+					},
+					"status": {
+						"type": "string",
+						"enum": [
+							"active",
+							"sold",
+							"expired",
+							"cancelled"
+						]
+					},
+					"base_price": {
+						"type": "number",
+						"format": "double"
+					},
+					"variant_prices": {
+						"items": {
+							"properties": {
+								"price": {
+									"type": "number",
+									"format": "double"
+								},
+								"variant_id": {
+									"type": "string"
+								}
+							},
+							"required": [
+								"price",
+								"variant_id"
+							],
+							"type": "object"
+						},
+						"type": "array"
+					}
+				},
+				"type": "object",
+				"additionalProperties": false
+			},
 			"HealthResponse": {
 				"properties": {
 					"status": {
@@ -590,6 +1157,546 @@
 				],
 				"type": "object",
 				"additionalProperties": false
+			},
+			"CartSellerV2": {
+				"description": "Cart seller grouping (for multi-seller carts)",
+				"properties": {
+					"seller_id": {
+						"type": "string"
+					},
+					"seller_name": {
+						"type": "string"
+					},
+					"seller_type": {
+						"type": "string",
+						"enum": [
+							"user",
+							"contractor"
+						]
+					},
+					"buyer_note": {
+						"type": "string"
+					},
+					"items": {
+						"items": {
+							"properties": {
+								"is_available": {
+									"type": "boolean"
+								},
+								"is_price_stale": {
+									"type": "boolean"
+								},
+								"current_price": {
+									"type": "number",
+									"format": "double"
+								},
+								"price_per_unit": {
+									"type": "number",
+									"format": "double"
+								},
+								"quantity": {
+									"type": "number",
+									"format": "double"
+								},
+								"variant": {
+									"properties": {
+										"quality_tier": {
+											"type": "number",
+											"format": "double"
+										},
+										"attributes": {
+											"$ref": "#/components/schemas/Record_string.any_"
+										},
+										"display_name": {
+											"type": "string"
+										},
+										"variant_id": {
+											"type": "string"
+										}
+									},
+									"required": [
+										"quality_tier",
+										"attributes",
+										"display_name",
+										"variant_id"
+									],
+									"type": "object"
+								},
+								"game_item": {
+									"properties": {
+										"type": {
+											"type": "string"
+										},
+										"name": {
+											"type": "string"
+										},
+										"game_item_id": {
+											"type": "string"
+										}
+									},
+									"required": [
+										"type",
+										"name",
+										"game_item_id"
+									],
+									"type": "object"
+								},
+								"listing": {
+									"properties": {
+										"title": {
+											"type": "string"
+										},
+										"listing_id": {
+											"type": "string"
+										}
+									},
+									"required": [
+										"title",
+										"listing_id"
+									],
+									"type": "object"
+								},
+								"cart_item_id": {
+									"type": "string"
+								}
+							},
+							"required": [
+								"is_available",
+								"is_price_stale",
+								"current_price",
+								"price_per_unit",
+								"quantity",
+								"variant",
+								"game_item",
+								"listing",
+								"cart_item_id"
+							],
+							"type": "object"
+						},
+						"type": "array"
+					},
+					"subtotal": {
+						"type": "number",
+						"format": "double"
+					},
+					"stale_items_count": {
+						"type": "number",
+						"format": "double"
+					},
+					"unavailable_items_count": {
+						"type": "number",
+						"format": "double"
+					},
+					"availability_required": {
+						"type": "boolean"
+					},
+					"availability_set": {
+						"type": "boolean"
+					},
+					"order_limits": {
+						"properties": {
+							"max_order_value": {
+								"type": "string"
+							},
+							"min_order_value": {
+								"type": "string"
+							},
+							"max_order_size": {
+								"type": "string"
+							},
+							"min_order_size": {
+								"type": "string"
+							}
+						},
+						"type": "object"
+					}
+				},
+				"required": [
+					"seller_id",
+					"seller_name",
+					"seller_type",
+					"items",
+					"subtotal",
+					"stale_items_count",
+					"unavailable_items_count"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
+			"CartDetailV2": {
+				"description": "Cart detail response with variant information and seller grouping",
+				"properties": {
+					"sellers": {
+						"items": {
+							"$ref": "#/components/schemas/CartSellerV2"
+						},
+						"type": "array"
+					},
+					"total_price": {
+						"type": "number",
+						"format": "double"
+					},
+					"stale_items_count": {
+						"type": "number",
+						"format": "double"
+					},
+					"unavailable_items_count": {
+						"type": "number",
+						"format": "double"
+					}
+				},
+				"required": [
+					"sellers",
+					"total_price",
+					"stale_items_count",
+					"unavailable_items_count"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
+			"CartItemV2": {
+				"description": "Cart item in database",
+				"properties": {
+					"cart_item_id": {
+						"type": "string"
+					},
+					"user_id": {
+						"type": "string"
+					},
+					"seller_id": {
+						"type": "string"
+					},
+					"listing_id": {
+						"type": "string"
+					},
+					"item_id": {
+						"type": "string"
+					},
+					"variant_id": {
+						"type": "string"
+					},
+					"quantity": {
+						"type": "number",
+						"format": "double"
+					},
+					"price_per_unit": {
+						"type": "number",
+						"format": "double"
+					},
+					"price_updated_at": {
+						"type": "string",
+						"format": "date-time"
+					},
+					"buyer_note": {
+						"type": "string"
+					},
+					"created_at": {
+						"type": "string",
+						"format": "date-time"
+					},
+					"updated_at": {
+						"type": "string",
+						"format": "date-time"
+					}
+				},
+				"required": [
+					"cart_item_id",
+					"user_id",
+					"seller_id",
+					"listing_id",
+					"item_id",
+					"variant_id",
+					"quantity",
+					"price_per_unit",
+					"price_updated_at",
+					"created_at",
+					"updated_at"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
+			"AddToCartRequest": {
+				"description": "Add to cart request",
+				"properties": {
+					"listing_id": {
+						"type": "string"
+					},
+					"variant_id": {
+						"type": "string"
+					},
+					"quantity": {
+						"type": "number",
+						"format": "double"
+					}
+				},
+				"required": [
+					"listing_id",
+					"variant_id",
+					"quantity"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
+			"UpdateCartItemRequest": {
+				"description": "Update cart item request",
+				"properties": {
+					"quantity": {
+						"type": "number",
+						"format": "double"
+					}
+				},
+				"required": [
+					"quantity"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
+			"UpdateCartNotesRequest": {
+				"description": "Update cart notes request",
+				"properties": {
+					"seller_id": {
+						"type": "string"
+					},
+					"buyer_note": {
+						"type": "string"
+					}
+				},
+				"required": [
+					"seller_id",
+					"buyer_note"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
+			"CheckoutCartResponse": {
+				"description": "Checkout cart response",
+				"properties": {
+					"order_id": {
+						"type": "string"
+					},
+					"session_id": {
+						"type": "string"
+					},
+					"discord_invite": {
+						"type": "string"
+					},
+					"order_details": {
+						"$ref": "#/components/schemas/OrderDetailV2"
+					},
+					"items_removed": {
+						"items": {
+							"type": "string"
+						},
+						"type": "array"
+					},
+					"price_changes": {
+						"items": {
+							"properties": {
+								"percentage_change": {
+									"type": "number",
+									"format": "double"
+								},
+								"new_price": {
+									"type": "number",
+									"format": "double"
+								},
+								"old_price": {
+									"type": "number",
+									"format": "double"
+								},
+								"cart_item_id": {
+									"type": "string"
+								}
+							},
+							"required": [
+								"percentage_change",
+								"new_price",
+								"old_price",
+								"cart_item_id"
+							],
+							"type": "object"
+						},
+						"type": "array"
+					}
+				},
+				"required": [
+					"order_id",
+					"session_id",
+					"items_removed",
+					"price_changes"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
+			"CheckoutCartRequest": {
+				"description": "Checkout cart request",
+				"properties": {
+					"seller_id": {
+						"type": "string"
+					},
+					"accept_price_changes": {
+						"type": "boolean"
+					},
+					"offer_amount": {
+						"type": "number",
+						"format": "double"
+					},
+					"buyer_note": {
+						"type": "string"
+					}
+				},
+				"required": [
+					"seller_id"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
+			"FeatureFlagConfig": {
+				"properties": {
+					"key": {
+						"type": "string"
+					},
+					"default_version": {
+						"$ref": "#/components/schemas/MarketVersion"
+					},
+					"rollout_percentage": {
+						"type": "number",
+						"format": "double"
+					},
+					"enabled": {
+						"type": "boolean"
+					},
+					"created_at": {
+						"type": "string",
+						"format": "date-time"
+					},
+					"updated_at": {
+						"type": "string",
+						"format": "date-time"
+					}
+				},
+				"required": [
+					"key",
+					"default_version",
+					"rollout_percentage",
+					"enabled",
+					"created_at",
+					"updated_at"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
+			"UpdateConfigRequest": {
+				"properties": {
+					"default_version": {
+						"$ref": "#/components/schemas/MarketVersion",
+						"description": "Global default version for users without overrides"
+					},
+					"rollout_percentage": {
+						"type": "number",
+						"format": "double",
+						"description": "Percentage of users (0-100) to receive V2 via rollout"
+					},
+					"enabled": {
+						"type": "boolean",
+						"description": "Master kill-switch: when false, everyone gets V1"
+					}
+				},
+				"type": "object",
+				"additionalProperties": false
+			},
+			"FeatureFlagStats": {
+				"properties": {
+					"total_overrides": {
+						"type": "number",
+						"format": "double"
+					},
+					"v1_overrides": {
+						"type": "number",
+						"format": "double"
+					},
+					"v2_overrides": {
+						"type": "number",
+						"format": "double"
+					},
+					"rollout_percentage": {
+						"type": "number",
+						"format": "double"
+					},
+					"default_version": {
+						"$ref": "#/components/schemas/MarketVersion"
+					},
+					"enabled": {
+						"type": "boolean"
+					}
+				},
+				"required": [
+					"total_overrides",
+					"v1_overrides",
+					"v2_overrides",
+					"rollout_percentage",
+					"default_version",
+					"enabled"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
+			"UserOverride": {
+				"properties": {
+					"user_id": {
+						"type": "string"
+					},
+					"market_version": {
+						"$ref": "#/components/schemas/MarketVersion"
+					},
+					"updated_at": {
+						"type": "string",
+						"format": "date-time"
+					}
+				},
+				"required": [
+					"user_id",
+					"market_version",
+					"updated_at"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
+			"UserOverridesResponse": {
+				"properties": {
+					"overrides": {
+						"items": {
+							"$ref": "#/components/schemas/UserOverride"
+						},
+						"type": "array"
+					},
+					"total": {
+						"type": "number",
+						"format": "double"
+					}
+				},
+				"required": [
+					"overrides",
+					"total"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
+			"SetUserOverrideRequest": {
+				"properties": {
+					"user_id": {
+						"type": "string"
+					},
+					"market_version": {
+						"$ref": "#/components/schemas/MarketVersion"
+					}
+				},
+				"required": [
+					"user_id",
+					"market_version"
+				],
+				"type": "object",
+				"additionalProperties": false
 			}
 		},
 		"securitySchemes": {}
@@ -654,6 +1761,400 @@
 						"description": "Variant type ID to retrieve",
 						"in": "path",
 						"name": "variant_type_id",
+						"required": true,
+						"schema": {
+							"type": "string"
+						}
+					}
+				]
+			}
+		},
+		"/stock-lots": {
+			"get": {
+				"operationId": "GetStockLots",
+				"responses": {
+					"200": {
+						"description": "Stock lots with pagination metadata",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/StockLotsResponse"
+								}
+							}
+						}
+					}
+				},
+				"description": "Get stock lots with filters\n\nRetrieves stock lots with optional filters for listing, game item, location,\nand quality tier range. Includes variant attributes and listing information.\nResults are paginated.",
+				"summary": "Get stock lots",
+				"tags": [
+					"Stock Lots V2"
+				],
+				"security": [],
+				"parameters": [
+					{
+						"description": "Optional listing ID filter",
+						"in": "query",
+						"name": "listing_id",
+						"required": false,
+						"schema": {
+							"type": "string"
+						}
+					},
+					{
+						"description": "Optional game item ID filter",
+						"in": "query",
+						"name": "game_item_id",
+						"required": false,
+						"schema": {
+							"type": "string"
+						}
+					},
+					{
+						"description": "Optional location ID filter",
+						"in": "query",
+						"name": "location_id",
+						"required": false,
+						"schema": {
+							"type": "string"
+						}
+					},
+					{
+						"description": "Optional minimum quality tier (1-5)",
+						"in": "query",
+						"name": "quality_tier_min",
+						"required": false,
+						"schema": {
+							"format": "double",
+							"type": "number"
+						}
+					},
+					{
+						"description": "Optional maximum quality tier (1-5)",
+						"in": "query",
+						"name": "quality_tier_max",
+						"required": false,
+						"schema": {
+							"format": "double",
+							"type": "number"
+						}
+					},
+					{
+						"description": "Page number (default: 1)",
+						"in": "query",
+						"name": "page",
+						"required": false,
+						"schema": {
+							"default": 1,
+							"format": "double",
+							"type": "number"
+						}
+					},
+					{
+						"description": "Results per page (default: 20, max: 100)",
+						"in": "query",
+						"name": "page_size",
+						"required": false,
+						"schema": {
+							"default": 20,
+							"format": "double",
+							"type": "number"
+						}
+					}
+				]
+			}
+		},
+		"/stock-lots/{lot_id}": {
+			"put": {
+				"operationId": "UpdateStockLot",
+				"responses": {
+					"200": {
+						"description": "Updated stock lot detail",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/StockLotDetail"
+								}
+							}
+						}
+					}
+				},
+				"description": "Update stock lot\n\nUpdates stock lot quantity, listed status, location, or notes.\nValidates ownership before allowing updates. Prevents negative quantities.\nTriggers quantity_available recalculation via database trigger.",
+				"summary": "Update stock lot",
+				"tags": [
+					"Stock Lots V2"
+				],
+				"security": [],
+				"parameters": [
+					{
+						"description": "Stock lot ID to update",
+						"in": "path",
+						"name": "lot_id",
+						"required": true,
+						"schema": {
+							"type": "string"
+						}
+					}
+				],
+				"requestBody": {
+					"description": "Update request with fields to modify",
+					"required": true,
+					"content": {
+						"application/json": {
+							"schema": {
+								"$ref": "#/components/schemas/UpdateStockLotRequest",
+								"description": "Update request with fields to modify"
+							}
+						}
+					}
+				}
+			}
+		},
+		"/stock-lots/bulk-update": {
+			"post": {
+				"operationId": "BulkUpdateStockLots",
+				"responses": {
+					"200": {
+						"description": "Summary with successful/failed counts and errors",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/BulkStockUpdateResponse"
+								}
+							}
+						}
+					}
+				},
+				"description": "Bulk update stock lots\n\nPerforms bulk operations on multiple stock lots in a single transaction.\nSupports update_quantity, list/unlist, and transfer_location operations.\nValidates ownership for all lots before proceeding.",
+				"summary": "Bulk update stock lots",
+				"tags": [
+					"Stock Lots V2"
+				],
+				"security": [],
+				"parameters": [],
+				"requestBody": {
+					"description": "Bulk update request with lot IDs and operation",
+					"required": true,
+					"content": {
+						"application/json": {
+							"schema": {
+								"$ref": "#/components/schemas/BulkStockUpdateRequest",
+								"description": "Bulk update request with lot IDs and operation"
+							}
+						}
+					}
+				}
+			}
+		},
+		"/api/v2/orders": {
+			"post": {
+				"operationId": "CreateOrder",
+				"responses": {
+					"201": {
+						"description": "Order created successfully",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/OrderDetailV2"
+								}
+							}
+						}
+					}
+				},
+				"description": "Create order with variant-specific items",
+				"summary": "Create order",
+				"tags": [
+					"Orders V2"
+				],
+				"security": [
+					{
+						"jwt": []
+					}
+				],
+				"parameters": [],
+				"requestBody": {
+					"required": true,
+					"content": {
+						"application/json": {
+							"schema": {
+								"$ref": "#/components/schemas/CreateOrderRequest"
+							}
+						}
+					}
+				}
+			},
+			"get": {
+				"operationId": "GetOrders",
+				"responses": {
+					"200": {
+						"description": "Orders retrieved successfully",
+						"content": {
+							"application/json": {
+								"schema": {
+									"properties": {
+										"page_size": {
+											"type": "number",
+											"format": "double"
+										},
+										"page": {
+											"type": "number",
+											"format": "double"
+										},
+										"total": {
+											"type": "number",
+											"format": "double"
+										},
+										"orders": {
+											"items": {
+												"$ref": "#/components/schemas/OrderDetailV2"
+											},
+											"type": "array"
+										}
+									},
+									"required": [
+										"page_size",
+										"page",
+										"total",
+										"orders"
+									],
+									"type": "object"
+								}
+							}
+						}
+					}
+				},
+				"description": "Get orders with filters",
+				"summary": "Get orders",
+				"tags": [
+					"Orders V2"
+				],
+				"security": [
+					{
+						"jwt": []
+					}
+				],
+				"parameters": [
+					{
+						"in": "query",
+						"name": "role",
+						"required": false,
+						"schema": {
+							"type": "string",
+							"enum": [
+								"buyer",
+								"seller"
+							]
+						}
+					},
+					{
+						"in": "query",
+						"name": "status",
+						"required": false,
+						"schema": {
+							"type": "string"
+						}
+					},
+					{
+						"in": "query",
+						"name": "quality_tier",
+						"required": false,
+						"schema": {
+							"format": "double",
+							"type": "number"
+						}
+					},
+					{
+						"in": "query",
+						"name": "date_from",
+						"required": false,
+						"schema": {
+							"type": "string"
+						}
+					},
+					{
+						"in": "query",
+						"name": "date_to",
+						"required": false,
+						"schema": {
+							"type": "string"
+						}
+					},
+					{
+						"in": "query",
+						"name": "page",
+						"required": false,
+						"schema": {
+							"default": 1,
+							"format": "double",
+							"type": "number"
+						}
+					},
+					{
+						"in": "query",
+						"name": "page_size",
+						"required": false,
+						"schema": {
+							"default": 20,
+							"format": "double",
+							"type": "number"
+						}
+					},
+					{
+						"in": "query",
+						"name": "sort_by",
+						"required": false,
+						"schema": {
+							"type": "string",
+							"enum": [
+								"created_at",
+								"total_price",
+								"quality_tier"
+							]
+						}
+					},
+					{
+						"in": "query",
+						"name": "sort_order",
+						"required": false,
+						"schema": {
+							"type": "string",
+							"enum": [
+								"asc",
+								"desc"
+							]
+						}
+					}
+				]
+			}
+		},
+		"/api/v2/orders/{order_id}": {
+			"get": {
+				"operationId": "GetOrderDetail",
+				"responses": {
+					"200": {
+						"description": "Order retrieved successfully",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/OrderDetailV2"
+								}
+							}
+						}
+					}
+				},
+				"description": "Get order detail with variant information",
+				"summary": "Get order detail",
+				"tags": [
+					"Orders V2"
+				],
+				"security": [
+					{
+						"jwt": []
+					}
+				],
+				"parameters": [
+					{
+						"in": "path",
+						"name": "order_id",
 						"required": true,
 						"schema": {
 							"type": "string"
@@ -835,6 +2336,140 @@
 						}
 					}
 				]
+			},
+			"put": {
+				"operationId": "UpdateListing",
+				"responses": {
+					"200": {
+						"description": "Updated listing detail with variant breakdown",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/ListingDetailResponse"
+								}
+							}
+						}
+					}
+				},
+				"description": "Update listing\n\nUpdates listing title, description, base_price, or per-variant prices.\nValidates ownership and prevents editing sold or cancelled listings.\nAll modifications are logged to the audit trail.",
+				"summary": "Update listing",
+				"tags": [
+					"Listings V2"
+				],
+				"security": [],
+				"parameters": [
+					{
+						"description": "Listing ID to update",
+						"in": "path",
+						"name": "listing_id",
+						"required": true,
+						"schema": {
+							"type": "string"
+						}
+					}
+				],
+				"requestBody": {
+					"description": "Update request with fields to modify",
+					"required": true,
+					"content": {
+						"application/json": {
+							"schema": {
+								"$ref": "#/components/schemas/UpdateListingRequest",
+								"description": "Update request with fields to modify"
+							}
+						}
+					}
+				}
+			}
+		},
+		"/listings/mine": {
+			"get": {
+				"operationId": "GetMyListings",
+				"responses": {
+					"200": {
+						"description": "My listings with pagination metadata",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/MyListingsResponse"
+								}
+							}
+						}
+					}
+				},
+				"description": "Get current user's listings with variant breakdown\n\nReturns listings owned by the authenticated user with aggregated variant information\nincluding variant count, total quantity, price range, and quality tier range.\nSupports filtering by status and pagination with sorting.",
+				"summary": "Get my listings",
+				"tags": [
+					"Listings V2"
+				],
+				"security": [],
+				"parameters": [
+					{
+						"description": "Optional status filter (active, sold, expired, cancelled)",
+						"in": "query",
+						"name": "status",
+						"required": false,
+						"schema": {
+							"type": "string",
+							"enum": [
+								"active",
+								"sold",
+								"expired",
+								"cancelled"
+							]
+						}
+					},
+					{
+						"description": "Page number (default: 1)",
+						"in": "query",
+						"name": "page",
+						"required": false,
+						"schema": {
+							"default": 1,
+							"format": "double",
+							"type": "number"
+						}
+					},
+					{
+						"description": "Results per page (default: 20, max: 100)",
+						"in": "query",
+						"name": "page_size",
+						"required": false,
+						"schema": {
+							"default": 20,
+							"format": "double",
+							"type": "number"
+						}
+					},
+					{
+						"description": "Sort field (default: created_at)",
+						"in": "query",
+						"name": "sort_by",
+						"required": false,
+						"schema": {
+							"type": "string",
+							"enum": [
+								"created_at",
+								"updated_at",
+								"price",
+								"quantity"
+							]
+						}
+					},
+					{
+						"description": "Sort order (default: desc)",
+						"in": "query",
+						"name": "sort_order",
+						"required": false,
+						"schema": {
+							"type": "string",
+							"enum": [
+								"asc",
+								"desc"
+							]
+						}
+					}
+				]
 			}
 		},
 		"/health": {
@@ -917,6 +2552,450 @@
 						}
 					}
 				}
+			}
+		},
+		"/api/v2/cart": {
+			"get": {
+				"operationId": "GetCart",
+				"responses": {
+					"200": {
+						"description": "Cart retrieved successfully",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/CartDetailV2"
+								}
+							}
+						}
+					}
+				},
+				"description": "Get current user's cart with variant details",
+				"summary": "Get cart",
+				"tags": [
+					"Cart V2"
+				],
+				"security": [
+					{
+						"jwt": []
+					}
+				],
+				"parameters": []
+			}
+		},
+		"/api/v2/cart/add": {
+			"post": {
+				"operationId": "AddToCart",
+				"responses": {
+					"201": {
+						"description": "Item added to cart",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/CartItemV2"
+								}
+							}
+						}
+					}
+				},
+				"description": "Add item to cart with variant selection",
+				"summary": "Add to cart",
+				"tags": [
+					"Cart V2"
+				],
+				"security": [
+					{
+						"jwt": []
+					}
+				],
+				"parameters": [],
+				"requestBody": {
+					"required": true,
+					"content": {
+						"application/json": {
+							"schema": {
+								"$ref": "#/components/schemas/AddToCartRequest"
+							}
+						}
+					}
+				}
+			}
+		},
+		"/api/v2/cart/{cart_item_id}": {
+			"put": {
+				"operationId": "UpdateCartItem",
+				"responses": {
+					"200": {
+						"description": "Cart item updated",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/CartItemV2"
+								}
+							}
+						}
+					}
+				},
+				"description": "Update cart item quantity",
+				"summary": "Update cart item",
+				"tags": [
+					"Cart V2"
+				],
+				"security": [
+					{
+						"jwt": []
+					}
+				],
+				"parameters": [
+					{
+						"in": "path",
+						"name": "cart_item_id",
+						"required": true,
+						"schema": {
+							"type": "string"
+						}
+					}
+				],
+				"requestBody": {
+					"required": true,
+					"content": {
+						"application/json": {
+							"schema": {
+								"$ref": "#/components/schemas/UpdateCartItemRequest"
+							}
+						}
+					}
+				}
+			},
+			"delete": {
+				"operationId": "RemoveFromCart",
+				"responses": {
+					"204": {
+						"description": "Item removed from cart"
+					}
+				},
+				"description": "Remove item from cart",
+				"summary": "Remove from cart",
+				"tags": [
+					"Cart V2"
+				],
+				"security": [
+					{
+						"jwt": []
+					}
+				],
+				"parameters": [
+					{
+						"in": "path",
+						"name": "cart_item_id",
+						"required": true,
+						"schema": {
+							"type": "string"
+						}
+					}
+				]
+			}
+		},
+		"/api/v2/cart/notes": {
+			"put": {
+				"operationId": "UpdateCartNotes",
+				"responses": {
+					"200": {
+						"description": "Notes updated successfully"
+					}
+				},
+				"description": "Update buyer notes for a seller's cart items",
+				"summary": "Update cart notes",
+				"tags": [
+					"Cart V2"
+				],
+				"security": [
+					{
+						"jwt": []
+					}
+				],
+				"parameters": [],
+				"requestBody": {
+					"required": true,
+					"content": {
+						"application/json": {
+							"schema": {
+								"$ref": "#/components/schemas/UpdateCartNotesRequest"
+							}
+						}
+					}
+				}
+			}
+		},
+		"/api/v2/cart/seller/{seller_id}": {
+			"delete": {
+				"operationId": "ClearCartForSeller",
+				"responses": {
+					"204": {
+						"description": "Seller cart cleared"
+					}
+				},
+				"description": "Clear cart for a specific seller",
+				"summary": "Clear seller cart",
+				"tags": [
+					"Cart V2"
+				],
+				"security": [
+					{
+						"jwt": []
+					}
+				],
+				"parameters": [
+					{
+						"in": "path",
+						"name": "seller_id",
+						"required": true,
+						"schema": {
+							"type": "string"
+						}
+					}
+				]
+			}
+		},
+		"/api/v2/cart/checkout": {
+			"post": {
+				"operationId": "CheckoutCart",
+				"responses": {
+					"200": {
+						"description": "Checkout completed",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/CheckoutCartResponse"
+								}
+							}
+						}
+					}
+				},
+				"description": "Checkout cart for a specific seller and create order",
+				"summary": "Checkout cart",
+				"tags": [
+					"Cart V2"
+				],
+				"security": [
+					{
+						"jwt": []
+					}
+				],
+				"parameters": [],
+				"requestBody": {
+					"required": true,
+					"content": {
+						"application/json": {
+							"schema": {
+								"$ref": "#/components/schemas/CheckoutCartRequest"
+							}
+						}
+					}
+				}
+			}
+		},
+		"/admin/feature-flags/config": {
+			"get": {
+				"operationId": "GetConfig",
+				"responses": {
+					"200": {
+						"description": "Ok",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/FeatureFlagConfig"
+								}
+							}
+						}
+					}
+				},
+				"description": "Get global feature flag configuration",
+				"summary": "Get config",
+				"tags": [
+					"Admin Feature Flags"
+				],
+				"security": [],
+				"parameters": []
+			},
+			"put": {
+				"operationId": "UpdateConfig",
+				"responses": {
+					"200": {
+						"description": "Ok",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/FeatureFlagConfig"
+								}
+							}
+						}
+					}
+				},
+				"description": "Update global feature flag configuration",
+				"summary": "Update config",
+				"tags": [
+					"Admin Feature Flags"
+				],
+				"security": [],
+				"parameters": [],
+				"requestBody": {
+					"required": true,
+					"content": {
+						"application/json": {
+							"schema": {
+								"$ref": "#/components/schemas/UpdateConfigRequest"
+							}
+						}
+					}
+				}
+			}
+		},
+		"/admin/feature-flags/stats": {
+			"get": {
+				"operationId": "GetStats",
+				"responses": {
+					"200": {
+						"description": "Ok",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/FeatureFlagStats"
+								}
+							}
+						}
+					}
+				},
+				"description": "Get feature flag stats (override counts, config summary)",
+				"summary": "Get stats",
+				"tags": [
+					"Admin Feature Flags"
+				],
+				"security": [],
+				"parameters": []
+			}
+		},
+		"/admin/feature-flags/overrides": {
+			"get": {
+				"operationId": "GetUserOverrides",
+				"responses": {
+					"200": {
+						"description": "Ok",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/UserOverridesResponse"
+								}
+							}
+						}
+					}
+				},
+				"description": "List per-user overrides with pagination",
+				"summary": "List user overrides",
+				"tags": [
+					"Admin Feature Flags"
+				],
+				"security": [],
+				"parameters": [
+					{
+						"in": "query",
+						"name": "page",
+						"required": false,
+						"schema": {
+							"format": "double",
+							"type": "number"
+						}
+					},
+					{
+						"in": "query",
+						"name": "pageSize",
+						"required": false,
+						"schema": {
+							"format": "double",
+							"type": "number"
+						}
+					}
+				]
+			},
+			"post": {
+				"operationId": "SetUserOverride",
+				"responses": {
+					"200": {
+						"description": "Ok",
+						"content": {
+							"application/json": {
+								"schema": {
+									"properties": {
+										"message": {
+											"type": "string"
+										}
+									},
+									"required": [
+										"message"
+									],
+									"type": "object"
+								}
+							}
+						}
+					}
+				},
+				"description": "Set a per-user version override",
+				"summary": "Set user override",
+				"tags": [
+					"Admin Feature Flags"
+				],
+				"security": [],
+				"parameters": [],
+				"requestBody": {
+					"required": true,
+					"content": {
+						"application/json": {
+							"schema": {
+								"$ref": "#/components/schemas/SetUserOverrideRequest"
+							}
+						}
+					}
+				}
+			}
+		},
+		"/admin/feature-flags/overrides/{userId}": {
+			"delete": {
+				"operationId": "RemoveUserOverride",
+				"responses": {
+					"200": {
+						"description": "Ok",
+						"content": {
+							"application/json": {
+								"schema": {
+									"properties": {
+										"message": {
+											"type": "string"
+										}
+									},
+									"required": [
+										"message"
+									],
+									"type": "object"
+								}
+							}
+						}
+					}
+				},
+				"description": "Remove a per-user version override (user falls back to global config)",
+				"summary": "Remove user override",
+				"tags": [
+					"Admin Feature Flags"
+				],
+				"security": [],
+				"parameters": [
+					{
+						"in": "path",
+						"name": "userId",
+						"required": true,
+						"schema": {
+							"type": "string"
+						}
+					}
+				]
 			}
 		}
 	},

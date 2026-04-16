@@ -166,7 +166,7 @@ describe.skip("PriceConsistencyService - Unit Tests (Integration)", () => {
     })
 
     it("should throw error when no price available", async () => {
-      const { itemId } = await createTestListing("unified", null)
+      const { itemId } = await createTestListing("unified", undefined)
       const variantId = await createTestVariant(3)
 
       await expect(service.getCurrentPrice(itemId, variantId)).rejects.toThrow(
