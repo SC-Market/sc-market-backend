@@ -34,6 +34,30 @@ export interface MockTableTypes {
     expires_at: Date | null
     contractor_ids?: string[] | null
   }
+  listing_items: {
+    item_id: string
+    listing_id: string
+    game_item_id: string
+    pricing_mode: "unified" | "per_variant"
+    base_price?: number
+    quantity_available: number
+    variant_count: number
+    display_order: number
+  }
+  listing_item_lots: {
+    lot_id: string
+    item_id: string
+    variant_id: string
+    quantity_total: number
+    location_id?: string
+    owner_id?: string
+    listed: boolean
+    notes?: string
+    crafted_by?: string
+    crafted_at?: Date
+    created_at: Date
+    updated_at: Date
+  }
 }
 
 /**

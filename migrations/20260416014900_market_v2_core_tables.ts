@@ -1,6 +1,8 @@
 import type { Knex } from "knex"
 
 export async function up(knex: Knex): Promise<void> {
+  await knex.raw("CREATE EXTENSION IF NOT EXISTS pgcrypto")
+
   // Create variant_types table first (referenced by item_variants)
   await knex.schema.createTable("variant_types", (table) => {
     table.uuid("variant_type_id").primary().defaultTo(knex.raw("gen_random_uuid()"))
@@ -215,8 +217,8 @@ export async function up(knex: Knex): Promise<void> {
     table.comment("Unique combinations of variant attributes for game items")
   })
 
-  // Create stock_lots table (physical inventory with variants)
-  await knex.schema.createTable("stock_lots", (table) => {
+  // Physical inventory for listing items (distinct from V1 stock_lots tied to market_listings)
+  await knex.schema.createTable("listing_item_lots", (table) => {
     table.uuid("lot_id").primary().defaultTo(knex.raw("gen_random_uuid()"))
     table
       .uuid("item_id")
@@ -252,10 +254,10 @@ export async function up(knex: Knex): Promise<void> {
     table.timestamp("updated_at").notNullable().defaultTo(knex.fn.now())
 
     // Indexes
-    table.index("item_id", "idx_stock_lots_item")
-    table.index("variant_id", "idx_stock_lots_variant")
-    table.index("location_id", "idx_stock_lots_location")
-    table.index("listed", "idx_stock_lots_listed", {
+    table.index("item_id", "idx_listing_item_lots_item")
+    table.index("variant_id", "idx_listing_item_lots_variant")
+    table.index("location_id", "idx_listing_item_lots_location")
+    table.index("listed", "idx_listing_item_lots_listed", {
       predicate: knex.whereRaw("listed = true"),
     })
 
@@ -299,7 +301,7 @@ export async function up(knex: Knex): Promise<void> {
 export async function down(knex: Knex): Promise<void> {
   // Drop tables in reverse order to respect foreign key constraints
   await knex.schema.dropTableIfExists("variant_pricing")
-  await knex.schema.dropTableIfExists("stock_lots")
+  await knex.schema.dropTableIfExists("listing_item_lots")
   await knex.schema.dropTableIfExists("item_variants")
   await knex.schema.dropTableIfExists("listing_items")
   await knex.schema.dropTableIfExists("listings")

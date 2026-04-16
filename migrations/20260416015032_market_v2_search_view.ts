@@ -27,7 +27,10 @@ export async function up(knex: Knex): Promise<void> {
       
       -- Seller info (join with accounts for users or contractors for contractors)
       COALESCE(u.username, c.name) as seller_name,
-      COALESCE(u.rating, c.rating) as seller_rating,
+      CASE
+        WHEN l.seller_type = 'user' THEN get_average_rating_float(l.seller_id, NULL::uuid)
+        WHEN l.seller_type = 'contractor' THEN get_average_rating_float(NULL::uuid, l.seller_id)
+      END as seller_rating,
       
       -- Price range (computed based on pricing mode)
       CASE 
@@ -50,19 +53,19 @@ export async function up(knex: Knex): Promise<void> {
       -- Quality tier range (computed from variants in stock lots)
       (
         SELECT MIN((iv.attributes->>'quality_tier')::integer)
-        FROM stock_lots sl
+        FROM listing_item_lots sl
         JOIN item_variants iv ON sl.variant_id = iv.variant_id
         WHERE sl.item_id = li.item_id 
           AND sl.listed = true
-          AND iv.attributes ? 'quality_tier'
+          AND iv.attributes->>'quality_tier' IS NOT NULL
       ) as quality_tier_min,
       (
         SELECT MAX((iv.attributes->>'quality_tier')::integer)
-        FROM stock_lots sl
+        FROM listing_item_lots sl
         JOIN item_variants iv ON sl.variant_id = iv.variant_id
         WHERE sl.item_id = li.item_id 
           AND sl.listed = true
-          AND iv.attributes ? 'quality_tier'
+          AND iv.attributes->>'quality_tier' IS NOT NULL
       ) as quality_tier_max,
       
       -- Full-text search vector (weighted: title=A, item name=A, description=B)
@@ -72,7 +75,7 @@ export async function up(knex: Knex): Promise<void> {
       
     FROM listings l
     JOIN listing_items li ON l.listing_id = li.listing_id
-    JOIN game_items gi ON li.game_item_id = gi.game_item_id
+    JOIN game_items gi ON li.game_item_id = gi.id
     LEFT JOIN accounts u ON l.seller_type = 'user' AND l.seller_id = u.user_id
     LEFT JOIN contractors c ON l.seller_type = 'contractor' AND l.seller_id = c.contractor_id
     WHERE l.status = 'active';

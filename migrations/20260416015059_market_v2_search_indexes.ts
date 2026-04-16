@@ -9,10 +9,10 @@ export async function up(knex: Knex): Promise<void> {
   // We need to create a functional index on the base tables
   await knex.raw(`
     CREATE INDEX idx_listings_search_vector ON listings 
-    USING GIN (
+    USING GIN ((
       setweight(to_tsvector('english', title), 'A') ||
       setweight(to_tsvector('english', COALESCE(description, '')), 'B')
-    );
+    ));
   `)
 
   await knex.raw(`
