@@ -64,21 +64,6 @@ jobs:
           push: true
           tags: ${{ steps.meta.outputs.tags }}
           labels: ${{ steps.meta.outputs.labels }}
-
-      # Apply pending Knex migrations before rolling out new containers.
-      # Requires the same DB env as production (see knexfile.ts). The Postgres
-      # instance must accept TLS connections from GitHub-hosted runner IPs
-      # (public endpoint + security group / RDS public access), or use a
-      # self-hosted runner in your VPC.
-      - name: Run database migrations
-        env:
-          NODE_ENV: production
-          DATABASE_HOST: ${{ secrets.DATABASE_HOST }}
-          DATABASE_USER: ${{ secrets.DATABASE_USER }}
-          DATABASE_PASS: ${{ secrets.DATABASE_PASS }}
-          DATABASE_TARGET: ${{ secrets.DATABASE_TARGET }}
-          DATABASE_PORT: ${{ secrets.DATABASE_PORT }}
-        run: npm run migrate:latest
       
       - name: Configure AWS credentials
         uses: aws-actions/configure-aws-credentials@v4
