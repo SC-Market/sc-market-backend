@@ -558,10 +558,9 @@ export interface CheckoutCartRequest {
  * Checkout cart response
  */
 export interface CheckoutCartResponse {
-  order_id: string;
+  offer_id: string;                // NEW: Offer ID (not order_id - offers must be accepted first)
   session_id: string;              // NEW: For navigation to offer page
   discord_invite?: string;         // NEW: Discord invite code
-  order_details?: OrderDetailV2;   // NEW: Full order details
   items_removed: string[];
   price_changes: Array<{
     cart_item_id: string;

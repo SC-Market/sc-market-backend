@@ -321,6 +321,59 @@ export async function initiateOrder(session: DBOfferSession) {
       )
     }
 
+    // Check if this is a V2 offer with variant tracking
+    // If offer_market_items_v2 entries exist, create order_market_items_v2 entries
+    const v2OfferItems = await trx("offer_market_items_v2")
+      .where({ offer_id: most_recent.id })
+      .select("*")
+
+    if (v2OfferItems.length > 0) {
+      logger.info("Creating V2 order items with variant tracking", {
+        order_id: createdOrder.order_id,
+        offer_id: most_recent.id,
+        item_count: v2OfferItems.length,
+      })
+
+      // Get listing_items to fetch item_id for each listing
+      for (const v2Item of v2OfferItems) {
+        const listingItem = await trx("listing_items")
+          .where({ listing_id: v2Item.listing_id })
+          .first()
+
+        if (!listingItem) {
+          logger.warn("Listing item not found for V2 offer item", {
+            listing_id: v2Item.listing_id,
+            offer_id: most_recent.id,
+          })
+          continue
+        }
+
+        // Get current price for this variant
+        const variantPrice = await trx("variant_pricing")
+          .where({
+            item_id: listingItem.item_id,
+            variant_id: v2Item.variant_id,
+          })
+          .first()
+
+        const pricePerUnit = variantPrice
+          ? variantPrice.price
+          : listingItem.base_price
+
+        // Create V2 order item with variant info
+        await trx("order_market_items_v2").insert({
+          order_id: createdOrder.order_id,
+          listing_id: v2Item.listing_id,
+          item_id: listingItem.item_id,
+          variant_id: v2Item.variant_id,
+          quantity: v2Item.quantity,
+          price_per_unit: pricePerUnit,
+          fulfillment_status: "pending",
+          created_at: trx.fn.now(),
+        })
+      }
+    }
+
     // Allocate stock based on allocation_mode setting (auto/manual/none)
     // The stock_subtraction_timing setting controls PUBLIC visibility, not physical allocation
     // Requirements: 5.7, 6.1, 6.2, 6.3, 12.2, 12.3
