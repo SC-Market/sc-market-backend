@@ -61,7 +61,10 @@ export class DebugV2Controller extends BaseController {
    * @returns Current feature flag setting
    */
   @Get("feature-flag")
-  public async getFeatureFlag(): Promise<GetFeatureFlagResponse> {
+  public async getFeatureFlag(
+    @Request() request: ExpressRequest,
+  ): Promise<GetFeatureFlagResponse> {
+    this.request = request
     this.requireAuth()
     const userId = this.getUserId()
     const isDeveloper =
@@ -109,7 +112,9 @@ export class DebugV2Controller extends BaseController {
   @Post("feature-flag")
   public async setFeatureFlag(
     @Body() request: SetFeatureFlagRequest,
+    @Request() expressRequest: ExpressRequest,
   ): Promise<SetFeatureFlagResponse> {
+    this.request = expressRequest
     // Require admin role for developer privileges
     this.requireAdmin()
     const userId = this.getUserId()
