@@ -106,7 +106,9 @@ export class ListingsV2Controller extends BaseController {
   @Post()
   public async createListing(
     @Body() request: CreateListingRequest,
+    @Request() expressRequest: ExpressRequest,
   ): Promise<Listing> {
+    this.request = expressRequest
     // Require authentication
     this.requireAuth()
     const userId = this.getUserId()

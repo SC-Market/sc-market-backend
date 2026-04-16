@@ -62,7 +62,7 @@ describe("Debug V2 Controller - Property Tests", () => {
             // Admin should be able to set feature flag
             const result = await controller.setFeatureFlag({
               market_version: marketVersion,
-            })
+            }, request)
 
             expect(result.user_id).toBe(userId)
             expect(result.market_version).toBe(marketVersion)
@@ -98,14 +98,14 @@ describe("Debug V2 Controller - Property Tests", () => {
             await expect(
               controller.setFeatureFlag({
                 market_version: marketVersion,
-              }),
+              }, request),
             ).rejects.toThrow(BusinessLogicError)
 
             // Verify it throws FORBIDDEN error
             try {
               await controller.setFeatureFlag({
                 market_version: marketVersion,
-              })
+              }, request)
             } catch (error) {
               expect(error).toBeInstanceOf(BusinessLogicError)
               expect((error as BusinessLogicError).code).toBe(
@@ -135,14 +135,14 @@ describe("Debug V2 Controller - Property Tests", () => {
             await expect(
               controller.setFeatureFlag({
                 market_version: marketVersion,
-              }),
+              }, request),
             ).rejects.toThrow(BusinessLogicError)
 
             // Verify it throws UNAUTHORIZED error
             try {
               await controller.setFeatureFlag({
                 market_version: marketVersion,
-              })
+              }, request)
             } catch (error) {
               expect(error).toBeInstanceOf(BusinessLogicError)
               expect((error as BusinessLogicError).code).toBe(
@@ -173,7 +173,7 @@ describe("Debug V2 Controller - Property Tests", () => {
             const controller = new DebugV2Controller(request)
 
             // Any authenticated user should be able to read feature flag
-            const result = await controller.getFeatureFlag()
+            const result = await controller.getFeatureFlag(request)
 
             expect(result.user_id).toBe(userId)
             expect(result.market_version).toMatch(/^(V1|V2)$/)
@@ -196,13 +196,13 @@ describe("Debug V2 Controller - Property Tests", () => {
       const controller = new DebugV2Controller(request)
 
       // Unauthenticated user should NOT be able to read feature flag
-      await expect(controller.getFeatureFlag()).rejects.toThrow(
+      await expect(controller.getFeatureFlag(request)).rejects.toThrow(
         BusinessLogicError,
       )
 
       // Verify it throws UNAUTHORIZED error
       try {
-        await controller.getFeatureFlag()
+        await controller.getFeatureFlag(request)
       } catch (error) {
         expect(error).toBeInstanceOf(BusinessLogicError)
         expect((error as BusinessLogicError).code).toBe(ErrorCode.UNAUTHORIZED)
@@ -225,7 +225,7 @@ describe("Debug V2 Controller - Property Tests", () => {
             const request = createMockRequest(user)
             const controller = new DebugV2Controller(request)
 
-            const result = await controller.getFeatureFlag()
+            const result = await controller.getFeatureFlag(request)
 
             // is_developer: admin, or any role in development
             expect(result.is_developer).toBe(
@@ -272,14 +272,14 @@ describe("Debug V2 Controller - Property Tests", () => {
                 // Admin should always succeed
                 const result = await controller.setFeatureFlag({
                   market_version: marketVersion,
-                })
+                }, request)
                 expect(result.market_version).toBe(marketVersion)
               } else {
                 // Regular user should always fail
                 await expect(
                   controller.setFeatureFlag({
                     market_version: marketVersion,
-                  }),
+                  }, request),
                 ).rejects.toThrow(BusinessLogicError)
               }
             }
