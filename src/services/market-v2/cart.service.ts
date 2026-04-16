@@ -378,7 +378,7 @@ export class CartService {
   ): Promise<CheckoutCartResponse> {
     const { seller_id, accept_price_changes = false, offer_amount, buyer_note } = request;
 
-    return await this.knex.transaction(async (trx) => {
+    const checkoutData = await this.knex.transaction(async (trx) => {
       // Get cart items for this seller only
       const sellerCartItems = await trx("cart_items_v2")
         .where({
@@ -426,73 +426,7 @@ export class CartService {
         })
       );
 
-      // Calculate order total
-      const orderTotal = itemsWithCurrentPrices.reduce(
-        (sum, item) => sum + item.current_price * item.quantity,
-        0
-      );
-
-      // Use offer_amount if provided, otherwise use calculated total
-      const finalAmount = offer_amount !== undefined ? offer_amount : orderTotal;
-
-      // Get seller info for discord invite
-      const seller = await trx("accounts")
-        .where({ user_id: seller_id })
-        .first();
-
-      let discordInvite: string | undefined;
-      
-      // Check if seller is a contractor and has discord invite
-      if (seller) {
-        const contractor = await trx("contractors")
-          .where({ user_id: seller_id })
-          .first();
-        
-        if (contractor?.discord_invite) {
-          discordInvite = contractor.discord_invite;
-        }
-      }
-
-      // Generate session ID for offer page navigation
-      const sessionId = this.knex.raw("gen_random_uuid()").toString();
-
-      // Create order
-      const [order] = await trx("orders")
-        .insert({
-          buyer_id: userId,
-          seller_id: seller_id,
-          status: "pending",
-          total_price: orderTotal,
-          offer_amount: offer_amount,
-          buyer_note: buyer_note || sellerCartItems[0].buyer_note,
-          discord_invite: discordInvite,
-          session_id: sessionId,
-          created_at: trx.fn.now(),
-        })
-        .returning("*");
-
-      // Allocate stock and create order items
-      const StockAllocationService = (await import("./stock-allocation.service.js")).StockAllocationService;
-      const stockService = new StockAllocationService(trx);
-
-      for (const item of itemsWithCurrentPrices) {
-        // Allocate stock using FIFO
-        await stockService.allocateStock(item.variant_id, item.quantity, trx);
-
-        // Create order item
-        await trx("order_market_items_v2").insert({
-          order_id: order.order_id,
-          listing_id: item.listing_id,
-          item_id: item.item_id,
-          variant_id: item.variant_id,
-          quantity: item.quantity,
-          price_per_unit: item.current_price,
-          fulfillment_status: "pending",
-          created_at: trx.fn.now(),
-        });
-      }
-
-      // Clear cart for this seller after successful checkout
+      // Clear cart for this seller before creating offer
       await trx("cart_items_v2")
         .where({
           user_id: userId,
@@ -500,13 +434,37 @@ export class CartService {
         })
         .del();
 
+      // Return data for offer creation outside transaction
       return {
-        order_id: order.order_id,
-        session_id: order.session_id,
-        discord_invite: discordInvite,
-        items_removed: validation.removed_items.map((item) => item.cart_item_id),
+        valid_items: itemsWithCurrentPrices,
+        removed_items: validation.removed_items,
         price_changes: priceChanges,
+        offer_amount: offer_amount,
+        buyer_note: buyer_note || sellerCartItems[0].buyer_note,
       };
     });
+
+    // Use purchase service to create offer (outside transaction)
+    // This creates offer session with chat, Discord thread, and notifications
+    const PurchaseService = (await import("./purchase.service.js")).PurchaseService;
+    const purchaseService = new PurchaseService(this.knex);
+
+    const purchaseResult = await purchaseService.purchaseItems(userId, {
+      items: checkoutData.valid_items.map((item: any) => ({
+        listing_id: item.listing_id,
+        variant_id: item.variant_id,
+        quantity: item.quantity,
+      })),
+      offer_amount: checkoutData.offer_amount,
+      buyer_note: checkoutData.buyer_note,
+    });
+
+    return {
+      offer_id: purchaseResult.offer_id,
+      session_id: purchaseResult.session_id,
+      discord_invite: purchaseResult.discord_invite || undefined,
+      items_removed: checkoutData.removed_items.map((item: any) => item.cart_item_id),
+      price_changes: checkoutData.price_changes,
+    };
   }
 }

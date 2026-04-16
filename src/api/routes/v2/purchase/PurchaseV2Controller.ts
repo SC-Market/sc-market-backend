@@ -36,11 +36,12 @@ export class PurchaseV2Controller extends Controller {
 
   /**
    * Purchase V2 market listings with variant support
+   * Creates an offer session (not a direct order)
    * @summary Purchase items
    */
   @Post()
   @Security("jwt")
-  @SuccessResponse("201", "Purchase completed successfully")
+  @SuccessResponse("201", "Offer created successfully")
   public async purchaseItems(
     @Body() requestBody: PurchaseRequest,
     @Request() request: AuthenticatedRequest
