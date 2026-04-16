@@ -7,6 +7,178 @@
 		"requestBodies": {},
 		"responses": {},
 		"schemas": {
+			"Listing": {
+				"description": "Unified listing table (replaces V1's 3-table structure)",
+				"properties": {
+					"listing_id": {
+						"type": "string"
+					},
+					"seller_id": {
+						"type": "string"
+					},
+					"seller_type": {
+						"type": "string",
+						"enum": [
+							"user",
+							"contractor"
+						]
+					},
+					"title": {
+						"type": "string"
+					},
+					"description": {
+						"type": "string"
+					},
+					"status": {
+						"type": "string",
+						"enum": [
+							"active",
+							"sold",
+							"expired",
+							"cancelled"
+						]
+					},
+					"visibility": {
+						"type": "string",
+						"enum": [
+							"public",
+							"private",
+							"unlisted"
+						]
+					},
+					"sale_type": {
+						"type": "string",
+						"enum": [
+							"fixed",
+							"auction",
+							"negotiable"
+						]
+					},
+					"listing_type": {
+						"type": "string",
+						"enum": [
+							"single",
+							"bundle",
+							"bulk"
+						]
+					},
+					"created_at": {
+						"type": "string",
+						"format": "date-time"
+					},
+					"updated_at": {
+						"type": "string",
+						"format": "date-time"
+					},
+					"expires_at": {
+						"type": "string",
+						"format": "date-time"
+					}
+				},
+				"required": [
+					"listing_id",
+					"seller_id",
+					"seller_type",
+					"title",
+					"description",
+					"status",
+					"visibility",
+					"sale_type",
+					"listing_type",
+					"created_at",
+					"updated_at"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
+			"VariantAttributes": {
+				"description": "Variant attributes structure",
+				"properties": {
+					"quality_tier": {
+						"type": "number",
+						"format": "double"
+					},
+					"quality_value": {
+						"type": "number",
+						"format": "double"
+					},
+					"crafted_source": {
+						"type": "string",
+						"enum": [
+							"crafted",
+							"store",
+							"looted",
+							"unknown"
+						]
+					},
+					"blueprint_tier": {
+						"type": "number",
+						"format": "double"
+					}
+				},
+				"type": "object",
+				"additionalProperties": {}
+			},
+			"CreateListingRequest": {
+				"description": "Create new listing with variants",
+				"properties": {
+					"title": {
+						"type": "string"
+					},
+					"description": {
+						"type": "string"
+					},
+					"game_item_id": {
+						"type": "string"
+					},
+					"pricing_mode": {
+						"type": "string",
+						"enum": [
+							"unified",
+							"per_variant"
+						]
+					},
+					"base_price": {
+						"type": "number",
+						"format": "double"
+					},
+					"lots": {
+						"items": {
+							"properties": {
+								"price": {
+									"type": "number",
+									"format": "double"
+								},
+								"location_id": {
+									"type": "string"
+								},
+								"variant_attributes": {
+									"$ref": "#/components/schemas/VariantAttributes"
+								},
+								"quantity": {
+									"type": "number",
+									"format": "double"
+								}
+							},
+							"required": [
+								"variant_attributes",
+								"quantity"
+							],
+							"type": "object"
+						},
+						"type": "array"
+					}
+				},
+				"required": [
+					"title",
+					"description",
+					"game_item_id",
+					"pricing_mode",
+					"lots"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
 			"HealthResponse": {
 				"properties": {
 					"status": {
@@ -40,6 +212,42 @@
 		"contact": {}
 	},
 	"paths": {
+		"/listings": {
+			"post": {
+				"operationId": "CreateListing",
+				"responses": {
+					"200": {
+						"description": "Created listing object",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/Listing"
+								}
+							}
+						}
+					}
+				},
+				"description": "Create a new listing with variants\n\nCreates a listing with stock lots and variant pricing in a single atomic transaction.\nSupports both unified pricing (one price for all variants) and per-variant pricing.",
+				"summary": "Create listing",
+				"tags": [
+					"Listings V2"
+				],
+				"security": [],
+				"parameters": [],
+				"requestBody": {
+					"description": "Listing creation request with title, description, game item, pricing mode, and lots",
+					"required": true,
+					"content": {
+						"application/json": {
+							"schema": {
+								"$ref": "#/components/schemas/CreateListingRequest",
+								"description": "Listing creation request with title, description, game item, pricing mode, and lots"
+							}
+						}
+					}
+				}
+			}
+		},
 		"/health": {
 			"get": {
 				"operationId": "GetHealth",
