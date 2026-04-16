@@ -1,31 +1,3 @@
-// Global error listeners — log everything, don't exit
-process.on("uncaughtException", (err) => {
-  console.error("[UNCAUGHT EXCEPTION]", err?.message, err?.stack)
-})
-
-process.on("unhandledRejection", (reason) => {
-  console.error("[UNHANDLED REJECTION]", reason instanceof Error ? `${reason.message}\n${reason.stack}` : reason)
-})
-
-// Log memory usage and uptime every 30 seconds to diagnose crashes
-setInterval(() => {
-  const mem = process.memoryUsage()
-  console.log(`[HEARTBEAT] uptime=${Math.floor(process.uptime())}s rss=${Math.floor(mem.rss / 1024 / 1024)}MB heap=${Math.floor(mem.heapUsed / 1024 / 1024)}/${Math.floor(mem.heapTotal / 1024 / 1024)}MB`)
-}, 30_000)
-
-// Log on exit
-process.on("exit", (code) => {
-  console.error(`[EXIT] Process exiting with code ${code}`)
-})
-
-process.on("SIGTERM", () => {
-  console.error("[SIGTERM] Received SIGTERM")
-})
-
-process.on("SIGINT", () => {
-  console.error("[SIGINT] Received SIGINT")
-})
-
 import express, { Request, RequestHandler } from "express"
 import compression from "compression"
 import passport from "passport"
