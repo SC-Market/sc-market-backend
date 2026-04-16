@@ -17,10 +17,12 @@ import {
   Listing,
   SearchListingsRequest,
   SearchListingsResponse,
+  ListingDetailResponse,
 } from "../../api/routes/v2/types/market-v2-types.js"
 import {
   BusinessLogicError,
   ValidationError,
+  NotFoundError,
 } from "../../api/routes/v1/util/errors.js"
 import { ErrorCode } from "../../api/routes/v1/util/error-codes.js"
 import logger from "../../logger/logger.js"
@@ -481,5 +483,228 @@ export class ListingService {
     }
 
     return "Invalid reference to related data"
+  }
+
+  /**
+   * Get listing detail with variant breakdown
+   *
+   * Fetches comprehensive listing information including:
+   * - Listing metadata
+   * - Seller information (user or contractor)
+   * - Game item details
+   * - Variant breakdown with attributes, quantities, and prices
+   *
+   * Requirements: 15.1, 15.2, 15.3, 15.4, 15.5, 15.6, 6.5, 7.2, 7.3, 25.1, 25.2
+   */
+  async getListingDetail(listingId: string): Promise<ListingDetailResponse> {
+    try {
+      // Fetch listing
+      const listing = await this.knex("listings")
+        .where({ listing_id: listingId })
+        .first()
+
+      if (!listing) {
+        throw new NotFoundError("Listing", listingId)
+      }
+
+      // Fetch seller information
+      let seller
+      if (listing.seller_type === "user") {
+        const userRow = await this.knex("accounts")
+          .where({ user_id: listing.seller_id })
+          .select("user_id as id", "username as name", "rating")
+          .first()
+
+        if (!userRow) {
+          throw new BusinessLogicError(
+            ErrorCode.INTERNAL_SERVER_ERROR,
+            "Seller user not found",
+          )
+        }
+
+        seller = {
+          id: userRow.id,
+          name: userRow.name,
+          type: "user" as const,
+          rating: parseFloat(userRow.rating) || 0,
+        }
+      } else {
+        const contractorRow = await this.knex("contractors")
+          .where({ contractor_id: listing.seller_id })
+          .select("contractor_id as id", "name", "rating")
+          .first()
+
+        if (!contractorRow) {
+          throw new BusinessLogicError(
+            ErrorCode.INTERNAL_SERVER_ERROR,
+            "Seller contractor not found",
+          )
+        }
+
+        seller = {
+          id: contractorRow.id,
+          name: contractorRow.name,
+          type: "contractor" as const,
+          rating: parseFloat(contractorRow.rating) || 0,
+        }
+      }
+
+      // Fetch listing items with game item details
+      const listingItems = await this.knex("listing_items as li")
+        .join("game_items as gi", "li.game_item_id", "gi.game_item_id")
+        .where("li.listing_id", listingId)
+        .select(
+          "li.item_id",
+          "li.game_item_id",
+          "li.pricing_mode",
+          "li.base_price",
+          "gi.name as game_item_name",
+          "gi.type as game_item_type",
+          "gi.icon_url as game_item_icon_url",
+        )
+        .orderBy("li.display_order", "asc")
+
+      // Build items array with variant breakdown
+      const items = await Promise.all(
+        listingItems.map(async (item) => {
+          // Fetch variant breakdown for this item
+          const variants = await this.getVariantBreakdown(
+            item.item_id,
+            item.pricing_mode,
+            item.base_price,
+          )
+
+          return {
+            item_id: item.item_id,
+            game_item: {
+              game_item_id: item.game_item_id,
+              name: item.game_item_name,
+              type: item.game_item_type,
+              icon_url: item.game_item_icon_url || undefined,
+            },
+            pricing_mode: item.pricing_mode,
+            base_price: item.base_price ? parseInt(item.base_price, 10) : undefined,
+            variants,
+          }
+        }),
+      )
+
+      return {
+        listing: {
+          listing_id: listing.listing_id,
+          seller_id: listing.seller_id,
+          seller_type: listing.seller_type,
+          title: listing.title,
+          description: listing.description,
+          status: listing.status,
+          visibility: listing.visibility,
+          sale_type: listing.sale_type,
+          listing_type: listing.listing_type,
+          created_at: listing.created_at,
+          updated_at: listing.updated_at,
+          expires_at: listing.expires_at || undefined,
+        },
+        seller,
+        items,
+      }
+    } catch (error) {
+      // Re-throw known errors
+      if (
+        error instanceof NotFoundError ||
+        error instanceof BusinessLogicError
+      ) {
+        throw error
+      }
+
+      logger.error("Failed to fetch listing detail", {
+        listingId,
+        error: error instanceof Error ? error.message : String(error),
+      })
+
+      throw new BusinessLogicError(
+        ErrorCode.INTERNAL_SERVER_ERROR,
+        "Failed to fetch listing detail",
+      )
+    }
+  }
+
+  /**
+   * Get variant breakdown for a listing item
+   *
+   * Joins listing_items, item_variants, and stock_lots to compute:
+   * - Total quantity per variant
+   * - Price per variant (from variant_pricing or base_price)
+   * - Variant attributes and display names
+   * - Locations where variants are available
+   *
+   * Requirements: 6.5, 15.4, 15.5, 15.6, 7.2, 7.3, 25.1, 25.2
+   */
+  private async getVariantBreakdown(
+    itemId: string,
+    pricingMode: string,
+    basePrice: number | null,
+  ): Promise<
+    Array<{
+      variant_id: string
+      attributes: Record<string, any>
+      display_name: string
+      short_name: string
+      quantity: number
+      price: number
+      locations?: string[]
+    }>
+  > {
+    // Query to get variant breakdown with quantities
+    const variantRows = await this.knex("stock_lots as sl")
+      .join("item_variants as iv", "sl.variant_id", "iv.variant_id")
+      .leftJoin("locations as loc", "sl.location_id", "loc.location_id")
+      .where("sl.item_id", itemId)
+      .where("sl.listed", true)
+      .select(
+        "iv.variant_id",
+        "iv.attributes",
+        "iv.display_name",
+        "iv.short_name",
+        this.knex.raw("SUM(sl.quantity_total) as total_quantity"),
+        this.knex.raw(
+          "ARRAY_AGG(DISTINCT loc.name) FILTER (WHERE loc.name IS NOT NULL) as location_names",
+        ),
+      )
+      .groupBy("iv.variant_id", "iv.attributes", "iv.display_name", "iv.short_name")
+
+    // Fetch variant pricing if per_variant mode
+    let variantPricing: Map<string, number> = new Map()
+    if (pricingMode === "per_variant") {
+      const pricingRows = await this.knex("variant_pricing")
+        .where({ item_id: itemId })
+        .select("variant_id", "price")
+
+      variantPricing = new Map(
+        pricingRows.map((row) => [row.variant_id, parseInt(row.price, 10)]),
+      )
+    }
+
+    // Build variant breakdown
+    return variantRows.map((row) => {
+      // Determine price based on pricing mode
+      let price: number
+      if (pricingMode === "per_variant") {
+        // Use variant-specific price, fallback to base_price
+        price = variantPricing.get(row.variant_id) || (basePrice ? parseInt(String(basePrice), 10) : 0)
+      } else {
+        // Use base_price for unified pricing
+        price = basePrice ? parseInt(String(basePrice), 10) : 0
+      }
+
+      return {
+        variant_id: row.variant_id,
+        attributes: row.attributes,
+        display_name: row.display_name || "Unknown",
+        short_name: row.short_name || "N/A",
+        quantity: parseInt(row.total_quantity, 10),
+        price,
+        locations: row.location_names || undefined,
+      }
+    })
   }
 }

@@ -1100,3 +1100,377 @@ function arbitraryVariantAttributes() {
     blueprint_tier: fc.option(fc.integer({ min: 1, max: 5 }), { nil: undefined }),
   })
 }
+
+describe.skip("Market V2 - Property 10: Unified Pricing Consistency (Integration)", () => {
+  let knex: Knex
+  let service: ListingService
+  let testUserId: string
+  let testGameItemId: string
+  let createdListingIds: string[] = []
+
+  beforeEach(async () => {
+    knex = getKnex()
+    service = new ListingService(knex)
+    createdListingIds = []
+
+    // Create test user
+    const [user] = await knex("accounts")
+      .insert({
+        username: `test_user_${Date.now()}`,
+        email: `test_${Date.now()}@example.com`,
+        password_hash: "test_hash",
+      })
+      .returning("user_id")
+    testUserId = user.user_id
+
+    // Create test game item
+    const [gameItem] = await knex("game_items")
+      .insert({
+        name: `Test Item ${Date.now()}`,
+        type: "weapon",
+      })
+      .returning("game_item_id")
+    testGameItemId = gameItem.game_item_id
+  })
+
+  afterEach(async () => {
+    // Clean up test data
+    if (createdListingIds.length > 0) {
+      await knex("listings").whereIn("listing_id", createdListingIds).del()
+    }
+    if (testUserId) {
+      await knex("accounts").where("user_id", testUserId).del()
+    }
+    if (testGameItemId) {
+      await knex("item_variants").where("game_item_id", testGameItemId).del()
+      await knex("game_items").where("game_item_id", testGameItemId).del()
+    }
+  })
+
+  /**
+   * Feature: market-v2-parallel-system
+   * Property 10: Unified Pricing Consistency
+   *
+   * For any listing with pricing_mode='unified', all variants SHALL have
+   * the same price equal to base_price.
+   *
+   * Validates: Requirements 7.2, 25.1
+   */
+  it("Property 10: unified pricing - all variants have same price equal to base_price", async () => {
+    await fc.assert(
+      fc.asyncProperty(
+        fc.record({
+          base_price: fc.integer({ min: 1000, max: 1000000 }),
+          variants: fc.array(arbitraryVariantAttributes(), {
+            minLength: 2,
+            maxLength: 5,
+          }),
+        }),
+        async ({ base_price, variants }) => {
+          // Create listing with unified pricing and multiple variants
+          const request: CreateListingRequest = {
+            title: "Unified Pricing Test Listing",
+            description: "Testing unified pricing consistency",
+            game_item_id: testGameItemId,
+            pricing_mode: "unified",
+            base_price,
+            lots: variants.map((attrs) => ({
+              quantity: 10,
+              variant_attributes: attrs,
+            })),
+          }
+
+          const listing = await service.createListing(testUserId, request)
+          createdListingIds.push(listing.listing_id)
+
+          // Fetch listing detail
+          const detail = await service.getListingDetail(listing.listing_id)
+
+          // Verify all variants have the same price equal to base_price
+          for (const item of detail.items) {
+            expect(item.pricing_mode).toBe("unified")
+            expect(item.base_price).toBe(base_price)
+
+            for (const variant of item.variants) {
+              expect(variant.price).toBe(base_price)
+            }
+          }
+        },
+      ),
+      { numRuns: 20 },
+    )
+  })
+})
+
+describe.skip("Market V2 - Property 11: Per-Variant Pricing Lookup (Integration)", () => {
+  let knex: Knex
+  let service: ListingService
+  let testUserId: string
+  let testGameItemId: string
+  let createdListingIds: string[] = []
+
+  beforeEach(async () => {
+    knex = getKnex()
+    service = new ListingService(knex)
+    createdListingIds = []
+
+    // Create test user
+    const [user] = await knex("accounts")
+      .insert({
+        username: `test_user_${Date.now()}`,
+        email: `test_${Date.now()}@example.com`,
+        password_hash: "test_hash",
+      })
+      .returning("user_id")
+    testUserId = user.user_id
+
+    // Create test game item
+    const [gameItem] = await knex("game_items")
+      .insert({
+        name: `Test Item ${Date.now()}`,
+        type: "weapon",
+      })
+      .returning("game_item_id")
+    testGameItemId = gameItem.game_item_id
+  })
+
+  afterEach(async () => {
+    // Clean up test data
+    if (createdListingIds.length > 0) {
+      await knex("listings").whereIn("listing_id", createdListingIds).del()
+    }
+    if (testUserId) {
+      await knex("accounts").where("user_id", testUserId).del()
+    }
+    if (testGameItemId) {
+      await knex("item_variants").where("game_item_id", testGameItemId).del()
+      await knex("game_items").where("game_item_id", testGameItemId).del()
+    }
+  })
+
+  /**
+   * Feature: market-v2-parallel-system
+   * Property 11: Per-Variant Pricing Lookup
+   *
+   * For any listing with pricing_mode='per_variant' and any variant in that
+   * listing, the variant's price SHALL come from the variant_pricing table.
+   *
+   * Validates: Requirements 7.3, 25.2
+   */
+  it("Property 11: per-variant pricing - each variant price comes from variant_pricing table", async () => {
+    await fc.assert(
+      fc.asyncProperty(
+        fc.array(
+          fc.record({
+            variant_attributes: arbitraryVariantAttributes(),
+            price: fc.integer({ min: 1000, max: 1000000 }),
+          }),
+          { minLength: 2, maxLength: 5 },
+        ),
+        async (variantsWithPrices) => {
+          // Create listing with per_variant pricing
+          const request: CreateListingRequest = {
+            title: "Per-Variant Pricing Test Listing",
+            description: "Testing per-variant pricing lookup",
+            game_item_id: testGameItemId,
+            pricing_mode: "per_variant",
+            lots: variantsWithPrices.map((v) => ({
+              quantity: 10,
+              variant_attributes: v.variant_attributes,
+              price: v.price,
+            })),
+          }
+
+          const listing = await service.createListing(testUserId, request)
+          createdListingIds.push(listing.listing_id)
+
+          // Fetch listing detail
+          const detail = await service.getListingDetail(listing.listing_id)
+
+          // Verify each variant's price matches what was specified
+          for (const item of detail.items) {
+            expect(item.pricing_mode).toBe("per_variant")
+
+            for (const variant of item.variants) {
+              // Find the corresponding input variant
+              const inputVariant = variantsWithPrices.find((v) => {
+                // Compare attributes (simplified comparison)
+                return (
+                  v.variant_attributes.quality_tier ===
+                    variant.attributes.quality_tier &&
+                  v.variant_attributes.crafted_source ===
+                    variant.attributes.crafted_source
+                )
+              })
+
+              if (inputVariant) {
+                expect(variant.price).toBe(inputVariant.price)
+              }
+            }
+          }
+        },
+      ),
+      { numRuns: 20 },
+    )
+  })
+})
+
+describe.skip("Market V2 - Property 12: Price Range Computation (Integration)", () => {
+  let knex: Knex
+  let service: ListingService
+  let testUserId: string
+  let testGameItemId: string
+  let createdListingIds: string[] = []
+
+  beforeEach(async () => {
+    knex = getKnex()
+    service = new ListingService(knex)
+    createdListingIds = []
+
+    // Create test user
+    const [user] = await knex("accounts")
+      .insert({
+        username: `test_user_${Date.now()}`,
+        email: `test_${Date.now()}@example.com`,
+        password_hash: "test_hash",
+      })
+      .returning("user_id")
+    testUserId = user.user_id
+
+    // Create test game item
+    const [gameItem] = await knex("game_items")
+      .insert({
+        name: `Test Item ${Date.now()}`,
+        type: "weapon",
+      })
+      .returning("game_item_id")
+    testGameItemId = gameItem.game_item_id
+  })
+
+  afterEach(async () => {
+    // Clean up test data
+    if (createdListingIds.length > 0) {
+      await knex("listings").whereIn("listing_id", createdListingIds).del()
+    }
+    if (testUserId) {
+      await knex("accounts").where("user_id", testUserId).del()
+    }
+    if (testGameItemId) {
+      await knex("item_variants").where("game_item_id", testGameItemId).del()
+      await knex("game_items").where("game_item_id", testGameItemId).del()
+    }
+  })
+
+  /**
+   * Feature: market-v2-parallel-system
+   * Property 12: Price Range Computation
+   *
+   * For any listing, price_min SHALL equal the minimum variant price and
+   * price_max SHALL equal the maximum variant price.
+   *
+   * Validates: Requirements 7.5, 25.4, 25.5
+   */
+  it("Property 12: price range - price_min equals minimum and price_max equals maximum", async () => {
+    await fc.assert(
+      fc.asyncProperty(
+        fc.array(
+          fc.record({
+            variant_attributes: arbitraryVariantAttributes(),
+            price: fc.integer({ min: 1000, max: 1000000 }),
+          }),
+          { minLength: 2, maxLength: 5 },
+        ),
+        async (variantsWithPrices) => {
+          // Create listing with per_variant pricing and different prices
+          const request: CreateListingRequest = {
+            title: "Price Range Test Listing",
+            description: "Testing price range computation",
+            game_item_id: testGameItemId,
+            pricing_mode: "per_variant",
+            lots: variantsWithPrices.map((v) => ({
+              quantity: 10,
+              variant_attributes: v.variant_attributes,
+              price: v.price,
+            })),
+          }
+
+          const listing = await service.createListing(testUserId, request)
+          createdListingIds.push(listing.listing_id)
+
+          // Compute expected min and max prices
+          const prices = variantsWithPrices.map((v) => v.price)
+          const expectedMinPrice = Math.min(...prices)
+          const expectedMaxPrice = Math.max(...prices)
+
+          // Search for the listing to get price_min and price_max
+          const searchResults = await service.searchListings({
+            game_item_id: testGameItemId,
+            page: 1,
+            page_size: 100,
+          })
+
+          const searchListing = searchResults.listings.find(
+            (l) => l.listing_id === listing.listing_id,
+          )
+
+          expect(searchListing).toBeDefined()
+          if (searchListing) {
+            expect(searchListing.price_min).toBe(expectedMinPrice)
+            expect(searchListing.price_max).toBe(expectedMaxPrice)
+          }
+        },
+      ),
+      { numRuns: 20 },
+    )
+  })
+
+  it("Property 12: price range - unified pricing has price_min equal to price_max", async () => {
+    await fc.assert(
+      fc.asyncProperty(
+        fc.record({
+          base_price: fc.integer({ min: 1000, max: 1000000 }),
+          variants: fc.array(arbitraryVariantAttributes(), {
+            minLength: 2,
+            maxLength: 5,
+          }),
+        }),
+        async ({ base_price, variants }) => {
+          // Create listing with unified pricing
+          const request: CreateListingRequest = {
+            title: "Unified Price Range Test Listing",
+            description: "Testing price range with unified pricing",
+            game_item_id: testGameItemId,
+            pricing_mode: "unified",
+            base_price,
+            lots: variants.map((attrs) => ({
+              quantity: 10,
+              variant_attributes: attrs,
+            })),
+          }
+
+          const listing = await service.createListing(testUserId, request)
+          createdListingIds.push(listing.listing_id)
+
+          // Search for the listing to get price_min and price_max
+          const searchResults = await service.searchListings({
+            game_item_id: testGameItemId,
+            page: 1,
+            page_size: 100,
+          })
+
+          const searchListing = searchResults.listings.find(
+            (l) => l.listing_id === listing.listing_id,
+          )
+
+          expect(searchListing).toBeDefined()
+          if (searchListing) {
+            // For unified pricing, min and max should be equal to base_price
+            expect(searchListing.price_min).toBe(base_price)
+            expect(searchListing.price_max).toBe(base_price)
+          }
+        },
+      ),
+      { numRuns: 20 },
+    )
+  })
+})

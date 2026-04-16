@@ -6,10 +6,10 @@
  * Requirements: 9.1, 10.1, 13.1, 13.2, 13.3, 13.4, 14.1, 14.2, 14.3, 14.4, 14.5, 14.6, 26.1, 26.2, 28.1, 28.4, 28.5, 28.6
  */
 
-import { Controller, Get, Post, Route, Tags, Body, Query, Request } from "tsoa"
+import { Controller, Get, Post, Route, Tags, Body, Query, Path, Request } from "tsoa"
 import { Request as ExpressRequest } from "express"
 import { BaseController } from "../base/BaseController.js"
-import { CreateListingRequest, Listing, SearchListingsResponse } from "../types/market-v2-types.js"
+import { CreateListingRequest, Listing, SearchListingsResponse, ListingDetailResponse } from "../types/market-v2-types.js"
 import { ListingService } from "../../../../services/market-v2/listing.service.js"
 import logger from "../../../../logger/logger.js"
 
@@ -132,6 +132,44 @@ export class ListingsV2Controller extends BaseController {
     } catch (error) {
       logger.error("Failed to create listing", {
         userId,
+        error: error instanceof Error ? error.message : String(error),
+        stack: error instanceof Error ? error.stack : undefined,
+      })
+
+      // Re-throw to be handled by error middleware
+      throw error
+    }
+  }
+
+  /**
+   * Get listing detail with variant breakdown
+   *
+   * Returns comprehensive listing information including seller details, game item info,
+   * and a breakdown of all variants with their attributes, quantities, and prices.
+   *
+   * @summary Get listing details
+   * @param listing_id Listing ID to retrieve
+   * @returns Listing detail with variant breakdown
+   */
+  @Get("{listing_id}")
+  public async getListingDetail(
+    @Path() listing_id: string,
+  ): Promise<ListingDetailResponse> {
+    logger.info("Fetching listing detail", { listing_id })
+
+    try {
+      // Get listing detail using service
+      const detail = await this.listingService.getListingDetail(listing_id)
+
+      logger.info("Listing detail retrieved successfully", {
+        listingId: listing_id,
+        itemCount: detail.items.length,
+      })
+
+      return detail
+    } catch (error) {
+      logger.error("Failed to fetch listing detail", {
+        listing_id,
         error: error instanceof Error ? error.message : String(error),
         stack: error instanceof Error ? error.stack : undefined,
       })

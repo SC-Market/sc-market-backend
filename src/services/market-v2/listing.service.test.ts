@@ -814,3 +814,349 @@ describe.skip("ListingService - Search Edge Cases (Integration)", () => {
     })
   })
 })
+
+describe.skip("ListingService - Listing Detail Tests (Integration)", () => {
+  let service: ListingService
+
+  beforeEach(() => {
+    service = new ListingService()
+  })
+
+  describe("getListingDetail - Successful Retrieval", () => {
+    /**
+     * Test successful retrieval with unified pricing
+     * Validates: Requirements 15.1, 15.2, 15.3, 15.4, 15.5, 15.6, 7.2, 25.1
+     */
+    it("should retrieve listing detail with unified pricing", async () => {
+      // This test requires a real database with test data
+      // Create a test listing first, then retrieve it
+      const testListingId = "00000000-0000-0000-0000-000000000001"
+
+      const detail = await service.getListingDetail(testListingId)
+
+      // Verify listing metadata
+      expect(detail.listing).toBeDefined()
+      expect(detail.listing.listing_id).toBe(testListingId)
+      expect(detail.listing.title).toBeDefined()
+      expect(detail.listing.description).toBeDefined()
+      expect(detail.listing.status).toBeDefined()
+
+      // Verify seller information
+      expect(detail.seller).toBeDefined()
+      expect(detail.seller.id).toBeDefined()
+      expect(detail.seller.name).toBeDefined()
+      expect(detail.seller.type).toMatch(/^(user|contractor)$/)
+      expect(typeof detail.seller.rating).toBe("number")
+
+      // Verify items array
+      expect(detail.items).toBeDefined()
+      expect(Array.isArray(detail.items)).toBe(true)
+      expect(detail.items.length).toBeGreaterThan(0)
+
+      // Verify first item structure
+      const item = detail.items[0]
+      expect(item.item_id).toBeDefined()
+      expect(item.game_item).toBeDefined()
+      expect(item.game_item.game_item_id).toBeDefined()
+      expect(item.game_item.name).toBeDefined()
+      expect(item.game_item.type).toBeDefined()
+      expect(item.pricing_mode).toBe("unified")
+      expect(item.base_price).toBeDefined()
+      expect(typeof item.base_price).toBe("number")
+
+      // Verify variants array
+      expect(item.variants).toBeDefined()
+      expect(Array.isArray(item.variants)).toBe(true)
+      expect(item.variants.length).toBeGreaterThan(0)
+
+      // Verify variant structure
+      const variant = item.variants[0]
+      expect(variant.variant_id).toBeDefined()
+      expect(variant.attributes).toBeDefined()
+      expect(typeof variant.attributes).toBe("object")
+      expect(variant.display_name).toBeDefined()
+      expect(variant.short_name).toBeDefined()
+      expect(typeof variant.quantity).toBe("number")
+      expect(typeof variant.price).toBe("number")
+
+      // For unified pricing, all variants should have same price as base_price
+      for (const v of item.variants) {
+        expect(v.price).toBe(item.base_price)
+      }
+    })
+
+    /**
+     * Test successful retrieval with per_variant pricing
+     * Validates: Requirements 15.1, 15.2, 15.3, 15.4, 15.5, 15.6, 7.3, 25.2
+     */
+    it("should retrieve listing detail with per_variant pricing", async () => {
+      // This test requires a real database with test data
+      // Create a test listing with per_variant pricing first
+      const testListingId = "00000000-0000-0000-0000-000000000002"
+
+      const detail = await service.getListingDetail(testListingId)
+
+      // Verify listing metadata
+      expect(detail.listing).toBeDefined()
+      expect(detail.listing.listing_id).toBe(testListingId)
+
+      // Verify items array
+      expect(detail.items).toBeDefined()
+      expect(detail.items.length).toBeGreaterThan(0)
+
+      // Verify first item has per_variant pricing
+      const item = detail.items[0]
+      expect(item.pricing_mode).toBe("per_variant")
+
+      // Verify variants have different prices
+      expect(item.variants).toBeDefined()
+      expect(item.variants.length).toBeGreaterThan(1)
+
+      // Collect all prices
+      const prices = item.variants.map((v) => v.price)
+      const uniquePrices = new Set(prices)
+
+      // For per_variant pricing, we expect different prices
+      // (though not guaranteed, it's the typical use case)
+      expect(uniquePrices.size).toBeGreaterThan(0)
+    })
+
+    /**
+     * Test variant breakdown includes all required fields
+     * Validates: Requirements 15.4, 15.5, 15.6
+     */
+    it("should include complete variant breakdown with all fields", async () => {
+      const testListingId = "00000000-0000-0000-0000-000000000001"
+
+      const detail = await service.getListingDetail(testListingId)
+
+      expect(detail.items.length).toBeGreaterThan(0)
+
+      for (const item of detail.items) {
+        expect(item.variants.length).toBeGreaterThan(0)
+
+        for (const variant of item.variants) {
+          // Required fields
+          expect(variant.variant_id).toBeDefined()
+          expect(typeof variant.variant_id).toBe("string")
+
+          expect(variant.attributes).toBeDefined()
+          expect(typeof variant.attributes).toBe("object")
+
+          expect(variant.display_name).toBeDefined()
+          expect(typeof variant.display_name).toBe("string")
+
+          expect(variant.short_name).toBeDefined()
+          expect(typeof variant.short_name).toBe("string")
+
+          expect(variant.quantity).toBeDefined()
+          expect(typeof variant.quantity).toBe("number")
+          expect(variant.quantity).toBeGreaterThan(0)
+
+          expect(variant.price).toBeDefined()
+          expect(typeof variant.price).toBe("number")
+          expect(variant.price).toBeGreaterThan(0)
+
+          // Optional fields
+          if (variant.locations) {
+            expect(Array.isArray(variant.locations)).toBe(true)
+          }
+        }
+      }
+    })
+
+    /**
+     * Test variant attributes include quality information
+     * Validates: Requirements 6.5
+     */
+    it("should include quality tier information in variant attributes", async () => {
+      const testListingId = "00000000-0000-0000-0000-000000000001"
+
+      const detail = await service.getListingDetail(testListingId)
+
+      expect(detail.items.length).toBeGreaterThan(0)
+
+      for (const item of detail.items) {
+        for (const variant of item.variants) {
+          // Check if quality attributes are present
+          if (variant.attributes.quality_tier) {
+            expect(typeof variant.attributes.quality_tier).toBe("number")
+            expect(variant.attributes.quality_tier).toBeGreaterThanOrEqual(1)
+            expect(variant.attributes.quality_tier).toBeLessThanOrEqual(5)
+          }
+
+          if (variant.attributes.quality_value) {
+            expect(typeof variant.attributes.quality_value).toBe("number")
+            expect(variant.attributes.quality_value).toBeGreaterThanOrEqual(0)
+            expect(variant.attributes.quality_value).toBeLessThanOrEqual(100)
+          }
+
+          if (variant.attributes.crafted_source) {
+            expect(typeof variant.attributes.crafted_source).toBe("string")
+            expect(["crafted", "store", "looted", "unknown"]).toContain(
+              variant.attributes.crafted_source,
+            )
+          }
+        }
+      }
+    })
+
+    /**
+     * Test seller information is complete
+     * Validates: Requirements 15.2
+     */
+    it("should include complete seller information", async () => {
+      const testListingId = "00000000-0000-0000-0000-000000000001"
+
+      const detail = await service.getListingDetail(testListingId)
+
+      // Verify seller structure
+      expect(detail.seller).toBeDefined()
+      expect(detail.seller.id).toBeDefined()
+      expect(typeof detail.seller.id).toBe("string")
+
+      expect(detail.seller.name).toBeDefined()
+      expect(typeof detail.seller.name).toBe("string")
+      expect(detail.seller.name.length).toBeGreaterThan(0)
+
+      expect(detail.seller.type).toBeDefined()
+      expect(["user", "contractor"]).toContain(detail.seller.type)
+
+      expect(detail.seller.rating).toBeDefined()
+      expect(typeof detail.seller.rating).toBe("number")
+      expect(detail.seller.rating).toBeGreaterThanOrEqual(0)
+    })
+
+    /**
+     * Test game item information is complete
+     * Validates: Requirements 15.3
+     */
+    it("should include complete game item information", async () => {
+      const testListingId = "00000000-0000-0000-0000-000000000001"
+
+      const detail = await service.getListingDetail(testListingId)
+
+      expect(detail.items.length).toBeGreaterThan(0)
+
+      for (const item of detail.items) {
+        expect(item.game_item).toBeDefined()
+
+        expect(item.game_item.game_item_id).toBeDefined()
+        expect(typeof item.game_item.game_item_id).toBe("string")
+
+        expect(item.game_item.name).toBeDefined()
+        expect(typeof item.game_item.name).toBe("string")
+        expect(item.game_item.name.length).toBeGreaterThan(0)
+
+        expect(item.game_item.type).toBeDefined()
+        expect(typeof item.game_item.type).toBe("string")
+
+        // icon_url is optional
+        if (item.game_item.icon_url) {
+          expect(typeof item.game_item.icon_url).toBe("string")
+        }
+      }
+    })
+  })
+
+  describe("getListingDetail - Error Handling", () => {
+    /**
+     * Test 404 error for non-existent listing
+     * Validates: Requirements 28.2
+     */
+    it("should throw NotFoundError for non-existent listing", async () => {
+      const nonExistentId = "00000000-0000-0000-0000-999999999999"
+
+      await expect(service.getListingDetail(nonExistentId)).rejects.toThrow(
+        "not found",
+      )
+    })
+
+    it("should include listing_id in NotFoundError details", async () => {
+      const nonExistentId = "00000000-0000-0000-0000-999999999999"
+
+      try {
+        await service.getListingDetail(nonExistentId)
+        expect.fail("Should have thrown NotFoundError")
+      } catch (error: any) {
+        expect(error.message).toContain(nonExistentId)
+        expect(error.message).toContain("not found")
+      }
+    })
+
+    it("should handle invalid UUID format gracefully", async () => {
+      const invalidId = "not-a-valid-uuid"
+
+      await expect(service.getListingDetail(invalidId)).rejects.toThrow()
+    })
+
+    it("should handle empty string listing_id", async () => {
+      const emptyId = ""
+
+      await expect(service.getListingDetail(emptyId)).rejects.toThrow()
+    })
+  })
+
+  describe("getListingDetail - Response Structure", () => {
+    /**
+     * Test response structure matches ListingDetailResponse type
+     * Validates: Requirements 15.1
+     */
+    it("should return response matching ListingDetailResponse structure", async () => {
+      const testListingId = "00000000-0000-0000-0000-000000000001"
+
+      const detail = await service.getListingDetail(testListingId)
+
+      // Top-level structure
+      expect(detail).toHaveProperty("listing")
+      expect(detail).toHaveProperty("seller")
+      expect(detail).toHaveProperty("items")
+
+      // Listing structure
+      expect(detail.listing).toHaveProperty("listing_id")
+      expect(detail.listing).toHaveProperty("seller_id")
+      expect(detail.listing).toHaveProperty("seller_type")
+      expect(detail.listing).toHaveProperty("title")
+      expect(detail.listing).toHaveProperty("description")
+      expect(detail.listing).toHaveProperty("status")
+      expect(detail.listing).toHaveProperty("visibility")
+      expect(detail.listing).toHaveProperty("sale_type")
+      expect(detail.listing).toHaveProperty("listing_type")
+      expect(detail.listing).toHaveProperty("created_at")
+      expect(detail.listing).toHaveProperty("updated_at")
+
+      // Seller structure
+      expect(detail.seller).toHaveProperty("id")
+      expect(detail.seller).toHaveProperty("name")
+      expect(detail.seller).toHaveProperty("type")
+      expect(detail.seller).toHaveProperty("rating")
+
+      // Items array structure
+      expect(Array.isArray(detail.items)).toBe(true)
+      if (detail.items.length > 0) {
+        const item = detail.items[0]
+        expect(item).toHaveProperty("item_id")
+        expect(item).toHaveProperty("game_item")
+        expect(item).toHaveProperty("pricing_mode")
+        expect(item).toHaveProperty("variants")
+
+        // Game item structure
+        expect(item.game_item).toHaveProperty("game_item_id")
+        expect(item.game_item).toHaveProperty("name")
+        expect(item.game_item).toHaveProperty("type")
+
+        // Variants array structure
+        expect(Array.isArray(item.variants)).toBe(true)
+        if (item.variants.length > 0) {
+          const variant = item.variants[0]
+          expect(variant).toHaveProperty("variant_id")
+          expect(variant).toHaveProperty("attributes")
+          expect(variant).toHaveProperty("display_name")
+          expect(variant).toHaveProperty("short_name")
+          expect(variant).toHaveProperty("quantity")
+          expect(variant).toHaveProperty("price")
+        }
+      }
+    })
+  })
+})
