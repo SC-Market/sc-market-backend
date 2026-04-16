@@ -19,13 +19,28 @@ import logger from "../../logger/logger.js"
  * Setup authentication routes
  */
 export function setupAuthRoutes(app: any, frontendUrl: URL): void {
+  // Resolve the base URL for post-auth redirects.
+  // If origin is a known custom domain, redirect there; otherwise use frontendUrl.
+  function getRedirectBase(origin: string): URL {
+    if (!origin) return frontendUrl
+    try {
+      const url = new URL(origin)
+      // Only allow https custom domains (or http in dev)
+      if (url.protocol === "https:" || url.protocol === "http:") {
+        return url
+      }
+    } catch { /* invalid origin */ }
+    return frontendUrl
+  }
+
   // Discord authentication routes
   app.get(
     "/auth/discord",
     async (req: Request, res: Response, next: NextFunction) => {
-      const query = req.query as { path?: string; action?: string }
+      const query = req.query as { path?: string; action?: string; origin?: string }
       const path = query.path || ""
       const action = query.action === "signup" ? "signup" : "signin"
+      const origin = query.origin || ""
 
       // Validate the redirect path
       if (!validateRedirectPath(path)) {
@@ -46,7 +61,7 @@ export function setupAuthRoutes(app: any, frontendUrl: URL): void {
       const sessionSecret = env.SESSION_SECRET
       let signedStateToken: string
       try {
-        signedStateToken = createSignedStateToken(path, sessionSecret, action)
+        signedStateToken = createSignedStateToken(path, sessionSecret, action, origin)
       } catch (error) {
         return res.status(400).json({ error: "Failed to create state token" })
       }
@@ -79,6 +94,9 @@ export function setupAuthRoutes(app: any, frontendUrl: URL): void {
 
       const { path: redirectPath, action } = verified
 
+      // Resolve redirect base from origin in state
+      const redirectBase = getRedirectBase(verified.origin)
+
       // Ensure action is stored in session (should already be there, but ensure it)
       if (req.session) {
         ;(req.session as any).discord_auth_action = action
@@ -103,7 +121,7 @@ export function setupAuthRoutes(app: any, frontendUrl: URL): void {
             const errorCode = mapErrorCodeToFrontend(err.code)
 
             // Build redirect URL with error
-            const redirectTo = new URL("/", frontendUrl)
+            const redirectTo = new URL("/", redirectBase)
             redirectTo.searchParams.set("error", errorCode)
             if (err.message && err.message !== errorCode) {
               redirectTo.searchParams.set("error_description", err.message)
@@ -118,7 +136,7 @@ export function setupAuthRoutes(app: any, frontendUrl: URL): void {
               user,
               info,
             })
-            const redirectTo = new URL("/", frontendUrl)
+            const redirectTo = new URL("/", redirectBase)
             redirectTo.searchParams.set(
               "error",
               AuthErrorCodes.ACCOUNT_NOT_FOUND,
@@ -129,7 +147,7 @@ export function setupAuthRoutes(app: any, frontendUrl: URL): void {
           req.logIn(user, (loginErr) => {
             if (loginErr) {
               logger.error("Discord login error", { error: loginErr })
-              const redirectTo = new URL("/", frontendUrl)
+              const redirectTo = new URL("/", redirectBase)
               redirectTo.searchParams.set(
                 "error",
                 AuthErrorCodes.ACCOUNT_NOT_FOUND,
@@ -139,7 +157,7 @@ export function setupAuthRoutes(app: any, frontendUrl: URL): void {
 
             const successRedirect = new URL(
               redirectPath,
-              frontendUrl,
+              redirectBase,
             ).toString()
             return res.redirect(successRedirect)
           })
@@ -152,7 +170,7 @@ export function setupAuthRoutes(app: any, frontendUrl: URL): void {
   app.get(
     "/auth/citizenid",
     async (req: Request, res: Response, next: NextFunction) => {
-      const query = req.query as { path?: string; action?: string }
+      const query = req.query as { path?: string; action?: string; origin?: string }
       const path = query.path || "/market"
       const action = query.action === "signup" ? "signup" : "signin"
 
@@ -161,12 +179,13 @@ export function setupAuthRoutes(app: any, frontendUrl: URL): void {
         return res.status(400).json({ error: "Invalid redirect path" })
       }
 
-      // Store the redirect path and action in session for later retrieval
+      // Store the redirect path, action, and origin in session for later retrieval
       if (!req.session) {
         return res.status(500).json({ error: "Session not available" })
       }
       ;(req.session as any).citizenid_redirect_path = path
       ;(req.session as any).citizenid_auth_action = action
+      ;(req.session as any).citizenid_origin = query.origin || ""
 
       return passport.authenticate("citizenid", {
         session: true,
@@ -204,7 +223,8 @@ export function setupAuthRoutes(app: any, frontendUrl: URL): void {
       // Check for OAuth errors
       if (query.error) {
         const errorCode = mapErrorCodeToFrontend(query.error)
-        const redirectTo = new URL("/", frontendUrl)
+        const cidRedirectBase = getRedirectBase((req.session as any)?.citizenid_origin || "")
+        const redirectTo = new URL("/", cidRedirectBase)
         redirectTo.searchParams.set("error", errorCode)
         if (query.error_description) {
           redirectTo.searchParams.set(
@@ -215,13 +235,16 @@ export function setupAuthRoutes(app: any, frontendUrl: URL): void {
         return res.redirect(redirectTo.toString())
       }
 
-      // Get redirect path from session
+      // Get redirect path and origin from session
       const redirectPath =
         (req.session as any)?.citizenid_redirect_path || "/market"
+      const citizenidOrigin = (req.session as any)?.citizenid_origin || ""
+      const redirectBase = getRedirectBase(citizenidOrigin)
 
-      // Clear it from session after retrieving
+      // Clear from session after retrieving
       if (req.session) {
         delete (req.session as any).citizenid_redirect_path
+        delete (req.session as any).citizenid_origin
       }
 
       return passport.authenticate(
@@ -258,7 +281,7 @@ export function setupAuthRoutes(app: any, frontendUrl: URL): void {
               errorCode === AuthErrorCodes.ACCOUNT_NOT_FOUND ||
               errorCode === AuthErrorCodes.ACCOUNT_ALREADY_EXISTS
             ) {
-              const redirectTo = new URL("/", frontendUrl)
+              const redirectTo = new URL("/", redirectBase)
               redirectTo.searchParams.set("error", errorCode)
               if (err.message && err.message !== errorCode) {
                 redirectTo.searchParams.set("error_description", err.message)
@@ -266,7 +289,7 @@ export function setupAuthRoutes(app: any, frontendUrl: URL): void {
               return res.redirect(redirectTo.toString())
             }
 
-            const redirectTo = new URL("/", frontendUrl)
+            const redirectTo = new URL("/", redirectBase)
             redirectTo.searchParams.set("error", errorCode)
             if (err.message && err.message !== errorCode) {
               redirectTo.searchParams.set("error_description", err.message)
@@ -299,7 +322,7 @@ export function setupAuthRoutes(app: any, frontendUrl: URL): void {
               user,
               info,
             })
-            const redirectTo = new URL("/", frontendUrl)
+            const redirectTo = new URL("/", redirectBase)
             redirectTo.searchParams.set(
               "error",
               CitizenIDErrorCodes.AUTH_FAILED,
@@ -310,7 +333,7 @@ export function setupAuthRoutes(app: any, frontendUrl: URL): void {
           req.logIn(user, (loginErr) => {
             if (loginErr) {
               logger.error("Citizen ID login error", { error: loginErr })
-              const redirectTo = new URL("/", frontendUrl)
+              const redirectTo = new URL("/", redirectBase)
               redirectTo.searchParams.set(
                 "error",
                 CitizenIDErrorCodes.LOGIN_FAILED,
@@ -320,7 +343,7 @@ export function setupAuthRoutes(app: any, frontendUrl: URL): void {
 
             const successRedirect = new URL(
               redirectPath,
-              frontendUrl,
+              redirectBase,
             ).toString()
             return res.redirect(successRedirect)
           })

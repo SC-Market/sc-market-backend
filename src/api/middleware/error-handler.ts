@@ -23,6 +23,50 @@ import {
 import { applyCorsHeaders } from "./cors-helper.js"
 import logger from "../../logger/logger.js"
 
+// Bugsnag reference — populated lazily
+let Bugsnag: any = null
+
+async function ensureBugsnag() {
+  if (Bugsnag !== null) return Bugsnag
+  try {
+    const mod = await import("@bugsnag/js")
+    Bugsnag = mod.default || mod
+  } catch {
+    Bugsnag = false // mark as unavailable
+  }
+  return Bugsnag
+}
+
+function notifyBugsnag(err: Error, req: Request) {
+  ensureBugsnag().then((bs: any) => {
+    if (!bs || !bs.isStarted?.()) return
+    try {
+      bs.notify(err, (event: any) => {
+        event.addMetadata("request", {
+          path: req.path,
+          method: req.method,
+          user_id: (req.user as any)?.user_id,
+        })
+      })
+    } catch { /* ignore */ }
+  }).catch(() => {})
+}
+
+/**
+ * Middleware that intercepts 500 responses to log them in Bugsnag.
+ */
+export function track500Responses(req: Request, res: Response, next: NextFunction) {
+  const originalJson = res.json.bind(res)
+  res.json = function(this: Response, body: any) {
+    if (res.statusCode >= 500) {
+      const message = body?.error?.message || body?.error || "Internal Server Error"
+      notifyBugsnag(new Error(`[${res.statusCode}] ${req.method} ${req.path}: ${message}`), req)
+    }
+    return originalJson(body)
+  }
+  next()
+}
+
 /**
  * AJV validation error structure
  */
@@ -136,7 +180,7 @@ function getStatusCodeForErrorCode(code: ErrorCode | string): number {
  * Handles all unhandled errors and ensures CORS headers are present
  * in error responses so browsers don't block them.
  */
-export function errorHandler(
+export async function errorHandler(
   err: Error,
   req: Request,
   res: Response,
@@ -146,7 +190,11 @@ export function errorHandler(
   // This ensures browsers don't block error responses when routes crash
   // Only apply if headers haven't been sent yet
   if (!res.headersSent) {
-    applyCorsHeaders(req, res)
+    try {
+      await applyCorsHeaders(req, res)
+    } catch {
+      // CORS header application failed — continue to send error response anyway
+    }
   }
 
   // Log error with context
@@ -250,6 +298,7 @@ export function errorHandler(
   }
 
   // Default to internal server error
+  notifyBugsnag(err, req)
   res
     .status(500)
     .json(

@@ -17,6 +17,7 @@ import * as offerDb from "../offers/database.js"
 import * as marketDb from "../market/database.js"
 import { notificationService } from "../../../../services/notifications/notification.service.js"
 import { discordService } from "../../../../services/discord/discord.service.js"
+import { postOfferAlert, postOrderAlert } from "../../../../services/discord/order-alerts.js"
 import { chatParticipantService } from "../../../../services/chats/chat-participant.service.js"
 import { OrderLifecycleService } from "../../../../services/allocation/order-lifecycle.service.js"
 import { User } from "../api-models.js"
@@ -371,6 +372,12 @@ export async function initiateOrder(session: DBOfferSession) {
   } catch (e) {}
 
   try {
+    await postOrderAlert(order)
+  } catch (e) {
+    logger.error(`Failed to post order alert: ${e}`)
+  }
+
+  try {
     await discordService.renameThread(
       session.thread_id!,
       `order-${order.order_id.substring(0, 8)}`,
@@ -467,6 +474,12 @@ export async function createOffer(
     await notificationService.createOfferNotification(session, "create")
   } catch (e) {
     logger.error(`Failed to dispatch offer notifications: ${e}`)
+  }
+
+  try {
+    await postOfferAlert(session)
+  } catch (e) {
+    logger.error(`Failed to post offer alert: ${e}`)
   }
 
   // Create Discord invite directly for immediate user redirection

@@ -163,6 +163,7 @@ export interface DBContractorRole {
   manage_recruiting: boolean
   manage_webhooks: boolean
   manage_blocklist: boolean
+  claim_orders: boolean
 }
 
 export interface DBContractorMemberRole {
@@ -814,4 +815,33 @@ export interface DBUserEmail {
   created_at: Date
   updated_at: Date
   verified_at: Date | null
+}
+
+export interface DBOrderAlertSubscription {
+  id: string
+  channel_id: string
+  guild_id: string
+  contractor_id: string | null
+  user_id: string | null
+  created_by_discord_id: string
+  created_at: Date
+}
+
+export interface DBOrgPremiumTier {
+  id: string
+  contractor_id: string
+  tier: string
+  custom_domain: string | null
+  granted_by: string
+  granted_at: Date
+  revoked_at: Date | null
+}
+
+export interface DBOrgTheme {
+  id: string
+  contractor_id: string
+  theme_data: { light: Record<string, any>; dark: Record<string, any> }
+  favicon_url: string | null
+  updated_at: Date
+  updated_by: string
 }
