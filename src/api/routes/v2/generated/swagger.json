@@ -7,6 +7,195 @@
 		"requestBodies": {},
 		"responses": {},
 		"schemas": {
+			"VariantType": {
+				"description": "Define available variant attributes and validation rules",
+				"properties": {
+					"variant_type_id": {
+						"type": "string"
+					},
+					"name": {
+						"type": "string"
+					},
+					"display_name": {
+						"type": "string"
+					},
+					"description": {
+						"type": "string"
+					},
+					"affects_pricing": {
+						"type": "boolean"
+					},
+					"searchable": {
+						"type": "boolean"
+					},
+					"filterable": {
+						"type": "boolean"
+					},
+					"value_type": {
+						"type": "string",
+						"enum": [
+							"integer",
+							"decimal",
+							"string",
+							"enum"
+						]
+					},
+					"min_value": {
+						"type": "number",
+						"format": "double"
+					},
+					"max_value": {
+						"type": "number",
+						"format": "double"
+					},
+					"allowed_values": {
+						"items": {
+							"type": "string"
+						},
+						"type": "array"
+					},
+					"display_order": {
+						"type": "number",
+						"format": "double"
+					},
+					"icon": {
+						"type": "string"
+					},
+					"created_at": {
+						"type": "string",
+						"format": "date-time"
+					}
+				},
+				"required": [
+					"variant_type_id",
+					"name",
+					"display_name",
+					"affects_pricing",
+					"searchable",
+					"filterable",
+					"value_type",
+					"display_order",
+					"created_at"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
+			"VariantTypesResponse": {
+				"description": "Variant types list response",
+				"properties": {
+					"variant_types": {
+						"items": {
+							"$ref": "#/components/schemas/VariantType"
+						},
+						"type": "array"
+					}
+				},
+				"required": [
+					"variant_types"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
+			"VariantTypeResponse": {
+				"description": "Single variant type response",
+				"properties": {
+					"variant_type": {
+						"$ref": "#/components/schemas/VariantType"
+					}
+				},
+				"required": [
+					"variant_type"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
+			"SearchListingsResponse": {
+				"description": "Search results with pagination",
+				"properties": {
+					"listings": {
+						"items": {
+							"properties": {
+								"created_at": {
+									"type": "string",
+									"format": "date-time"
+								},
+								"variant_count": {
+									"type": "number",
+									"format": "double"
+								},
+								"quality_tier_max": {
+									"type": "number",
+									"format": "double"
+								},
+								"quality_tier_min": {
+									"type": "number",
+									"format": "double"
+								},
+								"quantity_available": {
+									"type": "number",
+									"format": "double"
+								},
+								"price_max": {
+									"type": "number",
+									"format": "double"
+								},
+								"price_min": {
+									"type": "number",
+									"format": "double"
+								},
+								"seller_rating": {
+									"type": "number",
+									"format": "double"
+								},
+								"seller_name": {
+									"type": "string"
+								},
+								"title": {
+									"type": "string"
+								},
+								"listing_id": {
+									"type": "string"
+								}
+							},
+							"required": [
+								"created_at",
+								"variant_count",
+								"quality_tier_max",
+								"quality_tier_min",
+								"quantity_available",
+								"price_max",
+								"price_min",
+								"seller_rating",
+								"seller_name",
+								"title",
+								"listing_id"
+							],
+							"type": "object"
+						},
+						"type": "array"
+					},
+					"total": {
+						"type": "number",
+						"format": "double"
+					},
+					"page": {
+						"type": "number",
+						"format": "double"
+					},
+					"page_size": {
+						"type": "number",
+						"format": "double"
+					}
+				},
+				"required": [
+					"listings",
+					"total",
+					"page",
+					"page_size"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
 			"Listing": {
 				"description": "Unified listing table (replaces V1's 3-table structure)",
 				"properties": {
@@ -179,6 +368,147 @@
 				"type": "object",
 				"additionalProperties": false
 			},
+			"Record_string.any_": {
+				"properties": {},
+				"additionalProperties": {},
+				"type": "object",
+				"description": "Construct a type with a set of properties K of type T"
+			},
+			"ListingDetailResponse": {
+				"description": "Listing detail with variant breakdown",
+				"properties": {
+					"listing": {
+						"$ref": "#/components/schemas/Listing"
+					},
+					"seller": {
+						"properties": {
+							"rating": {
+								"type": "number",
+								"format": "double"
+							},
+							"type": {
+								"type": "string",
+								"enum": [
+									"user",
+									"contractor"
+								]
+							},
+							"name": {
+								"type": "string"
+							},
+							"id": {
+								"type": "string"
+							}
+						},
+						"required": [
+							"rating",
+							"type",
+							"name",
+							"id"
+						],
+						"type": "object"
+					},
+					"items": {
+						"items": {
+							"properties": {
+								"variants": {
+									"items": {
+										"properties": {
+											"locations": {
+												"items": {
+													"type": "string"
+												},
+												"type": "array"
+											},
+											"price": {
+												"type": "number",
+												"format": "double"
+											},
+											"quantity": {
+												"type": "number",
+												"format": "double"
+											},
+											"short_name": {
+												"type": "string"
+											},
+											"display_name": {
+												"type": "string"
+											},
+											"attributes": {
+												"$ref": "#/components/schemas/Record_string.any_"
+											},
+											"variant_id": {
+												"type": "string"
+											}
+										},
+										"required": [
+											"price",
+											"quantity",
+											"short_name",
+											"display_name",
+											"attributes",
+											"variant_id"
+										],
+										"type": "object"
+									},
+									"type": "array"
+								},
+								"base_price": {
+									"type": "number",
+									"format": "double"
+								},
+								"pricing_mode": {
+									"type": "string",
+									"enum": [
+										"unified",
+										"per_variant"
+									]
+								},
+								"game_item": {
+									"properties": {
+										"icon_url": {
+											"type": "string"
+										},
+										"type": {
+											"type": "string"
+										},
+										"name": {
+											"type": "string"
+										},
+										"game_item_id": {
+											"type": "string"
+										}
+									},
+									"required": [
+										"type",
+										"name",
+										"game_item_id"
+									],
+									"type": "object"
+								},
+								"item_id": {
+									"type": "string"
+								}
+							},
+							"required": [
+								"variants",
+								"pricing_mode",
+								"game_item",
+								"item_id"
+							],
+							"type": "object"
+						},
+						"type": "array"
+					}
+				},
+				"required": [
+					"listing",
+					"seller",
+					"items"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
 			"HealthResponse": {
 				"properties": {
 					"status": {
@@ -212,6 +542,169 @@
 		"contact": {}
 	},
 	"paths": {
+		"/variant-types": {
+			"get": {
+				"operationId": "GetAllVariantTypes",
+				"responses": {
+					"200": {
+						"description": "List of variant types with validation rules",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/VariantTypesResponse"
+								}
+							}
+						}
+					}
+				},
+				"description": "Get all variant types\n\nReturns a list of all available variant types with their validation rules.\nVariant types define the attributes that can be used when creating item variants,\nincluding quality_tier, quality_value, crafted_source, and blueprint_tier.\n\nResults are ordered by display_order for consistent UI presentation.",
+				"summary": "List all variant types",
+				"tags": [
+					"Variant Types V2"
+				],
+				"security": [],
+				"parameters": []
+			}
+		},
+		"/variant-types/{variant_type_id}": {
+			"get": {
+				"operationId": "GetVariantTypeById",
+				"responses": {
+					"200": {
+						"description": "Variant type details",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/VariantTypeResponse"
+								}
+							}
+						}
+					}
+				},
+				"description": "Get variant type by ID\n\nReturns detailed information about a specific variant type including\nvalidation rules (min_value, max_value, allowed_values) and display configuration.",
+				"summary": "Get variant type details",
+				"tags": [
+					"Variant Types V2"
+				],
+				"security": [],
+				"parameters": [
+					{
+						"description": "Variant type ID to retrieve",
+						"in": "path",
+						"name": "variant_type_id",
+						"required": true,
+						"schema": {
+							"type": "string"
+						}
+					}
+				]
+			}
+		},
+		"/listings/search": {
+			"get": {
+				"operationId": "SearchListings",
+				"responses": {
+					"200": {
+						"description": "Search results with pagination metadata",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/SearchListingsResponse"
+								}
+							}
+						}
+					}
+				},
+				"description": "Search listings with filters\n\nSearches active listings using full-text search, quality tier filters, price filters,\nand game item filters. Results are paginated and include price/quality ranges.",
+				"summary": "Search market listings",
+				"tags": [
+					"Listings V2"
+				],
+				"security": [],
+				"parameters": [
+					{
+						"description": "Optional full-text search query",
+						"in": "query",
+						"name": "text",
+						"required": false,
+						"schema": {
+							"type": "string"
+						}
+					},
+					{
+						"description": "Optional game item ID filter",
+						"in": "query",
+						"name": "game_item_id",
+						"required": false,
+						"schema": {
+							"type": "string"
+						}
+					},
+					{
+						"description": "Optional minimum quality tier (1-5)",
+						"in": "query",
+						"name": "quality_tier_min",
+						"required": false,
+						"schema": {
+							"format": "double",
+							"type": "number"
+						}
+					},
+					{
+						"description": "Optional maximum quality tier (1-5)",
+						"in": "query",
+						"name": "quality_tier_max",
+						"required": false,
+						"schema": {
+							"format": "double",
+							"type": "number"
+						}
+					},
+					{
+						"description": "Optional minimum price filter",
+						"in": "query",
+						"name": "price_min",
+						"required": false,
+						"schema": {
+							"format": "double",
+							"type": "number"
+						}
+					},
+					{
+						"description": "Optional maximum price filter",
+						"in": "query",
+						"name": "price_max",
+						"required": false,
+						"schema": {
+							"format": "double",
+							"type": "number"
+						}
+					},
+					{
+						"description": "Page number (default: 1)",
+						"in": "query",
+						"name": "page",
+						"required": false,
+						"schema": {
+							"default": 1,
+							"format": "double",
+							"type": "number"
+						}
+					},
+					{
+						"description": "Results per page (default: 20, max: 100)",
+						"in": "query",
+						"name": "page_size",
+						"required": false,
+						"schema": {
+							"default": 20,
+							"format": "double",
+							"type": "number"
+						}
+					}
+				]
+			}
+		},
 		"/listings": {
 			"post": {
 				"operationId": "CreateListing",
@@ -246,6 +739,40 @@
 						}
 					}
 				}
+			}
+		},
+		"/listings/{listing_id}": {
+			"get": {
+				"operationId": "GetListingDetail",
+				"responses": {
+					"200": {
+						"description": "Listing detail with variant breakdown",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/ListingDetailResponse"
+								}
+							}
+						}
+					}
+				},
+				"description": "Get listing detail with variant breakdown\n\nReturns comprehensive listing information including seller details, game item info,\nand a breakdown of all variants with their attributes, quantities, and prices.",
+				"summary": "Get listing details",
+				"tags": [
+					"Listings V2"
+				],
+				"security": [],
+				"parameters": [
+					{
+						"description": "Listing ID to retrieve",
+						"in": "path",
+						"name": "listing_id",
+						"required": true,
+						"schema": {
+							"type": "string"
+						}
+					}
+				]
 			}
 		},
 		"/health": {
