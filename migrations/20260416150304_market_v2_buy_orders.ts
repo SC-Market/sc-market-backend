@@ -15,9 +15,10 @@ export async function up(knex: Knex): Promise<void> {
     table
       .uuid("game_item_id")
       .notNullable()
-      .references("game_item_id")
-      .inTable("game_items")
-      .onDelete("CASCADE")
+      // Note: game_item_id references the V1 `game_items` table, but the primary key
+      // column name differs across deployments (commonly `id`). We intentionally avoid
+      // a FK here, matching other V2 core tables.
+      .comment("References V1 game_items primary key (no FK constraint)")
 
     // Quality requirements
     table
