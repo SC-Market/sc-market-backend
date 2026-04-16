@@ -28,7 +28,6 @@ import { createResponse } from "./util/response.js"
 import { cspReportHandler } from "./util/csp-report.js"
 import { testErrorHandler } from "./util/test-error-handler.js"
 import { oapi } from "./openapi.js"
-import { getKnex } from "../../../clients/database/knex-db.js"
 
 /**
  * v1 API Router - Alias for existing /api/* routes
@@ -71,31 +70,6 @@ apiV1Router.use("/attributes", attributesRouter)
 // Languages reference endpoint
 apiV1Router.get("/languages", (req, res) => {
   res.json(createResponse({ languages: SUPPORTED_LANGUAGES }))
-})
-
-// Public domain resolution — maps a custom hostname to its org's spectrum_id
-apiV1Router.get("/domain/:hostname", async (req, res) => {
-  try {
-    const row = await getKnex()("org_premium_tiers")
-      .join("contractors", "contractors.contractor_id", "org_premium_tiers.contractor_id")
-      .where({ custom_domain: req.params.hostname })
-      .whereNull("revoked_at")
-      .select("contractors.spectrum_id", "contractors.name", "contractors.contractor_id")
-      .first()
-
-    if (!row) {
-      res.status(404).json({ error: { code: "NOT_FOUND", message: "Domain not found" } })
-      return
-    }
-
-    res.json(createResponse({
-      spectrum_id: row.spectrum_id,
-      contractor_id: row.contractor_id,
-      name: row.name,
-    }))
-  } catch {
-    res.status(500).json({ error: { code: "INTERNAL_SERVER_ERROR", message: "Failed to resolve domain" } })
-  }
 })
 
 // CSP reporting endpoint

@@ -25,28 +25,6 @@ const allowlist: string[] = [
     .map((h) => `https://${h.trim()}`),
 ]
 
-// Cache of custom domains from DB
-let customDomainCache: string[] = []
-let cacheTimestamp = 0
-const CACHE_TTL = 60_000
-
-async function getCustomDomains(): Promise<string[]> {
-  if (Date.now() - cacheTimestamp < CACHE_TTL) return customDomainCache
-  try {
-    const { getKnex } = await import("../../clients/database/knex-db.js")
-    const rows = await getKnex()("org_premium_tiers")
-      .whereNotNull("custom_domain")
-      .whereNull("revoked_at")
-      .select("custom_domain")
-    customDomainCache = rows.flatMap((r: any) => [
-      `https://${r.custom_domain}`,
-      `http://${r.custom_domain}`,
-    ])
-    cacheTimestamp = Date.now()
-  } catch { /* DB not ready */ }
-  return customDomainCache
-}
-
 /**
  * Apply CORS headers to response
  *
@@ -55,27 +33,13 @@ async function getCustomDomains(): Promise<string[]> {
  * for error responses when routes crash with unhandled errors, ensuring browsers
  * don't block error responses due to missing CORS headers.
  */
-export async function applyCorsHeaders(req: Request, res: Response): Promise<void> {
+export function applyCorsHeaders(req: Request, res: Response): void {
   const origin = req.header("Origin")
 
-  if (origin) {
-    // Check static allowlist first (always works, no DB needed)
-    let allowed = allowlist.includes(origin)
-
-    // Try dynamic domains only if static didn't match
-    if (!allowed) {
-      try {
-        const dynamicDomains = await getCustomDomains()
-        allowed = dynamicDomains.includes(origin)
-      } catch {
-        // DB failure — fall back to static allowlist only
-      }
-    }
-
-    if (allowed) {
-      res.setHeader("Access-Control-Allow-Origin", origin)
-      res.setHeader("Access-Control-Allow-Credentials", "true")
-    }
+  // Check if origin is in allowlist
+  if (origin && allowlist.indexOf(origin) !== -1) {
+    res.setHeader("Access-Control-Allow-Origin", origin)
+    res.setHeader("Access-Control-Allow-Credentials", "true")
   }
 
   // Set other CORS headers

@@ -23,7 +23,7 @@ import {
   OrderStub,
   Rating,
 } from "../../../../clients/database/db-models.js"
-import { database, getKnex } from "../../../../clients/database/knex-db.js"
+import { database } from "../../../../clients/database/knex-db.js"
 import * as marketDb from "../market/database.js"
 import * as orderDb from "../orders/database.js"
 import * as profileDb from "../profiles/database.js"
@@ -951,18 +951,6 @@ export async function contractorDetails(
     name: getLanguageName(code) || code,
   }))
 
-  // Get premium tier (gracefully handle missing table if migration hasn't run)
-  let premiumRow: any = null
-  try {
-    premiumRow = await getKnex()("org_premium_tiers")
-      .where({ contractor_id: contractor.contractor_id })
-      .whereNull("revoked_at")
-      .select("tier", "custom_domain")
-      .first()
-  } catch {
-    // Table may not exist yet if migration 60 hasn't been applied
-  }
-
   return {
     ...contractor,
     fields: fields.map((f) => f.field),
@@ -981,8 +969,6 @@ export async function contractorDetails(
           }),
     market_order_template: contractor.market_order_template,
     languages,
-    premium_tier: premiumRow?.tier ?? null,
-    custom_domain: premiumRow?.custom_domain ?? null,
     // balance: ['admin', 'owner'].includes(members.find(m => m.username === user?.username)?.role || '') ? Number.parseInt(contractor.balance) : undefined,
   }
 }
