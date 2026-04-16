@@ -1,31 +1,3 @@
-// Global error listeners — log everything, don't exit
-process.on("uncaughtException", (err) => {
-  console.error("[UNCAUGHT EXCEPTION]", err?.message, err?.stack)
-})
-
-process.on("unhandledRejection", (reason) => {
-  console.error("[UNHANDLED REJECTION]", reason instanceof Error ? `${reason.message}\n${reason.stack}` : reason)
-})
-
-// Log memory usage and uptime every 30 seconds to diagnose crashes
-setInterval(() => {
-  const mem = process.memoryUsage()
-  console.log(`[HEARTBEAT] uptime=${Math.floor(process.uptime())}s rss=${Math.floor(mem.rss / 1024 / 1024)}MB heap=${Math.floor(mem.heapUsed / 1024 / 1024)}/${Math.floor(mem.heapTotal / 1024 / 1024)}MB`)
-}, 30_000)
-
-// Log on exit
-process.on("exit", (code) => {
-  console.error(`[EXIT] Process exiting with code ${code}`)
-})
-
-process.on("SIGTERM", () => {
-  console.error("[SIGTERM] Received SIGTERM")
-})
-
-process.on("SIGINT", () => {
-  console.error("[SIGINT] Received SIGINT")
-})
-
 import express, { Request, RequestHandler } from "express"
 import compression from "compression"
 import passport from "passport"
@@ -52,12 +24,10 @@ import * as contractorDb from "./api/routes/v1/contractors/database.js"
 import * as recruitingDb from "./api/routes/v1/recruiting/database.js"
 import * as marketDb from "./api/routes/v1/market/database.js"
 import { userAuthorized } from "./api/middleware/auth.js"
-import { errorHandler, track500Responses } from "./api/middleware/error-handler.js"
+import { errorHandler } from "./api/middleware/error-handler.js"
 import { securityHeaders } from "./api/middleware/security-headers.js"
 import { registrationRouter } from "./clients/discord_api/registration.js"
 import { threadRouter } from "./clients/discord_api/threads.js"
-import { subscriptionRouter } from "./clients/discord_api/subscriptions.js"
-import { claimRouter } from "./clients/discord_api/claim.js"
 import { trackActivity } from "./api/middleware/activity.js"
 import { oapi } from "./api/routes/v1/openapi.js"
 import { env } from "./config/env.js"
@@ -104,52 +74,24 @@ const allowlist: string[] = [
   `http://${frontend_url.host}`,
   `https://${frontend_url.host}`,
   "https://discord.com",
-  ...(env.PREMIUM_HOSTS || "").split(",").filter((h: string) => h.trim()).map((h: string) => `https://${h.trim()}`),
+  ...(env.PREMIUM_HOSTS || "").split(",").map((h) => `https://${h}`),
 ]
-
-// Cache of custom domains from DB, refreshed periodically
-let customDomainAllowlist: string[] = []
-let customDomainLastFetch = 0
-const DOMAIN_CACHE_TTL = 60_000 // 1 minute
-
-async function refreshCustomDomains() {
-  try {
-    const { getKnex } = await import("./clients/database/knex-db.js")
-    const rows = await getKnex()("org_premium_tiers")
-      .whereNotNull("custom_domain")
-      .whereNull("revoked_at")
-      .select("custom_domain")
-    customDomainAllowlist = rows.flatMap((r: any) => [
-      `https://${r.custom_domain}`,
-      `http://${r.custom_domain}`,
-    ])
-    customDomainLastFetch = Date.now()
-  } catch {
-    // DB not ready yet — keep existing cache
-  }
-}
-
-function isOriginAllowed(origin: string): boolean {
-  if (allowlist.includes(origin)) return true
-  if (customDomainAllowlist.includes(origin)) return true
-  return false
-}
 
 const corsOptions = function (
   req: Request,
   callback: (arg0: Error | null, arg1: CorsOptions) => void,
 ) {
-  // Refresh domain cache if stale
-  if (Date.now() - customDomainLastFetch > DOMAIN_CACHE_TTL) {
-    refreshCustomDomains().catch(() => {})
-  }
-
+  let corsOptions
   const origin = req.header("Origin")
-  if (!origin || isOriginAllowed(origin)) {
-    callback(null, { origin: true, credentials: true })
+  if (!origin || allowlist.indexOf(origin) !== -1) {
+    corsOptions = {
+      origin: true,
+      credentials: true,
+    } // reflect (enable) the requested origin in the CORS response
   } else {
-    callback(null, { origin: false })
+    corsOptions = { origin: false } // disable CORS for this request
   }
+  callback(null, corsOptions) // callback expects two parameters: error and options
 }
 
 const rootApp = express()
@@ -267,7 +209,6 @@ app.use(
 )
 
 app.use(cors(corsOptions))
-app.use(track500Responses)
 app.use(i18nMiddleware)
 
 // Set up passport
@@ -587,8 +528,6 @@ discord_app.use(
 discord_app.use(express.json({ limit: "2.5mb" }))
 discord_app.use("/register", registrationRouter)
 discord_app.use("/threads", threadRouter)
-discord_app.use("/alert-subscriptions", subscriptionRouter)
-discord_app.use("/claim", claimRouter)
 discord_app.listen(discord_backend_url.port || 8081)
 logger.info(
   `discord backend up on port ${hostname()}:${

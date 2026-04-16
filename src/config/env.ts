@@ -30,7 +30,6 @@ interface Environment {
   // Discord
   DISCORD_API_KEY?: string
   DISCORD_BOT_URL?: string
-  DISCORD_PUBLIC_KEY?: string
 
   // Database
   DATABASE_URL?: string
