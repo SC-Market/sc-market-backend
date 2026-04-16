@@ -52,7 +52,8 @@ export class DebugV2Controller extends BaseController {
    * Get current feature flag setting
    *
    * Returns the current market version (V1 or V2) for the authenticated user.
-   * Also indicates whether the user has developer privileges.
+   * Also indicates whether the client should show debug / feature-flag tooling
+   * (admin users, or any user when NODE_ENV is development).
    *
    * Restricted to authenticated users only.
    *
@@ -63,7 +64,8 @@ export class DebugV2Controller extends BaseController {
   public async getFeatureFlag(): Promise<GetFeatureFlagResponse> {
     this.requireAuth()
     const userId = this.getUserId()
-    const isDeveloper = this.isAdmin()
+    const isDeveloper =
+      this.isAdmin() || process.env.NODE_ENV === "development"
 
     logger.info("Getting feature flag", { userId, isDeveloper })
 

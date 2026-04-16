@@ -177,7 +177,9 @@ describe("Debug V2 Controller - Property Tests", () => {
 
             expect(result.user_id).toBe(userId)
             expect(result.market_version).toMatch(/^(V1|V2)$/)
-            expect(result.is_developer).toBe(role === "admin")
+            expect(result.is_developer).toBe(
+              role === "admin" || process.env.NODE_ENV === "development",
+            )
 
             // Clean up
             await db("user_preferences").where({ user_id: userId }).delete()
@@ -225,8 +227,10 @@ describe("Debug V2 Controller - Property Tests", () => {
 
             const result = await controller.getFeatureFlag()
 
-            // is_developer should be true only for admin role
-            expect(result.is_developer).toBe(role === "admin")
+            // is_developer: admin, or any role in development
+            expect(result.is_developer).toBe(
+              role === "admin" || process.env.NODE_ENV === "development",
+            )
 
             // Clean up
             await db("user_preferences").where({ user_id: userId }).delete()

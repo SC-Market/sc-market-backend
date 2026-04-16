@@ -528,6 +528,68 @@
 				],
 				"type": "object",
 				"additionalProperties": false
+			},
+			"MarketVersion": {
+				"type": "string",
+				"enum": [
+					"V1",
+					"V2"
+				]
+			},
+			"GetFeatureFlagResponse": {
+				"description": "Response for getting feature flag",
+				"properties": {
+					"user_id": {
+						"type": "string"
+					},
+					"market_version": {
+						"$ref": "#/components/schemas/MarketVersion"
+					},
+					"is_developer": {
+						"type": "boolean"
+					}
+				},
+				"required": [
+					"user_id",
+					"market_version",
+					"is_developer"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
+			"SetFeatureFlagResponse": {
+				"description": "Response for setting feature flag",
+				"properties": {
+					"user_id": {
+						"type": "string"
+					},
+					"market_version": {
+						"$ref": "#/components/schemas/MarketVersion"
+					},
+					"message": {
+						"type": "string"
+					}
+				},
+				"required": [
+					"user_id",
+					"market_version",
+					"message"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
+			"SetFeatureFlagRequest": {
+				"description": "Request for setting feature flag",
+				"properties": {
+					"market_version": {
+						"$ref": "#/components/schemas/MarketVersion"
+					}
+				},
+				"required": [
+					"market_version"
+				],
+				"type": "object",
+				"additionalProperties": false
 			}
 		},
 		"securitySchemes": {}
@@ -797,6 +859,64 @@
 				],
 				"security": [],
 				"parameters": []
+			}
+		},
+		"/debug/feature-flag": {
+			"get": {
+				"operationId": "GetFeatureFlag",
+				"responses": {
+					"200": {
+						"description": "Current feature flag setting",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/GetFeatureFlagResponse"
+								}
+							}
+						}
+					}
+				},
+				"description": "Get current feature flag setting\n\nReturns the current market version (V1 or V2) for the authenticated user.\nAlso indicates whether the user has developer privileges.\n\nRestricted to authenticated users only.",
+				"summary": "Get feature flag",
+				"tags": [
+					"Debug V2"
+				],
+				"security": [],
+				"parameters": []
+			},
+			"post": {
+				"operationId": "SetFeatureFlag",
+				"responses": {
+					"200": {
+						"description": "Updated feature flag setting",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/SetFeatureFlagResponse"
+								}
+							}
+						}
+					}
+				},
+				"description": "Set feature flag\n\nSets the market version (V1 or V2) for the authenticated user.\nThis allows developers to switch between V1 and V2 experiences.\n\nRestricted to users with developer privileges (admin role) only.",
+				"summary": "Set feature flag",
+				"tags": [
+					"Debug V2"
+				],
+				"security": [],
+				"parameters": [],
+				"requestBody": {
+					"description": "Feature flag setting request",
+					"required": true,
+					"content": {
+						"application/json": {
+							"schema": {
+								"$ref": "#/components/schemas/SetFeatureFlagRequest",
+								"description": "Feature flag setting request"
+							}
+						}
+					}
+				}
 			}
 		}
 	},
