@@ -71,6 +71,10 @@ apiRouter.get("/languages", (req, res) => {
   res.json(createResponse({ languages: SUPPORTED_LANGUAGES }))
 })
 
+apiRouter.get("/version", (req, res) => {
+  res.json({ commit: "b702206-reverted", timestamp: new Date().toISOString() })
+})
+
 // CSP reporting endpoint (optional - for monitoring CSP violations)
 import { cspReportHandler } from "./util/csp-report.js"
 apiRouter.post("/csp-report", cspReportHandler)
