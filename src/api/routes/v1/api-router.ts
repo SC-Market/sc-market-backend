@@ -71,8 +71,30 @@ apiRouter.get("/languages", (req, res) => {
   res.json(createResponse({ languages: SUPPORTED_LANGUAGES }))
 })
 
-apiRouter.get("/version", (req, res) => {
-  res.json({ commit: "b702206-reverted", timestamp: new Date().toISOString() })
+// Public domain resolution — maps a custom hostname to its org's spectrum_id
+import { getKnex } from "../../../clients/database/knex-db.js"
+apiRouter.get("/domain/:hostname", async (req, res) => {
+  try {
+    const row = await getKnex()("org_premium_tiers")
+      .join("contractors", "contractors.contractor_id", "org_premium_tiers.contractor_id")
+      .where({ custom_domain: req.params.hostname })
+      .whereNull("revoked_at")
+      .select("contractors.spectrum_id", "contractors.name", "contractors.contractor_id")
+      .first()
+
+    if (!row) {
+      res.status(404).json({ error: { code: "NOT_FOUND", message: "Domain not found" } })
+      return
+    }
+
+    res.json(createResponse({
+      spectrum_id: row.spectrum_id,
+      contractor_id: row.contractor_id,
+      name: row.name,
+    }))
+  } catch {
+    res.status(500).json({ error: { code: "INTERNAL_SERVER_ERROR", message: "Failed to resolve domain" } })
+  }
 })
 
 // CSP reporting endpoint (optional - for monitoring CSP violations)

@@ -80,6 +80,12 @@ export interface DiscordService {
     channelId: string,
     options?: DiscordInviteOptions,
   ): Promise<string | null>
+
+  // Channel messages with components
+  postChannelMessage(
+    channelId: string,
+    body: RESTPostAPIChannelMessageJSONBody & { components?: any[] },
+  ): Promise<any>
 }
 
 /**
@@ -452,6 +458,24 @@ class RestDiscordService implements DiscordService {
       logger.error(
         `Failed to create Discord invite for channel ${channelId}: ${error}`,
       )
+      return null
+    }
+  }
+
+  /**
+   * Post a message to a Discord channel with optional components (buttons, etc.)
+   */
+  async postChannelMessage(
+    channelId: string,
+    body: RESTPostAPIChannelMessageJSONBody & { components?: any[] },
+  ): Promise<any> {
+    try {
+      const result = await this.rest.post(Routes.channelMessages(channelId), {
+        body,
+      })
+      return result
+    } catch (error) {
+      logger.error(`Failed to post message to channel ${channelId}`, { error })
       return null
     }
   }
