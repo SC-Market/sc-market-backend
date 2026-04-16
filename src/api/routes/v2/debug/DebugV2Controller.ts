@@ -45,7 +45,7 @@ export interface SetFeatureFlagResponse {
 @Tags("Debug V2")
 export class DebugV2Controller extends BaseController {
   constructor(@Request() request?: ExpressRequest) {
-    super(request as ExpressRequest)
+    super(request)
   }
 
   /**
