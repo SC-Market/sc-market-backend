@@ -5,50 +5,27 @@
  * computation that would be maintained by the database trigger.
  * 
  * Since we use mocked databases in tests, we simulate the trigger behavior
- * by manually computing quantity_available based on stock_lots.
+ * by manually computing quantity_available based on listing_item_lots.
  */
 
 import { describe, it, expect, beforeEach } from "vitest"
 import {
   clearMockData,
-  setupMockTableDataGeneric,
-  getMockTableDataGeneric,
+  setupMockTableData,
+  getMockTableData,
+  type MockTableTypes,
 } from "../../test-utils/mockDatabase.js"
 
-// Type definitions for V2 tables
-interface ListingItem {
-  item_id: string
-  listing_id: string
-  game_item_id: string
-  pricing_mode: "unified" | "per_variant"
-  base_price?: number
-  quantity_available: number
-  variant_count: number
-  display_order: number
-}
-
-interface StockLot {
-  lot_id: string
-  item_id: string
-  variant_id: string
-  quantity_total: number
-  location_id?: string
-  owner_id?: string
-  listed: boolean
-  notes?: string
-  crafted_by?: string
-  crafted_at?: Date
-  created_at: Date
-  updated_at: Date
-}
+type ListingItem = MockTableTypes["listing_items"]
+type StockLot = MockTableTypes["listing_item_lots"]
 
 /**
  * Simulate the database trigger behavior by computing quantity_available
- * from stock_lots for a given item_id
+ * from listing_item_lots for a given item_id
  */
 function simulateTriggerUpdate(itemId: string): void {
-  const listingItems = getMockTableDataGeneric("listing_items") as ListingItem[]
-  const stockLots = getMockTableDataGeneric("stock_lots") as StockLot[]
+  const listingItems = getMockTableData("listing_items")
+  const stockLots = getMockTableData("listing_item_lots")
 
   const item = listingItems.find((li) => li.item_id === itemId)
   if (!item) return
@@ -68,7 +45,7 @@ function simulateTriggerUpdate(itemId: string): void {
   item.quantity_available = quantityAvailable
   item.variant_count = variantCount
 
-  setupMockTableDataGeneric("listing_items", listingItems)
+  setupMockTableData("listing_items", listingItems)
 }
 
 /**
@@ -87,9 +64,9 @@ function createTestListingItem(overrides: Partial<ListingItem> = {}): ListingIte
     ...overrides,
   }
 
-  const items = getMockTableDataGeneric("listing_items") as ListingItem[]
+  const items = getMockTableData("listing_items")
   items.push(item)
-  setupMockTableDataGeneric("listing_items", items)
+  setupMockTableData("listing_items", items)
 
   return item
 }
@@ -109,9 +86,9 @@ function createTestStockLot(overrides: Partial<StockLot> = {}): StockLot {
     ...overrides,
   }
 
-  const lots = getMockTableDataGeneric("stock_lots") as StockLot[]
+  const lots = getMockTableData("listing_item_lots")
   lots.push(lot)
-  setupMockTableDataGeneric("stock_lots", lots)
+  setupMockTableData("listing_item_lots", lots)
 
   // Simulate trigger
   simulateTriggerUpdate(lot.item_id)
@@ -123,12 +100,12 @@ function createTestStockLot(overrides: Partial<StockLot> = {}): StockLot {
  * Helper to update a stock lot
  */
 function updateStockLot(lotId: string, updates: Partial<StockLot>): void {
-  const lots = getMockTableDataGeneric("stock_lots") as StockLot[]
+  const lots = getMockTableData("listing_item_lots")
   const lot = lots.find((l) => l.lot_id === lotId)
   if (!lot) return
 
   Object.assign(lot, updates, { updated_at: new Date() })
-  setupMockTableDataGeneric("stock_lots", lots)
+  setupMockTableData("listing_item_lots", lots)
 
   // Simulate trigger
   simulateTriggerUpdate(lot.item_id)
@@ -138,13 +115,13 @@ function updateStockLot(lotId: string, updates: Partial<StockLot>): void {
  * Helper to delete a stock lot
  */
 function deleteStockLot(lotId: string): void {
-  const lots = getMockTableDataGeneric("stock_lots") as StockLot[]
+  const lots = getMockTableData("listing_item_lots")
   const lot = lots.find((l) => l.lot_id === lotId)
   if (!lot) return
 
   const itemId = lot.item_id
   const filteredLots = lots.filter((l) => l.lot_id !== lotId)
-  setupMockTableDataGeneric("stock_lots", filteredLots)
+  setupMockTableData("listing_item_lots", filteredLots)
 
   // Simulate trigger
   simulateTriggerUpdate(itemId)
@@ -153,8 +130,8 @@ function deleteStockLot(lotId: string): void {
 describe("Market V2 - Property 14: Quantity Available Invariant", () => {
   beforeEach(() => {
     clearMockData()
-    setupMockTableDataGeneric("listing_items", [])
-    setupMockTableDataGeneric("stock_lots", [])
+    setupMockTableData("listing_items", [])
+    setupMockTableData("listing_item_lots", [])
   })
 
   /**
@@ -162,7 +139,7 @@ describe("Market V2 - Property 14: Quantity Available Invariant", () => {
    * Validates: Requirements 8.6, 23.1
    * 
    * For any listing item at any point in time, quantity_available SHALL equal
-   * the sum of quantity_total for all stock_lots where listed=true.
+   * the sum of quantity_total for all listing_item_lots where listed=true.
    */
 
   it("should compute quantity_available as sum of listed stock lots on INSERT", () => {
@@ -174,7 +151,7 @@ describe("Market V2 - Property 14: Quantity Available Invariant", () => {
     createTestStockLot({ item_id: item.item_id, quantity_total: 3, listed: true })
 
     // Verify quantity_available equals sum of listed lots
-    const items = getMockTableDataGeneric("listing_items") as ListingItem[]
+    const items = getMockTableData("listing_items")
     const updatedItem = items.find((i) => i.item_id === item.item_id)
 
     expect(updatedItem?.quantity_available).toBe(18) // 5 + 10 + 3
@@ -189,7 +166,7 @@ describe("Market V2 - Property 14: Quantity Available Invariant", () => {
     createTestStockLot({ item_id: item.item_id, quantity_total: 3, listed: true })
 
     // Verify only listed lots are counted
-    const items = getMockTableDataGeneric("listing_items") as ListingItem[]
+    const items = getMockTableData("listing_items")
     const updatedItem = items.find((i) => i.item_id === item.item_id)
 
     expect(updatedItem?.quantity_available).toBe(8) // 5 + 3 (10 is unlisted)
@@ -210,7 +187,7 @@ describe("Market V2 - Property 14: Quantity Available Invariant", () => {
     })
 
     // Initial quantity
-    let items = getMockTableDataGeneric("listing_items") as ListingItem[]
+    let items = getMockTableData("listing_items")
     let updatedItem = items.find((i) => i.item_id === item.item_id)
     expect(updatedItem?.quantity_available).toBe(15)
 
@@ -218,7 +195,7 @@ describe("Market V2 - Property 14: Quantity Available Invariant", () => {
     updateStockLot(lot1.lot_id, { quantity_total: 20 })
 
     // Verify quantity_available updated
-    items = getMockTableDataGeneric("listing_items") as ListingItem[]
+    items = getMockTableData("listing_items")
     updatedItem = items.find((i) => i.item_id === item.item_id)
     expect(updatedItem?.quantity_available).toBe(30) // 20 + 10
   })
@@ -238,7 +215,7 @@ describe("Market V2 - Property 14: Quantity Available Invariant", () => {
     })
 
     // Initial quantity
-    let items = getMockTableDataGeneric("listing_items") as ListingItem[]
+    let items = getMockTableData("listing_items")
     let updatedItem = items.find((i) => i.item_id === item.item_id)
     expect(updatedItem?.quantity_available).toBe(15)
 
@@ -246,7 +223,7 @@ describe("Market V2 - Property 14: Quantity Available Invariant", () => {
     deleteStockLot(lot1.lot_id)
 
     // Verify quantity_available updated
-    items = getMockTableDataGeneric("listing_items") as ListingItem[]
+    items = getMockTableData("listing_items")
     updatedItem = items.find((i) => i.item_id === item.item_id)
     expect(updatedItem?.quantity_available).toBe(10) // Only lot2 remains
   })
@@ -258,7 +235,7 @@ describe("Market V2 - Property 14: Quantity Available Invariant", () => {
     createTestStockLot({ item_id: item.item_id, quantity_total: 10, listed: false })
 
     // Verify quantity_available is zero
-    const items = getMockTableDataGeneric("listing_items") as ListingItem[]
+    const items = getMockTableData("listing_items")
     const updatedItem = items.find((i) => i.item_id === item.item_id)
 
     expect(updatedItem?.quantity_available).toBe(0)
@@ -268,7 +245,7 @@ describe("Market V2 - Property 14: Quantity Available Invariant", () => {
     const item = createTestListingItem()
 
     // No stock lots created
-    const items = getMockTableDataGeneric("listing_items") as ListingItem[]
+    const items = getMockTableData("listing_items")
     const updatedItem = items.find((i) => i.item_id === item.item_id)
 
     expect(updatedItem?.quantity_available).toBe(0)
@@ -298,7 +275,7 @@ describe("Market V2 - Property 14: Quantity Available Invariant", () => {
     })
 
     // Verify variant_count is 2 (unique variants)
-    const items = getMockTableDataGeneric("listing_items") as ListingItem[]
+    const items = getMockTableData("listing_items")
     const updatedItem = items.find((i) => i.item_id === item.item_id)
 
     expect(updatedItem?.variant_count).toBe(2)
@@ -328,7 +305,7 @@ describe("Market V2 - Property 14: Quantity Available Invariant", () => {
     })
 
     // Verify only listed variants are counted
-    const items = getMockTableDataGeneric("listing_items") as ListingItem[]
+    const items = getMockTableData("listing_items")
     const updatedItem = items.find((i) => i.item_id === item.item_id)
 
     expect(updatedItem?.variant_count).toBe(2) // variant_1 and variant_3
@@ -339,8 +316,8 @@ describe("Market V2 - Property 14: Quantity Available Invariant", () => {
 describe("Market V2 - Property 15: Quantity Update on Listing Status Change", () => {
   beforeEach(() => {
     clearMockData()
-    setupMockTableDataGeneric("listing_items", [])
-    setupMockTableDataGeneric("stock_lots", [])
+    setupMockTableData("listing_items", [])
+    setupMockTableData("listing_item_lots", [])
   })
 
   /**
@@ -367,7 +344,7 @@ describe("Market V2 - Property 15: Quantity Update on Listing Status Change", ()
     })
 
     // Initial quantity
-    let items = getMockTableDataGeneric("listing_items") as ListingItem[]
+    let items = getMockTableData("listing_items")
     let updatedItem = items.find((i) => i.item_id === item.item_id)
     expect(updatedItem?.quantity_available).toBe(15)
 
@@ -375,7 +352,7 @@ describe("Market V2 - Property 15: Quantity Update on Listing Status Change", ()
     updateStockLot(lot1.lot_id, { listed: false })
 
     // Verify quantity decreased by lot1's quantity
-    items = getMockTableDataGeneric("listing_items") as ListingItem[]
+    items = getMockTableData("listing_items")
     updatedItem = items.find((i) => i.item_id === item.item_id)
     expect(updatedItem?.quantity_available).toBe(10) // 15 - 5
   })
@@ -395,7 +372,7 @@ describe("Market V2 - Property 15: Quantity Update on Listing Status Change", ()
     })
 
     // Initial quantity (only lot1)
-    let items = getMockTableDataGeneric("listing_items") as ListingItem[]
+    let items = getMockTableData("listing_items")
     let updatedItem = items.find((i) => i.item_id === item.item_id)
     expect(updatedItem?.quantity_available).toBe(5)
 
@@ -403,7 +380,7 @@ describe("Market V2 - Property 15: Quantity Update on Listing Status Change", ()
     updateStockLot(lot2.lot_id, { listed: true })
 
     // Verify quantity increased by lot2's quantity
-    items = getMockTableDataGeneric("listing_items") as ListingItem[]
+    items = getMockTableData("listing_items")
     updatedItem = items.find((i) => i.item_id === item.item_id)
     expect(updatedItem?.quantity_available).toBe(15) // 5 + 10
   })
@@ -418,25 +395,25 @@ describe("Market V2 - Property 15: Quantity Update on Listing Status Change", ()
     })
 
     // Initial quantity
-    let items = getMockTableDataGeneric("listing_items") as ListingItem[]
+    let items = getMockTableData("listing_items")
     let updatedItem = items.find((i) => i.item_id === item.item_id)
     expect(updatedItem?.quantity_available).toBe(7)
 
     // Unlist
     updateStockLot(lot.lot_id, { listed: false })
-    items = getMockTableDataGeneric("listing_items") as ListingItem[]
+    items = getMockTableData("listing_items")
     updatedItem = items.find((i) => i.item_id === item.item_id)
     expect(updatedItem?.quantity_available).toBe(0)
 
     // List again
     updateStockLot(lot.lot_id, { listed: true })
-    items = getMockTableDataGeneric("listing_items") as ListingItem[]
+    items = getMockTableData("listing_items")
     updatedItem = items.find((i) => i.item_id === item.item_id)
     expect(updatedItem?.quantity_available).toBe(7)
 
     // Unlist again
     updateStockLot(lot.lot_id, { listed: false })
-    items = getMockTableDataGeneric("listing_items") as ListingItem[]
+    items = getMockTableData("listing_items")
     updatedItem = items.find((i) => i.item_id === item.item_id)
     expect(updatedItem?.quantity_available).toBe(0)
   })
@@ -458,7 +435,7 @@ describe("Market V2 - Property 15: Quantity Update on Listing Status Change", ()
     })
 
     // Initial state: 2 variants
-    let items = getMockTableDataGeneric("listing_items") as ListingItem[]
+    let items = getMockTableData("listing_items")
     let updatedItem = items.find((i) => i.item_id === item.item_id)
     expect(updatedItem?.variant_count).toBe(2)
     expect(updatedItem?.quantity_available).toBe(15)
@@ -467,7 +444,7 @@ describe("Market V2 - Property 15: Quantity Update on Listing Status Change", ()
     updateStockLot(lot2.lot_id, { listed: false })
 
     // Verify variant_count decreased
-    items = getMockTableDataGeneric("listing_items") as ListingItem[]
+    items = getMockTableData("listing_items")
     updatedItem = items.find((i) => i.item_id === item.item_id)
     expect(updatedItem?.variant_count).toBe(1) // Only variant_1 remains
     expect(updatedItem?.quantity_available).toBe(5)
@@ -490,7 +467,7 @@ describe("Market V2 - Property 15: Quantity Update on Listing Status Change", ()
     })
 
     // Initial state: 1 variant (2 lots)
-    let items = getMockTableDataGeneric("listing_items") as ListingItem[]
+    let items = getMockTableData("listing_items")
     let updatedItem = items.find((i) => i.item_id === item.item_id)
     expect(updatedItem?.variant_count).toBe(1)
     expect(updatedItem?.quantity_available).toBe(15)
@@ -499,7 +476,7 @@ describe("Market V2 - Property 15: Quantity Update on Listing Status Change", ()
     updateStockLot(lot1.lot_id, { listed: false })
 
     // Verify variant_count unchanged
-    items = getMockTableDataGeneric("listing_items") as ListingItem[]
+    items = getMockTableData("listing_items")
     updatedItem = items.find((i) => i.item_id === item.item_id)
     expect(updatedItem?.variant_count).toBe(1) // variant_1 still exists via lot2
     expect(updatedItem?.quantity_available).toBe(10)

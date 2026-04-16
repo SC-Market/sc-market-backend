@@ -11,13 +11,13 @@ export async function up(knex: Knex): Promise<void> {
       SET 
         quantity_available = (
           SELECT COALESCE(SUM(quantity_total), 0)
-          FROM stock_lots
+          FROM listing_item_lots
           WHERE item_id = COALESCE(NEW.item_id, OLD.item_id)
             AND listed = true
         ),
         variant_count = (
           SELECT COUNT(DISTINCT variant_id)
-          FROM stock_lots
+          FROM listing_item_lots
           WHERE item_id = COALESCE(NEW.item_id, OLD.item_id)
             AND listed = true
         )
@@ -28,19 +28,19 @@ export async function up(knex: Knex): Promise<void> {
     $$ LANGUAGE plpgsql;
   `)
 
-  // Create trigger on stock_lots for INSERT, UPDATE, DELETE
+  // Create trigger on listing_item_lots for INSERT, UPDATE, DELETE
   await knex.raw(`
-    CREATE TRIGGER trg_stock_lots_quantity
-    AFTER INSERT OR UPDATE OR DELETE ON stock_lots
+    CREATE TRIGGER trg_listing_item_lots_quantity
+    AFTER INSERT OR UPDATE OR DELETE ON listing_item_lots
     FOR EACH ROW
-    EXECUTE FUNCTION update_quantity_available();
+    EXECUTE PROCEDURE update_quantity_available();
   `)
 }
 
 export async function down(knex: Knex): Promise<void> {
   // Drop trigger first
   await knex.raw(`
-    DROP TRIGGER IF EXISTS trg_stock_lots_quantity ON stock_lots;
+    DROP TRIGGER IF EXISTS trg_listing_item_lots_quantity ON listing_item_lots;
   `)
 
   // Drop function
