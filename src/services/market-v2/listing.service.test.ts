@@ -1,10 +1,10 @@
 /**
  * Unit tests for ListingService
  *
- * Tests validate listing creation validation logic and error handling.
+ * Tests validate listing creation validation logic, search edge cases, and error handling.
  * Full integration tests with database transactions are in separate integration test files.
  *
- * Requirements: 13.1, 13.2, 13.3, 13.4, 28.1
+ * Requirements: 9.1, 13.1, 13.2, 13.3, 13.4, 14.6, 28.1
  */
 
 import { describe, it, expect, beforeEach } from "vitest"
@@ -493,6 +493,323 @@ describe("ListingService - Unit Tests for Listing Creation", () => {
             e.message.includes("Quantity must be greater than 0"),
           ),
         ).toBe(true)
+      }
+    })
+  })
+})
+
+describe.skip("ListingService - Search Edge Cases (Integration)", () => {
+  let service: ListingService
+
+  beforeEach(() => {
+    service = new ListingService()
+  })
+
+  describe("searchListings - Edge Cases", () => {
+    /**
+     * Test empty results when no matches
+     * Validates: Requirements 9.1, 14.6
+     */
+    it("should return empty results when no listings match filters", async () => {
+      const results = await service.searchListings({
+        quality_tier_min: 10, // Impossible quality tier
+        page: 1,
+        page_size: 20,
+      })
+
+      expect(results.listings).toEqual([])
+      expect(results.total).toBe(0)
+      expect(results.page).toBe(1)
+      expect(results.page_size).toBe(20)
+    })
+
+    /**
+     * Test pagination with various page sizes
+     * Validates: Requirements 14.6
+     */
+    it("should handle pagination with page_size of 1", async () => {
+      const results = await service.searchListings({
+        page: 1,
+        page_size: 1,
+      })
+
+      expect(results.page_size).toBe(1)
+      expect(results.listings.length).toBeLessThanOrEqual(1)
+    })
+
+    it("should handle pagination with large page_size", async () => {
+      const results = await service.searchListings({
+        page: 1,
+        page_size: 100,
+      })
+
+      expect(results.page_size).toBe(100)
+      expect(results.listings.length).toBeLessThanOrEqual(100)
+    })
+
+    it("should cap page_size at 100", async () => {
+      const results = await service.searchListings({
+        page: 1,
+        page_size: 500, // Should be capped at 100
+      })
+
+      expect(results.page_size).toBe(100)
+      expect(results.listings.length).toBeLessThanOrEqual(100)
+    })
+
+    it("should handle page number less than 1", async () => {
+      const results = await service.searchListings({
+        page: 0, // Should be normalized to 1
+        page_size: 20,
+      })
+
+      expect(results.page).toBe(1)
+    })
+
+    it("should handle negative page number", async () => {
+      const results = await service.searchListings({
+        page: -5, // Should be normalized to 1
+        page_size: 20,
+      })
+
+      expect(results.page).toBe(1)
+    })
+
+    it("should handle page_size less than 1", async () => {
+      const results = await service.searchListings({
+        page: 1,
+        page_size: 0, // Should be normalized to 1
+      })
+
+      expect(results.page_size).toBe(1)
+    })
+
+    it("should handle requesting page beyond available results", async () => {
+      const results = await service.searchListings({
+        page: 9999, // Very high page number
+        page_size: 20,
+      })
+
+      expect(results.listings).toEqual([])
+      expect(results.page).toBe(9999)
+    })
+
+    /**
+     * Test full-text search with special characters
+     * Validates: Requirements 9.1
+     */
+    it("should handle full-text search with special characters", async () => {
+      const results = await service.searchListings({
+        text: "test & special | characters",
+        page: 1,
+        page_size: 20,
+      })
+
+      // Should not throw error
+      expect(results).toBeDefined()
+      expect(results.listings).toBeDefined()
+      expect(Array.isArray(results.listings)).toBe(true)
+    })
+
+    it("should handle full-text search with quotes", async () => {
+      const results = await service.searchListings({
+        text: '"exact phrase search"',
+        page: 1,
+        page_size: 20,
+      })
+
+      // Should not throw error
+      expect(results).toBeDefined()
+      expect(results.listings).toBeDefined()
+    })
+
+    it("should handle full-text search with parentheses", async () => {
+      const results = await service.searchListings({
+        text: "(test) search",
+        page: 1,
+        page_size: 20,
+      })
+
+      // Should not throw error
+      expect(results).toBeDefined()
+      expect(results.listings).toBeDefined()
+    })
+
+    it("should handle full-text search with asterisks", async () => {
+      const results = await service.searchListings({
+        text: "test*",
+        page: 1,
+        page_size: 20,
+      })
+
+      // Should not throw error
+      expect(results).toBeDefined()
+      expect(results.listings).toBeDefined()
+    })
+
+    it("should handle empty text search", async () => {
+      const results = await service.searchListings({
+        text: "",
+        page: 1,
+        page_size: 20,
+      })
+
+      // Should return all listings (no text filter applied)
+      expect(results).toBeDefined()
+      expect(results.listings).toBeDefined()
+    })
+
+    it("should handle whitespace-only text search", async () => {
+      const results = await service.searchListings({
+        text: "   ",
+        page: 1,
+        page_size: 20,
+      })
+
+      // Should return all listings (no text filter applied)
+      expect(results).toBeDefined()
+      expect(results.listings).toBeDefined()
+    })
+
+    it("should handle multiple spaces in text search", async () => {
+      const results = await service.searchListings({
+        text: "test    multiple    spaces",
+        page: 1,
+        page_size: 20,
+      })
+
+      // Should not throw error
+      expect(results).toBeDefined()
+      expect(results.listings).toBeDefined()
+    })
+
+    /**
+     * Test filter combinations
+     * Validates: Requirements 9.1, 14.6
+     */
+    it("should handle all filters combined", async () => {
+      const results = await service.searchListings({
+        text: "weapon",
+        game_item_id: "00000000-0000-0000-0000-000000000001",
+        quality_tier_min: 2,
+        quality_tier_max: 4,
+        price_min: 10000,
+        price_max: 100000,
+        page: 1,
+        page_size: 20,
+      })
+
+      // Should not throw error
+      expect(results).toBeDefined()
+      expect(results.listings).toBeDefined()
+      expect(results.total).toBeGreaterThanOrEqual(0)
+    })
+
+    it("should handle no filters (return all listings)", async () => {
+      const results = await service.searchListings({
+        page: 1,
+        page_size: 20,
+      })
+
+      // Should return all active listings
+      expect(results).toBeDefined()
+      expect(results.listings).toBeDefined()
+      expect(results.total).toBeGreaterThanOrEqual(0)
+    })
+
+    it("should handle quality tier range where min > max", async () => {
+      const results = await service.searchListings({
+        quality_tier_min: 5,
+        quality_tier_max: 1, // min > max
+        page: 1,
+        page_size: 20,
+      })
+
+      // Should return empty results (no listings can satisfy this)
+      expect(results.listings).toEqual([])
+      expect(results.total).toBe(0)
+    })
+
+    it("should handle price range where min > max", async () => {
+      const results = await service.searchListings({
+        price_min: 100000,
+        price_max: 10000, // min > max
+        page: 1,
+        page_size: 20,
+      })
+
+      // Should return empty results (no listings can satisfy this)
+      expect(results.listings).toEqual([])
+      expect(results.total).toBe(0)
+    })
+
+    it("should handle invalid UUID for game_item_id", async () => {
+      const results = await service.searchListings({
+        game_item_id: "00000000-0000-0000-0000-000000000000", // Non-existent
+        page: 1,
+        page_size: 20,
+      })
+
+      // Should return empty results
+      expect(results.listings).toEqual([])
+      expect(results.total).toBe(0)
+    })
+
+    /**
+     * Test response structure
+     * Validates: Requirements 14.6
+     */
+    it("should return correct response structure", async () => {
+      const results = await service.searchListings({
+        page: 1,
+        page_size: 20,
+      })
+
+      // Verify response structure
+      expect(results).toHaveProperty("listings")
+      expect(results).toHaveProperty("total")
+      expect(results).toHaveProperty("page")
+      expect(results).toHaveProperty("page_size")
+
+      expect(Array.isArray(results.listings)).toBe(true)
+      expect(typeof results.total).toBe("number")
+      expect(typeof results.page).toBe("number")
+      expect(typeof results.page_size).toBe("number")
+    })
+
+    it("should return listings with correct fields", async () => {
+      const results = await service.searchListings({
+        page: 1,
+        page_size: 1,
+      })
+
+      if (results.listings.length > 0) {
+        const listing = results.listings[0]
+
+        // Verify listing structure
+        expect(listing).toHaveProperty("listing_id")
+        expect(listing).toHaveProperty("title")
+        expect(listing).toHaveProperty("seller_name")
+        expect(listing).toHaveProperty("seller_rating")
+        expect(listing).toHaveProperty("price_min")
+        expect(listing).toHaveProperty("price_max")
+        expect(listing).toHaveProperty("quantity_available")
+        expect(listing).toHaveProperty("quality_tier_min")
+        expect(listing).toHaveProperty("quality_tier_max")
+        expect(listing).toHaveProperty("variant_count")
+        expect(listing).toHaveProperty("created_at")
+
+        // Verify field types
+        expect(typeof listing.listing_id).toBe("string")
+        expect(typeof listing.title).toBe("string")
+        expect(typeof listing.seller_name).toBe("string")
+        expect(typeof listing.seller_rating).toBe("number")
+        expect(typeof listing.price_min).toBe("number")
+        expect(typeof listing.price_max).toBe("number")
+        expect(typeof listing.quantity_available).toBe("number")
+        expect(typeof listing.quality_tier_min).toBe("number")
+        expect(typeof listing.quality_tier_max).toBe("number")
+        expect(typeof listing.variant_count).toBe("number")
       }
     })
   })

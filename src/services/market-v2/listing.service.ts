@@ -3,8 +3,9 @@
  *
  * Business logic for creating and managing listings with variant support.
  * Handles atomic transactions for listing creation with stock lots and pricing.
+ * Implements search with full-text search, quality filters, and price filters.
  *
- * Requirements: 13.1, 13.2, 13.3, 13.4, 13.5, 13.6, 26.1, 26.2, 26.3, 26.4, 26.5, 28.1, 28.4, 28.5, 28.6
+ * Requirements: 9.1, 13.1, 13.2, 13.3, 13.4, 13.5, 13.6, 14.1, 14.2, 14.3, 14.4, 14.5, 14.6, 22.1, 22.2, 22.3, 22.4, 22.5, 26.1, 26.2, 26.3, 26.4, 26.5, 28.1, 28.4, 28.5, 28.6
  */
 
 import { Knex } from "knex"
@@ -14,6 +15,8 @@ import { MarketV2Repository } from "./repository.js"
 import {
   CreateListingRequest,
   Listing,
+  SearchListingsRequest,
+  SearchListingsResponse,
 } from "../../api/routes/v2/types/market-v2-types.js"
 import {
   BusinessLogicError,
@@ -31,6 +34,134 @@ export class ListingService {
     this.knex = knex || getKnex()
     this.variantService = new VariantService(this.knex)
     this.repository = new MarketV2Repository(this.knex)
+  }
+
+  /**
+   * Search listings with filters
+   *
+   * Queries the listing_search view with full-text search, quality tier filters,
+   * price filters, and game item filters. Results are paginated.
+   *
+   * Requirements: 9.1, 14.1, 14.2, 14.3, 14.4, 14.5, 14.6, 22.1, 22.2, 22.3, 22.4, 22.5
+   */
+  async searchListings(
+    request: SearchListingsRequest,
+  ): Promise<SearchListingsResponse> {
+    // Validate pagination parameters
+    const page = Math.max(1, request.page || 1)
+    const page_size = Math.min(100, Math.max(1, request.page_size || 20))
+
+    try {
+      // Build query on listing_search view
+      let query = this.knex("listing_search")
+
+      // Apply full-text search filter (Requirement 22.5)
+      if (request.text && request.text.trim().length > 0) {
+        const searchQuery = request.text
+          .trim()
+          .split(/\s+/)
+          .map((term) => `${term}:*`)
+          .join(" & ")
+
+        query = query.whereRaw(
+          "search_vector @@ to_tsquery('english', ?)",
+          [searchQuery],
+        )
+      }
+
+      // Apply game item filter (Requirement 22.5)
+      if (request.game_item_id) {
+        query = query.where("game_item_id", this.knex.raw("?::uuid", [request.game_item_id]))
+      }
+
+      // Apply quality tier min filter (Requirement 22.1)
+      // Filter: quality_tier_max >= quality_tier_min
+      if (request.quality_tier_min !== undefined) {
+        query = query.where("quality_tier_max", ">=", request.quality_tier_min)
+      }
+
+      // Apply quality tier max filter (Requirement 22.2)
+      // Filter: quality_tier_min <= quality_tier_max
+      if (request.quality_tier_max !== undefined) {
+        query = query.where("quality_tier_min", "<=", request.quality_tier_max)
+      }
+
+      // Apply price min filter (Requirement 22.3)
+      // Filter: price_max >= price_min
+      if (request.price_min !== undefined) {
+        query = query.where("price_max", ">=", request.price_min)
+      }
+
+      // Apply price max filter (Requirement 22.4)
+      // Filter: price_min <= price_max
+      if (request.price_max !== undefined) {
+        query = query.where("price_min", "<=", request.price_max)
+      }
+
+      // Get total count for pagination
+      const countQuery = query.clone().count("* as count")
+      const [{ count }] = await countQuery
+      const total = parseInt(count as string, 10)
+
+      // Apply pagination (Requirement 14.6)
+      const offset = (page - 1) * page_size
+      query = query
+        .select(
+          "listing_id",
+          "title",
+          "seller_name",
+          "seller_rating",
+          "price_min",
+          "price_max",
+          "quantity_available",
+          "quality_tier_min",
+          "quality_tier_max",
+          "variant_count",
+          "created_at",
+        )
+        .orderBy("created_at", "desc")
+        .limit(page_size)
+        .offset(offset)
+
+      // Execute query
+      const listings = await query
+
+      logger.debug("Search query executed", {
+        total,
+        returned: listings.length,
+        page,
+        page_size,
+      })
+
+      return {
+        listings: listings.map((row) => ({
+          listing_id: row.listing_id,
+          title: row.title,
+          seller_name: row.seller_name,
+          seller_rating: parseFloat(row.seller_rating) || 0,
+          price_min: parseInt(row.price_min, 10),
+          price_max: parseInt(row.price_max, 10),
+          quantity_available: row.quantity_available,
+          quality_tier_min: row.quality_tier_min || 1,
+          quality_tier_max: row.quality_tier_max || 1,
+          variant_count: row.variant_count,
+          created_at: row.created_at,
+        })),
+        total,
+        page,
+        page_size,
+      }
+    } catch (error) {
+      logger.error("Search query failed", {
+        error: error instanceof Error ? error.message : String(error),
+        request,
+      })
+
+      throw new BusinessLogicError(
+        ErrorCode.INTERNAL_SERVER_ERROR,
+        "Failed to search listings",
+      )
+    }
   }
 
   /**
