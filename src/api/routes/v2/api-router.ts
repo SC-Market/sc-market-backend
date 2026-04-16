@@ -11,6 +11,10 @@ import { join, dirname } from "path"
 import { fileURLToPath } from "url"
 import { apiReference } from "@scalar/express-api-reference"
 import { tsoaErrorHandler } from "../../middleware/tsoa-error-handler.js"
+import {
+  canViewV2DebugInternals,
+  filterV2DebugFromOpenApiSpec,
+} from "./util/openapi-debug-visibility.js"
 
 const __filename = fileURLToPath(import.meta.url)
 const __dirname = dirname(__filename)
@@ -31,7 +35,10 @@ apiV2Router.get("/openapi.json", (req, res) => {
   try {
     const specPath = join(__dirname, "generated", "swagger.json")
     const spec = JSON.parse(readFileSync(specPath, "utf-8"))
-    res.json(spec)
+    const payload = canViewV2DebugInternals(req)
+      ? spec
+      : filterV2DebugFromOpenApiSpec(spec)
+    res.json(payload)
   } catch (error) {
     res.status(404).json({
       error: {
