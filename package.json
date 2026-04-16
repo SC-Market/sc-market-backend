@@ -5,6 +5,9 @@
   "license": "MIT",
   "private": true,
   "type": "module",
+  "engines": {
+    "node": ">=24.0.0"
+  },
   "dependencies": {
     "@aws-sdk/client-cloudfront": "^3.830.0",
     "@aws-sdk/client-lambda": "^3.865.0",
