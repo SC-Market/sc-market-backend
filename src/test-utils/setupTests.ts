@@ -29,6 +29,36 @@ vi.mock("../clients/database/knex-db.js", () => {
     const builder: any = {
       select: vi.fn().mockReturnThis(),
       insert: vi.fn().mockImplementation((data: unknown) => {
+        if (table === "user_preferences") {
+          const record = (
+            Array.isArray(data) ? data[0] : data
+          ) as Record<string, unknown>
+          const upsert: {
+            onConflict: ReturnType<typeof vi.fn>
+            merge: ReturnType<typeof vi.fn>
+          } = {
+            onConflict: vi.fn(),
+            merge: vi.fn(),
+          }
+          upsert.onConflict.mockReturnValue(upsert)
+          upsert.merge.mockImplementation(
+            async (updates: Record<string, unknown>) => {
+              const tableData = getMockTableDataGeneric(table)
+              const uid = record.user_id as string
+              const idx = tableData.findIndex(
+                (r) => (r as Record<string, unknown>).user_id === uid,
+              )
+              const merged = { ...record, ...updates }
+              if (idx >= 0) {
+                Object.assign(tableData[idx] as object, merged)
+              } else {
+                tableData.push(merged as TableDataValue)
+              }
+              setupMockTableDataGeneric(table, tableData)
+            },
+          )
+          return upsert
+        }
         const tableData = getMockTableDataGeneric(table)
         const inserted = Array.isArray(data)
           ? (data as Record<string, unknown>[])
@@ -38,7 +68,47 @@ vi.mock("../clients/database/knex-db.js", () => {
         return builder
       }),
       update: vi.fn().mockReturnThis(),
-      delete: vi.fn().mockReturnThis(),
+      whereIn: vi
+        .fn()
+        .mockImplementation((column: string, values: unknown[]) => {
+          const asSet = new Set(values.map((v) => `${v}`))
+          filteredData = filteredData.filter(
+            (row) => column in row && asSet.has(`${row[column]}`),
+          )
+          return builder
+        }),
+      delete: vi.fn().mockImplementation(() => {
+        const tableData = getMockTableDataGeneric(table)
+        if (filteredData.length === 0) {
+          setupMockTableDataGeneric(table, [])
+        } else if (filteredData.length === tableData.length) {
+          setupMockTableDataGeneric(table, [])
+        } else if (table === "user_preferences") {
+          const removeIds = new Set(
+            filteredData.map((r) => `${r.user_id as string}`),
+          )
+          const next = tableData.filter(
+            (r) =>
+              !removeIds.has(
+                String((r as Record<string, unknown>).user_id ?? ""),
+              ),
+          )
+          setupMockTableDataGeneric(table, next)
+        } else {
+          const next = tableData.filter(
+            (row) =>
+              !filteredData.some(
+                (f) =>
+                  JSON.stringify(f) === JSON.stringify(row as object),
+              ),
+          )
+          setupMockTableDataGeneric(table, next)
+        }
+        filteredData = (getMockTableDataGeneric(table) as unknown[]).map(
+          (item) => item as Record<string, unknown>,
+        )
+        return Promise.resolve(1)
+      }),
       where: vi
         .fn()
         .mockImplementation(
@@ -46,7 +116,19 @@ vi.mock("../clients/database/knex-db.js", () => {
             columnOrFn: string | ((builder: unknown) => void),
             value?: unknown,
           ) => {
-            if (typeof columnOrFn === "function") {
+            if (
+              typeof columnOrFn === "object" &&
+              columnOrFn !== null &&
+              !Array.isArray(columnOrFn) &&
+              value === undefined
+            ) {
+              const obj = columnOrFn as Record<string, unknown>
+              filteredData = filteredData.filter((row) =>
+                Object.entries(obj).every(
+                  ([k, v]) => k in row && row[k] === v,
+                ),
+              )
+            } else if (typeof columnOrFn === "function") {
               // Handle callback pattern: where(function() { this.whereNull(...).orWhere(...) })
               const callbackBuilder = {
                 whereNull: vi.fn().mockImplementation((col: string) => {
@@ -118,6 +200,16 @@ vi.mock("../clients/database/knex-db.js", () => {
         ) // Reset for next query
         return Promise.resolve(result)
       }),
+      then: (onFulfilled?: (v: unknown) => unknown, onRejected?: unknown) => {
+        const snapshot = [...filteredData]
+        filteredData = (getMockTableDataGeneric(table) as unknown[]).map(
+          (item) => item as Record<string, unknown>,
+        )
+        return Promise.resolve(snapshot).then(
+          onFulfilled as (value: unknown) => unknown,
+          onRejected as (reason: unknown) => unknown,
+        )
+      },
       returning: vi.fn().mockImplementation((cols?: string) => {
         const result = filteredData
         filteredData = (getMockTableDataGeneric(table) as unknown[]).map(
