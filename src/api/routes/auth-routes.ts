@@ -14,11 +14,64 @@ import {
   AuthErrorCodes,
 } from "../util/auth-helpers.js"
 import logger from "../../logger/logger.js"
+import {
+  isJWTAuthEnabled,
+  generateAccessToken,
+  generateRefreshToken,
+  saveRefreshToken,
+  setAuthCookies,
+  clearAuthCookies,
+  getRefreshTokenFromRequest,
+  validateRefreshToken,
+  revokeRefreshToken,
+  revokeAllUserRefreshTokens,
+  getUserSessions,
+  revokeSessionById,
+  verifyAccessToken,
+} from "../util/jwt.js"
+import * as profileDb from "./v1/profiles/database.js"
 
 /**
  * Setup authentication routes
  */
 export function setupAuthRoutes(app: any, frontendUrl: URL): void {
+  /**
+   * Complete login: issue JWT cookies (if enabled) or save session, then redirect.
+   */
+  async function completeLogin(
+    req: Request,
+    res: Response,
+    user: User,
+    redirectUrl: string,
+    provider: string,
+  ): Promise<void> {
+    if (isJWTAuthEnabled()) {
+      const accessToken = generateAccessToken(user)
+      const refreshToken = generateRefreshToken()
+      await saveRefreshToken(user.user_id, refreshToken, req)
+      setAuthCookies(res, accessToken, refreshToken)
+      logger.info(`[Auth] ${provider} JWT login successful`, { userId: user.user_id })
+      res.redirect(redirectUrl)
+    } else {
+      req.logIn(user, (loginErr) => {
+        if (loginErr) {
+          logger.error(`[Auth] ${provider} login error`, { error: loginErr })
+          res.redirect(redirectUrl)
+          return
+        }
+        logger.info(`[Auth] ${provider} session login successful`, {
+          userId: user.user_id,
+          sessionID: req.sessionID,
+        })
+        req.session.save((saveErr) => {
+          if (saveErr) {
+            logger.error(`[Auth] ${provider} session save error`, { error: saveErr })
+          }
+          res.redirect(redirectUrl)
+        })
+      })
+    }
+  }
   // Resolve the base URL for post-auth redirects.
   // If origin is a known custom domain, redirect there; otherwise use frontendUrl.
   function getRedirectBase(origin: string): URL {
@@ -132,7 +185,7 @@ export function setupAuthRoutes(app: any, frontendUrl: URL): void {
           session: true,
           failWithError: true,
         },
-        (err: any, user: User | false, info: any) => {
+        async (err: any, user: User | false, info: any) => {
           logger.info("[Auth] Passport callback reached", {
             hasErr: !!err,
             hasUser: !!user,
@@ -173,35 +226,8 @@ export function setupAuthRoutes(app: any, frontendUrl: URL): void {
             return res.redirect(redirectTo.toString())
           }
 
-          req.logIn(user, (loginErr) => {
-            if (loginErr) {
-              logger.error("[Auth] Discord login error", { error: loginErr })
-              const redirectTo = new URL("/", redirectBase)
-              redirectTo.searchParams.set(
-                "error",
-                AuthErrorCodes.ACCOUNT_NOT_FOUND,
-              )
-              return res.redirect(redirectTo.toString())
-            }
-
-            logger.info("[Auth] Login successful, saving session", {
-              userId: (user as any)?.user_id,
-              sessionID: req.sessionID,
-            })
-
-            const successRedirect = new URL(
-              redirectPath,
-              redirectBase,
-            ).toString()
-            // Ensure session is persisted to store before redirecting
-            req.session.save((saveErr) => {
-              if (saveErr) {
-                logger.error("[Auth] Discord session save error", { error: saveErr })
-              }
-              logger.info("[Auth] Redirecting to", { successRedirect })
-              return res.redirect(successRedirect)
-            })
-          })
+          const successRedirect = new URL(redirectPath, redirectBase).toString()
+          await completeLogin(req, res, user as User, successRedirect, "Discord")
         },
       )(req, res, next)
       }) // end session.regenerate
@@ -301,7 +327,7 @@ export function setupAuthRoutes(app: any, frontendUrl: URL): void {
           session: true,
           failWithError: true,
         },
-        (err: any, user: User | false, info: any) => {
+        async (err: any, user: User | false, info: any) => {
           if (err) {
             logger.error("[CitizenID login callback] Error", {
               error: err,
@@ -378,28 +404,8 @@ export function setupAuthRoutes(app: any, frontendUrl: URL): void {
             return res.redirect(redirectTo.toString())
           }
 
-          req.logIn(user, (loginErr) => {
-            if (loginErr) {
-              logger.error("[Auth] Citizen ID login error", { error: loginErr })
-              const redirectTo = new URL("/", redirectBase)
-              redirectTo.searchParams.set(
-                "error",
-                CitizenIDErrorCodes.LOGIN_FAILED,
-              )
-              return res.redirect(redirectTo.toString())
-            }
-
-            const successRedirect = new URL(
-              redirectPath,
-              redirectBase,
-            ).toString()
-            req.session.save((saveErr) => {
-              if (saveErr) {
-                logger.error("[Auth] Citizen ID session save error", { error: saveErr })
-              }
-              return res.redirect(successRedirect)
-            })
-          })
+          const successRedirect = new URL(redirectPath, redirectBase).toString()
+          await completeLogin(req, res, user as User, successRedirect, "CitizenID")
         },
       )(req, res, next)
       }) // end session.regenerate
@@ -444,7 +450,7 @@ export function setupAuthRoutes(app: any, frontendUrl: URL): void {
           session: true,
           failWithError: true,
         },
-        (err: any, user: User | false, info: any) => {
+        async (err: any, user: User | false, info: any) => {
           if (err) {
             logger.error("[CitizenID link callback] Error", {
               error: err,
@@ -496,27 +502,8 @@ export function setupAuthRoutes(app: any, frontendUrl: URL): void {
             return res.redirect(redirectTo.toString())
           }
 
-          req.logIn(user, (loginErr) => {
-            if (loginErr) {
-              logger.error("[Auth] Citizen ID linking login error", {
-                error: loginErr,
-              })
-              const redirectTo = new URL("/settings", frontendUrl)
-              redirectTo.searchParams.set(
-                "error",
-                CitizenIDErrorCodes.LOGIN_FAILED,
-              )
-              return res.redirect(redirectTo.toString())
-            }
-            // Success - redirect to settings
-            const successRedirect = new URL("/settings", frontendUrl).toString()
-            req.session.save((saveErr) => {
-              if (saveErr) {
-                logger.error("[Auth] Citizen ID linking session save error", { error: saveErr })
-              }
-              return res.redirect(successRedirect)
-            })
-          })
+          const successRedirect = new URL("/settings", frontendUrl).toString()
+          await completeLogin(req, res, user as User, successRedirect, "CitizenID-link")
         },
       )(req, res, next)
     },
@@ -554,5 +541,100 @@ export function setupAuthRoutes(app: any, frontendUrl: URL): void {
         res.json({ success: true, message: "Logged out successfully" })
       })
     })
+  })
+
+  // ── JWT Auth Endpoints ─────────────────────────────────────────────────
+
+  // Refresh access token using refresh token cookie
+  app.post("/auth/refresh", async (req: Request, res: Response) => {
+    if (!isJWTAuthEnabled()) {
+      return res.status(404).json({ error: "JWT auth not enabled" })
+    }
+
+    const rawRefresh = getRefreshTokenFromRequest(req)
+    if (!rawRefresh) {
+      return res.status(401).json({ error: "No refresh token" })
+    }
+
+    const record = await validateRefreshToken(rawRefresh)
+    if (!record) {
+      clearAuthCookies(res)
+      return res.status(401).json({ error: "Invalid or expired refresh token" })
+    }
+
+    try {
+      const user = await profileDb.getUser({ user_id: record.user_id })
+      if (user.banned) {
+        await revokeRefreshToken(rawRefresh)
+        clearAuthCookies(res)
+        return res.status(403).json({ error: "Account suspended" })
+      }
+
+      const accessToken = generateAccessToken(user)
+      // Set only the access cookie — refresh cookie is still valid
+      const prod = app.get("env") === "production"
+      res.cookie("scmarket.access", accessToken, {
+        httpOnly: true,
+        secure: prod,
+        sameSite: prod ? ("none" as const) : ("lax" as const),
+        path: "/",
+        maxAge: 15 * 60 * 1000,
+      })
+      return res.json({ success: true })
+    } catch {
+      clearAuthCookies(res)
+      return res.status(401).json({ error: "User not found" })
+    }
+  })
+
+  // JWT logout — revoke refresh token + clear cookies
+  app.post("/auth/jwt-logout", async (req: Request, res: Response) => {
+    const rawRefresh = getRefreshTokenFromRequest(req)
+    if (rawRefresh) {
+      await revokeRefreshToken(rawRefresh)
+    }
+    clearAuthCookies(res)
+    res.json({ success: true, message: "Logged out successfully" })
+  })
+
+  // List active sessions (refresh tokens) for current user
+  app.get("/auth/sessions", async (req: Request, res: Response) => {
+    // Works with both JWT and session auth
+    const userId = (req.user as any)?.user_id
+    if (!userId) {
+      // Try JWT
+      const accessToken = req.cookies?.["scmarket.access"]
+      if (accessToken) {
+        const payload = verifyAccessToken(accessToken)
+        if (payload) {
+          const sessions = await getUserSessions(payload.sub)
+          return res.json({ data: sessions.map(s => ({
+            token_id: s.token_id,
+            created_at: s.created_at,
+            expires_at: s.expires_at,
+            user_agent: s.user_agent,
+            ip_address: s.ip_address,
+          }))})
+        }
+      }
+      return res.status(401).json({ error: "Unauthenticated" })
+    }
+    const sessions = await getUserSessions(userId)
+    return res.json({ data: sessions.map(s => ({
+      token_id: s.token_id,
+      created_at: s.created_at,
+      expires_at: s.expires_at,
+      user_agent: s.user_agent,
+      ip_address: s.ip_address,
+    }))})
+  })
+
+  // Revoke a specific session
+  app.delete("/auth/sessions/:tokenId", async (req: Request, res: Response) => {
+    const userId = (req.user as any)?.user_id
+    if (!userId) return res.status(401).json({ error: "Unauthenticated" })
+    const revoked = await revokeSessionById(userId, req.params.tokenId)
+    if (!revoked) return res.status(404).json({ error: "Session not found" })
+    return res.json({ success: true })
   })
 }
