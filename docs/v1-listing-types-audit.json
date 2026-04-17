@@ -1,0 +1,572 @@
+[
+  {
+    "section": "Query 1: -- PART 1: UNIQUE LISTINGS AUDIT",
+    "query": "-- PART 1: UNIQUE LISTINGS AUDIT\n\nSELECT \n    ml.status,\n    COUNT(*) as count,\n    COUNT(DISTINCT ml.user_seller_id) as unique_user_sellers,\n    COUNT(DISTINCT ml.contractor_seller_id) as unique_contractor_sellers\nFROM market_listings ml\nINNER JOIN market_unique_listings mul ON ml.listing_id = mul.listing_id\nGROUP BY ml.status\nORDER BY count DESC",
+    "results": [
+      {
+        "status": "inactive",
+        "count": "23",
+        "unique_user_sellers": "1",
+        "unique_contractor_sellers": "2"
+      },
+      {
+        "status": "archived",
+        "count": "13",
+        "unique_user_sellers": "0",
+        "unique_contractor_sellers": "7"
+      }
+    ],
+    "rowCount": 2,
+    "executionTime": 417
+  },
+  {
+    "section": "Query 2: SELECT ",
+    "query": "SELECT \n    ml.listing_id,\n    ml.sale_type,\n    ml.price,\n    ml.quantity_available,\n    ml.status,\n    ml.internal,\n    ml.user_seller_id,\n    ml.contractor_seller_id,\n    ml.timestamp,\n    ml.expiration,\n    mul.accept_offers,\n    mul.details_id,\n    mld.item_type,\n    mld.title,\n    mld.description,\n    mld.game_item_id\nFROM market_listings ml\nINNER JOIN market_unique_listings mul ON ml.listing_id = mul.listing_id\nLEFT JOIN market_listing_details mld ON mul.details_id = mld.details_id\nLIMIT 10",
+    "results": [
+      {
+        "listing_id": "3f27de28-42bf-494a-98c4-42801df3d3e6",
+        "sale_type": "sale",
+        "price": "5000",
+        "quantity_available": 1,
+        "status": "archived",
+        "internal": true,
+        "user_seller_id": null,
+        "contractor_seller_id": "c97d9115-6d75-4e3f-b7f9-7b6c90829084",
+        "timestamp": "2025-11-13T16:00:32.249Z",
+        "expiration": "2025-12-13T16:00:32.456Z",
+        "accept_offers": false,
+        "details_id": "fb70a04d-05e2-4549-9149-422d60ffe8fb",
+        "item_type": "Jumpsuits",
+        "title": "Test Archive Listing",
+        "description": "Test listing for archive verification",
+        "game_item_id": null
+      },
+      {
+        "listing_id": "622706bf-5d46-4a1a-9064-dbc57f8dbc93",
+        "sale_type": "sale",
+        "price": "5000",
+        "quantity_available": 1,
+        "status": "archived",
+        "internal": true,
+        "user_seller_id": null,
+        "contractor_seller_id": "2a722415-b15c-42b4-a30d-6ab309a20934",
+        "timestamp": "2025-11-13T16:00:51.904Z",
+        "expiration": "2025-12-13T16:00:52.137Z",
+        "accept_offers": false,
+        "details_id": "a119fa32-c421-4a10-a910-52b2aa0627a8",
+        "item_type": "Other",
+        "title": "Test Archive Listing",
+        "description": "Test listing for archive verification",
+        "game_item_id": null
+      },
+      {
+        "listing_id": "b4d02739-3d74-4a5a-9f39-27909bbb5f7e",
+        "sale_type": "sale",
+        "price": "1",
+        "quantity_available": 2,
+        "status": "inactive",
+        "internal": false,
+        "user_seller_id": "7fe4e6a8-924b-44de-85b9-6aaea515c96a",
+        "contractor_seller_id": null,
+        "timestamp": "2025-08-01T22:49:03.236Z",
+        "expiration": "2025-11-30T16:18:49.213Z",
+        "accept_offers": false,
+        "details_id": "7f91b2e7-f78f-4037-ad2f-9eb2c1dc5df4",
+        "item_type": "Melee Weapon",
+        "title": "Demon Fang Combat Knife",
+        "description": "GENERAL\n\nNAME\nDemon Fang Combat Knife\n\nMANUFACTURER\nApocalypse Arms\n\nVOLUME\n230 μSCU\n\nSTATS\n\nSIZE\n1",
+        "game_item_id": "486b0d7f-ac8f-40bf-93a8-06ee233bbaeb"
+      },
+      {
+        "listing_id": "7c3aceaa-9dda-4825-b22b-073b86d148da",
+        "sale_type": "sale",
+        "price": "1231",
+        "quantity_available": 13232,
+        "status": "inactive",
+        "internal": false,
+        "user_seller_id": null,
+        "contractor_seller_id": "d95f4697-7431-4bfc-a28c-bf7d557ecb1c",
+        "timestamp": "2025-08-10T13:55:03.016Z",
+        "expiration": "2025-12-01T14:10:09.442Z",
+        "accept_offers": false,
+        "details_id": "600fc24b-7e00-4963-8213-ea13241e20f8",
+        "item_type": "Flare",
+        "title": "Test Image2",
+        "description": "asdaasdasddas222",
+        "game_item_id": "d86290e1-7e24-4418-b575-7ac7eb51ee4b"
+      },
+      {
+        "listing_id": "56291d7c-a506-4468-b522-a06643241481",
+        "sale_type": "sale",
+        "price": "123123",
+        "quantity_available": 1350,
+        "status": "inactive",
+        "internal": true,
+        "user_seller_id": null,
+        "contractor_seller_id": "d95f4697-7431-4bfc-a28c-bf7d557ecb1c",
+        "timestamp": "2025-08-10T15:17:38.820Z",
+        "expiration": "2025-12-01T14:10:09.440Z",
+        "accept_offers": false,
+        "details_id": "f0e640e2-b1b8-4676-93af-3b02b9c6008c",
+        "item_type": "Tractor Beam",
+        "title": "Test Images",
+        "description": "asdasd",
+        "game_item_id": "9e3cd25f-21e4-4726-a5e5-66398b0beafb"
+      },
+      {
+        "listing_id": "85bbdee7-3626-4801-9c16-9dea79b5b8c2",
+        "sale_type": "sale",
+        "price": "1",
+        "quantity_available": 2,
+        "status": "inactive",
+        "internal": false,
+        "user_seller_id": null,
+        "contractor_seller_id": "d95f4697-7431-4bfc-a28c-bf7d557ecb1c",
+        "timestamp": "2025-08-13T13:11:04.232Z",
+        "expiration": "2025-12-01T14:10:09.442Z",
+        "accept_offers": false,
+        "details_id": "22850fe5-7163-4e72-b8a6-cc2e1503ef89",
+        "item_type": "Flare",
+        "title": "My Listing",
+        "description": "dasd",
+        "game_item_id": "92f17acc-9456-4928-92cc-9d9986ff29c7"
+      },
+      {
+        "listing_id": "d7f4f90a-23b1-4a3f-9e54-ba3d39f5d98e",
+        "sale_type": "sale",
+        "price": "2123",
+        "quantity_available": 131,
+        "status": "inactive",
+        "internal": false,
+        "user_seller_id": null,
+        "contractor_seller_id": "d95f4697-7431-4bfc-a28c-bf7d557ecb1c",
+        "timestamp": "2025-08-18T01:50:50.132Z",
+        "expiration": "2025-12-01T14:10:09.442Z",
+        "accept_offers": false,
+        "details_id": "f94aca98-5054-40eb-862e-8d2fb8362f9f",
+        "item_type": "Other",
+        "title": "Test Listing Bad Imaged",
+        "description": "asdasd",
+        "game_item_id": null
+      },
+      {
+        "listing_id": "e4f4c57e-08a1-4ee7-b67b-a572d38ae9ef",
+        "sale_type": "sale",
+        "price": "123",
+        "quantity_available": 1,
+        "status": "inactive",
+        "internal": false,
+        "user_seller_id": "7fe4e6a8-924b-44de-85b9-6aaea515c96a",
+        "contractor_seller_id": null,
+        "timestamp": "2025-10-01T12:41:37.447Z",
+        "expiration": "2025-12-01T14:10:09.516Z",
+        "accept_offers": false,
+        "details_id": "7872f1e2-4dec-45fa-9402-83d2aa6766b6",
+        "item_type": "Missile",
+        "title": "Arrester III Missile",
+        "description": "GENERAL\n\nNAME\nArrester III Missile\n\nMANUFACTURER\nAegis Dynamics\n\nTYPE\nCrossSection\n\nVOLUME\n46875 μSCU\n\nSTATS\n\nSIZE\n3\n\nLOCK TIME\n1 s\n\nMINIMUM LOCK DISTANCE\n1250 m\n\nMAXIMUM LOCK DISTANCE\n10000 m\n\nMINIMUM TRACKING SIGNAL\n10\n\nSPEED\n1330 m/s\n\nDAMAGE\n2526.42 dmg",
+        "game_item_id": "3c564efb-d18c-47e4-9cba-5f0727d6cd83"
+      },
+      {
+        "listing_id": "89cb6ebd-a431-4ca0-be85-70ebac4c233f",
+        "sale_type": "sale",
+        "price": "1",
+        "quantity_available": 1,
+        "status": "inactive",
+        "internal": false,
+        "user_seller_id": "7fe4e6a8-924b-44de-85b9-6aaea515c96a",
+        "contractor_seller_id": null,
+        "timestamp": "2025-10-01T12:41:17.890Z",
+        "expiration": "2025-12-01T14:10:09.516Z",
+        "accept_offers": false,
+        "details_id": "afff8c8d-fb60-48b5-b1f0-91646b7090e8",
+        "item_type": "Thrown Weapon",
+        "title": "MK-4 Frag Grenade",
+        "description": "GENERAL\n\nNAME\nMK-4 Frag Grenade\n\nMANUFACTURER\nBehring\n\nVOLUME\n900 μSCU\n\nSTATS\n\nSIZE\n1",
+        "game_item_id": "b7bfb702-77e6-46d9-b9dc-39a539891a17"
+      },
+      {
+        "listing_id": "58c71eac-fa58-4add-912c-547460b3a92e",
+        "sale_type": "sale",
+        "price": "0",
+        "quantity_available": 1,
+        "status": "inactive",
+        "internal": false,
+        "user_seller_id": null,
+        "contractor_seller_id": "d95f4697-7431-4bfc-a28c-bf7d557ecb1c",
+        "timestamp": "2025-10-03T12:53:32.882Z",
+        "expiration": "2025-12-03T15:31:24.330Z",
+        "accept_offers": false,
+        "details_id": "cee349f9-28dc-4eff-9859-4aaf6fbb91fb",
+        "item_type": "Mobiglass",
+        "title": "asdasdasd",
+        "description": "dsadasdsa",
+        "game_item_id": "b05dbd56-062e-44d2-a318-ce5a5a97f078"
+      }
+    ],
+    "rowCount": 10,
+    "executionTime": 30
+  },
+  {
+    "section": "Query 3: SELECT ",
+    "query": "SELECT \n    'NULL user_seller_id AND contractor_seller_id' as edge_case,\n    COUNT(*) as count\nFROM market_listings ml\nINNER JOIN market_unique_listings mul ON ml.listing_id = mul.listing_id\nWHERE ml.user_seller_id IS NULL AND ml.contractor_seller_id IS NULL\n\nUNION ALL\n\nSELECT \n    'BOTH user_seller_id AND contractor_seller_id set' as edge_case,\n    COUNT(*) as count\nFROM market_listings ml\nINNER JOIN market_unique_listings mul ON ml.listing_id = mul.listing_id\nWHERE ml.user_seller_id IS NOT NULL AND ml.contractor_seller_id IS NOT NULL\n\nUNION ALL\n\nSELECT \n    'NULL details_id' as edge_case,\n    COUNT(*) as count\nFROM market_unique_listings\nWHERE details_id IS NULL\n\nUNION ALL\n\nSELECT \n    'Orphaned (no market_listing)' as edge_case,\n    COUNT(*) as count\nFROM market_unique_listings mul\nLEFT JOIN market_listings ml ON mul.listing_id = ml.listing_id\nWHERE ml.listing_id IS NULL\n\nUNION ALL\n\nSELECT \n    'Zero or negative quantity' as edge_case,\n    COUNT(*) as count\nFROM market_listings ml\nINNER JOIN market_unique_listings mul ON ml.listing_id = mul.listing_id\nWHERE ml.quantity_available <= 0\n\nUNION ALL\n\nSELECT \n    'Zero or negative price' as edge_case,\n    COUNT(*) as count\nFROM market_listings ml\nINNER JOIN market_unique_listings mul ON ml.listing_id = mul.listing_id\nWHERE ml.price <= 0\n\nUNION ALL\n\nSELECT \n    'Expired but still active' as edge_case,\n    COUNT(*) as count\nFROM market_listings ml\nINNER JOIN market_unique_listings mul ON ml.listing_id = mul.listing_id\nWHERE ml.status = 'active' AND ml.expiration < NOW()",
+    "results": [
+      {
+        "edge_case": "NULL user_seller_id AND contractor_seller_id",
+        "count": "0"
+      },
+      {
+        "edge_case": "BOTH user_seller_id AND contractor_seller_id set",
+        "count": "0"
+      },
+      {
+        "edge_case": "NULL details_id",
+        "count": "0"
+      },
+      {
+        "edge_case": "Orphaned (no market_listing)",
+        "count": "0"
+      },
+      {
+        "edge_case": "Zero or negative quantity",
+        "count": "1"
+      },
+      {
+        "edge_case": "Zero or negative price",
+        "count": "5"
+      },
+      {
+        "edge_case": "Expired but still active",
+        "count": "0"
+      }
+    ],
+    "rowCount": 7,
+    "executionTime": 17
+  },
+  {
+    "section": "Query 4: SELECT ",
+    "query": "SELECT \n    ml.sale_type,\n    COUNT(*) as count,\n    MIN(ml.price) as min_price,\n    MAX(ml.price) as max_price,\n    AVG(ml.price) as avg_price\nFROM market_listings ml\nINNER JOIN market_unique_listings mul ON ml.listing_id = mul.listing_id\nGROUP BY ml.sale_type\nORDER BY count DESC",
+    "results": [
+      {
+        "sale_type": "sale",
+        "count": "36",
+        "min_price": "0",
+        "max_price": "123123",
+        "avg_price": "8847.8888888888888889"
+      }
+    ],
+    "rowCount": 1,
+    "executionTime": 12
+  },
+  {
+    "section": "Query 5: -- PART 2: AGGREGATE LISTINGS AUDIT",
+    "query": "-- PART 2: AGGREGATE LISTINGS AUDIT\n\nSELECT \n    ml.status,\n    COUNT(*) as count,\n    COUNT(DISTINCT ml.user_seller_id) as unique_user_sellers,\n    COUNT(DISTINCT ml.contractor_seller_id) as unique_contractor_sellers\nFROM market_listings ml\nINNER JOIN market_aggregate_listings mal ON ml.listing_id = mal.aggregate_listing_id\nGROUP BY ml.status\nORDER BY count DESC",
+    "results": [],
+    "rowCount": 0,
+    "executionTime": 21
+  },
+  {
+    "section": "Query 6: SELECT ",
+    "query": "SELECT \n    ml.listing_id,\n    ml.sale_type,\n    ml.price,\n    ml.quantity_available,\n    ml.status,\n    ml.internal,\n    ml.user_seller_id,\n    ml.contractor_seller_id,\n    ml.timestamp,\n    ml.expiration,\n    mal.aggregate_id,\n    ma.wiki_id,\n    ma.details_id,\n    mld.item_type,\n    mld.title,\n    mld.description,\n    mld.game_item_id\nFROM market_listings ml\nINNER JOIN market_aggregate_listings mal ON ml.listing_id = mal.aggregate_listing_id\nINNER JOIN market_aggregates ma ON mal.aggregate_id = ma.aggregate_id\nLEFT JOIN market_listing_details mld ON ma.details_id = mld.details_id\nLIMIT 10",
+    "results": [],
+    "rowCount": 0,
+    "executionTime": 10
+  },
+  {
+    "section": "Query 7: SELECT ",
+    "query": "SELECT \n    'NULL aggregate_id' as edge_case,\n    COUNT(*) as count\nFROM market_aggregate_listings\nWHERE aggregate_id IS NULL\n\nUNION ALL\n\nSELECT \n    'Orphaned aggregate_listing (no market_listing)' as edge_case,\n    COUNT(*) as count\nFROM market_aggregate_listings mal\nLEFT JOIN market_listings ml ON mal.aggregate_listing_id = ml.listing_id\nWHERE ml.listing_id IS NULL\n\nUNION ALL\n\nSELECT \n    'Orphaned aggregate (no market_aggregate)' as edge_case,\n    COUNT(*) as count\nFROM market_aggregate_listings mal\nLEFT JOIN market_aggregates ma ON mal.aggregate_id = ma.aggregate_id\nWHERE ma.aggregate_id IS NULL\n\nUNION ALL\n\nSELECT \n    'NULL wiki_id in aggregates' as edge_case,\n    COUNT(*) as count\nFROM market_aggregates\nWHERE wiki_id IS NULL\n\nUNION ALL\n\nSELECT \n    'NULL details_id in aggregates' as edge_case,\n    COUNT(*) as count\nFROM market_aggregates\nWHERE details_id IS NULL\n\nUNION ALL\n\nSELECT \n    'Zero or negative quantity' as edge_case,\n    COUNT(*) as count\nFROM market_listings ml\nINNER JOIN market_aggregate_listings mal ON ml.listing_id = mal.aggregate_listing_id\nWHERE ml.quantity_available <= 0\n\nUNION ALL\n\nSELECT \n    'Zero or negative price' as edge_case,\n    COUNT(*) as count\nFROM market_listings ml\nINNER JOIN market_aggregate_listings mal ON ml.listing_id = mal.aggregate_listing_id\nWHERE ml.price <= 0",
+    "results": [
+      {
+        "edge_case": "NULL aggregate_id",
+        "count": "0"
+      },
+      {
+        "edge_case": "Orphaned aggregate_listing (no market_listing)",
+        "count": "0"
+      },
+      {
+        "edge_case": "Orphaned aggregate (no market_aggregate)",
+        "count": "0"
+      },
+      {
+        "edge_case": "NULL wiki_id in aggregates",
+        "count": "0"
+      },
+      {
+        "edge_case": "NULL details_id in aggregates",
+        "count": "0"
+      },
+      {
+        "edge_case": "Zero or negative quantity",
+        "count": "0"
+      },
+      {
+        "edge_case": "Zero or negative price",
+        "count": "0"
+      }
+    ],
+    "rowCount": 7,
+    "executionTime": 7
+  },
+  {
+    "section": "Query 8: SELECT ",
+    "query": "SELECT \n    ml.sale_type,\n    COUNT(*) as count,\n    MIN(ml.price) as min_price,\n    MAX(ml.price) as max_price,\n    AVG(ml.price) as avg_price\nFROM market_listings ml\nINNER JOIN market_aggregate_listings mal ON ml.listing_id = mal.aggregate_listing_id\nGROUP BY ml.sale_type\nORDER BY count DESC",
+    "results": [],
+    "rowCount": 0,
+    "executionTime": 7
+  },
+  {
+    "section": "Query 9: -- PART 3: MULTIPLE LISTINGS AUDIT",
+    "query": "-- PART 3: MULTIPLE LISTINGS AUDIT\n\nSELECT \n    ml.status,\n    COUNT(*) as count,\n    COUNT(DISTINCT ml.user_seller_id) as unique_user_sellers,\n    COUNT(DISTINCT ml.contractor_seller_id) as unique_contractor_sellers\nFROM market_listings ml\nINNER JOIN market_multiple_listings mml ON ml.listing_id = mml.multiple_listing_id\nGROUP BY ml.status\nORDER BY count DESC",
+    "results": [],
+    "rowCount": 0,
+    "executionTime": 12
+  },
+  {
+    "section": "Query 10: SELECT ",
+    "query": "SELECT \n    ml.listing_id,\n    ml.sale_type,\n    ml.price,\n    ml.quantity_available,\n    ml.status,\n    ml.internal,\n    ml.user_seller_id,\n    ml.contractor_seller_id,\n    ml.timestamp,\n    ml.expiration,\n    mml.multiple_id,\n    mml.details_id,\n    mm.user_seller_id as multiple_user_seller_id,\n    mm.contractor_seller_id as multiple_contractor_seller_id,\n    mm.details_id as multiple_details_id,\n    mm.default_listing_id,\n    mm.timestamp as multiple_timestamp,\n    mld.item_type,\n    mld.title,\n    mld.description,\n    mld.game_item_id\nFROM market_listings ml\nINNER JOIN market_multiple_listings mml ON ml.listing_id = mml.multiple_listing_id\nINNER JOIN market_multiples mm ON mml.multiple_id = mm.multiple_id\nLEFT JOIN market_listing_details mld ON mml.details_id = mld.details_id\nLIMIT 10",
+    "results": [],
+    "rowCount": 0,
+    "executionTime": 13
+  },
+  {
+    "section": "Query 11: SELECT ",
+    "query": "SELECT \n    'NULL multiple_id' as edge_case,\n    COUNT(*) as count\nFROM market_multiple_listings\nWHERE multiple_id IS NULL\n\nUNION ALL\n\nSELECT \n    'NULL details_id in multiple_listings' as edge_case,\n    COUNT(*) as count\nFROM market_multiple_listings\nWHERE details_id IS NULL\n\nUNION ALL\n\nSELECT \n    'Orphaned multiple_listing (no market_listing)' as edge_case,\n    COUNT(*) as count\nFROM market_multiple_listings mml\nLEFT JOIN market_listings ml ON mml.multiple_listing_id = ml.listing_id\nWHERE ml.listing_id IS NULL\n\nUNION ALL\n\nSELECT \n    'Orphaned multiple (no market_multiple)' as edge_case,\n    COUNT(*) as count\nFROM market_multiple_listings mml\nLEFT JOIN market_multiples mm ON mml.multiple_id = mm.multiple_id\nWHERE mm.multiple_id IS NULL\n\nUNION ALL\n\nSELECT \n    'NULL default_listing_id in multiples' as edge_case,\n    COUNT(*) as count\nFROM market_multiples\nWHERE default_listing_id IS NULL\n\nUNION ALL\n\nSELECT \n    'Zero or negative quantity' as edge_case,\n    COUNT(*) as count\nFROM market_listings ml\nINNER JOIN market_multiple_listings mml ON ml.listing_id = mml.multiple_listing_id\nWHERE ml.quantity_available <= 0\n\nUNION ALL\n\nSELECT \n    'Zero or negative price' as edge_case,\n    COUNT(*) as count\nFROM market_listings ml\nINNER JOIN market_multiple_listings mml ON ml.listing_id = mml.multiple_listing_id\nWHERE ml.price <= 0",
+    "results": [
+      {
+        "edge_case": "NULL multiple_id",
+        "count": "0"
+      },
+      {
+        "edge_case": "NULL details_id in multiple_listings",
+        "count": "0"
+      },
+      {
+        "edge_case": "Orphaned multiple_listing (no market_listing)",
+        "count": "0"
+      },
+      {
+        "edge_case": "Orphaned multiple (no market_multiple)",
+        "count": "0"
+      },
+      {
+        "edge_case": "NULL default_listing_id in multiples",
+        "count": "0"
+      },
+      {
+        "edge_case": "Zero or negative quantity",
+        "count": "0"
+      },
+      {
+        "edge_case": "Zero or negative price",
+        "count": "0"
+      }
+    ],
+    "rowCount": 7,
+    "executionTime": 9
+  },
+  {
+    "section": "Query 12: SELECT ",
+    "query": "SELECT \n    ml.sale_type,\n    COUNT(*) as count,\n    MIN(ml.price) as min_price,\n    MAX(ml.price) as max_price,\n    AVG(ml.price) as avg_price\nFROM market_listings ml\nINNER JOIN market_multiple_listings mml ON ml.listing_id = mml.multiple_listing_id\nGROUP BY ml.sale_type\nORDER BY count DESC",
+    "results": [],
+    "rowCount": 0,
+    "executionTime": 7
+  },
+  {
+    "section": "Query 13: -- PART 4: OVERALL STATUS AND PRICING ANALYSIS",
+    "query": "-- PART 4: OVERALL STATUS AND PRICING ANALYSIS\n\nSELECT DISTINCT status, COUNT(*) as count\nFROM market_listings\nGROUP BY status\nORDER BY count DESC",
+    "results": [
+      {
+        "status": "inactive",
+        "count": "23"
+      },
+      {
+        "status": "archived",
+        "count": "13"
+      }
+    ],
+    "rowCount": 2,
+    "executionTime": 7
+  },
+  {
+    "section": "Query 14: SELECT DISTINCT sale_type, COUNT(*) as count",
+    "query": "SELECT DISTINCT sale_type, COUNT(*) as count\nFROM market_listings\nGROUP BY sale_type\nORDER BY count DESC",
+    "results": [
+      {
+        "sale_type": "sale",
+        "count": "36"
+      }
+    ],
+    "rowCount": 1,
+    "executionTime": 9
+  },
+  {
+    "section": "Query 15: SELECT ",
+    "query": "SELECT \n    'Unique Listings' as listing_type,\n    COUNT(*) as total_count,\n    COUNT(CASE WHEN ml.price = 0 THEN 1 END) as zero_price_count,\n    MIN(ml.price) as min_price,\n    MAX(ml.price) as max_price,\n    AVG(ml.price) as avg_price,\n    PERCENTILE_CONT(0.5) WITHIN GROUP (ORDER BY ml.price) as median_price\nFROM market_listings ml\nINNER JOIN market_unique_listings mul ON ml.listing_id = mul.listing_id\n\nUNION ALL\n\nSELECT \n    'Aggregate Listings' as listing_type,\n    COUNT(*) as total_count,\n    COUNT(CASE WHEN ml.price = 0 THEN 1 END) as zero_price_count,\n    MIN(ml.price) as min_price,\n    MAX(ml.price) as max_price,\n    AVG(ml.price) as avg_price,\n    PERCENTILE_CONT(0.5) WITHIN GROUP (ORDER BY ml.price) as median_price\nFROM market_listings ml\nINNER JOIN market_aggregate_listings mal ON ml.listing_id = mal.aggregate_listing_id\n\nUNION ALL\n\nSELECT \n    'Multiple Listings' as listing_type,\n    COUNT(*) as total_count,\n    COUNT(CASE WHEN ml.price = 0 THEN 1 END) as zero_price_count,\n    MIN(ml.price) as min_price,\n    MAX(ml.price) as max_price,\n    AVG(ml.price) as avg_price,\n    PERCENTILE_CONT(0.5) WITHIN GROUP (ORDER BY ml.price) as median_price\nFROM market_listings ml\nINNER JOIN market_multiple_listings mml ON ml.listing_id = mml.multiple_listing_id",
+    "results": [
+      {
+        "listing_type": "Unique Listings",
+        "total_count": "36",
+        "zero_price_count": "5",
+        "min_price": "0",
+        "max_price": "123123",
+        "avg_price": "8847.8888888888888889",
+        "median_price": 123
+      },
+      {
+        "listing_type": "Aggregate Listings",
+        "total_count": "0",
+        "zero_price_count": "0",
+        "min_price": null,
+        "max_price": null,
+        "avg_price": null,
+        "median_price": null
+      },
+      {
+        "listing_type": "Multiple Listings",
+        "total_count": "0",
+        "zero_price_count": "0",
+        "min_price": null,
+        "max_price": null,
+        "avg_price": null,
+        "median_price": null
+      }
+    ],
+    "rowCount": 3,
+    "executionTime": 16
+  },
+  {
+    "section": "Query 16: SELECT ",
+    "query": "SELECT \n    'Unique Listings' as listing_type,\n    COUNT(*) as total_count,\n    MIN(ml.quantity_available) as min_quantity,\n    MAX(ml.quantity_available) as max_quantity,\n    AVG(ml.quantity_available) as avg_quantity,\n    PERCENTILE_CONT(0.5) WITHIN GROUP (ORDER BY ml.quantity_available) as median_quantity\nFROM market_listings ml\nINNER JOIN market_unique_listings mul ON ml.listing_id = mul.listing_id\n\nUNION ALL\n\nSELECT \n    'Aggregate Listings' as listing_type,\n    COUNT(*) as total_count,\n    MIN(ml.quantity_available) as min_quantity,\n    MAX(ml.quantity_available) as max_quantity,\n    AVG(ml.quantity_available) as avg_quantity,\n    PERCENTILE_CONT(0.5) WITHIN GROUP (ORDER BY ml.quantity_available) as median_quantity\nFROM market_listings ml\nINNER JOIN market_aggregate_listings mal ON ml.listing_id = mal.aggregate_listing_id\n\nUNION ALL\n\nSELECT \n    'Multiple Listings' as listing_type,\n    COUNT(*) as total_count,\n    MIN(ml.quantity_available) as min_quantity,\n    MAX(ml.quantity_available) as max_quantity,\n    AVG(ml.quantity_available) as avg_quantity,\n    PERCENTILE_CONT(0.5) WITHIN GROUP (ORDER BY ml.quantity_available) as median_quantity\nFROM market_listings ml\nINNER JOIN market_multiple_listings mml ON ml.listing_id = mml.multiple_listing_id",
+    "results": [
+      {
+        "listing_type": "Unique Listings",
+        "total_count": "36",
+        "min_quantity": 0,
+        "max_quantity": 13232,
+        "avg_quantity": "416.2777777777777778",
+        "median_quantity": 1
+      },
+      {
+        "listing_type": "Aggregate Listings",
+        "total_count": "0",
+        "min_quantity": null,
+        "max_quantity": null,
+        "avg_quantity": null,
+        "median_quantity": null
+      },
+      {
+        "listing_type": "Multiple Listings",
+        "total_count": "0",
+        "min_quantity": null,
+        "max_quantity": null,
+        "avg_quantity": null,
+        "median_quantity": null
+      }
+    ],
+    "rowCount": 3,
+    "executionTime": 9
+  },
+  {
+    "section": "Query 17: -- PART 5: LISTING TYPE DISTRIBUTION",
+    "query": "-- PART 5: LISTING TYPE DISTRIBUTION\n\nSELECT \n    'Unique Listings' as listing_type,\n    COUNT(*) as count,\n    ROUND(COUNT(*) * 100.0 / (SELECT COUNT(*) FROM market_listings), 2) as percentage\nFROM market_listings ml\nINNER JOIN market_unique_listings mul ON ml.listing_id = mul.listing_id\n\nUNION ALL\n\nSELECT \n    'Aggregate Listings' as listing_type,\n    COUNT(*) as count,\n    ROUND(COUNT(*) * 100.0 / (SELECT COUNT(*) FROM market_listings), 2) as percentage\nFROM market_listings ml\nINNER JOIN market_aggregate_listings mal ON ml.listing_id = mal.aggregate_listing_id\n\nUNION ALL\n\nSELECT \n    'Multiple Listings' as listing_type,\n    COUNT(*) as count,\n    ROUND(COUNT(*) * 100.0 / (SELECT COUNT(*) FROM market_listings), 2) as percentage\nFROM market_listings ml\nINNER JOIN market_multiple_listings mml ON ml.listing_id = mml.multiple_listing_id\n\nUNION ALL\n\nSELECT \n    'Unclassified (no type)' as listing_type,\n    COUNT(*) as count,\n    ROUND(COUNT(*) * 100.0 / (SELECT COUNT(*) FROM market_listings), 2) as percentage\nFROM market_listings ml\nLEFT JOIN market_unique_listings mul ON ml.listing_id = mul.listing_id\nLEFT JOIN market_aggregate_listings mal ON ml.listing_id = mal.aggregate_listing_id\nLEFT JOIN market_multiple_listings mml ON ml.listing_id = mml.multiple_listing_id\nWHERE mul.listing_id IS NULL \n  AND mal.aggregate_listing_id IS NULL \n  AND mml.multiple_listing_id IS NULL",
+    "results": [
+      {
+        "listing_type": "Unique Listings",
+        "count": "36",
+        "percentage": "100.00"
+      },
+      {
+        "listing_type": "Aggregate Listings",
+        "count": "0",
+        "percentage": "0.00"
+      },
+      {
+        "listing_type": "Multiple Listings",
+        "count": "0",
+        "percentage": "0.00"
+      },
+      {
+        "listing_type": "Unclassified (no type)",
+        "count": "0",
+        "percentage": "0.00"
+      }
+    ],
+    "rowCount": 4,
+    "executionTime": 12
+  },
+  {
+    "section": "Query 18: -- PART 6: ITEM TYPE ANALYSIS",
+    "query": "-- PART 6: ITEM TYPE ANALYSIS\n\nSELECT \n    mld.item_type,\n    COUNT(*) as count\nFROM market_unique_listings mul\nLEFT JOIN market_listing_details mld ON mul.details_id = mld.details_id\nGROUP BY mld.item_type\nORDER BY count DESC\nLIMIT 20",
+    "results": [
+      {
+        "item_type": "Other",
+        "count": "7"
+      },
+      {
+        "item_type": "Thrown Weapon",
+        "count": "5"
+      },
+      {
+        "item_type": "Mobiglass",
+        "count": "4"
+      },
+      {
+        "item_type": "Tractor Beam",
+        "count": "3"
+      },
+      {
+        "item_type": "Flare",
+        "count": "3"
+      },
+      {
+        "item_type": "Ship for Sale/Rental",
+        "count": "3"
+      },
+      {
+        "item_type": "Container",
+        "count": "3"
+      },
+      {
+        "item_type": "Torso",
+        "count": "2"
+      },
+      {
+        "item_type": "Jumpsuits",
+        "count": "2"
+      },
+      {
+        "item_type": "Melee Weapon",
+        "count": "1"
+      },
+      {
+        "item_type": "Ranged Weapon",
+        "count": "1"
+      },
+      {
+        "item_type": "Missile",
+        "count": "1"
+      },
+      {
+        "item_type": "Mining Head",
+        "count": "1"
+      }
+    ],
+    "rowCount": 13,
+    "executionTime": 15
+  },
+  {
+    "section": "Query 19: SELECT ",
+    "query": "SELECT \n    mld.item_type,\n    COUNT(*) as count\nFROM market_aggregate_listings mal\nINNER JOIN market_aggregates ma ON mal.aggregate_id = ma.aggregate_id\nLEFT JOIN market_listing_details mld ON ma.details_id = mld.details_id\nGROUP BY mld.item_type\nORDER BY count DESC\nLIMIT 20",
+    "results": [],
+    "rowCount": 0,
+    "executionTime": 7
+  },
+  {
+    "section": "Query 20: SELECT ",
+    "query": "SELECT \n    mld.item_type,\n    COUNT(*) as count\nFROM market_multiple_listings mml\nLEFT JOIN market_listing_details mld ON mml.details_id = mld.details_id\nGROUP BY mld.item_type\nORDER BY count DESC\nLIMIT 20",
+    "results": [],
+    "rowCount": 0,
+    "executionTime": 10
+  }
+]
