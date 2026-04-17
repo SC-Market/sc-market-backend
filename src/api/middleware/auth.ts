@@ -187,13 +187,12 @@ export async function userAuthorized(
       // Enhanced logging for debugging session issues
       logger.warn("Authentication failed - no valid session", {
         path: req.path,
-        originalUrl: req.originalUrl,
         hasSessionID: !!req.sessionID,
-        sessionID: req.sessionID,
+        sessionID: req.sessionID?.substring(0, 10),
         hasCookie: !!req.headers.cookie,
-        cookieHeader: req.headers.cookie?.substring(0, 50), // First 50 chars only
-        ip: req.ip,
-        userAgent: req.headers["user-agent"],
+        hasPassport: !!(req.session as any)?.passport,
+        passportUser: (req.session as any)?.passport?.user?.substring?.(0, 10),
+        isAuthenticated: req.isAuthenticated?.(),
       })
       res.status(401).json(createUnauthorizedErrorResponse())
       return
