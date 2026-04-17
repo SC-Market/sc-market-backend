@@ -1,16 +1,16 @@
 import type { Knex } from "knex";
 
-/**
- * Stub migration for previously applied feature flags migration
- * This file was deleted but the migration was already run in the database
- * This stub allows the migration system to continue functioning
- */
-
 export async function up(knex: Knex): Promise<void> {
-  // Already applied - no-op
-  // Original migration created user_preferences table for feature flags
+  if (!(await knex.schema.hasTable("user_preferences"))) {
+    await knex.schema.createTable("user_preferences", (table) => {
+      table.uuid("user_id").primary().references("user_id").inTable("accounts").onDelete("CASCADE");
+      table.string("market_version", 10).notNullable().defaultTo("V1");
+      table.timestamp("updated_at").notNullable().defaultTo(knex.fn.now());
+      table.index("user_id");
+    });
+  }
 }
 
 export async function down(knex: Knex): Promise<void> {
-  // Not reversible - no-op
+  await knex.schema.dropTableIfExists("user_preferences");
 }
