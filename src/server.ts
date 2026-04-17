@@ -1,5 +1,6 @@
 import express, { Request, RequestHandler } from "express"
 import compression from "compression"
+import cookieParser from "cookie-parser"
 import passport from "passport"
 import cors, { CorsOptions } from "cors"
 import session from "express-session"
@@ -233,6 +234,7 @@ const sessionMiddleware = session({
 })
 
 app.use(sessionMiddleware)
+app.use(cookieParser())
 
 app.use(express.json({ limit: "2.5mb" }))
 app.use(

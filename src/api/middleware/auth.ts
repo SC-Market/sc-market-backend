@@ -11,6 +11,11 @@ import { database } from "../../clients/database/knex-db.js"
 import * as profileDb from "../routes/v1/profiles/database.js"
 import * as contractorDb from "../routes/v1/contractors/database.js"
 import logger from "../../logger/logger.js"
+import {
+  getAccessTokenFromRequest,
+  verifyAccessToken,
+  isJWTAuthEnabled,
+} from "../util/jwt.js"
 
 // Extended Request interface for token support
 export interface AuthRequest extends Request {
@@ -22,7 +27,24 @@ export interface AuthRequest extends Request {
     expires_at?: Date
     contractor_ids?: string[]
   }
-  authMethod?: "session" | "token"
+  authMethod?: "session" | "token" | "jwt"
+}
+
+/**
+ * Try to authenticate via JWT cookie. Returns the user if successful, null otherwise.
+ * Only active when JWT_AUTH_ENABLED=true.
+ */
+async function tryJWTAuth(req: Request): Promise<User | null> {
+  if (!isJWTAuthEnabled()) return null
+  const accessToken = getAccessTokenFromRequest(req)
+  if (!accessToken) return null
+  const payload = verifyAccessToken(accessToken)
+  if (!payload) return null
+  try {
+    return await profileDb.getUser({ user_id: payload.sub })
+  } catch {
+    return null
+  }
 }
 
 // Token authentication helper - we'll import database dynamically to avoid circular deps
@@ -162,6 +184,24 @@ export async function userAuthorized(
           .json(createUnauthorizedErrorResponse("Invalid or expired token"))
         return
       }
+    }
+
+    // Try JWT cookie auth (if enabled)
+    const jwtUser = await tryJWTAuth(req)
+    if (jwtUser) {
+      const authReq = req as AuthRequest
+      authReq.user = jwtUser
+      authReq.authMethod = "jwt"
+      if (jwtUser.banned) {
+        res.status(418).json(createErrorResponse({ message: "Internal server error" }))
+        return
+      }
+      if (jwtUser.role === "user" || jwtUser.role === "admin") {
+        next()
+        return
+      }
+      res.status(403).json(createForbiddenErrorResponse())
+      return
     }
 
     // Fall back to session authentication
@@ -319,6 +359,24 @@ export async function adminAuthorized(
           .json(createErrorResponse({ message: "Invalid or expired token" }))
         return
       }
+    }
+
+    // Try JWT cookie auth (if enabled)
+    const jwtAdmin = await tryJWTAuth(req)
+    if (jwtAdmin) {
+      const authReq = req as AuthRequest
+      authReq.user = jwtAdmin
+      authReq.authMethod = "jwt"
+      if (jwtAdmin.banned) {
+        res.status(418).json(createErrorResponse({ message: "Internal server error" }))
+        return
+      }
+      if (jwtAdmin.role === "admin") {
+        next()
+        return
+      }
+      res.status(403).json(createErrorResponse({ message: "Unauthorized" }))
+      return
     }
 
     // Fall back to session authentication

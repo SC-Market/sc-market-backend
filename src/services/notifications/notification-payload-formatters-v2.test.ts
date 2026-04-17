@@ -384,4 +384,134 @@ describe('notification-payload-formatters-v2', () => {
       expect(payload.body).toContain('Platinum')
     })
   })
+
+  describe('Variant Information in Notifications (Requirement 43.10)', () => {
+    it('includes variant ID in notification data', () => {
+      const payload = formatMarketBidNotificationPayloadV2(
+        mockListing,
+        45000,
+        'variant-001'
+      )
+
+      expect(payload.data.variantId).toBe('variant-001')
+    })
+
+    it('includes quality tier in notification body', () => {
+      const payload = formatMarketOfferNotificationPayloadV2(
+        mockListing,
+        40000,
+        'variant-001'
+      )
+
+      expect(payload.body).toContain('Diamond') // Tier 5
+    })
+
+    it('includes crafted source in notification body', () => {
+      const payload = formatNewOrderNotificationPayloadV2(mockOrder)
+
+      expect(payload.body).toContain('Crafted')
+    })
+
+    it('includes quality value in detailed notifications', () => {
+      const payload = formatMarketBidNotificationPayloadV2(
+        mockListing,
+        45000,
+        'variant-001'
+      )
+
+      // Notification includes quality tier (Diamond for tier 5)
+      expect(payload.body).toContain('Diamond')
+      // Notification includes crafted source
+      expect(payload.body).toContain('Crafted')
+    })
+
+    it('formats notification without variant when not specified', () => {
+      const payload = formatMarketBidNotificationPayloadV2(mockListing, 45000)
+
+      expect(payload.data.variantId).toBeUndefined()
+      expect(payload.body).not.toContain('Diamond')
+      expect(payload.body).not.toContain('Crafted')
+    })
+
+    it('includes variant information in buy order match notifications', () => {
+      const variant: VariantDetail = {
+        variant_id: 'variant-001',
+        attributes: {
+          quality_tier: 4,
+          quality_value: 85.0,
+          crafted_source: 'looted',
+        },
+        display_name: 'Tier 4 (85.0%) - Looted',
+        short_name: 'T4 Looted',
+        quantity: 5,
+        price: 30000,
+        locations: ['Area 18'],
+      }
+
+      const payload = formatBuyOrderMatchNotificationPayloadV2(
+        'buy-order-123',
+        'listing-456',
+        'Matched Listing',
+        'variant-001',
+        variant
+      )
+
+      expect(payload.body).toContain('Platinum') // Tier 4
+      expect(payload.body).toContain('Looted')
+      expect(payload.data.variantId).toBe('variant-001')
+    })
+
+    it('includes variant information in order status notifications', () => {
+      const payload = formatOrderStatusNotificationPayloadV2(
+        mockOrderDetail,
+        'shipped'
+      )
+
+      expect(payload.body).toContain('Diamond') // Tier 5 from first item
+    })
+
+    it('handles multiple variants in order notifications', () => {
+      const multiVariantOrder: CreateOrderResponse = {
+        ...mockOrder,
+        items: [
+          {
+            ...mockOrder.items[0],
+            variant: {
+              variant_id: 'variant-001',
+              attributes: {
+                quality_tier: 5,
+                crafted_source: 'crafted',
+              },
+              display_name: 'Tier 5 - Crafted',
+              short_name: 'T5 C',
+            },
+          },
+          {
+            order_item_id: 'order-item-002',
+            listing_id: 'listing-124',
+            item_id: 'item-790',
+            variant: {
+              variant_id: 'variant-002',
+              attributes: {
+                quality_tier: 3,
+                crafted_source: 'store',
+              },
+              display_name: 'Tier 3 - Store',
+              short_name: 'T3 S',
+            },
+            quantity: 1,
+            price_per_unit: 20000,
+            subtotal: 20000,
+          },
+        ],
+      }
+
+      const payload = formatNewOrderNotificationPayloadV2(multiVariantOrder)
+
+      // Should show first item's quality tier
+      expect(payload.body).toContain('Diamond')
+      // Should indicate multiple items
+      expect(payload.body).toContain('and 1 more item')
+    })
+  })
 })
