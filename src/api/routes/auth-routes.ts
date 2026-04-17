@@ -66,10 +66,16 @@ export function setupAuthRoutes(app: any, frontendUrl: URL): void {
         return res.status(400).json({ error: "Failed to create state token" })
       }
 
-      return passport.authenticate("discord", {
-        session: true,
-        state: signedStateToken,
-      })(req, res, next)
+      // Save session before redirecting to Discord OAuth
+      req.session.save((saveErr) => {
+        if (saveErr) {
+          logger.error("Failed to save session before Discord OAuth", { error: saveErr })
+        }
+        return passport.authenticate("discord", {
+          session: true,
+          state: signedStateToken,
+        })(req, res, next)
+      })
     },
   )
 
@@ -88,11 +94,21 @@ export function setupAuthRoutes(app: any, frontendUrl: URL): void {
 
       if (!verified) {
         // Invalid or missing state - potential CSRF attack or tampering
+        logger.error("[Discord callback] State verification failed", {
+          hasState: !!receivedState,
+          stateLength: receivedState?.length,
+          statePreview: receivedState ? receivedState.substring(0, 50) + "..." : "none",
+        })
         // Redirect to frontend home page on failure
         return res.redirect(frontendUrl.toString())
       }
 
       const { path: redirectPath, action } = verified
+      logger.info("[Discord callback] State verified", {
+        redirectPath,
+        action,
+        origin: verified.origin,
+      })
 
       // Resolve redirect base from origin in state
       const redirectBase = getRedirectBase(verified.origin)
