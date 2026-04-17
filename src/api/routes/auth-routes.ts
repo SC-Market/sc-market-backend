@@ -184,7 +184,6 @@ export function setupAuthRoutes(app: any, frontendUrl: URL): void {
       }
 
       // State is valid, proceed with authentication
-      logger.info("[Auth] Starting passport.authenticate")
       return passport.authenticate(
         "discord",
         {
@@ -192,12 +191,6 @@ export function setupAuthRoutes(app: any, frontendUrl: URL): void {
           failWithError: true,
         },
         async (err: any, user: User | false, info: any) => {
-          logger.info("[Auth] Passport callback reached", {
-            hasErr: !!err,
-            hasUser: !!user,
-            errMessage: err?.message,
-            info,
-          })
           if (err) {
             logger.error("[Auth] Error", {
               error: err,

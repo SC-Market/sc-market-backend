@@ -22,7 +22,7 @@ export interface UserPreference {
 }
 
 export interface FeatureFlagConfig {
-  key: string
+  flag_name: string
   default_version: MarketVersion
   rollout_percentage: number
   enabled: boolean
@@ -73,11 +73,11 @@ export class FeatureFlagService {
     }
     const db = getKnex()
     const row = await db<FeatureFlagConfig>("feature_flag_config")
-      .where({ key: CONFIG_KEY })
+      .where({ flag_name: CONFIG_KEY })
       .first()
 
     const config: FeatureFlagConfig = row ?? {
-      key: CONFIG_KEY,
+      flag_name: CONFIG_KEY,
       default_version: "V1",
       rollout_percentage: 0,
       enabled: true,
@@ -94,7 +94,7 @@ export class FeatureFlagService {
   ): Promise<FeatureFlagConfig> {
     const db = getKnex()
     await db("feature_flag_config")
-      .where({ key: CONFIG_KEY })
+      .where({ flag_name: CONFIG_KEY })
       .update({ ...updates, updated_at: new Date() })
 
     configCache = null // bust cache

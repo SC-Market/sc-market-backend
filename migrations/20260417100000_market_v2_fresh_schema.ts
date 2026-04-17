@@ -447,6 +447,7 @@ export async function up(knex: Knex): Promise<void> {
       l.sale_type,
       l.listing_type,
       l.created_at,
+      l.updated_at,
       li.item_id,
       li.game_item_id,
       li.quantity_available,
@@ -473,12 +474,15 @@ export async function up(knex: Knex): Promise<void> {
        JOIN item_variants iv ON sl.variant_id = iv.variant_id
        WHERE sl.item_id = li.item_id AND sl.listed = true
       ) AS quality_tier_max,
+      gi.name AS game_item_name,
+      gi.type AS game_item_type,
       -- Full-text search vector
       setweight(to_tsvector('english', l.title), 'A') ||
-      setweight(to_tsvector('english', COALESCE(l.description, '')), 'B') AS search_vector
+      setweight(to_tsvector('english', COALESCE(l.description, '')), 'B') ||
+      setweight(to_tsvector('english', COALESCE(gi.name, '')), 'C') AS search_vector
     FROM listings l
     JOIN listing_items li ON l.listing_id = li.listing_id
-    WHERE l.status = 'active'
+    LEFT JOIN game_items gi ON li.game_item_id = gi.game_item_id
   `);
 
   await knex.raw(`
