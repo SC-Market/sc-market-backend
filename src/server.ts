@@ -212,6 +212,8 @@ const isProduction = app.get("env") === "production"
 const sessionMiddleware = session({
   secret: env.SESSION_SECRET!,
   name: "scmarket.sid",
+  resave: false,
+  saveUninitialized: false,
   cookie: {
     secure: isProduction, // Only secure in production (HTTPS required)
     maxAge: 3600000 * 24 * 60,
