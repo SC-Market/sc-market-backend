@@ -173,6 +173,18 @@ oapi.schema("ContractorRole", {
       title: "ContractorRole.manage_webhooks",
       type: "boolean",
     },
+    manage_blocklist: {
+      title: "ContractorRole.manage_blocklist",
+      type: "boolean",
+    },
+    claim_orders: {
+      title: "ContractorRole.claim_orders",
+      type: "boolean",
+    },
+    manage_theme: {
+      title: "ContractorRole.manage_theme",
+      type: "boolean",
+    },
   },
   required: [
     "contractor_id",
@@ -188,6 +200,9 @@ oapi.schema("ContractorRole", {
     "manage_market",
     "manage_recruiting",
     "manage_webhooks",
+    "manage_blocklist",
+    "claim_orders",
+    "manage_theme",
   ],
   additionalProperties: false,
   title: "ContractorRole",
@@ -272,6 +287,14 @@ oapi.schema("ContractorRoleBody", {
       title: "ContractorRoleBody.manage_blocklist",
       type: "boolean",
     },
+    claim_orders: {
+      title: "ContractorRoleBody.claim_orders",
+      type: "boolean",
+    },
+    manage_theme: {
+      title: "ContractorRoleBody.manage_theme",
+      type: "boolean",
+    },
   },
   required: [
     "name",
@@ -285,6 +308,8 @@ oapi.schema("ContractorRoleBody", {
     "manage_recruiting",
     "manage_webhooks",
     "manage_blocklist",
+    "claim_orders",
+    "manage_theme",
   ],
   additionalProperties: false,
   title: "ContractorRoleBody",
@@ -342,6 +367,14 @@ oapi.schema("ContractorRoleUpdateBody", {
     },
     manage_blocklist: {
       title: "ContractorRoleUpdateBody.manage_blocklist",
+      type: "boolean",
+    },
+    claim_orders: {
+      title: "ContractorRoleUpdateBody.claim_orders",
+      type: "boolean",
+    },
+    manage_theme: {
+      title: "ContractorRoleUpdateBody.manage_theme",
       type: "boolean",
     },
   },
