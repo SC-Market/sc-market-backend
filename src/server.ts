@@ -280,6 +280,34 @@ setupPassportStrategies(backend_url)
 app.use(passport.initialize())
 app.use(passport.session())
 
+// Global JWT auth: populate req.user from JWT cookie on ALL requests (including public ones).
+// This runs after passport.session() so session auth takes precedence if both exist.
+import {
+  isJWTAuthEnabled,
+  getAccessTokenFromRequest,
+  verifyAccessToken,
+} from "./api/util/jwt.js"
+
+app.use(async (req: Request, _res, next) => {
+  if (!req.user && isJWTAuthEnabled()) {
+    const accessToken = getAccessTokenFromRequest(req)
+    if (accessToken) {
+      const payload = verifyAccessToken(accessToken)
+      if (payload) {
+        try {
+          const user = await profileDb.getUser({ user_id: payload.sub })
+          if (user && !user.banned) {
+            req.user = user
+          }
+        } catch {
+          // User not found — continue without auth
+        }
+      }
+    }
+  }
+  next()
+})
+
 app.use(trackActivity)
 
 // Setup authentication routes
