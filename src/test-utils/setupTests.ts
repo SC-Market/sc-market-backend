@@ -225,7 +225,10 @@ vi.mock("../clients/database/knex-db.js", () => {
     return builder
   }
 
-  const mockKnexFn = vi.fn((table: string) => createQueryBuilder(table))
+  const mockKnexFn = vi.fn((table: string) => createQueryBuilder(table)) as any
+  mockKnexFn.raw = vi.fn(async (sql: string, bindings?: any[]) => ({ rows: [] }))
+  mockKnexFn.fn = { now: vi.fn(() => new Date()) }
+  mockKnexFn.transaction = vi.fn(async (cb: any) => cb(mockKnexFn))
 
   return {
     database: {
