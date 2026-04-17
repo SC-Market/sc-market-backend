@@ -1111,6 +1111,10 @@
 						],
 						"description": "Seller type"
 					},
+					"slug": {
+						"type": "string",
+						"description": "Username (for users) or spectrum_id (for contractors) - use for profile links"
+					},
 					"rating": {
 						"type": "number",
 						"format": "double",
@@ -1125,6 +1129,7 @@
 					"id",
 					"name",
 					"type",
+					"slug",
 					"rating"
 				],
 				"type": "object",
@@ -1325,6 +1330,18 @@
 						"format": "double",
 						"description": "Number of unique variants in this listing"
 					},
+					"seller_type": {
+						"type": "string",
+						"enum": [
+							"user",
+							"contractor"
+						],
+						"description": "Seller type (user or contractor)"
+					},
+					"seller_slug": {
+						"type": "string",
+						"description": "Username (for user sellers) or spectrum_id (for contractor sellers) - use for profile links"
+					},
 					"created_at": {
 						"type": "string",
 						"description": "ISO 8601 timestamp when listing was created"
@@ -1339,6 +1356,8 @@
 					"price_max",
 					"quantity_available",
 					"variant_count",
+					"seller_type",
+					"seller_slug",
 					"created_at"
 				],
 				"type": "object",
@@ -1694,6 +1713,10 @@
 						],
 						"description": "Seller type"
 					},
+					"seller_slug": {
+						"type": "string",
+						"description": "Username (for user sellers) or spectrum_id (for contractor sellers)"
+					},
 					"price_min": {
 						"type": "number",
 						"format": "double",
@@ -1736,6 +1759,7 @@
 					"seller_name",
 					"seller_rating",
 					"seller_type",
+					"seller_slug",
 					"price_min",
 					"price_max",
 					"quantity_available",

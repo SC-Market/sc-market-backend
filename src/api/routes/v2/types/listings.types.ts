@@ -104,6 +104,12 @@ export interface SearchListingsRequest {
   
   /** Number of results per page (default: 20, max: 100) */
   page_size?: number;
+  
+  /** Sort field */
+  sort_by?: 'created_at' | 'price' | 'quality' | 'seller_rating';
+  
+  /** Sort order */
+  sort_order?: 'asc' | 'desc';
 }
 
 /**
@@ -139,6 +145,12 @@ export interface ListingSearchResult {
   
   /** Number of unique variants in this listing */
   variant_count: number;
+  
+  /** Seller type (user or contractor) */
+  seller_type: 'user' | 'contractor';
+  
+  /** Username (for user sellers) or spectrum_id (for contractor sellers) - use for profile links */
+  seller_slug: string;
   
   /** ISO 8601 timestamp when listing was created */
   created_at: string;
@@ -261,6 +273,9 @@ export interface SellerInfo {
   
   /** Seller type */
   type: 'user' | 'contractor';
+  
+  /** Username (for users) or spectrum_id (for contractors) - use for profile links */
+  slug: string;
   
   /** Seller rating (0-5) */
   rating: number;

@@ -210,6 +210,12 @@ export class GameItemsV2Controller extends BaseController {
               WHEN ls.seller_type = 'contractor' THEN COALESCE(c.rating, 0)
             END AS seller_rating
           `),
+          knex.raw(`
+            CASE 
+              WHEN ls.seller_type = 'user' THEN u.username
+              WHEN ls.seller_type = 'contractor' THEN c.spectrum_id
+            END AS seller_slug
+          `),
         )
         .where("ls.game_item_id", id)
         .where("ls.status", "active")
@@ -291,6 +297,7 @@ export class GameItemsV2Controller extends BaseController {
           seller_name: row.seller_name || "Unknown",
           seller_rating: parseFloat(row.seller_rating) || 0,
           seller_type: row.seller_type,
+          seller_slug: row.seller_slug || "",
           price_min: parseInt(row.price_min, 10) || 0,
           price_max: parseInt(row.price_max, 10) || 0,
           quantity_available: row.quantity_available || 0,
