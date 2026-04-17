@@ -7,6 +7,557 @@
 		"requestBodies": {},
 		"responses": {},
 		"schemas": {
+			"VariantAttributes": {
+				"description": "Flexible JSONB attributes for item variants\nSupports quality tiers, crafting source, and future extensibility",
+				"properties": {
+					"quality_tier": {
+						"type": "number",
+						"format": "double",
+						"description": "Quality tier from 1 (lowest) to 5 (highest)"
+					},
+					"quality_value": {
+						"type": "number",
+						"format": "double",
+						"description": "Precise quality percentage from 0 to 100"
+					},
+					"crafted_source": {
+						"type": "string",
+						"enum": [
+							"crafted",
+							"store",
+							"looted",
+							"unknown"
+						],
+						"description": "How the item was obtained"
+					},
+					"blueprint_tier": {
+						"type": "number",
+						"format": "double",
+						"description": "Blueprint quality tier for craftable items (1-5)"
+					}
+				},
+				"type": "object",
+				"additionalProperties": false
+			},
+			"StockLotVariant": {
+				"description": "Variant information for stock lot",
+				"properties": {
+					"variant_id": {
+						"type": "string",
+						"description": "Variant UUID"
+					},
+					"attributes": {
+						"$ref": "#/components/schemas/VariantAttributes",
+						"description": "Variant attributes"
+					},
+					"display_name": {
+						"type": "string",
+						"description": "Display name (e.g., \"Tier 5 (95.5%) - Crafted\")"
+					},
+					"short_name": {
+						"type": "string",
+						"description": "Short name (e.g., \"T5 Crafted\")"
+					}
+				},
+				"required": [
+					"variant_id",
+					"attributes",
+					"display_name",
+					"short_name"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
+			"LocationInfo": {
+				"description": "Location information",
+				"properties": {
+					"location_id": {
+						"type": "string",
+						"description": "Location UUID"
+					},
+					"name": {
+						"type": "string",
+						"description": "Location name"
+					},
+					"is_preset": {
+						"type": "boolean",
+						"description": "Whether this is a preset location (vs custom)"
+					}
+				},
+				"required": [
+					"location_id",
+					"name",
+					"is_preset"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
+			"OwnerInfo": {
+				"description": "Owner information",
+				"properties": {
+					"user_id": {
+						"type": "string",
+						"description": "User UUID"
+					},
+					"username": {
+						"type": "string",
+						"description": "Username"
+					},
+					"display_name": {
+						"type": "string",
+						"description": "Display name"
+					},
+					"avatar_url": {
+						"type": "string",
+						"description": "Avatar URL"
+					}
+				},
+				"required": [
+					"user_id",
+					"username"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
+			"StockLotDetail": {
+				"description": "Complete stock lot detail",
+				"properties": {
+					"lot_id": {
+						"type": "string",
+						"description": "Stock lot UUID"
+					},
+					"item_id": {
+						"type": "string",
+						"description": "Item UUID this lot belongs to"
+					},
+					"variant": {
+						"$ref": "#/components/schemas/StockLotVariant",
+						"description": "Variant information"
+					},
+					"quantity_total": {
+						"type": "number",
+						"format": "double",
+						"description": "Total quantity in this lot"
+					},
+					"location": {
+						"allOf": [
+							{
+								"$ref": "#/components/schemas/LocationInfo"
+							}
+						],
+						"nullable": true,
+						"description": "Location information (null if unspecified)"
+					},
+					"owner": {
+						"allOf": [
+							{
+								"$ref": "#/components/schemas/OwnerInfo"
+							}
+						],
+						"nullable": true,
+						"description": "Owner information (null if unassigned)"
+					},
+					"listed": {
+						"type": "boolean",
+						"description": "Whether this lot is listed for sale"
+					},
+					"notes": {
+						"type": "string",
+						"nullable": true,
+						"description": "Optional notes about this lot"
+					},
+					"crafted_by": {
+						"type": "string",
+						"description": "User who crafted this item (if applicable)"
+					},
+					"crafted_at": {
+						"type": "string",
+						"description": "Timestamp when item was crafted (if applicable)"
+					},
+					"created_at": {
+						"type": "string",
+						"description": "ISO 8601 timestamp when lot was created"
+					},
+					"updated_at": {
+						"type": "string",
+						"description": "ISO 8601 timestamp when lot was last updated"
+					}
+				},
+				"required": [
+					"lot_id",
+					"item_id",
+					"variant",
+					"quantity_total",
+					"location",
+					"owner",
+					"listed",
+					"notes",
+					"created_at",
+					"updated_at"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
+			"GetStockLotsResponse": {
+				"description": "Response for fetching stock lots",
+				"properties": {
+					"lots": {
+						"items": {
+							"$ref": "#/components/schemas/StockLotDetail"
+						},
+						"type": "array",
+						"description": "Array of stock lots"
+					},
+					"total": {
+						"type": "number",
+						"format": "double",
+						"description": "Total number of lots matching filters"
+					},
+					"page": {
+						"type": "number",
+						"format": "double",
+						"description": "Current page number"
+					},
+					"page_size": {
+						"type": "number",
+						"format": "double",
+						"description": "Number of results per page"
+					}
+				},
+				"required": [
+					"lots",
+					"total",
+					"page",
+					"page_size"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
+			"UpdateStockLotResponse": {
+				"description": "Response for updating a stock lot",
+				"properties": {
+					"lot": {
+						"$ref": "#/components/schemas/StockLotDetail",
+						"description": "Updated stock lot"
+					}
+				},
+				"required": [
+					"lot"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
+			"UpdateStockLotRequest": {
+				"description": "Request body for updating a stock lot",
+				"properties": {
+					"quantity_total": {
+						"type": "number",
+						"format": "double",
+						"description": "New total quantity (optional)"
+					},
+					"listed": {
+						"type": "boolean",
+						"description": "New listed status (optional)"
+					},
+					"location_id": {
+						"type": "string",
+						"nullable": true,
+						"description": "New location UUID (optional, null to clear)"
+					},
+					"notes": {
+						"type": "string",
+						"nullable": true,
+						"description": "New notes (optional, null to clear)"
+					}
+				},
+				"type": "object",
+				"additionalProperties": false
+			},
+			"BulkUpdateResult": {
+				"description": "Result of a single lot update in bulk operation",
+				"properties": {
+					"lot_id": {
+						"type": "string",
+						"description": "Stock lot UUID"
+					},
+					"success": {
+						"type": "boolean",
+						"description": "Whether the update succeeded"
+					},
+					"error": {
+						"type": "string",
+						"description": "Error message if update failed"
+					}
+				},
+				"required": [
+					"lot_id",
+					"success"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
+			"BulkUpdateStockLotsResponse": {
+				"description": "Response for bulk stock lot updates",
+				"properties": {
+					"results": {
+						"items": {
+							"$ref": "#/components/schemas/BulkUpdateResult"
+						},
+						"type": "array",
+						"description": "Array of update results"
+					},
+					"success_count": {
+						"type": "number",
+						"format": "double",
+						"description": "Number of successful updates"
+					},
+					"failure_count": {
+						"type": "number",
+						"format": "double",
+						"description": "Number of failed updates"
+					}
+				},
+				"required": [
+					"results",
+					"success_count",
+					"failure_count"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
+			"BulkLotUpdate": {
+				"description": "Individual lot update in bulk operation",
+				"properties": {
+					"lot_id": {
+						"type": "string",
+						"description": "Stock lot UUID"
+					},
+					"quantity_total": {
+						"type": "number",
+						"format": "double",
+						"description": "New total quantity (optional)"
+					},
+					"listed": {
+						"type": "boolean",
+						"description": "New listed status (optional)"
+					},
+					"location_id": {
+						"type": "string",
+						"nullable": true,
+						"description": "New location UUID (optional)"
+					}
+				},
+				"required": [
+					"lot_id"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
+			"BulkUpdateStockLotsRequest": {
+				"description": "Request body for bulk stock lot updates",
+				"properties": {
+					"updates": {
+						"items": {
+							"$ref": "#/components/schemas/BulkLotUpdate"
+						},
+						"type": "array",
+						"description": "Array of lot updates"
+					}
+				},
+				"required": [
+					"updates"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
+			"OrderVariantDetail": {
+				"description": "Variant details for orders (separate from listings to avoid TSOA conflicts)",
+				"properties": {
+					"variant_id": {
+						"type": "string",
+						"description": "UUID of the variant"
+					},
+					"attributes": {
+						"$ref": "#/components/schemas/VariantAttributes",
+						"description": "Variant attributes (quality_tier, quality_value, crafted_source, etc)"
+					},
+					"display_name": {
+						"type": "string",
+						"description": "Human-readable display name (e.g., \"Tier 5 (95.5%) - Crafted\")"
+					},
+					"short_name": {
+						"type": "string",
+						"description": "Short name for compact display (e.g., \"T5 Crafted\")"
+					}
+				},
+				"required": [
+					"variant_id",
+					"attributes",
+					"display_name",
+					"short_name"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
+			"OrderItemDetail": {
+				"description": "Detailed information about an order item\nRequirement 25.9: Create order_market_items_v2 entries for each item",
+				"properties": {
+					"order_item_id": {
+						"type": "string",
+						"description": "UUID of the order item"
+					},
+					"listing_id": {
+						"type": "string",
+						"description": "UUID of the listing"
+					},
+					"item_id": {
+						"type": "string",
+						"description": "UUID of the listing item"
+					},
+					"variant": {
+						"$ref": "#/components/schemas/OrderVariantDetail",
+						"description": "Variant details with quality attributes"
+					},
+					"quantity": {
+						"type": "number",
+						"format": "double",
+						"description": "Quantity purchased"
+					},
+					"price_per_unit": {
+						"type": "number",
+						"format": "double",
+						"description": "Price per unit at time of purchase (snapshot)"
+					},
+					"subtotal": {
+						"type": "number",
+						"format": "double",
+						"description": "Subtotal for this item (quantity * price_per_unit)"
+					}
+				},
+				"required": [
+					"order_item_id",
+					"listing_id",
+					"item_id",
+					"variant",
+					"quantity",
+					"price_per_unit",
+					"subtotal"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
+			"CreateOrderResponse": {
+				"description": "Response from creating an order\nRequirement 25.10: Return order_id and order details on success",
+				"properties": {
+					"order_id": {
+						"type": "string",
+						"description": "UUID of the created order"
+					},
+					"buyer_id": {
+						"type": "string",
+						"description": "UUID of the buyer"
+					},
+					"seller_id": {
+						"type": "string",
+						"description": "UUID of the seller"
+					},
+					"total_price": {
+						"type": "number",
+						"format": "double",
+						"description": "Total price in aUEC (atomic units)"
+					},
+					"status": {
+						"type": "string",
+						"description": "Order status"
+					},
+					"created_at": {
+						"type": "string",
+						"description": "ISO 8601 timestamp of order creation"
+					},
+					"items": {
+						"items": {
+							"$ref": "#/components/schemas/OrderItemDetail"
+						},
+						"type": "array",
+						"description": "Array of order items with variant details"
+					},
+					"allocation_result": {
+						"properties": {
+							"total_allocated": {
+								"type": "number",
+								"format": "double"
+							},
+							"total_requested": {
+								"type": "number",
+								"format": "double"
+							},
+							"has_partial_allocations": {
+								"type": "boolean"
+							}
+						},
+						"required": [
+							"total_allocated",
+							"total_requested",
+							"has_partial_allocations"
+						],
+						"type": "object",
+						"description": "Stock allocation result summary"
+					}
+				},
+				"required": [
+					"order_id",
+					"buyer_id",
+					"seller_id",
+					"total_price",
+					"status",
+					"created_at",
+					"items"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
+			"OrderItemInput": {
+				"description": "Individual item in an order request",
+				"properties": {
+					"listing_id": {
+						"type": "string",
+						"description": "UUID of the listing"
+					},
+					"variant_id": {
+						"type": "string",
+						"description": "UUID of the specific variant to purchase"
+					},
+					"quantity": {
+						"type": "number",
+						"format": "double",
+						"description": "Quantity to purchase (must be > 0)"
+					}
+				},
+				"required": [
+					"listing_id",
+					"variant_id",
+					"quantity"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
+			"CreateOrderRequest": {
+				"description": "Request to create an order with variant-specific items\nRequirement 25.2: Accept array of items with listing_id, variant_id, and quantity",
+				"properties": {
+					"items": {
+						"items": {
+							"$ref": "#/components/schemas/OrderItemInput"
+						},
+						"type": "array",
+						"description": "Array of items to purchase"
+					}
+				},
+				"required": [
+					"items"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
 			"CreateListingResponse": {
 				"description": "Response for creating a listing",
 				"properties": {
@@ -55,38 +606,6 @@
 					"created_at",
 					"updated_at"
 				],
-				"type": "object",
-				"additionalProperties": false
-			},
-			"VariantAttributes": {
-				"description": "Flexible JSONB attributes for item variants\nSupports quality tiers, crafting source, and future extensibility",
-				"properties": {
-					"quality_tier": {
-						"type": "number",
-						"format": "double",
-						"description": "Quality tier from 1 (lowest) to 5 (highest)"
-					},
-					"quality_value": {
-						"type": "number",
-						"format": "double",
-						"description": "Precise quality percentage from 0 to 100"
-					},
-					"crafted_source": {
-						"type": "string",
-						"enum": [
-							"crafted",
-							"store",
-							"looted",
-							"unknown"
-						],
-						"description": "How the item was obtained"
-					},
-					"blueprint_tier": {
-						"type": "number",
-						"format": "double",
-						"description": "Blueprint quality tier for craftable items (1-5)"
-					}
-				},
 				"type": "object",
 				"additionalProperties": false
 			},
@@ -971,6 +1490,234 @@
 		"contact": {}
 	},
 	"paths": {
+		"/stock-lots": {
+			"get": {
+				"operationId": "GetStockLots",
+				"responses": {
+					"200": {
+						"description": "Stock lots with pagination metadata",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/GetStockLotsResponse"
+								}
+							}
+						}
+					}
+				},
+				"description": "Get stock lots with filters\n\nRetrieves stock lots with optional filtering by listing, game item, location, variant,\nand quality tier. Supports pagination and returns enriched lot information including\nvariant attributes, location details, and owner information.\n\nRequirements:\n- 20.1: GET /api/v2/stock-lots endpoint\n- 20.2: Accept listing_id filter parameter\n- 20.3: Accept game_item_id filter parameter\n- 20.4: Accept location_id filter parameter\n- 20.5: Accept listed filter parameter\n- 20.6: Accept variant_id filter parameter\n- 20.7: Accept quality_tier_min and quality_tier_max filter parameters\n- 20.8: Return array of stock lots with variant information\n- 20.9: Include location and owner details in response\n- 20.10: Support pagination with page and page_size parameters\n- 20.11: Return total count for pagination\n- 20.12: Include crafted_by information if applicable",
+				"summary": "Get stock lots",
+				"tags": [
+					"Stock Lots V2"
+				],
+				"security": [],
+				"parameters": [
+					{
+						"description": "Filter by listing UUID",
+						"in": "query",
+						"name": "listing_id",
+						"required": false,
+						"schema": {
+							"type": "string"
+						}
+					},
+					{
+						"description": "Filter by game item UUID",
+						"in": "query",
+						"name": "game_item_id",
+						"required": false,
+						"schema": {
+							"type": "string"
+						}
+					},
+					{
+						"description": "Filter by location UUID",
+						"in": "query",
+						"name": "location_id",
+						"required": false,
+						"schema": {
+							"type": "string"
+						}
+					},
+					{
+						"description": "Filter by listed status",
+						"in": "query",
+						"name": "listed",
+						"required": false,
+						"schema": {
+							"type": "boolean"
+						}
+					},
+					{
+						"description": "Filter by variant UUID",
+						"in": "query",
+						"name": "variant_id",
+						"required": false,
+						"schema": {
+							"type": "string"
+						}
+					},
+					{
+						"description": "Minimum quality tier (1-5)",
+						"in": "query",
+						"name": "quality_tier_min",
+						"required": false,
+						"schema": {
+							"format": "double",
+							"type": "number"
+						}
+					},
+					{
+						"description": "Maximum quality tier (1-5)",
+						"in": "query",
+						"name": "quality_tier_max",
+						"required": false,
+						"schema": {
+							"format": "double",
+							"type": "number"
+						}
+					},
+					{
+						"description": "Page number for pagination (default: 1)",
+						"in": "query",
+						"name": "page",
+						"required": false,
+						"schema": {
+							"format": "double",
+							"type": "number"
+						}
+					},
+					{
+						"description": "Number of results per page (default: 20, max: 100)",
+						"in": "query",
+						"name": "page_size",
+						"required": false,
+						"schema": {
+							"format": "double",
+							"type": "number"
+						}
+					}
+				]
+			}
+		},
+		"/stock-lots/{id}": {
+			"put": {
+				"operationId": "UpdateStockLot",
+				"responses": {
+					"200": {
+						"description": "Updated stock lot",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/UpdateStockLotResponse"
+								}
+							}
+						}
+					}
+				},
+				"description": "Update a stock lot\n\nUpdates a stock lot's quantity, listed status, location, or notes. Verifies ownership\nbefore allowing updates and prevents negative quantities. Triggers automatic recalculation\nof quantity_available in the parent listing_items record.\n\nRequirements:\n- 20.1: PUT /api/v2/stock-lots/:id endpoint\n- 20.2: Accept quantity_total update\n- 20.3: Accept listed status update\n- 20.4: Accept location_id update\n- 20.5: Accept notes update\n- 20.6: Verify ownership before updates\n- 20.7: Trigger quantity_available recalculation\n- 20.8: Prevent negative quantities\n- 20.9: Log modifications to audit trail\n- 20.10: Return updated stock lot with variant information\n- 20.11: Validate notes length (max 1000 characters)\n- 20.12: Use database transaction for atomicity",
+				"summary": "Update stock lot",
+				"tags": [
+					"Stock Lots V2"
+				],
+				"security": [],
+				"parameters": [
+					{
+						"description": "Stock lot UUID",
+						"in": "path",
+						"name": "id",
+						"required": true,
+						"schema": {
+							"type": "string"
+						}
+					}
+				],
+				"requestBody": {
+					"description": "Update request with optional fields",
+					"required": true,
+					"content": {
+						"application/json": {
+							"schema": {
+								"$ref": "#/components/schemas/UpdateStockLotRequest",
+								"description": "Update request with optional fields"
+							}
+						}
+					}
+				}
+			}
+		},
+		"/stock-lots/bulk-update": {
+			"post": {
+				"operationId": "BulkUpdateStockLots",
+				"responses": {
+					"200": {
+						"description": "Bulk update results with success/failure counts",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/BulkUpdateStockLotsResponse"
+								}
+							}
+						}
+					}
+				},
+				"description": "Bulk update stock lots\n\nPerforms bulk operations on multiple stock lots in a single transaction. Validates\nownership for all lots before applying any updates. Returns summary of successful\nand failed operations.\n\nRequirements:\n- 22.1: POST /api/v2/stock-lots/bulk-update endpoint\n- 22.2: Accept array of stock_lot_id values with updates\n- 22.3: Support bulk quantity updates\n- 22.4: Support bulk listing/unlisting operations\n- 22.5: Support bulk location transfers\n- 22.6: Use database transaction for atomicity\n- 22.7: Return summary of successful and failed operations\n- 22.8: Validate ownership for all stock lots in batch\n- 22.9: Log all bulk operations to audit trail\n- 22.10: Trigger quantity_available recalculation for affected listings",
+				"summary": "Bulk update stock lots",
+				"tags": [
+					"Stock Lots V2"
+				],
+				"security": [],
+				"parameters": [],
+				"requestBody": {
+					"description": "Bulk update request with array of lot updates",
+					"required": true,
+					"content": {
+						"application/json": {
+							"schema": {
+								"$ref": "#/components/schemas/BulkUpdateStockLotsRequest",
+								"description": "Bulk update request with array of lot updates"
+							}
+						}
+					}
+				}
+			}
+		},
+		"/orders": {
+			"post": {
+				"operationId": "CreateOrder",
+				"responses": {
+					"200": {
+						"description": "Created order with order_id and item details",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/CreateOrderResponse"
+								}
+							}
+						}
+					}
+				},
+				"description": "Create a new order with variant-specific items\n\nCreates an order by:\n1. Validating variant availability for each item\n2. Creating order record in V1 orders table\n3. Creating market_orders entries (V1 compatibility)\n4. Creating order_market_items_v2 entries with variant tracking\n5. Snapshotting variant prices at purchase time\n6. Allocating stock from variant-specific lots\n7. Notifying seller of new order\n\nUses database transaction for atomicity to ensure all-or-nothing behavior.\nStock allocation follows the V1 workflow using OrderLifecycleService.\n\nRequirements:\n- 25.1: POST /api/v2/orders endpoint\n- 25.2: Accept array of items with listing_id, variant_id, quantity\n- 25.3: Validate variant availability before order creation\n- 25.4: Use variant-specific pricing in order calculations\n- 25.5: Allocate stock from correct variant's stock lots\n- 25.6: Use database transaction for atomicity\n- 25.7: Snapshot variant prices at time of order creation\n- 25.8: Prevent ordering unavailable variants with descriptive error\n- 25.9: Create order_market_items_v2 entries for each item\n- 25.10: Return order_id and order details on success\n- 25.11: Notify seller of new order\n- 25.12: Log order creation to Audit_Trail",
+				"summary": "Create order",
+				"tags": [
+					"Orders V2"
+				],
+				"security": [],
+				"parameters": [],
+				"requestBody": {
+					"description": "Order creation request with items array",
+					"required": true,
+					"content": {
+						"application/json": {
+							"schema": {
+								"$ref": "#/components/schemas/CreateOrderRequest",
+								"description": "Order creation request with items array"
+							}
+						}
+					}
+				}
+			}
+		},
 		"/listings": {
 			"post": {
 				"operationId": "CreateListing",
