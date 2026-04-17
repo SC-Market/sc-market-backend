@@ -573,7 +573,7 @@ export function createCitizenIDVerifyCallback(
         }
       }
 
-      logger.info("Citizen ID login successful", {
+      logger.info("[Auth] Citizen ID login successful", {
         userId: user.user_id,
         username: user.username,
         displayName: user.display_name,
@@ -585,7 +585,7 @@ export function createCitizenIDVerifyCallback(
         errorMessage: (error as Error)?.message,
         errorStack: (error as Error)?.stack,
       })
-      logger.error("Citizen ID verify callback error", { error })
+      logger.error("[Auth] Citizen ID verify callback error", { error })
       return done(error as Error)
     }
   }

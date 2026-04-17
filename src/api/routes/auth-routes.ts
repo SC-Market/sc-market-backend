@@ -94,7 +94,7 @@ export function setupAuthRoutes(app: any, frontendUrl: URL): void {
 
       if (!verified) {
         // Invalid or missing state - potential CSRF attack or tampering
-        logger.error("[Discord callback] State verification failed", {
+        logger.error("[Auth] State verification failed", {
           hasState: !!receivedState,
           stateLength: receivedState?.length,
           statePreview: receivedState ? receivedState.substring(0, 50) + "..." : "none",
@@ -104,7 +104,7 @@ export function setupAuthRoutes(app: any, frontendUrl: URL): void {
       }
 
       const { path: redirectPath, action } = verified
-      logger.info("[Discord callback] State verified", {
+      logger.info("[Auth] State verified", {
         redirectPath,
         action,
         origin: verified.origin,
@@ -113,28 +113,34 @@ export function setupAuthRoutes(app: any, frontendUrl: URL): void {
       // Resolve redirect base from origin in state
       const redirectBase = getRedirectBase(verified.origin)
 
-      // Ensure action is stored in session (should already be there, but ensure it)
-      if (req.session) {
-        ;(req.session as any).discord_auth_action = action
-      }
+      // Regenerate session to avoid fixation — old unauthenticated session
+      // cookie may conflict with the new authenticated one
+      req.session.regenerate((regenErr) => {
+        if (regenErr) {
+          logger.error("[Auth] Session regenerate error", { error: regenErr })
+        }
+        // Re-store action after regeneration (regenerate clears session data)
+        if (req.session) {
+          ;(req.session as any).discord_auth_action = action
+        }
 
-      // State is valid, proceed with authentication
-      logger.info("[Discord callback] Starting passport.authenticate")
-      return passport.authenticate(
-        "discord",
-        {
+        // State is valid, proceed with authentication
+        logger.info("[Auth] Starting passport.authenticate")
+        return passport.authenticate(
+          "discord",
+          {
           session: true,
           failWithError: true,
         },
         (err: any, user: User | false, info: any) => {
-          logger.info("[Discord callback] Passport callback reached", {
+          logger.info("[Auth] Passport callback reached", {
             hasErr: !!err,
             hasUser: !!user,
             errMessage: err?.message,
             info,
           })
           if (err) {
-            logger.error("[Discord callback] Error", {
+            logger.error("[Auth] Error", {
               error: err,
               errorMessage: err?.message,
               errorCode: err?.code,
@@ -153,7 +159,7 @@ export function setupAuthRoutes(app: any, frontendUrl: URL): void {
           }
 
           if (!user) {
-            logger.error("[Discord callback] No user returned", {
+            logger.error("[Auth] No user returned", {
               hasErr: !!err,
               err,
               user,
@@ -169,7 +175,7 @@ export function setupAuthRoutes(app: any, frontendUrl: URL): void {
 
           req.logIn(user, (loginErr) => {
             if (loginErr) {
-              logger.error("Discord login error", { error: loginErr })
+              logger.error("[Auth] Discord login error", { error: loginErr })
               const redirectTo = new URL("/", redirectBase)
               redirectTo.searchParams.set(
                 "error",
@@ -178,7 +184,7 @@ export function setupAuthRoutes(app: any, frontendUrl: URL): void {
               return res.redirect(redirectTo.toString())
             }
 
-            logger.info("[Discord callback] Login successful, saving session", {
+            logger.info("[Auth] Login successful, saving session", {
               userId: (user as any)?.user_id,
               sessionID: req.sessionID,
             })
@@ -190,14 +196,15 @@ export function setupAuthRoutes(app: any, frontendUrl: URL): void {
             // Ensure session is persisted to store before redirecting
             req.session.save((saveErr) => {
               if (saveErr) {
-                logger.error("Discord session save error", { error: saveErr })
+                logger.error("[Auth] Discord session save error", { error: saveErr })
               }
-              logger.info("[Discord callback] Redirecting to", { successRedirect })
+              logger.info("[Auth] Redirecting to", { successRedirect })
               return res.redirect(successRedirect)
             })
           })
         },
       )(req, res, next)
+      }) // end session.regenerate
     },
   )
 
@@ -297,7 +304,7 @@ export function setupAuthRoutes(app: any, frontendUrl: URL): void {
               hasUser: !!user,
               info,
             })
-            logger.error("Citizen ID login error", { error: err })
+            logger.error("[Auth] Citizen ID login error", { error: err })
             const errorCode = mapErrorCodeToFrontend(err.code)
 
             // If username is taken, redirect to Discord login with settings path
@@ -367,7 +374,7 @@ export function setupAuthRoutes(app: any, frontendUrl: URL): void {
 
           req.logIn(user, (loginErr) => {
             if (loginErr) {
-              logger.error("Citizen ID login error", { error: loginErr })
+              logger.error("[Auth] Citizen ID login error", { error: loginErr })
               const redirectTo = new URL("/", redirectBase)
               redirectTo.searchParams.set(
                 "error",
@@ -382,7 +389,7 @@ export function setupAuthRoutes(app: any, frontendUrl: URL): void {
             ).toString()
             req.session.save((saveErr) => {
               if (saveErr) {
-                logger.error("Citizen ID session save error", { error: saveErr })
+                logger.error("[Auth] Citizen ID session save error", { error: saveErr })
               }
               return res.redirect(successRedirect)
             })
@@ -484,7 +491,7 @@ export function setupAuthRoutes(app: any, frontendUrl: URL): void {
 
           req.logIn(user, (loginErr) => {
             if (loginErr) {
-              logger.error("Citizen ID linking login error", {
+              logger.error("[Auth] Citizen ID linking login error", {
                 error: loginErr,
               })
               const redirectTo = new URL("/settings", frontendUrl)
@@ -498,7 +505,7 @@ export function setupAuthRoutes(app: any, frontendUrl: URL): void {
             const successRedirect = new URL("/settings", frontendUrl).toString()
             req.session.save((saveErr) => {
               if (saveErr) {
-                logger.error("Citizen ID linking session save error", { error: saveErr })
+                logger.error("[Auth] Citizen ID linking session save error", { error: saveErr })
               }
               return res.redirect(successRedirect)
             })

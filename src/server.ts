@@ -251,10 +251,10 @@ passport.serializeUser((user: Express.User, done) => {
   done(null, user.user_id) // Express.User now extends our User type, so user_id is available
 })
 passport.deserializeUser(async (id: string, done) => {
-  logger.info(`[Session] Deserializing user: ${id}`)
+  logger.info(`[Auth] Deserializing user: ${id}`)
   try {
     const user = await profileDb.getUser({ user_id: id })
-    logger.info(`[Session] Deserialized user successfully: ${id}`)
+    logger.info(`[Auth] Deserialized user successfully: ${id}`)
     return done(null, user)
   } catch (e) {
     const error = e as Error
@@ -262,12 +262,12 @@ passport.deserializeUser(async (id: string, done) => {
     // This prevents unnecessary error logging for legitimate session cleanup
     if (error.message === "Invalid user!") {
       logger.warn(
-        `[Session] User ${id} not found during deserialization - invalidating session`,
+        `[Auth] User ${id} not found during deserialization - invalidating session`,
       )
       return done(null, false)
     }
     // For other errors (database connection issues, etc.), log and invalidate
-    logger.error(`[Session] Error deserializing user ${id}:`, { error })
+    logger.error(`[Auth] Error deserializing user ${id}:`, { error })
     return done(null, false)
   }
 })
