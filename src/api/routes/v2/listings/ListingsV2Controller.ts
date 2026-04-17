@@ -1380,4 +1380,123 @@ export class ListingsV2Controller extends BaseController {
       throw error
     }
   }
+
+  /**
+   * Refresh a listing to bump it to the top of search results
+   *
+   * Updates the listing's updated_at timestamp to make it appear at the top of search results
+   * when sorted by date. Enforces a cooldown period between refreshes to prevent abuse.
+   * Validates ownership before allowing refresh.
+   *
+   * Requirements:
+   * - 49.1: POST /api/v2/listings/:id/refresh endpoint
+   * - 49.2: Update listing updated_at timestamp
+   * - 49.3: Enforce cooldown period between refreshes
+   * - 49.4: Validate ownership before allowing refresh
+   * - 49.5: Log refresh actions to Audit_Trail
+   *
+   * @summary Refresh listing
+   * @param id Listing UUID
+   * @param request Express request for authentication
+   * @returns Success message with next refresh time
+   */
+  @Post("{id}/refresh")
+  public async refreshListing(
+    @Path() id: string,
+    @Request() request: ExpressRequest,
+  ): Promise<{ message: string; next_refresh_at: string }> {
+    this.request = request
+    this.requireAuth()
+    const userId = this.getUserId()
+
+    logger.info("Refreshing listing", {
+      listingId: id,
+      userId,
+    })
+
+    const db = getKnex()
+
+    try {
+      // 1. Fetch listing and verify ownership (Requirement 49.4)
+      const listing = await db("listings")
+        .where({ listing_id: id })
+        .first()
+
+      if (!listing) {
+        this.throwNotFound("Listing", id)
+      }
+
+      // Verify ownership
+      if (listing.seller_id !== userId) {
+        this.throwForbidden("You do not have permission to refresh this listing")
+      }
+
+      // Verify listing is active
+      if (listing.status !== "active") {
+        this.throwValidationError(
+          `Cannot refresh listing with status: ${listing.status}`,
+          [
+            {
+              field: "status",
+              message: `Only active listings can be refreshed`,
+            },
+          ],
+        )
+      }
+
+      // 2. Enforce cooldown period (Requirement 49.3)
+      // Cooldown period: 24 hours
+      const COOLDOWN_HOURS = 24
+      const cooldownMs = COOLDOWN_HOURS * 60 * 60 * 1000
+      const now = new Date()
+      const lastUpdate = new Date(listing.updated_at)
+      const timeSinceLastUpdate = now.getTime() - lastUpdate.getTime()
+
+      if (timeSinceLastUpdate < cooldownMs) {
+        const nextRefreshAt = new Date(lastUpdate.getTime() + cooldownMs)
+        const hoursRemaining = Math.ceil((cooldownMs - timeSinceLastUpdate) / (60 * 60 * 1000))
+
+        this.throwValidationError(
+          `Listing can only be refreshed once every ${COOLDOWN_HOURS} hours`,
+          [
+            {
+              field: "updated_at",
+              message: `Please wait ${hoursRemaining} more hour(s) before refreshing again`,
+            },
+          ],
+        )
+      }
+
+      // 3. Update listing updated_at timestamp (Requirement 49.2)
+      await db("listings")
+        .where({ listing_id: id })
+        .update({
+          updated_at: now,
+        })
+
+      const nextRefreshAt = new Date(now.getTime() + cooldownMs)
+
+      logger.info("Listing refreshed successfully", {
+        listingId: id,
+        userId,
+        nextRefreshAt: nextRefreshAt.toISOString(),
+      })
+
+      // TODO: Log refresh action to audit trail (Requirement 49.5)
+
+      return {
+        message: "Listing refreshed successfully",
+        next_refresh_at: nextRefreshAt.toISOString(),
+      }
+    } catch (error) {
+      logger.error("Failed to refresh listing", {
+        listingId: id,
+        userId,
+        error: error instanceof Error ? error.message : String(error),
+        stack: error instanceof Error ? error.stack : undefined,
+      })
+
+      throw error
+    }
+  }
 }

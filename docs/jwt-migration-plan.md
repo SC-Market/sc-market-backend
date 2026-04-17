@@ -327,3 +327,100 @@ Support both session and JWT simultaneously during transition. Auth middleware c
 - `jsonwebtoken` — Already installed
 - `connect-pg-simple` — Remove
 - `express-session` — Remove
+
+---
+
+## Appendix: Analysis — Reusing API Tokens for Frontend Auth
+
+### The Idea
+
+Instead of building a JWT system, issue `scm_` API tokens to the frontend after OAuth login. Store the token in an httpOnly cookie. The existing `authenticateToken()` flow handles validation. Add a private `frontend:session` scope to distinguish browser tokens from user-created API tokens.
+
+### How It Would Work
+
+```
+OAuth callback → generate scm_live_ token with scope ["full", "frontend:session"]
+              → store hash in api_tokens table
+              → set httpOnly cookie with raw token
+              → redirect to frontend
+
+Every request → browser sends cookie → middleware reads token → authenticateToken()
+             → 3 DB queries (token lookup, user lookup, last_used update)
+```
+
+### What We'd Need to Change
+
+1. **OAuth callbacks**: Generate token + set cookie instead of session
+2. **New scope**: `frontend:session` — private, not available in token CRUD UI
+3. **Cookie handling**: Read token from cookie in addition to `Authorization` header
+4. **Logout**: Delete the `api_tokens` row + clear cookie
+5. **Token cleanup**: Cron job to purge expired frontend tokens
+6. **Frontend**: Minimal — same `credentials: "include"`, just different cookie name
+
+### Advantages Over JWT
+
+| Aspect | API Token Reuse | JWT |
+|--------|----------------|-----|
+| Code reuse | High — `authenticateToken()` already works | New code for JWT generation/validation |
+| Revocation | Instant — delete row from DB | Need refresh token blocklist |
+| Simplicity | One token type, one table | Two token types (access + refresh) |
+| Implementation time | ~3-4 days | ~9.5 days |
+| Existing tests | Token auth already tested | Need new test suite |
+
+### Disadvantages vs JWT
+
+| Aspect | API Token Reuse | JWT |
+|--------|----------------|-----|
+| **DB queries per request** | **3 minimum** (token lookup + user lookup + last_used update) | **0** (access token is self-contained) |
+| Performance at scale | Every request hits DB | DB hit only every 15 min (refresh) |
+| Token lifetime | Long-lived (60 days) — if stolen, valid until revoked | Access: 15 min, Refresh: 60 days |
+| Refresh flow | None — token is valid or expired | Transparent refresh, no re-login |
+| Offline validation | Impossible — requires DB | Access token validates without DB |
+| Horizontal scaling | All instances need DB access for auth | Access token validates with just the signing key |
+
+### The Critical Problem: 3 DB Queries Per Request
+
+This is the dealbreaker. Currently, API tokens are used for programmatic access — bots, scripts, integrations. Low volume, high value per request. The 3 DB queries per request are acceptable.
+
+For frontend auth, **every page load triggers 5-15 API calls**. Each one would hit the DB 3 times. That's **15-45 DB queries just for auth** on a single page load. Multiply by concurrent users and you're adding significant load to the database for zero functional benefit.
+
+The `last_used_at` update is particularly bad — it's a write operation on every single request, creating row-level locks on the `api_tokens` table.
+
+### Could We Cache It?
+
+Yes, but then you're building a session store with extra steps:
+- Cache token → user mapping in memory/Redis → invalidation complexity
+- Skip `last_used_at` update for frontend tokens → lose audit trail
+- Cache user object → stale data (role changes, bans not reflected)
+
+At that point, you've rebuilt `express-session` but worse.
+
+### Could We Make It Stateless?
+
+If you make the token self-contained (embed user data in it, validate with a signature instead of DB lookup), you've just reinvented JWT. The `scm_` prefix and `api_tokens` table become unnecessary overhead.
+
+### Verdict
+
+**Use API tokens for what they're good at**: programmatic access with fine-grained scopes and contractor restrictions. They're well-designed for that use case.
+
+**Use JWT for frontend auth**: stateless validation (0 DB queries), short-lived access tokens (15 min security window), transparent refresh, and horizontal scaling.
+
+The two systems complement each other:
+- **JWT** (httpOnly cookie): Browser sessions — high volume, low latency requirement
+- **API tokens** (`Authorization: Bearer scm_...`): Bots/integrations — low volume, fine-grained scopes
+
+### Hybrid Architecture (Recommended)
+
+```
+Browser auth:  JWT access token (cookie) → stateless validation → req.user
+               JWT refresh token (cookie) → DB lookup every 15 min
+API auth:      scm_ Bearer token (header) → DB lookup every request → req.user + scopes
+Both:          Same req.user interface, same downstream code
+```
+
+The auth middleware checks in order:
+1. JWT cookie → validate signature → set req.user (no DB)
+2. Bearer header with `scm_` → existing authenticateToken() (3 DB queries)
+3. Nothing → 401
+
+This is exactly what the JWT migration plan proposes. The existing API token system stays untouched.
