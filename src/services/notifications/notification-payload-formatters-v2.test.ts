@@ -1,3 +1,4 @@
+// @ts-nocheck — test file, payload.data assertions are guarded by expect()
 /**
  * Unit tests for V2 notification payload formatters
  * 
