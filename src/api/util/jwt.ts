@@ -195,5 +195,5 @@ export function getRefreshTokenFromRequest(req: Request): string | null {
 // ── Toggle ─────────────────────────────────────────────────────────────────
 
 export function isJWTAuthEnabled(): boolean {
-  return env.JWT_AUTH_ENABLED === "true"
+  return env.JWT_AUTH_ENABLED !== "false"
 }
