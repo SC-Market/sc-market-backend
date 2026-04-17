@@ -3652,7 +3652,11 @@
 				"tags": [
 					"Debug V2"
 				],
-				"security": [],
+				"security": [
+					{
+						"jwt": []
+					}
+				],
 				"parameters": []
 			},
 			"post": {
@@ -3674,7 +3678,11 @@
 				"tags": [
 					"Debug V2"
 				],
-				"security": [],
+				"security": [
+					{
+						"jwt": []
+					}
+				],
 				"parameters": [],
 				"requestBody": {
 					"description": "Feature flag setting request",
