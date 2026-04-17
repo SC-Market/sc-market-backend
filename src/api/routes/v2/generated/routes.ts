@@ -434,6 +434,10 @@ const models: TsoaRoute.Models = {
             "seller_type": {"dataType":"union","subSchemas":[{"dataType":"enum","enums":["user"]},{"dataType":"enum","enums":["contractor"]}],"required":true},
             "seller_slug": {"dataType":"string","required":true},
             "created_at": {"dataType":"string","required":true},
+            "updated_at": {"dataType":"string","required":true},
+            "game_item_name": {"dataType":"string","required":true},
+            "game_item_type": {"dataType":"string","required":true},
+            "seller_rating_count": {"dataType":"double","required":true},
         },
         "additionalProperties": false,
     },
@@ -856,7 +860,7 @@ const models: TsoaRoute.Models = {
     "FeatureFlagConfig": {
         "dataType": "refObject",
         "properties": {
-            "key": {"dataType":"string","required":true},
+            "flag_name": {"dataType":"string","required":true},
             "default_version": {"ref":"MarketVersion","required":true},
             "rollout_percentage": {"dataType":"double","required":true},
             "enabled": {"dataType":"boolean","required":true},
@@ -1234,7 +1238,10 @@ export function RegisterRoutes(app: Router) {
                 price_max: {"in":"query","name":"price_max","dataType":"double"},
                 page: {"in":"query","name":"page","dataType":"double"},
                 page_size: {"in":"query","name":"page_size","dataType":"double"},
-                sort_by: {"in":"query","name":"sort_by","dataType":"union","subSchemas":[{"dataType":"enum","enums":["created_at"]},{"dataType":"enum","enums":["price"]},{"dataType":"enum","enums":["quality"]},{"dataType":"enum","enums":["seller_rating"]}]},
+                item_type: {"in":"query","name":"item_type","dataType":"string"},
+                quantity_min: {"in":"query","name":"quantity_min","dataType":"double"},
+                status: {"in":"query","name":"status","dataType":"union","subSchemas":[{"dataType":"enum","enums":["active"]},{"dataType":"enum","enums":["sold"]},{"dataType":"enum","enums":["expired"]},{"dataType":"enum","enums":["cancelled"]}]},
+                sort_by: {"in":"query","name":"sort_by","dataType":"union","subSchemas":[{"dataType":"enum","enums":["created_at"]},{"dataType":"enum","enums":["updated_at"]},{"dataType":"enum","enums":["price"]},{"dataType":"enum","enums":["quality"]},{"dataType":"enum","enums":["seller_rating"]},{"dataType":"enum","enums":["quantity"]}]},
                 sort_order: {"in":"query","name":"sort_order","dataType":"union","subSchemas":[{"dataType":"enum","enums":["asc"]},{"dataType":"enum","enums":["desc"]}]},
         };
         app.get('/listings/search',

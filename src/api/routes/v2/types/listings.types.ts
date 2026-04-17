@@ -105,8 +105,17 @@ export interface SearchListingsRequest {
   /** Number of results per page (default: 20, max: 100) */
   page_size?: number;
   
-  /** Sort field */
-  sort_by?: 'created_at' | 'price' | 'quality' | 'seller_rating';
+  /** Filter by game item type/category */
+  item_type?: string;
+  
+  /** Minimum quantity available */
+  quantity_min?: number;
+  
+  /** Filter by listing status (default: active only) */
+  status?: 'active' | 'sold' | 'expired' | 'cancelled';
+  
+  /** Sort field (default: created_at) */
+  sort_by?: 'created_at' | 'updated_at' | 'price' | 'quality' | 'seller_rating' | 'quantity';
   
   /** Sort order */
   sort_order?: 'asc' | 'desc';
@@ -154,6 +163,18 @@ export interface ListingSearchResult {
   
   /** ISO 8601 timestamp when listing was created */
   created_at: string;
+  
+  /** ISO 8601 timestamp when listing was last updated */
+  updated_at: string;
+  
+  /** Game item name */
+  game_item_name: string;
+  
+  /** Game item type/category */
+  game_item_type: string;
+  
+  /** Seller rating count */
+  seller_rating_count: number;
 }
 
 /**

@@ -253,10 +253,8 @@ passport.serializeUser((user: Express.User, done) => {
   done(null, user.user_id) // Express.User now extends our User type, so user_id is available
 })
 passport.deserializeUser(async (id: string, done) => {
-  logger.info(`[Auth] Deserializing user: ${id}`)
   try {
     const user = await profileDb.getUser({ user_id: id })
-    logger.info(`[Auth] Deserialized user successfully: ${id}`)
     return done(null, user)
   } catch (e) {
     const error = e as Error

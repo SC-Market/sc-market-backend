@@ -671,7 +671,10 @@ export class ListingsV2Controller extends BaseController {
     @Query() price_max?: number,
     @Query() page?: number,
     @Query() page_size?: number,
-    @Query() sort_by?: "created_at" | "price" | "quality" | "seller_rating",
+    @Query() item_type?: string,
+    @Query() quantity_min?: number,
+    @Query() status?: 'active' | 'sold' | 'expired' | 'cancelled',
+    @Query() sort_by?: "created_at" | "updated_at" | "price" | "quality" | "seller_rating" | "quantity",
     @Query() sort_order?: "asc" | "desc",
   ): Promise<SearchListingsResponse> {
     const db = getKnex()
@@ -789,6 +792,15 @@ export class ListingsV2Controller extends BaseController {
               WHEN ls.seller_type = 'contractor' THEN c.spectrum_id
             END AS seller_slug
           `),
+          "ls.updated_at",
+          "ls.game_item_name",
+          "ls.game_item_type",
+          db.raw(`
+            CASE 
+              WHEN ls.seller_type = 'user' THEN COALESCE(u.rating_count, 0)
+              WHEN ls.seller_type = 'contractor' THEN COALESCE(c.rating_count, 0)
+            END AS seller_rating_count
+          `),
         )
 
       // Apply full-text search filter (Requirement 15.2)
@@ -838,6 +850,20 @@ export class ListingsV2Controller extends BaseController {
         })
       }
 
+      // Filter by status (default: active)
+      const statusFilter = status || 'active';
+      query = query.where('ls.status', statusFilter);
+
+      // Filter by item type
+      if (item_type) {
+        query = query.where('ls.game_item_type', item_type);
+      }
+
+      // Filter by minimum quantity
+      if (quantity_min !== undefined && quantity_min > 0) {
+        query = query.where('ls.quantity_available', '>=', quantity_min);
+      }
+
       // Get total count for pagination (Requirement 15.8)
       const countQuery = query.clone().clearSelect().clearOrder().count("* as count")
       const [{ count: totalCount }] = await countQuery
@@ -858,6 +884,12 @@ export class ListingsV2Controller extends BaseController {
               WHEN ls.seller_type = 'contractor' THEN COALESCE(c.rating, 0)
             END ${validatedSortOrder}`,
           )
+          break
+        case "updated_at":
+          query = query.orderBy("ls.updated_at", validatedSortOrder)
+          break
+        case "quantity":
+          query = query.orderBy("ls.quantity_available", validatedSortOrder)
           break
         case "created_at":
         default:
@@ -887,6 +919,10 @@ export class ListingsV2Controller extends BaseController {
         seller_type: row.seller_type,
         seller_slug: row.seller_slug || "",
         created_at: row.created_at.toISOString(),
+        updated_at: row.updated_at?.toISOString() || row.created_at.toISOString(),
+        game_item_name: row.game_item_name || '',
+        game_item_type: row.game_item_type || '',
+        seller_rating_count: parseInt(row.seller_rating_count, 10) || 0,
       }))
 
       logger.info("Search completed", {
