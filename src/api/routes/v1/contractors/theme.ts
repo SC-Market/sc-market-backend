@@ -129,7 +129,7 @@ contractorThemeRouter.put(
   "/",
   userAuthorized,
   requireContractorsWrite,
-  org_permission("manage_org_details"),
+  org_permission("manage_theme"),
   writeRateLimit,
   async (req, res) => {
     try {
@@ -204,7 +204,7 @@ contractorThemeRouter.delete(
   "/",
   userAuthorized,
   requireContractorsWrite,
-  org_permission("manage_org_details"),
+  org_permission("manage_theme"),
   writeRateLimit,
   async (req, res) => {
     try {
