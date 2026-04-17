@@ -185,7 +185,7 @@ export async function userAuthorized(
       }
     } else {
       // Enhanced logging for debugging session issues
-      logger.warn("Authentication failed - no valid session", {
+      logger.warn("[Auth] Authentication failed - no valid session", {
         path: req.path,
         hasSessionID: !!req.sessionID,
         sessionID: req.sessionID?.substring(0, 10),
