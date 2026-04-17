@@ -164,6 +164,7 @@ export interface DBContractorRole {
   manage_webhooks: boolean
   manage_blocklist: boolean
   claim_orders: boolean
+  manage_theme: boolean
 }
 
 export interface DBContractorMemberRole {
