@@ -148,9 +148,9 @@ export class GameItemsV2Controller extends BaseController {
         .where("li.game_item_id", id)
         .where("l.status", "active")
         .where("lil.listed", true)
-        .whereNotNull(knex.raw("iv.attributes->>'quality_tier'"))
+        .whereRaw("iv.attributes->>'quality_tier' IS NOT NULL")
         .groupBy(knex.raw("(iv.attributes->>'quality_tier')::integer"))
-        .orderBy("quality_tier", "asc")
+        .orderBy(knex.raw("(iv.attributes->>'quality_tier')::integer") as any, "asc")
 
       const qualityDistributionResults = await qualityDistributionQuery
 

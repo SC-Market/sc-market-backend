@@ -76,12 +76,16 @@ export class FeatureFlagAdminController extends BaseController {
 
     if (body.rollout_percentage !== undefined) {
       if (body.rollout_percentage < 0 || body.rollout_percentage > 100) {
-        this.throwValidationError("rollout_percentage must be between 0 and 100")
+        this.throwValidationError("rollout_percentage must be between 0 and 100", [
+          { field: "rollout_percentage", message: "Must be between 0 and 100" }
+        ])
       }
     }
     if (body.default_version !== undefined) {
       if (body.default_version !== "V1" && body.default_version !== "V2") {
-        this.throwValidationError("default_version must be V1 or V2")
+        this.throwValidationError("default_version must be V1 or V2", [
+          { field: "default_version", message: "Must be V1 or V2" }
+        ])
       }
     }
 
@@ -134,7 +138,9 @@ export class FeatureFlagAdminController extends BaseController {
     this.requireAdmin()
 
     if (body.market_version !== "V1" && body.market_version !== "V2") {
-      this.throwValidationError("market_version must be V1 or V2")
+      this.throwValidationError("market_version must be V1 or V2", [
+        { field: "market_version", message: "Must be V1 or V2" }
+      ])
     }
 
     logger.info("Admin setting user override", {

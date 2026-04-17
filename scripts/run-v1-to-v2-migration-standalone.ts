@@ -60,10 +60,7 @@ interface MigrationSummary {
 }
 
 const DEFAULT_V1_VARIANT_ATTRIBUTES: VariantAttributes = {
-  quality_tier: undefined,
-  quality_value: undefined,
   crafted_source: "unknown",
-  blueprint_tier: undefined,
 }
 
 /**
@@ -78,7 +75,8 @@ function normalizeVariantAttributes(
   for (const key of keys) {
     const value = attributes[key as keyof VariantAttributes]
     if (value !== undefined && value !== null) {
-      normalized[key as keyof VariantAttributes] = value
+      // Type assertion to satisfy TypeScript - we know the key is valid
+      (normalized as any)[key] = value
     }
   }
 

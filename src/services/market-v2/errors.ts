@@ -4,7 +4,10 @@
  * Custom error types for variant management operations.
  */
 
-import { ValidationError } from "./types.js"
+export interface ValidationError {
+  attribute: string
+  message: string
+}
 
 /**
  * Error thrown when variant attribute validation fails
