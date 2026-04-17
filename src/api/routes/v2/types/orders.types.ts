@@ -150,3 +150,94 @@ export interface GetOrderDetailResponse {
   items: OrderItemDetail[];
 }
 
+/**
+ * Request parameters for getting orders list
+ * Requirement 45.1-45.5: Filter orders by quality tier with pagination
+ */
+export interface GetOrdersRequest {
+  /** Filter by order status */
+  status?: 'pending' | 'completed' | 'cancelled';
+  
+  /** Filter by role (buyer or seller) */
+  role?: 'buyer' | 'seller';
+  
+  /** Minimum quality tier (1-5) */
+  quality_tier_min?: number;
+  
+  /** Maximum quality tier (1-5) */
+  quality_tier_max?: number;
+  
+  /** Page number for pagination (default: 1) */
+  page?: number;
+  
+  /** Number of results per page (default: 20, max: 100) */
+  page_size?: number;
+  
+  /** Sort field (default: created_at) */
+  sort_by?: 'created_at' | 'updated_at' | 'total_price';
+  
+  /** Sort order (default: desc) */
+  sort_order?: 'asc' | 'desc';
+}
+
+/**
+ * Order preview item for list display
+ */
+export interface OrderPreview {
+  /** UUID of the order */
+  order_id: string;
+  
+  /** Order title (from first listing) */
+  title: string;
+  
+  /** Total price in aUEC */
+  total_price: number;
+  
+  /** Order status */
+  status: string;
+  
+  /** ISO 8601 timestamp of order creation */
+  created_at: string;
+  
+  /** ISO 8601 timestamp of last update */
+  updated_at: string;
+  
+  /** Buyer username */
+  buyer_username: string;
+  
+  /** Seller username */
+  seller_username: string;
+  
+  /** Number of items in order */
+  item_count: number;
+  
+  /** Minimum quality tier across all items */
+  quality_tier_min?: number;
+  
+  /** Maximum quality tier across all items */
+  quality_tier_max?: number;
+  
+  /** Buyer avatar URL */
+  buyer_avatar?: string | null;
+  
+  /** Seller avatar URL */
+  seller_avatar?: string | null;
+}
+
+/**
+ * Response from getting orders list
+ */
+export interface GetOrdersResponse {
+  /** Array of order previews */
+  orders: OrderPreview[];
+  
+  /** Total number of orders matching filters */
+  total: number;
+  
+  /** Current page number */
+  page: number;
+  
+  /** Number of results per page */
+  page_size: number;
+}
+

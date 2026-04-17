@@ -269,6 +269,37 @@ const models: TsoaRoute.Models = {
         "additionalProperties": false,
     },
     // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+    "OrderPreview": {
+        "dataType": "refObject",
+        "properties": {
+            "order_id": {"dataType":"string","required":true},
+            "title": {"dataType":"string","required":true},
+            "total_price": {"dataType":"double","required":true},
+            "status": {"dataType":"string","required":true},
+            "created_at": {"dataType":"string","required":true},
+            "updated_at": {"dataType":"string","required":true},
+            "buyer_username": {"dataType":"string","required":true},
+            "seller_username": {"dataType":"string","required":true},
+            "item_count": {"dataType":"double","required":true},
+            "quality_tier_min": {"dataType":"double"},
+            "quality_tier_max": {"dataType":"double"},
+            "buyer_avatar": {"dataType":"union","subSchemas":[{"dataType":"string"},{"dataType":"enum","enums":[null]}]},
+            "seller_avatar": {"dataType":"union","subSchemas":[{"dataType":"string"},{"dataType":"enum","enums":[null]}]},
+        },
+        "additionalProperties": false,
+    },
+    // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+    "GetOrdersResponse": {
+        "dataType": "refObject",
+        "properties": {
+            "orders": {"dataType":"array","array":{"dataType":"refObject","ref":"OrderPreview"},"required":true},
+            "total": {"dataType":"double","required":true},
+            "page": {"dataType":"double","required":true},
+            "page_size": {"dataType":"double","required":true},
+        },
+        "additionalProperties": false,
+    },
+    // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
     "CreateListingResponse": {
         "dataType": "refObject",
         "properties": {
@@ -1080,6 +1111,44 @@ export function RegisterRoutes(app: Router) {
 
               await templateService.apiHandler({
                 methodName: 'getOrderDetail',
+                controller,
+                response,
+                next,
+                validatedArgs,
+                successStatus: undefined,
+              });
+            } catch (err) {
+                return next(err);
+            }
+        });
+        // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+        const argsOrdersV2Controller_getOrders: Record<string, TsoaRoute.ParameterSchema> = {
+                status: {"in":"query","name":"status","dataType":"union","subSchemas":[{"dataType":"enum","enums":["pending"]},{"dataType":"enum","enums":["completed"]},{"dataType":"enum","enums":["cancelled"]}]},
+                role: {"in":"query","name":"role","dataType":"union","subSchemas":[{"dataType":"enum","enums":["buyer"]},{"dataType":"enum","enums":["seller"]}]},
+                quality_tier_min: {"in":"query","name":"quality_tier_min","dataType":"double"},
+                quality_tier_max: {"in":"query","name":"quality_tier_max","dataType":"double"},
+                page: {"in":"query","name":"page","dataType":"double"},
+                page_size: {"in":"query","name":"page_size","dataType":"double"},
+                sort_by: {"in":"query","name":"sort_by","dataType":"union","subSchemas":[{"dataType":"enum","enums":["created_at"]},{"dataType":"enum","enums":["updated_at"]},{"dataType":"enum","enums":["total_price"]}]},
+                sort_order: {"in":"query","name":"sort_order","dataType":"union","subSchemas":[{"dataType":"enum","enums":["asc"]},{"dataType":"enum","enums":["desc"]}]},
+                request: {"in":"request","name":"request","dataType":"object"},
+        };
+        app.get('/orders',
+            ...(fetchMiddlewares<RequestHandler>(OrdersV2Controller)),
+            ...(fetchMiddlewares<RequestHandler>(OrdersV2Controller.prototype.getOrders)),
+
+            async function OrdersV2Controller_getOrders(request: ExRequest, response: ExResponse, next: any) {
+
+            // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+
+            let validatedArgs: any[] = [];
+            try {
+                validatedArgs = templateService.getValidatedArgs({ args: argsOrdersV2Controller_getOrders, request, response });
+
+                const controller = new OrdersV2Controller();
+
+              await templateService.apiHandler({
+                methodName: 'getOrders',
                 controller,
                 response,
                 next,
