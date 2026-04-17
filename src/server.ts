@@ -217,7 +217,9 @@ const sessionMiddleware = session({
   cookie: {
     secure: isProduction, // Only secure in production (HTTPS required)
     maxAge: 3600000 * 24 * 60,
-    domain: env.BACKEND_HOST,
+    // Don't set domain — let the browser default to the origin that set the cookie.
+    // This works for both same-origin (localhost) and cross-origin (api.sc-market.space)
+    // with credentials: "include".
     // In production: SameSite=None requires Secure=true for cross-site cookies
     // In development: Use SameSite=Lax since we're on localhost (same-site)
     sameSite: isProduction ? ("none" as const) : ("lax" as const),
