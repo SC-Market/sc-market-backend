@@ -2742,7 +2742,7 @@
 		"contact": {}
 	},
 	"paths": {
-		"/variant-types": {
+		"/api/v2/variant-types": {
 			"get": {
 				"operationId": "GetVariantTypes",
 				"responses": {
@@ -2766,7 +2766,7 @@
 				"parameters": []
 			}
 		},
-		"/stock-lots": {
+		"/api/v2/stock-lots": {
 			"get": {
 				"operationId": "GetStockLots",
 				"responses": {
@@ -2876,7 +2876,7 @@
 				]
 			}
 		},
-		"/stock-lots/{id}": {
+		"/api/v2/stock-lots/{id}": {
 			"put": {
 				"operationId": "UpdateStockLot",
 				"responses": {
@@ -2922,7 +2922,7 @@
 				}
 			}
 		},
-		"/stock-lots/bulk-update": {
+		"/api/v2/stock-lots/bulk-update": {
 			"post": {
 				"operationId": "BulkUpdateStockLots",
 				"responses": {
@@ -2958,7 +2958,7 @@
 				}
 			}
 		},
-		"/orders": {
+		"/api/v2/orders": {
 			"post": {
 				"operationId": "CreateOrder",
 				"responses": {
@@ -3103,7 +3103,7 @@
 				]
 			}
 		},
-		"/orders/{orderId}": {
+		"/api/v2/orders/{orderId}": {
 			"get": {
 				"operationId": "GetOrderDetail",
 				"responses": {
@@ -3137,7 +3137,7 @@
 				]
 			}
 		},
-		"/listings": {
+		"/api/v2/listings": {
 			"post": {
 				"operationId": "CreateListing",
 				"responses": {
@@ -3173,7 +3173,7 @@
 				}
 			}
 		},
-		"/listings/{id}": {
+		"/api/v2/listings/{id}": {
 			"get": {
 				"operationId": "GetListingDetail",
 				"responses": {
@@ -3251,7 +3251,7 @@
 				}
 			}
 		},
-		"/listings/search": {
+		"/api/v2/listings/search": {
 			"get": {
 				"operationId": "SearchListings",
 				"responses": {
@@ -3382,7 +3382,7 @@
 				]
 			}
 		},
-		"/listings/mine": {
+		"/api/v2/listings/mine": {
 			"get": {
 				"operationId": "GetMyListings",
 				"responses": {
@@ -3470,7 +3470,53 @@
 				]
 			}
 		},
-		"/health": {
+		"/api/v2/listings/{id}/refresh": {
+			"post": {
+				"operationId": "RefreshListing",
+				"responses": {
+					"200": {
+						"description": "Success message with next refresh time",
+						"content": {
+							"application/json": {
+								"schema": {
+									"properties": {
+										"next_refresh_at": {
+											"type": "string"
+										},
+										"message": {
+											"type": "string"
+										}
+									},
+									"required": [
+										"next_refresh_at",
+										"message"
+									],
+									"type": "object"
+								}
+							}
+						}
+					}
+				},
+				"description": "Refresh a listing to bump it to the top of search results\n\nUpdates the listing's updated_at timestamp to make it appear at the top of search results\nwhen sorted by date. Enforces a cooldown period between refreshes to prevent abuse.\nValidates ownership before allowing refresh.\n\nRequirements:\n- 49.1: POST /api/v2/listings/:id/refresh endpoint\n- 49.2: Update listing updated_at timestamp\n- 49.3: Enforce cooldown period between refreshes\n- 49.4: Validate ownership before allowing refresh\n- 49.5: Log refresh actions to Audit_Trail",
+				"summary": "Refresh listing",
+				"tags": [
+					"Listings V2"
+				],
+				"security": [],
+				"parameters": [
+					{
+						"description": "Listing UUID",
+						"in": "path",
+						"name": "id",
+						"required": true,
+						"schema": {
+							"type": "string"
+						}
+					}
+				]
+			}
+		},
+		"/api/v2/health": {
 			"get": {
 				"operationId": "GetHealth",
 				"responses": {
@@ -3494,7 +3540,7 @@
 				"parameters": []
 			}
 		},
-		"/game-items/{id}/listings": {
+		"/api/v2/game-items/{id}/listings": {
 			"get": {
 				"operationId": "GetListings",
 				"responses": {
@@ -3586,7 +3632,7 @@
 				]
 			}
 		},
-		"/debug/feature-flag": {
+		"/api/v2/debug/feature-flag": {
 			"get": {
 				"operationId": "GetFeatureFlag",
 				"responses": {
@@ -3644,7 +3690,7 @@
 				}
 			}
 		},
-		"/cart": {
+		"/api/v2/cart": {
 			"get": {
 				"operationId": "GetCart",
 				"responses": {
@@ -3668,7 +3714,7 @@
 				"parameters": []
 			}
 		},
-		"/cart/add": {
+		"/api/v2/cart/add": {
 			"post": {
 				"operationId": "AddToCart",
 				"responses": {
@@ -3704,7 +3750,7 @@
 				}
 			}
 		},
-		"/cart/{id}": {
+		"/api/v2/cart/{id}": {
 			"put": {
 				"operationId": "UpdateCartItem",
 				"responses": {
@@ -3798,7 +3844,7 @@
 				]
 			}
 		},
-		"/cart/checkout": {
+		"/api/v2/cart/checkout": {
 			"post": {
 				"operationId": "CheckoutCart",
 				"responses": {
@@ -3834,7 +3880,7 @@
 				}
 			}
 		},
-		"/buy-orders": {
+		"/api/v2/buy-orders": {
 			"post": {
 				"operationId": "CreateBuyOrder",
 				"responses": {
@@ -3870,7 +3916,7 @@
 				}
 			}
 		},
-		"/analytics/price-history": {
+		"/api/v2/analytics/price-history": {
 			"get": {
 				"operationId": "GetPriceHistory",
 				"responses": {
@@ -3947,7 +3993,7 @@
 				]
 			}
 		},
-		"/analytics/quality-distribution": {
+		"/api/v2/analytics/quality-distribution": {
 			"get": {
 				"operationId": "GetQualityDistribution",
 				"responses": {
@@ -3999,7 +4045,7 @@
 				]
 			}
 		},
-		"/analytics/seller-stats": {
+		"/api/v2/analytics/seller-stats": {
 			"get": {
 				"operationId": "GetSellerStats",
 				"responses": {
@@ -4033,7 +4079,7 @@
 				]
 			}
 		},
-		"/admin/feature-flags/config": {
+		"/api/v2/admin/feature-flags/config": {
 			"get": {
 				"operationId": "GetConfig",
 				"responses": {
@@ -4089,7 +4135,7 @@
 				}
 			}
 		},
-		"/admin/feature-flags/stats": {
+		"/api/v2/admin/feature-flags/stats": {
 			"get": {
 				"operationId": "GetStats",
 				"responses": {
@@ -4113,7 +4159,7 @@
 				"parameters": []
 			}
 		},
-		"/admin/feature-flags/overrides": {
+		"/api/v2/admin/feature-flags/overrides": {
 			"get": {
 				"operationId": "GetUserOverrides",
 				"responses": {
@@ -4196,7 +4242,7 @@
 				}
 			}
 		},
-		"/admin/feature-flags/overrides/{userId}": {
+		"/api/v2/admin/feature-flags/overrides/{userId}": {
 			"delete": {
 				"operationId": "RemoveUserOverride",
 				"responses": {
@@ -4237,10 +4283,5 @@
 				]
 			}
 		}
-	},
-	"servers": [
-		{
-			"url": "/api/v2"
-		}
-	]
+	}
 }
