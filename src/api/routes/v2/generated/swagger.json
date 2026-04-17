@@ -7,6 +7,115 @@
 		"requestBodies": {},
 		"responses": {},
 		"schemas": {
+			"VariantType": {
+				"description": "Variant type definition with validation rules",
+				"properties": {
+					"variant_type_id": {
+						"type": "string",
+						"description": "Unique identifier for the variant type"
+					},
+					"name": {
+						"type": "string",
+						"description": "Internal name (e.g., 'quality_tier', 'quality_value')"
+					},
+					"display_name": {
+						"type": "string",
+						"description": "Display name for UI (e.g., 'Quality Tier', 'Quality Value')"
+					},
+					"description": {
+						"type": "string",
+						"description": "Description of the variant type"
+					},
+					"affects_pricing": {
+						"type": "boolean",
+						"description": "Whether this attribute affects pricing"
+					},
+					"searchable": {
+						"type": "boolean",
+						"description": "Whether this attribute is searchable"
+					},
+					"filterable": {
+						"type": "boolean",
+						"description": "Whether this attribute is filterable"
+					},
+					"value_type": {
+						"type": "string",
+						"enum": [
+							"integer",
+							"decimal",
+							"string",
+							"enum"
+						],
+						"description": "Data type of the value ('integer', 'decimal', 'string', 'enum')"
+					},
+					"min_value": {
+						"type": "number",
+						"format": "double",
+						"description": "Minimum allowed value (for numeric types)"
+					},
+					"max_value": {
+						"type": "number",
+						"format": "double",
+						"description": "Maximum allowed value (for numeric types)"
+					},
+					"allowed_values": {
+						"items": {
+							"type": "string"
+						},
+						"type": "array",
+						"description": "Allowed values (for enum types)"
+					},
+					"display_order": {
+						"type": "number",
+						"format": "double",
+						"description": "Display order for UI presentation"
+					},
+					"icon": {
+						"type": "string",
+						"description": "Optional icon identifier"
+					},
+					"created_at": {
+						"type": "string",
+						"description": "Creation timestamp"
+					}
+				},
+				"required": [
+					"variant_type_id",
+					"name",
+					"display_name",
+					"affects_pricing",
+					"searchable",
+					"filterable",
+					"value_type",
+					"display_order",
+					"created_at"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
+			"GetVariantTypesResponse": {
+				"description": "Response for GET /api/v2/variant-types endpoint",
+				"properties": {
+					"variant_types": {
+						"items": {
+							"$ref": "#/components/schemas/VariantType"
+						},
+						"type": "array",
+						"description": "Array of variant type definitions"
+					},
+					"total": {
+						"type": "number",
+						"format": "double",
+						"description": "Total count of variant types"
+					}
+				},
+				"required": [
+					"variant_types",
+					"total"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
 			"VariantAttributes": {
 				"description": "Flexible JSONB attributes for item variants\nSupports quality tiers, crafting source, and future extensibility",
 				"properties": {
@@ -553,6 +662,101 @@
 					}
 				},
 				"required": [
+					"items"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
+			"GetOrderDetailResponse": {
+				"description": "Response from getting order details\nRequirement 26.1-26.12: Return order metadata with buyer/seller info and variant details",
+				"properties": {
+					"order_id": {
+						"type": "string",
+						"description": "UUID of the order"
+					},
+					"buyer": {
+						"properties": {
+							"avatar": {
+								"type": "string",
+								"nullable": true
+							},
+							"display_name": {
+								"type": "string"
+							},
+							"username": {
+								"type": "string"
+							},
+							"user_id": {
+								"type": "string"
+							}
+						},
+						"required": [
+							"avatar",
+							"display_name",
+							"username",
+							"user_id"
+						],
+						"type": "object",
+						"description": "Buyer information"
+					},
+					"seller": {
+						"properties": {
+							"avatar": {
+								"type": "string",
+								"nullable": true
+							},
+							"display_name": {
+								"type": "string"
+							},
+							"username": {
+								"type": "string"
+							},
+							"user_id": {
+								"type": "string"
+							}
+						},
+						"required": [
+							"avatar",
+							"display_name",
+							"username",
+							"user_id"
+						],
+						"type": "object",
+						"description": "Seller information"
+					},
+					"total_price": {
+						"type": "number",
+						"format": "double",
+						"description": "Total price in aUEC (atomic units)"
+					},
+					"status": {
+						"type": "string",
+						"description": "Order status"
+					},
+					"created_at": {
+						"type": "string",
+						"description": "ISO 8601 timestamp of order creation"
+					},
+					"updated_at": {
+						"type": "string",
+						"description": "ISO 8601 timestamp of last update"
+					},
+					"items": {
+						"items": {
+							"$ref": "#/components/schemas/OrderItemDetail"
+						},
+						"type": "array",
+						"description": "Array of order items with variant details"
+					}
+				},
+				"required": [
+					"order_id",
+					"buyer",
+					"seller",
+					"total_price",
+					"status",
+					"created_at",
+					"updated_at",
 					"items"
 				],
 				"type": "object",
@@ -1268,6 +1472,216 @@
 				"type": "object",
 				"additionalProperties": false
 			},
+			"GameItemMetadata": {
+				"description": "Game item metadata",
+				"properties": {
+					"id": {
+						"type": "string",
+						"description": "Game item UUID"
+					},
+					"name": {
+						"type": "string",
+						"description": "Game item name"
+					},
+					"type": {
+						"type": "string",
+						"description": "Game item type"
+					},
+					"image_url": {
+						"type": "string",
+						"description": "Game item image URL"
+					}
+				},
+				"required": [
+					"id",
+					"name",
+					"type"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
+			"GameItemQualityDistribution": {
+				"description": "Quality tier distribution data for a game item",
+				"properties": {
+					"quality_tier": {
+						"type": "number",
+						"format": "double",
+						"description": "Quality tier (1-5)"
+					},
+					"quantity_available": {
+						"type": "number",
+						"format": "double",
+						"description": "Total quantity available for this tier across all listings"
+					},
+					"price_min": {
+						"type": "number",
+						"format": "double",
+						"description": "Minimum price for this tier"
+					},
+					"price_max": {
+						"type": "number",
+						"format": "double",
+						"description": "Maximum price for this tier"
+					},
+					"price_avg": {
+						"type": "number",
+						"format": "double",
+						"description": "Average price for this tier"
+					},
+					"seller_count": {
+						"type": "number",
+						"format": "double",
+						"description": "Number of unique sellers offering this tier"
+					},
+					"listing_count": {
+						"type": "number",
+						"format": "double",
+						"description": "Number of listings offering this tier"
+					}
+				},
+				"required": [
+					"quality_tier",
+					"quantity_available",
+					"price_min",
+					"price_max",
+					"price_avg",
+					"seller_count",
+					"listing_count"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
+			"GameItemListingResult": {
+				"description": "Listing result for game item listings endpoint",
+				"properties": {
+					"listing_id": {
+						"type": "string",
+						"description": "Listing UUID"
+					},
+					"title": {
+						"type": "string",
+						"description": "Listing title"
+					},
+					"seller_id": {
+						"type": "string",
+						"description": "Seller ID"
+					},
+					"seller_name": {
+						"type": "string",
+						"description": "Seller name"
+					},
+					"seller_rating": {
+						"type": "number",
+						"format": "double",
+						"description": "Seller rating (0-5)"
+					},
+					"seller_type": {
+						"type": "string",
+						"enum": [
+							"user",
+							"contractor"
+						],
+						"description": "Seller type"
+					},
+					"price_min": {
+						"type": "number",
+						"format": "double",
+						"description": "Minimum price across all variants in this listing"
+					},
+					"price_max": {
+						"type": "number",
+						"format": "double",
+						"description": "Maximum price across all variants in this listing"
+					},
+					"quantity_available": {
+						"type": "number",
+						"format": "double",
+						"description": "Total quantity available in this listing"
+					},
+					"quality_tier_min": {
+						"type": "number",
+						"format": "double",
+						"description": "Minimum quality tier in this listing"
+					},
+					"quality_tier_max": {
+						"type": "number",
+						"format": "double",
+						"description": "Maximum quality tier in this listing"
+					},
+					"variant_count": {
+						"type": "number",
+						"format": "double",
+						"description": "Number of variants in this listing"
+					},
+					"created_at": {
+						"type": "string",
+						"description": "Listing created timestamp"
+					}
+				},
+				"required": [
+					"listing_id",
+					"title",
+					"seller_id",
+					"seller_name",
+					"seller_rating",
+					"seller_type",
+					"price_min",
+					"price_max",
+					"quantity_available",
+					"variant_count",
+					"created_at"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
+			"GetGameItemListingsResponse": {
+				"description": "Response for game item listings endpoint",
+				"properties": {
+					"game_item": {
+						"$ref": "#/components/schemas/GameItemMetadata",
+						"description": "Game item metadata"
+					},
+					"quality_distribution": {
+						"items": {
+							"$ref": "#/components/schemas/GameItemQualityDistribution"
+						},
+						"type": "array",
+						"description": "Quality distribution across all listings"
+					},
+					"listings": {
+						"items": {
+							"$ref": "#/components/schemas/GameItemListingResult"
+						},
+						"type": "array",
+						"description": "Individual listings for this game item"
+					},
+					"total": {
+						"type": "number",
+						"format": "double",
+						"description": "Total number of listings (for pagination)"
+					},
+					"page": {
+						"type": "number",
+						"format": "double",
+						"description": "Current page number"
+					},
+					"page_size": {
+						"type": "number",
+						"format": "double",
+						"description": "Page size"
+					}
+				},
+				"required": [
+					"game_item",
+					"quality_distribution",
+					"listings",
+					"total",
+					"page",
+					"page_size"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
 			"MarketVersion": {
 				"type": "string",
 				"enum": [
@@ -1276,16 +1690,19 @@
 				]
 			},
 			"GetFeatureFlagResponse": {
-				"description": "Response for getting feature flag",
+				"description": "Response for getting feature flag\n\nReturns the current market version for the authenticated user,\nalong with developer status to determine if debug UI should be shown.",
 				"properties": {
 					"user_id": {
-						"type": "string"
+						"type": "string",
+						"description": "User ID"
 					},
 					"market_version": {
-						"$ref": "#/components/schemas/MarketVersion"
+						"$ref": "#/components/schemas/MarketVersion",
+						"description": "Current market version (V1 or V2)"
 					},
 					"is_developer": {
-						"type": "boolean"
+						"type": "boolean",
+						"description": "Whether user has developer privileges (admin or dev environment)"
 					}
 				},
 				"required": [
@@ -1297,16 +1714,19 @@
 				"additionalProperties": false
 			},
 			"SetFeatureFlagResponse": {
-				"description": "Response for setting feature flag",
+				"description": "Response for setting feature flag\n\nConfirms the market version has been updated for the user.",
 				"properties": {
 					"user_id": {
-						"type": "string"
+						"type": "string",
+						"description": "User ID"
 					},
 					"market_version": {
-						"$ref": "#/components/schemas/MarketVersion"
+						"$ref": "#/components/schemas/MarketVersion",
+						"description": "Updated market version"
 					},
 					"message": {
-						"type": "string"
+						"type": "string",
+						"description": "Success message"
 					}
 				},
 				"required": [
@@ -1318,14 +1738,735 @@
 				"additionalProperties": false
 			},
 			"SetFeatureFlagRequest": {
-				"description": "Request for setting feature flag",
+				"description": "Request for setting feature flag\n\nAllows developers to switch between V1 and V2 market experiences.\nRestricted to users with admin role.",
 				"properties": {
 					"market_version": {
-						"$ref": "#/components/schemas/MarketVersion"
+						"$ref": "#/components/schemas/MarketVersion",
+						"description": "Market version to set (V1 or V2)"
 					}
 				},
 				"required": [
 					"market_version"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
+			"CartListingInfo": {
+				"description": "Listing information for cart items",
+				"properties": {
+					"listing_id": {
+						"type": "string",
+						"description": "Listing UUID"
+					},
+					"title": {
+						"type": "string",
+						"description": "Listing title"
+					},
+					"seller_name": {
+						"type": "string",
+						"description": "Seller username or contractor name"
+					},
+					"seller_rating": {
+						"type": "number",
+						"format": "double",
+						"description": "Seller rating (0-5)"
+					},
+					"status": {
+						"type": "string",
+						"description": "Current listing status"
+					}
+				},
+				"required": [
+					"listing_id",
+					"title",
+					"seller_name",
+					"seller_rating",
+					"status"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
+			"CartVariantDetail": {
+				"description": "Variant details for cart items (separate from listings to avoid TSOA conflicts)",
+				"properties": {
+					"variant_id": {
+						"type": "string",
+						"description": "UUID of the variant"
+					},
+					"attributes": {
+						"$ref": "#/components/schemas/VariantAttributes",
+						"description": "Variant attributes (quality_tier, quality_value, crafted_source, etc)"
+					},
+					"display_name": {
+						"type": "string",
+						"description": "Human-readable display name (e.g., \"Tier 5 (95.5%) - Crafted\")"
+					},
+					"short_name": {
+						"type": "string",
+						"description": "Short name for compact display (e.g., \"T5 Crafted\")"
+					}
+				},
+				"required": [
+					"variant_id",
+					"attributes",
+					"display_name",
+					"short_name"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
+			"CartItemDetail": {
+				"description": "Detailed information about a cart item\nRequirement 29.8: Include availability and price change indicators",
+				"properties": {
+					"cart_item_id": {
+						"type": "string",
+						"description": "UUID of the cart item"
+					},
+					"listing": {
+						"$ref": "#/components/schemas/CartListingInfo",
+						"description": "Listing information"
+					},
+					"variant": {
+						"$ref": "#/components/schemas/CartVariantDetail",
+						"description": "Variant details with quality attributes"
+					},
+					"quantity": {
+						"type": "number",
+						"format": "double",
+						"description": "Quantity in cart"
+					},
+					"price_per_unit": {
+						"type": "number",
+						"format": "double",
+						"description": "Price per unit at time of add-to-cart (snapshot)"
+					},
+					"subtotal": {
+						"type": "number",
+						"format": "double",
+						"description": "Subtotal for this item (quantity * price_per_unit)"
+					},
+					"available": {
+						"type": "boolean",
+						"description": "Whether this variant is currently available"
+					},
+					"price_changed": {
+						"type": "boolean",
+						"description": "Whether the price has changed since add-to-cart"
+					},
+					"current_price": {
+						"type": "number",
+						"format": "double",
+						"description": "Current price if price_changed is true"
+					}
+				},
+				"required": [
+					"cart_item_id",
+					"listing",
+					"variant",
+					"quantity",
+					"price_per_unit",
+					"subtotal",
+					"available",
+					"price_changed"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
+			"GetCartResponse": {
+				"description": "Response from getting cart contents\nRequirement 29.1-29.12: Return cart items with variant details and totals",
+				"properties": {
+					"items": {
+						"items": {
+							"$ref": "#/components/schemas/CartItemDetail"
+						},
+						"type": "array",
+						"description": "Array of cart items with variant details"
+					},
+					"total_price": {
+						"type": "number",
+						"format": "double",
+						"description": "Total price of all items in cart"
+					},
+					"item_count": {
+						"type": "number",
+						"format": "double",
+						"description": "Total number of items in cart"
+					}
+				},
+				"required": [
+					"items",
+					"total_price",
+					"item_count"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
+			"AddToCartResponse": {
+				"description": "Response from adding item to cart\nRequirement 30.10: Return cart_item_id on success",
+				"properties": {
+					"cart_item_id": {
+						"type": "string",
+						"description": "UUID of the created cart item"
+					},
+					"message": {
+						"type": "string",
+						"description": "Success message"
+					}
+				},
+				"required": [
+					"cart_item_id",
+					"message"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
+			"AddToCartRequest": {
+				"description": "Request to add an item to cart with variant selection\nRequirement 30.2: Accept listing_id, variant_id, and quantity",
+				"properties": {
+					"listing_id": {
+						"type": "string",
+						"description": "UUID of the listing"
+					},
+					"variant_id": {
+						"type": "string",
+						"description": "UUID of the specific variant to add"
+					},
+					"quantity": {
+						"type": "number",
+						"format": "double",
+						"description": "Quantity to add (must be > 0)"
+					}
+				},
+				"required": [
+					"listing_id",
+					"variant_id",
+					"quantity"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
+			"UpdateCartItemRequest": {
+				"description": "Request to update a cart item\nRequirement 31.2: Accept quantity and variant_id updates",
+				"properties": {
+					"quantity": {
+						"type": "number",
+						"format": "double",
+						"description": "New quantity (optional, must be > 0 if provided)"
+					},
+					"variant_id": {
+						"type": "string",
+						"description": "New variant selection (optional)"
+					}
+				},
+				"type": "object",
+				"additionalProperties": false
+			},
+			"UnavailableCartItem": {
+				"description": "Unavailable item information for checkout response",
+				"properties": {
+					"cart_item_id": {
+						"type": "string",
+						"description": "Cart item UUID"
+					},
+					"listing_title": {
+						"type": "string",
+						"description": "Listing title"
+					},
+					"variant_display_name": {
+						"type": "string",
+						"description": "Variant display name"
+					},
+					"reason": {
+						"type": "string",
+						"description": "Reason for unavailability"
+					}
+				},
+				"required": [
+					"cart_item_id",
+					"listing_title",
+					"variant_display_name",
+					"reason"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
+			"CheckoutCartResponse": {
+				"description": "Response from cart checkout\nRequirement 32.10: Return order_id and purchase summary",
+				"properties": {
+					"order_id": {
+						"type": "string",
+						"description": "UUID of the created order"
+					},
+					"total_price": {
+						"type": "number",
+						"format": "double",
+						"description": "Total price of the order"
+					},
+					"items_purchased": {
+						"type": "number",
+						"format": "double",
+						"description": "Number of items successfully purchased"
+					},
+					"unavailable_items": {
+						"items": {
+							"$ref": "#/components/schemas/UnavailableCartItem"
+						},
+						"type": "array",
+						"description": "Array of items that could not be purchased (optional)"
+					}
+				},
+				"required": [
+					"order_id",
+					"total_price",
+					"items_purchased"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
+			"CheckoutCartRequest": {
+				"description": "Request to checkout cart\nRequirement 32.2: Accept confirmation for price changes",
+				"properties": {
+					"confirm_price_changes": {
+						"type": "boolean",
+						"description": "Required if any prices have changed since add-to-cart"
+					}
+				},
+				"type": "object",
+				"additionalProperties": false
+			},
+			"BuyOrderVariantDetail": {
+				"description": "Variant details for buy order response",
+				"properties": {
+					"variant_id": {
+						"type": "string",
+						"description": "UUID of the variant"
+					},
+					"attributes": {
+						"$ref": "#/components/schemas/VariantAttributes",
+						"description": "Variant attributes (quality_tier, quality_value, crafted_source, etc)"
+					},
+					"display_name": {
+						"type": "string",
+						"description": "Human-readable display name (e.g., \"Tier 5 (95.5%) - Crafted\")"
+					},
+					"short_name": {
+						"type": "string",
+						"description": "Short name for compact display (e.g., \"T5 Crafted\")"
+					}
+				},
+				"required": [
+					"variant_id",
+					"attributes",
+					"display_name",
+					"short_name"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
+			"BuyOrderItemDetail": {
+				"description": "Purchase item detail in buy order response",
+				"properties": {
+					"order_item_id": {
+						"type": "string",
+						"description": "UUID of the order item"
+					},
+					"listing_id": {
+						"type": "string",
+						"description": "UUID of the listing"
+					},
+					"item_id": {
+						"type": "string",
+						"description": "UUID of the listing item"
+					},
+					"variant": {
+						"$ref": "#/components/schemas/BuyOrderVariantDetail",
+						"description": "Variant details with quality attributes"
+					},
+					"quantity": {
+						"type": "number",
+						"format": "double",
+						"description": "Quantity purchased"
+					},
+					"price_per_unit": {
+						"type": "number",
+						"format": "double",
+						"description": "Price per unit at time of purchase (snapshot)"
+					},
+					"subtotal": {
+						"type": "number",
+						"format": "double",
+						"description": "Subtotal for this item (quantity * price_per_unit)"
+					}
+				},
+				"required": [
+					"order_item_id",
+					"listing_id",
+					"item_id",
+					"variant",
+					"quantity",
+					"price_per_unit",
+					"subtotal"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
+			"CreateBuyOrderResponse": {
+				"description": "Response from creating a direct purchase order",
+				"properties": {
+					"order_id": {
+						"type": "string",
+						"description": "UUID of the created order"
+					},
+					"buyer_id": {
+						"type": "string",
+						"description": "UUID of the buyer"
+					},
+					"seller_id": {
+						"type": "string",
+						"description": "UUID of the seller"
+					},
+					"total_price": {
+						"type": "number",
+						"format": "double",
+						"description": "Total price in aUEC (atomic units)"
+					},
+					"status": {
+						"type": "string",
+						"description": "Order status"
+					},
+					"created_at": {
+						"type": "string",
+						"description": "ISO 8601 timestamp of order creation"
+					},
+					"item": {
+						"$ref": "#/components/schemas/BuyOrderItemDetail",
+						"description": "Purchase item details"
+					},
+					"allocation_result": {
+						"properties": {
+							"total_allocated": {
+								"type": "number",
+								"format": "double"
+							},
+							"total_requested": {
+								"type": "number",
+								"format": "double"
+							},
+							"has_partial_allocations": {
+								"type": "boolean"
+							}
+						},
+						"required": [
+							"total_allocated",
+							"total_requested",
+							"has_partial_allocations"
+						],
+						"type": "object",
+						"description": "Stock allocation result summary"
+					}
+				},
+				"required": [
+					"order_id",
+					"buyer_id",
+					"seller_id",
+					"total_price",
+					"status",
+					"created_at",
+					"item"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
+			"CreateBuyOrderRequest": {
+				"description": "Request to create a direct purchase order\nBypasses cart and creates order immediately from listing with variant selection",
+				"properties": {
+					"listing_id": {
+						"type": "string",
+						"description": "UUID of the listing to purchase from"
+					},
+					"variant_id": {
+						"type": "string",
+						"description": "UUID of the specific variant to purchase"
+					},
+					"quantity": {
+						"type": "number",
+						"format": "double",
+						"description": "Quantity to purchase (must be > 0)"
+					}
+				},
+				"required": [
+					"listing_id",
+					"variant_id",
+					"quantity"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
+			"PriceDataPoint": {
+				"description": "Price data point in time series",
+				"properties": {
+					"timestamp": {
+						"type": "string",
+						"description": "ISO 8601 timestamp for this data point"
+					},
+					"avg_price": {
+						"type": "number",
+						"format": "double",
+						"description": "Average price during this time period"
+					},
+					"min_price": {
+						"type": "number",
+						"format": "double",
+						"description": "Minimum price during this time period"
+					},
+					"max_price": {
+						"type": "number",
+						"format": "double",
+						"description": "Maximum price during this time period"
+					},
+					"volume": {
+						"type": "number",
+						"format": "double",
+						"description": "Number of transactions/listings during this time period"
+					},
+					"quality_tier": {
+						"type": "number",
+						"format": "double",
+						"description": "Optional quality tier for this data series"
+					}
+				},
+				"required": [
+					"timestamp",
+					"avg_price",
+					"min_price",
+					"max_price",
+					"volume"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
+			"GetPriceHistoryResponse": {
+				"description": "Response for price history endpoint",
+				"properties": {
+					"game_item_id": {
+						"type": "string",
+						"description": "Game item UUID"
+					},
+					"game_item_name": {
+						"type": "string",
+						"description": "Game item name"
+					},
+					"data": {
+						"items": {
+							"$ref": "#/components/schemas/PriceDataPoint"
+						},
+						"type": "array",
+						"description": "Time series data points"
+					},
+					"start_date": {
+						"type": "string",
+						"description": "Start date of the time range"
+					},
+					"end_date": {
+						"type": "string",
+						"description": "End date of the time range"
+					},
+					"interval": {
+						"type": "string",
+						"description": "Time interval used for aggregation"
+					}
+				},
+				"required": [
+					"game_item_id",
+					"game_item_name",
+					"data",
+					"start_date",
+					"end_date",
+					"interval"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
+			"QualityTierDistribution": {
+				"description": "Quality tier distribution data",
+				"properties": {
+					"quality_tier": {
+						"type": "number",
+						"format": "double",
+						"description": "Quality tier (1-5)"
+					},
+					"quantity_available": {
+						"type": "number",
+						"format": "double",
+						"description": "Total quantity available for this tier"
+					},
+					"listing_count": {
+						"type": "number",
+						"format": "double",
+						"description": "Number of listings offering this tier"
+					},
+					"avg_price": {
+						"type": "number",
+						"format": "double",
+						"description": "Average price for this tier"
+					},
+					"min_price": {
+						"type": "number",
+						"format": "double",
+						"description": "Minimum price for this tier"
+					},
+					"max_price": {
+						"type": "number",
+						"format": "double",
+						"description": "Maximum price for this tier"
+					},
+					"seller_count": {
+						"type": "number",
+						"format": "double",
+						"description": "Number of unique sellers offering this tier"
+					}
+				},
+				"required": [
+					"quality_tier",
+					"quantity_available",
+					"listing_count",
+					"avg_price",
+					"min_price",
+					"max_price",
+					"seller_count"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
+			"GetQualityDistributionResponse": {
+				"description": "Response for quality distribution endpoint",
+				"properties": {
+					"game_item_id": {
+						"type": "string",
+						"description": "Game item UUID"
+					},
+					"game_item_name": {
+						"type": "string",
+						"description": "Game item name"
+					},
+					"distribution": {
+						"items": {
+							"$ref": "#/components/schemas/QualityTierDistribution"
+						},
+						"type": "array",
+						"description": "Distribution data by quality tier"
+					},
+					"total_quantity": {
+						"type": "number",
+						"format": "double",
+						"description": "Total quantity across all tiers"
+					},
+					"start_date": {
+						"type": "string",
+						"description": "Start date of the time range (if filtered)"
+					},
+					"end_date": {
+						"type": "string",
+						"description": "End date of the time range (if filtered)"
+					}
+				},
+				"required": [
+					"game_item_id",
+					"game_item_name",
+					"distribution",
+					"total_quantity"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
+			"QualityTierSales": {
+				"description": "Sales data by quality tier",
+				"properties": {
+					"quality_tier": {
+						"type": "number",
+						"format": "double",
+						"description": "Quality tier (1-5)"
+					},
+					"volume": {
+						"type": "number",
+						"format": "double",
+						"description": "Total sales volume (number of items sold)"
+					},
+					"avg_price": {
+						"type": "number",
+						"format": "double",
+						"description": "Average sale price for this tier"
+					},
+					"avg_time_to_sale_hours": {
+						"type": "number",
+						"format": "double",
+						"description": "Average time to sale in hours"
+					}
+				},
+				"required": [
+					"quality_tier",
+					"volume",
+					"avg_price",
+					"avg_time_to_sale_hours"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
+			"QualityTierPremium": {
+				"description": "Price premium data by quality tier",
+				"properties": {
+					"quality_tier": {
+						"type": "number",
+						"format": "double",
+						"description": "Quality tier (1-5)"
+					},
+					"premium_percentage": {
+						"type": "number",
+						"format": "double",
+						"description": "Price premium percentage compared to tier 1 baseline"
+					}
+				},
+				"required": [
+					"quality_tier",
+					"premium_percentage"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
+			"GetSellerStatsResponse": {
+				"description": "Response for seller stats endpoint",
+				"properties": {
+					"seller_id": {
+						"type": "string",
+						"description": "Seller ID"
+					},
+					"sales_by_quality": {
+						"items": {
+							"$ref": "#/components/schemas/QualityTierSales"
+						},
+						"type": "array",
+						"description": "Sales data grouped by quality tier"
+					},
+					"inventory_distribution": {
+						"items": {
+							"$ref": "#/components/schemas/QualityTierDistribution"
+						},
+						"type": "array",
+						"description": "Current inventory distribution by quality tier"
+					},
+					"price_premiums": {
+						"items": {
+							"$ref": "#/components/schemas/QualityTierPremium"
+						},
+						"type": "array",
+						"description": "Price premium percentages by quality tier"
+					}
+				},
+				"required": [
+					"seller_id",
+					"sales_by_quality",
+					"inventory_distribution",
+					"price_premiums"
 				],
 				"type": "object",
 				"additionalProperties": false
@@ -1490,7 +2631,31 @@
 		"contact": {}
 	},
 	"paths": {
-		"/stock-lots": {
+		"/api/v2/variant-types": {
+			"get": {
+				"operationId": "GetVariantTypes",
+				"responses": {
+					"200": {
+						"description": "All variant type definitions with validation rules",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/GetVariantTypesResponse"
+								}
+							}
+						}
+					}
+				},
+				"description": "Get all variant types with validation rules\n\nReturns all available variant type definitions including name, display_name,\nvalue_type, min_value, max_value, and allowed_values. Also includes flags\nfor affects_pricing, searchable, and filterable. Results are ordered by\ndisplay_order for consistent UI presentation.\n\nRequirements:\n- 4.4: GET /api/v2/variant-types endpoint\n- 4.5: Return all variant types with validation rules\n- 4.5: Include name, display_name, value_type, min_value, max_value, allowed_values\n- 4.5: Include affects_pricing, searchable, filterable flags\n- 4.5: Order by display_order",
+				"summary": "Get all variant types",
+				"tags": [
+					"Variant Types V2"
+				],
+				"security": [],
+				"parameters": []
+			}
+		},
+		"/api/v2/stock-lots": {
 			"get": {
 				"operationId": "GetStockLots",
 				"responses": {
@@ -1600,7 +2765,7 @@
 				]
 			}
 		},
-		"/stock-lots/{id}": {
+		"/api/v2/stock-lots/{id}": {
 			"put": {
 				"operationId": "UpdateStockLot",
 				"responses": {
@@ -1646,7 +2811,7 @@
 				}
 			}
 		},
-		"/stock-lots/bulk-update": {
+		"/api/v2/stock-lots/bulk-update": {
 			"post": {
 				"operationId": "BulkUpdateStockLots",
 				"responses": {
@@ -1682,7 +2847,7 @@
 				}
 			}
 		},
-		"/orders": {
+		"/api/v2/orders": {
 			"post": {
 				"operationId": "CreateOrder",
 				"responses": {
@@ -1718,7 +2883,41 @@
 				}
 			}
 		},
-		"/listings": {
+		"/api/v2/orders/{orderId}": {
+			"get": {
+				"operationId": "GetOrderDetail",
+				"responses": {
+					"200": {
+						"description": "Order details with buyer/seller info and variant details",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/GetOrderDetailResponse"
+								}
+							}
+						}
+					}
+				},
+				"description": "Get order details with variant information\n\nRetrieves complete order information including:\n1. Order metadata (status, timestamps, total price)\n2. Buyer and seller information (username, display_name, avatar)\n3. Array of order items with variant details\n4. Quality tier, variant attributes, and display_name for each item\n5. Price per unit snapshot from time of purchase\n\nAuthorization: User must be either the buyer or seller of the order.\n\nRequirements:\n- 26.1: GET /api/v2/orders/:id endpoint\n- 26.2: Return order metadata with buyer and seller information\n- 26.3: Return array of order items with variant details\n- 26.4: Include quality_tier for each order item\n- 26.5: Include variant attributes for each item\n- 26.6: Include variant display_name for each item\n- 26.7: Include price_per_unit snapshot from time of purchase\n- 26.8: Calculate order totals with per-variant pricing\n- 26.9: Include order status and timestamps\n- 26.10: Return 404 if order not found\n- 26.11: Validate user authorization to view order\n- 26.12: Include fulfillment status per item",
+				"summary": "Get order detail",
+				"tags": [
+					"Orders V2"
+				],
+				"security": [],
+				"parameters": [
+					{
+						"description": "UUID of the order to retrieve",
+						"in": "path",
+						"name": "orderId",
+						"required": true,
+						"schema": {
+							"type": "string"
+						}
+					}
+				]
+			}
+		},
+		"/api/v2/listings": {
 			"post": {
 				"operationId": "CreateListing",
 				"responses": {
@@ -1754,7 +2953,7 @@
 				}
 			}
 		},
-		"/listings/{id}": {
+		"/api/v2/listings/{id}": {
 			"get": {
 				"operationId": "GetListingDetail",
 				"responses": {
@@ -1832,7 +3031,7 @@
 				}
 			}
 		},
-		"/listings/search": {
+		"/api/v2/listings/search": {
 			"get": {
 				"operationId": "SearchListings",
 				"responses": {
@@ -1963,7 +3162,7 @@
 				]
 			}
 		},
-		"/listings/mine": {
+		"/api/v2/listings/mine": {
 			"get": {
 				"operationId": "GetMyListings",
 				"responses": {
@@ -2051,7 +3250,7 @@
 				]
 			}
 		},
-		"/health": {
+		"/api/v2/health": {
 			"get": {
 				"operationId": "GetHealth",
 				"responses": {
@@ -2075,7 +3274,99 @@
 				"parameters": []
 			}
 		},
-		"/debug/feature-flag": {
+		"/api/v2/game-items/{id}/listings": {
+			"get": {
+				"operationId": "GetListings",
+				"responses": {
+					"200": {
+						"description": "Game item listings with quality distribution",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/GetGameItemListingsResponse"
+								}
+							}
+						}
+					}
+				},
+				"description": "Get all listings for a specific game item with quality distribution\n\nReturns all active listings for the specified game item along with quality\ndistribution statistics. Supports filtering by quality tier and sorting options.\nComputes quality distribution across all listings showing quantity, price ranges,\nand seller counts per quality tier.\n\nRequirements:\n- 38.1: GET /api/v2/game-items/:id/listings endpoint\n- 38.2: Return all active listings for specified game item\n- 38.3: Compute quality distribution across all listings\n- 38.4: Return quantity available per quality_tier\n- 38.5: Return price range per quality_tier (min, max, average)\n- 38.6: Return number of sellers per quality_tier\n- 38.7: Support filtering by quality_tier\n- 38.8: Support sorting by price, quality, quantity, seller_rating\n- 38.9: Support pagination with page and page_size parameters\n- 38.10: Cache quality distribution for performance\n- 38.11: Execute queries within 50ms performance target\n- 38.12: Include game item metadata in response",
+				"summary": "Get listings for game item",
+				"tags": [
+					"Game Items V2"
+				],
+				"security": [],
+				"parameters": [
+					{
+						"description": "Game item UUID (required)",
+						"in": "path",
+						"name": "id",
+						"required": true,
+						"schema": {
+							"type": "string"
+						}
+					},
+					{
+						"description": "Optional quality tier filter (1-5)",
+						"in": "query",
+						"name": "quality_tier",
+						"required": false,
+						"schema": {
+							"format": "double",
+							"type": "number"
+						}
+					},
+					{
+						"description": "Sort field (default: price)",
+						"in": "query",
+						"name": "sort_by",
+						"required": false,
+						"schema": {
+							"type": "string",
+							"enum": [
+								"price",
+								"quality",
+								"quantity",
+								"seller_rating"
+							]
+						}
+					},
+					{
+						"description": "Sort order (default: asc)",
+						"in": "query",
+						"name": "sort_order",
+						"required": false,
+						"schema": {
+							"type": "string",
+							"enum": [
+								"asc",
+								"desc"
+							]
+						}
+					},
+					{
+						"description": "Page number for pagination (default: 1)",
+						"in": "query",
+						"name": "page",
+						"required": false,
+						"schema": {
+							"format": "double",
+							"type": "number"
+						}
+					},
+					{
+						"description": "Number of results per page (default: 20, max: 100)",
+						"in": "query",
+						"name": "page_size",
+						"required": false,
+						"schema": {
+							"format": "double",
+							"type": "number"
+						}
+					}
+				]
+			}
+		},
+		"/api/v2/debug/feature-flag": {
 			"get": {
 				"operationId": "GetFeatureFlag",
 				"responses": {
@@ -2133,7 +3424,396 @@
 				}
 			}
 		},
-		"/admin/feature-flags/config": {
+		"/api/v2/cart": {
+			"get": {
+				"operationId": "GetCart",
+				"responses": {
+					"200": {
+						"description": "Cart contents with variant details and availability",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/GetCartResponse"
+								}
+							}
+						}
+					}
+				},
+				"description": "Get user's cart with variant-specific items\n\nRetrieves all cart items for the authenticated user with:\n1. Variant details (quality tier, attributes, display name)\n2. Listing information (title, seller, status)\n3. Real-time availability check for each variant\n4. Price change detection (compare snapshot vs current price)\n5. Calculated subtotals and cart total\n\nAvailability is checked by querying listed stock lots for each variant.\nPrice changes are detected by comparing cart's price_per_unit with current\nvariant pricing from the listing.\n\nRequirements:\n- 29.1: GET /api/v2/cart endpoint\n- 29.2: Return array of cart items with variant details\n- 29.3: Include listing information for each cart item\n- 29.4: Include variant attributes (quality_tier, display_name)\n- 29.5: Include quantity and price_per_unit snapshot\n- 29.6: Calculate subtotal for each item\n- 29.7: Calculate total_price for entire cart\n- 29.8: Include availability indicator for each item\n- 29.9: Include price_changed indicator for each item\n- 29.10: Return current_price if price has changed\n- 29.11: Return item_count (total number of items)\n- 29.12: Filter cart items by authenticated user",
+				"summary": "Get cart",
+				"tags": [
+					"Cart V2"
+				],
+				"security": [],
+				"parameters": []
+			}
+		},
+		"/api/v2/cart/add": {
+			"post": {
+				"operationId": "AddToCart",
+				"responses": {
+					"200": {
+						"description": "Cart item ID and success message",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/AddToCartResponse"
+								}
+							}
+						}
+					}
+				},
+				"description": "Add item to cart with variant selection\n\nAdds a variant-specific item to the user's cart by:\n1. Validating listing exists and is active\n2. Validating variant exists and belongs to listing\n3. Checking variant availability (sufficient stock)\n4. Snapshotting current variant price\n5. Creating or updating cart item (upsert on user_id + listing_id + variant_id)\n\nIf the same variant already exists in cart, the quantities are added together.\nPrice is updated to current price on each add operation.\n\nRequirements:\n- 30.1: POST /api/v2/cart/add endpoint\n- 30.2: Accept listing_id, variant_id, and quantity\n- 30.3: Validate listing exists and is active\n- 30.4: Validate variant exists and belongs to listing\n- 30.5: Check variant availability before adding\n- 30.6: Snapshot variant price at add-to-cart time\n- 30.7: Create cart_items_v2 entry with variant_id\n- 30.8: Support upsert (update if already in cart)\n- 30.9: Validate quantity is positive integer\n- 30.10: Return cart_item_id on success\n- 30.11: Prevent adding unavailable variants with descriptive error\n- 30.12: Log cart additions to audit trail",
+				"summary": "Add item to cart",
+				"tags": [
+					"Cart V2"
+				],
+				"security": [],
+				"parameters": [],
+				"requestBody": {
+					"description": "Add to cart request with listing, variant, and quantity",
+					"required": true,
+					"content": {
+						"application/json": {
+							"schema": {
+								"$ref": "#/components/schemas/AddToCartRequest",
+								"description": "Add to cart request with listing, variant, and quantity"
+							}
+						}
+					}
+				}
+			}
+		},
+		"/api/v2/cart/{id}": {
+			"put": {
+				"operationId": "UpdateCartItem",
+				"responses": {
+					"200": {
+						"description": "Success message",
+						"content": {
+							"application/json": {
+								"schema": {
+									"properties": {
+										"message": {
+											"type": "string"
+										}
+									},
+									"required": [
+										"message"
+									],
+									"type": "object"
+								}
+							}
+						}
+					}
+				},
+				"description": "Update cart item quantity\n\nUpdates a cart item's quantity or variant selection by:\n1. Validating cart item exists and belongs to user\n2. If quantity updated: validating new quantity against availability\n3. If variant changed: validating new variant and checking availability\n4. Updating price_per_unit to current price\n5. Updating cart item record\n\nQuantity must be positive. To remove an item, use DELETE endpoint instead.\nChanging variant will update the price to the new variant's current price.\n\nRequirements:\n- 31.1: PUT /api/v2/cart/:id endpoint\n- 31.2: Accept quantity and variant_id updates\n- 31.3: Validate cart item exists and belongs to user\n- 31.4: Validate new quantity against variant availability\n- 31.5: Validate new variant_id if provided\n- 31.6: Update price_per_unit to current price\n- 31.7: Prevent quantity from being set to 0 (use DELETE instead)\n- 31.8: Use database transaction for atomicity\n- 31.9: Return 404 if cart item not found\n- 31.10: Return 403 if cart item belongs to different user\n- 31.11: Log cart modifications to audit trail\n- 31.12: Invalidate cart cache after update",
+				"summary": "Update cart item",
+				"tags": [
+					"Cart V2"
+				],
+				"security": [],
+				"parameters": [
+					{
+						"description": "Cart item UUID",
+						"in": "path",
+						"name": "id",
+						"required": true,
+						"schema": {
+							"type": "string"
+						}
+					}
+				],
+				"requestBody": {
+					"description": "Update request with optional quantity and variant_id",
+					"required": true,
+					"content": {
+						"application/json": {
+							"schema": {
+								"$ref": "#/components/schemas/UpdateCartItemRequest",
+								"description": "Update request with optional quantity and variant_id"
+							}
+						}
+					}
+				}
+			},
+			"delete": {
+				"operationId": "RemoveCartItem",
+				"responses": {
+					"200": {
+						"description": "Success message",
+						"content": {
+							"application/json": {
+								"schema": {
+									"properties": {
+										"message": {
+											"type": "string"
+										}
+									},
+									"required": [
+										"message"
+									],
+									"type": "object"
+								}
+							}
+						}
+					}
+				},
+				"description": "Remove item from cart\n\nDeletes a cart item by:\n1. Validating cart item exists and belongs to user\n2. Deleting cart item record\n\nRequirements:\n- 33.1: DELETE /api/v2/cart/:id endpoint\n- 33.2: Validate cart item exists and belongs to user\n- 33.3: Delete cart_items_v2 entry\n- 33.4: Return 404 if cart item not found\n- 33.5: Return 403 if cart item belongs to different user\n- 33.6: Log cart deletions to audit trail\n- 33.7: Invalidate cart cache after deletion",
+				"summary": "Remove cart item",
+				"tags": [
+					"Cart V2"
+				],
+				"security": [],
+				"parameters": [
+					{
+						"description": "Cart item UUID",
+						"in": "path",
+						"name": "id",
+						"required": true,
+						"schema": {
+							"type": "string"
+						}
+					}
+				]
+			}
+		},
+		"/api/v2/cart/checkout": {
+			"post": {
+				"operationId": "CheckoutCart",
+				"responses": {
+					"200": {
+						"description": "Order ID and purchase summary",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/CheckoutCartResponse"
+								}
+							}
+						}
+					}
+				},
+				"description": "Checkout cart and create order\n\nConverts cart items to an order by:\n1. Validating all cart items are still available\n2. Detecting price changes and requiring confirmation if needed\n3. Creating order with variant-specific line items\n4. Allocating stock for each variant\n5. Clearing cart after successful order\n6. Handling partial failures (some items unavailable)\n\nUses database transaction for atomicity to ensure all-or-nothing behavior.\nIf any cart items are unavailable or prices have changed without confirmation,\nthe checkout will fail with descriptive errors.\n\nRequirements:\n- 32.1: POST /api/v2/cart/checkout endpoint\n- 32.2: Validate all cart items for availability before checkout\n- 32.3: Create order with variant-specific items from cart\n- 32.4: Allocate stock from correct variants\n- 32.5: Use variant-specific pricing in order totals\n- 32.6: Use database transaction for atomicity\n- 32.7: Clear cart after successful checkout\n- 32.8: Handle partial checkout if some items become unavailable\n- 32.9: Return order_id and order details on success\n- 32.10: Notify user of price changes requiring confirmation\n- 32.11: Notify sellers of new orders\n- 32.12: Log checkout to Audit_Trail",
+				"summary": "Checkout cart",
+				"tags": [
+					"Cart V2"
+				],
+				"security": [],
+				"parameters": [],
+				"requestBody": {
+					"description": "Checkout request with optional price change confirmation",
+					"required": true,
+					"content": {
+						"application/json": {
+							"schema": {
+								"$ref": "#/components/schemas/CheckoutCartRequest",
+								"description": "Checkout request with optional price change confirmation"
+							}
+						}
+					}
+				}
+			}
+		},
+		"/api/v2/buy-orders": {
+			"post": {
+				"operationId": "CreateBuyOrder",
+				"responses": {
+					"200": {
+						"description": "Created order with order_id and purchase details",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/CreateBuyOrderResponse"
+								}
+							}
+						}
+					}
+				},
+				"description": "Create a direct purchase order from listing\n\nCreates an order directly from a listing with variant selection, bypassing the cart.\nThis implements \"Buy Now\" functionality for immediate purchases.\n\nProcess:\n1. Validates listing exists and is active\n2. Validates variant exists and belongs to listing\n3. Checks variant availability (sufficient stock)\n4. Snapshots variant price at purchase time\n5. Creates order record in V1 orders table\n6. Creates market_orders entry (V1 compatibility)\n7. Creates order_market_items_v2 entry with variant tracking\n8. Allocates stock from variant-specific lots\n9. Returns order details with purchase summary\n\nUses database transaction for atomicity to ensure all-or-nothing behavior.\nStock allocation follows the V1 workflow using OrderLifecycleService.\n\nRequirements:\n- Validate listing exists and is active\n- Validate variant exists and belongs to listing\n- Check variant availability before order creation\n- Create order with variant-specific line item\n- Allocate stock for the variant\n- Use database transaction for atomicity\n- Snapshot variant price at time of purchase\n- Return order_id and purchase summary\n- Prevent ordering unavailable variants with descriptive error\n- Follow same patterns as cart checkout",
+				"summary": "Create direct purchase order",
+				"tags": [
+					"Buy Orders V2"
+				],
+				"security": [],
+				"parameters": [],
+				"requestBody": {
+					"description": "Buy order request with listing, variant, and quantity",
+					"required": true,
+					"content": {
+						"application/json": {
+							"schema": {
+								"$ref": "#/components/schemas/CreateBuyOrderRequest",
+								"description": "Buy order request with listing, variant, and quantity"
+							}
+						}
+					}
+				}
+			}
+		},
+		"/api/v2/analytics/price-history": {
+			"get": {
+				"operationId": "GetPriceHistory",
+				"responses": {
+					"200": {
+						"description": "Price history time-series data",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/GetPriceHistoryResponse"
+								}
+							}
+						}
+					}
+				},
+				"description": "Get price history for a game item with optional quality tier filtering\n\nTracks prices per variant over time and aggregates by quality tier.\nReturns time-series data with timestamps, average/min/max prices, and volume.\nSupports filtering by game_item_id and quality_tier.\n\nRequirements:\n- 46.1: GET /api/v2/analytics/price-history endpoint\n- 46.2: Track prices per variant over time\n- 46.3: Aggregate by quality tier\n- 46.4: Support filtering by game_item_id and quality_tier\n- 46.5: Return time-series data with timestamps, avg_price, min_price, max_price, volume",
+				"summary": "Get price history",
+				"tags": [
+					"Analytics V2"
+				],
+				"security": [],
+				"parameters": [
+					{
+						"description": "Game item UUID (required)",
+						"in": "query",
+						"name": "game_item_id",
+						"required": true,
+						"schema": {
+							"type": "string"
+						}
+					},
+					{
+						"description": "Optional quality tier filter (1-5)",
+						"in": "query",
+						"name": "quality_tier",
+						"required": false,
+						"schema": {
+							"format": "double",
+							"type": "number"
+						}
+					},
+					{
+						"description": "Optional start date (ISO 8601 format, defaults to 30 days ago)",
+						"in": "query",
+						"name": "start_date",
+						"required": false,
+						"schema": {
+							"type": "string"
+						}
+					},
+					{
+						"description": "Optional end date (ISO 8601 format, defaults to now)",
+						"in": "query",
+						"name": "end_date",
+						"required": false,
+						"schema": {
+							"type": "string"
+						}
+					},
+					{
+						"description": "Time interval for aggregation (default: 'day')",
+						"in": "query",
+						"name": "interval",
+						"required": false,
+						"schema": {
+							"type": "string",
+							"enum": [
+								"hour",
+								"day",
+								"week",
+								"month"
+							]
+						}
+					}
+				]
+			}
+		},
+		"/api/v2/analytics/quality-distribution": {
+			"get": {
+				"operationId": "GetQualityDistribution",
+				"responses": {
+					"200": {
+						"description": "Quality tier distribution histogram data",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/GetQualityDistributionResponse"
+								}
+							}
+						}
+					}
+				},
+				"description": "Get quality tier distribution for a game item\n\nShows distribution of available quality tiers with tier counts, quantities,\nprices, and seller counts. Supports filtering by game_item_id and optional\ndate range for tracking quality tier trends over time.\n\nRequirements:\n- 47.1: GET /api/v2/analytics/quality-distribution endpoint\n- 47.2: Show distribution of available quality tiers\n- 47.3: Track quality tier trends over time\n- 47.4: Support filtering by game_item_id\n- 47.5: Return histogram data with tier counts, quantities, prices, seller counts",
+				"summary": "Get quality tier distribution",
+				"tags": [
+					"Analytics V2"
+				],
+				"security": [],
+				"parameters": [
+					{
+						"description": "Game item UUID (required)",
+						"in": "query",
+						"name": "game_item_id",
+						"required": true,
+						"schema": {
+							"type": "string"
+						}
+					},
+					{
+						"description": "Optional start date (ISO 8601 format)",
+						"in": "query",
+						"name": "start_date",
+						"required": false,
+						"schema": {
+							"type": "string"
+						}
+					},
+					{
+						"description": "Optional end date (ISO 8601 format)",
+						"in": "query",
+						"name": "end_date",
+						"required": false,
+						"schema": {
+							"type": "string"
+						}
+					}
+				]
+			}
+		},
+		"/api/v2/analytics/seller-stats": {
+			"get": {
+				"operationId": "GetSellerStats",
+				"responses": {
+					"200": {
+						"description": "Seller analytics with sales and inventory breakdown",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/GetSellerStatsResponse"
+								}
+							}
+						}
+					}
+				},
+				"description": "Get seller analytics with sales and inventory breakdown by quality tier\n\nProvides comprehensive seller analytics including:\n- Sales volume by quality tier (from completed orders)\n- Average sale price by quality tier\n- Time-to-sale metrics by quality tier\n- Current inventory distribution by quality tier\n- Price premium percentages for higher quality tiers\n\nRequirements:\n- 48.1: GET /api/v2/analytics/seller-stats endpoint\n- 48.2: Display sales volume by quality tier\n- 48.3: Display average sale price by quality tier\n- 48.4: Display time-to-sale by quality tier\n- 48.5: Display quality tier distribution of current inventory\n- 48.6: Calculate price premium percentage for higher quality tiers",
+				"summary": "Get seller analytics",
+				"tags": [
+					"Analytics V2"
+				],
+				"security": [],
+				"parameters": [
+					{
+						"description": "Optional seller ID (defaults to current user)",
+						"in": "query",
+						"name": "seller_id",
+						"required": false,
+						"schema": {
+							"type": "string"
+						}
+					}
+				]
+			}
+		},
+		"/api/v2/admin/feature-flags/config": {
 			"get": {
 				"operationId": "GetConfig",
 				"responses": {
@@ -2189,7 +3869,7 @@
 				}
 			}
 		},
-		"/admin/feature-flags/stats": {
+		"/api/v2/admin/feature-flags/stats": {
 			"get": {
 				"operationId": "GetStats",
 				"responses": {
@@ -2213,7 +3893,7 @@
 				"parameters": []
 			}
 		},
-		"/admin/feature-flags/overrides": {
+		"/api/v2/admin/feature-flags/overrides": {
 			"get": {
 				"operationId": "GetUserOverrides",
 				"responses": {
@@ -2296,7 +3976,7 @@
 				}
 			}
 		},
-		"/admin/feature-flags/overrides/{userId}": {
+		"/api/v2/admin/feature-flags/overrides/{userId}": {
 			"delete": {
 				"operationId": "RemoveUserOverride",
 				"responses": {
@@ -2337,10 +4017,5 @@
 				]
 			}
 		}
-	},
-	"servers": [
-		{
-			"url": "/api/v2"
-		}
-	]
+	}
 }

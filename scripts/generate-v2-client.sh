@@ -24,6 +24,13 @@ fi
 echo "✅ OpenAPI spec generated successfully"
 echo ""
 
+# Step 1.5: Fix OpenAPI paths to include /api/v2 prefix
+echo "Step 1.5: Fixing OpenAPI paths to include /api/v2 prefix..."
+npx tsx scripts/fix-openapi-paths.ts
+
+echo "✅ OpenAPI paths fixed"
+echo ""
+
 # Step 2: Copy OpenAPI spec to frontend
 echo "Step 2: Copying OpenAPI spec to frontend..."
 FRONTEND_DIR="../sc-market-frontend"

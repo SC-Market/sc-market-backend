@@ -13,7 +13,7 @@ import { getKnex } from "../../../../clients/database/knex-db.js"
 import { v4 as uuidv4 } from "uuid"
 import type { Knex } from "knex"
 
-describe.skip("BuyOrdersV2Controller", () => {
+describe("BuyOrdersV2Controller", () => {
   let knex: Knex
   let controller: BuyOrdersV2Controller
   let testBuyerId: string
