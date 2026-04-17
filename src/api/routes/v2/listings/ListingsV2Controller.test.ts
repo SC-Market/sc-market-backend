@@ -1128,12 +1128,12 @@ describe("ListingsV2Controller.getListingDetail", () => {
       expect(item.variants.length).toBe(5)
 
       // Verify all quality tiers are present
-      const qualityTiers = item.variants.map((v) => v.attributes.quality_tier).sort()
+      const qualityTiers = item.variants.map((v) => v.attributes?.quality_tier).sort()
       expect(qualityTiers).toEqual([1, 2, 3, 4, 5])
 
       // Verify prices are correct
       item.variants.forEach((variant) => {
-        const expectedPrice = variant.attributes.quality_tier * 1000
+        const expectedPrice = (variant.attributes?.quality_tier ?? 1) * 1000
         expect(variant.price).toBe(expectedPrice)
       })
     })

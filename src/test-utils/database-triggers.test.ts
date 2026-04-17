@@ -1,6 +1,6 @@
 import { describe, it, expect, beforeAll, afterAll, beforeEach } from 'vitest';
 import knex, { Knex } from 'knex';
-import knexConfig from '../../knexfile';
+import knexConfig from '../../knexfile.js';
 
 /**
  * Database Trigger Tests for Task 1.5

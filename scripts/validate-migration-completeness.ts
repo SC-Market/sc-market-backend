@@ -216,10 +216,11 @@ class MigrationValidator {
         };
       }
     } catch (error) {
+      const errorMessage = error instanceof Error ? error.message : String(error);
       return {
         passed: false,
-        message: `Error comparing listing counts: ${error.message}`,
-        details: { error: error.message }
+        message: `Error comparing listing counts: ${errorMessage}`,
+        details: { error: errorMessage }
       };
     }
   }
@@ -375,10 +376,11 @@ class MigrationValidator {
         };
       }
     } catch (error) {
+      const errorMessage = error instanceof Error ? error.message : String(error);
       return {
         passed: false,
-        message: `Error validating metadata preservation: ${error.message}`,
-        details: { error: error.message }
+        message: `Error validating metadata preservation: ${errorMessage}`,
+        details: { error: errorMessage }
       };
     }
   }
@@ -426,10 +428,11 @@ class MigrationValidator {
         };
       }
     } catch (error) {
+      const errorMessage = error instanceof Error ? error.message : String(error);
       return {
         passed: false,
-        message: `Error validating quantity_available: ${error.message}`,
-        details: { error: error.message }
+        message: `Error validating quantity_available: ${errorMessage}`,
+        details: { error: errorMessage }
       };
     }
   }
@@ -483,10 +486,11 @@ class MigrationValidator {
         };
       }
     } catch (error) {
+      const errorMessage = error instanceof Error ? error.message : String(error);
       return {
         passed: false,
-        message: `Error validating variant deduplication: ${error.message}`,
-        details: { error: error.message }
+        message: `Error validating variant deduplication: ${errorMessage}`,
+        details: { error: errorMessage }
       };
     }
   }
@@ -550,10 +554,11 @@ class MigrationValidator {
         };
       }
     } catch (error) {
+      const errorMessage = error instanceof Error ? error.message : String(error);
       return {
         passed: false,
-        message: `Error validating V1 tables unchanged: ${error.message}`,
-        details: { error: error.message }
+        message: `Error validating V1 tables unchanged: ${errorMessage}`,
+        details: { error: errorMessage }
       };
     }
   }
