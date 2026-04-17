@@ -2742,7 +2742,7 @@
 		"contact": {}
 	},
 	"paths": {
-		"/api/v2/variant-types": {
+		"/variant-types": {
 			"get": {
 				"operationId": "GetVariantTypes",
 				"responses": {
@@ -2766,7 +2766,7 @@
 				"parameters": []
 			}
 		},
-		"/api/v2/stock-lots": {
+		"/stock-lots": {
 			"get": {
 				"operationId": "GetStockLots",
 				"responses": {
@@ -2876,7 +2876,7 @@
 				]
 			}
 		},
-		"/api/v2/stock-lots/{id}": {
+		"/stock-lots/{id}": {
 			"put": {
 				"operationId": "UpdateStockLot",
 				"responses": {
@@ -2922,7 +2922,7 @@
 				}
 			}
 		},
-		"/api/v2/stock-lots/bulk-update": {
+		"/stock-lots/bulk-update": {
 			"post": {
 				"operationId": "BulkUpdateStockLots",
 				"responses": {
@@ -2958,7 +2958,7 @@
 				}
 			}
 		},
-		"/api/v2/orders": {
+		"/orders": {
 			"post": {
 				"operationId": "CreateOrder",
 				"responses": {
@@ -3103,7 +3103,7 @@
 				]
 			}
 		},
-		"/api/v2/orders/{orderId}": {
+		"/orders/{orderId}": {
 			"get": {
 				"operationId": "GetOrderDetail",
 				"responses": {
@@ -3137,7 +3137,7 @@
 				]
 			}
 		},
-		"/api/v2/listings": {
+		"/listings": {
 			"post": {
 				"operationId": "CreateListing",
 				"responses": {
@@ -3173,7 +3173,7 @@
 				}
 			}
 		},
-		"/api/v2/listings/{id}": {
+		"/listings/{id}": {
 			"get": {
 				"operationId": "GetListingDetail",
 				"responses": {
@@ -3251,7 +3251,7 @@
 				}
 			}
 		},
-		"/api/v2/listings/search": {
+		"/listings/search": {
 			"get": {
 				"operationId": "SearchListings",
 				"responses": {
@@ -3382,7 +3382,7 @@
 				]
 			}
 		},
-		"/api/v2/listings/mine": {
+		"/listings/mine": {
 			"get": {
 				"operationId": "GetMyListings",
 				"responses": {
@@ -3470,7 +3470,7 @@
 				]
 			}
 		},
-		"/api/v2/listings/{id}/refresh": {
+		"/listings/{id}/refresh": {
 			"post": {
 				"operationId": "RefreshListing",
 				"responses": {
@@ -3516,7 +3516,7 @@
 				]
 			}
 		},
-		"/api/v2/health": {
+		"/health": {
 			"get": {
 				"operationId": "GetHealth",
 				"responses": {
@@ -3540,7 +3540,7 @@
 				"parameters": []
 			}
 		},
-		"/api/v2/game-items/{id}/listings": {
+		"/game-items/{id}/listings": {
 			"get": {
 				"operationId": "GetListings",
 				"responses": {
@@ -3632,7 +3632,7 @@
 				]
 			}
 		},
-		"/api/v2/debug/feature-flag": {
+		"/debug/feature-flag": {
 			"get": {
 				"operationId": "GetFeatureFlag",
 				"responses": {
@@ -3690,7 +3690,7 @@
 				}
 			}
 		},
-		"/api/v2/cart": {
+		"/cart": {
 			"get": {
 				"operationId": "GetCart",
 				"responses": {
@@ -3714,7 +3714,7 @@
 				"parameters": []
 			}
 		},
-		"/api/v2/cart/add": {
+		"/cart/add": {
 			"post": {
 				"operationId": "AddToCart",
 				"responses": {
@@ -3750,7 +3750,7 @@
 				}
 			}
 		},
-		"/api/v2/cart/{id}": {
+		"/cart/{id}": {
 			"put": {
 				"operationId": "UpdateCartItem",
 				"responses": {
@@ -3844,7 +3844,7 @@
 				]
 			}
 		},
-		"/api/v2/cart/checkout": {
+		"/cart/checkout": {
 			"post": {
 				"operationId": "CheckoutCart",
 				"responses": {
@@ -3880,7 +3880,7 @@
 				}
 			}
 		},
-		"/api/v2/buy-orders": {
+		"/buy-orders": {
 			"post": {
 				"operationId": "CreateBuyOrder",
 				"responses": {
@@ -3916,7 +3916,7 @@
 				}
 			}
 		},
-		"/api/v2/analytics/price-history": {
+		"/analytics/price-history": {
 			"get": {
 				"operationId": "GetPriceHistory",
 				"responses": {
@@ -3993,7 +3993,7 @@
 				]
 			}
 		},
-		"/api/v2/analytics/quality-distribution": {
+		"/analytics/quality-distribution": {
 			"get": {
 				"operationId": "GetQualityDistribution",
 				"responses": {
@@ -4045,7 +4045,7 @@
 				]
 			}
 		},
-		"/api/v2/analytics/seller-stats": {
+		"/analytics/seller-stats": {
 			"get": {
 				"operationId": "GetSellerStats",
 				"responses": {
@@ -4079,7 +4079,7 @@
 				]
 			}
 		},
-		"/api/v2/admin/feature-flags/config": {
+		"/admin/feature-flags/config": {
 			"get": {
 				"operationId": "GetConfig",
 				"responses": {
@@ -4135,7 +4135,7 @@
 				}
 			}
 		},
-		"/api/v2/admin/feature-flags/stats": {
+		"/admin/feature-flags/stats": {
 			"get": {
 				"operationId": "GetStats",
 				"responses": {
@@ -4159,7 +4159,7 @@
 				"parameters": []
 			}
 		},
-		"/api/v2/admin/feature-flags/overrides": {
+		"/admin/feature-flags/overrides": {
 			"get": {
 				"operationId": "GetUserOverrides",
 				"responses": {
@@ -4242,7 +4242,7 @@
 				}
 			}
 		},
-		"/api/v2/admin/feature-flags/overrides/{userId}": {
+		"/admin/feature-flags/overrides/{userId}": {
 			"delete": {
 				"operationId": "RemoveUserOverride",
 				"responses": {
@@ -4283,5 +4283,10 @@
 				]
 			}
 		}
-	}
+	},
+	"servers": [
+		{
+			"url": "/api/v2"
+		}
+	]
 }

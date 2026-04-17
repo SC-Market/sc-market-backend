@@ -68,6 +68,10 @@ interface Environment {
   PORT?: string
   SESSION_SECRET?: string
 
+  // JWT Authentication
+  JWT_SECRET?: string          // Signing key for JWTs (falls back to SESSION_SECRET)
+  JWT_AUTH_ENABLED?: string    // "true" to enable JWT auth, anything else = session auth
+
   [key: string]: string | undefined
 }
 
