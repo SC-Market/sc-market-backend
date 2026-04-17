@@ -159,7 +159,13 @@ export function setupAuthRoutes(app: any, frontendUrl: URL): void {
               redirectPath,
               redirectBase,
             ).toString()
-            return res.redirect(successRedirect)
+            // Ensure session is persisted to store before redirecting
+            req.session.save((saveErr) => {
+              if (saveErr) {
+                logger.error("Discord session save error", { error: saveErr })
+              }
+              return res.redirect(successRedirect)
+            })
           })
         },
       )(req, res, next)
@@ -345,7 +351,12 @@ export function setupAuthRoutes(app: any, frontendUrl: URL): void {
               redirectPath,
               redirectBase,
             ).toString()
-            return res.redirect(successRedirect)
+            req.session.save((saveErr) => {
+              if (saveErr) {
+                logger.error("Citizen ID session save error", { error: saveErr })
+              }
+              return res.redirect(successRedirect)
+            })
           })
         },
       )(req, res, next)
@@ -455,7 +466,13 @@ export function setupAuthRoutes(app: any, frontendUrl: URL): void {
               return res.redirect(redirectTo.toString())
             }
             // Success - redirect to settings
-            return res.redirect(new URL("/settings", frontendUrl).toString())
+            const successRedirect = new URL("/settings", frontendUrl).toString()
+            req.session.save((saveErr) => {
+              if (saveErr) {
+                logger.error("Citizen ID linking session save error", { error: saveErr })
+              }
+              return res.redirect(successRedirect)
+            })
           })
         },
       )(req, res, next)
