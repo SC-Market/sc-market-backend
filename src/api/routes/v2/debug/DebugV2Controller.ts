@@ -10,36 +10,13 @@
 import { Controller, Get, Post, Route, Tags, Body, Request } from "tsoa"
 import { Request as ExpressRequest } from "express"
 import { BaseController } from "../base/BaseController.js"
+import { featureFlagService } from "../../../../services/market-v2/feature-flag.service.js"
 import {
-  featureFlagService,
-  MarketVersion,
-} from "../../../../services/market-v2/feature-flag.service.js"
+  GetFeatureFlagResponse,
+  SetFeatureFlagRequest,
+  SetFeatureFlagResponse,
+} from "../types/debug.types.js"
 import logger from "../../../../logger/logger.js"
-
-/**
- * Response for getting feature flag
- */
-export interface GetFeatureFlagResponse {
-  user_id: string
-  market_version: MarketVersion
-  is_developer: boolean
-}
-
-/**
- * Request for setting feature flag
- */
-export interface SetFeatureFlagRequest {
-  market_version: MarketVersion
-}
-
-/**
- * Response for setting feature flag
- */
-export interface SetFeatureFlagResponse {
-  user_id: string
-  market_version: MarketVersion
-  message: string
-}
 
 @Route("debug")
 @Tags("Debug V2")

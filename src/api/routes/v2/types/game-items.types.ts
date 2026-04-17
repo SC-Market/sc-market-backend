@@ -1,0 +1,145 @@
+/**
+ * TypeScript interfaces for Market V2 Game Items API
+ *
+ * These types are used by TSOA controllers for OpenAPI generation and type-safe API endpoints.
+ * All types are strongly typed with no `any` or `unknown` types.
+ *
+ * Requirements: 38.1-38.12
+ */
+
+// ============================================================================
+// Game Item Listings Types
+// ============================================================================
+
+/**
+ * Query parameters for game item listings endpoint
+ */
+export interface GetGameItemListingsRequest {
+  /** Game item UUID (required, from path parameter) */
+  id: string
+
+  /** Optional quality tier filter (1-5) */
+  quality_tier?: number
+
+  /** Sort field (default: price) */
+  sort_by?: "price" | "quality" | "quantity" | "seller_rating"
+
+  /** Sort order (default: asc) */
+  sort_order?: "asc" | "desc"
+
+  /** Page number for pagination (default: 1) */
+  page?: number
+
+  /** Number of results per page (default: 20, max: 100) */
+  page_size?: number
+}
+
+/**
+ * Quality tier distribution data for a game item
+ */
+export interface GameItemQualityDistribution {
+  /** Quality tier (1-5) */
+  quality_tier: number
+
+  /** Total quantity available for this tier across all listings */
+  quantity_available: number
+
+  /** Minimum price for this tier */
+  price_min: number
+
+  /** Maximum price for this tier */
+  price_max: number
+
+  /** Average price for this tier */
+  price_avg: number
+
+  /** Number of unique sellers offering this tier */
+  seller_count: number
+
+  /** Number of listings offering this tier */
+  listing_count: number
+}
+
+/**
+ * Listing result for game item listings endpoint
+ */
+export interface GameItemListingResult {
+  /** Listing UUID */
+  listing_id: string
+
+  /** Listing title */
+  title: string
+
+  /** Seller ID */
+  seller_id: string
+
+  /** Seller name */
+  seller_name: string
+
+  /** Seller rating (0-5) */
+  seller_rating: number
+
+  /** Seller type */
+  seller_type: "user" | "contractor"
+
+  /** Minimum price across all variants in this listing */
+  price_min: number
+
+  /** Maximum price across all variants in this listing */
+  price_max: number
+
+  /** Total quantity available in this listing */
+  quantity_available: number
+
+  /** Minimum quality tier in this listing */
+  quality_tier_min?: number
+
+  /** Maximum quality tier in this listing */
+  quality_tier_max?: number
+
+  /** Number of variants in this listing */
+  variant_count: number
+
+  /** Listing created timestamp */
+  created_at: string
+}
+
+/**
+ * Game item metadata
+ */
+export interface GameItemMetadata {
+  /** Game item UUID */
+  id: string
+
+  /** Game item name */
+  name: string
+
+  /** Game item type */
+  type: string
+
+  /** Game item image URL */
+  image_url?: string
+}
+
+/**
+ * Response for game item listings endpoint
+ */
+export interface GetGameItemListingsResponse {
+  /** Game item metadata */
+  game_item: GameItemMetadata
+
+  /** Quality distribution across all listings */
+  quality_distribution: GameItemQualityDistribution[]
+
+  /** Individual listings for this game item */
+  listings: GameItemListingResult[]
+
+  /** Total number of listings (for pagination) */
+  total: number
+
+  /** Current page number */
+  page: number
+
+  /** Page size */
+  page_size: number
+}
