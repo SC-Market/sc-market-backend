@@ -33,6 +33,20 @@ const db = knex({
       await db('knex_migrations').whereIn('name', names).del();
       console.log('Cleaned up ' + names.length + ' stale migration records:', names);
     }
+
+    // Also re-run feature flag migrations if their tables are missing
+    const ffMigrations = [
+      '20260416030903_market_v2_feature_flags.ts',
+      '20260416160700_feature_flag_config.ts',
+    ];
+    for (const mig of ffMigrations) {
+      const tableName = mig.includes('feature_flags') ? 'user_preferences' : 'feature_flag_config';
+      const exists = await db.schema.hasTable(tableName);
+      if (!exists) {
+        await db('knex_migrations').where('name', mig).del();
+        console.log('Reset migration ' + mig + ' (table ' + tableName + ' missing)');
+      }
+    }
   } catch (e) { console.error('Migration cleanup warning:', e.message); }
   await db.destroy();
 })();

@@ -455,6 +455,12 @@ export class ListingsV2Controller extends BaseController {
               WHEN l.seller_type = 'contractor' THEN c.logo_url
             END AS seller_avatar_url
           `),
+          db.raw(`
+            CASE 
+              WHEN l.seller_type = 'user' THEN u.username
+              WHEN l.seller_type = 'contractor' THEN c.spectrum_id
+            END AS seller_slug
+          `),
         )
         .where("l.listing_id", id)
         .first()
@@ -605,6 +611,7 @@ export class ListingsV2Controller extends BaseController {
           id: listing.seller_id,
           name: listing.seller_name || "Unknown",
           type: listing.seller_type,
+          slug: listing.seller_slug || "",
           rating: parseFloat(listing.seller_rating) || 0,
           avatar_url: listing.seller_avatar_url,
         },
@@ -775,6 +782,13 @@ export class ListingsV2Controller extends BaseController {
               WHEN ls.seller_type = 'contractor' THEN COALESCE(c.rating, 0)
             END AS seller_rating
           `),
+          "ls.seller_type",
+          db.raw(`
+            CASE 
+              WHEN ls.seller_type = 'user' THEN u.username
+              WHEN ls.seller_type = 'contractor' THEN c.spectrum_id
+            END AS seller_slug
+          `),
         )
 
       // Apply full-text search filter (Requirement 15.2)
@@ -870,6 +884,8 @@ export class ListingsV2Controller extends BaseController {
         quality_tier_min: row.quality_tier_min || undefined,
         quality_tier_max: row.quality_tier_max || undefined,
         variant_count: row.variant_count || 0,
+        seller_type: row.seller_type,
+        seller_slug: row.seller_slug || "",
         created_at: row.created_at.toISOString(),
       }))
 

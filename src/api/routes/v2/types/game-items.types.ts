@@ -82,6 +82,9 @@ export interface GameItemListingResult {
   /** Seller type */
   seller_type: "user" | "contractor"
 
+  /** Username (for user sellers) or spectrum_id (for contractor sellers) */
+  seller_slug: string
+
   /** Minimum price across all variants in this listing */
   price_min: number
 

@@ -59,13 +59,29 @@ export function setupAuthRoutes(app: any, frontendUrl: URL): void {
           res.redirect(redirectUrl)
           return
         }
-        logger.info(`[Auth] ${provider} session login successful`, {
-          userId: user.user_id,
-          sessionID: req.sessionID,
+        // Regenerate session after login to prevent fixation
+        req.session.regenerate((regenErr) => {
+          if (regenErr) {
+            logger.error(`[Auth] ${provider} session regenerate error`, { error: regenErr })
+          }
+          // Re-login after regenerate (regenerate clears passport data)
+          req.logIn(user, (reLoginErr) => {
+            if (reLoginErr) {
+              logger.error(`[Auth] ${provider} re-login error`, { error: reLoginErr })
+            }
+            logger.info(`[Auth] ${provider} session login successful`, {
+              userId: user.user_id,
+              sessionID: req.sessionID,
+            })
+            req.session.save((saveErr) => {
+              if (saveErr) {
+                logger.error(`[Auth] ${provider} session save error`, { error: saveErr })
+              }
+              res.redirect(redirectUrl)
+            })
+          })
         })
-        req.session.save((saveErr) => {
-          if (saveErr) {
-            logger.error(`[Auth] ${provider} session save error`, { error: saveErr })
+      })
           }
           res.redirect(redirectUrl)
         })
@@ -166,23 +182,17 @@ export function setupAuthRoutes(app: any, frontendUrl: URL): void {
       // Resolve redirect base from origin in state
       const redirectBase = getRedirectBase(verified.origin)
 
-      // Regenerate session to avoid fixation — old unauthenticated session
-      // cookie may conflict with the new authenticated one
-      req.session.regenerate((regenErr) => {
-        if (regenErr) {
-          logger.error("[Auth] Session regenerate error", { error: regenErr })
-        }
-        // Re-store action after regeneration (regenerate clears session data)
-        if (req.session) {
-          ;(req.session as any).discord_auth_action = action
-        }
+      // Ensure action is stored in session
+      if (req.session) {
+        ;(req.session as any).discord_auth_action = action
+      }
 
-        // State is valid, proceed with authentication
-        logger.info("[Auth] Starting passport.authenticate")
-        return passport.authenticate(
-          "discord",
-          {
-          session: true,
+      // State is valid, proceed with authentication
+      logger.info("[Auth] Starting passport.authenticate")
+      return passport.authenticate(
+        "discord",
+        {
+        session: true,
           failWithError: true,
         },
         async (err: any, user: User | false, info: any) => {
@@ -230,7 +240,6 @@ export function setupAuthRoutes(app: any, frontendUrl: URL): void {
           await completeLogin(req, res, user as User, successRedirect, "Discord")
         },
       )(req, res, next)
-      }) // end session.regenerate
     },
   )
 
@@ -315,13 +324,7 @@ export function setupAuthRoutes(app: any, frontendUrl: URL): void {
         delete (req.session as any).citizenid_origin
       }
 
-      // Regenerate session to prevent stale cookie conflicts
-      req.session.regenerate((regenErr) => {
-        if (regenErr) {
-          logger.error("[Auth] CitizenID session regenerate error", { error: regenErr })
-        }
-
-        return passport.authenticate(
+      return passport.authenticate(
         "citizenid",
         {
           session: true,
@@ -408,7 +411,6 @@ export function setupAuthRoutes(app: any, frontendUrl: URL): void {
           await completeLogin(req, res, user as User, successRedirect, "CitizenID")
         },
       )(req, res, next)
-      }) // end session.regenerate
     },
   )
 
