@@ -24,6 +24,14 @@ import { pushNotificationService } from "../push-notifications/push-notification
 import { webhookService } from "../webhooks/webhook.service.js"
 import { emailService } from "../email/email.service.js"
 import * as payloadFormatters from "./notification-payload-formatters.js"
+import * as payloadFormattersV2 from "./notification-payload-formatters-v2.js"
+import type {
+  GetListingDetailResponse,
+} from "../../api/routes/v2/types/listings.types.js"
+import type {
+  CreateOrderResponse,
+  GetOrderDetailResponse,
+} from "../../api/routes/v2/types/orders.types.js"
 
 /**
  * Service interface for notification creation and management.
@@ -67,6 +75,28 @@ export interface NotificationService {
   createMarketOfferNotification(
     listing: DBMarketListing,
     offer: DBMarketOffer,
+  ): Promise<void>
+
+  // V2 Market notifications
+  // Requirement 43.1-43.10: V2 notification system integration
+  createMarketBidNotificationV2(
+    listing: GetListingDetailResponse,
+    bidAmount: number,
+    variantId?: string,
+  ): Promise<void>
+  createMarketOfferNotificationV2(
+    listing: GetListingDetailResponse,
+    offerAmount: number,
+    variantId?: string,
+  ): Promise<void>
+  createNewOrderNotificationV2(
+    order: CreateOrderResponse | GetOrderDetailResponse,
+    sellerId: string,
+  ): Promise<void>
+  createOrderStatusNotificationV2(
+    order: GetOrderDetailResponse,
+    newStatus: string,
+    buyerId: string,
   ): Promise<void>
 
   // Other notifications
@@ -1492,6 +1522,151 @@ class DatabaseNotificationService implements NotificationService {
       }
     } catch (error) {
       logger.error("Failed to create review revision notification:", error)
+      throw error
+    }
+  }
+
+  /**
+   * Create market bid notification for V2 listing
+   * Requirement 43.5: Provide formatMarketBidNotificationPayloadV2 function
+   * Requirement 43.2: Include variant information in notifications
+   * Requirement 43.3: Show quality tier in notification text
+   */
+  async createMarketBidNotificationV2(
+    listing: GetListingDetailResponse,
+    bidAmount: number,
+    variantId?: string,
+  ): Promise<void> {
+    try {
+      // Get seller ID from listing
+      const sellerId = listing.listing.seller_id
+
+      // Format and send push notification
+      const payload = payloadFormattersV2.formatMarketBidNotificationPayloadV2(
+        listing,
+        bidAmount,
+        variantId,
+      )
+
+      await pushNotificationService.sendPushNotification(
+        sellerId,
+        payload,
+        "market_item_bid_v2",
+      )
+
+      logger.info("Created V2 market bid notification", {
+        listing_id: listing.listing.listing_id,
+        seller_id: sellerId,
+        bid_amount: bidAmount,
+        variant_id: variantId,
+      })
+    } catch (error) {
+      logger.error("Failed to create V2 market bid notification:", error)
+      throw error
+    }
+  }
+
+  /**
+   * Create market offer notification for V2 listing
+   * Requirement 43.6: Provide formatMarketOfferNotificationPayloadV2 function
+   * Requirement 43.2: Include variant information in notifications
+   * Requirement 43.3: Show quality tier in notification text
+   */
+  async createMarketOfferNotificationV2(
+    listing: GetListingDetailResponse,
+    offerAmount: number,
+    variantId?: string,
+  ): Promise<void> {
+    try {
+      // Get seller ID from listing
+      const sellerId = listing.listing.seller_id
+
+      // Format and send push notification
+      const payload = payloadFormattersV2.formatMarketOfferNotificationPayloadV2(
+        listing,
+        offerAmount,
+        variantId,
+      )
+
+      await pushNotificationService.sendPushNotification(
+        sellerId,
+        payload,
+        "market_item_offer_v2",
+      )
+
+      logger.info("Created V2 market offer notification", {
+        listing_id: listing.listing.listing_id,
+        seller_id: sellerId,
+        offer_amount: offerAmount,
+        variant_id: variantId,
+      })
+    } catch (error) {
+      logger.error("Failed to create V2 market offer notification:", error)
+      throw error
+    }
+  }
+
+  /**
+   * Create new order notification for V2 order
+   * Requirement 43.8: Notify sellers of new orders with variant information
+   */
+  async createNewOrderNotificationV2(
+    order: CreateOrderResponse | GetOrderDetailResponse,
+    sellerId: string,
+  ): Promise<void> {
+    try {
+      // Format and send push notification to seller
+      const payload = payloadFormattersV2.formatNewOrderNotificationPayloadV2(
+        order,
+      )
+
+      await pushNotificationService.sendPushNotification(
+        sellerId,
+        payload,
+        "order_create_v2",
+      )
+
+      logger.info("Created V2 new order notification", {
+        order_id: order.order_id,
+        seller_id: sellerId,
+        total_price: order.total_price,
+        item_count: order.items.length,
+      })
+    } catch (error) {
+      logger.error("Failed to create V2 new order notification:", error)
+      throw error
+    }
+  }
+
+  /**
+   * Create order status change notification for V2 order
+   * Requirement 43.9: Notify buyers of order status changes
+   */
+  async createOrderStatusNotificationV2(
+    order: GetOrderDetailResponse,
+    newStatus: string,
+    buyerId: string,
+  ): Promise<void> {
+    try {
+      // Format and send push notification to buyer
+      const payload = payloadFormattersV2.formatOrderStatusNotificationPayloadV2(
+        order,
+        newStatus,
+      )
+
+      await pushNotificationService.sendPushNotification(
+        buyerId,
+        payload,
+        `order_status_${newStatus}_v2`,
+      )
+
+      logger.info("Created V2 order status notification", {
+        order_id: order.order_id,
+        buyer_id: buyerId,
+        new_status: newStatus,
+      })
+    } catch (error) {
+      logger.error("Failed to create V2 order status notification:", error)
       throw error
     }
   }
