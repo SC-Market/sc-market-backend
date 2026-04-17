@@ -289,7 +289,13 @@ export function setupAuthRoutes(app: any, frontendUrl: URL): void {
         delete (req.session as any).citizenid_origin
       }
 
-      return passport.authenticate(
+      // Regenerate session to prevent stale cookie conflicts
+      req.session.regenerate((regenErr) => {
+        if (regenErr) {
+          logger.error("[Auth] CitizenID session regenerate error", { error: regenErr })
+        }
+
+        return passport.authenticate(
         "citizenid",
         {
           session: true,
@@ -396,6 +402,7 @@ export function setupAuthRoutes(app: any, frontendUrl: URL): void {
           })
         },
       )(req, res, next)
+      }) // end session.regenerate
     },
   )
 

@@ -8,7 +8,7 @@
  * Requirements: 25.1-25.12
  */
 
-import { Post, Route, Tags, Body, Request, Get, Path } from "tsoa"
+import { Post, Route, Tags, Body, Request, Get, Path, Query } from "tsoa"
 import { Request as ExpressRequest } from "express"
 import { BaseController } from "../base/BaseController.js"
 import { withTransaction } from "../../../../clients/database/transaction.js"
@@ -18,8 +18,11 @@ import {
   CreateOrderRequest,
   CreateOrderResponse,
   GetOrderDetailResponse,
+  GetOrdersRequest,
+  GetOrdersResponse,
   OrderItemDetail,
   OrderVariantDetail,
+  OrderPreview,
 } from "../types/orders.types.js"
 import logger from "../../../../logger/logger.js"
 
@@ -413,6 +416,225 @@ export class OrdersV2Controller extends BaseController {
     } catch (error) {
       logger.error("Failed to fetch V2 order detail", {
         orderId,
+        userId,
+        error: error instanceof Error ? error.message : String(error),
+        stack: error instanceof Error ? error.stack : undefined,
+      })
+
+      throw error
+    }
+  }
+
+  /**
+   * Get orders list with filtering and pagination
+   *
+   * Retrieves a list of orders for the current user with:
+   * 1. Role-based filtering (buyer or seller)
+   * 2. Status filtering (pending, completed, cancelled)
+   * 3. Quality tier filtering (min and max)
+   * 4. Pagination support
+   * 5. Sorting options
+   *
+   * Returns order previews with quality tier information visible.
+   *
+   * Requirements:
+   * - 45.1: Provide OrderListV2 React component (backend support)
+   * - 45.2: Maintain visual parity with V1 OrderList component
+   * - 45.3: Use RTK_Query_Client for API calls
+   * - 45.4: Show quality tier in order preview
+   * - 45.5: Filter orders by quality tier
+   *
+   * @summary Get orders list
+   * @param request Express request for authentication
+   * @returns Orders list with pagination metadata
+   */
+  @Get()
+  public async getOrders(
+    @Query() status?: 'pending' | 'completed' | 'cancelled',
+    @Query() role?: 'buyer' | 'seller',
+    @Query() quality_tier_min?: number,
+    @Query() quality_tier_max?: number,
+    @Query() page?: number,
+    @Query() page_size?: number,
+    @Query() sort_by?: 'created_at' | 'updated_at' | 'total_price',
+    @Query() sort_order?: 'asc' | 'desc',
+    @Request() request?: ExpressRequest,
+  ): Promise<GetOrdersResponse> {
+    this.request = request
+    this.requireAuth()
+    const userId = this.getUserId()
+
+    // Set defaults
+    const currentPage = page || 1
+    const pageSize = Math.min(page_size || 20, 100)
+    const sortBy = sort_by || 'created_at'
+    const sortOrder = sort_order || 'desc'
+    const offset = (currentPage - 1) * pageSize
+
+    logger.info("Fetching V2 orders list", {
+      userId,
+      status,
+      role,
+      quality_tier_min,
+      quality_tier_max,
+      page: currentPage,
+      page_size: pageSize,
+    })
+
+    try {
+      const knex = getKnex()
+
+      // Build base query
+      let query = knex("orders")
+        .select(
+          "orders.order_id",
+          "orders.status",
+          "orders.created_at",
+          "orders.updated_at",
+          "orders.customer_id",
+          "buyer.username as buyer_username",
+          "buyer.avatar as buyer_avatar",
+        )
+        .leftJoin("accounts as buyer", "orders.customer_id", "buyer.user_id")
+
+      // Apply role filter
+      if (role === 'buyer') {
+        query = query.where("orders.customer_id", userId)
+      } else if (role === 'seller') {
+        // For seller role, join with market_orders and listings
+        query = query
+          .join("market_orders", "orders.order_id", "market_orders.order_id")
+          .join("listings", "market_orders.listing_id", "listings.listing_id")
+          .where("listings.seller_id", userId)
+          .groupBy("orders.order_id", "buyer.username", "buyer.avatar")
+      } else {
+        // No role specified - show orders where user is buyer OR seller
+        query = query.where((builder) => {
+          builder
+            .where("orders.customer_id", userId)
+            .orWhereExists((subquery) => {
+              subquery
+                .select("*")
+                .from("market_orders")
+                .join("listings", "market_orders.listing_id", "listings.listing_id")
+                .whereRaw("market_orders.order_id = orders.order_id")
+                .where("listings.seller_id", userId)
+            })
+        })
+      }
+
+      // Apply status filter
+      if (status) {
+        query = query.where("orders.status", status)
+      }
+
+      // Clone query for count
+      const countQuery = query.clone().clearSelect().clearOrder().count("* as total")
+
+      // Apply sorting
+      query = query.orderBy(`orders.${sortBy}`, sortOrder)
+
+      // Apply pagination
+      query = query.limit(pageSize).offset(offset)
+
+      // Execute queries
+      const [orders, countResult] = await Promise.all([
+        query,
+        countQuery.first(),
+      ])
+
+      const total = parseInt(countResult?.total as string || "0")
+
+      // Enrich orders with additional information
+      const enrichedOrders = await Promise.all(
+        orders.map(async (order) => {
+          // Get seller information
+          const seller = await knex("market_orders")
+            .join("listings", "market_orders.listing_id", "listings.listing_id")
+            .join("accounts", "listings.seller_id", "accounts.user_id")
+            .where({ "market_orders.order_id": order.order_id })
+            .select("accounts.username", "accounts.avatar")
+            .first()
+
+          // Get order items with variant details
+          const orderItems = await knex("order_market_items_v2")
+            .where({ order_id: order.order_id })
+            .select("*")
+
+          // Calculate total price and quality tier range
+          let totalPrice = 0
+          let qualityTierMin: number | undefined
+          let qualityTierMax: number | undefined
+
+          for (const item of orderItems) {
+            totalPrice += item.price_per_unit * item.quantity
+
+            // Get variant to extract quality tier
+            const variant = await knex("item_variants")
+              .where({ variant_id: item.variant_id })
+              .first()
+
+            if (variant && variant.attributes.quality_tier) {
+              const tier = variant.attributes.quality_tier
+              if (qualityTierMin === undefined || tier < qualityTierMin) {
+                qualityTierMin = tier
+              }
+              if (qualityTierMax === undefined || tier > qualityTierMax) {
+                qualityTierMax = tier
+              }
+            }
+          }
+
+          // Apply quality tier filter if specified
+          if (quality_tier_min !== undefined && qualityTierMax !== undefined && qualityTierMax < quality_tier_min) {
+            return null // Filter out this order
+          }
+          if (quality_tier_max !== undefined && qualityTierMin !== undefined && qualityTierMin > quality_tier_max) {
+            return null // Filter out this order
+          }
+
+          // Get title from first listing
+          const firstListing = await knex("market_orders")
+            .join("listings", "market_orders.listing_id", "listings.listing_id")
+            .where({ "market_orders.order_id": order.order_id })
+            .select("listings.title")
+            .first()
+
+          return {
+            order_id: order.order_id,
+            title: firstListing?.title || "Order",
+            total_price: totalPrice,
+            status: order.status,
+            created_at: order.created_at.toISOString(),
+            updated_at: order.updated_at.toISOString(),
+            buyer_username: order.buyer_username,
+            seller_username: seller?.username || "Unknown",
+            item_count: orderItems.length,
+            quality_tier_min: qualityTierMin,
+            quality_tier_max: qualityTierMax,
+            buyer_avatar: order.buyer_avatar,
+            seller_avatar: seller?.avatar,
+          }
+        }),
+      )
+
+      // Filter out null entries (orders that didn't match quality tier filter)
+      const filteredOrders = enrichedOrders.filter((order) => order !== null) as OrderPreview[]
+
+      logger.info("V2 orders list retrieved successfully", {
+        userId,
+        orderCount: filteredOrders.length,
+        total,
+      })
+
+      return {
+        orders: filteredOrders,
+        total,
+        page: currentPage,
+        page_size: pageSize,
+      }
+    } catch (error) {
+      logger.error("Failed to fetch V2 orders list", {
         userId,
         error: error instanceof Error ? error.message : String(error),
         stack: error instanceof Error ? error.stack : undefined,
