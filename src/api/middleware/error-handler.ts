@@ -204,14 +204,27 @@ export async function errorHandler(
     }
   }
 
-  // Log error with context
-  logger.error("Request error", {
-    error: err,
-    path: req.path,
-    method: req.method,
-    user_id: (req.user as any)?.user_id,
-    stack: err.stack,
-  })
+  // Log error with context — only log unexpected errors, not client errors
+  const isClientError =
+    err instanceof ValidationError ||
+    err instanceof NotFoundError ||
+    err instanceof InvalidQuantityError ||
+    err instanceof InsufficientStockError ||
+    err instanceof OverAllocationError ||
+    err instanceof CharacterLimitError ||
+    err instanceof ConcurrentModificationError ||
+    (err instanceof BusinessLogicError &&
+      [ErrorCode.UNAUTHORIZED, ErrorCode.FORBIDDEN, ErrorCode.VALIDATION_ERROR, ErrorCode.NOT_FOUND, ErrorCode.CONFLICT].includes(err.code as ErrorCode))
+
+  if (!isClientError) {
+    logger.error("Request error", {
+      error: err,
+      path: req.path,
+      method: req.method,
+      user_id: (req.user as any)?.user_id,
+      stack: err.stack,
+    })
+  }
 
   // Don't send response if headers already sent
   if (res.headersSent) {
