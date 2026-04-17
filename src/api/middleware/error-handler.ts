@@ -20,6 +20,13 @@ import {
   NotFoundError,
   BusinessLogicError,
 } from "../routes/v1/util/errors.js"
+import {
+  InvalidQuantityError,
+  InsufficientStockError,
+  OverAllocationError,
+  CharacterLimitError,
+  ConcurrentModificationError,
+} from "../../services/stock-lot/errors.js"
 import { applyCorsHeaders } from "./cors-helper.js"
 import logger from "../../logger/logger.js"
 
@@ -278,6 +285,32 @@ export async function errorHandler(
     return res
       .status(statusCode)
       .json(createErrorResponse(err.code, err.message, err.details))
+  }
+
+  // Handle stock/quantity errors as 400 (client errors, not server errors)
+  if (
+    err instanceof InvalidQuantityError ||
+    err instanceof InsufficientStockError ||
+    err instanceof OverAllocationError ||
+    err instanceof CharacterLimitError
+  ) {
+    return res.status(400).json(
+      createErrorResponse(
+        (err as any).code || ErrorCode.VALIDATION_ERROR,
+        err.message,
+        (err as any).toJSON?.(),
+      ),
+    )
+  }
+
+  if (err instanceof ConcurrentModificationError) {
+    return res.status(409).json(
+      createErrorResponse(
+        (err as any).code || ErrorCode.CONFLICT,
+        err.message,
+        (err as any).toJSON?.(),
+      ),
+    )
   }
 
   // Database errors
