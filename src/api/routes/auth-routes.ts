@@ -82,10 +82,6 @@ export function setupAuthRoutes(app: any, frontendUrl: URL): void {
           })
         })
       })
-          }
-          res.redirect(redirectUrl)
-        })
-      })
     }
   }
   // Resolve the base URL for post-auth redirects.
