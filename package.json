@@ -122,6 +122,8 @@
     "find-duplicates": "tsx scripts/find-duplicate-items.ts",
     "merge-duplicates": "tsx scripts/merge-duplicate-items.ts",
     "refresh-view": "tsx scripts/refresh-materialized-view.ts",
+    "migrate:v1-to-v2": "tsx scripts/run-v1-to-v2-migration-standalone.ts",
+    "validate:migration": "tsx scripts/validate-migration-completeness.ts",
     "test": "vitest run",
     "test:watch": "vitest",
     "test:ui": "vitest --ui",
