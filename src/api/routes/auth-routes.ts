@@ -119,6 +119,7 @@ export function setupAuthRoutes(app: any, frontendUrl: URL): void {
       }
 
       // State is valid, proceed with authentication
+      logger.info("[Discord callback] Starting passport.authenticate")
       return passport.authenticate(
         "discord",
         {
@@ -126,6 +127,12 @@ export function setupAuthRoutes(app: any, frontendUrl: URL): void {
           failWithError: true,
         },
         (err: any, user: User | false, info: any) => {
+          logger.info("[Discord callback] Passport callback reached", {
+            hasErr: !!err,
+            hasUser: !!user,
+            errMessage: err?.message,
+            info,
+          })
           if (err) {
             logger.error("[Discord callback] Error", {
               error: err,
@@ -171,6 +178,11 @@ export function setupAuthRoutes(app: any, frontendUrl: URL): void {
               return res.redirect(redirectTo.toString())
             }
 
+            logger.info("[Discord callback] Login successful, saving session", {
+              userId: (user as any)?.user_id,
+              sessionID: req.sessionID,
+            })
+
             const successRedirect = new URL(
               redirectPath,
               redirectBase,
@@ -180,6 +192,7 @@ export function setupAuthRoutes(app: any, frontendUrl: URL): void {
               if (saveErr) {
                 logger.error("Discord session save error", { error: saveErr })
               }
+              logger.info("[Discord callback] Redirecting to", { successRedirect })
               return res.redirect(successRedirect)
             })
           })
