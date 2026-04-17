@@ -92,11 +92,16 @@ export function verifySignedStateToken(
   }
 
   const payloadParts = payload.split(":")
-  if (payloadParts.length < 2 || payloadParts.length > 4) {
+  // Origin may contain colons (e.g. https://example.com), so limit split to 4
+  // and rejoin any remaining parts as the origin
+  if (payloadParts.length < 2) {
     return null
   }
 
-  const [csrfToken, path, action, origin] = payloadParts
+  const csrfToken = payloadParts[0]
+  const path = payloadParts[1]
+  const action = payloadParts[2] || ""
+  const origin = payloadParts.slice(3).join(":")
 
   if (!validateRedirectPath(path)) {
     return null
