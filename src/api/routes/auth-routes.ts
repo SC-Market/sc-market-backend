@@ -512,34 +512,37 @@ export function setupAuthRoutes(app: any, frontendUrl: URL): void {
   // Logout route - POST only
   // Note: This route works for all authenticated users regardless of verification status
   // No authentication or verification middleware is applied - logout should always be accessible
-  app.post("/logout", (req: Request, res: Response, next: NextFunction) => {
-    // Step 1: Log out Passport user
+  app.post("/logout", async (req: Request, res: Response, next: NextFunction) => {
+    // Revoke JWT refresh token if present
+    const rawRefresh = getRefreshTokenFromRequest(req)
+    if (rawRefresh) {
+      await revokeRefreshToken(rawRefresh).catch(() => {})
+    }
+    clearAuthCookies(res)
+
+    // Also clear session auth (for backwards compat / dual-mode)
     req.logout((err) => {
       if (err) {
         logger.error("Error during Passport logout", { error: err })
-        return next(err)
       }
 
-      // Step 2: Destroy session in Postgres
-      req.session.destroy((err) => {
-        if (err) {
-          logger.error("Error destroying session on logout", { error: err })
-          // We continue to clear the cookie even if destroy fails
-        }
-
-        // Step 3: Clear the cookie with the exact same options as sessionMiddleware
-        const isProduction = app.get("env") === "production"
-        res.clearCookie("scmarket.sid", {
-          path: "/", // must match your session cookie path
-          httpOnly: true, // matches default for express-session
-          secure: isProduction, // must match cookie.secure
-          sameSite: isProduction ? ("none" as const) : ("lax" as const), // must match cookie.sameSite
-          domain: env.BACKEND_HOST, // must match cookie.domain if set
+      if (req.session) {
+        req.session.destroy((destroyErr) => {
+          if (destroyErr) {
+            logger.error("Error destroying session on logout", { error: destroyErr })
+          }
+          const isProduction = app.get("env") === "production"
+          res.clearCookie("scmarket.sid", {
+            path: "/",
+            httpOnly: true,
+            secure: isProduction,
+            sameSite: isProduction ? ("none" as const) : ("lax" as const),
+          })
+          res.json({ success: true, message: "Logged out successfully" })
         })
-
-        // Step 4: Return JSON response for POST requests
+      } else {
         res.json({ success: true, message: "Logged out successfully" })
-      })
+      }
     })
   })
 

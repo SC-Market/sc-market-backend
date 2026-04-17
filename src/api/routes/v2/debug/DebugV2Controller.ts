@@ -7,7 +7,7 @@
  * Requirements: 3.1, 3.5
  */
 
-import { Controller, Get, Post, Route, Tags, Body, Request } from "tsoa"
+import { Controller, Get, Post, Route, Tags, Body, Request, Security } from "tsoa"
 import { Request as ExpressRequest } from "express"
 import { BaseController } from "../base/BaseController.js"
 import { featureFlagService } from "../../../../services/market-v2/feature-flag.service.js"
@@ -38,6 +38,7 @@ export class DebugV2Controller extends BaseController {
    * @returns Current feature flag setting
    */
   @Get("feature-flag")
+  @Security("jwt")
   public async getFeatureFlag(
     @Request() request: ExpressRequest,
   ): Promise<GetFeatureFlagResponse> {
@@ -87,6 +88,7 @@ export class DebugV2Controller extends BaseController {
    * @returns Updated feature flag setting
    */
   @Post("feature-flag")
+  @Security("jwt")
   public async setFeatureFlag(
     @Body() request: SetFeatureFlagRequest,
     @Request() expressRequest: ExpressRequest,
