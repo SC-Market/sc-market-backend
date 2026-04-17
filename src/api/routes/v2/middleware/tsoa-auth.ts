@@ -11,6 +11,11 @@ import crypto from "crypto"
 import { database } from "../../../../clients/database/knex-db.js"
 import * as profileDb from "../../v1/profiles/database.js"
 import logger from "../../../../logger/logger.js"
+import {
+  getAccessTokenFromRequest,
+  verifyAccessToken,
+  isJWTAuthEnabled,
+} from "../../../util/jwt.js"
 
 /**
  * Authenticate token from Authorization header
@@ -120,6 +125,24 @@ export async function expressAuthentication(
         return authResult.user
       } else {
         throw new Error("Invalid or expired token")
+      }
+    }
+
+    // Fall back: try JWT cookie auth (if enabled)
+    if (isJWTAuthEnabled()) {
+      const accessToken = getAccessTokenFromRequest(request)
+      if (accessToken) {
+        const payload = verifyAccessToken(accessToken)
+        if (payload) {
+          try {
+            const user = await profileDb.getUser({ user_id: payload.sub })
+            if (user.banned) throw new Error("User is banned")
+            request.user = user
+            return user
+          } catch {
+            // User not found
+          }
+        }
       }
     }
 
