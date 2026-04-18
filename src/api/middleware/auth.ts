@@ -514,7 +514,7 @@ export const requireCommentsRead = requireScopes("comments:read")
 export const requireCommentsWrite = requireScopes("comments:write")
 export const requireRecruitingRead = requireScopes("recruiting:read")
 export const requireRecruitingWrite = requireScopes("recruiting:write")
-export const requireMarketAdmin = requireScopes("market:admin")
+export const requireMarketAdmin = requireScopes("admin")
 export const requireAdmin = requireScopes("admin")
 
 // Contractor access control middleware
