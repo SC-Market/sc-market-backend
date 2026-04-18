@@ -18,9 +18,10 @@
  * 9. Add comprehensive error handling
  */
 
-import { Post, Route, Tags, Body, Request } from "tsoa"
+import { Post, Get, Delete, Route, Tags, Body, Request, Query, Path, Security } from "tsoa"
 import { Request as ExpressRequest } from "express"
 import { BaseController } from "../base/BaseController.js"
+import { getKnex } from "../../../../clients/database/knex-db.js"
 import { withTransaction } from "../../../../clients/database/transaction.js"
 import { OrderLifecycleService } from "../../../../services/allocation/order-lifecycle.service.js"
 import {
@@ -28,6 +29,9 @@ import {
   CreateBuyOrderResponse,
   BuyOrderItemDetail,
   BuyOrderVariantDetail,
+  CreateStandingBuyOrderRequest,
+  StandingBuyOrder,
+  SearchBuyOrdersResponse,
 } from "../types/buy-orders.types.js"
 import logger from "../../../../logger/logger.js"
 
@@ -329,6 +333,157 @@ export class BuyOrdersV2Controller extends BaseController {
 
       throw error
     }
+  }
+
+  /**
+   * Create a standing buy order
+   */
+  @Post('standing')
+  @Security('session')
+  public async createStandingBuyOrder(
+    @Body() body: CreateStandingBuyOrderRequest,
+    @Request() request: ExpressRequest,
+  ): Promise<StandingBuyOrder> {
+    this.request = request
+    this.requireAuth()
+    const db = getKnex();
+    const userId = this.getUserId();
+
+    const expiresAt = body.expires_in_days
+      ? new Date(Date.now() + body.expires_in_days * 86400000)
+      : new Date(Date.now() + 30 * 86400000);
+
+    const [order] = await db('buy_orders_v2').insert({
+      game_item_id: body.game_item_id,
+      buyer_id: userId,
+      quantity: body.quantity,
+      price_min: body.price_per_unit,
+      price_max: body.price_per_unit,
+      quality_tier_min: body.quality_tier_min || 1,
+      quality_tier_max: body.quality_tier_max || 5,
+      status: 'active',
+      expires_at: expiresAt,
+    }).returning('*');
+
+    return this.formatBuyOrderRow(order);
+  }
+
+  /**
+   * Search active standing buy orders
+   */
+  @Get('search')
+  public async searchBuyOrders(
+    @Query() game_item_id?: string,
+    @Query() quality_tier_min?: number,
+    @Query() quality_tier_max?: number,
+    @Query() page?: number,
+    @Query() page_size?: number,
+  ): Promise<SearchBuyOrdersResponse> {
+    const db = getKnex();
+    const p = Math.max(1, page || 1);
+    const ps = Math.min(100, Math.max(1, page_size || 20));
+
+    let query = db('buy_orders_v2 as bo')
+      .leftJoin('accounts as u', 'bo.buyer_id', 'u.user_id')
+      .leftJoin('game_items as gi', 'bo.game_item_id', 'gi.game_item_id')
+      .where('bo.status', 'active');
+
+    if (game_item_id) query = query.where('bo.game_item_id', game_item_id);
+    if (quality_tier_min) query = query.where('bo.quality_tier_max', '>=', quality_tier_min);
+    if (quality_tier_max) query = query.where('bo.quality_tier_min', '<=', quality_tier_max);
+
+    const [{ count }] = await query.clone().clearSelect().clearOrder().count('* as count');
+    const total = parseInt(String(count), 10);
+
+    const results = await query
+      .select('bo.*', 'u.username as buyer_name', 'gi.name as game_item_name')
+      .orderBy('bo.created_at', 'desc')
+      .limit(ps).offset((p - 1) * ps);
+
+    return {
+      buy_orders: results.map((r: any) => this.formatBuyOrderRow(r)),
+      total, page: p, page_size: ps,
+    };
+  }
+
+  /**
+   * Get current user's buy orders
+   */
+  @Get('mine')
+  @Security('session')
+  public async getMyBuyOrders(
+    @Request() request: ExpressRequest,
+    @Query() status?: 'active' | 'fulfilled' | 'cancelled' | 'expired',
+    @Query() page?: number,
+    @Query() page_size?: number,
+  ): Promise<SearchBuyOrdersResponse> {
+    this.request = request
+    this.requireAuth()
+    const db = getKnex();
+    const userId = this.getUserId();
+    const p = Math.max(1, page || 1);
+    const ps = Math.min(100, Math.max(1, page_size || 20));
+
+    let query = db('buy_orders_v2 as bo')
+      .leftJoin('accounts as u', 'bo.buyer_id', 'u.user_id')
+      .leftJoin('game_items as gi', 'bo.game_item_id', 'gi.game_item_id')
+      .where('bo.buyer_id', userId);
+
+    if (status) query = query.where('bo.status', status);
+
+    const [{ count }] = await query.clone().clearSelect().clearOrder().count('* as count');
+    const total = parseInt(String(count), 10);
+
+    const results = await query
+      .select('bo.*', 'u.username as buyer_name', 'gi.name as game_item_name')
+      .orderBy('bo.created_at', 'desc')
+      .limit(ps).offset((p - 1) * ps);
+
+    return {
+      buy_orders: results.map((r: any) => this.formatBuyOrderRow(r)),
+      total, page: p, page_size: ps,
+    };
+  }
+
+  /**
+   * Cancel a standing buy order
+   */
+  @Delete('{id}')
+  @Security('session')
+  public async cancelBuyOrder(
+    @Request() request: ExpressRequest,
+    @Path() id: string,
+  ): Promise<{ message: string }> {
+    this.request = request
+    this.requireAuth()
+    const db = getKnex();
+    const userId = this.getUserId();
+
+    const order = await db('buy_orders_v2').where('buy_order_id', id).first();
+    if (!order) throw this.throwNotFound('Buy order not found');
+    if (order.buyer_id !== userId) throw this.throwValidationError('Not authorized', [{ field: 'id', message: 'You do not own this buy order' }]);
+    if (order.status !== 'active') return { message: 'Buy order already ' + order.status };
+
+    await db('buy_orders_v2').where('buy_order_id', id).update({ status: 'cancelled' });
+    return { message: 'Buy order cancelled' };
+  }
+
+  private formatBuyOrderRow(r: any): StandingBuyOrder {
+    return {
+      buy_order_id: r.buy_order_id,
+      game_item_id: r.game_item_id,
+      game_item_name: r.game_item_name || '',
+      buyer_id: r.buyer_id,
+      buyer_name: r.buyer_name || 'Unknown',
+      quantity: r.quantity || r.quantity_desired || 0,
+      price_per_unit: parseFloat(r.price_max) || 0,
+      quality_tier_min: r.quality_tier_min || undefined,
+      quality_tier_max: r.quality_tier_max || undefined,
+      negotiable: r.negotiable || false,
+      status: r.status,
+      created_at: r.created_at?.toISOString?.() || r.created_at,
+      expires_at: r.expires_at?.toISOString?.() || r.expires_at || undefined,
+    };
   }
 
   /**

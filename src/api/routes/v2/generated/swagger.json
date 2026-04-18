@@ -307,6 +307,57 @@
 				"type": "object",
 				"additionalProperties": false
 			},
+			"UpdateStockLotResponse": {
+				"description": "Response for updating a stock lot",
+				"properties": {
+					"lot": {
+						"$ref": "#/components/schemas/StockLotDetail",
+						"description": "Updated stock lot"
+					}
+				},
+				"required": [
+					"lot"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
+			"CreateStockLotRequest": {
+				"description": "Request body for creating a stock lot",
+				"properties": {
+					"item_id": {
+						"type": "string",
+						"description": "Listing item UUID"
+					},
+					"quantity": {
+						"type": "number",
+						"format": "double",
+						"description": "Quantity (must be > 0)"
+					},
+					"variant_attributes": {
+						"$ref": "#/components/schemas/VariantAttributes",
+						"description": "Variant attributes for this lot"
+					},
+					"location_id": {
+						"type": "string",
+						"description": "Optional location UUID"
+					},
+					"listed": {
+						"type": "boolean",
+						"description": "Whether to list for sale (default: true)"
+					},
+					"notes": {
+						"type": "string",
+						"description": "Optional notes"
+					}
+				},
+				"required": [
+					"item_id",
+					"quantity",
+					"variant_attributes"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
 			"GetStockLotsResponse": {
 				"description": "Response for fetching stock lots",
 				"properties": {
@@ -338,20 +389,6 @@
 					"total",
 					"page",
 					"page_size"
-				],
-				"type": "object",
-				"additionalProperties": false
-			},
-			"UpdateStockLotResponse": {
-				"description": "Response for updating a stock lot",
-				"properties": {
-					"lot": {
-						"$ref": "#/components/schemas/StockLotDetail",
-						"description": "Updated stock lot"
-					}
-				},
-				"required": [
-					"lot"
 				],
 				"type": "object",
 				"additionalProperties": false
@@ -1377,6 +1414,13 @@
 						"format": "double",
 						"description": "Seller rating count"
 					},
+					"seller_languages": {
+						"items": {
+							"type": "string"
+						},
+						"type": "array",
+						"description": "Seller's supported languages (ISO 639-1 codes)"
+					},
 					"photo": {
 						"type": "string",
 						"description": "First photo URL (null if no photos)"
@@ -2285,7 +2329,6 @@
 				"additionalProperties": false
 			},
 			"CreateBuyOrderResponse": {
-				"description": "Response from creating a direct purchase order",
 				"properties": {
 					"order_id": {
 						"type": "string",
@@ -2372,6 +2415,141 @@
 					"listing_id",
 					"variant_id",
 					"quantity"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
+			"StandingBuyOrder": {
+				"properties": {
+					"buy_order_id": {
+						"type": "string"
+					},
+					"game_item_id": {
+						"type": "string"
+					},
+					"game_item_name": {
+						"type": "string"
+					},
+					"buyer_id": {
+						"type": "string"
+					},
+					"buyer_name": {
+						"type": "string"
+					},
+					"quantity": {
+						"type": "number",
+						"format": "double"
+					},
+					"price_per_unit": {
+						"type": "number",
+						"format": "double"
+					},
+					"quality_tier_min": {
+						"type": "number",
+						"format": "double"
+					},
+					"quality_tier_max": {
+						"type": "number",
+						"format": "double"
+					},
+					"negotiable": {
+						"type": "boolean"
+					},
+					"status": {
+						"type": "string",
+						"enum": [
+							"active",
+							"fulfilled",
+							"cancelled",
+							"expired"
+						]
+					},
+					"created_at": {
+						"type": "string"
+					},
+					"expires_at": {
+						"type": "string"
+					}
+				},
+				"required": [
+					"buy_order_id",
+					"game_item_id",
+					"game_item_name",
+					"buyer_id",
+					"buyer_name",
+					"quantity",
+					"price_per_unit",
+					"negotiable",
+					"status",
+					"created_at"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
+			"CreateStandingBuyOrderRequest": {
+				"description": "Response from creating a direct purchase order",
+				"properties": {
+					"game_item_id": {
+						"type": "string"
+					},
+					"quantity": {
+						"type": "number",
+						"format": "double"
+					},
+					"price_per_unit": {
+						"type": "number",
+						"format": "double"
+					},
+					"quality_tier_min": {
+						"type": "number",
+						"format": "double"
+					},
+					"quality_tier_max": {
+						"type": "number",
+						"format": "double"
+					},
+					"negotiable": {
+						"type": "boolean"
+					},
+					"expires_in_days": {
+						"type": "number",
+						"format": "double"
+					}
+				},
+				"required": [
+					"game_item_id",
+					"quantity",
+					"price_per_unit"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
+			"SearchBuyOrdersResponse": {
+				"properties": {
+					"buy_orders": {
+						"items": {
+							"$ref": "#/components/schemas/StandingBuyOrder"
+						},
+						"type": "array"
+					},
+					"total": {
+						"type": "number",
+						"format": "double"
+					},
+					"page": {
+						"type": "number",
+						"format": "double"
+					},
+					"page_size": {
+						"type": "number",
+						"format": "double"
+					}
+				},
+				"required": [
+					"buy_orders",
+					"total",
+					"page",
+					"page_size"
 				],
 				"type": "object",
 				"additionalProperties": false
@@ -2830,6 +3008,40 @@
 			}
 		},
 		"/stock-lots": {
+			"post": {
+				"operationId": "CreateStockLot",
+				"responses": {
+					"200": {
+						"description": "Created stock lot",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/UpdateStockLotResponse"
+								}
+							}
+						}
+					}
+				},
+				"description": "Create a stock lot",
+				"summary": "Create stock lot",
+				"tags": [
+					"Stock Lots V2"
+				],
+				"security": [],
+				"parameters": [],
+				"requestBody": {
+					"description": "Create request with item_id, quantity, variant_attributes",
+					"required": true,
+					"content": {
+						"application/json": {
+							"schema": {
+								"$ref": "#/components/schemas/CreateStockLotRequest",
+								"description": "Create request with item_id, quantity, variant_attributes"
+							}
+						}
+					}
+				}
+			},
 			"get": {
 				"operationId": "GetStockLots",
 				"responses": {
@@ -3312,6 +3524,46 @@
 						}
 					}
 				}
+			},
+			"delete": {
+				"operationId": "DeleteListing",
+				"responses": {
+					"200": {
+						"description": "Success message",
+						"content": {
+							"application/json": {
+								"schema": {
+									"properties": {
+										"message": {
+											"type": "string"
+										}
+									},
+									"required": [
+										"message"
+									],
+									"type": "object"
+								}
+							}
+						}
+					}
+				},
+				"description": "Archive (soft delete) a listing\n\nSets the listing status to 'cancelled'. Validates ownership before allowing deletion.",
+				"summary": "Delete listing",
+				"tags": [
+					"Listings V2"
+				],
+				"security": [],
+				"parameters": [
+					{
+						"description": "Listing UUID",
+						"in": "path",
+						"name": "id",
+						"required": true,
+						"schema": {
+							"type": "string"
+						}
+					}
+				]
 			}
 		},
 		"/listings/search": {
@@ -3472,6 +3724,27 @@
 							"enum": [
 								"asc",
 								"desc"
+							]
+						}
+					},
+					{
+						"in": "query",
+						"name": "language_codes",
+						"required": false,
+						"schema": {
+							"type": "string"
+						}
+					},
+					{
+						"in": "query",
+						"name": "listing_type",
+						"required": false,
+						"schema": {
+							"type": "string",
+							"enum": [
+								"single",
+								"bundle",
+								"bulk"
 							]
 						}
 					}
@@ -4018,6 +4291,215 @@
 						}
 					}
 				}
+			}
+		},
+		"/buy-orders/standing": {
+			"post": {
+				"operationId": "CreateStandingBuyOrder",
+				"responses": {
+					"200": {
+						"description": "Ok",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/StandingBuyOrder"
+								}
+							}
+						}
+					}
+				},
+				"description": "Create a standing buy order",
+				"tags": [
+					"Buy Orders V2"
+				],
+				"security": [
+					{
+						"session": []
+					}
+				],
+				"parameters": [],
+				"requestBody": {
+					"required": true,
+					"content": {
+						"application/json": {
+							"schema": {
+								"$ref": "#/components/schemas/CreateStandingBuyOrderRequest"
+							}
+						}
+					}
+				}
+			}
+		},
+		"/buy-orders/search": {
+			"get": {
+				"operationId": "SearchBuyOrders",
+				"responses": {
+					"200": {
+						"description": "Ok",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/SearchBuyOrdersResponse"
+								}
+							}
+						}
+					}
+				},
+				"description": "Search active standing buy orders",
+				"tags": [
+					"Buy Orders V2"
+				],
+				"security": [],
+				"parameters": [
+					{
+						"in": "query",
+						"name": "game_item_id",
+						"required": false,
+						"schema": {
+							"type": "string"
+						}
+					},
+					{
+						"in": "query",
+						"name": "quality_tier_min",
+						"required": false,
+						"schema": {
+							"format": "double",
+							"type": "number"
+						}
+					},
+					{
+						"in": "query",
+						"name": "quality_tier_max",
+						"required": false,
+						"schema": {
+							"format": "double",
+							"type": "number"
+						}
+					},
+					{
+						"in": "query",
+						"name": "page",
+						"required": false,
+						"schema": {
+							"format": "double",
+							"type": "number"
+						}
+					},
+					{
+						"in": "query",
+						"name": "page_size",
+						"required": false,
+						"schema": {
+							"format": "double",
+							"type": "number"
+						}
+					}
+				]
+			}
+		},
+		"/buy-orders/mine": {
+			"get": {
+				"operationId": "GetMyBuyOrders",
+				"responses": {
+					"200": {
+						"description": "Ok",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/SearchBuyOrdersResponse"
+								}
+							}
+						}
+					}
+				},
+				"description": "Get current user's buy orders",
+				"tags": [
+					"Buy Orders V2"
+				],
+				"security": [
+					{
+						"session": []
+					}
+				],
+				"parameters": [
+					{
+						"in": "query",
+						"name": "status",
+						"required": false,
+						"schema": {
+							"type": "string",
+							"enum": [
+								"active",
+								"fulfilled",
+								"cancelled",
+								"expired"
+							]
+						}
+					},
+					{
+						"in": "query",
+						"name": "page",
+						"required": false,
+						"schema": {
+							"format": "double",
+							"type": "number"
+						}
+					},
+					{
+						"in": "query",
+						"name": "page_size",
+						"required": false,
+						"schema": {
+							"format": "double",
+							"type": "number"
+						}
+					}
+				]
+			}
+		},
+		"/buy-orders/{id}": {
+			"delete": {
+				"operationId": "CancelBuyOrder",
+				"responses": {
+					"200": {
+						"description": "Ok",
+						"content": {
+							"application/json": {
+								"schema": {
+									"properties": {
+										"message": {
+											"type": "string"
+										}
+									},
+									"required": [
+										"message"
+									],
+									"type": "object"
+								}
+							}
+						}
+					}
+				},
+				"description": "Cancel a standing buy order",
+				"tags": [
+					"Buy Orders V2"
+				],
+				"security": [
+					{
+						"session": []
+					}
+				],
+				"parameters": [
+					{
+						"in": "path",
+						"name": "id",
+						"required": true,
+						"schema": {
+							"type": "string"
+						}
+					}
+				]
 			}
 		},
 		"/analytics/price-history": {

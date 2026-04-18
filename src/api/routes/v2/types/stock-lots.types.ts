@@ -103,6 +103,28 @@ export interface StockLotDetail {
 }
 
 // ============================================================================
+// Create Stock Lot Request Type
+// ============================================================================
+
+/**
+ * Request body for creating a stock lot
+ */
+export interface CreateStockLotRequest {
+  /** Listing item UUID */
+  item_id: string;
+  /** Quantity (must be > 0) */
+  quantity: number;
+  /** Variant attributes for this lot */
+  variant_attributes: VariantAttributes;
+  /** Optional location UUID */
+  location_id?: string;
+  /** Whether to list for sale (default: true) */
+  listed?: boolean;
+  /** Optional notes */
+  notes?: string;
+}
+
+// ============================================================================
 // Get Stock Lots Request/Response Types
 // ============================================================================
 

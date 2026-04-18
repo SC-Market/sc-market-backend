@@ -13,6 +13,7 @@ import { BaseController } from "../base/BaseController.js"
 import { withTransaction } from "../../../../clients/database/transaction.js"
 import { getKnex } from "../../../../clients/database/knex-db.js"
 import {
+  CreateStockLotRequest,
   GetStockLotsRequest,
   GetStockLotsResponse,
   UpdateStockLotRequest,
@@ -29,6 +30,56 @@ import logger from "../../../../logger/logger.js"
 export class StockLotsV2Controller extends BaseController {
   constructor(@Request() request?: ExpressRequest) {
     super(request)
+  }
+
+  /**
+   * Create a stock lot
+   *
+   * @summary Create stock lot
+   * @param requestBody Create request with item_id, quantity, variant_attributes
+   * @param request Express request for authentication
+   * @returns Created stock lot
+   */
+  @Post()
+  public async createStockLot(
+    @Body() requestBody: CreateStockLotRequest,
+    @Request() request: ExpressRequest,
+  ): Promise<UpdateStockLotResponse> {
+    this.request = request
+    this.requireAuth()
+    const userId = this.getUserId()
+
+    const db = getKnex()
+
+    // Verify the listing item exists and user owns the listing
+    const item = await db('listing_items as li')
+      .join('listings as l', 'li.listing_id', 'l.listing_id')
+      .where('li.item_id', requestBody.item_id)
+      .andWhere('l.seller_id', userId)
+      .first('li.item_id', 'l.listing_id', 'li.game_item_id')
+
+    if (!item) {
+      this.throwNotFound('Listing item not found or not owned by user')
+    }
+
+    // Get or create variant
+    const { getOrCreateVariant } = await import('../../../../services/market-v2/variant.service.js')
+    const variantId = await getOrCreateVariant(item.game_item_id, requestBody.variant_attributes)
+
+    // Create the lot
+    const [lot] = await db('listing_item_lots').insert({
+      item_id: requestBody.item_id,
+      variant_id: variantId,
+      quantity_total: requestBody.quantity,
+      location_id: requestBody.location_id || null,
+      listed: requestBody.listed ?? true,
+      notes: requestBody.notes || null,
+      owner_id: userId,
+    }).returning('*')
+
+    // Fetch full lot detail for response
+    const lotDetail = await this.fetchLotDetail(db, lot.lot_id)
+    return { lot: lotDetail }
   }
 
   /**
@@ -668,6 +719,69 @@ export class StockLotsV2Controller extends BaseController {
       })
 
       throw error
+    }
+  }
+
+  /**
+   * Fetch full lot detail by lot_id
+   */
+  private async fetchLotDetail(db: ReturnType<typeof getKnex>, lotId: string): Promise<StockLotDetail> {
+    const row = await db("listing_item_lots as sl")
+      .join("item_variants as iv", "sl.variant_id", "iv.variant_id")
+      .leftJoin("locations as loc", "sl.location_id", "loc.location_id")
+      .leftJoin("accounts as owner", "sl.owner_id", "owner.user_id")
+      .leftJoin("accounts as crafter", "sl.crafted_by", "crafter.user_id")
+      .where("sl.lot_id", lotId)
+      .select(
+        "sl.lot_id",
+        "sl.item_id",
+        "sl.variant_id",
+        "sl.quantity_total",
+        "sl.listed",
+        "sl.notes",
+        "sl.created_at",
+        "sl.updated_at",
+        "sl.crafted_at",
+        "iv.attributes as variant_attributes",
+        "iv.display_name as variant_display_name",
+        "iv.short_name as variant_short_name",
+        "loc.location_id",
+        "loc.name as location_name",
+        "loc.is_preset as location_is_preset",
+        "owner.user_id as owner_user_id",
+        "owner.username as owner_username",
+        "owner.display_name as owner_display_name",
+        "owner.avatar_url as owner_avatar_url",
+        "crafter.username as crafted_by_username",
+      )
+      .first()
+
+    if (!row) {
+      this.throwNotFound("Stock lot", lotId)
+    }
+
+    return {
+      lot_id: row.lot_id,
+      item_id: row.item_id,
+      variant: {
+        variant_id: row.variant_id,
+        attributes: row.variant_attributes,
+        display_name: row.variant_display_name || "Standard",
+        short_name: row.variant_short_name || "STD",
+      },
+      quantity_total: row.quantity_total,
+      location: row.location_id
+        ? { location_id: row.location_id, name: row.location_name, is_preset: row.location_is_preset }
+        : null,
+      owner: row.owner_user_id
+        ? { user_id: row.owner_user_id, username: row.owner_username, display_name: row.owner_display_name, avatar_url: row.owner_avatar_url }
+        : null,
+      listed: row.listed,
+      notes: row.notes,
+      crafted_by: row.crafted_by_username,
+      crafted_at: row.crafted_at?.toISOString(),
+      created_at: row.created_at.toISOString(),
+      updated_at: row.updated_at.toISOString(),
     }
   }
 }
