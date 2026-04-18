@@ -6,11 +6,21 @@ const document: OpenAPIV3.Document = {
   openapi: "3.1.0",
   info: {
     title: "SC Market OpenAPI Definition",
-    description: "The API for the SC Market site",
+    description:
+      "The API for the SC Market site.\n\n## Authentication\n\nAuthenticated endpoints require a Bearer token in the `Authorization` header:\n\n```\nAuthorization: Bearer scm_live_...\n```\n\nYou can create API tokens from your [account settings](/settings). Tokens use the `scm_` prefix and support scoped permissions.",
     version: "1.0.0",
   },
   paths: {},
+  security: [{ BearerToken: [] }],
   components: {
+    securitySchemes: {
+      BearerToken: {
+        type: "http",
+        scheme: "bearer",
+        description:
+          "API token authentication. Create a token in your account settings, then pass it as a Bearer token in the Authorization header.",
+      },
+    },
     schemas: {
       AvailabilityEntry: {
         type: "object",
