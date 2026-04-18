@@ -160,7 +160,7 @@ export function setAuthCookies(
   const sameSite = prod ? ("none" as const) : ("lax" as const)
 
   // Clear old refresh cookie with wrong path (legacy cleanup)
-  res.clearCookie(REFRESH_COOKIE, { httpOnly: true, secure: prod, sameSite, path: "/api/auth" })
+  res.clearCookie(REFRESH_COOKIE, { httpOnly: true, secure: prod, sameSite, path: "/" })
 
   res.cookie(ACCESS_COOKIE, accessToken, {
     httpOnly: true,
@@ -174,7 +174,7 @@ export function setAuthCookies(
     httpOnly: true,
     secure: prod,
     sameSite,
-    path: "/",
+    path: "/api/auth",
     maxAge: REFRESH_TOKEN_EXPIRY_MS,
   })
 }
@@ -184,7 +184,8 @@ export function clearAuthCookies(res: Response): void {
   const sameSite = prod ? ("none" as const) : ("lax" as const)
 
   res.clearCookie(ACCESS_COOKIE, { httpOnly: true, secure: prod, sameSite, path: "/" })
-  res.clearCookie(REFRESH_COOKIE, { httpOnly: true, secure: prod, sameSite, path: "/" })
+  res.clearCookie(REFRESH_COOKIE, { httpOnly: true, secure: prod, sameSite, path: "/api/auth" })
+  res.clearCookie(REFRESH_COOKIE, { httpOnly: true, secure: prod, sameSite, path: "/" }) // legacy
 }
 
 export function getAccessTokenFromRequest(req: Request): string | null {
