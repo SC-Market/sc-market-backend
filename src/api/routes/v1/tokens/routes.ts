@@ -20,9 +20,30 @@ import {
 
 export const tokensRouter = express.Router()
 
+// Token management endpoints require session/JWT auth only (no token self-management)
+const sessionOnly: express.RequestHandler = (req, res, next) => {
+  const authHeader = req.headers.authorization
+  if (authHeader && authHeader.startsWith("Bearer scm_")) {
+    res.status(403).json({ error: { code: "FORBIDDEN", message: "API tokens cannot manage other tokens. Use session auth." } })
+    return
+  }
+  next()
+}
+
+// Get available scopes for current user (must be before /:tokenId)
+tokensRouter.get(
+  "/scopes",
+  sessionOnly,
+  userAuthorized,
+  tokens_get_scopes_spec,
+  readRateLimit,
+  tokensController.getAvailableScopes,
+)
+
 // Create a new API token
 tokensRouter.post(
   "/",
+  sessionOnly,
   userAuthorized,
   tokens_post_root_spec,
   writeRateLimit,
@@ -32,6 +53,7 @@ tokensRouter.post(
 // List user's tokens
 tokensRouter.get(
   "/",
+  sessionOnly,
   userAuthorized,
   tokens_get_root_spec,
   readRateLimit,
@@ -41,6 +63,7 @@ tokensRouter.get(
 // Get specific token details
 tokensRouter.get(
   "/:tokenId",
+  sessionOnly,
   userAuthorized,
   tokens_get_tokenId_spec,
   readRateLimit,
@@ -50,6 +73,7 @@ tokensRouter.get(
 // Update token (scopes, expiration, etc.)
 tokensRouter.put(
   "/:tokenId",
+  sessionOnly,
   userAuthorized,
   tokens_put_tokenId_spec,
   writeRateLimit,
@@ -59,6 +83,7 @@ tokensRouter.put(
 // Revoke token
 tokensRouter.delete(
   "/:tokenId",
+  sessionOnly,
   userAuthorized,
   tokens_delete_tokenId_spec,
   writeRateLimit,
@@ -68,6 +93,7 @@ tokensRouter.delete(
 // Extend token expiration
 tokensRouter.post(
   "/:tokenId/extend",
+  sessionOnly,
   userAuthorized,
   tokens_post_tokenId_extend_spec,
   writeRateLimit,
@@ -77,17 +103,9 @@ tokensRouter.post(
 // Get token usage statistics
 tokensRouter.get(
   "/:tokenId/stats",
+  sessionOnly,
   userAuthorized,
   tokens_get_tokenId_stats_spec,
   readRateLimit,
   tokensController.getTokenStats,
-)
-
-// Get available scopes for current user
-tokensRouter.get(
-  "/scopes",
-  userAuthorized,
-  tokens_get_scopes_spec,
-  readRateLimit,
-  tokensController.getAvailableScopes,
 )

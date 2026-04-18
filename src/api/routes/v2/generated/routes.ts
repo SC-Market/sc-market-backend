@@ -127,6 +127,27 @@ const models: TsoaRoute.Models = {
         "additionalProperties": false,
     },
     // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+    "UpdateStockLotResponse": {
+        "dataType": "refObject",
+        "properties": {
+            "lot": {"ref":"StockLotDetail","required":true},
+        },
+        "additionalProperties": false,
+    },
+    // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+    "CreateStockLotRequest": {
+        "dataType": "refObject",
+        "properties": {
+            "item_id": {"dataType":"string","required":true},
+            "quantity": {"dataType":"double","required":true},
+            "variant_attributes": {"ref":"VariantAttributes","required":true},
+            "location_id": {"dataType":"string"},
+            "listed": {"dataType":"boolean"},
+            "notes": {"dataType":"string"},
+        },
+        "additionalProperties": false,
+    },
+    // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
     "GetStockLotsResponse": {
         "dataType": "refObject",
         "properties": {
@@ -134,14 +155,6 @@ const models: TsoaRoute.Models = {
             "total": {"dataType":"double","required":true},
             "page": {"dataType":"double","required":true},
             "page_size": {"dataType":"double","required":true},
-        },
-        "additionalProperties": false,
-    },
-    // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
-    "UpdateStockLotResponse": {
-        "dataType": "refObject",
-        "properties": {
-            "lot": {"ref":"StockLotDetail","required":true},
         },
         "additionalProperties": false,
     },
@@ -440,6 +453,7 @@ const models: TsoaRoute.Models = {
             "game_item_name": {"dataType":"string","required":true},
             "game_item_type": {"dataType":"string","required":true},
             "seller_rating_count": {"dataType":"double","required":true},
+            "seller_languages": {"dataType":"array","array":{"dataType":"string"}},
             "photo": {"dataType":"string"},
         },
         "additionalProperties": false,
@@ -776,6 +790,51 @@ const models: TsoaRoute.Models = {
         "additionalProperties": false,
     },
     // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+    "StandingBuyOrder": {
+        "dataType": "refObject",
+        "properties": {
+            "buy_order_id": {"dataType":"string","required":true},
+            "game_item_id": {"dataType":"string","required":true},
+            "game_item_name": {"dataType":"string","required":true},
+            "buyer_id": {"dataType":"string","required":true},
+            "buyer_name": {"dataType":"string","required":true},
+            "quantity": {"dataType":"double","required":true},
+            "price_per_unit": {"dataType":"double","required":true},
+            "quality_tier_min": {"dataType":"double"},
+            "quality_tier_max": {"dataType":"double"},
+            "negotiable": {"dataType":"boolean","required":true},
+            "status": {"dataType":"union","subSchemas":[{"dataType":"enum","enums":["active"]},{"dataType":"enum","enums":["fulfilled"]},{"dataType":"enum","enums":["cancelled"]},{"dataType":"enum","enums":["expired"]}],"required":true},
+            "created_at": {"dataType":"string","required":true},
+            "expires_at": {"dataType":"string"},
+        },
+        "additionalProperties": false,
+    },
+    // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+    "CreateStandingBuyOrderRequest": {
+        "dataType": "refObject",
+        "properties": {
+            "game_item_id": {"dataType":"string","required":true},
+            "quantity": {"dataType":"double","required":true},
+            "price_per_unit": {"dataType":"double","required":true},
+            "quality_tier_min": {"dataType":"double"},
+            "quality_tier_max": {"dataType":"double"},
+            "negotiable": {"dataType":"boolean"},
+            "expires_in_days": {"dataType":"double"},
+        },
+        "additionalProperties": false,
+    },
+    // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+    "SearchBuyOrdersResponse": {
+        "dataType": "refObject",
+        "properties": {
+            "buy_orders": {"dataType":"array","array":{"dataType":"refObject","ref":"StandingBuyOrder"},"required":true},
+            "total": {"dataType":"double","required":true},
+            "page": {"dataType":"double","required":true},
+            "page_size": {"dataType":"double","required":true},
+        },
+        "additionalProperties": false,
+    },
+    // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
     "PriceDataPoint": {
         "dataType": "refObject",
         "properties": {
@@ -959,6 +1018,37 @@ export function RegisterRoutes(app: Router) {
 
               await templateService.apiHandler({
                 methodName: 'getVariantTypes',
+                controller,
+                response,
+                next,
+                validatedArgs,
+                successStatus: undefined,
+              });
+            } catch (err) {
+                return next(err);
+            }
+        });
+        // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+        const argsStockLotsV2Controller_createStockLot: Record<string, TsoaRoute.ParameterSchema> = {
+                requestBody: {"in":"body","name":"requestBody","required":true,"ref":"CreateStockLotRequest"},
+                request: {"in":"request","name":"request","required":true,"dataType":"object"},
+        };
+        app.post('/stock-lots',
+            ...(fetchMiddlewares<RequestHandler>(StockLotsV2Controller)),
+            ...(fetchMiddlewares<RequestHandler>(StockLotsV2Controller.prototype.createStockLot)),
+
+            async function StockLotsV2Controller_createStockLot(request: ExRequest, response: ExResponse, next: any) {
+
+            // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+
+            let validatedArgs: any[] = [];
+            try {
+                validatedArgs = templateService.getValidatedArgs({ args: argsStockLotsV2Controller_createStockLot, request, response });
+
+                const controller = new StockLotsV2Controller();
+
+              await templateService.apiHandler({
+                methodName: 'createStockLot',
                 controller,
                 response,
                 next,
@@ -1246,6 +1336,8 @@ export function RegisterRoutes(app: Router) {
                 status: {"in":"query","name":"status","dataType":"union","subSchemas":[{"dataType":"enum","enums":["active"]},{"dataType":"enum","enums":["sold"]},{"dataType":"enum","enums":["expired"]},{"dataType":"enum","enums":["cancelled"]}]},
                 sort_by: {"in":"query","name":"sort_by","dataType":"union","subSchemas":[{"dataType":"enum","enums":["created_at"]},{"dataType":"enum","enums":["updated_at"]},{"dataType":"enum","enums":["price"]},{"dataType":"enum","enums":["quality"]},{"dataType":"enum","enums":["seller_rating"]},{"dataType":"enum","enums":["quantity"]}]},
                 sort_order: {"in":"query","name":"sort_order","dataType":"union","subSchemas":[{"dataType":"enum","enums":["asc"]},{"dataType":"enum","enums":["desc"]}]},
+                language_codes: {"in":"query","name":"language_codes","dataType":"string"},
+                listing_type: {"in":"query","name":"listing_type","dataType":"union","subSchemas":[{"dataType":"enum","enums":["single"]},{"dataType":"enum","enums":["bundle"]},{"dataType":"enum","enums":["bulk"]}]},
         };
         app.get('/listings/search',
             ...(fetchMiddlewares<RequestHandler>(ListingsV2Controller)),
@@ -1361,6 +1453,37 @@ export function RegisterRoutes(app: Router) {
 
               await templateService.apiHandler({
                 methodName: 'refreshListing',
+                controller,
+                response,
+                next,
+                validatedArgs,
+                successStatus: undefined,
+              });
+            } catch (err) {
+                return next(err);
+            }
+        });
+        // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+        const argsListingsV2Controller_deleteListing: Record<string, TsoaRoute.ParameterSchema> = {
+                id: {"in":"path","name":"id","required":true,"dataType":"string"},
+                request: {"in":"request","name":"request","required":true,"dataType":"object"},
+        };
+        app.delete('/listings/:id',
+            ...(fetchMiddlewares<RequestHandler>(ListingsV2Controller)),
+            ...(fetchMiddlewares<RequestHandler>(ListingsV2Controller.prototype.deleteListing)),
+
+            async function ListingsV2Controller_deleteListing(request: ExRequest, response: ExResponse, next: any) {
+
+            // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+
+            let validatedArgs: any[] = [];
+            try {
+                validatedArgs = templateService.getValidatedArgs({ args: argsListingsV2Controller_deleteListing, request, response });
+
+                const controller = new ListingsV2Controller();
+
+              await templateService.apiHandler({
+                methodName: 'deleteListing',
                 controller,
                 response,
                 next,
@@ -1674,6 +1797,138 @@ export function RegisterRoutes(app: Router) {
 
               await templateService.apiHandler({
                 methodName: 'createBuyOrder',
+                controller,
+                response,
+                next,
+                validatedArgs,
+                successStatus: undefined,
+              });
+            } catch (err) {
+                return next(err);
+            }
+        });
+        // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+        const argsBuyOrdersV2Controller_createStandingBuyOrder: Record<string, TsoaRoute.ParameterSchema> = {
+                body: {"in":"body","name":"body","required":true,"ref":"CreateStandingBuyOrderRequest"},
+                request: {"in":"request","name":"request","required":true,"dataType":"object"},
+        };
+        app.post('/buy-orders/standing',
+            authenticateMiddleware([{"session":[]}]),
+            ...(fetchMiddlewares<RequestHandler>(BuyOrdersV2Controller)),
+            ...(fetchMiddlewares<RequestHandler>(BuyOrdersV2Controller.prototype.createStandingBuyOrder)),
+
+            async function BuyOrdersV2Controller_createStandingBuyOrder(request: ExRequest, response: ExResponse, next: any) {
+
+            // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+
+            let validatedArgs: any[] = [];
+            try {
+                validatedArgs = templateService.getValidatedArgs({ args: argsBuyOrdersV2Controller_createStandingBuyOrder, request, response });
+
+                const controller = new BuyOrdersV2Controller();
+
+              await templateService.apiHandler({
+                methodName: 'createStandingBuyOrder',
+                controller,
+                response,
+                next,
+                validatedArgs,
+                successStatus: undefined,
+              });
+            } catch (err) {
+                return next(err);
+            }
+        });
+        // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+        const argsBuyOrdersV2Controller_searchBuyOrders: Record<string, TsoaRoute.ParameterSchema> = {
+                game_item_id: {"in":"query","name":"game_item_id","dataType":"string"},
+                quality_tier_min: {"in":"query","name":"quality_tier_min","dataType":"double"},
+                quality_tier_max: {"in":"query","name":"quality_tier_max","dataType":"double"},
+                page: {"in":"query","name":"page","dataType":"double"},
+                page_size: {"in":"query","name":"page_size","dataType":"double"},
+        };
+        app.get('/buy-orders/search',
+            ...(fetchMiddlewares<RequestHandler>(BuyOrdersV2Controller)),
+            ...(fetchMiddlewares<RequestHandler>(BuyOrdersV2Controller.prototype.searchBuyOrders)),
+
+            async function BuyOrdersV2Controller_searchBuyOrders(request: ExRequest, response: ExResponse, next: any) {
+
+            // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+
+            let validatedArgs: any[] = [];
+            try {
+                validatedArgs = templateService.getValidatedArgs({ args: argsBuyOrdersV2Controller_searchBuyOrders, request, response });
+
+                const controller = new BuyOrdersV2Controller();
+
+              await templateService.apiHandler({
+                methodName: 'searchBuyOrders',
+                controller,
+                response,
+                next,
+                validatedArgs,
+                successStatus: undefined,
+              });
+            } catch (err) {
+                return next(err);
+            }
+        });
+        // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+        const argsBuyOrdersV2Controller_getMyBuyOrders: Record<string, TsoaRoute.ParameterSchema> = {
+                request: {"in":"request","name":"request","required":true,"dataType":"object"},
+                status: {"in":"query","name":"status","dataType":"union","subSchemas":[{"dataType":"enum","enums":["active"]},{"dataType":"enum","enums":["fulfilled"]},{"dataType":"enum","enums":["cancelled"]},{"dataType":"enum","enums":["expired"]}]},
+                page: {"in":"query","name":"page","dataType":"double"},
+                page_size: {"in":"query","name":"page_size","dataType":"double"},
+        };
+        app.get('/buy-orders/mine',
+            authenticateMiddleware([{"session":[]}]),
+            ...(fetchMiddlewares<RequestHandler>(BuyOrdersV2Controller)),
+            ...(fetchMiddlewares<RequestHandler>(BuyOrdersV2Controller.prototype.getMyBuyOrders)),
+
+            async function BuyOrdersV2Controller_getMyBuyOrders(request: ExRequest, response: ExResponse, next: any) {
+
+            // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+
+            let validatedArgs: any[] = [];
+            try {
+                validatedArgs = templateService.getValidatedArgs({ args: argsBuyOrdersV2Controller_getMyBuyOrders, request, response });
+
+                const controller = new BuyOrdersV2Controller();
+
+              await templateService.apiHandler({
+                methodName: 'getMyBuyOrders',
+                controller,
+                response,
+                next,
+                validatedArgs,
+                successStatus: undefined,
+              });
+            } catch (err) {
+                return next(err);
+            }
+        });
+        // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+        const argsBuyOrdersV2Controller_cancelBuyOrder: Record<string, TsoaRoute.ParameterSchema> = {
+                request: {"in":"request","name":"request","required":true,"dataType":"object"},
+                id: {"in":"path","name":"id","required":true,"dataType":"string"},
+        };
+        app.delete('/buy-orders/:id',
+            authenticateMiddleware([{"session":[]}]),
+            ...(fetchMiddlewares<RequestHandler>(BuyOrdersV2Controller)),
+            ...(fetchMiddlewares<RequestHandler>(BuyOrdersV2Controller.prototype.cancelBuyOrder)),
+
+            async function BuyOrdersV2Controller_cancelBuyOrder(request: ExRequest, response: ExResponse, next: any) {
+
+            // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+
+            let validatedArgs: any[] = [];
+            try {
+                validatedArgs = templateService.getValidatedArgs({ args: argsBuyOrdersV2Controller_cancelBuyOrder, request, response });
+
+                const controller = new BuyOrdersV2Controller();
+
+              await templateService.apiHandler({
+                methodName: 'cancelBuyOrder',
                 controller,
                 response,
                 next,

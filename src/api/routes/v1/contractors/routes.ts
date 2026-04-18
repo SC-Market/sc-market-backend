@@ -530,3 +530,7 @@ contractorsRouter.use("/", contractorAllocationsRouter)
 
 // Mount org theme routes
 contractorsRouter.use("/:spectrum_id/theme", contractorThemeRouter)
+
+// Mount org whitelabel config routes
+import { whitelabelConfigRouter } from "./whitelabel-config.js"
+contractorsRouter.use("/:spectrum_id/whitelabel", whitelabelConfigRouter)

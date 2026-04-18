@@ -10,6 +10,50 @@ import {
 import { ErrorCode } from "../util/error-codes.js"
 import logger from "../../../../logger/logger.js"
 
+const MAX_TOKENS_PER_USER = 25
+
+const VALID_SCOPES = [
+  "profile:read",
+  "profile:write",
+  "market:read",
+  "market:write",
+  "market:purchase",
+  "market:photos",
+  "orders:read",
+  "orders:write",
+  "orders:reviews",
+  "contractors:read",
+  "contractors:write",
+  "contractors:members",
+  "contractors:webhooks",
+  "contractors:blocklist",
+  "orgs:read",
+  "orgs:write",
+  "orgs:manage",
+  "services:read",
+  "services:write",
+  "services:photos",
+  "offers:read",
+  "offers:write",
+  "chats:read",
+  "chats:write",
+  "notifications:read",
+  "notifications:write",
+  "recruiting:read",
+  "recruiting:write",
+  "comments:read",
+  "comments:write",
+  "moderation:read",
+  "moderation:write",
+  "admin:read",
+  "admin:write",
+  "admin:spectrum",
+  "admin:stats",
+  "readonly",
+  "full",
+  "admin",
+] as const
+
 /**
  * Helper function to convert contractor Spectrum IDs to database contractor IDs
  */
@@ -81,47 +125,43 @@ export async function createToken(req: Request, res: Response): Promise<void> {
       return
     }
 
-    // Validate scopes
-    const validScopes = [
-      "profile:read",
-      "profile:write",
-      "market:read",
-      "market:write",
-      "market:purchase",
-      "market:photos",
-      "orders:read",
-      "orders:write",
-      "orders:reviews",
-      "contractors:read",
-      "contractors:write",
-      "contractors:members",
-      "contractors:webhooks",
-      "contractors:blocklist",
-      "orgs:read",
-      "orgs:write",
-      "orgs:manage",
-      "services:read",
-      "services:write",
-      "services:photos",
-      "offers:read",
-      "offers:write",
-      "chats:read",
-      "chats:write",
-      "notifications:read",
-      "notifications:write",
-      "moderation:read",
-      "moderation:write",
-      "admin:read",
-      "admin:write",
-      "admin:spectrum",
-      "admin:stats",
-      "readonly",
-      "full",
-      "admin",
-    ]
+    // Validate name length
+    if (name.length > 100 || (description && description.length > 500)) {
+      res
+        .status(400)
+        .json(
+          createErrorResponse(
+            ErrorCode.VALIDATION_ERROR,
+            "Name must be under 100 characters and description under 500",
+          ),
+        )
+      return
+    }
 
-    const invalidScopes = scopes.filter(
-      (scope: string) => !validScopes.includes(scope),
+    // Check token count limit
+    const existingCount = await database
+      .knex("api_tokens")
+      .where("user_id", user.user_id)
+      .count("id as count")
+      .first()
+    if (existingCount && Number(existingCount.count) >= MAX_TOKENS_PER_USER) {
+      res
+        .status(400)
+        .json(
+          createErrorResponse(
+            ErrorCode.VALIDATION_ERROR,
+            `Maximum of ${MAX_TOKENS_PER_USER} tokens per user`,
+          ),
+        )
+      return
+    }
+
+    // Deduplicate scopes
+    const uniqueScopes = [...new Set(scopes as string[])]
+
+    // Validate scopes
+    const invalidScopes = uniqueScopes.filter(
+      (scope: string) => !VALID_SCOPES.includes(scope as any),
     )
     if (invalidScopes.length > 0) {
       res
@@ -136,7 +176,7 @@ export async function createToken(req: Request, res: Response): Promise<void> {
     }
 
     // Check for admin scopes (only admins can create admin tokens)
-    const hasAdminScopes = scopes.some(
+    const hasAdminScopes = uniqueScopes.some(
       (scope: string) => scope.startsWith("admin:") || scope === "admin",
     )
     if (hasAdminScopes && user.role !== "admin") {
@@ -152,7 +192,7 @@ export async function createToken(req: Request, res: Response): Promise<void> {
     }
 
     // Check for moderation scopes (only admins can create moderation tokens)
-    const hasModerationScopes = scopes.some(
+    const hasModerationScopes = uniqueScopes.some(
       (scope: string) =>
         scope === "moderation:read" || scope === "moderation:write",
     )
@@ -250,7 +290,7 @@ export async function createToken(req: Request, res: Response): Promise<void> {
         name,
         description: description || null,
         token_hash: tokenHash,
-        scopes,
+        scopes: uniqueScopes,
         contractor_ids: validatedContractorIds,
         expires_at: expiresAt,
         created_at: new Date(),
@@ -405,46 +445,10 @@ export async function updateToken(req: Request, res: Response): Promise<void> {
 
     // Validate scopes if provided
     if (scopes && Array.isArray(scopes)) {
-      const validScopes = [
-        "profile:read",
-        "profile:write",
-        "market:read",
-        "market:write",
-        "market:purchase",
-        "market:photos",
-        "orders:read",
-        "orders:write",
-        "orders:reviews",
-        "contractors:read",
-        "contractors:write",
-        "contractors:members",
-        "contractors:webhooks",
-        "contractors:blocklist",
-        "orgs:read",
-        "orgs:write",
-        "orgs:manage",
-        "services:read",
-        "services:write",
-        "services:photos",
-        "offers:read",
-        "offers:write",
-        "chats:read",
-        "chats:write",
-        "notifications:read",
-        "notifications:write",
-        "moderation:read",
-        "moderation:write",
-        "admin:read",
-        "admin:write",
-        "admin:spectrum",
-        "admin:stats",
-        "readonly",
-        "full",
-        "admin",
-      ]
+      const uniqueScopes = [...new Set(scopes as string[])]
 
-      const invalidScopes = scopes.filter(
-        (scope: string) => !validScopes.includes(scope),
+      const invalidScopes = uniqueScopes.filter(
+        (scope: string) => !VALID_SCOPES.includes(scope as any),
       )
       if (invalidScopes.length > 0) {
         res
@@ -459,7 +463,7 @@ export async function updateToken(req: Request, res: Response): Promise<void> {
       }
 
       // Check for admin scopes
-      const hasAdminScopes = scopes.some(
+      const hasAdminScopes = uniqueScopes.some(
         (scope: string) => scope.startsWith("admin:") || scope === "admin",
       )
       if (hasAdminScopes && user.role !== "admin") {
@@ -475,7 +479,7 @@ export async function updateToken(req: Request, res: Response): Promise<void> {
       }
 
       // Check for moderation scopes (only admins can create moderation tokens)
-      const hasModerationScopes = scopes.some(
+      const hasModerationScopes = uniqueScopes.some(
         (scope: string) =>
           scope === "moderation:read" || scope === "moderation:write",
       )
@@ -517,6 +521,7 @@ export async function updateToken(req: Request, res: Response): Promise<void> {
             .status(400)
             .json(
               createErrorResponse(
+                ErrorCode.VALIDATION_ERROR,
                 "One or more contractor spectrum IDs are invalid",
               ),
             )
@@ -570,7 +575,7 @@ export async function updateToken(req: Request, res: Response): Promise<void> {
       .update({
         ...(name !== undefined && { name }),
         ...(description !== undefined && { description }),
-        ...(scopes !== undefined && { scopes }),
+        ...(scopes !== undefined && { scopes: [...new Set(scopes as string[])] }),
         ...(contractor_spectrum_ids !== undefined && {
           contractor_ids: validatedContractorIds,
         }),
@@ -675,14 +680,14 @@ export async function extendToken(req: Request, res: Response): Promise<void> {
     const expiresAt = new Date(dateString)
 
     if (isNaN(expiresAt.getTime())) {
-      res.status(400).json(createErrorResponse("Invalid expiration date"))
+      res.status(400).json(createErrorResponse(ErrorCode.VALIDATION_ERROR, "Invalid expiration date"))
       return
     }
 
     if (expiresAt <= new Date()) {
       res
         .status(400)
-        .json(createErrorResponse("Expiration date must be in the future"))
+        .json(createErrorResponse(ErrorCode.VALIDATION_ERROR, "Expiration date must be in the future"))
       return
     }
 
@@ -759,43 +764,7 @@ export async function getAvailableScopes(
   try {
     const user = req.user! as User
 
-    const allScopes = [
-      "profile:read",
-      "profile:write",
-      "market:read",
-      "market:write",
-      "market:purchase",
-      "market:photos",
-      "orders:read",
-      "orders:write",
-      "orders:reviews",
-      "contractors:read",
-      "contractors:write",
-      "contractors:members",
-      "contractors:webhooks",
-      "contractors:blocklist",
-      "orgs:read",
-      "orgs:write",
-      "orgs:manage",
-      "services:read",
-      "services:write",
-      "services:photos",
-      "offers:read",
-      "offers:write",
-      "chats:read",
-      "chats:write",
-      "notifications:read",
-      "notifications:write",
-      "moderation:read",
-      "moderation:write",
-      "admin:read",
-      "admin:write",
-      "admin:spectrum",
-      "admin:stats",
-      "readonly",
-      "full",
-      "admin",
-    ]
+    const allScopes = [...VALID_SCOPES]
 
     // Filter scopes based on user role
     const availableScopes =
