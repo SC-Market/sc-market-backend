@@ -586,6 +586,7 @@ export function setupAuthRoutes(app: any, frontendUrl: URL): void {
     }
   }
   app.post("/auth/refresh", refreshHandler)
+  app.post("/api/auth/refresh", refreshHandler) // legacy path for old cookies with path=/api/auth
 
   // JWT logout — revoke refresh token + clear cookies
   app.post("/auth/jwt-logout", async (req: Request, res: Response) => {
