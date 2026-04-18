@@ -150,6 +150,7 @@ describe("Authentication Middleware", () => {
         expires_at: expiredDate,
         created_at: new Date(),
         last_used_at: null,
+        revoked_at: null,
       })
       setupMockTableData("api_tokens", tokens)
 

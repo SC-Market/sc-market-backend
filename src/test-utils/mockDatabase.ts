@@ -32,6 +32,7 @@ export interface MockTableTypes {
     created_at: Date
     last_used_at: Date | null
     expires_at: Date | null
+    revoked_at: Date | null
     contractor_ids?: string[] | null
   }
   listing_items: {
