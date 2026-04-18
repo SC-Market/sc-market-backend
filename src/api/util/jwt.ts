@@ -159,6 +159,9 @@ export function setAuthCookies(
   const prod = isProduction()
   const sameSite = prod ? ("none" as const) : ("lax" as const)
 
+  // Clear old refresh cookie with wrong path (legacy cleanup)
+  res.clearCookie(REFRESH_COOKIE, { httpOnly: true, secure: prod, sameSite, path: "/api/auth" })
+
   res.cookie(ACCESS_COOKIE, accessToken, {
     httpOnly: true,
     secure: prod,
