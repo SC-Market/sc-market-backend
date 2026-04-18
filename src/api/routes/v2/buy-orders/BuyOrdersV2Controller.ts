@@ -18,7 +18,7 @@
  * 9. Add comprehensive error handling
  */
 
-import { Post, Get, Delete, Route, Tags, Body, Request, Query, Path, Security } from "tsoa"
+import { Post, Get, Put, Delete, Route, Tags, Body, Request, Query, Path, Security } from "tsoa"
 import { Request as ExpressRequest } from "express"
 import { BaseController } from "../base/BaseController.js"
 import { getKnex } from "../../../../clients/database/knex-db.js"
@@ -30,6 +30,7 @@ import {
   BuyOrderItemDetail,
   BuyOrderVariantDetail,
   CreateStandingBuyOrderRequest,
+  UpdateStandingBuyOrderRequest,
   StandingBuyOrder,
   SearchBuyOrdersResponse,
 } from "../types/buy-orders.types.js"
@@ -443,6 +444,54 @@ export class BuyOrdersV2Controller extends BaseController {
       buy_orders: results.map((r: any) => this.formatBuyOrderRow(r)),
       total, page: p, page_size: ps,
     };
+  }
+
+  /**
+   * Update a standing buy order
+   */
+  @Put('{id}')
+  @Security('session')
+  public async updateBuyOrder(
+    @Request() request: ExpressRequest,
+    @Path() id: string,
+    @Body() body: UpdateStandingBuyOrderRequest,
+  ): Promise<StandingBuyOrder> {
+    this.request = request
+    this.requireAuth()
+    const db = getKnex();
+    const userId = this.getUserId();
+
+    const order = await db('buy_orders_v2').where('buy_order_id', id).first();
+    if (!order) throw this.throwNotFound('Buy order not found');
+    if (order.buyer_id !== userId) throw this.throwValidationError('Not authorized', [{ field: 'id', message: 'You do not own this buy order' }]);
+    if (order.status !== 'active') throw this.throwValidationError('Cannot update', [{ field: 'status', message: 'Buy order is ' + order.status }]);
+
+    const updates: Record<string, any> = { updated_at: new Date() };
+    if (body.quantity !== undefined) updates.quantity_desired = body.quantity;
+    if (body.price_per_unit !== undefined) {
+      updates.price_min = body.price_per_unit;
+      updates.price_max = body.price_per_unit;
+    }
+    if (body.quality_tier_min !== undefined) updates.quality_tier_min = body.quality_tier_min;
+    if (body.quality_tier_max !== undefined) updates.quality_tier_max = body.quality_tier_max;
+    if (body.expires_in_days !== undefined) {
+      updates.expires_at = new Date(Date.now() + body.expires_in_days * 86400000);
+    }
+
+    const [updated] = await db('buy_orders_v2')
+      .where('buy_order_id', id)
+      .update(updates)
+      .returning('*');
+
+    // Re-fetch with joins for display names
+    const row = await db('buy_orders_v2 as bo')
+      .leftJoin('accounts as u', 'bo.buyer_id', 'u.user_id')
+      .leftJoin('game_items as gi', 'bo.game_item_id', 'gi.game_item_id')
+      .where('bo.buy_order_id', id)
+      .select('bo.*', 'u.username as buyer_name', 'gi.name as game_item_name')
+      .first();
+
+    return this.formatBuyOrderRow(row);
   }
 
   /**

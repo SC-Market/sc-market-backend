@@ -7,6 +7,12 @@ export interface CounterOfferBody {
   service_id: string | null
   market_listings: { listing_id: string; quantity: number }[]
   payment_type: string
+  v2_variant_items?: {
+    listing_id: string
+    variant_id: string
+    quantity: number
+    price_per_unit: number
+  }[]
 }
 
 export type OfferSearchSortMethod =

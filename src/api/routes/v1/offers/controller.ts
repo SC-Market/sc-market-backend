@@ -199,6 +199,23 @@ export const offer_put_session_id: RequestHandler = async (req, res) => {
       )
     }
 
+    // Insert V2 variant items if provided
+    if (body.v2_variant_items?.length) {
+      const db = (await import("../../../../clients/database/knex-db.js")).getKnex()
+      const hasTable = await db.schema.hasTable("offer_market_items_v2")
+      if (hasTable) {
+        for (const item of body.v2_variant_items) {
+          await db("offer_market_items_v2").insert({
+            offer_id: offer.id,
+            listing_id: item.listing_id,
+            variant_id: item.variant_id,
+            quantity: item.quantity,
+            price_per_unit: item.price_per_unit,
+          })
+        }
+      }
+    }
+
     await offerDb.updateOrderOffer(req.most_recent_offer!.id, {
       status: "counteroffered",
     })

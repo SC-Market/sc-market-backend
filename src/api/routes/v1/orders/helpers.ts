@@ -384,7 +384,6 @@ export async function initiateOrder(session: DBOfferSession) {
           variant_id: v2Item.variant_id,
           quantity: v2Item.quantity,
           price_per_unit: pricePerUnit,
-          fulfillment_status: "pending",
           created_at: trx.fn.now(),
         })
       }
@@ -477,6 +476,12 @@ export async function createOffer(
       | DBUniqueListingComplete
       | DBMultipleListingCompositeComplete
   }[] = [],
+  v2_variant_items?: {
+    listing_id: string
+    variant_id: string
+    quantity: number
+    price_per_unit: number
+  }[],
 ) {
   // Wrap critical database operations in a transaction
   const { session, offer } = await withTransaction(async (trx) => {
@@ -505,6 +510,26 @@ export async function createOffer(
         },
         trx,
       )
+    }
+
+    // Insert V2 variant items if provided (links offer to specific variants)
+    if (v2_variant_items?.length) {
+      const hasTable = await trx.schema.hasTable("offer_market_items_v2")
+      if (hasTable) {
+        for (const item of v2_variant_items) {
+          await trx("offer_market_items_v2").insert({
+            offer_id: createdOffer.id,
+            listing_id: item.listing_id,
+            variant_id: item.variant_id,
+            quantity: item.quantity,
+            price_per_unit: item.price_per_unit,
+          })
+        }
+        logger.info("Inserted V2 offer variant items", {
+          offer_id: createdOffer.id,
+          item_count: v2_variant_items.length,
+        })
+      }
     }
 
     // Check stock subtraction timing setting
