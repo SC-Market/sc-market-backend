@@ -1021,6 +1021,7 @@ export const purchase_listings: RequestHandler = async (req, res) => {
       items,
       note,
       offer,
+      v2_variant_items,
     }: {
       items: {
         listing_id: string
@@ -1028,6 +1029,12 @@ export const purchase_listings: RequestHandler = async (req, res) => {
       }[]
       note: string
       offer?: number
+      v2_variant_items?: {
+        listing_id: string
+        variant_id: string
+        quantity: number
+        price_per_unit: number
+      }[]
     } = req.body
 
     if (!items || !items.length) {
@@ -1154,6 +1161,7 @@ export const purchase_listings: RequestHandler = async (req, res) => {
         description: message,
       },
       listings,
+      v2_variant_items,
     )
 
     res.json(

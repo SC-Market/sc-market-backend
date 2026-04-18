@@ -103,6 +103,15 @@ export interface SearchBuyOrdersResponse {
   page_size: number;
 }
 
+export interface UpdateStandingBuyOrderRequest {
+  quantity?: number;
+  price_per_unit?: number;
+  quality_tier_min?: number;
+  quality_tier_max?: number;
+  negotiable?: boolean;
+  expires_in_days?: number;
+}
+
 export interface CreateBuyOrderResponse {
   /** UUID of the created order */
   order_id: string;
