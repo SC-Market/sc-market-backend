@@ -547,6 +547,10 @@ export function setupAuthRoutes(app: any, frontendUrl: URL): void {
 
     const rawRefresh = getRefreshTokenFromRequest(req)
     if (!rawRefresh) {
+      logger.warn("[Auth] Refresh attempt with no refresh cookie", {
+        cookies: Object.keys(req.cookies || {}),
+        hasAccessCookie: !!req.cookies?.["scmarket.access"],
+      })
       return res.status(401).json({ error: "No refresh token" })
     }
 
