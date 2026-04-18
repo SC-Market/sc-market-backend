@@ -316,11 +316,15 @@ export class BuyOrdersV2Controller extends BaseController {
         totalPrice: result.total_price,
       })
 
-      // TODO: Notify seller of new order
-      // This should be implemented using the existing notification service
-
-      // TODO: Log order creation to Audit_Trail
-      // This should be implemented when audit trail system is in place
+      // Notify seller of new order
+      try {
+        const { notificationService } = await import("../../../../services/notifications/notification.service.js")
+        // Adapt buy order response to CreateOrderResponse shape for notification
+        const orderForNotification = { ...result, items: [result.item] } as any
+        await notificationService.createNewOrderNotificationV2(orderForNotification, result.seller_id)
+      } catch (e) {
+        logger.error("Failed to send V2 buy order notification", { error: e })
+      }
 
       return result
     } catch (error) {

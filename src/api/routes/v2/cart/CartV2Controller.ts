@@ -1112,11 +1112,16 @@ export class CartV2Controller extends BaseController {
           orderId: order.order_id,
         })
 
-        // TODO: Requirement 32.11 - Notify sellers of new orders
-        // This should be implemented using the existing notification service
-
-        // TODO: Requirement 32.12 - Log checkout to Audit_Trail
-        // This should be implemented when audit trail system is in place
+        // Notify sellers of new orders (Requirement 32.11)
+        try {
+          const { notificationService } = await import("../../../../services/notifications/notification.service.js")
+          const orderRecord = await trx("orders").where({ order_id: order.order_id }).first()
+          if (orderRecord) {
+            await notificationService.createOrderNotification(orderRecord)
+          }
+        } catch (e) {
+          logger.error("Failed to send cart checkout notification", { error: e })
+        }
 
         // Step 12: Return checkout response (Requirement 32.9)
         return {
