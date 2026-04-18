@@ -987,6 +987,13 @@
 						},
 						"type": "array",
 						"description": "Array of stock lots with variant attributes"
+					},
+					"photo_resource_ids": {
+						"items": {
+							"type": "string"
+						},
+						"type": "array",
+						"description": "Optional array of image resource UUIDs to attach as photos"
 					}
 				},
 				"required": [
@@ -1074,6 +1081,13 @@
 					"expires_at": {
 						"type": "string",
 						"description": "Optional ISO 8601 timestamp when listing expires"
+					},
+					"photos": {
+						"items": {
+							"type": "string"
+						},
+						"type": "array",
+						"description": "Array of photo URLs"
 					}
 				},
 				"required": [
@@ -1362,6 +1376,10 @@
 						"type": "number",
 						"format": "double",
 						"description": "Seller rating count"
+					},
+					"photo": {
+						"type": "string",
+						"description": "First photo URL (null if no photos)"
 					}
 				},
 				"required": [

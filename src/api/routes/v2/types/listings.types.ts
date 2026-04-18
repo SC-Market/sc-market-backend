@@ -71,6 +71,9 @@ export interface CreateListingRequest {
   
   /** Array of stock lots with variant attributes */
   lots: StockLotInput[];
+
+  /** Optional array of image resource UUIDs to attach as photos */
+  photo_resource_ids?: string[];
 }
 
 // ============================================================================
@@ -175,6 +178,9 @@ export interface ListingSearchResult {
   
   /** Seller rating count */
   seller_rating_count: number;
+
+  /** First photo URL (null if no photos) */
+  photo?: string;
 }
 
 /**
@@ -237,6 +243,9 @@ export interface ListingDetail {
   
   /** Optional ISO 8601 timestamp when listing expires */
   expires_at?: string;
+
+  /** Array of photo URLs */
+  photos?: string[];
 }
 
 /**

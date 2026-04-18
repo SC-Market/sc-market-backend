@@ -195,6 +195,16 @@ export class ListingsV2Controller extends BaseController {
           }
         }
 
+        // Link photos if provided
+        if (requestBody.photo_resource_ids && requestBody.photo_resource_ids.length > 0) {
+          const photoRows = requestBody.photo_resource_ids.map((resource_id, index) => ({
+            listing_id: listing.listing_id,
+            resource_id,
+            display_order: index,
+          }));
+          await trx('listing_photos_v2').insert(photoRows);
+        }
+
         // Return listing data (Requirement 14.9)
         return {
           listing_id: listing.listing_id,
@@ -484,6 +494,13 @@ export class ListingsV2Controller extends BaseController {
         )
         .where("li.listing_id", id)
 
+      // Query listing photos (Requirement 16.12)
+      const photos = await db('listing_photos_v2 as lp')
+        .join('image_resources as ir', 'lp.resource_id', 'ir.resource_id')
+        .where('lp.listing_id', id)
+        .orderBy('lp.display_order', 'asc')
+        .select(db.raw("COALESCE(ir.external_url, 'https://cdn.sc-market.space/' || ir.filename) as url"));
+
       // For each listing item, query variants with details (Requirements 16.4-16.8)
       const items = await Promise.all(
         listingItems.map(async (item) => {
@@ -606,6 +623,7 @@ export class ListingsV2Controller extends BaseController {
           created_at: listing.created_at.toISOString(),
           updated_at: listing.updated_at.toISOString(),
           expires_at: listing.expires_at?.toISOString(),
+          photos: photos.map((p: any) => p.url),
         },
         seller: {
           id: listing.seller_id,
@@ -801,6 +819,7 @@ export class ListingsV2Controller extends BaseController {
               WHEN ls.seller_type = 'contractor' THEN COALESCE(c.rating_count, 0)
             END AS seller_rating_count
           `),
+          "ls.photo",
         )
 
       // Apply full-text search filter (Requirement 15.2)
@@ -923,6 +942,7 @@ export class ListingsV2Controller extends BaseController {
         game_item_name: row.game_item_name || '',
         game_item_type: row.game_item_type || '',
         seller_rating_count: parseInt(row.seller_rating_count, 10) || 0,
+        photo: row.photo || undefined,
       }))
 
       logger.info("Search completed", {
