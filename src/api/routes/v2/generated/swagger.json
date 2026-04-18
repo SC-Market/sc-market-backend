@@ -1685,6 +1685,47 @@
 				"type": "object",
 				"additionalProperties": false
 			},
+			"GameItemSearchResult": {
+				"description": "Search result for a game item",
+				"properties": {
+					"id": {
+						"type": "string"
+					},
+					"name": {
+						"type": "string"
+					},
+					"type": {
+						"type": "string"
+					}
+				},
+				"required": [
+					"id",
+					"name",
+					"type"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
+			"GameItemCategory": {
+				"description": "Category entry",
+				"properties": {
+					"category": {
+						"type": "string"
+					},
+					"game_item_categories": {
+						"type": "string"
+					},
+					"subcategory": {
+						"type": "string"
+					}
+				},
+				"required": [
+					"category",
+					"game_item_categories"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
 			"GameItemMetadata": {
 				"description": "Game item metadata",
 				"properties": {
@@ -2554,6 +2595,35 @@
 				"type": "object",
 				"additionalProperties": false
 			},
+			"UpdateStandingBuyOrderRequest": {
+				"properties": {
+					"quantity": {
+						"type": "number",
+						"format": "double"
+					},
+					"price_per_unit": {
+						"type": "number",
+						"format": "double"
+					},
+					"quality_tier_min": {
+						"type": "number",
+						"format": "double"
+					},
+					"quality_tier_max": {
+						"type": "number",
+						"format": "double"
+					},
+					"negotiable": {
+						"type": "boolean"
+					},
+					"expires_in_days": {
+						"type": "number",
+						"format": "double"
+					}
+				},
+				"type": "object",
+				"additionalProperties": false
+			},
 			"PriceDataPoint": {
 				"description": "Price data point in time series",
 				"properties": {
@@ -3195,6 +3265,50 @@
 						}
 					}
 				}
+			},
+			"delete": {
+				"operationId": "DeleteStockLot",
+				"responses": {
+					"200": {
+						"description": "Ok",
+						"content": {
+							"application/json": {
+								"schema": {
+									"properties": {
+										"message": {
+											"type": "string"
+										}
+									},
+									"required": [
+										"message"
+									],
+									"type": "object"
+								}
+							}
+						}
+					}
+				},
+				"description": "Delete a stock lot\n\nVerifies ownership and ensures the lot is not allocated to pending orders.",
+				"summary": "Delete stock lot",
+				"tags": [
+					"Stock Lots V2"
+				],
+				"security": [
+					{
+						"session": []
+					}
+				],
+				"parameters": [
+					{
+						"description": "Stock lot UUID",
+						"in": "path",
+						"name": "id",
+						"required": true,
+						"schema": {
+							"type": "string"
+						}
+					}
+				]
 			}
 		},
 		"/stock-lots/bulk-update": {
@@ -3885,6 +3999,110 @@
 				]
 			}
 		},
+		"/listings/{id}/views": {
+			"post": {
+				"operationId": "TrackView",
+				"responses": {
+					"200": {
+						"description": "Ok",
+						"content": {
+							"application/json": {
+								"schema": {
+									"properties": {
+										"views": {
+											"type": "number",
+											"format": "double"
+										}
+									},
+									"required": [
+										"views"
+									],
+									"type": "object"
+								}
+							}
+						}
+					}
+				},
+				"description": "Track a listing view",
+				"summary": "Increment view count",
+				"tags": [
+					"Listings V2"
+				],
+				"security": [],
+				"parameters": [
+					{
+						"description": "Listing UUID",
+						"in": "path",
+						"name": "id",
+						"required": true,
+						"schema": {
+							"type": "string"
+						}
+					}
+				]
+			}
+		},
+		"/listings/{id}/photos": {
+			"post": {
+				"operationId": "UploadPhotos",
+				"responses": {
+					"200": {
+						"description": "Ok",
+						"content": {
+							"application/json": {
+								"schema": {
+									"properties": {
+										"photos": {
+											"items": {
+												"properties": {
+													"url": {
+														"type": "string"
+													},
+													"resource_id": {
+														"type": "string"
+													}
+												},
+												"required": [
+													"url",
+													"resource_id"
+												],
+												"type": "object"
+											},
+											"type": "array"
+										}
+									},
+									"required": [
+										"photos"
+									],
+									"type": "object"
+								}
+							}
+						}
+					}
+				},
+				"description": "Upload photos for a listing",
+				"summary": "Upload listing photos",
+				"tags": [
+					"Listings V2"
+				],
+				"security": [
+					{
+						"session": []
+					}
+				],
+				"parameters": [
+					{
+						"description": "Listing UUID",
+						"in": "path",
+						"name": "id",
+						"required": true,
+						"schema": {
+							"type": "string"
+						}
+					}
+				]
+			}
+		},
 		"/health": {
 			"get": {
 				"operationId": "GetHealth",
@@ -3904,6 +4122,70 @@
 				"summary": "Check API health status",
 				"tags": [
 					"Health"
+				],
+				"security": [],
+				"parameters": []
+			}
+		},
+		"/game-items/search": {
+			"get": {
+				"operationId": "SearchGameItems",
+				"responses": {
+					"200": {
+						"description": "Ok",
+						"content": {
+							"application/json": {
+								"schema": {
+									"items": {
+										"$ref": "#/components/schemas/GameItemSearchResult"
+									},
+									"type": "array"
+								}
+							}
+						}
+					}
+				},
+				"description": "Search game items by name",
+				"summary": "Search game items",
+				"tags": [
+					"Game Items V2"
+				],
+				"security": [],
+				"parameters": [
+					{
+						"description": "Search text",
+						"in": "query",
+						"name": "query",
+						"required": false,
+						"schema": {
+							"type": "string"
+						}
+					}
+				]
+			}
+		},
+		"/game-items/categories": {
+			"get": {
+				"operationId": "GetCategories",
+				"responses": {
+					"200": {
+						"description": "Ok",
+						"content": {
+							"application/json": {
+								"schema": {
+									"items": {
+										"$ref": "#/components/schemas/GameItemCategory"
+									},
+									"type": "array"
+								}
+							}
+						}
+					}
+				},
+				"description": "Get game item categories",
+				"summary": "Get categories",
+				"tags": [
+					"Game Items V2"
 				],
 				"security": [],
 				"parameters": []
@@ -4459,6 +4741,50 @@
 			}
 		},
 		"/buy-orders/{id}": {
+			"put": {
+				"operationId": "UpdateBuyOrder",
+				"responses": {
+					"200": {
+						"description": "Ok",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/StandingBuyOrder"
+								}
+							}
+						}
+					}
+				},
+				"description": "Update a standing buy order",
+				"tags": [
+					"Buy Orders V2"
+				],
+				"security": [
+					{
+						"session": []
+					}
+				],
+				"parameters": [
+					{
+						"in": "path",
+						"name": "id",
+						"required": true,
+						"schema": {
+							"type": "string"
+						}
+					}
+				],
+				"requestBody": {
+					"required": true,
+					"content": {
+						"application/json": {
+							"schema": {
+								"$ref": "#/components/schemas/UpdateStandingBuyOrderRequest"
+							}
+						}
+					}
+				}
+			},
 			"delete": {
 				"operationId": "CancelBuyOrder",
 				"responses": {
@@ -4500,6 +4826,65 @@
 						}
 					}
 				]
+			}
+		},
+		"/buy-orders/{id}/fulfill": {
+			"post": {
+				"operationId": "FulfillBuyOrder",
+				"responses": {
+					"200": {
+						"description": "Ok",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/CreateBuyOrderResponse"
+								}
+							}
+						}
+					}
+				},
+				"description": "Fulfill a standing buy order",
+				"summary": "Seller fulfills a buy order",
+				"tags": [
+					"Buy Orders V2"
+				],
+				"security": [
+					{
+						"session": []
+					}
+				],
+				"parameters": [
+					{
+						"in": "path",
+						"name": "id",
+						"required": true,
+						"schema": {
+							"type": "string"
+						}
+					}
+				],
+				"requestBody": {
+					"required": true,
+					"content": {
+						"application/json": {
+							"schema": {
+								"properties": {
+									"variant_id": {
+										"type": "string"
+									},
+									"listing_id": {
+										"type": "string"
+									}
+								},
+								"required": [
+									"variant_id",
+									"listing_id"
+								],
+								"type": "object"
+							}
+						}
+					}
+				}
 			}
 		},
 		"/analytics/price-history": {

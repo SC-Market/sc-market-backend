@@ -26,6 +26,7 @@ whitelabelConfigRouter.get("/", valid_contractor, readRateLimit, async (req, res
       focus_mode: "public",
       homepage_path: null,
       require_membership: false,
+      drawer_style: "elevation",
     }))
   } catch (error) {
     res.status(500).json(createErrorResponse(ErrorCode.INTERNAL_SERVER_ERROR, "Failed to get config"))
@@ -42,10 +43,15 @@ whitelabelConfigRouter.put(
     try {
       const contractor = req.contractor!
       const user = req.user as User
-      const { focus_mode, homepage_path, require_membership } = req.body
+      const { focus_mode, homepage_path, require_membership, drawer_style } = req.body
 
       if (focus_mode && !["public", "internal"].includes(focus_mode)) {
         res.status(400).json(createErrorResponse(ErrorCode.VALIDATION_ERROR, "focus_mode must be 'public' or 'internal'"))
+        return
+      }
+
+      if (drawer_style && !["elevation", "outlined"].includes(drawer_style)) {
+        res.status(400).json(createErrorResponse(ErrorCode.VALIDATION_ERROR, "drawer_style must be 'elevation' or 'outlined'"))
         return
       }
 
@@ -57,6 +63,7 @@ whitelabelConfigRouter.put(
         ...(focus_mode !== undefined && { focus_mode }),
         ...(homepage_path !== undefined && { homepage_path }),
         ...(require_membership !== undefined && { require_membership }),
+        ...(drawer_style !== undefined && { drawer_style }),
         updated_at: new Date(),
         updated_by: user.user_id,
       }

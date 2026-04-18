@@ -18,9 +18,61 @@ import {
 } from "../types/game-items.types.js"
 import logger from "../../../../logger/logger.js"
 
+/** Search result for a game item */
+export interface GameItemSearchResult {
+  id: string
+  name: string
+  type: string
+}
+
+/** Category entry */
+export interface GameItemCategory {
+  category: string
+  game_item_categories: string
+  subcategory?: string
+}
+
 @Route("game-items")
 @Tags("Game Items V2")
 export class GameItemsV2Controller extends BaseController {
+  /**
+   * Search game items by name
+   * @summary Search game items
+   * @param query Search text
+   */
+  @Get("search")
+  public async searchGameItems(
+    @Query() query?: string,
+  ): Promise<GameItemSearchResult[]> {
+    if (!query || query.length < 1) return []
+
+    const knex = getKnex()
+    const limit = query.length < 3 ? 10 : 50
+
+    return knex("game_items")
+      .whereRaw("to_tsvector('english', name) @@ plainto_tsquery('english', ?)", [query])
+      .orWhere("name", "ilike", `${query}%`)
+      .orderByRaw("ts_rank(to_tsvector('english', name), plainto_tsquery('english', ?)) DESC", [query])
+      .orderBy("name")
+      .limit(limit)
+      .select("name", "type", "id")
+  }
+
+  /**
+   * Get game item categories
+   * @summary Get categories
+   */
+  @Get("categories")
+  public async getCategories(): Promise<GameItemCategory[]> {
+    const knex = getKnex()
+    const hasTable = await knex.schema.hasTable("game_item_categories")
+    if (!hasTable) return []
+
+    return knex("game_item_categories")
+      .orderBy("category")
+      .orderBy("game_item_categories")
+      .select()
+  }
   /**
    * Get all listings for a specific game item with quality distribution
    *

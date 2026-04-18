@@ -852,6 +852,7 @@ export interface DBOrgWhitelabelConfig {
   focus_mode: "public" | "internal"
   homepage_path: string | null
   require_membership: boolean
+  drawer_style: "elevation" | "outlined"
   updated_at: Date
   updated_by: string | null
 }

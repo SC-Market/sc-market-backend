@@ -517,6 +517,147 @@ export class BuyOrdersV2Controller extends BaseController {
     return { message: 'Buy order cancelled' };
   }
 
+  /**
+   * Fulfill a standing buy order
+   * @summary Seller fulfills a buy order
+   */
+  @Post('{id}/fulfill')
+  @Security('session')
+  public async fulfillBuyOrder(
+    @Request() request: ExpressRequest,
+    @Path() id: string,
+    @Body() body: { listing_id: string; variant_id: string },
+  ): Promise<CreateBuyOrderResponse> {
+    this.request = request
+    this.requireAuth()
+    const sellerId = this.getUserId()
+    const db = getKnex()
+
+    const result = await withTransaction(async (trx) => {
+      // Validate buy order is active
+      const buyOrder = await trx('buy_orders_v2').where('buy_order_id', id).first()
+      if (!buyOrder) throw this.throwNotFound('Buy order', id)
+      if (buyOrder.status !== 'active') {
+        throw this.throwValidationError('Buy order is not active', [
+          { field: 'status', message: `Buy order is ${buyOrder.status}` },
+        ])
+      }
+
+      // Validate listing belongs to seller and is active
+      const listing = await trx('listings').where({ listing_id: body.listing_id, seller_id: sellerId }).first()
+      if (!listing) throw this.throwNotFound('Listing', body.listing_id)
+      if (listing.status !== 'active') {
+        throw this.throwValidationError('Listing is not active', [
+          { field: 'listing_id', message: `Listing status is ${listing.status}` },
+        ])
+      }
+
+      // Get listing item matching the buy order's game item
+      const listingItem = await trx('listing_items')
+        .where({ listing_id: body.listing_id, game_item_id: buyOrder.game_item_id })
+        .first()
+      if (!listingItem) {
+        throw this.throwValidationError('Listing does not contain the requested game item', [
+          { field: 'listing_id', message: 'Game item mismatch' },
+        ])
+      }
+
+      // Validate variant
+      const variant = await trx('item_variants').where({ variant_id: body.variant_id }).first()
+      if (!variant) throw this.throwNotFound('Variant', body.variant_id)
+      if (variant.game_item_id !== buyOrder.game_item_id) {
+        throw this.throwValidationError('Variant does not match buy order game item', [
+          { field: 'variant_id', message: 'Game item mismatch' },
+        ])
+      }
+
+      // Check stock availability
+      const quantity = buyOrder.quantity || buyOrder.quantity_desired || 1
+      const availResult = await trx('listing_item_lots')
+        .where({ item_id: listingItem.item_id, variant_id: body.variant_id, listed: true })
+        .sum('quantity_total as total')
+        .first()
+      const available = parseInt(availResult?.total || '0')
+      if (available < quantity) {
+        throw this.throwValidationError('Insufficient stock', [
+          { field: 'quantity', message: `Only ${available} available, need ${quantity}` },
+        ])
+      }
+
+      // Determine price
+      let price: number
+      if (listingItem.pricing_mode === 'unified') {
+        price = listingItem.base_price
+      } else {
+        const vp = await trx('variant_pricing').where({ item_id: listingItem.item_id, variant_id: body.variant_id }).first()
+        price = vp ? vp.price : listingItem.base_price
+      }
+
+      // Create order
+      const [order] = await trx('orders').insert({
+        customer_id: buyOrder.buyer_id,
+        status: 'pending',
+        created_at: new Date(),
+        updated_at: new Date(),
+      }).returning('*')
+
+      // Create order item
+      const [orderItem] = await trx('order_market_items_v2').insert({
+        order_id: order.order_id,
+        listing_id: body.listing_id,
+        item_id: listingItem.item_id,
+        variant_id: body.variant_id,
+        quantity,
+        price_per_unit: price,
+        variant_attributes: variant.attributes,
+        variant_display_name: variant.display_name || 'Standard',
+        created_at: new Date(),
+      }).returning('*')
+
+      // Allocate stock
+      const lifecycleService = new OrderLifecycleService(trx)
+      const allocationResult = await lifecycleService.allocateStockForOrder(
+        order.order_id,
+        [{ listing_id: body.listing_id, quantity }],
+        null,
+        buyOrder.buyer_id,
+      )
+
+      // Mark buy order as fulfilled
+      await trx('buy_orders_v2').where('buy_order_id', id).update({ status: 'fulfilled', updated_at: new Date() })
+
+      return {
+        order_id: order.order_id,
+        buyer_id: buyOrder.buyer_id,
+        seller_id: sellerId,
+        total_price: price * quantity,
+        status: order.status,
+        created_at: order.created_at.toISOString(),
+        item: {
+          order_item_id: orderItem.order_item_id,
+          listing_id: body.listing_id,
+          item_id: listingItem.item_id,
+          variant: {
+            variant_id: variant.variant_id,
+            attributes: variant.attributes,
+            display_name: variant.display_name || 'Standard',
+            short_name: variant.short_name || 'STD',
+          },
+          quantity,
+          price_per_unit: price,
+          subtotal: price * quantity,
+        },
+        allocation_result: {
+          has_partial_allocations: allocationResult.has_partial_allocations,
+          total_requested: allocationResult.total_requested,
+          total_allocated: allocationResult.total_allocated,
+        },
+      } as CreateBuyOrderResponse
+    })
+
+    return result
+  }
+
   private formatBuyOrderRow(r: any): StandingBuyOrder {
     return {
       buy_order_id: r.buy_order_id,
