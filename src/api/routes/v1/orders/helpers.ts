@@ -321,13 +321,29 @@ export async function initiateOrder(session: DBOfferSession) {
       )
     }
 
-    // Check if this is a V2 offer with variant tracking
-    // If offer_market_items_v2 entries exist, create order_market_items_v2 entries
-    const v2OfferItems = await trx("offer_market_items_v2")
-      .where({ offer_id: most_recent.id })
-      .select("*")
+    // V2 variant tracking (tables from market V2 migrations). Prod may run V1-only DBs.
+    const hasOfferMarketItemsV2 = await trx.schema.hasTable(
+      "offer_market_items_v2",
+    )
+    const hasOrderMarketItemsV2 = await trx.schema.hasTable(
+      "order_market_items_v2",
+    )
 
-    if (v2OfferItems.length > 0) {
+    let v2OfferItems: any[] = []
+    if (hasOfferMarketItemsV2) {
+      v2OfferItems = await trx("offer_market_items_v2")
+        .where({ offer_id: most_recent.id })
+        .select("*")
+    }
+
+    if (v2OfferItems.length > 0 && !hasOrderMarketItemsV2) {
+      logger.warn(
+        "offer_market_items_v2 rows exist but order_market_items_v2 table is missing; skipping V2 order line items",
+        { offer_id: most_recent.id, order_id: createdOrder.order_id },
+      )
+    }
+
+    if (v2OfferItems.length > 0 && hasOrderMarketItemsV2) {
       logger.info("Creating V2 order items with variant tracking", {
         order_id: createdOrder.order_id,
         offer_id: most_recent.id,
