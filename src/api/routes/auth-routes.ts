@@ -585,8 +585,8 @@ export function setupAuthRoutes(app: any, frontendUrl: URL): void {
       return res.status(401).json({ error: "User not found" })
     }
   }
-  app.post("/auth/refresh", refreshHandler)
-  app.post("/api/auth/refresh", refreshHandler) // legacy path for old cookies with path=/api/auth
+  app.post("/api/auth/refresh", refreshHandler)
+  app.post("/auth/refresh", refreshHandler) // legacy — remove after transition
 
   // JWT logout — revoke refresh token + clear cookies
   app.post("/auth/jwt-logout", async (req: Request, res: Response) => {
