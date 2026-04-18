@@ -540,7 +540,8 @@ export function setupAuthRoutes(app: any, frontendUrl: URL): void {
   // ── JWT Auth Endpoints ─────────────────────────────────────────────────
 
   // Refresh access token using refresh token cookie
-  app.post("/auth/refresh", async (req: Request, res: Response) => {
+  // Mounted at both paths for backwards compat (old cookies have path=/api/auth)
+  const refreshHandler = async (req: Request, res: Response) => {
     if (!isJWTAuthEnabled()) {
       return res.status(404).json({ error: "JWT auth not enabled" })
     }
