@@ -70,6 +70,39 @@ export interface BuyOrderItemDetail {
 /**
  * Response from creating a direct purchase order
  */
+export interface CreateStandingBuyOrderRequest {
+  game_item_id: string;
+  quantity: number;
+  price_per_unit: number;
+  quality_tier_min?: number;
+  quality_tier_max?: number;
+  negotiable?: boolean;
+  expires_in_days?: number;
+}
+
+export interface StandingBuyOrder {
+  buy_order_id: string;
+  game_item_id: string;
+  game_item_name: string;
+  buyer_id: string;
+  buyer_name: string;
+  quantity: number;
+  price_per_unit: number;
+  quality_tier_min?: number;
+  quality_tier_max?: number;
+  negotiable: boolean;
+  status: 'active' | 'fulfilled' | 'cancelled' | 'expired';
+  created_at: string;
+  expires_at?: string;
+}
+
+export interface SearchBuyOrdersResponse {
+  buy_orders: StandingBuyOrder[];
+  total: number;
+  page: number;
+  page_size: number;
+}
+
 export interface CreateBuyOrderResponse {
   /** UUID of the created order */
   order_id: string;

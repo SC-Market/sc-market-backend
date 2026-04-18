@@ -122,6 +122,11 @@ export interface SearchListingsRequest {
   
   /** Sort order */
   sort_order?: 'asc' | 'desc';
+
+  /** Filter by seller language codes (comma-separated ISO 639-1, matches if seller supports ANY) */
+  language_codes?: string;
+  /** Filter by listing type */
+  listing_type?: 'single' | 'bundle' | 'bulk';
 }
 
 /**
@@ -178,6 +183,9 @@ export interface ListingSearchResult {
   
   /** Seller rating count */
   seller_rating_count: number;
+
+  /** Seller's supported languages (ISO 639-1 codes) */
+  seller_languages?: string[];
 
   /** First photo URL (null if no photos) */
   photo?: string;

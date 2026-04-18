@@ -7,7 +7,7 @@
  * Requirements: 14.1-14.12, 15.1-15.12, 16.1-16.12, 17.1-17.12, 18.1-18.12
  */
 
-import { Controller, Post, Get, Put, Route, Tags, Body, Request, Query, Path } from "tsoa"
+import { Controller, Delete, Post, Get, Put, Route, Tags, Body, Request, Query, Path } from "tsoa"
 import { Request as ExpressRequest } from "express"
 import { BaseController } from "../base/BaseController.js"
 import { withTransaction } from "../../../../clients/database/transaction.js"
@@ -694,6 +694,8 @@ export class ListingsV2Controller extends BaseController {
     @Query() status?: 'active' | 'sold' | 'expired' | 'cancelled',
     @Query() sort_by?: "created_at" | "updated_at" | "price" | "quality" | "seller_rating" | "quantity",
     @Query() sort_order?: "asc" | "desc",
+    @Query() language_codes?: string,
+    @Query() listing_type?: 'single' | 'bundle' | 'bulk',
   ): Promise<SearchListingsResponse> {
     const db = getKnex()
 
@@ -810,6 +812,12 @@ export class ListingsV2Controller extends BaseController {
               WHEN ls.seller_type = 'contractor' THEN c.spectrum_id
             END AS seller_slug
           `),
+          db.raw(`
+            CASE 
+              WHEN ls.seller_type = 'user' THEN COALESCE(u.supported_languages, ARRAY['en'])
+              WHEN ls.seller_type = 'contractor' THEN COALESCE(c.supported_languages, ARRAY['en'])
+            END AS seller_languages
+          `),
           "ls.updated_at",
           "ls.game_item_name",
           "ls.game_item_type",
@@ -883,6 +891,27 @@ export class ListingsV2Controller extends BaseController {
         query = query.where('ls.quantity_available', '>=', quantity_min);
       }
 
+      // Filter by language codes (seller supports ANY of the requested languages)
+      if (language_codes) {
+        const langs = language_codes.split(',').map(l => l.trim()).filter(Boolean);
+        if (langs.length > 0) {
+          query = query.where(function() {
+            this.whereRaw(
+              `COALESCE(u.supported_languages, ARRAY['en']) && ARRAY[${langs.map(() => '?').join(',')}]::text[]`,
+              langs
+            ).orWhereRaw(
+              `COALESCE(c.supported_languages, ARRAY['en']) && ARRAY[${langs.map(() => '?').join(',')}]::text[]`,
+              langs
+            );
+          });
+        }
+      }
+
+      // Filter by listing type
+      if (listing_type) {
+        query = query.where('ls.listing_type', listing_type);
+      }
+
       // Get total count for pagination (Requirement 15.8)
       const countQuery = query.clone().clearSelect().clearOrder().count("* as count")
       const [{ count: totalCount }] = await countQuery
@@ -942,6 +971,7 @@ export class ListingsV2Controller extends BaseController {
         game_item_name: row.game_item_name || '',
         game_item_type: row.game_item_type || '',
         seller_rating_count: parseInt(row.seller_rating_count, 10) || 0,
+        seller_languages: row.seller_languages || ['en'],
         photo: row.photo || undefined,
       }))
 
@@ -1570,5 +1600,41 @@ export class ListingsV2Controller extends BaseController {
 
       throw error
     }
+  }
+
+  /**
+   * Archive (soft delete) a listing
+   *
+   * Sets the listing status to 'cancelled'. Validates ownership before allowing deletion.
+   *
+   * @summary Delete listing
+   * @param id Listing UUID
+   * @param request Express request for authentication
+   * @returns Success message
+   */
+  @Delete("{id}")
+  public async deleteListing(
+    @Path() id: string,
+    @Request() request: ExpressRequest,
+  ): Promise<{ message: string }> {
+    this.request = request
+    this.requireAuth()
+    const userId = this.getUserId()
+
+    const db = getKnex()
+
+    const listing = await db('listings').where('listing_id', id).first()
+    if (!listing) {
+      this.throwNotFound('Listing', id)
+    }
+    if (listing.seller_id !== userId) {
+      this.throwValidationError('Not authorized', [{ field: 'id', message: 'You do not own this listing' }])
+    }
+    if (listing.status === 'cancelled') {
+      return { message: 'Listing already archived' }
+    }
+
+    await db('listings').where('listing_id', id).update({ status: 'cancelled', updated_at: db.fn.now() })
+    return { message: 'Listing archived successfully' }
   }
 }
