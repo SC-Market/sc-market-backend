@@ -85,3 +85,29 @@ export async function get_min_position(contractor_id: string, user_id: string) {
 
   return user_min
 }
+
+/**
+ * Block removing this role from yourself when it would violate org rules:
+ * - Cannot drop your highest-priority role (lowest position).
+ * - If that role lacks manage_roles, cannot drop the lowest-position role among
+ *   your assignments that still has manage_roles.
+ */
+export function self_member_role_removal_forbidden(
+  memberRoles: DBContractorRole[],
+  roleIdToRemove: string,
+): boolean {
+  if (memberRoles.length === 0) return true
+  const removing = memberRoles.find((r) => r.role_id === roleIdToRemove)
+  if (!removing) return false
+
+  const sorted = [...memberRoles].sort((a, b) => a.position - b.position)
+  const top = sorted[0]!
+  if (removing.role_id === top.role_id) return true
+
+  if (!top.manage_roles) {
+    const manageCarrier = sorted.find((r) => r.manage_roles)
+    if (manageCarrier?.role_id === roleIdToRemove) return true
+  }
+
+  return false
+}

@@ -101,6 +101,7 @@ export async function createContractor(options: {
     manage_recruiting: true,
     manage_blocklist: true,
     claim_orders: true,
+    manage_theme: true,
     name: "Owner",
   })
 
@@ -118,6 +119,7 @@ export async function createContractor(options: {
     manage_recruiting: false,
     manage_blocklist: false,
     claim_orders: true,
+    manage_theme: false,
     name: "Member",
   })
 
@@ -135,6 +137,7 @@ export async function createContractor(options: {
     manage_recruiting: true,
     manage_blocklist: true,
     claim_orders: true,
+    manage_theme: false,
     name: "Admin",
   })
   await contractorDb.insertContractorMemberRole({

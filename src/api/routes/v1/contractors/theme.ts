@@ -124,7 +124,7 @@ contractorThemeRouter.get("/", valid_contractor, readRateLimit, async (req, res)
   }
 })
 
-// PUT /:spectrum_id/theme — update org theme (requires manage_org_details + white_label tier)
+// PUT /:spectrum_id/theme — update org theme (requires manage_theme + white_label tier)
 contractorThemeRouter.put(
   "/",
   userAuthorized,

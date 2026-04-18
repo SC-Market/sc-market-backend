@@ -10,7 +10,10 @@ import {
   RateLimitHeaders,
 } from "../openapi.js"
 import { SUPPORTED_LOCALES } from "../util/i18n.js"
+import { SUPPORTED_LANGUAGES } from "../../../../constants/languages.js"
 import { VALID_ORG_TAGS } from "./controller.js"
+
+const SUPPORTED_LANGUAGE_CODES = SUPPORTED_LANGUAGES.map((l) => l.code)
 
 // Define AuditLogEntry schema for contractor audit logs
 oapi.schema("AuditLogEntry", {
@@ -391,6 +394,8 @@ oapi.schema("ContractorRoleUpdateBody", {
     "manage_recruiting",
     "manage_webhooks",
     "manage_blocklist",
+    "claim_orders",
+    "manage_theme",
   ],
   additionalProperties: false,
   title: "ContractorRoleUpdateBody",
@@ -556,6 +561,16 @@ oapi.schema("ContractorBody", {
       type: "string",
       minLength: 3,
       maxLength: 30,
+    },
+    language_codes: {
+      title: "ContractorBody.language_codes",
+      type: "array",
+      description:
+        "Optional ISO 639-1 language codes for org communication preferences",
+      items: {
+        type: "string",
+        enum: SUPPORTED_LANGUAGE_CODES,
+      },
     },
   },
   required: ["logo", "banner", "name", "description", "identifier"],
