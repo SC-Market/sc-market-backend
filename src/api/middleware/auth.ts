@@ -252,68 +252,80 @@ export async function verifiedUser(
   allowUnverified?: boolean,
 ): Promise<boolean> {
   try {
-    if (req.isAuthenticated()) {
-      const user = req.user as User
-      const authReq = req as AuthRequest
-      authReq.authMethod = "session"
+    const authReq = req as AuthRequest
 
-      if (user.banned) {
-        res
-          .status(418)
-          .json(createErrorResponse({ message: "Internal server error" }))
+    // If already authenticated by userAuthorized, reuse that
+    if (authReq.authMethod && authReq.user) {
+      if (authReq.user.banned) {
+        res.status(418).json(createErrorResponse({ message: "Internal server error" }))
         return false
       }
-
-      if (!allowUnverified && !user.rsi_confirmed) {
-        res
-          .status(401)
-          .json(
-            createErrorResponse({ message: "Your account is not verified." }),
-          )
+      if (!allowUnverified && !authReq.user.rsi_confirmed) {
+        res.status(401).json(createErrorResponse({ message: "Your account is not verified." }))
         return false
       }
-
       return true
     }
 
-    // Check for token authentication first
+    // Check for token authentication first (consistent with userAuthorized)
     const authHeader = req.headers.authorization
     if (authHeader && authHeader.startsWith("Bearer ")) {
-      const token = authHeader.substring(7) // Remove 'Bearer ' prefix
+      const token = authHeader.substring(7)
       const authResult = await authenticateToken(token)
 
       if (authResult) {
-        const authReq = req as AuthRequest
         authReq.user = authResult.user
         authReq.token = authResult.tokenInfo
         authReq.authMethod = "token"
 
-        // Apply same verification logic
         if (authResult.user.banned) {
-          res
-            .status(418)
-            .json(createErrorResponse({ message: "Internal server error" }))
+          res.status(418).json(createErrorResponse({ message: "Internal server error" }))
           return false
         }
         if (!allowUnverified && !authResult.user.rsi_confirmed) {
-          res
-            .status(401)
-            .json(
-              createErrorResponse({ message: "Your account is not verified." }),
-            )
+          res.status(401).json(createErrorResponse({ message: "Your account is not verified." }))
           return false
         }
         return true
       } else {
-        res
-          .status(401)
-          .json(createErrorResponse({ message: "Invalid or expired token" }))
+        res.status(401).json(createErrorResponse({ message: "Invalid or expired token" }))
         return false
       }
-    } else {
-      res.status(401).json(createErrorResponse({ message: "Unauthenticated" }))
-      return false
     }
+
+    // Try JWT cookie auth
+    const jwtUser = await tryJWTAuth(req)
+    if (jwtUser) {
+      authReq.user = jwtUser
+      authReq.authMethod = "jwt"
+      if (jwtUser.banned) {
+        res.status(418).json(createErrorResponse({ message: "Internal server error" }))
+        return false
+      }
+      if (!allowUnverified && !jwtUser.rsi_confirmed) {
+        res.status(401).json(createErrorResponse({ message: "Your account is not verified." }))
+        return false
+      }
+      return true
+    }
+
+    // Fall back to session authentication
+    if (req.isAuthenticated()) {
+      authReq.authMethod = "session"
+      const user = req.user as User
+      if (user.banned) {
+        res.status(418).json(createErrorResponse({ message: "Internal server error" }))
+        return false
+      }
+      if (!allowUnverified && !user.rsi_confirmed) {
+        res.status(401).json(createErrorResponse({ message: "Your account is not verified." }))
+        return false
+      }
+      return true
+    }
+
+    res.status(401).json(createErrorResponse({ message: "Unauthenticated" }))
+    return false
   } catch (e) {
     logger.error("Error in verifiedUser", { error: e })
     res.status(400).json(createErrorResponse({ message: "Bad request" }))
@@ -440,38 +452,38 @@ export function requireScopes(...requiredScopes: string[]) {
     }
     const authReq = req as AuthRequest
 
-    // Skip validation for session-based auth (full access)
-    if (authReq.authMethod === "session") {
+    // Skip validation for session/JWT auth (full access)
+    if (authReq.authMethod === "session" || authReq.authMethod === "jwt") {
       return next()
     }
 
     // Token-based auth requires scope validation
     if (!authReq.token) {
-      res.status(500).json({
-        error: "Scope middleware used without token authentication",
-      })
+      res.status(500).json(
+        createErrorResponse(ErrorCode.INTERNAL_SERVER_ERROR, "Authentication error"),
+      )
       return
     }
 
     const userScopes = authReq.token.scopes
+    const isAdminScope = (scope: string) =>
+      scope.startsWith("admin:") || scope === "admin" ||
+      scope === "moderation:read" || scope === "moderation:write"
 
-    // Check if user has all required scopes
-    const hasAllScopes = requiredScopes.every(
-      (scope) =>
-        userScopes.includes(scope) ||
-        userScopes.includes("admin") || // Admin has all scopes
-        userScopes.includes("full"), // Full access has all non-admin scopes
-    )
+    const hasAllScopes = requiredScopes.every((scope) => {
+      if (userScopes.includes(scope)) return true
+      if (userScopes.includes("admin")) return true
+      // "full" grants all non-admin scopes
+      if (userScopes.includes("full") && !isAdminScope(scope)) return true
+      // "readonly" grants all :read scopes (non-admin)
+      if (userScopes.includes("readonly") && scope.endsWith(":read") && !isAdminScope(scope)) return true
+      return false
+    })
 
     if (!hasAllScopes) {
-      res.status(403).json({
-        error: "Insufficient permissions",
-        required: requiredScopes,
-        granted: userScopes,
-        endpoint: req.path,
-        method: req.method,
-        token_id: authReq.token.id,
-      })
+      res.status(403).json(
+        createErrorResponse(ErrorCode.FORBIDDEN, "Insufficient token permissions"),
+      )
       return
     }
 
@@ -484,7 +496,6 @@ export const requireProfileRead = requireScopes("profile:read")
 export const requireProfileWrite = requireScopes("profile:write")
 export const requireMarketRead = requireScopes("market:read")
 export const requireMarketWrite = requireScopes("market:write")
-export const requireMarketAdmin = requireScopes("market:admin")
 export const requireOrdersRead = requireScopes("orders:read")
 export const requireOrdersWrite = requireScopes("orders:write")
 export const requireContractorsRead = requireScopes("contractors:read")
@@ -499,10 +510,11 @@ export const requireNotificationsRead = requireScopes("notifications:read")
 export const requireNotificationsWrite = requireScopes("notifications:write")
 export const requireModerationRead = requireScopes("moderation:read")
 export const requireModerationWrite = requireScopes("moderation:write")
-export const requireRecruitingRead = requireScopes("recruiting:read")
-export const requireRecruitingWrite = requireScopes("recruiting:write")
 export const requireCommentsRead = requireScopes("comments:read")
 export const requireCommentsWrite = requireScopes("comments:write")
+export const requireRecruitingRead = requireScopes("recruiting:read")
+export const requireRecruitingWrite = requireScopes("recruiting:write")
+export const requireMarketAdmin = requireScopes("market:admin")
 export const requireAdmin = requireScopes("admin")
 
 // Contractor access control middleware
@@ -530,12 +542,9 @@ export function requireContractorAccess(contractorId: string) {
         authReq.token.scopes.includes("full")
 
       if (!hasAccess) {
-        res.status(403).json({
-          error: "Token does not have access to this contractor",
-          contractor_id: contractorId,
-          granted_contractors: authReq.token.contractor_ids || [],
-          token_id: authReq.token.id,
-        })
+        res.status(403).json(
+          createErrorResponse(ErrorCode.FORBIDDEN, "Token does not have access to this contractor"),
+        )
         return
       }
     }
@@ -611,21 +620,16 @@ export function requireContractorAccessFromSpectrumId() {
           authReq.token.scopes.includes("full")
 
         if (!hasAccess) {
-          res.status(403).json({
-            error: "Token does not have access to this contractor",
-            contractor_id: contractor.contractor_id,
-            spectrum_id: spectrum_id,
-            contractor_name: contractor.name,
-            granted_contractors: authReq.token.contractor_ids || [],
-            token_id: authReq.token.id,
-          })
+          res.status(403).json(
+            createErrorResponse(ErrorCode.FORBIDDEN, "Token does not have access to this contractor"),
+          )
           return
         }
       } catch (error) {
         logger.error("Contractor access validation error", { error })
-        res.status(500).json({
-          error: "Failed to validate contractor access",
-        })
+        res.status(500).json(
+          createErrorResponse(ErrorCode.INTERNAL_SERVER_ERROR, "Failed to validate contractor access"),
+        )
         return
       }
     }

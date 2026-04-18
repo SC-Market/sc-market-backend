@@ -87,10 +87,18 @@ apiRouter.get("/domain/:hostname", async (req, res) => {
       return
     }
 
+    // Fetch whitelabel config if it exists
+    const wlConfig = await getKnex()("org_whitelabel_config")
+      .where({ contractor_id: row.contractor_id })
+      .first()
+
     res.json(createResponse({
       spectrum_id: row.spectrum_id,
       contractor_id: row.contractor_id,
       name: row.name,
+      focus_mode: wlConfig?.focus_mode || "public",
+      homepage_path: wlConfig?.homepage_path || null,
+      require_membership: wlConfig?.require_membership || false,
     }))
   } catch {
     res.status(500).json({ error: { code: "INTERNAL_SERVER_ERROR", message: "Failed to resolve domain" } })

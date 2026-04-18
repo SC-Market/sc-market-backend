@@ -846,3 +846,24 @@ export interface DBOrgTheme {
   updated_at: Date
   updated_by: string
 }
+
+export interface DBOrgWhitelabelConfig {
+  contractor_id: string
+  focus_mode: "public" | "internal"
+  homepage_path: string | null
+  require_membership: boolean
+  updated_at: Date
+  updated_by: string | null
+}
+
+export interface DBOrgSidebarConfig {
+  id: string
+  contractor_id: string
+  standard_tab_key: string | null
+  custom_label: string | null
+  custom_path: string | null
+  custom_icon: string | null
+  is_external: boolean
+  enabled: boolean
+  sort_order: number
+}
