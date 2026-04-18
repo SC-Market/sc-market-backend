@@ -697,6 +697,8 @@ export class ListingsV2Controller extends BaseController {
     @Query() sort_order?: "asc" | "desc",
     @Query() language_codes?: string,
     @Query() listing_type?: 'single' | 'bundle' | 'bulk',
+    @Query() seller_id?: string,
+    @Query() contractor_id?: string,
   ): Promise<SearchListingsResponse> {
     const db = getKnex()
 
@@ -911,6 +913,14 @@ export class ListingsV2Controller extends BaseController {
       // Filter by listing type
       if (listing_type) {
         query = query.where('ls.listing_type', listing_type);
+      }
+
+      // Filter by seller (user or contractor)
+      if (seller_id) {
+        query = query.where('ls.seller_id', seller_id).where('ls.seller_type', 'user');
+      }
+      if (contractor_id) {
+        query = query.where('ls.seller_id', contractor_id).where('ls.seller_type', 'contractor');
       }
 
       // Get total count for pagination (Requirement 15.8)

@@ -235,11 +235,13 @@ export class OrdersV2Controller extends BaseController {
         totalPrice: result.total_price,
       })
 
-      // TODO: Requirement 25.11 - Notify seller of new order
-      // This should be implemented using the existing notification service
-
-      // TODO: Requirement 25.12 - Log order creation to Audit_Trail
-      // This should be implemented when audit trail system is in place
+      // Notify seller of new order (Requirement 25.11)
+      try {
+        const { notificationService } = await import("../../../../services/notifications/notification.service.js")
+        await notificationService.createNewOrderNotificationV2(result, result.seller_id)
+      } catch (e) {
+        logger.error("Failed to send V2 order notification", { error: e })
+      }
 
       return result
     } catch (error) {
