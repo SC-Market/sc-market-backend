@@ -44,6 +44,7 @@ export const notificationRouter = express.Router()
 notificationRouter.patch(
   "/:notification_id",
   userAuthorized,
+  requireNotificationsWrite,
   notification_patch_notification_id_spec,
   notificationRateLimit,
   notification_patch_notification_id,
@@ -55,6 +56,7 @@ notificationRouter.patch(
 notificationRouter.patch(
   "/",
   userAuthorized,
+  requireNotificationsWrite,
   notification_patch_root_spec,
   notificationRateLimit,
   notification_patch_root,

@@ -1,6 +1,7 @@
 import express from "express"
 import {
   userAuthorized,
+  requireProfileRead,
   requireProfileWrite,
 } from "../../../middleware/auth.js"
 import {
@@ -36,6 +37,7 @@ export const shipsRouter = express.Router()
 shipsRouter.get(
   "/mine",
   userAuthorized,
+  requireProfileRead,
   readRateLimit,
   ships_get_mine_spec,
   ships_get_mine,

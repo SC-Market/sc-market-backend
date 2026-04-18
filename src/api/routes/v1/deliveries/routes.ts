@@ -1,5 +1,5 @@
 import express from "express"
-import { userAuthorized, requireOrdersWrite } from "../../../middleware/auth.js"
+import { userAuthorized, requireOrdersRead, requireOrdersWrite } from "../../../middleware/auth.js"
 import {
   writeRateLimit,
   readRateLimit,
@@ -42,6 +42,7 @@ deliveriesRouter.get(
   "/mine",
   deliveries_get_mine_spec,
   userAuthorized,
+  requireOrdersRead,
   readRateLimit,
   deliveries_get_mine,
 )

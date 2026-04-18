@@ -24,6 +24,7 @@ import {
   getRefreshTokenFromRequest,
   validateRefreshToken,
   revokeRefreshToken,
+  rotateRefreshToken,
   revokeAllUserRefreshTokens,
   getUserSessions,
   revokeSessionById,
@@ -245,13 +246,22 @@ export function setupAuthRoutes(app: any, frontendUrl: URL): void {
         return res.status(400).json({ error: "Invalid redirect path" })
       }
 
-      // Store the redirect path, action, and origin in session for later retrieval
-      if (!req.session) {
-        return res.status(500).json({ error: "Session not available" })
+      // Store redirect info in a signed cookie (works without sessions)
+      const sessionSecret = env.SESSION_SECRET || "set this var"
+      const stateToken = createSignedStateToken(path, sessionSecret, action, query.origin || "")
+      const prod = app.get("env") === "production"
+      res.cookie("scmarket.cidstate", stateToken, {
+        httpOnly: true,
+        secure: prod,
+        sameSite: prod ? ("none" as const) : ("lax" as const),
+        path: "/auth/citizenid",
+        maxAge: 10 * 60 * 1000, // 10 min — enough for OAuth round-trip
+      })
+
+      // Also store action in session for the verify callback (reads citizenid_auth_action)
+      if (req.session) {
+        ;(req.session as any).citizenid_auth_action = action
       }
-      ;(req.session as any).citizenid_redirect_path = path
-      ;(req.session as any).citizenid_auth_action = action
-      ;(req.session as any).citizenid_origin = query.origin || ""
 
       return passport.authenticate("citizenid", {
         session: true,
@@ -264,10 +274,16 @@ export function setupAuthRoutes(app: any, frontendUrl: URL): void {
     "/auth/citizenid/link",
     userAuthorized,
     async (req: Request, res: Response, next: NextFunction) => {
-      if (!req.session) {
-        return res.status(500).json({ error: "Session not available" })
-      }
-      ;(req.session as any).citizenid_redirect_path = "/settings"
+      const sessionSecret = env.SESSION_SECRET || "set this var"
+      const stateToken = createSignedStateToken("/settings", sessionSecret, "signin", "")
+      const prod = app.get("env") === "production"
+      res.cookie("scmarket.cidstate", stateToken, {
+        httpOnly: true,
+        secure: prod,
+        sameSite: prod ? ("none" as const) : ("lax" as const),
+        path: "/auth/citizenid",
+        maxAge: 10 * 60 * 1000,
+      })
 
       return passport.authenticate("citizenid-link", {
         session: true,
@@ -286,31 +302,33 @@ export function setupAuthRoutes(app: any, frontendUrl: URL): void {
         error_uri?: string
         [key: string]: string | undefined
       }
-      // Check for OAuth errors
-      if (query.error) {
-        const errorCode = mapErrorCodeToFrontend(query.error)
-        const cidRedirectBase = getRedirectBase((req.session as any)?.citizenid_origin || "")
-        const redirectTo = new URL("/", cidRedirectBase)
-        redirectTo.searchParams.set("error", errorCode)
-        if (query.error_description) {
-          redirectTo.searchParams.set(
-            "error_description",
-            query.error_description,
-          )
-        }
-        return res.redirect(redirectTo.toString())
-      }
 
-      // Get redirect path and origin from session
-      const redirectPath =
-        (req.session as any)?.citizenid_redirect_path || "/market"
-      const citizenidOrigin = (req.session as any)?.citizenid_origin || ""
-      const redirectBase = getRedirectBase(citizenidOrigin)
+      // Recover redirect info from signed cookie (session-free)
+      const sessionSecret = env.SESSION_SECRET || "set this var"
+      const cidState = req.cookies?.["scmarket.cidstate"]
+      const verified = cidState ? verifySignedStateToken(cidState, sessionSecret) : null
+      const redirectPath = verified?.path || (req.session as any)?.citizenid_redirect_path || "/market"
+      const citizenidOrigin = verified?.origin || (req.session as any)?.citizenid_origin || ""
 
-      // Clear from session after retrieving
+      // Clear cookie and session data
+      const prod = app.get("env") === "production"
+      res.clearCookie("scmarket.cidstate", { path: "/auth/citizenid", httpOnly: true, secure: prod, sameSite: prod ? ("none" as const) : ("lax" as const) })
       if (req.session) {
         delete (req.session as any).citizenid_redirect_path
         delete (req.session as any).citizenid_origin
+      }
+
+      const redirectBase = getRedirectBase(citizenidOrigin)
+
+      // Check for OAuth errors
+      if (query.error) {
+        const errorCode = mapErrorCodeToFrontend(query.error)
+        const redirectTo = new URL("/", redirectBase)
+        redirectTo.searchParams.set("error", errorCode)
+        if (query.error_description) {
+          redirectTo.searchParams.set("error_description", query.error_description)
+        }
+        return res.redirect(redirectTo.toString())
       }
 
       return passport.authenticate(
@@ -416,23 +434,24 @@ export function setupAuthRoutes(app: any, frontendUrl: URL): void {
         [key: string]: string | undefined
       }
 
+      // Clear signed cookie
+      const prod = app.get("env") === "production"
+      res.clearCookie("scmarket.cidstate", { path: "/auth/citizenid", httpOnly: true, secure: prod, sameSite: prod ? ("none" as const) : ("lax" as const) })
+
+      // Clear redirect path from session (legacy cleanup)
+      if (req.session) {
+        delete (req.session as any).citizenid_redirect_path
+      }
+
       // Check for OAuth errors
       if (query.error) {
         const errorCode = mapErrorCodeToFrontend(query.error)
         const redirectTo = new URL("/settings", frontendUrl)
         redirectTo.searchParams.set("error", errorCode)
         if (query.error_description) {
-          redirectTo.searchParams.set(
-            "error_description",
-            query.error_description,
-          )
+          redirectTo.searchParams.set("error_description", query.error_description)
         }
         return res.redirect(redirectTo.toString())
-      }
-
-      // Clear redirect path from session
-      if (req.session) {
-        delete (req.session as any).citizenid_redirect_path
       }
 
       return passport.authenticate(
@@ -555,30 +574,22 @@ export function setupAuthRoutes(app: any, frontendUrl: URL): void {
       return res.status(401).json({ error: "No refresh token" })
     }
 
-    const record = await validateRefreshToken(rawRefresh)
-    if (!record) {
+    // Rotate: revoke old token and issue new one atomically
+    const rotation = await rotateRefreshToken(rawRefresh, req)
+    if (!rotation) {
       clearAuthCookies(res)
       return res.status(401).json({ error: "Invalid or expired refresh token" })
     }
 
     try {
-      const user = await profileDb.getUser({ user_id: record.user_id })
+      const user = await profileDb.getUser({ user_id: rotation.userId })
       if (user.banned) {
-        await revokeRefreshToken(rawRefresh)
         clearAuthCookies(res)
         return res.status(403).json({ error: "Account suspended" })
       }
 
       const accessToken = generateAccessToken(user)
-      // Set only the access cookie — refresh cookie is still valid
-      const prod = app.get("env") === "production"
-      res.cookie("scmarket.access", accessToken, {
-        httpOnly: true,
-        secure: prod,
-        sameSite: prod ? ("none" as const) : ("lax" as const),
-        path: "/",
-        maxAge: 15 * 60 * 1000,
-      })
+      setAuthCookies(res, accessToken, rotation.newRawToken)
       return res.json({ success: true })
     } catch {
       clearAuthCookies(res)

@@ -1,5 +1,6 @@
 import express from "express"
 import {
+  requireProfileRead,
   requireProfileWrite,
   userAuthorized,
 } from "../../../middleware/auth.js"
@@ -150,6 +151,7 @@ profileRouter.get(
   "/webhooks",
   readRateLimit,
   userAuthorized,
+  requireProfileRead,
   profile_get_webhooks,
 )
 
@@ -188,6 +190,7 @@ profileRouter.get(
   "/settings/discord",
   readRateLimit,
   userAuthorized,
+  requireProfileRead,
   profile_get_settings_discord,
 )
 profileRouter.post(
@@ -202,6 +205,7 @@ profileRouter.get(
   "/availability",
   readRateLimit,
   userAuthorized,
+  requireProfileRead,
   profile_get_availability,
 )
 
@@ -218,6 +222,7 @@ profileRouter.get(
   "/my_data",
   readRateLimit,
   userAuthorized,
+  requireProfileRead,
   profile_get_my_data,
 )
 
@@ -226,6 +231,7 @@ profileRouter.get(
   "/blocklist",
   readRateLimit,
   userAuthorized,
+  requireProfileRead,
   profile_get_blocklist_spec,
   profile_get_blocklist,
 )
@@ -249,13 +255,14 @@ profileRouter.delete(
 )
 
 // Account linking endpoints
-profileRouter.get("/links", readRateLimit, userAuthorized, profile_get_links)
+profileRouter.get("/links", readRateLimit, userAuthorized, requireProfileRead, profile_get_links)
 
 // Organizations endpoint
 profileRouter.get(
   "/organizations",
   readRateLimit,
   userAuthorized,
+  requireProfileRead,
   profile_get_organizations,
 )
 
@@ -279,6 +286,7 @@ profileRouter.put(
 profileRouter.get(
   "/languages",
   userAuthorized,
+  requireProfileRead,
   readRateLimit,
   profile_get_languages,
 )

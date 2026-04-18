@@ -1,5 +1,5 @@
 import express, { NextFunction, Request, Response } from "express"
-import { userAuthorized, requireOrdersRead } from "../../../middleware/auth.js"
+import { userAuthorized, requireOrdersRead, requireOrdersWrite } from "../../../middleware/auth.js"
 import {
   writeRateLimit,
   readRateLimit,
@@ -59,6 +59,7 @@ export async function lockContractorTransaction(
 transactionRouter.post(
   "/create",
   userAuthorized,
+  requireOrdersWrite,
   writeRateLimit,
   transaction_post_create_spec,
   transaction_post_create,
@@ -67,6 +68,7 @@ transactionRouter.post(
 transactionRouter.post(
   "/contractor/:spectrum_id/create",
   userAuthorized,
+  requireOrdersWrite,
   writeRateLimit,
   transaction_post_contractor_spectrum_id_create_spec,
   transaction_post_contractor_spectrum_id_create,
@@ -77,6 +79,7 @@ export const transactionsRouter = express.Router()
 transactionsRouter.get(
   "/mine",
   userAuthorized,
+  requireOrdersRead,
   readRateLimit,
   transactions_get_mine_spec,
   transactions_get_mine,
@@ -85,6 +88,7 @@ transactionsRouter.get(
 transactionsRouter.get(
   "/contractor/:spectrum_id",
   userAuthorized,
+  requireOrdersRead,
   readRateLimit,
   transactions_get_contractor_spectrum_id_spec,
   transactions_get_contractor_spectrum_id,
