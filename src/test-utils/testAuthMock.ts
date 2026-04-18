@@ -36,10 +36,12 @@ export function createTestUserWithAuth(
     user_id: user.user_id,
     name: "Test Token",
     token_hash: tokenHash,
-    scopes: ["read", "write"],
+    scopes: user.role === "admin" ? ["admin", "full"] : ["full"],
     created_at: new Date(),
     last_used_at: new Date(),
     expires_at: null,
+    revoked_at: null,
+    contractor_ids: [],
   })
   setupMockTableData("api_tokens", tokens)
 
