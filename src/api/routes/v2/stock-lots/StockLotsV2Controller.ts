@@ -7,7 +7,7 @@
  * Requirements: 20.1-20.12, 22.1-22.10
  */
 
-import { Controller, Get, Put, Post, Route, Tags, Body, Request, Query, Path } from "tsoa"
+import { Controller, Get, Put, Post, Delete, Route, Tags, Body, Request, Query, Path, Security } from "tsoa"
 import { Request as ExpressRequest } from "express"
 import { BaseController } from "../base/BaseController.js"
 import { withTransaction } from "../../../../clients/database/transaction.js"
@@ -720,6 +720,58 @@ export class StockLotsV2Controller extends BaseController {
 
       throw error
     }
+  }
+
+  /**
+   * Delete a stock lot
+   *
+   * Verifies ownership and ensures the lot is not allocated to pending orders.
+   *
+   * @summary Delete stock lot
+   * @param id Stock lot UUID
+   * @param request Express request for authentication
+   */
+  @Delete("{id}")
+  @Security("session")
+  public async deleteStockLot(
+    @Path() id: string,
+    @Request() request: ExpressRequest,
+  ): Promise<{ message: string }> {
+    this.request = request
+    this.requireAuth()
+    const userId = this.getUserId()
+    const db = getKnex()
+
+    // Verify lot exists and user owns it
+    const lot = await db("listing_item_lots as sl")
+      .join("listing_items as li", "sl.item_id", "li.item_id")
+      .join("listings as l", "li.listing_id", "l.listing_id")
+      .where("sl.lot_id", id)
+      .select("sl.*", "l.seller_id")
+      .first()
+
+    if (!lot) throw this.throwNotFound("Stock lot", id)
+    if (lot.seller_id !== userId) throw this.throwForbidden("You do not own this stock lot")
+
+    // Check if lot is allocated to pending orders
+    const hasTable = await db.schema.hasTable("stock_allocation_log")
+    if (hasTable) {
+      const pendingAlloc = await db("stock_allocation_log as sal")
+        .join("order_market_items_v2 as oi", "sal.order_item_id", "oi.order_item_id")
+        .join("orders as o", "oi.order_id", "o.order_id")
+        .where("sal.lot_id", id)
+        .whereIn("o.status", ["pending", "processing"])
+        .first()
+
+      if (pendingAlloc) {
+        throw this.throwValidationError("Cannot delete lot allocated to pending orders", [
+          { field: "lot_id", message: "Lot has pending order allocations" },
+        ])
+      }
+    }
+
+    await db("listing_item_lots").where("lot_id", id).delete()
+    return { message: "Stock lot deleted" }
   }
 
   /**

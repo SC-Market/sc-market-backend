@@ -7,12 +7,13 @@
  * Requirements: 14.1-14.12, 15.1-15.12, 16.1-16.12, 17.1-17.12, 18.1-18.12
  */
 
-import { Controller, Delete, Post, Get, Put, Route, Tags, Body, Request, Query, Path } from "tsoa"
+import { Controller, Delete, Post, Get, Put, Route, Tags, Body, Request, Query, Path, Security } from "tsoa"
 import { Request as ExpressRequest } from "express"
 import { BaseController } from "../base/BaseController.js"
 import { withTransaction } from "../../../../clients/database/transaction.js"
 import { getOrCreateVariant } from "../../../../services/market-v2/variant.service.js"
 import { getKnex } from "../../../../clients/database/knex-db.js"
+import { cdn } from "../../../../clients/cdn/cdn.js"
 import {
   CreateListingRequest,
   SearchListingsRequest,
@@ -1636,5 +1637,102 @@ export class ListingsV2Controller extends BaseController {
 
     await db('listings').where('listing_id', id).update({ status: 'cancelled', updated_at: db.fn.now() })
     return { message: 'Listing archived successfully' }
+  }
+
+  /**
+   * Track a listing view
+   * @summary Increment view count
+   * @param id Listing UUID
+   */
+  @Post("{id}/views")
+  public async trackView(
+    @Path() id: string,
+    @Request() request: ExpressRequest,
+  ): Promise<{ views: number }> {
+    this.request = request
+    const db = getKnex()
+
+    const listing = await db('listings').where('listing_id', id).first()
+    if (!listing) throw this.throwNotFound('Listing', id)
+
+    const hasTable = await db.schema.hasTable('listing_views_v2')
+    if (hasTable) {
+      await db('listing_views_v2').insert({
+        listing_id: id,
+        viewer_id: (this.request?.user as any)?.user_id || null,
+        viewed_at: new Date(),
+      })
+      const [{ count }] = await db('listing_views_v2').where('listing_id', id).count('* as count')
+      return { views: parseInt(String(count), 10) }
+    }
+
+    // Fallback: use a view_count column on listings if views table doesn't exist
+    await db('listings').where('listing_id', id).increment('view_count', 1)
+    const updated = await db('listings').where('listing_id', id).select('view_count').first()
+    return { views: updated?.view_count || 1 }
+  }
+
+  /**
+   * Upload photos for a listing
+   * @summary Upload listing photos
+   * @param id Listing UUID
+   * @param request Express request with files
+   */
+  @Post("{id}/photos")
+  @Security("session")
+  public async uploadPhotos(
+    @Path() id: string,
+    @Request() request: ExpressRequest,
+  ): Promise<{ photos: Array<{ resource_id: string; url: string }> }> {
+    this.request = request
+    this.requireAuth()
+    const userId = this.getUserId()
+    const db = getKnex()
+
+    const listing = await db('listings').where('listing_id', id).first()
+    if (!listing) throw this.throwNotFound('Listing', id)
+    if (listing.seller_id !== userId) throw this.throwForbidden('You do not own this listing')
+
+    const files = (request as any).files as Express.Multer.File[]
+    if (!files || files.length === 0) {
+      throw this.throwValidationError('No photos provided', [
+        { field: 'photos', message: 'At least one photo is required' },
+      ])
+    }
+    if (files.length > 5) {
+      throw this.throwValidationError('Too many photos', [
+        { field: 'photos', message: 'Maximum 5 photos per upload' },
+      ])
+    }
+
+    const uploadResults: Array<{ resource_id: string; url: string }> = []
+    for (let i = 0; i < files.length; i++) {
+      const file = files[i]
+      const ext = file.mimetype.split('/')[1] || 'png'
+      const resource = await cdn.uploadFile(
+        `${id}-photos-${i}-${crypto.randomUUID()}.${ext}`,
+        file.path,
+        file.mimetype,
+      )
+      uploadResults.push({
+        resource_id: resource.resource_id,
+        url: resource.external_url || `https://cdn.sc-market.space/${resource.filename}`,
+      })
+    }
+
+    // Insert into listing_photos_v2
+    const photoRows = uploadResults.map((r, i) => ({
+      listing_id: id,
+      resource_id: r.resource_id,
+      display_order: i,
+    }))
+    await db('listing_photos_v2').insert(photoRows)
+
+    // Clean up temp files
+    for (const file of files) {
+      try { (await import('fs')).unlinkSync(file.path) } catch {}
+    }
+
+    return { photos: uploadResults }
   }
 }
