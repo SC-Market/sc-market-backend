@@ -86,7 +86,27 @@ function validateThemeData(
     }
   }
 
-  return { light: obj.light, dark: obj.dark }
+  // Scrim colors are not org-theme–customizable; drop if a client sent them.
+  return stripNonEditableBackgroundTokensFromThemeData({
+    light: obj.light,
+    dark: obj.dark,
+  })
+}
+
+function stripNonEditableBackgroundTokensFromThemeData(data: {
+  light: Record<string, any>
+  dark: Record<string, any>
+}): { light: Record<string, any>; dark: Record<string, any> } {
+  const light = structuredClone(data.light) as Record<string, any>
+  const dark = structuredClone(data.dark) as Record<string, any>
+  for (const modeData of [light, dark]) {
+    const bg = modeData.palette?.background
+    if (bg && typeof bg === "object") {
+      delete (bg as Record<string, unknown>).overlay
+      delete (bg as Record<string, unknown>).overlayDark
+    }
+  }
+  return { light, dark }
 }
 
 async function requireActivePremium(
