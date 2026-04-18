@@ -28,6 +28,7 @@ export async function up(knex: Knex): Promise<void> {
   await knex.schema.dropTableIfExists("order_market_items_v2");
   await knex.schema.dropTableIfExists("cart_items_v2");
   await knex.schema.dropTableIfExists("buy_orders_v2");
+  await knex.raw("DROP TABLE IF EXISTS listing_photos_v2 CASCADE");
   await knex.schema.dropTableIfExists("price_history_v2");
   await knex.schema.dropTableIfExists("variant_pricing");
   await knex.schema.dropTableIfExists("listing_item_lots");
@@ -476,6 +477,13 @@ export async function up(knex: Knex): Promise<void> {
       ) AS quality_tier_max,
       gi.name AS game_item_name,
       gi.type AS game_item_type,
+      (SELECT COALESCE(ir.external_url, 'https://cdn.sc-market.space/' || ir.filename)
+       FROM listing_photos_v2 lp
+       JOIN image_resources ir ON lp.resource_id = ir.resource_id
+       WHERE lp.listing_id = l.listing_id
+       ORDER BY lp.display_order ASC
+       LIMIT 1
+      ) AS photo,
       -- Full-text search vector
       setweight(to_tsvector('english', l.title), 'A') ||
       setweight(to_tsvector('english', COALESCE(l.description, '')), 'B') ||
@@ -809,6 +817,21 @@ export async function up(knex: Knex): Promise<void> {
     CREATE INDEX idx_buy_orders_v2_desired_attributes ON buy_orders_v2 USING GIN (desired_attributes)
   `);
 
+  // ============================================================================
+  // LISTING_PHOTOS_V2 TABLE
+  // ============================================================================
+  await knex.raw(`
+    CREATE TABLE IF NOT EXISTS listing_photos_v2 (
+      photo_id UUID DEFAULT gen_random_uuid() PRIMARY KEY,
+      listing_id UUID NOT NULL REFERENCES listings(listing_id) ON DELETE CASCADE,
+      resource_id UUID NOT NULL REFERENCES image_resources(resource_id) ON DELETE CASCADE,
+      display_order INTEGER NOT NULL DEFAULT 0,
+      created_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
+    );
+
+    CREATE INDEX idx_listing_photos_v2_listing ON listing_photos_v2(listing_id, display_order);
+  `);
+
 
 }
 
@@ -832,6 +855,7 @@ export async function down(knex: Knex): Promise<void> {
   await knex.schema.dropTableIfExists("order_market_items_v2");
   await knex.schema.dropTableIfExists("cart_items_v2");
   await knex.schema.dropTableIfExists("buy_orders_v2");
+  await knex.raw("DROP TABLE IF EXISTS listing_photos_v2 CASCADE");
   await knex.schema.dropTableIfExists("price_history_v2");
   await knex.schema.dropTableIfExists("variant_pricing");
   await knex.schema.dropTableIfExists("listing_item_lots");
