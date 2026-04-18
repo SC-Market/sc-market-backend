@@ -1120,6 +1120,9 @@ export const profile_get_my_data: RequestHandler = async (req, res) => {
         content += `Kick Members ${role.kick_members}\n`
         content += `Manage Invites ${role.manage_invites}\n`
         content += `Manage Org Details ${role.manage_org_details}\n`
+        content += `Manage Theme ${role.manage_theme}\n`
+        content += `Manage Blocklist ${role.manage_blocklist}\n`
+        content += `Claim Orders ${role.claim_orders}\n`
         content += `Manage Stock ${role.manage_stock}\n`
         content += `Manage Market ${role.manage_market}\n`
         content += `Manage Recruiting ${role.manage_recruiting}\n`

@@ -28,6 +28,7 @@ import {
   get_min_position,
   is_member,
   outranks,
+  self_member_role_removal_forbidden,
 } from "../util/permissions.js"
 import { createNotificationWebhook } from "../util/webhooks.js"
 import { notificationService } from "../../../../services/notifications/notification.service.js"
@@ -671,6 +672,8 @@ export const post_spectrum_id_roles: RequestHandler = async (
     manage_webhooks,
     manage_recruiting,
     manage_blocklist,
+    claim_orders,
+    manage_theme,
     name,
   }: {
     manage_roles: boolean
@@ -683,6 +686,8 @@ export const post_spectrum_id_roles: RequestHandler = async (
     manage_webhooks: boolean
     manage_recruiting: boolean
     manage_blocklist: boolean
+    claim_orders?: boolean
+    manage_theme?: boolean
     name: string
   } = req.body
 
@@ -703,6 +708,8 @@ export const post_spectrum_id_roles: RequestHandler = async (
     manage_webhooks: manage_webhooks,
     manage_recruiting: manage_recruiting,
     manage_blocklist: manage_blocklist,
+    claim_orders: claim_orders ?? false,
+    manage_theme: manage_theme ?? false,
     position: Math.max(...roles.map((r) => r.position)) + 1,
     name: name,
   })
@@ -730,6 +737,8 @@ export const post_spectrum_id_roles: RequestHandler = async (
         manage_webhooks,
         manage_recruiting,
         manage_blocklist,
+        claim_orders: claim_orders ?? false,
+        manage_theme: manage_theme ?? false,
       },
     },
   })
@@ -757,6 +766,8 @@ export const put_spectrum_id_roles_role_id: RequestHandler = async (
     manage_webhooks,
     manage_recruiting,
     manage_blocklist,
+    claim_orders,
+    manage_theme,
     name,
     position,
   }: {
@@ -770,6 +781,8 @@ export const put_spectrum_id_roles_role_id: RequestHandler = async (
     manage_webhooks: boolean
     manage_recruiting: boolean
     manage_blocklist: boolean
+    claim_orders: boolean
+    manage_theme: boolean
     name: string
     position: number
   } = req.body
@@ -807,6 +820,8 @@ export const put_spectrum_id_roles_role_id: RequestHandler = async (
         manage_webhooks: manage_webhooks,
         manage_recruiting: manage_recruiting,
         manage_blocklist: manage_blocklist,
+        claim_orders: claim_orders,
+        manage_theme: manage_theme,
         name: name,
         position: position,
       },
@@ -868,6 +883,16 @@ export const put_spectrum_id_roles_role_id: RequestHandler = async (
         old: oldRole.manage_blocklist,
         new: manage_blocklist,
       }
+    if (claim_orders !== oldRole.claim_orders)
+      permissionChanges.claim_orders = {
+        old: oldRole.claim_orders,
+        new: claim_orders,
+      }
+    if (manage_theme !== oldRole.manage_theme)
+      permissionChanges.manage_theme = {
+        old: oldRole.manage_theme,
+        new: manage_theme,
+      }
     if (Object.keys(permissionChanges).length > 0)
       changes.permissions = permissionChanges
 
@@ -922,6 +947,15 @@ export const delete_spectrum_id_roles_role_id: RequestHandler = async (
     res
       .status(403)
       .json(createErrorResponse({ message: "This role cannot be removed." }))
+    return
+  }
+
+  if (role_id === contractor.owner_role) {
+    res.status(403).json(
+      createErrorResponse({
+        message: "The organization owner role cannot be deleted.",
+      }),
+    )
     return
   }
 
@@ -989,6 +1023,17 @@ export const post_spectrum_id_roles_role_id_members_username: RequestHandler =
 
     if (outranked) {
       // You are outranked or equal
+      res.status(403).json(createErrorResponse({ message: "No permissions" }))
+      return
+    }
+
+    if (
+      !(await can_manage_role(
+        contractor.contractor_id,
+        role_id,
+        user.user_id,
+      ))
+    ) {
       res.status(403).json(createErrorResponse({ message: "No permissions" }))
       return
     }
@@ -1070,11 +1115,36 @@ export const delete_spectrum_id_roles_role_id_members_username: RequestHandler =
       return
     }
 
+    if (role_id === contractor.owner_role) {
+      res.status(403).json(
+        createErrorResponse({
+          message: "The owner role cannot be removed from a member.",
+        }),
+      )
+      return
+    }
+
     if (role_id === contractor.default_role) {
       res
         .status(403)
         .json(createErrorResponse({ message: "This role cannot be removed." }))
       return
+    }
+
+    if (target.user_id === user.user_id) {
+      const targetRoles = await contractorDb.getMemberRoles(
+        contractor.contractor_id,
+        target.user_id,
+      )
+      if (self_member_role_removal_forbidden(targetRoles, role_id)) {
+        res.status(403).json(
+          createErrorResponse({
+            message:
+              "You cannot remove this role from yourself (keep your top role, and keep a role with “manage roles” when your top role does not include it).",
+          }),
+        )
+        return
+      }
     }
 
     // Wrap role removal and audit log in a transaction
