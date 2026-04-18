@@ -36,6 +36,7 @@ async function authenticateToken(
     const tokenRecord = await database
       .knex("api_tokens")
       .where("token_hash", tokenHash)
+      .whereNull("revoked_at")
       .where(function (this: any) {
         this.whereNull("expires_at").orWhere("expires_at", ">", new Date())
       })
@@ -108,12 +109,17 @@ export async function expressAuthentication(
         // Validate scopes if provided
         if (scopes && scopes.length > 0) {
           const userScopes = authResult.tokenInfo.scopes
-          const hasAllScopes = scopes.every(
-            (scope) =>
-              userScopes.includes(scope) ||
-              userScopes.includes("admin") ||
-              userScopes.includes("full"),
-          )
+          const isAdminScope = (scope: string) =>
+            scope.startsWith("admin:") || scope === "admin" ||
+            scope === "moderation:read" || scope === "moderation:write"
+
+          const hasAllScopes = scopes.every((scope) => {
+            if (userScopes.includes(scope)) return true
+            if (userScopes.includes("admin")) return true
+            if (userScopes.includes("full") && !isAdminScope(scope)) return true
+            if (userScopes.includes("readonly") && scope.endsWith(":read") && !isAdminScope(scope)) return true
+            return false
+          })
 
           if (!hasAllScopes) {
             throw new Error(

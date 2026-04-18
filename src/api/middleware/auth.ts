@@ -64,6 +64,7 @@ async function authenticateToken(
     const tokenRecord = await database
       .knex("api_tokens")
       .where("token_hash", tokenHash)
+      .whereNull("revoked_at")
       .where(function (this: any) {
         this.whereNull("expires_at").orWhere("expires_at", ">", new Date())
       })
@@ -358,13 +359,20 @@ export async function adminAuthorized(
             .json(createErrorResponse({ message: "Internal server error" }))
           return
         }
-        if (authResult.user.role === "admin") {
-          next()
-          return
-        } else {
+        // Token must belong to admin AND have admin scope
+        if (authResult.user.role !== "admin") {
           res.status(403).json(createErrorResponse({ message: "Unauthorized" }))
           return
         }
+        const tokenScopes = authResult.tokenInfo.scopes as string[]
+        if (!tokenScopes.includes("admin")) {
+          res.status(403).json(
+            createErrorResponse(ErrorCode.FORBIDDEN, "Token requires admin scope"),
+          )
+          return
+        }
+        next()
+        return
       } else {
         res
           .status(401)

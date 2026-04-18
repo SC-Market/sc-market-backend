@@ -1,5 +1,5 @@
 import express from "express"
-import { userAuthorized } from "../../../middleware/auth.js"
+import { userAuthorized, requireProfileRead, requireProfileWrite } from "../../../middleware/auth.js"
 import {
   readRateLimit,
   commonWriteRateLimit,
@@ -45,6 +45,7 @@ export const emailRouter = express.Router()
 emailRouter.get(
   "/notification-types",
   userAuthorized,
+  requireProfileRead,
   readRateLimit,
   getNotificationTypes,
 )
@@ -54,6 +55,7 @@ emailRouter.get(
 emailRouter.get(
   "/preferences",
   userAuthorized,
+  requireProfileRead,
   readRateLimit,
   get_email_preferences_spec,
   getEmailPreferences,
@@ -64,6 +66,7 @@ emailRouter.get(
 emailRouter.patch(
   "/preferences",
   userAuthorized,
+  requireProfileWrite,
   commonWriteRateLimit,
   update_email_preferences_spec,
   updateEmailPreferences,

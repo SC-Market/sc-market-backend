@@ -559,15 +559,33 @@ function onlyForHandshake(middleware: RequestHandler): RequestHandler {
   }
 }
 
+// WebSocket auth: try JWT cookie first, fall back to session
+io.engine.use(onlyForHandshake(cookieParser()))
 io.engine.use(onlyForHandshake(sessionMiddleware))
 io.engine.use(onlyForHandshake(passport.session()))
 io.engine.use(
-  onlyForHandshake((req, res, next) => {
-    if (req.user) {
-      next()
-    } else {
-      next(new Error("Unauthorized"))
+  onlyForHandshake(async (req: any, res: any, next: any) => {
+    // Try JWT cookie auth first
+    if (isJWTAuthEnabled()) {
+      const accessToken = getAccessTokenFromRequest(req)
+      if (accessToken) {
+        const payload = verifyAccessToken(accessToken)
+        if (payload) {
+          try {
+            const user = await profileDb.getUser({ user_id: payload.sub })
+            if (user && !user.banned) {
+              req.user = user
+              return next()
+            }
+          } catch { /* fall through to session */ }
+        }
+      }
     }
+    // Fall back to session auth
+    if (req.user) {
+      return next()
+    }
+    next(new Error("Unauthorized"))
   }),
 )
 

@@ -1,5 +1,5 @@
 import express from "express"
-import { userAuthorized } from "../../../middleware/auth.js"
+import { userAuthorized, requireNotificationsRead, requireNotificationsWrite } from "../../../middleware/auth.js"
 import {
   readRateLimit,
   commonWriteRateLimit,
@@ -36,6 +36,7 @@ export const pushRouter = express.Router()
 pushRouter.post(
   "/subscribe",
   userAuthorized,
+  requireNotificationsWrite,
   push_subscribe_spec,
   commonWriteRateLimit,
   push_subscribe,
@@ -46,6 +47,7 @@ pushRouter.post(
 pushRouter.get(
   "/subscribe",
   userAuthorized,
+  requireNotificationsRead,
   push_get_subscriptions_spec,
   readRateLimit,
   push_get_subscriptions,
@@ -56,6 +58,7 @@ pushRouter.get(
 pushRouter.delete(
   "/subscribe/:subscription_id",
   userAuthorized,
+  requireNotificationsWrite,
   push_unsubscribe_spec,
   commonWriteRateLimit,
   push_unsubscribe,
@@ -66,6 +69,7 @@ pushRouter.delete(
 pushRouter.get(
   "/preferences",
   userAuthorized,
+  requireNotificationsRead,
   push_get_preferences_spec,
   readRateLimit,
   push_get_preferences,
@@ -76,6 +80,7 @@ pushRouter.get(
 pushRouter.patch(
   "/preferences",
   userAuthorized,
+  requireNotificationsWrite,
   push_update_preference_spec,
   commonWriteRateLimit,
   push_update_preference,

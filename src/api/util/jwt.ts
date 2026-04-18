@@ -117,6 +117,40 @@ export async function revokeRefreshToken(rawToken: string): Promise<void> {
     .update({ revoked_at: new Date() })
 }
 
+/**
+ * Rotate a refresh token: revoke the old one and issue a new one atomically.
+ * Returns the new raw refresh token, or null if the old token is invalid.
+ */
+export async function rotateRefreshToken(
+  oldRawToken: string,
+  req: Request,
+): Promise<{ newRawToken: string; userId: string } | null> {
+  const knex = getKnex()
+  const oldHash = hashToken(oldRawToken)
+
+  // Revoke old token and get its record in one step
+  const updated = await knex("refresh_tokens")
+    .where({ token_hash: oldHash })
+    .whereNull("revoked_at")
+    .where("expires_at", ">", new Date())
+    .update({ revoked_at: new Date() })
+    .returning(["user_id"])
+
+  if (!updated || updated.length === 0) return null
+
+  const userId = updated[0].user_id
+  const newRawToken = generateRefreshToken()
+  await knex("refresh_tokens").insert({
+    user_id: userId,
+    token_hash: hashToken(newRawToken),
+    expires_at: new Date(Date.now() + REFRESH_TOKEN_EXPIRY_MS),
+    user_agent: req.headers["user-agent"]?.substring(0, 500) || null,
+    ip_address: req.ip || null,
+  })
+
+  return { newRawToken, userId }
+}
+
 export async function revokeAllUserRefreshTokens(userId: string): Promise<number> {
   const knex = getKnex()
   return knex("refresh_tokens")

@@ -142,6 +142,7 @@ export async function createToken(req: Request, res: Response): Promise<void> {
     const existingCount = await database
       .knex("api_tokens")
       .where("user_id", user.user_id)
+      .whereNull("revoked_at")
       .count("id as count")
       .first()
     if (existingCount && Number(existingCount.count) >= MAX_TOKENS_PER_USER) {
@@ -339,6 +340,7 @@ export async function listTokens(req: Request, res: Response): Promise<void> {
     const tokens = await database
       .knex("api_tokens")
       .where("user_id", user.user_id)
+      .whereNull("revoked_at")
       .select("*")
       .orderBy("created_at", "desc")
 
@@ -386,6 +388,7 @@ export async function getToken(req: Request, res: Response): Promise<void> {
       .knex("api_tokens")
       .where("id", tokenId)
       .where("user_id", user.user_id)
+      .whereNull("revoked_at")
       .first()
 
     if (!token) {
@@ -436,6 +439,7 @@ export async function updateToken(req: Request, res: Response): Promise<void> {
       .knex("api_tokens")
       .where("id", tokenId)
       .where("user_id", user.user_id)
+      .whereNull("revoked_at")
       .first()
 
     if (!existingToken) {
@@ -630,7 +634,11 @@ export async function revokeToken(req: Request, res: Response): Promise<void> {
       return
     }
 
-    await database.knex("api_tokens").where("id", tokenId).delete()
+    // Soft-delete: set revoked_at timestamp for audit trail
+    await database
+      .knex("api_tokens")
+      .where("id", tokenId)
+      .update({ revoked_at: new Date(), updated_at: new Date() })
 
     res.json(createResponse({ message: "Token revoked successfully" }))
   } catch (error) {
@@ -657,6 +665,7 @@ export async function extendToken(req: Request, res: Response): Promise<void> {
       .knex("api_tokens")
       .where("id", tokenId)
       .where("user_id", user.user_id)
+      .whereNull("revoked_at")
       .first()
 
     if (!token) {
@@ -723,6 +732,7 @@ export async function getTokenStats(
       .knex("api_tokens")
       .where("id", tokenId)
       .where("user_id", user.user_id)
+      .whereNull("revoked_at")
       .first()
 
     if (!token) {
