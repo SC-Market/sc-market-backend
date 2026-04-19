@@ -107,7 +107,6 @@ export class ListingsV2Controller extends BaseController {
             visibility: "public",
             sale_type: "fixed",
             listing_type: "single",
-            pickup_method: requestBody.pickup_method || null,
             created_at: new Date(),
             updated_at: new Date(),
           })
@@ -449,7 +448,6 @@ export class ListingsV2Controller extends BaseController {
           "l.visibility",
           "l.sale_type",
           "l.listing_type",
-          "l.pickup_method",
           "l.created_at",
           "l.updated_at",
           "l.expires_at",
@@ -461,15 +459,15 @@ export class ListingsV2Controller extends BaseController {
           `),
           db.raw(`
             CASE 
-              WHEN l.seller_type = 'user' THEN COALESCE(u.rating, 0)
-              WHEN l.seller_type = 'contractor' THEN COALESCE(c.rating, 0)
+              WHEN l.seller_type = 'user' THEN COALESCE(public.get_average_rating_float(l.seller_id, NULL), 0)
+              WHEN l.seller_type = 'contractor' THEN COALESCE(public.get_average_rating_float(NULL, l.seller_id), 0)
             END AS seller_rating
           `),
           db.raw(`
             CASE 
-              WHEN l.seller_type = 'user' THEN u.avatar_url
-              WHEN l.seller_type = 'contractor' THEN c.logo_url
-            END AS seller_avatar_url
+              WHEN l.seller_type = 'user' THEN u.avatar
+              WHEN l.seller_type = 'contractor' THEN c.avatar
+            END AS seller_avatar
           `),
           db.raw(`
             CASE 
@@ -632,7 +630,7 @@ export class ListingsV2Controller extends BaseController {
           updated_at: listing.updated_at.toISOString(),
           expires_at: listing.expires_at?.toISOString(),
           photos: photos.map((p: any) => p.url),
-          pickup_method: listing.pickup_method || null,
+          pickup_method: null,
         },
         seller: {
           id: listing.seller_id,
@@ -640,7 +638,7 @@ export class ListingsV2Controller extends BaseController {
           type: listing.seller_type,
           slug: listing.seller_slug || "",
           rating: parseFloat(listing.seller_rating) || 0,
-          avatar_url: listing.seller_avatar_url,
+          avatar_url: listing.seller_avatar ? (await cdn.getFileLinkResource(listing.seller_avatar)) || undefined : undefined,
         },
         items,
       }
@@ -707,7 +705,6 @@ export class ListingsV2Controller extends BaseController {
     @Query() listing_type?: 'single' | 'bundle' | 'bulk',
     @Query() seller_id?: string,
     @Query() contractor_id?: string,
-    @Query() pickup_method?: 'delivery' | 'pickup' | 'any',
   ): Promise<SearchListingsResponse> {
     const db = getKnex()
 
@@ -813,8 +810,8 @@ export class ListingsV2Controller extends BaseController {
           `),
           db.raw(`
             CASE 
-              WHEN ls.seller_type = 'user' THEN COALESCE(u.rating, 0)
-              WHEN ls.seller_type = 'contractor' THEN COALESCE(c.rating, 0)
+              WHEN ls.seller_type = 'user' THEN COALESCE(public.get_average_rating_float(ls.seller_id, NULL), 0)
+              WHEN ls.seller_type = 'contractor' THEN COALESCE(public.get_average_rating_float(NULL, ls.seller_id), 0)
             END AS seller_rating
           `),
           "ls.seller_type",
@@ -835,13 +832,11 @@ export class ListingsV2Controller extends BaseController {
           "ls.game_item_type",
           db.raw(`
             CASE 
-              WHEN ls.seller_type = 'user' THEN COALESCE(u.rating_count, 0)
-              WHEN ls.seller_type = 'contractor' THEN COALESCE(c.rating_count, 0)
+              WHEN ls.seller_type = 'user' THEN COALESCE(public.get_rating_count(ls.seller_id, NULL), 0)
+              WHEN ls.seller_type = 'contractor' THEN COALESCE(public.get_rating_count(NULL, ls.seller_id), 0)
             END AS seller_rating_count
           `),
           "ls.photo",
-          "ls.pickup_method",
-          "ls.has_bulk_discount",
         )
 
       // Apply full-text search filter (Requirement 15.2)
@@ -926,13 +921,6 @@ export class ListingsV2Controller extends BaseController {
         query = query.where('ls.listing_type', listing_type);
       }
 
-      // Filter by pickup method ('any' matches both delivery and pickup filters)
-      if (pickup_method) {
-        query = query.where(function() {
-          this.where('ls.pickup_method', pickup_method).orWhere('ls.pickup_method', 'any');
-        });
-      }
-
       // Filter by seller (user or contractor)
       if (seller_id) {
         query = query.where('ls.seller_id', seller_id).where('ls.seller_type', 'user');
@@ -1002,8 +990,6 @@ export class ListingsV2Controller extends BaseController {
         seller_rating_count: parseInt(row.seller_rating_count, 10) || 0,
         seller_languages: row.seller_languages || ['en'],
         photo: row.photo || undefined,
-        pickup_method: row.pickup_method || null,
-        has_bulk_discount: !!row.has_bulk_discount,
       }))
 
       logger.info("Search completed", {
@@ -1138,15 +1124,6 @@ export class ListingsV2Controller extends BaseController {
             ])
           }
           listingUpdates.description = requestBody.description
-        }
-
-        if (requestBody.pickup_method !== undefined) {
-          if (requestBody.pickup_method !== null && !['delivery', 'pickup', 'any'].includes(requestBody.pickup_method)) {
-            this.throwValidationError("Invalid pickup_method", [
-              { field: "pickup_method", message: "Must be 'delivery', 'pickup', 'any', or null" },
-            ])
-          }
-          listingUpdates.pickup_method = requestBody.pickup_method
         }
 
         // Update listing if there are changes

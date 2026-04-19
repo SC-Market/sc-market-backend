@@ -1411,6 +1411,27 @@
 				"type": "object",
 				"additionalProperties": false
 			},
+			"BulkDiscountTier": {
+				"description": "A single bulk discount tier: buy at least min_quantity to get discount_percent off",
+				"properties": {
+					"min_quantity": {
+						"type": "number",
+						"format": "double",
+						"description": "Minimum quantity to qualify for this discount"
+					},
+					"discount_percent": {
+						"type": "number",
+						"format": "double",
+						"description": "Discount percentage (0-100)"
+					}
+				},
+				"required": [
+					"min_quantity",
+					"discount_percent"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
 			"CreateListingRequest": {
 				"description": "Request body for creating a new listing",
 				"properties": {
@@ -1461,6 +1482,13 @@
 							"any"
 						],
 						"description": "Pickup method: how the buyer receives the item"
+					},
+					"bulk_discount_tiers": {
+						"items": {
+							"$ref": "#/components/schemas/BulkDiscountTier"
+						},
+						"type": "array",
+						"description": "Optional bulk discount tiers sorted by min_quantity ascending"
 					}
 				},
 				"required": [
@@ -1734,6 +1762,14 @@
 						},
 						"type": "array",
 						"description": "Array of variants with quantities and prices"
+					},
+					"bulk_discount_tiers": {
+						"items": {
+							"$ref": "#/components/schemas/BulkDiscountTier"
+						},
+						"type": "array",
+						"nullable": true,
+						"description": "Bulk discount tiers (null if none defined)"
 					}
 				},
 				"required": [
@@ -1876,6 +1912,10 @@
 						],
 						"nullable": true,
 						"description": "Pickup method: delivery, pickup, any, or null (not specified)"
+					},
+					"has_bulk_discount": {
+						"type": "boolean",
+						"description": "Whether this listing has bulk discount tiers defined"
 					}
 				},
 				"required": [
@@ -2020,6 +2060,13 @@
 						],
 						"nullable": true,
 						"description": "Pickup method: how the buyer receives the item"
+					},
+					"bulk_discount_tiers": {
+						"items": {
+							"$ref": "#/components/schemas/BulkDiscountTier"
+						},
+						"type": "array",
+						"description": "Updated bulk discount tiers (pass [] to remove, omit to keep unchanged)"
 					}
 				},
 				"type": "object",
@@ -4445,19 +4492,6 @@
 						"required": false,
 						"schema": {
 							"type": "string"
-						}
-					},
-					{
-						"in": "query",
-						"name": "pickup_method",
-						"required": false,
-						"schema": {
-							"type": "string",
-							"enum": [
-								"delivery",
-								"pickup",
-								"any"
-							]
 						}
 					}
 				]
