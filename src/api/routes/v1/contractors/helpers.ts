@@ -137,7 +137,7 @@ export async function createContractor(options: {
     manage_recruiting: true,
     manage_blocklist: true,
     claim_orders: true,
-    manage_theme: false,
+    manage_theme: true,
     name: "Admin",
   })
   await contractorDb.insertContractorMemberRole({

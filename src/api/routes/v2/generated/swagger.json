@@ -1452,6 +1452,15 @@
 						},
 						"type": "array",
 						"description": "Optional array of image resource UUIDs to attach as photos"
+					},
+					"pickup_method": {
+						"type": "string",
+						"enum": [
+							"delivery",
+							"pickup",
+							"any"
+						],
+						"description": "Pickup method: how the buyer receives the item"
 					}
 				},
 				"required": [
@@ -1546,6 +1555,17 @@
 						},
 						"type": "array",
 						"description": "Array of photo URLs"
+					},
+					"pickup_method": {
+						"type": "string",
+						"enum": [
+							"delivery",
+							"pickup",
+							"any",
+							null
+						],
+						"nullable": true,
+						"description": "Pickup method: delivery, pickup, any, or null (not specified)"
 					}
 				},
 				"required": [
@@ -1845,6 +1865,17 @@
 					"photo": {
 						"type": "string",
 						"description": "First photo URL (null if no photos)"
+					},
+					"pickup_method": {
+						"type": "string",
+						"enum": [
+							"delivery",
+							"pickup",
+							"any",
+							null
+						],
+						"nullable": true,
+						"description": "Pickup method: delivery, pickup, any, or null (not specified)"
 					}
 				},
 				"required": [
@@ -1978,6 +2009,17 @@
 						},
 						"type": "array",
 						"description": "Array of stock lot updates (optional)"
+					},
+					"pickup_method": {
+						"type": "string",
+						"enum": [
+							"delivery",
+							"pickup",
+							"any",
+							null
+						],
+						"nullable": true,
+						"description": "Pickup method: how the buyer receives the item"
 					}
 				},
 				"type": "object",
@@ -4403,6 +4445,19 @@
 						"required": false,
 						"schema": {
 							"type": "string"
+						}
+					},
+					{
+						"in": "query",
+						"name": "pickup_method",
+						"required": false,
+						"schema": {
+							"type": "string",
+							"enum": [
+								"delivery",
+								"pickup",
+								"any"
+							]
 						}
 					}
 				]

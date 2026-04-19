@@ -100,13 +100,14 @@ export class ListingsV2Controller extends BaseController {
         const [listing] = await trx("listings")
           .insert({
             seller_id: userId,
-            seller_type: "user", // Default to user; contractor support can be added later
+            seller_type: "user",
             title: requestBody.title,
             description: requestBody.description,
             status: "active",
             visibility: "public",
             sale_type: "fixed",
             listing_type: "single",
+            pickup_method: requestBody.pickup_method || null,
             created_at: new Date(),
             updated_at: new Date(),
           })
@@ -445,6 +446,7 @@ export class ListingsV2Controller extends BaseController {
           "l.visibility",
           "l.sale_type",
           "l.listing_type",
+          "l.pickup_method",
           "l.created_at",
           "l.updated_at",
           "l.expires_at",
@@ -625,6 +627,7 @@ export class ListingsV2Controller extends BaseController {
           updated_at: listing.updated_at.toISOString(),
           expires_at: listing.expires_at?.toISOString(),
           photos: photos.map((p: any) => p.url),
+          pickup_method: listing.pickup_method || null,
         },
         seller: {
           id: listing.seller_id,
@@ -699,6 +702,7 @@ export class ListingsV2Controller extends BaseController {
     @Query() listing_type?: 'single' | 'bundle' | 'bulk',
     @Query() seller_id?: string,
     @Query() contractor_id?: string,
+    @Query() pickup_method?: 'delivery' | 'pickup' | 'any',
   ): Promise<SearchListingsResponse> {
     const db = getKnex()
 
@@ -831,6 +835,7 @@ export class ListingsV2Controller extends BaseController {
             END AS seller_rating_count
           `),
           "ls.photo",
+          "ls.pickup_method",
         )
 
       // Apply full-text search filter (Requirement 15.2)
@@ -915,6 +920,13 @@ export class ListingsV2Controller extends BaseController {
         query = query.where('ls.listing_type', listing_type);
       }
 
+      // Filter by pickup method ('any' matches both delivery and pickup filters)
+      if (pickup_method) {
+        query = query.where(function() {
+          this.where('ls.pickup_method', pickup_method).orWhere('ls.pickup_method', 'any');
+        });
+      }
+
       // Filter by seller (user or contractor)
       if (seller_id) {
         query = query.where('ls.seller_id', seller_id).where('ls.seller_type', 'user');
@@ -984,6 +996,7 @@ export class ListingsV2Controller extends BaseController {
         seller_rating_count: parseInt(row.seller_rating_count, 10) || 0,
         seller_languages: row.seller_languages || ['en'],
         photo: row.photo || undefined,
+        pickup_method: row.pickup_method || null,
       }))
 
       logger.info("Search completed", {
@@ -1118,6 +1131,15 @@ export class ListingsV2Controller extends BaseController {
             ])
           }
           listingUpdates.description = requestBody.description
+        }
+
+        if (requestBody.pickup_method !== undefined) {
+          if (requestBody.pickup_method !== null && !['delivery', 'pickup', 'any'].includes(requestBody.pickup_method)) {
+            this.throwValidationError("Invalid pickup_method", [
+              { field: "pickup_method", message: "Must be 'delivery', 'pickup', 'any', or null" },
+            ])
+          }
+          listingUpdates.pickup_method = requestBody.pickup_method
         }
 
         // Update listing if there are changes
