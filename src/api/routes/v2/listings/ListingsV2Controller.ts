@@ -336,11 +336,11 @@ export class ListingsV2Controller extends BaseController {
           if (lot.variant_attributes.quality_value !== undefined) {
             if (
               lot.variant_attributes.quality_value < 0 ||
-              lot.variant_attributes.quality_value > 100
+              lot.variant_attributes.quality_value > 1000
             ) {
               errors.push({
                 field: `lots[${index}].variant_attributes.quality_value`,
-                message: "Quality value must be between 0 and 100",
+                message: "Quality value must be between 0 and 1000",
               })
             }
           }

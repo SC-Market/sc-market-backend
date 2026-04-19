@@ -19,7 +19,7 @@ export interface VariantAttributes {
   /** Quality tier from 1 (lowest) to 5 (highest) */
   quality_tier?: number;
   
-  /** Precise quality percentage from 0 to 100 */
+  /** Precise quality value from 0 to 1000 */
   quality_value?: number;
   
   /** How the item was obtained */
