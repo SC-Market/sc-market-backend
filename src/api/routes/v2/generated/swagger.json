@@ -127,7 +127,7 @@
 					"quality_value": {
 						"type": "number",
 						"format": "double",
-						"description": "Precise quality percentage from 0 to 100"
+						"description": "Precise quality value from 0 to 1000"
 					},
 					"crafted_source": {
 						"type": "string",
