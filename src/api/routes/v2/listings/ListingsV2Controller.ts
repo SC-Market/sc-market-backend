@@ -125,6 +125,9 @@ export class ListingsV2Controller extends BaseController {
             game_item_id: requestBody.game_item_id,
             pricing_mode: requestBody.pricing_mode,
             base_price: requestBody.base_price || null,
+            bulk_discount_tiers: requestBody.bulk_discount_tiers?.length
+              ? JSON.stringify(requestBody.bulk_discount_tiers)
+              : null,
             display_order: 0,
             quantity_available: 0, // Will be updated by trigger
             variant_count: 0, // Will be updated by trigger
@@ -491,6 +494,7 @@ export class ListingsV2Controller extends BaseController {
           "li.game_item_id",
           "li.pricing_mode",
           "li.base_price",
+          "li.bulk_discount_tiers",
           "gi.name as game_item_name",
           "gi.type as game_item_type",
           "gi.image_url as game_item_image_url",
@@ -600,6 +604,7 @@ export class ListingsV2Controller extends BaseController {
             },
             pricing_mode: item.pricing_mode,
             base_price: item.base_price,
+            bulk_discount_tiers: item.bulk_discount_tiers || null,
             variants,
           }
         }),
@@ -836,6 +841,7 @@ export class ListingsV2Controller extends BaseController {
           `),
           "ls.photo",
           "ls.pickup_method",
+          "ls.has_bulk_discount",
         )
 
       // Apply full-text search filter (Requirement 15.2)
@@ -997,6 +1003,7 @@ export class ListingsV2Controller extends BaseController {
         seller_languages: row.seller_languages || ['en'],
         photo: row.photo || undefined,
         pickup_method: row.pickup_method || null,
+        has_bulk_discount: !!row.has_bulk_discount,
       }))
 
       logger.info("Search completed", {
@@ -1196,6 +1203,17 @@ export class ListingsV2Controller extends BaseController {
             itemId: listingItem.item_id,
             basePrice: requestBody.base_price,
           })
+        }
+
+        // Update bulk discount tiers
+        if (requestBody.bulk_discount_tiers !== undefined) {
+          await trx("listing_items")
+            .where({ item_id: listingItem.item_id })
+            .update({
+              bulk_discount_tiers: requestBody.bulk_discount_tiers?.length
+                ? JSON.stringify(requestBody.bulk_discount_tiers)
+                : null,
+            })
         }
 
         // 6. Update per-variant prices (Requirement 17.4)

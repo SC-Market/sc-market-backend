@@ -465,6 +465,7 @@ export interface DBMarketListing {
   timestamp: Date
   expiration: Date
   stock_locations?: string[]
+  bulk_discount_tiers?: Array<{ min_quantity: number; discount_percent: number }> | null
 }
 
 export interface DBMarketAggregate {

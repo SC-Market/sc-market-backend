@@ -518,6 +518,7 @@ export async function formatListingBase(
     internal: listing.internal,
     languages,
     stock_locations: listing.stock_locations,
+    bulk_discount_tiers: listing.bulk_discount_tiers || null,
     // aggregate: await
   }
 
