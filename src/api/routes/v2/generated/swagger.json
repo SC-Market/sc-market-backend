@@ -1501,6 +1501,274 @@
 				"type": "object",
 				"additionalProperties": false
 			},
+			"ListingSearchResult": {
+				"description": "Individual listing result in search response",
+				"properties": {
+					"listing_id": {
+						"type": "string",
+						"description": "Listing UUID"
+					},
+					"title": {
+						"type": "string",
+						"description": "Listing title"
+					},
+					"seller_name": {
+						"type": "string",
+						"description": "Seller username or contractor name"
+					},
+					"seller_rating": {
+						"type": "number",
+						"format": "double",
+						"description": "Seller rating (0-5)"
+					},
+					"price_min": {
+						"type": "number",
+						"format": "double",
+						"description": "Minimum price across all variants"
+					},
+					"price_max": {
+						"type": "number",
+						"format": "double",
+						"description": "Maximum price across all variants"
+					},
+					"quantity_available": {
+						"type": "number",
+						"format": "double",
+						"description": "Total quantity available across all variants"
+					},
+					"quality_tier_min": {
+						"type": "number",
+						"format": "double",
+						"description": "Minimum quality tier available (1-5)"
+					},
+					"quality_tier_max": {
+						"type": "number",
+						"format": "double",
+						"description": "Maximum quality tier available (1-5)"
+					},
+					"variant_count": {
+						"type": "number",
+						"format": "double",
+						"description": "Number of unique variants in this listing"
+					},
+					"seller_type": {
+						"type": "string",
+						"enum": [
+							"user",
+							"contractor"
+						],
+						"description": "Seller type (user or contractor)"
+					},
+					"seller_slug": {
+						"type": "string",
+						"description": "Username (for user sellers) or spectrum_id (for contractor sellers) - use for profile links"
+					},
+					"created_at": {
+						"type": "string",
+						"description": "ISO 8601 timestamp when listing was created"
+					},
+					"updated_at": {
+						"type": "string",
+						"description": "ISO 8601 timestamp when listing was last updated"
+					},
+					"game_item_name": {
+						"type": "string",
+						"description": "Game item name"
+					},
+					"game_item_type": {
+						"type": "string",
+						"description": "Game item type/category"
+					},
+					"seller_rating_count": {
+						"type": "number",
+						"format": "double",
+						"description": "Seller rating count"
+					},
+					"seller_languages": {
+						"items": {
+							"type": "string"
+						},
+						"type": "array",
+						"description": "Seller's supported languages (ISO 639-1 codes)"
+					},
+					"photo": {
+						"type": "string",
+						"description": "First photo URL (null if no photos)"
+					},
+					"pickup_method": {
+						"type": "string",
+						"enum": [
+							"delivery",
+							"pickup",
+							"any",
+							null
+						],
+						"nullable": true,
+						"description": "Pickup method: delivery, pickup, any, or null (not specified)"
+					},
+					"has_bulk_discount": {
+						"type": "boolean",
+						"description": "Whether this listing has bulk discount tiers defined"
+					}
+				},
+				"required": [
+					"listing_id",
+					"title",
+					"seller_name",
+					"seller_rating",
+					"price_min",
+					"price_max",
+					"quantity_available",
+					"variant_count",
+					"seller_type",
+					"seller_slug",
+					"created_at",
+					"updated_at",
+					"game_item_name",
+					"game_item_type",
+					"seller_rating_count"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
+			"SearchListingsResponse": {
+				"description": "Response for listing search with pagination",
+				"properties": {
+					"listings": {
+						"items": {
+							"$ref": "#/components/schemas/ListingSearchResult"
+						},
+						"type": "array",
+						"description": "Array of listing results"
+					},
+					"total": {
+						"type": "number",
+						"format": "double",
+						"description": "Total number of listings matching filters"
+					},
+					"page": {
+						"type": "number",
+						"format": "double",
+						"description": "Current page number"
+					},
+					"page_size": {
+						"type": "number",
+						"format": "double",
+						"description": "Number of results per page"
+					}
+				},
+				"required": [
+					"listings",
+					"total",
+					"page",
+					"page_size"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
+			"MyListingItem": {
+				"description": "Individual listing item in my listings response",
+				"properties": {
+					"listing_id": {
+						"type": "string",
+						"description": "Listing UUID"
+					},
+					"title": {
+						"type": "string",
+						"description": "Listing title"
+					},
+					"status": {
+						"type": "string",
+						"description": "Current status"
+					},
+					"created_at": {
+						"type": "string",
+						"description": "ISO 8601 timestamp when listing was created"
+					},
+					"updated_at": {
+						"type": "string",
+						"description": "ISO 8601 timestamp when listing was last updated"
+					},
+					"variant_count": {
+						"type": "number",
+						"format": "double",
+						"description": "Number of unique variants"
+					},
+					"quantity_available": {
+						"type": "number",
+						"format": "double",
+						"description": "Total quantity available across all variants"
+					},
+					"price_min": {
+						"type": "number",
+						"format": "double",
+						"description": "Minimum price across all variants"
+					},
+					"price_max": {
+						"type": "number",
+						"format": "double",
+						"description": "Maximum price across all variants"
+					},
+					"quality_tier_min": {
+						"type": "number",
+						"format": "double",
+						"description": "Minimum quality tier available (1-5)"
+					},
+					"quality_tier_max": {
+						"type": "number",
+						"format": "double",
+						"description": "Maximum quality tier available (1-5)"
+					}
+				},
+				"required": [
+					"listing_id",
+					"title",
+					"status",
+					"created_at",
+					"updated_at",
+					"variant_count",
+					"quantity_available",
+					"price_min",
+					"price_max"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
+			"GetMyListingsResponse": {
+				"description": "Response for my listings with pagination",
+				"properties": {
+					"listings": {
+						"items": {
+							"$ref": "#/components/schemas/MyListingItem"
+						},
+						"type": "array",
+						"description": "Array of user's listings"
+					},
+					"total": {
+						"type": "number",
+						"format": "double",
+						"description": "Total number of listings matching filters"
+					},
+					"page": {
+						"type": "number",
+						"format": "double",
+						"description": "Current page number"
+					},
+					"page_size": {
+						"type": "number",
+						"format": "double",
+						"description": "Number of results per page"
+					}
+				},
+				"required": [
+					"listings",
+					"total",
+					"page",
+					"page_size"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
 			"ListingDetail": {
 				"description": "Core listing metadata",
 				"properties": {
@@ -1808,171 +2076,6 @@
 				"type": "object",
 				"additionalProperties": false
 			},
-			"ListingSearchResult": {
-				"description": "Individual listing result in search response",
-				"properties": {
-					"listing_id": {
-						"type": "string",
-						"description": "Listing UUID"
-					},
-					"title": {
-						"type": "string",
-						"description": "Listing title"
-					},
-					"seller_name": {
-						"type": "string",
-						"description": "Seller username or contractor name"
-					},
-					"seller_rating": {
-						"type": "number",
-						"format": "double",
-						"description": "Seller rating (0-5)"
-					},
-					"price_min": {
-						"type": "number",
-						"format": "double",
-						"description": "Minimum price across all variants"
-					},
-					"price_max": {
-						"type": "number",
-						"format": "double",
-						"description": "Maximum price across all variants"
-					},
-					"quantity_available": {
-						"type": "number",
-						"format": "double",
-						"description": "Total quantity available across all variants"
-					},
-					"quality_tier_min": {
-						"type": "number",
-						"format": "double",
-						"description": "Minimum quality tier available (1-5)"
-					},
-					"quality_tier_max": {
-						"type": "number",
-						"format": "double",
-						"description": "Maximum quality tier available (1-5)"
-					},
-					"variant_count": {
-						"type": "number",
-						"format": "double",
-						"description": "Number of unique variants in this listing"
-					},
-					"seller_type": {
-						"type": "string",
-						"enum": [
-							"user",
-							"contractor"
-						],
-						"description": "Seller type (user or contractor)"
-					},
-					"seller_slug": {
-						"type": "string",
-						"description": "Username (for user sellers) or spectrum_id (for contractor sellers) - use for profile links"
-					},
-					"created_at": {
-						"type": "string",
-						"description": "ISO 8601 timestamp when listing was created"
-					},
-					"updated_at": {
-						"type": "string",
-						"description": "ISO 8601 timestamp when listing was last updated"
-					},
-					"game_item_name": {
-						"type": "string",
-						"description": "Game item name"
-					},
-					"game_item_type": {
-						"type": "string",
-						"description": "Game item type/category"
-					},
-					"seller_rating_count": {
-						"type": "number",
-						"format": "double",
-						"description": "Seller rating count"
-					},
-					"seller_languages": {
-						"items": {
-							"type": "string"
-						},
-						"type": "array",
-						"description": "Seller's supported languages (ISO 639-1 codes)"
-					},
-					"photo": {
-						"type": "string",
-						"description": "First photo URL (null if no photos)"
-					},
-					"pickup_method": {
-						"type": "string",
-						"enum": [
-							"delivery",
-							"pickup",
-							"any",
-							null
-						],
-						"nullable": true,
-						"description": "Pickup method: delivery, pickup, any, or null (not specified)"
-					},
-					"has_bulk_discount": {
-						"type": "boolean",
-						"description": "Whether this listing has bulk discount tiers defined"
-					}
-				},
-				"required": [
-					"listing_id",
-					"title",
-					"seller_name",
-					"seller_rating",
-					"price_min",
-					"price_max",
-					"quantity_available",
-					"variant_count",
-					"seller_type",
-					"seller_slug",
-					"created_at",
-					"updated_at",
-					"game_item_name",
-					"game_item_type",
-					"seller_rating_count"
-				],
-				"type": "object",
-				"additionalProperties": false
-			},
-			"SearchListingsResponse": {
-				"description": "Response for listing search with pagination",
-				"properties": {
-					"listings": {
-						"items": {
-							"$ref": "#/components/schemas/ListingSearchResult"
-						},
-						"type": "array",
-						"description": "Array of listing results"
-					},
-					"total": {
-						"type": "number",
-						"format": "double",
-						"description": "Total number of listings matching filters"
-					},
-					"page": {
-						"type": "number",
-						"format": "double",
-						"description": "Current page number"
-					},
-					"page_size": {
-						"type": "number",
-						"format": "double",
-						"description": "Number of results per page"
-					}
-				},
-				"required": [
-					"listings",
-					"total",
-					"page",
-					"page_size"
-				],
-				"type": "object",
-				"additionalProperties": false
-			},
 			"VariantPriceUpdate": {
 				"description": "Update for a specific variant's price",
 				"properties": {
@@ -2069,109 +2172,6 @@
 						"description": "Updated bulk discount tiers (pass [] to remove, omit to keep unchanged)"
 					}
 				},
-				"type": "object",
-				"additionalProperties": false
-			},
-			"MyListingItem": {
-				"description": "Individual listing item in my listings response",
-				"properties": {
-					"listing_id": {
-						"type": "string",
-						"description": "Listing UUID"
-					},
-					"title": {
-						"type": "string",
-						"description": "Listing title"
-					},
-					"status": {
-						"type": "string",
-						"description": "Current status"
-					},
-					"created_at": {
-						"type": "string",
-						"description": "ISO 8601 timestamp when listing was created"
-					},
-					"updated_at": {
-						"type": "string",
-						"description": "ISO 8601 timestamp when listing was last updated"
-					},
-					"variant_count": {
-						"type": "number",
-						"format": "double",
-						"description": "Number of unique variants"
-					},
-					"quantity_available": {
-						"type": "number",
-						"format": "double",
-						"description": "Total quantity available across all variants"
-					},
-					"price_min": {
-						"type": "number",
-						"format": "double",
-						"description": "Minimum price across all variants"
-					},
-					"price_max": {
-						"type": "number",
-						"format": "double",
-						"description": "Maximum price across all variants"
-					},
-					"quality_tier_min": {
-						"type": "number",
-						"format": "double",
-						"description": "Minimum quality tier available (1-5)"
-					},
-					"quality_tier_max": {
-						"type": "number",
-						"format": "double",
-						"description": "Maximum quality tier available (1-5)"
-					}
-				},
-				"required": [
-					"listing_id",
-					"title",
-					"status",
-					"created_at",
-					"updated_at",
-					"variant_count",
-					"quantity_available",
-					"price_min",
-					"price_max"
-				],
-				"type": "object",
-				"additionalProperties": false
-			},
-			"GetMyListingsResponse": {
-				"description": "Response for my listings with pagination",
-				"properties": {
-					"listings": {
-						"items": {
-							"$ref": "#/components/schemas/MyListingItem"
-						},
-						"type": "array",
-						"description": "Array of user's listings"
-					},
-					"total": {
-						"type": "number",
-						"format": "double",
-						"description": "Total number of listings matching filters"
-					},
-					"page": {
-						"type": "number",
-						"format": "double",
-						"description": "Current page number"
-					},
-					"page_size": {
-						"type": "number",
-						"format": "double",
-						"description": "Number of results per page"
-					}
-				},
-				"required": [
-					"listings",
-					"total",
-					"page",
-					"page_size"
-				],
 				"type": "object",
 				"additionalProperties": false
 			},
@@ -4178,124 +4178,6 @@
 				}
 			}
 		},
-		"/listings/{id}": {
-			"get": {
-				"operationId": "GetListingDetail",
-				"responses": {
-					"200": {
-						"description": "Complete listing detail with variant breakdown",
-						"content": {
-							"application/json": {
-								"schema": {
-									"$ref": "#/components/schemas/GetListingDetailResponse"
-								}
-							}
-						}
-					}
-				},
-				"description": "Get listing detail with variant breakdown\n\nRetrieves complete listing information including seller details, game item information,\nand variant breakdown with quantities, prices, and locations. Returns 404 if listing\nnot found.\n\nRequirements:\n- 16.1: GET /api/v2/listings/:id endpoint\n- 16.2: Return listing metadata with seller information\n- 16.3: Return array of items with game_item details\n- 16.4: Return array of variants for each item with attributes\n- 16.5: Return quantity and price for each variant\n- 16.6: Return display_name for each variant\n- 16.7: Include location information for stock lots\n- 16.8: Include crafted_by information if applicable\n- 16.9: Return 404 if listing not found\n- 16.10: Include view count and timestamps\n- 16.11: Include seller rating and status\n- 16.12: Support image gallery with multiple photos",
-				"summary": "Get listing detail",
-				"tags": [
-					"Listings V2"
-				],
-				"security": [],
-				"parameters": [
-					{
-						"description": "Listing UUID",
-						"in": "path",
-						"name": "id",
-						"required": true,
-						"schema": {
-							"type": "string"
-						}
-					}
-				]
-			},
-			"put": {
-				"operationId": "UpdateListing",
-				"responses": {
-					"200": {
-						"description": "Updated listing with variant breakdown",
-						"content": {
-							"application/json": {
-								"schema": {
-									"$ref": "#/components/schemas/GetListingDetailResponse"
-								}
-							}
-						}
-					}
-				},
-				"description": "Update an existing listing\n\nUpdates listing metadata (title, description), pricing (base_price or per-variant prices),\nand stock lot details (quantities, listed status, locations). Validates ownership before\nallowing updates and prevents editing sold or cancelled listings.\n\nRequirements:\n- 17.1: PUT /api/v2/listings/:id endpoint\n- 17.2: Allow updating title and description\n- 17.3: Allow updating base_price for unified pricing mode\n- 17.4: Allow updating per-variant prices for per_variant pricing mode\n- 17.5: Allow updating stock lot quantities\n- 17.6: Allow updating stock lot listed status\n- 17.7: Prevent editing sold or cancelled listings\n- 17.8: Validate ownership before allowing updates\n- 17.9: Return updated listing with variant breakdown\n- 17.10: Log all modifications to Audit_Trail\n- 17.11: Use database transaction for atomicity\n- 17.12: Invalidate cache after updates",
-				"summary": "Update listing",
-				"tags": [
-					"Listings V2"
-				],
-				"security": [],
-				"parameters": [
-					{
-						"description": "Listing UUID",
-						"in": "path",
-						"name": "id",
-						"required": true,
-						"schema": {
-							"type": "string"
-						}
-					}
-				],
-				"requestBody": {
-					"description": "Update request with optional fields",
-					"required": true,
-					"content": {
-						"application/json": {
-							"schema": {
-								"$ref": "#/components/schemas/UpdateListingRequest",
-								"description": "Update request with optional fields"
-							}
-						}
-					}
-				}
-			},
-			"delete": {
-				"operationId": "DeleteListing",
-				"responses": {
-					"200": {
-						"description": "Success message",
-						"content": {
-							"application/json": {
-								"schema": {
-									"properties": {
-										"message": {
-											"type": "string"
-										}
-									},
-									"required": [
-										"message"
-									],
-									"type": "object"
-								}
-							}
-						}
-					}
-				},
-				"description": "Archive (soft delete) a listing\n\nSets the listing status to 'cancelled'. Validates ownership before allowing deletion.",
-				"summary": "Delete listing",
-				"tags": [
-					"Listings V2"
-				],
-				"security": [],
-				"parameters": [
-					{
-						"description": "Listing UUID",
-						"in": "path",
-						"name": "id",
-						"required": true,
-						"schema": {
-							"type": "string"
-						}
-					}
-				]
-			}
-		},
 		"/listings/search": {
 			"get": {
 				"operationId": "SearchListings",
@@ -4502,7 +4384,7 @@
 				"operationId": "GetMyListings",
 				"responses": {
 					"200": {
-						"description": "User's listings with pagination metadata",
+						"description": "Updated listing with variant breakdown",
 						"content": {
 							"application/json": {
 								"schema": {
@@ -4512,8 +4394,8 @@
 						}
 					}
 				},
-				"description": "Get my listings with variant information\n\nRetrieves all listings owned by the authenticated user with variant breakdown,\nquantity information, and price ranges. Supports filtering by status, pagination,\nand sorting. Uses the listing_search view for optimized query performance.\n\nRequirements:\n- 18.1: GET /api/v2/listings/mine endpoint\n- 18.2: Return listings owned by current user\n- 18.3: Include variant breakdown for each listing\n- 18.4: Include quantity_available per variant\n- 18.5: Support filtering by status (active, sold, expired, cancelled)\n- 18.6: Support pagination with page and page_size parameters\n- 18.7: Support sorting by created_at, updated_at, price, quantity\n- 18.8: Include total count for pagination UI\n- 18.9: Include price range (min to max) for each listing\n- 18.10: Include quality tier range for each listing\n- 18.11: Include variant count for each listing\n- 18.12: Execute queries within 50ms performance target",
-				"summary": "Get my listings",
+				"description": "Update an existing listing\n\nUpdates listing metadata (title, description), pricing (base_price or per-variant prices),\nand stock lot details (quantities, listed status, locations). Validates ownership before\nallowing updates and prevents editing sold or cancelled listings.\n\nRequirements:\n- 17.1: PUT /api/v2/listings/:id endpoint\n- 17.2: Allow updating title and description\n- 17.3: Allow updating base_price for unified pricing mode\n- 17.4: Allow updating per-variant prices for per_variant pricing mode\n- 17.5: Allow updating stock lot quantities\n- 17.6: Allow updating stock lot listed status\n- 17.7: Prevent editing sold or cancelled listings\n- 17.8: Validate ownership before allowing updates\n- 17.9: Return updated listing with variant breakdown\n- 17.10: Log all modifications to Audit_Trail\n- 17.11: Use database transaction for atomicity\n- 17.12: Invalidate cache after updates",
+				"summary": "Update listing",
 				"tags": [
 					"Listings V2"
 				],
@@ -4580,6 +4462,121 @@
 								"asc",
 								"desc"
 							]
+						}
+					}
+				]
+			}
+		},
+		"/listings/{id}": {
+			"get": {
+				"operationId": "GetListingDetail",
+				"responses": {
+					"200": {
+						"description": "Complete listing detail with variant breakdown",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/GetListingDetailResponse"
+								}
+							}
+						}
+					}
+				},
+				"description": "Get listing detail with variant breakdown\n\nRetrieves complete listing information including seller details, game item information,\nand variant breakdown with quantities, prices, and locations. Returns 404 if listing\nnot found.\n\nRequirements:\n- 16.1: GET /api/v2/listings/:id endpoint\n- 16.2: Return listing metadata with seller information\n- 16.3: Return array of items with game_item details\n- 16.4: Return array of variants for each item with attributes\n- 16.5: Return quantity and price for each variant\n- 16.6: Return display_name for each variant\n- 16.7: Include location information for stock lots\n- 16.8: Include crafted_by information if applicable\n- 16.9: Return 404 if listing not found\n- 16.10: Include view count and timestamps\n- 16.11: Include seller rating and status\n- 16.12: Support image gallery with multiple photos",
+				"summary": "Get listing detail",
+				"tags": [
+					"Listings V2"
+				],
+				"security": [],
+				"parameters": [
+					{
+						"description": "Listing UUID",
+						"in": "path",
+						"name": "id",
+						"required": true,
+						"schema": {
+							"type": "string"
+						}
+					}
+				]
+			},
+			"put": {
+				"operationId": "UpdateListing",
+				"responses": {
+					"200": {
+						"description": "Search results with pagination metadata",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/GetListingDetailResponse"
+								}
+							}
+						}
+					}
+				},
+				"description": "Search listings with filters\n\nSearches active listings using full-text search, quality tier filters, price filters,\nand game item filters. Uses the listing_search view for optimized query performance.\n\nRequirements:\n- 15.1: GET /api/v2/listings/search endpoint\n- 15.2: Accept text query parameter for full-text search\n- 15.3: Accept game_item_id parameter for item filtering\n- 15.4: Accept quality_tier_min and quality_tier_max parameters\n- 15.5: Accept price_min and price_max parameters\n- 15.6: Accept page and page_size parameters for pagination\n- 15.7: Return listings with price_min, price_max, quality_tier_min, quality_tier_max\n- 15.8: Return total count for pagination\n- 15.9: Support sorting by created_at, price, quality, seller_rating\n- 15.10: Include seller information in results\n- 15.11: Include variant_count in results\n- 15.12: Execute queries within 50ms performance target",
+				"summary": "Search listings",
+				"tags": [
+					"Listings V2"
+				],
+				"security": [],
+				"parameters": [
+					{
+						"in": "path",
+						"name": "id",
+						"required": true,
+						"schema": {
+							"type": "string"
+						}
+					}
+				],
+				"requestBody": {
+					"required": true,
+					"content": {
+						"application/json": {
+							"schema": {
+								"$ref": "#/components/schemas/UpdateListingRequest"
+							}
+						}
+					}
+				}
+			},
+			"delete": {
+				"operationId": "DeleteListing",
+				"responses": {
+					"200": {
+						"description": "Success message",
+						"content": {
+							"application/json": {
+								"schema": {
+									"properties": {
+										"message": {
+											"type": "string"
+										}
+									},
+									"required": [
+										"message"
+									],
+									"type": "object"
+								}
+							}
+						}
+					}
+				},
+				"description": "Archive (soft delete) a listing\n\nSets the listing status to 'cancelled'. Validates ownership before allowing deletion.",
+				"summary": "Delete listing",
+				"tags": [
+					"Listings V2"
+				],
+				"security": [],
+				"parameters": [
+					{
+						"description": "Listing UUID",
+						"in": "path",
+						"name": "id",
+						"required": true,
+						"schema": {
+							"type": "string"
 						}
 					}
 				]
