@@ -94,8 +94,11 @@ export class DebugV2Controller extends BaseController {
     @Request() expressRequest: ExpressRequest,
   ): Promise<SetFeatureFlagResponse> {
     this.request = expressRequest
-    // Require admin role for developer privileges
-    this.requireAdmin()
+    this.requireAuth()
+    // In production, require admin role. In dev mode, any authenticated user can switch.
+    if (process.env.NODE_ENV !== "development") {
+      this.requireAdmin()
+    }
     const userId = this.getUserId()
 
     logger.info("Setting feature flag", {
