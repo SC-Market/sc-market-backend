@@ -6,6 +6,17 @@ export async function up(knex: Knex): Promise<void> {
     table.string("pickup_method", 20).nullable();
   });
 
+  // Ensure listing_photos_v2 exists (may not on older DBs)
+  if (!(await knex.schema.hasTable("listing_photos_v2"))) {
+    await knex.schema.createTable("listing_photos_v2", (table) => {
+      table.uuid("id").primary().defaultTo(knex.raw("gen_random_uuid()"));
+      table.uuid("listing_id").notNullable().references("listing_id").inTable("listings").onDelete("CASCADE");
+      table.uuid("resource_id").notNullable();
+      table.integer("display_order").notNullable().defaultTo(0);
+      table.index("listing_id");
+    });
+  }
+
   // Recreate listing_search view to include pickup_method
   await knex.raw("DROP VIEW IF EXISTS listing_search");
   await knex.raw(`
@@ -60,7 +71,7 @@ export async function up(knex: Knex): Promise<void> {
       setweight(to_tsvector('english', COALESCE(gi.name, '')), 'C') AS search_vector
     FROM listings l
     JOIN listing_items li ON l.listing_id = li.listing_id
-    LEFT JOIN game_items gi ON li.game_item_id = gi.game_item_id
+    LEFT JOIN game_items gi ON li.game_item_id::text = gi.id::text
   `);
 }
 
@@ -85,7 +96,7 @@ export async function down(knex: Knex): Promise<void> {
       setweight(to_tsvector('english', l.title), 'A') || setweight(to_tsvector('english', COALESCE(l.description, '')), 'B') || setweight(to_tsvector('english', COALESCE(gi.name, '')), 'C') AS search_vector
     FROM listings l
     JOIN listing_items li ON l.listing_id = li.listing_id
-    LEFT JOIN game_items gi ON li.game_item_id = gi.game_item_id
+    LEFT JOIN game_items gi ON li.game_item_id::text = gi.id::text
   `);
 
   await knex.schema.alterTable("listings", (table) => {
