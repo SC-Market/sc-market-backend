@@ -393,267 +393,6 @@ export class ListingsV2Controller extends BaseController {
   }
 
   /**
-   * Get listing detail with variant breakdown
-   *
-   * Retrieves complete listing information including seller details, game item information,
-   * and variant breakdown with quantities, prices, and locations. Returns 404 if listing
-   * not found.
-   *
-   * Requirements:
-   * - 16.1: GET /api/v2/listings/:id endpoint
-   * - 16.2: Return listing metadata with seller information
-   * - 16.3: Return array of items with game_item details
-   * - 16.4: Return array of variants for each item with attributes
-   * - 16.5: Return quantity and price for each variant
-   * - 16.6: Return display_name for each variant
-   * - 16.7: Include location information for stock lots
-   * - 16.8: Include crafted_by information if applicable
-   * - 16.9: Return 404 if listing not found
-   * - 16.10: Include view count and timestamps
-   * - 16.11: Include seller rating and status
-   * - 16.12: Support image gallery with multiple photos
-   *
-   * @summary Get listing detail
-   * @param id Listing UUID
-   * @returns Complete listing detail with variant breakdown
-   */
-  @Get("{id}")
-  public async getListingDetail(
-    id: string,
-  ): Promise<GetListingDetailResponse> {
-    const db = getKnex()
-
-    logger.info("Fetching listing detail", { listingId: id })
-
-    try {
-      // Query listing with seller information (Requirements 16.2, 16.11)
-      const listing = await db("listings as l")
-        .leftJoin("accounts as u", function () {
-          this.on("l.seller_id", "=", "u.user_id").andOn(
-            db.raw("l.seller_type = 'user'"),
-          )
-        })
-        .leftJoin("contractors as c", function () {
-          this.on("l.seller_id", "=", "c.contractor_id").andOn(
-            db.raw("l.seller_type = 'contractor'"),
-          )
-        })
-        .select(
-          "l.listing_id",
-          "l.seller_id",
-          "l.seller_type",
-          "l.title",
-          "l.description",
-          "l.status",
-          "l.visibility",
-          "l.sale_type",
-          "l.listing_type",
-          "l.created_at",
-          "l.updated_at",
-          "l.expires_at",
-          db.raw(`
-            CASE 
-              WHEN l.seller_type = 'user' THEN u.username
-              WHEN l.seller_type = 'contractor' THEN c.name
-            END AS seller_name
-          `),
-          db.raw(`
-            CASE 
-              WHEN l.seller_type = 'user' THEN COALESCE(public.get_average_rating_float(l.seller_id, NULL), 0)
-              WHEN l.seller_type = 'contractor' THEN COALESCE(public.get_average_rating_float(NULL, l.seller_id), 0)
-            END AS seller_rating
-          `),
-          db.raw(`
-            CASE 
-              WHEN l.seller_type = 'user' THEN u.avatar
-              WHEN l.seller_type = 'contractor' THEN c.avatar
-            END AS seller_avatar
-          `),
-          db.raw(`
-            CASE 
-              WHEN l.seller_type = 'user' THEN u.username
-              WHEN l.seller_type = 'contractor' THEN c.spectrum_id
-            END AS seller_slug
-          `),
-        )
-        .where("l.listing_id", id)
-        .first()
-
-      // Return 404 if listing not found (Requirement 16.9)
-      if (!listing) {
-        this.throwNotFound("Listing", id)
-      }
-
-      // Query listing items with game item details (Requirement 16.3)
-      const listingItems = await db("listing_items as li")
-        .leftJoin("game_items as gi", "li.game_item_id", "gi.id")
-        .select(
-          "li.item_id",
-          "li.game_item_id",
-          "li.pricing_mode",
-          "li.base_price",
-          "li.bulk_discount_tiers",
-          "gi.name as game_item_name",
-          "gi.type as game_item_type",
-          "gi.image_url as game_item_image_url",
-        )
-        .where("li.listing_id", id)
-
-      // Query listing photos (Requirement 16.12)
-      const photos = await db('listing_photos_v2 as lp')
-        .join('image_resources as ir', 'lp.resource_id', 'ir.resource_id')
-        .where('lp.listing_id', id)
-        .orderBy('lp.display_order', 'asc')
-        .select(db.raw("COALESCE(ir.external_url, 'https://cdn.sc-market.space/' || ir.filename) as url"));
-
-      // For each listing item, query variants with details (Requirements 16.4-16.8)
-      const items = await Promise.all(
-        listingItems.map(async (item) => {
-          // Query stock lots with variant information
-          const lots = await db("listing_item_lots as sl")
-            .join("item_variants as iv", "sl.variant_id", "iv.variant_id")
-            .leftJoin("locations as loc", "sl.location_id", "loc.location_id")
-            .leftJoin("accounts as crafter", "sl.crafted_by", "crafter.user_id")
-            .select(
-              "sl.variant_id",
-              "sl.quantity_total",
-              "sl.location_id",
-              "loc.name as location_name",
-              "sl.crafted_by",
-              "crafter.username as crafted_by_username",
-              "sl.crafted_at",
-              "iv.attributes",
-              "iv.display_name",
-              "iv.short_name",
-            )
-            .where("sl.item_id", item.item_id)
-            .where("sl.listed", true)
-
-          // Get pricing for each variant
-          const variantPricing =
-            item.pricing_mode === "per_variant"
-              ? await db("variant_pricing")
-                  .select("variant_id", "price")
-                  .where("item_id", item.item_id)
-              : []
-
-          // Group lots by variant and aggregate quantities and locations
-          const variantMap = new Map<
-            string,
-            {
-              variant_id: string
-              attributes: any
-              display_name: string
-              short_name: string
-              quantity: number
-              price: number
-              locations: string[]
-              crafted_by?: string
-              crafted_at?: string
-            }
-          >()
-
-          for (const lot of lots) {
-            const existing = variantMap.get(lot.variant_id)
-
-            // Determine price for this variant
-            let price: number
-            if (item.pricing_mode === "unified") {
-              price = item.base_price || 0
-            } else {
-              const pricing = variantPricing.find(
-                (vp) => vp.variant_id === lot.variant_id,
-              )
-              price = pricing?.price || 0
-            }
-
-            if (existing) {
-              // Aggregate quantity and locations
-              existing.quantity += lot.quantity_total
-              if (lot.location_name && !existing.locations.includes(lot.location_name)) {
-                existing.locations.push(lot.location_name)
-              }
-            } else {
-              // Create new variant entry
-              variantMap.set(lot.variant_id, {
-                variant_id: lot.variant_id,
-                attributes: lot.attributes,
-                display_name: lot.display_name || "Standard",
-                short_name: lot.short_name || "STD",
-                quantity: lot.quantity_total,
-                price,
-                locations: lot.location_name ? [lot.location_name] : [],
-                crafted_by: lot.crafted_by_username,
-                crafted_at: lot.crafted_at?.toISOString(),
-              })
-            }
-          }
-
-          // Convert map to array
-          const variants = Array.from(variantMap.values())
-
-          return {
-            item_id: item.item_id,
-            game_item: {
-              id: item.game_item_id,
-              name: item.game_item_name || "Unknown Item",
-              type: item.game_item_type || "unknown",
-              image_url: item.game_item_image_url,
-            },
-            pricing_mode: item.pricing_mode,
-            base_price: item.base_price,
-            bulk_discount_tiers: item.bulk_discount_tiers || null,
-            variants,
-          }
-        }),
-      )
-
-      logger.info("Listing detail fetched successfully", {
-        listingId: id,
-        itemCount: items.length,
-        variantCount: items.reduce((sum, item) => sum + item.variants.length, 0),
-      })
-
-      // Return complete listing detail (Requirement 16.10)
-      return {
-        listing: {
-          listing_id: listing.listing_id,
-          seller_id: listing.seller_id,
-          seller_type: listing.seller_type,
-          title: listing.title,
-          description: listing.description || "",
-          status: listing.status,
-          visibility: listing.visibility,
-          sale_type: listing.sale_type,
-          listing_type: listing.listing_type,
-          created_at: listing.created_at.toISOString(),
-          updated_at: listing.updated_at.toISOString(),
-          expires_at: listing.expires_at?.toISOString(),
-          photos: photos.map((p: any) => p.url),
-          pickup_method: null,
-        },
-        seller: {
-          id: listing.seller_id,
-          name: listing.seller_name || "Unknown",
-          type: listing.seller_type,
-          slug: listing.seller_slug || "",
-          rating: parseFloat(listing.seller_rating) || 0,
-          avatar_url: listing.seller_avatar ? (await cdn.getFileLinkResource(listing.seller_avatar)) || undefined : undefined,
-        },
-        items,
-      }
-    } catch (error) {
-      logger.error("Failed to fetch listing detail", {
-        listingId: id,
-        error: error instanceof Error ? error.message : String(error),
-        stack: error instanceof Error ? error.stack : undefined,
-      })
-
-      throw error
-    }
-  }
-
-  /**
    * Search listings with filters
    *
    * Searches active listings using full-text search, quality tier filters, price filters,
@@ -1042,6 +781,462 @@ export class ListingsV2Controller extends BaseController {
    * @param request Express request for authentication
    * @returns Updated listing with variant breakdown
    */
+  /**
+   * Get my listings with variant information
+   *
+   * Retrieves all listings owned by the authenticated user with variant breakdown,
+   * quantity information, and price ranges. Supports filtering by status, pagination,
+   * and sorting. Uses the listing_search view for optimized query performance.
+   *
+   * Requirements:
+   * - 18.1: GET /api/v2/listings/mine endpoint
+   * - 18.2: Return listings owned by current user
+   * - 18.3: Include variant breakdown for each listing
+   * - 18.4: Include quantity_available per variant
+   * - 18.5: Support filtering by status (active, sold, expired, cancelled)
+   * - 18.6: Support pagination with page and page_size parameters
+   * - 18.7: Support sorting by created_at, updated_at, price, quantity
+   * - 18.8: Include total count for pagination UI
+   * - 18.9: Include price range (min to max) for each listing
+   * - 18.10: Include quality tier range for each listing
+   * - 18.11: Include variant count for each listing
+   * - 18.12: Execute queries within 50ms performance target
+   *
+   * @summary Get my listings
+   * @param status Filter by listing status
+   * @param page Page number for pagination (default: 1)
+   * @param page_size Number of results per page (default: 20, max: 100)
+   * @param sort_by Sort field (default: created_at)
+   * @param sort_order Sort order (default: desc)
+   * @param request Express request for authentication
+   * @returns User's listings with pagination metadata
+   */
+  @Get("mine")
+  public async getMyListings(
+    @Query() status?: "active" | "sold" | "expired" | "cancelled",
+    @Query() page?: number,
+    @Query() page_size?: number,
+    @Query() sort_by?: "created_at" | "updated_at" | "price" | "quantity",
+    @Query() sort_order?: "asc" | "desc",
+    @Request() request?: ExpressRequest,
+  ): Promise<GetMyListingsResponse> {
+    this.request = request
+    this.requireAuth()
+    const userId = this.getUserId()
+
+    const db = getKnex()
+
+    // Validate and set defaults (Requirement 18.6)
+    const validatedPage = Math.max(1, page || 1)
+    const validatedPageSize = Math.min(100, Math.max(1, page_size || 20))
+    const validatedSortBy = sort_by || "created_at"
+    const validatedSortOrder = sort_order || "desc"
+
+    // Validate status if provided (Requirement 18.5)
+    if (status && !["active", "sold", "expired", "cancelled"].includes(status)) {
+      this.throwValidationError("Invalid status", [
+        {
+          field: "status",
+          message: "Status must be one of: active, sold, expired, cancelled",
+        },
+      ])
+    }
+
+    logger.info("Fetching my listings", {
+      userId,
+      status,
+      page: validatedPage,
+      page_size: validatedPageSize,
+      sort_by: validatedSortBy,
+      sort_order: validatedSortOrder,
+    })
+
+    try {
+      // Build query using listing_search view for performance (Requirement 18.12)
+      let query = db("listing_search as ls")
+        .select(
+          "ls.listing_id",
+          "ls.title",
+          "ls.status",
+          "ls.created_at",
+          "ls.updated_at",
+          "ls.quantity_available",
+          "ls.variant_count",
+          "ls.price_min",
+          "ls.price_max",
+          "ls.quality_tier_min",
+          "ls.quality_tier_max",
+        )
+        .where("ls.seller_id", userId) // Filter by current user (Requirement 18.2)
+
+      // Apply status filter if provided (Requirement 18.5)
+      if (status) {
+        query = query.where("ls.status", status)
+      }
+
+      // Get total count for pagination (Requirement 18.8)
+      const countQuery = query.clone().clearSelect().clearOrder().count("* as count")
+      const [{ count: totalCount }] = await countQuery
+      const total = parseInt(String(totalCount), 10)
+
+      // Apply sorting (Requirement 18.7)
+      switch (validatedSortBy) {
+        case "price":
+          query = query.orderBy("ls.price_min", validatedSortOrder)
+          break
+        case "quantity":
+          query = query.orderBy("ls.quantity_available", validatedSortOrder)
+          break
+        case "updated_at":
+          query = query.orderBy("ls.updated_at", validatedSortOrder)
+          break
+        case "created_at":
+        default:
+          query = query.orderBy("ls.created_at", validatedSortOrder)
+          break
+      }
+
+      // Apply pagination (Requirement 18.6)
+      const offset = (validatedPage - 1) * validatedPageSize
+      query = query.limit(validatedPageSize).offset(offset)
+
+      // Execute query
+      const results = await query
+
+      // Transform results to match response type (Requirements 18.3, 18.4, 18.9, 18.10, 18.11)
+      const listings = results.map((row: any) => ({
+        listing_id: row.listing_id,
+        title: row.title,
+        status: row.status,
+        created_at: row.created_at.toISOString(),
+        updated_at: row.updated_at.toISOString(),
+        variant_count: row.variant_count || 0,
+        quantity_available: row.quantity_available || 0,
+        price_min: parseInt(row.price_min, 10) || 0,
+        price_max: parseInt(row.price_max, 10) || 0,
+        quality_tier_min: row.quality_tier_min || undefined,
+        quality_tier_max: row.quality_tier_max || undefined,
+      }))
+
+      logger.info("My listings fetched successfully", {
+        userId,
+        total,
+        returned: listings.length,
+        page: validatedPage,
+        page_size: validatedPageSize,
+      })
+
+      return {
+        listings,
+        total,
+        page: validatedPage,
+        page_size: validatedPageSize,
+      }
+    } catch (error) {
+      logger.error("Failed to fetch my listings", {
+        userId,
+        error: error instanceof Error ? error.message : String(error),
+        stack: error instanceof Error ? error.stack : undefined,
+      })
+
+      throw error
+    }
+  }
+
+  /**
+   * Get listing detail with variant breakdown
+   *
+   * Retrieves complete listing information including seller details, game item information,
+   * and variant breakdown with quantities, prices, and locations. Returns 404 if listing
+   * not found.
+   *
+   * Requirements:
+   * - 16.1: GET /api/v2/listings/:id endpoint
+   * - 16.2: Return listing metadata with seller information
+   * - 16.3: Return array of items with game_item details
+   * - 16.4: Return array of variants for each item with attributes
+   * - 16.5: Return quantity and price for each variant
+   * - 16.6: Return display_name for each variant
+   * - 16.7: Include location information for stock lots
+   * - 16.8: Include crafted_by information if applicable
+   * - 16.9: Return 404 if listing not found
+   * - 16.10: Include view count and timestamps
+   * - 16.11: Include seller rating and status
+   * - 16.12: Support image gallery with multiple photos
+   *
+   * @summary Get listing detail
+   * @param id Listing UUID
+   * @returns Complete listing detail with variant breakdown
+   */
+  @Get("{id}")
+  public async getListingDetail(
+    id: string,
+  ): Promise<GetListingDetailResponse> {
+    const db = getKnex()
+
+    logger.info("Fetching listing detail", { listingId: id })
+
+    try {
+      // Query listing with seller information (Requirements 16.2, 16.11)
+      const listing = await db("listings as l")
+        .leftJoin("accounts as u", function () {
+          this.on("l.seller_id", "=", "u.user_id").andOn(
+            db.raw("l.seller_type = 'user'"),
+          )
+        })
+        .leftJoin("contractors as c", function () {
+          this.on("l.seller_id", "=", "c.contractor_id").andOn(
+            db.raw("l.seller_type = 'contractor'"),
+          )
+        })
+        .select(
+          "l.listing_id",
+          "l.seller_id",
+          "l.seller_type",
+          "l.title",
+          "l.description",
+          "l.status",
+          "l.visibility",
+          "l.sale_type",
+          "l.listing_type",
+          "l.created_at",
+          "l.updated_at",
+          "l.expires_at",
+          db.raw(`
+            CASE 
+              WHEN l.seller_type = 'user' THEN u.username
+              WHEN l.seller_type = 'contractor' THEN c.name
+            END AS seller_name
+          `),
+          db.raw(`
+            CASE 
+              WHEN l.seller_type = 'user' THEN COALESCE(public.get_average_rating_float(l.seller_id, NULL), 0)
+              WHEN l.seller_type = 'contractor' THEN COALESCE(public.get_average_rating_float(NULL, l.seller_id), 0)
+            END AS seller_rating
+          `),
+          db.raw(`
+            CASE 
+              WHEN l.seller_type = 'user' THEN u.avatar
+              WHEN l.seller_type = 'contractor' THEN c.avatar
+            END AS seller_avatar
+          `),
+          db.raw(`
+            CASE 
+              WHEN l.seller_type = 'user' THEN u.username
+              WHEN l.seller_type = 'contractor' THEN c.spectrum_id
+            END AS seller_slug
+          `),
+        )
+        .where("l.listing_id", id)
+        .first()
+
+      // Return 404 if listing not found (Requirement 16.9)
+      if (!listing) {
+        this.throwNotFound("Listing", id)
+      }
+
+      // Query listing items with game item details (Requirement 16.3)
+      const listingItems = await db("listing_items as li")
+        .leftJoin("game_items as gi", "li.game_item_id", "gi.id")
+        .select(
+          "li.item_id",
+          "li.game_item_id",
+          "li.pricing_mode",
+          "li.base_price",
+          "li.bulk_discount_tiers",
+          "gi.name as game_item_name",
+          "gi.type as game_item_type",
+          "gi.image_url as game_item_image_url",
+        )
+        .where("li.listing_id", id)
+
+      // Query listing photos (Requirement 16.12)
+      const photos = await db('listing_photos_v2 as lp')
+        .join('image_resources as ir', 'lp.resource_id', 'ir.resource_id')
+        .where('lp.listing_id', id)
+        .orderBy('lp.display_order', 'asc')
+        .select(db.raw("COALESCE(ir.external_url, 'https://cdn.sc-market.space/' || ir.filename) as url"));
+
+      // For each listing item, query variants with details (Requirements 16.4-16.8)
+      const items = await Promise.all(
+        listingItems.map(async (item) => {
+          // Query stock lots with variant information
+          const lots = await db("listing_item_lots as sl")
+            .join("item_variants as iv", "sl.variant_id", "iv.variant_id")
+            .leftJoin("locations as loc", "sl.location_id", "loc.location_id")
+            .leftJoin("accounts as crafter", "sl.crafted_by", "crafter.user_id")
+            .select(
+              "sl.variant_id",
+              "sl.quantity_total",
+              "sl.location_id",
+              "loc.name as location_name",
+              "sl.crafted_by",
+              "crafter.username as crafted_by_username",
+              "sl.crafted_at",
+              "iv.attributes",
+              "iv.display_name",
+              "iv.short_name",
+            )
+            .where("sl.item_id", item.item_id)
+            .where("sl.listed", true)
+
+          // Get pricing for each variant
+          const variantPricing =
+            item.pricing_mode === "per_variant"
+              ? await db("variant_pricing")
+                  .select("variant_id", "price")
+                  .where("item_id", item.item_id)
+              : []
+
+          // Group lots by variant and aggregate quantities and locations
+          const variantMap = new Map<
+            string,
+            {
+              variant_id: string
+              attributes: any
+              display_name: string
+              short_name: string
+              quantity: number
+              price: number
+              locations: string[]
+              crafted_by?: string
+              crafted_at?: string
+            }
+          >()
+
+          for (const lot of lots) {
+            const existing = variantMap.get(lot.variant_id)
+
+            // Determine price for this variant
+            let price: number
+            if (item.pricing_mode === "unified") {
+              price = item.base_price || 0
+            } else {
+              const pricing = variantPricing.find(
+                (vp) => vp.variant_id === lot.variant_id,
+              )
+              price = pricing?.price || 0
+            }
+
+            if (existing) {
+              // Aggregate quantity and locations
+              existing.quantity += lot.quantity_total
+              if (lot.location_name && !existing.locations.includes(lot.location_name)) {
+                existing.locations.push(lot.location_name)
+              }
+            } else {
+              // Create new variant entry
+              variantMap.set(lot.variant_id, {
+                variant_id: lot.variant_id,
+                attributes: lot.attributes,
+                display_name: lot.display_name || "Standard",
+                short_name: lot.short_name || "STD",
+                quantity: lot.quantity_total,
+                price,
+                locations: lot.location_name ? [lot.location_name] : [],
+                crafted_by: lot.crafted_by_username,
+                crafted_at: lot.crafted_at?.toISOString(),
+              })
+            }
+          }
+
+          // Convert map to array
+          const variants = Array.from(variantMap.values())
+
+          return {
+            item_id: item.item_id,
+            game_item: {
+              id: item.game_item_id,
+              name: item.game_item_name || "Unknown Item",
+              type: item.game_item_type || "unknown",
+              image_url: item.game_item_image_url,
+            },
+            pricing_mode: item.pricing_mode,
+            base_price: item.base_price,
+            bulk_discount_tiers: item.bulk_discount_tiers || null,
+            variants,
+          }
+        }),
+      )
+
+      logger.info("Listing detail fetched successfully", {
+        listingId: id,
+        itemCount: items.length,
+        variantCount: items.reduce((sum, item) => sum + item.variants.length, 0),
+      })
+
+      // Return complete listing detail (Requirement 16.10)
+      return {
+        listing: {
+          listing_id: listing.listing_id,
+          seller_id: listing.seller_id,
+          seller_type: listing.seller_type,
+          title: listing.title,
+          description: listing.description || "",
+          status: listing.status,
+          visibility: listing.visibility,
+          sale_type: listing.sale_type,
+          listing_type: listing.listing_type,
+          created_at: listing.created_at.toISOString(),
+          updated_at: listing.updated_at.toISOString(),
+          expires_at: listing.expires_at?.toISOString(),
+          photos: photos.map((p: any) => p.url),
+          pickup_method: null,
+        },
+        seller: {
+          id: listing.seller_id,
+          name: listing.seller_name || "Unknown",
+          type: listing.seller_type,
+          slug: listing.seller_slug || "",
+          rating: parseFloat(listing.seller_rating) || 0,
+          avatar_url: listing.seller_avatar ? (await cdn.getFileLinkResource(listing.seller_avatar)) || undefined : undefined,
+        },
+        items,
+      }
+    } catch (error) {
+      logger.error("Failed to fetch listing detail", {
+        listingId: id,
+        error: error instanceof Error ? error.message : String(error),
+        stack: error instanceof Error ? error.stack : undefined,
+      })
+
+      throw error
+    }
+  }
+
+  /**
+   * Search listings with filters
+   *
+   * Searches active listings using full-text search, quality tier filters, price filters,
+   * and game item filters. Uses the listing_search view for optimized query performance.
+   *
+   * Requirements:
+   * - 15.1: GET /api/v2/listings/search endpoint
+   * - 15.2: Accept text query parameter for full-text search
+   * - 15.3: Accept game_item_id parameter for item filtering
+   * - 15.4: Accept quality_tier_min and quality_tier_max parameters
+   * - 15.5: Accept price_min and price_max parameters
+   * - 15.6: Accept page and page_size parameters for pagination
+   * - 15.7: Return listings with price_min, price_max, quality_tier_min, quality_tier_max
+   * - 15.8: Return total count for pagination
+   * - 15.9: Support sorting by created_at, price, quality, seller_rating
+   * - 15.10: Include seller information in results
+   * - 15.11: Include variant_count in results
+   * - 15.12: Execute queries within 50ms performance target
+   *
+   * @summary Search listings
+   * @param text Full-text search query
+   * @param game_item_id Filter by specific game item UUID
+   * @param quality_tier_min Minimum quality tier (1-5)
+   * @param quality_tier_max Maximum quality tier (1-5)
+   * @param price_min Minimum price filter
+   * @param price_max Maximum price filter
+   * @param page Page number for pagination (default: 1)
+   * @param page_size Number of results per page (default: 20, max: 100)
+   * @param sort_by Sort field (default: created_at)
+   * @param sort_order Sort order (default: desc)
+   * @returns Search results with pagination metadata
+   */
   @Put("{id}")
   public async updateListing(
     @Path() id: string,
@@ -1340,168 +1535,6 @@ export class ListingsV2Controller extends BaseController {
     } catch (error) {
       logger.error("Failed to update listing", {
         listingId: id,
-        userId,
-        error: error instanceof Error ? error.message : String(error),
-        stack: error instanceof Error ? error.stack : undefined,
-      })
-
-      throw error
-    }
-  }
-
-  /**
-   * Get my listings with variant information
-   *
-   * Retrieves all listings owned by the authenticated user with variant breakdown,
-   * quantity information, and price ranges. Supports filtering by status, pagination,
-   * and sorting. Uses the listing_search view for optimized query performance.
-   *
-   * Requirements:
-   * - 18.1: GET /api/v2/listings/mine endpoint
-   * - 18.2: Return listings owned by current user
-   * - 18.3: Include variant breakdown for each listing
-   * - 18.4: Include quantity_available per variant
-   * - 18.5: Support filtering by status (active, sold, expired, cancelled)
-   * - 18.6: Support pagination with page and page_size parameters
-   * - 18.7: Support sorting by created_at, updated_at, price, quantity
-   * - 18.8: Include total count for pagination UI
-   * - 18.9: Include price range (min to max) for each listing
-   * - 18.10: Include quality tier range for each listing
-   * - 18.11: Include variant count for each listing
-   * - 18.12: Execute queries within 50ms performance target
-   *
-   * @summary Get my listings
-   * @param status Filter by listing status
-   * @param page Page number for pagination (default: 1)
-   * @param page_size Number of results per page (default: 20, max: 100)
-   * @param sort_by Sort field (default: created_at)
-   * @param sort_order Sort order (default: desc)
-   * @param request Express request for authentication
-   * @returns User's listings with pagination metadata
-   */
-  @Get("mine")
-  public async getMyListings(
-    @Query() status?: "active" | "sold" | "expired" | "cancelled",
-    @Query() page?: number,
-    @Query() page_size?: number,
-    @Query() sort_by?: "created_at" | "updated_at" | "price" | "quantity",
-    @Query() sort_order?: "asc" | "desc",
-    @Request() request?: ExpressRequest,
-  ): Promise<GetMyListingsResponse> {
-    this.request = request
-    this.requireAuth()
-    const userId = this.getUserId()
-
-    const db = getKnex()
-
-    // Validate and set defaults (Requirement 18.6)
-    const validatedPage = Math.max(1, page || 1)
-    const validatedPageSize = Math.min(100, Math.max(1, page_size || 20))
-    const validatedSortBy = sort_by || "created_at"
-    const validatedSortOrder = sort_order || "desc"
-
-    // Validate status if provided (Requirement 18.5)
-    if (status && !["active", "sold", "expired", "cancelled"].includes(status)) {
-      this.throwValidationError("Invalid status", [
-        {
-          field: "status",
-          message: "Status must be one of: active, sold, expired, cancelled",
-        },
-      ])
-    }
-
-    logger.info("Fetching my listings", {
-      userId,
-      status,
-      page: validatedPage,
-      page_size: validatedPageSize,
-      sort_by: validatedSortBy,
-      sort_order: validatedSortOrder,
-    })
-
-    try {
-      // Build query using listing_search view for performance (Requirement 18.12)
-      let query = db("listing_search as ls")
-        .select(
-          "ls.listing_id",
-          "ls.title",
-          "ls.status",
-          "ls.created_at",
-          "ls.updated_at",
-          "ls.quantity_available",
-          "ls.variant_count",
-          "ls.price_min",
-          "ls.price_max",
-          "ls.quality_tier_min",
-          "ls.quality_tier_max",
-        )
-        .where("ls.seller_id", userId) // Filter by current user (Requirement 18.2)
-
-      // Apply status filter if provided (Requirement 18.5)
-      if (status) {
-        query = query.where("ls.status", status)
-      }
-
-      // Get total count for pagination (Requirement 18.8)
-      const countQuery = query.clone().clearSelect().clearOrder().count("* as count")
-      const [{ count: totalCount }] = await countQuery
-      const total = parseInt(String(totalCount), 10)
-
-      // Apply sorting (Requirement 18.7)
-      switch (validatedSortBy) {
-        case "price":
-          query = query.orderBy("ls.price_min", validatedSortOrder)
-          break
-        case "quantity":
-          query = query.orderBy("ls.quantity_available", validatedSortOrder)
-          break
-        case "updated_at":
-          query = query.orderBy("ls.updated_at", validatedSortOrder)
-          break
-        case "created_at":
-        default:
-          query = query.orderBy("ls.created_at", validatedSortOrder)
-          break
-      }
-
-      // Apply pagination (Requirement 18.6)
-      const offset = (validatedPage - 1) * validatedPageSize
-      query = query.limit(validatedPageSize).offset(offset)
-
-      // Execute query
-      const results = await query
-
-      // Transform results to match response type (Requirements 18.3, 18.4, 18.9, 18.10, 18.11)
-      const listings = results.map((row: any) => ({
-        listing_id: row.listing_id,
-        title: row.title,
-        status: row.status,
-        created_at: row.created_at.toISOString(),
-        updated_at: row.updated_at.toISOString(),
-        variant_count: row.variant_count || 0,
-        quantity_available: row.quantity_available || 0,
-        price_min: parseInt(row.price_min, 10) || 0,
-        price_max: parseInt(row.price_max, 10) || 0,
-        quality_tier_min: row.quality_tier_min || undefined,
-        quality_tier_max: row.quality_tier_max || undefined,
-      }))
-
-      logger.info("My listings fetched successfully", {
-        userId,
-        total,
-        returned: listings.length,
-        page: validatedPage,
-        page_size: validatedPageSize,
-      })
-
-      return {
-        listings,
-        total,
-        page: validatedPage,
-        page_size: validatedPageSize,
-      }
-    } catch (error) {
-      logger.error("Failed to fetch my listings", {
         userId,
         error: error instanceof Error ? error.message : String(error),
         stack: error instanceof Error ? error.stack : undefined,
