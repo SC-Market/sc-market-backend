@@ -30,6 +30,20 @@ export interface VariantAttributes {
 }
 
 // ============================================================================
+// Bulk Discount Tiers
+// ============================================================================
+
+/**
+ * A single bulk discount tier: buy at least min_quantity to get discount_percent off
+ */
+export interface BulkDiscountTier {
+  /** Minimum quantity to qualify for this discount */
+  min_quantity: number;
+  /** Discount percentage (0-100) */
+  discount_percent: number;
+}
+
+// ============================================================================
 // Create Listing Request Types
 // ============================================================================
 
@@ -77,6 +91,9 @@ export interface CreateListingRequest {
 
   /** Pickup method: how the buyer receives the item */
   pickup_method?: 'delivery' | 'pickup' | 'any';
+
+  /** Optional bulk discount tiers sorted by min_quantity ascending */
+  bulk_discount_tiers?: BulkDiscountTier[];
 }
 
 // ============================================================================
@@ -195,6 +212,9 @@ export interface ListingSearchResult {
 
   /** Pickup method: delivery, pickup, any, or null (not specified) */
   pickup_method?: 'delivery' | 'pickup' | 'any' | null;
+
+  /** Whether this listing has bulk discount tiers defined */
+  has_bulk_discount?: boolean;
 }
 
 /**
@@ -349,6 +369,9 @@ export interface ListingItemDetail {
   
   /** Array of variants with quantities and prices */
   variants: VariantDetail[];
+
+  /** Bulk discount tiers (null if none defined) */
+  bulk_discount_tiers?: BulkDiscountTier[] | null;
 }
 
 /**
@@ -418,10 +441,10 @@ export interface UpdateListingRequest {
 
   /** Pickup method: how the buyer receives the item */
   pickup_method?: 'delivery' | 'pickup' | 'any' | null;
-}
 
-// ============================================================================
-// Get My Listings Request/Response Types
+  /** Updated bulk discount tiers (pass [] to remove, omit to keep unchanged) */
+  bulk_discount_tiers?: BulkDiscountTier[];
+}
 // ============================================================================
 
 /**

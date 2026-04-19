@@ -268,6 +268,13 @@ export const update_listing: RequestHandler = async (req, res) => {
         price,
         quantity_available,
         internal,
+        ...(req.body.bulk_discount_tiers !== undefined
+          ? {
+              bulk_discount_tiers: req.body.bulk_discount_tiers?.length
+                ? req.body.bulk_discount_tiers
+                : null,
+            }
+          : {}),
       })
     }
 
@@ -895,6 +902,9 @@ export const create_listing: RequestHandler = async (req, res) => {
       user_seller_id: contractor ? null : user.user_id,
       contractor_seller_id: contractor ? contractor.contractor_id : null,
       status,
+      bulk_discount_tiers: req.body.bulk_discount_tiers?.length
+        ? req.body.bulk_discount_tiers
+        : null,
     })
 
     await marketDb.createUniqueListing({
