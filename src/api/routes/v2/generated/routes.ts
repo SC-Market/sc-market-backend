@@ -479,6 +479,15 @@ const models: TsoaRoute.Models = {
         "additionalProperties": false,
     },
     // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+    "BulkDiscountTier": {
+        "dataType": "refObject",
+        "properties": {
+            "min_quantity": {"dataType":"double","required":true},
+            "discount_percent": {"dataType":"double","required":true},
+        },
+        "additionalProperties": false,
+    },
+    // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
     "CreateListingRequest": {
         "dataType": "refObject",
         "properties": {
@@ -490,6 +499,7 @@ const models: TsoaRoute.Models = {
             "lots": {"dataType":"array","array":{"dataType":"refObject","ref":"StockLotInput"},"required":true},
             "photo_resource_ids": {"dataType":"array","array":{"dataType":"string"}},
             "pickup_method": {"dataType":"union","subSchemas":[{"dataType":"enum","enums":["delivery"]},{"dataType":"enum","enums":["pickup"]},{"dataType":"enum","enums":["any"]}]},
+            "bulk_discount_tiers": {"dataType":"array","array":{"dataType":"refObject","ref":"BulkDiscountTier"}},
         },
         "additionalProperties": false,
     },
@@ -561,6 +571,7 @@ const models: TsoaRoute.Models = {
             "pricing_mode": {"dataType":"union","subSchemas":[{"dataType":"enum","enums":["unified"]},{"dataType":"enum","enums":["per_variant"]}],"required":true},
             "base_price": {"dataType":"double"},
             "variants": {"dataType":"array","array":{"dataType":"refObject","ref":"VariantDetail"},"required":true},
+            "bulk_discount_tiers": {"dataType":"union","subSchemas":[{"dataType":"array","array":{"dataType":"refObject","ref":"BulkDiscountTier"}},{"dataType":"enum","enums":[null]}]},
         },
         "additionalProperties": false,
     },
@@ -598,6 +609,7 @@ const models: TsoaRoute.Models = {
             "seller_languages": {"dataType":"array","array":{"dataType":"string"}},
             "photo": {"dataType":"string"},
             "pickup_method": {"dataType":"union","subSchemas":[{"dataType":"enum","enums":["delivery"]},{"dataType":"enum","enums":["pickup"]},{"dataType":"enum","enums":["any"]},{"dataType":"enum","enums":[null]}]},
+            "has_bulk_discount": {"dataType":"boolean"},
         },
         "additionalProperties": false,
     },
@@ -642,6 +654,7 @@ const models: TsoaRoute.Models = {
             "variant_prices": {"dataType":"array","array":{"dataType":"refObject","ref":"VariantPriceUpdate"}},
             "lot_updates": {"dataType":"array","array":{"dataType":"refObject","ref":"LotUpdate"}},
             "pickup_method": {"dataType":"union","subSchemas":[{"dataType":"enum","enums":["delivery"]},{"dataType":"enum","enums":["pickup"]},{"dataType":"enum","enums":["any"]},{"dataType":"enum","enums":[null]}]},
+            "bulk_discount_tiers": {"dataType":"array","array":{"dataType":"refObject","ref":"BulkDiscountTier"}},
         },
         "additionalProperties": false,
     },
@@ -1616,7 +1629,6 @@ export function RegisterRoutes(app: Router) {
                 listing_type: {"in":"query","name":"listing_type","dataType":"union","subSchemas":[{"dataType":"enum","enums":["single"]},{"dataType":"enum","enums":["bundle"]},{"dataType":"enum","enums":["bulk"]}]},
                 seller_id: {"in":"query","name":"seller_id","dataType":"string"},
                 contractor_id: {"in":"query","name":"contractor_id","dataType":"string"},
-                pickup_method: {"in":"query","name":"pickup_method","dataType":"union","subSchemas":[{"dataType":"enum","enums":["delivery"]},{"dataType":"enum","enums":["pickup"]},{"dataType":"enum","enums":["any"]}]},
         };
         app.get('/listings/search',
             ...(fetchMiddlewares<RequestHandler>(ListingsV2Controller)),
