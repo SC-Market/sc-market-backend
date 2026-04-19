@@ -40,6 +40,37 @@ export const offer_get_session_id: RequestHandler = async (req, res) => {
 
 export const offer_put_session_id: RequestHandler = async (req, res) => {
   const session = req.offer_session!
+
+  // Handle assignment update
+  if (req.body.assigned_to !== undefined) {
+    if (!session.contractor_id) {
+      res.status(400).json(createErrorResponse(ErrorCode.VALIDATION_ERROR, "This offer cannot be assigned"))
+      return
+    }
+    const user = req.user as User
+    const hasManage = await has_permission(session.contractor_id, user.user_id, "manage_orders")
+    if (!hasManage) {
+      const isSelfClaim = req.body.assigned_to === user.username && !session.assigned_id
+      const hasClaim = isSelfClaim && await has_permission(session.contractor_id, user.user_id, "claim_orders")
+      if (!hasClaim) {
+        res.status(403).json(createErrorResponse(ErrorCode.FORBIDDEN, "No permission to assign this offer"))
+        return
+      }
+    }
+    if (req.body.assigned_to) {
+      const targetUser = await profileDb.getUser({ username: req.body.assigned_to })
+      if (!targetUser) {
+        res.status(400).json(createErrorResponse(ErrorCode.VALIDATION_ERROR, "Invalid user"))
+        return
+      }
+      await offerDb.updateOfferSession(session.id, { assigned_id: targetUser.user_id })
+    } else {
+      await offerDb.updateOfferSession(session.id, { assigned_id: null })
+    }
+    res.json(createResponse({ result: "Success" }))
+    return
+  }
+
   let status = req.body.status as
     | "accepted"
     | "rejected"

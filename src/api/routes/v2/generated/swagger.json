@@ -704,6 +704,79 @@
 				"type": "object",
 				"additionalProperties": false
 			},
+			"OrderVariantItem": {
+				"properties": {
+					"order_item_id": {
+						"type": "string"
+					},
+					"variant_id": {
+						"type": "string"
+					},
+					"quantity": {
+						"type": "number",
+						"format": "double"
+					},
+					"price_per_unit": {
+						"type": "number",
+						"format": "double"
+					},
+					"attributes": {
+						"$ref": "#/components/schemas/VariantAttributes"
+					},
+					"display_name": {
+						"type": "string"
+					},
+					"short_name": {
+						"type": "string"
+					}
+				},
+				"required": [
+					"order_item_id",
+					"variant_id",
+					"quantity",
+					"price_per_unit",
+					"attributes",
+					"display_name",
+					"short_name"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
+			"OrderMarketListingV2": {
+				"description": "Market listing in an order, enriched with V2 variant data",
+				"properties": {
+					"listing_id": {
+						"type": "string"
+					},
+					"quantity": {
+						"type": "number",
+						"format": "double"
+					},
+					"title": {
+						"type": "string"
+					},
+					"price": {
+						"type": "number",
+						"format": "double"
+					},
+					"v2_variants": {
+						"items": {
+							"$ref": "#/components/schemas/OrderVariantItem"
+						},
+						"type": "array",
+						"description": "V2 variant items for this listing (empty if no V2 data)"
+					}
+				},
+				"required": [
+					"listing_id",
+					"quantity",
+					"title",
+					"price",
+					"v2_variants"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
 			"GetOrderDetailResponse": {
 				"description": "Response from getting order details\nRequirement 26.1-26.12: Return order metadata with buyer/seller info and variant details",
 				"properties": {
@@ -770,6 +843,27 @@
 						"type": "string",
 						"description": "Order status"
 					},
+					"kind": {
+						"type": "string",
+						"description": "Order kind (Delivery, Escort, etc.)"
+					},
+					"title": {
+						"type": "string",
+						"description": "Order title"
+					},
+					"description": {
+						"type": "string",
+						"description": "Order description"
+					},
+					"payment_type": {
+						"type": "string",
+						"description": "Payment type"
+					},
+					"offer_session_id": {
+						"type": "string",
+						"nullable": true,
+						"description": "Offer session ID (if created from offer)"
+					},
 					"created_at": {
 						"type": "string",
 						"description": "ISO 8601 timestamp of order creation"
@@ -778,12 +872,19 @@
 						"type": "string",
 						"description": "ISO 8601 timestamp of last update"
 					},
+					"market_listings": {
+						"items": {
+							"$ref": "#/components/schemas/OrderMarketListingV2"
+						},
+						"type": "array",
+						"description": "V1 market listings with V2 variant enrichment"
+					},
 					"items": {
 						"items": {
 							"$ref": "#/components/schemas/OrderItemDetail"
 						},
 						"type": "array",
-						"description": "Array of order items with variant details"
+						"description": "V2-only order items (from order_market_items_v2)"
 					}
 				},
 				"required": [
@@ -792,8 +893,13 @@
 					"seller",
 					"total_price",
 					"status",
+					"kind",
+					"title",
+					"description",
+					"payment_type",
 					"created_at",
 					"updated_at",
+					"market_listings",
 					"items"
 				],
 				"type": "object",
@@ -903,6 +1009,321 @@
 				},
 				"required": [
 					"orders",
+					"total",
+					"page",
+					"page_size"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
+			"UserSummary": {
+				"properties": {
+					"user_id": {
+						"type": "string"
+					},
+					"username": {
+						"type": "string"
+					},
+					"display_name": {
+						"type": "string"
+					},
+					"avatar": {
+						"type": "string",
+						"nullable": true
+					}
+				},
+				"required": [
+					"user_id",
+					"username"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
+			"OrgSummary": {
+				"properties": {
+					"contractor_id": {
+						"type": "string"
+					},
+					"spectrum_id": {
+						"type": "string"
+					},
+					"name": {
+						"type": "string"
+					},
+					"avatar": {
+						"type": "string",
+						"nullable": true
+					}
+				},
+				"required": [
+					"contractor_id",
+					"spectrum_id",
+					"name"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
+			"OfferVariantItem": {
+				"properties": {
+					"variant_id": {
+						"type": "string"
+					},
+					"quantity": {
+						"type": "number",
+						"format": "double"
+					},
+					"price_per_unit": {
+						"type": "number",
+						"format": "double"
+					},
+					"attributes": {
+						"$ref": "#/components/schemas/VariantAttributes"
+					},
+					"display_name": {
+						"type": "string"
+					},
+					"short_name": {
+						"type": "string"
+					}
+				},
+				"required": [
+					"variant_id",
+					"quantity",
+					"price_per_unit",
+					"attributes",
+					"display_name",
+					"short_name"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
+			"OfferMarketListingV2": {
+				"properties": {
+					"listing_id": {
+						"type": "string"
+					},
+					"quantity": {
+						"type": "number",
+						"format": "double"
+					},
+					"title": {
+						"type": "string"
+					},
+					"price": {
+						"type": "number",
+						"format": "double"
+					},
+					"v2_variants": {
+						"items": {
+							"$ref": "#/components/schemas/OfferVariantItem"
+						},
+						"type": "array",
+						"description": "V2 variant items for this listing (empty if no V2 data)"
+					}
+				},
+				"required": [
+					"listing_id",
+					"quantity",
+					"title",
+					"price",
+					"v2_variants"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
+			"OfferV2": {
+				"properties": {
+					"offer_id": {
+						"type": "string"
+					},
+					"kind": {
+						"type": "string"
+					},
+					"cost": {
+						"type": "number",
+						"format": "double"
+					},
+					"title": {
+						"type": "string"
+					},
+					"description": {
+						"type": "string"
+					},
+					"payment_type": {
+						"type": "string"
+					},
+					"status": {
+						"type": "string"
+					},
+					"created_at": {
+						"type": "string"
+					},
+					"actor_id": {
+						"type": "string"
+					},
+					"market_listings": {
+						"items": {
+							"$ref": "#/components/schemas/OfferMarketListingV2"
+						},
+						"type": "array",
+						"description": "V1 market listings (always present)"
+					},
+					"service": {
+						"properties": {
+							"title": {
+								"type": "string"
+							},
+							"service_id": {
+								"type": "string"
+							}
+						},
+						"required": [
+							"title",
+							"service_id"
+						],
+						"type": "object",
+						"nullable": true
+					}
+				},
+				"required": [
+					"offer_id",
+					"kind",
+					"cost",
+					"title",
+					"description",
+					"payment_type",
+					"status",
+					"created_at",
+					"actor_id",
+					"market_listings"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
+			"GetOfferSessionV2Response": {
+				"properties": {
+					"session_id": {
+						"type": "string"
+					},
+					"status": {
+						"type": "string"
+					},
+					"created_at": {
+						"type": "string"
+					},
+					"order_id": {
+						"type": "string"
+					},
+					"discord_invite": {
+						"type": "string",
+						"nullable": true
+					},
+					"customer": {
+						"$ref": "#/components/schemas/UserSummary"
+					},
+					"seller": {
+						"anyOf": [
+							{
+								"$ref": "#/components/schemas/UserSummary"
+							},
+							{
+								"$ref": "#/components/schemas/OrgSummary"
+							}
+						],
+						"nullable": true
+					},
+					"offers": {
+						"items": {
+							"$ref": "#/components/schemas/OfferV2"
+						},
+						"type": "array"
+					}
+				},
+				"required": [
+					"session_id",
+					"status",
+					"created_at",
+					"customer",
+					"seller",
+					"offers"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
+			"OfferSessionV2": {
+				"description": "V2 serialization of an offer session with variant-enriched market listings",
+				"properties": {
+					"session_id": {
+						"type": "string"
+					},
+					"status": {
+						"type": "string"
+					},
+					"created_at": {
+						"type": "string"
+					},
+					"order_id": {
+						"type": "string"
+					},
+					"discord_invite": {
+						"type": "string",
+						"nullable": true
+					},
+					"customer": {
+						"$ref": "#/components/schemas/UserSummary"
+					},
+					"seller": {
+						"anyOf": [
+							{
+								"$ref": "#/components/schemas/UserSummary"
+							},
+							{
+								"$ref": "#/components/schemas/OrgSummary"
+							}
+						],
+						"nullable": true
+					},
+					"offers": {
+						"items": {
+							"$ref": "#/components/schemas/OfferV2"
+						},
+						"type": "array"
+					}
+				},
+				"required": [
+					"session_id",
+					"status",
+					"created_at",
+					"customer",
+					"seller",
+					"offers"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
+			"SearchOffersV2Response": {
+				"properties": {
+					"offers": {
+						"items": {
+							"$ref": "#/components/schemas/OfferSessionV2"
+						},
+						"type": "array"
+					},
+					"total": {
+						"type": "number",
+						"format": "double"
+					},
+					"page": {
+						"type": "number",
+						"format": "double"
+					},
+					"page_size": {
+						"type": "number",
+						"format": "double"
+					}
+				},
+				"required": [
+					"offers",
 					"total",
 					"page",
 					"page_size"
@@ -3526,6 +3947,112 @@
 				]
 			}
 		},
+		"/offers/{sessionId}": {
+			"get": {
+				"operationId": "GetOfferSession",
+				"responses": {
+					"200": {
+						"description": "Ok",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/GetOfferSessionV2Response"
+								}
+							}
+						}
+					}
+				},
+				"description": "Get offer session with V2 variant-enriched market listings",
+				"tags": [
+					"Offers V2"
+				],
+				"security": [
+					{
+						"session": []
+					}
+				],
+				"parameters": [
+					{
+						"in": "path",
+						"name": "sessionId",
+						"required": true,
+						"schema": {
+							"type": "string"
+						}
+					}
+				]
+			}
+		},
+		"/offers/search": {
+			"get": {
+				"operationId": "SearchOffers",
+				"responses": {
+					"200": {
+						"description": "Ok",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/SearchOffersV2Response"
+								}
+							}
+						}
+					}
+				},
+				"description": "Search offers for the current user",
+				"tags": [
+					"Offers V2"
+				],
+				"security": [
+					{
+						"session": []
+					}
+				],
+				"parameters": [
+					{
+						"in": "query",
+						"name": "role",
+						"required": false,
+						"schema": {
+							"type": "string",
+							"enum": [
+								"customer",
+								"seller"
+							]
+						}
+					},
+					{
+						"in": "query",
+						"name": "status",
+						"required": false,
+						"schema": {
+							"type": "string",
+							"enum": [
+								"active",
+								"closed"
+							]
+						}
+					},
+					{
+						"in": "query",
+						"name": "page",
+						"required": false,
+						"schema": {
+							"format": "double",
+							"type": "number"
+						}
+					},
+					{
+						"in": "query",
+						"name": "page_size",
+						"required": false,
+						"schema": {
+							"format": "double",
+							"type": "number"
+						}
+					}
+				]
+			}
+		},
 		"/listings": {
 			"post": {
 				"operationId": "CreateListing",
@@ -3860,6 +4387,22 @@
 								"bundle",
 								"bulk"
 							]
+						}
+					},
+					{
+						"in": "query",
+						"name": "seller_id",
+						"required": false,
+						"schema": {
+							"type": "string"
+						}
+					},
+					{
+						"in": "query",
+						"name": "contractor_id",
+						"required": false,
+						"schema": {
+							"type": "string"
 						}
 					}
 				]
@@ -4541,7 +5084,7 @@
 		},
 		"/buy-orders": {
 			"post": {
-				"operationId": "CreateBuyOrder",
+				"operationId": "CreatePurchase",
 				"responses": {
 					"200": {
 						"description": "Created order with order_id and purchase details",
@@ -4562,13 +5105,13 @@
 				"security": [],
 				"parameters": [],
 				"requestBody": {
-					"description": "Buy order request with listing, variant, and quantity",
+					"description": "Purchase request with listing, variant, and quantity",
 					"required": true,
 					"content": {
 						"application/json": {
 							"schema": {
 								"$ref": "#/components/schemas/CreateBuyOrderRequest",
-								"description": "Buy order request with listing, variant, and quantity"
+								"description": "Purchase request with listing, variant, and quantity"
 							}
 						}
 					}
