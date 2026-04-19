@@ -17,6 +17,15 @@ export async function up(knex: Knex): Promise<void> {
       default_version: "V1",
       rollout_percentage: 0,
     });
+  } else {
+    // Existing table may use "key" instead of "flag_name" — rename if needed
+    const hasKey = await knex.schema.hasColumn("feature_flag_config", "key");
+    const hasFlagName = await knex.schema.hasColumn("feature_flag_config", "flag_name");
+    if (hasKey && !hasFlagName) {
+      await knex.schema.alterTable("feature_flag_config", (table) => {
+        table.renameColumn("key", "flag_name");
+      });
+    }
   }
 }
 
