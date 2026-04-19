@@ -132,7 +132,7 @@ describe("BuyOrdersV2Controller", () => {
         quantity: 3,
       }
 
-      const result = await controller.createBuyOrder(buyOrderRequest, mockRequest)
+      const result = await controller.createPurchase(buyOrderRequest, mockRequest)
 
       expect(result).toBeDefined()
       expect(result.order_id).toBeDefined()
@@ -201,7 +201,7 @@ describe("BuyOrdersV2Controller", () => {
       }
 
       await expect(
-        controller.createBuyOrder(buyOrderRequest, mockRequest),
+        controller.createPurchase(buyOrderRequest, mockRequest),
       ).rejects.toThrow(/Insufficient stock/)
     })
 
@@ -217,7 +217,7 @@ describe("BuyOrdersV2Controller", () => {
       }
 
       await expect(
-        controller.createBuyOrder(buyOrderRequest, mockRequest),
+        controller.createPurchase(buyOrderRequest, mockRequest),
       ).rejects.toThrow(/not found/)
     })
 
@@ -233,7 +233,7 @@ describe("BuyOrdersV2Controller", () => {
       }
 
       await expect(
-        controller.createBuyOrder(buyOrderRequest, mockRequest),
+        controller.createPurchase(buyOrderRequest, mockRequest),
       ).rejects.toThrow(/not found/)
     })
 
@@ -254,7 +254,7 @@ describe("BuyOrdersV2Controller", () => {
       }
 
       await expect(
-        controller.createBuyOrder(buyOrderRequest, mockRequest),
+        controller.createPurchase(buyOrderRequest, mockRequest),
       ).rejects.toThrow(/not active/)
 
       // Restore listing status
@@ -295,7 +295,7 @@ describe("BuyOrdersV2Controller", () => {
       }
 
       await expect(
-        controller.createBuyOrder(buyOrderRequest, mockRequest),
+        controller.createPurchase(buyOrderRequest, mockRequest),
       ).rejects.toThrow(/does not belong/)
 
       // Clean up
@@ -315,7 +315,7 @@ describe("BuyOrdersV2Controller", () => {
       }
 
       await expect(
-        controller.createBuyOrder(buyOrderRequest, mockRequest),
+        controller.createPurchase(buyOrderRequest, mockRequest),
       ).rejects.toThrow(/greater than 0/)
     })
 
@@ -331,7 +331,7 @@ describe("BuyOrdersV2Controller", () => {
       }
 
       await expect(
-        controller.createBuyOrder(buyOrderRequest, mockRequest),
+        controller.createPurchase(buyOrderRequest, mockRequest),
       ).rejects.toThrow(/greater than 0/)
     })
 
@@ -360,7 +360,7 @@ describe("BuyOrdersV2Controller", () => {
         quantity: 2,
       }
 
-      const result = await controller.createBuyOrder(buyOrderRequest, mockRequest)
+      const result = await controller.createPurchase(buyOrderRequest, mockRequest)
 
       expect(result.total_price).toBe(15000) // 2 * 7500
       expect(result.item.price_per_unit).toBe(7500)
@@ -400,7 +400,7 @@ describe("BuyOrdersV2Controller", () => {
         quantity: 1,
       }
 
-      const result = await controller.createBuyOrder(buyOrderRequest, mockRequest)
+      const result = await controller.createPurchase(buyOrderRequest, mockRequest)
 
       // Verify price was snapshotted
       const orderItem = await knex("order_market_items_v2")

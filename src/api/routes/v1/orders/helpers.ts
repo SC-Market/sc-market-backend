@@ -926,10 +926,24 @@ export async function handleAssignedUpdate(req: any, res: any) {
       "manage_orders",
     ))
   ) {
-    res
-      .status(403)
-      .json(createForbiddenErrorResponse("No permission to assign this order"))
-    return
+    // Allow claim_orders permission if user is claiming for themselves and order is unassigned
+    const isSelfClaim =
+      targetUser === req.user.username && !req.order.assigned_id
+    if (
+      !isSelfClaim ||
+      !(await has_permission(
+        contractorObj.contractor_id,
+        req.user.user_id,
+        "claim_orders",
+      ))
+    ) {
+      res
+        .status(403)
+        .json(
+          createForbiddenErrorResponse("No permission to assign this order"),
+        )
+      return
+    }
   }
 
   if (targetUser) {

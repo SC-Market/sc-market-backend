@@ -10,6 +10,8 @@ import { StockLotsV2Controller } from './../stock-lots/StockLotsV2Controller.js'
 // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
 import { OrdersV2Controller } from './../orders/OrdersV2Controller.js';
 // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+import { OffersV2Controller } from './../offers/OffersV2Controller.js';
+// WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
 import { ListingsV2Controller } from './../listings/ListingsV2Controller.js';
 // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
 import { HealthController } from './../health/HealthController.js';
@@ -267,6 +269,32 @@ const models: TsoaRoute.Models = {
         "additionalProperties": false,
     },
     // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+    "OrderVariantItem": {
+        "dataType": "refObject",
+        "properties": {
+            "order_item_id": {"dataType":"string","required":true},
+            "variant_id": {"dataType":"string","required":true},
+            "quantity": {"dataType":"double","required":true},
+            "price_per_unit": {"dataType":"double","required":true},
+            "attributes": {"ref":"VariantAttributes","required":true},
+            "display_name": {"dataType":"string","required":true},
+            "short_name": {"dataType":"string","required":true},
+        },
+        "additionalProperties": false,
+    },
+    // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+    "OrderMarketListingV2": {
+        "dataType": "refObject",
+        "properties": {
+            "listing_id": {"dataType":"string","required":true},
+            "quantity": {"dataType":"double","required":true},
+            "title": {"dataType":"string","required":true},
+            "price": {"dataType":"double","required":true},
+            "v2_variants": {"dataType":"array","array":{"dataType":"refObject","ref":"OrderVariantItem"},"required":true},
+        },
+        "additionalProperties": false,
+    },
+    // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
     "GetOrderDetailResponse": {
         "dataType": "refObject",
         "properties": {
@@ -275,8 +303,14 @@ const models: TsoaRoute.Models = {
             "seller": {"dataType":"nestedObjectLiteral","nestedProperties":{"avatar":{"dataType":"union","subSchemas":[{"dataType":"string"},{"dataType":"enum","enums":[null]}],"required":true},"display_name":{"dataType":"string","required":true},"username":{"dataType":"string","required":true},"user_id":{"dataType":"string","required":true}},"required":true},
             "total_price": {"dataType":"double","required":true},
             "status": {"dataType":"string","required":true},
+            "kind": {"dataType":"string","required":true},
+            "title": {"dataType":"string","required":true},
+            "description": {"dataType":"string","required":true},
+            "payment_type": {"dataType":"string","required":true},
+            "offer_session_id": {"dataType":"union","subSchemas":[{"dataType":"string"},{"dataType":"enum","enums":[null]}]},
             "created_at": {"dataType":"string","required":true},
             "updated_at": {"dataType":"string","required":true},
+            "market_listings": {"dataType":"array","array":{"dataType":"refObject","ref":"OrderMarketListingV2"},"required":true},
             "items": {"dataType":"array","array":{"dataType":"refObject","ref":"OrderItemDetail"},"required":true},
         },
         "additionalProperties": false,
@@ -306,6 +340,112 @@ const models: TsoaRoute.Models = {
         "dataType": "refObject",
         "properties": {
             "orders": {"dataType":"array","array":{"dataType":"refObject","ref":"OrderPreview"},"required":true},
+            "total": {"dataType":"double","required":true},
+            "page": {"dataType":"double","required":true},
+            "page_size": {"dataType":"double","required":true},
+        },
+        "additionalProperties": false,
+    },
+    // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+    "UserSummary": {
+        "dataType": "refObject",
+        "properties": {
+            "user_id": {"dataType":"string","required":true},
+            "username": {"dataType":"string","required":true},
+            "display_name": {"dataType":"string"},
+            "avatar": {"dataType":"union","subSchemas":[{"dataType":"string"},{"dataType":"enum","enums":[null]}]},
+        },
+        "additionalProperties": false,
+    },
+    // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+    "OrgSummary": {
+        "dataType": "refObject",
+        "properties": {
+            "contractor_id": {"dataType":"string","required":true},
+            "spectrum_id": {"dataType":"string","required":true},
+            "name": {"dataType":"string","required":true},
+            "avatar": {"dataType":"union","subSchemas":[{"dataType":"string"},{"dataType":"enum","enums":[null]}]},
+        },
+        "additionalProperties": false,
+    },
+    // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+    "OfferVariantItem": {
+        "dataType": "refObject",
+        "properties": {
+            "variant_id": {"dataType":"string","required":true},
+            "quantity": {"dataType":"double","required":true},
+            "price_per_unit": {"dataType":"double","required":true},
+            "attributes": {"ref":"VariantAttributes","required":true},
+            "display_name": {"dataType":"string","required":true},
+            "short_name": {"dataType":"string","required":true},
+        },
+        "additionalProperties": false,
+    },
+    // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+    "OfferMarketListingV2": {
+        "dataType": "refObject",
+        "properties": {
+            "listing_id": {"dataType":"string","required":true},
+            "quantity": {"dataType":"double","required":true},
+            "title": {"dataType":"string","required":true},
+            "price": {"dataType":"double","required":true},
+            "v2_variants": {"dataType":"array","array":{"dataType":"refObject","ref":"OfferVariantItem"},"required":true},
+        },
+        "additionalProperties": false,
+    },
+    // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+    "OfferV2": {
+        "dataType": "refObject",
+        "properties": {
+            "offer_id": {"dataType":"string","required":true},
+            "kind": {"dataType":"string","required":true},
+            "cost": {"dataType":"double","required":true},
+            "title": {"dataType":"string","required":true},
+            "description": {"dataType":"string","required":true},
+            "payment_type": {"dataType":"string","required":true},
+            "status": {"dataType":"string","required":true},
+            "created_at": {"dataType":"string","required":true},
+            "actor_id": {"dataType":"string","required":true},
+            "market_listings": {"dataType":"array","array":{"dataType":"refObject","ref":"OfferMarketListingV2"},"required":true},
+            "service": {"dataType":"union","subSchemas":[{"dataType":"nestedObjectLiteral","nestedProperties":{"title":{"dataType":"string","required":true},"service_id":{"dataType":"string","required":true}}},{"dataType":"enum","enums":[null]}]},
+        },
+        "additionalProperties": false,
+    },
+    // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+    "GetOfferSessionV2Response": {
+        "dataType": "refObject",
+        "properties": {
+            "session_id": {"dataType":"string","required":true},
+            "status": {"dataType":"string","required":true},
+            "created_at": {"dataType":"string","required":true},
+            "order_id": {"dataType":"string"},
+            "discord_invite": {"dataType":"union","subSchemas":[{"dataType":"string"},{"dataType":"enum","enums":[null]}]},
+            "customer": {"ref":"UserSummary","required":true},
+            "seller": {"dataType":"union","subSchemas":[{"ref":"UserSummary"},{"ref":"OrgSummary"},{"dataType":"enum","enums":[null]}],"required":true},
+            "offers": {"dataType":"array","array":{"dataType":"refObject","ref":"OfferV2"},"required":true},
+        },
+        "additionalProperties": false,
+    },
+    // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+    "OfferSessionV2": {
+        "dataType": "refObject",
+        "properties": {
+            "session_id": {"dataType":"string","required":true},
+            "status": {"dataType":"string","required":true},
+            "created_at": {"dataType":"string","required":true},
+            "order_id": {"dataType":"string"},
+            "discord_invite": {"dataType":"union","subSchemas":[{"dataType":"string"},{"dataType":"enum","enums":[null]}]},
+            "customer": {"ref":"UserSummary","required":true},
+            "seller": {"dataType":"union","subSchemas":[{"ref":"UserSummary"},{"ref":"OrgSummary"},{"dataType":"enum","enums":[null]}],"required":true},
+            "offers": {"dataType":"array","array":{"dataType":"refObject","ref":"OfferV2"},"required":true},
+        },
+        "additionalProperties": false,
+    },
+    // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+    "SearchOffersV2Response": {
+        "dataType": "refObject",
+        "properties": {
+            "offers": {"dataType":"array","array":{"dataType":"refObject","ref":"OfferSessionV2"},"required":true},
             "total": {"dataType":"double","required":true},
             "page": {"dataType":"double","required":true},
             "page_size": {"dataType":"double","required":true},
@@ -1326,6 +1466,73 @@ export function RegisterRoutes(app: Router) {
             }
         });
         // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+        const argsOffersV2Controller_getOfferSession: Record<string, TsoaRoute.ParameterSchema> = {
+                sessionId: {"in":"path","name":"sessionId","required":true,"dataType":"string"},
+                request: {"in":"request","name":"request","required":true,"dataType":"object"},
+        };
+        app.get('/offers/:sessionId',
+            authenticateMiddleware([{"session":[]}]),
+            ...(fetchMiddlewares<RequestHandler>(OffersV2Controller)),
+            ...(fetchMiddlewares<RequestHandler>(OffersV2Controller.prototype.getOfferSession)),
+
+            async function OffersV2Controller_getOfferSession(request: ExRequest, response: ExResponse, next: any) {
+
+            // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+
+            let validatedArgs: any[] = [];
+            try {
+                validatedArgs = templateService.getValidatedArgs({ args: argsOffersV2Controller_getOfferSession, request, response });
+
+                const controller = new OffersV2Controller();
+
+              await templateService.apiHandler({
+                methodName: 'getOfferSession',
+                controller,
+                response,
+                next,
+                validatedArgs,
+                successStatus: undefined,
+              });
+            } catch (err) {
+                return next(err);
+            }
+        });
+        // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+        const argsOffersV2Controller_searchOffers: Record<string, TsoaRoute.ParameterSchema> = {
+                request: {"in":"request","name":"request","required":true,"dataType":"object"},
+                role: {"in":"query","name":"role","dataType":"union","subSchemas":[{"dataType":"enum","enums":["customer"]},{"dataType":"enum","enums":["seller"]}]},
+                status: {"in":"query","name":"status","dataType":"union","subSchemas":[{"dataType":"enum","enums":["active"]},{"dataType":"enum","enums":["closed"]}]},
+                page: {"in":"query","name":"page","dataType":"double"},
+                page_size: {"in":"query","name":"page_size","dataType":"double"},
+        };
+        app.get('/offers/search',
+            authenticateMiddleware([{"session":[]}]),
+            ...(fetchMiddlewares<RequestHandler>(OffersV2Controller)),
+            ...(fetchMiddlewares<RequestHandler>(OffersV2Controller.prototype.searchOffers)),
+
+            async function OffersV2Controller_searchOffers(request: ExRequest, response: ExResponse, next: any) {
+
+            // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+
+            let validatedArgs: any[] = [];
+            try {
+                validatedArgs = templateService.getValidatedArgs({ args: argsOffersV2Controller_searchOffers, request, response });
+
+                const controller = new OffersV2Controller();
+
+              await templateService.apiHandler({
+                methodName: 'searchOffers',
+                controller,
+                response,
+                next,
+                validatedArgs,
+                successStatus: undefined,
+              });
+            } catch (err) {
+                return next(err);
+            }
+        });
+        // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
         const argsListingsV2Controller_createListing: Record<string, TsoaRoute.ParameterSchema> = {
                 requestBody: {"in":"body","name":"requestBody","required":true,"ref":"CreateListingRequest"},
                 request: {"in":"request","name":"request","required":true,"dataType":"object"},
@@ -1403,6 +1610,8 @@ export function RegisterRoutes(app: Router) {
                 sort_order: {"in":"query","name":"sort_order","dataType":"union","subSchemas":[{"dataType":"enum","enums":["asc"]},{"dataType":"enum","enums":["desc"]}]},
                 language_codes: {"in":"query","name":"language_codes","dataType":"string"},
                 listing_type: {"in":"query","name":"listing_type","dataType":"union","subSchemas":[{"dataType":"enum","enums":["single"]},{"dataType":"enum","enums":["bundle"]},{"dataType":"enum","enums":["bulk"]}]},
+                seller_id: {"in":"query","name":"seller_id","dataType":"string"},
+                contractor_id: {"in":"query","name":"contractor_id","dataType":"string"},
         };
         app.get('/listings/search',
             ...(fetchMiddlewares<RequestHandler>(ListingsV2Controller)),
@@ -1964,26 +2173,26 @@ export function RegisterRoutes(app: Router) {
             }
         });
         // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
-        const argsBuyOrdersV2Controller_createBuyOrder: Record<string, TsoaRoute.ParameterSchema> = {
+        const argsBuyOrdersV2Controller_createPurchase: Record<string, TsoaRoute.ParameterSchema> = {
                 requestBody: {"in":"body","name":"requestBody","required":true,"ref":"CreateBuyOrderRequest"},
                 request: {"in":"request","name":"request","required":true,"dataType":"object"},
         };
         app.post('/buy-orders',
             ...(fetchMiddlewares<RequestHandler>(BuyOrdersV2Controller)),
-            ...(fetchMiddlewares<RequestHandler>(BuyOrdersV2Controller.prototype.createBuyOrder)),
+            ...(fetchMiddlewares<RequestHandler>(BuyOrdersV2Controller.prototype.createPurchase)),
 
-            async function BuyOrdersV2Controller_createBuyOrder(request: ExRequest, response: ExResponse, next: any) {
+            async function BuyOrdersV2Controller_createPurchase(request: ExRequest, response: ExResponse, next: any) {
 
             // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
 
             let validatedArgs: any[] = [];
             try {
-                validatedArgs = templateService.getValidatedArgs({ args: argsBuyOrdersV2Controller_createBuyOrder, request, response });
+                validatedArgs = templateService.getValidatedArgs({ args: argsBuyOrdersV2Controller_createPurchase, request, response });
 
                 const controller = new BuyOrdersV2Controller();
 
               await templateService.apiHandler({
-                methodName: 'createBuyOrder',
+                methodName: 'createPurchase',
                 controller,
                 response,
                 next,

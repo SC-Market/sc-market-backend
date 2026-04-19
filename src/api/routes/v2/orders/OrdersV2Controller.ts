@@ -22,6 +22,8 @@ import {
   GetOrdersResponse,
   OrderItemDetail,
   OrderVariantDetail,
+  OrderMarketListingV2,
+  OrderVariantItem,
   OrderPreview,
 } from "../types/orders.types.js"
 import logger from "../../../../logger/logger.js"
@@ -295,134 +297,145 @@ export class OrdersV2Controller extends BaseController {
     this.requireAuth()
     const userId = this.getUserId()
 
-    logger.info("Fetching V2 order detail", { orderId, userId })
-
     try {
       const knex = getKnex()
 
-      // Step 1: Get order record
-      // Requirement 26.10: Return 404 if order not found
-      const order = await knex("orders")
-        .where({ order_id: orderId })
+      const order = await knex("orders").where({ order_id: orderId }).first()
+      if (!order) throw this.throwNotFound("Order", orderId)
+
+      // Buyer
+      const buyer = await knex("accounts")
+        .where({ user_id: order.customer_id })
+        .select("user_id", "username", "display_name", "avatar")
         .first()
 
-      if (!order) {
-        throw this.throwNotFound("Order", orderId)
-      }
+      // Seller — from market_orders → listings → accounts, or from assigned_id
+      let seller = await knex("market_orders")
+        .join("listings", "market_orders.listing_id", "listings.listing_id")
+        .join("accounts", "listings.seller_id", "accounts.user_id")
+        .where({ "market_orders.order_id": orderId })
+        .select("accounts.user_id", "accounts.username", "accounts.display_name", "accounts.avatar")
+        .first()
 
-      // Step 2: Get buyer and seller information
-      // Requirement 26.2: Return order metadata with buyer and seller information
-      const [buyer, seller] = await Promise.all([
-        knex("accounts")
-          .where({ user_id: order.customer_id })
+      if (!seller && order.assigned_id) {
+        seller = await knex("accounts")
+          .where({ user_id: order.assigned_id })
           .select("user_id", "username", "display_name", "avatar")
-          .first(),
-        knex("market_orders")
-          .join("listings", "market_orders.listing_id", "listings.listing_id")
-          .join("accounts", "listings.seller_id", "accounts.user_id")
-          .where({ "market_orders.order_id": orderId })
-          .select("accounts.user_id", "accounts.username", "accounts.display_name", "accounts.avatar")
-          .first(),
-      ])
-
-      if (!buyer || !seller) {
-        throw this.throwNotFound("Order participants", orderId)
+          .first()
       }
 
-      // Requirement 26.11: Validate user authorization to view order
-      if (userId !== buyer.user_id && userId !== seller.user_id) {
+      if (!buyer) throw this.throwNotFound("Order buyer", orderId)
+
+      // Auth check — buyer, seller, or contractor member
+      const isBuyer = userId === buyer.user_id
+      const isSeller = seller && userId === seller.user_id
+      const isAssigned = order.assigned_id === userId
+      if (!isBuyer && !isSeller && !isAssigned) {
         throw this.throwForbidden("You do not have permission to view this order")
       }
 
-      // Step 3: Get order items with variant details
-      // Requirement 26.3: Return array of order items with variant details
-      const orderItems = await knex("order_market_items_v2")
+      // V1 market listings
+      const v1Listings = await knex("market_orders")
         .where({ order_id: orderId })
-        .select("*")
+        .select("listing_id", "quantity")
 
-      if (orderItems.length === 0) {
-        logger.warn("Order has no items in order_market_items_v2", { orderId })
-        // Return empty items array instead of throwing error
+      // V2 variant items (may not exist)
+      const hasV2Table = await knex.schema.hasTable("order_market_items_v2")
+      let v2Items: any[] = []
+      if (hasV2Table) {
+        v2Items = await knex("order_market_items_v2")
+          .where({ order_id: orderId })
+          .select("*")
       }
 
-      // Step 4: Enrich items with variant details
-      // Requirements 26.4-26.7: Include quality_tier, variant attributes, display_name, price_per_unit
+      // Build enriched market_listings
+      const marketListings: OrderMarketListingV2[] = await Promise.all(
+        v1Listings.map(async (ml) => {
+          // Get listing title/price from V2 listings table first, fall back to V1
+          let title = "Unknown"
+          let price = 0
+          const v2Listing = await knex("listings").where({ listing_id: ml.listing_id }).first()
+          if (v2Listing) {
+            title = v2Listing.title
+            const li = await knex("listing_items").where({ listing_id: ml.listing_id }).first()
+            price = li?.base_price ? parseInt(li.base_price) : 0
+          } else {
+            const v1Details = await knex("market_listing_details").where({ listing_id: ml.listing_id }).first()
+            if (v1Details) {
+              title = v1Details.title
+              price = parseInt(v1Details.price) || 0
+            }
+          }
+
+          // Get V2 variant items for this listing
+          const listingV2Items = v2Items.filter((i) => i.listing_id === ml.listing_id)
+          const v2Variants: OrderVariantItem[] = await Promise.all(
+            listingV2Items.map(async (vi) => {
+              const variant = await knex("item_variants").where({ variant_id: vi.variant_id }).first()
+              return {
+                order_item_id: vi.order_item_id,
+                variant_id: vi.variant_id,
+                quantity: vi.quantity,
+                price_per_unit: parseInt(vi.price_per_unit) || 0,
+                attributes: variant?.attributes || {},
+                display_name: variant?.display_name || "Standard",
+                short_name: variant?.short_name || "STD",
+              }
+            }),
+          )
+
+          return { listing_id: ml.listing_id, quantity: ml.quantity, title, price, v2_variants: v2Variants }
+        }),
+      )
+
+      // Build items array from V2 data
       const items: OrderItemDetail[] = await Promise.all(
-        orderItems.map(async (orderItem) => {
-          // Get variant details
-          const variant = await knex("item_variants")
-            .where({ variant_id: orderItem.variant_id })
-            .first()
-
-          if (!variant) {
-            logger.error("Variant not found for order item", {
-              orderId,
-              orderItemId: orderItem.order_item_id,
-              variantId: orderItem.variant_id,
-            })
-            throw this.throwNotFound("Variant", orderItem.variant_id)
-          }
-
-          // Build variant detail for response
-          const variantDetail: OrderVariantDetail = {
-            variant_id: variant.variant_id,
-            attributes: variant.attributes,
-            display_name: variant.display_name,
-            short_name: variant.short_name,
-          }
-
+        v2Items.map(async (oi) => {
+          const variant = await knex("item_variants").where({ variant_id: oi.variant_id }).first()
           return {
-            order_item_id: orderItem.order_item_id,
-            listing_id: orderItem.listing_id,
-            item_id: orderItem.item_id,
-            variant: variantDetail,
-            quantity: orderItem.quantity,
-            price_per_unit: orderItem.price_per_unit, // Requirement 26.7: Snapshot from purchase time
-            subtotal: orderItem.price_per_unit * orderItem.quantity,
+            order_item_id: oi.order_item_id,
+            listing_id: oi.listing_id,
+            item_id: oi.item_id,
+            variant: {
+              variant_id: oi.variant_id,
+              attributes: variant?.attributes || {},
+              display_name: variant?.display_name || "Standard",
+              short_name: variant?.short_name || "STD",
+            },
+            quantity: oi.quantity,
+            price_per_unit: parseInt(oi.price_per_unit) || 0,
+            subtotal: (parseInt(oi.price_per_unit) || 0) * oi.quantity,
           }
         }),
       )
 
-      // Step 5: Calculate total price
-      // Requirement 26.8: Calculate order totals with per-variant pricing
-      const totalPrice = items.reduce((sum, item) => sum + item.subtotal, 0)
+      const totalPrice = items.length > 0
+        ? items.reduce((s, i) => s + i.subtotal, 0)
+        : parseInt(String(order.cost)) || 0
 
-      logger.info("V2 order detail retrieved successfully", {
-        orderId,
-        userId,
-        itemCount: items.length,
-        totalPrice,
-      })
-
-      // Requirement 26.9: Include order status and timestamps
       return {
         order_id: order.order_id,
-        buyer: {
-          user_id: buyer.user_id,
-          username: buyer.username,
-          display_name: buyer.display_name,
-          avatar: buyer.avatar,
-        },
-        seller: {
-          user_id: seller.user_id,
-          username: seller.username,
-          display_name: seller.display_name,
-          avatar: seller.avatar,
-        },
+        buyer: { user_id: buyer.user_id, username: buyer.username, display_name: buyer.display_name, avatar: buyer.avatar },
+        seller: seller
+          ? { user_id: seller.user_id, username: seller.username, display_name: seller.display_name, avatar: seller.avatar }
+          : { user_id: "", username: "Unknown", display_name: "Unknown", avatar: null },
         total_price: totalPrice,
         status: order.status,
-        created_at: order.created_at.toISOString(),
-        updated_at: order.updated_at.toISOString(),
+        kind: order.kind || "",
+        title: order.title || "",
+        description: order.description || "",
+        payment_type: order.payment_type || "",
+        offer_session_id: order.offer_session_id || null,
+        created_at: order.timestamp?.toISOString?.() || new Date().toISOString(),
+        updated_at: order.updated_at?.toISOString?.() || order.timestamp?.toISOString?.() || new Date().toISOString(),
+        market_listings: marketListings,
         items,
       }
     } catch (error) {
       logger.error("Failed to fetch V2 order detail", {
-        orderId,
-        userId,
+        orderId, userId,
         error: error instanceof Error ? error.message : String(error),
-        stack: error instanceof Error ? error.stack : undefined,
       })
-
       throw error
     }
   }

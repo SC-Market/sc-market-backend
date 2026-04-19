@@ -76,12 +76,13 @@ export class BuyOrdersV2Controller extends BaseController {
    * - Follow same patterns as cart checkout
    *
    * @summary Create direct purchase order
-   * @param requestBody Buy order request with listing, variant, and quantity
+   * @summary Create direct purchase from listing
+   * @param requestBody Purchase request with listing, variant, and quantity
    * @param request Express request for authentication
    * @returns Created order with order_id and purchase details
    */
   @Post()
-  public async createBuyOrder(
+  public async createPurchase(
     @Body() requestBody: CreateBuyOrderRequest,
     @Request() request: ExpressRequest,
   ): Promise<CreateBuyOrderResponse> {
