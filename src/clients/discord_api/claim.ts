@@ -25,16 +25,16 @@ claimRouter.post("/order", async (req, res) => {
     }
 
     const order = await orderDb.getOrder({ order_id })
-    if (!order) { res.json({ success: false, error: "This order no longer exists" }); return }
-    if (order.status === "cancelled" || order.status === "fulfilled") { res.json({ success: false, error: "This order is no longer available" }); return }
-    if (order.assigned_id) { res.json({ success: false, error: "This order has already been claimed" }); return }
+    if (!order) { res.json({ success: false, error: "This order no longer exists", remove_button: true }); return }
+    if (order.status === "cancelled" || order.status === "fulfilled") { res.json({ success: false, error: "This order is no longer available", remove_button: true }); return }
+    if (order.assigned_id) { res.json({ success: false, error: "This order has already been claimed", remove_button: true }); return }
     if (!order.contractor_id) { res.json({ success: false, error: "This order cannot be claimed (no organization)" }); return }
     if (!(await is_member(order.contractor_id, user.user_id))) { res.json({ success: false, error: "You are not a member of this organization" }); return }
     if (!(await has_permission(order.contractor_id, user.user_id, "claim_orders"))) { res.json({ success: false, error: "You don't have permission to claim orders for this organization" }); return }
 
     await knex()("orders").where({ order_id }).update({ assigned_id: user.user_id })
     logger.info(`Order ${order_id} claimed by ${user.username} via Discord`)
-    res.json({ success: true, display_name: user.display_name })
+    res.json({ success: true, display_name: user.display_name, remove_button: true })
   } catch (err) {
     logger.error("Failed to process order claim", { error: err })
     res.status(500).json({ error: "Internal error" })
@@ -57,16 +57,16 @@ claimRouter.post("/offer", async (req, res) => {
     }
 
     const session = await knex()("offer_sessions").where({ id: session_id }).first()
-    if (!session) { res.json({ success: false, error: "This offer no longer exists" }); return }
-    if (session.status === "rejected" || session.status === "cancelled") { res.json({ success: false, error: "This offer is no longer available" }); return }
-    if (session.assigned_id) { res.json({ success: false, error: "This offer has already been claimed" }); return }
+    if (!session) { res.json({ success: false, error: "This offer no longer exists", remove_button: true }); return }
+    if (session.status !== "active") { res.json({ success: false, error: "This offer is no longer pending", remove_button: true }); return }
+    if (session.assigned_id) { res.json({ success: false, error: "This offer has already been claimed", remove_button: true }); return }
     if (!session.contractor_id) { res.json({ success: false, error: "This offer cannot be claimed (no organization)" }); return }
     if (!(await is_member(session.contractor_id, user.user_id))) { res.json({ success: false, error: "You are not a member of this organization" }); return }
     if (!(await has_permission(session.contractor_id, user.user_id, "claim_orders"))) { res.json({ success: false, error: "You don't have permission to claim offers for this organization" }); return }
 
     await knex()("offer_sessions").where({ id: session_id }).update({ assigned_id: user.user_id })
     logger.info(`Offer ${session_id} claimed by ${user.username} via Discord`)
-    res.json({ success: true, display_name: user.display_name })
+    res.json({ success: true, display_name: user.display_name, remove_button: true })
   } catch (err) {
     logger.error("Failed to process offer claim", { error: err })
     res.status(500).json({ error: "Internal error" })

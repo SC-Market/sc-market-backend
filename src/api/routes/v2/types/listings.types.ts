@@ -74,6 +74,9 @@ export interface CreateListingRequest {
 
   /** Optional array of image resource UUIDs to attach as photos */
   photo_resource_ids?: string[];
+
+  /** Pickup method: how the buyer receives the item */
+  pickup_method?: 'delivery' | 'pickup' | 'any';
 }
 
 // ============================================================================
@@ -189,6 +192,9 @@ export interface ListingSearchResult {
 
   /** First photo URL (null if no photos) */
   photo?: string;
+
+  /** Pickup method: delivery, pickup, any, or null (not specified) */
+  pickup_method?: 'delivery' | 'pickup' | 'any' | null;
 }
 
 /**
@@ -254,6 +260,9 @@ export interface ListingDetail {
 
   /** Array of photo URLs */
   photos?: string[];
+
+  /** Pickup method: delivery, pickup, any, or null (not specified) */
+  pickup_method?: 'delivery' | 'pickup' | 'any' | null;
 }
 
 /**
@@ -406,6 +415,9 @@ export interface UpdateListingRequest {
   
   /** Array of stock lot updates (optional) */
   lot_updates?: LotUpdate[];
+
+  /** Pickup method: how the buyer receives the item */
+  pickup_method?: 'delivery' | 'pickup' | 'any' | null;
 }
 
 // ============================================================================
