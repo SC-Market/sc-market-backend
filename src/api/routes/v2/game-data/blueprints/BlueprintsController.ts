@@ -608,7 +608,7 @@ export class BlueprintsController extends BaseController {
    * @returns Array of categories with counts
    */
   @Get("categories")
-  public async getCategories(
+  public async getBlueprintCategories(
     @Query() version_id?: string,
   ): Promise<BlueprintCategory[]> {
     const knex = getKnex()
