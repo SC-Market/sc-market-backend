@@ -3841,25 +3841,25 @@ export function RegisterRoutes(app: Router) {
             }
         });
         // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
-        const argsResourcesController_getCategories: Record<string, TsoaRoute.ParameterSchema> = {
+        const argsResourcesController_getResourceCategories: Record<string, TsoaRoute.ParameterSchema> = {
                 version_id: {"in":"query","name":"version_id","dataType":"string"},
         };
         app.get('/api/v2/game-data/resources/categories',
             ...(fetchMiddlewares<RequestHandler>(ResourcesController)),
-            ...(fetchMiddlewares<RequestHandler>(ResourcesController.prototype.getCategories)),
+            ...(fetchMiddlewares<RequestHandler>(ResourcesController.prototype.getResourceCategories)),
 
-            async function ResourcesController_getCategories(request: ExRequest, response: ExResponse, next: any) {
+            async function ResourcesController_getResourceCategories(request: ExRequest, response: ExResponse, next: any) {
 
             // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
 
             let validatedArgs: any[] = [];
             try {
-                validatedArgs = templateService.getValidatedArgs({ args: argsResourcesController_getCategories, request, response });
+                validatedArgs = templateService.getValidatedArgs({ args: argsResourcesController_getResourceCategories, request, response });
 
                 const controller = new ResourcesController();
 
               await templateService.apiHandler({
-                methodName: 'getCategories',
+                methodName: 'getResourceCategories',
                 controller,
                 response,
                 next,
@@ -4368,25 +4368,25 @@ export function RegisterRoutes(app: Router) {
             }
         });
         // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
-        const argsBlueprintsController_getCategories: Record<string, TsoaRoute.ParameterSchema> = {
+        const argsBlueprintsController_getBlueprintCategories: Record<string, TsoaRoute.ParameterSchema> = {
                 version_id: {"in":"query","name":"version_id","dataType":"string"},
         };
         app.get('/api/v2/game-data/blueprints/categories',
             ...(fetchMiddlewares<RequestHandler>(BlueprintsController)),
-            ...(fetchMiddlewares<RequestHandler>(BlueprintsController.prototype.getCategories)),
+            ...(fetchMiddlewares<RequestHandler>(BlueprintsController.prototype.getBlueprintCategories)),
 
-            async function BlueprintsController_getCategories(request: ExRequest, response: ExResponse, next: any) {
+            async function BlueprintsController_getBlueprintCategories(request: ExRequest, response: ExResponse, next: any) {
 
             // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
 
             let validatedArgs: any[] = [];
             try {
-                validatedArgs = templateService.getValidatedArgs({ args: argsBlueprintsController_getCategories, request, response });
+                validatedArgs = templateService.getValidatedArgs({ args: argsBlueprintsController_getBlueprintCategories, request, response });
 
                 const controller = new BlueprintsController();
 
               await templateService.apiHandler({
-                methodName: 'getCategories',
+                methodName: 'getBlueprintCategories',
                 controller,
                 response,
                 next,

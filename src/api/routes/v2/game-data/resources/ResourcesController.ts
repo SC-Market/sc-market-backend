@@ -378,7 +378,7 @@ export class ResourcesController extends BaseController {
    * @returns Array of categories with counts
    */
   @Get("categories")
-  public async getCategories(
+  public async getResourceCategories(
     @Query() version_id?: string,
   ): Promise<ResourceCategory[]> {
     const knex = getKnex()

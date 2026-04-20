@@ -9439,7 +9439,7 @@
 		},
 		"/api/v2/game-data/resources/categories": {
 			"get": {
-				"operationId": "GetCategories",
+				"operationId": "GetResourceCategories",
 				"responses": {
 					"200": {
 						"description": "Array of categories with counts",
@@ -10506,7 +10506,7 @@
 		},
 		"/api/v2/game-data/blueprints/categories": {
 			"get": {
-				"operationId": "GetCategories",
+				"operationId": "GetBlueprintCategories",
 				"responses": {
 					"200": {
 						"description": "Array of categories with counts",
