@@ -129,12 +129,26 @@ export async function rotateRefreshToken(
   const oldHash = hashToken(oldRawToken)
 
   // Revoke old token and get its record in one step
-  const updated = await knex("refresh_tokens")
+  // First try: token is not yet revoked
+  let updated = await knex("refresh_tokens")
     .where({ token_hash: oldHash })
     .whereNull("revoked_at")
     .where("expires_at", ">", new Date())
     .update({ revoked_at: new Date() })
     .returning(["user_id"])
+
+  // Grace period: if token was revoked in the last 10s (client retried after network hiccup),
+  // allow it and just return the existing session
+  if (!updated || updated.length === 0) {
+    const recent = await knex("refresh_tokens")
+      .where({ token_hash: oldHash })
+      .where("revoked_at", ">", new Date(Date.now() - 10_000))
+      .where("expires_at", ">", new Date())
+      .first()
+    if (recent) {
+      updated = [{ user_id: recent.user_id }]
+    }
+  }
 
   if (!updated || updated.length === 0) return null
 
