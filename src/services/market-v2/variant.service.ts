@@ -202,15 +202,18 @@ export async function getOrCreateVariant(
     return existing.variant_id
   }
 
-  // Create new variant
+  // Create new variant — use onConflict to handle race conditions
   const [variant] = await db<ItemVariant>("item_variants")
     .insert({
       game_item_id: gameItemId,
       attributes: normalized,
+      attributes_hash: hash,
       display_name: generateVariantDisplayName(normalized),
       short_name: generateVariantShortName(normalized),
       created_at: new Date(),
     })
+    .onConflict(["game_item_id", "attributes_hash"])
+    .merge(["display_name", "short_name"])
     .returning("*")
 
   return variant.variant_id
