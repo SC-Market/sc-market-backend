@@ -97,6 +97,7 @@ export interface P4KItem {
   tags: string | null
   thumbnail: string | null
   file: string
+  attributes?: Record<string, any>
 }
 
 export interface P4KMission {
@@ -509,6 +510,46 @@ export class GameDataImportService {
         }
 
         // ========================================================================
+        // STEP 4.5: Import item attributes from P4K data
+        // ========================================================================
+        logger.info("Importing item attributes")
+
+        let attrCount = 0
+        const allImported = [...matches.map((m) => ({ dbId: m.dbId, p4k: m.p4k })), ...inserts.map((p4k) => ({ dbId: null, p4k }))]
+
+        for (const { dbId, p4k } of allImported) {
+          if (!p4k.attributes || Object.keys(p4k.attributes).length === 0) continue
+
+          // Resolve the DB id for inserts (they were just inserted by p4k_id)
+          let itemId = dbId
+          if (!itemId) {
+            const inserted = await trx("game_items").where("p4k_id", p4k.id).select("id").first()
+            if (!inserted) continue
+            itemId = inserted.id
+          }
+
+          // Upsert attributes
+          for (const [attrName, attrValue] of Object.entries(p4k.attributes)) {
+            if (attrValue === null || attrValue === undefined) continue
+            const valueStr = Array.isArray(attrValue) ? attrValue.join(", ") : String(attrValue)
+
+            await trx("game_item_attributes")
+              .insert({
+                game_item_id: itemId,
+                attribute_name: attrName,
+                attribute_value: valueStr,
+                updated_at: new Date(),
+              })
+              .onConflict(["game_item_id", "attribute_name"])
+              .merge({ attribute_value: valueStr, updated_at: new Date() })
+
+            attrCount++
+          }
+        }
+
+        logger.info(`Imported ${attrCount} attributes`)
+
+        // ========================================================================
         // STEP 5: Regenerate Full Set items
         // ========================================================================
         logger.info("Regenerating Full Set items")
@@ -710,6 +751,185 @@ export class GameDataImportService {
         
         // Add reward linking errors to main stats
         stats.errors.push(...rewardStats.errors)
+      }
+
+      // ========================================================================
+      // STEP 11: Import blueprint reward pools
+      // ========================================================================
+      if (gameData.blueprintRewardPools && gameData.blueprintRewardPools.length > 0) {
+        logger.info("Importing blueprint reward pools")
+
+        let version = await knex("game_versions")
+          .where({ version_type: "LIVE", is_active: true })
+          .first()
+
+        if (version) {
+          for (const pool of gameData.blueprintRewardPools) {
+            try {
+              await knex("blueprint_reward_pools")
+                .insert({
+                  version_id: version.version_id,
+                  pool_code: pool.name,
+                  updated_at: new Date(),
+                })
+                .onConflict(["version_id", "pool_code"])
+                .merge({ updated_at: new Date() })
+
+              const [poolRow] = await knex("blueprint_reward_pools")
+                .where({ version_id: version.version_id, pool_code: pool.name })
+                .select("pool_id")
+
+              // Replace pool entries
+              await knex("blueprint_reward_pool_entries")
+                .where("pool_id", poolRow.pool_id)
+                .delete()
+
+              for (const reward of pool.rewards) {
+                const bp = await knex("blueprints")
+                  .where({ version_id: version.version_id, blueprint_code: reward.blueprint })
+                  .select("blueprint_id")
+                  .first()
+
+                if (bp) {
+                  await knex("blueprint_reward_pool_entries").insert({
+                    pool_id: poolRow.pool_id,
+                    blueprint_id: bp.blueprint_id,
+                    weight: reward.weight,
+                  })
+                }
+              }
+            } catch (err) {
+              // Tables may not exist yet - skip silently
+              logger.debug("Blueprint reward pool import skipped (table may not exist)")
+              break
+            }
+          }
+        }
+      }
+
+      // ========================================================================
+      // STEP 12: Import refining processes
+      // ========================================================================
+      if (gameData.refiningProcesses && gameData.refiningProcesses.length > 0) {
+        logger.info("Importing refining processes")
+        try {
+          await knex("refining_processes").delete()
+          await knex("refining_processes").insert(
+            gameData.refiningProcesses.map((p: any) => ({
+              name: p.name,
+              speed: p.speed,
+              quality: p.quality,
+            })),
+          )
+        } catch {
+          logger.debug("Refining processes import skipped (table may not exist)")
+        }
+      }
+
+      // ========================================================================
+      // STEP 13: Import starmap locations
+      // ========================================================================
+      if (gameData.starmap && gameData.starmap.length > 0) {
+        logger.info("Importing starmap locations")
+        try {
+          let version = await knex("game_versions")
+            .where({ version_type: "LIVE", is_active: true })
+            .first()
+
+          if (version) {
+            for (const loc of gameData.starmap) {
+              await knex("starmap_locations")
+                .insert({
+                  version_id: version.version_id,
+                  location_code: loc.file,
+                  location_name: loc.name,
+                  location_type: loc.type,
+                  parent_code: loc.parent,
+                  jurisdiction: loc.jurisdiction,
+                  description: loc.description,
+                  size: loc.size,
+                  updated_at: new Date(),
+                })
+                .onConflict(["version_id", "location_code"])
+                .merge({
+                  location_name: loc.name,
+                  location_type: loc.type,
+                  parent_code: loc.parent,
+                  jurisdiction: loc.jurisdiction,
+                  description: loc.description,
+                  updated_at: new Date(),
+                })
+            }
+            logger.info(`Imported ${gameData.starmap.length} starmap locations`)
+          }
+        } catch {
+          logger.debug("Starmap import skipped (table may not exist)")
+        }
+      }
+
+      // ========================================================================
+      // STEP 14: Import manufacturers
+      // ========================================================================
+      if (gameData.manufacturers && gameData.manufacturers.length > 0) {
+        logger.info("Importing manufacturers")
+        try {
+          for (const mfr of gameData.manufacturers) {
+            if (!mfr.code) continue
+            await knex("manufacturers")
+              .insert({
+                code: mfr.code,
+                name: mfr.name || mfr.code,
+                description: mfr.description || null,
+                name_key: mfr.nameKey || null,
+              })
+              .onConflict("code")
+              .merge({
+                name: mfr.name || mfr.code,
+                description: mfr.description || null,
+              })
+          }
+          logger.info(`Imported ${gameData.manufacturers.length} manufacturers`)
+        } catch {
+          logger.debug("Manufacturers import skipped (table may not exist)")
+        }
+      }
+
+      // ========================================================================
+      // STEP 15: Import ships
+      // ========================================================================
+      if (gameData.ships && gameData.ships.length > 0) {
+        logger.info("Importing ships")
+        try {
+          let version = await knex("game_versions")
+            .where({ version_type: "LIVE", is_active: true })
+            .first()
+
+          if (version) {
+            for (const ship of gameData.ships) {
+              if (!ship.name || ship.name.startsWith("@")) continue
+              await knex("ships")
+                .insert({
+                  version_id: version.version_id,
+                  ship_code: ship.file,
+                  name: ship.name,
+                  focus: ship.focus,
+                  manufacturer_code: ship.manufacturer,
+                  size: ship.size,
+                  description: ship.description,
+                })
+                .onConflict(["version_id", "ship_code"])
+                .merge({
+                  name: ship.name,
+                  focus: ship.focus,
+                  manufacturer_code: ship.manufacturer,
+                  description: ship.description,
+                })
+            }
+            logger.info(`Imported ${gameData.ships.length} ships`)
+          }
+        } catch {
+          logger.debug("Ships import skipped (table may not exist)")
+        }
       }
 
       logger.info("Import completed successfully", stats)
@@ -1026,7 +1246,7 @@ export class GameDataImportService {
 
   /**
    * Parse blueprint data from extracted JSON
-   * Subtask 8.5.1: Parse blueprint data from extracted JSON
+   * Handles the P4K extraction format: craftedItem (filename), slots[] with nested ingredients
    */
   private parseBlueprintData(gameData: any): P4KBlueprint[] {
     const blueprints: P4KBlueprint[] = []
@@ -1034,31 +1254,49 @@ export class GameDataImportService {
 
     for (const raw of rawBlueprints) {
       try {
-        // Parse ingredients array
-        const ingredients = (raw.ingredients || []).map((ing: any) => ({
-          itemId: ing.itemId || ing.item_id,
-          quantity: ing.quantity || 1,
-          minQuality: ing.minQuality || ing.min_quality,
-          recommendedQuality: ing.recommendedQuality || ing.recommended_quality,
-        }))
+        // Flatten nested slots into a flat ingredients array
+        const ingredients: Array<{ itemId: string; quantity: number; minQuality?: number }> = []
+
+        const flattenSlots = (slots: any[]) => {
+          for (const slot of slots || []) {
+            if (slot.type === "resource" && slot.resource) {
+              ingredients.push({
+                itemId: slot.resource,
+                quantity: slot.quantity_scu || 1,
+                minQuality: slot.minQuality || undefined,
+              })
+            } else if (slot.type === "item" && slot.item) {
+              ingredients.push({
+                itemId: slot.item,
+                quantity: slot.quantity || 1,
+                minQuality: slot.minQuality || undefined,
+              })
+            } else if (slot.type === "slot" && slot.ingredients) {
+              flattenSlots(slot.ingredients)
+            }
+          }
+        }
+
+        flattenSlots(raw.slots || [])
+        flattenSlots(raw.optionalCosts || [])
 
         blueprints.push({
           id: raw.id,
           name: raw.name,
-          nameKey: raw.nameKey || raw.name_key || null,
+          nameKey: raw.nameKey || null,
           description: raw.description || null,
-          descriptionKey: raw.descriptionKey || raw.description_key || null,
-          outputItemId: raw.outputItemId || raw.output_item_id,
-          outputQuantity: raw.outputQuantity || raw.output_quantity || 1,
+          descriptionKey: raw.descriptionKey || null,
+          outputItemId: raw.craftedItem || raw.outputItemId || "",
+          outputQuantity: raw.outputQuantity || 1,
           ingredients,
           category: raw.category || null,
-          subcategory: raw.subcategory || raw.subCategory || null,
+          subcategory: raw.subcategory || null,
           rarity: raw.rarity || null,
           tier: raw.tier || null,
-          craftingStation: raw.craftingStation || raw.crafting_station || null,
-          craftingTime: raw.craftingTime || raw.crafting_time || null,
-          requiredSkill: raw.requiredSkill || raw.required_skill || null,
-          iconUrl: raw.iconUrl || raw.icon_url || null,
+          craftingStation: raw.craftingStation || null,
+          craftingTime: raw.craftTimeSeconds || raw.craftingTime || null,
+          requiredSkill: raw.requiredSkill || null,
+          iconUrl: raw.iconUrl || null,
         })
       } catch (error) {
         logger.warn("Failed to parse blueprint", { blueprintId: raw.id, error })
@@ -1134,10 +1372,10 @@ export class GameDataImportService {
     versionId: string,
     blueprint: P4KBlueprint,
   ): Promise<"inserted" | "updated"> {
-    // First, verify the output game item exists
+    // First, verify the output game item exists (match by p4k_file or p4k_id)
     const outputItem = await trx("game_items")
-      .where("p4k_id", blueprint.outputItemId)
-      .orWhere("cstone_uuid", blueprint.outputItemId)
+      .where("p4k_file", blueprint.outputItemId)
+      .orWhere("p4k_id", blueprint.outputItemId)
       .first()
 
     if (!outputItem) {
@@ -1197,10 +1435,11 @@ export class GameDataImportService {
     for (let i = 0; i < blueprint.ingredients.length; i++) {
       const ing = blueprint.ingredients[i]
 
-      // Find the ingredient game item
+      // Find the ingredient game item (by name for resources, by p4k_file for items)
       const ingredientItem = await trx("game_items")
-        .where("p4k_id", ing.itemId)
-        .orWhere("cstone_uuid", ing.itemId)
+        .where("p4k_file", ing.itemId)
+        .orWhere("name", ing.itemId)
+        .orWhereRaw("lower(name) = ?", [ing.itemId.toLowerCase()])
         .first()
 
       if (!ingredientItem) {
