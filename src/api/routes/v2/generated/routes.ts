@@ -22,6 +22,8 @@ import { GameItemsV2Controller } from './../game-items/GameItemsV2Controller.js'
 // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
 import { WishlistsController } from './../game-data/wishlists/WishlistsController.js';
 // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+import { WikiController } from './../game-data/wiki/WikiController.js';
+// WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
 import { VersionsController } from './../game-data/versions/VersionsController.js';
 // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
 import { ResourcesController } from './../game-data/resources/ResourcesController.js';
@@ -623,7 +625,6 @@ const models: TsoaRoute.Models = {
     "SellerInfo": {
         "dataType": "refObject",
         "properties": {
-            "id": {"dataType":"string","required":true},
             "name": {"dataType":"string","required":true},
             "type": {"dataType":"union","subSchemas":[{"dataType":"enum","enums":["user"]},{"dataType":"enum","enums":["contractor"]}],"required":true},
             "slug": {"dataType":"string","required":true},
@@ -976,6 +977,186 @@ const models: TsoaRoute.Models = {
             "materials_fully_stocked": {"dataType":"double","required":true},
             "materials_partially_stocked": {"dataType":"double","required":true},
             "materials_not_stocked": {"dataType":"double","required":true},
+        },
+        "additionalProperties": false,
+    },
+    // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+    "WikiItemSearchResult": {
+        "dataType": "refObject",
+        "properties": {
+            "id": {"dataType":"string","required":true},
+            "name": {"dataType":"string","required":true},
+            "type": {"dataType":"string"},
+            "sub_type": {"dataType":"string"},
+            "size": {"dataType":"string"},
+            "grade": {"dataType":"string"},
+            "manufacturer": {"dataType":"string"},
+            "image_url": {"dataType":"string"},
+            "thumbnail_path": {"dataType":"string"},
+            "display_type": {"dataType":"string"},
+        },
+        "additionalProperties": false,
+    },
+    // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+    "SearchWikiItemsResponse": {
+        "dataType": "refObject",
+        "properties": {
+            "items": {"dataType":"array","array":{"dataType":"refObject","ref":"WikiItemSearchResult"},"required":true},
+            "total": {"dataType":"double","required":true},
+            "page": {"dataType":"double","required":true},
+            "page_size": {"dataType":"double","required":true},
+        },
+        "additionalProperties": false,
+    },
+    // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+    "BlueprintReference": {
+        "dataType": "refObject",
+        "properties": {
+            "blueprint_id": {"dataType":"string","required":true},
+            "blueprint_name": {"dataType":"string","required":true},
+            "rarity": {"dataType":"string"},
+            "tier": {"dataType":"double"},
+            "crafting_time_seconds": {"dataType":"double"},
+        },
+        "additionalProperties": false,
+    },
+    // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+    "MissionRewardReference": {
+        "dataType": "refObject",
+        "properties": {
+            "mission_id": {"dataType":"string","required":true},
+            "mission_name": {"dataType":"string","required":true},
+            "star_system": {"dataType":"string"},
+            "drop_probability": {"dataType":"double","required":true},
+            "blueprint_id": {"dataType":"string","required":true},
+            "blueprint_name": {"dataType":"string","required":true},
+        },
+        "additionalProperties": false,
+    },
+    // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+    "MarketStats": {
+        "dataType": "refObject",
+        "properties": {
+            "listing_count": {"dataType":"double","required":true},
+            "min_price": {"dataType":"double"},
+            "max_price": {"dataType":"double"},
+            "total_quantity": {"dataType":"double","required":true},
+        },
+        "additionalProperties": false,
+    },
+    // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+    "WikiItemDetail": {
+        "dataType": "refObject",
+        "properties": {
+            "id": {"dataType":"string","required":true},
+            "name": {"dataType":"string","required":true},
+            "type": {"dataType":"string"},
+            "sub_type": {"dataType":"string"},
+            "size": {"dataType":"string"},
+            "grade": {"dataType":"string"},
+            "manufacturer": {"dataType":"string"},
+            "image_url": {"dataType":"string"},
+            "thumbnail_path": {"dataType":"string"},
+            "display_type": {"dataType":"string"},
+            "p4k_id": {"dataType":"string"},
+            "p4k_file": {"dataType":"string"},
+            "name_key": {"dataType":"string"},
+            "attributes": {"ref":"Record_string.any_","required":true},
+            "craftable_from": {"dataType":"array","array":{"dataType":"refObject","ref":"BlueprintReference"},"required":true},
+            "rewarded_by": {"dataType":"array","array":{"dataType":"refObject","ref":"MissionRewardReference"},"required":true},
+            "market_stats": {"ref":"MarketStats","required":true},
+        },
+        "additionalProperties": false,
+    },
+    // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+    "WikiShipSearchResult": {
+        "dataType": "refObject",
+        "properties": {
+            "id": {"dataType":"string","required":true},
+            "name": {"dataType":"string","required":true},
+            "manufacturer": {"dataType":"string"},
+            "focus": {"dataType":"string"},
+            "size": {"dataType":"string"},
+            "image_url": {"dataType":"string"},
+        },
+        "additionalProperties": false,
+    },
+    // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+    "WikiShipDetail": {
+        "dataType": "refObject",
+        "properties": {
+            "id": {"dataType":"string","required":true},
+            "name": {"dataType":"string","required":true},
+            "manufacturer": {"dataType":"string"},
+            "focus": {"dataType":"string"},
+            "size": {"dataType":"string"},
+            "description": {"dataType":"string"},
+            "movement_class": {"dataType":"string"},
+            "image_url": {"dataType":"string"},
+            "default_loadout": {"dataType":"any"},
+            "attributes": {"ref":"Record_string.any_","required":true},
+        },
+        "additionalProperties": false,
+    },
+    // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+    "WikiCommoditySearchResult": {
+        "dataType": "refObject",
+        "properties": {
+            "resource_id": {"dataType":"string","required":true},
+            "game_item_id": {"dataType":"string","required":true},
+            "name": {"dataType":"string","required":true},
+            "resource_category": {"dataType":"string","required":true},
+            "resource_subcategory": {"dataType":"string"},
+            "can_be_mined": {"dataType":"boolean","required":true},
+            "can_be_purchased": {"dataType":"boolean","required":true},
+            "can_be_salvaged": {"dataType":"boolean","required":true},
+            "can_be_looted": {"dataType":"boolean","required":true},
+            "image_url": {"dataType":"string"},
+        },
+        "additionalProperties": false,
+    },
+    // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+    "WikiLocationNode": {
+        "dataType": "refObject",
+        "properties": {
+            "id": {"dataType":"string","required":true},
+            "name": {"dataType":"string","required":true},
+            "type": {"dataType":"string","required":true},
+            "parent_id": {"dataType":"string"},
+            "children": {"dataType":"array","array":{"dataType":"refObject","ref":"WikiLocationNode"},"required":true},
+        },
+        "additionalProperties": false,
+    },
+    // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+    "WikiManufacturerSearchResult": {
+        "dataType": "refObject",
+        "properties": {
+            "manufacturer": {"dataType":"string","required":true},
+            "item_count": {"dataType":"double","required":true},
+        },
+        "additionalProperties": false,
+    },
+    // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+    "ManufacturerItem": {
+        "dataType": "refObject",
+        "properties": {
+            "id": {"dataType":"string","required":true},
+            "name": {"dataType":"string","required":true},
+            "type": {"dataType":"string"},
+            "size": {"dataType":"string"},
+            "grade": {"dataType":"string"},
+            "image_url": {"dataType":"string"},
+        },
+        "additionalProperties": false,
+    },
+    // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+    "WikiManufacturerDetail": {
+        "dataType": "refObject",
+        "properties": {
+            "manufacturer": {"dataType":"string","required":true},
+            "description": {"dataType":"string"},
+            "item_count": {"dataType":"double","required":true},
+            "items": {"dataType":"array","array":{"dataType":"refObject","ref":"ManufacturerItem"},"required":true},
         },
         "additionalProperties": false,
     },
@@ -2436,8 +2617,8 @@ export function RegisterRoutes(app: Router) {
                 sort_order: {"in":"query","name":"sort_order","dataType":"union","subSchemas":[{"dataType":"enum","enums":["asc"]},{"dataType":"enum","enums":["desc"]}]},
                 language_codes: {"in":"query","name":"language_codes","dataType":"string"},
                 listing_type: {"in":"query","name":"listing_type","dataType":"union","subSchemas":[{"dataType":"enum","enums":["single"]},{"dataType":"enum","enums":["bundle"]},{"dataType":"enum","enums":["bulk"]}]},
-                seller_id: {"in":"query","name":"seller_id","dataType":"string"},
-                contractor_id: {"in":"query","name":"contractor_id","dataType":"string"},
+                seller_username: {"in":"query","name":"seller_username","dataType":"string"},
+                contractor_spectrum_id: {"in":"query","name":"contractor_spectrum_id","dataType":"string"},
         };
         app.get('/listings/search',
             ...(fetchMiddlewares<RequestHandler>(ListingsV2Controller)),
@@ -3178,6 +3359,261 @@ export function RegisterRoutes(app: Router) {
 
               await templateService.apiHandler({
                 methodName: 'generateShoppingList',
+                controller,
+                response,
+                next,
+                validatedArgs,
+                successStatus: undefined,
+              });
+            } catch (err) {
+                return next(err);
+            }
+        });
+        // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+        const argsWikiController_searchItems: Record<string, TsoaRoute.ParameterSchema> = {
+                text: {"in":"query","name":"text","dataType":"string"},
+                type: {"in":"query","name":"type","dataType":"string"},
+                sub_type: {"in":"query","name":"sub_type","dataType":"string"},
+                size: {"in":"query","name":"size","dataType":"string"},
+                grade: {"in":"query","name":"grade","dataType":"string"},
+                manufacturer: {"in":"query","name":"manufacturer","dataType":"string"},
+                category: {"in":"query","name":"category","dataType":"string"},
+                version_id: {"in":"query","name":"version_id","dataType":"string"},
+                page: {"default":1,"in":"query","name":"page","dataType":"double"},
+                page_size: {"default":20,"in":"query","name":"page_size","dataType":"double"},
+        };
+        app.get('/api/v2/game-data/wiki/items',
+            ...(fetchMiddlewares<RequestHandler>(WikiController)),
+            ...(fetchMiddlewares<RequestHandler>(WikiController.prototype.searchItems)),
+
+            async function WikiController_searchItems(request: ExRequest, response: ExResponse, next: any) {
+
+            // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+
+            let validatedArgs: any[] = [];
+            try {
+                validatedArgs = templateService.getValidatedArgs({ args: argsWikiController_searchItems, request, response });
+
+                const controller = new WikiController();
+
+              await templateService.apiHandler({
+                methodName: 'searchItems',
+                controller,
+                response,
+                next,
+                validatedArgs,
+                successStatus: undefined,
+              });
+            } catch (err) {
+                return next(err);
+            }
+        });
+        // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+        const argsWikiController_getItemDetail: Record<string, TsoaRoute.ParameterSchema> = {
+                id: {"in":"path","name":"id","required":true,"dataType":"string"},
+        };
+        app.get('/api/v2/game-data/wiki/items/:id',
+            ...(fetchMiddlewares<RequestHandler>(WikiController)),
+            ...(fetchMiddlewares<RequestHandler>(WikiController.prototype.getItemDetail)),
+
+            async function WikiController_getItemDetail(request: ExRequest, response: ExResponse, next: any) {
+
+            // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+
+            let validatedArgs: any[] = [];
+            try {
+                validatedArgs = templateService.getValidatedArgs({ args: argsWikiController_getItemDetail, request, response });
+
+                const controller = new WikiController();
+
+              await templateService.apiHandler({
+                methodName: 'getItemDetail',
+                controller,
+                response,
+                next,
+                validatedArgs,
+                successStatus: undefined,
+              });
+            } catch (err) {
+                return next(err);
+            }
+        });
+        // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+        const argsWikiController_getShips: Record<string, TsoaRoute.ParameterSchema> = {
+                manufacturer: {"in":"query","name":"manufacturer","dataType":"string"},
+                focus: {"in":"query","name":"focus","dataType":"string"},
+                size: {"in":"query","name":"size","dataType":"string"},
+                page: {"default":1,"in":"query","name":"page","dataType":"double"},
+                page_size: {"default":20,"in":"query","name":"page_size","dataType":"double"},
+        };
+        app.get('/api/v2/game-data/wiki/ships',
+            ...(fetchMiddlewares<RequestHandler>(WikiController)),
+            ...(fetchMiddlewares<RequestHandler>(WikiController.prototype.getShips)),
+
+            async function WikiController_getShips(request: ExRequest, response: ExResponse, next: any) {
+
+            // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+
+            let validatedArgs: any[] = [];
+            try {
+                validatedArgs = templateService.getValidatedArgs({ args: argsWikiController_getShips, request, response });
+
+                const controller = new WikiController();
+
+              await templateService.apiHandler({
+                methodName: 'getShips',
+                controller,
+                response,
+                next,
+                validatedArgs,
+                successStatus: undefined,
+              });
+            } catch (err) {
+                return next(err);
+            }
+        });
+        // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+        const argsWikiController_getShipDetail: Record<string, TsoaRoute.ParameterSchema> = {
+                id: {"in":"path","name":"id","required":true,"dataType":"string"},
+        };
+        app.get('/api/v2/game-data/wiki/ships/:id',
+            ...(fetchMiddlewares<RequestHandler>(WikiController)),
+            ...(fetchMiddlewares<RequestHandler>(WikiController.prototype.getShipDetail)),
+
+            async function WikiController_getShipDetail(request: ExRequest, response: ExResponse, next: any) {
+
+            // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+
+            let validatedArgs: any[] = [];
+            try {
+                validatedArgs = templateService.getValidatedArgs({ args: argsWikiController_getShipDetail, request, response });
+
+                const controller = new WikiController();
+
+              await templateService.apiHandler({
+                methodName: 'getShipDetail',
+                controller,
+                response,
+                next,
+                validatedArgs,
+                successStatus: undefined,
+              });
+            } catch (err) {
+                return next(err);
+            }
+        });
+        // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+        const argsWikiController_getCommodities: Record<string, TsoaRoute.ParameterSchema> = {
+                category: {"in":"query","name":"category","dataType":"string"},
+                can_be_mined: {"in":"query","name":"can_be_mined","dataType":"boolean"},
+                page: {"default":1,"in":"query","name":"page","dataType":"double"},
+                page_size: {"default":20,"in":"query","name":"page_size","dataType":"double"},
+        };
+        app.get('/api/v2/game-data/wiki/commodities',
+            ...(fetchMiddlewares<RequestHandler>(WikiController)),
+            ...(fetchMiddlewares<RequestHandler>(WikiController.prototype.getCommodities)),
+
+            async function WikiController_getCommodities(request: ExRequest, response: ExResponse, next: any) {
+
+            // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+
+            let validatedArgs: any[] = [];
+            try {
+                validatedArgs = templateService.getValidatedArgs({ args: argsWikiController_getCommodities, request, response });
+
+                const controller = new WikiController();
+
+              await templateService.apiHandler({
+                methodName: 'getCommodities',
+                controller,
+                response,
+                next,
+                validatedArgs,
+                successStatus: undefined,
+              });
+            } catch (err) {
+                return next(err);
+            }
+        });
+        // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+        const argsWikiController_getLocations: Record<string, TsoaRoute.ParameterSchema> = {
+                parent_id: {"in":"query","name":"parent_id","dataType":"string"},
+        };
+        app.get('/api/v2/game-data/wiki/locations',
+            ...(fetchMiddlewares<RequestHandler>(WikiController)),
+            ...(fetchMiddlewares<RequestHandler>(WikiController.prototype.getLocations)),
+
+            async function WikiController_getLocations(request: ExRequest, response: ExResponse, next: any) {
+
+            // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+
+            let validatedArgs: any[] = [];
+            try {
+                validatedArgs = templateService.getValidatedArgs({ args: argsWikiController_getLocations, request, response });
+
+                const controller = new WikiController();
+
+              await templateService.apiHandler({
+                methodName: 'getLocations',
+                controller,
+                response,
+                next,
+                validatedArgs,
+                successStatus: undefined,
+              });
+            } catch (err) {
+                return next(err);
+            }
+        });
+        // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+        const argsWikiController_getManufacturers: Record<string, TsoaRoute.ParameterSchema> = {
+        };
+        app.get('/api/v2/game-data/wiki/manufacturers',
+            ...(fetchMiddlewares<RequestHandler>(WikiController)),
+            ...(fetchMiddlewares<RequestHandler>(WikiController.prototype.getManufacturers)),
+
+            async function WikiController_getManufacturers(request: ExRequest, response: ExResponse, next: any) {
+
+            // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+
+            let validatedArgs: any[] = [];
+            try {
+                validatedArgs = templateService.getValidatedArgs({ args: argsWikiController_getManufacturers, request, response });
+
+                const controller = new WikiController();
+
+              await templateService.apiHandler({
+                methodName: 'getManufacturers',
+                controller,
+                response,
+                next,
+                validatedArgs,
+                successStatus: undefined,
+              });
+            } catch (err) {
+                return next(err);
+            }
+        });
+        // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+        const argsWikiController_getManufacturerDetail: Record<string, TsoaRoute.ParameterSchema> = {
+                id: {"in":"path","name":"id","required":true,"dataType":"string"},
+        };
+        app.get('/api/v2/game-data/wiki/manufacturers/:id',
+            ...(fetchMiddlewares<RequestHandler>(WikiController)),
+            ...(fetchMiddlewares<RequestHandler>(WikiController.prototype.getManufacturerDetail)),
+
+            async function WikiController_getManufacturerDetail(request: ExRequest, response: ExResponse, next: any) {
+
+            // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+
+            let validatedArgs: any[] = [];
+            try {
+                validatedArgs = templateService.getValidatedArgs({ args: argsWikiController_getManufacturerDetail, request, response });
+
+                const controller = new WikiController();
+
+              await templateService.apiHandler({
+                methodName: 'getManufacturerDetail',
                 controller,
                 response,
                 next,
