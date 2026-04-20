@@ -1621,6 +1621,53 @@ const models: TsoaRoute.Models = {
         "additionalProperties": false,
     },
     // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+    "MaterialAvailability": {
+        "dataType": "refObject",
+        "properties": {
+            "game_item_id": {"dataType":"string","required":true},
+            "material_name": {"dataType":"string","required":true},
+            "quantity_required": {"dataType":"double","required":true},
+            "quantity_available": {"dataType":"double","required":true},
+            "is_sufficient": {"dataType":"boolean","required":true},
+            "quality_tier_min": {"dataType":"double"},
+            "quality_tier_max": {"dataType":"double"},
+            "stock_lot_ids": {"dataType":"array","array":{"dataType":"string"},"required":true},
+        },
+        "additionalProperties": false,
+    },
+    // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+    "CraftableItem": {
+        "dataType": "refObject",
+        "properties": {
+            "blueprint_id": {"dataType":"string","required":true},
+            "blueprint_name": {"dataType":"string","required":true},
+            "output_item_name": {"dataType":"string","required":true},
+            "output_item_icon": {"dataType":"string"},
+            "item_category": {"dataType":"string"},
+            "rarity": {"dataType":"string"},
+            "tier": {"dataType":"double"},
+            "crafting_time_seconds": {"dataType":"double"},
+            "can_craft": {"dataType":"boolean","required":true},
+            "max_craftable_quantity": {"dataType":"double","required":true},
+            "materials": {"dataType":"array","array":{"dataType":"refObject","ref":"MaterialAvailability"},"required":true},
+            "missing_materials_count": {"dataType":"double","required":true},
+            "estimated_cost_per_craft": {"dataType":"double"},
+        },
+        "additionalProperties": false,
+    },
+    // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+    "GetCraftableItemsResponse": {
+        "dataType": "refObject",
+        "properties": {
+            "craftable_items": {"dataType":"array","array":{"dataType":"refObject","ref":"CraftableItem"},"required":true},
+            "total": {"dataType":"double","required":true},
+            "page": {"dataType":"double","required":true},
+            "page_size": {"dataType":"double","required":true},
+            "summary": {"dataType":"nestedObjectLiteral","nestedProperties":{"items_missing_materials":{"dataType":"double","required":true},"items_craftable_now":{"dataType":"double","required":true},"total_blueprints_owned":{"dataType":"double","required":true}},"required":true},
+        },
+        "additionalProperties": false,
+    },
+    // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
     "BlueprintStatistics": {
         "dataType": "refObject",
         "properties": {
@@ -4141,6 +4188,43 @@ export function RegisterRoutes(app: Router) {
 
               await templateService.apiHandler({
                 methodName: 'getCraftingHistory',
+                controller,
+                response,
+                next,
+                validatedArgs,
+                successStatus: undefined,
+              });
+            } catch (err) {
+                return next(err);
+            }
+        });
+        // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+        const argsCraftingController_getCraftableItems: Record<string, TsoaRoute.ParameterSchema> = {
+                item_category: {"in":"query","name":"item_category","dataType":"string"},
+                rarity: {"in":"query","name":"rarity","dataType":"string"},
+                tier: {"in":"query","name":"tier","dataType":"double"},
+                craftable_only: {"in":"query","name":"craftable_only","dataType":"boolean"},
+                version_id: {"in":"query","name":"version_id","dataType":"string"},
+                page: {"default":1,"in":"query","name":"page","dataType":"double"},
+                page_size: {"default":20,"in":"query","name":"page_size","dataType":"double"},
+        };
+        app.get('/api/v2/game-data/crafting/craftable-items',
+            authenticateMiddleware([{"discord_oauth":[]}]),
+            ...(fetchMiddlewares<RequestHandler>(CraftingController)),
+            ...(fetchMiddlewares<RequestHandler>(CraftingController.prototype.getCraftableItems)),
+
+            async function CraftingController_getCraftableItems(request: ExRequest, response: ExResponse, next: any) {
+
+            // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+
+            let validatedArgs: any[] = [];
+            try {
+                validatedArgs = templateService.getValidatedArgs({ args: argsCraftingController_getCraftableItems, request, response });
+
+                const controller = new CraftingController();
+
+              await templateService.apiHandler({
+                methodName: 'getCraftableItems',
                 controller,
                 response,
                 next,

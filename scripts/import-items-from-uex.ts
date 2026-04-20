@@ -2,6 +2,15 @@
  * Import Game Items from UEXCorp
  * Fetches items from UEX API and adds new ones to game_items table
  *
+ * @deprecated This script is deprecated in favor of P4K-based extraction.
+ * Use the new game data import system via /api/v2/admin/game-data/import instead.
+ * This script will be removed in a future version.
+ *
+ * Reason for deprecation:
+ * - P4K extraction provides more accurate and complete game data
+ * - Eliminates dependency on third-party APIs (UEXCorp)
+ * - Provides better attribute coverage and data consistency
+ *
  * Usage:
  *   npm run import-uex-items           # Normal mode
  *   npm run import-uex-items -- --dry  # Dry run mode
@@ -28,6 +37,12 @@ interface UEXItem {
 }
 
 async function importItemsFromUEX() {
+  logger.warn("⚠️  DEPRECATION WARNING: import-items-from-uex.ts is deprecated")
+  logger.warn("⚠️  Please use the new P4K-based extraction system instead:")
+  logger.warn("⚠️  POST /api/v2/admin/game-data/import")
+  logger.warn("⚠️  This script will be removed in a future version.")
+  logger.warn("")
+  
   logger.info("Starting UEX item import", { dryRun: DRY_RUN })
 
   if (DRY_RUN) {

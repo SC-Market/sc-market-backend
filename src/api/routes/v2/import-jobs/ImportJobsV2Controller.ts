@@ -55,13 +55,21 @@ function isSourceRunning(source: ImportSource): boolean {
 
 // ── Runners ────────────────────────────────────────────────────────────
 
+/**
+ * @deprecated Use P4K-based extraction instead
+ */
 async function runCstoneItems(job: ImportJob) {
+  logger.warn("⚠️  DEPRECATION: cstone-items import is deprecated. Use P4K-based extraction.")
   const { importItemsFromCStone } = await import("../../../../../scripts/import-items-from-cstone.js")
   const result = await importItemsFromCStone(database.knex, logger, false)
   job.result = result ?? {}
 }
 
+/**
+ * @deprecated Use P4K-based extraction instead
+ */
 async function runUexItems(job: ImportJob) {
+  logger.warn("⚠️  DEPRECATION: uex-items import is deprecated. Use P4K-based extraction.")
   const { importItemsFromUEX } = await import("../../../../../scripts/import-items-from-uex.js")
   const result = await importItemsFromUEX()
   job.result = result ?? {}

@@ -333,3 +333,136 @@ export interface GetCraftingStatisticsResponse {
   /** Statistics per blueprint */
   blueprint_statistics: BlueprintStatistics[]
 }
+
+// ============================================================================
+// Craftable Items from Stock Types
+// ============================================================================
+
+/**
+ * Material availability information
+ */
+export interface MaterialAvailability {
+  /** Game item UUID */
+  game_item_id: string
+
+  /** Material name */
+  material_name: string
+
+  /** Required quantity */
+  quantity_required: number
+
+  /** Available quantity in stock */
+  quantity_available: number
+
+  /** Is sufficient */
+  is_sufficient: boolean
+
+  /** Quality tier range available */
+  quality_tier_min?: number
+  quality_tier_max?: number
+
+  /** Stock lot IDs containing this material */
+  stock_lot_ids: string[]
+}
+
+/**
+ * Craftable item based on owned blueprints and stock
+ */
+export interface CraftableItem {
+  /** Blueprint UUID */
+  blueprint_id: string
+
+  /** Blueprint name */
+  blueprint_name: string
+
+  /** Output item name */
+  output_item_name: string
+
+  /** Output item icon */
+  output_item_icon?: string
+
+  /** Item category */
+  item_category?: string
+
+  /** Rarity */
+  rarity?: string
+
+  /** Tier */
+  tier?: number
+
+  /** Crafting time in seconds */
+  crafting_time_seconds?: number
+
+  /** Can craft with current stock */
+  can_craft: boolean
+
+  /** Maximum craftable quantity */
+  max_craftable_quantity: number
+
+  /** Material availability details */
+  materials: MaterialAvailability[]
+
+  /** Missing materials count */
+  missing_materials_count: number
+
+  /** Estimated cost per craft */
+  estimated_cost_per_craft?: number
+}
+
+/**
+ * Request for getting craftable items from stock
+ */
+export interface GetCraftableItemsRequest {
+  /** User ID (from auth context) */
+  user_id?: string
+
+  /** Filter by item category */
+  item_category?: string
+
+  /** Filter by rarity */
+  rarity?: string
+
+  /** Filter by tier */
+  tier?: number
+
+  /** Show only items that can be crafted with current stock */
+  craftable_only?: boolean
+
+  /** Game version ID */
+  version_id?: string
+
+  /** Page number */
+  page?: number
+
+  /** Page size */
+  page_size?: number
+}
+
+/**
+ * Response for getting craftable items from stock
+ */
+export interface GetCraftableItemsResponse {
+  /** Craftable items */
+  craftable_items: CraftableItem[]
+
+  /** Total count */
+  total: number
+
+  /** Current page */
+  page: number
+
+  /** Page size */
+  page_size: number
+
+  /** Summary statistics */
+  summary: {
+    /** Total blueprints owned */
+    total_blueprints_owned: number
+
+    /** Items that can be crafted now */
+    items_craftable_now: number
+
+    /** Items missing materials */
+    items_missing_materials: number
+  }
+}
