@@ -135,7 +135,8 @@
 							"crafted",
 							"store",
 							"looted",
-							"unknown"
+							"unknown",
+							"duped"
 						],
 						"description": "How the item was obtained"
 					},
@@ -2612,6 +2613,2027 @@
 				"type": "object",
 				"additionalProperties": false
 			},
+			"Wishlist": {
+				"description": "Complete wishlist data",
+				"properties": {
+					"wishlist_id": {
+						"type": "string"
+					},
+					"user_id": {
+						"type": "string"
+					},
+					"wishlist_name": {
+						"type": "string"
+					},
+					"wishlist_description": {
+						"type": "string"
+					},
+					"is_public": {
+						"type": "boolean"
+					},
+					"share_token": {
+						"type": "string"
+					},
+					"organization_id": {
+						"type": "string"
+					},
+					"is_collaborative": {
+						"type": "boolean"
+					},
+					"created_at": {
+						"type": "string"
+					},
+					"updated_at": {
+						"type": "string"
+					}
+				},
+				"required": [
+					"wishlist_id",
+					"user_id",
+					"wishlist_name",
+					"is_public",
+					"is_collaborative",
+					"created_at",
+					"updated_at"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
+			"ListWishlistsResponse": {
+				"description": "Response for list wishlists endpoint",
+				"properties": {
+					"wishlists": {
+						"items": {
+							"allOf": [
+								{
+									"$ref": "#/components/schemas/Wishlist"
+								},
+								{
+									"properties": {
+										"progress_percentage": {
+											"type": "number",
+											"format": "double"
+										},
+										"completed_items": {
+											"type": "number",
+											"format": "double"
+										},
+										"item_count": {
+											"type": "number",
+											"format": "double"
+										}
+									},
+									"required": [
+										"progress_percentage",
+										"completed_items",
+										"item_count"
+									],
+									"type": "object"
+								}
+							]
+						},
+						"type": "array"
+					}
+				},
+				"required": [
+					"wishlists"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
+			"CreateWishlistRequest": {
+				"description": "Request to create a new wishlist",
+				"properties": {
+					"wishlist_name": {
+						"type": "string",
+						"description": "Wishlist name"
+					},
+					"wishlist_description": {
+						"type": "string",
+						"description": "Optional description"
+					},
+					"is_public": {
+						"type": "boolean",
+						"description": "Is wishlist public"
+					},
+					"organization_id": {
+						"type": "string",
+						"description": "Optional organization ID for org wishlists"
+					},
+					"is_collaborative": {
+						"type": "boolean",
+						"description": "Is collaborative (multiple users can edit)"
+					}
+				},
+				"required": [
+					"wishlist_name",
+					"is_public",
+					"is_collaborative"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
+			"WishlistItemWithDetails": {
+				"description": "Wishlist item with enriched data",
+				"properties": {
+					"item_id": {
+						"type": "string"
+					},
+					"wishlist_id": {
+						"type": "string"
+					},
+					"game_item_id": {
+						"type": "string"
+					},
+					"desired_quantity": {
+						"type": "number",
+						"format": "double"
+					},
+					"desired_quality_tier": {
+						"type": "number",
+						"format": "double"
+					},
+					"blueprint_id": {
+						"type": "string"
+					},
+					"priority": {
+						"type": "number",
+						"format": "double"
+					},
+					"notes": {
+						"type": "string"
+					},
+					"is_acquired": {
+						"type": "boolean"
+					},
+					"acquired_quantity": {
+						"type": "number",
+						"format": "double"
+					},
+					"created_at": {
+						"type": "string"
+					},
+					"updated_at": {
+						"type": "string"
+					},
+					"game_item_name": {
+						"type": "string"
+					},
+					"game_item_icon": {
+						"type": "string"
+					},
+					"game_item_type": {
+						"type": "string"
+					},
+					"blueprint_name": {
+						"type": "string"
+					},
+					"estimated_cost": {
+						"type": "number",
+						"format": "double"
+					},
+					"crafting_available": {
+						"type": "boolean"
+					}
+				},
+				"required": [
+					"item_id",
+					"wishlist_id",
+					"game_item_id",
+					"desired_quantity",
+					"priority",
+					"is_acquired",
+					"acquired_quantity",
+					"created_at",
+					"updated_at",
+					"game_item_name",
+					"game_item_type",
+					"crafting_available"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
+			"GetWishlistResponse": {
+				"description": "Response for get wishlist detail endpoint",
+				"properties": {
+					"wishlist": {
+						"$ref": "#/components/schemas/Wishlist"
+					},
+					"items": {
+						"items": {
+							"$ref": "#/components/schemas/WishlistItemWithDetails"
+						},
+						"type": "array"
+					},
+					"statistics": {
+						"properties": {
+							"total_estimated_cost": {
+								"type": "number",
+								"format": "double"
+							},
+							"progress_percentage": {
+								"type": "number",
+								"format": "double"
+							},
+							"completed_items": {
+								"type": "number",
+								"format": "double"
+							},
+							"total_items": {
+								"type": "number",
+								"format": "double"
+							}
+						},
+						"required": [
+							"total_estimated_cost",
+							"progress_percentage",
+							"completed_items",
+							"total_items"
+						],
+						"type": "object"
+					}
+				},
+				"required": [
+					"wishlist",
+					"items",
+					"statistics"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
+			"UpdateWishlistRequest": {
+				"description": "Request to update a wishlist",
+				"properties": {
+					"wishlist_name": {
+						"type": "string",
+						"description": "Updated wishlist name"
+					},
+					"wishlist_description": {
+						"type": "string",
+						"description": "Updated description"
+					},
+					"is_public": {
+						"type": "boolean",
+						"description": "Updated public status"
+					},
+					"is_collaborative": {
+						"type": "boolean",
+						"description": "Updated collaborative status"
+					}
+				},
+				"type": "object",
+				"additionalProperties": false
+			},
+			"AddWishlistItemRequest": {
+				"description": "Request to add an item to a wishlist",
+				"properties": {
+					"game_item_id": {
+						"type": "string",
+						"description": "Game item ID"
+					},
+					"desired_quantity": {
+						"type": "number",
+						"format": "double",
+						"description": "Desired quantity"
+					},
+					"desired_quality_tier": {
+						"type": "number",
+						"format": "double",
+						"description": "Desired quality tier (1-5)"
+					},
+					"blueprint_id": {
+						"type": "string",
+						"description": "Optional blueprint ID if item is craftable"
+					},
+					"priority": {
+						"type": "number",
+						"format": "double",
+						"description": "Priority level (1-5, higher is more important)"
+					},
+					"notes": {
+						"type": "string",
+						"description": "Optional notes"
+					}
+				},
+				"required": [
+					"game_item_id",
+					"desired_quantity",
+					"priority"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
+			"UpdateWishlistItemRequest": {
+				"description": "Request to update a wishlist item",
+				"properties": {
+					"desired_quantity": {
+						"type": "number",
+						"format": "double",
+						"description": "Updated desired quantity"
+					},
+					"desired_quality_tier": {
+						"type": "number",
+						"format": "double",
+						"description": "Updated desired quality tier"
+					},
+					"priority": {
+						"type": "number",
+						"format": "double",
+						"description": "Updated priority"
+					},
+					"notes": {
+						"type": "string",
+						"description": "Updated notes"
+					},
+					"is_acquired": {
+						"type": "boolean",
+						"description": "Updated acquired status"
+					},
+					"acquired_quantity": {
+						"type": "number",
+						"format": "double",
+						"description": "Updated acquired quantity"
+					}
+				},
+				"type": "object",
+				"additionalProperties": false
+			},
+			"ShoppingListMaterial": {
+				"description": "Shopping list material requirement",
+				"properties": {
+					"game_item_id": {
+						"type": "string",
+						"description": "Game item ID"
+					},
+					"game_item_name": {
+						"type": "string",
+						"description": "Game item name"
+					},
+					"game_item_icon": {
+						"type": "string",
+						"description": "Game item icon"
+					},
+					"total_quantity_needed": {
+						"type": "number",
+						"format": "double",
+						"description": "Total quantity needed across all wishlist items"
+					},
+					"desired_quality_tier": {
+						"type": "number",
+						"format": "double",
+						"description": "Desired quality tier"
+					},
+					"user_inventory_quantity": {
+						"type": "number",
+						"format": "double",
+						"description": "User inventory quantity"
+					},
+					"quantity_to_acquire": {
+						"type": "number",
+						"format": "double",
+						"description": "Quantity still needed"
+					},
+					"estimated_unit_price": {
+						"type": "number",
+						"format": "double",
+						"description": "Estimated unit price"
+					},
+					"estimated_total_cost": {
+						"type": "number",
+						"format": "double",
+						"description": "Estimated total cost"
+					},
+					"acquisition_methods": {
+						"items": {
+							"type": "string"
+						},
+						"type": "array",
+						"description": "Acquisition methods (mining, purchase, salvage, etc.)"
+					},
+					"used_by_items": {
+						"items": {
+							"properties": {
+								"quantity_for_this_item": {
+									"type": "number",
+									"format": "double"
+								},
+								"item_name": {
+									"type": "string"
+								},
+								"wishlist_item_id": {
+									"type": "string"
+								}
+							},
+							"required": [
+								"quantity_for_this_item",
+								"item_name",
+								"wishlist_item_id"
+							],
+							"type": "object"
+						},
+						"type": "array",
+						"description": "Which wishlist items use this material"
+					}
+				},
+				"required": [
+					"game_item_id",
+					"game_item_name",
+					"total_quantity_needed",
+					"user_inventory_quantity",
+					"quantity_to_acquire",
+					"acquisition_methods",
+					"used_by_items"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
+			"ShoppingListResponse": {
+				"description": "Response for shopping list generation endpoint",
+				"properties": {
+					"wishlist_id": {
+						"type": "string"
+					},
+					"wishlist_name": {
+						"type": "string"
+					},
+					"materials_needed": {
+						"items": {
+							"$ref": "#/components/schemas/ShoppingListMaterial"
+						},
+						"type": "array"
+					},
+					"total_estimated_cost": {
+						"type": "number",
+						"format": "double"
+					},
+					"materials_fully_stocked": {
+						"type": "number",
+						"format": "double"
+					},
+					"materials_partially_stocked": {
+						"type": "number",
+						"format": "double"
+					},
+					"materials_not_stocked": {
+						"type": "number",
+						"format": "double"
+					}
+				},
+				"required": [
+					"wishlist_id",
+					"wishlist_name",
+					"materials_needed",
+					"total_estimated_cost",
+					"materials_fully_stocked",
+					"materials_partially_stocked",
+					"materials_not_stocked"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
+			"MissionSearchResult": {
+				"description": "Mission search result item",
+				"properties": {
+					"mission_id": {
+						"type": "string",
+						"description": "Mission UUID"
+					},
+					"mission_name": {
+						"type": "string",
+						"description": "Mission name"
+					},
+					"category": {
+						"type": "string",
+						"description": "Mission category"
+					},
+					"career_type": {
+						"type": "string",
+						"description": "Career type"
+					},
+					"legal_status": {
+						"type": "string",
+						"description": "Legal status"
+					},
+					"difficulty_level": {
+						"type": "number",
+						"format": "double",
+						"description": "Difficulty level (1-5)"
+					},
+					"star_system": {
+						"type": "string",
+						"description": "Star system"
+					},
+					"planet_moon": {
+						"type": "string",
+						"description": "Planet or moon"
+					},
+					"faction": {
+						"type": "string",
+						"description": "Faction"
+					},
+					"credit_reward_min": {
+						"type": "number",
+						"format": "double",
+						"description": "Minimum credit reward"
+					},
+					"credit_reward_max": {
+						"type": "number",
+						"format": "double",
+						"description": "Maximum credit reward"
+					},
+					"blueprint_reward_count": {
+						"type": "number",
+						"format": "double",
+						"description": "Number of blueprint rewards"
+					},
+					"community_difficulty_avg": {
+						"type": "number",
+						"format": "double",
+						"description": "Average community difficulty rating"
+					},
+					"community_satisfaction_avg": {
+						"type": "number",
+						"format": "double",
+						"description": "Average community satisfaction rating"
+					},
+					"is_chain_starter": {
+						"type": "boolean",
+						"description": "Is chain starter mission"
+					},
+					"is_shareable": {
+						"type": "boolean",
+						"description": "Is shareable mission"
+					}
+				},
+				"required": [
+					"mission_id",
+					"mission_name",
+					"category",
+					"blueprint_reward_count",
+					"is_chain_starter",
+					"is_shareable"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
+			"SearchMissionsResponse": {
+				"description": "Response for mission search endpoint",
+				"properties": {
+					"missions": {
+						"items": {
+							"$ref": "#/components/schemas/MissionSearchResult"
+						},
+						"type": "array",
+						"description": "Mission search results"
+					},
+					"total": {
+						"type": "number",
+						"format": "double",
+						"description": "Total number of missions matching filters"
+					},
+					"page": {
+						"type": "number",
+						"format": "double",
+						"description": "Current page number"
+					},
+					"page_size": {
+						"type": "number",
+						"format": "double",
+						"description": "Page size"
+					}
+				},
+				"required": [
+					"missions",
+					"total",
+					"page",
+					"page_size"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
+			"Mission": {
+				"description": "Complete mission data",
+				"properties": {
+					"mission_id": {
+						"type": "string"
+					},
+					"version_id": {
+						"type": "string"
+					},
+					"mission_code": {
+						"type": "string"
+					},
+					"mission_name": {
+						"type": "string"
+					},
+					"mission_description": {
+						"type": "string"
+					},
+					"category": {
+						"type": "string"
+					},
+					"mission_type": {
+						"type": "string"
+					},
+					"career_type": {
+						"type": "string"
+					},
+					"legal_status": {
+						"type": "string",
+						"enum": [
+							"LEGAL",
+							"ILLEGAL",
+							"UNKNOWN"
+						]
+					},
+					"difficulty_level": {
+						"type": "number",
+						"format": "double"
+					},
+					"star_system": {
+						"type": "string"
+					},
+					"planet_moon": {
+						"type": "string"
+					},
+					"location_detail": {
+						"type": "string"
+					},
+					"mission_giver_org": {
+						"type": "string"
+					},
+					"faction": {
+						"type": "string"
+					},
+					"credit_reward_min": {
+						"type": "number",
+						"format": "double"
+					},
+					"credit_reward_max": {
+						"type": "number",
+						"format": "double"
+					},
+					"reputation_reward": {
+						"type": "number",
+						"format": "double"
+					},
+					"is_shareable": {
+						"type": "boolean"
+					},
+					"availability_type": {
+						"type": "string"
+					},
+					"associated_event": {
+						"type": "string"
+					},
+					"required_rank": {
+						"type": "number",
+						"format": "double"
+					},
+					"required_reputation": {
+						"type": "number",
+						"format": "double"
+					},
+					"is_chain_starter": {
+						"type": "boolean"
+					},
+					"is_chain_mission": {
+						"type": "boolean"
+					},
+					"is_unique_mission": {
+						"type": "boolean"
+					},
+					"prerequisite_missions": {},
+					"estimated_uec_per_hour": {
+						"type": "number",
+						"format": "double"
+					},
+					"estimated_rep_per_hour": {
+						"type": "number",
+						"format": "double"
+					},
+					"rank_index": {
+						"type": "number",
+						"format": "double"
+					},
+					"reward_scope": {
+						"type": "string"
+					},
+					"community_difficulty_avg": {
+						"type": "number",
+						"format": "double"
+					},
+					"community_difficulty_count": {
+						"type": "number",
+						"format": "double"
+					},
+					"community_satisfaction_avg": {
+						"type": "number",
+						"format": "double"
+					},
+					"community_satisfaction_count": {
+						"type": "number",
+						"format": "double"
+					},
+					"data_source": {
+						"type": "string"
+					},
+					"is_verified": {
+						"type": "boolean"
+					},
+					"created_at": {
+						"type": "string"
+					},
+					"updated_at": {
+						"type": "string"
+					}
+				},
+				"required": [
+					"mission_id",
+					"version_id",
+					"mission_code",
+					"mission_name",
+					"category",
+					"is_shareable",
+					"is_chain_starter",
+					"is_chain_mission",
+					"is_unique_mission",
+					"community_difficulty_count",
+					"community_satisfaction_count",
+					"data_source",
+					"is_verified",
+					"created_at",
+					"updated_at"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
+			"MissionBlueprintReward": {
+				"description": "Blueprint reward in a mission reward pool",
+				"properties": {
+					"blueprint_id": {
+						"type": "string",
+						"description": "Blueprint UUID"
+					},
+					"blueprint_name": {
+						"type": "string",
+						"description": "Blueprint name"
+					},
+					"output_item_name": {
+						"type": "string",
+						"description": "Output item name"
+					},
+					"output_item_icon": {
+						"type": "string",
+						"description": "Output item icon URL"
+					},
+					"drop_probability": {
+						"type": "number",
+						"format": "double",
+						"description": "Drop probability percentage (0-100)"
+					},
+					"is_guaranteed": {
+						"type": "boolean",
+						"description": "Is guaranteed reward"
+					},
+					"rarity": {
+						"type": "string",
+						"description": "Blueprint rarity"
+					},
+					"tier": {
+						"type": "number",
+						"format": "double",
+						"description": "Blueprint tier (1-5)"
+					},
+					"user_owns": {
+						"type": "boolean",
+						"description": "Does user own this blueprint"
+					}
+				},
+				"required": [
+					"blueprint_id",
+					"blueprint_name",
+					"output_item_name",
+					"drop_probability",
+					"is_guaranteed"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
+			"MissionRewardPool": {
+				"description": "Mission reward pool",
+				"properties": {
+					"reward_pool_id": {
+						"type": "number",
+						"format": "double",
+						"description": "Reward pool ID"
+					},
+					"reward_pool_size": {
+						"type": "number",
+						"format": "double",
+						"description": "Total number of blueprints in pool"
+					},
+					"selection_count": {
+						"type": "number",
+						"format": "double",
+						"description": "Number of blueprints selected from pool"
+					},
+					"blueprints": {
+						"items": {
+							"$ref": "#/components/schemas/MissionBlueprintReward"
+						},
+						"type": "array",
+						"description": "Blueprints in this reward pool"
+					}
+				},
+				"required": [
+					"reward_pool_id",
+					"reward_pool_size",
+					"selection_count",
+					"blueprints"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
+			"UserMissionRating": {
+				"description": "User's mission rating",
+				"properties": {
+					"difficulty_rating": {
+						"type": "number",
+						"format": "double",
+						"description": "Difficulty rating (1-5)"
+					},
+					"satisfaction_rating": {
+						"type": "number",
+						"format": "double",
+						"description": "Satisfaction rating (1-5)"
+					},
+					"rating_comment": {
+						"type": "string",
+						"description": "Optional comment"
+					}
+				},
+				"required": [
+					"difficulty_rating",
+					"satisfaction_rating"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
+			"MissionDetailResponse": {
+				"description": "Response for mission detail endpoint",
+				"properties": {
+					"mission": {
+						"$ref": "#/components/schemas/Mission",
+						"description": "Complete mission data"
+					},
+					"blueprint_rewards": {
+						"items": {
+							"$ref": "#/components/schemas/MissionRewardPool"
+						},
+						"type": "array",
+						"description": "Blueprint reward pools"
+					},
+					"prerequisite_missions": {
+						"items": {
+							"$ref": "#/components/schemas/Mission"
+						},
+						"type": "array",
+						"description": "Prerequisite missions (if any)"
+					},
+					"user_completed": {
+						"type": "boolean",
+						"description": "Has user completed this mission"
+					},
+					"user_rating": {
+						"$ref": "#/components/schemas/UserMissionRating",
+						"description": "User's rating for this mission"
+					}
+				},
+				"required": [
+					"mission",
+					"blueprint_rewards"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
+			"BlueprintDetail": {
+				"description": "Blueprint detail for mission blueprints endpoint",
+				"properties": {
+					"blueprint_id": {
+						"type": "string",
+						"description": "Blueprint UUID"
+					},
+					"blueprint_code": {
+						"type": "string",
+						"description": "Blueprint code"
+					},
+					"blueprint_name": {
+						"type": "string",
+						"description": "Blueprint name"
+					},
+					"blueprint_description": {
+						"type": "string",
+						"description": "Blueprint description"
+					},
+					"output_game_item_id": {
+						"type": "string",
+						"description": "Output game item ID"
+					},
+					"output_item_name": {
+						"type": "string",
+						"description": "Output item name"
+					},
+					"output_item_type": {
+						"type": "string",
+						"description": "Output item type"
+					},
+					"output_item_icon": {
+						"type": "string",
+						"description": "Output item icon URL"
+					},
+					"output_quantity": {
+						"type": "number",
+						"format": "double",
+						"description": "Output quantity"
+					},
+					"item_category": {
+						"type": "string",
+						"description": "Item category"
+					},
+					"item_subcategory": {
+						"type": "string",
+						"description": "Item subcategory"
+					},
+					"rarity": {
+						"type": "string",
+						"description": "Rarity"
+					},
+					"tier": {
+						"type": "number",
+						"format": "double",
+						"description": "Tier (1-5)"
+					},
+					"crafting_station_type": {
+						"type": "string",
+						"description": "Crafting station type"
+					},
+					"crafting_time_seconds": {
+						"type": "number",
+						"format": "double",
+						"description": "Crafting time in seconds"
+					},
+					"required_skill_level": {
+						"type": "number",
+						"format": "double",
+						"description": "Required skill level"
+					},
+					"icon_url": {
+						"type": "string",
+						"description": "Icon URL"
+					},
+					"ingredient_count": {
+						"type": "number",
+						"format": "double",
+						"description": "Number of ingredients"
+					},
+					"drop_probability": {
+						"type": "number",
+						"format": "double",
+						"description": "Drop probability for this mission"
+					},
+					"is_guaranteed": {
+						"type": "boolean",
+						"description": "Is guaranteed reward"
+					}
+				},
+				"required": [
+					"blueprint_id",
+					"blueprint_code",
+					"blueprint_name",
+					"output_game_item_id",
+					"output_item_name",
+					"output_item_type",
+					"output_quantity",
+					"ingredient_count",
+					"drop_probability",
+					"is_guaranteed"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
+			"Record_string.number_": {
+				"properties": {},
+				"additionalProperties": {
+					"type": "number",
+					"format": "double"
+				},
+				"type": "object",
+				"description": "Construct a type with a set of properties K of type T"
+			},
+			"QualityContribution": {
+				"description": "Quality contribution breakdown for a single material",
+				"properties": {
+					"material_name": {
+						"type": "string",
+						"description": "Material name"
+					},
+					"quality_tier": {
+						"type": "number",
+						"format": "double",
+						"description": "Quality tier (1-5)"
+					},
+					"quality_value": {
+						"type": "number",
+						"format": "double",
+						"description": "Quality value (0-100)"
+					},
+					"weight": {
+						"type": "number",
+						"format": "double",
+						"description": "Weight in calculation"
+					},
+					"contribution": {
+						"type": "number",
+						"format": "double",
+						"description": "Contribution to final quality"
+					}
+				},
+				"required": [
+					"material_name",
+					"quality_tier",
+					"quality_value",
+					"weight",
+					"contribution"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
+			"CalculateQualityResponse": {
+				"description": "Response for quality calculation endpoint",
+				"properties": {
+					"output_quality_tier": {
+						"type": "number",
+						"format": "double",
+						"description": "Output quality tier (1-5)"
+					},
+					"output_quality_value": {
+						"type": "number",
+						"format": "double",
+						"description": "Output quality value (0-100)"
+					},
+					"output_quantity": {
+						"type": "number",
+						"format": "double",
+						"description": "Output quantity"
+					},
+					"calculation_breakdown": {
+						"properties": {
+							"quality_contributions": {
+								"items": {
+									"$ref": "#/components/schemas/QualityContribution"
+								},
+								"type": "array",
+								"description": "Quality contributions per material"
+							},
+							"input_weights": {
+								"$ref": "#/components/schemas/Record_string.number_",
+								"description": "Input weights per material"
+							},
+							"formula_used": {
+								"type": "string",
+								"description": "Formula type used (weighted_average, minimum, maximum)"
+							}
+						},
+						"required": [
+							"quality_contributions",
+							"input_weights",
+							"formula_used"
+						],
+						"type": "object",
+						"description": "Calculation breakdown"
+					},
+					"estimated_cost": {
+						"properties": {
+							"total_cost": {
+								"type": "number",
+								"format": "double",
+								"description": "Total cost"
+							},
+							"crafting_station_fee": {
+								"type": "number",
+								"format": "double",
+								"description": "Crafting station fee"
+							},
+							"material_cost": {
+								"type": "number",
+								"format": "double",
+								"description": "Total material cost"
+							}
+						},
+						"required": [
+							"total_cost",
+							"material_cost"
+						],
+						"type": "object",
+						"description": "Estimated costs"
+					},
+					"success_probability": {
+						"type": "number",
+						"format": "double",
+						"description": "Success probability percentage (0-100)"
+					},
+					"critical_success_chance": {
+						"type": "number",
+						"format": "double",
+						"description": "Critical success chance percentage (0-100)"
+					}
+				},
+				"required": [
+					"output_quality_tier",
+					"output_quality_value",
+					"output_quantity",
+					"calculation_breakdown",
+					"estimated_cost",
+					"success_probability",
+					"critical_success_chance"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
+			"CraftingInputMaterial": {
+				"description": "Input material for crafting calculation",
+				"properties": {
+					"game_item_id": {
+						"type": "string",
+						"description": "Game item UUID"
+					},
+					"quantity": {
+						"type": "number",
+						"format": "double",
+						"description": "Quantity of material"
+					},
+					"quality_tier": {
+						"type": "number",
+						"format": "double",
+						"description": "Quality tier (1-5)"
+					},
+					"quality_value": {
+						"type": "number",
+						"format": "double",
+						"description": "Precise quality value (0-100)"
+					}
+				},
+				"required": [
+					"game_item_id",
+					"quantity",
+					"quality_tier",
+					"quality_value"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
+			"CalculateQualityRequest": {
+				"description": "Request for quality calculation endpoint",
+				"properties": {
+					"blueprint_id": {
+						"type": "string",
+						"description": "Blueprint UUID"
+					},
+					"input_materials": {
+						"items": {
+							"$ref": "#/components/schemas/CraftingInputMaterial"
+						},
+						"type": "array",
+						"description": "Input materials with quality values"
+					}
+				},
+				"required": [
+					"blueprint_id",
+					"input_materials"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
+			"SimulationResult": {
+				"description": "Single simulation result",
+				"properties": {
+					"material_configuration": {
+						"items": {
+							"$ref": "#/components/schemas/CraftingInputMaterial"
+						},
+						"type": "array",
+						"description": "Material configuration used"
+					},
+					"output_quality_tier": {
+						"type": "number",
+						"format": "double",
+						"description": "Output quality tier"
+					},
+					"output_quality_value": {
+						"type": "number",
+						"format": "double",
+						"description": "Output quality value"
+					},
+					"estimated_cost": {
+						"type": "number",
+						"format": "double",
+						"description": "Estimated total cost"
+					}
+				},
+				"required": [
+					"material_configuration",
+					"output_quality_tier",
+					"output_quality_value",
+					"estimated_cost"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
+			"SimulateCraftingResponse": {
+				"description": "Response for crafting simulation endpoint",
+				"properties": {
+					"blueprint_id": {
+						"type": "string",
+						"description": "Blueprint UUID"
+					},
+					"blueprint_name": {
+						"type": "string",
+						"description": "Blueprint name"
+					},
+					"simulation_results": {
+						"items": {
+							"$ref": "#/components/schemas/SimulationResult"
+						},
+						"type": "array",
+						"description": "All simulation results"
+					},
+					"best_result": {
+						"$ref": "#/components/schemas/SimulationResult",
+						"description": "Best result (highest quality)"
+					},
+					"worst_result": {
+						"$ref": "#/components/schemas/SimulationResult",
+						"description": "Worst result (lowest quality)"
+					},
+					"most_cost_effective": {
+						"$ref": "#/components/schemas/SimulationResult",
+						"description": "Most cost-effective result"
+					}
+				},
+				"required": [
+					"blueprint_id",
+					"blueprint_name",
+					"simulation_results",
+					"best_result",
+					"worst_result",
+					"most_cost_effective"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
+			"MaterialVariation": {
+				"description": "Material variation for simulation",
+				"properties": {
+					"game_item_id": {
+						"type": "string",
+						"description": "Game item UUID"
+					},
+					"quantity": {
+						"type": "number",
+						"format": "double",
+						"description": "Quantity of material"
+					},
+					"quality_tiers": {
+						"items": {
+							"type": "number",
+							"format": "double"
+						},
+						"type": "array",
+						"description": "Quality tier options to test"
+					}
+				},
+				"required": [
+					"game_item_id",
+					"quantity",
+					"quality_tiers"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
+			"SimulateCraftingRequest": {
+				"description": "Request for crafting simulation endpoint",
+				"properties": {
+					"blueprint_id": {
+						"type": "string",
+						"description": "Blueprint UUID"
+					},
+					"material_variations": {
+						"items": {
+							"$ref": "#/components/schemas/MaterialVariation"
+						},
+						"type": "array",
+						"description": "Material variations to test"
+					}
+				},
+				"required": [
+					"blueprint_id",
+					"material_variations"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
+			"RecordCraftingResponse": {
+				"description": "Response for recording crafting session",
+				"properties": {
+					"success": {
+						"type": "boolean",
+						"description": "Success status"
+					},
+					"session_id": {
+						"type": "string",
+						"description": "Crafting session UUID"
+					}
+				},
+				"required": [
+					"success",
+					"session_id"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
+			"RecordCraftingRequest": {
+				"description": "Request to record a crafting session",
+				"properties": {
+					"blueprint_id": {
+						"type": "string",
+						"description": "Blueprint UUID"
+					},
+					"input_materials": {
+						"items": {
+							"$ref": "#/components/schemas/CraftingInputMaterial"
+						},
+						"type": "array",
+						"description": "Input materials used"
+					},
+					"output_quality_tier": {
+						"type": "number",
+						"format": "double",
+						"description": "Output quality tier achieved"
+					},
+					"output_quality_value": {
+						"type": "number",
+						"format": "double",
+						"description": "Output quality value achieved"
+					},
+					"output_quantity": {
+						"type": "number",
+						"format": "double",
+						"description": "Output quantity produced"
+					},
+					"was_critical_success": {
+						"type": "boolean",
+						"description": "Was critical success"
+					},
+					"total_material_cost": {
+						"type": "number",
+						"format": "double",
+						"description": "Total material cost"
+					},
+					"crafting_station_fee": {
+						"type": "number",
+						"format": "double",
+						"description": "Crafting station fee"
+					}
+				},
+				"required": [
+					"blueprint_id",
+					"input_materials",
+					"output_quality_tier",
+					"output_quality_value",
+					"output_quantity",
+					"was_critical_success"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
+			"CraftingSessionHistory": {
+				"description": "Crafting session history item",
+				"properties": {
+					"session_id": {
+						"type": "string",
+						"description": "Session UUID"
+					},
+					"blueprint_id": {
+						"type": "string",
+						"description": "Blueprint UUID"
+					},
+					"blueprint_name": {
+						"type": "string",
+						"description": "Blueprint name"
+					},
+					"output_item_name": {
+						"type": "string",
+						"description": "Output item name"
+					},
+					"crafting_date": {
+						"type": "string",
+						"description": "Crafting date"
+					},
+					"input_materials": {
+						"items": {
+							"$ref": "#/components/schemas/CraftingInputMaterial"
+						},
+						"type": "array",
+						"description": "Input materials used"
+					},
+					"output_quality_tier": {
+						"type": "number",
+						"format": "double",
+						"description": "Output quality tier"
+					},
+					"output_quality_value": {
+						"type": "number",
+						"format": "double",
+						"description": "Output quality value"
+					},
+					"output_quantity": {
+						"type": "number",
+						"format": "double",
+						"description": "Output quantity"
+					},
+					"was_critical_success": {
+						"type": "boolean",
+						"description": "Was critical success"
+					},
+					"total_material_cost": {
+						"type": "number",
+						"format": "double",
+						"description": "Total material cost"
+					},
+					"crafting_station_fee": {
+						"type": "number",
+						"format": "double",
+						"description": "Crafting station fee"
+					}
+				},
+				"required": [
+					"session_id",
+					"blueprint_id",
+					"blueprint_name",
+					"output_item_name",
+					"crafting_date",
+					"input_materials",
+					"output_quality_tier",
+					"output_quality_value",
+					"output_quantity",
+					"was_critical_success"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
+			"GetCraftingHistoryResponse": {
+				"description": "Response for crafting history endpoint",
+				"properties": {
+					"history": {
+						"items": {
+							"$ref": "#/components/schemas/CraftingSessionHistory"
+						},
+						"type": "array",
+						"description": "Crafting sessions"
+					},
+					"total": {
+						"type": "number",
+						"format": "double",
+						"description": "Total number of sessions"
+					},
+					"page": {
+						"type": "number",
+						"format": "double",
+						"description": "Current page"
+					},
+					"page_size": {
+						"type": "number",
+						"format": "double",
+						"description": "Page size"
+					}
+				},
+				"required": [
+					"history",
+					"total",
+					"page",
+					"page_size"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
+			"BlueprintStatistics": {
+				"description": "Statistics for a specific blueprint",
+				"properties": {
+					"blueprint_id": {
+						"type": "string",
+						"description": "Blueprint UUID"
+					},
+					"blueprint_name": {
+						"type": "string",
+						"description": "Blueprint name"
+					},
+					"total_crafts": {
+						"type": "number",
+						"format": "double",
+						"description": "Total crafts"
+					},
+					"average_quality": {
+						"type": "number",
+						"format": "double",
+						"description": "Average output quality"
+					},
+					"success_rate": {
+						"type": "number",
+						"format": "double",
+						"description": "Success rate percentage"
+					},
+					"critical_successes": {
+						"type": "number",
+						"format": "double",
+						"description": "Critical success count"
+					},
+					"total_materials_cost": {
+						"type": "number",
+						"format": "double",
+						"description": "Total materials spent"
+					}
+				},
+				"required": [
+					"blueprint_id",
+					"blueprint_name",
+					"total_crafts",
+					"average_quality",
+					"success_rate",
+					"critical_successes",
+					"total_materials_cost"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
+			"GetCraftingStatisticsResponse": {
+				"description": "Response for crafting statistics endpoint",
+				"properties": {
+					"total_sessions": {
+						"type": "number",
+						"format": "double",
+						"description": "Total crafting sessions"
+					},
+					"unique_blueprints_crafted": {
+						"type": "number",
+						"format": "double",
+						"description": "Total unique blueprints crafted"
+					},
+					"average_output_quality": {
+						"type": "number",
+						"format": "double",
+						"description": "Average output quality across all crafts"
+					},
+					"total_critical_successes": {
+						"type": "number",
+						"format": "double",
+						"description": "Total critical successes"
+					},
+					"critical_success_rate": {
+						"type": "number",
+						"format": "double",
+						"description": "Critical success rate percentage"
+					},
+					"total_materials_cost": {
+						"type": "number",
+						"format": "double",
+						"description": "Total materials cost"
+					},
+					"blueprint_statistics": {
+						"items": {
+							"$ref": "#/components/schemas/BlueprintStatistics"
+						},
+						"type": "array",
+						"description": "Statistics per blueprint"
+					}
+				},
+				"required": [
+					"total_sessions",
+					"unique_blueprints_crafted",
+					"average_output_quality",
+					"total_critical_successes",
+					"critical_success_rate",
+					"total_materials_cost",
+					"blueprint_statistics"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
+			"BlueprintSearchResult": {
+				"description": "Blueprint search result item",
+				"properties": {
+					"blueprint_id": {
+						"type": "string",
+						"description": "Blueprint UUID"
+					},
+					"blueprint_name": {
+						"type": "string",
+						"description": "Blueprint name"
+					},
+					"output_item_name": {
+						"type": "string",
+						"description": "Output item name"
+					},
+					"output_item_icon": {
+						"type": "string",
+						"description": "Output item icon URL"
+					},
+					"item_category": {
+						"type": "string",
+						"description": "Item category"
+					},
+					"rarity": {
+						"type": "string",
+						"description": "Rarity"
+					},
+					"tier": {
+						"type": "number",
+						"format": "double",
+						"description": "Tier (1-5)"
+					},
+					"ingredient_count": {
+						"type": "number",
+						"format": "double",
+						"description": "Number of ingredients"
+					},
+					"mission_count": {
+						"type": "number",
+						"format": "double",
+						"description": "Number of missions that reward this blueprint"
+					},
+					"crafting_time_seconds": {
+						"type": "number",
+						"format": "double",
+						"description": "Crafting time in seconds"
+					},
+					"user_owns": {
+						"type": "boolean",
+						"description": "Does user own this blueprint"
+					}
+				},
+				"required": [
+					"blueprint_id",
+					"blueprint_name",
+					"output_item_name",
+					"ingredient_count",
+					"mission_count"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
+			"SearchBlueprintsResponse": {
+				"description": "Response for blueprint search endpoint",
+				"properties": {
+					"blueprints": {
+						"items": {
+							"$ref": "#/components/schemas/BlueprintSearchResult"
+						},
+						"type": "array",
+						"description": "Blueprint search results"
+					},
+					"total": {
+						"type": "number",
+						"format": "double",
+						"description": "Total number of blueprints matching filters"
+					},
+					"page": {
+						"type": "number",
+						"format": "double",
+						"description": "Current page number"
+					},
+					"page_size": {
+						"type": "number",
+						"format": "double",
+						"description": "Page size"
+					}
+				},
+				"required": [
+					"blueprints",
+					"total",
+					"page",
+					"page_size"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
+			"Blueprint": {
+				"description": "Complete blueprint data",
+				"properties": {
+					"blueprint_id": {
+						"type": "string"
+					},
+					"version_id": {
+						"type": "string"
+					},
+					"blueprint_code": {
+						"type": "string"
+					},
+					"blueprint_name": {
+						"type": "string"
+					},
+					"blueprint_description": {
+						"type": "string"
+					},
+					"output_game_item_id": {
+						"type": "string"
+					},
+					"output_quantity": {
+						"type": "number",
+						"format": "double"
+					},
+					"item_category": {
+						"type": "string"
+					},
+					"item_subcategory": {
+						"type": "string"
+					},
+					"rarity": {
+						"type": "string"
+					},
+					"tier": {
+						"type": "number",
+						"format": "double"
+					},
+					"crafting_station_type": {
+						"type": "string"
+					},
+					"crafting_time_seconds": {
+						"type": "number",
+						"format": "double"
+					},
+					"required_skill_level": {
+						"type": "number",
+						"format": "double"
+					},
+					"icon_url": {
+						"type": "string"
+					},
+					"is_active": {
+						"type": "boolean"
+					},
+					"created_at": {
+						"type": "string"
+					},
+					"updated_at": {
+						"type": "string"
+					}
+				},
+				"required": [
+					"blueprint_id",
+					"version_id",
+					"blueprint_code",
+					"blueprint_name",
+					"output_game_item_id",
+					"output_quantity",
+					"is_active",
+					"created_at",
+					"updated_at"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
+			"GameItem": {
+				"description": "Game item reference",
+				"properties": {
+					"game_item_id": {
+						"type": "string",
+						"description": "Game item UUID"
+					},
+					"name": {
+						"type": "string",
+						"description": "Item name"
+					},
+					"type": {
+						"type": "string",
+						"description": "Item type"
+					},
+					"icon_url": {
+						"type": "string",
+						"description": "Icon URL"
+					}
+				},
+				"required": [
+					"game_item_id",
+					"name",
+					"type"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
+			"BlueprintIngredient": {
+				"description": "Blueprint ingredient with market data",
+				"properties": {
+					"ingredient_id": {
+						"type": "string",
+						"description": "Ingredient UUID"
+					},
+					"game_item": {
+						"$ref": "#/components/schemas/GameItem",
+						"description": "Game item reference"
+					},
+					"quantity_required": {
+						"type": "number",
+						"format": "double",
+						"description": "Required quantity"
+					},
+					"min_quality_tier": {
+						"type": "number",
+						"format": "double",
+						"description": "Minimum quality tier (1-5)"
+					},
+					"recommended_quality_tier": {
+						"type": "number",
+						"format": "double",
+						"description": "Recommended quality tier (1-5)"
+					},
+					"is_alternative": {
+						"type": "boolean",
+						"description": "Is alternative ingredient"
+					},
+					"alternative_group": {
+						"type": "number",
+						"format": "double",
+						"description": "Alternative group ID"
+					},
+					"market_price_min": {
+						"type": "number",
+						"format": "double",
+						"description": "Minimum market price"
+					},
+					"market_price_max": {
+						"type": "number",
+						"format": "double",
+						"description": "Maximum market price"
+					},
+					"user_inventory_quantity": {
+						"type": "number",
+						"format": "double",
+						"description": "User inventory quantity"
+					}
+				},
+				"required": [
+					"ingredient_id",
+					"game_item",
+					"quantity_required",
+					"is_alternative"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
+			"MissionRewardingBlueprint": {
+				"description": "Mission that rewards this blueprint",
+				"properties": {
+					"mission_id": {
+						"type": "string",
+						"description": "Mission UUID"
+					},
+					"mission_name": {
+						"type": "string",
+						"description": "Mission name"
+					},
+					"drop_probability": {
+						"type": "number",
+						"format": "double",
+						"description": "Drop probability percentage (0-100)"
+					},
+					"star_system": {
+						"type": "string",
+						"description": "Star system"
+					}
+				},
+				"required": [
+					"mission_id",
+					"mission_name",
+					"drop_probability"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
+			"UserBlueprintAcquisition": {
+				"description": "User acquisition data",
+				"properties": {
+					"acquisition_date": {
+						"type": "string",
+						"description": "Acquisition date"
+					},
+					"acquisition_method": {
+						"type": "string",
+						"description": "Acquisition method"
+					},
+					"acquisition_location": {
+						"type": "string",
+						"description": "Acquisition location"
+					},
+					"acquisition_notes": {
+						"type": "string",
+						"description": "Acquisition notes"
+					}
+				},
+				"required": [
+					"acquisition_date"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
+			"BlueprintDetailResponse": {
+				"description": "Response for blueprint detail endpoint",
+				"properties": {
+					"blueprint": {
+						"$ref": "#/components/schemas/Blueprint",
+						"description": "Complete blueprint data"
+					},
+					"output_item": {
+						"$ref": "#/components/schemas/GameItem",
+						"description": "Output item reference"
+					},
+					"ingredients": {
+						"items": {
+							"$ref": "#/components/schemas/BlueprintIngredient"
+						},
+						"type": "array",
+						"description": "Ingredients required"
+					},
+					"missions_rewarding": {
+						"items": {
+							"$ref": "#/components/schemas/MissionRewardingBlueprint"
+						},
+						"type": "array",
+						"description": "Missions that reward this blueprint"
+					},
+					"crafting_recipe": {
+						"properties": {
+							"max_output_quality_tier": {
+								"type": "number",
+								"format": "double"
+							},
+							"min_output_quality_tier": {
+								"type": "number",
+								"format": "double"
+							},
+							"quality_calculation_type": {
+								"type": "string"
+							}
+						},
+						"required": [
+							"max_output_quality_tier",
+							"min_output_quality_tier",
+							"quality_calculation_type"
+						],
+						"type": "object",
+						"description": "Crafting recipe (if available)"
+					},
+					"user_owns": {
+						"type": "boolean",
+						"description": "Does user own this blueprint"
+					},
+					"user_acquisition": {
+						"$ref": "#/components/schemas/UserBlueprintAcquisition",
+						"description": "User acquisition data"
+					}
+				},
+				"required": [
+					"blueprint",
+					"output_item",
+					"ingredients",
+					"missions_rewarding"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
+			"BlueprintCategory": {
+				"description": "Blueprint category with count",
+				"properties": {
+					"category": {
+						"type": "string",
+						"description": "Category name"
+					},
+					"subcategory": {
+						"type": "string",
+						"description": "Subcategory name"
+					},
+					"count": {
+						"type": "number",
+						"format": "double",
+						"description": "Number of blueprints in this category"
+					}
+				},
+				"required": [
+					"category",
+					"count"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
 			"MarketVersion": {
 				"type": "string",
 				"enum": [
@@ -5066,6 +7088,1696 @@
 						"name": "page_size",
 						"required": false,
 						"schema": {
+							"format": "double",
+							"type": "number"
+						}
+					}
+				]
+			}
+		},
+		"/api/v2/game-data/wishlists": {
+			"get": {
+				"operationId": "GetWishlists",
+				"responses": {
+					"200": {
+						"description": "List of user wishlists with statistics",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/ListWishlistsResponse"
+								}
+							}
+						}
+					}
+				},
+				"description": "Get user's wishlists\n\nReturns all wishlists owned by the authenticated user with item counts\nand progress statistics.\n\nRequirements:\n- 32.1: List user wishlists\n- 32.2: Display item counts\n- 32.3: Display progress statistics\n- 46.3: Display acquisition progress",
+				"summary": "Get user wishlists",
+				"tags": [
+					"Game Data - Wishlists"
+				],
+				"security": [
+					{
+						"discord_oauth": []
+					}
+				],
+				"parameters": []
+			},
+			"post": {
+				"operationId": "CreateWishlist",
+				"responses": {
+					"200": {
+						"description": "Created wishlist",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/Wishlist"
+								}
+							}
+						}
+					}
+				},
+				"description": "Create a new wishlist\n\nCreates a new wishlist for the authenticated user with specified settings.\nSupports public/private visibility and organization collaboration.\n\nRequirements:\n- 32.1: Create wishlist\n- 32.2: Support custom names and descriptions\n- 32.4: Support public/private visibility\n- 32.5: Support organization wishlists",
+				"summary": "Create wishlist",
+				"tags": [
+					"Game Data - Wishlists"
+				],
+				"security": [
+					{
+						"discord_oauth": []
+					}
+				],
+				"parameters": [],
+				"requestBody": {
+					"description": "Wishlist creation data",
+					"required": true,
+					"content": {
+						"application/json": {
+							"schema": {
+								"$ref": "#/components/schemas/CreateWishlistRequest",
+								"description": "Wishlist creation data"
+							}
+						}
+					}
+				}
+			}
+		},
+		"/api/v2/game-data/wishlists/{wishlist_id}": {
+			"get": {
+				"operationId": "GetWishlist",
+				"responses": {
+					"200": {
+						"description": "Wishlist with items and statistics",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/GetWishlistResponse"
+								}
+							}
+						}
+					}
+				},
+				"description": "Get wishlist detail with items\n\nReturns complete wishlist information including all items with enriched\ngame data, crafting availability, and progress statistics.\n\nRequirements:\n- 32.3: Get wishlist detail\n- 53.1: Display all wishlist items\n- 53.2: Display item details (name, icon, type)\n- 53.3: Display crafting availability\n- 53.4: Display progress statistics",
+				"summary": "Get wishlist detail",
+				"tags": [
+					"Game Data - Wishlists"
+				],
+				"security": [],
+				"parameters": [
+					{
+						"description": "Wishlist UUID",
+						"in": "path",
+						"name": "wishlist_id",
+						"required": true,
+						"schema": {
+							"type": "string"
+						}
+					},
+					{
+						"description": "Optional share token for public wishlists",
+						"in": "query",
+						"name": "share_token",
+						"required": false,
+						"schema": {
+							"type": "string"
+						}
+					}
+				]
+			},
+			"put": {
+				"operationId": "UpdateWishlist",
+				"responses": {
+					"200": {
+						"description": "Updated wishlist",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/Wishlist"
+								}
+							}
+						}
+					}
+				},
+				"description": "Update wishlist\n\nUpdates wishlist metadata including name, description, and visibility settings.\nOnly the wishlist owner can update it.\n\nRequirements:\n- 32.4: Update wishlist\n- 32.5: Update visibility settings",
+				"summary": "Update wishlist",
+				"tags": [
+					"Game Data - Wishlists"
+				],
+				"security": [
+					{
+						"discord_oauth": []
+					}
+				],
+				"parameters": [
+					{
+						"description": "Wishlist UUID",
+						"in": "path",
+						"name": "wishlist_id",
+						"required": true,
+						"schema": {
+							"type": "string"
+						}
+					}
+				],
+				"requestBody": {
+					"description": "Update data",
+					"required": true,
+					"content": {
+						"application/json": {
+							"schema": {
+								"$ref": "#/components/schemas/UpdateWishlistRequest",
+								"description": "Update data"
+							}
+						}
+					}
+				}
+			},
+			"delete": {
+				"operationId": "DeleteWishlist",
+				"responses": {
+					"200": {
+						"description": "Success response",
+						"content": {
+							"application/json": {
+								"schema": {
+									"properties": {
+										"success": {
+											"type": "boolean"
+										}
+									},
+									"required": [
+										"success"
+									],
+									"type": "object"
+								}
+							}
+						}
+					}
+				},
+				"description": "Delete wishlist\n\nPermanently deletes a wishlist and all its items.\nOnly the wishlist owner can delete it.\n\nRequirements:\n- 32.6: Delete wishlist",
+				"summary": "Delete wishlist",
+				"tags": [
+					"Game Data - Wishlists"
+				],
+				"security": [
+					{
+						"discord_oauth": []
+					}
+				],
+				"parameters": [
+					{
+						"description": "Wishlist UUID",
+						"in": "path",
+						"name": "wishlist_id",
+						"required": true,
+						"schema": {
+							"type": "string"
+						}
+					}
+				]
+			}
+		},
+		"/api/v2/game-data/wishlists/{wishlist_id}/items": {
+			"post": {
+				"operationId": "AddWishlistItem",
+				"responses": {
+					"200": {
+						"description": "Created wishlist item",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/WishlistItemWithDetails"
+								}
+							}
+						}
+					}
+				},
+				"description": "Add item to wishlist\n\nAdds a new item to the wishlist with specified quantity, quality, and priority.\nSupports both craftable and non-craftable items.\n\nRequirements:\n- 46.7: Add item to wishlist\n- 53.5: Support priority levels\n- 53.6: Support quality tier specification\n- 53.7: Support notes",
+				"summary": "Add item to wishlist",
+				"tags": [
+					"Game Data - Wishlists"
+				],
+				"security": [
+					{
+						"discord_oauth": []
+					}
+				],
+				"parameters": [
+					{
+						"description": "Wishlist UUID",
+						"in": "path",
+						"name": "wishlist_id",
+						"required": true,
+						"schema": {
+							"type": "string"
+						}
+					}
+				],
+				"requestBody": {
+					"description": "Item data",
+					"required": true,
+					"content": {
+						"application/json": {
+							"schema": {
+								"$ref": "#/components/schemas/AddWishlistItemRequest",
+								"description": "Item data"
+							}
+						}
+					}
+				}
+			}
+		},
+		"/api/v2/game-data/wishlists/{wishlist_id}/items/{item_id}": {
+			"delete": {
+				"operationId": "RemoveWishlistItem",
+				"responses": {
+					"200": {
+						"description": "Success response",
+						"content": {
+							"application/json": {
+								"schema": {
+									"properties": {
+										"success": {
+											"type": "boolean"
+										}
+									},
+									"required": [
+										"success"
+									],
+									"type": "object"
+								}
+							}
+						}
+					}
+				},
+				"description": "Remove item from wishlist\n\nPermanently removes an item from the wishlist.\n\nRequirements:\n- 46.8: Remove item from wishlist",
+				"summary": "Remove item from wishlist",
+				"tags": [
+					"Game Data - Wishlists"
+				],
+				"security": [
+					{
+						"discord_oauth": []
+					}
+				],
+				"parameters": [
+					{
+						"description": "Wishlist UUID",
+						"in": "path",
+						"name": "wishlist_id",
+						"required": true,
+						"schema": {
+							"type": "string"
+						}
+					},
+					{
+						"description": "Item UUID",
+						"in": "path",
+						"name": "item_id",
+						"required": true,
+						"schema": {
+							"type": "string"
+						}
+					}
+				]
+			},
+			"put": {
+				"operationId": "UpdateWishlistItem",
+				"responses": {
+					"200": {
+						"description": "Updated wishlist item",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/WishlistItemWithDetails"
+								}
+							}
+						}
+					}
+				},
+				"description": "Update wishlist item\n\nUpdates item properties including quantity, quality tier, priority, notes, and acquisition status.\n\nRequirements:\n- 46.9: Update item priority/notes\n- 53.8: Update acquisition status\n- 53.9: Support reordering by priority",
+				"summary": "Update wishlist item",
+				"tags": [
+					"Game Data - Wishlists"
+				],
+				"security": [
+					{
+						"discord_oauth": []
+					}
+				],
+				"parameters": [
+					{
+						"description": "Wishlist UUID",
+						"in": "path",
+						"name": "wishlist_id",
+						"required": true,
+						"schema": {
+							"type": "string"
+						}
+					},
+					{
+						"description": "Item UUID",
+						"in": "path",
+						"name": "item_id",
+						"required": true,
+						"schema": {
+							"type": "string"
+						}
+					}
+				],
+				"requestBody": {
+					"description": "Update data",
+					"required": true,
+					"content": {
+						"application/json": {
+							"schema": {
+								"$ref": "#/components/schemas/UpdateWishlistItemRequest",
+								"description": "Update data"
+							}
+						}
+					}
+				}
+			}
+		},
+		"/api/v2/game-data/wishlists/{wishlist_id}/shopping-list": {
+			"get": {
+				"operationId": "GenerateShoppingList",
+				"responses": {
+					"200": {
+						"description": "Shopping list with material requirements",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/ShoppingListResponse"
+								}
+							}
+						}
+					}
+				},
+				"description": "Generate shopping list from wishlist\n\nAnalyzes all wishlist items and generates a comprehensive shopping list\nshowing required materials for crafting, quantities needed, and acquisition methods.\n\nRequirements:\n- 46.10: Generate shopping list\n- 53.10: Display material requirements",
+				"summary": "Generate shopping list",
+				"tags": [
+					"Game Data - Wishlists"
+				],
+				"security": [
+					{
+						"discord_oauth": []
+					}
+				],
+				"parameters": [
+					{
+						"description": "Wishlist UUID",
+						"in": "path",
+						"name": "wishlist_id",
+						"required": true,
+						"schema": {
+							"type": "string"
+						}
+					}
+				]
+			}
+		},
+		"/api/v2/game-data/missions/search": {
+			"get": {
+				"operationId": "SearchMissions",
+				"responses": {
+					"200": {
+						"description": "Mission search results with pagination",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/SearchMissionsResponse"
+								}
+							}
+						}
+					}
+				},
+				"description": "Search missions with comprehensive filters\n\nSupports filtering by category, career type, location, faction, legal status,\ndifficulty, sharing status, events, and blueprint rewards. Includes full-text\nsearch on mission names and community ratings.\n\nRequirements:\n- 1.1: Return all missions that can reward specified blueprint\n- 1.2: Display mission name, location, career type, organization\n- 1.3: Display reward probability for each blueprint\n- 1.4: Display total credit reward for each mission\n- 1.5: Support partial name matching for searches\n- 1.6: Return results within 200ms for typical queries\n- 41.1-41.10: Support comprehensive filtering (category, system, type, faction, etc.)",
+				"summary": "Search missions",
+				"tags": [
+					"Game Data - Missions"
+				],
+				"security": [],
+				"parameters": [
+					{
+						"description": "Full-text search on mission name",
+						"in": "query",
+						"name": "text",
+						"required": false,
+						"schema": {
+							"type": "string"
+						}
+					},
+					{
+						"description": "Filter by mission category",
+						"in": "query",
+						"name": "category",
+						"required": false,
+						"schema": {
+							"type": "string"
+						}
+					},
+					{
+						"description": "Filter by career type",
+						"in": "query",
+						"name": "career_type",
+						"required": false,
+						"schema": {
+							"type": "string"
+						}
+					},
+					{
+						"description": "Filter by star system",
+						"in": "query",
+						"name": "star_system",
+						"required": false,
+						"schema": {
+							"type": "string"
+						}
+					},
+					{
+						"description": "Filter by planet or moon",
+						"in": "query",
+						"name": "planet_moon",
+						"required": false,
+						"schema": {
+							"type": "string"
+						}
+					},
+					{
+						"description": "Filter by faction",
+						"in": "query",
+						"name": "faction",
+						"required": false,
+						"schema": {
+							"type": "string"
+						}
+					},
+					{
+						"description": "Filter by legal status",
+						"in": "query",
+						"name": "legal_status",
+						"required": false,
+						"schema": {
+							"type": "string",
+							"enum": [
+								"LEGAL",
+								"ILLEGAL"
+							]
+						}
+					},
+					{
+						"description": "Minimum difficulty level (1-5)",
+						"in": "query",
+						"name": "difficulty_min",
+						"required": false,
+						"schema": {
+							"format": "double",
+							"type": "number"
+						}
+					},
+					{
+						"description": "Maximum difficulty level (1-5)",
+						"in": "query",
+						"name": "difficulty_max",
+						"required": false,
+						"schema": {
+							"format": "double",
+							"type": "number"
+						}
+					},
+					{
+						"description": "Filter by shareable status",
+						"in": "query",
+						"name": "is_shareable",
+						"required": false,
+						"schema": {
+							"type": "boolean"
+						}
+					},
+					{
+						"description": "Filter by availability type",
+						"in": "query",
+						"name": "availability_type",
+						"required": false,
+						"schema": {
+							"type": "string"
+						}
+					},
+					{
+						"description": "Filter by associated event",
+						"in": "query",
+						"name": "associated_event",
+						"required": false,
+						"schema": {
+							"type": "string"
+						}
+					},
+					{
+						"description": "Filter for chain starter missions",
+						"in": "query",
+						"name": "is_chain_starter",
+						"required": false,
+						"schema": {
+							"type": "boolean"
+						}
+					},
+					{
+						"description": "Filter for missions with blueprint rewards",
+						"in": "query",
+						"name": "has_blueprint_rewards",
+						"required": false,
+						"schema": {
+							"type": "boolean"
+						}
+					},
+					{
+						"description": "Minimum credit reward",
+						"in": "query",
+						"name": "credit_reward_min",
+						"required": false,
+						"schema": {
+							"format": "double",
+							"type": "number"
+						}
+					},
+					{
+						"description": "Minimum community difficulty rating",
+						"in": "query",
+						"name": "community_difficulty_min",
+						"required": false,
+						"schema": {
+							"format": "double",
+							"type": "number"
+						}
+					},
+					{
+						"description": "Minimum community satisfaction rating",
+						"in": "query",
+						"name": "community_satisfaction_min",
+						"required": false,
+						"schema": {
+							"format": "double",
+							"type": "number"
+						}
+					},
+					{
+						"description": "Game version ID (defaults to active LIVE version)",
+						"in": "query",
+						"name": "version_id",
+						"required": false,
+						"schema": {
+							"type": "string"
+						}
+					},
+					{
+						"description": "Page number (default: 1)",
+						"in": "query",
+						"name": "page",
+						"required": false,
+						"schema": {
+							"default": 1,
+							"format": "double",
+							"type": "number"
+						}
+					},
+					{
+						"description": "Results per page (default: 20, max: 100)",
+						"in": "query",
+						"name": "page_size",
+						"required": false,
+						"schema": {
+							"default": 20,
+							"format": "double",
+							"type": "number"
+						}
+					}
+				]
+			}
+		},
+		"/api/v2/game-data/missions/{mission_id}": {
+			"get": {
+				"operationId": "GetMissionDetail",
+				"responses": {
+					"200": {
+						"description": "Complete mission details with reward pools",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/MissionDetailResponse"
+								}
+							}
+						}
+					}
+				},
+				"description": "Get mission detail with blueprint rewards\n\nReturns complete mission information including all blueprint reward pools,\nprerequisite missions, and user-specific data (completion status, ratings).\n\nRequirements:\n- 2.1: Display all blueprints in reward pool\n- 2.2: Display probability of receiving each blueprint\n- 2.3: Display total number of blueprints in reward pool\n- 2.4: Display selection mechanism (e.g., \"1 of 6 blueprints\")\n- 2.5: Group blueprints by reward pool when multiple pools exist\n- 2.6: Display blueprint rarity or tier information",
+				"summary": "Get mission details",
+				"tags": [
+					"Game Data - Missions"
+				],
+				"security": [],
+				"parameters": [
+					{
+						"description": "Mission UUID",
+						"in": "path",
+						"name": "mission_id",
+						"required": true,
+						"schema": {
+							"type": "string"
+						}
+					},
+					{
+						"description": "Optional user ID for user-specific data",
+						"in": "query",
+						"name": "user_id",
+						"required": false,
+						"schema": {
+							"type": "string"
+						}
+					}
+				]
+			}
+		},
+		"/api/v2/game-data/missions/{mission_id}/blueprints": {
+			"get": {
+				"operationId": "GetMissionBlueprints",
+				"responses": {
+					"200": {
+						"description": "Array of blueprint details with reward information",
+						"content": {
+							"application/json": {
+								"schema": {
+									"items": {
+										"$ref": "#/components/schemas/BlueprintDetail"
+									},
+									"type": "array"
+								}
+							}
+						}
+					}
+				},
+				"description": "Get blueprints rewarded by mission\n\nReturns detailed information about all blueprints that can be rewarded\nby the specified mission, including drop probabilities and ingredient counts.",
+				"summary": "Get mission blueprints",
+				"tags": [
+					"Game Data - Missions"
+				],
+				"security": [],
+				"parameters": [
+					{
+						"description": "Mission UUID",
+						"in": "path",
+						"name": "mission_id",
+						"required": true,
+						"schema": {
+							"type": "string"
+						}
+					}
+				]
+			}
+		},
+		"/api/v2/game-data/missions/{mission_id}/complete": {
+			"post": {
+				"operationId": "CompleteMission",
+				"responses": {
+					"200": {
+						"description": "Success response",
+						"content": {
+							"application/json": {
+								"schema": {
+									"properties": {
+										"completion_id": {
+											"type": "string"
+										},
+										"success": {
+											"type": "boolean"
+										}
+									},
+									"required": [
+										"completion_id",
+										"success"
+									],
+									"type": "object"
+								}
+							}
+						}
+					}
+				},
+				"description": "Mark mission as completed\n\nRecords mission completion for the authenticated user, including which\nblueprints were rewarded. This enables completion tracking and filtering.\n\nRequirements:\n- 29.1: Allow players to mark missions as completed\n- 29.2: Record completion date for each mission\n- 29.3: Record which blueprints were rewarded from each completion\n- 29.4: Display completion status on mission search results\n- 29.5: Compute completion statistics per player\n- 29.6: Support filtering missions by completion status",
+				"summary": "Complete mission",
+				"tags": [
+					"Game Data - Missions"
+				],
+				"security": [
+					{
+						"discord_oauth": []
+					}
+				],
+				"parameters": [
+					{
+						"description": "Mission UUID",
+						"in": "path",
+						"name": "mission_id",
+						"required": true,
+						"schema": {
+							"type": "string"
+						}
+					}
+				],
+				"requestBody": {
+					"description": "Completion details",
+					"required": true,
+					"content": {
+						"application/json": {
+							"schema": {
+								"properties": {
+									"completion_notes": {
+										"type": "string"
+									},
+									"blueprints_rewarded": {
+										"items": {
+											"type": "string"
+										},
+										"type": "array"
+									}
+								},
+								"type": "object",
+								"description": "Completion details"
+							}
+						}
+					}
+				}
+			}
+		},
+		"/api/v2/game-data/missions/{mission_id}/rate": {
+			"post": {
+				"operationId": "RateMission",
+				"responses": {
+					"200": {
+						"description": "Success response",
+						"content": {
+							"application/json": {
+								"schema": {
+									"properties": {
+										"rating_id": {
+											"type": "string"
+										},
+										"success": {
+											"type": "boolean"
+										}
+									},
+									"required": [
+										"rating_id",
+										"success"
+									],
+									"type": "object"
+								}
+							}
+						}
+					}
+				},
+				"description": "Rate mission difficulty and satisfaction\n\nRecords user's rating for a mission. Ratings are aggregated to compute\ncommunity averages displayed on mission search results. Database triggers\nautomatically update the mission's aggregate ratings.\n\nRequirements:\n- 49.1: Allow authenticated users to rate mission difficulty (1-5 stars)\n- 49.2: Allow authenticated users to rate mission satisfaction (1-5 stars)\n- 49.3: Display average community difficulty rating\n- 49.4: Display average community satisfaction rating",
+				"summary": "Rate mission",
+				"tags": [
+					"Game Data - Missions"
+				],
+				"security": [
+					{
+						"discord_oauth": []
+					}
+				],
+				"parameters": [
+					{
+						"description": "Mission UUID",
+						"in": "path",
+						"name": "mission_id",
+						"required": true,
+						"schema": {
+							"type": "string"
+						}
+					}
+				],
+				"requestBody": {
+					"description": "Rating details",
+					"required": true,
+					"content": {
+						"application/json": {
+							"schema": {
+								"properties": {
+									"rating_comment": {
+										"type": "string"
+									},
+									"satisfaction_rating": {
+										"type": "number",
+										"format": "double"
+									},
+									"difficulty_rating": {
+										"type": "number",
+										"format": "double"
+									}
+								},
+								"required": [
+									"satisfaction_rating",
+									"difficulty_rating"
+								],
+								"type": "object",
+								"description": "Rating details"
+							}
+						}
+					}
+				}
+			}
+		},
+		"/api/v2/game-data/missions/chains": {
+			"get": {
+				"operationId": "GetMissionChains",
+				"responses": {
+					"200": {
+						"description": "Array of mission chains",
+						"content": {
+							"application/json": {
+								"schema": {
+									"items": {
+										"properties": {
+											"total_missions": {
+												"type": "number",
+												"format": "double"
+											},
+											"chain_missions": {
+												"items": {
+													"$ref": "#/components/schemas/Mission"
+												},
+												"type": "array"
+											},
+											"starter_mission": {
+												"$ref": "#/components/schemas/Mission"
+											},
+											"chain_name": {
+												"type": "string"
+											},
+											"chain_id": {
+												"type": "string"
+											}
+										},
+										"required": [
+											"total_missions",
+											"chain_missions",
+											"starter_mission",
+											"chain_name",
+											"chain_id"
+										],
+										"type": "object"
+									},
+									"type": "array"
+								}
+							}
+						}
+					}
+				},
+				"description": "Get mission chains\n\nReturns all mission chains with their starter missions and progression paths.\nMission chains are series of related missions that must be completed in order.\n\nRequirements:\n- 47.1: Identify mission chains (series of related missions)\n- 47.2: Display starter missions (entry points to chains)\n- 47.3: Display unique missions (one-time only)\n- 47.4: Display mission prerequisites and unlock requirements",
+				"summary": "Get mission chains",
+				"tags": [
+					"Game Data - Missions"
+				],
+				"security": [],
+				"parameters": [
+					{
+						"description": "Game version ID (defaults to active LIVE version)",
+						"in": "query",
+						"name": "version_id",
+						"required": false,
+						"schema": {
+							"type": "string"
+						}
+					}
+				]
+			}
+		},
+		"/api/v2/game-data/crafting/calculate-quality": {
+			"post": {
+				"operationId": "CalculateQuality",
+				"responses": {
+					"200": {
+						"description": "Quality calculation result with breakdown",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/CalculateQualityResponse"
+								}
+							}
+						}
+					}
+				},
+				"description": "Calculate output quality from ingredients\n\nComputes the expected output quality based on input material qualities\nusing the blueprint's quality calculation formula (weighted_average, minimum, or maximum).\n\nRequirements:\n- 20.1: Support weighted_average calculation type\n- 20.2: Support minimum calculation type\n- 20.3: Support maximum calculation type\n- 20.4: Validate input materials match blueprint requirements\n- 20.5: Return quality tier and quality value\n- 20.6: Include calculation breakdown\n- 51.1-51.10: Quality calculation display requirements",
+				"summary": "Calculate output quality",
+				"tags": [
+					"Game Data - Crafting"
+				],
+				"security": [],
+				"parameters": [],
+				"requestBody": {
+					"description": "Crafting calculation request with blueprint and materials",
+					"required": true,
+					"content": {
+						"application/json": {
+							"schema": {
+								"$ref": "#/components/schemas/CalculateQualityRequest",
+								"description": "Crafting calculation request with blueprint and materials"
+							}
+						}
+					}
+				}
+			}
+		},
+		"/api/v2/game-data/crafting/simulate": {
+			"post": {
+				"operationId": "SimulateCrafting",
+				"responses": {
+					"200": {
+						"description": "Simulation results with best/worst/cost-effective options",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/SimulateCraftingResponse"
+								}
+							}
+						}
+					}
+				},
+				"description": "Simulate crafting with ingredient variations\n\nTests different combinations of ingredient qualities to show how\noutput quality varies. Useful for planning optimal material selection.\n\nRequirements:\n- 21.1: Support testing multiple quality tier combinations\n- 21.2: Return all simulation results\n- 21.3: Identify best result (highest quality)\n- 21.4: Identify worst result (lowest quality)\n- 21.5: Identify most cost-effective result\n- 21.6: Include material configuration for each result\n- 52.1-52.10: Crafting simulation requirements",
+				"summary": "Simulate crafting variations",
+				"tags": [
+					"Game Data - Crafting"
+				],
+				"security": [],
+				"parameters": [],
+				"requestBody": {
+					"description": "Simulation request with material variations",
+					"required": true,
+					"content": {
+						"application/json": {
+							"schema": {
+								"$ref": "#/components/schemas/SimulateCraftingRequest",
+								"description": "Simulation request with material variations"
+							}
+						}
+					}
+				}
+			}
+		},
+		"/api/v2/game-data/crafting/craft": {
+			"post": {
+				"operationId": "RecordCrafting",
+				"responses": {
+					"200": {
+						"description": "Success response with session ID",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/RecordCraftingResponse"
+								}
+							}
+						}
+					}
+				},
+				"description": "Record crafting session\n\nSaves a completed crafting session to the user's history for tracking\nand statistics. Requires authentication.\n\nRequirements:\n- 31.1: Record blueprint used\n- 31.2: Record input materials with qualities\n- 31.3: Record output quality achieved\n- 31.4: Record success/critical success status\n- 31.5: Record costs\n- 31.6: Associate with user account",
+				"summary": "Record crafting session",
+				"tags": [
+					"Game Data - Crafting"
+				],
+				"security": [
+					{
+						"discord_oauth": []
+					}
+				],
+				"parameters": [],
+				"requestBody": {
+					"description": "Crafting session data",
+					"required": true,
+					"content": {
+						"application/json": {
+							"schema": {
+								"$ref": "#/components/schemas/RecordCraftingRequest",
+								"description": "Crafting session data"
+							}
+						}
+					}
+				}
+			}
+		},
+		"/api/v2/game-data/crafting/history": {
+			"get": {
+				"operationId": "GetCraftingHistory",
+				"responses": {
+					"200": {
+						"description": "Paginated crafting history",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/GetCraftingHistoryResponse"
+								}
+							}
+						}
+					}
+				},
+				"description": "Get user's crafting history\n\nReturns paginated list of user's crafting sessions with optional\nfiltering by blueprint. Requires authentication.\n\nRequirements:\n- 45.1: Return crafting sessions with pagination\n- 45.2: Support filtering by blueprint\n- 45.3: Include blueprint and output item names\n- 45.4: Include input materials used\n- 45.5: Include output quality achieved\n- 45.6: Sort by date descending",
+				"summary": "Get crafting history",
+				"tags": [
+					"Game Data - Crafting"
+				],
+				"security": [
+					{
+						"discord_oauth": []
+					}
+				],
+				"parameters": [
+					{
+						"description": "Optional blueprint filter",
+						"in": "query",
+						"name": "blueprint_id",
+						"required": false,
+						"schema": {
+							"type": "string"
+						}
+					},
+					{
+						"description": "Page number (default: 1)",
+						"in": "query",
+						"name": "page",
+						"required": false,
+						"schema": {
+							"default": 1,
+							"format": "double",
+							"type": "number"
+						}
+					},
+					{
+						"description": "Results per page (default: 20, max: 100)",
+						"in": "query",
+						"name": "page_size",
+						"required": false,
+						"schema": {
+							"default": 20,
+							"format": "double",
+							"type": "number"
+						}
+					}
+				]
+			}
+		},
+		"/api/v2/game-data/crafting/statistics": {
+			"get": {
+				"operationId": "GetCraftingStatistics",
+				"responses": {
+					"200": {
+						"description": "Crafting statistics",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/GetCraftingStatisticsResponse"
+								}
+							}
+						}
+					}
+				},
+				"description": "Get user's crafting statistics\n\nReturns aggregate statistics about user's crafting activity including\nsuccess rates, average quality, and per-blueprint statistics.\n\nRequirements:\n- 45.7: Calculate total sessions\n- 45.8: Calculate average output quality\n- 45.9: Calculate success rates\n- 45.10: Provide per-blueprint statistics",
+				"summary": "Get crafting statistics",
+				"tags": [
+					"Game Data - Crafting"
+				],
+				"security": [
+					{
+						"discord_oauth": []
+					}
+				],
+				"parameters": []
+			}
+		},
+		"/api/v2/game-data/blueprints/search": {
+			"get": {
+				"operationId": "SearchBlueprints",
+				"responses": {
+					"200": {
+						"description": "Blueprint search results with pagination",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/SearchBlueprintsResponse"
+								}
+							}
+						}
+					}
+				},
+				"description": "Search blueprints with filters\n\nSupports filtering by category, rarity, tier, crafting station, and ownership.\nIncludes full-text search on blueprint names and displays ingredient/mission counts.\n\nRequirements:\n- 19.1: Categorize blueprints by item type\n- 19.2: Support hierarchical categories with subcategories\n- 19.3: Display category navigation in blueprint browser\n- 19.4: Support filtering by category in searches\n- 19.5: Display item count per category\n- 19.6: Support custom category views per user\n- 43.1-43.10: Display blueprints as cards with comprehensive information",
+				"summary": "Search blueprints",
+				"tags": [
+					"Game Data - Blueprints"
+				],
+				"security": [],
+				"parameters": [
+					{
+						"description": "Full-text search on blueprint name",
+						"in": "query",
+						"name": "text",
+						"required": false,
+						"schema": {
+							"type": "string"
+						}
+					},
+					{
+						"description": "Filter by item category",
+						"in": "query",
+						"name": "item_category",
+						"required": false,
+						"schema": {
+							"type": "string"
+						}
+					},
+					{
+						"description": "Filter by item subcategory",
+						"in": "query",
+						"name": "item_subcategory",
+						"required": false,
+						"schema": {
+							"type": "string"
+						}
+					},
+					{
+						"description": "Filter by rarity",
+						"in": "query",
+						"name": "rarity",
+						"required": false,
+						"schema": {
+							"type": "string"
+						}
+					},
+					{
+						"description": "Filter by tier (1-5)",
+						"in": "query",
+						"name": "tier",
+						"required": false,
+						"schema": {
+							"format": "double",
+							"type": "number"
+						}
+					},
+					{
+						"description": "Filter by crafting station type",
+						"in": "query",
+						"name": "crafting_station_type",
+						"required": false,
+						"schema": {
+							"type": "string"
+						}
+					},
+					{
+						"description": "Filter by output game item ID",
+						"in": "query",
+						"name": "output_game_item_id",
+						"required": false,
+						"schema": {
+							"type": "string"
+						}
+					},
+					{
+						"description": "Filter to show only user-owned blueprints",
+						"in": "query",
+						"name": "user_owned_only",
+						"required": false,
+						"schema": {
+							"type": "boolean"
+						}
+					},
+					{
+						"description": "Game version ID (defaults to active LIVE version)",
+						"in": "query",
+						"name": "version_id",
+						"required": false,
+						"schema": {
+							"type": "string"
+						}
+					},
+					{
+						"description": "Page number (default: 1)",
+						"in": "query",
+						"name": "page",
+						"required": false,
+						"schema": {
+							"default": 1,
+							"format": "double",
+							"type": "number"
+						}
+					},
+					{
+						"description": "Results per page (default: 20, max: 100)",
+						"in": "query",
+						"name": "page_size",
+						"required": false,
+						"schema": {
+							"default": 20,
+							"format": "double",
+							"type": "number"
+						}
+					}
+				]
+			}
+		},
+		"/api/v2/game-data/blueprints/{blueprint_id}": {
+			"get": {
+				"operationId": "GetBlueprintDetail",
+				"responses": {
+					"200": {
+						"description": "Complete blueprint details with ingredients and missions",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/BlueprintDetailResponse"
+								}
+							}
+						}
+					}
+				},
+				"description": "Get blueprint detail with ingredients and missions\n\nReturns complete blueprint information including all required ingredients\nwith market prices, missions that reward this blueprint, and crafting recipe details.\n\nRequirements:\n- 50.1: List all required ingredients with names\n- 50.2: Display required quantity for each ingredient\n- 50.3: Display ingredient quality requirements if applicable\n- 50.4: Highlight ingredients the player doesn't have\n- 50.5: Display ingredient icons or images\n- 50.6: Support clicking ingredients to view details\n- 50.7: Display total ingredient count\n- 50.8: Group ingredients by category\n- 50.9: Display alternative ingredients if substitutions are allowed\n- 50.10: Calculate total material cost based on market prices",
+				"summary": "Get blueprint details",
+				"tags": [
+					"Game Data - Blueprints"
+				],
+				"security": [],
+				"parameters": [
+					{
+						"description": "Blueprint UUID",
+						"in": "path",
+						"name": "blueprint_id",
+						"required": true,
+						"schema": {
+							"type": "string"
+						}
+					},
+					{
+						"description": "Optional user ID for user-specific data",
+						"in": "query",
+						"name": "user_id",
+						"required": false,
+						"schema": {
+							"type": "string"
+						}
+					}
+				]
+			}
+		},
+		"/api/v2/game-data/blueprints/{blueprint_id}/missions": {
+			"get": {
+				"operationId": "GetBlueprintMissions",
+				"responses": {
+					"200": {
+						"description": "Array of missions that reward this blueprint",
+						"content": {
+							"application/json": {
+								"schema": {
+									"items": {
+										"$ref": "#/components/schemas/MissionRewardingBlueprint"
+									},
+									"type": "array"
+								}
+							}
+						}
+					}
+				},
+				"description": "Get missions that reward this blueprint\n\nReturns all missions that can reward the specified blueprint,\nincluding drop probabilities and mission locations.",
+				"summary": "Get blueprint missions",
+				"tags": [
+					"Game Data - Blueprints"
+				],
+				"security": [],
+				"parameters": [
+					{
+						"description": "Blueprint UUID",
+						"in": "path",
+						"name": "blueprint_id",
+						"required": true,
+						"schema": {
+							"type": "string"
+						}
+					},
+					{
+						"description": "Optional game version ID",
+						"in": "query",
+						"name": "version_id",
+						"required": false,
+						"schema": {
+							"type": "string"
+						}
+					}
+				]
+			}
+		},
+		"/api/v2/game-data/blueprints/categories": {
+			"get": {
+				"operationId": "GetCategories",
+				"responses": {
+					"200": {
+						"description": "Array of categories with counts",
+						"content": {
+							"application/json": {
+								"schema": {
+									"items": {
+										"$ref": "#/components/schemas/BlueprintCategory"
+									},
+									"type": "array"
+								}
+							}
+						}
+					}
+				},
+				"description": "Get blueprint categories\n\nReturns all blueprint categories with item counts, supporting\nhierarchical category navigation in the blueprint browser.\n\nRequirements:\n- 19.1: Categorize blueprints by item type\n- 19.2: Support hierarchical categories with subcategories\n- 19.5: Display item count per category",
+				"summary": "Get categories",
+				"tags": [
+					"Game Data - Blueprints"
+				],
+				"security": [],
+				"parameters": [
+					{
+						"description": "Optional game version ID (defaults to active LIVE version)",
+						"in": "query",
+						"name": "version_id",
+						"required": false,
+						"schema": {
+							"type": "string"
+						}
+					}
+				]
+			}
+		},
+		"/api/v2/game-data/blueprints/{blueprint_id}/inventory": {
+			"post": {
+				"operationId": "AddBlueprintToInventory",
+				"responses": {
+					"200": {
+						"description": "Success response with inventory ID",
+						"content": {
+							"application/json": {
+								"schema": {
+									"properties": {
+										"inventory_id": {
+											"type": "string"
+										},
+										"success": {
+											"type": "boolean"
+										}
+									},
+									"required": [
+										"inventory_id",
+										"success"
+									],
+									"type": "object"
+								}
+							}
+						}
+					}
+				},
+				"description": "Add blueprint to user inventory\n\nMarks a blueprint as owned by the authenticated user. Records acquisition\ndetails including date, method, location, and notes for tracking purposes.\n\nRequirements:\n- 30.1: Allow players to mark blueprints as owned/not owned\n- 30.2: Display owned blueprint count vs. total available\n- 30.3: Support filtering blueprints by owned status\n- 30.4: Display acquisition progress\n- 44.1: Support Discord OAuth integration for authentication\n- 44.2: Associate blueprint inventory with Discord user account",
+				"summary": "Add blueprint to inventory",
+				"tags": [
+					"Game Data - Blueprints"
+				],
+				"security": [
+					{
+						"discord_oauth": []
+					}
+				],
+				"parameters": [
+					{
+						"description": "Blueprint UUID",
+						"in": "path",
+						"name": "blueprint_id",
+						"required": true,
+						"schema": {
+							"type": "string"
+						}
+					}
+				],
+				"requestBody": {
+					"description": "Acquisition details",
+					"required": true,
+					"content": {
+						"application/json": {
+							"schema": {
+								"properties": {
+									"acquisition_notes": {
+										"type": "string"
+									},
+									"acquisition_location": {
+										"type": "string"
+									},
+									"acquisition_method": {
+										"type": "string"
+									}
+								},
+								"type": "object",
+								"description": "Acquisition details"
+							}
+						}
+					}
+				}
+			},
+			"delete": {
+				"operationId": "RemoveBlueprintFromInventory",
+				"responses": {
+					"200": {
+						"description": "Success response",
+						"content": {
+							"application/json": {
+								"schema": {
+									"properties": {
+										"success": {
+											"type": "boolean"
+										}
+									},
+									"required": [
+										"success"
+									],
+									"type": "object"
+								}
+							}
+						}
+					}
+				},
+				"description": "Remove blueprint from user inventory\n\nMarks a blueprint as not owned by the authenticated user. This allows users\nto maintain accurate inventory tracking when they lose access to blueprints.\n\nRequirements:\n- 30.1: Allow players to mark blueprints as owned/not owned\n- 30.3: Support filtering blueprints by owned status\n- 44.2: Associate blueprint inventory with Discord user account",
+				"summary": "Remove blueprint from inventory",
+				"tags": [
+					"Game Data - Blueprints"
+				],
+				"security": [
+					{
+						"discord_oauth": []
+					}
+				],
+				"parameters": [
+					{
+						"description": "Blueprint UUID",
+						"in": "path",
+						"name": "blueprint_id",
+						"required": true,
+						"schema": {
+							"type": "string"
+						}
+					}
+				]
+			}
+		},
+		"/api/v2/game-data/blueprints/inventory": {
+			"get": {
+				"operationId": "GetUserBlueprintInventory",
+				"responses": {
+					"200": {
+						"description": "User's blueprint inventory with statistics",
+						"content": {
+							"application/json": {
+								"schema": {
+									"properties": {
+										"page_size": {
+											"type": "number",
+											"format": "double"
+										},
+										"page": {
+											"type": "number",
+											"format": "double"
+										},
+										"total": {
+											"type": "number",
+											"format": "double"
+										},
+										"statistics": {
+											"properties": {
+												"recently_acquired_count": {
+													"type": "number",
+													"format": "double"
+												},
+												"completion_percentage": {
+													"type": "number",
+													"format": "double"
+												},
+												"total_available": {
+													"type": "number",
+													"format": "double"
+												},
+												"total_owned": {
+													"type": "number",
+													"format": "double"
+												}
+											},
+											"required": [
+												"recently_acquired_count",
+												"completion_percentage",
+												"total_available",
+												"total_owned"
+											],
+											"type": "object"
+										},
+										"blueprints": {
+											"items": {
+												"properties": {
+													"acquisition_notes": {
+														"type": "string"
+													},
+													"acquisition_location": {
+														"type": "string"
+													},
+													"acquisition_method": {
+														"type": "string"
+													},
+													"acquisition_date": {
+														"type": "string"
+													},
+													"tier": {
+														"type": "number",
+														"format": "double"
+													},
+													"rarity": {
+														"type": "string"
+													},
+													"item_category": {
+														"type": "string"
+													},
+													"output_item_icon": {
+														"type": "string"
+													},
+													"output_item_name": {
+														"type": "string"
+													},
+													"blueprint_name": {
+														"type": "string"
+													},
+													"blueprint_id": {
+														"type": "string"
+													}
+												},
+												"required": [
+													"acquisition_date",
+													"output_item_name",
+													"blueprint_name",
+													"blueprint_id"
+												],
+												"type": "object"
+											},
+											"type": "array"
+										}
+									},
+									"required": [
+										"page_size",
+										"page",
+										"total",
+										"statistics",
+										"blueprints"
+									],
+									"type": "object"
+								}
+							}
+						}
+					}
+				},
+				"description": "Get user's blueprint inventory\n\nReturns all blueprints owned by the authenticated user with acquisition details.\nSupports filtering by category, rarity, and version. Displays acquisition progress\nand statistics.\n\nRequirements:\n- 30.1: Record which blueprints each player owns\n- 30.2: Display owned blueprint count vs. total available\n- 30.3: Display acquisition date for each blueprint\n- 30.4: Support filtering blueprints by owned status\n- 30.5: Display acquisition progress\n- 30.6: Support bulk import of owned blueprints\n- 44.3: Allow players to mark blueprints as owned/not owned\n- 44.4: Display owned blueprint count vs. total available\n- 44.5: Support filtering blueprints by owned status\n- 44.6: Display acquisition progress\n- 44.7: Sync blueprint inventory across devices\n- 44.8: Support bulk import of blueprint lists\n- 44.9: Display recently acquired blueprints\n- 44.10: Support blueprint collection goals and achievements",
+				"summary": "Get user inventory",
+				"tags": [
+					"Game Data - Blueprints"
+				],
+				"security": [
+					{
+						"discord_oauth": []
+					}
+				],
+				"parameters": [
+					{
+						"description": "Filter by item category",
+						"in": "query",
+						"name": "item_category",
+						"required": false,
+						"schema": {
+							"type": "string"
+						}
+					},
+					{
+						"description": "Filter by rarity",
+						"in": "query",
+						"name": "rarity",
+						"required": false,
+						"schema": {
+							"type": "string"
+						}
+					},
+					{
+						"description": "Game version ID (defaults to active LIVE version)",
+						"in": "query",
+						"name": "version_id",
+						"required": false,
+						"schema": {
+							"type": "string"
+						}
+					},
+					{
+						"description": "Sort field (acquisition_date, blueprint_name)",
+						"in": "query",
+						"name": "sort_by",
+						"required": false,
+						"schema": {
+							"default": "acquisition_date",
+							"type": "string",
+							"enum": [
+								"acquisition_date",
+								"blueprint_name"
+							]
+						}
+					},
+					{
+						"description": "Sort order (asc, desc)",
+						"in": "query",
+						"name": "sort_order",
+						"required": false,
+						"schema": {
+							"default": "desc",
+							"type": "string",
+							"enum": [
+								"asc",
+								"desc"
+							]
+						}
+					},
+					{
+						"description": "Page number (default: 1)",
+						"in": "query",
+						"name": "page",
+						"required": false,
+						"schema": {
+							"default": 1,
+							"format": "double",
+							"type": "number"
+						}
+					},
+					{
+						"description": "Results per page (default: 50, max: 100)",
+						"in": "query",
+						"name": "page_size",
+						"required": false,
+						"schema": {
+							"default": 50,
 							"format": "double",
 							"type": "number"
 						}

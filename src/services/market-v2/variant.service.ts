@@ -16,7 +16,7 @@ import crypto from "crypto"
 export interface VariantAttributes {
   quality_tier?: number // 1-5
   quality_value?: number // 0-1000
-  crafted_source?: "crafted" | "store" | "looted" | "unknown"
+  crafted_source?: "crafted" | "store" | "looted" | "unknown" | "duped"
   blueprint_tier?: number // 1-5
   [key: string]: any // Future extensibility
 }
