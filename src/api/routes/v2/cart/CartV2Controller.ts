@@ -13,6 +13,8 @@ import { Request as ExpressRequest } from "express"
 import { BaseController } from "../base/BaseController.js"
 import { withTransaction } from "../../../../clients/database/transaction.js"
 import { getKnex } from "../../../../clients/database/knex-db.js"
+import { getNextAvailableTime } from "../util/next-available.js"
+import * as profileDb from "../../v1/profiles/database.js"
 import {
   AddToCartRequest,
   AddToCartResponse,
@@ -88,6 +90,10 @@ export class CartV2Controller extends BaseController {
           this.on("l.seller_id", "seller.user_id")
             .andOn(knex.raw("l.seller_type = 'user'"))
         })
+        .leftJoin("contractors as contractor", function() {
+          this.on("l.seller_id", "contractor.contractor_id")
+            .andOn(knex.raw("l.seller_type = 'contractor'"))
+        })
         .where("ci.user_id", userId)
         .select(
           "ci.cart_item_id",
@@ -102,6 +108,7 @@ export class CartV2Controller extends BaseController {
           "l.title as listing_title",
           "l.status as listing_status",
           "l.seller_type",
+          "l.seller_id",
           // Variant info
           "iv.attributes as variant_attributes",
           "iv.display_name as variant_display_name",
@@ -110,6 +117,8 @@ export class CartV2Controller extends BaseController {
           "seller.username as seller_username",
           "seller.display_name as seller_display_name",
           "seller.rating as seller_rating",
+          "contractor.spectrum_id as contractor_spectrum_id",
+          "contractor.name as contractor_name",
           // Pricing info
           "li.pricing_mode",
           "li.base_price",
@@ -163,12 +172,34 @@ export class CartV2Controller extends BaseController {
           }
 
           // Build listing info (Requirement 29.3)
+          const sellerSlug = item.seller_type === "contractor"
+            ? item.contractor_spectrum_id || ""
+            : item.seller_username || ""
+          const sellerName = item.seller_type === "contractor"
+            ? item.contractor_name || "Unknown"
+            : item.seller_username || item.seller_display_name || "Unknown"
+
+          // Compute next available time from seller's availability schedule
+          let sellerNextAvailable: string | null = null
+          try {
+            const availability = await profileDb.getUserAvailability(
+              item.seller_id,
+              item.seller_type === "contractor" ? item.seller_id : null,
+            )
+            sellerNextAvailable = getNextAvailableTime(availability)
+          } catch {
+            // Silently ignore — availability is optional
+          }
+
           const listingInfo: CartListingInfo = {
             listing_id: item.listing_id,
             title: item.listing_title,
-            seller_name: item.seller_username || item.seller_display_name || "Unknown",
+            seller_name: sellerName,
+            seller_type: item.seller_type,
+            seller_slug: sellerSlug,
             seller_rating: item.seller_rating || 0,
             status: item.listing_status,
+            seller_next_available: sellerNextAvailable,
           }
 
           // Calculate subtotal (Requirement 29.6)

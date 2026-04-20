@@ -78,11 +78,20 @@ export interface CartListingInfo {
   /** Seller username or contractor name */
   seller_name: string;
   
+  /** Seller type */
+  seller_type: 'user' | 'contractor';
+
+  /** Seller slug (username or spectrum_id) */
+  seller_slug: string;
+
   /** Seller rating (0-5) */
   seller_rating: number;
   
   /** Current listing status */
   status: string;
+
+  /** ISO 8601 timestamp of seller's next available slot, or null if not set / currently available */
+  seller_next_available?: string | null;
 }
 
 /**
