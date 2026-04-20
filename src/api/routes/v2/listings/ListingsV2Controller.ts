@@ -107,6 +107,8 @@ export class ListingsV2Controller extends BaseController {
             visibility: "public",
             sale_type: "fixed",
             listing_type: "single",
+            pickup_method: requestBody.pickup_method || null,
+            quantity_unit: requestBody.quantity_unit || "unit",
             created_at: new Date(),
             updated_at: new Date(),
           })
@@ -576,6 +578,8 @@ export class ListingsV2Controller extends BaseController {
             END AS seller_rating_count
           `),
           "ls.photo",
+          "ls.pickup_method",
+          "ls.quantity_unit",
         )
 
       // Apply full-text search filter (Requirement 15.2)
@@ -729,6 +733,8 @@ export class ListingsV2Controller extends BaseController {
         seller_rating_count: parseInt(row.seller_rating_count, 10) || 0,
         seller_languages: row.seller_languages || ['en'],
         photo: row.photo || undefined,
+        pickup_method: row.pickup_method || null,
+        quantity_unit: row.quantity_unit || "unit",
       }))
 
       logger.info("Search completed", {
@@ -999,6 +1005,8 @@ export class ListingsV2Controller extends BaseController {
           "l.visibility",
           "l.sale_type",
           "l.listing_type",
+          "l.pickup_method",
+          "l.quantity_unit",
           "l.created_at",
           "l.updated_at",
           "l.expires_at",
@@ -1181,7 +1189,8 @@ export class ListingsV2Controller extends BaseController {
           updated_at: listing.updated_at.toISOString(),
           expires_at: listing.expires_at?.toISOString(),
           photos: photos.map((p: any) => p.url),
-          pickup_method: null,
+          pickup_method: listing.pickup_method || null,
+          quantity_unit: listing.quantity_unit || "unit",
         },
         seller: {
           id: listing.seller_id,
@@ -1319,6 +1328,19 @@ export class ListingsV2Controller extends BaseController {
             ])
           }
           listingUpdates.description = requestBody.description
+        }
+
+        if (requestBody.pickup_method !== undefined) {
+          listingUpdates.pickup_method = requestBody.pickup_method
+        }
+
+        if (requestBody.quantity_unit !== undefined) {
+          if (!['unit', 'scu'].includes(requestBody.quantity_unit)) {
+            this.throwValidationError("Invalid quantity_unit", [
+              { field: "quantity_unit", message: "Must be 'unit' or 'scu'" },
+            ])
+          }
+          listingUpdates.quantity_unit = requestBody.quantity_unit
         }
 
         // Update listing if there are changes
