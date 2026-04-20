@@ -29,14 +29,16 @@ export function filterV2DebugFromOpenApiSpec<T extends OpenApiLike>(spec: T): T 
   if (spec.paths) {
     const paths = { ...spec.paths }
     for (const pathKey of Object.keys(paths)) {
-      if (pathKey.startsWith("/debug")) {
+      if (pathKey.startsWith("/debug") || pathKey.startsWith("/admin")) {
         delete paths[pathKey]
       }
     }
     next.paths = paths
   }
   if (Array.isArray(spec.tags)) {
-    next.tags = spec.tags.filter((t) => t?.name !== V2_DEBUG_OPENAPI_TAG)
+    next.tags = spec.tags.filter(
+      (t) => t?.name !== V2_DEBUG_OPENAPI_TAG && t?.name !== "Admin Imports",
+    )
   }
   return next
 }
