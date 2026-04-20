@@ -38,15 +38,23 @@ export class DebugV2Controller extends BaseController {
    * @returns Current feature flag setting
    */
   @Get("feature-flag")
-  @Security("jwt")
   public async getFeatureFlag(
     @Request() request: ExpressRequest,
   ): Promise<GetFeatureFlagResponse> {
     this.request = request
-    this.requireAuth()
-    const userId = this.getUserId()
+    const user = request.user as any
+
+    if (!user?.user_id) {
+      return {
+        user_id: "",
+        market_version: "V1",
+        is_developer: false,
+      }
+    }
+
+    const userId = user.user_id
     const isDeveloper =
-      this.isAdmin() || process.env.NODE_ENV === "development"
+      user.role === "admin" || process.env.NODE_ENV === "development"
 
     logger.info("Getting feature flag", { userId, isDeveloper })
 
