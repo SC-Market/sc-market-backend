@@ -1951,10 +1951,6 @@
 			"SellerInfo": {
 				"description": "Seller information",
 				"properties": {
-					"id": {
-						"type": "string",
-						"description": "Seller UUID"
-					},
 					"name": {
 						"type": "string",
 						"description": "Seller username or contractor name"
@@ -1982,7 +1978,6 @@
 					}
 				},
 				"required": [
-					"id",
 					"name",
 					"type",
 					"slug",
@@ -3097,6 +3092,447 @@
 					"materials_fully_stocked",
 					"materials_partially_stocked",
 					"materials_not_stocked"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
+			"WikiItemSearchResult": {
+				"properties": {
+					"id": {
+						"type": "string"
+					},
+					"name": {
+						"type": "string"
+					},
+					"type": {
+						"type": "string"
+					},
+					"sub_type": {
+						"type": "string"
+					},
+					"size": {
+						"type": "string"
+					},
+					"grade": {
+						"type": "string"
+					},
+					"manufacturer": {
+						"type": "string"
+					},
+					"image_url": {
+						"type": "string"
+					},
+					"thumbnail_path": {
+						"type": "string"
+					},
+					"display_type": {
+						"type": "string"
+					}
+				},
+				"required": [
+					"id",
+					"name"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
+			"SearchWikiItemsResponse": {
+				"properties": {
+					"items": {
+						"items": {
+							"$ref": "#/components/schemas/WikiItemSearchResult"
+						},
+						"type": "array"
+					},
+					"total": {
+						"type": "number",
+						"format": "double"
+					},
+					"page": {
+						"type": "number",
+						"format": "double"
+					},
+					"page_size": {
+						"type": "number",
+						"format": "double"
+					}
+				},
+				"required": [
+					"items",
+					"total",
+					"page",
+					"page_size"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
+			"BlueprintReference": {
+				"properties": {
+					"blueprint_id": {
+						"type": "string"
+					},
+					"blueprint_name": {
+						"type": "string"
+					},
+					"rarity": {
+						"type": "string"
+					},
+					"tier": {
+						"type": "number",
+						"format": "double"
+					},
+					"crafting_time_seconds": {
+						"type": "number",
+						"format": "double"
+					}
+				},
+				"required": [
+					"blueprint_id",
+					"blueprint_name"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
+			"MissionRewardReference": {
+				"properties": {
+					"mission_id": {
+						"type": "string"
+					},
+					"mission_name": {
+						"type": "string"
+					},
+					"star_system": {
+						"type": "string"
+					},
+					"drop_probability": {
+						"type": "number",
+						"format": "double"
+					},
+					"blueprint_id": {
+						"type": "string"
+					},
+					"blueprint_name": {
+						"type": "string"
+					}
+				},
+				"required": [
+					"mission_id",
+					"mission_name",
+					"drop_probability",
+					"blueprint_id",
+					"blueprint_name"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
+			"MarketStats": {
+				"properties": {
+					"listing_count": {
+						"type": "number",
+						"format": "double"
+					},
+					"min_price": {
+						"type": "number",
+						"format": "double"
+					},
+					"max_price": {
+						"type": "number",
+						"format": "double"
+					},
+					"total_quantity": {
+						"type": "number",
+						"format": "double"
+					}
+				},
+				"required": [
+					"listing_count",
+					"total_quantity"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
+			"WikiItemDetail": {
+				"properties": {
+					"id": {
+						"type": "string"
+					},
+					"name": {
+						"type": "string"
+					},
+					"type": {
+						"type": "string"
+					},
+					"sub_type": {
+						"type": "string"
+					},
+					"size": {
+						"type": "string"
+					},
+					"grade": {
+						"type": "string"
+					},
+					"manufacturer": {
+						"type": "string"
+					},
+					"image_url": {
+						"type": "string"
+					},
+					"thumbnail_path": {
+						"type": "string"
+					},
+					"display_type": {
+						"type": "string"
+					},
+					"p4k_id": {
+						"type": "string"
+					},
+					"p4k_file": {
+						"type": "string"
+					},
+					"name_key": {
+						"type": "string"
+					},
+					"attributes": {
+						"$ref": "#/components/schemas/Record_string.any_"
+					},
+					"craftable_from": {
+						"items": {
+							"$ref": "#/components/schemas/BlueprintReference"
+						},
+						"type": "array"
+					},
+					"rewarded_by": {
+						"items": {
+							"$ref": "#/components/schemas/MissionRewardReference"
+						},
+						"type": "array"
+					},
+					"market_stats": {
+						"$ref": "#/components/schemas/MarketStats"
+					}
+				},
+				"required": [
+					"id",
+					"name",
+					"attributes",
+					"craftable_from",
+					"rewarded_by",
+					"market_stats"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
+			"WikiShipSearchResult": {
+				"properties": {
+					"id": {
+						"type": "string"
+					},
+					"name": {
+						"type": "string"
+					},
+					"manufacturer": {
+						"type": "string"
+					},
+					"focus": {
+						"type": "string"
+					},
+					"size": {
+						"type": "string"
+					},
+					"image_url": {
+						"type": "string"
+					}
+				},
+				"required": [
+					"id",
+					"name"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
+			"WikiShipDetail": {
+				"properties": {
+					"id": {
+						"type": "string"
+					},
+					"name": {
+						"type": "string"
+					},
+					"manufacturer": {
+						"type": "string"
+					},
+					"focus": {
+						"type": "string"
+					},
+					"size": {
+						"type": "string"
+					},
+					"description": {
+						"type": "string"
+					},
+					"movement_class": {
+						"type": "string"
+					},
+					"image_url": {
+						"type": "string"
+					},
+					"default_loadout": {},
+					"attributes": {
+						"$ref": "#/components/schemas/Record_string.any_"
+					}
+				},
+				"required": [
+					"id",
+					"name",
+					"attributes"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
+			"WikiCommoditySearchResult": {
+				"properties": {
+					"resource_id": {
+						"type": "string"
+					},
+					"game_item_id": {
+						"type": "string"
+					},
+					"name": {
+						"type": "string"
+					},
+					"resource_category": {
+						"type": "string"
+					},
+					"resource_subcategory": {
+						"type": "string"
+					},
+					"can_be_mined": {
+						"type": "boolean"
+					},
+					"can_be_purchased": {
+						"type": "boolean"
+					},
+					"can_be_salvaged": {
+						"type": "boolean"
+					},
+					"can_be_looted": {
+						"type": "boolean"
+					},
+					"image_url": {
+						"type": "string"
+					}
+				},
+				"required": [
+					"resource_id",
+					"game_item_id",
+					"name",
+					"resource_category",
+					"can_be_mined",
+					"can_be_purchased",
+					"can_be_salvaged",
+					"can_be_looted"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
+			"WikiLocationNode": {
+				"properties": {
+					"id": {
+						"type": "string"
+					},
+					"name": {
+						"type": "string"
+					},
+					"type": {
+						"type": "string"
+					},
+					"parent_id": {
+						"type": "string"
+					},
+					"children": {
+						"items": {
+							"$ref": "#/components/schemas/WikiLocationNode"
+						},
+						"type": "array"
+					}
+				},
+				"required": [
+					"id",
+					"name",
+					"type",
+					"children"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
+			"WikiManufacturerSearchResult": {
+				"properties": {
+					"manufacturer": {
+						"type": "string"
+					},
+					"item_count": {
+						"type": "number",
+						"format": "double"
+					}
+				},
+				"required": [
+					"manufacturer",
+					"item_count"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
+			"ManufacturerItem": {
+				"properties": {
+					"id": {
+						"type": "string"
+					},
+					"name": {
+						"type": "string"
+					},
+					"type": {
+						"type": "string"
+					},
+					"size": {
+						"type": "string"
+					},
+					"grade": {
+						"type": "string"
+					},
+					"image_url": {
+						"type": "string"
+					}
+				},
+				"required": [
+					"id",
+					"name"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
+			"WikiManufacturerDetail": {
+				"properties": {
+					"manufacturer": {
+						"type": "string"
+					},
+					"description": {
+						"type": "string"
+					},
+					"item_count": {
+						"type": "number",
+						"format": "double"
+					},
+					"items": {
+						"items": {
+							"$ref": "#/components/schemas/ManufacturerItem"
+						},
+						"type": "array"
+					}
+				},
+				"required": [
+					"manufacturer",
+					"item_count",
+					"items"
 				],
 				"type": "object",
 				"additionalProperties": false
@@ -7122,7 +7558,7 @@
 					},
 					{
 						"in": "query",
-						"name": "seller_id",
+						"name": "seller_username",
 						"required": false,
 						"schema": {
 							"type": "string"
@@ -7130,7 +7566,7 @@
 					},
 					{
 						"in": "query",
-						"name": "contractor_id",
+						"name": "contractor_spectrum_id",
 						"required": false,
 						"schema": {
 							"type": "string"
@@ -8065,6 +8501,482 @@
 						"description": "Wishlist UUID",
 						"in": "path",
 						"name": "wishlist_id",
+						"required": true,
+						"schema": {
+							"type": "string"
+						}
+					}
+				]
+			}
+		},
+		"/api/v2/game-data/wiki/items": {
+			"get": {
+				"operationId": "SearchItems",
+				"responses": {
+					"200": {
+						"description": "Wiki item search results with pagination",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/SearchWikiItemsResponse"
+								}
+							}
+						}
+					}
+				},
+				"description": "Search and filter game items with full stats\n\nReturns comprehensive item database with filtering by type, size, grade,\nmanufacturer, and full-text search. Includes all item attributes extracted\nfrom game data (weapon stats, shield stats, power output, etc.).",
+				"summary": "Search wiki items",
+				"tags": [
+					"Game Data - Wiki"
+				],
+				"security": [],
+				"parameters": [
+					{
+						"description": "Full-text search on item name",
+						"in": "query",
+						"name": "text",
+						"required": false,
+						"schema": {
+							"type": "string"
+						}
+					},
+					{
+						"description": "Filter by item type (e.g., WeaponGun, Shield, PowerPlant)",
+						"in": "query",
+						"name": "type",
+						"required": false,
+						"schema": {
+							"type": "string"
+						}
+					},
+					{
+						"description": "Filter by item sub-type",
+						"in": "query",
+						"name": "sub_type",
+						"required": false,
+						"schema": {
+							"type": "string"
+						}
+					},
+					{
+						"description": "Filter by item size (1-5, S1-S5)",
+						"in": "query",
+						"name": "size",
+						"required": false,
+						"schema": {
+							"type": "string"
+						}
+					},
+					{
+						"description": "Filter by item grade (A, B, C, D, F)",
+						"in": "query",
+						"name": "grade",
+						"required": false,
+						"schema": {
+							"type": "string"
+						}
+					},
+					{
+						"description": "Filter by manufacturer name",
+						"in": "query",
+						"name": "manufacturer",
+						"required": false,
+						"schema": {
+							"type": "string"
+						}
+					},
+					{
+						"description": "Filter by game item category",
+						"in": "query",
+						"name": "category",
+						"required": false,
+						"schema": {
+							"type": "string"
+						}
+					},
+					{
+						"description": "Game version ID (defaults to active LIVE version)",
+						"in": "query",
+						"name": "version_id",
+						"required": false,
+						"schema": {
+							"type": "string"
+						}
+					},
+					{
+						"description": "Page number (default: 1)",
+						"in": "query",
+						"name": "page",
+						"required": false,
+						"schema": {
+							"default": 1,
+							"format": "double",
+							"type": "number"
+						}
+					},
+					{
+						"description": "Results per page (default: 20, max: 100)",
+						"in": "query",
+						"name": "page_size",
+						"required": false,
+						"schema": {
+							"default": 20,
+							"format": "double",
+							"type": "number"
+						}
+					}
+				]
+			}
+		},
+		"/api/v2/game-data/wiki/items/{id}": {
+			"get": {
+				"operationId": "GetItemDetail",
+				"responses": {
+					"200": {
+						"description": "Complete item details with attributes, recipes, and missions",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/WikiItemDetail"
+								}
+							}
+						}
+					}
+				},
+				"description": "Get item detail with all attributes, crafting recipes, and related missions\n\nReturns complete item information including all extracted attributes\n(weapon stats, shield stats, power output, etc.), blueprints that craft\nthis item, missions that reward this item, and market listing statistics.",
+				"summary": "Get item details",
+				"tags": [
+					"Game Data - Wiki"
+				],
+				"security": [],
+				"parameters": [
+					{
+						"description": "Game item UUID",
+						"in": "path",
+						"name": "id",
+						"required": true,
+						"schema": {
+							"type": "string"
+						}
+					}
+				]
+			}
+		},
+		"/api/v2/game-data/wiki/ships": {
+			"get": {
+				"operationId": "GetShips",
+				"responses": {
+					"200": {
+						"description": "Ship search results with pagination",
+						"content": {
+							"application/json": {
+								"schema": {
+									"properties": {
+										"page_size": {
+											"type": "number",
+											"format": "double"
+										},
+										"page": {
+											"type": "number",
+											"format": "double"
+										},
+										"total": {
+											"type": "number",
+											"format": "double"
+										},
+										"ships": {
+											"items": {
+												"$ref": "#/components/schemas/WikiShipSearchResult"
+											},
+											"type": "array"
+										}
+									},
+									"required": [
+										"page_size",
+										"page",
+										"total",
+										"ships"
+									],
+									"type": "object"
+								}
+							}
+						}
+					}
+				},
+				"description": "Get ship list with manufacturer, focus, and size\n\nReturns all ships with basic information for browsing. Ships are identified\nby specific item types in the game data.",
+				"summary": "Get ships",
+				"tags": [
+					"Game Data - Wiki"
+				],
+				"security": [],
+				"parameters": [
+					{
+						"description": "Filter by manufacturer",
+						"in": "query",
+						"name": "manufacturer",
+						"required": false,
+						"schema": {
+							"type": "string"
+						}
+					},
+					{
+						"description": "Filter by ship focus (e.g., Combat, Exploration, Mining)",
+						"in": "query",
+						"name": "focus",
+						"required": false,
+						"schema": {
+							"type": "string"
+						}
+					},
+					{
+						"description": "Filter by ship size",
+						"in": "query",
+						"name": "size",
+						"required": false,
+						"schema": {
+							"type": "string"
+						}
+					},
+					{
+						"description": "Page number (default: 1)",
+						"in": "query",
+						"name": "page",
+						"required": false,
+						"schema": {
+							"default": 1,
+							"format": "double",
+							"type": "number"
+						}
+					},
+					{
+						"description": "Results per page (default: 20, max: 100)",
+						"in": "query",
+						"name": "page_size",
+						"required": false,
+						"schema": {
+							"default": 20,
+							"format": "double",
+							"type": "number"
+						}
+					}
+				]
+			}
+		},
+		"/api/v2/game-data/wiki/ships/{id}": {
+			"get": {
+				"operationId": "GetShipDetail",
+				"responses": {
+					"200": {
+						"description": "Complete ship details with loadout",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/WikiShipDetail"
+								}
+							}
+						}
+					}
+				},
+				"description": "Get ship detail with default loadout and description\n\nReturns complete ship information including all attributes, default loadout\ncomponents, and detailed specifications.",
+				"summary": "Get ship details",
+				"tags": [
+					"Game Data - Wiki"
+				],
+				"security": [],
+				"parameters": [
+					{
+						"description": "Ship game item UUID",
+						"in": "path",
+						"name": "id",
+						"required": true,
+						"schema": {
+							"type": "string"
+						}
+					}
+				]
+			}
+		},
+		"/api/v2/game-data/wiki/commodities": {
+			"get": {
+				"operationId": "GetCommodities",
+				"responses": {
+					"200": {
+						"description": "Commodity search results with pagination",
+						"content": {
+							"application/json": {
+								"schema": {
+									"properties": {
+										"page_size": {
+											"type": "number",
+											"format": "double"
+										},
+										"page": {
+											"type": "number",
+											"format": "double"
+										},
+										"total": {
+											"type": "number",
+											"format": "double"
+										},
+										"commodities": {
+											"items": {
+												"$ref": "#/components/schemas/WikiCommoditySearchResult"
+											},
+											"type": "array"
+										}
+									},
+									"required": [
+										"page_size",
+										"page",
+										"total",
+										"commodities"
+									],
+									"type": "object"
+								}
+							}
+						}
+					}
+				},
+				"description": "Get commodity/resource list with mining stats\n\nReturns all resources and commodities with acquisition methods and mining\nstatistics where applicable.",
+				"summary": "Get commodities",
+				"tags": [
+					"Game Data - Wiki"
+				],
+				"security": [],
+				"parameters": [
+					{
+						"description": "Filter by resource category",
+						"in": "query",
+						"name": "category",
+						"required": false,
+						"schema": {
+							"type": "string"
+						}
+					},
+					{
+						"description": "Filter to mineable resources only",
+						"in": "query",
+						"name": "can_be_mined",
+						"required": false,
+						"schema": {
+							"type": "boolean"
+						}
+					},
+					{
+						"description": "Page number (default: 1)",
+						"in": "query",
+						"name": "page",
+						"required": false,
+						"schema": {
+							"default": 1,
+							"format": "double",
+							"type": "number"
+						}
+					},
+					{
+						"description": "Results per page (default: 20, max: 100)",
+						"in": "query",
+						"name": "page_size",
+						"required": false,
+						"schema": {
+							"default": 20,
+							"format": "double",
+							"type": "number"
+						}
+					}
+				]
+			}
+		},
+		"/api/v2/game-data/wiki/locations": {
+			"get": {
+				"operationId": "GetLocations",
+				"responses": {
+					"200": {
+						"description": "Location hierarchy nodes",
+						"content": {
+							"application/json": {
+								"schema": {
+									"items": {
+										"$ref": "#/components/schemas/WikiLocationNode"
+									},
+									"type": "array"
+								}
+							}
+						}
+					}
+				},
+				"description": "Get starmap hierarchy browser\n\nReturns hierarchical location data (System → Planet → Moon → Outpost)\nfor browsing the game universe.",
+				"summary": "Get locations",
+				"tags": [
+					"Game Data - Wiki"
+				],
+				"security": [],
+				"parameters": [
+					{
+						"description": "Optional parent location ID to get children",
+						"in": "query",
+						"name": "parent_id",
+						"required": false,
+						"schema": {
+							"type": "string"
+						}
+					}
+				]
+			}
+		},
+		"/api/v2/game-data/wiki/manufacturers": {
+			"get": {
+				"operationId": "GetManufacturers",
+				"responses": {
+					"200": {
+						"description": "Manufacturer list",
+						"content": {
+							"application/json": {
+								"schema": {
+									"items": {
+										"$ref": "#/components/schemas/WikiManufacturerSearchResult"
+									},
+									"type": "array"
+								}
+							}
+						}
+					}
+				},
+				"description": "Get manufacturer list with lore\n\nReturns all manufacturers with descriptions and item counts.",
+				"summary": "Get manufacturers",
+				"tags": [
+					"Game Data - Wiki"
+				],
+				"security": [],
+				"parameters": []
+			}
+		},
+		"/api/v2/game-data/wiki/manufacturers/{id}": {
+			"get": {
+				"operationId": "GetManufacturerDetail",
+				"responses": {
+					"200": {
+						"description": "Complete manufacturer details with items",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/WikiManufacturerDetail"
+								}
+							}
+						}
+					}
+				},
+				"description": "Get manufacturer detail with all items\n\nReturns complete manufacturer information including all items produced\nby this manufacturer.",
+				"summary": "Get manufacturer details",
+				"tags": [
+					"Game Data - Wiki"
+				],
+				"security": [],
+				"parameters": [
+					{
+						"description": "Manufacturer name",
+						"in": "path",
+						"name": "id",
 						"required": true,
 						"schema": {
 							"type": "string"

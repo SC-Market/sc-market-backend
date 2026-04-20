@@ -356,9 +356,6 @@ export interface GameItemInfo {
  * Seller information
  */
 export interface SellerInfo {
-  /** Seller UUID */
-  id: string;
-  
   /** Seller username or contractor name */
   name: string;
   

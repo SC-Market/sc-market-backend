@@ -448,8 +448,8 @@ export class ListingsV2Controller extends BaseController {
     @Query() sort_order?: "asc" | "desc",
     @Query() language_codes?: string,
     @Query() listing_type?: 'single' | 'bundle' | 'bulk',
-    @Query() seller_id?: string,
-    @Query() contractor_id?: string,
+    @Query() seller_username?: string,
+    @Query() contractor_spectrum_id?: string,
   ): Promise<SearchListingsResponse> {
     const db = getKnex()
 
@@ -668,12 +668,22 @@ export class ListingsV2Controller extends BaseController {
         query = query.where('ls.listing_type', listing_type);
       }
 
-      // Filter by seller (user or contractor)
-      if (seller_id) {
-        query = query.where('ls.seller_id', seller_id).where('ls.seller_type', 'user');
+      // Filter by seller (user or contractor) — resolve public identifiers to internal IDs
+      if (seller_username) {
+        const user = await db('accounts').where('username', seller_username).first('user_id')
+        if (user) {
+          query = query.where('ls.seller_id', user.user_id).where('ls.seller_type', 'user')
+        } else {
+          query = query.whereRaw('1 = 0') // No results if user not found
+        }
       }
-      if (contractor_id) {
-        query = query.where('ls.seller_id', contractor_id).where('ls.seller_type', 'contractor');
+      if (contractor_spectrum_id) {
+        const contractor = await db('contractors').where('spectrum_id', contractor_spectrum_id).first('contractor_id')
+        if (contractor) {
+          query = query.where('ls.seller_id', contractor.contractor_id).where('ls.seller_type', 'contractor')
+        } else {
+          query = query.whereRaw('1 = 0')
+        }
       }
 
       // Get total count for pagination (Requirement 15.8)
@@ -1205,7 +1215,6 @@ export class ListingsV2Controller extends BaseController {
           max_order_value: listing.max_order_value ? Number(listing.max_order_value) : null,
         },
         seller: {
-          id: listing.seller_id,
           name: listing.seller_name || "Unknown",
           type: listing.seller_type,
           slug: listing.seller_slug || "",
