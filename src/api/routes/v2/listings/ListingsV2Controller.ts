@@ -353,7 +353,7 @@ export class ListingsV2Controller extends BaseController {
 
           // Validate crafted_source if present
           if (lot.variant_attributes.crafted_source !== undefined) {
-            const validSources = ["crafted", "store", "looted", "unknown"]
+            const validSources = ["crafted", "store", "looted", "unknown", "duped"]
             if (!validSources.includes(lot.variant_attributes.crafted_source)) {
               errors.push({
                 field: `lots[${index}].variant_attributes.crafted_source`,

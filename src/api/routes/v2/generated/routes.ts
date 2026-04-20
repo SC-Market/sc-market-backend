@@ -20,6 +20,14 @@ import { HealthController } from './../health/HealthController.js';
 // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
 import { GameItemsV2Controller } from './../game-items/GameItemsV2Controller.js';
 // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+import { WishlistsController } from './../game-data/wishlists/WishlistsController.js';
+// WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+import { MissionsController } from './../game-data/missions/MissionsController.js';
+// WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+import { CraftingController } from './../game-data/crafting/CraftingController.js';
+// WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+import { BlueprintsController } from './../game-data/blueprints/BlueprintsController.js';
+// WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
 import { DebugV2Controller } from './../debug/DebugV2Controller.js';
 // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
 import { CartV2Controller } from './../cart/CartV2Controller.js';
@@ -74,7 +82,7 @@ const models: TsoaRoute.Models = {
         "properties": {
             "quality_tier": {"dataType":"double"},
             "quality_value": {"dataType":"double"},
-            "crafted_source": {"dataType":"union","subSchemas":[{"dataType":"enum","enums":["crafted"]},{"dataType":"enum","enums":["store"]},{"dataType":"enum","enums":["looted"]},{"dataType":"enum","enums":["unknown"]}]},
+            "crafted_source": {"dataType":"union","subSchemas":[{"dataType":"enum","enums":["crafted"]},{"dataType":"enum","enums":["store"]},{"dataType":"enum","enums":["looted"]},{"dataType":"enum","enums":["unknown"]},{"dataType":"enum","enums":["duped"]}]},
             "blueprint_tier": {"dataType":"double"},
         },
         "additionalProperties": false,
@@ -820,6 +828,607 @@ const models: TsoaRoute.Models = {
             "total": {"dataType":"double","required":true},
             "page": {"dataType":"double","required":true},
             "page_size": {"dataType":"double","required":true},
+        },
+        "additionalProperties": false,
+    },
+    // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+    "Wishlist": {
+        "dataType": "refObject",
+        "properties": {
+            "wishlist_id": {"dataType":"string","required":true},
+            "user_id": {"dataType":"string","required":true},
+            "wishlist_name": {"dataType":"string","required":true},
+            "wishlist_description": {"dataType":"string"},
+            "is_public": {"dataType":"boolean","required":true},
+            "share_token": {"dataType":"string"},
+            "organization_id": {"dataType":"string"},
+            "is_collaborative": {"dataType":"boolean","required":true},
+            "created_at": {"dataType":"string","required":true},
+            "updated_at": {"dataType":"string","required":true},
+        },
+        "additionalProperties": false,
+    },
+    // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+    "ListWishlistsResponse": {
+        "dataType": "refObject",
+        "properties": {
+            "wishlists": {"dataType":"array","array":{"dataType":"intersection","subSchemas":[{"ref":"Wishlist"},{"dataType":"nestedObjectLiteral","nestedProperties":{"progress_percentage":{"dataType":"double","required":true},"completed_items":{"dataType":"double","required":true},"item_count":{"dataType":"double","required":true}}}]},"required":true},
+        },
+        "additionalProperties": false,
+    },
+    // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+    "CreateWishlistRequest": {
+        "dataType": "refObject",
+        "properties": {
+            "wishlist_name": {"dataType":"string","required":true},
+            "wishlist_description": {"dataType":"string"},
+            "is_public": {"dataType":"boolean","required":true},
+            "organization_id": {"dataType":"string"},
+            "is_collaborative": {"dataType":"boolean","required":true},
+        },
+        "additionalProperties": false,
+    },
+    // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+    "WishlistItemWithDetails": {
+        "dataType": "refObject",
+        "properties": {
+            "item_id": {"dataType":"string","required":true},
+            "wishlist_id": {"dataType":"string","required":true},
+            "game_item_id": {"dataType":"string","required":true},
+            "desired_quantity": {"dataType":"double","required":true},
+            "desired_quality_tier": {"dataType":"double"},
+            "blueprint_id": {"dataType":"string"},
+            "priority": {"dataType":"double","required":true},
+            "notes": {"dataType":"string"},
+            "is_acquired": {"dataType":"boolean","required":true},
+            "acquired_quantity": {"dataType":"double","required":true},
+            "created_at": {"dataType":"string","required":true},
+            "updated_at": {"dataType":"string","required":true},
+            "game_item_name": {"dataType":"string","required":true},
+            "game_item_icon": {"dataType":"string"},
+            "game_item_type": {"dataType":"string","required":true},
+            "blueprint_name": {"dataType":"string"},
+            "estimated_cost": {"dataType":"double"},
+            "crafting_available": {"dataType":"boolean","required":true},
+        },
+        "additionalProperties": false,
+    },
+    // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+    "GetWishlistResponse": {
+        "dataType": "refObject",
+        "properties": {
+            "wishlist": {"ref":"Wishlist","required":true},
+            "items": {"dataType":"array","array":{"dataType":"refObject","ref":"WishlistItemWithDetails"},"required":true},
+            "statistics": {"dataType":"nestedObjectLiteral","nestedProperties":{"total_estimated_cost":{"dataType":"double","required":true},"progress_percentage":{"dataType":"double","required":true},"completed_items":{"dataType":"double","required":true},"total_items":{"dataType":"double","required":true}},"required":true},
+        },
+        "additionalProperties": false,
+    },
+    // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+    "UpdateWishlistRequest": {
+        "dataType": "refObject",
+        "properties": {
+            "wishlist_name": {"dataType":"string"},
+            "wishlist_description": {"dataType":"string"},
+            "is_public": {"dataType":"boolean"},
+            "is_collaborative": {"dataType":"boolean"},
+        },
+        "additionalProperties": false,
+    },
+    // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+    "AddWishlistItemRequest": {
+        "dataType": "refObject",
+        "properties": {
+            "game_item_id": {"dataType":"string","required":true},
+            "desired_quantity": {"dataType":"double","required":true},
+            "desired_quality_tier": {"dataType":"double"},
+            "blueprint_id": {"dataType":"string"},
+            "priority": {"dataType":"double","required":true},
+            "notes": {"dataType":"string"},
+        },
+        "additionalProperties": false,
+    },
+    // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+    "UpdateWishlistItemRequest": {
+        "dataType": "refObject",
+        "properties": {
+            "desired_quantity": {"dataType":"double"},
+            "desired_quality_tier": {"dataType":"double"},
+            "priority": {"dataType":"double"},
+            "notes": {"dataType":"string"},
+            "is_acquired": {"dataType":"boolean"},
+            "acquired_quantity": {"dataType":"double"},
+        },
+        "additionalProperties": false,
+    },
+    // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+    "ShoppingListMaterial": {
+        "dataType": "refObject",
+        "properties": {
+            "game_item_id": {"dataType":"string","required":true},
+            "game_item_name": {"dataType":"string","required":true},
+            "game_item_icon": {"dataType":"string"},
+            "total_quantity_needed": {"dataType":"double","required":true},
+            "desired_quality_tier": {"dataType":"double"},
+            "user_inventory_quantity": {"dataType":"double","required":true},
+            "quantity_to_acquire": {"dataType":"double","required":true},
+            "estimated_unit_price": {"dataType":"double"},
+            "estimated_total_cost": {"dataType":"double"},
+            "acquisition_methods": {"dataType":"array","array":{"dataType":"string"},"required":true},
+            "used_by_items": {"dataType":"array","array":{"dataType":"nestedObjectLiteral","nestedProperties":{"quantity_for_this_item":{"dataType":"double","required":true},"item_name":{"dataType":"string","required":true},"wishlist_item_id":{"dataType":"string","required":true}}},"required":true},
+        },
+        "additionalProperties": false,
+    },
+    // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+    "ShoppingListResponse": {
+        "dataType": "refObject",
+        "properties": {
+            "wishlist_id": {"dataType":"string","required":true},
+            "wishlist_name": {"dataType":"string","required":true},
+            "materials_needed": {"dataType":"array","array":{"dataType":"refObject","ref":"ShoppingListMaterial"},"required":true},
+            "total_estimated_cost": {"dataType":"double","required":true},
+            "materials_fully_stocked": {"dataType":"double","required":true},
+            "materials_partially_stocked": {"dataType":"double","required":true},
+            "materials_not_stocked": {"dataType":"double","required":true},
+        },
+        "additionalProperties": false,
+    },
+    // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+    "MissionSearchResult": {
+        "dataType": "refObject",
+        "properties": {
+            "mission_id": {"dataType":"string","required":true},
+            "mission_name": {"dataType":"string","required":true},
+            "category": {"dataType":"string","required":true},
+            "career_type": {"dataType":"string"},
+            "legal_status": {"dataType":"string"},
+            "difficulty_level": {"dataType":"double"},
+            "star_system": {"dataType":"string"},
+            "planet_moon": {"dataType":"string"},
+            "faction": {"dataType":"string"},
+            "credit_reward_min": {"dataType":"double"},
+            "credit_reward_max": {"dataType":"double"},
+            "blueprint_reward_count": {"dataType":"double","required":true},
+            "community_difficulty_avg": {"dataType":"double"},
+            "community_satisfaction_avg": {"dataType":"double"},
+            "is_chain_starter": {"dataType":"boolean","required":true},
+            "is_shareable": {"dataType":"boolean","required":true},
+        },
+        "additionalProperties": false,
+    },
+    // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+    "SearchMissionsResponse": {
+        "dataType": "refObject",
+        "properties": {
+            "missions": {"dataType":"array","array":{"dataType":"refObject","ref":"MissionSearchResult"},"required":true},
+            "total": {"dataType":"double","required":true},
+            "page": {"dataType":"double","required":true},
+            "page_size": {"dataType":"double","required":true},
+        },
+        "additionalProperties": false,
+    },
+    // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+    "Mission": {
+        "dataType": "refObject",
+        "properties": {
+            "mission_id": {"dataType":"string","required":true},
+            "version_id": {"dataType":"string","required":true},
+            "mission_code": {"dataType":"string","required":true},
+            "mission_name": {"dataType":"string","required":true},
+            "mission_description": {"dataType":"string"},
+            "category": {"dataType":"string","required":true},
+            "mission_type": {"dataType":"string"},
+            "career_type": {"dataType":"string"},
+            "legal_status": {"dataType":"union","subSchemas":[{"dataType":"enum","enums":["LEGAL"]},{"dataType":"enum","enums":["ILLEGAL"]},{"dataType":"enum","enums":["UNKNOWN"]}]},
+            "difficulty_level": {"dataType":"double"},
+            "star_system": {"dataType":"string"},
+            "planet_moon": {"dataType":"string"},
+            "location_detail": {"dataType":"string"},
+            "mission_giver_org": {"dataType":"string"},
+            "faction": {"dataType":"string"},
+            "credit_reward_min": {"dataType":"double"},
+            "credit_reward_max": {"dataType":"double"},
+            "reputation_reward": {"dataType":"double"},
+            "is_shareable": {"dataType":"boolean","required":true},
+            "availability_type": {"dataType":"string"},
+            "associated_event": {"dataType":"string"},
+            "required_rank": {"dataType":"double"},
+            "required_reputation": {"dataType":"double"},
+            "is_chain_starter": {"dataType":"boolean","required":true},
+            "is_chain_mission": {"dataType":"boolean","required":true},
+            "is_unique_mission": {"dataType":"boolean","required":true},
+            "prerequisite_missions": {"dataType":"any"},
+            "estimated_uec_per_hour": {"dataType":"double"},
+            "estimated_rep_per_hour": {"dataType":"double"},
+            "rank_index": {"dataType":"double"},
+            "reward_scope": {"dataType":"string"},
+            "community_difficulty_avg": {"dataType":"double"},
+            "community_difficulty_count": {"dataType":"double","required":true},
+            "community_satisfaction_avg": {"dataType":"double"},
+            "community_satisfaction_count": {"dataType":"double","required":true},
+            "data_source": {"dataType":"string","required":true},
+            "is_verified": {"dataType":"boolean","required":true},
+            "created_at": {"dataType":"string","required":true},
+            "updated_at": {"dataType":"string","required":true},
+        },
+        "additionalProperties": false,
+    },
+    // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+    "MissionBlueprintReward": {
+        "dataType": "refObject",
+        "properties": {
+            "blueprint_id": {"dataType":"string","required":true},
+            "blueprint_name": {"dataType":"string","required":true},
+            "output_item_name": {"dataType":"string","required":true},
+            "output_item_icon": {"dataType":"string"},
+            "drop_probability": {"dataType":"double","required":true},
+            "is_guaranteed": {"dataType":"boolean","required":true},
+            "rarity": {"dataType":"string"},
+            "tier": {"dataType":"double"},
+            "user_owns": {"dataType":"boolean"},
+        },
+        "additionalProperties": false,
+    },
+    // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+    "MissionRewardPool": {
+        "dataType": "refObject",
+        "properties": {
+            "reward_pool_id": {"dataType":"double","required":true},
+            "reward_pool_size": {"dataType":"double","required":true},
+            "selection_count": {"dataType":"double","required":true},
+            "blueprints": {"dataType":"array","array":{"dataType":"refObject","ref":"MissionBlueprintReward"},"required":true},
+        },
+        "additionalProperties": false,
+    },
+    // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+    "UserMissionRating": {
+        "dataType": "refObject",
+        "properties": {
+            "difficulty_rating": {"dataType":"double","required":true},
+            "satisfaction_rating": {"dataType":"double","required":true},
+            "rating_comment": {"dataType":"string"},
+        },
+        "additionalProperties": false,
+    },
+    // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+    "MissionDetailResponse": {
+        "dataType": "refObject",
+        "properties": {
+            "mission": {"ref":"Mission","required":true},
+            "blueprint_rewards": {"dataType":"array","array":{"dataType":"refObject","ref":"MissionRewardPool"},"required":true},
+            "prerequisite_missions": {"dataType":"array","array":{"dataType":"refObject","ref":"Mission"}},
+            "user_completed": {"dataType":"boolean"},
+            "user_rating": {"ref":"UserMissionRating"},
+        },
+        "additionalProperties": false,
+    },
+    // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+    "BlueprintDetail": {
+        "dataType": "refObject",
+        "properties": {
+            "blueprint_id": {"dataType":"string","required":true},
+            "blueprint_code": {"dataType":"string","required":true},
+            "blueprint_name": {"dataType":"string","required":true},
+            "blueprint_description": {"dataType":"string"},
+            "output_game_item_id": {"dataType":"string","required":true},
+            "output_item_name": {"dataType":"string","required":true},
+            "output_item_type": {"dataType":"string","required":true},
+            "output_item_icon": {"dataType":"string"},
+            "output_quantity": {"dataType":"double","required":true},
+            "item_category": {"dataType":"string"},
+            "item_subcategory": {"dataType":"string"},
+            "rarity": {"dataType":"string"},
+            "tier": {"dataType":"double"},
+            "crafting_station_type": {"dataType":"string"},
+            "crafting_time_seconds": {"dataType":"double"},
+            "required_skill_level": {"dataType":"double"},
+            "icon_url": {"dataType":"string"},
+            "ingredient_count": {"dataType":"double","required":true},
+            "drop_probability": {"dataType":"double","required":true},
+            "is_guaranteed": {"dataType":"boolean","required":true},
+        },
+        "additionalProperties": false,
+    },
+    // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+    "Record_string.number_": {
+        "dataType": "refAlias",
+        "type": {"dataType":"nestedObjectLiteral","nestedProperties":{},"additionalProperties":{"dataType":"double"},"validators":{}},
+    },
+    // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+    "QualityContribution": {
+        "dataType": "refObject",
+        "properties": {
+            "material_name": {"dataType":"string","required":true},
+            "quality_tier": {"dataType":"double","required":true},
+            "quality_value": {"dataType":"double","required":true},
+            "weight": {"dataType":"double","required":true},
+            "contribution": {"dataType":"double","required":true},
+        },
+        "additionalProperties": false,
+    },
+    // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+    "CalculateQualityResponse": {
+        "dataType": "refObject",
+        "properties": {
+            "output_quality_tier": {"dataType":"double","required":true},
+            "output_quality_value": {"dataType":"double","required":true},
+            "output_quantity": {"dataType":"double","required":true},
+            "calculation_breakdown": {"dataType":"nestedObjectLiteral","nestedProperties":{"quality_contributions":{"dataType":"array","array":{"dataType":"refObject","ref":"QualityContribution"},"required":true},"input_weights":{"ref":"Record_string.number_","required":true},"formula_used":{"dataType":"string","required":true}},"required":true},
+            "estimated_cost": {"dataType":"nestedObjectLiteral","nestedProperties":{"total_cost":{"dataType":"double","required":true},"crafting_station_fee":{"dataType":"double"},"material_cost":{"dataType":"double","required":true}},"required":true},
+            "success_probability": {"dataType":"double","required":true},
+            "critical_success_chance": {"dataType":"double","required":true},
+        },
+        "additionalProperties": false,
+    },
+    // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+    "CraftingInputMaterial": {
+        "dataType": "refObject",
+        "properties": {
+            "game_item_id": {"dataType":"string","required":true},
+            "quantity": {"dataType":"double","required":true},
+            "quality_tier": {"dataType":"double","required":true},
+            "quality_value": {"dataType":"double","required":true},
+        },
+        "additionalProperties": false,
+    },
+    // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+    "CalculateQualityRequest": {
+        "dataType": "refObject",
+        "properties": {
+            "blueprint_id": {"dataType":"string","required":true},
+            "input_materials": {"dataType":"array","array":{"dataType":"refObject","ref":"CraftingInputMaterial"},"required":true},
+        },
+        "additionalProperties": false,
+    },
+    // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+    "SimulationResult": {
+        "dataType": "refObject",
+        "properties": {
+            "material_configuration": {"dataType":"array","array":{"dataType":"refObject","ref":"CraftingInputMaterial"},"required":true},
+            "output_quality_tier": {"dataType":"double","required":true},
+            "output_quality_value": {"dataType":"double","required":true},
+            "estimated_cost": {"dataType":"double","required":true},
+        },
+        "additionalProperties": false,
+    },
+    // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+    "SimulateCraftingResponse": {
+        "dataType": "refObject",
+        "properties": {
+            "blueprint_id": {"dataType":"string","required":true},
+            "blueprint_name": {"dataType":"string","required":true},
+            "simulation_results": {"dataType":"array","array":{"dataType":"refObject","ref":"SimulationResult"},"required":true},
+            "best_result": {"ref":"SimulationResult","required":true},
+            "worst_result": {"ref":"SimulationResult","required":true},
+            "most_cost_effective": {"ref":"SimulationResult","required":true},
+        },
+        "additionalProperties": false,
+    },
+    // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+    "MaterialVariation": {
+        "dataType": "refObject",
+        "properties": {
+            "game_item_id": {"dataType":"string","required":true},
+            "quantity": {"dataType":"double","required":true},
+            "quality_tiers": {"dataType":"array","array":{"dataType":"double"},"required":true},
+        },
+        "additionalProperties": false,
+    },
+    // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+    "SimulateCraftingRequest": {
+        "dataType": "refObject",
+        "properties": {
+            "blueprint_id": {"dataType":"string","required":true},
+            "material_variations": {"dataType":"array","array":{"dataType":"refObject","ref":"MaterialVariation"},"required":true},
+        },
+        "additionalProperties": false,
+    },
+    // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+    "RecordCraftingResponse": {
+        "dataType": "refObject",
+        "properties": {
+            "success": {"dataType":"boolean","required":true},
+            "session_id": {"dataType":"string","required":true},
+        },
+        "additionalProperties": false,
+    },
+    // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+    "RecordCraftingRequest": {
+        "dataType": "refObject",
+        "properties": {
+            "blueprint_id": {"dataType":"string","required":true},
+            "input_materials": {"dataType":"array","array":{"dataType":"refObject","ref":"CraftingInputMaterial"},"required":true},
+            "output_quality_tier": {"dataType":"double","required":true},
+            "output_quality_value": {"dataType":"double","required":true},
+            "output_quantity": {"dataType":"double","required":true},
+            "was_critical_success": {"dataType":"boolean","required":true},
+            "total_material_cost": {"dataType":"double"},
+            "crafting_station_fee": {"dataType":"double"},
+        },
+        "additionalProperties": false,
+    },
+    // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+    "CraftingSessionHistory": {
+        "dataType": "refObject",
+        "properties": {
+            "session_id": {"dataType":"string","required":true},
+            "blueprint_id": {"dataType":"string","required":true},
+            "blueprint_name": {"dataType":"string","required":true},
+            "output_item_name": {"dataType":"string","required":true},
+            "crafting_date": {"dataType":"string","required":true},
+            "input_materials": {"dataType":"array","array":{"dataType":"refObject","ref":"CraftingInputMaterial"},"required":true},
+            "output_quality_tier": {"dataType":"double","required":true},
+            "output_quality_value": {"dataType":"double","required":true},
+            "output_quantity": {"dataType":"double","required":true},
+            "was_critical_success": {"dataType":"boolean","required":true},
+            "total_material_cost": {"dataType":"double"},
+            "crafting_station_fee": {"dataType":"double"},
+        },
+        "additionalProperties": false,
+    },
+    // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+    "GetCraftingHistoryResponse": {
+        "dataType": "refObject",
+        "properties": {
+            "history": {"dataType":"array","array":{"dataType":"refObject","ref":"CraftingSessionHistory"},"required":true},
+            "total": {"dataType":"double","required":true},
+            "page": {"dataType":"double","required":true},
+            "page_size": {"dataType":"double","required":true},
+        },
+        "additionalProperties": false,
+    },
+    // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+    "BlueprintStatistics": {
+        "dataType": "refObject",
+        "properties": {
+            "blueprint_id": {"dataType":"string","required":true},
+            "blueprint_name": {"dataType":"string","required":true},
+            "total_crafts": {"dataType":"double","required":true},
+            "average_quality": {"dataType":"double","required":true},
+            "success_rate": {"dataType":"double","required":true},
+            "critical_successes": {"dataType":"double","required":true},
+            "total_materials_cost": {"dataType":"double","required":true},
+        },
+        "additionalProperties": false,
+    },
+    // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+    "GetCraftingStatisticsResponse": {
+        "dataType": "refObject",
+        "properties": {
+            "total_sessions": {"dataType":"double","required":true},
+            "unique_blueprints_crafted": {"dataType":"double","required":true},
+            "average_output_quality": {"dataType":"double","required":true},
+            "total_critical_successes": {"dataType":"double","required":true},
+            "critical_success_rate": {"dataType":"double","required":true},
+            "total_materials_cost": {"dataType":"double","required":true},
+            "blueprint_statistics": {"dataType":"array","array":{"dataType":"refObject","ref":"BlueprintStatistics"},"required":true},
+        },
+        "additionalProperties": false,
+    },
+    // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+    "BlueprintSearchResult": {
+        "dataType": "refObject",
+        "properties": {
+            "blueprint_id": {"dataType":"string","required":true},
+            "blueprint_name": {"dataType":"string","required":true},
+            "output_item_name": {"dataType":"string","required":true},
+            "output_item_icon": {"dataType":"string"},
+            "item_category": {"dataType":"string"},
+            "rarity": {"dataType":"string"},
+            "tier": {"dataType":"double"},
+            "ingredient_count": {"dataType":"double","required":true},
+            "mission_count": {"dataType":"double","required":true},
+            "crafting_time_seconds": {"dataType":"double"},
+            "user_owns": {"dataType":"boolean"},
+        },
+        "additionalProperties": false,
+    },
+    // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+    "SearchBlueprintsResponse": {
+        "dataType": "refObject",
+        "properties": {
+            "blueprints": {"dataType":"array","array":{"dataType":"refObject","ref":"BlueprintSearchResult"},"required":true},
+            "total": {"dataType":"double","required":true},
+            "page": {"dataType":"double","required":true},
+            "page_size": {"dataType":"double","required":true},
+        },
+        "additionalProperties": false,
+    },
+    // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+    "Blueprint": {
+        "dataType": "refObject",
+        "properties": {
+            "blueprint_id": {"dataType":"string","required":true},
+            "version_id": {"dataType":"string","required":true},
+            "blueprint_code": {"dataType":"string","required":true},
+            "blueprint_name": {"dataType":"string","required":true},
+            "blueprint_description": {"dataType":"string"},
+            "output_game_item_id": {"dataType":"string","required":true},
+            "output_quantity": {"dataType":"double","required":true},
+            "item_category": {"dataType":"string"},
+            "item_subcategory": {"dataType":"string"},
+            "rarity": {"dataType":"string"},
+            "tier": {"dataType":"double"},
+            "crafting_station_type": {"dataType":"string"},
+            "crafting_time_seconds": {"dataType":"double"},
+            "required_skill_level": {"dataType":"double"},
+            "icon_url": {"dataType":"string"},
+            "is_active": {"dataType":"boolean","required":true},
+            "created_at": {"dataType":"string","required":true},
+            "updated_at": {"dataType":"string","required":true},
+        },
+        "additionalProperties": false,
+    },
+    // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+    "GameItem": {
+        "dataType": "refObject",
+        "properties": {
+            "game_item_id": {"dataType":"string","required":true},
+            "name": {"dataType":"string","required":true},
+            "type": {"dataType":"string","required":true},
+            "icon_url": {"dataType":"string"},
+        },
+        "additionalProperties": false,
+    },
+    // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+    "BlueprintIngredient": {
+        "dataType": "refObject",
+        "properties": {
+            "ingredient_id": {"dataType":"string","required":true},
+            "game_item": {"ref":"GameItem","required":true},
+            "quantity_required": {"dataType":"double","required":true},
+            "min_quality_tier": {"dataType":"double"},
+            "recommended_quality_tier": {"dataType":"double"},
+            "is_alternative": {"dataType":"boolean","required":true},
+            "alternative_group": {"dataType":"double"},
+            "market_price_min": {"dataType":"double"},
+            "market_price_max": {"dataType":"double"},
+            "user_inventory_quantity": {"dataType":"double"},
+        },
+        "additionalProperties": false,
+    },
+    // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+    "MissionRewardingBlueprint": {
+        "dataType": "refObject",
+        "properties": {
+            "mission_id": {"dataType":"string","required":true},
+            "mission_name": {"dataType":"string","required":true},
+            "drop_probability": {"dataType":"double","required":true},
+            "star_system": {"dataType":"string"},
+        },
+        "additionalProperties": false,
+    },
+    // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+    "UserBlueprintAcquisition": {
+        "dataType": "refObject",
+        "properties": {
+            "acquisition_date": {"dataType":"string","required":true},
+            "acquisition_method": {"dataType":"string"},
+            "acquisition_location": {"dataType":"string"},
+            "acquisition_notes": {"dataType":"string"},
+        },
+        "additionalProperties": false,
+    },
+    // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+    "BlueprintDetailResponse": {
+        "dataType": "refObject",
+        "properties": {
+            "blueprint": {"ref":"Blueprint","required":true},
+            "output_item": {"ref":"GameItem","required":true},
+            "ingredients": {"dataType":"array","array":{"dataType":"refObject","ref":"BlueprintIngredient"},"required":true},
+            "missions_rewarding": {"dataType":"array","array":{"dataType":"refObject","ref":"MissionRewardingBlueprint"},"required":true},
+            "crafting_recipe": {"dataType":"nestedObjectLiteral","nestedProperties":{"max_output_quality_tier":{"dataType":"double","required":true},"min_output_quality_tier":{"dataType":"double","required":true},"quality_calculation_type":{"dataType":"string","required":true}}},
+            "user_owns": {"dataType":"boolean"},
+            "user_acquisition": {"ref":"UserBlueprintAcquisition"},
+        },
+        "additionalProperties": false,
+    },
+    // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+    "BlueprintCategory": {
+        "dataType": "refObject",
+        "properties": {
+            "category": {"dataType":"string","required":true},
+            "subcategory": {"dataType":"string"},
+            "count": {"dataType":"double","required":true},
         },
         "additionalProperties": false,
     },
@@ -2103,6 +2712,879 @@ export function RegisterRoutes(app: Router) {
 
               await templateService.apiHandler({
                 methodName: 'getListings',
+                controller,
+                response,
+                next,
+                validatedArgs,
+                successStatus: undefined,
+              });
+            } catch (err) {
+                return next(err);
+            }
+        });
+        // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+        const argsWishlistsController_getWishlists: Record<string, TsoaRoute.ParameterSchema> = {
+        };
+        app.get('/api/v2/game-data/wishlists',
+            authenticateMiddleware([{"discord_oauth":[]}]),
+            ...(fetchMiddlewares<RequestHandler>(WishlistsController)),
+            ...(fetchMiddlewares<RequestHandler>(WishlistsController.prototype.getWishlists)),
+
+            async function WishlistsController_getWishlists(request: ExRequest, response: ExResponse, next: any) {
+
+            // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+
+            let validatedArgs: any[] = [];
+            try {
+                validatedArgs = templateService.getValidatedArgs({ args: argsWishlistsController_getWishlists, request, response });
+
+                const controller = new WishlistsController();
+
+              await templateService.apiHandler({
+                methodName: 'getWishlists',
+                controller,
+                response,
+                next,
+                validatedArgs,
+                successStatus: undefined,
+              });
+            } catch (err) {
+                return next(err);
+            }
+        });
+        // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+        const argsWishlistsController_createWishlist: Record<string, TsoaRoute.ParameterSchema> = {
+                request: {"in":"body","name":"request","required":true,"ref":"CreateWishlistRequest"},
+        };
+        app.post('/api/v2/game-data/wishlists',
+            authenticateMiddleware([{"discord_oauth":[]}]),
+            ...(fetchMiddlewares<RequestHandler>(WishlistsController)),
+            ...(fetchMiddlewares<RequestHandler>(WishlistsController.prototype.createWishlist)),
+
+            async function WishlistsController_createWishlist(request: ExRequest, response: ExResponse, next: any) {
+
+            // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+
+            let validatedArgs: any[] = [];
+            try {
+                validatedArgs = templateService.getValidatedArgs({ args: argsWishlistsController_createWishlist, request, response });
+
+                const controller = new WishlistsController();
+
+              await templateService.apiHandler({
+                methodName: 'createWishlist',
+                controller,
+                response,
+                next,
+                validatedArgs,
+                successStatus: undefined,
+              });
+            } catch (err) {
+                return next(err);
+            }
+        });
+        // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+        const argsWishlistsController_getWishlist: Record<string, TsoaRoute.ParameterSchema> = {
+                wishlist_id: {"in":"path","name":"wishlist_id","required":true,"dataType":"string"},
+                share_token: {"in":"query","name":"share_token","dataType":"string"},
+        };
+        app.get('/api/v2/game-data/wishlists/:wishlist_id',
+            ...(fetchMiddlewares<RequestHandler>(WishlistsController)),
+            ...(fetchMiddlewares<RequestHandler>(WishlistsController.prototype.getWishlist)),
+
+            async function WishlistsController_getWishlist(request: ExRequest, response: ExResponse, next: any) {
+
+            // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+
+            let validatedArgs: any[] = [];
+            try {
+                validatedArgs = templateService.getValidatedArgs({ args: argsWishlistsController_getWishlist, request, response });
+
+                const controller = new WishlistsController();
+
+              await templateService.apiHandler({
+                methodName: 'getWishlist',
+                controller,
+                response,
+                next,
+                validatedArgs,
+                successStatus: undefined,
+              });
+            } catch (err) {
+                return next(err);
+            }
+        });
+        // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+        const argsWishlistsController_updateWishlist: Record<string, TsoaRoute.ParameterSchema> = {
+                wishlist_id: {"in":"path","name":"wishlist_id","required":true,"dataType":"string"},
+                request: {"in":"body","name":"request","required":true,"ref":"UpdateWishlistRequest"},
+        };
+        app.put('/api/v2/game-data/wishlists/:wishlist_id',
+            authenticateMiddleware([{"discord_oauth":[]}]),
+            ...(fetchMiddlewares<RequestHandler>(WishlistsController)),
+            ...(fetchMiddlewares<RequestHandler>(WishlistsController.prototype.updateWishlist)),
+
+            async function WishlistsController_updateWishlist(request: ExRequest, response: ExResponse, next: any) {
+
+            // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+
+            let validatedArgs: any[] = [];
+            try {
+                validatedArgs = templateService.getValidatedArgs({ args: argsWishlistsController_updateWishlist, request, response });
+
+                const controller = new WishlistsController();
+
+              await templateService.apiHandler({
+                methodName: 'updateWishlist',
+                controller,
+                response,
+                next,
+                validatedArgs,
+                successStatus: undefined,
+              });
+            } catch (err) {
+                return next(err);
+            }
+        });
+        // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+        const argsWishlistsController_deleteWishlist: Record<string, TsoaRoute.ParameterSchema> = {
+                wishlist_id: {"in":"path","name":"wishlist_id","required":true,"dataType":"string"},
+        };
+        app.delete('/api/v2/game-data/wishlists/:wishlist_id',
+            authenticateMiddleware([{"discord_oauth":[]}]),
+            ...(fetchMiddlewares<RequestHandler>(WishlistsController)),
+            ...(fetchMiddlewares<RequestHandler>(WishlistsController.prototype.deleteWishlist)),
+
+            async function WishlistsController_deleteWishlist(request: ExRequest, response: ExResponse, next: any) {
+
+            // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+
+            let validatedArgs: any[] = [];
+            try {
+                validatedArgs = templateService.getValidatedArgs({ args: argsWishlistsController_deleteWishlist, request, response });
+
+                const controller = new WishlistsController();
+
+              await templateService.apiHandler({
+                methodName: 'deleteWishlist',
+                controller,
+                response,
+                next,
+                validatedArgs,
+                successStatus: undefined,
+              });
+            } catch (err) {
+                return next(err);
+            }
+        });
+        // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+        const argsWishlistsController_addWishlistItem: Record<string, TsoaRoute.ParameterSchema> = {
+                wishlist_id: {"in":"path","name":"wishlist_id","required":true,"dataType":"string"},
+                request: {"in":"body","name":"request","required":true,"ref":"AddWishlistItemRequest"},
+        };
+        app.post('/api/v2/game-data/wishlists/:wishlist_id/items',
+            authenticateMiddleware([{"discord_oauth":[]}]),
+            ...(fetchMiddlewares<RequestHandler>(WishlistsController)),
+            ...(fetchMiddlewares<RequestHandler>(WishlistsController.prototype.addWishlistItem)),
+
+            async function WishlistsController_addWishlistItem(request: ExRequest, response: ExResponse, next: any) {
+
+            // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+
+            let validatedArgs: any[] = [];
+            try {
+                validatedArgs = templateService.getValidatedArgs({ args: argsWishlistsController_addWishlistItem, request, response });
+
+                const controller = new WishlistsController();
+
+              await templateService.apiHandler({
+                methodName: 'addWishlistItem',
+                controller,
+                response,
+                next,
+                validatedArgs,
+                successStatus: undefined,
+              });
+            } catch (err) {
+                return next(err);
+            }
+        });
+        // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+        const argsWishlistsController_removeWishlistItem: Record<string, TsoaRoute.ParameterSchema> = {
+                wishlist_id: {"in":"path","name":"wishlist_id","required":true,"dataType":"string"},
+                item_id: {"in":"path","name":"item_id","required":true,"dataType":"string"},
+        };
+        app.delete('/api/v2/game-data/wishlists/:wishlist_id/items/:item_id',
+            authenticateMiddleware([{"discord_oauth":[]}]),
+            ...(fetchMiddlewares<RequestHandler>(WishlistsController)),
+            ...(fetchMiddlewares<RequestHandler>(WishlistsController.prototype.removeWishlistItem)),
+
+            async function WishlistsController_removeWishlistItem(request: ExRequest, response: ExResponse, next: any) {
+
+            // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+
+            let validatedArgs: any[] = [];
+            try {
+                validatedArgs = templateService.getValidatedArgs({ args: argsWishlistsController_removeWishlistItem, request, response });
+
+                const controller = new WishlistsController();
+
+              await templateService.apiHandler({
+                methodName: 'removeWishlistItem',
+                controller,
+                response,
+                next,
+                validatedArgs,
+                successStatus: undefined,
+              });
+            } catch (err) {
+                return next(err);
+            }
+        });
+        // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+        const argsWishlistsController_updateWishlistItem: Record<string, TsoaRoute.ParameterSchema> = {
+                wishlist_id: {"in":"path","name":"wishlist_id","required":true,"dataType":"string"},
+                item_id: {"in":"path","name":"item_id","required":true,"dataType":"string"},
+                request: {"in":"body","name":"request","required":true,"ref":"UpdateWishlistItemRequest"},
+        };
+        app.put('/api/v2/game-data/wishlists/:wishlist_id/items/:item_id',
+            authenticateMiddleware([{"discord_oauth":[]}]),
+            ...(fetchMiddlewares<RequestHandler>(WishlistsController)),
+            ...(fetchMiddlewares<RequestHandler>(WishlistsController.prototype.updateWishlistItem)),
+
+            async function WishlistsController_updateWishlistItem(request: ExRequest, response: ExResponse, next: any) {
+
+            // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+
+            let validatedArgs: any[] = [];
+            try {
+                validatedArgs = templateService.getValidatedArgs({ args: argsWishlistsController_updateWishlistItem, request, response });
+
+                const controller = new WishlistsController();
+
+              await templateService.apiHandler({
+                methodName: 'updateWishlistItem',
+                controller,
+                response,
+                next,
+                validatedArgs,
+                successStatus: undefined,
+              });
+            } catch (err) {
+                return next(err);
+            }
+        });
+        // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+        const argsWishlistsController_generateShoppingList: Record<string, TsoaRoute.ParameterSchema> = {
+                wishlist_id: {"in":"path","name":"wishlist_id","required":true,"dataType":"string"},
+        };
+        app.get('/api/v2/game-data/wishlists/:wishlist_id/shopping-list',
+            authenticateMiddleware([{"discord_oauth":[]}]),
+            ...(fetchMiddlewares<RequestHandler>(WishlistsController)),
+            ...(fetchMiddlewares<RequestHandler>(WishlistsController.prototype.generateShoppingList)),
+
+            async function WishlistsController_generateShoppingList(request: ExRequest, response: ExResponse, next: any) {
+
+            // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+
+            let validatedArgs: any[] = [];
+            try {
+                validatedArgs = templateService.getValidatedArgs({ args: argsWishlistsController_generateShoppingList, request, response });
+
+                const controller = new WishlistsController();
+
+              await templateService.apiHandler({
+                methodName: 'generateShoppingList',
+                controller,
+                response,
+                next,
+                validatedArgs,
+                successStatus: undefined,
+              });
+            } catch (err) {
+                return next(err);
+            }
+        });
+        // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+        const argsMissionsController_searchMissions: Record<string, TsoaRoute.ParameterSchema> = {
+                text: {"in":"query","name":"text","dataType":"string"},
+                category: {"in":"query","name":"category","dataType":"string"},
+                career_type: {"in":"query","name":"career_type","dataType":"string"},
+                star_system: {"in":"query","name":"star_system","dataType":"string"},
+                planet_moon: {"in":"query","name":"planet_moon","dataType":"string"},
+                faction: {"in":"query","name":"faction","dataType":"string"},
+                legal_status: {"in":"query","name":"legal_status","dataType":"union","subSchemas":[{"dataType":"enum","enums":["LEGAL"]},{"dataType":"enum","enums":["ILLEGAL"]}]},
+                difficulty_min: {"in":"query","name":"difficulty_min","dataType":"double"},
+                difficulty_max: {"in":"query","name":"difficulty_max","dataType":"double"},
+                is_shareable: {"in":"query","name":"is_shareable","dataType":"boolean"},
+                availability_type: {"in":"query","name":"availability_type","dataType":"string"},
+                associated_event: {"in":"query","name":"associated_event","dataType":"string"},
+                is_chain_starter: {"in":"query","name":"is_chain_starter","dataType":"boolean"},
+                has_blueprint_rewards: {"in":"query","name":"has_blueprint_rewards","dataType":"boolean"},
+                credit_reward_min: {"in":"query","name":"credit_reward_min","dataType":"double"},
+                community_difficulty_min: {"in":"query","name":"community_difficulty_min","dataType":"double"},
+                community_satisfaction_min: {"in":"query","name":"community_satisfaction_min","dataType":"double"},
+                version_id: {"in":"query","name":"version_id","dataType":"string"},
+                page: {"default":1,"in":"query","name":"page","dataType":"double"},
+                page_size: {"default":20,"in":"query","name":"page_size","dataType":"double"},
+        };
+        app.get('/api/v2/game-data/missions/search',
+            ...(fetchMiddlewares<RequestHandler>(MissionsController)),
+            ...(fetchMiddlewares<RequestHandler>(MissionsController.prototype.searchMissions)),
+
+            async function MissionsController_searchMissions(request: ExRequest, response: ExResponse, next: any) {
+
+            // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+
+            let validatedArgs: any[] = [];
+            try {
+                validatedArgs = templateService.getValidatedArgs({ args: argsMissionsController_searchMissions, request, response });
+
+                const controller = new MissionsController();
+
+              await templateService.apiHandler({
+                methodName: 'searchMissions',
+                controller,
+                response,
+                next,
+                validatedArgs,
+                successStatus: undefined,
+              });
+            } catch (err) {
+                return next(err);
+            }
+        });
+        // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+        const argsMissionsController_getMissionDetail: Record<string, TsoaRoute.ParameterSchema> = {
+                mission_id: {"in":"path","name":"mission_id","required":true,"dataType":"string"},
+                user_id: {"in":"query","name":"user_id","dataType":"string"},
+        };
+        app.get('/api/v2/game-data/missions/:mission_id',
+            ...(fetchMiddlewares<RequestHandler>(MissionsController)),
+            ...(fetchMiddlewares<RequestHandler>(MissionsController.prototype.getMissionDetail)),
+
+            async function MissionsController_getMissionDetail(request: ExRequest, response: ExResponse, next: any) {
+
+            // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+
+            let validatedArgs: any[] = [];
+            try {
+                validatedArgs = templateService.getValidatedArgs({ args: argsMissionsController_getMissionDetail, request, response });
+
+                const controller = new MissionsController();
+
+              await templateService.apiHandler({
+                methodName: 'getMissionDetail',
+                controller,
+                response,
+                next,
+                validatedArgs,
+                successStatus: undefined,
+              });
+            } catch (err) {
+                return next(err);
+            }
+        });
+        // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+        const argsMissionsController_getMissionBlueprints: Record<string, TsoaRoute.ParameterSchema> = {
+                mission_id: {"in":"path","name":"mission_id","required":true,"dataType":"string"},
+        };
+        app.get('/api/v2/game-data/missions/:mission_id/blueprints',
+            ...(fetchMiddlewares<RequestHandler>(MissionsController)),
+            ...(fetchMiddlewares<RequestHandler>(MissionsController.prototype.getMissionBlueprints)),
+
+            async function MissionsController_getMissionBlueprints(request: ExRequest, response: ExResponse, next: any) {
+
+            // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+
+            let validatedArgs: any[] = [];
+            try {
+                validatedArgs = templateService.getValidatedArgs({ args: argsMissionsController_getMissionBlueprints, request, response });
+
+                const controller = new MissionsController();
+
+              await templateService.apiHandler({
+                methodName: 'getMissionBlueprints',
+                controller,
+                response,
+                next,
+                validatedArgs,
+                successStatus: undefined,
+              });
+            } catch (err) {
+                return next(err);
+            }
+        });
+        // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+        const argsMissionsController_completeMission: Record<string, TsoaRoute.ParameterSchema> = {
+                mission_id: {"in":"path","name":"mission_id","required":true,"dataType":"string"},
+                body: {"in":"body","name":"body","required":true,"dataType":"nestedObjectLiteral","nestedProperties":{"completion_notes":{"dataType":"string"},"blueprints_rewarded":{"dataType":"array","array":{"dataType":"string"}}}},
+        };
+        app.post('/api/v2/game-data/missions/:mission_id/complete',
+            authenticateMiddleware([{"discord_oauth":[]}]),
+            ...(fetchMiddlewares<RequestHandler>(MissionsController)),
+            ...(fetchMiddlewares<RequestHandler>(MissionsController.prototype.completeMission)),
+
+            async function MissionsController_completeMission(request: ExRequest, response: ExResponse, next: any) {
+
+            // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+
+            let validatedArgs: any[] = [];
+            try {
+                validatedArgs = templateService.getValidatedArgs({ args: argsMissionsController_completeMission, request, response });
+
+                const controller = new MissionsController();
+
+              await templateService.apiHandler({
+                methodName: 'completeMission',
+                controller,
+                response,
+                next,
+                validatedArgs,
+                successStatus: undefined,
+              });
+            } catch (err) {
+                return next(err);
+            }
+        });
+        // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+        const argsMissionsController_rateMission: Record<string, TsoaRoute.ParameterSchema> = {
+                mission_id: {"in":"path","name":"mission_id","required":true,"dataType":"string"},
+                body: {"in":"body","name":"body","required":true,"dataType":"nestedObjectLiteral","nestedProperties":{"rating_comment":{"dataType":"string"},"satisfaction_rating":{"dataType":"double","required":true},"difficulty_rating":{"dataType":"double","required":true}}},
+        };
+        app.post('/api/v2/game-data/missions/:mission_id/rate',
+            authenticateMiddleware([{"discord_oauth":[]}]),
+            ...(fetchMiddlewares<RequestHandler>(MissionsController)),
+            ...(fetchMiddlewares<RequestHandler>(MissionsController.prototype.rateMission)),
+
+            async function MissionsController_rateMission(request: ExRequest, response: ExResponse, next: any) {
+
+            // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+
+            let validatedArgs: any[] = [];
+            try {
+                validatedArgs = templateService.getValidatedArgs({ args: argsMissionsController_rateMission, request, response });
+
+                const controller = new MissionsController();
+
+              await templateService.apiHandler({
+                methodName: 'rateMission',
+                controller,
+                response,
+                next,
+                validatedArgs,
+                successStatus: undefined,
+              });
+            } catch (err) {
+                return next(err);
+            }
+        });
+        // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+        const argsMissionsController_getMissionChains: Record<string, TsoaRoute.ParameterSchema> = {
+                version_id: {"in":"query","name":"version_id","dataType":"string"},
+        };
+        app.get('/api/v2/game-data/missions/chains',
+            ...(fetchMiddlewares<RequestHandler>(MissionsController)),
+            ...(fetchMiddlewares<RequestHandler>(MissionsController.prototype.getMissionChains)),
+
+            async function MissionsController_getMissionChains(request: ExRequest, response: ExResponse, next: any) {
+
+            // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+
+            let validatedArgs: any[] = [];
+            try {
+                validatedArgs = templateService.getValidatedArgs({ args: argsMissionsController_getMissionChains, request, response });
+
+                const controller = new MissionsController();
+
+              await templateService.apiHandler({
+                methodName: 'getMissionChains',
+                controller,
+                response,
+                next,
+                validatedArgs,
+                successStatus: undefined,
+              });
+            } catch (err) {
+                return next(err);
+            }
+        });
+        // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+        const argsCraftingController_calculateQuality: Record<string, TsoaRoute.ParameterSchema> = {
+                request: {"in":"body","name":"request","required":true,"ref":"CalculateQualityRequest"},
+        };
+        app.post('/api/v2/game-data/crafting/calculate-quality',
+            ...(fetchMiddlewares<RequestHandler>(CraftingController)),
+            ...(fetchMiddlewares<RequestHandler>(CraftingController.prototype.calculateQuality)),
+
+            async function CraftingController_calculateQuality(request: ExRequest, response: ExResponse, next: any) {
+
+            // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+
+            let validatedArgs: any[] = [];
+            try {
+                validatedArgs = templateService.getValidatedArgs({ args: argsCraftingController_calculateQuality, request, response });
+
+                const controller = new CraftingController();
+
+              await templateService.apiHandler({
+                methodName: 'calculateQuality',
+                controller,
+                response,
+                next,
+                validatedArgs,
+                successStatus: undefined,
+              });
+            } catch (err) {
+                return next(err);
+            }
+        });
+        // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+        const argsCraftingController_simulateCrafting: Record<string, TsoaRoute.ParameterSchema> = {
+                request: {"in":"body","name":"request","required":true,"ref":"SimulateCraftingRequest"},
+        };
+        app.post('/api/v2/game-data/crafting/simulate',
+            ...(fetchMiddlewares<RequestHandler>(CraftingController)),
+            ...(fetchMiddlewares<RequestHandler>(CraftingController.prototype.simulateCrafting)),
+
+            async function CraftingController_simulateCrafting(request: ExRequest, response: ExResponse, next: any) {
+
+            // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+
+            let validatedArgs: any[] = [];
+            try {
+                validatedArgs = templateService.getValidatedArgs({ args: argsCraftingController_simulateCrafting, request, response });
+
+                const controller = new CraftingController();
+
+              await templateService.apiHandler({
+                methodName: 'simulateCrafting',
+                controller,
+                response,
+                next,
+                validatedArgs,
+                successStatus: undefined,
+              });
+            } catch (err) {
+                return next(err);
+            }
+        });
+        // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+        const argsCraftingController_recordCrafting: Record<string, TsoaRoute.ParameterSchema> = {
+                request: {"in":"body","name":"request","required":true,"ref":"RecordCraftingRequest"},
+        };
+        app.post('/api/v2/game-data/crafting/craft',
+            authenticateMiddleware([{"discord_oauth":[]}]),
+            ...(fetchMiddlewares<RequestHandler>(CraftingController)),
+            ...(fetchMiddlewares<RequestHandler>(CraftingController.prototype.recordCrafting)),
+
+            async function CraftingController_recordCrafting(request: ExRequest, response: ExResponse, next: any) {
+
+            // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+
+            let validatedArgs: any[] = [];
+            try {
+                validatedArgs = templateService.getValidatedArgs({ args: argsCraftingController_recordCrafting, request, response });
+
+                const controller = new CraftingController();
+
+              await templateService.apiHandler({
+                methodName: 'recordCrafting',
+                controller,
+                response,
+                next,
+                validatedArgs,
+                successStatus: undefined,
+              });
+            } catch (err) {
+                return next(err);
+            }
+        });
+        // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+        const argsCraftingController_getCraftingHistory: Record<string, TsoaRoute.ParameterSchema> = {
+                blueprint_id: {"in":"query","name":"blueprint_id","dataType":"string"},
+                page: {"default":1,"in":"query","name":"page","dataType":"double"},
+                page_size: {"default":20,"in":"query","name":"page_size","dataType":"double"},
+        };
+        app.get('/api/v2/game-data/crafting/history',
+            authenticateMiddleware([{"discord_oauth":[]}]),
+            ...(fetchMiddlewares<RequestHandler>(CraftingController)),
+            ...(fetchMiddlewares<RequestHandler>(CraftingController.prototype.getCraftingHistory)),
+
+            async function CraftingController_getCraftingHistory(request: ExRequest, response: ExResponse, next: any) {
+
+            // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+
+            let validatedArgs: any[] = [];
+            try {
+                validatedArgs = templateService.getValidatedArgs({ args: argsCraftingController_getCraftingHistory, request, response });
+
+                const controller = new CraftingController();
+
+              await templateService.apiHandler({
+                methodName: 'getCraftingHistory',
+                controller,
+                response,
+                next,
+                validatedArgs,
+                successStatus: undefined,
+              });
+            } catch (err) {
+                return next(err);
+            }
+        });
+        // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+        const argsCraftingController_getCraftingStatistics: Record<string, TsoaRoute.ParameterSchema> = {
+        };
+        app.get('/api/v2/game-data/crafting/statistics',
+            authenticateMiddleware([{"discord_oauth":[]}]),
+            ...(fetchMiddlewares<RequestHandler>(CraftingController)),
+            ...(fetchMiddlewares<RequestHandler>(CraftingController.prototype.getCraftingStatistics)),
+
+            async function CraftingController_getCraftingStatistics(request: ExRequest, response: ExResponse, next: any) {
+
+            // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+
+            let validatedArgs: any[] = [];
+            try {
+                validatedArgs = templateService.getValidatedArgs({ args: argsCraftingController_getCraftingStatistics, request, response });
+
+                const controller = new CraftingController();
+
+              await templateService.apiHandler({
+                methodName: 'getCraftingStatistics',
+                controller,
+                response,
+                next,
+                validatedArgs,
+                successStatus: undefined,
+              });
+            } catch (err) {
+                return next(err);
+            }
+        });
+        // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+        const argsBlueprintsController_searchBlueprints: Record<string, TsoaRoute.ParameterSchema> = {
+                text: {"in":"query","name":"text","dataType":"string"},
+                item_category: {"in":"query","name":"item_category","dataType":"string"},
+                item_subcategory: {"in":"query","name":"item_subcategory","dataType":"string"},
+                rarity: {"in":"query","name":"rarity","dataType":"string"},
+                tier: {"in":"query","name":"tier","dataType":"double"},
+                crafting_station_type: {"in":"query","name":"crafting_station_type","dataType":"string"},
+                output_game_item_id: {"in":"query","name":"output_game_item_id","dataType":"string"},
+                user_owned_only: {"in":"query","name":"user_owned_only","dataType":"boolean"},
+                version_id: {"in":"query","name":"version_id","dataType":"string"},
+                page: {"default":1,"in":"query","name":"page","dataType":"double"},
+                page_size: {"default":20,"in":"query","name":"page_size","dataType":"double"},
+        };
+        app.get('/api/v2/game-data/blueprints/search',
+            ...(fetchMiddlewares<RequestHandler>(BlueprintsController)),
+            ...(fetchMiddlewares<RequestHandler>(BlueprintsController.prototype.searchBlueprints)),
+
+            async function BlueprintsController_searchBlueprints(request: ExRequest, response: ExResponse, next: any) {
+
+            // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+
+            let validatedArgs: any[] = [];
+            try {
+                validatedArgs = templateService.getValidatedArgs({ args: argsBlueprintsController_searchBlueprints, request, response });
+
+                const controller = new BlueprintsController();
+
+              await templateService.apiHandler({
+                methodName: 'searchBlueprints',
+                controller,
+                response,
+                next,
+                validatedArgs,
+                successStatus: undefined,
+              });
+            } catch (err) {
+                return next(err);
+            }
+        });
+        // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+        const argsBlueprintsController_getBlueprintDetail: Record<string, TsoaRoute.ParameterSchema> = {
+                blueprint_id: {"in":"path","name":"blueprint_id","required":true,"dataType":"string"},
+                user_id: {"in":"query","name":"user_id","dataType":"string"},
+        };
+        app.get('/api/v2/game-data/blueprints/:blueprint_id',
+            ...(fetchMiddlewares<RequestHandler>(BlueprintsController)),
+            ...(fetchMiddlewares<RequestHandler>(BlueprintsController.prototype.getBlueprintDetail)),
+
+            async function BlueprintsController_getBlueprintDetail(request: ExRequest, response: ExResponse, next: any) {
+
+            // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+
+            let validatedArgs: any[] = [];
+            try {
+                validatedArgs = templateService.getValidatedArgs({ args: argsBlueprintsController_getBlueprintDetail, request, response });
+
+                const controller = new BlueprintsController();
+
+              await templateService.apiHandler({
+                methodName: 'getBlueprintDetail',
+                controller,
+                response,
+                next,
+                validatedArgs,
+                successStatus: undefined,
+              });
+            } catch (err) {
+                return next(err);
+            }
+        });
+        // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+        const argsBlueprintsController_getBlueprintMissions: Record<string, TsoaRoute.ParameterSchema> = {
+                blueprint_id: {"in":"path","name":"blueprint_id","required":true,"dataType":"string"},
+                version_id: {"in":"query","name":"version_id","dataType":"string"},
+        };
+        app.get('/api/v2/game-data/blueprints/:blueprint_id/missions',
+            ...(fetchMiddlewares<RequestHandler>(BlueprintsController)),
+            ...(fetchMiddlewares<RequestHandler>(BlueprintsController.prototype.getBlueprintMissions)),
+
+            async function BlueprintsController_getBlueprintMissions(request: ExRequest, response: ExResponse, next: any) {
+
+            // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+
+            let validatedArgs: any[] = [];
+            try {
+                validatedArgs = templateService.getValidatedArgs({ args: argsBlueprintsController_getBlueprintMissions, request, response });
+
+                const controller = new BlueprintsController();
+
+              await templateService.apiHandler({
+                methodName: 'getBlueprintMissions',
+                controller,
+                response,
+                next,
+                validatedArgs,
+                successStatus: undefined,
+              });
+            } catch (err) {
+                return next(err);
+            }
+        });
+        // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+        const argsBlueprintsController_getCategories: Record<string, TsoaRoute.ParameterSchema> = {
+                version_id: {"in":"query","name":"version_id","dataType":"string"},
+        };
+        app.get('/api/v2/game-data/blueprints/categories',
+            ...(fetchMiddlewares<RequestHandler>(BlueprintsController)),
+            ...(fetchMiddlewares<RequestHandler>(BlueprintsController.prototype.getCategories)),
+
+            async function BlueprintsController_getCategories(request: ExRequest, response: ExResponse, next: any) {
+
+            // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+
+            let validatedArgs: any[] = [];
+            try {
+                validatedArgs = templateService.getValidatedArgs({ args: argsBlueprintsController_getCategories, request, response });
+
+                const controller = new BlueprintsController();
+
+              await templateService.apiHandler({
+                methodName: 'getCategories',
+                controller,
+                response,
+                next,
+                validatedArgs,
+                successStatus: undefined,
+              });
+            } catch (err) {
+                return next(err);
+            }
+        });
+        // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+        const argsBlueprintsController_addBlueprintToInventory: Record<string, TsoaRoute.ParameterSchema> = {
+                blueprint_id: {"in":"path","name":"blueprint_id","required":true,"dataType":"string"},
+                body: {"in":"body","name":"body","required":true,"dataType":"nestedObjectLiteral","nestedProperties":{"acquisition_notes":{"dataType":"string"},"acquisition_location":{"dataType":"string"},"acquisition_method":{"dataType":"string"}}},
+        };
+        app.post('/api/v2/game-data/blueprints/:blueprint_id/inventory',
+            authenticateMiddleware([{"discord_oauth":[]}]),
+            ...(fetchMiddlewares<RequestHandler>(BlueprintsController)),
+            ...(fetchMiddlewares<RequestHandler>(BlueprintsController.prototype.addBlueprintToInventory)),
+
+            async function BlueprintsController_addBlueprintToInventory(request: ExRequest, response: ExResponse, next: any) {
+
+            // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+
+            let validatedArgs: any[] = [];
+            try {
+                validatedArgs = templateService.getValidatedArgs({ args: argsBlueprintsController_addBlueprintToInventory, request, response });
+
+                const controller = new BlueprintsController();
+
+              await templateService.apiHandler({
+                methodName: 'addBlueprintToInventory',
+                controller,
+                response,
+                next,
+                validatedArgs,
+                successStatus: undefined,
+              });
+            } catch (err) {
+                return next(err);
+            }
+        });
+        // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+        const argsBlueprintsController_removeBlueprintFromInventory: Record<string, TsoaRoute.ParameterSchema> = {
+                blueprint_id: {"in":"path","name":"blueprint_id","required":true,"dataType":"string"},
+        };
+        app.delete('/api/v2/game-data/blueprints/:blueprint_id/inventory',
+            authenticateMiddleware([{"discord_oauth":[]}]),
+            ...(fetchMiddlewares<RequestHandler>(BlueprintsController)),
+            ...(fetchMiddlewares<RequestHandler>(BlueprintsController.prototype.removeBlueprintFromInventory)),
+
+            async function BlueprintsController_removeBlueprintFromInventory(request: ExRequest, response: ExResponse, next: any) {
+
+            // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+
+            let validatedArgs: any[] = [];
+            try {
+                validatedArgs = templateService.getValidatedArgs({ args: argsBlueprintsController_removeBlueprintFromInventory, request, response });
+
+                const controller = new BlueprintsController();
+
+              await templateService.apiHandler({
+                methodName: 'removeBlueprintFromInventory',
+                controller,
+                response,
+                next,
+                validatedArgs,
+                successStatus: undefined,
+              });
+            } catch (err) {
+                return next(err);
+            }
+        });
+        // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+        const argsBlueprintsController_getUserBlueprintInventory: Record<string, TsoaRoute.ParameterSchema> = {
+                item_category: {"in":"query","name":"item_category","dataType":"string"},
+                rarity: {"in":"query","name":"rarity","dataType":"string"},
+                version_id: {"in":"query","name":"version_id","dataType":"string"},
+                sort_by: {"default":"acquisition_date","in":"query","name":"sort_by","dataType":"union","subSchemas":[{"dataType":"enum","enums":["acquisition_date"]},{"dataType":"enum","enums":["blueprint_name"]}]},
+                sort_order: {"default":"desc","in":"query","name":"sort_order","dataType":"union","subSchemas":[{"dataType":"enum","enums":["asc"]},{"dataType":"enum","enums":["desc"]}]},
+                page: {"default":1,"in":"query","name":"page","dataType":"double"},
+                page_size: {"default":50,"in":"query","name":"page_size","dataType":"double"},
+        };
+        app.get('/api/v2/game-data/blueprints/inventory',
+            authenticateMiddleware([{"discord_oauth":[]}]),
+            ...(fetchMiddlewares<RequestHandler>(BlueprintsController)),
+            ...(fetchMiddlewares<RequestHandler>(BlueprintsController.prototype.getUserBlueprintInventory)),
+
+            async function BlueprintsController_getUserBlueprintInventory(request: ExRequest, response: ExResponse, next: any) {
+
+            // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+
+            let validatedArgs: any[] = [];
+            try {
+                validatedArgs = templateService.getValidatedArgs({ args: argsBlueprintsController_getUserBlueprintInventory, request, response });
+
+                const controller = new BlueprintsController();
+
+              await templateService.apiHandler({
+                methodName: 'getUserBlueprintInventory',
                 controller,
                 response,
                 next,
