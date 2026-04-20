@@ -562,7 +562,7 @@ function parseResources(): any[] {
 // --- Step 7: Parse Ships ---
 function parseShips(): any[] {
   console.log("  Parsing ships...")
-  const dir = path.join(RECORDS_DIR, "entities/spaceships/ships")
+  const dir = path.join(RECORDS_DIR, "entities/spaceships")
   if (!fs.existsSync(dir)) {
     console.log("  Ships directory not found, skipping")
     return []
@@ -576,62 +576,49 @@ function parseShips(): any[] {
       const data = readJson(f)
       const rv = data._RecordValue_
       if (!rv) continue
-
       const comps: any[] = rv.Components || []
+
+      let displayName: string | null = null
+      let displayType: string | null = null
       let manufacturer: string | null = null
-      let focus: string | null = null
-      let description: string | null = null
-      let movementClass: string | null = null
-      const defaultLoadout: any[] = []
+      let size: number | null = null
 
       for (const comp of comps) {
         if (!comp) continue
         const t = comp._Type_
-
-        if (t === "SAttachableComponentParams") {
-          const ad = comp.AttachDef || {}
-          const mfr = ad.Manufacturer
+        if (t === "SCItemPurchasableParams") {
+          displayName = comp.displayName || null
+          displayType = comp.displayType || null
+        } else if (t === "SAttachableComponentParams") {
+          size = comp.AttachDef?.Size ?? null
+          const mfr = comp.AttachDef?.Manufacturer
           if (typeof mfr === "string" && mfr.includes("/")) {
             manufacturer = path.basename(mfr, ".json").replace("scitemmanufacturer.", "")
-          } else if (mfr && typeof mfr === "object") {
-            manufacturer = refName(mfr)?.replace("scitemmanufacturer.", "") || null
           }
-        } else if (t === "SCItemVehicleParams") {
-          focus = comp.vehicleFocus || null
-          description = loc(comp.vehicleDescription) || comp.vehicleDescription || null
-          movementClass = comp.movementClass || null
-        } else if (t === "SItemPortContainerComponentParams") {
-          // Extract default loadout from ports
-          const ports = comp.Ports || []
-          for (const port of ports) {
-            if (port.InstalledItem) {
-              const itemRef = typeof port.InstalledItem === "string" 
-                ? path.basename(port.InstalledItem, ".json")
-                : refName(port.InstalledItem)
-              
-              if (itemRef) {
-                defaultLoadout.push({
-                  port: port.Name,
-                  item: itemRef,
-                  size: port.MaxSize || port.MinSize,
-                })
-              }
-            }
+        } else if (t === "VehicleComponentParams" && !manufacturer) {
+          const mfr = comp.manufacturer
+          if (typeof mfr === "string" && mfr.includes("/")) {
+            manufacturer = path.basename(mfr, ".json").replace("scitemmanufacturer.", "")
           }
         }
       }
 
-      const shipName = loc(rv.name) || rv.name || path.basename(f, ".json")
-      
+      if (!displayName) continue
+
+      const name = loc(displayName)
+      const focus = loc(displayType)
+      // Get description from localization
+      const descKey = displayName.replace("vehicle_Name", "vehicle_Desc")
+      const description = loc(descKey)
+
       ships.push({
         id: data._RecordId_,
-        name: shipName,
-        nameKey: rv.name,
+        name: name || displayName,
+        nameKey: displayName,
+        focus: focus || displayType,
         manufacturer,
-        focus,
+        size,
         description,
-        movementClass,
-        defaultLoadout: defaultLoadout.length > 0 ? defaultLoadout : null,
         file: path.basename(f, ".json"),
       })
     } catch {}
@@ -644,7 +631,7 @@ function parseShips(): any[] {
 // --- Step 8: Parse Manufacturers ---
 function parseManufacturers(): any[] {
   console.log("  Parsing manufacturers...")
-  const dir = path.join(RECORDS_DIR, "entities/scitem/manufacturers")
+  const dir = path.join(RECORDS_DIR, "scitemmanufacturer")
   if (!fs.existsSync(dir)) {
     console.log("  Manufacturers directory not found, skipping")
     return []
@@ -657,19 +644,19 @@ function parseManufacturers(): any[] {
     try {
       const data = readJson(f)
       const rv = data._RecordValue_
-      if (!rv) continue
+      if (!rv || rv._Type_ !== "SCItemManufacturer") continue
 
       const code = path.basename(f, ".json").replace("scitemmanufacturer.", "")
-      const name = loc(rv.name) || rv.name || code
-      const description = loc(rv.description) || rv.description || null
+      const locData = rv.Localization || {}
+      const nameKey = locData.Name || null
+      const descKey = locData.Description || null
 
       manufacturers.push({
         id: data._RecordId_,
         code,
-        name,
-        nameKey: rv.name,
-        description,
-        descriptionKey: rv.description,
+        name: loc(nameKey) || code,
+        nameKey,
+        description: loc(descKey) || null,
       })
     } catch {}
   }
@@ -740,6 +727,100 @@ const ships = parseShips()
 const manufacturers = parseManufacturers()
 const starmap = parseStarmap()
 
+// --- Parse Blueprint Reward Pools (mission → blueprint links) ---
+function parseBlueprintRewardPools(): any[] {
+  const dir = path.join(RECORDS_DIR, "crafting/blueprintrewards/blueprintmissionpools")
+  if (!fs.existsSync(dir)) return []
+  const files = findJsonFiles(dir)
+  const pools: any[] = []
+
+  for (const f of files) {
+    try {
+      const data = readJson(f)
+      const rv = data._RecordValue_
+      if (rv?._Type_ !== "BlueprintPoolRecord") continue
+
+      const rewards = (rv.blueprintRewards || []).map((r: any) => ({
+        blueprint: r.blueprintRecord ? path.basename(r.blueprintRecord, ".json") : null,
+        weight: r.weight ?? 1,
+      })).filter((r: any) => r.blueprint)
+
+      if (rewards.length > 0) {
+        pools.push({
+          id: data._RecordId_,
+          name: path.basename(f, ".json"),
+          rewards,
+        })
+      }
+    } catch {}
+  }
+
+  console.log(`  Blueprint reward pools: ${pools.length}`)
+  return pools
+}
+
+// --- Parse Reputation Reward Amounts (resolve names to numbers) ---
+function parseReputationAmounts(): Record<string, number> {
+  const dir = path.join(RECORDS_DIR, "reputation/rewards")
+  if (!fs.existsSync(dir)) return {}
+  const files = findJsonFiles(dir)
+  const amounts: Record<string, number> = {}
+
+  for (const f of files) {
+    try {
+      const data = readJson(f)
+      const rv = data._RecordValue_
+      const amount = rv?.reputationAmount
+      if (typeof amount === "number") {
+        amounts[path.basename(f, ".json")] = amount
+      }
+    } catch {}
+  }
+
+  console.log(`  Reputation amounts: ${Object.keys(amounts).length}`)
+  return amounts
+}
+
+// --- Parse Refining Processes ---
+function parseRefiningProcesses(): any[] {
+  const dir = path.join(RECORDS_DIR, "refiningprocess")
+  if (!fs.existsSync(dir)) return []
+  const files = findJsonFiles(dir)
+  const processes: any[] = []
+
+  for (const f of files) {
+    try {
+      const data = readJson(f)
+      const rv = data._RecordValue_
+      if (rv?._Type_ !== "RefiningProcess") continue
+      processes.push({
+        name: loc(rv.processName) || rv.processName,
+        speed: rv.refiningSpeed,
+        quality: rv.refiningQuality,
+      })
+    } catch {}
+  }
+
+  console.log(`  Refining processes: ${processes.length}`)
+  return processes
+}
+
+const blueprintRewardPools = parseBlueprintRewardPools()
+const reputationAmounts = parseReputationAmounts()
+const refiningProcesses = parseRefiningProcesses()
+
+// --- Resolve reputation amounts in missions ---
+for (const mission of missions) {
+  if (!mission.reputationRewards) continue
+  for (const [outcome, rewards] of Object.entries(mission.reputationRewards as Record<string, any[]>)) {
+    for (const r of rewards) {
+      if (r.reward && reputationAmounts[r.reward] !== undefined) {
+        r.amount = reputationAmounts[r.reward]
+      }
+    }
+  }
+}
+
 fs.mkdirSync(OUTPUT_DIR, { recursive: true })
 
 const outputData = {
@@ -753,6 +834,8 @@ const outputData = {
     ships: ships.length,
     manufacturers: manufacturers.length,
     locations: starmap.length,
+    blueprintRewardPools: blueprintRewardPools.length,
+    refiningProcesses: refiningProcesses.length,
   },
   items,
   blueprints,
@@ -761,10 +844,13 @@ const outputData = {
   ships,
   manufacturers,
   starmap,
+  blueprintRewardPools,
+  reputationAmounts,
+  refiningProcesses,
 }
 
 const jsonPath = path.join(OUTPUT_DIR, "game-data.json")
-fs.writeFileSync(jsonPath, JSON.stringify(outputData, null, 2))
+fs.writeFileSync(jsonPath, JSON.stringify(outputData))
 
 const zipPath = path.join(OUTPUT_DIR, "game-data.zip")
 execSync(`cd "${OUTPUT_DIR}" && zip -j "${zipPath}" game-data.json`, { stdio: "inherit" })
