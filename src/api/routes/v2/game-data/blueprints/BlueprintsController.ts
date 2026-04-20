@@ -692,7 +692,7 @@ export class BlueprintsController extends BaseController {
    * @returns Success response with inventory ID
    */
   @Post("{blueprint_id}/inventory")
-  @Security("discord_oauth")
+  @Security("jwt")
   public async addBlueprintToInventory(
     @Path() blueprint_id: string,
     @Body()
@@ -812,7 +812,7 @@ export class BlueprintsController extends BaseController {
    * @returns Success response
    */
   @Delete("{blueprint_id}/inventory")
-  @Security("discord_oauth")
+  @Security("jwt")
   public async removeBlueprintFromInventory(
     @Path() blueprint_id: string,
   ): Promise<{ success: boolean }> {
@@ -920,7 +920,7 @@ export class BlueprintsController extends BaseController {
    * @returns User's blueprint inventory with statistics
    */
   @Get("inventory")
-  @Security("discord_oauth")
+  @Security("jwt")
   public async getUserBlueprintInventory(
     @Query() item_category?: string,
     @Query() rarity?: string,

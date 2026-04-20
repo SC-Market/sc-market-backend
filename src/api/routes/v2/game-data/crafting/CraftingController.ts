@@ -418,7 +418,7 @@ export class CraftingController extends BaseController {
    * @returns Success response with session ID
    */
   @Post("craft")
-  @Security("discord_oauth")
+  @Security("jwt")
   public async recordCrafting(
     @Body() request: RecordCraftingRequest,
   ): Promise<RecordCraftingResponse> {
@@ -507,7 +507,7 @@ export class CraftingController extends BaseController {
    * @returns Paginated crafting history
    */
   @Get("history")
-  @Security("discord_oauth")
+  @Security("jwt")
   public async getCraftingHistory(
     @Query() blueprint_id?: string,
     @Query() page: number = 1,
@@ -631,7 +631,7 @@ export class CraftingController extends BaseController {
    * @returns Craftable items with material availability
    */
   @Get("craftable-items")
-  @Security("discord_oauth")
+  @Security("jwt")
   public async getCraftableItems(
     @Query() item_category?: string,
     @Query() rarity?: string,
@@ -933,7 +933,7 @@ export class CraftingController extends BaseController {
    * @returns Crafting statistics
    */
   @Get("statistics")
-  @Security("discord_oauth")
+  @Security("jwt")
   public async getCraftingStatistics(): Promise<GetCraftingStatisticsResponse> {
     const knex = getKnex()
 

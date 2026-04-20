@@ -42,7 +42,7 @@ export class WishlistsController extends BaseController {
    * @returns List of user wishlists with statistics
    */
   @Get()
-  @Security("discord_oauth")
+  @Security("jwt")
   public async getWishlists(): Promise<ListWishlistsResponse> {
     const knex = getKnex()
     const user_id = this.getUserId()
@@ -120,7 +120,7 @@ export class WishlistsController extends BaseController {
    * @returns Created wishlist
    */
   @Post()
-  @Security("discord_oauth")
+  @Security("jwt")
   public async createWishlist(@Body() request: CreateWishlistRequest): Promise<Wishlist> {
     const knex = getKnex()
     const user_id = this.getUserId()
@@ -331,7 +331,7 @@ export class WishlistsController extends BaseController {
    * @returns Updated wishlist
    */
   @Put("{wishlist_id}")
-  @Security("discord_oauth")
+  @Security("jwt")
   public async updateWishlist(
     @Path() wishlist_id: string,
     @Body() request: UpdateWishlistRequest,
@@ -434,7 +434,7 @@ export class WishlistsController extends BaseController {
    * @returns Success response
    */
   @Delete("{wishlist_id}")
-  @Security("discord_oauth")
+  @Security("jwt")
   public async deleteWishlist(@Path() wishlist_id: string): Promise<{ success: boolean }> {
     const knex = getKnex()
     const user_id = this.getUserId()
@@ -494,7 +494,7 @@ export class WishlistsController extends BaseController {
    * @returns Created wishlist item
    */
   @Post("{wishlist_id}/items")
-  @Security("discord_oauth")
+  @Security("jwt")
   public async addWishlistItem(
     @Path() wishlist_id: string,
     @Body() request: AddWishlistItemRequest,
@@ -634,7 +634,7 @@ export class WishlistsController extends BaseController {
    * @returns Success response
    */
   @Delete("{wishlist_id}/items/{item_id}")
-  @Security("discord_oauth")
+  @Security("jwt")
   public async removeWishlistItem(
     @Path() wishlist_id: string,
     @Path() item_id: string,
@@ -719,7 +719,7 @@ export class WishlistsController extends BaseController {
    * @returns Updated wishlist item
    */
   @Put("{wishlist_id}/items/{item_id}")
-  @Security("discord_oauth")
+  @Security("jwt")
   public async updateWishlistItem(
     @Path() wishlist_id: string,
     @Path() item_id: string,
@@ -888,7 +888,7 @@ export class WishlistsController extends BaseController {
    * @returns Shopping list with material requirements
    */
   @Get("{wishlist_id}/shopping-list")
-  @Security("discord_oauth")
+  @Security("jwt")
   public async generateShoppingList(@Path() wishlist_id: string): Promise<ShoppingListResponse> {
     const knex = getKnex()
     const user_id = this.getUserId()
