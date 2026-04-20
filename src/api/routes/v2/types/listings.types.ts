@@ -92,6 +92,9 @@ export interface CreateListingRequest {
   /** Pickup method: how the buyer receives the item */
   pickup_method?: 'delivery' | 'pickup' | 'any';
 
+  /** Quantity unit: 'unit' for discrete items, 'scu' for cargo measured in cSCU */
+  quantity_unit?: 'unit' | 'scu';
+
   /** Optional bulk discount tiers sorted by min_quantity ascending */
   bulk_discount_tiers?: BulkDiscountTier[];
 }
@@ -213,6 +216,9 @@ export interface ListingSearchResult {
   /** Pickup method: delivery, pickup, any, or null (not specified) */
   pickup_method?: 'delivery' | 'pickup' | 'any' | null;
 
+  /** Quantity unit: 'unit' or 'scu' */
+  quantity_unit: 'unit' | 'scu';
+
   /** Whether this listing has bulk discount tiers defined */
   has_bulk_discount?: boolean;
 }
@@ -283,6 +289,9 @@ export interface ListingDetail {
 
   /** Pickup method: delivery, pickup, any, or null (not specified) */
   pickup_method?: 'delivery' | 'pickup' | 'any' | null;
+
+  /** Quantity unit: 'unit' or 'scu' */
+  quantity_unit: 'unit' | 'scu';
 }
 
 /**
@@ -441,6 +450,9 @@ export interface UpdateListingRequest {
 
   /** Pickup method: how the buyer receives the item */
   pickup_method?: 'delivery' | 'pickup' | 'any' | null;
+
+  /** Quantity unit */
+  quantity_unit?: 'unit' | 'scu';
 
   /** Updated bulk discount tiers (pass [] to remove, omit to keep unchanged) */
   bulk_discount_tiers?: BulkDiscountTier[];
