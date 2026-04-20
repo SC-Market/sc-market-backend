@@ -285,13 +285,13 @@ async function importItemsFromUEX() {
       fullSetsCreated,
     })
 
-    process.exit(0)
+    return { imported, updated, skipped, fullSetsCreated }
   } catch (error) {
     logger.error("Failed to import items from UEX", {
       error: error instanceof Error ? error.message : "Unknown error",
       stack: error instanceof Error ? error.stack : undefined,
     })
-    process.exit(1)
+    throw error
   }
 }
 
@@ -345,4 +345,8 @@ function isCoreItem(name: string): boolean {
   )
 }
 
-importItemsFromUEX()
+export { importItemsFromUEX }
+
+if (import.meta.url === `file://${process.argv[1]}`) {
+  importItemsFromUEX()
+}

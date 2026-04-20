@@ -294,12 +294,12 @@ async function importAllAttributes() {
       totalAttributesImported,
     })
 
-    process.exit(0)
+    return { total: gameItems.length, success: successCount, failure: failureCount, noMatch: noMatchCount, totalAttributesImported }
   } catch (error) {
     logger.error("Import failed", {
       error: error instanceof Error ? error.message : "Unknown error",
     })
-    process.exit(1)
+    throw error
   }
 }
 
@@ -311,4 +311,8 @@ function mapQuality(quality: string): string {
   return quality
 }
 
-importAllAttributes()
+export { importAllAttributes }
+
+if (import.meta.url === `file://${process.argv[1]}`) {
+  importAllAttributes()
+}

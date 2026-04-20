@@ -1483,6 +1483,14 @@
 						],
 						"description": "Pickup method: how the buyer receives the item"
 					},
+					"quantity_unit": {
+						"type": "string",
+						"enum": [
+							"unit",
+							"scu"
+						],
+						"description": "Quantity unit: 'unit' for discrete items, 'scu' for cargo measured in cSCU"
+					},
 					"bulk_discount_tiers": {
 						"items": {
 							"$ref": "#/components/schemas/BulkDiscountTier"
@@ -1606,6 +1614,14 @@
 						"nullable": true,
 						"description": "Pickup method: delivery, pickup, any, or null (not specified)"
 					},
+					"quantity_unit": {
+						"type": "string",
+						"enum": [
+							"unit",
+							"scu"
+						],
+						"description": "Quantity unit: 'unit' or 'scu'"
+					},
 					"has_bulk_discount": {
 						"type": "boolean",
 						"description": "Whether this listing has bulk discount tiers defined"
@@ -1626,7 +1642,8 @@
 					"updated_at",
 					"game_item_name",
 					"game_item_type",
-					"seller_rating_count"
+					"seller_rating_count",
+					"quantity_unit"
 				],
 				"type": "object",
 				"additionalProperties": false
@@ -1862,6 +1879,14 @@
 						],
 						"nullable": true,
 						"description": "Pickup method: delivery, pickup, any, or null (not specified)"
+					},
+					"quantity_unit": {
+						"type": "string",
+						"enum": [
+							"unit",
+							"scu"
+						],
+						"description": "Quantity unit: 'unit' or 'scu'"
 					}
 				},
 				"required": [
@@ -1875,7 +1900,8 @@
 					"sale_type",
 					"listing_type",
 					"created_at",
-					"updated_at"
+					"updated_at",
+					"quantity_unit"
 				],
 				"type": "object",
 				"additionalProperties": false
@@ -2164,6 +2190,14 @@
 						"nullable": true,
 						"description": "Pickup method: how the buyer receives the item"
 					},
+					"quantity_unit": {
+						"type": "string",
+						"enum": [
+							"unit",
+							"scu"
+						],
+						"description": "Quantity unit"
+					},
 					"bulk_discount_tiers": {
 						"items": {
 							"$ref": "#/components/schemas/BulkDiscountTier"
@@ -2172,6 +2206,71 @@
 						"description": "Updated bulk discount tiers (pass [] to remove, omit to keep unchanged)"
 					}
 				},
+				"type": "object",
+				"additionalProperties": false
+			},
+			"ImportSource": {
+				"type": "string",
+				"enum": [
+					"cstone-items",
+					"uex-items",
+					"uex-attributes"
+				]
+			},
+			"JobStatus": {
+				"type": "string",
+				"enum": [
+					"running",
+					"completed",
+					"failed"
+				]
+			},
+			"Record_string.any_": {
+				"properties": {},
+				"additionalProperties": {},
+				"type": "object",
+				"description": "Construct a type with a set of properties K of type T"
+			},
+			"ImportJob": {
+				"properties": {
+					"id": {
+						"type": "string"
+					},
+					"source": {
+						"$ref": "#/components/schemas/ImportSource"
+					},
+					"status": {
+						"$ref": "#/components/schemas/JobStatus"
+					},
+					"startedAt": {
+						"type": "string"
+					},
+					"completedAt": {
+						"type": "string",
+						"nullable": true
+					},
+					"result": {
+						"allOf": [
+							{
+								"$ref": "#/components/schemas/Record_string.any_"
+							}
+						],
+						"nullable": true
+					},
+					"error": {
+						"type": "string",
+						"nullable": true
+					}
+				},
+				"required": [
+					"id",
+					"source",
+					"status",
+					"startedAt",
+					"completedAt",
+					"result",
+					"error"
+				],
 				"type": "object",
 				"additionalProperties": false
 			},

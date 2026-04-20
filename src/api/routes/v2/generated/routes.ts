@@ -14,6 +14,8 @@ import { OffersV2Controller } from './../offers/OffersV2Controller.js';
 // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
 import { ListingsV2Controller } from './../listings/ListingsV2Controller.js';
 // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+import { ImportJobsV2Controller } from './../import-jobs/ImportJobsV2Controller.js';
+// WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
 import { HealthController } from './../health/HealthController.js';
 // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
 import { GameItemsV2Controller } from './../game-items/GameItemsV2Controller.js';
@@ -499,6 +501,7 @@ const models: TsoaRoute.Models = {
             "lots": {"dataType":"array","array":{"dataType":"refObject","ref":"StockLotInput"},"required":true},
             "photo_resource_ids": {"dataType":"array","array":{"dataType":"string"}},
             "pickup_method": {"dataType":"union","subSchemas":[{"dataType":"enum","enums":["delivery"]},{"dataType":"enum","enums":["pickup"]},{"dataType":"enum","enums":["any"]}]},
+            "quantity_unit": {"dataType":"union","subSchemas":[{"dataType":"enum","enums":["unit"]},{"dataType":"enum","enums":["scu"]}]},
             "bulk_discount_tiers": {"dataType":"array","array":{"dataType":"refObject","ref":"BulkDiscountTier"}},
         },
         "additionalProperties": false,
@@ -527,6 +530,7 @@ const models: TsoaRoute.Models = {
             "seller_languages": {"dataType":"array","array":{"dataType":"string"}},
             "photo": {"dataType":"string"},
             "pickup_method": {"dataType":"union","subSchemas":[{"dataType":"enum","enums":["delivery"]},{"dataType":"enum","enums":["pickup"]},{"dataType":"enum","enums":["any"]},{"dataType":"enum","enums":[null]}]},
+            "quantity_unit": {"dataType":"union","subSchemas":[{"dataType":"enum","enums":["unit"]},{"dataType":"enum","enums":["scu"]}],"required":true},
             "has_bulk_discount": {"dataType":"boolean"},
         },
         "additionalProperties": false,
@@ -589,6 +593,7 @@ const models: TsoaRoute.Models = {
             "expires_at": {"dataType":"string"},
             "photos": {"dataType":"array","array":{"dataType":"string"}},
             "pickup_method": {"dataType":"union","subSchemas":[{"dataType":"enum","enums":["delivery"]},{"dataType":"enum","enums":["pickup"]},{"dataType":"enum","enums":["any"]},{"dataType":"enum","enums":[null]}]},
+            "quantity_unit": {"dataType":"union","subSchemas":[{"dataType":"enum","enums":["unit"]},{"dataType":"enum","enums":["scu"]}],"required":true},
         },
         "additionalProperties": false,
     },
@@ -683,7 +688,37 @@ const models: TsoaRoute.Models = {
             "variant_prices": {"dataType":"array","array":{"dataType":"refObject","ref":"VariantPriceUpdate"}},
             "lot_updates": {"dataType":"array","array":{"dataType":"refObject","ref":"LotUpdate"}},
             "pickup_method": {"dataType":"union","subSchemas":[{"dataType":"enum","enums":["delivery"]},{"dataType":"enum","enums":["pickup"]},{"dataType":"enum","enums":["any"]},{"dataType":"enum","enums":[null]}]},
+            "quantity_unit": {"dataType":"union","subSchemas":[{"dataType":"enum","enums":["unit"]},{"dataType":"enum","enums":["scu"]}]},
             "bulk_discount_tiers": {"dataType":"array","array":{"dataType":"refObject","ref":"BulkDiscountTier"}},
+        },
+        "additionalProperties": false,
+    },
+    // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+    "ImportSource": {
+        "dataType": "refAlias",
+        "type": {"dataType":"union","subSchemas":[{"dataType":"enum","enums":["cstone-items"]},{"dataType":"enum","enums":["uex-items"]},{"dataType":"enum","enums":["uex-attributes"]}],"validators":{}},
+    },
+    // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+    "JobStatus": {
+        "dataType": "refAlias",
+        "type": {"dataType":"union","subSchemas":[{"dataType":"enum","enums":["running"]},{"dataType":"enum","enums":["completed"]},{"dataType":"enum","enums":["failed"]}],"validators":{}},
+    },
+    // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+    "Record_string.any_": {
+        "dataType": "refAlias",
+        "type": {"dataType":"nestedObjectLiteral","nestedProperties":{},"additionalProperties":{"dataType":"any"},"validators":{}},
+    },
+    // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+    "ImportJob": {
+        "dataType": "refObject",
+        "properties": {
+            "id": {"dataType":"string","required":true},
+            "source": {"ref":"ImportSource","required":true},
+            "status": {"ref":"JobStatus","required":true},
+            "startedAt": {"dataType":"string","required":true},
+            "completedAt": {"dataType":"union","subSchemas":[{"dataType":"string"},{"dataType":"enum","enums":[null]}],"required":true},
+            "result": {"dataType":"union","subSchemas":[{"ref":"Record_string.any_"},{"dataType":"enum","enums":[null]}],"required":true},
+            "error": {"dataType":"union","subSchemas":[{"dataType":"string"},{"dataType":"enum","enums":[null]}],"required":true},
         },
         "additionalProperties": false,
     },
@@ -1838,6 +1873,101 @@ export function RegisterRoutes(app: Router) {
 
               await templateService.apiHandler({
                 methodName: 'uploadPhotos',
+                controller,
+                response,
+                next,
+                validatedArgs,
+                successStatus: undefined,
+              });
+            } catch (err) {
+                return next(err);
+            }
+        });
+        // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+        const argsImportJobsV2Controller_startImport: Record<string, TsoaRoute.ParameterSchema> = {
+                source: {"in":"path","name":"source","required":true,"ref":"ImportSource"},
+                request: {"in":"request","name":"request","required":true,"dataType":"object"},
+        };
+        app.post('/admin/imports/:source',
+            authenticateMiddleware([{"jwt":[]}]),
+            ...(fetchMiddlewares<RequestHandler>(ImportJobsV2Controller)),
+            ...(fetchMiddlewares<RequestHandler>(ImportJobsV2Controller.prototype.startImport)),
+
+            async function ImportJobsV2Controller_startImport(request: ExRequest, response: ExResponse, next: any) {
+
+            // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+
+            let validatedArgs: any[] = [];
+            try {
+                validatedArgs = templateService.getValidatedArgs({ args: argsImportJobsV2Controller_startImport, request, response });
+
+                const controller = new ImportJobsV2Controller();
+
+              await templateService.apiHandler({
+                methodName: 'startImport',
+                controller,
+                response,
+                next,
+                validatedArgs,
+                successStatus: undefined,
+              });
+            } catch (err) {
+                return next(err);
+            }
+        });
+        // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+        const argsImportJobsV2Controller_getJobStatus: Record<string, TsoaRoute.ParameterSchema> = {
+                jobId: {"in":"path","name":"jobId","required":true,"dataType":"string"},
+                request: {"in":"request","name":"request","required":true,"dataType":"object"},
+        };
+        app.get('/admin/imports/:jobId',
+            authenticateMiddleware([{"jwt":[]}]),
+            ...(fetchMiddlewares<RequestHandler>(ImportJobsV2Controller)),
+            ...(fetchMiddlewares<RequestHandler>(ImportJobsV2Controller.prototype.getJobStatus)),
+
+            async function ImportJobsV2Controller_getJobStatus(request: ExRequest, response: ExResponse, next: any) {
+
+            // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+
+            let validatedArgs: any[] = [];
+            try {
+                validatedArgs = templateService.getValidatedArgs({ args: argsImportJobsV2Controller_getJobStatus, request, response });
+
+                const controller = new ImportJobsV2Controller();
+
+              await templateService.apiHandler({
+                methodName: 'getJobStatus',
+                controller,
+                response,
+                next,
+                validatedArgs,
+                successStatus: undefined,
+              });
+            } catch (err) {
+                return next(err);
+            }
+        });
+        // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+        const argsImportJobsV2Controller_listJobs: Record<string, TsoaRoute.ParameterSchema> = {
+                request: {"in":"request","name":"request","required":true,"dataType":"object"},
+        };
+        app.get('/admin/imports',
+            authenticateMiddleware([{"jwt":[]}]),
+            ...(fetchMiddlewares<RequestHandler>(ImportJobsV2Controller)),
+            ...(fetchMiddlewares<RequestHandler>(ImportJobsV2Controller.prototype.listJobs)),
+
+            async function ImportJobsV2Controller_listJobs(request: ExRequest, response: ExResponse, next: any) {
+
+            // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+
+            let validatedArgs: any[] = [];
+            try {
+                validatedArgs = templateService.getValidatedArgs({ args: argsImportJobsV2Controller_listJobs, request, response });
+
+                const controller = new ImportJobsV2Controller();
+
+              await templateService.apiHandler({
+                methodName: 'listJobs',
                 controller,
                 response,
                 next,
