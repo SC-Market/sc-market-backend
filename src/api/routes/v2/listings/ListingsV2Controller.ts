@@ -109,6 +109,10 @@ export class ListingsV2Controller extends BaseController {
             listing_type: "single",
             pickup_method: requestBody.pickup_method || null,
             quantity_unit: requestBody.quantity_unit || "unit",
+            min_order_quantity: requestBody.min_order_quantity ?? null,
+            max_order_quantity: requestBody.max_order_quantity ?? null,
+            min_order_value: requestBody.min_order_value ?? null,
+            max_order_value: requestBody.max_order_value ?? null,
             created_at: new Date(),
             updated_at: new Date(),
           })
@@ -1007,6 +1011,10 @@ export class ListingsV2Controller extends BaseController {
           "l.listing_type",
           "l.pickup_method",
           "l.quantity_unit",
+          "l.min_order_quantity",
+          "l.max_order_quantity",
+          "l.min_order_value",
+          "l.max_order_value",
           "l.created_at",
           "l.updated_at",
           "l.expires_at",
@@ -1191,6 +1199,10 @@ export class ListingsV2Controller extends BaseController {
           photos: photos.map((p: any) => p.url),
           pickup_method: listing.pickup_method || null,
           quantity_unit: listing.quantity_unit || "unit",
+          min_order_quantity: listing.min_order_quantity ?? null,
+          max_order_quantity: listing.max_order_quantity ?? null,
+          min_order_value: listing.min_order_value ? Number(listing.min_order_value) : null,
+          max_order_value: listing.max_order_value ? Number(listing.max_order_value) : null,
         },
         seller: {
           id: listing.seller_id,
@@ -1342,6 +1354,12 @@ export class ListingsV2Controller extends BaseController {
           }
           listingUpdates.quantity_unit = requestBody.quantity_unit
         }
+
+        // Update per-listing order limits
+        if (requestBody.min_order_quantity !== undefined) listingUpdates.min_order_quantity = requestBody.min_order_quantity
+        if (requestBody.max_order_quantity !== undefined) listingUpdates.max_order_quantity = requestBody.max_order_quantity
+        if (requestBody.min_order_value !== undefined) listingUpdates.min_order_value = requestBody.min_order_value
+        if (requestBody.max_order_value !== undefined) listingUpdates.max_order_value = requestBody.max_order_value
 
         // Update listing if there are changes
         if (Object.keys(listingUpdates).length > 1) {

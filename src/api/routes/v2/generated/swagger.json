@@ -1491,6 +1491,26 @@
 						],
 						"description": "Quantity unit: 'unit' for discrete items, 'scu' for cargo measured in cSCU"
 					},
+					"min_order_quantity": {
+						"type": "number",
+						"format": "double",
+						"description": "Minimum quantity per order for this listing"
+					},
+					"max_order_quantity": {
+						"type": "number",
+						"format": "double",
+						"description": "Maximum quantity per order for this listing"
+					},
+					"min_order_value": {
+						"type": "number",
+						"format": "double",
+						"description": "Minimum order value (aUEC) for this listing"
+					},
+					"max_order_value": {
+						"type": "number",
+						"format": "double",
+						"description": "Maximum order value (aUEC) for this listing"
+					},
 					"bulk_discount_tiers": {
 						"items": {
 							"$ref": "#/components/schemas/BulkDiscountTier"
@@ -1887,6 +1907,27 @@
 							"scu"
 						],
 						"description": "Quantity unit: 'unit' or 'scu'"
+					},
+					"min_order_quantity": {
+						"type": "number",
+						"format": "double",
+						"nullable": true,
+						"description": "Per-listing order limits (null = no limit)"
+					},
+					"max_order_quantity": {
+						"type": "number",
+						"format": "double",
+						"nullable": true
+					},
+					"min_order_value": {
+						"type": "number",
+						"format": "double",
+						"nullable": true
+					},
+					"max_order_value": {
+						"type": "number",
+						"format": "double",
+						"nullable": true
 					}
 				},
 				"required": [
@@ -2197,6 +2238,27 @@
 							"scu"
 						],
 						"description": "Quantity unit"
+					},
+					"min_order_quantity": {
+						"type": "number",
+						"format": "double",
+						"nullable": true,
+						"description": "Per-listing order limits (null to remove)"
+					},
+					"max_order_quantity": {
+						"type": "number",
+						"format": "double",
+						"nullable": true
+					},
+					"min_order_value": {
+						"type": "number",
+						"format": "double",
+						"nullable": true
+					},
+					"max_order_value": {
+						"type": "number",
+						"format": "double",
+						"nullable": true
 					},
 					"bulk_discount_tiers": {
 						"items": {
