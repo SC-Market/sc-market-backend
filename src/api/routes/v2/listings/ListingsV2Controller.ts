@@ -1346,6 +1346,16 @@ export class ListingsV2Controller extends BaseController {
           listingUpdates.pickup_method = requestBody.pickup_method
         }
 
+        if (requestBody.status !== undefined) {
+          const allowed = ["active", "sold", "expired", "cancelled"]
+          if (!allowed.includes(requestBody.status)) {
+            this.throwValidationError("Invalid status", [
+              { field: "status", message: `Status must be one of: ${allowed.join(", ")}` },
+            ])
+          }
+          listingUpdates.status = requestBody.status
+        }
+
         if (requestBody.quantity_unit !== undefined) {
           if (!['unit', 'scu'].includes(requestBody.quantity_unit)) {
             this.throwValidationError("Invalid quantity_unit", [

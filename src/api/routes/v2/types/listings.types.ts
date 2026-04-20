@@ -450,6 +450,9 @@ export interface LotUpdate {
 export interface UpdateListingRequest {
   /** New title (optional) */
   title?: string;
+
+  /** New status (optional) — active, sold, expired, cancelled */
+  status?: 'active' | 'sold' | 'expired' | 'cancelled';
   
   /** New description (optional) */
   description?: string;

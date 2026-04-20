@@ -2198,6 +2198,16 @@
 						"type": "string",
 						"description": "New title (optional)"
 					},
+					"status": {
+						"type": "string",
+						"enum": [
+							"active",
+							"sold",
+							"expired",
+							"cancelled"
+						],
+						"description": "New status (optional) — active, sold, expired, cancelled"
+					},
 					"description": {
 						"type": "string",
 						"description": "New description (optional)"
@@ -3087,6 +3097,458 @@
 					"materials_fully_stocked",
 					"materials_partially_stocked",
 					"materials_not_stocked"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
+			"GameVersion": {
+				"description": "Game version data",
+				"properties": {
+					"version_id": {
+						"type": "string",
+						"description": "Version UUID"
+					},
+					"version_type": {
+						"type": "string",
+						"enum": [
+							"LIVE",
+							"PTU",
+							"EPTU"
+						],
+						"description": "Version type (LIVE, PTU, EPTU)"
+					},
+					"version_number": {
+						"type": "string",
+						"description": "Version number (e.g., \"4.7.0\")"
+					},
+					"build_number": {
+						"type": "string",
+						"description": "Build number (e.g., \"11592622\")"
+					},
+					"release_date": {
+						"type": "string",
+						"description": "Release date"
+					},
+					"is_active": {
+						"type": "boolean",
+						"description": "Is this version currently active"
+					},
+					"last_data_update": {
+						"type": "string",
+						"description": "Last data update timestamp"
+					},
+					"created_at": {
+						"type": "string",
+						"description": "Created timestamp"
+					},
+					"updated_at": {
+						"type": "string",
+						"description": "Updated timestamp"
+					}
+				},
+				"required": [
+					"version_id",
+					"version_type",
+					"version_number",
+					"is_active",
+					"created_at",
+					"updated_at"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
+			"ActiveVersionsResponse": {
+				"description": "Active versions response",
+				"properties": {
+					"LIVE": {
+						"$ref": "#/components/schemas/GameVersion",
+						"description": "Active LIVE version"
+					},
+					"PTU": {
+						"$ref": "#/components/schemas/GameVersion",
+						"description": "Active PTU version"
+					},
+					"EPTU": {
+						"$ref": "#/components/schemas/GameVersion",
+						"description": "Active EPTU version"
+					}
+				},
+				"type": "object",
+				"additionalProperties": false
+			},
+			"SelectVersionResponse": {
+				"description": "Select version response",
+				"properties": {
+					"success": {
+						"type": "boolean",
+						"description": "Success status"
+					},
+					"version": {
+						"$ref": "#/components/schemas/GameVersion",
+						"description": "Selected version"
+					}
+				},
+				"required": [
+					"success"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
+			"SelectVersionRequest": {
+				"description": "Select version request body",
+				"properties": {
+					"version_id": {
+						"type": "string",
+						"description": "Version ID to select"
+					}
+				},
+				"required": [
+					"version_id"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
+			"ResourceSearchResult": {
+				"description": "Resource search result item",
+				"properties": {
+					"resource_id": {
+						"type": "string",
+						"description": "Resource UUID"
+					},
+					"game_item_id": {
+						"type": "string",
+						"description": "Game item ID"
+					},
+					"resource_name": {
+						"type": "string",
+						"description": "Resource name"
+					},
+					"resource_icon": {
+						"type": "string",
+						"description": "Resource icon URL"
+					},
+					"resource_category": {
+						"type": "string",
+						"description": "Resource category"
+					},
+					"resource_subcategory": {
+						"type": "string",
+						"description": "Resource subcategory"
+					},
+					"max_stack_size": {
+						"type": "number",
+						"format": "double",
+						"description": "Maximum stack size"
+					},
+					"base_value": {
+						"type": "number",
+						"format": "double",
+						"description": "Base value in UEC"
+					},
+					"can_be_mined": {
+						"type": "boolean",
+						"description": "Can be mined"
+					},
+					"can_be_purchased": {
+						"type": "boolean",
+						"description": "Can be purchased"
+					},
+					"can_be_salvaged": {
+						"type": "boolean",
+						"description": "Can be salvaged"
+					},
+					"can_be_looted": {
+						"type": "boolean",
+						"description": "Can be looted"
+					},
+					"blueprint_count": {
+						"type": "number",
+						"format": "double",
+						"description": "Number of blueprints that require this resource"
+					}
+				},
+				"required": [
+					"resource_id",
+					"game_item_id",
+					"resource_name",
+					"resource_category",
+					"can_be_mined",
+					"can_be_purchased",
+					"can_be_salvaged",
+					"can_be_looted",
+					"blueprint_count"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
+			"SearchResourcesResponse": {
+				"description": "Response for resource search endpoint",
+				"properties": {
+					"resources": {
+						"items": {
+							"$ref": "#/components/schemas/ResourceSearchResult"
+						},
+						"type": "array",
+						"description": "Resource search results"
+					},
+					"total": {
+						"type": "number",
+						"format": "double",
+						"description": "Total number of resources matching filters"
+					},
+					"page": {
+						"type": "number",
+						"format": "double",
+						"description": "Current page number"
+					},
+					"page_size": {
+						"type": "number",
+						"format": "double",
+						"description": "Page size"
+					}
+				},
+				"required": [
+					"resources",
+					"total",
+					"page",
+					"page_size"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
+			"MiningLocation": {
+				"description": "Mining location information",
+				"properties": {
+					"star_system": {
+						"type": "string",
+						"description": "Star system"
+					},
+					"planet_moon": {
+						"type": "string",
+						"description": "Planet or moon"
+					},
+					"location_detail": {
+						"type": "string",
+						"description": "Location detail"
+					},
+					"abundance": {
+						"type": "string",
+						"description": "Abundance level"
+					}
+				},
+				"type": "object",
+				"additionalProperties": false
+			},
+			"PurchaseLocation": {
+				"description": "Purchase location information",
+				"properties": {
+					"star_system": {
+						"type": "string",
+						"description": "Star system"
+					},
+					"planet_moon": {
+						"type": "string",
+						"description": "Planet or moon"
+					},
+					"station": {
+						"type": "string",
+						"description": "Station or outpost"
+					},
+					"average_price": {
+						"type": "number",
+						"format": "double",
+						"description": "Average price"
+					}
+				},
+				"type": "object",
+				"additionalProperties": false
+			},
+			"Resource": {
+				"description": "Complete resource data",
+				"properties": {
+					"resource_id": {
+						"type": "string"
+					},
+					"version_id": {
+						"type": "string"
+					},
+					"game_item_id": {
+						"type": "string"
+					},
+					"resource_name": {
+						"type": "string"
+					},
+					"resource_icon": {
+						"type": "string"
+					},
+					"resource_category": {
+						"type": "string"
+					},
+					"resource_subcategory": {
+						"type": "string"
+					},
+					"max_stack_size": {
+						"type": "number",
+						"format": "double"
+					},
+					"base_value": {
+						"type": "number",
+						"format": "double"
+					},
+					"can_be_mined": {
+						"type": "boolean"
+					},
+					"can_be_purchased": {
+						"type": "boolean"
+					},
+					"can_be_salvaged": {
+						"type": "boolean"
+					},
+					"can_be_looted": {
+						"type": "boolean"
+					},
+					"mining_locations": {
+						"items": {
+							"$ref": "#/components/schemas/MiningLocation"
+						},
+						"type": "array"
+					},
+					"purchase_locations": {
+						"items": {
+							"$ref": "#/components/schemas/PurchaseLocation"
+						},
+						"type": "array"
+					},
+					"created_at": {
+						"type": "string"
+					},
+					"updated_at": {
+						"type": "string"
+					}
+				},
+				"required": [
+					"resource_id",
+					"version_id",
+					"game_item_id",
+					"resource_name",
+					"resource_category",
+					"can_be_mined",
+					"can_be_purchased",
+					"can_be_salvaged",
+					"can_be_looted",
+					"created_at",
+					"updated_at"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
+			"BlueprintRequiringResource": {
+				"description": "Blueprint that requires this resource",
+				"properties": {
+					"blueprint_id": {
+						"type": "string",
+						"description": "Blueprint UUID"
+					},
+					"blueprint_name": {
+						"type": "string",
+						"description": "Blueprint name"
+					},
+					"output_item_name": {
+						"type": "string",
+						"description": "Output item name"
+					},
+					"output_item_icon": {
+						"type": "string",
+						"description": "Output item icon"
+					},
+					"quantity_required": {
+						"type": "number",
+						"format": "double",
+						"description": "Quantity required"
+					},
+					"min_quality_tier": {
+						"type": "number",
+						"format": "double",
+						"description": "Minimum quality tier"
+					},
+					"recommended_quality_tier": {
+						"type": "number",
+						"format": "double",
+						"description": "Recommended quality tier"
+					}
+				},
+				"required": [
+					"blueprint_id",
+					"blueprint_name",
+					"output_item_name",
+					"quantity_required"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
+			"ResourceDetailResponse": {
+				"description": "Response for resource detail endpoint",
+				"properties": {
+					"resource": {
+						"$ref": "#/components/schemas/Resource",
+						"description": "Complete resource data"
+					},
+					"blueprints_requiring": {
+						"items": {
+							"$ref": "#/components/schemas/BlueprintRequiringResource"
+						},
+						"type": "array",
+						"description": "Blueprints that require this resource"
+					},
+					"market_price": {
+						"properties": {
+							"last_updated": {
+								"type": "string"
+							},
+							"average_price": {
+								"type": "number",
+								"format": "double"
+							},
+							"max_price": {
+								"type": "number",
+								"format": "double"
+							},
+							"min_price": {
+								"type": "number",
+								"format": "double"
+							}
+						},
+						"type": "object",
+						"description": "Market price data (if available)"
+					}
+				},
+				"required": [
+					"resource",
+					"blueprints_requiring"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
+			"ResourceCategory": {
+				"description": "Resource category with count",
+				"properties": {
+					"category": {
+						"type": "string",
+						"description": "Category name"
+					},
+					"subcategory": {
+						"type": "string",
+						"description": "Subcategory name"
+					},
+					"count": {
+						"type": "number",
+						"format": "double",
+						"description": "Number of resources in this category"
+					}
+				},
+				"required": [
+					"category",
+					"count"
 				],
 				"type": "object",
 				"additionalProperties": false
@@ -5732,6 +6194,121 @@
 				],
 				"type": "object",
 				"additionalProperties": false
+			},
+			"ImportGameDataResponse": {
+				"description": "Import summary returned by game data import endpoint",
+				"properties": {
+					"success": {
+						"type": "boolean"
+					},
+					"summary": {
+						"properties": {
+							"fullSetsCreated": {
+								"type": "number",
+								"format": "double"
+							},
+							"nameChanges": {
+								"type": "number",
+								"format": "double"
+							},
+							"updated": {
+								"type": "number",
+								"format": "double"
+							},
+							"inserted": {
+								"type": "number",
+								"format": "double"
+							},
+							"matchedFuzzy": {
+								"type": "number",
+								"format": "double"
+							},
+							"matchedCStoneUUID": {
+								"type": "number",
+								"format": "double"
+							},
+							"matchedExact": {
+								"type": "number",
+								"format": "double"
+							},
+							"matched": {
+								"type": "number",
+								"format": "double"
+							},
+							"existingDBItems": {
+								"type": "number",
+								"format": "double"
+							},
+							"validP4KItems": {
+								"type": "number",
+								"format": "double"
+							},
+							"totalP4KItems": {
+								"type": "number",
+								"format": "double"
+							}
+						},
+						"required": [
+							"fullSetsCreated",
+							"nameChanges",
+							"updated",
+							"inserted",
+							"matchedFuzzy",
+							"matchedCStoneUUID",
+							"matchedExact",
+							"matched",
+							"existingDBItems",
+							"validP4KItems",
+							"totalP4KItems"
+						],
+						"type": "object"
+					},
+					"errors": {
+						"items": {
+							"type": "string"
+						},
+						"type": "array"
+					},
+					"timestamp": {
+						"type": "string"
+					}
+				},
+				"required": [
+					"success",
+					"summary",
+					"errors",
+					"timestamp"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
+			"ImportErrorResponse": {
+				"description": "Error response for import failures",
+				"properties": {
+					"success": {
+						"type": "boolean",
+						"enum": [
+							false
+						],
+						"nullable": false
+					},
+					"error": {
+						"type": "string"
+					},
+					"details": {
+						"type": "string"
+					},
+					"timestamp": {
+						"type": "string"
+					}
+				},
+				"required": [
+					"success",
+					"error",
+					"timestamp"
+				],
+				"type": "object",
+				"additionalProperties": false
 			}
 		},
 		"securitySchemes": {}
@@ -7496,6 +8073,266 @@
 				]
 			}
 		},
+		"/api/v2/game-data/versions": {
+			"get": {
+				"operationId": "ListVersions",
+				"responses": {
+					"200": {
+						"description": "Array of all game versions",
+						"content": {
+							"application/json": {
+								"schema": {
+									"items": {
+										"$ref": "#/components/schemas/GameVersion"
+									},
+									"type": "array"
+								}
+							}
+						}
+					}
+				},
+				"description": "List all game versions\n\nReturns all game versions (LIVE, PTU, EPTU) with metadata including\nversion numbers, build numbers, release dates, and last data update timestamps.\n\nRequirements:\n- 13.1: Allow players to choose between LIVE, PTU, and EPTU versions\n- 45.1: Display current selected version prominently\n- 45.3: Display version type (LIVE, PTU, EPTU) with visual distinction\n- 45.4: Display full version number including build number\n- 45.5: Display last data update timestamp for each version",
+				"summary": "List game versions",
+				"tags": [
+					"Game Data - Versions"
+				],
+				"security": [],
+				"parameters": []
+			}
+		},
+		"/api/v2/game-data/versions/active": {
+			"get": {
+				"operationId": "GetActiveVersions",
+				"responses": {
+					"200": {
+						"description": "Active versions by type",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/ActiveVersionsResponse"
+								}
+							}
+						}
+					}
+				},
+				"description": "Get active game versions\n\nReturns the currently active version for each version type (LIVE, PTU, EPTU).\nThis endpoint is used by the version selector to display available versions\nand by default queries to determine which version to use.\n\nRequirements:\n- 13.1: Allow players to choose between LIVE, PTU, and EPTU versions\n- 13.6: Default to LIVE version for new users\n- 45.2: Provide dropdown or modal for version selection\n- 45.5: Display last data update timestamp for each version\n- 45.7: Display version-specific data counts",
+				"summary": "Get active versions",
+				"tags": [
+					"Game Data - Versions"
+				],
+				"security": [],
+				"parameters": []
+			}
+		},
+		"/api/v2/game-data/versions/select": {
+			"post": {
+				"operationId": "SelectVersion",
+				"responses": {
+					"200": {
+						"description": "Success response with selected version",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/SelectVersionResponse"
+								}
+							}
+						}
+					}
+				},
+				"description": "Set user's selected game version\n\nRecords the user's selected game version preference, which persists across\nbrowser sessions and page navigation. This selection determines which version's\ndata is displayed throughout the game data system.\n\nRequirements:\n- 13.2: Display data specific to selected version\n- 13.3: Persist selected version across browser sessions\n- 45.6: Persist selection across page navigation\n- 45.9: Support quick toggle between LIVE and PTU",
+				"summary": "Select game version",
+				"tags": [
+					"Game Data - Versions"
+				],
+				"security": [
+					{
+						"discord_oauth": []
+					}
+				],
+				"parameters": [],
+				"requestBody": {
+					"description": "Version selection request",
+					"required": true,
+					"content": {
+						"application/json": {
+							"schema": {
+								"$ref": "#/components/schemas/SelectVersionRequest",
+								"description": "Version selection request"
+							}
+						}
+					}
+				}
+			}
+		},
+		"/api/v2/game-data/resources/search": {
+			"get": {
+				"operationId": "SearchResources",
+				"responses": {
+					"200": {
+						"description": "Resource search results with pagination",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/SearchResourcesResponse"
+								}
+							}
+						}
+					}
+				},
+				"description": "Search resources with filters\n\nSupports filtering by category, subcategory, and acquisition method.\nIncludes full-text search on resource names and displays blueprint counts.\n\nRequirements:\n- 44.1: Maintain a database of all craftable resources (178+ resources)\n- 44.2: Categorize resources by type (Metals, Gases, Minerals, Components, etc.)\n- 44.3: Display resource properties (quality tiers, stack sizes, etc.)\n- 44.4: Support filtering resources by category\n- 44.5: Display which blueprints require each resource\n- 44.6: Display where resources can be obtained (mining, purchase, salvage)\n- 44.7: Support resource search by name or properties",
+				"summary": "Search resources",
+				"tags": [
+					"Game Data - Resources"
+				],
+				"security": [],
+				"parameters": [
+					{
+						"description": "Full-text search on resource name",
+						"in": "query",
+						"name": "text",
+						"required": false,
+						"schema": {
+							"type": "string"
+						}
+					},
+					{
+						"description": "Filter by resource category",
+						"in": "query",
+						"name": "resource_category",
+						"required": false,
+						"schema": {
+							"type": "string"
+						}
+					},
+					{
+						"description": "Filter by resource subcategory",
+						"in": "query",
+						"name": "resource_subcategory",
+						"required": false,
+						"schema": {
+							"type": "string"
+						}
+					},
+					{
+						"description": "Filter by acquisition method",
+						"in": "query",
+						"name": "acquisition_method",
+						"required": false,
+						"schema": {
+							"type": "string",
+							"enum": [
+								"mined",
+								"purchased",
+								"salvaged",
+								"looted"
+							]
+						}
+					},
+					{
+						"description": "Game version ID (defaults to active LIVE version)",
+						"in": "query",
+						"name": "version_id",
+						"required": false,
+						"schema": {
+							"type": "string"
+						}
+					},
+					{
+						"description": "Page number (default: 1)",
+						"in": "query",
+						"name": "page",
+						"required": false,
+						"schema": {
+							"default": 1,
+							"format": "double",
+							"type": "number"
+						}
+					},
+					{
+						"description": "Results per page (default: 20, max: 100)",
+						"in": "query",
+						"name": "page_size",
+						"required": false,
+						"schema": {
+							"default": 20,
+							"format": "double",
+							"type": "number"
+						}
+					}
+				]
+			}
+		},
+		"/api/v2/game-data/resources/{resource_id}": {
+			"get": {
+				"operationId": "GetResource",
+				"responses": {
+					"200": {
+						"description": "Complete resource details with blueprints and locations",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/ResourceDetailResponse"
+								}
+							}
+						}
+					}
+				},
+				"description": "Get resource detail with blueprints and locations\n\nReturns complete resource information including all blueprints that require\nthis resource, mining/purchase locations, and market price data.\n\nRequirements:\n- 44.3: Display resource properties (quality tiers, stack sizes, etc.)\n- 44.5: Display which blueprints require each resource\n- 44.6: Display where resources can be obtained (mining, purchase, salvage)\n- 44.8: Display resource market prices and availability",
+				"summary": "Get resource details",
+				"tags": [
+					"Game Data - Resources"
+				],
+				"security": [],
+				"parameters": [
+					{
+						"description": "Resource UUID",
+						"in": "path",
+						"name": "resource_id",
+						"required": true,
+						"schema": {
+							"type": "string"
+						}
+					}
+				]
+			}
+		},
+		"/api/v2/game-data/resources/categories": {
+			"get": {
+				"operationId": "GetCategories",
+				"responses": {
+					"200": {
+						"description": "Array of categories with counts",
+						"content": {
+							"application/json": {
+								"schema": {
+									"items": {
+										"$ref": "#/components/schemas/ResourceCategory"
+									},
+									"type": "array"
+								}
+							}
+						}
+					}
+				},
+				"description": "Get resource categories\n\nReturns all resource categories with item counts, supporting\nhierarchical category navigation in the resource browser.\n\nRequirements:\n- 44.2: Categorize resources by type (Metals, Gases, Minerals, Components, etc.)\n- 44.4: Support filtering resources by category",
+				"summary": "Get categories",
+				"tags": [
+					"Game Data - Resources"
+				],
+				"security": [],
+				"parameters": [
+					{
+						"description": "Optional game version ID (defaults to active LIVE version)",
+						"in": "query",
+						"name": "version_id",
+						"required": false,
+						"schema": {
+							"type": "string"
+						}
+					}
+				]
+			}
+		},
 		"/api/v2/game-data/missions/search": {
 			"get": {
 				"operationId": "SearchMissions",
@@ -8016,7 +8853,7 @@
 				"operationId": "CalculateQuality",
 				"responses": {
 					"200": {
-						"description": "Quality calculation result with breakdown",
+						"description": "Quality calculation result with breakdown and predicted stats",
 						"content": {
 							"application/json": {
 								"schema": {
@@ -8026,8 +8863,8 @@
 						}
 					}
 				},
-				"description": "Calculate output quality from ingredients\n\nComputes the expected output quality based on input material qualities\nusing the blueprint's quality calculation formula (weighted_average, minimum, or maximum).\n\nRequirements:\n- 20.1: Support weighted_average calculation type\n- 20.2: Support minimum calculation type\n- 20.3: Support maximum calculation type\n- 20.4: Validate input materials match blueprint requirements\n- 20.5: Return quality tier and quality value\n- 20.6: Include calculation breakdown\n- 51.1-51.10: Quality calculation display requirements",
-				"summary": "Calculate output quality",
+				"description": "Calculate output quality from ingredients\n\nComputes the expected output quality based on input material qualities\nusing the blueprint's quality calculation formula (weighted_average, minimum, or maximum).\n\nENHANCEMENT: Now includes actual stat calculations from game_item_attributes.\nShows how material quality affects final item stats (damage, HP, power output, etc.)\n\nRequirements:\n- 20.1: Support weighted_average calculation type\n- 20.2: Support minimum calculation type\n- 20.3: Support maximum calculation type\n- 20.4: Validate input materials match blueprint requirements\n- 20.5: Return quality tier and quality value\n- 20.6: Include calculation breakdown\n- 51.1-51.10: Quality calculation display requirements",
+				"summary": "Calculate output quality with stat predictions",
 				"tags": [
 					"Game Data - Crafting"
 				],
@@ -9754,6 +10591,37 @@
 						}
 					}
 				]
+			}
+		},
+		"/api/v2/admin/import-game-data": {
+			"post": {
+				"operationId": "ImportGameData",
+				"responses": {
+					"200": {
+						"description": "Import summary with statistics",
+						"content": {
+							"application/json": {
+								"schema": {
+									"anyOf": [
+										{
+											"$ref": "#/components/schemas/ImportGameDataResponse"
+										},
+										{
+											"$ref": "#/components/schemas/ImportErrorResponse"
+										}
+									]
+								}
+							}
+						}
+					}
+				},
+				"description": "Import game data from uploaded ZIP file\n\nAccepts a game-data.zip file upload, extracts the game-data.json,\nand runs the same import logic as the command-line script.\n\nThe import process:\n1. Validates ZIP file format\n2. Extracts game-data.json\n3. Matches P4K items to existing database items using:\n   - Exact name match (case-insensitive)\n   - CStone UUID match\n   - Fuzzy name match (Levenshtein distance ≤ 2)\n4. Updates matched items with P4K metadata\n5. Inserts new items not found in database\n6. Regenerates \"Full Set\" synthetic items from \"Core\" items\n7. Rebuilds full-text search indexes\n\nRequirements:\n- 4.1: Parse game data files to extract mission information\n- 4.2: Identify mission names, locations, and rewards\n- 4.3: Extract blueprint reward pools and probabilities\n- 4.4: Validate extracted data for completeness\n- 4.5: Log extraction errors with descriptive messages\n- 4.6: Support multiple game versions simultaneously",
+				"summary": "Import game data",
+				"tags": [
+					"Admin"
+				],
+				"security": [],
+				"parameters": []
 			}
 		}
 	},
