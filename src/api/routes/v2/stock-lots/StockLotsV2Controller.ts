@@ -732,7 +732,7 @@ export class StockLotsV2Controller extends BaseController {
    * @param request Express request for authentication
    */
   @Delete("{id}")
-  @Security("session")
+  @Security("jwt")
   public async deleteStockLot(
     @Path() id: string,
     @Request() request: ExpressRequest,

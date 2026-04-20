@@ -1798,7 +1798,7 @@ export class ListingsV2Controller extends BaseController {
    * @param request Express request with files
    */
   @Post("{id}/photos")
-  @Security("session")
+  @Security("jwt")
   public async uploadPhotos(
     @Path() id: string,
     @Request() request: ExpressRequest,
