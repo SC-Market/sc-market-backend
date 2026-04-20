@@ -181,7 +181,7 @@ export class VersionsController extends BaseController {
    * @returns Success response with selected version
    */
   @Post("select")
-  @Security("discord_oauth")
+  @Security("jwt")
   public async selectVersion(
     @Body() body: SelectVersionRequest,
   ): Promise<SelectVersionResponse> {
