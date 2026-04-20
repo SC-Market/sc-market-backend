@@ -40,6 +40,8 @@ import { CartV2Controller } from './../cart/CartV2Controller.js';
 // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
 import { BuyOrdersV2Controller } from './../buy-orders/BuyOrdersV2Controller.js';
 // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+import { AvailabilityV2Controller } from './../availability/AvailabilityV2Controller.js';
+// WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
 import { AnalyticsV2Controller } from './../analytics/AnalyticsV2Controller.js';
 // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
 import { FeatureFlagAdminController } from './../admin/FeatureFlagAdminController.js';
@@ -1814,8 +1816,11 @@ const models: TsoaRoute.Models = {
             "listing_id": {"dataType":"string","required":true},
             "title": {"dataType":"string","required":true},
             "seller_name": {"dataType":"string","required":true},
+            "seller_type": {"dataType":"union","subSchemas":[{"dataType":"enum","enums":["user"]},{"dataType":"enum","enums":["contractor"]}],"required":true},
+            "seller_slug": {"dataType":"string","required":true},
             "seller_rating": {"dataType":"double","required":true},
             "status": {"dataType":"string","required":true},
+            "seller_next_available": {"dataType":"union","subSchemas":[{"dataType":"string"},{"dataType":"enum","enums":[null]}]},
         },
         "additionalProperties": false,
     },
@@ -2019,6 +2024,15 @@ const models: TsoaRoute.Models = {
             "quality_tier_max": {"dataType":"double"},
             "negotiable": {"dataType":"boolean"},
             "expires_in_days": {"dataType":"double"},
+        },
+        "additionalProperties": false,
+    },
+    // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+    "SellerNextAvailableResponse": {
+        "dataType": "refObject",
+        "properties": {
+            "next_available": {"dataType":"union","subSchemas":[{"dataType":"string"},{"dataType":"enum","enums":[null]}],"required":true},
+            "has_schedule": {"dataType":"boolean","required":true},
         },
         "additionalProperties": false,
     },
@@ -4836,6 +4850,38 @@ export function RegisterRoutes(app: Router) {
 
               await templateService.apiHandler({
                 methodName: 'fulfillBuyOrder',
+                controller,
+                response,
+                next,
+                validatedArgs,
+                successStatus: undefined,
+              });
+            } catch (err) {
+                return next(err);
+            }
+        });
+        // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+        const argsAvailabilityV2Controller_getNextAvailable: Record<string, TsoaRoute.ParameterSchema> = {
+                username: {"in":"query","name":"username","dataType":"string"},
+                spectrum_id: {"in":"query","name":"spectrum_id","dataType":"string"},
+        };
+        app.get('/availability/next',
+            authenticateMiddleware([{"jwt":[]}]),
+            ...(fetchMiddlewares<RequestHandler>(AvailabilityV2Controller)),
+            ...(fetchMiddlewares<RequestHandler>(AvailabilityV2Controller.prototype.getNextAvailable)),
+
+            async function AvailabilityV2Controller_getNextAvailable(request: ExRequest, response: ExResponse, next: any) {
+
+            // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+
+            let validatedArgs: any[] = [];
+            try {
+                validatedArgs = templateService.getValidatedArgs({ args: argsAvailabilityV2Controller_getNextAvailable, request, response });
+
+                const controller = new AvailabilityV2Controller();
+
+              await templateService.apiHandler({
+                methodName: 'getNextAvailable',
                 controller,
                 response,
                 next,

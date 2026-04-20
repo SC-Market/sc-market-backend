@@ -5616,6 +5616,18 @@
 						"type": "string",
 						"description": "Seller username or contractor name"
 					},
+					"seller_type": {
+						"type": "string",
+						"enum": [
+							"user",
+							"contractor"
+						],
+						"description": "Seller type"
+					},
+					"seller_slug": {
+						"type": "string",
+						"description": "Seller slug (username or spectrum_id)"
+					},
 					"seller_rating": {
 						"type": "number",
 						"format": "double",
@@ -5624,12 +5636,19 @@
 					"status": {
 						"type": "string",
 						"description": "Current listing status"
+					},
+					"seller_next_available": {
+						"type": "string",
+						"nullable": true,
+						"description": "ISO 8601 timestamp of seller's next available slot, or null if not set / currently available"
 					}
 				},
 				"required": [
 					"listing_id",
 					"title",
 					"seller_name",
+					"seller_type",
+					"seller_slug",
 					"seller_rating",
 					"status"
 				],
@@ -6212,6 +6231,25 @@
 						"format": "double"
 					}
 				},
+				"type": "object",
+				"additionalProperties": false
+			},
+			"SellerNextAvailableResponse": {
+				"properties": {
+					"next_available": {
+						"type": "string",
+						"nullable": true,
+						"description": "ISO 8601 timestamp of next available slot, or null if currently available / no schedule"
+					},
+					"has_schedule": {
+						"type": "boolean",
+						"description": "Whether the seller has an availability schedule set"
+					}
+				},
+				"required": [
+					"next_available",
+					"has_schedule"
+				],
 				"type": "object",
 				"additionalProperties": false
 			},
@@ -11136,6 +11174,52 @@
 						}
 					}
 				}
+			}
+		},
+		"/availability/next": {
+			"get": {
+				"operationId": "GetNextAvailable",
+				"responses": {
+					"200": {
+						"description": "Ok",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/SellerNextAvailableResponse"
+								}
+							}
+						}
+					}
+				},
+				"description": "Get a seller's next available time",
+				"tags": [
+					"Availability"
+				],
+				"security": [
+					{
+						"jwt": []
+					}
+				],
+				"parameters": [
+					{
+						"description": "Username (for user sellers)",
+						"in": "query",
+						"name": "username",
+						"required": false,
+						"schema": {
+							"type": "string"
+						}
+					},
+					{
+						"description": "Spectrum ID (for contractor sellers)",
+						"in": "query",
+						"name": "spectrum_id",
+						"required": false,
+						"schema": {
+							"type": "string"
+						}
+					}
+				]
 			}
 		},
 		"/analytics/price-history": {
