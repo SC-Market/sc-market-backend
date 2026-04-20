@@ -7,7 +7,7 @@
  * Requirements: 20.1-20.6, 21.1-21.6, 31.1-31.6, 45.1-45.10, 51.1-51.10, 52.1-52.10
  */
 
-import { Controller, Get, Post, Route, Tags, Query, Path, Body, Security } from "tsoa"
+import { Get, Post, Route, Tags, Query, Body, Security } from "tsoa"
 import { BaseController } from "../../base/BaseController.js"
 import { getKnex } from "../../../../../clients/database/knex-db.js"
 import {
@@ -24,6 +24,9 @@ import {
   QualityContribution,
   CraftingSessionHistory,
   BlueprintStatistics,
+  GetCraftableItemsResponse,
+  CraftableItem,
+  MaterialAvailability,
 } from "./crafting.types.js"
 import logger from "../../../../../logger/logger.js"
 
@@ -35,6 +38,9 @@ export class CraftingController extends BaseController {
    *
    * Computes the expected output quality based on input material qualities
    * using the blueprint's quality calculation formula (weighted_average, minimum, or maximum).
+   * 
+   * ENHANCEMENT: Now includes actual stat calculations from game_item_attributes.
+   * Shows how material quality affects final item stats (damage, HP, power output, etc.)
    *
    * Requirements:
    * - 20.1: Support weighted_average calculation type
@@ -45,9 +51,9 @@ export class CraftingController extends BaseController {
    * - 20.6: Include calculation breakdown
    * - 51.1-51.10: Quality calculation display requirements
    *
-   * @summary Calculate output quality
+   * @summary Calculate output quality with stat predictions
    * @param request Crafting calculation request with blueprint and materials
-   * @returns Quality calculation result with breakdown
+   * @returns Quality calculation result with breakdown and predicted stats
    */
   @Post("calculate-quality")
   public async calculateQuality(
@@ -592,6 +598,316 @@ export class CraftingController extends BaseController {
       }
     } catch (error) {
       logger.error("Failed to fetch crafting history", {
+        user_id,
+        error: error instanceof Error ? error.message : String(error),
+        stack: error instanceof Error ? error.stack : undefined,
+      })
+
+      throw error
+    }
+  }
+
+  /**
+   * Get craftable items based on owned blueprints and stock
+   *
+   * Returns items that can be crafted based on user's owned blueprints
+   * and available materials in their stock lots. Shows material availability
+   * and maximum craftable quantities.
+   *
+   * Requirements:
+   * - 10.1-10.6: Blueprint Inventory Tracking
+   * - 11.1-11.6: Organization Blueprint Tracking
+   * - 21.1-21.6: Material Inventory Integration
+   * - 22.1-22.6: Crafting Cost Estimation
+   *
+   * @summary Get craftable items from stock
+   * @param item_category Filter by item category
+   * @param rarity Filter by rarity
+   * @param tier Filter by tier (1-5)
+   * @param craftable_only Show only items that can be crafted with current stock
+   * @param version_id Game version ID (defaults to active LIVE version)
+   * @param page Page number (default: 1)
+   * @param page_size Results per page (default: 20, max: 100)
+   * @returns Craftable items with material availability
+   */
+  @Get("craftable-items")
+  @Security("discord_oauth")
+  public async getCraftableItems(
+    @Query() item_category?: string,
+    @Query() rarity?: string,
+    @Query() tier?: number,
+    @Query() craftable_only?: boolean,
+    @Query() version_id?: string,
+    @Query() page: number = 1,
+    @Query() page_size: number = 20,
+  ): Promise<GetCraftableItemsResponse> {
+    const knex = getKnex()
+
+    // Get authenticated user
+    const user_id = this.getUserId()
+
+    // Validate pagination parameters
+    const validatedPage = Math.max(1, page || 1)
+    const validatedPageSize = Math.min(100, Math.max(1, page_size || 20))
+
+    // Validate tier range
+    if (tier !== undefined && (tier < 1 || tier > 5)) {
+      this.throwValidationError("Invalid tier", [
+        { field: "tier", message: "Tier must be between 1 and 5" },
+      ])
+    }
+
+    logger.info("Fetching craftable items", {
+      user_id,
+      item_category,
+      rarity,
+      tier,
+      craftable_only,
+      page: validatedPage,
+      page_size: validatedPageSize,
+    })
+
+    try {
+      // ========================================================================
+      // Part 1: Get or validate version_id
+      // ========================================================================
+      let effectiveVersionId = version_id
+
+      if (!effectiveVersionId) {
+        // Get active LIVE version
+        const activeVersion = await knex("game_versions")
+          .where("version_type", "LIVE")
+          .where("is_active", true)
+          .orderBy("created_at", "desc")
+          .first()
+
+        if (!activeVersion) {
+          this.throwNotFound("Active LIVE game version", "LIVE")
+        }
+
+        effectiveVersionId = activeVersion.version_id
+      }
+
+      // ========================================================================
+      // Part 2: Get user's owned blueprints
+      // ========================================================================
+      let ownedBlueprintsQuery = knex("user_blueprint_inventory as ubi")
+        .join("blueprints as b", "ubi.blueprint_id", "b.blueprint_id")
+        .join("game_items as gi", "b.output_game_item_id", "gi.id")
+        .select(
+          "b.blueprint_id",
+          "b.blueprint_name",
+          "gi.name as output_item_name",
+          "gi.image_url as output_item_icon",
+          "b.item_category",
+          "b.rarity",
+          "b.tier",
+          "b.crafting_time_seconds",
+        )
+        .where("ubi.user_id", user_id)
+        .where("ubi.is_owned", true)
+        .where("b.version_id", effectiveVersionId)
+        .where("b.is_active", true)
+
+      // Apply filters
+      if (item_category) {
+        ownedBlueprintsQuery = ownedBlueprintsQuery.where("b.item_category", item_category)
+      }
+
+      if (rarity) {
+        ownedBlueprintsQuery = ownedBlueprintsQuery.where("b.rarity", rarity)
+      }
+
+      if (tier !== undefined) {
+        ownedBlueprintsQuery = ownedBlueprintsQuery.where("b.tier", tier)
+      }
+
+      const ownedBlueprints = await ownedBlueprintsQuery
+
+      if (ownedBlueprints.length === 0) {
+        return {
+          craftable_items: [],
+          total: 0,
+          page: validatedPage,
+          page_size: validatedPageSize,
+          summary: {
+            total_blueprints_owned: 0,
+            items_craftable_now: 0,
+            items_missing_materials: 0,
+          },
+        }
+      }
+
+      // ========================================================================
+      // Part 3: Get user's stock lots (all materials available)
+      // ========================================================================
+      const stockLots = await knex("listing_item_lots as sl")
+        .join("listing_items as li", "sl.item_id", "li.item_id")
+        .join("listings as l", "li.listing_id", "l.listing_id")
+        .join("item_variants as iv", "sl.variant_id", "iv.variant_id")
+        .select(
+          "li.game_item_id",
+          "sl.quantity_total",
+          "sl.lot_id",
+          "iv.attributes",
+        )
+        .where("l.seller_id", user_id)
+        .where("sl.listed", true)
+
+      // Build material availability map: game_item_id -> { total_quantity, quality_tiers, lot_ids }
+      const materialAvailability = new Map<
+        string,
+        {
+          total_quantity: number
+          quality_tier_min?: number
+          quality_tier_max?: number
+          lot_ids: string[]
+        }
+      >()
+
+      for (const lot of stockLots) {
+        const gameItemId = lot.game_item_id
+        const qualityTier = lot.attributes?.quality_tier
+
+        if (!materialAvailability.has(gameItemId)) {
+          materialAvailability.set(gameItemId, {
+            total_quantity: 0,
+            quality_tier_min: qualityTier,
+            quality_tier_max: qualityTier,
+            lot_ids: [],
+          })
+        }
+
+        const availability = materialAvailability.get(gameItemId)!
+        availability.total_quantity += lot.quantity_total
+        availability.lot_ids.push(lot.lot_id)
+
+        if (qualityTier !== undefined) {
+          if (
+            availability.quality_tier_min === undefined ||
+            qualityTier < availability.quality_tier_min
+          ) {
+            availability.quality_tier_min = qualityTier
+          }
+          if (
+            availability.quality_tier_max === undefined ||
+            qualityTier > availability.quality_tier_max
+          ) {
+            availability.quality_tier_max = qualityTier
+          }
+        }
+      }
+
+      // ========================================================================
+      // Part 4: For each blueprint, get ingredients and check availability
+      // ========================================================================
+      const craftableItems: CraftableItem[] = []
+
+      for (const blueprint of ownedBlueprints) {
+        // Get ingredients for this blueprint
+        const ingredients = await knex("blueprint_ingredients as bi")
+          .join("game_items as gi", "bi.ingredient_game_item_id", "gi.id")
+          .select(
+            "bi.ingredient_game_item_id",
+            "bi.quantity_required",
+            "gi.name as material_name",
+          )
+          .where("bi.blueprint_id", blueprint.blueprint_id)
+          .orderBy("bi.display_order", "asc")
+
+        // Check material availability
+        const materials: MaterialAvailability[] = []
+        let canCraft = true
+        let maxCraftableQuantity = Infinity
+        let missingMaterialsCount = 0
+
+        for (const ingredient of ingredients) {
+          const availability = materialAvailability.get(ingredient.ingredient_game_item_id)
+          const quantityAvailable = availability?.total_quantity || 0
+          const isSufficient = quantityAvailable >= ingredient.quantity_required
+
+          if (!isSufficient) {
+            canCraft = false
+            missingMaterialsCount++
+          } else {
+            // Calculate max craftable based on this material
+            const maxFromThisMaterial = Math.floor(
+              quantityAvailable / ingredient.quantity_required,
+            )
+            maxCraftableQuantity = Math.min(maxCraftableQuantity, maxFromThisMaterial)
+          }
+
+          materials.push({
+            game_item_id: ingredient.ingredient_game_item_id,
+            material_name: ingredient.material_name,
+            quantity_required: ingredient.quantity_required,
+            quantity_available: quantityAvailable,
+            is_sufficient: isSufficient,
+            quality_tier_min: availability?.quality_tier_min,
+            quality_tier_max: availability?.quality_tier_max,
+            stock_lot_ids: availability?.lot_ids || [],
+          })
+        }
+
+        if (!canCraft) {
+          maxCraftableQuantity = 0
+        }
+
+        // Apply craftable_only filter
+        if (craftable_only && !canCraft) {
+          continue
+        }
+
+        craftableItems.push({
+          blueprint_id: blueprint.blueprint_id,
+          blueprint_name: blueprint.blueprint_name,
+          output_item_name: blueprint.output_item_name,
+          output_item_icon: blueprint.output_item_icon || undefined,
+          item_category: blueprint.item_category || undefined,
+          rarity: blueprint.rarity || undefined,
+          tier: blueprint.tier || undefined,
+          crafting_time_seconds: blueprint.crafting_time_seconds || undefined,
+          can_craft: canCraft,
+          max_craftable_quantity: maxCraftableQuantity === Infinity ? 0 : maxCraftableQuantity,
+          materials,
+          missing_materials_count: missingMaterialsCount,
+          estimated_cost_per_craft: undefined, // TODO: Implement market price lookup
+        })
+      }
+
+      // ========================================================================
+      // Part 5: Apply pagination
+      // ========================================================================
+      const total = craftableItems.length
+      const offset = (validatedPage - 1) * validatedPageSize
+      const paginatedItems = craftableItems.slice(offset, offset + validatedPageSize)
+
+      // ========================================================================
+      // Part 6: Calculate summary statistics
+      // ========================================================================
+      const itemsCraftableNow = craftableItems.filter((item) => item.can_craft).length
+      const itemsMissingMaterials = craftableItems.filter((item) => !item.can_craft).length
+
+      logger.info("Craftable items fetched successfully", {
+        user_id,
+        total,
+        items_craftable_now: itemsCraftableNow,
+        items_missing_materials: itemsMissingMaterials,
+      })
+
+      return {
+        craftable_items: paginatedItems,
+        total,
+        page: validatedPage,
+        page_size: validatedPageSize,
+        summary: {
+          total_blueprints_owned: ownedBlueprints.length,
+          items_craftable_now: itemsCraftableNow,
+          items_missing_materials: itemsMissingMaterials,
+        },
+      }
+    } catch (error) {
+      logger.error("Failed to fetch craftable items", {
         user_id,
         error: error instanceof Error ? error.message : String(error),
         stack: error instanceof Error ? error.stack : undefined,

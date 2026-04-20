@@ -35,3 +35,9 @@ export const avatarUpload = multer({
   dest: "uploads/",
   limits: { fileSize: 1 * 1000 * 1000 /* 1mb */ },
 })
+
+// Configuration for game data ZIP uploads (admin only)
+export const gameDataZipUpload = multer({
+  dest: "uploads/",
+  limits: { fileSize: 50 * 1000 * 1000 /* 50mb */ },
+})

@@ -15,6 +15,7 @@ import {
   canViewV2DebugInternals,
   filterV2DebugFromOpenApiSpec,
 } from "./util/openapi-debug-visibility.js"
+import { gameDataZipUpload } from "../v1/util/upload.js"
 
 const __filename = fileURLToPath(import.meta.url)
 const __dirname = dirname(__filename)
@@ -63,6 +64,14 @@ apiV2Router.use(
 // This will be populated after running 'npm run tsoa:routes'
 // Import and register routes like this:
 import { RegisterRoutes } from "./generated/routes.js"
+
+// Register file upload middleware for admin import endpoint BEFORE TSOA routes
+// This allows the controller to access req.file
+apiV2Router.post(
+  "/admin/import-game-data",
+  gameDataZipUpload.single("file"),
+)
+
 RegisterRoutes(apiV2Router)
 
 // Apply TSOA error handler middleware

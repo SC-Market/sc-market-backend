@@ -129,6 +129,38 @@ function parseItems(): any[] {
   const files = findJsonFiles(base)
   const items: any[] = []
 
+  // First pass: build ammo lookup map
+  const ammoMap = new Map<string, any>()
+  for (const f of files) {
+    try {
+      const data = readJson(f)
+      const rv = data._RecordValue_
+      const comps: any[] = rv?.Components || []
+      
+      for (const comp of comps) {
+        if (!comp) continue
+        if (comp._Type_ === "SAmmoContainerComponentParams") {
+          const ammoParams = comp.ammoParamsRecord
+          if (ammoParams) {
+            const ammoId = path.basename(f, ".json")
+            ammoMap.set(ammoId, {
+              damage: ammoParams.damage ?? null,
+              speed: ammoParams.speed ?? null,
+              lifetime: ammoParams.lifetime ?? null,
+              impactDamage: ammoParams.impactDamage ?? null,
+              energyDamage: ammoParams.energyDamage ?? null,
+              physicalDamage: ammoParams.physicalDamage ?? null,
+              distortionDamage: ammoParams.distortionDamage ?? null,
+            })
+          }
+        }
+      }
+    } catch {}
+  }
+
+  console.log(`  Built ammo lookup map with ${ammoMap.size} entries`)
+
+  // Second pass: parse items with ammo data
   for (const f of files) {
     try {
       const data = readJson(f)
@@ -145,6 +177,7 @@ function parseItems(): any[] {
       let grade: number | null = null
       let manufacturer: string | null = null
       let tags: string | null = null
+      const attributes: Record<string, any> = {}
 
       for (const comp of comps) {
         if (!comp) continue
@@ -166,6 +199,131 @@ function parseItems(): any[] {
           } else if (mfr && typeof mfr === "object") {
             manufacturer = refName(mfr)?.replace("scitemmanufacturer.", "") || null
           }
+        } else if (t === "SHealthComponentParams") {
+          attributes.health = comp.Health ?? null
+          attributes.healthMax = comp.Health ?? null
+        } else if (t === "SCItemShieldGeneratorParams") {
+          attributes.shieldMaxHP = comp.MaxShieldHealth ?? null
+          attributes.shieldRegen = comp.MaxShieldRegen ?? null
+          attributes.shieldDownedDelay = comp.DownedRegenDelay ?? null
+          attributes.shieldDownedRegen = comp.DamagedRegenDelay ?? null
+          attributes.shieldAbsorption = comp.AbsorptionMax ?? null
+        } else if (t === "SCItemWeaponComponentParams") {
+          attributes.ammoRef = comp.ammoContainerRecord ? path.basename(comp.ammoContainerRecord, ".json") : null
+          // Extract fire rate and fire modes from fireActions
+          const fireActions = comp.fireActions || []
+          if (fireActions.length > 0) {
+            attributes.fireRate = fireActions[0].fireRate ?? null
+            attributes.fireModes = fireActions.map((a: any) => a.name).filter(Boolean)
+          }
+        } else if (t === "SAmmoContainerComponentParams") {
+          attributes.magazineSize = comp.maxAmmoCount ?? null
+          // Follow ammo params ref for damage/speed
+          const ammoRef = comp.ammoParamsRecord
+          if (ammoRef && typeof ammoRef === "string") {
+            try {
+              const ammoPath = path.resolve(path.dirname(f), ammoRef.replace("file://./", ""))
+              if (fs.existsSync(ammoPath)) {
+                const ammoData = readJson(ammoPath)._RecordValue_
+                attributes.ammoSpeed = ammoData.speed ?? null
+                attributes.ammoLifetime = ammoData.lifetime ?? null
+                const dmg = ammoData.projectileParams?.damage
+                if (dmg) {
+                  attributes.damagePhysical = dmg.DamagePhysical || null
+                  attributes.damageEnergy = dmg.DamageEnergy || null
+                  attributes.damageDistortion = dmg.DamageDistortion || null
+                  attributes.damageThermal = dmg.DamageThermal || null
+                }
+              }
+            } catch {}
+          }
+        } else if (t === "SCItemSuitArmorParams") {
+          const drRef = comp.damageResistance
+          if (drRef && typeof drRef === "string") {
+            const drName = path.basename(drRef, ".json")
+            attributes.armorClass = drName
+            try {
+              const drPath = path.join(RECORDS_DIR, "damage", drName + ".json")
+              if (fs.existsSync(drPath)) {
+                const drData = readJson(drPath)._RecordValue_?.damageResistance
+                if (drData) {
+                  attributes.damageReduction = drData.PhysicalResistance?.Multiplier ?? null
+                  attributes.energyReduction = drData.EnergyResistance?.Multiplier ?? null
+                  attributes.thermalReduction = drData.ThermalResistance?.Multiplier ?? null
+                  attributes.biochemReduction = drData.BiochemicalResistance?.Multiplier ?? null
+                  attributes.stunReduction = drData.StunResistance?.Multiplier ?? null
+                }
+              }
+            } catch {}
+          }
+        } else if (t === "SCItemInventoryContainerComponentParams") {
+          const containerRef = comp.containerParams
+          if (containerRef && typeof containerRef === "string") {
+            try {
+              const cPath = path.resolve(path.dirname(f), containerRef.replace("file://./", ""))
+              if (fs.existsSync(cPath)) {
+                const cData = readJson(cPath)._RecordValue_
+                attributes.capacity = cData.inventoryType?.capacity?.microSCU ?? null
+              }
+            } catch {}
+          }
+        } else if (t === "SCItemClothingParams") {
+          const tempRes = comp.TemperatureResistance
+          if (tempRes) {
+            attributes.tempMin = tempRes.MinResistance ?? null
+            attributes.tempMax = tempRes.MaxResistance ?? null
+          }
+          const radRes = comp.RadiationResistance
+          if (radRes) {
+            attributes.radiationCapacity = radRes.MaximumRadiationCapacity ?? null
+            attributes.radiationDissipation = radRes.RadiationDissipationRate ?? null
+          }
+        } else if (t === "SItemPortContainerComponentParams") {
+          const ports = comp.Ports || []
+          const weaponPorts = ports.filter((p: any) => {
+            const name = (p?.Name || "").toLowerCase()
+            return name.includes("weapon") || name.includes("optics") || name.includes("barrel") || name.includes("underbarrel")
+          })
+          if (weaponPorts.length > 0) {
+            attributes.ports = weaponPorts.map((p: any) => ({
+              name: p.Name,
+              minSize: p.MinSize,
+              maxSize: p.MaxSize,
+              types: p.Types || [],
+            }))
+          }
+        } else if (t === "SDistortionParams") {
+          attributes.distortionMax = comp.Maximum ?? null
+          attributes.distortionDecayRate = comp.DecayRate ?? null
+          attributes.distortionRecoveryTime = comp.RecoveryTime ?? null
+          attributes.distortionOverloadRatio = comp.OverloadRatio ?? null
+        } else if (t === "SCItemQuantumDriveParams") {
+          attributes.qdSpoolTime = comp.spoolUpTime ?? null
+          attributes.qdSpeed = comp.driveSpeed ?? null
+          attributes.qdFuelRate = comp.quantumFuelRequirement ?? null
+          attributes.qdCooldownTime = comp.cooldownTime ?? null
+          attributes.qdStage1AccelRate = comp.stage1AccelerationRate ?? null
+          attributes.qdStage2AccelRate = comp.stage2AccelerationRate ?? null
+        } else if (t === "SCItemPowerPlantParams" || t === "ItemResourceComponentParams") {
+          // Power plants and resource components (coolers)
+          attributes.powerOutput = comp.PowerOutput ?? comp.powerOutput ?? null
+          attributes.powerDraw = comp.PowerDraw ?? comp.powerDraw ?? null
+          attributes.coolingRate = comp.CoolingRate ?? comp.coolingRate ?? null
+          attributes.thermalEnergyBase = comp.ThermalEnergyBase ?? null
+          attributes.thermalEnergyDraw = comp.ThermalEnergyDraw ?? null
+        } else if (t === "SCItemArmorParams") {
+          // Armor stats
+          attributes.damageReduction = comp.damageReduction ?? null
+          attributes.signalReduction = comp.signalReduction ?? null
+          attributes.tempMin = comp.temperatureMin ?? null
+          attributes.tempMax = comp.temperatureMax ?? null
+        } else if (t === "SCItemMiningModuleParams") {
+          // Mining element stats
+          attributes.instability = comp.instability ?? null
+          attributes.resistance = comp.resistance ?? null
+          attributes.optimalChargeWindowSize = comp.optimalChargeWindowSize ?? null
+          attributes.optimalChargeRate = comp.optimalChargeRate ?? null
+          attributes.shatterDamage = comp.shatterDamage ?? null
         }
       }
 
@@ -188,6 +346,31 @@ function parseItems(): any[] {
         finalName = path.basename(f, ".json").replace(/[_-]/g, " ").replace(/\b\w/g, (c) => c.toUpperCase()).trim()
       }
 
+      // --- Derived attributes ---
+      // Color: extract from item name
+      const COLOR_WORDS = [
+        "Black", "White", "Red", "Blue", "Green", "Grey", "Gray", "Orange",
+        "Yellow", "Purple", "Pink", "Brown", "Tan", "Beige", "Olive", "Navy",
+        "Teal", "Cyan", "Gold", "Silver", "Bronze", "Slate", "Charcoal",
+        "Crimson", "Maroon", "Ivory", "Sand", "Cobalt", "Sage", "Rust",
+        "Marigold", "Coral", "Lavender", "Indigo", "Khaki", "Camo",
+      ]
+      const nameLower = finalName.toLowerCase()
+      const colors = COLOR_WORDS.filter((c) => nameLower.includes(c.toLowerCase()))
+      if (colors.length > 0) attributes.color = colors.join(", ")
+
+      // Effective range: ammo speed × lifetime
+      if (attributes.ammoSpeed && attributes.ammoLifetime) {
+        attributes.effectiveRange = Math.round(attributes.ammoSpeed * attributes.ammoLifetime)
+      }
+
+      // DPS: damage × fire rate / 60
+      const totalDmgPerShot = (attributes.damagePhysical || 0) + (attributes.damageEnergy || 0)
+      if (totalDmgPerShot > 0 && attributes.fireRate) {
+        attributes.dps = Math.round((totalDmgPerShot * attributes.fireRate / 60) * 100) / 100
+        attributes.alphaDamage = totalDmgPerShot
+      }
+
       items.push({
         id: data._RecordId_,
         name: finalName,
@@ -201,6 +384,7 @@ function parseItems(): any[] {
         tags,
         thumbnail,
         file: path.basename(f, ".json"),
+        attributes: Object.keys(attributes).length > 0 ? attributes : undefined,
       })
     } catch {}
   }
@@ -375,7 +559,126 @@ function parseResources(): any[] {
   return resources
 }
 
-// --- Step 7: Parse Starmap ---
+// --- Step 7: Parse Ships ---
+function parseShips(): any[] {
+  console.log("  Parsing ships...")
+  const dir = path.join(RECORDS_DIR, "entities/spaceships/ships")
+  if (!fs.existsSync(dir)) {
+    console.log("  Ships directory not found, skipping")
+    return []
+  }
+
+  const files = findJsonFiles(dir)
+  const ships: any[] = []
+
+  for (const f of files) {
+    try {
+      const data = readJson(f)
+      const rv = data._RecordValue_
+      if (!rv) continue
+
+      const comps: any[] = rv.Components || []
+      let manufacturer: string | null = null
+      let focus: string | null = null
+      let description: string | null = null
+      let movementClass: string | null = null
+      const defaultLoadout: any[] = []
+
+      for (const comp of comps) {
+        if (!comp) continue
+        const t = comp._Type_
+
+        if (t === "SAttachableComponentParams") {
+          const ad = comp.AttachDef || {}
+          const mfr = ad.Manufacturer
+          if (typeof mfr === "string" && mfr.includes("/")) {
+            manufacturer = path.basename(mfr, ".json").replace("scitemmanufacturer.", "")
+          } else if (mfr && typeof mfr === "object") {
+            manufacturer = refName(mfr)?.replace("scitemmanufacturer.", "") || null
+          }
+        } else if (t === "SCItemVehicleParams") {
+          focus = comp.vehicleFocus || null
+          description = loc(comp.vehicleDescription) || comp.vehicleDescription || null
+          movementClass = comp.movementClass || null
+        } else if (t === "SItemPortContainerComponentParams") {
+          // Extract default loadout from ports
+          const ports = comp.Ports || []
+          for (const port of ports) {
+            if (port.InstalledItem) {
+              const itemRef = typeof port.InstalledItem === "string" 
+                ? path.basename(port.InstalledItem, ".json")
+                : refName(port.InstalledItem)
+              
+              if (itemRef) {
+                defaultLoadout.push({
+                  port: port.Name,
+                  item: itemRef,
+                  size: port.MaxSize || port.MinSize,
+                })
+              }
+            }
+          }
+        }
+      }
+
+      const shipName = loc(rv.name) || rv.name || path.basename(f, ".json")
+      
+      ships.push({
+        id: data._RecordId_,
+        name: shipName,
+        nameKey: rv.name,
+        manufacturer,
+        focus,
+        description,
+        movementClass,
+        defaultLoadout: defaultLoadout.length > 0 ? defaultLoadout : null,
+        file: path.basename(f, ".json"),
+      })
+    } catch {}
+  }
+
+  console.log(`  Ships: ${ships.length}`)
+  return ships
+}
+
+// --- Step 8: Parse Manufacturers ---
+function parseManufacturers(): any[] {
+  console.log("  Parsing manufacturers...")
+  const dir = path.join(RECORDS_DIR, "entities/scitem/manufacturers")
+  if (!fs.existsSync(dir)) {
+    console.log("  Manufacturers directory not found, skipping")
+    return []
+  }
+
+  const files = findJsonFiles(dir)
+  const manufacturers: any[] = []
+
+  for (const f of files) {
+    try {
+      const data = readJson(f)
+      const rv = data._RecordValue_
+      if (!rv) continue
+
+      const code = path.basename(f, ".json").replace("scitemmanufacturer.", "")
+      const name = loc(rv.name) || rv.name || code
+      const description = loc(rv.description) || rv.description || null
+
+      manufacturers.push({
+        id: data._RecordId_,
+        code,
+        name,
+        nameKey: rv.name,
+        description,
+        descriptionKey: rv.description,
+      })
+    } catch {}
+  }
+
+  console.log(`  Manufacturers: ${manufacturers.length}`)
+  return manufacturers
+}
+
+// --- Step 9: Parse Starmap ---
 function parseStarmap(): any[] {
   // Load type definitions
   const typesFile = path.join(RECORDS_DIR, "starmap/starmapobjecttypes.json")
@@ -427,12 +730,14 @@ function parseStarmap(): any[] {
   return locations
 }
 
-// --- Step 8: Write output and zip ---
+// --- Step 10: Write output and zip ---
 console.log("\nParsing game data...")
 const items = parseItems()
 const blueprints = parseBlueprints()
 const missions = parseMissions()
 const resources = parseResources()
+const ships = parseShips()
+const manufacturers = parseManufacturers()
 const starmap = parseStarmap()
 
 fs.mkdirSync(OUTPUT_DIR, { recursive: true })
@@ -445,12 +750,16 @@ const outputData = {
     blueprints: blueprints.length,
     missions: missions.length,
     resources: resources.length,
+    ships: ships.length,
+    manufacturers: manufacturers.length,
     locations: starmap.length,
   },
   items,
   blueprints,
   missions,
   resources,
+  ships,
+  manufacturers,
   starmap,
 }
 
@@ -462,4 +771,5 @@ execSync(`cd "${OUTPUT_DIR}" && zip -j "${zipPath}" game-data.json`, { stdio: "i
 
 const zipSize = (fs.statSync(zipPath).size / 1024).toFixed(0)
 console.log(`\nDone! Output: ${zipPath} (${zipSize} KB)`)
-console.log(`  ${items.length} items, ${blueprints.length} blueprints, ${missions.length} missions, ${resources.length} resources, ${starmap.length} locations`)
+console.log(`  ${items.length} items, ${blueprints.length} blueprints, ${missions.length} missions`)
+console.log(`  ${resources.length} resources, ${ships.length} ships, ${manufacturers.length} manufacturers, ${starmap.length} locations`)

@@ -5025,6 +5025,197 @@
 				"type": "object",
 				"additionalProperties": false
 			},
+			"MaterialAvailability": {
+				"description": "Material availability information",
+				"properties": {
+					"game_item_id": {
+						"type": "string",
+						"description": "Game item UUID"
+					},
+					"material_name": {
+						"type": "string",
+						"description": "Material name"
+					},
+					"quantity_required": {
+						"type": "number",
+						"format": "double",
+						"description": "Required quantity"
+					},
+					"quantity_available": {
+						"type": "number",
+						"format": "double",
+						"description": "Available quantity in stock"
+					},
+					"is_sufficient": {
+						"type": "boolean",
+						"description": "Is sufficient"
+					},
+					"quality_tier_min": {
+						"type": "number",
+						"format": "double",
+						"description": "Quality tier range available"
+					},
+					"quality_tier_max": {
+						"type": "number",
+						"format": "double"
+					},
+					"stock_lot_ids": {
+						"items": {
+							"type": "string"
+						},
+						"type": "array",
+						"description": "Stock lot IDs containing this material"
+					}
+				},
+				"required": [
+					"game_item_id",
+					"material_name",
+					"quantity_required",
+					"quantity_available",
+					"is_sufficient",
+					"stock_lot_ids"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
+			"CraftableItem": {
+				"description": "Craftable item based on owned blueprints and stock",
+				"properties": {
+					"blueprint_id": {
+						"type": "string",
+						"description": "Blueprint UUID"
+					},
+					"blueprint_name": {
+						"type": "string",
+						"description": "Blueprint name"
+					},
+					"output_item_name": {
+						"type": "string",
+						"description": "Output item name"
+					},
+					"output_item_icon": {
+						"type": "string",
+						"description": "Output item icon"
+					},
+					"item_category": {
+						"type": "string",
+						"description": "Item category"
+					},
+					"rarity": {
+						"type": "string",
+						"description": "Rarity"
+					},
+					"tier": {
+						"type": "number",
+						"format": "double",
+						"description": "Tier"
+					},
+					"crafting_time_seconds": {
+						"type": "number",
+						"format": "double",
+						"description": "Crafting time in seconds"
+					},
+					"can_craft": {
+						"type": "boolean",
+						"description": "Can craft with current stock"
+					},
+					"max_craftable_quantity": {
+						"type": "number",
+						"format": "double",
+						"description": "Maximum craftable quantity"
+					},
+					"materials": {
+						"items": {
+							"$ref": "#/components/schemas/MaterialAvailability"
+						},
+						"type": "array",
+						"description": "Material availability details"
+					},
+					"missing_materials_count": {
+						"type": "number",
+						"format": "double",
+						"description": "Missing materials count"
+					},
+					"estimated_cost_per_craft": {
+						"type": "number",
+						"format": "double",
+						"description": "Estimated cost per craft"
+					}
+				},
+				"required": [
+					"blueprint_id",
+					"blueprint_name",
+					"output_item_name",
+					"can_craft",
+					"max_craftable_quantity",
+					"materials",
+					"missing_materials_count"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
+			"GetCraftableItemsResponse": {
+				"description": "Response for getting craftable items from stock",
+				"properties": {
+					"craftable_items": {
+						"items": {
+							"$ref": "#/components/schemas/CraftableItem"
+						},
+						"type": "array",
+						"description": "Craftable items"
+					},
+					"total": {
+						"type": "number",
+						"format": "double",
+						"description": "Total count"
+					},
+					"page": {
+						"type": "number",
+						"format": "double",
+						"description": "Current page"
+					},
+					"page_size": {
+						"type": "number",
+						"format": "double",
+						"description": "Page size"
+					},
+					"summary": {
+						"properties": {
+							"items_missing_materials": {
+								"type": "number",
+								"format": "double",
+								"description": "Items missing materials"
+							},
+							"items_craftable_now": {
+								"type": "number",
+								"format": "double",
+								"description": "Items that can be crafted now"
+							},
+							"total_blueprints_owned": {
+								"type": "number",
+								"format": "double",
+								"description": "Total blueprints owned"
+							}
+						},
+						"required": [
+							"items_missing_materials",
+							"items_craftable_now",
+							"total_blueprints_owned"
+						],
+						"type": "object",
+						"description": "Summary statistics"
+					}
+				},
+				"required": [
+					"craftable_items",
+					"total",
+					"page",
+					"page_size",
+					"summary"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
 			"BlueprintStatistics": {
 				"description": "Statistics for a specific blueprint",
 				"properties": {
@@ -9940,6 +10131,103 @@
 						"description": "Optional blueprint filter",
 						"in": "query",
 						"name": "blueprint_id",
+						"required": false,
+						"schema": {
+							"type": "string"
+						}
+					},
+					{
+						"description": "Page number (default: 1)",
+						"in": "query",
+						"name": "page",
+						"required": false,
+						"schema": {
+							"default": 1,
+							"format": "double",
+							"type": "number"
+						}
+					},
+					{
+						"description": "Results per page (default: 20, max: 100)",
+						"in": "query",
+						"name": "page_size",
+						"required": false,
+						"schema": {
+							"default": 20,
+							"format": "double",
+							"type": "number"
+						}
+					}
+				]
+			}
+		},
+		"/api/v2/game-data/crafting/craftable-items": {
+			"get": {
+				"operationId": "GetCraftableItems",
+				"responses": {
+					"200": {
+						"description": "Craftable items with material availability",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/GetCraftableItemsResponse"
+								}
+							}
+						}
+					}
+				},
+				"description": "Get craftable items based on owned blueprints and stock\n\nReturns items that can be crafted based on user's owned blueprints\nand available materials in their stock lots. Shows material availability\nand maximum craftable quantities.\n\nRequirements:\n- 10.1-10.6: Blueprint Inventory Tracking\n- 11.1-11.6: Organization Blueprint Tracking\n- 21.1-21.6: Material Inventory Integration\n- 22.1-22.6: Crafting Cost Estimation",
+				"summary": "Get craftable items from stock",
+				"tags": [
+					"Game Data - Crafting"
+				],
+				"security": [
+					{
+						"discord_oauth": []
+					}
+				],
+				"parameters": [
+					{
+						"description": "Filter by item category",
+						"in": "query",
+						"name": "item_category",
+						"required": false,
+						"schema": {
+							"type": "string"
+						}
+					},
+					{
+						"description": "Filter by rarity",
+						"in": "query",
+						"name": "rarity",
+						"required": false,
+						"schema": {
+							"type": "string"
+						}
+					},
+					{
+						"description": "Filter by tier (1-5)",
+						"in": "query",
+						"name": "tier",
+						"required": false,
+						"schema": {
+							"format": "double",
+							"type": "number"
+						}
+					},
+					{
+						"description": "Show only items that can be crafted with current stock",
+						"in": "query",
+						"name": "craftable_only",
+						"required": false,
+						"schema": {
+							"type": "boolean"
+						}
+					},
+					{
+						"description": "Game version ID (defaults to active LIVE version)",
+						"in": "query",
+						"name": "version_id",
 						"required": false,
 						"schema": {
 							"type": "string"

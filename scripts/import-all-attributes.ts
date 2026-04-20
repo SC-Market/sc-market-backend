@@ -3,6 +3,9 @@
  * Script to import attributes for game items from UEXCorp
  * Supports incremental updates with rate limiting
  *
+ * NOTE: This script currently relies on UEXCorp API for size, grade, and manufacturer attributes.
+ * Future versions will migrate these attributes to P4K-based extraction for better accuracy.
+ *
  * Usage:
  *   npm run import-attributes              # Fetch only outdated items (>7 days)
  *   npm run import-attributes -- --fetch-all  # Fetch all items
@@ -163,7 +166,11 @@ async function importAllAttributes() {
 
         const records: Array<{ attribute_name: string; value: string }> = []
 
-        // Basic attributes
+        // Basic attributes from UEX
+        // TODO: Migrate these to P4K-based extraction for better accuracy
+        // - size: Currently from UEX, should come from P4K item definitions
+        // - grade/quality: Currently from UEX, should come from P4K item stats
+        // - manufacturer: Currently from UEX, should come from P4K item metadata
         if (uexItem.size)
           records.push({ attribute_name: "size", value: uexItem.size })
         if (uexItem.color)

@@ -69,11 +69,64 @@ The scripts use the following configuration (from docker-compose.yml):
 
 If your database uses different credentials, update the variables at the top of each script.
 
+## Game Data Import Scripts
+
+### ⚠️ DEPRECATED: UEX and CStone Import Scripts
+
+**The following scripts are deprecated and will be removed in a future version:**
+
+- `import-items-from-uex.ts` - **DEPRECATED**
+- `import-items-from-cstone.ts` - **DEPRECATED**
+
+**Reason for deprecation:**
+- The new P4K-based extraction system provides more accurate and complete game data
+- Eliminates dependency on third-party APIs (UEXCorp and CStone)
+- Provides better attribute coverage and data consistency
+- Directly extracts data from game files for authoritative information
+
+**Migration path:**
+Use the new game data import system instead:
+```bash
+# Via API endpoint (recommended)
+POST /api/v2/admin/game-data/import
+
+# Or via the admin import service
+# See docs/task-8.3-admin-import-endpoint-implementation.md
+```
+
+The deprecated scripts will continue to work but will display deprecation warnings. They are maintained only for backward compatibility and emergency fallback scenarios.
+
+### import-items-from-uex.ts (DEPRECATED)
+
+**⚠️ This script is deprecated. Use P4K-based extraction instead.**
+
+Imports game items from UEXCorp API.
+
+**Usage:**
+```bash
+npm run import-uex-items           # Normal mode
+npm run import-uex-items -- --dry  # Dry run mode
+```
+
+### import-items-from-cstone.ts (DEPRECATED)
+
+**⚠️ This script is deprecated. Use P4K-based extraction instead.**
+
+Imports game items from CStone API.
+
+**Usage:**
+```bash
+npm run import-cstone-items           # Normal mode
+npm run import-cstone-items -- --dry  # Dry run mode
+```
+
 ## Attribute Import Script
 
 ### import-all-attributes.ts
 
 Imports game item attributes from external data sources (finder.cstone.space and UEXCorp.space) for all existing game items in the database.
+
+**Note:** This script still relies on UEX for some attributes (size, grade, manufacturer). Future versions will migrate these to P4K-based extraction.
 
 **Usage:**
 
