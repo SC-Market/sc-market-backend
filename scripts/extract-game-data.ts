@@ -92,6 +92,18 @@ function loc(key: string | null | undefined): string | null {
   return resolved
 }
 
+/** Convert ~mission(Variable|SubField) placeholders to [VARIABLE] and clean markup */
+function cleanMissionText(text: string | null): string | null {
+  if (!text) return null
+  return text
+    .replace(/~mission\(([^|)]+)(?:\|[^)]*)?\)/g, (_, key: string) => {
+      const label = key.replace(/([a-z])([A-Z])/g, "$1 $2").replace(/_/g, " ").trim()
+      return `[${label.toUpperCase()}]`
+    })
+    .replace(/\\n/g, "\n")
+    .replace(/<EM\d*>/g, "")
+}
+
 // --- Helpers ---
 function readJson(filePath: string): any {
   return JSON.parse(fs.readFileSync(filePath, "utf-8"))
@@ -517,9 +529,9 @@ function parseMissions(): any[] {
       missions.push({
         id: data._RecordId_,
         name: data._RecordName_?.split(".")?.slice(1).join(".") || "",
-        title: loc(v.title) || v.title,
+        title: cleanMissionText(loc(v.title) || v.title),
         titleKey: v.title,
-        description: loc(v.description) || v.description,
+        description: cleanMissionText(loc(v.description) || v.description),
         missionGiver: loc(v.missionGiver) || v.missionGiver,
         missionGiverRecord: v.missionGiverRecord ? path.basename(v.missionGiverRecord, ".json") : null,
         type: refName(v.type),
@@ -546,6 +558,10 @@ function parseMissions(): any[] {
         personalCooldownTime: v.hasPersonalCooldown ? v.personalCooldownTime : null,
         // Deadline
         deadline: v.missionDeadline?.missionCompletionTime || null,
+        // Instance info
+        respawnTime: v.respawnTime || null,
+        instanceLifeTime: v.instanceLifeTime || null,
+        buyInAmount: v.missionBuyInAmount || null,
       })
     } catch {}
   }
