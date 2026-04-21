@@ -72,6 +72,36 @@ apiV2Router.use(
   gameDataZipUpload.single("file"),
 )
 
+// DEV ONLY: unauthenticated import endpoint for testing — REMOVE BEFORE PRODUCTION
+apiV2Router.post("/dev/import-game-data", gameDataZipUpload.single("file"), async (req, res) => {
+  const { gameDataImportService } = await import("../../services/game-data/import.service.js")
+  const { getKnex } = await import("../../clients/database/knex-db.js")
+  const fs = await import("fs")
+  const path = await import("path")
+  const { execSync } = await import("child_process")
+
+  const file = (req as express.Request & { file?: Express.Multer.File }).file
+  if (!file) return res.status(400).json({ error: "No file" })
+
+  const tmpDir = path.join("/tmp", `dev-import-${Date.now()}`)
+  fs.mkdirSync(tmpDir, { recursive: true })
+  try {
+    execSync(`unzip -o "${file.path}" -d "${tmpDir}"`, { stdio: "pipe", timeout: 30000 })
+    const jsonPath = path.join(tmpDir, "game-data.json")
+    const gameData = JSON.parse(fs.readFileSync(jsonPath, "utf-8"))
+    if (req.body?.gameVersion) gameData.gameVersion = req.body.gameVersion
+    if (req.body?.gameChannel) gameData.gameChannel = req.body.gameChannel
+    const stats = await gameDataImportService.importGameData(getKnex(), gameData)
+    res.json({ success: true, stats })
+  } catch (err: unknown) {
+    const msg = err instanceof Error ? err.message : String(err)
+    res.status(500).json({ error: msg })
+  } finally {
+    try { fs.rmSync(tmpDir, { recursive: true, force: true }) } catch {}
+    try { if (file.path) fs.unlinkSync(file.path) } catch {}
+  }
+})
+
 // Register static routes that conflict with TSOA parameterized routes
 // TSOA registers /:param before /static, so we need to handle these manually
 import { BlueprintsController } from "./game-data/blueprints/BlueprintsController.js"
