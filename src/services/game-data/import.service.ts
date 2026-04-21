@@ -286,7 +286,7 @@ interface DBItem {
 interface MatchResult {
   dbId: string
   p4k: P4KItem
-  matchType: "exact" | "cstone_uuid" | "fuzzy"
+  matchType: "exact" | "cstone_uuid" | "fuzzy" | "normalized"
 }
 
 export interface ImportStats {
@@ -540,7 +540,7 @@ export class GameDataImportService {
 
       for (const p4k of validItems) {
         let dbItem: DBItem | undefined
-        let matchType: "exact" | "cstone_uuid" | "fuzzy" | undefined
+        let matchType: "exact" | "cstone_uuid" | "fuzzy" | "normalized" | undefined
 
         // Skip if already imported
         if (dbByP4kId.has(p4k.id)) {
