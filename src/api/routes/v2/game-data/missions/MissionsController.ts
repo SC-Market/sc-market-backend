@@ -19,6 +19,7 @@ import {
   MissionRewardPool,
   MissionBlueprintReward,
   BlueprintDetail,
+  ReputationRank,
 } from "./missions.types.js"
 import logger from "../../../../../logger/logger.js"
 
@@ -332,6 +333,9 @@ export class MissionsController extends BaseController {
           : undefined,
         is_chain_starter: row.is_chain_starter || false,
         is_shareable: row.is_shareable || false,
+        reputation_reward: row.reputation_reward || undefined,
+        reward_scope: row.reward_scope || undefined,
+        mission_giver_org: row.mission_giver_org || undefined,
       }))
 
       return {
@@ -1187,5 +1191,43 @@ export class MissionsController extends BaseController {
       created_at: row.created_at.toISOString(),
       updated_at: row.updated_at.toISOString(),
     }
+  }
+
+  /**
+   * Get reputation rank thresholds for a scope (e.g., headhunter, salvage)
+   * @param scope_code The reputation scope code
+   * @summary Get reputation ranks
+   */
+  @Get("reputation-ranks")
+  public async getReputationRanks(
+    @Query() scope_code?: string,
+  ): Promise<{ ranks: ReputationRank[]; scopes: string[] }> {
+    const knex = getKnex()
+
+    // Get all unique scopes
+    const scopeRows = await knex("reputation_ranks")
+      .distinct("scope_code", "scope_display_name")
+      .orderBy("scope_display_name")
+
+    const scopes = scopeRows.map((r: any) => r.scope_code)
+
+    // Get ranks for the requested scope (or all if not specified)
+    let query = knex("reputation_ranks").orderBy("scope_code").orderBy("rank_index")
+    if (scope_code) {
+      query = query.where("scope_code", scope_code)
+    }
+
+    const rows = await query
+    const ranks: ReputationRank[] = rows.map((r: any) => ({
+      scope_code: r.scope_code,
+      scope_display_name: r.scope_display_name,
+      standing_code: r.standing_code,
+      standing_display_name: r.standing_display_name,
+      threshold: r.threshold,
+      ceiling: r.ceiling,
+      rank_index: r.rank_index,
+    }))
+
+    return { ranks, scopes }
   }
 }

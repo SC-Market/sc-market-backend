@@ -126,7 +126,17 @@ export interface MissionSearchResult {
   is_chain_starter: boolean
 
   /** Is shareable mission */
+  /** Is shareable mission */
   is_shareable: boolean
+
+  /** Reputation XP reward */
+  reputation_reward?: number
+
+  /** Reputation scope (e.g., headhunter, salvage) */
+  reward_scope?: string
+
+  /** Mission giver organization */
+  mission_giver_org?: string
 }
 
 /**
@@ -345,4 +355,17 @@ export interface BlueprintDetail {
 
   /** Is guaranteed reward */
   is_guaranteed: boolean
+}
+
+/**
+ * Reputation rank threshold for a career scope
+ */
+export interface ReputationRank {
+  scope_code: string
+  scope_display_name: string
+  standing_code: string
+  standing_display_name: string
+  threshold: number
+  ceiling: number
+  rank_index: number
 }
