@@ -6860,6 +6860,34 @@
 				"type": "object",
 				"additionalProperties": false
 			},
+			"ImportErrorResponse": {
+				"description": "Error response for import failures",
+				"properties": {
+					"success": {
+						"type": "boolean",
+						"enum": [
+							false
+						],
+						"nullable": false
+					},
+					"error": {
+						"type": "string"
+					},
+					"details": {
+						"type": "string"
+					},
+					"timestamp": {
+						"type": "string"
+					}
+				},
+				"required": [
+					"success",
+					"error",
+					"timestamp"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
 			"ImportGameDataResponse": {
 				"description": "Import summary returned by game data import endpoint",
 				"properties": {
@@ -6977,30 +7005,58 @@
 				"type": "object",
 				"additionalProperties": false
 			},
-			"ImportErrorResponse": {
-				"description": "Error response for import failures",
+			"GameDataImportJob": {
 				"properties": {
-					"success": {
-						"type": "boolean",
+					"id": {
+						"type": "string"
+					},
+					"status": {
+						"type": "string",
 						"enum": [
-							false
+							"validating",
+							"extracting",
+							"importing",
+							"completed",
+							"failed"
+						]
+					},
+					"startedAt": {
+						"type": "string"
+					},
+					"completedAt": {
+						"type": "string",
+						"nullable": true
+					},
+					"progress": {
+						"type": "string",
+						"nullable": true
+					},
+					"result": {
+						"allOf": [
+							{
+								"$ref": "#/components/schemas/ImportGameDataResponse"
+							}
 						],
-						"nullable": false
+						"nullable": true
 					},
 					"error": {
-						"type": "string"
+						"type": "string",
+						"nullable": true
 					},
 					"details": {
-						"type": "string"
-					},
-					"timestamp": {
-						"type": "string"
+						"type": "string",
+						"nullable": true
 					}
 				},
 				"required": [
-					"success",
+					"id",
+					"status",
+					"startedAt",
+					"completedAt",
+					"progress",
+					"result",
 					"error",
-					"timestamp"
+					"details"
 				],
 				"type": "object",
 				"additionalProperties": false
@@ -12159,13 +12215,21 @@
 				"operationId": "ImportGameData",
 				"responses": {
 					"200": {
-						"description": "Import summary with statistics",
+						"description": "Ok",
 						"content": {
 							"application/json": {
 								"schema": {
 									"anyOf": [
 										{
-											"$ref": "#/components/schemas/ImportGameDataResponse"
+											"properties": {
+												"job_id": {
+													"type": "string"
+												}
+											},
+											"required": [
+												"job_id"
+											],
+											"type": "object"
 										},
 										{
 											"$ref": "#/components/schemas/ImportErrorResponse"
@@ -12176,8 +12240,49 @@
 						}
 					}
 				},
-				"description": "Import game data from uploaded ZIP file\n\nAccepts a game-data.zip file upload, extracts the game-data.json,\nand runs the same import logic as the command-line script.\n\nThe import process:\n1. Validates ZIP file format\n2. Extracts game-data.json\n3. Matches P4K items to existing database items using:\n   - Exact name match (case-insensitive)\n   - CStone UUID match\n   - Fuzzy name match (Levenshtein distance ≤ 2)\n4. Updates matched items with P4K metadata\n5. Inserts new items not found in database\n6. Regenerates \"Full Set\" synthetic items from \"Core\" items\n7. Rebuilds full-text search indexes\n\nRequirements:\n- 4.1: Parse game data files to extract mission information\n- 4.2: Identify mission names, locations, and rewards\n- 4.3: Extract blueprint reward pools and probabilities\n- 4.4: Validate extracted data for completeness\n- 4.5: Log extraction errors with descriptive messages\n- 4.6: Support multiple game versions simultaneously",
-				"summary": "Import game data",
+				"description": "Upload game data ZIP and start async import job",
+				"summary": "Start game data import",
+				"tags": [
+					"Admin"
+				],
+				"security": [
+					{
+						"jwt": []
+					}
+				],
+				"parameters": []
+			}
+		},
+		"/admin/import-game-data/{jobId}": {
+			"get": {
+				"operationId": "GetImportJobStatus",
+				"responses": {
+					"200": {
+						"description": "Ok",
+						"content": {
+							"application/json": {
+								"schema": {
+									"properties": {
+										"job": {
+											"allOf": [
+												{
+													"$ref": "#/components/schemas/GameDataImportJob"
+												}
+											],
+											"nullable": true
+										}
+									},
+									"required": [
+										"job"
+									],
+									"type": "object"
+								}
+							}
+						}
+					}
+				},
+				"description": "Get game data import job status",
+				"summary": "Poll import job",
 				"tags": [
 					"Admin"
 				],
