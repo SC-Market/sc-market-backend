@@ -282,7 +282,7 @@ export class StockLotsV2Controller extends BaseController {
               user_id: row.owner_user_id,
               username: row.owner_username,
               display_name: row.owner_display_name,
-              avatar_url: await cdn.getFileLinkResource(row.owner_avatar),
+              avatar_url: (await cdn.getFileLinkResource(row.owner_avatar)) || undefined,
             }
           : null,
         listed: row.listed,
@@ -291,7 +291,7 @@ export class StockLotsV2Controller extends BaseController {
         crafted_at: row.crafted_at?.toISOString(),
         created_at: row.created_at.toISOString(),
         updated_at: row.updated_at.toISOString(),
-      }))
+      })))
 
       logger.info("Stock lots fetched successfully", {
         total,
@@ -510,7 +510,7 @@ export class StockLotsV2Controller extends BaseController {
               user_id: lotResult.owner_user_id,
               username: lotResult.owner_username,
               display_name: lotResult.owner_display_name,
-              avatar_url: lotResult.owner_avatar,
+              avatar_url: (await cdn.getFileLinkResource(lotResult.owner_avatar)) || undefined,
             }
           : null,
         listed: lotResult.listed,
@@ -830,7 +830,7 @@ export class StockLotsV2Controller extends BaseController {
         ? { location_id: row.location_id, name: row.location_name, is_preset: row.location_is_preset }
         : null,
       owner: row.owner_user_id
-        ? { user_id: row.owner_user_id, username: row.owner_username, display_name: row.owner_display_name, avatar_url: row.owner_avatar }
+        ? { user_id: row.owner_user_id, username: row.owner_username, display_name: row.owner_display_name, avatar_url: (await cdn.getFileLinkResource(row.owner_avatar)) || undefined }
         : null,
       listed: row.listed,
       notes: row.notes,
