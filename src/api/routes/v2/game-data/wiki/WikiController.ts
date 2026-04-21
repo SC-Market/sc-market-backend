@@ -87,6 +87,15 @@ export class WikiController extends BaseController {
           "gi.image_url",
           "gi.thumbnail_path",
           "gi.display_type",
+          knex.raw(`(
+            SELECT lp.url FROM listing_items li
+            JOIN listings l ON l.listing_id = li.listing_id AND l.status = 'active'
+            JOIN listing_photos lp ON lp.listing_id = l.listing_id
+            WHERE li.game_item_id = gi.id
+              AND lp.url IS NOT NULL AND lp.url != ''
+              AND lp.url != 'https://cdn.robertsspaceindustries.com/static/images/Temp/default-image.png'
+            ORDER BY lp.created_at DESC LIMIT 1
+          ) as listing_photo`),
         )
 
       // Apply text search filter
@@ -159,7 +168,7 @@ export class WikiController extends BaseController {
         size: row.size || undefined,
         grade: row.grade || undefined,
         manufacturer: row.manufacturer || undefined,
-        image_url: row.image_url || undefined,
+        image_url: row.image_url || row.listing_photo || undefined,
         thumbnail_path: row.thumbnail_path || undefined,
         display_type: row.display_type || undefined,
       }))
