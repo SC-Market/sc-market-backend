@@ -58,6 +58,7 @@ export class AdminController extends BaseController {
    * @returns Import summary with statistics
    */
   @Post("import-game-data")
+  @Security("jwt")
   public async importGameData(
     @Request() request: ExpressRequest,
   ): Promise<ImportGameDataResponse | ImportErrorResponse> {
