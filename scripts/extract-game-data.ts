@@ -126,7 +126,8 @@ function parseTime(t: any): number {
 function parseItems(): any[] {
   console.log("  Parsing items...")
   const base = path.join(RECORDS_DIR, "entities/scitem")
-  const files = findJsonFiles(base)
+  const commoditiesDir = path.join(RECORDS_DIR, "entities/commodities")
+  const files = [...findJsonFiles(base), ...findJsonFiles(commoditiesDir)]
   const items: any[] = []
 
   // First pass: build ammo lookup map
