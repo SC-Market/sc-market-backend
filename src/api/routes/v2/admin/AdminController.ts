@@ -75,7 +75,7 @@ export class AdminController extends BaseController {
       // ========================================================================
       // STEP 1: Validate file upload
       // ========================================================================
-      const file = (request as any).file as Express.Multer.File | undefined
+      const file = (request as Express.Request & { file?: Express.Multer.File }).file
 
       if (!file) {
         logger.warn("No file uploaded", { admin: adminUserId })
