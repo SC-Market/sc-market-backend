@@ -145,26 +145,28 @@ export interface P4KRefiningProcess {
   quality: string
 }
 
+export interface P4KBlueprintSlot {
+  type: string
+  name?: string
+  displayName?: string
+  count?: number
+  modifiers?: Array<{ property: string; startQuality: number; endQuality: number; modifierAtStart: number; modifierAtEnd: number }>
+  resource?: string
+  quantity_scu?: number
+  minQuality?: number
+  item?: string
+  quantity?: number
+  ingredients?: P4KBlueprintSlot[]
+}
+
 export interface P4KRawBlueprint {
   id: string
   name: string
   category: string | null
   craftedItem: string | null
   craftTimeSeconds: number
-  slots: Array<{
-    type: string
-    name?: string
-    displayName?: string
-    count?: number
-    modifiers?: Array<{ property: string; startQuality: number; endQuality: number; modifierAtStart: number; modifierAtEnd: number }>
-    resource?: string
-    quantity_scu?: number
-    minQuality?: number
-    item?: string
-    quantity?: number
-    ingredients?: Array<{ type: string; resource?: string; quantity_scu?: number; item?: string; quantity?: number; minQuality?: number }>
-  }>
-  optionalCosts: Array<Record<string, unknown>>
+  slots: P4KBlueprintSlot[]
+  optionalCosts: P4KBlueprintSlot[]
 }
 
 export interface P4KRawResource {
@@ -1305,7 +1307,7 @@ export class GameDataImportService {
         // Flatten nested slots into a flat ingredients array
         const ingredients: Array<{ itemId: string; quantity: number; minQuality?: number }> = []
 
-        const flattenSlots = (slots: P4KRawBlueprint["slots"]) => {
+        const flattenSlots = (slots: P4KBlueprintSlot[]) => {
           for (const slot of slots || []) {
             if (slot.type === "resource" && slot.resource) {
               ingredients.push({
