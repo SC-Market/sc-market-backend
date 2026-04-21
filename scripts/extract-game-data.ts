@@ -564,6 +564,13 @@ function parseMissions(): any[] {
         buyInAmount: v.missionBuyInAmount || null,
         // Tags
         tutorial: v.tutorial || false,
+        // Reputation requirements (min rank to accept)
+        reputationRequirements: v.reputationRequirements?.expression?.map((expr: Record<string, unknown>) => ({
+          faction: typeof expr.factionReputation === 'string' ? path.basename(expr.factionReputation, ".json") : refName(expr.factionReputation),
+          scope: typeof expr.reputationScope === 'string' ? path.basename(expr.reputationScope, ".json") : refName(expr.reputationScope),
+          comparison: expr.comparison,
+          standing: typeof expr.standing === 'string' ? path.basename(expr.standing, ".json") : refName(expr.standing),
+        })) || null,
       })
     } catch {}
   }
@@ -928,6 +935,8 @@ for (const mission of missions) {
   const isRequiredByOthers = requiredByOthers.has(mission.name.toLowerCase())
   mission.isChainStarter = !hasPrereqs && isRequiredByOthers
   mission.isStoryMission = hasPrereqs && isRequiredByOthers
+  mission.isChainEnder = hasPrereqs && !isRequiredByOthers
+  mission.isWikelo = (mission.type || "").toLowerCase().includes("wikelo") || (mission.name || "").toLowerCase().includes("wikelo")
 }
 
 fs.mkdirSync(OUTPUT_DIR, { recursive: true })
