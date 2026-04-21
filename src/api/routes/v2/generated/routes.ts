@@ -3150,7 +3150,7 @@ export function RegisterRoutes(app: Router) {
         // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
         const argsWishlistsController_getWishlists: Record<string, TsoaRoute.ParameterSchema> = {
         };
-        app.get('/api/v2/game-data/wishlists',
+        app.get('/game-data/wishlists',
             authenticateMiddleware([{"jwt":[]}]),
             ...(fetchMiddlewares<RequestHandler>(WishlistsController)),
             ...(fetchMiddlewares<RequestHandler>(WishlistsController.prototype.getWishlists)),
@@ -3181,7 +3181,7 @@ export function RegisterRoutes(app: Router) {
         const argsWishlistsController_createWishlist: Record<string, TsoaRoute.ParameterSchema> = {
                 request: {"in":"body","name":"request","required":true,"ref":"CreateWishlistRequest"},
         };
-        app.post('/api/v2/game-data/wishlists',
+        app.post('/game-data/wishlists',
             authenticateMiddleware([{"jwt":[]}]),
             ...(fetchMiddlewares<RequestHandler>(WishlistsController)),
             ...(fetchMiddlewares<RequestHandler>(WishlistsController.prototype.createWishlist)),
@@ -3213,7 +3213,7 @@ export function RegisterRoutes(app: Router) {
                 wishlist_id: {"in":"path","name":"wishlist_id","required":true,"dataType":"string"},
                 share_token: {"in":"query","name":"share_token","dataType":"string"},
         };
-        app.get('/api/v2/game-data/wishlists/:wishlist_id',
+        app.get('/game-data/wishlists/:wishlist_id',
             ...(fetchMiddlewares<RequestHandler>(WishlistsController)),
             ...(fetchMiddlewares<RequestHandler>(WishlistsController.prototype.getWishlist)),
 
@@ -3244,7 +3244,7 @@ export function RegisterRoutes(app: Router) {
                 wishlist_id: {"in":"path","name":"wishlist_id","required":true,"dataType":"string"},
                 request: {"in":"body","name":"request","required":true,"ref":"UpdateWishlistRequest"},
         };
-        app.put('/api/v2/game-data/wishlists/:wishlist_id',
+        app.put('/game-data/wishlists/:wishlist_id',
             authenticateMiddleware([{"jwt":[]}]),
             ...(fetchMiddlewares<RequestHandler>(WishlistsController)),
             ...(fetchMiddlewares<RequestHandler>(WishlistsController.prototype.updateWishlist)),
@@ -3275,7 +3275,7 @@ export function RegisterRoutes(app: Router) {
         const argsWishlistsController_deleteWishlist: Record<string, TsoaRoute.ParameterSchema> = {
                 wishlist_id: {"in":"path","name":"wishlist_id","required":true,"dataType":"string"},
         };
-        app.delete('/api/v2/game-data/wishlists/:wishlist_id',
+        app.delete('/game-data/wishlists/:wishlist_id',
             authenticateMiddleware([{"jwt":[]}]),
             ...(fetchMiddlewares<RequestHandler>(WishlistsController)),
             ...(fetchMiddlewares<RequestHandler>(WishlistsController.prototype.deleteWishlist)),
@@ -3307,7 +3307,7 @@ export function RegisterRoutes(app: Router) {
                 wishlist_id: {"in":"path","name":"wishlist_id","required":true,"dataType":"string"},
                 request: {"in":"body","name":"request","required":true,"ref":"AddWishlistItemRequest"},
         };
-        app.post('/api/v2/game-data/wishlists/:wishlist_id/items',
+        app.post('/game-data/wishlists/:wishlist_id/items',
             authenticateMiddleware([{"jwt":[]}]),
             ...(fetchMiddlewares<RequestHandler>(WishlistsController)),
             ...(fetchMiddlewares<RequestHandler>(WishlistsController.prototype.addWishlistItem)),
@@ -3339,7 +3339,7 @@ export function RegisterRoutes(app: Router) {
                 wishlist_id: {"in":"path","name":"wishlist_id","required":true,"dataType":"string"},
                 item_id: {"in":"path","name":"item_id","required":true,"dataType":"string"},
         };
-        app.delete('/api/v2/game-data/wishlists/:wishlist_id/items/:item_id',
+        app.delete('/game-data/wishlists/:wishlist_id/items/:item_id',
             authenticateMiddleware([{"jwt":[]}]),
             ...(fetchMiddlewares<RequestHandler>(WishlistsController)),
             ...(fetchMiddlewares<RequestHandler>(WishlistsController.prototype.removeWishlistItem)),
@@ -3372,7 +3372,7 @@ export function RegisterRoutes(app: Router) {
                 item_id: {"in":"path","name":"item_id","required":true,"dataType":"string"},
                 request: {"in":"body","name":"request","required":true,"ref":"UpdateWishlistItemRequest"},
         };
-        app.put('/api/v2/game-data/wishlists/:wishlist_id/items/:item_id',
+        app.put('/game-data/wishlists/:wishlist_id/items/:item_id',
             authenticateMiddleware([{"jwt":[]}]),
             ...(fetchMiddlewares<RequestHandler>(WishlistsController)),
             ...(fetchMiddlewares<RequestHandler>(WishlistsController.prototype.updateWishlistItem)),
@@ -3403,7 +3403,7 @@ export function RegisterRoutes(app: Router) {
         const argsWishlistsController_generateShoppingList: Record<string, TsoaRoute.ParameterSchema> = {
                 wishlist_id: {"in":"path","name":"wishlist_id","required":true,"dataType":"string"},
         };
-        app.get('/api/v2/game-data/wishlists/:wishlist_id/shopping-list',
+        app.get('/game-data/wishlists/:wishlist_id/shopping-list',
             authenticateMiddleware([{"jwt":[]}]),
             ...(fetchMiddlewares<RequestHandler>(WishlistsController)),
             ...(fetchMiddlewares<RequestHandler>(WishlistsController.prototype.generateShoppingList)),
@@ -3443,7 +3443,7 @@ export function RegisterRoutes(app: Router) {
                 page: {"default":1,"in":"query","name":"page","dataType":"double"},
                 page_size: {"default":20,"in":"query","name":"page_size","dataType":"double"},
         };
-        app.get('/api/v2/game-data/wiki/items',
+        app.get('/game-data/wiki/items',
             ...(fetchMiddlewares<RequestHandler>(WikiController)),
             ...(fetchMiddlewares<RequestHandler>(WikiController.prototype.searchItems)),
 
@@ -3473,7 +3473,7 @@ export function RegisterRoutes(app: Router) {
         const argsWikiController_getItemDetail: Record<string, TsoaRoute.ParameterSchema> = {
                 id: {"in":"path","name":"id","required":true,"dataType":"string"},
         };
-        app.get('/api/v2/game-data/wiki/items/:id',
+        app.get('/game-data/wiki/items/:id',
             ...(fetchMiddlewares<RequestHandler>(WikiController)),
             ...(fetchMiddlewares<RequestHandler>(WikiController.prototype.getItemDetail)),
 
@@ -3507,7 +3507,7 @@ export function RegisterRoutes(app: Router) {
                 page: {"default":1,"in":"query","name":"page","dataType":"double"},
                 page_size: {"default":20,"in":"query","name":"page_size","dataType":"double"},
         };
-        app.get('/api/v2/game-data/wiki/ships',
+        app.get('/game-data/wiki/ships',
             ...(fetchMiddlewares<RequestHandler>(WikiController)),
             ...(fetchMiddlewares<RequestHandler>(WikiController.prototype.getShips)),
 
@@ -3537,7 +3537,7 @@ export function RegisterRoutes(app: Router) {
         const argsWikiController_getShipDetail: Record<string, TsoaRoute.ParameterSchema> = {
                 id: {"in":"path","name":"id","required":true,"dataType":"string"},
         };
-        app.get('/api/v2/game-data/wiki/ships/:id',
+        app.get('/game-data/wiki/ships/:id',
             ...(fetchMiddlewares<RequestHandler>(WikiController)),
             ...(fetchMiddlewares<RequestHandler>(WikiController.prototype.getShipDetail)),
 
@@ -3570,7 +3570,7 @@ export function RegisterRoutes(app: Router) {
                 page: {"default":1,"in":"query","name":"page","dataType":"double"},
                 page_size: {"default":20,"in":"query","name":"page_size","dataType":"double"},
         };
-        app.get('/api/v2/game-data/wiki/commodities',
+        app.get('/game-data/wiki/commodities',
             ...(fetchMiddlewares<RequestHandler>(WikiController)),
             ...(fetchMiddlewares<RequestHandler>(WikiController.prototype.getCommodities)),
 
@@ -3600,7 +3600,7 @@ export function RegisterRoutes(app: Router) {
         const argsWikiController_getLocations: Record<string, TsoaRoute.ParameterSchema> = {
                 parent_id: {"in":"query","name":"parent_id","dataType":"string"},
         };
-        app.get('/api/v2/game-data/wiki/locations',
+        app.get('/game-data/wiki/locations',
             ...(fetchMiddlewares<RequestHandler>(WikiController)),
             ...(fetchMiddlewares<RequestHandler>(WikiController.prototype.getLocations)),
 
@@ -3629,7 +3629,7 @@ export function RegisterRoutes(app: Router) {
         // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
         const argsWikiController_getManufacturers: Record<string, TsoaRoute.ParameterSchema> = {
         };
-        app.get('/api/v2/game-data/wiki/manufacturers',
+        app.get('/game-data/wiki/manufacturers',
             ...(fetchMiddlewares<RequestHandler>(WikiController)),
             ...(fetchMiddlewares<RequestHandler>(WikiController.prototype.getManufacturers)),
 
@@ -3659,7 +3659,7 @@ export function RegisterRoutes(app: Router) {
         const argsWikiController_getManufacturerDetail: Record<string, TsoaRoute.ParameterSchema> = {
                 id: {"in":"path","name":"id","required":true,"dataType":"string"},
         };
-        app.get('/api/v2/game-data/wiki/manufacturers/:id',
+        app.get('/game-data/wiki/manufacturers/:id',
             ...(fetchMiddlewares<RequestHandler>(WikiController)),
             ...(fetchMiddlewares<RequestHandler>(WikiController.prototype.getManufacturerDetail)),
 
@@ -3688,7 +3688,7 @@ export function RegisterRoutes(app: Router) {
         // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
         const argsVersionsController_listVersions: Record<string, TsoaRoute.ParameterSchema> = {
         };
-        app.get('/api/v2/game-data/versions',
+        app.get('/game-data/versions',
             ...(fetchMiddlewares<RequestHandler>(VersionsController)),
             ...(fetchMiddlewares<RequestHandler>(VersionsController.prototype.listVersions)),
 
@@ -3717,7 +3717,7 @@ export function RegisterRoutes(app: Router) {
         // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
         const argsVersionsController_getActiveVersions: Record<string, TsoaRoute.ParameterSchema> = {
         };
-        app.get('/api/v2/game-data/versions/active',
+        app.get('/game-data/versions/active',
             ...(fetchMiddlewares<RequestHandler>(VersionsController)),
             ...(fetchMiddlewares<RequestHandler>(VersionsController.prototype.getActiveVersions)),
 
@@ -3747,7 +3747,7 @@ export function RegisterRoutes(app: Router) {
         const argsVersionsController_selectVersion: Record<string, TsoaRoute.ParameterSchema> = {
                 body: {"in":"body","name":"body","required":true,"ref":"SelectVersionRequest"},
         };
-        app.post('/api/v2/game-data/versions/select',
+        app.post('/game-data/versions/select',
             authenticateMiddleware([{"jwt":[]}]),
             ...(fetchMiddlewares<RequestHandler>(VersionsController)),
             ...(fetchMiddlewares<RequestHandler>(VersionsController.prototype.selectVersion)),
@@ -3784,7 +3784,7 @@ export function RegisterRoutes(app: Router) {
                 page: {"default":1,"in":"query","name":"page","dataType":"double"},
                 page_size: {"default":20,"in":"query","name":"page_size","dataType":"double"},
         };
-        app.get('/api/v2/game-data/resources/search',
+        app.get('/game-data/resources/search',
             ...(fetchMiddlewares<RequestHandler>(ResourcesController)),
             ...(fetchMiddlewares<RequestHandler>(ResourcesController.prototype.searchResources)),
 
@@ -3814,7 +3814,7 @@ export function RegisterRoutes(app: Router) {
         const argsResourcesController_getResource: Record<string, TsoaRoute.ParameterSchema> = {
                 resource_id: {"in":"path","name":"resource_id","required":true,"dataType":"string"},
         };
-        app.get('/api/v2/game-data/resources/:resource_id',
+        app.get('/game-data/resources/:resource_id',
             ...(fetchMiddlewares<RequestHandler>(ResourcesController)),
             ...(fetchMiddlewares<RequestHandler>(ResourcesController.prototype.getResource)),
 
@@ -3844,7 +3844,7 @@ export function RegisterRoutes(app: Router) {
         const argsResourcesController_getResourceCategories: Record<string, TsoaRoute.ParameterSchema> = {
                 version_id: {"in":"query","name":"version_id","dataType":"string"},
         };
-        app.get('/api/v2/game-data/resources/categories',
+        app.get('/game-data/resources/categories',
             ...(fetchMiddlewares<RequestHandler>(ResourcesController)),
             ...(fetchMiddlewares<RequestHandler>(ResourcesController.prototype.getResourceCategories)),
 
@@ -3878,6 +3878,7 @@ export function RegisterRoutes(app: Router) {
                 star_system: {"in":"query","name":"star_system","dataType":"string"},
                 planet_moon: {"in":"query","name":"planet_moon","dataType":"string"},
                 faction: {"in":"query","name":"faction","dataType":"string"},
+                mission_giver_org: {"in":"query","name":"mission_giver_org","dataType":"string"},
                 legal_status: {"in":"query","name":"legal_status","dataType":"union","subSchemas":[{"dataType":"enum","enums":["LEGAL"]},{"dataType":"enum","enums":["ILLEGAL"]}]},
                 difficulty_min: {"in":"query","name":"difficulty_min","dataType":"double"},
                 difficulty_max: {"in":"query","name":"difficulty_max","dataType":"double"},
@@ -3893,7 +3894,7 @@ export function RegisterRoutes(app: Router) {
                 page: {"default":1,"in":"query","name":"page","dataType":"double"},
                 page_size: {"default":20,"in":"query","name":"page_size","dataType":"double"},
         };
-        app.get('/api/v2/game-data/missions/search',
+        app.get('/game-data/missions/search',
             ...(fetchMiddlewares<RequestHandler>(MissionsController)),
             ...(fetchMiddlewares<RequestHandler>(MissionsController.prototype.searchMissions)),
 
@@ -3924,7 +3925,7 @@ export function RegisterRoutes(app: Router) {
                 mission_id: {"in":"path","name":"mission_id","required":true,"dataType":"string"},
                 user_id: {"in":"query","name":"user_id","dataType":"string"},
         };
-        app.get('/api/v2/game-data/missions/:mission_id',
+        app.get('/game-data/missions/:mission_id',
             ...(fetchMiddlewares<RequestHandler>(MissionsController)),
             ...(fetchMiddlewares<RequestHandler>(MissionsController.prototype.getMissionDetail)),
 
@@ -3954,7 +3955,7 @@ export function RegisterRoutes(app: Router) {
         const argsMissionsController_getMissionBlueprints: Record<string, TsoaRoute.ParameterSchema> = {
                 mission_id: {"in":"path","name":"mission_id","required":true,"dataType":"string"},
         };
-        app.get('/api/v2/game-data/missions/:mission_id/blueprints',
+        app.get('/game-data/missions/:mission_id/blueprints',
             ...(fetchMiddlewares<RequestHandler>(MissionsController)),
             ...(fetchMiddlewares<RequestHandler>(MissionsController.prototype.getMissionBlueprints)),
 
@@ -3985,7 +3986,7 @@ export function RegisterRoutes(app: Router) {
                 mission_id: {"in":"path","name":"mission_id","required":true,"dataType":"string"},
                 body: {"in":"body","name":"body","required":true,"dataType":"nestedObjectLiteral","nestedProperties":{"completion_notes":{"dataType":"string"},"blueprints_rewarded":{"dataType":"array","array":{"dataType":"string"}}}},
         };
-        app.post('/api/v2/game-data/missions/:mission_id/complete',
+        app.post('/game-data/missions/:mission_id/complete',
             authenticateMiddleware([{"jwt":[]}]),
             ...(fetchMiddlewares<RequestHandler>(MissionsController)),
             ...(fetchMiddlewares<RequestHandler>(MissionsController.prototype.completeMission)),
@@ -4017,7 +4018,7 @@ export function RegisterRoutes(app: Router) {
                 mission_id: {"in":"path","name":"mission_id","required":true,"dataType":"string"},
                 body: {"in":"body","name":"body","required":true,"dataType":"nestedObjectLiteral","nestedProperties":{"rating_comment":{"dataType":"string"},"satisfaction_rating":{"dataType":"double","required":true},"difficulty_rating":{"dataType":"double","required":true}}},
         };
-        app.post('/api/v2/game-data/missions/:mission_id/rate',
+        app.post('/game-data/missions/:mission_id/rate',
             authenticateMiddleware([{"jwt":[]}]),
             ...(fetchMiddlewares<RequestHandler>(MissionsController)),
             ...(fetchMiddlewares<RequestHandler>(MissionsController.prototype.rateMission)),
@@ -4048,7 +4049,7 @@ export function RegisterRoutes(app: Router) {
         const argsMissionsController_getMissionChains: Record<string, TsoaRoute.ParameterSchema> = {
                 version_id: {"in":"query","name":"version_id","dataType":"string"},
         };
-        app.get('/api/v2/game-data/missions/chains',
+        app.get('/game-data/missions/chains',
             ...(fetchMiddlewares<RequestHandler>(MissionsController)),
             ...(fetchMiddlewares<RequestHandler>(MissionsController.prototype.getMissionChains)),
 
@@ -4078,7 +4079,7 @@ export function RegisterRoutes(app: Router) {
         const argsCraftingController_calculateQuality: Record<string, TsoaRoute.ParameterSchema> = {
                 request: {"in":"body","name":"request","required":true,"ref":"CalculateQualityRequest"},
         };
-        app.post('/api/v2/game-data/crafting/calculate-quality',
+        app.post('/game-data/crafting/calculate-quality',
             ...(fetchMiddlewares<RequestHandler>(CraftingController)),
             ...(fetchMiddlewares<RequestHandler>(CraftingController.prototype.calculateQuality)),
 
@@ -4108,7 +4109,7 @@ export function RegisterRoutes(app: Router) {
         const argsCraftingController_simulateCrafting: Record<string, TsoaRoute.ParameterSchema> = {
                 request: {"in":"body","name":"request","required":true,"ref":"SimulateCraftingRequest"},
         };
-        app.post('/api/v2/game-data/crafting/simulate',
+        app.post('/game-data/crafting/simulate',
             ...(fetchMiddlewares<RequestHandler>(CraftingController)),
             ...(fetchMiddlewares<RequestHandler>(CraftingController.prototype.simulateCrafting)),
 
@@ -4138,7 +4139,7 @@ export function RegisterRoutes(app: Router) {
         const argsCraftingController_recordCrafting: Record<string, TsoaRoute.ParameterSchema> = {
                 request: {"in":"body","name":"request","required":true,"ref":"RecordCraftingRequest"},
         };
-        app.post('/api/v2/game-data/crafting/craft',
+        app.post('/game-data/crafting/craft',
             authenticateMiddleware([{"jwt":[]}]),
             ...(fetchMiddlewares<RequestHandler>(CraftingController)),
             ...(fetchMiddlewares<RequestHandler>(CraftingController.prototype.recordCrafting)),
@@ -4171,7 +4172,7 @@ export function RegisterRoutes(app: Router) {
                 page: {"default":1,"in":"query","name":"page","dataType":"double"},
                 page_size: {"default":20,"in":"query","name":"page_size","dataType":"double"},
         };
-        app.get('/api/v2/game-data/crafting/history',
+        app.get('/game-data/crafting/history',
             authenticateMiddleware([{"jwt":[]}]),
             ...(fetchMiddlewares<RequestHandler>(CraftingController)),
             ...(fetchMiddlewares<RequestHandler>(CraftingController.prototype.getCraftingHistory)),
@@ -4208,7 +4209,7 @@ export function RegisterRoutes(app: Router) {
                 page: {"default":1,"in":"query","name":"page","dataType":"double"},
                 page_size: {"default":20,"in":"query","name":"page_size","dataType":"double"},
         };
-        app.get('/api/v2/game-data/crafting/craftable-items',
+        app.get('/game-data/crafting/craftable-items',
             authenticateMiddleware([{"jwt":[]}]),
             ...(fetchMiddlewares<RequestHandler>(CraftingController)),
             ...(fetchMiddlewares<RequestHandler>(CraftingController.prototype.getCraftableItems)),
@@ -4238,7 +4239,7 @@ export function RegisterRoutes(app: Router) {
         // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
         const argsCraftingController_getCraftingStatistics: Record<string, TsoaRoute.ParameterSchema> = {
         };
-        app.get('/api/v2/game-data/crafting/statistics',
+        app.get('/game-data/crafting/statistics',
             authenticateMiddleware([{"jwt":[]}]),
             ...(fetchMiddlewares<RequestHandler>(CraftingController)),
             ...(fetchMiddlewares<RequestHandler>(CraftingController.prototype.getCraftingStatistics)),
@@ -4279,7 +4280,7 @@ export function RegisterRoutes(app: Router) {
                 page: {"default":1,"in":"query","name":"page","dataType":"double"},
                 page_size: {"default":20,"in":"query","name":"page_size","dataType":"double"},
         };
-        app.get('/api/v2/game-data/blueprints/search',
+        app.get('/game-data/blueprints/search',
             ...(fetchMiddlewares<RequestHandler>(BlueprintsController)),
             ...(fetchMiddlewares<RequestHandler>(BlueprintsController.prototype.searchBlueprints)),
 
@@ -4310,7 +4311,7 @@ export function RegisterRoutes(app: Router) {
                 blueprint_id: {"in":"path","name":"blueprint_id","required":true,"dataType":"string"},
                 user_id: {"in":"query","name":"user_id","dataType":"string"},
         };
-        app.get('/api/v2/game-data/blueprints/:blueprint_id',
+        app.get('/game-data/blueprints/:blueprint_id',
             ...(fetchMiddlewares<RequestHandler>(BlueprintsController)),
             ...(fetchMiddlewares<RequestHandler>(BlueprintsController.prototype.getBlueprintDetail)),
 
@@ -4341,7 +4342,7 @@ export function RegisterRoutes(app: Router) {
                 blueprint_id: {"in":"path","name":"blueprint_id","required":true,"dataType":"string"},
                 version_id: {"in":"query","name":"version_id","dataType":"string"},
         };
-        app.get('/api/v2/game-data/blueprints/:blueprint_id/missions',
+        app.get('/game-data/blueprints/:blueprint_id/missions',
             ...(fetchMiddlewares<RequestHandler>(BlueprintsController)),
             ...(fetchMiddlewares<RequestHandler>(BlueprintsController.prototype.getBlueprintMissions)),
 
@@ -4371,7 +4372,7 @@ export function RegisterRoutes(app: Router) {
         const argsBlueprintsController_getBlueprintCategories: Record<string, TsoaRoute.ParameterSchema> = {
                 version_id: {"in":"query","name":"version_id","dataType":"string"},
         };
-        app.get('/api/v2/game-data/blueprints/categories',
+        app.get('/game-data/blueprints/categories',
             ...(fetchMiddlewares<RequestHandler>(BlueprintsController)),
             ...(fetchMiddlewares<RequestHandler>(BlueprintsController.prototype.getBlueprintCategories)),
 
@@ -4402,7 +4403,7 @@ export function RegisterRoutes(app: Router) {
                 blueprint_id: {"in":"path","name":"blueprint_id","required":true,"dataType":"string"},
                 body: {"in":"body","name":"body","required":true,"dataType":"nestedObjectLiteral","nestedProperties":{"acquisition_notes":{"dataType":"string"},"acquisition_location":{"dataType":"string"},"acquisition_method":{"dataType":"string"}}},
         };
-        app.post('/api/v2/game-data/blueprints/:blueprint_id/inventory',
+        app.post('/game-data/blueprints/:blueprint_id/inventory',
             authenticateMiddleware([{"jwt":[]}]),
             ...(fetchMiddlewares<RequestHandler>(BlueprintsController)),
             ...(fetchMiddlewares<RequestHandler>(BlueprintsController.prototype.addBlueprintToInventory)),
@@ -4433,7 +4434,7 @@ export function RegisterRoutes(app: Router) {
         const argsBlueprintsController_removeBlueprintFromInventory: Record<string, TsoaRoute.ParameterSchema> = {
                 blueprint_id: {"in":"path","name":"blueprint_id","required":true,"dataType":"string"},
         };
-        app.delete('/api/v2/game-data/blueprints/:blueprint_id/inventory',
+        app.delete('/game-data/blueprints/:blueprint_id/inventory',
             authenticateMiddleware([{"jwt":[]}]),
             ...(fetchMiddlewares<RequestHandler>(BlueprintsController)),
             ...(fetchMiddlewares<RequestHandler>(BlueprintsController.prototype.removeBlueprintFromInventory)),
@@ -4470,7 +4471,7 @@ export function RegisterRoutes(app: Router) {
                 page: {"default":1,"in":"query","name":"page","dataType":"double"},
                 page_size: {"default":50,"in":"query","name":"page_size","dataType":"double"},
         };
-        app.get('/api/v2/game-data/blueprints/inventory',
+        app.get('/game-data/blueprints/inventory',
             authenticateMiddleware([{"jwt":[]}]),
             ...(fetchMiddlewares<RequestHandler>(BlueprintsController)),
             ...(fetchMiddlewares<RequestHandler>(BlueprintsController.prototype.getUserBlueprintInventory)),
@@ -5260,7 +5261,7 @@ export function RegisterRoutes(app: Router) {
         const argsAdminController_importGameData: Record<string, TsoaRoute.ParameterSchema> = {
                 request: {"in":"request","name":"request","required":true,"dataType":"object"},
         };
-        app.post('/api/v2/admin/import-game-data',
+        app.post('/admin/import-game-data',
             ...(fetchMiddlewares<RequestHandler>(AdminController)),
             ...(fetchMiddlewares<RequestHandler>(AdminController.prototype.importGameData)),
 

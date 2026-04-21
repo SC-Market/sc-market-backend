@@ -8367,7 +8367,7 @@
 				]
 			}
 		},
-		"/api/v2/game-data/wishlists": {
+		"/game-data/wishlists": {
 			"get": {
 				"operationId": "GetWishlists",
 				"responses": {
@@ -8433,7 +8433,7 @@
 				}
 			}
 		},
-		"/api/v2/game-data/wishlists/{wishlist_id}": {
+		"/game-data/wishlists/{wishlist_id}": {
 			"get": {
 				"operationId": "GetWishlist",
 				"responses": {
@@ -8568,7 +8568,7 @@
 				]
 			}
 		},
-		"/api/v2/game-data/wishlists/{wishlist_id}/items": {
+		"/game-data/wishlists/{wishlist_id}/items": {
 			"post": {
 				"operationId": "AddWishlistItem",
 				"responses": {
@@ -8618,7 +8618,7 @@
 				}
 			}
 		},
-		"/api/v2/game-data/wishlists/{wishlist_id}/items/{item_id}": {
+		"/game-data/wishlists/{wishlist_id}/items/{item_id}": {
 			"delete": {
 				"operationId": "RemoveWishlistItem",
 				"responses": {
@@ -8730,7 +8730,7 @@
 				}
 			}
 		},
-		"/api/v2/game-data/wishlists/{wishlist_id}/shopping-list": {
+		"/game-data/wishlists/{wishlist_id}/shopping-list": {
 			"get": {
 				"operationId": "GenerateShoppingList",
 				"responses": {
@@ -8768,7 +8768,7 @@
 				]
 			}
 		},
-		"/api/v2/game-data/wiki/items": {
+		"/game-data/wiki/items": {
 			"get": {
 				"operationId": "SearchItems",
 				"responses": {
@@ -8887,7 +8887,7 @@
 				]
 			}
 		},
-		"/api/v2/game-data/wiki/items/{id}": {
+		"/game-data/wiki/items/{id}": {
 			"get": {
 				"operationId": "GetItemDetail",
 				"responses": {
@@ -8921,7 +8921,7 @@
 				]
 			}
 		},
-		"/api/v2/game-data/wiki/ships": {
+		"/game-data/wiki/ships": {
 			"get": {
 				"operationId": "GetShips",
 				"responses": {
@@ -9021,7 +9021,7 @@
 				]
 			}
 		},
-		"/api/v2/game-data/wiki/ships/{id}": {
+		"/game-data/wiki/ships/{id}": {
 			"get": {
 				"operationId": "GetShipDetail",
 				"responses": {
@@ -9055,7 +9055,7 @@
 				]
 			}
 		},
-		"/api/v2/game-data/wiki/commodities": {
+		"/game-data/wiki/commodities": {
 			"get": {
 				"operationId": "GetCommodities",
 				"responses": {
@@ -9146,7 +9146,7 @@
 				]
 			}
 		},
-		"/api/v2/game-data/wiki/locations": {
+		"/game-data/wiki/locations": {
 			"get": {
 				"operationId": "GetLocations",
 				"responses": {
@@ -9183,7 +9183,7 @@
 				]
 			}
 		},
-		"/api/v2/game-data/wiki/manufacturers": {
+		"/game-data/wiki/manufacturers": {
 			"get": {
 				"operationId": "GetManufacturers",
 				"responses": {
@@ -9210,7 +9210,7 @@
 				"parameters": []
 			}
 		},
-		"/api/v2/game-data/wiki/manufacturers/{id}": {
+		"/game-data/wiki/manufacturers/{id}": {
 			"get": {
 				"operationId": "GetManufacturerDetail",
 				"responses": {
@@ -9244,7 +9244,7 @@
 				]
 			}
 		},
-		"/api/v2/game-data/versions": {
+		"/game-data/versions": {
 			"get": {
 				"operationId": "ListVersions",
 				"responses": {
@@ -9271,7 +9271,7 @@
 				"parameters": []
 			}
 		},
-		"/api/v2/game-data/versions/active": {
+		"/game-data/versions/active": {
 			"get": {
 				"operationId": "GetActiveVersions",
 				"responses": {
@@ -9295,7 +9295,7 @@
 				"parameters": []
 			}
 		},
-		"/api/v2/game-data/versions/select": {
+		"/game-data/versions/select": {
 			"post": {
 				"operationId": "SelectVersion",
 				"responses": {
@@ -9335,7 +9335,7 @@
 				}
 			}
 		},
-		"/api/v2/game-data/resources/search": {
+		"/game-data/resources/search": {
 			"get": {
 				"operationId": "SearchResources",
 				"responses": {
@@ -9433,7 +9433,7 @@
 				]
 			}
 		},
-		"/api/v2/game-data/resources/{resource_id}": {
+		"/game-data/resources/{resource_id}": {
 			"get": {
 				"operationId": "GetResource",
 				"responses": {
@@ -9467,7 +9467,7 @@
 				]
 			}
 		},
-		"/api/v2/game-data/resources/categories": {
+		"/game-data/resources/categories": {
 			"get": {
 				"operationId": "GetResourceCategories",
 				"responses": {
@@ -9504,7 +9504,7 @@
 				]
 			}
 		},
-		"/api/v2/game-data/missions/search": {
+		"/game-data/missions/search": {
 			"get": {
 				"operationId": "SearchMissions",
 				"responses": {
@@ -9575,6 +9575,14 @@
 						"description": "Filter by faction",
 						"in": "query",
 						"name": "faction",
+						"required": false,
+						"schema": {
+							"type": "string"
+						}
+					},
+					{
+						"in": "query",
+						"name": "mission_giver_org",
 						"required": false,
 						"schema": {
 							"type": "string"
@@ -9722,7 +9730,7 @@
 				]
 			}
 		},
-		"/api/v2/game-data/missions/{mission_id}": {
+		"/game-data/missions/{mission_id}": {
 			"get": {
 				"operationId": "GetMissionDetail",
 				"responses": {
@@ -9765,7 +9773,7 @@
 				]
 			}
 		},
-		"/api/v2/game-data/missions/{mission_id}/blueprints": {
+		"/game-data/missions/{mission_id}/blueprints": {
 			"get": {
 				"operationId": "GetMissionBlueprints",
 				"responses": {
@@ -9802,7 +9810,7 @@
 				]
 			}
 		},
-		"/api/v2/game-data/missions/{mission_id}/complete": {
+		"/game-data/missions/{mission_id}/complete": {
 			"post": {
 				"operationId": "CompleteMission",
 				"responses": {
@@ -9875,7 +9883,7 @@
 				}
 			}
 		},
-		"/api/v2/game-data/missions/{mission_id}/rate": {
+		"/game-data/missions/{mission_id}/rate": {
 			"post": {
 				"operationId": "RateMission",
 				"responses": {
@@ -9954,7 +9962,7 @@
 				}
 			}
 		},
-		"/api/v2/game-data/missions/chains": {
+		"/game-data/missions/chains": {
 			"get": {
 				"operationId": "GetMissionChains",
 				"responses": {
@@ -10019,7 +10027,7 @@
 				]
 			}
 		},
-		"/api/v2/game-data/crafting/calculate-quality": {
+		"/game-data/crafting/calculate-quality": {
 			"post": {
 				"operationId": "CalculateQuality",
 				"responses": {
@@ -10055,7 +10063,7 @@
 				}
 			}
 		},
-		"/api/v2/game-data/crafting/simulate": {
+		"/game-data/crafting/simulate": {
 			"post": {
 				"operationId": "SimulateCrafting",
 				"responses": {
@@ -10091,7 +10099,7 @@
 				}
 			}
 		},
-		"/api/v2/game-data/crafting/craft": {
+		"/game-data/crafting/craft": {
 			"post": {
 				"operationId": "RecordCrafting",
 				"responses": {
@@ -10131,7 +10139,7 @@
 				}
 			}
 		},
-		"/api/v2/game-data/crafting/history": {
+		"/game-data/crafting/history": {
 			"get": {
 				"operationId": "GetCraftingHistory",
 				"responses": {
@@ -10191,7 +10199,7 @@
 				]
 			}
 		},
-		"/api/v2/game-data/crafting/craftable-items": {
+		"/game-data/crafting/craftable-items": {
 			"get": {
 				"operationId": "GetCraftableItems",
 				"responses": {
@@ -10288,7 +10296,7 @@
 				]
 			}
 		},
-		"/api/v2/game-data/crafting/statistics": {
+		"/game-data/crafting/statistics": {
 			"get": {
 				"operationId": "GetCraftingStatistics",
 				"responses": {
@@ -10316,7 +10324,7 @@
 				"parameters": []
 			}
 		},
-		"/api/v2/game-data/blueprints/search": {
+		"/game-data/blueprints/search": {
 			"get": {
 				"operationId": "SearchBlueprints",
 				"responses": {
@@ -10445,7 +10453,7 @@
 				]
 			}
 		},
-		"/api/v2/game-data/blueprints/{blueprint_id}": {
+		"/game-data/blueprints/{blueprint_id}": {
 			"get": {
 				"operationId": "GetBlueprintDetail",
 				"responses": {
@@ -10488,7 +10496,7 @@
 				]
 			}
 		},
-		"/api/v2/game-data/blueprints/{blueprint_id}/missions": {
+		"/game-data/blueprints/{blueprint_id}/missions": {
 			"get": {
 				"operationId": "GetBlueprintMissions",
 				"responses": {
@@ -10534,7 +10542,7 @@
 				]
 			}
 		},
-		"/api/v2/game-data/blueprints/categories": {
+		"/game-data/blueprints/categories": {
 			"get": {
 				"operationId": "GetBlueprintCategories",
 				"responses": {
@@ -10571,7 +10579,7 @@
 				]
 			}
 		},
-		"/api/v2/game-data/blueprints/{blueprint_id}/inventory": {
+		"/game-data/blueprints/{blueprint_id}/inventory": {
 			"post": {
 				"operationId": "AddBlueprintToInventory",
 				"responses": {
@@ -10688,7 +10696,7 @@
 				]
 			}
 		},
-		"/api/v2/game-data/blueprints/inventory": {
+		"/game-data/blueprints/inventory": {
 			"get": {
 				"operationId": "GetUserBlueprintInventory",
 				"responses": {
@@ -11903,7 +11911,7 @@
 				]
 			}
 		},
-		"/api/v2/admin/import-game-data": {
+		"/admin/import-game-data": {
 			"post": {
 				"operationId": "ImportGameData",
 				"responses": {

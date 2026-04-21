@@ -22,7 +22,7 @@ import {
 } from "./missions.types.js"
 import logger from "../../../../../logger/logger.js"
 
-@Route("api/v2/game-data/missions")
+@Route("game-data/missions")
 @Tags("Game Data - Missions")
 export class MissionsController extends BaseController {
   /**

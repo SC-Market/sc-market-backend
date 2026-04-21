@@ -30,7 +30,7 @@ import {
 } from "./crafting.types.js"
 import logger from "../../../../../logger/logger.js"
 
-@Route("api/v2/game-data/crafting")
+@Route("game-data/crafting")
 @Tags("Game Data - Crafting")
 export class CraftingController extends BaseController {
   /**

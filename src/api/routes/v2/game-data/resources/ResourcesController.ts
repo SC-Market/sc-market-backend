@@ -23,7 +23,7 @@ import {
 } from "./resources.types.js"
 import logger from "../../../../../logger/logger.js"
 
-@Route("api/v2/game-data/resources")
+@Route("game-data/resources")
 @Tags("Game Data - Resources")
 export class ResourcesController extends BaseController {
   /**
