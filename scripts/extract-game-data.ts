@@ -227,7 +227,16 @@ function parseItems(): any[] {
           const fireActions = comp.fireActions || []
           if (fireActions.length > 0) {
             attributes.fireRate = fireActions[0].fireRate ?? null
-            attributes.fireModes = fireActions.map((a: any) => a.name).filter(Boolean)
+            attributes.fireModes = fireActions.map((a: Record<string, unknown>) => a.name).filter(Boolean)
+            attributes.fireActions = fireActions.map((a: Record<string, unknown>) => ({
+              name: a.name,
+              type: (a._Type_ as string || "").replace("SWeaponActionFire", "").replace("Params", ""),
+              fireRate: a.fireRate,
+              heatPerShot: a.heatPerShot || null,
+              wearPerShot: a.wearPerShot || null,
+              spinUpTime: a.spinUpTime || null,
+              spinDownTime: a.spinDownTime || null,
+            }))
           }
         } else if (t === "SAmmoContainerComponentParams") {
           attributes.magazineSize = comp.maxAmmoCount ?? null
@@ -614,14 +623,15 @@ function parseResources(): any[] {
 
 // --- Step 7: Parse Ships ---
 function parseShips(): any[] {
-  console.log("  Parsing ships...")
+  console.log("  Parsing ships & vehicles...")
   const dir = path.join(RECORDS_DIR, "entities/spaceships")
-  if (!fs.existsSync(dir)) {
+  const gvDir = path.join(RECORDS_DIR, "entities/groundvehicles")
+  if (!fs.existsSync(dir) && !fs.existsSync(gvDir)) {
     console.log("  Ships directory not found, skipping")
     return []
   }
 
-  const files = findJsonFiles(dir)
+  const files = [...(fs.existsSync(dir) ? findJsonFiles(dir) : []), ...(fs.existsSync(gvDir) ? findJsonFiles(gvDir) : [])]
   const ships: any[] = []
 
   for (const f of files) {
@@ -931,6 +941,67 @@ function parseReputationRanks(): any[] {
 
 const reputationRanks = parseReputationRanks()
 
+// --- Parse loot tables ---
+function parseLootTables(): { tables: number; archetypes: number; data: Record<string, unknown>[] } {
+  const tableDir = path.join(RECORDS_DIR, "lootgeneration/loottables")
+  if (!fs.existsSync(tableDir)) return { tables: 0, archetypes: 0, data: [] }
+  const files = findJsonFiles(tableDir)
+  const tables: Record<string, unknown>[] = []
+
+  for (const f of files) {
+    try {
+      const d = readJson(f)._RecordValue_
+      const entries = d.lootTable?.lootArchetypes || d.lootArchetypes || []
+      if (!entries.length) continue
+      tables.push({
+        name: path.basename(f, ".json"),
+        entries: entries.map((e: Record<string, unknown>) => ({
+          name: (e as { name?: string }).name,
+          weight: (e as { weight?: number }).weight,
+          archetype: refName((e as { archetype?: unknown }).archetype || (e as { lootArchetypeRecord?: unknown }).lootArchetypeRecord),
+          minResults: ((e as { numberOfResultsConstraints?: { minResults?: number } }).numberOfResultsConstraints)?.minResults,
+          maxResults: ((e as { numberOfResultsConstraints?: { maxResults?: number } }).numberOfResultsConstraints)?.maxResults,
+        })),
+      })
+    } catch {}
+  }
+
+  console.log(`  Loot tables: ${tables.length}`)
+  return { tables: tables.length, archetypes: 0, data: tables }
+}
+
+// --- Parse mining rock compositions ---
+function parseRockCompositions(): Record<string, unknown>[] {
+  const dir = path.join(RECORDS_DIR, "mining/rockcompositionpresets")
+  if (!fs.existsSync(dir)) return []
+  const files = findJsonFiles(dir)
+  const compositions: Record<string, unknown>[] = []
+
+  for (const f of files) {
+    try {
+      const d = readJson(f)._RecordValue_
+      if (d._Type_ !== "MineableComposition") continue
+      compositions.push({
+        name: path.basename(f, ".json"),
+        depositName: loc(d.depositName) || d.depositName,
+        minDistinctElements: d.minimumDistinctElements,
+        elements: (d.compositionArray || []).map((p: Record<string, unknown>) => ({
+          element: refName(p.mineableElement),
+          minPct: p.minPercentage,
+          maxPct: p.maxPercentage,
+          probability: p.probability,
+        })),
+      })
+    } catch {}
+  }
+
+  console.log(`  Rock compositions: ${compositions.length}`)
+  return compositions
+}
+
+const lootTables = parseLootTables()
+const rockCompositions = parseRockCompositions()
+
 // --- Resolve reputation amounts in missions ---
 for (const mission of missions) {
   if (!mission.reputationRewards) continue
@@ -1018,6 +1089,8 @@ const outputData = {
   reputationAmounts,
   reputationRanks,
   refiningProcesses,
+  lootTables: lootTables.data,
+  rockCompositions,
 }
 
 const jsonPath = path.join(OUTPUT_DIR, "game-data.json")
