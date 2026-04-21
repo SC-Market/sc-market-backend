@@ -562,6 +562,8 @@ function parseMissions(): any[] {
         respawnTime: v.respawnTime || null,
         instanceLifeTime: v.instanceLifeTime || null,
         buyInAmount: v.missionBuyInAmount || null,
+        // Tags
+        tutorial: v.tutorial || false,
       })
     } catch {}
   }
@@ -910,6 +912,22 @@ for (const mission of missions) {
   if (mission.type) {
     mission.career = careerLookup.get(mission.type) || null
   }
+}
+
+// --- Derive chain starter and story tags ---
+const requiredByOthers = new Set<string>()
+const missionNameLower = new Map<string, string>()
+for (const mission of missions) {
+  missionNameLower.set(mission.name.toLowerCase(), mission.name)
+  for (const req of mission.requiredMissions || []) {
+    requiredByOthers.add(req.toLowerCase())
+  }
+}
+for (const mission of missions) {
+  const hasPrereqs = mission.requiredMissions && mission.requiredMissions.length > 0
+  const isRequiredByOthers = requiredByOthers.has(mission.name.toLowerCase())
+  mission.isChainStarter = !hasPrereqs && isRequiredByOthers
+  mission.isStoryMission = hasPrereqs && isRequiredByOthers
 }
 
 fs.mkdirSync(OUTPUT_DIR, { recursive: true })
