@@ -20,7 +20,6 @@ import logger from "../../../../../logger/logger.js"
 
 @Route("game-data/versions")
 @Tags("Game Data - Versions")
-@Security("jwt")
 export class VersionsController extends BaseController {
   /**
    * List all game versions

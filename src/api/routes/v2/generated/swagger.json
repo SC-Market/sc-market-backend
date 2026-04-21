@@ -8630,11 +8630,7 @@
 				"tags": [
 					"Game Data - Wishlists"
 				],
-				"security": [
-					{
-						"jwt": []
-					}
-				],
+				"security": [],
 				"parameters": [
 					{
 						"description": "Wishlist UUID",
@@ -9448,11 +9444,7 @@
 				"tags": [
 					"Game Data - Versions"
 				],
-				"security": [
-					{
-						"jwt": []
-					}
-				],
+				"security": [],
 				"parameters": []
 			}
 		},
@@ -9476,11 +9468,7 @@
 				"tags": [
 					"Game Data - Versions"
 				],
-				"security": [
-					{
-						"jwt": []
-					}
-				],
+				"security": [],
 				"parameters": []
 			}
 		},
@@ -9713,11 +9701,7 @@
 				"tags": [
 					"Game Data - Missions"
 				],
-				"security": [
-					{
-						"jwt": []
-					}
-				],
+				"security": [],
 				"parameters": [
 					{
 						"description": "Full-text search on mission name",
@@ -9943,11 +9927,7 @@
 				"tags": [
 					"Game Data - Missions"
 				],
-				"security": [
-					{
-						"jwt": []
-					}
-				],
+				"security": [],
 				"parameters": [
 					{
 						"description": "Mission UUID",
@@ -9993,11 +9973,7 @@
 				"tags": [
 					"Game Data - Missions"
 				],
-				"security": [
-					{
-						"jwt": []
-					}
-				],
+				"security": [],
 				"parameters": [
 					{
 						"description": "Mission UUID",
@@ -10214,11 +10190,7 @@
 				"tags": [
 					"Game Data - Missions"
 				],
-				"security": [
-					{
-						"jwt": []
-					}
-				],
+				"security": [],
 				"parameters": [
 					{
 						"description": "Game version ID (defaults to active LIVE version)",
@@ -10252,11 +10224,7 @@
 				"tags": [
 					"Game Data - Crafting"
 				],
-				"security": [
-					{
-						"jwt": []
-					}
-				],
+				"security": [],
 				"parameters": [],
 				"requestBody": {
 					"description": "Crafting calculation request with blueprint and materials",
@@ -10292,11 +10260,7 @@
 				"tags": [
 					"Game Data - Crafting"
 				],
-				"security": [
-					{
-						"jwt": []
-					}
-				],
+				"security": [],
 				"parameters": [],
 				"requestBody": {
 					"description": "Simulation request with material variations",
@@ -10557,11 +10521,7 @@
 				"tags": [
 					"Game Data - Blueprints"
 				],
-				"security": [
-					{
-						"jwt": []
-					}
-				],
+				"security": [],
 				"parameters": [
 					{
 						"description": "Full-text search on blueprint name",
@@ -10690,11 +10650,7 @@
 				"tags": [
 					"Game Data - Blueprints"
 				],
-				"security": [
-					{
-						"jwt": []
-					}
-				],
+				"security": [],
 				"parameters": [
 					{
 						"description": "Blueprint UUID",
@@ -10740,11 +10696,7 @@
 				"tags": [
 					"Game Data - Blueprints"
 				],
-				"security": [
-					{
-						"jwt": []
-					}
-				],
+				"security": [],
 				"parameters": [
 					{
 						"description": "Blueprint UUID",
@@ -10790,11 +10742,7 @@
 				"tags": [
 					"Game Data - Blueprints"
 				],
-				"security": [
-					{
-						"jwt": []
-					}
-				],
+				"security": [],
 				"parameters": [
 					{
 						"description": "Optional game version ID (defaults to active LIVE version)",
@@ -11147,11 +11095,7 @@
 				"tags": [
 					"Debug V2"
 				],
-				"security": [
-					{
-						"jwt": []
-					}
-				],
+				"security": [],
 				"parameters": []
 			},
 			"post": {
@@ -11174,6 +11118,9 @@
 					"Debug V2"
 				],
 				"security": [
+					{
+						"jwt": []
+					},
 					{
 						"jwt": []
 					}
@@ -11464,6 +11411,9 @@
 				],
 				"security": [
 					{
+						"jwt": []
+					},
+					{
 						"session": []
 					}
 				],
@@ -11499,11 +11449,7 @@
 				"tags": [
 					"Buy Orders V2"
 				],
-				"security": [
-					{
-						"jwt": []
-					}
-				],
+				"security": [],
 				"parameters": [
 					{
 						"in": "query",
@@ -11573,6 +11519,9 @@
 				],
 				"security": [
 					{
+						"jwt": []
+					},
+					{
 						"session": []
 					}
 				],
@@ -11633,6 +11582,9 @@
 				],
 				"security": [
 					{
+						"jwt": []
+					},
+					{
 						"session": []
 					}
 				],
@@ -11685,6 +11637,9 @@
 				],
 				"security": [
 					{
+						"jwt": []
+					},
+					{
 						"session": []
 					}
 				],
@@ -11721,6 +11676,9 @@
 					"Buy Orders V2"
 				],
 				"security": [
+					{
+						"jwt": []
+					},
 					{
 						"session": []
 					}

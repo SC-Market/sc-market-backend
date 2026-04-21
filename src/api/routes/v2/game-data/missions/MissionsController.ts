@@ -24,7 +24,6 @@ import logger from "../../../../../logger/logger.js"
 
 @Route("game-data/missions")
 @Tags("Game Data - Missions")
-@Security("jwt")
 export class MissionsController extends BaseController {
   /**
    * Search missions with comprehensive filters

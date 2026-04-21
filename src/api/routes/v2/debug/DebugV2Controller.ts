@@ -20,7 +20,6 @@ import logger from "../../../../logger/logger.js"
 
 @Route("debug")
 @Tags("Debug V2")
-@Security("jwt")
 export class DebugV2Controller extends BaseController {
   constructor(@Request() request?: ExpressRequest) {
     super(request)
@@ -96,6 +95,7 @@ export class DebugV2Controller extends BaseController {
    * @param request Feature flag setting request
    * @returns Updated feature flag setting
    */
+  @Security("jwt")
   @Post("feature-flag")
   @Security("jwt")
   public async setFeatureFlag(

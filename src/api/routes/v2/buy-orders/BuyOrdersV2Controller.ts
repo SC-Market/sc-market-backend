@@ -38,7 +38,6 @@ import logger from "../../../../logger/logger.js"
 
 @Route("buy-orders")
 @Tags("Buy Orders V2")
-@Security("jwt")
 export class BuyOrdersV2Controller extends BaseController {
   constructor(@Request() request?: ExpressRequest) {
     super(request)
@@ -82,6 +81,7 @@ export class BuyOrdersV2Controller extends BaseController {
    * @param request Express request for authentication
    * @returns Created order with order_id and purchase details
    */
+  @Security("jwt")
   @Post()
   public async createPurchase(
     @Body() requestBody: CreateBuyOrderRequest,
@@ -345,6 +345,7 @@ export class BuyOrdersV2Controller extends BaseController {
   /**
    * Create a standing buy order
    */
+  @Security("jwt")
   @Post('standing')
   @Security('session')
   public async createStandingBuyOrder(
@@ -416,6 +417,7 @@ export class BuyOrdersV2Controller extends BaseController {
   /**
    * Get current user's buy orders
    */
+  @Security("jwt")
   @Get('mine')
   @Security('session')
   public async getMyBuyOrders(
@@ -455,6 +457,7 @@ export class BuyOrdersV2Controller extends BaseController {
   /**
    * Update a standing buy order
    */
+  @Security("jwt")
   @Put('{id}')
   @Security('session')
   public async updateBuyOrder(
@@ -503,6 +506,7 @@ export class BuyOrdersV2Controller extends BaseController {
   /**
    * Cancel a standing buy order
    */
+  @Security("jwt")
   @Delete('{id}')
   @Security('session')
   public async cancelBuyOrder(
@@ -527,6 +531,7 @@ export class BuyOrdersV2Controller extends BaseController {
    * Fulfill a standing buy order
    * @summary Seller fulfills a buy order
    */
+  @Security("jwt")
   @Post('{id}/fulfill')
   @Security('session')
   public async fulfillBuyOrder(
