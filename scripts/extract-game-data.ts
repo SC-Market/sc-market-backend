@@ -504,6 +504,16 @@ function parseMissions(): any[] {
         }
       }
 
+      // Parse wanted level from reputation prerequisites
+      const wantedLevel = v.reputationPrerequisites?.wantedLevel
+      const maxCrimestat = wantedLevel ? Math.floor(wantedLevel.maxValue ?? 5) : null
+
+      // Parse required/linked missions for chain info
+      const requiredMissions = (v.requiredMissions || [])
+        .map((ref: string) => path.basename(ref, ".json"))
+        .filter(Boolean)
+      const linkedMission = v.linkedMission ? path.basename(v.linkedMission, ".json") : null
+
       missions.push({
         id: data._RecordId_,
         name: data._RecordName_?.split(".")?.slice(1).join(".") || "",
@@ -511,6 +521,7 @@ function parseMissions(): any[] {
         titleKey: v.title,
         description: loc(v.description) || v.description,
         missionGiver: loc(v.missionGiver) || v.missionGiver,
+        missionGiverRecord: v.missionGiverRecord ? path.basename(v.missionGiverRecord, ".json") : null,
         type: refName(v.type),
         location: refName(v.locationMissionAvailable),
         lawful: v.lawfulMission,
@@ -520,6 +531,21 @@ function parseMissions(): any[] {
         maxPlayers: v.maxPlayersPerInstance,
         canBeShared: v.canBeShared,
         notForRelease: v.notForRelease || false,
+        // Chain info
+        requiredMissions,
+        linkedMission,
+        onceOnly: v.onceOnly || false,
+        // Restrictions
+        maxCrimestat,
+        failIfSentToPrison: v.failIfSentToPrison || false,
+        failIfBecameCriminal: v.failIfBecameCriminal || false,
+        // Cooldowns
+        canReacceptAfterFailing: v.canReacceptAfterFailing || false,
+        canReacceptAfterAbandoning: v.canReacceptAfterAbandoning || false,
+        abandonedCooldownTime: v.abandonedCooldownTime || null,
+        personalCooldownTime: v.hasPersonalCooldown ? v.personalCooldownTime : null,
+        // Deadline
+        deadline: v.missionDeadline?.missionCompletionTime || null,
       })
     } catch {}
   }
