@@ -8187,6 +8187,139 @@
 				]
 			}
 		},
+		"/admin/imports/{source}": {
+			"post": {
+				"operationId": "StartImport",
+				"responses": {
+					"200": {
+						"description": "Ok",
+						"content": {
+							"application/json": {
+								"schema": {
+									"properties": {
+										"job": {
+											"$ref": "#/components/schemas/ImportJob"
+										}
+									},
+									"required": [
+										"job"
+									],
+									"type": "object"
+								}
+							}
+						}
+					}
+				},
+				"description": "Start a bulk import job",
+				"tags": [
+					"Admin Imports"
+				],
+				"security": [
+					{
+						"jwt": []
+					}
+				],
+				"parameters": [
+					{
+						"description": "Import source: cstone-items, uex-items, or uex-attributes",
+						"in": "path",
+						"name": "source",
+						"required": true,
+						"schema": {
+							"$ref": "#/components/schemas/ImportSource"
+						}
+					}
+				]
+			}
+		},
+		"/admin/imports/{jobId}": {
+			"get": {
+				"operationId": "GetJobStatus",
+				"responses": {
+					"200": {
+						"description": "Ok",
+						"content": {
+							"application/json": {
+								"schema": {
+									"properties": {
+										"job": {
+											"allOf": [
+												{
+													"$ref": "#/components/schemas/ImportJob"
+												}
+											],
+											"nullable": true
+										}
+									},
+									"required": [
+										"job"
+									],
+									"type": "object"
+								}
+							}
+						}
+					}
+				},
+				"description": "Get status of a specific import job",
+				"tags": [
+					"Admin Imports"
+				],
+				"security": [
+					{
+						"jwt": []
+					}
+				],
+				"parameters": [
+					{
+						"description": "The job ID returned from startImport",
+						"in": "path",
+						"name": "jobId",
+						"required": true,
+						"schema": {
+							"type": "string"
+						}
+					}
+				]
+			}
+		},
+		"/admin/imports": {
+			"get": {
+				"operationId": "ListJobs",
+				"responses": {
+					"200": {
+						"description": "Ok",
+						"content": {
+							"application/json": {
+								"schema": {
+									"properties": {
+										"jobs": {
+											"items": {
+												"$ref": "#/components/schemas/ImportJob"
+											},
+											"type": "array"
+										}
+									},
+									"required": [
+										"jobs"
+									],
+									"type": "object"
+								}
+							}
+						}
+					}
+				},
+				"description": "List all import jobs (most recent first)",
+				"tags": [
+					"Admin Imports"
+				],
+				"security": [
+					{
+						"jwt": []
+					}
+				],
+				"parameters": []
+			}
+		},
 		"/health": {
 			"get": {
 				"operationId": "GetHealth",

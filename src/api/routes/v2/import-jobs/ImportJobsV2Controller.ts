@@ -5,7 +5,7 @@
  * Jobs run asynchronously — start returns a job ID, poll status for progress.
  */
 
-import { Controller, Get, Post, Route, Tags, Path, Request, Security, Hidden } from "tsoa"
+import { Controller, Get, Post, Route, Tags, Path, Request, Security } from "tsoa"
 import { Request as ExpressRequest } from "express"
 import { BaseController } from "../base/BaseController.js"
 import { database } from "../../../../clients/database/knex-db.js"
@@ -91,7 +91,6 @@ const runners: Record<ImportSource, (job: ImportJob) => Promise<void>> = {
 
 @Route("admin/imports")
 @Tags("Admin Imports")
-@Hidden()
 @Security("jwt")
 export class ImportJobsV2Controller extends BaseController {
   /**
