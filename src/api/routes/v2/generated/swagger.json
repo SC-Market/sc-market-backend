@@ -12251,6 +12251,43 @@
 					}
 				],
 				"parameters": []
+			},
+			"get": {
+				"operationId": "ListGameDataImportJobs",
+				"responses": {
+					"200": {
+						"description": "Ok",
+						"content": {
+							"application/json": {
+								"schema": {
+									"properties": {
+										"jobs": {
+											"items": {
+												"$ref": "#/components/schemas/GameDataImportJob"
+											},
+											"type": "array"
+										}
+									},
+									"required": [
+										"jobs"
+									],
+									"type": "object"
+								}
+							}
+						}
+					}
+				},
+				"description": "List all game data import jobs (most recent first)",
+				"summary": "List import jobs",
+				"tags": [
+					"Admin"
+				],
+				"security": [
+					{
+						"jwt": []
+					}
+				],
+				"parameters": []
 			}
 		},
 		"/admin/import-game-data/{jobId}": {
