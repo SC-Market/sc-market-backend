@@ -21,10 +21,10 @@ export interface CraftingInputMaterial {
   /** Quantity of material */
   quantity: number
 
-  /** Quality tier (1-5) */
-  quality_tier: number
+  /** Quality tier (1-5) — optional, derived from quality_value if not provided */
+  quality_tier?: number
 
-  /** Precise quality value (0-100) */
+  /** Precise quality value (0-1000) */
   quality_value: number
 }
 

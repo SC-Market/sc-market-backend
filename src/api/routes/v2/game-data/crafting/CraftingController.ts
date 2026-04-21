@@ -8,6 +8,16 @@
  */
 
 import { Get, Post, Route, Tags, Query, Body, Security } from "tsoa"
+
+/** Derive quality tier (1-5) from quality value (0-1000) */
+function deriveTier(qualityValue: number, explicitTier?: number): number {
+  if (explicitTier) return explicitTier
+  if (qualityValue >= 800) return 5
+  if (qualityValue >= 600) return 4
+  if (qualityValue >= 400) return 3
+  if (qualityValue >= 200) return 2
+  return 1
+}
 import { BaseController } from "../../base/BaseController.js"
 import { getKnex } from "../../../../../clients/database/knex-db.js"
 import {
@@ -163,7 +173,7 @@ export class CraftingController extends BaseController {
 
           qualityContributions.push({
             material_name: nameMap.get(material.game_item_id) || material.game_item_id,
-            quality_tier: material.quality_tier,
+            quality_tier: deriveTier(material.quality_value, material.quality_tier),
             quality_value: material.quality_value,
             weight,
             contribution: material.quality_value * weight,
@@ -185,7 +195,7 @@ export class CraftingController extends BaseController {
 
           qualityContributions.push({
             material_name: nameMap.get(material.game_item_id) || material.game_item_id,
-            quality_tier: material.quality_tier,
+            quality_tier: deriveTier(material.quality_value, material.quality_tier),
             quality_value: material.quality_value,
             weight,
             contribution: weight * material.quality_value,
@@ -205,7 +215,7 @@ export class CraftingController extends BaseController {
 
           qualityContributions.push({
             material_name: nameMap.get(material.game_item_id) || material.game_item_id,
-            quality_tier: material.quality_tier,
+            quality_tier: deriveTier(material.quality_value, material.quality_tier),
             quality_value: material.quality_value,
             weight,
             contribution: weight * material.quality_value,

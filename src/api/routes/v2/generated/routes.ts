@@ -1526,7 +1526,7 @@ const models: TsoaRoute.Models = {
         "properties": {
             "game_item_id": {"dataType":"string","required":true},
             "quantity": {"dataType":"double","required":true},
-            "quality_tier": {"dataType":"double","required":true},
+            "quality_tier": {"dataType":"double"},
             "quality_value": {"dataType":"double","required":true},
         },
         "additionalProperties": false,

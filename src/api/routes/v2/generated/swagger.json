@@ -4727,18 +4727,17 @@
 					"quality_tier": {
 						"type": "number",
 						"format": "double",
-						"description": "Quality tier (1-5)"
+						"description": "Quality tier (1-5) — optional, derived from quality_value if not provided"
 					},
 					"quality_value": {
 						"type": "number",
 						"format": "double",
-						"description": "Precise quality value (0-100)"
+						"description": "Precise quality value (0-1000)"
 					}
 				},
 				"required": [
 					"game_item_id",
 					"quantity",
-					"quality_tier",
 					"quality_value"
 				],
 				"type": "object",
