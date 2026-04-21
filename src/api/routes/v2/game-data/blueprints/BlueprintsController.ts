@@ -25,6 +25,7 @@ import logger from "../../../../../logger/logger.js"
 
 @Route("game-data/blueprints")
 @Tags("Game Data - Blueprints")
+@Security("jwt")
 export class BlueprintsController extends BaseController {
   /**
    * Search blueprints with filters

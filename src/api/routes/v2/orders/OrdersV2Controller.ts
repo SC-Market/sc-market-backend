@@ -8,7 +8,7 @@
  * Requirements: 25.1-25.12
  */
 
-import { Post, Route, Tags, Body, Request, Get, Path, Query } from "tsoa"
+import { Post, Route, Tags, Body, Request, Get, Path, Query, Security } from "tsoa"
 import { Request as ExpressRequest } from "express"
 import { BaseController } from "../base/BaseController.js"
 import { withTransaction } from "../../../../clients/database/transaction.js"
@@ -30,6 +30,7 @@ import logger from "../../../../logger/logger.js"
 
 @Route("orders")
 @Tags("Orders V2")
+@Security("jwt")
 export class OrdersV2Controller extends BaseController {
   constructor(@Request() request?: ExpressRequest) {
     super(request)

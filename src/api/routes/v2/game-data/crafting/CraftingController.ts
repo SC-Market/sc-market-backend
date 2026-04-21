@@ -32,6 +32,7 @@ import logger from "../../../../../logger/logger.js"
 
 @Route("game-data/crafting")
 @Tags("Game Data - Crafting")
+@Security("jwt")
 export class CraftingController extends BaseController {
   /**
    * Calculate output quality from ingredients

@@ -8,7 +8,7 @@
  * Requirements: 29.1-29.12, 30.1-30.12, 31.1-31.12, 32.1-32.12
  */
 
-import { Get, Post, Put, Delete, Route, Tags, Body, Request, Path } from "tsoa"
+import { Get, Post, Put, Delete, Route, Tags, Body, Request, Path, Security } from "tsoa"
 import { Request as ExpressRequest } from "express"
 import { BaseController } from "../base/BaseController.js"
 import { withTransaction } from "../../../../clients/database/transaction.js"
@@ -31,6 +31,7 @@ import logger from "../../../../logger/logger.js"
 
 @Route("cart")
 @Tags("Cart V2")
+@Security("jwt")
 export class CartV2Controller extends BaseController {
   constructor(@Request() request?: ExpressRequest) {
     super(request)

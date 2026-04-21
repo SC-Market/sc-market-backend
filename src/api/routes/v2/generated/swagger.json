@@ -7062,7 +7062,11 @@
 				"tags": [
 					"Stock Lots V2"
 				],
-				"security": [],
+				"security": [
+					{
+						"jwt": []
+					}
+				],
 				"parameters": [],
 				"requestBody": {
 					"description": "Create request with item_id, quantity, variant_attributes",
@@ -7206,7 +7210,11 @@
 				"tags": [
 					"Stock Lots V2"
 				],
-				"security": [],
+				"security": [
+					{
+						"jwt": []
+					}
+				],
 				"parameters": [
 					{
 						"description": "Stock lot UUID",
@@ -7296,7 +7304,11 @@
 				"tags": [
 					"Stock Lots V2"
 				],
-				"security": [],
+				"security": [
+					{
+						"jwt": []
+					}
+				],
 				"parameters": [],
 				"requestBody": {
 					"description": "Bulk update request with array of lot updates",
@@ -7332,7 +7344,11 @@
 				"tags": [
 					"Orders V2"
 				],
-				"security": [],
+				"security": [
+					{
+						"jwt": []
+					}
+				],
 				"parameters": [],
 				"requestBody": {
 					"description": "Order creation request with items array",
@@ -7366,7 +7382,11 @@
 				"tags": [
 					"Orders V2"
 				],
-				"security": [],
+				"security": [
+					{
+						"jwt": []
+					}
+				],
 				"parameters": [
 					{
 						"in": "query",
@@ -7477,7 +7497,11 @@
 				"tags": [
 					"Orders V2"
 				],
-				"security": [],
+				"security": [
+					{
+						"jwt": []
+					}
+				],
 				"parameters": [
 					{
 						"description": "UUID of the order to retrieve",
@@ -7617,7 +7641,11 @@
 				"tags": [
 					"Listings V2"
 				],
-				"security": [],
+				"security": [
+					{
+						"jwt": []
+					}
+				],
 				"parameters": [],
 				"requestBody": {
 					"description": "Listing creation request with title, description, pricing, and lots",
@@ -7854,7 +7882,11 @@
 				"tags": [
 					"Listings V2"
 				],
-				"security": [],
+				"security": [
+					{
+						"jwt": []
+					}
+				],
 				"parameters": [
 					{
 						"description": "Filter by listing status",
@@ -7974,7 +8006,11 @@
 				"tags": [
 					"Listings V2"
 				],
-				"security": [],
+				"security": [
+					{
+						"jwt": []
+					}
+				],
 				"parameters": [
 					{
 						"in": "path",
@@ -8023,7 +8059,11 @@
 				"tags": [
 					"Listings V2"
 				],
-				"security": [],
+				"security": [
+					{
+						"jwt": []
+					}
+				],
 				"parameters": [
 					{
 						"description": "Listing UUID",
@@ -8069,7 +8109,11 @@
 				"tags": [
 					"Listings V2"
 				],
-				"security": [],
+				"security": [
+					{
+						"jwt": []
+					}
+				],
 				"parameters": [
 					{
 						"description": "Listing UUID",
@@ -8586,7 +8630,11 @@
 				"tags": [
 					"Game Data - Wishlists"
 				],
-				"security": [],
+				"security": [
+					{
+						"jwt": []
+					}
+				],
 				"parameters": [
 					{
 						"description": "Wishlist UUID",
@@ -9400,7 +9448,11 @@
 				"tags": [
 					"Game Data - Versions"
 				],
-				"security": [],
+				"security": [
+					{
+						"jwt": []
+					}
+				],
 				"parameters": []
 			}
 		},
@@ -9424,7 +9476,11 @@
 				"tags": [
 					"Game Data - Versions"
 				],
-				"security": [],
+				"security": [
+					{
+						"jwt": []
+					}
+				],
 				"parameters": []
 			}
 		},
@@ -9657,7 +9713,11 @@
 				"tags": [
 					"Game Data - Missions"
 				],
-				"security": [],
+				"security": [
+					{
+						"jwt": []
+					}
+				],
 				"parameters": [
 					{
 						"description": "Full-text search on mission name",
@@ -9883,7 +9943,11 @@
 				"tags": [
 					"Game Data - Missions"
 				],
-				"security": [],
+				"security": [
+					{
+						"jwt": []
+					}
+				],
 				"parameters": [
 					{
 						"description": "Mission UUID",
@@ -9929,7 +9993,11 @@
 				"tags": [
 					"Game Data - Missions"
 				],
-				"security": [],
+				"security": [
+					{
+						"jwt": []
+					}
+				],
 				"parameters": [
 					{
 						"description": "Mission UUID",
@@ -10146,7 +10214,11 @@
 				"tags": [
 					"Game Data - Missions"
 				],
-				"security": [],
+				"security": [
+					{
+						"jwt": []
+					}
+				],
 				"parameters": [
 					{
 						"description": "Game version ID (defaults to active LIVE version)",
@@ -10180,7 +10252,11 @@
 				"tags": [
 					"Game Data - Crafting"
 				],
-				"security": [],
+				"security": [
+					{
+						"jwt": []
+					}
+				],
 				"parameters": [],
 				"requestBody": {
 					"description": "Crafting calculation request with blueprint and materials",
@@ -10216,7 +10292,11 @@
 				"tags": [
 					"Game Data - Crafting"
 				],
-				"security": [],
+				"security": [
+					{
+						"jwt": []
+					}
+				],
 				"parameters": [],
 				"requestBody": {
 					"description": "Simulation request with material variations",
@@ -10477,7 +10557,11 @@
 				"tags": [
 					"Game Data - Blueprints"
 				],
-				"security": [],
+				"security": [
+					{
+						"jwt": []
+					}
+				],
 				"parameters": [
 					{
 						"description": "Full-text search on blueprint name",
@@ -10606,7 +10690,11 @@
 				"tags": [
 					"Game Data - Blueprints"
 				],
-				"security": [],
+				"security": [
+					{
+						"jwt": []
+					}
+				],
 				"parameters": [
 					{
 						"description": "Blueprint UUID",
@@ -10652,7 +10740,11 @@
 				"tags": [
 					"Game Data - Blueprints"
 				],
-				"security": [],
+				"security": [
+					{
+						"jwt": []
+					}
+				],
 				"parameters": [
 					{
 						"description": "Blueprint UUID",
@@ -10698,7 +10790,11 @@
 				"tags": [
 					"Game Data - Blueprints"
 				],
-				"security": [],
+				"security": [
+					{
+						"jwt": []
+					}
+				],
 				"parameters": [
 					{
 						"description": "Optional game version ID (defaults to active LIVE version)",
@@ -11051,7 +11147,11 @@
 				"tags": [
 					"Debug V2"
 				],
-				"security": [],
+				"security": [
+					{
+						"jwt": []
+					}
+				],
 				"parameters": []
 			},
 			"post": {
@@ -11113,7 +11213,11 @@
 				"tags": [
 					"Cart V2"
 				],
-				"security": [],
+				"security": [
+					{
+						"jwt": []
+					}
+				],
 				"parameters": []
 			}
 		},
@@ -11137,7 +11241,11 @@
 				"tags": [
 					"Cart V2"
 				],
-				"security": [],
+				"security": [
+					{
+						"jwt": []
+					}
+				],
 				"parameters": [],
 				"requestBody": {
 					"description": "Add to cart request with listing, variant, and quantity",
@@ -11181,7 +11289,11 @@
 				"tags": [
 					"Cart V2"
 				],
-				"security": [],
+				"security": [
+					{
+						"jwt": []
+					}
+				],
 				"parameters": [
 					{
 						"description": "Cart item UUID",
@@ -11233,7 +11345,11 @@
 				"tags": [
 					"Cart V2"
 				],
-				"security": [],
+				"security": [
+					{
+						"jwt": []
+					}
+				],
 				"parameters": [
 					{
 						"description": "Cart item UUID",
@@ -11267,7 +11383,11 @@
 				"tags": [
 					"Cart V2"
 				],
-				"security": [],
+				"security": [
+					{
+						"jwt": []
+					}
+				],
 				"parameters": [],
 				"requestBody": {
 					"description": "Checkout request with optional price change confirmation",
@@ -11303,7 +11423,11 @@
 				"tags": [
 					"Buy Orders V2"
 				],
-				"security": [],
+				"security": [
+					{
+						"jwt": []
+					}
+				],
 				"parameters": [],
 				"requestBody": {
 					"description": "Purchase request with listing, variant, and quantity",
@@ -11375,7 +11499,11 @@
 				"tags": [
 					"Buy Orders V2"
 				],
-				"security": [],
+				"security": [
+					{
+						"jwt": []
+					}
+				],
 				"parameters": [
 					{
 						"in": "query",
@@ -11860,7 +11988,11 @@
 				"tags": [
 					"Admin Feature Flags"
 				],
-				"security": [],
+				"security": [
+					{
+						"jwt": []
+					}
+				],
 				"parameters": []
 			},
 			"put": {
@@ -11882,7 +12014,11 @@
 				"tags": [
 					"Admin Feature Flags"
 				],
-				"security": [],
+				"security": [
+					{
+						"jwt": []
+					}
+				],
 				"parameters": [],
 				"requestBody": {
 					"required": true,
@@ -11916,7 +12052,11 @@
 				"tags": [
 					"Admin Feature Flags"
 				],
-				"security": [],
+				"security": [
+					{
+						"jwt": []
+					}
+				],
 				"parameters": []
 			}
 		},
@@ -11940,7 +12080,11 @@
 				"tags": [
 					"Admin Feature Flags"
 				],
-				"security": [],
+				"security": [
+					{
+						"jwt": []
+					}
+				],
 				"parameters": [
 					{
 						"in": "query",
@@ -11989,7 +12133,11 @@
 				"tags": [
 					"Admin Feature Flags"
 				],
-				"security": [],
+				"security": [
+					{
+						"jwt": []
+					}
+				],
 				"parameters": [],
 				"requestBody": {
 					"required": true,
@@ -12031,7 +12179,11 @@
 				"tags": [
 					"Admin Feature Flags"
 				],
-				"security": [],
+				"security": [
+					{
+						"jwt": []
+					}
+				],
 				"parameters": [
 					{
 						"in": "path",
