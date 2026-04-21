@@ -1518,10 +1518,10 @@ export class GameDataImportService {
     versionId: string,
     blueprint: P4KBlueprint,
   ): Promise<"inserted" | "updated"> {
-    // First, verify the output game item exists (match by p4k_file or p4k_id)
+    // First, verify the output game item exists (match by p4k_file or name)
     const outputItem = await trx("game_items")
       .where("p4k_file", blueprint.outputItemId)
-      .orWhere("p4k_id", blueprint.outputItemId)
+      .orWhere("name", blueprint.outputItemId)
       .first()
 
     if (!outputItem) {
