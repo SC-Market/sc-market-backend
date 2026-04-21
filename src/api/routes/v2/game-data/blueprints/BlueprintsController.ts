@@ -22,6 +22,7 @@ import {
   BlueprintCategory,
 } from "./blueprints.types.js"
 import logger from "../../../../../logger/logger.js"
+import { resolveGameItemImages } from "../../util/resolve-game-item-images.js"
 
 @Route("game-data/blueprints")
 @Tags("Game Data - Blueprints")
@@ -415,10 +416,26 @@ export class BlueprintsController extends BaseController {
         recommended_quality_tier: row.recommended_quality_tier || undefined,
         is_alternative: row.is_alternative || false,
         alternative_group: row.alternative_group || undefined,
-        market_price_min: undefined, // TODO: Implement market price lookup
-        market_price_max: undefined, // TODO: Implement market price lookup
-        user_inventory_quantity: undefined, // TODO: Implement user inventory lookup
+        market_price_min: undefined,
+        market_price_max: undefined,
+        user_inventory_quantity: undefined,
       }))
+
+      // Resolve missing ingredient icons from listing photos
+      const missingIconIds = ingredients
+        .filter(i => !i.game_item.icon_url)
+        .map(i => i.game_item.game_item_id)
+      if (missingIconIds.length > 0) {
+        try {
+          const resolved = await resolveGameItemImages(missingIconIds)
+          for (const ing of ingredients) {
+            if (!ing.game_item.icon_url) {
+              const url = resolved.get(ing.game_item.game_item_id)
+              if (url) ing.game_item.icon_url = url
+            }
+          }
+        } catch { /* silently ignore — icons are optional */ }
+      }
 
       // ========================================================================
       // Part 4: Get missions that reward this blueprint
