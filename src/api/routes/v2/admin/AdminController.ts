@@ -84,6 +84,20 @@ export class AdminController extends BaseController {
   }
 
   /**
+   * List all game data import jobs (most recent first)
+   * @summary List import jobs
+   */
+  @Get("import-game-data")
+  @Security("jwt")
+  public async listGameDataImportJobs(
+    @Request() request: ExpressRequest,
+  ): Promise<{ jobs: GameDataImportJob[] }> {
+    this.request = request
+    this.requireAdmin()
+    return { jobs: [...jobs.values()].reverse() }
+  }
+
+  /**
    * Get game data import job status
    * @summary Poll import job
    */
