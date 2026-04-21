@@ -367,6 +367,11 @@ function normalize(name: string): string {
   return name.toLowerCase().trim()
 }
 
+function truncate(val: string | null, maxLen: number): string | null {
+  if (!val) return null
+  return val.length > maxLen ? val.slice(0, maxLen) : val
+}
+
 /**
  * Check if an item is a Core armor piece
  */
@@ -457,12 +462,24 @@ export class GameDataImportService {
       logger.info(`Loaded ${p4kItems.length} items from P4K data`, { channel, versionNumber, versionId })
 
       // Filter to items with resolved names
-      const validItems = p4kItems.filter(
+      const filteredItems = p4kItems.filter(
         (i) => i.name && !i.name.startsWith("@") && !i.name.includes("PLACEHOLDER"),
       )
+
+      // Deduplicate by name (keep the item with more attributes)
+      const seenNames = new Map<string, P4KItem>()
+      for (const item of filteredItems) {
+        const key = item.name.toLowerCase().trim()
+        const existing = seenNames.get(key)
+        if (!existing || (item.attributes && Object.keys(item.attributes).length > (existing.attributes ? Object.keys(existing.attributes).length : 0))) {
+          seenNames.set(key, item)
+        }
+      }
+      const validItems = Array.from(seenNames.values())
+
       stats.validP4KItems = validItems.length
       logger.info(
-        `${validItems.length} items with usable names (${p4kItems.length - validItems.length} filtered out)`,
+        `${validItems.length} unique items with usable names (${p4kItems.length - validItems.length} filtered/deduped)`,
       )
 
       // ========================================================================
@@ -530,26 +547,6 @@ export class GameDataImportService {
           }
         }
 
-        // 3. Fuzzy match
-        if (!dbItem && p4k.name.length > 10 && p4k.name.length <= 60) {
-          const norm = normalize(p4k.name)
-          const dbNameEntries = Array.from(dbByName.entries())
-          for (const [dbName, candidate] of dbNameEntries) {
-            if (Math.abs(dbName.length - norm.length) > 2) continue
-
-            const distance = levenshtein(norm, dbName)
-            if (distance <= 2) {
-              dbItem = candidate
-              matchType = "fuzzy"
-              stats.matchedFuzzy++
-              logger.info(
-                `Fuzzy match (distance=${distance}): "${candidate.name}" → "${p4k.name}"`,
-              )
-              break
-            }
-          }
-        }
-
         if (dbItem && matchType) {
           stats.matched++
           matches.push({ dbId: dbItem.id, p4k, matchType })
@@ -589,34 +586,39 @@ export class GameDataImportService {
       // ========================================================================
       logger.info("Updating database")
 
-      await knex.transaction(async (trx) => {
-        // Update matched items
-        if (matches.length > 0) {
+      // Update matched items (no transaction - each batch is independent)
+      const trx = knex
+
+      if (matches.length > 0) {
           logger.info(`Updating ${matches.length} matched items`)
-          const BATCH = 100
+          const BATCH = 200
           for (let i = 0; i < matches.length; i += BATCH) {
             const batch = matches.slice(i, i + BATCH)
             for (const { dbId, p4k } of batch) {
-              await trx("game_items")
-                .where("id", dbId)
-                .update({
-                  name: p4k.name,
-                  type: P4K_TYPE_MAP[p4k.type || ""] || "Other",
-                  p4k_id: p4k.id,
-                  p4k_file: p4k.file,
-                  item_type: p4k.type,
-                  sub_type: p4k.subType,
-                  size: p4k.size,
-                  grade: p4k.grade,
-                  manufacturer: p4k.manufacturer,
-                  display_type: p4k.displayType,
-                  thumbnail_path: p4k.thumbnail,
-                  name_key: p4k.nameKey,
-                })
+              await trx.raw(
+                `UPDATE game_items SET name = ?, type = ?, p4k_id = ?, p4k_file = ?,
+                 item_type = ?, sub_type = ?, size = ?, grade = ?,
+                 manufacturer = ?, display_type = ?, thumbnail_path = ?, name_key = ?
+                 WHERE id = ?`,
+                [
+                  truncate(p4k.name, 100),
+                  truncate(P4K_TYPE_MAP[p4k.type || ""] || "Other", 50),
+                  p4k.id,
+                  truncate(p4k.file, 200),
+                  truncate(p4k.type, 100),
+                  truncate(p4k.subType, 100),
+                  p4k.size,
+                  p4k.grade,
+                  truncate(p4k.manufacturer, 100),
+                  truncate(p4k.displayType, 100),
+                  truncate(p4k.thumbnail, 500),
+                  truncate(p4k.nameKey, 200),
+                  dbId,
+                ],
+              )
             }
+            if (i % 1000 === 0 && i > 0) logger.info(`  Updated ${i}/${matches.length}`)
           }
-          stats.updated = matches.length
-        }
 
         // Insert new items
         if (inserts.length > 0) {
@@ -626,20 +628,20 @@ export class GameDataImportService {
             const batch = inserts.slice(i, i + BATCH)
             await trx("game_items").insert(
               batch.map((p4k) => ({
-                name: p4k.name,
-                type: P4K_TYPE_MAP[p4k.type || ""] || "Other",
+                name: truncate(p4k.name, 100)!,
+                type: truncate(P4K_TYPE_MAP[p4k.type || ""] || "Other", 50),
                 p4k_id: p4k.id,
-                p4k_file: p4k.file,
-                item_type: p4k.type,
-                sub_type: p4k.subType,
+                p4k_file: truncate(p4k.file, 200),
+                item_type: truncate(p4k.type, 100),
+                sub_type: truncate(p4k.subType, 100),
                 size: p4k.size,
                 grade: p4k.grade,
-                manufacturer: p4k.manufacturer,
-                display_type: p4k.displayType,
-                thumbnail_path: p4k.thumbnail,
-                name_key: p4k.nameKey,
+                manufacturer: truncate(p4k.manufacturer, 100),
+                display_type: truncate(p4k.displayType, 100),
+                thumbnail_path: truncate(p4k.thumbnail, 500),
+                name_key: truncate(p4k.nameKey, 200),
               })),
-            )
+            ).onConflict("name").merge()
           }
         }
 
@@ -649,38 +651,55 @@ export class GameDataImportService {
         logger.info("Importing item attributes")
 
         let attrCount = 0
-        const allImported = [...matches.map((m) => ({ dbId: m.dbId, p4k: m.p4k })), ...inserts.map((p4k) => ({ dbId: null, p4k }))]
 
-        for (const { dbId, p4k } of allImported) {
+        // Build all attribute rows first, then batch insert
+        const attrRows: Array<{ game_item_id: string; attribute_name: string; attribute_value: string }> = []
+
+        for (const { dbId, p4k } of matches) {
           if (!p4k.attributes || Object.keys(p4k.attributes).length === 0) continue
-
-          // Resolve the DB id for inserts (they were just inserted by p4k_id)
-          let itemId = dbId
-          if (!itemId) {
-            const inserted = await trx("game_items").where("p4k_id", p4k.id).select("id").first()
-            if (!inserted) continue
-            itemId = inserted.id
-          }
-
-          // Upsert attributes
           for (const [attrName, attrValue] of Object.entries(p4k.attributes)) {
             if (attrValue === null || attrValue === undefined) continue
-            const valueStr = Array.isArray(attrValue) ? attrValue.join(", ") : String(attrValue)
-
-            await trx("game_item_attributes")
-              .insert({
-                game_item_id: itemId,
-                attribute_name: attrName,
-                attribute_value: valueStr,
-                updated_at: new Date(),
-              })
-              .onConflict(["game_item_id", "attribute_name"])
-              .merge({ attribute_value: valueStr, updated_at: new Date() })
-
-            attrCount++
+            attrRows.push({
+              game_item_id: dbId,
+              attribute_name: attrName,
+              attribute_value: Array.isArray(attrValue) ? attrValue.join(", ") : String(attrValue),
+            })
           }
         }
 
+        // For inserts, we need to resolve IDs first
+        if (inserts.length > 0) {
+          const insertedItems = await trx("game_items")
+            .whereIn("p4k_id", inserts.filter(p => p.id).map(p => p.id))
+            .select("id", "p4k_id")
+          const idMap = new Map(insertedItems.map((r: { id: string; p4k_id: string }) => [r.p4k_id, r.id]))
+
+          for (const p4k of inserts) {
+            if (!p4k.attributes || Object.keys(p4k.attributes).length === 0) continue
+            const itemId = idMap.get(p4k.id)
+            if (!itemId) continue
+            for (const [attrName, attrValue] of Object.entries(p4k.attributes)) {
+              if (attrValue === null || attrValue === undefined) continue
+              attrRows.push({
+                game_item_id: itemId,
+                attribute_name: attrName,
+                attribute_value: Array.isArray(attrValue) ? attrValue.join(", ") : String(attrValue),
+              })
+            }
+          }
+        }
+
+        // Batch upsert attributes
+        const ATTR_BATCH = 500
+        for (let i = 0; i < attrRows.length; i += ATTR_BATCH) {
+          const batch = attrRows.slice(i, i + ATTR_BATCH)
+          await trx("game_item_attributes")
+            .insert(batch.map(r => ({ ...r, updated_at: new Date() })))
+            .onConflict(["game_item_id", "attribute_name"])
+            .merge({ attribute_value: trx.raw("EXCLUDED.attribute_value"), updated_at: new Date() })
+          if (i % 5000 === 0 && i > 0) logger.info(`  Attributes: ${i}/${attrRows.length}`)
+        }
+        attrCount = attrRows.length
         logger.info(`Imported ${attrCount} attributes`)
 
         // ========================================================================
@@ -716,7 +735,7 @@ export class GameDataImportService {
 
         stats.fullSetsCreated = fullSetsCreated
         logger.info(`Created ${fullSetsCreated} Full Set items`)
-      })
+      }
 
       // ========================================================================
       // STEP 6: Rebuild search index

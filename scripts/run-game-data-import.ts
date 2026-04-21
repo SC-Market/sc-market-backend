@@ -34,8 +34,8 @@ const db = knexLib({
     database: process.env.DATABASE_TARGET || "scmarket",
     connectTimeout: 10000,
   },
-  pool: { min: 0, max: 3 },
-  acquireConnectionTimeout: 15000,
+  pool: { min: 0, max: 10 },
+  acquireConnectionTimeout: 30000,
 })
 
 async function run() {
