@@ -1336,6 +1336,9 @@ const models: TsoaRoute.Models = {
             "community_satisfaction_avg": {"dataType":"double"},
             "is_chain_starter": {"dataType":"boolean","required":true},
             "is_shareable": {"dataType":"boolean","required":true},
+            "reputation_reward": {"dataType":"double"},
+            "reward_scope": {"dataType":"string"},
+            "mission_giver_org": {"dataType":"string"},
         },
         "additionalProperties": false,
     },
@@ -1469,6 +1472,20 @@ const models: TsoaRoute.Models = {
             "ingredient_count": {"dataType":"double","required":true},
             "drop_probability": {"dataType":"double","required":true},
             "is_guaranteed": {"dataType":"boolean","required":true},
+        },
+        "additionalProperties": false,
+    },
+    // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+    "ReputationRank": {
+        "dataType": "refObject",
+        "properties": {
+            "scope_code": {"dataType":"string","required":true},
+            "scope_display_name": {"dataType":"string","required":true},
+            "standing_code": {"dataType":"string","required":true},
+            "standing_display_name": {"dataType":"string","required":true},
+            "threshold": {"dataType":"double","required":true},
+            "ceiling": {"dataType":"double","required":true},
+            "rank_index": {"dataType":"double","required":true},
         },
         "additionalProperties": false,
     },
@@ -4102,6 +4119,36 @@ export function RegisterRoutes(app: Router) {
             }
         });
         // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+        const argsMissionsController_getReputationRanks: Record<string, TsoaRoute.ParameterSchema> = {
+                scope_code: {"in":"query","name":"scope_code","dataType":"string"},
+        };
+        app.get('/game-data/missions/reputation-ranks',
+            ...(fetchMiddlewares<RequestHandler>(MissionsController)),
+            ...(fetchMiddlewares<RequestHandler>(MissionsController.prototype.getReputationRanks)),
+
+            async function MissionsController_getReputationRanks(request: ExRequest, response: ExResponse, next: any) {
+
+            // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+
+            let validatedArgs: any[] = [];
+            try {
+                validatedArgs = templateService.getValidatedArgs({ args: argsMissionsController_getReputationRanks, request, response });
+
+                const controller = new MissionsController();
+
+              await templateService.apiHandler({
+                methodName: 'getReputationRanks',
+                controller,
+                response,
+                next,
+                validatedArgs,
+                successStatus: undefined,
+              });
+            } catch (err) {
+                return next(err);
+            }
+        });
+        // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
         const argsCraftingController_calculateQuality: Record<string, TsoaRoute.ParameterSchema> = {
                 request: {"in":"body","name":"request","required":true,"ref":"CalculateQualityRequest"},
         };
@@ -5359,6 +5406,7 @@ export function RegisterRoutes(app: Router) {
         });
         // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
         const argsAdminController_getImportJobStatus: Record<string, TsoaRoute.ParameterSchema> = {
+                jobId: {"in":"path","name":"jobId","required":true,"dataType":"string"},
                 request: {"in":"request","name":"request","required":true,"dataType":"object"},
         };
         app.get('/admin/import-game-data/:jobId',

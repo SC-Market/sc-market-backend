@@ -2,7 +2,7 @@
  * Admin V2 Controller — Game Data Import with async job tracking
  */
 
-import { Controller, Post, Get, Route, Tags, Request, Security } from "tsoa"
+import { Controller, Post, Get, Route, Tags, Request, Security, Path } from "tsoa"
 import { Request as ExpressRequest } from "express"
 import { BaseController } from "../base/BaseController.js"
 import { getKnex } from "../../../../clients/database/knex-db.js"
@@ -104,12 +104,12 @@ export class AdminController extends BaseController {
   @Get("import-game-data/{jobId}")
   @Security("jwt")
   public async getImportJobStatus(
+    @Path() jobId: string,
     @Request() request: ExpressRequest,
   ): Promise<{ job: GameDataImportJob | null }> {
     this.request = request
     this.requireAdmin()
 
-    const jobId = (request as any).params.jobId
     const job = jobs.get(jobId) ?? null
     if (!job) this.setStatus(404)
     return { job }
