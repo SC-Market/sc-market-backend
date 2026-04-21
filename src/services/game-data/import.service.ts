@@ -1399,6 +1399,8 @@ export class GameDataImportService {
               stats.inserted++
             } else if (result === "updated") {
               stats.updated++
+            } else if (result === "skipped") {
+              stats.skipped++
             }
           } catch (error) {
             const errorMessage = error instanceof Error ? error.message : String(error)
@@ -1517,7 +1519,7 @@ export class GameDataImportService {
     trx: Knex.Transaction,
     versionId: string,
     blueprint: P4KBlueprint,
-  ): Promise<"inserted" | "updated"> {
+  ): Promise<"inserted" | "updated" | "skipped"> {
     // First, verify the output game item exists (match by p4k_file or name)
     const outputItem = await trx("game_items")
       .where("p4k_file", blueprint.outputItemId)
@@ -1526,9 +1528,8 @@ export class GameDataImportService {
       .first()
 
     if (!outputItem) {
-      // Skip silently — item may not have been imported (e.g. NPC-only items)
-      stats.skipped++
-      return "updated" // not actually updated, but avoids double-counting
+      logger.debug("Output item not found, skipping blueprint", { outputItemId: blueprint.outputItemId })
+      return "skipped"
     }
 
     // Build blueprint record

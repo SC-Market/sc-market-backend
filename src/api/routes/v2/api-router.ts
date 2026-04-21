@@ -75,8 +75,8 @@ apiV2Router.use(
 // DEV ONLY: unauthenticated import endpoint for testing — REMOVE BEFORE PRODUCTION
 if (process.env.NODE_ENV !== "production") {
   apiV2Router.post("/dev/import-game-data", gameDataZipUpload.single("file"), async (req, res) => {
-  const { gameDataImportService } = await import("../../services/game-data/import.service.js")
-  const { getKnex } = await import("../../clients/database/knex-db.js")
+  const { gameDataImportService } = await import("../../../services/game-data/import.service.js")
+  const { getKnex } = await import("../../../clients/database/knex-db.js")
   const fs = await import("fs")
   const path = await import("path")
   const { execSync } = await import("child_process")
