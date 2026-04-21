@@ -394,6 +394,7 @@ export class BlueprintsController extends BaseController {
           "gi.id as game_item_id",
           "gi.name as game_item_name",
           "gi.type as game_item_type",
+          "gi.sub_type as game_item_sub_type",
           "gi.image_url as game_item_icon",
         )
         .where("bi.blueprint_id", blueprint_id)
@@ -409,6 +410,7 @@ export class BlueprintsController extends BaseController {
           game_item_id: row.game_item_id,
           name: row.game_item_name,
           type: row.game_item_type || "unknown",
+          sub_type: row.game_item_sub_type || undefined,
           icon_url: row.game_item_icon || undefined,
         },
         quantity_required: row.quantity_required,

@@ -1773,6 +1773,7 @@ const models: TsoaRoute.Models = {
             "game_item_id": {"dataType":"string","required":true},
             "name": {"dataType":"string","required":true},
             "type": {"dataType":"string","required":true},
+            "sub_type": {"dataType":"string"},
             "icon_url": {"dataType":"string"},
         },
         "additionalProperties": false,

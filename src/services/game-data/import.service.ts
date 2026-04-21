@@ -1034,6 +1034,38 @@ export class GameDataImportService {
       }
 
       // ========================================================================
+      // STEP 12.8: Import commodities (from resources array)
+      // ========================================================================
+      if (gameData.resources && gameData.resources.length > 0) {
+        logger.info("Importing commodities")
+        try {
+          await knex("wiki_commodities").delete()
+          for (const res of gameData.resources) {
+            // Try to link to game_items by name match
+            const gameItem = await knex("game_items")
+              .where("name", res.name)
+              .orWhereRaw("lower(name) = ?", [res.name.toLowerCase()])
+              .select("id")
+              .first()
+
+            await knex("wiki_commodities").insert({
+              p4k_id: res.id,
+              name: res.name,
+              game_item_id: gameItem?.id || null,
+              group_name: res.group,
+              group_key: res.groupKey,
+              parent_group: res.parentGroup,
+              density: res.density,
+              description: res.description,
+            })
+          }
+          logger.info(`Imported ${gameData.resources.length} commodities`)
+        } catch (err) {
+          logger.debug("Commodities import skipped (table may not exist)", { error: err instanceof Error ? err.message : String(err) })
+        }
+      }
+
+      // ========================================================================
       // STEP 13: Import starmap locations
       // ========================================================================
       if (gameData.starmap && gameData.starmap.length > 0) {
