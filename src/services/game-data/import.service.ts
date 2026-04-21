@@ -1408,7 +1408,6 @@ export class GameDataImportService {
   private validateBlueprintData(blueprint: P4KBlueprint): MissionValidationResult {
     const errors: string[] = []
 
-    // Required fields
     if (!blueprint.id) {
       errors.push("Missing blueprint ID")
     }
@@ -1419,41 +1418,11 @@ export class GameDataImportService {
       errors.push("Missing output item ID")
     }
 
-    // Validate output quantity
-    if (blueprint.outputQuantity < 1) {
-      errors.push("Output quantity must be at least 1")
-    }
-
-    // Validate ingredients
-    if (!blueprint.ingredients || blueprint.ingredients.length === 0) {
-      errors.push("Blueprint must have at least one ingredient")
-    } else {
-      for (let i = 0; i < blueprint.ingredients.length; i++) {
-        const ing = blueprint.ingredients[i]
-        if (!ing.itemId) {
-          errors.push(`Ingredient ${i}: Missing item ID`)
-        }
-        if (ing.quantity < 1) {
-          errors.push(`Ingredient ${i}: Quantity must be at least 1`)
-        }
-        if (ing.minQuality && (ing.minQuality < 1 || ing.minQuality > 5)) {
-          errors.push(`Ingredient ${i}: Min quality must be between 1 and 5`)
-        }
-        if (ing.recommendedQuality && (ing.recommendedQuality < 1 || ing.recommendedQuality > 5)) {
-          errors.push(`Ingredient ${i}: Recommended quality must be between 1 and 5`)
-        }
-      }
-    }
-
-    // Validate tier if present
-    if (blueprint.tier !== null && (blueprint.tier < 1 || blueprint.tier > 5)) {
-      errors.push("Tier must be between 1 and 5")
-    }
-
     return {
       valid: errors.length === 0,
       errors,
     }
+  }
   }
 
   /**

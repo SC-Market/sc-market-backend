@@ -75,13 +75,60 @@ apiV2Router.use(
 // Register static routes that conflict with TSOA parameterized routes
 // TSOA registers /:param before /static, so we need to handle these manually
 import { BlueprintsController } from "./game-data/blueprints/BlueprintsController.js"
-apiV2Router.get("/game-data/blueprints/categories", async (req, res, next) => {
-  try {
-    const controller = new BlueprintsController(req)
-    const result = await controller.getBlueprintCategories(req.query.version_id as string | undefined)
-    res.json(result)
-  } catch (err) { next(err) }
-})
+import { ResourcesController } from "./game-data/resources/ResourcesController.js"
+import { MissionsController } from "./game-data/missions/MissionsController.js"
+
+const staticRoutes: Array<{ path: string; handler: (req: express.Request, res: express.Response, next: express.NextFunction) => void }> = [
+  {
+    path: "/game-data/blueprints/categories",
+    handler: async (req, res, next) => {
+      try {
+        const c = new BlueprintsController(req)
+        res.json(await c.getBlueprintCategories(req.query.version_id as string | undefined))
+      } catch (err) { next(err) }
+    },
+  },
+  {
+    path: "/game-data/blueprints/inventory",
+    handler: async (req, res, next) => {
+      try {
+        const c = new BlueprintsController(req)
+        res.json(await c.getUserBlueprintInventory(
+          req.query.user_id as string | undefined,
+          req.query.version_id as string | undefined,
+          Number(req.query.page) || 1,
+          Number(req.query.page_size) || 20,
+        ))
+      } catch (err) { next(err) }
+    },
+  },
+  {
+    path: "/game-data/resources/categories",
+    handler: async (req, res, next) => {
+      try {
+        const c = new ResourcesController(req)
+        res.json(await c.getResourceCategories(req.query.version_id as string | undefined))
+      } catch (err) { next(err) }
+    },
+  },
+  {
+    path: "/game-data/missions/chains",
+    handler: async (req, res, next) => {
+      try {
+        const c = new MissionsController(req)
+        res.json(await c.getMissionChains(
+          req.query.version_id as string | undefined,
+          Number(req.query.page) || 1,
+          Number(req.query.page_size) || 20,
+        ))
+      } catch (err) { next(err) }
+    },
+  },
+]
+
+for (const route of staticRoutes) {
+  apiV2Router.get(route.path, route.handler)
+}
 
 RegisterRoutes(apiV2Router)
 
