@@ -214,12 +214,16 @@ export class MissionsController extends BaseController {
         missionsQuery = missionsQuery.where("m.legal_status", legal_status)
       }
 
-      // Apply difficulty range filter
+      // Apply difficulty range filter (include NULLs - most missions don't have difficulty set)
       if (difficulty_min !== undefined) {
-        missionsQuery = missionsQuery.where("m.difficulty_level", ">=", difficulty_min)
+        missionsQuery = missionsQuery.where(function() {
+          this.where("m.difficulty_level", ">=", difficulty_min).orWhereNull("m.difficulty_level")
+        })
       }
       if (difficulty_max !== undefined) {
-        missionsQuery = missionsQuery.where("m.difficulty_level", "<=", difficulty_max)
+        missionsQuery = missionsQuery.where(function() {
+          this.where("m.difficulty_level", "<=", difficulty_max).orWhereNull("m.difficulty_level")
+        })
       }
 
       // Apply shareable filter (Requirement 41.5)
