@@ -18,7 +18,7 @@ import { ImportGameDataResponse, ImportErrorResponse } from "./admin.types.js"
 import logger from "../../../../logger/logger.js"
 import * as fs from "fs"
 import * as path from "path"
-import { execSync } from "child_process"
+import AdmZip from "adm-zip"
 
 @Route("admin")
 @Tags("Admin")
@@ -120,14 +120,8 @@ export class AdminController extends BaseController {
       fs.mkdirSync(tempDir, { recursive: true })
 
       try {
-        // Validate path contains no shell metacharacters
-        if (/[;&|`$]/.test(uploadedFilePath!)) {
-          throw new Error("Invalid file path")
-        }
-        execSync(`unzip -o "${uploadedFilePath}" -d "${tempDir}"`, {
-          stdio: "pipe",
-          timeout: 30000,
-        })
+        const zip = new AdmZip(uploadedFilePath!)
+        zip.extractAllTo(tempDir, true)
       } catch (error) {
         logger.error("Failed to extract ZIP", {
           admin: adminUserId,
