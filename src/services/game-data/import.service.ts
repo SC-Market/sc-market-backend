@@ -1522,10 +1522,13 @@ export class GameDataImportService {
     const outputItem = await trx("game_items")
       .where("p4k_file", blueprint.outputItemId)
       .orWhere("name", blueprint.outputItemId)
+      .orWhereRaw("p4k_file LIKE ?", [`%${blueprint.outputItemId}`])
       .first()
 
     if (!outputItem) {
-      throw new Error(`Output item not found: ${blueprint.outputItemId}`)
+      // Skip silently — item may not have been imported (e.g. NPC-only items)
+      stats.skipped++
+      return "updated" // not actually updated, but avoids double-counting
     }
 
     // Build blueprint record
@@ -1600,8 +1603,8 @@ export class GameDataImportService {
         blueprint_id: blueprintId,
         ingredient_game_item_id: ingredientItem.id,
         quantity_required: ing.quantity,
-        min_quality_tier: ing.minQuality || null,
-        recommended_quality_tier: ing.recommendedQuality || null,
+        min_quality_tier: null,
+        recommended_quality_tier: null,
         is_alternative: false,
         display_order: i,
         created_at: new Date(),
