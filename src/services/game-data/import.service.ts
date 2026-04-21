@@ -100,6 +100,12 @@ export interface GameDataPayload {
   starmap: P4KStarmapLocation[]
   blueprintRewardPools: P4KBlueprintRewardPool[]
   reputationAmounts: Record<string, number>
+  reputationRanks: Array<{
+    scope: string
+    displayName: string
+    ceiling: number
+    ranks: Array<{ code: string; displayName: string; threshold: number; index: number }>
+  }>
   refiningProcesses: P4KRefiningProcess[]
 }
 
@@ -945,6 +951,37 @@ export class GameDataImportService {
           )
         } catch {
           logger.debug("Refining processes import skipped (table may not exist)")
+        }
+      }
+
+      // ========================================================================
+      // STEP 12.5: Import reputation ranks
+      // ========================================================================
+      if (gameData.reputationRanks && gameData.reputationRanks.length > 0) {
+        logger.info("Importing reputation ranks")
+        try {
+          await knex("reputation_ranks").delete()
+          const rows: Array<Record<string, unknown>> = []
+          for (const ladder of gameData.reputationRanks) {
+            for (const rank of ladder.ranks || []) {
+              rows.push({
+                scope_code: ladder.scope,
+                scope_display_name: ladder.displayName,
+                ceiling: ladder.ceiling,
+                standing_code: rank.code,
+                standing_display_name: rank.displayName,
+                threshold: rank.threshold,
+                rank_index: rank.index,
+              })
+            }
+          }
+          const BATCH = 200
+          for (let i = 0; i < rows.length; i += BATCH) {
+            await knex("reputation_ranks").insert(rows.slice(i, i + BATCH))
+          }
+          logger.info(`Imported ${rows.length} reputation ranks across ${gameData.reputationRanks.length} scopes`)
+        } catch {
+          logger.debug("Reputation ranks import skipped (table may not exist)")
         }
       }
 
