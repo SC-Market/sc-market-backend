@@ -218,6 +218,8 @@ export interface P4KMission {
   missionGiver: string | null
   type: string | null
   location: string | null
+  locationName: string | null
+  career: string | null
   lawful: boolean | null
   reward: { uec: number; max: number } | null
   reputationRewards: Record<string, Array<{ faction: string | null; scope: string | null; reward: string | null; amount?: number }>> | null
@@ -1145,6 +1147,8 @@ export class GameDataImportService {
           missionGiver: raw.missionGiver || null,
           type: raw.type || null,
           location: raw.location || null,
+          locationName: raw.locationName || null,
+          career: raw.career || null,
           lawful: raw.lawful ?? null,
           reward: raw.reward || null,
           reputationRewards: raw.reputationRewards || null,
@@ -1217,12 +1221,14 @@ export class GameDataImportService {
     // Build mission record
     const missionRecord = {
       version_id: versionId,
-      mission_code: mission.name, // Use internal name as code
+      mission_code: mission.name,
       mission_name: mission.title || mission.name,
       mission_description: mission.description,
       category,
       mission_type: mission.type,
+      career_type: mission.career,
       legal_status: legalStatus,
+      star_system: mission.locationName || mission.location,
       mission_giver_org: mission.missionGiver,
       credit_reward_min: mission.reward?.uec || null,
       credit_reward_max: mission.reward?.max || mission.reward?.uec || null,
