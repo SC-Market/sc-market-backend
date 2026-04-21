@@ -2236,7 +2236,7 @@ const models: TsoaRoute.Models = {
         "dataType": "refObject",
         "properties": {
             "success": {"dataType":"boolean","required":true},
-            "summary": {"dataType":"nestedObjectLiteral","nestedProperties":{"fullSetsCreated":{"dataType":"double","required":true},"nameChanges":{"dataType":"double","required":true},"updated":{"dataType":"double","required":true},"inserted":{"dataType":"double","required":true},"matchedFuzzy":{"dataType":"double","required":true},"matchedCStoneUUID":{"dataType":"double","required":true},"matchedExact":{"dataType":"double","required":true},"matched":{"dataType":"double","required":true},"existingDBItems":{"dataType":"double","required":true},"validP4KItems":{"dataType":"double","required":true},"totalP4KItems":{"dataType":"double","required":true}},"required":true},
+            "summary": {"dataType":"nestedObjectLiteral","nestedProperties":{"blueprintsUpdated":{"dataType":"double","required":true},"blueprintsInserted":{"dataType":"double","required":true},"blueprintsProcessed":{"dataType":"double","required":true},"missionsUpdated":{"dataType":"double","required":true},"missionsInserted":{"dataType":"double","required":true},"missionsProcessed":{"dataType":"double","required":true},"fullSetsCreated":{"dataType":"double","required":true},"nameChanges":{"dataType":"double","required":true},"updated":{"dataType":"double","required":true},"inserted":{"dataType":"double","required":true},"matchedFuzzy":{"dataType":"double","required":true},"matchedCStoneUUID":{"dataType":"double","required":true},"matchedExact":{"dataType":"double","required":true},"matched":{"dataType":"double","required":true},"existingDBItems":{"dataType":"double","required":true},"validP4KItems":{"dataType":"double","required":true},"totalP4KItems":{"dataType":"double","required":true}},"required":true},
             "errors": {"dataType":"array","array":{"dataType":"string"},"required":true},
             "timestamp": {"dataType":"string","required":true},
         },
@@ -2437,7 +2437,7 @@ export function RegisterRoutes(app: Router) {
                 request: {"in":"request","name":"request","required":true,"dataType":"object"},
         };
         app.delete('/stock-lots/:id',
-            authenticateMiddleware([{"session":[]}]),
+            authenticateMiddleware([{"jwt":[]}]),
             ...(fetchMiddlewares<RequestHandler>(StockLotsV2Controller)),
             ...(fetchMiddlewares<RequestHandler>(StockLotsV2Controller.prototype.deleteStockLot)),
 
@@ -2569,7 +2569,7 @@ export function RegisterRoutes(app: Router) {
                 request: {"in":"request","name":"request","required":true,"dataType":"object"},
         };
         app.get('/offers/:sessionId',
-            authenticateMiddleware([{"session":[]}]),
+            authenticateMiddleware([{"jwt":[]}]),
             ...(fetchMiddlewares<RequestHandler>(OffersV2Controller)),
             ...(fetchMiddlewares<RequestHandler>(OffersV2Controller.prototype.getOfferSession)),
 
@@ -2604,7 +2604,7 @@ export function RegisterRoutes(app: Router) {
                 page_size: {"in":"query","name":"page_size","dataType":"double"},
         };
         app.get('/offers/search',
-            authenticateMiddleware([{"session":[]}]),
+            authenticateMiddleware([{"jwt":[]}]),
             ...(fetchMiddlewares<RequestHandler>(OffersV2Controller)),
             ...(fetchMiddlewares<RequestHandler>(OffersV2Controller.prototype.searchOffers)),
 
@@ -2903,7 +2903,7 @@ export function RegisterRoutes(app: Router) {
                 request: {"in":"request","name":"request","required":true,"dataType":"object"},
         };
         app.post('/listings/:id/photos',
-            authenticateMiddleware([{"session":[]}]),
+            authenticateMiddleware([{"jwt":[]}]),
             ...(fetchMiddlewares<RequestHandler>(ListingsV2Controller)),
             ...(fetchMiddlewares<RequestHandler>(ListingsV2Controller.prototype.uploadPhotos)),
 
@@ -3151,7 +3151,7 @@ export function RegisterRoutes(app: Router) {
         const argsWishlistsController_getWishlists: Record<string, TsoaRoute.ParameterSchema> = {
         };
         app.get('/api/v2/game-data/wishlists',
-            authenticateMiddleware([{"discord_oauth":[]}]),
+            authenticateMiddleware([{"jwt":[]}]),
             ...(fetchMiddlewares<RequestHandler>(WishlistsController)),
             ...(fetchMiddlewares<RequestHandler>(WishlistsController.prototype.getWishlists)),
 
@@ -3182,7 +3182,7 @@ export function RegisterRoutes(app: Router) {
                 request: {"in":"body","name":"request","required":true,"ref":"CreateWishlistRequest"},
         };
         app.post('/api/v2/game-data/wishlists',
-            authenticateMiddleware([{"discord_oauth":[]}]),
+            authenticateMiddleware([{"jwt":[]}]),
             ...(fetchMiddlewares<RequestHandler>(WishlistsController)),
             ...(fetchMiddlewares<RequestHandler>(WishlistsController.prototype.createWishlist)),
 
@@ -3245,7 +3245,7 @@ export function RegisterRoutes(app: Router) {
                 request: {"in":"body","name":"request","required":true,"ref":"UpdateWishlistRequest"},
         };
         app.put('/api/v2/game-data/wishlists/:wishlist_id',
-            authenticateMiddleware([{"discord_oauth":[]}]),
+            authenticateMiddleware([{"jwt":[]}]),
             ...(fetchMiddlewares<RequestHandler>(WishlistsController)),
             ...(fetchMiddlewares<RequestHandler>(WishlistsController.prototype.updateWishlist)),
 
@@ -3276,7 +3276,7 @@ export function RegisterRoutes(app: Router) {
                 wishlist_id: {"in":"path","name":"wishlist_id","required":true,"dataType":"string"},
         };
         app.delete('/api/v2/game-data/wishlists/:wishlist_id',
-            authenticateMiddleware([{"discord_oauth":[]}]),
+            authenticateMiddleware([{"jwt":[]}]),
             ...(fetchMiddlewares<RequestHandler>(WishlistsController)),
             ...(fetchMiddlewares<RequestHandler>(WishlistsController.prototype.deleteWishlist)),
 
@@ -3308,7 +3308,7 @@ export function RegisterRoutes(app: Router) {
                 request: {"in":"body","name":"request","required":true,"ref":"AddWishlistItemRequest"},
         };
         app.post('/api/v2/game-data/wishlists/:wishlist_id/items',
-            authenticateMiddleware([{"discord_oauth":[]}]),
+            authenticateMiddleware([{"jwt":[]}]),
             ...(fetchMiddlewares<RequestHandler>(WishlistsController)),
             ...(fetchMiddlewares<RequestHandler>(WishlistsController.prototype.addWishlistItem)),
 
@@ -3340,7 +3340,7 @@ export function RegisterRoutes(app: Router) {
                 item_id: {"in":"path","name":"item_id","required":true,"dataType":"string"},
         };
         app.delete('/api/v2/game-data/wishlists/:wishlist_id/items/:item_id',
-            authenticateMiddleware([{"discord_oauth":[]}]),
+            authenticateMiddleware([{"jwt":[]}]),
             ...(fetchMiddlewares<RequestHandler>(WishlistsController)),
             ...(fetchMiddlewares<RequestHandler>(WishlistsController.prototype.removeWishlistItem)),
 
@@ -3373,7 +3373,7 @@ export function RegisterRoutes(app: Router) {
                 request: {"in":"body","name":"request","required":true,"ref":"UpdateWishlistItemRequest"},
         };
         app.put('/api/v2/game-data/wishlists/:wishlist_id/items/:item_id',
-            authenticateMiddleware([{"discord_oauth":[]}]),
+            authenticateMiddleware([{"jwt":[]}]),
             ...(fetchMiddlewares<RequestHandler>(WishlistsController)),
             ...(fetchMiddlewares<RequestHandler>(WishlistsController.prototype.updateWishlistItem)),
 
@@ -3404,7 +3404,7 @@ export function RegisterRoutes(app: Router) {
                 wishlist_id: {"in":"path","name":"wishlist_id","required":true,"dataType":"string"},
         };
         app.get('/api/v2/game-data/wishlists/:wishlist_id/shopping-list',
-            authenticateMiddleware([{"discord_oauth":[]}]),
+            authenticateMiddleware([{"jwt":[]}]),
             ...(fetchMiddlewares<RequestHandler>(WishlistsController)),
             ...(fetchMiddlewares<RequestHandler>(WishlistsController.prototype.generateShoppingList)),
 
@@ -3748,7 +3748,7 @@ export function RegisterRoutes(app: Router) {
                 body: {"in":"body","name":"body","required":true,"ref":"SelectVersionRequest"},
         };
         app.post('/api/v2/game-data/versions/select',
-            authenticateMiddleware([{"discord_oauth":[]}]),
+            authenticateMiddleware([{"jwt":[]}]),
             ...(fetchMiddlewares<RequestHandler>(VersionsController)),
             ...(fetchMiddlewares<RequestHandler>(VersionsController.prototype.selectVersion)),
 
@@ -3986,7 +3986,7 @@ export function RegisterRoutes(app: Router) {
                 body: {"in":"body","name":"body","required":true,"dataType":"nestedObjectLiteral","nestedProperties":{"completion_notes":{"dataType":"string"},"blueprints_rewarded":{"dataType":"array","array":{"dataType":"string"}}}},
         };
         app.post('/api/v2/game-data/missions/:mission_id/complete',
-            authenticateMiddleware([{"discord_oauth":[]}]),
+            authenticateMiddleware([{"jwt":[]}]),
             ...(fetchMiddlewares<RequestHandler>(MissionsController)),
             ...(fetchMiddlewares<RequestHandler>(MissionsController.prototype.completeMission)),
 
@@ -4018,7 +4018,7 @@ export function RegisterRoutes(app: Router) {
                 body: {"in":"body","name":"body","required":true,"dataType":"nestedObjectLiteral","nestedProperties":{"rating_comment":{"dataType":"string"},"satisfaction_rating":{"dataType":"double","required":true},"difficulty_rating":{"dataType":"double","required":true}}},
         };
         app.post('/api/v2/game-data/missions/:mission_id/rate',
-            authenticateMiddleware([{"discord_oauth":[]}]),
+            authenticateMiddleware([{"jwt":[]}]),
             ...(fetchMiddlewares<RequestHandler>(MissionsController)),
             ...(fetchMiddlewares<RequestHandler>(MissionsController.prototype.rateMission)),
 
@@ -4139,7 +4139,7 @@ export function RegisterRoutes(app: Router) {
                 request: {"in":"body","name":"request","required":true,"ref":"RecordCraftingRequest"},
         };
         app.post('/api/v2/game-data/crafting/craft',
-            authenticateMiddleware([{"discord_oauth":[]}]),
+            authenticateMiddleware([{"jwt":[]}]),
             ...(fetchMiddlewares<RequestHandler>(CraftingController)),
             ...(fetchMiddlewares<RequestHandler>(CraftingController.prototype.recordCrafting)),
 
@@ -4172,7 +4172,7 @@ export function RegisterRoutes(app: Router) {
                 page_size: {"default":20,"in":"query","name":"page_size","dataType":"double"},
         };
         app.get('/api/v2/game-data/crafting/history',
-            authenticateMiddleware([{"discord_oauth":[]}]),
+            authenticateMiddleware([{"jwt":[]}]),
             ...(fetchMiddlewares<RequestHandler>(CraftingController)),
             ...(fetchMiddlewares<RequestHandler>(CraftingController.prototype.getCraftingHistory)),
 
@@ -4209,7 +4209,7 @@ export function RegisterRoutes(app: Router) {
                 page_size: {"default":20,"in":"query","name":"page_size","dataType":"double"},
         };
         app.get('/api/v2/game-data/crafting/craftable-items',
-            authenticateMiddleware([{"discord_oauth":[]}]),
+            authenticateMiddleware([{"jwt":[]}]),
             ...(fetchMiddlewares<RequestHandler>(CraftingController)),
             ...(fetchMiddlewares<RequestHandler>(CraftingController.prototype.getCraftableItems)),
 
@@ -4239,7 +4239,7 @@ export function RegisterRoutes(app: Router) {
         const argsCraftingController_getCraftingStatistics: Record<string, TsoaRoute.ParameterSchema> = {
         };
         app.get('/api/v2/game-data/crafting/statistics',
-            authenticateMiddleware([{"discord_oauth":[]}]),
+            authenticateMiddleware([{"jwt":[]}]),
             ...(fetchMiddlewares<RequestHandler>(CraftingController)),
             ...(fetchMiddlewares<RequestHandler>(CraftingController.prototype.getCraftingStatistics)),
 
@@ -4403,7 +4403,7 @@ export function RegisterRoutes(app: Router) {
                 body: {"in":"body","name":"body","required":true,"dataType":"nestedObjectLiteral","nestedProperties":{"acquisition_notes":{"dataType":"string"},"acquisition_location":{"dataType":"string"},"acquisition_method":{"dataType":"string"}}},
         };
         app.post('/api/v2/game-data/blueprints/:blueprint_id/inventory',
-            authenticateMiddleware([{"discord_oauth":[]}]),
+            authenticateMiddleware([{"jwt":[]}]),
             ...(fetchMiddlewares<RequestHandler>(BlueprintsController)),
             ...(fetchMiddlewares<RequestHandler>(BlueprintsController.prototype.addBlueprintToInventory)),
 
@@ -4434,7 +4434,7 @@ export function RegisterRoutes(app: Router) {
                 blueprint_id: {"in":"path","name":"blueprint_id","required":true,"dataType":"string"},
         };
         app.delete('/api/v2/game-data/blueprints/:blueprint_id/inventory',
-            authenticateMiddleware([{"discord_oauth":[]}]),
+            authenticateMiddleware([{"jwt":[]}]),
             ...(fetchMiddlewares<RequestHandler>(BlueprintsController)),
             ...(fetchMiddlewares<RequestHandler>(BlueprintsController.prototype.removeBlueprintFromInventory)),
 
@@ -4471,7 +4471,7 @@ export function RegisterRoutes(app: Router) {
                 page_size: {"default":50,"in":"query","name":"page_size","dataType":"double"},
         };
         app.get('/api/v2/game-data/blueprints/inventory',
-            authenticateMiddleware([{"discord_oauth":[]}]),
+            authenticateMiddleware([{"jwt":[]}]),
             ...(fetchMiddlewares<RequestHandler>(BlueprintsController)),
             ...(fetchMiddlewares<RequestHandler>(BlueprintsController.prototype.getUserBlueprintInventory)),
 
@@ -4502,7 +4502,6 @@ export function RegisterRoutes(app: Router) {
                 request: {"in":"request","name":"request","required":true,"dataType":"object"},
         };
         app.get('/debug/feature-flag',
-            authenticateMiddleware([{"jwt":[]}]),
             ...(fetchMiddlewares<RequestHandler>(DebugV2Controller)),
             ...(fetchMiddlewares<RequestHandler>(DebugV2Controller.prototype.getFeatureFlag)),
 
