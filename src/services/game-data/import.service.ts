@@ -929,7 +929,7 @@ export class GameDataImportService {
         try {
           for (const mfr of gameData.manufacturers) {
             if (!mfr.code) continue
-            await knex("manufacturers")
+            await knex("wiki_manufacturers")
               .insert({
                 code: mfr.code,
                 name: mfr.name || mfr.code,
@@ -957,7 +957,7 @@ export class GameDataImportService {
           {
             for (const ship of gameData.ships) {
               if (!ship.name || ship.name.startsWith("@")) continue
-              await knex("ships")
+              await knex("wiki_ships")
                 .insert({
                   version_id: versionId,
                   ship_code: ship.file,
