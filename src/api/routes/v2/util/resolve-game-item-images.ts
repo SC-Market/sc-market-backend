@@ -3,7 +3,7 @@
  * Checks active listings linked to the game item for the most recent photo.
  */
 
-import { getKnex } from "../../clients/database/knex-db.js"
+import { getKnex } from "../../../../clients/database/knex-db.js"
 
 const FALLBACK_URLS = new Set([
   "https://cdn.robertsspaceindustries.com/static/images/Temp/default-image.png",
