@@ -45,7 +45,7 @@ export async function up(knex: Knex): Promise<void> {
   })
 
   // Manufacturers
-  await knex.schema.createTable("manufacturers", (table) => {
+  await knex.schema.createTable("wiki_manufacturers", (table) => {
     table.uuid("manufacturer_id").primary().defaultTo(knex.raw("gen_random_uuid()"))
     table.string("code", 50).notNullable().unique()
     table.string("name", 200).notNullable()
@@ -54,7 +54,7 @@ export async function up(knex: Knex): Promise<void> {
   })
 
   // Ships/vehicles
-  await knex.schema.createTable("ships", (table) => {
+  await knex.schema.createTable("wiki_ships", (table) => {
     table.uuid("ship_id").primary().defaultTo(knex.raw("gen_random_uuid()"))
     table.uuid("version_id").notNullable().references("version_id").inTable("game_versions")
     table.string("ship_code", 200).notNullable()
@@ -69,8 +69,8 @@ export async function up(knex: Knex): Promise<void> {
 }
 
 export async function down(knex: Knex): Promise<void> {
-  await knex.schema.dropTableIfExists("ships")
-  await knex.schema.dropTableIfExists("manufacturers")
+  await knex.schema.dropTableIfExists("wiki_ships")
+  await knex.schema.dropTableIfExists("wiki_manufacturers")
   await knex.schema.dropTableIfExists("starmap_locations")
   await knex.schema.dropTableIfExists("refining_processes")
   await knex.schema.dropTableIfExists("blueprint_reward_pool_entries")
