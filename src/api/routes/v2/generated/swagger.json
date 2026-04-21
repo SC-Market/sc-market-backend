@@ -5558,6 +5558,10 @@
 						"type": "string",
 						"description": "Item type"
 					},
+					"sub_type": {
+						"type": "string",
+						"description": "Item sub-type (e.g., mineral, metal, gas for commodities)"
+					},
 					"icon_url": {
 						"type": "string",
 						"description": "Icon URL"
