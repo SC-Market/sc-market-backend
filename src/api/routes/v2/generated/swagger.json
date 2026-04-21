@@ -10775,43 +10775,6 @@
 				]
 			}
 		},
-		"/game-data/blueprints/categories": {
-			"get": {
-				"operationId": "GetBlueprintCategories",
-				"responses": {
-					"200": {
-						"description": "Array of categories with counts",
-						"content": {
-							"application/json": {
-								"schema": {
-									"items": {
-										"$ref": "#/components/schemas/BlueprintCategory"
-									},
-									"type": "array"
-								}
-							}
-						}
-					}
-				},
-				"description": "Get blueprint categories\n\nReturns all blueprint categories with item counts, supporting\nhierarchical category navigation in the blueprint browser.\n\nRequirements:\n- 19.1: Categorize blueprints by item type\n- 19.2: Support hierarchical categories with subcategories\n- 19.5: Display item count per category",
-				"summary": "Get categories",
-				"tags": [
-					"Game Data - Blueprints"
-				],
-				"security": [],
-				"parameters": [
-					{
-						"description": "Optional game version ID (defaults to active LIVE version)",
-						"in": "query",
-						"name": "version_id",
-						"required": false,
-						"schema": {
-							"type": "string"
-						}
-					}
-				]
-			}
-		},
 		"/game-data/blueprints/{blueprint_id}/inventory": {
 			"post": {
 				"operationId": "AddBlueprintToInventory",
@@ -10922,6 +10885,43 @@
 						"in": "path",
 						"name": "blueprint_id",
 						"required": true,
+						"schema": {
+							"type": "string"
+						}
+					}
+				]
+			}
+		},
+		"/game-data/blueprints/categories": {
+			"get": {
+				"operationId": "GetBlueprintCategories",
+				"responses": {
+					"200": {
+						"description": "Array of categories with counts",
+						"content": {
+							"application/json": {
+								"schema": {
+									"items": {
+										"$ref": "#/components/schemas/BlueprintCategory"
+									},
+									"type": "array"
+								}
+							}
+						}
+					}
+				},
+				"description": "Get blueprint categories\n\nReturns all blueprint categories with item counts, supporting\nhierarchical category navigation in the blueprint browser.\n\nRequirements:\n- 19.1: Categorize blueprints by item type\n- 19.2: Support hierarchical categories with subcategories\n- 19.5: Display item count per category",
+				"summary": "Get categories",
+				"tags": [
+					"Game Data - Blueprints"
+				],
+				"security": [],
+				"parameters": [
+					{
+						"description": "Optional game version ID (defaults to active LIVE version)",
+						"in": "query",
+						"name": "version_id",
+						"required": false,
 						"schema": {
 							"type": "string"
 						}

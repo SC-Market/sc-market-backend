@@ -4395,36 +4395,6 @@ export function RegisterRoutes(app: Router) {
             }
         });
         // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
-        const argsBlueprintsController_getBlueprintCategories: Record<string, TsoaRoute.ParameterSchema> = {
-                version_id: {"in":"query","name":"version_id","dataType":"string"},
-        };
-        app.get('/game-data/blueprints/categories',
-            ...(fetchMiddlewares<RequestHandler>(BlueprintsController)),
-            ...(fetchMiddlewares<RequestHandler>(BlueprintsController.prototype.getBlueprintCategories)),
-
-            async function BlueprintsController_getBlueprintCategories(request: ExRequest, response: ExResponse, next: any) {
-
-            // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
-
-            let validatedArgs: any[] = [];
-            try {
-                validatedArgs = templateService.getValidatedArgs({ args: argsBlueprintsController_getBlueprintCategories, request, response });
-
-                const controller = new BlueprintsController();
-
-              await templateService.apiHandler({
-                methodName: 'getBlueprintCategories',
-                controller,
-                response,
-                next,
-                validatedArgs,
-                successStatus: undefined,
-              });
-            } catch (err) {
-                return next(err);
-            }
-        });
-        // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
         const argsBlueprintsController_addBlueprintToInventory: Record<string, TsoaRoute.ParameterSchema> = {
                 blueprint_id: {"in":"path","name":"blueprint_id","required":true,"dataType":"string"},
                 body: {"in":"body","name":"body","required":true,"dataType":"nestedObjectLiteral","nestedProperties":{"acquisition_notes":{"dataType":"string"},"acquisition_location":{"dataType":"string"},"acquisition_method":{"dataType":"string"}}},
@@ -4477,6 +4447,36 @@ export function RegisterRoutes(app: Router) {
 
               await templateService.apiHandler({
                 methodName: 'removeBlueprintFromInventory',
+                controller,
+                response,
+                next,
+                validatedArgs,
+                successStatus: undefined,
+              });
+            } catch (err) {
+                return next(err);
+            }
+        });
+        // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+        const argsBlueprintsController_getBlueprintCategories: Record<string, TsoaRoute.ParameterSchema> = {
+                version_id: {"in":"query","name":"version_id","dataType":"string"},
+        };
+        app.get('/game-data/blueprints/categories',
+            ...(fetchMiddlewares<RequestHandler>(BlueprintsController)),
+            ...(fetchMiddlewares<RequestHandler>(BlueprintsController.prototype.getBlueprintCategories)),
+
+            async function BlueprintsController_getBlueprintCategories(request: ExRequest, response: ExResponse, next: any) {
+
+            // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+
+            let validatedArgs: any[] = [];
+            try {
+                validatedArgs = templateService.getValidatedArgs({ args: argsBlueprintsController_getBlueprintCategories, request, response });
+
+                const controller = new BlueprintsController();
+
+              await templateService.apiHandler({
+                methodName: 'getBlueprintCategories',
                 controller,
                 response,
                 next,

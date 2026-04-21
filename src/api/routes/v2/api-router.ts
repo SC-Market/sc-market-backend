@@ -72,6 +72,17 @@ apiV2Router.use(
   gameDataZipUpload.single("file"),
 )
 
+// Register static routes that conflict with TSOA parameterized routes
+// TSOA registers /:param before /static, so we need to handle these manually
+import { BlueprintsController } from "./game-data/blueprints/BlueprintsController.js"
+apiV2Router.get("/game-data/blueprints/categories", async (req, res, next) => {
+  try {
+    const controller = new BlueprintsController(req)
+    const result = await controller.getBlueprintCategories(req.query.version_id as string | undefined)
+    res.json(result)
+  } catch (err) { next(err) }
+})
+
 RegisterRoutes(apiV2Router)
 
 // Apply TSOA error handler middleware
