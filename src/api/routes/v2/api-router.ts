@@ -66,8 +66,8 @@ apiV2Router.use(
 import { RegisterRoutes } from "./generated/routes.js"
 
 // Register file upload middleware for admin import endpoint BEFORE TSOA routes
-// This allows the controller to access req.file
-apiV2Router.post(
+// multer processes the file and attaches it to req.file, then next() passes to TSOA
+apiV2Router.use(
   "/admin/import-game-data",
   gameDataZipUpload.single("file"),
 )
