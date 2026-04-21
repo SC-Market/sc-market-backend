@@ -377,7 +377,7 @@ function parseItems(): any[] {
         name: finalName,
         nameKey: displayNameKey,
         displayType: resolvedType || displayTypeKey,
-        type: itemType,
+        type: itemType || (f.includes("/commodities/") || (displayTypeKey && displayTypeKey.includes("commodities")) ? "Commodity" : null),
         subType,
         size,
         grade,
