@@ -8,7 +8,7 @@
  * Requirements: 4.1-4.6 (Mission Data Extraction)
  */
 
-import { Controller, Post, Route, Tags, Request } from "tsoa"
+import { Controller, Post, Route, Tags, Request, Security } from "tsoa"
 import { Request as ExpressRequest } from "express"
 import { BaseController } from "../base/BaseController.js"
 import { getKnex } from "../../../../clients/database/knex-db.js"
