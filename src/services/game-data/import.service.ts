@@ -367,6 +367,17 @@ function normalize(name: string): string {
   return name.toLowerCase().trim()
 }
 
+/** Strip CStone-specific naming patterns to match against p4k names */
+function normalizeForMatching(name: string): string {
+  return name.toLowerCase().trim()
+    .replace(/\s*\(\d{2}_\d{2}_\d{2,}\)\s*/g, "")   // variant suffixes like (01_02_01)
+    .replace(/\s*\(modified[^)]*\)\s*/gi, "")          // (Modified 9T), (Modified XT)
+    .replace(/\s*\(iae \d{4}\)\s*/gi, "")              // (IAE 2952)
+    .replace(/\s*alternative\s*/gi, "")                 // "Alternative"
+    .replace(/\s+armor\s+/gi, " ")                     // "Armor" between words
+    .replace(/\s+/g, " ").trim()
+}
+
 function truncate(val: string | null, maxLen: number): string | null {
   if (!val) return null
   return val.length > maxLen ? val.slice(0, maxLen) : val
@@ -502,6 +513,7 @@ export class GameDataImportService {
       const dbByName = new Map<string, DBItem>()
       const dbByCstoneUuid = new Map<string, DBItem>()
       const dbByP4kId = new Map<string, DBItem>()
+      const dbByNormalized = new Map<string, DBItem>()
 
       for (const item of dbItems) {
         dbByName.set(normalize(item.name), item)
@@ -510,6 +522,10 @@ export class GameDataImportService {
         }
         if (item.p4k_id) {
           dbByP4kId.set(item.p4k_id, item)
+        }
+        const norm = normalizeForMatching(item.name)
+        if (!dbByNormalized.has(norm)) {
+          dbByNormalized.set(norm, item)
         }
       }
 
@@ -544,6 +560,16 @@ export class GameDataImportService {
           if (dbItem) {
             matchType = "cstone_uuid"
             stats.matchedCStoneUUID++
+          }
+        }
+
+        // 3. Normalized name match (strips CStone suffixes like "(01_02_01)", "Armor", "(Modified)")
+        if (!dbItem) {
+          const norm = normalizeForMatching(p4k.name)
+          dbItem = dbByNormalized.get(norm)
+          if (dbItem) {
+            matchType = "normalized"
+            stats.matchedFuzzy++ // reuse fuzzy counter for normalized matches
           }
         }
 
@@ -1059,7 +1085,7 @@ export class GameDataImportService {
             // Validate mission data
             const validation = this.validateMissionData(mission)
             if (!validation.valid) {
-              logger.warn("Invalid mission data", {
+              logger.debug("Skipped mission", {
                 missionId: mission.id,
                 errors: validation.errors,
               })
