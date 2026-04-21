@@ -25,7 +25,6 @@ import logger from "../../../../../logger/logger.js"
 
 @Route("game-data/wishlists")
 @Tags("Game Data - Wishlists")
-@Security("jwt")
 export class WishlistsController extends BaseController {
   /**
    * Get user's wishlists
