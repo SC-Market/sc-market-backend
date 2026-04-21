@@ -840,6 +840,36 @@ for (const mission of missions) {
   }
 }
 
+// --- Resolve location names in missions ---
+const starmapLookup = new Map<string, string>()
+for (const loc of starmap) {
+  starmapLookup.set(loc.file, loc.name)
+  starmapLookup.set(`starmapobject.${loc.file}`, loc.name)
+}
+
+// --- Build mission type career name lookup ---
+const careerLookup = new Map<string, string>()
+const missionTypeDir = path.join(RECORDS_DIR, "missiontype/pu")
+if (fs.existsSync(missionTypeDir)) {
+  for (const f of findJsonFiles(missionTypeDir)) {
+    try {
+      const d = readJson(f)
+      const rv = d._RecordValue_
+      const name = loc(rv?.LocalisedTypeName)
+      if (name) careerLookup.set(path.basename(f, ".json"), name)
+    } catch {}
+  }
+}
+
+for (const mission of missions) {
+  if (mission.location) {
+    mission.locationName = starmapLookup.get(mission.location) || null
+  }
+  if (mission.type) {
+    mission.career = careerLookup.get(mission.type) || null
+  }
+}
+
 fs.mkdirSync(OUTPUT_DIR, { recursive: true })
 
 const outputData = {
