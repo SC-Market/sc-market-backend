@@ -227,6 +227,22 @@ export interface P4KMission {
   maxPlayers: number | null
   canBeShared: boolean | null
   notForRelease: boolean
+  // Chain info
+  requiredMissions: string[]
+  linkedMission: string | null
+  onceOnly: boolean
+  // Restrictions
+  maxCrimestat: number | null
+  failIfSentToPrison: boolean
+  failIfBecameCriminal: boolean
+  // Cooldowns
+  canReacceptAfterFailing: boolean
+  canReacceptAfterAbandoning: boolean
+  abandonedCooldownTime: number | null
+  personalCooldownTime: number | null
+  deadline: number | null
+  // Optional
+  missionGiverRecord?: string | null
   blueprintRewards?: Array<{
     blueprintId: string
     rewardPoolId?: number
@@ -1156,6 +1172,17 @@ export class GameDataImportService {
           maxPlayers: raw.maxPlayers ?? null,
           canBeShared: raw.canBeShared ?? null,
           notForRelease: raw.notForRelease || false,
+          requiredMissions: raw.requiredMissions || [],
+          linkedMission: raw.linkedMission || null,
+          onceOnly: raw.onceOnly || false,
+          maxCrimestat: raw.maxCrimestat ?? null,
+          failIfSentToPrison: raw.failIfSentToPrison || false,
+          failIfBecameCriminal: raw.failIfBecameCriminal || false,
+          canReacceptAfterFailing: raw.canReacceptAfterFailing || false,
+          canReacceptAfterAbandoning: raw.canReacceptAfterAbandoning || false,
+          abandonedCooldownTime: raw.abandonedCooldownTime || null,
+          personalCooldownTime: raw.personalCooldownTime || null,
+          deadline: raw.deadline || null,
         })
       } catch (error) {
         logger.warn("Failed to parse mission", { missionId: raw.id, error })
@@ -1233,6 +1260,18 @@ export class GameDataImportService {
       credit_reward_min: mission.reward?.uec || null,
       credit_reward_max: mission.reward?.max || mission.reward?.uec || null,
       is_shareable: mission.canBeShared ?? false,
+      is_chain_mission: mission.requiredMissions.length > 0,
+      is_unique_mission: mission.onceOnly,
+      prerequisite_missions: mission.requiredMissions.length > 0 ? JSON.stringify(mission.requiredMissions) : null,
+      linked_mission_code: mission.linkedMission,
+      max_crimestat: mission.maxCrimestat,
+      fail_if_sent_to_prison: mission.failIfSentToPrison,
+      fail_if_became_criminal: mission.failIfBecameCriminal,
+      can_reaccept_after_failing: mission.canReacceptAfterFailing,
+      can_reaccept_after_abandoning: mission.canReacceptAfterAbandoning,
+      abandoned_cooldown_time: mission.abandonedCooldownTime,
+      personal_cooldown_time: mission.personalCooldownTime,
+      deadline_seconds: mission.deadline,
       data_source: "extraction",
       is_verified: false,
       updated_at: new Date(),
