@@ -12,5 +12,6 @@
     "allowSyntheticDefaultImports": true,
     "experimentalDecorators": true,
     "emitDecoratorMetadata": true
-  }
+  },
+  "exclude": ["**/*.test.ts", "**/*.spec.ts"]
 }
