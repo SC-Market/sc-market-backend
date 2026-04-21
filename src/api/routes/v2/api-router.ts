@@ -73,7 +73,8 @@ apiV2Router.use(
 )
 
 // DEV ONLY: unauthenticated import endpoint for testing — REMOVE BEFORE PRODUCTION
-apiV2Router.post("/dev/import-game-data", gameDataZipUpload.single("file"), async (req, res) => {
+if (process.env.NODE_ENV !== "production") {
+  apiV2Router.post("/dev/import-game-data", gameDataZipUpload.single("file"), async (req, res) => {
   const { gameDataImportService } = await import("../../services/game-data/import.service.js")
   const { getKnex } = await import("../../clients/database/knex-db.js")
   const fs = await import("fs")
@@ -101,6 +102,7 @@ apiV2Router.post("/dev/import-game-data", gameDataZipUpload.single("file"), asyn
     try { if (file.path) fs.unlinkSync(file.path) } catch {}
   }
 })
+}
 
 // Register static routes that conflict with TSOA parameterized routes
 // TSOA registers /:param before /static, so we need to handle these manually
