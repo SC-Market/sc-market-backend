@@ -23,7 +23,7 @@ import {
 } from "./wishlists.types.js"
 import logger from "../../../../../logger/logger.js"
 
-@Route("api/v2/game-data/wishlists")
+@Route("game-data/wishlists")
 @Tags("Game Data - Wishlists")
 export class WishlistsController extends BaseController {
   /**

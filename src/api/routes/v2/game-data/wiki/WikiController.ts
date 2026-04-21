@@ -23,7 +23,7 @@ import {
 } from "./wiki.types.js"
 import logger from "../../../../../logger/logger.js"
 
-@Route("api/v2/game-data/wiki")
+@Route("game-data/wiki")
 @Tags("Game Data - Wiki")
 export class WikiController extends BaseController {
   /**

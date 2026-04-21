@@ -20,7 +20,7 @@ import * as fs from "fs"
 import * as path from "path"
 import { execSync } from "child_process"
 
-@Route("api/v2/admin")
+@Route("admin")
 @Tags("Admin")
 export class AdminController extends BaseController {
   constructor(@Request() request?: ExpressRequest) {

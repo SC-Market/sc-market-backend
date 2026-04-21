@@ -18,7 +18,7 @@ import {
 } from "./versions.types.js"
 import logger from "../../../../../logger/logger.js"
 
-@Route("api/v2/game-data/versions")
+@Route("game-data/versions")
 @Tags("Game Data - Versions")
 export class VersionsController extends BaseController {
   /**
