@@ -13,6 +13,7 @@ import { Request as ExpressRequest } from "express"
 import { BaseController } from "../base/BaseController.js"
 import { getKnex } from "../../../../clients/database/knex-db.js"
 import { gameDataImportService } from "../../../../services/game-data/import.service.js"
+import type { GameDataPayload } from "../../../../services/game-data/import.service.js"
 import { ImportGameDataResponse, ImportErrorResponse } from "./admin.types.js"
 import logger from "../../../../logger/logger.js"
 import * as fs from "fs"
@@ -118,7 +119,14 @@ export class AdminController extends BaseController {
       fs.mkdirSync(tempDir, { recursive: true })
 
       try {
-        execSync(`unzip -o "${uploadedFilePath}" -d "${tempDir}"`, { stdio: "pipe" })
+        // Validate path contains no shell metacharacters
+        if (/[;&|`$]/.test(uploadedFilePath!)) {
+          throw new Error("Invalid file path")
+        }
+        execSync(`unzip -o "${uploadedFilePath}" -d "${tempDir}"`, {
+          stdio: "pipe",
+          timeout: 30000,
+        })
       } catch (error) {
         logger.error("Failed to extract ZIP", {
           admin: adminUserId,
@@ -148,10 +156,10 @@ export class AdminController extends BaseController {
       // ========================================================================
       logger.info("Parsing game-data.json", { admin: adminUserId })
 
-      let gameData: any
+      let gameData: GameDataPayload
       try {
         const jsonContent = fs.readFileSync(jsonPath, "utf-8")
-        gameData = JSON.parse(jsonContent)
+        gameData = JSON.parse(jsonContent) as GameDataPayload
       } catch (error) {
         logger.error("Failed to parse JSON", {
           admin: adminUserId,
@@ -175,6 +183,11 @@ export class AdminController extends BaseController {
           timestamp: new Date().toISOString(),
         }
       }
+
+      // Apply version info from form fields (override JSON defaults)
+      const body = request.body || {}
+      if (body.gameVersion) gameData.gameVersion = body.gameVersion
+      if (body.gameChannel) gameData.gameChannel = body.gameChannel
 
       // ========================================================================
       // STEP 4: Run import
@@ -206,6 +219,12 @@ export class AdminController extends BaseController {
           updated: stats.updated,
           nameChanges: stats.nameChanges,
           fullSetsCreated: stats.fullSetsCreated,
+          missionsProcessed: stats.missionsProcessed,
+          missionsInserted: stats.missionsInserted,
+          missionsUpdated: stats.missionsUpdated,
+          blueprintsProcessed: stats.blueprintsProcessed,
+          blueprintsInserted: stats.blueprintsInserted,
+          blueprintsUpdated: stats.blueprintsUpdated,
         },
         errors: stats.errors,
         timestamp: new Date().toISOString(),

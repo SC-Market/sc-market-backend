@@ -21,6 +21,12 @@ export interface ImportGameDataResponse {
     updated: number
     nameChanges: number
     fullSetsCreated: number
+    missionsProcessed: number
+    missionsInserted: number
+    missionsUpdated: number
+    blueprintsProcessed: number
+    blueprintsInserted: number
+    blueprintsUpdated: number
   }
   errors: string[]
   timestamp: string

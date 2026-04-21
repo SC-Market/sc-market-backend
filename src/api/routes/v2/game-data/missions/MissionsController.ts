@@ -72,6 +72,7 @@ export class MissionsController extends BaseController {
     @Query() star_system?: string,
     @Query() planet_moon?: string,
     @Query() faction?: string,
+    @Query() mission_giver_org?: string,
     @Query() legal_status?: "LEGAL" | "ILLEGAL",
     @Query() difficulty_min?: number,
     @Query() difficulty_max?: number,
@@ -158,6 +159,7 @@ export class MissionsController extends BaseController {
           "m.star_system",
           "m.planet_moon",
           "m.faction",
+          "m.mission_giver_org",
           "m.credit_reward_min",
           "m.credit_reward_max",
           "m.community_difficulty_avg",
@@ -201,6 +203,10 @@ export class MissionsController extends BaseController {
       // Apply faction filter (Requirement 41.4)
       if (faction) {
         missionsQuery = missionsQuery.where("m.faction", faction)
+      }
+
+      if (mission_giver_org) {
+        missionsQuery = missionsQuery.where("m.mission_giver_org", "ilike", `%${mission_giver_org}%`)
       }
 
       // Apply legal status filter

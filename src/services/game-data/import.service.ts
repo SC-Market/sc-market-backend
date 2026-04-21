@@ -84,6 +84,100 @@ const P4K_TYPE_MAP: Record<string, string> = {
 
 // --- Type Definitions ---
 
+export interface GameDataPayload {
+  extractedAt: string
+  localizationKeys: number
+  gameVersion?: string
+  gameChannel?: "LIVE" | "PTU" | "EPTU"
+  counts: Record<string, number>
+  items: P4KItem[]
+  blueprints: P4KRawBlueprint[]
+  missions: P4KMission[]
+  resources: P4KRawResource[]
+  ships: P4KShip[]
+  manufacturers: P4KManufacturer[]
+  starmap: P4KStarmapLocation[]
+  blueprintRewardPools: P4KBlueprintRewardPool[]
+  reputationAmounts: Record<string, number>
+  refiningProcesses: P4KRefiningProcess[]
+}
+
+export interface P4KShip {
+  id: string
+  name: string
+  nameKey: string | null
+  focus: string | null
+  manufacturer: string | null
+  size: number | null
+  description: string | null
+  file: string
+}
+
+export interface P4KManufacturer {
+  id: string
+  code: string
+  name: string
+  nameKey: string | null
+  description: string | null
+}
+
+export interface P4KStarmapLocation {
+  id: string
+  name: string
+  nameKey: string | null
+  description: string | null
+  type: string
+  parent: string | null
+  jurisdiction: string | null
+  size: number | null
+  file: string
+}
+
+export interface P4KBlueprintRewardPool {
+  id: string
+  name: string
+  rewards: Array<{ blueprint: string; weight: number }>
+}
+
+export interface P4KRefiningProcess {
+  name: string
+  speed: string
+  quality: string
+}
+
+export interface P4KRawBlueprint {
+  id: string
+  name: string
+  category: string | null
+  craftedItem: string | null
+  craftTimeSeconds: number
+  slots: any[]
+  optionalCosts: any[]
+}
+
+export interface P4KRawResource {
+  id: string
+  name: string
+  nameKey: string | null
+  description: string | null
+  group: string
+  groupKey: string
+  parentGroup: string | null
+  density: number | null
+  canBePurchased?: boolean
+  can_be_purchased?: boolean
+  canBeSalvaged?: boolean
+  can_be_salvaged?: boolean
+  canBeLooted?: boolean
+  can_be_looted?: boolean
+  canBeMined?: boolean
+  can_be_mined?: boolean
+  miningLocations?: string | null
+  mining_locations?: string | null
+  purchaseLocations?: string | null
+  purchase_locations?: string | null
+}
+
 export interface P4KItem {
   id: string
   name: string
@@ -279,7 +373,7 @@ export class GameDataImportService {
    * @param gameData Parsed game-data.json content
    * @returns Import statistics
    */
-  async importGameData(knex: Knex, gameData: any): Promise<ImportStats> {
+  async importGameData(knex: Knex, gameData: GameDataPayload): Promise<ImportStats> {
     const stats: ImportStats = {
       totalP4KItems: 0,
       validP4KItems: 0,
@@ -320,7 +414,33 @@ export class GameDataImportService {
         throw new Error("No items found in game data")
       }
 
-      logger.info(`Loaded ${p4kItems.length} items from P4K data`)
+      // Resolve game version from payload or default to LIVE
+      const channel = gameData.gameChannel || "LIVE"
+      const versionNumber = gameData.gameVersion || "Unknown"
+
+      let version = await knex("game_versions")
+        .where({ version_type: channel, is_active: true })
+        .first()
+
+      if (!version) {
+        const [newVersion] = await knex("game_versions")
+          .insert({
+            version_type: channel,
+            version_number: versionNumber,
+            is_active: true,
+            last_data_update: new Date(),
+          })
+          .returning("*")
+        version = newVersion
+      } else if (versionNumber !== "Unknown") {
+        await knex("game_versions")
+          .where("version_id", version.version_id)
+          .update({ version_number: versionNumber, last_data_update: new Date() })
+      }
+
+      const versionId: string = version.version_id
+
+      logger.info(`Loaded ${p4kItems.length} items from P4K data`, { channel, versionNumber, versionId })
 
       // Filter to items with resolved names
       const validItems = p4kItems.filter(
@@ -605,25 +725,7 @@ export class GameDataImportService {
       if (gameData.missions && gameData.missions.length > 0) {
         logger.info("Importing missions")
         
-        // Get or create LIVE version for mission import
-        let version = await knex("game_versions")
-          .where({ version_type: "LIVE", is_active: true })
-          .first()
-
-        if (!version) {
-          logger.info("Creating default LIVE version for mission import")
-          const [newVersion] = await knex("game_versions")
-            .insert({
-              version_type: "LIVE",
-              version_number: "Unknown",
-              is_active: true,
-              last_data_update: new Date(),
-            })
-            .returning("*")
-          version = newVersion
-        }
-
-        const missionStats = await this.importMissions(knex, gameData, version.version_id)
+        const missionStats = await this.importMissions(knex, gameData, versionId)
         stats.missionsProcessed = missionStats.processed
         stats.missionsInserted = missionStats.inserted
         stats.missionsUpdated = missionStats.updated
@@ -644,25 +746,7 @@ export class GameDataImportService {
       if (gameData.blueprints && gameData.blueprints.length > 0) {
         logger.info("Importing blueprints")
         
-        // Get or create LIVE version for blueprint import
-        let version = await knex("game_versions")
-          .where({ version_type: "LIVE", is_active: true })
-          .first()
-
-        if (!version) {
-          logger.info("Creating default LIVE version for blueprint import")
-          const [newVersion] = await knex("game_versions")
-            .insert({
-              version_type: "LIVE",
-              version_number: "Unknown",
-              is_active: true,
-              last_data_update: new Date(),
-            })
-            .returning("*")
-          version = newVersion
-        }
-
-        const blueprintStats = await this.importBlueprints(knex, gameData, version.version_id)
+        const blueprintStats = await this.importBlueprints(knex, gameData, versionId)
         stats.blueprintsProcessed = blueprintStats.processed
         stats.blueprintsInserted = blueprintStats.inserted
         stats.blueprintsUpdated = blueprintStats.updated
@@ -683,25 +767,7 @@ export class GameDataImportService {
       if (gameData.resources && gameData.resources.length > 0) {
         logger.info("Importing resources")
         
-        // Get or create LIVE version for resource import
-        let version = await knex("game_versions")
-          .where({ version_type: "LIVE", is_active: true })
-          .first()
-
-        if (!version) {
-          logger.info("Creating default LIVE version for resource import")
-          const [newVersion] = await knex("game_versions")
-            .insert({
-              version_type: "LIVE",
-              version_number: "Unknown",
-              is_active: true,
-              last_data_update: new Date(),
-            })
-            .returning("*")
-          version = newVersion
-        }
-
-        const resourceStats = await this.importResources(knex, gameData, version.version_id)
+        const resourceStats = await this.importResources(knex, gameData, versionId)
         stats.resourcesProcessed = resourceStats.processed
         stats.resourcesInserted = resourceStats.inserted
         stats.resourcesUpdated = resourceStats.updated
@@ -722,25 +788,7 @@ export class GameDataImportService {
       if (gameData.missions && gameData.missions.length > 0) {
         logger.info("Linking mission blueprint rewards")
         
-        // Get or create LIVE version for reward linking
-        let version = await knex("game_versions")
-          .where({ version_type: "LIVE", is_active: true })
-          .first()
-
-        if (!version) {
-          logger.info("Creating default LIVE version for reward linking")
-          const [newVersion] = await knex("game_versions")
-            .insert({
-              version_type: "LIVE",
-              version_number: "Unknown",
-              is_active: true,
-              last_data_update: new Date(),
-            })
-            .returning("*")
-          version = newVersion
-        }
-
-        const rewardStats = await this.linkMissionRewards(knex, gameData, version.version_id)
+        const rewardStats = await this.linkMissionRewards(knex, gameData, versionId)
         
         logger.info("Mission reward linking completed", {
           processed: rewardStats.processed,
@@ -759,11 +807,7 @@ export class GameDataImportService {
       if (gameData.blueprintRewardPools && gameData.blueprintRewardPools.length > 0) {
         logger.info("Importing blueprint reward pools")
 
-        let version = await knex("game_versions")
-          .where({ version_type: "LIVE", is_active: true })
-          .first()
-
-        if (version) {
+        {
           for (const pool of gameData.blueprintRewardPools) {
             try {
               await knex("blueprint_reward_pools")
@@ -776,7 +820,7 @@ export class GameDataImportService {
                 .merge({ updated_at: new Date() })
 
               const [poolRow] = await knex("blueprint_reward_pools")
-                .where({ version_id: version.version_id, pool_code: pool.name })
+                .where({ version_id: versionId, pool_code: pool.name })
                 .select("pool_id")
 
               // Replace pool entries
@@ -815,7 +859,7 @@ export class GameDataImportService {
         try {
           await knex("refining_processes").delete()
           await knex("refining_processes").insert(
-            gameData.refiningProcesses.map((p: any) => ({
+            gameData.refiningProcesses.map((p: P4KRefiningProcess) => ({
               name: p.name,
               speed: p.speed,
               quality: p.quality,
@@ -832,15 +876,11 @@ export class GameDataImportService {
       if (gameData.starmap && gameData.starmap.length > 0) {
         logger.info("Importing starmap locations")
         try {
-          let version = await knex("game_versions")
-            .where({ version_type: "LIVE", is_active: true })
-            .first()
-
-          if (version) {
+          {
             for (const loc of gameData.starmap) {
               await knex("starmap_locations")
                 .insert({
-                  version_id: version.version_id,
+                  version_id: versionId,
                   location_code: loc.file,
                   location_name: loc.name,
                   location_type: loc.type,
@@ -900,16 +940,12 @@ export class GameDataImportService {
       if (gameData.ships && gameData.ships.length > 0) {
         logger.info("Importing ships")
         try {
-          let version = await knex("game_versions")
-            .where({ version_type: "LIVE", is_active: true })
-            .first()
-
-          if (version) {
+          {
             for (const ship of gameData.ships) {
               if (!ship.name || ship.name.startsWith("@")) continue
               await knex("ships")
                 .insert({
-                  version_id: version.version_id,
+                  version_id: versionId,
                   ship_code: ship.file,
                   name: ship.name,
                   focus: ship.focus,
@@ -952,7 +988,7 @@ export class GameDataImportService {
    */
   async importMissions(
     knex: Knex,
-    gameData: any,
+    gameData: Pick<GameDataPayload, "missions">,
     versionId: string,
   ): Promise<{
     processed: number
@@ -1034,7 +1070,7 @@ export class GameDataImportService {
    * Parse mission data from extracted JSON
    * Subtask 8.4.1: Parse mission data from extracted JSON
    */
-  private parseMissionData(gameData: any): P4KMission[] {
+  private parseMissionData(gameData: Pick<GameDataPayload, "missions">): P4KMission[] {
     const missions: P4KMission[] = []
     const rawMissions = gameData.missions || []
 
@@ -1166,7 +1202,7 @@ export class GameDataImportService {
    */
   async importBlueprints(
     knex: Knex,
-    gameData: any,
+    gameData: Pick<GameDataPayload, "blueprints">,
     versionId: string,
   ): Promise<{
     processed: number
@@ -1248,7 +1284,7 @@ export class GameDataImportService {
    * Parse blueprint data from extracted JSON
    * Handles the P4K extraction format: craftedItem (filename), slots[] with nested ingredients
    */
-  private parseBlueprintData(gameData: any): P4KBlueprint[] {
+  private parseBlueprintData(gameData: Pick<GameDataPayload, "blueprints">): P4KBlueprint[] {
     const blueprints: P4KBlueprint[] = []
     const rawBlueprints = gameData.blueprints || []
 
@@ -1283,20 +1319,20 @@ export class GameDataImportService {
         blueprints.push({
           id: raw.id,
           name: raw.name,
-          nameKey: raw.nameKey || null,
-          description: raw.description || null,
-          descriptionKey: raw.descriptionKey || null,
-          outputItemId: raw.craftedItem || raw.outputItemId || "",
-          outputQuantity: raw.outputQuantity || 1,
+          nameKey: null,
+          description: null,
+          descriptionKey: null,
+          outputItemId: raw.craftedItem || "",
+          outputQuantity: 1,
           ingredients,
           category: raw.category || null,
-          subcategory: raw.subcategory || null,
-          rarity: raw.rarity || null,
-          tier: raw.tier || null,
-          craftingStation: raw.craftingStation || null,
-          craftingTime: raw.craftTimeSeconds || raw.craftingTime || null,
-          requiredSkill: raw.requiredSkill || null,
-          iconUrl: raw.iconUrl || null,
+          subcategory: null,
+          rarity: null,
+          tier: null,
+          craftingStation: null,
+          craftingTime: raw.craftTimeSeconds || null,
+          requiredSkill: null,
+          iconUrl: null,
         })
       } catch (error) {
         logger.warn("Failed to parse blueprint", { blueprintId: raw.id, error })
@@ -1475,7 +1511,7 @@ export class GameDataImportService {
    */
   async importResources(
     knex: Knex,
-    gameData: any,
+    gameData: Pick<GameDataPayload, "resources">,
     versionId: string,
   ): Promise<{
     processed: number
@@ -1557,7 +1593,7 @@ export class GameDataImportService {
    * Parse resource data from extracted JSON
    * Subtask 8.6.1: Parse resource data from extracted JSON
    */
-  private parseResourceData(gameData: any): P4KResource[] {
+  private parseResourceData(gameData: Pick<GameDataPayload, "resources">): P4KResource[] {
     const resources: P4KResource[] = []
     const rawResources = gameData.resources || []
 
@@ -1566,17 +1602,17 @@ export class GameDataImportService {
         resources.push({
           id: raw.id,
           name: raw.name,
-          itemId: raw.itemId || raw.item_id,
-          category: raw.category || null,
-          subcategory: raw.subcategory || raw.subCategory || null,
-          maxStackSize: raw.maxStackSize || raw.max_stack_size || null,
-          baseValue: raw.baseValue || raw.base_value || null,
-          canBeMined: raw.canBeMined || raw.can_be_mined || false,
-          canBePurchased: raw.canBePurchased || raw.can_be_purchased || false,
-          canBeSalvaged: raw.canBeSalvaged || raw.can_be_salvaged || false,
-          canBeLooted: raw.canBeLooted || raw.can_be_looted || false,
-          miningLocations: raw.miningLocations || raw.mining_locations || null,
-          purchaseLocations: raw.purchaseLocations || raw.purchase_locations || null,
+          itemId: raw.id,
+          category: raw.group || null,
+          subcategory: raw.groupKey || null,
+          maxStackSize: null,
+          baseValue: null,
+          canBeMined: false,
+          canBePurchased: false,
+          canBeSalvaged: false,
+          canBeLooted: false,
+          miningLocations: null,
+          purchaseLocations: null,
         })
       } catch (error) {
         logger.warn("Failed to parse resource", { resourceId: raw.id, error })
@@ -1707,7 +1743,7 @@ export class GameDataImportService {
    */
   async linkMissionRewards(
     knex: Knex,
-    gameData: any,
+    gameData: Pick<GameDataPayload, "missions">,
     versionId: string,
   ): Promise<{
     processed: number
@@ -1729,7 +1765,7 @@ export class GameDataImportService {
       
       // Filter missions that have blueprint rewards
       const missionsWithRewards = missions.filter(
-        (m: any) => m.blueprintRewards && m.blueprintRewards.length > 0
+        (m: { blueprintRewards?: any[] }) => m.blueprintRewards && m.blueprintRewards.length > 0
       )
       
       stats.processed = missionsWithRewards.length

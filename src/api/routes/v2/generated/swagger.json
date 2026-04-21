@@ -6868,6 +6868,30 @@
 					},
 					"summary": {
 						"properties": {
+							"blueprintsUpdated": {
+								"type": "number",
+								"format": "double"
+							},
+							"blueprintsInserted": {
+								"type": "number",
+								"format": "double"
+							},
+							"blueprintsProcessed": {
+								"type": "number",
+								"format": "double"
+							},
+							"missionsUpdated": {
+								"type": "number",
+								"format": "double"
+							},
+							"missionsInserted": {
+								"type": "number",
+								"format": "double"
+							},
+							"missionsProcessed": {
+								"type": "number",
+								"format": "double"
+							},
 							"fullSetsCreated": {
 								"type": "number",
 								"format": "double"
@@ -6914,6 +6938,12 @@
 							}
 						},
 						"required": [
+							"blueprintsUpdated",
+							"blueprintsInserted",
+							"blueprintsProcessed",
+							"missionsUpdated",
+							"missionsInserted",
+							"missionsProcessed",
 							"fullSetsCreated",
 							"nameChanges",
 							"updated",
@@ -7230,7 +7260,7 @@
 				],
 				"security": [
 					{
-						"session": []
+						"jwt": []
 					}
 				],
 				"parameters": [
@@ -7482,7 +7512,7 @@
 				],
 				"security": [
 					{
-						"session": []
+						"jwt": []
 					}
 				],
 				"parameters": [
@@ -7518,7 +7548,7 @@
 				],
 				"security": [
 					{
-						"session": []
+						"jwt": []
 					}
 				],
 				"parameters": [
@@ -8141,7 +8171,7 @@
 				],
 				"security": [
 					{
-						"session": []
+						"jwt": []
 					}
 				],
 				"parameters": [
@@ -8359,7 +8389,7 @@
 				],
 				"security": [
 					{
-						"discord_oauth": []
+						"jwt": []
 					}
 				],
 				"parameters": []
@@ -8385,7 +8415,7 @@
 				],
 				"security": [
 					{
-						"discord_oauth": []
+						"jwt": []
 					}
 				],
 				"parameters": [],
@@ -8466,7 +8496,7 @@
 				],
 				"security": [
 					{
-						"discord_oauth": []
+						"jwt": []
 					}
 				],
 				"parameters": [
@@ -8522,7 +8552,7 @@
 				],
 				"security": [
 					{
-						"discord_oauth": []
+						"jwt": []
 					}
 				],
 				"parameters": [
@@ -8560,7 +8590,7 @@
 				],
 				"security": [
 					{
-						"discord_oauth": []
+						"jwt": []
 					}
 				],
 				"parameters": [
@@ -8618,7 +8648,7 @@
 				],
 				"security": [
 					{
-						"discord_oauth": []
+						"jwt": []
 					}
 				],
 				"parameters": [
@@ -8663,7 +8693,7 @@
 				],
 				"security": [
 					{
-						"discord_oauth": []
+						"jwt": []
 					}
 				],
 				"parameters": [
@@ -8722,7 +8752,7 @@
 				],
 				"security": [
 					{
-						"discord_oauth": []
+						"jwt": []
 					}
 				],
 				"parameters": [
@@ -9287,7 +9317,7 @@
 				],
 				"security": [
 					{
-						"discord_oauth": []
+						"jwt": []
 					}
 				],
 				"parameters": [],
@@ -9806,7 +9836,7 @@
 				],
 				"security": [
 					{
-						"discord_oauth": []
+						"jwt": []
 					}
 				],
 				"parameters": [
@@ -9879,7 +9909,7 @@
 				],
 				"security": [
 					{
-						"discord_oauth": []
+						"jwt": []
 					}
 				],
 				"parameters": [
@@ -10083,7 +10113,7 @@
 				],
 				"security": [
 					{
-						"discord_oauth": []
+						"jwt": []
 					}
 				],
 				"parameters": [],
@@ -10123,7 +10153,7 @@
 				],
 				"security": [
 					{
-						"discord_oauth": []
+						"jwt": []
 					}
 				],
 				"parameters": [
@@ -10183,7 +10213,7 @@
 				],
 				"security": [
 					{
-						"discord_oauth": []
+						"jwt": []
 					}
 				],
 				"parameters": [
@@ -10280,7 +10310,7 @@
 				],
 				"security": [
 					{
-						"discord_oauth": []
+						"jwt": []
 					}
 				],
 				"parameters": []
@@ -10575,7 +10605,7 @@
 				],
 				"security": [
 					{
-						"discord_oauth": []
+						"jwt": []
 					}
 				],
 				"parameters": [
@@ -10642,7 +10672,7 @@
 				],
 				"security": [
 					{
-						"discord_oauth": []
+						"jwt": []
 					}
 				],
 				"parameters": [
@@ -10776,7 +10806,7 @@
 				],
 				"security": [
 					{
-						"discord_oauth": []
+						"jwt": []
 					}
 				],
 				"parameters": [
@@ -10880,11 +10910,7 @@
 				"tags": [
 					"Debug V2"
 				],
-				"security": [
-					{
-						"jwt": []
-					}
-				],
+				"security": [],
 				"parameters": []
 			},
 			"post": {
