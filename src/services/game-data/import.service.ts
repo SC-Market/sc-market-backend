@@ -1423,7 +1423,6 @@ export class GameDataImportService {
       errors,
     }
   }
-  }
 
   /**
    * Insert or update blueprint in database

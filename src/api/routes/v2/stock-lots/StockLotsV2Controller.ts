@@ -12,6 +12,7 @@ import { Request as ExpressRequest } from "express"
 import { BaseController } from "../base/BaseController.js"
 import { withTransaction } from "../../../../clients/database/transaction.js"
 import { getKnex } from "../../../../clients/database/knex-db.js"
+import { cdn } from "../../../../clients/cdn/cdn.js"
 import {
   CreateStockLotRequest,
   GetStockLotsRequest,
@@ -202,7 +203,7 @@ export class StockLotsV2Controller extends BaseController {
           "owner.user_id as owner_user_id",
           "owner.username as owner_username",
           "owner.display_name as owner_display_name",
-          "owner.avatar_url as owner_avatar_url",
+          "owner.avatar as owner_avatar",
           // Crafter information
           "crafter.username as crafted_by_username",
         )
@@ -259,7 +260,7 @@ export class StockLotsV2Controller extends BaseController {
       const results = await query
 
       // Transform results to match response type (Requirements 20.8, 20.9, 20.12)
-      const lots: StockLotDetail[] = results.map((row: any) => ({
+      const lots: StockLotDetail[] = await Promise.all(results.map(async (row: any) => ({
         lot_id: row.lot_id,
         item_id: row.item_id,
         variant: {
@@ -281,7 +282,7 @@ export class StockLotsV2Controller extends BaseController {
               user_id: row.owner_user_id,
               username: row.owner_username,
               display_name: row.owner_display_name,
-              avatar_url: row.owner_avatar_url,
+              avatar_url: await cdn.getFileLinkResource(row.owner_avatar),
             }
           : null,
         listed: row.listed,
@@ -478,7 +479,7 @@ export class StockLotsV2Controller extends BaseController {
           "owner.user_id as owner_user_id",
           "owner.username as owner_username",
           "owner.display_name as owner_display_name",
-          "owner.avatar_url as owner_avatar_url",
+          "owner.avatar as owner_avatar",
           "crafter.username as crafted_by_username",
         )
         .first()
@@ -509,7 +510,7 @@ export class StockLotsV2Controller extends BaseController {
               user_id: lotResult.owner_user_id,
               username: lotResult.owner_username,
               display_name: lotResult.owner_display_name,
-              avatar_url: lotResult.owner_avatar_url,
+              avatar_url: lotResult.owner_avatar,
             }
           : null,
         listed: lotResult.listed,
@@ -806,7 +807,7 @@ export class StockLotsV2Controller extends BaseController {
         "owner.user_id as owner_user_id",
         "owner.username as owner_username",
         "owner.display_name as owner_display_name",
-        "owner.avatar_url as owner_avatar_url",
+        "owner.avatar as owner_avatar",
         "crafter.username as crafted_by_username",
       )
       .first()
@@ -829,7 +830,7 @@ export class StockLotsV2Controller extends BaseController {
         ? { location_id: row.location_id, name: row.location_name, is_preset: row.location_is_preset }
         : null,
       owner: row.owner_user_id
-        ? { user_id: row.owner_user_id, username: row.owner_username, display_name: row.owner_display_name, avatar_url: row.owner_avatar_url }
+        ? { user_id: row.owner_user_id, username: row.owner_username, display_name: row.owner_display_name, avatar_url: row.owner_avatar }
         : null,
       listed: row.listed,
       notes: row.notes,
