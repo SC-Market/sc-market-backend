@@ -879,6 +879,58 @@ const blueprintRewardPools = parseBlueprintRewardPools()
 const reputationAmounts = parseReputationAmounts()
 const refiningProcesses = parseRefiningProcesses()
 
+// --- Parse reputation rank ladders ---
+function parseReputationRanks(): any[] {
+  const scopeDir = path.join(RECORDS_DIR, "reputation/scopes")
+  const standingDir = path.join(RECORDS_DIR, "reputation/standings")
+  if (!fs.existsSync(scopeDir)) return []
+
+  // Load all standing files for display names
+  const standingData = new Map<string, Record<string, unknown>>()
+  if (fs.existsSync(standingDir)) {
+    for (const f of findJsonFiles(standingDir)) {
+      try {
+        const d = readJson(f)._RecordValue_
+        standingData.set(path.basename(f, ".json"), d)
+      } catch {}
+    }
+  }
+
+  const ladders: any[] = []
+  for (const f of findJsonFiles(scopeDir)) {
+    try {
+      const d = readJson(f)._RecordValue_
+      const sm = d.standingMap
+      if (!sm || !sm.standings || !sm.standings.length) continue
+
+      const scopeCode = path.basename(f, ".json")
+      const ceiling = sm.reputationCeiling || 0
+      const rankCount = sm.standings.length
+
+      const ranks = sm.standings.map((ref: string, idx: number) => {
+        const code = typeof ref === "string" ? path.basename(ref, ".json") : ""
+        const sd = standingData.get(code) || {}
+        const displayName = loc(sd.displayName as string) || sd.displayName || code
+        // Evenly distribute thresholds across ceiling
+        const threshold = rankCount > 1 ? Math.round((ceiling / (rankCount - 1)) * idx) : 0
+        return { code, displayName, threshold, index: idx }
+      })
+
+      ladders.push({
+        scope: scopeCode,
+        displayName: loc(d.displayName) || d.displayName || scopeCode,
+        ceiling,
+        ranks,
+      })
+    } catch {}
+  }
+
+  console.log(`  Reputation rank ladders: ${ladders.length}`)
+  return ladders
+}
+
+const reputationRanks = parseReputationRanks()
+
 // --- Resolve reputation amounts in missions ---
 for (const mission of missions) {
   if (!mission.reputationRewards) continue
@@ -964,6 +1016,7 @@ const outputData = {
   starmap,
   blueprintRewardPools,
   reputationAmounts,
+  reputationRanks,
   refiningProcesses,
 }
 
