@@ -299,6 +299,8 @@ export interface P4KResource {
   canBeLooted: boolean
   miningLocations: Record<string, string[]> | null
   purchaseLocations: Record<string, string[]> | null
+  density: number | null
+  description: string | null
 }
 
 interface DBItem {
@@ -1030,38 +1032,6 @@ export class GameDataImportService {
           logger.info(`Imported ${gameData.rockCompositions.length} rock compositions`)
         } catch {
           logger.debug("Rock compositions import skipped (table may not exist)")
-        }
-      }
-
-      // ========================================================================
-      // STEP 12.8: Import commodities (from resources array)
-      // ========================================================================
-      if (gameData.resources && gameData.resources.length > 0) {
-        logger.info("Importing commodities")
-        try {
-          await knex("wiki_commodities").delete()
-          for (const res of gameData.resources) {
-            // Try to link to game_items by name match
-            const gameItem = await knex("game_items")
-              .where("name", res.name)
-              .orWhereRaw("lower(name) = ?", [res.name.toLowerCase()])
-              .select("id")
-              .first()
-
-            await knex("wiki_commodities").insert({
-              p4k_id: res.id,
-              name: res.name,
-              game_item_id: gameItem?.id || null,
-              group_name: res.group,
-              group_key: res.groupKey,
-              parent_group: res.parentGroup,
-              density: res.density,
-              description: res.description,
-            })
-          }
-          logger.info(`Imported ${gameData.resources.length} commodities`)
-        } catch (err) {
-          logger.debug("Commodities import skipped (table may not exist)", { error: err instanceof Error ? err.message : String(err) })
         }
       }
 
@@ -1807,6 +1777,8 @@ export class GameDataImportService {
           canBeLooted: false,
           miningLocations: null,
           purchaseLocations: null,
+          density: raw.density ?? null,
+          description: raw.description ?? null,
         })
       } catch (error) {
         logger.warn("Failed to parse resource", { resourceId: raw.id, error })
@@ -1823,45 +1795,10 @@ export class GameDataImportService {
   private validateResourceData(resource: P4KResource): MissionValidationResult {
     const errors: string[] = []
 
-    // Required fields
-    if (!resource.id) {
-      errors.push("Missing resource ID")
-    }
-    if (!resource.name) {
-      errors.push("Missing resource name")
-    }
-    if (!resource.itemId) {
-      errors.push("Missing item ID reference")
-    }
+    if (!resource.id) errors.push("Missing resource ID")
+    if (!resource.name) errors.push("Missing resource name")
 
-    // Validate category
-    if (!resource.category) {
-      errors.push("Missing resource category")
-    }
-
-    // Validate numeric fields
-    if (resource.maxStackSize !== null && resource.maxStackSize !== undefined && resource.maxStackSize < 1) {
-      errors.push("Max stack size must be at least 1")
-    }
-    if (resource.baseValue !== null && resource.baseValue !== undefined && resource.baseValue < 0) {
-      errors.push("Base value cannot be negative")
-    }
-
-    // Validate at least one acquisition method
-    const hasAcquisitionMethod =
-      resource.canBeMined ||
-      resource.canBePurchased ||
-      resource.canBeSalvaged ||
-      resource.canBeLooted
-
-    if (!hasAcquisitionMethod) {
-      errors.push("Resource must have at least one acquisition method")
-    }
-
-    return {
-      valid: errors.length === 0,
-      errors,
-    }
+    return { valid: errors.length === 0, errors }
   }
 
   /**
@@ -1875,35 +1812,37 @@ export class GameDataImportService {
     versionId: string,
     resource: P4KResource,
   ): Promise<"inserted" | "updated"> {
-    // First, verify the game item exists
-    const gameItem = await trx("game_items")
-      .where("p4k_id", resource.itemId)
-      .orWhere("cstone_uuid", resource.itemId)
-      .orWhere("name", resource.name)
+    // Find or create the game item
+    let gameItem = await trx("game_items")
+      .where("name", resource.name)
+      .orWhereRaw("lower(name) = ?", [resource.name.toLowerCase()])
       .first()
 
     if (!gameItem) {
-      throw new Error(`Game item not found for resource: ${resource.itemId} (${resource.name})`)
+      // Create a new game item for this resource
+      const [inserted] = await trx("game_items")
+        .insert({
+          name: resource.name,
+          type: "Commodity",
+          p4k_id: resource.itemId || null,
+        })
+        .returning("id")
+      gameItem = inserted
     }
 
-    // Build resource record
     const resourceRecord = {
       version_id: versionId,
       game_item_id: gameItem.id,
       resource_category: resource.category || "Unknown",
       resource_subcategory: resource.subcategory,
-      max_stack_size: resource.maxStackSize,
-      base_value: resource.baseValue,
-      can_be_mined: resource.canBeMined,
-      can_be_purchased: resource.canBePurchased,
-      can_be_salvaged: resource.canBeSalvaged,
-      can_be_looted: resource.canBeLooted,
-      mining_locations: resource.miningLocations,
-      purchase_locations: resource.purchaseLocations,
+      resource_name: resource.name,
+      group_name: resource.category,
+      p4k_id: resource.itemId,
+      density: resource.density ?? null,
+      description: resource.description ?? null,
       updated_at: new Date(),
     }
 
-    // Check if resource already exists for this version and game item
     const existing = await trx("resources")
       .where({ version_id: versionId, game_item_id: gameItem.id })
       .first()
