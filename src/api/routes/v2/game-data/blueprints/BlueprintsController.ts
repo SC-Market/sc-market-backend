@@ -320,9 +320,9 @@ export class BlueprintsController extends BaseController {
   ): Promise<BlueprintDetailResponse> {
     const knex = getKnex()
 
-    if (!blueprint_id) {
-      this.throwValidationError("blueprint_id is required", [
-        { field: "blueprint_id", message: "Blueprint ID is required" },
+    if (!blueprint_id || !/^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(blueprint_id)) {
+      this.throwValidationError("Invalid blueprint_id", [
+        { field: "blueprint_id", message: "Blueprint ID must be a valid UUID" },
       ])
     }
 
@@ -592,86 +592,7 @@ export class BlueprintsController extends BaseController {
     }
   }
 
-  /**
-   * Get blueprint categories
-   *
-   * Returns all blueprint categories with item counts, supporting
-   * hierarchical category navigation in the blueprint browser.
-   *
-   * Requirements:
-   * - 19.1: Categorize blueprints by item type
-   * - 19.2: Support hierarchical categories with subcategories
-   * - 19.5: Display item count per category
-   *
-   * @summary Get categories
-   * @param version_id Optional game version ID (defaults to active LIVE version)
-   * @returns Array of categories with counts
-   */
-  @Get("categories")
-  public async getBlueprintCategories(
-    @Query() version_id?: string,
-  ): Promise<BlueprintCategory[]> {
-    const knex = getKnex()
-
-    logger.info("Fetching blueprint categories", { version_id })
-
-    try {
-      // ========================================================================
-      // Get or validate version_id
-      // ========================================================================
-      let effectiveVersionId = version_id
-
-      if (!effectiveVersionId) {
-        // Get active LIVE version
-        const activeVersion = await knex("game_versions")
-          .where("version_type", "LIVE")
-          .where("is_active", true)
-          .orderBy("created_at", "desc")
-          .first()
-
-        if (!activeVersion) {
-          this.throwNotFound("Active LIVE game version", "LIVE")
-        }
-
-        effectiveVersionId = activeVersion.version_id
-      }
-
-      // ========================================================================
-      // Get categories with counts (Requirement 19.5)
-      // ========================================================================
-      const categoriesQuery = await knex("blueprints")
-        .select(
-          "item_category as category",
-          "item_subcategory as subcategory",
-        )
-        .count("* as count")
-        .where("version_id", effectiveVersionId)
-        .where("is_active", true)
-        .groupBy("item_category", "item_subcategory")
-        .orderBy("item_category", "asc")
-        .orderBy("item_subcategory", "asc")
-
-      const categories: BlueprintCategory[] = categoriesQuery.map((row: any) => ({
-        category: row.category,
-        subcategory: row.subcategory || undefined,
-        count: parseInt(String(row.count), 10),
-      }))
-
-      logger.info("Blueprint categories fetched successfully", {
-        category_count: categories.length,
-      })
-
-      return categories
-    } catch (error) {
-      logger.error("Failed to fetch blueprint categories", {
-        error: error instanceof Error ? error.message : String(error),
-        stack: error instanceof Error ? error.stack : undefined,
-      })
-
-      throw error
-    }
-  }
-
+  
   /**
    * Add blueprint to user inventory
    *
@@ -885,6 +806,87 @@ export class BlueprintsController extends BaseController {
       throw error
     }
   }
+
+  /**
+   * Get blueprint categories
+   *
+   * Returns all blueprint categories with item counts, supporting
+   * hierarchical category navigation in the blueprint browser.
+   *
+   * Requirements:
+   * - 19.1: Categorize blueprints by item type
+   * - 19.2: Support hierarchical categories with subcategories
+   * - 19.5: Display item count per category
+   *
+   * @summary Get categories
+   * @param version_id Optional game version ID (defaults to active LIVE version)
+   * @returns Array of categories with counts
+   */
+  @Get("categories")
+  public async getBlueprintCategories(
+    @Query() version_id?: string,
+  ): Promise<BlueprintCategory[]> {
+    const knex = getKnex()
+
+    logger.info("Fetching blueprint categories", { version_id })
+
+    try {
+      // ========================================================================
+      // Get or validate version_id
+      // ========================================================================
+      let effectiveVersionId = version_id
+
+      if (!effectiveVersionId) {
+        // Get active LIVE version
+        const activeVersion = await knex("game_versions")
+          .where("version_type", "LIVE")
+          .where("is_active", true)
+          .orderBy("created_at", "desc")
+          .first()
+
+        if (!activeVersion) {
+          this.throwNotFound("Active LIVE game version", "LIVE")
+        }
+
+        effectiveVersionId = activeVersion.version_id
+      }
+
+      // ========================================================================
+      // Get categories with counts (Requirement 19.5)
+      // ========================================================================
+      const categoriesQuery = await knex("blueprints")
+        .select(
+          "item_category as category",
+          "item_subcategory as subcategory",
+        )
+        .count("* as count")
+        .where("version_id", effectiveVersionId)
+        .where("is_active", true)
+        .groupBy("item_category", "item_subcategory")
+        .orderBy("item_category", "asc")
+        .orderBy("item_subcategory", "asc")
+
+      const categories: BlueprintCategory[] = categoriesQuery.map((row: any) => ({
+        category: row.category,
+        subcategory: row.subcategory || undefined,
+        count: parseInt(String(row.count), 10),
+      }))
+
+      logger.info("Blueprint categories fetched successfully", {
+        category_count: categories.length,
+      })
+
+      return categories
+    } catch (error) {
+      logger.error("Failed to fetch blueprint categories", {
+        error: error instanceof Error ? error.message : String(error),
+        stack: error instanceof Error ? error.stack : undefined,
+      })
+
+      throw error
+    }
+  }
+
 
   /**
    * Get user's blueprint inventory
