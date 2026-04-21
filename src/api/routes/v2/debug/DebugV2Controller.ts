@@ -20,6 +20,7 @@ import logger from "../../../../logger/logger.js"
 
 @Route("debug")
 @Tags("Debug V2")
+@Security("jwt")
 export class DebugV2Controller extends BaseController {
   constructor(@Request() request?: ExpressRequest) {
     super(request)

@@ -73,6 +73,7 @@ export class ListingsV2Controller extends BaseController {
    * @param request Express request for authentication
    * @returns Created listing with listing_id
    */
+  @Security("jwt")
   @Post()
   public async createListing(
     @Body() requestBody: CreateListingRequest,
@@ -831,6 +832,7 @@ export class ListingsV2Controller extends BaseController {
    * @param request Express request for authentication
    * @returns User's listings with pagination metadata
    */
+  @Security("jwt")
   @Get("mine")
   public async getMyListings(
     @Query() status?: "active" | "sold" | "expired" | "cancelled",
@@ -1267,6 +1269,7 @@ export class ListingsV2Controller extends BaseController {
    * @param sort_order Sort order (default: desc)
    * @returns Search results with pagination metadata
    */
+  @Security("jwt")
   @Put("{id}")
   public async updateListing(
     @Path() id: string,
@@ -1622,6 +1625,7 @@ export class ListingsV2Controller extends BaseController {
    * @param request Express request for authentication
    * @returns Success message with next refresh time
    */
+  @Security("jwt")
   @Post("{id}/refresh")
   public async refreshListing(
     @Path() id: string,
@@ -1732,6 +1736,7 @@ export class ListingsV2Controller extends BaseController {
    * @param request Express request for authentication
    * @returns Success message
    */
+  @Security("jwt")
   @Delete("{id}")
   public async deleteListing(
     @Path() id: string,

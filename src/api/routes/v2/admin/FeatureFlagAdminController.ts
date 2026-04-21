@@ -7,7 +7,7 @@
  * - List/add/remove per-user overrides
  */
 
-import { Controller, Get, Put, Post, Delete, Route, Tags, Body, Query, Path, Request } from "tsoa"
+import { Controller, Get, Put, Post, Delete, Route, Tags, Body, Query, Path, Request, Security } from "tsoa"
 import { Request as ExpressRequest } from "express"
 import { BaseController } from "../base/BaseController.js"
 import {
@@ -44,6 +44,7 @@ export interface UserOverridesResponse {
 
 @Route("admin/feature-flags")
 @Tags("Admin Feature Flags")
+@Security("jwt")
 export class FeatureFlagAdminController extends BaseController {
   constructor(@Request() request?: ExpressRequest) {
     super(request)

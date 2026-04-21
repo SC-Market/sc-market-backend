@@ -2305,6 +2305,7 @@ export function RegisterRoutes(app: Router) {
                 request: {"in":"request","name":"request","required":true,"dataType":"object"},
         };
         app.post('/stock-lots',
+            authenticateMiddleware([{"jwt":[]}]),
             ...(fetchMiddlewares<RequestHandler>(StockLotsV2Controller)),
             ...(fetchMiddlewares<RequestHandler>(StockLotsV2Controller.prototype.createStockLot)),
 
@@ -2375,6 +2376,7 @@ export function RegisterRoutes(app: Router) {
                 request: {"in":"request","name":"request","required":true,"dataType":"object"},
         };
         app.put('/stock-lots/:id',
+            authenticateMiddleware([{"jwt":[]}]),
             ...(fetchMiddlewares<RequestHandler>(StockLotsV2Controller)),
             ...(fetchMiddlewares<RequestHandler>(StockLotsV2Controller.prototype.updateStockLot)),
 
@@ -2406,6 +2408,7 @@ export function RegisterRoutes(app: Router) {
                 request: {"in":"request","name":"request","required":true,"dataType":"object"},
         };
         app.post('/stock-lots/bulk-update',
+            authenticateMiddleware([{"jwt":[]}]),
             ...(fetchMiddlewares<RequestHandler>(StockLotsV2Controller)),
             ...(fetchMiddlewares<RequestHandler>(StockLotsV2Controller.prototype.bulkUpdateStockLots)),
 
@@ -2469,6 +2472,7 @@ export function RegisterRoutes(app: Router) {
                 request: {"in":"request","name":"request","required":true,"dataType":"object"},
         };
         app.post('/orders',
+            authenticateMiddleware([{"jwt":[]}]),
             ...(fetchMiddlewares<RequestHandler>(OrdersV2Controller)),
             ...(fetchMiddlewares<RequestHandler>(OrdersV2Controller.prototype.createOrder)),
 
@@ -2500,6 +2504,7 @@ export function RegisterRoutes(app: Router) {
                 request: {"in":"request","name":"request","required":true,"dataType":"object"},
         };
         app.get('/orders/:orderId',
+            authenticateMiddleware([{"jwt":[]}]),
             ...(fetchMiddlewares<RequestHandler>(OrdersV2Controller)),
             ...(fetchMiddlewares<RequestHandler>(OrdersV2Controller.prototype.getOrderDetail)),
 
@@ -2538,6 +2543,7 @@ export function RegisterRoutes(app: Router) {
                 request: {"in":"request","name":"request","dataType":"object"},
         };
         app.get('/orders',
+            authenticateMiddleware([{"jwt":[]}]),
             ...(fetchMiddlewares<RequestHandler>(OrdersV2Controller)),
             ...(fetchMiddlewares<RequestHandler>(OrdersV2Controller.prototype.getOrders)),
 
@@ -2636,6 +2642,7 @@ export function RegisterRoutes(app: Router) {
                 request: {"in":"request","name":"request","required":true,"dataType":"object"},
         };
         app.post('/listings',
+            authenticateMiddleware([{"jwt":[]}]),
             ...(fetchMiddlewares<RequestHandler>(ListingsV2Controller)),
             ...(fetchMiddlewares<RequestHandler>(ListingsV2Controller.prototype.createListing)),
 
@@ -2717,6 +2724,7 @@ export function RegisterRoutes(app: Router) {
                 request: {"in":"request","name":"request","dataType":"object"},
         };
         app.get('/listings/mine',
+            authenticateMiddleware([{"jwt":[]}]),
             ...(fetchMiddlewares<RequestHandler>(ListingsV2Controller)),
             ...(fetchMiddlewares<RequestHandler>(ListingsV2Controller.prototype.getMyListings)),
 
@@ -2779,6 +2787,7 @@ export function RegisterRoutes(app: Router) {
                 request: {"in":"request","name":"request","required":true,"dataType":"object"},
         };
         app.put('/listings/:id',
+            authenticateMiddleware([{"jwt":[]}]),
             ...(fetchMiddlewares<RequestHandler>(ListingsV2Controller)),
             ...(fetchMiddlewares<RequestHandler>(ListingsV2Controller.prototype.updateListing)),
 
@@ -2810,6 +2819,7 @@ export function RegisterRoutes(app: Router) {
                 request: {"in":"request","name":"request","required":true,"dataType":"object"},
         };
         app.post('/listings/:id/refresh',
+            authenticateMiddleware([{"jwt":[]}]),
             ...(fetchMiddlewares<RequestHandler>(ListingsV2Controller)),
             ...(fetchMiddlewares<RequestHandler>(ListingsV2Controller.prototype.refreshListing)),
 
@@ -2841,6 +2851,7 @@ export function RegisterRoutes(app: Router) {
                 request: {"in":"request","name":"request","required":true,"dataType":"object"},
         };
         app.delete('/listings/:id',
+            authenticateMiddleware([{"jwt":[]}]),
             ...(fetchMiddlewares<RequestHandler>(ListingsV2Controller)),
             ...(fetchMiddlewares<RequestHandler>(ListingsV2Controller.prototype.deleteListing)),
 
@@ -3214,6 +3225,7 @@ export function RegisterRoutes(app: Router) {
                 share_token: {"in":"query","name":"share_token","dataType":"string"},
         };
         app.get('/game-data/wishlists/:wishlist_id',
+            authenticateMiddleware([{"jwt":[]}]),
             ...(fetchMiddlewares<RequestHandler>(WishlistsController)),
             ...(fetchMiddlewares<RequestHandler>(WishlistsController.prototype.getWishlist)),
 
@@ -3689,6 +3701,7 @@ export function RegisterRoutes(app: Router) {
         const argsVersionsController_listVersions: Record<string, TsoaRoute.ParameterSchema> = {
         };
         app.get('/game-data/versions',
+            authenticateMiddleware([{"jwt":[]}]),
             ...(fetchMiddlewares<RequestHandler>(VersionsController)),
             ...(fetchMiddlewares<RequestHandler>(VersionsController.prototype.listVersions)),
 
@@ -3718,6 +3731,7 @@ export function RegisterRoutes(app: Router) {
         const argsVersionsController_getActiveVersions: Record<string, TsoaRoute.ParameterSchema> = {
         };
         app.get('/game-data/versions/active',
+            authenticateMiddleware([{"jwt":[]}]),
             ...(fetchMiddlewares<RequestHandler>(VersionsController)),
             ...(fetchMiddlewares<RequestHandler>(VersionsController.prototype.getActiveVersions)),
 
@@ -3895,6 +3909,7 @@ export function RegisterRoutes(app: Router) {
                 page_size: {"default":20,"in":"query","name":"page_size","dataType":"double"},
         };
         app.get('/game-data/missions/search',
+            authenticateMiddleware([{"jwt":[]}]),
             ...(fetchMiddlewares<RequestHandler>(MissionsController)),
             ...(fetchMiddlewares<RequestHandler>(MissionsController.prototype.searchMissions)),
 
@@ -3926,6 +3941,7 @@ export function RegisterRoutes(app: Router) {
                 user_id: {"in":"query","name":"user_id","dataType":"string"},
         };
         app.get('/game-data/missions/:mission_id',
+            authenticateMiddleware([{"jwt":[]}]),
             ...(fetchMiddlewares<RequestHandler>(MissionsController)),
             ...(fetchMiddlewares<RequestHandler>(MissionsController.prototype.getMissionDetail)),
 
@@ -3956,6 +3972,7 @@ export function RegisterRoutes(app: Router) {
                 mission_id: {"in":"path","name":"mission_id","required":true,"dataType":"string"},
         };
         app.get('/game-data/missions/:mission_id/blueprints',
+            authenticateMiddleware([{"jwt":[]}]),
             ...(fetchMiddlewares<RequestHandler>(MissionsController)),
             ...(fetchMiddlewares<RequestHandler>(MissionsController.prototype.getMissionBlueprints)),
 
@@ -4050,6 +4067,7 @@ export function RegisterRoutes(app: Router) {
                 version_id: {"in":"query","name":"version_id","dataType":"string"},
         };
         app.get('/game-data/missions/chains',
+            authenticateMiddleware([{"jwt":[]}]),
             ...(fetchMiddlewares<RequestHandler>(MissionsController)),
             ...(fetchMiddlewares<RequestHandler>(MissionsController.prototype.getMissionChains)),
 
@@ -4080,6 +4098,7 @@ export function RegisterRoutes(app: Router) {
                 request: {"in":"body","name":"request","required":true,"ref":"CalculateQualityRequest"},
         };
         app.post('/game-data/crafting/calculate-quality',
+            authenticateMiddleware([{"jwt":[]}]),
             ...(fetchMiddlewares<RequestHandler>(CraftingController)),
             ...(fetchMiddlewares<RequestHandler>(CraftingController.prototype.calculateQuality)),
 
@@ -4110,6 +4129,7 @@ export function RegisterRoutes(app: Router) {
                 request: {"in":"body","name":"request","required":true,"ref":"SimulateCraftingRequest"},
         };
         app.post('/game-data/crafting/simulate',
+            authenticateMiddleware([{"jwt":[]}]),
             ...(fetchMiddlewares<RequestHandler>(CraftingController)),
             ...(fetchMiddlewares<RequestHandler>(CraftingController.prototype.simulateCrafting)),
 
@@ -4281,6 +4301,7 @@ export function RegisterRoutes(app: Router) {
                 page_size: {"default":20,"in":"query","name":"page_size","dataType":"double"},
         };
         app.get('/game-data/blueprints/search',
+            authenticateMiddleware([{"jwt":[]}]),
             ...(fetchMiddlewares<RequestHandler>(BlueprintsController)),
             ...(fetchMiddlewares<RequestHandler>(BlueprintsController.prototype.searchBlueprints)),
 
@@ -4312,6 +4333,7 @@ export function RegisterRoutes(app: Router) {
                 user_id: {"in":"query","name":"user_id","dataType":"string"},
         };
         app.get('/game-data/blueprints/:blueprint_id',
+            authenticateMiddleware([{"jwt":[]}]),
             ...(fetchMiddlewares<RequestHandler>(BlueprintsController)),
             ...(fetchMiddlewares<RequestHandler>(BlueprintsController.prototype.getBlueprintDetail)),
 
@@ -4343,6 +4365,7 @@ export function RegisterRoutes(app: Router) {
                 version_id: {"in":"query","name":"version_id","dataType":"string"},
         };
         app.get('/game-data/blueprints/:blueprint_id/missions',
+            authenticateMiddleware([{"jwt":[]}]),
             ...(fetchMiddlewares<RequestHandler>(BlueprintsController)),
             ...(fetchMiddlewares<RequestHandler>(BlueprintsController.prototype.getBlueprintMissions)),
 
@@ -4373,6 +4396,7 @@ export function RegisterRoutes(app: Router) {
                 version_id: {"in":"query","name":"version_id","dataType":"string"},
         };
         app.get('/game-data/blueprints/categories',
+            authenticateMiddleware([{"jwt":[]}]),
             ...(fetchMiddlewares<RequestHandler>(BlueprintsController)),
             ...(fetchMiddlewares<RequestHandler>(BlueprintsController.prototype.getBlueprintCategories)),
 
@@ -4503,6 +4527,7 @@ export function RegisterRoutes(app: Router) {
                 request: {"in":"request","name":"request","required":true,"dataType":"object"},
         };
         app.get('/debug/feature-flag',
+            authenticateMiddleware([{"jwt":[]}]),
             ...(fetchMiddlewares<RequestHandler>(DebugV2Controller)),
             ...(fetchMiddlewares<RequestHandler>(DebugV2Controller.prototype.getFeatureFlag)),
 
@@ -4565,6 +4590,7 @@ export function RegisterRoutes(app: Router) {
                 request: {"in":"request","name":"request","required":true,"dataType":"object"},
         };
         app.get('/cart',
+            authenticateMiddleware([{"jwt":[]}]),
             ...(fetchMiddlewares<RequestHandler>(CartV2Controller)),
             ...(fetchMiddlewares<RequestHandler>(CartV2Controller.prototype.getCart)),
 
@@ -4596,6 +4622,7 @@ export function RegisterRoutes(app: Router) {
                 request: {"in":"request","name":"request","required":true,"dataType":"object"},
         };
         app.post('/cart/add',
+            authenticateMiddleware([{"jwt":[]}]),
             ...(fetchMiddlewares<RequestHandler>(CartV2Controller)),
             ...(fetchMiddlewares<RequestHandler>(CartV2Controller.prototype.addToCart)),
 
@@ -4628,6 +4655,7 @@ export function RegisterRoutes(app: Router) {
                 request: {"in":"request","name":"request","required":true,"dataType":"object"},
         };
         app.put('/cart/:id',
+            authenticateMiddleware([{"jwt":[]}]),
             ...(fetchMiddlewares<RequestHandler>(CartV2Controller)),
             ...(fetchMiddlewares<RequestHandler>(CartV2Controller.prototype.updateCartItem)),
 
@@ -4659,6 +4687,7 @@ export function RegisterRoutes(app: Router) {
                 request: {"in":"request","name":"request","required":true,"dataType":"object"},
         };
         app.delete('/cart/:id',
+            authenticateMiddleware([{"jwt":[]}]),
             ...(fetchMiddlewares<RequestHandler>(CartV2Controller)),
             ...(fetchMiddlewares<RequestHandler>(CartV2Controller.prototype.removeCartItem)),
 
@@ -4690,6 +4719,7 @@ export function RegisterRoutes(app: Router) {
                 request: {"in":"request","name":"request","required":true,"dataType":"object"},
         };
         app.post('/cart/checkout',
+            authenticateMiddleware([{"jwt":[]}]),
             ...(fetchMiddlewares<RequestHandler>(CartV2Controller)),
             ...(fetchMiddlewares<RequestHandler>(CartV2Controller.prototype.checkoutCart)),
 
@@ -4721,6 +4751,7 @@ export function RegisterRoutes(app: Router) {
                 request: {"in":"request","name":"request","required":true,"dataType":"object"},
         };
         app.post('/buy-orders',
+            authenticateMiddleware([{"jwt":[]}]),
             ...(fetchMiddlewares<RequestHandler>(BuyOrdersV2Controller)),
             ...(fetchMiddlewares<RequestHandler>(BuyOrdersV2Controller.prototype.createPurchase)),
 
@@ -4787,6 +4818,7 @@ export function RegisterRoutes(app: Router) {
                 page_size: {"in":"query","name":"page_size","dataType":"double"},
         };
         app.get('/buy-orders/search',
+            authenticateMiddleware([{"jwt":[]}]),
             ...(fetchMiddlewares<RequestHandler>(BuyOrdersV2Controller)),
             ...(fetchMiddlewares<RequestHandler>(BuyOrdersV2Controller.prototype.searchBuyOrders)),
 
@@ -5077,6 +5109,7 @@ export function RegisterRoutes(app: Router) {
                 request: {"in":"request","name":"request","required":true,"dataType":"object"},
         };
         app.get('/admin/feature-flags/config',
+            authenticateMiddleware([{"jwt":[]}]),
             ...(fetchMiddlewares<RequestHandler>(FeatureFlagAdminController)),
             ...(fetchMiddlewares<RequestHandler>(FeatureFlagAdminController.prototype.getConfig)),
 
@@ -5108,6 +5141,7 @@ export function RegisterRoutes(app: Router) {
                 body: {"in":"body","name":"body","required":true,"ref":"UpdateConfigRequest"},
         };
         app.put('/admin/feature-flags/config',
+            authenticateMiddleware([{"jwt":[]}]),
             ...(fetchMiddlewares<RequestHandler>(FeatureFlagAdminController)),
             ...(fetchMiddlewares<RequestHandler>(FeatureFlagAdminController.prototype.updateConfig)),
 
@@ -5138,6 +5172,7 @@ export function RegisterRoutes(app: Router) {
                 request: {"in":"request","name":"request","required":true,"dataType":"object"},
         };
         app.get('/admin/feature-flags/stats',
+            authenticateMiddleware([{"jwt":[]}]),
             ...(fetchMiddlewares<RequestHandler>(FeatureFlagAdminController)),
             ...(fetchMiddlewares<RequestHandler>(FeatureFlagAdminController.prototype.getStats)),
 
@@ -5170,6 +5205,7 @@ export function RegisterRoutes(app: Router) {
                 pageSize: {"in":"query","name":"pageSize","dataType":"double"},
         };
         app.get('/admin/feature-flags/overrides',
+            authenticateMiddleware([{"jwt":[]}]),
             ...(fetchMiddlewares<RequestHandler>(FeatureFlagAdminController)),
             ...(fetchMiddlewares<RequestHandler>(FeatureFlagAdminController.prototype.getUserOverrides)),
 
@@ -5201,6 +5237,7 @@ export function RegisterRoutes(app: Router) {
                 body: {"in":"body","name":"body","required":true,"ref":"SetUserOverrideRequest"},
         };
         app.post('/admin/feature-flags/overrides',
+            authenticateMiddleware([{"jwt":[]}]),
             ...(fetchMiddlewares<RequestHandler>(FeatureFlagAdminController)),
             ...(fetchMiddlewares<RequestHandler>(FeatureFlagAdminController.prototype.setUserOverride)),
 
@@ -5232,6 +5269,7 @@ export function RegisterRoutes(app: Router) {
                 userId: {"in":"path","name":"userId","required":true,"dataType":"string"},
         };
         app.delete('/admin/feature-flags/overrides/:userId',
+            authenticateMiddleware([{"jwt":[]}]),
             ...(fetchMiddlewares<RequestHandler>(FeatureFlagAdminController)),
             ...(fetchMiddlewares<RequestHandler>(FeatureFlagAdminController.prototype.removeUserOverride)),
 
