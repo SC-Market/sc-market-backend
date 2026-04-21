@@ -107,6 +107,8 @@ export interface GameDataPayload {
     ranks: Array<{ code: string; displayName: string; threshold: number; index: number }>
   }>
   refiningProcesses: P4KRefiningProcess[]
+  lootTables: Array<{ name: string; entries: Array<Record<string, unknown>> }>
+  rockCompositions: Array<{ name: string; depositName: string | null; minDistinctElements: number; elements: Array<Record<string, unknown>> }>
 }
 
 export interface P4KShip {
@@ -982,6 +984,52 @@ export class GameDataImportService {
           logger.info(`Imported ${rows.length} reputation ranks across ${gameData.reputationRanks.length} scopes`)
         } catch {
           logger.debug("Reputation ranks import skipped (table may not exist)")
+        }
+      }
+
+      // ========================================================================
+      // STEP 12.6: Import loot tables
+      // ========================================================================
+      if (gameData.lootTables && gameData.lootTables.length > 0) {
+        logger.info("Importing loot tables")
+        try {
+          await knex("loot_tables").delete()
+          const BATCH = 100
+          for (let i = 0; i < gameData.lootTables.length; i += BATCH) {
+            await knex("loot_tables").insert(
+              gameData.lootTables.slice(i, i + BATCH).map((t) => ({
+                name: t.name,
+                entries: JSON.stringify(t.entries),
+              })),
+            )
+          }
+          logger.info(`Imported ${gameData.lootTables.length} loot tables`)
+        } catch {
+          logger.debug("Loot tables import skipped (table may not exist)")
+        }
+      }
+
+      // ========================================================================
+      // STEP 12.7: Import rock compositions
+      // ========================================================================
+      if (gameData.rockCompositions && gameData.rockCompositions.length > 0) {
+        logger.info("Importing rock compositions")
+        try {
+          await knex("rock_compositions").delete()
+          const BATCH = 100
+          for (let i = 0; i < gameData.rockCompositions.length; i += BATCH) {
+            await knex("rock_compositions").insert(
+              gameData.rockCompositions.slice(i, i + BATCH).map((r) => ({
+                name: r.name,
+                deposit_name: r.depositName,
+                min_distinct_elements: r.minDistinctElements,
+                elements: JSON.stringify(r.elements),
+              })),
+            )
+          }
+          logger.info(`Imported ${gameData.rockCompositions.length} rock compositions`)
+        } catch {
+          logger.debug("Rock compositions import skipped (table may not exist)")
         }
       }
 
