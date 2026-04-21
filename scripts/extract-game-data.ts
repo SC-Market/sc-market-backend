@@ -382,6 +382,7 @@ function parseItems(): any[] {
         size,
         grade,
         manufacturer,
+        manufacturerName: manufacturer ? mfrNameMap.get(manufacturer) || null : null,
         tags,
         thumbnail,
         file: path.basename(f, ".json"),
@@ -720,6 +721,23 @@ function parseStarmap(): any[] {
 
 // --- Step 10: Write output and zip ---
 console.log("\nParsing game data...")
+// --- Pre-build manufacturer name lookup ---
+const mfrNameMap = new Map<string, string>()
+const mfrDir = path.join(RECORDS_DIR, "scitemmanufacturer")
+if (fs.existsSync(mfrDir)) {
+  for (const f of findJsonFiles(mfrDir)) {
+    try {
+      const d = readJson(f)
+      const rv = d._RecordValue_
+      if (rv?._Type_ !== "SCItemManufacturer") continue
+      const code = path.basename(f, ".json").replace("scitemmanufacturer.", "")
+      const name = loc(rv.Localization?.Name) || null
+      if (name) mfrNameMap.set(code, name)
+    } catch {}
+  }
+}
+console.log(`  Manufacturer lookup: ${mfrNameMap.size} entries`)
+
 const items = parseItems()
 const blueprints = parseBlueprints()
 const missions = parseMissions()
