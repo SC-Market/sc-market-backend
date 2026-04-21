@@ -94,10 +94,9 @@ const staticRoutes: Array<{ path: string; handler: (req: express.Request, res: e
       try {
         const c = new BlueprintsController(req)
         res.json(await c.getUserBlueprintInventory(
-          req.query.user_id as string | undefined,
+          req.query.item_category as string | undefined,
+          req.query.rarity as string | undefined,
           req.query.version_id as string | undefined,
-          Number(req.query.page) || 1,
-          Number(req.query.page_size) || 20,
         ))
       } catch (err) { next(err) }
     },
@@ -118,8 +117,6 @@ const staticRoutes: Array<{ path: string; handler: (req: express.Request, res: e
         const c = new MissionsController(req)
         res.json(await c.getMissionChains(
           req.query.version_id as string | undefined,
-          Number(req.query.page) || 1,
-          Number(req.query.page_size) || 20,
         ))
       } catch (err) { next(err) }
     },

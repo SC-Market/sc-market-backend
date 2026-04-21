@@ -79,6 +79,7 @@ const P4K_TYPE_MAP: Record<string, string> = {
   Char_Clothing_Backpack: "Backpack (Clothing)",
   TowingBeam: "Towing Beam",
   Grenade: "Thrown Weapon",
+  Commodity: "Commodity",
   UNDEFINED: "Other",
 }
 
