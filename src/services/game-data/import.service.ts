@@ -151,8 +151,20 @@ export interface P4KRawBlueprint {
   category: string | null
   craftedItem: string | null
   craftTimeSeconds: number
-  slots: any[]
-  optionalCosts: any[]
+  slots: Array<{
+    type: string
+    name?: string
+    displayName?: string
+    count?: number
+    modifiers?: Array<{ property: string; startQuality: number; endQuality: number; modifierAtStart: number; modifierAtEnd: number }>
+    resource?: string
+    quantity_scu?: number
+    minQuality?: number
+    item?: string
+    quantity?: number
+    ingredients?: Array<{ type: string; resource?: string; quantity_scu?: number; item?: string; quantity?: number; minQuality?: number }>
+  }>
+  optionalCosts: Array<Record<string, unknown>>
 }
 
 export interface P4KRawResource {
@@ -191,7 +203,7 @@ export interface P4KItem {
   tags: string | null
   thumbnail: string | null
   file: string
-  attributes?: Record<string, any>
+  attributes?: Record<string, string | number | boolean | string[] | null>
 }
 
 export interface P4KMission {
@@ -205,7 +217,7 @@ export interface P4KMission {
   location: string | null
   lawful: boolean | null
   reward: { uec: number; max: number } | null
-  reputationRewards: any | null
+  reputationRewards: Record<string, Array<{ faction: string | null; scope: string | null; reward: string | null; amount?: number }>> | null
   maxInstances: number | null
   maxPlayers: number | null
   canBeShared: boolean | null
@@ -256,8 +268,8 @@ export interface P4KResource {
   canBePurchased: boolean
   canBeSalvaged: boolean
   canBeLooted: boolean
-  miningLocations: any | null
-  purchaseLocations: any | null
+  miningLocations: Record<string, string[]> | null
+  purchaseLocations: Record<string, string[]> | null
 }
 
 interface DBItem {
@@ -988,7 +1000,7 @@ export class GameDataImportService {
    */
   async importMissions(
     knex: Knex,
-    gameData: Pick<GameDataPayload, "missions">,
+    gameData: { missions?: P4KMission[] },
     versionId: string,
   ): Promise<{
     processed: number
@@ -1070,7 +1082,7 @@ export class GameDataImportService {
    * Parse mission data from extracted JSON
    * Subtask 8.4.1: Parse mission data from extracted JSON
    */
-  private parseMissionData(gameData: Pick<GameDataPayload, "missions">): P4KMission[] {
+  private parseMissionData(gameData: { missions?: P4KMission[] }): P4KMission[] {
     const missions: P4KMission[] = []
     const rawMissions = gameData.missions || []
 
@@ -1202,7 +1214,7 @@ export class GameDataImportService {
    */
   async importBlueprints(
     knex: Knex,
-    gameData: Pick<GameDataPayload, "blueprints">,
+    gameData: { blueprints?: P4KRawBlueprint[] },
     versionId: string,
   ): Promise<{
     processed: number
@@ -1284,7 +1296,7 @@ export class GameDataImportService {
    * Parse blueprint data from extracted JSON
    * Handles the P4K extraction format: craftedItem (filename), slots[] with nested ingredients
    */
-  private parseBlueprintData(gameData: Pick<GameDataPayload, "blueprints">): P4KBlueprint[] {
+  private parseBlueprintData(gameData: { blueprints?: P4KRawBlueprint[] }): P4KBlueprint[] {
     const blueprints: P4KBlueprint[] = []
     const rawBlueprints = gameData.blueprints || []
 
@@ -1293,7 +1305,7 @@ export class GameDataImportService {
         // Flatten nested slots into a flat ingredients array
         const ingredients: Array<{ itemId: string; quantity: number; minQuality?: number }> = []
 
-        const flattenSlots = (slots: any[]) => {
+        const flattenSlots = (slots: P4KRawBlueprint["slots"]) => {
           for (const slot of slots || []) {
             if (slot.type === "resource" && slot.resource) {
               ingredients.push({
@@ -1511,7 +1523,7 @@ export class GameDataImportService {
    */
   async importResources(
     knex: Knex,
-    gameData: Pick<GameDataPayload, "resources">,
+    gameData: { resources?: P4KRawResource[] },
     versionId: string,
   ): Promise<{
     processed: number
@@ -1593,7 +1605,7 @@ export class GameDataImportService {
    * Parse resource data from extracted JSON
    * Subtask 8.6.1: Parse resource data from extracted JSON
    */
-  private parseResourceData(gameData: Pick<GameDataPayload, "resources">): P4KResource[] {
+  private parseResourceData(gameData: { resources?: P4KRawResource[] }): P4KResource[] {
     const resources: P4KResource[] = []
     const rawResources = gameData.resources || []
 
@@ -1743,7 +1755,7 @@ export class GameDataImportService {
    */
   async linkMissionRewards(
     knex: Knex,
-    gameData: Pick<GameDataPayload, "missions">,
+    gameData: { missions?: P4KMission[] },
     versionId: string,
   ): Promise<{
     processed: number
@@ -1765,7 +1777,7 @@ export class GameDataImportService {
       
       // Filter missions that have blueprint rewards
       const missionsWithRewards = missions.filter(
-        (m: { blueprintRewards?: any[] }) => m.blueprintRewards && m.blueprintRewards.length > 0
+        (m: P4KMission) => m.blueprintRewards && m.blueprintRewards.length > 0
       )
       
       stats.processed = missionsWithRewards.length
