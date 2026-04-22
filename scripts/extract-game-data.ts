@@ -1308,19 +1308,19 @@ console.log(`  Merged ${activeMissions.length} active missions → ${mergedMissi
 
 // --- Resolve blueprint pool references to individual blueprints ---
 const poolMap = new Map(blueprintRewardPools.map((p: { name: string; rewards: { blueprint: string; weight: number }[] }) => [p.name, p]))
-const bpNameLookup = new Map(blueprints.map((bp: { name: string }) => [bp.name.toLowerCase(), bp.name]))
+const bpLookup = new Map(blueprints.map((bp: { name: string; id: string }) => [bp.name.toLowerCase(), { name: bp.name, id: bp.id }]))
 let resolvedLinks = 0
 for (const m of mergedMissions) {
   const poolRefs = m.blueprintRewards as { pool: string; chance: number }[] | undefined
   if (!poolRefs?.length) continue
-  const resolved: { blueprint: string; weight: number; chance: number; poolName: string }[] = []
+  const resolved: { blueprintId: string; blueprint: string; weight: number; chance: number; poolName: string }[] = []
   for (const ref of poolRefs) {
     const pool = poolMap.get(ref.pool)
     if (!pool) continue
     for (const r of pool.rewards) {
-      const bpName = bpNameLookup.get(r.blueprint.toLowerCase())
-      if (bpName) {
-        resolved.push({ blueprint: bpName, weight: r.weight, chance: ref.chance, poolName: ref.pool })
+      const bp = bpLookup.get(r.blueprint.toLowerCase())
+      if (bp) {
+        resolved.push({ blueprintId: bp.id, blueprint: bp.name, weight: r.weight, chance: ref.chance, poolName: ref.pool })
       }
     }
   }
