@@ -1428,6 +1428,8 @@ const models: TsoaRoute.Models = {
             "reward_scope": {"dataType":"string"},
             "min_standing": {"dataType":"string"},
             "max_standing": {"dataType":"string"},
+            "min_standing_display": {"dataType":"string"},
+            "max_standing_display": {"dataType":"string"},
             "can_reaccept_after_failing": {"dataType":"boolean"},
             "can_reaccept_after_abandoning": {"dataType":"boolean"},
             "abandoned_cooldown_time": {"dataType":"double"},
