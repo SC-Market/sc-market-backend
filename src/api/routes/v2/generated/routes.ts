@@ -1840,6 +1840,20 @@ const models: TsoaRoute.Models = {
         "additionalProperties": false,
     },
     // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+    "SlotModifier": {
+        "dataType": "refObject",
+        "properties": {
+            "slot_name": {"dataType":"string","required":true},
+            "slot_display_name": {"dataType":"string","required":true},
+            "property": {"dataType":"string","required":true},
+            "start_quality": {"dataType":"double","required":true},
+            "end_quality": {"dataType":"double","required":true},
+            "modifier_at_start": {"dataType":"double","required":true},
+            "modifier_at_end": {"dataType":"double","required":true},
+        },
+        "additionalProperties": false,
+    },
+    // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
     "UserBlueprintAcquisition": {
         "dataType": "refObject",
         "properties": {
@@ -1859,6 +1873,7 @@ const models: TsoaRoute.Models = {
             "ingredients": {"dataType":"array","array":{"dataType":"refObject","ref":"BlueprintIngredient"},"required":true},
             "missions_rewarding": {"dataType":"array","array":{"dataType":"refObject","ref":"MissionRewardingBlueprint"},"required":true},
             "crafting_recipe": {"dataType":"nestedObjectLiteral","nestedProperties":{"max_output_quality_tier":{"dataType":"double","required":true},"min_output_quality_tier":{"dataType":"double","required":true},"quality_calculation_type":{"dataType":"string","required":true}}},
+            "slot_modifiers": {"dataType":"array","array":{"dataType":"refObject","ref":"SlotModifier"},"required":true},
             "user_owns": {"dataType":"boolean"},
             "user_acquisition": {"ref":"UserBlueprintAcquisition"},
         },
