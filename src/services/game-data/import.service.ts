@@ -218,6 +218,33 @@ export interface P4KItem {
   attributes?: Record<string, string | number | boolean | string[] | null>
 }
 
+export interface P4KStanding {
+  code: string
+  displayName: string
+  xp: number
+}
+
+export interface P4KBlueprintReward {
+  blueprintId: string
+  blueprint: string
+  weight: number
+  totalWeight: number
+  chance: number
+  poolName: string
+}
+
+export interface P4KReputationReward {
+  faction: string
+  scope: string
+  reward: string
+  amount?: number
+}
+
+export interface P4KShipEncounter {
+  role: string
+  waves: Array<{ name: string; shipCount: number }>
+}
+
 export interface P4KMission {
   id: string
   name: string
@@ -228,11 +255,11 @@ export interface P4KMission {
   type: string | null
   template: string | null
   career: string | null
-  reward: { uec: number; max?: number } | null
-  reputationRewards: Array<{ faction: string; scope: string; reward: string; amount?: number }> | null
-  blueprintRewards: Array<{ pool?: string; chance: number; blueprint?: string; weight?: number; poolName?: string }> | null
-  minStanding: string | null
-  maxStanding: string | null
+  reward: { uec: number; max: number } | null
+  reputationRewards: P4KReputationReward[] | null
+  blueprintRewards: P4KBlueprintReward[] | null
+  minStanding: P4KStanding | null
+  maxStanding: P4KStanding | null
   canBeShared: boolean | null
   notForRelease: boolean
   workInProgress: boolean
@@ -243,16 +270,16 @@ export interface P4KMission {
   personalCooldownTime: number | null
   deadline: number | null
   availableInPrison: boolean
+  hideInMobiGlas: boolean
   variantCount?: number
-  // Rich metadata
-  shipEncounters?: Array<{ role: string; waves: Array<{ name: string; shipCount: number }> }>
+  shipEncounters?: P4KShipEncounter[]
   npcEncounters?: Array<{ name: string; count: number }>
   haulingOrders?: Array<{ resource: string; minSCU: number; maxSCU: number }>
   entitySpawns?: Array<{ name: string; count: number }>
-  illegal?: boolean
+  illegal: boolean
   lawful?: boolean
   difficulty?: number
-  starSystem?: string
+  starSystem: string | null
   maxCrimestat?: number
   requiredScenarios?: string[]
 }
@@ -1424,11 +1451,12 @@ export class GameDataImportService {
           npcEncounters: raw.npcEncounters || undefined,
           haulingOrders: raw.haulingOrders || undefined,
           entitySpawns: raw.entitySpawns || undefined,
-          illegal: raw.illegal ?? undefined,
+          illegal: raw.illegal ?? false,
           lawful: raw.lawful ?? undefined,
           difficulty: raw.difficulty ?? undefined,
-          starSystem: raw.starSystem || undefined,
+          starSystem: raw.starSystem || null,
           maxCrimestat: raw.maxCrimestat ?? undefined,
+          hideInMobiGlas: raw.hideInMobiGlas || false,
           requiredScenarios: raw.requiredScenarios || undefined,
         })
       } catch (error) {
@@ -1493,18 +1521,18 @@ export class GameDataImportService {
       mission_giver_org: mission.missionGiver,
       credit_reward_min: mission.reward?.uec || null,
       credit_reward_max: mission.reward?.max || mission.reward?.uec || null,
-      min_standing: typeof mission.minStanding === 'object' && mission.minStanding ? (mission.minStanding as { code: string }).code : mission.minStanding,
-      max_standing: typeof mission.maxStanding === 'object' && mission.maxStanding ? (mission.maxStanding as { code: string }).code : mission.maxStanding,
-      min_standing_name: typeof mission.minStanding === 'object' && mission.minStanding ? (mission.minStanding as { displayName: string }).displayName : null,
-      min_standing_xp: typeof mission.minStanding === 'object' && mission.minStanding ? (mission.minStanding as { xp: number }).xp : null,
-      max_standing_name: typeof mission.maxStanding === 'object' && mission.maxStanding ? (mission.maxStanding as { displayName: string }).displayName : null,
-      max_standing_xp: typeof mission.maxStanding === 'object' && mission.maxStanding ? (mission.maxStanding as { xp: number }).xp : null,
+      min_standing: mission.minStanding?.code || null,
+      max_standing: mission.maxStanding?.code || null,
+      min_standing_name: mission.minStanding?.displayName || null,
+      min_standing_xp: mission.minStanding?.xp ?? null,
+      max_standing_name: mission.maxStanding?.displayName || null,
+      max_standing_xp: mission.maxStanding?.xp ?? null,
       reputation_reward_amount: mission.reputationRewards?.[0]?.amount ?? null,
       reputation_reward_scope: mission.reputationRewards?.[0]?.scope ?? null,
       is_shareable: mission.canBeShared ?? false,
       is_unique_mission: mission.onceOnly,
       available_in_prison: mission.availableInPrison,
-      hide_in_mobiglas: (mission as Record<string, unknown>).hideInMobiGlas ?? false,
+      hide_in_mobiglas: mission.hideInMobiGlas,
       can_reaccept_after_failing: mission.canReacceptAfterFailing ?? false,
       can_reaccept_after_abandoning: mission.canReacceptAfterAbandoning ?? false,
       abandoned_cooldown_time: mission.abandonedCooldownTime,
@@ -2115,15 +2143,13 @@ export class GameDataImportService {
 
         const seen = new Set<string>()
         for (const br of mission.blueprintRewards || []) {
-          const reward = br as { blueprintId?: string; blueprint?: string; weight?: number; totalWeight?: number; chance?: number; poolName?: string }
-          const bpId = reward.blueprintId ? bpIdByCode.get(reward.blueprintId) : undefined
+          const bpId = br.blueprintId ? bpIdByCode.get(br.blueprintId) : undefined
           if (!bpId || seen.has(bpId)) continue
           seen.add(bpId)
 
-          // drop_probability = pool_chance × (blueprint_weight / total_pool_weight) × 100
-          const poolChance = reward.chance ?? 1
-          const weight = reward.weight ?? 1
-          const totalWeight = reward.totalWeight ?? 1
+          const poolChance = br.chance ?? 1
+          const weight = br.weight ?? 1
+          const totalWeight = br.totalWeight ?? 1
           const dropProbability = poolChance * (weight / totalWeight) * 100
 
           rows.push({
