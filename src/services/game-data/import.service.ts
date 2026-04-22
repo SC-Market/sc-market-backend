@@ -2023,10 +2023,16 @@ export class GameDataImportService {
 
         const seen = new Set<string>()
         for (const br of mission.blueprintRewards || []) {
-          const reward = br as { blueprintId?: string; blueprint?: string; weight?: number; chance?: number; poolName?: string }
+          const reward = br as { blueprintId?: string; blueprint?: string; weight?: number; totalWeight?: number; chance?: number; poolName?: string }
           const bpId = reward.blueprintId ? bpIdByCode.get(reward.blueprintId) : undefined
           if (!bpId || seen.has(bpId)) continue
           seen.add(bpId)
+
+          // drop_probability = pool_chance × (blueprint_weight / total_pool_weight) × 100
+          const poolChance = reward.chance ?? 1
+          const weight = reward.weight ?? 1
+          const totalWeight = reward.totalWeight ?? 1
+          const dropProbability = poolChance * (weight / totalWeight) * 100
 
           rows.push({
             mission_id: missionId,
@@ -2034,7 +2040,7 @@ export class GameDataImportService {
             reward_pool_id: 1,
             reward_pool_size: 1,
             selection_count: 1,
-            drop_probability: (reward.chance ?? 1) * 100,
+            drop_probability: Math.round(dropProbability * 100) / 100,
             is_guaranteed: false,
           })
         }
