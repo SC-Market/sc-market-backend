@@ -1062,53 +1062,94 @@ for (const mission of missions) {
   mission.isWikelo = (mission.type || "").toLowerCase().includes("wikelo") || (mission.name || "").toLowerCase().includes("wikelo")
 }
 
-// --- Link missions to blueprint reward pools via contracts ---
+// --- Link missions to blueprint reward pools via contract template → XML → mission chain ---
 const contractDir = path.join(RECORDS_DIR, "contracts")
 if (fs.existsSync(contractDir)) {
-  // Build contract debugName → pool mapping
-  const contractPools = new Map<string, Set<string>>()
-  for (const f of findJsonFiles(contractDir)) {
+  const norm = (s: string) => s.toLowerCase().replace(/\\/g, "/")
+
+  // Step 1: Build contract template name → set of blueprint pools
+  const templatePools = new Map<string, Set<string>>()
+  for (const f of findJsonFiles(path.join(contractDir, "contractgenerator"))) {
     try {
       const d = readJson(f)._RecordValue_
-      for (const gen of d.generators || []) {
-        for (const contract of gen.contracts || []) {
-          const debug = (contract.debugName || "").toLowerCase()
-          const results = contract.contractResults?.contractResults || []
+      const extractPools = (obj: any) => {
+        if (!obj || typeof obj !== "object") return
+        if (obj.debugName && obj.template) {
+          const tmpl = path.basename(obj.template, ".json")
+          const results = obj.contractResults?.contractResults || []
           for (const cr of results) {
-            const bp = cr.blueprintPool
-            if (bp) {
+            const bp = cr?.blueprintPool
+            if (bp && bp !== "None") {
               const pool = path.basename(typeof bp === "string" ? bp : bp._RecordPath_ || "", ".json")
-              if (pool && debug) {
-                if (!contractPools.has(debug)) contractPools.set(debug, new Set())
-                contractPools.get(debug)!.add(pool)
+              if (pool) {
+                if (!templatePools.has(tmpl)) templatePools.set(tmpl, new Set())
+                templatePools.get(tmpl)!.add(pool)
               }
             }
           }
         }
+        if (Array.isArray(obj)) obj.forEach(extractPools)
+        else Object.values(obj).forEach(extractPools)
       }
+      extractPools(d)
     } catch {}
   }
 
-  // Match missions to contracts by name similarity
-  const poolLookup = new Map(blueprintRewardPools.map((p: { name: string }) => [p.name, p]))
-  let linked = 0
-  for (const mission of missions) {
-    const mName = mission.name.toLowerCase()
-    // Try matching contract debugNames that share significant parts with mission name
-    for (const [debug, pools] of contractPools) {
-      // Normalize both for comparison
-      const debugParts = debug.replace(/_/g, " ").split(" ").filter((p: string) => p.length > 3)
-      const mParts = mName.replace(/_/g, " ").split(" ").filter((p: string) => p.length > 3)
-      // Count matching parts
-      const matches = debugParts.filter((dp: string) => mParts.some((mp: string) => mp.includes(dp) || dp.includes(mp)))
-      if (matches.length >= 2) {
-        mission.blueprintPools = [...pools]
-        linked++
-        break
+  // Step 2: Build contract template name → set of Subsumption XMLs
+  const templateXmls = new Map<string, Set<string>>()
+  for (const f of findJsonFiles(path.join(contractDir, "contracttemplates"))) {
+    try {
+      const tname = path.basename(f, ".json")
+      const findXmls = (obj: any): string[] => {
+        if (typeof obj === "string" && obj.toLowerCase().endsWith(".xml")) return [norm(obj)]
+        if (!obj || typeof obj !== "object") return []
+        return (Array.isArray(obj) ? obj : Object.values(obj)).flatMap(findXmls)
+      }
+      const xmls = findXmls(readJson(f))
+      if (xmls.length) templateXmls.set(tname, new Set(xmls))
+    } catch {}
+  }
+
+  // Step 3: Build XML → set of pools (by joining template→pools and template→XMLs)
+  const xmlPools = new Map<string, Set<string>>()
+  for (const [tmpl, pools] of templatePools) {
+    const xmls = templateXmls.get(tmpl)
+    if (xmls) {
+      for (const xml of xmls) {
+        if (!xmlPools.has(xml)) xmlPools.set(xml, new Set())
+        for (const p of pools) xmlPools.get(xml)!.add(p)
       }
     }
   }
-  console.log(`  Mission→Blueprint pool links: ${linked}`)
+
+  // Step 4: Build mission missionModule → mission name mapping, then assign pools
+  // Re-read mission broker entries for their missionModule field
+  const missionDir = path.join(RECORDS_DIR, "missionbroker/pu_missions")
+  const missionNameToXml = new Map<string, string>()
+  if (fs.existsSync(missionDir)) {
+    for (const f of findJsonFiles(missionDir)) {
+      try {
+        const d = readJson(f)
+        const rn: string = d._RecordName_ || ""
+        const name = rn.split(".").slice(1).join(".")
+        const mm = d._RecordValue_?.missionModule
+        if (name && mm) missionNameToXml.set(name, norm(mm))
+      } catch {}
+    }
+  }
+
+  let linked = 0
+  for (const mission of missions) {
+    const xml = missionNameToXml.get(mission.name)
+    if (xml) {
+      const pools = xmlPools.get(xml)
+      if (pools?.size) {
+        mission.blueprintPools = [...pools]
+        linked++
+      }
+    }
+  }
+  console.log(`  Mission→Blueprint pool links: ${linked} (via template→XML→mission chain)`)
 }
 
 fs.mkdirSync(OUTPUT_DIR, { recursive: true })

@@ -3996,6 +3996,37 @@ export function RegisterRoutes(app: Router) {
             }
         });
         // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+        const argsMissionsController_getMissionDetailByCode: Record<string, TsoaRoute.ParameterSchema> = {
+                mission_code: {"in":"path","name":"mission_code","required":true,"dataType":"string"},
+                user_id: {"in":"query","name":"user_id","dataType":"string"},
+        };
+        app.get('/game-data/missions/by-code/:mission_code',
+            ...(fetchMiddlewares<RequestHandler>(MissionsController)),
+            ...(fetchMiddlewares<RequestHandler>(MissionsController.prototype.getMissionDetailByCode)),
+
+            async function MissionsController_getMissionDetailByCode(request: ExRequest, response: ExResponse, next: any) {
+
+            // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+
+            let validatedArgs: any[] = [];
+            try {
+                validatedArgs = templateService.getValidatedArgs({ args: argsMissionsController_getMissionDetailByCode, request, response });
+
+                const controller = new MissionsController();
+
+              await templateService.apiHandler({
+                methodName: 'getMissionDetailByCode',
+                controller,
+                response,
+                next,
+                validatedArgs,
+                successStatus: undefined,
+              });
+            } catch (err) {
+                return next(err);
+            }
+        });
+        // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
         const argsMissionsController_getMissionBlueprints: Record<string, TsoaRoute.ParameterSchema> = {
                 mission_id: {"in":"path","name":"mission_id","required":true,"dataType":"string"},
         };
