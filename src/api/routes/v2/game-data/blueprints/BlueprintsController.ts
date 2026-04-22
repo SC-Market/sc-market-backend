@@ -157,7 +157,9 @@ export class BlueprintsController extends BaseController {
           this.whereRaw(
             "to_tsvector('english', b.blueprint_name) @@ plainto_tsquery('english', ?)",
             [text],
-          ).orWhere("b.blueprint_name", "ilike", `%${text}%`)
+          )
+            .orWhere("b.blueprint_name", "ilike", `%${text}%`)
+            .orWhere("gi.name", "ilike", `%${text}%`)
         })
       }
 
