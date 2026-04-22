@@ -649,10 +649,51 @@ function extractPropertyOverrides(po: Record<string, unknown>): {
   return { shipEncounters, npcEncounters, haulingOrders, entitySpawns }
 }
 
-function parseMissions(): Record<string, unknown>[] {
+interface ExtractedMission {
+  id: string
+  name: string
+  title: string | null
+  titleKey: string | null
+  description: string | null
+  missionGiver: string
+  type: string | null
+  template: string | null
+  reward: { uec: number; max: number } | null
+  reputationRewards: Array<{ faction: string; scope: string; reward: string; amount?: number }> | null
+  blueprintRewards?: Array<{ pool: string; chance: number }> | Array<{ blueprintId: string; blueprint: string; weight: number; totalWeight: number; chance: number; poolName: string }> | null
+  minStanding: string | { code: string; displayName: string; xp: number } | null
+  maxStanding: string | { code: string; displayName: string; xp: number } | null
+  notForRelease: boolean
+  workInProgress: boolean
+  onceOnly: boolean
+  canBeShared: boolean | null
+  canReacceptAfterAbandoning: boolean | null
+  canReacceptAfterFailing: boolean | null
+  abandonedCooldownTime: number | null
+  personalCooldownTime: number | null
+  deadline: number | null
+  availableInPrison: boolean
+  illegal: boolean
+  hideInMobiGlas: boolean
+  requiredScenarios?: string[]
+  starSystem: string | null
+  acceptLocations?: string[]
+  shipEncounters?: ShipEncounter[]
+  npcEncounters?: NpcEncounter[]
+  haulingOrders?: HaulingOrder[]
+  entitySpawns?: EntitySpawn[]
+  // Added by post-processing
+  career?: string | null
+  lawful?: boolean
+  difficulty?: number
+  maxCrimestat?: number
+  variantCount?: number
+}
+
+function parseMissions(): ExtractedMission[] {
   const dir = path.join(RECORDS_DIR, "contracts/contractgenerator")
   const files = findJsonFiles(dir)
-  const missions: Record<string, unknown>[] = []
+  const missions: ExtractedMission[] = []
 
   for (const f of files) {
     try {
@@ -1293,18 +1334,18 @@ for (const ladder of reputationRanks) {
   }
 }
 for (const mission of missions) {
-  if (mission.minStanding) {
-    const s = standingLookup.get(mission.minStanding as string)
+  if (typeof mission.minStanding === "string") {
+    const s = standingLookup.get(mission.minStanding)
     if (s) mission.minStanding = { code: mission.minStanding, ...s }
   }
-  if (mission.maxStanding) {
-    const s = standingLookup.get(mission.maxStanding as string)
+  if (typeof mission.maxStanding === "string") {
+    const s = standingLookup.get(mission.maxStanding)
     if (s) mission.maxStanding = { code: mission.maxStanding, ...s }
   }
 }
 
 // Blueprint pools are already on contracts — just count
-const withBP = missions.filter((m: Record<string, unknown>) => (m.blueprintRewards as unknown[] | undefined)?.length).length
+const withBP = missions.filter((m) => m.blueprintRewards?.length).length
 console.log(`  Missions with blueprint rewards: ${withBP}`)
 
 // --- Mission broker enrichment ---
@@ -1349,16 +1390,16 @@ const stripLocation = (name: string) => name.replace(LOCATION_PARTS, "")
 const cleanTitle = (t: string) => t.replace(/~mission\([^)]*\)/g, "[VARIABLE]").trim()
 
 // Filter out notForRelease and workInProgress before merging
-const activeMissions = missions.filter((m: Record<string, unknown>) => !m.notForRelease && !m.workInProgress)
+const activeMissions = missions.filter((m) => !m.notForRelease && !m.workInProgress)
 
-const mergeGroups = new Map<string, Record<string, unknown>[]>()
+const mergeGroups = new Map<string, ExtractedMission[]>()
 for (const m of activeMissions) {
   const k = stripLocation(m.name as string)
   if (!mergeGroups.has(k)) mergeGroups.set(k, [])
   mergeGroups.get(k)!.push(m)
 }
 
-function unionByKey<T>(groups: Record<string, unknown>[], field: string, key: string): T[] | undefined {
+function unionByKey<T>(groups: ExtractedMission[], field: keyof ExtractedMission, key: string): T[] | undefined {
   const seen = new Map<string, T>()
   for (const m of groups) {
     for (const item of (m[field] as T[] | undefined) || []) {
@@ -1369,7 +1410,7 @@ function unionByKey<T>(groups: Record<string, unknown>[], field: string, key: st
   return seen.size ? [...seen.values()] : undefined
 }
 
-const mergedMissions: Record<string, unknown>[] = []
+const mergedMissions: ExtractedMission[] = []
 for (const [key, group] of mergeGroups) {
   const base = { ...group[0] }
   base.name = key
@@ -1395,8 +1436,8 @@ for (const [key, group] of mergeGroups) {
     base.haulingOrders = unionByKey<HaulingOrder>(group, "haulingOrders", "resource")
     base.entitySpawns = unionByKey<EntitySpawn>(group, "entitySpawns", "name")
     // Collect all star systems from variants
-    const systems = new Set(group.map((m) => m.starSystem as string | null).filter(Boolean))
-    if (systems.size > 1) base.starSystems = [...systems]
+    const systems = new Set(group.map((m) => m.starSystem).filter(Boolean))
+    if (systems.size > 1) base.starSystem = [...systems].join(", ")
     base.variantCount = group.length
   }
   mergedMissions.push(base)
@@ -1408,10 +1449,11 @@ const poolMap = new Map(blueprintRewardPools.map((p: { name: string; rewards: { 
 const bpLookup = new Map(blueprints.map((bp: { name: string; id: string }) => [bp.name.toLowerCase(), { name: bp.name, id: bp.id }]))
 let resolvedLinks = 0
 for (const m of mergedMissions) {
-  const poolRefs = m.blueprintRewards as { pool: string; chance: number }[] | undefined
+  const poolRefs = m.blueprintRewards
   if (!poolRefs?.length) continue
   const resolved: { blueprintId: string; blueprint: string; weight: number; totalWeight: number; chance: number; poolName: string }[] = []
   for (const ref of poolRefs) {
+    if (!("pool" in ref)) continue
     const pool = poolMap.get(ref.pool)
     if (!pool) continue
     const totalWeight = pool.rewards.reduce((s: number, r: { weight: number }) => s + r.weight, 0)
@@ -1426,7 +1468,7 @@ for (const m of mergedMissions) {
     m.blueprintRewards = resolved
     resolvedLinks += resolved.length
   } else {
-    delete m.blueprintRewards
+    m.blueprintRewards = undefined
   }
 }
 console.log(`  Resolved ${resolvedLinks} mission→blueprint links`)

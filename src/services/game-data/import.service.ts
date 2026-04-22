@@ -2146,6 +2146,13 @@ export class GameDataImportService {
         if (!missionId) { stats.skipped++; continue }
 
         const seen = new Set<string>()
+        const poolIdMap = new Map<string, number>()
+        let nextPoolId = 1
+        for (const br of mission.blueprintRewards || []) {
+          if (br.poolName && !poolIdMap.has(br.poolName)) {
+            poolIdMap.set(br.poolName, nextPoolId++)
+          }
+        }
         for (const br of mission.blueprintRewards || []) {
           const bpId = br.blueprintId ? bpIdByCode.get(br.blueprintId) : undefined
           if (!bpId || seen.has(bpId)) continue
@@ -2159,9 +2166,11 @@ export class GameDataImportService {
           rows.push({
             mission_id: missionId,
             blueprint_id: bpId,
-            reward_pool_id: 1,
+            reward_pool_id: br.poolName ? poolIdMap.get(br.poolName) ?? 1 : 1,
             reward_pool_size: 1,
             selection_count: 1,
+            pool_name: br.poolName || null,
+            pool_chance: br.chance ?? 1,
             drop_probability: Math.round(dropProbability * 100) / 100,
             is_guaranteed: false,
           })
