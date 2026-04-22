@@ -1060,7 +1060,6 @@ export class ListingsV2Controller extends BaseController {
               WHEN l.seller_type = 'contractor' THEN COALESCE(c.supported_languages, ARRAY['en'])
             END AS seller_languages
           `),
-          db.raw(`(SELECT COUNT(*)::integer FROM listing_views_v2 WHERE listing_id = l.listing_id) AS view_count`),
         )
         .where("l.listing_id", id)
         .first()
@@ -1222,6 +1221,7 @@ export class ListingsV2Controller extends BaseController {
           max_order_quantity: listing.max_order_quantity ?? null,
           min_order_value: listing.min_order_value ? Number(listing.min_order_value) : null,
           max_order_value: listing.max_order_value ? Number(listing.max_order_value) : null,
+          view_count: await this.getViewCount(db, id),
         },
         seller: {
           name: listing.seller_name || "Unknown",
@@ -1229,6 +1229,7 @@ export class ListingsV2Controller extends BaseController {
           slug: listing.seller_slug || "",
           rating: parseFloat(listing.seller_rating) || 0,
           avatar_url: listing.seller_avatar ? (await cdn.getFileLinkResource(listing.seller_avatar)) || undefined : undefined,
+          languages: listing.seller_languages || ["en"],
         },
         items,
       }
@@ -1865,5 +1866,16 @@ export class ListingsV2Controller extends BaseController {
     }
 
     return { photos: uploadResults }
+  }
+
+  private async getViewCount(db: any, listingId: string): Promise<number> {
+    try {
+      const hasTable = await db.schema.hasTable("listing_views_v2")
+      if (!hasTable) return 0
+      const [{ count }] = await db("listing_views_v2").where("listing_id", listingId).count("* as count")
+      return parseInt(String(count), 10)
+    } catch {
+      return 0
+    }
   }
 }
