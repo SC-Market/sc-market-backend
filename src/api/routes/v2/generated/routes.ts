@@ -1823,6 +1823,8 @@ const models: TsoaRoute.Models = {
             "recommended_quality_tier": {"dataType":"double"},
             "is_alternative": {"dataType":"boolean","required":true},
             "alternative_group": {"dataType":"double"},
+            "slot_name": {"dataType":"string"},
+            "slot_display_name": {"dataType":"string"},
             "market_price_min": {"dataType":"double"},
             "market_price_max": {"dataType":"double"},
             "user_inventory_quantity": {"dataType":"double"},

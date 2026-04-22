@@ -419,6 +419,8 @@ export class BlueprintsController extends BaseController {
           "gi.type as game_item_type",
           "gi.sub_type as game_item_sub_type",
           "gi.image_url as game_item_icon",
+          "bi.slot_name",
+          "bi.slot_display_name",
         )
         .where("bi.blueprint_id", blueprint_id)
         .orderBy("bi.display_order", "asc")
@@ -441,6 +443,8 @@ export class BlueprintsController extends BaseController {
         recommended_quality_tier: row.recommended_quality_tier || undefined,
         is_alternative: row.is_alternative || false,
         alternative_group: row.alternative_group || undefined,
+        slot_name: row.slot_name || undefined,
+        slot_display_name: row.slot_display_name || undefined,
         market_price_min: undefined,
         market_price_max: undefined,
         user_inventory_quantity: undefined,

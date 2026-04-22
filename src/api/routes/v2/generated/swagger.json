@@ -5760,6 +5760,14 @@
 						"format": "double",
 						"description": "Alternative group ID"
 					},
+					"slot_name": {
+						"type": "string",
+						"description": "Slot name for linking to slot modifiers"
+					},
+					"slot_display_name": {
+						"type": "string",
+						"description": "Slot display name"
+					},
 					"market_price_min": {
 						"type": "number",
 						"format": "double",
