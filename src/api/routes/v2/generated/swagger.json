@@ -415,6 +415,10 @@
 						"type": "string",
 						"nullable": true,
 						"description": "New notes (optional, null to clear)"
+					},
+					"variant_attributes": {
+						"$ref": "#/components/schemas/VariantAttributes",
+						"description": "New variant attributes (optional — changes the lot's variant via getOrCreateVariant)"
 					}
 				},
 				"type": "object",

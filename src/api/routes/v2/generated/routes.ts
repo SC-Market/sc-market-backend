@@ -188,6 +188,7 @@ const models: TsoaRoute.Models = {
             "listed": {"dataType":"boolean"},
             "location_id": {"dataType":"union","subSchemas":[{"dataType":"string"},{"dataType":"enum","enums":[null]}]},
             "notes": {"dataType":"union","subSchemas":[{"dataType":"string"},{"dataType":"enum","enums":[null]}]},
+            "variant_attributes": {"ref":"VariantAttributes"},
         },
         "additionalProperties": false,
     },

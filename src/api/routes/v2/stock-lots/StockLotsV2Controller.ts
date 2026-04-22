@@ -428,6 +428,16 @@ export class StockLotsV2Controller extends BaseController {
           updates.notes = requestBody.notes
         }
 
+        // Update variant if variant_attributes provided
+        if (requestBody.variant_attributes) {
+          const { getOrCreateVariant } = await import('../../../../services/market-v2/variant.service.js')
+          const item = await trx("listing_items").where({ item_id: lot.item_id }).first()
+          if (item) {
+            const newVariantId = await getOrCreateVariant(item.game_item_id, requestBody.variant_attributes)
+            updates.variant_id = newVariantId
+          }
+        }
+
         // 3. Apply updates
         if (Object.keys(updates).length > 1) {
           // More than just updated_at

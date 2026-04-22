@@ -196,6 +196,9 @@ export interface UpdateStockLotRequest {
   
   /** New notes (optional, null to clear) */
   notes?: string | null;
+
+  /** New variant attributes (optional — changes the lot's variant via getOrCreateVariant) */
+  variant_attributes?: VariantAttributes;
 }
 
 /**
