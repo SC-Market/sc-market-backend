@@ -1954,11 +1954,11 @@ export class GameDataImportService {
         .select("mission_id", "mission_code")
       const missionIdByCode = new Map(missionRows.map((r: { mission_id: string; mission_code: string }) => [r.mission_code, r.mission_id]))
 
-      // Build lookup: blueprint_name (lowercase) -> blueprint_id
+      // Build lookup: blueprint_code (P4K UUID) -> blueprint_id (DB UUID)
       const bpRows = await knex("blueprints")
         .where("version_id", versionId)
-        .select("blueprint_id", "blueprint_name")
-      const bpIdByName = new Map(bpRows.map((r: { blueprint_id: string; blueprint_name: string }) => [r.blueprint_name.toLowerCase(), r.blueprint_id]))
+        .select("blueprint_id", "blueprint_code")
+      const bpIdByCode = new Map(bpRows.map((r: { blueprint_id: string; blueprint_code: string }) => [r.blueprint_code, r.blueprint_id]))
 
       // Batch insert all links
       const rows: Array<Record<string, unknown>> = []
@@ -1968,11 +1968,8 @@ export class GameDataImportService {
 
         const seen = new Set<string>()
         for (const br of mission.blueprintRewards || []) {
-          // Pre-resolved: br has {blueprint, weight, chance, poolName}
-          const reward = br as { blueprint?: string; weight?: number; chance?: number; poolName?: string; pool?: string }
-          const bpName = reward.blueprint
-          if (!bpName) continue
-          const bpId = bpIdByName.get(bpName.toLowerCase())
+          const reward = br as { blueprintId?: string; blueprint?: string; weight?: number; chance?: number; poolName?: string }
+          const bpId = reward.blueprintId ? bpIdByCode.get(reward.blueprintId) : undefined
           if (!bpId || seen.has(bpId)) continue
           seen.add(bpId)
 
