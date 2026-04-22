@@ -918,7 +918,8 @@ export class GameDataImportService {
 
               for (const reward of pool.rewards) {
                 const bp = await knex("blueprints")
-                  .where({ version_id: version.version_id, blueprint_code: reward.blueprint })
+                  .where({ version_id: version.version_id })
+                  .whereRaw("LOWER(blueprint_code) = LOWER(?)", [reward.blueprint])
                   .select("blueprint_id")
                   .first()
 
