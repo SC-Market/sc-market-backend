@@ -242,6 +242,7 @@ export interface P4KReputationReward {
 
 export interface P4KShipEncounter {
   role: string
+  alignment: "hostile" | "friendly" | "neutral"
   waves: Array<{ name: string; shipCount: number }>
 }
 
@@ -282,6 +283,7 @@ export interface P4KMission {
   starSystem: string | null
   maxCrimestat?: number
   requiredScenarios?: string[]
+  acceptLocations?: string[]
 }
 
 export interface P4KBlueprint {
@@ -1368,7 +1370,7 @@ export class GameDataImportService {
             const ships = dedup(mission.shipEncounters, "role")
             if (ships.length) {
               await trx("mission_ship_encounters").insert(
-                ships.map((e) => ({ mission_id: mid, role: e.role, waves: JSON.stringify(e.waves) })),
+                ships.map((e) => ({ mission_id: mid, role: e.role, alignment: e.alignment || "neutral", waves: JSON.stringify(e.waves) })),
               ).onConflict(["mission_id", "role"]).ignore()
             }
             const npcs = dedup(mission.npcEncounters, "name")
@@ -1458,6 +1460,7 @@ export class GameDataImportService {
           maxCrimestat: raw.maxCrimestat ?? undefined,
           hideInMobiGlas: raw.hideInMobiGlas || false,
           requiredScenarios: raw.requiredScenarios || undefined,
+          acceptLocations: raw.acceptLocations || undefined,
         })
       } catch (error) {
         logger.warn("Failed to parse mission", { missionId: raw.id, error })
@@ -1533,6 +1536,7 @@ export class GameDataImportService {
       is_unique_mission: mission.onceOnly,
       available_in_prison: mission.availableInPrison,
       hide_in_mobiglas: mission.hideInMobiGlas,
+      accept_locations: mission.acceptLocations?.length ? JSON.stringify(mission.acceptLocations) : null,
       can_reaccept_after_failing: mission.canReacceptAfterFailing ?? false,
       can_reaccept_after_abandoning: mission.canReacceptAfterAbandoning ?? false,
       abandoned_cooldown_time: mission.abandonedCooldownTime,
