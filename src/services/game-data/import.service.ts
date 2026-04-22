@@ -99,6 +99,7 @@ export interface GameDataPayload {
   manufacturers: P4KManufacturer[]
   starmap: P4KStarmapLocation[]
   blueprintRewardPools: P4KBlueprintRewardPool[]
+  events?: string[]
   reputationAmounts: Record<string, number>
   reputationRanks: Array<{
     scope: string
@@ -943,7 +944,46 @@ export class GameDataImportService {
       }
 
       // ========================================================================
-      // STEP 11: Import blueprint reward pools
+      // STEP 11: Import events and link to missions
+      // ========================================================================
+      if (gameData.events && gameData.events.length > 0) {
+        logger.info(`Importing ${gameData.events.length} events`)
+        // Upsert events
+        for (const eventCode of gameData.events) {
+          await knex("game_events")
+            .insert({ version_id: versionId, event_code: eventCode, event_name: eventCode })
+            .onConflict(["version_id", "event_code"])
+            .ignore()
+        }
+        // Build event lookup
+        const eventRows = await knex("game_events").where("version_id", versionId).select("event_id", "event_code")
+        const eventIdByCode = new Map(eventRows.map((r: { event_id: string; event_code: string }) => [r.event_code, r.event_id]))
+
+        // Build mission lookup
+        const missionRows = await knex("missions").where("version_id", versionId).select("mission_id", "mission_code")
+        const missionIdByCode = new Map(missionRows.map((r: { mission_id: string; mission_code: string }) => [r.mission_code, r.mission_id]))
+
+        // Link missions to events
+        const missions = gameData.missions || []
+        const links: Array<{ mission_id: string; event_id: string }> = []
+        for (const m of missions) {
+          const mid = missionIdByCode.get(m.name)
+          if (!mid) continue
+          for (const s of (m as Record<string, unknown>).requiredScenarios as string[] || []) {
+            const eid = eventIdByCode.get(s)
+            if (eid) links.push({ mission_id: mid, event_id: eid })
+          }
+        }
+        if (links.length) {
+          for (let i = 0; i < links.length; i += 500) {
+            await knex("mission_events").insert(links.slice(i, i + 500)).onConflict(["mission_id", "event_id"]).ignore()
+          }
+        }
+        logger.info(`Linked ${links.length} mission→event associations`)
+      }
+
+      // ========================================================================
+      // STEP 12: Import blueprint reward pools
       // ========================================================================
       if (gameData.blueprintRewardPools && gameData.blueprintRewardPools.length > 0) {
         logger.info("Importing blueprint reward pools")

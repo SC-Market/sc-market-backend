@@ -307,6 +307,9 @@ export interface ListingDetail {
   max_order_quantity?: number | null;
   min_order_value?: number | null;
   max_order_value?: number | null;
+
+  /** Number of views this listing has received */
+  view_count?: number;
 }
 
 /**
@@ -370,6 +373,9 @@ export interface SellerInfo {
   
   /** Optional seller avatar URL */
   avatar_url?: string;
+
+  /** Seller's supported languages (ISO 639-1 codes) */
+  languages?: string[];
 }
 
 /**
