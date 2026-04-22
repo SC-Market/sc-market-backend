@@ -1054,6 +1054,13 @@ export class ListingsV2Controller extends BaseController {
               WHEN l.seller_type = 'contractor' THEN c.spectrum_id
             END AS seller_slug
           `),
+          db.raw(`
+            CASE 
+              WHEN l.seller_type = 'user' THEN COALESCE(u.supported_languages, ARRAY['en'])
+              WHEN l.seller_type = 'contractor' THEN COALESCE(c.supported_languages, ARRAY['en'])
+            END AS seller_languages
+          `),
+          db.raw(`(SELECT COUNT(*)::integer FROM listing_views_v2 WHERE listing_id = l.listing_id) AS view_count`),
         )
         .where("l.listing_id", id)
         .first()

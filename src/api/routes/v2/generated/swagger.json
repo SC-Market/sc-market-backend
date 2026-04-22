@@ -1933,6 +1933,11 @@
 						"type": "number",
 						"format": "double",
 						"nullable": true
+					},
+					"view_count": {
+						"type": "number",
+						"format": "double",
+						"description": "Number of views this listing has received"
 					}
 				},
 				"required": [
@@ -1979,6 +1984,13 @@
 					"avatar_url": {
 						"type": "string",
 						"description": "Optional seller avatar URL"
+					},
+					"languages": {
+						"items": {
+							"type": "string"
+						},
+						"type": "array",
+						"description": "Seller's supported languages (ISO 639-1 codes)"
 					}
 				},
 				"required": [
