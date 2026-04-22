@@ -1277,6 +1277,12 @@ for (const mission of missions) {
   if (mission.type) {
     mission.career = careerLookup.get(mission.type as string) || null
   }
+  // Resolve accept location refs to friendly names
+  if (mission.acceptLocations) {
+    mission.acceptLocations = (mission.acceptLocations as string[]).map((l: string) =>
+      starmapLookup.get(l) || starmapLookup.get(`starmapobject.${l}`) || l
+    )
+  }
 }
 
 // --- Resolve standing refs to display names + XP ---
