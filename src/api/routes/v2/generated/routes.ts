@@ -1756,6 +1756,7 @@ const models: TsoaRoute.Models = {
             "rarity": {"dataType":"string"},
             "tier": {"dataType":"double"},
             "ingredient_count": {"dataType":"double","required":true},
+            "ingredients": {"dataType":"array","array":{"dataType":"nestedObjectLiteral","nestedProperties":{"quantity_required":{"dataType":"double","required":true},"icon_url":{"dataType":"string"},"sub_type":{"dataType":"string"},"name":{"dataType":"string","required":true}}},"required":true},
             "mission_count": {"dataType":"double","required":true},
             "crafting_time_seconds": {"dataType":"double"},
             "user_owns": {"dataType":"boolean"},

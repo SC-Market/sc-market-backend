@@ -5526,6 +5526,32 @@
 						"format": "double",
 						"description": "Number of ingredients"
 					},
+					"ingredients": {
+						"items": {
+							"properties": {
+								"quantity_required": {
+									"type": "number",
+									"format": "double"
+								},
+								"icon_url": {
+									"type": "string"
+								},
+								"sub_type": {
+									"type": "string"
+								},
+								"name": {
+									"type": "string"
+								}
+							},
+							"required": [
+								"quantity_required",
+								"name"
+							],
+							"type": "object"
+						},
+						"type": "array",
+						"description": "Ingredient summaries"
+					},
 					"mission_count": {
 						"type": "number",
 						"format": "double",
@@ -5546,6 +5572,7 @@
 					"blueprint_name",
 					"output_item_name",
 					"ingredient_count",
+					"ingredients",
 					"mission_count"
 				],
 				"type": "object",

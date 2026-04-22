@@ -1368,6 +1368,31 @@ for (const m of mergedMissions) {
 }
 console.log(`  Resolved ${resolvedLinks} mission→blueprint links`)
 
+// --- Tag blueprint sources (default / mission_reward / unsourced) ---
+const defaultBpFile = path.join(RECORDS_DIR, "crafting/globalparams/craftingglobalparams.json")
+const defaultBpSet = new Set<string>()
+if (fs.existsSync(defaultBpFile)) {
+  const gp = readJson(defaultBpFile)._RecordValue_
+  for (const ref of gp?.defaultBlueprintSelection?.blueprintRecords || []) {
+    if (typeof ref === "string") defaultBpSet.add(path.basename(ref, ".json").toLowerCase())
+  }
+}
+const poolBpSet = new Set<string>()
+for (const p of blueprintRewardPools) {
+  for (const r of (p as { rewards: { blueprint: string }[] }).rewards) {
+    poolBpSet.add(r.blueprint.toLowerCase())
+  }
+}
+for (const bp of blueprints) {
+  const key = (bp.name as string).toLowerCase()
+  if (defaultBpSet.has(key)) bp.source = "default"
+  else if (poolBpSet.has(key)) bp.source = "mission_reward"
+  else bp.source = "unsourced"
+}
+const bpSources = { default: 0, mission_reward: 0, unsourced: 0 }
+for (const bp of blueprints) bpSources[bp.source as keyof typeof bpSources]++
+console.log(`  Blueprint sources: ${bpSources.default} default, ${bpSources.mission_reward} mission reward, ${bpSources.unsourced} unsourced`)
+
 // --- Collect unique events/scenarios from missions ---
 const eventSet = new Set<string>()
 for (const m of mergedMissions) {
