@@ -431,7 +431,7 @@ export class GameItemsV2Controller extends BaseController {
         )
       }
       if (item_type) {
-        query = query.where(db.raw("COALESCE(gi.type, ls.game_item_type)"), item_type)
+        query = query.whereRaw("COALESCE(gi.type, ls.game_item_type) = ?", [item_type])
       }
       if (price_min !== undefined) {
         query = query.having(db.raw("MIN(ls.price_min)"), ">=", price_min)
