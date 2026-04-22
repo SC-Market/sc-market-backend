@@ -1153,22 +1153,25 @@ if (fs.existsSync(contractDir)) {
 }
 
 // --- Merge location-variant missions into templates ---
+// Only merge missions whose names differ by location parts
+// (e.g., _Stanton1, _Pyro3). Keeps difficulty/type variants separate.
+const LOCATION_PARTS = /_(Stanton[1-4]|Pyro[1-6]|Nyx[1-3]|Hurston|Crusader|ArcCorp|microTech|Terra|Magnus|Castra|Odin|Helios|Oso|Kilian|Davien|Rhetor|Vega|Tiber)/g
+const stripLocation = (name: string) => name.replace(LOCATION_PARTS, "")
 const cleanTitle = (t: string) => t.replace(/~mission\([^)]*\)/g, "[VARIABLE]").trim()
-const mergeKey = (m: any) =>
-  `${cleanTitle(m.title || "")}|${m.type || ""}|${m.missionGiver || ""}|${m.lawful ?? ""}`
 
 const mergeGroups = new Map<string, any[]>()
 for (const m of missions) {
-  const k = mergeKey(m)
+  const k = stripLocation(m.name)
   if (!mergeGroups.has(k)) mergeGroups.set(k, [])
   mergeGroups.get(k)!.push(m)
 }
 
 const mergedMissions: any[] = []
-for (const [, group] of mergeGroups) {
+for (const [key, group] of mergeGroups) {
   const base = { ...group[0] }
+  base.name = key // Use the stripped name as canonical
+  base.title = cleanTitle(base.title || "")
   if (group.length > 1) {
-    // Aggregate varying fields
     const rewards = group.map((m: any) => m.reward?.uec || 0).filter(Boolean)
     const maxRewards = group.map((m: any) => m.reward?.max || 0).filter(Boolean)
     if (rewards.length) {
@@ -1180,19 +1183,13 @@ for (const [, group] of mergeGroups) {
     const locations = [...new Set(group.map((m: any) => m.location).filter(Boolean))]
     base.locations = locations
     delete base.location
-    // Merge blueprint pools
     const allPools = new Set<string>()
     for (const m of group) for (const p of m.blueprintPools || []) allPools.add(p)
     if (allPools.size) base.blueprintPools = [...allPools]
-    // Merge chain flags
     base.isChainStarter = group.some((m: any) => m.isChainStarter)
     base.isChainEnder = group.some((m: any) => m.isChainEnder)
     base.variantCount = group.length
-    // Use the most specific name (shortest, likely the parent)
-    base.name = group.reduce((a: any, b: any) => a.name.length <= b.name.length ? a : b).name
-    base.variantNames = group.map((m: any) => m.name)
   }
-  base.title = cleanTitle(base.title || "")
   mergedMissions.push(base)
 }
 console.log(`  Merged ${missions.length} missions → ${mergedMissions.length} templates`)
