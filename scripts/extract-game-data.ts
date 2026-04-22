@@ -656,13 +656,22 @@ function parseMissions(): Record<string, unknown>[] {
           const description = cleanMissionText(loc(params.Description) || params.Description || "")
           const contractor = loc(params.Contractor) || params.Contractor || ""
 
-          // Extract reward (UEC)
+          // Extract reward (UEC) - check multiple sources
           let rewardUec = 0
           const cr = contract.contractResults?.contractResults || []
           for (const r of cr) {
             if (r?._Type_ === "ContractResult_CalculatedReward") {
               rewardUec = r.reward || r.calculatedReward || 0
             }
+            if (r?._Type_ === "ContractResult_FixedReward" && r.reward) {
+              rewardUec = r.reward
+            }
+          }
+          // Fallback: check generationParams
+          if (!rewardUec) {
+            const gp = contract.generationParams
+            if (gp?.rewardAmount) rewardUec = gp.rewardAmount
+            else if (gp?.baseReward) rewardUec = gp.baseReward
           }
 
           // Extract blueprint pools
