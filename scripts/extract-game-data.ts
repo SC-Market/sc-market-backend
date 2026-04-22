@@ -1152,6 +1152,51 @@ if (fs.existsSync(contractDir)) {
   console.log(`  Mission→Blueprint pool links: ${linked} (via template→XML→mission chain)`)
 }
 
+// --- Merge location-variant missions into templates ---
+const cleanTitle = (t: string) => t.replace(/~mission\([^)]*\)/g, "[VARIABLE]").trim()
+const mergeKey = (m: any) =>
+  `${cleanTitle(m.title || "")}|${m.type || ""}|${m.missionGiver || ""}|${m.lawful ?? ""}`
+
+const mergeGroups = new Map<string, any[]>()
+for (const m of missions) {
+  const k = mergeKey(m)
+  if (!mergeGroups.has(k)) mergeGroups.set(k, [])
+  mergeGroups.get(k)!.push(m)
+}
+
+const mergedMissions: any[] = []
+for (const [, group] of mergeGroups) {
+  const base = { ...group[0] }
+  if (group.length > 1) {
+    // Aggregate varying fields
+    const rewards = group.map((m: any) => m.reward?.uec || 0).filter(Boolean)
+    const maxRewards = group.map((m: any) => m.reward?.max || 0).filter(Boolean)
+    if (rewards.length) {
+      base.reward = {
+        uec: Math.min(...rewards),
+        max: Math.max(...maxRewards.length ? maxRewards : rewards),
+      }
+    }
+    const locations = [...new Set(group.map((m: any) => m.location).filter(Boolean))]
+    base.locations = locations
+    delete base.location
+    // Merge blueprint pools
+    const allPools = new Set<string>()
+    for (const m of group) for (const p of m.blueprintPools || []) allPools.add(p)
+    if (allPools.size) base.blueprintPools = [...allPools]
+    // Merge chain flags
+    base.isChainStarter = group.some((m: any) => m.isChainStarter)
+    base.isChainEnder = group.some((m: any) => m.isChainEnder)
+    base.variantCount = group.length
+    // Use the most specific name (shortest, likely the parent)
+    base.name = group.reduce((a: any, b: any) => a.name.length <= b.name.length ? a : b).name
+    base.variantNames = group.map((m: any) => m.name)
+  }
+  base.title = cleanTitle(base.title || "")
+  mergedMissions.push(base)
+}
+console.log(`  Merged ${missions.length} missions → ${mergedMissions.length} templates`)
+
 fs.mkdirSync(OUTPUT_DIR, { recursive: true })
 
 const outputData = {
@@ -1160,7 +1205,7 @@ const outputData = {
   counts: {
     items: items.length,
     blueprints: blueprints.length,
-    missions: missions.length,
+    missions: mergedMissions.length,
     resources: resources.length,
     ships: ships.length,
     manufacturers: manufacturers.length,
@@ -1170,7 +1215,7 @@ const outputData = {
   },
   items,
   blueprints,
-  missions,
+  missions: mergedMissions,
   resources,
   ships,
   manufacturers,
