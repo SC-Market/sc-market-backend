@@ -393,15 +393,7 @@ export class MissionsController extends BaseController {
       // Part 1: Get mission data
       // ========================================================================
       const missionRow = await knex("missions")
-        .where(function() {
-          // Support both UUID and mission_code lookups
-          const isUuid = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(mission_id)
-          if (isUuid) {
-            this.where("mission_id", mission_id)
-          } else {
-            this.where("mission_code", mission_id)
-          }
-        })
+        .where("mission_id", mission_id)
         .first()
 
       if (!missionRow) {
@@ -628,6 +620,21 @@ export class MissionsController extends BaseController {
 
       throw error
     }
+  }
+
+  /**
+   * Get mission detail by mission_code (string identifier)
+   * @param mission_code The mission code string (e.g., pu_eliminatespecific_lawful_stanton4_intro)
+   */
+  @Get("by-code/{mission_code}")
+  public async getMissionDetailByCode(
+    @Path() mission_code: string,
+    @Query() user_id?: string,
+  ): Promise<MissionDetailResponse> {
+    const knex = getKnex()
+    const row = await knex("missions").where("mission_code", mission_code).first("mission_id")
+    if (!row) this.throwNotFound("Mission", mission_code)
+    return this.getMissionDetail(row.mission_id, user_id)
   }
 
   /**
