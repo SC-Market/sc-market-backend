@@ -488,10 +488,24 @@ function parseBlueprints(): any[] {
       const costs = tier?.recipe?.costs
       const mandatory = costs?.mandatoryCost
 
+      const BLUEPRINT_CATEGORY_NAMES: Record<string, string> = {
+        FPSWeapons: "Personal Weapons",
+        FPSArmours: "Armor",
+        VehicleWeaponsS1: "Vehicle Weapons (S1)",
+        VehicleWeaponsS2: "Vehicle Weapons (S2)",
+        VehicleWeaponsS3: "Vehicle Weapons (S3)",
+        VehicleWeaponsS4: "Vehicle Weapons (S4)",
+        VehicleWeaponsS5: "Vehicle Weapons (S5)",
+        VehicleWeaponsS6: "Vehicle Weapons (S6)",
+        Medical: "Medical",
+        FuseBattery: "Fuse Battery",
+      }
+      const rawCat = refName(bp.category) || ""
+
       blueprints.push({
         id: data._RecordId_,
         name: data._RecordName_?.split(".")?.slice(1).join(".") || "",
-        category: refName(bp.category),
+        category: BLUEPRINT_CATEGORY_NAMES[rawCat] || rawCat,
         craftedItem: bp.processSpecificData?.entityClass
           ? path.basename(bp.processSpecificData.entityClass, ".json")
           : null,
