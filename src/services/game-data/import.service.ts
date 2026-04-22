@@ -469,7 +469,7 @@ export class GameDataImportService {
 
       // Resolve game version from payload or default to LIVE
       const channel = gameData.gameChannel || "LIVE"
-      const versionNumber = gameData.gameVersion || "Unknown"
+      const versionNumber = (gameData.gameVersion || "Unknown").slice(0, 200)
 
       let version = await knex("game_versions")
         .where({ version_type: channel, is_active: true })
