@@ -1368,6 +1368,14 @@ for (const m of mergedMissions) {
 }
 console.log(`  Resolved ${resolvedLinks} mission→blueprint links`)
 
+// --- Collect unique events/scenarios from missions ---
+const eventSet = new Set<string>()
+for (const m of mergedMissions) {
+  for (const s of (m.requiredScenarios as string[] | undefined) || []) eventSet.add(s)
+}
+const events = [...eventSet].sort()
+if (events.length) console.log(`  Events/scenarios: ${events.length} (${events.join(", ")})`)
+
 fs.mkdirSync(OUTPUT_DIR, { recursive: true })
 
 const outputData = {
@@ -1395,6 +1403,7 @@ const outputData = {
   reputationAmounts,
   reputationRanks,
   refiningProcesses,
+  events,
   dismantleParams: (() => {
     const df = path.join(RECORDS_DIR, "crafting/blueprints/dismantle/globalgenericdismantle.json")
     if (!fs.existsSync(df)) return null
