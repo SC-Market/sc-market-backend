@@ -1254,6 +1254,24 @@ for (const mission of missions) {
   }
 }
 
+// --- Resolve standing refs to display names + XP ---
+const standingLookup = new Map<string, { displayName: string; xp: number }>()
+for (const ladder of reputationRanks) {
+  for (const rank of (ladder as { ranks: { code: string; displayName: string; threshold: number }[] }).ranks) {
+    standingLookup.set(rank.code, { displayName: rank.displayName, xp: rank.threshold })
+  }
+}
+for (const mission of missions) {
+  if (mission.minStanding) {
+    const s = standingLookup.get(mission.minStanding as string)
+    if (s) mission.minStanding = { code: mission.minStanding, ...s }
+  }
+  if (mission.maxStanding) {
+    const s = standingLookup.get(mission.maxStanding as string)
+    if (s) mission.maxStanding = { code: mission.maxStanding, ...s }
+  }
+}
+
 // Blueprint pools are already on contracts — just count
 const withBP = missions.filter((m: Record<string, unknown>) => (m.blueprintRewards as unknown[] | undefined)?.length).length
 console.log(`  Missions with blueprint rewards: ${withBP}`)

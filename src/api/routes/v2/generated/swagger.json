@@ -4353,6 +4353,59 @@
 					"reward_scope": {
 						"type": "string"
 					},
+					"min_standing": {
+						"type": "string",
+						"description": "Standing requirement — min (e.g. \"Neutral\")"
+					},
+					"max_standing": {
+						"type": "string",
+						"description": "Standing requirement — max (e.g. \"Elite Contractor\")"
+					},
+					"can_reaccept_after_failing": {
+						"type": "boolean",
+						"description": "Can re-accept after failing"
+					},
+					"can_reaccept_after_abandoning": {
+						"type": "boolean",
+						"description": "Can re-accept after abandoning"
+					},
+					"abandoned_cooldown_time": {
+						"type": "number",
+						"format": "double",
+						"description": "Cooldown after abandoning (seconds)"
+					},
+					"personal_cooldown_time": {
+						"type": "number",
+						"format": "double",
+						"description": "Personal cooldown between accepts (seconds)"
+					},
+					"deadline_seconds": {
+						"type": "number",
+						"format": "double",
+						"description": "Mission deadline (seconds)"
+					},
+					"available_in_prison": {
+						"type": "boolean",
+						"description": "Available in prison"
+					},
+					"is_illegal": {
+						"type": "boolean",
+						"description": "Is illegal"
+					},
+					"is_lawful": {
+						"type": "boolean",
+						"description": "Is lawful"
+					},
+					"max_crimestat": {
+						"type": "number",
+						"format": "double",
+						"description": "Max crimestat allowed"
+					},
+					"difficulty_from_broker": {
+						"type": "number",
+						"format": "double",
+						"description": "Difficulty from broker (raw)"
+					},
 					"community_difficulty_avg": {
 						"type": "number",
 						"format": "double"
@@ -4489,6 +4542,102 @@
 				"type": "object",
 				"additionalProperties": false
 			},
+			"ShipWave": {
+				"properties": {
+					"name": {
+						"type": "string"
+					},
+					"ship_count": {
+						"type": "number",
+						"format": "double"
+					}
+				},
+				"required": [
+					"name",
+					"ship_count"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
+			"ShipEncounter": {
+				"description": "Ship encounter group (e.g. \"Mission Targets\", \"Reinforcements\")",
+				"properties": {
+					"role": {
+						"type": "string"
+					},
+					"waves": {
+						"items": {
+							"$ref": "#/components/schemas/ShipWave"
+						},
+						"type": "array"
+					}
+				},
+				"required": [
+					"role",
+					"waves"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
+			"NpcEncounter": {
+				"description": "NPC encounter",
+				"properties": {
+					"name": {
+						"type": "string"
+					},
+					"count": {
+						"type": "number",
+						"format": "double"
+					}
+				},
+				"required": [
+					"name",
+					"count"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
+			"HaulingOrder": {
+				"description": "Hauling order",
+				"properties": {
+					"resource_name": {
+						"type": "string"
+					},
+					"min_scu": {
+						"type": "number",
+						"format": "double"
+					},
+					"max_scu": {
+						"type": "number",
+						"format": "double"
+					}
+				},
+				"required": [
+					"resource_name",
+					"min_scu",
+					"max_scu"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
+			"EntitySpawn": {
+				"description": "Entity spawn",
+				"properties": {
+					"name": {
+						"type": "string"
+					},
+					"count": {
+						"type": "number",
+						"format": "double"
+					}
+				},
+				"required": [
+					"name",
+					"count"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
 			"UserMissionRating": {
 				"description": "User's mission rating",
 				"properties": {
@@ -4534,6 +4683,34 @@
 						},
 						"type": "array",
 						"description": "Prerequisite missions (if any)"
+					},
+					"ship_encounters": {
+						"items": {
+							"$ref": "#/components/schemas/ShipEncounter"
+						},
+						"type": "array",
+						"description": "Ship encounters (Combat tab)"
+					},
+					"npc_encounters": {
+						"items": {
+							"$ref": "#/components/schemas/NpcEncounter"
+						},
+						"type": "array",
+						"description": "NPC encounters (Combat tab)"
+					},
+					"hauling_orders": {
+						"items": {
+							"$ref": "#/components/schemas/HaulingOrder"
+						},
+						"type": "array",
+						"description": "Hauling orders"
+					},
+					"entity_spawns": {
+						"items": {
+							"$ref": "#/components/schemas/EntitySpawn"
+						},
+						"type": "array",
+						"description": "Entity spawns"
 					},
 					"user_completed": {
 						"type": "boolean",

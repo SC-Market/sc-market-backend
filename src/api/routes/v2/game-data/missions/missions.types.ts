@@ -195,6 +195,30 @@ export interface Mission {
   estimated_rep_per_hour?: number
   rank_index?: number
   reward_scope?: string
+  /** Standing requirement — min (e.g. "Neutral") */
+  min_standing?: string
+  /** Standing requirement — max (e.g. "Elite Contractor") */
+  max_standing?: string
+  /** Can re-accept after failing */
+  can_reaccept_after_failing?: boolean
+  /** Can re-accept after abandoning */
+  can_reaccept_after_abandoning?: boolean
+  /** Cooldown after abandoning (seconds) */
+  abandoned_cooldown_time?: number
+  /** Personal cooldown between accepts (seconds) */
+  personal_cooldown_time?: number
+  /** Mission deadline (seconds) */
+  deadline_seconds?: number
+  /** Available in prison */
+  available_in_prison?: boolean
+  /** Is illegal */
+  is_illegal?: boolean
+  /** Is lawful */
+  is_lawful?: boolean
+  /** Max crimestat allowed */
+  max_crimestat?: number
+  /** Difficulty from broker (raw) */
+  difficulty_from_broker?: number
   community_difficulty_avg?: number
   community_difficulty_count: number
   community_satisfaction_avg?: number
@@ -281,11 +305,53 @@ export interface MissionDetailResponse {
   /** Prerequisite missions (if any) */
   prerequisite_missions?: Mission[]
 
+  /** Ship encounters (Combat tab) */
+  ship_encounters?: ShipEncounter[]
+
+  /** NPC encounters (Combat tab) */
+  npc_encounters?: NpcEncounter[]
+
+  /** Hauling orders */
+  hauling_orders?: HaulingOrder[]
+
+  /** Entity spawns */
+  entity_spawns?: EntitySpawn[]
+
   /** Has user completed this mission */
   user_completed?: boolean
 
   /** User's rating for this mission */
   user_rating?: UserMissionRating
+}
+
+/** Ship encounter group (e.g. "Mission Targets", "Reinforcements") */
+export interface ShipEncounter {
+  role: string
+  waves: ShipWave[]
+}
+
+export interface ShipWave {
+  name: string
+  ship_count: number
+}
+
+/** NPC encounter */
+export interface NpcEncounter {
+  name: string
+  count: number
+}
+
+/** Hauling order */
+export interface HaulingOrder {
+  resource_name: string
+  min_scu: number
+  max_scu: number
+}
+
+/** Entity spawn */
+export interface EntitySpawn {
+  name: string
+  count: number
 }
 
 // ============================================================================
