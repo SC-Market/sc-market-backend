@@ -393,7 +393,15 @@ export class MissionsController extends BaseController {
       // Part 1: Get mission data
       // ========================================================================
       const missionRow = await knex("missions")
-        .where("mission_id", mission_id)
+        .where(function() {
+          // Support both UUID and mission_code lookups
+          const isUuid = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(mission_id)
+          if (isUuid) {
+            this.where("mission_id", mission_id)
+          } else {
+            this.where("mission_code", mission_id)
+          }
+        })
         .first()
 
       if (!missionRow) {
