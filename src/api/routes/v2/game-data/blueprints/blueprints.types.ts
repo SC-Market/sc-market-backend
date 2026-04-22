@@ -77,6 +77,14 @@ export interface BlueprintSearchResult {
   /** Number of ingredients */
   ingredient_count: number
 
+  /** Ingredient summaries */
+  ingredients: {
+    name: string
+    sub_type?: string
+    icon_url?: string
+    quantity_required: number
+  }[]
+
   /** Number of missions that reward this blueprint */
   mission_count: number
 

@@ -257,6 +257,28 @@ export class BlueprintsController extends BaseController {
       })
 
       // Transform results
+      const blueprintIds = blueprintsResults.map((r: any) => r.blueprint_id)
+
+      // Batch fetch ingredients for all results
+      const ingredientRows = blueprintIds.length > 0
+        ? await knex("blueprint_ingredients as bi")
+            .join("game_items as gi", "bi.ingredient_game_item_id", "gi.id")
+            .whereIn("bi.blueprint_id", blueprintIds)
+            .select("bi.blueprint_id", "gi.name", "gi.sub_type", "gi.image_url", "bi.quantity_required")
+            .orderBy("bi.display_order")
+        : []
+
+      const ingredientsByBp = new Map<string, any[]>()
+      for (const row of ingredientRows) {
+        if (!ingredientsByBp.has(row.blueprint_id)) ingredientsByBp.set(row.blueprint_id, [])
+        ingredientsByBp.get(row.blueprint_id)!.push({
+          name: row.name,
+          sub_type: row.sub_type || undefined,
+          icon_url: row.image_url || undefined,
+          quantity_required: parseFloat(row.quantity_required) || 0,
+        })
+      }
+
       const blueprints: BlueprintSearchResult[] = blueprintsResults.map((row: any) => ({
         blueprint_id: row.blueprint_id,
         blueprint_name: row.blueprint_name,
@@ -266,6 +288,7 @@ export class BlueprintsController extends BaseController {
         rarity: row.rarity || undefined,
         tier: row.tier || undefined,
         ingredient_count: row.ingredient_count || 0,
+        ingredients: ingredientsByBp.get(row.blueprint_id) || [],
         mission_count: row.mission_count || 0,
         crafting_time_seconds: row.crafting_time_seconds || undefined,
         user_owns: user_id
