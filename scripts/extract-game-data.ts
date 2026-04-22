@@ -501,10 +501,124 @@ function parseBlueprints(): any[] {
 }
 
 // --- Step 5: Parse Missions ---
-function parseMissions(): any[] {
+
+// Interfaces for mission metadata
+interface ShipWave { name: string; shipCount: number }
+interface ShipEncounter { role: string; waves: ShipWave[] }
+interface NpcEncounter { name: string; count: number }
+interface HaulingOrder { resource: string; minSCU: number; maxSCU: number }
+interface EntitySpawn { name: string; count: number }
+
+// Pre-build template illegal lookup
+const templateIllegalMap = new Map<string, boolean>()
+const templateDir = path.join(RECORDS_DIR, "contracts/contracttemplates")
+if (fs.existsSync(templateDir)) {
+  for (const tf of findJsonFiles(templateDir)) {
+    try {
+      const td = readJson(tf)._RecordValue_
+      const illegal = td?.contractDisplayInfo?.illegal
+      if (illegal === true) templateIllegalMap.set(path.basename(tf, ".json"), true)
+    } catch {}
+  }
+}
+console.log(`  Template illegal lookup: ${templateIllegalMap.size} illegal templates`)
+
+// Pre-build resource name lookup from resourcetypedatabase
+const resourceNameMap = new Map<string, string>()
+const resDbFile = path.join(RECORDS_DIR, "resourcetypedatabase/resourcetypedatabase.json")
+if (fs.existsSync(resDbFile)) {
+  const resDb = readJson(resDbFile)._RecordValue_
+  function walkResGroups(groups: Array<Record<string, unknown>>): void {
+    for (const g of groups || []) {
+      for (const r of (g.resources as Array<Record<string, unknown>>) || []) {
+        const rn = ((r._RecordName_ as string) || "").split(".").pop() || ""
+        const dn = r.displayName as string
+        const resolved = loc(dn)
+        if (rn && resolved) resourceNameMap.set(rn, resolved)
+      }
+      walkResGroups((g.groups as Array<Record<string, unknown>>) || [])
+    }
+  }
+  walkResGroups((resDb?.groups as Array<Record<string, unknown>>) || [])
+}
+console.log(`  Resource name lookup: ${resourceNameMap.size} entries`)
+
+// System detection from debugName
+const SYSTEM_PATTERN = /(Stanton|Pyro|Nyx|Terra|Magnus|Castra|Odin|Helios|Oso|Kilian|Davien|Rhetor|Vega|Tiber)/i
+function detectSystem(debugName: string): string | null {
+  const m = debugName.match(SYSTEM_PATTERN)
+  return m ? m[1].charAt(0).toUpperCase() + m[1].slice(1).toLowerCase() : null
+}
+
+function extractPropertyOverrides(po: Record<string, unknown>): {
+  shipEncounters: ShipEncounter[]
+  npcEncounters: NpcEncounter[]
+  haulingOrders: HaulingOrder[]
+  entitySpawns: EntitySpawn[]
+} {
+  const shipEncounters: ShipEncounter[] = []
+  const npcEncounters: NpcEncounter[] = []
+  const haulingOrders: HaulingOrder[] = []
+  const entitySpawns: EntitySpawn[] = []
+
+  const overrides = (po as { propertyOverrides?: Array<{ value?: Record<string, unknown> }> }).propertyOverrides
+  if (!overrides) return { shipEncounters, npcEncounters, haulingOrders, entitySpawns }
+
+  for (const prop of overrides) {
+    const v = prop?.value
+    if (!v) continue
+    const t = v._Type_ as string
+
+    if (t === "MissionPropertyValue_ShipSpawnDescriptions") {
+      for (const sd of (v as { spawnDescriptions?: Array<Record<string, unknown>> }).spawnDescriptions || []) {
+        const waves: ShipWave[] = []
+        for (const wave of (sd as { ships?: Array<{ options?: Array<Record<string, unknown>> }> }).ships || []) {
+          for (const opt of wave.options || []) {
+            const name = ((opt as { autoSpawnSettings?: { name?: string } }).autoSpawnSettings?.name) || "ship"
+            const count = (opt as { concurrentAmount?: number }).concurrentAmount || 1
+            waves.push({ name, shipCount: count })
+          }
+        }
+        if (waves.length) shipEncounters.push({ role: (sd as { Name?: string }).Name || "unknown", waves })
+      }
+    } else if (t === "MissionPropertyValue_NPCSpawnDescriptions") {
+      for (const sd of (v as { spawnDescriptions?: Array<Record<string, unknown>> }).spawnDescriptions || []) {
+        const opts = (sd as { options?: Array<Record<string, unknown>> }).options || []
+        npcEncounters.push({ name: (sd as { Name?: string }).Name || "unknown", count: opts.length })
+      }
+    } else if (t === "MissionPropertyValue_HaulingOrders") {
+      for (const hoc of (v as { haulingOrderContent?: Array<Record<string, unknown>> }).haulingOrderContent || []) {
+        if ((hoc as { _Type_?: string })._Type_ === "HaulingOrderContent_Resource") {
+          const res = (hoc as { resource?: Record<string, unknown> }).resource
+          const resName = res ? (res as { _RecordName_?: string })._RecordName_?.split(".")?.pop() || refName(res) || "" : ""
+          const localized = resourceNameMap.get(resName) || loc(resName) || resName
+          haulingOrders.push({
+            resource: localized,
+            minSCU: (hoc as { minSCU?: number }).minSCU || 0,
+            maxSCU: (hoc as { maxSCU?: number }).maxSCU || 0,
+          })
+        }
+      }
+    } else if (t === "MissionPropertyValue_EntitySpawnDescriptions") {
+      for (const sd of (v as { spawnDescriptions?: Array<Record<string, unknown>> }).spawnDescriptions || []) {
+        let count = 0
+        for (const ew of (sd as { entities?: Array<{ options?: Array<Record<string, unknown>> }> }).entities || []) {
+          for (const opt of ew.options || []) {
+            count += (opt as { amount?: number }).amount || 1
+          }
+        }
+        entitySpawns.push({ name: (sd as { Name?: string }).Name || "unknown", count })
+      }
+    }
+  }
+
+  return { shipEncounters, npcEncounters, haulingOrders, entitySpawns }
+}
+
+function parseMissions(): Record<string, unknown>[] {
   const dir = path.join(RECORDS_DIR, "contracts/contractgenerator")
   const files = findJsonFiles(dir)
-  const missions: any[] = []
+  const missions: Record<string, unknown>[] = []
 
   for (const f of files) {
     try {
@@ -591,6 +705,15 @@ function parseMissions(): any[] {
           // Template name
           const template = contract.template ? path.basename(contract.template, ".json") : null
 
+          // Extract rich metadata from propertyOverrides
+          const metadata = po ? extractPropertyOverrides(po) : null
+
+          // Illegal flag from template
+          const illegal = template ? (templateIllegalMap.get(template) || false) : false
+
+          // Star system from debugName
+          const starSystem = detectSystem(contract.debugName)
+
           missions.push({
             id: contract.id,
             name: contract.debugName,
@@ -616,6 +739,12 @@ function parseMissions(): any[] {
               ? gen.defaultAvailability.personalCooldownTime : null,
             deadline,
             availableInPrison: gen.defaultAvailability?.availableInPrison || false,
+            illegal,
+            starSystem,
+            shipEncounters: metadata?.shipEncounters.length ? metadata.shipEncounters : undefined,
+            npcEncounters: metadata?.npcEncounters.length ? metadata.npcEncounters : undefined,
+            haulingOrders: metadata?.haulingOrders.length ? metadata.haulingOrders : undefined,
+            entitySpawns: metadata?.entitySpawns.length ? metadata.entitySpawns : undefined,
           })
         }
       }
@@ -1043,7 +1172,7 @@ const rockCompositions = parseRockCompositions()
 // --- Resolve reputation amounts in missions ---
 for (const mission of missions) {
   if (!mission.reputationRewards) continue
-  for (const r of mission.reputationRewards) {
+  for (const r of mission.reputationRewards as Array<{ reward: string; amount?: number }>) {
     if (r.reward && reputationAmounts[r.reward] !== undefined) {
       r.amount = reputationAmounts[r.reward]
     }
@@ -1073,13 +1202,48 @@ if (fs.existsSync(missionTypeDir)) {
 
 for (const mission of missions) {
   if (mission.type) {
-    mission.career = careerLookup.get(mission.type) || null
+    mission.career = careerLookup.get(mission.type as string) || null
   }
 }
 
 // Blueprint pools are already on contracts — just count
-const withBP = missions.filter((m: any) => m.blueprintRewards?.length).length
+const withBP = missions.filter((m: Record<string, unknown>) => (m.blueprintRewards as unknown[] | undefined)?.length).length
 console.log(`  Missions with blueprint rewards: ${withBP}`)
+
+// --- Mission broker enrichment ---
+interface BrokerData { lawful: boolean; difficulty: number; maxCrimestat: number }
+const brokerByTitle = new Map<string, BrokerData>()
+const brokerDir = path.join(RECORDS_DIR, "missionbroker/pu_missions")
+if (fs.existsSync(brokerDir)) {
+  for (const bf of findJsonFiles(brokerDir)) {
+    try {
+      const bd = readJson(bf)._RecordValue_
+      if (bd?._Type_ !== "MissionBrokerEntry") continue
+      const titleKey = bd.title as string
+      if (!titleKey || brokerByTitle.has(titleKey)) continue
+      const wl = bd.reputationPrerequisites?.wantedLevel
+      brokerByTitle.set(titleKey, {
+        lawful: bd.lawfulMission === true,
+        difficulty: typeof bd.missionDifficulty === "number" && bd.missionDifficulty >= 0 ? bd.missionDifficulty : -1,
+        maxCrimestat: typeof wl?.maxValue === "number" ? wl.maxValue : 5,
+      })
+    } catch {}
+  }
+  console.log(`  Mission broker entries loaded: ${brokerByTitle.size}`)
+
+  let enriched = 0
+  for (const m of missions) {
+    const tk = m.titleKey as string | null
+    if (!tk) continue
+    const bd = brokerByTitle.get(tk)
+    if (!bd) continue
+    m.lawful = bd.lawful
+    if (bd.difficulty >= 0) m.difficulty = bd.difficulty
+    if (bd.maxCrimestat < 5) m.maxCrimestat = bd.maxCrimestat
+    enriched++
+  }
+  console.log(`  Missions enriched from broker: ${enriched}`)
+}
 
 // --- Merge location-variant missions ---
 // Strip system/planet names from contract debugNames to merge location variants
@@ -1088,35 +1252,54 @@ const stripLocation = (name: string) => name.replace(LOCATION_PARTS, "")
 const cleanTitle = (t: string) => t.replace(/~mission\([^)]*\)/g, "[VARIABLE]").trim()
 
 // Filter out notForRelease and workInProgress before merging
-const activeMissions = missions.filter((m: any) => !m.notForRelease && !m.workInProgress)
+const activeMissions = missions.filter((m: Record<string, unknown>) => !m.notForRelease && !m.workInProgress)
 
-const mergeGroups = new Map<string, any[]>()
+const mergeGroups = new Map<string, Record<string, unknown>[]>()
 for (const m of activeMissions) {
-  const k = stripLocation(m.name)
+  const k = stripLocation(m.name as string)
   if (!mergeGroups.has(k)) mergeGroups.set(k, [])
   mergeGroups.get(k)!.push(m)
 }
 
-const mergedMissions: any[] = []
+function unionByKey<T>(groups: Record<string, unknown>[], field: string, key: string): T[] | undefined {
+  const seen = new Map<string, T>()
+  for (const m of groups) {
+    for (const item of (m[field] as T[] | undefined) || []) {
+      const k = (item as Record<string, unknown>)[key] as string
+      if (k && !seen.has(k)) seen.set(k, item)
+    }
+  }
+  return seen.size ? [...seen.values()] : undefined
+}
+
+const mergedMissions: Record<string, unknown>[] = []
 for (const [key, group] of mergeGroups) {
   const base = { ...group[0] }
   base.name = key
-  base.title = cleanTitle(base.title || "")
+  base.title = cleanTitle((base.title as string) || "")
   if (group.length > 1) {
-    const rewards = group.map((m: any) => m.reward?.uec || 0).filter(Boolean)
+    const rewards = group.map((m) => (m.reward as { uec?: number })?.uec || 0).filter(Boolean)
     if (rewards.length) {
       base.reward = { uec: Math.min(...rewards), max: Math.max(...rewards) }
     }
     // Merge blueprint rewards (union of pools)
     const allPools = new Map<string, number>()
     for (const m of group) {
-      for (const br of m.blueprintRewards || []) {
+      for (const br of (m.blueprintRewards as { pool: string; chance: number }[] | undefined) || []) {
         allPools.set(br.pool, br.chance)
       }
     }
     if (allPools.size) {
       base.blueprintRewards = [...allPools.entries()].map(([pool, chance]) => ({ pool, chance }))
     }
+    // Union metadata arrays across variants
+    base.shipEncounters = unionByKey<ShipEncounter>(group, "shipEncounters", "role")
+    base.npcEncounters = unionByKey<NpcEncounter>(group, "npcEncounters", "name")
+    base.haulingOrders = unionByKey<HaulingOrder>(group, "haulingOrders", "resource")
+    base.entitySpawns = unionByKey<EntitySpawn>(group, "entitySpawns", "name")
+    // Collect all star systems from variants
+    const systems = new Set(group.map((m) => m.starSystem as string | null).filter(Boolean))
+    if (systems.size > 1) base.starSystems = [...systems]
     base.variantCount = group.length
   }
   mergedMissions.push(base)
