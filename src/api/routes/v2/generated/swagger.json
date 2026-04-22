@@ -4385,6 +4385,14 @@
 						"type": "string",
 						"description": "Standing requirement — max (e.g. \"Elite Contractor\")"
 					},
+					"min_standing_display": {
+						"type": "string",
+						"description": "Friendly display name for min standing"
+					},
+					"max_standing_display": {
+						"type": "string",
+						"description": "Friendly display name for max standing"
+					},
 					"can_reaccept_after_failing": {
 						"type": "boolean",
 						"description": "Can re-accept after failing"

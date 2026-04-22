@@ -213,6 +213,10 @@ export interface Mission {
   min_standing?: string
   /** Standing requirement — max (e.g. "Elite Contractor") */
   max_standing?: string
+  /** Friendly display name for min standing */
+  min_standing_display?: string
+  /** Friendly display name for max standing */
+  max_standing_display?: string
   /** Can re-accept after failing */
   can_reaccept_after_failing?: boolean
   /** Can re-accept after abandoning */
