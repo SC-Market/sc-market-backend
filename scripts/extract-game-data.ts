@@ -727,11 +727,24 @@ function parseMissions(): Record<string, unknown>[] {
           // Extract rich metadata from propertyOverrides
           const metadata = po ? extractPropertyOverrides(po) : null
 
-          // Illegal flag from template
-          const illegal = templateName ? (templateIllegalMap.get(templateName) || false) : false
+          // Illegal flag: check template, then boolParamOverrides
+          let illegal = templateName ? (templateIllegalMap.get(templateName) || false) : false
+          if (po?.boolParamOverrides) {
+            for (const bp of po.boolParamOverrides) {
+              if (bp?.param === "Illegal" && bp.value === true) illegal = true
+            }
+          }
 
           // Star system from debugName
           const starSystem = detectSystem(contract.debugName)
+
+          // Event/scenario requirements
+          const requiredScenarios = (contract.required_active_scenarios || gen.required_active_scenarios || [])
+            .filter((s: string) => s && s !== "None")
+            .map((s: string) => path.basename(s, ".json"))
+
+          // Hide in MobiGlas
+          const hideInMobiGlas = gen.defaultAvailability?.hideInMobiGlas || false
 
           missions.push({
             id: contract.id,
@@ -759,6 +772,8 @@ function parseMissions(): Record<string, unknown>[] {
             deadline,
             availableInPrison: gen.defaultAvailability?.availableInPrison || false,
             illegal,
+            hideInMobiGlas,
+            requiredScenarios: requiredScenarios.length ? requiredScenarios : undefined,
             starSystem,
             shipEncounters: metadata?.shipEncounters.length ? metadata.shipEncounters : undefined,
             npcEncounters: metadata?.npcEncounters.length ? metadata.npcEncounters : undefined,
