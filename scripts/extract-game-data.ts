@@ -502,89 +502,127 @@ function parseBlueprints(): any[] {
 
 // --- Step 5: Parse Missions ---
 function parseMissions(): any[] {
-  const dir = path.join(RECORDS_DIR, "missionbroker/pu_missions")
+  const dir = path.join(RECORDS_DIR, "contracts/contractgenerator")
   const files = findJsonFiles(dir)
   const missions: any[] = []
 
   for (const f of files) {
     try {
-      const data = readJson(f)
-      const v = data._RecordValue_
-      if (v?._Type_ !== "MissionBrokerEntry") continue
+      const data = readJson(f)._RecordValue_
+      for (const gen of data.generators || []) {
+        // Generator-level params (inherited by contracts)
+        const genParams: Record<string, string> = {}
+        const gp = gen.contractParams
+        if (gp) {
+          for (const sp of gp.stringParamOverrides || []) {
+            if (sp?.param && sp?.value) genParams[sp.param] = sp.value
+          }
+        }
+        const genType = gp?.missionTypeOverride && gp.missionTypeOverride !== "None"
+          ? refName(gp.missionTypeOverride) : null
 
-      const repRewards: any = {}
-      const labels = ["success", "failure", "abandon", "giveUp", "expired"]
-      for (let i = 0; i < (v.missionResultReputationRewards?.length || 0); i++) {
-        const amounts = v.missionResultReputationRewards[i]?.reputationAmounts
-        if (amounts?.length) {
-          repRewards[labels[i] || `result_${i}`] = amounts.map((a: any) => ({
-            faction: refName(a.factionReputation),
-            scope: refName(a.reputationScope),
-            reward: refName(a.reward),
-          }))
+        const allContracts = [...(gen.contracts || []), ...(gen.introContracts || [])]
+        for (const contract of allContracts) {
+          if (!contract.debugName) continue
+
+          // Contract-level string param overrides (override generator-level)
+          const params = { ...genParams }
+          const po = contract.paramOverrides
+          if (po) {
+            for (const sp of po.stringParamOverrides || []) {
+              if (sp?.param && sp?.value) params[sp.param] = sp.value
+            }
+          }
+
+          const contractType = po?.missionTypeOverride && po.missionTypeOverride !== "None"
+            ? refName(po.missionTypeOverride) : genType
+
+          // Resolve title and description from loc
+          const title = cleanMissionText(loc(params.Title) || params.Title || "")
+          const description = cleanMissionText(loc(params.Description) || params.Description || "")
+          const contractor = loc(params.Contractor) || params.Contractor || ""
+
+          // Extract reward (UEC)
+          let rewardUec = 0
+          const cr = contract.contractResults?.contractResults || []
+          for (const r of cr) {
+            if (r?._Type_ === "ContractResult_CalculatedReward") {
+              rewardUec = r.reward || r.calculatedReward || 0
+            }
+          }
+
+          // Extract blueprint pools
+          const blueprintPools: { pool: string; chance: number }[] = []
+          for (const r of cr) {
+            if (r?._Type_ === "BlueprintRewards") {
+              const bp = r.blueprintPool
+              if (bp && bp !== "None") {
+                const poolName = path.basename(typeof bp === "string" ? bp : bp._RecordPath_ || "", ".json")
+                if (poolName) {
+                  blueprintPools.push({ pool: poolName, chance: r.chance ?? 1 })
+                }
+              }
+            }
+          }
+
+          // Extract reputation rewards
+          const repRewards: { faction: string; scope: string; reward: string }[] = []
+          for (const r of cr) {
+            if (r?._Type_ === "ContractResult_LegacyReputation") {
+              const ra = r.contractResultReputationAmounts
+              if (ra) {
+                repRewards.push({
+                  faction: refName(ra.factionReputation),
+                  scope: refName(ra.reputationScope),
+                  reward: refName(ra.reward),
+                })
+              }
+            }
+          }
+
+          // Standing requirements
+          const minStanding = contract.minStanding ? refName(contract.minStanding) : null
+          const maxStanding = contract.maxStanding ? refName(contract.maxStanding) : null
+
+          // Deadline / lifetime
+          const lifetime = contract.contractLifeTime
+          const deadline = lifetime?.contractCompletionTime || null
+
+          // Template name
+          const template = contract.template ? path.basename(contract.template, ".json") : null
+
+          missions.push({
+            id: contract.id,
+            name: contract.debugName,
+            title,
+            titleKey: params.Title || null,
+            description,
+            missionGiver: contractor,
+            type: contractType || refName(contract.template),
+            template,
+            reward: rewardUec ? { uec: rewardUec } : null,
+            reputationRewards: repRewards.length ? repRewards : null,
+            blueprintRewards: blueprintPools.length ? blueprintPools : null,
+            minStanding,
+            maxStanding,
+            notForRelease: contract.notForRelease || false,
+            workInProgress: contract.workInProgress || false,
+            onceOnly: gen.defaultAvailability?.onceOnly || false,
+            canBeShared: gen.defaultAvailability?.canBeShared ?? null,
+            canReacceptAfterAbandoning: gen.defaultAvailability?.canReacceptAfterAbandoning ?? null,
+            canReacceptAfterFailing: gen.defaultAvailability?.canReacceptAfterFailing ?? null,
+            abandonedCooldownTime: gen.defaultAvailability?.abandonedCooldownTime || null,
+            personalCooldownTime: gen.defaultAvailability?.hasPersonalCooldown
+              ? gen.defaultAvailability.personalCooldownTime : null,
+            deadline,
+            availableInPrison: gen.defaultAvailability?.availableInPrison || false,
+          })
         }
       }
-
-      // Parse wanted level from reputation prerequisites
-      const wantedLevel = v.reputationPrerequisites?.wantedLevel
-      const maxCrimestat = wantedLevel ? Math.floor(wantedLevel.maxValue ?? 5) : null
-
-      // Parse required/linked missions for chain info
-      const requiredMissions = (v.requiredMissions || [])
-        .map((ref: string) => path.basename(ref, ".json"))
-        .filter(Boolean)
-      const linkedMission = v.linkedMission ? path.basename(v.linkedMission, ".json") : null
-
-      missions.push({
-        id: data._RecordId_,
-        name: data._RecordName_?.split(".")?.slice(1).join(".") || "",
-        title: cleanMissionText(loc(v.title) || v.title),
-        titleKey: v.title,
-        description: cleanMissionText(loc(v.description) || v.description),
-        missionGiver: loc(v.missionGiver) || v.missionGiver,
-        missionGiverRecord: v.missionGiverRecord ? path.basename(v.missionGiverRecord, ".json") : null,
-        type: refName(v.type),
-        location: refName(v.locationMissionAvailable),
-        lawful: v.lawfulMission,
-        reward: v.missionReward ? { uec: v.missionReward.reward || 0, max: v.missionReward.max || 0 } : null,
-        reputationRewards: Object.keys(repRewards).length ? repRewards : null,
-        maxInstances: v.maxInstances,
-        maxPlayers: v.maxPlayersPerInstance,
-        canBeShared: v.canBeShared,
-        notForRelease: v.notForRelease || false,
-        // Chain info
-        requiredMissions,
-        linkedMission,
-        onceOnly: v.onceOnly || false,
-        // Restrictions
-        maxCrimestat,
-        failIfSentToPrison: v.failIfSentToPrison || false,
-        failIfBecameCriminal: v.failIfBecameCriminal || false,
-        // Cooldowns
-        canReacceptAfterFailing: v.canReacceptAfterFailing || false,
-        canReacceptAfterAbandoning: v.canReacceptAfterAbandoning || false,
-        abandonedCooldownTime: v.abandonedCooldownTime || null,
-        personalCooldownTime: v.hasPersonalCooldown ? v.personalCooldownTime : null,
-        // Deadline
-        deadline: v.missionDeadline?.missionCompletionTime || null,
-        // Instance info
-        respawnTime: v.respawnTime || null,
-        instanceLifeTime: v.instanceLifeTime || null,
-        buyInAmount: v.missionBuyInAmount || null,
-        // Tags
-        tutorial: v.tutorial || false,
-        // Reputation requirements (min rank to accept)
-        reputationRequirements: v.reputationRequirements?.expression?.map((expr: Record<string, unknown>) => ({
-          faction: typeof expr.factionReputation === 'string' ? path.basename(expr.factionReputation, ".json") : refName(expr.factionReputation),
-          scope: typeof expr.reputationScope === 'string' ? path.basename(expr.reputationScope, ".json") : refName(expr.reputationScope),
-          comparison: expr.comparison,
-          standing: typeof expr.standing === 'string' ? path.basename(expr.standing, ".json") : refName(expr.standing),
-        })) || null,
-      })
     } catch {}
   }
 
-  console.log(`  Missions: ${missions.length}`)
+  console.log(`  Missions (contracts): ${missions.length}`)
   return missions
 }
 
@@ -1005,11 +1043,9 @@ const rockCompositions = parseRockCompositions()
 // --- Resolve reputation amounts in missions ---
 for (const mission of missions) {
   if (!mission.reputationRewards) continue
-  for (const [outcome, rewards] of Object.entries(mission.reputationRewards as Record<string, any[]>)) {
-    for (const r of rewards) {
-      if (r.reward && reputationAmounts[r.reward] !== undefined) {
-        r.amount = reputationAmounts[r.reward]
-      }
+  for (const r of mission.reputationRewards) {
+    if (r.reward && reputationAmounts[r.reward] !== undefined) {
+      r.amount = reputationAmounts[r.reward]
     }
   }
 }
@@ -1036,131 +1072,26 @@ if (fs.existsSync(missionTypeDir)) {
 }
 
 for (const mission of missions) {
-  if (mission.location) {
-    mission.locationName = starmapLookup.get(mission.location) || null
-  }
   if (mission.type) {
     mission.career = careerLookup.get(mission.type) || null
   }
 }
 
-// --- Derive chain starter and story tags ---
-const requiredByOthers = new Set<string>()
-const missionNameLower = new Map<string, string>()
-for (const mission of missions) {
-  missionNameLower.set(mission.name.toLowerCase(), mission.name)
-  for (const req of mission.requiredMissions || []) {
-    requiredByOthers.add(req.toLowerCase())
-  }
-}
-for (const mission of missions) {
-  const hasPrereqs = mission.requiredMissions && mission.requiredMissions.length > 0
-  const isRequiredByOthers = requiredByOthers.has(mission.name.toLowerCase())
-  mission.isChainStarter = !hasPrereqs && isRequiredByOthers
-  mission.isStoryMission = hasPrereqs && isRequiredByOthers
-  mission.isChainEnder = hasPrereqs && !isRequiredByOthers
-  mission.isWikelo = (mission.type || "").toLowerCase().includes("wikelo") || (mission.name || "").toLowerCase().includes("wikelo")
-}
+// Blueprint pools are already on contracts — just count
+const withBP = missions.filter((m: any) => m.blueprintRewards?.length).length
+console.log(`  Missions with blueprint rewards: ${withBP}`)
 
-// --- Link missions to blueprint reward pools via contract template → XML → mission chain ---
-const contractDir = path.join(RECORDS_DIR, "contracts")
-if (fs.existsSync(contractDir)) {
-  const norm = (s: string) => s.toLowerCase().replace(/\\/g, "/")
-
-  // Step 1: Build contract template name → set of blueprint pools
-  const templatePools = new Map<string, Set<string>>()
-  for (const f of findJsonFiles(path.join(contractDir, "contractgenerator"))) {
-    try {
-      const d = readJson(f)._RecordValue_
-      const extractPools = (obj: any) => {
-        if (!obj || typeof obj !== "object") return
-        if (obj.debugName && obj.template) {
-          const tmpl = path.basename(obj.template, ".json")
-          const results = obj.contractResults?.contractResults || []
-          for (const cr of results) {
-            const bp = cr?.blueprintPool
-            if (bp && bp !== "None") {
-              const pool = path.basename(typeof bp === "string" ? bp : bp._RecordPath_ || "", ".json")
-              if (pool) {
-                if (!templatePools.has(tmpl)) templatePools.set(tmpl, new Set())
-                templatePools.get(tmpl)!.add(pool)
-              }
-            }
-          }
-        }
-        if (Array.isArray(obj)) obj.forEach(extractPools)
-        else Object.values(obj).forEach(extractPools)
-      }
-      extractPools(d)
-    } catch {}
-  }
-
-  // Step 2: Build contract template name → set of Subsumption XMLs
-  const templateXmls = new Map<string, Set<string>>()
-  for (const f of findJsonFiles(path.join(contractDir, "contracttemplates"))) {
-    try {
-      const tname = path.basename(f, ".json")
-      const findXmls = (obj: any): string[] => {
-        if (typeof obj === "string" && obj.toLowerCase().endsWith(".xml")) return [norm(obj)]
-        if (!obj || typeof obj !== "object") return []
-        return (Array.isArray(obj) ? obj : Object.values(obj)).flatMap(findXmls)
-      }
-      const xmls = findXmls(readJson(f))
-      if (xmls.length) templateXmls.set(tname, new Set(xmls))
-    } catch {}
-  }
-
-  // Step 3: Build XML → set of pools (by joining template→pools and template→XMLs)
-  const xmlPools = new Map<string, Set<string>>()
-  for (const [tmpl, pools] of templatePools) {
-    const xmls = templateXmls.get(tmpl)
-    if (xmls) {
-      for (const xml of xmls) {
-        if (!xmlPools.has(xml)) xmlPools.set(xml, new Set())
-        for (const p of pools) xmlPools.get(xml)!.add(p)
-      }
-    }
-  }
-
-  // Step 4: Build mission missionModule → mission name mapping, then assign pools
-  // Re-read mission broker entries for their missionModule field
-  const missionDir = path.join(RECORDS_DIR, "missionbroker/pu_missions")
-  const missionNameToXml = new Map<string, string>()
-  if (fs.existsSync(missionDir)) {
-    for (const f of findJsonFiles(missionDir)) {
-      try {
-        const d = readJson(f)
-        const rn: string = d._RecordName_ || ""
-        const name = rn.split(".").slice(1).join(".")
-        const mm = d._RecordValue_?.missionModule
-        if (name && mm) missionNameToXml.set(name, norm(mm))
-      } catch {}
-    }
-  }
-
-  let linked = 0
-  for (const mission of missions) {
-    const xml = missionNameToXml.get(mission.name)
-    if (xml) {
-      const pools = xmlPools.get(xml)
-      if (pools?.size) {
-        mission.blueprintPools = [...pools]
-        linked++
-      }
-    }
-  }
-  console.log(`  Mission→Blueprint pool links: ${linked} (via template→XML→mission chain)`)
-}
-
-// --- Merge location-variant missions into templates ---
-// Only merge missions whose names differ by location parts
-// (e.g., _Stanton1, _Pyro3). Keeps difficulty/type variants separate.
+// --- Merge location-variant missions ---
+// Strip system/planet names from contract debugNames to merge location variants
 const LOCATION_PARTS = /_(Stanton[1-4]|Pyro[1-6]|Nyx[1-3]|Hurston|Crusader|ArcCorp|microTech|Terra|Magnus|Castra|Odin|Helios|Oso|Kilian|Davien|Rhetor|Vega|Tiber)/g
 const stripLocation = (name: string) => name.replace(LOCATION_PARTS, "")
 const cleanTitle = (t: string) => t.replace(/~mission\([^)]*\)/g, "[VARIABLE]").trim()
 
+// Filter out notForRelease and workInProgress before merging
+const activeMissions = missions.filter((m: any) => !m.notForRelease && !m.workInProgress)
+
 const mergeGroups = new Map<string, any[]>()
-for (const m of missions) {
+for (const m of activeMissions) {
   const k = stripLocation(m.name)
   if (!mergeGroups.has(k)) mergeGroups.set(k, [])
   mergeGroups.get(k)!.push(m)
@@ -1169,30 +1100,28 @@ for (const m of missions) {
 const mergedMissions: any[] = []
 for (const [key, group] of mergeGroups) {
   const base = { ...group[0] }
-  base.name = key // Use the stripped name as canonical
+  base.name = key
   base.title = cleanTitle(base.title || "")
   if (group.length > 1) {
     const rewards = group.map((m: any) => m.reward?.uec || 0).filter(Boolean)
-    const maxRewards = group.map((m: any) => m.reward?.max || 0).filter(Boolean)
     if (rewards.length) {
-      base.reward = {
-        uec: Math.min(...rewards),
-        max: Math.max(...maxRewards.length ? maxRewards : rewards),
+      base.reward = { uec: Math.min(...rewards), max: Math.max(...rewards) }
+    }
+    // Merge blueprint rewards (union of pools)
+    const allPools = new Map<string, number>()
+    for (const m of group) {
+      for (const br of m.blueprintRewards || []) {
+        allPools.set(br.pool, br.chance)
       }
     }
-    const locations = [...new Set(group.map((m: any) => m.location).filter(Boolean))]
-    base.locations = locations
-    delete base.location
-    const allPools = new Set<string>()
-    for (const m of group) for (const p of m.blueprintPools || []) allPools.add(p)
-    if (allPools.size) base.blueprintPools = [...allPools]
-    base.isChainStarter = group.some((m: any) => m.isChainStarter)
-    base.isChainEnder = group.some((m: any) => m.isChainEnder)
+    if (allPools.size) {
+      base.blueprintRewards = [...allPools.entries()].map(([pool, chance]) => ({ pool, chance }))
+    }
     base.variantCount = group.length
   }
   mergedMissions.push(base)
 }
-console.log(`  Merged ${missions.length} missions → ${mergedMissions.length} templates`)
+console.log(`  Merged ${activeMissions.length} active missions → ${mergedMissions.length} templates`)
 
 fs.mkdirSync(OUTPUT_DIR, { recursive: true })
 
