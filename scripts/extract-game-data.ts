@@ -271,6 +271,7 @@ function parseItems(): any[] {
                 if (drData) {
                   attributes.damageReduction = drData.PhysicalResistance?.Multiplier ?? null
                   attributes.energyReduction = drData.EnergyResistance?.Multiplier ?? null
+                  attributes.distortionReduction = drData.DistortionResistance?.Multiplier ?? null
                   attributes.thermalReduction = drData.ThermalResistance?.Multiplier ?? null
                   attributes.biochemReduction = drData.BiochemicalResistance?.Multiplier ?? null
                   attributes.stunReduction = drData.StunResistance?.Multiplier ?? null
