@@ -1221,7 +1221,17 @@ export class ListingsV2Controller extends BaseController {
           max_order_quantity: listing.max_order_quantity ?? null,
           min_order_value: listing.min_order_value ? Number(listing.min_order_value) : null,
           max_order_value: listing.max_order_value ? Number(listing.max_order_value) : null,
-          view_count: await this.getViewCount(db, id),
+          view_count: await (async () => {
+            try {
+              const hasTable = await db.schema.hasTable('listing_views_v2')
+              if (hasTable) {
+                const [{ count }] = await db('listing_views_v2').where('listing_id', id).count('* as count')
+                return parseInt(String(count), 10)
+              }
+              const row = await db('listings').where('listing_id', id).select('view_count').first()
+              return row?.view_count || 0
+            } catch { return 0 }
+          })(),
         },
         seller: {
           name: listing.seller_name || "Unknown",
