@@ -572,9 +572,9 @@ function parseMissions(): any[] {
               const ra = r.contractResultReputationAmounts
               if (ra) {
                 repRewards.push({
-                  faction: refName(ra.factionReputation),
-                  scope: refName(ra.reputationScope),
-                  reward: refName(ra.reward),
+                  faction: refName(ra.factionReputation) || "",
+                  scope: refName(ra.reputationScope) || "",
+                  reward: refName(ra.reward) || "",
                 })
               }
             }
