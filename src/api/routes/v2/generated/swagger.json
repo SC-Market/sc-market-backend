@@ -5810,6 +5810,50 @@
 				"type": "object",
 				"additionalProperties": false
 			},
+			"SlotModifier": {
+				"description": "Quality modifier curve for a blueprint ingredient slot",
+				"properties": {
+					"slot_name": {
+						"type": "string"
+					},
+					"slot_display_name": {
+						"type": "string"
+					},
+					"property": {
+						"type": "string",
+						"description": "Property affected (e.g., \"damagemitigation\", \"mintemp\", \"maxtemp\")"
+					},
+					"start_quality": {
+						"type": "number",
+						"format": "double"
+					},
+					"end_quality": {
+						"type": "number",
+						"format": "double"
+					},
+					"modifier_at_start": {
+						"type": "number",
+						"format": "double",
+						"description": "Modifier value at start_quality (e.g., 0.9 = ×0.9)"
+					},
+					"modifier_at_end": {
+						"type": "number",
+						"format": "double",
+						"description": "Modifier value at end_quality (e.g., 1.1 = ×1.1)"
+					}
+				},
+				"required": [
+					"slot_name",
+					"slot_display_name",
+					"property",
+					"start_quality",
+					"end_quality",
+					"modifier_at_start",
+					"modifier_at_end"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
 			"UserBlueprintAcquisition": {
 				"description": "User acquisition data",
 				"properties": {
@@ -5883,6 +5927,13 @@
 						"type": "object",
 						"description": "Crafting recipe (if available)"
 					},
+					"slot_modifiers": {
+						"items": {
+							"$ref": "#/components/schemas/SlotModifier"
+						},
+						"type": "array",
+						"description": "Per-slot quality modifiers (how ingredient quality affects output stats)"
+					},
 					"user_owns": {
 						"type": "boolean",
 						"description": "Does user own this blueprint"
@@ -5896,7 +5947,8 @@
 					"blueprint",
 					"output_item",
 					"ingredients",
-					"missions_rewarding"
+					"missions_rewarding",
+					"slot_modifiers"
 				],
 				"type": "object",
 				"additionalProperties": false

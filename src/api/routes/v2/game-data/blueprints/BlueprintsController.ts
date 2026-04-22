@@ -533,12 +533,29 @@ export class BlueprintsController extends BaseController {
         mission_count: missions_rewarding.length,
       })
 
+      // Fetch slot modifiers (quality curves per ingredient)
+      const slotModifierRows = await knex("blueprint_slot_modifiers")
+        .where("blueprint_id", blueprint_id)
+        .orderBy("slot_name")
+        .orderBy("property")
+
+      const slot_modifiers = slotModifierRows.map((r: any) => ({
+        slot_name: r.slot_name,
+        slot_display_name: r.slot_display_name || r.slot_name,
+        property: r.property,
+        start_quality: r.start_quality,
+        end_quality: r.end_quality,
+        modifier_at_start: parseFloat(r.modifier_at_start),
+        modifier_at_end: parseFloat(r.modifier_at_end),
+      }))
+
       return {
         blueprint,
         output_item,
         ingredients,
         missions_rewarding,
         crafting_recipe,
+        slot_modifiers,
         user_owns,
         user_acquisition,
       }

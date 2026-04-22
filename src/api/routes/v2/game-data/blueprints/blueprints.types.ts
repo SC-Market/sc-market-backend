@@ -252,6 +252,9 @@ export interface BlueprintDetailResponse {
     max_output_quality_tier: number
   }
 
+  /** Per-slot quality modifiers (how ingredient quality affects output stats) */
+  slot_modifiers: SlotModifier[]
+
   /** Does user own this blueprint */
   user_owns?: boolean
 
@@ -277,3 +280,17 @@ export interface BlueprintCategory {
   count: number
 }
 
+
+/** Quality modifier curve for a blueprint ingredient slot */
+export interface SlotModifier {
+  slot_name: string
+  slot_display_name: string
+  /** Property affected (e.g., "damagemitigation", "mintemp", "maxtemp") */
+  property: string
+  start_quality: number
+  end_quality: number
+  /** Modifier value at start_quality (e.g., 0.9 = ×0.9) */
+  modifier_at_start: number
+  /** Modifier value at end_quality (e.g., 1.1 = ×1.1) */
+  modifier_at_end: number
+}

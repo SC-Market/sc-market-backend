@@ -78,7 +78,12 @@ for (const line of locContent.split("\n")) {
   if (eq === -1) continue
   const key = line.slice(0, eq).trim()
   const value = line.slice(eq + 1).trim().replace(/\r$/, "")
-  if (key && value) locMap.set(key.toLowerCase(), value)
+  if (key && value) {
+    locMap.set(key.toLowerCase(), value)
+    // Also store without ,P or ,p suffix for plural form keys
+    const commaIdx = key.indexOf(",")
+    if (commaIdx > 0) locMap.set(key.slice(0, commaIdx).toLowerCase(), value)
+  }
 }
 console.log(`  Loaded ${locMap.size} localization keys`)
 
@@ -664,26 +669,20 @@ function parseMissions(): Record<string, unknown>[] {
           const missionType = contractType || (templateName ? templateTypeMap.get(templateName) : null) || templateName
 
           // Resolve title and description from loc
-          const title = cleanMissionText(loc(params.Title) || params.Title || "")
-          const description = cleanMissionText(loc(params.Description) || params.Description || "")
-          const contractor = loc(params.Contractor) || params.Contractor || ""
+          const stripAt = (s: string) => s.startsWith("@") ? s.slice(1) : s
+          const title = cleanMissionText(loc(params.Title) || stripAt(params.Title || ""))
+          const description = cleanMissionText(loc(params.Description) || stripAt(params.Description || ""))
+          const contractor = loc(params.Contractor) || stripAt(params.Contractor || "")
 
           // Extract reward (UEC) - check multiple sources
           let rewardUec = 0
+          let rewardMax = 0
           const cr = contract.contractResults?.contractResults || []
           for (const r of cr) {
-            if (r?._Type_ === "ContractResult_CalculatedReward") {
-              rewardUec = r.reward || r.calculatedReward || 0
+            if (r?._Type_ === "ContractResult_Reward" && r.contractReward) {
+              rewardUec = r.contractReward.reward || 0
+              rewardMax = r.contractReward.max || rewardUec
             }
-            if (r?._Type_ === "ContractResult_FixedReward" && r.reward) {
-              rewardUec = r.reward
-            }
-          }
-          // Fallback: check generationParams
-          if (!rewardUec) {
-            const gp = contract.generationParams
-            if (gp?.rewardAmount) rewardUec = gp.rewardAmount
-            else if (gp?.baseReward) rewardUec = gp.baseReward
           }
 
           // Extract blueprint pools
@@ -756,7 +755,7 @@ function parseMissions(): Record<string, unknown>[] {
             missionGiver: contractor,
             type: missionType,
             template: templateName,
-            reward: rewardUec ? { uec: rewardUec } : null,
+            reward: rewardUec ? { uec: rewardUec, max: rewardMax || rewardUec } : null,
             reputationRewards: repRewards.length ? repRewards : null,
             blueprintRewards: blueprintPools.length ? blueprintPools : null,
             minStanding,
