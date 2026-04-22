@@ -584,6 +584,7 @@ const models: TsoaRoute.Models = {
             "price_max": {"dataType":"double","required":true},
             "quality_tier_min": {"dataType":"double"},
             "quality_tier_max": {"dataType":"double"},
+            "expires_at": {"dataType":"string"},
         },
         "additionalProperties": false,
     },

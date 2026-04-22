@@ -542,6 +542,9 @@ export interface MyListingItem {
   
   /** Maximum quality tier available (1-5) */
   quality_tier_max?: number;
+
+  /** ISO 8601 timestamp when listing expires (null if no expiry) */
+  expires_at?: string;
 }
 
 /**

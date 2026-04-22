@@ -888,7 +888,9 @@ export class ListingsV2Controller extends BaseController {
           "ls.price_max",
           "ls.quality_tier_min",
           "ls.quality_tier_max",
+          "l_full.expires_at",
         )
+        .leftJoin("listings as l_full", "ls.listing_id", "l_full.listing_id")
         .where("ls.seller_id", userId) // Filter by current user (Requirement 18.2)
 
       // Apply status filter if provided (Requirement 18.5)
@@ -938,6 +940,7 @@ export class ListingsV2Controller extends BaseController {
         price_max: parseInt(row.price_max, 10) || 0,
         quality_tier_min: row.quality_tier_min || undefined,
         quality_tier_max: row.quality_tier_max || undefined,
+        expires_at: row.expires_at?.toISOString?.() || undefined,
       }))
 
       logger.info("My listings fetched successfully", {
