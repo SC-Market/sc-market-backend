@@ -511,17 +511,24 @@ interface EntitySpawn { name: string; count: number }
 
 // Pre-build template illegal lookup
 const templateIllegalMap = new Map<string, boolean>()
+const templateTypeMap = new Map<string, string>()
 const templateDir = path.join(RECORDS_DIR, "contracts/contracttemplates")
 if (fs.existsSync(templateDir)) {
   for (const tf of findJsonFiles(templateDir)) {
     try {
       const td = readJson(tf)._RecordValue_
-      const illegal = td?.contractDisplayInfo?.illegal
-      if (illegal === true) templateIllegalMap.set(path.basename(tf, ".json"), true)
+      const tname = path.basename(tf, ".json")
+      const cdi = td?.contractDisplayInfo
+      if (cdi?.illegal === true) templateIllegalMap.set(tname, true)
+      const typeRef = cdi?.type
+      if (typeRef && typeof typeRef === "string" && typeRef !== "None") {
+        templateTypeMap.set(tname, refName(typeRef) || "")
+      }
     } catch {}
   }
 }
 console.log(`  Template illegal lookup: ${templateIllegalMap.size} illegal templates`)
+console.log(`  Template type lookup: ${templateTypeMap.size} templates with mission type`)
 
 // Pre-build resource name lookup from resourcetypedatabase
 const resourceNameMap = new Map<string, string>()
@@ -651,6 +658,10 @@ function parseMissions(): Record<string, unknown>[] {
           const contractType = po?.missionTypeOverride && po.missionTypeOverride !== "None"
             ? refName(po.missionTypeOverride) : genType
 
+          // Resolve type from template if no override
+          const templateName = contract.template ? path.basename(contract.template, ".json") : null
+          const missionType = contractType || (templateName ? templateTypeMap.get(templateName) : null) || templateName
+
           // Resolve title and description from loc
           const title = cleanMissionText(loc(params.Title) || params.Title || "")
           const description = cleanMissionText(loc(params.Description) || params.Description || "")
@@ -711,14 +722,13 @@ function parseMissions(): Record<string, unknown>[] {
           const lifetime = contract.contractLifeTime
           const deadline = lifetime?.contractCompletionTime || null
 
-          // Template name
-          const template = contract.template ? path.basename(contract.template, ".json") : null
+          // Template name (already computed above as templateName)
 
           // Extract rich metadata from propertyOverrides
           const metadata = po ? extractPropertyOverrides(po) : null
 
           // Illegal flag from template
-          const illegal = template ? (templateIllegalMap.get(template) || false) : false
+          const illegal = templateName ? (templateIllegalMap.get(templateName) || false) : false
 
           // Star system from debugName
           const starSystem = detectSystem(contract.debugName)
@@ -730,8 +740,8 @@ function parseMissions(): Record<string, unknown>[] {
             titleKey: params.Title || null,
             description,
             missionGiver: contractor,
-            type: contractType || refName(contract.template),
-            template,
+            type: missionType,
+            template: templateName,
             reward: rewardUec ? { uec: rewardUec } : null,
             reputationRewards: repRewards.length ? repRewards : null,
             blueprintRewards: blueprintPools.length ? blueprintPools : null,
