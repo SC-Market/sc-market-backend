@@ -5854,6 +5854,14 @@
 				"type": "object",
 				"additionalProperties": false
 			},
+			"Record_string.string_": {
+				"properties": {},
+				"additionalProperties": {
+					"type": "string"
+				},
+				"type": "object",
+				"description": "Construct a type with a set of properties K of type T"
+			},
 			"UserBlueprintAcquisition": {
 				"description": "User acquisition data",
 				"properties": {
@@ -5934,6 +5942,10 @@
 						"type": "array",
 						"description": "Per-slot quality modifiers (how ingredient quality affects output stats)"
 					},
+					"item_attributes": {
+						"$ref": "#/components/schemas/Record_string.string_",
+						"description": "Output item base attributes (damage resistance, temperature, etc.)"
+					},
 					"user_owns": {
 						"type": "boolean",
 						"description": "Does user own this blueprint"
@@ -5948,7 +5960,8 @@
 					"output_item",
 					"ingredients",
 					"missions_rewarding",
-					"slot_modifiers"
+					"slot_modifiers",
+					"item_attributes"
 				],
 				"type": "object",
 				"additionalProperties": false

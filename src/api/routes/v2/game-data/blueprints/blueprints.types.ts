@@ -255,6 +255,9 @@ export interface BlueprintDetailResponse {
   /** Per-slot quality modifiers (how ingredient quality affects output stats) */
   slot_modifiers: SlotModifier[]
 
+  /** Output item base attributes (damage resistance, temperature, etc.) */
+  item_attributes: Record<string, string>
+
   /** Does user own this blueprint */
   user_owns?: boolean
 

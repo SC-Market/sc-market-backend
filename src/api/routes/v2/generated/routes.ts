@@ -1854,6 +1854,11 @@ const models: TsoaRoute.Models = {
         "additionalProperties": false,
     },
     // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+    "Record_string.string_": {
+        "dataType": "refAlias",
+        "type": {"dataType":"nestedObjectLiteral","nestedProperties":{},"additionalProperties":{"dataType":"string"},"validators":{}},
+    },
+    // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
     "UserBlueprintAcquisition": {
         "dataType": "refObject",
         "properties": {
@@ -1874,6 +1879,7 @@ const models: TsoaRoute.Models = {
             "missions_rewarding": {"dataType":"array","array":{"dataType":"refObject","ref":"MissionRewardingBlueprint"},"required":true},
             "crafting_recipe": {"dataType":"nestedObjectLiteral","nestedProperties":{"max_output_quality_tier":{"dataType":"double","required":true},"min_output_quality_tier":{"dataType":"double","required":true},"quality_calculation_type":{"dataType":"string","required":true}}},
             "slot_modifiers": {"dataType":"array","array":{"dataType":"refObject","ref":"SlotModifier"},"required":true},
+            "item_attributes": {"ref":"Record_string.string_","required":true},
             "user_owns": {"dataType":"boolean"},
             "user_acquisition": {"ref":"UserBlueprintAcquisition"},
         },

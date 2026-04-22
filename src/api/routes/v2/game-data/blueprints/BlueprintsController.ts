@@ -539,6 +539,16 @@ export class BlueprintsController extends BaseController {
         .orderBy("slot_name")
         .orderBy("property")
 
+      // Fetch output item attributes (base stats for Product Stats display)
+      const itemAttributeRows = await knex("game_item_attributes")
+        .where("game_item_id", blueprint.output_game_item_id)
+        .select("attribute_name", "attribute_value")
+
+      const item_attributes: Record<string, string> = {}
+      for (const row of itemAttributeRows) {
+        item_attributes[row.attribute_name] = row.attribute_value
+      }
+
       const slot_modifiers = slotModifierRows.map((r: any) => ({
         slot_name: r.slot_name,
         slot_display_name: r.slot_display_name || r.slot_name,
@@ -556,6 +566,7 @@ export class BlueprintsController extends BaseController {
         missions_rewarding,
         crafting_recipe,
         slot_modifiers,
+        item_attributes,
         user_owns,
         user_acquisition,
       }
