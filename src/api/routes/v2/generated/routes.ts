@@ -1470,6 +1470,8 @@ const models: TsoaRoute.Models = {
         "dataType": "refObject",
         "properties": {
             "reward_pool_id": {"dataType":"double","required":true},
+            "pool_name": {"dataType":"string"},
+            "pool_chance": {"dataType":"double"},
             "reward_pool_size": {"dataType":"double","required":true},
             "selection_count": {"dataType":"double","required":true},
             "blueprints": {"dataType":"array","array":{"dataType":"refObject","ref":"MissionBlueprintReward"},"required":true},

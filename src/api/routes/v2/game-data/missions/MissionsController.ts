@@ -455,6 +455,8 @@ export class MissionsController extends BaseController {
         reward_scope: missionRow.reward_scope || undefined,
         min_standing: missionRow.min_standing || undefined,
         max_standing: missionRow.max_standing || undefined,
+        min_standing_display: await this.resolveStandingName(knex, missionRow.min_standing),
+        max_standing_display: await this.resolveStandingName(knex, missionRow.max_standing),
         can_reaccept_after_failing: missionRow.can_reaccept_after_failing ?? undefined,
         can_reaccept_after_abandoning: missionRow.can_reaccept_after_abandoning ?? undefined,
         abandoned_cooldown_time: missionRow.abandoned_cooldown_time || undefined,
@@ -495,6 +497,8 @@ export class MissionsController extends BaseController {
           "mbr.reward_pool_id",
           "mbr.reward_pool_size",
           "mbr.selection_count",
+          "mbr.pool_name",
+          "mbr.pool_chance",
           "mbr.drop_probability",
           "mbr.is_guaranteed",
           "b.blueprint_id",
@@ -518,6 +522,8 @@ export class MissionsController extends BaseController {
         if (!rewardPoolsMap.has(poolId)) {
           rewardPoolsMap.set(poolId, {
             reward_pool_id: poolId,
+            pool_name: row.pool_name || undefined,
+            pool_chance: row.pool_chance ? parseFloat(row.pool_chance) : undefined,
             reward_pool_size: row.reward_pool_size,
             selection_count: row.selection_count,
             blueprints: [],
@@ -1316,5 +1322,15 @@ export class MissionsController extends BaseController {
     }))
 
     return { ranks, scopes }
+  }
+
+  private async resolveStandingName(knex: any, code: string | null | undefined): Promise<string | undefined> {
+    if (!code) return undefined
+    try {
+      const row = await knex("reputation_ranks").where("standing_code", code).select("standing_display_name").first()
+      return row?.standing_display_name || code
+    } catch {
+      return code
+    }
   }
 }

@@ -4539,6 +4539,15 @@
 						"format": "double",
 						"description": "Reward pool ID"
 					},
+					"pool_name": {
+						"type": "string",
+						"description": "Pool name from game data (e.g. \"BP_MISSIONREWARD_CFP_Outpost_RegionC\")"
+					},
+					"pool_chance": {
+						"type": "number",
+						"format": "double",
+						"description": "Pool-level chance (0-1, e.g. 1.0 = 100%)"
+					},
 					"reward_pool_size": {
 						"type": "number",
 						"format": "double",
