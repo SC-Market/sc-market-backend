@@ -1627,24 +1627,29 @@ export class GameDataImportService {
     for (const raw of rawBlueprints) {
       try {
         // Flatten nested slots into a flat ingredients array
-        const ingredients: Array<{ itemId: string; quantity: number; minQuality?: number }> = []
+        const ingredients: Array<{ itemId: string; quantity: number; quantityScu?: number; minQuality?: number; slotName?: string; slotDisplayName?: string }> = []
 
-        const flattenSlots = (slots: P4KBlueprintSlot[]) => {
+        const flattenSlots = (slots: P4KBlueprintSlot[], parentSlot?: { name: string; displayName: string }) => {
           for (const slot of slots || []) {
             if (slot.type === "resource" && slot.resource) {
               ingredients.push({
                 itemId: slot.resource,
                 quantity: slot.quantity_scu || 1,
+                quantityScu: slot.quantity_scu || undefined,
                 minQuality: slot.minQuality || undefined,
+                slotName: parentSlot?.name,
+                slotDisplayName: parentSlot?.displayName,
               })
             } else if (slot.type === "item" && slot.item) {
               ingredients.push({
                 itemId: slot.item,
                 quantity: slot.quantity || 1,
                 minQuality: slot.minQuality || undefined,
+                slotName: parentSlot?.name,
+                slotDisplayName: parentSlot?.displayName,
               })
             } else if (slot.type === "slot" && slot.ingredients) {
-              flattenSlots(slot.ingredients)
+              flattenSlots(slot.ingredients, { name: slot.name || "", displayName: slot.displayName || "" })
             }
           }
         }
@@ -1800,8 +1805,36 @@ export class GameDataImportService {
         recommended_quality_tier: null,
         is_alternative: false,
         display_order: i,
+        slot_name: ing.slotName || null,
+        slot_display_name: ing.slotDisplayName || null,
+        quantity_scu: ing.quantityScu || null,
+        min_quality: ing.minQuality || null,
         created_at: new Date(),
       })
+    }
+
+    // Insert slot modifiers (quality curves)
+    await trx("blueprint_slot_modifiers").where({ blueprint_id: blueprintId }).delete()
+    const rawSlots = (blueprint as Record<string, unknown>).slots as Array<{
+      type: string; name: string; displayName: string;
+      modifiers: Array<{ property: string; startQuality: number; endQuality: number; modifierAtStart: number; modifierAtEnd: number }>
+    }> | undefined
+    if (rawSlots) {
+      for (const slot of rawSlots) {
+        if (slot.type !== "slot" || !slot.modifiers?.length) continue
+        for (const mod of slot.modifiers) {
+          await trx("blueprint_slot_modifiers").insert({
+            blueprint_id: blueprintId,
+            slot_name: slot.name,
+            slot_display_name: slot.displayName || slot.name,
+            property: mod.property,
+            start_quality: mod.startQuality,
+            end_quality: mod.endQuality,
+            modifier_at_start: mod.modifierAtStart,
+            modifier_at_end: mod.modifierAtEnd,
+          })
+        }
+      }
     }
 
     return existing ? "updated" : "inserted"
