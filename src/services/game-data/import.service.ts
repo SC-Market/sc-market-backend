@@ -243,6 +243,16 @@ export interface P4KMission {
   deadline: number | null
   availableInPrison: boolean
   variantCount?: number
+  // Rich metadata
+  shipEncounters?: Array<{ role: string; waves: Array<{ name: string; shipCount: number }> }>
+  npcEncounters?: Array<{ name: string; count: number }>
+  haulingOrders?: Array<{ resource: string; minSCU: number; maxSCU: number }>
+  entitySpawns?: Array<{ name: string; count: number }>
+  illegal?: boolean
+  lawful?: boolean
+  difficulty?: number
+  starSystem?: string
+  maxCrimestat?: number
 }
 
 export interface P4KBlueprint {
@@ -1188,10 +1198,57 @@ export class GameDataImportService {
 
             // Store mission in database
             const result = await this.upsertMission(trx, versionId, mission)
-            if (result === "inserted") {
+            if (result.action === "inserted") {
               stats.inserted++
-            } else if (result === "updated") {
+            } else if (result.action === "updated") {
               stats.updated++
+            }
+
+            // Insert rich metadata into child tables
+            const mid = result.missionId
+            // Clear existing metadata for this mission
+            await Promise.all([
+              trx("mission_ship_encounters").where("mission_id", mid).delete(),
+              trx("mission_npc_encounters").where("mission_id", mid).delete(),
+              trx("mission_hauling_orders").where("mission_id", mid).delete(),
+              trx("mission_entity_spawns").where("mission_id", mid).delete(),
+            ])
+            if (mission.shipEncounters?.length) {
+              await trx("mission_ship_encounters").insert(
+                mission.shipEncounters.map((e) => ({
+                  mission_id: mid,
+                  role: e.role,
+                  waves: JSON.stringify(e.waves),
+                })),
+              )
+            }
+            if (mission.npcEncounters?.length) {
+              await trx("mission_npc_encounters").insert(
+                mission.npcEncounters.map((e) => ({
+                  mission_id: mid,
+                  name: e.name,
+                  count: e.count,
+                })),
+              )
+            }
+            if (mission.haulingOrders?.length) {
+              await trx("mission_hauling_orders").insert(
+                mission.haulingOrders.map((e) => ({
+                  mission_id: mid,
+                  resource_name: e.resource,
+                  min_scu: e.minSCU,
+                  max_scu: e.maxSCU,
+                })),
+              )
+            }
+            if (mission.entitySpawns?.length) {
+              await trx("mission_entity_spawns").insert(
+                mission.entitySpawns.map((e) => ({
+                  mission_id: mid,
+                  name: e.name,
+                  count: e.count,
+                })),
+              )
             }
           } catch (error) {
             const errorMessage = error instanceof Error ? error.message : String(error)
@@ -1251,6 +1308,15 @@ export class GameDataImportService {
           deadline: raw.deadline || null,
           availableInPrison: raw.availableInPrison || false,
           variantCount: raw.variantCount,
+          shipEncounters: raw.shipEncounters || undefined,
+          npcEncounters: raw.npcEncounters || undefined,
+          haulingOrders: raw.haulingOrders || undefined,
+          entitySpawns: raw.entitySpawns || undefined,
+          illegal: raw.illegal ?? undefined,
+          lawful: raw.lawful ?? undefined,
+          difficulty: raw.difficulty ?? undefined,
+          starSystem: raw.starSystem || undefined,
+          maxCrimestat: raw.maxCrimestat ?? undefined,
         })
       } catch (error) {
         logger.warn("Failed to parse mission", { missionId: raw.id, error })
@@ -1296,7 +1362,7 @@ export class GameDataImportService {
     trx: Knex.Transaction,
     versionId: string,
     mission: P4KMission,
-  ): Promise<"inserted" | "updated"> {
+  ): Promise<{ action: "inserted" | "updated"; missionId: string }> {
     // Map mission type to category
     const category = mission.type ? MISSION_TYPE_MAP[mission.type] || mission.type : "Unknown"
 
@@ -1326,6 +1392,11 @@ export class GameDataImportService {
       deadline_seconds: mission.deadline,
       has_blueprint_rewards: (mission.blueprintRewards?.length ?? 0) > 0,
       variant_count: mission.variantCount || null,
+      is_illegal: mission.illegal ?? null,
+      is_lawful: mission.lawful ?? null,
+      difficulty_from_broker: mission.difficulty ?? null,
+      star_system_derived: mission.starSystem || null,
+      max_crimestat: mission.maxCrimestat ?? null,
       data_source: "extraction",
       is_verified: false,
       updated_at: new Date(),
@@ -1337,18 +1408,16 @@ export class GameDataImportService {
       .first()
 
     if (existing) {
-      // Update existing mission
       await trx("missions")
         .where({ version_id: versionId, mission_code: mission.name })
         .update(missionRecord)
-      return "updated"
+      return { action: "updated", missionId: existing.mission_id }
     } else {
-      // Insert new mission
-      await trx("missions").insert({
+      const [row] = await trx("missions").insert({
         ...missionRecord,
         created_at: new Date(),
-      })
-      return "inserted"
+      }).returning("mission_id")
+      return { action: "inserted", missionId: row.mission_id }
     }
   }
   /**
