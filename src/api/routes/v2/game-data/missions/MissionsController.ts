@@ -432,6 +432,18 @@ export class MissionsController extends BaseController {
         estimated_rep_per_hour: missionRow.estimated_rep_per_hour || undefined,
         rank_index: missionRow.rank_index || undefined,
         reward_scope: missionRow.reward_scope || undefined,
+        min_standing: missionRow.min_standing || undefined,
+        max_standing: missionRow.max_standing || undefined,
+        can_reaccept_after_failing: missionRow.can_reaccept_after_failing ?? undefined,
+        can_reaccept_after_abandoning: missionRow.can_reaccept_after_abandoning ?? undefined,
+        abandoned_cooldown_time: missionRow.abandoned_cooldown_time || undefined,
+        personal_cooldown_time: missionRow.personal_cooldown_time || undefined,
+        deadline_seconds: missionRow.deadline_seconds || undefined,
+        available_in_prison: missionRow.available_in_prison ?? undefined,
+        is_illegal: missionRow.is_illegal ?? undefined,
+        is_lawful: missionRow.is_lawful ?? undefined,
+        max_crimestat: missionRow.max_crimestat ?? undefined,
+        difficulty_from_broker: missionRow.difficulty_from_broker || undefined,
         community_difficulty_avg: missionRow.community_difficulty_avg
           ? parseFloat(missionRow.community_difficulty_avg)
           : undefined,
@@ -604,10 +616,49 @@ export class MissionsController extends BaseController {
         total_blueprints: blueprint_rewards.reduce((sum, pool) => sum + pool.blueprints.length, 0),
       })
 
+      // ========================================================================
+      // Part 5: Get encounter data (Combat tab)
+      // ========================================================================
+      const shipEncounterRows = await knex("mission_ship_encounters")
+        .where("mission_id", mission_id)
+      const ship_encounters = shipEncounterRows.map((r: any) => ({
+        role: r.role,
+        waves: (typeof r.waves === "string" ? JSON.parse(r.waves) : r.waves || []).map((w: any) => ({
+          name: w.name,
+          ship_count: w.shipCount ?? w.ship_count ?? 0,
+        })),
+      }))
+
+      const npcEncounterRows = await knex("mission_npc_encounters")
+        .where("mission_id", mission_id)
+      const npc_encounters = npcEncounterRows.map((r: any) => ({
+        name: r.name,
+        count: r.count,
+      }))
+
+      const haulingRows = await knex("mission_hauling_orders")
+        .where("mission_id", mission_id)
+      const hauling_orders = haulingRows.map((r: any) => ({
+        resource_name: r.resource_name,
+        min_scu: parseFloat(r.min_scu),
+        max_scu: parseFloat(r.max_scu),
+      }))
+
+      const entityRows = await knex("mission_entity_spawns")
+        .where("mission_id", mission_id)
+      const entity_spawns = entityRows.map((r: any) => ({
+        name: r.name,
+        count: r.count,
+      }))
+
       return {
         mission,
         blueprint_rewards,
         prerequisite_missions,
+        ship_encounters: ship_encounters.length ? ship_encounters : undefined,
+        npc_encounters: npc_encounters.length ? npc_encounters : undefined,
+        hauling_orders: hauling_orders.length ? hauling_orders : undefined,
+        entity_spawns: entity_spawns.length ? entity_spawns : undefined,
         user_completed,
         user_rating,
       }

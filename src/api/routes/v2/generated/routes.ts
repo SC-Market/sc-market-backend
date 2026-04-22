@@ -1421,6 +1421,18 @@ const models: TsoaRoute.Models = {
             "estimated_rep_per_hour": {"dataType":"double"},
             "rank_index": {"dataType":"double"},
             "reward_scope": {"dataType":"string"},
+            "min_standing": {"dataType":"string"},
+            "max_standing": {"dataType":"string"},
+            "can_reaccept_after_failing": {"dataType":"boolean"},
+            "can_reaccept_after_abandoning": {"dataType":"boolean"},
+            "abandoned_cooldown_time": {"dataType":"double"},
+            "personal_cooldown_time": {"dataType":"double"},
+            "deadline_seconds": {"dataType":"double"},
+            "available_in_prison": {"dataType":"boolean"},
+            "is_illegal": {"dataType":"boolean"},
+            "is_lawful": {"dataType":"boolean"},
+            "max_crimestat": {"dataType":"double"},
+            "difficulty_from_broker": {"dataType":"double"},
             "community_difficulty_avg": {"dataType":"double"},
             "community_difficulty_count": {"dataType":"double","required":true},
             "community_satisfaction_avg": {"dataType":"double"},
@@ -1460,6 +1472,52 @@ const models: TsoaRoute.Models = {
         "additionalProperties": false,
     },
     // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+    "ShipWave": {
+        "dataType": "refObject",
+        "properties": {
+            "name": {"dataType":"string","required":true},
+            "ship_count": {"dataType":"double","required":true},
+        },
+        "additionalProperties": false,
+    },
+    // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+    "ShipEncounter": {
+        "dataType": "refObject",
+        "properties": {
+            "role": {"dataType":"string","required":true},
+            "waves": {"dataType":"array","array":{"dataType":"refObject","ref":"ShipWave"},"required":true},
+        },
+        "additionalProperties": false,
+    },
+    // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+    "NpcEncounter": {
+        "dataType": "refObject",
+        "properties": {
+            "name": {"dataType":"string","required":true},
+            "count": {"dataType":"double","required":true},
+        },
+        "additionalProperties": false,
+    },
+    // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+    "HaulingOrder": {
+        "dataType": "refObject",
+        "properties": {
+            "resource_name": {"dataType":"string","required":true},
+            "min_scu": {"dataType":"double","required":true},
+            "max_scu": {"dataType":"double","required":true},
+        },
+        "additionalProperties": false,
+    },
+    // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+    "EntitySpawn": {
+        "dataType": "refObject",
+        "properties": {
+            "name": {"dataType":"string","required":true},
+            "count": {"dataType":"double","required":true},
+        },
+        "additionalProperties": false,
+    },
+    // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
     "UserMissionRating": {
         "dataType": "refObject",
         "properties": {
@@ -1476,6 +1534,10 @@ const models: TsoaRoute.Models = {
             "mission": {"ref":"Mission","required":true},
             "blueprint_rewards": {"dataType":"array","array":{"dataType":"refObject","ref":"MissionRewardPool"},"required":true},
             "prerequisite_missions": {"dataType":"array","array":{"dataType":"refObject","ref":"Mission"}},
+            "ship_encounters": {"dataType":"array","array":{"dataType":"refObject","ref":"ShipEncounter"}},
+            "npc_encounters": {"dataType":"array","array":{"dataType":"refObject","ref":"NpcEncounter"}},
+            "hauling_orders": {"dataType":"array","array":{"dataType":"refObject","ref":"HaulingOrder"}},
+            "entity_spawns": {"dataType":"array","array":{"dataType":"refObject","ref":"EntitySpawn"}},
             "user_completed": {"dataType":"boolean"},
             "user_rating": {"ref":"UserMissionRating"},
         },
