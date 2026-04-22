@@ -328,6 +328,8 @@ export interface ImportStats {
   missionsInserted: number
   missionsUpdated: number
   missionsSkipped: number
+  missionsWithBlueprintRewards: number
+  missionBlueprintLinksCreated: number
   blueprintsProcessed: number
   blueprintsInserted: number
   blueprintsUpdated: number
@@ -443,6 +445,8 @@ export class GameDataImportService {
       missionsInserted: 0,
       missionsUpdated: 0,
       missionsSkipped: 0,
+      missionsWithBlueprintRewards: 0,
+      missionBlueprintLinksCreated: 0,
       blueprintsProcessed: 0,
       blueprintsInserted: 0,
       blueprintsUpdated: 0,
@@ -871,6 +875,8 @@ export class GameDataImportService {
         logger.info("Linking mission blueprint rewards")
         
         const rewardStats = await this.linkMissionRewards(knex, gameData, versionId)
+        stats.missionsWithBlueprintRewards = rewardStats.processed
+        stats.missionBlueprintLinksCreated = rewardStats.linked
         
         logger.info("Mission reward linking completed", {
           processed: rewardStats.processed,
