@@ -15,6 +15,8 @@ import {
   GameItemQualityDistribution,
   GameItemListingResult,
   GameItemMetadata,
+  SearchGameItemAggregatesResponse,
+  GameItemAggregate,
 } from "../types/game-items.types.js"
 import logger from "../../../../logger/logger.js"
 
@@ -376,6 +378,104 @@ export class GameItemsV2Controller extends BaseController {
         stack: error instanceof Error ? error.stack : undefined,
       })
 
+      throw error
+    }
+  }
+
+  /**
+   * Search game item aggregates for the bulk items page.
+   * Returns one row per game item with totals across all sellers.
+   *
+   * @summary Search game item aggregates
+   */
+  @Get("aggregates")
+  public async searchGameItemAggregates(
+    @Query() text?: string,
+    @Query() item_type?: string,
+    @Query() price_min?: number,
+    @Query() price_max?: number,
+    @Query() sort_by?: "price" | "quantity" | "name" | "seller_count",
+    @Query() sort_order?: "asc" | "desc",
+    @Query() page?: number,
+    @Query() page_size?: number,
+  ): Promise<SearchGameItemAggregatesResponse> {
+    const db = getKnex()
+    const validatedPage = Math.max(1, page || 1)
+    const validatedPageSize = Math.min(100, Math.max(1, page_size || 24))
+    const offset = (validatedPage - 1) * validatedPageSize
+
+    try {
+      let query = db("listing_search as ls")
+        .leftJoin("game_items as gi", db.raw("ls.game_item_id::text = gi.id::text"))
+        .where("ls.status", "active")
+        .whereNotNull("ls.game_item_id")
+        .groupBy("ls.game_item_id", "gi.name", "gi.type", "gi.image_url")
+        .select(
+          "ls.game_item_id",
+          db.raw("COALESCE(gi.name, ls.title) as name"),
+          db.raw("COALESCE(gi.type, ls.game_item_type, 'Other') as type"),
+          db.raw("gi.image_url"),
+          db.raw("MIN(ls.price_min) as min_price"),
+          db.raw("MAX(ls.price_max) as max_price"),
+          db.raw("SUM(ls.quantity_available) as total_quantity"),
+          db.raw("COUNT(DISTINCT ls.listing_id) as listing_count"),
+          db.raw("COUNT(DISTINCT ls.seller_id) as seller_count"),
+          db.raw("MIN(ls.quality_tier_min) as quality_tier_min"),
+          db.raw("MAX(ls.quality_tier_max) as quality_tier_max"),
+        )
+
+      if (text && text.trim()) {
+        query = query.whereRaw(
+          "ls.search_vector @@ plainto_tsquery('english', ?)",
+          [text.trim()],
+        )
+      }
+      if (item_type) {
+        query = query.where(db.raw("COALESCE(gi.type, ls.game_item_type)"), item_type)
+      }
+      if (price_min !== undefined) {
+        query = query.having(db.raw("MIN(ls.price_min)"), ">=", price_min)
+      }
+      if (price_max !== undefined) {
+        query = query.having(db.raw("MAX(ls.price_max)"), "<=", price_max)
+      }
+
+      // Count total
+      const countQuery = db.raw(
+        `SELECT COUNT(*) as count FROM (${query.toQuery()}) as sub`,
+      )
+      const [{ count: totalCount }] = (await countQuery).rows
+      const total = parseInt(String(totalCount), 10)
+
+      // Sort
+      const sortField = sort_by || "quantity"
+      const sortDir = sort_order || "desc"
+      switch (sortField) {
+        case "price": query = query.orderByRaw(`MIN(ls.price_min) ${sortDir}`); break
+        case "name": query = query.orderByRaw(`COALESCE(gi.name, ls.title) ${sortDir}`); break
+        case "seller_count": query = query.orderByRaw(`COUNT(DISTINCT ls.seller_id) ${sortDir}`); break
+        default: query = query.orderByRaw(`SUM(ls.quantity_available) ${sortDir}`); break
+      }
+
+      const rows = await query.limit(validatedPageSize).offset(offset)
+
+      const items: GameItemAggregate[] = rows.map((r: any) => ({
+        game_item_id: r.game_item_id,
+        name: r.name || "Unknown",
+        type: r.type || "Other",
+        image_url: r.image_url || undefined,
+        min_price: parseInt(r.min_price, 10) || 0,
+        max_price: parseInt(r.max_price, 10) || 0,
+        total_quantity: parseInt(r.total_quantity, 10) || 0,
+        listing_count: parseInt(r.listing_count, 10) || 0,
+        seller_count: parseInt(r.seller_count, 10) || 0,
+        quality_tier_min: r.quality_tier_min || undefined,
+        quality_tier_max: r.quality_tier_max || undefined,
+      }))
+
+      return { items, total, page: validatedPage, page_size: validatedPageSize }
+    } catch (error) {
+      logger.error("Failed to search game item aggregates", { error })
       throw error
     }
   }

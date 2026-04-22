@@ -225,40 +225,24 @@ export interface P4KMission {
   description: string | null
   missionGiver: string | null
   type: string | null
-  location: string | null
-  locationName: string | null
+  template: string | null
   career: string | null
-  lawful: boolean | null
-  reward: { uec: number; max: number } | null
-  reputationRewards: Record<string, Array<{ faction: string | null; scope: string | null; reward: string | null; amount?: number }>> | null
-  maxInstances: number | null
-  maxPlayers: number | null
+  reward: { uec: number; max?: number } | null
+  reputationRewards: Array<{ faction: string; scope: string; reward: string; amount?: number }> | null
+  blueprintRewards: Array<{ pool: string; chance: number }> | null
+  minStanding: string | null
+  maxStanding: string | null
   canBeShared: boolean | null
   notForRelease: boolean
-  // Chain info
-  requiredMissions: string[]
-  linkedMission: string | null
+  workInProgress: boolean
   onceOnly: boolean
-  // Restrictions
-  maxCrimestat: number | null
-  failIfSentToPrison: boolean
-  failIfBecameCriminal: boolean
-  // Cooldowns
-  canReacceptAfterFailing: boolean
-  canReacceptAfterAbandoning: boolean
+  canReacceptAfterFailing: boolean | null
+  canReacceptAfterAbandoning: boolean | null
   abandonedCooldownTime: number | null
   personalCooldownTime: number | null
   deadline: number | null
-  // Optional
-  missionGiverRecord?: string | null
-  blueprintRewards?: Array<{
-    blueprintId: string
-    rewardPoolId?: number
-    rewardPoolSize?: number
-    selectionCount?: number
-    dropProbability?: number
-    isGuaranteed?: boolean
-  }>
+  availableInPrison: boolean
+  variantCount?: number
 }
 
 export interface P4KBlueprint {
@@ -1249,27 +1233,24 @@ export class GameDataImportService {
           description: raw.description || null,
           missionGiver: raw.missionGiver || null,
           type: raw.type || null,
-          location: raw.location || null,
-          locationName: raw.locationName || null,
+          template: raw.template || null,
           career: raw.career || null,
-          lawful: raw.lawful ?? null,
           reward: raw.reward || null,
           reputationRewards: raw.reputationRewards || null,
-          maxInstances: raw.maxInstances ?? null,
-          maxPlayers: raw.maxPlayers ?? null,
+          blueprintRewards: raw.blueprintRewards || null,
+          minStanding: raw.minStanding || null,
+          maxStanding: raw.maxStanding || null,
           canBeShared: raw.canBeShared ?? null,
           notForRelease: raw.notForRelease || false,
-          requiredMissions: raw.requiredMissions || [],
-          linkedMission: raw.linkedMission || null,
+          workInProgress: raw.workInProgress || false,
           onceOnly: raw.onceOnly || false,
-          maxCrimestat: raw.maxCrimestat ?? null,
-          failIfSentToPrison: raw.failIfSentToPrison || false,
-          failIfBecameCriminal: raw.failIfBecameCriminal || false,
-          canReacceptAfterFailing: raw.canReacceptAfterFailing || false,
-          canReacceptAfterAbandoning: raw.canReacceptAfterAbandoning || false,
+          canReacceptAfterFailing: raw.canReacceptAfterFailing ?? null,
+          canReacceptAfterAbandoning: raw.canReacceptAfterAbandoning ?? null,
           abandonedCooldownTime: raw.abandonedCooldownTime || null,
           personalCooldownTime: raw.personalCooldownTime || null,
           deadline: raw.deadline || null,
+          availableInPrison: raw.availableInPrison || false,
+          variantCount: raw.variantCount,
         })
       } catch (error) {
         logger.warn("Failed to parse mission", { missionId: raw.id, error })
@@ -1295,13 +1276,8 @@ export class GameDataImportService {
     }
 
     // Skip missions marked as not for release
-    if (mission.notForRelease) {
+    if (mission.notForRelease || mission.workInProgress) {
       errors.push("Mission marked as not for release")
-    }
-
-    // Validate mission has some usable content
-    if (!mission.title && !mission.description) {
-      errors.push("Mission has no title or description")
     }
 
     return {
@@ -1324,14 +1300,6 @@ export class GameDataImportService {
     // Map mission type to category
     const category = mission.type ? MISSION_TYPE_MAP[mission.type] || mission.type : "Unknown"
 
-    // Determine legal status
-    let legalStatus: "LEGAL" | "ILLEGAL" | "UNKNOWN" = "UNKNOWN"
-    if (mission.lawful === true) {
-      legalStatus = "LEGAL"
-    } else if (mission.lawful === false) {
-      legalStatus = "ILLEGAL"
-    }
-
     // Build mission record
     const missionRecord = {
       version_id: versionId,
@@ -1341,24 +1309,17 @@ export class GameDataImportService {
       category,
       mission_type: mission.type,
       career_type: mission.career,
-      legal_status: legalStatus,
-      star_system: mission.locationName || mission.location,
       mission_giver_org: mission.missionGiver,
       credit_reward_min: mission.reward?.uec || null,
       credit_reward_max: mission.reward?.max || mission.reward?.uec || null,
       is_shareable: mission.canBeShared ?? false,
-      is_chain_mission: mission.requiredMissions.length > 0,
       is_unique_mission: mission.onceOnly,
-      prerequisite_missions: mission.requiredMissions.length > 0 ? JSON.stringify(mission.requiredMissions) : null,
-      linked_mission_code: mission.linkedMission,
-      max_crimestat: mission.maxCrimestat,
-      fail_if_sent_to_prison: mission.failIfSentToPrison,
-      fail_if_became_criminal: mission.failIfBecameCriminal,
-      can_reaccept_after_failing: mission.canReacceptAfterFailing,
-      can_reaccept_after_abandoning: mission.canReacceptAfterAbandoning,
+      can_reaccept_after_failing: mission.canReacceptAfterFailing ?? false,
+      can_reaccept_after_abandoning: mission.canReacceptAfterAbandoning ?? false,
       abandoned_cooldown_time: mission.abandonedCooldownTime,
       personal_cooldown_time: mission.personalCooldownTime,
       deadline_seconds: mission.deadline,
+      has_blueprint_rewards: (mission.blueprintRewards?.length ?? 0) > 0,
       data_source: "extraction",
       is_verified: false,
       updated_at: new Date(),
@@ -1888,11 +1849,11 @@ export class GameDataImportService {
 
     try {
       const missions = gameData.missions || []
-      const withPools = missions.filter((m) => (m as Record<string, unknown>).blueprintPools)
+      const withPools = missions.filter((m) => m.blueprintRewards?.length)
       stats.processed = withPools.length
 
       if (withPools.length === 0) {
-        logger.info("No missions with blueprint pools found")
+        logger.info("No missions with blueprint rewards found")
         return stats
       }
 
@@ -1911,17 +1872,17 @@ export class GameDataImportService {
             .first()
           if (!dbMission) continue
 
-          const poolNames = (mission as Record<string, unknown>).blueprintPools as string[]
-          for (const poolName of poolNames) {
+          for (const br of mission.blueprintRewards || []) {
             // Find blueprints in this pool from the blueprint_reward_pools table
             const poolEntries = await knex("blueprint_reward_pool_entries as e")
               .join("blueprint_reward_pools as p", "p.pool_id", "e.pool_id")
-              .where("p.pool_code", poolName)
+              .where("p.pool_code", br.pool)
               .where("p.version_id", versionId)
               .select("e.blueprint_id", "e.weight")
 
             for (const entry of poolEntries) {
               try {
+                const totalWeight = poolEntries.reduce((s: number, e: { weight: number }) => s + e.weight, 0)
                 await knex("mission_blueprint_rewards")
                   .insert({
                     mission_id: dbMission.mission_id,
@@ -1929,7 +1890,7 @@ export class GameDataImportService {
                     reward_pool_id: 1,
                     reward_pool_size: poolEntries.length,
                     selection_count: 1,
-                    drop_probability: (entry.weight / poolEntries.reduce((s: number, e: { weight: number }) => s + e.weight, 0)) * 100,
+                    drop_probability: (entry.weight / totalWeight) * 100 * br.chance,
                     is_guaranteed: false,
                   })
                   .onConflict(["mission_id", "blueprint_id"])
