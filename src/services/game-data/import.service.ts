@@ -1178,8 +1178,12 @@ export class GameDataImportService {
 
       logger.info(`Parsed ${missions.length} missions from game data`)
 
-      // Process missions in transaction
+      // Process missions in transaction — full replace for this version
       await knex.transaction(async (trx) => {
+        // Delete all existing missions for this version (cascades to child tables)
+        const deleted = await trx("missions").where("version_id", versionId).delete()
+        if (deleted) logger.info(`Deleted ${deleted} old missions for version ${versionId}`)
+
         for (const mission of missions) {
           try {
             // Validate mission data
