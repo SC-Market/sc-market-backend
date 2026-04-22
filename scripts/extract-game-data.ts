@@ -1138,6 +1138,15 @@ const outputData = {
   reputationAmounts,
   reputationRanks,
   refiningProcesses,
+  dismantleParams: (() => {
+    const df = path.join(RECORDS_DIR, "crafting/blueprints/dismantle/globalgenericdismantle.json")
+    if (!fs.existsSync(df)) return null
+    const d = readJson(df)._RecordValue_?.blueprint?.processSpecificData
+    return d ? {
+      efficiency: d.efficiency,
+      dismantleTimeSeconds: parseTime(d.dismantleTime),
+    } : null
+  })(),
   lootTables: lootTables.data,
   rockCompositions,
 }
