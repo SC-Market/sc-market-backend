@@ -146,3 +146,49 @@ export interface GetGameItemListingsResponse {
   /** Page size */
   page_size: number
 }
+
+// ============================================================================
+// Game Item Aggregate Search Types (for Bulk Items page)
+// ============================================================================
+
+/**
+ * A single game item aggregate — one row per game item with totals across all sellers
+ */
+export interface GameItemAggregate {
+  /** Game item UUID */
+  game_item_id: string
+  /** Game item name */
+  name: string
+  /** Game item type/category */
+  type: string
+  /** Game item image URL */
+  image_url?: string
+  /** Minimum price across all listings for this item */
+  min_price: number
+  /** Maximum price across all listings for this item */
+  max_price: number
+  /** Total quantity available across all sellers */
+  total_quantity: number
+  /** Number of active listings */
+  listing_count: number
+  /** Number of unique sellers */
+  seller_count: number
+  /** Minimum quality tier available */
+  quality_tier_min?: number
+  /** Maximum quality tier available */
+  quality_tier_max?: number
+}
+
+/**
+ * Response for game item aggregate search
+ */
+export interface SearchGameItemAggregatesResponse {
+  /** Array of game item aggregates */
+  items: GameItemAggregate[]
+  /** Total number of game items with active listings */
+  total: number
+  /** Current page */
+  page: number
+  /** Page size */
+  page_size: number
+}

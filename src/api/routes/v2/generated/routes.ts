@@ -842,6 +842,35 @@ const models: TsoaRoute.Models = {
         "additionalProperties": false,
     },
     // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+    "GameItemAggregate": {
+        "dataType": "refObject",
+        "properties": {
+            "game_item_id": {"dataType":"string","required":true},
+            "name": {"dataType":"string","required":true},
+            "type": {"dataType":"string","required":true},
+            "image_url": {"dataType":"string"},
+            "min_price": {"dataType":"double","required":true},
+            "max_price": {"dataType":"double","required":true},
+            "total_quantity": {"dataType":"double","required":true},
+            "listing_count": {"dataType":"double","required":true},
+            "seller_count": {"dataType":"double","required":true},
+            "quality_tier_min": {"dataType":"double"},
+            "quality_tier_max": {"dataType":"double"},
+        },
+        "additionalProperties": false,
+    },
+    // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+    "SearchGameItemAggregatesResponse": {
+        "dataType": "refObject",
+        "properties": {
+            "items": {"dataType":"array","array":{"dataType":"refObject","ref":"GameItemAggregate"},"required":true},
+            "total": {"dataType":"double","required":true},
+            "page": {"dataType":"double","required":true},
+            "page_size": {"dataType":"double","required":true},
+        },
+        "additionalProperties": false,
+    },
+    // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
     "Wishlist": {
         "dataType": "refObject",
         "properties": {
@@ -3181,6 +3210,43 @@ export function RegisterRoutes(app: Router) {
 
               await templateService.apiHandler({
                 methodName: 'getListings',
+                controller,
+                response,
+                next,
+                validatedArgs,
+                successStatus: undefined,
+              });
+            } catch (err) {
+                return next(err);
+            }
+        });
+        // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+        const argsGameItemsV2Controller_searchGameItemAggregates: Record<string, TsoaRoute.ParameterSchema> = {
+                text: {"in":"query","name":"text","dataType":"string"},
+                item_type: {"in":"query","name":"item_type","dataType":"string"},
+                price_min: {"in":"query","name":"price_min","dataType":"double"},
+                price_max: {"in":"query","name":"price_max","dataType":"double"},
+                sort_by: {"in":"query","name":"sort_by","dataType":"union","subSchemas":[{"dataType":"enum","enums":["price"]},{"dataType":"enum","enums":["quantity"]},{"dataType":"enum","enums":["name"]},{"dataType":"enum","enums":["seller_count"]}]},
+                sort_order: {"in":"query","name":"sort_order","dataType":"union","subSchemas":[{"dataType":"enum","enums":["asc"]},{"dataType":"enum","enums":["desc"]}]},
+                page: {"in":"query","name":"page","dataType":"double"},
+                page_size: {"in":"query","name":"page_size","dataType":"double"},
+        };
+        app.get('/game-items/aggregates',
+            ...(fetchMiddlewares<RequestHandler>(GameItemsV2Controller)),
+            ...(fetchMiddlewares<RequestHandler>(GameItemsV2Controller.prototype.searchGameItemAggregates)),
+
+            async function GameItemsV2Controller_searchGameItemAggregates(request: ExRequest, response: ExResponse, next: any) {
+
+            // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+
+            let validatedArgs: any[] = [];
+            try {
+                validatedArgs = templateService.getValidatedArgs({ args: argsGameItemsV2Controller_searchGameItemAggregates, request, response });
+
+                const controller = new GameItemsV2Controller();
+
+              await templateService.apiHandler({
+                methodName: 'searchGameItemAggregates',
                 controller,
                 response,
                 next,
