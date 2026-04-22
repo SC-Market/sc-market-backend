@@ -1213,42 +1213,40 @@ export class GameDataImportService {
               trx("mission_hauling_orders").where("mission_id", mid).delete(),
               trx("mission_entity_spawns").where("mission_id", mid).delete(),
             ])
-            if (mission.shipEncounters?.length) {
+            // Helper to deduplicate by key
+            const dedup = <T>(arr: T[] | undefined, key: keyof T): T[] => {
+              if (!arr?.length) return []
+              const seen = new Set<unknown>()
+              return arr.filter((item) => {
+                const k = item[key]
+                if (seen.has(k)) return false
+                seen.add(k)
+                return true
+              })
+            }
+            const ships = dedup(mission.shipEncounters, "role")
+            if (ships.length) {
               await trx("mission_ship_encounters").insert(
-                mission.shipEncounters.map((e) => ({
-                  mission_id: mid,
-                  role: e.role,
-                  waves: JSON.stringify(e.waves),
-                })),
-              )
+                ships.map((e) => ({ mission_id: mid, role: e.role, waves: JSON.stringify(e.waves) })),
+              ).onConflict(["mission_id", "role"]).ignore()
             }
-            if (mission.npcEncounters?.length) {
+            const npcs = dedup(mission.npcEncounters, "name")
+            if (npcs.length) {
               await trx("mission_npc_encounters").insert(
-                mission.npcEncounters.map((e) => ({
-                  mission_id: mid,
-                  name: e.name,
-                  count: e.count,
-                })),
-              )
+                npcs.map((e) => ({ mission_id: mid, name: e.name, count: e.count })),
+              ).onConflict(["mission_id", "name"]).ignore()
             }
-            if (mission.haulingOrders?.length) {
+            const hauling = dedup(mission.haulingOrders, "resource")
+            if (hauling.length) {
               await trx("mission_hauling_orders").insert(
-                mission.haulingOrders.map((e) => ({
-                  mission_id: mid,
-                  resource_name: e.resource,
-                  min_scu: e.minSCU,
-                  max_scu: e.maxSCU,
-                })),
-              )
+                hauling.map((e) => ({ mission_id: mid, resource_name: e.resource, min_scu: e.minSCU, max_scu: e.maxSCU })),
+              ).onConflict(["mission_id", "resource_name"]).ignore()
             }
-            if (mission.entitySpawns?.length) {
+            const entities = dedup(mission.entitySpawns, "name")
+            if (entities.length) {
               await trx("mission_entity_spawns").insert(
-                mission.entitySpawns.map((e) => ({
-                  mission_id: mid,
-                  name: e.name,
-                  count: e.count,
-                })),
-              )
+                entities.map((e) => ({ mission_id: mid, name: e.name, count: e.count })),
+              ).onConflict(["mission_id", "name"]).ignore()
             }
           } catch (error) {
             const errorMessage = error instanceof Error ? error.message : String(error)
