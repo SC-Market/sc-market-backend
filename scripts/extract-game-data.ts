@@ -1062,6 +1062,55 @@ for (const mission of missions) {
   mission.isWikelo = (mission.type || "").toLowerCase().includes("wikelo") || (mission.name || "").toLowerCase().includes("wikelo")
 }
 
+// --- Link missions to blueprint reward pools via contracts ---
+const contractDir = path.join(RECORDS_DIR, "contracts")
+if (fs.existsSync(contractDir)) {
+  // Build contract debugName → pool mapping
+  const contractPools = new Map<string, Set<string>>()
+  for (const f of findJsonFiles(contractDir)) {
+    try {
+      const d = readJson(f)._RecordValue_
+      for (const gen of d.generators || []) {
+        for (const contract of gen.contracts || []) {
+          const debug = (contract.debugName || "").toLowerCase()
+          const results = contract.contractResults?.contractResults || []
+          for (const cr of results) {
+            const bp = cr.blueprintPool
+            if (bp) {
+              const pool = path.basename(typeof bp === "string" ? bp : bp._RecordPath_ || "", ".json")
+              if (pool && debug) {
+                if (!contractPools.has(debug)) contractPools.set(debug, new Set())
+                contractPools.get(debug)!.add(pool)
+              }
+            }
+          }
+        }
+      }
+    } catch {}
+  }
+
+  // Match missions to contracts by name similarity
+  const poolLookup = new Map(blueprintRewardPools.map((p: { name: string }) => [p.name, p]))
+  let linked = 0
+  for (const mission of missions) {
+    const mName = mission.name.toLowerCase()
+    // Try matching contract debugNames that share significant parts with mission name
+    for (const [debug, pools] of contractPools) {
+      // Normalize both for comparison
+      const debugParts = debug.replace(/_/g, " ").split(" ").filter((p: string) => p.length > 3)
+      const mParts = mName.replace(/_/g, " ").split(" ").filter((p: string) => p.length > 3)
+      // Count matching parts
+      const matches = debugParts.filter((dp: string) => mParts.some((mp: string) => mp.includes(dp) || dp.includes(mp)))
+      if (matches.length >= 2) {
+        mission.blueprintPools = [...pools]
+        linked++
+        break
+      }
+    }
+  }
+  console.log(`  Mission→Blueprint pool links: ${linked}`)
+}
+
 fs.mkdirSync(OUTPUT_DIR, { recursive: true })
 
 const outputData = {

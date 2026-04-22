@@ -1884,116 +1884,70 @@ export class GameDataImportService {
     skipped: number
     errors: string[]
   }> {
-    const stats = {
-      processed: 0,
-      linked: 0,
-      skipped: 0,
-      errors: [] as string[],
-    }
+    const stats = { processed: 0, linked: 0, skipped: 0, errors: [] as string[] }
 
     try {
-      logger.info("Starting mission reward linking", { versionId })
-
       const missions = gameData.missions || []
-      
-      // Filter missions that have blueprint rewards
-      const missionsWithRewards = missions.filter(
-        (m: P4KMission) => m.blueprintRewards && m.blueprintRewards.length > 0
-      )
-      
-      stats.processed = missionsWithRewards.length
+      const withPools = missions.filter((m) => (m as Record<string, unknown>).blueprintPools)
+      stats.processed = withPools.length
 
-      if (missionsWithRewards.length === 0) {
-        logger.info("No missions with blueprint rewards found in game data")
+      if (withPools.length === 0) {
+        logger.info("No missions with blueprint pools found")
         return stats
       }
 
-      logger.info(`Found ${missionsWithRewards.length} missions with blueprint rewards`)
+      logger.info(`Linking ${withPools.length} missions to blueprint pools`)
 
-      // Process rewards in transaction
-      await knex.transaction(async (trx) => {
-        for (const mission of missionsWithRewards) {
-          try {
-            // Find the mission in the database
-            const dbMission = await trx("missions")
-              .where({ version_id: versionId, mission_code: mission.name })
-              .first()
+      // Clear existing links for this version
+      await knex("mission_blueprint_rewards")
+        .whereIn("mission_id", knex("missions").where("version_id", versionId).select("mission_id"))
+        .delete()
 
-            if (!dbMission) {
-              logger.warn("Mission not found in database, skipping rewards", {
-                missionCode: mission.name,
-              })
-              stats.skipped++
-              stats.errors.push(`Mission not found: ${mission.name}`)
-              continue
-            }
+      for (const mission of withPools) {
+        try {
+          const dbMission = await knex("missions")
+            .where({ version_id: versionId, mission_code: mission.name })
+            .select("mission_id")
+            .first()
+          if (!dbMission) continue
 
-            // Delete existing rewards for this mission (to handle updates)
-            await trx("mission_blueprint_rewards")
-              .where({ mission_id: dbMission.mission_id })
-              .delete()
+          const poolNames = (mission as Record<string, unknown>).blueprintPools as string[]
+          for (const poolName of poolNames) {
+            // Find blueprints in this pool from the blueprint_reward_pools table
+            const poolEntries = await knex("blueprint_reward_pool_entries as e")
+              .join("blueprint_reward_pools as p", "p.pool_id", "e.pool_id")
+              .where("p.pool_code", poolName)
+              .where("p.version_id", versionId)
+              .select("e.blueprint_id", "e.weight")
 
-            // Process each blueprint reward
-            for (const reward of mission.blueprintRewards || []) {
+            for (const entry of poolEntries) {
               try {
-                // Find the blueprint in the database
-                const dbBlueprint = await trx("blueprints")
-                  .where({ version_id: versionId, blueprint_code: reward.blueprintId })
-                  .orWhere(function() {
-                    this.where({ version_id: versionId })
-                      .whereRaw("LOWER(blueprint_name) = LOWER(?)", [reward.blueprintId])
+                await knex("mission_blueprint_rewards")
+                  .insert({
+                    mission_id: dbMission.mission_id,
+                    blueprint_id: entry.blueprint_id,
+                    reward_pool_id: 1,
+                    reward_pool_size: poolEntries.length,
+                    selection_count: 1,
+                    drop_probability: (entry.weight / poolEntries.reduce((s: number, e: { weight: number }) => s + e.weight, 0)) * 100,
+                    is_guaranteed: false,
                   })
-                  .first()
-
-                if (!dbBlueprint) {
-                  logger.warn("Blueprint not found in database, skipping reward", {
-                    missionCode: mission.name,
-                    blueprintId: reward.blueprintId,
-                  })
-                  continue
-                }
-
-                // Insert mission blueprint reward
-                await trx("mission_blueprint_rewards").insert({
-                  mission_id: dbMission.mission_id,
-                  blueprint_id: dbBlueprint.blueprint_id,
-                  reward_pool_id: reward.rewardPoolId || 1,
-                  reward_pool_size: reward.rewardPoolSize || 1,
-                  selection_count: reward.selectionCount || 1,
-                  drop_probability: reward.dropProbability || 100.0,
-                  is_guaranteed: reward.isGuaranteed ?? (reward.dropProbability === 100),
-                  created_at: new Date(),
-                })
-
+                  .onConflict(["mission_id", "blueprint_id"])
+                  .ignore()
                 stats.linked++
-              } catch (error) {
-                const errorMessage = error instanceof Error ? error.message : String(error)
-                logger.warn("Failed to link blueprint reward", {
-                  missionCode: mission.name,
-                  blueprintId: reward.blueprintId,
-                  error: errorMessage,
-                })
-              }
+              } catch {}
             }
-          } catch (error) {
-            const errorMessage = error instanceof Error ? error.message : String(error)
-            logger.error("Failed to process mission rewards", {
-              missionCode: mission.name,
-              error: errorMessage,
-            })
-            stats.errors.push(`Mission ${mission.name}: ${errorMessage}`)
-            stats.skipped++
           }
+        } catch (err) {
+          stats.skipped++
         }
-      })
+      }
 
-      logger.info("Mission reward linking completed", stats)
+      logger.info(`Linked ${stats.linked} mission→blueprint rewards`)
       return stats
     } catch (error) {
-      const errorMessage = error instanceof Error ? error.message : String(error)
-      logger.error("Mission reward linking failed", { error: errorMessage })
-      stats.errors.push(errorMessage)
-      throw error
+      stats.errors.push(error instanceof Error ? error.message : String(error))
+      return stats
     }
   }
 }
