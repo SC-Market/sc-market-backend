@@ -254,6 +254,7 @@ export interface P4KMission {
   difficulty?: number
   starSystem?: string
   maxCrimestat?: number
+  requiredScenarios?: string[]
 }
 
 export interface P4KBlueprint {
@@ -969,7 +970,7 @@ export class GameDataImportService {
         for (const m of missions) {
           const mid = missionIdByCode.get(m.name)
           if (!mid) continue
-          for (const s of (m as Record<string, unknown>).requiredScenarios as string[] || []) {
+          for (const s of m.requiredScenarios || []) {
             const eid = eventIdByCode.get(s)
             if (eid) links.push({ mission_id: mid, event_id: eid })
           }
@@ -1419,6 +1420,7 @@ export class GameDataImportService {
           difficulty: raw.difficulty ?? undefined,
           starSystem: raw.starSystem || undefined,
           maxCrimestat: raw.maxCrimestat ?? undefined,
+          requiredScenarios: raw.requiredScenarios || undefined,
         })
       } catch (error) {
         logger.warn("Failed to parse mission", { missionId: raw.id, error })
