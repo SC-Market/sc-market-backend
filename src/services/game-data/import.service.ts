@@ -268,8 +268,11 @@ export interface P4KBlueprint {
   ingredients: Array<{
     itemId: string
     quantity: number
+    quantityScu?: number
     minQuality?: number
     recommendedQuality?: number
+    slotName?: string
+    slotDisplayName?: string
   }>
   category: string | null
   subcategory: string | null
@@ -279,6 +282,12 @@ export interface P4KBlueprint {
   craftingTime: number | null
   requiredSkill: number | null
   iconUrl: string | null
+  source?: string
+  slots?: Array<{
+    type: string; name: string; displayName: string;
+    modifiers: Array<{ property: string; startQuality: number; endQuality: number; modifierAtStart: number; modifierAtEnd: number }>
+    ingredients?: P4KBlueprintSlot[]
+  }>
 }
 
 export interface P4KResource {
@@ -1815,10 +1824,7 @@ export class GameDataImportService {
 
     // Insert slot modifiers (quality curves)
     await trx("blueprint_slot_modifiers").where({ blueprint_id: blueprintId }).delete()
-    const rawSlots = (blueprint as Record<string, unknown>).slots as Array<{
-      type: string; name: string; displayName: string;
-      modifiers: Array<{ property: string; startQuality: number; endQuality: number; modifierAtStart: number; modifierAtEnd: number }>
-    }> | undefined
+    const rawSlots = blueprint.slots
     if (rawSlots) {
       for (const slot of rawSlots) {
         if (slot.type !== "slot" || !slot.modifiers?.length) continue
