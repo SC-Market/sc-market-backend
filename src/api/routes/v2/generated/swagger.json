@@ -4181,9 +4181,21 @@
 						"type": "boolean",
 						"description": "Is chain starter mission"
 					},
+					"is_chain_mission": {
+						"type": "boolean",
+						"description": "Is part of a chain"
+					},
 					"is_shareable": {
 						"type": "boolean",
 						"description": "Is shareable mission"
+					},
+					"is_unique_mission": {
+						"type": "boolean",
+						"description": "Is unique (one-time) mission"
+					},
+					"is_illegal": {
+						"type": "boolean",
+						"description": "Is illegal"
 					},
 					"reputation_reward": {
 						"type": "number",
@@ -4197,6 +4209,15 @@
 					"mission_giver_org": {
 						"type": "string",
 						"description": "Mission giver organization"
+					},
+					"associated_event": {
+						"type": "string",
+						"description": "Associated event name (e.g., \"Nyx Mission Pack\")"
+					},
+					"ship_encounter_count": {
+						"type": "number",
+						"format": "double",
+						"description": "Total ship encounter count"
 					}
 				},
 				"required": [
@@ -4205,7 +4226,10 @@
 					"category",
 					"blueprint_reward_count",
 					"is_chain_starter",
-					"is_shareable"
+					"is_chain_mission",
+					"is_shareable",
+					"is_unique_mission",
+					"ship_encounter_count"
 				],
 				"type": "object",
 				"additionalProperties": false

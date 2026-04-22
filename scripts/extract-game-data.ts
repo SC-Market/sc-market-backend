@@ -524,7 +524,7 @@ function parseBlueprints(): any[] {
 
 // Interfaces for mission metadata
 interface ShipWave { name: string; shipCount: number }
-interface ShipEncounter { role: string; waves: ShipWave[] }
+interface ShipEncounter { role: string; alignment: "hostile" | "friendly" | "neutral"; waves: ShipWave[] }
 interface NpcEncounter { name: string; count: number }
 interface HaulingOrder { resource: string; minSCU: number; maxSCU: number }
 interface EntitySpawn { name: string; count: number }
@@ -606,7 +606,14 @@ function extractPropertyOverrides(po: Record<string, unknown>): {
             waves.push({ name, shipCount: count })
           }
         }
-        if (waves.length) shipEncounters.push({ role: (sd as { Name?: string }).Name || "unknown", waves })
+        if (waves.length) {
+          const roleName = (sd as { Name?: string }).Name || "unknown"
+          const rl = roleName.toLowerCase()
+          const alignment: "hostile" | "friendly" | "neutral" =
+            /target|enemy|attacker|hostile|pirate|criminal|wave\d/i.test(rl) ? "hostile" :
+            /defend|escort|salvage|chicken|protect|friendly|allied|cargo/i.test(rl) ? "friendly" : "neutral"
+          shipEncounters.push({ role: roleName, alignment, waves })
+        }
       }
     } else if (t === "MissionPropertyValue_NPCSpawnDescriptions") {
       for (const sd of (v as { spawnDescriptions?: Array<Record<string, unknown>> }).spawnDescriptions || []) {
@@ -752,6 +759,23 @@ function parseMissions(): Record<string, unknown>[] {
           // Star system from debugName
           const starSystem = detectSystem(contract.debugName)
 
+          // Accept locations from prerequisites
+          const acceptLocations: string[] = []
+          const allPrereqs = [
+            ...(gen.defaultAvailability?.prerequisites || []),
+            ...(contract.additionalPrerequisites || []),
+          ]
+          for (const prereq of allPrereqs) {
+            if (prereq?._Type_ === "ContractPrerequisite_Location" && prereq.locationAvailable) {
+              const locName = loc(refName(prereq.locationAvailable)) || refName(prereq.locationAvailable) || ""
+              if (locName) acceptLocations.push(locName)
+            }
+            if (prereq?._Type_ === "ContractPrerequisite_Locality" && prereq.localityAvailable) {
+              const locName = refName(prereq.localityAvailable) || ""
+              if (locName) acceptLocations.push(locName)
+            }
+          }
+
           // Event/scenario requirements
           const requiredScenarios = (contract.required_active_scenarios || gen.required_active_scenarios || [])
             .filter((s: string) => s && s !== "None")
@@ -789,6 +813,7 @@ function parseMissions(): Record<string, unknown>[] {
             hideInMobiGlas,
             requiredScenarios: requiredScenarios.length ? requiredScenarios : undefined,
             starSystem,
+            acceptLocations: acceptLocations.length ? acceptLocations : undefined,
             shipEncounters: metadata?.shipEncounters.length ? metadata.shipEncounters : undefined,
             npcEncounters: metadata?.npcEncounters.length ? metadata.npcEncounters : undefined,
             haulingOrders: metadata?.haulingOrders.length ? metadata.haulingOrders : undefined,

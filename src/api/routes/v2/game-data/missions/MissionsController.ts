@@ -150,6 +150,15 @@ export class MissionsController extends BaseController {
           "m.mission_id",
           "reward_counts.mission_id",
         )
+        .leftJoin(
+          knex("mission_ship_encounters as mse")
+            .select("mission_id")
+            .select(knex.raw("SUM((SELECT SUM((w->>'shipCount')::int) FROM jsonb_array_elements(mse.waves::jsonb) w)) as total_ships"))
+            .groupBy("mission_id")
+            .as("ship_counts"),
+          "m.mission_id",
+          "ship_counts.mission_id",
+        )
         .select(
           "m.mission_id",
           "m.mission_name",
@@ -166,8 +175,15 @@ export class MissionsController extends BaseController {
           "m.community_difficulty_avg",
           "m.community_satisfaction_avg",
           "m.is_chain_starter",
+          "m.is_chain_mission",
           "m.is_shareable",
+          "m.is_unique_mission",
+          "m.is_illegal",
+          "m.reputation_reward",
+          "m.reward_scope",
+          "m.associated_event",
           knex.raw("COALESCE(reward_counts.blueprint_count, 0)::integer as blueprint_reward_count"),
+          knex.raw("COALESCE(ship_counts.total_ships, 0)::integer as ship_encounter_count"),
         )
         .where("m.version_id", effectiveVersionId)
 
@@ -332,10 +348,15 @@ export class MissionsController extends BaseController {
           ? parseFloat(row.community_satisfaction_avg)
           : undefined,
         is_chain_starter: row.is_chain_starter || false,
+        is_chain_mission: row.is_chain_mission || false,
         is_shareable: row.is_shareable || false,
+        is_unique_mission: row.is_unique_mission || false,
+        is_illegal: row.is_illegal ?? undefined,
         reputation_reward: row.reputation_reward ?? undefined,
         reward_scope: row.reward_scope || undefined,
         mission_giver_org: row.mission_giver_org || undefined,
+        associated_event: row.associated_event || undefined,
+        ship_encounter_count: row.ship_encounter_count || 0,
       }))
 
       return {
