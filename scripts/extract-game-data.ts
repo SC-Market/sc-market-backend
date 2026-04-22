@@ -1336,10 +1336,11 @@ for (const m of mergedMissions) {
   for (const ref of poolRefs) {
     const pool = poolMap.get(ref.pool)
     if (!pool) continue
+    const totalWeight = pool.rewards.reduce((s: number, r: { weight: number }) => s + r.weight, 0)
     for (const r of pool.rewards) {
       const bp = bpLookup.get(r.blueprint.toLowerCase())
       if (bp) {
-        resolved.push({ blueprintId: bp.id, blueprint: bp.name, weight: r.weight, chance: ref.chance, poolName: ref.pool })
+        resolved.push({ blueprintId: bp.id, blueprint: bp.name, weight: r.weight, totalWeight, chance: ref.chance, poolName: ref.pool })
       }
     }
   }
