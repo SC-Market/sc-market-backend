@@ -11581,6 +11581,85 @@
 				]
 			}
 		},
+		"/game-data/blueprints/{blueprint_id}/org-owners/{spectrum_id}": {
+			"get": {
+				"operationId": "GetOrgBlueprintOwners",
+				"responses": {
+					"200": {
+						"description": "Ok",
+						"content": {
+							"application/json": {
+								"schema": {
+									"properties": {
+										"members": {
+											"items": {
+												"properties": {
+													"acquisition_date": {
+														"type": "string"
+													},
+													"avatar": {
+														"type": "string"
+													},
+													"display_name": {
+														"type": "string"
+													},
+													"username": {
+														"type": "string"
+													},
+													"user_id": {
+														"type": "string"
+													}
+												},
+												"required": [
+													"display_name",
+													"username",
+													"user_id"
+												],
+												"type": "object"
+											},
+											"type": "array"
+										}
+									},
+									"required": [
+										"members"
+									],
+									"type": "object"
+								}
+							}
+						}
+					}
+				},
+				"description": "Get org members who own a specific blueprint",
+				"tags": [
+					"Game Data - Blueprints"
+				],
+				"security": [
+					{
+						"jwt": []
+					}
+				],
+				"parameters": [
+					{
+						"description": "Blueprint UUID",
+						"in": "path",
+						"name": "blueprint_id",
+						"required": true,
+						"schema": {
+							"type": "string"
+						}
+					},
+					{
+						"description": "Org spectrum ID",
+						"in": "path",
+						"name": "spectrum_id",
+						"required": true,
+						"schema": {
+							"type": "string"
+						}
+					}
+				]
+			}
+		},
 		"/debug/feature-flag": {
 			"get": {
 				"operationId": "GetFeatureFlag",

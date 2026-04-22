@@ -1206,4 +1206,44 @@ export class BlueprintsController extends BaseController {
       throw error
     }
   }
+
+  /**
+   * Get org members who own a specific blueprint
+   * @param blueprint_id Blueprint UUID
+   * @param spectrum_id Org spectrum ID
+   */
+  @Get("{blueprint_id}/org-owners/{spectrum_id}")
+  @Security("jwt")
+  public async getOrgBlueprintOwners(
+    @Path() blueprint_id: string,
+    @Path() spectrum_id: string,
+  ): Promise<{ members: { user_id: string; username: string; display_name: string; avatar?: string; acquisition_date?: string }[] }> {
+    const knex = getKnex()
+
+    const rows = await knex("user_blueprint_inventory as ubi")
+      .join("contractor_members as cm", "ubi.user_id", "cm.user_id")
+      .join("contractors as c", "cm.contractor_id", "c.contractor_id")
+      .join("accounts as a", "ubi.user_id", "a.user_id")
+      .where("ubi.blueprint_id", blueprint_id)
+      .where("c.spectrum_id", spectrum_id)
+      .where("ubi.is_owned", true)
+      .select(
+        "a.user_id",
+        "a.username",
+        "a.display_name",
+        "a.avatar",
+        "ubi.acquisition_date",
+      )
+      .orderBy("a.display_name")
+
+    return {
+      members: rows.map((r: any) => ({
+        user_id: r.user_id,
+        username: r.username,
+        display_name: r.display_name || r.username,
+        avatar: r.avatar || undefined,
+        acquisition_date: r.acquisition_date?.toISOString() || undefined,
+      })),
+    }
+  }
 }

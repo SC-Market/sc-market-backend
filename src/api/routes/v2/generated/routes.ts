@@ -4689,6 +4689,38 @@ export function RegisterRoutes(app: Router) {
             }
         });
         // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+        const argsBlueprintsController_getOrgBlueprintOwners: Record<string, TsoaRoute.ParameterSchema> = {
+                blueprint_id: {"in":"path","name":"blueprint_id","required":true,"dataType":"string"},
+                spectrum_id: {"in":"path","name":"spectrum_id","required":true,"dataType":"string"},
+        };
+        app.get('/game-data/blueprints/:blueprint_id/org-owners/:spectrum_id',
+            authenticateMiddleware([{"jwt":[]}]),
+            ...(fetchMiddlewares<RequestHandler>(BlueprintsController)),
+            ...(fetchMiddlewares<RequestHandler>(BlueprintsController.prototype.getOrgBlueprintOwners)),
+
+            async function BlueprintsController_getOrgBlueprintOwners(request: ExRequest, response: ExResponse, next: any) {
+
+            // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+
+            let validatedArgs: any[] = [];
+            try {
+                validatedArgs = templateService.getValidatedArgs({ args: argsBlueprintsController_getOrgBlueprintOwners, request, response });
+
+                const controller = new BlueprintsController();
+
+              await templateService.apiHandler({
+                methodName: 'getOrgBlueprintOwners',
+                controller,
+                response,
+                next,
+                validatedArgs,
+                successStatus: undefined,
+              });
+            } catch (err) {
+                return next(err);
+            }
+        });
+        // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
         const argsDebugV2Controller_getFeatureFlag: Record<string, TsoaRoute.ParameterSchema> = {
                 request: {"in":"request","name":"request","required":true,"dataType":"object"},
         };
