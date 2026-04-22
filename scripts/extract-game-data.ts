@@ -1332,7 +1332,7 @@ let resolvedLinks = 0
 for (const m of mergedMissions) {
   const poolRefs = m.blueprintRewards as { pool: string; chance: number }[] | undefined
   if (!poolRefs?.length) continue
-  const resolved: { blueprintId: string; blueprint: string; weight: number; chance: number; poolName: string }[] = []
+  const resolved: { blueprintId: string; blueprint: string; weight: number; totalWeight: number; chance: number; poolName: string }[] = []
   for (const ref of poolRefs) {
     const pool = poolMap.get(ref.pool)
     if (!pool) continue
