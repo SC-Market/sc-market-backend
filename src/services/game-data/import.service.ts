@@ -229,7 +229,7 @@ export interface P4KMission {
   career: string | null
   reward: { uec: number; max?: number } | null
   reputationRewards: Array<{ faction: string; scope: string; reward: string; amount?: number }> | null
-  blueprintRewards: Array<{ pool: string; chance: number }> | null
+  blueprintRewards: Array<{ pool?: string; chance: number; blueprint?: string; weight?: number; poolName?: string }> | null
   minStanding: string | null
   maxStanding: string | null
   canBeShared: boolean | null
@@ -1933,60 +1933,69 @@ export class GameDataImportService {
 
     try {
       const missions = gameData.missions || []
-      const withPools = missions.filter((m) => m.blueprintRewards?.length)
-      stats.processed = withPools.length
+      const withRewards = missions.filter((m) => m.blueprintRewards?.length)
+      stats.processed = withRewards.length
 
-      if (withPools.length === 0) {
+      if (withRewards.length === 0) {
         logger.info("No missions with blueprint rewards found")
         return stats
       }
 
-      logger.info(`Linking ${withPools.length} missions to blueprint pools`)
+      logger.info(`Linking ${withRewards.length} missions with pre-resolved blueprint rewards`)
 
       // Clear existing links for this version
       await knex("mission_blueprint_rewards")
         .whereIn("mission_id", knex("missions").where("version_id", versionId).select("mission_id"))
         .delete()
 
-      for (const mission of withPools) {
-        try {
-          const dbMission = await knex("missions")
-            .where({ version_id: versionId, mission_code: mission.name })
-            .select("mission_id")
-            .first()
-          if (!dbMission) continue
+      // Build lookup: mission_code -> mission_id
+      const missionRows = await knex("missions")
+        .where("version_id", versionId)
+        .select("mission_id", "mission_code")
+      const missionIdByCode = new Map(missionRows.map((r: { mission_id: string; mission_code: string }) => [r.mission_code, r.mission_id]))
 
-          for (const br of mission.blueprintRewards || []) {
-            // Find blueprints in this pool from the blueprint_reward_pools table
-            const poolEntries = await knex("blueprint_reward_pool_entries as e")
-              .join("blueprint_reward_pools as p", "p.pool_id", "e.pool_id")
-              .where("p.pool_code", br.pool)
-              .where("p.version_id", versionId)
-              .select("e.blueprint_id", "e.weight")
+      // Build lookup: blueprint_code (lowercase) -> blueprint_id
+      const bpRows = await knex("blueprints")
+        .where("version_id", versionId)
+        .select("blueprint_id", "blueprint_code")
+      const bpIdByCode = new Map(bpRows.map((r: { blueprint_id: string; blueprint_code: string }) => [r.blueprint_code.toLowerCase(), r.blueprint_id]))
 
-            for (const entry of poolEntries) {
-              try {
-                const totalWeight = poolEntries.reduce((s: number, e: { weight: number }) => s + e.weight, 0)
-                await knex("mission_blueprint_rewards")
-                  .insert({
-                    mission_id: dbMission.mission_id,
-                    blueprint_id: entry.blueprint_id,
-                    reward_pool_id: 1,
-                    reward_pool_size: poolEntries.length,
-                    selection_count: 1,
-                    drop_probability: (entry.weight / totalWeight) * 100 * br.chance,
-                    is_guaranteed: false,
-                  })
-                  .onConflict(["mission_id", "blueprint_id"])
-                  .ignore()
-                stats.linked++
-              } catch {}
-            }
-          }
-        } catch (err) {
-          stats.skipped++
+      // Batch insert all links
+      const rows: Array<Record<string, unknown>> = []
+      for (const mission of withRewards) {
+        const missionId = missionIdByCode.get(mission.name)
+        if (!missionId) { stats.skipped++; continue }
+
+        const seen = new Set<string>()
+        for (const br of mission.blueprintRewards || []) {
+          // Pre-resolved: br has {blueprint, weight, chance, poolName}
+          const reward = br as { blueprint?: string; weight?: number; chance?: number; poolName?: string; pool?: string }
+          const bpName = reward.blueprint
+          if (!bpName) continue
+          const bpId = bpIdByCode.get(bpName.toLowerCase())
+          if (!bpId || seen.has(bpId)) continue
+          seen.add(bpId)
+
+          rows.push({
+            mission_id: missionId,
+            blueprint_id: bpId,
+            reward_pool_id: 1,
+            reward_pool_size: 1,
+            selection_count: 1,
+            drop_probability: (reward.chance ?? 1) * 100,
+            is_guaranteed: false,
+          })
         }
       }
+
+      // Batch insert in chunks
+      for (let i = 0; i < rows.length; i += 500) {
+        await knex("mission_blueprint_rewards")
+          .insert(rows.slice(i, i + 500))
+          .onConflict(["mission_id", "blueprint_id"])
+          .ignore()
+      }
+      stats.linked = rows.length
 
       logger.info(`Linked ${stats.linked} mission→blueprint rewards`)
       return stats
