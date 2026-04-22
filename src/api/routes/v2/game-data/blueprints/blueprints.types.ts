@@ -185,6 +185,12 @@ export interface BlueprintIngredient {
   /** Alternative group ID */
   alternative_group?: number
 
+  /** Slot name for linking to slot modifiers */
+  slot_name?: string
+
+  /** Slot display name */
+  slot_display_name?: string
+
   /** Minimum market price */
   market_price_min?: number
 
