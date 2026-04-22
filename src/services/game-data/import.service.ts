@@ -1993,6 +1993,10 @@ export class GameDataImportService {
       .orWhereRaw("lower(name) = ?", [resource.name.toLowerCase()])
       .first()
 
+    if (!gameItem && resource.itemId) {
+      gameItem = await trx("game_items").where("p4k_id", resource.itemId).first()
+    }
+
     if (!gameItem) {
       // Create a new game item for this resource
       const [inserted] = await trx("game_items")
