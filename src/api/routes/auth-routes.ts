@@ -353,8 +353,7 @@ export function setupAuthRoutes(app: any, frontendUrl: URL): void {
             // redirect to login with existing method, then to /settings to link
             if (
               errorCode === CitizenIDErrorCodes.USERNAME_TAKEN ||
-              errorCode === CitizenIDErrorCodes.ALREADY_LINKED ||
-              errorCode === AuthErrorCodes.ACCOUNT_NOT_FOUND
+              errorCode === CitizenIDErrorCodes.ALREADY_LINKED
             ) {
               const backendUrl = new URL(
                 env.BACKEND_URL || "http://localhost:7000",
