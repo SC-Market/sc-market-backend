@@ -28,6 +28,7 @@ import {
   UnavailableCartItem,
 } from "../types/cart.types.js"
 import logger from "../../../../logger/logger.js"
+import { auditService } from "../../../../services/audit/audit.service.js"
 
 @Route("cart")
 @Tags("Cart V2")
@@ -473,7 +474,7 @@ export class CartV2Controller extends BaseController {
         }
 
         // TODO: Requirement 30.12 - Log cart additions to audit trail
-        // This should be implemented when audit trail system is in place
+        auditService.log({ entity_type: "cart", entity_id: cartItemId, action: "item_added", actor_id: userId, details: { listing_id: requestBody.listing_id, variant_id: requestBody.variant_id, quantity: requestBody.quantity } })
 
         return cartItemId
       })

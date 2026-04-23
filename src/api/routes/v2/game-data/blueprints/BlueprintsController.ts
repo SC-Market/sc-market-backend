@@ -268,7 +268,6 @@ export class BlueprintsController extends BaseController {
       // ========================================================================
       // Part 5: Get user ownership data (if authenticated)
       // ========================================================================
-      const user_id = (this as any).user?.user_id
       let userOwnedBlueprintIds: Set<string> = new Set()
 
       if (user_id && !user_owned_only) {
