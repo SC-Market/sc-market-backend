@@ -88,13 +88,13 @@ export class WikiController extends BaseController {
           "gi.thumbnail_path",
           "gi.display_type",
           knex.raw(`(
-            SELECT lp.url FROM listing_items li
+            SELECT COALESCE(ir.external_url, 'https://cdn.sc-market.space/' || ir.filename)
+            FROM listing_items li
             JOIN listings l ON l.listing_id = li.listing_id AND l.status = 'active'
-            JOIN listing_photos lp ON lp.listing_id = l.listing_id
-            WHERE li.game_item_id = gi.id
-              AND lp.url IS NOT NULL AND lp.url != ''
-              AND lp.url != 'https://cdn.robertsspaceindustries.com/static/images/Temp/default-image.png'
-            ORDER BY lp.created_at DESC LIMIT 1
+            JOIN listing_photos_v2 lp ON lp.listing_id = l.listing_id
+            JOIN image_resources ir ON lp.resource_id = ir.resource_id
+            WHERE li.game_item_id::text = gi.id::text
+            ORDER BY lp.display_order ASC LIMIT 1
           ) as listing_photo`),
         )
 
