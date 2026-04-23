@@ -1,18 +1,22 @@
 import type { Knex } from "knex"
 
 export async function up(knex: Knex): Promise<void> {
-  await knex.schema.alterTable("missions", (table) => {
-    table.jsonb("destinations").nullable()
-    table.jsonb("item_rewards").nullable()
-    table.jsonb("token_substitutions").nullable()
-    table.float("time_to_complete").nullable()
-    table.integer("max_players_per_instance").nullable()
-    table.boolean("is_intro").defaultTo(false)
-    table.jsonb("linked_intros").nullable()
-    table.integer("buy_in").nullable()
-    table.integer("reputation_reward").nullable()
-    table.string("reward_scope", 200).nullable()
-  })
+  // Use raw SQL with IF NOT EXISTS to handle columns that may already exist
+  const cols = [
+    ["destinations", "jsonb"],
+    ["item_rewards", "jsonb"],
+    ["token_substitutions", "jsonb"],
+    ["time_to_complete", "real"],
+    ["max_players_per_instance", "integer"],
+    ["is_intro", "boolean DEFAULT false"],
+    ["linked_intros", "jsonb"],
+    ["buy_in", "integer"],
+    ["reputation_reward", "integer"],
+    ["reward_scope", "varchar(200)"],
+  ]
+  for (const [col, type] of cols) {
+    await knex.raw(`ALTER TABLE missions ADD COLUMN IF NOT EXISTS ${col} ${type}`)
+  }
 }
 
 export async function down(knex: Knex): Promise<void> {
