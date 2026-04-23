@@ -68,6 +68,15 @@ export interface BlueprintSearchResult {
   /** Item category */
   item_category?: string
 
+  /** Item subcategory */
+  item_subcategory?: string
+
+  /** Manufacturer name */
+  manufacturer?: string
+
+  /** Blueprint source (default, mission_reward) */
+  source?: string
+
   /** Rarity */
   rarity?: string
 
@@ -90,6 +99,9 @@ export interface BlueprintSearchResult {
 
   /** Crafting time in seconds */
   crafting_time_seconds?: number
+
+  /** Distinct modifier property names (e.g. ["damagemitigation", "mintemp"]) */
+  modifier_properties?: string[]
 
   /** Does user own this blueprint */
   user_owns?: boolean

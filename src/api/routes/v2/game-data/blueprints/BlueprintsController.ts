@@ -66,6 +66,12 @@ export class BlueprintsController extends BaseController {
     @Query() crafting_station_type?: string,
     @Query() output_game_item_id?: string,
     @Query() user_owned_only?: boolean,
+    /** Filter by blueprint source (default, mission_reward) */
+    @Query() source?: string,
+    /** Filter by manufacturer name */
+    @Query() manufacturer?: string,
+    /** Filter by ingredient material name */
+    @Query() ingredient_name?: string,
     @Query() version_id?: string,
     @Query() page: number = 1,
     @Query() page_size: number = 20,
@@ -141,12 +147,16 @@ export class BlueprintsController extends BaseController {
           "b.blueprint_name",
           "gi.name as output_item_name",
           "gi.image_url as output_item_icon",
+          "gi.manufacturer",
           "b.item_category",
+          "b.item_subcategory",
           "b.rarity",
           "b.tier",
+          "b.source",
           "b.crafting_time_seconds",
           knex.raw("COALESCE(ingredient_counts.ingredient_count, 0)::integer as ingredient_count"),
           knex.raw("COALESCE(mission_counts.mission_count, 0)::integer as mission_count"),
+          knex.raw(`(SELECT array_agg(DISTINCT bsm.property) FROM blueprint_slot_modifiers bsm WHERE bsm.blueprint_id = b.blueprint_id) as modifier_properties`),
         )
         .where("b.version_id", effectiveVersionId)
         .where("b.is_active", true)
@@ -191,6 +201,26 @@ export class BlueprintsController extends BaseController {
       // Apply output game item filter
       if (output_game_item_id) {
         blueprintsQuery = blueprintsQuery.where("b.output_game_item_id", output_game_item_id)
+      }
+
+      // Apply source filter
+      if (source) {
+        blueprintsQuery = blueprintsQuery.where("b.source", source)
+      }
+
+      // Apply manufacturer filter
+      if (manufacturer) {
+        blueprintsQuery = blueprintsQuery.where("gi.manufacturer", manufacturer)
+      }
+
+      // Apply ingredient material filter
+      if (ingredient_name) {
+        blueprintsQuery = blueprintsQuery.whereExists(
+          knex("blueprint_ingredients as bi_filter")
+            .join("game_items as gi_filter", "bi_filter.game_item_id", "gi_filter.id")
+            .whereRaw("bi_filter.blueprint_id = b.blueprint_id")
+            .where("gi_filter.name", "ilike", `%${ingredient_name}%`),
+        )
       }
 
       // Apply user ownership filter (if user_owned_only is true)
@@ -286,13 +316,17 @@ export class BlueprintsController extends BaseController {
         blueprint_name: row.blueprint_name,
         output_item_name: row.output_item_name,
         output_item_icon: row.output_item_icon || undefined,
+        manufacturer: row.manufacturer || undefined,
         item_category: row.item_category || undefined,
+        item_subcategory: row.item_subcategory || undefined,
         rarity: row.rarity || undefined,
         tier: row.tier || undefined,
+        source: row.source || undefined,
         ingredient_count: row.ingredient_count || 0,
         ingredients: ingredientsByBp.get(row.blueprint_id) || [],
         mission_count: row.mission_count || 0,
         crafting_time_seconds: row.crafting_time_seconds || undefined,
+        modifier_properties: row.modifier_properties || undefined,
         user_owns: user_id
           ? user_owned_only
             ? true

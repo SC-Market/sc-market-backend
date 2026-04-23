@@ -5842,6 +5842,18 @@
 						"type": "string",
 						"description": "Item category"
 					},
+					"item_subcategory": {
+						"type": "string",
+						"description": "Item subcategory"
+					},
+					"manufacturer": {
+						"type": "string",
+						"description": "Manufacturer name"
+					},
+					"source": {
+						"type": "string",
+						"description": "Blueprint source (default, mission_reward)"
+					},
 					"rarity": {
 						"type": "string",
 						"description": "Rarity"
@@ -5891,6 +5903,13 @@
 						"type": "number",
 						"format": "double",
 						"description": "Crafting time in seconds"
+					},
+					"modifier_properties": {
+						"items": {
+							"type": "string"
+						},
+						"type": "array",
+						"description": "Distinct modifier property names (e.g. [\"damagemitigation\", \"mintemp\"])"
 					},
 					"user_owns": {
 						"type": "boolean",
@@ -11504,6 +11523,33 @@
 						"required": false,
 						"schema": {
 							"type": "boolean"
+						}
+					},
+					{
+						"description": "Filter by blueprint source (default, mission_reward)",
+						"in": "query",
+						"name": "source",
+						"required": false,
+						"schema": {
+							"type": "string"
+						}
+					},
+					{
+						"description": "Filter by manufacturer name",
+						"in": "query",
+						"name": "manufacturer",
+						"required": false,
+						"schema": {
+							"type": "string"
+						}
+					},
+					{
+						"description": "Filter by ingredient material name",
+						"in": "query",
+						"name": "ingredient_name",
+						"required": false,
+						"schema": {
+							"type": "string"
 						}
 					},
 					{
