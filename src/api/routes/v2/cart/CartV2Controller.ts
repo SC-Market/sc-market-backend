@@ -678,7 +678,7 @@ export class CartV2Controller extends BaseController {
         })
 
         // TODO: Requirement 31.11 - Log cart modifications to audit trail
-        auditService.log({ entity_type: "cart", entity_id: cartItemId, action: "item_updated", actor_id: userId })
+        auditService.log({ entity_type: "cart", entity_id: cartItem.cart_item_id, action: "item_updated", actor_id: userId })
       })
 
       logger.info("Cart item updated successfully", {
@@ -1049,6 +1049,8 @@ export class CartV2Controller extends BaseController {
         sessionId: session.id,
         offerId: offer.id,
       })
+
+      auditService.log({ entity_type: "offer", entity_id: session.id, action: "checkout", actor_id: userId, details: { offer_id: offer.id, item_count: validatedItems.length, total_price: totalPrice } })
 
       return {
         result: "Success",

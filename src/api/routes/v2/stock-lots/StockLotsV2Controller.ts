@@ -25,6 +25,7 @@ import {
   BulkUpdateResult,
 } from "../types/stock-lots.types.js"
 import logger from "../../../../logger/logger.js"
+import { auditService } from "../../../../services/audit/audit.service.js"
 
 @Route("stock-lots")
 @Tags("Stock Lots V2")
@@ -455,6 +456,7 @@ export class StockLotsV2Controller extends BaseController {
         }
 
         // TODO: Log modifications to audit trail (Requirement 20.9)
+        auditService.log({ entity_type: "stock_lot", entity_id: id, action: "updated", actor_id: userId })
       })
 
       logger.info("Stock lot updated successfully", {
@@ -710,6 +712,7 @@ export class StockLotsV2Controller extends BaseController {
         // and variant_count in listing_items table (Requirement 22.10)
 
         // TODO: Log bulk operations to audit trail (Requirement 22.9)
+        auditService.logBatch(requestBody.updates.map((u) => ({ entity_type: "stock_lot" as const, entity_id: u.lot_id, action: "bulk_updated", actor_id: userId })))
       })
 
       logger.info("Bulk update completed", {

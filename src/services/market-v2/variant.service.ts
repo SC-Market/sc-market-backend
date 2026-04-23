@@ -114,7 +114,7 @@ export function generateVariantDisplayName(attributes: VariantAttributes): strin
     const sourceCapitalized =
       attributes.crafted_source.charAt(0).toUpperCase() +
       attributes.crafted_source.slice(1)
-    parts.push(`- ${sourceCapitalized}`)
+    parts.push(parts.length ? `- ${sourceCapitalized}` : sourceCapitalized)
   }
 
   if (attributes.blueprint_tier) {
