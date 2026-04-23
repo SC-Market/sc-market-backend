@@ -83,6 +83,9 @@ export interface MissionSearchResult {
   /** Mission UUID */
   mission_id: string
 
+  /** Mission code (internal name for URL-friendly links) */
+  mission_code: string
+
   /** Mission name */
   mission_name: string
 

@@ -148,6 +148,7 @@ export class BlueprintsController extends BaseController {
         )
         .select(
           "b.blueprint_id",
+          "b.blueprint_code",
           "b.blueprint_name",
           "gi.name as output_item_name",
           "gi.image_url as output_item_icon",
@@ -314,6 +315,7 @@ export class BlueprintsController extends BaseController {
 
       const blueprints: BlueprintSearchResult[] = blueprintsResults.map((row: any) => ({
         blueprint_id: row.blueprint_id,
+        blueprint_code: row.blueprint_code,
         blueprint_name: row.blueprint_name,
         output_item_name: row.output_item_name,
         output_item_icon: row.output_item_icon || undefined,
@@ -383,9 +385,17 @@ export class BlueprintsController extends BaseController {
     const user_id = this.tryGetUserId()
     const knex = getKnex()
 
-    if (!blueprint_id || !/^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(blueprint_id)) {
+    // Accept both UUID and blueprint_code
+    const isUuid = /^[0-9a-f]{8}-[0-9a-f]{4}-/i.test(blueprint_id || "")
+    if (blueprint_id && !isUuid) {
+      const row = await knex("blueprints").where("blueprint_code", blueprint_id).first("blueprint_id")
+      if (!row) this.throwNotFound("Blueprint", blueprint_id)
+      blueprint_id = row.blueprint_id
+    }
+
+    if (!blueprint_id) {
       this.throwValidationError("Invalid blueprint_id", [
-        { field: "blueprint_id", message: "Blueprint ID must be a valid UUID" },
+        { field: "blueprint_id", message: "Blueprint ID is required" },
       ])
     }
 
@@ -628,6 +638,26 @@ export class BlueprintsController extends BaseController {
    * Get missions that reward this blueprint
    *
    * Returns all missions that can reward the specified blueprint,
+  /**
+   * Get blueprint detail by blueprint_code (string identifier)
+   * @summary Get blueprint by code
+   * @param blueprint_code The blueprint code string
+   */
+  @Get("by-code/{blueprint_code}")
+  public async getBlueprintDetailByCode(
+    @Path() blueprint_code: string,
+    @Request() request?: ExpressRequest,
+  ): Promise<BlueprintDetailResponse> {
+    if (request) this.request = request
+    const knex = getKnex()
+    const row = await knex("blueprints").where("blueprint_code", blueprint_code).first("blueprint_id")
+    if (!row) this.throwNotFound("Blueprint", blueprint_code)
+    return this.getBlueprintDetail(row.blueprint_id, request)
+  }
+
+  /**
+   * Get missions that reward a specific blueprint
+   *
    * including drop probabilities and mission locations.
    *
    * @summary Get blueprint missions

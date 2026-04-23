@@ -167,6 +167,7 @@ export class MissionsController extends BaseController {
         )
         .select(
           "m.mission_id",
+          "m.mission_code",
           "m.mission_name",
           "m.category",
           "m.career_type",
@@ -356,6 +357,7 @@ export class MissionsController extends BaseController {
       // Transform results
       const missions: MissionSearchResult[] = missionsResults.map((row: any) => ({
         mission_id: row.mission_id,
+        mission_code: row.mission_code,
         mission_name: row.mission_name,
         category: row.category,
         career_type: row.career_type || undefined,
@@ -429,6 +431,14 @@ export class MissionsController extends BaseController {
     if (request) this.request = request
     const user_id = this.tryGetUserId()
     const knex = getKnex()
+
+    // Accept both UUID and mission_code
+    const isUuid = /^[0-9a-f]{8}-[0-9a-f]{4}-/i.test(mission_id || "")
+    if (mission_id && !isUuid) {
+      const row = await knex("missions").where("mission_code", mission_id).first("mission_id")
+      if (!row) this.throwNotFound("Mission", mission_id)
+      mission_id = row.mission_id
+    }
 
     if (!mission_id) {
       this.throwValidationError("mission_id is required", [

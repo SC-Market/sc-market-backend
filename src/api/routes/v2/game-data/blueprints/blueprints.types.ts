@@ -56,6 +56,9 @@ export interface BlueprintSearchResult {
   /** Blueprint UUID */
   blueprint_id: string
 
+  /** Blueprint code (internal name for URL-friendly links) */
+  blueprint_code: string
+
   /** Blueprint name */
   blueprint_name: string
 
