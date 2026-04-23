@@ -542,6 +542,8 @@ const models: TsoaRoute.Models = {
             "quantity_available": {"dataType":"double","required":true},
             "quality_tier_min": {"dataType":"double"},
             "quality_tier_max": {"dataType":"double"},
+            "quality_value_min": {"dataType":"double"},
+            "quality_value_max": {"dataType":"double"},
             "variant_count": {"dataType":"double","required":true},
             "seller_type": {"dataType":"union","subSchemas":[{"dataType":"enum","enums":["user"]},{"dataType":"enum","enums":["contractor"]}],"required":true},
             "seller_slug": {"dataType":"string","required":true},

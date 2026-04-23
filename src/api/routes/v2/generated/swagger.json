@@ -1579,6 +1579,16 @@
 						"format": "double",
 						"description": "Maximum quality tier available (1-5)"
 					},
+					"quality_value_min": {
+						"type": "number",
+						"format": "double",
+						"description": "Minimum quality value available (0-1000)"
+					},
+					"quality_value_max": {
+						"type": "number",
+						"format": "double",
+						"description": "Maximum quality value available (0-1000)"
+					},
 					"variant_count": {
 						"type": "number",
 						"format": "double",
