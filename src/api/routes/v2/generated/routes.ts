@@ -2044,7 +2044,9 @@ const models: TsoaRoute.Models = {
     "SetFeatureFlagRequest": {
         "dataType": "refObject",
         "properties": {
-            "market_version": {"ref":"MarketVersion","required":true},
+            "market_version": {"ref":"MarketVersion"},
+            "flag_name": {"dataType":"string"},
+            "enabled": {"dataType":"boolean"},
         },
         "additionalProperties": false,
     },

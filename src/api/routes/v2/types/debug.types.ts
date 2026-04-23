@@ -37,8 +37,12 @@ export interface GetFeatureFlagResponse {
  * Restricted to users with admin role.
  */
 export interface SetFeatureFlagRequest {
-  /** Market version to set (V1 or V2) */
-  market_version: MarketVersion
+  /** Market version to set (V1 or V2) — backward compat for market_v2 */
+  market_version?: MarketVersion
+  /** Flag name to set (e.g. "market_v2", "crafting", "wiki") */
+  flag_name?: string
+  /** Whether to enable or disable the flag */
+  enabled?: boolean
 }
 
 /**

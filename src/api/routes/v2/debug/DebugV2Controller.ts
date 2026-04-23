@@ -124,18 +124,20 @@ export class DebugV2Controller extends BaseController {
     })
 
     try {
-      await featureFlagService.setMarketVersion(userId, request.market_version)
-
-      logger.info("Feature flag set successfully", {
-        userId,
-        marketVersion: request.market_version,
-      })
-
-      return {
-        user_id: userId,
-        market_version: request.market_version,
-        message: `Market version set to ${request.market_version}`,
+      // Handle generic flag_name + enabled
+      if (request.flag_name && request.enabled !== undefined) {
+        await featureFlagService.setFlagOverride(userId, request.flag_name, request.enabled)
+        const mv = await featureFlagService.getMarketVersion(userId)
+        return { user_id: userId, market_version: mv, message: `Set ${request.flag_name}=${request.enabled}` }
       }
+
+      // Backward compat: market_version field
+      if (request.market_version) {
+        await featureFlagService.setMarketVersion(userId, request.market_version)
+        return { user_id: userId, market_version: request.market_version, message: `Market version set to ${request.market_version}` }
+      }
+
+      return { user_id: userId, market_version: await featureFlagService.getMarketVersion(userId), message: "No changes" }
     } catch (error) {
       logger.error("Failed to set feature flag", {
         userId,
