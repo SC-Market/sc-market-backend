@@ -10,6 +10,7 @@
 import { Controller, Get, Post, Route, Tags, Body, Request, Security } from "tsoa"
 import { Request as ExpressRequest } from "express"
 import { BaseController } from "../base/BaseController.js"
+import { getKnex } from "../../../../clients/database/knex-db.js"
 import { featureFlagService } from "../../../../services/market-v2/feature-flag.service.js"
 import {
   GetFeatureFlagResponse,
@@ -69,7 +70,7 @@ export class DebugV2Controller extends BaseController {
       })
 
       // Check if user has a manual override
-      const db = (await import("../../../../clients/database/knex-db.js")).getKnex()
+      const db = getKnex()
       const override = await db("user_preferences").where({ user_id: userId }).first()
       const hasOverride = !!override
 
@@ -111,11 +112,16 @@ export class DebugV2Controller extends BaseController {
   ): Promise<SetFeatureFlagResponse> {
     this.request = expressRequest
     this.requireAuth()
-    // In production, require admin role. In dev mode, any authenticated user can switch.
-    if (process.env.NODE_ENV !== "development") {
-      this.requireAdmin()
-    }
     const userId = this.getUserId()
+
+    // Allow switching if: dev mode, admin, or user has an existing override
+    if (process.env.NODE_ENV !== "development" && !this.isAdmin()) {
+      const db = getKnex()
+      const override = await db("user_preferences").where({ user_id: userId }).first()
+      if (!override) {
+        this.throwForbidden("Only admin or override users can switch versions")
+      }
+    }
 
     logger.info("Setting feature flag", {
       userId,
