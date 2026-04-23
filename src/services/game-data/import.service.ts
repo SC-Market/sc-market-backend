@@ -1722,6 +1722,8 @@ export class GameDataImportService {
           craftingTime: raw.craftTimeSeconds || null,
           requiredSkill: null,
           iconUrl: null,
+          source: raw.source || undefined,
+          slots: raw.slots || undefined,
         })
       } catch (error) {
         logger.warn("Failed to parse blueprint", { blueprintId: raw.id, error })
