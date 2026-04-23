@@ -86,6 +86,10 @@ export class MissionsController extends BaseController {
     @Query() credit_reward_min?: number,
     @Query() community_difficulty_min?: number,
     @Query() community_satisfaction_min?: number,
+    /** Filter by event code (show only missions for this event) */
+    @Query() event_code?: string,
+    /** Exclude event-only missions (default: true — hides seasonal missions) */
+    @Query() exclude_events?: boolean,
     @Query() version_id?: string,
     @Query() page: number = 1,
     @Query() page_size: number = 20,
@@ -257,6 +261,21 @@ export class MissionsController extends BaseController {
       // Apply event filter (Requirement 41.7)
       if (associated_event) {
         missionsQuery = missionsQuery.where("m.associated_event", associated_event)
+      }
+
+      // Filter by specific event or exclude event-only missions
+      if (event_code) {
+        missionsQuery = missionsQuery.whereExists(
+          knex("mission_events as me")
+            .join("game_events as ge", "me.event_id", "ge.event_id")
+            .whereRaw("me.mission_id = m.mission_id")
+            .where("ge.event_code", event_code),
+        )
+      } else if (exclude_events !== false) {
+        // Default: exclude missions that require events
+        missionsQuery = missionsQuery.whereNotExists(
+          knex("mission_events as me").whereRaw("me.mission_id = m.mission_id"),
+        )
       }
 
       // Apply chain starter filter
