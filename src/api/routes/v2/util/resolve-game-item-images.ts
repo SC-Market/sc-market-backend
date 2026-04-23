@@ -25,15 +25,13 @@ export async function resolveGameItemImages(
   const rows = await db.raw(`
     SELECT DISTINCT ON (li.game_item_id)
       li.game_item_id,
-      lp.url
+      COALESCE(ir.external_url, 'https://cdn.sc-market.space/' || ir.filename) as url
     FROM listing_items li
     JOIN listings l ON l.listing_id = li.listing_id AND l.status = 'active'
-    JOIN listing_photos lp ON lp.listing_id = l.listing_id
+    JOIN listing_photos_v2 lp ON lp.listing_id = l.listing_id
+    JOIN image_resources ir ON lp.resource_id = ir.resource_id
     WHERE li.game_item_id = ANY(?)
-      AND lp.url IS NOT NULL
-      AND lp.url != ''
-      AND lp.url != 'https://cdn.robertsspaceindustries.com/static/images/Temp/default-image.png'
-    ORDER BY li.game_item_id, lp.created_at DESC
+    ORDER BY li.game_item_id, lp.display_order ASC
   `, [gameItemIds])
 
   const result = new Map<string, string>()
