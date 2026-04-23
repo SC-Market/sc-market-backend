@@ -367,8 +367,10 @@ export class BuyOrdersV2Controller extends BaseController {
       quantity: body.quantity,
       price_min: body.price_per_unit,
       price_max: body.price_per_unit,
-      quality_tier_min: body.quality_tier_min || 1,
-      quality_tier_max: body.quality_tier_max || 5,
+      quality_tier_min: body.quality_tier_min || null,
+      quality_tier_max: body.quality_tier_max || null,
+      quality_value_min: body.quality_value_min ?? null,
+      quality_value_max: body.quality_value_max ?? null,
       status: 'active',
       expires_at: expiresAt,
     }).returning('*');
@@ -384,6 +386,11 @@ export class BuyOrdersV2Controller extends BaseController {
     @Query() game_item_id?: string,
     @Query() quality_tier_min?: number,
     @Query() quality_tier_max?: number,
+    @Query() quality_value_min?: number,
+    @Query() quality_value_max?: number,
+    /** Sort by: created_at, price_per_unit, quality_tier_min, quality_value_min */
+    @Query() sort_by?: string,
+    @Query() sort_order?: 'asc' | 'desc',
     @Query() page?: number,
     @Query() page_size?: number,
   ): Promise<SearchBuyOrdersResponse> {
@@ -399,13 +406,24 @@ export class BuyOrdersV2Controller extends BaseController {
     if (game_item_id) query = query.where('bo.game_item_id', game_item_id);
     if (quality_tier_min) query = query.where('bo.quality_tier_max', '>=', quality_tier_min);
     if (quality_tier_max) query = query.where('bo.quality_tier_min', '<=', quality_tier_max);
+    if (quality_value_min) query = query.where('bo.quality_value_max', '>=', quality_value_min);
+    if (quality_value_max) query = query.where('bo.quality_value_min', '<=', quality_value_max);
 
     const [{ count }] = await query.clone().clearSelect().clearOrder().count('* as count');
     const total = parseInt(String(count), 10);
 
+    const validSorts: Record<string, string> = {
+      created_at: 'bo.created_at',
+      price_per_unit: 'bo.price_max',
+      quality_tier_min: 'bo.quality_tier_min',
+      quality_value_min: 'bo.quality_value_min',
+    };
+    const orderCol = validSorts[sort_by || ''] || 'bo.created_at';
+    const orderDir = sort_order === 'asc' ? 'asc' : 'desc';
+
     const results = await query
-      .select('bo.*', 'u.username as buyer_name', 'gi.name as game_item_name')
-      .orderBy('bo.created_at', 'desc')
+      .select('bo.*', 'u.username as buyer_name', 'gi.name as game_item_name', 'gi.type as game_item_type')
+      .orderBy(orderCol, orderDir)
       .limit(ps).offset((p - 1) * ps);
 
     return {
@@ -483,6 +501,8 @@ export class BuyOrdersV2Controller extends BaseController {
     }
     if (body.quality_tier_min !== undefined) updates.quality_tier_min = body.quality_tier_min;
     if (body.quality_tier_max !== undefined) updates.quality_tier_max = body.quality_tier_max;
+    if (body.quality_value_min !== undefined) updates.quality_value_min = body.quality_value_min;
+    if (body.quality_value_max !== undefined) updates.quality_value_max = body.quality_value_max;
     if (body.expires_in_days !== undefined) {
       updates.expires_at = new Date(Date.now() + body.expires_in_days * 86400000);
     }
@@ -680,6 +700,9 @@ export class BuyOrdersV2Controller extends BaseController {
       price_per_unit: parseFloat(r.price_max) || 0,
       quality_tier_min: r.quality_tier_min || undefined,
       quality_tier_max: r.quality_tier_max || undefined,
+      quality_value_min: r.quality_value_min ?? undefined,
+      quality_value_max: r.quality_value_max ?? undefined,
+      game_item_type: r.game_item_type || undefined,
       negotiable: r.negotiable || false,
       status: r.status,
       created_at: r.created_at?.toISOString?.() || r.created_at,

@@ -24,6 +24,7 @@ import {
   GetMyListingsResponse,
 } from "../types/listings.types.js"
 import logger from "../../../../logger/logger.js"
+import { auditService } from "../../../../services/audit/audit.service.js"
 
 /**
  * Response for creating a listing

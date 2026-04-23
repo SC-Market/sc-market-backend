@@ -76,6 +76,10 @@ export interface CreateStandingBuyOrderRequest {
   price_per_unit: number;
   quality_tier_min?: number;
   quality_tier_max?: number;
+  /** Minimum quality value (0-1000) for resource buy orders */
+  quality_value_min?: number;
+  /** Maximum quality value (0-1000) for resource buy orders */
+  quality_value_max?: number;
   negotiable?: boolean;
   expires_in_days?: number;
 }
@@ -84,12 +88,18 @@ export interface StandingBuyOrder {
   buy_order_id: string;
   game_item_id: string;
   game_item_name: string;
+  /** Game item type for quality mode determination */
+  game_item_type?: string;
   buyer_id: string;
   buyer_name: string;
   quantity: number;
   price_per_unit: number;
   quality_tier_min?: number;
   quality_tier_max?: number;
+  /** Minimum quality value (0-1000) */
+  quality_value_min?: number;
+  /** Maximum quality value (0-1000) */
+  quality_value_max?: number;
   negotiable: boolean;
   status: 'active' | 'fulfilled' | 'cancelled' | 'expired';
   created_at: string;
@@ -108,6 +118,8 @@ export interface UpdateStandingBuyOrderRequest {
   price_per_unit?: number;
   quality_tier_min?: number;
   quality_tier_max?: number;
+  quality_value_min?: number;
+  quality_value_max?: number;
   negotiable?: boolean;
   expires_in_days?: number;
 }
