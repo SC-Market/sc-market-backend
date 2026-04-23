@@ -7,7 +7,8 @@
  * Requirements: 19.1-19.6, 30.1-30.6, 43.1-43.10, 44.1-44.10, 50.1-50.10
  */
 
-import { Controller, Get, Post, Delete, Route, Tags, Query, Path, Body, Security } from "tsoa"
+import { Controller, Get, Post, Delete, Route, Tags, Query, Path, Body, Security, Request } from "tsoa"
+import { Request as ExpressRequest } from "express"
 import { BaseController } from "../../base/BaseController.js"
 import { getKnex } from "../../../../../clients/database/knex-db.js"
 import {
@@ -370,14 +371,16 @@ export class BlueprintsController extends BaseController {
    *
    * @summary Get blueprint details
    * @param blueprint_id Blueprint UUID
-   * @param user_id Optional user ID for user-specific data
+   * @param request Express request for optional JWT auth
    * @returns Complete blueprint details with ingredients and missions
    */
   @Get("{blueprint_id}")
   public async getBlueprintDetail(
     @Path() blueprint_id: string,
-    @Query() user_id?: string,
+    @Request() request?: ExpressRequest,
   ): Promise<BlueprintDetailResponse> {
+    if (request) this.request = request
+    const user_id = this.tryGetUserId()
     const knex = getKnex()
 
     if (!blueprint_id || !/^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(blueprint_id)) {

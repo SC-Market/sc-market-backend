@@ -4,12 +4,14 @@
  * Read-only V2 serialization of V1 offer sessions.
  * Offers still live in V1 tables — this controller provides a cleaner
  * response shape with V2 variant data from offer_market_items_v2.
+ * No raw user_id or contractor_id exposed — uses usernames and spectrum_ids.
  */
 
 import { Get, Route, Tags, Request, Path, Query, Security } from "tsoa"
 import { Request as ExpressRequest } from "express"
 import { BaseController } from "../base/BaseController.js"
 import { getKnex } from "../../../../clients/database/knex-db.js"
+import { cdn } from "../../../../clients/cdn/cdn.js"
 import {
   OfferSessionV2,
   OfferV2,
@@ -116,23 +118,46 @@ export class OffersV2Controller extends BaseController {
     const knex = getKnex()
 
     // Customer
-    const customer = await knex("accounts")
+    const customerRow = await knex("accounts")
       .where({ user_id: session.customer_id })
-      .select("user_id", "username", "display_name", "avatar")
+      .select("username", "display_name", "avatar")
       .first()
+    const customer = {
+      username: customerRow?.username || "Unknown",
+      display_name: customerRow?.display_name,
+      avatar: customerRow?.avatar ? await cdn.getFileLinkResource(customerRow.avatar) : null,
+    }
 
-    // Seller (user or contractor)
-    let seller: any = null
-    if (session.contractor_id) {
-      seller = await knex("contractors")
-        .where({ contractor_id: session.contractor_id })
-        .select("contractor_id", "spectrum_id", "name", "avatar")
-        .first()
-    } else if (session.assigned_id) {
-      seller = await knex("accounts")
+    // Assigned user
+    let assigned_to: { username: string; display_name?: string; avatar?: string | null } | null = null
+    if (session.assigned_id) {
+      const row = await knex("accounts")
         .where({ user_id: session.assigned_id })
-        .select("user_id", "username", "display_name", "avatar")
+        .select("username", "display_name", "avatar")
         .first()
+      if (row) {
+        assigned_to = {
+          username: row.username,
+          display_name: row.display_name,
+          avatar: row.avatar ? await cdn.getFileLinkResource(row.avatar) : null,
+        }
+      }
+    }
+
+    // Contractor
+    let contractor: { spectrum_id: string; name: string; avatar?: string | null } | null = null
+    if (session.contractor_id) {
+      const row = await knex("contractors")
+        .where({ contractor_id: session.contractor_id })
+        .select("spectrum_id", "name", "avatar")
+        .first()
+      if (row) {
+        contractor = {
+          spectrum_id: row.spectrum_id,
+          name: row.name,
+          avatar: row.avatar ? await cdn.getFileLinkResource(row.avatar) : null,
+        }
+      }
     }
 
     // Order ID if accepted
@@ -142,18 +167,25 @@ export class OffersV2Controller extends BaseController {
       if (order) order_id = order.order_id
     }
 
-    // Offers
-    const dbOffers = await knex("offers").where({ session_id: session.id }).orderBy("timestamp", "asc")
+    // Offers (correct table: order_offers)
+    const dbOffers = await knex("order_offers").where({ session_id: session.id }).orderBy("timestamp", "asc")
     const offers: OfferV2[] = await Promise.all(dbOffers.map((o: any) => this.serializeOffer(o)))
+
+    // Derive status
+    let derivedStatus = session.status
+    if (session.status === "closed") {
+      derivedStatus = order_id ? "accepted" : "rejected"
+    }
 
     return {
       session_id: session.id,
-      status: session.status === "closed" ? (order_id ? "accepted" : "rejected") : session.status,
+      status: derivedStatus,
       created_at: session.timestamp?.toISOString?.() || new Date().toISOString(),
       order_id,
       discord_invite: session.discord_invite || null,
-      customer: customer || { user_id: session.customer_id, username: "Unknown" },
-      seller,
+      customer,
+      assigned_to,
+      contractor,
       offers,
     }
   }
@@ -161,15 +193,24 @@ export class OffersV2Controller extends BaseController {
   private async serializeOffer(offer: any): Promise<OfferV2> {
     const knex = getKnex()
 
+    // Resolve actor_id to username
+    let actor_username = "Unknown"
+    if (offer.actor_id) {
+      const actor = await knex("accounts").where({ user_id: offer.actor_id }).select("username").first()
+      if (actor) actor_username = actor.username
+    }
+
     // V1 market listings
     const v1Listings = await knex("offer_market_items").where({ offer_id: offer.id }).select("*")
 
-    // V2 variant items (may not exist)
-    const hasV2Table = await knex.schema.hasTable("offer_market_items_v2")
+    // V2 variant items
     let v2Items: any[] = []
-    if (hasV2Table) {
-      v2Items = await knex("offer_market_items_v2").where({ offer_id: offer.id }).select("*")
-    }
+    try {
+      const hasV2Table = await knex.schema.hasTable("offer_market_items_v2")
+      if (hasV2Table) {
+        v2Items = await knex("offer_market_items_v2").where({ offer_id: offer.id }).select("*")
+      }
+    } catch { /* ignore */ }
 
     const marketListings: OfferMarketListingV2[] = await Promise.all(
       v1Listings.map(async (ml: any) => {
@@ -181,12 +222,12 @@ export class OffersV2Controller extends BaseController {
         if (v2Listing) {
           title = v2Listing.title
           const li = await knex("listing_items").where({ listing_id: ml.listing_id }).first()
-          price = li?.base_price ? parseInt(li.base_price) : 0
+          price = li?.base_price ? parseFloat(li.base_price) : 0
         } else {
           const v1Details = await knex("market_listing_details").where({ listing_id: ml.listing_id }).first()
           if (v1Details) {
             title = v1Details.title
-            price = parseInt(v1Details.price) || 0
+            price = parseFloat(v1Details.price) || 0
           }
         }
 
@@ -198,7 +239,7 @@ export class OffersV2Controller extends BaseController {
             return {
               variant_id: vi.variant_id,
               quantity: vi.quantity,
-              price_per_unit: parseInt(vi.price_per_unit) || 0,
+              price_per_unit: parseFloat(vi.price_per_unit) || 0,
               attributes: variant?.attributes || {},
               display_name: variant?.display_name || "Standard",
               short_name: variant?.short_name || "STD",
@@ -226,7 +267,7 @@ export class OffersV2Controller extends BaseController {
       payment_type: offer.payment_type || "",
       status: offer.status || "pending",
       created_at: offer.timestamp?.toISOString?.() || new Date().toISOString(),
-      actor_id: offer.actor_id || "",
+      actor_username,
       market_listings: marketListings,
       service,
     }

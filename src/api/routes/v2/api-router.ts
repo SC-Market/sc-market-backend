@@ -170,7 +170,7 @@ apiV2Router.get("/game-data/missions/events", async (req, res, next) => {
   try { const c = new MissionsController(req); res.json(await c.getGameEvents()) } catch (e) { next(e) }
 })
 apiV2Router.get("/game-data/missions/by-code/:mission_code", async (req, res, next) => {
-  try { const c = new MissionsController(req); res.json(await c.getMissionDetailByCode(req.params.mission_code, req.query.user_id as string | undefined)) } catch (e) { next(e) }
+  try { const c = new MissionsController(req); res.json(await c.getMissionDetailByCode(req.params.mission_code, req)) } catch (e) { next(e) }
 })
 
 RegisterRoutes(apiV2Router)

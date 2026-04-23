@@ -43,6 +43,15 @@ export abstract class BaseController extends Controller {
   }
 
   /**
+   * Try to get the current user ID without throwing.
+   * Returns undefined if not authenticated.
+   */
+  protected tryGetUserId(): string | undefined {
+    const user = this.request?.user as User | undefined
+    return user?.user_id
+  }
+
+  /**
    * Get the current user object
    * @throws {BusinessLogicError} If user is not authenticated
    */

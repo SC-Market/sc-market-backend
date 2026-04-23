@@ -7,7 +7,8 @@
  * Requirements: 1.1-1.6, 2.1-2.6, 41.1-41.10, 42.1-42.10
  */
 
-import { Controller, Get, Post, Route, Tags, Query, Path, Body, Security } from "tsoa"
+import { Controller, Get, Post, Route, Tags, Query, Path, Body, Security, Request } from "tsoa"
+import { Request as ExpressRequest } from "express"
 import { BaseController } from "../../base/BaseController.js"
 import { getKnex } from "../../../../../clients/database/knex-db.js"
 import {
@@ -417,14 +418,16 @@ export class MissionsController extends BaseController {
    *
    * @summary Get mission details
    * @param mission_id Mission UUID
-   * @param user_id Optional user ID for user-specific data
+   * @param request Express request for optional JWT auth
    * @returns Complete mission details with reward pools
    */
   @Get("{mission_id}")
   public async getMissionDetail(
     @Path() mission_id: string,
-    @Query() user_id?: string,
+    @Request() request?: ExpressRequest,
   ): Promise<MissionDetailResponse> {
+    if (request) this.request = request
+    const user_id = this.tryGetUserId()
     const knex = getKnex()
 
     if (!mission_id) {
@@ -741,12 +744,13 @@ export class MissionsController extends BaseController {
   @Get("by-code/{mission_code}")
   public async getMissionDetailByCode(
     @Path() mission_code: string,
-    @Query() user_id?: string,
+    @Request() request?: ExpressRequest,
   ): Promise<MissionDetailResponse> {
+    if (request) this.request = request
     const knex = getKnex()
     const row = await knex("missions").where("mission_code", mission_code).first("mission_id")
     if (!row) this.throwNotFound("Mission", mission_code)
-    return this.getMissionDetail(row.mission_id, user_id)
+    return this.getMissionDetail(row.mission_id)
   }
 
   /**
