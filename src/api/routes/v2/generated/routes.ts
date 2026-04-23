@@ -2410,7 +2410,8 @@ const models: TsoaRoute.Models = {
         "properties": {
             "user_id": {"dataType":"string","required":true},
             "username": {"dataType":"string","required":true},
-            "market_version": {"ref":"MarketVersion","required":true},
+            "flag_name": {"dataType":"string","required":true},
+            "enabled": {"dataType":"boolean","required":true},
             "updated_at": {"dataType":"string","required":true},
         },
         "additionalProperties": false,
@@ -2429,7 +2430,8 @@ const models: TsoaRoute.Models = {
         "dataType": "refObject",
         "properties": {
             "username": {"dataType":"string","required":true},
-            "market_version": {"ref":"MarketVersion","required":true},
+            "flag_name": {"dataType":"string","required":true},
+            "enabled": {"dataType":"boolean","required":true},
         },
         "additionalProperties": false,
     },
@@ -5609,6 +5611,7 @@ export function RegisterRoutes(app: Router) {
                 page: {"in":"query","name":"page","dataType":"double"},
                 pageSize: {"in":"query","name":"pageSize","dataType":"double"},
                 search: {"in":"query","name":"search","dataType":"string"},
+                flag_name: {"in":"query","name":"flag_name","dataType":"string"},
         };
         app.get('/admin/feature-flags/overrides',
             authenticateMiddleware([{"jwt":[]}]),
@@ -5673,6 +5676,7 @@ export function RegisterRoutes(app: Router) {
         const argsFeatureFlagAdminController_removeUserOverride: Record<string, TsoaRoute.ParameterSchema> = {
                 request: {"in":"request","name":"request","required":true,"dataType":"object"},
                 username: {"in":"path","name":"username","required":true,"dataType":"string"},
+                flag_name: {"in":"query","name":"flag_name","dataType":"string"},
         };
         app.delete('/admin/feature-flags/overrides/:username',
             authenticateMiddleware([{"jwt":[]}]),
