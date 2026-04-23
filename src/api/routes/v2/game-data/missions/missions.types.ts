@@ -397,6 +397,14 @@ export interface ItemReward {
   ref: string
 }
 
+/** Game event/scenario (e.g. Luminalia, Invictus) */
+export interface GameEvent {
+  event_id: string
+  event_code: string
+  event_name: string
+  mission_count: number
+}
+
 // ============================================================================
 // Mission Blueprints Types
 // ============================================================================
