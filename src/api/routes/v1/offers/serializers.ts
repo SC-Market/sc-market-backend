@@ -234,9 +234,42 @@ export async function serializeOffer(offer: DBOffer) {
     service = await serializeService(service_obj!)
   }
 
+  // Fetch V2 variant items if available
+  let v2_variant_items: any[] | undefined
+  try {
+    const knex = database.knex
+    const hasTable = await knex.schema.hasTable("offer_market_items_v2")
+    if (hasTable) {
+      const rows = await knex("offer_market_items_v2")
+        .where({ offer_id: offer.id })
+        .select("*")
+      if (rows.length > 0) {
+        v2_variant_items = await Promise.all(
+          rows.map(async (row: any) => {
+            const variant = await knex("item_variants")
+              .where({ variant_id: row.variant_id })
+              .first()
+            return {
+              listing_id: row.listing_id,
+              variant_id: row.variant_id,
+              quantity: row.quantity,
+              price_per_unit: parseFloat(row.price_per_unit) || 0,
+              attributes: variant?.attributes || {},
+              display_name: variant?.display_name || "Standard",
+              short_name: variant?.short_name || "STD",
+            }
+          }),
+        )
+      }
+    }
+  } catch {
+    // Silently ignore — V2 data is optional
+  }
+
   return {
     ...offer,
     market_listings,
     service,
+    v2_variant_items,
   }
 }

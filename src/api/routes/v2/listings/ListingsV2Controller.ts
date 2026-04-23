@@ -548,8 +548,22 @@ export class ListingsV2Controller extends BaseController {
           "ls.price_max",
           "ls.quality_tier_min",
           "ls.quality_tier_max",
-          db.raw(`(SELECT MIN((v.attributes->>'quality_value')::int) FROM listing_item_lots sl JOIN item_variants v ON sl.variant_id = v.variant_id WHERE sl.listing_id = ls.listing_id AND v.attributes->>'quality_value' IS NOT NULL AND sl.quantity_available > 0) as quality_value_min`),
-          db.raw(`(SELECT MAX((v.attributes->>'quality_value')::int) FROM listing_item_lots sl JOIN item_variants v ON sl.variant_id = v.variant_id WHERE sl.listing_id = ls.listing_id AND v.attributes->>'quality_value' IS NOT NULL AND sl.quantity_available > 0) as quality_value_max`),
+          db.raw(`(
+            SELECT MIN((iv.attributes->>'quality_value')::int)
+            FROM listing_item_lots lil
+            JOIN item_variants iv ON lil.variant_id = iv.variant_id
+            WHERE lil.listing_id = ls.listing_id
+              AND iv.attributes->>'quality_value' IS NOT NULL
+              AND lil.quantity_available > 0
+          ) as quality_value_min`),
+          db.raw(`(
+            SELECT MAX((iv.attributes->>'quality_value')::int)
+            FROM listing_item_lots lil
+            JOIN item_variants iv ON lil.variant_id = iv.variant_id
+            WHERE lil.listing_id = ls.listing_id
+              AND iv.attributes->>'quality_value' IS NOT NULL
+              AND lil.quantity_available > 0
+          ) as quality_value_max`),
           db.raw(`
             CASE 
               WHEN ls.seller_type = 'user' THEN u.username
