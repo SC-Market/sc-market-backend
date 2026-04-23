@@ -76,7 +76,10 @@ export class BlueprintsController extends BaseController {
     @Query() version_id?: string,
     @Query() page: number = 1,
     @Query() page_size: number = 20,
+    @Request() request?: ExpressRequest,
   ): Promise<SearchBlueprintsResponse> {
+    if (request) this.request = request
+    const user_id = this.tryGetUserId()
     const knex = getKnex()
 
     // Validate pagination parameters
@@ -227,8 +230,6 @@ export class BlueprintsController extends BaseController {
       // Apply user ownership filter (if user_owned_only is true)
       // Note: This requires user_id from authentication context
       if (user_owned_only) {
-        const user_id = (this as any).user?.user_id
-
         if (!user_id) {
           this.throwUnauthorized("User must be authenticated to filter by ownership")
         }

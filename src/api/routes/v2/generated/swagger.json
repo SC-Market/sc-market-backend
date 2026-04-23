@@ -6911,6 +6911,10 @@
 					"game_item_name": {
 						"type": "string"
 					},
+					"game_item_type": {
+						"type": "string",
+						"description": "Game item type for quality mode determination"
+					},
 					"buyer_id": {
 						"type": "string"
 					},
@@ -6932,6 +6936,16 @@
 					"quality_tier_max": {
 						"type": "number",
 						"format": "double"
+					},
+					"quality_value_min": {
+						"type": "number",
+						"format": "double",
+						"description": "Minimum quality value (0-1000)"
+					},
+					"quality_value_max": {
+						"type": "number",
+						"format": "double",
+						"description": "Maximum quality value (0-1000)"
 					},
 					"negotiable": {
 						"type": "boolean"
@@ -6988,6 +7002,16 @@
 					"quality_tier_max": {
 						"type": "number",
 						"format": "double"
+					},
+					"quality_value_min": {
+						"type": "number",
+						"format": "double",
+						"description": "Minimum quality value (0-1000) for resource buy orders"
+					},
+					"quality_value_max": {
+						"type": "number",
+						"format": "double",
+						"description": "Maximum quality value (0-1000) for resource buy orders"
 					},
 					"negotiable": {
 						"type": "boolean"
@@ -7050,6 +7074,14 @@
 						"format": "double"
 					},
 					"quality_tier_max": {
+						"type": "number",
+						"format": "double"
+					},
+					"quality_value_min": {
+						"type": "number",
+						"format": "double"
+					},
+					"quality_value_max": {
 						"type": "number",
 						"format": "double"
 					},
@@ -12507,6 +12539,45 @@
 						"schema": {
 							"format": "double",
 							"type": "number"
+						}
+					},
+					{
+						"in": "query",
+						"name": "quality_value_min",
+						"required": false,
+						"schema": {
+							"format": "double",
+							"type": "number"
+						}
+					},
+					{
+						"in": "query",
+						"name": "quality_value_max",
+						"required": false,
+						"schema": {
+							"format": "double",
+							"type": "number"
+						}
+					},
+					{
+						"description": "Sort by: created_at, price_per_unit, quality_tier_min, quality_value_min",
+						"in": "query",
+						"name": "sort_by",
+						"required": false,
+						"schema": {
+							"type": "string"
+						}
+					},
+					{
+						"in": "query",
+						"name": "sort_order",
+						"required": false,
+						"schema": {
+							"type": "string",
+							"enum": [
+								"asc",
+								"desc"
+							]
 						}
 					},
 					{
