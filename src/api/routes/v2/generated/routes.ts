@@ -1392,6 +1392,20 @@ const models: TsoaRoute.Models = {
         "additionalProperties": false,
     },
     // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+    "ItemReward": {
+        "dataType": "refObject",
+        "properties": {
+            "name": {"dataType":"string","required":true},
+            "ref": {"dataType":"string","required":true},
+        },
+        "additionalProperties": false,
+    },
+    // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+    "Record_string.string_": {
+        "dataType": "refAlias",
+        "type": {"dataType":"nestedObjectLiteral","nestedProperties":{},"additionalProperties":{"dataType":"string"},"validators":{}},
+    },
+    // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
     "Mission": {
         "dataType": "refObject",
         "properties": {
@@ -1440,6 +1454,11 @@ const models: TsoaRoute.Models = {
             "is_lawful": {"dataType":"boolean"},
             "max_crimestat": {"dataType":"double"},
             "difficulty_from_broker": {"dataType":"double"},
+            "time_to_complete": {"dataType":"double"},
+            "accept_locations": {"dataType":"array","array":{"dataType":"string"}},
+            "destinations": {"dataType":"array","array":{"dataType":"string"}},
+            "item_rewards": {"dataType":"array","array":{"dataType":"refObject","ref":"ItemReward"}},
+            "token_substitutions": {"ref":"Record_string.string_"},
             "community_difficulty_avg": {"dataType":"double"},
             "community_difficulty_count": {"dataType":"double","required":true},
             "community_satisfaction_avg": {"dataType":"double"},
@@ -1929,11 +1948,6 @@ const models: TsoaRoute.Models = {
             "modifier_at_end": {"dataType":"double","required":true},
         },
         "additionalProperties": false,
-    },
-    // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
-    "Record_string.string_": {
-        "dataType": "refAlias",
-        "type": {"dataType":"nestedObjectLiteral","nestedProperties":{},"additionalProperties":{"dataType":"string"},"validators":{}},
     },
     // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
     "UserBlueprintAcquisition": {
