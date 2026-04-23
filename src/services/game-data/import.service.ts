@@ -244,7 +244,8 @@ export interface P4KReputationReward {
 export interface P4KShipEncounter {
   role: string
   alignment: "hostile" | "friendly" | "neutral"
-  waves: Array<{ name: string; shipCount: number }>
+  waves: Array<{ name: string; minShips: number; maxShips: number }>
+  shipPool?: string[]
 }
 
 export interface P4KMission {
@@ -1529,6 +1530,8 @@ export class GameDataImportService {
       max_standing_xp: mission.maxStanding?.xp ?? null,
       reputation_reward_amount: mission.reputationRewards?.[0]?.amount ?? null,
       reputation_reward_scope: mission.reputationRewards?.[0]?.scope ?? null,
+      reputation_reward: mission.reputationRewards?.[0]?.amount ?? null,
+      reward_scope: mission.reputationRewards?.[0]?.scope ?? null,
       is_shareable: mission.canBeShared ?? false,
       is_unique_mission: mission.onceOnly,
       available_in_prison: mission.availableInPrison,

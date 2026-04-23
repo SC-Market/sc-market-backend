@@ -523,7 +523,7 @@ function parseBlueprints(): any[] {
 // --- Step 5: Parse Missions ---
 
 // Interfaces for mission metadata
-interface ShipWave { name: string; shipCount: number }
+interface ShipWave { name: string; minShips: number; maxShips: number }
 interface ShipEncounter { role: string; alignment: "hostile" | "friendly" | "neutral"; waves: ShipWave[]; shipPool?: string[] }
 interface NpcEncounter { name: string; count: number }
 interface HaulingOrder { resource: string; minSCU: number; maxSCU: number }
@@ -687,12 +687,15 @@ function extractPropertyOverrides(po: Record<string, unknown>): {
         const waves: ShipWave[] = []
         const allShips = new Set<string>()
         for (const wave of (sd as { ships?: Array<{ options?: Array<Record<string, unknown>> }> }).ships || []) {
-          for (const opt of wave.options || []) {
-            const name = ((opt as { autoSpawnSettings?: { name?: string } }).autoSpawnSettings?.name) || "ship"
-            const count = (opt as { concurrentAmount?: number }).concurrentAmount || 1
-            waves.push({ name, shipCount: count })
-            // Resolve ship pool from tags
-            if (matchFn) {
+          // Each ships[] entry is a wave group; options are alternatives (game picks one)
+          const opts = wave.options || []
+          if (!opts.length) continue
+          const counts = opts.map(o => (o as { concurrentAmount?: number }).concurrentAmount || 1)
+          const waveName = ((opts[0] as { autoSpawnSettings?: { name?: string } }).autoSpawnSettings?.name) || "ship"
+          waves.push({ name: waveName, minShips: Math.min(...counts), maxShips: Math.max(...counts) })
+          // Resolve ship pool from all option tags
+          if (matchFn) {
+            for (const opt of opts) {
               const tagList = ((opt as { tags?: { tags?: Array<{ _RecordId_?: string }> } }).tags?.tags || [])
               const tagIds = tagList.filter((t): t is { _RecordId_: string } => !!t?._RecordId_).map(t => t._RecordId_)
               if (tagIds.length) for (const s of matchFn(tagIds)) allShips.add(s)
