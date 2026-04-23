@@ -236,6 +236,7 @@ export class ListingsV2Controller extends BaseController {
       })
 
       // TODO: Log listing creation to audit trail (Requirement 14.12)
+      auditService.log({ entity_type: "listing", entity_id: result.listing_id, action: "created", actor_id: userId, details: { title: requestBody.title } })
 
       return result
     } catch (error) {
@@ -1631,6 +1632,7 @@ export class ListingsV2Controller extends BaseController {
         }
 
         // TODO: Log modifications to audit trail (Requirement 17.10)
+        auditService.log({ entity_type: "listing", entity_id: id, action: "updated", actor_id: userId })
       })
 
       logger.info("Listing updated successfully", {
@@ -1756,6 +1758,7 @@ export class ListingsV2Controller extends BaseController {
       })
 
       // TODO: Log refresh action to audit trail (Requirement 49.5)
+      auditService.log({ entity_type: "listing", entity_id: id, action: "refreshed", actor_id: userId })
 
       return {
         message: "Listing refreshed successfully",
