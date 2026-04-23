@@ -6679,19 +6679,22 @@
 			"CheckoutCartResponse": {
 				"description": "Response from cart checkout\nRequirement 32.10: Return order_id and purchase summary",
 				"properties": {
-					"order_id": {
+					"result": {
 						"type": "string",
-						"description": "UUID of the created order"
+						"description": "Result status"
 					},
-					"total_price": {
-						"type": "number",
-						"format": "double",
-						"description": "Total price of the order"
+					"offer_id": {
+						"type": "string",
+						"description": "UUID of the created offer"
 					},
-					"items_purchased": {
-						"type": "number",
-						"format": "double",
-						"description": "Number of items successfully purchased"
+					"session_id": {
+						"type": "string",
+						"description": "UUID of the offer session"
+					},
+					"discord_invite": {
+						"type": "string",
+						"nullable": true,
+						"description": "Discord invite code (if available)"
 					},
 					"unavailable_items": {
 						"items": {
@@ -6702,9 +6705,10 @@
 					}
 				},
 				"required": [
-					"order_id",
-					"total_price",
-					"items_purchased"
+					"result",
+					"offer_id",
+					"session_id",
+					"discord_invite"
 				],
 				"type": "object",
 				"additionalProperties": false
@@ -6715,6 +6719,10 @@
 					"confirm_price_changes": {
 						"type": "boolean",
 						"description": "Required if any prices have changed since add-to-cart"
+					},
+					"note": {
+						"type": "string",
+						"description": "Optional note from buyer to seller"
 					}
 				},
 				"type": "object",
@@ -12360,7 +12368,7 @@
 				"operationId": "CheckoutCart",
 				"responses": {
 					"200": {
-						"description": "Order ID and purchase summary",
+						"description": "Offer session details (session_id, offer_id, discord_invite)",
 						"content": {
 							"application/json": {
 								"schema": {
@@ -12370,7 +12378,7 @@
 						}
 					}
 				},
-				"description": "Checkout cart and create order\n\nConverts cart items to an order by:\n1. Validating all cart items are still available\n2. Detecting price changes and requiring confirmation if needed\n3. Creating order with variant-specific line items\n4. Allocating stock for each variant\n5. Clearing cart after successful order\n6. Handling partial failures (some items unavailable)\n\nUses database transaction for atomicity to ensure all-or-nothing behavior.\nIf any cart items are unavailable or prices have changed without confirmation,\nthe checkout will fail with descriptive errors.\n\nRequirements:\n- 32.1: POST /api/v2/cart/checkout endpoint\n- 32.2: Validate all cart items for availability before checkout\n- 32.3: Create order with variant-specific items from cart\n- 32.4: Allocate stock from correct variants\n- 32.5: Use variant-specific pricing in order totals\n- 32.6: Use database transaction for atomicity\n- 32.7: Clear cart after successful checkout\n- 32.8: Handle partial checkout if some items become unavailable\n- 32.9: Return order_id and order details on success\n- 32.10: Notify user of price changes requiring confirmation\n- 32.11: Notify sellers of new orders\n- 32.12: Log checkout to Audit_Trail",
+				"description": "Checkout cart — creates an offer session (mirrors V1 purchase_listings flow)\n\n1. Validates all cart items are still available\n2. Detects price changes and requires confirmation if needed\n3. Checks blocked users, availability requirements, order limits\n4. Creates an offer session via V1 createOffer (chat, Discord, notifications)\n5. Clears cart after successful offer creation",
 				"summary": "Checkout cart",
 				"tags": [
 					"Cart V2"
@@ -12382,13 +12390,13 @@
 				],
 				"parameters": [],
 				"requestBody": {
-					"description": "Checkout request with optional price change confirmation",
+					"description": "Checkout request with optional price change confirmation and note",
 					"required": true,
 					"content": {
 						"application/json": {
 							"schema": {
 								"$ref": "#/components/schemas/CheckoutCartRequest",
-								"description": "Checkout request with optional price change confirmation"
+								"description": "Checkout request with optional price change confirmation and note"
 							}
 						}
 					}

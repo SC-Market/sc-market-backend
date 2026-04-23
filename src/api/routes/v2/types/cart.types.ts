@@ -149,6 +149,8 @@ export interface GetCartResponse {
 export interface CheckoutCartRequest {
   /** Required if any prices have changed since add-to-cart */
   confirm_price_changes?: boolean;
+  /** Optional note from buyer to seller */
+  note?: string;
 }
 
 /**
@@ -173,15 +175,14 @@ export interface UnavailableCartItem {
  * Requirement 32.10: Return order_id and purchase summary
  */
 export interface CheckoutCartResponse {
-  /** UUID of the created order */
-  order_id: string;
-  
-  /** Total price of the order */
-  total_price: number;
-  
-  /** Number of items successfully purchased */
-  items_purchased: number;
-  
+  /** Result status */
+  result: string;
+  /** UUID of the created offer */
+  offer_id: string;
+  /** UUID of the offer session */
+  session_id: string;
+  /** Discord invite code (if available) */
+  discord_invite: string | null;
   /** Array of items that could not be purchased (optional) */
   unavailable_items?: UnavailableCartItem[];
 }

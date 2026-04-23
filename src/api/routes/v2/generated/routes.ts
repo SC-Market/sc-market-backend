@@ -2132,9 +2132,10 @@ const models: TsoaRoute.Models = {
     "CheckoutCartResponse": {
         "dataType": "refObject",
         "properties": {
-            "order_id": {"dataType":"string","required":true},
-            "total_price": {"dataType":"double","required":true},
-            "items_purchased": {"dataType":"double","required":true},
+            "result": {"dataType":"string","required":true},
+            "offer_id": {"dataType":"string","required":true},
+            "session_id": {"dataType":"string","required":true},
+            "discord_invite": {"dataType":"union","subSchemas":[{"dataType":"string"},{"dataType":"enum","enums":[null]}],"required":true},
             "unavailable_items": {"dataType":"array","array":{"dataType":"refObject","ref":"UnavailableCartItem"}},
         },
         "additionalProperties": false,
@@ -2144,6 +2145,7 @@ const models: TsoaRoute.Models = {
         "dataType": "refObject",
         "properties": {
             "confirm_price_changes": {"dataType":"boolean"},
+            "note": {"dataType":"string"},
         },
         "additionalProperties": false,
     },
