@@ -8503,6 +8503,14 @@
 								"desc"
 							]
 						}
+					},
+					{
+						"in": "query",
+						"name": "spectrum_id",
+						"required": false,
+						"schema": {
+							"type": "string"
+						}
 					}
 				]
 			}
