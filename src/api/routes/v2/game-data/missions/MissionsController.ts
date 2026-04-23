@@ -1342,7 +1342,7 @@ export class MissionsController extends BaseController {
   @Get("reputation-ranks")
   public async getReputationRanks(
     @Query() scope_code?: string,
-  ): Promise<{ ranks: ReputationRank[]; scopes: string[] }> {
+  ): Promise<{ ranks: ReputationRank[]; scopes: string[]; display_name: string }> {
     const knex = getKnex()
 
     // Get all unique scopes
@@ -1369,7 +1369,7 @@ export class MissionsController extends BaseController {
       rank_index: r.rank_index,
     }))
 
-    return { ranks, scopes }
+    return { ranks, scopes, display_name: ranks[0]?.scope_display_name || scope_code || "" }
   }
 
   private async resolveStandingName(knex: any, code: string | null | undefined): Promise<string | undefined> {
