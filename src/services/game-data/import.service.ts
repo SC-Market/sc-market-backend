@@ -1246,7 +1246,22 @@ export class GameDataImportService {
         try {
           {
             for (const ship of gameData.ships) {
-              if (!ship.name || ship.name.startsWith("@")) continue
+              if (!ship.name || ship.name.startsWith("@") || ship.name.startsWith("<=")) continue
+
+              // Upsert as game_item so ships are linkable
+              const existing = await knex("game_items")
+                .where("name", ship.name)
+                .orWhere("p4k_id", ship.id)
+                .first()
+              if (!existing) {
+                await knex("game_items").insert({
+                  name: ship.name,
+                  type: ship.size === "Vehicle" ? "Ground Vehicle" : "Ship",
+                  p4k_id: ship.id,
+                  manufacturer: ship.manufacturer || null,
+                }).onConflict("p4k_id").ignore()
+              }
+
               await knex("wiki_ships")
                 .insert({
                   version_id: versionId,
