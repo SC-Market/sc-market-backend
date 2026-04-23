@@ -4161,6 +4161,10 @@
 						"type": "string",
 						"description": "Mission UUID"
 					},
+					"mission_code": {
+						"type": "string",
+						"description": "Mission code (internal name for URL-friendly links)"
+					},
 					"mission_name": {
 						"type": "string",
 						"description": "Mission name"
@@ -4271,6 +4275,7 @@
 				},
 				"required": [
 					"mission_id",
+					"mission_code",
 					"mission_name",
 					"category",
 					"blueprint_reward_count",
@@ -5845,6 +5850,10 @@
 						"type": "string",
 						"description": "Blueprint UUID"
 					},
+					"blueprint_code": {
+						"type": "string",
+						"description": "Blueprint code (internal name for URL-friendly links)"
+					},
 					"blueprint_name": {
 						"type": "string",
 						"description": "Blueprint name"
@@ -5937,6 +5946,7 @@
 				},
 				"required": [
 					"blueprint_id",
+					"blueprint_code",
 					"blueprint_name",
 					"output_item_name",
 					"ingredient_count",
@@ -6379,12 +6389,17 @@
 					"is_developer": {
 						"type": "boolean",
 						"description": "Whether user has developer privileges (admin or dev environment)"
+					},
+					"has_override": {
+						"type": "boolean",
+						"description": "Whether this user has a manual override (show treatment picker if true)"
 					}
 				},
 				"required": [
 					"user_id",
 					"market_version",
-					"is_developer"
+					"is_developer",
+					"has_override"
 				],
 				"type": "object",
 				"additionalProperties": false
@@ -7478,21 +7493,24 @@
 				"type": "object",
 				"additionalProperties": false
 			},
-			"UserOverride": {
+			"UserOverrideWithName": {
 				"properties": {
 					"user_id": {
+						"type": "string"
+					},
+					"username": {
 						"type": "string"
 					},
 					"market_version": {
 						"$ref": "#/components/schemas/MarketVersion"
 					},
 					"updated_at": {
-						"type": "string",
-						"format": "date-time"
+						"type": "string"
 					}
 				},
 				"required": [
 					"user_id",
+					"username",
 					"market_version",
 					"updated_at"
 				],
@@ -7503,7 +7521,7 @@
 				"properties": {
 					"overrides": {
 						"items": {
-							"$ref": "#/components/schemas/UserOverride"
+							"$ref": "#/components/schemas/UserOverrideWithName"
 						},
 						"type": "array"
 					},
@@ -7521,7 +7539,7 @@
 			},
 			"SetUserOverrideRequest": {
 				"properties": {
-					"user_id": {
+					"username": {
 						"type": "string"
 					},
 					"market_version": {
@@ -7529,7 +7547,7 @@
 					}
 				},
 				"required": [
-					"user_id",
+					"username",
 					"market_version"
 				],
 				"type": "object",
@@ -9333,6 +9351,24 @@
 					{
 						"in": "query",
 						"name": "price_max",
+						"required": false,
+						"schema": {
+							"format": "double",
+							"type": "number"
+						}
+					},
+					{
+						"in": "query",
+						"name": "quantity_min",
+						"required": false,
+						"schema": {
+							"format": "double",
+							"type": "number"
+						}
+					},
+					{
+						"in": "query",
+						"name": "quantity_max",
 						"required": false,
 						"schema": {
 							"format": "double",
@@ -11662,6 +11698,40 @@
 				]
 			}
 		},
+		"/game-data/blueprints/by-code/{blueprint_code}": {
+			"get": {
+				"operationId": "GetBlueprintDetailByCode",
+				"responses": {
+					"200": {
+						"description": "Ok",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/BlueprintDetailResponse"
+								}
+							}
+						}
+					}
+				},
+				"description": "Get missions that reward this blueprint\n\nReturns all missions that can reward the specified blueprint,\n/**\nGet blueprint detail by blueprint_code (string identifier)",
+				"summary": "Get blueprint by code",
+				"tags": [
+					"Game Data - Blueprints"
+				],
+				"security": [],
+				"parameters": [
+					{
+						"description": "The blueprint code string",
+						"in": "path",
+						"name": "blueprint_code",
+						"required": true,
+						"schema": {
+							"type": "string"
+						}
+					}
+				]
+			}
+		},
 		"/game-data/blueprints/{blueprint_id}/missions": {
 			"get": {
 				"operationId": "GetBlueprintMissions",
@@ -11680,7 +11750,7 @@
 						}
 					}
 				},
-				"description": "Get missions that reward this blueprint\n\nReturns all missions that can reward the specified blueprint,\nincluding drop probabilities and mission locations.",
+				"description": "Get missions that reward a specific blueprint\n\nincluding drop probabilities and mission locations.",
 				"summary": "Get blueprint missions",
 				"tags": [
 					"Game Data - Blueprints"
@@ -13168,6 +13238,14 @@
 							"format": "double",
 							"type": "number"
 						}
+					},
+					{
+						"in": "query",
+						"name": "search",
+						"required": false,
+						"schema": {
+							"type": "string"
+						}
 					}
 				]
 			},
@@ -13216,7 +13294,7 @@
 				}
 			}
 		},
-		"/admin/feature-flags/overrides/{userId}": {
+		"/admin/feature-flags/overrides/{username}": {
 			"delete": {
 				"operationId": "RemoveUserOverride",
 				"responses": {
@@ -13252,7 +13330,7 @@
 				"parameters": [
 					{
 						"in": "path",
-						"name": "userId",
+						"name": "username",
 						"required": true,
 						"schema": {
 							"type": "string"

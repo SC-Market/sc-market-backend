@@ -22,6 +22,8 @@ export interface GetFeatureFlagResponse {
   market_version: MarketVersion
   /** Whether user has developer privileges (admin or dev environment) */
   is_developer: boolean
+  /** Whether this user has a manual override (show treatment picker if true) */
+  has_override: boolean
 }
 
 /**

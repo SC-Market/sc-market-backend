@@ -49,6 +49,7 @@ export class DebugV2Controller extends BaseController {
         user_id: "",
         market_version: "V1",
         is_developer: false,
+        has_override: false,
       }
     }
 
@@ -67,10 +68,16 @@ export class DebugV2Controller extends BaseController {
         isDeveloper,
       })
 
+      // Check if user has a manual override
+      const db = (await import("../../../../clients/database/knex-db.js")).getKnex()
+      const override = await db("user_preferences").where({ user_id: userId }).first()
+      const hasOverride = !!override
+
       return {
         user_id: userId,
         market_version: marketVersion,
         is_developer: isDeveloper,
+        has_override: hasOverride,
       }
     } catch (error) {
       logger.error("Failed to get feature flag", {
