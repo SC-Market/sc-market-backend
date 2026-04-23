@@ -1256,7 +1256,7 @@ export class GameDataImportService {
               if (!existing) {
                 await knex("game_items").insert({
                   name: ship.name,
-                  type: ship.size === "Vehicle" ? "Ground Vehicle" : "Ship",
+                  type: "Ship for Sale/Rental",
                   p4k_id: ship.id,
                   manufacturer: ship.manufacturer || null,
                 }).onConflict("p4k_id").ignore()
