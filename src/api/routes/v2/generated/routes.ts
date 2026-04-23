@@ -1367,6 +1367,7 @@ const models: TsoaRoute.Models = {
         "dataType": "refObject",
         "properties": {
             "mission_id": {"dataType":"string","required":true},
+            "mission_code": {"dataType":"string","required":true},
             "mission_name": {"dataType":"string","required":true},
             "category": {"dataType":"string","required":true},
             "career_type": {"dataType":"string"},
@@ -1858,6 +1859,7 @@ const models: TsoaRoute.Models = {
         "dataType": "refObject",
         "properties": {
             "blueprint_id": {"dataType":"string","required":true},
+            "blueprint_code": {"dataType":"string","required":true},
             "blueprint_name": {"dataType":"string","required":true},
             "output_item_name": {"dataType":"string","required":true},
             "output_item_icon": {"dataType":"string"},
@@ -2017,6 +2019,7 @@ const models: TsoaRoute.Models = {
             "user_id": {"dataType":"string","required":true},
             "market_version": {"ref":"MarketVersion","required":true},
             "is_developer": {"dataType":"boolean","required":true},
+            "has_override": {"dataType":"boolean","required":true},
         },
         "additionalProperties": false,
     },
@@ -2395,12 +2398,13 @@ const models: TsoaRoute.Models = {
         "additionalProperties": false,
     },
     // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
-    "UserOverride": {
+    "UserOverrideWithName": {
         "dataType": "refObject",
         "properties": {
             "user_id": {"dataType":"string","required":true},
+            "username": {"dataType":"string","required":true},
             "market_version": {"ref":"MarketVersion","required":true},
-            "updated_at": {"dataType":"datetime","required":true},
+            "updated_at": {"dataType":"string","required":true},
         },
         "additionalProperties": false,
     },
@@ -2408,7 +2412,7 @@ const models: TsoaRoute.Models = {
     "UserOverridesResponse": {
         "dataType": "refObject",
         "properties": {
-            "overrides": {"dataType":"array","array":{"dataType":"refObject","ref":"UserOverride"},"required":true},
+            "overrides": {"dataType":"array","array":{"dataType":"refObject","ref":"UserOverrideWithName"},"required":true},
             "total": {"dataType":"double","required":true},
         },
         "additionalProperties": false,
@@ -2417,7 +2421,7 @@ const models: TsoaRoute.Models = {
     "SetUserOverrideRequest": {
         "dataType": "refObject",
         "properties": {
-            "user_id": {"dataType":"string","required":true},
+            "username": {"dataType":"string","required":true},
             "market_version": {"ref":"MarketVersion","required":true},
         },
         "additionalProperties": false,
@@ -3371,6 +3375,8 @@ export function RegisterRoutes(app: Router) {
                 item_type: {"in":"query","name":"item_type","dataType":"string"},
                 price_min: {"in":"query","name":"price_min","dataType":"double"},
                 price_max: {"in":"query","name":"price_max","dataType":"double"},
+                quantity_min: {"in":"query","name":"quantity_min","dataType":"double"},
+                quantity_max: {"in":"query","name":"quantity_max","dataType":"double"},
                 sort_by: {"in":"query","name":"sort_by","dataType":"union","subSchemas":[{"dataType":"enum","enums":["price"]},{"dataType":"enum","enums":["quantity"]},{"dataType":"enum","enums":["name"]},{"dataType":"enum","enums":["seller_count"]}]},
                 sort_order: {"in":"query","name":"sort_order","dataType":"union","subSchemas":[{"dataType":"enum","enums":["asc"]},{"dataType":"enum","enums":["desc"]}]},
                 page: {"in":"query","name":"page","dataType":"double"},
@@ -4689,6 +4695,37 @@ export function RegisterRoutes(app: Router) {
             }
         });
         // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+        const argsBlueprintsController_getBlueprintDetailByCode: Record<string, TsoaRoute.ParameterSchema> = {
+                blueprint_code: {"in":"path","name":"blueprint_code","required":true,"dataType":"string"},
+                request: {"in":"request","name":"request","dataType":"object"},
+        };
+        app.get('/game-data/blueprints/by-code/:blueprint_code',
+            ...(fetchMiddlewares<RequestHandler>(BlueprintsController)),
+            ...(fetchMiddlewares<RequestHandler>(BlueprintsController.prototype.getBlueprintDetailByCode)),
+
+            async function BlueprintsController_getBlueprintDetailByCode(request: ExRequest, response: ExResponse, next: any) {
+
+            // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+
+            let validatedArgs: any[] = [];
+            try {
+                validatedArgs = templateService.getValidatedArgs({ args: argsBlueprintsController_getBlueprintDetailByCode, request, response });
+
+                const controller = new BlueprintsController();
+
+              await templateService.apiHandler({
+                methodName: 'getBlueprintDetailByCode',
+                controller,
+                response,
+                next,
+                validatedArgs,
+                successStatus: undefined,
+              });
+            } catch (err) {
+                return next(err);
+            }
+        });
+        // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
         const argsBlueprintsController_getBlueprintMissions: Record<string, TsoaRoute.ParameterSchema> = {
                 blueprint_id: {"in":"path","name":"blueprint_id","required":true,"dataType":"string"},
                 version_id: {"in":"query","name":"version_id","dataType":"string"},
@@ -5564,6 +5601,7 @@ export function RegisterRoutes(app: Router) {
                 request: {"in":"request","name":"request","required":true,"dataType":"object"},
                 page: {"in":"query","name":"page","dataType":"double"},
                 pageSize: {"in":"query","name":"pageSize","dataType":"double"},
+                search: {"in":"query","name":"search","dataType":"string"},
         };
         app.get('/admin/feature-flags/overrides',
             authenticateMiddleware([{"jwt":[]}]),
@@ -5627,9 +5665,9 @@ export function RegisterRoutes(app: Router) {
         // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
         const argsFeatureFlagAdminController_removeUserOverride: Record<string, TsoaRoute.ParameterSchema> = {
                 request: {"in":"request","name":"request","required":true,"dataType":"object"},
-                userId: {"in":"path","name":"userId","required":true,"dataType":"string"},
+                username: {"in":"path","name":"username","required":true,"dataType":"string"},
         };
-        app.delete('/admin/feature-flags/overrides/:userId',
+        app.delete('/admin/feature-flags/overrides/:username',
             authenticateMiddleware([{"jwt":[]}]),
             ...(fetchMiddlewares<RequestHandler>(FeatureFlagAdminController)),
             ...(fetchMiddlewares<RequestHandler>(FeatureFlagAdminController.prototype.removeUserOverride)),
