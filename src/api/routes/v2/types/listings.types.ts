@@ -572,3 +572,18 @@ export interface GetMyListingsResponse {
   /** Number of results per page */
   page_size: number;
 }
+
+/** Aggregated inventory material */
+export interface InventoryMaterial {
+  game_item_id: string;
+  game_item_name: string;
+  game_item_type?: string;
+  game_item_icon?: string;
+  total_quantity: number;
+  avg_quality_value?: number;
+  max_quality_value?: number;
+}
+
+export interface InventorySummaryResponse {
+  materials: InventoryMaterial[];
+}

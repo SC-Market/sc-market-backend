@@ -731,6 +731,28 @@ const models: TsoaRoute.Models = {
         "additionalProperties": false,
     },
     // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+    "InventoryMaterial": {
+        "dataType": "refObject",
+        "properties": {
+            "game_item_id": {"dataType":"string","required":true},
+            "game_item_name": {"dataType":"string","required":true},
+            "game_item_type": {"dataType":"string"},
+            "game_item_icon": {"dataType":"string"},
+            "total_quantity": {"dataType":"double","required":true},
+            "avg_quality_value": {"dataType":"double"},
+            "max_quality_value": {"dataType":"double"},
+        },
+        "additionalProperties": false,
+    },
+    // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+    "InventorySummaryResponse": {
+        "dataType": "refObject",
+        "properties": {
+            "materials": {"dataType":"array","array":{"dataType":"refObject","ref":"InventoryMaterial"},"required":true},
+        },
+        "additionalProperties": false,
+    },
+    // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
     "ImportSource": {
         "dataType": "refAlias",
         "type": {"dataType":"union","subSchemas":[{"dataType":"enum","enums":["cstone-items"]},{"dataType":"enum","enums":["uex-items"]},{"dataType":"enum","enums":["uex-attributes"]}],"validators":{}},
@@ -2008,6 +2030,22 @@ const models: TsoaRoute.Models = {
         "additionalProperties": false,
     },
     // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+    "CraftableBlueprintResult": {
+        "dataType": "refObject",
+        "properties": {
+            "blueprint_id": {"dataType":"string","required":true},
+            "blueprint_code": {"dataType":"string","required":true},
+            "blueprint_name": {"dataType":"string","required":true},
+            "output_item_name": {"dataType":"string","required":true},
+            "output_item_icon": {"dataType":"string"},
+            "item_category": {"dataType":"string"},
+            "crafting_time_seconds": {"dataType":"double"},
+            "max_craftable": {"dataType":"double","required":true},
+            "ingredients": {"dataType":"array","array":{"dataType":"nestedObjectLiteral","nestedProperties":{"quality_value":{"dataType":"double"},"available_quantity":{"dataType":"double","required":true},"quantity_required":{"dataType":"double","required":true},"name":{"dataType":"string","required":true},"game_item_id":{"dataType":"string","required":true}}},"required":true},
+        },
+        "additionalProperties": false,
+    },
+    // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
     "MarketVersion": {
         "dataType": "refAlias",
         "type": {"dataType":"union","subSchemas":[{"dataType":"enum","enums":["V1"]},{"dataType":"enum","enums":["V2"]}],"validators":{}},
@@ -3152,6 +3190,37 @@ export function RegisterRoutes(app: Router) {
 
               await templateService.apiHandler({
                 methodName: 'uploadPhotos',
+                controller,
+                response,
+                next,
+                validatedArgs,
+                successStatus: undefined,
+              });
+            } catch (err) {
+                return next(err);
+            }
+        });
+        // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+        const argsListingsV2Controller_getInventorySummary: Record<string, TsoaRoute.ParameterSchema> = {
+                spectrum_id: {"in":"query","name":"spectrum_id","dataType":"string"},
+        };
+        app.get('/listings/inventory-summary',
+            authenticateMiddleware([{"jwt":[]}]),
+            ...(fetchMiddlewares<RequestHandler>(ListingsV2Controller)),
+            ...(fetchMiddlewares<RequestHandler>(ListingsV2Controller.prototype.getInventorySummary)),
+
+            async function ListingsV2Controller_getInventorySummary(request: ExRequest, response: ExResponse, next: any) {
+
+            // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+
+            let validatedArgs: any[] = [];
+            try {
+                validatedArgs = templateService.getValidatedArgs({ args: argsListingsV2Controller_getInventorySummary, request, response });
+
+                const controller = new ListingsV2Controller();
+
+              await templateService.apiHandler({
+                methodName: 'getInventorySummary',
                 controller,
                 response,
                 next,
@@ -4919,6 +4988,36 @@ export function RegisterRoutes(app: Router) {
 
               await templateService.apiHandler({
                 methodName: 'getOrgBlueprintOwners',
+                controller,
+                response,
+                next,
+                validatedArgs,
+                successStatus: undefined,
+              });
+            } catch (err) {
+                return next(err);
+            }
+        });
+        // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+        const argsBlueprintsController_findCraftableBlueprints: Record<string, TsoaRoute.ParameterSchema> = {
+                body: {"in":"body","name":"body","required":true,"dataType":"nestedObjectLiteral","nestedProperties":{"materials":{"dataType":"array","array":{"dataType":"nestedObjectLiteral","nestedProperties":{"quality_value":{"dataType":"double"},"quantity_scu":{"dataType":"double","required":true},"game_item_id":{"dataType":"string","required":true}}},"required":true}}},
+        };
+        app.post('/game-data/blueprints/craftable',
+            ...(fetchMiddlewares<RequestHandler>(BlueprintsController)),
+            ...(fetchMiddlewares<RequestHandler>(BlueprintsController.prototype.findCraftableBlueprints)),
+
+            async function BlueprintsController_findCraftableBlueprints(request: ExRequest, response: ExResponse, next: any) {
+
+            // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+
+            let validatedArgs: any[] = [];
+            try {
+                validatedArgs = templateService.getValidatedArgs({ args: argsBlueprintsController_findCraftableBlueprints, request, response });
+
+                const controller = new BlueprintsController();
+
+              await templateService.apiHandler({
+                methodName: 'findCraftableBlueprints',
                 controller,
                 response,
                 next,

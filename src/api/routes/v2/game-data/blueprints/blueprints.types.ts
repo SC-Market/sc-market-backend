@@ -318,3 +318,22 @@ export interface SlotModifier {
   /** Modifier value at end_quality (e.g., 1.1 = ×1.1) */
   modifier_at_end: number
 }
+
+/** Result from the craftable blueprints endpoint */
+export interface CraftableBlueprintResult {
+  blueprint_id: string
+  blueprint_code: string
+  blueprint_name: string
+  output_item_name: string
+  output_item_icon?: string
+  item_category?: string
+  crafting_time_seconds?: number
+  max_craftable: number
+  ingredients: Array<{
+    game_item_id: string
+    name: string
+    quantity_required: number
+    available_quantity: number
+    quality_value?: number
+  }>
+}
