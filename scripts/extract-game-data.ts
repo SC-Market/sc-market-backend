@@ -524,7 +524,7 @@ function parseBlueprints(): any[] {
 
 // Interfaces for mission metadata
 interface ShipWave { name: string; shipCount: number }
-interface ShipEncounter { role: string; alignment: "hostile" | "friendly" | "neutral"; waves: ShipWave[] }
+interface ShipEncounter { role: string; alignment: "hostile" | "friendly" | "neutral"; waves: ShipWave[]; shipPool?: string[] }
 interface NpcEncounter { name: string; count: number }
 interface HaulingOrder { resource: string; minSCU: number; maxSCU: number }
 interface EntitySpawn { name: string; count: number }
@@ -549,6 +549,91 @@ if (fs.existsSync(templateDir)) {
 }
 console.log(`  Template illegal lookup: ${templateIllegalMap.size} illegal templates`)
 console.log(`  Template type lookup: ${templateTypeMap.size} templates with mission type`)
+
+// Pre-build ship pool resolver (tag-based ship matching)
+const tagDbFile = path.join(RECORDS_DIR, "tagdatabase/tagdatabase.tagdatabase.json")
+const shipPoolCache = new Map<string, string[]>() // serialized tag set -> ship names
+if (fs.existsSync(tagDbFile)) {
+  const tagData = readJson(tagDbFile)._RecordValue_
+  const tagNameMap: Record<string, string> = {}
+  const tagParent: Record<string, string> = {}
+  const walkTags = (tl: any[], prefix = "", pid?: string) => {
+    for (const t of tl) {
+      const tid = t._RecordId_ as string
+      const full = prefix ? `${prefix}.${t.tagName || ""}` : (t.tagName || "")
+      tagNameMap[tid] = full
+      if (pid) tagParent[tid] = pid
+      walkTags(t.children || [], full, tid)
+    }
+  }
+  walkTags(tagData.tags || [])
+
+  // Build descendant sets
+  const childrenOf: Record<string, Set<string>> = {}
+  for (const [c, p] of Object.entries(tagParent)) {
+    if (!childrenOf[p]) childrenOf[p] = new Set()
+    childrenOf[p].add(c)
+  }
+  const tagDesc: Record<string, Set<string>> = {}
+  const buildDesc = (tid: string): Set<string> => {
+    if (tagDesc[tid]) return tagDesc[tid]
+    const r = new Set([tid])
+    for (const c of childrenOf[tid] || []) for (const d of buildDesc(c)) r.add(d)
+    tagDesc[tid] = r
+    return r
+  }
+  for (const tid of Object.keys(tagNameMap)) if (!tagParent[tid]) buildDesc(tid)
+
+  const MATCH_PREFIXES = ["Ship.", "Missions.VehicleType.", "AI.ShipClass.", "AI.Ship.CombatClass."]
+  const isMatchTag = (tid: string) => MATCH_PREFIXES.some(p => (tagNameMap[tid] || "").startsWith(p))
+
+  // Build ship -> tags from spaceship entities
+  const shipDb = new Map<string, Set<string>>()
+  const spDir = path.join(RECORDS_DIR, "entities/spaceships")
+  if (fs.existsSync(spDir)) {
+    for (const sf of findJsonFiles(spDir)) {
+      try {
+        const sd = readJson(sf)._RecordValue_
+        let sName: string | null = null
+        for (const comp of sd.Components || sd.components || []) {
+          if (comp?._Type_ === "SAttachableComponentParams") {
+            const lk = comp.AttachDef?.Localization?.Name
+            if (lk) sName = loc(lk) || null
+            break
+          }
+        }
+        if (!sName || sName.startsWith("<=")) continue
+        const tags = new Set<string>()
+        for (const t of sd.tags || []) if (t?._RecordId_) tags.add(t._RecordId_)
+        if (tags.size) {
+          const existing = shipDb.get(sName)
+          if (existing) for (const t of tags) existing.add(t)
+          else shipDb.set(sName, tags)
+        }
+      } catch {}
+    }
+  }
+  console.log(`  Ship pool resolver: ${shipDb.size} ships, ${Object.keys(tagNameMap).length} tags`)
+
+  // Expose match function for use in extractPropertyOverrides
+  ;(globalThis as Record<string, unknown>).__shipPoolMatch = (reqTagIds: string[]) => {
+    const key = reqTagIds.sort().join(",")
+    if (shipPoolCache.has(key)) return shipPoolCache.get(key)!
+    const identityReqs = reqTagIds.filter(isMatchTag)
+    if (!identityReqs.length) { shipPoolCache.set(key, []); return [] }
+    const result: string[] = []
+    for (const [name, tags] of shipDb) {
+      if (identityReqs.every(r => {
+        const desc = tagDesc[r] || new Set([r])
+        for (const d of desc) if (tags.has(d)) return true
+        return false
+      })) result.push(name)
+    }
+    result.sort()
+    shipPoolCache.set(key, result)
+    return result
+  }
+}
 
 // Pre-build resource name lookup from resourcetypedatabase
 const resourceNameMap = new Map<string, string>()
@@ -597,13 +682,21 @@ function extractPropertyOverrides(po: Record<string, unknown>): {
     const t = v._Type_ as string
 
     if (t === "MissionPropertyValue_ShipSpawnDescriptions") {
+      const matchFn = (globalThis as Record<string, unknown>).__shipPoolMatch as ((ids: string[]) => string[]) | undefined
       for (const sd of (v as { spawnDescriptions?: Array<Record<string, unknown>> }).spawnDescriptions || []) {
         const waves: ShipWave[] = []
+        const allShips = new Set<string>()
         for (const wave of (sd as { ships?: Array<{ options?: Array<Record<string, unknown>> }> }).ships || []) {
           for (const opt of wave.options || []) {
             const name = ((opt as { autoSpawnSettings?: { name?: string } }).autoSpawnSettings?.name) || "ship"
             const count = (opt as { concurrentAmount?: number }).concurrentAmount || 1
             waves.push({ name, shipCount: count })
+            // Resolve ship pool from tags
+            if (matchFn) {
+              const tagList = ((opt as { tags?: { tags?: Array<{ _RecordId_?: string }> } }).tags?.tags || [])
+              const tagIds = tagList.filter((t): t is { _RecordId_: string } => !!t?._RecordId_).map(t => t._RecordId_)
+              if (tagIds.length) for (const s of matchFn(tagIds)) allShips.add(s)
+            }
           }
         }
         if (waves.length) {
@@ -612,7 +705,7 @@ function extractPropertyOverrides(po: Record<string, unknown>): {
           const alignment: "hostile" | "friendly" | "neutral" =
             /target|enemy|attacker|hostile|pirate|criminal|wave\d/i.test(rl) ? "hostile" :
             /defend|escort|salvage|chicken|protect|friendly|allied|cargo/i.test(rl) ? "friendly" : "neutral"
-          shipEncounters.push({ role: roleName, alignment, waves })
+          shipEncounters.push({ role: roleName, alignment, waves, shipPool: allShips.size ? [...allShips].sort() : undefined })
         }
       }
     } else if (t === "MissionPropertyValue_NPCSpawnDescriptions") {
