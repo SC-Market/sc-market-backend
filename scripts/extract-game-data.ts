@@ -1302,6 +1302,13 @@ if (fs.existsSync(mfrDir)) {
 console.log(`  Manufacturer lookup: ${mfrNameMap.size} entries`)
 
 const items = parseItems()
+// Build item name lookup for resolving item reward names
+const itemNameByFile = new Map<string, string>()
+for (const item of items) {
+  const p4k = (item.p4kFile as string || "").toLowerCase()
+  const name = item.name as string || ""
+  if (p4k && name) itemNameByFile.set(p4k, name)
+}
 const blueprints = parseBlueprints()
 const missions = parseMissions()
 
@@ -1546,15 +1553,32 @@ function parseReputationRanks(): any[] {
       const ranks = sm.standings.map((ref: string, idx: number) => {
         const code = typeof ref === "string" ? path.basename(ref, ".json") : ""
         const sd = standingData.get(code) || {}
-        const displayName = loc(sd.displayName as string) || sd.displayName || code
-        // Evenly distribute thresholds across ceiling
+        const rawName = loc(sd.displayName as string) || (sd.displayName as string) || ""
+        // Fall back to Roman numeral if placeholder/unresolved
+        const roman = ["0", "I", "II", "III", "IV", "V", "VI", "VII", "VIII", "IX", "X",
+          "XI", "XII", "XIII", "XIV", "XV", "XVI", "XVII", "XVIII", "XIX", "XX",
+          "XXI", "XXII", "XXIII", "XXIV", "XXV", "XXVI", "XXVII", "XXVIII", "XXIX", "XXX",
+          "XXXI", "XXXII", "XXXIII", "XXXIV", "XXXV", "XXXVI", "XXXVII", "XXXVIII", "XXXIX", "XL",
+          "XLI", "XLII", "XLIII", "XLIV", "XLV", "XLVI", "XLVII", "XLVIII", "XLIX", "L"]
+        const isPlaceholder = !rawName || rawName.includes("LOC_PLACEHOLDER") || rawName.includes("LOC_UNINITIALIZED") || rawName.startsWith("@")
+        const displayName = isPlaceholder ? `Rank ${roman[idx] || idx}` : rawName
         const threshold = rankCount > 1 ? Math.round((ceiling / (rankCount - 1)) * idx) : 0
         return { code, displayName, threshold, index: idx }
       })
 
+      // Derive friendly scope name from code if loc fails
+      const rawScopeName = loc(d.displayName) || (d.displayName as string) || ""
+      const isScopePlaceholder = !rawScopeName || rawScopeName.includes("LOC_") || rawScopeName.startsWith("@")
+      const friendlyScopeName = isScopePlaceholder
+        ? scopeCode
+            .replace(/^reputationscope_/, "")
+            .replace(/_/g, " ")
+            .replace(/\b\w/g, (c: string) => c.toUpperCase())
+        : rawScopeName
+
       ladders.push({
         scope: scopeCode,
-        displayName: loc(d.displayName) || d.displayName || scopeCode,
+        displayName: friendlyScopeName,
         ceiling,
         ranks,
       })
