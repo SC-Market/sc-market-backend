@@ -548,6 +548,8 @@ export class ListingsV2Controller extends BaseController {
           "ls.price_max",
           "ls.quality_tier_min",
           "ls.quality_tier_max",
+          db.raw(`(SELECT MIN((v.attributes->>'quality_value')::int) FROM stock_lots sl JOIN item_variants v ON sl.variant_id = v.variant_id WHERE sl.listing_id = ls.listing_id AND v.attributes->>'quality_value' IS NOT NULL AND sl.quantity_available > 0) as quality_value_min`),
+          db.raw(`(SELECT MAX((v.attributes->>'quality_value')::int) FROM stock_lots sl JOIN item_variants v ON sl.variant_id = v.variant_id WHERE sl.listing_id = ls.listing_id AND v.attributes->>'quality_value' IS NOT NULL AND sl.quantity_available > 0) as quality_value_max`),
           db.raw(`
             CASE 
               WHEN ls.seller_type = 'user' THEN u.username
@@ -738,6 +740,8 @@ export class ListingsV2Controller extends BaseController {
         quantity_available: row.quantity_available || 0,
         quality_tier_min: row.quality_tier_min || undefined,
         quality_tier_max: row.quality_tier_max || undefined,
+        quality_value_min: row.quality_value_min != null ? parseInt(row.quality_value_min) : undefined,
+        quality_value_max: row.quality_value_max != null ? parseInt(row.quality_value_max) : undefined,
         variant_count: row.variant_count || 0,
         seller_type: row.seller_type,
         seller_slug: row.seller_slug || "",
