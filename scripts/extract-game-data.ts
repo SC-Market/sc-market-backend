@@ -783,6 +783,7 @@ interface ExtractedMission {
   lawful?: boolean
   difficulty?: number
   maxCrimestat?: number
+  buyIn?: number
   variantCount?: number
 }
 
@@ -1445,7 +1446,7 @@ const withBP = missions.filter((m) => m.blueprintRewards?.length).length
 console.log(`  Missions with blueprint rewards: ${withBP}`)
 
 // --- Mission broker enrichment ---
-interface BrokerData { lawful: boolean; difficulty: number; maxCrimestat: number }
+interface BrokerData { lawful: boolean; difficulty: number; maxCrimestat: number; buyIn: number }
 const brokerByTitle = new Map<string, BrokerData>()
 const brokerDir = path.join(RECORDS_DIR, "missionbroker/pu_missions")
 if (fs.existsSync(brokerDir)) {
@@ -1460,6 +1461,7 @@ if (fs.existsSync(brokerDir)) {
         lawful: bd.lawfulMission === true,
         difficulty: typeof bd.missionDifficulty === "number" && bd.missionDifficulty >= 0 ? bd.missionDifficulty : -1,
         maxCrimestat: typeof wl?.maxValue === "number" ? wl.maxValue : 5,
+        buyIn: bd.missionBuyInAmount || 0,
       })
     } catch {}
   }
@@ -1474,6 +1476,7 @@ if (fs.existsSync(brokerDir)) {
     m.lawful = bd.lawful
     if (bd.difficulty >= 0) m.difficulty = bd.difficulty
     if (bd.maxCrimestat < 5) m.maxCrimestat = bd.maxCrimestat
+    if (bd.buyIn > 0) m.buyIn = bd.buyIn
     enriched++
   }
   console.log(`  Missions enriched from broker: ${enriched}`)
