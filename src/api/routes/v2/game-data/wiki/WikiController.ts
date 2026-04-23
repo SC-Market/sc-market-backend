@@ -76,6 +76,7 @@ export class WikiController extends BaseController {
     try {
       // Build query
       let itemsQuery = knex("game_items as gi")
+        .leftJoin("wiki_manufacturers as wm", "wm.manufacturer_code", "gi.manufacturer")
         .select(
           "gi.id",
           "gi.name",
@@ -84,6 +85,7 @@ export class WikiController extends BaseController {
           "gi.size",
           "gi.grade",
           "gi.manufacturer",
+          knex.raw("wm.name as manufacturer_name"),
           "gi.image_url",
           "gi.thumbnail_path",
           "gi.display_type",
@@ -167,7 +169,7 @@ export class WikiController extends BaseController {
         sub_type: row.sub_type || undefined,
         size: row.size || undefined,
         grade: row.grade || undefined,
-        manufacturer: row.manufacturer || undefined,
+        manufacturer: row.manufacturer_name || row.manufacturer || undefined,
         image_url: row.image_url || row.listing_photo || undefined,
         thumbnail_path: row.thumbnail_path || undefined,
         display_type: row.display_type || undefined,

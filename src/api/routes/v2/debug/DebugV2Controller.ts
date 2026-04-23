@@ -51,6 +51,8 @@ export class DebugV2Controller extends BaseController {
         market_version: "V1",
         is_developer: false,
         has_override: false,
+        flags: {},
+        overridden_flags: [],
       }
     }
 
@@ -62,23 +64,17 @@ export class DebugV2Controller extends BaseController {
 
     try {
       const marketVersion = await featureFlagService.getMarketVersion(userId)
-
-      logger.info("Retrieved feature flag", {
-        userId,
-        marketVersion,
-        isDeveloper,
-      })
-
-      // Check if user has a manual override
-      const db = getKnex()
-      const override = await db("user_preferences").where({ user_id: userId }).first()
-      const hasOverride = !!override
+      const flags = await featureFlagService.getAllFlags(userId)
+      const hasOverride = await featureFlagService.hasOverride(userId)
+      const userOverrides = await featureFlagService.getUserFlagOverrides(userId)
 
       return {
         user_id: userId,
         market_version: marketVersion,
         is_developer: isDeveloper,
         has_override: hasOverride,
+        flags,
+        overridden_flags: userOverrides.map((o) => o.flag_name),
       }
     } catch (error) {
       logger.error("Failed to get feature flag", {
@@ -116,9 +112,8 @@ export class DebugV2Controller extends BaseController {
 
     // Allow switching if: dev mode, admin, or user has an existing override
     if (process.env.NODE_ENV !== "development" && !this.isAdmin()) {
-      const db = getKnex()
-      const override = await db("user_preferences").where({ user_id: userId }).first()
-      if (!override) {
+      const hasOvr = await featureFlagService.hasOverride(userId)
+      if (!hasOvr) {
         this.throwForbidden("Only admin or override users can switch versions")
       }
     }

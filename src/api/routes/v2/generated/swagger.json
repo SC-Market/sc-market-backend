@@ -6375,6 +6375,14 @@
 					"V2"
 				]
 			},
+			"Record_string.boolean_": {
+				"properties": {},
+				"additionalProperties": {
+					"type": "boolean"
+				},
+				"type": "object",
+				"description": "Construct a type with a set of properties K of type T"
+			},
 			"GetFeatureFlagResponse": {
 				"description": "Response for getting feature flag\n\nReturns the current market version for the authenticated user,\nalong with developer status to determine if debug UI should be shown.",
 				"properties": {
@@ -6384,7 +6392,7 @@
 					},
 					"market_version": {
 						"$ref": "#/components/schemas/MarketVersion",
-						"description": "Current market version (V1 or V2)"
+						"description": "Current market version (V1 or V2) — backward compat"
 					},
 					"is_developer": {
 						"type": "boolean",
@@ -6393,13 +6401,26 @@
 					"has_override": {
 						"type": "boolean",
 						"description": "Whether this user has a manual override (show treatment picker if true)"
+					},
+					"flags": {
+						"$ref": "#/components/schemas/Record_string.boolean_",
+						"description": "All resolved flags for this user"
+					},
+					"overridden_flags": {
+						"items": {
+							"type": "string"
+						},
+						"type": "array",
+						"description": "Which flags this user has overrides for"
 					}
 				},
 				"required": [
 					"user_id",
 					"market_version",
 					"is_developer",
-					"has_override"
+					"has_override",
+					"flags",
+					"overridden_flags"
 				],
 				"type": "object",
 				"additionalProperties": false
@@ -7417,29 +7438,23 @@
 					},
 					"enabled": {
 						"type": "boolean"
-					},
-					"created_at": {
-						"type": "string",
-						"format": "date-time"
-					},
-					"updated_at": {
-						"type": "string",
-						"format": "date-time"
 					}
 				},
 				"required": [
 					"flag_name",
 					"default_version",
 					"rollout_percentage",
-					"enabled",
-					"created_at",
-					"updated_at"
+					"enabled"
 				],
 				"type": "object",
 				"additionalProperties": false
 			},
 			"UpdateConfigRequest": {
 				"properties": {
+					"flag_name": {
+						"type": "string",
+						"description": "Which flag to update (defaults to market_v2)"
+					},
 					"default_version": {
 						"$ref": "#/components/schemas/MarketVersion",
 						"description": "Global default version for users without overrides"
@@ -7459,36 +7474,40 @@
 			},
 			"FeatureFlagStats": {
 				"properties": {
-					"total_overrides": {
-						"type": "number",
-						"format": "double"
+					"flag_name": {
+						"type": "string"
 					},
-					"v1_overrides": {
-						"type": "number",
-						"format": "double"
+					"enabled": {
+						"type": "boolean"
 					},
-					"v2_overrides": {
-						"type": "number",
-						"format": "double"
+					"default_version": {
+						"$ref": "#/components/schemas/MarketVersion"
 					},
 					"rollout_percentage": {
 						"type": "number",
 						"format": "double"
 					},
-					"default_version": {
-						"$ref": "#/components/schemas/MarketVersion"
+					"override_count": {
+						"type": "number",
+						"format": "double"
 					},
-					"enabled": {
-						"type": "boolean"
+					"enabled_overrides": {
+						"type": "number",
+						"format": "double"
+					},
+					"disabled_overrides": {
+						"type": "number",
+						"format": "double"
 					}
 				},
 				"required": [
-					"total_overrides",
-					"v1_overrides",
-					"v2_overrides",
-					"rollout_percentage",
+					"flag_name",
+					"enabled",
 					"default_version",
-					"enabled"
+					"rollout_percentage",
+					"override_count",
+					"enabled_overrides",
+					"disabled_overrides"
 				],
 				"type": "object",
 				"additionalProperties": false
@@ -13176,7 +13195,10 @@
 						"content": {
 							"application/json": {
 								"schema": {
-									"$ref": "#/components/schemas/FeatureFlagStats"
+									"items": {
+										"$ref": "#/components/schemas/FeatureFlagStats"
+									},
+									"type": "array"
 								}
 							}
 						}

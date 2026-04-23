@@ -23,6 +23,8 @@ import { getKnex } from "../../../../clients/database/knex-db.js"
 // ── Request / Response types ─────────────────────────────────────
 
 export interface UpdateConfigRequest {
+  /** Which flag to update (defaults to market_v2) */
+  flag_name?: string
   /** Global default version for users without overrides */
   default_version?: MarketVersion
   /** Percentage of users (0-100) to receive V2 via rollout */
@@ -103,7 +105,7 @@ export class FeatureFlagAdminController extends BaseController {
       updates: body,
     })
 
-    return featureFlagService.updateConfig(body)
+    return featureFlagService.updateConfig(body.flag_name || "market_v2", body)
   }
 
   /**
@@ -113,7 +115,7 @@ export class FeatureFlagAdminController extends BaseController {
   @Get("stats")
   public async getStats(
     @Request() request: ExpressRequest,
-  ): Promise<FeatureFlagStats> {
+  ): Promise<FeatureFlagStats[]> {
     this.request = request
     this.requireAdmin()
     return featureFlagService.getStats()

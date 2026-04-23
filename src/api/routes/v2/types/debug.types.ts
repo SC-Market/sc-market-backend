@@ -18,12 +18,16 @@ import { MarketVersion } from "../../../../services/market-v2/feature-flag.servi
 export interface GetFeatureFlagResponse {
   /** User ID */
   user_id: string
-  /** Current market version (V1 or V2) */
+  /** Current market version (V1 or V2) — backward compat */
   market_version: MarketVersion
   /** Whether user has developer privileges (admin or dev environment) */
   is_developer: boolean
   /** Whether this user has a manual override (show treatment picker if true) */
   has_override: boolean
+  /** All resolved flags for this user */
+  flags: Record<string, boolean>
+  /** Which flags this user has overrides for */
+  overridden_flags: string[]
 }
 
 /**
