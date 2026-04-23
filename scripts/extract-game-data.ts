@@ -706,8 +706,8 @@ function extractPropertyOverrides(po: Record<string, unknown>): {
           const roleName = (sd as { Name?: string }).Name || "unknown"
           const rl = roleName.toLowerCase()
           const alignment: "hostile" | "friendly" | "neutral" =
-            /target|enemy|attacker|hostile|pirate|criminal|wave\d/i.test(rl) ? "hostile" :
-            /defend|escort|salvage|chicken|protect|friendly|allied|cargo/i.test(rl) ? "friendly" : "neutral"
+            /target|enemy|attacker|hostile|pirate|criminal|wave\d|defender/i.test(rl) ? "hostile" :
+            /escort|salvage|chicken|protect|friendly|allied|cargo/i.test(rl) ? "friendly" : "neutral"
           shipEncounters.push({ role: roleName, alignment, waves, shipPool: allShips.size ? [...allShips].sort() : undefined })
         }
       }
