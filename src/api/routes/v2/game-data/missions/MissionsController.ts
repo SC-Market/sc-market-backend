@@ -650,10 +650,13 @@ export class MissionsController extends BaseController {
         .where("mission_id", mission_id)
       const ship_encounters = shipEncounterRows.map((r: any) => ({
         role: r.role,
+        alignment: r.alignment || "neutral",
         waves: (typeof r.waves === "string" ? JSON.parse(r.waves) : r.waves || []).map((w: any) => ({
           name: w.name,
-          ship_count: w.shipCount ?? w.ship_count ?? 0,
+          min_ships: w.minShips ?? w.min_ships ?? w.shipCount ?? w.ship_count ?? 0,
+          max_ships: w.maxShips ?? w.max_ships ?? w.shipCount ?? w.ship_count ?? 0,
         })),
+        ship_pool: r.ship_pool ? (typeof r.ship_pool === "string" ? JSON.parse(r.ship_pool) : r.ship_pool) : undefined,
       }))
 
       const npcEncounterRows = await knex("mission_npc_encounters")

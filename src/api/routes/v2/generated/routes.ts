@@ -1485,7 +1485,8 @@ const models: TsoaRoute.Models = {
         "dataType": "refObject",
         "properties": {
             "name": {"dataType":"string","required":true},
-            "ship_count": {"dataType":"double","required":true},
+            "min_ships": {"dataType":"double","required":true},
+            "max_ships": {"dataType":"double","required":true},
         },
         "additionalProperties": false,
     },
@@ -1494,7 +1495,9 @@ const models: TsoaRoute.Models = {
         "dataType": "refObject",
         "properties": {
             "role": {"dataType":"string","required":true},
+            "alignment": {"dataType":"union","subSchemas":[{"dataType":"enum","enums":["hostile"]},{"dataType":"enum","enums":["friendly"]},{"dataType":"enum","enums":["neutral"]}],"required":true},
             "waves": {"dataType":"array","array":{"dataType":"refObject","ref":"ShipWave"},"required":true},
+            "ship_pool": {"dataType":"array","array":{"dataType":"string"}},
         },
         "additionalProperties": false,
     },

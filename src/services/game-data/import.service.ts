@@ -1368,7 +1368,7 @@ export class GameDataImportService {
             const ships = dedup(mission.shipEncounters, "role")
             if (ships.length) {
               await trx("mission_ship_encounters").insert(
-                ships.map((e) => ({ mission_id: mid, role: e.role, alignment: e.alignment || "neutral", waves: JSON.stringify(e.waves) })),
+                ships.map((e) => ({ mission_id: mid, role: e.role, alignment: e.alignment || "neutral", waves: JSON.stringify(e.waves), ship_pool: e.shipPool?.length ? JSON.stringify(e.shipPool) : null })),
               ).onConflict(["mission_id", "role"]).ignore()
             }
             const npcs = dedup(mission.npcEncounters, "name")
