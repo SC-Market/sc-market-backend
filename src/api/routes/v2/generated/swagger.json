@@ -2316,6 +2316,57 @@
 				"type": "object",
 				"additionalProperties": false
 			},
+			"InventoryMaterial": {
+				"description": "Aggregated inventory material",
+				"properties": {
+					"game_item_id": {
+						"type": "string"
+					},
+					"game_item_name": {
+						"type": "string"
+					},
+					"game_item_type": {
+						"type": "string"
+					},
+					"game_item_icon": {
+						"type": "string"
+					},
+					"total_quantity": {
+						"type": "number",
+						"format": "double"
+					},
+					"avg_quality_value": {
+						"type": "number",
+						"format": "double"
+					},
+					"max_quality_value": {
+						"type": "number",
+						"format": "double"
+					}
+				},
+				"required": [
+					"game_item_id",
+					"game_item_name",
+					"total_quantity"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
+			"InventorySummaryResponse": {
+				"properties": {
+					"materials": {
+						"items": {
+							"$ref": "#/components/schemas/InventoryMaterial"
+						},
+						"type": "array"
+					}
+				},
+				"required": [
+					"materials"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
 			"ImportSource": {
 				"type": "string",
 				"enum": [
@@ -6368,6 +6419,79 @@
 				"type": "object",
 				"additionalProperties": false
 			},
+			"CraftableBlueprintResult": {
+				"description": "Result from the craftable blueprints endpoint",
+				"properties": {
+					"blueprint_id": {
+						"type": "string"
+					},
+					"blueprint_code": {
+						"type": "string"
+					},
+					"blueprint_name": {
+						"type": "string"
+					},
+					"output_item_name": {
+						"type": "string"
+					},
+					"output_item_icon": {
+						"type": "string"
+					},
+					"item_category": {
+						"type": "string"
+					},
+					"crafting_time_seconds": {
+						"type": "number",
+						"format": "double"
+					},
+					"max_craftable": {
+						"type": "number",
+						"format": "double"
+					},
+					"ingredients": {
+						"items": {
+							"properties": {
+								"quality_value": {
+									"type": "number",
+									"format": "double"
+								},
+								"available_quantity": {
+									"type": "number",
+									"format": "double"
+								},
+								"quantity_required": {
+									"type": "number",
+									"format": "double"
+								},
+								"name": {
+									"type": "string"
+								},
+								"game_item_id": {
+									"type": "string"
+								}
+							},
+							"required": [
+								"available_quantity",
+								"quantity_required",
+								"name",
+								"game_item_id"
+							],
+							"type": "object"
+						},
+						"type": "array"
+					}
+				},
+				"required": [
+					"blueprint_id",
+					"blueprint_code",
+					"blueprint_name",
+					"output_item_name",
+					"max_craftable",
+					"ingredients"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
 			"MarketVersion": {
 				"type": "string",
 				"enum": [
@@ -9013,6 +9137,44 @@
 						"in": "path",
 						"name": "id",
 						"required": true,
+						"schema": {
+							"type": "string"
+						}
+					}
+				]
+			}
+		},
+		"/listings/inventory-summary": {
+			"get": {
+				"operationId": "GetInventorySummary",
+				"responses": {
+					"200": {
+						"description": "Ok",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/InventorySummaryResponse"
+								}
+							}
+						}
+					}
+				},
+				"description": "Get aggregated inventory summary — materials from user's and/or org's stock lots.\nGroups by game item, sums quantities, averages quality values.",
+				"summary": "Get inventory summary",
+				"tags": [
+					"Listings V2"
+				],
+				"security": [
+					{
+						"jwt": []
+					}
+				],
+				"parameters": [
+					{
+						"description": "Optional org spectrum_id to include org inventory",
+						"in": "query",
+						"name": "spectrum_id",
+						"required": false,
 						"schema": {
 							"type": "string"
 						}
@@ -12247,6 +12409,71 @@
 						}
 					}
 				]
+			}
+		},
+		"/game-data/blueprints/craftable": {
+			"post": {
+				"operationId": "FindCraftableBlueprints",
+				"responses": {
+					"200": {
+						"description": "Ok",
+						"content": {
+							"application/json": {
+								"schema": {
+									"items": {
+										"$ref": "#/components/schemas/CraftableBlueprintResult"
+									},
+									"type": "array"
+								}
+							}
+						}
+					}
+				},
+				"description": "Find blueprints craftable with given materials.\nReturns blueprints where all ingredients are satisfied, with max craftable count.",
+				"summary": "Find craftable blueprints",
+				"tags": [
+					"Game Data - Blueprints"
+				],
+				"security": [],
+				"parameters": [],
+				"requestBody": {
+					"required": true,
+					"content": {
+						"application/json": {
+							"schema": {
+								"properties": {
+									"materials": {
+										"items": {
+											"properties": {
+												"quality_value": {
+													"type": "number",
+													"format": "double"
+												},
+												"quantity_scu": {
+													"type": "number",
+													"format": "double"
+												},
+												"game_item_id": {
+													"type": "string"
+												}
+											},
+											"required": [
+												"quantity_scu",
+												"game_item_id"
+											],
+											"type": "object"
+										},
+										"type": "array"
+									}
+								},
+								"required": [
+									"materials"
+								],
+								"type": "object"
+							}
+						}
+					}
+				}
 			}
 		},
 		"/debug/feature-flag": {

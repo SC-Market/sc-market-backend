@@ -52,7 +52,17 @@ export class WishlistsController extends BaseController {
     try {
       const wishlists = await knex("user_wishlists as w")
         .leftJoin("wishlist_items as wi", "w.wishlist_id", "wi.wishlist_id")
-        .where("w.user_id", user_id)
+        .where(function () {
+          this.where("w.user_id", user_id)
+            .orWhere(function () {
+              // Include org lists where user is a member
+              this.whereNotNull("w.organization_id")
+                .where("w.is_collaborative", true)
+                .whereIn("w.organization_id",
+                  knex("contractor_members").where("user_id", user_id).select("contractor_id")
+                )
+            })
+        })
         .groupBy("w.wishlist_id")
         .select(
           "w.wishlist_id",
@@ -544,6 +554,16 @@ export class WishlistsController extends BaseController {
 
       if (wishlist.user_id !== user_id && !wishlist.is_collaborative) {
         this.throwForbidden("You do not have permission to add items to this wishlist")
+      }
+
+      // For org collaborative lists, verify membership
+      if (wishlist.user_id !== user_id && wishlist.is_collaborative && wishlist.organization_id) {
+        const isMember = await knex("contractor_members")
+          .where({ user_id, contractor_id: wishlist.organization_id })
+          .first()
+        if (!isMember) {
+          this.throwForbidden("You must be an org member to modify this list")
+        }
       }
 
       // Verify game item exists

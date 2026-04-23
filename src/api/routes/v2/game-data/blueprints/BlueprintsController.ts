@@ -21,6 +21,7 @@ import {
   BlueprintIngredient,
   MissionRewardingBlueprint,
   BlueprintCategory,
+  CraftableBlueprintResult,
 } from "./blueprints.types.js"
 import logger from "../../../../../logger/logger.js"
 import { resolveGameItemImages } from "../../util/resolve-game-item-images.js"
@@ -765,7 +766,10 @@ export class BlueprintsController extends BaseController {
       acquisition_location?: string
       acquisition_notes?: string
     },
+    @Request() request: ExpressRequest,
   ): Promise<{ success: boolean; inventory_id: string }> {
+    this.request = request
+    this.requireAuth()
     const knex = getKnex()
 
     if (!blueprint_id) {
@@ -775,7 +779,7 @@ export class BlueprintsController extends BaseController {
     }
 
     // Get user_id from authentication context
-    const user_id = (this as any).user?.user_id
+    const user_id = this.getUserId()
 
     if (!user_id) {
       this.throwUnauthorized("User must be authenticated to manage blueprint inventory")
@@ -889,7 +893,7 @@ export class BlueprintsController extends BaseController {
     }
 
     // Get user_id from authentication context
-    const user_id = (this as any).user?.user_id
+    const user_id = this.getUserId()
 
     if (!user_id) {
       this.throwUnauthorized("User must be authenticated to manage blueprint inventory")
@@ -1101,7 +1105,7 @@ export class BlueprintsController extends BaseController {
     const knex = getKnex()
 
     // Get user_id from authentication context
-    const user_id = (this as any).user?.user_id
+    const user_id = this.getUserId()
 
     if (!user_id) {
       this.throwUnauthorized("User must be authenticated to view blueprint inventory")
@@ -1329,5 +1333,83 @@ export class BlueprintsController extends BaseController {
         acquisition_date: r.acquisition_date?.toISOString() || undefined,
       })),
     }
+  }
+
+  /**
+   * Find blueprints craftable with given materials.
+   * Returns blueprints where all ingredients are satisfied, with max craftable count.
+   * @summary Find craftable blueprints
+   */
+  @Post("craftable")
+  public async findCraftableBlueprints(
+    @Body() body: { materials: Array<{ game_item_id: string; quantity_scu: number; quality_value?: number }> },
+  ): Promise<CraftableBlueprintResult[]> {
+    const knex = getKnex()
+
+    if (!body.materials?.length) return []
+
+    // Build a map of available materials
+    const available = new Map<string, { qty: number; quality: number }>()
+    for (const m of body.materials) {
+      available.set(m.game_item_id, { qty: m.quantity_scu, quality: m.quality_value ?? 500 })
+    }
+
+    // Get the active version
+    const version = await knex("game_versions").where("is_active", true).first("version_id")
+    if (!version) return []
+
+    // Find all blueprints with their ingredients
+    const blueprints = await knex("blueprints as b")
+      .join("game_items as gi", "b.output_game_item_id", "gi.id")
+      .where("b.version_id", version.version_id)
+      .where("b.is_active", true)
+      .select("b.blueprint_id", "b.blueprint_code", "b.blueprint_name", "b.crafting_time_seconds",
+        "gi.name as output_item_name", "gi.image_url as output_item_icon", "b.item_category")
+
+    const results: CraftableBlueprintResult[] = []
+
+    for (const bp of blueprints) {
+      const ingredients = await knex("blueprint_ingredients as bi")
+        .join("game_items as ig", "bi.game_item_id", "ig.id")
+        .where("bi.blueprint_id", bp.blueprint_id)
+        .select("bi.game_item_id", "ig.name", "bi.quantity_required")
+
+      if (!ingredients.length) continue
+
+      // Check if all ingredients are available and compute max craftable
+      let maxCraftable = Infinity
+      let allAvailable = true
+
+      for (const ing of ingredients) {
+        const mat = available.get(ing.game_item_id)
+        if (!mat || mat.qty <= 0) { allAvailable = false; break }
+        const qty = parseFloat(ing.quantity_required)
+        if (qty > 0) maxCraftable = Math.min(maxCraftable, Math.floor(mat.qty / qty))
+      }
+
+      if (!allAvailable || maxCraftable <= 0) continue
+
+      results.push({
+        blueprint_id: bp.blueprint_id,
+        blueprint_code: bp.blueprint_code,
+        blueprint_name: bp.blueprint_name,
+        output_item_name: bp.output_item_name,
+        output_item_icon: bp.output_item_icon || undefined,
+        item_category: bp.item_category || undefined,
+        crafting_time_seconds: bp.crafting_time_seconds || undefined,
+        max_craftable: maxCraftable === Infinity ? 0 : maxCraftable,
+        ingredients: ingredients.map(ing => ({
+          game_item_id: ing.game_item_id,
+          name: ing.name,
+          quantity_required: parseFloat(ing.quantity_required),
+          available_quantity: available.get(ing.game_item_id)?.qty || 0,
+          quality_value: available.get(ing.game_item_id)?.quality,
+        })),
+      })
+    }
+
+    // Sort by max craftable descending
+    results.sort((a, b) => b.max_craftable - a.max_craftable)
+    return results
   }
 }
