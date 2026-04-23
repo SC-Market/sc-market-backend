@@ -786,6 +786,7 @@ interface ExtractedMission {
   destinations?: string[]
   itemRewards?: ItemReward[]
   tokenSubstitutions?: Record<string, string>
+  source: 'contract' | 'broker'
   // Added by post-processing
   career?: string | null
   lawful?: boolean
@@ -1046,6 +1047,7 @@ function parseMissions(): ExtractedMission[] {
             blueprintRewards: blueprintPools.length ? blueprintPools : null,
             minStanding,
             maxStanding,
+            source: 'contract',
             notForRelease: contract.notForRelease || false,
             workInProgress: contract.workInProgress || false,
             onceOnly: gen.defaultAvailability?.onceOnly || false,
@@ -1302,6 +1304,130 @@ console.log(`  Manufacturer lookup: ${mfrNameMap.size} entries`)
 const items = parseItems()
 const blueprints = parseBlueprints()
 const missions = parseMissions()
+
+// --- Build template→module map for dedup ---
+const tmplModuleMap = new Map<string, string>()
+{
+  const tmplDir2 = path.join(RECORDS_DIR, "contracts/contracttemplates")
+  if (fs.existsSync(tmplDir2)) {
+    for (const tf of findJsonFiles(tmplDir2)) {
+      try {
+        const findXml = (obj: unknown): string | null => {
+          if (typeof obj === "string" && obj.toLowerCase().endsWith(".xml"))
+            return path.basename(obj, ".xml").toLowerCase()
+          if (obj && typeof obj === "object") {
+            for (const v of Object.values(obj)) {
+              const r = findXml(v)
+              if (r) return r
+            }
+          }
+          return null
+        }
+        const module = findXml(readJson(tf))
+        if (module) tmplModuleMap.set(path.basename(tf, ".json"), module)
+      } catch {}
+    }
+  }
+}
+
+// --- Parse broker-only missions ---
+function parseBrokerMissions(): ExtractedMission[] {
+  const dir = path.join(RECORDS_DIR, "missionbroker/pu_missions")
+  if (!fs.existsSync(dir)) return []
+
+  // Build set of modules already covered by contract missions
+  const contractModules = new Set<string>()
+  for (const m of missions) {
+    if (m.template) {
+      const mod = tmplModuleMap.get(m.template)
+      if (mod) contractModules.add(mod)
+    }
+  }
+
+  const files = findJsonFiles(dir)
+  const brokerMissions: ExtractedMission[] = []
+
+  for (const f of files) {
+    try {
+      const data = readJson(f)
+      const bd = data._RecordValue_
+      if (bd?._Type_ !== "MissionBrokerEntry") continue
+      if (bd.notForRelease === true) continue
+
+      const titleResolved = cleanMissionText(loc(bd.title))
+      const descResolved = cleanMissionText(loc(bd.description))
+      if (!titleResolved && !descResolved) continue
+
+      // Dedup: skip if this broker entry's module is already in a contract mission
+      const brokerModule = path.basename(bd.missionModule || "", ".xml").toLowerCase()
+      if (brokerModule && contractModules.has(brokerModule)) continue
+
+      const recordName = (data._RecordName_ as string) || ""
+      const name = recordName.includes(".") ? recordName.split(".").slice(1).join(".") : recordName
+
+      // Reputation rewards from success outcome (index 0)
+      const repRewards: { faction: string; scope: string; reward: string }[] = []
+      const successRep = (bd.missionResultReputationRewards as Array<{ reputationAmounts?: Array<Record<string, unknown>> }>)?.[0]
+      if (successRep?.reputationAmounts) {
+        for (const ra of successRep.reputationAmounts) {
+          repRewards.push({
+            faction: refName(ra.factionReputation) || "",
+            scope: refName(ra.reputationScope) || "",
+            reward: refName(ra.reward) || "",
+          })
+        }
+      }
+
+      const wl = (bd.reputationPrerequisites as { wantedLevel?: { maxValue?: number } })?.wantedLevel
+      const locRef = bd.locationMissionAvailable
+      const locRefName = refName(locRef)
+
+      brokerMissions.push({
+        id: data._RecordId_,
+        name,
+        title: titleResolved,
+        titleKey: bd.title || null,
+        description: descResolved,
+        missionGiver: loc(bd.missionGiver) || "",
+        type: refName(bd.type),
+        template: null,
+        reward: bd.missionReward?.reward ? { uec: bd.missionReward.reward, max: bd.missionReward.max || bd.missionReward.reward } : null,
+        reputationRewards: repRewards.length ? repRewards : null,
+        blueprintRewards: null,
+        minStanding: null,
+        maxStanding: null,
+        source: 'broker',
+        notForRelease: false,
+        workInProgress: false,
+        onceOnly: bd.onceOnly || false,
+        canBeShared: bd.canBeShared ?? null,
+        canReacceptAfterAbandoning: bd.canReacceptAfterAbandoning ?? null,
+        canReacceptAfterFailing: bd.canReacceptAfterFailing ?? null,
+        abandonedCooldownTime: bd.abandonedCooldownTime || null,
+        personalCooldownTime: bd.hasPersonalCooldown ? (bd.personalCooldownTime || null) : null,
+        deadline: (bd.missionDeadline as { missionCompletionTime?: number })?.missionCompletionTime || null,
+        timeToComplete: null,
+        availableInPrison: bd.availableInPrison || false,
+        illegal: !bd.lawfulMission,
+        lawful: bd.lawfulMission === true,
+        hideInMobiGlas: false,
+        starSystem: locRefName ? detectSystem(locRefName) : detectSystem(name),
+        maxPlayersPerInstance: bd.maxPlayersPerInstance ?? null,
+        buyIn: bd.missionBuyInAmount || 0,
+        acceptLocations: locRefName ? [locRefName] : undefined,
+        maxCrimestat: typeof wl?.maxValue === "number" ? wl.maxValue : undefined,
+        difficulty: typeof bd.missionDifficulty === "number" && bd.missionDifficulty >= 0 ? bd.missionDifficulty : undefined,
+      })
+    } catch {}
+  }
+
+  console.log(`  Missions (broker-only): ${brokerMissions.length}`)
+  return brokerMissions
+}
+
+const brokerOnlyMissions = parseBrokerMissions()
+missions.push(...brokerOnlyMissions)
+
 const resources = parseResources()
 const ships = parseShips()
 const manufacturers = parseManufacturers()
@@ -1634,28 +1760,7 @@ if (fs.existsSync(brokerDir)) {
     }
   }
 
-  // Build template → module mapping
-  const tmplModuleMap = new Map<string, string>()
-  const tmplDir2 = path.join(RECORDS_DIR, "contracts/contracttemplates")
-  if (fs.existsSync(tmplDir2)) {
-    for (const tf of findJsonFiles(tmplDir2)) {
-      try {
-        const findXml = (obj: unknown): string | null => {
-          if (typeof obj === "string" && obj.toLowerCase().endsWith(".xml"))
-            return path.basename(obj, ".xml").toLowerCase()
-          if (obj && typeof obj === "object") {
-            for (const v of Object.values(obj)) {
-              const r = findXml(v)
-              if (r) return r
-            }
-          }
-          return null
-        }
-        const module = findXml(readJson(tf))
-        if (module) tmplModuleMap.set(path.basename(tf, ".json"), module)
-      } catch {}
-    }
-  }
+  // Reuse tmplModuleMap built earlier
 
   let moduleMatched = 0
   for (const m of missions) {
