@@ -20,6 +20,7 @@ import {
   MissionBlueprintReward,
   BlueprintDetail,
   ReputationRank,
+  GameEvent,
 } from "./missions.types.js"
 import logger from "../../../../../logger/logger.js"
 
@@ -1339,6 +1340,29 @@ export class MissionsController extends BaseController {
       return row?.standing_display_name || code
     } catch {
       return code
+    }
+  }
+
+  /**
+   * List all game events/scenarios that have associated missions
+   * @summary Get game events
+   */
+  @Get("events")
+  public async getGameEvents(): Promise<{ events: GameEvent[] }> {
+    const knex = getKnex()
+    const rows = await knex("game_events as ge")
+      .join("mission_events as me", "ge.event_id", "me.event_id")
+      .select("ge.event_id", "ge.event_code", "ge.event_name")
+      .count("me.mission_id as mission_count")
+      .groupBy("ge.event_id", "ge.event_code", "ge.event_name")
+      .orderBy("ge.event_name")
+    return {
+      events: rows.map((r: any) => ({
+        event_id: r.event_id,
+        event_code: r.event_code,
+        event_name: r.event_name,
+        mission_count: parseInt(r.mission_count) || 0,
+      })),
     }
   }
 }

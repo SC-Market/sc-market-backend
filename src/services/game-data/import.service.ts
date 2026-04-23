@@ -290,6 +290,10 @@ export interface P4KMission {
   destinations?: string[]
   itemRewards?: Array<{ name: string; ref: string }>
   tokenSubstitutions?: Record<string, string>
+  maxPlayersPerInstance?: number
+  isIntro?: boolean
+  linkedIntros?: string[]
+  buyIn?: number
 }
 
 export interface P4KBlueprint {
@@ -1463,6 +1467,14 @@ export class GameDataImportService {
           hideInMobiGlas: raw.hideInMobiGlas || false,
           requiredScenarios: raw.requiredScenarios || undefined,
           acceptLocations: raw.acceptLocations || undefined,
+          maxPlayersPerInstance: raw.maxPlayersPerInstance ?? undefined,
+          isIntro: raw.isIntro ?? undefined,
+          linkedIntros: raw.linkedIntros || undefined,
+          buyIn: raw.buyIn ?? undefined,
+          maxPlayersPerInstance: raw.maxPlayersPerInstance ?? undefined,
+          isIntro: raw.isIntro ?? undefined,
+          linkedIntros: raw.linkedIntros || undefined,
+          buyIn: raw.buyIn ?? undefined,
           timeToComplete: raw.timeToComplete ?? undefined,
           destinations: raw.destinations || undefined,
           itemRewards: raw.itemRewards || undefined,
@@ -1549,6 +1561,10 @@ export class GameDataImportService {
       destinations: mission.destinations?.length ? JSON.stringify(mission.destinations) : null,
       item_rewards: mission.itemRewards?.length ? JSON.stringify(mission.itemRewards) : null,
       token_substitutions: mission.tokenSubstitutions && Object.keys(mission.tokenSubstitutions).length ? JSON.stringify(mission.tokenSubstitutions) : null,
+      max_players_per_instance: mission.maxPlayersPerInstance ?? null,
+      is_intro: mission.isIntro ?? false,
+      linked_intros: mission.linkedIntros ? JSON.stringify(mission.linkedIntros) : null,
+      buy_in: mission.buyIn ?? null,
       can_reaccept_after_failing: mission.canReacceptAfterFailing ?? false,
       can_reaccept_after_abandoning: mission.canReacceptAfterAbandoning ?? false,
       abandoned_cooldown_time: mission.abandonedCooldownTime,
