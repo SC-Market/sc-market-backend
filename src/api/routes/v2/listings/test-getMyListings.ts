@@ -110,6 +110,7 @@ async function runTests() {
       undefined,
       undefined,
       undefined,
+      undefined,
       createMockRequest() as ExpressRequest,
     )
     console.log(`✅ Total listings: ${allListings.total}`)
@@ -125,6 +126,7 @@ async function runTests() {
     console.log("📝 Test 3: Filter by active status...")
     const activeListings = await controller.getMyListings(
       "active",
+      undefined,
       undefined,
       undefined,
       undefined,
@@ -151,6 +153,7 @@ async function runTests() {
       undefined,
       undefined,
       undefined,
+      undefined,
       createMockRequest() as ExpressRequest,
     )
     console.log(`✅ Sold listings: ${soldListings.total}`)
@@ -168,6 +171,7 @@ async function runTests() {
       1,
       undefined,
       undefined,
+      undefined,
       createMockRequest() as ExpressRequest,
     )
     console.log(`✅ Page 1: ${page1.listings.length} listings`)
@@ -180,6 +184,7 @@ async function runTests() {
       undefined,
       2,
       1,
+      undefined,
       undefined,
       undefined,
       createMockRequest() as ExpressRequest,
@@ -199,6 +204,7 @@ async function runTests() {
       undefined,
       "price",
       "asc",
+      undefined,
       createMockRequest() as ExpressRequest,
     )
     console.log(`✅ Listings sorted by price:`)
