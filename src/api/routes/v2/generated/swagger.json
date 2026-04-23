@@ -4112,6 +4112,29 @@
 				"type": "object",
 				"additionalProperties": false
 			},
+			"HaulingOrder": {
+				"description": "Hauling order",
+				"properties": {
+					"resource_name": {
+						"type": "string"
+					},
+					"min_scu": {
+						"type": "number",
+						"format": "double"
+					},
+					"max_scu": {
+						"type": "number",
+						"format": "double"
+					}
+				},
+				"required": [
+					"resource_name",
+					"min_scu",
+					"max_scu"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
 			"MissionSearchResult": {
 				"description": "Mission search result item",
 				"properties": {
@@ -4218,6 +4241,13 @@
 						"type": "number",
 						"format": "double",
 						"description": "Total ship encounter count"
+					},
+					"hauling_orders": {
+						"items": {
+							"$ref": "#/components/schemas/HaulingOrder"
+						},
+						"type": "array",
+						"description": "Hauling order summaries for material badges"
 					}
 				},
 				"required": [
@@ -4709,29 +4739,6 @@
 				"required": [
 					"name",
 					"count"
-				],
-				"type": "object",
-				"additionalProperties": false
-			},
-			"HaulingOrder": {
-				"description": "Hauling order",
-				"properties": {
-					"resource_name": {
-						"type": "string"
-					},
-					"min_scu": {
-						"type": "number",
-						"format": "double"
-					},
-					"max_scu": {
-						"type": "number",
-						"format": "double"
-					}
-				},
-				"required": [
-					"resource_name",
-					"min_scu",
-					"max_scu"
 				],
 				"type": "object",
 				"additionalProperties": false

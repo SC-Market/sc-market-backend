@@ -151,6 +151,9 @@ export interface MissionSearchResult {
 
   /** Total ship encounter count */
   ship_encounter_count: number
+
+  /** Hauling order summaries for material badges */
+  hauling_orders?: HaulingOrder[]
 }
 
 /**

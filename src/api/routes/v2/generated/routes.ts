@@ -1350,6 +1350,16 @@ const models: TsoaRoute.Models = {
         "additionalProperties": false,
     },
     // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+    "HaulingOrder": {
+        "dataType": "refObject",
+        "properties": {
+            "resource_name": {"dataType":"string","required":true},
+            "min_scu": {"dataType":"double","required":true},
+            "max_scu": {"dataType":"double","required":true},
+        },
+        "additionalProperties": false,
+    },
+    // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
     "MissionSearchResult": {
         "dataType": "refObject",
         "properties": {
@@ -1377,6 +1387,7 @@ const models: TsoaRoute.Models = {
             "mission_giver_org": {"dataType":"string"},
             "associated_event": {"dataType":"string"},
             "ship_encounter_count": {"dataType":"double","required":true},
+            "hauling_orders": {"dataType":"array","array":{"dataType":"refObject","ref":"HaulingOrder"}},
         },
         "additionalProperties": false,
     },
@@ -1526,16 +1537,6 @@ const models: TsoaRoute.Models = {
         "properties": {
             "name": {"dataType":"string","required":true},
             "count": {"dataType":"double","required":true},
-        },
-        "additionalProperties": false,
-    },
-    // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
-    "HaulingOrder": {
-        "dataType": "refObject",
-        "properties": {
-            "resource_name": {"dataType":"string","required":true},
-            "min_scu": {"dataType":"double","required":true},
-            "max_scu": {"dataType":"double","required":true},
         },
         "additionalProperties": false,
     },

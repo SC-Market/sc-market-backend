@@ -189,6 +189,7 @@ export class MissionsController extends BaseController {
           "m.associated_event",
           knex.raw("COALESCE(reward_counts.blueprint_count, 0)::integer as blueprint_reward_count"),
           knex.raw("COALESCE(ship_counts.total_ships, 0)::integer as ship_encounter_count"),
+          knex.raw(`(SELECT json_agg(json_build_object('resource_name', mho.resource_name, 'min_scu', mho.min_scu, 'max_scu', mho.max_scu)) FROM mission_hauling_orders mho WHERE mho.mission_id = m.mission_id) as hauling_orders`),
         )
         .where("m.version_id", effectiveVersionId)
 
@@ -204,7 +205,9 @@ export class MissionsController extends BaseController {
 
       // Apply category filter (Requirement 41.1)
       if (category) {
-        missionsQuery = missionsQuery.where("m.category", category)
+        const cats = category.split(",").map(c => c.trim()).filter(Boolean)
+        if (cats.length === 1) missionsQuery = missionsQuery.where("m.category", cats[0])
+        else if (cats.length > 1) missionsQuery = missionsQuery.whereIn("m.category", cats)
       }
 
       // Apply career type filter (Requirement 41.1)
@@ -214,7 +217,9 @@ export class MissionsController extends BaseController {
 
       // Apply star system filter (Requirement 41.2)
       if (star_system) {
-        missionsQuery = missionsQuery.where("m.star_system", star_system)
+        const systems = star_system.split(",").map(s => s.trim()).filter(Boolean)
+        if (systems.length === 1) missionsQuery = missionsQuery.where("m.star_system", systems[0])
+        else if (systems.length > 1) missionsQuery = missionsQuery.whereIn("m.star_system", systems)
       }
 
       // Apply planet/moon filter
@@ -377,6 +382,7 @@ export class MissionsController extends BaseController {
         mission_giver_org: row.mission_giver_org || undefined,
         associated_event: row.associated_event || undefined,
         ship_encounter_count: row.ship_encounter_count || 0,
+        hauling_orders: row.hauling_orders || undefined,
       }))
 
       return {
