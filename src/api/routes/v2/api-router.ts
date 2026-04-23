@@ -159,6 +159,20 @@ for (const route of staticRoutes) {
   apiV2Router.get(route.path, route.handler)
 }
 
+// Fix TSOA route ordering: static mission paths must be registered before /:mission_id
+apiV2Router.get("/game-data/missions/chains", async (req, res, next) => {
+  try { const c = new MissionsController(req); res.json(await c.getMissionChains(req.query.version_id as string | undefined)) } catch (e) { next(e) }
+})
+apiV2Router.get("/game-data/missions/reputation-ranks", async (req, res, next) => {
+  try { const c = new MissionsController(req); res.json(await c.getReputationRanks(req.query.scope_code as string | undefined)) } catch (e) { next(e) }
+})
+apiV2Router.get("/game-data/missions/events", async (req, res, next) => {
+  try { const c = new MissionsController(req); res.json(await c.getGameEvents()) } catch (e) { next(e) }
+})
+apiV2Router.get("/game-data/missions/by-code/:mission_code", async (req, res, next) => {
+  try { const c = new MissionsController(req); res.json(await c.getMissionDetailByCode(req.params.mission_code, req.query.user_id as string | undefined)) } catch (e) { next(e) }
+})
+
 RegisterRoutes(apiV2Router)
 
 // Apply TSOA error handler middleware
