@@ -786,38 +786,18 @@ export class CartV2Controller extends BaseController {
   }
 
   /**
-   * Checkout cart and create order
+   * Checkout cart — creates an offer session (mirrors V1 purchase_listings flow)
    *
-   * Converts cart items to an order by:
-   * 1. Validating all cart items are still available
-   * 2. Detecting price changes and requiring confirmation if needed
-   * 3. Creating order with variant-specific line items
-   * 4. Allocating stock for each variant
-   * 5. Clearing cart after successful order
-   * 6. Handling partial failures (some items unavailable)
-   *
-   * Uses database transaction for atomicity to ensure all-or-nothing behavior.
-   * If any cart items are unavailable or prices have changed without confirmation,
-   * the checkout will fail with descriptive errors.
-   *
-   * Requirements:
-   * - 32.1: POST /api/v2/cart/checkout endpoint
-   * - 32.2: Validate all cart items for availability before checkout
-   * - 32.3: Create order with variant-specific items from cart
-   * - 32.4: Allocate stock from correct variants
-   * - 32.5: Use variant-specific pricing in order totals
-   * - 32.6: Use database transaction for atomicity
-   * - 32.7: Clear cart after successful checkout
-   * - 32.8: Handle partial checkout if some items become unavailable
-   * - 32.9: Return order_id and order details on success
-   * - 32.10: Notify user of price changes requiring confirmation
-   * - 32.11: Notify sellers of new orders
-   * - 32.12: Log checkout to Audit_Trail
+   * 1. Validates all cart items are still available
+   * 2. Detects price changes and requires confirmation if needed
+   * 3. Checks blocked users, availability requirements, order limits
+   * 4. Creates an offer session via V1 createOffer (chat, Discord, notifications)
+   * 5. Clears cart after successful offer creation
    *
    * @summary Checkout cart
-   * @param requestBody Checkout request with optional price change confirmation
+   * @param requestBody Checkout request with optional price change confirmation and note
    * @param request Express request for authentication
-   * @returns Order ID and purchase summary
+   * @returns Offer session details (session_id, offer_id, discord_invite)
    */
   @Post("checkout")
   public async checkoutCart(
@@ -826,356 +806,256 @@ export class CartV2Controller extends BaseController {
   ): Promise<CheckoutCartResponse> {
     this.request = request
     this.requireAuth()
-    const userId = this.getUserId()
+    const user = this.getUser()
+    const userId = user.user_id
 
     logger.info("Checking out cart", { userId })
 
     try {
       const knex = getKnex()
 
-      // Use database transaction for atomicity (Requirement 32.6)
-      const result = await withTransaction(async (trx) => {
-        // Step 1: Fetch all cart items for user
-        const cartItems = await trx("cart_items_v2")
-          .where({ user_id: userId })
-          .select("*")
+      // Step 1: Fetch all cart items
+      const cartItems = await knex("cart_items_v2")
+        .where({ user_id: userId })
+        .select("*")
 
-        if (cartItems.length === 0) {
-          this.throwValidationError("Cart is empty", [
-            {
-              field: "cart",
-              message: "Cannot checkout an empty cart",
-            },
-          ])
+      if (cartItems.length === 0) {
+        this.throwValidationError("Cart is empty", [
+          { field: "cart", message: "Cannot checkout an empty cart" },
+        ])
+      }
+
+      // Step 2: Validate availability and detect price changes
+      const unavailableItems: UnavailableCartItem[] = []
+      const validatedItems: Array<{
+        cart_item_id: string
+        listing_id: string
+        item_id: string
+        variant_id: string
+        quantity: number
+        price_per_unit: number
+        current_price: number
+        listing_title: string
+        variant_display_name: string
+        seller_id: string
+        seller_type: string
+      }> = []
+      let hasPriceChanges = false
+
+      for (const cartItem of cartItems) {
+        const listing = await knex("listings")
+          .where({ listing_id: cartItem.listing_id })
+          .first()
+
+        if (!listing || listing.status !== "active") {
+          unavailableItems.push({
+            cart_item_id: cartItem.cart_item_id,
+            listing_title: listing?.title || "Unknown",
+            variant_display_name: "Unknown",
+            reason: listing ? `Listing status is ${listing.status}` : "Listing not found",
+          })
+          continue
         }
 
-        // Step 2: Validate availability and detect price changes (Requirements 32.2, 32.10)
-        const unavailableItems: UnavailableCartItem[] = []
-        const priceChanges: Array<{
-          cart_item_id: string
-          listing_title: string
-          variant_display_name: string
-          old_price: number
-          new_price: number
-        }> = []
-
-        const validatedItems: Array<{
-          cart_item_id: string
-          listing_id: string
-          item_id: string
-          variant_id: string
-          quantity: number
-          price_per_unit: number
-          current_price: number
-          listing_title: string
-          variant_display_name: string
-          seller_id: string
-        }> = []
-
-        for (const cartItem of cartItems) {
-          // Get listing and listing_item
-          const listing = await trx("listings")
-            .where({ listing_id: cartItem.listing_id })
-            .first()
-
-          if (!listing || listing.status !== "active") {
-            unavailableItems.push({
-              cart_item_id: cartItem.cart_item_id,
-              listing_title: listing?.title || "Unknown",
-              variant_display_name: "Unknown",
-              reason: listing ? `Listing status is ${listing.status}` : "Listing not found",
-            })
-            continue
-          }
-
-          const listingItem = await trx("listing_items")
-            .where({ item_id: cartItem.item_id })
-            .first()
-
-          if (!listingItem) {
-            unavailableItems.push({
-              cart_item_id: cartItem.cart_item_id,
-              listing_title: listing.title,
-              variant_display_name: "Unknown",
-              reason: "Listing item not found",
-            })
-            continue
-          }
-
-          // Get variant details
-          const variant = await trx("item_variants")
-            .where({ variant_id: cartItem.variant_id })
-            .first()
-
-          if (!variant) {
-            unavailableItems.push({
-              cart_item_id: cartItem.cart_item_id,
-              listing_title: listing.title,
-              variant_display_name: "Unknown",
-              reason: "Variant not found",
-            })
-            continue
-          }
-
-          // Check availability
-          const availabilityResult = await trx("listing_item_lots")
-            .where({
-              item_id: cartItem.item_id,
-              variant_id: cartItem.variant_id,
-              listed: true,
-            })
-            .sum("quantity_total as total")
-            .first()
-
-          const availableQuantity = parseInt(availabilityResult?.total || "0")
-
-          if (availableQuantity < cartItem.quantity) {
-            unavailableItems.push({
-              cart_item_id: cartItem.cart_item_id,
-              listing_title: listing.title,
-              variant_display_name: variant.display_name || "Unknown",
-              reason: `Only ${availableQuantity} available, cart has ${cartItem.quantity}`,
-            })
-            continue
-          }
-
-          // Check for price changes
-          let currentPrice = cartItem.price_per_unit
-
-          if (listingItem.pricing_mode === "unified") {
-            currentPrice = listingItem.base_price
-          } else {
-            // per_variant pricing
-            const variantPricing = await trx("variant_pricing")
-              .where({
-                item_id: cartItem.item_id,
-                variant_id: cartItem.variant_id,
-              })
-              .first()
-
-            if (variantPricing) {
-              currentPrice = variantPricing.price
-            }
-          }
-
-          if (currentPrice !== cartItem.price_per_unit) {
-            priceChanges.push({
-              cart_item_id: cartItem.cart_item_id,
-              listing_title: listing.title,
-              variant_display_name: variant.display_name || "Unknown",
-              old_price: cartItem.price_per_unit,
-              new_price: currentPrice,
-            })
-          }
-
-          // Item is valid
-          validatedItems.push({
+        const listingItem = await knex("listing_items")
+          .where({ item_id: cartItem.item_id })
+          .first()
+        if (!listingItem) {
+          unavailableItems.push({
             cart_item_id: cartItem.cart_item_id,
-            listing_id: cartItem.listing_id,
-            item_id: cartItem.item_id,
-            variant_id: cartItem.variant_id,
-            quantity: cartItem.quantity,
-            price_per_unit: cartItem.price_per_unit,
-            current_price: currentPrice,
+            listing_title: listing.title,
+            variant_display_name: "Unknown",
+            reason: "Listing item not found",
+          })
+          continue
+        }
+
+        const variant = await knex("item_variants")
+          .where({ variant_id: cartItem.variant_id })
+          .first()
+        if (!variant) {
+          unavailableItems.push({
+            cart_item_id: cartItem.cart_item_id,
+            listing_title: listing.title,
+            variant_display_name: "Unknown",
+            reason: "Variant not found",
+          })
+          continue
+        }
+
+        // Check stock availability
+        const availabilityResult = await knex("listing_item_lots")
+          .where({ item_id: cartItem.item_id, variant_id: cartItem.variant_id, listed: true })
+          .sum("quantity_total as total")
+          .first()
+        const availableQuantity = parseInt(availabilityResult?.total || "0")
+        if (availableQuantity < cartItem.quantity) {
+          unavailableItems.push({
+            cart_item_id: cartItem.cart_item_id,
             listing_title: listing.title,
             variant_display_name: variant.display_name || "Unknown",
-            seller_id: listing.seller_id,
+            reason: `Only ${availableQuantity} available, cart has ${cartItem.quantity}`,
           })
+          continue
         }
 
-        // Step 3: Handle unavailable items (Requirement 32.8)
-        if (unavailableItems.length > 0) {
-          logger.warn("Cart has unavailable items", {
-            userId,
-            unavailableCount: unavailableItems.length,
-          })
-
-          // If ALL items are unavailable, fail checkout
-          if (validatedItems.length === 0) {
-            this.throwValidationError("All cart items are unavailable", [
-              {
-                field: "cart",
-                message: "Cannot checkout - all items are unavailable",
-              },
-            ])
-          }
-
-          // Otherwise, continue with partial checkout
-          // Remove unavailable items from cart
-          const unavailableIds = unavailableItems.map((item) => item.cart_item_id)
-          await trx("cart_items_v2")
-            .whereIn("cart_item_id", unavailableIds)
-            .delete()
+        // Check for price changes
+        let currentPrice = cartItem.price_per_unit
+        if (listingItem.pricing_mode === "unified") {
+          currentPrice = listingItem.base_price
+        } else {
+          const variantPricing = await knex("variant_pricing")
+            .where({ item_id: cartItem.item_id, variant_id: cartItem.variant_id })
+            .first()
+          if (variantPricing) currentPrice = variantPricing.price
         }
+        if (currentPrice !== cartItem.price_per_unit) hasPriceChanges = true
 
-        // Step 4: Handle price changes (Requirement 32.10)
-        if (priceChanges.length > 0 && !requestBody.confirm_price_changes) {
-          logger.warn("Cart has price changes requiring confirmation", {
-            userId,
-            priceChangeCount: priceChanges.length,
-          })
+        validatedItems.push({
+          cart_item_id: cartItem.cart_item_id,
+          listing_id: cartItem.listing_id,
+          item_id: cartItem.item_id,
+          variant_id: cartItem.variant_id,
+          quantity: cartItem.quantity,
+          price_per_unit: cartItem.price_per_unit,
+          current_price: currentPrice,
+          listing_title: listing.title,
+          variant_display_name: variant.display_name || "Unknown",
+          seller_id: listing.seller_id,
+          seller_type: listing.seller_type,
+        })
+      }
 
-          this.throwValidationError("Price changes detected - confirmation required", [
-            {
-              field: "confirm_price_changes",
-              message: `${priceChanges.length} item(s) have price changes. Set confirm_price_changes=true to proceed.`,
-            },
+      // Handle unavailable items
+      if (unavailableItems.length > 0) {
+        if (validatedItems.length === 0) {
+          this.throwValidationError("All cart items are unavailable", [
+            { field: "cart", message: "Cannot checkout - all items are unavailable" },
           ])
         }
-
-        // Step 5: Verify all items are from the same seller
-        const sellerIds = new Set(validatedItems.map((item) => item.seller_id))
-        if (sellerIds.size > 1) {
-          this.throwValidationError("Cart contains items from multiple sellers", [
-            {
-              field: "cart",
-              message: "Cannot checkout - all items must be from the same seller",
-            },
-          ])
-        }
-
-        const sellerId = validatedItems[0].seller_id
-
-        // Step 6: Calculate total price (use current prices) (Requirement 32.5)
-        const totalPrice = validatedItems.reduce(
-          (sum, item) => sum + item.current_price * item.quantity,
-          0,
-        )
-
-        // Step 7: Create order record (Requirement 32.3)
-        const [order] = await trx("orders")
-          .insert({
-            customer_id: userId,
-            contractor_id: null,
-            status: "pending",
-          })
-          .returning("*")
-
-        logger.info("Created order from cart", {
-          orderId: order.order_id,
-          userId,
-          itemCount: validatedItems.length,
-          totalPrice,
-        })
-
-        // Step 8: Create market_orders entries for V1 compatibility
-        const listingQuantities = new Map<string, number>()
-        for (const item of validatedItems) {
-          const current = listingQuantities.get(item.listing_id) || 0
-          listingQuantities.set(item.listing_id, current + item.quantity)
-        }
-
-        for (const [listing_id, quantity] of listingQuantities.entries()) {
-          await trx("market_orders").insert({
-            order_id: order.order_id,
-            listing_id,
-            quantity,
-          })
-        }
-
-        // Step 9: Create order_market_items_v2 entries
-        const orderItems: Array<{
-          order_item_id: string
-          listing_id: string
-          item_id: string
-          variant_id: string
-          quantity: number
-          price_per_unit: number
-          subtotal: number
-        }> = []
-
-        for (const item of validatedItems) {
-          const [orderItem] = await trx("order_market_items_v2")
-            .insert({
-              order_id: order.order_id,
-              listing_id: item.listing_id,
-              item_id: item.item_id,
-              variant_id: item.variant_id,
-              quantity: item.quantity,
-              price_per_unit: item.current_price, // Use current price
-              created_at: new Date(),
-            })
-            .returning("*")
-
-          orderItems.push({
-            order_item_id: orderItem.order_item_id,
-            listing_id: item.listing_id,
-            item_id: item.item_id,
-            variant_id: item.variant_id,
-            quantity: item.quantity,
-            price_per_unit: item.current_price,
-            subtotal: item.current_price * item.quantity,
-          })
-        }
-
-        logger.info("Created order items from cart", {
-          orderId: order.order_id,
-          itemCount: orderItems.length,
-        })
-
-        // Step 10: Allocate stock (Requirement 32.4)
-        const OrderLifecycleService = (await import("../../../../services/allocation/order-lifecycle.service.js")).OrderLifecycleService
-        const lifecycleService = new OrderLifecycleService(trx)
-
-        const marketListings = Array.from(listingQuantities.entries()).map(
-          ([listing_id, quantity]) => ({
-            listing_id,
-            quantity,
-          }),
-        )
-
-        const allocationResult = await lifecycleService.allocateStockForOrder(
-          order.order_id,
-          marketListings,
-          null, // contractor_id
-          userId,
-        )
-
-        logger.info("Stock allocated for cart checkout", {
-          orderId: order.order_id,
-          totalRequested: allocationResult.total_requested,
-          totalAllocated: allocationResult.total_allocated,
-          hasPartial: allocationResult.has_partial_allocations,
-        })
-
-        // Step 11: Clear cart (Requirement 32.7)
-        await trx("cart_items_v2")
-          .where({ user_id: userId })
+        // Remove unavailable items from cart
+        await knex("cart_items_v2")
+          .whereIn("cart_item_id", unavailableItems.map((i) => i.cart_item_id))
           .delete()
+      }
 
-        logger.info("Cart cleared after successful checkout", {
-          userId,
-          orderId: order.order_id,
-        })
+      // Handle price changes
+      if (hasPriceChanges && !requestBody.confirm_price_changes) {
+        this.throwValidationError("Price changes detected - confirmation required", [
+          { field: "confirm_price_changes", message: "Item prices have changed. Set confirm_price_changes=true to proceed." },
+        ])
+      }
 
-        // Notify sellers of new orders (Requirement 32.11)
-        try {
-          const { notificationService } = await import("../../../../services/notifications/notification.service.js")
-          const orderRecord = await trx("orders").where({ order_id: order.order_id }).first()
-          if (orderRecord) {
-            await notificationService.createOrderNotification(orderRecord)
-          }
-        } catch (e) {
-          logger.error("Failed to send cart checkout notification", { error: e })
+      // Verify single seller
+      const sellerIds = new Set(validatedItems.map((i) => i.seller_id))
+      if (sellerIds.size > 1) {
+        this.throwValidationError("Cart contains items from multiple sellers", [
+          { field: "cart", message: "Cannot checkout - all items must be from the same seller" },
+        ])
+      }
+
+      const firstItem = validatedItems[0]
+      const sellerContractorId = firstItem.seller_type === "contractor" ? firstItem.seller_id : null
+      const sellerUserId = firstItem.seller_type === "user" ? firstItem.seller_id : null
+
+      // Step 3: Blocked user check (mirrors V1)
+      if (sellerContractorId) {
+        const blocked = await profileDb.isUserBlocked(sellerContractorId, userId, "contractor")
+        if (blocked) {
+          this.throwValidationError("You are blocked from creating offers with this contractor", [
+            { field: "seller", message: "You are blocked from creating offers with this contractor" },
+          ])
         }
-
-        // Step 12: Return checkout response (Requirement 32.9)
-        return {
-          order_id: order.order_id,
-          total_price: totalPrice,
-          items_purchased: validatedItems.length,
-          unavailable_items: unavailableItems.length > 0 ? unavailableItems : undefined,
+      }
+      if (sellerUserId) {
+        const blocked = await profileDb.isUserBlocked(sellerUserId, userId, "user")
+        if (blocked) {
+          this.throwValidationError("You are blocked from creating offers with this user", [
+            { field: "seller", message: "You are blocked from creating offers with this user" },
+          ])
         }
-      })
+      }
 
-      logger.info("Cart checkout completed successfully", {
+      // Step 4: Availability requirement check
+      const { validateAvailabilityRequirement, validateOrderLimits, createOffer } =
+        await import("../../v1/orders/helpers.js")
+
+      try {
+        await validateAvailabilityRequirement(userId, sellerContractorId, sellerUserId)
+      } catch (error) {
+        this.throwValidationError(
+          error instanceof Error ? error.message : "Availability is required to submit this offer.",
+          [{ field: "availability", message: error instanceof Error ? error.message : "Availability required" }],
+        )
+      }
+
+      // Step 5: Order limit validation
+      const offerSize = validatedItems.reduce((sum, i) => sum + i.quantity, 0)
+      const totalPrice = validatedItems.reduce((sum, i) => sum + i.current_price * i.quantity, 0)
+
+      try {
+        await validateOrderLimits(sellerContractorId, sellerUserId, offerSize, totalPrice)
+      } catch (error) {
+        this.throwValidationError(
+          error instanceof Error ? error.message : "Order does not meet size or value requirements",
+          [{ field: "order_limits", message: error instanceof Error ? error.message : "Order limit violation" }],
+        )
+      }
+
+      // Step 6: Build market_listings for createOffer (it only uses listing_id + quantity)
+      const listingQuantities = new Map<string, number>()
+      for (const item of validatedItems) {
+        listingQuantities.set(item.listing_id, (listingQuantities.get(item.listing_id) || 0) + item.quantity)
+      }
+      const marketListings = Array.from(listingQuantities.entries()).map(([listing_id, quantity]) => ({
+        quantity,
+        listing: { listing: { listing_id } } as any,
+      }))
+
+      // Build v2_variant_items for offer
+      const v2VariantItems = validatedItems.map((i) => ({
+        listing_id: i.listing_id,
+        variant_id: i.variant_id,
+        quantity: i.quantity,
+        price_per_unit: i.current_price,
+      }))
+
+      const message = requestBody.note || ""
+
+      // Step 7: Create offer session (mirrors V1 purchase_listings exactly)
+      const { offer, session, discord_invite } = await createOffer(
+        {
+          customer_id: userId,
+          assigned_id: sellerUserId,
+          contractor_id: sellerContractorId,
+        },
+        {
+          actor_id: userId,
+          kind: "Delivery",
+          cost: totalPrice.toString(),
+          title: `Items Sold to ${user.username}`,
+          description: message,
+        },
+        marketListings,
+        v2VariantItems,
+      )
+
+      // Step 8: Clear cart
+      await knex("cart_items_v2").where({ user_id: userId }).delete()
+
+      logger.info("Cart checkout completed — offer created", {
         userId,
-        orderId: result.order_id,
-        itemsPurchased: result.items_purchased,
-        hadUnavailableItems: result.unavailable_items !== undefined,
+        sessionId: session.id,
+        offerId: offer.id,
       })
 
-      return result
+      return {
+        result: "Success",
+        offer_id: offer.id,
+        session_id: session.id,
+        discord_invite: discord_invite,
+        unavailable_items: unavailableItems.length > 0 ? unavailableItems : undefined,
+      }
     } catch (error) {
       logger.error("Failed to checkout cart", {
         userId,
