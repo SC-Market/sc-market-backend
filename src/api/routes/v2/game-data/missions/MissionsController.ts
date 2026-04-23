@@ -467,6 +467,11 @@ export class MissionsController extends BaseController {
         is_lawful: missionRow.is_lawful ?? undefined,
         max_crimestat: missionRow.max_crimestat ?? undefined,
         difficulty_from_broker: missionRow.difficulty_from_broker || undefined,
+        time_to_complete: missionRow.time_to_complete || undefined,
+        accept_locations: missionRow.accept_locations ? (typeof missionRow.accept_locations === "string" ? JSON.parse(missionRow.accept_locations) : missionRow.accept_locations) : undefined,
+        destinations: missionRow.destinations ? (typeof missionRow.destinations === "string" ? JSON.parse(missionRow.destinations) : missionRow.destinations) : undefined,
+        item_rewards: missionRow.item_rewards ? (typeof missionRow.item_rewards === "string" ? JSON.parse(missionRow.item_rewards) : missionRow.item_rewards) : undefined,
+        token_substitutions: missionRow.token_substitutions ? (typeof missionRow.token_substitutions === "string" ? JSON.parse(missionRow.token_substitutions) : missionRow.token_substitutions) : undefined,
         community_difficulty_avg: missionRow.community_difficulty_avg
           ? parseFloat(missionRow.community_difficulty_avg)
           : undefined,

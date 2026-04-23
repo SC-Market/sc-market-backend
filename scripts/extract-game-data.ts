@@ -792,6 +792,9 @@ interface ExtractedMission {
   difficulty?: number
   maxCrimestat?: number
   buyIn?: number
+  maxPlayersPerInstance?: number
+  isIntro?: boolean
+  linkedIntros?: string[]
   variantCount?: number
 }
 
@@ -815,6 +818,8 @@ function parseMissions(): ExtractedMission[] {
         const genType = gp?.missionTypeOverride && gp.missionTypeOverride !== "None"
           ? refName(gp.missionTypeOverride) : null
 
+        const introNames = new Set<string>((gen.introContracts || []).map((c: { debugName?: string }) => c.debugName).filter((n): n is string => !!n))
+        const mainNames = (gen.contracts || []).map((c: { debugName?: string }) => c.debugName).filter(Boolean)
         const allContracts = [...(gen.contracts || []), ...(gen.introContracts || [])]
         for (const contract of allContracts) {
           if (!contract.debugName) continue
@@ -840,6 +845,15 @@ function parseMissions(): ExtractedMission[] {
           const title = cleanMissionText(loc(params.Title) || stripAt(params.Title || ""))
           const description = cleanMissionText(loc(params.Description) || stripAt(params.Description || ""))
           const contractor = loc(params.Contractor) || stripAt(params.Contractor || "")
+
+          // Extract int param overrides (cooldowns, max players, etc.)
+          const intParams: Record<string, number> = {}
+          for (const ip of (gen.contractParams?.intParamOverrides || [])) {
+            if (ip?.param && typeof ip.value === "number") intParams[ip.param] = ip.value
+          }
+          for (const ip of (po?.intParamOverrides || [])) {
+            if (ip?.param && typeof ip.value === "number") intParams[ip.param] = ip.value // contract overrides gen
+          }
 
           // Extract reward (UEC) - check multiple sources
           let rewardUec = 0
@@ -897,9 +911,15 @@ function parseMissions(): ExtractedMission[] {
 
           // Illegal flag: check template, then boolParamOverrides
           let illegal = templateName ? (templateIllegalMap.get(templateName) || false) : false
+          // Check generator-level boolParams
+          for (const bp of gen.contractParams?.boolParamOverrides || []) {
+            if (bp?.param === "Illegal" && bp.value === true) illegal = true
+          }
+          // Contract-level overrides
           if (po?.boolParamOverrides) {
             for (const bp of po.boolParamOverrides) {
               if (bp?.param === "Illegal" && bp.value === true) illegal = true
+              if (bp?.param === "Illegal" && bp.value === false) illegal = false
             }
           }
 
@@ -924,9 +944,14 @@ function parseMissions(): ExtractedMission[] {
           }
 
           // Event/scenario requirements
-          const requiredScenarios = (contract.required_active_scenarios || gen.required_active_scenarios || [])
+          const requiredScenarios = [
+            ...(data.required_active_scenarios || []),
+            ...(gen.required_active_scenarios || []),
+            ...(contract.required_active_scenarios || []),
+          ]
             .filter((s: string) => s && s !== "None")
             .map((s: string) => path.basename(s, ".json"))
+            .filter((s: string, i: number, a: string[]) => a.indexOf(s) === i) // dedup
 
           // Hide in MobiGlas
           const hideInMobiGlas = gen.defaultAvailability?.hideInMobiGlas || false
@@ -1027,18 +1052,20 @@ function parseMissions(): ExtractedMission[] {
             canBeShared: gen.defaultAvailability?.canBeShared ?? null,
             canReacceptAfterAbandoning: gen.defaultAvailability?.canReacceptAfterAbandoning ?? null,
             canReacceptAfterFailing: gen.defaultAvailability?.canReacceptAfterFailing ?? null,
-            abandonedCooldownTime: gen.defaultAvailability?.abandonedCooldownTime || null,
-            personalCooldownTime: (() => {
-              // Check contract-level paramOverrides first, then fall back to generator defaults
+            abandonedCooldownTime: intParams.AbandonedCooldownTime ?? (gen.defaultAvailability?.abandonedCooldownTime || null),
+            personalCooldownTime: intParams.PersonalCooldownTime ?? (() => {
               if (po?.hasPersonalCooldown) return po.personalCooldownTime || null
               if (gen.defaultAvailability?.hasPersonalCooldown) return gen.defaultAvailability.personalCooldownTime
               return null
             })(),
+            maxPlayersPerInstance: intParams.MaxPlayersPerInstance ?? gen.defaultAvailability?.maxPlayersPerInstance ?? null,
             deadline,
             timeToComplete: timeToComplete || null,
             availableInPrison: gen.defaultAvailability?.availableInPrison || false,
             illegal,
             hideInMobiGlas,
+            isIntro: introNames.has(contract.debugName) || undefined,
+            linkedIntros: !introNames.has(contract.debugName) && introNames.size ? [...introNames] : undefined,
             requiredScenarios: requiredScenarios.length ? requiredScenarios : undefined,
             starSystem,
             acceptLocations: acceptLocations.length ? acceptLocations : undefined,

@@ -4269,6 +4269,31 @@
 				"type": "object",
 				"additionalProperties": false
 			},
+			"ItemReward": {
+				"description": "Non-blueprint item reward",
+				"properties": {
+					"name": {
+						"type": "string"
+					},
+					"ref": {
+						"type": "string"
+					}
+				},
+				"required": [
+					"name",
+					"ref"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
+			"Record_string.string_": {
+				"properties": {},
+				"additionalProperties": {
+					"type": "string"
+				},
+				"type": "object",
+				"description": "Construct a type with a set of properties K of type T"
+			},
 			"Mission": {
 				"description": "Complete mission data",
 				"properties": {
@@ -4437,6 +4462,36 @@
 						"type": "number",
 						"format": "double",
 						"description": "Difficulty from broker (raw)"
+					},
+					"time_to_complete": {
+						"type": "number",
+						"format": "double",
+						"description": "Time to complete the mission (seconds)"
+					},
+					"accept_locations": {
+						"items": {
+							"type": "string"
+						},
+						"type": "array",
+						"description": "Accept locations (where the mission can be picked up)"
+					},
+					"destinations": {
+						"items": {
+							"type": "string"
+						},
+						"type": "array",
+						"description": "Destinations (pickup/dropoff location names)"
+					},
+					"item_rewards": {
+						"items": {
+							"$ref": "#/components/schemas/ItemReward"
+						},
+						"type": "array",
+						"description": "Non-blueprint item rewards"
+					},
+					"token_substitutions": {
+						"$ref": "#/components/schemas/Record_string.string_",
+						"description": "Token substitutions for description placeholders"
 					},
 					"community_difficulty_avg": {
 						"type": "number",
@@ -6103,14 +6158,6 @@
 				],
 				"type": "object",
 				"additionalProperties": false
-			},
-			"Record_string.string_": {
-				"properties": {},
-				"additionalProperties": {
-					"type": "string"
-				},
-				"type": "object",
-				"description": "Construct a type with a set of properties K of type T"
 			},
 			"UserBlueprintAcquisition": {
 				"description": "User acquisition data",

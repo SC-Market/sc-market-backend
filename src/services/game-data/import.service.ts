@@ -286,6 +286,10 @@ export interface P4KMission {
   maxCrimestat?: number
   requiredScenarios?: string[]
   acceptLocations?: string[]
+  timeToComplete?: number | null
+  destinations?: string[]
+  itemRewards?: Array<{ name: string; ref: string }>
+  tokenSubstitutions?: Record<string, string>
 }
 
 export interface P4KBlueprint {
@@ -1459,6 +1463,10 @@ export class GameDataImportService {
           hideInMobiGlas: raw.hideInMobiGlas || false,
           requiredScenarios: raw.requiredScenarios || undefined,
           acceptLocations: raw.acceptLocations || undefined,
+          timeToComplete: raw.timeToComplete ?? undefined,
+          destinations: raw.destinations || undefined,
+          itemRewards: raw.itemRewards || undefined,
+          tokenSubstitutions: raw.tokenSubstitutions || undefined,
         })
       } catch (error) {
         logger.warn("Failed to parse mission", { missionId: raw.id, error })
@@ -1537,6 +1545,10 @@ export class GameDataImportService {
       available_in_prison: mission.availableInPrison,
       hide_in_mobiglas: mission.hideInMobiGlas,
       accept_locations: mission.acceptLocations?.length ? JSON.stringify(mission.acceptLocations) : null,
+      time_to_complete: mission.timeToComplete ?? null,
+      destinations: mission.destinations?.length ? JSON.stringify(mission.destinations) : null,
+      item_rewards: mission.itemRewards?.length ? JSON.stringify(mission.itemRewards) : null,
+      token_substitutions: mission.tokenSubstitutions && Object.keys(mission.tokenSubstitutions).length ? JSON.stringify(mission.tokenSubstitutions) : null,
       can_reaccept_after_failing: mission.canReacceptAfterFailing ?? false,
       can_reaccept_after_abandoning: mission.canReacceptAfterAbandoning ?? false,
       abandoned_cooldown_time: mission.abandonedCooldownTime,

@@ -237,6 +237,16 @@ export interface Mission {
   max_crimestat?: number
   /** Difficulty from broker (raw) */
   difficulty_from_broker?: number
+  /** Time to complete the mission (seconds) */
+  time_to_complete?: number
+  /** Accept locations (where the mission can be picked up) */
+  accept_locations?: string[]
+  /** Destinations (pickup/dropoff location names) */
+  destinations?: string[]
+  /** Non-blueprint item rewards */
+  item_rewards?: ItemReward[]
+  /** Token substitutions for description placeholders */
+  token_substitutions?: Record<string, string>
   community_difficulty_avg?: number
   community_difficulty_count: number
   community_satisfaction_avg?: number
@@ -379,6 +389,12 @@ export interface HaulingOrder {
 export interface EntitySpawn {
   name: string
   count: number
+}
+
+/** Non-blueprint item reward */
+export interface ItemReward {
+  name: string
+  ref: string
 }
 
 // ============================================================================
