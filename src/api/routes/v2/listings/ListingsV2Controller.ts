@@ -551,16 +551,18 @@ export class ListingsV2Controller extends BaseController {
           db.raw(`(
             SELECT MIN((iv.attributes->>'quality_value')::int)
             FROM listing_item_lots lil
+            JOIN listing_items li ON lil.item_id = li.item_id
             JOIN item_variants iv ON lil.variant_id = iv.variant_id
-            WHERE lil.listing_id = ls.listing_id
+            WHERE li.listing_id = ls.listing_id
               AND iv.attributes->>'quality_value' IS NOT NULL
               AND lil.quantity_available > 0
           ) as quality_value_min`),
           db.raw(`(
             SELECT MAX((iv.attributes->>'quality_value')::int)
             FROM listing_item_lots lil
+            JOIN listing_items li ON lil.item_id = li.item_id
             JOIN item_variants iv ON lil.variant_id = iv.variant_id
-            WHERE lil.listing_id = ls.listing_id
+            WHERE li.listing_id = ls.listing_id
               AND iv.attributes->>'quality_value' IS NOT NULL
               AND lil.quantity_available > 0
           ) as quality_value_max`),

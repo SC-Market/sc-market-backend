@@ -8,7 +8,8 @@ export interface OfferSessionV2 {
   order_id?: string;
   discord_invite?: string | null;
   customer: UserSummary;
-  seller: UserSummary | OrgSummary | null;
+  assigned_to: UserSummary | null;
+  contractor: OrgSummary | null;
   offers: OfferV2[];
 }
 
@@ -21,7 +22,8 @@ export interface OfferV2 {
   payment_type: string;
   status: string;
   created_at: string;
-  actor_id: string;
+  /** Username of the user who created this offer */
+  actor_username: string;
   /** V1 market listings (always present) */
   market_listings: OfferMarketListingV2[];
   service?: { service_id: string; title: string } | null;
@@ -46,14 +48,12 @@ export interface OfferVariantItem {
 }
 
 export interface UserSummary {
-  user_id: string;
   username: string;
   display_name?: string;
   avatar?: string | null;
 }
 
 export interface OrgSummary {
-  contractor_id: string;
   spectrum_id: string;
   name: string;
   avatar?: string | null;

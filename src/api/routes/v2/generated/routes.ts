@@ -371,7 +371,6 @@ const models: TsoaRoute.Models = {
     "UserSummary": {
         "dataType": "refObject",
         "properties": {
-            "user_id": {"dataType":"string","required":true},
             "username": {"dataType":"string","required":true},
             "display_name": {"dataType":"string"},
             "avatar": {"dataType":"union","subSchemas":[{"dataType":"string"},{"dataType":"enum","enums":[null]}]},
@@ -382,7 +381,6 @@ const models: TsoaRoute.Models = {
     "OrgSummary": {
         "dataType": "refObject",
         "properties": {
-            "contractor_id": {"dataType":"string","required":true},
             "spectrum_id": {"dataType":"string","required":true},
             "name": {"dataType":"string","required":true},
             "avatar": {"dataType":"union","subSchemas":[{"dataType":"string"},{"dataType":"enum","enums":[null]}]},
@@ -426,7 +424,7 @@ const models: TsoaRoute.Models = {
             "payment_type": {"dataType":"string","required":true},
             "status": {"dataType":"string","required":true},
             "created_at": {"dataType":"string","required":true},
-            "actor_id": {"dataType":"string","required":true},
+            "actor_username": {"dataType":"string","required":true},
             "market_listings": {"dataType":"array","array":{"dataType":"refObject","ref":"OfferMarketListingV2"},"required":true},
             "service": {"dataType":"union","subSchemas":[{"dataType":"nestedObjectLiteral","nestedProperties":{"title":{"dataType":"string","required":true},"service_id":{"dataType":"string","required":true}}},{"dataType":"enum","enums":[null]}]},
         },
@@ -442,7 +440,8 @@ const models: TsoaRoute.Models = {
             "order_id": {"dataType":"string"},
             "discord_invite": {"dataType":"union","subSchemas":[{"dataType":"string"},{"dataType":"enum","enums":[null]}]},
             "customer": {"ref":"UserSummary","required":true},
-            "seller": {"dataType":"union","subSchemas":[{"ref":"UserSummary"},{"ref":"OrgSummary"},{"dataType":"enum","enums":[null]}],"required":true},
+            "assigned_to": {"dataType":"union","subSchemas":[{"ref":"UserSummary"},{"dataType":"enum","enums":[null]}],"required":true},
+            "contractor": {"dataType":"union","subSchemas":[{"ref":"OrgSummary"},{"dataType":"enum","enums":[null]}],"required":true},
             "offers": {"dataType":"array","array":{"dataType":"refObject","ref":"OfferV2"},"required":true},
         },
         "additionalProperties": false,
@@ -457,7 +456,8 @@ const models: TsoaRoute.Models = {
             "order_id": {"dataType":"string"},
             "discord_invite": {"dataType":"union","subSchemas":[{"dataType":"string"},{"dataType":"enum","enums":[null]}]},
             "customer": {"ref":"UserSummary","required":true},
-            "seller": {"dataType":"union","subSchemas":[{"ref":"UserSummary"},{"ref":"OrgSummary"},{"dataType":"enum","enums":[null]}],"required":true},
+            "assigned_to": {"dataType":"union","subSchemas":[{"ref":"UserSummary"},{"dataType":"enum","enums":[null]}],"required":true},
+            "contractor": {"dataType":"union","subSchemas":[{"ref":"OrgSummary"},{"dataType":"enum","enums":[null]}],"required":true},
             "offers": {"dataType":"array","array":{"dataType":"refObject","ref":"OfferV2"},"required":true},
         },
         "additionalProperties": false,
@@ -4172,7 +4172,7 @@ export function RegisterRoutes(app: Router) {
         // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
         const argsMissionsController_getMissionDetail: Record<string, TsoaRoute.ParameterSchema> = {
                 mission_id: {"in":"path","name":"mission_id","required":true,"dataType":"string"},
-                user_id: {"in":"query","name":"user_id","dataType":"string"},
+                request: {"in":"request","name":"request","dataType":"object"},
         };
         app.get('/game-data/missions/:mission_id',
             ...(fetchMiddlewares<RequestHandler>(MissionsController)),
@@ -4203,7 +4203,7 @@ export function RegisterRoutes(app: Router) {
         // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
         const argsMissionsController_getMissionDetailByCode: Record<string, TsoaRoute.ParameterSchema> = {
                 mission_code: {"in":"path","name":"mission_code","required":true,"dataType":"string"},
-                user_id: {"in":"query","name":"user_id","dataType":"string"},
+                request: {"in":"request","name":"request","dataType":"object"},
         };
         app.get('/game-data/missions/by-code/:mission_code',
             ...(fetchMiddlewares<RequestHandler>(MissionsController)),
@@ -4651,7 +4651,7 @@ export function RegisterRoutes(app: Router) {
         // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
         const argsBlueprintsController_getBlueprintDetail: Record<string, TsoaRoute.ParameterSchema> = {
                 blueprint_id: {"in":"path","name":"blueprint_id","required":true,"dataType":"string"},
-                user_id: {"in":"query","name":"user_id","dataType":"string"},
+                request: {"in":"request","name":"request","dataType":"object"},
         };
         app.get('/game-data/blueprints/:blueprint_id',
             ...(fetchMiddlewares<RequestHandler>(BlueprintsController)),

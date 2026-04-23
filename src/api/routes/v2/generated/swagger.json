@@ -1023,9 +1023,6 @@
 			},
 			"UserSummary": {
 				"properties": {
-					"user_id": {
-						"type": "string"
-					},
 					"username": {
 						"type": "string"
 					},
@@ -1038,7 +1035,6 @@
 					}
 				},
 				"required": [
-					"user_id",
 					"username"
 				],
 				"type": "object",
@@ -1046,9 +1042,6 @@
 			},
 			"OrgSummary": {
 				"properties": {
-					"contractor_id": {
-						"type": "string"
-					},
 					"spectrum_id": {
 						"type": "string"
 					},
@@ -1061,7 +1054,6 @@
 					}
 				},
 				"required": [
-					"contractor_id",
 					"spectrum_id",
 					"name"
 				],
@@ -1163,8 +1155,9 @@
 					"created_at": {
 						"type": "string"
 					},
-					"actor_id": {
-						"type": "string"
+					"actor_username": {
+						"type": "string",
+						"description": "Username of the user who created this offer"
 					},
 					"market_listings": {
 						"items": {
@@ -1199,7 +1192,7 @@
 					"payment_type",
 					"status",
 					"created_at",
-					"actor_id",
+					"actor_username",
 					"market_listings"
 				],
 				"type": "object",
@@ -1226,11 +1219,16 @@
 					"customer": {
 						"$ref": "#/components/schemas/UserSummary"
 					},
-					"seller": {
-						"anyOf": [
+					"assigned_to": {
+						"allOf": [
 							{
 								"$ref": "#/components/schemas/UserSummary"
-							},
+							}
+						],
+						"nullable": true
+					},
+					"contractor": {
+						"allOf": [
 							{
 								"$ref": "#/components/schemas/OrgSummary"
 							}
@@ -1249,7 +1247,8 @@
 					"status",
 					"created_at",
 					"customer",
-					"seller",
+					"assigned_to",
+					"contractor",
 					"offers"
 				],
 				"type": "object",
@@ -1277,11 +1276,16 @@
 					"customer": {
 						"$ref": "#/components/schemas/UserSummary"
 					},
-					"seller": {
-						"anyOf": [
+					"assigned_to": {
+						"allOf": [
 							{
 								"$ref": "#/components/schemas/UserSummary"
-							},
+							}
+						],
+						"nullable": true
+					},
+					"contractor": {
+						"allOf": [
 							{
 								"$ref": "#/components/schemas/OrgSummary"
 							}
@@ -1300,7 +1304,8 @@
 					"status",
 					"created_at",
 					"customer",
-					"seller",
+					"assigned_to",
+					"contractor",
 					"offers"
 				],
 				"type": "object",
@@ -10756,15 +10761,6 @@
 						"schema": {
 							"type": "string"
 						}
-					},
-					{
-						"description": "Optional user ID for user-specific data",
-						"in": "query",
-						"name": "user_id",
-						"required": false,
-						"schema": {
-							"type": "string"
-						}
 					}
 				]
 			}
@@ -10795,14 +10791,6 @@
 						"in": "path",
 						"name": "mission_code",
 						"required": true,
-						"schema": {
-							"type": "string"
-						}
-					},
-					{
-						"in": "query",
-						"name": "user_id",
-						"required": false,
 						"schema": {
 							"type": "string"
 						}
@@ -11631,15 +11619,6 @@
 						"in": "path",
 						"name": "blueprint_id",
 						"required": true,
-						"schema": {
-							"type": "string"
-						}
-					},
-					{
-						"description": "Optional user ID for user-specific data",
-						"in": "query",
-						"name": "user_id",
-						"required": false,
 						"schema": {
 							"type": "string"
 						}
