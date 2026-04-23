@@ -4654,6 +4654,10 @@
 						"type": "string",
 						"description": "Blueprint UUID"
 					},
+					"blueprint_code": {
+						"type": "string",
+						"description": "Blueprint code for URL-friendly links"
+					},
 					"blueprint_name": {
 						"type": "string",
 						"description": "Blueprint name"
@@ -4691,6 +4695,7 @@
 				},
 				"required": [
 					"blueprint_id",
+					"blueprint_code",
 					"blueprint_name",
 					"output_item_name",
 					"drop_probability",
