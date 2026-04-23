@@ -703,8 +703,8 @@ export class ListingsV2Controller extends BaseController {
         case "seller_rating":
           query = query.orderByRaw(
             `CASE 
-              WHEN ls.seller_type = 'user' THEN COALESCE(u.rating, 0)
-              WHEN ls.seller_type = 'contractor' THEN COALESCE(c.rating, 0)
+              WHEN ls.seller_type = 'user' THEN COALESCE(public.get_average_rating_float(ls.seller_id, NULL), 0)
+              WHEN ls.seller_type = 'contractor' THEN COALESCE(public.get_average_rating_float(NULL, ls.seller_id), 0)
             END ${validatedSortOrder}`,
           )
           break

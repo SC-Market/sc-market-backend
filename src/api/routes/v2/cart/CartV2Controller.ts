@@ -117,6 +117,13 @@ export class CartV2Controller extends BaseController {
           // Seller info
           "seller.username as seller_username",
           "seller.display_name as seller_display_name",
+          knex.raw(`
+            CASE 
+              WHEN l.seller_type = 'user' THEN get_total_rating(l.seller_id, NULL)
+              WHEN l.seller_type = 'contractor' THEN get_total_rating(NULL, l.seller_id)
+              ELSE 0
+            END AS seller_rating
+          `),
           "contractor.spectrum_id as contractor_spectrum_id",
           "contractor.name as contractor_name",
           // Pricing info
@@ -197,7 +204,7 @@ export class CartV2Controller extends BaseController {
             seller_name: sellerName,
             seller_type: item.seller_type,
             seller_slug: sellerSlug,
-            seller_rating: 0,
+            seller_rating: parseInt(item.seller_rating) || 0,
             status: item.listing_status,
             seller_next_available: sellerNextAvailable,
           }
