@@ -106,7 +106,7 @@ function cleanMissionText(text: string | null): string | null {
       return `[${label.toUpperCase()}]`
     })
     .replace(/\\n/g, "\n")
-    .replace(/<EM\d*>/g, "")
+    .replace(/<\/?EM\d*>/gi, "")
 }
 
 // --- Helpers ---
