@@ -432,7 +432,7 @@ export class MissionsController extends BaseController {
     const user_id = this.tryGetUserId()
     const knex = getKnex()
 
-    // Accept both UUID and mission_code
+    // Resolve mission_id from code
     const isUuid = /^[0-9a-f]{8}-[0-9a-f]{4}-/i.test(mission_id || "")
     if (mission_id && !isUuid) {
       const row = await knex("missions").where("mission_code", mission_id).first("mission_id")
