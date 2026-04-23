@@ -18,6 +18,7 @@ import {
   type UserOverride,
 } from "../../../../services/market-v2/feature-flag.service.js"
 import logger from "../../../../logger/logger.js"
+import { getKnex } from "../../../../clients/database/knex-db.js"
 
 // ── Request / Response types ─────────────────────────────────────
 
@@ -31,12 +32,19 @@ export interface UpdateConfigRequest {
 }
 
 export interface SetUserOverrideRequest {
-  user_id: string
+  username: string
   market_version: MarketVersion
 }
 
+export interface UserOverrideWithName {
+  user_id: string
+  username: string
+  market_version: MarketVersion
+  updated_at: string
+}
+
 export interface UserOverridesResponse {
-  overrides: UserOverride[]
+  overrides: UserOverrideWithName[]
   total: number
 }
 
@@ -120,10 +128,38 @@ export class FeatureFlagAdminController extends BaseController {
     @Request() request: ExpressRequest,
     @Query() page?: number,
     @Query() pageSize?: number,
+    @Query() search?: string,
   ): Promise<UserOverridesResponse> {
     this.request = request
     this.requireAdmin()
-    return featureFlagService.getUserOverrides(page ?? 1, pageSize ?? 50)
+    const db = getKnex()
+    const p = page ?? 1
+    const ps = pageSize ?? 50
+    const offset = (p - 1) * ps
+
+    let query = db("user_preferences as up")
+      .leftJoin("accounts as a", "up.user_id", "a.user_id")
+      .select("up.user_id", "a.username", "up.market_version", "up.updated_at")
+
+    if (search) {
+      query = query.where("a.username", "ilike", `%${search}%`)
+    }
+
+    const countQuery = query.clone().clearSelect().clearOrder().count("* as count")
+    const [overrides, [{ count }]] = await Promise.all([
+      query.orderBy("up.updated_at", "desc").limit(ps).offset(offset),
+      countQuery,
+    ])
+
+    return {
+      overrides: overrides.map((o: any) => ({
+        user_id: o.user_id,
+        username: o.username || "Unknown",
+        market_version: o.market_version,
+        updated_at: o.updated_at?.toISOString?.() || new Date().toISOString(),
+      })),
+      total: Number(count),
+    }
   }
 
   /**
@@ -144,34 +180,47 @@ export class FeatureFlagAdminController extends BaseController {
       ])
     }
 
+    const db = getKnex()
+    const user = await db("accounts").where("username", body.username).first("user_id")
+    if (!user) {
+      this.throwNotFound("User", body.username)
+    }
+
     logger.info("Admin setting user override", {
       admin: this.getUserId(),
-      target_user: body.user_id,
+      target_user: body.username,
+      target_user_id: user.user_id,
       version: body.market_version,
     })
 
-    await featureFlagService.setMarketVersion(body.user_id, body.market_version)
-    return { message: `Set ${body.user_id} to ${body.market_version}` }
+    await featureFlagService.setMarketVersion(user.user_id, body.market_version)
+    return { message: `Set ${body.username} to ${body.market_version}` }
   }
 
   /**
    * Remove a per-user version override (user falls back to global config)
    * @summary Remove user override
    */
-  @Delete("overrides/{userId}")
+  @Delete("overrides/{username}")
   public async removeUserOverride(
     @Request() request: ExpressRequest,
-    @Path() userId: string,
+    @Path() username: string,
   ): Promise<{ message: string }> {
     this.request = request
     this.requireAdmin()
 
+    const db = getKnex()
+    const user = await db("accounts").where("username", username).first("user_id")
+    if (!user) {
+      this.throwNotFound("User", username)
+    }
+
     logger.info("Admin removing user override", {
       admin: this.getUserId(),
-      target_user: userId,
+      target_user: username,
     })
 
-    await featureFlagService.removeUserOverride(userId)
-    return { message: `Removed override for ${userId}` }
+    await featureFlagService.removeUserOverride(user.user_id)
+    return { message: `Removed override for ${username}` }
   }
 }

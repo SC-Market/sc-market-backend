@@ -745,7 +745,7 @@ function extractPropertyOverrides(po: Record<string, unknown>): {
   return { shipEncounters, npcEncounters, haulingOrders, entitySpawns }
 }
 
-interface ItemReward { name: string; ref: string }
+interface ItemReward { name: string; ref: string; itemId?: string }
 
 interface ExtractedMission {
   id: string
@@ -1920,6 +1920,27 @@ for (const bp of blueprints) {
 const bpSources = { default: 0, mission_reward: 0, unsourced: 0 }
 for (const bp of blueprints) bpSources[bp.source as keyof typeof bpSources]++
 console.log(`  Blueprint sources: ${bpSources.default} default, ${bpSources.mission_reward} mission reward, ${bpSources.unsourced} unsourced`)
+
+// --- Resolve item reward names and IDs from items array ---
+const itemByBasename = new Map<string, { id: string; name: string }>()
+for (const item of items) {
+  const name = (item.name as string || "").toLowerCase()
+  itemByBasename.set(name, { id: item.id as string, name: item.name as string })
+}
+let itemRewardsResolved = 0
+for (const m of mergedMissions) {
+  if (!m.itemRewards) continue
+  for (const ir of m.itemRewards) {
+    const search = ir.name.replace(/_/g, " ").toLowerCase()
+    const match = itemByBasename.get(search)
+    if (match) {
+      ir.name = match.name
+      ir.itemId = match.id
+      itemRewardsResolved++
+    }
+  }
+}
+console.log(`  Item rewards resolved: ${itemRewardsResolved}`)
 
 // --- Collect unique events/scenarios from missions ---
 const eventSet = new Set<string>()
