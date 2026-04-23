@@ -745,6 +745,8 @@ function extractPropertyOverrides(po: Record<string, unknown>): {
   return { shipEncounters, npcEncounters, haulingOrders, entitySpawns }
 }
 
+interface ItemReward { name: string; ref: string }
+
 interface ExtractedMission {
   id: string
   name: string
@@ -768,6 +770,7 @@ interface ExtractedMission {
   abandonedCooldownTime: number | null
   personalCooldownTime: number | null
   deadline: number | null
+  timeToComplete: number | null
   availableInPrison: boolean
   illegal: boolean
   hideInMobiGlas: boolean
@@ -778,6 +781,11 @@ interface ExtractedMission {
   npcEncounters?: NpcEncounter[]
   haulingOrders?: HaulingOrder[]
   entitySpawns?: EntitySpawn[]
+  pickupCount?: number
+  deliveryCount?: number
+  destinations?: string[]
+  itemRewards?: ItemReward[]
+  tokenSubstitutions?: Record<string, string>
   // Added by post-processing
   career?: string | null
   lawful?: boolean
@@ -880,6 +888,7 @@ function parseMissions(): ExtractedMission[] {
           // Deadline / lifetime
           const lifetime = contract.contractLifeTime
           const deadline = lifetime?.contractCompletionTime || null
+          const timeToComplete = contract.contractResults?.timeToComplete || null
 
           // Template name (already computed above as templateName)
 
@@ -922,6 +931,82 @@ function parseMissions(): ExtractedMission[] {
           // Hide in MobiGlas
           const hideInMobiGlas = gen.defaultAvailability?.hideInMobiGlas || false
 
+          // Extract pickupCount / deliveryCount from intParamOverrides and propertyOverrides
+          let pickupCount: number | undefined
+          let deliveryCount: number | undefined
+          if (po) {
+            for (const ip of po.intParamOverrides || []) {
+              if (ip?.param === "PickupCount") pickupCount = ip.value
+              if (ip?.param === "DeliveryCount") deliveryCount = ip.value
+            }
+            for (const prop of po.propertyOverrides || []) {
+              const v = prop?.value
+              if (v?._Type_ === "MissionPropertyValue_Integer") {
+                const vn = (prop.missionVariableName || "").toLowerCase()
+                if (vn.includes("pickup") && !pickupCount) {
+                  const opt = v.options?.[0]
+                  if (opt?.value) pickupCount = opt.value
+                }
+                if (vn.includes("delivery") && !deliveryCount) {
+                  const opt = v.options?.[0]
+                  if (opt?.value) deliveryCount = opt.value
+                }
+              }
+            }
+          }
+
+          // Extract destinations from propertyOverrides (location variable names for dropoff/destination/pickup)
+          const destinations: string[] = []
+          if (po?.propertyOverrides) {
+            for (const prop of po.propertyOverrides) {
+              const v = prop?.value
+              if (v?._Type_ === "MissionPropertyValue_Location") {
+                const vn = prop.missionVariableName || ""
+                if (/dropoff|destination|pickup|cargodeck/i.test(vn) && vn) {
+                  destinations.push(vn)
+                }
+              }
+            }
+          }
+
+          // Extract item rewards from contractResults
+          const itemRewards: ItemReward[] = []
+          for (const r of cr) {
+            if (r?._Type_ === "ContractResult_Item") {
+              const ref = r.item || r.entityClass
+              if (ref) {
+                const name = typeof ref === "string" ? path.basename(ref, ".json") : refName(ref) || ""
+                itemRewards.push({ name, ref: typeof ref === "string" ? ref : ref._RecordPath_ || "" })
+              }
+            } else if (r?._Type_ === "ContractResult_ItemsWeighting") {
+              for (const item of r.items || []) {
+                const ref = item?.item || item?.entityClass
+                if (ref) {
+                  const name = typeof ref === "string" ? path.basename(ref, ".json") : refName(ref) || ""
+                  itemRewards.push({ name, ref: typeof ref === "string" ? ref : ref._RecordPath_ || "" })
+                }
+              }
+            }
+          }
+
+          // Collect ALL string param overrides as tokenSubstitutions (merged generator + contract level)
+          const tokenSubstitutions: Record<string, string> = { ...params }
+
+          // Hauling orders from template name fallback
+          let haulingFromTemplate: HaulingOrder[] | undefined
+          if (templateName && templateName.startsWith("haulcargo_") && !metadata?.haulingOrders.length) {
+            const m = templateName.match(/^haulcargo_[a-z0-9]+_(?:bulk|small|supply|firesale|wtp)_(.+?)(?:_(?:large|medium|stanton|interstellar))?$/)
+            if (m) {
+              const resourceCode = m[1]
+              // Case-insensitive lookup in resourceNameMap
+              let friendlyName: string | undefined
+              for (const [key, val] of resourceNameMap) {
+                if (key.toLowerCase() === resourceCode.toLowerCase()) { friendlyName = val; break }
+              }
+              haulingFromTemplate = [{ resource: friendlyName || resourceCode, minSCU: 0, maxSCU: 0 }]
+            }
+          }
+
           missions.push({
             id: contract.id,
             name: contract.debugName,
@@ -943,9 +1028,14 @@ function parseMissions(): ExtractedMission[] {
             canReacceptAfterAbandoning: gen.defaultAvailability?.canReacceptAfterAbandoning ?? null,
             canReacceptAfterFailing: gen.defaultAvailability?.canReacceptAfterFailing ?? null,
             abandonedCooldownTime: gen.defaultAvailability?.abandonedCooldownTime || null,
-            personalCooldownTime: gen.defaultAvailability?.hasPersonalCooldown
-              ? gen.defaultAvailability.personalCooldownTime : null,
+            personalCooldownTime: (() => {
+              // Check contract-level paramOverrides first, then fall back to generator defaults
+              if (po?.hasPersonalCooldown) return po.personalCooldownTime || null
+              if (gen.defaultAvailability?.hasPersonalCooldown) return gen.defaultAvailability.personalCooldownTime
+              return null
+            })(),
             deadline,
+            timeToComplete: timeToComplete || null,
             availableInPrison: gen.defaultAvailability?.availableInPrison || false,
             illegal,
             hideInMobiGlas,
@@ -954,8 +1044,13 @@ function parseMissions(): ExtractedMission[] {
             acceptLocations: acceptLocations.length ? acceptLocations : undefined,
             shipEncounters: metadata?.shipEncounters.length ? metadata.shipEncounters : undefined,
             npcEncounters: metadata?.npcEncounters.length ? metadata.npcEncounters : undefined,
-            haulingOrders: metadata?.haulingOrders.length ? metadata.haulingOrders : undefined,
+            haulingOrders: metadata?.haulingOrders.length ? metadata.haulingOrders : haulingFromTemplate,
             entitySpawns: metadata?.entitySpawns.length ? metadata.entitySpawns : undefined,
+            pickupCount,
+            deliveryCount,
+            destinations: destinations.length ? destinations : undefined,
+            itemRewards: itemRewards.length ? itemRewards : undefined,
+            tokenSubstitutions: Object.keys(tokenSubstitutions).length ? tokenSubstitutions : undefined,
           })
         }
       }
@@ -1534,6 +1629,11 @@ for (const [key, group] of mergeGroups) {
     base.npcEncounters = unionByKey<NpcEncounter>(group, "npcEncounters", "name")
     base.haulingOrders = unionByKey<HaulingOrder>(group, "haulingOrders", "resource")
     base.entitySpawns = unionByKey<EntitySpawn>(group, "entitySpawns", "name")
+    base.itemRewards = unionByKey<ItemReward>(group, "itemRewards", "name")
+    // Union destinations
+    const allDests = new Set<string>()
+    for (const m of group) for (const d of m.destinations || []) allDests.add(d)
+    if (allDests.size) base.destinations = [...allDests]
     // Collect all star systems from variants
     const systems = new Set(group.map((m) => m.starSystem).filter(Boolean))
     if (systems.size > 1) base.starSystem = [...systems].join(", ")
