@@ -1562,7 +1562,7 @@ function parseReputationRanks(): any[] {
           "XLI", "XLII", "XLIII", "XLIV", "XLV", "XLVI", "XLVII", "XLVIII", "XLIX", "L"]
         const isPlaceholder = !rawName || rawName.includes("LOC_PLACEHOLDER") || rawName.includes("LOC_UNINITIALIZED") || rawName.startsWith("@")
         const displayName = isPlaceholder ? `Rank ${roman[idx] || idx}` : rawName
-        const threshold = rankCount > 1 ? Math.round((ceiling / (rankCount - 1)) * idx) : 0
+        const threshold = typeof sd.minReputation === "number" ? sd.minReputation : (rankCount > 1 ? Math.round((ceiling / (rankCount - 1)) * idx) : 0)
         return { code, displayName, threshold, index: idx }
       })
 
