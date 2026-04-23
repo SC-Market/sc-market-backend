@@ -1926,31 +1926,22 @@ export class GameDataImportService {
 
       logger.info(`Parsed ${resources.length} resources from game data`)
 
-      // Process resources in transaction
-      await knex.transaction(async (trx) => {
-        for (const resource of resources) {
-          try {
-            // Validate resource data
-            const validation = this.validateResourceData(resource)
-            if (!validation.valid) {
-              logger.warn("Invalid resource data", {
-                resourceId: resource.id,
-                errors: validation.errors,
-              })
-              stats.skipped++
-              stats.errors.push(
-                `Resource ${resource.id}: ${validation.errors.join(", ")}`,
-              )
-              continue
-            }
+      // Process resources individually (no transaction - prevents cascade failures)
+      for (const resource of resources) {
+        try {
+          const validation = this.validateResourceData(resource)
+          if (!validation.valid) {
+            stats.skipped++
+            stats.errors.push(`Resource ${resource.id}: ${validation.errors.join(", ")}`)
+            continue
+          }
 
-            // Store resource in database
-            const result = await this.upsertResource(trx, versionId, resource)
-            if (result === "inserted") {
-              stats.inserted++
-            } else if (result === "updated") {
-              stats.updated++
-            }
+          const result = await this.upsertResource(knex, versionId, resource)
+          if (result === "inserted") {
+            stats.inserted++
+          } else if (result === "updated") {
+            stats.updated++
+          }
           } catch (error) {
             const errorMessage = error instanceof Error ? error.message : String(error)
             logger.error("Failed to import resource", {
@@ -1961,7 +1952,6 @@ export class GameDataImportService {
             stats.skipped++
           }
         }
-      })
 
       logger.info("Resource import completed", stats)
       return stats
@@ -2028,7 +2018,7 @@ export class GameDataImportService {
    * Subtask 8.6.5: Handle resource properties and attributes
    */
   private async upsertResource(
-    trx: Knex.Transaction,
+    trx: Knex | Knex.Transaction,
     versionId: string,
     resource: P4KResource,
   ): Promise<"inserted" | "updated"> {
