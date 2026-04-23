@@ -1894,7 +1894,7 @@ export async function getMarketItemsBySubcategory(
   subcategory: string,
 ): Promise<DBMarketItem[]> {
   return knex()<DBMarketItem>("game_items")
-    .whereRaw("LOWER(REPLACE(type, ' ', '')) = LOWER(REPLACE(?, ' ', ''))", [subcategory])
+    .where("type", subcategory)
     .orderBy("name")
     .select("name", "type", "id")
 }
