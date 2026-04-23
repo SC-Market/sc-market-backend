@@ -526,6 +526,7 @@ const models: TsoaRoute.Models = {
             "min_order_value": {"dataType":"double"},
             "max_order_value": {"dataType":"double"},
             "bulk_discount_tiers": {"dataType":"array","array":{"dataType":"refObject","ref":"BulkDiscountTier"}},
+            "contractor_spectrum_id": {"dataType":"string"},
         },
         "additionalProperties": false,
     },

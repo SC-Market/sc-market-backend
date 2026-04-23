@@ -106,6 +106,9 @@ export interface CreateListingRequest {
 
   /** Optional bulk discount tiers sorted by min_quantity ascending */
   bulk_discount_tiers?: BulkDiscountTier[];
+
+  /** Optional contractor spectrum_id — if provided, listing is created on behalf of the org */
+  contractor_spectrum_id?: string;
 }
 
 // ============================================================================
