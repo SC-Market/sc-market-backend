@@ -7520,8 +7520,11 @@
 					"username": {
 						"type": "string"
 					},
-					"market_version": {
-						"$ref": "#/components/schemas/MarketVersion"
+					"flag_name": {
+						"type": "string"
+					},
+					"enabled": {
+						"type": "boolean"
 					},
 					"updated_at": {
 						"type": "string"
@@ -7530,7 +7533,8 @@
 				"required": [
 					"user_id",
 					"username",
-					"market_version",
+					"flag_name",
+					"enabled",
 					"updated_at"
 				],
 				"type": "object",
@@ -7561,13 +7565,17 @@
 					"username": {
 						"type": "string"
 					},
-					"market_version": {
-						"$ref": "#/components/schemas/MarketVersion"
+					"flag_name": {
+						"type": "string"
+					},
+					"enabled": {
+						"type": "boolean"
 					}
 				},
 				"required": [
 					"username",
-					"market_version"
+					"flag_name",
+					"enabled"
 				],
 				"type": "object",
 				"additionalProperties": false
@@ -13268,6 +13276,14 @@
 						"schema": {
 							"type": "string"
 						}
+					},
+					{
+						"in": "query",
+						"name": "flag_name",
+						"required": false,
+						"schema": {
+							"type": "string"
+						}
 					}
 				]
 			},
@@ -13354,6 +13370,14 @@
 						"in": "path",
 						"name": "username",
 						"required": true,
+						"schema": {
+							"type": "string"
+						}
+					},
+					{
+						"in": "query",
+						"name": "flag_name",
+						"required": false,
 						"schema": {
 							"type": "string"
 						}

@@ -35,13 +35,15 @@ export interface UpdateConfigRequest {
 
 export interface SetUserOverrideRequest {
   username: string
-  market_version: MarketVersion
+  flag_name: string
+  enabled: boolean
 }
 
 export interface UserOverrideWithName {
   user_id: string
   username: string
-  market_version: MarketVersion
+  flag_name: string
+  enabled: boolean
   updated_at: string
 }
 
@@ -131,6 +133,7 @@ export class FeatureFlagAdminController extends BaseController {
     @Query() page?: number,
     @Query() pageSize?: number,
     @Query() search?: string,
+    @Query() flag_name?: string,
   ): Promise<UserOverridesResponse> {
     this.request = request
     this.requireAdmin()
@@ -139,17 +142,19 @@ export class FeatureFlagAdminController extends BaseController {
     const ps = pageSize ?? 50
     const offset = (p - 1) * ps
 
-    let query = db("user_preferences as up")
-      .leftJoin("accounts as a", "up.user_id", "a.user_id")
-      .select("up.user_id", "a.username", "up.market_version", "up.updated_at")
+    const hasTable = await db.schema.hasTable("user_feature_overrides")
+    if (!hasTable) return { overrides: [], total: 0 }
 
-    if (search) {
-      query = query.where("a.username", "ilike", `%${search}%`)
-    }
+    let query = db("user_feature_overrides as uo")
+      .leftJoin("accounts as a", "uo.user_id", "a.user_id")
+      .select("uo.user_id", "a.username", "uo.flag_name", "uo.enabled", "uo.updated_at")
+
+    if (flag_name) query = query.where("uo.flag_name", flag_name)
+    if (search) query = query.where("a.username", "ilike", `%${search}%`)
 
     const countQuery = query.clone().clearSelect().clearOrder().count("* as count")
     const [overrides, [{ count }]] = await Promise.all([
-      query.orderBy("up.updated_at", "desc").limit(ps).offset(offset),
+      query.orderBy("uo.updated_at", "desc").limit(ps).offset(offset),
       countQuery,
     ])
 
@@ -157,7 +162,8 @@ export class FeatureFlagAdminController extends BaseController {
       overrides: overrides.map((o: any) => ({
         user_id: o.user_id,
         username: o.username || "Unknown",
-        market_version: o.market_version,
+        flag_name: o.flag_name,
+        enabled: o.enabled,
         updated_at: o.updated_at?.toISOString?.() || new Date().toISOString(),
       })),
       total: Number(count),
@@ -176,12 +182,6 @@ export class FeatureFlagAdminController extends BaseController {
     this.request = request
     this.requireAdmin()
 
-    if (body.market_version !== "V1" && body.market_version !== "V2") {
-      this.throwValidationError("market_version must be V1 or V2", [
-        { field: "market_version", message: "Must be V1 or V2" }
-      ])
-    }
-
     const db = getKnex()
     const user = await db("accounts").where("username", body.username).first("user_id")
     if (!user) {
@@ -191,12 +191,12 @@ export class FeatureFlagAdminController extends BaseController {
     logger.info("Admin setting user override", {
       admin: this.getUserId(),
       target_user: body.username,
-      target_user_id: user.user_id,
-      version: body.market_version,
+      flag_name: body.flag_name,
+      enabled: body.enabled,
     })
 
-    await featureFlagService.setMarketVersion(user.user_id, body.market_version)
-    return { message: `Set ${body.username} to ${body.market_version}` }
+    await featureFlagService.setFlagOverride(user.user_id, body.flag_name, body.enabled)
+    return { message: `Set ${body.username} ${body.flag_name}=${body.enabled}` }
   }
 
   /**
@@ -207,6 +207,7 @@ export class FeatureFlagAdminController extends BaseController {
   public async removeUserOverride(
     @Request() request: ExpressRequest,
     @Path() username: string,
+    @Query() flag_name?: string,
   ): Promise<{ message: string }> {
     this.request = request
     this.requireAdmin()
@@ -217,12 +218,15 @@ export class FeatureFlagAdminController extends BaseController {
       this.throwNotFound("User", username)
     }
 
-    logger.info("Admin removing user override", {
-      admin: this.getUserId(),
-      target_user: username,
-    })
+    if (flag_name) {
+      await featureFlagService.removeFlagOverride(user.user_id, flag_name)
+    } else {
+      // Remove all overrides for this user
+      const hasTable = await db.schema.hasTable("user_feature_overrides")
+      if (hasTable) await db("user_feature_overrides").where({ user_id: user.user_id }).del()
+      await featureFlagService.removeUserOverride(user.user_id)
+    }
 
-    await featureFlagService.removeUserOverride(user.user_id)
-    return { message: `Removed override for ${username}` }
+    return { message: `Removed override for ${username}${flag_name ? ` (${flag_name})` : " (all flags)"}` }
   }
 }
