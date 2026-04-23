@@ -366,7 +366,14 @@ export function setupAuthRoutes(app: any, frontendUrl: URL): void {
               return res.redirect(discordLoginUrl.toString())
             }
 
-            const redirectTo = new URL("/", redirectBase)
+            // Account not found — redirect to login page with helpful message
+            if (errorCode === AuthErrorCodes.ACCOUNT_NOT_FOUND) {
+              const redirectTo = new URL("/login", redirectBase)
+              redirectTo.searchParams.set("error", "account_not_found")
+              return res.redirect(redirectTo.toString())
+            }
+
+            const redirectTo = new URL("/login", redirectBase)
             redirectTo.searchParams.set("error", errorCode)
             if (err.message && err.message !== errorCode) {
               redirectTo.searchParams.set("error_description", err.message)
