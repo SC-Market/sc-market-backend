@@ -818,7 +818,7 @@ function parseMissions(): ExtractedMission[] {
         const genType = gp?.missionTypeOverride && gp.missionTypeOverride !== "None"
           ? refName(gp.missionTypeOverride) : null
 
-        const introNames = new Set<string>((gen.introContracts || []).map((c: { debugName?: string }) => c.debugName).filter((n): n is string => !!n))
+        const introNames = new Set<string>((gen.introContracts || []).map((c: { debugName?: string }) => c.debugName).filter((n: string | undefined): n is string => !!n))
         const mainNames = (gen.contracts || []).map((c: { debugName?: string }) => c.debugName).filter(Boolean)
         const allContracts = [...(gen.contracts || []), ...(gen.introContracts || [])]
         for (const contract of allContracts) {
