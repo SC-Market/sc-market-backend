@@ -1927,12 +1927,17 @@ for (const item of items) {
   const name = (item.name as string || "").toLowerCase()
   itemByBasename.set(name, { id: item.id as string, name: item.name as string })
 }
+// Also add ships/vehicles by file basename
+for (const ship of ships) {
+  const file = (ship.file as string || "").toLowerCase()
+  if (file) itemByBasename.set(file, { id: ship.id as string, name: ship.name as string })
+}
 let itemRewardsResolved = 0
 for (const m of mergedMissions) {
   if (!m.itemRewards) continue
   for (const ir of m.itemRewards) {
     const search = ir.name.replace(/_/g, " ").toLowerCase()
-    const match = itemByBasename.get(search)
+    const match = itemByBasename.get(search) || itemByBasename.get(ir.name.toLowerCase())
     if (match) {
       ir.name = match.name
       ir.itemId = match.id

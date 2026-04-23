@@ -394,6 +394,8 @@ export class GameItemsV2Controller extends BaseController {
     @Query() item_type?: string,
     @Query() price_min?: number,
     @Query() price_max?: number,
+    @Query() quantity_min?: number,
+    @Query() quantity_max?: number,
     @Query() sort_by?: "price" | "quantity" | "name" | "seller_count",
     @Query() sort_order?: "asc" | "desc",
     @Query() page?: number,
@@ -438,6 +440,12 @@ export class GameItemsV2Controller extends BaseController {
       }
       if (price_max !== undefined) {
         query = query.having(db.raw("MAX(ls.price_max)"), "<=", price_max)
+      }
+      if (quantity_min !== undefined) {
+        query = query.having(db.raw("SUM(ls.quantity_available)"), ">=", quantity_min)
+      }
+      if (quantity_max !== undefined) {
+        query = query.having(db.raw("SUM(ls.quantity_available)"), "<=", quantity_max)
       }
 
       // Count total
