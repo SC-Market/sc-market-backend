@@ -351,12 +351,15 @@ export interface MissionDetailResponse {
 /** Ship encounter group (e.g. "Mission Targets", "Reinforcements") */
 export interface ShipEncounter {
   role: string
+  alignment: "hostile" | "friendly" | "neutral"
   waves: ShipWave[]
+  ship_pool?: string[]
 }
 
 export interface ShipWave {
   name: string
-  ship_count: number
+  min_ships: number
+  max_ships: number
 }
 
 /** NPC encounter */

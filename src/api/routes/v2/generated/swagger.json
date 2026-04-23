@@ -4588,14 +4588,19 @@
 					"name": {
 						"type": "string"
 					},
-					"ship_count": {
+					"min_ships": {
+						"type": "number",
+						"format": "double"
+					},
+					"max_ships": {
 						"type": "number",
 						"format": "double"
 					}
 				},
 				"required": [
 					"name",
-					"ship_count"
+					"min_ships",
+					"max_ships"
 				],
 				"type": "object",
 				"additionalProperties": false
@@ -4606,15 +4611,30 @@
 					"role": {
 						"type": "string"
 					},
+					"alignment": {
+						"type": "string",
+						"enum": [
+							"hostile",
+							"friendly",
+							"neutral"
+						]
+					},
 					"waves": {
 						"items": {
 							"$ref": "#/components/schemas/ShipWave"
+						},
+						"type": "array"
+					},
+					"ship_pool": {
+						"items": {
+							"type": "string"
 						},
 						"type": "array"
 					}
 				},
 				"required": [
 					"role",
+					"alignment",
 					"waves"
 				],
 				"type": "object",
