@@ -1048,8 +1048,6 @@ export class CartV2Controller extends BaseController {
             customer_id: userId,
             contractor_id: null,
             status: "pending",
-            created_at: new Date(),
-            updated_at: new Date(),
           })
           .returning("*")
 
