@@ -117,7 +117,6 @@ export class CartV2Controller extends BaseController {
           // Seller info
           "seller.username as seller_username",
           "seller.display_name as seller_display_name",
-          "seller.rating as seller_rating",
           "contractor.spectrum_id as contractor_spectrum_id",
           "contractor.name as contractor_name",
           // Pricing info
@@ -198,7 +197,7 @@ export class CartV2Controller extends BaseController {
             seller_name: sellerName,
             seller_type: item.seller_type,
             seller_slug: sellerSlug,
-            seller_rating: item.seller_rating || 0,
+            seller_rating: 0,
             status: item.listing_status,
             seller_next_available: sellerNextAvailable,
           }
