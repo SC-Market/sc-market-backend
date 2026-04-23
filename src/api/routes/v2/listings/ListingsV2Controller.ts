@@ -101,8 +101,13 @@ export class ListingsV2Controller extends BaseController {
         // 1. Create listing record
         const [listing] = await trx("listings")
           .insert({
-            seller_id: userId,
-            seller_type: "user",
+            seller_id: requestBody.contractor_spectrum_id
+              ? await (async () => {
+                  const c = await trx("contractors").where("spectrum_id", requestBody.contractor_spectrum_id).select("contractor_id").first()
+                  return c?.contractor_id || userId
+                })()
+              : userId,
+            seller_type: requestBody.contractor_spectrum_id ? "contractor" : "user",
             title: requestBody.title,
             description: requestBody.description,
             status: "active",
