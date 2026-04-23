@@ -1609,6 +1609,69 @@ if (fs.existsSync(brokerDir)) {
   console.log(`  Missions enriched from broker: ${enriched}`)
 }
 
+// --- Enrich rewards via template→module→broker chain ---
+{
+  // Build broker module → reward range
+  const brokerModuleRewards = new Map<string, { min: number; max: number }>()
+  const brokerDir2 = path.join(RECORDS_DIR, "missionbroker/pu_missions")
+  if (fs.existsSync(brokerDir2)) {
+    for (const bf of findJsonFiles(brokerDir2)) {
+      try {
+        const bd = readJson(bf)._RecordValue_
+        if (bd?._Type_ !== "MissionBrokerEntry") continue
+        const r = bd.missionReward
+        if (!r?.reward) continue
+        const module = path.basename(bd.missionModule || "", ".xml").toLowerCase()
+        if (!module) continue
+        const existing = brokerModuleRewards.get(module)
+        if (existing) {
+          existing.min = Math.min(existing.min, r.reward)
+          existing.max = Math.max(existing.max, r.max || r.reward)
+        } else {
+          brokerModuleRewards.set(module, { min: r.reward, max: r.max || r.reward })
+        }
+      } catch {}
+    }
+  }
+
+  // Build template → module mapping
+  const tmplModuleMap = new Map<string, string>()
+  const tmplDir2 = path.join(RECORDS_DIR, "contracts/contracttemplates")
+  if (fs.existsSync(tmplDir2)) {
+    for (const tf of findJsonFiles(tmplDir2)) {
+      try {
+        const findXml = (obj: unknown): string | null => {
+          if (typeof obj === "string" && obj.toLowerCase().endsWith(".xml"))
+            return path.basename(obj, ".xml").toLowerCase()
+          if (obj && typeof obj === "object") {
+            for (const v of Object.values(obj)) {
+              const r = findXml(v)
+              if (r) return r
+            }
+          }
+          return null
+        }
+        const module = findXml(readJson(tf))
+        if (module) tmplModuleMap.set(path.basename(tf, ".json"), module)
+      } catch {}
+    }
+  }
+
+  let moduleMatched = 0
+  for (const m of missions) {
+    if (m.reward) continue
+    const tmpl = m.template
+    if (!tmpl) continue
+    const module = tmplModuleMap.get(tmpl)
+    if (!module) continue
+    const mr = brokerModuleRewards.get(module)
+    if (!mr) continue
+    m.reward = { uec: mr.min, max: mr.max }
+    moduleMatched++
+  }
+  console.log(`  Rewards from broker module chain: ${moduleMatched}`)
+}
+
 // --- Merge location-variant missions ---
 // Strip system/planet names from contract debugNames to merge location variants
 const LOCATION_PARTS = /_(Stanton[1-4]|Pyro[1-6]|Nyx[1-3]|Hurston|Crusader|ArcCorp|microTech|Terra|Magnus|Castra|Odin|Helios|Oso|Kilian|Davien|Rhetor|Vega|Tiber)/g
