@@ -780,11 +780,6 @@ export class BlueprintsController extends BaseController {
 
     // Get user_id from authentication context
     const user_id = this.getUserId()
-
-    if (!user_id) {
-      this.throwUnauthorized("User must be authenticated to manage blueprint inventory")
-    }
-
     logger.info("Adding blueprint to user inventory", { blueprint_id, user_id })
 
     try {
@@ -883,7 +878,10 @@ export class BlueprintsController extends BaseController {
   @Security("jwt")
   public async removeBlueprintFromInventory(
     @Path() blueprint_id: string,
+    @Request() request: ExpressRequest,
   ): Promise<{ success: boolean }> {
+    this.request = request
+    this.requireAuth()
     const knex = getKnex()
 
     if (!blueprint_id) {
@@ -894,11 +892,6 @@ export class BlueprintsController extends BaseController {
 
     // Get user_id from authentication context
     const user_id = this.getUserId()
-
-    if (!user_id) {
-      this.throwUnauthorized("User must be authenticated to manage blueprint inventory")
-    }
-
     logger.info("Removing blueprint from user inventory", { blueprint_id, user_id })
 
     try {
