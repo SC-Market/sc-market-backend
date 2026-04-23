@@ -2013,6 +2013,11 @@ const models: TsoaRoute.Models = {
         "type": {"dataType":"union","subSchemas":[{"dataType":"enum","enums":["V1"]},{"dataType":"enum","enums":["V2"]}],"validators":{}},
     },
     // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+    "Record_string.boolean_": {
+        "dataType": "refAlias",
+        "type": {"dataType":"nestedObjectLiteral","nestedProperties":{},"additionalProperties":{"dataType":"boolean"},"validators":{}},
+    },
+    // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
     "GetFeatureFlagResponse": {
         "dataType": "refObject",
         "properties": {
@@ -2020,6 +2025,8 @@ const models: TsoaRoute.Models = {
             "market_version": {"ref":"MarketVersion","required":true},
             "is_developer": {"dataType":"boolean","required":true},
             "has_override": {"dataType":"boolean","required":true},
+            "flags": {"ref":"Record_string.boolean_","required":true},
+            "overridden_flags": {"dataType":"array","array":{"dataType":"string"},"required":true},
         },
         "additionalProperties": false,
     },
@@ -2369,8 +2376,6 @@ const models: TsoaRoute.Models = {
             "default_version": {"ref":"MarketVersion","required":true},
             "rollout_percentage": {"dataType":"double","required":true},
             "enabled": {"dataType":"boolean","required":true},
-            "created_at": {"dataType":"datetime","required":true},
-            "updated_at": {"dataType":"datetime","required":true},
         },
         "additionalProperties": false,
     },
@@ -2378,6 +2383,7 @@ const models: TsoaRoute.Models = {
     "UpdateConfigRequest": {
         "dataType": "refObject",
         "properties": {
+            "flag_name": {"dataType":"string"},
             "default_version": {"ref":"MarketVersion"},
             "rollout_percentage": {"dataType":"double"},
             "enabled": {"dataType":"boolean"},
@@ -2388,12 +2394,13 @@ const models: TsoaRoute.Models = {
     "FeatureFlagStats": {
         "dataType": "refObject",
         "properties": {
-            "total_overrides": {"dataType":"double","required":true},
-            "v1_overrides": {"dataType":"double","required":true},
-            "v2_overrides": {"dataType":"double","required":true},
-            "rollout_percentage": {"dataType":"double","required":true},
-            "default_version": {"ref":"MarketVersion","required":true},
+            "flag_name": {"dataType":"string","required":true},
             "enabled": {"dataType":"boolean","required":true},
+            "default_version": {"ref":"MarketVersion","required":true},
+            "rollout_percentage": {"dataType":"double","required":true},
+            "override_count": {"dataType":"double","required":true},
+            "enabled_overrides": {"dataType":"double","required":true},
+            "disabled_overrides": {"dataType":"double","required":true},
         },
         "additionalProperties": false,
     },
