@@ -177,6 +177,7 @@ export interface P4KRawBlueprint {
   craftTimeSeconds: number
   slots: P4KBlueprintSlot[]
   optionalCosts: P4KBlueprintSlot[]
+  source?: string
 }
 
 export interface P4KRawResource {
@@ -312,11 +313,7 @@ export interface P4KBlueprint {
   requiredSkill: number | null
   iconUrl: string | null
   source?: string
-  slots?: Array<{
-    type: string; name: string; displayName: string;
-    modifiers: Array<{ property: string; startQuality: number; endQuality: number; modifierAtStart: number; modifierAtEnd: number }>
-    ingredients?: P4KBlueprintSlot[]
-  }>
+  slots?: P4KBlueprintSlot[]
 }
 
 export interface P4KResource {
