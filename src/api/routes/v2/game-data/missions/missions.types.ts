@@ -270,6 +270,9 @@ export interface MissionBlueprintReward {
   /** Blueprint UUID */
   blueprint_id: string
 
+  /** Blueprint code for URL-friendly links */
+  blueprint_code: string
+
   /** Blueprint name */
   blueprint_name: string
 

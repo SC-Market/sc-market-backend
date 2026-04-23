@@ -1512,6 +1512,7 @@ const models: TsoaRoute.Models = {
         "dataType": "refObject",
         "properties": {
             "blueprint_id": {"dataType":"string","required":true},
+            "blueprint_code": {"dataType":"string","required":true},
             "blueprint_name": {"dataType":"string","required":true},
             "output_item_name": {"dataType":"string","required":true},
             "output_item_icon": {"dataType":"string"},
@@ -4840,6 +4841,7 @@ export function RegisterRoutes(app: Router) {
         const argsBlueprintsController_addBlueprintToInventory: Record<string, TsoaRoute.ParameterSchema> = {
                 blueprint_id: {"in":"path","name":"blueprint_id","required":true,"dataType":"string"},
                 body: {"in":"body","name":"body","required":true,"dataType":"nestedObjectLiteral","nestedProperties":{"acquisition_notes":{"dataType":"string"},"acquisition_location":{"dataType":"string"},"acquisition_method":{"dataType":"string"}}},
+                request: {"in":"request","name":"request","required":true,"dataType":"object"},
         };
         app.post('/game-data/blueprints/:blueprint_id/inventory',
             authenticateMiddleware([{"jwt":[]}]),
@@ -4871,6 +4873,7 @@ export function RegisterRoutes(app: Router) {
         // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
         const argsBlueprintsController_removeBlueprintFromInventory: Record<string, TsoaRoute.ParameterSchema> = {
                 blueprint_id: {"in":"path","name":"blueprint_id","required":true,"dataType":"string"},
+                request: {"in":"request","name":"request","required":true,"dataType":"object"},
         };
         app.delete('/game-data/blueprints/:blueprint_id/inventory',
             authenticateMiddleware([{"jwt":[]}]),

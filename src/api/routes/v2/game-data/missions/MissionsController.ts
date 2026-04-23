@@ -546,6 +546,7 @@ export class MissionsController extends BaseController {
           "mbr.drop_probability",
           "mbr.is_guaranteed",
           "b.blueprint_id",
+          "b.blueprint_code",
           "b.blueprint_name",
           "gi.name as output_item_name",
           "gi.image_url as output_item_icon",
@@ -577,6 +578,7 @@ export class MissionsController extends BaseController {
         const pool = rewardPoolsMap.get(poolId)!
         pool.blueprints.push({
           blueprint_id: row.blueprint_id,
+          blueprint_code: row.blueprint_code,
           blueprint_name: row.blueprint_name,
           output_item_name: row.output_item_name,
           output_item_icon: row.output_item_icon || undefined,
