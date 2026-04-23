@@ -678,7 +678,7 @@ export class CartV2Controller extends BaseController {
         })
 
         // TODO: Requirement 31.11 - Log cart modifications to audit trail
-        // This should be implemented when audit trail system is in place
+        auditService.log({ entity_type: "cart", entity_id: cartItemId, action: "item_updated", actor_id: userId })
       })
 
       logger.info("Cart item updated successfully", {
