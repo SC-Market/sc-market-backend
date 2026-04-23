@@ -1820,6 +1820,7 @@ export class GameDataImportService {
       required_skill_level: blueprint.requiredSkill,
       icon_url: blueprint.iconUrl,
       is_active: true,
+      source: blueprint.source || null,
       updated_at: new Date(),
     }
 
