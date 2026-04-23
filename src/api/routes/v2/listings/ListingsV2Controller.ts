@@ -840,6 +840,7 @@ export class ListingsV2Controller extends BaseController {
     @Query() page_size?: number,
     @Query() sort_by?: "created_at" | "updated_at" | "price" | "quantity",
     @Query() sort_order?: "asc" | "desc",
+    @Query() spectrum_id?: string,
     @Request() request?: ExpressRequest,
   ): Promise<GetMyListingsResponse> {
     this.request = request
@@ -891,7 +892,19 @@ export class ListingsV2Controller extends BaseController {
           "l_full.expires_at",
         )
         .leftJoin("listings as l_full", "ls.listing_id", "l_full.listing_id")
-        .where("ls.seller_id", userId) // Filter by current user (Requirement 18.2)
+
+      // Filter by org (spectrum_id) or current user
+      if (spectrum_id) {
+        const contractor = await db("contractors").where({ spectrum_id }).first()
+        if (contractor) {
+          query = query.where("ls.seller_id", contractor.contractor_id).where("ls.seller_type", "contractor")
+        } else {
+          // No matching org — return empty
+          query = query.whereRaw("1 = 0")
+        }
+      } else {
+        query = query.where("ls.seller_id", userId)
+      }
 
       // Apply status filter if provided (Requirement 18.5)
       if (status) {
