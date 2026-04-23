@@ -4989,6 +4989,32 @@
 				"type": "object",
 				"additionalProperties": false
 			},
+			"GameEvent": {
+				"description": "Game event/scenario (e.g. Luminalia, Invictus)",
+				"properties": {
+					"event_id": {
+						"type": "string"
+					},
+					"event_code": {
+						"type": "string"
+					},
+					"event_name": {
+						"type": "string"
+					},
+					"mission_count": {
+						"type": "number",
+						"format": "double"
+					}
+				},
+				"required": [
+					"event_id",
+					"event_code",
+					"event_name",
+					"mission_count"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
 			"Record_string.number_": {
 				"properties": {},
 				"additionalProperties": {
@@ -10605,6 +10631,24 @@
 						}
 					},
 					{
+						"description": "Filter by event code (show only missions for this event)",
+						"in": "query",
+						"name": "event_code",
+						"required": false,
+						"schema": {
+							"type": "string"
+						}
+					},
+					{
+						"description": "Exclude event-only missions (default: true — hides seasonal missions)",
+						"in": "query",
+						"name": "exclude_events",
+						"required": false,
+						"schema": {
+							"type": "boolean"
+						}
+					},
+					{
 						"description": "Game version ID (defaults to active LIVE version)",
 						"in": "query",
 						"name": "version_id",
@@ -11026,6 +11070,41 @@
 						}
 					}
 				]
+			}
+		},
+		"/game-data/missions/events": {
+			"get": {
+				"operationId": "GetGameEvents",
+				"responses": {
+					"200": {
+						"description": "Ok",
+						"content": {
+							"application/json": {
+								"schema": {
+									"properties": {
+										"events": {
+											"items": {
+												"$ref": "#/components/schemas/GameEvent"
+											},
+											"type": "array"
+										}
+									},
+									"required": [
+										"events"
+									],
+									"type": "object"
+								}
+							}
+						}
+					}
+				},
+				"description": "List all game events/scenarios that have associated missions",
+				"summary": "Get game events",
+				"tags": [
+					"Game Data - Missions"
+				],
+				"security": [],
+				"parameters": []
 			}
 		},
 		"/game-data/crafting/calculate-quality": {

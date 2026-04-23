@@ -1616,6 +1616,17 @@ const models: TsoaRoute.Models = {
         "additionalProperties": false,
     },
     // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+    "GameEvent": {
+        "dataType": "refObject",
+        "properties": {
+            "event_id": {"dataType":"string","required":true},
+            "event_code": {"dataType":"string","required":true},
+            "event_name": {"dataType":"string","required":true},
+            "mission_count": {"dataType":"double","required":true},
+        },
+        "additionalProperties": false,
+    },
+    // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
     "Record_string.number_": {
         "dataType": "refAlias",
         "type": {"dataType":"nestedObjectLiteral","nestedProperties":{},"additionalProperties":{"dataType":"double"},"validators":{}},
@@ -4117,6 +4128,8 @@ export function RegisterRoutes(app: Router) {
                 credit_reward_min: {"in":"query","name":"credit_reward_min","dataType":"double"},
                 community_difficulty_min: {"in":"query","name":"community_difficulty_min","dataType":"double"},
                 community_satisfaction_min: {"in":"query","name":"community_satisfaction_min","dataType":"double"},
+                event_code: {"in":"query","name":"event_code","dataType":"string"},
+                exclude_events: {"in":"query","name":"exclude_events","dataType":"boolean"},
                 version_id: {"in":"query","name":"version_id","dataType":"string"},
                 page: {"default":1,"in":"query","name":"page","dataType":"double"},
                 page_size: {"default":20,"in":"query","name":"page_size","dataType":"double"},
@@ -4353,6 +4366,35 @@ export function RegisterRoutes(app: Router) {
 
               await templateService.apiHandler({
                 methodName: 'getReputationRanks',
+                controller,
+                response,
+                next,
+                validatedArgs,
+                successStatus: undefined,
+              });
+            } catch (err) {
+                return next(err);
+            }
+        });
+        // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+        const argsMissionsController_getGameEvents: Record<string, TsoaRoute.ParameterSchema> = {
+        };
+        app.get('/game-data/missions/events',
+            ...(fetchMiddlewares<RequestHandler>(MissionsController)),
+            ...(fetchMiddlewares<RequestHandler>(MissionsController.prototype.getGameEvents)),
+
+            async function MissionsController_getGameEvents(request: ExRequest, response: ExResponse, next: any) {
+
+            // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+
+            let validatedArgs: any[] = [];
+            try {
+                validatedArgs = templateService.getValidatedArgs({ args: argsMissionsController_getGameEvents, request, response });
+
+                const controller = new MissionsController();
+
+              await templateService.apiHandler({
+                methodName: 'getGameEvents',
                 controller,
                 response,
                 next,
