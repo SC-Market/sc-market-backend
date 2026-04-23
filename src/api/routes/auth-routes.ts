@@ -349,28 +349,22 @@ export function setupAuthRoutes(app: any, frontendUrl: URL): void {
             logger.error("[Auth] Citizen ID login error", { error: err })
             const errorCode = mapErrorCodeToFrontend(err.code)
 
-            // If username is taken, redirect to Discord login with settings path
-            if (errorCode === CitizenIDErrorCodes.USERNAME_TAKEN) {
-              // Use backend URL for auth endpoint
+            // If username is taken or account exists with different provider,
+            // redirect to login with existing method, then to /settings to link
+            if (
+              errorCode === CitizenIDErrorCodes.USERNAME_TAKEN ||
+              errorCode === CitizenIDErrorCodes.ALREADY_LINKED ||
+              errorCode === AuthErrorCodes.ACCOUNT_NOT_FOUND
+            ) {
               const backendUrl = new URL(
                 env.BACKEND_URL || "http://localhost:7000",
               )
               const discordLoginUrl = new URL("/auth/discord", backendUrl)
               discordLoginUrl.searchParams.set("path", "/settings")
-              return res.redirect(discordLoginUrl.toString())
-            }
-
-            // Handle new error codes
-            if (
-              errorCode === AuthErrorCodes.ACCOUNT_NOT_FOUND ||
-              errorCode === AuthErrorCodes.ACCOUNT_ALREADY_EXISTS
-            ) {
-              const redirectTo = new URL("/", redirectBase)
-              redirectTo.searchParams.set("error", errorCode)
-              if (err.message && err.message !== errorCode) {
-                redirectTo.searchParams.set("error_description", err.message)
+              if (citizenidOrigin) {
+                discordLoginUrl.searchParams.set("origin", citizenidOrigin)
               }
-              return res.redirect(redirectTo.toString())
+              return res.redirect(discordLoginUrl.toString())
             }
 
             const redirectTo = new URL("/", redirectBase)
