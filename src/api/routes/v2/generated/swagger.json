@@ -4518,9 +4518,12 @@
 					"reward_scope": {
 						"type": "string"
 					},
-					"min_standing": {
+					"reputation_reward_faction": {
 						"type": "string",
-						"description": "Standing requirement — min (e.g. \"Neutral\")"
+						"description": "Faction name for reputation reward"
+					},
+					"min_standing": {
+						"type": "string"
 					},
 					"max_standing": {
 						"type": "string",

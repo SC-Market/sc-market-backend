@@ -390,6 +390,7 @@ export class MissionsController extends BaseController {
         is_illegal: row.is_illegal ?? undefined,
         reputation_reward: row.reputation_reward ?? undefined,
         reward_scope: row.reward_scope || undefined,
+        reputation_reward_faction: row.reputation_reward_faction || undefined,
         mission_giver_org: row.mission_giver_org || undefined,
         associated_event: row.associated_event || undefined,
         ship_encounter_count: row.ship_encounter_count || 0,
@@ -500,6 +501,7 @@ export class MissionsController extends BaseController {
         estimated_rep_per_hour: missionRow.estimated_rep_per_hour || undefined,
         rank_index: missionRow.rank_index || undefined,
         reward_scope: missionRow.reward_scope || undefined,
+        reputation_reward_faction: missionRow.reputation_reward_faction || undefined,
         min_standing: missionRow.min_standing || undefined,
         max_standing: missionRow.max_standing || undefined,
         min_standing_display: await this.resolveStandingName(knex, missionRow.min_standing),
@@ -646,6 +648,7 @@ export class MissionsController extends BaseController {
           estimated_rep_per_hour: row.estimated_rep_per_hour || undefined,
           rank_index: row.rank_index || undefined,
           reward_scope: row.reward_scope || undefined,
+        reputation_reward_faction: row.reputation_reward_faction || undefined,
           community_difficulty_avg: row.community_difficulty_avg
             ? parseFloat(row.community_difficulty_avg)
             : undefined,
@@ -1329,6 +1332,7 @@ export class MissionsController extends BaseController {
       estimated_rep_per_hour: row.estimated_rep_per_hour || undefined,
       rank_index: row.rank_index || undefined,
       reward_scope: row.reward_scope || undefined,
+        reputation_reward_faction: row.reputation_reward_faction || undefined,
       community_difficulty_avg: row.community_difficulty_avg
         ? parseFloat(row.community_difficulty_avg)
         : undefined,

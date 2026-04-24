@@ -1479,6 +1479,7 @@ const models: TsoaRoute.Models = {
             "estimated_rep_per_hour": {"dataType":"double"},
             "rank_index": {"dataType":"double"},
             "reward_scope": {"dataType":"string"},
+            "reputation_reward_faction": {"dataType":"string"},
             "min_standing": {"dataType":"string"},
             "max_standing": {"dataType":"string"},
             "min_standing_display": {"dataType":"string"},
