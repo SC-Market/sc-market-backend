@@ -920,6 +920,7 @@ export class ListingsV2Controller extends BaseController {
           "ls.price_max",
           "ls.quality_tier_min",
           "ls.quality_tier_max",
+          "ls.photo",
           "l_full.expires_at",
         )
         .leftJoin("listings as l_full", "ls.listing_id", "l_full.listing_id")
@@ -992,6 +993,7 @@ export class ListingsV2Controller extends BaseController {
         price_max: parseInt(row.price_max, 10) || 0,
         quality_tier_min: row.quality_tier_min || undefined,
         quality_tier_max: row.quality_tier_max || undefined,
+        photo: row.photo || undefined,
         expires_at: row.expires_at?.toISOString?.() || undefined,
       }))
 

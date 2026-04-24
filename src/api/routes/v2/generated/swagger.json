@@ -1780,6 +1780,10 @@
 						"format": "double",
 						"description": "Maximum quality tier available (1-5)"
 					},
+					"photo": {
+						"type": "string",
+						"description": "Primary photo URL"
+					},
 					"expires_at": {
 						"type": "string",
 						"description": "ISO 8601 timestamp when listing expires (null if no expiry)"
