@@ -389,20 +389,8 @@ export async function initiateOrder(session: DBOfferSession) {
       }
     }
 
-    // Create market_orders entries from V2 items if V1 market_listings is empty
-    // This ensures V2 orders show up in order lists that count market_orders
-    if (market_listings.length === 0 && v2OfferItems.length > 0) {
-      const grouped = new Map<string, number>()
-      for (const vi of v2OfferItems) {
-        grouped.set(vi.listing_id, (grouped.get(vi.listing_id) || 0) + vi.quantity)
-      }
-      for (const [listing_id, quantity] of grouped) {
-        await marketDb.insertMarketListingOrder(
-          { listing_id, order_id: createdOrder.order_id, quantity },
-          trx,
-        )
-      }
-    }
+    // V2 orders use order_market_items_v2 only — no market_orders entries needed
+    // Order list counts should use order_market_items_v2 for V2 orders
 
     // Allocate stock based on allocation_mode setting (auto/manual/none)
     // The stock_subtraction_timing setting controls PUBLIC visibility, not physical allocation
