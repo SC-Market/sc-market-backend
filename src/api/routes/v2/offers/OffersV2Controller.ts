@@ -171,7 +171,7 @@ export class OffersV2Controller extends BaseController {
     return {
       session_id: session.id,
       status: derivedStatus,
-      created_at: session.timestamp ? (+session.timestamp).toString() : new Date().toISOString(),
+      created_at: session.timestamp ? new Date(+session.timestamp).toISOString() : new Date().toISOString(),
       order_id,
       contract_id,
       discord_thread_id: session.thread_id || null,
