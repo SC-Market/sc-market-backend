@@ -1365,7 +1365,6 @@ export class ListingsV2Controller extends BaseController {
         if (!(await canModifyListing(listing, userId))) {
           this.throwForbidden("You do not have permission to update this listing")
         }
-        }
 
         // 2. Prevent editing sold or cancelled listings (Requirement 17.7)
         if (listing.status === "sold" || listing.status === "cancelled") {
@@ -1710,7 +1709,7 @@ export class ListingsV2Controller extends BaseController {
       }
 
       // Verify ownership
-      if (listing.seller_id !== userId) {
+      if (!(await canModifyListing(listing, userId))) {
         this.throwForbidden("You do not have permission to refresh this listing")
       }
 
@@ -1810,7 +1809,7 @@ export class ListingsV2Controller extends BaseController {
     if (!listing) {
       this.throwNotFound('Listing', id)
     }
-    if (listing.seller_id !== userId) {
+    if (!(await canModifyListing(listing, userId))) {
       this.throwValidationError('Not authorized', [{ field: 'id', message: 'You do not own this listing' }])
     }
     if (listing.status === 'cancelled') {
@@ -1873,7 +1872,7 @@ export class ListingsV2Controller extends BaseController {
 
     const listing = await db('listings').where('listing_id', id).first()
     if (!listing) throw this.throwNotFound('Listing', id)
-    if (listing.seller_id !== userId) throw this.throwForbidden('You do not own this listing')
+    if (!(await canModifyListing(listing, userId))) throw this.throwForbidden('You do not own this listing')
 
     const files = (request as any).files as Express.Multer.File[]
     if (!files || files.length === 0) {
