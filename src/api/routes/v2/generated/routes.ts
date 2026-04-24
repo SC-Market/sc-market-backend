@@ -2836,6 +2836,37 @@ export function RegisterRoutes(app: Router) {
             }
         });
         // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+        const argsOrdersV2Controller_getOrdersByListing: Record<string, TsoaRoute.ParameterSchema> = {
+                listingId: {"in":"path","name":"listingId","required":true,"dataType":"string"},
+        };
+        app.get('/orders/by-listing/:listingId',
+            authenticateMiddleware([{"jwt":[]}]),
+            ...(fetchMiddlewares<RequestHandler>(OrdersV2Controller)),
+            ...(fetchMiddlewares<RequestHandler>(OrdersV2Controller.prototype.getOrdersByListing)),
+
+            async function OrdersV2Controller_getOrdersByListing(request: ExRequest, response: ExResponse, next: any) {
+
+            // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+
+            let validatedArgs: any[] = [];
+            try {
+                validatedArgs = templateService.getValidatedArgs({ args: argsOrdersV2Controller_getOrdersByListing, request, response });
+
+                const controller = new OrdersV2Controller();
+
+              await templateService.apiHandler({
+                methodName: 'getOrdersByListing',
+                controller,
+                response,
+                next,
+                validatedArgs,
+                successStatus: undefined,
+              });
+            } catch (err) {
+                return next(err);
+            }
+        });
+        // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
         const argsOffersV2Controller_getOfferSession: Record<string, TsoaRoute.ParameterSchema> = {
                 sessionId: {"in":"path","name":"sessionId","required":true,"dataType":"string"},
                 request: {"in":"request","name":"request","required":true,"dataType":"object"},

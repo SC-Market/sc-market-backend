@@ -8454,6 +8454,58 @@
 				]
 			}
 		},
+		"/orders/by-listing/{listingId}": {
+			"get": {
+				"operationId": "GetOrdersByListing",
+				"responses": {
+					"200": {
+						"description": "Ok",
+						"content": {
+							"application/json": {
+								"schema": {
+									"properties": {
+										"offers": {
+											"items": {},
+											"type": "array"
+										},
+										"orders": {
+											"items": {},
+											"type": "array"
+										}
+									},
+									"required": [
+										"offers",
+										"orders"
+									],
+									"type": "object"
+								}
+							}
+						}
+					}
+				},
+				"description": "Get orders and offers related to a specific listing.\nOnly visible to the listing owner or org members.",
+				"summary": "Get orders by listing",
+				"tags": [
+					"Orders V2"
+				],
+				"security": [
+					{
+						"jwt": []
+					}
+				],
+				"parameters": [
+					{
+						"description": "Listing UUID",
+						"in": "path",
+						"name": "listingId",
+						"required": true,
+						"schema": {
+							"type": "string"
+						}
+					}
+				]
+			}
+		},
 		"/offers/{sessionId}": {
 			"get": {
 				"operationId": "GetOfferSession",
