@@ -1050,8 +1050,9 @@ export class CartV2Controller extends BaseController {
         v2VariantItems,
       )
 
-      // Step 8: Clear cart
-      await knex("cart_items_v2").where({ user_id: userId }).delete()
+      // Step 8: Clear checked-out items only (not entire cart)
+      const checkedOutItemIds = validatedItems.map(i => i.cart_item_id)
+      await knex("cart_items_v2").whereIn("cart_item_id", checkedOutItemIds).delete()
 
       logger.info("Cart checkout completed — offer created", {
         userId,
