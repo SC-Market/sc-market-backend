@@ -221,6 +221,7 @@ export class CartV2Controller extends BaseController {
             price_per_unit: item.price_per_unit,
             subtotal,
             available,
+            quantity_available: availableQuantity,
             price_changed: priceChanged,
             current_price: priceChanged ? currentPrice : undefined,
           }

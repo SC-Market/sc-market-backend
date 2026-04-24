@@ -119,6 +119,9 @@ export interface CartItemDetail {
   
   /** Whether this variant is currently available */
   available: boolean;
+
+  /** Total quantity available for this variant */
+  quantity_available: number;
   
   /** Whether the price has changed since add-to-cart */
   price_changed: boolean;
