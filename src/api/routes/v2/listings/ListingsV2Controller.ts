@@ -934,7 +934,15 @@ export class ListingsV2Controller extends BaseController {
           query = query.whereRaw("1 = 0")
         }
       } else {
-        query = query.where("ls.seller_id", userId)
+        // Show user's own listings + listings from orgs they belong to
+        const userContractorIds = await db("contractor_members")
+          .where("user_id", userId)
+          .select("contractor_id")
+        const cIds = userContractorIds.map((r: any) => r.contractor_id)
+        query = query.where((qb: any) => {
+          qb.where("ls.seller_id", userId)
+          if (cIds.length) qb.orWhereIn("ls.seller_id", cIds)
+        })
       }
 
       // Apply status filter if provided (Requirement 18.5)
