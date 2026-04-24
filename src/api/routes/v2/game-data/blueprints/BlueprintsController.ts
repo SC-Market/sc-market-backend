@@ -386,10 +386,10 @@ export class BlueprintsController extends BaseController {
     const user_id = this.tryGetUserId()
     const knex = getKnex()
 
-    // Resolve blueprint_id from code
+    // Resolve blueprint_id from name
     const isUuid = /^[0-9a-f]{8}-[0-9a-f]{4}-/i.test(blueprint_id || "")
     if (blueprint_id && !isUuid) {
-      const row = await knex("blueprints").where("blueprint_code", blueprint_id).first("blueprint_id")
+      const row = await knex("blueprints").where("blueprint_name", blueprint_id).first("blueprint_id")
       if (!row) this.throwNotFound("Blueprint", blueprint_id)
       blueprint_id = row.blueprint_id
     }
