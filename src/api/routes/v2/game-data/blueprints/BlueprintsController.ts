@@ -238,7 +238,7 @@ export class BlueprintsController extends BaseController {
 
         blueprintsQuery = blueprintsQuery
           .join("user_blueprint_inventory as ubi", function () {
-            this.on("ubi.blueprint_id", "=", "b.blueprint_id").andOn(
+            this.on("ubi.blueprint_name", "=", "b.blueprint_name").andOn(
               "ubi.user_id",
               "=",
               knex.raw("?", [user_id]),
@@ -270,19 +270,19 @@ export class BlueprintsController extends BaseController {
       // ========================================================================
       // Part 5: Get user ownership data (if authenticated)
       // ========================================================================
-      let userOwnedBlueprintIds: Set<string> = new Set()
+      let userOwnedBlueprintNames: Set<string> = new Set()
 
       if (user_id && !user_owned_only) {
         const ownedBlueprints = await knex("user_blueprint_inventory")
           .where("user_id", user_id)
           .where("is_owned", true)
           .whereIn(
-            "blueprint_id",
-            blueprintsResults.map((b: any) => b.blueprint_id),
+            "blueprint_name",
+            blueprintsResults.map((b: any) => b.blueprint_name),
           )
-          .select("blueprint_id")
+          .select("blueprint_name")
 
-        userOwnedBlueprintIds = new Set(ownedBlueprints.map((b: any) => b.blueprint_id))
+        userOwnedBlueprintNames = new Set(ownedBlueprints.map((b: any) => b.blueprint_name))
       }
 
       logger.info("Blueprints search completed", {
@@ -334,7 +334,7 @@ export class BlueprintsController extends BaseController {
         user_owns: user_id
           ? user_owned_only
             ? true
-            : userOwnedBlueprintIds.has(row.blueprint_id)
+            : userOwnedBlueprintNames.has(row.blueprint_name)
           : undefined,
       }))
 
@@ -562,7 +562,7 @@ export class BlueprintsController extends BaseController {
       if (user_id) {
         const inventoryRow = await knex("user_blueprint_inventory")
           .where("user_id", user_id)
-          .where("blueprint_id", blueprint_id)
+          .where("blueprint_name", blueprintRow.blueprint_name)
           .first()
 
         if (inventoryRow) {
@@ -792,10 +792,10 @@ export class BlueprintsController extends BaseController {
         this.throwNotFound("Blueprint", blueprint_id)
       }
 
-      // Check if user already has this blueprint in inventory
+      // Check if user already has this blueprint in inventory (by name for version stability)
       const existingInventory = await knex("user_blueprint_inventory")
         .where("user_id", user_id)
-        .where("blueprint_id", blueprint_id)
+        .where("blueprint_name", blueprintExists.blueprint_name)
         .first()
 
       let inventory_id: string
@@ -806,6 +806,7 @@ export class BlueprintsController extends BaseController {
           .where("inventory_id", existingInventory.inventory_id)
           .update({
             is_owned: true,
+            blueprint_id: blueprint_id, // update to current version's ID
             acquisition_date: knex.fn.now(),
             acquisition_method: body.acquisition_method || null,
             acquisition_location: body.acquisition_location || null,
@@ -826,6 +827,7 @@ export class BlueprintsController extends BaseController {
           .insert({
             user_id,
             blueprint_id,
+            blueprint_name: blueprintExists.blueprint_name,
             is_owned: true,
             acquisition_date: knex.fn.now(),
             acquisition_method: body.acquisition_method || null,
@@ -904,10 +906,10 @@ export class BlueprintsController extends BaseController {
         this.throwNotFound("Blueprint", blueprint_id)
       }
 
-      // Check if user has this blueprint in inventory
+      // Check if user has this blueprint in inventory (by name for version stability)
       const existingInventory = await knex("user_blueprint_inventory")
         .where("user_id", user_id)
-        .where("blueprint_id", blueprint_id)
+        .where("blueprint_name", blueprintExists.blueprint_name)
         .first()
 
       if (existingInventory) {
