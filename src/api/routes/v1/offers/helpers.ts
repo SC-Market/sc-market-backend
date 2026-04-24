@@ -293,6 +293,12 @@ export async function search_offer_sessions_optimized(
       "=",
       "offer_market_items.offer_id",
     )
+    .leftJoin(
+      "offer_market_items_v2 as omiv2",
+      "most_recent_offer.id",
+      "=",
+      "omiv2.offer_id",
+    )
     // Join accounts for buyer username filtering
     .leftJoin(
       "accounts as buyer_account",
@@ -386,11 +392,11 @@ export async function search_offer_sessions_optimized(
   if (args.has_market_listings !== undefined) {
     if (args.has_market_listings) {
       filteredSessionsQuery = filteredSessionsQuery.havingRaw(
-        "COUNT(offer_market_items.offer_id) > 0",
+        "COUNT(offer_market_items.offer_id) > 0 OR COUNT(omiv2.offer_id) > 0",
       )
     } else {
       filteredSessionsQuery = filteredSessionsQuery.havingRaw(
-        "COUNT(offer_market_items.offer_id) = 0",
+        "COUNT(offer_market_items.offer_id) = 0 AND COUNT(omiv2.offer_id) = 0",
       )
     }
   }
@@ -460,6 +466,12 @@ export async function search_offer_sessions_optimized(
       "most_recent_offer.id",
       "=",
       "offer_market_items.offer_id",
+    )
+    .leftJoin(
+      "offer_market_items_v2 as omiv2",
+      "most_recent_offer.id",
+      "=",
+      "omiv2.offer_id",
     )
     .leftJoin(
       "services",
@@ -581,7 +593,7 @@ export async function search_offer_sessions_optimized(
       "most_recent_offer.actor_id as most_recent_actor_id",
       "most_recent_offer.status as most_recent_status",
       "most_recent_offer.service_id as most_recent_service_id",
-      database.knex.raw("COUNT(offer_market_items.offer_id) as item_count"),
+      database.knex.raw("GREATEST(COUNT(offer_market_items.offer_id), COUNT(omiv2.offer_id)) as item_count"),
       "services.title as service_title",
       "customer_account.username as customer_username",
       "customer_account.avatar as customer_avatar",
@@ -614,12 +626,12 @@ export async function search_offer_sessions_optimized(
     if (args.has_market_listings) {
       // Has market listings - must have at least one
       optimizedQuery = optimizedQuery.havingRaw(
-        "COUNT(offer_market_items.offer_id) > 0",
+        "COUNT(offer_market_items.offer_id) > 0 OR COUNT(omiv2.offer_id) > 0",
       )
     } else {
       // No market listings - must have zero
       optimizedQuery = optimizedQuery.havingRaw(
-        "COUNT(offer_market_items.offer_id) = 0",
+        "COUNT(offer_market_items.offer_id) = 0 AND COUNT(omiv2.offer_id) = 0",
       )
     }
   }
