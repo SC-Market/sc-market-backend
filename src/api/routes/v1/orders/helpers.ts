@@ -393,12 +393,22 @@ export async function initiateOrder(session: DBOfferSession) {
     // Order list counts should use order_market_items_v2 for V2 orders
 
     // Allocate stock based on allocation_mode setting (auto/manual/none)
-    // The stock_subtraction_timing setting controls PUBLIC visibility, not physical allocation
-    // Requirements: 5.7, 6.1, 6.2, 6.3, 12.2, 12.3
     const lifecycleService = new OrderLifecycleService(trx)
+
+    // For V2 orders, build market_listings from V2 items for allocation
+    const allocationListings = market_listings.length > 0
+      ? market_listings
+      : v2OfferItems.length > 0
+        ? (() => {
+            const grouped = new Map<string, number>()
+            for (const vi of v2OfferItems) grouped.set(vi.listing_id, (grouped.get(vi.listing_id) || 0) + vi.quantity)
+            return Array.from(grouped.entries()).map(([listing_id, quantity]) => ({ listing_id, quantity }))
+          })()
+        : []
+
     const allocationResult = await lifecycleService.allocateStockForOrder(
       createdOrder.order_id,
-      market_listings,
+      allocationListings,
       session.contractor_id,
       session.customer_id,
     )
