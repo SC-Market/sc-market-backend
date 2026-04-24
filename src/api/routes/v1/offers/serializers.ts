@@ -13,6 +13,7 @@ import {
   formatOrderAvailability,
 } from "../util/formatting.js"
 import { serializeService } from "../services/serializers.js"
+import logger from "../../../../logger/logger.js"
 import { DBContractOffer } from "../contracts/types.js"
 import { cdn } from "../../../../clients/cdn/cdn.js"
 
@@ -269,7 +270,10 @@ export async function serializeOffer(offer: DBOffer) {
   return {
     ...offer,
     market_listings,
-    market_listings_v2: v2_variant_items?.length ? await buildV2MarketListings(v2_variant_items) : undefined,
+    market_listings_v2: v2_variant_items?.length ? await buildV2MarketListings(v2_variant_items).catch((err) => {
+      logger.error("buildV2MarketListings failed", { offer_id: offer.id, error: err.message })
+      return undefined
+    }) : undefined,
     service,
     v2_variant_items,
   }

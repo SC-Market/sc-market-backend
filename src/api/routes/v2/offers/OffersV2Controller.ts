@@ -4,14 +4,15 @@
  * Read-only V2 serialization of V1 offer sessions.
  * Offers still live in V1 tables — this controller provides a cleaner
  * response shape with V2 variant data from offer_market_items_v2.
- * No raw user_id or contractor_id exposed — uses usernames and spectrum_ids.
  */
 
 import { Get, Route, Tags, Request, Path, Query, Security } from "tsoa"
 import { Request as ExpressRequest } from "express"
 import { BaseController } from "../base/BaseController.js"
 import { getKnex } from "../../../../clients/database/knex-db.js"
-import { cdn } from "../../../../clients/cdn/cdn.js"
+import * as profileDb from "../../v1/profiles/database.js"
+import * as contractorDb from "../../v1/contractors/database.js"
+import { formatOrderAvailability } from "../../v1/util/formatting.js"
 import {
   OfferSessionV2,
   OfferV2,
@@ -117,48 +118,14 @@ export class OffersV2Controller extends BaseController {
   private async serializeSession(session: any): Promise<OfferSessionV2> {
     const knex = getKnex()
 
-    // Customer
-    const customerRow = await knex("accounts")
-      .where({ user_id: session.customer_id })
-      .select("username", "display_name", "avatar")
-      .first()
-    const customer = {
-      username: customerRow?.username || "Unknown",
-      display_name: customerRow?.display_name,
-      avatar: customerRow?.avatar ? await cdn.getFileLinkResource(customerRow.avatar) : null,
-    }
-
-    // Assigned user
-    let assigned_to: { username: string; display_name?: string; avatar?: string | null } | null = null
-    if (session.assigned_id) {
-      const row = await knex("accounts")
-        .where({ user_id: session.assigned_id })
-        .select("username", "display_name", "avatar")
-        .first()
-      if (row) {
-        assigned_to = {
-          username: row.username,
-          display_name: row.display_name,
-          avatar: row.avatar ? await cdn.getFileLinkResource(row.avatar) : null,
-        }
-      }
-    }
-
-    // Contractor
-    let contractor: { spectrum_id: string; name: string; avatar?: string | null } | null = null
-    if (session.contractor_id) {
-      const row = await knex("contractors")
-        .where({ contractor_id: session.contractor_id })
-        .select("spectrum_id", "name", "avatar")
-        .first()
-      if (row) {
-        contractor = {
-          spectrum_id: row.spectrum_id,
-          name: row.name,
-          avatar: row.avatar ? await cdn.getFileLinkResource(row.avatar) : null,
-        }
-      }
-    }
+    // Use V1 helpers for full user data (ratings, badges, presence)
+    const customer = await profileDb.getMinimalUser({ user_id: session.customer_id })
+    const assigned_to = session.assigned_id
+      ? await profileDb.getMinimalUser({ user_id: session.assigned_id })
+      : null
+    const contractor = session.contractor_id
+      ? await contractorDb.getMinimalContractor({ contractor_id: session.contractor_id })
+      : null
 
     // Order ID if accepted
     let order_id: string | undefined
@@ -167,26 +134,49 @@ export class OffersV2Controller extends BaseController {
       if (order) order_id = order.order_id
     }
 
-    // Offers (correct table: order_offers)
+    // Offers
     const dbOffers = await knex("order_offers").where({ session_id: session.id }).orderBy("timestamp", "asc")
     const offers: OfferV2[] = await Promise.all(dbOffers.map((o: any) => this.serializeOffer(o)))
 
     // Derive status
+    const mostRecent = dbOffers[dbOffers.length - 1]
     let derivedStatus = session.status
-    if (session.status === "closed") {
-      derivedStatus = order_id ? "accepted" : "rejected"
+    if (session.status === "active") {
+      derivedStatus = mostRecent?.actor_id === session.customer_id
+        ? "Waiting for Seller"
+        : "Waiting for Customer"
+    } else if (mostRecent?.status === "rejected") {
+      derivedStatus = "Rejected"
+    } else if (mostRecent?.status === "accepted") {
+      derivedStatus = "Accepted"
+    } else {
+      derivedStatus = "Counter Offered"
     }
+
+    // Availability
+    const availability = await formatOrderAvailability(session)
+
+    // Discord
+    const assignee = session.assigned_id
+      ? await knex("accounts").where({ user_id: session.assigned_id }).select("official_server_id").first()
+      : null
+    const contractorRow = session.contractor_id
+      ? await knex("contractors").where({ contractor_id: session.contractor_id }).select("official_server_id").first()
+      : null
 
     return {
       session_id: session.id,
       status: derivedStatus,
-      created_at: session.timestamp?.toISOString?.() || new Date().toISOString(),
+      created_at: session.timestamp ? (+session.timestamp).toString() : new Date().toISOString(),
       order_id,
+      discord_thread_id: session.thread_id || null,
+      discord_server_id: contractorRow?.official_server_id || assignee?.official_server_id || null,
       discord_invite: session.discord_invite || null,
       customer,
       assigned_to,
       contractor,
       offers,
+      availability,
     }
   }
 
@@ -206,16 +196,14 @@ export class OffersV2Controller extends BaseController {
     // V2 variant items
     let v2Items: any[] = []
     try {
-      const hasV2Table = await knex.schema.hasTable("offer_market_items_v2")
-      if (hasV2Table) {
-        v2Items = await knex("offer_market_items_v2").where({ offer_id: offer.id }).select("*")
-      }
-    } catch { /* ignore */ }
+      v2Items = await knex("offer_market_items_v2").where({ offer_id: offer.id }).select("*")
+    } catch (err: any) {
+      logger.error("Failed to fetch offer_market_items_v2", { offer_id: offer.id, error: err.message })
+    }
 
     // Build market listings — from V1 items, or from V2 items if V1 is empty
     let sourceListings: Array<{ listing_id: string; quantity: number }> = v1Listings
     if (v1Listings.length === 0 && v2Items.length > 0) {
-      // Group V2 items by listing_id
       const grouped = new Map<string, number>()
       for (const vi of v2Items) {
         grouped.set(vi.listing_id, (grouped.get(vi.listing_id) || 0) + vi.quantity)
@@ -228,7 +216,6 @@ export class OffersV2Controller extends BaseController {
         let title = "Unknown"
         let price = 0
 
-        // Try V2 listings table first, fall back to V1
         const v2Listing = await knex("listings").where({ listing_id: ml.listing_id }).first()
         if (v2Listing) {
           title = v2Listing.title
@@ -242,7 +229,6 @@ export class OffersV2Controller extends BaseController {
           }
         }
 
-        // V2 variant items for this listing
         const listingV2Items = v2Items.filter((i: any) => i.listing_id === ml.listing_id)
         const v2Variants: OfferVariantItem[] = await Promise.all(
           listingV2Items.map(async (vi: any) => {
@@ -278,6 +264,7 @@ export class OffersV2Controller extends BaseController {
       payment_type: offer.payment_type || "",
       status: offer.status || "pending",
       created_at: offer.timestamp?.toISOString?.() || new Date().toISOString(),
+      collateral: parseFloat(offer.collateral) || 0,
       actor_username,
       market_listings: marketListings,
       service,

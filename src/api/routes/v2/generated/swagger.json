@@ -1114,26 +1114,188 @@
 				"type": "object",
 				"additionalProperties": false
 			},
-			"UserSummary": {
+			"Rating": {
+				"properties": {
+					"avg_rating": {
+						"type": "number",
+						"format": "double"
+					},
+					"rating_count": {
+						"type": "number",
+						"format": "double"
+					},
+					"streak": {
+						"type": "number",
+						"format": "double"
+					},
+					"total_rating": {
+						"type": "number",
+						"format": "double"
+					},
+					"total_orders": {
+						"type": "number",
+						"format": "double"
+					},
+					"response_rate": {
+						"type": "number",
+						"format": "double"
+					},
+					"total_assignments": {
+						"type": "number",
+						"format": "double"
+					}
+				},
+				"required": [
+					"avg_rating",
+					"rating_count",
+					"streak",
+					"total_rating"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
+			"BadgeMetadata": {
+				"properties": {
+					"avg_rating": {
+						"type": "number",
+						"format": "double"
+					},
+					"rating_count": {
+						"type": "number",
+						"format": "double"
+					},
+					"rating_streak": {
+						"type": "number",
+						"format": "double"
+					},
+					"total_orders": {
+						"type": "number",
+						"format": "double"
+					},
+					"fulfilled_orders": {
+						"type": "number",
+						"format": "double"
+					},
+					"total_assignments": {
+						"type": "number",
+						"format": "double"
+					},
+					"response_rate": {
+						"type": "number",
+						"format": "double"
+					},
+					"total_rating": {
+						"type": "number",
+						"format": "double"
+					},
+					"orders_last_30_days": {
+						"type": "number",
+						"format": "double"
+					},
+					"orders_last_90_days": {
+						"type": "number",
+						"format": "double"
+					},
+					"avg_completion_time_hours": {
+						"type": "number",
+						"format": "double",
+						"nullable": true
+					},
+					"account_age_months": {
+						"type": "number",
+						"format": "double"
+					},
+					"account_created_at": {
+						"type": "string",
+						"nullable": true
+					},
+					"donor_duration_months": {
+						"type": "number",
+						"format": "double",
+						"nullable": true
+					},
+					"calculated_at": {
+						"type": "string"
+					}
+				},
+				"required": [
+					"avg_rating",
+					"rating_count",
+					"rating_streak",
+					"total_orders",
+					"fulfilled_orders",
+					"total_assignments",
+					"response_rate",
+					"total_rating",
+					"orders_last_30_days",
+					"orders_last_90_days",
+					"avg_completion_time_hours",
+					"account_age_months",
+					"account_created_at",
+					"donor_duration_months",
+					"calculated_at"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
+			"BadgeData": {
+				"properties": {
+					"badge_ids": {
+						"items": {
+							"type": "string"
+						},
+						"type": "array"
+					},
+					"metadata": {
+						"$ref": "#/components/schemas/BadgeMetadata"
+					}
+				},
+				"required": [
+					"badge_ids"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
+			"MinimalUser": {
 				"properties": {
 					"username": {
+						"type": "string"
+					},
+					"avatar": {
 						"type": "string"
 					},
 					"display_name": {
 						"type": "string"
 					},
-					"avatar": {
-						"type": "string",
+					"rating": {
+						"$ref": "#/components/schemas/Rating"
+					},
+					"badges": {
+						"allOf": [
+							{
+								"$ref": "#/components/schemas/BadgeData"
+							}
+						],
 						"nullable": true
+					},
+					"last_seen": {
+						"type": "string",
+						"format": "date-time"
+					},
+					"in_game": {
+						"type": "boolean"
 					}
 				},
 				"required": [
-					"username"
+					"username",
+					"avatar",
+					"display_name",
+					"rating"
 				],
 				"type": "object",
 				"additionalProperties": false
 			},
-			"OrgSummary": {
+			"MinimalContractor": {
 				"properties": {
 					"spectrum_id": {
 						"type": "string"
@@ -1142,13 +1304,33 @@
 						"type": "string"
 					},
 					"avatar": {
-						"type": "string",
+						"type": "string"
+					},
+					"rating": {
+						"$ref": "#/components/schemas/Rating"
+					},
+					"badges": {
+						"allOf": [
+							{
+								"$ref": "#/components/schemas/BadgeData"
+							}
+						],
 						"nullable": true
+					},
+					"last_seen": {
+						"type": "string",
+						"format": "date-time"
+					},
+					"members_online": {
+						"type": "number",
+						"format": "double"
 					}
 				},
 				"required": [
 					"spectrum_id",
-					"name"
+					"name",
+					"avatar",
+					"rating"
 				],
 				"type": "object",
 				"additionalProperties": false
@@ -1248,6 +1430,10 @@
 					"created_at": {
 						"type": "string"
 					},
+					"collateral": {
+						"type": "number",
+						"format": "double"
+					},
 					"actor_username": {
 						"type": "string",
 						"description": "Username of the user who created this offer"
@@ -1256,8 +1442,7 @@
 						"items": {
 							"$ref": "#/components/schemas/OfferMarketListingV2"
 						},
-						"type": "array",
-						"description": "V1 market listings (always present)"
+						"type": "array"
 					},
 					"service": {
 						"properties": {
@@ -1291,6 +1476,57 @@
 				"type": "object",
 				"additionalProperties": false
 			},
+			"DBAvailabilityEntry": {
+				"properties": {
+					"contractor_id": {
+						"type": "string",
+						"nullable": true
+					},
+					"user_id": {
+						"type": "string"
+					},
+					"start": {
+						"type": "number",
+						"format": "double"
+					},
+					"finish": {
+						"type": "number",
+						"format": "double"
+					}
+				},
+				"required": [
+					"contractor_id",
+					"user_id",
+					"start",
+					"finish"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
+			"OfferAvailability": {
+				"properties": {
+					"customer": {
+						"items": {
+							"$ref": "#/components/schemas/DBAvailabilityEntry"
+						},
+						"type": "array",
+						"nullable": true
+					},
+					"assigned": {
+						"items": {
+							"$ref": "#/components/schemas/DBAvailabilityEntry"
+						},
+						"type": "array",
+						"nullable": true
+					}
+				},
+				"required": [
+					"customer",
+					"assigned"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
 			"GetOfferSessionV2Response": {
 				"properties": {
 					"session_id": {
@@ -1305,17 +1541,25 @@
 					"order_id": {
 						"type": "string"
 					},
+					"discord_thread_id": {
+						"type": "string",
+						"nullable": true
+					},
+					"discord_server_id": {
+						"type": "string",
+						"nullable": true
+					},
 					"discord_invite": {
 						"type": "string",
 						"nullable": true
 					},
 					"customer": {
-						"$ref": "#/components/schemas/UserSummary"
+						"$ref": "#/components/schemas/MinimalUser"
 					},
 					"assigned_to": {
 						"allOf": [
 							{
-								"$ref": "#/components/schemas/UserSummary"
+								"$ref": "#/components/schemas/MinimalUser"
 							}
 						],
 						"nullable": true
@@ -1323,7 +1567,7 @@
 					"contractor": {
 						"allOf": [
 							{
-								"$ref": "#/components/schemas/OrgSummary"
+								"$ref": "#/components/schemas/MinimalContractor"
 							}
 						],
 						"nullable": true
@@ -1333,6 +1577,14 @@
 							"$ref": "#/components/schemas/OfferV2"
 						},
 						"type": "array"
+					},
+					"availability": {
+						"allOf": [
+							{
+								"$ref": "#/components/schemas/OfferAvailability"
+							}
+						],
+						"nullable": true
 					}
 				},
 				"required": [
@@ -1362,17 +1614,25 @@
 					"order_id": {
 						"type": "string"
 					},
+					"discord_thread_id": {
+						"type": "string",
+						"nullable": true
+					},
+					"discord_server_id": {
+						"type": "string",
+						"nullable": true
+					},
 					"discord_invite": {
 						"type": "string",
 						"nullable": true
 					},
 					"customer": {
-						"$ref": "#/components/schemas/UserSummary"
+						"$ref": "#/components/schemas/MinimalUser"
 					},
 					"assigned_to": {
 						"allOf": [
 							{
-								"$ref": "#/components/schemas/UserSummary"
+								"$ref": "#/components/schemas/MinimalUser"
 							}
 						],
 						"nullable": true
@@ -1380,7 +1640,7 @@
 					"contractor": {
 						"allOf": [
 							{
-								"$ref": "#/components/schemas/OrgSummary"
+								"$ref": "#/components/schemas/MinimalContractor"
 							}
 						],
 						"nullable": true
@@ -1390,6 +1650,14 @@
 							"$ref": "#/components/schemas/OfferV2"
 						},
 						"type": "array"
+					},
+					"availability": {
+						"allOf": [
+							{
+								"$ref": "#/components/schemas/OfferAvailability"
+							}
+						],
+						"nullable": true
 					}
 				},
 				"required": [
