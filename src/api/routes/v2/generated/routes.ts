@@ -1402,6 +1402,7 @@ const models: TsoaRoute.Models = {
             "credit_reward_min": {"dataType":"double"},
             "credit_reward_max": {"dataType":"double"},
             "blueprint_reward_count": {"dataType":"double","required":true},
+            "blueprint_reward_names": {"dataType":"array","array":{"dataType":"string"}},
             "community_difficulty_avg": {"dataType":"double"},
             "community_satisfaction_avg": {"dataType":"double"},
             "is_chain_starter": {"dataType":"boolean","required":true},

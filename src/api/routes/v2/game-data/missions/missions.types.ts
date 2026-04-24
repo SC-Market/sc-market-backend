@@ -119,6 +119,9 @@ export interface MissionSearchResult {
   /** Number of blueprint rewards */
   blueprint_reward_count: number
 
+  /** Names of blueprint reward output items */
+  blueprint_reward_names?: string[]
+
   /** Average community difficulty rating */
   community_difficulty_avg?: number
 
