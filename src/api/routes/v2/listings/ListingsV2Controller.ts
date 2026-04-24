@@ -76,7 +76,7 @@ export class ListingsV2Controller extends BaseController {
    * @param request Express request for authentication
    * @returns Created listing with listing_id
    */
-  @Security("jwt")
+  @Security("loggedin")
   @Post()
   public async createListing(
     @Body() requestBody: CreateListingRequest,
@@ -863,7 +863,7 @@ export class ListingsV2Controller extends BaseController {
    * @param request Express request for authentication
    * @returns User's listings with pagination metadata
    */
-  @Security("jwt")
+  @Security("loggedin")
   @Get("mine")
   public async getMyListings(
     @Query() status?: "active" | "sold" | "expired" | "cancelled",
@@ -1050,7 +1050,7 @@ export class ListingsV2Controller extends BaseController {
 
   /** @summary Get inventory summary */
   @Get("inventory-summary")
-  @Security("jwt")
+  @Security("loggedin")
   public async getInventorySummary(@Query() spectrum_id?: string): Promise<InventorySummaryResponse> {
     const db = getKnex(); const user_id = this.getUserId()
     let query = db("listing_item_lots as lil").join("listing_items as li", "lil.item_id", "li.item_id")
@@ -1358,7 +1358,7 @@ export class ListingsV2Controller extends BaseController {
    * @param sort_order Sort order (default: desc)
    * @returns Search results with pagination metadata
    */
-  @Security("jwt")
+  @Security("loggedin")
   @Put("{id}")
   public async updateListing(
     @Path() id: string,
@@ -1715,7 +1715,7 @@ export class ListingsV2Controller extends BaseController {
    * @param request Express request for authentication
    * @returns Success message with next refresh time
    */
-  @Security("jwt")
+  @Security("loggedin")
   @Post("{id}/refresh")
   public async refreshListing(
     @Path() id: string,
@@ -1827,7 +1827,7 @@ export class ListingsV2Controller extends BaseController {
    * @param request Express request for authentication
    * @returns Success message
    */
-  @Security("jwt")
+  @Security("loggedin")
   @Delete("{id}")
   public async deleteListing(
     @Path() id: string,
@@ -1894,7 +1894,7 @@ export class ListingsV2Controller extends BaseController {
    * @param request Express request with files
    */
   @Post("{id}/photos")
-  @Security("jwt")
+  @Security("loggedin")
   public async uploadPhotos(
     @Path() id: string,
     @Request() request: ExpressRequest,

@@ -56,7 +56,7 @@ export interface UserOverridesResponse {
 
 @Route("admin/feature-flags")
 @Tags("Admin Feature Flags")
-@Security("jwt")
+@Security("loggedin")
 export class FeatureFlagAdminController extends BaseController {
   constructor(@Request() request?: ExpressRequest) {
     super(request)

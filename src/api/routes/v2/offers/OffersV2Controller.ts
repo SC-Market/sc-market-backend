@@ -33,7 +33,7 @@ export class OffersV2Controller extends BaseController {
    * Get offer session with V2 variant-enriched market listings
    */
   @Get("{sessionId}")
-  @Security("jwt")
+  @Security("loggedin")
   public async getOfferSession(
     @Path() sessionId: string,
     @Request() request: ExpressRequest,
@@ -65,7 +65,7 @@ export class OffersV2Controller extends BaseController {
    * Search offers for the current user
    */
   @Get("search")
-  @Security("jwt")
+  @Security("loggedin")
   public async searchOffers(
     @Request() request: ExpressRequest,
     @Query() role?: "customer" | "seller",

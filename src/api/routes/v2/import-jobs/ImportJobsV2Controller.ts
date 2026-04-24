@@ -91,7 +91,7 @@ const runners: Record<ImportSource, (job: ImportJob) => Promise<void>> = {
 
 @Route("admin/imports")
 @Tags("Admin Imports")
-@Security("jwt")
+@Security("loggedin")
 export class ImportJobsV2Controller extends BaseController {
   /**
    * Start a bulk import job

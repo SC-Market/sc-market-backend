@@ -43,7 +43,7 @@ export class StockLotsV2Controller extends BaseController {
    * @param request Express request for authentication
    * @returns Created stock lot
    */
-  @Security("jwt")
+  @Security("loggedin")
   @Post()
   public async createStockLot(
     @Body() requestBody: CreateStockLotRequest,
@@ -345,7 +345,7 @@ export class StockLotsV2Controller extends BaseController {
    * @param request Express request for authentication
    * @returns Updated stock lot
    */
-  @Security("jwt")
+  @Security("loggedin")
   @Put("{id}")
   public async updateStockLot(
     @Path() id: string,
@@ -571,7 +571,7 @@ export class StockLotsV2Controller extends BaseController {
    * @param request Express request for authentication
    * @returns Bulk update results with success/failure counts
    */
-  @Security("jwt")
+  @Security("loggedin")
   @Post("bulk-update")
   public async bulkUpdateStockLots(
     @Body() requestBody: BulkUpdateStockLotsRequest,
@@ -750,7 +750,7 @@ export class StockLotsV2Controller extends BaseController {
    * @param request Express request for authentication
    */
   @Delete("{id}")
-  @Security("jwt")
+  @Security("loggedin")
   public async deleteStockLot(
     @Path() id: string,
     @Request() request: ExpressRequest,

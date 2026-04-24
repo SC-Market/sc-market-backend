@@ -7,7 +7,8 @@
  * Requirements: 20.1-20.6, 21.1-21.6, 31.1-31.6, 45.1-45.10, 51.1-51.10, 52.1-52.10
  */
 
-import { Get, Post, Route, Tags, Query, Body, Security } from "tsoa"
+import { Get, Post, Route, Tags, Query, Body, Security, Request } from "tsoa"
+import { Request as ExpressRequest } from "express"
 
 /** Derive quality tier (1-5) from quality value (0-1000) */
 function deriveTier(qualityValue: number, explicitTier?: number): number {
@@ -67,25 +68,25 @@ export class CraftingController extends BaseController {
    */
   @Post("calculate-quality")
   public async calculateQuality(
-    @Body() request: CalculateQualityRequest,
+    @Body() body: CalculateQualityRequest,
   ): Promise<CalculateQualityResponse> {
     const knex = getKnex()
 
-    if (!request.blueprint_id) {
+    if (!body.blueprint_id) {
       this.throwValidationError("blueprint_id is required", [
         { field: "blueprint_id", message: "Blueprint ID is required" },
       ])
     }
 
-    if (!request.input_materials || request.input_materials.length === 0) {
+    if (!body.input_materials || body.input_materials.length === 0) {
       this.throwValidationError("input_materials is required", [
         { field: "input_materials", message: "At least one input material is required" },
       ])
     }
 
     logger.info("Calculating crafting quality", {
-      blueprint_id: request.blueprint_id,
-      material_count: request.input_materials.length,
+      blueprint_id: body.blueprint_id,
+      material_count: body.input_materials.length,
     })
 
     try {
@@ -93,30 +94,30 @@ export class CraftingController extends BaseController {
       // Part 1: Get blueprint and recipe data
       // ========================================================================
       const blueprint = await knex("blueprints")
-        .where("blueprint_id", request.blueprint_id)
+        .where("blueprint_id", body.blueprint_id)
         .first()
 
       if (!blueprint) {
-        this.throwNotFound("Blueprint", request.blueprint_id)
+        this.throwNotFound("Blueprint", body.blueprint_id)
       }
 
       const recipe = await knex("crafting_recipes")
-        .where("blueprint_id", request.blueprint_id)
+        .where("blueprint_id", body.blueprint_id)
         .first()
 
       if (!recipe) {
-        this.throwNotFound("Crafting recipe for blueprint", request.blueprint_id)
+        this.throwNotFound("Crafting recipe for blueprint", body.blueprint_id)
       }
 
       // ========================================================================
       // Part 2: Get required ingredients and validate
       // ========================================================================
       const requiredIngredients = await knex("blueprint_ingredients")
-        .where("blueprint_id", request.blueprint_id)
+        .where("blueprint_id", body.blueprint_id)
         .select("ingredient_game_item_id", "quantity_required")
 
       // Validate that all required ingredients are provided (Requirement 20.4)
-      const providedItemIds = new Set(request.input_materials.map((m) => m.game_item_id))
+      const providedItemIds = new Set(body.input_materials.map((m) => m.game_item_id))
       const requiredItemIds = new Set(requiredIngredients.map((i) => i.ingredient_game_item_id))
 
       for (const requiredId of requiredItemIds) {
@@ -129,7 +130,7 @@ export class CraftingController extends BaseController {
 
       // Validate quantities
       for (const required of requiredIngredients) {
-        const provided = request.input_materials.find(
+        const provided = body.input_materials.find(
           (m) => m.game_item_id === required.ingredient_game_item_id,
         )
         if (provided && provided.quantity < required.quantity_required) {
@@ -148,7 +149,7 @@ export class CraftingController extends BaseController {
       const materialNames = await knex("game_items")
         .whereIn(
           "id",
-          request.input_materials.map((m) => m.game_item_id),
+          body.input_materials.map((m) => m.game_item_id),
         )
         .select("id", "name")
 
@@ -165,9 +166,9 @@ export class CraftingController extends BaseController {
       // Requirements 20.1, 20.2, 20.3: Support different calculation types
       if (calculationType === "weighted_average") {
         // Weighted average: each material contributes based on quantity
-        const totalQuantity = request.input_materials.reduce((sum, m) => sum + m.quantity, 0)
+        const totalQuantity = body.input_materials.reduce((sum, m) => sum + m.quantity, 0)
 
-        for (const material of request.input_materials) {
+        for (const material of body.input_materials) {
           const weight = material.quantity / totalQuantity
           inputWeights[material.game_item_id] = weight
 
@@ -183,13 +184,13 @@ export class CraftingController extends BaseController {
         outputQualityValue = qualityContributions.reduce((sum, c) => sum + c.contribution, 0)
       } else if (calculationType === "minimum") {
         // Minimum: output quality is the lowest input quality
-        const minMaterial = request.input_materials.reduce((min, m) =>
+        const minMaterial = body.input_materials.reduce((min, m) =>
           m.quality_value < min.quality_value ? m : min,
         )
 
         outputQualityValue = minMaterial.quality_value
 
-        for (const material of request.input_materials) {
+        for (const material of body.input_materials) {
           const weight = material.game_item_id === minMaterial.game_item_id ? 1 : 0
           inputWeights[material.game_item_id] = weight
 
@@ -203,13 +204,13 @@ export class CraftingController extends BaseController {
         }
       } else if (calculationType === "maximum") {
         // Maximum: output quality is the highest input quality
-        const maxMaterial = request.input_materials.reduce((max, m) =>
+        const maxMaterial = body.input_materials.reduce((max, m) =>
           m.quality_value > max.quality_value ? m : max,
         )
 
         outputQualityValue = maxMaterial.quality_value
 
-        for (const material of request.input_materials) {
+        for (const material of body.input_materials) {
           const weight = material.game_item_id === maxMaterial.game_item_id ? 1 : 0
           inputWeights[material.game_item_id] = weight
 
@@ -248,7 +249,7 @@ export class CraftingController extends BaseController {
       const criticalSuccessChance = recipe.critical_success_chance || 0.0
 
       logger.info("Quality calculation completed", {
-        blueprint_id: request.blueprint_id,
+        blueprint_id: body.blueprint_id,
         output_quality_tier: outputQualityTier,
         output_quality_value: outputQualityValue,
         calculation_type: calculationType,
@@ -274,7 +275,7 @@ export class CraftingController extends BaseController {
       }
     } catch (error) {
       logger.error("Failed to calculate crafting quality", {
-        blueprint_id: request.blueprint_id,
+        blueprint_id: body.blueprint_id,
         error: error instanceof Error ? error.message : String(error),
         stack: error instanceof Error ? error.stack : undefined,
       })
@@ -304,25 +305,25 @@ export class CraftingController extends BaseController {
    */
   @Post("simulate")
   public async simulateCrafting(
-    @Body() request: SimulateCraftingRequest,
+    @Body() body: SimulateCraftingRequest,
   ): Promise<SimulateCraftingResponse> {
     const knex = getKnex()
 
-    if (!request.blueprint_id) {
+    if (!body.blueprint_id) {
       this.throwValidationError("blueprint_id is required", [
         { field: "blueprint_id", message: "Blueprint ID is required" },
       ])
     }
 
-    if (!request.material_variations || request.material_variations.length === 0) {
+    if (!body.material_variations || body.material_variations.length === 0) {
       this.throwValidationError("material_variations is required", [
         { field: "material_variations", message: "At least one material variation is required" },
       ])
     }
 
     logger.info("Simulating crafting variations", {
-      blueprint_id: request.blueprint_id,
-      variation_count: request.material_variations.length,
+      blueprint_id: body.blueprint_id,
+      variation_count: body.material_variations.length,
     })
 
     try {
@@ -330,17 +331,17 @@ export class CraftingController extends BaseController {
       // Part 1: Get blueprint data
       // ========================================================================
       const blueprint = await knex("blueprints")
-        .where("blueprint_id", request.blueprint_id)
+        .where("blueprint_id", body.blueprint_id)
         .first()
 
       if (!blueprint) {
-        this.throwNotFound("Blueprint", request.blueprint_id)
+        this.throwNotFound("Blueprint", body.blueprint_id)
       }
 
       // ========================================================================
       // Part 2: Generate all combinations (Requirement 21.1)
       // ========================================================================
-      const combinations = this.generateQualityCombinations(request.material_variations)
+      const combinations = this.generateQualityCombinations(body.material_variations)
 
       // ========================================================================
       // Part 3: Calculate quality for each combination (Requirement 21.2)
@@ -349,7 +350,7 @@ export class CraftingController extends BaseController {
 
       for (const combination of combinations) {
         const calcResult = await this.calculateQuality({
-          blueprint_id: request.blueprint_id,
+          blueprint_id: body.blueprint_id,
           input_materials: combination,
         })
 
@@ -384,14 +385,14 @@ export class CraftingController extends BaseController {
       })
 
       logger.info("Crafting simulation completed", {
-        blueprint_id: request.blueprint_id,
+        blueprint_id: body.blueprint_id,
         total_combinations: simulationResults.length,
         best_quality: bestResult.output_quality_value,
         worst_quality: worstResult.output_quality_value,
       })
 
       return {
-        blueprint_id: request.blueprint_id,
+        blueprint_id: body.blueprint_id,
         blueprint_name: blueprint.blueprint_name,
         simulation_results: simulationResults,
         best_result: bestResult,
@@ -400,7 +401,7 @@ export class CraftingController extends BaseController {
       }
     } catch (error) {
       logger.error("Failed to simulate crafting", {
-        blueprint_id: request.blueprint_id,
+        blueprint_id: body.blueprint_id,
         error: error instanceof Error ? error.message : String(error),
         stack: error instanceof Error ? error.stack : undefined,
       })
@@ -428,55 +429,57 @@ export class CraftingController extends BaseController {
    * @returns Success response with session ID
    */
   @Post("craft")
-  @Security("jwt")
+  @Security("loggedin")
   public async recordCrafting(
-    @Body() request: RecordCraftingRequest,
+    @Body() body: RecordCraftingRequest,
+    @Request() request: ExpressRequest,
   ): Promise<RecordCraftingResponse> {
+    this.request = request
     const knex = getKnex()
 
     // Get authenticated user
     const user_id = this.getUserId()
 
-    if (!request.blueprint_id) {
+    if (!body.blueprint_id) {
       this.throwValidationError("blueprint_id is required", [
         { field: "blueprint_id", message: "Blueprint ID is required" },
       ])
     }
 
     logger.info("Recording crafting session", {
-      blueprint_id: request.blueprint_id,
+      blueprint_id: body.blueprint_id,
       user_id,
     })
 
     try {
       // Verify blueprint exists
       const blueprint = await knex("blueprints")
-        .where("blueprint_id", request.blueprint_id)
+        .where("blueprint_id", body.blueprint_id)
         .first()
 
       if (!blueprint) {
-        this.throwNotFound("Blueprint", request.blueprint_id)
+        this.throwNotFound("Blueprint", body.blueprint_id)
       }
 
       // Insert crafting session (Requirements 31.1-31.6)
       const [session] = await knex("crafting_history")
         .insert({
           user_id,
-          blueprint_id: request.blueprint_id,
+          blueprint_id: body.blueprint_id,
           crafting_date: knex.fn.now(),
-          input_materials: JSON.stringify(request.input_materials),
-          output_quality_tier: request.output_quality_tier,
-          output_quality_value: request.output_quality_value,
-          output_quantity: request.output_quantity,
-          was_critical_success: request.was_critical_success,
-          total_material_cost: request.total_material_cost || null,
-          crafting_station_fee: request.crafting_station_fee || null,
+          input_materials: JSON.stringify(body.input_materials),
+          output_quality_tier: body.output_quality_tier,
+          output_quality_value: body.output_quality_value,
+          output_quantity: body.output_quantity,
+          was_critical_success: body.was_critical_success,
+          total_material_cost: body.total_material_cost || null,
+          crafting_station_fee: body.crafting_station_fee || null,
         })
         .returning("*")
 
       logger.info("Crafting session recorded", {
         session_id: session.history_id,
-        blueprint_id: request.blueprint_id,
+        blueprint_id: body.blueprint_id,
         user_id,
       })
 
@@ -486,7 +489,7 @@ export class CraftingController extends BaseController {
       }
     } catch (error) {
       logger.error("Failed to record crafting session", {
-        blueprint_id: request.blueprint_id,
+        blueprint_id: body.blueprint_id,
         user_id,
         error: error instanceof Error ? error.message : String(error),
         stack: error instanceof Error ? error.stack : undefined,
@@ -517,12 +520,14 @@ export class CraftingController extends BaseController {
    * @returns Paginated crafting history
    */
   @Get("history")
-  @Security("jwt")
+  @Security("loggedin")
   public async getCraftingHistory(
     @Query() blueprint_id?: string,
     @Query() page: number = 1,
     @Query() page_size: number = 20,
+    @Request() request?: ExpressRequest,
   ): Promise<GetCraftingHistoryResponse> {
+    if (request) this.request = request
     const knex = getKnex()
 
     // Get authenticated user
@@ -641,7 +646,7 @@ export class CraftingController extends BaseController {
    * @returns Craftable items with material availability
    */
   @Get("craftable-items")
-  @Security("jwt")
+  @Security("loggedin")
   public async getCraftableItems(
     @Query() item_category?: string,
     @Query() rarity?: string,
@@ -650,7 +655,9 @@ export class CraftingController extends BaseController {
     @Query() version_id?: string,
     @Query() page: number = 1,
     @Query() page_size: number = 20,
+    @Request() request?: ExpressRequest,
   ): Promise<GetCraftableItemsResponse> {
+    if (request) this.request = request
     const knex = getKnex()
 
     // Get authenticated user
@@ -943,8 +950,11 @@ export class CraftingController extends BaseController {
    * @returns Crafting statistics
    */
   @Get("statistics")
-  @Security("jwt")
-  public async getCraftingStatistics(): Promise<GetCraftingStatisticsResponse> {
+  @Security("loggedin")
+  public async getCraftingStatistics(
+    @Request() request?: ExpressRequest,
+  ): Promise<GetCraftingStatisticsResponse> {
+    if (request) this.request = request
     const knex = getKnex()
 
     // Get authenticated user

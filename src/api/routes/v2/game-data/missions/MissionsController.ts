@@ -908,7 +908,7 @@ export class MissionsController extends BaseController {
    * @returns Success response
    */
   @Post("{mission_id}/complete")
-  @Security("jwt")
+  @Security("loggedin")
   public async completeMission(
     @Path() mission_id: string,
     @Body()
@@ -1041,7 +1041,7 @@ export class MissionsController extends BaseController {
    * @returns Success response
    */
   @Post("{mission_id}/rate")
-  @Security("jwt")
+  @Security("loggedin")
   public async rateMission(
     @Path() mission_id: string,
     @Body()

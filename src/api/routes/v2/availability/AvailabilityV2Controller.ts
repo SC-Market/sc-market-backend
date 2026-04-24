@@ -25,7 +25,7 @@ export class AvailabilityV2Controller extends Controller {
    * @param spectrum_id Spectrum ID (for contractor sellers)
    */
   @Get("next")
-  @Security("jwt")
+  @Security("loggedin")
   public async getNextAvailable(
     @Query() username?: string,
     @Query() spectrum_id?: string,

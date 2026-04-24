@@ -181,7 +181,7 @@ export class VersionsController extends BaseController {
    * @returns Success response with selected version
    */
   @Post("select")
-  @Security("jwt")
+  @Security("loggedin")
   public async selectVersion(
     @Body() body: SelectVersionRequest,
   ): Promise<SelectVersionResponse> {

@@ -8003,7 +8003,7 @@
 				],
 				"security": [
 					{
-						"jwt": []
+						"loggedin": []
 					}
 				],
 				"parameters": [],
@@ -8151,7 +8151,7 @@
 				],
 				"security": [
 					{
-						"jwt": []
+						"loggedin": []
 					}
 				],
 				"parameters": [
@@ -8207,7 +8207,7 @@
 				],
 				"security": [
 					{
-						"jwt": []
+						"loggedin": []
 					}
 				],
 				"parameters": [
@@ -8245,7 +8245,7 @@
 				],
 				"security": [
 					{
-						"jwt": []
+						"loggedin": []
 					}
 				],
 				"parameters": [],
@@ -8285,7 +8285,7 @@
 				],
 				"security": [
 					{
-						"jwt": []
+						"loggedin": []
 					}
 				],
 				"parameters": [],
@@ -8323,7 +8323,7 @@
 				],
 				"security": [
 					{
-						"jwt": []
+						"loggedin": []
 					}
 				],
 				"parameters": [
@@ -8438,7 +8438,7 @@
 				],
 				"security": [
 					{
-						"jwt": []
+						"loggedin": []
 					}
 				],
 				"parameters": [
@@ -8475,7 +8475,7 @@
 				],
 				"security": [
 					{
-						"jwt": []
+						"loggedin": []
 					}
 				],
 				"parameters": [
@@ -8511,7 +8511,7 @@
 				],
 				"security": [
 					{
-						"jwt": []
+						"loggedin": []
 					}
 				],
 				"parameters": [
@@ -8582,7 +8582,7 @@
 				],
 				"security": [
 					{
-						"jwt": []
+						"loggedin": []
 					}
 				],
 				"parameters": [],
@@ -8823,7 +8823,7 @@
 				],
 				"security": [
 					{
-						"jwt": []
+						"loggedin": []
 					}
 				],
 				"parameters": [
@@ -8923,7 +8923,7 @@
 				],
 				"security": [
 					{
-						"jwt": []
+						"loggedin": []
 					}
 				],
 				"parameters": [
@@ -8989,7 +8989,7 @@
 				],
 				"security": [
 					{
-						"jwt": []
+						"loggedin": []
 					}
 				],
 				"parameters": [
@@ -9042,7 +9042,7 @@
 				],
 				"security": [
 					{
-						"jwt": []
+						"loggedin": []
 					}
 				],
 				"parameters": [
@@ -9092,7 +9092,7 @@
 				],
 				"security": [
 					{
-						"jwt": []
+						"loggedin": []
 					}
 				],
 				"parameters": [
@@ -9196,7 +9196,7 @@
 				],
 				"security": [
 					{
-						"jwt": []
+						"loggedin": []
 					}
 				],
 				"parameters": [
@@ -9241,7 +9241,7 @@
 				],
 				"security": [
 					{
-						"jwt": []
+						"loggedin": []
 					}
 				],
 				"parameters": [
@@ -9291,7 +9291,7 @@
 				],
 				"security": [
 					{
-						"jwt": []
+						"loggedin": []
 					}
 				],
 				"parameters": [
@@ -9339,7 +9339,7 @@
 				],
 				"security": [
 					{
-						"jwt": []
+						"loggedin": []
 					}
 				],
 				"parameters": []
@@ -9668,7 +9668,7 @@
 				],
 				"security": [
 					{
-						"jwt": []
+						"loggedin": []
 					}
 				],
 				"parameters": []
@@ -9694,18 +9694,16 @@
 				],
 				"security": [
 					{
-						"jwt": []
+						"loggedin": []
 					}
 				],
 				"parameters": [],
 				"requestBody": {
-					"description": "Wishlist creation data",
 					"required": true,
 					"content": {
 						"application/json": {
 							"schema": {
-								"$ref": "#/components/schemas/CreateWishlistRequest",
-								"description": "Wishlist creation data"
+								"$ref": "#/components/schemas/CreateWishlistRequest"
 							}
 						}
 					}
@@ -9775,7 +9773,7 @@
 				],
 				"security": [
 					{
-						"jwt": []
+						"loggedin": []
 					}
 				],
 				"parameters": [
@@ -9790,13 +9788,11 @@
 					}
 				],
 				"requestBody": {
-					"description": "Update data",
 					"required": true,
 					"content": {
 						"application/json": {
 							"schema": {
-								"$ref": "#/components/schemas/UpdateWishlistRequest",
-								"description": "Update data"
+								"$ref": "#/components/schemas/UpdateWishlistRequest"
 							}
 						}
 					}
@@ -9831,7 +9827,7 @@
 				],
 				"security": [
 					{
-						"jwt": []
+						"loggedin": []
 					}
 				],
 				"parameters": [
@@ -9869,7 +9865,7 @@
 				],
 				"security": [
 					{
-						"jwt": []
+						"loggedin": []
 					}
 				],
 				"parameters": [
@@ -9884,13 +9880,11 @@
 					}
 				],
 				"requestBody": {
-					"description": "Item data",
 					"required": true,
 					"content": {
 						"application/json": {
 							"schema": {
-								"$ref": "#/components/schemas/AddWishlistItemRequest",
-								"description": "Item data"
+								"$ref": "#/components/schemas/AddWishlistItemRequest"
 							}
 						}
 					}
@@ -9927,7 +9921,7 @@
 				],
 				"security": [
 					{
-						"jwt": []
+						"loggedin": []
 					}
 				],
 				"parameters": [
@@ -9972,7 +9966,7 @@
 				],
 				"security": [
 					{
-						"jwt": []
+						"loggedin": []
 					}
 				],
 				"parameters": [
@@ -9996,13 +9990,11 @@
 					}
 				],
 				"requestBody": {
-					"description": "Update data",
 					"required": true,
 					"content": {
 						"application/json": {
 							"schema": {
-								"$ref": "#/components/schemas/UpdateWishlistItemRequest",
-								"description": "Update data"
+								"$ref": "#/components/schemas/UpdateWishlistItemRequest"
 							}
 						}
 					}
@@ -10031,7 +10023,7 @@
 				],
 				"security": [
 					{
-						"jwt": []
+						"loggedin": []
 					}
 				],
 				"parameters": [
@@ -10596,7 +10588,7 @@
 				],
 				"security": [
 					{
-						"jwt": []
+						"loggedin": []
 					}
 				],
 				"parameters": [],
@@ -11165,7 +11157,7 @@
 				],
 				"security": [
 					{
-						"jwt": []
+						"loggedin": []
 					}
 				],
 				"parameters": [
@@ -11238,7 +11230,7 @@
 				],
 				"security": [
 					{
-						"jwt": []
+						"loggedin": []
 					}
 				],
 				"parameters": [
@@ -11462,13 +11454,11 @@
 				"security": [],
 				"parameters": [],
 				"requestBody": {
-					"description": "Crafting calculation request with blueprint and materials",
 					"required": true,
 					"content": {
 						"application/json": {
 							"schema": {
-								"$ref": "#/components/schemas/CalculateQualityRequest",
-								"description": "Crafting calculation request with blueprint and materials"
+								"$ref": "#/components/schemas/CalculateQualityRequest"
 							}
 						}
 					}
@@ -11498,13 +11488,11 @@
 				"security": [],
 				"parameters": [],
 				"requestBody": {
-					"description": "Simulation request with material variations",
 					"required": true,
 					"content": {
 						"application/json": {
 							"schema": {
-								"$ref": "#/components/schemas/SimulateCraftingRequest",
-								"description": "Simulation request with material variations"
+								"$ref": "#/components/schemas/SimulateCraftingRequest"
 							}
 						}
 					}
@@ -11533,18 +11521,16 @@
 				],
 				"security": [
 					{
-						"jwt": []
+						"loggedin": []
 					}
 				],
 				"parameters": [],
 				"requestBody": {
-					"description": "Crafting session data",
 					"required": true,
 					"content": {
 						"application/json": {
 							"schema": {
-								"$ref": "#/components/schemas/RecordCraftingRequest",
-								"description": "Crafting session data"
+								"$ref": "#/components/schemas/RecordCraftingRequest"
 							}
 						}
 					}
@@ -11573,7 +11559,7 @@
 				],
 				"security": [
 					{
-						"jwt": []
+						"loggedin": []
 					}
 				],
 				"parameters": [
@@ -11633,7 +11619,7 @@
 				],
 				"security": [
 					{
-						"jwt": []
+						"loggedin": []
 					}
 				],
 				"parameters": [
@@ -11730,7 +11716,7 @@
 				],
 				"security": [
 					{
-						"jwt": []
+						"loggedin": []
 					}
 				],
 				"parameters": []
@@ -12040,7 +12026,7 @@
 				],
 				"security": [
 					{
-						"jwt": []
+						"loggedin": []
 					}
 				],
 				"parameters": [
@@ -12107,7 +12093,7 @@
 				],
 				"security": [
 					{
-						"jwt": []
+						"loggedin": []
 					}
 				],
 				"parameters": [
@@ -12278,7 +12264,7 @@
 				],
 				"security": [
 					{
-						"jwt": []
+						"loggedin": []
 					}
 				],
 				"parameters": [
@@ -12416,7 +12402,7 @@
 				],
 				"security": [
 					{
-						"jwt": []
+						"loggedin": []
 					}
 				],
 				"parameters": [
@@ -12550,10 +12536,10 @@
 				],
 				"security": [
 					{
-						"jwt": []
+						"loggedin": []
 					},
 					{
-						"jwt": []
+						"loggedin": []
 					}
 				],
 				"parameters": [],
@@ -12593,7 +12579,7 @@
 				],
 				"security": [
 					{
-						"jwt": []
+						"loggedin": []
 					}
 				],
 				"parameters": []
@@ -12621,7 +12607,7 @@
 				],
 				"security": [
 					{
-						"jwt": []
+						"loggedin": []
 					}
 				],
 				"parameters": [],
@@ -12669,7 +12655,7 @@
 				],
 				"security": [
 					{
-						"jwt": []
+						"loggedin": []
 					}
 				],
 				"parameters": [
@@ -12725,7 +12711,7 @@
 				],
 				"security": [
 					{
-						"jwt": []
+						"loggedin": []
 					}
 				],
 				"parameters": [
@@ -12763,7 +12749,7 @@
 				],
 				"security": [
 					{
-						"jwt": []
+						"loggedin": []
 					}
 				],
 				"parameters": [],
@@ -12803,7 +12789,7 @@
 				],
 				"security": [
 					{
-						"jwt": []
+						"loggedin": []
 					}
 				],
 				"parameters": [],
@@ -12842,10 +12828,7 @@
 				],
 				"security": [
 					{
-						"jwt": []
-					},
-					{
-						"session": []
+						"loggedin": []
 					}
 				],
 				"parameters": [],
@@ -12989,10 +12972,7 @@
 				],
 				"security": [
 					{
-						"jwt": []
-					},
-					{
-						"session": []
+						"loggedin": []
 					}
 				],
 				"parameters": [
@@ -13052,10 +13032,7 @@
 				],
 				"security": [
 					{
-						"jwt": []
-					},
-					{
-						"session": []
+						"loggedin": []
 					}
 				],
 				"parameters": [
@@ -13107,10 +13084,7 @@
 				],
 				"security": [
 					{
-						"jwt": []
-					},
-					{
-						"session": []
+						"loggedin": []
 					}
 				],
 				"parameters": [
@@ -13147,10 +13121,7 @@
 				],
 				"security": [
 					{
-						"jwt": []
-					},
-					{
-						"session": []
+						"loggedin": []
 					}
 				],
 				"parameters": [
@@ -13208,7 +13179,7 @@
 				],
 				"security": [
 					{
-						"jwt": []
+						"loggedin": []
 					}
 				],
 				"parameters": [
@@ -13418,7 +13389,7 @@
 				],
 				"security": [
 					{
-						"jwt": []
+						"loggedin": []
 					}
 				],
 				"parameters": []
@@ -13444,7 +13415,7 @@
 				],
 				"security": [
 					{
-						"jwt": []
+						"loggedin": []
 					}
 				],
 				"parameters": [],
@@ -13485,7 +13456,7 @@
 				],
 				"security": [
 					{
-						"jwt": []
+						"loggedin": []
 					}
 				],
 				"parameters": []
@@ -13513,7 +13484,7 @@
 				],
 				"security": [
 					{
-						"jwt": []
+						"loggedin": []
 					}
 				],
 				"parameters": [
@@ -13582,7 +13553,7 @@
 				],
 				"security": [
 					{
-						"jwt": []
+						"loggedin": []
 					}
 				],
 				"parameters": [],
@@ -13628,7 +13599,7 @@
 				],
 				"security": [
 					{
-						"jwt": []
+						"loggedin": []
 					}
 				],
 				"parameters": [
@@ -13688,7 +13659,7 @@
 				],
 				"security": [
 					{
-						"jwt": []
+						"loggedin": []
 					}
 				],
 				"parameters": []
@@ -13725,7 +13696,7 @@
 				],
 				"security": [
 					{
-						"jwt": []
+						"loggedin": []
 					}
 				],
 				"parameters": []
@@ -13766,7 +13737,7 @@
 				],
 				"security": [
 					{
-						"jwt": []
+						"loggedin": []
 					}
 				],
 				"parameters": [

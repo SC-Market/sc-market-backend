@@ -7,7 +7,8 @@
  * Requirements: 32.1-32.6, 46.1-46.10, 53.1-53.10
  */
 
-import { Controller, Get, Post, Put, Delete, Route, Tags, Query, Path, Body, Security } from "tsoa"
+import { Controller, Get, Post, Put, Delete, Route, Tags, Query, Path, Body, Security, Request } from "tsoa"
+import { Request as ExpressRequest } from "express"
 import { BaseController } from "../../base/BaseController.js"
 import { getKnex } from "../../../../../clients/database/knex-db.js"
 import {
@@ -42,8 +43,11 @@ export class WishlistsController extends BaseController {
    * @returns List of user wishlists with statistics
    */
   @Get()
-  @Security("jwt")
-  public async getWishlists(): Promise<ListWishlistsResponse> {
+  @Security("loggedin")
+  public async getWishlists(
+    @Request() request: ExpressRequest,
+  ): Promise<ListWishlistsResponse> {
+    this.request = request
     const knex = getKnex()
     const user_id = this.getUserId()
 
@@ -130,32 +134,36 @@ export class WishlistsController extends BaseController {
    * @returns Created wishlist
    */
   @Post()
-  @Security("jwt")
-  public async createWishlist(@Body() request: CreateWishlistRequest): Promise<Wishlist> {
+  @Security("loggedin")
+  public async createWishlist(
+    @Body() body: CreateWishlistRequest,
+    @Request() request: ExpressRequest,
+  ): Promise<Wishlist> {
+    this.request = request
     const knex = getKnex()
     const user_id = this.getUserId()
 
-    if (!request.wishlist_name || request.wishlist_name.trim().length === 0) {
+    if (!body.wishlist_name || body.wishlist_name.trim().length === 0) {
       this.throwValidationError("wishlist_name is required", [
         { field: "wishlist_name", message: "Wishlist name is required" },
       ])
     }
 
-    logger.info("Creating wishlist", { user_id, wishlist_name: request.wishlist_name })
+    logger.info("Creating wishlist", { user_id, wishlist_name: body.wishlist_name })
 
     try {
       // Generate share token if public
-      const share_token = request.is_public ? this.generateShareToken() : null
+      const share_token = body.is_public ? this.generateShareToken() : null
 
       const [wishlist] = await knex("user_wishlists")
         .insert({
           user_id,
-          wishlist_name: request.wishlist_name.trim(),
-          wishlist_description: request.wishlist_description?.trim() || null,
-          is_public: request.is_public,
+          wishlist_name: body.wishlist_name.trim(),
+          wishlist_description: body.wishlist_description?.trim() || null,
+          is_public: body.is_public,
           share_token,
-          organization_id: request.organization_id || null,
-          is_collaborative: request.is_collaborative,
+          organization_id: body.organization_id || null,
+          is_collaborative: body.is_collaborative,
         })
         .returning("*")
 
@@ -208,7 +216,9 @@ export class WishlistsController extends BaseController {
   public async getWishlist(
     @Path() wishlist_id: string,
     @Query() share_token?: string,
+    @Request() request?: ExpressRequest,
   ): Promise<GetWishlistResponse> {
+    if (request) this.request = request
     const knex = getKnex()
 
     if (!wishlist_id) {
@@ -228,7 +238,7 @@ export class WishlistsController extends BaseController {
       }
 
       // Check access permissions
-      const user_id = (this as any).user?.user_id
+      const user_id = this.tryGetUserId()
       const isOwner = user_id && wishlist.user_id === user_id
       const hasShareToken = wishlist.is_public && share_token === wishlist.share_token
 
@@ -341,11 +351,13 @@ export class WishlistsController extends BaseController {
    * @returns Updated wishlist
    */
   @Put("{wishlist_id}")
-  @Security("jwt")
+  @Security("loggedin")
   public async updateWishlist(
     @Path() wishlist_id: string,
-    @Body() request: UpdateWishlistRequest,
+    @Body() body: UpdateWishlistRequest,
+    @Request() request: ExpressRequest,
   ): Promise<Wishlist> {
+    this.request = request
     const knex = getKnex()
     const user_id = this.getUserId()
 
@@ -374,29 +386,29 @@ export class WishlistsController extends BaseController {
         updated_at: knex.fn.now(),
       }
 
-      if (request.wishlist_name !== undefined) {
-        if (request.wishlist_name.trim().length === 0) {
+      if (body.wishlist_name !== undefined) {
+        if (body.wishlist_name.trim().length === 0) {
           this.throwValidationError("wishlist_name cannot be empty", [
             { field: "wishlist_name", message: "Wishlist name cannot be empty" },
           ])
         }
-        updates.wishlist_name = request.wishlist_name.trim()
+        updates.wishlist_name = body.wishlist_name.trim()
       }
 
-      if (request.wishlist_description !== undefined) {
-        updates.wishlist_description = request.wishlist_description?.trim() || null
+      if (body.wishlist_description !== undefined) {
+        updates.wishlist_description = body.wishlist_description?.trim() || null
       }
 
-      if (request.is_public !== undefined) {
-        updates.is_public = request.is_public
+      if (body.is_public !== undefined) {
+        updates.is_public = body.is_public
         // Generate share token if making public and doesn't have one
-        if (request.is_public && !wishlist.share_token) {
+        if (body.is_public && !wishlist.share_token) {
           updates.share_token = this.generateShareToken()
         }
       }
 
-      if (request.is_collaborative !== undefined) {
-        updates.is_collaborative = request.is_collaborative
+      if (body.is_collaborative !== undefined) {
+        updates.is_collaborative = body.is_collaborative
       }
 
       // Update wishlist
@@ -444,8 +456,12 @@ export class WishlistsController extends BaseController {
    * @returns Success response
    */
   @Delete("{wishlist_id}")
-  @Security("jwt")
-  public async deleteWishlist(@Path() wishlist_id: string): Promise<{ success: boolean }> {
+  @Security("loggedin")
+  public async deleteWishlist(
+    @Path() wishlist_id: string,
+    @Request() request: ExpressRequest,
+  ): Promise<{ success: boolean }> {
+    this.request = request
     const knex = getKnex()
     const user_id = this.getUserId()
 
@@ -504,11 +520,13 @@ export class WishlistsController extends BaseController {
    * @returns Created wishlist item
    */
   @Post("{wishlist_id}/items")
-  @Security("jwt")
+  @Security("loggedin")
   public async addWishlistItem(
     @Path() wishlist_id: string,
-    @Body() request: AddWishlistItemRequest,
+    @Body() body: AddWishlistItemRequest,
+    @Request() request: ExpressRequest,
   ): Promise<WishlistItemWithDetails> {
+    this.request = request
     const knex = getKnex()
     const user_id = this.getUserId()
 
@@ -518,31 +536,31 @@ export class WishlistsController extends BaseController {
       ])
     }
 
-    if (!request.game_item_id) {
+    if (!body.game_item_id) {
       this.throwValidationError("game_item_id is required", [
         { field: "game_item_id", message: "Game item ID is required" },
       ])
     }
 
-    if (request.desired_quantity < 1) {
+    if (body.desired_quantity < 1) {
       this.throwValidationError("desired_quantity must be at least 1", [
         { field: "desired_quantity", message: "Desired quantity must be at least 1" },
       ])
     }
 
-    if (request.desired_quality_tier && (request.desired_quality_tier < 1 || request.desired_quality_tier > 5)) {
+    if (body.desired_quality_tier && (body.desired_quality_tier < 1 || body.desired_quality_tier > 5)) {
       this.throwValidationError("desired_quality_tier must be between 1 and 5", [
         { field: "desired_quality_tier", message: "Quality tier must be between 1 and 5" },
       ])
     }
 
-    if (request.priority < 1 || request.priority > 5) {
+    if (body.priority < 1 || body.priority > 5) {
       this.throwValidationError("priority must be between 1 and 5", [
         { field: "priority", message: "Priority must be between 1 and 5" },
       ])
     }
 
-    logger.info("Adding item to wishlist", { wishlist_id, user_id, game_item_id: request.game_item_id })
+    logger.info("Adding item to wishlist", { wishlist_id, user_id, game_item_id: body.game_item_id })
 
     try {
       // Verify wishlist exists and user has access
@@ -567,19 +585,19 @@ export class WishlistsController extends BaseController {
       }
 
       // Verify game item exists
-      const gameItem = await knex("game_items").where("id", request.game_item_id).first()
+      const gameItem = await knex("game_items").where("id", body.game_item_id).first()
 
       if (!gameItem) {
-        this.throwNotFound("Game item", request.game_item_id)
+        this.throwNotFound("Game item", body.game_item_id)
       }
 
       // Verify blueprint exists if provided
       let blueprintName: string | undefined
-      if (request.blueprint_id) {
-        const blueprint = await knex("blueprints").where("blueprint_id", request.blueprint_id).first()
+      if (body.blueprint_id) {
+        const blueprint = await knex("blueprints").where("blueprint_id", body.blueprint_id).first()
 
         if (!blueprint) {
-          this.throwNotFound("Blueprint", request.blueprint_id)
+          this.throwNotFound("Blueprint", body.blueprint_id)
         }
 
         blueprintName = blueprint.blueprint_name
@@ -589,12 +607,12 @@ export class WishlistsController extends BaseController {
       const [item] = await knex("wishlist_items")
         .insert({
           wishlist_id,
-          game_item_id: request.game_item_id,
-          desired_quantity: request.desired_quantity,
-          desired_quality_tier: request.desired_quality_tier || null,
-          blueprint_id: request.blueprint_id || null,
-          priority: request.priority,
-          notes: request.notes?.trim() || null,
+          game_item_id: body.game_item_id,
+          desired_quantity: body.desired_quantity,
+          desired_quality_tier: body.desired_quality_tier || null,
+          blueprint_id: body.blueprint_id || null,
+          priority: body.priority,
+          notes: body.notes?.trim() || null,
           is_acquired: false,
           acquired_quantity: 0,
         })
@@ -627,7 +645,7 @@ export class WishlistsController extends BaseController {
         game_item_type: gameItem.type || "unknown",
         blueprint_name: blueprintName,
         estimated_cost: undefined, // TODO: Implement market price lookup
-        crafting_available: !!request.blueprint_id,
+        crafting_available: !!body.blueprint_id,
       }
     } catch (error) {
       logger.error("Failed to add item to wishlist", {
@@ -654,11 +672,13 @@ export class WishlistsController extends BaseController {
    * @returns Success response
    */
   @Delete("{wishlist_id}/items/{item_id}")
-  @Security("jwt")
+  @Security("loggedin")
   public async removeWishlistItem(
     @Path() wishlist_id: string,
     @Path() item_id: string,
+    @Request() request: ExpressRequest,
   ): Promise<{ success: boolean }> {
+    this.request = request
     const knex = getKnex()
     const user_id = this.getUserId()
 
@@ -739,12 +759,14 @@ export class WishlistsController extends BaseController {
    * @returns Updated wishlist item
    */
   @Put("{wishlist_id}/items/{item_id}")
-  @Security("jwt")
+  @Security("loggedin")
   public async updateWishlistItem(
     @Path() wishlist_id: string,
     @Path() item_id: string,
-    @Body() request: UpdateWishlistItemRequest,
+    @Body() body: UpdateWishlistItemRequest,
+    @Request() request: ExpressRequest,
   ): Promise<WishlistItemWithDetails> {
+    this.request = request
     const knex = getKnex()
     const user_id = this.getUserId()
 
@@ -792,48 +814,48 @@ export class WishlistsController extends BaseController {
         updated_at: knex.fn.now(),
       }
 
-      if (request.desired_quantity !== undefined) {
-        if (request.desired_quantity < 1) {
+      if (body.desired_quantity !== undefined) {
+        if (body.desired_quantity < 1) {
           this.throwValidationError("desired_quantity must be at least 1", [
             { field: "desired_quantity", message: "Desired quantity must be at least 1" },
           ])
         }
-        updates.desired_quantity = request.desired_quantity
+        updates.desired_quantity = body.desired_quantity
       }
 
-      if (request.desired_quality_tier !== undefined) {
-        if (request.desired_quality_tier < 1 || request.desired_quality_tier > 5) {
+      if (body.desired_quality_tier !== undefined) {
+        if (body.desired_quality_tier < 1 || body.desired_quality_tier > 5) {
           this.throwValidationError("desired_quality_tier must be between 1 and 5", [
             { field: "desired_quality_tier", message: "Quality tier must be between 1 and 5" },
           ])
         }
-        updates.desired_quality_tier = request.desired_quality_tier
+        updates.desired_quality_tier = body.desired_quality_tier
       }
 
-      if (request.priority !== undefined) {
-        if (request.priority < 1 || request.priority > 5) {
+      if (body.priority !== undefined) {
+        if (body.priority < 1 || body.priority > 5) {
           this.throwValidationError("priority must be between 1 and 5", [
             { field: "priority", message: "Priority must be between 1 and 5" },
           ])
         }
-        updates.priority = request.priority
+        updates.priority = body.priority
       }
 
-      if (request.notes !== undefined) {
-        updates.notes = request.notes?.trim() || null
+      if (body.notes !== undefined) {
+        updates.notes = body.notes?.trim() || null
       }
 
-      if (request.is_acquired !== undefined) {
-        updates.is_acquired = request.is_acquired
+      if (body.is_acquired !== undefined) {
+        updates.is_acquired = body.is_acquired
       }
 
-      if (request.acquired_quantity !== undefined) {
-        if (request.acquired_quantity < 0) {
+      if (body.acquired_quantity !== undefined) {
+        if (body.acquired_quantity < 0) {
           this.throwValidationError("acquired_quantity cannot be negative", [
             { field: "acquired_quantity", message: "Acquired quantity cannot be negative" },
           ])
         }
-        updates.acquired_quantity = request.acquired_quantity
+        updates.acquired_quantity = body.acquired_quantity
       }
 
       // Update item
@@ -908,8 +930,12 @@ export class WishlistsController extends BaseController {
    * @returns Shopping list with material requirements
    */
   @Get("{wishlist_id}/shopping-list")
-  @Security("jwt")
-  public async generateShoppingList(@Path() wishlist_id: string): Promise<ShoppingListResponse> {
+  @Security("loggedin")
+  public async generateShoppingList(
+    @Path() wishlist_id: string,
+    @Request() request: ExpressRequest,
+  ): Promise<ShoppingListResponse> {
+    this.request = request
     const knex = getKnex()
     const user_id = this.getUserId()
 
