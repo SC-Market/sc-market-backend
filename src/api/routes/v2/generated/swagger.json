@@ -1838,6 +1838,57 @@
 				"type": "object",
 				"additionalProperties": false
 			},
+			"InventoryMaterial": {
+				"description": "Aggregated inventory material",
+				"properties": {
+					"game_item_id": {
+						"type": "string"
+					},
+					"game_item_name": {
+						"type": "string"
+					},
+					"game_item_type": {
+						"type": "string"
+					},
+					"game_item_icon": {
+						"type": "string"
+					},
+					"total_quantity": {
+						"type": "number",
+						"format": "double"
+					},
+					"avg_quality_value": {
+						"type": "number",
+						"format": "double"
+					},
+					"max_quality_value": {
+						"type": "number",
+						"format": "double"
+					}
+				},
+				"required": [
+					"game_item_id",
+					"game_item_name",
+					"total_quantity"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
+			"InventorySummaryResponse": {
+				"properties": {
+					"materials": {
+						"items": {
+							"$ref": "#/components/schemas/InventoryMaterial"
+						},
+						"type": "array"
+					}
+				},
+				"required": [
+					"materials"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
 			"ListingDetail": {
 				"description": "Core listing metadata",
 				"properties": {
@@ -2317,57 +2368,6 @@
 						"description": "Updated bulk discount tiers (pass [] to remove, omit to keep unchanged)"
 					}
 				},
-				"type": "object",
-				"additionalProperties": false
-			},
-			"InventoryMaterial": {
-				"description": "Aggregated inventory material",
-				"properties": {
-					"game_item_id": {
-						"type": "string"
-					},
-					"game_item_name": {
-						"type": "string"
-					},
-					"game_item_type": {
-						"type": "string"
-					},
-					"game_item_icon": {
-						"type": "string"
-					},
-					"total_quantity": {
-						"type": "number",
-						"format": "double"
-					},
-					"avg_quality_value": {
-						"type": "number",
-						"format": "double"
-					},
-					"max_quality_value": {
-						"type": "number",
-						"format": "double"
-					}
-				},
-				"required": [
-					"game_item_id",
-					"game_item_name",
-					"total_quantity"
-				],
-				"type": "object",
-				"additionalProperties": false
-			},
-			"InventorySummaryResponse": {
-				"properties": {
-					"materials": {
-						"items": {
-							"$ref": "#/components/schemas/InventoryMaterial"
-						},
-						"type": "array"
-					}
-				},
-				"required": [
-					"materials"
-				],
 				"type": "object",
 				"additionalProperties": false
 			},
@@ -8901,16 +8901,16 @@
 				]
 			}
 		},
-		"/listings/{id}": {
+		"/listings/inventory-summary": {
 			"get": {
-				"operationId": "GetListingDetail",
+				"operationId": "GetInventorySummary",
 				"responses": {
 					"200": {
 						"description": "Complete listing detail with variant breakdown",
 						"content": {
 							"application/json": {
 								"schema": {
-									"$ref": "#/components/schemas/GetListingDetailResponse"
+									"$ref": "#/components/schemas/InventorySummaryResponse"
 								}
 							}
 						}
@@ -8921,10 +8921,44 @@
 				"tags": [
 					"Listings V2"
 				],
+				"security": [
+					{
+						"jwt": []
+					}
+				],
+				"parameters": [
+					{
+						"in": "query",
+						"name": "spectrum_id",
+						"required": false,
+						"schema": {
+							"type": "string"
+						}
+					}
+				]
+			}
+		},
+		"/listings/{id}": {
+			"get": {
+				"operationId": "GetListingDetail",
+				"responses": {
+					"200": {
+						"description": "Ok",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/GetListingDetailResponse"
+								}
+							}
+						}
+					}
+				},
+				"tags": [
+					"Listings V2"
+				],
 				"security": [],
 				"parameters": [
 					{
-						"description": "Listing UUID",
 						"in": "path",
 						"name": "id",
 						"required": true,
@@ -9171,44 +9205,6 @@
 						"in": "path",
 						"name": "id",
 						"required": true,
-						"schema": {
-							"type": "string"
-						}
-					}
-				]
-			}
-		},
-		"/listings/inventory-summary": {
-			"get": {
-				"operationId": "GetInventorySummary",
-				"responses": {
-					"200": {
-						"description": "Ok",
-						"content": {
-							"application/json": {
-								"schema": {
-									"$ref": "#/components/schemas/InventorySummaryResponse"
-								}
-							}
-						}
-					}
-				},
-				"description": "Get aggregated inventory summary — materials from user's and/or org's stock lots.\nGroups by game item, sums quantities, averages quality values.",
-				"summary": "Get inventory summary",
-				"tags": [
-					"Listings V2"
-				],
-				"security": [
-					{
-						"jwt": []
-					}
-				],
-				"parameters": [
-					{
-						"description": "Optional org spectrum_id to include org inventory",
-						"in": "query",
-						"name": "spectrum_id",
-						"required": false,
 						"schema": {
 							"type": "string"
 						}

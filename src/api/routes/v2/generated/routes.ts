@@ -604,6 +604,28 @@ const models: TsoaRoute.Models = {
         "additionalProperties": false,
     },
     // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+    "InventoryMaterial": {
+        "dataType": "refObject",
+        "properties": {
+            "game_item_id": {"dataType":"string","required":true},
+            "game_item_name": {"dataType":"string","required":true},
+            "game_item_type": {"dataType":"string"},
+            "game_item_icon": {"dataType":"string"},
+            "total_quantity": {"dataType":"double","required":true},
+            "avg_quality_value": {"dataType":"double"},
+            "max_quality_value": {"dataType":"double"},
+        },
+        "additionalProperties": false,
+    },
+    // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+    "InventorySummaryResponse": {
+        "dataType": "refObject",
+        "properties": {
+            "materials": {"dataType":"array","array":{"dataType":"refObject","ref":"InventoryMaterial"},"required":true},
+        },
+        "additionalProperties": false,
+    },
+    // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
     "ListingDetail": {
         "dataType": "refObject",
         "properties": {
@@ -728,28 +750,6 @@ const models: TsoaRoute.Models = {
             "min_order_value": {"dataType":"union","subSchemas":[{"dataType":"double"},{"dataType":"enum","enums":[null]}]},
             "max_order_value": {"dataType":"union","subSchemas":[{"dataType":"double"},{"dataType":"enum","enums":[null]}]},
             "bulk_discount_tiers": {"dataType":"array","array":{"dataType":"refObject","ref":"BulkDiscountTier"}},
-        },
-        "additionalProperties": false,
-    },
-    // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
-    "InventoryMaterial": {
-        "dataType": "refObject",
-        "properties": {
-            "game_item_id": {"dataType":"string","required":true},
-            "game_item_name": {"dataType":"string","required":true},
-            "game_item_type": {"dataType":"string"},
-            "game_item_icon": {"dataType":"string"},
-            "total_quantity": {"dataType":"double","required":true},
-            "avg_quality_value": {"dataType":"double"},
-            "max_quality_value": {"dataType":"double"},
-        },
-        "additionalProperties": false,
-    },
-    // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
-    "InventorySummaryResponse": {
-        "dataType": "refObject",
-        "properties": {
-            "materials": {"dataType":"array","array":{"dataType":"refObject","ref":"InventoryMaterial"},"required":true},
         },
         "additionalProperties": false,
     },
@@ -3018,6 +3018,37 @@ export function RegisterRoutes(app: Router) {
             }
         });
         // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+        const argsListingsV2Controller_getInventorySummary: Record<string, TsoaRoute.ParameterSchema> = {
+                spectrum_id: {"in":"query","name":"spectrum_id","dataType":"string"},
+        };
+        app.get('/listings/inventory-summary',
+            authenticateMiddleware([{"jwt":[]}]),
+            ...(fetchMiddlewares<RequestHandler>(ListingsV2Controller)),
+            ...(fetchMiddlewares<RequestHandler>(ListingsV2Controller.prototype.getInventorySummary)),
+
+            async function ListingsV2Controller_getInventorySummary(request: ExRequest, response: ExResponse, next: any) {
+
+            // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+
+            let validatedArgs: any[] = [];
+            try {
+                validatedArgs = templateService.getValidatedArgs({ args: argsListingsV2Controller_getInventorySummary, request, response });
+
+                const controller = new ListingsV2Controller();
+
+              await templateService.apiHandler({
+                methodName: 'getInventorySummary',
+                controller,
+                response,
+                next,
+                validatedArgs,
+                successStatus: undefined,
+              });
+            } catch (err) {
+                return next(err);
+            }
+        });
+        // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
         const argsListingsV2Controller_getListingDetail: Record<string, TsoaRoute.ParameterSchema> = {
                 id: {"in":"path","name":"id","required":true,"dataType":"string"},
         };
@@ -3197,37 +3228,6 @@ export function RegisterRoutes(app: Router) {
 
               await templateService.apiHandler({
                 methodName: 'uploadPhotos',
-                controller,
-                response,
-                next,
-                validatedArgs,
-                successStatus: undefined,
-              });
-            } catch (err) {
-                return next(err);
-            }
-        });
-        // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
-        const argsListingsV2Controller_getInventorySummary: Record<string, TsoaRoute.ParameterSchema> = {
-                spectrum_id: {"in":"query","name":"spectrum_id","dataType":"string"},
-        };
-        app.get('/listings/inventory-summary',
-            authenticateMiddleware([{"jwt":[]}]),
-            ...(fetchMiddlewares<RequestHandler>(ListingsV2Controller)),
-            ...(fetchMiddlewares<RequestHandler>(ListingsV2Controller.prototype.getInventorySummary)),
-
-            async function ListingsV2Controller_getInventorySummary(request: ExRequest, response: ExResponse, next: any) {
-
-            // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
-
-            let validatedArgs: any[] = [];
-            try {
-                validatedArgs = templateService.getValidatedArgs({ args: argsListingsV2Controller_getInventorySummary, request, response });
-
-                const controller = new ListingsV2Controller();
-
-              await templateService.apiHandler({
-                methodName: 'getInventorySummary',
                 controller,
                 response,
                 next,
