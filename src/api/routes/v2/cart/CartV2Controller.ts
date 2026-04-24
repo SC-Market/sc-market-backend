@@ -131,7 +131,7 @@ export class CartV2Controller extends BaseController {
           "li.pricing_mode",
           "li.base_price",
         )
-        .orderBy("ci.created_at", "desc")
+        .orderBy("ci.updated_at", "desc")
 
       // Enrich each cart item with availability and price change info
       const items: CartItemDetail[] = await Promise.all(
