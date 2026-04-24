@@ -4268,6 +4268,13 @@
 						"format": "double",
 						"description": "Number of blueprint rewards"
 					},
+					"blueprint_reward_names": {
+						"items": {
+							"type": "string"
+						},
+						"type": "array",
+						"description": "Names of blueprint reward output items"
+					},
 					"community_difficulty_avg": {
 						"type": "number",
 						"format": "double",

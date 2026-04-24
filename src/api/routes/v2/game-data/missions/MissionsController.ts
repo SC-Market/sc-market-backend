@@ -190,6 +190,13 @@ export class MissionsController extends BaseController {
           "m.reward_scope",
           "m.associated_event",
           knex.raw("COALESCE(reward_counts.blueprint_count, 0)::integer as blueprint_reward_count"),
+          knex.raw(`(
+            SELECT json_agg(gi.name ORDER BY gi.name)
+            FROM mission_blueprint_rewards mbr2
+            JOIN blueprints b2 ON mbr2.blueprint_id = b2.blueprint_id
+            JOIN game_items gi ON b2.output_game_item_id = gi.id
+            WHERE mbr2.mission_id = m.mission_id
+          ) as blueprint_reward_names`),
           knex.raw("COALESCE(ship_counts.total_ships, 0)::integer as ship_encounter_count"),
           knex.raw(`(SELECT json_agg(json_build_object('resource_name', mho.resource_name, 'min_scu', mho.min_scu, 'max_scu', mho.max_scu)) FROM mission_hauling_orders mho WHERE mho.mission_id = m.mission_id) as hauling_orders`),
         )
@@ -369,6 +376,7 @@ export class MissionsController extends BaseController {
         credit_reward_min: row.credit_reward_min || undefined,
         credit_reward_max: row.credit_reward_max || undefined,
         blueprint_reward_count: row.blueprint_reward_count || 0,
+        blueprint_reward_names: row.blueprint_reward_names || undefined,
         community_difficulty_avg: row.community_difficulty_avg
           ? parseFloat(row.community_difficulty_avg)
           : undefined,
