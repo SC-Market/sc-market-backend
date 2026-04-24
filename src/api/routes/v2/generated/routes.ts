@@ -2097,6 +2097,7 @@ const models: TsoaRoute.Models = {
             "listing_id": {"dataType":"string","required":true},
             "title": {"dataType":"string","required":true},
             "seller_name": {"dataType":"string","required":true},
+            "seller_id": {"dataType":"string","required":true},
             "seller_type": {"dataType":"union","subSchemas":[{"dataType":"enum","enums":["user"]},{"dataType":"enum","enums":["contractor"]}],"required":true},
             "seller_slug": {"dataType":"string","required":true},
             "seller_rating": {"dataType":"double","required":true},
@@ -2200,6 +2201,7 @@ const models: TsoaRoute.Models = {
         "properties": {
             "confirm_price_changes": {"dataType":"boolean"},
             "note": {"dataType":"string"},
+            "seller_id": {"dataType":"string"},
         },
         "additionalProperties": false,
     },

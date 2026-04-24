@@ -6616,6 +6616,10 @@
 						"type": "string",
 						"description": "Seller username or contractor name"
 					},
+					"seller_id": {
+						"type": "string",
+						"description": "Seller ID (user_id or contractor_id)"
+					},
 					"seller_type": {
 						"type": "string",
 						"enum": [
@@ -6647,6 +6651,7 @@
 					"listing_id",
 					"title",
 					"seller_name",
+					"seller_id",
 					"seller_type",
 					"seller_slug",
 					"seller_rating",
@@ -6912,6 +6917,10 @@
 					"note": {
 						"type": "string",
 						"description": "Optional note from buyer to seller"
+					},
+					"seller_id": {
+						"type": "string",
+						"description": "Checkout only items from this seller (user_id or contractor_id). If omitted, all items must be from one seller."
 					}
 				},
 				"type": "object",

@@ -77,6 +77,9 @@ export interface CartListingInfo {
   
   /** Seller username or contractor name */
   seller_name: string;
+
+  /** Seller ID (user_id or contractor_id) */
+  seller_id: string;
   
   /** Seller type */
   seller_type: 'user' | 'contractor';
@@ -154,6 +157,8 @@ export interface CheckoutCartRequest {
   confirm_price_changes?: boolean;
   /** Optional note from buyer to seller */
   note?: string;
+  /** Checkout only items from this seller (user_id or contractor_id). If omitted, all items must be from one seller. */
+  seller_id?: string;
 }
 
 /**

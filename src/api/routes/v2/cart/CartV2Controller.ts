@@ -203,6 +203,7 @@ export class CartV2Controller extends BaseController {
             listing_id: item.listing_id,
             title: item.listing_title,
             seller_name: sellerName,
+            seller_id: item.seller_id,
             seller_type: item.seller_type,
             seller_slug: sellerSlug,
             seller_rating: parseInt(item.seller_rating) || 0,
@@ -816,10 +817,17 @@ export class CartV2Controller extends BaseController {
     try {
       const knex = getKnex()
 
-      // Step 1: Fetch all cart items
-      const cartItems = await knex("cart_items_v2")
-        .where({ user_id: userId })
-        .select("*")
+      // Step 1: Fetch cart items (optionally filtered by seller)
+      let cartQuery = knex("cart_items_v2 as ci")
+        .join("listings as l", "ci.listing_id", "l.listing_id")
+        .where("ci.user_id", userId)
+        .select("ci.*", "l.seller_id", "l.seller_type")
+
+      if (requestBody.seller_id) {
+        cartQuery = cartQuery.where("l.seller_id", requestBody.seller_id)
+      }
+
+      const cartItems = await cartQuery
 
       if (cartItems.length === 0) {
         this.throwValidationError("Cart is empty", [
@@ -948,11 +956,11 @@ export class CartV2Controller extends BaseController {
         ])
       }
 
-      // Verify single seller
+      // Verify single seller (skip if already filtered by seller_id)
       const sellerIds = new Set(validatedItems.map((i) => i.seller_id))
-      if (sellerIds.size > 1) {
+      if (sellerIds.size > 1 && !requestBody.seller_id) {
         this.throwValidationError("Cart contains items from multiple sellers", [
-          { field: "cart", message: "Cannot checkout - all items must be from the same seller" },
+          { field: "cart", message: "Cannot checkout - all items must be from the same seller. Pass seller_id to checkout one seller at a time." },
         ])
       }
 
