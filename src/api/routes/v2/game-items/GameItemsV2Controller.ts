@@ -411,7 +411,7 @@ export class GameItemsV2Controller extends BaseController {
         .leftJoin("game_items as gi", db.raw("ls.game_item_id::text = gi.id::text"))
         .where("ls.status", "active")
         .whereNotNull("ls.game_item_id")
-        .groupBy("ls.game_item_id", "gi.name", "gi.type", "gi.image_url")
+        .groupBy("ls.game_item_id", "gi.name", "gi.type", "gi.image_url", "ls.title", "ls.game_item_type")
         .select(
           "ls.game_item_id",
           db.raw("COALESCE(gi.name, ls.title) as name"),
