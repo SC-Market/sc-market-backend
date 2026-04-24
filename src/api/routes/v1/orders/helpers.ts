@@ -1271,6 +1271,7 @@ export async function search_orders_optimized(
   let filteredOrdersQuery = database
     .knex("orders")
     .leftJoin("market_orders", "orders.order_id", "=", "market_orders.order_id")
+    .leftJoin("order_market_items_v2 as omiv2", "orders.order_id", "=", "omiv2.order_id")
     // Join accounts for buyer username filtering
     .leftJoin(
       "accounts as buyer_account",
@@ -1360,11 +1361,11 @@ export async function search_orders_optimized(
   if (args.has_market_listings !== undefined) {
     if (args.has_market_listings) {
       filteredOrdersQuery = filteredOrdersQuery.havingRaw(
-        "COUNT(market_orders.order_id) > 0",
+        "COUNT(market_orders.order_id) > 0 OR COUNT(omiv2.order_item_id) > 0",
       )
     } else {
       filteredOrdersQuery = filteredOrdersQuery.havingRaw(
-        "COUNT(market_orders.order_id) = 0",
+        "COUNT(market_orders.order_id) = 0 AND COUNT(omiv2.order_item_id) = 0",
       )
     }
   }
@@ -1406,6 +1407,7 @@ export async function search_orders_optimized(
   let optimizedQuery = database
     .knex("orders")
     .leftJoin("market_orders", "orders.order_id", "=", "market_orders.order_id")
+    .leftJoin("order_market_items_v2 as omiv2", "orders.order_id", "=", "omiv2.order_id")
     .leftJoin("services", "orders.service_id", "=", "services.service_id")
     .leftJoin(
       "accounts as customer_account",
@@ -1484,7 +1486,7 @@ export async function search_orders_optimized(
     .offset(args.page_size * args.index)
     .select(
       "orders.*",
-      database.knex.raw("COUNT(market_orders.order_id) as item_count"),
+      database.knex.raw("GREATEST(COUNT(market_orders.order_id), COUNT(omiv2.order_item_id)) as item_count"),
       "services.title as service_title",
       "customer_account.username as customer_username",
       "customer_account.avatar as customer_avatar",
@@ -1507,14 +1509,14 @@ export async function search_orders_optimized(
   // Apply market listings filter (must be after GROUP BY for HAVING)
   if (args.has_market_listings !== undefined) {
     if (args.has_market_listings) {
-      // Has market listings - must have at least one
+      // Has market listings - must have at least one (V1 or V2)
       optimizedQuery = optimizedQuery.havingRaw(
-        "COUNT(market_orders.order_id) > 0",
+        "COUNT(market_orders.order_id) > 0 OR COUNT(omiv2.order_item_id) > 0",
       )
     } else {
-      // No market listings - must have zero
+      // No market listings - must have zero in both
       optimizedQuery = optimizedQuery.havingRaw(
-        "COUNT(market_orders.order_id) = 0",
+        "COUNT(market_orders.order_id) = 0 AND COUNT(omiv2.order_item_id) = 0",
       )
     }
   }

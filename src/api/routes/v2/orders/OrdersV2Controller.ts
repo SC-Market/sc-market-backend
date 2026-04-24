@@ -884,4 +884,77 @@ export class OrdersV2Controller extends BaseController {
 
     return result
   }
+
+  /**
+   * Get orders and offers related to a specific listing.
+   * Only visible to the listing owner or org members.
+   * @summary Get orders by listing
+   * @param listingId Listing UUID
+   */
+  @Get("by-listing/{listingId}")
+  @Security("jwt")
+  public async getOrdersByListing(
+    @Path() listingId: string,
+  ): Promise<{ orders: any[]; offers: any[] }> {
+    const knex = getKnex()
+    const userId = this.getUserId()
+
+    // Verify user owns this listing or is in the org
+    const listing = await knex("listings").where("listing_id", listingId).first()
+    if (!listing) this.throwNotFound("Listing", listingId)
+
+    const isOwner = listing.seller_id === userId
+    let isOrgMember = false
+    if (!isOwner && listing.seller_type === "contractor") {
+      const member = await knex("contractor_members").where({ user_id: userId, contractor_id: listing.seller_id }).first()
+      isOrgMember = !!member
+    }
+    if (!isOwner && !isOrgMember) this.throwForbidden("Not authorized to view orders for this listing")
+
+    // Get orders via order_market_items_v2
+    const v2Orders = await knex("order_market_items_v2 as omi")
+      .join("orders as o", "omi.order_id", "o.order_id")
+      .join("accounts as buyer", "o.customer_id", "buyer.user_id")
+      .where("omi.listing_id", listingId)
+      .select(
+        "o.order_id", "o.status", "o.timestamp as created_at",
+        "buyer.username as buyer_name",
+        "omi.quantity", "omi.price_per_unit",
+      )
+      .orderBy("o.timestamp", "desc")
+      .limit(20)
+
+    // Get offers via offer_market_items_v2
+    let v2Offers: any[] = []
+    const hasTable = await knex.schema.hasTable("offer_market_items_v2")
+    if (hasTable) {
+      v2Offers = await knex("offer_market_items_v2 as omi")
+        .join("offers as off", "omi.offer_id", "off.id")
+        .join("offer_sessions as os", "off.offer_session_id", "os.id")
+        .join("accounts as buyer", "os.customer_id", "buyer.user_id")
+        .where("omi.listing_id", listingId)
+        .whereNotIn("os.status", ["accepted", "rejected"])
+        .select(
+          "os.id as session_id", "os.status",
+          "os.timestamp as created_at",
+          "buyer.username as buyer_name",
+          "omi.quantity", "omi.price_per_unit",
+        )
+        .orderBy("os.timestamp", "desc")
+        .limit(20)
+    }
+
+    return {
+      orders: v2Orders.map((r: any) => ({
+        order_id: r.order_id, status: r.status, created_at: r.created_at?.toISOString(),
+        buyer_name: r.buyer_name, quantity: r.quantity,
+        price_per_unit: parseFloat(r.price_per_unit) || 0,
+      })),
+      offers: v2Offers.map((r: any) => ({
+        session_id: r.session_id, status: r.status, created_at: r.created_at?.toISOString(),
+        buyer_name: r.buyer_name, quantity: r.quantity,
+        price_per_unit: parseFloat(r.price_per_unit) || 0,
+      })),
+    }
+  }
 }
