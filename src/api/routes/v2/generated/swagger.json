@@ -12458,6 +12458,9 @@
 						"application/json": {
 							"schema": {
 								"properties": {
+									"owned_only": {
+										"type": "boolean"
+									},
 									"materials": {
 										"items": {
 											"properties": {
