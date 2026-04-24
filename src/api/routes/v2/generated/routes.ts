@@ -2127,6 +2127,7 @@ const models: TsoaRoute.Models = {
             "price_per_unit": {"dataType":"double","required":true},
             "subtotal": {"dataType":"double","required":true},
             "available": {"dataType":"boolean","required":true},
+            "quantity_available": {"dataType":"double","required":true},
             "price_changed": {"dataType":"boolean","required":true},
             "current_price": {"dataType":"double"},
         },

@@ -6718,6 +6718,11 @@
 						"type": "boolean",
 						"description": "Whether this variant is currently available"
 					},
+					"quantity_available": {
+						"type": "number",
+						"format": "double",
+						"description": "Total quantity available for this variant"
+					},
 					"price_changed": {
 						"type": "boolean",
 						"description": "Whether the price has changed since add-to-cart"
@@ -6736,6 +6741,7 @@
 					"price_per_unit",
 					"subtotal",
 					"available",
+					"quantity_available",
 					"price_changed"
 				],
 				"type": "object",
