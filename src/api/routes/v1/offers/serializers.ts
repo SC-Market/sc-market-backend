@@ -268,33 +268,33 @@ export async function serializeOffer(offer: DBOffer) {
 
   return {
     ...offer,
-    market_listings: market_listings.length > 0 ? market_listings : await buildMarketListingsFromV2(offer.id, v2_variant_items),
+    market_listings,
+    market_listings_v2: v2_variant_items?.length ? await buildV2MarketListings(v2_variant_items) : undefined,
     service,
     v2_variant_items,
   }
 }
 
-/** Build market_listings from V2 variant items when V1 offer_market_items is empty */
-async function buildMarketListingsFromV2(offerId: string, v2Items?: any[]): Promise<any[]> {
-  if (!v2Items?.length) return []
+/** Build structured V2 market listings from variant items */
+async function buildV2MarketListings(v2Items: any[]): Promise<any[]> {
   const knex = database.knex
-  const grouped = new Map<string, { quantity: number; items: any[] }>()
+  const grouped = new Map<string, { quantity: number; variants: any[] }>()
   for (const vi of v2Items) {
-    if (!grouped.has(vi.listing_id)) grouped.set(vi.listing_id, { quantity: 0, items: [] })
+    if (!grouped.has(vi.listing_id)) grouped.set(vi.listing_id, { quantity: 0, variants: [] })
     const g = grouped.get(vi.listing_id)!
     g.quantity += vi.quantity
-    g.items.push(vi)
+    g.variants.push(vi)
   }
   const results = []
-  for (const [listing_id, { quantity }] of grouped) {
+  for (const [listing_id, { quantity, variants }] of grouped) {
     const listing = await knex("listings").where({ listing_id }).first()
     const li = await knex("listing_items").where({ listing_id }).first()
     results.push({
-      listing: {
-        listing: { listing_id, title: listing?.title || "Unknown", price: li?.base_price ? parseFloat(li.base_price) : 0 },
-      },
-      quantity,
       listing_id,
+      title: listing?.title || "Unknown",
+      price: li?.base_price ? parseFloat(li.base_price) : 0,
+      quantity,
+      variants,
     })
   }
   return results
