@@ -1336,11 +1336,26 @@ export class BlueprintsController extends BaseController {
    */
   @Post("craftable")
   public async findCraftableBlueprints(
-    @Body() body: { materials: Array<{ game_item_id: string; quantity_scu: number; quality_value?: number }> },
+    @Body() body: { materials: Array<{ game_item_id: string; quantity_scu: number; quality_value?: number }>; owned_only?: boolean },
+    @Request() request?: ExpressRequest,
   ): Promise<CraftableBlueprintResult[]> {
+    if (request) this.request = request
     const knex = getKnex()
 
     if (!body.materials?.length) return []
+
+    // If owned_only, get user's owned blueprint names
+    let ownedNames: Set<string> | null = null
+    if (body.owned_only) {
+      const user_id = this.tryGetUserId()
+      if (user_id) {
+        const hasBpNameCol = await knex.schema.hasColumn("user_blueprint_inventory", "blueprint_name")
+        const owned = hasBpNameCol
+          ? await knex("user_blueprint_inventory").where("user_id", user_id).where("is_owned", true).select("blueprint_name")
+          : await knex("user_blueprint_inventory as ubi").join("blueprints as b", "ubi.blueprint_id", "b.blueprint_id").where("ubi.user_id", user_id).where("ubi.is_owned", true).select("b.blueprint_name")
+        ownedNames = new Set(owned.map((r: { blueprint_name: string }) => r.blueprint_name))
+      }
+    }
 
     // Build a map of available materials
     const available = new Map<string, { qty: number; quality: number }>()
@@ -1363,6 +1378,9 @@ export class BlueprintsController extends BaseController {
     const results: CraftableBlueprintResult[] = []
 
     for (const bp of blueprints) {
+      // Skip if owned_only and user doesn't own this blueprint
+      if (ownedNames && !ownedNames.has(bp.blueprint_name)) continue
+
       const ingredients = await knex("blueprint_ingredients as bi")
         .join("game_items as ig", "bi.game_item_id", "ig.id")
         .where("bi.blueprint_id", bp.blueprint_id)

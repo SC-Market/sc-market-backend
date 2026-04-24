@@ -5022,7 +5022,8 @@ export function RegisterRoutes(app: Router) {
         });
         // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
         const argsBlueprintsController_findCraftableBlueprints: Record<string, TsoaRoute.ParameterSchema> = {
-                body: {"in":"body","name":"body","required":true,"dataType":"nestedObjectLiteral","nestedProperties":{"materials":{"dataType":"array","array":{"dataType":"nestedObjectLiteral","nestedProperties":{"quality_value":{"dataType":"double"},"quantity_scu":{"dataType":"double","required":true},"game_item_id":{"dataType":"string","required":true}}},"required":true}}},
+                body: {"in":"body","name":"body","required":true,"dataType":"nestedObjectLiteral","nestedProperties":{"owned_only":{"dataType":"boolean"},"materials":{"dataType":"array","array":{"dataType":"nestedObjectLiteral","nestedProperties":{"quality_value":{"dataType":"double"},"quantity_scu":{"dataType":"double","required":true},"game_item_id":{"dataType":"string","required":true}}},"required":true}}},
+                request: {"in":"request","name":"request","dataType":"object"},
         };
         app.post('/game-data/blueprints/craftable',
             ...(fetchMiddlewares<RequestHandler>(BlueprintsController)),
