@@ -565,6 +565,10 @@
 						"type": "string",
 						"description": "UUID of the listing item"
 					},
+					"listing_title": {
+						"type": "string",
+						"description": "Listing title"
+					},
 					"variant": {
 						"$ref": "#/components/schemas/OrderVariantDetail",
 						"description": "Variant details with quality attributes"
@@ -589,6 +593,7 @@
 					"order_item_id",
 					"listing_id",
 					"item_id",
+					"listing_title",
 					"variant",
 					"quantity",
 					"price_per_unit",
@@ -1385,6 +1390,10 @@
 						"type": "number",
 						"format": "double"
 					},
+					"photo": {
+						"type": "string",
+						"description": "First photo URL"
+					},
 					"v2_variants": {
 						"items": {
 							"$ref": "#/components/schemas/OfferVariantItem"
@@ -1541,6 +1550,10 @@
 					"order_id": {
 						"type": "string"
 					},
+					"contract_id": {
+						"type": "string",
+						"nullable": true
+					},
 					"discord_thread_id": {
 						"type": "string",
 						"nullable": true
@@ -1613,6 +1626,10 @@
 					},
 					"order_id": {
 						"type": "string"
+					},
+					"contract_id": {
+						"type": "string",
+						"nullable": true
 					},
 					"discord_thread_id": {
 						"type": "string",

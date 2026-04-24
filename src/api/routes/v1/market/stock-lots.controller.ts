@@ -1052,7 +1052,22 @@ export const getOrderAllocations: RequestHandler = async (req, res) => {
       )
     }
 
-    const orderListingIds: string[] = [order.listing_id]
+    // Get listing IDs from V1 market_orders or V2 order_market_items_v2
+    let orderListingIds: string[] = []
+    if (order.listing_id) {
+      orderListingIds = [order.listing_id]
+    }
+    // Check V1 market_orders
+    const v1MarketOrders = await getKnex()("market_orders").where({ order_id }).select("listing_id")
+    if (v1MarketOrders.length > 0) {
+      orderListingIds = [...new Set(v1MarketOrders.map((mo: any) => mo.listing_id))]
+    }
+    // Check V2 order items
+    const v2OrderItems = await getKnex()("order_market_items_v2").where({ order_id }).select("listing_id")
+    if (v2OrderItems.length > 0) {
+      const v2Ids = [...new Set(v2OrderItems.map((oi: any) => oi.listing_id))]
+      orderListingIds = [...new Set([...orderListingIds, ...v2Ids])]
+    }
 
     // Get allocations
     const allocations = await allocationService.getAllocations(order_id)
@@ -1110,10 +1125,23 @@ export const getOrderAllocations: RequestHandler = async (req, res) => {
     // Fetch listing details for each group
     const groupedAllocations = await Promise.all(
       orderListingIds.map(async (listing_id) => {
-        const listingComplete = await marketDb.getMarketUniqueListingComplete(
-          listing_id,
-        )
-        const listing = await formatUniqueListingComplete(listingComplete)
+        // Try V2 listing first, fall back to V1
+        let listing: any = null
+        const v2Listing = await getKnex()("listings").where({ listing_id }).first()
+        if (v2Listing) {
+          const photo = await getKnex()("listing_photos_v2 as lp")
+            .join("image_resources as ir", "lp.resource_id", "ir.resource_id")
+            .where("lp.listing_id", listing_id)
+            .orderBy("lp.display_order", "asc")
+            .select(getKnex().raw("COALESCE(ir.external_url, 'https://cdn.sc-market.space/' || ir.filename) as url"))
+            .first()
+          listing = { title: v2Listing.title, listing_id, photos: photo ? [photo.url] : [] }
+        } else {
+          try {
+            const listingComplete = await marketDb.getMarketUniqueListingComplete(listing_id)
+            listing = await formatUniqueListingComplete(listingComplete)
+          } catch { /* V1 listing not found */ }
+        }
 
         // Get allocations for this listing
         const allocs = byListing.get(listing_id) || []

@@ -134,6 +134,10 @@ export class OffersV2Controller extends BaseController {
       if (order) order_id = order.order_id
     }
 
+    // Contract ID if linked
+    const contractOffer = await knex("public_contract_offers").where({ session_id: session.id }).select("contract_id").first()
+    const contract_id = contractOffer?.contract_id || null
+
     // Offers
     const dbOffers = await knex("order_offers").where({ session_id: session.id }).orderBy("timestamp", "asc")
     const offers: OfferV2[] = await Promise.all(dbOffers.map((o: any) => this.serializeOffer(o)))
@@ -169,6 +173,7 @@ export class OffersV2Controller extends BaseController {
       status: derivedStatus,
       created_at: session.timestamp ? (+session.timestamp).toString() : new Date().toISOString(),
       order_id,
+      contract_id,
       discord_thread_id: session.thread_id || null,
       discord_server_id: contractorRow?.official_server_id || assignee?.official_server_id || null,
       discord_invite: session.discord_invite || null,
@@ -229,6 +234,14 @@ export class OffersV2Controller extends BaseController {
           }
         }
 
+        // Get first photo
+        const photoRow = await knex("listing_photos_v2 as lp")
+          .join("image_resources as ir", "lp.resource_id", "ir.resource_id")
+          .where("lp.listing_id", ml.listing_id)
+          .orderBy("lp.display_order", "asc")
+          .select(knex.raw("COALESCE(ir.external_url, 'https://cdn.sc-market.space/' || ir.filename) as url"))
+          .first()
+
         const listingV2Items = v2Items.filter((i: any) => i.listing_id === ml.listing_id)
         const v2Variants: OfferVariantItem[] = await Promise.all(
           listingV2Items.map(async (vi: any) => {
@@ -244,7 +257,7 @@ export class OffersV2Controller extends BaseController {
           }),
         )
 
-        return { listing_id: ml.listing_id, quantity: ml.quantity, title, price, v2_variants: v2Variants }
+        return { listing_id: ml.listing_id, quantity: ml.quantity, title, price, photo: photoRow?.url || undefined, v2_variants: v2Variants }
       }),
     )
 

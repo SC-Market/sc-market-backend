@@ -968,6 +968,13 @@ export class CartV2Controller extends BaseController {
       const sellerContractorId = firstItem.seller_type === "contractor" ? firstItem.seller_id : null
       const sellerUserId = firstItem.seller_type === "user" ? firstItem.seller_id : null
 
+      // Self-purchase check — can't buy your own listings (org listings are fine)
+      if (sellerUserId && sellerUserId === userId) {
+        this.throwValidationError("You cannot purchase your own listings", [
+          { field: "seller", message: "You cannot purchase your own listings" },
+        ])
+      }
+
       // Step 3: Blocked user check (mirrors V1)
       if (sellerContractorId) {
         const blocked = await profileDb.isUserBlocked(sellerContractorId, userId, "contractor")
