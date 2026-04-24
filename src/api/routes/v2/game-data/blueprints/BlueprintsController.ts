@@ -238,7 +238,7 @@ export class BlueprintsController extends BaseController {
 
         blueprintsQuery = blueprintsQuery
           .join("user_blueprint_inventory as ubi", function () {
-            this.on("ubi.blueprint_name", "=", "b.blueprint_name").andOn(
+            this.on("ubi.blueprint_id", "=", "b.blueprint_id").andOn(
               "ubi.user_id",
               "=",
               knex.raw("?", [user_id]),
@@ -273,16 +273,14 @@ export class BlueprintsController extends BaseController {
       let userOwnedBlueprintNames: Set<string> = new Set()
 
       if (user_id && !user_owned_only) {
-        const ownedBlueprints = await knex("user_blueprint_inventory")
-          .where("user_id", user_id)
-          .where("is_owned", true)
-          .whereIn(
-            "blueprint_name",
-            blueprintsResults.map((b: any) => b.blueprint_name),
-          )
-          .select("blueprint_name")
+        const hasBpNameCol = await knex.schema.hasColumn("user_blueprint_inventory", "blueprint_name")
+        const ownedBlueprints = hasBpNameCol
+          ? await knex("user_blueprint_inventory").where("user_id", user_id).where("is_owned", true)
+              .whereIn("blueprint_name", blueprintsResults.map((b: any) => b.blueprint_name)).select("blueprint_name")
+          : await knex("user_blueprint_inventory").where("user_id", user_id).where("is_owned", true)
+              .whereIn("blueprint_id", blueprintsResults.map((b: any) => b.blueprint_id)).select("blueprint_id")
 
-        userOwnedBlueprintNames = new Set(ownedBlueprints.map((b: any) => b.blueprint_name))
+        userOwnedBlueprintNames = new Set(ownedBlueprints.map((b: any) => b.blueprint_name || b.blueprint_id))
       }
 
       logger.info("Blueprints search completed", {
@@ -334,7 +332,7 @@ export class BlueprintsController extends BaseController {
         user_owns: user_id
           ? user_owned_only
             ? true
-            : userOwnedBlueprintNames.has(row.blueprint_name)
+            : userOwnedBlueprintNames.has(row.blueprint_name) || userOwnedBlueprintNames.has(row.blueprint_id)
           : undefined,
       }))
 
@@ -560,10 +558,10 @@ export class BlueprintsController extends BaseController {
       let user_acquisition: any | undefined
 
       if (user_id) {
-        const inventoryRow = await knex("user_blueprint_inventory")
-          .where("user_id", user_id)
-          .where("blueprint_name", blueprintRow.blueprint_name)
-          .first()
+        const hasBpNameCol = await knex.schema.hasColumn("user_blueprint_inventory", "blueprint_name")
+        const inventoryRow = hasBpNameCol
+          ? await knex("user_blueprint_inventory").where("user_id", user_id).where("blueprint_name", blueprintRow.blueprint_name).first()
+          : await knex("user_blueprint_inventory").where("user_id", user_id).where("blueprint_id", blueprint_id).first()
 
         if (inventoryRow) {
           user_owns = inventoryRow.is_owned || false
@@ -792,11 +790,12 @@ export class BlueprintsController extends BaseController {
         this.throwNotFound("Blueprint", blueprint_id)
       }
 
-      // Check if user already has this blueprint in inventory (by name for version stability)
-      const existingInventory = await knex("user_blueprint_inventory")
-        .where("user_id", user_id)
-        .where("blueprint_name", blueprintExists.blueprint_name)
-        .first()
+      // Check if user already has this blueprint in inventory
+      // Use blueprint_name for version stability, fall back to blueprint_id
+      const hasBpNameCol = await knex.schema.hasColumn("user_blueprint_inventory", "blueprint_name")
+      const existingInventory = hasBpNameCol
+        ? await knex("user_blueprint_inventory").where("user_id", user_id).where("blueprint_name", blueprintExists.blueprint_name).first()
+        : await knex("user_blueprint_inventory").where("user_id", user_id).where("blueprint_id", blueprint_id).first()
 
       let inventory_id: string
 
@@ -827,7 +826,7 @@ export class BlueprintsController extends BaseController {
           .insert({
             user_id,
             blueprint_id,
-            blueprint_name: blueprintExists.blueprint_name,
+            ...(hasBpNameCol ? { blueprint_name: blueprintExists.blueprint_name } : {}),
             is_owned: true,
             acquisition_date: knex.fn.now(),
             acquisition_method: body.acquisition_method || null,
@@ -906,11 +905,11 @@ export class BlueprintsController extends BaseController {
         this.throwNotFound("Blueprint", blueprint_id)
       }
 
-      // Check if user has this blueprint in inventory (by name for version stability)
-      const existingInventory = await knex("user_blueprint_inventory")
-        .where("user_id", user_id)
-        .where("blueprint_name", blueprintExists.blueprint_name)
-        .first()
+      // Check if user has this blueprint in inventory
+      const hasBpNameCol2 = await knex.schema.hasColumn("user_blueprint_inventory", "blueprint_name")
+      const existingInventory = hasBpNameCol2
+        ? await knex("user_blueprint_inventory").where("user_id", user_id).where("blueprint_name", blueprintExists.blueprint_name).first()
+        : await knex("user_blueprint_inventory").where("user_id", user_id).where("blueprint_id", blueprint_id).first()
 
       if (existingInventory) {
         // Mark as not owned instead of deleting to preserve history
