@@ -1021,6 +1021,99 @@
 				"type": "object",
 				"additionalProperties": false
 			},
+			"ListingOrderSummary": {
+				"description": "Order summary for a specific listing",
+				"properties": {
+					"order_id": {
+						"type": "string"
+					},
+					"status": {
+						"type": "string"
+					},
+					"created_at": {
+						"type": "string"
+					},
+					"buyer_name": {
+						"type": "string"
+					},
+					"quantity": {
+						"type": "number",
+						"format": "double"
+					},
+					"price_per_unit": {
+						"type": "number",
+						"format": "double"
+					}
+				},
+				"required": [
+					"order_id",
+					"status",
+					"created_at",
+					"buyer_name",
+					"quantity",
+					"price_per_unit"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
+			"ListingOfferSummary": {
+				"description": "Offer summary for a specific listing",
+				"properties": {
+					"session_id": {
+						"type": "string"
+					},
+					"status": {
+						"type": "string"
+					},
+					"created_at": {
+						"type": "string"
+					},
+					"buyer_name": {
+						"type": "string"
+					},
+					"quantity": {
+						"type": "number",
+						"format": "double"
+					},
+					"price_per_unit": {
+						"type": "number",
+						"format": "double"
+					}
+				},
+				"required": [
+					"session_id",
+					"status",
+					"created_at",
+					"buyer_name",
+					"quantity",
+					"price_per_unit"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
+			"OrdersByListingResponse": {
+				"description": "Response for orders/offers by listing",
+				"properties": {
+					"orders": {
+						"items": {
+							"$ref": "#/components/schemas/ListingOrderSummary"
+						},
+						"type": "array"
+					},
+					"offers": {
+						"items": {
+							"$ref": "#/components/schemas/ListingOfferSummary"
+						},
+						"type": "array"
+					}
+				},
+				"required": [
+					"orders",
+					"offers"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
 			"UserSummary": {
 				"properties": {
 					"username": {
@@ -8463,21 +8556,7 @@
 						"content": {
 							"application/json": {
 								"schema": {
-									"properties": {
-										"offers": {
-											"items": {},
-											"type": "array"
-										},
-										"orders": {
-											"items": {},
-											"type": "array"
-										}
-									},
-									"required": [
-										"offers",
-										"orders"
-									],
-									"type": "object"
+									"$ref": "#/components/schemas/OrdersByListingResponse"
 								}
 							}
 						}

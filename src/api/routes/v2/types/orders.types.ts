@@ -279,3 +279,29 @@ export interface GetOrdersResponse {
   page_size: number;
 }
 
+
+/** Order summary for a specific listing */
+export interface ListingOrderSummary {
+  order_id: string;
+  status: string;
+  created_at: string;
+  buyer_name: string;
+  quantity: number;
+  price_per_unit: number;
+}
+
+/** Offer summary for a specific listing */
+export interface ListingOfferSummary {
+  session_id: string;
+  status: string;
+  created_at: string;
+  buyer_name: string;
+  quantity: number;
+  price_per_unit: number;
+}
+
+/** Response for orders/offers by listing */
+export interface OrdersByListingResponse {
+  orders: ListingOrderSummary[];
+  offers: ListingOfferSummary[];
+}

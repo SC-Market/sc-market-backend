@@ -368,6 +368,41 @@ const models: TsoaRoute.Models = {
         "additionalProperties": false,
     },
     // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+    "ListingOrderSummary": {
+        "dataType": "refObject",
+        "properties": {
+            "order_id": {"dataType":"string","required":true},
+            "status": {"dataType":"string","required":true},
+            "created_at": {"dataType":"string","required":true},
+            "buyer_name": {"dataType":"string","required":true},
+            "quantity": {"dataType":"double","required":true},
+            "price_per_unit": {"dataType":"double","required":true},
+        },
+        "additionalProperties": false,
+    },
+    // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+    "ListingOfferSummary": {
+        "dataType": "refObject",
+        "properties": {
+            "session_id": {"dataType":"string","required":true},
+            "status": {"dataType":"string","required":true},
+            "created_at": {"dataType":"string","required":true},
+            "buyer_name": {"dataType":"string","required":true},
+            "quantity": {"dataType":"double","required":true},
+            "price_per_unit": {"dataType":"double","required":true},
+        },
+        "additionalProperties": false,
+    },
+    // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+    "OrdersByListingResponse": {
+        "dataType": "refObject",
+        "properties": {
+            "orders": {"dataType":"array","array":{"dataType":"refObject","ref":"ListingOrderSummary"},"required":true},
+            "offers": {"dataType":"array","array":{"dataType":"refObject","ref":"ListingOfferSummary"},"required":true},
+        },
+        "additionalProperties": false,
+    },
+    // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
     "UserSummary": {
         "dataType": "refObject",
         "properties": {

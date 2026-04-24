@@ -25,6 +25,7 @@ import {
   OrderMarketListingV2,
   OrderVariantItem,
   OrderPreview,
+  OrdersByListingResponse,
 } from "../types/orders.types.js"
 import logger from "../../../../logger/logger.js"
 
@@ -895,7 +896,7 @@ export class OrdersV2Controller extends BaseController {
   @Security("jwt")
   public async getOrdersByListing(
     @Path() listingId: string,
-  ): Promise<{ orders: any[]; offers: any[] }> {
+  ): Promise<OrdersByListingResponse> {
     const knex = getKnex()
     const userId = this.getUserId()
 
@@ -912,11 +913,12 @@ export class OrdersV2Controller extends BaseController {
     if (!isOwner && !isOrgMember) this.throwForbidden("Not authorized to view orders for this listing")
 
     // Get orders via order_market_items_v2
+    interface OrderRow { order_id: string; status: string; created_at: Date; buyer_name: string; quantity: number; price_per_unit: string }
     const v2Orders = await knex("order_market_items_v2 as omi")
       .join("orders as o", "omi.order_id", "o.order_id")
       .join("accounts as buyer", "o.customer_id", "buyer.user_id")
       .where("omi.listing_id", listingId)
-      .select(
+      .select<OrderRow[]>(
         "o.order_id", "o.status", "o.timestamp as created_at",
         "buyer.username as buyer_name",
         "omi.quantity", "omi.price_per_unit",
@@ -925,7 +927,8 @@ export class OrdersV2Controller extends BaseController {
       .limit(20)
 
     // Get offers via offer_market_items_v2
-    let v2Offers: any[] = []
+    interface OfferRow { session_id: string; status: string; created_at: Date; buyer_name: string; quantity: number; price_per_unit: string }
+    let v2Offers: OfferRow[] = []
     const hasTable = await knex.schema.hasTable("offer_market_items_v2")
     if (hasTable) {
       v2Offers = await knex("offer_market_items_v2 as omi")
@@ -934,7 +937,7 @@ export class OrdersV2Controller extends BaseController {
         .join("accounts as buyer", "os.customer_id", "buyer.user_id")
         .where("omi.listing_id", listingId)
         .whereNotIn("os.status", ["accepted", "rejected"])
-        .select(
+        .select<OfferRow[]>(
           "os.id as session_id", "os.status",
           "os.timestamp as created_at",
           "buyer.username as buyer_name",
@@ -945,13 +948,13 @@ export class OrdersV2Controller extends BaseController {
     }
 
     return {
-      orders: v2Orders.map((r: any) => ({
-        order_id: r.order_id, status: r.status, created_at: r.created_at?.toISOString(),
+      orders: v2Orders.map((r) => ({
+        order_id: r.order_id, status: r.status, created_at: r.created_at?.toISOString?.() || "",
         buyer_name: r.buyer_name, quantity: r.quantity,
         price_per_unit: parseFloat(r.price_per_unit) || 0,
       })),
-      offers: v2Offers.map((r: any) => ({
-        session_id: r.session_id, status: r.status, created_at: r.created_at?.toISOString(),
+      offers: v2Offers.map((r) => ({
+        session_id: r.session_id, status: r.status, created_at: r.created_at?.toISOString?.() || "",
         buyer_name: r.buyer_name, quantity: r.quantity,
         price_per_unit: parseFloat(r.price_per_unit) || 0,
       })),
