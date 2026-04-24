@@ -76,7 +76,7 @@ export class WikiController extends BaseController {
     try {
       // Build query
       let itemsQuery = knex("game_items as gi")
-        .leftJoin("wiki_manufacturers as wm", "wm.manufacturer_code", "gi.manufacturer")
+        .leftJoin("wiki_manufacturers as wm", "wm.code", "gi.manufacturer")
         .select(
           "gi.id",
           "gi.name",
