@@ -772,7 +772,7 @@ interface ExtractedMission {
   type: string | null
   template: string | null
   reward: { uec: number; max: number } | null
-  reputationRewards: Array<{ faction: string; scope: string; reward: string; amount?: number }> | null
+  reputationRewards: Array<{ faction: string; factionName: string; scope: string; reward: string; amount?: number }> | null
   blueprintRewards?: Array<{ pool: string; chance: number }> | Array<{ blueprintId: string; blueprint: string; weight: number; totalWeight: number; chance: number; poolName: string }> | null
   minStanding: string | { code: string; displayName: string; xp: number } | null
   maxStanding: string | { code: string; displayName: string; xp: number } | null
@@ -897,7 +897,7 @@ function parseMissions(): ExtractedMission[] {
           }
 
           // Extract reputation rewards
-          const repRewards: { faction: string; scope: string; reward: string }[] = []
+          const repRewards: { faction: string; factionName: string; scope: string; reward: string }[] = []
           for (const r of cr) {
             if (r?._Type_ === "ContractResult_LegacyReputation") {
               const ra = r.contractResultReputationAmounts

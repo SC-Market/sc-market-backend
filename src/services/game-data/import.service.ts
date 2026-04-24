@@ -236,6 +236,7 @@ export interface P4KBlueprintReward {
 
 export interface P4KReputationReward {
   faction: string
+  factionName?: string
   scope: string
   reward: string
   amount?: number
@@ -1561,7 +1562,7 @@ export class GameDataImportService {
       max_standing_xp: mission.maxStanding?.xp ?? null,
       reputation_reward_amount: mission.reputationRewards?.[0]?.amount ?? null,
       reputation_reward_scope: mission.reputationRewards?.[0]?.scope ?? null,
-      reputation_reward_faction: (mission.reputationRewards?.[0] as { factionName?: string } | undefined)?.factionName || null,
+      reputation_reward_faction: mission.reputationRewards?.[0]?.factionName || null,
       reputation_reward: mission.reputationRewards?.[0]?.amount ?? null,
       reward_scope: mission.reputationRewards?.[0]?.scope ?? null,
       is_shareable: mission.canBeShared ?? false,

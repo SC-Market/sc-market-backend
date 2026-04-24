@@ -13,6 +13,7 @@ import { BaseController } from "../base/BaseController.js"
 import { withTransaction } from "../../../../clients/database/transaction.js"
 import { getOrCreateVariant } from "../../../../services/market-v2/variant.service.js"
 import { getKnex } from "../../../../clients/database/knex-db.js"
+import { canModifyListing } from "../util/listing-permissions.js"
 import { cdn } from "../../../../clients/cdn/cdn.js"
 import {
   CreateListingRequest,
@@ -1360,18 +1361,10 @@ export class ListingsV2Controller extends BaseController {
           this.throwNotFound("Listing", id)
         }
 
-        // Verify ownership — user is seller, or member of seller contractor
-        if (listing.seller_id !== userId) {
-          if (listing.seller_type === "contractor") {
-            const member = await trx("contractor_members")
-              .where({ contractor_id: listing.seller_id, user_id: userId })
-              .first()
-            if (!member) {
-              this.throwForbidden("You do not have permission to update this listing")
-            }
-          } else {
-            this.throwForbidden("You do not have permission to update this listing")
-          }
+        // Verify ownership
+        if (!(await canModifyListing(listing, userId))) {
+          this.throwForbidden("You do not have permission to update this listing")
+        }
         }
 
         // 2. Prevent editing sold or cancelled listings (Requirement 17.7)
