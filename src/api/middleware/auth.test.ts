@@ -4,317 +4,141 @@ import {
   userAuthorized,
   adminAuthorized,
   verifiedUser,
-  AuthRequest,
 } from "./auth.js"
 import { clearMockData } from "../../test-utils/mockDatabase.js"
 import { createTestUser } from "../../test-utils/testFixturesMock.js"
-import {
-  createTestUserWithAuth,
-  getAuthHeaders,
-} from "../../test-utils/testAuthMock.js"
-import crypto from "crypto"
-import { v4 as uuidv4 } from "uuid"
+
+/**
+ * These tests verify the simplified auth middleware.
+ *
+ * In production, `populate-user` middleware runs first and sets req.user.
+ * These middleware functions just check req.user exists and meets conditions.
+ */
+
+function mockReq(user?: any): Request {
+  return { user, headers: {}, isAuthenticated: () => !!user } as unknown as Request
+}
+
+function mockRes() {
+  let _status = 0
+  let _data: any = null
+  const res = {
+    status: (code: number) => { _status = code; return res },
+    json: (data: any) => { _data = data; return res },
+    get statusCode() { return _status },
+    get responseData() { return _data },
+  } as unknown as Response & { statusCode: number; responseData: any }
+  return res
+}
 
 describe("Authentication Middleware", () => {
-  beforeEach(() => {
-    clearMockData()
-  })
-
-  afterEach(() => {
-    clearMockData()
-  })
+  beforeEach(() => clearMockData())
+  afterEach(() => clearMockData())
 
   describe("userAuthorized", () => {
-    it("should allow access with valid token", async () => {
-      const user = await createTestUserWithAuth()
-      const req = {
-        headers: {
-          authorization: `Bearer ${user.token}`,
-        },
-        isAuthenticated: () => false,
-      } as unknown as Request
-
-      const res = {
-        status: (code: number) => {
-          expect(code).not.toBe(401)
-          expect(code).not.toBe(403)
-          return res
-        },
-        json: (data: any) => {
-          // Should not be called for successful auth
-          expect(true).toBe(false)
-          return res
-        },
-      } as unknown as Response
-
+    it("should allow access when req.user is set", async () => {
+      const user = createTestUser()
+      const req = mockReq(user)
+      const res = mockRes()
       let nextCalled = false
-      const next: NextFunction = () => {
-        nextCalled = true
-      }
 
-      await userAuthorized(req, res, next)
+      await userAuthorized(req, res, () => { nextCalled = true })
 
       expect(nextCalled).toBe(true)
-      expect((req as AuthRequest).user).toBeDefined()
-      expect((req as AuthRequest).user?.user_id).toBe(user.user_id)
-      expect((req as AuthRequest).authMethod).toBe("token")
     })
 
-    it("should reject invalid token", async () => {
-      const req = {
-        headers: {
-          authorization: "Bearer invalid_token_123",
-        },
-        isAuthenticated: () => false,
-      } as unknown as Request
-
-      let statusCode = 0
-      let responseData: any = null
-
-      const res = {
-        status: (code: number) => {
-          statusCode = code
-          return res
-        },
-        json: (data: any) => {
-          responseData = data
-          return res
-        },
-      } as unknown as Response
-
+    it("should reject when no user", async () => {
+      const req = mockReq()
+      const res = mockRes()
       let nextCalled = false
-      const next: NextFunction = () => {
-        nextCalled = true
-      }
 
-      await userAuthorized(req, res, next)
+      await userAuthorized(req, res, () => { nextCalled = true })
 
       expect(nextCalled).toBe(false)
-      expect(statusCode).toBe(401)
-      expect(responseData).toHaveProperty("error")
+      expect(res.statusCode).toBe(401)
     })
 
-    it("should reject request without authorization header", async () => {
-      const req = {
-        headers: {},
-        isAuthenticated: () => false,
-      } as unknown as Request
-
-      let statusCode = 0
-      let responseData: any = null
-
-      const res = {
-        status: (code: number) => {
-          statusCode = code
-          return res
-        },
-        json: (data: any) => {
-          responseData = data
-          return res
-        },
-      } as unknown as Response
-
+    it("should reject banned user", async () => {
+      const user = createTestUser({ banned: true })
+      const req = mockReq(user)
+      const res = mockRes()
       let nextCalled = false
-      const next: NextFunction = () => {
-        nextCalled = true
-      }
 
-      await userAuthorized(req, res, next)
+      await userAuthorized(req, res, () => { nextCalled = true })
 
       expect(nextCalled).toBe(false)
-      expect(statusCode).toBe(401)
-      expect(responseData).toHaveProperty("error")
-    })
-
-    it("should reject expired token", async () => {
-      const user = createTestUser()
-
-      const expiredDate = new Date()
-      expiredDate.setDate(expiredDate.getDate() - 1) // Yesterday
-
-      // Add expired token to mock data
-      const { setupMockTableData, getMockTableData } =
-        await import("../../test-utils/mockDatabase.js")
-      const tokens = getMockTableData("api_tokens")
-      const expiredToken = `scm_test_expired_${Date.now()}`
-      const expiredTokenHash = crypto
-        .createHash("sha256")
-        .update(expiredToken)
-        .digest("hex")
-      tokens.push({
-        id: uuidv4(),
-        user_id: user.user_id,
-        name: "Expired Token",
-        token_hash: expiredTokenHash,
-        scopes: ["read", "write"],
-        expires_at: expiredDate,
-        created_at: new Date(),
-        last_used_at: null,
-        revoked_at: null,
-      })
-      setupMockTableData("api_tokens", tokens)
-
-      const req = {
-        headers: {
-          authorization: `Bearer ${expiredToken}`,
-        },
-        isAuthenticated: () => false,
-      } as unknown as Request
-
-      let statusCode = 0
-      const res = {
-        status: (code: number) => {
-          statusCode = code
-          return res
-        },
-        json: (data: any) => res,
-      } as unknown as Response
-
-      let nextCalled = false
-      const next: NextFunction = () => {
-        nextCalled = true
-      }
-
-      await userAuthorized(req, res, next)
-
-      expect(nextCalled).toBe(false)
-      expect(statusCode).toBe(401)
+      expect(res.statusCode).toBe(418)
     })
   })
 
   describe("adminAuthorized", () => {
-    it("should allow access for admin user with token", async () => {
-      const user = createTestUserWithAuth({ role: "admin" })
-
-      const req = {
-        headers: {
-          authorization: `Bearer ${user.token}`,
-        },
-        isAuthenticated: () => false,
-      } as unknown as Request
-
+    it("should allow admin user", async () => {
+      const user = createTestUser({ role: "admin" })
+      const req = mockReq(user)
+      const res = mockRes()
       let nextCalled = false
-      const res = {
-        status: (code: number) => {
-          expect(code).not.toBe(401)
-          expect(code).not.toBe(403)
-          return res
-        },
-        json: (data: any) => {
-          expect(true).toBe(false) // Should not be called
-          return res
-        },
-      } as unknown as Response
 
-      const next: NextFunction = () => {
-        nextCalled = true
-      }
-
-      await adminAuthorized(req, res, next)
+      await adminAuthorized(req, res, () => { nextCalled = true })
 
       expect(nextCalled).toBe(true)
-      expect((req as AuthRequest).user).toBeDefined()
     })
 
-    it("should reject non-admin user with token", async () => {
-      const user = createTestUserWithAuth({ role: "user" })
-
-      const req = {
-        headers: {
-          authorization: `Bearer ${user.token}`,
-        },
-        isAuthenticated: () => false,
-      } as unknown as Request
-
-      let statusCode = 0
-      const res = {
-        status: (code: number) => {
-          statusCode = code
-          return res
-        },
-        json: (data: any) => res,
-      } as unknown as Response
-
+    it("should reject non-admin user", async () => {
+      const user = createTestUser({ role: "user" })
+      const req = mockReq(user)
+      const res = mockRes()
       let nextCalled = false
-      const next: NextFunction = () => {
-        nextCalled = true
-      }
 
-      await adminAuthorized(req, res, next)
+      await adminAuthorized(req, res, () => { nextCalled = true })
 
       expect(nextCalled).toBe(false)
-      expect(statusCode).toBe(403)
+      expect(res.statusCode).toBe(403)
+    })
+
+    it("should reject when no user", async () => {
+      const req = mockReq()
+      const res = mockRes()
+      let nextCalled = false
+
+      await adminAuthorized(req, res, () => { nextCalled = true })
+
+      expect(nextCalled).toBe(false)
+      expect(res.statusCode).toBe(401)
     })
   })
 
   describe("verifiedUser", () => {
-    it("should return true for verified user with token", async () => {
-      const user = createTestUserWithAuth({ rsi_confirmed: true })
+    it("should return true for verified user", async () => {
+      const user = createTestUser({ rsi_confirmed: true })
+      const req = mockReq(user)
+      const res = mockRes()
 
-      const req = {
-        headers: {
-          authorization: `Bearer ${user.token}`,
-        },
-        isAuthenticated: () => false,
-      } as unknown as Request
-
-      const res = {
-        status: (code: number) => res,
-        json: (data: any) => res,
-      } as unknown as Response
-
-      const result = await verifiedUser(req, res)
-
-      expect(result).toBe(true)
-      expect((req as AuthRequest).user).toBeDefined()
+      expect(await verifiedUser(req, res)).toBe(true)
     })
 
-    it("should return false for unverified user with token", async () => {
-      const user = createTestUserWithAuth({ rsi_confirmed: false })
+    it("should return false for unverified user", async () => {
+      const user = createTestUser({ rsi_confirmed: false })
+      const req = mockReq(user)
+      const res = mockRes()
 
-      const req = {
-        headers: {
-          authorization: `Bearer ${user.token}`,
-        },
-        isAuthenticated: () => false,
-      } as unknown as Request
-
-      let statusCode = 0
-      const res = {
-        status: (code: number) => {
-          statusCode = code
-          return res
-        },
-        json: (data: any) => res,
-      } as unknown as Response
-
-      const result = await verifiedUser(req, res)
-
-      expect(result).toBe(false)
-      expect(statusCode).toBe(401)
+      expect(await verifiedUser(req, res)).toBe(false)
+      expect(res.statusCode).toBe(401)
     })
 
-    it("should return false for invalid token", async () => {
-      const req = {
-        headers: {
-          authorization: "Bearer invalid_token",
-        },
-        isAuthenticated: () => false,
-      } as unknown as Request
+    it("should allow unverified when allowUnverified=true", async () => {
+      const user = createTestUser({ rsi_confirmed: false })
+      const req = mockReq(user)
+      const res = mockRes()
 
-      let statusCode = 0
-      const res = {
-        status: (code: number) => {
-          statusCode = code
-          return res
-        },
-        json: (data: any) => res,
-      } as unknown as Response
+      expect(await verifiedUser(req, res, true)).toBe(true)
+    })
 
-      const result = await verifiedUser(req, res)
+    it("should return false when no user", async () => {
+      const req = mockReq()
+      const res = mockRes()
 
-      expect(result).toBe(false)
-      expect(statusCode).toBe(401)
+      expect(await verifiedUser(req, res)).toBe(false)
+      expect(res.statusCode).toBe(401)
     })
   })
 })

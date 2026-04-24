@@ -81,7 +81,7 @@ export class BuyOrdersV2Controller extends BaseController {
    * @param request Express request for authentication
    * @returns Created order with order_id and purchase details
    */
-  @Security("jwt")
+  @Security("loggedin")
   @Post()
   public async createPurchase(
     @Body() requestBody: CreateBuyOrderRequest,
@@ -345,9 +345,8 @@ export class BuyOrdersV2Controller extends BaseController {
   /**
    * Create a standing buy order
    */
-  @Security("jwt")
+  @Security("loggedin")
   @Post('standing')
-  @Security('session')
   public async createStandingBuyOrder(
     @Body() body: CreateStandingBuyOrderRequest,
     @Request() request: ExpressRequest,
@@ -435,9 +434,8 @@ export class BuyOrdersV2Controller extends BaseController {
   /**
    * Get current user's buy orders
    */
-  @Security("jwt")
+  @Security("loggedin")
   @Get('mine')
-  @Security('session')
   public async getMyBuyOrders(
     @Request() request: ExpressRequest,
     @Query() status?: 'active' | 'fulfilled' | 'cancelled' | 'expired',
@@ -475,9 +473,8 @@ export class BuyOrdersV2Controller extends BaseController {
   /**
    * Update a standing buy order
    */
-  @Security("jwt")
+  @Security("loggedin")
   @Put('{id}')
-  @Security('session')
   public async updateBuyOrder(
     @Request() request: ExpressRequest,
     @Path() id: string,
@@ -526,9 +523,8 @@ export class BuyOrdersV2Controller extends BaseController {
   /**
    * Cancel a standing buy order
    */
-  @Security("jwt")
+  @Security("loggedin")
   @Delete('{id}')
-  @Security('session')
   public async cancelBuyOrder(
     @Request() request: ExpressRequest,
     @Path() id: string,
@@ -551,9 +547,8 @@ export class BuyOrdersV2Controller extends BaseController {
    * Fulfill a standing buy order
    * @summary Seller fulfills a buy order
    */
-  @Security("jwt")
+  @Security("loggedin")
   @Post('{id}/fulfill')
-  @Security('session')
   public async fulfillBuyOrder(
     @Request() request: ExpressRequest,
     @Path() id: string,

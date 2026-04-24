@@ -99,9 +99,9 @@ export class DebugV2Controller extends BaseController {
    * @param request Feature flag setting request
    * @returns Updated feature flag setting
    */
-  @Security("jwt")
+  @Security("loggedin")
   @Post("feature-flag")
-  @Security("jwt")
+  @Security("loggedin")
   public async setFeatureFlag(
     @Body() request: SetFeatureFlagRequest,
     @Request() expressRequest: ExpressRequest,

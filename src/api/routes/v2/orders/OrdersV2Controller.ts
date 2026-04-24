@@ -30,7 +30,7 @@ import logger from "../../../../logger/logger.js"
 
 @Route("orders")
 @Tags("Orders V2")
-@Security("jwt")
+@Security("loggedin")
 export class OrdersV2Controller extends BaseController {
   constructor(@Request() request?: ExpressRequest) {
     super(request)

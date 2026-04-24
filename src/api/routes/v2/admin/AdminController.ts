@@ -41,7 +41,7 @@ export class AdminController extends BaseController {
    * @summary Start game data import
    */
   @Post("import-game-data")
-  @Security("jwt")
+  @Security("loggedin")
   public async importGameData(
     @Request() request: ExpressRequest,
   ): Promise<{ job_id: string } | ImportErrorResponse> {
@@ -88,7 +88,7 @@ export class AdminController extends BaseController {
    * @summary List import jobs
    */
   @Get("import-game-data")
-  @Security("jwt")
+  @Security("loggedin")
   public async listGameDataImportJobs(
     @Request() request: ExpressRequest,
   ): Promise<{ jobs: GameDataImportJob[] }> {
@@ -102,7 +102,7 @@ export class AdminController extends BaseController {
    * @summary Poll import job
    */
   @Get("import-game-data/{jobId}")
-  @Security("jwt")
+  @Security("loggedin")
   public async getImportJobStatus(
     @Path() jobId: string,
     @Request() request: ExpressRequest,

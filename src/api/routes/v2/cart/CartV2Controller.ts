@@ -32,7 +32,7 @@ import { auditService } from "../../../../services/audit/audit.service.js"
 
 @Route("cart")
 @Tags("Cart V2")
-@Security("jwt")
+@Security("loggedin")
 export class CartV2Controller extends BaseController {
   constructor(@Request() request?: ExpressRequest) {
     super(request)

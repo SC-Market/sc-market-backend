@@ -755,7 +755,7 @@ export class BlueprintsController extends BaseController {
    * @returns Success response with inventory ID
    */
   @Post("{blueprint_id}/inventory")
-  @Security("jwt")
+  @Security("loggedin")
   public async addBlueprintToInventory(
     @Path() blueprint_id: string,
     @Body()
@@ -876,7 +876,7 @@ export class BlueprintsController extends BaseController {
    * @returns Success response
    */
   @Delete("{blueprint_id}/inventory")
-  @Security("jwt")
+  @Security("loggedin")
   public async removeBlueprintFromInventory(
     @Path() blueprint_id: string,
     @Request() request: ExpressRequest,
@@ -1063,7 +1063,7 @@ export class BlueprintsController extends BaseController {
    * @returns User's blueprint inventory with statistics
    */
   @Get("inventory")
-  @Security("jwt")
+  @Security("loggedin")
   public async getUserBlueprintInventory(
     @Query() item_category?: string,
     @Query() rarity?: string,
@@ -1295,7 +1295,7 @@ export class BlueprintsController extends BaseController {
    * @param spectrum_id Org spectrum ID
    */
   @Get("{blueprint_id}/org-owners/{spectrum_id}")
-  @Security("jwt")
+  @Security("loggedin")
   public async getOrgBlueprintOwners(
     @Path() blueprint_id: string,
     @Path() spectrum_id: string,
