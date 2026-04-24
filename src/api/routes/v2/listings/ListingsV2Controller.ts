@@ -1047,6 +1047,30 @@ export class ListingsV2Controller extends BaseController {
    * @param id Listing UUID
    * @returns Complete listing detail with variant breakdown
    */
+
+  /** @summary Get inventory summary */
+  @Get("inventory-summary")
+  @Security("jwt")
+  public async getInventorySummary(@Query() spectrum_id?: string): Promise<InventorySummaryResponse> {
+    const db = getKnex(); const user_id = this.getUserId()
+    let query = db("listing_item_lots as lil").join("listing_items as li", "lil.item_id", "li.item_id")
+      .join("listings as l", "li.listing_id", "l.listing_id").join("game_items as gi", "li.game_item_id", "gi.id")
+      .leftJoin("item_variants as iv", "lil.variant_id", "iv.variant_id")
+      .where("l.status", "active").where("lil.listed", true).where("lil.quantity_total", ">", 0)
+    if (spectrum_id) {
+      const org = await db("contractors").where("spectrum_id", spectrum_id).first("contractor_id")
+      if (org) { query = query.where(function () { this.where("l.seller_id", user_id).orWhere(function () { this.where("l.seller_type", "contractor").where("l.seller_id", org.contractor_id) }) }) }
+      else { query = query.where("l.seller_id", user_id) }
+    } else { query = query.where("l.seller_id", user_id) }
+    const rows = await query.groupBy("li.game_item_id", "gi.name", "gi.type", "gi.image_url")
+      .select("li.game_item_id", "gi.name as game_item_name", "gi.type as game_item_type", "gi.image_url as game_item_icon",
+        db.raw("SUM(lil.quantity_total)::numeric as total_quantity"),
+        db.raw("AVG((iv.attributes->>'quality_value')::int) FILTER (WHERE iv.attributes->>'quality_value' IS NOT NULL) as avg_quality_value"),
+        db.raw("MAX((iv.attributes->>'quality_value')::int) FILTER (WHERE iv.attributes->>'quality_value' IS NOT NULL) as max_quality_value"))
+      .orderBy("gi.name")
+    return { materials: rows.map((r: any) => ({ game_item_id: r.game_item_id, game_item_name: r.game_item_name, game_item_type: r.game_item_type || undefined, game_item_icon: r.game_item_icon || undefined, total_quantity: parseFloat(r.total_quantity) || 0, avg_quality_value: r.avg_quality_value ? Math.round(parseFloat(r.avg_quality_value)) : undefined, max_quality_value: r.max_quality_value ? parseInt(r.max_quality_value) : undefined })) }
+  }
+
   @Get("{id}")
   public async getListingDetail(
     id: string,
@@ -1935,73 +1959,6 @@ export class ListingsV2Controller extends BaseController {
       return parseInt(String(count), 10)
     } catch {
       return 0
-    }
-  }
-
-  /**
-   * Get aggregated inventory summary — materials from user's and/or org's stock lots.
-   * Groups by game item, sums quantities, averages quality values.
-   * @summary Get inventory summary
-   * @param spectrum_id Optional org spectrum_id to include org inventory
-   */
-  @Get("inventory-summary")
-  @Security("jwt")
-  public async getInventorySummary(
-    @Query() spectrum_id?: string,
-  ): Promise<InventorySummaryResponse> {
-    const db = getKnex()
-    const user_id = this.getUserId()
-
-    // Build seller filter: user's listings + optionally org listings
-    let query = db("listing_item_lots as lil")
-      .join("listing_items as li", "lil.item_id", "li.item_id")
-      .join("listings as l", "li.listing_id", "l.listing_id")
-      .join("game_items as gi", "li.game_item_id", "gi.id")
-      .leftJoin("item_variants as iv", "lil.variant_id", "iv.variant_id")
-      .where("l.status", "active")
-      .where("lil.listed", true)
-      .where("lil.quantity_total", ">", 0)
-
-    if (spectrum_id) {
-      // Include both user and org listings
-      const org = await db("contractors").where("spectrum_id", spectrum_id).first("contractor_id")
-      if (org) {
-        query = query.where(function () {
-          this.where("l.seller_id", user_id)
-            .orWhere(function () {
-              this.where("l.seller_type", "contractor").where("l.seller_id", org.contractor_id)
-            })
-        })
-      } else {
-        query = query.where("l.seller_id", user_id)
-      }
-    } else {
-      query = query.where("l.seller_id", user_id)
-    }
-
-    const rows = await query
-      .groupBy("li.game_item_id", "gi.name", "gi.type", "gi.image_url")
-      .select(
-        "li.game_item_id",
-        "gi.name as game_item_name",
-        "gi.type as game_item_type",
-        "gi.image_url as game_item_icon",
-        db.raw("SUM(lil.quantity_total)::numeric as total_quantity"),
-        db.raw("AVG((iv.attributes->>'quality_value')::int) FILTER (WHERE iv.attributes->>'quality_value' IS NOT NULL) as avg_quality_value"),
-        db.raw("MAX((iv.attributes->>'quality_value')::int) FILTER (WHERE iv.attributes->>'quality_value' IS NOT NULL) as max_quality_value"),
-      )
-      .orderBy("gi.name")
-
-    return {
-      materials: rows.map((r: any) => ({
-        game_item_id: r.game_item_id,
-        game_item_name: r.game_item_name,
-        game_item_type: r.game_item_type || undefined,
-        game_item_icon: r.game_item_icon || undefined,
-        total_quantity: parseFloat(r.total_quantity) || 0,
-        avg_quality_value: r.avg_quality_value ? Math.round(parseFloat(r.avg_quality_value)) : undefined,
-        max_quality_value: r.max_quality_value ? parseInt(r.max_quality_value) : undefined,
-      })),
     }
   }
 }
