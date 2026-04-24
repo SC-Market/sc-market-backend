@@ -79,6 +79,9 @@ export interface OrderItemDetail {
   
   /** UUID of the listing item */
   item_id: string;
+
+  /** Listing title */
+  listing_title: string;
   
   /** Variant details with quality attributes */
   variant: OrderVariantDetail;

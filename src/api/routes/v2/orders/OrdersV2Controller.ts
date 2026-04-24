@@ -177,6 +177,7 @@ export class OrdersV2Controller extends BaseController {
             order_item_id: orderItem.order_item_id,
             listing_id: item.listing_id,
             item_id: item.item_id,
+            listing_title: item.listing_title,
             variant: variantDetail,
             quantity: item.quantity,
             price_per_unit: item.price,
@@ -407,10 +408,12 @@ export class OrdersV2Controller extends BaseController {
       const items: OrderItemDetail[] = await Promise.all(
         v2Items.map(async (oi) => {
           const variant = await knex("item_variants").where({ variant_id: oi.variant_id }).first()
+          const listing = await knex("listings").where({ listing_id: oi.listing_id }).select("title").first()
           return {
             order_item_id: oi.order_item_id,
             listing_id: oi.listing_id,
             item_id: oi.item_id,
+            listing_title: listing?.title || "Unknown",
             variant: {
               variant_id: oi.variant_id,
               attributes: variant?.attributes || {},
@@ -749,6 +752,7 @@ export class OrdersV2Controller extends BaseController {
       quantity: number
       price: number
       seller_id: string
+      listing_title: string
       variant_attributes: any
       variant_display_name: string
       variant_short_name: string
@@ -877,6 +881,7 @@ export class OrdersV2Controller extends BaseController {
         quantity: item.quantity,
         price,
         seller_id: listing.seller_id,
+        listing_title: listing.title,
         variant_attributes: variant.attributes,
         variant_display_name: variant.display_name,
         variant_short_name: variant.short_name,
