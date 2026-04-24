@@ -500,16 +500,18 @@ export async function createOffer(
       trx,
     )
 
-    // Insert offer market listings
-    for (const { quantity, listing } of market_listings) {
-      await marketDb.insertOfferMarketListing(
-        {
-          listing_id: listing.listing.listing_id,
-          offer_id: createdOffer.id,
-          quantity,
-        },
-        trx,
-      )
+    // Insert offer market listings (V1 only — skip if V2 variant items provided)
+    if (!v2_variant_items?.length) {
+      for (const { quantity, listing } of market_listings) {
+        await marketDb.insertOfferMarketListing(
+          {
+            listing_id: listing.listing.listing_id,
+            offer_id: createdOffer.id,
+            quantity,
+          },
+          trx,
+        )
+      }
     }
 
     // Insert V2 variant items if provided (links offer to specific variants)
