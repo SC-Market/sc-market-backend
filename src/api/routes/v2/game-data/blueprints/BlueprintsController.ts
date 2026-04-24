@@ -1216,17 +1216,22 @@ export class BlueprintsController extends BaseController {
 
       const total_owned = parseInt(String(totalOwnedCount), 10)
 
-      // Get total available count
-      const [{ count: totalAvailableCount }] = await knex("blueprints")
-        .where("version_id", effectiveVersionId)
-        .where("is_active", true)
+      // Get total available count (only obtainable: default source or has mission rewards)
+      const [{ count: totalAvailableCount }] = await knex("blueprints as b")
+        .where("b.version_id", effectiveVersionId)
+        .where("b.is_active", true)
+        .where(function () {
+          this.where("b.source", "default").orWhereExists(
+            knex("mission_blueprint_rewards").whereRaw("mission_blueprint_rewards.blueprint_id = b.blueprint_id"),
+          )
+        })
         .count("* as count")
 
       const total_available = parseInt(String(totalAvailableCount), 10)
 
       // Calculate completion percentage
       const completion_percentage =
-        total_available > 0 ? Math.round((total_owned / total_available) * 100) : 0
+        total_available > 0 ? (total_owned / total_available) * 100 : 0
 
       // Get recently acquired count (last 7 days) (Requirement 44.9)
       const sevenDaysAgo = new Date()
