@@ -12,6 +12,7 @@ import { Request as ExpressRequest } from "express"
 import { BaseController } from "../base/BaseController.js"
 import { withTransaction } from "../../../../clients/database/transaction.js"
 import { getKnex } from "../../../../clients/database/knex-db.js"
+import { canModifyListing } from "../util/listing-permissions.js"
 import { cdn } from "../../../../clients/cdn/cdn.js"
 import {
   CreateStockLotRequest,
@@ -384,7 +385,7 @@ export class StockLotsV2Controller extends BaseController {
         }
 
         // Verify ownership
-        if (lot.seller_id !== userId) {
+        if (!(await canModifyListing(lot, userId))) {
           this.throwForbidden("You do not have permission to update this stock lot")
         }
 
@@ -630,7 +631,7 @@ export class StockLotsV2Controller extends BaseController {
             }
 
             // Verify ownership
-            if (lot.seller_id !== userId) {
+            if (!(await canModifyListing(lot, userId))) {
               results.push({
                 lot_id: update.lot_id,
                 success: false,
@@ -768,7 +769,7 @@ export class StockLotsV2Controller extends BaseController {
       .first()
 
     if (!lot) throw this.throwNotFound("Stock lot", id)
-    if (lot.seller_id !== userId) throw this.throwForbidden("You do not own this stock lot")
+    if (!(await canModifyListing(lot, userId))) throw this.throwForbidden("You do not own this stock lot")
 
     // Check if lot is allocated to pending orders
     const hasTable = await db.schema.hasTable("stock_allocation_log")
