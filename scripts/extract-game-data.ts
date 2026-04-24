@@ -655,6 +655,21 @@ if (fs.existsSync(resDbFile)) {
 }
 console.log(`  Resource name lookup: ${resourceNameMap.size} entries`)
 
+// Pre-build faction reputation name lookup
+const factionNameMap = new Map<string, string>()
+const factionDir = path.join(RECORDS_DIR, "factions/factionreputation")
+if (fs.existsSync(factionDir)) {
+  for (const f of findJsonFiles(factionDir)) {
+    try {
+      const d = readJson(f)._RecordValue_
+      const code = path.basename(f, ".json")
+      const name = loc(d.displayName) || d.displayName || ""
+      if (name && !name.startsWith("@")) factionNameMap.set(code, name)
+    } catch {}
+  }
+}
+console.log(`  Faction name lookup: ${factionNameMap.size} entries`)
+
 // System detection from debugName
 const SYSTEM_PATTERN = /(Stanton|Pyro|Nyx|Terra|Magnus|Castra|Odin|Helios|Oso|Kilian|Davien|Rhetor|Vega|Tiber)/i
 function detectSystem(debugName: string): string | null {
@@ -889,6 +904,7 @@ function parseMissions(): ExtractedMission[] {
               if (ra) {
                 repRewards.push({
                   faction: refName(ra.factionReputation) || "",
+                  factionName: factionNameMap.get(refName(ra.factionReputation) || "") || "",
                   scope: refName(ra.reputationScope) || "",
                   reward: refName(ra.reward) || "",
                 })
@@ -1373,12 +1389,13 @@ function parseBrokerMissions(): ExtractedMission[] {
       const name = recordName.includes(".") ? recordName.split(".").slice(1).join(".") : recordName
 
       // Reputation rewards from success outcome (index 0)
-      const repRewards: { faction: string; scope: string; reward: string }[] = []
+      const repRewards: { faction: string; factionName: string; scope: string; reward: string }[] = []
       const successRep = (bd.missionResultReputationRewards as Array<{ reputationAmounts?: Array<Record<string, unknown>> }>)?.[0]
       if (successRep?.reputationAmounts) {
         for (const ra of successRep.reputationAmounts) {
           repRewards.push({
             faction: refName(ra.factionReputation) || "",
+            factionName: factionNameMap.get(refName(ra.factionReputation) || "") || "",
             scope: refName(ra.reputationScope) || "",
             reward: refName(ra.reward) || "",
           })
