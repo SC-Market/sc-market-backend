@@ -1360,9 +1360,18 @@ export class ListingsV2Controller extends BaseController {
           this.throwNotFound("Listing", id)
         }
 
-        // Verify ownership
+        // Verify ownership — user is seller, or member of seller contractor
         if (listing.seller_id !== userId) {
-          this.throwForbidden("You do not have permission to update this listing")
+          if (listing.seller_type === "contractor") {
+            const member = await trx("contractor_members")
+              .where({ contractor_id: listing.seller_id, user_id: userId })
+              .first()
+            if (!member) {
+              this.throwForbidden("You do not have permission to update this listing")
+            }
+          } else {
+            this.throwForbidden("You do not have permission to update this listing")
+          }
         }
 
         // 2. Prevent editing sold or cancelled listings (Requirement 17.7)
