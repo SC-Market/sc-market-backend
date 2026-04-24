@@ -331,7 +331,20 @@ export class OrdersV2Controller extends BaseController {
       const isBuyer = userId === buyer.user_id
       const isSeller = seller && userId === seller.user_id
       const isAssigned = order.assigned_id === userId
-      if (!isBuyer && !isSeller && !isAssigned) {
+      // Check contractor membership if seller is an org
+      let isOrgMember = false
+      if (!isSeller && seller) {
+        const listing = await knex("market_orders")
+          .join("listings", "market_orders.listing_id", "listings.listing_id")
+          .where({ "market_orders.order_id": orderId })
+          .select("listings.seller_id", "listings.seller_type")
+          .first()
+        if (listing?.seller_type === "contractor") {
+          const { is_member } = await import("../../../routes/v1/util/permissions.js")
+          isOrgMember = await is_member(listing.seller_id, userId)
+        }
+      }
+      if (!isBuyer && !isSeller && !isAssigned && !isOrgMember) {
         throw this.throwForbidden("You do not have permission to view this order")
       }
 
@@ -517,14 +530,25 @@ export class OrdersV2Controller extends BaseController {
       if (role === 'buyer') {
         query = query.where("orders.customer_id", userId)
       } else if (role === 'seller') {
-        // For seller role, join with market_orders and listings
+        // For seller role: direct seller OR member of seller contractor
+        const userContractorIds = await knex("contractor_members")
+          .where("user_id", userId)
+          .select("contractor_id")
+        const cIds = userContractorIds.map((r: any) => r.contractor_id)
         query = query
           .join("market_orders", "orders.order_id", "market_orders.order_id")
           .join("listings", "market_orders.listing_id", "listings.listing_id")
-          .where("listings.seller_id", userId)
+          .where((qb) => {
+            qb.where("listings.seller_id", userId)
+            if (cIds.length) qb.orWhereIn("listings.seller_id", cIds)
+          })
           .groupBy("orders.order_id", "buyer.username", "buyer.avatar")
       } else {
-        // No role specified - show orders where user is buyer OR seller
+        // No role: buyer OR seller (direct or org)
+        const userContractorIds = await knex("contractor_members")
+          .where("user_id", userId)
+          .select("contractor_id")
+        const cIds = userContractorIds.map((r: any) => r.contractor_id)
         query = query.where((builder) => {
           builder
             .where("orders.customer_id", userId)
@@ -534,7 +558,10 @@ export class OrdersV2Controller extends BaseController {
                 .from("market_orders")
                 .join("listings", "market_orders.listing_id", "listings.listing_id")
                 .whereRaw("market_orders.order_id = orders.order_id")
-                .where("listings.seller_id", userId)
+                .where((qb) => {
+                  qb.where("listings.seller_id", userId)
+                  if (cIds.length) qb.orWhereIn("listings.seller_id", cIds)
+                })
             })
         })
       }
