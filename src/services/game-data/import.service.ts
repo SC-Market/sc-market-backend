@@ -385,6 +385,8 @@ export interface ImportStats {
   resourcesInserted: number
   resourcesUpdated: number
   resourcesSkipped: number
+  shipsProcessed: number
+  shipsInserted: number
   errors: string[]
 }
 
@@ -555,6 +557,8 @@ export class GameDataImportService {
       resourcesInserted: 0,
       resourcesUpdated: 0,
       resourcesSkipped: 0,
+      shipsProcessed: 0,
+      shipsInserted: 0,
       errors: [],
     }
 
@@ -1244,8 +1248,10 @@ export class GameDataImportService {
       // ========================================================================
       if (gameData.ships && gameData.ships.length > 0) {
         logger.info("Importing ships")
+        stats.shipsProcessed = gameData.ships.length
         try {
           {
+            let shipsInserted = 0
             for (const ship of gameData.ships) {
               if (!ship.name || ship.name.startsWith("@") || ship.name.startsWith("<=")) continue
 
@@ -1261,6 +1267,7 @@ export class GameDataImportService {
                   p4k_id: ship.id,
                   manufacturer: ship.manufacturer || null,
                 }).onConflict("p4k_id").ignore()
+                shipsInserted++
               }
 
               await knex("wiki_ships")
@@ -1281,7 +1288,8 @@ export class GameDataImportService {
                   description: ship.description,
                 })
             }
-            logger.info(`Imported ${gameData.ships.length} ships`)
+            logger.info(`Imported ${gameData.ships.length} ships (${shipsInserted} new game_items)`)
+            stats.shipsInserted = shipsInserted
           }
         } catch {
           logger.debug("Ships import skipped (table may not exist)")
