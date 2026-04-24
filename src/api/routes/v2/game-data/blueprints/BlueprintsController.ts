@@ -229,22 +229,25 @@ export class BlueprintsController extends BaseController {
         )
       }
 
-      // Apply user ownership filter (if user_owned_only is true)
-      // Note: This requires user_id from authentication context
+      // Apply user ownership filter — includes default-source blueprints (everyone has them)
       if (user_owned_only) {
         if (!user_id) {
           this.throwUnauthorized("User must be authenticated to filter by ownership")
         }
 
         blueprintsQuery = blueprintsQuery
-          .join("user_blueprint_inventory as ubi", function () {
+          .leftJoin("user_blueprint_inventory as ubi", function () {
             this.on("ubi.blueprint_id", "=", "b.blueprint_id").andOn(
               "ubi.user_id",
               "=",
               knex.raw("?", [user_id]),
             )
           })
-          .where("ubi.is_owned", true)
+          .where(function () {
+            this.where(function () {
+              this.whereNotNull("ubi.blueprint_id").andWhere("ubi.is_owned", true)
+            }).orWhere("b.source", "default")
+          })
       }
 
       // ========================================================================
