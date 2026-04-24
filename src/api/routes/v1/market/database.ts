@@ -1323,17 +1323,17 @@ export async function getOfferMarketListings(
 export async function getOfferMarketListingCount(
   offer_id: string,
 ): Promise<{ sum: number }> {
-  const v1 = await knex()<{ sum: number }>("offer_market_items")
+  interface SumResult { sum: number }
+  const v1 = await knex()("offer_market_items")
     .where({ offer_id })
-    .first(knex().raw("COALESCE(SUM(quantity), 0) as sum"))
+    .first<SumResult>(knex().raw("COALESCE(SUM(quantity), 0) as sum"))
   if (v1 && +v1.sum > 0) return v1
-  // Fall back to V2 table
   try {
     const hasV2 = await knex().schema.hasTable("offer_market_items_v2")
     if (hasV2) {
-      const v2 = await knex()<{ sum: number }>("offer_market_items_v2")
+      const v2 = await knex()("offer_market_items_v2")
         .where({ offer_id })
-        .first(knex().raw("COALESCE(SUM(quantity), 0) as sum"))
+        .first<SumResult>(knex().raw("COALESCE(SUM(quantity), 0) as sum"))
       if (v2 && +v2.sum > 0) return v2
     }
   } catch { /* ignore */ }
