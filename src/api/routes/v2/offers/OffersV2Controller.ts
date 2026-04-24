@@ -212,8 +212,19 @@ export class OffersV2Controller extends BaseController {
       }
     } catch { /* ignore */ }
 
+    // Build market listings — from V1 items, or from V2 items if V1 is empty
+    let sourceListings: Array<{ listing_id: string; quantity: number }> = v1Listings
+    if (v1Listings.length === 0 && v2Items.length > 0) {
+      // Group V2 items by listing_id
+      const grouped = new Map<string, number>()
+      for (const vi of v2Items) {
+        grouped.set(vi.listing_id, (grouped.get(vi.listing_id) || 0) + vi.quantity)
+      }
+      sourceListings = Array.from(grouped.entries()).map(([listing_id, quantity]) => ({ listing_id, quantity }))
+    }
+
     const marketListings: OfferMarketListingV2[] = await Promise.all(
-      v1Listings.map(async (ml: any) => {
+      sourceListings.map(async (ml) => {
         let title = "Unknown"
         let price = 0
 
