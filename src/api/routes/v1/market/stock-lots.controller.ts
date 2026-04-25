@@ -21,6 +21,7 @@ import logger from "../../../../logger/logger.js"
 import * as marketDb from "./database.js"
 import { getKnex } from "../../../../clients/database/knex-db.js"
 import { formatUniqueListingComplete } from "../util/formatting.js"
+import type { FormattedUniqueListing } from "../market/types.js"
 import { cdn } from "../../../../clients/cdn/cdn.js"
 
 const stockLotService = new StockLotService()
@@ -311,9 +312,10 @@ export const getListingLots: RequestHandler = async (req, res) => {
   try {
     const { listing_id } = req.params
     const { location_id, owner_id, listed } = req.query
+    const db = getKnex()
 
-    // Build base query with owner and location joins
-    let query = knex("stock_lots as sl")
+    // Try V1 stock_lots first
+    let query = db("stock_lots as sl")
       .leftJoin("accounts as acc", "sl.owner_id", "acc.user_id")
       .leftJoin("locations as loc", "sl.location_id", "loc.location_id")
       .where("sl.listing_id", listing_id)
@@ -331,7 +333,38 @@ export const getListingLots: RequestHandler = async (req, res) => {
     if (owner_id) query = query.where("sl.owner_id", owner_id as string)
     if (listed !== undefined) query = query.where("sl.listed", listed === "true")
 
-    const lotsWithOwner = await query.orderBy("sl.created_at", "asc")
+    let lotsWithOwner = await query.orderBy("sl.created_at", "asc")
+
+    // If no V1 lots, try V2 listing_item_lots
+    if (lotsWithOwner.length === 0) {
+      let v2Query = db("listing_item_lots as sl")
+        .join("listing_items as li", "sl.item_id", "li.item_id")
+        .leftJoin("accounts as acc", "sl.owner_id", "acc.user_id")
+        .leftJoin("locations as loc", "sl.location_id", "loc.location_id")
+        .where("li.listing_id", listing_id)
+        .select(
+          "sl.lot_id",
+          db.raw("? as listing_id", [listing_id]),
+          "sl.location_id",
+          "sl.owner_id",
+          "sl.quantity_total",
+          "sl.listed",
+          "sl.created_at",
+          "sl.updated_at",
+          "acc.user_id as owner_user_id",
+          "acc.username as owner_username",
+          "acc.display_name as owner_display_name",
+          "acc.avatar as owner_avatar",
+          "loc.location_id as location_location_id",
+          "loc.name as location_name",
+        )
+
+      if (location_id) v2Query = v2Query.where("sl.location_id", location_id as string)
+      if (owner_id) v2Query = v2Query.where("sl.owner_id", owner_id as string)
+      if (listed !== undefined) v2Query = v2Query.where("sl.listed", listed === "true")
+
+      lotsWithOwner = await v2Query.orderBy("sl.created_at", "asc")
+    }
 
     // Enrich with allocation info
     const lotsWithAllocations = await Promise.all(
@@ -379,16 +412,36 @@ export const getListingLots: RequestHandler = async (req, res) => {
       }),
     )
 
-    // Enrich with listing data
-    const listingComplete = await marketDb.getMarketUniqueListingComplete(
-      listing_id,
-    )
-    const listing = await formatUniqueListingComplete(listingComplete)
+    // Enrich with listing data — try V2 first, fall back to V1
+    let listing: { title: string; listing_id: string; photos?: string[] } | FormattedUniqueListing | null = null
+    const v2Listing = await getKnex()("listings").where({ listing_id }).first()
+    if (v2Listing) {
+      const photo = await getKnex()("listing_photos_v2 as lp")
+        .join("image_resources as ir", "lp.resource_id", "ir.resource_id")
+        .where("lp.listing_id", listing_id)
+        .orderBy("lp.display_order", "asc")
+        .select(getKnex().raw("COALESCE(ir.external_url, 'https://cdn.sc-market.space/' || ir.filename) as url"))
+        .first()
+      listing = { title: v2Listing.title, listing_id, photos: photo ? [photo.url] : [] }
+    } else {
+      try {
+        const listingComplete = await marketDb.getMarketUniqueListingComplete(listing_id)
+        listing = await formatUniqueListingComplete(listingComplete)
+      } catch { /* V1 listing not found */ }
+    }
 
-    // Get aggregates
-    const total = await stockLotService.getTotalStock(listing_id)
-    const available = await stockLotService.getAvailableStock(listing_id)
-    const reserved = await stockLotService.getReservedStock(listing_id)
+    // Get aggregates — try V1 stock_lots first, fall back to V2 listing_item_lots
+    let total = await stockLotService.getTotalStock(listing_id)
+    let available = await stockLotService.getAvailableStock(listing_id)
+    let reserved = await stockLotService.getReservedStock(listing_id)
+
+    if (total === 0 && lotsWithAllocations.length > 0) {
+      // V2 lots — compute aggregates from the lots we already fetched
+      total = lotsWithAllocations.reduce((s, l) => s + l.quantity_total, 0)
+      const totalAllocated = lotsWithAllocations.reduce((s, l) => s + l.allocated_quantity, 0)
+      available = total - totalAllocated
+      reserved = totalAllocated
+    }
 
     res.json(
       createResponse({
@@ -1039,8 +1092,8 @@ export const getOrderAllocations: RequestHandler = async (req, res) => {
   try {
     const { order_id } = req.params
 
-    // Get order to check listing
-    const order = await getKnex()("market_orders")
+    // Get order
+    const order = await getKnex()("orders")
       .where({ order_id })
       .first()
 
@@ -1052,22 +1105,13 @@ export const getOrderAllocations: RequestHandler = async (req, res) => {
       )
     }
 
-    // Get listing IDs from V1 market_orders or V2 order_market_items_v2
-    let orderListingIds: string[] = []
-    if (order.listing_id) {
-      orderListingIds = [order.listing_id]
-    }
-    // Check V1 market_orders
+    // Get listing IDs from V1 market_orders and V2 order_market_items_v2
     const v1MarketOrders = await getKnex()("market_orders").where({ order_id }).select("listing_id")
-    if (v1MarketOrders.length > 0) {
-      orderListingIds = [...new Set(v1MarketOrders.map((mo: any) => mo.listing_id))]
-    }
-    // Check V2 order items
     const v2OrderItems = await getKnex()("order_market_items_v2").where({ order_id }).select("listing_id")
-    if (v2OrderItems.length > 0) {
-      const v2Ids = [...new Set(v2OrderItems.map((oi: any) => oi.listing_id))]
-      orderListingIds = [...new Set([...orderListingIds, ...v2Ids])]
-    }
+    const orderListingIds = [...new Set([
+      ...v1MarketOrders.map((mo: { listing_id: string }) => mo.listing_id),
+      ...v2OrderItems.map((oi: { listing_id: string }) => oi.listing_id),
+    ])]
 
     // Get allocations
     const allocations = await allocationService.getAllocations(order_id)
@@ -1126,7 +1170,7 @@ export const getOrderAllocations: RequestHandler = async (req, res) => {
     const groupedAllocations = await Promise.all(
       orderListingIds.map(async (listing_id) => {
         // Try V2 listing first, fall back to V1
-        let listing: any = null
+        let listing: { title: string; listing_id: string; photos?: string[] } | FormattedUniqueListing | null = null
         const v2Listing = await getKnex()("listings").where({ listing_id }).first()
         if (v2Listing) {
           const photo = await getKnex()("listing_photos_v2 as lp")

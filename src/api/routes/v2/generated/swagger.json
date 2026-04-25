@@ -769,6 +769,10 @@
 						"type": "number",
 						"format": "double"
 					},
+					"photo": {
+						"type": "string",
+						"description": "First photo URL"
+					},
 					"v2_variants": {
 						"items": {
 							"$ref": "#/components/schemas/OrderVariantItem"
