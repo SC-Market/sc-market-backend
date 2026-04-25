@@ -1874,17 +1874,15 @@ export class ListingsV2Controller extends BaseController {
     if (hasTable) {
       await db('listing_views_v2').insert({
         listing_id: id,
-        viewer_id: (this.request?.user as any)?.user_id || null,
+        viewer_id: (this.request?.user as { user_id?: string })?.user_id || null,
         viewed_at: new Date(),
       })
       const [{ count }] = await db('listing_views_v2').where('listing_id', id).count('* as count')
       return { views: parseInt(String(count), 10) }
     }
 
-    // Fallback: use a view_count column on listings if views table doesn't exist
-    await db('listings').where('listing_id', id).increment('view_count', 1)
-    const updated = await db('listings').where('listing_id', id).select('view_count').first()
-    return { views: updated?.view_count || 1 }
+    // listing_views_v2 table not yet created — return 0
+    return { views: 0 }
   }
 
   /**
