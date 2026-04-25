@@ -472,14 +472,18 @@ export async function initiateOrder(session: DBOfferSession, externalTrx?: Knex.
 
   // Non-critical operations outside transaction (can fail without breaking order creation)
   try {
-    const chat = await chatDb.getChat({ session_id: session.id })
-
-    await chatDb.updateChat(
-      { chat_id: chat.chat_id },
-      { order_id: order.order_id },
-    )
-  } catch {
-    await chatDb.insertChat([], order.order_id, session.id)
+    // Try to find existing chat for this offer session and link it to the order
+    const existingChat = await chatDb.getChat({ session_id: session.id }).catch(() => null)
+    if (existingChat) {
+      await chatDb.updateChat(
+        { chat_id: existingChat.chat_id },
+        { order_id: order.order_id },
+      )
+    } else {
+      await chatDb.insertChat([], order.order_id, session.id)
+    }
+  } catch (e) {
+    logger.error(`Failed to link chat to order: ${e}`)
   }
 
   // Ensure chat participants are added (customer and assigned user)
