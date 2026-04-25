@@ -1,7 +1,6 @@
-/**
- * @param { import("knex").Knex } knex
- */
-exports.up = async function (knex) {
+import type { Knex } from "knex"
+
+export async function up(knex: Knex): Promise<void> {
   await knex.schema.createTable("listing_views_v2", (table) => {
     table.uuid("view_id").primary().defaultTo(knex.raw("gen_random_uuid()"))
     table.uuid("listing_id").notNullable().references("listing_id").inTable("listings").onDelete("CASCADE")
@@ -12,9 +11,6 @@ exports.up = async function (knex) {
   })
 }
 
-/**
- * @param { import("knex").Knex } knex
- */
-exports.down = async function (knex) {
+export async function down(knex: Knex): Promise<void> {
   await knex.schema.dropTableIfExists("listing_views_v2")
 }
