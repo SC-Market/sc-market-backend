@@ -1,4 +1,6 @@
-exports.up = async function(knex) {
+import type { Knex } from "knex"
+
+export async function up(knex: Knex): Promise<void> {
   const has = await knex.schema.hasColumn('buy_orders_v2', 'quality_value_min')
   if (!has) {
     await knex.schema.alterTable('buy_orders_v2', (t) => {
@@ -7,7 +9,6 @@ exports.up = async function(knex) {
     })
   }
 
-  // Also add blueprint_name to user_blueprint_inventory if missing
   const hasBpName = await knex.schema.hasColumn('user_blueprint_inventory', 'blueprint_name')
   if (!hasBpName) {
     await knex.schema.alterTable('user_blueprint_inventory', (t) => {
@@ -22,4 +23,12 @@ exports.up = async function(knex) {
   }
 }
 
-exports.down = async function() {}
+export async function down(knex: Knex): Promise<void> {
+  await knex.schema.alterTable('buy_orders_v2', (t) => {
+    t.dropColumn('quality_value_min')
+    t.dropColumn('quality_value_max')
+  })
+  await knex.schema.alterTable('user_blueprint_inventory', (t) => {
+    t.dropColumn('blueprint_name')
+  })
+}
