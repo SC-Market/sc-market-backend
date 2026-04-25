@@ -291,6 +291,17 @@ const models: TsoaRoute.Models = {
         "additionalProperties": false,
     },
     // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+    "OrderMarketListingV1": {
+        "dataType": "refObject",
+        "properties": {
+            "listing_id": {"dataType":"string","required":true},
+            "quantity": {"dataType":"double","required":true},
+            "title": {"dataType":"string","required":true},
+            "price": {"dataType":"double","required":true},
+        },
+        "additionalProperties": false,
+    },
+    // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
     "OrderVariantItem": {
         "dataType": "refObject",
         "properties": {
@@ -333,7 +344,8 @@ const models: TsoaRoute.Models = {
             "offer_session_id": {"dataType":"union","subSchemas":[{"dataType":"string"},{"dataType":"enum","enums":[null]}]},
             "created_at": {"dataType":"string","required":true},
             "updated_at": {"dataType":"string","required":true},
-            "market_listings": {"dataType":"array","array":{"dataType":"refObject","ref":"OrderMarketListingV2"},"required":true},
+            "market_listings": {"dataType":"array","array":{"dataType":"refObject","ref":"OrderMarketListingV1"},"required":true},
+            "market_listings_v2": {"dataType":"array","array":{"dataType":"refObject","ref":"OrderMarketListingV2"},"required":true},
             "items": {"dataType":"array","array":{"dataType":"refObject","ref":"OrderItemDetail"},"required":true},
         },
         "additionalProperties": false,
@@ -478,6 +490,17 @@ const models: TsoaRoute.Models = {
         "additionalProperties": false,
     },
     // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+    "OfferMarketListingV1": {
+        "dataType": "refObject",
+        "properties": {
+            "listing_id": {"dataType":"string","required":true},
+            "quantity": {"dataType":"double","required":true},
+            "title": {"dataType":"string","required":true},
+            "price": {"dataType":"double","required":true},
+        },
+        "additionalProperties": false,
+    },
+    // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
     "OfferVariantItem": {
         "dataType": "refObject",
         "properties": {
@@ -517,7 +540,8 @@ const models: TsoaRoute.Models = {
             "created_at": {"dataType":"string","required":true},
             "collateral": {"dataType":"double"},
             "actor_username": {"dataType":"string","required":true},
-            "market_listings": {"dataType":"array","array":{"dataType":"refObject","ref":"OfferMarketListingV2"},"required":true},
+            "market_listings": {"dataType":"array","array":{"dataType":"refObject","ref":"OfferMarketListingV1"},"required":true},
+            "market_listings_v2": {"dataType":"array","array":{"dataType":"refObject","ref":"OfferMarketListingV2"},"required":true},
             "service": {"dataType":"union","subSchemas":[{"dataType":"nestedObjectLiteral","nestedProperties":{"title":{"dataType":"string","required":true},"service_id":{"dataType":"string","required":true}}},{"dataType":"enum","enums":[null]}]},
         },
         "additionalProperties": false,
