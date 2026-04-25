@@ -312,6 +312,7 @@ const models: TsoaRoute.Models = {
             "quantity": {"dataType":"double","required":true},
             "title": {"dataType":"string","required":true},
             "price": {"dataType":"double","required":true},
+            "photo": {"dataType":"string"},
             "v2_variants": {"dataType":"array","array":{"dataType":"refObject","ref":"OrderVariantItem"},"required":true},
         },
         "additionalProperties": false,

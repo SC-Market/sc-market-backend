@@ -400,7 +400,15 @@ export class OrdersV2Controller extends BaseController {
             }),
           )
 
-          return { listing_id: ml.listing_id, quantity: ml.quantity, title, price, v2_variants: v2Variants }
+          // Get first photo
+          const photoRow = await knex("listing_photos_v2 as lp")
+            .join("image_resources as ir", "lp.resource_id", "ir.resource_id")
+            .where("lp.listing_id", ml.listing_id)
+            .orderBy("lp.display_order", "asc")
+            .select(knex.raw("COALESCE(ir.external_url, 'https://cdn.sc-market.space/' || ir.filename) as url"))
+            .first()
+
+          return { listing_id: ml.listing_id, quantity: ml.quantity, title, price, photo: photoRow?.url || undefined, v2_variants: v2Variants }
         }),
       )
 
