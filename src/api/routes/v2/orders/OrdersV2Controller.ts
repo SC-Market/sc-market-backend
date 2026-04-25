@@ -364,9 +364,19 @@ export class OrdersV2Controller extends BaseController {
           .select("*")
       }
 
+      // Build source listings — V1 market_orders, or grouped V2 items if V1 is empty
+      let sourceListings: Array<{ listing_id: string; quantity: number }> = v1Listings
+      if (v1Listings.length === 0 && v2Items.length > 0) {
+        const grouped = new Map<string, number>()
+        for (const vi of v2Items) {
+          grouped.set(vi.listing_id, (grouped.get(vi.listing_id) || 0) + vi.quantity)
+        }
+        sourceListings = Array.from(grouped.entries()).map(([listing_id, quantity]) => ({ listing_id, quantity }))
+      }
+
       // Build enriched market_listings
       const marketListings: OrderMarketListingV2[] = await Promise.all(
-        v1Listings.map(async (ml) => {
+        sourceListings.map(async (ml) => {
           // Get listing title/price from V2 listings table first, fall back to V1
           let title = "Unknown"
           let price = 0
