@@ -488,6 +488,7 @@ export async function createOffer(
       | DBAggregateListingComplete
       | DBUniqueListingComplete
       | DBMultipleListingCompositeComplete
+      | { listing: { listing_id: string } }
   }[] = [],
   v2_variant_items?: {
     listing_id: string

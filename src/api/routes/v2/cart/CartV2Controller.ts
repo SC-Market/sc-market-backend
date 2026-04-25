@@ -1026,7 +1026,7 @@ export class CartV2Controller extends BaseController {
       }
       const marketListings = Array.from(listingQuantities.entries()).map(([listing_id, quantity]) => ({
         quantity,
-        listing: { listing: { listing_id } } as any,
+        listing: { listing: { listing_id } },
       }))
 
       // Build v2_variant_items for offer
