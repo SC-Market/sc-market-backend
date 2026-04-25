@@ -13,7 +13,7 @@ import { Request as ExpressRequest } from "express"
 import { BaseController } from "../base/BaseController.js"
 import { withTransaction } from "../../../../clients/database/transaction.js"
 import { getKnex } from "../../../../clients/database/knex-db.js"
-import { OrderLifecycleService } from "../../../../services/allocation/order-lifecycle.service.js"
+import { getAllocationMode } from "../../../../services/allocation/allocation-mode.service.js"
 import {
   CreateOrderRequest,
   CreateOrderResponse,
@@ -51,7 +51,7 @@ export class OrdersV2Controller extends BaseController {
    * 7. Notifying seller of new order
    *
    * Uses database transaction for atomicity to ensure all-or-nothing behavior.
-   * Stock allocation follows the V1 workflow using OrderLifecycleService.
+   * Stock allocation uses listing_item_lots directly (V2).
    *
    * Requirements:
    * - 25.1: POST /api/v2/orders endpoint
@@ -192,35 +192,48 @@ export class OrdersV2Controller extends BaseController {
         })
 
         // Step 5: Allocate stock from variant-specific lots
-        // Requirement 25.5: Allocate stock from correct variant's stock lots
-        // Use OrderLifecycleService to maintain V1 workflow compatibility
-        const lifecycleService = new OrderLifecycleService(trx)
-        
-        // Convert to format expected by OrderLifecycleService
-        const marketListings = Array.from(listingQuantities.entries()).map(
-          ([listing_id, quantity]) => ({
-            listing_id,
-            quantity,
-          }),
-        )
-
-        // Get seller info for allocation mode check
+        // V2 uses listing_item_lots directly (not V1 stock_allocations)
         const sellerType = itemsWithPricing[0].seller_type
-        const sellerContractorId = sellerType === "contractor" ? sellerId : null
-        const sellerUserId = sellerType === "user" ? sellerId : null
-
-        const allocationResult = await lifecycleService.allocateStockForOrder(
-          order.order_id,
-          marketListings,
-          sellerContractorId,
-          sellerUserId,
+        const allocationMode = await getAllocationMode(
+          sellerType === "contractor" ? "contractor" : "user",
+          sellerId,
         )
+
+        if (allocationMode === "auto") {
+          for (const item of itemsWithPricing) {
+            const listingItem = await trx("listing_items")
+              .where({ listing_id: item.listing_id })
+              .first("item_id")
+            if (!listingItem) continue
+
+            const lot = await trx("listing_item_lots")
+              .where({
+                item_id: listingItem.item_id,
+                variant_id: item.variant_id,
+                listed: true,
+              })
+              .where("quantity_total", ">=", item.quantity)
+              .first()
+
+            if (lot) {
+              await trx("listing_item_lots")
+                .where({ lot_id: lot.lot_id })
+                .decrement("quantity_total", item.quantity)
+            } else {
+              logger.warn("V2 stock insufficient for auto-allocation", {
+                orderId: order.order_id,
+                listing_id: item.listing_id,
+                variant_id: item.variant_id,
+                quantity: item.quantity,
+              })
+            }
+          }
+        }
 
         logger.info("Stock allocated for V2 order", {
           orderId: order.order_id,
-          totalRequested: allocationResult.total_requested,
-          totalAllocated: allocationResult.total_allocated,
-          hasPartial: allocationResult.has_partial_allocations,
+          allocationMode,
+          itemCount: itemsWithPricing.length,
         })
 
         // Return order response (Requirement 25.10)

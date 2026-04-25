@@ -23,7 +23,7 @@ import { Request as ExpressRequest } from "express"
 import { BaseController } from "../base/BaseController.js"
 import { getKnex } from "../../../../clients/database/knex-db.js"
 import { withTransaction } from "../../../../clients/database/transaction.js"
-import { OrderLifecycleService } from "../../../../services/allocation/order-lifecycle.service.js"
+import { getAllocationMode } from "../../../../services/allocation/allocation-mode.service.js"
 import {
   CreateBuyOrderRequest,
   CreateBuyOrderResponse,
@@ -61,7 +61,7 @@ export class BuyOrdersV2Controller extends BaseController {
    * 9. Returns order details with purchase summary
    *
    * Uses database transaction for atomicity to ensure all-or-nothing behavior.
-   * Stock allocation follows the V1 workflow using OrderLifecycleService.
+   * Stock allocation uses listing_item_lots directly (V2).
    *
    * Requirements:
    * - Validate listing exists and is active
@@ -254,26 +254,38 @@ export class BuyOrdersV2Controller extends BaseController {
           orderItemId: orderItem.order_item_id,
         })
 
-        // Step 9: Allocate stock from variant-specific lots
-        const lifecycleService = new OrderLifecycleService(trx)
-
-        const allocationResult = await lifecycleService.allocateStockForOrder(
-          order.order_id,
-          [
-            {
-              listing_id: requestBody.listing_id,
-              quantity: requestBody.quantity,
-            },
-          ],
-          null, // contractor_id
-          userId,
+        // Step 9: Allocate stock from variant-specific lots (V2 direct)
+        const allocationMode = await getAllocationMode(
+          listing.seller_type === "contractor" ? "contractor" : "user",
+          listing.seller_id,
         )
+
+        if (allocationMode === "auto") {
+          const listingItem = await trx("listing_items")
+            .where({ listing_id: requestBody.listing_id })
+            .first("item_id")
+
+          if (listingItem) {
+            const lot = await trx("listing_item_lots")
+              .where({
+                item_id: listingItem.item_id,
+                variant_id: requestBody.variant_id,
+                listed: true,
+              })
+              .where("quantity_total", ">=", requestBody.quantity)
+              .first()
+
+            if (lot) {
+              await trx("listing_item_lots")
+                .where({ lot_id: lot.lot_id })
+                .decrement("quantity_total", requestBody.quantity)
+            }
+          }
+        }
 
         logger.info("Stock allocated for direct purchase", {
           orderId: order.order_id,
-          totalRequested: allocationResult.total_requested,
-          totalAllocated: allocationResult.total_allocated,
-          hasPartial: allocationResult.has_partial_allocations,
+          allocationMode,
         })
 
         // Build variant detail for response
@@ -640,14 +652,28 @@ export class BuyOrdersV2Controller extends BaseController {
         created_at: new Date(),
       }).returning('*')
 
-      // Allocate stock
-      const lifecycleService = new OrderLifecycleService(trx)
-      const allocationResult = await lifecycleService.allocateStockForOrder(
-        order.order_id,
-        [{ listing_id: body.listing_id, quantity }],
-        null,
-        buyOrder.buyer_id,
+      // Allocate stock (V2 direct)
+      const allocationMode2 = await getAllocationMode(
+        listing.seller_type === "contractor" ? "contractor" : "user",
+        sellerId,
       )
+
+      if (allocationMode2 === "auto") {
+        const lot = await trx("listing_item_lots")
+          .where({
+            item_id: listingItem.item_id,
+            variant_id: body.variant_id,
+            listed: true,
+          })
+          .where("quantity_total", ">=", quantity)
+          .first()
+
+        if (lot) {
+          await trx("listing_item_lots")
+            .where({ lot_id: lot.lot_id })
+            .decrement("quantity_total", quantity)
+        }
+      }
 
       // Mark buy order as fulfilled
       await trx('buy_orders_v2').where('buy_order_id', id).update({ status: 'fulfilled', updated_at: new Date() })
