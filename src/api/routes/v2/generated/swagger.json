@@ -714,6 +714,33 @@
 				"type": "object",
 				"additionalProperties": false
 			},
+			"OrderMarketListingV1": {
+				"description": "V1 market listing in an order",
+				"properties": {
+					"listing_id": {
+						"type": "string"
+					},
+					"quantity": {
+						"type": "number",
+						"format": "double"
+					},
+					"title": {
+						"type": "string"
+					},
+					"price": {
+						"type": "number",
+						"format": "double"
+					}
+				},
+				"required": [
+					"listing_id",
+					"quantity",
+					"title",
+					"price"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
 			"OrderVariantItem": {
 				"properties": {
 					"order_item_id": {
@@ -753,7 +780,7 @@
 				"additionalProperties": false
 			},
 			"OrderMarketListingV2": {
-				"description": "Market listing in an order, enriched with V2 variant data",
+				"description": "V2 market listing in an order with variant data",
 				"properties": {
 					"listing_id": {
 						"type": "string"
@@ -778,7 +805,7 @@
 							"$ref": "#/components/schemas/OrderVariantItem"
 						},
 						"type": "array",
-						"description": "V2 variant items for this listing (empty if no V2 data)"
+						"description": "V2 variant items for this listing"
 					}
 				},
 				"required": [
@@ -888,10 +915,17 @@
 					},
 					"market_listings": {
 						"items": {
+							"$ref": "#/components/schemas/OrderMarketListingV1"
+						},
+						"type": "array",
+						"description": "V1 market listings from market_orders"
+					},
+					"market_listings_v2": {
+						"items": {
 							"$ref": "#/components/schemas/OrderMarketListingV2"
 						},
 						"type": "array",
-						"description": "V1 market listings with V2 variant enrichment"
+						"description": "V2 market listings with variant data from order_market_items_v2"
 					},
 					"items": {
 						"items": {
@@ -914,6 +948,7 @@
 					"created_at",
 					"updated_at",
 					"market_listings",
+					"market_listings_v2",
 					"items"
 				],
 				"type": "object",
@@ -1344,6 +1379,32 @@
 				"type": "object",
 				"additionalProperties": false
 			},
+			"OfferMarketListingV1": {
+				"properties": {
+					"listing_id": {
+						"type": "string"
+					},
+					"quantity": {
+						"type": "number",
+						"format": "double"
+					},
+					"title": {
+						"type": "string"
+					},
+					"price": {
+						"type": "number",
+						"format": "double"
+					}
+				},
+				"required": [
+					"listing_id",
+					"quantity",
+					"title",
+					"price"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
 			"OfferVariantItem": {
 				"properties": {
 					"variant_id": {
@@ -1403,7 +1464,7 @@
 							"$ref": "#/components/schemas/OfferVariantItem"
 						},
 						"type": "array",
-						"description": "V2 variant items for this listing (empty if no V2 data)"
+						"description": "V2 variant items for this listing"
 					}
 				},
 				"required": [
@@ -1453,9 +1514,17 @@
 					},
 					"market_listings": {
 						"items": {
+							"$ref": "#/components/schemas/OfferMarketListingV1"
+						},
+						"type": "array",
+						"description": "V1 market listings from offer_market_items (empty when V2 data exists)"
+					},
+					"market_listings_v2": {
+						"items": {
 							"$ref": "#/components/schemas/OfferMarketListingV2"
 						},
-						"type": "array"
+						"type": "array",
+						"description": "V2 market listings with variant data from offer_market_items_v2"
 					},
 					"service": {
 						"properties": {
@@ -1484,7 +1553,8 @@
 					"status",
 					"created_at",
 					"actor_username",
-					"market_listings"
+					"market_listings",
+					"market_listings_v2"
 				],
 				"type": "object",
 				"additionalProperties": false

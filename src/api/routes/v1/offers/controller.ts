@@ -90,38 +90,52 @@ export const offer_put_session_id: RequestHandler = async (req, res) => {
 
   if (["accepted", "rejected"].includes(status)) {
     const user = req.user as User
-    await offerDb.updateOfferSession(session.id, { status: "closed" })
-    await offerDb.updateOrderOffer(req.most_recent_offer!.id, {
-      status,
-    })
-
-    // Send Discord embed
-    await discordService.sendOfferStatusUpdate(
-      session,
-      nameMap.get(status)!,
-      user,
-    )
-
-    // Send chat message
-    try {
-      const chat = await chatDb.getChat({ session_id: session.id })
-      const actionBy = user ? ` by ${user.username}` : ""
-      const content = `Offer status updated to **${nameMap.get(status)!}**${actionBy}`
-      await sendSystemMessage(chat.chat_id, content, false)
-    } catch (error) {
-      logger.debug(
-        `Failed to send offer status update chat message for session ${session.id}: ${error}`,
-      )
-    }
 
     if (status === "accepted") {
-      const order = await initiateOrder(session)
+      // Update status first, then create order. Revert if order creation fails.
+      await offerDb.updateOfferSession(session.id, { status: "closed" })
+      await offerDb.updateOrderOffer(req.most_recent_offer!.id, { status })
 
-      res.json(createResponse({ order_id: order.order_id }))
-      return
-    } else {
-      res.json(createResponse({ result: "Success" }))
-      return
+      try {
+        const order = await initiateOrder(session)
+
+        // Side effects after success
+        try {
+          await discordService.sendOfferStatusUpdate(session, "Accepted", user)
+          const chat = await chatDb.getChat({ session_id: session.id })
+          const actionBy = user ? ` by ${user.username}` : ""
+          await sendSystemMessage(chat.chat_id, `Offer status updated to **Accepted**${actionBy}`, false)
+        } catch (error) {
+          logger.debug(`Failed to send offer accept side effects for session ${session.id}: ${error}`)
+        }
+
+        res.json(createResponse({ order_id: order.order_id }))
+        return
+      } catch (e) {
+        // Revert offer status so it can be retried
+        logger.error(`Failed to create order from accepted offer ${session.id}, reverting status`, { error: e })
+        await offerDb.updateOfferSession(session.id, { status: "active" })
+        await offerDb.updateOrderOffer(req.most_recent_offer!.id, { status: "active" })
+        res.status(500).json(createErrorResponse({ message: "Failed to create order. Offer has been reverted." }))
+        return
+      }
+    }
+
+    // Rejected
+    await offerDb.updateOfferSession(session.id, { status: "closed" })
+    await offerDb.updateOrderOffer(req.most_recent_offer!.id, { status })
+
+    try {
+      await discordService.sendOfferStatusUpdate(session, nameMap.get(status)!, user)
+      const chat = await chatDb.getChat({ session_id: session.id })
+      const actionBy = user ? ` by ${user.username}` : ""
+      await sendSystemMessage(chat.chat_id, `Offer status updated to **${nameMap.get(status)!}**${actionBy}`, false)
+    } catch (error) {
+      logger.debug(`Failed to send offer status update chat message for session ${session.id}: ${error}`)
+    }
+
+    res.json(createResponse({ result: "Success" }))
+    return
     }
   } else {
     const user = req.user as User
