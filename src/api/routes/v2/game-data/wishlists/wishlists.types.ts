@@ -28,6 +28,13 @@ export interface Wishlist {
 }
 
 /**
+ * How the user intends to acquire this item
+ * - "buy": Purchase the finished item from the market
+ * - "craft": Craft the item — ingredients will be added to the shopping list
+ */
+export type AcquisitionMode = "buy" | "craft"
+
+/**
  * Wishlist item with game data
  */
 export interface WishlistItem {
@@ -37,6 +44,7 @@ export interface WishlistItem {
   desired_quantity: number
   desired_quality_tier?: number
   blueprint_id?: string
+  acquisition_mode: AcquisitionMode
   priority: number
   notes?: string
   is_acquired: boolean
@@ -114,6 +122,9 @@ export interface AddWishlistItemRequest {
   /** Optional blueprint ID if item is craftable */
   blueprint_id?: string
 
+  /** How to acquire: "buy" from market or "craft" from ingredients (default: "buy") */
+  acquisition_mode?: AcquisitionMode
+
   /** Priority level (1-5, higher is more important) */
   priority: number
 
@@ -136,6 +147,9 @@ export interface UpdateWishlistItemRequest {
 
   /** Updated notes */
   notes?: string
+
+  /** Updated acquisition mode */
+  acquisition_mode?: AcquisitionMode
 
   /** Updated acquired status */
   is_acquired?: boolean

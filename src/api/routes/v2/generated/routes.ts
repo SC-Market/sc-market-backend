@@ -1082,6 +1082,11 @@ const models: TsoaRoute.Models = {
         "additionalProperties": false,
     },
     // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+    "AcquisitionMode": {
+        "dataType": "refAlias",
+        "type": {"dataType":"union","subSchemas":[{"dataType":"enum","enums":["buy"]},{"dataType":"enum","enums":["craft"]}],"validators":{}},
+    },
+    // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
     "WishlistItemWithDetails": {
         "dataType": "refObject",
         "properties": {
@@ -1091,6 +1096,7 @@ const models: TsoaRoute.Models = {
             "desired_quantity": {"dataType":"double","required":true},
             "desired_quality_tier": {"dataType":"double"},
             "blueprint_id": {"dataType":"string"},
+            "acquisition_mode": {"ref":"AcquisitionMode","required":true},
             "priority": {"dataType":"double","required":true},
             "notes": {"dataType":"string"},
             "is_acquired": {"dataType":"boolean","required":true},
@@ -1135,6 +1141,7 @@ const models: TsoaRoute.Models = {
             "desired_quantity": {"dataType":"double","required":true},
             "desired_quality_tier": {"dataType":"double"},
             "blueprint_id": {"dataType":"string"},
+            "acquisition_mode": {"ref":"AcquisitionMode"},
             "priority": {"dataType":"double","required":true},
             "notes": {"dataType":"string"},
         },
@@ -1148,6 +1155,7 @@ const models: TsoaRoute.Models = {
             "desired_quality_tier": {"dataType":"double"},
             "priority": {"dataType":"double"},
             "notes": {"dataType":"string"},
+            "acquisition_mode": {"ref":"AcquisitionMode"},
             "is_acquired": {"dataType":"boolean"},
             "acquired_quantity": {"dataType":"double"},
         },
