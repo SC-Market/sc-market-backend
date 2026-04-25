@@ -384,10 +384,14 @@ export class OrdersV2Controller extends BaseController {
             price = li?.base_price ? parseInt(li.base_price) : 0
           } else {
             // V1 listings table
-            const v1Details = await knex("market_listing_details").where({ listing_id: ml.listing_id }).first()
-            if (v1Details) {
-              title = v1Details.title
-              price = parseInt(v1Details.price) || 0
+            const v1 = await knex("market_unique_listings")
+              .join("market_listing_details", "market_unique_listings.details_id", "market_listing_details.details_id")
+              .join("market_listings", "market_unique_listings.listing_id", "market_listings.listing_id")
+              .where("market_unique_listings.listing_id", ml.listing_id)
+              .first("market_listing_details.title", "market_listings.price")
+            if (v1) {
+              title = v1.title
+              price = parseInt(v1.price) || 0
             }
           }
 
