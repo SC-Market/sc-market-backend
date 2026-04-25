@@ -350,42 +350,40 @@ export class OrdersV2Controller extends BaseController {
         throw this.throwForbidden("You do not have permission to view this order")
       }
 
+      // V2 order items
+      const v2Items = await knex("order_market_items_v2")
+        .where({ order_id: orderId })
+        .select("*")
+
       // V1 market listings
       const v1Listings = await knex("market_orders")
         .where({ order_id: orderId })
         .select("listing_id", "quantity")
 
-      // V2 variant items (may not exist)
-      const hasV2Table = await knex.schema.hasTable("order_market_items_v2")
-      let v2Items: any[] = []
-      if (hasV2Table) {
-        v2Items = await knex("order_market_items_v2")
-          .where({ order_id: orderId })
-          .select("*")
-      }
+      // Build market_listings from whichever source has data
+      // V2 orders use order_market_items_v2, V1 orders use market_orders
+      const isV2Order = v2Items.length > 0
+      const listingSources: Array<{ listing_id: string; quantity: number }> = isV2Order
+        ? (() => {
+            const grouped = new Map<string, number>()
+            for (const vi of v2Items) grouped.set(vi.listing_id, (grouped.get(vi.listing_id) || 0) + vi.quantity)
+            return Array.from(grouped.entries()).map(([listing_id, quantity]) => ({ listing_id, quantity }))
+          })()
+        : v1Listings
 
-      // Build source listings — V1 market_orders, or grouped V2 items if V1 is empty
-      let sourceListings: Array<{ listing_id: string; quantity: number }> = v1Listings
-      if (v1Listings.length === 0 && v2Items.length > 0) {
-        const grouped = new Map<string, number>()
-        for (const vi of v2Items) {
-          grouped.set(vi.listing_id, (grouped.get(vi.listing_id) || 0) + vi.quantity)
-        }
-        sourceListings = Array.from(grouped.entries()).map(([listing_id, quantity]) => ({ listing_id, quantity }))
-      }
-
-      // Build enriched market_listings
       const marketListings: OrderMarketListingV2[] = await Promise.all(
-        sourceListings.map(async (ml) => {
-          // Get listing title/price from V2 listings table first, fall back to V1
+        listingSources.map(async (ml) => {
           let title = "Unknown"
           let price = 0
+
+          // V2 listings table
           const v2Listing = await knex("listings").where({ listing_id: ml.listing_id }).first()
           if (v2Listing) {
             title = v2Listing.title
             const li = await knex("listing_items").where({ listing_id: ml.listing_id }).first()
             price = li?.base_price ? parseInt(li.base_price) : 0
           } else {
+            // V1 listings table
             const v1Details = await knex("market_listing_details").where({ listing_id: ml.listing_id }).first()
             if (v1Details) {
               title = v1Details.title
@@ -393,10 +391,10 @@ export class OrdersV2Controller extends BaseController {
             }
           }
 
-          // Get V2 variant items for this listing
-          const listingV2Items = v2Items.filter((i) => i.listing_id === ml.listing_id)
+          // V2 variant items for this listing
+          const listingV2Items = v2Items.filter((i: { listing_id: string }) => i.listing_id === ml.listing_id)
           const v2Variants: OrderVariantItem[] = await Promise.all(
-            listingV2Items.map(async (vi) => {
+            listingV2Items.map(async (vi: { order_item_id: string; variant_id: string; quantity: number; price_per_unit: string }) => {
               const variant = await knex("item_variants").where({ variant_id: vi.variant_id }).first()
               return {
                 order_item_id: vi.order_item_id,
@@ -410,7 +408,7 @@ export class OrdersV2Controller extends BaseController {
             }),
           )
 
-          // Get first photo
+          // Photo
           const photoRow = await knex("listing_photos_v2 as lp")
             .join("image_resources as ir", "lp.resource_id", "ir.resource_id")
             .where("lp.listing_id", ml.listing_id)
