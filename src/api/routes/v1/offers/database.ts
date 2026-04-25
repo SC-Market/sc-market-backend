@@ -32,8 +32,10 @@ export async function getOfferSessions(
 export async function updateOfferSession(
   id: string,
   data: Partial<DBOfferSession>,
+  trx?: any,
 ): Promise<DBOfferSession[]> {
-  return knex()<DBOfferSession>("offer_sessions")
+  const q = trx || knex()
+  return q<DBOfferSession>("offer_sessions")
     .where({ id })
     .update(data)
     .returning("*")
@@ -105,8 +107,10 @@ export async function createOrderOffer(
 export async function updateOrderOffer(
   id: string,
   data: Partial<DBOffer>,
+  trx?: any,
 ): Promise<DBOffer[]> {
-  return knex()<DBOffer>("order_offers")
+  const q = trx || knex()
+  return q<DBOffer>("order_offers")
     .where({ id })
     .update(data)
     .returning("*")

@@ -92,14 +92,15 @@ export const offer_put_session_id: RequestHandler = async (req, res) => {
     const user = req.user as User
 
     if (status === "accepted") {
-      // Update status first, then create order. Revert if order creation fails.
-      await offerDb.updateOfferSession(session.id, { status: "closed" })
-      await offerDb.updateOrderOffer(req.most_recent_offer!.id, { status })
-
       try {
-        const order = await initiateOrder(session)
+        const { withTransaction } = await import("../../../../clients/database/transaction.js")
+        const order = await withTransaction(async (trx) => {
+          await offerDb.updateOfferSession(session.id, { status: "closed" }, trx)
+          await offerDb.updateOrderOffer(req.most_recent_offer!.id, { status }, trx)
+          return await initiateOrder(session, trx)
+        })
 
-        // Side effects after success
+        // Side effects after successful commit
         try {
           await discordService.sendOfferStatusUpdate(session, "Accepted", user)
           const chat = await chatDb.getChat({ session_id: session.id })
@@ -112,11 +113,8 @@ export const offer_put_session_id: RequestHandler = async (req, res) => {
         res.json(createResponse({ order_id: order.order_id }))
         return
       } catch (e) {
-        // Revert offer status so it can be retried
-        logger.error(`Failed to create order from accepted offer ${session.id}, reverting status`, { error: e })
-        await offerDb.updateOfferSession(session.id, { status: "active" })
-        await offerDb.updateOrderOffer(req.most_recent_offer!.id, { status: "active" })
-        res.status(500).json(createErrorResponse({ message: "Failed to create order. Offer has been reverted." }))
+        logger.error(`Failed to accept offer ${session.id}`, { error: e })
+        res.status(500).json(createErrorResponse({ message: "Failed to create order from accepted offer" }))
         return
       }
     }

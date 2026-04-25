@@ -274,7 +274,7 @@ export const paymentTypes = [
   "mscu",
 ]
 
-export async function initiateOrder(session: DBOfferSession) {
+export async function initiateOrder(session: DBOfferSession, externalTrx?: Knex.Transaction) {
   const most_recent = await offerDb.getMostRecentOrderOffer(session.id)
 
   const market_listings = await marketDb.getOfferMarketListings(most_recent.id)
@@ -288,7 +288,7 @@ export async function initiateOrder(session: DBOfferSession) {
   const settingValue = stockSetting?.message_content
 
   // Wrap critical database operations in a transaction
-  const order = await withTransaction(async (trx) => {
+  const orderFn = async (trx: import("knex").Knex.Transaction) => {
     // Create order
     const [createdOrder] = await orderDb.createOrder(
       {
@@ -427,7 +427,11 @@ export async function initiateOrder(session: DBOfferSession) {
     ;(createdOrder as any).allocation_result = allocationResult
 
     return createdOrder
-  })
+  }
+
+  const order = externalTrx
+    ? await orderFn(externalTrx)
+    : await withTransaction(orderFn)
 
   // Non-critical operations outside transaction (can fail without breaking order creation)
   try {
