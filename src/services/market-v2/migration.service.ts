@@ -32,6 +32,7 @@ export interface V1UniqueListing {
   title: string
   description: string
   game_item_id: string
+  bulk_discount_tiers: Array<{ min_quantity: number; discount_percent: number }> | null
 }
 
 export interface V1AggregateListing {
@@ -51,6 +52,7 @@ export interface V1AggregateListing {
   title: string
   description: string
   game_item_id: string
+  bulk_discount_tiers: Array<{ min_quantity: number; discount_percent: number }> | null
 }
 
 export interface V1MultipleListing {
@@ -70,6 +72,7 @@ export interface V1MultipleListing {
   title: string
   description: string
   game_item_id: string
+  bulk_discount_tiers: Array<{ min_quantity: number; discount_percent: number }> | null
 }
 
 export interface MigrationResult {
@@ -178,7 +181,7 @@ export async function migrateUniqueListing(
     // V2: 'fixed', 'auction', 'negotiable'
     let v2SaleType = v1Listing.sale_type
     if (v1Listing.sale_type === "sale") {
-      v2SaleType = "fixed"
+      v2SaleType = v1Listing.accept_offers ? "negotiable" : "fixed"
     }
 
     // Idempotency: skip if already migrated
@@ -199,7 +202,7 @@ export async function migrateUniqueListing(
           status: v2Status,
           visibility: v1Listing.internal ? "private" : "public",
           sale_type: v2SaleType,
-          listing_type: "single", // Unique listings map to 'single'
+          listing_type: "single",
           created_at: v1Listing.timestamp,
           updated_at: v1Listing.timestamp,
           expires_at: v1Listing.expiration,
@@ -211,11 +214,12 @@ export async function migrateUniqueListing(
         .insert({
           listing_id: listing.listing_id,
           game_item_id: v1Listing.game_item_id,
-          pricing_mode: "unified", // V1 uses single price
+          pricing_mode: "unified",
           base_price: v1Listing.price,
           display_order: 0,
-          quantity_available: 0, // Will be updated by trigger
-          variant_count: 0, // Will be updated by trigger
+          quantity_available: 0,
+          variant_count: 0,
+          bulk_discount_tiers: v1Listing.bulk_discount_tiers || null,
         })
         .returning("*")
 
@@ -262,7 +266,17 @@ export async function migrateUniqueListing(
         })
       }
 
-      // 5. Record listing mapping
+      // 5. Migrate photos from V1 market_images → V2 listing_photos_v2
+      const v1Photos = await trx("market_images").where({ details_id: v1Listing.details_id })
+      for (let i = 0; i < v1Photos.length; i++) {
+        await trx("listing_photos_v2").insert({
+          listing_id: listing.listing_id,
+          resource_id: v1Photos[i].resource_id,
+          display_order: i,
+        })
+      }
+
+      // 6. Record listing mapping
       await trx("v1_v2_listing_map").insert({
         v1_listing_id: v1Listing.listing_id,
         v2_listing_id: listing.listing_id,
@@ -391,6 +405,7 @@ export async function migrateAggregateListing(
           display_order: 0,
           quantity_available: 0,
           variant_count: 0,
+          bulk_discount_tiers: v1Listing.bulk_discount_tiers || null,
         })
         .returning("*")
 
@@ -437,7 +452,17 @@ export async function migrateAggregateListing(
         })
       }
 
-      // 5. Record listing mapping
+      // 5. Migrate photos from V1 market_images → V2 listing_photos_v2
+      const v1Photos = await trx("market_images").where({ details_id: v1Listing.details_id })
+      for (let i = 0; i < v1Photos.length; i++) {
+        await trx("listing_photos_v2").insert({
+          listing_id: listing.listing_id,
+          resource_id: v1Photos[i].resource_id,
+          display_order: i,
+        })
+      }
+
+      // 6. Record listing mapping
       await trx("v1_v2_listing_map").insert({
         v1_listing_id: v1Listing.listing_id,
         v2_listing_id: listing.listing_id,
@@ -549,70 +574,93 @@ export async function migrateMultipleListing(
           status: v2Status,
           visibility: v1Listing.internal ? "private" : "public",
           sale_type: v2SaleType,
-          listing_type: "bundle", // Multiple listings map to 'bundle'
+          listing_type: "bundle",
           created_at: v1Listing.timestamp,
           updated_at: v1Listing.timestamp,
           expires_at: v1Listing.expiration,
         })
         .returning("*")
 
-      // 2. Create V2 listing_items record with unified pricing
-      const [listingItem] = await trx("listing_items")
-        .insert({
-          listing_id: listing.listing_id,
-          game_item_id: v1Listing.game_item_id,
-          pricing_mode: "unified",
-          base_price: v1Listing.price,
-          display_order: 0,
-          quantity_available: 0,
-          variant_count: 0,
-        })
-        .returning("*")
+      // 2. Get all sub-items in this bundle
+      const bundleEntries = await trx("market_multiple_listings")
+        .join("market_listing_details", "market_multiple_listings.details_id", "market_listing_details.details_id")
+        .where({ multiple_id: v1Listing.multiple_id })
+        .select(
+          "market_multiple_listings.details_id",
+          "market_listing_details.game_item_id",
+        )
 
-      // 3. Get or create default variant
-      const variantId = await getOrCreateVariant(
-        v1Listing.game_item_id,
-        DEFAULT_V1_VARIANT_ATTRIBUTES,
-      )
+      // 3. Create listing_item + variant + lot for each bundle entry
+      for (let i = 0; i < bundleEntries.length; i++) {
+        const entry = bundleEntries[i]
+        if (!entry.game_item_id) continue
 
-      // 4. Migrate V1 stock_lots if they exist, otherwise create from quantity_available
-      const v1Lots = await trx("stock_lots").where({ listing_id: v1Listing.listing_id })
+        const [listingItem] = await trx("listing_items")
+          .insert({
+            listing_id: listing.listing_id,
+            game_item_id: entry.game_item_id,
+            pricing_mode: "unified",
+            base_price: i === 0 ? v1Listing.price : 0,
+            display_order: i,
+            quantity_available: 0,
+            variant_count: 0,
+            bulk_discount_tiers: i === 0 ? (v1Listing.bulk_discount_tiers || null) : null,
+          })
+          .returning("*")
 
-      if (v1Lots.length > 0) {
-        for (const v1Lot of v1Lots) {
-          const [v2Lot] = await trx("listing_item_lots").insert({
-            item_id: listingItem.item_id,
-            variant_id: variantId,
-            quantity_total: v1Lot.quantity_total,
-            location_id: v1Lot.location_id,
-            owner_id: v1Lot.owner_id,
-            listed: v1Lot.listed,
-            notes: v1Lot.notes,
-            created_at: v1Lot.created_at,
-            updated_at: v1Lot.updated_at,
-          }).returning("*")
+        const variantId = await getOrCreateVariant(
+          entry.game_item_id,
+          DEFAULT_V1_VARIANT_ATTRIBUTES,
+        )
 
-          await trx("v1_v2_stock_lot_map").insert({
-            v1_lot_id: v1Lot.lot_id,
-            v2_lot_id: v2Lot.lot_id,
-            v1_listing_id: v1Listing.listing_id,
+        if (i === 0) {
+          const v1Lots = await trx("stock_lots").where({ listing_id: v1Listing.listing_id })
+          if (v1Lots.length > 0) {
+            for (const v1Lot of v1Lots) {
+              const [v2Lot] = await trx("listing_item_lots").insert({
+                item_id: listingItem.item_id,
+                variant_id: variantId,
+                quantity_total: v1Lot.quantity_total,
+                location_id: v1Lot.location_id,
+                owner_id: v1Lot.owner_id,
+                listed: v1Lot.listed,
+                notes: v1Lot.notes,
+                created_at: v1Lot.created_at,
+                updated_at: v1Lot.updated_at,
+              }).returning("*")
+              await trx("v1_v2_stock_lot_map").insert({
+                v1_lot_id: v1Lot.lot_id,
+                v2_lot_id: v2Lot.lot_id,
+                v1_listing_id: v1Listing.listing_id,
+              })
+            }
+          } else if (v1Listing.quantity_available > 0) {
+            await trx("listing_item_lots").insert({
+              item_id: listingItem.item_id,
+              variant_id: variantId,
+              quantity_total: v1Listing.quantity_available,
+              location_id: null,
+              owner_id: seller_id,
+              listed: true,
+              notes: `Migrated from V1 bundle listing ${v1Listing.listing_id}`,
+              created_at: v1Listing.timestamp,
+              updated_at: v1Listing.timestamp,
+            })
+          }
+        }
+
+        // Migrate photos for this sub-item
+        const v1Photos = await trx("market_images").where({ details_id: entry.details_id })
+        for (let j = 0; j < v1Photos.length; j++) {
+          await trx("listing_photos_v2").insert({
+            listing_id: listing.listing_id,
+            resource_id: v1Photos[j].resource_id,
+            display_order: i * 100 + j,
           })
         }
-      } else if (v1Listing.quantity_available > 0) {
-        await trx("listing_item_lots").insert({
-          item_id: listingItem.item_id,
-          variant_id: variantId,
-          quantity_total: v1Listing.quantity_available,
-          location_id: null,
-          owner_id: seller_id,
-          listed: true,
-          notes: `Migrated from V1 multiple listing ${v1Listing.listing_id}`,
-          created_at: v1Listing.timestamp,
-          updated_at: v1Listing.timestamp,
-        })
       }
 
-      // 5. Record listing mapping
+      // 4. Record listing mapping
       await trx("v1_v2_listing_map").insert({
         v1_listing_id: v1Listing.listing_id,
         v2_listing_id: listing.listing_id,
@@ -705,6 +753,7 @@ export class V1ToV2MigrationService {
           "ml.contractor_seller_id",
           "ml.timestamp",
           "ml.expiration",
+          "ml.bulk_discount_tiers",
           "mul.accept_offers",
           "mul.details_id",
           "mld.item_type",
@@ -780,6 +829,7 @@ export class V1ToV2MigrationService {
           "ml.contractor_seller_id",
           "ml.timestamp",
           "ml.expiration",
+          "ml.bulk_discount_tiers",
           "mal.aggregate_id",
           "ma.details_id",
           "mld.item_type",
@@ -854,6 +904,7 @@ export class V1ToV2MigrationService {
           "ml.contractor_seller_id",
           "ml.timestamp",
           "ml.expiration",
+          "ml.bulk_discount_tiers",
           "mml.multiple_id",
           "mml.details_id",
           "mld.item_type",
