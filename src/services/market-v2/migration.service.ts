@@ -181,6 +181,12 @@ export async function migrateUniqueListing(
       v2SaleType = "fixed"
     }
 
+    // Idempotency: skip if already migrated
+    const existing = await db("v1_v2_listing_map").where({ v1_listing_id: v1Listing.listing_id }).first()
+    if (existing) {
+      return { success: true, listing_id: existing.v2_listing_id, v1_listing_id: v1Listing.listing_id }
+    }
+
     // Use database transaction for atomicity
     const result = await db.transaction(async (trx) => {
       // 1. Create V2 listing record
@@ -219,13 +225,35 @@ export async function migrateUniqueListing(
         DEFAULT_V1_VARIANT_ATTRIBUTES,
       )
 
-      // 4. Create single stock lot with V1 quantity
-      if (v1Listing.quantity_available > 0) {
+      // 4. Migrate V1 stock_lots if they exist, otherwise create from quantity_available
+      const v1Lots = await trx("stock_lots").where({ listing_id: v1Listing.listing_id })
+
+      if (v1Lots.length > 0) {
+        for (const v1Lot of v1Lots) {
+          const [v2Lot] = await trx("listing_item_lots").insert({
+            item_id: listingItem.item_id,
+            variant_id: variantId,
+            quantity_total: v1Lot.quantity_total,
+            location_id: v1Lot.location_id,
+            owner_id: v1Lot.owner_id,
+            listed: v1Lot.listed,
+            notes: v1Lot.notes,
+            created_at: v1Lot.created_at,
+            updated_at: v1Lot.updated_at,
+          }).returning("*")
+
+          await trx("v1_v2_stock_lot_map").insert({
+            v1_lot_id: v1Lot.lot_id,
+            v2_lot_id: v2Lot.lot_id,
+            v1_listing_id: v1Listing.listing_id,
+          })
+        }
+      } else if (v1Listing.quantity_available > 0) {
         await trx("listing_item_lots").insert({
           item_id: listingItem.item_id,
           variant_id: variantId,
           quantity_total: v1Listing.quantity_available,
-          location_id: null, // V1 has no location tracking
+          location_id: null,
           owner_id: seller_id,
           listed: true,
           notes: `Migrated from V1 listing ${v1Listing.listing_id}`,
@@ -234,7 +262,12 @@ export async function migrateUniqueListing(
         })
       }
 
-      // Trigger will automatically update quantity_available and variant_count
+      // 5. Record listing mapping
+      await trx("v1_v2_listing_map").insert({
+        v1_listing_id: v1Listing.listing_id,
+        v2_listing_id: listing.listing_id,
+        v1_listing_type: "unique",
+      })
 
       return {
         success: true,
@@ -323,6 +356,12 @@ export async function migrateAggregateListing(
       v2SaleType = "fixed"
     }
 
+    // Idempotency: skip if already migrated
+    const existing = await db("v1_v2_listing_map").where({ v1_listing_id: v1Listing.listing_id }).first()
+    if (existing) {
+      return { success: true, listing_id: existing.v2_listing_id, v1_listing_id: v1Listing.listing_id }
+    }
+
     // Use database transaction for atomicity
     const result = await db.transaction(async (trx) => {
       // 1. Create V2 listing record
@@ -350,8 +389,8 @@ export async function migrateAggregateListing(
           pricing_mode: "unified",
           base_price: v1Listing.price,
           display_order: 0,
-          quantity_available: 0, // Will be updated by trigger
-          variant_count: 0, // Will be updated by trigger
+          quantity_available: 0,
+          variant_count: 0,
         })
         .returning("*")
 
@@ -361,8 +400,30 @@ export async function migrateAggregateListing(
         DEFAULT_V1_VARIANT_ATTRIBUTES,
       )
 
-      // 4. Create single stock lot with V1 quantity
-      if (v1Listing.quantity_available > 0) {
+      // 4. Migrate V1 stock_lots if they exist, otherwise create from quantity_available
+      const v1Lots = await trx("stock_lots").where({ listing_id: v1Listing.listing_id })
+
+      if (v1Lots.length > 0) {
+        for (const v1Lot of v1Lots) {
+          const [v2Lot] = await trx("listing_item_lots").insert({
+            item_id: listingItem.item_id,
+            variant_id: variantId,
+            quantity_total: v1Lot.quantity_total,
+            location_id: v1Lot.location_id,
+            owner_id: v1Lot.owner_id,
+            listed: v1Lot.listed,
+            notes: v1Lot.notes,
+            created_at: v1Lot.created_at,
+            updated_at: v1Lot.updated_at,
+          }).returning("*")
+
+          await trx("v1_v2_stock_lot_map").insert({
+            v1_lot_id: v1Lot.lot_id,
+            v2_lot_id: v2Lot.lot_id,
+            v1_listing_id: v1Listing.listing_id,
+          })
+        }
+      } else if (v1Listing.quantity_available > 0) {
         await trx("listing_item_lots").insert({
           item_id: listingItem.item_id,
           variant_id: variantId,
@@ -375,6 +436,13 @@ export async function migrateAggregateListing(
           updated_at: v1Listing.timestamp,
         })
       }
+
+      // 5. Record listing mapping
+      await trx("v1_v2_listing_map").insert({
+        v1_listing_id: v1Listing.listing_id,
+        v2_listing_id: listing.listing_id,
+        v1_listing_type: "aggregate",
+      })
 
       return {
         success: true,
@@ -463,6 +531,12 @@ export async function migrateMultipleListing(
       v2SaleType = "fixed"
     }
 
+    // Idempotency: skip if already migrated
+    const existing = await db("v1_v2_listing_map").where({ v1_listing_id: v1Listing.listing_id }).first()
+    if (existing) {
+      return { success: true, listing_id: existing.v2_listing_id, v1_listing_id: v1Listing.listing_id }
+    }
+
     // Use database transaction for atomicity
     const result = await db.transaction(async (trx) => {
       // 1. Create V2 listing record
@@ -490,8 +564,8 @@ export async function migrateMultipleListing(
           pricing_mode: "unified",
           base_price: v1Listing.price,
           display_order: 0,
-          quantity_available: 0, // Will be updated by trigger
-          variant_count: 0, // Will be updated by trigger
+          quantity_available: 0,
+          variant_count: 0,
         })
         .returning("*")
 
@@ -501,8 +575,30 @@ export async function migrateMultipleListing(
         DEFAULT_V1_VARIANT_ATTRIBUTES,
       )
 
-      // 4. Create single stock lot with V1 quantity
-      if (v1Listing.quantity_available > 0) {
+      // 4. Migrate V1 stock_lots if they exist, otherwise create from quantity_available
+      const v1Lots = await trx("stock_lots").where({ listing_id: v1Listing.listing_id })
+
+      if (v1Lots.length > 0) {
+        for (const v1Lot of v1Lots) {
+          const [v2Lot] = await trx("listing_item_lots").insert({
+            item_id: listingItem.item_id,
+            variant_id: variantId,
+            quantity_total: v1Lot.quantity_total,
+            location_id: v1Lot.location_id,
+            owner_id: v1Lot.owner_id,
+            listed: v1Lot.listed,
+            notes: v1Lot.notes,
+            created_at: v1Lot.created_at,
+            updated_at: v1Lot.updated_at,
+          }).returning("*")
+
+          await trx("v1_v2_stock_lot_map").insert({
+            v1_lot_id: v1Lot.lot_id,
+            v2_lot_id: v2Lot.lot_id,
+            v1_listing_id: v1Listing.listing_id,
+          })
+        }
+      } else if (v1Listing.quantity_available > 0) {
         await trx("listing_item_lots").insert({
           item_id: listingItem.item_id,
           variant_id: variantId,
@@ -515,6 +611,13 @@ export async function migrateMultipleListing(
           updated_at: v1Listing.timestamp,
         })
       }
+
+      // 5. Record listing mapping
+      await trx("v1_v2_listing_map").insert({
+        v1_listing_id: v1Listing.listing_id,
+        v2_listing_id: listing.listing_id,
+        v1_listing_type: "multiple",
+      })
 
       return {
         success: true,

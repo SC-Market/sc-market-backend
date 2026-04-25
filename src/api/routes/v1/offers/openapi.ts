@@ -166,6 +166,20 @@ oapi.schema("CounterOfferBody", {
       type: "string",
       enum: ["counteroffered"],
     },
+    v2_variant_items: {
+      title: "CounterOfferBody.v2_variant_items",
+      type: "array",
+      items: {
+        type: "object",
+        properties: {
+          listing_id: { type: "string" },
+          variant_id: { type: "string" },
+          quantity: { type: "integer", minimum: 1 },
+          price_per_unit: { type: "number", minimum: 0 },
+        },
+        required: ["listing_id", "variant_id", "quantity", "price_per_unit"],
+      },
+    },
   },
   additionalProperties: false,
   title: "CounterOfferBody",
