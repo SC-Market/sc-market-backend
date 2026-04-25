@@ -136,7 +136,6 @@ export const offer_put_session_id: RequestHandler = async (req, res) => {
 
     res.json(createResponse({ result: "Success" }))
     return
-    }
   } else {
     const user = req.user as User
     const customer = await profileDb.getUser({ user_id: session.customer_id })
