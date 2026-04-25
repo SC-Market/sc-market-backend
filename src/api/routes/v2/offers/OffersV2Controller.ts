@@ -140,11 +140,11 @@ export class OffersV2Controller extends BaseController {
     const contract_id = contractOffer?.contract_id || null
 
     // Offers
-    const dbOffers = await knex("order_offers").where({ session_id: session.id }).orderBy("timestamp", "asc")
+    const dbOffers = await knex("order_offers").where({ session_id: session.id }).orderBy("timestamp", "desc")
     const offers: OfferV2[] = await Promise.all(dbOffers.map((o: any) => this.serializeOffer(o)))
 
     // Derive status
-    const mostRecent = dbOffers[dbOffers.length - 1]
+    const mostRecent = dbOffers[0]
     let derivedStatus = session.status
     if (session.status === "active") {
       derivedStatus = mostRecent?.actor_id === session.customer_id
