@@ -128,9 +128,31 @@ export const offer_put_session_id: RequestHandler = async (req, res) => {
     const customer = await profileDb.getUser({ user_id: session.customer_id })
     const body = req.body as CounterOfferBody
 
-    const listings = await verify_listings(res, body.market_listings, customer)
+    // Separate V1 and V2 listing IDs
+    const v2ListingIds = new Set((body.v2_variant_items || []).map((i) => i.listing_id))
+    const v1MarketListings = body.market_listings.filter((ml) => !v2ListingIds.has(ml.listing_id))
+
+    // Validate V1 listings only (V2 listings are in the `listings` table, not `market_listing_details`)
+    const listings = await verify_listings(res, v1MarketListings, customer)
     if (listings === undefined || listings === null) {
       return
+    }
+
+    // Validate V2 variant items against the V2 listings table
+    if (body.v2_variant_items?.length) {
+      const db = (await import("../../../../clients/database/knex-db.js")).getKnex()
+      for (const item of body.v2_variant_items) {
+        const listing = await db("listings").where({ listing_id: item.listing_id }).first()
+        if (!listing || listing.status !== "active") {
+          res.status(400).json(createErrorResponse(ErrorCode.VALIDATION_ERROR, "Invalid V2 listing"))
+          return
+        }
+        const variant = await db("item_variants").where({ variant_id: item.variant_id }).first()
+        if (!variant) {
+          res.status(400).json(createErrorResponse(ErrorCode.VALIDATION_ERROR, "Invalid variant"))
+          return
+        }
+      }
     }
 
     if (body.service_id) {
@@ -185,8 +207,9 @@ export const offer_put_session_id: RequestHandler = async (req, res) => {
     // Only validate if buyer is making counter offer (not seller)
     // Seller counter offers can exceed limits to allow negotiation flexibility
     if (!isSellerCounterOffer) {
-      const offerSize =
-        listings?.reduce((sum, item) => sum + item.quantity, 0) || 0
+      const v1Size = listings?.reduce((sum, item) => sum + item.quantity, 0) || 0
+      const v2Size = (body.v2_variant_items || []).reduce((sum, item) => sum + item.quantity, 0)
+      const offerSize = v1Size + v2Size
       try {
         const { validateOrderLimits } = await import("../orders/helpers.js")
         await validateOrderLimits(
