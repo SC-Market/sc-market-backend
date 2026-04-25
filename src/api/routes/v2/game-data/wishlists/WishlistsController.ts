@@ -908,6 +908,7 @@ export class WishlistsController extends BaseController {
         game_item_type: enriched.game_item_type || "unknown",
         blueprint_name: enriched.blueprint_name || undefined,
         estimated_cost: undefined, // TODO: Implement market price lookup
+        acquisition_mode: enriched.blueprint_id ? "craft" : "buy",
         crafting_available: !!enriched.blueprint_id,
       }
     } catch (error) {
