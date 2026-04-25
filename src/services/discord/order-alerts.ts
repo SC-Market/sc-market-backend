@@ -115,22 +115,40 @@ export async function postOrderAlert(order: DBOrder): Promise<void> {
     const customer = await profileDb.getUser({ user_id: order.customer_id })
     const avatar = await cdn.getFileLinkResource(customer.avatar)
 
-    // Get market listing details from the order
+    // Get market listing details from V1 or V2
     const orderListings = await knex()("market_listing_orders")
       .where({ order_id: order.order_id })
       .select()
+      .catch(() => [] as { listing_id: string; quantity: number }[])
+
     const itemFields: { name: string; value: string; inline: boolean }[] = []
     if (orderListings.length) {
       const items: string[] = []
       for (const ol of orderListings) {
         try {
           const complete = await marketDb.getMarketListingComplete(ol.listing_id)
-          const name = (complete as any)?.details?.title || (complete as any)?.details?.item_name || "Item"
+          const name = (complete as { details?: { title?: string; item_name?: string } })?.details?.title || (complete as { details?: { item_name?: string } })?.details?.item_name || "Item"
           items.push(`${name} ×${ol.quantity}`)
         } catch { /* skip */ }
       }
       if (items.length) {
         itemFields.push({ name: "Items", value: items.join("\n"), inline: false })
+      }
+    } else {
+      // V2 order items
+      const v2Items = await knex()("order_market_items_v2")
+        .where({ order_id: order.order_id })
+        .select("listing_id", "quantity")
+        .catch(() => [] as { listing_id: string; quantity: number }[])
+      if (v2Items.length) {
+        const items: string[] = []
+        for (const oi of v2Items) {
+          const listing = await knex()("listings").where({ listing_id: oi.listing_id }).first("title")
+          items.push(`${listing?.title || "Item"} ×${oi.quantity}`)
+        }
+        if (items.length) {
+          itemFields.push({ name: "Items", value: items.join("\n"), inline: false })
+        }
       }
     }
 

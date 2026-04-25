@@ -470,50 +470,49 @@ export async function initiateOrder(session: DBOfferSession, externalTrx?: Knex.
     ? await orderFn(externalTrx)
     : await withTransaction(orderFn)
 
-  // Non-critical operations outside transaction (can fail without breaking order creation)
-  try {
-    // Try to find existing chat for this offer session and link it to the order
-    const existingChat = await chatDb.getChat({ session_id: session.id }).catch(() => null)
-    if (existingChat) {
-      await chatDb.updateChat(
-        { chat_id: existingChat.chat_id },
-        { order_id: order.order_id },
-      )
-    } else {
-      await chatDb.insertChat([], order.order_id, session.id)
+  // Non-critical side effects — only run when we own the transaction
+  // (when externalTrx is provided, the caller handles side effects after commit)
+  if (!externalTrx) {
+    try {
+      const existingChat = await chatDb.getChat({ session_id: session.id }).catch(() => null)
+      if (existingChat) {
+        await chatDb.updateChat(
+          { chat_id: existingChat.chat_id },
+          { order_id: order.order_id },
+        )
+      }
+    } catch (e) {
+      logger.error(`Failed to link chat to order: ${e}`)
     }
-  } catch (e) {
-    logger.error(`Failed to link chat to order: ${e}`)
+
+    try {
+      await chatParticipantService.ensureOrderChatParticipants(order)
+    } catch (e) {
+      logger.error(`Failed to ensure order chat participants: ${e}`)
+    }
+
+    try {
+      await notificationService.createOrderNotification(order)
+    } catch (e) {}
+
+    try {
+      await postOrderAlert(order)
+    } catch (e) {
+      logger.error(`Failed to post order alert: ${e}`)
+    }
+
+    try {
+      await discordService.renameThread(
+        session.thread_id!,
+        `order-${order.order_id.substring(0, 8)}`,
+      )
+    } catch (e) {
+      logger.error(`Failed to rename thread: ${e}`)
+    }
+
+    // Send custom order message if setting exists
+    await sendCustomOrderMessage(order, session)
   }
-
-  // Ensure chat participants are added (customer and assigned user)
-  try {
-    await chatParticipantService.ensureOrderChatParticipants(order)
-  } catch (e) {
-    logger.error(`Failed to ensure order chat participants: ${e}`)
-  }
-
-  try {
-    await notificationService.createOrderNotification(order)
-  } catch (e) {}
-
-  try {
-    await postOrderAlert(order)
-  } catch (e) {
-    logger.error(`Failed to post order alert: ${e}`)
-  }
-
-  try {
-    await discordService.renameThread(
-      session.thread_id!,
-      `order-${order.order_id.substring(0, 8)}`,
-    )
-  } catch (e) {
-    logger.error(`Failed to rename thread: ${e}`)
-  }
-
-  // Send custom order message if setting exists
-  await sendCustomOrderMessage(order, session)
 
   return { ...order }
 }

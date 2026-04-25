@@ -3387,6 +3387,14 @@
 				"type": "object",
 				"additionalProperties": false
 			},
+			"AcquisitionMode": {
+				"type": "string",
+				"enum": [
+					"buy",
+					"craft"
+				],
+				"description": "How the user intends to acquire this item\n- \"buy\": Purchase the finished item from the market\n- \"craft\": Craft the item — ingredients will be added to the shopping list"
+			},
 			"WishlistItemWithDetails": {
 				"description": "Wishlist item with enriched data",
 				"properties": {
@@ -3409,6 +3417,9 @@
 					},
 					"blueprint_id": {
 						"type": "string"
+					},
+					"acquisition_mode": {
+						"$ref": "#/components/schemas/AcquisitionMode"
 					},
 					"priority": {
 						"type": "number",
@@ -3455,6 +3466,7 @@
 					"wishlist_id",
 					"game_item_id",
 					"desired_quantity",
+					"acquisition_mode",
 					"priority",
 					"is_acquired",
 					"acquired_quantity",
@@ -3559,6 +3571,10 @@
 						"type": "string",
 						"description": "Optional blueprint ID if item is craftable"
 					},
+					"acquisition_mode": {
+						"$ref": "#/components/schemas/AcquisitionMode",
+						"description": "How to acquire: \"buy\" from market or \"craft\" from ingredients (default: \"buy\")"
+					},
 					"priority": {
 						"type": "number",
 						"format": "double",
@@ -3598,6 +3614,10 @@
 					"notes": {
 						"type": "string",
 						"description": "Updated notes"
+					},
+					"acquisition_mode": {
+						"$ref": "#/components/schemas/AcquisitionMode",
+						"description": "Updated acquisition mode"
 					},
 					"is_acquired": {
 						"type": "boolean",
@@ -8730,7 +8750,7 @@
 						}
 					}
 				},
-				"description": "Create a new order with variant-specific items\n\nCreates an order by:\n1. Validating variant availability for each item\n2. Creating order record in V1 orders table\n3. Creating market_orders entries (V1 compatibility)\n4. Creating order_market_items_v2 entries with variant tracking\n5. Snapshotting variant prices at purchase time\n6. Allocating stock from variant-specific lots\n7. Notifying seller of new order\n\nUses database transaction for atomicity to ensure all-or-nothing behavior.\nStock allocation follows the V1 workflow using OrderLifecycleService.\n\nRequirements:\n- 25.1: POST /api/v2/orders endpoint\n- 25.2: Accept array of items with listing_id, variant_id, quantity\n- 25.3: Validate variant availability before order creation\n- 25.4: Use variant-specific pricing in order calculations\n- 25.5: Allocate stock from correct variant's stock lots\n- 25.6: Use database transaction for atomicity\n- 25.7: Snapshot variant prices at time of order creation\n- 25.8: Prevent ordering unavailable variants with descriptive error\n- 25.9: Create order_market_items_v2 entries for each item\n- 25.10: Return order_id and order details on success\n- 25.11: Notify seller of new order\n- 25.12: Log order creation to Audit_Trail",
+				"description": "Create a new order with variant-specific items\n\nCreates an order by:\n1. Validating variant availability for each item\n2. Creating order record in V1 orders table\n3. Creating market_orders entries (V1 compatibility)\n4. Creating order_market_items_v2 entries with variant tracking\n5. Snapshotting variant prices at purchase time\n6. Allocating stock from variant-specific lots\n7. Notifying seller of new order\n\nUses database transaction for atomicity to ensure all-or-nothing behavior.\nStock allocation uses listing_item_lots directly (V2).\n\nRequirements:\n- 25.1: POST /api/v2/orders endpoint\n- 25.2: Accept array of items with listing_id, variant_id, quantity\n- 25.3: Validate variant availability before order creation\n- 25.4: Use variant-specific pricing in order calculations\n- 25.5: Allocate stock from correct variant's stock lots\n- 25.6: Use database transaction for atomicity\n- 25.7: Snapshot variant prices at time of order creation\n- 25.8: Prevent ordering unavailable variants with descriptive error\n- 25.9: Create order_market_items_v2 entries for each item\n- 25.10: Return order_id and order details on success\n- 25.11: Notify seller of new order\n- 25.12: Log order creation to Audit_Trail",
 				"summary": "Create order",
 				"tags": [
 					"Orders V2"
@@ -13275,7 +13295,7 @@
 						}
 					}
 				},
-				"description": "Create a direct purchase order from listing\n\nCreates an order directly from a listing with variant selection, bypassing the cart.\nThis implements \"Buy Now\" functionality for immediate purchases.\n\nProcess:\n1. Validates listing exists and is active\n2. Validates variant exists and belongs to listing\n3. Checks variant availability (sufficient stock)\n4. Snapshots variant price at purchase time\n5. Creates order record in V1 orders table\n6. Creates market_orders entry (V1 compatibility)\n7. Creates order_market_items_v2 entry with variant tracking\n8. Allocates stock from variant-specific lots\n9. Returns order details with purchase summary\n\nUses database transaction for atomicity to ensure all-or-nothing behavior.\nStock allocation follows the V1 workflow using OrderLifecycleService.\n\nRequirements:\n- Validate listing exists and is active\n- Validate variant exists and belongs to listing\n- Check variant availability before order creation\n- Create order with variant-specific line item\n- Allocate stock for the variant\n- Use database transaction for atomicity\n- Snapshot variant price at time of purchase\n- Return order_id and purchase summary\n- Prevent ordering unavailable variants with descriptive error\n- Follow same patterns as cart checkout",
+				"description": "Create a direct purchase order from listing\n\nCreates an order directly from a listing with variant selection, bypassing the cart.\nThis implements \"Buy Now\" functionality for immediate purchases.\n\nProcess:\n1. Validates listing exists and is active\n2. Validates variant exists and belongs to listing\n3. Checks variant availability (sufficient stock)\n4. Snapshots variant price at purchase time\n5. Creates order record in V1 orders table\n6. Creates market_orders entry (V1 compatibility)\n7. Creates order_market_items_v2 entry with variant tracking\n8. Allocates stock from variant-specific lots\n9. Returns order details with purchase summary\n\nUses database transaction for atomicity to ensure all-or-nothing behavior.\nStock allocation uses listing_item_lots directly (V2).\n\nRequirements:\n- Validate listing exists and is active\n- Validate variant exists and belongs to listing\n- Check variant availability before order creation\n- Create order with variant-specific line item\n- Allocate stock for the variant\n- Use database transaction for atomicity\n- Snapshot variant price at time of purchase\n- Return order_id and purchase summary\n- Prevent ordering unavailable variants with descriptive error\n- Follow same patterns as cart checkout",
 				"summary": "Create direct purchase order",
 				"tags": [
 					"Buy Orders V2"

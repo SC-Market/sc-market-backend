@@ -279,6 +279,7 @@ export class WishlistsController extends BaseController {
         desired_quantity: item.desired_quantity,
         desired_quality_tier: item.desired_quality_tier || undefined,
         blueprint_id: item.blueprint_id || undefined,
+        acquisition_mode: item.acquisition_mode || "buy",
         priority: item.priority,
         notes: item.notes || undefined,
         is_acquired: item.is_acquired,
@@ -611,6 +612,7 @@ export class WishlistsController extends BaseController {
           desired_quantity: body.desired_quantity,
           desired_quality_tier: body.desired_quality_tier || null,
           blueprint_id: body.blueprint_id || null,
+          acquisition_mode: body.acquisition_mode || "buy",
           priority: body.priority,
           notes: body.notes?.trim() || null,
           is_acquired: false,
@@ -634,6 +636,7 @@ export class WishlistsController extends BaseController {
         desired_quantity: item.desired_quantity,
         desired_quality_tier: item.desired_quality_tier || undefined,
         blueprint_id: item.blueprint_id || undefined,
+        acquisition_mode: item.acquisition_mode || "buy",
         priority: item.priority,
         notes: item.notes || undefined,
         is_acquired: item.is_acquired,
@@ -856,6 +859,10 @@ export class WishlistsController extends BaseController {
           ])
         }
         updates.acquired_quantity = body.acquired_quantity
+      }
+
+      if (body.acquisition_mode !== undefined) {
+        updates.acquisition_mode = body.acquisition_mode
       }
 
       // Update item
