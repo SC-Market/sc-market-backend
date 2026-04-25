@@ -46,25 +46,7 @@ export class StockLotRepository {
       .where({ lot_id: lotId })
       .first()
 
-    if (lot) return lot
-
-    // Check V2 listing_item_lots
-    const v2Lot = await this.knex("listing_item_lots as lil")
-      .join("listing_items as li", "lil.item_id", "li.item_id")
-      .where("lil.lot_id", lotId)
-      .select(
-        "lil.lot_id",
-        "li.listing_id",
-        "lil.location_id",
-        "lil.owner_id",
-        "lil.quantity_total",
-        "lil.listed",
-        "lil.created_at",
-        "lil.updated_at",
-      )
-      .first()
-
-    return (v2Lot as DBStockLot) || null
+    return lot || null
   }
 
   /**
@@ -90,31 +72,6 @@ export class StockLotRepository {
     }
 
     const lots = await query.orderBy("created_at", "asc")
-
-    // If no V1 stock_lots found and filtering by listing_id, check V2 listing_item_lots
-    if (lots.length === 0 && filters.listing_id) {
-      const v2Lots = await this.knex("listing_item_lots as lil")
-        .join("listing_items as li", "lil.item_id", "li.item_id")
-        .where("li.listing_id", filters.listing_id)
-        .modify((qb) => {
-          if (filters.listed !== undefined) qb.where("lil.listed", filters.listed)
-          if (filters.location_id !== undefined) qb.where("lil.location_id", filters.location_id)
-          if (filters.owner_id !== undefined) qb.where("lil.owner_id", filters.owner_id)
-        })
-        .select(
-          "lil.lot_id",
-          this.knex.raw("? as listing_id", [filters.listing_id]),
-          "lil.location_id",
-          "lil.owner_id",
-          "lil.quantity_total",
-          "lil.listed",
-          "lil.created_at",
-          "lil.updated_at",
-        )
-        .orderBy("lil.created_at", "asc")
-
-      return v2Lots as DBStockLot[]
-    }
 
     return lots
   }
@@ -156,22 +113,7 @@ export class StockLotRepository {
       .update(updateData)
       .returning("*")
 
-    if (lot) return lot
-
-    // Try V2 listing_item_lots
-    const v2UpdateData: Record<string, unknown> = { updated_at: new Date() }
-    if (updates.quantity !== undefined) v2UpdateData.quantity_total = updates.quantity
-    if (updates.location_id !== undefined) v2UpdateData.location_id = updates.location_id
-    if (updates.owner_id !== undefined) v2UpdateData.owner_id = updates.owner_id
-    if (updates.listed !== undefined) v2UpdateData.listed = updates.listed
-
-    await this.knex("listing_item_lots")
-      .where({ lot_id: lotId })
-      .update(v2UpdateData)
-
-    const updated = await this.getById(lotId)
-    if (!updated) throw new Error(`Lot ${lotId} not found in stock_lots or listing_item_lots`)
-    return updated
+    return lot
   }
 
   /**

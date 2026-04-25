@@ -33,6 +33,7 @@ import { ErrorCode } from "../util/error-codes.js"
 import logger from "../../../../logger/logger.js"
 import { Request } from "express"
 import { withTransaction } from "../../../../clients/database/transaction.js"
+import { getAllocationMode } from "../../../../services/allocation/allocation-mode.service.js"
 import {
   OrderSearchQuery,
   OrderSearchQueryArguments,
@@ -393,39 +394,74 @@ export async function initiateOrder(session: DBOfferSession, externalTrx?: Knex.
     // V2 orders use order_market_items_v2 only — no market_orders entries needed
     // Order list counts should use order_market_items_v2 for V2 orders
 
-    // Allocate stock based on allocation_mode setting (auto/manual/none)
-    const lifecycleService = new OrderLifecycleService(trx)
+    // Allocate stock based on allocation_mode setting
+    if (v2OfferItems.length > 0) {
+      // V2 orders: directly decrement listing_item_lots (no stock_allocations FK issue)
+      const allocationMode = await getAllocationMode(
+        session.contractor_id ? "contractor" : "user",
+        session.contractor_id || session.assigned_id || session.customer_id,
+      )
 
-    // For V2 orders, build market_listings from V2 items for allocation
-    const allocationListings = market_listings.length > 0
-      ? market_listings
-      : v2OfferItems.length > 0
-        ? (() => {
-            const grouped = new Map<string, number>()
-            for (const vi of v2OfferItems) grouped.set(vi.listing_id, (grouped.get(vi.listing_id) || 0) + vi.quantity)
-            return Array.from(grouped.entries()).map(([listing_id, quantity]) => ({ listing_id, quantity }))
-          })()
-        : []
+      if (allocationMode === "auto") {
+        for (const vi of v2OfferItems) {
+          const listingItem = await trx("listing_items")
+            .where({ listing_id: vi.listing_id })
+            .first("item_id")
+          if (!listingItem) continue
 
-    const allocationResult = await lifecycleService.allocateStockForOrder(
-      createdOrder.order_id,
-      allocationListings,
-      session.contractor_id,
-      session.customer_id,
-    )
+          // Find a listed lot with enough stock for this variant
+          const lot = await trx("listing_item_lots")
+            .where({
+              item_id: listingItem.item_id,
+              variant_id: vi.variant_id,
+              listed: true,
+            })
+            .where("quantity_total", ">=", vi.quantity)
+            .first()
 
-    // Log allocation result
-    logger.info("Stock allocated for order", {
-      order_id: createdOrder.order_id,
-      total_requested: allocationResult.total_requested,
-      total_allocated: allocationResult.total_allocated,
-      has_partial: allocationResult.has_partial_allocations,
-      stock_subtraction_timing: settingValue || "on_accepted",
-    })
+          if (lot) {
+            await trx("listing_item_lots")
+              .where({ lot_id: lot.lot_id })
+              .decrement("quantity_total", vi.quantity)
 
-    // Store allocation result on the order object for later use
-    // This allows the caller to check if there were partial allocations
-    ;(createdOrder as any).allocation_result = allocationResult
+            logger.info("V2 stock decremented", {
+              order_id: createdOrder.order_id,
+              lot_id: lot.lot_id,
+              variant_id: vi.variant_id,
+              quantity: vi.quantity,
+            })
+          } else {
+            logger.warn("V2 stock insufficient for auto-allocation", {
+              order_id: createdOrder.order_id,
+              listing_id: vi.listing_id,
+              variant_id: vi.variant_id,
+              quantity: vi.quantity,
+            })
+          }
+        }
+      } else {
+        logger.info("Skipping V2 auto-allocation due to mode", {
+          order_id: createdOrder.order_id,
+          allocation_mode: allocationMode,
+        })
+      }
+    } else if (market_listings.length > 0) {
+      // V1 orders: use existing allocation service
+      const lifecycleService = new OrderLifecycleService(trx)
+      const allocationResult = await lifecycleService.allocateStockForOrder(
+        createdOrder.order_id,
+        market_listings,
+        session.contractor_id,
+        session.customer_id,
+      )
+
+      logger.info("Stock allocated for order", {
+        order_id: createdOrder.order_id,
+        total_requested: allocationResult.total_requested,
+        total_allocated: allocationResult.total_allocated,
+        has_partial: allocationResult.has_partial_allocations,
+      })
+    }
 
     return createdOrder
   }
