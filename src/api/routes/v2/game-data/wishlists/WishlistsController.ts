@@ -54,7 +54,7 @@ export class WishlistsController extends BaseController {
     logger.info("Fetching user wishlists", { user_id })
 
     try {
-      const wishlists = await knex("user_wishlists as w")
+      const wishlists = await knex("wishlists as w")
         .leftJoin("wishlist_items as wi", "w.wishlist_id", "wi.wishlist_id")
         .where(function () {
           this.where("w.user_id", user_id)
@@ -155,7 +155,7 @@ export class WishlistsController extends BaseController {
       // Generate share token if public
       const share_token = body.is_public ? this.generateShareToken() : null
 
-      const [wishlist] = await knex("user_wishlists")
+      const [wishlist] = await knex("wishlists")
         .insert({
           user_id,
           wishlist_name: body.wishlist_name.trim(),
@@ -231,7 +231,7 @@ export class WishlistsController extends BaseController {
 
     try {
       // Get wishlist
-      const wishlist = await knex("user_wishlists").where("wishlist_id", wishlist_id).first()
+      const wishlist = await knex("wishlists").where("wishlist_id", wishlist_id).first()
 
       if (!wishlist) {
         this.throwNotFound("Wishlist", wishlist_id)
@@ -371,7 +371,7 @@ export class WishlistsController extends BaseController {
 
     try {
       // Verify wishlist exists and user owns it
-      const wishlist = await knex("user_wishlists").where("wishlist_id", wishlist_id).first()
+      const wishlist = await knex("wishlists").where("wishlist_id", wishlist_id).first()
 
       if (!wishlist) {
         this.throwNotFound("Wishlist", wishlist_id)
@@ -412,7 +412,7 @@ export class WishlistsController extends BaseController {
       }
 
       // Update wishlist
-      const [updated] = await knex("user_wishlists")
+      const [updated] = await knex("wishlists")
         .where("wishlist_id", wishlist_id)
         .update(updates)
         .returning("*")
@@ -475,7 +475,7 @@ export class WishlistsController extends BaseController {
 
     try {
       // Verify wishlist exists and user owns it
-      const wishlist = await knex("user_wishlists").where("wishlist_id", wishlist_id).first()
+      const wishlist = await knex("wishlists").where("wishlist_id", wishlist_id).first()
 
       if (!wishlist) {
         this.throwNotFound("Wishlist", wishlist_id)
@@ -486,7 +486,7 @@ export class WishlistsController extends BaseController {
       }
 
       // Delete wishlist (cascade will delete items)
-      await knex("user_wishlists").where("wishlist_id", wishlist_id).delete()
+      await knex("wishlists").where("wishlist_id", wishlist_id).delete()
 
       logger.info("Wishlist deleted successfully", { wishlist_id, user_id })
 
@@ -564,7 +564,7 @@ export class WishlistsController extends BaseController {
 
     try {
       // Verify wishlist exists and user has access
-      const wishlist = await knex("user_wishlists").where("wishlist_id", wishlist_id).first()
+      const wishlist = await knex("wishlists").where("wishlist_id", wishlist_id).first()
 
       if (!wishlist) {
         this.throwNotFound("Wishlist", wishlist_id)
@@ -619,7 +619,7 @@ export class WishlistsController extends BaseController {
         .returning("*")
 
       // Update wishlist timestamp
-      await knex("user_wishlists").where("wishlist_id", wishlist_id).update({ updated_at: knex.fn.now() })
+      await knex("wishlists").where("wishlist_id", wishlist_id).update({ updated_at: knex.fn.now() })
 
       logger.info("Item added to wishlist successfully", {
         item_id: item.item_id,
@@ -698,7 +698,7 @@ export class WishlistsController extends BaseController {
 
     try {
       // Verify wishlist exists and user has access
-      const wishlist = await knex("user_wishlists").where("wishlist_id", wishlist_id).first()
+      const wishlist = await knex("wishlists").where("wishlist_id", wishlist_id).first()
 
       if (!wishlist) {
         this.throwNotFound("Wishlist", wishlist_id)
@@ -725,7 +725,7 @@ export class WishlistsController extends BaseController {
       await knex("wishlist_items").where("item_id", item_id).delete()
 
       // Update wishlist timestamp
-      await knex("user_wishlists").where("wishlist_id", wishlist_id).update({ updated_at: knex.fn.now() })
+      await knex("wishlists").where("wishlist_id", wishlist_id).update({ updated_at: knex.fn.now() })
 
       logger.info("Item removed from wishlist successfully", { wishlist_id, item_id, user_id })
 
@@ -786,7 +786,7 @@ export class WishlistsController extends BaseController {
 
     try {
       // Verify wishlist exists and user has access
-      const wishlist = await knex("user_wishlists").where("wishlist_id", wishlist_id).first()
+      const wishlist = await knex("wishlists").where("wishlist_id", wishlist_id).first()
 
       if (!wishlist) {
         this.throwNotFound("Wishlist", wishlist_id)
@@ -865,7 +865,7 @@ export class WishlistsController extends BaseController {
         .returning("*")
 
       // Update wishlist timestamp
-      await knex("user_wishlists").where("wishlist_id", wishlist_id).update({ updated_at: knex.fn.now() })
+      await knex("wishlists").where("wishlist_id", wishlist_id).update({ updated_at: knex.fn.now() })
 
       // Get enriched data
       const enriched = await knex("wishlist_items as wi")
@@ -949,7 +949,7 @@ export class WishlistsController extends BaseController {
 
     try {
       // Verify wishlist exists and user has access
-      const wishlist = await knex("user_wishlists").where("wishlist_id", wishlist_id).first()
+      const wishlist = await knex("wishlists").where("wishlist_id", wishlist_id).first()
 
       if (!wishlist) {
         this.throwNotFound("Wishlist", wishlist_id)
