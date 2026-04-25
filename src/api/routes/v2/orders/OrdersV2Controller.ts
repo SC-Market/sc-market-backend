@@ -246,12 +246,25 @@ export class OrdersV2Controller extends BaseController {
         totalPrice: result.total_price,
       })
 
-      // Notify seller of new order (Requirement 25.11)
+      // Notify seller of new order
       try {
         const { notificationService } = await import("../../../../services/notifications/notification.service.js")
+        // V2 push notification
         await notificationService.createNewOrderNotificationV2(result, result.seller_id)
+        // V1 in-app notification (creates notification objects in DB)
+        const orderRow = await getKnex()("orders").where({ order_id: result.order_id }).first()
+        if (orderRow) await notificationService.createOrderNotification(orderRow)
       } catch (e) {
         logger.error("Failed to send V2 order notification", { error: e })
+      }
+
+      // Discord order alert
+      try {
+        const { postOrderAlert } = await import("../../../../services/discord/order-alerts.js")
+        const orderRow = await getKnex()("orders").where({ order_id: result.order_id }).first()
+        if (orderRow) await postOrderAlert(orderRow)
+      } catch (e) {
+        logger.error("Failed to post V2 order Discord alert", { error: e })
       }
 
       return result
