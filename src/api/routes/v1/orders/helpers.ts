@@ -1,3 +1,4 @@
+import { Knex } from "knex"
 import {
   DBAggregateListingComplete,
   DBContractor,
@@ -288,7 +289,7 @@ export async function initiateOrder(session: DBOfferSession, externalTrx?: Knex.
   const settingValue = stockSetting?.message_content
 
   // Wrap critical database operations in a transaction
-  const orderFn = async (trx: import("knex").Knex.Transaction) => {
+  const orderFn = async (trx: Knex.Transaction) => {
     // Create order
     const [createdOrder] = await orderDb.createOrder(
       {

@@ -4,6 +4,7 @@
  * offer sessions, and related functionality.
  */
 
+import { Knex } from "knex"
 import { getKnex } from "../../../../clients/database/knex-db.js"
 import {
   DBOffer,
@@ -32,10 +33,9 @@ export async function getOfferSessions(
 export async function updateOfferSession(
   id: string,
   data: Partial<DBOfferSession>,
-  trx?: any,
+  trx?: Knex.Transaction,
 ): Promise<DBOfferSession[]> {
-  const q = trx || knex()
-  return q<DBOfferSession>("offer_sessions")
+  return (trx || knex())("offer_sessions")
     .where({ id })
     .update(data)
     .returning("*")
@@ -48,7 +48,7 @@ export async function createOrderOfferSession(
   data: Partial<
     Omit<DBOfferSession, "timestamp"> & { timestamp: string | Date }
   >,
-  trx?: any,
+  trx?: Knex.Transaction,
 ): Promise<DBOfferSession[]> {
   if (trx) {
     return trx("offer_sessions")
@@ -89,7 +89,7 @@ export async function getMostRecentOrderOffer(id: string): Promise<DBOffer> {
  */
 export async function createOrderOffer(
   data: Partial<Omit<DBOffer, "timestamp"> & { timestamp: string | Date }>,
-  trx?: any,
+  trx?: Knex.Transaction,
 ): Promise<DBOffer[]> {
   if (trx) {
     return trx("order_offers")
@@ -107,10 +107,9 @@ export async function createOrderOffer(
 export async function updateOrderOffer(
   id: string,
   data: Partial<DBOffer>,
-  trx?: any,
+  trx?: Knex.Transaction,
 ): Promise<DBOffer[]> {
-  const q = trx || knex()
-  return q<DBOffer>("order_offers")
+  return (trx || knex())("order_offers")
     .where({ id })
     .update(data)
     .returning("*")
