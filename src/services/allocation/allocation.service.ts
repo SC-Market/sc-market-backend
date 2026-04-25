@@ -601,10 +601,29 @@ export class AllocationService {
     orderId: string,
     lotId: string,
   ): Promise<void> {
-    // Get the allocated lot
-    const allocatedLot = await trx<DBStockLot>("stock_lots")
+    // Get the allocated lot from V1 or V2
+    let allocatedLot = await trx<DBStockLot>("stock_lots")
       .where({ lot_id: lotId })
       .first()
+
+    const isV2Lot = !allocatedLot
+    if (!allocatedLot) {
+      // Check V2 listing_item_lots
+      allocatedLot = await trx("listing_item_lots as lil")
+        .join("listing_items as li", "lil.item_id", "li.item_id")
+        .where("lil.lot_id", lotId)
+        .select(
+          "lil.lot_id",
+          "li.listing_id",
+          "lil.location_id",
+          "lil.owner_id",
+          "lil.quantity_total",
+          "lil.listed",
+          "lil.created_at",
+          "lil.updated_at",
+        )
+        .first() as DBStockLot | undefined
+    }
 
     if (!allocatedLot) return
 
@@ -613,40 +632,42 @@ export class AllocationService {
       .where({ order_id: orderId, lot_id: lotId })
       .delete()
 
-    // Try to find a matching lot to merge back into
-    // Match: same listing, same location, same owner, listed=true (unallocated)
-    const targetLot = await trx<DBStockLot>("stock_lots")
-      .where({
-        listing_id: allocatedLot.listing_id,
-        location_id: allocatedLot.location_id,
-        owner_id: allocatedLot.owner_id,
-        listed: true,
-      })
-      .whereNot({ lot_id: lotId })
-      .first()
-
-    if (targetLot) {
-      // Merge: add quantity to target lot and delete allocated lot
-      await trx<DBStockLot>("stock_lots")
-        .where({ lot_id: targetLot.lot_id })
-        .update({
-          quantity_total: targetLot.quantity_total + allocatedLot.quantity_total,
-          updated_at: new Date(),
-        })
-
-      // Hard delete the allocated lot
-      await trx<DBStockLot>("stock_lots")
+    if (isV2Lot) {
+      // V2: just mark as listed
+      await trx("listing_item_lots")
         .where({ lot_id: lotId })
-        .delete()
+        .update({ listed: true, updated_at: new Date() })
     } else {
-      // No matching lot: make this lot listed (unallocated)
-      await trx<DBStockLot>("stock_lots")
-        .where({ lot_id: lotId })
-        .update({
+      // V1: Try to find a matching lot to merge back into
+      const targetLot = await trx<DBStockLot>("stock_lots")
+        .where({
+          listing_id: allocatedLot.listing_id,
+          location_id: allocatedLot.location_id,
+          owner_id: allocatedLot.owner_id,
           listed: true,
-          notes: null,
-          updated_at: new Date(),
         })
+        .whereNot({ lot_id: lotId })
+        .first()
+
+      if (targetLot) {
+        await trx<DBStockLot>("stock_lots")
+          .where({ lot_id: targetLot.lot_id })
+          .update({
+            quantity_total: targetLot.quantity_total + allocatedLot.quantity_total,
+            updated_at: new Date(),
+          })
+        await trx<DBStockLot>("stock_lots")
+          .where({ lot_id: lotId })
+          .delete()
+      } else {
+        await trx<DBStockLot>("stock_lots")
+          .where({ lot_id: lotId })
+          .update({
+            listed: true,
+            notes: null,
+            updated_at: new Date(),
+          })
+      }
     }
   }
 

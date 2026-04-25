@@ -729,6 +729,42 @@ export async function cancelOrderMarketItems(order: DBOrder) {
       new_quantity: newQuantity,
     })
   }
+
+  // V2: Restore listing_item_lots quantities for V2 order items
+  const v2Items = await database.knex("order_market_items_v2")
+    .where({ order_id: order.order_id })
+    .select("listing_id", "variant_id", "quantity")
+
+  if (v2Items.length > 0) {
+    for (const item of v2Items) {
+      const listingItem = await database.knex("listing_items")
+        .where({ listing_id: item.listing_id })
+        .first("item_id")
+      if (!listingItem) continue
+
+      // Find the matching lot and restore quantity
+      const lot = await database.knex("listing_item_lots")
+        .where({
+          item_id: listingItem.item_id,
+          variant_id: item.variant_id,
+          listed: true,
+        })
+        .first()
+
+      if (lot) {
+        await database.knex("listing_item_lots")
+          .where({ lot_id: lot.lot_id })
+          .increment("quantity_total", item.quantity)
+
+        logger.info("V2 stock restored on order cancellation", {
+          order_id: order.order_id,
+          lot_id: lot.lot_id,
+          variant_id: item.variant_id,
+          quantity_restored: item.quantity,
+        })
+      }
+    }
+  }
 }
 
 export async function is_related_to_order(order: DBOrder, user: User) {
