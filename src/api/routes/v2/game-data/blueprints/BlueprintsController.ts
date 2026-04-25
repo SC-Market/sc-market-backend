@@ -1310,11 +1310,20 @@ export class BlueprintsController extends BaseController {
   ): Promise<{ members: { user_id: string; username: string; display_name: string; avatar?: string; acquisition_date?: string }[] }> {
     const knex = getKnex()
 
+    // Resolve blueprint code to UUID if needed
+    const isUuid = /^[0-9a-f]{8}-[0-9a-f]{4}-/i.test(blueprint_id)
+    let resolvedId = blueprint_id
+    if (!isUuid) {
+      const row = await knex("blueprints").where("blueprint_name", blueprint_id).first("blueprint_id")
+      if (!row) throw this.throwNotFound("Blueprint", blueprint_id)
+      resolvedId = row.blueprint_id
+    }
+
     const rows = await knex("user_blueprint_inventory as ubi")
       .join("contractor_members as cm", "ubi.user_id", "cm.user_id")
       .join("contractors as c", "cm.contractor_id", "c.contractor_id")
       .join("accounts as a", "ubi.user_id", "a.user_id")
-      .where("ubi.blueprint_id", blueprint_id)
+      .where("ubi.blueprint_id", resolvedId)
       .where("c.spectrum_id", spectrum_id)
       .where("ubi.is_owned", true)
       .select(
