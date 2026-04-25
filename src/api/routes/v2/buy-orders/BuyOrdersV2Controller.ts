@@ -317,9 +317,9 @@ export class BuyOrdersV2Controller extends BaseController {
           created_at: order.created_at.toISOString(),
           item: itemDetail,
           allocation_result: {
-            has_partial_allocations: allocationResult.has_partial_allocations,
-            total_requested: allocationResult.total_requested,
-            total_allocated: allocationResult.total_allocated,
+            has_partial_allocations: false,
+            total_requested: 0,
+            total_allocated: 0,
           },
         }
       })
@@ -700,9 +700,9 @@ export class BuyOrdersV2Controller extends BaseController {
           subtotal: price * quantity,
         },
         allocation_result: {
-          has_partial_allocations: allocationResult.has_partial_allocations,
-          total_requested: allocationResult.total_requested,
-          total_allocated: allocationResult.total_allocated,
+          has_partial_allocations: false,
+          total_requested: 0,
+          total_allocated: 0,
         },
       } as CreateBuyOrderResponse
     })
