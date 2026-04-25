@@ -22,6 +22,7 @@ import {
   GetOrdersResponse,
   OrderItemDetail,
   OrderVariantDetail,
+  OrderMarketListingV1,
   OrderMarketListingV2,
   OrderVariantItem,
   OrderPreview,
@@ -360,69 +361,61 @@ export class OrdersV2Controller extends BaseController {
         .where({ order_id: orderId })
         .select("listing_id", "quantity")
 
-      // Build market_listings from whichever source has data
-      // V2 orders use order_market_items_v2, V1 orders use market_orders
-      const isV2Order = v2Items.length > 0
-      const listingSources: Array<{ listing_id: string; quantity: number }> = isV2Order
-        ? (() => {
-            const grouped = new Map<string, number>()
-            for (const vi of v2Items) grouped.set(vi.listing_id, (grouped.get(vi.listing_id) || 0) + vi.quantity)
-            return Array.from(grouped.entries()).map(([listing_id, quantity]) => ({ listing_id, quantity }))
-          })()
-        : v1Listings
-
-      const marketListings: OrderMarketListingV2[] = await Promise.all(
-        listingSources.map(async (ml) => {
+      // Build V1 market listings (separate, no V2 enrichment)
+      const market_listings: OrderMarketListingV1[] = await Promise.all(
+        v1Listings.map(async (ml: { listing_id: string; quantity: number }) => {
           let title = "Unknown"
           let price = 0
+          const v1 = await knex("market_unique_listings")
+            .join("market_listing_details", "market_unique_listings.details_id", "market_listing_details.details_id")
+            .join("market_listings", "market_unique_listings.listing_id", "market_listings.listing_id")
+            .where("market_unique_listings.listing_id", ml.listing_id)
+            .first("market_listing_details.title", "market_listings.price")
+          if (v1) { title = v1.title; price = parseInt(v1.price) || 0 }
+          return { listing_id: ml.listing_id, quantity: ml.quantity, title, price }
+        }),
+      )
 
-          // V2 listings table
-          const v2Listing = await knex("listings").where({ listing_id: ml.listing_id }).first()
+      // Build V2 market listings (separate, with variant data)
+      const market_listings_v2: OrderMarketListingV2[] = []
+      if (v2Items.length > 0) {
+        const grouped = new Map<string, any[]>()
+        for (const vi of v2Items) {
+          if (!grouped.has(vi.listing_id)) grouped.set(vi.listing_id, [])
+          grouped.get(vi.listing_id)!.push(vi)
+        }
+        for (const [listing_id, litems] of grouped) {
+          let title = "Unknown"
+          let price = 0
+          const v2Listing = await knex("listings").where({ listing_id }).first()
           if (v2Listing) {
             title = v2Listing.title
-            const li = await knex("listing_items").where({ listing_id: ml.listing_id }).first()
+            const li = await knex("listing_items").where({ listing_id }).first()
             price = li?.base_price ? parseInt(li.base_price) : 0
-          } else {
-            // V1 listings table
-            const v1 = await knex("market_unique_listings")
-              .join("market_listing_details", "market_unique_listings.details_id", "market_listing_details.details_id")
-              .join("market_listings", "market_unique_listings.listing_id", "market_listings.listing_id")
-              .where("market_unique_listings.listing_id", ml.listing_id)
-              .first("market_listing_details.title", "market_listings.price")
-            if (v1) {
-              title = v1.title
-              price = parseInt(v1.price) || 0
-            }
           }
-
-          // V2 variant items for this listing
-          const listingV2Items = v2Items.filter((i: { listing_id: string }) => i.listing_id === ml.listing_id)
-          const v2Variants: OrderVariantItem[] = await Promise.all(
-            listingV2Items.map(async (vi: { order_item_id: string; variant_id: string; quantity: number; price_per_unit: string }) => {
-              const variant = await knex("item_variants").where({ variant_id: vi.variant_id }).first()
-              return {
-                order_item_id: vi.order_item_id,
-                variant_id: vi.variant_id,
-                quantity: vi.quantity,
-                price_per_unit: parseInt(vi.price_per_unit) || 0,
-                attributes: variant?.attributes || {},
-                display_name: variant?.display_name || "Standard",
-                short_name: variant?.short_name || "STD",
-              }
-            }),
-          )
-
-          // Photo
           const photoRow = await knex("listing_photos_v2 as lp")
             .join("image_resources as ir", "lp.resource_id", "ir.resource_id")
-            .where("lp.listing_id", ml.listing_id)
+            .where("lp.listing_id", listing_id)
             .orderBy("lp.display_order", "asc")
             .select(knex.raw("COALESCE(ir.external_url, 'https://cdn.sc-market.space/' || ir.filename) as url"))
             .first()
+          const totalQty = litems.reduce((s: number, i: any) => s + i.quantity, 0)
+          const v2Variants: OrderVariantItem[] = await Promise.all(
+            litems.map(async (vi: any) => {
+              const variant = await knex("item_variants").where({ variant_id: vi.variant_id }).first()
+              return {
+                order_item_id: vi.order_item_id, variant_id: vi.variant_id, quantity: vi.quantity,
+                price_per_unit: parseInt(vi.price_per_unit) || 0,
+                attributes: variant?.attributes || {}, display_name: variant?.display_name || "Standard", short_name: variant?.short_name || "STD",
+              }
+            }),
+          )
+          market_listings_v2.push({ listing_id, quantity: totalQty, title, price, photo: photoRow?.url || undefined, v2_variants: v2Variants })
+        }
+      }
 
-          return { listing_id: ml.listing_id, quantity: ml.quantity, title, price, photo: photoRow?.url || undefined, v2_variants: v2Variants }
-        }),
-      )
+      const marketListings = market_listings
+      const marketListingsV2 = market_listings_v2
 
       // Build items array from V2 data
       const items: OrderItemDetail[] = await Promise.all(
@@ -467,6 +460,7 @@ export class OrdersV2Controller extends BaseController {
         created_at: order.timestamp?.toISOString?.() || new Date().toISOString(),
         updated_at: order.updated_at?.toISOString?.() || order.timestamp?.toISOString?.() || new Date().toISOString(),
         market_listings: marketListings,
+        market_listings_v2: marketListingsV2,
         items,
       }
     } catch (error) {
