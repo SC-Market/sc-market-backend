@@ -236,7 +236,15 @@ export async function serializeOffer(offer: DBOffer) {
   }
 
   // Fetch V2 variant items if available
-  let v2_variant_items: any[] | undefined
+  let v2_variant_items: Array<{
+    listing_id: string
+    variant_id: string
+    quantity: number
+    price_per_unit: number
+    attributes: Record<string, unknown>
+    display_name: string
+    short_name: string
+  }> | undefined
   try {
     const knex = database.knex
     const hasTable = await knex.schema.hasTable("offer_market_items_v2")
@@ -246,7 +254,7 @@ export async function serializeOffer(offer: DBOffer) {
         .select("*")
       if (rows.length > 0) {
         v2_variant_items = await Promise.all(
-          rows.map(async (row: any) => {
+          rows.map(async (row: { listing_id: string; variant_id: string; quantity: number; price_per_unit: string | number }) => {
             const variant = await knex("item_variants")
               .where({ variant_id: row.variant_id })
               .first()
@@ -254,7 +262,7 @@ export async function serializeOffer(offer: DBOffer) {
               listing_id: row.listing_id,
               variant_id: row.variant_id,
               quantity: row.quantity,
-              price_per_unit: parseFloat(row.price_per_unit) || 0,
+              price_per_unit: parseFloat(String(row.price_per_unit)) || 0,
               attributes: variant?.attributes || {},
               display_name: variant?.display_name || "Standard",
               short_name: variant?.short_name || "STD",
@@ -280,16 +288,40 @@ export async function serializeOffer(offer: DBOffer) {
 }
 
 /** Build structured V2 market listings from variant items */
-async function buildV2MarketListings(v2Items: any[]): Promise<any[]> {
+interface V2MarketListingSummary {
+  listing_id: string
+  title: string
+  price: number
+  quantity: number
+  variants: Array<{
+    listing_id: string
+    variant_id: string
+    quantity: number
+    price_per_unit: number
+    attributes: Record<string, unknown>
+    display_name: string
+    short_name: string
+  }>
+}
+
+async function buildV2MarketListings(v2Items: Array<{
+  listing_id: string
+  variant_id: string
+  quantity: number
+  price_per_unit: number
+  attributes: Record<string, unknown>
+  display_name: string
+  short_name: string
+}>): Promise<V2MarketListingSummary[]> {
   const knex = database.knex
-  const grouped = new Map<string, { quantity: number; variants: any[] }>()
+  const grouped = new Map<string, { quantity: number; variants: typeof v2Items }>()
   for (const vi of v2Items) {
     if (!grouped.has(vi.listing_id)) grouped.set(vi.listing_id, { quantity: 0, variants: [] })
     const g = grouped.get(vi.listing_id)!
     g.quantity += vi.quantity
     g.variants.push(vi)
   }
-  const results = []
+  const results: V2MarketListingSummary[] = []
   for (const [listing_id, { quantity, variants }] of grouped) {
     const listing = await knex("listings").where({ listing_id }).first()
     const li = await knex("listing_items").where({ listing_id }).first()
