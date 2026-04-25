@@ -204,11 +204,16 @@ export class OrdersV2Controller extends BaseController {
           }),
         )
 
+        // Get seller info for allocation mode check
+        const sellerType = itemsWithPricing[0].seller_type
+        const sellerContractorId = sellerType === "contractor" ? sellerId : null
+        const sellerUserId = sellerType === "user" ? sellerId : null
+
         const allocationResult = await lifecycleService.allocateStockForOrder(
           order.order_id,
           marketListings,
-          null, // contractor_id
-          userId,
+          sellerContractorId,
+          sellerUserId,
         )
 
         logger.info("Stock allocated for V2 order", {
@@ -766,6 +771,7 @@ export class OrdersV2Controller extends BaseController {
       quantity: number
       price: number
       seller_id: string
+      seller_type: string
       listing_title: string
       variant_attributes: any
       variant_display_name: string
@@ -895,6 +901,7 @@ export class OrdersV2Controller extends BaseController {
         quantity: item.quantity,
         price,
         seller_id: listing.seller_id,
+        seller_type: listing.seller_type,
         listing_title: listing.title,
         variant_attributes: variant.attributes,
         variant_display_name: variant.display_name,

@@ -210,8 +210,9 @@ export class AllocationService {
           lotIds.map((id) => stockLotRepo.getById(id)),
         )
 
-        // Lock the lots for update
+        // Lock the lots for update (V1 stock_lots and V2 listing_item_lots)
         await trx("stock_lots").whereIn("lot_id", lotIds).forUpdate()
+        await trx("listing_item_lots").whereIn("lot_id", lotIds).forUpdate()
 
         // Get current allocations to check total
         const currentAllocations = await allocationRepo.getByOrderId(orderId)
@@ -321,9 +322,10 @@ export class AllocationService {
       // Get all active allocations for the order
       const allocations = await allocationRepo.getActiveByOrderId(orderId)
 
-      // Lock the lots for update
+      // Lock the lots for update (V1 stock_lots and V2 listing_item_lots)
       const lotIds = [...new Set(allocations.map((a) => a.lot_id))]
       await trx("stock_lots").whereIn("lot_id", lotIds).forUpdate()
+      await trx("listing_item_lots").whereIn("lot_id", lotIds).forUpdate()
 
       // Reduce lot quantities
       for (const allocation of allocations) {
