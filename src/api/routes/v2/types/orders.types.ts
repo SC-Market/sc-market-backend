@@ -164,14 +164,25 @@ export interface GetOrderDetailResponse {
   /** ISO 8601 timestamp of last update */
   updated_at: string;
   
-  /** V1 market listings with V2 variant enrichment */
-  market_listings: OrderMarketListingV2[];
+  /** V1 market listings from market_orders */
+  market_listings: OrderMarketListingV1[];
+
+  /** V2 market listings with variant data from order_market_items_v2 */
+  market_listings_v2: OrderMarketListingV2[];
 
   /** V2-only order items (from order_market_items_v2) */
   items: OrderItemDetail[];
 }
 
-/** Market listing in an order, enriched with V2 variant data */
+/** V1 market listing in an order */
+export interface OrderMarketListingV1 {
+  listing_id: string;
+  quantity: number;
+  title: string;
+  price: number;
+}
+
+/** V2 market listing in an order with variant data */
 export interface OrderMarketListingV2 {
   listing_id: string;
   quantity: number;
@@ -179,7 +190,7 @@ export interface OrderMarketListingV2 {
   price: number;
   /** First photo URL */
   photo?: string;
-  /** V2 variant items for this listing (empty if no V2 data) */
+  /** V2 variant items for this listing */
   v2_variants: OrderVariantItem[];
 }
 

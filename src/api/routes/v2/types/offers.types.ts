@@ -35,8 +35,18 @@ export interface OfferV2 {
   collateral?: number;
   /** Username of the user who created this offer */
   actor_username: string;
-  market_listings: OfferMarketListingV2[];
+  /** V1 market listings from offer_market_items (empty when V2 data exists) */
+  market_listings: OfferMarketListingV1[];
+  /** V2 market listings with variant data from offer_market_items_v2 */
+  market_listings_v2: OfferMarketListingV2[];
   service?: { service_id: string; title: string } | null;
+}
+
+export interface OfferMarketListingV1 {
+  listing_id: string;
+  quantity: number;
+  title: string;
+  price: number;
 }
 
 export interface OfferMarketListingV2 {
@@ -46,7 +56,7 @@ export interface OfferMarketListingV2 {
   price: number;
   /** First photo URL */
   photo?: string;
-  /** V2 variant items for this listing (empty if no V2 data) */
+  /** V2 variant items for this listing */
   v2_variants: OfferVariantItem[];
 }
 

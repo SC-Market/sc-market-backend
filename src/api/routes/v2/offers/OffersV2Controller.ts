@@ -16,6 +16,7 @@ import { formatOrderAvailability } from "../../v1/util/formatting.js"
 import {
   OfferSessionV2,
   OfferV2,
+  OfferMarketListingV1,
   OfferMarketListingV2,
   OfferVariantItem,
   GetOfferSessionV2Response,
@@ -195,10 +196,23 @@ export class OffersV2Controller extends BaseController {
       if (actor) actor_username = actor.username
     }
 
-    // V1 market listings
-    const v1Listings = await knex("offer_market_items").where({ offer_id: offer.id }).select("*")
+    // V1 market listings — kept as their own type
+    const v1Rows = await knex("offer_market_items").where({ offer_id: offer.id }).select("*")
+    const market_listings: OfferMarketListingV1[] = await Promise.all(
+      v1Rows.map(async (row: any) => {
+        let title = "Unknown"
+        let price = 0
+        const v1 = await knex("market_unique_listings")
+          .join("market_listing_details", "market_unique_listings.details_id", "market_listing_details.details_id")
+          .join("market_listings", "market_unique_listings.listing_id", "market_listings.listing_id")
+          .where("market_unique_listings.listing_id", row.listing_id)
+          .first("market_listing_details.title", "market_listings.price")
+        if (v1) { title = v1.title; price = parseFloat(v1.price) || 0 }
+        return { listing_id: row.listing_id, quantity: row.quantity, title, price }
+      }),
+    )
 
-    // V2 variant items
+    // V2 variant items — kept as their own type
     let v2Items: any[] = []
     try {
       v2Items = await knex("offer_market_items_v2").where({ offer_id: offer.id }).select("*")
@@ -206,49 +220,35 @@ export class OffersV2Controller extends BaseController {
       logger.error("Failed to fetch offer_market_items_v2", { offer_id: offer.id, error: err.message })
     }
 
-    // Build market listings — from V1 items, or from V2 items if V1 is empty
-    let sourceListings: Array<{ listing_id: string; quantity: number }> = v1Listings
-    if (v1Listings.length === 0 && v2Items.length > 0) {
-      const grouped = new Map<string, number>()
+    const market_listings_v2: OfferMarketListingV2[] = []
+    if (v2Items.length > 0) {
+      // Group V2 items by listing
+      const grouped = new Map<string, typeof v2Items>()
       for (const vi of v2Items) {
-        grouped.set(vi.listing_id, (grouped.get(vi.listing_id) || 0) + vi.quantity)
+        if (!grouped.has(vi.listing_id)) grouped.set(vi.listing_id, [])
+        grouped.get(vi.listing_id)!.push(vi)
       }
-      sourceListings = Array.from(grouped.entries()).map(([listing_id, quantity]) => ({ listing_id, quantity }))
-    }
 
-    const marketListings: OfferMarketListingV2[] = await Promise.all(
-      sourceListings.map(async (ml) => {
+      for (const [listing_id, items] of grouped) {
         let title = "Unknown"
         let price = 0
-
-        const v2Listing = await knex("listings").where({ listing_id: ml.listing_id }).first()
+        const v2Listing = await knex("listings").where({ listing_id }).first()
         if (v2Listing) {
           title = v2Listing.title
-          const li = await knex("listing_items").where({ listing_id: ml.listing_id }).first()
+          const li = await knex("listing_items").where({ listing_id }).first()
           price = li?.base_price ? parseFloat(li.base_price) : 0
-        } else {
-          const v1 = await knex("market_unique_listings")
-            .join("market_listing_details", "market_unique_listings.details_id", "market_listing_details.details_id")
-            .join("market_listings", "market_unique_listings.listing_id", "market_listings.listing_id")
-            .where("market_unique_listings.listing_id", ml.listing_id)
-            .first("market_listing_details.title", "market_listings.price")
-          if (v1) {
-            title = v1.title
-            price = parseFloat(v1.price) || 0
-          }
         }
 
-        // Get first photo
         const photoRow = await knex("listing_photos_v2 as lp")
           .join("image_resources as ir", "lp.resource_id", "ir.resource_id")
-          .where("lp.listing_id", ml.listing_id)
+          .where("lp.listing_id", listing_id)
           .orderBy("lp.display_order", "asc")
           .select(knex.raw("COALESCE(ir.external_url, 'https://cdn.sc-market.space/' || ir.filename) as url"))
           .first()
 
-        const listingV2Items = v2Items.filter((i: any) => i.listing_id === ml.listing_id)
+        const totalQty = items.reduce((s: number, i: any) => s + i.quantity, 0)
         const v2Variants: OfferVariantItem[] = await Promise.all(
-          listingV2Items.map(async (vi: any) => {
+          items.map(async (vi: any) => {
             const variant = await knex("item_variants").where({ variant_id: vi.variant_id }).first()
             return {
               variant_id: vi.variant_id,
@@ -261,9 +261,9 @@ export class OffersV2Controller extends BaseController {
           }),
         )
 
-        return { listing_id: ml.listing_id, quantity: ml.quantity, title, price, photo: photoRow?.url || undefined, v2_variants: v2Variants }
-      }),
-    )
+        market_listings_v2.push({ listing_id, quantity: totalQty, title, price, photo: photoRow?.url || undefined, v2_variants: v2Variants })
+      }
+    }
 
     // Service
     let service: { service_id: string; title: string } | null = null
@@ -283,7 +283,8 @@ export class OffersV2Controller extends BaseController {
       created_at: offer.timestamp?.toISOString?.() || new Date().toISOString(),
       collateral: parseFloat(offer.collateral) || 0,
       actor_username,
-      market_listings: marketListings,
+      market_listings,
+      market_listings_v2,
       service,
     }
   }
