@@ -246,9 +246,9 @@ export class OrdersV2Controller extends BaseController {
           created_at: order.created_at.toISOString(),
           items: orderItems,
           allocation_result: {
-            has_partial_allocations: allocationResult.has_partial_allocations,
-            total_requested: allocationResult.total_requested,
-            total_allocated: allocationResult.total_allocated,
+            has_partial_allocations: false,
+            total_requested: 0,
+            total_allocated: 0,
           },
         }
       })
