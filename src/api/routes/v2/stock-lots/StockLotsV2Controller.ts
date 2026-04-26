@@ -79,6 +79,8 @@ export class StockLotsV2Controller extends BaseController {
       listed: requestBody.listed ?? true,
       notes: requestBody.notes || null,
       owner_id: userId,
+      game_item_id: item.game_item_id || null,
+      listing_id: item.listing_id || null,
     }).returning('*')
 
     // Fetch full lot detail for response
