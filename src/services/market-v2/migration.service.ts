@@ -108,6 +108,46 @@ const DEFAULT_V1_VARIANT_ATTRIBUTES: VariantAttributes = {
 }
 
 /**
+ * Normalize V1 status to a valid V2 status.
+ * V2 CHECK: 'active', 'sold', 'expired', 'cancelled'
+ */
+function normalizeStatus(v1Status: string, expiration: Date): string {
+  switch (v1Status) {
+    case "active":
+      // If expiration is in the past, mark as expired
+      return expiration < new Date() ? "expired" : "active"
+    case "sold":
+      return "sold"
+    case "expired":
+      return "expired"
+    case "inactive":
+    case "archived":
+    case "cancelled":
+      return "cancelled"
+    default:
+      // Unknown status → cancelled (safe default)
+      return "cancelled"
+  }
+}
+
+/**
+ * Normalize V1 sale_type to a valid V2 sale_type.
+ * V2 CHECK: 'fixed', 'auction', 'negotiable'
+ */
+function normalizeSaleType(v1SaleType: string, acceptOffers?: boolean | null): string {
+  switch (v1SaleType) {
+    case "sale":
+      return acceptOffers ? "negotiable" : "fixed"
+    case "auction":
+      return "auction"
+    case "negotiable":
+      return "negotiable"
+    default:
+      return "fixed"
+  }
+}
+
+/**
  * Migrates a V1 unique listing to V2 format.
  *
  * Creates:
@@ -130,21 +170,12 @@ export async function migrateUniqueListing(
   const db = getKnex()
 
   try {
-    // Validate required fields
+    // Validate required fields — skip (not fail) for missing game_item_id
     if (!v1Listing.game_item_id) {
       return {
         success: false,
         v1_listing_id: v1Listing.listing_id,
-        error: "Missing game_item_id",
-      }
-    }
-
-    // Skip listings with invalid data (zero price or zero quantity)
-    if (v1Listing.price <= 0) {
-      return {
-        success: false,
-        v1_listing_id: v1Listing.listing_id,
-        error: "Invalid price (must be > 0)",
+        error: "Skipped: missing game_item_id",
       }
     }
 
@@ -168,21 +199,8 @@ export async function migrateUniqueListing(
       }
     }
 
-    // Map V1 status to V2 status
-    // V1: 'active', 'inactive', 'archived', 'sold', 'expired', 'cancelled'
-    // V2: 'active', 'sold', 'expired', 'cancelled'
-    let v2Status = v1Listing.status
-    if (v1Listing.status === "inactive" || v1Listing.status === "archived") {
-      v2Status = "cancelled" // Map inactive/archived to cancelled
-    }
-
-    // Map V1 sale_type to V2 sale_type
-    // V1: 'sale', 'auction', 'negotiable'
-    // V2: 'fixed', 'auction', 'negotiable'
-    let v2SaleType = v1Listing.sale_type
-    if (v1Listing.sale_type === "sale") {
-      v2SaleType = v1Listing.accept_offers ? "negotiable" : "fixed"
-    }
+    const v2Status = normalizeStatus(v1Listing.status, v1Listing.expiration)
+    const v2SaleType = normalizeSaleType(v1Listing.sale_type, v1Listing.accept_offers)
 
     // Idempotency: skip if already migrated
     const existing = await db("v1_v2_listing_map").where({ v1_listing_id: v1Listing.listing_id }).first()
@@ -320,55 +338,20 @@ export async function migrateAggregateListing(
   const db = getKnex()
 
   try {
-    // Validate required fields
     if (!v1Listing.game_item_id) {
-      return {
-        success: false,
-        v1_listing_id: v1Listing.listing_id,
-        error: "Missing game_item_id",
-      }
+      return { success: false, v1_listing_id: v1Listing.listing_id, error: "Skipped: missing game_item_id" }
     }
-
-    // Skip listings with invalid data
-    if (v1Listing.price <= 0) {
-      return {
-        success: false,
-        v1_listing_id: v1Listing.listing_id,
-        error: "Invalid price (must be > 0)",
-      }
-    }
-
     if (v1Listing.quantity_available < 0) {
-      return {
-        success: false,
-        v1_listing_id: v1Listing.listing_id,
-        error: "Invalid quantity (must be >= 0)",
-      }
+      return { success: false, v1_listing_id: v1Listing.listing_id, error: "Invalid quantity (must be >= 0)" }
     }
-
-    // Determine seller_id and seller_type
     const seller_id = v1Listing.user_seller_id || v1Listing.contractor_seller_id
     const seller_type = v1Listing.user_seller_id ? "user" : "contractor"
-
     if (!seller_id) {
-      return {
-        success: false,
-        v1_listing_id: v1Listing.listing_id,
-        error: "Missing seller_id",
-      }
+      return { success: false, v1_listing_id: v1Listing.listing_id, error: "Missing seller_id" }
     }
 
-    // Map V1 status to V2 status
-    let v2Status = v1Listing.status
-    if (v1Listing.status === "inactive" || v1Listing.status === "archived") {
-      v2Status = "cancelled"
-    }
-
-    // Map V1 sale_type to V2 sale_type
-    let v2SaleType = v1Listing.sale_type
-    if (v1Listing.sale_type === "sale") {
-      v2SaleType = "fixed"
-    }
+    const v2Status = normalizeStatus(v1Listing.status, v1Listing.expiration)
+    const v2SaleType = normalizeSaleType(v1Listing.sale_type)
 
     // Idempotency: skip if already migrated
     const existing = await db("v1_v2_listing_map").where({ v1_listing_id: v1Listing.listing_id }).first()
@@ -506,55 +489,20 @@ export async function migrateMultipleListing(
   const db = getKnex()
 
   try {
-    // Validate required fields
     if (!v1Listing.game_item_id) {
-      return {
-        success: false,
-        v1_listing_id: v1Listing.listing_id,
-        error: "Missing game_item_id",
-      }
+      return { success: false, v1_listing_id: v1Listing.listing_id, error: "Skipped: missing game_item_id" }
     }
-
-    // Skip listings with invalid data
-    if (v1Listing.price <= 0) {
-      return {
-        success: false,
-        v1_listing_id: v1Listing.listing_id,
-        error: "Invalid price (must be > 0)",
-      }
-    }
-
     if (v1Listing.quantity_available < 0) {
-      return {
-        success: false,
-        v1_listing_id: v1Listing.listing_id,
-        error: "Invalid quantity (must be >= 0)",
-      }
+      return { success: false, v1_listing_id: v1Listing.listing_id, error: "Invalid quantity (must be >= 0)" }
     }
-
-    // Determine seller_id and seller_type
     const seller_id = v1Listing.user_seller_id || v1Listing.contractor_seller_id
     const seller_type = v1Listing.user_seller_id ? "user" : "contractor"
-
     if (!seller_id) {
-      return {
-        success: false,
-        v1_listing_id: v1Listing.listing_id,
-        error: "Missing seller_id",
-      }
+      return { success: false, v1_listing_id: v1Listing.listing_id, error: "Missing seller_id" }
     }
 
-    // Map V1 status to V2 status
-    let v2Status = v1Listing.status
-    if (v1Listing.status === "inactive" || v1Listing.status === "archived") {
-      v2Status = "cancelled"
-    }
-
-    // Map V1 sale_type to V2 sale_type
-    let v2SaleType = v1Listing.sale_type
-    if (v1Listing.sale_type === "sale") {
-      v2SaleType = "fixed"
-    }
+    const v2Status = normalizeStatus(v1Listing.status, v1Listing.expiration)
+    const v2SaleType = normalizeSaleType(v1Listing.sale_type)
 
     // Idempotency: skip if already migrated
     const existing = await db("v1_v2_listing_map").where({ v1_listing_id: v1Listing.listing_id }).first()
@@ -591,6 +539,10 @@ export async function migrateMultipleListing(
         )
 
       // 3. Create listing_item + variant + lot for each bundle entry
+      if (bundleEntries.length === 0) {
+        throw new Error("Bundle has no sub-items in market_multiple_listings")
+      }
+
       for (let i = 0; i < bundleEntries.length; i++) {
         const entry = bundleEntries[i]
         if (!entry.game_item_id) continue
