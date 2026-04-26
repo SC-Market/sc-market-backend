@@ -339,6 +339,7 @@ export const getListingLots: RequestHandler = async (req, res) => {
     if (lotsWithOwner.length === 0) {
       let v2Query = db("listing_item_lots as sl")
         .join("listing_items as li", "sl.item_id", "li.item_id")
+        .leftJoin("item_variants as iv", "sl.variant_id", "iv.variant_id")
         .leftJoin("accounts as acc", "sl.owner_id", "acc.user_id")
         .leftJoin("locations as loc", "sl.location_id", "loc.location_id")
         .where("li.listing_id", listing_id)
@@ -351,6 +352,9 @@ export const getListingLots: RequestHandler = async (req, res) => {
           "sl.listed",
           "sl.created_at",
           "sl.updated_at",
+          "sl.variant_id",
+          "iv.attributes as variant_attributes",
+          "iv.display_name as variant_display_name",
           "acc.user_id as owner_user_id",
           "acc.username as owner_username",
           "acc.display_name as owner_display_name",
@@ -403,6 +407,11 @@ export const getListingLots: RequestHandler = async (req, res) => {
             : null,
           is_allocated: allocations.length > 0,
           allocated_quantity: totalAllocated,
+          variant: lot.variant_id ? {
+            variant_id: lot.variant_id,
+            attributes: lot.variant_attributes || {},
+            display_name: lot.variant_display_name || "Standard",
+          } : null,
           allocations: allocations.map((a) => ({
             allocation_id: a.allocation_id,
             order_id: a.order_id,
@@ -642,8 +651,54 @@ export const updateLot: RequestHandler = async (req, res) => {
       }
     }
 
-    // Update lot
-    const lot = await stockLotService.updateLot(lot_id, updates)
+    // Handle variant_attributes update for V2 lots
+    let variantData: { variant_id: string; attributes: Record<string, unknown>; display_name: string } | null = null
+    if (updates.variant_attributes) {
+      // Check if this is a V2 lot (in listing_item_lots)
+      const v2Lot = await knex("listing_item_lots as lil")
+        .join("listing_items as li", "lil.item_id", "li.item_id")
+        .where("lil.lot_id", lot_id)
+        .select("li.game_item_id", "lil.variant_id")
+        .first()
+
+      if (v2Lot) {
+        const { getOrCreateVariant } = await import("../../../../services/market-v2/variant.service.js")
+        const newVariantId = await getOrCreateVariant(v2Lot.game_item_id, updates.variant_attributes)
+
+        await knex("listing_item_lots")
+          .where({ lot_id })
+          .update({ variant_id: newVariantId, updated_at: new Date() })
+
+        const variant = await knex("item_variants").where({ variant_id: newVariantId }).first()
+        variantData = {
+          variant_id: newVariantId,
+          attributes: variant?.attributes || updates.variant_attributes,
+          display_name: variant?.display_name || "Standard",
+        }
+      }
+      delete updates.variant_attributes
+    }
+
+    // Update lot (V1 stock_lots fields)
+    let lot
+    const v2LotExists = await knex("listing_item_lots").where({ lot_id }).first()
+    if (v2LotExists) {
+      // V2 lot - update listing_item_lots directly
+      const v2Updates: Record<string, unknown> = { updated_at: new Date() }
+      if (updates.quantity !== undefined) v2Updates.quantity_total = updates.quantity
+      if (updates.location_id !== undefined) v2Updates.location_id = updates.location_id
+      if (updates.owner_id !== undefined) v2Updates.owner_id = updates.owner_id
+      if (updates.listed !== undefined) v2Updates.listed = updates.listed
+      if (updates.notes !== undefined) v2Updates.notes = updates.notes
+
+      const [updated] = await knex("listing_item_lots")
+        .where({ lot_id })
+        .update(v2Updates)
+        .returning("*")
+      lot = { ...updated, listing_id: updates.listing_id || v2LotExists.listing_id }
+    } else {
+      lot = await stockLotService.updateLot(lot_id, updates)
+    }
 
     // Enrich with owner details
     let owner = null
@@ -669,6 +724,7 @@ export const updateLot: RequestHandler = async (req, res) => {
           created_at: lot.created_at,
           updated_at: lot.updated_at,
           owner,
+          variant: variantData || undefined,
         },
       }),
     )
