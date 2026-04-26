@@ -14,6 +14,8 @@ import { OffersV2Controller } from './../offers/OffersV2Controller.js';
 // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
 import { ListingsV2Controller } from './../listings/ListingsV2Controller.js';
 // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+import { InventoryV2Controller } from './../inventory/InventoryV2Controller.js';
+// WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
 import { ImportJobsV2Controller } from './../import-jobs/ImportJobsV2Controller.js';
 // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
 import { HealthController } from './../health/HealthController.js';
@@ -41,6 +43,8 @@ import { CartV2Controller } from './../cart/CartV2Controller.js';
 import { BuyOrdersV2Controller } from './../buy-orders/BuyOrdersV2Controller.js';
 // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
 import { AvailabilityV2Controller } from './../availability/AvailabilityV2Controller.js';
+// WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+import { AuctionsV2Controller } from './../auctions/AuctionsV2Controller.js';
 // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
 import { AnalyticsV2Controller } from './../analytics/AnalyticsV2Controller.js';
 // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
@@ -894,6 +898,59 @@ const models: TsoaRoute.Models = {
             "min_order_value": {"dataType":"union","subSchemas":[{"dataType":"double"},{"dataType":"enum","enums":[null]}]},
             "max_order_value": {"dataType":"union","subSchemas":[{"dataType":"double"},{"dataType":"enum","enums":[null]}]},
             "bulk_discount_tiers": {"dataType":"array","array":{"dataType":"refObject","ref":"BulkDiscountTier"}},
+        },
+        "additionalProperties": false,
+    },
+    // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+    "InventoryLotDetail": {
+        "dataType": "refObject",
+        "properties": {
+            "lot_id": {"dataType":"string","required":true},
+            "owner_id": {"dataType":"string","required":true},
+            "game_item_id": {"dataType":"union","subSchemas":[{"dataType":"string"},{"dataType":"enum","enums":[null]}],"required":true},
+            "game_item_name": {"dataType":"union","subSchemas":[{"dataType":"string"},{"dataType":"enum","enums":[null]}],"required":true},
+            "variant_id": {"dataType":"union","subSchemas":[{"dataType":"string"},{"dataType":"enum","enums":[null]}],"required":true},
+            "variant_display_name": {"dataType":"union","subSchemas":[{"dataType":"string"},{"dataType":"enum","enums":[null]}],"required":true},
+            "listing_id": {"dataType":"union","subSchemas":[{"dataType":"string"},{"dataType":"enum","enums":[null]}],"required":true},
+            "listing_title": {"dataType":"union","subSchemas":[{"dataType":"string"},{"dataType":"enum","enums":[null]}],"required":true},
+            "quantity_total": {"dataType":"double","required":true},
+            "location_id": {"dataType":"union","subSchemas":[{"dataType":"string"},{"dataType":"enum","enums":[null]}],"required":true},
+            "location_name": {"dataType":"union","subSchemas":[{"dataType":"string"},{"dataType":"enum","enums":[null]}],"required":true},
+            "listed": {"dataType":"boolean","required":true},
+            "notes": {"dataType":"union","subSchemas":[{"dataType":"string"},{"dataType":"enum","enums":[null]}],"required":true},
+            "created_at": {"dataType":"string","required":true},
+            "updated_at": {"dataType":"string","required":true},
+        },
+        "additionalProperties": false,
+    },
+    // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+    "InventoryResponse": {
+        "dataType": "refObject",
+        "properties": {
+            "lots": {"dataType":"array","array":{"dataType":"refObject","ref":"InventoryLotDetail"},"required":true},
+            "total": {"dataType":"double","required":true},
+            "page": {"dataType":"double","required":true},
+            "page_size": {"dataType":"double","required":true},
+        },
+        "additionalProperties": false,
+    },
+    // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+    "CreateInventoryLotRequest": {
+        "dataType": "refObject",
+        "properties": {
+            "game_item_id": {"dataType":"union","subSchemas":[{"dataType":"string"},{"dataType":"enum","enums":[null]}]},
+            "variant_id": {"dataType":"union","subSchemas":[{"dataType":"string"},{"dataType":"enum","enums":[null]}]},
+            "quantity": {"dataType":"double","required":true},
+            "location_id": {"dataType":"union","subSchemas":[{"dataType":"string"},{"dataType":"enum","enums":[null]}]},
+            "notes": {"dataType":"union","subSchemas":[{"dataType":"string"},{"dataType":"enum","enums":[null]}]},
+        },
+        "additionalProperties": false,
+    },
+    // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+    "LinkToListingRequest": {
+        "dataType": "refObject",
+        "properties": {
+            "listing_id": {"dataType":"string","required":true},
         },
         "additionalProperties": false,
     },
@@ -2484,6 +2541,53 @@ const models: TsoaRoute.Models = {
         "additionalProperties": false,
     },
     // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+    "BidDetail": {
+        "dataType": "refObject",
+        "properties": {
+            "bid_id": {"dataType":"string","required":true},
+            "bidder": {"dataType":"nestedObjectLiteral","nestedProperties":{"avatar":{"dataType":"union","subSchemas":[{"dataType":"string"},{"dataType":"enum","enums":[null]}],"required":true},"display_name":{"dataType":"string","required":true},"username":{"dataType":"string","required":true}},"required":true},
+            "amount": {"dataType":"double","required":true},
+            "is_active": {"dataType":"boolean","required":true},
+            "created_at": {"dataType":"string","required":true},
+        },
+        "additionalProperties": false,
+    },
+    // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+    "AuctionDetailResponse": {
+        "dataType": "refObject",
+        "properties": {
+            "listing_id": {"dataType":"string","required":true},
+            "end_time": {"dataType":"string","required":true},
+            "min_bid_increment": {"dataType":"double","required":true},
+            "buyout_price": {"dataType":"union","subSchemas":[{"dataType":"double"},{"dataType":"enum","enums":[null]}],"required":true},
+            "reserve_price": {"dataType":"union","subSchemas":[{"dataType":"double"},{"dataType":"enum","enums":[null]}],"required":true},
+            "status": {"dataType":"string","required":true},
+            "current_highest_bid": {"dataType":"union","subSchemas":[{"dataType":"double"},{"dataType":"enum","enums":[null]}],"required":true},
+            "total_bids": {"dataType":"double","required":true},
+            "bids": {"dataType":"array","array":{"dataType":"refObject","ref":"BidDetail"},"required":true},
+        },
+        "additionalProperties": false,
+    },
+    // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+    "PlaceBidResponse": {
+        "dataType": "refObject",
+        "properties": {
+            "bid_id": {"dataType":"string","required":true},
+            "amount": {"dataType":"double","required":true},
+            "is_highest": {"dataType":"boolean","required":true},
+            "current_highest": {"dataType":"double","required":true},
+        },
+        "additionalProperties": false,
+    },
+    // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+    "PlaceBidRequest": {
+        "dataType": "refObject",
+        "properties": {
+            "amount": {"dataType":"double","required":true},
+        },
+        "additionalProperties": false,
+    },
+    // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
     "PriceDataPoint": {
         "dataType": "refObject",
         "properties": {
@@ -3411,6 +3515,171 @@ export function RegisterRoutes(app: Router) {
 
               await templateService.apiHandler({
                 methodName: 'uploadPhotos',
+                controller,
+                response,
+                next,
+                validatedArgs,
+                successStatus: undefined,
+              });
+            } catch (err) {
+                return next(err);
+            }
+        });
+        // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+        const argsInventoryV2Controller_getInventory: Record<string, TsoaRoute.ParameterSchema> = {
+                request: {"in":"request","name":"request","required":true,"dataType":"object"},
+                game_item_id: {"in":"query","name":"game_item_id","dataType":"string"},
+                listing_id: {"in":"query","name":"listing_id","dataType":"string"},
+                listed: {"in":"query","name":"listed","dataType":"boolean"},
+                page: {"in":"query","name":"page","dataType":"double"},
+                page_size: {"in":"query","name":"page_size","dataType":"double"},
+        };
+        app.get('/inventory',
+            authenticateMiddleware([{"loggedin":[]}]),
+            ...(fetchMiddlewares<RequestHandler>(InventoryV2Controller)),
+            ...(fetchMiddlewares<RequestHandler>(InventoryV2Controller.prototype.getInventory)),
+
+            async function InventoryV2Controller_getInventory(request: ExRequest, response: ExResponse, next: any) {
+
+            // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+
+            let validatedArgs: any[] = [];
+            try {
+                validatedArgs = templateService.getValidatedArgs({ args: argsInventoryV2Controller_getInventory, request, response });
+
+                const controller = new InventoryV2Controller();
+
+              await templateService.apiHandler({
+                methodName: 'getInventory',
+                controller,
+                response,
+                next,
+                validatedArgs,
+                successStatus: undefined,
+              });
+            } catch (err) {
+                return next(err);
+            }
+        });
+        // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+        const argsInventoryV2Controller_createInventoryLot: Record<string, TsoaRoute.ParameterSchema> = {
+                requestBody: {"in":"body","name":"requestBody","required":true,"ref":"CreateInventoryLotRequest"},
+                request: {"in":"request","name":"request","required":true,"dataType":"object"},
+        };
+        app.post('/inventory',
+            authenticateMiddleware([{"loggedin":[]}]),
+            ...(fetchMiddlewares<RequestHandler>(InventoryV2Controller)),
+            ...(fetchMiddlewares<RequestHandler>(InventoryV2Controller.prototype.createInventoryLot)),
+
+            async function InventoryV2Controller_createInventoryLot(request: ExRequest, response: ExResponse, next: any) {
+
+            // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+
+            let validatedArgs: any[] = [];
+            try {
+                validatedArgs = templateService.getValidatedArgs({ args: argsInventoryV2Controller_createInventoryLot, request, response });
+
+                const controller = new InventoryV2Controller();
+
+              await templateService.apiHandler({
+                methodName: 'createInventoryLot',
+                controller,
+                response,
+                next,
+                validatedArgs,
+                successStatus: undefined,
+              });
+            } catch (err) {
+                return next(err);
+            }
+        });
+        // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+        const argsInventoryV2Controller_linkToListing: Record<string, TsoaRoute.ParameterSchema> = {
+                lotId: {"in":"path","name":"lotId","required":true,"dataType":"string"},
+                requestBody: {"in":"body","name":"requestBody","required":true,"ref":"LinkToListingRequest"},
+                request: {"in":"request","name":"request","required":true,"dataType":"object"},
+        };
+        app.post('/inventory/:lotId/list',
+            authenticateMiddleware([{"loggedin":[]}]),
+            ...(fetchMiddlewares<RequestHandler>(InventoryV2Controller)),
+            ...(fetchMiddlewares<RequestHandler>(InventoryV2Controller.prototype.linkToListing)),
+
+            async function InventoryV2Controller_linkToListing(request: ExRequest, response: ExResponse, next: any) {
+
+            // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+
+            let validatedArgs: any[] = [];
+            try {
+                validatedArgs = templateService.getValidatedArgs({ args: argsInventoryV2Controller_linkToListing, request, response });
+
+                const controller = new InventoryV2Controller();
+
+              await templateService.apiHandler({
+                methodName: 'linkToListing',
+                controller,
+                response,
+                next,
+                validatedArgs,
+                successStatus: undefined,
+              });
+            } catch (err) {
+                return next(err);
+            }
+        });
+        // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+        const argsInventoryV2Controller_unlinkFromListing: Record<string, TsoaRoute.ParameterSchema> = {
+                lotId: {"in":"path","name":"lotId","required":true,"dataType":"string"},
+                request: {"in":"request","name":"request","required":true,"dataType":"object"},
+        };
+        app.post('/inventory/:lotId/unlist',
+            authenticateMiddleware([{"loggedin":[]}]),
+            ...(fetchMiddlewares<RequestHandler>(InventoryV2Controller)),
+            ...(fetchMiddlewares<RequestHandler>(InventoryV2Controller.prototype.unlinkFromListing)),
+
+            async function InventoryV2Controller_unlinkFromListing(request: ExRequest, response: ExResponse, next: any) {
+
+            // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+
+            let validatedArgs: any[] = [];
+            try {
+                validatedArgs = templateService.getValidatedArgs({ args: argsInventoryV2Controller_unlinkFromListing, request, response });
+
+                const controller = new InventoryV2Controller();
+
+              await templateService.apiHandler({
+                methodName: 'unlinkFromListing',
+                controller,
+                response,
+                next,
+                validatedArgs,
+                successStatus: undefined,
+              });
+            } catch (err) {
+                return next(err);
+            }
+        });
+        // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+        const argsInventoryV2Controller_deleteInventoryLot: Record<string, TsoaRoute.ParameterSchema> = {
+                lotId: {"in":"path","name":"lotId","required":true,"dataType":"string"},
+                request: {"in":"request","name":"request","required":true,"dataType":"object"},
+        };
+        app.delete('/inventory/:lotId',
+            authenticateMiddleware([{"loggedin":[]}]),
+            ...(fetchMiddlewares<RequestHandler>(InventoryV2Controller)),
+            ...(fetchMiddlewares<RequestHandler>(InventoryV2Controller.prototype.deleteInventoryLot)),
+
+            async function InventoryV2Controller_deleteInventoryLot(request: ExRequest, response: ExResponse, next: any) {
+
+            // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+
+            let validatedArgs: any[] = [];
+            try {
+                validatedArgs = templateService.getValidatedArgs({ args: argsInventoryV2Controller_deleteInventoryLot, request, response });
+
+                const controller = new InventoryV2Controller();
+
+              await templateService.apiHandler({
+                methodName: 'deleteInventoryLot',
                 controller,
                 response,
                 next,
@@ -5712,6 +5981,70 @@ export function RegisterRoutes(app: Router) {
 
               await templateService.apiHandler({
                 methodName: 'getNextAvailable',
+                controller,
+                response,
+                next,
+                validatedArgs,
+                successStatus: undefined,
+              });
+            } catch (err) {
+                return next(err);
+            }
+        });
+        // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+        const argsAuctionsV2Controller_getAuctionDetail: Record<string, TsoaRoute.ParameterSchema> = {
+                listingId: {"in":"path","name":"listingId","required":true,"dataType":"string"},
+                request: {"in":"request","name":"request","required":true,"dataType":"object"},
+        };
+        app.get('/auctions/:listingId',
+            ...(fetchMiddlewares<RequestHandler>(AuctionsV2Controller)),
+            ...(fetchMiddlewares<RequestHandler>(AuctionsV2Controller.prototype.getAuctionDetail)),
+
+            async function AuctionsV2Controller_getAuctionDetail(request: ExRequest, response: ExResponse, next: any) {
+
+            // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+
+            let validatedArgs: any[] = [];
+            try {
+                validatedArgs = templateService.getValidatedArgs({ args: argsAuctionsV2Controller_getAuctionDetail, request, response });
+
+                const controller = new AuctionsV2Controller();
+
+              await templateService.apiHandler({
+                methodName: 'getAuctionDetail',
+                controller,
+                response,
+                next,
+                validatedArgs,
+                successStatus: undefined,
+              });
+            } catch (err) {
+                return next(err);
+            }
+        });
+        // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+        const argsAuctionsV2Controller_placeBid: Record<string, TsoaRoute.ParameterSchema> = {
+                listingId: {"in":"path","name":"listingId","required":true,"dataType":"string"},
+                requestBody: {"in":"body","name":"requestBody","required":true,"ref":"PlaceBidRequest"},
+                request: {"in":"request","name":"request","required":true,"dataType":"object"},
+        };
+        app.post('/auctions/:listingId/bids',
+            authenticateMiddleware([{"loggedin":[]}]),
+            ...(fetchMiddlewares<RequestHandler>(AuctionsV2Controller)),
+            ...(fetchMiddlewares<RequestHandler>(AuctionsV2Controller.prototype.placeBid)),
+
+            async function AuctionsV2Controller_placeBid(request: ExRequest, response: ExResponse, next: any) {
+
+            // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+
+            let validatedArgs: any[] = [];
+            try {
+                validatedArgs = templateService.getValidatedArgs({ args: argsAuctionsV2Controller_placeBid, request, response });
+
+                const controller = new AuctionsV2Controller();
+
+              await templateService.apiHandler({
+                methodName: 'placeBid',
                 controller,
                 response,
                 next,

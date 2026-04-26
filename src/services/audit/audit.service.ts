@@ -1,7 +1,7 @@
 import { getKnex } from "../../clients/database/knex-db.js"
 import logger from "../../logger/logger.js"
 
-export type AuditEntityType = "listing" | "order" | "offer" | "cart" | "stock_lot"
+export type AuditEntityType = "listing" | "order" | "offer" | "cart" | "stock_lot" | "inventory_lot"
 
 export interface AuditEntry {
   entity_type: AuditEntityType

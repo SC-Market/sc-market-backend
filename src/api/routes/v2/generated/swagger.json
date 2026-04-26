@@ -2823,6 +2823,155 @@
 				"type": "object",
 				"additionalProperties": false
 			},
+			"InventoryLotDetail": {
+				"properties": {
+					"lot_id": {
+						"type": "string"
+					},
+					"owner_id": {
+						"type": "string"
+					},
+					"game_item_id": {
+						"type": "string",
+						"nullable": true
+					},
+					"game_item_name": {
+						"type": "string",
+						"nullable": true
+					},
+					"variant_id": {
+						"type": "string",
+						"nullable": true
+					},
+					"variant_display_name": {
+						"type": "string",
+						"nullable": true
+					},
+					"listing_id": {
+						"type": "string",
+						"nullable": true
+					},
+					"listing_title": {
+						"type": "string",
+						"nullable": true
+					},
+					"quantity_total": {
+						"type": "number",
+						"format": "double"
+					},
+					"location_id": {
+						"type": "string",
+						"nullable": true
+					},
+					"location_name": {
+						"type": "string",
+						"nullable": true
+					},
+					"listed": {
+						"type": "boolean"
+					},
+					"notes": {
+						"type": "string",
+						"nullable": true
+					},
+					"created_at": {
+						"type": "string"
+					},
+					"updated_at": {
+						"type": "string"
+					}
+				},
+				"required": [
+					"lot_id",
+					"owner_id",
+					"game_item_id",
+					"game_item_name",
+					"variant_id",
+					"variant_display_name",
+					"listing_id",
+					"listing_title",
+					"quantity_total",
+					"location_id",
+					"location_name",
+					"listed",
+					"notes",
+					"created_at",
+					"updated_at"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
+			"InventoryResponse": {
+				"properties": {
+					"lots": {
+						"items": {
+							"$ref": "#/components/schemas/InventoryLotDetail"
+						},
+						"type": "array"
+					},
+					"total": {
+						"type": "number",
+						"format": "double"
+					},
+					"page": {
+						"type": "number",
+						"format": "double"
+					},
+					"page_size": {
+						"type": "number",
+						"format": "double"
+					}
+				},
+				"required": [
+					"lots",
+					"total",
+					"page",
+					"page_size"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
+			"CreateInventoryLotRequest": {
+				"properties": {
+					"game_item_id": {
+						"type": "string",
+						"nullable": true
+					},
+					"variant_id": {
+						"type": "string",
+						"nullable": true
+					},
+					"quantity": {
+						"type": "number",
+						"format": "double"
+					},
+					"location_id": {
+						"type": "string",
+						"nullable": true
+					},
+					"notes": {
+						"type": "string",
+						"nullable": true
+					}
+				},
+				"required": [
+					"quantity"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
+			"LinkToListingRequest": {
+				"properties": {
+					"listing_id": {
+						"type": "string"
+					}
+				},
+				"required": [
+					"listing_id"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
 			"ImportSource": {
 				"type": "string",
 				"enum": [
@@ -7790,6 +7939,146 @@
 				"type": "object",
 				"additionalProperties": false
 			},
+			"BidDetail": {
+				"properties": {
+					"bid_id": {
+						"type": "string"
+					},
+					"bidder": {
+						"properties": {
+							"avatar": {
+								"type": "string",
+								"nullable": true
+							},
+							"display_name": {
+								"type": "string"
+							},
+							"username": {
+								"type": "string"
+							}
+						},
+						"required": [
+							"avatar",
+							"display_name",
+							"username"
+						],
+						"type": "object"
+					},
+					"amount": {
+						"type": "number",
+						"format": "double"
+					},
+					"is_active": {
+						"type": "boolean"
+					},
+					"created_at": {
+						"type": "string"
+					}
+				},
+				"required": [
+					"bid_id",
+					"bidder",
+					"amount",
+					"is_active",
+					"created_at"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
+			"AuctionDetailResponse": {
+				"properties": {
+					"listing_id": {
+						"type": "string"
+					},
+					"end_time": {
+						"type": "string"
+					},
+					"min_bid_increment": {
+						"type": "number",
+						"format": "double"
+					},
+					"buyout_price": {
+						"type": "number",
+						"format": "double",
+						"nullable": true
+					},
+					"reserve_price": {
+						"type": "number",
+						"format": "double",
+						"nullable": true
+					},
+					"status": {
+						"type": "string"
+					},
+					"current_highest_bid": {
+						"type": "number",
+						"format": "double",
+						"nullable": true
+					},
+					"total_bids": {
+						"type": "number",
+						"format": "double"
+					},
+					"bids": {
+						"items": {
+							"$ref": "#/components/schemas/BidDetail"
+						},
+						"type": "array"
+					}
+				},
+				"required": [
+					"listing_id",
+					"end_time",
+					"min_bid_increment",
+					"buyout_price",
+					"reserve_price",
+					"status",
+					"current_highest_bid",
+					"total_bids",
+					"bids"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
+			"PlaceBidResponse": {
+				"properties": {
+					"bid_id": {
+						"type": "string"
+					},
+					"amount": {
+						"type": "number",
+						"format": "double"
+					},
+					"is_highest": {
+						"type": "boolean"
+					},
+					"current_highest": {
+						"type": "number",
+						"format": "double"
+					}
+				},
+				"required": [
+					"bid_id",
+					"amount",
+					"is_highest",
+					"current_highest"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
+			"PlaceBidRequest": {
+				"properties": {
+					"amount": {
+						"type": "number",
+						"format": "double"
+					}
+				},
+				"required": [
+					"amount"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
 			"PriceDataPoint": {
 				"description": "Price data point in time series",
 				"properties": {
@@ -9714,6 +10003,246 @@
 						"description": "Listing UUID",
 						"in": "path",
 						"name": "id",
+						"required": true,
+						"schema": {
+							"type": "string"
+						}
+					}
+				]
+			}
+		},
+		"/inventory": {
+			"get": {
+				"operationId": "GetInventory",
+				"responses": {
+					"200": {
+						"description": "Ok",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/InventoryResponse"
+								}
+							}
+						}
+					}
+				},
+				"description": "List all inventory lots for the current user",
+				"tags": [
+					"Inventory V2"
+				],
+				"security": [
+					{
+						"loggedin": []
+					}
+				],
+				"parameters": [
+					{
+						"in": "query",
+						"name": "game_item_id",
+						"required": false,
+						"schema": {
+							"type": "string"
+						}
+					},
+					{
+						"in": "query",
+						"name": "listing_id",
+						"required": false,
+						"schema": {
+							"type": "string"
+						}
+					},
+					{
+						"in": "query",
+						"name": "listed",
+						"required": false,
+						"schema": {
+							"type": "boolean"
+						}
+					},
+					{
+						"in": "query",
+						"name": "page",
+						"required": false,
+						"schema": {
+							"format": "double",
+							"type": "number"
+						}
+					},
+					{
+						"in": "query",
+						"name": "page_size",
+						"required": false,
+						"schema": {
+							"format": "double",
+							"type": "number"
+						}
+					}
+				]
+			},
+			"post": {
+				"operationId": "CreateInventoryLot",
+				"responses": {
+					"200": {
+						"description": "Ok",
+						"content": {
+							"application/json": {
+								"schema": {
+									"properties": {
+										"lot": {
+											"$ref": "#/components/schemas/InventoryLotDetail"
+										}
+									},
+									"required": [
+										"lot"
+									],
+									"type": "object"
+								}
+							}
+						}
+					}
+				},
+				"description": "Create an unlisted inventory lot (personal inventory)",
+				"tags": [
+					"Inventory V2"
+				],
+				"security": [
+					{
+						"loggedin": []
+					}
+				],
+				"parameters": [],
+				"requestBody": {
+					"required": true,
+					"content": {
+						"application/json": {
+							"schema": {
+								"$ref": "#/components/schemas/CreateInventoryLotRequest"
+							}
+						}
+					}
+				}
+			}
+		},
+		"/inventory/{lotId}/list": {
+			"post": {
+				"operationId": "LinkToListing",
+				"responses": {
+					"200": {
+						"description": "Ok",
+						"content": {
+							"application/json": {
+								"schema": {
+									"properties": {
+										"lot": {
+											"$ref": "#/components/schemas/InventoryLotDetail"
+										}
+									},
+									"required": [
+										"lot"
+									],
+									"type": "object"
+								}
+							}
+						}
+					}
+				},
+				"description": "Link a lot to a listing (makes it available for sale)",
+				"tags": [
+					"Inventory V2"
+				],
+				"security": [
+					{
+						"loggedin": []
+					}
+				],
+				"parameters": [
+					{
+						"in": "path",
+						"name": "lotId",
+						"required": true,
+						"schema": {
+							"type": "string"
+						}
+					}
+				],
+				"requestBody": {
+					"required": true,
+					"content": {
+						"application/json": {
+							"schema": {
+								"$ref": "#/components/schemas/LinkToListingRequest"
+							}
+						}
+					}
+				}
+			}
+		},
+		"/inventory/{lotId}/unlist": {
+			"post": {
+				"operationId": "UnlinkFromListing",
+				"responses": {
+					"200": {
+						"description": "Ok",
+						"content": {
+							"application/json": {
+								"schema": {
+									"properties": {
+										"lot": {
+											"$ref": "#/components/schemas/InventoryLotDetail"
+										}
+									},
+									"required": [
+										"lot"
+									],
+									"type": "object"
+								}
+							}
+						}
+					}
+				},
+				"description": "Unlink a lot from its listing (returns to personal inventory)",
+				"tags": [
+					"Inventory V2"
+				],
+				"security": [
+					{
+						"loggedin": []
+					}
+				],
+				"parameters": [
+					{
+						"in": "path",
+						"name": "lotId",
+						"required": true,
+						"schema": {
+							"type": "string"
+						}
+					}
+				]
+			}
+		},
+		"/inventory/{lotId}": {
+			"delete": {
+				"operationId": "DeleteInventoryLot",
+				"responses": {
+					"204": {
+						"description": "No content"
+					}
+				},
+				"description": "Delete an inventory lot",
+				"tags": [
+					"Inventory V2"
+				],
+				"security": [
+					{
+						"loggedin": []
+					}
+				],
+				"parameters": [
+					{
+						"in": "path",
+						"name": "lotId",
 						"required": true,
 						"schema": {
 							"type": "string"
@@ -13715,6 +14244,84 @@
 						}
 					}
 				]
+			}
+		},
+		"/auctions/{listingId}": {
+			"get": {
+				"operationId": "GetAuctionDetail",
+				"responses": {
+					"200": {
+						"description": "Ok",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/AuctionDetailResponse"
+								}
+							}
+						}
+					}
+				},
+				"description": "Get auction details and bids for a listing",
+				"tags": [
+					"Auctions V2"
+				],
+				"security": [],
+				"parameters": [
+					{
+						"in": "path",
+						"name": "listingId",
+						"required": true,
+						"schema": {
+							"type": "string"
+						}
+					}
+				]
+			}
+		},
+		"/auctions/{listingId}/bids": {
+			"post": {
+				"operationId": "PlaceBid",
+				"responses": {
+					"200": {
+						"description": "Ok",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/PlaceBidResponse"
+								}
+							}
+						}
+					}
+				},
+				"description": "Place a bid on an auction listing",
+				"tags": [
+					"Auctions V2"
+				],
+				"security": [
+					{
+						"loggedin": []
+					}
+				],
+				"parameters": [
+					{
+						"in": "path",
+						"name": "listingId",
+						"required": true,
+						"schema": {
+							"type": "string"
+						}
+					}
+				],
+				"requestBody": {
+					"required": true,
+					"content": {
+						"application/json": {
+							"schema": {
+								"$ref": "#/components/schemas/PlaceBidRequest"
+							}
+						}
+					}
+				}
 			}
 		},
 		"/analytics/price-history": {
