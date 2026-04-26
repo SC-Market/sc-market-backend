@@ -148,6 +148,25 @@ function normalizeSaleType(v1SaleType: string, acceptOffers?: boolean | null): s
 }
 
 /**
+ * Get or create a sentinel "Custom Item" game_item for V1 listings without a game_item_id.
+ */
+let _customItemId: string | null = null
+async function getCustomGameItemId(): Promise<string> {
+  if (_customItemId) return _customItemId
+  const db = getKnex()
+  const existing = await db("game_items").where({ name: "__custom_item__" }).first()
+  if (existing) {
+    _customItemId = existing.id || existing.item_id
+    return _customItemId!
+  }
+  const [row] = await db("game_items")
+    .insert({ name: "__custom_item__", type: "custom", sub_type: "custom" })
+    .returning("*")
+  _customItemId = row.id || row.item_id
+  return _customItemId!
+}
+
+/**
  * Migrates a V1 unique listing to V2 format.
  *
  * Creates:
@@ -170,14 +189,8 @@ export async function migrateUniqueListing(
   const db = getKnex()
 
   try {
-    // Validate required fields — skip (not fail) for missing game_item_id
-    if (!v1Listing.game_item_id) {
-      return {
-        success: false,
-        v1_listing_id: v1Listing.listing_id,
-        error: "Skipped: missing game_item_id",
-      }
-    }
+    // Use sentinel game item for custom listings without a game_item_id
+    const gameItemId = v1Listing.game_item_id || await getCustomGameItemId()
 
     if (v1Listing.quantity_available < 0) {
       return {
@@ -231,7 +244,7 @@ export async function migrateUniqueListing(
       const [listingItem] = await trx("listing_items")
         .insert({
           listing_id: listing.listing_id,
-          game_item_id: v1Listing.game_item_id,
+          game_item_id: gameItemId,
           pricing_mode: "unified",
           base_price: v1Listing.price,
           display_order: 0,
@@ -243,7 +256,7 @@ export async function migrateUniqueListing(
 
       // 3. Get or create default variant (no quality data)
       const variantId = await getOrCreateVariant(
-        v1Listing.game_item_id,
+        gameItemId,
         DEFAULT_V1_VARIANT_ATTRIBUTES,
       )
 
@@ -338,9 +351,7 @@ export async function migrateAggregateListing(
   const db = getKnex()
 
   try {
-    if (!v1Listing.game_item_id) {
-      return { success: false, v1_listing_id: v1Listing.listing_id, error: "Skipped: missing game_item_id" }
-    }
+    const gameItemId = v1Listing.game_item_id || await getCustomGameItemId()
     if (v1Listing.quantity_available < 0) {
       return { success: false, v1_listing_id: v1Listing.listing_id, error: "Invalid quantity (must be >= 0)" }
     }
@@ -382,7 +393,7 @@ export async function migrateAggregateListing(
       const [listingItem] = await trx("listing_items")
         .insert({
           listing_id: listing.listing_id,
-          game_item_id: v1Listing.game_item_id,
+          game_item_id: gameItemId,
           pricing_mode: "unified",
           base_price: v1Listing.price,
           display_order: 0,
@@ -394,7 +405,7 @@ export async function migrateAggregateListing(
 
       // 3. Get or create default variant
       const variantId = await getOrCreateVariant(
-        v1Listing.game_item_id,
+        gameItemId,
         DEFAULT_V1_VARIANT_ATTRIBUTES,
       )
 
@@ -489,9 +500,6 @@ export async function migrateMultipleListing(
   const db = getKnex()
 
   try {
-    if (!v1Listing.game_item_id) {
-      return { success: false, v1_listing_id: v1Listing.listing_id, error: "Skipped: missing game_item_id" }
-    }
     if (v1Listing.quantity_available < 0) {
       return { success: false, v1_listing_id: v1Listing.listing_id, error: "Invalid quantity (must be >= 0)" }
     }
@@ -545,12 +553,12 @@ export async function migrateMultipleListing(
 
       for (let i = 0; i < bundleEntries.length; i++) {
         const entry = bundleEntries[i]
-        if (!entry.game_item_id) continue
+        const entryGameItemId = entry.game_item_id || await getCustomGameItemId()
 
         const [listingItem] = await trx("listing_items")
           .insert({
             listing_id: listing.listing_id,
-            game_item_id: entry.game_item_id,
+            game_item_id: entryGameItemId,
             pricing_mode: "unified",
             base_price: i === 0 ? v1Listing.price : 0,
             display_order: i,
@@ -561,7 +569,7 @@ export async function migrateMultipleListing(
           .returning("*")
 
         const variantId = await getOrCreateVariant(
-          entry.game_item_id,
+          entryGameItemId,
           DEFAULT_V1_VARIANT_ATTRIBUTES,
         )
 
