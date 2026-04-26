@@ -148,23 +148,7 @@ function normalizeSaleType(v1SaleType: string, acceptOffers?: boolean | null): s
 }
 
 /**
- * Get or create a sentinel "Custom Item" game_item for V1 listings without a game_item_id.
- */
-let _customItemId: string | null = null
-async function getCustomGameItemId(): Promise<string> {
-  if (_customItemId) return _customItemId
-  const db = getKnex()
-  const existing = await db("game_items").where({ name: "__custom_item__" }).first()
-  if (existing) {
-    _customItemId = existing.id || existing.item_id
-    return _customItemId!
-  }
-  const [row] = await db("game_items")
-    .insert({ name: "__custom_item__", type: "custom", sub_type: "custom" })
-    .returning("*")
-  _customItemId = row.id || row.item_id
-  return _customItemId!
-}
+ * Migrates a V1 unique listing to V2 format.
 
 /**
  * Migrates a V1 unique listing to V2 format.
@@ -189,8 +173,8 @@ export async function migrateUniqueListing(
   const db = getKnex()
 
   try {
-    // Use sentinel game item for custom listings without a game_item_id
-    const gameItemId = v1Listing.game_item_id || await getCustomGameItemId()
+    // game_item_id is nullable — custom listings have NULL
+    const gameItemId = v1Listing.game_item_id || null
 
     if (v1Listing.quantity_available < 0) {
       return {
@@ -254,14 +238,15 @@ export async function migrateUniqueListing(
         })
         .returning("*")
 
-      // 3. Get or create default variant (no quality data)
-      const variantId = await getOrCreateVariant(
-        gameItemId,
-        DEFAULT_V1_VARIANT_ATTRIBUTES,
-      )
+      // 3. Get or create default variant and migrate stock (only if game item linked)
+      if (gameItemId) {
+        const variantId = await getOrCreateVariant(
+          gameItemId,
+          DEFAULT_V1_VARIANT_ATTRIBUTES,
+        )
 
-      // 4. Migrate V1 stock_lots if they exist, otherwise create from quantity_available
-      const v1Lots = await trx("stock_lots").where({ listing_id: v1Listing.listing_id })
+        // 4. Migrate V1 stock_lots if they exist, otherwise create from quantity_available
+        const v1Lots = await trx("stock_lots").where({ listing_id: v1Listing.listing_id })
 
       if (v1Lots.length > 0) {
         for (const v1Lot of v1Lots) {
@@ -270,9 +255,11 @@ export async function migrateUniqueListing(
             variant_id: variantId,
             quantity_total: v1Lot.quantity_total,
             location_id: v1Lot.location_id,
-            owner_id: v1Lot.owner_id,
+            owner_id: v1Lot.owner_id || seller_id,
             listed: v1Lot.listed,
             notes: v1Lot.notes,
+            game_item_id: gameItemId,
+            listing_id: listing.listing_id,
             created_at: v1Lot.created_at,
             updated_at: v1Lot.updated_at,
           }).returning("*")
@@ -292,10 +279,13 @@ export async function migrateUniqueListing(
           owner_id: seller_id,
           listed: true,
           notes: `Migrated from V1 listing ${v1Listing.listing_id}`,
+          game_item_id: gameItemId,
+          listing_id: listing.listing_id,
           created_at: v1Listing.timestamp,
           updated_at: v1Listing.timestamp,
         })
       }
+      } // end if (gameItemId)
 
       // 5. Migrate photos from V1 market_images → V2 listing_photos_v2
       const v1Photos = await trx("market_images").where({ details_id: v1Listing.details_id })
@@ -351,7 +341,7 @@ export async function migrateAggregateListing(
   const db = getKnex()
 
   try {
-    const gameItemId = v1Listing.game_item_id || await getCustomGameItemId()
+    const gameItemId = v1Listing.game_item_id || null
     if (v1Listing.quantity_available < 0) {
       return { success: false, v1_listing_id: v1Listing.listing_id, error: "Invalid quantity (must be >= 0)" }
     }
@@ -404,6 +394,7 @@ export async function migrateAggregateListing(
         .returning("*")
 
       // 3. Get or create default variant
+      if (gameItemId) {
       const variantId = await getOrCreateVariant(
         gameItemId,
         DEFAULT_V1_VARIANT_ATTRIBUTES,
@@ -419,9 +410,11 @@ export async function migrateAggregateListing(
             variant_id: variantId,
             quantity_total: v1Lot.quantity_total,
             location_id: v1Lot.location_id,
-            owner_id: v1Lot.owner_id,
+            owner_id: v1Lot.owner_id || seller_id,
             listed: v1Lot.listed,
             notes: v1Lot.notes,
+            game_item_id: gameItemId,
+            listing_id: listing.listing_id,
             created_at: v1Lot.created_at,
             updated_at: v1Lot.updated_at,
           }).returning("*")
@@ -441,10 +434,13 @@ export async function migrateAggregateListing(
           owner_id: seller_id,
           listed: true,
           notes: `Migrated from V1 aggregate listing ${v1Listing.listing_id}`,
+          game_item_id: gameItemId,
+          listing_id: listing.listing_id,
           created_at: v1Listing.timestamp,
           updated_at: v1Listing.timestamp,
         })
       }
+      } // end if (gameItemId)
 
       // 5. Migrate photos from V1 market_images → V2 listing_photos_v2
       const v1Photos = await trx("market_images").where({ details_id: v1Listing.details_id })
@@ -553,7 +549,7 @@ export async function migrateMultipleListing(
 
       for (let i = 0; i < bundleEntries.length; i++) {
         const entry = bundleEntries[i]
-        const entryGameItemId = entry.game_item_id || await getCustomGameItemId()
+        const entryGameItemId = entry.game_item_id || null
 
         const [listingItem] = await trx("listing_items")
           .insert({
@@ -568,46 +564,52 @@ export async function migrateMultipleListing(
           })
           .returning("*")
 
-        const variantId = await getOrCreateVariant(
-          entryGameItemId,
-          DEFAULT_V1_VARIANT_ATTRIBUTES,
-        )
+        if (entryGameItemId) {
+          const variantId = await getOrCreateVariant(
+            entryGameItemId,
+            DEFAULT_V1_VARIANT_ATTRIBUTES,
+          )
 
-        if (i === 0) {
-          const v1Lots = await trx("stock_lots").where({ listing_id: v1Listing.listing_id })
-          if (v1Lots.length > 0) {
-            for (const v1Lot of v1Lots) {
-              const [v2Lot] = await trx("listing_item_lots").insert({
+          if (i === 0) {
+            const v1Lots = await trx("stock_lots").where({ listing_id: v1Listing.listing_id })
+            if (v1Lots.length > 0) {
+              for (const v1Lot of v1Lots) {
+                const [v2Lot] = await trx("listing_item_lots").insert({
+                  item_id: listingItem.item_id,
+                  variant_id: variantId,
+                  quantity_total: v1Lot.quantity_total,
+                  location_id: v1Lot.location_id,
+                  owner_id: v1Lot.owner_id || seller_id,
+                  listed: v1Lot.listed,
+                  notes: v1Lot.notes,
+                  game_item_id: entryGameItemId,
+                  listing_id: listing.listing_id,
+                  created_at: v1Lot.created_at,
+                  updated_at: v1Lot.updated_at,
+                }).returning("*")
+                await trx("v1_v2_stock_lot_map").insert({
+                  v1_lot_id: v1Lot.lot_id,
+                  v2_lot_id: v2Lot.lot_id,
+                  v1_listing_id: v1Listing.listing_id,
+                })
+              }
+            } else if (v1Listing.quantity_available > 0) {
+              await trx("listing_item_lots").insert({
                 item_id: listingItem.item_id,
                 variant_id: variantId,
-                quantity_total: v1Lot.quantity_total,
-                location_id: v1Lot.location_id,
-                owner_id: v1Lot.owner_id,
-                listed: v1Lot.listed,
-                notes: v1Lot.notes,
-                created_at: v1Lot.created_at,
-                updated_at: v1Lot.updated_at,
-              }).returning("*")
-              await trx("v1_v2_stock_lot_map").insert({
-                v1_lot_id: v1Lot.lot_id,
-                v2_lot_id: v2Lot.lot_id,
-                v1_listing_id: v1Listing.listing_id,
+                quantity_total: v1Listing.quantity_available,
+                location_id: null,
+                owner_id: seller_id,
+                listed: true,
+                notes: `Migrated from V1 bundle listing ${v1Listing.listing_id}`,
+                game_item_id: entryGameItemId,
+                listing_id: listing.listing_id,
+                created_at: v1Listing.timestamp,
+                updated_at: v1Listing.timestamp,
               })
             }
-          } else if (v1Listing.quantity_available > 0) {
-            await trx("listing_item_lots").insert({
-              item_id: listingItem.item_id,
-              variant_id: variantId,
-              quantity_total: v1Listing.quantity_available,
-              location_id: null,
-              owner_id: seller_id,
-              listed: true,
-              notes: `Migrated from V1 bundle listing ${v1Listing.listing_id}`,
-              created_at: v1Listing.timestamp,
-              updated_at: v1Listing.timestamp,
-            })
           }
-        }
+        } // end if (entryGameItemId)
 
         // Migrate photos for this sub-item
         const v1Photos = await trx("market_images").where({ details_id: entry.details_id })
@@ -931,6 +933,125 @@ export class V1ToV2MigrationService {
         ...multipleSummary.errors,
       ],
     }
+  }
+
+  /**
+   * Migrates V1 market_price_history → V2 price_history_v2.
+   * V1 has daily snapshots per game_item_id.
+   * V2 is event-based per variant — we use the default variant and event_type='legacy_snapshot'.
+   */
+  async migratePriceHistory(): Promise<MigrationSummary> {
+    const db = getKnex()
+    const summary: MigrationSummary = { total_attempted: 0, successful: 0, failed: 0, skipped: 0, errors: [] }
+
+    try {
+      const v1Rows = await db("market_price_history").select("*")
+      summary.total_attempted = v1Rows.length
+
+      for (const row of v1Rows) {
+        if (!row.game_item_id) { summary.skipped++; continue }
+
+        // Check if already migrated (by game_item_id + date)
+        const existing = await db("price_history_v2")
+          .where({ game_item_id: row.game_item_id, event_type: "legacy_snapshot" })
+          .whereRaw("recorded_at::date = ?::date", [row.date])
+          .first()
+        if (existing) { summary.skipped++; continue }
+
+        try {
+          // Get or create default variant for this game item
+          const variantId = await getOrCreateVariant(row.game_item_id, DEFAULT_V1_VARIANT_ATTRIBUTES)
+
+          await db("price_history_v2").insert({
+            game_item_id: row.game_item_id,
+            variant_id: variantId,
+            price: row.price,
+            quality_tier: null,
+            listing_id: null,
+            event_type: "legacy_snapshot",
+            recorded_at: row.date,
+          })
+          summary.successful++
+        } catch (error) {
+          summary.failed++
+          summary.errors.push({ v1_listing_id: `price_${row.game_item_id}_${row.date}`, error: error instanceof Error ? error.message : "Unknown error" })
+        }
+      }
+    } catch (error) {
+      throw new Error(`Failed to migrate price history: ${error instanceof Error ? error.message : "Unknown error"}`)
+    }
+
+    return summary
+  }
+
+  /**
+   * Migrates V1 auction data (market_auction_details + market_bids) → V2 tables.
+   * Requires auction_details_v2 and bids_v2 tables to exist.
+   */
+  async migrateAuctionData(): Promise<MigrationSummary> {
+    const db = getKnex()
+    const summary: MigrationSummary = { total_attempted: 0, successful: 0, failed: 0, skipped: 0, errors: [] }
+
+    const hasAuctionTable = await db.schema.hasTable("auction_details_v2")
+    const hasBidsTable = await db.schema.hasTable("bids_v2")
+    if (!hasAuctionTable || !hasBidsTable) {
+      return summary // Tables don't exist yet, skip
+    }
+
+    try {
+      const v1Auctions = await db("market_auction_details").select("*")
+      summary.total_attempted = v1Auctions.length
+
+      for (const auction of v1Auctions) {
+        // Need the V2 listing_id from the mapping table
+        const mapping = await db("v1_v2_listing_map").where({ v1_listing_id: auction.listing_id }).first()
+        if (!mapping) { summary.skipped++; continue }
+
+        // Check if already migrated
+        const existing = await db("auction_details_v2").where({ listing_id: mapping.v2_listing_id }).first()
+        if (existing) { summary.skipped++; continue }
+
+        try {
+          // Find the winning bid
+          const bids = await db("market_bids").where({ listing_id: auction.listing_id }).orderBy("bid", "desc")
+          const winningBid = bids[0]
+
+          await db("auction_details_v2").insert({
+            listing_id: mapping.v2_listing_id,
+            end_time: auction.end_time,
+            min_bid_increment: auction.minimum_bid_increment,
+            buyout_price: auction.buyout_price || null,
+            reserve_price: null,
+            status: auction.status === "concluded" ? "concluded" : auction.status === "active" ? "active" : "cancelled",
+            winner_id: auction.status === "concluded" && winningBid ? (winningBid.user_bidder_id || null) : null,
+            winning_bid: auction.status === "concluded" && winningBid ? winningBid.bid : null,
+            concluded_at: auction.status === "concluded" ? auction.end_time : null,
+          })
+
+          // Migrate bids
+          for (const bid of bids) {
+            await db("bids_v2").insert({
+              listing_id: mapping.v2_listing_id,
+              bidder_id: bid.user_bidder_id,
+              bidder_type: bid.contractor_bidder_id ? "contractor" : "user",
+              contractor_id: bid.contractor_bidder_id || null,
+              amount: bid.bid,
+              is_active: bid === winningBid && auction.status === "active",
+              created_at: bid.timestamp,
+            })
+          }
+
+          summary.successful++
+        } catch (error) {
+          summary.failed++
+          summary.errors.push({ v1_listing_id: auction.listing_id, error: error instanceof Error ? error.message : "Unknown error" })
+        }
+      }
+    } catch (error) {
+      throw new Error(`Failed to migrate auction data: ${error instanceof Error ? error.message : "Unknown error"}`)
+    }
+
+    return summary
   }
 }
 
