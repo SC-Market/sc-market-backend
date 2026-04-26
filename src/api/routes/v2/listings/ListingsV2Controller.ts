@@ -174,6 +174,8 @@ export class ListingsV2Controller extends BaseController {
             location_id: lot.location_id || null,
             owner_id: userId,
             listed: true,
+            game_item_id: listingItem.game_item_id || null,
+            listing_id: listing.listing_id,
             created_at: new Date(),
             updated_at: new Date(),
           })
