@@ -240,6 +240,14 @@
 						"type": "string",
 						"description": "Item UUID this lot belongs to"
 					},
+					"listing_id": {
+						"type": "string",
+						"description": "Listing UUID this lot belongs to"
+					},
+					"listing_title": {
+						"type": "string",
+						"description": "Listing title"
+					},
 					"variant": {
 						"$ref": "#/components/schemas/StockLotVariant",
 						"description": "Variant information"
@@ -296,6 +304,8 @@
 				"required": [
 					"lot_id",
 					"item_id",
+					"listing_id",
+					"listing_title",
 					"variant",
 					"quantity_total",
 					"location",

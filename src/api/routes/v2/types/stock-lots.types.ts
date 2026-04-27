@@ -70,6 +70,12 @@ export interface StockLotDetail {
   
   /** Item UUID this lot belongs to */
   item_id: string;
+
+  /** Listing UUID this lot belongs to */
+  listing_id: string;
+
+  /** Listing title */
+  listing_title: string;
   
   /** Variant information */
   variant: StockLotVariant;

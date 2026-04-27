@@ -182,12 +182,15 @@ export class StockLotsV2Controller extends BaseController {
       let query = knex("listing_item_lots as sl")
         .join("item_variants as iv", "sl.variant_id", "iv.variant_id")
         .join("listing_items as li", "sl.item_id", "li.item_id")
+        .join("listings as lst", "li.listing_id", "lst.listing_id")
         .leftJoin("locations as loc", "sl.location_id", "loc.location_id")
         .leftJoin("accounts as owner", "sl.owner_id", "owner.user_id")
         .leftJoin("accounts as crafter", "sl.crafted_by", "crafter.user_id")
         .select(
           "sl.lot_id",
           "sl.item_id",
+          "li.listing_id",
+          "lst.title as listing_title",
           "sl.variant_id",
           "sl.quantity_total",
           "sl.listed",
@@ -267,6 +270,8 @@ export class StockLotsV2Controller extends BaseController {
       const lots: StockLotDetail[] = await Promise.all(results.map(async (row: any) => ({
         lot_id: row.lot_id,
         item_id: row.item_id,
+        listing_id: row.listing_id,
+        listing_title: row.listing_title || "Unknown",
         variant: {
           variant_id: row.variant_id,
           attributes: row.variant_attributes,
@@ -471,6 +476,8 @@ export class StockLotsV2Controller extends BaseController {
       const knex2 = getKnex()
       const lotResult = await knex2("listing_item_lots as sl")
         .join("item_variants as iv", "sl.variant_id", "iv.variant_id")
+        .join("listing_items as li", "sl.item_id", "li.item_id")
+        .join("listings as lst", "li.listing_id", "lst.listing_id")
         .leftJoin("locations as loc", "sl.location_id", "loc.location_id")
         .leftJoin("accounts as owner", "sl.owner_id", "owner.user_id")
         .leftJoin("accounts as crafter", "sl.crafted_by", "crafter.user_id")
@@ -478,6 +485,8 @@ export class StockLotsV2Controller extends BaseController {
         .select(
           "sl.lot_id",
           "sl.item_id",
+          "li.listing_id",
+          "lst.title as listing_title",
           "sl.variant_id",
           "sl.quantity_total",
           "sl.listed",
@@ -506,6 +515,8 @@ export class StockLotsV2Controller extends BaseController {
       const lot: StockLotDetail = {
         lot_id: lotResult.lot_id,
         item_id: lotResult.item_id,
+        listing_id: lotResult.listing_id,
+        listing_title: lotResult.listing_title || "Unknown",
         variant: {
           variant_id: lotResult.variant_id,
           attributes: lotResult.variant_attributes,
@@ -800,6 +811,8 @@ export class StockLotsV2Controller extends BaseController {
   private async fetchLotDetail(db: ReturnType<typeof getKnex>, lotId: string): Promise<StockLotDetail> {
     const row = await db("listing_item_lots as sl")
       .join("item_variants as iv", "sl.variant_id", "iv.variant_id")
+      .join("listing_items as li", "sl.item_id", "li.item_id")
+      .join("listings as lst", "li.listing_id", "lst.listing_id")
       .leftJoin("locations as loc", "sl.location_id", "loc.location_id")
       .leftJoin("accounts as owner", "sl.owner_id", "owner.user_id")
       .leftJoin("accounts as crafter", "sl.crafted_by", "crafter.user_id")
@@ -807,6 +820,8 @@ export class StockLotsV2Controller extends BaseController {
       .select(
         "sl.lot_id",
         "sl.item_id",
+        "li.listing_id",
+        "lst.title as listing_title",
         "sl.variant_id",
         "sl.quantity_total",
         "sl.listed",
@@ -835,6 +850,8 @@ export class StockLotsV2Controller extends BaseController {
     return {
       lot_id: row.lot_id,
       item_id: row.item_id,
+      listing_id: row.listing_id,
+      listing_title: row.listing_title || "Unknown",
       variant: {
         variant_id: row.variant_id,
         attributes: row.variant_attributes,
