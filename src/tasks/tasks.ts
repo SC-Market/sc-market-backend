@@ -1,5 +1,6 @@
 import {
   process_auctions,
+  process_auctions_v2,
   process_expiring_market_listings,
   rebuild_search_view,
   refresh_badge_view,
@@ -44,6 +45,11 @@ export function start_tasks() {
     safe(process_auctions, "process_auctions")
     setInterval(() => safe(process_auctions, "process_auctions"), 5 * 60 * 1000)
   }, STARTUP_DELAY + 10_000)
+
+  setTimeout(() => {
+    safe(process_auctions_v2, "process_auctions_v2")
+    setInterval(() => safe(process_auctions_v2, "process_auctions_v2"), 5 * 60 * 1000)
+  }, STARTUP_DELAY + 12_000)
 
   setTimeout(() => {
     safe(process_expiring_market_listings, "process_expiring_market_listings")
