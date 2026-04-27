@@ -181,7 +181,7 @@ export function generateVariantShortName(attributes: VariantAttributes): string 
  * // Returns: "987fcdeb-51a2-43f7-8d9e-1234567890ab"
  */
 export async function getOrCreateVariant(
-  gameItemId: string,
+  gameItemId: string | null,
   attributes: VariantAttributes,
 ): Promise<string> {
   const db = getKnex()
@@ -193,8 +193,11 @@ export async function getOrCreateVariant(
   // Try to find existing variant with same game_item_id and attributes_hash
   const existing = await db<ItemVariant>("item_variants")
     .where({
-      game_item_id: gameItemId,
       attributes_hash: hash,
+    })
+    .modify((qb) => {
+      if (gameItemId) qb.where("game_item_id", gameItemId)
+      else qb.whereNull("game_item_id")
     })
     .first()
 
@@ -205,7 +208,7 @@ export async function getOrCreateVariant(
   // Create new variant — use onConflict to handle race conditions
   const [variant] = await db<ItemVariant>("item_variants")
     .insert({
-      game_item_id: gameItemId,
+      game_item_id: gameItemId || (null as any),
       attributes: normalized,
       attributes_hash: hash,
       display_name: generateVariantDisplayName(normalized),
