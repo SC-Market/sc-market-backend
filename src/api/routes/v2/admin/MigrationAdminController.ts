@@ -1,11 +1,11 @@
 /**
  * V1→V2 Migration Admin Controller
  *
- * Temporary admin endpoints for running the data migration from the admin panel.
- * Supports dry-run (transaction rollback) and execute modes.
+ * Async job-based migration with polling, matching the game data import pattern.
+ * Jobs run in the background; poll GET /admin/migration/jobs/:id for status.
  */
 
-import { Post, Get, Route, Tags, Body, Request, Security } from "tsoa"
+import { Post, Get, Route, Tags, Body, Request, Path, Security } from "tsoa"
 import { Request as ExpressRequest } from "express"
 import { BaseController } from "../base/BaseController.js"
 import { getKnex } from "../../../../clients/database/knex-db.js"
@@ -13,7 +13,6 @@ import { v1ToV2MigrationService, MigrationSummary } from "../../../../services/m
 import logger from "../../../../logger/logger.js"
 
 interface MigrationRunRequest {
-  /** If true, wraps in a transaction and rolls back — no data is persisted */
   dry_run: boolean
 }
 
@@ -24,7 +23,7 @@ interface MigrationStatusResponse {
   auctions: { v1: number; v2: number }
 }
 
-interface MigrationRunResponse {
+interface MigrationResult {
   dry_run: boolean
   listings: MigrationSummary
   price_history: MigrationSummary
@@ -35,15 +34,19 @@ interface MigrationRunResponse {
   duration_seconds: number
 }
 
-interface MigrationLogEntry {
-  timestamp: string
+interface MigrationJob {
+  id: string
+  status: "running" | "rolling_back" | "completed" | "failed"
   dry_run: boolean
-  duration_seconds: number
-  result: MigrationRunResponse
+  started_at: string
+  completed_at: string | null
+  progress: string | null
+  result: MigrationResult | null
+  error: string | null
 }
 
-// In-memory log of recent migration runs (survives until server restart)
-const migrationLogs: MigrationLogEntry[] = []
+const jobs = new Map<string, MigrationJob>()
+let jobCounter = 0
 
 @Route("admin/migration")
 @Tags("Admin Migration")
@@ -75,133 +78,144 @@ export class MigrationAdminController extends BaseController {
     const [phV2] = await knex("price_history_v2").count("* as c")
 
     let auctionsV1 = 0, auctionsV2 = 0
-    try {
-      const [av1] = await knex("market_auction_details").count("* as c")
-      auctionsV1 = Number(av1.c)
-    } catch { /* table may not exist */ }
-    try {
-      const [av2] = await knex("auction_details_v2").count("* as c")
-      auctionsV2 = Number(av2.c)
-    } catch { /* table may not exist */ }
+    try { auctionsV1 = Number((await knex("market_auction_details").count("* as c"))[0].c) } catch {}
+    try { auctionsV2 = Number((await knex("auction_details_v2").count("* as c"))[0].c) } catch {}
 
     return {
-      v1_counts: {
-        unique: Number(u.c), aggregate: Number(a.c), multiple: Number(m.c),
-        total: Number(u.c) + Number(a.c) + Number(m.c),
-      },
-      v2_counts: {
-        listings: Number(v2.c), mapped: Number(mapped.c),
-        stock_lots_mapped: Number(stockMapped.c), photos: Number(photos.c),
-      },
+      v1_counts: { unique: Number(u.c), aggregate: Number(a.c), multiple: Number(m.c), total: Number(u.c) + Number(a.c) + Number(m.c) },
+      v2_counts: { listings: Number(v2.c), mapped: Number(mapped.c), stock_lots_mapped: Number(stockMapped.c), photos: Number(photos.c) },
       price_history: { v1: Number(phV1.c), v2: Number(phV2.c) },
       auctions: { v1: auctionsV1, v2: auctionsV2 },
     }
   }
 
   /**
-   * Get recent migration run logs (in-memory, clears on server restart)
+   * List all migration jobs (most recent first)
    */
-  @Get("logs")
-  public async getMigrationLogs(
+  @Get("jobs")
+  public async listMigrationJobs(
     @Request() request: ExpressRequest,
-  ): Promise<MigrationLogEntry[]> {
+  ): Promise<{ jobs: MigrationJob[] }> {
     this.request = request
     this.requireAdmin()
-    return migrationLogs
+    return { jobs: [...jobs.values()].reverse() }
   }
 
   /**
-   * Run the V1→V2 migration (dry-run or execute)
+   * Poll a migration job for status
+   */
+  @Get("jobs/{jobId}")
+  public async getMigrationJob(
+    @Path() jobId: string,
+    @Request() request: ExpressRequest,
+  ): Promise<{ job: MigrationJob | null }> {
+    this.request = request
+    this.requireAdmin()
+    const job = jobs.get(jobId) ?? null
+    if (!job) this.setStatus(404)
+    return { job }
+  }
+
+  /**
+   * Start a migration job (returns immediately, poll for status)
    */
   @Post("run")
   public async runMigration(
     @Body() requestBody: MigrationRunRequest,
     @Request() request: ExpressRequest,
-  ): Promise<MigrationRunResponse> {
+  ): Promise<{ job_id: string }> {
     this.request = request
     this.requireAdmin()
-    const knex = getKnex()
+    const adminId = this.getUserId()
 
-    logger.info("Admin migration triggered", { dry_run: requestBody.dry_run, admin: this.getUserId() })
-
-    const start = Date.now()
-
-    // Run the actual migration (validates full flow including inserts, triggers, constraints)
-    const listings = await v1ToV2MigrationService.migrateAllListings()
-    const priceHistory = await v1ToV2MigrationService.migratePriceHistory()
-    const auctions = await v1ToV2MigrationService.migrateAuctionData()
-    const orderItems = await v1ToV2MigrationService.migrateOrderLineItems()
-    const offerItems = await v1ToV2MigrationService.migrateOfferLineItems()
-    const buyOrders = await v1ToV2MigrationService.migrateBuyOrders()
-
-    const duration = (Date.now() - start) / 1000
-
-    if (requestBody.dry_run) {
-      // Roll back: delete everything we just created using the mapping tables
-      logger.info("Dry run — rolling back migrated data", { admin: this.getUserId() })
-      await this.rollbackMigratedData(knex)
-    } else {
-      logger.info("Admin migration completed", {
-        listings: { success: listings.successful, failed: listings.failed },
-        priceHistory: { success: priceHistory.successful, failed: priceHistory.failed },
-        auctions: { success: auctions.successful, failed: auctions.failed },
-        orderItems: { success: orderItems.successful, failed: orderItems.failed },
-        offerItems: { success: offerItems.successful, failed: offerItems.failed },
-        buyOrders: { success: buyOrders.successful, failed: buyOrders.failed },
-      })
-    }
-
-    const response: MigrationRunResponse = {
+    const jobId = `mig-${++jobCounter}-${Date.now()}`
+    const job: MigrationJob = {
+      id: jobId,
+      status: "running",
       dry_run: requestBody.dry_run,
-      listings,
-      price_history: priceHistory,
-      auctions,
-      order_items: orderItems,
-      offer_items: offerItems,
-      buy_orders: buyOrders,
-      duration_seconds: duration,
+      started_at: new Date().toISOString(),
+      completed_at: null,
+      progress: "Starting migration...",
+      result: null,
+      error: null,
     }
+    jobs.set(jobId, job)
 
-    // Save to in-memory log
-    migrationLogs.unshift({
-      timestamp: new Date().toISOString(),
-      dry_run: requestBody.dry_run,
-      duration_seconds: duration,
-      result: response,
-    })
-    // Keep last 20 runs
-    if (migrationLogs.length > 20) migrationLogs.length = 20
+    logger.info("Admin migration job started", { jobId, dry_run: requestBody.dry_run, admin: adminId })
 
-    return response
+    // Run in background
+    this.executeMigration(job)
+
+    this.setStatus(202)
+    return { job_id: jobId }
   }
 
-  /**
-   * Roll back migrated data using the mapping tables.
-   * Deletes V2 data created by the migration, clears mapping tables.
-   * V1 tables are never touched.
-   */
+  private async executeMigration(job: MigrationJob) {
+    const start = Date.now()
+    const knex = getKnex()
+
+    try {
+      job.progress = "Migrating listings..."
+      const listings = await v1ToV2MigrationService.migrateAllListings()
+
+      job.progress = "Migrating price history..."
+      const priceHistory = await v1ToV2MigrationService.migratePriceHistory()
+
+      job.progress = "Migrating auction data..."
+      const auctions = await v1ToV2MigrationService.migrateAuctionData()
+
+      job.progress = "Migrating order line items..."
+      const orderItems = await v1ToV2MigrationService.migrateOrderLineItems()
+
+      job.progress = "Migrating offer line items..."
+      const offerItems = await v1ToV2MigrationService.migrateOfferLineItems()
+
+      job.progress = "Migrating buy orders..."
+      const buyOrders = await v1ToV2MigrationService.migrateBuyOrders()
+
+      const duration = (Date.now() - start) / 1000
+
+      const result: MigrationResult = {
+        dry_run: job.dry_run,
+        listings, price_history: priceHistory, auctions,
+        order_items: orderItems, offer_items: offerItems, buy_orders: buyOrders,
+        duration_seconds: duration,
+      }
+
+      if (job.dry_run) {
+        job.status = "rolling_back"
+        job.progress = "Rolling back (dry run)..."
+        await this.rollbackMigratedData(knex)
+      }
+
+      job.status = "completed"
+      job.completed_at = new Date().toISOString()
+      job.progress = null
+      job.result = result
+
+      logger.info("Admin migration job completed", { jobId: job.id, dry_run: job.dry_run, duration })
+    } catch (err) {
+      job.status = "failed"
+      job.completed_at = new Date().toISOString()
+      job.error = err instanceof Error ? err.message : String(err)
+      job.progress = null
+
+      logger.error("Admin migration job failed", { jobId: job.id, error: job.error })
+    }
+  }
+
   private async rollbackMigratedData(knex: ReturnType<typeof getKnex>) {
     const mappedListings = await knex("v1_v2_listing_map").select("v2_listing_id")
     const ids = mappedListings.map((r: { v2_listing_id: string }) => r.v2_listing_id)
 
     if (ids.length > 0) {
-      // Delete migrated order/offer line items first (no CASCADE from listings)
       await knex("order_market_items_v2").whereIn("listing_id", ids).delete()
       await knex("offer_market_items_v2").whereIn("listing_id", ids).delete()
-
-      // Delete V2 listings (CASCADE deletes listing_items, listing_item_lots, listing_photos_v2, auction_details_v2, bids_v2)
       await knex("listings").whereIn("listing_id", ids).delete()
     }
 
-    // Delete migrated price history
     await knex("price_history_v2").where("event_type", "legacy_snapshot").delete()
-
-    // Clear mapping tables
     await knex("v1_v2_stock_lot_map").delete()
     await knex("v1_v2_listing_map").delete()
-
-    logger.info("Dry run rollback complete", {
-      listings_deleted: mappedListings.length,
-    })
   }
 }
