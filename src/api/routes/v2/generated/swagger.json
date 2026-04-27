@@ -8957,7 +8957,7 @@
 		"contact": {}
 	},
 	"paths": {
-		"/api/v2/variant-types": {
+		"/variant-types": {
 			"get": {
 				"operationId": "GetVariantTypes",
 				"responses": {
@@ -8981,7 +8981,7 @@
 				"parameters": []
 			}
 		},
-		"/api/v2/stock-lots": {
+		"/stock-lots": {
 			"post": {
 				"operationId": "CreateStockLot",
 				"responses": {
@@ -9129,7 +9129,7 @@
 				]
 			}
 		},
-		"/api/v2/stock-lots/{id}": {
+		"/stock-lots/{id}": {
 			"put": {
 				"operationId": "UpdateStockLot",
 				"responses": {
@@ -9223,7 +9223,7 @@
 				]
 			}
 		},
-		"/api/v2/stock-lots/bulk-update": {
+		"/stock-lots/bulk-update": {
 			"post": {
 				"operationId": "BulkUpdateStockLots",
 				"responses": {
@@ -9263,7 +9263,7 @@
 				}
 			}
 		},
-		"/api/v2/orders": {
+		"/orders": {
 			"post": {
 				"operationId": "CreateOrder",
 				"responses": {
@@ -9416,7 +9416,7 @@
 				]
 			}
 		},
-		"/api/v2/orders/{orderId}": {
+		"/orders/{orderId}": {
 			"get": {
 				"operationId": "GetOrderDetail",
 				"responses": {
@@ -9454,7 +9454,7 @@
 				]
 			}
 		},
-		"/api/v2/orders/by-listing/{listingId}": {
+		"/orders/by-listing/{listingId}": {
 			"get": {
 				"operationId": "GetOrdersByListing",
 				"responses": {
@@ -9492,7 +9492,7 @@
 				]
 			}
 		},
-		"/api/v2/offers/{sessionId}": {
+		"/offers/{sessionId}": {
 			"get": {
 				"operationId": "GetOfferSession",
 				"responses": {
@@ -9528,7 +9528,7 @@
 				]
 			}
 		},
-		"/api/v2/offers/search": {
+		"/offers/search": {
 			"get": {
 				"operationId": "SearchOffers",
 				"responses": {
@@ -9598,7 +9598,7 @@
 				]
 			}
 		},
-		"/api/v2/listings": {
+		"/listings": {
 			"post": {
 				"operationId": "CreateListing",
 				"responses": {
@@ -9638,7 +9638,7 @@
 				}
 			}
 		},
-		"/api/v2/listings/search": {
+		"/listings/search": {
 			"get": {
 				"operationId": "SearchListings",
 				"responses": {
@@ -9839,7 +9839,7 @@
 				]
 			}
 		},
-		"/api/v2/listings/mine": {
+		"/listings/mine": {
 			"get": {
 				"operationId": "GetMyListings",
 				"responses": {
@@ -9939,7 +9939,7 @@
 				]
 			}
 		},
-		"/api/v2/listings/inventory-summary": {
+		"/listings/inventory-summary": {
 			"get": {
 				"operationId": "GetInventorySummary",
 				"responses": {
@@ -9976,7 +9976,7 @@
 				]
 			}
 		},
-		"/api/v2/listings/{id}": {
+		"/listings/{id}": {
 			"get": {
 				"operationId": "GetListingDetail",
 				"responses": {
@@ -10096,7 +10096,7 @@
 				]
 			}
 		},
-		"/api/v2/listings/{id}/refresh": {
+		"/listings/{id}/refresh": {
 			"post": {
 				"operationId": "RefreshListing",
 				"responses": {
@@ -10146,7 +10146,7 @@
 				]
 			}
 		},
-		"/api/v2/listings/{id}/views": {
+		"/listings/{id}/views": {
 			"post": {
 				"operationId": "TrackView",
 				"responses": {
@@ -10189,7 +10189,7 @@
 				]
 			}
 		},
-		"/api/v2/listings/{id}/photos": {
+		"/listings/{id}/photos": {
 			"post": {
 				"operationId": "UploadPhotos",
 				"responses": {
@@ -10250,7 +10250,7 @@
 				]
 			}
 		},
-		"/api/v2/inventory": {
+		"/inventory": {
 			"get": {
 				"operationId": "GetInventory",
 				"responses": {
@@ -10363,7 +10363,7 @@
 				}
 			}
 		},
-		"/api/v2/inventory/{lotId}/list": {
+		"/inventory/{lotId}/list": {
 			"post": {
 				"operationId": "LinkToListing",
 				"responses": {
@@ -10417,7 +10417,7 @@
 				}
 			}
 		},
-		"/api/v2/inventory/{lotId}/unlist": {
+		"/inventory/{lotId}/unlist": {
 			"post": {
 				"operationId": "UnlinkFromListing",
 				"responses": {
@@ -10461,7 +10461,7 @@
 				]
 			}
 		},
-		"/api/v2/inventory/{lotId}": {
+		"/inventory/{lotId}": {
 			"delete": {
 				"operationId": "DeleteInventoryLot",
 				"responses": {
@@ -10490,7 +10490,7 @@
 				]
 			}
 		},
-		"/api/v2/admin/imports/{source}": {
+		"/admin/imports/{source}": {
 			"post": {
 				"operationId": "StartImport",
 				"responses": {
@@ -10535,7 +10535,7 @@
 				]
 			}
 		},
-		"/api/v2/admin/imports/{jobId}": {
+		"/admin/imports/{jobId}": {
 			"get": {
 				"operationId": "GetJobStatus",
 				"responses": {
@@ -10585,7 +10585,7 @@
 				]
 			}
 		},
-		"/api/v2/admin/imports": {
+		"/admin/imports": {
 			"get": {
 				"operationId": "ListJobs",
 				"responses": {
@@ -10623,7 +10623,7 @@
 				"parameters": []
 			}
 		},
-		"/api/v2/health": {
+		"/health": {
 			"get": {
 				"operationId": "GetHealth",
 				"responses": {
@@ -10647,7 +10647,7 @@
 				"parameters": []
 			}
 		},
-		"/api/v2/game-items/search": {
+		"/game-items/search": {
 			"get": {
 				"operationId": "SearchGameItems",
 				"responses": {
@@ -10684,7 +10684,7 @@
 				]
 			}
 		},
-		"/api/v2/game-items/categories": {
+		"/game-items/categories": {
 			"get": {
 				"operationId": "GetCategories",
 				"responses": {
@@ -10711,7 +10711,7 @@
 				"parameters": []
 			}
 		},
-		"/api/v2/game-items/{id}/listings": {
+		"/game-items/{id}/listings": {
 			"get": {
 				"operationId": "GetListings",
 				"responses": {
@@ -10803,7 +10803,7 @@
 				]
 			}
 		},
-		"/api/v2/game-items/aggregates": {
+		"/game-items/aggregates": {
 			"get": {
 				"operationId": "SearchGameItemAggregates",
 				"responses": {
@@ -10924,7 +10924,7 @@
 				]
 			}
 		},
-		"/api/v2/game-data/wishlists": {
+		"/game-data/wishlists": {
 			"get": {
 				"operationId": "GetWishlists",
 				"responses": {
@@ -10988,7 +10988,7 @@
 				}
 			}
 		},
-		"/api/v2/game-data/wishlists/{wishlist_id}": {
+		"/game-data/wishlists/{wishlist_id}": {
 			"get": {
 				"operationId": "GetWishlist",
 				"responses": {
@@ -11121,7 +11121,7 @@
 				]
 			}
 		},
-		"/api/v2/game-data/wishlists/{wishlist_id}/items": {
+		"/game-data/wishlists/{wishlist_id}/items": {
 			"post": {
 				"operationId": "AddWishlistItem",
 				"responses": {
@@ -11169,7 +11169,7 @@
 				}
 			}
 		},
-		"/api/v2/game-data/wishlists/{wishlist_id}/items/{item_id}": {
+		"/game-data/wishlists/{wishlist_id}/items/{item_id}": {
 			"delete": {
 				"operationId": "RemoveWishlistItem",
 				"responses": {
@@ -11279,7 +11279,7 @@
 				}
 			}
 		},
-		"/api/v2/game-data/wishlists/{wishlist_id}/shopping-list": {
+		"/game-data/wishlists/{wishlist_id}/shopping-list": {
 			"get": {
 				"operationId": "GenerateShoppingList",
 				"responses": {
@@ -11317,7 +11317,7 @@
 				]
 			}
 		},
-		"/api/v2/game-data/wiki/items": {
+		"/game-data/wiki/items": {
 			"get": {
 				"operationId": "SearchItems",
 				"responses": {
@@ -11436,7 +11436,7 @@
 				]
 			}
 		},
-		"/api/v2/game-data/wiki/items/{id}": {
+		"/game-data/wiki/items/{id}": {
 			"get": {
 				"operationId": "GetItemDetail",
 				"responses": {
@@ -11470,7 +11470,7 @@
 				]
 			}
 		},
-		"/api/v2/game-data/wiki/ships": {
+		"/game-data/wiki/ships": {
 			"get": {
 				"operationId": "GetShips",
 				"responses": {
@@ -11570,7 +11570,7 @@
 				]
 			}
 		},
-		"/api/v2/game-data/wiki/ships/{id}": {
+		"/game-data/wiki/ships/{id}": {
 			"get": {
 				"operationId": "GetShipDetail",
 				"responses": {
@@ -11604,7 +11604,7 @@
 				]
 			}
 		},
-		"/api/v2/game-data/wiki/commodities": {
+		"/game-data/wiki/commodities": {
 			"get": {
 				"operationId": "GetCommodities",
 				"responses": {
@@ -11695,7 +11695,7 @@
 				]
 			}
 		},
-		"/api/v2/game-data/wiki/locations": {
+		"/game-data/wiki/locations": {
 			"get": {
 				"operationId": "GetLocations",
 				"responses": {
@@ -11732,7 +11732,7 @@
 				]
 			}
 		},
-		"/api/v2/game-data/wiki/manufacturers": {
+		"/game-data/wiki/manufacturers": {
 			"get": {
 				"operationId": "GetManufacturers",
 				"responses": {
@@ -11759,7 +11759,7 @@
 				"parameters": []
 			}
 		},
-		"/api/v2/game-data/wiki/manufacturers/{id}": {
+		"/game-data/wiki/manufacturers/{id}": {
 			"get": {
 				"operationId": "GetManufacturerDetail",
 				"responses": {
@@ -11793,7 +11793,7 @@
 				]
 			}
 		},
-		"/api/v2/game-data/versions": {
+		"/game-data/versions": {
 			"get": {
 				"operationId": "ListVersions",
 				"responses": {
@@ -11820,7 +11820,7 @@
 				"parameters": []
 			}
 		},
-		"/api/v2/game-data/versions/active": {
+		"/game-data/versions/active": {
 			"get": {
 				"operationId": "GetActiveVersions",
 				"responses": {
@@ -11844,7 +11844,7 @@
 				"parameters": []
 			}
 		},
-		"/api/v2/game-data/versions/select": {
+		"/game-data/versions/select": {
 			"post": {
 				"operationId": "SelectVersion",
 				"responses": {
@@ -11884,7 +11884,7 @@
 				}
 			}
 		},
-		"/api/v2/game-data/resources/search": {
+		"/game-data/resources/search": {
 			"get": {
 				"operationId": "SearchResources",
 				"responses": {
@@ -11982,7 +11982,7 @@
 				]
 			}
 		},
-		"/api/v2/game-data/resources/{resource_id}": {
+		"/game-data/resources/{resource_id}": {
 			"get": {
 				"operationId": "GetResource",
 				"responses": {
@@ -12016,7 +12016,7 @@
 				]
 			}
 		},
-		"/api/v2/game-data/resources/categories": {
+		"/game-data/resources/categories": {
 			"get": {
 				"operationId": "GetResourceCategories",
 				"responses": {
@@ -12053,7 +12053,7 @@
 				]
 			}
 		},
-		"/api/v2/game-data/missions/search": {
+		"/game-data/missions/search": {
 			"get": {
 				"operationId": "SearchMissions",
 				"responses": {
@@ -12297,7 +12297,7 @@
 				]
 			}
 		},
-		"/api/v2/game-data/missions/{mission_id}": {
+		"/game-data/missions/{mission_id}": {
 			"get": {
 				"operationId": "GetMissionDetail",
 				"responses": {
@@ -12331,7 +12331,7 @@
 				]
 			}
 		},
-		"/api/v2/game-data/missions/by-code/{mission_code}": {
+		"/game-data/missions/by-code/{mission_code}": {
 			"get": {
 				"operationId": "GetMissionDetailByCode",
 				"responses": {
@@ -12364,7 +12364,7 @@
 				]
 			}
 		},
-		"/api/v2/game-data/missions/{mission_id}/blueprints": {
+		"/game-data/missions/{mission_id}/blueprints": {
 			"get": {
 				"operationId": "GetMissionBlueprints",
 				"responses": {
@@ -12401,7 +12401,7 @@
 				]
 			}
 		},
-		"/api/v2/game-data/missions/{mission_id}/complete": {
+		"/game-data/missions/{mission_id}/complete": {
 			"post": {
 				"operationId": "CompleteMission",
 				"responses": {
@@ -12474,7 +12474,7 @@
 				}
 			}
 		},
-		"/api/v2/game-data/missions/{mission_id}/rate": {
+		"/game-data/missions/{mission_id}/rate": {
 			"post": {
 				"operationId": "RateMission",
 				"responses": {
@@ -12553,7 +12553,7 @@
 				}
 			}
 		},
-		"/api/v2/game-data/missions/chains": {
+		"/game-data/missions/chains": {
 			"get": {
 				"operationId": "GetMissionChains",
 				"responses": {
@@ -12618,7 +12618,7 @@
 				]
 			}
 		},
-		"/api/v2/game-data/missions/reputation-ranks": {
+		"/game-data/missions/reputation-ranks": {
 			"get": {
 				"operationId": "GetReputationRanks",
 				"responses": {
@@ -12674,7 +12674,7 @@
 				]
 			}
 		},
-		"/api/v2/game-data/missions/events": {
+		"/game-data/missions/events": {
 			"get": {
 				"operationId": "GetGameEvents",
 				"responses": {
@@ -12709,7 +12709,7 @@
 				"parameters": []
 			}
 		},
-		"/api/v2/game-data/crafting/calculate-quality": {
+		"/game-data/crafting/calculate-quality": {
 			"post": {
 				"operationId": "CalculateQuality",
 				"responses": {
@@ -12743,7 +12743,7 @@
 				}
 			}
 		},
-		"/api/v2/game-data/crafting/simulate": {
+		"/game-data/crafting/simulate": {
 			"post": {
 				"operationId": "SimulateCrafting",
 				"responses": {
@@ -12777,7 +12777,7 @@
 				}
 			}
 		},
-		"/api/v2/game-data/crafting/craft": {
+		"/game-data/crafting/craft": {
 			"post": {
 				"operationId": "RecordCrafting",
 				"responses": {
@@ -12815,7 +12815,7 @@
 				}
 			}
 		},
-		"/api/v2/game-data/crafting/history": {
+		"/game-data/crafting/history": {
 			"get": {
 				"operationId": "GetCraftingHistory",
 				"responses": {
@@ -12875,7 +12875,7 @@
 				]
 			}
 		},
-		"/api/v2/game-data/crafting/craftable-items": {
+		"/game-data/crafting/craftable-items": {
 			"get": {
 				"operationId": "GetCraftableItems",
 				"responses": {
@@ -12972,7 +12972,7 @@
 				]
 			}
 		},
-		"/api/v2/game-data/crafting/statistics": {
+		"/game-data/crafting/statistics": {
 			"get": {
 				"operationId": "GetCraftingStatistics",
 				"responses": {
@@ -13000,7 +13000,7 @@
 				"parameters": []
 			}
 		},
-		"/api/v2/game-data/blueprints/search": {
+		"/game-data/blueprints/search": {
 			"get": {
 				"operationId": "SearchBlueprints",
 				"responses": {
@@ -13156,7 +13156,7 @@
 				]
 			}
 		},
-		"/api/v2/game-data/blueprints/{blueprint_id}": {
+		"/game-data/blueprints/{blueprint_id}": {
 			"get": {
 				"operationId": "GetBlueprintDetail",
 				"responses": {
@@ -13190,7 +13190,7 @@
 				]
 			}
 		},
-		"/api/v2/game-data/blueprints/by-code/{blueprint_code}": {
+		"/game-data/blueprints/by-code/{blueprint_code}": {
 			"get": {
 				"operationId": "GetBlueprintDetailByCode",
 				"responses": {
@@ -13224,7 +13224,7 @@
 				]
 			}
 		},
-		"/api/v2/game-data/blueprints/{blueprint_id}/missions": {
+		"/game-data/blueprints/{blueprint_id}/missions": {
 			"get": {
 				"operationId": "GetBlueprintMissions",
 				"responses": {
@@ -13270,7 +13270,7 @@
 				]
 			}
 		},
-		"/api/v2/game-data/blueprints/{blueprint_id}/inventory": {
+		"/game-data/blueprints/{blueprint_id}/inventory": {
 			"post": {
 				"operationId": "AddBlueprintToInventory",
 				"responses": {
@@ -13387,7 +13387,7 @@
 				]
 			}
 		},
-		"/api/v2/game-data/blueprints/categories": {
+		"/game-data/blueprints/categories": {
 			"get": {
 				"operationId": "GetBlueprintCategories",
 				"responses": {
@@ -13424,7 +13424,7 @@
 				]
 			}
 		},
-		"/api/v2/game-data/blueprints/inventory": {
+		"/game-data/blueprints/inventory": {
 			"get": {
 				"operationId": "GetUserBlueprintInventory",
 				"responses": {
@@ -13626,7 +13626,7 @@
 				]
 			}
 		},
-		"/api/v2/game-data/blueprints/{blueprint_id}/org-owners/{spectrum_id}": {
+		"/game-data/blueprints/{blueprint_id}/org-owners/{spectrum_id}": {
 			"get": {
 				"operationId": "GetOrgBlueprintOwners",
 				"responses": {
@@ -13705,7 +13705,7 @@
 				]
 			}
 		},
-		"/api/v2/game-data/blueprints/craftable": {
+		"/game-data/blueprints/craftable": {
 			"post": {
 				"operationId": "FindCraftableBlueprints",
 				"responses": {
@@ -13773,7 +13773,7 @@
 				}
 			}
 		},
-		"/api/v2/debug/feature-flag": {
+		"/debug/feature-flag": {
 			"get": {
 				"operationId": "GetFeatureFlag",
 				"responses": {
@@ -13838,7 +13838,7 @@
 				}
 			}
 		},
-		"/api/v2/cart": {
+		"/cart": {
 			"get": {
 				"operationId": "GetCart",
 				"responses": {
@@ -13866,7 +13866,7 @@
 				"parameters": []
 			}
 		},
-		"/api/v2/cart/add": {
+		"/cart/add": {
 			"post": {
 				"operationId": "AddToCart",
 				"responses": {
@@ -13906,7 +13906,7 @@
 				}
 			}
 		},
-		"/api/v2/cart/{id}": {
+		"/cart/{id}": {
 			"put": {
 				"operationId": "UpdateCartItem",
 				"responses": {
@@ -14008,7 +14008,7 @@
 				]
 			}
 		},
-		"/api/v2/cart/checkout": {
+		"/cart/checkout": {
 			"post": {
 				"operationId": "CheckoutCart",
 				"responses": {
@@ -14048,7 +14048,7 @@
 				}
 			}
 		},
-		"/api/v2/buy-orders": {
+		"/buy-orders": {
 			"post": {
 				"operationId": "CreatePurchase",
 				"responses": {
@@ -14088,7 +14088,7 @@
 				}
 			}
 		},
-		"/api/v2/buy-orders/standing": {
+		"/buy-orders/standing": {
 			"post": {
 				"operationId": "CreateStandingBuyOrder",
 				"responses": {
@@ -14125,7 +14125,7 @@
 				}
 			}
 		},
-		"/api/v2/buy-orders/search": {
+		"/buy-orders/search": {
 			"get": {
 				"operationId": "SearchBuyOrders",
 				"responses": {
@@ -14232,7 +14232,7 @@
 				]
 			}
 		},
-		"/api/v2/buy-orders/mine": {
+		"/buy-orders/mine": {
 			"get": {
 				"operationId": "GetMyBuyOrders",
 				"responses": {
@@ -14292,7 +14292,7 @@
 				]
 			}
 		},
-		"/api/v2/buy-orders/{id}": {
+		"/buy-orders/{id}": {
 			"put": {
 				"operationId": "UpdateBuyOrder",
 				"responses": {
@@ -14380,7 +14380,7 @@
 				]
 			}
 		},
-		"/api/v2/buy-orders/{id}/fulfill": {
+		"/buy-orders/{id}/fulfill": {
 			"post": {
 				"operationId": "FulfillBuyOrder",
 				"responses": {
@@ -14439,7 +14439,7 @@
 				}
 			}
 		},
-		"/api/v2/availability/next": {
+		"/availability/next": {
 			"get": {
 				"operationId": "GetNextAvailable",
 				"responses": {
@@ -14485,7 +14485,7 @@
 				]
 			}
 		},
-		"/api/v2/auctions/{listingId}": {
+		"/auctions/{listingId}": {
 			"get": {
 				"operationId": "GetAuctionDetail",
 				"responses": {
@@ -14517,7 +14517,7 @@
 				]
 			}
 		},
-		"/api/v2/auctions/{listingId}/bids": {
+		"/auctions/{listingId}/bids": {
 			"post": {
 				"operationId": "PlaceBid",
 				"responses": {
@@ -14563,7 +14563,7 @@
 				}
 			}
 		},
-		"/api/v2/analytics/price-history": {
+		"/analytics/price-history": {
 			"get": {
 				"operationId": "GetPriceHistory",
 				"responses": {
@@ -14640,7 +14640,7 @@
 				]
 			}
 		},
-		"/api/v2/analytics/quality-distribution": {
+		"/analytics/quality-distribution": {
 			"get": {
 				"operationId": "GetQualityDistribution",
 				"responses": {
@@ -14692,7 +14692,7 @@
 				]
 			}
 		},
-		"/api/v2/analytics/seller-stats": {
+		"/analytics/seller-stats": {
 			"get": {
 				"operationId": "GetSellerStats",
 				"responses": {
@@ -14726,7 +14726,7 @@
 				]
 			}
 		},
-		"/api/v2/admin/migration/status": {
+		"/admin/migration/status": {
 			"get": {
 				"operationId": "GetMigrationStatus",
 				"responses": {
@@ -14753,7 +14753,7 @@
 				"parameters": []
 			}
 		},
-		"/api/v2/admin/migration/run": {
+		"/admin/migration/run": {
 			"post": {
 				"operationId": "RunMigration",
 				"responses": {
@@ -14790,7 +14790,7 @@
 				}
 			}
 		},
-		"/api/v2/admin/feature-flags/config": {
+		"/admin/feature-flags/config": {
 			"get": {
 				"operationId": "GetConfig",
 				"responses": {
@@ -14854,7 +14854,7 @@
 				}
 			}
 		},
-		"/api/v2/admin/feature-flags/stats": {
+		"/admin/feature-flags/stats": {
 			"get": {
 				"operationId": "GetStats",
 				"responses": {
@@ -14885,7 +14885,7 @@
 				"parameters": []
 			}
 		},
-		"/api/v2/admin/feature-flags/overrides": {
+		"/admin/feature-flags/overrides": {
 			"get": {
 				"operationId": "GetUserOverrides",
 				"responses": {
@@ -14992,7 +14992,7 @@
 				}
 			}
 		},
-		"/api/v2/admin/feature-flags/overrides/{username}": {
+		"/admin/feature-flags/overrides/{username}": {
 			"delete": {
 				"operationId": "RemoveUserOverride",
 				"responses": {
@@ -15045,7 +15045,7 @@
 				]
 			}
 		},
-		"/api/v2/admin/import-game-data": {
+		"/admin/import-game-data": {
 			"post": {
 				"operationId": "ImportGameData",
 				"responses": {
@@ -15125,7 +15125,7 @@
 				"parameters": []
 			}
 		},
-		"/api/v2/admin/import-game-data/{jobId}": {
+		"/admin/import-game-data/{jobId}": {
 			"get": {
 				"operationId": "GetImportJobStatus",
 				"responses": {
@@ -15175,5 +15175,10 @@
 				]
 			}
 		}
-	}
+	},
+	"servers": [
+		{
+			"url": "/api/v2"
+		}
+	]
 }
