@@ -35,6 +35,16 @@ interface MigrationRunResponse {
   duration_seconds: number
 }
 
+interface MigrationLogEntry {
+  timestamp: string
+  dry_run: boolean
+  duration_seconds: number
+  result: MigrationRunResponse
+}
+
+// In-memory log of recent migration runs (survives until server restart)
+const migrationLogs: MigrationLogEntry[] = []
+
 @Route("admin/migration")
 @Tags("Admin Migration")
 @Security("loggedin")
@@ -89,6 +99,18 @@ export class MigrationAdminController extends BaseController {
   }
 
   /**
+   * Get recent migration run logs (in-memory, clears on server restart)
+   */
+  @Get("logs")
+  public async getMigrationLogs(
+    @Request() request: ExpressRequest,
+  ): Promise<MigrationLogEntry[]> {
+    this.request = request
+    this.requireAdmin()
+    return migrationLogs
+  }
+
+  /**
    * Run the V1→V2 migration (dry-run or execute)
    */
   @Post("run")
@@ -129,7 +151,7 @@ export class MigrationAdminController extends BaseController {
       })
     }
 
-    return {
+    const response: MigrationRunResponse = {
       dry_run: requestBody.dry_run,
       listings,
       price_history: priceHistory,
@@ -139,6 +161,18 @@ export class MigrationAdminController extends BaseController {
       buy_orders: buyOrders,
       duration_seconds: duration,
     }
+
+    // Save to in-memory log
+    migrationLogs.unshift({
+      timestamp: new Date().toISOString(),
+      dry_run: requestBody.dry_run,
+      duration_seconds: duration,
+      result: response,
+    })
+    // Keep last 20 runs
+    if (migrationLogs.length > 20) migrationLogs.length = 20
+
+    return response
   }
 
   /**
