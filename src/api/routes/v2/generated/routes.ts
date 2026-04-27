@@ -141,6 +141,8 @@ const models: TsoaRoute.Models = {
         "properties": {
             "lot_id": {"dataType":"string","required":true},
             "item_id": {"dataType":"string","required":true},
+            "listing_id": {"dataType":"string","required":true},
+            "listing_title": {"dataType":"string","required":true},
             "variant": {"ref":"StockLotVariant","required":true},
             "quantity_total": {"dataType":"double","required":true},
             "location": {"dataType":"union","subSchemas":[{"ref":"LocationInfo"},{"dataType":"enum","enums":[null]}],"required":true},
