@@ -101,50 +101,56 @@ export class MigrationAdminController extends BaseController {
 
     const start = Date.now()
 
+    // Run the actual migration (validates full flow including inserts, triggers, constraints)
+    const listings = await v1ToV2MigrationService.migrateAllListings()
+    const priceHistory = await v1ToV2MigrationService.migratePriceHistory()
+    const auctions = await v1ToV2MigrationService.migrateAuctionData()
+
+    const duration = (Date.now() - start) / 1000
+
     if (requestBody.dry_run) {
-      // Wrap everything in a transaction and roll back
-      const result = await knex.transaction(async (trx) => {
-        // Temporarily override getKnex to return the transaction
-        // We can't easily do this with the service, so we run the service
-        // and then throw to rollback
-        const listings = await v1ToV2MigrationService.migrateAllListings()
-        const priceHistory = await v1ToV2MigrationService.migratePriceHistory()
-        const auctions = await v1ToV2MigrationService.migrateAuctionData()
-
-        // Force rollback by throwing — data is NOT persisted
-        const result = { listings, priceHistory, auctions }
-        throw { __dryRunResult: result }
-      }).catch((err) => {
-        if (err.__dryRunResult) return err.__dryRunResult
-        throw err
-      })
-
-      return {
-        dry_run: true,
-        listings: result.listings,
-        price_history: result.priceHistory,
-        auctions: result.auctions,
-        duration_seconds: (Date.now() - start) / 1000,
-      }
+      // Roll back: delete everything we just created using the mapping tables
+      logger.info("Dry run — rolling back migrated data", { admin: this.getUserId() })
+      await this.rollbackMigratedData(knex)
     } else {
-      // Execute for real
-      const listings = await v1ToV2MigrationService.migrateAllListings()
-      const priceHistory = await v1ToV2MigrationService.migratePriceHistory()
-      const auctions = await v1ToV2MigrationService.migrateAuctionData()
-
       logger.info("Admin migration completed", {
         listings: { success: listings.successful, failed: listings.failed },
         priceHistory: { success: priceHistory.successful, failed: priceHistory.failed },
         auctions: { success: auctions.successful, failed: auctions.failed },
       })
-
-      return {
-        dry_run: false,
-        listings,
-        price_history: priceHistory,
-        auctions,
-        duration_seconds: (Date.now() - start) / 1000,
-      }
     }
+
+    return {
+      dry_run: requestBody.dry_run,
+      listings,
+      price_history: priceHistory,
+      auctions,
+      duration_seconds: duration,
+    }
+  }
+
+  /**
+   * Roll back migrated data using the mapping tables.
+   * Deletes V2 data created by the migration, clears mapping tables.
+   * V1 tables are never touched.
+   */
+  private async rollbackMigratedData(knex: ReturnType<typeof getKnex>) {
+    // Delete V2 listings (CASCADE deletes listing_items, listing_item_lots, listing_photos_v2, auction_details_v2, bids_v2)
+    const mappedListings = await knex("v1_v2_listing_map").select("v2_listing_id")
+    if (mappedListings.length > 0) {
+      const ids = mappedListings.map((r: { v2_listing_id: string }) => r.v2_listing_id)
+      await knex("listings").whereIn("listing_id", ids).delete()
+    }
+
+    // Delete migrated price history
+    await knex("price_history_v2").where("event_type", "legacy_snapshot").delete()
+
+    // Clear mapping tables
+    await knex("v1_v2_stock_lot_map").delete()
+    await knex("v1_v2_listing_map").delete()
+
+    logger.info("Dry run rollback complete", {
+      listings_deleted: mappedListings.length,
+    })
   }
 }
