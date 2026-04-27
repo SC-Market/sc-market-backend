@@ -24,14 +24,7 @@ fi
 echo "✅ OpenAPI spec generated successfully"
 echo ""
 
-# Step 1.5: Fix OpenAPI paths to include /api/v2 prefix
-echo "Step 1.5: Fixing OpenAPI paths to include /api/v2 prefix..."
-npx tsx scripts/fix-openapi-paths.ts
-
-echo "✅ OpenAPI paths fixed"
-echo ""
-
-# Step 2: Copy OpenAPI spec to frontend
+# Step 1.5: Copy to frontend first, THEN fix paths on the copy only
 echo "Step 2: Copying OpenAPI spec to frontend..."
 FRONTEND_DIR="../sc-market-frontend"
 
@@ -44,6 +37,27 @@ mkdir -p "$FRONTEND_DIR/spec"
 cp src/api/routes/v2/generated/swagger.json "$FRONTEND_DIR/spec/sc-market-v2.openapi.json"
 
 echo "✅ OpenAPI spec copied to frontend"
+echo ""
+
+# Step 2.5: Fix paths on the FRONTEND copy only (add /api/v2 prefix)
+echo "Step 2.5: Fixing OpenAPI paths on frontend copy..."
+cd "$FRONTEND_DIR"
+node -e "
+const fs = require('fs');
+const spec = JSON.parse(fs.readFileSync('spec/sc-market-v2.openapi.json', 'utf-8'));
+const basePath = '/api/v2';
+const newPaths = {};
+for (const [path, methods] of Object.entries(spec.paths)) {
+  newPaths[basePath + path] = methods;
+}
+spec.paths = newPaths;
+delete spec.servers;
+fs.writeFileSync('spec/sc-market-v2.openapi.json', JSON.stringify(spec, null, '\t'));
+console.log('Updated ' + Object.keys(newPaths).length + ' paths');
+"
+cd -
+
+echo "✅ Frontend paths fixed"
 echo ""
 
 # Step 3: Generate TypeScript client in frontend
