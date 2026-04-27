@@ -1053,6 +1053,120 @@ export class V1ToV2MigrationService {
 
     return summary
   }
+
+  /**
+   * Migrates V1 market_orders → V2 order_market_items_v2.
+   * Only migrates orders whose listing has been migrated to V2 (exists in v1_v2_listing_map).
+   * Skips orders that already have V2 rows.
+   */
+  async migrateOrderLineItems(): Promise<MigrationSummary> {
+    const db = getKnex()
+    const summary: MigrationSummary = { total_attempted: 0, successful: 0, failed: 0, skipped: 0, errors: [] }
+
+    try {
+      // Get all V1 order line items that have a mapped V2 listing
+      const v1Rows = await db("market_orders as mo")
+        .join("v1_v2_listing_map as m", "mo.listing_id", "m.v1_listing_id")
+        .join("listing_items as li", "m.v2_listing_id", "li.listing_id")
+        .join("market_listings as ml", "mo.listing_id", "ml.listing_id")
+        .select(
+          "mo.order_id", "mo.listing_id as v1_listing_id", "mo.quantity",
+          "m.v2_listing_id as listing_id", "li.item_id", "li.game_item_id",
+          "ml.price",
+        )
+
+      summary.total_attempted = v1Rows.length
+
+      for (const row of v1Rows) {
+        // Skip if V2 row already exists for this order+listing
+        const existing = await db("order_market_items_v2")
+          .where({ order_id: row.order_id, listing_id: row.listing_id })
+          .first()
+        if (existing) { summary.skipped++; continue }
+
+        try {
+          // Get default variant for this game item
+          let variantId: string | null = null
+          if (row.game_item_id) {
+            variantId = await getOrCreateVariant(row.game_item_id, DEFAULT_V1_VARIANT_ATTRIBUTES)
+          }
+          if (!variantId) { summary.skipped++; continue }
+
+          await db("order_market_items_v2").insert({
+            order_id: row.order_id,
+            listing_id: row.listing_id,
+            item_id: row.item_id,
+            variant_id: variantId,
+            quantity: row.quantity,
+            price_per_unit: row.price,
+          })
+          summary.successful++
+        } catch (error) {
+          summary.failed++
+          summary.errors.push({ v1_listing_id: `order_${row.order_id}_${row.v1_listing_id}`, error: error instanceof Error ? error.message : "Unknown error" })
+        }
+      }
+    } catch (error) {
+      throw new Error(`Failed to migrate order line items: ${error instanceof Error ? error.message : "Unknown error"}`)
+    }
+
+    return summary
+  }
+
+  /**
+   * Migrates V1 offer_market_items → V2 offer_market_items_v2.
+   * Only migrates offers whose listing has been migrated to V2 (exists in v1_v2_listing_map).
+   * Skips offers that already have V2 rows.
+   */
+  async migrateOfferLineItems(): Promise<MigrationSummary> {
+    const db = getKnex()
+    const summary: MigrationSummary = { total_attempted: 0, successful: 0, failed: 0, skipped: 0, errors: [] }
+
+    try {
+      const v1Rows = await db("offer_market_items as omi")
+        .join("v1_v2_listing_map as m", "omi.listing_id", "m.v1_listing_id")
+        .join("listing_items as li", "m.v2_listing_id", "li.listing_id")
+        .join("market_listings as ml", "omi.listing_id", "ml.listing_id")
+        .select(
+          "omi.offer_id", "omi.listing_id as v1_listing_id", "omi.quantity",
+          "m.v2_listing_id as listing_id", "li.game_item_id",
+          "ml.price",
+        )
+
+      summary.total_attempted = v1Rows.length
+
+      for (const row of v1Rows) {
+        const existing = await db("offer_market_items_v2")
+          .where({ offer_id: row.offer_id, listing_id: row.listing_id })
+          .first()
+        if (existing) { summary.skipped++; continue }
+
+        try {
+          let variantId: string | null = null
+          if (row.game_item_id) {
+            variantId = await getOrCreateVariant(row.game_item_id, DEFAULT_V1_VARIANT_ATTRIBUTES)
+          }
+          if (!variantId) { summary.skipped++; continue }
+
+          await db("offer_market_items_v2").insert({
+            offer_id: row.offer_id,
+            listing_id: row.listing_id,
+            variant_id: variantId,
+            quantity: row.quantity,
+            price_per_unit: row.price,
+          })
+          summary.successful++
+        } catch (error) {
+          summary.failed++
+          summary.errors.push({ v1_listing_id: `offer_${row.offer_id}_${row.v1_listing_id}`, error: error instanceof Error ? error.message : "Unknown error" })
+        }
+      }
+    } catch (error) {
+      throw new Error(`Failed to migrate offer line items: ${error instanceof Error ? error.message : "Unknown error"}`)
+    }
+
+    return summary
+  }
 }
 
 export const v1ToV2MigrationService = new V1ToV2MigrationService()
