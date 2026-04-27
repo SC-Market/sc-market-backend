@@ -109,6 +109,21 @@ export interface CreateListingRequest {
 
   /** Optional contractor spectrum_id — if provided, listing is created on behalf of the org */
   contractor_spectrum_id?: string;
+
+  /** Sale type: fixed price, auction, or negotiable */
+  sale_type?: 'fixed' | 'auction' | 'negotiable';
+
+  /** Auction details — required when sale_type is 'auction' */
+  auction_details?: {
+    /** When the auction ends (ISO 8601) */
+    end_time: string;
+    /** Minimum bid increment in aUEC */
+    min_bid_increment: number;
+    /** Optional buyout price in aUEC */
+    buyout_price?: number;
+    /** Optional reserve price — auction won't sell below this */
+    reserve_price?: number;
+  };
 }
 
 // ============================================================================
