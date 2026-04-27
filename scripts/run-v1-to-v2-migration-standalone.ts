@@ -90,6 +90,11 @@ async function main() {
   const offerSummary = await v1ToV2MigrationService.migrateOfferLineItems()
   console.log(`Offer items: ✅ ${offerSummary.successful}, ❌ ${offerSummary.failed}, ⏭️ ${offerSummary.skipped}`)
 
+  // Buy orders
+  console.log("\n🔄 Migrating buy orders...")
+  const buySummary = await v1ToV2MigrationService.migrateBuyOrders()
+  console.log(`Buy orders: ✅ ${buySummary.successful}, ❌ ${buySummary.failed}, ⏭️ ${buySummary.skipped}`)
+
   // Verify V1 unchanged
   const afterV1 = await getV1TableCounts()
   const v1Ok = beforeV1.unique === afterV1.unique && beforeV1.aggregate === afterV1.aggregate && beforeV1.multiple === afterV1.multiple

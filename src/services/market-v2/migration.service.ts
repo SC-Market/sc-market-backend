@@ -1114,9 +1114,53 @@ export class V1ToV2MigrationService {
   }
 
   /**
+   * Migrates V1 market_buy_orders → V2 buy_orders_v2.
+   * Skips buy orders that already exist in V2 (by buyer_id + game_item_id + created_timestamp).
+   */
+  async migrateBuyOrders(): Promise<MigrationSummary> {
+    const db = getKnex()
+    const summary: MigrationSummary = { total_attempted: 0, successful: 0, failed: 0, skipped: 0, errors: [] }
+
+    try {
+      const v1Rows = await db("market_buy_orders").select("*")
+      summary.total_attempted = v1Rows.length
+
+      for (const row of v1Rows) {
+        if (!row.game_item_id) { summary.skipped++; continue }
+
+        // Idempotency: check if already migrated
+        const existing = await db("buy_orders_v2")
+          .where({ buyer_id: row.buyer_id, game_item_id: row.game_item_id })
+          .whereRaw("created_at = ?", [row.created_timestamp])
+          .first()
+        if (existing) { summary.skipped++; continue }
+
+        try {
+          await db("buy_orders_v2").insert({
+            buyer_id: row.buyer_id,
+            game_item_id: row.game_item_id,
+            quantity_desired: row.quantity,
+            price_max: row.price,
+            status: row.fulfilled_timestamp ? "fulfilled" : (row.expiry < new Date() ? "expired" : "active"),
+            created_at: row.created_timestamp,
+            updated_at: row.created_timestamp,
+            expires_at: row.expiry,
+          })
+          summary.successful++
+        } catch (error) {
+          summary.failed++
+          summary.errors.push({ v1_listing_id: `buy_order_${row.buy_order_id}`, error: error instanceof Error ? error.message : "Unknown error" })
+        }
+      }
+    } catch (error) {
+      throw new Error(`Failed to migrate buy orders: ${error instanceof Error ? error.message : "Unknown error"}`)
+    }
+
+    return summary
+  }
+
+  /**
    * Migrates V1 offer_market_items → V2 offer_market_items_v2.
-   * Only migrates offers whose listing has been migrated to V2 (exists in v1_v2_listing_map).
-   * Skips offers that already have V2 rows.
    */
   async migrateOfferLineItems(): Promise<MigrationSummary> {
     const db = getKnex()

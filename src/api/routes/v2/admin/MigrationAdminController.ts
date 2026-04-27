@@ -31,6 +31,7 @@ interface MigrationRunResponse {
   auctions: MigrationSummary
   order_items: MigrationSummary
   offer_items: MigrationSummary
+  buy_orders: MigrationSummary
   duration_seconds: number
 }
 
@@ -109,6 +110,7 @@ export class MigrationAdminController extends BaseController {
     const auctions = await v1ToV2MigrationService.migrateAuctionData()
     const orderItems = await v1ToV2MigrationService.migrateOrderLineItems()
     const offerItems = await v1ToV2MigrationService.migrateOfferLineItems()
+    const buyOrders = await v1ToV2MigrationService.migrateBuyOrders()
 
     const duration = (Date.now() - start) / 1000
 
@@ -123,6 +125,7 @@ export class MigrationAdminController extends BaseController {
         auctions: { success: auctions.successful, failed: auctions.failed },
         orderItems: { success: orderItems.successful, failed: orderItems.failed },
         offerItems: { success: offerItems.successful, failed: offerItems.failed },
+        buyOrders: { success: buyOrders.successful, failed: buyOrders.failed },
       })
     }
 
@@ -133,6 +136,7 @@ export class MigrationAdminController extends BaseController {
       auctions,
       order_items: orderItems,
       offer_items: offerItems,
+      buy_orders: buyOrders,
       duration_seconds: duration,
     }
   }
