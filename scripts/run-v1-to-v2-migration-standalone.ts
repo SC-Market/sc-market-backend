@@ -55,13 +55,13 @@ async function main() {
   const beforeV2 = await getV2Counts()
   console.log(`V2 before: ${beforeV2.listings} listings, ${beforeV2.mapped} mapped, ${beforeV2.photos} photos`)
 
-  console.log("\n🔄 Migrating...")
+  console.log("\n🔄 Migrating listings...")
   const start = Date.now()
   const summary = await v1ToV2MigrationService.migrateAllListings()
-  const duration = ((Date.now() - start) / 1000).toFixed(2)
+  const listingDuration = ((Date.now() - start) / 1000).toFixed(2)
 
   console.log(`\n${"=".repeat(60)}`)
-  console.log(`✅ ${summary.successful} migrated, ❌ ${summary.failed} failed, ⏭️ ${summary.skipped} skipped (${duration}s)`)
+  console.log(`Listings: ✅ ${summary.successful} migrated, ❌ ${summary.failed} failed, ⏭️ ${summary.skipped} skipped (${listingDuration}s)`)
 
   if (summary.errors.length > 0) {
     console.log("\nErrors:")
@@ -69,6 +69,16 @@ async function main() {
       console.log(`  ${e.v1_listing_id}: ${e.error}`)
     }
   }
+
+  // Price history
+  console.log("\n🔄 Migrating price history...")
+  const phSummary = await v1ToV2MigrationService.migratePriceHistory()
+  console.log(`Price history: ✅ ${phSummary.successful}, ❌ ${phSummary.failed}, ⏭️ ${phSummary.skipped}`)
+
+  // Auction data
+  console.log("\n🔄 Migrating auction data...")
+  const auctionSummary = await v1ToV2MigrationService.migrateAuctionData()
+  console.log(`Auctions: ✅ ${auctionSummary.successful}, ❌ ${auctionSummary.failed}, ⏭️ ${auctionSummary.skipped}`)
 
   // Verify V1 unchanged
   const afterV1 = await getV1TableCounts()
