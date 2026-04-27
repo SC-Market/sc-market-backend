@@ -2699,7 +2699,7 @@ const models: TsoaRoute.Models = {
         "additionalProperties": false,
     },
     // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
-    "MigrationRunResponse": {
+    "MigrationResult": {
         "dataType": "refObject",
         "properties": {
             "dry_run": {"dataType":"boolean","required":true},
@@ -2714,13 +2714,17 @@ const models: TsoaRoute.Models = {
         "additionalProperties": false,
     },
     // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
-    "MigrationLogEntry": {
+    "MigrationJob": {
         "dataType": "refObject",
         "properties": {
-            "timestamp": {"dataType":"string","required":true},
+            "id": {"dataType":"string","required":true},
+            "status": {"dataType":"union","subSchemas":[{"dataType":"enum","enums":["running"]},{"dataType":"enum","enums":["rolling_back"]},{"dataType":"enum","enums":["completed"]},{"dataType":"enum","enums":["failed"]}],"required":true},
             "dry_run": {"dataType":"boolean","required":true},
-            "duration_seconds": {"dataType":"double","required":true},
-            "result": {"ref":"MigrationRunResponse","required":true},
+            "started_at": {"dataType":"string","required":true},
+            "completed_at": {"dataType":"union","subSchemas":[{"dataType":"string"},{"dataType":"enum","enums":[null]}],"required":true},
+            "progress": {"dataType":"union","subSchemas":[{"dataType":"string"},{"dataType":"enum","enums":[null]}],"required":true},
+            "result": {"dataType":"union","subSchemas":[{"ref":"MigrationResult"},{"dataType":"enum","enums":[null]}],"required":true},
+            "error": {"dataType":"union","subSchemas":[{"dataType":"string"},{"dataType":"enum","enums":[null]}],"required":true},
         },
         "additionalProperties": false,
     },
@@ -6244,26 +6248,58 @@ export function RegisterRoutes(app: Router) {
             }
         });
         // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
-        const argsMigrationAdminController_getMigrationLogs: Record<string, TsoaRoute.ParameterSchema> = {
+        const argsMigrationAdminController_listMigrationJobs: Record<string, TsoaRoute.ParameterSchema> = {
                 request: {"in":"request","name":"request","required":true,"dataType":"object"},
         };
-        app.get('/admin/migration/logs',
+        app.get('/admin/migration/jobs',
             authenticateMiddleware([{"loggedin":[]}]),
             ...(fetchMiddlewares<RequestHandler>(MigrationAdminController)),
-            ...(fetchMiddlewares<RequestHandler>(MigrationAdminController.prototype.getMigrationLogs)),
+            ...(fetchMiddlewares<RequestHandler>(MigrationAdminController.prototype.listMigrationJobs)),
 
-            async function MigrationAdminController_getMigrationLogs(request: ExRequest, response: ExResponse, next: any) {
+            async function MigrationAdminController_listMigrationJobs(request: ExRequest, response: ExResponse, next: any) {
 
             // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
 
             let validatedArgs: any[] = [];
             try {
-                validatedArgs = templateService.getValidatedArgs({ args: argsMigrationAdminController_getMigrationLogs, request, response });
+                validatedArgs = templateService.getValidatedArgs({ args: argsMigrationAdminController_listMigrationJobs, request, response });
 
                 const controller = new MigrationAdminController();
 
               await templateService.apiHandler({
-                methodName: 'getMigrationLogs',
+                methodName: 'listMigrationJobs',
+                controller,
+                response,
+                next,
+                validatedArgs,
+                successStatus: undefined,
+              });
+            } catch (err) {
+                return next(err);
+            }
+        });
+        // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+        const argsMigrationAdminController_getMigrationJob: Record<string, TsoaRoute.ParameterSchema> = {
+                jobId: {"in":"path","name":"jobId","required":true,"dataType":"string"},
+                request: {"in":"request","name":"request","required":true,"dataType":"object"},
+        };
+        app.get('/admin/migration/jobs/:jobId',
+            authenticateMiddleware([{"loggedin":[]}]),
+            ...(fetchMiddlewares<RequestHandler>(MigrationAdminController)),
+            ...(fetchMiddlewares<RequestHandler>(MigrationAdminController.prototype.getMigrationJob)),
+
+            async function MigrationAdminController_getMigrationJob(request: ExRequest, response: ExResponse, next: any) {
+
+            // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+
+            let validatedArgs: any[] = [];
+            try {
+                validatedArgs = templateService.getValidatedArgs({ args: argsMigrationAdminController_getMigrationJob, request, response });
+
+                const controller = new MigrationAdminController();
+
+              await templateService.apiHandler({
+                methodName: 'getMigrationJob',
                 controller,
                 response,
                 next,

@@ -8533,7 +8533,7 @@
 				"type": "object",
 				"additionalProperties": false
 			},
-			"MigrationRunResponse": {
+			"MigrationResult": {
 				"properties": {
 					"dry_run": {
 						"type": "boolean"
@@ -8574,27 +8574,56 @@
 				"type": "object",
 				"additionalProperties": false
 			},
-			"MigrationLogEntry": {
+			"MigrationJob": {
 				"properties": {
-					"timestamp": {
+					"id": {
 						"type": "string"
+					},
+					"status": {
+						"type": "string",
+						"enum": [
+							"running",
+							"rolling_back",
+							"completed",
+							"failed"
+						]
 					},
 					"dry_run": {
 						"type": "boolean"
 					},
-					"duration_seconds": {
-						"type": "number",
-						"format": "double"
+					"started_at": {
+						"type": "string"
+					},
+					"completed_at": {
+						"type": "string",
+						"nullable": true
+					},
+					"progress": {
+						"type": "string",
+						"nullable": true
 					},
 					"result": {
-						"$ref": "#/components/schemas/MigrationRunResponse"
+						"allOf": [
+							{
+								"$ref": "#/components/schemas/MigrationResult"
+							}
+						],
+						"nullable": true
+					},
+					"error": {
+						"type": "string",
+						"nullable": true
 					}
 				},
 				"required": [
-					"timestamp",
+					"id",
+					"status",
 					"dry_run",
-					"duration_seconds",
-					"result"
+					"started_at",
+					"completed_at",
+					"progress",
+					"result",
+					"error"
 				],
 				"type": "object",
 				"additionalProperties": false
@@ -8602,8 +8631,7 @@
 			"MigrationRunRequest": {
 				"properties": {
 					"dry_run": {
-						"type": "boolean",
-						"description": "If true, wraps in a transaction and rolls back — no data is persisted"
+						"type": "boolean"
 					}
 				},
 				"required": [
@@ -14778,25 +14806,33 @@
 				"parameters": []
 			}
 		},
-		"/admin/migration/logs": {
+		"/admin/migration/jobs": {
 			"get": {
-				"operationId": "GetMigrationLogs",
+				"operationId": "ListMigrationJobs",
 				"responses": {
 					"200": {
 						"description": "Ok",
 						"content": {
 							"application/json": {
 								"schema": {
-									"items": {
-										"$ref": "#/components/schemas/MigrationLogEntry"
+									"properties": {
+										"jobs": {
+											"items": {
+												"$ref": "#/components/schemas/MigrationJob"
+											},
+											"type": "array"
+										}
 									},
-									"type": "array"
+									"required": [
+										"jobs"
+									],
+									"type": "object"
 								}
 							}
 						}
 					}
 				},
-				"description": "Get recent migration run logs (in-memory, clears on server restart)",
+				"description": "List all migration jobs (most recent first)",
 				"tags": [
 					"Admin Migration"
 				],
@@ -14808,6 +14844,55 @@
 				"parameters": []
 			}
 		},
+		"/admin/migration/jobs/{jobId}": {
+			"get": {
+				"operationId": "GetMigrationJob",
+				"responses": {
+					"200": {
+						"description": "Ok",
+						"content": {
+							"application/json": {
+								"schema": {
+									"properties": {
+										"job": {
+											"allOf": [
+												{
+													"$ref": "#/components/schemas/MigrationJob"
+												}
+											],
+											"nullable": true
+										}
+									},
+									"required": [
+										"job"
+									],
+									"type": "object"
+								}
+							}
+						}
+					}
+				},
+				"description": "Poll a migration job for status",
+				"tags": [
+					"Admin Migration"
+				],
+				"security": [
+					{
+						"loggedin": []
+					}
+				],
+				"parameters": [
+					{
+						"in": "path",
+						"name": "jobId",
+						"required": true,
+						"schema": {
+							"type": "string"
+						}
+					}
+				]
+			}
+		},
 		"/admin/migration/run": {
 			"post": {
 				"operationId": "RunMigration",
@@ -14817,13 +14902,21 @@
 						"content": {
 							"application/json": {
 								"schema": {
-									"$ref": "#/components/schemas/MigrationRunResponse"
+									"properties": {
+										"job_id": {
+											"type": "string"
+										}
+									},
+									"required": [
+										"job_id"
+									],
+									"type": "object"
 								}
 							}
 						}
 					}
 				},
-				"description": "Run the V1→V2 migration (dry-run or execute)",
+				"description": "Start a migration job (returns immediately, poll for status)",
 				"tags": [
 					"Admin Migration"
 				],
