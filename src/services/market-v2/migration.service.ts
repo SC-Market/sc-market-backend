@@ -238,15 +238,14 @@ export async function migrateUniqueListing(
         })
         .returning("*")
 
-      // 3. Get or create default variant and migrate stock (only if game item linked)
-      if (gameItemId) {
-        const variantId = await getOrCreateVariant(
-          gameItemId,
-          DEFAULT_V1_VARIANT_ATTRIBUTES,
-        )
+      // 3. Get or create default variant and migrate stock
+      const variantId = await getOrCreateVariant(
+        gameItemId,
+        DEFAULT_V1_VARIANT_ATTRIBUTES,
+      )
 
-        // 4. Migrate V1 stock_lots if they exist, otherwise create from quantity_available
-        const v1Lots = await trx("stock_lots").where({ listing_id: v1Listing.listing_id })
+      // 4. Migrate V1 stock_lots if they exist, otherwise create from quantity_available
+      const v1Lots = await trx("stock_lots").where({ listing_id: v1Listing.listing_id })
 
       if (v1Lots.length > 0) {
         for (const v1Lot of v1Lots) {
@@ -285,7 +284,6 @@ export async function migrateUniqueListing(
           updated_at: v1Listing.timestamp,
         })
       }
-      } // end if (gameItemId)
 
       // 5. Migrate photos from V1 market_images → V2 listing_photos_v2
       const v1Photos = await trx("market_images").where({ details_id: v1Listing.details_id })
@@ -394,7 +392,6 @@ export async function migrateAggregateListing(
         .returning("*")
 
       // 3. Get or create default variant
-      if (gameItemId) {
       const variantId = await getOrCreateVariant(
         gameItemId,
         DEFAULT_V1_VARIANT_ATTRIBUTES,
@@ -440,7 +437,6 @@ export async function migrateAggregateListing(
           updated_at: v1Listing.timestamp,
         })
       }
-      } // end if (gameItemId)
 
       // 5. Migrate photos from V1 market_images → V2 listing_photos_v2
       const v1Photos = await trx("market_images").where({ details_id: v1Listing.details_id })
@@ -564,7 +560,6 @@ export async function migrateMultipleListing(
           })
           .returning("*")
 
-        if (entryGameItemId) {
           const variantId = await getOrCreateVariant(
             entryGameItemId,
             DEFAULT_V1_VARIANT_ATTRIBUTES,
@@ -609,7 +604,6 @@ export async function migrateMultipleListing(
               })
             }
           }
-        } // end if (entryGameItemId)
 
         // Migrate photos for this sub-item
         const v1Photos = await trx("market_images").where({ details_id: entry.details_id })
