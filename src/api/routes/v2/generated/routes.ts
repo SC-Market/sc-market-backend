@@ -2714,6 +2714,17 @@ const models: TsoaRoute.Models = {
         "additionalProperties": false,
     },
     // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+    "MigrationLogEntry": {
+        "dataType": "refObject",
+        "properties": {
+            "timestamp": {"dataType":"string","required":true},
+            "dry_run": {"dataType":"boolean","required":true},
+            "duration_seconds": {"dataType":"double","required":true},
+            "result": {"ref":"MigrationRunResponse","required":true},
+        },
+        "additionalProperties": false,
+    },
+    // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
     "MigrationRunRequest": {
         "dataType": "refObject",
         "properties": {
@@ -6222,6 +6233,37 @@ export function RegisterRoutes(app: Router) {
 
               await templateService.apiHandler({
                 methodName: 'getMigrationStatus',
+                controller,
+                response,
+                next,
+                validatedArgs,
+                successStatus: undefined,
+              });
+            } catch (err) {
+                return next(err);
+            }
+        });
+        // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+        const argsMigrationAdminController_getMigrationLogs: Record<string, TsoaRoute.ParameterSchema> = {
+                request: {"in":"request","name":"request","required":true,"dataType":"object"},
+        };
+        app.get('/admin/migration/logs',
+            authenticateMiddleware([{"loggedin":[]}]),
+            ...(fetchMiddlewares<RequestHandler>(MigrationAdminController)),
+            ...(fetchMiddlewares<RequestHandler>(MigrationAdminController.prototype.getMigrationLogs)),
+
+            async function MigrationAdminController_getMigrationLogs(request: ExRequest, response: ExResponse, next: any) {
+
+            // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+
+            let validatedArgs: any[] = [];
+            try {
+                validatedArgs = templateService.getValidatedArgs({ args: argsMigrationAdminController_getMigrationLogs, request, response });
+
+                const controller = new MigrationAdminController();
+
+              await templateService.apiHandler({
+                methodName: 'getMigrationLogs',
                 controller,
                 response,
                 next,

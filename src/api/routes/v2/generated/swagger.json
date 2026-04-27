@@ -8574,6 +8574,31 @@
 				"type": "object",
 				"additionalProperties": false
 			},
+			"MigrationLogEntry": {
+				"properties": {
+					"timestamp": {
+						"type": "string"
+					},
+					"dry_run": {
+						"type": "boolean"
+					},
+					"duration_seconds": {
+						"type": "number",
+						"format": "double"
+					},
+					"result": {
+						"$ref": "#/components/schemas/MigrationRunResponse"
+					}
+				},
+				"required": [
+					"timestamp",
+					"dry_run",
+					"duration_seconds",
+					"result"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
 			"MigrationRunRequest": {
 				"properties": {
 					"dry_run": {
@@ -14742,6 +14767,36 @@
 					}
 				},
 				"description": "Get current migration status — V1 vs V2 counts",
+				"tags": [
+					"Admin Migration"
+				],
+				"security": [
+					{
+						"loggedin": []
+					}
+				],
+				"parameters": []
+			}
+		},
+		"/admin/migration/logs": {
+			"get": {
+				"operationId": "GetMigrationLogs",
+				"responses": {
+					"200": {
+						"description": "Ok",
+						"content": {
+							"application/json": {
+								"schema": {
+									"items": {
+										"$ref": "#/components/schemas/MigrationLogEntry"
+									},
+									"type": "array"
+								}
+							}
+						}
+					}
+				},
+				"description": "Get recent migration run logs (in-memory, clears on server restart)",
 				"tags": [
 					"Admin Migration"
 				],
