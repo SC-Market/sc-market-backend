@@ -39,23 +39,31 @@ cp src/api/routes/v2/generated/swagger.json "$FRONTEND_DIR/spec/sc-market-v2.ope
 echo "✅ OpenAPI spec copied to frontend"
 echo ""
 
-# Step 2.5: Fix paths on the FRONTEND copy only (add /api/v2 prefix)
+# Step 2.5: Add /api/v2 prefix to paths on the FRONTEND copy only.
+# The frontend's generatedApiV2 uses fetchBaseQuery with baseUrl containing /api/v2,
+# but RTK Query treats absolute paths (starting with /) as origin-relative,
+# bypassing baseUrl. So generated URLs must include the /api/v2 prefix.
+# The backend's swagger.json stays clean (no prefix) — TSOA regenerates it each build.
 echo "Step 2.5: Fixing OpenAPI paths on frontend copy..."
-cd "$FRONTEND_DIR"
 node -e "
 const fs = require('fs');
-const spec = JSON.parse(fs.readFileSync('spec/sc-market-v2.openapi.json', 'utf-8'));
+const spec = JSON.parse(fs.readFileSync('$FRONTEND_DIR/spec/sc-market-v2.openapi.json', 'utf-8'));
 const basePath = '/api/v2';
 const newPaths = {};
+let alreadyPrefixed = false;
 for (const [path, methods] of Object.entries(spec.paths)) {
+  if (path.startsWith(basePath)) { alreadyPrefixed = true; break; }
   newPaths[basePath + path] = methods;
 }
-spec.paths = newPaths;
-delete spec.servers;
-fs.writeFileSync('spec/sc-market-v2.openapi.json', JSON.stringify(spec, null, '\t'));
-console.log('Updated ' + Object.keys(newPaths).length + ' paths');
+if (alreadyPrefixed) {
+  console.log('Paths already prefixed — skipping');
+} else {
+  spec.paths = newPaths;
+  delete spec.servers;
+  fs.writeFileSync('$FRONTEND_DIR/spec/sc-market-v2.openapi.json', JSON.stringify(spec, null, '\t'));
+  console.log('Updated ' + Object.keys(newPaths).length + ' paths');
+}
 "
-cd -
 
 echo "✅ Frontend paths fixed"
 echo ""
