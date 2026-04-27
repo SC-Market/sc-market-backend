@@ -153,34 +153,40 @@ export class MigrationAdminController extends BaseController {
   private async executeMigration(job: MigrationJob) {
     const start = Date.now()
     const knex = getKnex()
+    const empty: MigrationSummary = { total_attempted: 0, successful: 0, failed: 0, skipped: 0, errors: [] }
+
+    // Initialize result so partial progress is visible during polling
+    job.result = {
+      dry_run: job.dry_run,
+      listings: empty, price_history: empty, auctions: empty,
+      order_items: empty, offer_items: empty, buy_orders: empty,
+      duration_seconds: 0,
+    }
 
     try {
       job.progress = "Migrating listings..."
-      const listings = await v1ToV2MigrationService.migrateAllListings()
+      job.result.listings = await v1ToV2MigrationService.migrateAllListings()
+      job.result.duration_seconds = (Date.now() - start) / 1000
 
       job.progress = "Migrating price history..."
-      const priceHistory = await v1ToV2MigrationService.migratePriceHistory()
+      job.result.price_history = await v1ToV2MigrationService.migratePriceHistory()
+      job.result.duration_seconds = (Date.now() - start) / 1000
 
       job.progress = "Migrating auction data..."
-      const auctions = await v1ToV2MigrationService.migrateAuctionData()
+      job.result.auctions = await v1ToV2MigrationService.migrateAuctionData()
+      job.result.duration_seconds = (Date.now() - start) / 1000
 
       job.progress = "Migrating order line items..."
-      const orderItems = await v1ToV2MigrationService.migrateOrderLineItems()
+      job.result.order_items = await v1ToV2MigrationService.migrateOrderLineItems()
+      job.result.duration_seconds = (Date.now() - start) / 1000
 
       job.progress = "Migrating offer line items..."
-      const offerItems = await v1ToV2MigrationService.migrateOfferLineItems()
+      job.result.offer_items = await v1ToV2MigrationService.migrateOfferLineItems()
+      job.result.duration_seconds = (Date.now() - start) / 1000
 
       job.progress = "Migrating buy orders..."
-      const buyOrders = await v1ToV2MigrationService.migrateBuyOrders()
-
-      const duration = (Date.now() - start) / 1000
-
-      const result: MigrationResult = {
-        dry_run: job.dry_run,
-        listings, price_history: priceHistory, auctions,
-        order_items: orderItems, offer_items: offerItems, buy_orders: buyOrders,
-        duration_seconds: duration,
-      }
+      job.result.buy_orders = await v1ToV2MigrationService.migrateBuyOrders()
+      job.result.duration_seconds = (Date.now() - start) / 1000
 
       if (job.dry_run) {
         job.status = "rolling_back"
@@ -191,9 +197,8 @@ export class MigrationAdminController extends BaseController {
       job.status = "completed"
       job.completed_at = new Date().toISOString()
       job.progress = null
-      job.result = result
 
-      logger.info("Admin migration job completed", { jobId: job.id, dry_run: job.dry_run, duration })
+      logger.info("Admin migration job completed", { jobId: job.id, dry_run: job.dry_run, duration: job.result.duration_seconds })
     } catch (err) {
       job.status = "failed"
       job.completed_at = new Date().toISOString()
