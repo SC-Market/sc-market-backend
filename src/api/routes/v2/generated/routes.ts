@@ -48,6 +48,8 @@ import { AuctionsV2Controller } from './../auctions/AuctionsV2Controller.js';
 // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
 import { AnalyticsV2Controller } from './../analytics/AnalyticsV2Controller.js';
 // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+import { MigrationAdminController } from './../admin/MigrationAdminController.js';
+// WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
 import { FeatureFlagAdminController } from './../admin/FeatureFlagAdminController.js';
 // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
 import { AdminController } from './../admin/AdminController.js';
@@ -2670,6 +2672,49 @@ const models: TsoaRoute.Models = {
             "sales_by_quality": {"dataType":"array","array":{"dataType":"refObject","ref":"QualityTierSales"},"required":true},
             "inventory_distribution": {"dataType":"array","array":{"dataType":"refObject","ref":"QualityTierDistribution"},"required":true},
             "price_premiums": {"dataType":"array","array":{"dataType":"refObject","ref":"QualityTierPremium"},"required":true},
+        },
+        "additionalProperties": false,
+    },
+    // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+    "MigrationStatusResponse": {
+        "dataType": "refObject",
+        "properties": {
+            "v1_counts": {"dataType":"nestedObjectLiteral","nestedProperties":{"total":{"dataType":"double","required":true},"multiple":{"dataType":"double","required":true},"aggregate":{"dataType":"double","required":true},"unique":{"dataType":"double","required":true}},"required":true},
+            "v2_counts": {"dataType":"nestedObjectLiteral","nestedProperties":{"photos":{"dataType":"double","required":true},"stock_lots_mapped":{"dataType":"double","required":true},"mapped":{"dataType":"double","required":true},"listings":{"dataType":"double","required":true}},"required":true},
+            "price_history": {"dataType":"nestedObjectLiteral","nestedProperties":{"v2":{"dataType":"double","required":true},"v1":{"dataType":"double","required":true}},"required":true},
+            "auctions": {"dataType":"nestedObjectLiteral","nestedProperties":{"v2":{"dataType":"double","required":true},"v1":{"dataType":"double","required":true}},"required":true},
+        },
+        "additionalProperties": false,
+    },
+    // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+    "MigrationSummary": {
+        "dataType": "refObject",
+        "properties": {
+            "total_attempted": {"dataType":"double","required":true},
+            "successful": {"dataType":"double","required":true},
+            "failed": {"dataType":"double","required":true},
+            "skipped": {"dataType":"double","required":true},
+            "errors": {"dataType":"array","array":{"dataType":"nestedObjectLiteral","nestedProperties":{"error":{"dataType":"string","required":true},"v1_listing_id":{"dataType":"string","required":true}}},"required":true},
+        },
+        "additionalProperties": false,
+    },
+    // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+    "MigrationRunResponse": {
+        "dataType": "refObject",
+        "properties": {
+            "dry_run": {"dataType":"boolean","required":true},
+            "listings": {"ref":"MigrationSummary","required":true},
+            "price_history": {"ref":"MigrationSummary","required":true},
+            "auctions": {"ref":"MigrationSummary","required":true},
+            "duration_seconds": {"dataType":"double","required":true},
+        },
+        "additionalProperties": false,
+    },
+    // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+    "MigrationRunRequest": {
+        "dataType": "refObject",
+        "properties": {
+            "dry_run": {"dataType":"boolean","required":true},
         },
         "additionalProperties": false,
     },
@@ -6143,6 +6188,69 @@ export function RegisterRoutes(app: Router) {
 
               await templateService.apiHandler({
                 methodName: 'getSellerStats',
+                controller,
+                response,
+                next,
+                validatedArgs,
+                successStatus: undefined,
+              });
+            } catch (err) {
+                return next(err);
+            }
+        });
+        // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+        const argsMigrationAdminController_getMigrationStatus: Record<string, TsoaRoute.ParameterSchema> = {
+                request: {"in":"request","name":"request","required":true,"dataType":"object"},
+        };
+        app.get('/admin/migration/status',
+            authenticateMiddleware([{"loggedin":[]}]),
+            ...(fetchMiddlewares<RequestHandler>(MigrationAdminController)),
+            ...(fetchMiddlewares<RequestHandler>(MigrationAdminController.prototype.getMigrationStatus)),
+
+            async function MigrationAdminController_getMigrationStatus(request: ExRequest, response: ExResponse, next: any) {
+
+            // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+
+            let validatedArgs: any[] = [];
+            try {
+                validatedArgs = templateService.getValidatedArgs({ args: argsMigrationAdminController_getMigrationStatus, request, response });
+
+                const controller = new MigrationAdminController();
+
+              await templateService.apiHandler({
+                methodName: 'getMigrationStatus',
+                controller,
+                response,
+                next,
+                validatedArgs,
+                successStatus: undefined,
+              });
+            } catch (err) {
+                return next(err);
+            }
+        });
+        // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+        const argsMigrationAdminController_runMigration: Record<string, TsoaRoute.ParameterSchema> = {
+                requestBody: {"in":"body","name":"requestBody","required":true,"ref":"MigrationRunRequest"},
+                request: {"in":"request","name":"request","required":true,"dataType":"object"},
+        };
+        app.post('/admin/migration/run',
+            authenticateMiddleware([{"loggedin":[]}]),
+            ...(fetchMiddlewares<RequestHandler>(MigrationAdminController)),
+            ...(fetchMiddlewares<RequestHandler>(MigrationAdminController.prototype.runMigration)),
+
+            async function MigrationAdminController_runMigration(request: ExRequest, response: ExResponse, next: any) {
+
+            // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+
+            let validatedArgs: any[] = [];
+            try {
+                validatedArgs = templateService.getValidatedArgs({ args: argsMigrationAdminController_runMigration, request, response });
+
+                const controller = new MigrationAdminController();
+
+              await templateService.apiHandler({
+                methodName: 'runMigration',
                 controller,
                 response,
                 next,
