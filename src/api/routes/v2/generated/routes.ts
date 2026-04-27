@@ -2708,6 +2708,7 @@ const models: TsoaRoute.Models = {
             "auctions": {"ref":"MigrationSummary","required":true},
             "order_items": {"ref":"MigrationSummary","required":true},
             "offer_items": {"ref":"MigrationSummary","required":true},
+            "buy_orders": {"ref":"MigrationSummary","required":true},
             "duration_seconds": {"dataType":"double","required":true},
         },
         "additionalProperties": false,

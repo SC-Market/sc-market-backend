@@ -8553,6 +8553,9 @@
 					"offer_items": {
 						"$ref": "#/components/schemas/MigrationSummary"
 					},
+					"buy_orders": {
+						"$ref": "#/components/schemas/MigrationSummary"
+					},
 					"duration_seconds": {
 						"type": "number",
 						"format": "double"
@@ -8565,6 +8568,7 @@
 					"auctions",
 					"order_items",
 					"offer_items",
+					"buy_orders",
 					"duration_seconds"
 				],
 				"type": "object",
