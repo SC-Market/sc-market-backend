@@ -23,7 +23,7 @@ export interface VariantAttributes {
 
 export interface ItemVariant {
   variant_id: string
-  game_item_id: string
+  game_item_id: string | null
   attributes: VariantAttributes
   attributes_hash: string
   display_name: string
@@ -208,7 +208,7 @@ export async function getOrCreateVariant(
   // Create new variant — use onConflict to handle race conditions
   const [variant] = await db<ItemVariant>("item_variants")
     .insert({
-      game_item_id: gameItemId || (null as any),
+      game_item_id: gameItemId || null,
       attributes: normalized,
       attributes_hash: hash,
       display_name: generateVariantDisplayName(normalized),
