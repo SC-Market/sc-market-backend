@@ -80,6 +80,16 @@ async function main() {
   const auctionSummary = await v1ToV2MigrationService.migrateAuctionData()
   console.log(`Auctions: ✅ ${auctionSummary.successful}, ❌ ${auctionSummary.failed}, ⏭️ ${auctionSummary.skipped}`)
 
+  // Order line items
+  console.log("\n🔄 Migrating order line items...")
+  const orderSummary = await v1ToV2MigrationService.migrateOrderLineItems()
+  console.log(`Order items: ✅ ${orderSummary.successful}, ❌ ${orderSummary.failed}, ⏭️ ${orderSummary.skipped}`)
+
+  // Offer line items
+  console.log("\n🔄 Migrating offer line items...")
+  const offerSummary = await v1ToV2MigrationService.migrateOfferLineItems()
+  console.log(`Offer items: ✅ ${offerSummary.successful}, ❌ ${offerSummary.failed}, ⏭️ ${offerSummary.skipped}`)
+
   // Verify V1 unchanged
   const afterV1 = await getV1TableCounts()
   const v1Ok = beforeV1.unique === afterV1.unique && beforeV1.aggregate === afterV1.aggregate && beforeV1.multiple === afterV1.multiple

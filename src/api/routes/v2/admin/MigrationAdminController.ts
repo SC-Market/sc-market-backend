@@ -29,6 +29,8 @@ interface MigrationRunResponse {
   listings: MigrationSummary
   price_history: MigrationSummary
   auctions: MigrationSummary
+  order_items: MigrationSummary
+  offer_items: MigrationSummary
   duration_seconds: number
 }
 
@@ -105,6 +107,8 @@ export class MigrationAdminController extends BaseController {
     const listings = await v1ToV2MigrationService.migrateAllListings()
     const priceHistory = await v1ToV2MigrationService.migratePriceHistory()
     const auctions = await v1ToV2MigrationService.migrateAuctionData()
+    const orderItems = await v1ToV2MigrationService.migrateOrderLineItems()
+    const offerItems = await v1ToV2MigrationService.migrateOfferLineItems()
 
     const duration = (Date.now() - start) / 1000
 
@@ -117,6 +121,8 @@ export class MigrationAdminController extends BaseController {
         listings: { success: listings.successful, failed: listings.failed },
         priceHistory: { success: priceHistory.successful, failed: priceHistory.failed },
         auctions: { success: auctions.successful, failed: auctions.failed },
+        orderItems: { success: orderItems.successful, failed: orderItems.failed },
+        offerItems: { success: offerItems.successful, failed: offerItems.failed },
       })
     }
 
@@ -125,6 +131,8 @@ export class MigrationAdminController extends BaseController {
       listings,
       price_history: priceHistory,
       auctions,
+      order_items: orderItems,
+      offer_items: offerItems,
       duration_seconds: duration,
     }
   }
@@ -135,10 +143,15 @@ export class MigrationAdminController extends BaseController {
    * V1 tables are never touched.
    */
   private async rollbackMigratedData(knex: ReturnType<typeof getKnex>) {
-    // Delete V2 listings (CASCADE deletes listing_items, listing_item_lots, listing_photos_v2, auction_details_v2, bids_v2)
     const mappedListings = await knex("v1_v2_listing_map").select("v2_listing_id")
-    if (mappedListings.length > 0) {
-      const ids = mappedListings.map((r: { v2_listing_id: string }) => r.v2_listing_id)
+    const ids = mappedListings.map((r: { v2_listing_id: string }) => r.v2_listing_id)
+
+    if (ids.length > 0) {
+      // Delete migrated order/offer line items first (no CASCADE from listings)
+      await knex("order_market_items_v2").whereIn("listing_id", ids).delete()
+      await knex("offer_market_items_v2").whereIn("listing_id", ids).delete()
+
+      // Delete V2 listings (CASCADE deletes listing_items, listing_item_lots, listing_photos_v2, auction_details_v2, bids_v2)
       await knex("listings").whereIn("listing_id", ids).delete()
     }
 
