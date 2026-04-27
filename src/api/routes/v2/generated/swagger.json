@@ -1983,6 +1983,44 @@
 					"contractor_spectrum_id": {
 						"type": "string",
 						"description": "Optional contractor spectrum_id — if provided, listing is created on behalf of the org"
+					},
+					"sale_type": {
+						"type": "string",
+						"enum": [
+							"fixed",
+							"auction",
+							"negotiable"
+						],
+						"description": "Sale type: fixed price, auction, or negotiable"
+					},
+					"auction_details": {
+						"properties": {
+							"reserve_price": {
+								"type": "number",
+								"format": "double",
+								"description": "Optional reserve price — auction won't sell below this"
+							},
+							"buyout_price": {
+								"type": "number",
+								"format": "double",
+								"description": "Optional buyout price in aUEC"
+							},
+							"min_bid_increment": {
+								"type": "number",
+								"format": "double",
+								"description": "Minimum bid increment in aUEC"
+							},
+							"end_time": {
+								"type": "string",
+								"description": "When the auction ends (ISO 8601)"
+							}
+						},
+						"required": [
+							"min_bid_increment",
+							"end_time"
+						],
+						"type": "object",
+						"description": "Auction details — required when sale_type is 'auction'"
 					}
 				},
 				"required": [

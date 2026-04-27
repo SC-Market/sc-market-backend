@@ -675,6 +675,8 @@ const models: TsoaRoute.Models = {
             "max_order_value": {"dataType":"double"},
             "bulk_discount_tiers": {"dataType":"array","array":{"dataType":"refObject","ref":"BulkDiscountTier"}},
             "contractor_spectrum_id": {"dataType":"string"},
+            "sale_type": {"dataType":"union","subSchemas":[{"dataType":"enum","enums":["fixed"]},{"dataType":"enum","enums":["auction"]},{"dataType":"enum","enums":["negotiable"]}]},
+            "auction_details": {"dataType":"nestedObjectLiteral","nestedProperties":{"reserve_price":{"dataType":"double"},"buyout_price":{"dataType":"double"},"min_bid_increment":{"dataType":"double","required":true},"end_time":{"dataType":"string","required":true}}},
         },
         "additionalProperties": false,
     },

@@ -114,7 +114,7 @@ export class ListingsV2Controller extends BaseController {
             description: requestBody.description,
             status: "active",
             visibility: "public",
-            sale_type: "fixed",
+            sale_type: requestBody.sale_type || "fixed",
             listing_type: "single",
             pickup_method: requestBody.pickup_method || null,
             quantity_unit: requestBody.quantity_unit || "unit",
@@ -224,6 +224,18 @@ export class ListingsV2Controller extends BaseController {
             display_order: index,
           }));
           await trx('listing_photos_v2').insert(photoRows);
+        }
+
+        // Create auction details if sale_type is 'auction'
+        if (requestBody.sale_type === "auction" && requestBody.auction_details) {
+          await trx("auction_details_v2").insert({
+            listing_id: listing.listing_id,
+            end_time: new Date(requestBody.auction_details.end_time),
+            min_bid_increment: requestBody.auction_details.min_bid_increment,
+            buyout_price: requestBody.auction_details.buyout_price || null,
+            reserve_price: requestBody.auction_details.reserve_price || null,
+            status: "active",
+          })
         }
 
         // Return listing data (Requirement 14.9)
@@ -403,6 +415,22 @@ export class ListingsV2Controller extends BaseController {
           }
         }
       })
+    }
+
+    // Validate auction details
+    if (request.sale_type === "auction") {
+      if (!request.auction_details) {
+        errors.push({ field: "auction_details", message: "Auction details required when sale_type is 'auction'" })
+      } else {
+        if (!request.auction_details.end_time) {
+          errors.push({ field: "auction_details.end_time", message: "End time is required" })
+        } else if (new Date(request.auction_details.end_time) <= new Date()) {
+          errors.push({ field: "auction_details.end_time", message: "End time must be in the future" })
+        }
+        if (!request.auction_details.min_bid_increment || request.auction_details.min_bid_increment < 1) {
+          errors.push({ field: "auction_details.min_bid_increment", message: "Minimum bid increment must be >= 1" })
+        }
+      }
     }
 
     if (errors.length > 0) {
