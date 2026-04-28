@@ -8485,13 +8485,67 @@
 							"v1"
 						],
 						"type": "object"
+					},
+					"order_items": {
+						"properties": {
+							"v2": {
+								"type": "number",
+								"format": "double"
+							},
+							"v1": {
+								"type": "number",
+								"format": "double"
+							}
+						},
+						"required": [
+							"v2",
+							"v1"
+						],
+						"type": "object"
+					},
+					"offer_items": {
+						"properties": {
+							"v2": {
+								"type": "number",
+								"format": "double"
+							},
+							"v1": {
+								"type": "number",
+								"format": "double"
+							}
+						},
+						"required": [
+							"v2",
+							"v1"
+						],
+						"type": "object"
+					},
+					"buy_orders": {
+						"properties": {
+							"v2": {
+								"type": "number",
+								"format": "double"
+							},
+							"v1": {
+								"type": "number",
+								"format": "double"
+							}
+						},
+						"required": [
+							"v2",
+							"v1"
+						],
+						"type": "object"
 					}
 				},
 				"required": [
 					"v1_counts",
 					"v2_counts",
 					"price_history",
-					"auctions"
+					"auctions",
+					"order_items",
+					"offer_items",
+					"buy_orders"
 				],
 				"type": "object",
 				"additionalProperties": false

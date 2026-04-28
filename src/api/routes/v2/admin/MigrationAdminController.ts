@@ -21,6 +21,9 @@ interface MigrationStatusResponse {
   v2_counts: { listings: number; mapped: number; stock_lots_mapped: number; photos: number }
   price_history: { v1: number; v2: number }
   auctions: { v1: number; v2: number }
+  order_items: { v1: number; v2: number }
+  offer_items: { v1: number; v2: number }
+  buy_orders: { v1: number; v2: number }
 }
 
 interface MigrationResult {
@@ -81,11 +84,21 @@ export class MigrationAdminController extends BaseController {
     try { auctionsV1 = Number((await knex("market_auction_details").count("* as c"))[0].c) } catch {}
     try { auctionsV2 = Number((await knex("auction_details_v2").count("* as c"))[0].c) } catch {}
 
+    const [orderV1] = await knex("market_orders").count("* as c")
+    const [orderV2] = await knex("order_market_items_v2").count("* as c")
+    const [offerV1] = await knex("offer_market_items").count("* as c")
+    const [offerV2] = await knex("offer_market_items_v2").count("* as c")
+    const [buyV1] = await knex("market_buy_orders").count("* as c")
+    const [buyV2] = await knex("buy_orders_v2").count("* as c")
+
     return {
       v1_counts: { unique: Number(u.c), aggregate: Number(a.c), multiple: Number(m.c), total: Number(u.c) + Number(a.c) + Number(m.c) },
       v2_counts: { listings: Number(v2.c), mapped: Number(mapped.c), stock_lots_mapped: Number(stockMapped.c), photos: Number(photos.c) },
       price_history: { v1: Number(phV1.c), v2: Number(phV2.c) },
       auctions: { v1: auctionsV1, v2: auctionsV2 },
+      order_items: { v1: Number(orderV1.c), v2: Number(orderV2.c) },
+      offer_items: { v1: Number(offerV1.c), v2: Number(offerV2.c) },
+      buy_orders: { v1: Number(buyV1.c), v2: Number(buyV2.c) },
     }
   }
 
@@ -220,6 +233,12 @@ export class MigrationAdminController extends BaseController {
     }
 
     await knex("price_history_v2").where("event_type", "legacy_snapshot").delete()
+    await knex("buy_orders_v2").whereIn("buy_order_id",
+      knex("buy_orders_v2").join("market_buy_orders as mbo", function () {
+        this.on("buy_orders_v2.buyer_id", "mbo.buyer_id")
+          .andOn("buy_orders_v2.game_item_id", "mbo.game_item_id")
+      }).select("buy_orders_v2.buy_order_id")
+    ).delete()
     await knex("v1_v2_stock_lot_map").delete()
     await knex("v1_v2_listing_map").delete()
   }
