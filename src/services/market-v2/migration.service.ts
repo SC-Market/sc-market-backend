@@ -1082,12 +1082,7 @@ export class V1ToV2MigrationService {
         if (existing) { summary.skipped++; continue }
 
         try {
-          // Get default variant for this game item
-          let variantId: string | null = null
-          if (row.game_item_id) {
-            variantId = await getOrCreateVariant(row.game_item_id, DEFAULT_V1_VARIANT_ATTRIBUTES)
-          }
-          if (!variantId) { summary.skipped++; continue }
+          const variantId = await getOrCreateVariant(row.game_item_id, DEFAULT_V1_VARIANT_ATTRIBUTES)
 
           await db("order_market_items_v2").insert({
             order_id: row.order_id,
@@ -1183,11 +1178,7 @@ export class V1ToV2MigrationService {
         if (existing) { summary.skipped++; continue }
 
         try {
-          let variantId: string | null = null
-          if (row.game_item_id) {
-            variantId = await getOrCreateVariant(row.game_item_id, DEFAULT_V1_VARIANT_ATTRIBUTES)
-          }
-          if (!variantId) { summary.skipped++; continue }
+          const variantId = await getOrCreateVariant(row.game_item_id, DEFAULT_V1_VARIANT_ATTRIBUTES)
 
           await db("offer_market_items_v2").insert({
             offer_id: row.offer_id,
