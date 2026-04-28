@@ -55,7 +55,7 @@ const config: { [key: string]: Knex.Config } = {
     },
     pool: {
       min: 2,
-      max: 10,
+      max: 20,
       afterCreate: (conn: any, done: (err?: Error) => void) => {
         conn.query(`SET TIME ZONE 'UTC'; SET search_path TO "$user", public;`, done)
       },
