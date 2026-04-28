@@ -183,7 +183,7 @@ export function generateVariantShortName(attributes: VariantAttributes): string 
 export async function getOrCreateVariant(
   gameItemId: string | null,
   attributes: VariantAttributes,
-  trx?: any,
+  trx?: ReturnType<typeof getKnex>,
 ): Promise<string> {
   const db = trx || getKnex()
 
