@@ -226,19 +226,38 @@ export class MigrationAdminController extends BaseController {
     const mappedListings = await knex("v1_v2_listing_map").select("v2_listing_id")
     const ids = mappedListings.map((r: { v2_listing_id: string }) => r.v2_listing_id)
 
+    // Delete order/offer items pointing to migrated listings
     if (ids.length > 0) {
       await knex("order_market_items_v2").whereIn("listing_id", ids).delete()
       await knex("offer_market_items_v2").whereIn("listing_id", ids).delete()
+    }
+
+    // Also delete any order/offer items that reference V1 orders/offers
+    // (catches items that might have been missed by the listing-based cleanup)
+    await knex("order_market_items_v2").whereIn("order_id",
+      knex("market_orders").select("order_id"),
+    ).delete()
+    await knex("offer_market_items_v2").whereIn("offer_id",
+      knex("offer_market_items").select("offer_id"),
+    ).delete()
+
+    // Delete migrated listings (CASCADE handles listing_items, lots, photos, auction_details, bids)
+    if (ids.length > 0) {
       await knex("listings").whereIn("listing_id", ids).delete()
     }
 
+    // Delete migrated price history
     await knex("price_history_v2").where("event_type", "legacy_snapshot").delete()
+
+    // Delete migrated buy orders (those matching V1 by buyer+game_item)
     await knex("buy_orders_v2").whereIn("buy_order_id",
       knex("buy_orders_v2").join("market_buy_orders as mbo", function () {
         this.on("buy_orders_v2.buyer_id", "mbo.buyer_id")
           .andOn("buy_orders_v2.game_item_id", "mbo.game_item_id")
       }).select("buy_orders_v2.buy_order_id")
     ).delete()
+
+    // Clear mapping tables
     await knex("v1_v2_stock_lot_map").delete()
     await knex("v1_v2_listing_map").delete()
   }
