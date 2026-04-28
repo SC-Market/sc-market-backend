@@ -242,6 +242,7 @@ export async function migrateUniqueListing(
       const variantId = await getOrCreateVariant(
         gameItemId,
         DEFAULT_V1_VARIANT_ATTRIBUTES,
+        trx,
       )
 
       // 4. Migrate V1 stock_lots if they exist, otherwise create from quantity_available
@@ -395,6 +396,7 @@ export async function migrateAggregateListing(
       const variantId = await getOrCreateVariant(
         gameItemId,
         DEFAULT_V1_VARIANT_ATTRIBUTES,
+        trx,
       )
 
       // 4. Migrate V1 stock_lots if they exist, otherwise create from quantity_available
@@ -563,6 +565,7 @@ export async function migrateMultipleListing(
           const variantId = await getOrCreateVariant(
             entryGameItemId,
             DEFAULT_V1_VARIANT_ATTRIBUTES,
+            trx,
           )
 
           if (i === 0) {

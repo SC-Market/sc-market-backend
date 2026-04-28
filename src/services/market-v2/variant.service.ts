@@ -183,8 +183,9 @@ export function generateVariantShortName(attributes: VariantAttributes): string 
 export async function getOrCreateVariant(
   gameItemId: string | null,
   attributes: VariantAttributes,
+  trx?: any,
 ): Promise<string> {
-  const db = getKnex()
+  const db = trx || getKnex()
 
   // Normalize and hash attributes
   const normalized = normalizeVariantAttributes(attributes)
