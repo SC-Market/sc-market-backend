@@ -286,7 +286,7 @@ export async function migrateUniqueListing(
       }
 
       // 5. Migrate photos from V1 market_images → V2 listing_photos_v2
-      const v1Photos = await trx("market_images").where({ details_id: v1Listing.details_id })
+      const v1Photos = await trx("market_images").where({ details_id: v1Listing.details_id }).whereNotNull("resource_id")
       for (let i = 0; i < v1Photos.length; i++) {
         await trx("listing_photos_v2").insert({
           listing_id: listing.listing_id,
@@ -439,7 +439,7 @@ export async function migrateAggregateListing(
       }
 
       // 5. Migrate photos from V1 market_images → V2 listing_photos_v2
-      const v1Photos = await trx("market_images").where({ details_id: v1Listing.details_id })
+      const v1Photos = await trx("market_images").where({ details_id: v1Listing.details_id }).whereNotNull("resource_id")
       for (let i = 0; i < v1Photos.length; i++) {
         await trx("listing_photos_v2").insert({
           listing_id: listing.listing_id,
@@ -606,7 +606,7 @@ export async function migrateMultipleListing(
           }
 
         // Migrate photos for this sub-item
-        const v1Photos = await trx("market_images").where({ details_id: entry.details_id })
+        const v1Photos = await trx("market_images").where({ details_id: entry.details_id }).whereNotNull("resource_id")
         for (let j = 0; j < v1Photos.length; j++) {
           await trx("listing_photos_v2").insert({
             listing_id: listing.listing_id,
