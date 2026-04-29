@@ -172,6 +172,11 @@ contractorThemeRouter.put(
         return
       }
 
+      if (favicon_url && !favicon_url.startsWith("https://")) {
+        res.status(400).json(createErrorResponse(ErrorCode.VALIDATION_ERROR, "favicon_url must use https://"))
+        return
+      }
+
       const user = req.user as User
       const existing = await knex()<DBOrgTheme>("org_themes")
         .where({ contractor_id: contractor.contractor_id })

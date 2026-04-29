@@ -71,50 +71,20 @@ const discord_backend_url = new URL(
 )
 const discord_bot_url = new URL(env.DISCORD_BOT_URL || "http://localhost:8081")
 
-const allowlist: string[] = [
-  `http://${backend_url.host}`,
-  `https://${backend_url.host}`,
-  `http://${frontend_url.host}`,
-  `https://${frontend_url.host}`,
-  "https://discord.com",
-  ...(env.PREMIUM_HOSTS || "").split(",").filter((h: string) => h.trim()).map((h: string) => `https://${h.trim()}`),
-]
-
-// Cache of custom domains from DB, refreshed periodically
-let customDomainAllowlist: string[] = []
-let customDomainLastFetch = 0
-const DOMAIN_CACHE_TTL = 60_000 // 1 minute
-
-async function refreshCustomDomains() {
-  try {
-    const { getKnex } = await import("./clients/database/knex-db.js")
-    const rows = await getKnex()("org_premium_tiers")
-      .whereNotNull("custom_domain")
-      .whereNull("revoked_at")
-      .select("custom_domain")
-    customDomainAllowlist = rows.flatMap((r: any) => [
-      `https://${r.custom_domain}`,
-      `http://${r.custom_domain}`,
-    ])
-    customDomainLastFetch = Date.now()
-  } catch {
-    // DB not ready yet — keep existing cache
-  }
-}
-
-function isOriginAllowed(origin: string): boolean {
-  if (allowlist.includes(origin)) return true
-  if (customDomainAllowlist.includes(origin)) return true
-  return false
-}
+import {
+  staticAllowlist,
+  isOriginAllowed,
+  isCacheStale,
+  refreshCustomDomainCache,
+} from "./api/util/allowed-origins.js"
 
 const corsOptions = function (
   req: Request,
   callback: (arg0: Error | null, arg1: CorsOptions) => void,
 ) {
   // Refresh domain cache if stale
-  if (Date.now() - customDomainLastFetch > DOMAIN_CACHE_TTL) {
-    refreshCustomDomains().catch(() => {})
+  if (isCacheStale()) {
+    refreshCustomDomainCache().catch(() => {})
   }
 
   const origin = req.header("Origin")
@@ -527,7 +497,13 @@ const io = new Server(httpServer, {
   path: "/ws",
   cors: {
     credentials: true,
-    origin: allowlist,
+    origin: (origin, callback) => {
+      if (!origin || isOriginAllowed(origin)) {
+        callback(null, true)
+      } else {
+        callback(null, false)
+      }
+    },
   },
 })
 

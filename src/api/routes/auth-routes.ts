@@ -8,6 +8,7 @@ import {
   createSignedStateToken,
   verifySignedStateToken,
 } from "../util/oauth-state.js"
+import { isOriginAllowed } from "../util/allowed-origins.js"
 import {
   mapErrorCodeToFrontend,
   CitizenIDErrorCodes,
@@ -86,13 +87,13 @@ export function setupAuthRoutes(app: any, frontendUrl: URL): void {
     }
   }
   // Resolve the base URL for post-auth redirects.
-  // If origin is a known custom domain, redirect there; otherwise use frontendUrl.
+  // SECURITY: Only allow origins that are in the CORS allowlist (static + registered custom domains).
+  // This prevents open redirect attacks where an attacker crafts a login URL with origin=https://evil.com.
   function getRedirectBase(origin: string): URL {
     if (!origin) return frontendUrl
     try {
       const url = new URL(origin)
-      // Only allow https custom domains (or http in dev)
-      if (url.protocol === "https:" || url.protocol === "http:") {
+      if (isOriginAllowed(url.origin)) {
         return url
       }
     } catch { /* invalid origin */ }
