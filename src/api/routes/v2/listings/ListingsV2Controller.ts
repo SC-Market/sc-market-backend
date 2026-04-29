@@ -969,9 +969,11 @@ export class ListingsV2Controller extends BaseController {
         query = query.where("ls.seller_id", userId).where("ls.seller_type", "user")
       }
 
-      // Apply status filter if provided (Requirement 18.5)
+      // Apply status filter if provided; exclude cancelled/archived by default
       if (status) {
         query = query.where("ls.status", status)
+      } else {
+        query = query.where("ls.status", "!=", "cancelled")
       }
 
       // Get total count for pagination (Requirement 18.8)
