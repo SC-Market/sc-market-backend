@@ -16,6 +16,7 @@ import {
   filterV2DebugFromOpenApiSpec,
 } from "./util/openapi-debug-visibility.js"
 import { gameDataZipUpload } from "../v1/util/upload.js"
+import { multiplePhotoUpload } from "../v1/util/upload.js"
 
 const __filename = fileURLToPath(import.meta.url)
 const __dirname = dirname(__filename)
@@ -70,6 +71,12 @@ import { RegisterRoutes } from "./generated/routes.js"
 apiV2Router.use(
   "/admin/import-game-data",
   gameDataZipUpload.single("file"),
+)
+
+// Register multer for listing photo uploads
+apiV2Router.post(
+  "/listings/:id/photos",
+  multiplePhotoUpload.array("photos", 5),
 )
 
 // DEV ONLY: unauthenticated import endpoint for testing — REMOVE BEFORE PRODUCTION
