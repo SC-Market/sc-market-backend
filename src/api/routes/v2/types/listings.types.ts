@@ -499,6 +499,9 @@ export interface UpdateListingRequest {
   /** Pickup method: how the buyer receives the item */
   pickup_method?: 'delivery' | 'pickup' | 'any' | null;
 
+  /** Replace listing photos with these URLs (handles removals) */
+  photos?: string[];
+
   /** Quantity unit */
   quantity_unit?: 'unit' | 'scu';
 

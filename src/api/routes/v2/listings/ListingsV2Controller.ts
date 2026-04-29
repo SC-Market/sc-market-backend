@@ -1510,6 +1510,26 @@ export class ListingsV2Controller extends BaseController {
           })
         }
 
+        // Sync photos if provided (replace set — handles removals)
+        if (requestBody.photos !== undefined) {
+          const existingPhotos = await trx("listing_photos_v2 as lp")
+            .join("image_resources as ir", "lp.resource_id", "ir.resource_id")
+            .where("lp.listing_id", id)
+            .select("lp.resource_id", db.raw("COALESCE(ir.external_url, 'https://cdn.sc-market.space/' || ir.filename) as url"))
+
+          const keepUrls = new Set(requestBody.photos)
+          const toDelete = existingPhotos.filter((p: { url: string }) => !keepUrls.has(p.url))
+
+          if (toDelete.length > 0) {
+            await trx("listing_photos_v2")
+              .where("listing_id", id)
+              .whereIn("resource_id", toDelete.map((p: { resource_id: string }) => p.resource_id))
+              .delete()
+
+            logger.info("Removed listing photos", { listingId: id, removed: toDelete.length })
+          }
+        }
+
         // 4. Get listing_items to determine pricing mode
         const listingItems = await trx("listing_items")
           .where({ listing_id: id })
