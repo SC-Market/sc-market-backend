@@ -121,6 +121,7 @@ function normalizeStatus(v1Status: string, expiration: Date): string {
     case "expired":
       return "expired"
     case "inactive":
+      return "inactive"
     case "archived":
     case "cancelled":
       return "cancelled"

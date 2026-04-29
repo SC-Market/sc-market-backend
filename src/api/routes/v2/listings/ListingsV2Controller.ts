@@ -37,7 +37,7 @@ export interface CreateListingResponse {
   seller_type: "user" | "contractor"
   title: string
   description: string
-  status: "active" | "sold" | "expired" | "cancelled"
+  status: "active" | "inactive" | "sold" | "expired" | "cancelled"
   created_at: string
   updated_at: string
 }
@@ -112,7 +112,7 @@ export class ListingsV2Controller extends BaseController {
             seller_type: requestBody.contractor_spectrum_id ? "contractor" : "user",
             title: requestBody.title,
             description: requestBody.description,
-            status: "active",
+            status: requestBody.status || "active",
             visibility: "public",
             sale_type: requestBody.sale_type || "fixed",
             listing_type: "single",
@@ -483,7 +483,7 @@ export class ListingsV2Controller extends BaseController {
     @Query() page_size?: number,
     @Query() item_type?: string,
     @Query() quantity_min?: number,
-    @Query() status?: 'active' | 'sold' | 'expired' | 'cancelled',
+    @Query() status?: 'active' | 'inactive' | 'sold' | 'expired' | 'cancelled',
     @Query() sort_by?: "created_at" | "updated_at" | "price" | "quality" | "seller_rating" | "quantity",
     @Query() sort_order?: "asc" | "desc",
     @Query() language_codes?: string,
@@ -896,7 +896,7 @@ export class ListingsV2Controller extends BaseController {
   @Security("loggedin")
   @Get("mine")
   public async getMyListings(
-    @Query() status?: "active" | "sold" | "expired" | "cancelled",
+    @Query() status?: "active" | "inactive" | "sold" | "expired" | "cancelled",
     @Query() page?: number,
     @Query() page_size?: number,
     @Query() sort_by?: "created_at" | "updated_at" | "price" | "quantity",
@@ -917,7 +917,7 @@ export class ListingsV2Controller extends BaseController {
     const validatedSortOrder = sort_order || "desc"
 
     // Validate status if provided (Requirement 18.5)
-    if (status && !["active", "sold", "expired", "cancelled"].includes(status)) {
+    if (status && !["active", "inactive", "sold", "expired", "cancelled"].includes(status)) {
       this.throwValidationError("Invalid status", [
         {
           field: "status",
@@ -1471,7 +1471,7 @@ export class ListingsV2Controller extends BaseController {
         }
 
         if (requestBody.status !== undefined) {
-          const allowed = ["active", "sold", "expired", "cancelled"]
+          const allowed = ["active", "inactive", "sold", "expired", "cancelled"]
           if (!allowed.includes(requestBody.status)) {
             this.throwValidationError("Invalid status", [
               { field: "status", message: `Status must be one of: ${allowed.join(", ")}` },
