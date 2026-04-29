@@ -1772,14 +1772,14 @@ export class ListingsV2Controller extends BaseController {
         this.throwForbidden("You do not have permission to refresh this listing")
       }
 
-      // Verify listing is active
-      if (listing.status !== "active") {
+      // Verify listing is active or inactive (editable)
+      if (listing.status !== "active" && listing.status !== "inactive") {
         this.throwValidationError(
           `Cannot refresh listing with status: ${listing.status}`,
           [
             {
               field: "status",
-              message: `Only active listings can be refreshed`,
+              message: `Only active or inactive listings can be refreshed`,
             },
           ],
         )
