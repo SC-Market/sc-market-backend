@@ -34,6 +34,7 @@ describe("GameItemsV2Controller", () => {
     testGameItemId = uuidv4()
     testSellerId = uuidv4()
     createdListingIds = []
+    createdResourceIds = []
 
     mockRequest = {
       user: {
@@ -76,9 +77,15 @@ describe("GameItemsV2Controller", () => {
     })
   })
 
+  let createdResourceIds: string[] = []
+
   afterEach(async () => {
     // Clean up test data in reverse order due to foreign key constraints
     if (createdListingIds.length > 0) {
+      await knex("listing_photos_v2")
+        .whereIn("listing_id", createdListingIds)
+        .delete()
+
       await knex("variant_pricing")
         .whereIn(
           "item_id",
@@ -102,6 +109,10 @@ describe("GameItemsV2Controller", () => {
         .delete()
 
       await knex("listings").whereIn("listing_id", createdListingIds).delete()
+    }
+
+    if (createdResourceIds.length > 0) {
+      await knex("image_resources").whereIn("resource_id", createdResourceIds).delete()
     }
 
     await knex("item_variants")
@@ -1059,6 +1070,95 @@ describe("GameItemsV2Controller", () => {
 
       // Cleanup
       await knex("accounts").where("user_id", seller2Id).delete()
+    })
+  })
+
+  describe("searchGameItemAggregates", () => {
+    async function createListingWithItem(gameItemId: string, sellerId: string, price: number) {
+      const listingId = uuidv4()
+      await knex("listings").insert({
+        listing_id: listingId,
+        seller_id: sellerId,
+        seller_type: "user",
+        title: "Test Listing",
+        status: "active",
+      })
+      createdListingIds.push(listingId)
+
+      const itemId = uuidv4()
+      await knex("listing_items").insert({
+        item_id: itemId,
+        listing_id: listingId,
+        game_item_id: gameItemId,
+        pricing_mode: "unified",
+        base_price: price,
+      })
+
+      const variantId = uuidv4()
+      await knex("item_variants").insert({
+        variant_id: variantId,
+        game_item_id: gameItemId,
+        attributes: { quality_tier: 3 },
+        display_name: "Tier 3",
+      })
+
+      await knex("listing_item_lots").insert({
+        item_id: itemId,
+        variant_id: variantId,
+        quantity_total: 10,
+        listed: true,
+      })
+
+      return listingId
+    }
+
+    it("should prefer user-uploaded listing photo over game item image_url", async () => {
+      const listingId = await createListingWithItem(testGameItemId, testSellerId, 1000)
+
+      // Add a user-uploaded photo to the listing
+      const resourceId = uuidv4()
+      await knex("image_resources").insert({
+        resource_id: resourceId,
+        filename: "user-photo.jpg",
+        external_url: "https://cdn.sc-market.space/user-photo.jpg",
+      })
+      createdResourceIds.push(resourceId)
+
+      await knex("listing_photos_v2").insert({
+        listing_id: listingId,
+        resource_id: resourceId,
+        display_order: 0,
+      })
+
+      const result = await controller.searchGameItemAggregates()
+
+      const item = result.items.find((i) => i.game_item_id === testGameItemId)
+      expect(item).toBeDefined()
+      // Should use the listing photo, NOT the game item's cstone image
+      expect(item!.image_url).toBe("https://cdn.sc-market.space/user-photo.jpg")
+    })
+
+    it("should fall back to game item image_url when no listing photo exists", async () => {
+      await createListingWithItem(testGameItemId, testSellerId, 1000)
+
+      const result = await controller.searchGameItemAggregates()
+
+      const item = result.items.find((i) => i.game_item_id === testGameItemId)
+      expect(item).toBeDefined()
+      expect(item!.image_url).toBe("https://example.com/weapon.png")
+    })
+
+    it("should return undefined image_url when neither listing photo nor game item image exists", async () => {
+      // Update game item to have no image
+      await knex("game_items").where("id", testGameItemId).update({ image_url: null })
+
+      await createListingWithItem(testGameItemId, testSellerId, 1000)
+
+      const result = await controller.searchGameItemAggregates()
+
+      const item = result.items.find((i) => i.game_item_id === testGameItemId)
+      expect(item).toBeDefined()
+      expect(item!.image_url).toBeUndefined()
     })
   })
 })

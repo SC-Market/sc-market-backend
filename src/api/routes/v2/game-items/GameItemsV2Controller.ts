@@ -417,6 +417,15 @@ export class GameItemsV2Controller extends BaseController {
           db.raw("COALESCE(gi.name, ls.title) as name"),
           db.raw("COALESCE(gi.type, ls.game_item_type, 'Other') as type"),
           db.raw("gi.image_url"),
+          db.raw(`(
+            SELECT COALESCE(ir.external_url, 'https://cdn.sc-market.space/' || ir.filename)
+            FROM listing_items li2
+            JOIN listings l2 ON l2.listing_id = li2.listing_id AND l2.status = 'active'
+            JOIN listing_photos_v2 lp ON lp.listing_id = l2.listing_id
+            JOIN image_resources ir ON lp.resource_id = ir.resource_id
+            WHERE li2.game_item_id::text = ls.game_item_id::text
+            ORDER BY lp.display_order ASC LIMIT 1
+          ) as listing_photo`),
           db.raw("MIN(ls.price_min) as min_price"),
           db.raw("MAX(ls.price_max) as max_price"),
           db.raw("SUM(ls.quantity_available) as total_quantity"),
@@ -471,7 +480,7 @@ export class GameItemsV2Controller extends BaseController {
         game_item_id: r.game_item_id,
         name: r.name || "Unknown",
         type: r.type || "Other",
-        image_url: r.image_url || undefined,
+        image_url: r.listing_photo || r.image_url || undefined,
         min_price: parseInt(r.min_price, 10) || 0,
         max_price: parseInt(r.max_price, 10) || 0,
         total_quantity: parseInt(r.total_quantity, 10) || 0,
