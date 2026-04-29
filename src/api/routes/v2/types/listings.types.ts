@@ -124,6 +124,9 @@ export interface CreateListingRequest {
     /** Optional reserve price — auction won't sell below this */
     reserve_price?: number;
   };
+
+  /** Initial listing status (default: 'active'). Use 'inactive' for draft/prep. */
+  status?: 'active' | 'inactive';
 }
 
 // ============================================================================
@@ -165,7 +168,7 @@ export interface SearchListingsRequest {
   quantity_min?: number;
   
   /** Filter by listing status (default: active only) */
-  status?: 'active' | 'sold' | 'expired' | 'cancelled';
+  status?: 'active' | 'inactive' | 'sold' | 'expired' | 'cancelled';
   
   /** Sort field (default: created_at) */
   sort_by?: 'created_at' | 'updated_at' | 'price' | 'quality' | 'seller_rating' | 'quantity';
@@ -297,7 +300,7 @@ export interface ListingDetail {
   description: string;
   
   /** Current listing status */
-  status: 'active' | 'sold' | 'expired' | 'cancelled';
+  status: 'active' | 'inactive' | 'sold' | 'expired' | 'cancelled';
   
   /** Visibility setting */
   visibility: 'public' | 'private' | 'unlisted';
@@ -478,8 +481,8 @@ export interface UpdateListingRequest {
   /** New title (optional) */
   title?: string;
 
-  /** New status (optional) — active, sold, expired, cancelled */
-  status?: 'active' | 'sold' | 'expired' | 'cancelled';
+  /** New status (optional) — active, inactive, sold, expired, cancelled */
+  status?: 'active' | 'inactive' | 'sold' | 'expired' | 'cancelled';
   
   /** New description (optional) */
   description?: string;
@@ -515,7 +518,7 @@ export interface UpdateListingRequest {
  */
 export interface GetMyListingsRequest {
   /** Filter by listing status */
-  status?: 'active' | 'sold' | 'expired' | 'cancelled';
+  status?: 'active' | 'inactive' | 'sold' | 'expired' | 'cancelled';
   
   /** Page number for pagination (default: 1) */
   page?: number;
