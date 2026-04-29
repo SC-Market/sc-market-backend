@@ -8,44 +8,7 @@
  */
 
 import { Request, Response } from "express"
-import { env } from "../../config/env.js"
-
-const backend_url = new URL(env.BACKEND_URL || "http://localhost:7000")
-const frontend_url = new URL(env.FRONTEND_URL || "http://localhost:5173")
-
-const allowlist: string[] = [
-  `http://${backend_url.host}`,
-  `https://${backend_url.host}`,
-  `http://${frontend_url.host}`,
-  `https://${frontend_url.host}`,
-  "https://discord.com",
-  ...(env.PREMIUM_HOSTS || "")
-    .split(",")
-    .filter((h) => h.trim())
-    .map((h) => `https://${h.trim()}`),
-]
-
-// Cache of custom domains from DB
-let customDomainCache: string[] = []
-let cacheTimestamp = 0
-const CACHE_TTL = 60_000
-
-async function getCustomDomains(): Promise<string[]> {
-  if (Date.now() - cacheTimestamp < CACHE_TTL) return customDomainCache
-  try {
-    const { getKnex } = await import("../../clients/database/knex-db.js")
-    const rows = await getKnex()("org_premium_tiers")
-      .whereNotNull("custom_domain")
-      .whereNull("revoked_at")
-      .select("custom_domain")
-    customDomainCache = rows.flatMap((r: any) => [
-      `https://${r.custom_domain}`,
-      `http://${r.custom_domain}`,
-    ])
-    cacheTimestamp = Date.now()
-  } catch { /* DB not ready */ }
-  return customDomainCache
-}
+import { isOriginAllowedAsync } from "../util/allowed-origins.js"
 
 /**
  * Apply CORS headers to response
@@ -59,19 +22,7 @@ export async function applyCorsHeaders(req: Request, res: Response): Promise<voi
   const origin = req.header("Origin")
 
   if (origin) {
-    // Check static allowlist first (always works, no DB needed)
-    let allowed = allowlist.includes(origin)
-
-    // Try dynamic domains only if static didn't match
-    if (!allowed) {
-      try {
-        const dynamicDomains = await getCustomDomains()
-        allowed = dynamicDomains.includes(origin)
-      } catch {
-        // DB failure — fall back to static allowlist only
-      }
-    }
-
+    const allowed = await isOriginAllowedAsync(origin)
     if (allowed) {
       res.setHeader("Access-Control-Allow-Origin", origin)
       res.setHeader("Access-Control-Allow-Credentials", "true")

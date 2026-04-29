@@ -7,6 +7,7 @@ import { createResponse, createErrorResponse } from "../util/response.js"
 import { ErrorCode } from "../util/error-codes.js"
 import { User } from "../api-models.js"
 import { DBOrgWhitelabelConfig, DBOrgSidebarConfig } from "../../../../clients/database/db-models.js"
+import { validateRedirectPath } from "../../../util/oauth-state.js"
 
 const knex = () => getKnex()
 
@@ -52,6 +53,11 @@ whitelabelConfigRouter.put(
 
       if (drawer_style && !["elevation", "outlined"].includes(drawer_style)) {
         res.status(400).json(createErrorResponse(ErrorCode.VALIDATION_ERROR, "drawer_style must be 'elevation' or 'outlined'"))
+        return
+      }
+
+      if (homepage_path && !validateRedirectPath(homepage_path)) {
+        res.status(400).json(createErrorResponse(ErrorCode.VALIDATION_ERROR, "homepage_path must be a relative path starting with /"))
         return
       }
 
@@ -138,6 +144,16 @@ whitelabelConfigRouter.put(
             `Cannot disable protected tab: ${item.standard_tab_key}`,
           ))
           return
+        }
+        // Validate custom_path: must be a relative path (/) or https:// URL
+        if (item.custom_path) {
+          if (!item.custom_path.startsWith("/") && !item.custom_path.startsWith("https://")) {
+            res.status(400).json(createErrorResponse(
+              ErrorCode.VALIDATION_ERROR,
+              "custom_path must start with / or https://",
+            ))
+            return
+          }
         }
       }
 
