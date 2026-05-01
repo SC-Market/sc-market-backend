@@ -439,3 +439,124 @@ export async function deleteContentReport(
     .delete()
     .returning("*")
 }
+
+/**
+ * Get offer analytics (mirrors getOrderAnalytics for offer_sessions).
+ */
+export async function getOfferAnalytics() {
+  // Daily totals (last 30 days)
+  const dailyTotals = await knex()("offer_sessions")
+    .select(
+      knex().raw("DATE(timestamp) as date"),
+      knex().raw("COUNT(*) as total"),
+      knex().raw("COUNT(CASE WHEN status = 'active' THEN 1 END) as active"),
+      knex().raw("COUNT(CASE WHEN status = 'accepted' THEN 1 END) as accepted"),
+      knex().raw("COUNT(CASE WHEN status = 'rejected' THEN 1 END) as rejected"),
+    )
+    .where("timestamp", ">=", knex().raw("NOW() - INTERVAL '30 days'"))
+    .groupBy(knex().raw("DATE(timestamp)"))
+    .orderBy("date", "asc")
+
+  // Weekly totals (last 12 weeks)
+  const weeklyTotals = await knex()("offer_sessions")
+    .select(
+      knex().raw("DATE_TRUNC('week', timestamp) as date"),
+      knex().raw("COUNT(*) as total"),
+      knex().raw("COUNT(CASE WHEN status = 'active' THEN 1 END) as active"),
+      knex().raw("COUNT(CASE WHEN status = 'accepted' THEN 1 END) as accepted"),
+      knex().raw("COUNT(CASE WHEN status = 'rejected' THEN 1 END) as rejected"),
+    )
+    .where("timestamp", ">=", knex().raw("NOW() - INTERVAL '12 weeks'"))
+    .groupBy(knex().raw("DATE_TRUNC('week', timestamp)"))
+    .orderBy("date", "asc")
+
+  // Monthly totals (last 12 months)
+  const monthlyTotals = await knex()("offer_sessions")
+    .select(
+      knex().raw("DATE_TRUNC('month', timestamp) as date"),
+      knex().raw("COUNT(*) as total"),
+      knex().raw("COUNT(CASE WHEN status = 'active' THEN 1 END) as active"),
+      knex().raw("COUNT(CASE WHEN status = 'accepted' THEN 1 END) as accepted"),
+      knex().raw("COUNT(CASE WHEN status = 'rejected' THEN 1 END) as rejected"),
+      knex().raw(
+        `COALESCE(AVG(CASE WHEN status = 'accepted' THEN (SELECT CAST(oo.cost AS numeric) FROM order_offers oo WHERE oo.session_id = offer_sessions.id ORDER BY oo.timestamp DESC LIMIT 1) END), 0) as average_accepted_value`,
+      ),
+    )
+    .where("timestamp", ">=", knex().raw("NOW() - INTERVAL '12 months'"))
+    .groupBy(knex().raw("DATE_TRUNC('month', timestamp)"))
+    .orderBy("date", "asc")
+
+  // Top contractors
+  const topContractors = await knex()("offer_sessions as os")
+    .join("contractors as c", "os.contractor_id", "c.contractor_id")
+    .whereNotNull("os.contractor_id")
+    .select(
+      "c.name",
+      knex().raw("COUNT(CASE WHEN os.status = 'accepted' THEN 1 END) as accepted_offers"),
+      knex().raw("COUNT(*) as total_offers"),
+    )
+    .groupBy("c.contractor_id", "c.name")
+    .orderBy("accepted_offers", "desc")
+    .orderBy("total_offers", "desc")
+    .limit(10)
+
+  // Top users
+  const topUsers = await knex()("offer_sessions as os")
+    .join("accounts as a", "os.customer_id", "a.user_id")
+    .select(
+      "a.username",
+      knex().raw("COUNT(CASE WHEN os.status = 'accepted' THEN 1 END) as accepted_offers"),
+      knex().raw("COUNT(*) as total_offers"),
+    )
+    .groupBy("a.user_id", "a.username")
+    .orderBy("accepted_offers", "desc")
+    .orderBy("total_offers", "desc")
+    .limit(10)
+
+  // Summary
+  const summary = await knex()("offer_sessions")
+    .select(
+      knex().raw("COUNT(*) as total_offers"),
+      knex().raw("COUNT(CASE WHEN status = 'active' THEN 1 END) as active_offers"),
+      knex().raw("COUNT(CASE WHEN status = 'accepted' THEN 1 END) as accepted_offers"),
+      knex().raw("COUNT(CASE WHEN status = 'rejected' THEN 1 END) as rejected_offers"),
+      knex().raw(
+        `COALESCE(SUM(CASE WHEN status = 'accepted' THEN (SELECT CAST(oo.cost AS numeric) FROM order_offers oo WHERE oo.session_id = offer_sessions.id ORDER BY oo.timestamp DESC LIMIT 1) ELSE 0 END), 0) as total_value`,
+      ),
+    )
+    .first()
+
+  const fmt = (row: any) => ({
+    date: row.date.toISOString().split("T")[0],
+    total: parseInt(row.total),
+    active: parseInt(row.active),
+    accepted: parseInt(row.accepted),
+    rejected: parseInt(row.rejected),
+  })
+
+  return {
+    daily_totals: dailyTotals.map(fmt),
+    weekly_totals: weeklyTotals.map(fmt),
+    monthly_totals: monthlyTotals.map((row: any) => ({
+      ...fmt(row),
+      average_accepted_value: parseFloat(row.average_accepted_value) || 0,
+    })),
+    top_contractors: topContractors.map((row: any) => ({
+      name: row.name,
+      accepted_offers: parseInt(row.accepted_offers),
+      total_offers: parseInt(row.total_offers),
+    })),
+    top_users: topUsers.map((row: any) => ({
+      username: row.username,
+      accepted_offers: parseInt(row.accepted_offers),
+      total_offers: parseInt(row.total_offers),
+    })),
+    summary: {
+      total_offers: parseInt(summary.total_offers),
+      active_offers: parseInt(summary.active_offers),
+      accepted_offers: parseInt(summary.accepted_offers),
+      rejected_offers: parseInt(summary.rejected_offers),
+      total_value: parseInt(summary.total_value),
+    },
+  }
+}

@@ -1171,7 +1171,15 @@ export class ListingsV2Controller extends BaseController {
         .first()
 
       // Return 404 if listing not found (Requirement 16.9)
+      // If not found, check if this is a V1 listing ID and redirect to the V2 equivalent
       if (!listing) {
+        const mapped = await db("v1_v2_listing_map")
+          .where("v1_listing_id", id)
+          .select("v2_listing_id")
+          .first()
+        if (mapped) {
+          return this.getListingDetail(mapped.v2_listing_id)
+        }
         this.throwNotFound("Listing", id)
       }
 

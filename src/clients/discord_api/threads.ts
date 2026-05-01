@@ -175,7 +175,13 @@ threadRouter.post("/market/quantity/:opt", async (req, res) => {
     }
   }
 
-  await stockLotService.updateSimpleStock(listing.listing_id, new_quantity)
+  try {
+    await stockLotService.updateSimpleStock(listing.listing_id, new_quantity)
+  } catch (err: unknown) {
+    const message = err instanceof Error ? err.message : "Failed to update stock"
+    res.status(400).json({ error: message })
+    return
+  }
   res.json({ result: "Success" })
 })
 
