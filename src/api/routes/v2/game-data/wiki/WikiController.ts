@@ -655,53 +655,84 @@ export class WikiController extends BaseController {
     logger.info("Fetching locations", { parent_id })
 
     try {
-      // This is a placeholder implementation
-      // In a full implementation, you would have a locations table with hierarchical data
-      // For now, we'll return mission locations as a simple list
+      // Query all locations with jurisdiction friendly name
+      const rows = await knex("starmap_locations as sl")
+        .leftJoin("jurisdictions as j", "sl.jurisdiction_code", "j.code")
+        .select(
+          "sl.location_id",
+          "sl.location_code",
+          "sl.location_name",
+          "sl.location_type",
+          "sl.parent_code",
+          "sl.jurisdiction",
+          "sl.jurisdiction_code",
+          "sl.description",
+          "sl.size",
+          "sl.nav_icon",
+          "sl.respawn_type",
+          "sl.file_name",
+          "sl.qt_arrival_radius",
+          "sl.qt_obstruction_radius",
+          "j.name as jurisdiction_name",
+        )
 
-      const locationsQuery = await knex("missions")
-        .select("star_system", "planet_moon")
-        .whereNotNull("star_system")
-        .groupBy("star_system", "planet_moon")
-        .orderBy("star_system", "asc")
-        .orderBy("planet_moon", "asc")
+      // Query amenities for all locations
+      const amenityRows = await knex("location_amenities as la")
+        .join("starmap_amenity_types as sat", "la.amenity_type_id", "sat.id")
+        .select("la.location_code", "sat.name")
 
-      // Group by star system
-      const systemsMap = new Map<string, Set<string>>()
-
-      for (const row of locationsQuery) {
-        if (!systemsMap.has(row.star_system)) {
-          systemsMap.set(row.star_system, new Set())
+      // Build amenities map: location_code -> amenity names
+      const amenitiesMap = new Map<string, string[]>()
+      for (const row of amenityRows) {
+        if (!amenitiesMap.has(row.location_code)) {
+          amenitiesMap.set(row.location_code, [])
         }
-        if (row.planet_moon) {
-          systemsMap.get(row.star_system)!.add(row.planet_moon)
-        }
+        amenitiesMap.get(row.location_code)!.push(row.name)
       }
 
-      // Convert to hierarchy
-      const locations: WikiLocationNode[] = []
-
-      for (const [system, planets] of systemsMap.entries()) {
-        const children: WikiLocationNode[] = Array.from(planets).map((planet) => ({
-          id: `${system}-${planet}`,
-          name: planet,
-          type: "planet",
-          parent_id: system,
+      // Map rows to WikiLocationNode and index by location_code
+      const nodeMap = new Map<string, WikiLocationNode>()
+      for (const row of rows) {
+        nodeMap.set(row.location_code, {
+          id: row.location_code,
+          name: row.location_name,
+          type: row.location_type || row.nav_icon || "unknown",
+          navIcon: row.nav_icon || null,
+          description: row.description || null,
+          parentId: row.parent_code || null,
+          jurisdiction: row.jurisdiction_name || row.jurisdiction || null,
+          respawnType: row.respawn_type || null,
+          size: row.size != null ? Number(row.size) : null,
+          qtArrivalRadius: row.qt_arrival_radius != null ? parseFloat(row.qt_arrival_radius) : null,
+          qtObstructionRadius: row.qt_obstruction_radius != null ? parseFloat(row.qt_obstruction_radius) : null,
+          amenities: amenitiesMap.get(row.location_code) || [],
           children: [],
-        }))
-
-        locations.push({
-          id: system,
-          name: system,
-          type: "system",
-          parent_id: undefined,
-          children,
         })
       }
 
-      logger.info("Locations fetched successfully", { count: locations.length })
+      // Build tree: attach children to parents
+      const roots: WikiLocationNode[] = []
+      for (const node of nodeMap.values()) {
+        const parent = node.parentId ? nodeMap.get(node.parentId) : null
+        if (parent) {
+          parent.children.push(node)
+        } else {
+          roots.push(node)
+        }
+      }
 
-      return locations
+      // Sort children by name at each level
+      const sortChildren = (nodes: WikiLocationNode[]) => {
+        nodes.sort((a, b) => a.name.localeCompare(b.name))
+        for (const node of nodes) {
+          if (node.children.length > 0) sortChildren(node.children)
+        }
+      }
+      sortChildren(roots)
+
+      logger.info("Locations fetched successfully", { count: roots.length })
+
+      return roots
     } catch (error) {
       logger.error("Failed to fetch locations", {
         error: error instanceof Error ? error.message : String(error),

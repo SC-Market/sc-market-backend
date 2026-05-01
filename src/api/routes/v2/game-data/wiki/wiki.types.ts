@@ -140,7 +140,15 @@ export interface WikiLocationNode {
   id: string
   name: string
   type: string
-  parent_id?: string
+  navIcon: string | null
+  description: string | null
+  parentId: string | null
+  jurisdiction: string | null
+  respawnType: string | null
+  size: number | null
+  qtArrivalRadius: number | null
+  qtObstructionRadius: number | null
+  amenities: string[]
   children: WikiLocationNode[]
 }
 
