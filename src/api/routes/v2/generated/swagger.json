@@ -1829,6 +1829,7 @@
 						"type": "string",
 						"enum": [
 							"active",
+							"inactive",
 							"sold",
 							"expired",
 							"cancelled"
@@ -2031,6 +2032,14 @@
 						],
 						"type": "object",
 						"description": "Auction details — required when sale_type is 'auction'"
+					},
+					"status": {
+						"type": "string",
+						"enum": [
+							"active",
+							"inactive"
+						],
+						"description": "Initial listing status (default: 'active'). Use 'inactive' for draft/prep."
 					}
 				},
 				"required": [
@@ -2420,6 +2429,7 @@
 						"type": "string",
 						"enum": [
 							"active",
+							"inactive",
 							"sold",
 							"expired",
 							"cancelled"
@@ -2791,11 +2801,12 @@
 						"type": "string",
 						"enum": [
 							"active",
+							"inactive",
 							"sold",
 							"expired",
 							"cancelled"
 						],
-						"description": "New status (optional) — active, sold, expired, cancelled"
+						"description": "New status (optional) — active, inactive, sold, expired, cancelled"
 					},
 					"description": {
 						"type": "string",
@@ -2830,6 +2841,13 @@
 						],
 						"nullable": true,
 						"description": "Pickup method: how the buyer receives the item"
+					},
+					"photos": {
+						"items": {
+							"type": "string"
+						},
+						"type": "array",
+						"description": "Replace listing photos with these URLs (handles removals)"
 					},
 					"quantity_unit": {
 						"type": "string",
@@ -5781,6 +5799,508 @@
 					"event_code",
 					"event_name",
 					"mission_count"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
+			"OreTopLocation": {
+				"description": "TypeScript interfaces for Game Data Mining API",
+				"properties": {
+					"name": {
+						"type": "string"
+					},
+					"system": {
+						"type": "string"
+					},
+					"probability": {
+						"type": "number",
+						"format": "double"
+					}
+				},
+				"required": [
+					"name",
+					"system",
+					"probability"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
+			"OreSearchResult": {
+				"properties": {
+					"name": {
+						"type": "string"
+					},
+					"resourceName": {
+						"type": "string",
+						"nullable": true
+					},
+					"instability": {
+						"type": "number",
+						"format": "double",
+						"nullable": true
+					},
+					"resistance": {
+						"type": "number",
+						"format": "double",
+						"nullable": true
+					},
+					"optimalWindowMidpoint": {
+						"type": "number",
+						"format": "double",
+						"nullable": true
+					},
+					"optimalWindowThinness": {
+						"type": "number",
+						"format": "double",
+						"nullable": true
+					},
+					"explosionMultiplier": {
+						"type": "number",
+						"format": "double",
+						"nullable": true
+					},
+					"clusterFactor": {
+						"type": "number",
+						"format": "double",
+						"nullable": true
+					},
+					"rarity": {
+						"type": "string"
+					},
+					"marketPrice": {
+						"type": "number",
+						"format": "double",
+						"nullable": true
+					},
+					"locationCount": {
+						"type": "number",
+						"format": "double"
+					},
+					"topLocations": {
+						"items": {
+							"$ref": "#/components/schemas/OreTopLocation"
+						},
+						"type": "array"
+					}
+				},
+				"required": [
+					"name",
+					"resourceName",
+					"instability",
+					"resistance",
+					"optimalWindowMidpoint",
+					"optimalWindowThinness",
+					"explosionMultiplier",
+					"clusterFactor",
+					"rarity",
+					"marketPrice",
+					"locationCount",
+					"topLocations"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
+			"SearchOresResponse": {
+				"properties": {
+					"ores": {
+						"items": {
+							"$ref": "#/components/schemas/OreSearchResult"
+						},
+						"type": "array"
+					},
+					"total": {
+						"type": "number",
+						"format": "double"
+					},
+					"page": {
+						"type": "number",
+						"format": "double"
+					},
+					"page_size": {
+						"type": "number",
+						"format": "double"
+					}
+				},
+				"required": [
+					"ores",
+					"total",
+					"page",
+					"page_size"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
+			"OreLocation": {
+				"properties": {
+					"locationName": {
+						"type": "string"
+					},
+					"system": {
+						"type": "string"
+					},
+					"locationType": {
+						"type": "string"
+					},
+					"groupName": {
+						"type": "string"
+					},
+					"groupProbability": {
+						"type": "number",
+						"format": "double"
+					},
+					"relativeProbability": {
+						"type": "number",
+						"format": "double"
+					}
+				},
+				"required": [
+					"locationName",
+					"system",
+					"locationType",
+					"groupName",
+					"groupProbability",
+					"relativeProbability"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
+			"OreDetailResponse": {
+				"properties": {
+					"name": {
+						"type": "string"
+					},
+					"resourceName": {
+						"type": "string",
+						"nullable": true
+					},
+					"instability": {
+						"type": "number",
+						"format": "double",
+						"nullable": true
+					},
+					"resistance": {
+						"type": "number",
+						"format": "double",
+						"nullable": true
+					},
+					"optimalWindowMidpoint": {
+						"type": "number",
+						"format": "double",
+						"nullable": true
+					},
+					"optimalWindowMidpointRandomness": {
+						"type": "number",
+						"format": "double",
+						"nullable": true
+					},
+					"optimalWindowThinness": {
+						"type": "number",
+						"format": "double",
+						"nullable": true
+					},
+					"explosionMultiplier": {
+						"type": "number",
+						"format": "double",
+						"nullable": true
+					},
+					"clusterFactor": {
+						"type": "number",
+						"format": "double",
+						"nullable": true
+					},
+					"rarity": {
+						"type": "string"
+					},
+					"marketPrice": {
+						"type": "number",
+						"format": "double",
+						"nullable": true
+					},
+					"locations": {
+						"items": {
+							"$ref": "#/components/schemas/OreLocation"
+						},
+						"type": "array"
+					}
+				},
+				"required": [
+					"name",
+					"resourceName",
+					"instability",
+					"resistance",
+					"optimalWindowMidpoint",
+					"optimalWindowMidpointRandomness",
+					"optimalWindowThinness",
+					"explosionMultiplier",
+					"clusterFactor",
+					"rarity",
+					"marketPrice",
+					"locations"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
+			"LocationGroup": {
+				"properties": {
+					"groupName": {
+						"type": "string"
+					},
+					"groupProbability": {
+						"type": "number",
+						"format": "double"
+					},
+					"oreCount": {
+						"type": "number",
+						"format": "double"
+					}
+				},
+				"required": [
+					"groupName",
+					"groupProbability",
+					"oreCount"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
+			"LocationSearchResult": {
+				"properties": {
+					"name": {
+						"type": "string"
+					},
+					"displayName": {
+						"type": "string",
+						"nullable": true
+					},
+					"system": {
+						"type": "string"
+					},
+					"locationType": {
+						"type": "string"
+					},
+					"groups": {
+						"items": {
+							"$ref": "#/components/schemas/LocationGroup"
+						},
+						"type": "array"
+					},
+					"hasRefinery": {
+						"type": "boolean"
+					}
+				},
+				"required": [
+					"name",
+					"displayName",
+					"system",
+					"locationType",
+					"groups",
+					"hasRefinery"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
+			"SearchLocationsResponse": {
+				"properties": {
+					"locations": {
+						"items": {
+							"$ref": "#/components/schemas/LocationSearchResult"
+						},
+						"type": "array"
+					},
+					"total": {
+						"type": "number",
+						"format": "double"
+					},
+					"page": {
+						"type": "number",
+						"format": "double"
+					},
+					"page_size": {
+						"type": "number",
+						"format": "double"
+					}
+				},
+				"required": [
+					"locations",
+					"total",
+					"page",
+					"page_size"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
+			"LocationOre": {
+				"properties": {
+					"presetName": {
+						"type": "string"
+					},
+					"elementName": {
+						"type": "string",
+						"nullable": true
+					},
+					"resourceName": {
+						"type": "string",
+						"nullable": true
+					},
+					"relativeProbability": {
+						"type": "number",
+						"format": "double"
+					},
+					"instability": {
+						"type": "number",
+						"format": "double",
+						"nullable": true
+					},
+					"resistance": {
+						"type": "number",
+						"format": "double",
+						"nullable": true
+					},
+					"optimalWindowMidpoint": {
+						"type": "number",
+						"format": "double",
+						"nullable": true
+					},
+					"optimalWindowThinness": {
+						"type": "number",
+						"format": "double",
+						"nullable": true
+					},
+					"explosionMultiplier": {
+						"type": "number",
+						"format": "double",
+						"nullable": true
+					},
+					"clusterFactor": {
+						"type": "number",
+						"format": "double",
+						"nullable": true
+					},
+					"marketPrice": {
+						"type": "number",
+						"format": "double",
+						"nullable": true
+					},
+					"estimatedValue": {
+						"type": "number",
+						"format": "double",
+						"nullable": true
+					}
+				},
+				"required": [
+					"presetName",
+					"elementName",
+					"resourceName",
+					"relativeProbability",
+					"instability",
+					"resistance",
+					"optimalWindowMidpoint",
+					"optimalWindowThinness",
+					"explosionMultiplier",
+					"clusterFactor",
+					"marketPrice",
+					"estimatedValue"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
+			"LocationMiningGroup": {
+				"properties": {
+					"groupName": {
+						"type": "string"
+					},
+					"groupProbability": {
+						"type": "number",
+						"format": "double"
+					},
+					"ores": {
+						"items": {
+							"$ref": "#/components/schemas/LocationOre"
+						},
+						"type": "array"
+					}
+				},
+				"required": [
+					"groupName",
+					"groupProbability",
+					"ores"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
+			"LocationDetailResponse": {
+				"properties": {
+					"name": {
+						"type": "string"
+					},
+					"displayName": {
+						"type": "string",
+						"nullable": true
+					},
+					"system": {
+						"type": "string"
+					},
+					"locationType": {
+						"type": "string"
+					},
+					"groups": {
+						"items": {
+							"$ref": "#/components/schemas/LocationMiningGroup"
+						},
+						"type": "array"
+					},
+					"hasRefinery": {
+						"type": "boolean"
+					},
+					"amenities": {
+						"items": {
+							"type": "string"
+						},
+						"type": "array"
+					}
+				},
+				"required": [
+					"name",
+					"displayName",
+					"system",
+					"locationType",
+					"groups",
+					"hasRefinery",
+					"amenities"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
+			"RefiningMethod": {
+				"properties": {
+					"name": {
+						"type": "string"
+					},
+					"speed": {
+						"type": "string"
+					},
+					"quality": {
+						"type": "string"
+					}
+				},
+				"required": [
+					"name",
+					"speed",
+					"quality"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
+			"RefiningMethodsResponse": {
+				"properties": {
+					"methods": {
+						"items": {
+							"$ref": "#/components/schemas/RefiningMethod"
+						},
+						"type": "array"
+					}
+				},
+				"required": [
+					"methods"
 				],
 				"type": "object",
 				"additionalProperties": false
@@ -9880,6 +10400,7 @@
 							"type": "string",
 							"enum": [
 								"active",
+								"inactive",
 								"sold",
 								"expired",
 								"cancelled"
@@ -9991,6 +10512,7 @@
 							"type": "string",
 							"enum": [
 								"active",
+								"inactive",
 								"sold",
 								"expired",
 								"cancelled"
@@ -12821,6 +13343,285 @@
 				"summary": "Get game events",
 				"tags": [
 					"Game Data - Missions"
+				],
+				"security": [],
+				"parameters": []
+			}
+		},
+		"/game-data/mining/ores": {
+			"get": {
+				"operationId": "SearchOres",
+				"responses": {
+					"200": {
+						"description": "Ok",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/SearchOresResponse"
+								}
+							}
+						}
+					}
+				},
+				"description": "Search ores with filters",
+				"summary": "Search ores",
+				"tags": [
+					"Game Data - Mining"
+				],
+				"security": [],
+				"parameters": [
+					{
+						"description": "Search ore name",
+						"in": "query",
+						"name": "text",
+						"required": false,
+						"schema": {
+							"type": "string"
+						}
+					},
+					{
+						"description": "Filter by star system",
+						"in": "query",
+						"name": "system",
+						"required": false,
+						"schema": {
+							"type": "string"
+						}
+					},
+					{
+						"description": "Filter by mining method",
+						"in": "query",
+						"name": "mining_method",
+						"required": false,
+						"schema": {
+							"type": "string",
+							"enum": [
+								"ship",
+								"ground",
+								"fps"
+							]
+						}
+					},
+					{
+						"description": "Filter by rarity",
+						"in": "query",
+						"name": "rarity",
+						"required": false,
+						"schema": {
+							"type": "string",
+							"enum": [
+								"common",
+								"uncommon",
+								"rare",
+								"epic",
+								"legendary"
+							]
+						}
+					},
+					{
+						"description": "Page number (default: 1)",
+						"in": "query",
+						"name": "page",
+						"required": false,
+						"schema": {
+							"default": 1,
+							"format": "double",
+							"type": "number"
+						}
+					},
+					{
+						"description": "Results per page (default: 20, max: 100)",
+						"in": "query",
+						"name": "page_size",
+						"required": false,
+						"schema": {
+							"default": 20,
+							"format": "double",
+							"type": "number"
+						}
+					}
+				]
+			}
+		},
+		"/game-data/mining/ores/{name}": {
+			"get": {
+				"operationId": "GetOreDetail",
+				"responses": {
+					"200": {
+						"description": "Ok",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/OreDetailResponse"
+								}
+							}
+						}
+					}
+				},
+				"description": "Get ore detail by name",
+				"summary": "Get ore details",
+				"tags": [
+					"Game Data - Mining"
+				],
+				"security": [],
+				"parameters": [
+					{
+						"description": "Element name (e.g. 'gold_ore')",
+						"in": "path",
+						"name": "name",
+						"required": true,
+						"schema": {
+							"type": "string"
+						}
+					}
+				]
+			}
+		},
+		"/game-data/mining/locations": {
+			"get": {
+				"operationId": "SearchLocations",
+				"responses": {
+					"200": {
+						"description": "Ok",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/SearchLocationsResponse"
+								}
+							}
+						}
+					}
+				},
+				"description": "Search mining locations with filters",
+				"summary": "Search mining locations",
+				"tags": [
+					"Game Data - Mining"
+				],
+				"security": [],
+				"parameters": [
+					{
+						"description": "Search location name",
+						"in": "query",
+						"name": "text",
+						"required": false,
+						"schema": {
+							"type": "string"
+						}
+					},
+					{
+						"description": "Filter by star system",
+						"in": "query",
+						"name": "system",
+						"required": false,
+						"schema": {
+							"type": "string"
+						}
+					},
+					{
+						"description": "Filter by location type",
+						"in": "query",
+						"name": "location_type",
+						"required": false,
+						"schema": {
+							"type": "string",
+							"enum": [
+								"surface",
+								"asteroidfield"
+							]
+						}
+					},
+					{
+						"description": "Filter by mining method",
+						"in": "query",
+						"name": "mining_method",
+						"required": false,
+						"schema": {
+							"type": "string",
+							"enum": [
+								"ship",
+								"ground",
+								"fps"
+							]
+						}
+					},
+					{
+						"description": "Page number (default: 1)",
+						"in": "query",
+						"name": "page",
+						"required": false,
+						"schema": {
+							"default": 1,
+							"format": "double",
+							"type": "number"
+						}
+					},
+					{
+						"description": "Results per page (default: 20, max: 100)",
+						"in": "query",
+						"name": "page_size",
+						"required": false,
+						"schema": {
+							"default": 20,
+							"format": "double",
+							"type": "number"
+						}
+					}
+				]
+			}
+		},
+		"/game-data/mining/locations/{name}": {
+			"get": {
+				"operationId": "GetLocationDetail",
+				"responses": {
+					"200": {
+						"description": "Ok",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/LocationDetailResponse"
+								}
+							}
+						}
+					}
+				},
+				"description": "Get mining location detail",
+				"summary": "Get location details",
+				"tags": [
+					"Game Data - Mining"
+				],
+				"security": [],
+				"parameters": [
+					{
+						"description": "Location name (e.g. 'stanton1b')",
+						"in": "path",
+						"name": "name",
+						"required": true,
+						"schema": {
+							"type": "string"
+						}
+					}
+				]
+			}
+		},
+		"/game-data/mining/refining-methods": {
+			"get": {
+				"operationId": "GetRefiningMethods",
+				"responses": {
+					"200": {
+						"description": "Ok",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/RefiningMethodsResponse"
+								}
+							}
+						}
+					}
+				},
+				"description": "Get all refining methods",
+				"summary": "Get refining methods",
+				"tags": [
+					"Game Data - Mining"
 				],
 				"security": [],
 				"parameters": []

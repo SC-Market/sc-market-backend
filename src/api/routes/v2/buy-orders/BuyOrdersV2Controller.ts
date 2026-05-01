@@ -35,6 +35,7 @@ import {
   SearchBuyOrdersResponse,
 } from "../types/buy-orders.types.js"
 import logger from "../../../../logger/logger.js"
+import { notificationService } from "../../../../services/notifications/notification.service.js"
 
 @Route("buy-orders")
 @Tags("Buy Orders V2")
@@ -332,7 +333,6 @@ export class BuyOrdersV2Controller extends BaseController {
 
       // Notify seller of new order
       try {
-        const { notificationService } = await import("../../../../services/notifications/notification.service.js")
         // Adapt buy order response to CreateOrderResponse shape for notification
         const orderForNotification = { ...result, items: [result.item] } as any
         await notificationService.createNewOrderNotificationV2(orderForNotification, result.seller_id)

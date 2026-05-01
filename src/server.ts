@@ -476,25 +476,25 @@ app.get("/sitemap.xml", async function (req, res) {
 app.use(oapi)
 app.use("/swaggerui", userAuthorized, oapi.swaggerui())
 
-app.use(
-  "/docs",
-  apiReference({
-    sources: [
-      {
-        title: "V2 API",
-        slug: "v2",
-        url: "/api/v2/openapi.json",
-        default: true,
-      },
-      {
-        title: "V1 API",
-        slug: "v1",
-        url: "/api/v1/openapi.json",
-      },
-    ],
-    theme: "purple",
-  }),
-)
+app.get("/docs", (_, res) => {
+  res.type("text/html").send(`<!doctype html>
+<html>
+<head><title>SC Market API Docs</title><meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" /></head>
+<body>
+  <div id="app"></div>
+  <script src="https://cdn.jsdelivr.net/npm/@scalar/api-reference"></script>
+  <script>
+    Scalar.createApiReference('#app', {
+      sources: [
+        { title: 'V2 API', slug: 'v2', url: '/api/v2/openapi.json', default: true },
+        { title: 'V1 API', slug: 'v1', url: '/api/v1/openapi.json' },
+      ],
+      theme: 'purple',
+    })
+  </script>
+</body>
+</html>`)
+})
 
 app.use(addTranslationToRequestWithUser)
 

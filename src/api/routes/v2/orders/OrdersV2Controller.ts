@@ -29,6 +29,7 @@ import {
   OrdersByListingResponse,
 } from "../types/orders.types.js"
 import logger from "../../../../logger/logger.js"
+import { notificationService } from "../../../../services/notifications/notification.service.js"
 
 @Route("orders")
 @Tags("Orders V2")
@@ -261,7 +262,6 @@ export class OrdersV2Controller extends BaseController {
 
       // Notify seller of new order
       try {
-        const { notificationService } = await import("../../../../services/notifications/notification.service.js")
         // V2 push notification
         await notificationService.createNewOrderNotificationV2(result, result.seller_id)
         // V1 in-app notification (creates notification objects in DB)

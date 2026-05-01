@@ -437,7 +437,22 @@ export async function getEntityByType(
     }
     case "market_bids": {
       const bids = await marketDb.getMarketBids({ bid_id: entity_id })
-      return await formatBid(bids[0])
+      if (bids[0]) return await formatBid(bids[0])
+      // Fallback: check V2 bids table
+      const v2Bid = await knex()("bids_v2")
+        .where({ bid_id: entity_id })
+        .join("accounts", "bids_v2.bidder_id", "accounts.user_id")
+        .select("bids_v2.*", "accounts.username", "accounts.display_name", "accounts.avatar")
+        .first()
+      if (v2Bid) {
+        return {
+          bid_id: v2Bid.bid_id,
+          listing_id: v2Bid.listing_id,
+          amount: parseInt(v2Bid.amount),
+          user_bidder: { username: v2Bid.username, display_name: v2Bid.display_name, avatar: v2Bid.avatar },
+        }
+      }
+      throw new Error(`Bid not found: ${entity_id}`)
     }
     case "market_offers": {
       const offers = await marketDb.getMarketOffers({ offer_id: entity_id })
