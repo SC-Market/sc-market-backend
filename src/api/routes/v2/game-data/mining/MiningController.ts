@@ -38,6 +38,23 @@ function deriveRarity(presetName: string): string {
   return "common"
 }
 
+/** Strip _ore/_raw suffix to get the base mineral name for preset matching */
+function baseMineral(elementName: string): string {
+  return elementName.replace(/_ore$/, "").replace(/_raw$/, "")
+}
+
+/** Derive a friendly display name from a preset name like mining_asteroidrare_beryl */
+function presetDisplayName(presetName: string): string {
+  // Strip prefixes: mining_, fpsmining_, groundvehiclemining_
+  let name = presetName
+    .replace(/^mining_asteroid(common|uncommon|rare|epic|legendary)_/, "")
+    .replace(/^mining_(common|uncommon|rare|epic|legendary)_/, "")
+    .replace(/^fpsmining_/, "")
+    .replace(/^groundvehiclemining_/, "")
+    .replace(/^mining_/, "")
+  return name.replace(/_/g, " ").replace(/\b\w/g, (c) => c.toUpperCase())
+}
+
 @Route("game-data/mining")
 @Tags("Game Data - Mining")
 export class MiningController extends BaseController {
@@ -71,7 +88,7 @@ export class MiningController extends BaseController {
       // Build base query for elements with rarity derived from spawns
       let query = knex("mineable_elements as me")
         .leftJoin("location_mining_spawns as lms", function () {
-          this.on(knex.raw("lms.preset_name ILIKE '%' || me.name || '%'"))
+          this.on(knex.raw("lms.preset_name ILIKE '%' || REGEXP_REPLACE(me.name, '_(ore|raw)$', '') || '%'"))
         })
 
       // Filter by system
@@ -146,27 +163,28 @@ export class MiningController extends BaseController {
       const ores: OreSearchResult[] = []
       if (rows.length > 0) {
         const elementNames = rows.map((r: any) => r.name)
+        const baseNames = elementNames.map(baseMineral)
         const topLocations = await knex("location_mining_spawns as lms")
           .select("lms.location_name", "lms.system", "lms.relative_probability", "lms.preset_name")
           .whereRaw(
             `EXISTS (SELECT 1 FROM unnest(?::text[]) AS en(n) WHERE lms.preset_name ILIKE '%' || en.n || '%')`,
-            [elementNames],
+            [baseNames],
           )
           .orderBy("lms.relative_probability", "desc")
 
         // Group top locations by element
         const locationsByElement = new Map<string, OreTopLocation[]>()
         for (const loc of topLocations) {
-          for (const name of elementNames) {
-            if (loc.preset_name.toLowerCase().includes(name.toLowerCase())) {
-              const arr = locationsByElement.get(name) || []
+          for (let i = 0; i < elementNames.length; i++) {
+            if (loc.preset_name.toLowerCase().includes(baseNames[i].toLowerCase())) {
+              const arr = locationsByElement.get(elementNames[i]) || []
               if (arr.length < 3) {
                 arr.push({
                   name: loc.location_name,
                   system: loc.system,
                   probability: parseFloat(loc.relative_probability),
                 })
-                locationsByElement.set(name, arr)
+                locationsByElement.set(elementNames[i], arr)
               }
               break
             }
@@ -217,13 +235,14 @@ export class MiningController extends BaseController {
       }
 
       // Get all locations
+      const baseName = baseMineral(name)
       const locations = await knex("location_mining_spawns as lms")
         .select(
           "lms.location_name", "lms.system", "lms.location_type",
           "lms.group_name", "lms.group_probability", "lms.relative_probability",
           "lms.preset_name",
         )
-        .whereRaw("lms.preset_name ILIKE ?", [`%${name}%`])
+        .whereRaw("lms.preset_name ILIKE ?", [`%${baseName}%`])
         .orderBy("lms.relative_probability", "desc")
 
       // Derive rarity from first spawn preset
@@ -385,7 +404,7 @@ export class MiningController extends BaseController {
     try {
       // Get all spawns for this location
       const spawns = await knex("location_mining_spawns as lms")
-        .leftJoin("mineable_elements as me", knex.raw("lms.preset_name ILIKE '%' || me.name || '%'"))
+        .leftJoin("mineable_elements as me", knex.raw("lms.preset_name ILIKE '%' || REGEXP_REPLACE(me.name, '_(ore|raw)$', '') || '%'"))
         .select(
           "lms.location_name", "lms.system", "lms.location_type",
           "lms.group_name", "lms.group_probability", "lms.preset_name",
@@ -450,8 +469,10 @@ export class MiningController extends BaseController {
 
         groupMap.get(key)!.ores.push({
           presetName: spawn.preset_name,
+          displayName: presetDisplayName(spawn.preset_name),
           elementName: spawn.element_name || null,
           resourceName: spawn.resource_name || null,
+          rarity: deriveRarity(spawn.preset_name),
           relativeProbability: relProb,
           instability: spawn.instability ? parseFloat(spawn.instability) : null,
           resistance: spawn.resistance ? parseFloat(spawn.resistance) : null,
