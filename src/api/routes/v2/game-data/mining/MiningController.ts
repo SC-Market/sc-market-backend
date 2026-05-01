@@ -72,14 +72,29 @@ const SYSTEM_DISPLAY_NAMES: Record<string, string> = {
 /** Build a location name lookup from starmap_locations + fallback map */
 async function buildLocationNameLookup(knex: ReturnType<typeof getKnex>): Promise<Map<string, string>> {
   const lookup = new Map<string, string>()
-  // Load from starmap_locations
-  const rows = await knex("starmap_locations").select("location_code", "location_name", "file_name")
+  // Load from starmap_locations with parent info
+  const rows = await knex("starmap_locations as sl")
+    .leftJoin("starmap_locations as parent", function () {
+      this.on(knex.raw("sl.parent_code = parent.location_code"))
+    })
+    .select("sl.location_code", "sl.location_name", "sl.file_name", "sl.location_type",
+      "parent.location_name as parent_name")
   for (const r of rows) {
     if (r.location_name && r.location_code) {
-      // starmapobject.stanton1 -> stanton1
       const code = r.location_code.replace(/^starmapobject\./, "").toLowerCase()
-      lookup.set(code, r.location_name)
-      if (r.file_name) lookup.set(r.file_name.toLowerCase(), r.location_name)
+      // For moons, show "Parent - Moon" (e.g., "Pyro V-c - Adir")
+      let displayName = r.location_name
+      if (r.location_type === "Moon" && r.parent_name) {
+        // Derive the moon letter suffix from code (pyro5c -> c, stanton1a -> a)
+        const moonMatch = code.match(/\d([a-f])$/)
+        if (moonMatch && r.parent_name) {
+          displayName = `${r.parent_name}-${moonMatch[1]} - ${r.location_name}`
+        } else {
+          displayName = `${r.parent_name} - ${r.location_name}`
+        }
+      }
+      lookup.set(code, displayName)
+      if (r.file_name) lookup.set(r.file_name.toLowerCase(), displayName)
     }
   }
   // Add fallbacks
