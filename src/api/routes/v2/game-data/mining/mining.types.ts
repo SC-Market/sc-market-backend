@@ -64,6 +64,16 @@ export interface OreDetailResponse {
   rarity: string
   marketPrice: number | null
   locations: OreLocation[]
+  qualityDistributions: OreQualityDistribution[]
+}
+
+export interface OreQualityDistribution {
+  miningType: string
+  rarity: string | null
+  min: number | null
+  max: number | null
+  mean: number | null
+  stddev: number | null
 }
 
 // ============================================================================
