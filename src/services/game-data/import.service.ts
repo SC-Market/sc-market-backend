@@ -2387,14 +2387,13 @@ export class GameDataImportService {
         await knex("jurisdiction_prohibited_goods").where("jurisdiction_code", j.code).delete()
         const goodRows: Array<Record<string, unknown>> = []
         for (const good of j.prohibitedGoods) {
-          goodRows.push({ jurisdiction_code: j.code, commodity_name: good, type: "prohibited" })
+          goodRows.push({ jurisdiction_code: j.code, commodity_name: good })
         }
         for (const cs of j.controlledSubstances) {
           for (const commodity of cs.commodities) {
             goodRows.push({
               jurisdiction_code: j.code,
               commodity_name: commodity,
-              type: "controlled",
               substance_class: cs.class,
               max_possession_scu: cs.maxPossessionScu,
             })
@@ -2541,10 +2540,10 @@ export class GameDataImportService {
       rarity: d.rarity,
       is_location_override: d.isLocationOverride,
       location_ref: d.locationRef,
-      min: d.min,
-      max: d.max,
-      mean: d.mean,
-      stddev: d.stddev,
+      dist_min: d.min,
+      dist_max: d.max,
+      dist_mean: d.mean,
+      dist_stddev: d.stddev,
     }))
     for (let i = 0; i < rows.length; i += BATCH) {
       await knex("mining_quality_distributions").insert(rows.slice(i, i + BATCH))
