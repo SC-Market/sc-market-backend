@@ -345,8 +345,38 @@ function parseItems(): any[] {
           attributes.signalReduction = comp.signalReduction ?? null
           attributes.tempMin = comp.temperatureMin ?? null
           attributes.tempMax = comp.temperatureMax ?? null
+        } else if (t === "SEntityComponentMiningLaserParams") {
+          // Mining laser stats
+          attributes.throttleLerpSpeed = comp.throttleLerpSpeed ?? null
+          attributes.throttleMinimum = comp.throttleMinimum ?? null
+          const ml = comp.miningLaserModifiers || {}
+          attributes.laserInstability = ml.laserInstability?.value ?? null
+          attributes.optimalChargeWindowSize = ml.optimalChargeWindowSizeModifier?.value ?? null
+          attributes.resistanceModifier = ml.resistanceModifier?.value ?? null
+          attributes.shatterDamageModifier = ml.shatterdamageModifier?.value ?? null
+          attributes.optimalChargeRate = ml.optimalChargeWindowRateModifier?.value ?? null
+          attributes.catastrophicChargeRate = ml.catastrophicChargeWindowRateModifier?.value ?? null
+          const fp = comp.filterParams?.filterModifier
+          if (fp?.value != null) attributes.filterModifier = fp.value
+          attributes.usesPowerThrottle = comp.usesPowerThrottle ?? null
+        } else if (t === "EntityComponentAttachableModifierParams") {
+          // Mining module stats (active/passive consumables)
+          for (const mod of comp.modifiers || []) {
+            const mt = mod?._Type_
+            if (mt === "ItemMiningModifierParams") {
+              const ml = mod.MiningLaserModifier || {}
+              if (ml.laserInstability?.value != null) attributes.laserInstability = ml.laserInstability.value
+              if (ml.optimalChargeWindowSizeModifier?.value != null) attributes.optimalChargeWindowSize = ml.optimalChargeWindowSizeModifier.value
+              if (ml.resistanceModifier?.value != null) attributes.resistanceModifier = ml.resistanceModifier.value
+              if (ml.shatterdamageModifier?.value != null) attributes.shatterDamageModifier = ml.shatterdamageModifier.value
+              if (ml.optimalChargeWindowRateModifier?.value != null) attributes.optimalChargeRate = ml.optimalChargeWindowRateModifier.value
+              if (ml.catastrophicChargeWindowRateModifier?.value != null) attributes.catastrophicChargeRate = ml.catastrophicChargeWindowRateModifier.value
+            } else if (mt === "ItemMiningBoosterParams") {
+              if (mod.powerLevelChange) attributes.powerLevelChange = mod.powerLevelChange
+            }
+          }
         } else if (t === "SCItemMiningModuleParams") {
-          // Mining element stats
+          // Legacy fallback
           attributes.instability = comp.instability ?? null
           attributes.resistance = comp.resistance ?? null
           attributes.optimalChargeWindowSize = comp.optimalChargeWindowSize ?? null
