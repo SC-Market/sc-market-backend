@@ -1593,6 +1593,13 @@ class DatabaseNotificationService implements NotificationService {
         variant_id: variantId,
         recipient_count: recipients.length,
       })
+
+      // Send webhooks
+      await webhookService.sendBidWebhooksV2(
+        { listing_id: listing.listing.listing_id, title: listing.listing.title, seller_id: sellerId, seller_type: sellerType },
+        bidAmount,
+        bidderId,
+      )
     } catch (error) {
       logger.error("Failed to create V2 market bid notification:", error)
       throw error

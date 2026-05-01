@@ -24,6 +24,7 @@ import * as profileDb from "./api/routes/v1/profiles/database.js"
 import * as contractorDb from "./api/routes/v1/contractors/database.js"
 import * as recruitingDb from "./api/routes/v1/recruiting/database.js"
 import * as marketDb from "./api/routes/v1/market/database.js"
+import { getKnex } from "./clients/database/knex-db.js"
 import { userAuthorized } from "./api/middleware/auth.js"
 import { errorHandler, track500Responses } from "./api/middleware/error-handler.js"
 import { securityHeaders } from "./api/middleware/security-headers.js"
@@ -403,6 +404,38 @@ app.get("/sitemap.xml", async function (req, res) {
       })
     }
 
+    // Game data detail pages
+    const game_data_routes: Array<{ url: string; changefreq: string; priority: number }> = []
+    try {
+      const db = getKnex()
+      const missions = await db("missions").select("mission_code").limit(5000)
+      for (const m of missions) {
+        game_data_routes.push({ url: `/missions/${m.mission_code}`, changefreq: "monthly", priority: 0.6 })
+      }
+      const blueprints = await db("blueprints").select("blueprint_code").limit(5000)
+      for (const b of blueprints) {
+        game_data_routes.push({ url: `/blueprints/${b.blueprint_code}`, changefreq: "monthly", priority: 0.6 })
+      }
+      const resources = await db("resources").select("resource_id").limit(5000)
+      for (const r of resources) {
+        game_data_routes.push({ url: `/resources/${r.resource_id}`, changefreq: "monthly", priority: 0.5 })
+      }
+      const wikiItems = await db("game_items").select("id").limit(5000)
+      for (const i of wikiItems) {
+        game_data_routes.push({ url: `/wiki/items/${i.id}`, changefreq: "monthly", priority: 0.6 })
+      }
+      const ships = await db("game_items").where("type", "Ship").select("id").limit(2000)
+      for (const s of ships) {
+        game_data_routes.push({ url: `/wiki/ships/${s.id}`, changefreq: "monthly", priority: 0.6 })
+      }
+      const manufacturers = await db("wiki_manufacturers").select("code").limit(500)
+      for (const m of manufacturers) {
+        game_data_routes.push({ url: `/wiki/manufacturers/${m.code}`, changefreq: "monthly", priority: 0.5 })
+      }
+    } catch (e) {
+      logger.warn("Failed to fetch game data for sitemap", { error: e })
+    }
+
     const pages = [
       {
         url: "/",
@@ -434,10 +467,30 @@ app.get("/sitemap.xml", async function (req, res) {
         changefreq: "always",
         priority: 1.0,
       },
+      // Market sub-pages
+      { url: "/bulk", changefreq: "always", priority: 0.8 },
+      { url: "/buyorders", changefreq: "always", priority: 0.8 },
+      { url: "/market/services", changefreq: "always", priority: 0.8 },
+      // Game data
+      { url: "/missions", changefreq: "weekly", priority: 0.8 },
+      { url: "/blueprints", changefreq: "weekly", priority: 0.8 },
+      { url: "/crafting/calculator", changefreq: "monthly", priority: 0.7 },
+      { url: "/resources", changefreq: "weekly", priority: 0.7 },
+      { url: "/shopping-lists", changefreq: "monthly", priority: 0.5 },
+      // Wiki
+      { url: "/wiki/items", changefreq: "weekly", priority: 0.8 },
+      { url: "/wiki/ships", changefreq: "weekly", priority: 0.8 },
+      { url: "/wiki/commodities", changefreq: "weekly", priority: 0.7 },
+      { url: "/wiki/locations", changefreq: "monthly", priority: 0.7 },
+      { url: "/wiki/manufacturers", changefreq: "monthly", priority: 0.6 },
+      // Auth
+      { url: "/login", changefreq: "yearly", priority: 0.3 },
+      { url: "/signup", changefreq: "yearly", priority: 0.4 },
       ...contractor_routes,
       ...user_routes,
       ...recruit_routes,
       ...market_routes,
+      ...game_data_routes,
     ]
 
     try {
