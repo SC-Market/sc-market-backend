@@ -2350,7 +2350,7 @@ export class GameDataImportService {
       p4k_id: a.p4kId,
       name: a.name,
       display_name: a.displayName,
-      icon: a.icon,
+      icon_path: a.icon,
     }))
     for (let i = 0; i < rows.length; i += BATCH) {
       await knex("starmap_amenity_types")
