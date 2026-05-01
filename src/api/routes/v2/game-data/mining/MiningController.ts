@@ -116,6 +116,15 @@ function baseMineral(elementName: string): string {
   return elementName.replace(/_ore$/, "").replace(/_raw$/, "")
 }
 
+/** Clean a resource or element name into a friendly display name */
+function friendlyElementName(displayName: string | null, resourceName: string | null, elementName: string): string {
+  if (displayName) return displayName
+  if (resourceName) {
+    return resourceName.replace(/^Ore_/, "").replace(/^Raw_?/, "").replace(/^Gem_/, "").replace(/_/g, " ")
+  }
+  return elementName.replace(/_ore$/, "").replace(/_raw$/, "").replace(/_/g, " ").replace(/\b\w/g, (c) => c.toUpperCase())
+}
+
 /** Derive a friendly display name from a preset name like mining_asteroidrare_beryl */
 function presetDisplayName(presetName: string): string {
   // Strip prefixes: mining_, fpsmining_, groundvehiclemining_
@@ -270,7 +279,7 @@ export class MiningController extends BaseController {
         for (const row of rows) {
           ores.push({
             name: row.name,
-            displayName: row.display_name || row.resource_name || row.name,
+            displayName: friendlyElementName(row.display_name, row.resource_name, row.name),
             resourceName: row.resource_name,
             gameItemId: row.game_item_id || null,
             instability: row.instability ? parseFloat(row.instability) : null,
@@ -351,7 +360,7 @@ export class MiningController extends BaseController {
 
       return {
         name: element.name,
-        displayName: element.display_name || element.resource_name || element.name,
+        displayName: friendlyElementName(element.display_name, element.resource_name, element.name),
         resourceName: element.resource_name,
         gameItemId: element.game_item_id || null,
         instability: element.instability ? parseFloat(element.instability) : null,
