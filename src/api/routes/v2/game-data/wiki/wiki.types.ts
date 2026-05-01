@@ -150,11 +150,13 @@ export interface WikiLocationNode {
 
 export interface WikiManufacturerSearchResult {
   manufacturer: string
+  display_name: string | null
   item_count: number
 }
 
 export interface WikiManufacturerDetail {
   manufacturer: string
+  display_name: string | null
   description?: string
   item_count: number
   items: ManufacturerItem[]
