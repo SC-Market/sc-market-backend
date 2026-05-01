@@ -30,6 +30,79 @@ const MINING_METHOD_PATTERN: Record<string, string> = {
   fps: "FPS",
 }
 
+/** Friendly names for mining group types */
+const GROUP_DISPLAY_NAMES: Record<string, string> = {
+  SpaceShip_Mineables: "Ship Mining",
+  GroundVehicle_Mineables: "Ground Vehicle Mining (ROC)",
+  FPS_Mineables: "Hand Mining (FPS)",
+}
+
+/** Friendly names for asteroid fields and other locations not in starmap */
+const LOCATION_FALLBACK_NAMES: Record<string, string> = {
+  aaronhalo: "Aaron Halo Belt",
+  lagrange_a: "Stanton–Hurston L1",
+  lagrange_b: "Stanton–Hurston L2",
+  lagrange_c: "Stanton–Crusader L1",
+  lagrange_d: "Stanton–ArcCorp L1",
+  lagrange_e: "Stanton–microTech L1",
+  lagrange_f: "Stanton–ArcCorp L2",
+  lagrange_g: "Stanton–microTech L2",
+  lagrange_occupied: "Stanton Lagrange (Occupied)",
+  stanton2c_belt: "Yela Asteroid Belt",
+  nyx_keegerbelt: "Keeger Belt (Nyx)",
+  nyx_glaciemring: "Glaciem Ring (Nyx)",
+  pyro_deepspaceasteroids: "Pyro Deep Space Asteroids",
+  pyro_warm01: "Pyro Warm Belt 1",
+  pyro_warm02: "Pyro Warm Belt 2",
+  pyro_cool01: "Pyro Cool Belt 1",
+  pyro_cool02: "Pyro Cool Belt 2",
+  pyro_akirocluster: "Akiro Cluster (Pyro)",
+  asteroidcluster_low_yield: "Low Yield Asteroid Cluster",
+  asteroidcluster_medium_yield: "Medium Yield Asteroid Cluster",
+  resourcerush_gold: "Gold Rush Event Area",
+  resourcerush_gold_highdensity: "Gold Rush Event Area (High Density)",
+}
+
+const SYSTEM_DISPLAY_NAMES: Record<string, string> = {
+  stanton: "Stanton",
+  pyro: "Pyro",
+  nyx: "Nyx",
+}
+
+/** Build a location name lookup from starmap_locations + fallback map */
+async function buildLocationNameLookup(knex: ReturnType<typeof getKnex>): Promise<Map<string, string>> {
+  const lookup = new Map<string, string>()
+  // Load from starmap_locations
+  const rows = await knex("starmap_locations").select("location_code", "location_name", "file_name")
+  for (const r of rows) {
+    if (r.location_name && r.location_code) {
+      // starmapobject.stanton1 -> stanton1
+      const code = r.location_code.replace(/^starmapobject\./, "").toLowerCase()
+      lookup.set(code, r.location_name)
+      if (r.file_name) lookup.set(r.file_name.toLowerCase(), r.location_name)
+    }
+  }
+  // Add fallbacks
+  for (const [k, v] of Object.entries(LOCATION_FALLBACK_NAMES)) {
+    if (!lookup.has(k)) lookup.set(k, v)
+  }
+  return lookup
+}
+
+function friendlyGroupName(groupName: string): string {
+  return GROUP_DISPLAY_NAMES[groupName] || groupName.replace(/_/g, " ").replace(/\b\w/g, (c) => c.toUpperCase())
+}
+
+function friendlySystem(system: string): string {
+  return SYSTEM_DISPLAY_NAMES[system?.toLowerCase()] || system?.charAt(0).toUpperCase() + system?.slice(1) || "Unknown"
+}
+
+function friendlyLocationType(lt: string): string {
+  if (lt === "asteroidfield") return "Asteroid Field"
+  if (lt === "surface") return "Surface"
+  return lt?.charAt(0).toUpperCase() + lt?.slice(1) || lt
+}
+
 function deriveRarity(presetName: string): string {
   if (presetName.startsWith("mining_legendary")) return "legendary"
   if (presetName.startsWith("mining_epic")) return "epic"
@@ -164,6 +237,7 @@ export class MiningController extends BaseController {
       // For each ore, get top 3 locations
       const ores: OreSearchResult[] = []
       if (rows.length > 0) {
+        const locationNames = await buildLocationNameLookup(knex)
         const elementNames = rows.map((r: any) => r.name)
         const baseNames = elementNames.map(baseMineral)
         const topLocations = await knex("location_mining_spawns as lms")
@@ -182,8 +256,8 @@ export class MiningController extends BaseController {
               const arr = locationsByElement.get(elementNames[i]) || []
               if (arr.length < 3) {
                 arr.push({
-                  name: loc.location_name,
-                  system: loc.system,
+                  name: locationNames.get(loc.location_name.toLowerCase()) || loc.location_name,
+                  system: friendlySystem(loc.system),
                   probability: parseFloat(loc.relative_probability),
                 })
                 locationsByElement.set(elementNames[i], arr)
@@ -265,11 +339,12 @@ export class MiningController extends BaseController {
         if (priceRow?.min_price) marketPrice = parseInt(priceRow.min_price, 10)
       }
 
+      const locationNames = await buildLocationNameLookup(knex)
       const oreLocations: OreLocation[] = locations.map((loc: any) => ({
-        locationName: loc.location_name,
-        system: loc.system,
-        locationType: loc.location_type,
-        groupName: loc.group_name,
+        locationName: locationNames.get(loc.location_name.toLowerCase()) || loc.location_name,
+        system: friendlySystem(loc.system),
+        locationType: friendlyLocationType(loc.location_type),
+        groupName: friendlyGroupName(loc.group_name),
         groupProbability: parseFloat(loc.group_probability),
         relativeProbability: parseFloat(loc.relative_probability),
       }))
@@ -382,12 +457,16 @@ export class MiningController extends BaseController {
 
       const refineryFileNames = new Set(refineryCheck.map((r: any) => r.file_name?.toLowerCase()))
 
+      const locationNameLookup = await buildLocationNameLookup(knex)
       const locations: LocationSearchResult[] = locationRows.map((row: any) => ({
         name: row.location_name,
-        displayName: null,
-        system: row.system,
-        locationType: row.location_type,
-        groups: groupsByLocation.get(row.location_name) || [],
+        displayName: locationNameLookup.get(row.location_name.toLowerCase()) || null,
+        system: friendlySystem(row.system),
+        locationType: friendlyLocationType(row.location_type),
+        groups: (groupsByLocation.get(row.location_name) || []).map((g) => ({
+          ...g,
+          groupName: friendlyGroupName(g.groupName),
+        })),
         hasRefinery: refineryFileNames.has(row.location_name.toLowerCase()),
       }))
 
@@ -504,12 +583,20 @@ export class MiningController extends BaseController {
       const amenities = amenityRows.map((a: any) => a.display_name || a.name)
       const hasRefinery = amenities.some((a: string) => a.toLowerCase().includes("refinery"))
 
+      const locationNameLookup = await buildLocationNameLookup(knex)
+
+      // Apply friendly group names
+      const groups = Array.from(groupMap.values()).map((g) => ({
+        ...g,
+        groupName: friendlyGroupName(g.groupName),
+      }))
+
       return {
         name: firstSpawn.location_name,
-        displayName: null,
-        system: firstSpawn.system,
-        locationType: firstSpawn.location_type,
-        groups: Array.from(groupMap.values()),
+        displayName: locationNameLookup.get(firstSpawn.location_name.toLowerCase()) || null,
+        system: friendlySystem(firstSpawn.system),
+        locationType: friendlyLocationType(firstSpawn.location_type),
+        groups,
         hasRefinery,
         amenities,
       }
