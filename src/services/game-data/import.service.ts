@@ -110,6 +110,54 @@ export interface GameDataPayload {
   refiningProcesses: P4KRefiningProcess[]
   lootTables: Array<{ name: string; entries: Array<Record<string, unknown>> }>
   rockCompositions: Array<{ name: string; depositName: string | null; minDistinctElements: number; elements: Array<Record<string, unknown>> }>
+  mineableElements?: Array<{
+    name: string
+    resourceName: string | null
+    instability: number | null
+    resistance: number | null
+    optimalWindowMidpoint: number | null
+    optimalWindowMidpointRandomness: number | null
+    optimalWindowThinness: number | null
+    explosionMultiplier: number | null
+    clusterFactor: number | null
+  }>
+  miningLocationSpawns?: Array<{
+    locationName: string
+    system: string
+    locationType: string
+    groupName: string
+    groupProbability: number
+    presetName: string
+    relativeProbability: number
+  }>
+  miningQualityDistributions?: Array<{
+    name: string
+    miningType: string
+    rarity: string | null
+    isLocationOverride: boolean
+    locationRef: string | null
+    min: number | null
+    max: number | null
+    mean: number | null
+    stddev: number | null
+  }>
+  amenityTypes?: Array<{
+    p4kId: string
+    name: string
+    displayName: string | null
+    icon: string | null
+  }>
+  jurisdictions?: Array<{
+    code: string
+    name: string
+    logoPath: string | null
+    parentJurisdictionCode: string | null
+    baseFine: number
+    isPrison: boolean
+    maxStolenGoodsScu: number | null
+    prohibitedGoods: string[]
+    controlledSubstances: Array<{ class: string; commodities: string[]; maxPossessionScu: number }>
+  }>
 }
 
 export interface P4KShip {
@@ -139,8 +187,13 @@ export interface P4KStarmapLocation {
   type: string
   parent: string | null
   jurisdiction: string | null
+  navIcon: string | null
   size: number | null
   file: string
+  amenities: string[]
+  respawnType: string | null
+  qtArrivalRadius: number | null
+  qtObstructionRadius: number | null
 }
 
 export interface P4KBlueprintRewardPool {
@@ -387,6 +440,12 @@ export interface ImportStats {
   resourcesSkipped: number
   shipsProcessed: number
   shipsInserted: number
+  amenityTypesImported: number
+  jurisdictionsImported: number
+  locationsImported: number
+  mineableElementsImported: number
+  miningSpawnsImported: number
+  qualityDistributionsImported: number
   errors: string[]
 }
 
@@ -559,6 +618,12 @@ export class GameDataImportService {
       resourcesSkipped: 0,
       shipsProcessed: 0,
       shipsInserted: 0,
+      amenityTypesImported: 0,
+      jurisdictionsImported: 0,
+      locationsImported: 0,
+      mineableElementsImported: 0,
+      miningSpawnsImported: 0,
+      qualityDistributionsImported: 0,
       errors: [],
     }
 
@@ -1294,6 +1359,48 @@ export class GameDataImportService {
         } catch {
           logger.debug("Ships import skipped (table may not exist)")
         }
+      }
+
+      // ========================================================================
+      // STEP 16: Import amenity types
+      // ========================================================================
+      if (gameData.amenityTypes?.length) {
+        stats.amenityTypesImported = await this.importAmenityTypes(knex, gameData)
+      }
+
+      // ========================================================================
+      // STEP 17: Import jurisdictions
+      // ========================================================================
+      if (gameData.jurisdictions?.length) {
+        stats.jurisdictionsImported = await this.importJurisdictions(knex, gameData)
+      }
+
+      // ========================================================================
+      // STEP 18: Import starmap locations (new p4k_id-based)
+      // ========================================================================
+      if (gameData.starmap?.length) {
+        stats.locationsImported = await this.importStarmapLocations(knex, gameData)
+      }
+
+      // ========================================================================
+      // STEP 19: Import mineable elements
+      // ========================================================================
+      if (gameData.mineableElements?.length) {
+        stats.mineableElementsImported = await this.importMineableElements(knex, gameData)
+      }
+
+      // ========================================================================
+      // STEP 20: Import mining location spawns
+      // ========================================================================
+      if (gameData.miningLocationSpawns?.length) {
+        stats.miningSpawnsImported = await this.importMiningLocationSpawns(knex, gameData)
+      }
+
+      // ========================================================================
+      // STEP 21: Import mining quality distributions
+      // ========================================================================
+      if (gameData.miningQualityDistributions?.length) {
+        stats.qualityDistributionsImported = await this.importMiningQualityDistributions(knex, gameData)
       }
 
       logger.info("Import completed successfully", stats)
@@ -2234,6 +2341,216 @@ export class GameDataImportService {
       stats.errors.push(error instanceof Error ? error.message : String(error))
       return stats
     }
+  }
+
+  async importAmenityTypes(knex: Knex, gameData: GameDataPayload): Promise<number> {
+    logger.info(`Importing ${gameData.amenityTypes!.length} amenity types`)
+    const BATCH = 100
+    const rows = gameData.amenityTypes!.map((a) => ({
+      p4k_id: a.p4kId,
+      name: a.name,
+      display_name: a.displayName,
+      icon: a.icon,
+    }))
+    for (let i = 0; i < rows.length; i += BATCH) {
+      await knex("starmap_amenity_types")
+        .insert(rows.slice(i, i + BATCH))
+        .onConflict("p4k_id")
+        .merge()
+    }
+    logger.info(`Imported ${rows.length} amenity types`)
+    return rows.length
+  }
+
+  async importJurisdictions(knex: Knex, gameData: GameDataPayload): Promise<number> {
+    logger.info(`Importing ${gameData.jurisdictions!.length} jurisdictions`)
+    const BATCH = 100
+    for (let i = 0; i < gameData.jurisdictions!.length; i += BATCH) {
+      const batch = gameData.jurisdictions!.slice(i, i + BATCH)
+      await knex("jurisdictions")
+        .insert(
+          batch.map((j) => ({
+            code: j.code,
+            name: j.name,
+            logo_path: j.logoPath,
+            parent_jurisdiction_code: j.parentJurisdictionCode,
+            base_fine: j.baseFine,
+            is_prison: j.isPrison,
+            max_stolen_goods_scu: j.maxStolenGoodsScu,
+          })),
+        )
+        .onConflict("code")
+        .merge()
+
+      // Insert prohibited goods and controlled substances per jurisdiction
+      for (const j of batch) {
+        await knex("jurisdiction_prohibited_goods").where("jurisdiction_code", j.code).delete()
+        const goodRows: Array<Record<string, unknown>> = []
+        for (const good of j.prohibitedGoods) {
+          goodRows.push({ jurisdiction_code: j.code, commodity_name: good, type: "prohibited" })
+        }
+        for (const cs of j.controlledSubstances) {
+          for (const commodity of cs.commodities) {
+            goodRows.push({
+              jurisdiction_code: j.code,
+              commodity_name: commodity,
+              type: "controlled",
+              substance_class: cs.class,
+              max_possession_scu: cs.maxPossessionScu,
+            })
+          }
+        }
+        if (goodRows.length) {
+          for (let k = 0; k < goodRows.length; k += BATCH) {
+            await knex("jurisdiction_prohibited_goods").insert(goodRows.slice(k, k + BATCH))
+          }
+        }
+      }
+    }
+    logger.info(`Imported ${gameData.jurisdictions!.length} jurisdictions`)
+    return gameData.jurisdictions!.length
+  }
+
+  async importStarmapLocations(knex: Knex, gameData: GameDataPayload): Promise<number> {
+    logger.info(`Importing ${gameData.starmap!.length} starmap locations (p4k_id)`)
+    const BATCH = 100
+    for (let i = 0; i < gameData.starmap!.length; i += BATCH) {
+      const batch = gameData.starmap!.slice(i, i + BATCH)
+      // Update existing rows by location_code, or insert new ones
+      for (const loc of batch) {
+        const updated = await knex("starmap_locations")
+          .where("location_code", loc.file)
+          .update({
+            p4k_id: loc.id,
+            location_name: loc.name,
+            name_key: loc.nameKey,
+            description: loc.description,
+            location_type: loc.type,
+            parent_code: loc.parent,
+            jurisdiction: loc.jurisdiction,
+            jurisdiction_code: loc.jurisdiction,
+            nav_icon: loc.navIcon ?? null,
+            size: loc.size,
+            file_name: loc.file,
+            respawn_type: loc.respawnType ?? null,
+            qt_arrival_radius: loc.qtArrivalRadius ?? null,
+            qt_obstruction_radius: loc.qtObstructionRadius ?? null,
+            is_visible: true,
+            updated_at: new Date(),
+          })
+
+        if (updated === 0) {
+          const version = await knex("game_versions").where({ is_active: true }).first()
+          if (version) {
+            await knex("starmap_locations")
+              .insert({
+                version_id: version.version_id,
+                location_code: loc.file,
+                location_name: loc.name,
+                p4k_id: loc.id,
+                name_key: loc.nameKey,
+                description: loc.description,
+                location_type: loc.type,
+                parent_code: loc.parent,
+                jurisdiction: loc.jurisdiction,
+                jurisdiction_code: loc.jurisdiction,
+                nav_icon: loc.navIcon ?? null,
+                size: loc.size,
+                file_name: loc.file,
+                respawn_type: loc.respawnType ?? null,
+                qt_arrival_radius: loc.qtArrivalRadius ?? null,
+                qt_obstruction_radius: loc.qtObstructionRadius ?? null,
+                is_visible: true,
+              })
+              .onConflict(["version_id", "location_code"])
+              .merge()
+          }
+        }
+      }
+
+      // Insert location amenities
+      for (const loc of batch) {
+        if (!loc.amenities?.length) continue
+        const locRow = await knex("starmap_locations").where("location_code", loc.file).select("location_id").first()
+        if (!locRow) continue
+        await knex("location_amenities").where("location_id", locRow.location_id).delete()
+        const amenityRows = loc.amenities.map((a) => ({
+          location_id: locRow.location_id,
+          amenity_p4k_id: a,
+        }))
+        for (let k = 0; k < amenityRows.length; k += BATCH) {
+          await knex("location_amenities").insert(amenityRows.slice(k, k + BATCH))
+        }
+      }
+    }
+    logger.info(`Imported ${gameData.starmap!.length} starmap locations`)
+    return gameData.starmap!.length
+  }
+
+  async importMineableElements(knex: Knex, gameData: GameDataPayload): Promise<number> {
+    logger.info(`Importing ${gameData.mineableElements!.length} mineable elements`)
+    const BATCH = 100
+    const rows = gameData.mineableElements!.map((e) => ({
+      name: e.name,
+      resource_name: e.resourceName,
+      instability: e.instability,
+      resistance: e.resistance,
+      optimal_window_midpoint: e.optimalWindowMidpoint,
+      optimal_window_midpoint_randomness: e.optimalWindowMidpointRandomness,
+      optimal_window_thinness: e.optimalWindowThinness,
+      explosion_multiplier: e.explosionMultiplier,
+      cluster_factor: e.clusterFactor,
+    }))
+    for (let i = 0; i < rows.length; i += BATCH) {
+      await knex("mineable_elements")
+        .insert(rows.slice(i, i + BATCH))
+        .onConflict("name")
+        .merge()
+    }
+    logger.info(`Imported ${rows.length} mineable elements`)
+    return rows.length
+  }
+
+  async importMiningLocationSpawns(knex: Knex, gameData: GameDataPayload): Promise<number> {
+    logger.info(`Importing ${gameData.miningLocationSpawns!.length} mining location spawns`)
+    await knex("location_mining_spawns").delete()
+    const BATCH = 100
+    const rows = gameData.miningLocationSpawns!.map((s) => ({
+      location_name: s.locationName,
+      system: s.system,
+      location_type: s.locationType,
+      group_name: s.groupName,
+      group_probability: s.groupProbability,
+      preset_name: s.presetName,
+      relative_probability: s.relativeProbability,
+    }))
+    for (let i = 0; i < rows.length; i += BATCH) {
+      await knex("location_mining_spawns").insert(rows.slice(i, i + BATCH))
+    }
+    logger.info(`Imported ${rows.length} mining location spawns`)
+    return rows.length
+  }
+
+  async importMiningQualityDistributions(knex: Knex, gameData: GameDataPayload): Promise<number> {
+    logger.info(`Importing ${gameData.miningQualityDistributions!.length} mining quality distributions`)
+    await knex("mining_quality_distributions").delete()
+    const BATCH = 100
+    const rows = gameData.miningQualityDistributions!.map((d) => ({
+      name: d.name,
+      mining_type: d.miningType,
+      rarity: d.rarity,
+      is_location_override: d.isLocationOverride,
+      location_ref: d.locationRef,
+      min: d.min,
+      max: d.max,
+      mean: d.mean,
+      stddev: d.stddev,
+    }))
+    for (let i = 0; i < rows.length; i += BATCH) {
+      await knex("mining_quality_distributions").insert(rows.slice(i, i + BATCH))
+    }
+    logger.info(`Imported ${rows.length} mining quality distributions`)
+    return rows.length
   }
 }
 
