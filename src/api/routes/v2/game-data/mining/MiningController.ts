@@ -20,6 +20,7 @@ import {
   LocationDetailResponse,
   LocationMiningGroup,
   LocationOre,
+  RefiningMethodsResponse,
 } from "./mining.types.js"
 import logger from "../../../../../logger/logger.js"
 
@@ -485,6 +486,23 @@ export class MiningController extends BaseController {
     } catch (error) {
       logger.error("Failed to fetch location detail", { name, error: error instanceof Error ? error.message : String(error) })
       throw error
+    }
+  }
+
+  /**
+   * Get all refining methods
+   *
+   * @summary Get refining methods
+   */
+  @Get("refining-methods")
+  public async getRefiningMethods(): Promise<RefiningMethodsResponse> {
+    const knex = getKnex()
+    try {
+      const rows = await knex("refining_processes").select("name", "speed", "quality").orderBy("speed").orderBy("quality")
+      return { methods: rows }
+    } catch (error) {
+      logger.error("Failed to fetch refining methods", { error: error instanceof Error ? error.message : String(error) })
+      return { methods: [] }
     }
   }
 }
