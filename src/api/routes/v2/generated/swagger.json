@@ -6133,6 +6133,9 @@
 					"presetName": {
 						"type": "string"
 					},
+					"displayName": {
+						"type": "string"
+					},
 					"elementName": {
 						"type": "string",
 						"nullable": true
@@ -6140,6 +6143,9 @@
 					"resourceName": {
 						"type": "string",
 						"nullable": true
+					},
+					"rarity": {
+						"type": "string"
 					},
 					"relativeProbability": {
 						"type": "number",
@@ -6188,8 +6194,10 @@
 				},
 				"required": [
 					"presetName",
+					"displayName",
 					"elementName",
 					"resourceName",
+					"rarity",
 					"relativeProbability",
 					"instability",
 					"resistance",
