@@ -74,17 +74,17 @@ export function createMemoryFallback(): RateLimiterMemory {
 // Create rate limiters for each tier
 export const rateLimiters = {
   anonymous: createRateLimiter({
-    points: 60,
+    points: 120,
     duration: 60,
-    blockDuration: 300, // 5 minutes
-    inMemoryBlockOnConsumed: 60, // Block in memory after 10 violations (same as points)
+    blockDuration: 60, // 1 minute
+    inMemoryBlockOnConsumed: 120,
     keyPrefix: "scmarket:anon",
   }),
   authenticated: createRateLimiter({
-    points: 200,
+    points: 500,
     duration: 60,
-    blockDuration: 0, // No blocking for authenticated users — just reject excess requests
-    inMemoryBlockOnConsumed: 200,
+    blockDuration: 0,
+    inMemoryBlockOnConsumed: 500,
     keyPrefix: "scmarket:auth",
   }),
   admin: createRateLimiter({
