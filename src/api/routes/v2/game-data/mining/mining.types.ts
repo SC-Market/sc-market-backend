@@ -122,3 +122,17 @@ export interface LocationDetailResponse {
   hasRefinery: boolean
   amenities: string[]
 }
+
+// ============================================================================
+// Refinery Types
+// ============================================================================
+
+export interface RefiningMethod {
+  name: string
+  speed: string
+  quality: string
+}
+
+export interface RefiningMethodsResponse {
+  methods: RefiningMethod[]
+}
