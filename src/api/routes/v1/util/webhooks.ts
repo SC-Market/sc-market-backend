@@ -758,6 +758,61 @@ async function marketBidWebhook(
   )
 }
 
+export async function sendBidWebhooksV2(
+  listing: { listing_id: string; title: string; seller_id: string; seller_type: string },
+  bidAmount: number,
+  bidderId: string,
+) {
+  let webhooks: DBNotificationWebhook[]
+  if (listing.seller_type === "contractor") {
+    webhooks = await notificationDb.getNotificationWebhooksByAction(
+      { "notification_webhooks.contractor_id": listing.seller_id },
+      "market_item_bid",
+    )
+  } else {
+    webhooks = await notificationDb.getNotificationWebhooksByAction(
+      { "notification_webhooks.user_id": listing.seller_id },
+      "market_item_bid",
+    )
+  }
+
+  const bidder = await profileDb.getMinimalUser({ user_id: bidderId })
+
+  for (const webhook of webhooks) {
+    try {
+      await sendWebhook(
+        {
+          username: "SC Market - Bid Received",
+          avatar_url: getLogoUrl(),
+          allowed_mentions: { parse: [] },
+          embeds: [
+            {
+              color: 0x111828,
+              author: {
+                name: bidder.display_name,
+                url: `https://sc-market.space/user/${bidder.username}`,
+                icon_url: bidder.avatar,
+              },
+              title: listing.title,
+              url: `https://sc-market.space/market/${listing.listing_id}`,
+              fields: [
+                {
+                  name: "Bid Amount",
+                  value: `${bidAmount.toLocaleString("en-US")} aUEC`,
+                },
+              ],
+              timestamp: new Date().toISOString(),
+            },
+          ],
+        },
+        webhook,
+      )
+    } catch (e) {
+      logger.error(`Failed to send V2 bid webhook ${webhook.webhook_id}: ${e}`)
+    }
+  }
+}
+
 export async function sendOrderCommentWebhooks(
   order: DBOrder,
   comment: DBOrderComment,

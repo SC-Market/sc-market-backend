@@ -45,6 +45,11 @@ export interface WebhookService {
     listing: DBMarketListingComplete,
     bid: DBMarketBid,
   ): Promise<void>
+  sendBidWebhooksV2(
+    listing: { listing_id: string; title: string; seller_id: string; seller_type: string },
+    bidAmount: number,
+    bidderId: string,
+  ): Promise<void>
 }
 
 /**
@@ -123,6 +128,21 @@ class DatabaseWebhookService implements WebhookService {
         { error },
       )
       // Don't throw - webhook failures shouldn't break the main flow
+    }
+  }
+
+  async sendBidWebhooksV2(
+    listing: { listing_id: string; title: string; seller_id: string; seller_type: string },
+    bidAmount: number,
+    bidderId: string,
+  ): Promise<void> {
+    try {
+      await webhookUtil.sendBidWebhooksV2(listing, bidAmount, bidderId)
+    } catch (error) {
+      logger.error(
+        `Failed to send V2 bid webhooks for listing ${listing.listing_id}:`,
+        { error },
+      )
     }
   }
 }
