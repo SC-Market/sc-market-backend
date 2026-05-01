@@ -115,7 +115,7 @@
     "buildrun": "build && start",
     "start": "tsx watch src/server.ts",
     "build": "npm run tsoa:generate && tsc && npm run copy-templates",
-    "copy-templates": "mkdir -p dist/src/services/email/templates/notifications dist/src/services/email/templates/layouts && cp -r src/services/email/templates/notifications/* dist/src/services/email/templates/notifications/ && cp -r src/services/email/templates/layouts/* dist/src/services/email/templates/layouts/",
+    "copy-templates": "mkdir -p dist/src/services/email/templates/notifications dist/src/services/email/templates/layouts dist/src/api/routes/v2/generated && cp -r src/services/email/templates/notifications/* dist/src/services/email/templates/notifications/ && cp -r src/services/email/templates/layouts/* dist/src/services/email/templates/layouts/ && cp src/api/routes/v2/generated/swagger.json dist/src/api/routes/v2/generated/swagger.json",
     "migrate:make": "tsx node_modules/.bin/knex migrate:make --knexfile knexfile.ts",
     "migrate:latest": "tsx node_modules/.bin/knex migrate:latest --knexfile knexfile.ts",
     "migrate:rollback": "tsx node_modules/.bin/knex migrate:rollback --knexfile knexfile.ts",
