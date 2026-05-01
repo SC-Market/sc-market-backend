@@ -82,15 +82,14 @@ async function buildLocationNameLookup(knex: ReturnType<typeof getKnex>): Promis
   for (const r of rows) {
     if (r.location_name && r.location_code) {
       const code = r.location_code.replace(/^starmapobject\./, "").toLowerCase()
-      // For moons, show "Parent - Moon" (e.g., "Pyro V-c - Adir")
+      // For moons, show "Name - Parent-X" (e.g., "Wala - ArcCorp-B")
       let displayName = r.location_name
       if (r.location_type === "Moon" && r.parent_name) {
-        // Derive the moon letter suffix from code (pyro5c -> c, stanton1a -> a)
         const moonMatch = code.match(/\d([a-f])$/)
-        if (moonMatch && r.parent_name) {
-          displayName = `${r.parent_name}-${moonMatch[1]} - ${r.location_name}`
+        if (moonMatch) {
+          displayName = `${r.location_name} - ${r.parent_name}-${moonMatch[1].toUpperCase()}`
         } else {
-          displayName = `${r.parent_name} - ${r.location_name}`
+          displayName = `${r.location_name} - ${r.parent_name}`
         }
       }
       lookup.set(code, displayName)
