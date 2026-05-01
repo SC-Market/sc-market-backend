@@ -81,10 +81,10 @@ export const rateLimiters = {
     keyPrefix: "scmarket:anon",
   }),
   authenticated: createRateLimiter({
-    points: 60,
+    points: 200,
     duration: 60,
-    blockDuration: 600, // 10 minutes
-    inMemoryBlockOnConsumed: 60, // Block in memory after 60 violations (same as points)
+    blockDuration: 0, // No blocking for authenticated users — just reject excess requests
+    inMemoryBlockOnConsumed: 200,
     keyPrefix: "scmarket:auth",
   }),
   admin: createRateLimiter({
