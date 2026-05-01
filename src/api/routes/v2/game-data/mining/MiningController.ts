@@ -111,24 +111,26 @@ export class MiningController extends BaseController {
         query = query.where("me.name", "ilike", `%${text}%`)
       }
 
-      // Market price subquery
-      const priceSubquery = knex("game_items as gi")
+      // Market price subquery — use game_item_id for direct join
+      const priceSubquery = knex("mineable_elements as me2")
+        .join("game_items as gi", "gi.id", "me2.game_item_id")
         .join("listing_items as li", "li.game_item_id", "gi.id")
         .join("listings as l", "li.listing_id", "l.listing_id")
-        .select(knex.raw("MIN(li.base_price) as min_price"), "gi.name")
+        .select(knex.raw("MIN(li.base_price) as min_price"), "me2.element_id")
         .where("l.status", "active")
-        .groupBy("gi.name")
+        .whereNotNull("me2.game_item_id")
+        .groupBy("me2.element_id")
         .as("mp")
 
       // Main aggregation
       const baseQuery = query.clone()
-        .leftJoin(priceSubquery, function () {
-          this.on(knex.raw("mp.name ILIKE '%' || me.resource_name || '%'"))
-        })
+        .leftJoin(priceSubquery, "mp.element_id", "me.element_id")
         .select(
           "me.element_id",
           "me.name",
+          "me.display_name",
           "me.resource_name",
+          "me.game_item_id",
           "me.instability",
           "me.resistance",
           "me.optimal_window_midpoint",
@@ -140,7 +142,7 @@ export class MiningController extends BaseController {
           knex.raw("COUNT(DISTINCT lms.location_name)::integer as location_count"),
         )
         .groupBy(
-          "me.element_id", "me.name", "me.resource_name",
+          "me.element_id", "me.name", "me.display_name", "me.resource_name", "me.game_item_id",
           "me.instability", "me.resistance", "me.optimal_window_midpoint",
           "me.optimal_window_thinness", "me.explosion_multiplier", "me.cluster_factor",
           "mp.min_price",
@@ -194,7 +196,9 @@ export class MiningController extends BaseController {
         for (const row of rows) {
           ores.push({
             name: row.name,
+            displayName: row.display_name || row.resource_name || row.name,
             resourceName: row.resource_name,
+            gameItemId: row.game_item_id || null,
             instability: row.instability ? parseFloat(row.instability) : null,
             resistance: row.resistance ? parseFloat(row.resistance) : null,
             optimalWindowMidpoint: row.optimal_window_midpoint ? parseFloat(row.optimal_window_midpoint) : null,
@@ -249,14 +253,17 @@ export class MiningController extends BaseController {
       const samplePreset = locations.length > 0 ? locations[0].preset_name : `mining_common_${name}`
       const rarityValue = deriveRarity(samplePreset)
 
-      // Market price
-      const priceRow = await knex("game_items as gi")
-        .join("listing_items as li", "li.game_item_id", "gi.id")
-        .join("listings as l", "li.listing_id", "l.listing_id")
-        .select(knex.raw("MIN(li.base_price) as min_price"))
-        .where("l.status", "active")
-        .whereRaw("gi.name ILIKE ?", [`%${element.resource_name || name}%`])
-        .first()
+      // Market price — use game_item_id if available
+      let marketPrice: number | null = null
+      if (element.game_item_id) {
+        const priceRow = await knex("listing_items as li")
+          .join("listings as l", "li.listing_id", "l.listing_id")
+          .select(knex.raw("MIN(li.base_price) as min_price"))
+          .where("l.status", "active")
+          .where("li.game_item_id", element.game_item_id)
+          .first()
+        if (priceRow?.min_price) marketPrice = parseInt(priceRow.min_price, 10)
+      }
 
       const oreLocations: OreLocation[] = locations.map((loc: any) => ({
         locationName: loc.location_name,
@@ -269,7 +276,9 @@ export class MiningController extends BaseController {
 
       return {
         name: element.name,
+        displayName: element.display_name || element.resource_name || element.name,
         resourceName: element.resource_name,
+        gameItemId: element.game_item_id || null,
         instability: element.instability ? parseFloat(element.instability) : null,
         resistance: element.resistance ? parseFloat(element.resistance) : null,
         optimalWindowMidpoint: element.optimal_window_midpoint ? parseFloat(element.optimal_window_midpoint) : null,
@@ -278,7 +287,7 @@ export class MiningController extends BaseController {
         explosionMultiplier: element.explosion_multiplier ? parseFloat(element.explosion_multiplier) : null,
         clusterFactor: element.cluster_factor ? parseFloat(element.cluster_factor) : null,
         rarity: rarityValue,
-        marketPrice: priceRow?.min_price ? parseInt(priceRow.min_price, 10) : null,
+        marketPrice,
         locations: oreLocations,
       }
     } catch (error) {

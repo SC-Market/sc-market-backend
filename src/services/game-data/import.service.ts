@@ -2488,18 +2488,36 @@ export class GameDataImportService {
 
   async importMineableElements(knex: Knex, gameData: GameDataPayload): Promise<number> {
     logger.info(`Importing ${gameData.mineableElements!.length} mineable elements`)
+
+    // Build game_items lookup for resolving IDs
+    const gameItems = await knex("game_items").select("id", "name")
+    const itemByName = new Map<string, { id: string; name: string }>()
+    for (const gi of gameItems) {
+      itemByName.set(gi.name.toLowerCase(), { id: gi.id, name: gi.name })
+    }
+
     const BATCH = 100
-    const rows = gameData.mineableElements!.map((e) => ({
-      name: e.name,
-      resource_name: e.resourceName,
-      instability: e.instability,
-      resistance: e.resistance,
-      optimal_window_midpoint: e.optimalWindowMidpoint,
-      optimal_window_midpoint_randomness: e.optimalWindowMidpointRandomness,
-      optimal_window_thinness: e.optimalWindowThinness,
-      explosion_multiplier: e.explosionMultiplier,
-      cluster_factor: e.clusterFactor,
-    }))
+    const rows = gameData.mineableElements!.map((e) => {
+      // Resolve game_item_id from resource_name
+      const rn = e.resourceName || ""
+      const clean = rn.replace(/^Ore_/, "").replace(/^Raw_?/, "").replace(/^Gem_/, "").replace(/_/g, " ")
+      const match = itemByName.get(clean.toLowerCase())
+      return {
+        name: e.name,
+        resource_name: e.resourceName,
+        display_name: match?.name || clean || e.name.replace(/_/g, " ").replace(/\b\w/g, (c: string) => c.toUpperCase()),
+        game_item_id: match?.id || null,
+        instability: e.instability,
+        resistance: e.resistance,
+        optimal_window_midpoint: e.optimalWindowMidpoint,
+        optimal_window_midpoint_randomness: e.optimalWindowMidpointRandomness,
+        optimal_window_thinness: e.optimalWindowThinness,
+        explosion_multiplier: e.explosionMultiplier,
+        cluster_factor: e.clusterFactor,
+      }
+    })
+    const linked = rows.filter((r) => r.game_item_id).length
+    logger.info(`Resolved ${linked}/${rows.length} mineable elements to game items`)
     for (let i = 0; i < rows.length; i += BATCH) {
       await knex("mineable_elements")
         .insert(rows.slice(i, i + BATCH))

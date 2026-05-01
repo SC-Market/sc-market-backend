@@ -14,7 +14,9 @@ export interface OreTopLocation {
 
 export interface OreSearchResult {
   name: string
+  displayName: string
   resourceName: string | null
+  gameItemId: string | null
   instability: number | null
   resistance: number | null
   optimalWindowMidpoint: number | null
@@ -49,7 +51,9 @@ export interface OreLocation {
 
 export interface OreDetailResponse {
   name: string
+  displayName: string
   resourceName: string | null
+  gameItemId: string | null
   instability: number | null
   resistance: number | null
   optimalWindowMidpoint: number | null
