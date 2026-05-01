@@ -465,11 +465,31 @@ export class MiningController extends BaseController {
       for (const g of groupRows) {
         const arr = groupsByLocation.get(String(g.location_name)) || []
         arr.push({
-          groupName: String(g.group_name),
+          groupName: friendlyGroupName(String(g.group_name)),
           groupProbability: parseFloat(String(g.group_probability)),
           oreCount: parseInt(String(g.ore_count), 10),
+          topOres: [],
         })
         groupsByLocation.set(String(g.location_name), arr)
+      }
+
+      // Get top 3 ore names per location+group
+      const oreRows = await knex("location_mining_spawns as lms")
+        .leftJoin("mineable_elements as me", knex.raw("lms.preset_name ILIKE '%' || REGEXP_REPLACE(me.name, '_(ore|raw)$', '') || '%'"))
+        .select("lms.location_name", "lms.group_name", "lms.preset_name", "lms.relative_probability",
+          "me.display_name", "me.resource_name", "me.name as element_name")
+        .whereIn("lms.location_name", locationNames)
+        .orderBy("lms.relative_probability", "desc")
+
+      // Assign top ores to groups
+      for (const ore of oreRows) {
+        const groups = groupsByLocation.get(String(ore.location_name))
+        if (!groups) continue
+        const friendlyGN = friendlyGroupName(String(ore.group_name))
+        const group = groups.find((g) => g.groupName === friendlyGN)
+        if (!group || group.topOres.length >= 3) continue
+        const name = ore.display_name || (ore.resource_name ? ore.resource_name.replace(/^Ore_/, "").replace(/^Raw_?/, "") : null) || presetDisplayName(ore.preset_name)
+        group.topOres.push(name)
       }
 
       // Check for refinery amenity via starmap_locations
@@ -487,10 +507,7 @@ export class MiningController extends BaseController {
         displayName: locationNameLookup.get(row.location_name.toLowerCase()) || null,
         system: friendlySystem(row.system),
         locationType: friendlyLocationType(row.location_type),
-        groups: (groupsByLocation.get(row.location_name) || []).map((g) => ({
-          ...g,
-          groupName: friendlyGroupName(g.groupName),
-        })),
+        groups: groupsByLocation.get(row.location_name) || [],
         hasRefinery: refineryFileNames.has(row.location_name.toLowerCase()),
       }))
 
