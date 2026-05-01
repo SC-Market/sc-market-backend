@@ -479,7 +479,20 @@ app.use("/swaggerui", userAuthorized, oapi.swaggerui())
 app.use(
   "/docs",
   apiReference({
-    url: "/openapi.json",
+    sources: [
+      {
+        title: "V2 API",
+        slug: "v2",
+        url: "/api/v2/openapi.json",
+        default: true,
+      },
+      {
+        title: "V1 API",
+        slug: "v1",
+        url: "/api/v1/openapi.json",
+      },
+    ],
+    theme: "purple",
   }),
 )
 
