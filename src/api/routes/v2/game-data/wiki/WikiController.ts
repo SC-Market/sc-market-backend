@@ -728,15 +728,17 @@ export class WikiController extends BaseController {
 
     try {
       // Get manufacturers from game_items with counts
-      const manufacturersQuery = await knex("game_items")
-        .select("manufacturer")
+      const manufacturersQuery = await knex("game_items as gi")
+        .leftJoin("wiki_manufacturers as wm", "wm.code", "gi.manufacturer")
+        .select("gi.manufacturer", knex.raw("MAX(wm.name) as display_name"))
         .count("* as item_count")
-        .whereNotNull("manufacturer")
-        .groupBy("manufacturer")
-        .orderBy("manufacturer", "asc")
+        .whereNotNull("gi.manufacturer")
+        .groupBy("gi.manufacturer")
+        .orderByRaw("COALESCE(MAX(wm.name), gi.manufacturer) ASC")
 
       const manufacturers = manufacturersQuery.map((row: any) => ({
         manufacturer: row.manufacturer,
+        display_name: row.display_name || null,
         item_count: parseInt(String(row.item_count), 10),
       }))
 
@@ -800,9 +802,13 @@ export class WikiController extends BaseController {
         item_count: items.length,
       })
 
+      // Get manufacturer display name
+      const mfrRow = await knex("wiki_manufacturers").where("code", id).select("name", "description").first()
+
       return {
         manufacturer: id,
-        description: undefined, // TODO: Add manufacturer lore/description when available
+        display_name: mfrRow?.name || null,
+        description: mfrRow?.description || undefined,
         item_count: items.length,
         items,
       }
