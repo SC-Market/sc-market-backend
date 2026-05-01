@@ -115,11 +115,13 @@ if (process.env.NODE_ENV !== "production") {
 
 // Serve v1 OpenAPI spec at /api/v1/openapi.json
 apiV1Router.get("/openapi.json", (req, res) => {
-  // Rewrite paths: strip /api prefix since server URL already includes /api/v1
+  // Rewrite paths: /api/X → /api/v1/X so /api/v1 is the canonical prefix
   const originalPaths = oapi.document.paths || {}
   const rewrittenPaths: Record<string, unknown> = {}
   for (const [path, value] of Object.entries(originalPaths)) {
-    const canonical = path.startsWith("/api/") ? path.slice(4) : path
+    const canonical = path.startsWith("/api/")
+      ? `/api/v1/${path.slice(5)}`
+      : path
     rewrittenPaths[canonical] = value
   }
 
@@ -134,12 +136,12 @@ apiV1Router.get("/openapi.json", (req, res) => {
     },
     servers: [
       {
-        url: "https://api.sc-market.space/api/v1",
-        description: "Production v1 API",
+        url: "https://api.sc-market.space",
+        description: "Production",
       },
       {
-        url: "http://localhost:7000/api/v1",
-        description: "Development v1 API",
+        url: "http://localhost:7000",
+        description: "Development",
       },
     ],
   }
