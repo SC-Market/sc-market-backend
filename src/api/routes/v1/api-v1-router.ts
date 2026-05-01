@@ -115,9 +115,17 @@ if (process.env.NODE_ENV !== "production") {
 
 // Serve v1 OpenAPI spec at /api/v1/openapi.json
 apiV1Router.get("/openapi.json", (req, res) => {
-  // Get the OpenAPI document and update it for v1
+  // Rewrite paths: strip /api prefix since server URL already includes /api/v1
+  const originalPaths = oapi.document.paths || {}
+  const rewrittenPaths: Record<string, unknown> = {}
+  for (const [path, value] of Object.entries(originalPaths)) {
+    const canonical = path.startsWith("/api/") ? path.slice(4) : path
+    rewrittenPaths[canonical] = value
+  }
+
   const v1Document = {
     ...oapi.document,
+    paths: rewrittenPaths,
     info: {
       ...oapi.document.info,
       title: "SC Market API v1",
