@@ -11,6 +11,7 @@ import { adminPremiumRouter } from "./premium.js"
 import {
   admin_get_activity,
   admin_get_orders_analytics,
+  admin_get_offers_analytics,
   admin_get_users,
   admin_get_membership_analytics,
   admin_get_audit_logs,
@@ -21,6 +22,7 @@ import {
 import {
   admin_get_activity_spec,
   admin_get_orders_analytics_spec,
+  admin_get_offers_analytics_spec,
   admin_get_users_spec,
   admin_get_membership_analytics_spec,
   admin_get_audit_logs_spec,
@@ -55,6 +57,14 @@ adminRouter.get(
   readRateLimit,
   admin_get_orders_analytics_spec,
   admin_get_orders_analytics,
+)
+
+adminRouter.get(
+  "/offers/analytics",
+  adminAuthorized,
+  readRateLimit,
+  admin_get_offers_analytics_spec,
+  admin_get_offers_analytics,
 )
 
 adminRouter.get(

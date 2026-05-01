@@ -1069,3 +1069,22 @@ export const admin_post_test_notification_spec = adminOapi.validPath({
   },
   security: [{ adminAuth: [] }],
 })
+
+export const admin_get_offers_analytics_spec = adminOapi.validPath({
+  summary: "Get comprehensive offer analytics",
+  description: "Returns detailed offer statistics including time-series data, top performers, and summary metrics.",
+  operationId: "getOfferAnalytics",
+  tags: ["Admin"],
+  responses: {
+    "200": {
+      description: "Offer analytics data retrieved successfully",
+      content: { "application/json": { schema: { type: "object" } } },
+      headers: RateLimitHeaders,
+    },
+    "401": Response401,
+    "403": Response403,
+    "429": Response429Read,
+    "500": Response500,
+  },
+  security: [{ adminAuth: [] }],
+})

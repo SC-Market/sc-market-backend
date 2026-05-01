@@ -122,6 +122,19 @@ export const admin_get_orders_analytics: RequestHandler = async (req, res) => {
   return
 }
 
+export const admin_get_offers_analytics: RequestHandler = async (req, res) => {
+  try {
+    const analytics = await adminDb.getOfferAnalytics()
+    res.json(createResponse(analytics))
+  } catch (error) {
+    logger.error("Error fetching offer analytics", { error })
+    res
+      .status(500)
+      .json(createResponse({ error: "Failed to fetch offer analytics" }))
+  }
+  return
+}
+
 export const admin_get_users: RequestHandler = async (req, res) => {
   try {
     const page = Math.max(1, parseInt(req.query.page as string) || 1)

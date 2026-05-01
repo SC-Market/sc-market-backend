@@ -411,7 +411,7 @@ export class BuyOrdersV2Controller extends BaseController {
 
     let query = db('buy_orders_v2 as bo')
       .leftJoin('accounts as u', 'bo.buyer_id', 'u.user_id')
-      .leftJoin('game_items as gi', 'bo.game_item_id', 'gi.game_item_id')
+      .leftJoin('game_items as gi', 'bo.game_item_id', 'gi.id')
       .where('bo.status', 'active');
 
     if (game_item_id) query = query.where('bo.game_item_id', game_item_id);
@@ -463,7 +463,7 @@ export class BuyOrdersV2Controller extends BaseController {
 
     let query = db('buy_orders_v2 as bo')
       .leftJoin('accounts as u', 'bo.buyer_id', 'u.user_id')
-      .leftJoin('game_items as gi', 'bo.game_item_id', 'gi.game_item_id')
+      .leftJoin('game_items as gi', 'bo.game_item_id', 'gi.id')
       .where('bo.buyer_id', userId);
 
     if (status) query = query.where('bo.status', status);
@@ -524,7 +524,7 @@ export class BuyOrdersV2Controller extends BaseController {
     // Re-fetch with joins for display names
     const row = await db('buy_orders_v2 as bo')
       .leftJoin('accounts as u', 'bo.buyer_id', 'u.user_id')
-      .leftJoin('game_items as gi', 'bo.game_item_id', 'gi.game_item_id')
+      .leftJoin('game_items as gi', 'bo.game_item_id', 'gi.id')
       .where('bo.buy_order_id', id)
       .select('bo.*', 'u.username as buyer_name', 'gi.name as game_item_name')
       .first();
