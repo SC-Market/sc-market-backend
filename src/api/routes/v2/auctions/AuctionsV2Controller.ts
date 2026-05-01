@@ -12,6 +12,7 @@ import { getKnex } from "../../../../clients/database/knex-db.js"
 import { withTransaction } from "../../../../clients/database/transaction.js"
 import logger from "../../../../logger/logger.js"
 import { notificationService } from "../../../../services/notifications/notification.service.js"
+import { ListingsV2Controller } from "../listings/ListingsV2Controller.js"
 
 interface PlaceBidRequest {
   amount: number
@@ -107,7 +108,7 @@ export class AuctionsV2Controller extends BaseController {
     const userId = this.getUserId()
     const knex = getKnex()
 
-    return await withTransaction(async (trx) => {
+    const result = await withTransaction(async (trx) => {
       // 1. Validate auction exists and is active
       const auction = await trx("auction_details_v2").where({ listing_id: listingId }).first()
       if (!auction) throw this.throwNotFound("Auction", listingId)
@@ -169,5 +170,21 @@ export class AuctionsV2Controller extends BaseController {
         current_highest: parseInt(bid.amount),
       }
     })
+
+    // Send notifications after transaction commits
+    try {
+      const listingsController = new ListingsV2Controller()
+      const listingDetail = await listingsController.getListingDetail(listingId)
+      await notificationService.createMarketBidNotificationV2(
+        listingDetail,
+        requestBody.amount,
+        userId,
+        result.bid_id,
+      )
+    } catch (e) {
+      logger.error("Failed to send bid notification", { listing_id: listingId, error: e })
+    }
+
+    return result
   }
 }

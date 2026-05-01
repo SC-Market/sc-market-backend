@@ -82,6 +82,8 @@ export interface NotificationService {
   createMarketBidNotificationV2(
     listing: GetListingDetailResponse,
     bidAmount: number,
+    bidderId: string,
+    bidId: string,
     variantId?: string,
   ): Promise<void>
   createMarketOfferNotificationV2(
@@ -1535,23 +1537,53 @@ class DatabaseNotificationService implements NotificationService {
   async createMarketBidNotificationV2(
     listing: GetListingDetailResponse,
     bidAmount: number,
+    bidderId: string,
+    bidId: string,
     variantId?: string,
   ): Promise<void> {
     try {
-      // Get seller ID from listing
       const sellerId = listing.listing.seller_id
+      const sellerType = listing.listing.seller_type
+      const recipients: string[] = []
 
-      // Format and send push notification
+      // Determine recipients (mirrors V1 createMarketBidNotification logic)
+      if (sellerType === "contractor") {
+        const admins = await contractorDb.getMembersWithMatchingRole(
+          sellerId,
+          { manage_market: true },
+        )
+        recipients.push(...admins.map((u) => u.user_id))
+      } else {
+        recipients.push(sellerId)
+      }
+
+      // Create in-app notification
+      if (recipients.length > 0) {
+        const action = await notificationDb.getNotificationActionByName("market_item_bid")
+        const notif_objects = await notificationDb.insertNotificationObjects([
+          { action_type_id: action.action_type_id, entity_id: bidId },
+        ])
+        await notificationDb.insertNotificationChange([
+          { notification_object_id: notif_objects[0].notification_object_id, actor_id: bidderId },
+        ])
+        await notificationDb.insertNotifications(
+          recipients.map((u) => ({
+            notification_object_id: notif_objects[0].notification_object_id,
+            notifier_id: u,
+          })),
+        )
+      }
+
+      // Send V2 push notification
       const payload = payloadFormattersV2.formatMarketBidNotificationPayloadV2(
         listing,
         bidAmount,
         variantId,
       )
-
-      await pushNotificationService.sendPushNotification(
-        sellerId,
+      await pushNotificationService.sendPushNotifications(
+        recipients,
         payload,
-        "market_item_bid_v2",
+        "market_item_bid",
       )
 
       logger.info("Created V2 market bid notification", {
@@ -1559,6 +1591,7 @@ class DatabaseNotificationService implements NotificationService {
         seller_id: sellerId,
         bid_amount: bidAmount,
         variant_id: variantId,
+        recipient_count: recipients.length,
       })
     } catch (error) {
       logger.error("Failed to create V2 market bid notification:", error)
