@@ -6080,12 +6080,19 @@
 					"oreCount": {
 						"type": "number",
 						"format": "double"
+					},
+					"topOres": {
+						"items": {
+							"type": "string"
+						},
+						"type": "array"
 					}
 				},
 				"required": [
 					"groupName",
 					"groupProbability",
-					"oreCount"
+					"oreCount",
+					"topOres"
 				],
 				"type": "object",
 				"additionalProperties": false
