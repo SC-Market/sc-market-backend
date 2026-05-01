@@ -1289,6 +1289,10 @@ function parseStarmap(): any[] {
         jurisdiction: refName(rv.jurisdiction),
         navIcon: rv.navIcon || null,
         size: rv.size || null,
+        amenities: (rv.amenities || []).map((a: Record<string, unknown>) => a._RecordId_).filter(Boolean),
+        respawnType: rv.respawnLocationType || null,
+        qtArrivalRadius: rv.quantumTravelData?.arrivalRadius ?? null,
+        qtObstructionRadius: rv.quantumTravelData?.obstructionRadius ?? null,
         file: path.basename(f, ".json"),
       })
     } catch {}
@@ -1657,6 +1661,8 @@ function parseRockCompositions(): Record<string, unknown>[] {
           minPct: p.minPercentage,
           maxPct: p.maxPercentage,
           probability: p.probability,
+          curveExponent: (p.curveExponent as number) ?? 1.0,
+          qualityScale: (p.qualityScale as number) ?? 1.0,
         })),
       })
     } catch {}
@@ -1666,8 +1672,199 @@ function parseRockCompositions(): Record<string, unknown>[] {
   return compositions
 }
 
+// --- Parse mineable elements ---
+function parseMineableElements(): Record<string, unknown>[] {
+  const dir = path.join(RECORDS_DIR, "mining/mineableelements")
+  if (!fs.existsSync(dir)) return []
+  const files = findJsonFiles(dir)
+  const elements: Record<string, unknown>[] = []
+
+  for (const f of files) {
+    const bn = path.basename(f, ".json").toLowerCase()
+    if (bn.includes("template") || bn.includes("test")) continue
+    try {
+      const d = readJson(f)._RecordValue_
+      const rn = (d.resourceType?._RecordName_ || "") as string
+      elements.push({
+        name: path.basename(f, ".json"),
+        resourceName: rn.includes(".") ? rn.split(".").pop() : rn,
+        instability: d.elementInstability ?? null,
+        resistance: d.elementResistance ?? null,
+        optimalWindowMidpoint: d.elementOptimalWindowMidpoint ?? null,
+        optimalWindowMidpointRandomness: d.elementOptimalWindowMidpointRandomness ?? null,
+        optimalWindowThinness: d.elementOptimalWindowThinness ?? null,
+        explosionMultiplier: d.elementExplosionMultiplier ?? null,
+        clusterFactor: d.elementClusterFactor ?? null,
+      })
+    } catch {}
+  }
+
+  console.log(`  Mineable elements: ${elements.length}`)
+  return elements
+}
+
+// --- Parse mining location spawns ---
+function parseMiningLocationSpawns(): Record<string, unknown>[] {
+  const dir = path.join(RECORDS_DIR, "harvestable/providerpresets/system")
+  if (!fs.existsSync(dir)) return []
+  const files = findJsonFiles(dir)
+  const spawns: Record<string, unknown>[] = []
+
+  for (const f of files) {
+    try {
+      const d = readJson(f)._RecordValue_
+      const rel = path.relative(dir, f).toLowerCase()
+      const locationName = path.basename(f, ".json").replace(/^hpp_/, "")
+      const systemMatch = rel.match(/^(stanton|pyro|nyx)/)
+      const system = systemMatch ? systemMatch[1] : "unknown"
+      const locationType = rel.includes("asteroidfield") ? "asteroidfield" : "surface"
+
+      for (const group of d.harvestableGroups || []) {
+        const gn = (group.groupName || "") as string
+        if (!/mineable|mining/i.test(gn)) continue
+        const groupProbability = group.probability ?? 1
+        for (const entry of group.harvestables || []) {
+          const href = entry.harvestable
+          const presetName = href ? path.basename(typeof href === "string" ? href : href._RecordPath_ || "", ".json") : null
+          if (!presetName) continue
+          spawns.push({
+            locationName,
+            system,
+            locationType,
+            groupName: gn,
+            groupProbability,
+            presetName,
+            relativeProbability: entry.relativeProbability ?? entry.probability ?? 1,
+          })
+        }
+      }
+    } catch {}
+  }
+
+  console.log(`  Mining location spawns: ${spawns.length}`)
+  return spawns
+}
+
+// --- Parse mining quality distributions ---
+function parseMiningQualityDistributions(): Record<string, unknown>[] {
+  const baseDirs = ["crafting/qualitydistribution/fpsmineables", "crafting/qualitydistribution/groundmineables", "crafting/qualitydistribution/shipmineables"]
+  const typeMap: Record<string, string> = { fpsmineables: "fps", groundmineables: "ground", shipmineables: "ship" }
+  const results: Record<string, unknown>[] = []
+
+  for (const sub of baseDirs) {
+    const dir = path.join(RECORDS_DIR, sub)
+    if (!fs.existsSync(dir)) continue
+    const dirName = path.basename(sub)
+    const miningType = typeMap[dirName] || dirName
+    for (const f of findJsonFiles(dir)) {
+      try {
+        const d = readJson(f)._RecordValue_
+        const bn = path.basename(f, ".json").toLowerCase()
+        const rarityMatch = bn.match(/(common|uncommon|rare|epic|legendary)/)
+        const rarity = rarityMatch ? rarityMatch[1] : null
+        const name = path.basename(f, ".json")
+
+        if (d._Type_ === "CraftingQualityDistributionRecord") {
+          const qd = d.qualityDistribution || {}
+          results.push({ name, miningType, rarity, isLocationOverride: false, locationRef: null, min: qd.min, max: qd.max, mean: qd.mean, stddev: qd.stddev })
+        } else if (d._Type_ === "CraftingQualityLocationOverrideRecord") {
+          for (const entry of d.locationOverride?.locationOverrideList || []) {
+            const locRef = entry.location ? (typeof entry.location === "string" ? path.basename(entry.location, ".json") : refName(entry.location)) : null
+            const qd = entry.qualityDistribution || {}
+            results.push({ name, miningType, rarity, isLocationOverride: true, locationRef: locRef, min: qd.min, max: qd.max, mean: qd.mean, stddev: qd.stddev })
+          }
+        }
+      } catch {}
+    }
+  }
+
+  console.log(`  Mining quality distributions: ${results.length}`)
+  return results
+}
+
+// --- Parse amenity types ---
+function parseAmenityTypes(): Record<string, unknown>[] {
+  const f = path.join(RECORDS_DIR, "starmapamenitytypes/starmapamenitytypes.json")
+  if (!fs.existsSync(f)) return []
+  try {
+    const d = readJson(f)._RecordValue_
+    const types = (d.amenityTypes || []).map((a: Record<string, unknown>) => ({
+      p4kId: a._RecordId_,
+      name: a.name,
+      displayName: a.displayName,
+      icon: a.icon,
+    }))
+    console.log(`  Amenity types: ${types.length}`)
+    return types
+  } catch { return [] }
+}
+
+// --- Parse jurisdictions ---
+function parseJurisdictions(): Record<string, unknown>[] {
+  const dir = path.join(RECORDS_DIR, "lawsystem/jurisdictions")
+  if (!fs.existsSync(dir)) return []
+  const files = findJsonFiles(dir)
+  const jurisdictions: Record<string, unknown>[] = []
+  const classLabels = ["A", "B", "C"]
+
+  for (const f of files) {
+    try {
+      const d = readJson(f)._RecordValue_
+      const code = path.basename(f, ".json")
+      const parentRef = d.parentJurisdiction
+      const parentCode = parentRef ? path.basename(typeof parentRef === "string" ? parentRef : parentRef._RecordPath_ || "", ".json") : null
+
+      const prohibitedGoods: string[] = []
+      for (const ref of d.prohibitedGoods || []) {
+        const n = typeof ref === "string" ? path.basename(ref, ".json") : refName(ref)
+        if (n) prohibitedGoods.push(n)
+      }
+      for (const ref of d.prohibitedResources || []) {
+        const rn = (ref?._RecordName_ || "") as string
+        const n = rn.includes(".") ? rn.split(".").pop()! : rn
+        if (n) prohibitedGoods.push(n)
+      }
+
+      const controlledSubstances: Record<string, unknown>[] = []
+      for (let i = 0; i < (d.controlledSubstances || []).length; i++) {
+        const cs = d.controlledSubstances[i]
+        const commodities: string[] = []
+        for (const ref of cs.commodities || []) {
+          const n = typeof ref === "string" ? path.basename(ref, ".json") : refName(ref)
+          if (n) commodities.push(n)
+        }
+        controlledSubstances.push({
+          class: classLabels[i] || `${i}`,
+          commodities,
+          maxPossessionScu: cs.maxPossessionSCU ?? cs.maxPossessionScu ?? null,
+        })
+      }
+
+      jurisdictions.push({
+        code,
+        name: loc(d.name) || d.name,
+        logoPath: d.logoPath || null,
+        parentJurisdictionCode: parentCode,
+        baseFine: d.baseFine ?? null,
+        isPrison: d.isPrison ?? false,
+        maxStolenGoodsScu: d.maxStolenGoodsPossessionSCU ?? null,
+        prohibitedGoods,
+        controlledSubstances,
+      })
+    } catch {}
+  }
+
+  console.log(`  Jurisdictions: ${jurisdictions.length}`)
+  return jurisdictions
+}
+
 const lootTables = parseLootTables()
 const rockCompositions = parseRockCompositions()
+const mineableElements = parseMineableElements()
+const miningLocationSpawns = parseMiningLocationSpawns()
+const miningQualityDistributions = parseMiningQualityDistributions()
+const amenityTypes = parseAmenityTypes()
+const jurisdictions = parseJurisdictions()
 
 // --- Resolve reputation amounts in missions ---
 for (const mission of missions) {
@@ -1987,6 +2184,11 @@ const outputData = {
     locations: starmap.length,
     blueprintRewardPools: blueprintRewardPools.length,
     refiningProcesses: refiningProcesses.length,
+    mineableElements: mineableElements.length,
+    miningLocationSpawns: miningLocationSpawns.length,
+    miningQualityDistributions: miningQualityDistributions.length,
+    amenityTypes: amenityTypes.length,
+    jurisdictions: jurisdictions.length,
   },
   items,
   blueprints,
@@ -2011,6 +2213,11 @@ const outputData = {
   })(),
   lootTables: lootTables.data,
   rockCompositions,
+  mineableElements,
+  miningLocationSpawns,
+  miningQualityDistributions,
+  amenityTypes,
+  jurisdictions,
 }
 
 const jsonPath = path.join(OUTPUT_DIR, "game-data.json")
