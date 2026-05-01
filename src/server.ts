@@ -274,7 +274,7 @@ app.get("/sitemap.xml", async function (req, res) {
     res.header("Content-Encoding", "gzip")
 
     if (sitemap) {
-      res.json(sitemap)
+      res.send(sitemap)
       return
     }
 
