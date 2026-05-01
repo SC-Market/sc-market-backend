@@ -14,6 +14,7 @@ import {
   OreTopLocation,
   OreDetailResponse,
   OreLocation,
+  OreQualityDistribution,
   SearchLocationsResponse,
   LocationSearchResult,
   LocationGroup,
@@ -387,6 +388,7 @@ export class MiningController extends BaseController {
         rarity: rarityValue,
         marketPrice,
         locations: oreLocations,
+        qualityDistributions: await this.getQualityDistributions(knex, rarityValue),
       }
     } catch (error) {
       logger.error("Failed to fetch ore detail", { name, error: error instanceof Error ? error.message : String(error) })
@@ -660,6 +662,33 @@ export class MiningController extends BaseController {
     } catch (error) {
       logger.error("Failed to fetch refining methods", { error: error instanceof Error ? error.message : String(error) })
       return { methods: [] }
+    }
+  }
+
+  /** Get quality distributions for a given rarity tier */
+  private async getQualityDistributions(knex: ReturnType<typeof getKnex>, rarity: string): Promise<OreQualityDistribution[]> {
+    try {
+      // Map ore rarity to mining type patterns
+      // Ship mining has per-rarity distributions; fps/ground have single defaults
+      const rows = await knex("mining_quality_distributions")
+        .select("mining_type", "rarity", "dist_min", "dist_max", "dist_mean", "dist_stddev")
+        .where("is_location_override", false)
+        .where(function () {
+          this.where("rarity", rarity)
+            .orWhereNull("rarity") // fps/ground defaults
+        })
+        .orderBy("mining_type")
+
+      return rows.map((r: any) => ({
+        miningType: r.mining_type === "ship" ? "Ship Mining" : r.mining_type === "fps" ? "Hand Mining" : r.mining_type === "ground" ? "Ground Vehicle" : r.mining_type,
+        rarity: r.rarity,
+        min: r.dist_min,
+        max: r.dist_max,
+        mean: r.dist_mean ? parseFloat(r.dist_mean) : null,
+        stddev: r.dist_stddev ? parseFloat(r.dist_stddev) : null,
+      }))
+    } catch {
+      return []
     }
   }
 }
