@@ -74,6 +74,7 @@ export interface LocationGroup {
   groupName: string
   groupProbability: number
   oreCount: number
+  topOres: string[]
 }
 
 export interface LocationSearchResult {
