@@ -4330,8 +4330,46 @@
 					"type": {
 						"type": "string"
 					},
-					"parent_id": {
-						"type": "string"
+					"navIcon": {
+						"type": "string",
+						"nullable": true
+					},
+					"description": {
+						"type": "string",
+						"nullable": true
+					},
+					"parentId": {
+						"type": "string",
+						"nullable": true
+					},
+					"jurisdiction": {
+						"type": "string",
+						"nullable": true
+					},
+					"respawnType": {
+						"type": "string",
+						"nullable": true
+					},
+					"size": {
+						"type": "number",
+						"format": "double",
+						"nullable": true
+					},
+					"qtArrivalRadius": {
+						"type": "number",
+						"format": "double",
+						"nullable": true
+					},
+					"qtObstructionRadius": {
+						"type": "number",
+						"format": "double",
+						"nullable": true
+					},
+					"amenities": {
+						"items": {
+							"type": "string"
+						},
+						"type": "array"
 					},
 					"children": {
 						"items": {
@@ -4344,6 +4382,15 @@
 					"id",
 					"name",
 					"type",
+					"navIcon",
+					"description",
+					"parentId",
+					"jurisdiction",
+					"respawnType",
+					"size",
+					"qtArrivalRadius",
+					"qtObstructionRadius",
+					"amenities",
 					"children"
 				],
 				"type": "object",
@@ -5983,6 +6030,47 @@
 				"type": "object",
 				"additionalProperties": false
 			},
+			"OreQualityDistribution": {
+				"properties": {
+					"miningType": {
+						"type": "string"
+					},
+					"rarity": {
+						"type": "string",
+						"nullable": true
+					},
+					"min": {
+						"type": "number",
+						"format": "double",
+						"nullable": true
+					},
+					"max": {
+						"type": "number",
+						"format": "double",
+						"nullable": true
+					},
+					"mean": {
+						"type": "number",
+						"format": "double",
+						"nullable": true
+					},
+					"stddev": {
+						"type": "number",
+						"format": "double",
+						"nullable": true
+					}
+				},
+				"required": [
+					"miningType",
+					"rarity",
+					"min",
+					"max",
+					"mean",
+					"stddev"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
 			"OreDetailResponse": {
 				"properties": {
 					"name": {
@@ -6047,6 +6135,12 @@
 							"$ref": "#/components/schemas/OreLocation"
 						},
 						"type": "array"
+					},
+					"qualityDistributions": {
+						"items": {
+							"$ref": "#/components/schemas/OreQualityDistribution"
+						},
+						"type": "array"
 					}
 				},
 				"required": [
@@ -6063,7 +6157,8 @@
 					"clusterFactor",
 					"rarity",
 					"marketPrice",
-					"locations"
+					"locations",
+					"qualityDistributions"
 				],
 				"type": "object",
 				"additionalProperties": false

@@ -266,14 +266,16 @@ app.use(trackActivity)
 // Setup authentication routes
 setupAuthRoutes(app, frontend_url)
 
-let sitemap: Buffer
+let sitemap: Buffer | null = null
+let sitemapGeneratedAt = 0
+const SITEMAP_TTL_MS = 6 * 60 * 60 * 1000 // 6 hours
 
 app.get("/sitemap.xml", async function (req, res) {
   try {
     res.header("Content-Type", "application/xml")
     res.header("Content-Encoding", "gzip")
 
-    if (sitemap) {
+    if (sitemap && Date.now() - sitemapGeneratedAt < SITEMAP_TTL_MS) {
       res.send(sitemap)
       return
     }
@@ -509,7 +511,7 @@ app.get("/sitemap.xml", async function (req, res) {
             */
 
       // cache the response
-      streamToPromise(pipeline).then((sm) => (sitemap = sm))
+      streamToPromise(pipeline).then((sm) => { sitemap = sm; sitemapGeneratedAt = Date.now() })
       // make sure to attach a write stream such as streamToPromise before ending
       smStream.end()
       // stream write the response
