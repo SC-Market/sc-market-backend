@@ -126,18 +126,33 @@ function deriveRarity(presetName: string): string {
   return "common"
 }
 
-/** Strip _ore/_raw suffix to get the base mineral name for preset matching */
+/** Strip prefixes and suffixes to get the base mineral name for preset matching */
 function baseMineral(elementName: string): string {
-  return elementName.replace(/_ore$/, "").replace(/_raw$/, "")
+  return elementName
+    .replace(/^minableelement_fps_/, "")
+    .replace(/^minableelement_groundvehicle_/, "")
+    .replace(/_ore$/, "")
+    .replace(/_raw$/, "")
 }
 
 /** Clean a resource or element name into a friendly display name */
 function friendlyElementName(displayName: string | null, resourceName: string | null, elementName: string): string {
   if (displayName) return displayName
   if (resourceName) {
-    return resourceName.replace(/^Ore_/, "").replace(/^Raw_?/, "").replace(/^Gem_/, "").replace(/_/g, " ")
+    let clean = resourceName.replace(/^Ore_/, "").replace(/^Raw_?/, "").replace(/^Gem_/, "").replace(/^Vlk_/, "")
+    // Split camelCase: CarinitePure -> Carinite Pure
+    clean = clean.replace(/([a-z])([A-Z])/g, "$1 $2")
+    return clean.replace(/_/g, " ")
   }
-  return elementName.replace(/_ore$/, "").replace(/_raw$/, "").replace(/_/g, " ").replace(/\b\w/g, (c) => c.toUpperCase())
+  // Strip fps/ground prefixes from element name
+  let name = elementName
+    .replace(/^minableelement_fps_/, "")
+    .replace(/^minableelement_groundvehicle_/, "")
+    .replace(/_ore$/, "")
+    .replace(/_raw$/, "")
+  // Split camelCase
+  name = name.replace(/([a-z])([A-Z])/g, "$1 $2")
+  return name.replace(/_/g, " ").replace(/\b\w/g, (c) => c.toUpperCase())
 }
 
 /** Derive a friendly display name from a preset name like mining_asteroidrare_beryl */
@@ -185,7 +200,7 @@ export class MiningController extends BaseController {
       // Build base query for elements with rarity derived from spawns
       let query = knex("mineable_elements as me")
         .leftJoin("location_mining_spawns as lms", function () {
-          this.on(knex.raw("lms.preset_name ILIKE '%' || REGEXP_REPLACE(me.name, '_(ore|raw)$', '') || '%'"))
+          this.on(knex.raw("lms.preset_name ILIKE '%' || REGEXP_REPLACE(REGEXP_REPLACE(me.name, '^minableelement_(fps|groundvehicle)_', ''), '_(ore|raw)$', '') || '%'"))
         })
 
       // Filter by system
@@ -476,7 +491,7 @@ export class MiningController extends BaseController {
 
       // Get top 3 ore names per location+group
       const oreRows = await knex("location_mining_spawns as lms")
-        .leftJoin("mineable_elements as me", knex.raw("lms.preset_name ILIKE '%' || REGEXP_REPLACE(me.name, '_(ore|raw)$', '') || '%'"))
+        .leftJoin("mineable_elements as me", knex.raw("lms.preset_name ILIKE '%' || REGEXP_REPLACE(REGEXP_REPLACE(me.name, '^minableelement_(fps|groundvehicle)_', ''), '_(ore|raw)$', '') || '%'"))
         .select("lms.location_name", "lms.group_name", "lms.preset_name", "lms.relative_probability",
           "me.display_name", "me.resource_name", "me.name as element_name")
         .whereIn("lms.location_name", locationNames)
@@ -534,7 +549,7 @@ export class MiningController extends BaseController {
     try {
       // Get all spawns for this location
       const spawns = await knex("location_mining_spawns as lms")
-        .leftJoin("mineable_elements as me", knex.raw("lms.preset_name ILIKE '%' || REGEXP_REPLACE(me.name, '_(ore|raw)$', '') || '%'"))
+        .leftJoin("mineable_elements as me", knex.raw("lms.preset_name ILIKE '%' || REGEXP_REPLACE(REGEXP_REPLACE(me.name, '^minableelement_(fps|groundvehicle)_', ''), '_(ore|raw)$', '') || '%'"))
         .select(
           "lms.location_name", "lms.system", "lms.location_type",
           "lms.group_name", "lms.group_probability", "lms.preset_name",
