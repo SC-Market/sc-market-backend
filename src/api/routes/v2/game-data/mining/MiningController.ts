@@ -138,21 +138,20 @@ function baseMineral(elementName: string): string {
 /** Clean a resource or element name into a friendly display name */
 function friendlyElementName(displayName: string | null, resourceName: string | null, elementName: string): string {
   if (displayName) return displayName
+  // For FPS/ground elements, derive name from element filename (more specific than resourceName)
+  if (elementName.startsWith("minableelement_")) {
+    let name = elementName
+      .replace(/^minableelement_fps_/, "")
+      .replace(/^minableelement_groundvehicle_/, "")
+    name = name.replace(/([a-z])([A-Z])/g, "$1 $2")
+    return name.replace(/_/g, " ").replace(/\b\w/g, (c) => c.toUpperCase())
+  }
   if (resourceName) {
     let clean = resourceName.replace(/^Ore_/, "").replace(/^Raw_?/, "").replace(/^Gem_/, "").replace(/^Vlk_/, "")
-    // Split camelCase: CarinitePure -> Carinite Pure
     clean = clean.replace(/([a-z])([A-Z])/g, "$1 $2")
     return clean.replace(/_/g, " ")
   }
-  // Strip fps/ground prefixes from element name
-  let name = elementName
-    .replace(/^minableelement_fps_/, "")
-    .replace(/^minableelement_groundvehicle_/, "")
-    .replace(/_ore$/, "")
-    .replace(/_raw$/, "")
-  // Split camelCase
-  name = name.replace(/([a-z])([A-Z])/g, "$1 $2")
-  return name.replace(/_/g, " ").replace(/\b\w/g, (c) => c.toUpperCase())
+  return elementName.replace(/_ore$/, "").replace(/_raw$/, "").replace(/_/g, " ").replace(/\b\w/g, (c) => c.toUpperCase())
 }
 
 /** Derive a friendly display name from a preset name like mining_asteroidrare_beryl */
@@ -202,6 +201,12 @@ export class MiningController extends BaseController {
         .leftJoin("location_mining_spawns as lms", function () {
           this.on(knex.raw("lms.preset_name ILIKE '%' || REGEXP_REPLACE(REGEXP_REPLACE(me.name, '^minableelement_(fps|groundvehicle)_', ''), '_(ore|raw)$', '') || '%'"))
         })
+        // Exclude ground vehicle elements that duplicate an FPS element with same base name
+        .whereRaw(`NOT (me.name LIKE 'minableelement_groundvehicle_%' AND EXISTS (
+          SELECT 1 FROM mineable_elements me2 
+          WHERE me2.name LIKE 'minableelement_fps_%' 
+          AND REGEXP_REPLACE(me2.name, '^minableelement_fps_', '') = REGEXP_REPLACE(me.name, '^minableelement_groundvehicle_', '')
+        ))`)
 
       // Filter by system
       if (system) {
