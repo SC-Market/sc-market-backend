@@ -1219,6 +1219,7 @@ export async function convert_order_search_query(
 
   return {
     assigned_id: assigned?.user_id || undefined,
+    unassigned: query.unassigned === "true" ? true : undefined,
     contractor_id: contractor?.contractor_id || undefined,
     customer_id: customer?.user_id || undefined,
     index: +(query.index || 0),
@@ -1243,6 +1244,7 @@ export async function search_orders(
   let base = database.knex("orders").where((qd) => {
     if (args.customer_id) qd = qd.where("customer_id", args.customer_id)
     if (args.assigned_id) qd = qd.where("assigned_id", args.assigned_id)
+    if (args.unassigned) qd = qd.whereNull("assigned_id")
     if (args.contractor_id) qd = qd.where("contractor_id", args.contractor_id)
     return qd
   })
@@ -1379,6 +1381,8 @@ export async function search_orders_optimized(
         qd = qd.where("orders.customer_id", args.customer_id)
       if (args.assigned_id)
         qd = qd.where("orders.assigned_id", args.assigned_id)
+      if (args.unassigned)
+        qd = qd.whereNull("orders.assigned_id")
       if (args.contractor_id)
         qd = qd.where("orders.contractor_id", args.contractor_id)
 
