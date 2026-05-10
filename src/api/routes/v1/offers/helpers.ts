@@ -155,9 +155,17 @@ export async function search_offer_sessions(
       database.knex.raw("COUNT(*) as count"),
     )
 
-  const item_counts = Object.fromEntries(
+  const unassignedCount = await base
+    .clone()
+    .whereNull("assigned_id")
+    .where("status", "active")
+    .count("* as count")
+    .first()
+
+  const item_counts: Record<string, number> = Object.fromEntries(
     totals.map(({ offer_status, count }) => [offer_status, +count]),
   )
+  item_counts.unclaimed = +(unassignedCount?.count || 0)
 
   switch (args.sort_method) {
     case "status":
