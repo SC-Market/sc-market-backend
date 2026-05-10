@@ -1254,9 +1254,18 @@ export async function search_orders(
     .groupByRaw("status")
     .select("status", database.knex.raw("COUNT(*) as count"))
 
-  const item_counts = Object.fromEntries(
+  // Count unassigned orders (active only)
+  const unassignedCount = await base
+    .clone()
+    .whereNull("assigned_id")
+    .whereIn("status", ["not-started", "in-progress"])
+    .count("* as count")
+    .first()
+
+  const item_counts: Record<string, number> = Object.fromEntries(
     totals.map(({ status, count }) => [status, +count]),
   )
+  item_counts.unassigned = +(unassignedCount?.count || 0)
 
   if (args.status) {
     base = base.andWhere((qb) => {
@@ -1482,9 +1491,18 @@ export async function search_orders_optimized(
     .groupByRaw("status")
     .select("status", database.knex.raw("COUNT(*) as count"))
 
-  const item_counts = Object.fromEntries(
+  const unassignedCount = await database
+    .knex("orders")
+    .whereIn("order_id", filteredOrderIds)
+    .whereNull("assigned_id")
+    .whereIn("status", ["not-started", "in-progress"])
+    .count("* as count")
+    .first()
+
+  const item_counts: Record<string, number> = Object.fromEntries(
     totals.map(({ status, count }) => [status, +count]),
   )
+  item_counts.unassigned = +(unassignedCount?.count || 0)
 
   // Build optimized query with JOINs to get all related data
   // Only query orders that passed the filters
