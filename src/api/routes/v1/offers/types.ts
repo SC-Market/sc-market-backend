@@ -47,6 +47,7 @@ export interface OfferSearchQueryArguments {
   sort_method: OfferSearchSortMethod
   status?: OfferSearchStatus
   assigned_id?: string
+  unassigned?: boolean
   contractor_id?: string
   customer_id?: string
   index: number
@@ -66,6 +67,7 @@ export interface OfferSearchQuery {
   sort_method?: OfferSearchSortMethod
   status?: OfferSearchStatus
   assigned?: string
+  unassigned?: string
   contractor?: string
   customer?: string
   index?: string
