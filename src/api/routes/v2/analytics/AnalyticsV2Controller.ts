@@ -119,40 +119,29 @@ export class AnalyticsV2Controller extends BaseController {
       // Determine PostgreSQL date_trunc interval
       const truncInterval = timeInterval === "hour" ? "hour" : timeInterval
 
-      // Build query to get price history from variant_pricing
-      // Join with listing_item_lots to get variant attributes and timestamps
-      // Join with item_variants to filter by quality_tier
-      const query = knex("variant_pricing as vp")
-        .join("listing_items as li", "vp.item_id", "li.item_id")
-        .join("item_variants as iv", "vp.variant_id", "iv.variant_id")
-        .join("listings as l", "li.listing_id", "l.listing_id")
+      // Build query from price_history_v2 (populated by triggers on listing/order events)
+      const query = knex("price_history_v2 as ph")
         .select(
           knex.raw(
-            `date_trunc('${truncInterval}', vp.created_at) as time_bucket`,
+            `date_trunc('${truncInterval}', ph.recorded_at) as time_bucket`,
           ),
-          knex.raw("AVG(vp.price)::bigint as avg_price"),
-          knex.raw("MIN(vp.price) as min_price"),
-          knex.raw("MAX(vp.price) as max_price"),
+          knex.raw("AVG(ph.price)::bigint as avg_price"),
+          knex.raw("MIN(ph.price) as min_price"),
+          knex.raw("MAX(ph.price) as max_price"),
           knex.raw("COUNT(*)::integer as volume"),
         )
-        .where("li.game_item_id", game_item_id)
-        .whereBetween("vp.created_at", [startDate, endDate])
-        .where("l.status", "active")
+        .where("ph.game_item_id", game_item_id)
+        .whereBetween("ph.recorded_at", [startDate, endDate])
         .modify((queryBuilder) => {
-          // Add quality tier filter if provided (Requirement 46.4)
           if (quality_tier !== undefined) {
-            queryBuilder.whereRaw(
-              "(iv.attributes->>'quality_tier')::integer = ?",
-              [quality_tier],
-            )
-            // Add quality_tier to select
+            queryBuilder.where("ph.quality_tier", quality_tier)
             queryBuilder.select(
               knex.raw("?::integer as quality_tier", [quality_tier]),
             )
           }
         })
-        .groupBy(knex.raw(`date_trunc('${truncInterval}', vp.created_at)`))
-        .orderBy(knex.raw(`date_trunc('${truncInterval}', vp.created_at)`) as any, "asc")
+        .groupBy(knex.raw(`date_trunc('${truncInterval}', ph.recorded_at)`))
+        .orderBy(knex.raw(`date_trunc('${truncInterval}', ph.recorded_at)`) as any, "asc")
 
       const results = await query
 
