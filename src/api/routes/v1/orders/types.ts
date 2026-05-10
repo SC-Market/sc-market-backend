@@ -34,6 +34,7 @@ export interface OrderSearchQueryArguments {
   sort_method: OrderSearchSortMethod
   status?: OrderSearchStatus
   assigned_id?: string
+  unassigned?: boolean
   contractor_id?: string
   customer_id?: string
   index: number
@@ -53,6 +54,7 @@ export interface OrderSearchQuery {
   sort_method?: OrderSearchSortMethod
   status?: OrderSearchStatus
   assigned?: string
+  unassigned?: string
   contractor?: string
   customer?: string
   index?: string
