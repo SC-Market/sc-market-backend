@@ -610,7 +610,7 @@ export class BuyOrdersV2Controller extends BaseController {
       }
 
       // Check stock availability
-      const quantity = buyOrder.quantity || buyOrder.quantity_desired || 1
+      const quantity = buyOrder.quantity_desired || 1
       const availResult = await trx('listing_item_lots')
         .where({ item_id: listingItem.item_id, variant_id: body.variant_id, listed: true })
         .sum('quantity_total as total')
@@ -717,7 +717,7 @@ export class BuyOrdersV2Controller extends BaseController {
       game_item_name: r.game_item_name || '',
       buyer_id: r.buyer_id,
       buyer_name: r.buyer_name || 'Unknown',
-      quantity: r.quantity || r.quantity_desired || 0,
+      quantity: r.quantity_desired || 0,
       price_per_unit: parseFloat(r.price_max) || 0,
       quality_tier_min: r.quality_tier_min || undefined,
       quality_tier_max: r.quality_tier_max || undefined,
