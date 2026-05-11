@@ -183,4 +183,38 @@ export class AdminController extends BaseController {
       try { if (tempDir && fs.existsSync(tempDir)) fs.rmSync(tempDir, { recursive: true, force: true }) } catch {}
     }
   }
+
+  /**
+   * Expire all active listings (used after game wipes).
+   * Sets all active listings to 'expired' status, requiring sellers to manually refresh.
+   * @summary Expire all active listings
+   */
+  @Post("expire-all-listings")
+  @Security("loggedin")
+  public async expireAllListings(): Promise<{ affected: number }> {
+    this.requireAdmin()
+    const knex = getKnex()
+
+    const result = await knex("listings")
+      .where("status", "active")
+      .update({ status: "expired", updated_at: new Date() })
+
+    logger.info("Admin expired all active listings", { affected: result })
+
+    return { affected: result }
+  }
+
+  /**
+   * Get count of active listings (for confirmation dialog).
+   * @summary Get active listing count
+   */
+  @Get("active-listing-count")
+  @Security("loggedin")
+  public async getActiveListingCount(): Promise<{ count: number }> {
+    this.requireAdmin()
+    const knex = getKnex()
+
+    const [{ count }] = await knex("listings").where("status", "active").count("* as count")
+    return { count: parseInt(String(count), 10) }
+  }
 }
