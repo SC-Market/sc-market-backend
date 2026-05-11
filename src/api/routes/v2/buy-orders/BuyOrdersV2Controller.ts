@@ -375,7 +375,7 @@ export class BuyOrdersV2Controller extends BaseController {
     const [order] = await db('buy_orders_v2').insert({
       game_item_id: body.game_item_id,
       buyer_id: userId,
-      quantity: body.quantity,
+      quantity_desired: body.quantity,
       price_min: body.price_per_unit,
       price_max: body.price_per_unit,
       quality_tier_min: body.quality_tier_min || null,
