@@ -945,7 +945,7 @@ export class OrdersV2Controller extends BaseController {
    * @param listingId Listing UUID
    */
   @Get("by-listing/{listingId}")
-  @Security("jwt")
+  @Security("loggedin")
   public async getOrdersByListing(
     @Path() listingId: string,
   ): Promise<OrdersByListingResponse> {
