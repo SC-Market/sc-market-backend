@@ -1244,7 +1244,7 @@ export async function search_orders(
   let base = database.knex("orders").where((qd) => {
     if (args.customer_id) qd = qd.where("customer_id", args.customer_id)
     if (args.assigned_id) qd = qd.where("assigned_id", args.assigned_id)
-    if (args.unassigned) qd = qd.whereNull("assigned_id")
+    if (args.unassigned) qd = qd.whereNull("assigned_id").whereIn("status", ["not-started", "in-progress"])
     if (args.contractor_id) qd = qd.where("contractor_id", args.contractor_id)
     return qd
   })
@@ -1391,7 +1391,7 @@ export async function search_orders_optimized(
       if (args.assigned_id)
         qd = qd.where("orders.assigned_id", args.assigned_id)
       if (args.unassigned)
-        qd = qd.whereNull("orders.assigned_id")
+        qd = qd.whereNull("orders.assigned_id").whereIn("orders.status", ["not-started", "in-progress"])
       if (args.contractor_id)
         qd = qd.where("orders.contractor_id", args.contractor_id)
 
