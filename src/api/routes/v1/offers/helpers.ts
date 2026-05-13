@@ -342,6 +342,8 @@ export async function search_offer_sessions_optimized(
         qd = qd.where("offer_sessions.customer_id", args.customer_id)
       if (args.assigned_id)
         qd = qd.where("offer_sessions.assigned_id", args.assigned_id)
+      if (args.unassigned)
+        qd = qd.whereNull("offer_sessions.assigned_id").where("offer_sessions.status", "active")
       if (args.contractor_id)
         qd = qd.where("offer_sessions.contractor_id", args.contractor_id)
 
@@ -450,6 +452,17 @@ export async function search_offer_sessions_optimized(
     item_counts = Object.fromEntries(
       totals.map(({ offer_status, count }) => [offer_status, +count]),
     ) as { [k: string]: number }
+  }
+
+  // Compute unclaimed count (active + unassigned for this contractor)
+  if (args.contractor_id) {
+    const unclaimedResult = await database.knex("offer_sessions")
+      .where("contractor_id", args.contractor_id)
+      .whereNull("assigned_id")
+      .where("status", "active")
+      .count("* as count")
+      .first()
+    item_counts.unclaimed = +(unclaimedResult?.count || 0)
   }
 
   // Build optimized query with JOINs to get all related data
