@@ -122,6 +122,7 @@ export class StockLotsV2Controller extends BaseController {
    * @returns Stock lots with pagination metadata
    */
   @Get()
+  @Security("loggedin")
   public async getStockLots(
     @Query() listing_id?: string,
     @Query() game_item_id?: string,
@@ -178,6 +179,8 @@ export class StockLotsV2Controller extends BaseController {
     })
 
     try {
+      const userId = this.getUserId()
+
       // Build query with joins for enriched data (Requirements 20.8, 20.9, 20.12)
       let query = knex("listing_item_lots as sl")
         .join("item_variants as iv", "sl.variant_id", "iv.variant_id")
@@ -186,6 +189,12 @@ export class StockLotsV2Controller extends BaseController {
         .leftJoin("locations as loc", "sl.location_id", "loc.location_id")
         .leftJoin("accounts as owner", "sl.owner_id", "owner.user_id")
         .leftJoin("accounts as crafter", "sl.crafted_by", "crafter.user_id")
+        // Only show lots from listings owned by the current user or their orgs
+        .where(function () {
+          this.where("lst.seller_id", userId)
+            .orWhere("lst.seller_type", "contractor")
+            .whereIn("lst.seller_id", knex("contractor_members").select("contractor_id").where("user_id", userId))
+        })
         .select(
           "sl.lot_id",
           "sl.item_id",
