@@ -104,6 +104,10 @@ export interface StandingBuyOrder {
   status: 'active' | 'fulfilled' | 'cancelled' | 'expired';
   created_at: string;
   expires_at?: string;
+  visibility?: 'public' | 'roster_only' | 'private';
+  target_supplier_id?: string | null;
+  target_supplier_contractor_id?: string | null;
+  declined_at?: string | null;
 }
 
 export interface SearchBuyOrdersResponse {
@@ -152,4 +156,25 @@ export interface CreateBuyOrderResponse {
     total_requested: number;
     total_allocated: number;
   };
+}
+
+// ---------------------------------------------------------------------------
+// Targeted / Supplier-Directed Buy Orders
+// ---------------------------------------------------------------------------
+
+export type BuyOrderVisibility = 'public' | 'roster_only' | 'private'
+
+export interface CreateTargetedBuyOrderRequest extends CreateStandingBuyOrderRequest {
+  /** Controls who can see and act on this buy order */
+  visibility?: BuyOrderVisibility
+  /** Direct to a specific supplier user (requires visibility = 'private') */
+  target_supplier_id?: string
+  /** Direct to a specific supplier org (requires visibility = 'private') */
+  target_supplier_contractor_id?: string
+  /** Whether the buyer accepts counter-offers / offer sessions on this order */
+  negotiable?: boolean
+}
+
+export interface DeclineBuyOrderRequest {
+  buy_order_id: string
 }

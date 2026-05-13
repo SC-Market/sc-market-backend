@@ -116,6 +116,202 @@
 				"type": "object",
 				"additionalProperties": false
 			},
+			"SupplierEntityInfo": {
+				"description": "Minimal profile shape for either a user or contractor org",
+				"properties": {
+					"id": {
+						"type": "string"
+					},
+					"username": {
+						"type": "string"
+					},
+					"display_name": {
+						"type": "string"
+					},
+					"avatar": {
+						"type": "string",
+						"nullable": true
+					},
+					"kind": {
+						"type": "string",
+						"enum": [
+							"user",
+							"contractor"
+						],
+						"description": "'user' | 'contractor'"
+					},
+					"spectrum_id": {
+						"type": "string",
+						"description": "Contractor spectrum_id, only present when kind = 'contractor'"
+					}
+				},
+				"required": [
+					"id",
+					"username",
+					"display_name",
+					"kind"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
+			"SupplierTier": {
+				"type": "string",
+				"enum": [
+					"preferred",
+					"approved",
+					"restricted"
+				],
+				"description": "Supplier Relationship Types\n\nTypes for the supplier roster feature — aggregators maintaining a list of\ntrusted/approved suppliers with tier, notes, and status tracking."
+			},
+			"SupplierStatus": {
+				"type": "string",
+				"enum": [
+					"active",
+					"suspended",
+					"removed"
+				]
+			},
+			"SupplierRelationship": {
+				"properties": {
+					"relationship_id": {
+						"type": "string"
+					},
+					"aggregator": {
+						"$ref": "#/components/schemas/SupplierEntityInfo"
+					},
+					"supplier": {
+						"$ref": "#/components/schemas/SupplierEntityInfo"
+					},
+					"tier": {
+						"allOf": [
+							{
+								"$ref": "#/components/schemas/SupplierTier"
+							}
+						],
+						"nullable": true
+					},
+					"notes": {
+						"type": "string",
+						"nullable": true
+					},
+					"status": {
+						"$ref": "#/components/schemas/SupplierStatus"
+					},
+					"created_at": {
+						"type": "string"
+					},
+					"updated_at": {
+						"type": "string"
+					}
+				},
+				"required": [
+					"relationship_id",
+					"aggregator",
+					"supplier",
+					"status",
+					"created_at",
+					"updated_at"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
+			"GetSuppliersResponse": {
+				"properties": {
+					"suppliers": {
+						"items": {
+							"$ref": "#/components/schemas/SupplierRelationship"
+						},
+						"type": "array"
+					},
+					"total": {
+						"type": "number",
+						"format": "double"
+					},
+					"page": {
+						"type": "number",
+						"format": "double"
+					},
+					"page_size": {
+						"type": "number",
+						"format": "double"
+					}
+				},
+				"required": [
+					"suppliers",
+					"total",
+					"page",
+					"page_size"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
+			"AddSupplierResponse": {
+				"properties": {
+					"relationship": {
+						"$ref": "#/components/schemas/SupplierRelationship"
+					}
+				},
+				"required": [
+					"relationship"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
+			"AddSupplierRequest": {
+				"description": "Request to add a supplier to your roster",
+				"properties": {
+					"supplier_id": {
+						"type": "string",
+						"description": "UUID of user to add as supplier (mutually exclusive with supplier_contractor_id)"
+					},
+					"supplier_contractor_id": {
+						"type": "string",
+						"description": "UUID of contractor org to add as supplier (mutually exclusive with supplier_id)"
+					},
+					"tier": {
+						"$ref": "#/components/schemas/SupplierTier"
+					},
+					"notes": {
+						"type": "string"
+					}
+				},
+				"type": "object",
+				"additionalProperties": false
+			},
+			"UpdateSupplierResponse": {
+				"properties": {
+					"relationship": {
+						"$ref": "#/components/schemas/SupplierRelationship"
+					}
+				},
+				"required": [
+					"relationship"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
+			"UpdateSupplierRequest": {
+				"description": "Request to update an existing supplier relationship",
+				"properties": {
+					"tier": {
+						"allOf": [
+							{
+								"$ref": "#/components/schemas/SupplierTier"
+							}
+						],
+						"nullable": true
+					},
+					"notes": {
+						"type": "string",
+						"nullable": true
+					},
+					"status": {
+						"$ref": "#/components/schemas/SupplierStatus"
+					}
+				},
+				"type": "object",
+				"additionalProperties": false
+			},
 			"VariantAttributes": {
 				"description": "Flexible JSONB attributes for item variants\nSupports quality tiers, crafting source, and future extensibility",
 				"properties": {
@@ -527,6 +723,396 @@
 				},
 				"required": [
 					"updates"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
+			"RequisitionLineItem": {
+				"description": "Requisition Order Types\n\nTypes for supplier requisition orders — orders where line items are anchored\nto game items (not listings). Suppliers decide which listing to fulfil from.\n\nA requisition order has orders.kind = 'requisition' and its line items live in\nrequisition_items instead of market_orders / order_market_items_v2.",
+				"properties": {
+					"requisition_item_id": {
+						"type": "string"
+					},
+					"game_item_id": {
+						"type": "string"
+					},
+					"game_item_name": {
+						"type": "string"
+					},
+					"quantity": {
+						"type": "number",
+						"format": "double"
+					},
+					"price_per_unit": {
+						"type": "number",
+						"format": "double"
+					},
+					"fulfilled_quantity": {
+						"type": "number",
+						"format": "double"
+					},
+					"quality_tier_min": {
+						"type": "number",
+						"format": "double",
+						"nullable": true
+					},
+					"quality_tier_max": {
+						"type": "number",
+						"format": "double",
+						"nullable": true
+					}
+				},
+				"required": [
+					"requisition_item_id",
+					"game_item_id",
+					"game_item_name",
+					"quantity",
+					"price_per_unit",
+					"fulfilled_quantity"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
+			"CreateRequisitionResponse": {
+				"properties": {
+					"order_id": {
+						"type": "string"
+					},
+					"offer_session_id": {
+						"type": "string"
+					},
+					"status": {
+						"type": "string"
+					},
+					"items": {
+						"items": {
+							"$ref": "#/components/schemas/RequisitionLineItem"
+						},
+						"type": "array"
+					},
+					"created_at": {
+						"type": "string"
+					}
+				},
+				"required": [
+					"order_id",
+					"offer_session_id",
+					"status",
+					"items",
+					"created_at"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
+			"CreateRequisitionItem": {
+				"properties": {
+					"game_item_id": {
+						"type": "string"
+					},
+					"quantity": {
+						"type": "number",
+						"format": "double"
+					},
+					"price_per_unit": {
+						"type": "number",
+						"format": "double"
+					},
+					"quality_tier_min": {
+						"type": "number",
+						"format": "double"
+					},
+					"quality_tier_max": {
+						"type": "number",
+						"format": "double"
+					}
+				},
+				"required": [
+					"game_item_id",
+					"quantity",
+					"price_per_unit"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
+			"CreateRequisitionRequest": {
+				"properties": {
+					"target_supplier_id": {
+						"type": "string",
+						"description": "UUID of target supplier user (mutually exclusive with target_contractor_id)"
+					},
+					"target_contractor_id": {
+						"type": "string",
+						"description": "UUID of target supplier contractor org"
+					},
+					"title": {
+						"type": "string"
+					},
+					"description": {
+						"type": "string"
+					},
+					"items": {
+						"items": {
+							"$ref": "#/components/schemas/CreateRequisitionItem"
+						},
+						"type": "array"
+					},
+					"buy_order_id": {
+						"type": "string",
+						"description": "Link to an existing buy order that triggered this requisition (optional)"
+					}
+				},
+				"required": [
+					"title",
+					"items"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
+			"RequisitionDetail": {
+				"properties": {
+					"order_id": {
+						"type": "string"
+					},
+					"offer_session_id": {
+						"type": "string",
+						"nullable": true
+					},
+					"status": {
+						"type": "string"
+					},
+					"kind": {
+						"type": "string",
+						"enum": [
+							"requisition"
+						],
+						"nullable": false
+					},
+					"title": {
+						"type": "string"
+					},
+					"description": {
+						"type": "string"
+					},
+					"buyer": {
+						"properties": {
+							"avatar": {
+								"type": "string",
+								"nullable": true
+							},
+							"display_name": {
+								"type": "string"
+							},
+							"username": {
+								"type": "string"
+							},
+							"user_id": {
+								"type": "string"
+							}
+						},
+						"required": [
+							"display_name",
+							"username",
+							"user_id"
+						],
+						"type": "object"
+					},
+					"supplier": {
+						"properties": {
+							"avatar": {
+								"type": "string",
+								"nullable": true
+							},
+							"display_name": {
+								"type": "string"
+							},
+							"username": {
+								"type": "string"
+							},
+							"user_id": {
+								"type": "string"
+							}
+						},
+						"required": [
+							"display_name",
+							"username",
+							"user_id"
+						],
+						"type": "object",
+						"nullable": true
+					},
+					"supplier_contractor": {
+						"properties": {
+							"avatar": {
+								"type": "string",
+								"nullable": true
+							},
+							"name": {
+								"type": "string"
+							},
+							"spectrum_id": {
+								"type": "string"
+							},
+							"contractor_id": {
+								"type": "string"
+							}
+						},
+						"required": [
+							"name",
+							"spectrum_id",
+							"contractor_id"
+						],
+						"type": "object",
+						"nullable": true
+					},
+					"items": {
+						"items": {
+							"$ref": "#/components/schemas/RequisitionLineItem"
+						},
+						"type": "array"
+					},
+					"total_price": {
+						"type": "number",
+						"format": "double"
+					},
+					"created_at": {
+						"type": "string"
+					},
+					"updated_at": {
+						"type": "string"
+					}
+				},
+				"required": [
+					"order_id",
+					"status",
+					"kind",
+					"title",
+					"description",
+					"buyer",
+					"supplier",
+					"supplier_contractor",
+					"items",
+					"total_price",
+					"created_at",
+					"updated_at"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
+			"GetRequisitionsResponse": {
+				"properties": {
+					"requisitions": {
+						"items": {
+							"$ref": "#/components/schemas/RequisitionDetail"
+						},
+						"type": "array"
+					},
+					"total": {
+						"type": "number",
+						"format": "double"
+					},
+					"page": {
+						"type": "number",
+						"format": "double"
+					},
+					"page_size": {
+						"type": "number",
+						"format": "double"
+					}
+				},
+				"required": [
+					"requisitions",
+					"total",
+					"page",
+					"page_size"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
+			"OfferRequisitionItem": {
+				"description": "Item-anchored line item inside an offer negotiation on a requisition",
+				"properties": {
+					"id": {
+						"type": "string"
+					},
+					"offer_id": {
+						"type": "string"
+					},
+					"game_item_id": {
+						"type": "string"
+					},
+					"game_item_name": {
+						"type": "string"
+					},
+					"quantity": {
+						"type": "number",
+						"format": "double"
+					},
+					"price_per_unit": {
+						"type": "number",
+						"format": "double"
+					},
+					"listing_id": {
+						"type": "string",
+						"nullable": true,
+						"description": "Optional: listing the supplier plans to fulfil from"
+					},
+					"listing_title": {
+						"type": "string",
+						"nullable": true
+					}
+				},
+				"required": [
+					"id",
+					"offer_id",
+					"game_item_id",
+					"game_item_name",
+					"quantity",
+					"price_per_unit"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
+			"OfferRequisitionItemInput": {
+				"properties": {
+					"game_item_id": {
+						"type": "string"
+					},
+					"quantity": {
+						"type": "number",
+						"format": "double"
+					},
+					"price_per_unit": {
+						"type": "number",
+						"format": "double"
+					},
+					"listing_id": {
+						"type": "string"
+					}
+				},
+				"required": [
+					"game_item_id",
+					"quantity",
+					"price_per_unit"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
+			"SetOfferRequisitionItemsRequest": {
+				"description": "Request body for creating or updating offer_requisition_items on an offer",
+				"properties": {
+					"offer_id": {
+						"type": "string"
+					},
+					"items": {
+						"items": {
+							"$ref": "#/components/schemas/OfferRequisitionItemInput"
+						},
+						"type": "array"
+					}
+				},
+				"required": [
+					"offer_id",
+					"items"
 				],
 				"type": "object",
 				"additionalProperties": false
@@ -8494,6 +9080,26 @@
 					},
 					"expires_at": {
 						"type": "string"
+					},
+					"visibility": {
+						"type": "string",
+						"enum": [
+							"public",
+							"roster_only",
+							"private"
+						]
+					},
+					"target_supplier_id": {
+						"type": "string",
+						"nullable": true
+					},
+					"target_supplier_contractor_id": {
+						"type": "string",
+						"nullable": true
+					},
+					"declined_at": {
+						"type": "string",
+						"nullable": true
 					}
 				},
 				"required": [
@@ -8623,6 +9229,18 @@
 						"format": "double"
 					}
 				},
+				"type": "object",
+				"additionalProperties": false
+			},
+			"DeclineBuyOrderRequest": {
+				"properties": {
+					"buy_order_id": {
+						"type": "string"
+					}
+				},
+				"required": [
+					"buy_order_id"
+				],
 				"type": "object",
 				"additionalProperties": false
 			},
@@ -9756,6 +10374,242 @@
 				"parameters": []
 			}
 		},
+		"/suppliers": {
+			"get": {
+				"operationId": "GetMySuppliers",
+				"responses": {
+					"200": {
+						"description": "Ok",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/GetSuppliersResponse"
+								}
+							}
+						}
+					}
+				},
+				"tags": [
+					"Suppliers V2"
+				],
+				"security": [
+					{
+						"loggedin": []
+					}
+				],
+				"parameters": [
+					{
+						"in": "query",
+						"name": "status",
+						"required": false,
+						"schema": {
+							"type": "string",
+							"enum": [
+								"active",
+								"suspended",
+								"removed"
+							]
+						}
+					},
+					{
+						"in": "query",
+						"name": "tier",
+						"required": false,
+						"schema": {
+							"type": "string",
+							"enum": [
+								"preferred",
+								"approved",
+								"restricted"
+							]
+						}
+					},
+					{
+						"in": "query",
+						"name": "page",
+						"required": false,
+						"schema": {
+							"format": "double",
+							"type": "number"
+						}
+					},
+					{
+						"in": "query",
+						"name": "page_size",
+						"required": false,
+						"schema": {
+							"format": "double",
+							"type": "number"
+						}
+					}
+				]
+			},
+			"post": {
+				"operationId": "AddSupplier",
+				"responses": {
+					"200": {
+						"description": "Ok",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/AddSupplierResponse"
+								}
+							}
+						}
+					}
+				},
+				"tags": [
+					"Suppliers V2"
+				],
+				"security": [
+					{
+						"loggedin": []
+					}
+				],
+				"parameters": [],
+				"requestBody": {
+					"required": true,
+					"content": {
+						"application/json": {
+							"schema": {
+								"$ref": "#/components/schemas/AddSupplierRequest"
+							}
+						}
+					}
+				}
+			}
+		},
+		"/suppliers/{relationshipId}": {
+			"patch": {
+				"operationId": "UpdateSupplier",
+				"responses": {
+					"200": {
+						"description": "Ok",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/UpdateSupplierResponse"
+								}
+							}
+						}
+					}
+				},
+				"tags": [
+					"Suppliers V2"
+				],
+				"security": [
+					{
+						"loggedin": []
+					}
+				],
+				"parameters": [
+					{
+						"in": "path",
+						"name": "relationshipId",
+						"required": true,
+						"schema": {
+							"type": "string"
+						}
+					}
+				],
+				"requestBody": {
+					"required": true,
+					"content": {
+						"application/json": {
+							"schema": {
+								"$ref": "#/components/schemas/UpdateSupplierRequest"
+							}
+						}
+					}
+				}
+			},
+			"delete": {
+				"operationId": "RemoveSupplier",
+				"responses": {
+					"200": {
+						"description": "Ok",
+						"content": {
+							"application/json": {
+								"schema": {
+									"properties": {
+										"success": {
+											"type": "boolean"
+										}
+									},
+									"required": [
+										"success"
+									],
+									"type": "object"
+								}
+							}
+						}
+					}
+				},
+				"tags": [
+					"Suppliers V2"
+				],
+				"security": [
+					{
+						"loggedin": []
+					}
+				],
+				"parameters": [
+					{
+						"in": "path",
+						"name": "relationshipId",
+						"required": true,
+						"schema": {
+							"type": "string"
+						}
+					}
+				]
+			}
+		},
+		"/suppliers/as-supplier": {
+			"get": {
+				"operationId": "GetMyAggregators",
+				"responses": {
+					"200": {
+						"description": "Ok",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/GetSuppliersResponse"
+								}
+							}
+						}
+					}
+				},
+				"tags": [
+					"Suppliers V2"
+				],
+				"security": [
+					{
+						"loggedin": []
+					}
+				],
+				"parameters": [
+					{
+						"in": "query",
+						"name": "page",
+						"required": false,
+						"schema": {
+							"format": "double",
+							"type": "number"
+						}
+					},
+					{
+						"in": "query",
+						"name": "page_size",
+						"required": false,
+						"schema": {
+							"format": "double",
+							"type": "number"
+						}
+					}
+				]
+			}
+		},
 		"/stock-lots": {
 			"post": {
 				"operationId": "CreateStockLot",
@@ -9814,7 +10668,11 @@
 				"tags": [
 					"Stock Lots V2"
 				],
-				"security": [],
+				"security": [
+					{
+						"loggedin": []
+					}
+				],
 				"parameters": [
 					{
 						"description": "Filter by listing UUID",
@@ -10038,6 +10896,239 @@
 				}
 			}
 		},
+		"/requisitions": {
+			"post": {
+				"operationId": "CreateRequisition",
+				"responses": {
+					"200": {
+						"description": "Ok",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/CreateRequisitionResponse"
+								}
+							}
+						}
+					}
+				},
+				"tags": [
+					"Requisitions V2"
+				],
+				"security": [
+					{
+						"loggedin": []
+					}
+				],
+				"parameters": [],
+				"requestBody": {
+					"required": true,
+					"content": {
+						"application/json": {
+							"schema": {
+								"$ref": "#/components/schemas/CreateRequisitionRequest"
+							}
+						}
+					}
+				}
+			},
+			"get": {
+				"operationId": "GetRequisitions",
+				"responses": {
+					"200": {
+						"description": "Ok",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/GetRequisitionsResponse"
+								}
+							}
+						}
+					}
+				},
+				"tags": [
+					"Requisitions V2"
+				],
+				"security": [
+					{
+						"loggedin": []
+					}
+				],
+				"parameters": [
+					{
+						"in": "query",
+						"name": "role",
+						"required": false,
+						"schema": {
+							"type": "string",
+							"enum": [
+								"buyer",
+								"supplier"
+							]
+						}
+					},
+					{
+						"in": "query",
+						"name": "status",
+						"required": false,
+						"schema": {
+							"type": "string",
+							"enum": [
+								"pending",
+								"assigned",
+								"completed",
+								"cancelled"
+							]
+						}
+					},
+					{
+						"in": "query",
+						"name": "page",
+						"required": false,
+						"schema": {
+							"format": "double",
+							"type": "number"
+						}
+					},
+					{
+						"in": "query",
+						"name": "page_size",
+						"required": false,
+						"schema": {
+							"format": "double",
+							"type": "number"
+						}
+					}
+				]
+			}
+		},
+		"/requisitions/{orderId}": {
+			"get": {
+				"operationId": "GetRequisition",
+				"responses": {
+					"200": {
+						"description": "Ok",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/RequisitionDetail"
+								}
+							}
+						}
+					}
+				},
+				"tags": [
+					"Requisitions V2"
+				],
+				"security": [
+					{
+						"loggedin": []
+					}
+				],
+				"parameters": [
+					{
+						"in": "path",
+						"name": "orderId",
+						"required": true,
+						"schema": {
+							"type": "string"
+						}
+					}
+				]
+			}
+		},
+		"/requisitions/offer-items": {
+			"post": {
+				"operationId": "SetOfferRequisitionItems",
+				"responses": {
+					"200": {
+						"description": "Ok",
+						"content": {
+							"application/json": {
+								"schema": {
+									"properties": {
+										"items": {
+											"items": {
+												"$ref": "#/components/schemas/OfferRequisitionItem"
+											},
+											"type": "array"
+										}
+									},
+									"required": [
+										"items"
+									],
+									"type": "object"
+								}
+							}
+						}
+					}
+				},
+				"tags": [
+					"Requisitions V2"
+				],
+				"security": [
+					{
+						"loggedin": []
+					}
+				],
+				"parameters": [],
+				"requestBody": {
+					"required": true,
+					"content": {
+						"application/json": {
+							"schema": {
+								"$ref": "#/components/schemas/SetOfferRequisitionItemsRequest"
+							}
+						}
+					}
+				}
+			}
+		},
+		"/requisitions/offer-items/{offerId}": {
+			"get": {
+				"operationId": "GetOfferRequisitionItems",
+				"responses": {
+					"200": {
+						"description": "Ok",
+						"content": {
+							"application/json": {
+								"schema": {
+									"properties": {
+										"items": {
+											"items": {
+												"$ref": "#/components/schemas/OfferRequisitionItem"
+											},
+											"type": "array"
+										}
+									},
+									"required": [
+										"items"
+									],
+									"type": "object"
+								}
+							}
+						}
+					}
+				},
+				"tags": [
+					"Requisitions V2"
+				],
+				"security": [
+					{
+						"loggedin": []
+					}
+				],
+				"parameters": [
+					{
+						"in": "path",
+						"name": "offerId",
+						"required": true,
+						"schema": {
+							"type": "string"
+						}
+					}
+				]
+			}
+		},
 		"/orders": {
 			"post": {
 				"operationId": "CreateOrder",
@@ -10251,7 +11342,7 @@
 				],
 				"security": [
 					{
-						"jwt": []
+						"loggedin": []
 					}
 				],
 				"parameters": [
@@ -15495,6 +16586,43 @@
 				}
 			}
 		},
+		"/buy-orders/decline": {
+			"post": {
+				"operationId": "DeclineBuyOrder",
+				"responses": {
+					"200": {
+						"description": "Ok",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/StandingBuyOrder"
+								}
+							}
+						}
+					}
+				},
+				"description": "Decline a standing buy order that was targeted directly at you.\nSets declined_at + declined_by and flips the order back to 'public' visibility\nso the buyer can retarget it or leave it open.",
+				"tags": [
+					"Buy Orders V2"
+				],
+				"security": [
+					{
+						"loggedin": []
+					}
+				],
+				"parameters": [],
+				"requestBody": {
+					"required": true,
+					"content": {
+						"application/json": {
+							"schema": {
+								"$ref": "#/components/schemas/DeclineBuyOrderRequest"
+							}
+						}
+					}
+				}
+			}
+		},
 		"/availability/next": {
 			"get": {
 				"operationId": "GetNextAvailable",
@@ -16324,6 +17452,80 @@
 						}
 					}
 				]
+			}
+		},
+		"/admin/expire-all-listings": {
+			"post": {
+				"operationId": "ExpireAllListings",
+				"responses": {
+					"200": {
+						"description": "Ok",
+						"content": {
+							"application/json": {
+								"schema": {
+									"properties": {
+										"affected": {
+											"type": "number",
+											"format": "double"
+										}
+									},
+									"required": [
+										"affected"
+									],
+									"type": "object"
+								}
+							}
+						}
+					}
+				},
+				"description": "Expire all active listings (used after game wipes).\nSets all active listings to 'expired' status, requiring sellers to manually refresh.",
+				"summary": "Expire all active listings",
+				"tags": [
+					"Admin"
+				],
+				"security": [
+					{
+						"loggedin": []
+					}
+				],
+				"parameters": []
+			}
+		},
+		"/admin/active-listing-count": {
+			"get": {
+				"operationId": "GetActiveListingCount",
+				"responses": {
+					"200": {
+						"description": "Ok",
+						"content": {
+							"application/json": {
+								"schema": {
+									"properties": {
+										"count": {
+											"type": "number",
+											"format": "double"
+										}
+									},
+									"required": [
+										"count"
+									],
+									"type": "object"
+								}
+							}
+						}
+					}
+				},
+				"description": "Get count of active listings (for confirmation dialog).",
+				"summary": "Get active listing count",
+				"tags": [
+					"Admin"
+				],
+				"security": [
+					{
+						"loggedin": []
+					}
+				],
+				"parameters": []
 			}
 		}
 	},
