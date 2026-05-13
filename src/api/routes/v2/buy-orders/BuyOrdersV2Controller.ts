@@ -30,9 +30,11 @@ import {
   BuyOrderItemDetail,
   BuyOrderVariantDetail,
   CreateStandingBuyOrderRequest,
+  CreateTargetedBuyOrderRequest,
   UpdateStandingBuyOrderRequest,
   StandingBuyOrder,
   SearchBuyOrdersResponse,
+  DeclineBuyOrderRequest,
 } from "../types/buy-orders.types.js"
 import logger from "../../../../logger/logger.js"
 import { notificationService } from "../../../../services/notifications/notification.service.js"
@@ -384,6 +386,11 @@ export class BuyOrdersV2Controller extends BaseController {
       quality_value_max: body.quality_value_max ?? null,
       status: 'active',
       expires_at: expiresAt,
+      // Visibility & targeting (only present on CreateTargetedBuyOrderRequest)
+      visibility: (body as CreateTargetedBuyOrderRequest).visibility ?? 'public',
+      target_supplier_id: (body as CreateTargetedBuyOrderRequest).target_supplier_id ?? null,
+      target_supplier_contractor_id: (body as CreateTargetedBuyOrderRequest).target_supplier_contractor_id ?? null,
+      negotiable: (body as CreateTargetedBuyOrderRequest).negotiable ?? false,
     }).returning('*');
 
     return this.formatBuyOrderRow(order);
@@ -412,7 +419,9 @@ export class BuyOrdersV2Controller extends BaseController {
     let query = db('buy_orders_v2 as bo')
       .leftJoin('accounts as u', 'bo.buyer_id', 'u.user_id')
       .leftJoin('game_items as gi', 'bo.game_item_id', 'gi.id')
-      .where('bo.status', 'active');
+      .where('bo.status', 'active')
+      // Only show public buy orders in the open market feed
+      .where('bo.visibility', 'public');
 
     if (game_item_id) query = query.where('bo.game_item_id', game_item_id);
     if (quality_tier_min) query = query.where('bo.quality_tier_max', '>=', quality_tier_min);
@@ -710,7 +719,65 @@ export class BuyOrdersV2Controller extends BaseController {
     return result
   }
 
-  private formatBuyOrderRow(r: any): StandingBuyOrder {
+  
+  /**
+   * Decline a standing buy order that was targeted directly at you.
+   * Sets declined_at + declined_by and flips the order back to 'public' visibility
+   * so the buyer can retarget it or leave it open.
+   */
+  @Security("loggedin")
+  @Post('decline')
+  public async declineBuyOrder(
+    @Body() body: DeclineBuyOrderRequest,
+    @Request() request: ExpressRequest,
+  ): Promise<StandingBuyOrder> {
+    this.request = request
+    this.requireAuth()
+    const db = getKnex()
+    const userId = this.getUserId()
+
+    const order = await db('buy_orders_v2').where({ buy_order_id: body.buy_order_id }).first()
+    if (!order) throw this.throwNotFound('Buy order', body.buy_order_id)
+    if (order.status !== 'active') {
+      throw this.throwValidationError('Buy order is not active', [{ field: 'buy_order_id', message: 'Order must be active to decline' }])
+    }
+
+    // Must be the targeted supplier
+    const isSelf = order.target_supplier_id === userId
+    let isOrgMember = false
+    if (!isSelf && order.target_supplier_contractor_id) {
+      const member = await db('contractor_members')
+        .where({ contractor_id: order.target_supplier_contractor_id, user_id: userId })
+        .first()
+      isOrgMember = !!member
+    }
+    if (!isSelf && !isOrgMember) {
+      throw this.throwForbidden('Only the targeted supplier can decline this buy order')
+    }
+
+    const [updated] = await db('buy_orders_v2')
+      .where({ buy_order_id: body.buy_order_id })
+      .update({
+        declined_at: new Date(),
+        declined_by: userId,
+        target_supplier_id: null,
+        target_supplier_contractor_id: null,
+        visibility: 'public',
+        updated_at: new Date(),
+      })
+      .returning('*')
+
+    const row = await db('buy_orders_v2 as bo')
+      .leftJoin('accounts as u', 'bo.buyer_id', 'u.user_id')
+      .leftJoin('game_items as gi', 'bo.game_item_id', 'gi.id')
+      .where('bo.buy_order_id', updated.buy_order_id)
+      .select('bo.*', 'u.username as buyer_name', 'gi.name as game_item_name', 'gi.type as game_item_type')
+      .first()
+
+    return this.formatBuyOrderRow(row)
+  }
+
+private formatBuyOrderRow(r: any): StandingBuyOrder {
     return {
       buy_order_id: r.buy_order_id,
       game_item_id: r.game_item_id,
@@ -728,6 +795,10 @@ export class BuyOrdersV2Controller extends BaseController {
       status: r.status,
       created_at: r.created_at?.toISOString?.() || r.created_at,
       expires_at: r.expires_at?.toISOString?.() || r.expires_at || undefined,
+      visibility: r.visibility || 'public',
+      target_supplier_id: r.target_supplier_id || null,
+      target_supplier_contractor_id: r.target_supplier_contractor_id || null,
+      declined_at: r.declined_at?.toISOString?.() || r.declined_at || null,
     };
   }
 
