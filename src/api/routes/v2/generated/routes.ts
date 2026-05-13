@@ -32,6 +32,8 @@ import { ResourcesController } from './../game-data/resources/ResourcesControlle
 // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
 import { MissionsController } from './../game-data/missions/MissionsController.js';
 // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+import { MiningController } from './../game-data/mining/MiningController.js';
+// WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
 import { CraftingController } from './../game-data/crafting/CraftingController.js';
 // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
 import { BlueprintsController } from './../game-data/blueprints/BlueprintsController.js';
@@ -634,7 +636,7 @@ const models: TsoaRoute.Models = {
             "seller_type": {"dataType":"union","subSchemas":[{"dataType":"enum","enums":["user"]},{"dataType":"enum","enums":["contractor"]}],"required":true},
             "title": {"dataType":"string","required":true},
             "description": {"dataType":"string","required":true},
-            "status": {"dataType":"union","subSchemas":[{"dataType":"enum","enums":["active"]},{"dataType":"enum","enums":["sold"]},{"dataType":"enum","enums":["expired"]},{"dataType":"enum","enums":["cancelled"]}],"required":true},
+            "status": {"dataType":"union","subSchemas":[{"dataType":"enum","enums":["active"]},{"dataType":"enum","enums":["inactive"]},{"dataType":"enum","enums":["sold"]},{"dataType":"enum","enums":["expired"]},{"dataType":"enum","enums":["cancelled"]}],"required":true},
             "created_at": {"dataType":"string","required":true},
             "updated_at": {"dataType":"string","required":true},
         },
@@ -681,6 +683,7 @@ const models: TsoaRoute.Models = {
             "contractor_spectrum_id": {"dataType":"string"},
             "sale_type": {"dataType":"union","subSchemas":[{"dataType":"enum","enums":["fixed"]},{"dataType":"enum","enums":["auction"]},{"dataType":"enum","enums":["negotiable"]}]},
             "auction_details": {"dataType":"nestedObjectLiteral","nestedProperties":{"reserve_price":{"dataType":"double"},"buyout_price":{"dataType":"double"},"min_bid_increment":{"dataType":"double","required":true},"end_time":{"dataType":"string","required":true}}},
+            "status": {"dataType":"union","subSchemas":[{"dataType":"enum","enums":["active"]},{"dataType":"enum","enums":["inactive"]}]},
         },
         "additionalProperties": false,
     },
@@ -788,7 +791,7 @@ const models: TsoaRoute.Models = {
             "seller_type": {"dataType":"union","subSchemas":[{"dataType":"enum","enums":["user"]},{"dataType":"enum","enums":["contractor"]}],"required":true},
             "title": {"dataType":"string","required":true},
             "description": {"dataType":"string","required":true},
-            "status": {"dataType":"union","subSchemas":[{"dataType":"enum","enums":["active"]},{"dataType":"enum","enums":["sold"]},{"dataType":"enum","enums":["expired"]},{"dataType":"enum","enums":["cancelled"]}],"required":true},
+            "status": {"dataType":"union","subSchemas":[{"dataType":"enum","enums":["active"]},{"dataType":"enum","enums":["inactive"]},{"dataType":"enum","enums":["sold"]},{"dataType":"enum","enums":["expired"]},{"dataType":"enum","enums":["cancelled"]}],"required":true},
             "visibility": {"dataType":"union","subSchemas":[{"dataType":"enum","enums":["public"]},{"dataType":"enum","enums":["private"]},{"dataType":"enum","enums":["unlisted"]}],"required":true},
             "sale_type": {"dataType":"union","subSchemas":[{"dataType":"enum","enums":["fixed"]},{"dataType":"enum","enums":["auction"]},{"dataType":"enum","enums":["negotiable"]}],"required":true},
             "listing_type": {"dataType":"union","subSchemas":[{"dataType":"enum","enums":["single"]},{"dataType":"enum","enums":["bundle"]},{"dataType":"enum","enums":["bulk"]}],"required":true},
@@ -892,12 +895,13 @@ const models: TsoaRoute.Models = {
         "dataType": "refObject",
         "properties": {
             "title": {"dataType":"string"},
-            "status": {"dataType":"union","subSchemas":[{"dataType":"enum","enums":["active"]},{"dataType":"enum","enums":["sold"]},{"dataType":"enum","enums":["expired"]},{"dataType":"enum","enums":["cancelled"]}]},
+            "status": {"dataType":"union","subSchemas":[{"dataType":"enum","enums":["active"]},{"dataType":"enum","enums":["inactive"]},{"dataType":"enum","enums":["sold"]},{"dataType":"enum","enums":["expired"]},{"dataType":"enum","enums":["cancelled"]}]},
             "description": {"dataType":"string"},
             "base_price": {"dataType":"double"},
             "variant_prices": {"dataType":"array","array":{"dataType":"refObject","ref":"VariantPriceUpdate"}},
             "lot_updates": {"dataType":"array","array":{"dataType":"refObject","ref":"LotUpdate"}},
             "pickup_method": {"dataType":"union","subSchemas":[{"dataType":"enum","enums":["delivery"]},{"dataType":"enum","enums":["pickup"]},{"dataType":"enum","enums":["any"]},{"dataType":"enum","enums":[null]}]},
+            "photos": {"dataType":"array","array":{"dataType":"string"}},
             "quantity_unit": {"dataType":"union","subSchemas":[{"dataType":"enum","enums":["unit"]},{"dataType":"enum","enums":["scu"]}]},
             "min_order_quantity": {"dataType":"union","subSchemas":[{"dataType":"double"},{"dataType":"enum","enums":[null]}]},
             "max_order_quantity": {"dataType":"union","subSchemas":[{"dataType":"double"},{"dataType":"enum","enums":[null]}]},
@@ -1398,7 +1402,15 @@ const models: TsoaRoute.Models = {
             "id": {"dataType":"string","required":true},
             "name": {"dataType":"string","required":true},
             "type": {"dataType":"string","required":true},
-            "parent_id": {"dataType":"string"},
+            "navIcon": {"dataType":"union","subSchemas":[{"dataType":"string"},{"dataType":"enum","enums":[null]}],"required":true},
+            "description": {"dataType":"union","subSchemas":[{"dataType":"string"},{"dataType":"enum","enums":[null]}],"required":true},
+            "parentId": {"dataType":"union","subSchemas":[{"dataType":"string"},{"dataType":"enum","enums":[null]}],"required":true},
+            "jurisdiction": {"dataType":"union","subSchemas":[{"dataType":"string"},{"dataType":"enum","enums":[null]}],"required":true},
+            "respawnType": {"dataType":"union","subSchemas":[{"dataType":"string"},{"dataType":"enum","enums":[null]}],"required":true},
+            "size": {"dataType":"union","subSchemas":[{"dataType":"double"},{"dataType":"enum","enums":[null]}],"required":true},
+            "qtArrivalRadius": {"dataType":"union","subSchemas":[{"dataType":"double"},{"dataType":"enum","enums":[null]}],"required":true},
+            "qtObstructionRadius": {"dataType":"union","subSchemas":[{"dataType":"double"},{"dataType":"enum","enums":[null]}],"required":true},
+            "amenities": {"dataType":"array","array":{"dataType":"string"},"required":true},
             "children": {"dataType":"array","array":{"dataType":"refObject","ref":"WikiLocationNode"},"required":true},
         },
         "additionalProperties": false,
@@ -1408,6 +1420,7 @@ const models: TsoaRoute.Models = {
         "dataType": "refObject",
         "properties": {
             "manufacturer": {"dataType":"string","required":true},
+            "display_name": {"dataType":"union","subSchemas":[{"dataType":"string"},{"dataType":"enum","enums":[null]}],"required":true},
             "item_count": {"dataType":"double","required":true},
         },
         "additionalProperties": false,
@@ -1430,6 +1443,7 @@ const models: TsoaRoute.Models = {
         "dataType": "refObject",
         "properties": {
             "manufacturer": {"dataType":"string","required":true},
+            "display_name": {"dataType":"union","subSchemas":[{"dataType":"string"},{"dataType":"enum","enums":[null]}],"required":true},
             "description": {"dataType":"string"},
             "item_count": {"dataType":"double","required":true},
             "items": {"dataType":"array","array":{"dataType":"refObject","ref":"ManufacturerItem"},"required":true},
@@ -1869,6 +1883,194 @@ const models: TsoaRoute.Models = {
             "event_code": {"dataType":"string","required":true},
             "event_name": {"dataType":"string","required":true},
             "mission_count": {"dataType":"double","required":true},
+        },
+        "additionalProperties": false,
+    },
+    // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+    "OreTopLocation": {
+        "dataType": "refObject",
+        "properties": {
+            "name": {"dataType":"string","required":true},
+            "system": {"dataType":"string","required":true},
+            "probability": {"dataType":"double","required":true},
+        },
+        "additionalProperties": false,
+    },
+    // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+    "OreSearchResult": {
+        "dataType": "refObject",
+        "properties": {
+            "name": {"dataType":"string","required":true},
+            "displayName": {"dataType":"string","required":true},
+            "resourceName": {"dataType":"union","subSchemas":[{"dataType":"string"},{"dataType":"enum","enums":[null]}],"required":true},
+            "gameItemId": {"dataType":"union","subSchemas":[{"dataType":"string"},{"dataType":"enum","enums":[null]}],"required":true},
+            "instability": {"dataType":"union","subSchemas":[{"dataType":"double"},{"dataType":"enum","enums":[null]}],"required":true},
+            "resistance": {"dataType":"union","subSchemas":[{"dataType":"double"},{"dataType":"enum","enums":[null]}],"required":true},
+            "optimalWindowMidpoint": {"dataType":"union","subSchemas":[{"dataType":"double"},{"dataType":"enum","enums":[null]}],"required":true},
+            "optimalWindowThinness": {"dataType":"union","subSchemas":[{"dataType":"double"},{"dataType":"enum","enums":[null]}],"required":true},
+            "explosionMultiplier": {"dataType":"union","subSchemas":[{"dataType":"double"},{"dataType":"enum","enums":[null]}],"required":true},
+            "clusterFactor": {"dataType":"union","subSchemas":[{"dataType":"double"},{"dataType":"enum","enums":[null]}],"required":true},
+            "rarity": {"dataType":"string","required":true},
+            "marketPrice": {"dataType":"union","subSchemas":[{"dataType":"double"},{"dataType":"enum","enums":[null]}],"required":true},
+            "locationCount": {"dataType":"double","required":true},
+            "topLocations": {"dataType":"array","array":{"dataType":"refObject","ref":"OreTopLocation"},"required":true},
+        },
+        "additionalProperties": false,
+    },
+    // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+    "SearchOresResponse": {
+        "dataType": "refObject",
+        "properties": {
+            "ores": {"dataType":"array","array":{"dataType":"refObject","ref":"OreSearchResult"},"required":true},
+            "total": {"dataType":"double","required":true},
+            "page": {"dataType":"double","required":true},
+            "page_size": {"dataType":"double","required":true},
+        },
+        "additionalProperties": false,
+    },
+    // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+    "OreLocation": {
+        "dataType": "refObject",
+        "properties": {
+            "locationName": {"dataType":"string","required":true},
+            "system": {"dataType":"string","required":true},
+            "locationType": {"dataType":"string","required":true},
+            "groupName": {"dataType":"string","required":true},
+            "groupProbability": {"dataType":"double","required":true},
+            "relativeProbability": {"dataType":"double","required":true},
+        },
+        "additionalProperties": false,
+    },
+    // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+    "OreQualityDistribution": {
+        "dataType": "refObject",
+        "properties": {
+            "miningType": {"dataType":"string","required":true},
+            "rarity": {"dataType":"union","subSchemas":[{"dataType":"string"},{"dataType":"enum","enums":[null]}],"required":true},
+            "min": {"dataType":"union","subSchemas":[{"dataType":"double"},{"dataType":"enum","enums":[null]}],"required":true},
+            "max": {"dataType":"union","subSchemas":[{"dataType":"double"},{"dataType":"enum","enums":[null]}],"required":true},
+            "mean": {"dataType":"union","subSchemas":[{"dataType":"double"},{"dataType":"enum","enums":[null]}],"required":true},
+            "stddev": {"dataType":"union","subSchemas":[{"dataType":"double"},{"dataType":"enum","enums":[null]}],"required":true},
+        },
+        "additionalProperties": false,
+    },
+    // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+    "OreDetailResponse": {
+        "dataType": "refObject",
+        "properties": {
+            "name": {"dataType":"string","required":true},
+            "displayName": {"dataType":"string","required":true},
+            "resourceName": {"dataType":"union","subSchemas":[{"dataType":"string"},{"dataType":"enum","enums":[null]}],"required":true},
+            "gameItemId": {"dataType":"union","subSchemas":[{"dataType":"string"},{"dataType":"enum","enums":[null]}],"required":true},
+            "instability": {"dataType":"union","subSchemas":[{"dataType":"double"},{"dataType":"enum","enums":[null]}],"required":true},
+            "resistance": {"dataType":"union","subSchemas":[{"dataType":"double"},{"dataType":"enum","enums":[null]}],"required":true},
+            "optimalWindowMidpoint": {"dataType":"union","subSchemas":[{"dataType":"double"},{"dataType":"enum","enums":[null]}],"required":true},
+            "optimalWindowMidpointRandomness": {"dataType":"union","subSchemas":[{"dataType":"double"},{"dataType":"enum","enums":[null]}],"required":true},
+            "optimalWindowThinness": {"dataType":"union","subSchemas":[{"dataType":"double"},{"dataType":"enum","enums":[null]}],"required":true},
+            "explosionMultiplier": {"dataType":"union","subSchemas":[{"dataType":"double"},{"dataType":"enum","enums":[null]}],"required":true},
+            "clusterFactor": {"dataType":"union","subSchemas":[{"dataType":"double"},{"dataType":"enum","enums":[null]}],"required":true},
+            "rarity": {"dataType":"string","required":true},
+            "marketPrice": {"dataType":"union","subSchemas":[{"dataType":"double"},{"dataType":"enum","enums":[null]}],"required":true},
+            "locations": {"dataType":"array","array":{"dataType":"refObject","ref":"OreLocation"},"required":true},
+            "qualityDistributions": {"dataType":"array","array":{"dataType":"refObject","ref":"OreQualityDistribution"},"required":true},
+        },
+        "additionalProperties": false,
+    },
+    // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+    "LocationGroup": {
+        "dataType": "refObject",
+        "properties": {
+            "groupName": {"dataType":"string","required":true},
+            "groupProbability": {"dataType":"double","required":true},
+            "oreCount": {"dataType":"double","required":true},
+            "topOres": {"dataType":"array","array":{"dataType":"string"},"required":true},
+        },
+        "additionalProperties": false,
+    },
+    // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+    "LocationSearchResult": {
+        "dataType": "refObject",
+        "properties": {
+            "name": {"dataType":"string","required":true},
+            "displayName": {"dataType":"union","subSchemas":[{"dataType":"string"},{"dataType":"enum","enums":[null]}],"required":true},
+            "system": {"dataType":"string","required":true},
+            "locationType": {"dataType":"string","required":true},
+            "groups": {"dataType":"array","array":{"dataType":"refObject","ref":"LocationGroup"},"required":true},
+            "hasRefinery": {"dataType":"boolean","required":true},
+        },
+        "additionalProperties": false,
+    },
+    // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+    "SearchLocationsResponse": {
+        "dataType": "refObject",
+        "properties": {
+            "locations": {"dataType":"array","array":{"dataType":"refObject","ref":"LocationSearchResult"},"required":true},
+            "total": {"dataType":"double","required":true},
+            "page": {"dataType":"double","required":true},
+            "page_size": {"dataType":"double","required":true},
+        },
+        "additionalProperties": false,
+    },
+    // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+    "LocationOre": {
+        "dataType": "refObject",
+        "properties": {
+            "presetName": {"dataType":"string","required":true},
+            "displayName": {"dataType":"string","required":true},
+            "elementName": {"dataType":"union","subSchemas":[{"dataType":"string"},{"dataType":"enum","enums":[null]}],"required":true},
+            "resourceName": {"dataType":"union","subSchemas":[{"dataType":"string"},{"dataType":"enum","enums":[null]}],"required":true},
+            "rarity": {"dataType":"string","required":true},
+            "relativeProbability": {"dataType":"double","required":true},
+            "instability": {"dataType":"union","subSchemas":[{"dataType":"double"},{"dataType":"enum","enums":[null]}],"required":true},
+            "resistance": {"dataType":"union","subSchemas":[{"dataType":"double"},{"dataType":"enum","enums":[null]}],"required":true},
+            "optimalWindowMidpoint": {"dataType":"union","subSchemas":[{"dataType":"double"},{"dataType":"enum","enums":[null]}],"required":true},
+            "optimalWindowThinness": {"dataType":"union","subSchemas":[{"dataType":"double"},{"dataType":"enum","enums":[null]}],"required":true},
+            "explosionMultiplier": {"dataType":"union","subSchemas":[{"dataType":"double"},{"dataType":"enum","enums":[null]}],"required":true},
+            "clusterFactor": {"dataType":"union","subSchemas":[{"dataType":"double"},{"dataType":"enum","enums":[null]}],"required":true},
+            "marketPrice": {"dataType":"union","subSchemas":[{"dataType":"double"},{"dataType":"enum","enums":[null]}],"required":true},
+            "estimatedValue": {"dataType":"union","subSchemas":[{"dataType":"double"},{"dataType":"enum","enums":[null]}],"required":true},
+        },
+        "additionalProperties": false,
+    },
+    // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+    "LocationMiningGroup": {
+        "dataType": "refObject",
+        "properties": {
+            "groupName": {"dataType":"string","required":true},
+            "groupProbability": {"dataType":"double","required":true},
+            "ores": {"dataType":"array","array":{"dataType":"refObject","ref":"LocationOre"},"required":true},
+        },
+        "additionalProperties": false,
+    },
+    // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+    "LocationDetailResponse": {
+        "dataType": "refObject",
+        "properties": {
+            "name": {"dataType":"string","required":true},
+            "displayName": {"dataType":"union","subSchemas":[{"dataType":"string"},{"dataType":"enum","enums":[null]}],"required":true},
+            "system": {"dataType":"string","required":true},
+            "locationType": {"dataType":"string","required":true},
+            "groups": {"dataType":"array","array":{"dataType":"refObject","ref":"LocationMiningGroup"},"required":true},
+            "hasRefinery": {"dataType":"boolean","required":true},
+            "amenities": {"dataType":"array","array":{"dataType":"string"},"required":true},
+        },
+        "additionalProperties": false,
+    },
+    // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+    "RefiningMethod": {
+        "dataType": "refObject",
+        "properties": {
+            "name": {"dataType":"string","required":true},
+            "speed": {"dataType":"string","required":true},
+            "quality": {"dataType":"string","required":true},
+        },
+        "additionalProperties": false,
+    },
+    // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+    "RefiningMethodsResponse": {
+        "dataType": "refObject",
+        "properties": {
+            "methods": {"dataType":"array","array":{"dataType":"refObject","ref":"RefiningMethod"},"required":true},
         },
         "additionalProperties": false,
     },
@@ -2936,6 +3138,7 @@ export function RegisterRoutes(app: Router) {
                 page_size: {"in":"query","name":"page_size","dataType":"double"},
         };
         app.get('/stock-lots',
+            authenticateMiddleware([{"loggedin":[]}]),
             ...(fetchMiddlewares<RequestHandler>(StockLotsV2Controller)),
             ...(fetchMiddlewares<RequestHandler>(StockLotsV2Controller.prototype.getStockLots)),
 
@@ -3166,7 +3369,7 @@ export function RegisterRoutes(app: Router) {
                 listingId: {"in":"path","name":"listingId","required":true,"dataType":"string"},
         };
         app.get('/orders/by-listing/:listingId',
-            authenticateMiddleware([{"jwt":[]}]),
+            authenticateMiddleware([{"loggedin":[]}]),
             ...(fetchMiddlewares<RequestHandler>(OrdersV2Controller)),
             ...(fetchMiddlewares<RequestHandler>(OrdersV2Controller.prototype.getOrdersByListing)),
 
@@ -3303,7 +3506,7 @@ export function RegisterRoutes(app: Router) {
                 page_size: {"in":"query","name":"page_size","dataType":"double"},
                 item_type: {"in":"query","name":"item_type","dataType":"string"},
                 quantity_min: {"in":"query","name":"quantity_min","dataType":"double"},
-                status: {"in":"query","name":"status","dataType":"union","subSchemas":[{"dataType":"enum","enums":["active"]},{"dataType":"enum","enums":["sold"]},{"dataType":"enum","enums":["expired"]},{"dataType":"enum","enums":["cancelled"]}]},
+                status: {"in":"query","name":"status","dataType":"union","subSchemas":[{"dataType":"enum","enums":["active"]},{"dataType":"enum","enums":["inactive"]},{"dataType":"enum","enums":["sold"]},{"dataType":"enum","enums":["expired"]},{"dataType":"enum","enums":["cancelled"]}]},
                 sort_by: {"in":"query","name":"sort_by","dataType":"union","subSchemas":[{"dataType":"enum","enums":["created_at"]},{"dataType":"enum","enums":["updated_at"]},{"dataType":"enum","enums":["price"]},{"dataType":"enum","enums":["quality"]},{"dataType":"enum","enums":["seller_rating"]},{"dataType":"enum","enums":["quantity"]}]},
                 sort_order: {"in":"query","name":"sort_order","dataType":"union","subSchemas":[{"dataType":"enum","enums":["asc"]},{"dataType":"enum","enums":["desc"]}]},
                 language_codes: {"in":"query","name":"language_codes","dataType":"string"},
@@ -3339,7 +3542,7 @@ export function RegisterRoutes(app: Router) {
         });
         // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
         const argsListingsV2Controller_getMyListings: Record<string, TsoaRoute.ParameterSchema> = {
-                status: {"in":"query","name":"status","dataType":"union","subSchemas":[{"dataType":"enum","enums":["active"]},{"dataType":"enum","enums":["sold"]},{"dataType":"enum","enums":["expired"]},{"dataType":"enum","enums":["cancelled"]}]},
+                status: {"in":"query","name":"status","dataType":"union","subSchemas":[{"dataType":"enum","enums":["active"]},{"dataType":"enum","enums":["inactive"]},{"dataType":"enum","enums":["sold"]},{"dataType":"enum","enums":["expired"]},{"dataType":"enum","enums":["cancelled"]}]},
                 page: {"in":"query","name":"page","dataType":"double"},
                 page_size: {"in":"query","name":"page_size","dataType":"double"},
                 sort_by: {"in":"query","name":"sort_by","dataType":"union","subSchemas":[{"dataType":"enum","enums":["created_at"]},{"dataType":"enum","enums":["updated_at"]},{"dataType":"enum","enums":["price"]},{"dataType":"enum","enums":["quantity"]}]},
@@ -5047,6 +5250,165 @@ export function RegisterRoutes(app: Router) {
             }
         });
         // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+        const argsMiningController_searchOres: Record<string, TsoaRoute.ParameterSchema> = {
+                text: {"in":"query","name":"text","dataType":"string"},
+                system: {"in":"query","name":"system","dataType":"string"},
+                mining_method: {"in":"query","name":"mining_method","dataType":"union","subSchemas":[{"dataType":"enum","enums":["ship"]},{"dataType":"enum","enums":["ground"]},{"dataType":"enum","enums":["fps"]}]},
+                rarity: {"in":"query","name":"rarity","dataType":"union","subSchemas":[{"dataType":"enum","enums":["common"]},{"dataType":"enum","enums":["uncommon"]},{"dataType":"enum","enums":["rare"]},{"dataType":"enum","enums":["epic"]},{"dataType":"enum","enums":["legendary"]}]},
+                page: {"default":1,"in":"query","name":"page","dataType":"double"},
+                page_size: {"default":20,"in":"query","name":"page_size","dataType":"double"},
+        };
+        app.get('/game-data/mining/ores',
+            ...(fetchMiddlewares<RequestHandler>(MiningController)),
+            ...(fetchMiddlewares<RequestHandler>(MiningController.prototype.searchOres)),
+
+            async function MiningController_searchOres(request: ExRequest, response: ExResponse, next: any) {
+
+            // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+
+            let validatedArgs: any[] = [];
+            try {
+                validatedArgs = templateService.getValidatedArgs({ args: argsMiningController_searchOres, request, response });
+
+                const controller = new MiningController();
+
+              await templateService.apiHandler({
+                methodName: 'searchOres',
+                controller,
+                response,
+                next,
+                validatedArgs,
+                successStatus: undefined,
+              });
+            } catch (err) {
+                return next(err);
+            }
+        });
+        // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+        const argsMiningController_getOreDetail: Record<string, TsoaRoute.ParameterSchema> = {
+                name: {"in":"path","name":"name","required":true,"dataType":"string"},
+        };
+        app.get('/game-data/mining/ores/:name',
+            ...(fetchMiddlewares<RequestHandler>(MiningController)),
+            ...(fetchMiddlewares<RequestHandler>(MiningController.prototype.getOreDetail)),
+
+            async function MiningController_getOreDetail(request: ExRequest, response: ExResponse, next: any) {
+
+            // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+
+            let validatedArgs: any[] = [];
+            try {
+                validatedArgs = templateService.getValidatedArgs({ args: argsMiningController_getOreDetail, request, response });
+
+                const controller = new MiningController();
+
+              await templateService.apiHandler({
+                methodName: 'getOreDetail',
+                controller,
+                response,
+                next,
+                validatedArgs,
+                successStatus: undefined,
+              });
+            } catch (err) {
+                return next(err);
+            }
+        });
+        // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+        const argsMiningController_searchLocations: Record<string, TsoaRoute.ParameterSchema> = {
+                text: {"in":"query","name":"text","dataType":"string"},
+                system: {"in":"query","name":"system","dataType":"string"},
+                location_type: {"in":"query","name":"location_type","dataType":"union","subSchemas":[{"dataType":"enum","enums":["surface"]},{"dataType":"enum","enums":["asteroidfield"]}]},
+                mining_method: {"in":"query","name":"mining_method","dataType":"union","subSchemas":[{"dataType":"enum","enums":["ship"]},{"dataType":"enum","enums":["ground"]},{"dataType":"enum","enums":["fps"]}]},
+                page: {"default":1,"in":"query","name":"page","dataType":"double"},
+                page_size: {"default":20,"in":"query","name":"page_size","dataType":"double"},
+        };
+        app.get('/game-data/mining/locations',
+            ...(fetchMiddlewares<RequestHandler>(MiningController)),
+            ...(fetchMiddlewares<RequestHandler>(MiningController.prototype.searchLocations)),
+
+            async function MiningController_searchLocations(request: ExRequest, response: ExResponse, next: any) {
+
+            // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+
+            let validatedArgs: any[] = [];
+            try {
+                validatedArgs = templateService.getValidatedArgs({ args: argsMiningController_searchLocations, request, response });
+
+                const controller = new MiningController();
+
+              await templateService.apiHandler({
+                methodName: 'searchLocations',
+                controller,
+                response,
+                next,
+                validatedArgs,
+                successStatus: undefined,
+              });
+            } catch (err) {
+                return next(err);
+            }
+        });
+        // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+        const argsMiningController_getLocationDetail: Record<string, TsoaRoute.ParameterSchema> = {
+                name: {"in":"path","name":"name","required":true,"dataType":"string"},
+        };
+        app.get('/game-data/mining/locations/:name',
+            ...(fetchMiddlewares<RequestHandler>(MiningController)),
+            ...(fetchMiddlewares<RequestHandler>(MiningController.prototype.getLocationDetail)),
+
+            async function MiningController_getLocationDetail(request: ExRequest, response: ExResponse, next: any) {
+
+            // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+
+            let validatedArgs: any[] = [];
+            try {
+                validatedArgs = templateService.getValidatedArgs({ args: argsMiningController_getLocationDetail, request, response });
+
+                const controller = new MiningController();
+
+              await templateService.apiHandler({
+                methodName: 'getLocationDetail',
+                controller,
+                response,
+                next,
+                validatedArgs,
+                successStatus: undefined,
+              });
+            } catch (err) {
+                return next(err);
+            }
+        });
+        // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+        const argsMiningController_getRefiningMethods: Record<string, TsoaRoute.ParameterSchema> = {
+        };
+        app.get('/game-data/mining/refining-methods',
+            ...(fetchMiddlewares<RequestHandler>(MiningController)),
+            ...(fetchMiddlewares<RequestHandler>(MiningController.prototype.getRefiningMethods)),
+
+            async function MiningController_getRefiningMethods(request: ExRequest, response: ExResponse, next: any) {
+
+            // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+
+            let validatedArgs: any[] = [];
+            try {
+                validatedArgs = templateService.getValidatedArgs({ args: argsMiningController_getRefiningMethods, request, response });
+
+                const controller = new MiningController();
+
+              await templateService.apiHandler({
+                methodName: 'getRefiningMethods',
+                controller,
+                response,
+                next,
+                validatedArgs,
+                successStatus: undefined,
+              });
+            } catch (err) {
+                return next(err);
+            }
+        });
+        // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
         const argsCraftingController_calculateQuality: Record<string, TsoaRoute.ParameterSchema> = {
                 body: {"in":"body","name":"body","required":true,"ref":"CalculateQualityRequest"},
         };
@@ -6625,6 +6987,66 @@ export function RegisterRoutes(app: Router) {
 
               await templateService.apiHandler({
                 methodName: 'getImportJobStatus',
+                controller,
+                response,
+                next,
+                validatedArgs,
+                successStatus: undefined,
+              });
+            } catch (err) {
+                return next(err);
+            }
+        });
+        // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+        const argsAdminController_expireAllListings: Record<string, TsoaRoute.ParameterSchema> = {
+        };
+        app.post('/admin/expire-all-listings',
+            authenticateMiddleware([{"loggedin":[]}]),
+            ...(fetchMiddlewares<RequestHandler>(AdminController)),
+            ...(fetchMiddlewares<RequestHandler>(AdminController.prototype.expireAllListings)),
+
+            async function AdminController_expireAllListings(request: ExRequest, response: ExResponse, next: any) {
+
+            // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+
+            let validatedArgs: any[] = [];
+            try {
+                validatedArgs = templateService.getValidatedArgs({ args: argsAdminController_expireAllListings, request, response });
+
+                const controller = new AdminController();
+
+              await templateService.apiHandler({
+                methodName: 'expireAllListings',
+                controller,
+                response,
+                next,
+                validatedArgs,
+                successStatus: undefined,
+              });
+            } catch (err) {
+                return next(err);
+            }
+        });
+        // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+        const argsAdminController_getActiveListingCount: Record<string, TsoaRoute.ParameterSchema> = {
+        };
+        app.get('/admin/active-listing-count',
+            authenticateMiddleware([{"loggedin":[]}]),
+            ...(fetchMiddlewares<RequestHandler>(AdminController)),
+            ...(fetchMiddlewares<RequestHandler>(AdminController.prototype.getActiveListingCount)),
+
+            async function AdminController_getActiveListingCount(request: ExRequest, response: ExResponse, next: any) {
+
+            // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+
+            let validatedArgs: any[] = [];
+            try {
+                validatedArgs = templateService.getValidatedArgs({ args: argsAdminController_getActiveListingCount, request, response });
+
+                const controller = new AdminController();
+
+              await templateService.apiHandler({
+                methodName: 'getActiveListingCount',
                 controller,
                 response,
                 next,
