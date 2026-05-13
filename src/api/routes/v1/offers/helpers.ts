@@ -149,14 +149,14 @@ export async function search_offer_sessions(
   const unassignedCount = await base
     .clone()
     .whereNull("assigned_id")
-    .whereRaw("get_offer_status(id, customer_id, status) NOT IN ('accepted', 'rejected')")
+    .where("status", "active")
     .count("* as count")
     .first()
 
   // Now apply unassigned filter to base if requested
   if (args.unassigned) {
     base = base.whereNull("assigned_id")
-      .whereRaw("get_offer_status(id, customer_id, status) NOT IN ('accepted', 'rejected')")
+      .where("status", "active")
   }
 
   const totals: { offer_status: string; count: number }[] = await base
