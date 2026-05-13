@@ -137,13 +137,27 @@ export async function search_offer_sessions(
   items: DBOfferSession[]
   item_counts: { [k: string]: number }
 }> {
+  // Base query with entity filters (but NOT unassigned — that's applied separately)
   let base = database.knex("offer_sessions").where((qd) => {
     if (args.customer_id) qd = qd.where("customer_id", args.customer_id)
     if (args.assigned_id) qd = qd.where("assigned_id", args.assigned_id)
-    if (args.unassigned) qd = qd.whereNull("assigned_id").whereRaw("get_offer_status(id, customer_id, status) NOT IN ('accepted', 'rejected')")
     if (args.contractor_id) qd = qd.where("contractor_id", args.contractor_id)
     return qd
   })
+
+  // Compute unclaimed count from the unfiltered contractor base
+  const unassignedCount = await base
+    .clone()
+    .whereNull("assigned_id")
+    .whereRaw("get_offer_status(id, customer_id, status) NOT IN ('accepted', 'rejected')")
+    .count("* as count")
+    .first()
+
+  // Now apply unassigned filter to base if requested
+  if (args.unassigned) {
+    base = base.whereNull("assigned_id")
+      .whereRaw("get_offer_status(id, customer_id, status) NOT IN ('accepted', 'rejected')")
+  }
 
   const totals: { offer_status: string; count: number }[] = await base
     .clone()
@@ -154,13 +168,6 @@ export async function search_offer_sessions(
       ),
       database.knex.raw("COUNT(*) as count"),
     )
-
-  const unassignedCount = await base
-    .clone()
-    .whereNull("assigned_id")
-    .whereRaw("get_offer_status(id, customer_id, status) NOT IN ('accepted', 'rejected')")
-    .count("* as count")
-    .first()
 
   const item_counts: Record<string, number> = Object.fromEntries(
     totals.map(({ offer_status, count }) => [offer_status, +count]),
