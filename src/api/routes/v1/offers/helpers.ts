@@ -131,6 +131,34 @@ export async function convert_offer_search_query(
   }
 }
 
+interface OptimizedOfferSessionRow {
+  id: string
+  customer_id: string
+  assigned_id: string | null
+  contractor_id: string | null
+  status: string
+  timestamp: Date
+  most_recent_offer_id: string
+  most_recent_cost: number
+  most_recent_title: string
+  most_recent_payment_type: string
+  most_recent_timestamp: Date
+  most_recent_actor_id: string
+  most_recent_status: string
+  most_recent_service_id: string | null
+  item_count: number
+  service_title: string | null
+  customer_username: string
+  customer_avatar: string
+  customer_display_name: string
+  assigned_username: string | null
+  assigned_avatar: string | null
+  assigned_display_name: string | null
+  contractor_spectrum_id: string | null
+  contractor_name: string | null
+  contractor_avatar: string | null
+}
+
 export async function search_offer_sessions_optimized(
   args: OfferSearchQueryArguments,
 ): Promise<{
