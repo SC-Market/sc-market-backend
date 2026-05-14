@@ -213,7 +213,7 @@ export interface P4KBlueprintSlot {
   name?: string
   displayName?: string
   count?: number
-  modifiers?: Array<{ property: string; startQuality: number; endQuality: number; modifierAtStart: number; modifierAtEnd: number }>
+  modifiers?: Array<{ property: string; startQuality: number; endQuality: number; modifierAtStart: number; modifierAtEnd: number; modifierType?: string }>
   resource?: string
   quantity_scu?: number
   minQuality?: number
