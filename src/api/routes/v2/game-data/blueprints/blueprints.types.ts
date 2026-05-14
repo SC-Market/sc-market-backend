@@ -313,10 +313,12 @@ export interface SlotModifier {
   property: string
   start_quality: number
   end_quality: number
-  /** Modifier value at start_quality (e.g., 0.9 = ×0.9) */
+  /** Modifier value at start_quality (e.g., 0.9 = ×0.9 for linear, or -2 for additive) */
   modifier_at_start: number
-  /** Modifier value at end_quality (e.g., 1.1 = ×1.1) */
+  /** Modifier value at end_quality (e.g., 1.1 = ×1.1 for linear, or +2 for additive) */
   modifier_at_end: number
+  /** "linear" = multiplicative (×0.8–×1.2), "additive" = flat integer (+/- value) */
+  modifier_type: "linear" | "additive"
 }
 
 /** Result from the craftable blueprints endpoint */

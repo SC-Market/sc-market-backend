@@ -459,12 +459,17 @@ function parseModifiers(contextList: any[]): any[] {
     if (ctx?._Type_ !== "CraftingCostContext_ResultGameplayPropertyModifiers") continue
     for (const mod of ctx.gameplayPropertyModifiers?.gameplayPropertyModifiers || []) {
       for (const vr of mod.valueRanges || []) {
+        const isAdditive = vr._Type_?.includes("Additive")
+        const start = isAdditive ? vr.additiveModifierAtStart : vr.modifierAtStart
+        const end = isAdditive ? vr.additiveModifierAtEnd : vr.modifierAtEnd
+        if (start == null || end == null) continue
         mods.push({
           property: path.basename(mod.gameplayPropertyRecord || "", ".json"),
-          startQuality: vr.startQuality,
-          endQuality: vr.endQuality,
-          modifierAtStart: vr.modifierAtStart,
-          modifierAtEnd: vr.modifierAtEnd,
+          startQuality: vr.startQuality ?? 0,
+          endQuality: vr.endQuality ?? 1000,
+          modifierAtStart: start,
+          modifierAtEnd: end,
+          modifierType: isAdditive ? "additive" : "linear",
         })
       }
     }

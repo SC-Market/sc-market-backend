@@ -2027,15 +2027,17 @@ export class GameDataImportService {
       for (const slot of rawSlots) {
         if (slot.type !== "slot" || !slot.modifiers?.length) continue
         for (const mod of slot.modifiers) {
+          if (mod.modifierAtStart == null || mod.modifierAtEnd == null) continue
           await trx("blueprint_slot_modifiers").insert({
             blueprint_id: blueprintId,
             slot_name: slot.name,
             slot_display_name: slot.displayName || slot.name,
             property: mod.property,
-            start_quality: mod.startQuality,
-            end_quality: mod.endQuality,
+            start_quality: mod.startQuality ?? 0,
+            end_quality: mod.endQuality ?? 1000,
             modifier_at_start: mod.modifierAtStart,
             modifier_at_end: mod.modifierAtEnd,
+            modifier_type: mod.modifierType || "linear",
           })
         }
       }

@@ -612,6 +612,7 @@ export class BlueprintsController extends BaseController {
         end_quality: r.end_quality,
         modifier_at_start: parseFloat(r.modifier_at_start),
         modifier_at_end: parseFloat(r.modifier_at_end),
+        modifier_type: r.modifier_type || "linear",
       }))
 
       return {
