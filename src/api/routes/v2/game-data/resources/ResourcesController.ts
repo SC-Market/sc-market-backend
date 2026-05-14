@@ -279,6 +279,7 @@ export class ResourcesController extends BaseController {
           "r.can_be_looted",
           "r.mining_locations",
           "r.purchase_locations",
+          "r.quality_bands",
           "r.created_at",
           "r.updated_at",
         )
@@ -305,6 +306,7 @@ export class ResourcesController extends BaseController {
         can_be_looted: resourceRow.can_be_looted || false,
         mining_locations: resourceRow.mining_locations as MiningLocation[] | undefined,
         purchase_locations: resourceRow.purchase_locations as PurchaseLocation[] | undefined,
+        quality_bands: resourceRow.quality_bands || undefined,
         created_at: resourceRow.created_at.toISOString(),
         updated_at: resourceRow.updated_at.toISOString(),
       }
