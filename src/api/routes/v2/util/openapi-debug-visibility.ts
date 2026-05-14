@@ -37,7 +37,7 @@ export function filterV2DebugFromOpenApiSpec<T extends OpenApiLike>(spec: T): T 
   }
   if (Array.isArray(spec.tags)) {
     next.tags = spec.tags.filter(
-      (t) => t?.name !== V2_DEBUG_OPENAPI_TAG && t?.name !== "Admin Imports",
+      (t) => t?.name !== V2_DEBUG_OPENAPI_TAG && !t?.name?.startsWith("Admin"),
     )
   }
   return next

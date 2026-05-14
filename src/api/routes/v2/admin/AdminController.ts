@@ -191,7 +191,10 @@ export class AdminController extends BaseController {
    */
   @Post("expire-all-listings")
   @Security("loggedin")
-  public async expireAllListings(): Promise<{ affected: number }> {
+  public async expireAllListings(
+    @Request() request: ExpressRequest,
+  ): Promise<{ affected: number }> {
+    this.request = request
     this.requireAdmin()
     const knex = getKnex()
 
@@ -210,7 +213,10 @@ export class AdminController extends BaseController {
    */
   @Get("active-listing-count")
   @Security("loggedin")
-  public async getActiveListingCount(): Promise<{ count: number }> {
+  public async getActiveListingCount(
+    @Request() request: ExpressRequest,
+  ): Promise<{ count: number }> {
+    this.request = request
     this.requireAdmin()
     const knex = getKnex()
 
