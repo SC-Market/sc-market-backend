@@ -22,6 +22,7 @@ import {
   MissionRewardingBlueprint,
   BlueprintCategory,
   CraftableBlueprintResult,
+  CraftedPropertyDef,
 } from "./blueprints.types.js"
 import logger from "../../../../../logger/logger.js"
 import { resolveGameItemImages } from "../../util/resolve-game-item-images.js"
@@ -615,6 +616,28 @@ export class BlueprintsController extends BaseController {
         modifier_type: r.modifier_type || "linear",
       }))
 
+      // Fetch crafted property display definitions for all properties referenced in slot_modifiers
+      let crafted_property_defs: CraftedPropertyDef[] | undefined
+      if (slot_modifiers.length > 0) {
+        const propertyKeys = [...new Set(slot_modifiers.map((m: { property: string }) => m.property))]
+        try {
+          const propDefRows = await knex("crafted_property_defs")
+            .whereIn("property_key", propertyKeys)
+            .select("property_key", "display_name", "display_mode", "scale_factor", "unit_label")
+          if (propDefRows.length > 0) {
+            crafted_property_defs = propDefRows.map((r: any) => ({
+              property_key: r.property_key,
+              display_name: r.display_name || null,
+              display_mode: r.display_mode || "raw",
+              scale_factor: r.scale_factor ? parseFloat(r.scale_factor) : null,
+              unit_label: r.unit_label || null,
+            }))
+          }
+        } catch {
+          // Table may not exist yet — skip silently
+        }
+      }
+
       return {
         blueprint,
         output_item,
@@ -623,6 +646,7 @@ export class BlueprintsController extends BaseController {
         crafting_recipe,
         slot_modifiers,
         item_attributes,
+        crafted_property_defs,
         user_owns,
         user_acquisition,
       }

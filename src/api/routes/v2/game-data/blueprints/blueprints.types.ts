@@ -279,6 +279,9 @@ export interface BlueprintDetailResponse {
   /** Output item base attributes (damage resistance, temperature, etc.) */
   item_attributes: Record<string, string>
 
+  /** Crafted property display metadata for interpreting slot modifier values */
+  crafted_property_defs?: CraftedPropertyDef[]
+
   /** Does user own this blueprint */
   user_owns?: boolean
 
@@ -304,6 +307,20 @@ export interface BlueprintCategory {
   count: number
 }
 
+
+/** Crafted property display metadata (how to show a modifier's value to users) */
+export interface CraftedPropertyDef {
+  /** Property key matching slot_modifiers[].property (e.g. "damagemitigation") */
+  property_key: string
+  /** Localized display name (e.g. "Damage Mitigation") */
+  display_name: string | null
+  /** How to transform the raw modifier value for display */
+  display_mode: "raw" | "percent" | "negated_percent" | "scale" | "percent_of_base"
+  /** Scale factor (only set when display_mode is "scale") */
+  scale_factor: number | null
+  /** Localized unit label (e.g. "%", "C") */
+  unit_label: string | null
+}
 
 /** Quality modifier curve for a blueprint ingredient slot */
 export interface SlotModifier {

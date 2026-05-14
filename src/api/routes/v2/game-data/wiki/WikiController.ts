@@ -375,6 +375,13 @@ export class WikiController extends BaseController {
     logger.info("Fetching ships", { manufacturer, focus, size, page: validatedPage })
 
     try {
+      // Get active LIVE version for wiki_ships join
+      const activeVersion = await knex("game_versions")
+        .where("version_type", "LIVE")
+        .where("is_active", true)
+        .orderBy("created_at", "desc")
+        .first()
+
       // Build query - ships are identified by type = 'Ship' or similar
       let shipsQuery = knex("game_items as gi")
         .leftJoin("game_item_attributes as gia_focus", function () {
@@ -385,14 +392,36 @@ export class WikiController extends BaseController {
           )
         })
         .where("gi.type", "Ship for Sale/Rental")
-        .select(
-          "gi.id",
-          "gi.name",
-          "gi.manufacturer",
-          "gi.size",
-          "gi.image_url",
-          "gia_focus.attribute_value as focus",
-        )
+
+      // Left join wiki_ships for vehicle metadata
+      if (activeVersion) {
+        shipsQuery = shipsQuery.leftJoin("wiki_ships as ws", function () {
+          this.on("gi.name", "=", "ws.name").andOn(
+            "ws.version_id",
+            "=",
+            knex.raw("?", [activeVersion.version_id]),
+          )
+        })
+      }
+
+      shipsQuery = shipsQuery.select(
+        "gi.id",
+        "gi.name",
+        "gi.manufacturer",
+        "gi.size",
+        "gi.image_url",
+        "gia_focus.attribute_value as focus",
+        ...(activeVersion
+          ? [
+              "ws.crew_size",
+              "ws.career",
+              "ws.role",
+              "ws.length_m",
+              "ws.width_m",
+              "ws.height_m",
+            ]
+          : []),
+      )
 
       // Apply manufacturer filter
       if (manufacturer) {
@@ -429,6 +458,12 @@ export class WikiController extends BaseController {
         focus: row.focus || undefined,
         size: row.size || undefined,
         image_url: row.image_url || undefined,
+        crew_size: row.crew_size != null ? Number(row.crew_size) : undefined,
+        career: row.career || undefined,
+        role: row.role || undefined,
+        length_m: row.length_m != null ? parseFloat(row.length_m) : undefined,
+        width_m: row.width_m != null ? parseFloat(row.width_m) : undefined,
+        height_m: row.height_m != null ? parseFloat(row.height_m) : undefined,
       }))
 
       logger.info("Ships fetched successfully", { total, returned: ships.length })

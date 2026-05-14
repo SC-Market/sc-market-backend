@@ -1566,6 +1566,12 @@ const models: TsoaRoute.Models = {
             "focus": {"dataType":"string"},
             "size": {"dataType":"string"},
             "image_url": {"dataType":"string"},
+            "crew_size": {"dataType":"double"},
+            "career": {"dataType":"string"},
+            "role": {"dataType":"string"},
+            "length_m": {"dataType":"double"},
+            "width_m": {"dataType":"double"},
+            "height_m": {"dataType":"double"},
         },
         "additionalProperties": false,
     },
@@ -1702,6 +1708,16 @@ const models: TsoaRoute.Models = {
         "additionalProperties": false,
     },
     // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+    "QualityBand": {
+        "dataType": "refObject",
+        "properties": {
+            "start": {"dataType":"double","required":true},
+            "end": {"dataType":"double","required":true},
+            "mappedValue": {"dataType":"double","required":true},
+        },
+        "additionalProperties": false,
+    },
+    // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
     "ResourceSearchResult": {
         "dataType": "refObject",
         "properties": {
@@ -1718,6 +1734,7 @@ const models: TsoaRoute.Models = {
             "can_be_salvaged": {"dataType":"boolean","required":true},
             "can_be_looted": {"dataType":"boolean","required":true},
             "blueprint_count": {"dataType":"double","required":true},
+            "quality_bands": {"dataType":"array","array":{"dataType":"refObject","ref":"QualityBand"}},
         },
         "additionalProperties": false,
     },
@@ -1773,6 +1790,7 @@ const models: TsoaRoute.Models = {
             "can_be_looted": {"dataType":"boolean","required":true},
             "mining_locations": {"dataType":"array","array":{"dataType":"refObject","ref":"MiningLocation"}},
             "purchase_locations": {"dataType":"array","array":{"dataType":"refObject","ref":"PurchaseLocation"}},
+            "quality_bands": {"dataType":"array","array":{"dataType":"refObject","ref":"QualityBand"}},
             "created_at": {"dataType":"string","required":true},
             "updated_at": {"dataType":"string","required":true},
         },
@@ -2618,6 +2636,19 @@ const models: TsoaRoute.Models = {
             "end_quality": {"dataType":"double","required":true},
             "modifier_at_start": {"dataType":"double","required":true},
             "modifier_at_end": {"dataType":"double","required":true},
+            "modifier_type": {"dataType":"union","subSchemas":[{"dataType":"enum","enums":["linear"]},{"dataType":"enum","enums":["additive"]}],"required":true},
+        },
+        "additionalProperties": false,
+    },
+    // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+    "CraftedPropertyDef": {
+        "dataType": "refObject",
+        "properties": {
+            "property_key": {"dataType":"string","required":true},
+            "display_name": {"dataType":"union","subSchemas":[{"dataType":"string"},{"dataType":"enum","enums":[null]}],"required":true},
+            "display_mode": {"dataType":"union","subSchemas":[{"dataType":"enum","enums":["raw"]},{"dataType":"enum","enums":["percent"]},{"dataType":"enum","enums":["negated_percent"]},{"dataType":"enum","enums":["scale"]},{"dataType":"enum","enums":["percent_of_base"]}],"required":true},
+            "scale_factor": {"dataType":"union","subSchemas":[{"dataType":"double"},{"dataType":"enum","enums":[null]}],"required":true},
+            "unit_label": {"dataType":"union","subSchemas":[{"dataType":"string"},{"dataType":"enum","enums":[null]}],"required":true},
         },
         "additionalProperties": false,
     },
@@ -2643,6 +2674,7 @@ const models: TsoaRoute.Models = {
             "crafting_recipe": {"dataType":"nestedObjectLiteral","nestedProperties":{"max_output_quality_tier":{"dataType":"double","required":true},"min_output_quality_tier":{"dataType":"double","required":true},"quality_calculation_type":{"dataType":"string","required":true}}},
             "slot_modifiers": {"dataType":"array","array":{"dataType":"refObject","ref":"SlotModifier"},"required":true},
             "item_attributes": {"ref":"Record_string.string_","required":true},
+            "crafted_property_defs": {"dataType":"array","array":{"dataType":"refObject","ref":"CraftedPropertyDef"}},
             "user_owns": {"dataType":"boolean"},
             "user_acquisition": {"ref":"UserBlueprintAcquisition"},
         },

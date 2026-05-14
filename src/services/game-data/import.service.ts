@@ -158,6 +158,13 @@ export interface GameDataPayload {
     prohibitedGoods: string[]
     controlledSubstances: Array<{ class: string; commodities: string[]; maxPossessionScu: number }>
   }>
+  craftedProperties?: Array<{
+    propertyKey: string
+    displayName: string | null
+    displayMode: "raw" | "percent" | "negated_percent" | "scale" | "percent_of_base"
+    scaleFactor: number | null
+    unitLabel: string | null
+  }>
 }
 
 export interface P4KShip {
@@ -167,6 +174,11 @@ export interface P4KShip {
   focus: string | null
   manufacturer: string | null
   size: number | null
+  crewSize: number | null
+  career: string | null
+  role: string | null
+  maxBoundingBoxSize: { x: number; y: number; z: number } | null
+  movementClass: string | null
   description: string | null
   file: string
 }
@@ -448,6 +460,7 @@ export interface ImportStats {
   mineableElementsImported: number
   miningSpawnsImported: number
   qualityDistributionsImported: number
+  craftedPropertyDefsImported: number
   errors: string[]
 }
 
@@ -626,6 +639,7 @@ export class GameDataImportService {
       mineableElementsImported: 0,
       miningSpawnsImported: 0,
       qualityDistributionsImported: 0,
+      craftedPropertyDefsImported: 0,
       errors: [],
     }
 
@@ -1346,6 +1360,12 @@ export class GameDataImportService {
                   manufacturer_code: ship.manufacturer,
                   size: ship.size,
                   description: ship.description,
+                  crew_size: ship.crewSize ?? null,
+                  career: ship.career ?? null,
+                  role: ship.role ?? null,
+                  length_m: ship.maxBoundingBoxSize?.y ?? null,
+                  width_m: ship.maxBoundingBoxSize?.x ?? null,
+                  height_m: ship.maxBoundingBoxSize?.z ?? null,
                 })
                 .onConflict(["version_id", "ship_code"])
                 .merge({
@@ -1353,6 +1373,12 @@ export class GameDataImportService {
                   focus: ship.focus,
                   manufacturer_code: ship.manufacturer,
                   description: ship.description,
+                  crew_size: ship.crewSize ?? null,
+                  career: ship.career ?? null,
+                  role: ship.role ?? null,
+                  length_m: ship.maxBoundingBoxSize?.y ?? null,
+                  width_m: ship.maxBoundingBoxSize?.x ?? null,
+                  height_m: ship.maxBoundingBoxSize?.z ?? null,
                 })
             }
             logger.info(`Imported ${gameData.ships.length} ships (${shipsInserted} new game_items)`)
@@ -1403,6 +1429,13 @@ export class GameDataImportService {
       // ========================================================================
       if (gameData.miningQualityDistributions?.length) {
         stats.qualityDistributionsImported = await this.importMiningQualityDistributions(knex, gameData)
+      }
+
+      // ========================================================================
+      // STEP 22: Import crafted property definitions
+      // ========================================================================
+      if (gameData.craftedProperties?.length) {
+        stats.craftedPropertyDefsImported = await this.importCraftedPropertyDefs(knex, gameData)
       }
 
       logger.info("Import completed successfully", stats)
@@ -2574,6 +2607,38 @@ export class GameDataImportService {
     }
     logger.info(`Imported ${rows.length} mining quality distributions`)
     return rows.length
+  }
+
+  async importCraftedPropertyDefs(knex: Knex, gameData: GameDataPayload): Promise<number> {
+    logger.info(`Importing ${gameData.craftedProperties!.length} crafted property definitions`)
+    try {
+      const BATCH = 100
+      const rows = gameData.craftedProperties!.map((p) => ({
+        property_key: p.propertyKey,
+        display_name: p.displayName,
+        display_mode: p.displayMode,
+        scale_factor: p.scaleFactor,
+        unit_label: p.unitLabel,
+        updated_at: new Date(),
+      }))
+      for (let i = 0; i < rows.length; i += BATCH) {
+        await knex("crafted_property_defs")
+          .insert(rows.slice(i, i + BATCH))
+          .onConflict("property_key")
+          .merge({
+            display_name: knex.raw("EXCLUDED.display_name"),
+            display_mode: knex.raw("EXCLUDED.display_mode"),
+            scale_factor: knex.raw("EXCLUDED.scale_factor"),
+            unit_label: knex.raw("EXCLUDED.unit_label"),
+            updated_at: new Date(),
+          })
+      }
+      logger.info(`Imported ${rows.length} crafted property definitions`)
+      return rows.length
+    } catch {
+      logger.debug("Crafted property defs import skipped (table may not exist)")
+      return 0
+    }
   }
 }
 
