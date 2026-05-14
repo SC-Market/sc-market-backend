@@ -124,6 +124,7 @@ export class ResourcesController extends BaseController {
           "r.can_be_purchased",
           "r.can_be_salvaged",
           "r.can_be_looted",
+          "r.quality_bands",
           knex.raw("COALESCE(blueprint_counts.blueprint_count, 0)::integer as blueprint_count"),
         )
         .where("r.version_id", effectiveVersionId)
@@ -207,6 +208,7 @@ export class ResourcesController extends BaseController {
         can_be_salvaged: row.can_be_salvaged || false,
         can_be_looted: row.can_be_looted || false,
         blueprint_count: row.blueprint_count || 0,
+        quality_bands: row.quality_bands || undefined,
       }))
 
       return {

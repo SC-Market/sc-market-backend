@@ -8,6 +8,20 @@
  */
 
 // ============================================================================
+// Quality Quantization Types
+// ============================================================================
+
+/** A quality band defining how raw quality maps to a discrete value */
+export interface QualityBand {
+  /** Start of the raw quality range (0-1000) */
+  start: number
+  /** End of the raw quality range (0-1000) */
+  end: number
+  /** The quality value items in this band are snapped to */
+  mappedValue: number
+}
+
+// ============================================================================
 // Resource Search Types
 // ============================================================================
 
@@ -79,6 +93,9 @@ export interface ResourceSearchResult {
 
   /** Number of blueprints that require this resource */
   blueprint_count: number
+
+  /** Quality quantization bands — defines discrete quality tiers for this resource */
+  quality_bands?: QualityBand[]
 }
 
 /**

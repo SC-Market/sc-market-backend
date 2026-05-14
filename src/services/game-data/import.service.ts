@@ -254,6 +254,7 @@ export interface P4KRawResource {
   mining_locations?: string | null
   purchaseLocations?: string | null
   purchase_locations?: string | null
+  qualityBands?: Array<{ start: number; end: number; mappedValue: number }>
 }
 
 export interface P4KItem {
@@ -395,6 +396,7 @@ export interface P4KResource {
   purchaseLocations: Record<string, string[]> | null
   density: number | null
   description: string | null
+  qualityBands: Array<{ start: number; end: number; mappedValue: number }> | null
 }
 
 interface DBItem {
@@ -2150,6 +2152,7 @@ export class GameDataImportService {
           purchaseLocations: null,
           density: raw.density ?? null,
           description: raw.description ?? null,
+          qualityBands: raw.qualityBands || null,
         })
       } catch (error) {
         logger.warn("Failed to parse resource", { resourceId: raw.id, error })
@@ -2215,6 +2218,7 @@ export class GameDataImportService {
       p4k_id: resource.itemId,
       density: resource.density ?? null,
       description: resource.description ?? null,
+      quality_bands: resource.qualityBands ? JSON.stringify(resource.qualityBands) : null,
       updated_at: new Date(),
     }
 

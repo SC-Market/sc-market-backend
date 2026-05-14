@@ -1142,12 +1142,30 @@ function parseMissions(): ExtractedMission[] {
 }
 
 // --- Step 6: Parse Resources ---
-function parseResources(): any[] {
+interface QualityBand {
+  start: number
+  end: number
+  mappedValue: number
+}
+
+interface ExtractedResource {
+  id: string
+  name: string
+  nameKey: string | null
+  description: string | null
+  group: string
+  groupKey: string
+  parentGroup: string | null
+  density: number | null
+  qualityBands?: QualityBand[]
+}
+
+function parseResources(): ExtractedResource[] {
   const dbFile = path.join(RECORDS_DIR, "resourcetypedatabase/resourcetypedatabase.json")
   if (!fs.existsSync(dbFile)) return []
 
   const data = readJson(dbFile)
-  const resources: any[] = []
+  const resources: ExtractedResource[] = []
 
   function walkGroups(groups: any[], parentGroup?: string) {
     for (const group of groups || []) {
@@ -1157,7 +1175,7 @@ function parseResources(): any[] {
         resources.push({
           id: res._RecordId_,
           name: loc(res.displayName) || res._RecordName_?.split(".")?.pop() || "",
-          nameKey: res.displayName,
+          nameKey: res.displayName || null,
           description: loc(res.description) || null,
           group: groupDisplayName,
           groupKey: groupName,
@@ -1170,7 +1188,34 @@ function parseResources(): any[] {
   }
 
   walkGroups(data._RecordValue_?.groups)
-  console.log(`  Resources: ${resources.length}`)
+
+  // Attach quality quantization bands per resource
+  const quantDir = path.join(RECORDS_DIR, "crafting/qualityquantization")
+  let quantized = 0
+  if (fs.existsSync(quantDir)) {
+    for (const qf of findJsonFiles(quantDir)) {
+      try {
+        const qData = readJson(qf)
+        const bands = qData._RecordValue_?.qualityQuantization?.bands
+        if (!bands?.length) continue
+        const resourceKey = path.basename(qf, ".json").replace("quantization_", "").toLowerCase()
+        if (resourceKey === "template") continue
+        const match = resources.find((r: ExtractedResource) =>
+          r.name.toLowerCase() === resourceKey ||
+          r.nameKey?.toLowerCase()?.includes(resourceKey)
+        )
+        if (match) {
+          match.qualityBands = bands.map((b: any) => ({
+            start: b.start,
+            end: b.end,
+            mappedValue: b.mappedValue,
+          }))
+          quantized++
+        }
+      } catch {}
+    }
+  }
+  console.log(`  Resources: ${resources.length} (${quantized} with quality bands)`)
   return resources
 }
 
