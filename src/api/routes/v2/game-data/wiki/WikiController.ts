@@ -384,7 +384,7 @@ export class WikiController extends BaseController {
             knex.raw("?", ["ship_focus"]),
           )
         })
-        .where("gi.type", "Ship")
+        .where("gi.type", "Ship for Sale/Rental")
         .select(
           "gi.id",
           "gi.name",
@@ -678,8 +678,9 @@ export class WikiController extends BaseController {
 
       // Query amenities for all locations
       const amenityRows = await knex("location_amenities as la")
-        .join("starmap_amenity_types as sat", "la.amenity_type_id", "sat.id")
-        .select("la.location_code", "sat.name")
+        .join("starmap_locations as sl2", "la.location_id", "sl2.location_id")
+        .join("starmap_amenity_types as sat", "la.amenity_p4k_id", "sat.p4k_id")
+        .select("sl2.location_code", "sat.name")
 
       // Build amenities map: location_code -> amenity names
       const amenitiesMap = new Map<string, string[]>()
@@ -759,13 +760,17 @@ export class WikiController extends BaseController {
 
     try {
       // Get manufacturers from game_items with counts
+      // Use lower() grouping to deduplicate case variants (e.g. "RSI" vs "rsi")
       const manufacturersQuery = await knex("game_items as gi")
-        .leftJoin("wiki_manufacturers as wm", "wm.code", "gi.manufacturer")
-        .select("gi.manufacturer", knex.raw("MAX(wm.name) as display_name"))
+        .leftJoin("wiki_manufacturers as wm", function () {
+          this.on(knex.raw("lower(wm.code) = lower(gi.manufacturer)"))
+        })
+        .select(knex.raw("lower(gi.manufacturer) as manufacturer"), knex.raw("MAX(wm.name) as display_name"))
         .count("* as item_count")
         .whereNotNull("gi.manufacturer")
-        .groupBy("gi.manufacturer")
-        .orderByRaw("COALESCE(MAX(wm.name), gi.manufacturer) ASC")
+        .andWhere("gi.manufacturer", "!=", "")
+        .groupByRaw("lower(gi.manufacturer)")
+        .orderByRaw("COALESCE(MAX(wm.name), lower(gi.manufacturer)) ASC")
 
       const manufacturers = manufacturersQuery.map((row: any) => ({
         manufacturer: row.manufacturer,
