@@ -4811,6 +4811,28 @@
 					},
 					"image_url": {
 						"type": "string"
+					},
+					"crew_size": {
+						"type": "number",
+						"format": "double"
+					},
+					"career": {
+						"type": "string"
+					},
+					"role": {
+						"type": "string"
+					},
+					"length_m": {
+						"type": "number",
+						"format": "double"
+					},
+					"width_m": {
+						"type": "number",
+						"format": "double"
+					},
+					"height_m": {
+						"type": "number",
+						"format": "double"
 					}
 				},
 				"required": [
@@ -5171,6 +5193,33 @@
 				"type": "object",
 				"additionalProperties": false
 			},
+			"QualityBand": {
+				"description": "A quality band defining how raw quality maps to a discrete value",
+				"properties": {
+					"start": {
+						"type": "number",
+						"format": "double",
+						"description": "Start of the raw quality range (0-1000)"
+					},
+					"end": {
+						"type": "number",
+						"format": "double",
+						"description": "End of the raw quality range (0-1000)"
+					},
+					"mappedValue": {
+						"type": "number",
+						"format": "double",
+						"description": "The quality value items in this band are snapped to"
+					}
+				},
+				"required": [
+					"start",
+					"end",
+					"mappedValue"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
 			"ResourceSearchResult": {
 				"description": "Resource search result item",
 				"properties": {
@@ -5228,6 +5277,13 @@
 						"type": "number",
 						"format": "double",
 						"description": "Number of blueprints that require this resource"
+					},
+					"quality_bands": {
+						"items": {
+							"$ref": "#/components/schemas/QualityBand"
+						},
+						"type": "array",
+						"description": "Quality quantization bands — defines discrete quality tiers for this resource"
 					}
 				},
 				"required": [
@@ -5381,6 +5437,13 @@
 							"$ref": "#/components/schemas/PurchaseLocation"
 						},
 						"type": "array"
+					},
+					"quality_bands": {
+						"items": {
+							"$ref": "#/components/schemas/QualityBand"
+						},
+						"type": "array",
+						"description": "Quality quantization bands — defines discrete quality tiers for this resource"
 					},
 					"created_at": {
 						"type": "string"
@@ -8203,12 +8266,20 @@
 					"modifier_at_start": {
 						"type": "number",
 						"format": "double",
-						"description": "Modifier value at start_quality (e.g., 0.9 = ×0.9)"
+						"description": "Modifier value at start_quality (e.g., 0.9 = ×0.9 for linear, or -2 for additive)"
 					},
 					"modifier_at_end": {
 						"type": "number",
 						"format": "double",
-						"description": "Modifier value at end_quality (e.g., 1.1 = ×1.1)"
+						"description": "Modifier value at end_quality (e.g., 1.1 = ×1.1 for linear, or +2 for additive)"
+					},
+					"modifier_type": {
+						"type": "string",
+						"enum": [
+							"linear",
+							"additive"
+						],
+						"description": "\"linear\" = multiplicative (×0.8–×1.2), \"additive\" = flat integer (+/- value)"
 					}
 				},
 				"required": [
@@ -8218,7 +8289,53 @@
 					"start_quality",
 					"end_quality",
 					"modifier_at_start",
-					"modifier_at_end"
+					"modifier_at_end",
+					"modifier_type"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
+			"CraftedPropertyDef": {
+				"description": "Crafted property display metadata (how to show a modifier's value to users)",
+				"properties": {
+					"property_key": {
+						"type": "string",
+						"description": "Property key matching slot_modifiers[].property (e.g. \"damagemitigation\")"
+					},
+					"display_name": {
+						"type": "string",
+						"nullable": true,
+						"description": "Localized display name (e.g. \"Damage Mitigation\")"
+					},
+					"display_mode": {
+						"type": "string",
+						"enum": [
+							"raw",
+							"percent",
+							"negated_percent",
+							"scale",
+							"percent_of_base"
+						],
+						"description": "How to transform the raw modifier value for display"
+					},
+					"scale_factor": {
+						"type": "number",
+						"format": "double",
+						"nullable": true,
+						"description": "Scale factor (only set when display_mode is \"scale\")"
+					},
+					"unit_label": {
+						"type": "string",
+						"nullable": true,
+						"description": "Localized unit label (e.g. \"%\", \"C\")"
+					}
+				},
+				"required": [
+					"property_key",
+					"display_name",
+					"display_mode",
+					"scale_factor",
+					"unit_label"
 				],
 				"type": "object",
 				"additionalProperties": false
@@ -8306,6 +8423,13 @@
 					"item_attributes": {
 						"$ref": "#/components/schemas/Record_string.string_",
 						"description": "Output item base attributes (damage resistance, temperature, etc.)"
+					},
+					"crafted_property_defs": {
+						"items": {
+							"$ref": "#/components/schemas/CraftedPropertyDef"
+						},
+						"type": "array",
+						"description": "Crafted property display metadata for interpreting slot modifier values"
 					},
 					"user_owns": {
 						"type": "boolean",

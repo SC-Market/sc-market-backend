@@ -1243,6 +1243,11 @@ function parseShips(): any[] {
       let displayType: string | null = null
       let manufacturer: string | null = null
       let size: number | null = null
+      let crewSize: number | null = null
+      let career: string | null = null
+      let role: string | null = null
+      let maxBoundingBoxSize: { x: number; y: number; z: number } | null = null
+      let movementClass: string | null = null
 
       for (const comp of comps) {
         if (!comp) continue
@@ -1256,10 +1261,24 @@ function parseShips(): any[] {
           if (typeof mfr === "string" && mfr.includes("/")) {
             manufacturer = path.basename(mfr, ".json").replace("scitemmanufacturer.", "")
           }
-        } else if (t === "VehicleComponentParams" && !manufacturer) {
-          const mfr = comp.manufacturer
-          if (typeof mfr === "string" && mfr.includes("/")) {
-            manufacturer = path.basename(mfr, ".json").replace("scitemmanufacturer.", "")
+        } else if (t === "VehicleComponentParams") {
+          if (!manufacturer) {
+            const mfr = comp.manufacturer
+            if (typeof mfr === "string" && mfr.includes("/")) {
+              manufacturer = path.basename(mfr, ".json").replace("scitemmanufacturer.", "")
+            }
+          }
+          crewSize = typeof comp.crewSize === "number" ? comp.crewSize : null
+          movementClass = comp.movementClass || null
+          if (typeof comp.vehicleCareerRef === "string" && comp.vehicleCareerRef.includes("/")) {
+            career = path.basename(comp.vehicleCareerRef, ".json")
+          }
+          if (typeof comp.vehicleRoleRef === "string" && comp.vehicleRoleRef.includes("/")) {
+            role = path.basename(comp.vehicleRoleRef, ".json")
+          }
+          const bbox = comp.maxBoundingBoxSize
+          if (bbox && typeof bbox.x === "number" && typeof bbox.y === "number" && typeof bbox.z === "number") {
+            maxBoundingBoxSize = { x: bbox.x, y: bbox.y, z: bbox.z }
           }
         }
       }
@@ -1279,6 +1298,11 @@ function parseShips(): any[] {
         focus: focus || displayType,
         manufacturer,
         size,
+        crewSize,
+        career,
+        role,
+        maxBoundingBoxSize,
+        movementClass,
         description,
         file: path.basename(f, ".json"),
       })
@@ -1938,6 +1962,99 @@ function parseJurisdictions(): Record<string, unknown>[] {
   return jurisdictions
 }
 
+// --- Parse Crafted Property Definitions (GPP files) ---
+interface CraftedPropertyDef {
+  propertyKey: string
+  displayName: string | null
+  displayMode: "raw" | "percent" | "negated_percent" | "scale" | "percent_of_base"
+  scaleFactor: number | null
+  unitLabel: string | null
+}
+
+function parseCraftedProperties(): CraftedPropertyDef[] {
+  const dir = path.join(RECORDS_DIR, "crafting/craftedproperties")
+  if (!fs.existsSync(dir)) {
+    console.log("  Crafted properties directory not found, skipping")
+    return []
+  }
+
+  const files = findJsonFiles(dir).filter((f) => path.basename(f).startsWith("gpp_"))
+  const properties: CraftedPropertyDef[] = []
+
+  for (const f of files) {
+    try {
+      const data = readJson(f)
+      const rv = data._RecordValue_
+
+      // Extract property key from filename: gpp_damagemitigation.json -> damagemitigation
+      const propertyKey = path.basename(f, ".json").replace(/^gpp_/, "")
+
+      // Resolve display name from localization
+      const propertyNameKey = rv?.propertyName || null
+      const displayName = loc(propertyNameKey)
+
+      // Resolve unit format from localization
+      const unitFormatKey = rv?.unitFormat || null
+      const unitLabel = loc(unitFormatKey)
+
+      // Parse display transformation to determine display mode
+      let displayMode: CraftedPropertyDef["displayMode"] = "raw"
+      let scaleFactor: number | null = null
+
+      const dt = rv?.displayTransformation
+      if (dt) {
+        const dtType = dt._Type_ || ""
+        if (dtType === "CraftingDisplayTransformation_Scale") {
+          displayMode = "scale"
+          scaleFactor = dt.scale ?? dt.scaleFactor ?? null
+        } else if (dtType === "CraftingDisplayTransformation_Sequence") {
+          // Walk sub-transformations to determine the combined mode
+          const subTransforms = dt.transformations || dt.subTransformations || []
+          let hasConvertToFactor = false
+          let hasPercentChange = false
+          let hasNegatedPercentChange = false
+
+          for (const sub of subTransforms) {
+            const subType = sub?._Type_ || ""
+            if (subType.includes("ConvertValueToFactorOfBaseValue")) {
+              hasConvertToFactor = true
+            } else if (subType.includes("ConvertFactorToNegatedPercentChange")) {
+              hasNegatedPercentChange = true
+            } else if (subType.includes("ConvertFactorToPercentChange")) {
+              hasPercentChange = true
+            }
+          }
+
+          if (hasConvertToFactor && hasNegatedPercentChange) {
+            displayMode = "negated_percent"
+          } else if (hasConvertToFactor && hasPercentChange) {
+            displayMode = "percent"
+          } else if (hasPercentChange) {
+            displayMode = "percent"
+          } else if (hasNegatedPercentChange) {
+            displayMode = "negated_percent"
+          } else if (hasConvertToFactor) {
+            displayMode = "percent_of_base"
+          }
+        }
+      }
+
+      properties.push({
+        propertyKey,
+        displayName,
+        displayMode,
+        scaleFactor,
+        unitLabel,
+      })
+    } catch {}
+  }
+
+  console.log(`  Crafted property definitions: ${properties.length}`)
+  return properties
+}
+
+const craftedProperties = parseCraftedProperties()
+
 const lootTables = parseLootTables()
 const rockCompositions = parseRockCompositions()
 const mineableElements = parseMineableElements()
@@ -2269,6 +2386,7 @@ const outputData = {
     miningQualityDistributions: miningQualityDistributions.length,
     amenityTypes: amenityTypes.length,
     jurisdictions: jurisdictions.length,
+    craftedProperties: craftedProperties.length,
   },
   items,
   blueprints,
@@ -2298,6 +2416,7 @@ const outputData = {
   miningQualityDistributions,
   amenityTypes,
   jurisdictions,
+  craftedProperties,
 }
 
 const jsonPath = path.join(OUTPUT_DIR, "game-data.json")

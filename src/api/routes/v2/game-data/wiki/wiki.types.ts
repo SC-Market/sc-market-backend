@@ -100,6 +100,12 @@ export interface WikiShipSearchResult {
   focus?: string
   size?: string
   image_url?: string
+  crew_size?: number
+  career?: string
+  role?: string
+  length_m?: number
+  width_m?: number
+  height_m?: number
 }
 
 export interface WikiShipDetail {
