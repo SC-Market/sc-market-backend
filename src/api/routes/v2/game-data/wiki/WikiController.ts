@@ -845,17 +845,23 @@ export class WikiController extends BaseController {
     logger.info("Fetching manufacturers")
 
     try {
-      // Get manufacturers from game_items with counts
-      // Use lower() grouping to deduplicate case variants (e.g. "RSI" vs "rsi")
+      // Match game_items.manufacturer to wiki_manufacturers by code OR name,
+      // then group by the resolved manufacturer_id to merge duplicates like
+      // "aegs" and "Aegis Dynamics" into a single entry.
       const manufacturersQuery = await knex("game_items as gi")
         .leftJoin("wiki_manufacturers as wm", function () {
           this.on(knex.raw("lower(wm.code) = lower(gi.manufacturer)"))
+            .orOn(knex.raw("lower(wm.name) = lower(gi.manufacturer)"))
         })
-        .select(knex.raw("lower(gi.manufacturer) as manufacturer"), knex.raw("MAX(wm.name) as display_name"))
+        .select(
+          knex.raw("COALESCE(wm.manufacturer_id::text, lower(gi.manufacturer)) as group_key"),
+          knex.raw("COALESCE(wm.code, lower(gi.manufacturer)) as manufacturer"),
+          knex.raw("MAX(wm.name) as display_name"),
+        )
         .count("* as item_count")
         .whereNotNull("gi.manufacturer")
         .andWhere("gi.manufacturer", "!=", "")
-        .groupByRaw("lower(gi.manufacturer)")
+        .groupByRaw("COALESCE(wm.manufacturer_id::text, lower(gi.manufacturer)), COALESCE(wm.code, lower(gi.manufacturer))")
         .orderByRaw("COALESCE(MAX(wm.name), lower(gi.manufacturer)) ASC")
 
       const manufacturers = manufacturersQuery.map((row: any) => ({
@@ -900,9 +906,24 @@ export class WikiController extends BaseController {
     logger.info("Fetching manufacturer detail", { id })
 
     try {
-      // Get items by this manufacturer
+      // Resolve the wiki_manufacturers row by code or name (case-insensitive)
+      const mfrRow = await knex("wiki_manufacturers")
+        .whereRaw("lower(code) = lower(?)", [id])
+        .orWhereRaw("lower(name) = lower(?)", [id])
+        .select("code", "name", "description")
+        .first()
+
+      // Get items matching either the code or the name (covers "aegs" and "Aegis Dynamics")
+      const matchValues = mfrRow
+        ? [mfrRow.code, mfrRow.name]
+        : [id]
+
       const itemsQuery = await knex("game_items")
-        .where("manufacturer", id)
+        .where(function () {
+          for (const val of matchValues) {
+            this.orWhereRaw("lower(manufacturer) = lower(?)", [val])
+          }
+        })
         .select("id", "name", "type", "size", "grade", "image_url")
         .orderBy("name", "asc")
 
@@ -924,11 +945,8 @@ export class WikiController extends BaseController {
         item_count: items.length,
       })
 
-      // Get manufacturer display name
-      const mfrRow = await knex("wiki_manufacturers").where("code", id).select("name", "description").first()
-
       return {
-        manufacturer: id,
+        manufacturer: mfrRow?.code || id,
         display_name: mfrRow?.name || null,
         description: mfrRow?.description || undefined,
         item_count: items.length,
