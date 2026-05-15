@@ -544,27 +544,28 @@ export class WikiController extends BaseController {
         }
       }
 
-      if (!shipRow) {
+      if (!shipRow && !wikiShip) {
         this.throwNotFound("Ship", id)
       }
 
-      // Get ship attributes
-      const attributesRows = await knex("game_item_attributes")
-        .where("game_item_id", shipRow.id)
-        .select("attribute_name", "attribute_value")
-
+      // Get ship attributes (only if we have a game_items row)
       const attributes: Record<string, any> = {}
-      for (const row of attributesRows) {
-        attributes[row.attribute_name] = row.attribute_value
+      if (shipRow) {
+        const attributesRows = await knex("game_item_attributes")
+          .where("game_item_id", shipRow.id)
+          .select("attribute_name", "attribute_value")
+        for (const row of attributesRows) {
+          attributes[row.attribute_name] = row.attribute_value
+        }
       }
 
-      const focus = attributes.ship_focus || undefined
-      const description = attributes.description || undefined
+      const focus = attributes.ship_focus || wikiShip?.focus || undefined
+      const description = attributes.description || wikiShip?.description || undefined
       const movement_class = attributes.movement_class || undefined
       const default_loadout = attributes.default_loadout || undefined
 
       // Resolve manufacturer display name
-      const mfrCode = wikiShip?.manufacturer_code || shipRow.manufacturer
+      const mfrCode = wikiShip?.manufacturer_code || shipRow?.manufacturer
       const mfrRow = mfrCode
         ? await knex("wiki_manufacturers").where("code", mfrCode).select("name").first()
         : null
@@ -573,15 +574,15 @@ export class WikiController extends BaseController {
       logger.info("Ship detail fetched successfully", { id })
 
       return {
-        id: shipRow.id,
-        name: shipRow.name,
+        id: shipRow?.id || wikiShip.ship_id,
+        name: shipRow?.name || wikiShip.name,
         ship_code: wikiShip?.ship_code || undefined,
         manufacturer: manufacturerName,
         focus,
-        size: shipRow.size || undefined,
+        size: shipRow?.size || wikiShip?.size || undefined,
         description,
         movement_class,
-        image_url: shipRow.image_url || undefined,
+        image_url: shipRow?.image_url || undefined,
         default_loadout,
         attributes,
         crew_size: wikiShip?.crew_size != null ? Number(wikiShip.crew_size) : undefined,
