@@ -780,9 +780,22 @@ export class WikiController extends BaseController {
       // Map rows to WikiLocationNode and index by location_code
       const nodeMap = new Map<string, WikiLocationNode>()
       for (const row of rows) {
+        // Resolve display name: use location_name unless it's a localization key
+        let displayName = row.location_name
+        if (!displayName || displayName.startsWith("@") || displayName.startsWith("<=")) {
+          // Derive readable name from file_name or location_code
+          const source = row.file_name || row.location_code || ""
+          displayName = source
+            .replace(/^.*[\\/]/, "")     // strip path
+            .replace(/\.[^.]+$/, "")     // strip extension
+            .replace(/[-_]/g, " ")       // dashes/underscores → spaces
+            .replace(/([a-z])([A-Z])/g, "$1 $2") // camelCase → words
+            .replace(/\b\w/g, (c: string) => c.toUpperCase()) // title case
+            .trim() || row.location_code
+        }
         nodeMap.set(row.location_code, {
           id: row.location_code,
-          name: row.location_name,
+          name: displayName,
           type: row.location_type || row.nav_icon || "unknown",
           navIcon: row.nav_icon || null,
           description: row.description || null,
