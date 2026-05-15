@@ -845,30 +845,52 @@ export class WikiController extends BaseController {
     logger.info("Fetching manufacturers")
 
     try {
-      // Match game_items.manufacturer to wiki_manufacturers by code OR name,
-      // then group by the resolved manufacturer_id to merge duplicates like
-      // "aegs" and "Aegis Dynamics" into a single entry.
-      const manufacturersQuery = await knex("game_items as gi")
-        .leftJoin("wiki_manufacturers as wm", function () {
-          this.on(knex.raw("lower(wm.code) = lower(gi.manufacturer)"))
-            .orOn(knex.raw("lower(wm.name) = lower(gi.manufacturer)"))
-        })
-        .select(
-          knex.raw("COALESCE(wm.manufacturer_id::text, lower(gi.manufacturer)) as group_key"),
-          knex.raw("COALESCE(wm.code, lower(gi.manufacturer)) as manufacturer"),
-          knex.raw("MAX(wm.name) as display_name"),
-        )
-        .count("* as item_count")
-        .whereNotNull("gi.manufacturer")
-        .andWhere("gi.manufacturer", "!=", "")
-        .groupByRaw("COALESCE(wm.manufacturer_id::text, lower(gi.manufacturer)), COALESCE(wm.code, lower(gi.manufacturer))")
-        .orderByRaw("COALESCE(MAX(wm.name), lower(gi.manufacturer)) ASC")
+      // Step 1: Build a lookup from wiki_manufacturers (code → id, name → id)
+      const wmRows = await knex("wiki_manufacturers").select("manufacturer_id", "code", "name", "description")
 
-      const manufacturers = manufacturersQuery.map((row: any) => ({
-        manufacturer: row.manufacturer,
-        display_name: row.display_name || null,
-        item_count: parseInt(String(row.item_count), 10),
-      }))
+      // Map lowercase variants to the canonical manufacturer entry
+      const codeToMfr = new Map<string, { id: string; code: string; name: string }>()
+      for (const row of wmRows) {
+        const entry = { id: row.manufacturer_id, code: row.code, name: row.name }
+        codeToMfr.set(row.code.toLowerCase(), entry)
+        if (row.name) codeToMfr.set(row.name.toLowerCase(), entry)
+      }
+
+      // Step 2: Get all distinct manufacturer values with item counts
+      const rawCounts = await knex("game_items")
+        .select(knex.raw("lower(manufacturer) as mfr_lower"))
+        .count("* as item_count")
+        .whereNotNull("manufacturer")
+        .andWhere("manufacturer", "!=", "")
+        .groupByRaw("lower(manufacturer)")
+
+      // Step 3: Merge by resolved manufacturer identity
+      const merged = new Map<string, { code: string; displayName: string | null; count: number }>()
+      for (const row of rawCounts) {
+        const key = row.mfr_lower as string
+        const count = parseInt(String(row.item_count), 10)
+        const resolved = codeToMfr.get(key)
+        const groupKey = resolved?.id || key
+        const existing = merged.get(groupKey)
+        if (existing) {
+          existing.count += count
+        } else {
+          merged.set(groupKey, {
+            code: resolved?.code || key,
+            displayName: resolved?.name || null,
+            count,
+          })
+        }
+      }
+
+      // Step 4: Sort and return
+      const manufacturers = Array.from(merged.values())
+        .sort((a, b) => (a.displayName || a.code).localeCompare(b.displayName || b.code))
+        .map((m) => ({
+          manufacturer: m.code,
+          display_name: m.displayName,
+          item_count: m.count,
+        }))
 
       logger.info("Manufacturers fetched successfully", { count: manufacturers.length })
 
