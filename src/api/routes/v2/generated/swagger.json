@@ -4800,6 +4800,9 @@
 					"name": {
 						"type": "string"
 					},
+					"ship_code": {
+						"type": "string"
+					},
 					"manufacturer": {
 						"type": "string"
 					},
@@ -4850,6 +4853,9 @@
 					"name": {
 						"type": "string"
 					},
+					"ship_code": {
+						"type": "string"
+					},
 					"manufacturer": {
 						"type": "string"
 					},
@@ -4871,6 +4877,28 @@
 					"default_loadout": {},
 					"attributes": {
 						"$ref": "#/components/schemas/Record_string.any_"
+					},
+					"crew_size": {
+						"type": "number",
+						"format": "double"
+					},
+					"career": {
+						"type": "string"
+					},
+					"role": {
+						"type": "string"
+					},
+					"length_m": {
+						"type": "number",
+						"format": "double"
+					},
+					"width_m": {
+						"type": "number",
+						"format": "double"
+					},
+					"height_m": {
+						"type": "number",
+						"format": "double"
 					}
 				},
 				"required": [
