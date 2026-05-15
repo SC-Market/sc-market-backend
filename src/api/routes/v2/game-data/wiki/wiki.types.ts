@@ -96,6 +96,7 @@ export interface MarketStats {
 export interface WikiShipSearchResult {
   id: string
   name: string
+  ship_code?: string
   manufacturer?: string
   focus?: string
   size?: string
@@ -111,6 +112,7 @@ export interface WikiShipSearchResult {
 export interface WikiShipDetail {
   id: string
   name: string
+  ship_code?: string
   manufacturer?: string
   focus?: string
   size?: string
