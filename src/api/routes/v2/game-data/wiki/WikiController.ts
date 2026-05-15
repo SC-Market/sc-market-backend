@@ -386,7 +386,7 @@ export class WikiController extends BaseController {
       }
 
       // Primary source: wiki_ships (versioned, deduplicated by name)
-      // LEFT JOIN game_items for the UUID (used for market linking)
+      // LEFT JOIN game_items for the UUID, wiki_manufacturers for display name
       let shipsQuery = knex(
         knex.raw(
           `(SELECT DISTINCT ON (name) * FROM wiki_ships WHERE version_id = ? ORDER BY name, ship_code) as ws`,
@@ -400,10 +400,11 @@ export class WikiController extends BaseController {
             knex.raw("?", ["Ship for Sale/Rental"]),
           )
         })
+        .leftJoin("wiki_manufacturers as wm", "wm.code", "ws.manufacturer_code")
         .select(
           knex.raw("COALESCE(gi.id::text, ws.ship_id::text) as id"),
           "ws.name",
-          knex.raw("COALESCE(ws.manufacturer_code, gi.manufacturer) as manufacturer"),
+          knex.raw("COALESCE(wm.name, ws.manufacturer_code, gi.manufacturer) as manufacturer"),
           "ws.size",
           "gi.image_url",
           "ws.focus",
@@ -416,10 +417,12 @@ export class WikiController extends BaseController {
           "ws.height_m",
         )
 
-      // Apply manufacturer filter
+      // Apply manufacturer filter (match against display name or code)
       if (manufacturer) {
         shipsQuery = shipsQuery.where(function () {
-          this.where("ws.manufacturer_code", manufacturer).orWhere("gi.manufacturer", manufacturer)
+          this.where("wm.name", manufacturer)
+            .orWhere("ws.manufacturer_code", manufacturer)
+            .orWhere("gi.manufacturer", manufacturer)
         })
       }
 
@@ -560,13 +563,20 @@ export class WikiController extends BaseController {
       const movement_class = attributes.movement_class || undefined
       const default_loadout = attributes.default_loadout || undefined
 
+      // Resolve manufacturer display name
+      const mfrCode = wikiShip?.manufacturer_code || shipRow.manufacturer
+      const mfrRow = mfrCode
+        ? await knex("wiki_manufacturers").where("code", mfrCode).select("name").first()
+        : null
+      const manufacturerName = mfrRow?.name || mfrCode || undefined
+
       logger.info("Ship detail fetched successfully", { id })
 
       return {
         id: shipRow.id,
         name: shipRow.name,
         ship_code: wikiShip?.ship_code || undefined,
-        manufacturer: shipRow.manufacturer || undefined,
+        manufacturer: manufacturerName,
         focus,
         size: shipRow.size || undefined,
         description,
