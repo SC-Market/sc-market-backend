@@ -413,6 +413,7 @@ export class WikiController extends BaseController {
         "gia_focus.attribute_value as focus",
         ...(activeVersion
           ? [
+              "ws.ship_code",
               "ws.crew_size",
               "ws.career",
               "ws.role",
@@ -454,6 +455,7 @@ export class WikiController extends BaseController {
       const ships = shipsResults.map((row: any) => ({
         id: row.id,
         name: row.name,
+        ship_code: row.ship_code || undefined,
         manufacturer: row.manufacturer || undefined,
         focus: row.focus || undefined,
         size: row.size || undefined,
@@ -507,8 +509,8 @@ export class WikiController extends BaseController {
     logger.info("Fetching ship detail", { id })
 
     try {
-      // Get ship data
-      const shipRow = await knex("game_items").where("id", id).where("type", "Ship").first()
+      // type filter omitted — ships may be stored as "Ship for Sale/Rental"
+      const shipRow = await knex("game_items").where("id", id).first()
 
       if (!shipRow) {
         this.throwNotFound("Ship", id)
@@ -532,11 +534,26 @@ export class WikiController extends BaseController {
       // Get default loadout (if stored in attributes)
       const default_loadout = attributes.default_loadout || undefined
 
+      // Join wiki_ships to get ship_code and vehicle metadata
+      const activeVersion = await knex("game_versions")
+        .where("version_type", "LIVE")
+        .where("is_active", true)
+        .orderBy("created_at", "desc")
+        .first()
+
+      const wikiShip = activeVersion
+        ? await knex("wiki_ships")
+            .where("name", shipRow.name)
+            .where("version_id", activeVersion.version_id)
+            .first()
+        : null
+
       logger.info("Ship detail fetched successfully", { id })
 
       return {
         id: shipRow.id,
         name: shipRow.name,
+        ship_code: wikiShip?.ship_code || undefined,
         manufacturer: shipRow.manufacturer || undefined,
         focus,
         size: shipRow.size || undefined,
@@ -545,6 +562,12 @@ export class WikiController extends BaseController {
         image_url: shipRow.image_url || undefined,
         default_loadout,
         attributes,
+        crew_size: wikiShip?.crew_size != null ? Number(wikiShip.crew_size) : undefined,
+        career: wikiShip?.career || undefined,
+        role: wikiShip?.role || undefined,
+        length_m: wikiShip?.length_m != null ? parseFloat(wikiShip.length_m) : undefined,
+        width_m: wikiShip?.width_m != null ? parseFloat(wikiShip.width_m) : undefined,
+        height_m: wikiShip?.height_m != null ? parseFloat(wikiShip.height_m) : undefined,
       }
     } catch (error) {
       logger.error("Failed to fetch ship detail", {
