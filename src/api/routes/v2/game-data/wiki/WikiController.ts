@@ -402,6 +402,7 @@ export class WikiController extends BaseController {
         })
         .leftJoin("wiki_manufacturers as wm", function () {
           this.on(knex.raw("lower(wm.code) = lower(ws.manufacturer_code)"))
+            .orOn(knex.raw("lower(wm.code) = lower(gi.manufacturer)"))
         })
         .select(
           knex.raw("COALESCE(gi.id::text, ws.ship_id::text) as id"),
@@ -566,12 +567,14 @@ export class WikiController extends BaseController {
       const movement_class = attributes.movement_class || undefined
       const default_loadout = attributes.default_loadout || undefined
 
-      // Resolve manufacturer display name (case-insensitive lookup)
-      const mfrCode = wikiShip?.manufacturer_code || shipRow?.manufacturer
-      const mfrRow = mfrCode
-        ? await knex("wiki_manufacturers").whereRaw("lower(code) = lower(?)", [mfrCode]).select("name").first()
-        : null
-      const manufacturerName = mfrRow?.name || mfrCode || undefined
+      // Resolve manufacturer display name (try both codes)
+      const mfrCodes = [wikiShip?.manufacturer_code, shipRow?.manufacturer].filter(Boolean)
+      let mfrRow: any = null
+      for (const code of mfrCodes) {
+        mfrRow = await knex("wiki_manufacturers").whereRaw("lower(code) = lower(?)", [code]).select("name").first()
+        if (mfrRow) break
+      }
+      const manufacturerName = mfrRow?.name || mfrCodes[0] || undefined
 
       logger.info("Ship detail fetched successfully", { id })
 
