@@ -1562,6 +1562,7 @@ const models: TsoaRoute.Models = {
         "properties": {
             "id": {"dataType":"string","required":true},
             "name": {"dataType":"string","required":true},
+            "ship_code": {"dataType":"string"},
             "manufacturer": {"dataType":"string"},
             "focus": {"dataType":"string"},
             "size": {"dataType":"string"},
@@ -1581,6 +1582,7 @@ const models: TsoaRoute.Models = {
         "properties": {
             "id": {"dataType":"string","required":true},
             "name": {"dataType":"string","required":true},
+            "ship_code": {"dataType":"string"},
             "manufacturer": {"dataType":"string"},
             "focus": {"dataType":"string"},
             "size": {"dataType":"string"},
@@ -1589,6 +1591,12 @@ const models: TsoaRoute.Models = {
             "image_url": {"dataType":"string"},
             "default_loadout": {"dataType":"any"},
             "attributes": {"ref":"Record_string.any_","required":true},
+            "crew_size": {"dataType":"double"},
+            "career": {"dataType":"string"},
+            "role": {"dataType":"string"},
+            "length_m": {"dataType":"double"},
+            "width_m": {"dataType":"double"},
+            "height_m": {"dataType":"double"},
         },
         "additionalProperties": false,
     },
