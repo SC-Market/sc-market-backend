@@ -368,75 +368,69 @@ export class WikiController extends BaseController {
   ): Promise<{ ships: WikiShipSearchResult[]; total: number; page: number; page_size: number }> {
     const knex = getKnex()
 
-    // Validate pagination parameters
+    // Validate pagination — allow up to 500 since the frontend fetches all for client-side filtering
     const validatedPage = Math.max(1, page || 1)
-    const validatedPageSize = Math.min(100, Math.max(1, page_size || 20))
+    const validatedPageSize = Math.min(500, Math.max(1, page_size || 20))
 
     logger.info("Fetching ships", { manufacturer, focus, size, page: validatedPage })
 
     try {
-      // Get active LIVE version for wiki_ships join
-      const activeVersion = await knex("game_versions")
-        .where("version_type", "LIVE")
-        .where("is_active", true)
+      // Use the latest version (most recent upload), not just active LIVE
+      const latestVersion = await knex("game_versions")
+        .whereIn("version_type", ["LIVE", "PTU"])
         .orderBy("created_at", "desc")
         .first()
 
-      // Build query - ships are identified by type = 'Ship' or similar
-      let shipsQuery = knex("game_items as gi")
-        .leftJoin("game_item_attributes as gia_focus", function () {
-          this.on("gi.id", "=", "gia_focus.game_item_id").andOn(
-            "gia_focus.attribute_name",
-            "=",
-            knex.raw("?", ["ship_focus"]),
-          )
-        })
-        .where("gi.type", "Ship for Sale/Rental")
-
-      // Left join wiki_ships for vehicle metadata
-      if (activeVersion) {
-        shipsQuery = shipsQuery.leftJoin("wiki_ships as ws", function () {
-          this.on("gi.name", "=", "ws.name").andOn(
-            "ws.version_id",
-            "=",
-            knex.raw("?", [activeVersion.version_id]),
-          )
-        })
+      if (!latestVersion) {
+        return { ships: [], total: 0, page: validatedPage, page_size: validatedPageSize }
       }
 
-      shipsQuery = shipsQuery.select(
-        "gi.id",
-        "gi.name",
-        "gi.manufacturer",
-        "gi.size",
-        "gi.image_url",
-        "gia_focus.attribute_value as focus",
-        ...(activeVersion
-          ? [
-              "ws.ship_code",
-              "ws.crew_size",
-              "ws.career",
-              "ws.role",
-              "ws.length_m",
-              "ws.width_m",
-              "ws.height_m",
-            ]
-          : []),
+      // Primary source: wiki_ships (versioned, deduplicated by name)
+      // LEFT JOIN game_items for the UUID (used for market linking)
+      let shipsQuery = knex(
+        knex.raw(
+          `(SELECT DISTINCT ON (name) * FROM wiki_ships WHERE version_id = ? ORDER BY name, ship_code) as ws`,
+          [latestVersion.version_id],
+        ),
       )
+        .leftJoin("game_items as gi", function () {
+          this.on("gi.name", "=", "ws.name").andOn(
+            "gi.type",
+            "=",
+            knex.raw("?", ["Ship for Sale/Rental"]),
+          )
+        })
+        .select(
+          knex.raw("COALESCE(gi.id::text, ws.ship_id::text) as id"),
+          "ws.name",
+          knex.raw("COALESCE(ws.manufacturer_code, gi.manufacturer) as manufacturer"),
+          "ws.size",
+          "gi.image_url",
+          "ws.focus",
+          "ws.ship_code",
+          "ws.crew_size",
+          "ws.career",
+          "ws.role",
+          "ws.length_m",
+          "ws.width_m",
+          "ws.height_m",
+        )
 
       // Apply manufacturer filter
       if (manufacturer) {
-        shipsQuery = shipsQuery.where("gi.manufacturer", manufacturer)
+        shipsQuery = shipsQuery.where(function () {
+          this.where("ws.manufacturer_code", manufacturer).orWhere("gi.manufacturer", manufacturer)
+        })
       }
 
       // Apply focus filter
       if (focus) {
-        shipsQuery = shipsQuery.where("gia_focus.attribute_value", focus)
+        shipsQuery = shipsQuery.where("ws.focus", focus)
       }
 
       // Apply size filter
       if (size) {
-        shipsQuery = shipsQuery.where("gi.size", size)
+        shipsQuery = shipsQuery.where("ws.size", size)
       }
 
       // Get total count
@@ -445,7 +439,7 @@ export class WikiController extends BaseController {
       const total = parseInt(String(totalCount), 10)
 
       // Apply sorting and pagination
-      shipsQuery = shipsQuery.orderBy("gi.name", "asc")
+      shipsQuery = shipsQuery.orderBy("ws.name", "asc")
       const offset = (validatedPage - 1) * validatedPageSize
       shipsQuery = shipsQuery.limit(validatedPageSize).offset(offset)
 
@@ -458,7 +452,7 @@ export class WikiController extends BaseController {
         ship_code: row.ship_code || undefined,
         manufacturer: row.manufacturer || undefined,
         focus: row.focus || undefined,
-        size: row.size || undefined,
+        size: row.size != null ? String(row.size) : undefined,
         image_url: row.image_url || undefined,
         crew_size: row.crew_size != null ? Number(row.crew_size) : undefined,
         career: row.career || undefined,
@@ -509,8 +503,43 @@ export class WikiController extends BaseController {
     logger.info("Fetching ship detail", { id })
 
     try {
-      // type filter omitted — ships may be stored as "Ship for Sale/Rental"
-      const shipRow = await knex("game_items").where("id", id).first()
+      // Use the latest version (most recent upload)
+      const latestVersion = await knex("game_versions")
+        .whereIn("version_type", ["LIVE", "PTU"])
+        .orderBy("created_at", "desc")
+        .first()
+
+      // Support lookup by UUID or ship_code
+      const isUuid = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(id)
+      let shipRow: any
+      let wikiShip: any = null
+
+      if (isUuid) {
+        shipRow = await knex("game_items").where("id", id).first()
+        if (shipRow && latestVersion) {
+          wikiShip = await knex("wiki_ships")
+            .where("name", shipRow.name)
+            .where("version_id", latestVersion.version_id)
+            .first()
+        }
+      } else {
+        // Lookup by ship_code
+        if (latestVersion) {
+          wikiShip = await knex("wiki_ships")
+            .where("ship_code", id)
+            .where("version_id", latestVersion.version_id)
+            .first()
+        }
+        if (wikiShip) {
+          shipRow = await knex("game_items")
+            .where("name", wikiShip.name)
+            .where("type", "Ship for Sale/Rental")
+            .first()
+        }
+        if (!shipRow) {
+          shipRow = await knex("game_items").where("p4k_id", id).first()
+        }
+      }
 
       if (!shipRow) {
         this.throwNotFound("Ship", id)
@@ -518,7 +547,7 @@ export class WikiController extends BaseController {
 
       // Get ship attributes
       const attributesRows = await knex("game_item_attributes")
-        .where("game_item_id", id)
+        .where("game_item_id", shipRow.id)
         .select("attribute_name", "attribute_value")
 
       const attributes: Record<string, any> = {}
@@ -526,27 +555,10 @@ export class WikiController extends BaseController {
         attributes[row.attribute_name] = row.attribute_value
       }
 
-      // Extract specific attributes
       const focus = attributes.ship_focus || undefined
       const description = attributes.description || undefined
       const movement_class = attributes.movement_class || undefined
-
-      // Get default loadout (if stored in attributes)
       const default_loadout = attributes.default_loadout || undefined
-
-      // Join wiki_ships to get ship_code and vehicle metadata
-      const activeVersion = await knex("game_versions")
-        .where("version_type", "LIVE")
-        .where("is_active", true)
-        .orderBy("created_at", "desc")
-        .first()
-
-      const wikiShip = activeVersion
-        ? await knex("wiki_ships")
-            .where("name", shipRow.name)
-            .where("version_id", activeVersion.version_id)
-            .first()
-        : null
 
       logger.info("Ship detail fetched successfully", { id })
 
