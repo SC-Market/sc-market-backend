@@ -400,7 +400,9 @@ export class WikiController extends BaseController {
             knex.raw("?", ["Ship for Sale/Rental"]),
           )
         })
-        .leftJoin("wiki_manufacturers as wm", "wm.code", "ws.manufacturer_code")
+        .leftJoin("wiki_manufacturers as wm", function () {
+          this.on(knex.raw("lower(wm.code) = lower(ws.manufacturer_code)"))
+        })
         .select(
           knex.raw("COALESCE(gi.id::text, ws.ship_id::text) as id"),
           "ws.name",
@@ -564,10 +566,10 @@ export class WikiController extends BaseController {
       const movement_class = attributes.movement_class || undefined
       const default_loadout = attributes.default_loadout || undefined
 
-      // Resolve manufacturer display name
+      // Resolve manufacturer display name (case-insensitive lookup)
       const mfrCode = wikiShip?.manufacturer_code || shipRow?.manufacturer
       const mfrRow = mfrCode
-        ? await knex("wiki_manufacturers").where("code", mfrCode).select("name").first()
+        ? await knex("wiki_manufacturers").whereRaw("lower(code) = lower(?)", [mfrCode]).select("name").first()
         : null
       const manufacturerName = mfrRow?.name || mfrCode || undefined
 
