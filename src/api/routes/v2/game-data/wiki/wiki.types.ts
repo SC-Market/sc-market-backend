@@ -121,6 +121,12 @@ export interface WikiShipDetail {
   image_url?: string
   default_loadout?: any
   attributes: Record<string, any>
+  crew_size?: number
+  career?: string
+  role?: string
+  length_m?: number
+  width_m?: number
+  height_m?: number
 }
 
 // ============================================================================
