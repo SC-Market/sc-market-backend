@@ -1912,19 +1912,38 @@ export async function getMarketItemsBySubcategory(
 }
 
 /**
- * Search game items by name using PostgreSQL full-text search.
+ * Search game items by name using PostgreSQL full-text search with fuzzy fallback.
  */
 export async function searchGameItems(
   query: string,
   limit?: number,
 ): Promise<DBMarketItem[]> {
-  // Use PostgreSQL full-text search with prefix matching
+  const trimmed = query.trim()
+  const effectiveLimit = limit || 50
+
+  // Build a prefix-aware tsquery: each word gets :* for prefix matching
+  const prefixTsquery = trimmed
+    .split(/\s+/)
+    .filter(Boolean)
+    .map((word) => `${word.replace(/[^\w]/g, "")}:*`)
+    .join(" & ")
+
   return knex()<DBMarketItem>("game_items")
-    .whereRaw("to_tsvector('english', name) @@ plainto_tsquery('english', ?)", [query])
-    .orWhere("name", "ilike", `${query}%`) // Also match prefix for short queries
-    .orderByRaw("ts_rank(to_tsvector('english', name), plainto_tsquery('english', ?)) DESC", [query])
+    .whereRaw(
+      "to_tsvector('english', name) @@ to_tsquery('english', ?)",
+      [prefixTsquery],
+    )
+    .orWhere("name", "ilike", `%${trimmed}%`)
+    .orderByRaw(
+      `ts_rank(to_tsvector('english', name), to_tsquery('english', ?)) DESC`,
+      [prefixTsquery],
+    )
+    .orderByRaw(
+      `CASE WHEN name ILIKE ? THEN 0 ELSE 1 END`,
+      [`${trimmed}%`],
+    )
     .orderBy("name")
-    .limit(limit || 50)
+    .limit(effectiveLimit)
     .select("name", "type", "id")
 }
 
