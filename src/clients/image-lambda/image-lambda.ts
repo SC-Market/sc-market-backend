@@ -50,6 +50,26 @@ export class ImageLambdaClient {
     this.functionName = env.IMAGE_LAMBDA_NAME
   }
 
+  private static readonly MAX_RETRIES = 2
+  private static readonly RETRY_DELAY_MS = 500
+
+  private static isRetryableError(error: Error): boolean {
+    const msg = error.message.toLowerCase()
+    return (
+      msg.includes("unhandled") ||
+      msg.includes("timeout") ||
+      msg.includes("timed out") ||
+      msg.includes("task timed out") ||
+      msg.includes("service exception") ||
+      msg.includes("too many requests") ||
+      msg.includes("socket hang up")
+    )
+  }
+
+  private static sleep(ms: number): Promise<void> {
+    return new Promise((resolve) => setTimeout(resolve, ms))
+  }
+
   /**
    * Upload an image to the image lambda for processing and moderation
    * @param imageBuffer - The image buffer to process
@@ -62,9 +82,40 @@ export class ImageLambdaClient {
     filename: string,
     contentType: string,
   ): Promise<ImageLambdaResponse> {
+    let lastError: Error | undefined
+
+    for (let attempt = 0; attempt <= this.MAX_RETRIES; attempt++) {
+      try {
+        return await this.invokeUpload(imageBuffer, filename, contentType)
+      } catch (error) {
+        lastError = error instanceof Error ? error : new Error(String(error))
+
+        if (attempt < this.MAX_RETRIES && this.isRetryableError(lastError)) {
+          const delay = this.RETRY_DELAY_MS * Math.pow(2, attempt)
+          logger.warn("Image lambda transient failure, retrying", {
+            attempt: attempt + 1,
+            maxRetries: this.MAX_RETRIES,
+            delayMs: delay,
+            error: lastError.message,
+            filename,
+          })
+          await this.sleep(delay)
+        } else {
+          break
+        }
+      }
+    }
+
+    throw lastError!
+  }
+
+  private static async invokeUpload(
+    imageBuffer: Buffer,
+    filename: string,
+    contentType: string,
+  ): Promise<ImageLambdaResponse> {
     this.initialize()
 
-    // Convert image to base64
     const base64Image = imageBuffer.toString("base64")
 
     const payload = {
@@ -81,117 +132,101 @@ export class ImageLambdaClient {
       payloadKeys: Object.keys(payload),
     })
 
+    const command = new InvokeCommand({
+      FunctionName: this.functionName!,
+      Payload: JSON.stringify(payload),
+      InvocationType: "RequestResponse",
+    })
+
+    const response = await this.lambdaClient!.send(command)
+
+    logger.debug("Lambda response received", {
+      statusCode: response.StatusCode,
+      functionError: response.FunctionError,
+      logResult: response.LogResult,
+      executedVersion: response.ExecutedVersion,
+    })
+
+    if (response.StatusCode !== 200) {
+      throw new Error(
+        `Lambda invocation failed with status: ${response.StatusCode}`,
+      )
+    }
+
+    if (response.FunctionError) {
+      throw new Error(`Lambda function error: ${response.FunctionError}`)
+    }
+
+    if (!response.Payload) {
+      throw new Error("Lambda response has no payload")
+    }
+
+    const responseText = new TextDecoder().decode(response.Payload)
+    logger.debug("Raw Lambda response payload:", { responseText })
+
+    let responseData: ImageLambdaResponse | ApiGatewayResponse
     try {
-      // Create the invoke command
-      const command = new InvokeCommand({
-        FunctionName: this.functionName!,
-        Payload: JSON.stringify(payload),
-        InvocationType: "RequestResponse", // Synchronous invocation
+      responseData = JSON.parse(responseText)
+      logger.debug("Parsed response data:", { responseData })
+    } catch (parseError) {
+      throw new Error(`Failed to parse response as JSON: ${responseText}`)
+    }
+
+    // Handle API Gateway response wrapper
+    if ("statusCode" in responseData && "body" in responseData) {
+      logger.debug("Detected API Gateway response wrapper:", {
+        statusCode: responseData.statusCode,
+        headers: responseData.headers,
+        bodyLength: responseData.body.length,
       })
 
-      // Invoke the lambda function
-      const response = await this.lambdaClient!.send(command)
-
-      logger.debug("Lambda response received", {
-        statusCode: response.StatusCode,
-        functionError: response.FunctionError,
-        logResult: response.LogResult,
-        executedVersion: response.ExecutedVersion,
-      })
-
-      // Check if the lambda execution was successful
-      if (response.StatusCode !== 200) {
+      const apiGatewayResponse = responseData as ApiGatewayResponse
+      try {
+        const actualBody = JSON.parse(apiGatewayResponse.body)
+        logger.debug("Extracted actual response body:", { actualBody })
+        responseData = actualBody
+      } catch (parseError) {
         throw new Error(
-          `Lambda invocation failed with status: ${response.StatusCode}`,
+          `Failed to parse API Gateway body: ${apiGatewayResponse.body}`,
         )
       }
-
-      if (response.FunctionError) {
-        throw new Error(`Lambda function error: ${response.FunctionError}`)
-      }
-
-      // Parse the response payload
-      if (!response.Payload) {
-        throw new Error("Lambda response has no payload")
-      }
-
-      const responseText = new TextDecoder().decode(response.Payload)
-      logger.debug("Raw Lambda response payload:", { responseText })
-
-      let responseData: ImageLambdaResponse | ApiGatewayResponse
-      try {
-        responseData = JSON.parse(responseText)
-        logger.debug("Parsed response data:", { responseData })
-      } catch (parseError) {
-        throw new Error(`Failed to parse response as JSON: ${responseText}`)
-      }
-
-      // Handle API Gateway response wrapper
-      if ("statusCode" in responseData && "body" in responseData) {
-        logger.debug("Detected API Gateway response wrapper:", {
-          statusCode: responseData.statusCode,
-          headers: responseData.headers,
-          bodyLength: responseData.body.length,
-        })
-
-        // This is an API Gateway response, extract the actual body
-        const apiGatewayResponse = responseData as ApiGatewayResponse
-        try {
-          const actualBody = JSON.parse(apiGatewayResponse.body)
-          logger.debug("Extracted actual response body:", { actualBody })
-          responseData = actualBody
-        } catch (parseError) {
-          throw new Error(
-            `Failed to parse API Gateway body: ${apiGatewayResponse.body}`,
-          )
-        }
-      } else {
-        logger.debug("Direct Lambda response (no API Gateway wrapper)")
-      }
-
-      // Now responseData should be ImageLambdaResponse
-      const finalResponse = responseData as ImageLambdaResponse
-      logger.debug("Final processed response:", { finalResponse })
-
-      // Check if the request was successful
-      if (finalResponse.success) {
-        logger.debug("Image upload successful:", finalResponse)
-        return finalResponse
-      } else {
-        // Handle error cases
-        const errorMessage = finalResponse.message || "Upload failed"
-
-        // Determine if this is a user-fault error or system error
-        const isUserFault =
-          finalResponse.error &&
-          [
-            "MODERATION_FAILED",
-            "VALIDATION_ERROR",
-            "UNSUPPORTED_FORMAT",
-          ].includes(finalResponse.error)
-
-        if (isUserFault) {
-          logger.debug("Image upload failed due to user input:", {
-            error: finalResponse.error,
-            message: finalResponse.message,
-            data: finalResponse.data,
-          })
-        } else {
-          logger.error("Image upload failed due to system error:", {
-            error: finalResponse.error,
-            message: finalResponse.message,
-            data: finalResponse.data,
-          })
-        }
-
-        throw new Error(errorMessage)
-      }
-    } catch (error) {
-      if (error instanceof Error) {
-        throw error
-      }
-      throw new Error(`Lambda invocation failed: ${error}`)
+    } else {
+      logger.debug("Direct Lambda response (no API Gateway wrapper)")
     }
+
+    const finalResponse = responseData as ImageLambdaResponse
+    logger.debug("Final processed response:", { finalResponse })
+
+    if (finalResponse.success) {
+      logger.debug("Image upload successful:", finalResponse)
+      return finalResponse
+    }
+
+    const errorMessage = finalResponse.message || "Upload failed"
+
+    const isUserFault =
+      finalResponse.error &&
+      [
+        "MODERATION_FAILED",
+        "VALIDATION_ERROR",
+        "UNSUPPORTED_FORMAT",
+      ].includes(finalResponse.error)
+
+    if (isUserFault) {
+      logger.debug("Image upload failed due to user input:", {
+        error: finalResponse.error,
+        message: finalResponse.message,
+        data: finalResponse.data,
+      })
+    } else {
+      logger.error("Image upload failed due to system error:", {
+        error: finalResponse.error,
+        message: finalResponse.message,
+        data: finalResponse.data,
+      })
+    }
+
+    throw new Error(errorMessage)
   }
 
   /**
