@@ -453,6 +453,11 @@
 						"format": "double",
 						"description": "Total quantity in this lot"
 					},
+					"quantity_allocated": {
+						"type": "number",
+						"format": "double",
+						"description": "Quantity currently allocated to active orders"
+					},
 					"location": {
 						"allOf": [
 							{
@@ -504,6 +509,7 @@
 					"listing_title",
 					"variant",
 					"quantity_total",
+					"quantity_allocated",
 					"location",
 					"owner",
 					"listed",
@@ -12699,6 +12705,16 @@
 						"required": false,
 						"schema": {
 							"type": "string"
+						}
+					},
+					{
+						"description": "Max results (default 50)",
+						"in": "query",
+						"name": "limit",
+						"required": false,
+						"schema": {
+							"format": "double",
+							"type": "number"
 						}
 					}
 				]
