@@ -713,14 +713,20 @@ export const update_listing_quantity: RequestHandler = async (req, res) => {
     return
   }
 
-  // Use stock lot service to update quantity
   const stockLotService = new StockLotService()
   await stockLotService.updateSimpleStock(
     listing.listing_id,
     quantity_available,
   )
 
-  res.json(createResponse({ result: "Success" }))
+  const available = await stockLotService.getAvailableStock(listing.listing_id)
+  const reserved = await stockLotService.getReservedStock(listing.listing_id)
+
+  res.json(createResponse({
+    result: "Success",
+    quantity_available: available,
+    quantity_reserved: reserved,
+  }))
 }
 
 export const refresh_listing: RequestHandler = async (req, res) => {

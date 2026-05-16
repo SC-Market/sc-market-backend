@@ -82,7 +82,10 @@ export interface StockLotDetail {
   
   /** Total quantity in this lot */
   quantity_total: number;
-  
+
+  /** Quantity currently allocated to active orders */
+  quantity_allocated: number;
+
   /** Location information (null if unspecified) */
   location: LocationInfo | null;
   

@@ -237,6 +237,7 @@ const models: TsoaRoute.Models = {
             "listing_title": {"dataType":"string","required":true},
             "variant": {"ref":"StockLotVariant","required":true},
             "quantity_total": {"dataType":"double","required":true},
+            "quantity_allocated": {"dataType":"double","required":true},
             "location": {"dataType":"union","subSchemas":[{"ref":"LocationInfo"},{"dataType":"enum","enums":[null]}],"required":true},
             "owner": {"dataType":"union","subSchemas":[{"ref":"OwnerInfo"},{"dataType":"enum","enums":[null]}],"required":true},
             "listed": {"dataType":"boolean","required":true},
@@ -4678,6 +4679,7 @@ export function RegisterRoutes(app: Router) {
         // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
         const argsGameItemsV2Controller_searchGameItems: Record<string, TsoaRoute.ParameterSchema> = {
                 query: {"in":"query","name":"query","dataType":"string"},
+                limit: {"in":"query","name":"limit","dataType":"double"},
         };
         app.get('/game-items/search',
             ...(fetchMiddlewares<RequestHandler>(GameItemsV2Controller)),

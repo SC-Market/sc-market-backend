@@ -50,45 +50,38 @@ export class StockLotService {
   }
 
   /**
-   * Update stock using the simple interface (single number)
-   * Creates or updates an Unspecified location lot with listed=true
+   * Update stock using the simple interface (single number).
+   * The quantity represents desired *available* (unallocated) stock.
+   * Allocated units for active orders are preserved on top.
+   * Negative input is clamped to 0 (noop-style: never throws for quantity values).
    *
    * Requirements: 1.1, 1.4, 4.5
    */
   async updateSimpleStock(listingId: string, quantity: number): Promise<void> {
-    if (quantity < 0) {
-      throw new InvalidQuantityError(quantity, "Quantity must be non-negative")
-    }
-
-    // Find or create Unspecified location lot
-    const existingLot = await this.repository.getUnspecifiedLot(listingId)
-    const currentTotal = await this.getTotalStock(listingId)
-    const newTotal = existingLot
-      ? currentTotal - existingLot.quantity_total + quantity
-      : currentTotal + quantity
+    const desiredAvailable = Math.max(0, quantity)
 
     const allocated = await this.getActiveAllocatedQuantityForListing(listingId)
-    if (newTotal < allocated) {
-      throw new InvalidQuantityError(
-        quantity,
-        `Cannot reduce stock below ${allocated} (committed to active orders). Current total across all lots is ${currentTotal}.`,
-      )
-    }
+    const effectiveTotal = desiredAvailable + allocated
+
+    const existingLot = await this.repository.getUnspecifiedLot(listingId)
 
     if (existingLot) {
-      // Update existing Unspecified lot
-      await this.repository.update(existingLot.lot_id, { quantity })
+      await this.repository.update(existingLot.lot_id, { quantity: effectiveTotal })
     } else {
-      // Create new Unspecified lot
       await this.repository.create({
         listing_id: listingId,
-        quantity,
+        quantity: effectiveTotal,
         location_id: null,
         listed: true,
       })
     }
 
-    logger.info("Simple stock updated", { listingId, quantity })
+    logger.info("Simple stock updated", {
+      listingId,
+      desiredAvailable,
+      allocated,
+      effectiveTotal,
+    })
   }
 
   /**

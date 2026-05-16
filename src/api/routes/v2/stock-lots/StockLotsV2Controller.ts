@@ -275,6 +275,17 @@ export class StockLotsV2Controller extends BaseController {
       // Execute query
       const results = await query
 
+      // Fetch allocations for all lots in one query
+      const lotIds = results.map((r: any) => r.lot_id)
+      const allocationRows = lotIds.length > 0
+        ? await knex("stock_allocations")
+            .whereIn("lot_id", lotIds)
+            .where("status", "active")
+            .groupBy("lot_id")
+            .select("lot_id", knex.raw("SUM(quantity)::integer as allocated"))
+        : []
+      const allocationMap = new Map(allocationRows.map((r: any) => [r.lot_id, r.allocated]))
+
       // Transform results to match response type (Requirements 20.8, 20.9, 20.12)
       const lots: StockLotDetail[] = await Promise.all(results.map(async (row: any) => ({
         lot_id: row.lot_id,
@@ -288,6 +299,7 @@ export class StockLotsV2Controller extends BaseController {
           short_name: row.variant_short_name || "STD",
         },
         quantity_total: row.quantity_total,
+        quantity_allocated: allocationMap.get(row.lot_id) || 0,
         location: row.location_id
           ? {
               location_id: row.location_id,
@@ -521,6 +533,14 @@ export class StockLotsV2Controller extends BaseController {
         this.throwNotFound("Stock lot", id)
       }
 
+      // Fetch allocation for this lot
+      const allocRow = await knex2("stock_allocations")
+        .where("lot_id", id)
+        .where("status", "active")
+        .sum("quantity as allocated")
+        .first()
+      const quantityAllocated = Number(allocRow?.allocated || 0)
+
       const lot: StockLotDetail = {
         lot_id: lotResult.lot_id,
         item_id: lotResult.item_id,
@@ -533,6 +553,7 @@ export class StockLotsV2Controller extends BaseController {
           short_name: lotResult.variant_short_name || "STD",
         },
         quantity_total: lotResult.quantity_total,
+        quantity_allocated: quantityAllocated,
         location: lotResult.location_id
           ? {
               location_id: lotResult.location_id,
@@ -856,6 +877,13 @@ export class StockLotsV2Controller extends BaseController {
       this.throwNotFound("Stock lot", lotId)
     }
 
+    const allocRow = await db("stock_allocations")
+      .where("lot_id", lotId)
+      .where("status", "active")
+      .sum("quantity as allocated")
+      .first()
+    const quantityAllocated = Number(allocRow?.allocated || 0)
+
     return {
       lot_id: row.lot_id,
       item_id: row.item_id,
@@ -868,6 +896,7 @@ export class StockLotsV2Controller extends BaseController {
         short_name: row.variant_short_name || "STD",
       },
       quantity_total: row.quantity_total,
+      quantity_allocated: quantityAllocated,
       location: row.location_id
         ? { location_id: row.location_id, name: row.location_name, is_preset: row.location_is_preset }
         : null,
