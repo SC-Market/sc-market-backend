@@ -41,22 +41,42 @@ export class GameItemsV2Controller extends BaseController {
    * Search game items by name
    * @summary Search game items
    * @param query Search text
+   * @param limit Max results (default 50)
    */
   @Get("search")
   public async searchGameItems(
     @Query() query?: string,
+    @Query() limit?: number,
   ): Promise<GameItemSearchResult[]> {
-    if (!query || query.length < 1) return []
+    if (!query || query.trim().length < 1) return []
 
     const knex = getKnex()
-    const limit = query.length < 3 ? 10 : 50
+    const trimmed = query.trim()
+    const effectiveLimit = Math.min(limit || 50, 100)
+
+    // Build a prefix-aware tsquery: each word gets :* for prefix matching
+    const prefixTsquery = trimmed
+      .split(/\s+/)
+      .filter(Boolean)
+      .map((word) => `${word.replace(/[^\w]/g, "")}:*`)
+      .join(" & ")
 
     return knex("game_items")
-      .whereRaw("to_tsvector('english', name) @@ plainto_tsquery('english', ?)", [query])
-      .orWhere("name", "ilike", `${query}%`)
-      .orderByRaw("ts_rank(to_tsvector('english', name), plainto_tsquery('english', ?)) DESC", [query])
+      .whereRaw(
+        "to_tsvector('english', name) @@ to_tsquery('english', ?)",
+        [prefixTsquery],
+      )
+      .orWhere("name", "ilike", `%${trimmed}%`)
+      .orderByRaw(
+        `ts_rank(to_tsvector('english', name), to_tsquery('english', ?)) DESC`,
+        [prefixTsquery],
+      )
+      .orderByRaw(
+        `CASE WHEN name ILIKE ? THEN 0 ELSE 1 END`,
+        [`${trimmed}%`],
+      )
       .orderBy("name")
-      .limit(limit)
+      .limit(effectiveLimit)
       .select("name", "type", "id")
   }
 

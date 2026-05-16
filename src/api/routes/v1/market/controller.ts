@@ -2490,14 +2490,13 @@ export const get_category_details: RequestHandler = async (req, res) => {
 
 export const search_game_items: RequestHandler = async (req, res) => {
   const query = req.query.query as string
-  
-  if (!query || query.length < 1) {
+
+  if (!query || query.trim().length < 1) {
     res.json(createResponse([]))
     return
   }
-  
-  const limit = query.length < 3 ? 10 : 50
-  const items = await marketDb.searchGameItems(query, limit)
+
+  const items = await marketDb.searchGameItems(query, 50)
   res.json(createResponse(items))
 }
 
