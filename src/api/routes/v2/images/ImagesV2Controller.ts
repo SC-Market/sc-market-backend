@@ -12,6 +12,7 @@ import fs from "node:fs"
 import crypto from "crypto"
 import { BaseController } from "../base/BaseController.js"
 import { cdn } from "../../../../clients/cdn/cdn.js"
+import { ImageModerationError } from "../../../../clients/image-lambda/image-lambda.js"
 import logger from "../../../../logger/logger.js"
 
 /**
@@ -87,22 +88,20 @@ export class ImagesV2Controller extends BaseController {
         url,
       }
     } catch (uploadError: any) {
-      const msg = uploadError?.message || "Image upload failed"
-
-      if (
-        msg.includes("moderation") ||
-        msg.includes("Moderation") ||
-        msg.includes("MODERATION")
-      ) {
+      if (uploadError instanceof ImageModerationError) {
         this.throwValidationError("Image failed moderation", [
-          { field: "photo", message: `Image was rejected: ${msg}` },
+          {
+            field: "photo",
+            message: uploadError.labels.length > 0
+              ? `Rejected for: ${uploadError.labels.join(", ")} (${uploadError.confidence.toFixed(0)}% confidence)`
+              : "Image failed content moderation checks",
+          },
         ])
       }
 
-      if (
-        msg.includes("Unsupported") ||
-        msg.includes("UNSUPPORTED")
-      ) {
+      const msg = uploadError?.message || "Image upload failed"
+
+      if (msg.includes("Unsupported") || msg.includes("UNSUPPORTED")) {
         this.throwValidationError("Unsupported image format", [
           { field: "photo", message: msg },
         ])
