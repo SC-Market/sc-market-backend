@@ -76,7 +76,9 @@ export class ImageLambdaClient {
       msg.includes("task timed out") ||
       msg.includes("service exception") ||
       msg.includes("too many requests") ||
-      msg.includes("socket hang up")
+      msg.includes("socket hang up") ||
+      msg.includes("scan_infra_error") ||
+      msg.includes("scanning unavailable")
     )
   }
 
