@@ -22,6 +22,8 @@ import { InventoryV2Controller } from './../inventory/InventoryV2Controller.js';
 // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
 import { ImportJobsV2Controller } from './../import-jobs/ImportJobsV2Controller.js';
 // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+import { ImagesV2Controller } from './../images/ImagesV2Controller.js';
+// WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
 import { HealthController } from './../health/HealthController.js';
 // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
 import { GameItemsV2Controller } from './../game-items/GameItemsV2Controller.js';
@@ -1199,6 +1201,15 @@ const models: TsoaRoute.Models = {
             "completedAt": {"dataType":"union","subSchemas":[{"dataType":"string"},{"dataType":"enum","enums":[null]}],"required":true},
             "result": {"dataType":"union","subSchemas":[{"ref":"Record_string.any_"},{"dataType":"enum","enums":[null]}],"required":true},
             "error": {"dataType":"union","subSchemas":[{"dataType":"string"},{"dataType":"enum","enums":[null]}],"required":true},
+        },
+        "additionalProperties": false,
+    },
+    // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+    "ImageUploadResponse": {
+        "dataType": "refObject",
+        "properties": {
+            "resource_id": {"dataType":"string","required":true},
+            "url": {"dataType":"string","required":true},
         },
         "additionalProperties": false,
     },
@@ -3562,6 +3573,7 @@ export function RegisterRoutes(app: Router) {
                 quality_tier_max: {"in":"query","name":"quality_tier_max","dataType":"double"},
                 page: {"in":"query","name":"page","dataType":"double"},
                 page_size: {"in":"query","name":"page_size","dataType":"double"},
+                request: {"in":"request","name":"request","dataType":"object"},
         };
         app.get('/stock-lots',
             authenticateMiddleware([{"loggedin":[]}]),
@@ -4388,6 +4400,38 @@ export function RegisterRoutes(app: Router) {
             }
         });
         // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+        const argsListingsV2Controller_importFromUex: Record<string, TsoaRoute.ParameterSchema> = {
+                requestBody: {"in":"body","name":"requestBody","required":true,"dataType":"nestedObjectLiteral","nestedProperties":{"confirm":{"dataType":"boolean"},"listings":{"dataType":"array","array":{"dataType":"nestedObjectLiteral","nestedProperties":{"source":{"dataType":"string"},"location":{"dataType":"string"},"durability":{"dataType":"double"},"quality":{"dataType":"double"},"quantity":{"dataType":"double","required":true},"price":{"dataType":"double","required":true},"description":{"dataType":"string","required":true},"title":{"dataType":"string","required":true}}}},"contractor_spectrum_id":{"dataType":"string"},"uex_username":{"dataType":"string","required":true}}},
+                request: {"in":"request","name":"request","required":true,"dataType":"object"},
+        };
+        app.post('/listings/import-uex',
+            authenticateMiddleware([{"loggedin":[]}]),
+            ...(fetchMiddlewares<RequestHandler>(ListingsV2Controller)),
+            ...(fetchMiddlewares<RequestHandler>(ListingsV2Controller.prototype.importFromUex)),
+
+            async function ListingsV2Controller_importFromUex(request: ExRequest, response: ExResponse, next: any) {
+
+            // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+
+            let validatedArgs: any[] = [];
+            try {
+                validatedArgs = templateService.getValidatedArgs({ args: argsListingsV2Controller_importFromUex, request, response });
+
+                const controller = new ListingsV2Controller();
+
+              await templateService.apiHandler({
+                methodName: 'importFromUex',
+                controller,
+                response,
+                next,
+                validatedArgs,
+                successStatus: undefined,
+              });
+            } catch (err) {
+                return next(err);
+            }
+        });
+        // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
         const argsInventoryV2Controller_getInventory: Record<string, TsoaRoute.ParameterSchema> = {
                 request: {"in":"request","name":"request","required":true,"dataType":"object"},
                 game_item_id: {"in":"query","name":"game_item_id","dataType":"string"},
@@ -4637,6 +4681,37 @@ export function RegisterRoutes(app: Router) {
 
               await templateService.apiHandler({
                 methodName: 'listJobs',
+                controller,
+                response,
+                next,
+                validatedArgs,
+                successStatus: undefined,
+              });
+            } catch (err) {
+                return next(err);
+            }
+        });
+        // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+        const argsImagesV2Controller_uploadImage: Record<string, TsoaRoute.ParameterSchema> = {
+                request: {"in":"request","name":"request","required":true,"dataType":"object"},
+        };
+        app.post('/images/upload',
+            authenticateMiddleware([{"loggedin":[]}]),
+            ...(fetchMiddlewares<RequestHandler>(ImagesV2Controller)),
+            ...(fetchMiddlewares<RequestHandler>(ImagesV2Controller.prototype.uploadImage)),
+
+            async function ImagesV2Controller_uploadImage(request: ExRequest, response: ExResponse, next: any) {
+
+            // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+
+            let validatedArgs: any[] = [];
+            try {
+                validatedArgs = templateService.getValidatedArgs({ args: argsImagesV2Controller_uploadImage, request, response });
+
+                const controller = new ImagesV2Controller();
+
+              await templateService.apiHandler({
+                methodName: 'uploadImage',
                 controller,
                 response,
                 next,

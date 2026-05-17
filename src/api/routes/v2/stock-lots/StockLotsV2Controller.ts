@@ -133,7 +133,9 @@ export class StockLotsV2Controller extends BaseController {
     @Query() quality_tier_max?: number,
     @Query() page?: number,
     @Query() page_size?: number,
+    @Request() request?: ExpressRequest,
   ): Promise<GetStockLotsResponse> {
+    if (request) this.request = request
     const knex = getKnex()
 
     // Validate and set defaults (Requirement 20.10)
