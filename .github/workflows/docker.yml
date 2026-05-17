@@ -151,3 +151,41 @@ jobs:
           
           echo "✗ Deployment timed out after $TIMEOUT seconds"
           exit 1
+
+      - name: Clean up old Lightsail container images
+        if: success()
+        run: |
+          echo "Cleaning up old container images (keeping last 5)..."
+          IMAGES=$(aws lightsail get-container-images \
+            --service-name sc-market \
+            --region us-east-2 \
+            --query 'containerImages[*].image' \
+            --output text 2>/dev/null || echo "")
+
+          if [ -z "$IMAGES" ]; then
+            echo "No images found or API not available, skipping cleanup"
+            exit 0
+          fi
+
+          # Get all images sorted by creation (newest first), skip first 5
+          IMAGES_TO_DELETE=$(aws lightsail get-container-images \
+            --service-name sc-market \
+            --region us-east-2 \
+            --query 'containerImages[5:].image' \
+            --output text 2>/dev/null || echo "")
+
+          if [ -z "$IMAGES_TO_DELETE" ] || [ "$IMAGES_TO_DELETE" = "None" ]; then
+            echo "No old images to clean up (5 or fewer exist)"
+            exit 0
+          fi
+
+          COUNT=0
+          for IMAGE in $IMAGES_TO_DELETE; do
+            echo "Deleting old image: $IMAGE"
+            aws lightsail delete-container-image \
+              --service-name sc-market \
+              --region us-east-2 \
+              --image "$IMAGE" 2>/dev/null || true
+            COUNT=$((COUNT + 1))
+          done
+          echo "✓ Cleaned up $COUNT old container images"
