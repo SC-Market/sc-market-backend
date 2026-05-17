@@ -79,6 +79,12 @@ apiV2Router.post(
   multiplePhotoUpload.array("photos", 5),
 )
 
+// Register multer for standalone image upload (two-phase upload)
+apiV2Router.post(
+  "/images/upload",
+  multiplePhotoUpload.single("photo"),
+)
+
 // DEV ONLY: unauthenticated import endpoint for testing — REMOVE BEFORE PRODUCTION
 if (process.env.NODE_ENV !== "production") {
   apiV2Router.post("/dev/import-game-data", gameDataZipUpload.single("file"), async (req, res) => {
