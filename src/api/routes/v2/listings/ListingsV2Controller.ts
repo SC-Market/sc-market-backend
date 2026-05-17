@@ -1547,6 +1547,28 @@ export class ListingsV2Controller extends BaseController {
           }
         }
 
+        // Append new photos by resource ID (from two-phase upload)
+        if (requestBody.photo_resource_ids && requestBody.photo_resource_ids.length > 0) {
+          // Get current max display_order
+          const maxOrderRow = await trx("listing_photos_v2")
+            .where("listing_id", id)
+            .max("display_order as max_order")
+            .first()
+          const startOrder = (maxOrderRow?.max_order ?? -1) + 1
+
+          const photoRows = requestBody.photo_resource_ids.map((resource_id, index) => ({
+            listing_id: id,
+            resource_id,
+            display_order: startOrder + index,
+          }))
+          await trx("listing_photos_v2").insert(photoRows)
+
+          logger.info("Appended listing photos via resource IDs", {
+            listingId: id,
+            count: requestBody.photo_resource_ids.length,
+          })
+        }
+
         // 4. Get listing_items to determine pricing mode
         const listingItems = await trx("listing_items")
           .where({ listing_id: id })

@@ -513,6 +513,9 @@ export interface UpdateListingRequest {
 
   /** Updated bulk discount tiers (pass [] to remove, omit to keep unchanged) */
   bulk_discount_tiers?: BulkDiscountTier[];
+
+  /** New photo resource IDs to append (from two-phase upload) */
+  photo_resource_ids?: string[];
 }
 // ============================================================================
 

@@ -1119,6 +1119,7 @@ const models: TsoaRoute.Models = {
             "min_order_value": {"dataType":"union","subSchemas":[{"dataType":"double"},{"dataType":"enum","enums":[null]}]},
             "max_order_value": {"dataType":"union","subSchemas":[{"dataType":"double"},{"dataType":"enum","enums":[null]}]},
             "bulk_discount_tiers": {"dataType":"array","array":{"dataType":"refObject","ref":"BulkDiscountTier"}},
+            "photo_resource_ids": {"dataType":"array","array":{"dataType":"string"}},
         },
         "additionalProperties": false,
     },

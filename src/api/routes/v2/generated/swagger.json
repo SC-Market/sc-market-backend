@@ -3476,6 +3476,13 @@
 						},
 						"type": "array",
 						"description": "Updated bulk discount tiers (pass [] to remove, omit to keep unchanged)"
+					},
+					"photo_resource_ids": {
+						"items": {
+							"type": "string"
+						},
+						"type": "array",
+						"description": "New photo resource IDs to append (from two-phase upload)"
 					}
 				},
 				"type": "object",
