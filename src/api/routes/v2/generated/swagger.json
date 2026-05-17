@@ -3695,6 +3695,23 @@
 				"type": "object",
 				"additionalProperties": false
 			},
+			"ImageUploadResponse": {
+				"description": "Response for a single image upload",
+				"properties": {
+					"resource_id": {
+						"type": "string"
+					},
+					"url": {
+						"type": "string"
+					}
+				},
+				"required": [
+					"resource_id",
+					"url"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
 			"HealthResponse": {
 				"properties": {
 					"status": {
@@ -12276,6 +12293,143 @@
 				]
 			}
 		},
+		"/listings/import-uex": {
+			"post": {
+				"operationId": "ImportFromUex",
+				"responses": {
+					"200": {
+						"description": "Preview of importable listings or import result",
+						"content": {
+							"application/json": {
+								"schema": {
+									"properties": {
+										"total": {
+											"type": "number",
+											"format": "double"
+										},
+										"imported": {
+											"type": "number",
+											"format": "double"
+										},
+										"preview": {
+											"items": {
+												"properties": {
+													"source": {
+														"type": "string"
+													},
+													"quality": {
+														"type": "number",
+														"format": "double"
+													},
+													"quantity": {
+														"type": "number",
+														"format": "double"
+													},
+													"price": {
+														"type": "number",
+														"format": "double"
+													},
+													"title": {
+														"type": "string"
+													}
+												},
+												"required": [
+													"quantity",
+													"price",
+													"title"
+												],
+												"type": "object"
+											},
+											"type": "array"
+										}
+									},
+									"type": "object"
+								}
+							}
+						}
+					}
+				},
+				"description": "Import listings from UEX marketplace\n\nFetches a user's active sell listings from UEXCorp API and creates\ncorresponding listings on SC Market. Supports importing as the user\nor as an org they belong to.",
+				"summary": "Import listings from UEX",
+				"tags": [
+					"Listings V2"
+				],
+				"security": [
+					{
+						"loggedin": []
+					}
+				],
+				"parameters": [],
+				"requestBody": {
+					"description": "UEX username and optional org to import as",
+					"required": true,
+					"content": {
+						"application/json": {
+							"schema": {
+								"properties": {
+									"confirm": {
+										"type": "boolean"
+									},
+									"listings": {
+										"items": {
+											"properties": {
+												"source": {
+													"type": "string"
+												},
+												"location": {
+													"type": "string"
+												},
+												"durability": {
+													"type": "number",
+													"format": "double"
+												},
+												"quality": {
+													"type": "number",
+													"format": "double"
+												},
+												"quantity": {
+													"type": "number",
+													"format": "double"
+												},
+												"price": {
+													"type": "number",
+													"format": "double"
+												},
+												"description": {
+													"type": "string"
+												},
+												"title": {
+													"type": "string"
+												}
+											},
+											"required": [
+												"quantity",
+												"price",
+												"description",
+												"title"
+											],
+											"type": "object"
+										},
+										"type": "array"
+									},
+									"contractor_spectrum_id": {
+										"type": "string"
+									},
+									"uex_username": {
+										"type": "string"
+									}
+								},
+								"required": [
+									"uex_username"
+								],
+								"type": "object",
+								"description": "UEX username and optional org to import as"
+							}
+						}
+					}
+				}
+			}
+		},
 		"/inventory": {
 			"get": {
 				"operationId": "GetInventory",
@@ -12640,6 +12794,34 @@
 				"description": "List all import jobs (most recent first)",
 				"tags": [
 					"Admin Imports"
+				],
+				"security": [
+					{
+						"loggedin": []
+					}
+				],
+				"parameters": []
+			}
+		},
+		"/images/upload": {
+			"post": {
+				"operationId": "UploadImage",
+				"responses": {
+					"200": {
+						"description": "The uploaded image resource_id and CDN URL",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/ImageUploadResponse"
+								}
+							}
+						}
+					}
+				},
+				"description": "Upload a single image\n\nUploads and validates an image immediately (before form submission).\nThe returned resource_id can be used in photo_resource_ids when creating a listing.",
+				"summary": "Upload image",
+				"tags": [
+					"Images V2"
 				],
 				"security": [
 					{
