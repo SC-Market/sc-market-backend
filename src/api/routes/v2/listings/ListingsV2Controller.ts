@@ -27,6 +27,7 @@ import {
 } from "../types/listings.types.js"
 import logger from "../../../../logger/logger.js"
 import { auditService } from "../../../../services/audit/audit.service.js"
+import { checkWatchlistMatches } from "../../../../services/watchlist/watchlist.service.js"
 
 /**
  * Response for creating a listing
@@ -258,6 +259,14 @@ export class ListingsV2Controller extends BaseController {
 
       // TODO: Log listing creation to audit trail (Requirement 14.12)
       auditService.log({ entity_type: "listing", entity_id: result.listing_id, action: "created", actor_id: userId, details: { title: requestBody.title } })
+
+      // Check watchlist matches for the new listing (fire-and-forget)
+      checkWatchlistMatches({
+        listing_id: result.listing_id,
+        title: requestBody.title,
+        price: requestBody.base_price || requestBody.lots?.[0]?.price || 0,
+        quantity: requestBody.lots.reduce((sum, l) => sum + l.quantity, 0),
+      }).catch(() => {})
 
       return result
     } catch (error) {
@@ -1579,6 +1588,14 @@ export class ListingsV2Controller extends BaseController {
             itemId: listingItem.item_id,
             basePrice: requestBody.base_price,
           })
+
+          // Check watchlist matches for the new price (fire-and-forget)
+          checkWatchlistMatches({
+            listing_id: id,
+            title: listing.title,
+            price: requestBody.base_price,
+            quantity: 1,
+          }).catch(() => {})
         }
 
         // Update bulk discount tiers
@@ -1975,15 +1992,34 @@ export class ListingsV2Controller extends BaseController {
     for (let i = 0; i < files.length; i++) {
       const file = files[i]
       const ext = file.mimetype.split('/')[1] || 'png'
-      const resource = await cdn.uploadFile(
-        `${id}-photos-${i}-${crypto.randomUUID()}.${ext}`,
-        file.path,
-        file.mimetype,
-      )
-      uploadResults.push({
-        resource_id: resource.resource_id,
-        url: resource.external_url || `https://cdn.sc-market.space/${resource.filename}`,
-      })
+      try {
+        const resource = await cdn.uploadFile(
+          `${id}-photos-${i}-${crypto.randomUUID()}.${ext}`,
+          file.path,
+          file.mimetype,
+        )
+        uploadResults.push({
+          resource_id: resource.resource_id,
+          url: resource.external_url || `https://cdn.sc-market.space/${resource.filename}`,
+        })
+      } catch (uploadError: any) {
+        // Clean up temp files before throwing
+        for (const f of files) {
+          try { (await import('fs')).unlinkSync(f.path) } catch {}
+        }
+        const msg = uploadError?.message || 'Image upload failed'
+        if (msg.includes('moderation') || msg.includes('Moderation') || msg.includes('MODERATION')) {
+          this.throwValidationError('Image failed moderation', [
+            { field: 'photos', message: `Photo ${i + 1} was rejected: ${msg}` },
+          ])
+        }
+        if (msg.includes('Unsupported') || msg.includes('UNSUPPORTED')) {
+          this.throwValidationError('Unsupported image format', [
+            { field: 'photos', message: `Photo ${i + 1}: ${msg}` },
+          ])
+        }
+        throw uploadError
+      }
     }
 
     // Insert into listing_photos_v2
@@ -2000,6 +2036,206 @@ export class ListingsV2Controller extends BaseController {
     }
 
     return { photos: uploadResults }
+  }
+
+  /**
+   * Import listings from UEX marketplace
+   *
+   * Fetches a user's active sell listings from UEXCorp API and creates
+   * corresponding listings on SC Market. Supports importing as the user
+   * or as an org they belong to.
+   *
+   * @summary Import listings from UEX
+   * @param requestBody UEX username and optional org to import as
+   * @param request Express request for authentication
+   * @returns Preview of importable listings or import result
+   */
+  @Security("loggedin")
+  @Post("import-uex")
+  public async importFromUex(
+    @Body() requestBody: {
+      uex_username: string
+      contractor_spectrum_id?: string
+      listings?: Array<{
+        title: string
+        description: string
+        price: number
+        quantity: number
+        quality?: number
+        durability?: number
+        location?: string
+        source?: string
+      }>
+      confirm?: boolean
+    },
+    @Request() request: ExpressRequest,
+  ): Promise<{
+    preview?: Array<{ title: string; price: number; quantity: number; quality?: number; source?: string }>
+    imported?: number
+    total?: number
+  }> {
+    this.request = request
+    this.requireAuth()
+    const userId = this.getUserId()
+    const db = getKnex()
+
+    // Determine seller
+    let sellerId = userId
+    let sellerType: "user" | "contractor" = "user"
+
+    if (requestBody.contractor_spectrum_id) {
+      const contractor = await db("contractors")
+        .where("spectrum_id", requestBody.contractor_spectrum_id)
+        .first()
+      if (!contractor) {
+        this.throwValidationError("Org not found", [
+          { field: "contractor_spectrum_id", message: "Organization not found" },
+        ])
+      }
+      // Verify user is a member with listing permissions
+      const membership = await db("contractor_members")
+        .where({ contractor_id: contractor.contractor_id, user_id: userId })
+        .first()
+      if (!membership) {
+        this.throwForbidden("You are not a member of this organization")
+      }
+      sellerId = contractor.contractor_id
+      sellerType = "contractor"
+    }
+
+    // If no listings provided, fetch from UEX and return preview
+    if (!requestBody.confirm || !requestBody.listings) {
+      const uexListings = await this.fetchUexListings(requestBody.uex_username)
+      if (!uexListings.length) {
+        return { preview: [], total: 0 }
+      }
+      return {
+        preview: uexListings.map((l) => ({
+          title: l.title,
+          price: l.price,
+          quantity: l.quantity,
+          quality: l.quality,
+          source: l.source,
+        })),
+        total: uexListings.length,
+      }
+    }
+
+    // Import confirmed — create listings
+    let imported = 0
+    for (const item of requestBody.listings) {
+      try {
+        await withTransaction(async (trx) => {
+          const [listing] = await trx("listings")
+            .insert({
+              seller_id: sellerId,
+              seller_type: sellerType,
+              title: item.title,
+              description: item.description || item.title,
+              status: "active",
+              visibility: "public",
+              sale_type: "fixed",
+              listing_type: "single",
+              created_at: new Date(),
+              updated_at: new Date(),
+            })
+            .returning("*")
+
+          const [listingItem] = await trx("listing_items")
+            .insert({
+              listing_id: listing.listing_id,
+              game_item_id: null,
+              pricing_mode: "unified",
+              base_price: item.price,
+              display_order: 0,
+              quantity_available: 0,
+              variant_count: 0,
+            })
+            .returning("*")
+
+          const variantAttrs: Record<string, any> = {}
+          if (item.quality != null) {
+            variantAttrs.quality_value = item.quality
+          }
+          if (item.source) {
+            const sourceMap: Record<string, string> = { looted: "looted", pledged: "store" }
+            variantAttrs.crafted_source = sourceMap[item.source] || "unknown"
+          }
+
+          const variantId = await getOrCreateVariant(
+            null,
+            Object.keys(variantAttrs).length > 0 ? variantAttrs : { quality_tier: undefined },
+          )
+
+          await trx("listing_item_lots").insert({
+            item_id: listingItem.item_id,
+            variant_id: variantId,
+            quantity_total: item.quantity || 1,
+            location_id: null,
+            owner_id: userId,
+            listed: true,
+            game_item_id: null,
+            listing_id: listing.listing_id,
+            created_at: new Date(),
+            updated_at: new Date(),
+          })
+        })
+        imported++
+      } catch (err) {
+        logger.error("Error importing UEX listing", {
+          title: item.title,
+          error: err instanceof Error ? err.message : String(err),
+        })
+      }
+    }
+
+    logger.info("UEX import completed", { userId, imported, total: requestBody.listings.length })
+
+    return { imported, total: requestBody.listings.length }
+  }
+
+  private async fetchUexListings(username: string): Promise<
+    Array<{
+      title: string
+      description: string
+      price: number
+      quantity: number
+      quality?: number
+      durability?: number
+      location?: string
+      source?: string
+    }>
+  > {
+    try {
+      const response = await fetch(
+        `https://api.uexcorp.space/2.0/marketplace_listings/?username=${encodeURIComponent(username)}`,
+        { signal: AbortSignal.timeout(15000) },
+      )
+      if (!response.ok) return []
+
+      const data = await response.json()
+      if (data.status !== "ok" || !data.data) return []
+
+      return data.data
+        .filter((l: any) => l.operation === "sell" && !l.is_sold_out)
+        .slice(0, 100)
+        .map((l: any) => ({
+          title: l.title || "Untitled",
+          description: (l.description || "").replace(/\\r\\n/g, "\n").trim(),
+          price: parseInt(l.price, 10) || 0,
+          quantity: parseInt(l.in_stock, 10) || 1,
+          quality: l.quality || undefined,
+          durability: l.durability || undefined,
+          location: l.location || undefined,
+          source: l.source || undefined,
+        }))
+    } catch (err) {
+      logger.error("Failed to fetch UEX listings", {
+        username,
+        error: err instanceof Error ? err.message : String(err),
+      })
+      return []
+    }
   }
 
   private async getViewCount(db: any, listingId: string): Promise<number> {
