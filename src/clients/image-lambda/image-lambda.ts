@@ -14,8 +14,22 @@ export interface ImageLambdaResponse {
       isAppropriate: boolean
       confidence: number
     }
+    moderationLabels?: string[]
+    confidence?: number
   }
   error?: string
+}
+
+export class ImageModerationError extends Error {
+  public readonly labels: string[]
+  public readonly confidence: number
+
+  constructor(message: string, labels: string[], confidence: number) {
+    super(message)
+    this.name = "ImageModerationError"
+    this.labels = labels
+    this.confidence = confidence
+  }
 }
 
 // API Gateway response wrapper
@@ -224,6 +238,18 @@ export class ImageLambdaClient {
         message: finalResponse.message,
         data: finalResponse.data,
       })
+    }
+
+    if (finalResponse.error === "MODERATION_FAILED") {
+      const labels = finalResponse.data?.moderationLabels || []
+      const confidence = finalResponse.data?.confidence || 0
+      throw new ImageModerationError(
+        labels.length > 0
+          ? `Image rejected: flagged for ${labels.join(", ")} (${confidence.toFixed(0)}% confidence)`
+          : errorMessage,
+        labels,
+        confidence,
+      )
     }
 
     throw new Error(errorMessage)

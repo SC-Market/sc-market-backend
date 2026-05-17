@@ -2025,16 +2025,21 @@ export class ListingsV2Controller extends BaseController {
           url: resource.external_url || `https://cdn.sc-market.space/${resource.filename}`,
         })
       } catch (uploadError: any) {
-        // Clean up temp files before throwing
         for (const f of files) {
           try { (await import('fs')).unlinkSync(f.path) } catch {}
         }
-        const msg = uploadError?.message || 'Image upload failed'
-        if (msg.includes('moderation') || msg.includes('Moderation') || msg.includes('MODERATION')) {
+        if (uploadError?.name === "ImageModerationError") {
+          const labels = uploadError.labels || []
           this.throwValidationError('Image failed moderation', [
-            { field: 'photos', message: `Photo ${i + 1} was rejected: ${msg}` },
+            {
+              field: 'photos',
+              message: labels.length > 0
+                ? `Photo ${i + 1} rejected for: ${labels.join(", ")} (${uploadError.confidence?.toFixed(0) || 0}% confidence)`
+                : `Photo ${i + 1} failed content moderation checks`,
+            },
           ])
         }
+        const msg = uploadError?.message || 'Image upload failed'
         if (msg.includes('Unsupported') || msg.includes('UNSUPPORTED')) {
           this.throwValidationError('Unsupported image format', [
             { field: 'photos', message: `Photo ${i + 1}: ${msg}` },
