@@ -2423,7 +2423,36 @@ const jsonPath = path.join(OUTPUT_DIR, "game-data.json")
 fs.writeFileSync(jsonPath, JSON.stringify(outputData))
 
 // --- Extract Shop Inventories from P4K ---
-let shopInventories: any[] = []
+interface ShopInventoryItem {
+  id: string
+  name: string | null
+  type: string | null
+  subType: string | null
+  buyPrice: number
+  sellPrice: number
+}
+
+interface ShopInventoryEntry {
+  shop: string
+  location: string
+  filename: string
+  items: ShopInventoryItem[]
+}
+
+interface P4KInventoryEntry {
+  ID: { ID: string[] }
+  BuyPrice: number
+  SellPrice: number
+  CurrentInventory: number
+  MaxInventory: number
+}
+
+interface P4KInventoryFile {
+  ShopID: string
+  Collection: { Inventory: P4KInventoryEntry[] }
+}
+
+let shopInventories: ShopInventoryEntry[] = []
 if (P4K_PATH && STARBREAKER_BIN) {
   console.log("\nExtracting shop inventories from P4K...")
   const shopDir = path.join(OUTPUT_DIR, "shop_inventories_raw")
@@ -2453,7 +2482,7 @@ if (P4K_PATH && STARBREAKER_BIN) {
 
     for (const invFile of invFiles) {
       try {
-        const raw = JSON.parse(fs.readFileSync(path.join(shopInvDir, invFile), "utf-8"))
+        const raw: P4KInventoryFile = JSON.parse(fs.readFileSync(path.join(shopInvDir, invFile), "utf-8"))
         const inventory = raw?.Collection?.Inventory || []
         if (inventory.length === 0) continue
 
@@ -2464,13 +2493,13 @@ if (P4K_PATH && STARBREAKER_BIN) {
         const location = parts.pop() || ""
         const shopName = parts.join(" ").replace(/([a-z])([A-Z])/g, "$1 $2")
 
-        const shopItems = inventory
-          .filter((entry: any) => {
+        const shopItems: ShopInventoryItem[] = inventory
+          .filter((entry) => {
             const id = entry?.ID?.ID?.[0]
             const buyPrice = entry?.BuyPrice ?? 0
             return id && buyPrice > 0
           })
-          .map((entry: any) => {
+          .map((entry) => {
             const id = entry.ID.ID[0]
             const info = itemNameById.get(id)
             return {
@@ -2493,7 +2522,7 @@ if (P4K_PATH && STARBREAKER_BIN) {
         }
       } catch {}
     }
-    console.log(`  Parsed ${shopInventories.length} shops with ${shopInventories.reduce((s: number, sh: any) => s + sh.items.length, 0)} total items`)
+    console.log(`  Parsed ${shopInventories.length} shops with ${shopInventories.reduce((s, sh) => s + sh.items.length, 0)} total items`)
   } else {
     console.warn("  ShopInventories directory not found after extraction")
   }
@@ -2518,5 +2547,5 @@ console.log(`\nDone! Output: ${zipPath} (${zipSize} KB)`)
 console.log(`  ${items.length} items, ${blueprints.length} blueprints, ${missions.length} missions`)
 console.log(`  ${resources.length} resources, ${ships.length} ships, ${manufacturers.length} manufacturers, ${starmap.length} locations`)
 if (shopInventories.length > 0) {
-  console.log(`  ${shopInventories.length} shops with ${shopInventories.reduce((s: number, sh: any) => s + sh.items.length, 0)} item listings`)
+  console.log(`  ${shopInventories.length} shops with ${shopInventories.reduce((s, sh) => s + sh.items.length, 0)} item listings`)
 }
