@@ -130,6 +130,7 @@
     "refresh-view": "tsx scripts/refresh-materialized-view.ts",
     "extract-game-data": "tsx scripts/extract-game-data.ts",
     "import-game-data": "tsx scripts/import-game-data.ts",
+    "import-shops": "tsx scripts/import-shop-inventories.ts",
     "verify:game-data-schema": "tsx scripts/verify-game-data-schema.ts",
     "migrate:v1-to-v2": "tsx scripts/run-v1-to-v2-migration-standalone.ts",
     "validate:migration": "tsx scripts/validate-migration-completeness.ts",

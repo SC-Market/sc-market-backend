@@ -40,25 +40,35 @@ interface ShopEntry {
   items: ShopItem[]
 }
 
-async function main() {
-  const args = process.argv.slice(2)
-  const fileIdx = args.indexOf("--file")
+export async function importShopInventories(knexInstance?: any, filePath?: string) {
+  const knex = knexInstance || getKnex()
 
-  if (fileIdx === -1 || !args[fileIdx + 1]) {
-    console.error("Usage: npx tsx scripts/import-shop-inventories.ts --file <path>")
-    process.exit(1)
+  if (!filePath) {
+    // Check CLI args first, then fallback to default location
+    const args = process.argv.slice(2)
+    const fileIdx = args.indexOf("--file")
+
+    if (fileIdx !== -1 && args[fileIdx + 1]) {
+      filePath = path.resolve(args[fileIdx + 1])
+    } else {
+      // Default: look in game-data-export directory
+      const defaultPath = path.resolve(__dirname, "../game-data-export/shop-inventories.json")
+      if (fs.existsSync(defaultPath)) {
+        filePath = defaultPath
+      } else {
+        console.error("Usage: npx tsx scripts/import-shop-inventories.ts --file <path>")
+        console.error("  Or place shop-inventories.json in game-data-export/")
+        process.exit(1)
+      }
+    }
   }
 
-  const filePath = path.resolve(args[fileIdx + 1])
   if (!fs.existsSync(filePath)) {
-    console.error(`File not found: ${filePath}`)
-    process.exit(1)
+    throw new Error(`File not found: ${filePath}`)
   }
 
   const shops: ShopEntry[] = JSON.parse(fs.readFileSync(filePath, "utf-8"))
   console.log(`Loaded ${shops.length} shops from ${filePath}`)
-
-  const knex = getKnex()
 
   let totalShops = 0
   let totalItems = 0
@@ -137,17 +147,32 @@ async function main() {
     }
   }
 
-  console.log(`\nImport complete:`)
-  console.log(`  Shops:        ${totalShops}`)
-  console.log(`  Items:        ${totalItems}`)
-  console.log(`  Linked:       ${linkedItems} (matched to game_items via p4k_id)`)
-  console.log(`  Unlinked:     ${totalItems - linkedItems}`)
-  console.log(`  Errors:       ${errors}`)
+  const result = {
+    shops: totalShops,
+    items: totalItems,
+    linked: linkedItems,
+    unlinked: totalItems - linkedItems,
+    errors,
+  }
 
-  await knex.destroy()
+  console.log(`\nImport complete:`)
+  console.log(`  Shops:        ${result.shops}`)
+  console.log(`  Items:        ${result.items}`)
+  console.log(`  Linked:       ${result.linked} (matched to game_items via p4k_id)`)
+  console.log(`  Unlinked:     ${result.unlinked}`)
+  console.log(`  Errors:       ${result.errors}`)
+
+  if (!knexInstance) {
+    await knex.destroy()
+  }
+
+  return result
 }
 
-main().catch((err) => {
-  console.error("Import failed:", err)
-  process.exit(1)
-})
+// CLI entrypoint
+if (process.argv[1]?.includes("import-shop-inventories")) {
+  importShopInventories().catch((err) => {
+    console.error("Import failed:", err)
+    process.exit(1)
+  })
+}
