@@ -1,8 +1,9 @@
 /**
- * Game Data Import Script - Blueprints & Crafting Recipes
+ * Game Data Import Script - Blueprints, Crafting Recipes & Shop Inventories
  *
- * Imports blueprint and crafting recipe data from a JSON source file into the database.
- * Supports both initial import and incremental updates (upsert by blueprint_code + version).
+ * Imports blueprint/crafting data and shop inventories from JSON source files.
+ * Automatically imports shop-inventories.json if found alongside the input file.
+ * Supports both initial import and incremental updates.
  *
  * Usage:
  *   npx tsx scripts/import-game-data.ts --file ./data/blueprints.json [--version "4.0.1"] [--type LIVE]
@@ -229,10 +230,28 @@ async function main() {
     .where("version_id", version.version_id)
     .update({ last_data_update: knex.fn.now() })
 
-  console.log(`\nImport complete:`)
+  console.log(`\nBlueprint import complete:`)
   console.log(`  Imported: ${imported}`)
   console.log(`  Skipped:  ${skipped}`)
   console.log(`  Errors:   ${errors}`)
+
+  // --- Shop Inventories Import ---
+  // Look for shop-inventories.json alongside the input file or in game-data-export/
+  const shopCandidates = [
+    path.resolve(path.dirname(filePath), "shop-inventories.json"),
+    path.resolve(__dirname, "../game-data-export/shop-inventories.json"),
+  ]
+  const shopFile = shopCandidates.find(f => fs.existsSync(f))
+
+  if (shopFile) {
+    console.log(`\n${"=".repeat(60)}`)
+    console.log(`Importing shop inventories from ${shopFile}...`)
+    const { importShopInventories } = await import("./import-shop-inventories.js")
+    await importShopInventories(knex, shopFile)
+  } else {
+    console.log(`\nNo shop-inventories.json found — skipping shop import.`)
+    console.log(`  Checked: ${shopCandidates.join(", ")}`)
+  }
 
   await knex.destroy()
 }
