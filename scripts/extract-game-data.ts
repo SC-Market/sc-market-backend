@@ -2458,11 +2458,11 @@ if (P4K_PATH && STARBREAKER_BIN) {
   const shopDir = path.join(OUTPUT_DIR, "shop_inventories_raw")
   fs.mkdirSync(shopDir, { recursive: true })
   try {
-    execSync(`"${STARBREAKER_BIN}" p4k extract "${P4K_PATH}" "${shopDir}" --filter "**/ShopInventories/**"`, { stdio: "pipe" })
+    execSync(`SC_DATA_P4K="${P4K_PATH}" "${STARBREAKER_BIN}" p4k extract -o "${shopDir}" --filter "**/ShopInventories/**"`, { stdio: "pipe" })
   } catch {
-    // Try alternative filter syntax
+    // Try regex fallback
     try {
-      execSync(`"${STARBREAKER_BIN}" p4k extract "${P4K_PATH}" "${shopDir}" --regex "ShopInventor"`, { stdio: "pipe" })
+      execSync(`SC_DATA_P4K="${P4K_PATH}" "${STARBREAKER_BIN}" p4k extract -o "${shopDir}" --regex "ShopInventor"`, { stdio: "pipe" })
     } catch {
       console.warn("  Could not extract ShopInventories from P4K (starbreaker filter failed)")
     }
