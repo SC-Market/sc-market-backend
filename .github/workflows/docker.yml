@@ -155,37 +155,34 @@ jobs:
       - name: Clean up old Lightsail container images
         if: success()
         run: |
-          echo "Cleaning up old container images (keeping last 5)..."
-          IMAGES=$(aws lightsail get-container-images \
+          CURRENT_IMAGE=$(aws lightsail get-container-services \
             --service-name sc-market \
             --region us-east-2 \
-            --query 'containerImages[*].image' \
-            --output text 2>/dev/null || echo "")
+            --query 'containerServices[0].currentDeployment.containers.backend.image' \
+            --output text)
 
-          if [ -z "$IMAGES" ]; then
-            echo "No images found or API not available, skipping cleanup"
-            exit 0
-          fi
+          echo "Current deployment image: $CURRENT_IMAGE"
 
-          # Get all images sorted by creation (newest first), skip first 5
-          IMAGES_TO_DELETE=$(aws lightsail get-container-images \
+          ALL_IMAGES=$(aws lightsail get-container-images \
             --service-name sc-market \
             --region us-east-2 \
-            --query 'containerImages[5:].image' \
-            --output text 2>/dev/null || echo "")
+            --query 'containerImages[].image' \
+            --output text)
 
-          if [ -z "$IMAGES_TO_DELETE" ] || [ "$IMAGES_TO_DELETE" = "None" ]; then
-            echo "No old images to clean up (5 or fewer exist)"
-            exit 0
-          fi
-
-          COUNT=0
-          for IMAGE in $IMAGES_TO_DELETE; do
-            echo "Deleting old image: $IMAGE"
-            aws lightsail delete-container-image \
+          DELETED=0
+          for IMG in $ALL_IMAGES; do
+            if [ "$IMG" = "$CURRENT_IMAGE" ]; then
+              echo "Skipping (active): $IMG"
+              continue
+            fi
+            echo "Deleting: $IMG"
+            if aws lightsail delete-container-image \
               --service-name sc-market \
               --region us-east-2 \
-              --image "$IMAGE" 2>/dev/null || true
-            COUNT=$((COUNT + 1))
+              --image "$IMG" 2>&1; then
+              DELETED=$((DELETED + 1))
+            else
+              echo "Warning: could not delete $IMG (may still be referenced)"
+            fi
           done
-          echo "✓ Cleaned up $COUNT old container images"
+          echo "Image cleanup complete — deleted $DELETED image(s)"
