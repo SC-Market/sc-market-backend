@@ -2,6 +2,8 @@ import {
   process_auctions,
   process_auctions_v2,
   process_expiring_market_listings,
+  process_expiring_buy_orders,
+  snapshot_price_history_v2,
   rebuild_search_view,
   refresh_badge_view,
   update_price_history,
@@ -57,9 +59,19 @@ export function start_tasks() {
   }, STARTUP_DELAY + 15_000)
 
   setTimeout(() => {
+    safe(process_expiring_buy_orders, "process_expiring_buy_orders")
+    setInterval(() => safe(process_expiring_buy_orders, "process_expiring_buy_orders"), 60 * 60 * 1000)
+  }, STARTUP_DELAY + 20_000)
+
+  setTimeout(() => {
     safe(update_price_history, "update_price_history")
     setInterval(() => safe(update_price_history, "update_price_history"), 6 * 60 * 60 * 1000)
   }, STARTUP_DELAY + 45_000)
+
+  setTimeout(() => {
+    safe(snapshot_price_history_v2, "snapshot_price_history_v2")
+    setInterval(() => safe(snapshot_price_history_v2, "snapshot_price_history_v2"), 6 * 60 * 60 * 1000)
+  }, STARTUP_DELAY + 50_000)
 
   setTimeout(() => {
     safe(fetchAndInsertCommodities, "fetchAndInsertCommodities")

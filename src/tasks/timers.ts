@@ -227,6 +227,66 @@ export async function process_auctions_v2() {
   }
 }
 
+export async function snapshot_price_history_v2() {
+  try {
+    const knex = getKnex()
+    const hasTable = await knex.schema.hasTable("price_history_v2")
+    if (!hasTable) return
+
+    // Snapshot current active listing prices into price_history_v2.
+    // Handles both unified pricing (base_price on listing_items) and
+    // per-variant pricing (price on variant_pricing).
+    const result = await knex.raw(`
+      INSERT INTO price_history_v2 (game_item_id, variant_id, price, quality_tier, listing_id, event_type)
+      SELECT DISTINCT ON (li.game_item_id, lil.variant_id)
+        li.game_item_id,
+        lil.variant_id,
+        CASE
+          WHEN li.pricing_mode = 'per_variant' AND vp.price IS NOT NULL THEN vp.price
+          ELSE li.base_price
+        END AS price,
+        COALESCE((iv.attributes->>'quality_tier')::integer, 1) AS quality_tier,
+        li.listing_id,
+        'price_snapshot'
+      FROM listing_items li
+      JOIN listings l ON l.listing_id = li.listing_id AND l.status = 'active'
+      JOIN listing_item_lots lil ON lil.item_id = li.item_id AND lil.listed = true AND lil.quantity_total > 0
+      JOIN item_variants iv ON iv.variant_id = lil.variant_id
+      LEFT JOIN variant_pricing vp ON vp.item_id = li.item_id AND vp.variant_id = lil.variant_id
+      WHERE li.game_item_id IS NOT NULL
+        AND (li.base_price > 0 OR vp.price > 0)
+      ORDER BY li.game_item_id, lil.variant_id, l.created_at DESC
+    `)
+
+    const count = result?.rowCount || 0
+    if (count > 0) {
+      logger.info("Price history V2 snapshot completed", { records: count })
+    }
+  } catch (error) {
+    logger.error("Failed to snapshot price history V2", { error })
+  }
+}
+
+export async function process_expiring_buy_orders() {
+  try {
+    const knex = getKnex()
+    const hasTable = await knex.schema.hasTable("buy_orders_v2")
+    if (!hasTable) return
+
+    const result = await knex("buy_orders_v2")
+      .where("status", "active")
+      .whereNotNull("expires_at")
+      .where("expires_at", "<", new Date())
+      .update({ status: "expired", updated_at: new Date() })
+
+    if (result > 0) {
+      logger.info("Expired buy orders", { count: result })
+    }
+  } catch (error) {
+    logger.error("Failed to process expiring buy orders", { error })
+  }
+}
+
 /**
  * Clean up invalid push notification subscriptions
  * Removes subscriptions that have been revoked, expired, or are otherwise invalid
