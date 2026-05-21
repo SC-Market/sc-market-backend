@@ -1,3 +1,20 @@
+// Initialize Bugsnag FIRST — before any application imports that could crash.
+// This ensures uncaughtException/unhandledRejection during module loading are captured.
+import { createRequire } from "module"
+const require = createRequire(import.meta.url)
+const Bugsnag = require("@bugsnag/js")
+import BugsnagPluginExpress from "@bugsnag/plugin-express"
+
+const isDevelopment = process.env.NODE_ENV === "development"
+
+const bugsnag = isDevelopment
+  ? null
+  : Bugsnag.start({
+      apiKey: process.env.BUGSNAG_API_KEY || "",
+      plugins: [BugsnagPluginExpress],
+      enabledReleaseStages: ["production", "staging"],
+    })
+
 import express, { Request, RequestHandler } from "express"
 import compression from "compression"
 import cookieParser from "cookie-parser"
@@ -46,21 +63,6 @@ import { adminOverride } from "./api/routes/v1/admin/middleware.js"
 import { setupPassportStrategies } from "./api/util/passport-strategies.js"
 import { setupAuthRoutes } from "./api/routes/auth-routes.js"
 import logger from "./logger/logger.js"
-
-import { createRequire } from "module"
-const require = createRequire(import.meta.url)
-
-const Bugsnag = require("@bugsnag/js")
-import BugsnagPluginExpress from "@bugsnag/plugin-express"
-
-const isDevelopment = process.env.NODE_ENV === "development"
-
-const bugsnag = isDevelopment
-  ? null
-  : Bugsnag.start({
-      apiKey: process.env.BUGSNAG_API_KEY || "",
-      plugins: [BugsnagPluginExpress],
-    })
 
 const SessionPool = pg.Pool
 
