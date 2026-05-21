@@ -238,24 +238,33 @@ export async function snapshot_price_history_v2() {
     // per-variant pricing (price on variant_pricing).
     const result = await knex.raw(`
       INSERT INTO price_history_v2 (game_item_id, variant_id, price, quality_tier, listing_id, event_type)
-      SELECT DISTINCT ON (li.game_item_id, lil.variant_id)
-        li.game_item_id,
-        lil.variant_id,
-        CASE
-          WHEN li.pricing_mode = 'per_variant' AND vp.price IS NOT NULL THEN vp.price
-          ELSE li.base_price
-        END AS price,
-        COALESCE((iv.attributes->>'quality_tier')::integer, 1) AS quality_tier,
-        li.listing_id,
+      SELECT DISTINCT ON (sub.game_item_id, sub.variant_id)
+        sub.game_item_id,
+        sub.variant_id,
+        sub.price,
+        sub.quality_tier,
+        sub.listing_id,
         'price_snapshot'
-      FROM listing_items li
-      JOIN listings l ON l.listing_id = li.listing_id AND l.status = 'active'
-      JOIN listing_item_lots lil ON lil.item_id = li.item_id AND lil.listed = true AND lil.quantity_total > 0
-      JOIN item_variants iv ON iv.variant_id = lil.variant_id
-      LEFT JOIN variant_pricing vp ON vp.item_id = li.item_id AND vp.variant_id = lil.variant_id
-      WHERE li.game_item_id IS NOT NULL
-        AND (li.base_price > 0 OR vp.price > 0)
-      ORDER BY li.game_item_id, lil.variant_id, l.created_at DESC
+      FROM (
+        SELECT
+          li.game_item_id,
+          lil.variant_id,
+          COALESCE(
+            CASE WHEN li.pricing_mode = 'per_variant' THEN vp.price END,
+            li.base_price
+          ) AS price,
+          COALESCE((iv.attributes->>'quality_tier')::integer, 1) AS quality_tier,
+          li.listing_id,
+          l.created_at
+        FROM listing_items li
+        JOIN listings l ON l.listing_id = li.listing_id AND l.status = 'active'
+        JOIN listing_item_lots lil ON lil.item_id = li.item_id AND lil.listed = true AND lil.quantity_total > 0
+        JOIN item_variants iv ON iv.variant_id = lil.variant_id
+        LEFT JOIN variant_pricing vp ON vp.item_id = li.item_id AND vp.variant_id = lil.variant_id
+        WHERE li.game_item_id IS NOT NULL
+      ) sub
+      WHERE sub.price IS NOT NULL AND sub.price > 0
+      ORDER BY sub.game_item_id, sub.variant_id, sub.created_at DESC
     `)
 
     const count = result?.rowCount || 0

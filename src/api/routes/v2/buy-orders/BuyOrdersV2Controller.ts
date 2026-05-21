@@ -826,24 +826,31 @@ export class BuyOrdersV2Controller extends BaseController {
       }
 
       // Record fulfillment and update buy order
-      await trx('buy_order_fulfillments').insert({
-        buy_order_id: id,
-        seller_id: sellerId,
-        order_id: order.order_id,
-        listing_id: body.listing_id,
-        variant_id: body.variant_id,
-        quantity,
-        price_per_unit: price,
-      })
-
       const newFulfilled = (buyOrder.quantity_fulfilled || 0) + quantity
       const isFullyFulfilled = newFulfilled >= buyOrder.quantity_desired
 
-      await trx('buy_orders_v2').where('buy_order_id', id).update({
-        quantity_fulfilled: newFulfilled,
+      try {
+        await trx('buy_order_fulfillments').insert({
+          buy_order_id: id,
+          seller_id: sellerId,
+          order_id: order.order_id,
+          listing_id: body.listing_id,
+          variant_id: body.variant_id,
+          quantity,
+          price_per_unit: price,
+        })
+      } catch {
+        // Table may not exist pre-migration
+      }
+
+      const updatePayload: Record<string, any> = {
         status: isFullyFulfilled ? 'fulfilled' : 'active',
         updated_at: new Date(),
-      })
+      }
+      if (await trx.schema.hasColumn('buy_orders_v2', 'quantity_fulfilled')) {
+        updatePayload.quantity_fulfilled = newFulfilled
+      }
+      await trx('buy_orders_v2').where('buy_order_id', id).update(updatePayload)
 
       return {
         order_id: order.order_id,
@@ -972,12 +979,20 @@ private formatBuyOrderRow(r: any): StandingBuyOrder {
 
     const ids = buyOrders.map(bo => bo.buy_order_id)
 
-    // Fetch user-uploaded photos
-    const photoRows = await db('buy_order_photos as bp')
-      .join('image_resources as ir', 'bp.resource_id', 'ir.resource_id')
-      .whereIn('bp.buy_order_id', ids)
-      .orderBy('bp.display_order', 'asc')
-      .select('bp.buy_order_id', 'ir.resource_id', db.raw("COALESCE(ir.external_url, 'https://cdn.sc-market.space/' || ir.filename) as url"))
+    // Fetch user-uploaded photos (gracefully handle missing table pre-migration)
+    let photoRows: Array<{ buy_order_id: string; resource_id: string; url: string }> = []
+    try {
+      const hasTable = await db.schema.hasTable('buy_order_photos')
+      if (hasTable) {
+        photoRows = await db('buy_order_photos as bp')
+          .join('image_resources as ir', 'bp.resource_id', 'ir.resource_id')
+          .whereIn('bp.buy_order_id', ids)
+          .orderBy('bp.display_order', 'asc')
+          .select('bp.buy_order_id', 'ir.resource_id', db.raw("COALESCE(ir.external_url, 'https://cdn.sc-market.space/' || ir.filename) as url"))
+      }
+    } catch {
+      // Table doesn't exist yet — skip user photos
+    }
 
     const photoMap = new Map<string, BuyOrderPhoto[]>()
     for (const row of photoRows) {
