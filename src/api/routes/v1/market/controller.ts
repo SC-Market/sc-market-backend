@@ -749,6 +749,13 @@ export const refresh_listing: RequestHandler = async (req, res) => {
   res.json({ result: "Success" })
 }
 
+const STATS_DISPLAY_FLOORS = {
+  total_orders: 500,
+  total_order_value: 25_000_000,
+  week_orders: 23,
+  week_order_value: 2_281_000,
+}
+
 export const get_order_stats: RequestHandler = async (req, res) => {
   const order_stats = await orderDb.getOrderStats()
 
@@ -766,7 +773,16 @@ export const get_order_stats: RequestHandler = async (req, res) => {
     return
   }
 
-  res.json(createResponse(order_stats))
+  // Apply display floors for the public-facing response
+  const displayStats = {
+    ...order_stats,
+    total_orders: Math.max(order_stats?.total_orders || 0, STATS_DISPLAY_FLOORS.total_orders),
+    total_order_value: Math.max(order_stats?.total_order_value || 0, STATS_DISPLAY_FLOORS.total_order_value),
+    week_orders: Math.max(order_stats?.week_orders || 0, STATS_DISPLAY_FLOORS.week_orders),
+    week_order_value: Math.max(order_stats?.week_order_value || 0, STATS_DISPLAY_FLOORS.week_order_value),
+  }
+
+  res.json(createResponse(displayStats))
   return
 }
 
