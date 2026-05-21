@@ -31,11 +31,14 @@ import {
   BuyOrderVariantDetail,
   CreateStandingBuyOrderRequest,
   CreateTargetedBuyOrderRequest,
+  FulfillBuyOrderRequest,
   UpdateStandingBuyOrderRequest,
   StandingBuyOrder,
+  BuyOrderPhoto,
   SearchBuyOrdersResponse,
   DeclineBuyOrderRequest,
 } from "../types/buy-orders.types.js"
+import { resolveGameItemImages } from "../util/resolve-game-item-images.js"
 import logger from "../../../../logger/logger.js"
 import { notificationService } from "../../../../services/notifications/notification.service.js"
 
@@ -386,14 +389,33 @@ export class BuyOrdersV2Controller extends BaseController {
       quality_value_max: body.quality_value_max ?? null,
       status: 'active',
       expires_at: expiresAt,
-      // Visibility & targeting (only present on CreateTargetedBuyOrderRequest)
       visibility: (body as CreateTargetedBuyOrderRequest).visibility ?? 'public',
       target_supplier_id: (body as CreateTargetedBuyOrderRequest).target_supplier_id ?? null,
       target_supplier_contractor_id: (body as CreateTargetedBuyOrderRequest).target_supplier_contractor_id ?? null,
       negotiable: (body as CreateTargetedBuyOrderRequest).negotiable ?? false,
     }).returning('*');
 
-    return this.formatBuyOrderRow(order);
+    // Attach photos if provided
+    if (body.photo_resource_ids?.length) {
+      const photoRows = body.photo_resource_ids.map((resource_id, index) => ({
+        buy_order_id: order.buy_order_id,
+        resource_id,
+        display_order: index,
+      }))
+      await db('buy_order_photos').insert(photoRows)
+    }
+
+    const formatted = this.formatBuyOrderRow(order)
+    // Attach photos to response
+    if (body.photo_resource_ids?.length) {
+      const photos = await db('buy_order_photos as bp')
+        .join('image_resources as ir', 'bp.resource_id', 'ir.resource_id')
+        .where('bp.buy_order_id', order.buy_order_id)
+        .orderBy('bp.display_order', 'asc')
+        .select('ir.resource_id', db.raw("COALESCE(ir.external_url, 'https://cdn.sc-market.space/' || ir.filename) as url"))
+      formatted.photos = photos
+    }
+    return formatted;
   }
 
   /**
@@ -401,6 +423,7 @@ export class BuyOrdersV2Controller extends BaseController {
    */
   @Get('search')
   public async searchBuyOrders(
+    @Request() request: ExpressRequest,
     @Query() game_item_id?: string,
     @Query() quality_tier_min?: number,
     @Query() quality_tier_max?: number,
@@ -412,16 +435,40 @@ export class BuyOrdersV2Controller extends BaseController {
     @Query() page?: number,
     @Query() page_size?: number,
   ): Promise<SearchBuyOrdersResponse> {
+    this.request = request
     const db = getKnex();
     const p = Math.max(1, page || 1);
     const ps = Math.min(100, Math.max(1, page_size || 20));
+    const userId = this.tryGetUserId()
 
     let query = db('buy_orders_v2 as bo')
       .leftJoin('accounts as u', 'bo.buyer_id', 'u.user_id')
       .leftJoin('game_items as gi', 'bo.game_item_id', 'gi.id')
-      .where('bo.status', 'active')
-      // Only show public buy orders in the open market feed
-      .where('bo.visibility', 'public');
+      .where('bo.status', 'active');
+
+    // Visibility: public always shown; roster_only if user is on buyer's supplier roster
+    if (userId) {
+      query = query.where(function () {
+        this.where('bo.visibility', 'public')
+          .orWhere(function () {
+            this.where('bo.visibility', 'roster_only')
+              .whereExists(function () {
+                this.select(db.raw('1'))
+                  .from('supplier_relationships as sr')
+                  .where('sr.status', 'active')
+                  .whereRaw('sr.aggregator_id = bo.buyer_id')
+                  .where(function () {
+                    this.where('sr.supplier_id', userId)
+                      .orWhereIn('sr.supplier_contractor_id',
+                        db('contractor_members').select('contractor_id').where('user_id', userId),
+                      )
+                  })
+              })
+          })
+      })
+    } else {
+      query = query.where('bo.visibility', 'public')
+    }
 
     if (game_item_id) query = query.where('bo.game_item_id', game_item_id);
     if (quality_tier_min) query = query.where('bo.quality_tier_max', '>=', quality_tier_min);
@@ -446,10 +493,73 @@ export class BuyOrdersV2Controller extends BaseController {
       .orderBy(orderCol, orderDir)
       .limit(ps).offset((p - 1) * ps);
 
-    return {
-      buy_orders: results.map((r: any) => this.formatBuyOrderRow(r)),
-      total, page: p, page_size: ps,
-    };
+    const buyOrders = results.map((r: any) => this.formatBuyOrderRow(r))
+    await this.attachPhotos(buyOrders)
+    return { buy_orders: buyOrders, total, page: p, page_size: ps };
+  }
+
+  /**
+   * Get active buy orders matching the seller's current inventory.
+   * Joins against listing_items to find orders the seller can fulfill right now.
+   */
+  @Security("loggedin")
+  @Get('matches-for-seller')
+  public async getMatchesForSeller(
+    @Request() request: ExpressRequest,
+    @Query() page?: number,
+    @Query() page_size?: number,
+  ): Promise<SearchBuyOrdersResponse> {
+    this.request = request
+    this.requireAuth()
+    const db = getKnex()
+    const sellerId = this.getUserId()
+    const p = Math.max(1, page || 1)
+    const ps = Math.min(50, Math.max(1, page_size || 10))
+
+    // Find game_item_ids the seller currently has active listings for
+    const sellerItemIds = db('listing_items as li')
+      .join('listings as l', 'l.listing_id', 'li.listing_id')
+      .where('l.seller_id', sellerId)
+      .where('l.status', 'active')
+      .select('li.game_item_id')
+
+    let query = db('buy_orders_v2 as bo')
+      .leftJoin('accounts as u', 'bo.buyer_id', 'u.user_id')
+      .leftJoin('game_items as gi', 'bo.game_item_id', 'gi.id')
+      .where('bo.status', 'active')
+      .whereNot('bo.buyer_id', sellerId)
+      .whereIn('bo.game_item_id', sellerItemIds)
+      // Only show public + roster_only (if seller is on roster)
+      .where(function () {
+        this.where('bo.visibility', 'public')
+          .orWhere(function () {
+            this.where('bo.visibility', 'roster_only')
+              .whereExists(function () {
+                this.select(db.raw('1'))
+                  .from('supplier_relationships as sr')
+                  .where('sr.status', 'active')
+                  .whereRaw('sr.aggregator_id = bo.buyer_id')
+                  .where(function () {
+                    this.where('sr.supplier_id', sellerId)
+                      .orWhereIn('sr.supplier_contractor_id',
+                        db('contractor_members').select('contractor_id').where('user_id', sellerId),
+                      )
+                  })
+              })
+          })
+      })
+
+    const [{ count }] = await query.clone().clearSelect().clearOrder().count('* as count')
+    const total = parseInt(String(count), 10)
+
+    const results = await query
+      .select('bo.*', 'u.username as buyer_name', 'gi.name as game_item_name', 'gi.type as game_item_type')
+      .orderBy('bo.price_max', 'desc')
+      .limit(ps).offset((p - 1) * ps)
+
+    const buyOrders = results.map((r: any) => this.formatBuyOrderRow(r))
+    await this.attachPhotos(buyOrders)
+    return { buy_orders: buyOrders, total, page: p, page_size: ps }
   }
 
   /**
@@ -485,10 +595,34 @@ export class BuyOrdersV2Controller extends BaseController {
       .orderBy('bo.created_at', 'desc')
       .limit(ps).offset((p - 1) * ps);
 
-    return {
-      buy_orders: results.map((r: any) => this.formatBuyOrderRow(r)),
-      total, page: p, page_size: ps,
-    };
+    const buyOrders = results.map((r: any) => this.formatBuyOrderRow(r))
+    await this.attachPhotos(buyOrders)
+    return { buy_orders: buyOrders, total, page: p, page_size: ps };
+  }
+
+  /**
+   * Get a single buy order by ID with full details
+   */
+  @Get('{id}')
+  public async getBuyOrderDetail(
+    @Request() request: ExpressRequest,
+    @Path() id: string,
+  ): Promise<StandingBuyOrder> {
+    this.request = request
+    const db = getKnex()
+
+    const row = await db('buy_orders_v2 as bo')
+      .leftJoin('accounts as u', 'bo.buyer_id', 'u.user_id')
+      .leftJoin('game_items as gi', 'bo.game_item_id', 'gi.id')
+      .where('bo.buy_order_id', id)
+      .select('bo.*', 'u.username as buyer_name', 'gi.name as game_item_name', 'gi.type as game_item_type')
+      .first()
+
+    if (!row) throw this.throwNotFound('Buy order', id)
+
+    const buyOrder = this.formatBuyOrderRow(row)
+    await this.attachPhotos([buyOrder])
+    return buyOrder
   }
 
   /**
@@ -565,7 +699,7 @@ export class BuyOrdersV2Controller extends BaseController {
   }
 
   /**
-   * Fulfill a standing buy order
+   * Fulfill a standing buy order (supports partial fulfillment)
    * @summary Seller fulfills a buy order
    */
   @Security("loggedin")
@@ -573,7 +707,7 @@ export class BuyOrdersV2Controller extends BaseController {
   public async fulfillBuyOrder(
     @Request() request: ExpressRequest,
     @Path() id: string,
-    @Body() body: { listing_id: string; variant_id: string },
+    @Body() body: FulfillBuyOrderRequest,
   ): Promise<CreateBuyOrderResponse> {
     this.request = request
     this.requireAuth()
@@ -581,12 +715,20 @@ export class BuyOrdersV2Controller extends BaseController {
     const db = getKnex()
 
     const result = await withTransaction(async (trx) => {
-      // Validate buy order is active
       const buyOrder = await trx('buy_orders_v2').where('buy_order_id', id).first()
       if (!buyOrder) throw this.throwNotFound('Buy order', id)
       if (buyOrder.status !== 'active') {
         throw this.throwValidationError('Buy order is not active', [
           { field: 'status', message: `Buy order is ${buyOrder.status}` },
+        ])
+      }
+
+      // Compute remaining quantity for partial fulfillment
+      const remaining = (buyOrder.quantity_desired || 1) - (buyOrder.quantity_fulfilled || 0)
+      const quantity = body.quantity ?? remaining
+      if (quantity <= 0 || quantity > remaining) {
+        throw this.throwValidationError('Invalid fulfillment quantity', [
+          { field: 'quantity', message: `Must be between 1 and ${remaining} (remaining)` },
         ])
       }
 
@@ -618,8 +760,7 @@ export class BuyOrdersV2Controller extends BaseController {
         ])
       }
 
-      // Check stock availability
-      const quantity = buyOrder.quantity_desired || 1
+      // Check stock availability against requested quantity
       const availResult = await trx('listing_item_lots')
         .where({ item_id: listingItem.item_id, variant_id: body.variant_id, listed: true })
         .sum('quantity_total as total')
@@ -661,7 +802,7 @@ export class BuyOrdersV2Controller extends BaseController {
         created_at: new Date(),
       }).returning('*')
 
-      // Allocate stock (V2 direct)
+      // Allocate stock
       const allocationMode2 = await getAllocationMode(
         listing.seller_type === "contractor" ? "contractor" : "user",
         sellerId,
@@ -684,8 +825,25 @@ export class BuyOrdersV2Controller extends BaseController {
         }
       }
 
-      // Mark buy order as fulfilled
-      await trx('buy_orders_v2').where('buy_order_id', id).update({ status: 'fulfilled', updated_at: new Date() })
+      // Record fulfillment and update buy order
+      await trx('buy_order_fulfillments').insert({
+        buy_order_id: id,
+        seller_id: sellerId,
+        order_id: order.order_id,
+        listing_id: body.listing_id,
+        variant_id: body.variant_id,
+        quantity,
+        price_per_unit: price,
+      })
+
+      const newFulfilled = (buyOrder.quantity_fulfilled || 0) + quantity
+      const isFullyFulfilled = newFulfilled >= buyOrder.quantity_desired
+
+      await trx('buy_orders_v2').where('buy_order_id', id).update({
+        quantity_fulfilled: newFulfilled,
+        status: isFullyFulfilled ? 'fulfilled' : 'active',
+        updated_at: new Date(),
+      })
 
       return {
         order_id: order.order_id,
@@ -709,9 +867,9 @@ export class BuyOrdersV2Controller extends BaseController {
           subtotal: price * quantity,
         },
         allocation_result: {
-          has_partial_allocations: false,
-          total_requested: 0,
-          total_allocated: 0,
+          has_partial_allocations: !isFullyFulfilled,
+          total_requested: buyOrder.quantity_desired,
+          total_allocated: newFulfilled,
         },
       } as CreateBuyOrderResponse
     })
@@ -785,6 +943,7 @@ private formatBuyOrderRow(r: any): StandingBuyOrder {
       buyer_id: r.buyer_id,
       buyer_name: r.buyer_name || 'Unknown',
       quantity: r.quantity_desired || 0,
+      quantity_fulfilled: r.quantity_fulfilled || 0,
       price_per_unit: parseFloat(r.price_max) || 0,
       quality_tier_min: r.quality_tier_min || undefined,
       quality_tier_max: r.quality_tier_max || undefined,
@@ -800,6 +959,53 @@ private formatBuyOrderRow(r: any): StandingBuyOrder {
       target_supplier_contractor_id: r.target_supplier_contractor_id || null,
       declined_at: r.declined_at?.toISOString?.() || r.declined_at || null,
     };
+  }
+
+  /**
+   * Batch-resolve photos for buy orders.
+   * First checks buy_order_photos for user-uploaded images,
+   * then falls back to resolveGameItemImages for items without user photos.
+   */
+  private async attachPhotos(buyOrders: StandingBuyOrder[]): Promise<void> {
+    if (!buyOrders.length) return
+    const db = getKnex()
+
+    const ids = buyOrders.map(bo => bo.buy_order_id)
+
+    // Fetch user-uploaded photos
+    const photoRows = await db('buy_order_photos as bp')
+      .join('image_resources as ir', 'bp.resource_id', 'ir.resource_id')
+      .whereIn('bp.buy_order_id', ids)
+      .orderBy('bp.display_order', 'asc')
+      .select('bp.buy_order_id', 'ir.resource_id', db.raw("COALESCE(ir.external_url, 'https://cdn.sc-market.space/' || ir.filename) as url"))
+
+    const photoMap = new Map<string, BuyOrderPhoto[]>()
+    for (const row of photoRows) {
+      const arr = photoMap.get(row.buy_order_id) || []
+      arr.push({ resource_id: row.resource_id, url: row.url })
+      photoMap.set(row.buy_order_id, arr)
+    }
+
+    // Find orders without user photos that need fallback from game item images
+    const needsFallback: string[] = []
+    for (const bo of buyOrders) {
+      if (photoMap.has(bo.buy_order_id)) {
+        bo.photos = photoMap.get(bo.buy_order_id)!
+      } else {
+        needsFallback.push(bo.game_item_id)
+      }
+    }
+
+    // Resolve fallback images from game item listings
+    const uniqueGameItemIds = [...new Set(needsFallback)]
+    const fallbackMap = await resolveGameItemImages(uniqueGameItemIds)
+
+    for (const bo of buyOrders) {
+      if (!bo.photos) {
+        const fallbackUrl = fallbackMap.get(bo.game_item_id)
+        bo.photos = fallbackUrl ? [{ resource_id: '', url: fallbackUrl }] : []
+      }
+    }
   }
 
   /**

@@ -28,6 +28,7 @@ import {
 import logger from "../../../../logger/logger.js"
 import { auditService } from "../../../../services/audit/audit.service.js"
 import { checkWatchlistMatches } from "../../../../services/watchlist/watchlist.service.js"
+import { checkBuyOrderMatches } from "../../../../services/buy-order-matching/buy-order-matching.service.js"
 
 /**
  * Response for creating a listing
@@ -266,6 +267,17 @@ export class ListingsV2Controller extends BaseController {
         title: requestBody.title,
         price: requestBody.base_price || requestBody.lots?.[0]?.price || 0,
         quantity: requestBody.lots.reduce((sum, l) => sum + l.quantity, 0),
+      }).catch(() => {})
+
+      // Check buy order matches (fire-and-forget)
+      checkBuyOrderMatches({
+        listing_id: result.listing_id,
+        game_item_id: requestBody.game_item_id,
+        seller_id: userId,
+        price: requestBody.base_price || requestBody.lots?.[0]?.price || 0,
+        quality_tier: requestBody.lots?.[0]?.variant_attributes?.quality_tier,
+        quality_value: requestBody.lots?.[0]?.variant_attributes?.quality_value,
+        title: requestBody.title,
       }).catch(() => {})
 
       return result

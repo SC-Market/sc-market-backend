@@ -82,6 +82,13 @@ export interface CreateStandingBuyOrderRequest {
   quality_value_max?: number;
   negotiable?: boolean;
   expires_in_days?: number;
+  /** Optional image resource IDs to attach to this buy order */
+  photo_resource_ids?: string[];
+}
+
+export interface BuyOrderPhoto {
+  resource_id: string;
+  url: string;
 }
 
 export interface StandingBuyOrder {
@@ -93,6 +100,7 @@ export interface StandingBuyOrder {
   buyer_id: string;
   buyer_name: string;
   quantity: number;
+  quantity_fulfilled: number;
   price_per_unit: number;
   quality_tier_min?: number;
   quality_tier_max?: number;
@@ -108,6 +116,7 @@ export interface StandingBuyOrder {
   target_supplier_id?: string | null;
   target_supplier_contractor_id?: string | null;
   declined_at?: string | null;
+  photos?: BuyOrderPhoto[];
 }
 
 export interface SearchBuyOrdersResponse {
@@ -173,6 +182,25 @@ export interface CreateTargetedBuyOrderRequest extends CreateStandingBuyOrderReq
   target_supplier_contractor_id?: string
   /** Whether the buyer accepts counter-offers / offer sessions on this order */
   negotiable?: boolean
+}
+
+export interface FulfillBuyOrderRequest {
+  listing_id: string
+  variant_id: string
+  /** Quantity to fulfill (defaults to remaining if omitted) */
+  quantity?: number
+}
+
+export interface BuyOrderFulfillment {
+  fulfillment_id: string
+  buy_order_id: string
+  seller_id: string
+  order_id: string
+  listing_id: string
+  variant_id: string
+  quantity: number
+  price_per_unit: number
+  created_at: string
 }
 
 export interface DeclineBuyOrderRequest {

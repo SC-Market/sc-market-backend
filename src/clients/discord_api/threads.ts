@@ -801,3 +801,239 @@ threadRouter.get("/watchlist/:discord_id", async (req, res) => {
     res.status(500).json({ error: message })
   }
 })
+
+// ═══════════════════════════════════════════════════════════════════
+// Blueprint / Recipe Discord Endpoints
+// ═══════════════════════════════════════════════════════════════════
+
+threadRouter.get("/blueprints/search", async (req, res) => {
+  try {
+    const knex = getKnex()
+    const text = (req.query.text as string) || ""
+    const limit = Math.min(25, parseInt(req.query.limit as string) || 10)
+
+    let query = knex("blueprints as b")
+      .leftJoin("game_items as gi", "b.output_game_item_id", "gi.id")
+      .where("b.is_active", true)
+
+    if (text) {
+      query = query.whereRaw(
+        "b.blueprint_name_tsvector @@ plainto_tsquery('english', ?)",
+        [text],
+      )
+    }
+
+    const results = await query
+      .select(
+        "b.blueprint_id",
+        "b.blueprint_name",
+        "b.blueprint_code",
+        "b.item_category",
+        "b.rarity",
+        "b.output_quantity",
+        "gi.name as output_item_name",
+      )
+      .orderBy("b.blueprint_name")
+      .limit(limit)
+
+    res.json({ blueprints: results })
+  } catch (err: unknown) {
+    const message = err instanceof Error ? err.message : "Blueprint search failed"
+    logger.error("Blueprint search error", { error: message })
+    res.status(500).json({ error: message })
+  }
+})
+
+threadRouter.get("/blueprints/:blueprint_id", async (req, res) => {
+  try {
+    const knex = getKnex()
+    const { blueprint_id } = req.params
+
+    const bp = await knex("blueprints as b")
+      .leftJoin("game_items as gi", "b.output_game_item_id", "gi.id")
+      .where("b.blueprint_id", blueprint_id)
+      .select("b.*", "gi.name as output_item_name")
+      .first()
+
+    if (!bp) return res.status(404).json({ error: "Blueprint not found" })
+
+    const ingredients = await knex("blueprint_ingredients as bi")
+      .leftJoin("game_items as ig", "bi.ingredient_game_item_id", "ig.id")
+      .where("bi.blueprint_id", blueprint_id)
+      .orderBy("bi.display_order")
+      .select(
+        "bi.ingredient_id",
+        "bi.quantity_required",
+        "bi.quantity_scu",
+        "bi.min_quality_tier",
+        "bi.slot_name",
+        "bi.slot_display_name",
+        "bi.is_alternative",
+        "bi.alternative_group",
+        "ig.name as ingredient_name",
+      )
+
+    res.json({ blueprint: bp, ingredients })
+  } catch (err: unknown) {
+    const message = err instanceof Error ? err.message : "Blueprint detail failed"
+    logger.error("Blueprint detail error", { error: message })
+    res.status(500).json({ error: message })
+  }
+})
+
+threadRouter.post("/blueprints/inventory/add", async (req, res) => {
+  try {
+    const knex = getKnex()
+    const { discord_id, blueprint_id, acquisition_method, acquisition_location } = req.body
+
+    if (!discord_id || !blueprint_id) {
+      return res.status(400).json({ error: "discord_id and blueprint_id are required" })
+    }
+
+    const user = await profileDb.getUserByDiscordId(discord_id)
+    if (!user) return res.status(404).json({ error: "User not registered" })
+
+    const bp = await knex("blueprints").where("blueprint_id", blueprint_id).first()
+    if (!bp) return res.status(404).json({ error: "Blueprint not found" })
+
+    const existing = await knex("user_blueprint_inventory")
+      .where({ user_id: user.user_id, blueprint_id })
+      .first()
+
+    if (existing) {
+      await knex("user_blueprint_inventory")
+        .where("inventory_id", existing.inventory_id)
+        .update({
+          is_owned: true,
+          acquisition_method: acquisition_method || existing.acquisition_method,
+          acquisition_location: acquisition_location || existing.acquisition_location,
+          acquisition_date: new Date(),
+        })
+    } else {
+      await knex("user_blueprint_inventory").insert({
+        user_id: user.user_id,
+        blueprint_id,
+        blueprint_name: bp.blueprint_name,
+        is_owned: true,
+        acquisition_method: acquisition_method || "discord",
+        acquisition_location: acquisition_location || null,
+        acquisition_date: new Date(),
+      })
+    }
+
+    res.json({ success: true, blueprint_name: bp.blueprint_name })
+  } catch (err: unknown) {
+    const message = err instanceof Error ? err.message : "Failed to add blueprint"
+    logger.error("Blueprint inventory add error", { error: message })
+    res.status(500).json({ error: message })
+  }
+})
+
+threadRouter.post("/blueprints/inventory/remove", async (req, res) => {
+  try {
+    const knex = getKnex()
+    const { discord_id, blueprint_id } = req.body
+
+    if (!discord_id || !blueprint_id) {
+      return res.status(400).json({ error: "discord_id and blueprint_id are required" })
+    }
+
+    const user = await profileDb.getUserByDiscordId(discord_id)
+    if (!user) return res.status(404).json({ error: "User not registered" })
+
+    await knex("user_blueprint_inventory")
+      .where({ user_id: user.user_id, blueprint_id })
+      .update({ is_owned: false })
+
+    res.json({ success: true })
+  } catch (err: unknown) {
+    const message = err instanceof Error ? err.message : "Failed to remove blueprint"
+    logger.error("Blueprint inventory remove error", { error: message })
+    res.status(500).json({ error: message })
+  }
+})
+
+threadRouter.get("/blueprints/inventory/:discord_id", async (req, res) => {
+  try {
+    const knex = getKnex()
+    const { discord_id } = req.params
+
+    const user = await profileDb.getUserByDiscordId(discord_id)
+    if (!user) return res.status(404).json({ error: "User not registered" })
+
+    const owned = await knex("user_blueprint_inventory as ubi")
+      .join("blueprints as b", "ubi.blueprint_id", "b.blueprint_id")
+      .leftJoin("game_items as gi", "b.output_game_item_id", "gi.id")
+      .where("ubi.user_id", user.user_id)
+      .where("ubi.is_owned", true)
+      .select(
+        "b.blueprint_id",
+        "b.blueprint_name",
+        "b.blueprint_code",
+        "b.item_category",
+        "b.rarity",
+        "b.output_quantity",
+        "gi.name as output_item_name",
+        "ubi.acquisition_date",
+        "ubi.acquisition_method",
+      )
+      .orderBy("b.blueprint_name")
+
+    const totalAvailable = await knex("blueprints").where("is_active", true).count("* as count").first()
+
+    res.json({
+      blueprints: owned,
+      total_owned: owned.length,
+      total_available: parseInt(String(totalAvailable?.count || 0)),
+    })
+  } catch (err: unknown) {
+    const message = err instanceof Error ? err.message : "Failed to fetch inventory"
+    logger.error("Blueprint inventory fetch error", { error: message })
+    res.status(500).json({ error: message })
+  }
+})
+
+threadRouter.get("/blueprints/conversion/:blueprint_id", async (req, res) => {
+  try {
+    const knex = getKnex()
+    const { blueprint_id } = req.params
+
+    const bp = await knex("blueprints as b")
+      .leftJoin("game_items as gi", "b.output_game_item_id", "gi.id")
+      .where("b.blueprint_id", blueprint_id)
+      .select("b.blueprint_name", "b.output_quantity", "gi.name as output_item_name")
+      .first()
+
+    if (!bp) return res.status(404).json({ error: "Blueprint not found" })
+
+    const ingredients = await knex("blueprint_ingredients as bi")
+      .leftJoin("game_items as ig", "bi.ingredient_game_item_id", "ig.id")
+      .where("bi.blueprint_id", blueprint_id)
+      .orderBy("bi.display_order")
+      .select(
+        "bi.quantity_required",
+        "bi.quantity_scu",
+        "bi.min_quality_tier",
+        "bi.is_alternative",
+        "bi.alternative_group",
+        "bi.slot_display_name",
+        "ig.name as ingredient_name",
+      )
+
+    const recipe = await knex("crafting_recipes")
+      .where("blueprint_id", blueprint_id)
+      .first()
+
+    res.json({
+      blueprint_name: bp.blueprint_name,
+      output_item: bp.output_item_name,
+      output_quantity: bp.output_quantity,
+      ingredients,
+      quality_calculation: recipe?.quality_calculation_type || null,
+    })
+  } catch (err: unknown) {
+    const message = err instanceof Error ? err.message : "Failed to fetch conversion"
+    logger.error("Blueprint conversion error", { error: message })
+    res.status(500).json({ error: message })
+  }
+})
