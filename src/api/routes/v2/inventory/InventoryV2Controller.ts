@@ -30,6 +30,7 @@ interface InventoryLotDetail {
   variant_display_name: string | null
   listing_id: string | null
   listing_title: string | null
+  listing_photo: string | null
   quantity_total: number
   location_id: string | null
   location_name: string | null
@@ -92,6 +93,10 @@ export class InventoryV2Controller extends BaseController {
       .leftJoin("item_variants as iv", "lil.variant_id", "iv.variant_id")
       .leftJoin("listings as l", "lil.listing_id", "l.listing_id")
       .leftJoin("locations as loc", "lil.location_id", "loc.location_id")
+      .leftJoin("listing_photos_v2 as lp", function () {
+        this.on("lp.listing_id", "l.listing_id").andOn("lp.display_order", knex.raw("0"))
+      })
+      .leftJoin("image_resources as ir", "lp.resource_id", "ir.resource_id")
       .select(
         "lil.*",
         "gi.name as game_item_name",
@@ -99,6 +104,7 @@ export class InventoryV2Controller extends BaseController {
         "iv.display_name as variant_display_name",
         "l.title as listing_title",
         "loc.name as location_name",
+        knex.raw("COALESCE(ir.external_url, CASE WHEN ir.filename IS NOT NULL THEN 'https://cdn.sc-market.space/' || ir.filename END) as listing_photo"),
       )
       .orderBy("lil.created_at", "desc")
       .limit(ps)
@@ -115,6 +121,7 @@ export class InventoryV2Controller extends BaseController {
         variant_display_name: lot.variant_display_name,
         listing_id: lot.listing_id,
         listing_title: lot.listing_title,
+        listing_photo: lot.listing_photo || null,
         quantity_total: lot.quantity_total,
         location_id: lot.location_id,
         location_name: lot.location_name,
@@ -260,8 +267,20 @@ export class InventoryV2Controller extends BaseController {
       .leftJoin("item_variants as iv", "lil.variant_id", "iv.variant_id")
       .leftJoin("listings as l", "lil.listing_id", "l.listing_id")
       .leftJoin("locations as loc", "lil.location_id", "loc.location_id")
+      .leftJoin("listing_photos_v2 as lp", function (this: any) {
+        this.on("lp.listing_id", "l.listing_id").andOn("lp.display_order", knex.raw("0"))
+      })
+      .leftJoin("image_resources as ir", "lp.resource_id", "ir.resource_id")
       .where("lil.lot_id", lotId)
-      .select("lil.*", "gi.name as game_item_name", "gi.image_url as game_item_image", "iv.display_name as variant_display_name", "l.title as listing_title", "loc.name as location_name")
+      .select(
+        "lil.*",
+        "gi.name as game_item_name",
+        "gi.image_url as game_item_image",
+        "iv.display_name as variant_display_name",
+        "l.title as listing_title",
+        "loc.name as location_name",
+        knex.raw("COALESCE(ir.external_url, CASE WHEN ir.filename IS NOT NULL THEN 'https://cdn.sc-market.space/' || ir.filename END) as listing_photo"),
+      )
       .first()
 
     return {
@@ -274,6 +293,7 @@ export class InventoryV2Controller extends BaseController {
       variant_display_name: lot.variant_display_name,
       listing_id: lot.listing_id,
       listing_title: lot.listing_title,
+      listing_photo: lot.listing_photo || null,
       quantity_total: lot.quantity_total,
       location_id: lot.location_id,
       location_name: lot.location_name,
