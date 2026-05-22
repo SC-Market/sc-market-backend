@@ -25,6 +25,7 @@ interface InventoryLotDetail {
   owner_id: string
   game_item_id: string | null
   game_item_name: string | null
+  game_item_image: string | null
   variant_id: string | null
   variant_display_name: string | null
   listing_id: string | null
@@ -94,6 +95,7 @@ export class InventoryV2Controller extends BaseController {
       .select(
         "lil.*",
         "gi.name as game_item_name",
+        "gi.image_url as game_item_image",
         "iv.display_name as variant_display_name",
         "l.title as listing_title",
         "loc.name as location_name",
@@ -108,6 +110,7 @@ export class InventoryV2Controller extends BaseController {
         owner_id: lot.owner_id,
         game_item_id: lot.game_item_id,
         game_item_name: lot.game_item_name,
+        game_item_image: lot.game_item_image || null,
         variant_id: lot.variant_id,
         variant_display_name: lot.variant_display_name,
         listing_id: lot.listing_id,
@@ -258,7 +261,7 @@ export class InventoryV2Controller extends BaseController {
       .leftJoin("listings as l", "lil.listing_id", "l.listing_id")
       .leftJoin("locations as loc", "lil.location_id", "loc.location_id")
       .where("lil.lot_id", lotId)
-      .select("lil.*", "gi.name as game_item_name", "iv.display_name as variant_display_name", "l.title as listing_title", "loc.name as location_name")
+      .select("lil.*", "gi.name as game_item_name", "gi.image_url as game_item_image", "iv.display_name as variant_display_name", "l.title as listing_title", "loc.name as location_name")
       .first()
 
     return {
@@ -266,6 +269,7 @@ export class InventoryV2Controller extends BaseController {
       owner_id: lot.owner_id,
       game_item_id: lot.game_item_id,
       game_item_name: lot.game_item_name,
+      game_item_image: lot.game_item_image || null,
       variant_id: lot.variant_id,
       variant_display_name: lot.variant_display_name,
       listing_id: lot.listing_id,
