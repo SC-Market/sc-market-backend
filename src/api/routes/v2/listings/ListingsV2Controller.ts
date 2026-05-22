@@ -78,7 +78,7 @@ export class ListingsV2Controller extends BaseController {
    * @param request Express request for authentication
    * @returns Created listing with listing_id
    */
-  @Security("loggedin")
+  @Security("verified")
   @Post()
   public async createListing(
     @Body() requestBody: CreateListingRequest,
@@ -2089,7 +2089,7 @@ export class ListingsV2Controller extends BaseController {
    * @param request Express request for authentication
    * @returns Preview of importable listings or import result
    */
-  @Security("loggedin")
+  @Security("verified")
   @Post("import-uex")
   public async importFromUex(
     @Body() requestBody: {
