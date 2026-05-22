@@ -188,9 +188,14 @@ export class StockLotsV2Controller extends BaseController {
         .join("item_variants as iv", "sl.variant_id", "iv.variant_id")
         .join("listing_items as li", "sl.item_id", "li.item_id")
         .join("listings as lst", "li.listing_id", "lst.listing_id")
+        .leftJoin("game_items as gi", "li.game_item_id", "gi.id")
         .leftJoin("locations as loc", "sl.location_id", "loc.location_id")
         .leftJoin("accounts as owner", "sl.owner_id", "owner.user_id")
         .leftJoin("accounts as crafter", "sl.crafted_by", "crafter.user_id")
+        .leftJoin("listing_photos_v2 as lp", function () {
+          this.on("lp.listing_id", "lst.listing_id").andOn("lp.display_order", knex.raw("0"))
+        })
+        .leftJoin("image_resources as ir", "lp.resource_id", "ir.resource_id")
         // Only show lots from listings owned by the current user or their orgs
         .where(function () {
           this.where("lst.seller_id", userId)
@@ -202,6 +207,8 @@ export class StockLotsV2Controller extends BaseController {
           "sl.item_id",
           "li.listing_id",
           "lst.title as listing_title",
+          "gi.name as game_item_name",
+          knex.raw("COALESCE(ir.external_url, CASE WHEN ir.filename IS NOT NULL THEN 'https://cdn.sc-market.space/' || ir.filename END) as listing_photo"),
           "sl.variant_id",
           "sl.quantity_total",
           "sl.listed",
@@ -294,6 +301,8 @@ export class StockLotsV2Controller extends BaseController {
         item_id: row.item_id,
         listing_id: row.listing_id,
         listing_title: row.listing_title || "Unknown",
+        game_item_name: row.game_item_name || null,
+        listing_photo: row.listing_photo || null,
         variant: {
           variant_id: row.variant_id,
           attributes: row.variant_attributes,
@@ -548,6 +557,8 @@ export class StockLotsV2Controller extends BaseController {
         item_id: lotResult.item_id,
         listing_id: lotResult.listing_id,
         listing_title: lotResult.listing_title || "Unknown",
+        game_item_name: lotResult.game_item_name || null,
+        listing_photo: lotResult.listing_photo || null,
         variant: {
           variant_id: lotResult.variant_id,
           attributes: lotResult.variant_attributes,
@@ -891,6 +902,8 @@ export class StockLotsV2Controller extends BaseController {
       item_id: row.item_id,
       listing_id: row.listing_id,
       listing_title: row.listing_title || "Unknown",
+      game_item_name: row.game_item_name || null,
+      listing_photo: row.listing_photo || null,
       variant: {
         variant_id: row.variant_id,
         attributes: row.variant_attributes,
