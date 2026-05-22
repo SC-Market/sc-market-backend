@@ -76,7 +76,13 @@ export interface StockLotDetail {
 
   /** Listing title */
   listing_title: string;
-  
+
+  /** Game item name */
+  game_item_name: string | null;
+
+  /** First listing photo URL */
+  listing_photo: string | null;
+
   /** Variant information */
   variant: StockLotVariant;
   
