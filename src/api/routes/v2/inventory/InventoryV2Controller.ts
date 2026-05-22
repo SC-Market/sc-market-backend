@@ -261,13 +261,13 @@ export class InventoryV2Controller extends BaseController {
     auditService.log({ entity_type: "inventory_lot", entity_id: lotId, action: "deleted", actor_id: userId })
   }
 
-  private async fetchLotDetail(knex: any, lotId: string): Promise<InventoryLotDetail> {
+  private async fetchLotDetail(knex: ReturnType<typeof getKnex>, lotId: string): Promise<InventoryLotDetail> {
     const lot = await knex("listing_item_lots as lil")
       .leftJoin("game_items as gi", "lil.game_item_id", "gi.id")
       .leftJoin("item_variants as iv", "lil.variant_id", "iv.variant_id")
       .leftJoin("listings as l", "lil.listing_id", "l.listing_id")
       .leftJoin("locations as loc", "lil.location_id", "loc.location_id")
-      .leftJoin("listing_photos_v2 as lp", function (this: any) {
+      .leftJoin("listing_photos_v2 as lp", function () {
         this.on("lp.listing_id", "l.listing_id").andOn("lp.display_order", knex.raw("0"))
       })
       .leftJoin("image_resources as ir", "lp.resource_id", "ir.resource_id")
