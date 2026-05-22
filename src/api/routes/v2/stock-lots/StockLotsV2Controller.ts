@@ -131,6 +131,7 @@ export class StockLotsV2Controller extends BaseController {
     @Query() variant_id?: string,
     @Query() quality_tier_min?: number,
     @Query() quality_tier_max?: number,
+    @Query() spectrum_id?: string,
     @Query() page?: number,
     @Query() page_size?: number,
     @Request() request?: ExpressRequest,
@@ -196,11 +197,16 @@ export class StockLotsV2Controller extends BaseController {
           this.on("lp.listing_id", "lst.listing_id").andOn("lp.display_order", knex.raw("0"))
         })
         .leftJoin("image_resources as ir", "lp.resource_id", "ir.resource_id")
-        // Only show lots from listings owned by the current user or their orgs
+        // Only show lots from listings the user can manage
         .where(function () {
-          this.where("lst.seller_id", userId)
-            .orWhere("lst.seller_type", "contractor")
-            .whereIn("lst.seller_id", knex("contractor_members").select("contractor_id").where("user_id", userId))
+          if (spectrum_id) {
+            // Scoped to a specific org
+            this.where("lst.seller_type", "contractor")
+              .whereIn("lst.seller_id", knex("contractors").select("contractor_id").where("spectrum_id", spectrum_id))
+          } else {
+            // User's own listings only (no org context)
+            this.where("lst.seller_id", userId).where("lst.seller_type", "user")
+          }
         })
         .select(
           "sl.lot_id",
