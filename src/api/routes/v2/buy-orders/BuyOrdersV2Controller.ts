@@ -87,7 +87,7 @@ export class BuyOrdersV2Controller extends BaseController {
    * @param request Express request for authentication
    * @returns Created order with order_id and purchase details
    */
-  @Security("loggedin")
+  @Security("verified")
   @Post()
   public async createPurchase(
     @Body() requestBody: CreateBuyOrderRequest,
@@ -362,7 +362,7 @@ export class BuyOrdersV2Controller extends BaseController {
   /**
    * Create a standing buy order
    */
-  @Security("loggedin")
+  @Security("verified")
   @Post('standing')
   public async createStandingBuyOrder(
     @Body() body: CreateStandingBuyOrderRequest,
@@ -702,7 +702,7 @@ export class BuyOrdersV2Controller extends BaseController {
    * Fulfill a standing buy order (supports partial fulfillment)
    * @summary Seller fulfills a buy order
    */
-  @Security("loggedin")
+  @Security("verified")
   @Post('{id}/fulfill')
   public async fulfillBuyOrder(
     @Request() request: ExpressRequest,

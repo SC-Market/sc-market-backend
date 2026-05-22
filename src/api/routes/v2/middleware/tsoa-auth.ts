@@ -14,10 +14,13 @@ export async function expressAuthentication(
   securityName: string,
   _scopes?: string[],
 ): Promise<User> {
-  if (securityName === "loggedin") {
+  if (securityName === "loggedin" || securityName === "verified") {
     const user = request.user as User | undefined
     if (!user) throw new Error("Authentication required")
     if (user.banned) throw new Error("User is banned")
+    if (securityName === "verified" && !user.rsi_confirmed) {
+      throw new Error("Your account is not verified.")
+    }
     return user
   }
 
