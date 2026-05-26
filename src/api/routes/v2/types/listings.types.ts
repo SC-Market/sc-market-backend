@@ -127,6 +127,9 @@ export interface CreateListingRequest {
 
   /** Initial listing status (default: 'active'). Use 'inactive' for draft/prep. */
   status?: 'active' | 'inactive';
+
+  /** Listing visibility (default: 'public'). Use 'private' for org-internal listings (contractor only). */
+  visibility?: 'public' | 'private';
 }
 
 // ============================================================================
@@ -257,6 +260,9 @@ export interface ListingSearchResult {
 
   /** Whether this listing has bulk discount tiers defined */
   has_bulk_discount?: boolean;
+
+  /** Listing visibility: public, private (org-only), or unlisted */
+  visibility?: 'public' | 'private' | 'unlisted';
 }
 
 /**
@@ -516,6 +522,9 @@ export interface UpdateListingRequest {
 
   /** New photo resource IDs to append (from two-phase upload) */
   photo_resource_ids?: string[];
+
+  /** Listing visibility (null to keep unchanged). Only contractor listings can be 'private'. */
+  visibility?: 'public' | 'private';
 }
 // ============================================================================
 

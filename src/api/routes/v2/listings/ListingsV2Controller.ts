@@ -115,7 +115,7 @@ export class ListingsV2Controller extends BaseController {
             title: requestBody.title,
             description: requestBody.description,
             status: requestBody.status || "active",
-            visibility: "public",
+            visibility: (requestBody.contractor_spectrum_id && requestBody.visibility) || "public",
             sale_type: requestBody.sale_type || "fixed",
             listing_type: "single",
             pickup_method: requestBody.pickup_method || null,
@@ -511,7 +511,9 @@ export class ListingsV2Controller extends BaseController {
     @Query() listing_type?: 'single' | 'bundle' | 'bulk',
     @Query() seller_username?: string,
     @Query() contractor_spectrum_id?: string,
+    @Request() request?: ExpressRequest,
   ): Promise<SearchListingsResponse> {
+    if (request) this.request = request
     const db = getKnex()
 
     // Validate and set defaults
@@ -665,6 +667,7 @@ export class ListingsV2Controller extends BaseController {
           "ls.photo",
           "ls.pickup_method",
           "ls.quantity_unit",
+          "ls.visibility",
         )
 
       // Apply full-text search filter (Requirement 15.2)
@@ -767,6 +770,25 @@ export class ListingsV2Controller extends BaseController {
         }
       }
 
+      // Filter by visibility: exclude private listings unless user is an org member
+      const currentUserId = this.tryGetUserId()
+      if (currentUserId) {
+        query = query.where(function () {
+          this.where("ls.visibility", "!=", "private")
+            .orWhere(function () {
+              this.where("ls.seller_type", "contractor")
+                .whereExists(function () {
+                  this.select(db.raw("1"))
+                    .from("contractor_members")
+                    .whereRaw("contractor_members.contractor_id = ls.seller_id")
+                    .where("contractor_members.user_id", currentUserId)
+                })
+            })
+        })
+      } else {
+        query = query.where("ls.visibility", "!=", "private")
+      }
+
       // Get total count for pagination (Requirement 15.8)
       const countQuery = query.clone().clearSelect().clearOrder().count("* as count")
       const [{ count: totalCount }] = await countQuery
@@ -832,6 +854,7 @@ export class ListingsV2Controller extends BaseController {
         photo: row.photo || undefined,
         pickup_method: row.pickup_method || null,
         quantity_unit: row.quantity_unit || "unit",
+        visibility: row.visibility || "public",
       }))
 
       logger.info("Search completed", {
@@ -1120,7 +1143,9 @@ export class ListingsV2Controller extends BaseController {
   @Get("{id}")
   public async getListingDetail(
     id: string,
+    @Request() request?: ExpressRequest,
   ): Promise<GetListingDetailResponse> {
+    if (request) this.request = request
     const db = getKnex()
 
     logger.info("Fetching listing detail", { listingId: id })
@@ -1202,6 +1227,21 @@ export class ListingsV2Controller extends BaseController {
           return this.getListingDetail(mapped.v2_listing_id)
         }
         this.throwNotFound("Listing", id)
+      }
+
+      // Visibility access control: private listings require org membership
+      if (listing.visibility === "private" && listing.seller_type === "contractor") {
+        const currentUserId = this.tryGetUserId()
+        if (!currentUserId) {
+          this.throwForbidden("This listing is only visible to organization members")
+        }
+        const membership = await db("contractor_members")
+          .where("contractor_id", listing.seller_id)
+          .where("user_id", currentUserId)
+          .first()
+        if (!membership) {
+          this.throwForbidden("This listing is only visible to organization members")
+        }
       }
 
       // Query listing items with game item details (Requirement 16.3)
@@ -1518,6 +1558,20 @@ export class ListingsV2Controller extends BaseController {
             ])
           }
           listingUpdates.quantity_unit = requestBody.quantity_unit
+        }
+
+        if (requestBody.visibility !== undefined) {
+          if (!['public', 'private'].includes(requestBody.visibility)) {
+            this.throwValidationError("Invalid visibility", [
+              { field: "visibility", message: "Must be 'public' or 'private'" },
+            ])
+          }
+          if (requestBody.visibility === 'private' && listing.seller_type !== 'contractor') {
+            this.throwValidationError("Invalid visibility", [
+              { field: "visibility", message: "Only contractor listings can be private" },
+            ])
+          }
+          listingUpdates.visibility = requestBody.visibility
         }
 
         // Update per-listing order limits
