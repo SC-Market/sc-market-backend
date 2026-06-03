@@ -603,6 +603,8 @@ export async function getUser(
     discord_thread_channel_id: user.discord_thread_channel_id,
     market_order_template: user.market_order_template,
     locale: user.locale,
+    deleted_at: user.deleted_at,
+    is_tombstone: user.is_tombstone,
   } as User
 }
 
@@ -638,6 +640,8 @@ export async function findUser(
     discord_thread_channel_id: user.discord_thread_channel_id,
     market_order_template: user.market_order_template,
     locale: user.locale,
+    deleted_at: user.deleted_at,
+    is_tombstone: user.is_tombstone,
   } as User
 }
 

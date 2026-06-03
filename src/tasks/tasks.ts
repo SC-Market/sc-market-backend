@@ -9,6 +9,7 @@ import {
   update_price_history,
   clear_uploads_folder,
   cleanup_push_subscriptions,
+  process_account_deletions,
 } from "./timers.js"
 import { fetchAndInsertCommodities } from "./commodities.js"
 import { processDiscordQueue } from "./discord-queue-consumer.js"
@@ -108,4 +109,10 @@ export function start_tasks() {
   // This removes subscriptions that have been revoked, expired, or are invalid
   safe(cleanup_push_subscriptions, "cleanup_push_subscriptions")
   setInterval(() => safe(cleanup_push_subscriptions, "cleanup_push_subscriptions"), 24 * 60 * 60 * 1000)
+
+  // Process expired account deletions (convert to tombstone after grace period)
+  setTimeout(() => {
+    safe(process_account_deletions, "process_account_deletions")
+    setInterval(() => safe(process_account_deletions, "process_account_deletions"), 60 * 60 * 1000)
+  }, STARTUP_DELAY + 70_000)
 }

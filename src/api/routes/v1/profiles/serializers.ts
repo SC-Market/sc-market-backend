@@ -11,6 +11,25 @@ export async function serializePublicProfile(
   user: DBUser | User,
   opts: { discord: boolean } = { discord: false },
 ) {
+  if ("is_tombstone" in user && user.is_tombstone) {
+    return {
+      username: user.username,
+      display_name: "Deleted User",
+      avatar: null,
+      banner: null,
+      profile_description: "",
+      contractors: [],
+      rating: { avg_rating: 0, rating_count: 0, streak: 0, total_rating: 0 },
+      badges: null,
+      discord_profile: undefined,
+      market_order_template: "",
+      rsi_confirmed: false,
+      languages: [],
+      last_seen: null,
+      in_game: false,
+    }
+  }
+
   const contractors = await contractorDb.getUserContractorRoles({
     user_id: user.user_id,
   })

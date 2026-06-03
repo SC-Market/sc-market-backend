@@ -30,6 +30,8 @@ export interface User {
   market_order_template: string
   last_seen: Date
   in_game: boolean
+  deleted_at?: Date | null
+  is_tombstone?: boolean
 }
 
 export interface PostBody {

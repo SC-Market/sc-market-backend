@@ -308,3 +308,20 @@ export async function cleanup_push_subscriptions() {
     logger.error("Failed to cleanup push subscriptions", { error })
   }
 }
+
+/**
+ * Process accounts whose grace period has expired and convert to tombstones.
+ */
+export async function process_account_deletions() {
+  try {
+    const { processExpiredDeletions } = await import(
+      "../services/account-deletion/account-deletion.service.js"
+    )
+    const count = await processExpiredDeletions()
+    if (count > 0) {
+      logger.info("Processed account deletions", { count })
+    }
+  } catch (error) {
+    logger.error("Failed to process account deletions", { error })
+  }
+}
