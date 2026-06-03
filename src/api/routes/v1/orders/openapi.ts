@@ -231,6 +231,81 @@ oapi.schema("OfferMarketListing", {
   type: "object",
 })
 
+oapi.schema("OrderV2VariantItem", {
+  properties: {
+    listing_id: {
+      title: "OrderV2VariantItem.listing_id",
+      type: "string",
+    },
+    variant_id: {
+      title: "OrderV2VariantItem.variant_id",
+      type: "string",
+    },
+    quantity: {
+      title: "OrderV2VariantItem.quantity",
+      type: "integer",
+      minimum: 1,
+    },
+    price_per_unit: {
+      title: "OrderV2VariantItem.price_per_unit",
+      type: "number",
+      minimum: 0,
+    },
+    attributes: {
+      title: "OrderV2VariantItem.attributes",
+      type: "object",
+      additionalProperties: true,
+    },
+    display_name: {
+      title: "OrderV2VariantItem.display_name",
+      type: "string",
+    },
+    short_name: {
+      title: "OrderV2VariantItem.short_name",
+      type: "string",
+    },
+  },
+  required: ["listing_id", "variant_id", "quantity", "price_per_unit", "attributes", "display_name", "short_name"],
+  additionalProperties: false,
+  title: "OrderV2VariantItem",
+  type: "object",
+})
+
+oapi.schema("OrderV2MarketListing", {
+  properties: {
+    listing_id: {
+      title: "OrderV2MarketListing.listing_id",
+      type: "string",
+    },
+    title: {
+      title: "OrderV2MarketListing.title",
+      type: "string",
+    },
+    price: {
+      title: "OrderV2MarketListing.price",
+      type: "number",
+      minimum: 0,
+    },
+    quantity: {
+      title: "OrderV2MarketListing.quantity",
+      type: "integer",
+      minimum: 0,
+    },
+    variants: {
+      items: {
+        ...oapi.schema("OrderV2VariantItem"),
+        title: "OrderV2MarketListing.variants.[]",
+      },
+      title: "OrderV2MarketListing.variants",
+      type: "array",
+    },
+  },
+  required: ["listing_id", "title", "price", "quantity", "variants"],
+  additionalProperties: false,
+  title: "OrderV2MarketListing",
+  type: "object",
+})
+
 oapi.schema("Order", {
   properties: {
     order_id: {
@@ -309,6 +384,15 @@ oapi.schema("Order", {
       },
       title: "Order.market_listings",
       type: "array",
+    },
+    market_listings_v2: {
+      items: {
+        ...oapi.schema("OrderV2MarketListing"),
+        title: "Order.market_listings_v2.[]",
+      },
+      title: "Order.market_listings_v2",
+      type: "array",
+      nullable: true,
     },
     customer_review: {
       ...oapi.schema("OrderReview"),
