@@ -89,6 +89,10 @@ export function createTestUser(overrides?: Partial<TestUser>): TestUser {
     supported_languages: ["en"],
     last_seen: new Date(),
     in_game: false,
+    deleted_at: null,
+    deletion_scheduled_at: null,
+    is_tombstone: false,
+    deletion_reason: null,
   }
   const accounts = getMockTableData("accounts")
   accounts.push(dbUser)

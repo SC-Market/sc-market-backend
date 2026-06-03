@@ -34,6 +34,11 @@ export interface DBUser {
   supported_languages: string[] | null // Array of ISO 639-1 language codes (default ['en'])
   last_seen: Date
   in_game: boolean
+
+  deleted_at: Date | null
+  deletion_scheduled_at: Date | null
+  is_tombstone: boolean
+  deletion_reason: string | null
 }
 
 export interface DBAccountSettings {

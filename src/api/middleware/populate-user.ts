@@ -52,7 +52,7 @@ export async function populateUser(
           const user = await profileDb.getUser({
             user_id: tokenRecord.user_id,
           })
-          if (user && !user.banned) {
+          if (user && !user.banned && !user.is_tombstone) {
             req.user = user
             // Stash token metadata for scope checks downstream
             ;(req as any).__tokenInfo = {
@@ -81,7 +81,7 @@ export async function populateUser(
         if (payload) {
           try {
             const user = await profileDb.getUser({ user_id: payload.sub })
-            if (user && !user.banned) {
+            if (user && !user.banned && !user.is_tombstone) {
               req.user = user
             }
           } catch {
