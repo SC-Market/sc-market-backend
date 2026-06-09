@@ -1486,8 +1486,11 @@ export class ListingsV2Controller extends BaseController {
           .first()
 
         if (!listing) {
+          logger.error("PUT /listings/:id - listing NOT found in listings table", { id, userId })
           this.throwNotFound("Listing", id)
         }
+
+        logger.info("PUT /listings/:id - listing found, checking permissions", { id, userId, sellerId: listing.seller_id, sellerType: listing.seller_type })
 
         // Verify ownership
         if (!(await canModifyListing(listing, userId))) {
@@ -1635,19 +1638,20 @@ export class ListingsV2Controller extends BaseController {
           })
         }
 
-        // 4. Get listing_items to determine pricing mode
+        // 4. Get listing_items to determine pricing mode (may be empty for custom-item listings)
         const listingItems = await trx("listing_items")
           .where({ listing_id: id })
           .select("*")
 
-        if (listingItems.length === 0) {
-          this.throwNotFound("Listing items", id)
-        }
-
-        const listingItem = listingItems[0]
+        const listingItem = listingItems[0] ?? null
 
         // 5. Update base_price for unified pricing (Requirement 17.3)
         if (requestBody.base_price !== undefined) {
+          if (!listingItem) {
+            this.throwValidationError("Cannot update pricing for a listing without items", [
+              { field: "base_price", message: "This listing has no linked items" },
+            ])
+          }
           if (listingItem.pricing_mode !== "unified") {
             this.throwValidationError(
               "Cannot update base_price for per_variant pricing mode",
@@ -1687,7 +1691,7 @@ export class ListingsV2Controller extends BaseController {
         }
 
         // Update bulk discount tiers
-        if (requestBody.bulk_discount_tiers !== undefined) {
+        if (requestBody.bulk_discount_tiers !== undefined && listingItem) {
           await trx("listing_items")
             .where({ item_id: listingItem.item_id })
             .update({
@@ -1699,6 +1703,11 @@ export class ListingsV2Controller extends BaseController {
 
         // 6. Update per-variant prices (Requirement 17.4)
         if (requestBody.variant_prices && requestBody.variant_prices.length > 0) {
+          if (!listingItem) {
+            this.throwValidationError("Cannot update variant prices for a listing without items", [
+              { field: "variant_prices", message: "This listing has no linked items" },
+            ])
+          }
           if (listingItem.pricing_mode !== "per_variant") {
             this.throwValidationError(
               "Cannot update variant_prices for unified pricing mode",
@@ -1763,7 +1772,7 @@ export class ListingsV2Controller extends BaseController {
         }
 
         // 7. Update stock lots (Requirements 17.5, 17.6)
-        if (requestBody.lot_updates && requestBody.lot_updates.length > 0) {
+        if (requestBody.lot_updates && requestBody.lot_updates.length > 0 && listingItem) {
           for (const lotUpdate of requestBody.lot_updates) {
             // Verify lot belongs to this listing
             const lot = await trx("listing_item_lots as sl")
