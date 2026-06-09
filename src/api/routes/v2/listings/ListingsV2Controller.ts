@@ -1478,15 +1478,6 @@ export class ListingsV2Controller extends BaseController {
     const db = getKnex()
 
     try {
-      // Resolve V1 listing ID if needed (V1 IDs live in market_listings, V2 in listings)
-      const directCheck = await db("listings").where({ listing_id: id }).select("listing_id").first()
-      if (!directCheck) {
-        const mapped = await db("v1_v2_listing_map").where("v1_listing_id", id).select("v2_listing_id").first()
-        if (mapped) {
-          id = mapped.v2_listing_id as string
-        }
-      }
-
       // Use database transaction for atomicity (Requirement 17.11)
       await withTransaction(async (trx) => {
         // 1. Fetch listing and verify ownership (Requirement 17.8)
@@ -1901,18 +1892,9 @@ export class ListingsV2Controller extends BaseController {
 
     try {
       // 1. Fetch listing and verify ownership (Requirement 49.4)
-      let listing = await db("listings")
+      const listing = await db("listings")
         .where({ listing_id: id })
         .first()
-
-      // Resolve V1 listing ID if needed
-      if (!listing) {
-        const mapped = await db("v1_v2_listing_map").where("v1_listing_id", id).select("v2_listing_id").first()
-        if (mapped) {
-          id = mapped.v2_listing_id as string
-          listing = await db("listings").where({ listing_id: id }).first()
-        }
-      }
 
       if (!listing) {
         this.throwNotFound("Listing", id)
@@ -2015,15 +1997,7 @@ export class ListingsV2Controller extends BaseController {
 
     const db = getKnex()
 
-    // Resolve V1 listing ID if needed
-    let listing = await db('listings').where('listing_id', id).first()
-    if (!listing) {
-      const mapped = await db("v1_v2_listing_map").where("v1_listing_id", id).select("v2_listing_id").first()
-      if (mapped) {
-        id = mapped.v2_listing_id as string
-        listing = await db('listings').where('listing_id', id).first()
-      }
-    }
+    const listing = await db('listings').where('listing_id', id).first()
     if (!listing) {
       this.throwNotFound('Listing', id)
     }
