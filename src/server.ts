@@ -25,8 +25,6 @@ import enableWS from "express-ws"
 import wrapPGSession from "connect-pg-simple"
 import pg from "pg"
 import { hostname } from "os"
-import { SitemapStream, streamToPromise } from "sitemap"
-import { createGzip } from "zlib"
 import { createServer } from "node:http"
 import { Server } from "socket.io"
 import { apiReference } from "@scalar/express-api-reference"
@@ -38,10 +36,6 @@ import { apiRouter } from "./api/routes/v1/api-router.js"
 import { apiV1Router } from "./api/routes/v1/api-v1-router.js"
 import { apiV2Router } from "./api/routes/v2/api-router.js"
 import * as profileDb from "./api/routes/v1/profiles/database.js"
-import * as contractorDb from "./api/routes/v1/contractors/database.js"
-import * as recruitingDb from "./api/routes/v1/recruiting/database.js"
-import * as marketDb from "./api/routes/v1/market/database.js"
-import { getKnex } from "./clients/database/knex-db.js"
 import { userAuthorized } from "./api/middleware/auth.js"
 import { errorHandler, track500Responses } from "./api/middleware/error-handler.js"
 import { securityHeaders } from "./api/middleware/security-headers.js"
@@ -52,7 +46,7 @@ import { claimRouter } from "./clients/discord_api/claim.js"
 import { trackActivity } from "./api/middleware/activity.js"
 import { oapi } from "./api/routes/v1/openapi.js"
 import { env } from "./config/env.js"
-import { formatListingSlug } from "./api/routes/v1/market/helpers.js"
+import { setupSitemapRoutes } from "./services/sitemap/sitemap.routes.js"
 import { chatServer } from "./clients/messaging/websocket.js"
 import { start_tasks } from "./tasks/tasks.js"
 import {
@@ -268,267 +262,8 @@ app.use(trackActivity)
 // Setup authentication routes
 setupAuthRoutes(app, frontend_url)
 
-let sitemap: Buffer | null = null
-let sitemapGeneratedAt = 0
-const SITEMAP_TTL_MS = 6 * 60 * 60 * 1000 // 6 hours
+setupSitemapRoutes(app)
 
-app.get("/sitemap.xml", async function (req, res) {
-  try {
-    res.header("Content-Type", "application/xml")
-    res.header("Content-Encoding", "gzip")
-
-    if (sitemap && Date.now() - sitemapGeneratedAt < SITEMAP_TTL_MS) {
-      res.send(sitemap)
-      return
-    }
-
-    const contractors = await contractorDb.getContractorListings({})
-    const users = await profileDb.getUsersWhere({ rsi_confirmed: true })
-    const recruit_posts = await recruitingDb.getAllRecruitingPosts()
-    const market_listings = await marketDb.searchMarket(
-      {
-        sale_type: null,
-        maxCost: null,
-        minCost: 0,
-        quantityAvailable: 1,
-        item_type: null,
-        index: 0,
-        rating: 0,
-        reverseSort: false,
-        sort: "timestamp",
-        query: "",
-        seller_rating: 0,
-        page_size: 0,
-      },
-      {
-        status: "active",
-        internal: "false",
-      },
-    )
-
-    const user_routes = []
-    for (const user of users) {
-      user_routes.push(
-        {
-          url: `/user/${user.username}`,
-          changefreq: "monthly",
-          priority: 0.5,
-        },
-        {
-          url: `/user/${user.username}/services`,
-          changefreq: "monthly",
-          priority: 0.4,
-        },
-        {
-          url: `/user/${user.username}/market`,
-          changefreq: "monthly",
-          priority: 0.4,
-        },
-        {
-          url: `/user/${user.username}/order`,
-          changefreq: "yearly",
-          priority: 0.2,
-        },
-        {
-          url: `/user/${user.username}/reviews`,
-          changefreq: "monthly",
-          priority: 0.2,
-        },
-      )
-    }
-
-    const market_routes = []
-    for (const listing of market_listings) {
-      let type
-      switch (listing.listing_type) {
-        case "unique": {
-          type = "market"
-          break
-        }
-        case "aggregate": {
-          type = "market/aggregate"
-          break
-        }
-        case "multiple": {
-          type = "market/multiple"
-          break
-        }
-        default:
-          type = "market"
-      }
-      market_routes.push({
-        url: `/${type}/${listing.listing_id}/#/${formatListingSlug(listing.title)}`,
-        changefreq: "weekly",
-        priority: 0.8,
-      })
-    }
-
-    const contractor_routes = []
-    for (const contractor of contractors) {
-      contractor_routes.push(
-        {
-          url: `/contractor/${contractor.spectrum_id}`,
-          changefreq: "monthly",
-          priority: 0.5,
-        },
-        {
-          url: `/contractor/${contractor.spectrum_id}/services`,
-          changefreq: "monthly",
-          priority: 0.4,
-        },
-        {
-          url: `/contractor/${contractor.spectrum_id}/market`,
-          changefreq: "monthly",
-          priority: 0.4,
-        },
-        // {
-        //     url: `/contractor/${contractor.spectrum_id}/recruiting`,
-        //     changefreq: 'monthly',
-        //     priority: 0.3,
-        // },
-        {
-          url: `/contractor/${contractor.spectrum_id}/order`,
-          changefreq: "yearly",
-          priority: 0.2,
-        },
-        {
-          url: `/contractor/${contractor.spectrum_id}/members`,
-          changefreq: "monthly",
-          priority: 0.2,
-        },
-      )
-    }
-
-    const recruit_routes = []
-    for (const post of recruit_posts) {
-      recruit_routes.push({
-        url: `/recruiting/post/${post.post_id}`,
-        changefreq: "monthly",
-        priority: 0.5,
-      })
-    }
-
-    // Game data detail pages
-    const game_data_routes: Array<{ url: string; changefreq: string; priority: number }> = []
-    try {
-      const db = getKnex()
-      const missions = await db("missions").select("mission_code").limit(5000)
-      for (const m of missions) {
-        game_data_routes.push({ url: `/missions/${m.mission_code}`, changefreq: "monthly", priority: 0.6 })
-      }
-      const blueprints = await db("blueprints").select("blueprint_code").limit(5000)
-      for (const b of blueprints) {
-        game_data_routes.push({ url: `/blueprints/${b.blueprint_code}`, changefreq: "monthly", priority: 0.6 })
-      }
-      const resources = await db("resources").select("resource_id").limit(5000)
-      for (const r of resources) {
-        game_data_routes.push({ url: `/resources/${r.resource_id}`, changefreq: "monthly", priority: 0.5 })
-      }
-      const wikiItems = await db("game_items").select("id").limit(5000)
-      for (const i of wikiItems) {
-        game_data_routes.push({ url: `/wiki/items/${i.id}`, changefreq: "monthly", priority: 0.6 })
-      }
-      const ships = await db("game_items").where("type", "Ship").select("id").limit(2000)
-      for (const s of ships) {
-        game_data_routes.push({ url: `/wiki/ships/${s.id}`, changefreq: "monthly", priority: 0.6 })
-      }
-      const manufacturers = await db("wiki_manufacturers").select("code").limit(500)
-      for (const m of manufacturers) {
-        game_data_routes.push({ url: `/wiki/manufacturers/${m.code}`, changefreq: "monthly", priority: 0.5 })
-      }
-    } catch (e) {
-      logger.warn("Failed to fetch game data for sitemap", { error: e })
-    }
-
-    const pages = [
-      {
-        url: "/",
-        changefreq: "monthly",
-        priority: 1.0,
-      },
-      {
-        url: "/market",
-        changefreq: "always",
-        priority: 1.0,
-      },
-      {
-        url: "/recruiting",
-        changefreq: "always",
-        priority: 1.0,
-      },
-      {
-        url: "/contractors",
-        changefreq: "always",
-        priority: 1.0,
-      },
-      {
-        url: "/contracts",
-        changefreq: "always",
-        priority: 1.0,
-      },
-      {
-        url: "/services",
-        changefreq: "always",
-        priority: 1.0,
-      },
-      // Market sub-pages
-      { url: "/bulk", changefreq: "always", priority: 0.8 },
-      { url: "/buyorders", changefreq: "always", priority: 0.8 },
-      { url: "/market/services", changefreq: "always", priority: 0.8 },
-      // Game data
-      { url: "/missions", changefreq: "weekly", priority: 0.8 },
-      { url: "/blueprints", changefreq: "weekly", priority: 0.8 },
-      { url: "/crafting/calculator", changefreq: "monthly", priority: 0.7 },
-      { url: "/resources", changefreq: "weekly", priority: 0.7 },
-      { url: "/shopping-lists", changefreq: "monthly", priority: 0.5 },
-      // Wiki
-      { url: "/wiki/items", changefreq: "weekly", priority: 0.8 },
-      { url: "/wiki/ships", changefreq: "weekly", priority: 0.8 },
-      { url: "/wiki/commodities", changefreq: "weekly", priority: 0.7 },
-      { url: "/wiki/locations", changefreq: "monthly", priority: 0.7 },
-      { url: "/wiki/manufacturers", changefreq: "monthly", priority: 0.6 },
-      // Auth
-      { url: "/login", changefreq: "yearly", priority: 0.3 },
-      { url: "/signup", changefreq: "yearly", priority: 0.4 },
-      ...contractor_routes,
-      ...user_routes,
-      ...recruit_routes,
-      ...market_routes,
-      ...game_data_routes,
-    ]
-
-    try {
-      const smStream = new SitemapStream({
-        hostname: "https://sc-market.space/",
-      })
-      const pipeline = smStream.pipe(createGzip())
-
-      // pipe your entries or directly write them.
-      for (const page of pages) {
-        smStream.write(page)
-      }
-      /* or use
-            Readable.from([{url: '/page-1'}...]).pipe(smStream)
-            if you are looking to avoid writing your own loop.
-            */
-
-      // cache the response
-      streamToPromise(pipeline).then((sm) => { sitemap = sm; sitemapGeneratedAt = Date.now() })
-      // make sure to attach a write stream such as streamToPromise before ending
-      smStream.end()
-      // stream write the response
-      pipeline.pipe(res).on("error", (e) => {
-        throw e
-      })
-    } catch (e) {
-      logger.error("Error generating sitemap stream", { error: e })
-      res.status(500).json({ error: "Big error" }).end()
-    }
-  } catch (e) {
-    logger.error("Error generating sitemap", { error: e })
-    res.status(400).json({ error: "Big error 2" }).end()
-  }
-})
 
 app.use(oapi)
 app.use("/swaggerui", userAuthorized, oapi.swaggerui())
