@@ -39,6 +39,7 @@ export interface DBUser {
   deletion_scheduled_at: Date | null
   is_tombstone: boolean
   deletion_reason: string | null
+  onboarding_completed_at: Date | null
 }
 
 export interface DBAccountSettings {

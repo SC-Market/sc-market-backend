@@ -32,6 +32,7 @@ export interface User {
   in_game: boolean
   deleted_at?: Date | null
   is_tombstone?: boolean
+  onboarding_completed_at?: Date | null
 }
 
 export interface PostBody {

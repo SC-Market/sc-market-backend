@@ -14,6 +14,8 @@ import { RequisitionsV2Controller } from './../requisitions/RequisitionsV2Contro
 // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
 import { OrdersV2Controller } from './../orders/OrdersV2Controller.js';
 // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+import { OnboardingV2Controller } from './../onboarding/OnboardingV2Controller.js';
+// WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
 import { OffersV2Controller } from './../offers/OffersV2Controller.js';
 // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
 import { ListingsV2Controller } from './../listings/ListingsV2Controller.js';
@@ -638,6 +640,16 @@ const models: TsoaRoute.Models = {
         "properties": {
             "orders": {"dataType":"array","array":{"dataType":"refObject","ref":"ListingOrderSummary"},"required":true},
             "offers": {"dataType":"array","array":{"dataType":"refObject","ref":"ListingOfferSummary"},"required":true},
+        },
+        "additionalProperties": false,
+    },
+    // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+    "OnboardingStatusResponse": {
+        "dataType": "refObject",
+        "properties": {
+            "completed": {"dataType":"boolean","required":true},
+            "completedAt": {"dataType":"union","subSchemas":[{"dataType":"string"},{"dataType":"enum","enums":[null]}],"required":true},
+            "steps": {"dataType":"nestedObjectLiteral","nestedProperties":{"dmRemindersEnabled":{"dataType":"boolean","required":true},"hasEmail":{"dataType":"boolean","required":true},"hasAvailability":{"dataType":"boolean","required":true},"hasDiscord":{"dataType":"boolean","required":true}},"required":true},
         },
         "additionalProperties": false,
     },
@@ -4055,6 +4067,68 @@ export function RegisterRoutes(app: Router) {
 
               await templateService.apiHandler({
                 methodName: 'getOrdersByListing',
+                controller,
+                response,
+                next,
+                validatedArgs,
+                successStatus: undefined,
+              });
+            } catch (err) {
+                return next(err);
+            }
+        });
+        // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+        const argsOnboardingV2Controller_getOnboardingStatus: Record<string, TsoaRoute.ParameterSchema> = {
+                request: {"in":"request","name":"request","required":true,"dataType":"object"},
+        };
+        app.get('/onboarding/status',
+            authenticateMiddleware([{"loggedin":[]}]),
+            ...(fetchMiddlewares<RequestHandler>(OnboardingV2Controller)),
+            ...(fetchMiddlewares<RequestHandler>(OnboardingV2Controller.prototype.getOnboardingStatus)),
+
+            async function OnboardingV2Controller_getOnboardingStatus(request: ExRequest, response: ExResponse, next: any) {
+
+            // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+
+            let validatedArgs: any[] = [];
+            try {
+                validatedArgs = templateService.getValidatedArgs({ args: argsOnboardingV2Controller_getOnboardingStatus, request, response });
+
+                const controller = new OnboardingV2Controller();
+
+              await templateService.apiHandler({
+                methodName: 'getOnboardingStatus',
+                controller,
+                response,
+                next,
+                validatedArgs,
+                successStatus: undefined,
+              });
+            } catch (err) {
+                return next(err);
+            }
+        });
+        // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+        const argsOnboardingV2Controller_completeOnboarding: Record<string, TsoaRoute.ParameterSchema> = {
+                request: {"in":"request","name":"request","required":true,"dataType":"object"},
+        };
+        app.post('/onboarding/complete',
+            authenticateMiddleware([{"loggedin":[]}]),
+            ...(fetchMiddlewares<RequestHandler>(OnboardingV2Controller)),
+            ...(fetchMiddlewares<RequestHandler>(OnboardingV2Controller.prototype.completeOnboarding)),
+
+            async function OnboardingV2Controller_completeOnboarding(request: ExRequest, response: ExResponse, next: any) {
+
+            // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+
+            let validatedArgs: any[] = [];
+            try {
+                validatedArgs = templateService.getValidatedArgs({ args: argsOnboardingV2Controller_completeOnboarding, request, response });
+
+                const controller = new OnboardingV2Controller();
+
+              await templateService.apiHandler({
+                methodName: 'completeOnboarding',
                 controller,
                 response,
                 next,

@@ -930,6 +930,7 @@ export const profile_get_root: RequestHandler = async (req, res, next) => {
         last_used_at: p.last_used_at,
       })),
       market_order_template: user.market_order_template,
+      onboarding_completed_at: user.onboarding_completed_at ?? null,
     })
   } catch (error) {
     next(error)

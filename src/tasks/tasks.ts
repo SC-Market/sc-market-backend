@@ -11,6 +11,7 @@ import {
   cleanup_push_subscriptions,
   process_account_deletions,
 } from "./timers.js"
+import { processDmReminders } from "../services/dm-reminders/dm-reminder.service.js"
 import { fetchAndInsertCommodities } from "./commodities.js"
 import { processDiscordQueue } from "./discord-queue-consumer.js"
 import { processEmailQueue } from "./email-queue-consumer.js"
@@ -115,4 +116,10 @@ export function start_tasks() {
     safe(process_account_deletions, "process_account_deletions")
     setInterval(() => safe(process_account_deletions, "process_account_deletions"), 60 * 60 * 1000)
   }, STARTUP_DELAY + 70_000)
+
+  // Send DM reminder emails for unread messages older than 24h (runs every 6 hours)
+  setTimeout(() => {
+    safe(processDmReminders, "processDmReminders")
+    setInterval(() => safe(processDmReminders, "processDmReminders"), 6 * 60 * 60 * 1000)
+  }, STARTUP_DELAY + 80_000)
 }
