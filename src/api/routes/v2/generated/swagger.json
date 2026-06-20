@@ -1772,6 +1772,47 @@
 				"type": "object",
 				"additionalProperties": false
 			},
+			"OnboardingStatusResponse": {
+				"properties": {
+					"completed": {
+						"type": "boolean"
+					},
+					"completedAt": {
+						"type": "string",
+						"nullable": true
+					},
+					"steps": {
+						"properties": {
+							"dmRemindersEnabled": {
+								"type": "boolean"
+							},
+							"hasEmail": {
+								"type": "boolean"
+							},
+							"hasAvailability": {
+								"type": "boolean"
+							},
+							"hasDiscord": {
+								"type": "boolean"
+							}
+						},
+						"required": [
+							"dmRemindersEnabled",
+							"hasEmail",
+							"hasAvailability",
+							"hasDiscord"
+						],
+						"type": "object"
+					}
+				},
+				"required": [
+					"completed",
+					"completedAt",
+					"steps"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
 			"Rating": {
 				"properties": {
 					"avg_rating": {
@@ -11724,6 +11765,66 @@
 						}
 					}
 				]
+			}
+		},
+		"/onboarding/status": {
+			"get": {
+				"operationId": "GetOnboardingStatus",
+				"responses": {
+					"200": {
+						"description": "Ok",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/OnboardingStatusResponse"
+								}
+							}
+						}
+					}
+				},
+				"tags": [
+					"Onboarding"
+				],
+				"security": [
+					{
+						"loggedin": []
+					}
+				],
+				"parameters": []
+			}
+		},
+		"/onboarding/complete": {
+			"post": {
+				"operationId": "CompleteOnboarding",
+				"responses": {
+					"200": {
+						"description": "Ok",
+						"content": {
+							"application/json": {
+								"schema": {
+									"properties": {
+										"completedAt": {
+											"type": "string"
+										}
+									},
+									"required": [
+										"completedAt"
+									],
+									"type": "object"
+								}
+							}
+						}
+					}
+				},
+				"tags": [
+					"Onboarding"
+				],
+				"security": [
+					{
+						"loggedin": []
+					}
+				],
+				"parameters": []
 			}
 		},
 		"/offers/{sessionId}": {
