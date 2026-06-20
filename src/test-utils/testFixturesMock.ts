@@ -93,6 +93,7 @@ export function createTestUser(overrides?: Partial<TestUser>): TestUser {
     deletion_scheduled_at: null,
     is_tombstone: false,
     deletion_reason: null,
+    onboarding_completed_at: new Date(),
   }
   const accounts = getMockTableData("accounts")
   accounts.push(dbUser)
