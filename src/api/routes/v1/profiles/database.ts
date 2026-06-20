@@ -605,6 +605,7 @@ export async function getUser(
     locale: user.locale,
     deleted_at: user.deleted_at,
     is_tombstone: user.is_tombstone,
+    onboarding_completed_at: user.onboarding_completed_at,
   } as User
 }
 
@@ -642,6 +643,7 @@ export async function findUser(
     locale: user.locale,
     deleted_at: user.deleted_at,
     is_tombstone: user.is_tombstone,
+    onboarding_completed_at: user.onboarding_completed_at,
   } as User
 }
 
