@@ -590,6 +590,9 @@ export interface MyListingItem {
 
   /** ISO 8601 timestamp when listing expires (null if no expiry) */
   expires_at?: string;
+
+  /** Listing visibility: public or private (org-only) */
+  visibility?: 'public' | 'private';
 }
 
 /**

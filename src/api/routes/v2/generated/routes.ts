@@ -975,6 +975,7 @@ const models: TsoaRoute.Models = {
             "quality_tier_max": {"dataType":"double"},
             "photo": {"dataType":"string"},
             "expires_at": {"dataType":"string"},
+            "visibility": {"dataType":"union","subSchemas":[{"dataType":"enum","enums":["public"]},{"dataType":"enum","enums":["private"]}]},
         },
         "additionalProperties": false,
     },
@@ -2995,7 +2996,12 @@ const models: TsoaRoute.Models = {
         "additionalProperties": false,
     },
     // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
-    "CreateStandingBuyOrderRequest": {
+    "BuyOrderVisibility": {
+        "dataType": "refAlias",
+        "type": {"dataType":"union","subSchemas":[{"dataType":"enum","enums":["public"]},{"dataType":"enum","enums":["roster_only"]},{"dataType":"enum","enums":["private"]}],"validators":{}},
+    },
+    // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+    "CreateTargetedBuyOrderRequest": {
         "dataType": "refObject",
         "properties": {
             "game_item_id": {"dataType":"string","required":true},
@@ -3008,6 +3014,9 @@ const models: TsoaRoute.Models = {
             "negotiable": {"dataType":"boolean"},
             "expires_in_days": {"dataType":"double"},
             "photo_resource_ids": {"dataType":"array","array":{"dataType":"string"}},
+            "visibility": {"ref":"BuyOrderVisibility"},
+            "target_supplier_id": {"dataType":"string"},
+            "target_supplier_contractor_id": {"dataType":"string"},
         },
         "additionalProperties": false,
     },
@@ -7001,7 +7010,7 @@ export function RegisterRoutes(app: Router) {
         });
         // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
         const argsBuyOrdersV2Controller_createStandingBuyOrder: Record<string, TsoaRoute.ParameterSchema> = {
-                body: {"in":"body","name":"body","required":true,"ref":"CreateStandingBuyOrderRequest"},
+                body: {"in":"body","name":"body","required":true,"ref":"CreateTargetedBuyOrderRequest"},
                 request: {"in":"request","name":"request","required":true,"dataType":"object"},
         };
         app.post('/buy-orders/standing',

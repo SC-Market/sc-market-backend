@@ -365,7 +365,7 @@ export class BuyOrdersV2Controller extends BaseController {
   @Security("verified")
   @Post('standing')
   public async createStandingBuyOrder(
-    @Body() body: CreateStandingBuyOrderRequest,
+    @Body() body: CreateTargetedBuyOrderRequest,
     @Request() request: ExpressRequest,
   ): Promise<StandingBuyOrder> {
     this.request = request

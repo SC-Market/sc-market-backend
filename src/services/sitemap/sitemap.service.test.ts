@@ -1,5 +1,14 @@
 import { gunzipSync } from "node:zlib"
-import { describe, expect, it } from "vitest"
+import { describe, expect, it, vi } from "vitest"
+
+vi.mock("../../clients/cdn/cdn.js", () => ({
+  cdn: { getFileLinkResource: vi.fn() },
+}))
+
+vi.mock("../../clients/database/knex-db.js", () => ({
+  getKnex: vi.fn(() => vi.fn()),
+  database: {},
+}))
 
 import {
   generateSitemapsFromPages,
