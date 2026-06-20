@@ -995,6 +995,7 @@ export class ListingsV2Controller extends BaseController {
           "ls.quality_tier_min",
           "ls.quality_tier_max",
           "ls.photo",
+          "ls.visibility",
           "l_full.expires_at",
         )
         .leftJoin("listings as l_full", "ls.listing_id", "l_full.listing_id")

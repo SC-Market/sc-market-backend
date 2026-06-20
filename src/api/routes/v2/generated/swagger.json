@@ -2958,6 +2958,14 @@
 					"expires_at": {
 						"type": "string",
 						"description": "ISO 8601 timestamp when listing expires (null if no expiry)"
+					},
+					"visibility": {
+						"type": "string",
+						"enum": [
+							"public",
+							"private"
+						],
+						"description": "Listing visibility: public or private (org-only)"
 					}
 				},
 				"required": [
@@ -9415,8 +9423,15 @@
 				"type": "object",
 				"additionalProperties": false
 			},
-			"CreateStandingBuyOrderRequest": {
-				"description": "Response from creating a direct purchase order",
+			"BuyOrderVisibility": {
+				"type": "string",
+				"enum": [
+					"public",
+					"roster_only",
+					"private"
+				]
+			},
+			"CreateTargetedBuyOrderRequest": {
 				"properties": {
 					"game_item_id": {
 						"type": "string"
@@ -9448,7 +9463,8 @@
 						"description": "Maximum quality value (0-1000) for resource buy orders"
 					},
 					"negotiable": {
-						"type": "boolean"
+						"type": "boolean",
+						"description": "Whether the buyer accepts counter-offers / offer sessions on this order"
 					},
 					"expires_in_days": {
 						"type": "number",
@@ -9460,6 +9476,18 @@
 						},
 						"type": "array",
 						"description": "Optional image resource IDs to attach to this buy order"
+					},
+					"visibility": {
+						"$ref": "#/components/schemas/BuyOrderVisibility",
+						"description": "Controls who can see and act on this buy order"
+					},
+					"target_supplier_id": {
+						"type": "string",
+						"description": "Direct to a specific supplier user (requires visibility = 'private')"
+					},
+					"target_supplier_contractor_id": {
+						"type": "string",
+						"description": "Direct to a specific supplier org (requires visibility = 'private')"
 					}
 				},
 				"required": [
@@ -16909,7 +16937,7 @@
 					"content": {
 						"application/json": {
 							"schema": {
-								"$ref": "#/components/schemas/CreateStandingBuyOrderRequest"
+								"$ref": "#/components/schemas/CreateTargetedBuyOrderRequest"
 							}
 						}
 					}
