@@ -11,6 +11,8 @@ export interface Shop {
   owner_user_id: string | null
   owner_contractor_id: string | null
   supported_languages: string[]
+  tags: string[]
+  accepts_custom_orders: boolean
   market_order_template: string
   default_pickup_method: string | null
   status: string
