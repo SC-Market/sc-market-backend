@@ -386,6 +386,17 @@ const models: TsoaRoute.Models = {
         "additionalProperties": false,
     },
     // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+    "ShopOwnerInfo": {
+        "dataType": "refObject",
+        "properties": {
+            "type": {"dataType":"union","subSchemas":[{"dataType":"enum","enums":["user"]},{"dataType":"enum","enums":["contractor"]}],"required":true},
+            "slug": {"dataType":"string","required":true},
+            "name": {"dataType":"string","required":true},
+            "avatar_url": {"dataType":"union","subSchemas":[{"dataType":"string"},{"dataType":"enum","enums":[null]}],"required":true},
+        },
+        "additionalProperties": false,
+    },
+    // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
     "ShopPublicResponse": {
         "dataType": "refObject",
         "properties": {
@@ -400,6 +411,9 @@ const models: TsoaRoute.Models = {
             "created_at": {"dataType":"string","required":true},
             "rating": {"dataType":"union","subSchemas":[{"dataType":"double"},{"dataType":"enum","enums":[null]}],"required":true},
             "rating_count": {"dataType":"double","required":true},
+            "owner": {"ref":"ShopOwnerInfo"},
+            "listing_count": {"dataType":"double"},
+            "total_sales": {"dataType":"double"},
         },
         "additionalProperties": false,
     },
