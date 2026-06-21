@@ -40,6 +40,7 @@ export async function getServicesPaginated(params: {
   language_codes?: string[]
   contractor_id?: string
   user_id?: string
+  shop_id?: string
 }): Promise<{
   services: DBService[]
   pagination: {
@@ -65,6 +66,7 @@ export async function getServicesPaginated(params: {
     language_codes,
     contractor_id,
     user_id,
+    shop_id,
   } = params
 
   // Build base query with filters
@@ -75,12 +77,14 @@ export async function getServicesPaginated(params: {
   query = query.where("status", status)
   countQuery = countQuery.where("status", status)
 
-  // Filter by contractor (org) or user when viewing a profile/org services tab
-  if (contractor_id) {
+  // Filter by shop (preferred), contractor, or user
+  if (shop_id) {
+    query = query.where("shop_id", shop_id)
+    countQuery = countQuery.where("shop_id", shop_id)
+  } else if (contractor_id) {
     query = query.where("contractor_id", contractor_id)
     countQuery = countQuery.where("contractor_id", contractor_id)
-  }
-  if (user_id) {
+  } else if (user_id) {
     query = query.where("user_id", user_id)
     countQuery = countQuery.where("user_id", user_id)
   }

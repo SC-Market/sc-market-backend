@@ -176,6 +176,7 @@ export const services_get_public: RequestHandler = async (req, res, next) => {
     language_codes,
     contractor: contractorSpectrumId,
     user: username,
+    shop_id: shopId,
   } = req.query
 
   // Resolve optional contractor (spectrum_id) and user (username) to DB IDs
@@ -211,6 +212,7 @@ export const services_get_public: RequestHandler = async (req, res, next) => {
       : undefined,
     contractor_id,
     user_id,
+    shop_id: shopId as string | undefined,
   }
 
   const result = await serviceDb.getServicesPaginated(params)
