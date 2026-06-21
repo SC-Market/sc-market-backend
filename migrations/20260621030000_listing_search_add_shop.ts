@@ -30,7 +30,7 @@ export async function up(knex: Knex): Promise<void> {
     FROM listings l
     JOIN listing_items li ON l.listing_id = li.listing_id
     LEFT JOIN game_items gi ON li.game_item_id::text = gi.id::text
-    JOIN shops s ON l.shop_id = s.shop_id
+    LEFT JOIN shops s ON l.shop_id = s.shop_id
   `)
 }
 

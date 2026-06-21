@@ -1665,25 +1665,43 @@ class DatabaseNotificationService implements NotificationService {
    */
   async createNewOrderNotificationV2(
     order: CreateOrderResponse | GetOrderDetailResponse,
-    sellerId: string,
+    shopId: string,
   ): Promise<void> {
     try {
-      // Format and send push notification to seller
+      // Resolve recipients from shop owner
+      const shop = await getKnex()("shops").where("shop_id", shopId).first()
+      if (!shop) return
+
+      const recipients: string[] = []
+      if (shop.owner_contractor_id) {
+        const admins = await contractorDb.getMembersWithMatchingRole(
+          shop.owner_contractor_id,
+          { manage_orders: true },
+        )
+        recipients.push(...admins.map((u: { user_id: string }) => u.user_id))
+      } else if (shop.owner_user_id) {
+        recipients.push(shop.owner_user_id)
+      }
+
+      if (recipients.length === 0) return
+
+      // Format and send push notification to seller(s)
       const payload = payloadFormattersV2.formatNewOrderNotificationPayloadV2(
         order,
       )
 
-      await pushNotificationService.sendPushNotification(
-        sellerId,
+      await pushNotificationService.sendPushNotifications(
+        recipients,
         payload,
         "order_create_v2",
       )
 
       logger.info("Created V2 new order notification", {
         order_id: order.order_id,
-        seller_id: sellerId,
+        shop_id: shopId,
         total_price: order.total_price,
         item_count: order.items.length,
+        recipient_count: recipients.length,
       })
     } catch (error) {
       logger.error("Failed to create V2 new order notification:", error)
