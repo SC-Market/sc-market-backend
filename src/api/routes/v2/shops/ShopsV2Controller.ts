@@ -5,7 +5,7 @@
  * listings, services, orders belong to a shop. A user or org can own multiple shops.
  */
 
-import { Controller, Post, Get, Put, Delete, Route, Tags, Body, Request, Path, Security } from "tsoa"
+import { Controller, Post, Get, Put, Delete, Route, Tags, Body, Request, Path, Query, Security } from "tsoa"
 import { Request as ExpressRequest } from "express"
 import { BaseController } from "../base/BaseController.js"
 import { getKnex } from "../../../../clients/database/knex-db.js"
