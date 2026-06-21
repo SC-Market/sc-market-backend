@@ -2625,6 +2625,11 @@
 						],
 						"nullable": true
 					},
+					"shop_slug": {
+						"type": "string",
+						"nullable": true,
+						"description": "Shop slug for the seller — use to filter listings in counteroffers"
+					},
 					"offers": {
 						"items": {
 							"$ref": "#/components/schemas/OfferV2"
@@ -2701,6 +2706,11 @@
 							}
 						],
 						"nullable": true
+					},
+					"shop_slug": {
+						"type": "string",
+						"nullable": true,
+						"description": "Shop slug for the seller — use to filter listings in counteroffers"
 					},
 					"offers": {
 						"items": {

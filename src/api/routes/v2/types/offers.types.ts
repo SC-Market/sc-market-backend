@@ -19,6 +19,8 @@ export interface OfferSessionV2 {
   customer: MinimalUser;
   assigned_to: MinimalUser | null;
   contractor: MinimalContractor | null;
+  /** Shop slug for the seller — use to filter listings in counteroffers */
+  shop_slug?: string | null;
   offers: OfferV2[];
   availability?: OfferAvailability | null;
 }
