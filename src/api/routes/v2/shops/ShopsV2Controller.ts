@@ -123,6 +123,7 @@ export class ShopsV2Controller extends BaseController {
   @Get("mine")
   @Security("loggedin")
   public async getMyShops(@Request() request: ExpressRequest): Promise<ShopResponse[]> {
+    this.request = request
     const userId = this.getUserId()
     const shops = await getShopsForUser(userId)
     return Promise.all(shops.map(shopToResponse))
@@ -140,6 +141,7 @@ export class ShopsV2Controller extends BaseController {
     @Request() request: ExpressRequest,
     @Body() body: CreateShopRequest,
   ): Promise<ShopResponse> {
+    this.request = request
     const userId = this.getUserId()
     const db = getKnex()
 
@@ -190,6 +192,7 @@ export class ShopsV2Controller extends BaseController {
     @Request() request: ExpressRequest,
     @Body() body: QuickCreateShopRequest,
   ): Promise<ShopResponse> {
+    this.request = request
     const userId = this.getUserId()
     const db = getKnex()
 
@@ -471,6 +474,7 @@ export class ShopsV2Controller extends BaseController {
     @Path() shopId: string,
     @Body() body: UpdateShopRequest,
   ): Promise<ShopResponse> {
+    this.request = request
     const userId = this.getUserId()
     const db = getKnex()
 
@@ -488,7 +492,7 @@ export class ShopsV2Controller extends BaseController {
       }
     }
 
-    const updates: Record<string, any> = { updated_at: db.fn.now() }
+    const updates: Partial<Record<string, string | boolean | string[] | null | ReturnType<typeof db.fn.now>>> = { updated_at: db.fn.now() }
     if (body.name !== undefined) updates.name = body.name
     if (body.slug !== undefined) updates.slug = body.slug
     if (body.description !== undefined) updates.description = body.description
@@ -515,6 +519,7 @@ export class ShopsV2Controller extends BaseController {
     @Request() request: ExpressRequest,
     @Path() shopId: string,
   ): Promise<{ success: boolean }> {
+    this.request = request
     const userId = this.getUserId()
     const db = getKnex()
 
@@ -542,6 +547,7 @@ export class ShopsV2Controller extends BaseController {
     @Path() shopId: string,
     @Body() body: TransferShopRequest,
   ): Promise<ShopResponse> {
+    this.request = request
     const userId = this.getUserId()
     const db = getKnex()
 
