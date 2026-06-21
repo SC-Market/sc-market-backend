@@ -11,6 +11,11 @@ export async function up(knex: Knex): Promise<void> {
     table.uuid("shop_id").nullable().references("shop_id").inTable("shops").onDelete("CASCADE")
   })
 
+  // Drop dead trigger: references get_public_quantity → get_available_stock which was
+  // removed in migration 53. V2 stock tracking uses listing_item_lots triggers instead.
+  await knex.raw(`DROP TRIGGER IF EXISTS sync_listings_on_setting_change_trigger ON order_settings`)
+  await knex.raw(`DROP FUNCTION IF EXISTS sync_listings_on_setting_change()`)
+
   // Backfill order_settings: link existing settings to their entity's shop
   // Contractor settings → contractor's shop
   await knex.raw(`
