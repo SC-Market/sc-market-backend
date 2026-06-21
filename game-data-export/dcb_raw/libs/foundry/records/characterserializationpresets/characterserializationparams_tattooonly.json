@@ -1,0 +1,48 @@
+{
+  "_RecordName_": "CharacterSerializationSettingsPreset.CharacterSerializationParams_TattooOnly",
+  "_RecordId_": "3889b8e0-6d74-496e-950e-de8a9823fa8f",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "CharacterSerializationSettingsPreset",
+    "modelTag": false,
+    "voiceTag": false,
+    "dna": false,
+    "loadout": false,
+    "customizationLoadoutOnly": false,
+    "fullLoadout": false,
+    "materials": true,
+    "fullMaterials": false,
+    "decals": false,
+    "materialSettings": [
+      {
+        "_Type_": "SCharacterSerializationMaterialsSettingsPreset",
+        "attachmentName": "head_itemport_skinitemport",
+        "shaderParamsToExport": [
+          "TattooAge",
+          "TattooHueRotation",
+          "TattooNumTilesU",
+          "TattooNumTilesV",
+          "TattooOffsetU",
+          "TattooOffsetV"],
+        "textureSlotsToExport": [
+          {
+            "_Type_": "SCharacterSerializationTexture",
+            "debugName": "Tattoo",
+            "slot": 9}],
+        "includeMaterialGUID": false,
+        "subMaterials": [
+          0]},
+      {
+        "_Type_": "SCharacterSerializationMaterialsSettingsPreset",
+        "attachmentName": "body_itemport_skinitemport",
+        "shaderParamsToExport": [
+          "TattooAge",
+          "TattooHueRotation"],
+        "textureSlotsToExport": [
+          {
+            "_Type_": "SCharacterSerializationTexture",
+            "debugName": "Tattoo",
+            "slot": 9}],
+        "includeMaterialGUID": false,
+        "subMaterials": [
+          0]}]}}

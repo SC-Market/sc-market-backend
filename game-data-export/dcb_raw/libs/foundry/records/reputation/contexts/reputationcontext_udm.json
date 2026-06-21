@@ -1,0 +1,16 @@
+{
+  "_RecordName_": "SReputationContextUI.ReputationContext_UDM",
+  "_RecordId_": "427c067d-d162-4490-9d5a-35b368658ab6",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "SReputationContextUI",
+    "sortOrderScope": "Alphabetical",
+    "primaryScopeContext": {
+      "_Type_": "SReputationScopeContextUI",
+      "scope": "file://./../../../../../libs/foundry/records/reputation/scopes/reputationscope_affinity.json",
+      "propertiesBB": []},
+    "scopeContextList": [
+      {
+        "_Type_": "SReputationScopeContextUI",
+        "scope": "file://./../../../../../libs/foundry/records/reputation/scopes/reputationscope_courier.json",
+        "propertiesBB": []}]}}

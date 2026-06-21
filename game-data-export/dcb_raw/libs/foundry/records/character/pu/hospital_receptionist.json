@@ -1,0 +1,24 @@
+{
+  "_RecordName_": "Character.Hospital_Receptionist",
+  "_RecordId_": "c6079bd8-9d6b-4276-8161-c691395ff10a",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "Character",
+    "characterPersonalData": {
+      "_Type_": "CharacterPersonalData",
+      "title": "",
+      "firstName": "",
+      "nickName": "",
+      "lastName": "",
+      "randomNameParams": null,
+      "affiliation": "",
+      "details": ""},
+    "audioSwitchStateName": "",
+    "animationRemapAlias": "",
+    "characterMannequinTag": "Hospital_Receptionist",
+    "styleMannequinTag": "",
+    "combatStyle": "NotSet",
+    "gender": "Female",
+    "characterSpeedOverrides": [],
+    "nicknameChance": 0.0,
+    "name": "Hospital_Receptionist"}}

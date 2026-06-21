@@ -1,0 +1,72 @@
+{
+  "_RecordName_": "AudioBreathStyle.PassOut",
+  "_RecordId_": "3c4508b7-6975-499a-ad07-242be383ba83",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "AudioBreathStyle",
+    "firstBreathCustomisation": [],
+    "VO2InputParam": "Stamina",
+    "minInputValue": 0.0,
+    "maxInputValue": 1.0,
+    "InputFallingPredictionTime": 2.0,
+    "InputRisingPredictionTime": 1.0,
+    "allowBreathShortening": true,
+    "VO2FromInput": {
+      "_Type_": "BezierCurve",
+      "points": [],
+      "useLUT": false},
+    "maxVO2FallRate": 0.1,
+    "maxVO2RiseRate": 0.1,
+    "durationFromVO2": {
+      "_Type_": "BezierCurve",
+      "points": [],
+      "useLUT": false},
+    "volumeFromVO2": {
+      "_Type_": "BezierCurve",
+      "points": [],
+      "useLUT": false},
+    "durationVolumeScaleFromVO2Delta": {
+      "_Type_": "BezierCurve",
+      "points": [],
+      "useLUT": false},
+    "inhaleExhaleRatioFromVO2Delta": {
+      "_Type_": "BezierCurve",
+      "points": [],
+      "useLUT": false},
+    "minVolume": 0.1,
+    "maxVolume": 1.0,
+    "maxVolumeDrop": 50.0,
+    "maxVolumeRise": 100.0,
+    "minDuration": 3.5,
+    "maxDuration": 3.9,
+    "maxDurationDrop": 50.0,
+    "maxDurationRise": 100.0,
+    "audioEventOnEnter": {
+      "_Type_": "GlobalResourceAudio",
+      "audioTrigger": ""},
+    "audioEventOnExit": {
+      "_Type_": "GlobalResourceAudio",
+      "audioTrigger": ""},
+    "audioEvents": [
+      {
+        "_Type_": "GlobalResourceAudio",
+        "audioTrigger": "Play_DXHN_Player_Breathing_Blacking_Out_Inhale"},
+      {
+        "_Type_": "GlobalResourceAudio",
+        "audioTrigger": "Play_DXHN_Player_Breathing_Blacking_Out_Exhale"},
+      {
+        "_Type_": "GlobalResourceAudio",
+        "audioTrigger": ""},
+      {
+        "_Type_": "GlobalResourceAudio",
+        "audioTrigger": ""},
+      {
+        "_Type_": "GlobalResourceAudio",
+        "audioTrigger": ""},
+      {
+        "_Type_": "GlobalResourceAudio",
+        "audioTrigger": ""},
+      {
+        "_Type_": "GlobalResourceAudio",
+        "audioTrigger": ""}],
+    "landingInterrupt": null}}

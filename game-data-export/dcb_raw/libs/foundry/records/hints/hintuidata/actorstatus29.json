@@ -1,0 +1,12 @@
+{
+  "_RecordName_": "HintUIData.ActorStatus29",
+  "_RecordId_": "e5435370-2e9e-4fe4-ae68-f2f62e43a88a",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "HintUIData",
+    "TitleText": "@Hints_ActorStatusPartialParalysis_Title",
+    "BodyText": "@Hints_ActorStatusEffectProneLockStart",
+    "BodyTextGamePad": "@Hints_ActorStatusEffectProneLockStart",
+    "BodyTextJoystick": "@Hints_ActorStatusEffectProneLockStart",
+    "TitleImagePath": "",
+    "BodyImagePath": ""}}

@@ -1,0 +1,41 @@
+{
+  "_RecordName_": "SecurityNetworkManifest.SNM_Col_Outpost_Outlaw_HH",
+  "_RecordId_": "8c4b91c1-b1fa-45e6-b1bf-6c52cb89ac1e",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "SecurityNetworkManifest",
+    "defaultProtocol": {
+      "_Type_": "SecurityNetworkProtocol",
+      "permissionsWithClearance": {
+        "_Type_": "SecurityNetworkPermissions",
+        "access": "Yes",
+        "trespass": "No"},
+      "permissionsWithoutClearance": {
+        "_Type_": "SecurityNetworkPermissions",
+        "access": "No",
+        "trespass": "Yes"},
+      "acceptedClearance": {
+        "_Type_": "SecurityClearanceConditions",
+        "tokens": [
+          "file://./../../../../../../../../libs/foundry/records/lawsystem/securityclearancetokens/pu/snct_factionreputation/snct_headhunters_rep.json"]},
+      "ownerFaction": "file://./../../../../../../../../libs/foundry/records/factions/faction_reputation_unlawful_headhunters.json"},
+    "roomProtocols": [],
+    "variables": [],
+    "hostilityRules": [
+      {
+        "_Type_": "SHostilityRules",
+        "tag": {
+          "_RecordPath_": "file://./../../../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+          "_RecordName_": "Tag.489c08ec-1af3-422a-a938-48cd6a253f51",
+          "_RecordId_": "489c08ec-1af3-422a-a938-48cd6a253f51"},
+        "useReputationHostility": true,
+        "usePersonalHostility": true,
+        "useFactionHostility": true,
+        "policesLawfulTrespass": true,
+        "hostileToCriminals": true,
+        "hostileToStolenVehicles": true,
+        "factionOverride": null,
+        "factionToOverride": "file://./../../../../../../../../libs/foundry/records/factions/faction_reputation_unlawful_headhunters.json"}],
+    "variableEffects": [],
+    "isNeutralTerritory": false,
+    "teleportPlayerOut": false}}

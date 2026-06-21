@@ -1,0 +1,24 @@
+{
+  "_RecordName_": "Character.Forge",
+  "_RecordId_": "c2caf8f1-bb55-4afa-b59f-07db694734af",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "Character",
+    "characterPersonalData": {
+      "_Type_": "CharacterPersonalData",
+      "title": "@LOC_UNINITIALIZED",
+      "firstName": "@Name_ShatteredBlade_Forge",
+      "nickName": "@LOC_UNINITIALIZED",
+      "lastName": "@LOC_UNINITIALIZED",
+      "randomNameParams": null,
+      "affiliation": "@LOC_UNINITIALIZED",
+      "details": "@LOC_UNINITIALIZED"},
+    "audioSwitchStateName": "",
+    "animationRemapAlias": "",
+    "characterMannequinTag": "Forge",
+    "styleMannequinTag": "",
+    "combatStyle": "NotSet",
+    "gender": "Male",
+    "characterSpeedOverrides": [],
+    "nicknameChance": 0.0,
+    "name": "Forge"}}

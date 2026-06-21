@@ -1,0 +1,28 @@
+{
+  "_RecordName_": "Hauling_EntityClasses.HaulingEntityClass_ShipGun_S05_S06",
+  "_RecordId_": "6cc17f13-4d41-47f1-9f5a-df862c6b1c86",
+  "_RecordTag_": "MissionDesign",
+  "_RecordValue_": {
+    "_Type_": "Hauling_EntityClasses",
+    "entityClasses": {
+      "_Type_": "Hauling_EntityClassList",
+      "entityClassList": [
+        "file://./../../../../../libs/foundry/records/entities/scitem/ships/weapons/amrs_lasercannon_s5.json",
+        "file://./../../../../../libs/foundry/records/entities/scitem/ships/weapons/behr_lasercannon_s5.json",
+        "file://./../../../../../libs/foundry/records/entities/scitem/ships/weapons/espr_lasercannon_s5.json",
+        "file://./../../../../../libs/foundry/records/entities/scitem/ships/weapons/vncl_gen2_plasmacannon_s5.json",
+        "file://./../../../../../libs/foundry/records/entities/scitem/ships/weapons/vncl_neutroncannon_s5.json",
+        "file://./../../../../../libs/foundry/records/entities/scitem/ships/weapons/vncl_plasmacannon_s5.json",
+        "file://./../../../../../libs/foundry/records/entities/scitem/ships/weapons/hrst_laserrepeater_s5.json",
+        "file://./../../../../../libs/foundry/records/entities/scitem/ships/weapons/klwe_laserrepeater_s5.json",
+        "file://./../../../../../libs/foundry/records/entities/scitem/ships/weapons/klwe_laserrepeater_s5_idris_m.json",
+        "file://./../../../../../libs/foundry/records/entities/scitem/ships/weapons/klwe_laserrepeater_s5_turret.json",
+        "file://./../../../../../libs/foundry/records/entities/scitem/ships/weapons/prar_distortionscattergun_s5.json",
+        "file://./../../../../../libs/foundry/records/entities/scitem/ships/weapons/amrs_lasercannon_s6.json",
+        "file://./../../../../../libs/foundry/records/entities/scitem/ships/weapons/behr_lasercannon_s6.json",
+        "file://./../../../../../libs/foundry/records/entities/scitem/ships/weapons/behr_lasercannon_s6_turret.json",
+        "file://./../../../../../libs/foundry/records/entities/scitem/ships/weapons/espr_lasercannon_s6.json",
+        "file://./../../../../../libs/foundry/records/entities/scitem/ships/weapons/hrst_laserrepeater_s6.json",
+        "file://./../../../../../libs/foundry/records/entities/scitem/ships/weapons/klwe_laserrepeater_s6.json",
+        "file://./../../../../../libs/foundry/records/entities/scitem/ships/weapons/prar_distortionscattergun_s6.json"]},
+    "orderDisplayName": "@Salvage_Ship_Component_Ship_Weapon_S5_S6_Name"}}

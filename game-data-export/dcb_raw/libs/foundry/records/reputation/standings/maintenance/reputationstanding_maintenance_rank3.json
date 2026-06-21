@@ -1,0 +1,15 @@
+{
+  "_RecordName_": "SReputationStandingParams.ReputationStanding_Maintenance_Rank3",
+  "_RecordId_": "2d3f8664-7329-45ef-9e97-783d2c099e18",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "SReputationStandingParams",
+    "name": "Maintenance_Rank3",
+    "description": "desc",
+    "displayName": "@RepScope_Maintenance_Rank3",
+    "perkDescription": "@blank_space",
+    "icon": "",
+    "minReputation": 10000,
+    "driftReputation": 0,
+    "driftTimeHours": 0.0,
+    "gated": false}}

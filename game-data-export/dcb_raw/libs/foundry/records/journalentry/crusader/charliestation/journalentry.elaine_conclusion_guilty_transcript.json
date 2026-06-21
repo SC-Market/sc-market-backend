@@ -1,0 +1,20 @@
+{
+  "_RecordName_": "JournalEntry.Elaine_Conclusion_Guilty_Transcript",
+  "_RecordId_": "9f7fdd8a-abc1-4216-8923-c6e5e90aef51",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "JournalEntry",
+    "Title": "@mobiglas_CharlieStation_Elaine_Conclusion_Guilty_Transcript_title",
+    "ShortTitle": "@LOC_UNINITIALIZED",
+    "SubHeading": "@mobiglas_Author_ElaineWard",
+    "autoOpenMobiGlas": false,
+    "showNotification": true,
+    "missionSpecificContent": false,
+    "removeOnMissionEnd": true,
+    "Style": "file://./../../../../../../libs/foundry/records/journalentrytype/journalentrytype.dialoguelog.json",
+    "type": {
+      "_Type_": "JournalEntryDialogueLog",
+      "Dialogue": [
+        null],
+      "Description": "@LOC_UNINITIALIZED"},
+    "tutorialEntry": false}}

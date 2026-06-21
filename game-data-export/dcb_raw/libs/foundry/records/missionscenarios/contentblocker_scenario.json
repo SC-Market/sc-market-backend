@@ -1,0 +1,18 @@
+{
+  "_RecordName_": "MissionScenario.ContentBlocker_Scenario",
+  "_RecordId_": "4d28ed2c-dde2-4747-b6e4-261db8ecbc56",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "MissionScenario",
+    "name": "ContentBlocker_Scenario",
+    "description": "Start this scenario to block content from being in build",
+    "variables": [],
+    "cycles": [],
+    "schedule": {
+      "_Type_": "MissionScenarioSchedule",
+      "enabled": false,
+      "start_constraint": null,
+      "end_constraint": null,
+      "recurrence": null},
+    "auto_create": true,
+    "track_progress": false}}

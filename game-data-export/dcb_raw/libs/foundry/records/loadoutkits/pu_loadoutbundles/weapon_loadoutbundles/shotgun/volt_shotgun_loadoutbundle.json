@@ -1,0 +1,42 @@
+{
+  "_RecordName_": "SLoadoutAssortment.volt_shotgun_loadoutbundle",
+  "_RecordId_": "85c13f6e-cfeb-4f0c-9c5b-5b7d895d4e57",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "SLoadoutAssortment",
+    "Requirement": null,
+    "GroupedLoadouts": [
+      {
+        "_Type_": "SGroupedLoadouts",
+        "Group": "PrimaryWeapon",
+        "Requirement": {
+          "_Type_": "SLoadoutRequirementTags",
+          "RequiredTags": [
+            {
+              "_RecordPath_": "file://./../../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+              "_RecordName_": "Tag.29413549-5eb1-4a17-85f2-8699d837003a",
+              "_RecordId_": "29413549-5eb1-4a17-85f2-8699d837003a"}],
+          "BannedTags": []},
+        "Loadouts": [
+          {
+            "_Type_": "SItemPortLoadoutXMLParams",
+            "WearRange": null,
+            "DirtRange": null,
+            "SkipInventoryItemsOnMissionEntities": false,
+            "InventoryItems": [],
+            "loadoutPath": "Scripts/Loadouts/Character/Human/Weapon/LoadoutbundleWeaponXML/loadoutbundle_shotgun/shotgun_skins/volt_shotgun_energy_01_tint03.xml"}]},
+      {
+        "_Type_": "SGroupedLoadouts",
+        "Group": "PrimaryWeapon",
+        "Requirement": {
+          "_Type_": "SLoadoutRequirementTags",
+          "RequiredTags": [],
+          "BannedTags": []},
+        "Loadouts": [
+          {
+            "_Type_": "SItemPortLoadoutXMLParams",
+            "WearRange": null,
+            "DirtRange": null,
+            "SkipInventoryItemsOnMissionEntities": false,
+            "InventoryItems": [],
+            "loadoutPath": "Scripts/Loadouts/Character/Human/Weapon/LoadoutbundleWeaponXML/loadoutbundle_shotgun/volt_shotgun.xml"}]}]}}

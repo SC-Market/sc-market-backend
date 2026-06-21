@@ -1,0 +1,11 @@
+{
+  "_RecordName_": "BreathingTriggerDef.TriggerVaultingMantlingInterrupt",
+  "_RecordId_": "88060d0b-c343-4c21-af6d-49ba843ea041",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "BreathingTriggerDef",
+    "audioBreathInterrupt": "file://./../../../../../../libs/foundry/records/audio/breathing/interruptions/vaultingmantling.json",
+    "interruptParam": 1.0,
+    "resumeBreathingWhenAudioEnds": false,
+    "forceInhaleAfterResume": true,
+    "forceExhaleAfterResume": false}}

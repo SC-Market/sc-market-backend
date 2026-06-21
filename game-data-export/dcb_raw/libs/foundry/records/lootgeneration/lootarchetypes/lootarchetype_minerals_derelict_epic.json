@@ -1,0 +1,45 @@
+{
+  "_RecordName_": "LootArchetype.LootArchetype_Minerals_Derelict_Epic",
+  "_RecordId_": "2d627ab4-2616-42cb-9da1-f63cd08f35bb",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "LootArchetype",
+    "excludedTags": {
+      "_Type_": "TagList",
+      "tags": [
+        {
+          "_RecordPath_": "file://./../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+          "_RecordName_": "Tag.85e008e3-cc4e-4d13-98f6-b33c234dd82c",
+          "_RecordId_": "85e008e3-cc4e-4d13-98f6-b33c234dd82c"}]},
+    "primaryOrGroup": {
+      "_Type_": "LootArchetypeOrGroup_Primary",
+      "entries": [
+        {
+          "_Type_": "LootArchetypeEntry_Primary",
+          "name": "Minerals Epic",
+          "tag": {
+            "_RecordPath_": "file://./../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+            "_RecordName_": "Tag.ad40e9c1-a7c4-44e3-b03a-c334bd2ece76",
+            "_RecordId_": "ad40e9c1-a7c4-44e3-b03a-c334bd2ece76"},
+          "additionalTags": {
+            "_Type_": "TagsDNFTerm",
+            "positiveTags": [],
+            "negativeTags": []},
+          "weight": 1.0,
+          "optionalData": [
+            {
+              "_Type_": "EntryOptionalData_StackSize",
+              "min": 1,
+              "max": 5}]}]},
+    "secondaryOrGroups": [
+      {
+        "_Type_": "LootArchetypeOrGroup_Secondary",
+        "groupName": "Rarity",
+        "entries": [
+          {
+            "_Type_": "LootArchetypeEntry_Secondary",
+            "tag": {
+              "_RecordPath_": "file://./../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+              "_RecordName_": "Tag.b285311b-1f68-4a69-b73f-1295e83a3909",
+              "_RecordId_": "b285311b-1f68-4a69-b73f-1295e83a3909"},
+            "weight": 1.0}]}]}}

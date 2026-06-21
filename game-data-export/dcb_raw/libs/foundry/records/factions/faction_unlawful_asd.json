@@ -1,0 +1,20 @@
+{
+  "_RecordName_": "Faction.Faction_Unlawful_ASD",
+  "_RecordId_": "c1abb5fa-54a5-47a1-b69b-b951254a9a66",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "Faction",
+    "name": "@Factions_ASD_DisplayName",
+    "description": "@LOC_UNINITIALIZED",
+    "defaultReaction": "Hostile",
+    "alliedFactions": [
+      "file://./../../../../libs/foundry/records/factions/faction_special_friendlytoall.json",
+      "file://./../../../../libs/foundry/records/factions/faction_creature_hostile_generic_vlk_asd_align.json"],
+    "enemyFactions": [],
+    "friendlyFireBehaviorOverrides": [],
+    "factionType": "Unlawful",
+    "ableToArrest": false,
+    "policesLawfulTrespass": false,
+    "policesCriminality": false,
+    "noLegalRights": false,
+    "factionReputationRef": null}}

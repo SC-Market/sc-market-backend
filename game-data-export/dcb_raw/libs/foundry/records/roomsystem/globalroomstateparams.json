@@ -1,0 +1,108 @@
+{
+  "_RecordName_": "GlobalRoomStateParams.GlobalRoomStateParams",
+  "_RecordId_": "50ea6bf9-c349-49b2-baf5-032a99e0937f",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "GlobalRoomStateParams",
+    "typeRanges": [
+      {
+        "_Type_": "Range",
+        "minimum": 0.0,
+        "maximum": 1.0},
+      {
+        "_Type_": "Range",
+        "minimum": 0.0,
+        "maximum": 2.0},
+      {
+        "_Type_": "Range",
+        "minimum": 0.0,
+        "maximum": 373.15},
+      {
+        "_Type_": "Range",
+        "minimum": 0.0,
+        "maximum": 3.0},
+      {
+        "_Type_": "Range",
+        "minimum": 0.0,
+        "maximum": 1.0},
+      {
+        "_Type_": "Range",
+        "minimum": 0.0,
+        "maximum": 1.0},
+      {
+        "_Type_": "Range",
+        "minimum": 0.0,
+        "maximum": 100000.0},
+      {
+        "_Type_": "Range",
+        "minimum": 0.0,
+        "maximum": 100000.0},
+      {
+        "_Type_": "Range",
+        "minimum": 0.0,
+        "maximum": 100000.0},
+      {
+        "_Type_": "Range",
+        "minimum": 0.0,
+        "maximum": 1.0}],
+    "typeDebugColors": [
+      {
+        "_Type_": "RGB",
+        "r": 0.8148466,
+        "g": 0.7304608,
+        "b": 0.5711249},
+      {
+        "_Type_": "RGB",
+        "r": 0.8713671,
+        "g": 0.5457245,
+        "b": 1.0},
+      {
+        "_Type_": "RGB",
+        "r": 0.000607054,
+        "g": 1.0,
+        "b": 0.9734453},
+      {
+        "_Type_": "RGB",
+        "r": 0.3967552,
+        "g": 0.8549926,
+        "b": 0.9473065},
+      {
+        "_Type_": "RGB",
+        "r": 1.0,
+        "g": 1.0,
+        "b": 0.000910581},
+      {
+        "_Type_": "RGB",
+        "r": 1.0,
+        "g": 0.001517635,
+        "b": 0.001517635},
+      {
+        "_Type_": "RGB",
+        "r": 1.0,
+        "g": 0.4677838,
+        "b": 0.07227185},
+      {
+        "_Type_": "RGB",
+        "r": 1.0,
+        "g": 0.6239604,
+        "b": 0.02624122},
+      {
+        "_Type_": "RGB",
+        "r": 1.0,
+        "g": 0.7835378,
+        "b": 0.07618539},
+      {
+        "_Type_": "RGB",
+        "r": 0.006512091,
+        "g": 1.0,
+        "b": 0.0703601}],
+    "debugParticles": {
+      "_Type_": "GlobalResourceParticle",
+      "path": "fa109800-fded-81f0-6599-c07d3d858f5f|Environments/Debug/room_state_debug.DebugSpaceLoop"},
+    "defaultSpaceDust": {
+      "_Type_": "WeatherEffects_SpaceLoopEffect",
+      "effect": {
+        "_Type_": "GlobalResourceParticle",
+        "path": "eda3540c-5954-98ef-36f2-7005ec8c82d2|Environments/Generic/generic_space.space_dust.space_dust_default_Low"},
+      "updateStrength": true,
+      "updateCount": true}}}

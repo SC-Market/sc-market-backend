@@ -1,0 +1,102 @@
+{
+  "_RecordName_": "BuildingBlocks_Style.S_LBCO",
+  "_RecordId_": "df2b596e-97c8-4a52-b727-e302a80b9942",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "BuildingBlocks_Style",
+    "entries": [
+      {
+        "_Type_": "BuildingBlocks_StyleEntry",
+        "name": "Lightning Bolt Company Brand Colors",
+        "conditionsList": [],
+        "modifiers": [],
+        "transitions": []}],
+    "colorStyles": [
+      {
+        "_Type_": "BuildingBlocks_ColorSolid",
+        "color": {
+          "_Type_": "SRGBA8",
+          "r": 138,
+          "g": 17,
+          "b": 22,
+          "a": 255}},
+      {
+        "_Type_": "BuildingBlocks_ColorSolid",
+        "color": {
+          "_Type_": "SRGBA8",
+          "r": 0,
+          "g": 211,
+          "b": 78,
+          "a": 255}},
+      {
+        "_Type_": "BuildingBlocks_ColorSolid",
+        "color": {
+          "_Type_": "SRGBA8",
+          "r": 255,
+          "g": 212,
+          "b": 0,
+          "a": 255}},
+      {
+        "_Type_": "BuildingBlocks_ColorSolid",
+        "color": {
+          "_Type_": "SRGBA8",
+          "r": 255,
+          "g": 0,
+          "b": 0,
+          "a": 255}},
+      {
+        "_Type_": "BuildingBlocks_ColorSolid",
+        "color": {
+          "_Type_": "SRGBA8",
+          "r": 127,
+          "g": 176,
+          "b": 241,
+          "a": 255}},
+      {
+        "_Type_": "BuildingBlocks_ColorSolid",
+        "color": {
+          "_Type_": "SRGBA8",
+          "r": 249,
+          "g": 216,
+          "b": 142,
+          "a": 255}},
+      {
+        "_Type_": "BuildingBlocks_ColorSolid",
+        "color": {
+          "_Type_": "SRGBA8",
+          "r": 246,
+          "g": 230,
+          "b": 194,
+          "a": 255}},
+      {
+        "_Type_": "BuildingBlocks_ColorSolid",
+        "color": {
+          "_Type_": "SRGBA8",
+          "r": 228,
+          "g": 28,
+          "b": 36,
+          "a": 255}},
+      {
+        "_Type_": "BuildingBlocks_ColorSolid",
+        "color": {
+          "_Type_": "SRGBA8",
+          "r": 181,
+          "g": 159,
+          "b": 159,
+          "a": 255}},
+      {
+        "_Type_": "BuildingBlocks_ColorSolid",
+        "color": {
+          "_Type_": "SRGBA8",
+          "r": 13,
+          "g": 1,
+          "b": 1,
+          "a": 255}},
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null],
+    "textFieldModifiers": []}}

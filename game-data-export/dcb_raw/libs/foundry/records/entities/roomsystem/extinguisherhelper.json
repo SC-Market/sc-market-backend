@@ -1,0 +1,36 @@
+{
+  "_RecordName_": "EntityClassDefinition.ExtinguisherHelper",
+  "_RecordId_": "3ef88358-67d4-40ab-854a-83b9fb1adc3d",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "EntityClassDefinition",
+    "Category": "Room/Fire",
+    "Icon": "Default.bmp",
+    "Invisible": false,
+    "BBoxSelection": false,
+    "defaultEditorColor": {
+      "_Type_": "RGB",
+      "r": 1.0,
+      "g": 1.0,
+      "b": 0.0},
+    "entityDensityClass": null,
+    "tags": [],
+    "StaticEntityClassData": [],
+    "Components": [
+      {
+        "_Type_": "EntityComponentRoomOccupantParams"},
+      {
+        "_Type_": "EntityComponentExtinguisher",
+        "enable": true,
+        "strength": 1.0,
+        "type": {
+          "_Type_": "ExtinguishType_Spray",
+          "maximumDistance": 10.0,
+          "coneAngle": 20.0},
+        "extinguishingEffectOverride": {
+          "_Type_": "GlobalResourceParticle",
+          "path": ""},
+        "vectorFieldRadius": 1.0,
+        "vectorFieldWidth": 1.0,
+        "vectorFieldFalloff": 1.0,
+        "vectorFieldMaxStrength": 4.0}]}}

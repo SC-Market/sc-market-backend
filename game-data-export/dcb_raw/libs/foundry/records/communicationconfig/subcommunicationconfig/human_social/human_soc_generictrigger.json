@@ -1,0 +1,465 @@
+{
+  "_RecordName_": "CommunicationConfig.Human_SOC_GenericTrigger",
+  "_RecordId_": "64695fec-55b5-47c1-823a-6c3d3cd5a501",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "CommunicationConfig",
+    "name": "Human_SOC_GenericTrigger",
+    "communications": [
+      {
+        "_Type_": "CommunicationEntry",
+        "name": "file://./../../../../../../libs/foundry/records/communicationname/social/soc_casual_idleline.json",
+        "channelName": "file://./../../../../../../libs/foundry/records/communicationchannelname/globalgroup.json",
+        "method": "RandomSequence",
+        "forceAnimation": false,
+        "variations": [],
+        "entityRetriggerDelay": 0.0,
+        "channelRetriggerDelay": 0.0,
+        "gameTags": []},
+      {
+        "_Type_": "CommunicationEntry",
+        "name": "file://./../../../../../../libs/foundry/records/communicationname/social/soc_casual_actionline.json",
+        "channelName": "file://./../../../../../../libs/foundry/records/communicationchannelname/globalgroup.json",
+        "method": "RandomSequence",
+        "forceAnimation": false,
+        "variations": [
+          {
+            "_Type_": "CommunicationVariation",
+            "animationFragmentId": "dx_wildlines",
+            "animationFragmentTags": "dx_Comment+dx_SimResults",
+            "soundName": "",
+            "overrideMinSilence": -1.0,
+            "overrideMinSpeakerSilence": -1.0,
+            "dialogueContext": null,
+            "playDialogueAsAnimation": false,
+            "dialogueExternalSource": null,
+            "rules": {
+              "_Type_": "CommunicationVariationRules",
+              "timeout": 0.0,
+              "lookAtTarget": false,
+              "finishAnimation": true,
+              "finishSound": true,
+              "finishVoice": true,
+              "finishTimeout": true,
+              "blockMovement": false,
+              "blockFire": false},
+            "conditions": {
+              "_Type_": "CommunicationVariationCondition",
+              "expression": "",
+              "conditionTags": {
+                "_Type_": "TagsDNF",
+                "terms": [
+                  {
+                    "_Type_": "TagsDNFTerm",
+                    "positiveTags": [
+                      {
+                        "_RecordPath_": "file://./../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+                        "_RecordName_": "Tag.519eaf03-66e4-4ba2-890a-fea2210c641e",
+                        "_RecordId_": "519eaf03-66e4-4ba2-890a-fea2210c641e"},
+                      {
+                        "_RecordPath_": "file://./../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+                        "_RecordName_": "Tag.3a07dced-7bb8-4ebb-a5e3-c0a95eabbb37",
+                        "_RecordId_": "3a07dced-7bb8-4ebb-a5e3-c0a95eabbb37"}],
+                    "negativeTags": []}]}}}],
+        "entityRetriggerDelay": 0.0,
+        "channelRetriggerDelay": 0.0,
+        "gameTags": []},
+      {
+        "_Type_": "CommunicationEntry",
+        "name": "file://./../../../../../../libs/foundry/records/communicationname/social/workrelated/soc_work_idleline.json",
+        "channelName": "file://./../../../../../../libs/foundry/records/communicationchannelname/globalgroup.json",
+        "method": "RandomSequence",
+        "forceAnimation": false,
+        "variations": [
+          {
+            "_Type_": "CommunicationVariation",
+            "animationFragmentId": "dx_wildlines",
+            "animationFragmentTags": "dx_AudioFidget+dx_Work+dx_Pos",
+            "soundName": "",
+            "overrideMinSilence": -1.0,
+            "overrideMinSpeakerSilence": -1.0,
+            "dialogueContext": null,
+            "playDialogueAsAnimation": false,
+            "dialogueExternalSource": null,
+            "rules": {
+              "_Type_": "CommunicationVariationRules",
+              "timeout": 0.0,
+              "lookAtTarget": false,
+              "finishAnimation": true,
+              "finishSound": true,
+              "finishVoice": true,
+              "finishTimeout": true,
+              "blockMovement": false,
+              "blockFire": false},
+            "conditions": {
+              "_Type_": "CommunicationVariationCondition",
+              "expression": "",
+              "conditionTags": {
+                "_Type_": "TagsDNF",
+                "terms": []}}},
+          {
+            "_Type_": "CommunicationVariation",
+            "animationFragmentId": "dx_wildlines",
+            "animationFragmentTags": "dx_Chat+dx_WorkOneSided",
+            "soundName": "",
+            "overrideMinSilence": -1.0,
+            "overrideMinSpeakerSilence": -1.0,
+            "dialogueContext": null,
+            "playDialogueAsAnimation": false,
+            "dialogueExternalSource": null,
+            "rules": {
+              "_Type_": "CommunicationVariationRules",
+              "timeout": 0.0,
+              "lookAtTarget": false,
+              "finishAnimation": true,
+              "finishSound": true,
+              "finishVoice": true,
+              "finishTimeout": true,
+              "blockMovement": false,
+              "blockFire": false},
+            "conditions": {
+              "_Type_": "CommunicationVariationCondition",
+              "expression": "",
+              "conditionTags": {
+                "_Type_": "TagsDNF",
+                "terms": [
+                  {
+                    "_Type_": "TagsDNFTerm",
+                    "positiveTags": [
+                      {
+                        "_RecordPath_": "file://./../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+                        "_RecordName_": "Tag.99cf665e-f2bb-4e84-93ff-9ff861f3fb00",
+                        "_RecordId_": "99cf665e-f2bb-4e84-93ff-9ff861f3fb00"},
+                      {
+                        "_RecordPath_": "file://./../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+                        "_RecordName_": "Tag.d1dd79bb-bb60-46f9-9c81-2b924a34d7d5",
+                        "_RecordId_": "d1dd79bb-bb60-46f9-9c81-2b924a34d7d5"}],
+                    "negativeTags": []},
+                  {
+                    "_Type_": "TagsDNFTerm",
+                    "positiveTags": [
+                      {
+                        "_RecordPath_": "file://./../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+                        "_RecordName_": "Tag.78978339-73cc-44d0-a9b9-cbe52b8d3884",
+                        "_RecordId_": "78978339-73cc-44d0-a9b9-cbe52b8d3884"},
+                      {
+                        "_RecordPath_": "file://./../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+                        "_RecordName_": "Tag.8c51d349-f661-4d2d-a266-8d3925dac59a",
+                        "_RecordId_": "8c51d349-f661-4d2d-a266-8d3925dac59a"}],
+                    "negativeTags": []},
+                  {
+                    "_Type_": "TagsDNFTerm",
+                    "positiveTags": [
+                      {
+                        "_RecordPath_": "file://./../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+                        "_RecordName_": "Tag.14249ee2-2d94-4fe2-8d3e-2cffbdba26c3",
+                        "_RecordId_": "14249ee2-2d94-4fe2-8d3e-2cffbdba26c3"},
+                      {
+                        "_RecordPath_": "file://./../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+                        "_RecordName_": "Tag.66ea4ff6-5c0a-41dc-a955-8a4b4116f6af",
+                        "_RecordId_": "66ea4ff6-5c0a-41dc-a955-8a4b4116f6af"}],
+                    "negativeTags": []}]}}},
+          {
+            "_Type_": "CommunicationVariation",
+            "animationFragmentId": "dx_wildlines",
+            "animationFragmentTags": "dx_Reaction+dx_GenStim+dx_Pos",
+            "soundName": "",
+            "overrideMinSilence": -1.0,
+            "overrideMinSpeakerSilence": -1.0,
+            "dialogueContext": null,
+            "playDialogueAsAnimation": false,
+            "dialogueExternalSource": null,
+            "rules": {
+              "_Type_": "CommunicationVariationRules",
+              "timeout": 0.0,
+              "lookAtTarget": false,
+              "finishAnimation": true,
+              "finishSound": true,
+              "finishVoice": true,
+              "finishTimeout": true,
+              "blockMovement": false,
+              "blockFire": false},
+            "conditions": {
+              "_Type_": "CommunicationVariationCondition",
+              "expression": "",
+              "conditionTags": {
+                "_Type_": "TagsDNF",
+                "terms": []}}},
+          {
+            "_Type_": "CommunicationVariation",
+            "animationFragmentId": "dx_wildlines",
+            "animationFragmentTags": "dx_Reaction+dx_GenStim+dx_Neg",
+            "soundName": "",
+            "overrideMinSilence": -1.0,
+            "overrideMinSpeakerSilence": -1.0,
+            "dialogueContext": null,
+            "playDialogueAsAnimation": false,
+            "dialogueExternalSource": null,
+            "rules": {
+              "_Type_": "CommunicationVariationRules",
+              "timeout": 0.0,
+              "lookAtTarget": false,
+              "finishAnimation": true,
+              "finishSound": true,
+              "finishVoice": true,
+              "finishTimeout": true,
+              "blockMovement": false,
+              "blockFire": false},
+            "conditions": {
+              "_Type_": "CommunicationVariationCondition",
+              "expression": "",
+              "conditionTags": {
+                "_Type_": "TagsDNF",
+                "terms": []}}}],
+        "entityRetriggerDelay": 0.0,
+        "channelRetriggerDelay": 0.0,
+        "gameTags": []},
+      {
+        "_Type_": "CommunicationEntry",
+        "name": "file://./../../../../../../libs/foundry/records/communicationname/social/workrelated/soc_work_actionline.json",
+        "channelName": "file://./../../../../../../libs/foundry/records/communicationchannelname/globalgroup.json",
+        "method": "RandomSequence",
+        "forceAnimation": false,
+        "variations": [
+          {
+            "_Type_": "CommunicationVariation",
+            "animationFragmentId": "dx_wildlines",
+            "animationFragmentTags": "dx_Comment+dx_WorkBegin",
+            "soundName": "",
+            "overrideMinSilence": -1.0,
+            "overrideMinSpeakerSilence": -1.0,
+            "dialogueContext": null,
+            "playDialogueAsAnimation": false,
+            "dialogueExternalSource": null,
+            "rules": {
+              "_Type_": "CommunicationVariationRules",
+              "timeout": 0.0,
+              "lookAtTarget": false,
+              "finishAnimation": true,
+              "finishSound": true,
+              "finishVoice": true,
+              "finishTimeout": true,
+              "blockMovement": false,
+              "blockFire": false},
+            "conditions": {
+              "_Type_": "CommunicationVariationCondition",
+              "expression": "",
+              "conditionTags": {
+                "_Type_": "TagsDNF",
+                "terms": [
+                  {
+                    "_Type_": "TagsDNFTerm",
+                    "positiveTags": [
+                      {
+                        "_RecordPath_": "file://./../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+                        "_RecordName_": "Tag.99cf665e-f2bb-4e84-93ff-9ff861f3fb00",
+                        "_RecordId_": "99cf665e-f2bb-4e84-93ff-9ff861f3fb00"},
+                      {
+                        "_RecordPath_": "file://./../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+                        "_RecordName_": "Tag.4b1e1d6a-d19c-4c57-88fa-d520eb7f87fc",
+                        "_RecordId_": "4b1e1d6a-d19c-4c57-88fa-d520eb7f87fc"}],
+                    "negativeTags": []},
+                  {
+                    "_Type_": "TagsDNFTerm",
+                    "positiveTags": [
+                      {
+                        "_RecordPath_": "file://./../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+                        "_RecordName_": "Tag.6f3fe619-4c19-4a5d-8b7b-3e83da731b37",
+                        "_RecordId_": "6f3fe619-4c19-4a5d-8b7b-3e83da731b37"},
+                      {
+                        "_RecordPath_": "file://./../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+                        "_RecordName_": "Tag.4b1e1d6a-d19c-4c57-88fa-d520eb7f87fc",
+                        "_RecordId_": "4b1e1d6a-d19c-4c57-88fa-d520eb7f87fc"}],
+                    "negativeTags": []},
+                  {
+                    "_Type_": "TagsDNFTerm",
+                    "positiveTags": [
+                      {
+                        "_RecordPath_": "file://./../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+                        "_RecordName_": "Tag.4b1e1d6a-d19c-4c57-88fa-d520eb7f87fc",
+                        "_RecordId_": "4b1e1d6a-d19c-4c57-88fa-d520eb7f87fc"},
+                      {
+                        "_RecordPath_": "file://./../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+                        "_RecordName_": "Tag.0ebe3ff3-efab-4549-b9a9-27414e441b88",
+                        "_RecordId_": "0ebe3ff3-efab-4549-b9a9-27414e441b88"}],
+                    "negativeTags": []},
+                  {
+                    "_Type_": "TagsDNFTerm",
+                    "positiveTags": [
+                      {
+                        "_RecordPath_": "file://./../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+                        "_RecordName_": "Tag.a803d703-28bc-4076-af8b-dc61f45f3684",
+                        "_RecordId_": "a803d703-28bc-4076-af8b-dc61f45f3684"},
+                      {
+                        "_RecordPath_": "file://./../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+                        "_RecordName_": "Tag.4b1e1d6a-d19c-4c57-88fa-d520eb7f87fc",
+                        "_RecordId_": "4b1e1d6a-d19c-4c57-88fa-d520eb7f87fc"}],
+                    "negativeTags": []}]}}},
+          {
+            "_Type_": "CommunicationVariation",
+            "animationFragmentId": "dx_wildlines",
+            "animationFragmentTags": "dx_Comment+dx_WorkFinish",
+            "soundName": "",
+            "overrideMinSilence": -1.0,
+            "overrideMinSpeakerSilence": -1.0,
+            "dialogueContext": null,
+            "playDialogueAsAnimation": false,
+            "dialogueExternalSource": null,
+            "rules": {
+              "_Type_": "CommunicationVariationRules",
+              "timeout": 0.0,
+              "lookAtTarget": false,
+              "finishAnimation": true,
+              "finishSound": true,
+              "finishVoice": true,
+              "finishTimeout": true,
+              "blockMovement": false,
+              "blockFire": false},
+            "conditions": {
+              "_Type_": "CommunicationVariationCondition",
+              "expression": "",
+              "conditionTags": {
+                "_Type_": "TagsDNF",
+                "terms": [
+                  {
+                    "_Type_": "TagsDNFTerm",
+                    "positiveTags": [
+                      {
+                        "_RecordPath_": "file://./../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+                        "_RecordName_": "Tag.99cf665e-f2bb-4e84-93ff-9ff861f3fb00",
+                        "_RecordId_": "99cf665e-f2bb-4e84-93ff-9ff861f3fb00"},
+                      {
+                        "_RecordPath_": "file://./../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+                        "_RecordName_": "Tag.4b8fd2dd-97be-4f92-92a6-2695259279e6",
+                        "_RecordId_": "4b8fd2dd-97be-4f92-92a6-2695259279e6"}],
+                    "negativeTags": []},
+                  {
+                    "_Type_": "TagsDNFTerm",
+                    "positiveTags": [
+                      {
+                        "_RecordPath_": "file://./../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+                        "_RecordName_": "Tag.6f3fe619-4c19-4a5d-8b7b-3e83da731b37",
+                        "_RecordId_": "6f3fe619-4c19-4a5d-8b7b-3e83da731b37"},
+                      {
+                        "_RecordPath_": "file://./../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+                        "_RecordName_": "Tag.4b8fd2dd-97be-4f92-92a6-2695259279e6",
+                        "_RecordId_": "4b8fd2dd-97be-4f92-92a6-2695259279e6"}],
+                    "negativeTags": []},
+                  {
+                    "_Type_": "TagsDNFTerm",
+                    "positiveTags": [
+                      {
+                        "_RecordPath_": "file://./../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+                        "_RecordName_": "Tag.4b8fd2dd-97be-4f92-92a6-2695259279e6",
+                        "_RecordId_": "4b8fd2dd-97be-4f92-92a6-2695259279e6"},
+                      {
+                        "_RecordPath_": "file://./../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+                        "_RecordName_": "Tag.0ebe3ff3-efab-4549-b9a9-27414e441b88",
+                        "_RecordId_": "0ebe3ff3-efab-4549-b9a9-27414e441b88"}],
+                    "negativeTags": []},
+                  {
+                    "_Type_": "TagsDNFTerm",
+                    "positiveTags": [
+                      {
+                        "_RecordPath_": "file://./../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+                        "_RecordName_": "Tag.a803d703-28bc-4076-af8b-dc61f45f3684",
+                        "_RecordId_": "a803d703-28bc-4076-af8b-dc61f45f3684"},
+                      {
+                        "_RecordPath_": "file://./../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+                        "_RecordName_": "Tag.4b8fd2dd-97be-4f92-92a6-2695259279e6",
+                        "_RecordId_": "4b8fd2dd-97be-4f92-92a6-2695259279e6"}],
+                    "negativeTags": []}]}}},
+          {
+            "_Type_": "CommunicationVariation",
+            "animationFragmentId": "dx_wildlines",
+            "animationFragmentTags": "dx_Comment+dx_HealthDiagnosis",
+            "soundName": "",
+            "overrideMinSilence": -1.0,
+            "overrideMinSpeakerSilence": -1.0,
+            "dialogueContext": null,
+            "playDialogueAsAnimation": false,
+            "dialogueExternalSource": null,
+            "rules": {
+              "_Type_": "CommunicationVariationRules",
+              "timeout": 0.0,
+              "lookAtTarget": false,
+              "finishAnimation": true,
+              "finishSound": true,
+              "finishVoice": true,
+              "finishTimeout": true,
+              "blockMovement": false,
+              "blockFire": false},
+            "conditions": {
+              "_Type_": "CommunicationVariationCondition",
+              "expression": "",
+              "conditionTags": {
+                "_Type_": "TagsDNF",
+                "terms": [
+                  {
+                    "_Type_": "TagsDNFTerm",
+                    "positiveTags": [
+                      {
+                        "_RecordPath_": "file://./../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+                        "_RecordName_": "Tag.99cf665e-f2bb-4e84-93ff-9ff861f3fb00",
+                        "_RecordId_": "99cf665e-f2bb-4e84-93ff-9ff861f3fb00"},
+                      {
+                        "_RecordPath_": "file://./../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+                        "_RecordName_": "Tag.d1dd79bb-bb60-46f9-9c81-2b924a34d7d5",
+                        "_RecordId_": "d1dd79bb-bb60-46f9-9c81-2b924a34d7d5"},
+                      {
+                        "_RecordPath_": "file://./../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+                        "_RecordName_": "Tag.353e396b-08bc-4a01-a534-0f0c52c77cd1",
+                        "_RecordId_": "353e396b-08bc-4a01-a534-0f0c52c77cd1"}],
+                    "negativeTags": []},
+                  {
+                    "_Type_": "TagsDNFTerm",
+                    "positiveTags": [
+                      {
+                        "_RecordPath_": "file://./../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+                        "_RecordName_": "Tag.94c03220-8983-4152-9a49-9c8b425f1ad7",
+                        "_RecordId_": "94c03220-8983-4152-9a49-9c8b425f1ad7"},
+                      {
+                        "_RecordPath_": "file://./../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+                        "_RecordName_": "Tag.907876e0-a73f-4a88-8a20-3f86242533c7",
+                        "_RecordId_": "907876e0-a73f-4a88-8a20-3f86242533c7"}],
+                    "negativeTags": []}]}}}],
+        "entityRetriggerDelay": 0.0,
+        "channelRetriggerDelay": 0.0,
+        "gameTags": []},
+      {
+        "_Type_": "CommunicationEntry",
+        "name": "file://./../../../../../../libs/foundry/records/communicationname/social/workrelated/soc_work_overcommsidlechatter.json",
+        "channelName": "file://./../../../../../../libs/foundry/records/communicationchannelname/globalgroup.json",
+        "method": "RandomSequence",
+        "forceAnimation": false,
+        "variations": [
+          {
+            "_Type_": "CommunicationVariation",
+            "animationFragmentId": "dx_wildlines",
+            "animationFragmentTags": "dx_Chat+dx_WorkOneSided",
+            "soundName": "",
+            "overrideMinSilence": -1.0,
+            "overrideMinSpeakerSilence": -1.0,
+            "dialogueContext": null,
+            "playDialogueAsAnimation": false,
+            "dialogueExternalSource": null,
+            "rules": {
+              "_Type_": "CommunicationVariationRules",
+              "timeout": 0.0,
+              "lookAtTarget": false,
+              "finishAnimation": true,
+              "finishSound": true,
+              "finishVoice": true,
+              "finishTimeout": true,
+              "blockMovement": false,
+              "blockFire": false},
+            "conditions": {
+              "_Type_": "CommunicationVariationCondition",
+              "expression": "",
+              "conditionTags": {
+                "_Type_": "TagsDNF",
+                "terms": []}}}],
+        "entityRetriggerDelay": 0.0,
+        "channelRetriggerDelay": 0.0,
+        "gameTags": []}],
+    "subConfigs": []}}

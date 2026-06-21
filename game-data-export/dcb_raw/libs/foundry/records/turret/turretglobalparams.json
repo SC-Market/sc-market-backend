@@ -1,0 +1,17 @@
+{
+  "_RecordName_": "STurretGlobalParams.TurretGlobalParams",
+  "_RecordId_": "57cb491b-4b32-4a85-b673-f4da1f16589e",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "STurretGlobalParams",
+    "pointerModeAllowed": true,
+    "pointerModeInputSmoothing": 0.085,
+    "pointerModeInnerAngle": 10.0,
+    "pointerModeInnerAngleMaxSpeedModifier": 0.2,
+    "pointerModeInnerAngleTurretSmoothing": 0.4,
+    "pointerModeMiddleAngle": 15.0,
+    "pointerModeOuterAngle": 5.0,
+    "pointerModeOuterAngleTurretSmoothing": 0.2,
+    "pointerModeMaxDegPerSec": 90.0,
+    "relativeInputAllowed": true,
+    "relativeInputSmoothing": 0.1}}

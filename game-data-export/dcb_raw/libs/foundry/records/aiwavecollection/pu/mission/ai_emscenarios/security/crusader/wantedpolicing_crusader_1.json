@@ -1,0 +1,28 @@
+{
+  "_RecordName_": "AIWaveCollection.WantedPolicing_Crusader_1",
+  "_RecordId_": "f477ffdb-2ed7-4100-8403-af216139048f",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "AIWaveCollection",
+    "waves": [
+      {
+        "_Type_": "AIWave",
+        "id": 1,
+        "textId": "",
+        "staggerTime": 1.0,
+        "members": [
+          {
+            "_Type_": "AIWaveMember",
+            "archetype": "",
+            "entityClassDefinition": "file://./../../../../../../../../../libs/foundry/records/entities/spaceships/aegs_avenger_stalker_pu_ai_sec_crusader.json",
+            "name": "@Factions_CrusaderSecurity_DisplayName",
+            "vehicleName": "",
+            "amount": 1,
+            "minAmount": -1,
+            "midAmount": -1,
+            "maxAmount": -1,
+            "crewManifestOverride": null,
+            "skillsetOverride": "file://./../../../../../../../../../libs/foundry/records/aiprofile/skills/humanpilot40.json",
+            "cargoManifests": [
+              null],
+            "aiDamageModifiersOverride": null}]}]}}

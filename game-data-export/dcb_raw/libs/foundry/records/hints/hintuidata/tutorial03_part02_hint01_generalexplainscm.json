@@ -1,0 +1,12 @@
+{
+  "_RecordName_": "HintUIData.Tutorial03_Part02_Hint01_GeneralExplainSCM",
+  "_RecordId_": "e2fd5f19-e95f-460d-a90f-da6a7bc92a34",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "HintUIData",
+    "TitleText": "@Tut03_Part03_Hint01_GeneralReminderMM_Title",
+    "BodyText": "@Tut03_Part03_Hint01_GeneralReminderMM",
+    "BodyTextGamePad": "@Tut03_Part03_Hint01_GeneralReminderMM",
+    "BodyTextJoystick": "@Tut03_Part03_Hint01_GeneralReminderMM",
+    "TitleImagePath": "",
+    "BodyImagePath": ""}}

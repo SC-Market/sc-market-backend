@@ -1,0 +1,34 @@
+{
+  "_RecordName_": "LootArchetypeV3Record.V3LootArchetype_Food",
+  "_RecordId_": "373d036b-4de9-4b34-b76e-aaf891b141a2",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "LootArchetypeV3Record",
+    "lootArchetype": {
+      "_Type_": "LootArchetypeV3",
+      "entries": [
+        {
+          "_Type_": "LootArchetypeV3Entry",
+          "name": "Food",
+          "weight": 1.0,
+          "selector": {
+            "_Type_": "LootArchetypeV3Selector_Tags",
+            "tags": {
+              "_Type_": "TagsDNFTerm",
+              "positiveTags": [
+                {
+                  "_RecordPath_": "file://./../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+                  "_RecordName_": "Tag.dfd29606-8533-404a-b6c3-a8d46335ecdc",
+                  "_RecordId_": "dfd29606-8533-404a-b6c3-a8d46335ecdc"}],
+              "negativeTags": [
+                {
+                  "_RecordPath_": "file://./../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+                  "_RecordName_": "Tag.1bc82cd1-44a4-45e6-9645-e35ad142a924",
+                  "_RecordId_": "1bc82cd1-44a4-45e6-9645-e35ad142a924"}]}},
+          "optionalData": [
+            {
+              "_Type_": "ArchetypeOptionalDataV3_StackSize",
+              "stackSize": {
+                "_Type_": "QuantityRange_Linear",
+                "min": 2,
+                "max": 4}}]}]}}}

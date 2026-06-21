@@ -1,0 +1,12 @@
+{
+  "_RecordName_": "HintUIData.FPSMining03",
+  "_RecordId_": "5d84fb75-1208-4f80-801f-68b8492d28cb",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "HintUIData",
+    "TitleText": "@Hints_FPSMining_Tool_Title",
+    "BodyText": "@Hints_FPSMining_OnPlayerShootMiningToolAtEnvironment",
+    "BodyTextGamePad": "@Hints_FPSMining_OnPlayerShootMiningToolAtEnvironment",
+    "BodyTextJoystick": "@Hints_FPSMining_OnPlayerShootMiningToolAtEnvironment",
+    "TitleImagePath": "",
+    "BodyImagePath": ""}}

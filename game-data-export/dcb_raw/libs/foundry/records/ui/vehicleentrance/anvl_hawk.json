@@ -1,0 +1,27 @@
+{
+  "_RecordName_": "SEntrancesDef.ANVL_Hawk",
+  "_RecordId_": "a06e8b2c-e06c-4e52-8776-1083f720a9ba",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "SEntrancesDef",
+    "boundingBoxScale": {
+      "_Type_": "Vec3",
+      "x": 1.2,
+      "y": 1.2,
+      "z": 1.2},
+    "boundingBoxOffset": {
+      "_Type_": "Vec3",
+      "x": 0.0,
+      "y": 0.0,
+      "z": -1.0},
+    "entranceArray": [
+      {
+        "_Type_": "SCEntranceItem",
+        "entranceName": "@entrance_hatch",
+        "jointName": "ANVL_Hawk",
+        "positionOffset": {
+          "_Type_": "Vec3",
+          "x": 0.0,
+          "y": 5.6,
+          "z": -0.5},
+        "shipState": "Both"}]}}

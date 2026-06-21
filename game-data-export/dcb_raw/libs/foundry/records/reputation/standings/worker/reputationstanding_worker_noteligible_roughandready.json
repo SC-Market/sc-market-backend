@@ -1,0 +1,15 @@
+{
+  "_RecordName_": "SReputationStandingParams.ReputationStanding_Worker_NotEligible_RoughAndReady",
+  "_RecordId_": "7b0da5d8-b9f6-4e34-be39-4f9fc6ae77dd",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "SReputationStandingParams",
+    "name": "Worker_NotEligible_RoughAndReady",
+    "description": "desc",
+    "displayName": "@RepStanding_NotEligible",
+    "perkDescription": "@blank_space",
+    "icon": "UI/Textures/Vector/MobiGlas/App_ReputationManager/icon_reputationrank_bountyhunter_1.svg",
+    "minReputation": -1000,
+    "driftReputation": 100,
+    "driftTimeHours": 24.0,
+    "gated": false}}

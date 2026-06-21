@@ -1,0 +1,24 @@
+{
+  "_RecordName_": "Character.SECR3",
+  "_RecordId_": "bcbe3d51-30a1-4069-88f7-d4c8c95004bb",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "Character",
+    "characterPersonalData": {
+      "_Type_": "CharacterPersonalData",
+      "title": "",
+      "firstName": "",
+      "nickName": "",
+      "lastName": "",
+      "randomNameParams": null,
+      "affiliation": "",
+      "details": ""},
+    "audioSwitchStateName": "",
+    "animationRemapAlias": "",
+    "characterMannequinTag": "",
+    "styleMannequinTag": "",
+    "combatStyle": "NotSet",
+    "gender": "NotSet",
+    "characterSpeedOverrides": [],
+    "nicknameChance": 0.0,
+    "name": "SECR3"}}

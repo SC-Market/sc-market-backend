@@ -1,0 +1,12 @@
+{
+  "_RecordName_": "HintUIData.MiningConsumables05",
+  "_RecordId_": "241fa597-5fc4-40f1-8474-49813d18b64d",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "HintUIData",
+    "TitleText": "@Hints_Mining_Modules_Title",
+    "BodyText": "@Hints_MiningConsumables_OnConsumableExpiredNoCharges",
+    "BodyTextGamePad": "@Hints_MiningConsumables_OnConsumableExpiredNoCharges",
+    "BodyTextJoystick": "@Hints_MiningConsumables_OnConsumableExpiredNoCharges",
+    "TitleImagePath": "",
+    "BodyImagePath": ""}}

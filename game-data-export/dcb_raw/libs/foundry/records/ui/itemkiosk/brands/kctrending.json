@@ -1,0 +1,14 @@
+{
+  "_RecordName_": "ItemKioskBrand.KCTrending",
+  "_RecordId_": "43bc524e-8374-4cdb-abf3-92dd8e023573",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "ItemKioskBrand",
+    "name": "kctrending",
+    "logoPath": "ui/kiosk/assets/tif/backgrounds/kctrending.tif",
+    "color": {
+      "_Type_": "SRGBA8",
+      "r": 57,
+      "g": 124,
+      "b": 105,
+      "a": 255}}}

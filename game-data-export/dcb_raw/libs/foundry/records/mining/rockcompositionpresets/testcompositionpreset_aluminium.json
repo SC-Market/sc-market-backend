@@ -1,0 +1,17 @@
+{
+  "_RecordName_": "MineableComposition.TestCompositionPreset_Aluminium",
+  "_RecordId_": "d796027d-d990-4dcc-b4ce-640bb20ae315",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "MineableComposition",
+    "depositName": "@hud_mining_rock_name_1",
+    "minimumDistinctElements": 1,
+    "compositionArray": [
+      {
+        "_Type_": "MineableCompositionPart",
+        "mineableElement": "file://./../../../../../libs/foundry/records/mining/mineableelements/aluminium_ore.json",
+        "minPercentage": 100.0,
+        "maxPercentage": 100.0,
+        "probability": 1.0,
+        "curveExponent": 1.0,
+        "qualityScale": 1.0}]}}

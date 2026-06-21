@@ -1,0 +1,33 @@
+{
+  "_RecordName_": "CommsNotification.MCN_ASDDelving_AMallor_Phase2_MIssionAccept_Radiation",
+  "_RecordId_": "1fdc92e7-beda-47ba-b798-cb81c2739067",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "CommsNotification",
+    "tags": {
+      "_Type_": "TagList",
+      "tags": [
+        {
+          "_RecordPath_": "file://./../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+          "_RecordName_": "Tag.39de38cd-d4d3-4fee-a80a-99f35046bfc6",
+          "_RecordId_": "39de38cd-d4d3-4fee-a80a-99f35046bfc6"},
+        {
+          "_RecordPath_": "file://./../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+          "_RecordName_": "Tag.10e86aa3-33df-4eb7-aa8a-e447254e8769",
+          "_RecordId_": "10e86aa3-33df-4eb7-aa8a-e447254e8769"},
+        {
+          "_RecordPath_": "file://./../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+          "_RecordName_": "Tag.4586a666-f05e-4a42-9f13-7ec88b6b56d4",
+          "_RecordId_": "4586a666-f05e-4a42-9f13-7ec88b6b56d4"},
+        {
+          "_RecordPath_": "file://./../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+          "_RecordName_": "Tag.fa9a5787-8fd1-4a97-a6c4-9da4e62e2264",
+          "_RecordId_": "fa9a5787-8fd1-4a97-a6c4-9da4e62e2264"},
+        {
+          "_RecordPath_": "file://./../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+          "_RecordName_": "Tag.f60b9299-de37-4f87-ab9e-e043122c0e09",
+          "_RecordId_": "f60b9299-de37-4f87-ab9e-e043122c0e09"}]},
+    "communicationName": "file://./../../../../../../libs/foundry/records/communicationname/missioncommunications/asddelvingbespoke/asddelving_phase2_missionaccept_radiation.json",
+    "characterEntityClass": "file://./../../../../../../libs/foundry/records/actor/actors/npc_archetypes/male/human/missiongivers/npc_archetypes-male-human-missiongivers-arkenmallor.json",
+    "fakeCommsAudioEntityClass": null,
+    "stage": "file://./../../../../../../libs/foundry/records/commsnotificationstages/cns_test.json"}}

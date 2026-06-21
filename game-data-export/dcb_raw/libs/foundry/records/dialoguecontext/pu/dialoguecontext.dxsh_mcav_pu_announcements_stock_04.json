@@ -1,0 +1,21 @@
+{
+  "_RecordName_": "DialogueContext.DXSH_MCAV_PU_Announcements_Stock_04",
+  "_RecordId_": "6487bd89-de1f-4a2e-823a-5780b1b0f0e9",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "DialogueContext",
+    "speaker": null,
+    "localizedSubtitleText": "@LOC_UNINITIALIZED",
+    "unlocalizedSubtitleText": "@LOC_UNINITIALIZED",
+    "subtitleShowDelay": 0.0,
+    "subtitleDisplayDurationOverride": 0.0,
+    "tempText": "Hurston Dynamics plus 2.6 points, Alliance Startec minus 1.6 point, Crusader Industries Plus 5.6 points",
+    "audioTrigger": {
+      "_Type_": "GlobalResourceAudio",
+      "audioTrigger": ""},
+    "femaleAudioTrigger": {
+      "_Type_": "GlobalResourceAudio",
+      "audioTrigger": ""},
+    "forceSubtitles": false,
+    "contents": [],
+    "tags": []}}

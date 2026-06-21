@@ -1,0 +1,15 @@
+{
+  "_RecordName_": "Conversation.BlackBox_2_Distress_Beacon_Vanduul_Ambush",
+  "_RecordId_": "c6735562-11bc-4378-947a-f8b3682a59be",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "Conversation",
+    "fragments": [
+      {
+        "_Type_": "ConversationNode_Start",
+        "next": null},
+      {
+        "_Type_": "ConversationNode_Dialogue",
+        "next": null,
+        "context": "file://./../../../../../../libs/foundry/records/dialoguecontext/arenacommander/crusader/dialoguecontext.dxhn_pu_blackbox2_recording_001_d.json",
+        "skipNodeInXSecs": -1.0}]}}

@@ -1,0 +1,105 @@
+{
+  "_RecordName_": "TacticalQuery.FindCoverFromReferencePointInArea",
+  "_RecordId_": "9c1bc33c-57ff-4672-af6a-75f7ed68df20",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "TacticalQuery",
+    "name": "FindCoverFromReferencePointInArea",
+    "type": "TacticalPointQuery",
+    "options": [
+      {
+        "_Type_": "TQSEmbeddedOption",
+        "requirements": {
+          "_Type_": "TagsDNF",
+          "terms": []},
+        "content": {
+          "_Type_": "TQSOptionContent",
+          "parameters": [],
+          "generation": [
+            {
+              "_Type_": "TQSInputIntValue",
+              "requirements": {
+                "_Type_": "TagsDNF",
+                "terms": []},
+              "condition": "cover_from_referencePoint_around_area",
+              "value": 20,
+              "overrides": []}],
+          "conditions": [
+            {
+              "_Type_": "TQSInputIntValue",
+              "requirements": {
+                "_Type_": "TagsDNF",
+                "terms": []},
+              "condition": "min_distance_from_referencePoint",
+              "value": 3,
+              "overrides": []},
+            {
+              "_Type_": "TQSInputBoolValue",
+              "requirements": {
+                "_Type_": "TagsDNF",
+                "terms": []},
+              "condition": "isInside_of_area",
+              "value": true,
+              "overrides": []},
+            {
+              "_Type_": "TQSInputBoolValue",
+              "requirements": {
+                "_Type_": "TagsDNF",
+                "terms": []},
+              "condition": "hasTargetedShootingPosture_to_referencePoint",
+              "value": true,
+              "overrides": []}],
+          "weights": [
+            {
+              "_Type_": "TQSWeightInputValue",
+              "requirements": {
+                "_Type_": "TagsDNF",
+                "terms": []},
+              "condition": "distance_to_referencePoint",
+              "weight": 1.0,
+              "overrides": []}]},
+        "optionOverrides": []},
+      {
+        "_Type_": "TQSEmbeddedOption",
+        "requirements": {
+          "_Type_": "TagsDNF",
+          "terms": []},
+        "content": {
+          "_Type_": "TQSOptionContent",
+          "parameters": [],
+          "generation": [
+            {
+              "_Type_": "TQSInputIntValue",
+              "requirements": {
+                "_Type_": "TagsDNF",
+                "terms": []},
+              "condition": "cover_from_referencePoint_around_area",
+              "value": 20,
+              "overrides": []}],
+          "conditions": [
+            {
+              "_Type_": "TQSInputIntValue",
+              "requirements": {
+                "_Type_": "TagsDNF",
+                "terms": []},
+              "condition": "min_distance_from_referencePoint",
+              "value": 3,
+              "overrides": []},
+            {
+              "_Type_": "TQSInputBoolValue",
+              "requirements": {
+                "_Type_": "TagsDNF",
+                "terms": []},
+              "condition": "isInside_of_area",
+              "value": true,
+              "overrides": []}],
+          "weights": [
+            {
+              "_Type_": "TQSWeightInputValue",
+              "requirements": {
+                "_Type_": "TagsDNF",
+                "terms": []},
+              "condition": "distance_to_referencePoint",
+              "weight": 1.0,
+              "overrides": []}]},
+        "optionOverrides": []}]}}

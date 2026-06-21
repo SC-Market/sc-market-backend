@@ -1,0 +1,23 @@
+{
+  "_RecordName_": "LootTable.Harvestables-Glowsticks",
+  "_RecordId_": "5484f644-9cbe-4696-ad18-e87e44f17efe",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "LootTable",
+    "lootArchetypes": [
+      {
+        "_Type_": "WeightedLootArchetype",
+        "archetype": "file://./../../../../../libs/foundry/records/lootgeneration/lootarchetypes/lootarchetype_harvestablecache_common.json",
+        "weight": 0.7,
+        "numberOfResultsConstraints": {
+          "_Type_": "NumResultsConstraints",
+          "minResults": 0,
+          "maxResults": 0}},
+      {
+        "_Type_": "WeightedLootArchetype",
+        "archetype": "file://./../../../../../libs/foundry/records/lootgeneration/lootarchetypes/lootarchetype_glowsticks.json",
+        "weight": 0.8,
+        "numberOfResultsConstraints": {
+          "_Type_": "NumResultsConstraints",
+          "minResults": 0,
+          "maxResults": 0}}]}}

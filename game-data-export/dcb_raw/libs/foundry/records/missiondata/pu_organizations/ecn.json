@@ -1,0 +1,42 @@
+{
+  "_RecordName_": "MissionOrganization.ECN",
+  "_RecordId_": "ee15146c-b0a3-4002-b26e-72fc8e8941bc",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "MissionOrganization",
+    "organizationTags": [
+      {
+        "_Type_": "MissionLocationTags",
+        "tags": []},
+      {
+        "_Type_": "MissionLocationTags",
+        "tags": []},
+      {
+        "_Type_": "MissionLocationTags",
+        "tags": []}],
+    "stringVariants": {
+      "_Type_": "MissionStringVariants",
+      "variants": [
+        {
+          "_Type_": "MissionStringVariant",
+          "tag": {
+            "_RecordPath_": "file://./../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+            "_RecordName_": "Tag.0130de18-97e2-4d4c-9bb1-3e7ef5fd0490",
+            "_RecordId_": "0130de18-97e2-4d4c-9bb1-3e7ef5fd0490"},
+          "string": "@ecn_from"},
+        {
+          "_Type_": "MissionStringVariant",
+          "tag": {
+            "_RecordPath_": "file://./../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+            "_RecordName_": "Tag.9bbc21f3-6203-4da0-beb9-1c2a548796e1",
+            "_RecordId_": "9bbc21f3-6203-4da0-beb9-1c2a548796e1"},
+          "string": "@ecn_hackprevent_title_001"},
+        {
+          "_Type_": "MissionStringVariant",
+          "tag": {
+            "_RecordPath_": "file://./../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+            "_RecordName_": "Tag.013a6630-ea7a-4f61-ab93-0c964f671eec",
+            "_RecordId_": "013a6630-ea7a-4f61-ab93-0c964f671eec"},
+          "string": "@ecn_hackprevent_desc_001"}]},
+    "weighting": 1.0,
+    "factionReputation": null}}

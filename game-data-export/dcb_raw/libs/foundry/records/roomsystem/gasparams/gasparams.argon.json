@@ -1,0 +1,18 @@
+{
+  "_RecordName_": "GasParams.Argon",
+  "_RecordId_": "2518e5d6-a7f4-47a2-b938-56113b078a97",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "GasParams",
+    "debugColor": {
+      "_Type_": "RGB",
+      "r": 1.0,
+      "g": 0.0,
+      "b": 1.0},
+    "chemicalSymbol": "@ui_chemsymbol_Argon",
+    "fogDensity": 0.0,
+    "fogColor": {
+      "_Type_": "RGB",
+      "r": 0.0,
+      "g": 0.0,
+      "b": 0.0}}}

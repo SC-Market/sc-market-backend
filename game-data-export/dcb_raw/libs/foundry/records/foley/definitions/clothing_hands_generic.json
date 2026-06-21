@@ -1,0 +1,56 @@
+{
+  "_RecordName_": "FoleyDefinition.Clothing_Hands_Generic",
+  "_RecordId_": "9c4d7024-d6e0-4de1-89be-f17e2f7e8347",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "FoleyDefinition",
+    "priority": 3,
+    "items": [
+      {
+        "_Type_": "FoleyItem",
+        "bone": "file://./../../../../../libs/foundry/records/foley/bones/foleybone.lefthand.json",
+        "trackedBoneOverride": null,
+        "referenceBone": null,
+        "velocityRTPCName": "Hand_Speed",
+        "velocityRTPCMinimum": 0.0,
+        "velocityRTPCMaximum": 5.0,
+        "collisionImpactRTPCName": "Character_Collision_Impact_Speed",
+        "collisionScuffRTPCName": "Character_Collision_Scuff_Speed",
+        "equipmentMassRTPCName": "",
+        "oneShots": [],
+        "loops": [],
+        "collisions": [
+          {
+            "_Type_": "FoleyCollision",
+            "trigger": "",
+            "minImpactSpeed": 0.3,
+            "retriggerTimeout": 0.1,
+            "applyToClient": true,
+            "applyToNLPC": true}]},
+      {
+        "_Type_": "FoleyItem",
+        "bone": "file://./../../../../../libs/foundry/records/foley/bones/foleybone.righthand.json",
+        "trackedBoneOverride": null,
+        "referenceBone": null,
+        "velocityRTPCName": "Hand_Speed",
+        "velocityRTPCMinimum": 0.0,
+        "velocityRTPCMaximum": 5.0,
+        "collisionImpactRTPCName": "Character_Collision_Impact_Speed",
+        "collisionScuffRTPCName": "Character_Collision_Scuff_Speed",
+        "equipmentMassRTPCName": "",
+        "oneShots": [],
+        "loops": [],
+        "collisions": [
+          {
+            "_Type_": "FoleyCollision",
+            "trigger": "",
+            "minImpactSpeed": 0.3,
+            "retriggerTimeout": 0.1,
+            "applyToClient": true,
+            "applyToNLPC": true}]}],
+    "userRTPCs": [
+      {
+        "_Type_": "UserRTPC",
+        "userRTPCName": "Character_Loadout_Clothing_On",
+        "userRTPCValue": 1.0,
+        "userRTPCResetValue": 0.0}]}}

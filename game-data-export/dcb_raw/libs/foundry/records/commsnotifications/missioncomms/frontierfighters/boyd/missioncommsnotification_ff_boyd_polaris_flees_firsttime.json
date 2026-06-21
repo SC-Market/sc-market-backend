@@ -1,0 +1,29 @@
+{
+  "_RecordName_": "CommsNotification.MissionCommsNotification_FF_Boyd_Polaris_Flees_FirstTime",
+  "_RecordId_": "c74369f5-f1cd-42b0-a41d-2f7383c68419",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "CommsNotification",
+    "tags": {
+      "_Type_": "TagList",
+      "tags": [
+        {
+          "_RecordPath_": "file://./../../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+          "_RecordName_": "Tag.04f3b0c0-192d-47f8-8edc-eb5b00ec2e03",
+          "_RecordId_": "04f3b0c0-192d-47f8-8edc-eb5b00ec2e03"},
+        {
+          "_RecordPath_": "file://./../../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+          "_RecordName_": "Tag.a0a3bf89-b022-41f7-8c5b-286a69d703c5",
+          "_RecordId_": "a0a3bf89-b022-41f7-8c5b-286a69d703c5"},
+        {
+          "_RecordPath_": "file://./../../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+          "_RecordName_": "Tag.52b40f62-d9e0-4a0d-b82c-99af0830c296",
+          "_RecordId_": "52b40f62-d9e0-4a0d-b82c-99af0830c296"},
+        {
+          "_RecordPath_": "file://./../../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+          "_RecordName_": "Tag.ccdeca91-4752-460f-97d8-a947e16f4d1c",
+          "_RecordId_": "ccdeca91-4752-460f-97d8-a947e16f4d1c"}]},
+    "communicationName": "file://./../../../../../../../libs/foundry/records/communicationname/missioncommunications/shipbattle/boyd_polarisflees_firsttime.json",
+    "characterEntityClass": "file://./../../../../../../../libs/foundry/records/actor/actors/npc_archetypes/female/human/missiongivers/npc_archetypes-female-human-missiongivers-boyd.json",
+    "fakeCommsAudioEntityClass": "file://./../../../../../../../libs/foundry/records/entities/audio/fakecommsaudioentity_frontierfighters_boyd.json",
+    "stage": "file://./../../../../../../../libs/foundry/records/commsnotificationstages/cns_test.json"}}

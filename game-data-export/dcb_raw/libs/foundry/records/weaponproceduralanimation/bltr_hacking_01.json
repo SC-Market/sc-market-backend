@@ -1,0 +1,24 @@
+{
+  "_RecordName_": "WeaponProceduralAnimation.bltr_hacking_01",
+  "_RecordId_": "ac1c5a3a-1aef-414b-ad14-345d8dfc8f1b",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "WeaponProceduralAnimation",
+    "weaponProceduralClipsSetUp": [
+      {
+        "_Type_": "WeaponProceduralClipsSetUp",
+        "filterName": "IdlePose",
+        "filterByState": "Any",
+        "filterByMotionSpeed": "Any",
+        "filterByPoseState": "Any",
+        "filterByStanceState": "Any",
+        "filterByAimStanceState": "Any",
+        "filterByLeanState": "Any",
+        "filterByHeldItemType": "Any",
+        "filterBySkeleton": "Any",
+        "filterByCharacterType": "Any",
+        "filterByRestrainedState": "Any",
+        "filterByPlayerCamera": "Any",
+        "filterByAimingRestriction": "Any",
+        "weaponProceduralClips": [
+          "file://./../../../../libs/foundry/records/weaponproceduralclip/utility/bltr_hacking_01_poseidle.json"]}]}}

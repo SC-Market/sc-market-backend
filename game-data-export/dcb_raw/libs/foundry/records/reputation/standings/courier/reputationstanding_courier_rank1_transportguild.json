@@ -1,0 +1,15 @@
+{
+  "_RecordName_": "SReputationStandingParams.ReputationStanding_Courier_Rank1_TransportGuild",
+  "_RecordId_": "2e739dae-3689-41ef-8b84-60c81be67114",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "SReputationStandingParams",
+    "name": "Courier_Rank1_TransportGuild",
+    "description": "desc",
+    "displayName": "@RepStanding_Courier_Rank1",
+    "perkDescription": "@blank_space",
+    "icon": "UI/Textures/Vector/MobiGlas/App_ReputationManager/icon_reputationrank_courier_2.svg",
+    "minReputation": 1,
+    "driftReputation": 0,
+    "driftTimeHours": 24.0,
+    "gated": true}}

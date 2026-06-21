@@ -1,0 +1,15 @@
+{
+  "_RecordName_": "VoiceBundle.PU_ShopKeeper_Female_Bundle",
+  "_RecordId_": "cad5da37-a943-4da5-979f-626fa2271cb2",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "VoiceBundle",
+    "name": "PU_ShopKeeper_Female_Bundle",
+    "voices": [
+      "file://./../../../../../libs/foundry/records/voicesingle/pu/shopkeeper/pu_shopkeep_female_04.json",
+      "file://./../../../../../libs/foundry/records/voicesingle/pu/shopkeeper/pu_shopkeep_female_05.json",
+      "file://./../../../../../libs/foundry/records/voicesingle/pu/shopkeeper/pu_shopkeep_female_07.json",
+      "file://./../../../../../libs/foundry/records/voicesingle/pu/shopkeeper/pu_shopkeep_gruff_female_01.json",
+      "file://./../../../../../libs/foundry/records/voicesingle/pu/shopkeeper/pu_shopkeep_friendly_female_01.json",
+      "file://./../../../../../libs/foundry/records/voicesingle/pu/civilian/pu_vendor_female_02.json",
+      "file://./../../../../../libs/foundry/records/voicesingle/pu/civilian/pu_vendor_female_04.json"]}}

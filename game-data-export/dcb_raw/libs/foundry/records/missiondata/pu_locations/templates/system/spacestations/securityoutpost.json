@@ -1,0 +1,257 @@
+{
+  "_RecordName_": "MissionLocationTemplate.SecurityOutpost",
+  "_RecordId_": "0b89c321-70a2-4fa8-9410-bd8ae16c325e",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "MissionLocationTemplate",
+    "locationData": {
+      "_Type_": "MissionLocationData",
+      "generalTags": {
+        "_Type_": "MissionLocationTags",
+        "tags": [
+          {
+            "_RecordPath_": "file://./../../../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+            "_RecordName_": "Tag.f00b6f01-7245-437d-9c41-da6a00e2df43",
+            "_RecordId_": "f00b6f01-7245-437d-9c41-da6a00e2df43"},
+          {
+            "_RecordPath_": "file://./../../../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+            "_RecordName_": "Tag.3fcd065f-5d40-4ad8-ae12-3868726d0c96",
+            "_RecordId_": "3fcd065f-5d40-4ad8-ae12-3868726d0c96"},
+          {
+            "_RecordPath_": "file://./../../../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+            "_RecordName_": "Tag.c7321bb6-6908-49c5-9234-c3a3bcf78cc4",
+            "_RecordId_": "c7321bb6-6908-49c5-9234-c3a3bcf78cc4"},
+          {
+            "_RecordPath_": "file://./../../../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+            "_RecordName_": "Tag.7c35db3b-6149-4d5c-a92e-4f98f1482873",
+            "_RecordId_": "7c35db3b-6149-4d5c-a92e-4f98f1482873"},
+          {
+            "_RecordPath_": "file://./../../../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+            "_RecordName_": "Tag.c5ca0d5e-1647-4209-860a-69cf5346b6fa",
+            "_RecordId_": "c5ca0d5e-1647-4209-860a-69cf5346b6fa"}]},
+      "producesTags": {
+        "_Type_": "TagSearchTerm",
+        "positiveTags": [],
+        "negativeTags": []},
+      "consumesTags": {
+        "_Type_": "TagSearchTerm",
+        "positiveTags": [],
+        "negativeTags": []},
+      "aiSpawnTags": {
+        "_Type_": "TagList",
+        "tags": [
+          {
+            "_RecordPath_": "file://./../../../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+            "_RecordName_": "Tag.b9525e1a-cb92-4899-82f8-608b36e4a6f2",
+            "_RecordId_": "b9525e1a-cb92-4899-82f8-608b36e4a6f2"}]},
+      "stringVariants": {
+        "_Type_": "MissionStringVariants",
+        "variants": [
+          {
+            "_Type_": "MissionStringVariant",
+            "tag": {
+              "_RecordPath_": "file://./../../../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+              "_RecordName_": "Tag.18c7e922-c531-4482-bf97-172770b0b221",
+              "_RecordId_": "18c7e922-c531-4482-bf97-172770b0b221"},
+            "string": "@generic_locations_blank"},
+          {
+            "_Type_": "MissionStringVariant",
+            "tag": {
+              "_RecordPath_": "file://./../../../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+              "_RecordName_": "Tag.0130de18-97e2-4d4c-9bb1-3e7ef5fd0490",
+              "_RecordId_": "0130de18-97e2-4d4c-9bb1-3e7ef5fd0490"},
+            "string": "@mission_location_stanton_0118"},
+          {
+            "_Type_": "MissionStringVariant",
+            "tag": {
+              "_RecordPath_": "file://./../../../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+              "_RecordName_": "Tag.8fd73fe9-94b6-45cd-9d4c-35ce67e86c75",
+              "_RecordId_": "8fd73fe9-94b6-45cd-9d4c-35ce67e86c75"},
+            "string": "@mission_location_stanton_0118_add"}]},
+      "missionModules": [
+        {
+          "_Type_": "SMissionLocationModule",
+          "isPersistent": false,
+          "missionModule": "Libs/Subsumption/Missions/PU/Modules/TimedItemDispenser/TimedItemDispenser.xml",
+          "missionInputs": [
+            {
+              "_Type_": "MissionInitParamBoolean",
+              "name": "RunOnEventTriggered_BP",
+              "value": true},
+            {
+              "_Type_": "MissionInitParamInteger",
+              "name": "ItemSpawnFrequency_BP",
+              "value": 30},
+            {
+              "_Type_": "MissionInitParamInteger",
+              "name": "MaxItemSpawnFrequency_BP",
+              "value": 60},
+            {
+              "_Type_": "MissionInitParamInteger",
+              "name": "MinAmountOfItems_BP",
+              "value": 15},
+            {
+              "_Type_": "MissionInitParamInteger",
+              "name": "MaxAmountOfItems_BP",
+              "value": 20}],
+          "properties": []},
+        {
+          "_Type_": "SMissionLocationModule",
+          "isPersistent": false,
+          "missionModule": "Libs/Subsumption/Missions/PU/Modules/LocationManager/LocationUnderAttack/LocationUnderAttack.xml",
+          "missionInputs": [
+            {
+              "_Type_": "MissionInitParamInteger",
+              "name": "KilledGuardThreshold_ML_BP",
+              "value": 1},
+            {
+              "_Type_": "MissionInitParamBoolean",
+              "name": "CriminalCheck_ML_BP",
+              "value": false},
+            {
+              "_Type_": "MissionInitParamTag",
+              "name": "NPCTags_ML_BP",
+              "value": {
+                "_Type_": "TagSearchTerm",
+                "positiveTags": [
+                  {
+                    "_RecordPath_": "file://./../../../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+                    "_RecordName_": "Tag.d9846151-8bb6-4a18-970a-b6f1ea10c27f",
+                    "_RecordId_": "d9846151-8bb6-4a18-970a-b6f1ea10c27f"},
+                  {
+                    "_RecordPath_": "file://./../../../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+                    "_RecordName_": "Tag.b9525e1a-cb92-4899-82f8-608b36e4a6f2",
+                    "_RecordId_": "b9525e1a-cb92-4899-82f8-608b36e4a6f2"},
+                  {
+                    "_RecordPath_": "file://./../../../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+                    "_RecordName_": "Tag.6b1cce6a-8ef0-4401-9136-5aff1a7f38cc",
+                    "_RecordId_": "6b1cce6a-8ef0-4401-9136-5aff1a7f38cc"}],
+                "negativeTags": [
+                  {
+                    "_RecordPath_": "file://./../../../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+                    "_RecordName_": "Tag.a8fe5e49-3259-40ed-a51d-02bf56a97288",
+                    "_RecordId_": "a8fe5e49-3259-40ed-a51d-02bf56a97288"},
+                  {
+                    "_RecordPath_": "file://./../../../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+                    "_RecordName_": "Tag.839f52f5-edb7-4c01-a425-428e6df2c0f2",
+                    "_RecordId_": "839f52f5-edb7-4c01-a425-428e6df2c0f2"},
+                  {
+                    "_RecordPath_": "file://./../../../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+                    "_RecordName_": "Tag.095599fd-e608-48a4-8c35-cec7a357f1f6",
+                    "_RecordId_": "095599fd-e608-48a4-8c35-cec7a357f1f6"}]}},
+            {
+              "_Type_": "MissionInitParamInteger",
+              "name": "PardonTimer_ML_BP",
+              "value": 3600},
+            {
+              "_Type_": "MissionInitParamBoolean",
+              "name": "SecurityTokenOverride_ML_BP",
+              "value": true},
+            {
+              "_Type_": "MissionInitParamBoolean",
+              "name": "SplitTracking_ML_BP",
+              "value": false}],
+          "properties": []},
+        {
+          "_Type_": "SMissionLocationModule",
+          "isPersistent": false,
+          "missionModule": "Libs/Subsumption/Missions/PU/Modules/LocationManager/KareahManager/KareahManager.xml",
+          "missionInputs": [
+            {
+              "_Type_": "MissionInitParamInteger",
+              "name": "KilledGuardThreshold_ML_BP",
+              "value": 6},
+            {
+              "_Type_": "MissionInitParamTag",
+              "name": "AllowedContrabandTags_ML_BP",
+              "value": {
+                "_Type_": "TagSearchTerm",
+                "positiveTags": [
+                  {
+                    "_RecordPath_": "file://./../../../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+                    "_RecordName_": "Tag.09869105-1fb6-4a95-8871-f7ff80074d96",
+                    "_RecordId_": "09869105-1fb6-4a95-8871-f7ff80074d96"}],
+                "negativeTags": [
+                  {
+                    "_RecordPath_": "file://./../../../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+                    "_RecordName_": "Tag.5e11a544-7fea-4160-b2bf-98c6cf9ee9df",
+                    "_RecordId_": "5e11a544-7fea-4160-b2bf-98c6cf9ee9df"}]}},
+            {
+              "_Type_": "MissionInitParamInteger",
+              "name": "MinItemSpawnFrequency_ML_BP",
+              "value": 30},
+            {
+              "_Type_": "MissionInitParamInteger",
+              "name": "MaxItemSpawnFrequency_ML_BP",
+              "value": 60},
+            {
+              "_Type_": "MissionInitParamInteger",
+              "name": "MinAmountOfItems_ML_BP",
+              "value": 15},
+            {
+              "_Type_": "MissionInitParamInteger",
+              "name": "MaxAmountOfItems_ML_BP",
+              "value": 20}],
+          "properties": []}],
+      "missionLimits": [
+        {
+          "_Type_": "LocationMissionLimit",
+          "tag": {
+            "_RecordPath_": "file://./../../../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+            "_RecordName_": "Tag.2a3d4c60-06cc-4b5a-b805-7269f4c13226",
+            "_RecordId_": "2a3d4c60-06cc-4b5a-b805-7269f4c13226"},
+          "autoConsumeIfPlayerAtLocation": true,
+          "maxMissionInstances": 1,
+          "dependentParentTags": {
+            "_Type_": "TagList",
+            "tags": []},
+          "dependentChildTags": {
+            "_Type_": "TagList",
+            "tags": []}},
+        {
+          "_Type_": "LocationMissionLimit",
+          "tag": {
+            "_RecordPath_": "file://./../../../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+            "_RecordName_": "Tag.6804b0a9-b01d-4c9a-8063-67784bd0f021",
+            "_RecordId_": "6804b0a9-b01d-4c9a-8063-67784bd0f021"},
+          "autoConsumeIfPlayerAtLocation": true,
+          "maxMissionInstances": 1,
+          "dependentParentTags": {
+            "_Type_": "TagList",
+            "tags": []},
+          "dependentChildTags": {
+            "_Type_": "TagList",
+            "tags": []}},
+        {
+          "_Type_": "LocationMissionLimit",
+          "tag": {
+            "_RecordPath_": "file://./../../../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+            "_RecordName_": "Tag.9a2ba214-8d5d-458d-84c6-fc11fdc5b3b7",
+            "_RecordId_": "9a2ba214-8d5d-458d-84c6-fc11fdc5b3b7"},
+          "autoConsumeIfPlayerAtLocation": true,
+          "maxMissionInstances": 1,
+          "dependentParentTags": {
+            "_Type_": "TagList",
+            "tags": []},
+          "dependentChildTags": {
+            "_Type_": "TagList",
+            "tags": []}},
+        {
+          "_Type_": "LocationMissionLimit",
+          "tag": {
+            "_RecordPath_": "file://./../../../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+            "_RecordName_": "Tag.e6a13cf1-526b-4949-ae2d-d21c2315b5c4",
+            "_RecordId_": "e6a13cf1-526b-4949-ae2d-d21c2315b5c4"},
+          "autoConsumeIfPlayerAtLocation": true,
+          "maxMissionInstances": 1,
+          "dependentParentTags": {
+            "_Type_": "TagList",
+            "tags": []},
+          "dependentChildTags": {
+            "_Type_": "TagList",
+            "tags": []}}],
+      "autoSpawnSettings": [],
+      "isSecurityNetworkHost": false,
+      "defaultSecurityNetworkManifest": null,
+      "disabled": false,
+      "entityClusterMember": null}}}

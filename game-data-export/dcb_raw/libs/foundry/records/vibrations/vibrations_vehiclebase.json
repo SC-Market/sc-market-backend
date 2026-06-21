@@ -1,0 +1,94 @@
+{
+  "_RecordName_": "SVibrationDef.Vibrations_VehicleBase",
+  "_RecordId_": "142d5d0d-a547-4912-9ddc-0c5185635d81",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "SVibrationDef",
+    "vibrationTypes": [
+      {
+        "_Type_": "VibrationTypeData",
+        "enabled": true,
+        "fallOffTime": 1.5},
+      {
+        "_Type_": "VibrationTypeData",
+        "enabled": false,
+        "fallOffTime": 1.5},
+      {
+        "_Type_": "VibrationTypeData",
+        "enabled": false,
+        "fallOffTime": 1.5},
+      {
+        "_Type_": "VibrationTypeData",
+        "enabled": true,
+        "fallOffTime": 0.5},
+      {
+        "_Type_": "VibrationTypeData",
+        "enabled": true,
+        "fallOffTime": 0.5},
+      {
+        "_Type_": "VibrationTypeData",
+        "enabled": true,
+        "fallOffTime": 0.5},
+      {
+        "_Type_": "VibrationTypeData",
+        "enabled": true,
+        "fallOffTime": 0.5},
+      {
+        "_Type_": "VibrationTypeData",
+        "enabled": true,
+        "fallOffTime": 0.5},
+      {
+        "_Type_": "VibrationTypeData",
+        "enabled": true,
+        "fallOffTime": 0.5},
+      {
+        "_Type_": "VibrationTypeData",
+        "enabled": true,
+        "fallOffTime": 0.5},
+      {
+        "_Type_": "VibrationTypeData",
+        "enabled": true,
+        "fallOffTime": 0.75},
+      {
+        "_Type_": "VibrationTypeData",
+        "enabled": false,
+        "fallOffTime": 0.5},
+      {
+        "_Type_": "VibrationTypeData",
+        "enabled": true,
+        "fallOffTime": 0.5},
+      {
+        "_Type_": "VibrationTypeData",
+        "enabled": true,
+        "fallOffTime": 0.5},
+      {
+        "_Type_": "VibrationTypeData",
+        "enabled": true,
+        "fallOffTime": 0.5},
+      {
+        "_Type_": "VibrationTypeData",
+        "enabled": true,
+        "fallOffTime": 1.2},
+      {
+        "_Type_": "VibrationTypeData",
+        "enabled": true,
+        "fallOffTime": 0.2},
+      {
+        "_Type_": "VibrationTypeData",
+        "enabled": true,
+        "fallOffTime": 0.15},
+      {
+        "_Type_": "VibrationTypeData",
+        "enabled": true,
+        "fallOffTime": 0.5},
+      {
+        "_Type_": "VibrationTypeData",
+        "enabled": true,
+        "fallOffTime": 0.5},
+      {
+        "_Type_": "VibrationTypeData",
+        "enabled": true,
+        "fallOffTime": 0.5}],
+    "listensToPhysics": true,
+    "listensToDamage": true,
+    "listensToHits": true}}

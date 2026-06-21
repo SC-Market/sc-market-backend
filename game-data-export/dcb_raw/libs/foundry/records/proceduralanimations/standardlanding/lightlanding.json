@@ -1,0 +1,89 @@
+{
+  "_RecordName_": "ProceduralAnimation.LightLanding",
+  "_RecordId_": "337fcb8e-ae5b-4045-a3f9-ceab63377d24",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "ProceduralAnimation",
+    "sequences": [
+      {
+        "_Type_": "ProceduralAnimationSequence",
+        "duration": 1.0,
+        "animationCurve": {
+          "_Type_": "BezierCurve",
+          "points": [
+            {
+              "_Type_": "Vec2",
+              "x": -0.01232931,
+              "y": -0.164234},
+            {
+              "_Type_": "Vec2",
+              "x": 0.0,
+              "y": 0.0},
+            {
+              "_Type_": "Vec2",
+              "x": 0.01919678,
+              "y": 0.174234},
+            {
+              "_Type_": "Vec2",
+              "x": 0.1415715,
+              "y": 0.5108154},
+            {
+              "_Type_": "Vec2",
+              "x": 0.2995711,
+              "y": 0.5405176},
+            {
+              "_Type_": "Vec2",
+              "x": 0.4575706,
+              "y": 0.5702198},
+            {
+              "_Type_": "Vec2",
+              "x": 0.5416671,
+              "y": 0.1894919},
+            {
+              "_Type_": "Vec2",
+              "x": 0.6920215,
+              "y": 0.07068322},
+            {
+              "_Type_": "Vec2",
+              "x": 0.8423759,
+              "y": -0.04812549},
+            {
+              "_Type_": "Vec2",
+              "x": 0.8856984,
+              "y": 0.02207965},
+            {
+              "_Type_": "Vec2",
+              "x": 1.0,
+              "y": 0.0},
+            {
+              "_Type_": "Vec2",
+              "x": 1.114302,
+              "y": -0.02207965}],
+          "useLUT": false},
+        "boneAnimations": [
+          {
+            "_Type_": "ProceduralAnimationBone",
+            "bone": "Hips",
+            "chainLength": 0,
+            "layer": 1,
+            "operation": "Offset",
+            "relativeTo": "ParentBone",
+            "values": {
+              "_Type_": "Vec3",
+              "x": 0.0,
+              "y": 0.0,
+              "z": -0.2},
+            "delay": 0.0},
+          {
+            "_Type_": "ProceduralAnimationBone",
+            "bone": "Spine3",
+            "chainLength": 4,
+            "layer": 9,
+            "operation": "Rotation",
+            "relativeTo": "Character",
+            "values": {
+              "_Type_": "Vec3",
+              "x": -20.0,
+              "y": 0.0,
+              "z": 0.0},
+            "delay": 0.05}]}]}}

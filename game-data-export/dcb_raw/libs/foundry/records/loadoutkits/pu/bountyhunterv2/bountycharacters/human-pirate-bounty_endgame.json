@@ -1,0 +1,72 @@
+{
+  "_RecordName_": "SLoadoutAssortment.Human-Pirate-Bounty_EndGame",
+  "_RecordId_": "9b81110d-e1f5-421a-bba3-01ebf794051f",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "SLoadoutAssortment",
+    "Requirement": null,
+    "GroupedLoadouts": [
+      {
+        "_Type_": "SGroupedLoadouts",
+        "Group": "Outfit",
+        "Requirement": null,
+        "Loadouts": [
+          {
+            "_Type_": "SItemPortLoadoutRecordParams",
+            "WearRange": null,
+            "DirtRange": null,
+            "SkipInventoryItemsOnMissionEntities": false,
+            "InventoryItems": [],
+            "loadoutRecord": null},
+          {
+            "_Type_": "SItemPortLoadoutRecordParams",
+            "WearRange": null,
+            "DirtRange": null,
+            "SkipInventoryItemsOnMissionEntities": false,
+            "InventoryItems": [],
+            "loadoutRecord": null},
+          {
+            "_Type_": "SItemPortLoadoutRecordParams",
+            "WearRange": null,
+            "DirtRange": null,
+            "SkipInventoryItemsOnMissionEntities": false,
+            "InventoryItems": [],
+            "loadoutRecord": null}]},
+      {
+        "_Type_": "SGroupedLoadouts",
+        "Group": "PrimaryWeapon",
+        "Requirement": null,
+        "Loadouts": [
+          {
+            "_Type_": "SItemPortLoadoutRecordParams",
+            "WearRange": null,
+            "DirtRange": null,
+            "SkipInventoryItemsOnMissionEntities": false,
+            "InventoryItems": [],
+            "loadoutRecord": null},
+          {
+            "_Type_": "SItemPortLoadoutRecordParams",
+            "WearRange": null,
+            "DirtRange": null,
+            "SkipInventoryItemsOnMissionEntities": false,
+            "InventoryItems": [],
+            "loadoutRecord": null},
+          {
+            "_Type_": "SItemPortLoadoutRecordParams",
+            "WearRange": null,
+            "DirtRange": null,
+            "SkipInventoryItemsOnMissionEntities": false,
+            "InventoryItems": [],
+            "loadoutRecord": null}]},
+      {
+        "_Type_": "SGroupedLoadouts",
+        "Group": "SecondaryWeapon",
+        "Requirement": null,
+        "Loadouts": [
+          {
+            "_Type_": "SItemPortLoadoutRecordParams",
+            "WearRange": null,
+            "DirtRange": null,
+            "SkipInventoryItemsOnMissionEntities": false,
+            "InventoryItems": [],
+            "loadoutRecord": null}]}]}}

@@ -1,0 +1,14 @@
+{
+  "_RecordName_": "BuildingBlocks_ExternalColorReference.Hack_Ability_ChargeUp",
+  "_RecordId_": "24d0207f-8634-406c-838b-fdd088c146fb",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "BuildingBlocks_ExternalColorReference",
+    "color": {
+      "_Type_": "BuildingBlocks_ColorSolid",
+      "color": {
+        "_Type_": "SRGBA8",
+        "r": 255,
+        "g": 255,
+        "b": 100,
+        "a": 255}}}}

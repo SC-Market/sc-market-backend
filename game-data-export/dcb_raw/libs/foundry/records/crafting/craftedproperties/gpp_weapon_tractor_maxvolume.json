@@ -1,0 +1,12 @@
+{
+  "_RecordName_": "CraftingGameplayPropertyDef.GPP_Weapon_Tractor_MaxVolume",
+  "_RecordId_": "254b0e0c-9688-4f45-badb-46851eaed25b",
+  "_RecordTag_": "CGP2",
+  "_RecordValue_": {
+    "_Type_": "CraftingGameplayPropertyDef",
+    "propertyName": "@StatName_GPP_Tractor_MaxVolume",
+    "displayTransformation": {
+      "_Type_": "CraftingDisplayTransformation_Scale",
+      "scale": 0.0001},
+    "unitFormat": "@StatUnits_Rating",
+    "nameOverrides": []}}

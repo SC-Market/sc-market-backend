@@ -1,0 +1,48 @@
+{
+  "_RecordName_": "MissionItem.ScrambleRace_Space",
+  "_RecordId_": "55f07749-c884-4a29-bd8a-cce102731859",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "MissionItem",
+    "tags": [
+      {
+        "_RecordPath_": "file://./../../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+        "_RecordName_": "Tag.9314b308-b5dd-44ce-8e81-61e1764cbd57",
+        "_RecordId_": "9314b308-b5dd-44ce-8e81-61e1764cbd57"},
+      {
+        "_RecordPath_": "file://./../../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+        "_RecordName_": "Tag.2edce6b3-40ee-4d68-9c92-ab68be6ab433",
+        "_RecordId_": "2edce6b3-40ee-4d68-9c92-ab68be6ab433"}],
+    "stringVariants": {
+      "_Type_": "MissionStringVariants",
+      "variants": [
+        {
+          "_Type_": "MissionStringVariant",
+          "tag": {
+            "_RecordPath_": "file://./../../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+            "_RecordName_": "Tag.0130de18-97e2-4d4c-9bb1-3e7ef5fd0490",
+            "_RecordId_": "0130de18-97e2-4d4c-9bb1-3e7ef5fd0490"},
+          "string": "@ScrambleRace_RaceType_01"},
+        {
+          "_Type_": "MissionStringVariant",
+          "tag": {
+            "_RecordPath_": "file://./../../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+            "_RecordName_": "Tag.5e22ff70-06a3-4060-8660-9cae8c4bcf52",
+            "_RecordId_": "5e22ff70-06a3-4060-8660-9cae8c4bcf52"},
+          "string": "@ScrambleRace_RaceTypeShort_01"},
+        {
+          "_Type_": "MissionStringVariant",
+          "tag": {
+            "_RecordPath_": "file://./../../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+            "_RecordName_": "Tag.83501a67-e92c-4154-acf6-6ab77dd233f7",
+            "_RecordId_": "83501a67-e92c-4154-acf6-6ab77dd233f7"},
+          "string": "@ScrambleRace_RaceTypeTitle_01"},
+        {
+          "_Type_": "MissionStringVariant",
+          "tag": {
+            "_RecordPath_": "file://./../../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+            "_RecordName_": "Tag.84be4467-2f3a-469c-b3df-eb3689630d8f",
+            "_RecordId_": "84be4467-2f3a-469c-b3df-eb3689630d8f"},
+          "string": "@procedural_text_null"}]},
+    "weighting": 1.0,
+    "entityClass": null}}

@@ -1,0 +1,482 @@
+{
+  "_RecordName_": "MissionBrokerEntry.PU_CommArrayHack_Stanton3",
+  "_RecordId_": "39fcd905-d82d-4aa5-b6db-096585a53fd8",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "MissionBrokerEntry",
+    "notForRelease": false,
+    "owner": "file://./../../../../../libs/foundry/records/devowners/developers/mft/elliotmaltby.json",
+    "missionModule": "libs/subsumption/missions/pu/pu_missions/pu_commarray_hack.xml",
+    "playerFacingDebugName": "",
+    "title": "@commarray_hack_title",
+    "titleHUD": "@LOC_UNINITIALIZED",
+    "description": "@commarray_hack_desc",
+    "missionGiver": "@commarray_hack_from",
+    "commsChannelName": "@LOC_UNINITIALIZED",
+    "type": "file://./../../../../../libs/foundry/records/missiontype/pu/mercenary.json",
+    "associatedMissions": [],
+    "missionDifficulty": -1,
+    "localityAvailable": null,
+    "locationMissionAvailable": "file://./../../../../../libs/foundry/records/starmap/pu/system/stanton/stanton3/starmapobject.stanton3.json",
+    "availableDateSchedule": [],
+    "onlyAvailableIfAllMissionsNotAvailable": [],
+    "missionReward": {
+      "_Type_": "MissionReward",
+      "reward": 25000,
+      "max": 0,
+      "plusBonuses": false,
+      "currencyType": "UEC",
+      "reputationBonus": null},
+    "partialRewardPayout": null,
+    "missionResultReputationRewards": [
+      {
+        "_Type_": "SReputationAmountListParams",
+        "reputationAmounts": []},
+      {
+        "_Type_": "SReputationAmountListParams",
+        "reputationAmounts": []},
+      {
+        "_Type_": "SReputationAmountListParams",
+        "reputationAmounts": []},
+      {
+        "_Type_": "SReputationAmountListParams",
+        "reputationAmounts": []},
+      {
+        "_Type_": "SReputationAmountListParams",
+        "reputationAmounts": []}],
+    "journalEntriesToAddOnComplete": [],
+    "journalEntriesToRemoveOnComplete": [],
+    "initiallyActive": true,
+    "notifyOnAvailable": false,
+    "preShowObjectives": false,
+    "showAsOffer": true,
+    "missionBuyInAmount": 0,
+    "refundBuyInOnWithdraw": false,
+    "hasCompleteButton": false,
+    "onlyOwnerCanComplete": false,
+    "handlesAbandonRequest": false,
+    "missionModulePerPlayer": true,
+    "maxInstances": 3,
+    "maxPlayersPerInstance": 1,
+    "maxInstancesPerPlayer": 1,
+    "canBeShared": true,
+    "onceOnly": false,
+    "tutorial": false,
+    "missionDeadline": {
+      "_Type_": "MissionDeadline",
+      "missionCompletionTime": 0.0,
+      "missionAutoEnd": false,
+      "missionResultAfterTimerEnd": "Failed",
+      "remainingTimeToShowTimer": 0.0,
+      "missionEndReason": "@LOC_EMPTY"},
+    "displayAlliedMarkers": true,
+    "availableInPrison": false,
+    "failIfSentToPrison": true,
+    "failIfBecameCriminal": false,
+    "failIfLeavePrison": false,
+    "completionTags": {
+      "_Type_": "TagList",
+      "tags": []},
+    "applyCompletionTagsOnFailed": false,
+    "applyCompletionTagsOnAbandoned": false,
+    "requestOnly": false,
+    "respawnTime": 5.0,
+    "respawnTimeVariation": 5.0,
+    "instanceHasLifeTime": false,
+    "showLifeTimeInMobiGlas": false,
+    "instanceLifeTime": 15.0,
+    "instanceLifeTimeVariation": 15.0,
+    "canReacceptAfterAbandoning": true,
+    "abandonedCooldownTime": 1.0,
+    "abandonedCooldownTimeVariation": 0.0,
+    "canReacceptAfterFailing": false,
+    "hasPersonalCooldown": true,
+    "personalCooldownTime": 3.0,
+    "personalCooldownTimeVariation": 1.0,
+    "moduleHandlesOwnShutdown": false,
+    "linkedMission": null,
+    "missionCompletePerk": null,
+    "modifiers": [],
+    "lawfulMission": false,
+    "missionGiverRecord": null,
+    "invitationMission": null,
+    "missionTags": [],
+    "missionGiverFragmentTags": "",
+    "reputationPrerequisites": {
+      "_Type_": "ReputationPrerequisites",
+      "wantedLevelJurisdictionOverride": null,
+      "wantedLevel": {
+        "_Type_": "ReputationPrerequisiteRange",
+        "minValue": 0.0,
+        "maxValue": 5.0}},
+    "reputationRequirements": null,
+    "minRequiredMissions": [],
+    "requiredMissions": [
+      "file://./../../../../../libs/foundry/records/missionbroker/pu_missions/missiongivers/pacheco/pu_eliminatespecific_unlawful_stanton3_pacheco_intro.json"],
+    "requiredCompletedMissionTags": [],
+    "requiredJournalEntries": [],
+    "requiredAreaTags": {
+      "_Type_": "TagList",
+      "tags": []},
+    "excludedAreaTags": {
+      "_Type_": "TagList",
+      "tags": []},
+    "properties": [
+      {
+        "_Type_": "MissionProperty",
+        "missionVariableName": "MDSE_CommArrayLocation",
+        "extendedTextToken": "MissionLocation",
+        "value": {
+          "_Type_": "MissionPropertyValue_Location",
+          "matchConditions": [
+            {
+              "_Type_": "DataSetMatchCondition_TagSearch",
+              "tagSearch": [
+                {
+                  "_Type_": "TagSearchTerm",
+                  "positiveTags": [
+                    {
+                      "_RecordPath_": "file://./../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+                      "_RecordName_": "Tag.01000bb5-9f5e-40f4-96e1-0a2f9195d785",
+                      "_RecordId_": "01000bb5-9f5e-40f4-96e1-0a2f9195d785"},
+                    {
+                      "_RecordPath_": "file://./../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+                      "_RecordName_": "Tag.cb31c9e2-7cc8-4342-853c-832c62429bb0",
+                      "_RecordId_": "cb31c9e2-7cc8-4342-853c-832c62429bb0"},
+                    {
+                      "_RecordPath_": "file://./../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+                      "_RecordName_": "Tag.64b542fa-a768-4da5-97b8-60e336d88536",
+                      "_RecordId_": "64b542fa-a768-4da5-97b8-60e336d88536"},
+                    {
+                      "_RecordPath_": "file://./../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+                      "_RecordName_": "Tag.67508ea1-f2a5-4e1a-a045-2c1378c4b89e",
+                      "_RecordId_": "67508ea1-f2a5-4e1a-a045-2c1378c4b89e"}],
+                  "negativeTags": [
+                    {
+                      "_RecordPath_": "file://./../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+                      "_RecordName_": "Tag.244dfed8-dc21-4779-b773-1b985d1a6dbb",
+                      "_RecordId_": "244dfed8-dc21-4779-b773-1b985d1a6dbb"}]}],
+              "tagType": "General"}],
+          "resourceTags": [
+            {
+              "_RecordPath_": "file://./../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+              "_RecordName_": "Tag.a204992d-f67a-4a28-bd86-8587b3243af1",
+              "_RecordId_": "a204992d-f67a-4a28-bd86-8587b3243af1"}],
+          "logErrorOnSearchFail": true}},
+      {
+        "_Type_": "MissionProperty",
+        "missionVariableName": "",
+        "extendedTextToken": "Title",
+        "value": {
+          "_Type_": "MissionPropertyValue_StringHash",
+          "options": [
+            {
+              "_Type_": "MissionPropertyValueOption_StringHash",
+              "textId": "@commarray_hack_title_0001",
+              "weighting": 1.0,
+              "DEBUG_forceChooseThisOption": false,
+              "dependentProperties": [],
+              "value": ""},
+            {
+              "_Type_": "MissionPropertyValueOption_StringHash",
+              "textId": "@commarray_hack_title_0002",
+              "weighting": 1.0,
+              "DEBUG_forceChooseThisOption": false,
+              "dependentProperties": [],
+              "value": ""},
+            {
+              "_Type_": "MissionPropertyValueOption_StringHash",
+              "textId": "@commarray_hack_title_0003",
+              "weighting": 1.0,
+              "DEBUG_forceChooseThisOption": false,
+              "dependentProperties": [],
+              "value": ""},
+            {
+              "_Type_": "MissionPropertyValueOption_StringHash",
+              "textId": "@commarray_hack_title_0004",
+              "weighting": 1.0,
+              "DEBUG_forceChooseThisOption": false,
+              "dependentProperties": [],
+              "value": ""},
+            {
+              "_Type_": "MissionPropertyValueOption_StringHash",
+              "textId": "@commarray_hack_title_0005",
+              "weighting": 1.0,
+              "DEBUG_forceChooseThisOption": false,
+              "dependentProperties": [],
+              "value": ""},
+            {
+              "_Type_": "MissionPropertyValueOption_StringHash",
+              "textId": "@commarray_hack_title_0006",
+              "weighting": 1.0,
+              "DEBUG_forceChooseThisOption": false,
+              "dependentProperties": [],
+              "value": ""},
+            {
+              "_Type_": "MissionPropertyValueOption_StringHash",
+              "textId": "@commarray_hack_title_0007",
+              "weighting": 1.0,
+              "DEBUG_forceChooseThisOption": false,
+              "dependentProperties": [],
+              "value": ""}]}},
+      {
+        "_Type_": "MissionProperty",
+        "missionVariableName": "",
+        "extendedTextToken": "Description",
+        "value": {
+          "_Type_": "MissionPropertyValue_StringHash",
+          "options": [
+            {
+              "_Type_": "MissionPropertyValueOption_StringHash",
+              "textId": "@commarray_hack_desc_0001",
+              "weighting": 1.0,
+              "DEBUG_forceChooseThisOption": false,
+              "dependentProperties": [],
+              "value": ""},
+            {
+              "_Type_": "MissionPropertyValueOption_StringHash",
+              "textId": "@commarray_hack_desc_0002",
+              "weighting": 1.0,
+              "DEBUG_forceChooseThisOption": false,
+              "dependentProperties": [],
+              "value": ""},
+            {
+              "_Type_": "MissionPropertyValueOption_StringHash",
+              "textId": "@commarray_hack_desc_0003",
+              "weighting": 1.0,
+              "DEBUG_forceChooseThisOption": false,
+              "dependentProperties": [],
+              "value": ""},
+            {
+              "_Type_": "MissionPropertyValueOption_StringHash",
+              "textId": "@commarray_hack_desc_0004",
+              "weighting": 1.0,
+              "DEBUG_forceChooseThisOption": false,
+              "dependentProperties": [],
+              "value": ""},
+            {
+              "_Type_": "MissionPropertyValueOption_StringHash",
+              "textId": "@commarray_hack_desc_0005",
+              "weighting": 1.0,
+              "DEBUG_forceChooseThisOption": false,
+              "dependentProperties": [],
+              "value": ""}]}},
+      {
+        "_Type_": "MissionProperty",
+        "missionVariableName": "",
+        "extendedTextToken": "Danger",
+        "value": {
+          "_Type_": "MissionPropertyValue_StringHash",
+          "options": [
+            {
+              "_Type_": "MissionPropertyValueOption_StringHash",
+              "textId": "@commarray_hack_danger_0001",
+              "weighting": 1.0,
+              "DEBUG_forceChooseThisOption": false,
+              "dependentProperties": [],
+              "value": ""},
+            {
+              "_Type_": "MissionPropertyValueOption_StringHash",
+              "textId": "@commarray_hack_danger_0002",
+              "weighting": 1.0,
+              "DEBUG_forceChooseThisOption": false,
+              "dependentProperties": [],
+              "value": ""},
+            {
+              "_Type_": "MissionPropertyValueOption_StringHash",
+              "textId": "@commarray_hack_danger_0003",
+              "weighting": 1.0,
+              "DEBUG_forceChooseThisOption": false,
+              "dependentProperties": [],
+              "value": ""},
+            {
+              "_Type_": "MissionPropertyValueOption_StringHash",
+              "textId": "@commarray_hack_danger_0004",
+              "weighting": 1.0,
+              "DEBUG_forceChooseThisOption": false,
+              "dependentProperties": [],
+              "value": ""}]}},
+      {
+        "_Type_": "MissionProperty",
+        "missionVariableName": "",
+        "extendedTextToken": "Client",
+        "value": {
+          "_Type_": "MissionPropertyValue_StringHash",
+          "options": [
+            {
+              "_Type_": "MissionPropertyValueOption_StringHash",
+              "textId": "@mission_client_0020",
+              "weighting": 1.0,
+              "DEBUG_forceChooseThisOption": false,
+              "dependentProperties": [],
+              "value": ""},
+            {
+              "_Type_": "MissionPropertyValueOption_StringHash",
+              "textId": "@mission_client_0021",
+              "weighting": 1.0,
+              "DEBUG_forceChooseThisOption": false,
+              "dependentProperties": [],
+              "value": ""},
+            {
+              "_Type_": "MissionPropertyValueOption_StringHash",
+              "textId": "@mission_client_0022",
+              "weighting": 1.0,
+              "DEBUG_forceChooseThisOption": false,
+              "dependentProperties": [],
+              "value": ""},
+            {
+              "_Type_": "MissionPropertyValueOption_StringHash",
+              "textId": "@mission_client_0023",
+              "weighting": 1.0,
+              "DEBUG_forceChooseThisOption": false,
+              "dependentProperties": [],
+              "value": ""},
+            {
+              "_Type_": "MissionPropertyValueOption_StringHash",
+              "textId": "@mission_client_0026",
+              "weighting": 1.0,
+              "DEBUG_forceChooseThisOption": false,
+              "dependentProperties": [],
+              "value": ""},
+            {
+              "_Type_": "MissionPropertyValueOption_StringHash",
+              "textId": "@mission_client_0027",
+              "weighting": 1.0,
+              "DEBUG_forceChooseThisOption": false,
+              "dependentProperties": [],
+              "value": ""},
+            {
+              "_Type_": "MissionPropertyValueOption_StringHash",
+              "textId": "@mission_client_0028",
+              "weighting": 1.0,
+              "DEBUG_forceChooseThisOption": false,
+              "dependentProperties": [],
+              "value": ""},
+            {
+              "_Type_": "MissionPropertyValueOption_StringHash",
+              "textId": "@mission_client_0029",
+              "weighting": 1.0,
+              "DEBUG_forceChooseThisOption": false,
+              "dependentProperties": [],
+              "value": ""}]}},
+      {
+        "_Type_": "MissionProperty",
+        "missionVariableName": "",
+        "extendedTextToken": "Contractor",
+        "value": {
+          "_Type_": "MissionPropertyValue_StringHash",
+          "options": [
+            {
+              "_Type_": "MissionPropertyValueOption_StringHash",
+              "textId": "@mission_contractor_0020",
+              "weighting": 1.0,
+              "DEBUG_forceChooseThisOption": false,
+              "dependentProperties": [],
+              "value": ""},
+            {
+              "_Type_": "MissionPropertyValueOption_StringHash",
+              "textId": "@mission_contractor_0021",
+              "weighting": 1.0,
+              "DEBUG_forceChooseThisOption": false,
+              "dependentProperties": [],
+              "value": ""},
+            {
+              "_Type_": "MissionPropertyValueOption_StringHash",
+              "textId": "@mission_contractor_0022",
+              "weighting": 1.0,
+              "DEBUG_forceChooseThisOption": false,
+              "dependentProperties": [],
+              "value": ""},
+            {
+              "_Type_": "MissionPropertyValueOption_StringHash",
+              "textId": "@mission_contractor_0023",
+              "weighting": 1.0,
+              "DEBUG_forceChooseThisOption": false,
+              "dependentProperties": [],
+              "value": ""},
+            {
+              "_Type_": "MissionPropertyValueOption_StringHash",
+              "textId": "@mission_contractor_0024",
+              "weighting": 1.0,
+              "DEBUG_forceChooseThisOption": false,
+              "dependentProperties": [],
+              "value": ""}]}},
+      {
+        "_Type_": "MissionProperty",
+        "missionVariableName": "MissionType_StringHash",
+        "extendedTextToken": "",
+        "value": {
+          "_Type_": "MissionPropertyValue_StringHash",
+          "options": [
+            {
+              "_Type_": "MissionPropertyValueOption_StringHash",
+              "textId": "@LOC_UNINITIALIZED",
+              "weighting": 1.0,
+              "DEBUG_forceChooseThisOption": false,
+              "dependentProperties": [],
+              "value": "Hack"}]}},
+      {
+        "_Type_": "MissionProperty",
+        "missionVariableName": "MissionChipLocation",
+        "extendedTextToken": "Location",
+        "value": {
+          "_Type_": "MissionPropertyValue_Location",
+          "matchConditions": [
+            {
+              "_Type_": "DataSetMatchCondition_TagSearch",
+              "tagSearch": [
+                {
+                  "_Type_": "TagSearchTerm",
+                  "positiveTags": [
+                    {
+                      "_RecordPath_": "file://./../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+                      "_RecordName_": "Tag.f0615e35-6af9-4e28-957f-476241c111e5",
+                      "_RecordId_": "f0615e35-6af9-4e28-957f-476241c111e5"},
+                    {
+                      "_RecordPath_": "file://./../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+                      "_RecordName_": "Tag.984285ee-9b94-48c9-b11a-915fc11643a4",
+                      "_RecordId_": "984285ee-9b94-48c9-b11a-915fc11643a4"},
+                    {
+                      "_RecordPath_": "file://./../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+                      "_RecordName_": "Tag.67508ea1-f2a5-4e1a-a045-2c1378c4b89e",
+                      "_RecordId_": "67508ea1-f2a5-4e1a-a045-2c1378c4b89e"}],
+                  "negativeTags": [
+                    {
+                      "_RecordPath_": "file://./../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+                      "_RecordName_": "Tag.1e3de0c0-5ca5-4826-9224-94c3501e03b2",
+                      "_RecordId_": "1e3de0c0-5ca5-4826-9224-94c3501e03b2"}]}],
+              "tagType": "General"}],
+          "resourceTags": [],
+          "logErrorOnSearchFail": true}},
+      {
+        "_Type_": "MissionProperty",
+        "missionVariableName": "MissionItem",
+        "extendedTextToken": "Item",
+        "value": {
+          "_Type_": "MissionPropertyValue_MissionItem",
+          "minItemsToFind": 1,
+          "maxItemsToFind": 1,
+          "matchConditions": [
+            {
+              "_Type_": "DataSetMatchCondition_SpecificItemsDef",
+              "items": [
+                "file://./../../../../../libs/foundry/records/missiondata/pu_items/carryable_1h/missionitems/pu_hackingchip_spd3rel3.json"]}],
+          "debugForceChosenItem": null}},
+      {
+        "_Type_": "MissionProperty",
+        "missionVariableName": "",
+        "extendedTextToken": "ObjectiveSetup",
+        "value": {
+          "_Type_": "MissionPropertyValue_StringHash",
+          "options": [
+            {
+              "_Type_": "MissionPropertyValueOption_StringHash",
+              "textId": "@delivery_missionitem",
+              "weighting": 1.0,
+              "DEBUG_forceChooseThisOption": false,
+              "dependentProperties": [],
+              "value": ""}]}}],
+    "objectiveTokens": [],
+    "missionFlow": {
+      "_Type_": "MissionFlow",
+      "triggers": []}}}

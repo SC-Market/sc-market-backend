@@ -1,0 +1,35 @@
+{
+  "_RecordName_": "BuildingBlocks_Timeline.AC_TextureScroll_0to1pc_VStart",
+  "_RecordId_": "54737a3d-3101-4edc-97e3-bd84eca140da",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "BuildingBlocks_Timeline",
+    "timeline": {
+      "_Type_": "BuildingBlocks_TimelineTypeEmbedded",
+      "keyframes": [
+        {
+          "_Type_": "BuildingBlocks_Keyframe",
+          "percent": 0.0,
+          "modifiers": [
+            {
+              "_Type_": "BuildingBlocks_KeyframeModifierData",
+              "timingFunction": {
+                "_Type_": "BuildingBlocks_TimingFunctionPreset",
+                "preset": "Linear"},
+              "modifier": {
+                "_Type_": "BuildingBlocks_FieldModifierNumber",
+                "field": "VStart",
+                "value": 0.0}}]},
+        {
+          "_Type_": "BuildingBlocks_Keyframe",
+          "percent": 1.0,
+          "modifiers": [
+            {
+              "_Type_": "BuildingBlocks_KeyframeModifierData",
+              "timingFunction": {
+                "_Type_": "BuildingBlocks_TimingFunctionPreset",
+                "preset": "Linear"},
+              "modifier": {
+                "_Type_": "BuildingBlocks_FieldModifierNumber",
+                "field": "VStart",
+                "value": 1.0}}]}]}}}

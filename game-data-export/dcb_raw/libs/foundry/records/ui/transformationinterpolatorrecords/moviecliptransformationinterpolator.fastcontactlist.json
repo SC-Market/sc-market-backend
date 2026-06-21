@@ -1,0 +1,44 @@
+{
+  "_RecordName_": "MovieClipTransformationInterpolator.FastContactList",
+  "_RecordId_": "c907645f-be59-4365-a0f3-1f11695338d6",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "MovieClipTransformationInterpolator",
+    "interpolationTime": 2.0,
+    "movieClipTransformationInterpolatorParams": [
+      {
+        "_Type_": "MovieClipTransformationInterpolatorParams",
+        "movieClipName": "_mainMc",
+        "transformationInterpolatorParams": {
+          "_Type_": "TransformationInterpolatorParams",
+          "startOffsetValues": {
+            "_Type_": "Vec3",
+            "x": 0.0,
+            "y": 0.0,
+            "z": 0.0},
+          "endOffsetValues": {
+            "_Type_": "Vec3",
+            "x": 0.0,
+            "y": 0.0,
+            "z": 0.0},
+          "offsetInterpolationModes": [
+            "Linear",
+            "Linear",
+            "Linear"],
+          "startRotationValues": {
+            "_Type_": "Ang3",
+            "x": 0.0,
+            "y": 0.0,
+            "z": 0.0},
+          "endRotationValues": {
+            "_Type_": "Ang3",
+            "x": 0.0,
+            "y": 0.0,
+            "z": 0.0},
+          "rotationInterpolationModes": [
+            "Linear",
+            "Linear",
+            "Linear"],
+          "startScaleValue": 0.8,
+          "endScaleValue": 0.8,
+          "scaleInterpolationMode": "Linear"}}]}}

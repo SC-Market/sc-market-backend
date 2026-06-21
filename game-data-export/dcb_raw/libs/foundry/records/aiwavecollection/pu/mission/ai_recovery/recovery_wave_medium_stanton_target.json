@@ -1,0 +1,28 @@
+{
+  "_RecordName_": "AIWaveCollection.Recovery_Wave_Medium_Stanton_Target",
+  "_RecordId_": "2c370cb4-cdd7-4fa1-a240-62bf79dd9c82",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "AIWaveCollection",
+    "waves": [
+      {
+        "_Type_": "AIWave",
+        "id": 1,
+        "textId": "Recovery_Wave_Medium_Stanton1_Target",
+        "staggerTime": 1.0,
+        "members": [
+          {
+            "_Type_": "AIWaveMember",
+            "archetype": "",
+            "entityClassDefinition": "file://./../../../../../../../libs/foundry/records/entities/spaceships/drak_cutlass_black_pu_ai_nt.json",
+            "name": "",
+            "vehicleName": "",
+            "amount": 1,
+            "minAmount": -1,
+            "midAmount": -1,
+            "maxAmount": -1,
+            "crewManifestOverride": null,
+            "skillsetOverride": "file://./../../../../../../../libs/foundry/records/aiprofile/skills/humanpilot60.json",
+            "cargoManifests": [
+              "file://./../../../../../../../libs/foundry/records/cargomanifest/criminal/criminal_25_high_001.json"],
+            "aiDamageModifiersOverride": null}]}]}}

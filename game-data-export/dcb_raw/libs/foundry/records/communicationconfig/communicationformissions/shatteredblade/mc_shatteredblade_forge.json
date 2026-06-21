@@ -1,0 +1,11 @@
+{
+  "_RecordName_": "CommunicationConfig.MC_ShatteredBlade_Forge",
+  "_RecordId_": "5b9def14-96d5-4083-9d6e-0b9db81fc542",
+  "_RecordTag_": "SocialAI",
+  "_RecordValue_": {
+    "_Type_": "CommunicationConfig",
+    "name": "MC_ShatteredBlade_Forge",
+    "communications": [],
+    "subConfigs": [
+      "file://./../../../../../../libs/foundry/records/communicationconfig/communicationformissions/bespokeevents/mc_prenyx.json",
+      "file://./../../../../../../libs/foundry/records/communicationconfig/communicationformissions/mc_tsg.json"]}}

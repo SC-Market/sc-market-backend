@@ -1,0 +1,29 @@
+{
+  "_RecordName_": "CommsNotification.MCN_Headhunters_Stows_AmbushMissionAccept",
+  "_RecordId_": "8b5e712e-4bcd-41e2-bb6d-4bceb69ba745",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "CommsNotification",
+    "tags": {
+      "_Type_": "TagList",
+      "tags": [
+        {
+          "_RecordPath_": "file://./../../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+          "_RecordName_": "Tag.16bc9e3a-f896-478e-89e5-0141752fd2d3",
+          "_RecordId_": "16bc9e3a-f896-478e-89e5-0141752fd2d3"},
+        {
+          "_RecordPath_": "file://./../../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+          "_RecordName_": "Tag.efc819e6-2a98-438e-a161-9af7c162952e",
+          "_RecordId_": "efc819e6-2a98-438e-a161-9af7c162952e"},
+        {
+          "_RecordPath_": "file://./../../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+          "_RecordName_": "Tag.eb849fc4-b405-444b-853d-26e21d898817",
+          "_RecordId_": "eb849fc4-b405-444b-853d-26e21d898817"},
+        {
+          "_RecordPath_": "file://./../../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+          "_RecordName_": "Tag.fa9a5787-8fd1-4a97-a6c4-9da4e62e2264",
+          "_RecordId_": "fa9a5787-8fd1-4a97-a6c4-9da4e62e2264"}]},
+    "communicationName": "file://./../../../../../../../libs/foundry/records/communicationname/missioncommunications/ambushmission/missionaccept_ambush.json",
+    "characterEntityClass": "file://./../../../../../../../libs/foundry/records/actor/actors/npc_archetypes/male/human/missiongivers/npc_archetypes-male-human-missiongivers-stows.json",
+    "fakeCommsAudioEntityClass": "file://./../../../../../../../libs/foundry/records/entities/audio/fakecommsaudioentity_headhunters_stows.json",
+    "stage": "file://./../../../../../../../libs/foundry/records/commsnotificationstages/cns_stows.json"}}

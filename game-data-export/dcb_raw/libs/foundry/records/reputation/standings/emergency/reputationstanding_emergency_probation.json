@@ -1,0 +1,15 @@
+{
+  "_RecordName_": "SReputationStandingParams.ReputationStanding_Emergency_Probation",
+  "_RecordId_": "36076dda-40b1-4535-9d7d-ba8fa8435738",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "SReputationStandingParams",
+    "name": "Emergency_Probation",
+    "description": "desc",
+    "displayName": "@RepStanding_Emergency_Rank0",
+    "perkDescription": "@blank_space",
+    "icon": "UI/Textures/Vector/MobiGlas/App_ReputationManager/icon_reputationrank_emergencyservices_2.svg",
+    "minReputation": 0,
+    "driftReputation": 0,
+    "driftTimeHours": 0.0,
+    "gated": true}}

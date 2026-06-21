@@ -1,0 +1,15 @@
+{
+  "_RecordName_": "SReputationStandingParams.ReputationStanding_Affinity_Neutral_005",
+  "_RecordId_": "4503a76d-bcb2-4edd-bda9-93aa40e1b756",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "SReputationStandingParams",
+    "name": "Affinity_Good_005",
+    "description": "desc",
+    "displayName": "@LOC_PLACEHOLDER",
+    "perkDescription": "@blank_space",
+    "icon": "",
+    "minReputation": 500,
+    "driftReputation": 0,
+    "driftTimeHours": 0.0,
+    "gated": false}}

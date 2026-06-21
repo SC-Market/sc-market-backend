@@ -1,0 +1,12 @@
+{
+  "_RecordName_": "HintUIData.ExternalCargoInterrupt_UI",
+  "_RecordId_": "7aeb6e26-30b0-4da9-896f-e2a598f39eef",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "HintUIData",
+    "TitleText": "@Hints_Cargo_Interrupt_Transfer_Title",
+    "BodyText": "@Hints_Cargo_Interrupt_Transfer",
+    "BodyTextGamePad": "@room_cargo_bay",
+    "BodyTextJoystick": "@room_cargo_bay",
+    "TitleImagePath": "",
+    "BodyImagePath": ""}}

@@ -1,0 +1,22 @@
+{
+  "_RecordName_": "SubHarvestableConfigRecord.Special_Turtle_2",
+  "_RecordId_": "b257922c-fb7a-4ca5-aa8a-017200630a1b",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "SubHarvestableConfigRecord",
+    "subConfig": {
+      "_Type_": "SubHarvestableConfig",
+      "initialSlotsProbability": 0.4,
+      "initialSlotsProbabilityDeepest": null,
+      "configRespawnTimeMultiplier": 1.0,
+      "subHarvestables": [
+        {
+          "_Type_": "SubHarvestableSlot",
+          "harvestable": "file://./../../../../../libs/foundry/records/harvestable/harvestablepresets/creature_turtle_2.json",
+          "harvestableEntityClass": null,
+          "harvestableSetup": null,
+          "relativeProbability": 1.0,
+          "relativeProbabilityDeepest": null,
+          "harvestableRespawnTimeMultiplier": 1.0,
+          "geometries": [],
+          "lootConfig": null}]}}}

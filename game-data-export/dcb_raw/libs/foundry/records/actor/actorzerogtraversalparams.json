@@ -1,0 +1,56 @@
+{
+  "_RecordName_": "ActorZeroGTraversalParams.ActorZeroGTraversalParams",
+  "_RecordId_": "d3d0c4aa-cfee-45ad-ba3a-f1f00adb76bb",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "ActorZeroGTraversalParams",
+    "defaultZeroGTraversalParams": {
+      "_Type_": "SCDefaultZeroGTraversalParams",
+      "zeroGLaunchParams": {
+        "_Type_": "SCZeroGLaunchParams",
+        "maxLaunchSpeed": 3.5,
+        "launchRotationDuration": 0.5,
+        "launchEdgeCheckRadius": 0.1,
+        "launchEdgeCheckDistance": 1.0,
+        "launchEdgeSurfaceHoverCheckRadius": 0.1,
+        "launchEdgeSurfaceHoverCheckDistance": 0.5}},
+    "optionalZeroGTraversalParams": [
+      {
+        "_Type_": "SCOptionalZeroGTraversalParams",
+        "activationTag": {
+          "_RecordPath_": "file://./../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+          "_RecordName_": "Tag.31e25a6b-44e9-4d72-9930-55db1d615f52",
+          "_RecordId_": "31e25a6b-44e9-4d72-9930-55db1d615f52"},
+        "zeroGLaunchParams": {
+          "_Type_": "SCZeroGLaunchParams",
+          "maxLaunchSpeed": 3.0,
+          "launchRotationDuration": 0.5,
+          "launchEdgeCheckRadius": 0.1,
+          "launchEdgeCheckDistance": 1.0,
+          "launchEdgeSurfaceHoverCheckRadius": 0.1,
+          "launchEdgeSurfaceHoverCheckDistance": 0.5}},
+      {
+        "_Type_": "SCOptionalZeroGTraversalParams",
+        "activationTag": {
+          "_RecordPath_": "file://./../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+          "_RecordName_": "Tag.95b8cab3-5230-46f9-92e6-8e021978f543",
+          "_RecordId_": "95b8cab3-5230-46f9-92e6-8e021978f543"},
+        "zeroGLaunchParams": {
+          "_Type_": "SCZeroGLaunchParams",
+          "maxLaunchSpeed": 0.85,
+          "launchRotationDuration": 0.5,
+          "launchEdgeCheckRadius": 0.1,
+          "launchEdgeCheckDistance": 1.0,
+          "launchEdgeSurfaceHoverCheckRadius": 0.1,
+          "launchEdgeSurfaceHoverCheckDistance": 0.5}},
+      {
+        "_Type_": "SCOptionalZeroGTraversalParams",
+        "activationTag": null,
+        "zeroGLaunchParams": {
+          "_Type_": "SCZeroGLaunchParams",
+          "maxLaunchSpeed": 1.5,
+          "launchRotationDuration": 0.5,
+          "launchEdgeCheckRadius": 0.1,
+          "launchEdgeCheckDistance": 1.0,
+          "launchEdgeSurfaceHoverCheckRadius": 0.1,
+          "launchEdgeSurfaceHoverCheckDistance": 0.5}}]}}

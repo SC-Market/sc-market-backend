@@ -1,0 +1,31 @@
+{
+  "_RecordName_": "LootTable.LootTable_C_Weapon_01",
+  "_RecordId_": "75a5ff62-f5bf-4958-94eb-505d7dbb04cd",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "LootTable",
+    "lootArchetypes": [
+      {
+        "_Type_": "WeightedLootArchetype",
+        "archetype": "file://./../../../../../../libs/foundry/records/lootgeneration/lootarchetypes/lootarchetype_ammo_pistol_common.json",
+        "weight": 0.25,
+        "numberOfResultsConstraints": {
+          "_Type_": "NumResultsConstraints",
+          "minResults": 0,
+          "maxResults": 0}},
+      {
+        "_Type_": "WeightedLootArchetype",
+        "archetype": "file://./../../../../../../libs/foundry/records/lootgeneration/lootarchetypes/lootarchetypes_pistol_uncommon.json",
+        "weight": 1.0,
+        "numberOfResultsConstraints": {
+          "_Type_": "NumResultsConstraints",
+          "minResults": 0,
+          "maxResults": 0}},
+      {
+        "_Type_": "WeightedLootArchetype",
+        "archetype": "file://./../../../../../../libs/foundry/records/lootgeneration/lootarchetypes/lootarchetype_attachment_size01.json",
+        "weight": 0.5,
+        "numberOfResultsConstraints": {
+          "_Type_": "NumResultsConstraints",
+          "minResults": 0,
+          "maxResults": 0}}]}}

@@ -1,0 +1,17 @@
+{
+  "_RecordName_": "Hauling_EntityClasses.HaulingEntityClass_SalvageHead",
+  "_RecordId_": "549466c6-139d-4c8e-9d1b-140765372b17",
+  "_RecordTag_": "MissionDesign",
+  "_RecordValue_": {
+    "_Type_": "Hauling_EntityClasses",
+    "entityClasses": {
+      "_Type_": "Hauling_EntityClassList",
+      "entityClassList": [
+        "file://./../../../../../libs/foundry/records/entities/scitem/ships/utility/salvage/salvagehead/salvage_head_standard.json",
+        "file://./../../../../../libs/foundry/records/entities/scitem/ships/utility/salvage/salvagehead/salvage_head_salvation.json",
+        "file://./../../../../../libs/foundry/records/entities/scitem/ships/utility/salvage/salvagemodifiers/salvage_modifier_scraper_small.json",
+        "file://./../../../../../libs/foundry/records/entities/scitem/ships/utility/salvage/salvagemodifiers/salvage_modifier_scraper_salvation_small.json",
+        "file://./../../../../../libs/foundry/records/entities/scitem/ships/utility/salvage/salvagemodifiers/salvage_modifier_scraper_medium.json",
+        "file://./../../../../../libs/foundry/records/entities/scitem/ships/utility/salvage/salvagemodifiers/salvage_modifier_scraper_salvation_medium.json",
+        "file://./../../../../../libs/foundry/records/entities/scitem/ships/utility/salvage/salvagemodifiers/salvage_modifier_scraper_large.json"]},
+    "orderDisplayName": "@Salvage_Ship_Component_Ship_Salvage_Head_Name"}}

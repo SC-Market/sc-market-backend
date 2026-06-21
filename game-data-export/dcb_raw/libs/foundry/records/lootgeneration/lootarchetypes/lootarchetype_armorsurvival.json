@@ -1,0 +1,65 @@
+{
+  "_RecordName_": "LootArchetype.LootArchetype_ArmorSurvival",
+  "_RecordId_": "eafbef40-9680-4736-a7d2-f3f0a4e556ab",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "LootArchetype",
+    "excludedTags": {
+      "_Type_": "TagList",
+      "tags": [
+        {
+          "_RecordPath_": "file://./../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+          "_RecordName_": "Tag.85e008e3-cc4e-4d13-98f6-b33c234dd82c",
+          "_RecordId_": "85e008e3-cc4e-4d13-98f6-b33c234dd82c"},
+        {
+          "_RecordPath_": "file://./../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+          "_RecordName_": "Tag.6101f12b-1494-4561-93cd-0c6e6e69bc6a",
+          "_RecordId_": "6101f12b-1494-4561-93cd-0c6e6e69bc6a"}]},
+    "primaryOrGroup": {
+      "_Type_": "LootArchetypeOrGroup_Primary",
+      "entries": [
+        {
+          "_Type_": "LootArchetypeEntry_Primary",
+          "name": "Caldera Armor",
+          "tag": {
+            "_RecordPath_": "file://./../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+            "_RecordName_": "Tag.b63c0ba2-dde9-4aa0-bbd1-d49b07903366",
+            "_RecordId_": "b63c0ba2-dde9-4aa0-bbd1-d49b07903366"},
+          "additionalTags": {
+            "_Type_": "TagsDNFTerm",
+            "positiveTags": [],
+            "negativeTags": []},
+          "weight": 1.0,
+          "optionalData": []},
+        {
+          "_Type_": "LootArchetypeEntry_Primary",
+          "name": "Greycat Armor",
+          "tag": {
+            "_RecordPath_": "file://./../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+            "_RecordName_": "Tag.6438162d-e23c-45fa-8e6a-103e10de98e0",
+            "_RecordId_": "6438162d-e23c-45fa-8e6a-103e10de98e0"},
+          "additionalTags": {
+            "_Type_": "TagsDNFTerm",
+            "positiveTags": [],
+            "negativeTags": []},
+          "weight": 1.0,
+          "optionalData": []}]},
+    "secondaryOrGroups": [
+      {
+        "_Type_": "LootArchetypeOrGroup_Secondary",
+        "groupName": "Rarity",
+        "entries": [
+          {
+            "_Type_": "LootArchetypeEntry_Secondary",
+            "tag": {
+              "_RecordPath_": "file://./../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+              "_RecordName_": "Tag.59ca5e36-b9a2-4459-ad0e-5745bcf5d899",
+              "_RecordId_": "59ca5e36-b9a2-4459-ad0e-5745bcf5d899"},
+            "weight": 1.0},
+          {
+            "_Type_": "LootArchetypeEntry_Secondary",
+            "tag": {
+              "_RecordPath_": "file://./../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+              "_RecordName_": "Tag.dfbc6af5-6211-4d71-8d10-b64c66ea95a9",
+              "_RecordId_": "dfbc6af5-6211-4d71-8d10-b64c66ea95a9"},
+            "weight": 0.1}]}]}}

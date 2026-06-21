@@ -1,0 +1,168 @@
+{
+  "_RecordName_": "TacticalQuery.MannedTurretTarget",
+  "_RecordId_": "bf2e26b8-14ca-432e-8a0b-2ef238e22ab7",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "TacticalQuery",
+    "name": "MannedTurretTarget",
+    "type": "TacticalTargetQuery",
+    "options": [
+      {
+        "_Type_": "TQSOptionReference",
+        "requirements": {
+          "_Type_": "TagsDNF",
+          "terms": [
+            {
+              "_Type_": "TagsDNFTerm",
+              "positiveTags": [
+                {
+                  "_RecordPath_": "file://./../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+                  "_RecordName_": "Tag.ffb9a3dd-eb70-4a2f-8477-a5b9a679f25c",
+                  "_RecordId_": "ffb9a3dd-eb70-4a2f-8477-a5b9a679f25c"}],
+              "negativeTags": []}]},
+        "content": "file://./../../../../../libs/foundry/records/tacticalquery/ttsqueries/content/pdcturretcombattargetcontentanybomb.json",
+        "optionOverrides": []},
+      {
+        "_Type_": "TQSOptionReference",
+        "requirements": {
+          "_Type_": "TagsDNF",
+          "terms": [
+            {
+              "_Type_": "TagsDNFTerm",
+              "positiveTags": [
+                {
+                  "_RecordPath_": "file://./../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+                  "_RecordName_": "Tag.ffb9a3dd-eb70-4a2f-8477-a5b9a679f25c",
+                  "_RecordId_": "ffb9a3dd-eb70-4a2f-8477-a5b9a679f25c"}],
+              "negativeTags": []}]},
+        "content": "file://./../../../../../libs/foundry/records/tacticalquery/ttsqueries/content/pdcturretcombattargetcontent.json",
+        "optionOverrides": []},
+      {
+        "_Type_": "TQSOptionReference",
+        "requirements": {
+          "_Type_": "TagsDNF",
+          "terms": [
+            {
+              "_Type_": "TagsDNFTerm",
+              "positiveTags": [
+                {
+                  "_RecordPath_": "file://./../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+                  "_RecordName_": "Tag.ffb9a3dd-eb70-4a2f-8477-a5b9a679f25c",
+                  "_RecordId_": "ffb9a3dd-eb70-4a2f-8477-a5b9a679f25c"}],
+              "negativeTags": []}]},
+        "content": "file://./../../../../../libs/foundry/records/tacticalquery/ttsqueries/content/pdcturretcombattargetclosefighterscontent.json",
+        "optionOverrides": []},
+      {
+        "_Type_": "TQSOptionReference",
+        "requirements": {
+          "_Type_": "TagsDNF",
+          "terms": [
+            {
+              "_Type_": "TagsDNFTerm",
+              "positiveTags": [],
+              "negativeTags": [
+                {
+                  "_RecordPath_": "file://./../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+                  "_RecordName_": "Tag.ffb9a3dd-eb70-4a2f-8477-a5b9a679f25c",
+                  "_RecordId_": "ffb9a3dd-eb70-4a2f-8477-a5b9a679f25c"}]},
+            {
+              "_Type_": "TagsDNFTerm",
+              "positiveTags": [
+                {
+                  "_RecordPath_": "file://./../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+                  "_RecordName_": "Tag.b0f055b9-9586-4d10-82ee-1d822953c956",
+                  "_RecordId_": "b0f055b9-9586-4d10-82ee-1d822953c956"}],
+              "negativeTags": [
+                {
+                  "_RecordPath_": "file://./../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+                  "_RecordName_": "Tag.d9102fe8-5ab1-4a4c-a0cf-70244a50329d",
+                  "_RecordId_": "d9102fe8-5ab1-4a4c-a0cf-70244a50329d"}]},
+            {
+              "_Type_": "TagsDNFTerm",
+              "positiveTags": [
+                {
+                  "_RecordPath_": "file://./../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+                  "_RecordName_": "Tag.63897a88-9b61-476d-94f4-1fe138ca648e",
+                  "_RecordId_": "63897a88-9b61-476d-94f4-1fe138ca648e"}],
+              "negativeTags": [
+                {
+                  "_RecordPath_": "file://./../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+                  "_RecordName_": "Tag.d9102fe8-5ab1-4a4c-a0cf-70244a50329d",
+                  "_RecordId_": "d9102fe8-5ab1-4a4c-a0cf-70244a50329d"}]}]},
+        "content": "file://./../../../../../libs/foundry/records/tacticalquery/ttsqueries/content/targettorpedoescontent.json",
+        "optionOverrides": []},
+      {
+        "_Type_": "TQSOptionReference",
+        "requirements": {
+          "_Type_": "TagsDNF",
+          "terms": [
+            {
+              "_Type_": "TagsDNFTerm",
+              "positiveTags": [],
+              "negativeTags": [
+                {
+                  "_RecordPath_": "file://./../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+                  "_RecordName_": "Tag.ffb9a3dd-eb70-4a2f-8477-a5b9a679f25c",
+                  "_RecordId_": "ffb9a3dd-eb70-4a2f-8477-a5b9a679f25c"}]}]},
+        "content": "file://./../../../../../libs/foundry/records/tacticalquery/ttsqueries/content/defaultmannedturretcontent.json",
+        "optionOverrides": [
+          {
+            "_Type_": "TQSOptionReference",
+            "requirements": {
+              "_Type_": "TagsDNF",
+              "terms": [
+                {
+                  "_Type_": "TagsDNFTerm",
+                  "positiveTags": [
+                    {
+                      "_RecordPath_": "file://./../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+                      "_RecordName_": "Tag.6ca7e6ae-2e96-47ab-b6a2-9e01ab8405ef",
+                      "_RecordId_": "6ca7e6ae-2e96-47ab-b6a2-9e01ab8405ef"}],
+                  "negativeTags": []}]},
+            "content": "file://./../../../../../libs/foundry/records/tacticalquery/ttsqueries/content/smallmannedturretcontent.json",
+            "optionOverrides": []},
+          {
+            "_Type_": "TQSOptionReference",
+            "requirements": {
+              "_Type_": "TagsDNF",
+              "terms": [
+                {
+                  "_Type_": "TagsDNFTerm",
+                  "positiveTags": [
+                    {
+                      "_RecordPath_": "file://./../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+                      "_RecordName_": "Tag.46360e28-5bdc-4142-b024-c31c368a926a",
+                      "_RecordId_": "46360e28-5bdc-4142-b024-c31c368a926a"}],
+                  "negativeTags": []}]},
+            "content": "file://./../../../../../libs/foundry/records/tacticalquery/ttsqueries/content/mediummannedturretcontent.json",
+            "optionOverrides": []},
+          {
+            "_Type_": "TQSOptionReference",
+            "requirements": {
+              "_Type_": "TagsDNF",
+              "terms": [
+                {
+                  "_Type_": "TagsDNFTerm",
+                  "positiveTags": [
+                    {
+                      "_RecordPath_": "file://./../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+                      "_RecordName_": "Tag.d9102fe8-5ab1-4a4c-a0cf-70244a50329d",
+                      "_RecordId_": "d9102fe8-5ab1-4a4c-a0cf-70244a50329d"}],
+                  "negativeTags": []}]},
+            "content": "file://./../../../../../libs/foundry/records/tacticalquery/ttsqueries/content/largemannedturretcontent.json",
+            "optionOverrides": []}]},
+      {
+        "_Type_": "TQSOptionReference",
+        "requirements": {
+          "_Type_": "TagsDNF",
+          "terms": [
+            {
+              "_Type_": "TagsDNFTerm",
+              "positiveTags": [],
+              "negativeTags": [
+                {
+                  "_RecordPath_": "file://./../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+                  "_RecordName_": "Tag.ffb9a3dd-eb70-4a2f-8477-a5b9a679f25c",
+                  "_RecordId_": "ffb9a3dd-eb70-4a2f-8477-a5b9a679f25c"}]}]},
+        "content": "file://./../../../../../libs/foundry/records/tacticalquery/ttsqueries/content/defaultmannedturretcontentversusturrets.json",
+        "optionOverrides": []}]}}

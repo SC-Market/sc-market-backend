@@ -1,0 +1,17 @@
+{
+  "_RecordName_": "ChatChannelFilterRecord.ChatChannelFilterRecord_PU",
+  "_RecordId_": "1a9bc6af-7fa7-41be-b6aa-f0c80cfdf2c2",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "ChatChannelFilterRecord",
+    "chatChannelFilter": {
+      "_Type_": "SChatChannelWhiteList",
+      "chatChannelType": [
+        {
+          "_Type_": "SGroupChannel",
+          "groupType": [
+            "System",
+            "Party",
+            "Group",
+            "Server",
+            "GameEntity"]}]}}}

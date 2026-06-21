@@ -1,0 +1,25 @@
+{
+  "_RecordName_": "CommsNotification.MCN_CFP_Endicott_HostilesObjectiveStart",
+  "_RecordId_": "92afaf2d-f0e6-4e4b-a3f0-988b7ee5dd9d",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "CommsNotification",
+    "tags": {
+      "_Type_": "TagList",
+      "tags": [
+        {
+          "_RecordPath_": "file://./../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+          "_RecordName_": "Tag.e2bbeaec-58b4-4e16-83c3-8e4ee6c41552",
+          "_RecordId_": "e2bbeaec-58b4-4e16-83c3-8e4ee6c41552"},
+        {
+          "_RecordPath_": "file://./../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+          "_RecordName_": "Tag.5a1d0597-b350-4a45-bcf2-e744bbf4b1ca",
+          "_RecordId_": "5a1d0597-b350-4a45-bcf2-e744bbf4b1ca"},
+        {
+          "_RecordPath_": "file://./../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+          "_RecordName_": "Tag.a13dd33a-dcd5-45a1-826b-45d7b3d2befc",
+          "_RecordId_": "a13dd33a-dcd5-45a1-826b-45d7b3d2befc"}]},
+    "communicationName": "file://./../../../../../../libs/foundry/records/communicationname/missioncommunications/eliminatehostiles/hostiles_objectivestart.json",
+    "characterEntityClass": "file://./../../../../../../libs/foundry/records/actor/actors/pyro/npc_archetypes-female-human-missiongivers-limaendicott.json",
+    "fakeCommsAudioEntityClass": null,
+    "stage": "file://./../../../../../../libs/foundry/records/commsnotificationstages/cns_test.json"}}

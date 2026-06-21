@@ -1,0 +1,35 @@
+{
+  "_RecordName_": "BlueprintPoolRecord.BP_MISSIONREWARD_InterSec_ResourceGathering",
+  "_RecordId_": "36e8ac4d-8962-4b03-89e7-cd7a06fc4adc",
+  "_RecordTag_": "SystemsDesign",
+  "_RecordValue_": {
+    "_Type_": "BlueprintPoolRecord",
+    "blueprintRewards": [
+      {
+        "_Type_": "BlueprintReward",
+        "weight": 1.0,
+        "blueprintRecord": "file://./../../../../../../libs/foundry/records/crafting/blueprints/crafting/fpsgear/weapons/pistol/bp_craft_volt_pistol_energy_01.json"},
+      {
+        "_Type_": "BlueprintReward",
+        "weight": 1.0,
+        "blueprintRecord": "file://./../../../../../../libs/foundry/records/crafting/blueprints/crafting/fpsgear/armour/combat/medium/bp_craft_qrt_combat_medium_arms_01_01_15.json"},
+      {
+        "_Type_": "BlueprintReward",
+        "weight": 1.0,
+        "blueprintRecord": "file://./../../../../../../libs/foundry/records/crafting/blueprints/crafting/fpsgear/armour/combat/medium/bp_craft_qrt_combat_medium_core_01_01_15.json"},
+      {
+        "_Type_": "BlueprintReward",
+        "weight": 1.0,
+        "blueprintRecord": "file://./../../../../../../libs/foundry/records/crafting/blueprints/crafting/fpsgear/armour/combat/medium/bp_craft_qrt_combat_medium_legs_01_01_15.json"},
+      {
+        "_Type_": "BlueprintReward",
+        "weight": 1.0,
+        "blueprintRecord": "file://./../../../../../../libs/foundry/records/crafting/blueprints/crafting/fpsgear/armour/combat/medium/bp_craft_qrt_combat_medium_helmet_01_01_15.json"},
+      {
+        "_Type_": "BlueprintReward",
+        "weight": 1.0,
+        "blueprintRecord": "file://./../../../../../../libs/foundry/records/crafting/blueprints/crafting/fpsgear/ammo/laser/bp_craft_volt_pistol_energy_01_mag.json"},
+      {
+        "_Type_": "BlueprintReward",
+        "weight": 1.0,
+        "blueprintRecord": "file://./../../../../../../libs/foundry/records/crafting/blueprints/crafting/fpsgear/armour/combat/medium/bp_craft_qrt_combat_medium_backpack_01_01_15.json"}]}}

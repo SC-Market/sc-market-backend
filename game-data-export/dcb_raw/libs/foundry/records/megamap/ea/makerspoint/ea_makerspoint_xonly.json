@@ -1,0 +1,41 @@
+{
+  "_RecordName_": "MegaMap.EA_MakersPoint_XOnly",
+  "_RecordId_": "ba88e595-056f-4c95-bf03-fab854444a8d",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "MegaMap",
+    "gameMode": "file://./../../../../../../libs/foundry/records/gamemode/ea_elimination_xonly.json",
+    "SolarSystems": [
+      {
+        "_Type_": "SMegaMapSolarSystem",
+        "Record": null,
+        "ObjectContainers": [
+          "ObjectContainers/EA/MakersPoint/global.socpak",
+          "objectcontainers/sm/fps_loadout.socpak"]}],
+    "singlePlayerOrMultiplayer": "Both",
+    "subsumptionMission": "",
+    "subsumptionMissionInitParams": [],
+    "arenaCommanderScenarioParams": {
+      "_Type_": "ArenaCommanderScenarioParams",
+      "locationObjectContainersParams": {
+        "_Type_": "ArenaCommanderLocationObjectContainersParams",
+        "location": "file://./../../../../../../libs/foundry/records/starmap/pu/system/stanton/stanton1/starmapobject.stanton1.json",
+        "overrideRootOC": false,
+        "objectContainers": [
+          "ObjectContainers/EA/MakersPoint/elimination.socpak"]},
+      "planetOverrideParams": {
+        "_Type_": "ArenaCommanderPlanetOverrideParams",
+        "location": "file://./../../../../../../libs/foundry/records/starmap/pu/system/stanton/stanton1/starmapobject.stanton1.json",
+        "fixedRotation": 0.0}},
+    "level": "file://./../../../../../../libs/foundry/records/level/ea/ea_makerspoint.json",
+    "trackViewIntro": "",
+    "rootLocation": null,
+    "streamingMode": "Always",
+    "bindCullingEnabled": true,
+    "defaultWinningTeamOverride": -1,
+    "displayName": "@LOC_UNINITIALIZED",
+    "appearsInS42LevelSelect": false,
+    "chapter": null,
+    "chapterAlias": "",
+    "skipLoadScreen": false,
+    "devDebugSkip": false}}

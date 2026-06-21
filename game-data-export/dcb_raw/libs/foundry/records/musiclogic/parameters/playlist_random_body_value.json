@@ -1,0 +1,23 @@
+{
+  "_RecordName_": "MusicLogicParameter.Playlist_Random_Body_Value",
+  "_RecordId_": "35f95f7f-6ab0-4d6b-acb6-772fe1216953",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "MusicLogicParameter",
+    "name": "Playlist_Random_Body_Value",
+    "min": 0.0,
+    "max": 100.0,
+    "defaultValue": 0.0,
+    "decayRate": 0.0,
+    "decayIsPercentage": false,
+    "scaleModifier": 1.0,
+    "shiftModifier": 0.0,
+    "inverted": false,
+    "rtpc": "",
+    "rtpcIsGlobal": false,
+    "contributors": [],
+    "debugColour": {
+      "_Type_": "RGB",
+      "r": 0.007499032,
+      "g": 0.7379104,
+      "b": 0.7758222}}}

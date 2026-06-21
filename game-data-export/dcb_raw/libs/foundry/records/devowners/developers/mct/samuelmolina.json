@@ -1,0 +1,10 @@
+{
+  "_RecordName_": "DevOwner.SamuelMolina",
+  "_RecordId_": "4db93a3e-71c3-4af8-aae1-bba680d87013",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "DevOwner",
+    "type": {
+      "_Type_": "Developer",
+      "name": "Samuel Molina",
+      "team": "file://./../../../../../../libs/foundry/records/devowners/devteams/mct.json"}}}

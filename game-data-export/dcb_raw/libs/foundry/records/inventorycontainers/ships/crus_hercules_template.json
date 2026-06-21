@@ -1,0 +1,17 @@
+{
+  "_RecordName_": "InventoryContainer.CRUS_Hercules_Template",
+  "_RecordId_": "0ff4c36c-a3c0-46d5-bbeb-2fea596abd63",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "InventoryContainer",
+    "excludedItemSubTypes": [],
+    "interiorDimensions": {
+      "_Type_": "Vec3",
+      "x": 2.0,
+      "y": 2.0,
+      "z": 2.0},
+    "inventoryType": {
+      "_Type_": "InventoryClosedContainerType",
+      "capacity": {
+        "_Type_": "SStandardCargoUnit",
+        "standardCargoUnits": 0.0}}}}

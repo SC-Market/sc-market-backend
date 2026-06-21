@@ -1,0 +1,29 @@
+{
+  "_RecordName_": "EntityClassDefinition.FireIgniter",
+  "_RecordId_": "dc9fcd76-1a4e-45ca-b24b-00add02d836a",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "EntityClassDefinition",
+    "Category": "Room/Fire",
+    "Icon": "Box.bmp",
+    "Invisible": false,
+    "BBoxSelection": false,
+    "defaultEditorColor": {
+      "_Type_": "RGB",
+      "r": 1.0,
+      "g": 1.0,
+      "b": 0.0},
+    "entityDensityClass": null,
+    "tags": [],
+    "StaticEntityClassData": [],
+    "Components": [
+      {
+        "_Type_": "EntityComponentRoomOccupantParams"},
+      {
+        "_Type_": "EntityComponentFireIgniter",
+        "igniteOnLoad": false,
+        "strength": 1.0,
+        "shape": {
+          "_Type_": "FireVoxelSelectionShape_Sphere",
+          "radius": 1.0,
+          "falloffExponent": 2.0}}]}}

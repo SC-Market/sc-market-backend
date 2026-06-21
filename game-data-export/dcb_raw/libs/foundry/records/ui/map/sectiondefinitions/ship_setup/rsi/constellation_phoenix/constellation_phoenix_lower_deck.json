@@ -1,0 +1,8 @@
+{
+  "_RecordName_": "InteriorMapSectionDefinition.Constellation_Phoenix_Lower_Deck",
+  "_RecordId_": "239335a0-fe44-4d97-9fe9-658b316f5eaa",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "InteriorMapSectionDefinition",
+    "name": "@vehicle_deck_lower",
+    "restrictViewBounds": false}}

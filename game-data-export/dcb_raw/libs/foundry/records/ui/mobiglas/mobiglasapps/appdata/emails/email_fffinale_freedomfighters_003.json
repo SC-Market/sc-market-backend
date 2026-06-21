@@ -1,0 +1,59 @@
+{
+  "_RecordName_": "MobiGlasAppData.Email_FFFinale_FreedomFighters_003",
+  "_RecordId_": "7f86a9bc-e732-41ce-a923-774ecb3dc56d",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "MobiGlasAppData",
+    "appData": {
+      "_Type_": "GenericDataDisplayAppData",
+      "dateTime": {
+        "_Type_": "DateTime",
+        "date": {
+          "_Type_": "Date",
+          "day": 20,
+          "month": "September",
+          "year": 2955},
+        "time": {
+          "_Type_": "Time",
+          "hour": 10,
+          "minute": 42,
+          "second": 0}},
+      "content": [
+        {
+          "_Type_": "MobiGlasAppContent",
+          "textContent": "@FrontierFightersFinale_Datapad1_From_003",
+          "imageContent": "",
+          "appLink": {
+            "_Type_": "SMobiGlasAppLink",
+            "targetApp": null,
+            "targetDataEntry": null,
+            "displayIcon": ""}},
+        {
+          "_Type_": "MobiGlasAppContent",
+          "textContent": "@FrontierFightersFinale_Datapad1_Subject_003",
+          "imageContent": "",
+          "appLink": {
+            "_Type_": "SMobiGlasAppLink",
+            "targetApp": null,
+            "targetDataEntry": null,
+            "displayIcon": ""}},
+        {
+          "_Type_": "MobiGlasAppContent",
+          "textContent": "@FrontierFightersFinale_Datapad1_To_003",
+          "imageContent": "",
+          "appLink": {
+            "_Type_": "SMobiGlasAppLink",
+            "targetApp": null,
+            "targetDataEntry": null,
+            "displayIcon": ""}},
+        {
+          "_Type_": "MobiGlasAppContent",
+          "textContent": "@FrontierFightersFinale_Datapad1_Text_003",
+          "imageContent": "",
+          "appLink": {
+            "_Type_": "SMobiGlasAppLink",
+            "targetApp": null,
+            "targetDataEntry": null,
+            "displayIcon": ""}}],
+      "securityToken": null,
+      "dynamicInteger": 0}}}

@@ -1,0 +1,16 @@
+{
+  "_RecordName_": "PopupDef.RefinerySellingConfirmationPopup",
+  "_RecordId_": "4303273c-05fa-4f1b-83a2-133087046126",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "PopupDef",
+    "title": "@shop_ui_RefinerySellingConfirmationMessage",
+    "message1": "@shop_ui_AreYouSure",
+    "message2": "@shop_ui_TotalTransactionReceived",
+    "message3": "@shop_ui_CostMessage",
+    "hasCancelButton": true,
+    "hasConfirmButton": true,
+    "cancelOverrideString": "@LOC_EMPTY",
+    "confirmOverrideString": "@LOC_EMPTY",
+    "popupFrame": "confirm",
+    "popupHeaderFrame": ""}}

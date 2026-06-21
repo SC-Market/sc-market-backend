@@ -1,0 +1,39 @@
+{
+  "_RecordName_": "EntityClassDefinition.TransitGateway",
+  "_RecordId_": "e52604d7-1685-4ff3-bf4b-e53ef8fd56c0",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "EntityClassDefinition",
+    "Category": "Default",
+    "Icon": "transit_gateway.bmp",
+    "Invisible": false,
+    "BBoxSelection": false,
+    "defaultEditorColor": {
+      "_Type_": "RGB",
+      "r": 1.0,
+      "g": 1.0,
+      "b": 0.0},
+    "entityDensityClass": null,
+    "tags": [],
+    "StaticEntityClassData": [],
+    "Components": [
+      {
+        "_Type_": "TransitGatewayParams",
+        "radius": 4.0,
+        "safeTeleportOffset": {
+          "_Type_": "Vec3",
+          "x": 0.0,
+          "y": 2.0,
+          "z": 0.0}},
+      {
+        "_Type_": "SActionAreaComponentParams",
+        "triggerOnce": false,
+        "requiredTags": [],
+        "excludedTags": [],
+        "applyTagsToContainedEntities": [],
+        "enterEvent": "ActionAreaEntered",
+        "exitEvent": "ActionAreaExited",
+        "sendEventsToEntity": false,
+        "eventTriggerMask": "AIAndPlayer",
+        "areaExtensions": [],
+        "audioFilter": null}]}}

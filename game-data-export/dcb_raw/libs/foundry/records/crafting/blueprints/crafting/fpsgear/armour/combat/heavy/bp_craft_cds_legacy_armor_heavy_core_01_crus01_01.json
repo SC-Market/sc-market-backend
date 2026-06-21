@@ -1,0 +1,128 @@
+{
+  "_RecordName_": "CraftingBlueprintRecord.BP_CRAFT_cds_legacy_armor_heavy_core_01_crus01_01",
+  "_RecordId_": "0efc1241-a8db-420b-bbc7-4bf64f676a2b",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "CraftingBlueprintRecord",
+    "blueprint": {
+      "_Type_": "CraftingBlueprint",
+      "category": {
+        "_RecordPath_": "file://./../../../../../../../../../../libs/foundry/records/crafting/blueprintcategories/blueprintcategorydatabase.json",
+        "_RecordName_": "BlueprintCategoryRecord.FPSArmours",
+        "_RecordId_": "35b0267e-cce0-46cc-a3ec-250271fe2ef3"},
+      "blueprintName": "@LOC_PLACEHOLDER",
+      "processSpecificData": {
+        "_Type_": "CraftingProcess_Creation",
+        "entityClass": "file://./../../../../../../../../../../libs/foundry/records/entities/scitem/characters/human/armor/pu_armor/heavy/core/cds_legacy_armor_heavy_core_01_crus01_01.json"},
+      "tiers": [
+        {
+          "_Type_": "CraftingBlueprintTier",
+          "recipe": {
+            "_Type_": "CraftingRecipe",
+            "processSpecificData": null,
+            "costs": {
+              "_Type_": "CraftingRecipeCosts",
+              "craftTime": {
+                "_Type_": "TimeValue_Partitioned",
+                "days": 0,
+                "hours": 0,
+                "minutes": 4,
+                "seconds": 0.0},
+              "mandatoryCost": {
+                "_Type_": "CraftingCost_Select",
+                "context": [
+                  {
+                    "_Type_": "CraftingCostContext_ResultCompositionInclusion",
+                    "option": "Include"}],
+                "nameInfo": {
+                  "_Type_": "CraftingNameInfo",
+                  "debugName": "ASPECTS",
+                  "displayName": "@LOC_PLACEHOLDER"},
+                "count": 2,
+                "options": [
+                  {
+                    "_Type_": "CraftingCost_Select",
+                    "context": [
+                      {
+                        "_Type_": "CraftingCostContext_ResultGameplayPropertyModifiers",
+                        "gameplayPropertyModifiers": {
+                          "_Type_": "CraftingGameplayPropertyModifiers_List",
+                          "gameplayPropertyModifiers": [
+                            {
+                              "_Type_": "CraftingGameplayPropertyModifierCommon",
+                              "gameplayPropertyRecord": "file://./../../../../../../../../../../libs/foundry/records/crafting/craftedproperties/gpp_armor_damagemitigation.json",
+                              "valueRanges": [
+                                {
+                                  "_Type_": "CraftingGameplayPropertyModifierValueRange_Linear",
+                                  "startQuality": 0,
+                                  "endQuality": 1000,
+                                  "modifierAtStart": 0.85,
+                                  "modifierAtEnd": 1.15}]}]}}],
+                    "nameInfo": {
+                      "_Type_": "CraftingNameInfo",
+                      "debugName": "ARMOURED CARAPACE",
+                      "displayName": "@crafting_ui_slotname_armouredcarapace"},
+                    "count": 1,
+                    "options": [
+                      {
+                        "_Type_": "CraftingCost_Resource",
+                        "context": [],
+                        "resource": {
+                          "_RecordPath_": "file://./../../../../../../../../../../libs/foundry/records/resourcetypedatabase/resourcetypedatabase.json",
+                          "_RecordName_": "ResourceType.Ouratite",
+                          "_RecordId_": "989f9b73-f636-4f35-a81d-579dcbe3f0ab"},
+                        "quantity": {
+                          "_Type_": "SStandardCargoUnit",
+                          "standardCargoUnits": 0.07},
+                        "minQuality": 0}]},
+                  {
+                    "_Type_": "CraftingCost_Select",
+                    "context": [
+                      {
+                        "_Type_": "CraftingCostContext_ResultGameplayPropertyModifiers",
+                        "gameplayPropertyModifiers": {
+                          "_Type_": "CraftingGameplayPropertyModifiers_List",
+                          "gameplayPropertyModifiers": [
+                            {
+                              "_Type_": "CraftingGameplayPropertyModifierCommon",
+                              "gameplayPropertyRecord": "file://./../../../../../../../../../../libs/foundry/records/crafting/craftedproperties/gpp_armor_temperaturemin.json",
+                              "valueRanges": [
+                                {
+                                  "_Type_": "CraftingGameplayPropertyModifierValueRange_Linear",
+                                  "startQuality": 500,
+                                  "endQuality": 1000,
+                                  "modifierAtStart": 1.0,
+                                  "modifierAtEnd": 1.2}]},
+                            {
+                              "_Type_": "CraftingGameplayPropertyModifierCommon",
+                              "gameplayPropertyRecord": "file://./../../../../../../../../../../libs/foundry/records/crafting/craftedproperties/gpp_armor_temperaturemax.json",
+                              "valueRanges": [
+                                {
+                                  "_Type_": "CraftingGameplayPropertyModifierValueRange_Linear",
+                                  "startQuality": 500,
+                                  "endQuality": 1000,
+                                  "modifierAtStart": 1.0,
+                                  "modifierAtEnd": 1.2}]}]}}],
+                    "nameInfo": {
+                      "_Type_": "CraftingNameInfo",
+                      "debugName": "INSULATIVE LINER",
+                      "displayName": "@crafting_ui_slotname_insulativeliner"},
+                    "count": 1,
+                    "options": [
+                      {
+                        "_Type_": "CraftingCost_Resource",
+                        "context": [],
+                        "resource": {
+                          "_RecordPath_": "file://./../../../../../../../../../../libs/foundry/records/resourcetypedatabase/resourcetypedatabase.json",
+                          "_RecordName_": "ResourceType.Aslarite",
+                          "_RecordId_": "fde0cd65-8827-4b23-804d-cc8845dfa7ac"},
+                        "quantity": {
+                          "_Type_": "SStandardCargoUnit",
+                          "standardCargoUnits": 0.02},
+                        "minQuality": 0}]}]},
+              "optionalCosts": []},
+            "results": null},
+          "research": {
+            "_Type_": "CraftingResearch",
+            "unlockRequirements": null,
+            "researchCosts": null}}]}}}

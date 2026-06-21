@@ -1,0 +1,23 @@
+{
+  "_RecordName_": "MusicLogicParameter.Intensity_Block",
+  "_RecordId_": "143e96d8-989c-4650-88c8-148a999c6674",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "MusicLogicParameter",
+    "name": "Intensity_Block",
+    "min": 0.0,
+    "max": 5000.0,
+    "defaultValue": 0.0,
+    "decayRate": 0.0,
+    "decayIsPercentage": false,
+    "scaleModifier": 1.0,
+    "shiftModifier": 0.0,
+    "inverted": false,
+    "rtpc": "",
+    "rtpcIsGlobal": false,
+    "contributors": [],
+    "debugColour": {
+      "_Type_": "RGB",
+      "r": 0.373,
+      "g": 0.62,
+      "b": 0.627}}}

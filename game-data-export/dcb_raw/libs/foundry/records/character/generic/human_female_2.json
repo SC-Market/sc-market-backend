@@ -1,0 +1,24 @@
+{
+  "_RecordName_": "Character.Human_Female_2",
+  "_RecordId_": "cc3a9651-606e-474f-b3c7-20605756b49f",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "Character",
+    "characterPersonalData": {
+      "_Type_": "CharacterPersonalData",
+      "title": "",
+      "firstName": "",
+      "nickName": "",
+      "lastName": "",
+      "randomNameParams": null,
+      "affiliation": "",
+      "details": ""},
+    "audioSwitchStateName": "",
+    "animationRemapAlias": "Human_Female_2",
+    "characterMannequinTag": "",
+    "styleMannequinTag": "",
+    "combatStyle": "NotSet",
+    "gender": "Female",
+    "characterSpeedOverrides": [],
+    "nicknameChance": 0.0,
+    "name": ""}}

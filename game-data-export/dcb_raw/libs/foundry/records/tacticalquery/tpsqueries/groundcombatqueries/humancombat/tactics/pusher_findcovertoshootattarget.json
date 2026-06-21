@@ -1,0 +1,137 @@
+{
+  "_RecordName_": "TacticalQuery.Pusher_FindCoverToShootAtTarget",
+  "_RecordId_": "37a11c87-2d75-495f-aad4-ccebddd1963b",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "TacticalQuery",
+    "name": "Pusher_FindCoverToShootAtTarget",
+    "type": "TacticalPointQuery",
+    "options": [
+      {
+        "_Type_": "TQSEmbeddedOption",
+        "requirements": {
+          "_Type_": "TagsDNF",
+          "terms": []},
+        "content": {
+          "_Type_": "TQSOptionContent",
+          "parameters": [],
+          "generation": [
+            {
+              "_Type_": "TQSInputIntValue",
+              "requirements": {
+                "_Type_": "TagsDNF",
+                "terms": []},
+              "condition": "cover_from_attentionTarget_around_puppet",
+              "value": 30,
+              "overrides": []}],
+          "conditions": [
+            {
+              "_Type_": "TQSInputIntValue",
+              "requirements": {
+                "_Type_": "TagsDNF",
+                "terms": []},
+              "condition": "min_distance_from_attentionTarget",
+              "value": 5,
+              "overrides": []},
+            {
+              "_Type_": "TQSInputBoolValue",
+              "requirements": {
+                "_Type_": "TagsDNF",
+                "terms": []},
+              "condition": "otherSide_of_attentionTarget",
+              "value": false,
+              "overrides": []},
+            {
+              "_Type_": "TQSInputFloatValue",
+              "requirements": {
+                "_Type_": "TagsDNF",
+                "terms": []},
+              "condition": "max_heightRelativeAbs_from_puppet",
+              "value": 3.0,
+              "overrides": []},
+            {
+              "_Type_": "TQSInputBoolValue",
+              "requirements": {
+                "_Type_": "TagsDNF",
+                "terms": [
+                  {
+                    "_Type_": "TagsDNFTerm",
+                    "positiveTags": [],
+                    "negativeTags": []}]},
+              "condition": "isInside_of_area",
+              "value": true,
+              "overrides": []},
+            {
+              "_Type_": "TQSInputBoolValue",
+              "requirements": {
+                "_Type_": "TagsDNF",
+                "terms": []},
+              "condition": "isPointReachable_from_puppet",
+              "value": true,
+              "overrides": []},
+            {
+              "_Type_": "TQSInputBoolValue",
+              "requirements": {
+                "_Type_": "TagsDNF",
+                "terms": []},
+              "condition": "hasTargetedShootingPosture_to_attentionTarget",
+              "value": true,
+              "overrides": []},
+            {
+              "_Type_": "TQSInputBoolValue",
+              "requirements": {
+                "_Type_": "TagsDNF",
+                "terms": []},
+              "condition": "isWithinMaxFiringRange_from_attentionTarget",
+              "value": true,
+              "overrides": []},
+            {
+              "_Type_": "TQSInputIntValue",
+              "requirements": {
+                "_Type_": "TagsDNF",
+                "terms": []},
+              "condition": "min_distance_from_puppet",
+              "value": 3,
+              "overrides": []},
+            {
+              "_Type_": "TQSInputFloatValue",
+              "requirements": {
+                "_Type_": "TagsDNF",
+                "terms": []},
+              "condition": "min_dot_from_attentionTarget",
+              "value": 0.7,
+              "overrides": []}],
+          "weights": [
+            {
+              "_Type_": "TQSWeightInputValue",
+              "requirements": {
+                "_Type_": "TagsDNF",
+                "terms": []},
+              "condition": "heightRelativeAbs_from_attentionTarget",
+              "weight": -0.75,
+              "overrides": []},
+            {
+              "_Type_": "TQSWeightInputValue",
+              "requirements": {
+                "_Type_": "TagsDNF",
+                "terms": []},
+              "condition": "coverDirection_from_attentionTarget",
+              "weight": 10.0,
+              "overrides": []},
+            {
+              "_Type_": "TQSWeightInputValue",
+              "requirements": {
+                "_Type_": "TagsDNF",
+                "terms": []},
+              "condition": "distance_from_puppet",
+              "weight": -1.0,
+              "overrides": []},
+            {
+              "_Type_": "TQSWeightInputValue",
+              "requirements": {
+                "_Type_": "TagsDNF",
+                "terms": []},
+              "condition": "dot_from_attentionTarget",
+              "weight": 3.0,
+              "overrides": []}]},
+        "optionOverrides": []}]}}

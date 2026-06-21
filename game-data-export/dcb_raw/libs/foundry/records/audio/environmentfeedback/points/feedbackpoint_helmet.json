@@ -1,0 +1,286 @@
+{
+  "_RecordName_": "AudioEnvironmentFeedbackPointDef.FeedbackPoint_Helmet",
+  "_RecordId_": "84695a3c-181b-43a8-98d2-30aee0c065bf",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "AudioEnvironmentFeedbackPointDef",
+    "tagAndEvents": [
+      {
+        "_Type_": "AudioEnvironmentFeedbackTagAndEvent",
+        "tag": {
+          "_RecordPath_": "file://./../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+          "_RecordName_": "Tag.732fce87-e902-4146-a8a5-2c9dd4a0b61e",
+          "_RecordId_": "732fce87-e902-4146-a8a5-2c9dd4a0b61e"},
+        "loopStart": {
+          "_Type_": "GlobalResourceAudio",
+          "audioTrigger": "Play_CHEF_Character_EnvironmentFeedback_Snow_Helmet"},
+        "loopStop": {
+          "_Type_": "GlobalResourceAudio",
+          "audioTrigger": "Stop_CHEF_Character_EnvironmentFeedback_Snow_Helmet"},
+        "movementRtpcs": [
+          {
+            "_Type_": "AudioEnvironmentMovementRtpcBehavior",
+            "rtpcs": [
+              {
+                "_Type_": "AudioRtpcWithBehaviour",
+                "rtpc": {
+                  "_Type_": "AudioRtpc",
+                  "rtpc": "EnvironmentFeedback_Snow_X"},
+                "behavior": {
+                  "_Type_": "SAverageValue",
+                  "frameCount": 60}}]},
+          {
+            "_Type_": "AudioEnvironmentMovementRtpcBehavior",
+            "rtpcs": [
+              {
+                "_Type_": "AudioRtpcWithBehaviour",
+                "rtpc": {
+                  "_Type_": "AudioRtpc",
+                  "rtpc": "EnvironmentFeedback_Snow_Y"},
+                "behavior": {
+                  "_Type_": "SAverageValue",
+                  "frameCount": 60}}]},
+          {
+            "_Type_": "AudioEnvironmentMovementRtpcBehavior",
+            "rtpcs": [
+              {
+                "_Type_": "AudioRtpcWithBehaviour",
+                "rtpc": {
+                  "_Type_": "AudioRtpc",
+                  "rtpc": "EnvironmentFeedback_Snow_Z"},
+                "behavior": {
+                  "_Type_": "SAverageValue",
+                  "frameCount": 60}}]},
+          {
+            "_Type_": "AudioEnvironmentMovementRtpcBehavior",
+            "rtpcs": [
+              {
+                "_Type_": "AudioRtpcWithBehaviour",
+                "rtpc": {
+                  "_Type_": "AudioRtpc",
+                  "rtpc": "EnvironmentFeedback_Snow_Magnitude"},
+                "behavior": {
+                  "_Type_": "SAverageValue",
+                  "frameCount": 60}}]}]},
+      {
+        "_Type_": "AudioEnvironmentFeedbackTagAndEvent",
+        "tag": {
+          "_RecordPath_": "file://./../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+          "_RecordName_": "Tag.44dcada1-254d-4f20-a8ff-06f0060bcc76",
+          "_RecordId_": "44dcada1-254d-4f20-a8ff-06f0060bcc76"},
+        "loopStart": {
+          "_Type_": "GlobalResourceAudio",
+          "audioTrigger": "Play_CHEF_Character_EnvironmentFeedback_Sand_Helmet"},
+        "loopStop": {
+          "_Type_": "GlobalResourceAudio",
+          "audioTrigger": "Stop_CHEF_Character_EnvironmentFeedback_Sand_Helmet"},
+        "movementRtpcs": [
+          {
+            "_Type_": "AudioEnvironmentMovementRtpcBehavior",
+            "rtpcs": [
+              {
+                "_Type_": "AudioRtpcWithBehaviour",
+                "rtpc": {
+                  "_Type_": "AudioRtpc",
+                  "rtpc": "EnvironmentFeedback_Sand_X"},
+                "behavior": {
+                  "_Type_": "SRtpcBehaviour"}}]},
+          {
+            "_Type_": "AudioEnvironmentMovementRtpcBehavior",
+            "rtpcs": [
+              {
+                "_Type_": "AudioRtpcWithBehaviour",
+                "rtpc": {
+                  "_Type_": "AudioRtpc",
+                  "rtpc": "EnvironmentFeedback_Sand_Y"},
+                "behavior": {
+                  "_Type_": "SRtpcBehaviour"}}]},
+          {
+            "_Type_": "AudioEnvironmentMovementRtpcBehavior",
+            "rtpcs": [
+              {
+                "_Type_": "AudioRtpcWithBehaviour",
+                "rtpc": {
+                  "_Type_": "AudioRtpc",
+                  "rtpc": "EnvironmentFeedback_Sand_Z"},
+                "behavior": {
+                  "_Type_": "SRtpcBehaviour"}}]},
+          {
+            "_Type_": "AudioEnvironmentMovementRtpcBehavior",
+            "rtpcs": [
+              {
+                "_Type_": "AudioRtpcWithBehaviour",
+                "rtpc": {
+                  "_Type_": "AudioRtpc",
+                  "rtpc": "EnvironmentFeedback_Sand_Magnitude"},
+                "behavior": {
+                  "_Type_": "SRtpcBehaviour"}}]}]},
+      {
+        "_Type_": "AudioEnvironmentFeedbackTagAndEvent",
+        "tag": {
+          "_RecordPath_": "file://./../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+          "_RecordName_": "Tag.ef5d3fe7-2352-48c2-bac2-c6754e3dce0e",
+          "_RecordId_": "ef5d3fe7-2352-48c2-bac2-c6754e3dce0e"},
+        "loopStart": {
+          "_Type_": "GlobalResourceAudio",
+          "audioTrigger": "Play_CHEF_Character_EnvironmentFeedback_Ice_Helmet"},
+        "loopStop": {
+          "_Type_": "GlobalResourceAudio",
+          "audioTrigger": "Stop_CHEF_Character_EnvironmentFeedback_Ice_Helmet"},
+        "movementRtpcs": [
+          {
+            "_Type_": "AudioEnvironmentMovementRtpcBehavior",
+            "rtpcs": [
+              {
+                "_Type_": "AudioRtpcWithBehaviour",
+                "rtpc": {
+                  "_Type_": "AudioRtpc",
+                  "rtpc": "EnvironmentFeedback_Ice_X"},
+                "behavior": {
+                  "_Type_": "SRtpcBehaviour"}}]},
+          {
+            "_Type_": "AudioEnvironmentMovementRtpcBehavior",
+            "rtpcs": [
+              {
+                "_Type_": "AudioRtpcWithBehaviour",
+                "rtpc": {
+                  "_Type_": "AudioRtpc",
+                  "rtpc": "EnvironmentFeedback_Ice_Y"},
+                "behavior": {
+                  "_Type_": "SRtpcBehaviour"}}]},
+          {
+            "_Type_": "AudioEnvironmentMovementRtpcBehavior",
+            "rtpcs": [
+              {
+                "_Type_": "AudioRtpcWithBehaviour",
+                "rtpc": {
+                  "_Type_": "AudioRtpc",
+                  "rtpc": "EnvironmentFeedback_Ice_Z"},
+                "behavior": {
+                  "_Type_": "SRtpcBehaviour"}}]},
+          {
+            "_Type_": "AudioEnvironmentMovementRtpcBehavior",
+            "rtpcs": [
+              {
+                "_Type_": "AudioRtpcWithBehaviour",
+                "rtpc": {
+                  "_Type_": "AudioRtpc",
+                  "rtpc": "EnvironmentFeedback_Ice_Magnitude"},
+                "behavior": {
+                  "_Type_": "SRtpcBehaviour"}}]}]},
+      {
+        "_Type_": "AudioEnvironmentFeedbackTagAndEvent",
+        "tag": {
+          "_RecordPath_": "file://./../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+          "_RecordName_": "Tag.9fcb697d-e199-442a-9647-524decdf6bb2",
+          "_RecordId_": "9fcb697d-e199-442a-9647-524decdf6bb2"},
+        "loopStart": {
+          "_Type_": "GlobalResourceAudio",
+          "audioTrigger": "Play_CHEF_Character_EnvironmentFeedback_DefaultDust_Helmet"},
+        "loopStop": {
+          "_Type_": "GlobalResourceAudio",
+          "audioTrigger": "Stop_CHEF_Character_EnvironmentFeedback_DefaultDust_Helmet"},
+        "movementRtpcs": [
+          {
+            "_Type_": "AudioEnvironmentMovementRtpcBehavior",
+            "rtpcs": [
+              {
+                "_Type_": "AudioRtpcWithBehaviour",
+                "rtpc": {
+                  "_Type_": "AudioRtpc",
+                  "rtpc": "EnvironmentFeedback_DefaultDust_X"},
+                "behavior": {
+                  "_Type_": "SRtpcBehaviour"}}]},
+          {
+            "_Type_": "AudioEnvironmentMovementRtpcBehavior",
+            "rtpcs": [
+              {
+                "_Type_": "AudioRtpcWithBehaviour",
+                "rtpc": {
+                  "_Type_": "AudioRtpc",
+                  "rtpc": "EnvironmentFeedback_DefaultDust_Y"},
+                "behavior": {
+                  "_Type_": "SRtpcBehaviour"}}]},
+          {
+            "_Type_": "AudioEnvironmentMovementRtpcBehavior",
+            "rtpcs": [
+              {
+                "_Type_": "AudioRtpcWithBehaviour",
+                "rtpc": {
+                  "_Type_": "AudioRtpc",
+                  "rtpc": "EnvironmentFeedback_DefaultDust_Z"},
+                "behavior": {
+                  "_Type_": "SRtpcBehaviour"}}]},
+          {
+            "_Type_": "AudioEnvironmentMovementRtpcBehavior",
+            "rtpcs": [
+              {
+                "_Type_": "AudioRtpcWithBehaviour",
+                "rtpc": {
+                  "_Type_": "AudioRtpc",
+                  "rtpc": "EnvironmentFeedback_DefaultDust_Magnitude"},
+                "behavior": {
+                  "_Type_": "SRtpcBehaviour"}}]}]},
+      {
+        "_Type_": "AudioEnvironmentFeedbackTagAndEvent",
+        "tag": {
+          "_RecordPath_": "file://./../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+          "_RecordName_": "Tag.c7e827a8-6ede-4f0f-9c5b-8dcedaa462d3",
+          "_RecordId_": "c7e827a8-6ede-4f0f-9c5b-8dcedaa462d3"},
+        "loopStart": {
+          "_Type_": "GlobalResourceAudio",
+          "audioTrigger": "Play_CHEF_Character_EnvironmentFeedback_GasCloud_Helmet"},
+        "loopStop": {
+          "_Type_": "GlobalResourceAudio",
+          "audioTrigger": "Stop_CHEF_Character_EnvironmentFeedback_GasCloud_Helmet"},
+        "movementRtpcs": [
+          {
+            "_Type_": "AudioEnvironmentMovementRtpcBehavior",
+            "rtpcs": [
+              {
+                "_Type_": "AudioRtpcWithBehaviour",
+                "rtpc": {
+                  "_Type_": "AudioRtpc",
+                  "rtpc": "EnvironmentFeedback_GasCloud_Velocity_X"},
+                "behavior": {
+                  "_Type_": "SRtpcBehaviour"}}]},
+          {
+            "_Type_": "AudioEnvironmentMovementRtpcBehavior",
+            "rtpcs": [
+              {
+                "_Type_": "AudioRtpcWithBehaviour",
+                "rtpc": {
+                  "_Type_": "AudioRtpc",
+                  "rtpc": "EnvironmentFeedback_GasCloud_Velocity_Y"},
+                "behavior": {
+                  "_Type_": "SRtpcBehaviour"}}]},
+          {
+            "_Type_": "AudioEnvironmentMovementRtpcBehavior",
+            "rtpcs": [
+              {
+                "_Type_": "AudioRtpcWithBehaviour",
+                "rtpc": {
+                  "_Type_": "AudioRtpc",
+                  "rtpc": "EnvironmentFeedback_GasCloud_Velocity_Z"},
+                "behavior": {
+                  "_Type_": "SRtpcBehaviour"}}]},
+          {
+            "_Type_": "AudioEnvironmentMovementRtpcBehavior",
+            "rtpcs": [
+              {
+                "_Type_": "AudioRtpcWithBehaviour",
+                "rtpc": {
+                  "_Type_": "AudioRtpc",
+                  "rtpc": "EnvironmentFeedback_GasCloud_Velocity_Magnitude"},
+                "behavior": {
+                  "_Type_": "SRtpcBehaviour"}},
+              {
+                "_Type_": "AudioRtpcWithBehaviour",
+                "rtpc": {
+                  "_Type_": "AudioRtpc",
+                  "rtpc": "EnvironmentFeedback_GasCloud_Velocity_Magnitude_VerySlowAttack"},
+                "behavior": {
+                  "_Type_": "SSmoothingTimeBased",
+                  "attackSlew": 5.0,
+                  "releaseSlew": 2.0,
+                  "clampedBelow": 0.001}}]}]}]}}

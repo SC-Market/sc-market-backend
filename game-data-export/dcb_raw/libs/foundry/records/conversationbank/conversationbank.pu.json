@@ -1,0 +1,1577 @@
+{
+  "_RecordName_": "ConversationBank.PU",
+  "_RecordId_": "06c8fd96-1801-4a29-bd02-ec32c024b291",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "ConversationBank",
+    "region": "PU",
+    "conversations": [
+      {
+        "_RecordId_": "75e4142b-c1cc-409c-a595-86f626f8ec88",
+        "_RecordName_": "Conversation.Dlg_SC_lz_shops_abernathyinteriors_abernathy_interiors_salesperson_main",
+        "_Type_": "Conversation",
+        "fragments": [
+          {
+            "_Type_": "ConversationNode_Start",
+            "next": "_PointsTo_:ptr:1"},
+          {
+            "_Pointer_": "ptr:1",
+            "_Type_": "ConversationNode_Dialogue",
+            "next": null,
+            "context": {
+              "_RecordPath_": "file://./../../../../libs/foundry/records/dialoguecontextbank/pu/dialoguecontextbank.pu_abernathy_interiors_salesperson.json",
+              "_RecordName_": "DialogueContext.SC_lz_shops_abernathyinteriors_abernathy_interiors_salesperson_main_1",
+              "_RecordId_": "655f7f61-73f8-43de-a901-fd563427af09"},
+            "skipNodeInXSecs": -1.0},
+          null,
+          {
+            "_Type_": "ConversationNode_Dialogue",
+            "next": "_PointsTo_:ptr:2",
+            "context": {
+              "_RecordPath_": "file://./../../../../libs/foundry/records/dialoguecontextbank/pu/dialoguecontextbank.pu_player.json",
+              "_RecordName_": "DialogueContext.SC_lz_shops_abernathyinteriors_abernathy_interiors_salesperson_main_2",
+              "_RecordId_": "ddec940e-c524-42b8-9374-c12beed8b20e"},
+            "skipNodeInXSecs": -1.0},
+          {
+            "_Pointer_": "ptr:2",
+            "_Type_": "ConversationNode_Dialogue",
+            "next": "_PointsTo_:ptr:3",
+            "context": {
+              "_RecordPath_": "file://./../../../../libs/foundry/records/dialoguecontextbank/pu/dialoguecontextbank.pu_abernathy_interiors_salesperson.json",
+              "_RecordName_": "DialogueContext.SC_lz_shops_abernathyinteriors_abernathy_interiors_salesperson_main_3",
+              "_RecordId_": "2eba3554-35e2-4373-9b76-6aed2c90379a"},
+            "skipNodeInXSecs": -1.0},
+          {
+            "_Pointer_": "ptr:3",
+            "_Type_": "ConversationNode_Dialogue",
+            "next": null,
+            "context": {
+              "_RecordPath_": "file://./../../../../libs/foundry/records/dialoguecontextbank/pu/dialoguecontextbank.pu_abernathy_interiors_salesperson.json",
+              "_RecordName_": "DialogueContext.SC_lz_shops_abernathyinteriors_abernathy_interiors_salesperson_main_4",
+              "_RecordId_": "9d180d01-0544-4103-947a-30f420474379"},
+            "skipNodeInXSecs": -1.0},
+          {
+            "_Type_": "ConversationNode_Dialogue",
+            "next": "_PointsTo_:ptr:4",
+            "context": {
+              "_RecordPath_": "file://./../../../../libs/foundry/records/dialoguecontextbank/pu/dialoguecontextbank.pu_player.json",
+              "_RecordName_": "DialogueContext.SC_lz_shops_abernathyinteriors_abernathy_interiors_salesperson_main_5",
+              "_RecordId_": "61a27667-28b1-435e-b978-547a5cd329ff"},
+            "skipNodeInXSecs": -1.0},
+          {
+            "_Pointer_": "ptr:4",
+            "_Type_": "ConversationNode_Dialogue",
+            "next": "_PointsTo_:ptr:3",
+            "context": {
+              "_RecordPath_": "file://./../../../../libs/foundry/records/dialoguecontextbank/pu/dialoguecontextbank.pu_abernathy_interiors_salesperson.json",
+              "_RecordName_": "DialogueContext.SC_lz_shops_abernathyinteriors_abernathy_interiors_salesperson_main_6",
+              "_RecordId_": "fbf4b0d0-4658-4480-8ea9-4467291fe338"},
+            "skipNodeInXSecs": -1.0},
+          {
+            "_Type_": "ConversationNode_Dialogue",
+            "next": "_PointsTo_:ptr:5",
+            "context": {
+              "_RecordPath_": "file://./../../../../libs/foundry/records/dialoguecontextbank/pu/dialoguecontextbank.pu_player.json",
+              "_RecordName_": "DialogueContext.SC_lz_shops_abernathyinteriors_abernathy_interiors_salesperson_main_7",
+              "_RecordId_": "8d8048af-c7d6-47c5-b33f-e7e1e64864a5"},
+            "skipNodeInXSecs": -1.0},
+          {
+            "_Pointer_": "ptr:5",
+            "_Type_": "ConversationNode_Dialogue",
+            "next": null,
+            "context": {
+              "_RecordPath_": "file://./../../../../libs/foundry/records/dialoguecontextbank/pu/dialoguecontextbank.pu_abernathy_interiors_salesperson.json",
+              "_RecordName_": "DialogueContext.SC_lz_shops_abernathyinteriors_abernathy_interiors_salesperson_main_8",
+              "_RecordId_": "302285c4-fbd6-435b-9277-1d1b2b753867"},
+            "skipNodeInXSecs": -1.0}]},
+      {
+        "_RecordId_": "3525936f-d0dd-46f6-b299-f2522ef698a9",
+        "_RecordName_": "Conversation.Dlg_SC_lz_shops_advocacyfieldoffice_advocacy_field_office_clerk_main",
+        "_Type_": "Conversation",
+        "fragments": [
+          {
+            "_Type_": "ConversationNode_Start",
+            "next": "_PointsTo_:ptr:6"},
+          {
+            "_Pointer_": "ptr:6",
+            "_Type_": "ConversationNode_Dialogue",
+            "next": null,
+            "context": {
+              "_RecordPath_": "file://./../../../../libs/foundry/records/dialoguecontextbank/pu/dialoguecontextbank.pu_advocacy_field_office_clerk.json",
+              "_RecordName_": "DialogueContext.SC_lz_shops_advocacyfieldoffice_advocacy_field_office_clerk_main_1",
+              "_RecordId_": "f9ffdace-6aab-438c-b0d4-1baff9604fb0"},
+            "skipNodeInXSecs": -1.0},
+          null,
+          {
+            "_Type_": "ConversationNode_Dialogue",
+            "next": "_PointsTo_:ptr:7",
+            "context": {
+              "_RecordPath_": "file://./../../../../libs/foundry/records/dialoguecontextbank/pu/dialoguecontextbank.pu_player.json",
+              "_RecordName_": "DialogueContext.SC_lz_shops_advocacyfieldoffice_advocacy_field_office_clerk_main_2",
+              "_RecordId_": "84d2e674-2f9a-4045-ae74-7563c6964fd8"},
+            "skipNodeInXSecs": -1.0},
+          {
+            "_Pointer_": "ptr:7",
+            "_Type_": "ConversationNode_Dialogue",
+            "next": null,
+            "context": {
+              "_RecordPath_": "file://./../../../../libs/foundry/records/dialoguecontextbank/pu/dialoguecontextbank.pu_advocacy_field_office_clerk.json",
+              "_RecordName_": "DialogueContext.SC_lz_shops_advocacyfieldoffice_advocacy_field_office_clerk_main_3",
+              "_RecordId_": "9c087ab0-0864-4022-ad2b-447c7ca533d5"},
+            "skipNodeInXSecs": -1.0},
+          null,
+          {
+            "_Type_": "ConversationNode_Dialogue",
+            "next": "_PointsTo_:ptr:8",
+            "context": {
+              "_RecordPath_": "file://./../../../../libs/foundry/records/dialoguecontextbank/pu/dialoguecontextbank.pu_player.json",
+              "_RecordName_": "DialogueContext.SC_lz_shops_advocacyfieldoffice_advocacy_field_office_clerk_main_4",
+              "_RecordId_": "e28f255d-5cb3-48d8-a6b5-c667ffcd6cea"},
+            "skipNodeInXSecs": -1.0},
+          {
+            "_Pointer_": "ptr:8",
+            "_Type_": "ConversationNode_Dialogue",
+            "next": "_PointsTo_:ptr:9",
+            "context": {
+              "_RecordPath_": "file://./../../../../libs/foundry/records/dialoguecontextbank/pu/dialoguecontextbank.pu_advocacy_field_office_clerk.json",
+              "_RecordName_": "DialogueContext.SC_lz_shops_advocacyfieldoffice_advocacy_field_office_clerk_main_5",
+              "_RecordId_": "7b8e12c7-9d29-4e6e-811c-81db2938bae9"},
+            "skipNodeInXSecs": -1.0},
+          {
+            "_Pointer_": "ptr:9",
+            "_Type_": "ConversationNode_Dialogue",
+            "next": null,
+            "context": {
+              "_RecordPath_": "file://./../../../../libs/foundry/records/dialoguecontextbank/pu/dialoguecontextbank.pu_advocacy_field_office_clerk.json",
+              "_RecordName_": "DialogueContext.SC_lz_shops_advocacyfieldoffice_advocacy_field_office_clerk_main_6",
+              "_RecordId_": "cc55101f-9640-4382-b8fc-76b8cd1d08f1"},
+            "skipNodeInXSecs": -1.0},
+          {
+            "_Type_": "ConversationNode_Dialogue",
+            "next": "_PointsTo_:ptr:10",
+            "context": {
+              "_RecordPath_": "file://./../../../../libs/foundry/records/dialoguecontextbank/pu/dialoguecontextbank.pu_player.json",
+              "_RecordName_": "DialogueContext.SC_lz_shops_advocacyfieldoffice_advocacy_field_office_clerk_main_7",
+              "_RecordId_": "8bb9b56b-7913-4754-a7cf-863574399a3c"},
+            "skipNodeInXSecs": -1.0},
+          {
+            "_Pointer_": "ptr:10",
+            "_Type_": "ConversationNode_Dialogue",
+            "next": null,
+            "context": {
+              "_RecordPath_": "file://./../../../../libs/foundry/records/dialoguecontextbank/pu/dialoguecontextbank.pu_advocacy_field_office_clerk.json",
+              "_RecordName_": "DialogueContext.SC_lz_shops_advocacyfieldoffice_advocacy_field_office_clerk_main_8",
+              "_RecordId_": "55939e21-6fec-4f29-81ed-3741b309218e"},
+            "skipNodeInXSecs": -1.0},
+          {
+            "_Type_": "ConversationNode_Dialogue",
+            "next": "_PointsTo_:ptr:11",
+            "context": {
+              "_RecordPath_": "file://./../../../../libs/foundry/records/dialoguecontextbank/pu/dialoguecontextbank.pu_player.json",
+              "_RecordName_": "DialogueContext.SC_lz_shops_advocacyfieldoffice_advocacy_field_office_clerk_main_9",
+              "_RecordId_": "8ee39c57-638a-4a0c-9d19-247f3d364a9f"},
+            "skipNodeInXSecs": -1.0},
+          {
+            "_Pointer_": "ptr:11",
+            "_Type_": "ConversationNode_Dialogue",
+            "next": "_PointsTo_:ptr:9",
+            "context": {
+              "_RecordPath_": "file://./../../../../libs/foundry/records/dialoguecontextbank/pu/dialoguecontextbank.pu_advocacy_field_office_clerk.json",
+              "_RecordName_": "DialogueContext.SC_lz_shops_advocacyfieldoffice_advocacy_field_office_clerk_main_10",
+              "_RecordId_": "457d44f7-5d08-49f4-af45-682538af84a1"},
+            "skipNodeInXSecs": -1.0},
+          {
+            "_Type_": "ConversationNode_Dialogue",
+            "next": "_PointsTo_:ptr:12",
+            "context": {
+              "_RecordPath_": "file://./../../../../libs/foundry/records/dialoguecontextbank/pu/dialoguecontextbank.pu_player.json",
+              "_RecordName_": "DialogueContext.SC_lz_shops_advocacyfieldoffice_advocacy_field_office_clerk_main_11",
+              "_RecordId_": "89f60b10-2561-4346-9a76-dbe5401d1b24"},
+            "skipNodeInXSecs": -1.0},
+          {
+            "_Pointer_": "ptr:12",
+            "_Type_": "ConversationNode_Dialogue",
+            "next": "_PointsTo_:ptr:9",
+            "context": {
+              "_RecordPath_": "file://./../../../../libs/foundry/records/dialoguecontextbank/pu/dialoguecontextbank.pu_advocacy_field_office_clerk.json",
+              "_RecordName_": "DialogueContext.SC_lz_shops_advocacyfieldoffice_advocacy_field_office_clerk_main_12",
+              "_RecordId_": "29e2aff7-cd15-4751-ba3c-b6dbf813b073"},
+            "skipNodeInXSecs": -1.0},
+          {
+            "_Type_": "ConversationNode_Dialogue",
+            "next": null,
+            "context": {
+              "_RecordPath_": "file://./../../../../libs/foundry/records/dialoguecontextbank/pu/dialoguecontextbank.pu_player.json",
+              "_RecordName_": "DialogueContext.SC_lz_shops_advocacyfieldoffice_advocacy_field_office_clerk_main_13",
+              "_RecordId_": "3785ab52-a541-4984-a0a9-e85d9cff14cc"},
+            "skipNodeInXSecs": -1.0}]},
+      {
+        "_RecordId_": "c9936efa-1330-42cc-b4f0-ba5a5fa84aeb",
+        "_RecordName_": "Conversation.Dlg_SC_lz_shops_advocacyfieldoffice_advocacy_field_office_guard_main",
+        "_Type_": "Conversation",
+        "fragments": [
+          {
+            "_Type_": "ConversationNode_Start",
+            "next": "_PointsTo_:ptr:13"},
+          {
+            "_Pointer_": "ptr:13",
+            "_Type_": "ConversationNode_Dialogue",
+            "next": null,
+            "context": {
+              "_RecordPath_": "file://./../../../../libs/foundry/records/dialoguecontextbank/pu/dialoguecontextbank.pu_advocacy_field_office_guard.json",
+              "_RecordName_": "DialogueContext.SC_lz_shops_advocacyfieldoffice_advocacy_field_office_guard_main_1",
+              "_RecordId_": "4d5e3a86-2bb7-4598-afd3-d086263cd1e9"},
+            "skipNodeInXSecs": -1.0}]},
+      {
+        "_RecordId_": "61d9d9b4-4fbd-4621-9ceb-91a1ff2bcb4d",
+        "_RecordName_": "Conversation.Dlg_SC_lz_shops_arccorpbar_arccorp_bar_bartender_main",
+        "_Type_": "Conversation",
+        "fragments": [
+          {
+            "_Type_": "ConversationNode_Start",
+            "next": "_PointsTo_:ptr:14"},
+          {
+            "_Pointer_": "ptr:14",
+            "_Type_": "ConversationNode_Dialogue",
+            "next": null,
+            "context": {
+              "_RecordPath_": "file://./../../../../libs/foundry/records/dialoguecontextbank/pu/dialoguecontextbank.pu_arccorp_bar_bartender.json",
+              "_RecordName_": "DialogueContext.SC_lz_shops_arccorpbar_arccorp_bar_bartender_main_1",
+              "_RecordId_": "db66229f-e23a-4f25-be43-78cf3d1f55b1"},
+            "skipNodeInXSecs": -1.0},
+          null,
+          {
+            "_Type_": "ConversationNode_Dialogue",
+            "next": "_PointsTo_:ptr:15",
+            "context": {
+              "_RecordPath_": "file://./../../../../libs/foundry/records/dialoguecontextbank/pu/dialoguecontextbank.pu_player.json",
+              "_RecordName_": "DialogueContext.SC_lz_shops_arccorpbar_arccorp_bar_bartender_main_2",
+              "_RecordId_": "b2fecb29-f341-496a-bc17-e6bf12295a9e"},
+            "skipNodeInXSecs": -1.0},
+          {
+            "_Pointer_": "ptr:15",
+            "_Type_": "ConversationNode_Dialogue",
+            "next": null,
+            "context": {
+              "_RecordPath_": "file://./../../../../libs/foundry/records/dialoguecontextbank/pu/dialoguecontextbank.pu_arccorp_bar_bartender.json",
+              "_RecordName_": "DialogueContext.SC_lz_shops_arccorpbar_arccorp_bar_bartender_main_3",
+              "_RecordId_": "9d911f16-9a53-4982-bdaa-4c5df92df80e"},
+            "skipNodeInXSecs": -1.0},
+          null,
+          {
+            "_Type_": "ConversationNode_Dialogue",
+            "next": "_PointsTo_:ptr:16",
+            "context": {
+              "_RecordPath_": "file://./../../../../libs/foundry/records/dialoguecontextbank/pu/dialoguecontextbank.pu_player.json",
+              "_RecordName_": "DialogueContext.SC_lz_shops_arccorpbar_arccorp_bar_bartender_main_4",
+              "_RecordId_": "66cfcb66-f39e-443b-a0a7-32193619c0a7"},
+            "skipNodeInXSecs": -1.0},
+          {
+            "_Pointer_": "ptr:16",
+            "_Type_": "ConversationNode_Dialogue",
+            "next": "_PointsTo_:ptr:17",
+            "context": {
+              "_RecordPath_": "file://./../../../../libs/foundry/records/dialoguecontextbank/pu/dialoguecontextbank.pu_arccorp_bar_bartender.json",
+              "_RecordName_": "DialogueContext.SC_lz_shops_arccorpbar_arccorp_bar_bartender_main_5",
+              "_RecordId_": "4944036a-3b84-42b2-930e-2ebcafb56daf"},
+            "skipNodeInXSecs": -1.0},
+          {
+            "_Pointer_": "ptr:17",
+            "_Type_": "ConversationNode_Dialogue",
+            "next": null,
+            "context": {
+              "_RecordPath_": "file://./../../../../libs/foundry/records/dialoguecontextbank/pu/dialoguecontextbank.pu_arccorp_bar_bartender.json",
+              "_RecordName_": "DialogueContext.SC_lz_shops_arccorpbar_arccorp_bar_bartender_main_6",
+              "_RecordId_": "3fc4d678-7a8e-4233-a77c-9b368377d92e"},
+            "skipNodeInXSecs": -1.0},
+          {
+            "_Type_": "ConversationNode_Dialogue",
+            "next": "_PointsTo_:ptr:18",
+            "context": {
+              "_RecordPath_": "file://./../../../../libs/foundry/records/dialoguecontextbank/pu/dialoguecontextbank.pu_player.json",
+              "_RecordName_": "DialogueContext.SC_lz_shops_arccorpbar_arccorp_bar_bartender_main_7",
+              "_RecordId_": "388f268c-3a55-4b4f-8aca-84838fc73f29"},
+            "skipNodeInXSecs": -1.0},
+          {
+            "_Pointer_": "ptr:18",
+            "_Type_": "ConversationNode_Dialogue",
+            "next": null,
+            "context": {
+              "_RecordPath_": "file://./../../../../libs/foundry/records/dialoguecontextbank/pu/dialoguecontextbank.pu_arccorp_bar_bartender.json",
+              "_RecordName_": "DialogueContext.SC_lz_shops_arccorpbar_arccorp_bar_bartender_main_8",
+              "_RecordId_": "f45c0b18-d3b9-4dfc-bfff-ec851f85fd15"},
+            "skipNodeInXSecs": -1.0},
+          {
+            "_Type_": "ConversationNode_Dialogue",
+            "next": "_PointsTo_:ptr:19",
+            "context": {
+              "_RecordPath_": "file://./../../../../libs/foundry/records/dialoguecontextbank/pu/dialoguecontextbank.pu_player.json",
+              "_RecordName_": "DialogueContext.SC_lz_shops_arccorpbar_arccorp_bar_bartender_main_9",
+              "_RecordId_": "f5ed05d2-ac81-4753-918e-ab7d6a8464ec"},
+            "skipNodeInXSecs": -1.0},
+          {
+            "_Pointer_": "ptr:19",
+            "_Type_": "ConversationNode_Dialogue",
+            "next": null,
+            "context": {
+              "_RecordPath_": "file://./../../../../libs/foundry/records/dialoguecontextbank/pu/dialoguecontextbank.pu_arccorp_bar_waiter.json",
+              "_RecordName_": "DialogueContext.SC_lz_shops_arccorpbar_arccorp_bar_bartender_main_10",
+              "_RecordId_": "0c6c928e-cb21-493d-8bd9-8a4e026255d5"},
+            "skipNodeInXSecs": -1.0},
+          {
+            "_Type_": "ConversationNode_Dialogue",
+            "next": "_PointsTo_:ptr:19",
+            "context": {
+              "_RecordPath_": "file://./../../../../libs/foundry/records/dialoguecontextbank/pu/dialoguecontextbank.pu_player.json",
+              "_RecordName_": "DialogueContext.SC_lz_shops_arccorpbar_arccorp_bar_bartender_main_11",
+              "_RecordId_": "98cbfffa-d536-43c6-a293-e5d26505655d"},
+            "skipNodeInXSecs": -1.0},
+          {
+            "_Type_": "ConversationNode_Dialogue",
+            "next": null,
+            "context": {
+              "_RecordPath_": "file://./../../../../libs/foundry/records/dialoguecontextbank/pu/dialoguecontextbank.pu_player.json",
+              "_RecordName_": "DialogueContext.SC_lz_shops_arccorpbar_arccorp_bar_bartender_main_12",
+              "_RecordId_": "896a6cc1-c499-497b-8bfb-2bb066504b3a"},
+            "skipNodeInXSecs": -1.0}]},
+      {
+        "_RecordId_": "95e8ba10-e50f-4186-a156-3d62d06eed8b",
+        "_RecordName_": "Conversation.Dlg_SC_lz_shops_arccorpbar_arccorp_bar_lev_cronenberg_main",
+        "_Type_": "Conversation",
+        "fragments": [
+          {
+            "_Type_": "ConversationNode_Start",
+            "next": "_PointsTo_:ptr:20"},
+          {
+            "_Pointer_": "ptr:20",
+            "_Type_": "ConversationNode_Dialogue",
+            "next": null,
+            "context": {
+              "_RecordPath_": "file://./../../../../libs/foundry/records/dialoguecontextbank/pu/dialoguecontextbank.pu_lev_cronenberg.json",
+              "_RecordName_": "DialogueContext.SC_lz_shops_arccorpbar_arccorp_bar_lev_cronenberg_main_1",
+              "_RecordId_": "881f78c9-ac9e-40fd-bae8-98aae22b823d"},
+            "skipNodeInXSecs": -1.0},
+          null,
+          {
+            "_Type_": "ConversationNode_Dialogue",
+            "next": "_PointsTo_:ptr:21",
+            "context": {
+              "_RecordPath_": "file://./../../../../libs/foundry/records/dialoguecontextbank/pu/dialoguecontextbank.pu_player.json",
+              "_RecordName_": "DialogueContext.SC_lz_shops_arccorpbar_arccorp_bar_lev_cronenberg_main_2",
+              "_RecordId_": "75f13487-7273-412d-87a0-ab24ded0fc0c"},
+            "skipNodeInXSecs": -1.0},
+          {
+            "_Pointer_": "ptr:21",
+            "_Type_": "ConversationNode_Dialogue",
+            "next": "_PointsTo_:ptr:22",
+            "context": {
+              "_RecordPath_": "file://./../../../../libs/foundry/records/dialoguecontextbank/pu/dialoguecontextbank.pu_lev_cronenberg.json",
+              "_RecordName_": "DialogueContext.SC_lz_shops_arccorpbar_arccorp_bar_lev_cronenberg_main_3",
+              "_RecordId_": "0847c445-5fe3-43c0-a57d-70941efe90c6"},
+            "skipNodeInXSecs": -1.0},
+          {
+            "_Pointer_": "ptr:22",
+            "_Type_": "ConversationNode_Dialogue",
+            "next": "_PointsTo_:ptr:23",
+            "context": {
+              "_RecordPath_": "file://./../../../../libs/foundry/records/dialoguecontextbank/pu/dialoguecontextbank.pu_lev_cronenberg.json",
+              "_RecordName_": "DialogueContext.SC_lz_shops_arccorpbar_arccorp_bar_lev_cronenberg_main_4",
+              "_RecordId_": "81595167-55e7-4af6-a1de-da1e1335826a"},
+            "skipNodeInXSecs": -1.0},
+          {
+            "_Pointer_": "ptr:23",
+            "_Type_": "ConversationNode_Dialogue",
+            "next": "_PointsTo_:ptr:24",
+            "context": {
+              "_RecordPath_": "file://./../../../../libs/foundry/records/dialoguecontextbank/pu/dialoguecontextbank.pu_player.json",
+              "_RecordName_": "DialogueContext.SC_lz_shops_arccorpbar_arccorp_bar_lev_cronenberg_main_5",
+              "_RecordId_": "cc6c1328-d9c0-4386-bd7f-56a729fee30f"},
+            "skipNodeInXSecs": -1.0},
+          {
+            "_Pointer_": "ptr:24",
+            "_Type_": "ConversationNode_Dialogue",
+            "next": null,
+            "context": {
+              "_RecordPath_": "file://./../../../../libs/foundry/records/dialoguecontextbank/pu/dialoguecontextbank.pu_lev_cronenberg.json",
+              "_RecordName_": "DialogueContext.SC_lz_shops_arccorpbar_arccorp_bar_lev_cronenberg_main_6",
+              "_RecordId_": "92a4afb4-58ec-40ed-b31d-7b61033648b3"},
+            "skipNodeInXSecs": -1.0},
+          {
+            "_Type_": "ConversationNode_Dialogue",
+            "next": "_PointsTo_:ptr:25",
+            "context": {
+              "_RecordPath_": "file://./../../../../libs/foundry/records/dialoguecontextbank/pu/dialoguecontextbank.pu_player.json",
+              "_RecordName_": "DialogueContext.SC_lz_shops_arccorpbar_arccorp_bar_lev_cronenberg_main_7",
+              "_RecordId_": "a58dd2ae-0f1a-4a1e-8b93-70d4a89d9f8e"},
+            "skipNodeInXSecs": -1.0},
+          {
+            "_Pointer_": "ptr:25",
+            "_Type_": "ConversationNode_Dialogue",
+            "next": null,
+            "context": {
+              "_RecordPath_": "file://./../../../../libs/foundry/records/dialoguecontextbank/pu/dialoguecontextbank.pu_lev_cronenberg.json",
+              "_RecordName_": "DialogueContext.SC_lz_shops_arccorpbar_arccorp_bar_lev_cronenberg_main_8",
+              "_RecordId_": "9eff3dc2-d062-4c31-a461-1f66b2e72c05"},
+            "skipNodeInXSecs": -1.0}]},
+      {
+        "_RecordId_": "ff6e00d0-4d5e-4bc7-b1cd-c475ba74fe8a",
+        "_RecordName_": "Conversation.Dlg_SC_lz_shops_arccorpbar_arccorp_bar_waiter_main",
+        "_Type_": "Conversation",
+        "fragments": [
+          {
+            "_Type_": "ConversationNode_Start",
+            "next": "_PointsTo_:ptr:26"},
+          {
+            "_Pointer_": "ptr:26",
+            "_Type_": "ConversationNode_Dialogue",
+            "next": null,
+            "context": {
+              "_RecordPath_": "file://./../../../../libs/foundry/records/dialoguecontextbank/pu/dialoguecontextbank.pu_arccorp_bar_waiter.json",
+              "_RecordName_": "DialogueContext.SC_lz_shops_arccorpbar_arccorp_bar_waiter_main_1",
+              "_RecordId_": "1df345a0-9cc2-44cb-a302-5a7a2b0fc667"},
+            "skipNodeInXSecs": -1.0},
+          null,
+          {
+            "_Type_": "ConversationNode_Dialogue",
+            "next": "_PointsTo_:ptr:27",
+            "context": {
+              "_RecordPath_": "file://./../../../../libs/foundry/records/dialoguecontextbank/pu/dialoguecontextbank.pu_player.json",
+              "_RecordName_": "DialogueContext.SC_lz_shops_arccorpbar_arccorp_bar_waiter_main_2",
+              "_RecordId_": "440197a5-746d-4b4c-b38d-8e0bc81a6920"},
+            "skipNodeInXSecs": -1.0},
+          {
+            "_Pointer_": "ptr:27",
+            "_Type_": "ConversationNode_Dialogue",
+            "next": null,
+            "context": {
+              "_RecordPath_": "file://./../../../../libs/foundry/records/dialoguecontextbank/pu/dialoguecontextbank.pu_arccorp_bar_waiter.json",
+              "_RecordName_": "DialogueContext.SC_lz_shops_arccorpbar_arccorp_bar_waiter_main_3",
+              "_RecordId_": "d7323acf-be3d-439e-97c2-518aa38ed00e"},
+            "skipNodeInXSecs": -1.0},
+          null,
+          {
+            "_Type_": "ConversationNode_Dialogue",
+            "next": "_PointsTo_:ptr:28",
+            "context": {
+              "_RecordPath_": "file://./../../../../libs/foundry/records/dialoguecontextbank/pu/dialoguecontextbank.pu_player.json",
+              "_RecordName_": "DialogueContext.SC_lz_shops_arccorpbar_arccorp_bar_waiter_main_4",
+              "_RecordId_": "f914c001-cec6-4126-a1b7-dc65f0457a66"},
+            "skipNodeInXSecs": -1.0},
+          {
+            "_Pointer_": "ptr:28",
+            "_Type_": "ConversationNode_Dialogue",
+            "next": null,
+            "context": {
+              "_RecordPath_": "file://./../../../../libs/foundry/records/dialoguecontextbank/pu/dialoguecontextbank.pu_arccorp_bar_waiter.json",
+              "_RecordName_": "DialogueContext.SC_lz_shops_arccorpbar_arccorp_bar_waiter_main_5",
+              "_RecordId_": "d51f3789-a24a-4f65-80ba-039a5ee975df"},
+            "skipNodeInXSecs": -1.0},
+          {
+            "_Type_": "ConversationNode_Dialogue",
+            "next": "_PointsTo_:ptr:29",
+            "context": {
+              "_RecordPath_": "file://./../../../../libs/foundry/records/dialoguecontextbank/pu/dialoguecontextbank.pu_player.json",
+              "_RecordName_": "DialogueContext.SC_lz_shops_arccorpbar_arccorp_bar_waiter_main_6",
+              "_RecordId_": "03637e6e-b52c-46c5-b1c4-831d13ba8ea2"},
+            "skipNodeInXSecs": -1.0},
+          {
+            "_Pointer_": "ptr:29",
+            "_Type_": "ConversationNode_Dialogue",
+            "next": null,
+            "context": {
+              "_RecordPath_": "file://./../../../../libs/foundry/records/dialoguecontextbank/pu/dialoguecontextbank.pu_arccorp_bar_waiter.json",
+              "_RecordName_": "DialogueContext.SC_lz_shops_arccorpbar_arccorp_bar_waiter_main_7",
+              "_RecordId_": "a8c3edee-4050-43b7-82d9-19d7cb13dbb3"},
+            "skipNodeInXSecs": -1.0},
+          {
+            "_Type_": "ConversationNode_Dialogue",
+            "next": "_PointsTo_:ptr:29",
+            "context": {
+              "_RecordPath_": "file://./../../../../libs/foundry/records/dialoguecontextbank/pu/dialoguecontextbank.pu_player.json",
+              "_RecordName_": "DialogueContext.SC_lz_shops_arccorpbar_arccorp_bar_waiter_main_8",
+              "_RecordId_": "e6604254-a4b6-4d59-ad72-dae54f678d26"},
+            "skipNodeInXSecs": -1.0},
+          {
+            "_Type_": "ConversationNode_Dialogue",
+            "next": null,
+            "context": {
+              "_RecordPath_": "file://./../../../../libs/foundry/records/dialoguecontextbank/pu/dialoguecontextbank.pu_player.json",
+              "_RecordName_": "DialogueContext.SC_lz_shops_arccorpbar_arccorp_bar_waiter_main_9",
+              "_RecordId_": "1fb3ea06-ac88-4544-8b25-1b1c4af73802"},
+            "skipNodeInXSecs": -1.0}]},
+      {
+        "_RecordId_": "8a7b30fd-5306-40b3-9f9f-57dbb5d3ec94",
+        "_RecordName_": "Conversation.Dlg_SC_lz_shops_ArcCorpDistroJobWell_arccorp_distro_job_well_clerk_main",
+        "_Type_": "Conversation",
+        "fragments": [
+          {
+            "_Type_": "ConversationNode_Start",
+            "next": "_PointsTo_:ptr:30"},
+          {
+            "_Pointer_": "ptr:30",
+            "_Type_": "ConversationNode_Dialogue",
+            "next": null,
+            "context": {
+              "_RecordPath_": "file://./../../../../libs/foundry/records/dialoguecontextbank/pu/dialoguecontextbank.pu_arccorp_distro_clerk.json",
+              "_RecordName_": "DialogueContext.SC_lz_shops_ArcCorpDistroJobWell_arccorp_distro_job_well_clerk_main_1",
+              "_RecordId_": "275838a4-07d1-4093-9d87-06fb606e9086"},
+            "skipNodeInXSecs": -1.0},
+          null,
+          {
+            "_Type_": "ConversationNode_Dialogue",
+            "next": "_PointsTo_:ptr:31",
+            "context": {
+              "_RecordPath_": "file://./../../../../libs/foundry/records/dialoguecontextbank/pu/dialoguecontextbank.pu_player.json",
+              "_RecordName_": "DialogueContext.SC_lz_shops_ArcCorpDistroJobWell_arccorp_distro_job_well_clerk_main_2",
+              "_RecordId_": "57a14ba1-9bb2-4119-bc81-87fdabfd15b1"},
+            "skipNodeInXSecs": -1.0},
+          {
+            "_Pointer_": "ptr:31",
+            "_Type_": "ConversationNode_Dialogue",
+            "next": "_PointsTo_:ptr:32",
+            "context": {
+              "_RecordPath_": "file://./../../../../libs/foundry/records/dialoguecontextbank/pu/dialoguecontextbank.pu_arccorp_distro_clerk.json",
+              "_RecordName_": "DialogueContext.SC_lz_shops_ArcCorpDistroJobWell_arccorp_distro_job_well_clerk_main_3",
+              "_RecordId_": "57761f3b-5e7b-4ac9-8ecc-386ae33eb2cf"},
+            "skipNodeInXSecs": -1.0},
+          {
+            "_Pointer_": "ptr:32",
+            "_Type_": "ConversationNode_Dialogue",
+            "next": null,
+            "context": {
+              "_RecordPath_": "file://./../../../../libs/foundry/records/dialoguecontextbank/pu/dialoguecontextbank.pu_arccorp_distro_clerk.json",
+              "_RecordName_": "DialogueContext.SC_lz_shops_ArcCorpDistroJobWell_arccorp_distro_job_well_clerk_main_4",
+              "_RecordId_": "0319129a-01d1-4fd5-931e-d3122ae923ef"},
+            "skipNodeInXSecs": -1.0},
+          {
+            "_Type_": "ConversationNode_Dialogue",
+            "next": "_PointsTo_:ptr:33",
+            "context": {
+              "_RecordPath_": "file://./../../../../libs/foundry/records/dialoguecontextbank/pu/dialoguecontextbank.pu_player.json",
+              "_RecordName_": "DialogueContext.SC_lz_shops_ArcCorpDistroJobWell_arccorp_distro_job_well_clerk_main_5",
+              "_RecordId_": "95272806-5ba9-472d-9608-086e61ee7157"},
+            "skipNodeInXSecs": -1.0},
+          {
+            "_Pointer_": "ptr:33",
+            "_Type_": "ConversationNode_Dialogue",
+            "next": "_PointsTo_:ptr:32",
+            "context": {
+              "_RecordPath_": "file://./../../../../libs/foundry/records/dialoguecontextbank/pu/dialoguecontextbank.pu_arccorp_distro_clerk.json",
+              "_RecordName_": "DialogueContext.SC_lz_shops_ArcCorpDistroJobWell_arccorp_distro_job_well_clerk_main_6",
+              "_RecordId_": "7fb879f3-5f46-4531-8eea-e8872057a6cd"},
+            "skipNodeInXSecs": -1.0},
+          {
+            "_Type_": "ConversationNode_Dialogue",
+            "next": "_PointsTo_:ptr:34",
+            "context": {
+              "_RecordPath_": "file://./../../../../libs/foundry/records/dialoguecontextbank/pu/dialoguecontextbank.pu_player.json",
+              "_RecordName_": "DialogueContext.SC_lz_shops_ArcCorpDistroJobWell_arccorp_distro_job_well_clerk_main_7",
+              "_RecordId_": "d3ce1cd3-95de-47c5-b522-c6ddae627b35"},
+            "skipNodeInXSecs": -1.0},
+          {
+            "_Pointer_": "ptr:34",
+            "_Type_": "ConversationNode_Dialogue",
+            "next": null,
+            "context": {
+              "_RecordPath_": "file://./../../../../libs/foundry/records/dialoguecontextbank/pu/dialoguecontextbank.pu_arccorp_distro_clerk.json",
+              "_RecordName_": "DialogueContext.SC_lz_shops_ArcCorpDistroJobWell_arccorp_distro_job_well_clerk_main_8",
+              "_RecordId_": "0ec80ff6-bce5-4bd1-be4f-8b4a34ce0eac"},
+            "skipNodeInXSecs": -1.0}]},
+      {
+        "_RecordId_": "ecfba3db-309d-49ac-8884-d7b640789d18",
+        "_RecordName_": "Conversation.Dlg_SC_lz_shops_ArcCorpStore_arccorp_store_salesperson_main",
+        "_Type_": "Conversation",
+        "fragments": [
+          {
+            "_Type_": "ConversationNode_Start",
+            "next": "_PointsTo_:ptr:35"},
+          {
+            "_Pointer_": "ptr:35",
+            "_Type_": "ConversationNode_Dialogue",
+            "next": null,
+            "context": {
+              "_RecordPath_": "file://./../../../../libs/foundry/records/dialoguecontextbank/pu/dialoguecontextbank.pu_arccorp_store_salesperson.json",
+              "_RecordName_": "DialogueContext.SC_lz_shops_ArcCorpStore_arccorp_store_salesperson_main_1",
+              "_RecordId_": "6effda10-1641-48a7-a02f-fb6969051629"},
+            "skipNodeInXSecs": -1.0},
+          null,
+          {
+            "_Type_": "ConversationNode_Dialogue",
+            "next": "_PointsTo_:ptr:36",
+            "context": {
+              "_RecordPath_": "file://./../../../../libs/foundry/records/dialoguecontextbank/pu/dialoguecontextbank.pu_player.json",
+              "_RecordName_": "DialogueContext.SC_lz_shops_ArcCorpStore_arccorp_store_salesperson_main_2",
+              "_RecordId_": "d5f58677-8b26-4ac6-9940-6ae7baa4b6cf"},
+            "skipNodeInXSecs": -1.0},
+          {
+            "_Pointer_": "ptr:36",
+            "_Type_": "ConversationNode_Dialogue",
+            "next": "_PointsTo_:ptr:37",
+            "context": {
+              "_RecordPath_": "file://./../../../../libs/foundry/records/dialoguecontextbank/pu/dialoguecontextbank.pu_arccorp_store_salesperson.json",
+              "_RecordName_": "DialogueContext.SC_lz_shops_ArcCorpStore_arccorp_store_salesperson_main_3",
+              "_RecordId_": "b87016a9-5d2f-4690-b65b-46e4abf9c5e4"},
+            "skipNodeInXSecs": -1.0},
+          {
+            "_Pointer_": "ptr:37",
+            "_Type_": "ConversationNode_Dialogue",
+            "next": null,
+            "context": {
+              "_RecordPath_": "file://./../../../../libs/foundry/records/dialoguecontextbank/pu/dialoguecontextbank.pu_arccorp_store_salesperson.json",
+              "_RecordName_": "DialogueContext.SC_lz_shops_ArcCorpStore_arccorp_store_salesperson_main_4",
+              "_RecordId_": "0fcdfbd0-cf56-498a-bad8-1d6da63b93aa"},
+            "skipNodeInXSecs": -1.0},
+          {
+            "_Type_": "ConversationNode_Dialogue",
+            "next": "_PointsTo_:ptr:38",
+            "context": {
+              "_RecordPath_": "file://./../../../../libs/foundry/records/dialoguecontextbank/pu/dialoguecontextbank.pu_player.json",
+              "_RecordName_": "DialogueContext.SC_lz_shops_ArcCorpStore_arccorp_store_salesperson_main_5",
+              "_RecordId_": "43906d70-9c0c-43f3-bc0f-e2e8938a8739"},
+            "skipNodeInXSecs": -1.0},
+          {
+            "_Pointer_": "ptr:38",
+            "_Type_": "ConversationNode_Dialogue",
+            "next": "_PointsTo_:ptr:37",
+            "context": {
+              "_RecordPath_": "file://./../../../../libs/foundry/records/dialoguecontextbank/pu/dialoguecontextbank.pu_arccorp_store_salesperson.json",
+              "_RecordName_": "DialogueContext.SC_lz_shops_ArcCorpStore_arccorp_store_salesperson_main_6",
+              "_RecordId_": "930213cd-f48d-4454-abd0-7e3c21d78207"},
+            "skipNodeInXSecs": -1.0},
+          {
+            "_Type_": "ConversationNode_Dialogue",
+            "next": "_PointsTo_:ptr:39",
+            "context": {
+              "_RecordPath_": "file://./../../../../libs/foundry/records/dialoguecontextbank/pu/dialoguecontextbank.pu_player.json",
+              "_RecordName_": "DialogueContext.SC_lz_shops_ArcCorpStore_arccorp_store_salesperson_main_7",
+              "_RecordId_": "77ed4750-db2f-4c0a-8694-b6c8691352d6"},
+            "skipNodeInXSecs": -1.0},
+          {
+            "_Pointer_": "ptr:39",
+            "_Type_": "ConversationNode_Dialogue",
+            "next": null,
+            "context": {
+              "_RecordPath_": "file://./../../../../libs/foundry/records/dialoguecontextbank/pu/dialoguecontextbank.pu_arccorp_store_salesperson.json",
+              "_RecordName_": "DialogueContext.SC_lz_shops_ArcCorpStore_arccorp_store_salesperson_main_8",
+              "_RecordId_": "dc0511cd-1bdc-42be-8df3-72e3fb696936"},
+            "skipNodeInXSecs": -1.0}]},
+      {
+        "_RecordId_": "67b1acf7-db6b-4c05-a7c9-67a8cf7bfc0e",
+        "_RecordName_": "Conversation.Dlg_SC_lz_shops_AstroArmada_astroarmada_insurance_main",
+        "_Type_": "Conversation",
+        "fragments": [
+          {
+            "_Type_": "ConversationNode_Start",
+            "next": "_PointsTo_:ptr:40"},
+          {
+            "_Pointer_": "ptr:40",
+            "_Type_": "ConversationNode_Dialogue",
+            "next": null,
+            "context": {
+              "_RecordPath_": "file://./../../../../libs/foundry/records/dialoguecontextbank/pu/dialoguecontextbank.pu_astro_armada_insurance_representative.json",
+              "_RecordName_": "DialogueContext.SC_lz_shops_AstroArmada_astroarmada_insurance_main_1",
+              "_RecordId_": "c1718df5-4cc0-43a9-b34d-e41eae944049"},
+            "skipNodeInXSecs": -1.0},
+          null,
+          {
+            "_Type_": "ConversationNode_Dialogue",
+            "next": "_PointsTo_:ptr:41",
+            "context": {
+              "_RecordPath_": "file://./../../../../libs/foundry/records/dialoguecontextbank/pu/dialoguecontextbank.pu_player.json",
+              "_RecordName_": "DialogueContext.SC_lz_shops_AstroArmada_astroarmada_insurance_main_2",
+              "_RecordId_": "13db517d-99b7-42f5-8a4a-c448d2b34d94"},
+            "skipNodeInXSecs": -1.0},
+          {
+            "_Pointer_": "ptr:41",
+            "_Type_": "ConversationNode_Dialogue",
+            "next": null,
+            "context": {
+              "_RecordPath_": "file://./../../../../libs/foundry/records/dialoguecontextbank/pu/dialoguecontextbank.pu_astro_armada_insurance_representative.json",
+              "_RecordName_": "DialogueContext.SC_lz_shops_AstroArmada_astroarmada_insurance_main_3",
+              "_RecordId_": "641e8026-7b59-4afb-869a-80ef6b9a6009"},
+            "skipNodeInXSecs": -1.0},
+          {
+            "_Type_": "ConversationNode_Dialogue",
+            "next": "_PointsTo_:ptr:42",
+            "context": {
+              "_RecordPath_": "file://./../../../../libs/foundry/records/dialoguecontextbank/pu/dialoguecontextbank.pu_player.json",
+              "_RecordName_": "DialogueContext.SC_lz_shops_AstroArmada_astroarmada_insurance_main_4",
+              "_RecordId_": "0f76178d-85fc-47f8-acdc-91be0e69bae3"},
+            "skipNodeInXSecs": -1.0},
+          {
+            "_Pointer_": "ptr:42",
+            "_Type_": "ConversationNode_Dialogue",
+            "next": null,
+            "context": {
+              "_RecordPath_": "file://./../../../../libs/foundry/records/dialoguecontextbank/pu/dialoguecontextbank.pu_astro_armada_insurance_representative.json",
+              "_RecordName_": "DialogueContext.SC_lz_shops_AstroArmada_astroarmada_insurance_main_5",
+              "_RecordId_": "7b119828-a2bd-4cfa-9c9d-4cf3f7fe853d"},
+            "skipNodeInXSecs": -1.0}]},
+      {
+        "_RecordId_": "e953d95c-5f3c-4cfa-9eed-717f1dd0625f",
+        "_RecordName_": "Conversation.Dlg_SC_lz_shops_AstroArmada_astroarmada_salesperson_main",
+        "_Type_": "Conversation",
+        "fragments": [
+          {
+            "_Type_": "ConversationNode_Start",
+            "next": "_PointsTo_:ptr:43"},
+          {
+            "_Pointer_": "ptr:43",
+            "_Type_": "ConversationNode_Dialogue",
+            "next": null,
+            "context": {
+              "_RecordPath_": "file://./../../../../libs/foundry/records/dialoguecontextbank/pu/dialoguecontextbank.pu_astro_armada_salesperson.json",
+              "_RecordName_": "DialogueContext.SC_lz_shops_AstroArmada_astroarmada_salesperson_main_1",
+              "_RecordId_": "b26a946d-af4d-4762-b568-a880fa062d9b"},
+            "skipNodeInXSecs": -1.0},
+          null,
+          {
+            "_Type_": "ConversationNode_Dialogue",
+            "next": "_PointsTo_:ptr:44",
+            "context": {
+              "_RecordPath_": "file://./../../../../libs/foundry/records/dialoguecontextbank/pu/dialoguecontextbank.pu_player.json",
+              "_RecordName_": "DialogueContext.SC_lz_shops_AstroArmada_astroarmada_salesperson_main_2",
+              "_RecordId_": "d1c166c5-076e-4bf1-b95d-0bf19b807ae8"},
+            "skipNodeInXSecs": -1.0},
+          {
+            "_Pointer_": "ptr:44",
+            "_Type_": "ConversationNode_Dialogue",
+            "next": "_PointsTo_:ptr:45",
+            "context": {
+              "_RecordPath_": "file://./../../../../libs/foundry/records/dialoguecontextbank/pu/dialoguecontextbank.pu_astro_armada_salesperson.json",
+              "_RecordName_": "DialogueContext.SC_lz_shops_AstroArmada_astroarmada_salesperson_main_3",
+              "_RecordId_": "d555bd0f-4eea-4f43-9da6-90792ffdfdc3"},
+            "skipNodeInXSecs": -1.0},
+          {
+            "_Pointer_": "ptr:45",
+            "_Type_": "ConversationNode_Dialogue",
+            "next": null,
+            "context": {
+              "_RecordPath_": "file://./../../../../libs/foundry/records/dialoguecontextbank/pu/dialoguecontextbank.pu_astro_armada_salesperson.json",
+              "_RecordName_": "DialogueContext.SC_lz_shops_AstroArmada_astroarmada_salesperson_main_4",
+              "_RecordId_": "4ef68c04-a43f-459e-9a98-c89ad8420412"},
+            "skipNodeInXSecs": -1.0},
+          {
+            "_Type_": "ConversationNode_Dialogue",
+            "next": "_PointsTo_:ptr:46",
+            "context": {
+              "_RecordPath_": "file://./../../../../libs/foundry/records/dialoguecontextbank/pu/dialoguecontextbank.pu_player.json",
+              "_RecordName_": "DialogueContext.SC_lz_shops_AstroArmada_astroarmada_salesperson_main_5",
+              "_RecordId_": "84019639-4c33-4f72-b55b-592523e844ff"},
+            "skipNodeInXSecs": -1.0},
+          {
+            "_Pointer_": "ptr:46",
+            "_Type_": "ConversationNode_Dialogue",
+            "next": "_PointsTo_:ptr:45",
+            "context": {
+              "_RecordPath_": "file://./../../../../libs/foundry/records/dialoguecontextbank/pu/dialoguecontextbank.pu_astro_armada_salesperson.json",
+              "_RecordName_": "DialogueContext.SC_lz_shops_AstroArmada_astroarmada_salesperson_main_6",
+              "_RecordId_": "19d5128a-03ea-46a7-a464-0527b47a94ce"},
+            "skipNodeInXSecs": -1.0},
+          {
+            "_Type_": "ConversationNode_Dialogue",
+            "next": "_PointsTo_:ptr:47",
+            "context": {
+              "_RecordPath_": "file://./../../../../libs/foundry/records/dialoguecontextbank/pu/dialoguecontextbank.pu_player.json",
+              "_RecordName_": "DialogueContext.SC_lz_shops_AstroArmada_astroarmada_salesperson_main_7",
+              "_RecordId_": "62699dfd-83ae-459b-ae54-b99d3ecbdf54"},
+            "skipNodeInXSecs": -1.0},
+          {
+            "_Pointer_": "ptr:47",
+            "_Type_": "ConversationNode_Dialogue",
+            "next": null,
+            "context": {
+              "_RecordPath_": "file://./../../../../libs/foundry/records/dialoguecontextbank/pu/dialoguecontextbank.pu_astro_armada_salesperson.json",
+              "_RecordName_": "DialogueContext.SC_lz_shops_AstroArmada_astroarmada_salesperson_main_8",
+              "_RecordId_": "70ccb3df-2a2a-4c75-aec5-b6e90bcff07c"},
+            "skipNodeInXSecs": -1.0},
+          {
+            "_Type_": "ConversationNode_Dialogue",
+            "next": "_PointsTo_:ptr:48",
+            "context": {
+              "_RecordPath_": "file://./../../../../libs/foundry/records/dialoguecontextbank/pu/dialoguecontextbank.pu_player.json",
+              "_RecordName_": "DialogueContext.SC_lz_shops_AstroArmada_astroarmada_salesperson_main_9",
+              "_RecordId_": "d619805e-b124-447c-ba16-5432f672e5c3"},
+            "skipNodeInXSecs": -1.0},
+          {
+            "_Pointer_": "ptr:48",
+            "_Type_": "ConversationNode_Dialogue",
+            "next": "_PointsTo_:ptr:49",
+            "context": {
+              "_RecordPath_": "file://./../../../../libs/foundry/records/dialoguecontextbank/pu/dialoguecontextbank.pu_astro_armada_salesperson.json",
+              "_RecordName_": "DialogueContext.SC_lz_shops_AstroArmada_astroarmada_salesperson_main_10",
+              "_RecordId_": "bccb6750-4276-4453-9557-87a658cf6574"},
+            "skipNodeInXSecs": -1.0},
+          {
+            "_Pointer_": "ptr:49",
+            "_Type_": "ConversationNode_Wait",
+            "next": "_PointsTo_:ptr:50",
+            "waitTime": 3.0},
+          {
+            "_Pointer_": "ptr:50",
+            "_Type_": "ConversationNode_Dialogue",
+            "next": null,
+            "context": {
+              "_RecordPath_": "file://./../../../../libs/foundry/records/dialoguecontextbank/pu/dialoguecontextbank.pu_astro_armada_salesperson.json",
+              "_RecordName_": "DialogueContext.SC_lz_shops_AstroArmada_astroarmada_salesperson_main_11",
+              "_RecordId_": "d4d0dbac-840f-40d1-84d3-5e6bcea285db"},
+            "skipNodeInXSecs": -1.0}]},
+      {
+        "_RecordId_": "fe402557-eb3a-423f-9bbf-cdcf8d7da830",
+        "_RecordName_": "Conversation.Dlg_SC_lz_shops_BarclaysEstate_barclays_estate_lawyer_main",
+        "_Type_": "Conversation",
+        "fragments": [
+          {
+            "_Type_": "ConversationNode_Start",
+            "next": "_PointsTo_:ptr:51"},
+          {
+            "_Pointer_": "ptr:51",
+            "_Type_": "ConversationNode_Dialogue",
+            "next": null,
+            "context": {
+              "_RecordPath_": "file://./../../../../libs/foundry/records/dialoguecontextbank/pu/dialoguecontextbank.pu_barclays_estate_lawyer.json",
+              "_RecordName_": "DialogueContext.SC_lz_shops_BarclaysEstate_barclays_estate_lawyer_main_1",
+              "_RecordId_": "7fd80031-ade9-4953-a611-3266029060e3"},
+            "skipNodeInXSecs": -1.0},
+          null,
+          {
+            "_Type_": "ConversationNode_Dialogue",
+            "next": "_PointsTo_:ptr:52",
+            "context": {
+              "_RecordPath_": "file://./../../../../libs/foundry/records/dialoguecontextbank/pu/dialoguecontextbank.pu_player.json",
+              "_RecordName_": "DialogueContext.SC_lz_shops_BarclaysEstate_barclays_estate_lawyer_main_2",
+              "_RecordId_": "40289d56-9fbc-403f-a894-e662bbf8366f"},
+            "skipNodeInXSecs": -1.0},
+          {
+            "_Pointer_": "ptr:52",
+            "_Type_": "ConversationNode_Dialogue",
+            "next": "_PointsTo_:ptr:53",
+            "context": {
+              "_RecordPath_": "file://./../../../../libs/foundry/records/dialoguecontextbank/pu/dialoguecontextbank.pu_barclays_estate_lawyer.json",
+              "_RecordName_": "DialogueContext.SC_lz_shops_BarclaysEstate_barclays_estate_lawyer_main_3",
+              "_RecordId_": "8ceedca1-2d62-4274-bf1e-db97f98a8ade"},
+            "skipNodeInXSecs": -1.0},
+          {
+            "_Pointer_": "ptr:53",
+            "_Type_": "ConversationNode_Dialogue",
+            "next": null,
+            "context": {
+              "_RecordPath_": "file://./../../../../libs/foundry/records/dialoguecontextbank/pu/dialoguecontextbank.pu_barclays_estate_lawyer.json",
+              "_RecordName_": "DialogueContext.SC_lz_shops_BarclaysEstate_barclays_estate_lawyer_main_4",
+              "_RecordId_": "7ceddb36-2711-494f-a69f-429ab0c52bc9"},
+            "skipNodeInXSecs": -1.0},
+          {
+            "_Type_": "ConversationNode_Dialogue",
+            "next": "_PointsTo_:ptr:54",
+            "context": {
+              "_RecordPath_": "file://./../../../../libs/foundry/records/dialoguecontextbank/pu/dialoguecontextbank.pu_player.json",
+              "_RecordName_": "DialogueContext.SC_lz_shops_BarclaysEstate_barclays_estate_lawyer_main_5",
+              "_RecordId_": "3cb7f2a8-d562-4f65-899c-60bc859b7e90"},
+            "skipNodeInXSecs": -1.0},
+          {
+            "_Pointer_": "ptr:54",
+            "_Type_": "ConversationNode_Dialogue",
+            "next": "_PointsTo_:ptr:53",
+            "context": {
+              "_RecordPath_": "file://./../../../../libs/foundry/records/dialoguecontextbank/pu/dialoguecontextbank.pu_barclays_estate_lawyer.json",
+              "_RecordName_": "DialogueContext.SC_lz_shops_BarclaysEstate_barclays_estate_lawyer_main_6",
+              "_RecordId_": "bdfd6525-64e1-4788-a9c9-e7c6d9c2c59a"},
+            "skipNodeInXSecs": -1.0},
+          {
+            "_Type_": "ConversationNode_Dialogue",
+            "next": "_PointsTo_:ptr:55",
+            "context": {
+              "_RecordPath_": "file://./../../../../libs/foundry/records/dialoguecontextbank/pu/dialoguecontextbank.pu_player.json",
+              "_RecordName_": "DialogueContext.SC_lz_shops_BarclaysEstate_barclays_estate_lawyer_main_7",
+              "_RecordId_": "8ef4bd62-65f2-48db-bdf3-8e3a3680377d"},
+            "skipNodeInXSecs": -1.0},
+          {
+            "_Pointer_": "ptr:55",
+            "_Type_": "ConversationNode_Dialogue",
+            "next": null,
+            "context": {
+              "_RecordPath_": "file://./../../../../libs/foundry/records/dialoguecontextbank/pu/dialoguecontextbank.pu_barclays_estate_lawyer.json",
+              "_RecordName_": "DialogueContext.SC_lz_shops_BarclaysEstate_barclays_estate_lawyer_main_8",
+              "_RecordId_": "b857bf19-9891-4f69-8a91-eb1e523a97c8"},
+            "skipNodeInXSecs": -1.0}]},
+      {
+        "_RecordId_": "520e0e46-b29a-4015-9e52-d3c4356365ac",
+        "_RecordName_": "Conversation.Dlg_SC_lz_shops_BarclaysEstate_barclays_estate_secretary_main",
+        "_Type_": "Conversation",
+        "fragments": [
+          {
+            "_Type_": "ConversationNode_Start",
+            "next": "_PointsTo_:ptr:56"},
+          {
+            "_Pointer_": "ptr:56",
+            "_Type_": "ConversationNode_Dialogue",
+            "next": null,
+            "context": {
+              "_RecordPath_": "file://./../../../../libs/foundry/records/dialoguecontextbank/pu/dialoguecontextbank.pu_barclays_estate_secretary.json",
+              "_RecordName_": "DialogueContext.SC_lz_shops_BarclaysEstate_barclays_estate_secretary_main_1",
+              "_RecordId_": "789d7e69-e331-4db8-94ac-46b9e788cd30"},
+            "skipNodeInXSecs": -1.0},
+          null,
+          {
+            "_Type_": "ConversationNode_Dialogue",
+            "next": "_PointsTo_:ptr:57",
+            "context": {
+              "_RecordPath_": "file://./../../../../libs/foundry/records/dialoguecontextbank/pu/dialoguecontextbank.pu_player.json",
+              "_RecordName_": "DialogueContext.SC_lz_shops_BarclaysEstate_barclays_estate_secretary_main_2",
+              "_RecordId_": "3da641c5-0a32-408b-b1bc-c25b534c9bb4"},
+            "skipNodeInXSecs": -1.0},
+          {
+            "_Pointer_": "ptr:57",
+            "_Type_": "ConversationNode_Dialogue",
+            "next": "_PointsTo_:ptr:58",
+            "context": {
+              "_RecordPath_": "file://./../../../../libs/foundry/records/dialoguecontextbank/pu/dialoguecontextbank.pu_barclays_estate_secretary.json",
+              "_RecordName_": "DialogueContext.SC_lz_shops_BarclaysEstate_barclays_estate_secretary_main_3",
+              "_RecordId_": "ab16ef9f-17a4-4487-8103-fd3535794417"},
+            "skipNodeInXSecs": -1.0},
+          {
+            "_Pointer_": "ptr:58",
+            "_Type_": "ConversationNode_Wait",
+            "next": "_PointsTo_:ptr:59",
+            "waitTime": 3.0},
+          {
+            "_Pointer_": "ptr:59",
+            "_Type_": "ConversationNode_Dialogue",
+            "next": null,
+            "context": {
+              "_RecordPath_": "file://./../../../../libs/foundry/records/dialoguecontextbank/pu/dialoguecontextbank.pu_barclays_estate_secretary.json",
+              "_RecordName_": "DialogueContext.SC_lz_shops_BarclaysEstate_barclays_estate_secretary_main_4",
+              "_RecordId_": "f6c44375-a6c9-47b2-905b-012fae54e5eb"},
+            "skipNodeInXSecs": -1.0},
+          {
+            "_Type_": "ConversationNode_Dialogue",
+            "next": "_PointsTo_:ptr:60",
+            "context": {
+              "_RecordPath_": "file://./../../../../libs/foundry/records/dialoguecontextbank/pu/dialoguecontextbank.pu_player.json",
+              "_RecordName_": "DialogueContext.SC_lz_shops_BarclaysEstate_barclays_estate_secretary_main_5",
+              "_RecordId_": "1894ba76-49c4-4f67-8417-023dfcce7d3a"},
+            "skipNodeInXSecs": -1.0},
+          {
+            "_Pointer_": "ptr:60",
+            "_Type_": "ConversationNode_Dialogue",
+            "next": null,
+            "context": {
+              "_RecordPath_": "file://./../../../../libs/foundry/records/dialoguecontextbank/pu/dialoguecontextbank.pu_barclays_estate_secretary.json",
+              "_RecordName_": "DialogueContext.SC_lz_shops_BarclaysEstate_barclays_estate_secretary_main_6",
+              "_RecordId_": "d8b322ab-4b7a-40ec-8670-e5b7539be88a"},
+            "skipNodeInXSecs": -1.0}]},
+      {
+        "_RecordId_": "459a8a7e-0f44-4d76-b4bb-347c0311e5da",
+        "_RecordName_": "Conversation.Dlg_SC_lz_shops_CasabaOutlet_casaba_outlet_salesperson_main",
+        "_Type_": "Conversation",
+        "fragments": [
+          {
+            "_Type_": "ConversationNode_Start",
+            "next": "_PointsTo_:ptr:61"},
+          {
+            "_Pointer_": "ptr:61",
+            "_Type_": "ConversationNode_Dialogue",
+            "next": null,
+            "context": {
+              "_RecordPath_": "file://./../../../../libs/foundry/records/dialoguecontextbank/pu/dialoguecontextbank.pu_casaba_outlet_salesperson.json",
+              "_RecordName_": "DialogueContext.SC_lz_shops_CasabaOutlet_casaba_outlet_salesperson_main_1",
+              "_RecordId_": "4cf88da0-2dbe-4568-afa3-4fbb0743d724"},
+            "skipNodeInXSecs": -1.0},
+          null,
+          {
+            "_Type_": "ConversationNode_Dialogue",
+            "next": "_PointsTo_:ptr:62",
+            "context": {
+              "_RecordPath_": "file://./../../../../libs/foundry/records/dialoguecontextbank/pu/dialoguecontextbank.pu_player.json",
+              "_RecordName_": "DialogueContext.SC_lz_shops_CasabaOutlet_casaba_outlet_salesperson_main_2",
+              "_RecordId_": "d743875d-a05a-4997-9aa2-e48686f58116"},
+            "skipNodeInXSecs": -1.0},
+          {
+            "_Pointer_": "ptr:62",
+            "_Type_": "ConversationNode_Dialogue",
+            "next": null,
+            "context": {
+              "_RecordPath_": "file://./../../../../libs/foundry/records/dialoguecontextbank/pu/dialoguecontextbank.pu_casaba_outlet_salesperson.json",
+              "_RecordName_": "DialogueContext.SC_lz_shops_CasabaOutlet_casaba_outlet_salesperson_main_3",
+              "_RecordId_": "73dbb84e-b43b-4385-a50f-77b6a905820e"},
+            "skipNodeInXSecs": -1.0},
+          {
+            "_Type_": "ConversationNode_Dialogue",
+            "next": "_PointsTo_:ptr:63",
+            "context": {
+              "_RecordPath_": "file://./../../../../libs/foundry/records/dialoguecontextbank/pu/dialoguecontextbank.pu_player.json",
+              "_RecordName_": "DialogueContext.SC_lz_shops_CasabaOutlet_casaba_outlet_salesperson_main_4",
+              "_RecordId_": "39303e18-ffad-4e43-be77-fb84b5da6532"},
+            "skipNodeInXSecs": -1.0},
+          {
+            "_Pointer_": "ptr:63",
+            "_Type_": "ConversationNode_Dialogue",
+            "next": null,
+            "context": {
+              "_RecordPath_": "file://./../../../../libs/foundry/records/dialoguecontextbank/pu/dialoguecontextbank.pu_casaba_outlet_salesperson.json",
+              "_RecordName_": "DialogueContext.SC_lz_shops_CasabaOutlet_casaba_outlet_salesperson_main_5",
+              "_RecordId_": "1ebd0f7b-6b0f-4431-92c8-c9a8845ef2e5"},
+            "skipNodeInXSecs": -1.0},
+          {
+            "_Type_": "ConversationNode_Dialogue",
+            "next": "_PointsTo_:ptr:64",
+            "context": {
+              "_RecordPath_": "file://./../../../../libs/foundry/records/dialoguecontextbank/pu/dialoguecontextbank.pu_player.json",
+              "_RecordName_": "DialogueContext.SC_lz_shops_CasabaOutlet_casaba_outlet_salesperson_main_6",
+              "_RecordId_": "759783b8-5c2c-49ae-87db-abfd3a3364d0"},
+            "skipNodeInXSecs": -1.0},
+          {
+            "_Pointer_": "ptr:64",
+            "_Type_": "ConversationNode_Dialogue",
+            "next": null,
+            "context": {
+              "_RecordPath_": "file://./../../../../libs/foundry/records/dialoguecontextbank/pu/dialoguecontextbank.pu_casaba_outlet_salesperson.json",
+              "_RecordName_": "DialogueContext.SC_lz_shops_CasabaOutlet_casaba_outlet_salesperson_main_7",
+              "_RecordId_": "3604c37d-5e57-4eee-8340-bc76dbcb06b8"},
+            "skipNodeInXSecs": -1.0}]},
+      {
+        "_RecordId_": "849a77cf-2388-492c-9ef3-6d0e197e0cab",
+        "_RecordName_": "Conversation.Dlg_SC_lz_shops_Centermass_centermass_salesperson_main",
+        "_Type_": "Conversation",
+        "fragments": [
+          {
+            "_Type_": "ConversationNode_Start",
+            "next": "_PointsTo_:ptr:65"},
+          {
+            "_Pointer_": "ptr:65",
+            "_Type_": "ConversationNode_Dialogue",
+            "next": null,
+            "context": {
+              "_RecordPath_": "file://./../../../../libs/foundry/records/dialoguecontextbank/pu/dialoguecontextbank.pu_centermass_salesperson.json",
+              "_RecordName_": "DialogueContext.SC_lz_shops_Centermass_centermass_salesperson_main_1",
+              "_RecordId_": "45911bd4-acfa-4687-b7ef-357b8859bd94"},
+            "skipNodeInXSecs": -1.0},
+          null,
+          {
+            "_Type_": "ConversationNode_Dialogue",
+            "next": "_PointsTo_:ptr:66",
+            "context": {
+              "_RecordPath_": "file://./../../../../libs/foundry/records/dialoguecontextbank/pu/dialoguecontextbank.pu_player.json",
+              "_RecordName_": "DialogueContext.SC_lz_shops_Centermass_centermass_salesperson_main_2",
+              "_RecordId_": "e0f81ef3-7dd7-45d9-9201-51d92d24a2ae"},
+            "skipNodeInXSecs": -1.0},
+          {
+            "_Pointer_": "ptr:66",
+            "_Type_": "ConversationNode_Dialogue",
+            "next": "_PointsTo_:ptr:67",
+            "context": {
+              "_RecordPath_": "file://./../../../../libs/foundry/records/dialoguecontextbank/pu/dialoguecontextbank.pu_centermass_salesperson.json",
+              "_RecordName_": "DialogueContext.SC_lz_shops_Centermass_centermass_salesperson_main_3",
+              "_RecordId_": "caed658c-8053-4388-8076-f23dd4bd8397"},
+            "skipNodeInXSecs": -1.0},
+          {
+            "_Pointer_": "ptr:67",
+            "_Type_": "ConversationNode_Dialogue",
+            "next": null,
+            "context": {
+              "_RecordPath_": "file://./../../../../libs/foundry/records/dialoguecontextbank/pu/dialoguecontextbank.pu_centermass_salesperson.json",
+              "_RecordName_": "DialogueContext.SC_lz_shops_Centermass_centermass_salesperson_main_4",
+              "_RecordId_": "d5eeabf3-85f2-42b7-aaf3-ca23439cc5aa"},
+            "skipNodeInXSecs": -1.0},
+          {
+            "_Type_": "ConversationNode_Dialogue",
+            "next": "_PointsTo_:ptr:68",
+            "context": {
+              "_RecordPath_": "file://./../../../../libs/foundry/records/dialoguecontextbank/pu/dialoguecontextbank.pu_player.json",
+              "_RecordName_": "DialogueContext.SC_lz_shops_Centermass_centermass_salesperson_main_5",
+              "_RecordId_": "168e9e64-2086-4b82-be4a-7f6d573447bc"},
+            "skipNodeInXSecs": -1.0},
+          {
+            "_Pointer_": "ptr:68",
+            "_Type_": "ConversationNode_Dialogue",
+            "next": "_PointsTo_:ptr:67",
+            "context": {
+              "_RecordPath_": "file://./../../../../libs/foundry/records/dialoguecontextbank/pu/dialoguecontextbank.pu_centermass_salesperson.json",
+              "_RecordName_": "DialogueContext.SC_lz_shops_Centermass_centermass_salesperson_main_6",
+              "_RecordId_": "fde921d9-d64d-4601-ac11-70a860ebcdf1"},
+            "skipNodeInXSecs": -1.0},
+          {
+            "_Type_": "ConversationNode_Dialogue",
+            "next": "_PointsTo_:ptr:69",
+            "context": {
+              "_RecordPath_": "file://./../../../../libs/foundry/records/dialoguecontextbank/pu/dialoguecontextbank.pu_player.json",
+              "_RecordName_": "DialogueContext.SC_lz_shops_Centermass_centermass_salesperson_main_7",
+              "_RecordId_": "47cef5d2-11ce-450e-96be-9dd26ef0e478"},
+            "skipNodeInXSecs": -1.0},
+          {
+            "_Pointer_": "ptr:69",
+            "_Type_": "ConversationNode_Dialogue",
+            "next": null,
+            "context": {
+              "_RecordPath_": "file://./../../../../libs/foundry/records/dialoguecontextbank/pu/dialoguecontextbank.pu_centermass_salesperson.json",
+              "_RecordName_": "DialogueContext.SC_lz_shops_Centermass_centermass_salesperson_main_8",
+              "_RecordId_": "13ebff1c-1c30-4f6f-aa56-66737d8d3137"},
+            "skipNodeInXSecs": -1.0}]},
+      {
+        "_RecordId_": "95e606a2-a9db-4754-bb62-31f39667db69",
+        "_RecordName_": "Conversation.Dlg_SC_lz_shops_CorporateSecurity_corporate_security_guard_main",
+        "_Type_": "Conversation",
+        "fragments": [
+          {
+            "_Type_": "ConversationNode_Start",
+            "next": "_PointsTo_:ptr:70"},
+          {
+            "_Pointer_": "ptr:70",
+            "_Type_": "ConversationNode_Dialogue",
+            "next": null,
+            "context": {
+              "_RecordPath_": "file://./../../../../libs/foundry/records/dialoguecontextbank/pu/dialoguecontextbank.pu_corporate_security_guard.json",
+              "_RecordName_": "DialogueContext.SC_lz_shops_CorporateSecurity_corporate_security_guard_main_1",
+              "_RecordId_": "9c24cf34-129d-46f8-9890-bbdb91d9a29e"},
+            "skipNodeInXSecs": -1.0}]},
+      {
+        "_RecordId_": "8e309176-b47e-4975-8190-dc959f59eb06",
+        "_RecordName_": "Conversation.Dlg_SC_lz_shops_CorporateSecurity_corporate_security_lt_callum_main",
+        "_Type_": "Conversation",
+        "fragments": [
+          {
+            "_Type_": "ConversationNode_Start",
+            "next": "_PointsTo_:ptr:71"},
+          {
+            "_Pointer_": "ptr:71",
+            "_Type_": "ConversationNode_Dialogue",
+            "next": null,
+            "context": {
+              "_RecordPath_": "file://./../../../../libs/foundry/records/dialoguecontextbank/pu/dialoguecontextbank.pu_lt_callum.json",
+              "_RecordName_": "DialogueContext.SC_lz_shops_CorporateSecurity_corporate_security_lt_callum_main_1",
+              "_RecordId_": "44037126-0745-4083-9b90-4b5f6a3fa3f9"},
+            "skipNodeInXSecs": -1.0},
+          null,
+          {
+            "_Type_": "ConversationNode_Dialogue",
+            "next": "_PointsTo_:ptr:72",
+            "context": {
+              "_RecordPath_": "file://./../../../../libs/foundry/records/dialoguecontextbank/pu/dialoguecontextbank.pu_player.json",
+              "_RecordName_": "DialogueContext.SC_lz_shops_CorporateSecurity_corporate_security_lt_callum_main_2",
+              "_RecordId_": "428170d8-e8a0-49a3-a5e7-09ae2ada44cd"},
+            "skipNodeInXSecs": -1.0},
+          {
+            "_Pointer_": "ptr:72",
+            "_Type_": "ConversationNode_Dialogue",
+            "next": "_PointsTo_:ptr:73",
+            "context": {
+              "_RecordPath_": "file://./../../../../libs/foundry/records/dialoguecontextbank/pu/dialoguecontextbank.pu_lt_callum.json",
+              "_RecordName_": "DialogueContext.SC_lz_shops_CorporateSecurity_corporate_security_lt_callum_main_3",
+              "_RecordId_": "9d96a4dd-9178-49f2-b80f-3b0b790265c9"},
+            "skipNodeInXSecs": -1.0},
+          {
+            "_Pointer_": "ptr:73",
+            "_Type_": "ConversationNode_Dialogue",
+            "next": null,
+            "context": {
+              "_RecordPath_": "file://./../../../../libs/foundry/records/dialoguecontextbank/pu/dialoguecontextbank.pu_lt_callum.json",
+              "_RecordName_": "DialogueContext.SC_lz_shops_CorporateSecurity_corporate_security_lt_callum_main_4",
+              "_RecordId_": "3e2d0933-7229-40e1-a79e-41189f360e53"},
+            "skipNodeInXSecs": -1.0},
+          null,
+          {
+            "_Type_": "ConversationNode_Dialogue",
+            "next": "_PointsTo_:ptr:74",
+            "context": {
+              "_RecordPath_": "file://./../../../../libs/foundry/records/dialoguecontextbank/pu/dialoguecontextbank.pu_player.json",
+              "_RecordName_": "DialogueContext.SC_lz_shops_CorporateSecurity_corporate_security_lt_callum_main_5",
+              "_RecordId_": "50753f27-cb7f-4836-9031-92f64dcfce59"},
+            "skipNodeInXSecs": -1.0},
+          {
+            "_Pointer_": "ptr:74",
+            "_Type_": "ConversationNode_Dialogue",
+            "next": null,
+            "context": {
+              "_RecordPath_": "file://./../../../../libs/foundry/records/dialoguecontextbank/pu/dialoguecontextbank.pu_lt_callum.json",
+              "_RecordName_": "DialogueContext.SC_lz_shops_CorporateSecurity_corporate_security_lt_callum_main_6",
+              "_RecordId_": "7989ff2f-62a9-4ed5-9d9d-60111a02268a"},
+            "skipNodeInXSecs": -1.0},
+          {
+            "_Type_": "ConversationNode_Dialogue",
+            "next": "_PointsTo_:ptr:75",
+            "context": {
+              "_RecordPath_": "file://./../../../../libs/foundry/records/dialoguecontextbank/pu/dialoguecontextbank.pu_player.json",
+              "_RecordName_": "DialogueContext.SC_lz_shops_CorporateSecurity_corporate_security_lt_callum_main_7",
+              "_RecordId_": "24e99edd-a37b-4bfb-91e3-70f8329ad5ea"},
+            "skipNodeInXSecs": -1.0},
+          {
+            "_Pointer_": "ptr:75",
+            "_Type_": "ConversationNode_Dialogue",
+            "next": null,
+            "context": {
+              "_RecordPath_": "file://./../../../../libs/foundry/records/dialoguecontextbank/pu/dialoguecontextbank.pu_lt_callum.json",
+              "_RecordName_": "DialogueContext.SC_lz_shops_CorporateSecurity_corporate_security_lt_callum_main_8",
+              "_RecordId_": "c03de6e9-e366-4e5e-93cb-1980b730008e"},
+            "skipNodeInXSecs": -1.0},
+          {
+            "_Type_": "ConversationNode_Dialogue",
+            "next": "_PointsTo_:ptr:76",
+            "context": {
+              "_RecordPath_": "file://./../../../../libs/foundry/records/dialoguecontextbank/pu/dialoguecontextbank.pu_player.json",
+              "_RecordName_": "DialogueContext.SC_lz_shops_CorporateSecurity_corporate_security_lt_callum_main_9",
+              "_RecordId_": "1747973e-3ce3-40ce-b97e-b7d54ea8cc62"},
+            "skipNodeInXSecs": -1.0},
+          {
+            "_Pointer_": "ptr:76",
+            "_Type_": "ConversationNode_Dialogue",
+            "next": null,
+            "context": {
+              "_RecordPath_": "file://./../../../../libs/foundry/records/dialoguecontextbank/pu/dialoguecontextbank.pu_lt_callum.json",
+              "_RecordName_": "DialogueContext.SC_lz_shops_CorporateSecurity_corporate_security_lt_callum_main_10",
+              "_RecordId_": "1b1e11c6-2da3-4aed-aa4d-7fe91498230a"},
+            "skipNodeInXSecs": -1.0}]},
+      {
+        "_RecordId_": "8141c26e-573c-4242-a3f6-6a0b93712ee0",
+        "_RecordName_": "Conversation.Dlg_SC_lz_shops_CubbyBlast_cubby_blast_clor_vee_main",
+        "_Type_": "Conversation",
+        "fragments": [
+          {
+            "_Type_": "ConversationNode_Start",
+            "next": "_PointsTo_:ptr:77"},
+          {
+            "_Pointer_": "ptr:77",
+            "_Type_": "ConversationNode_Dialogue",
+            "next": null,
+            "context": {
+              "_RecordPath_": "file://./../../../../libs/foundry/records/dialoguecontextbank/pu/dialoguecontextbank.pu_clor_vee.json",
+              "_RecordName_": "DialogueContext.SC_lz_shops_CubbyBlast_cubby_blast_clor_vee_main_1",
+              "_RecordId_": "73f2c4d2-2188-4486-a906-8b2097b7d427"},
+            "skipNodeInXSecs": -1.0},
+          null,
+          {
+            "_Type_": "ConversationNode_Dialogue",
+            "next": "_PointsTo_:ptr:78",
+            "context": {
+              "_RecordPath_": "file://./../../../../libs/foundry/records/dialoguecontextbank/pu/dialoguecontextbank.pu_player.json",
+              "_RecordName_": "DialogueContext.SC_lz_shops_CubbyBlast_cubby_blast_clor_vee_main_2",
+              "_RecordId_": "4f2d43bd-983f-4934-80aa-1bbf02f91356"},
+            "skipNodeInXSecs": -1.0},
+          {
+            "_Pointer_": "ptr:78",
+            "_Type_": "ConversationNode_Dialogue",
+            "next": null,
+            "context": {
+              "_RecordPath_": "file://./../../../../libs/foundry/records/dialoguecontextbank/pu/dialoguecontextbank.pu_clor_vee.json",
+              "_RecordName_": "DialogueContext.SC_lz_shops_CubbyBlast_cubby_blast_clor_vee_main_3",
+              "_RecordId_": "aecd41b7-6dcc-46ca-b92c-4cc75325819a"},
+            "skipNodeInXSecs": -1.0},
+          {
+            "_Type_": "ConversationNode_Dialogue",
+            "next": "_PointsTo_:ptr:79",
+            "context": {
+              "_RecordPath_": "file://./../../../../libs/foundry/records/dialoguecontextbank/pu/dialoguecontextbank.pu_player.json",
+              "_RecordName_": "DialogueContext.SC_lz_shops_CubbyBlast_cubby_blast_clor_vee_main_4",
+              "_RecordId_": "343d3543-e90e-47fa-9179-1f67cd417338"},
+            "skipNodeInXSecs": -1.0},
+          {
+            "_Pointer_": "ptr:79",
+            "_Type_": "ConversationNode_Dialogue",
+            "next": null,
+            "context": {
+              "_RecordPath_": "file://./../../../../libs/foundry/records/dialoguecontextbank/pu/dialoguecontextbank.pu_clor_vee.json",
+              "_RecordName_": "DialogueContext.SC_lz_shops_CubbyBlast_cubby_blast_clor_vee_main_5",
+              "_RecordId_": "958f18ce-d683-439c-9585-2f4c1c7cc8bb"},
+            "skipNodeInXSecs": -1.0},
+          {
+            "_Type_": "ConversationNode_Dialogue",
+            "next": "_PointsTo_:ptr:80",
+            "context": {
+              "_RecordPath_": "file://./../../../../libs/foundry/records/dialoguecontextbank/pu/dialoguecontextbank.pu_player.json",
+              "_RecordName_": "DialogueContext.SC_lz_shops_CubbyBlast_cubby_blast_clor_vee_main_6",
+              "_RecordId_": "eca52e42-b4a9-4788-8e3e-4ad7d92b23af"},
+            "skipNodeInXSecs": -1.0},
+          {
+            "_Pointer_": "ptr:80",
+            "_Type_": "ConversationNode_Dialogue",
+            "next": null,
+            "context": {
+              "_RecordPath_": "file://./../../../../libs/foundry/records/dialoguecontextbank/pu/dialoguecontextbank.pu_clor_vee.json",
+              "_RecordName_": "DialogueContext.SC_lz_shops_CubbyBlast_cubby_blast_clor_vee_main_7",
+              "_RecordId_": "5fe9780b-3c12-4143-a3fd-66b009b57489"},
+            "skipNodeInXSecs": -1.0}]},
+      {
+        "_RecordId_": "c17f2691-4599-41c9-9b9f-6914a5c8f327",
+        "_RecordName_": "Conversation.Dlg_SC_lz_shops_DumpersDepot_dumpers_depot_manager_main",
+        "_Type_": "Conversation",
+        "fragments": [
+          {
+            "_Type_": "ConversationNode_Start",
+            "next": "_PointsTo_:ptr:81"},
+          {
+            "_Pointer_": "ptr:81",
+            "_Type_": "ConversationNode_Dialogue",
+            "next": null,
+            "context": {
+              "_RecordPath_": "file://./../../../../libs/foundry/records/dialoguecontextbank/pu/dialoguecontextbank.pu_dumpers_depot_manager.json",
+              "_RecordName_": "DialogueContext.SC_lz_shops_DumpersDepot_dumpers_depot_manager_main_1",
+              "_RecordId_": "3fbde0e4-ff27-4a8f-93c6-f1270d6f89a2"},
+            "skipNodeInXSecs": -1.0},
+          null,
+          {
+            "_Type_": "ConversationNode_Dialogue",
+            "next": "_PointsTo_:ptr:82",
+            "context": {
+              "_RecordPath_": "file://./../../../../libs/foundry/records/dialoguecontextbank/pu/dialoguecontextbank.pu_player.json",
+              "_RecordName_": "DialogueContext.SC_lz_shops_DumpersDepot_dumpers_depot_manager_main_2",
+              "_RecordId_": "000978ad-d817-4473-928c-8afe516751df"},
+            "skipNodeInXSecs": -1.0},
+          {
+            "_Pointer_": "ptr:82",
+            "_Type_": "ConversationNode_Dialogue",
+            "next": "_PointsTo_:ptr:83",
+            "context": {
+              "_RecordPath_": "file://./../../../../libs/foundry/records/dialoguecontextbank/pu/dialoguecontextbank.pu_dumpers_depot_manager.json",
+              "_RecordName_": "DialogueContext.SC_lz_shops_DumpersDepot_dumpers_depot_manager_main_3",
+              "_RecordId_": "e5b61fb0-256d-4b4c-abf8-570e1344bdf6"},
+            "skipNodeInXSecs": -1.0},
+          {
+            "_Pointer_": "ptr:83",
+            "_Type_": "ConversationNode_Dialogue",
+            "next": null,
+            "context": {
+              "_RecordPath_": "file://./../../../../libs/foundry/records/dialoguecontextbank/pu/dialoguecontextbank.pu_dumpers_depot_manager.json",
+              "_RecordName_": "DialogueContext.SC_lz_shops_DumpersDepot_dumpers_depot_manager_main_4",
+              "_RecordId_": "5295e774-350e-4446-9887-07b51f6de505"},
+            "skipNodeInXSecs": -1.0},
+          {
+            "_Type_": "ConversationNode_Dialogue",
+            "next": "_PointsTo_:ptr:84",
+            "context": {
+              "_RecordPath_": "file://./../../../../libs/foundry/records/dialoguecontextbank/pu/dialoguecontextbank.pu_player.json",
+              "_RecordName_": "DialogueContext.SC_lz_shops_DumpersDepot_dumpers_depot_manager_main_5",
+              "_RecordId_": "4284aab5-5576-44ac-845e-e24288572a09"},
+            "skipNodeInXSecs": -1.0},
+          {
+            "_Pointer_": "ptr:84",
+            "_Type_": "ConversationNode_Dialogue",
+            "next": "_PointsTo_:ptr:83",
+            "context": {
+              "_RecordPath_": "file://./../../../../libs/foundry/records/dialoguecontextbank/pu/dialoguecontextbank.pu_dumpers_depot_manager.json",
+              "_RecordName_": "DialogueContext.SC_lz_shops_DumpersDepot_dumpers_depot_manager_main_6",
+              "_RecordId_": "7caaeb33-f891-4a25-81f4-68d6c98a8bff"},
+            "skipNodeInXSecs": -1.0},
+          {
+            "_Type_": "ConversationNode_Dialogue",
+            "next": "_PointsTo_:ptr:85",
+            "context": {
+              "_RecordPath_": "file://./../../../../libs/foundry/records/dialoguecontextbank/pu/dialoguecontextbank.pu_player.json",
+              "_RecordName_": "DialogueContext.SC_lz_shops_DumpersDepot_dumpers_depot_manager_main_7",
+              "_RecordId_": "2e6f1c2a-c83f-4f95-8ce2-e885c5606ebf"},
+            "skipNodeInXSecs": -1.0},
+          {
+            "_Pointer_": "ptr:85",
+            "_Type_": "ConversationNode_Dialogue",
+            "next": null,
+            "context": {
+              "_RecordPath_": "file://./../../../../libs/foundry/records/dialoguecontextbank/pu/dialoguecontextbank.pu_dumpers_depot_manager.json",
+              "_RecordName_": "DialogueContext.SC_lz_shops_DumpersDepot_dumpers_depot_manager_main_8",
+              "_RecordId_": "71ed04a1-7433-48b2-8486-6faacaaac165"},
+            "skipNodeInXSecs": -1.0}]},
+      {
+        "_RecordId_": "8d5e4053-bcef-4bb7-a739-4cbd999f0c51",
+        "_RecordName_": "Conversation.Dlg_SC_lz_shops_DumpersDepot_dumpers_depot_mechanic_main",
+        "_Type_": "Conversation",
+        "fragments": [
+          {
+            "_Type_": "ConversationNode_Start",
+            "next": "_PointsTo_:ptr:86"},
+          {
+            "_Pointer_": "ptr:86",
+            "_Type_": "ConversationNode_Dialogue",
+            "next": null,
+            "context": {
+              "_RecordPath_": "file://./../../../../libs/foundry/records/dialoguecontextbank/pu/dialoguecontextbank.pu_dumpers_depot_mechanic.json",
+              "_RecordName_": "DialogueContext.SC_lz_shops_DumpersDepot_dumpers_depot_mechanic_main_1",
+              "_RecordId_": "a68c6adb-ccc1-4174-ba66-7faab08f6012"},
+            "skipNodeInXSecs": -1.0}]},
+      {
+        "_RecordId_": "e19848ed-6bed-4c49-8d5b-20d8e8fa5882",
+        "_RecordName_": "Conversation.Dlg_SC_pu_Anvil_Hornet_Commercial",
+        "_Type_": "Conversation",
+        "fragments": [
+          {
+            "_Type_": "ConversationNode_Start",
+            "next": "_PointsTo_:ptr:87"},
+          {
+            "_Pointer_": "ptr:87",
+            "_Type_": "ConversationNode_Dialogue",
+            "next": null,
+            "context": {
+              "_RecordPath_": "file://./../../../../libs/foundry/records/dialoguecontextbank/pu/dialoguecontextbank.pu_pu_commercial_anvil_hornet.json",
+              "_RecordName_": "DialogueContext.DXSH_MCAV_Ad_ANVL_Hornet_Commercial",
+              "_RecordId_": "7fa47140-d7ff-4271-93a9-fe5dcc13f320"},
+            "skipNodeInXSecs": -1.0}]},
+      {
+        "_RecordId_": "dbfa1b4a-7820-41f0-ab1a-3fc5592671a9",
+        "_RecordName_": "Conversation.Dlg_SC_pu_Mustang_Commercial",
+        "_Type_": "Conversation",
+        "fragments": [
+          {
+            "_Type_": "ConversationNode_Start",
+            "next": "_PointsTo_:ptr:88"},
+          {
+            "_Pointer_": "ptr:88",
+            "_Type_": "ConversationNode_Dialogue",
+            "next": null,
+            "context": {
+              "_RecordPath_": "file://./../../../../libs/foundry/records/dialoguecontextbank/pu/dialoguecontextbank.pu_pu_commecial_cnou_mustang.json",
+              "_RecordName_": "DialogueContext.DXSH_MCAV_Ad_CNOU_Mustang_Commercial",
+              "_RecordId_": "10088c21-c3bd-420c-9e1b-9cd74b6411d2"},
+            "skipNodeInXSecs": -1.0}]},
+      {
+        "_RecordId_": "88d11eef-1b99-439e-b011-e3e44bb89b28",
+        "_RecordName_": "Conversation.Dlg_SC_pu_ORIG_M50_Commercial",
+        "_Type_": "Conversation",
+        "fragments": [
+          {
+            "_Type_": "ConversationNode_Start",
+            "next": "_PointsTo_:ptr:89"},
+          {
+            "_Pointer_": "ptr:89",
+            "_Type_": "ConversationNode_Dialogue",
+            "next": null,
+            "context": {
+              "_RecordPath_": "file://./../../../../libs/foundry/records/dialoguecontextbank/pu/dialoguecontextbank.pu_pu_commecial_orig_m50.json",
+              "_RecordName_": "DialogueContext.DXSH_MCAV_Ad_ORIG_M50_Commercial",
+              "_RecordId_": "3ded3086-bab9-41ca-ba4a-939c87d5b303"},
+            "skipNodeInXSecs": -1.0}]},
+      {
+        "_RecordId_": "9273fb2c-f919-4431-a230-f598a33a7581",
+        "_RecordName_": "Conversation.Dlg_SC_pu_tdd_Job_Announcement_01",
+        "_Type_": "Conversation",
+        "fragments": [
+          {
+            "_Type_": "ConversationNode_Start",
+            "next": "_PointsTo_:ptr:90"},
+          {
+            "_Pointer_": "ptr:90",
+            "_Type_": "ConversationNode_Dialogue",
+            "next": null,
+            "context": "file://./../../../../libs/foundry/records/dialoguecontext/pu/dialoguecontext.dxsh_mcav_pu_announcements_job_01.json",
+            "skipNodeInXSecs": -1.0}]},
+      {
+        "_RecordId_": "ad95af0b-6221-4fec-a058-fcd6204a60c2",
+        "_RecordName_": "Conversation.Dlg_SC_pu_tdd_Job_Announcement_02",
+        "_Type_": "Conversation",
+        "fragments": [
+          {
+            "_Type_": "ConversationNode_Start",
+            "next": "_PointsTo_:ptr:91"},
+          {
+            "_Pointer_": "ptr:91",
+            "_Type_": "ConversationNode_Dialogue",
+            "next": null,
+            "context": "file://./../../../../libs/foundry/records/dialoguecontext/pu/dialoguecontext.dxsh_mcav_pu_announcements_job_02.json",
+            "skipNodeInXSecs": -1.0}]},
+      {
+        "_RecordId_": "137e96ee-d3e4-4aec-b1cb-9a9e2cadcb82",
+        "_RecordName_": "Conversation.Dlg_SC_pu_tdd_Job_Announcement_03",
+        "_Type_": "Conversation",
+        "fragments": [
+          {
+            "_Type_": "ConversationNode_Start",
+            "next": "_PointsTo_:ptr:92"},
+          {
+            "_Pointer_": "ptr:92",
+            "_Type_": "ConversationNode_Dialogue",
+            "next": null,
+            "context": "file://./../../../../libs/foundry/records/dialoguecontext/pu/dialoguecontext.dxsh_mcav_pu_announcements_job_03.json",
+            "skipNodeInXSecs": -1.0}]},
+      {
+        "_RecordId_": "e45a2633-5c71-41fa-9fa9-309057cf9965",
+        "_RecordName_": "Conversation.Dlg_SC_pu_tdd_Job_Announcement_04",
+        "_Type_": "Conversation",
+        "fragments": [
+          {
+            "_Type_": "ConversationNode_Start",
+            "next": "_PointsTo_:ptr:93"},
+          {
+            "_Pointer_": "ptr:93",
+            "_Type_": "ConversationNode_Dialogue",
+            "next": null,
+            "context": "file://./../../../../libs/foundry/records/dialoguecontext/pu/dialoguecontext.dxsh_mcav_pu_announcements_job_04.json",
+            "skipNodeInXSecs": -1.0}]},
+      {
+        "_RecordId_": "8b127d4e-1597-426d-b393-65b43218bd26",
+        "_RecordName_": "Conversation.Dlg_SC_pu_tdd_Job_Announcement_05",
+        "_Type_": "Conversation",
+        "fragments": [
+          {
+            "_Type_": "ConversationNode_Start",
+            "next": "_PointsTo_:ptr:94"},
+          {
+            "_Pointer_": "ptr:94",
+            "_Type_": "ConversationNode_Dialogue",
+            "next": null,
+            "context": "file://./../../../../libs/foundry/records/dialoguecontext/pu/dialoguecontext.dxsh_mcav_pu_announcements_job_05.json",
+            "skipNodeInXSecs": -1.0}]},
+      {
+        "_RecordId_": "ecfa0972-b5d7-42e0-8a66-499a8e6d540a",
+        "_RecordName_": "Conversation.Dlg_SC_pu_tdd_Stock_Announcement_01",
+        "_Type_": "Conversation",
+        "fragments": [
+          {
+            "_Type_": "ConversationNode_Start",
+            "next": "_PointsTo_:ptr:95"},
+          {
+            "_Pointer_": "ptr:95",
+            "_Type_": "ConversationNode_Dialogue",
+            "next": null,
+            "context": "file://./../../../../libs/foundry/records/dialoguecontext/pu/dialoguecontext.dxsh_mcav_pu_announcements_stock_01.json",
+            "skipNodeInXSecs": -1.0}]},
+      {
+        "_RecordId_": "687da751-9bbb-437e-bdd2-d330894ca8d1",
+        "_RecordName_": "Conversation.Dlg_SC_pu_tdd_Stock_Announcement_02",
+        "_Type_": "Conversation",
+        "fragments": [
+          {
+            "_Type_": "ConversationNode_Start",
+            "next": "_PointsTo_:ptr:96"},
+          {
+            "_Pointer_": "ptr:96",
+            "_Type_": "ConversationNode_Dialogue",
+            "next": null,
+            "context": "file://./../../../../libs/foundry/records/dialoguecontext/pu/dialoguecontext.dxsh_mcav_pu_announcements_stock_02.json",
+            "skipNodeInXSecs": -1.0}]},
+      {
+        "_RecordId_": "38203270-1e57-4c95-a21b-6a1045341212",
+        "_RecordName_": "Conversation.Dlg_SC_pu_tdd_Stock_Announcement_03",
+        "_Type_": "Conversation",
+        "fragments": [
+          {
+            "_Type_": "ConversationNode_Start",
+            "next": "_PointsTo_:ptr:97"},
+          {
+            "_Pointer_": "ptr:97",
+            "_Type_": "ConversationNode_Dialogue",
+            "next": null,
+            "context": "file://./../../../../libs/foundry/records/dialoguecontext/pu/dialoguecontext.dxsh_mcav_pu_announcements_stock_03.json",
+            "skipNodeInXSecs": -1.0}]},
+      {
+        "_RecordId_": "09dcb545-7f20-4769-9c02-d9e178fa6c51",
+        "_RecordName_": "Conversation.Dlg_SC_pu_tdd_Stock_Announcement_04",
+        "_Type_": "Conversation",
+        "fragments": [
+          {
+            "_Type_": "ConversationNode_Start",
+            "next": "_PointsTo_:ptr:98"},
+          {
+            "_Pointer_": "ptr:98",
+            "_Type_": "ConversationNode_Dialogue",
+            "next": null,
+            "context": "file://./../../../../libs/foundry/records/dialoguecontext/pu/dialoguecontext.dxsh_mcav_pu_announcements_stock_04.json",
+            "skipNodeInXSecs": -1.0}]},
+      {
+        "_RecordId_": "f7239e1a-e0c3-447b-a7ef-024c09a50fc3",
+        "_RecordName_": "Conversation.Dlg_SC_pu_tdd_Stock_Announcement_05",
+        "_Type_": "Conversation",
+        "fragments": [
+          {
+            "_Type_": "ConversationNode_Start",
+            "next": "_PointsTo_:ptr:99"},
+          {
+            "_Pointer_": "ptr:99",
+            "_Type_": "ConversationNode_Dialogue",
+            "next": null,
+            "context": "file://./../../../../libs/foundry/records/dialoguecontext/pu/dialoguecontext.dxsh_mcav_pu_announcements_stock_05.json",
+            "skipNodeInXSecs": -1.0}]}]}}

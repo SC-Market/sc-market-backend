@@ -1,0 +1,22 @@
+{
+  "_RecordName_": "LoadoutKit.DRAK_Mule_Reburn_Black_Cherry",
+  "_RecordId_": "66a7e2f8-cf2e-4cc6-87b0-f65355aa7d26",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "LoadoutKit",
+    "name": "@item_NameMule_Paint_Reburn",
+    "description": "@item_DescMule_Paint_Reburn",
+    "loadout": {
+      "_Type_": "SItemPortLoadoutManualParams",
+      "WearRange": null,
+      "DirtRange": null,
+      "SkipInventoryItemsOnMissionEntities": false,
+      "InventoryItems": [],
+      "entries": [
+        {
+          "_Type_": "SItemPortLoadoutEntryParams",
+          "itemPortName": "hardpoint_paint",
+          "entityClassName": "",
+          "entityClassReference": "file://./../../../../../libs/foundry/records/entities/scitem/ships/paints/paint_mule_black_cherry.json",
+          "inventoryContainer": null,
+          "loadout": null}]}}}

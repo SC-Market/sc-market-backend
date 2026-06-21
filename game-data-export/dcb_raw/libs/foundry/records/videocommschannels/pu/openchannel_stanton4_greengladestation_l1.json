@@ -1,0 +1,10 @@
+{
+  "_RecordName_": "CommsChannelDef.OpenChannel_Stanton4_GreenGladeStation_L1",
+  "_RecordId_": "a5ba4e92-e22c-49d2-b780-1b0217925b7e",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "CommsChannelDef",
+    "channelId": "OpenChannel_Stanton4_GreenGladeStation_L1",
+    "displayName": "@LOC_PLACEHOLDER",
+    "canHaveMultipleInstances": false,
+    "useAreaOfEffect": false}}

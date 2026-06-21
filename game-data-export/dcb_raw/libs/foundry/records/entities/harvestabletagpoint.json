@@ -1,0 +1,27 @@
+{
+  "_RecordName_": "EntityClassDefinition.HarvestableTagPoint",
+  "_RecordId_": "7aebd1a0-2eee-46cf-92e1-08e7a2908017",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "EntityClassDefinition",
+    "Category": "Default",
+    "Icon": "TagPoint.bmp",
+    "Invisible": true,
+    "BBoxSelection": false,
+    "defaultEditorColor": {
+      "_Type_": "RGB",
+      "r": 1.0,
+      "g": 1.0,
+      "b": 0.0},
+    "entityDensityClass": null,
+    "tags": [
+      {
+        "_RecordPath_": "file://./../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+        "_RecordName_": "Tag.00ead468-9073-485b-a6df-ca6b94053603",
+        "_RecordId_": "00ead468-9073-485b-a6df-ca6b94053603"},
+      {
+        "_RecordPath_": "file://./../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+        "_RecordName_": "Tag.4ba81e75-67ac-4237-918e-4c45d81c91fc",
+        "_RecordId_": "4ba81e75-67ac-4237-918e-4c45d81c91fc"}],
+    "StaticEntityClassData": [],
+    "Components": []}}

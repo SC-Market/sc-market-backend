@@ -1,0 +1,14 @@
+{
+  "_RecordName_": "ItemKioskBrand.Generic_Refinery",
+  "_RecordId_": "a6a6d48b-efbd-4ca7-b7d6-b802a2d85e4d",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "ItemKioskBrand",
+    "name": "genericRefinery",
+    "logoPath": "UI/Kiosk/assets/TIF/backgrounds/genericRefinery.tif",
+    "color": {
+      "_Type_": "SRGBA8",
+      "r": 46,
+      "g": 189,
+      "b": 210,
+      "a": 255}}}

@@ -1,0 +1,57 @@
+{
+  "_RecordName_": "BuildingBlocks_Timeline.AS_Marker_Explosive_Edge_A",
+  "_RecordId_": "392f0fe2-99d0-4266-84d3-a2f774e8a248",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "BuildingBlocks_Timeline",
+    "timeline": {
+      "_Type_": "BuildingBlocks_TimelineTypeEmbedded",
+      "keyframes": [
+        {
+          "_Type_": "BuildingBlocks_Keyframe",
+          "percent": 0.0,
+          "modifiers": [
+            {
+              "_Type_": "BuildingBlocks_KeyframeModifierData",
+              "timingFunction": {
+                "_Type_": "BuildingBlocks_TimingFunctionPreset",
+                "preset": "EaseOutCubic"},
+              "modifier": {
+                "_Type_": "BuildingBlocks_FieldModifierColor",
+                "field": "TintColor",
+                "color": {
+                  "_Type_": "BuildingBlocks_ColorStyle",
+                  "color": "Critical",
+                  "alpha": 1.0}}}]},
+        {
+          "_Type_": "BuildingBlocks_Keyframe",
+          "percent": 0.35,
+          "modifiers": [
+            {
+              "_Type_": "BuildingBlocks_KeyframeModifierData",
+              "timingFunction": {
+                "_Type_": "BuildingBlocks_TimingFunctionPreset",
+                "preset": "EaseInOutCubic"},
+              "modifier": {
+                "_Type_": "BuildingBlocks_FieldModifierColor",
+                "field": "TintColor",
+                "color": {
+                  "_Type_": "BuildingBlocks_ColorStyle",
+                  "color": "ContactNeutral",
+                  "alpha": 1.0}}}]},
+        {
+          "_Type_": "BuildingBlocks_Keyframe",
+          "percent": 0.5,
+          "modifiers": [
+            {
+              "_Type_": "BuildingBlocks_KeyframeModifierData",
+              "timingFunction": {
+                "_Type_": "BuildingBlocks_TimingFunctionPreset",
+                "preset": "EaseOutCubic"},
+              "modifier": {
+                "_Type_": "BuildingBlocks_FieldModifierColor",
+                "field": "TintColor",
+                "color": {
+                  "_Type_": "BuildingBlocks_ColorStyle",
+                  "color": "Critical",
+                  "alpha": 1.0}}}]}]}}}

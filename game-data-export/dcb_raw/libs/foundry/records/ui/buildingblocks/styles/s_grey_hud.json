@@ -1,0 +1,204 @@
+{
+  "_RecordName_": "BuildingBlocks_Style.S_GREY_HUD",
+  "_RecordId_": "4108de29-df26-4e5c-95e6-0b52a764ce28",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "BuildingBlocks_Style",
+    "entries": [],
+    "colorStyles": [
+      {
+        "_Type_": "BuildingBlocks_ColorSolid",
+        "color": {
+          "_Type_": "SRGBA8",
+          "r": 126,
+          "g": 191,
+          "b": 63,
+          "a": 255}},
+      {
+        "_Type_": "BuildingBlocks_ColorSolid",
+        "color": {
+          "_Type_": "SRGBA8",
+          "r": 126,
+          "g": 191,
+          "b": 63,
+          "a": 255}},
+      {
+        "_Type_": "BuildingBlocks_ColorSolid",
+        "color": {
+          "_Type_": "SRGBA8",
+          "r": 255,
+          "g": 255,
+          "b": 0,
+          "a": 255}},
+      {
+        "_Type_": "BuildingBlocks_ColorSolid",
+        "color": {
+          "_Type_": "SRGBA8",
+          "r": 193,
+          "g": 52,
+          "b": 43,
+          "a": 255}},
+      {
+        "_Type_": "BuildingBlocks_ColorSolid",
+        "color": {
+          "_Type_": "SRGBA8",
+          "r": 126,
+          "g": 191,
+          "b": 63,
+          "a": 255}},
+      {
+        "_Type_": "BuildingBlocks_ColorSolid",
+        "color": {
+          "_Type_": "SRGBA8",
+          "r": 126,
+          "g": 191,
+          "b": 63,
+          "a": 255}},
+      {
+        "_Type_": "BuildingBlocks_ColorSolid",
+        "color": {
+          "_Type_": "SRGBA8",
+          "r": 227,
+          "g": 255,
+          "b": 224,
+          "a": 255}},
+      {
+        "_Type_": "BuildingBlocks_ColorSolid",
+        "color": {
+          "_Type_": "SRGBA8",
+          "r": 0,
+          "g": 255,
+          "b": 24,
+          "a": 255}},
+      {
+        "_Type_": "BuildingBlocks_ColorSolid",
+        "color": {
+          "_Type_": "SRGBA8",
+          "r": 5,
+          "g": 20,
+          "b": 6,
+          "a": 255}},
+      {
+        "_Type_": "BuildingBlocks_ColorSolid",
+        "color": {
+          "_Type_": "SRGBA8",
+          "r": 0,
+          "g": 10,
+          "b": 0,
+          "a": 255}},
+      {
+        "_Type_": "BuildingBlocks_ColorSolid",
+        "color": {
+          "_Type_": "SRGBA8",
+          "r": 225,
+          "g": 225,
+          "b": 225,
+          "a": 255}},
+      {
+        "_Type_": "BuildingBlocks_ColorSolid",
+        "color": {
+          "_Type_": "SRGBA8",
+          "r": 90,
+          "g": 176,
+          "b": 255,
+          "a": 255}},
+      {
+        "_Type_": "BuildingBlocks_ColorSolid",
+        "color": {
+          "_Type_": "SRGBA8",
+          "r": 4,
+          "g": 184,
+          "b": 15,
+          "a": 255}},
+      {
+        "_Type_": "BuildingBlocks_ColorSolid",
+        "color": {
+          "_Type_": "SRGBA8",
+          "r": 255,
+          "g": 115,
+          "b": 0,
+          "a": 255}},
+      {
+        "_Type_": "BuildingBlocks_ColorSolid",
+        "color": {
+          "_Type_": "SRGBA8",
+          "r": 255,
+          "g": 0,
+          "b": 0,
+          "a": 255}},
+      {
+        "_Type_": "BuildingBlocks_ColorSolid",
+        "color": {
+          "_Type_": "SRGBA8",
+          "r": 225,
+          "g": 225,
+          "b": 225,
+          "a": 255}},
+      {
+        "_Type_": "BuildingBlocks_ColorSolid",
+        "color": {
+          "_Type_": "SRGBA8",
+          "r": 243,
+          "g": 220,
+          "b": 110,
+          "a": 255}}],
+    "textFieldModifiers": [
+      {
+        "_Type_": "BuildingBlocks_TextEmphasisModifierList",
+        "textEmphasis": []},
+      {
+        "_Type_": "BuildingBlocks_TextEmphasisModifierList",
+        "textEmphasis": [
+          {
+            "_Type_": "BuildingBlocks_ColorTextFormatModifier",
+            "field": "FillColor",
+            "value": {
+              "_Type_": "BuildingBlocks_ColorSolid",
+              "color": {
+                "_Type_": "SRGBA8",
+                "r": 148,
+                "g": 250,
+                "b": 255,
+                "a": 255}}}]},
+      {
+        "_Type_": "BuildingBlocks_TextEmphasisModifierList",
+        "textEmphasis": [
+          {
+            "_Type_": "BuildingBlocks_ColorTextFormatModifier",
+            "field": "FillColor",
+            "value": {
+              "_Type_": "BuildingBlocks_ColorSolid",
+              "color": {
+                "_Type_": "SRGBA8",
+                "r": 0,
+                "g": 255,
+                "b": 255,
+                "a": 255}}}]},
+      {
+        "_Type_": "BuildingBlocks_TextEmphasisModifierList",
+        "textEmphasis": [
+          {
+            "_Type_": "BuildingBlocks_ColorTextFormatModifier",
+            "field": "FillColor",
+            "value": {
+              "_Type_": "BuildingBlocks_ColorSolid",
+              "color": {
+                "_Type_": "SRGBA8",
+                "r": 252,
+                "g": 252,
+                "b": 123,
+                "a": 255}}}]},
+      {
+        "_Type_": "BuildingBlocks_TextEmphasisModifierList",
+        "textEmphasis": [
+          {
+            "_Type_": "BuildingBlocks_ColorTextFormatModifier",
+            "field": "FillColor",
+            "value": {
+              "_Type_": "BuildingBlocks_ColorSolid",
+              "color": {
+                "_Type_": "SRGBA8",
+                "r": 216,
+                "g": 41,
+                "b": 76,
+                "a": 255}}}]}]}}

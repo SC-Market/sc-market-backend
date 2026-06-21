@@ -1,0 +1,19 @@
+{
+  "_RecordName_": "MissionGiver.CrusaderBountyDepartment",
+  "_RecordId_": "7f7b959a-0bea-4ac5-bd1e-a9fef0aefbb3",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "MissionGiver",
+    "entityClass": "file://./../../../../../libs/foundry/records/factions/legacy/crusaderindustries.json",
+    "reputation": "file://./../../../../../libs/foundry/records/factions/factionreputation/factionreputation_crusaderindustries.json",
+    "displayName": "@LOC_UNINITIALIZED",
+    "description": "@LOC_UNINITIALIZED",
+    "headquarters": "@LOC_UNINITIALIZED",
+    "invitationTimeout": 5.0,
+    "visitTimeout": 20.0,
+    "shortCooldown": 10.0,
+    "mediumCooldown": 20.0,
+    "longCooldown": 30.0,
+    "Allies": [],
+    "Enemies": [],
+    "propertiesBB": []}}

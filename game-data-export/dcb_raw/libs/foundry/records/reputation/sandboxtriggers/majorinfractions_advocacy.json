@@ -1,0 +1,103 @@
+{
+  "_RecordName_": "SandboxTriggerRecord.MajorInfractions_Advocacy",
+  "_RecordId_": "ff217c91-899f-4927-ae4e-04c85c3d8294",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "SandboxTriggerRecord",
+    "triggerManualParams": [
+      {
+        "_Type_": "SandboxTriggerManualParams",
+        "infractionTrigger": {
+          "_Type_": "SandboxInfractionDefinitionTrigger",
+          "sandboxInfractionDefinitionTrigger": "file://./../../../../../libs/foundry/records/lawsystem/infractiondefinitions/felonies/murder.json"},
+        "triggerOnInnocentsOnly": true,
+        "outcomes": [
+          null]},
+      {
+        "_Type_": "SandboxTriggerManualParams",
+        "infractionTrigger": {
+          "_Type_": "SandboxInfractionDefinitionTrigger",
+          "sandboxInfractionDefinitionTrigger": "file://./../../../../../libs/foundry/records/lawsystem/infractiondefinitions/misdemeanours/manslaughter.json"},
+        "triggerOnInnocentsOnly": true,
+        "outcomes": [
+          null]},
+      {
+        "_Type_": "SandboxTriggerManualParams",
+        "infractionTrigger": {
+          "_Type_": "SandboxInfractionDefinitionTrigger",
+          "sandboxInfractionDefinitionTrigger": "file://./../../../../../libs/foundry/records/lawsystem/infractiondefinitions/misdemeanours/grievousbodilyharm.json"},
+        "triggerOnInnocentsOnly": true,
+        "outcomes": [
+          null]},
+      {
+        "_Type_": "SandboxTriggerManualParams",
+        "infractionTrigger": {
+          "_Type_": "SandboxInfractionDefinitionTrigger",
+          "sandboxInfractionDefinitionTrigger": "file://./../../../../../libs/foundry/records/lawsystem/infractiondefinitions/misdemeanours/resistingarrest.json"},
+        "triggerOnInnocentsOnly": true,
+        "outcomes": [
+          null]},
+      {
+        "_Type_": "SandboxTriggerManualParams",
+        "infractionTrigger": {
+          "_Type_": "SandboxInfractionDefinitionTrigger",
+          "sandboxInfractionDefinitionTrigger": "file://./../../../../../libs/foundry/records/lawsystem/infractiondefinitions/misdemeanours/assaultinganofficerofthelaw.json"},
+        "triggerOnInnocentsOnly": true,
+        "outcomes": [
+          null]},
+      {
+        "_Type_": "SandboxTriggerManualParams",
+        "infractionTrigger": {
+          "_Type_": "SandboxInfractionDefinitionTrigger",
+          "sandboxInfractionDefinitionTrigger": "file://./../../../../../libs/foundry/records/lawsystem/infractiondefinitions/misdemeanours/aggravatedassault.json"},
+        "triggerOnInnocentsOnly": true,
+        "outcomes": [
+          null]},
+      {
+        "_Type_": "SandboxTriggerManualParams",
+        "infractionTrigger": {
+          "_Type_": "SandboxInfractionDefinitionTrigger",
+          "sandboxInfractionDefinitionTrigger": "file://./../../../../../libs/foundry/records/lawsystem/infractiondefinitions/misdemeanours/vehicledestruction.json"},
+        "triggerOnInnocentsOnly": true,
+        "outcomes": [
+          null]},
+      {
+        "_Type_": "SandboxTriggerManualParams",
+        "infractionTrigger": {
+          "_Type_": "SandboxInfractionDefinitionTrigger",
+          "sandboxInfractionDefinitionTrigger": "file://./../../../../../libs/foundry/records/lawsystem/infractiondefinitions/misdemeanours/evadingarrest.json"},
+        "triggerOnInnocentsOnly": true,
+        "outcomes": [
+          null]},
+      {
+        "_Type_": "SandboxTriggerManualParams",
+        "infractionTrigger": {
+          "_Type_": "SandboxInfractionDefinitionTrigger",
+          "sandboxInfractionDefinitionTrigger": "file://./../../../../../libs/foundry/records/lawsystem/infractiondefinitions/misdemeanours/vehicletheft.json"},
+        "triggerOnInnocentsOnly": true,
+        "outcomes": [
+          null]},
+      {
+        "_Type_": "SandboxTriggerManualParams",
+        "infractionTrigger": {
+          "_Type_": "SandboxInfractionDefinitionTrigger",
+          "sandboxInfractionDefinitionTrigger": "file://./../../../../../libs/foundry/records/lawsystem/infractiondefinitions/misdemeanours/armisticeviolation.json"},
+        "triggerOnInnocentsOnly": true,
+        "outcomes": [
+          null]},
+      {
+        "_Type_": "SandboxTriggerManualParams",
+        "infractionTrigger": {
+          "_Type_": "SandboxInfractionDefinitionTrigger",
+          "sandboxInfractionDefinitionTrigger": "file://./../../../../../libs/foundry/records/lawsystem/infractiondefinitions/misdemeanours/failuretocomply.json"},
+        "triggerOnInnocentsOnly": true,
+        "outcomes": [
+          null]},
+      {
+        "_Type_": "SandboxTriggerManualParams",
+        "infractionTrigger": {
+          "_Type_": "SandboxInfractionDefinitionTrigger",
+          "sandboxInfractionDefinitionTrigger": "file://./../../../../../libs/foundry/records/lawsystem/infractiondefinitions/misdemeanours/batteryfirstdegree.json"},
+        "triggerOnInnocentsOnly": true,
+        "outcomes": [
+          null]}]}}

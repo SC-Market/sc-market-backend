@@ -1,0 +1,24 @@
+{
+  "_RecordName_": "Character.SECR1",
+  "_RecordId_": "ec2263d7-a05c-4ef4-97eb-4873b4d68cbb",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "Character",
+    "characterPersonalData": {
+      "_Type_": "CharacterPersonalData",
+      "title": "",
+      "firstName": "",
+      "nickName": "",
+      "lastName": "",
+      "randomNameParams": null,
+      "affiliation": "",
+      "details": ""},
+    "audioSwitchStateName": "",
+    "animationRemapAlias": "",
+    "characterMannequinTag": "",
+    "styleMannequinTag": "",
+    "combatStyle": "NotSet",
+    "gender": "NotSet",
+    "characterSpeedOverrides": [],
+    "nicknameChance": 0.0,
+    "name": "SECR1"}}

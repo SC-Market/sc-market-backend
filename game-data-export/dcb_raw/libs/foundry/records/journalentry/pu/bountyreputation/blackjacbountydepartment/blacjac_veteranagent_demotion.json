@@ -1,0 +1,18 @@
+{
+  "_RecordName_": "JournalEntry.BlacJac_VeteranAgent_Demotion",
+  "_RecordId_": "0db5392c-ed03-44a7-ba30-68d2132ff4e0",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "JournalEntry",
+    "Title": "@BlacJac_ReputationJournal_VeteranAgent_Demotion_Title",
+    "ShortTitle": "@BlacJac_ReputationJournal_VeteranAgent_Demotion_ShortTitle",
+    "SubHeading": "@BlacJac_ReputationJournal_VeteranAgent_Demotion_SubHeading",
+    "autoOpenMobiGlas": false,
+    "showNotification": true,
+    "missionSpecificContent": false,
+    "removeOnMissionEnd": true,
+    "Style": "file://./../../../../../../../libs/foundry/records/journalentrytype/journalentrytype.textlog.json",
+    "type": {
+      "_Type_": "JournalEntryText",
+      "BodyText": "@BlacJac_ReputationJournal_VeteranAgent_Demotion_BodyText"},
+    "tutorialEntry": false}}

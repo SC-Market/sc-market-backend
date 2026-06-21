@@ -1,0 +1,46 @@
+{
+  "_RecordName_": "ScanCustomDataDef.Derelict_DRAK_Caterpillar_HullWreckage",
+  "_RecordId_": "47549d9f-083c-416a-b0be-8ae34c65f997",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "ScanCustomDataDef",
+    "info": {
+      "_Type_": "ScanCustomDataInfo",
+      "scanProcedures": [
+        {
+          "_Type_": "CustomScanProcedureParams",
+          "requiredScanTag": null,
+          "emissionBaseline": 0.0,
+          "runtimeDuration": 0.1,
+          "allowedInAIAutoScan": true,
+          "allowedInFocalPointScan": true,
+          "allowedInPingBroadScan": true,
+          "allowedInPingFocusScan": true,
+          "allowedInPassiveScan": false,
+          "customDatas": [
+            {
+              "_Type_": "ScanCustomDataDirect",
+              "requiredTags": {
+                "_Type_": "TagsDNFTerm",
+                "positiveTags": [],
+                "negativeTags": []},
+              "name": "@scan_data_model",
+              "displaySection": "Overview",
+              "addToBoxoutDisplay": false,
+              "displayInSameRowAsHeader": false,
+              "value": {
+                "_Type_": "ScanCustomValueLocString",
+                "value": "@vehicle_NameDRAK_Caterpillar"}},
+            {
+              "_Type_": "ScanCustomDataDirect",
+              "requiredTags": {
+                "_Type_": "TagsDNFTerm",
+                "positiveTags": [],
+                "negativeTags": []},
+              "name": "@scan_data_name",
+              "displaySection": "Overview",
+              "addToBoxoutDisplay": false,
+              "displayInSameRowAsHeader": false,
+              "value": {
+                "_Type_": "ScanCustomValueLocString",
+                "value": "@vehicle_DescDRAK_Caterpillar"}}]}]}}}

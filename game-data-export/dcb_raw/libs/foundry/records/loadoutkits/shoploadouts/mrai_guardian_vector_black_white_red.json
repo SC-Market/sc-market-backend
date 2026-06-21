@@ -1,0 +1,22 @@
+{
+  "_RecordName_": "LoadoutKit.MRAI_Guardian_Vector_Black_White_Red",
+  "_RecordId_": "54bb4bfe-a841-43a8-97e0-2752b57cd7b3",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "LoadoutKit",
+    "name": "@item_NameGuardian_Paint_Black_White_Red",
+    "description": "@item_DescGuardian_Paint_Black_White_Red",
+    "loadout": {
+      "_Type_": "SItemPortLoadoutManualParams",
+      "WearRange": null,
+      "DirtRange": null,
+      "SkipInventoryItemsOnMissionEntities": false,
+      "InventoryItems": [],
+      "entries": [
+        {
+          "_Type_": "SItemPortLoadoutEntryParams",
+          "itemPortName": "hardpoint_paint",
+          "entityClassName": "",
+          "entityClassReference": "file://./../../../../../libs/foundry/records/entities/scitem/ships/paints/paint_guardian_mx_black_white_red.json",
+          "inventoryContainer": null,
+          "loadout": null}]}}}

@@ -1,0 +1,17 @@
+{
+  "_RecordName_": "InventoryContainer.heavy_core_combat",
+  "_RecordId_": "4d277b22-e3e1-42f0-970b-06b9b637a9d0",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "InventoryContainer",
+    "excludedItemSubTypes": [],
+    "interiorDimensions": {
+      "_Type_": "Vec3",
+      "x": 0.2,
+      "y": 0.27,
+      "z": 0.2},
+    "inventoryType": {
+      "_Type_": "InventoryClosedContainerType",
+      "capacity": {
+        "_Type_": "SMicroCargoUnit",
+        "microSCU": 10500}}}}

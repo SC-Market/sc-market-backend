@@ -1,0 +1,13 @@
+{
+  "_RecordName_": "EntityAudioControllerRtpcSubscriberListDef.Ship_Translation_Acceleration_MaxAll",
+  "_RecordId_": "bb4fae92-d931-4bb6-990e-796e920dca09",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "EntityAudioControllerRtpcSubscriberListDef",
+    "rtpcs": [
+      {
+        "_Type_": "AudioRtpc",
+        "rtpc": "Ship_Translation_Acceleration_MaxAll"},
+      {
+        "_Type_": "AudioRtpc",
+        "rtpc": "Ship_Translation_Acceleration_MaxAll_SlowLerp"}]}}

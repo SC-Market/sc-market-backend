@@ -1,0 +1,91 @@
+{
+  "_RecordName_": "AIWaveCollection.Assassination_Security_Hard_Stanton_Target",
+  "_RecordId_": "6abada0d-b1ac-4b39-beb2-3adca428bfe2",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "AIWaveCollection",
+    "waves": [
+      {
+        "_Type_": "AIWave",
+        "id": 1,
+        "textId": "Assassination_Security_Hard_Stanton1_01",
+        "staggerTime": 1.0,
+        "members": [
+          {
+            "_Type_": "AIWaveMember",
+            "archetype": "",
+            "entityClassDefinition": "file://./../../../../../../../../libs/foundry/records/entities/spaceships/anvl_valkyrie_pu_ai_sec_hurston.json",
+            "name": "",
+            "vehicleName": "",
+            "amount": 1,
+            "minAmount": -1,
+            "midAmount": -1,
+            "maxAmount": -1,
+            "crewManifestOverride": null,
+            "skillsetOverride": "file://./../../../../../../../../libs/foundry/records/aiprofile/skills/humanpilot70.json",
+            "cargoManifests": [
+              null],
+            "aiDamageModifiersOverride": null}]},
+      {
+        "_Type_": "AIWave",
+        "id": 2,
+        "textId": "Assassination_Security_Hard_Stanton2_01",
+        "staggerTime": 1.0,
+        "members": [
+          {
+            "_Type_": "AIWaveMember",
+            "archetype": "",
+            "entityClassDefinition": "file://./../../../../../../../../libs/foundry/records/entities/spaceships/rsi_constellation_andromeda_pu_ai_sec_crusader_qig.json",
+            "name": "",
+            "vehicleName": "",
+            "amount": 1,
+            "minAmount": -1,
+            "midAmount": -1,
+            "maxAmount": -1,
+            "crewManifestOverride": null,
+            "skillsetOverride": "file://./../../../../../../../../libs/foundry/records/aiprofile/skills/humanpilot70.json",
+            "cargoManifests": [
+              null],
+            "aiDamageModifiersOverride": null}]},
+      {
+        "_Type_": "AIWave",
+        "id": 3,
+        "textId": "Assassination_Security_Medium_Stanton3_01",
+        "staggerTime": 1.0,
+        "members": [
+          {
+            "_Type_": "AIWaveMember",
+            "archetype": "",
+            "entityClassDefinition": "file://./../../../../../../../../libs/foundry/records/entities/spaceships/rsi_constellation_andromeda_pu_ai_sec_blacjac_qig.json",
+            "name": "",
+            "vehicleName": "",
+            "amount": 1,
+            "minAmount": -1,
+            "midAmount": -1,
+            "maxAmount": -1,
+            "crewManifestOverride": null,
+            "skillsetOverride": "file://./../../../../../../../../libs/foundry/records/aiprofile/skills/humanpilot70.json",
+            "cargoManifests": [
+              null],
+            "aiDamageModifiersOverride": null}]},
+      {
+        "_Type_": "AIWave",
+        "id": 4,
+        "textId": "Assassination_Security_Medium_Stanton_System",
+        "staggerTime": 1.0,
+        "members": [
+          {
+            "_Type_": "AIWaveMember",
+            "archetype": "",
+            "entityClassDefinition": "file://./../../../../../../../../libs/foundry/records/entities/spaceships/aegs_vanguard_pu_ai_uee.json",
+            "name": "",
+            "vehicleName": "",
+            "amount": 1,
+            "minAmount": -1,
+            "midAmount": -1,
+            "maxAmount": -1,
+            "crewManifestOverride": null,
+            "skillsetOverride": "file://./../../../../../../../../libs/foundry/records/aiprofile/skills/humanpilot70.json",
+            "cargoManifests": [
+              null],
+            "aiDamageModifiersOverride": null}]}]}}

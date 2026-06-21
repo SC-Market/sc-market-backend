@@ -1,0 +1,24 @@
+{
+  "_RecordName_": "Character.BATTAGLIA",
+  "_RecordId_": "56c4ef50-be5f-443f-8874-982d568dce7b",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "Character",
+    "characterPersonalData": {
+      "_Type_": "CharacterPersonalData",
+      "title": "",
+      "firstName": "",
+      "nickName": "",
+      "lastName": "",
+      "randomNameParams": null,
+      "affiliation": "",
+      "details": ""},
+    "audioSwitchStateName": "",
+    "animationRemapAlias": "",
+    "characterMannequinTag": "",
+    "styleMannequinTag": "",
+    "combatStyle": "NotSet",
+    "gender": "NotSet",
+    "characterSpeedOverrides": [],
+    "nicknameChance": 0.0,
+    "name": ""}}

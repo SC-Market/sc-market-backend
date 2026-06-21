@@ -1,0 +1,53 @@
+{
+  "_RecordName_": "BuildingBlocks_Timeline.AS_FM_KeyboardHide",
+  "_RecordId_": "eb4f37f9-4f74-4fb3-9e3a-20da2d554d8e",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "BuildingBlocks_Timeline",
+    "timeline": {
+      "_Type_": "BuildingBlocks_TimelineTypeEmbedded",
+      "keyframes": [
+        {
+          "_Type_": "BuildingBlocks_Keyframe",
+          "percent": 0.0,
+          "modifiers": [
+            {
+              "_Type_": "BuildingBlocks_KeyframeModifierData",
+              "timingFunction": {
+                "_Type_": "BuildingBlocks_TimingFunctionPreset",
+                "preset": "Linear"},
+              "modifier": {
+                "_Type_": "BuildingBlocks_FieldModifierNumber",
+                "field": "Alpha",
+                "value": 1.0}},
+            {
+              "_Type_": "BuildingBlocks_KeyframeModifierData",
+              "timingFunction": {
+                "_Type_": "BuildingBlocks_TimingFunctionPreset",
+                "preset": "Linear"},
+              "modifier": {
+                "_Type_": "BuildingBlocks_FieldModifierNumber",
+                "field": "AnchorY",
+                "value": 0.5}}]},
+        {
+          "_Type_": "BuildingBlocks_Keyframe",
+          "percent": 1.0,
+          "modifiers": [
+            {
+              "_Type_": "BuildingBlocks_KeyframeModifierData",
+              "timingFunction": {
+                "_Type_": "BuildingBlocks_TimingFunctionPreset",
+                "preset": "EaseInOutCubic"},
+              "modifier": {
+                "_Type_": "BuildingBlocks_FieldModifierNumber",
+                "field": "AnchorY",
+                "value": 1.5}},
+            {
+              "_Type_": "BuildingBlocks_KeyframeModifierData",
+              "timingFunction": {
+                "_Type_": "BuildingBlocks_TimingFunctionPreset",
+                "preset": "Linear"},
+              "modifier": {
+                "_Type_": "BuildingBlocks_FieldModifierNumber",
+                "field": "Alpha",
+                "value": 0.0}}]}]}}}

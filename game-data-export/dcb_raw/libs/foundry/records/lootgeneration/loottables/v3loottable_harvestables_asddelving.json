@@ -1,0 +1,66 @@
+{
+  "_RecordName_": "LootTableV3Record.V3LootTable_Harvestables_ASDDelving",
+  "_RecordId_": "a4a558e1-c9e3-4f6c-8ac7-796f767f46e4",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "LootTableV3Record",
+    "lootTable": {
+      "_Type_": "LootTableV3",
+      "lootArchetypes": [
+        {
+          "_Type_": "LootTableV3Entry",
+          "name": "Harvestables",
+          "weight": 100.0,
+          "archetype": {
+            "_Type_": "LootArchetypeV3",
+            "entries": [
+              {
+                "_Type_": "LootArchetypeV3Entry",
+                "name": "Harvestables",
+                "weight": 1.0,
+                "selector": {
+                  "_Type_": "LootArchetypeV3Selector_Tags",
+                  "tags": {
+                    "_Type_": "TagsDNFTerm",
+                    "positiveTags": [
+                      {
+                        "_RecordPath_": "file://./../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+                        "_RecordName_": "Tag.ce613614-ef14-4471-96c1-1319b3219ddc",
+                        "_RecordId_": "ce613614-ef14-4471-96c1-1319b3219ddc"}],
+                    "negativeTags": [
+                      {
+                        "_RecordPath_": "file://./../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+                        "_RecordName_": "Tag.33343636-46c2-4b37-8a19-3fdb1e396efc",
+                        "_RecordId_": "33343636-46c2-4b37-8a19-3fdb1e396efc"},
+                      {
+                        "_RecordPath_": "file://./../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+                        "_RecordName_": "Tag.3a96b2bd-c314-44ec-978c-e9973260a74b",
+                        "_RecordId_": "3a96b2bd-c314-44ec-978c-e9973260a74b"},
+                      {
+                        "_RecordPath_": "file://./../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+                        "_RecordName_": "Tag.ad40e9c1-a7c4-44e3-b03a-c334bd2ece76",
+                        "_RecordId_": "ad40e9c1-a7c4-44e3-b03a-c334bd2ece76"}]}},
+                "optionalData": []}]},
+          "optionalData": []},
+        {
+          "_Type_": "LootTableV3Entry",
+          "name": "ASD specimin vial",
+          "weight": 0.1,
+          "archetype": {
+            "_Type_": "LootArchetypeV3",
+            "entries": [
+              {
+                "_Type_": "LootArchetypeV3Entry",
+                "name": "ASD specimin vial",
+                "weight": 1.0,
+                "selector": {
+                  "_Type_": "LootArchetypeV3Selector_EntityClasses",
+                  "entityClasses": {
+                    "_Type_": "EntityClassList_Manual",
+                    "entityClasses": [
+                      "file://./../../../../../libs/foundry/records/entities/scitem/carryables/1h/carryable_1h_cy_vial_specimen_1_asd_a.json"]}},
+                "optionalData": []}]},
+          "optionalData": [
+            {
+              "_Type_": "LootTableOptionalDataV3_ChoiceLimit",
+              "choiceLimit": 1}]}]}}}

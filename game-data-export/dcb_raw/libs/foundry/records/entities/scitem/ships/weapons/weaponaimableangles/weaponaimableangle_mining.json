@@ -1,0 +1,41 @@
+{
+  "_RecordName_": "WeaponAimableAnglesDef.WeaponAimableAngle_Mining",
+  "_RecordId_": "9f629321-c5a0-4ae9-9878-7e2a63b9080f",
+  "_RecordTag_": "CGP4",
+  "_RecordValue_": {
+    "_Type_": "WeaponAimableAnglesDef",
+    "maxNudgeAngle": 12.0,
+    "innerThresholdAngle": 10.0,
+    "outerThresholdAngle": 11.0,
+    "closeDistanceMaxRange": 150.0,
+    "closeDistanceMinRange": 75.0,
+    "closeDistanceOuterAngle": 178.0,
+    "closeDistanceInnerAngle": 100.0,
+    "assistNudgeMapping": {
+      "_Type_": "BezierCurve",
+      "points": [
+        {
+          "_Type_": "Vec2",
+          "x": -0.1453872,
+          "y": -0.4570296},
+        {
+          "_Type_": "Vec2",
+          "x": 0.0,
+          "y": 0.0},
+        {
+          "_Type_": "Vec2",
+          "x": 0.5,
+          "y": 0.5},
+        {
+          "_Type_": "Vec2",
+          "x": 0.5,
+          "y": 0.5},
+        {
+          "_Type_": "Vec2",
+          "x": 1.0,
+          "y": 1.0},
+        {
+          "_Type_": "Vec2",
+          "x": 1.83413,
+          "y": -0.5085765}],
+      "useLUT": false}}}

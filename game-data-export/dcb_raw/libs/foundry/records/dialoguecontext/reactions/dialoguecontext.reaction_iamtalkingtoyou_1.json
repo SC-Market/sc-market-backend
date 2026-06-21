@@ -1,0 +1,21 @@
+{
+  "_RecordName_": "DialogueContext.Reaction_IAmTalkingToYou_1",
+  "_RecordId_": "507a90c3-05ab-47af-90bc-1dd7003187b8",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "DialogueContext",
+    "speaker": null,
+    "localizedSubtitleText": "@LOC_UNINITIALIZED",
+    "unlocalizedSubtitleText": "@LOC_UNINITIALIZED",
+    "subtitleShowDelay": 0.0,
+    "subtitleDisplayDurationOverride": 0.0,
+    "tempText": "Hey, will you stay here?\\nI am talking to you!",
+    "audioTrigger": {
+      "_Type_": "GlobalResourceAudio",
+      "audioTrigger": ""},
+    "femaleAudioTrigger": {
+      "_Type_": "GlobalResourceAudio",
+      "audioTrigger": ""},
+    "forceSubtitles": false,
+    "contents": [],
+    "tags": []}}

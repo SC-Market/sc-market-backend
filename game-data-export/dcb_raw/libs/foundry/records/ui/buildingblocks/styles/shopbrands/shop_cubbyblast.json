@@ -1,0 +1,96 @@
+{
+  "_RecordName_": "BuildingBlocks_Style.Shop_CubbyBlast",
+  "_RecordId_": "a7960984-34a0-4389-bf94-088c2314239a",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "BuildingBlocks_Style",
+    "entries": [],
+    "colorStyles": [
+      {
+        "_Type_": "BuildingBlocks_ColorSolid",
+        "color": {
+          "_Type_": "SRGBA8",
+          "r": 158,
+          "g": 80,
+          "b": 78,
+          "a": 255}},
+      {
+        "_Type_": "BuildingBlocks_ColorSolid",
+        "color": {
+          "_Type_": "SRGBA8",
+          "r": 50,
+          "g": 214,
+          "b": 187,
+          "a": 255}},
+      {
+        "_Type_": "BuildingBlocks_ColorSolid",
+        "color": {
+          "_Type_": "SRGBA8",
+          "r": 214,
+          "g": 50,
+          "b": 183,
+          "a": 255}},
+      {
+        "_Type_": "BuildingBlocks_ColorSolid",
+        "color": {
+          "_Type_": "SRGBA8",
+          "r": 214,
+          "g": 50,
+          "b": 61,
+          "a": 255}},
+      {
+        "_Type_": "BuildingBlocks_ColorSolid",
+        "color": {
+          "_Type_": "SRGBA8",
+          "r": 249,
+          "g": 182,
+          "b": 180,
+          "a": 255}},
+      {
+        "_Type_": "BuildingBlocks_ColorSolid",
+        "color": {
+          "_Type_": "SRGBA8",
+          "r": 31,
+          "g": 17,
+          "b": 16,
+          "a": 255}},
+      {
+        "_Type_": "BuildingBlocks_ColorSolid",
+        "color": {
+          "_Type_": "SRGBA8",
+          "r": 255,
+          "g": 238,
+          "b": 238,
+          "a": 255}},
+      {
+        "_Type_": "BuildingBlocks_ColorSolid",
+        "color": {
+          "_Type_": "SRGBA8",
+          "r": 246,
+          "g": 129,
+          "b": 126,
+          "a": 255}},
+      {
+        "_Type_": "BuildingBlocks_ColorSolid",
+        "color": {
+          "_Type_": "SRGBA8",
+          "r": 20,
+          "g": 20,
+          "b": 20,
+          "a": 255}},
+      {
+        "_Type_": "BuildingBlocks_ColorSolid",
+        "color": {
+          "_Type_": "SRGBA8",
+          "r": 9,
+          "g": 7,
+          "b": 6,
+          "a": 255}},
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null],
+    "textFieldModifiers": []}}

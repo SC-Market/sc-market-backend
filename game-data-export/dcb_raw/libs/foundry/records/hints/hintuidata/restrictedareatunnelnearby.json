@@ -1,0 +1,12 @@
+{
+  "_RecordName_": "HintUIData.RestrictedAreaTunnelNearby",
+  "_RecordId_": "54c0eb50-2070-4628-99ef-f421525960e8",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "HintUIData",
+    "TitleText": "@Hints_RestrictedAreaNavigation_Title",
+    "BodyText": "@Hints_RestrictedAreaTunnelNearby",
+    "BodyTextGamePad": "@Hints_RestrictedAreaTunnelNearby",
+    "BodyTextJoystick": "@Hints_RestrictedAreaTunnelNearby",
+    "TitleImagePath": "",
+    "BodyImagePath": ""}}

@@ -1,0 +1,22 @@
+{
+  "_RecordName_": "LoadoutKit.GRIN_ROC_Hadanite_Pink",
+  "_RecordId_": "66c9809d-d32d-4779-80fb-d6cc44648316",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "LoadoutKit",
+    "name": "@item_NameROC_Paint_Hadanite_Pink",
+    "description": "@item_DescROC_Paint_Hadanite_Pink",
+    "loadout": {
+      "_Type_": "SItemPortLoadoutManualParams",
+      "WearRange": null,
+      "DirtRange": null,
+      "SkipInventoryItemsOnMissionEntities": false,
+      "InventoryItems": [],
+      "entries": [
+        {
+          "_Type_": "SItemPortLoadoutEntryParams",
+          "itemPortName": "hardpoint_paint",
+          "entityClassName": "",
+          "entityClassReference": "file://./../../../../../libs/foundry/records/entities/scitem/ships/paints/paint_roc_hadanite_pink.json",
+          "inventoryContainer": null,
+          "loadout": null}]}}}

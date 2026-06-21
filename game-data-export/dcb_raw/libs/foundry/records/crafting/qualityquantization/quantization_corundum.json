@@ -1,0 +1,49 @@
+{
+  "_RecordName_": "CraftingQualityQuantizationRecord.Quantization_Corundum",
+  "_RecordId_": "3126ecb0-db03-487c-9f0a-b5b3c5ecbb86",
+  "_RecordTag_": "SystemsDesign",
+  "_RecordValue_": {
+    "_Type_": "CraftingQualityQuantizationRecord",
+    "qualityQuantization": {
+      "_Type_": "CraftingQualityQuantization",
+      "bands": [
+        {
+          "_Type_": "CraftingQualityQuantizationBand",
+          "start": 0,
+          "end": 399,
+          "mappedValue": 309},
+        {
+          "_Type_": "CraftingQualityQuantizationBand",
+          "start": 400,
+          "end": 599,
+          "mappedValue": 504},
+        {
+          "_Type_": "CraftingQualityQuantizationBand",
+          "start": 600,
+          "end": 699,
+          "mappedValue": 665},
+        {
+          "_Type_": "CraftingQualityQuantizationBand",
+          "start": 700,
+          "end": 799,
+          "mappedValue": 793},
+        {
+          "_Type_": "CraftingQualityQuantizationBand",
+          "start": 800,
+          "end": 899,
+          "mappedValue": 886},
+        {
+          "_Type_": "CraftingQualityQuantizationBand",
+          "start": 900,
+          "end": 949,
+          "mappedValue": 904},
+        {
+          "_Type_": "CraftingQualityQuantizationBand",
+          "start": 950,
+          "end": 998,
+          "mappedValue": 971},
+        {
+          "_Type_": "CraftingQualityQuantizationBand",
+          "start": 999,
+          "end": 1000,
+          "mappedValue": 1000}]}}}

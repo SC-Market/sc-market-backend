@@ -1,0 +1,60 @@
+{
+  "_RecordName_": "EntityClassDefinition.RoomModifier_AstAtm",
+  "_RecordId_": "245034c7-caea-4ae3-816d-68ac68af92ed",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "EntityClassDefinition",
+    "Category": "Room",
+    "Icon": "Box.bmp",
+    "Invisible": false,
+    "BBoxSelection": false,
+    "defaultEditorColor": {
+      "_Type_": "RGB",
+      "r": 1.0,
+      "g": 1.0,
+      "b": 0.0},
+    "entityDensityClass": null,
+    "tags": [],
+    "StaticEntityClassData": [],
+    "Components": [
+      {
+        "_Type_": "SEntityComponentRoomParams",
+        "roomType": "Area",
+        "minimumVolumeStrength": 0.0,
+        "roomName": "@LOC_EMPTY",
+        "interiorMapSection": null,
+        "roomExtensions": [],
+        "isPhysical": true},
+      {
+        "_Type_": "EntityComponentRoomFadeVolumeParams",
+        "areaVolume": {
+          "_Type_": "VolumeShape_Sphere",
+          "radius": 10.0},
+        "fadeZone": 2.0},
+      {
+        "_Type_": "AudioPropagationParams",
+        "audioEnvironment": "",
+        "physicalOcclusionValueWhenClosed": 1.0,
+        "physicalEncapsulationValue": 1.0},
+      {
+        "_Type_": "EntityComponentAsteroidVolumeParams",
+        "state": {
+          "_Type_": "AsteroidState",
+          "debrisDensityMod": "Override",
+          "debrisDensity": 1.0},
+        "behavior": null},
+      {
+        "_Type_": "SEntityComponentAtmosphereContainerParams",
+        "atmosphereType": "Static",
+        "state": {
+          "_Type_": "AtmosphereState",
+          "pressureMod": "Inherit",
+          "pressure": 1.0,
+          "temperatureMod": "Inherit",
+          "temperature": 288.15,
+          "humidityMod": "Inherit",
+          "humidity": 0.5},
+        "atmosphericComposition": {
+          "_Type_": "SAtmosphericCompositionInherit"},
+        "behavior": null,
+        "lifeSupport": null}]}}

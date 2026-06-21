@@ -1,0 +1,43 @@
+{
+  "_RecordName_": "STurretESP.TurretESP_Default",
+  "_RecordId_": "7b27f8d3-d5e6-42cc-b50f-aaeb411ccd5d",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "STurretESP",
+    "triggerZoneRampInCurve": {
+      "_Type_": "BezierCurve",
+      "points": [
+        {
+          "_Type_": "Vec2",
+          "x": -0.4120398,
+          "y": -0.1280471},
+        {
+          "_Type_": "Vec2",
+          "x": 0.0,
+          "y": 0.0},
+        {
+          "_Type_": "Vec2",
+          "x": 0.4120398,
+          "y": 0.1280471},
+        {
+          "_Type_": "Vec2",
+          "x": 0.6738061,
+          "y": 0.1510342},
+        {
+          "_Type_": "Vec2",
+          "x": 1.0,
+          "y": 1.0},
+        {
+          "_Type_": "Vec2",
+          "x": 1.331788,
+          "y": 1.846879}],
+      "useLUT": false},
+    "maxTrackingStrength": 0.5,
+    "distanceFalloffStart": 1500.0,
+    "distanceFalloffEnd": 2500.0,
+    "outerZoneDeg": 12.0,
+    "innerZoneRatio": 0.35,
+    "adsZoneMinSizeDeg": 4.5,
+    "inputScalerMin": 0.01,
+    "inputScalerMax": 0.05,
+    "allowWithRelativeMouseModes": false}}

@@ -1,0 +1,54 @@
+{
+  "_RecordName_": "MissionLocationTemplate.ASDFacility-Delving-Stanton",
+  "_RecordId_": "2a99d778-b37d-47f9-a5dc-4a2ae9cb4439",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "MissionLocationTemplate",
+    "locationData": {
+      "_Type_": "MissionLocationData",
+      "generalTags": {
+        "_Type_": "MissionLocationTags",
+        "tags": [
+          {
+            "_RecordPath_": "file://./../../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+            "_RecordName_": "Tag.4d694d23-f78e-4ea4-8215-0eb4fd3257a9",
+            "_RecordId_": "4d694d23-f78e-4ea4-8215-0eb4fd3257a9"},
+          {
+            "_RecordPath_": "file://./../../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+            "_RecordName_": "Tag.a47673ef-8511-490d-90ea-fd171d99b626",
+            "_RecordId_": "a47673ef-8511-490d-90ea-fd171d99b626"}]},
+      "producesTags": {
+        "_Type_": "TagSearchTerm",
+        "positiveTags": [],
+        "negativeTags": []},
+      "consumesTags": {
+        "_Type_": "TagSearchTerm",
+        "positiveTags": [],
+        "negativeTags": []},
+      "aiSpawnTags": {
+        "_Type_": "TagList",
+        "tags": []},
+      "stringVariants": {
+        "_Type_": "MissionStringVariants",
+        "variants": []},
+      "missionModules": [],
+      "missionLimits": [
+        {
+          "_Type_": "LocationMissionLimit",
+          "tag": {
+            "_RecordPath_": "file://./../../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+            "_RecordName_": "Tag.f2e0e1f6-a4db-4610-a844-f633e7ea86c6",
+            "_RecordId_": "f2e0e1f6-a4db-4610-a844-f633e7ea86c6"},
+          "autoConsumeIfPlayerAtLocation": false,
+          "maxMissionInstances": 8,
+          "dependentParentTags": {
+            "_Type_": "TagList",
+            "tags": []},
+          "dependentChildTags": {
+            "_Type_": "TagList",
+            "tags": []}}],
+      "autoSpawnSettings": [],
+      "isSecurityNetworkHost": false,
+      "defaultSecurityNetworkManifest": null,
+      "disabled": false,
+      "entityClusterMember": null}}}

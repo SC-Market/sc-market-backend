@@ -1,0 +1,47 @@
+{
+  "_RecordName_": "BlueprintPoolRecord.BP_MISSIONREWARD_RDC_Generic",
+  "_RecordId_": "e52bf354-8918-474d-987e-55c01bfecdd3",
+  "_RecordTag_": "SystemsDesign",
+  "_RecordValue_": {
+    "_Type_": "BlueprintPoolRecord",
+    "blueprintRewards": [
+      {
+        "_Type_": "BlueprintReward",
+        "weight": 1.0,
+        "blueprintRecord": "file://./../../../../../../libs/foundry/records/crafting/blueprints/crafting/fpsgear/weapons/shotgun/bp_craft_gmni_shotgun_ballistic_01.json"},
+      {
+        "_Type_": "BlueprintReward",
+        "weight": 1.0,
+        "blueprintRecord": "file://./../../../../../../libs/foundry/records/crafting/blueprints/crafting/fpsgear/armour/combat/heavy/bp_craft_kap_combat_heavy_arms_02_01_01.json"},
+      {
+        "_Type_": "BlueprintReward",
+        "weight": 1.0,
+        "blueprintRecord": "file://./../../../../../../libs/foundry/records/crafting/blueprints/crafting/fpsgear/armour/combat/heavy/bp_craft_kap_combat_heavy_core_02_01_01.json"},
+      {
+        "_Type_": "BlueprintReward",
+        "weight": 1.0,
+        "blueprintRecord": "file://./../../../../../../libs/foundry/records/crafting/blueprints/crafting/fpsgear/armour/combat/heavy/bp_craft_kap_combat_heavy_legs_02_01_01.json"},
+      {
+        "_Type_": "BlueprintReward",
+        "weight": 1.0,
+        "blueprintRecord": "file://./../../../../../../libs/foundry/records/crafting/blueprints/crafting/fpsgear/armour/combat/heavy/bp_craft_kap_combat_heavy_helmet_02_01_01.json"},
+      {
+        "_Type_": "BlueprintReward",
+        "weight": 1.0,
+        "blueprintRecord": "file://./../../../../../../libs/foundry/records/crafting/blueprints/crafting/fpsgear/armour/combat/heavy/bp_craft_kap_combat_heavy_arms_02_08_01.json"},
+      {
+        "_Type_": "BlueprintReward",
+        "weight": 1.0,
+        "blueprintRecord": "file://./../../../../../../libs/foundry/records/crafting/blueprints/crafting/fpsgear/armour/combat/heavy/bp_craft_kap_combat_heavy_core_02_08_01.json"},
+      {
+        "_Type_": "BlueprintReward",
+        "weight": 1.0,
+        "blueprintRecord": "file://./../../../../../../libs/foundry/records/crafting/blueprints/crafting/fpsgear/armour/combat/heavy/bp_craft_kap_combat_heavy_legs_02_08_01.json"},
+      {
+        "_Type_": "BlueprintReward",
+        "weight": 1.0,
+        "blueprintRecord": "file://./../../../../../../libs/foundry/records/crafting/blueprints/crafting/fpsgear/armour/combat/heavy/bp_craft_kap_combat_heavy_helmet_02_08_01.json"},
+      {
+        "_Type_": "BlueprintReward",
+        "weight": 1.0,
+        "blueprintRecord": "file://./../../../../../../libs/foundry/records/crafting/blueprints/crafting/fpsgear/ammo/shotgun/bp_craft_gmni_shotgun_ballistic_01_mag.json"}]}}

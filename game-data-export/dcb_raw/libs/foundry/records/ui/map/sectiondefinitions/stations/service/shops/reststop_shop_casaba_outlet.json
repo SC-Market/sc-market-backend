@@ -1,0 +1,8 @@
+{
+  "_RecordName_": "InteriorMapSectionDefinition.RestStop_Shop_Casaba_Outlet",
+  "_RecordId_": "5b905928-ab5b-4df7-aad8-d7964e7e3983",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "InteriorMapSectionDefinition",
+    "name": "@area_name_shop_casaba",
+    "restrictViewBounds": false}}

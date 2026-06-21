@@ -1,0 +1,14 @@
+{
+  "_RecordName_": "AIVisualFieldParams.DefaultFoV_irradiated_vlk",
+  "_RecordId_": "42b02aa0-f009-4348-9916-851534697fab",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "AIVisualFieldParams",
+    "sightRange": 500.0,
+    "sixthSenseRange": 0.0,
+    "clampDistanceForHorizontalFOV": 200.0,
+    "clampDistanceForVerticalFOV": 200.0,
+    "FOVHorizontal": 360.0,
+    "FOVVertical": 179.0,
+    "PrimaryFOVHorizontal": 360.0,
+    "PrimaryFOVVertical": 360.0}}

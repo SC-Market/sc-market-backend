@@ -1,0 +1,12 @@
+{
+  "_RecordName_": "MissionModuleHierarchy.EliminateAll_MMH",
+  "_RecordId_": "328d8fce-f977-47e9-aa52-41c6d131959f",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "MissionModuleHierarchy",
+    "missionModule": "Libs/Subsumption/Missions/PU/Missions/InfiltrateAndDefend/PU_EliminateAll.xml",
+    "subMissionModules": [
+      {
+        "_Type_": "MissionModuleHierarchySubMission",
+        "subMissionModule": "Libs/Subsumption/Missions/PU/PU_MissionModules/ModularParts/ClearAll.xml",
+        "subModuleHierarchy": null}]}}

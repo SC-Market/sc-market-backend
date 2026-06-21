@@ -1,0 +1,55 @@
+{
+  "_RecordName_": "LootTable.LootTable_NPC_CZ_Soldier_001",
+  "_RecordId_": "9b12a2f6-27cb-4278-9e77-a0da8f1d13b9",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "LootTable",
+    "lootArchetypes": [
+      {
+        "_Type_": "WeightedLootArchetype",
+        "archetype": "file://./../../../../../../../libs/foundry/records/lootgeneration/lootarchetypes/lootarchetype_medpen_only.json",
+        "weight": 0.5,
+        "numberOfResultsConstraints": {
+          "_Type_": "NumResultsConstraints",
+          "minResults": 0,
+          "maxResults": 0}},
+      {
+        "_Type_": "WeightedLootArchetype",
+        "archetype": "file://./../../../../../../../libs/foundry/records/lootgeneration/lootarchetypes/lootarchetype_gem_rare.json",
+        "weight": 0.1,
+        "numberOfResultsConstraints": {
+          "_Type_": "NumResultsConstraints",
+          "minResults": 0,
+          "maxResults": 0}},
+      {
+        "_Type_": "WeightedLootArchetype",
+        "archetype": "file://./../../../../../../../libs/foundry/records/lootgeneration/lootarchetypes/lootarchetype_grenadescache_common.json",
+        "weight": 0.25,
+        "numberOfResultsConstraints": {
+          "_Type_": "NumResultsConstraints",
+          "minResults": 0,
+          "maxResults": 0}},
+      {
+        "_Type_": "WeightedLootArchetype",
+        "archetype": "file://./../../../../../../../libs/foundry/records/lootgeneration/lootarchetypes/lootarchetype_fusecell_001.json",
+        "weight": 0.1,
+        "numberOfResultsConstraints": {
+          "_Type_": "NumResultsConstraints",
+          "minResults": 0,
+          "maxResults": 0}},
+      {
+        "_Type_": "WeightedLootArchetype",
+        "archetype": "file://./../../../../../../../libs/foundry/records/lootgeneration/lootarchetypes/lootarchetype_drugscache_narcotics.json",
+        "weight": 0.05,
+        "numberOfResultsConstraints": {
+          "_Type_": "NumResultsConstraints",
+          "minResults": 0,
+          "maxResults": 0}},
+      {
+        "_Type_": "WeightedLootArchetype",
+        "archetype": "file://./../../../../../../../libs/foundry/records/lootgeneration/lootarchetypes/lootarchetype_weapon_attachments_rare.json",
+        "weight": 0.01,
+        "numberOfResultsConstraints": {
+          "_Type_": "NumResultsConstraints",
+          "minResults": 0,
+          "maxResults": 0}}]}}

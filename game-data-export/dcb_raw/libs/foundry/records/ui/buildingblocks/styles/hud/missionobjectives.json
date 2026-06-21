@@ -1,0 +1,101 @@
+{
+  "_RecordName_": "BuildingBlocks_Style.MissionObjectives",
+  "_RecordId_": "f1fa9fd5-279f-49c4-8964-45b782a5d714",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "BuildingBlocks_Style",
+    "entries": [
+      {
+        "_Type_": "BuildingBlocks_StyleEntry",
+        "name": "New Style",
+        "conditionsList": [
+          {
+            "_Type_": "BuildingBlocks_StyleConditionList",
+            "name": "New Condition List",
+            "conditions": [
+              {
+                "_Type_": "BuildingBlocks_StyleSelectorConditionTag",
+                "tag": {
+                  "_RecordPath_": "file://./../../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+                  "_RecordName_": "Tag.5d094950-8c1c-4a4a-a149-ce23bb38a8b6",
+                  "_RecordId_": "5d094950-8c1c-4a4a-a149-ce23bb38a8b6"}}]}],
+        "modifiers": [],
+        "transitions": []}],
+    "colorStyles": [
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null],
+    "textFieldModifiers": [
+      {
+        "_Type_": "BuildingBlocks_TextEmphasisModifierList",
+        "textEmphasis": []},
+      {
+        "_Type_": "BuildingBlocks_TextEmphasisModifierList",
+        "textEmphasis": [
+          {
+            "_Type_": "BuildingBlocks_ColorTextFormatModifier",
+            "field": "FillColor",
+            "value": {
+              "_Type_": "BuildingBlocks_ColorSolid",
+              "color": {
+                "_Type_": "SRGBA8",
+                "r": 148,
+                "g": 250,
+                "b": 255,
+                "a": 255}}}]},
+      {
+        "_Type_": "BuildingBlocks_TextEmphasisModifierList",
+        "textEmphasis": [
+          {
+            "_Type_": "BuildingBlocks_ColorTextFormatModifier",
+            "field": "FillColor",
+            "value": {
+              "_Type_": "BuildingBlocks_ColorSolid",
+              "color": {
+                "_Type_": "SRGBA8",
+                "r": 158,
+                "g": 248,
+                "b": 123,
+                "a": 255}}}]},
+      {
+        "_Type_": "BuildingBlocks_TextEmphasisModifierList",
+        "textEmphasis": [
+          {
+            "_Type_": "BuildingBlocks_ColorTextFormatModifier",
+            "field": "FillColor",
+            "value": {
+              "_Type_": "BuildingBlocks_ColorSolid",
+              "color": {
+                "_Type_": "SRGBA8",
+                "r": 252,
+                "g": 252,
+                "b": 123,
+                "a": 255}}}]},
+      {
+        "_Type_": "BuildingBlocks_TextEmphasisModifierList",
+        "textEmphasis": [
+          {
+            "_Type_": "BuildingBlocks_ColorTextFormatModifier",
+            "field": "FillColor",
+            "value": {
+              "_Type_": "BuildingBlocks_ColorSolid",
+              "color": {
+                "_Type_": "SRGBA8",
+                "r": 216,
+                "g": 41,
+                "b": 76,
+                "a": 255}}}]}]}}

@@ -1,0 +1,13 @@
+{
+  "_RecordName_": "CharacterRandomNameParams.HumanMale_Civilian_ArkenMallor",
+  "_RecordId_": "e8bcfe46-a866-4b5b-9c1d-aea7da23af2e",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "CharacterRandomNameParams",
+    "firstNameString": "Name_ArkenMallor_First_Name",
+    "nickNameString": "LOC_UNINITIALIZED",
+    "lastNameString": "Name_ArkenMallor_Last_Name",
+    "numFirstNames": 1,
+    "numNickNames": 0,
+    "numLastNames": 1,
+    "nicknameChance": 0.05}}

@@ -1,0 +1,127 @@
+{
+  "_RecordName_": "CraftingBlueprintRecord.BP_CRAFT_utfl_crossbow_ballistic_01",
+  "_RecordId_": "e03e2902-6fbc-49b5-8d97-08aa6cc8d043",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "CraftingBlueprintRecord",
+    "blueprint": {
+      "_Type_": "CraftingBlueprint",
+      "category": {
+        "_RecordPath_": "file://./../../../../../../../../../libs/foundry/records/crafting/blueprintcategories/blueprintcategorydatabase.json",
+        "_RecordName_": "BlueprintCategoryRecord.FPSWeapons",
+        "_RecordId_": "f9ccf95d-ad0e-4c33-97e0-e56c847a7e37"},
+      "blueprintName": "@LOC_PLACEHOLDER",
+      "processSpecificData": {
+        "_Type_": "CraftingProcess_Creation",
+        "entityClass": "file://./../../../../../../../../../libs/foundry/records/entities/scitem/weapons/fps_weapons/utfl_crossbow_ballistic_01.json"},
+      "tiers": [
+        {
+          "_Type_": "CraftingBlueprintTier",
+          "recipe": {
+            "_Type_": "CraftingRecipe",
+            "processSpecificData": null,
+            "costs": {
+              "_Type_": "CraftingRecipeCosts",
+              "craftTime": {
+                "_Type_": "TimeValue_Partitioned",
+                "days": 0,
+                "hours": 0,
+                "minutes": 3,
+                "seconds": 30.0},
+              "mandatoryCost": {
+                "_Type_": "CraftingCost_Select",
+                "context": [
+                  {
+                    "_Type_": "CraftingCostContext_ResultCompositionInclusion",
+                    "option": "Include"}],
+                "nameInfo": {
+                  "_Type_": "CraftingNameInfo",
+                  "debugName": "ASPECTS",
+                  "displayName": "@LOC_PLACEHOLDER"},
+                "count": 2,
+                "options": [
+                  {
+                    "_Type_": "CraftingCost_Select",
+                    "context": [
+                      {
+                        "_Type_": "CraftingCostContext_ResultGameplayPropertyModifiers",
+                        "gameplayPropertyModifiers": {
+                          "_Type_": "CraftingGameplayPropertyModifiers_List",
+                          "gameplayPropertyModifiers": [
+                            {
+                              "_Type_": "CraftingGameplayPropertyModifierCommon",
+                              "gameplayPropertyRecord": "file://./../../../../../../../../../libs/foundry/records/crafting/craftedproperties/gpp_weapon_damage.json",
+                              "valueRanges": [
+                                {
+                                  "_Type_": "CraftingGameplayPropertyModifierValueRange_Linear",
+                                  "startQuality": 0,
+                                  "endQuality": 499,
+                                  "modifierAtStart": 0.95,
+                                  "modifierAtEnd": 1.0},
+                                {
+                                  "_Type_": "CraftingGameplayPropertyModifierValueRange_Linear",
+                                  "startQuality": 500,
+                                  "endQuality": 1000,
+                                  "modifierAtStart": 1.0,
+                                  "modifierAtEnd": 1.05}]}]}}],
+                    "nameInfo": {
+                      "_Type_": "CraftingNameInfo",
+                      "debugName": "FRAME",
+                      "displayName": "@crafting_ui_slotname_frame"},
+                    "count": 1,
+                    "options": [
+                      {
+                        "_Type_": "CraftingCost_Resource",
+                        "context": [],
+                        "resource": {
+                          "_RecordPath_": "file://./../../../../../../../../../libs/foundry/records/resourcetypedatabase/resourcetypedatabase.json",
+                          "_RecordName_": "ResourceType.Savrilium",
+                          "_RecordId_": "4a47cad8-0271-4048-b19b-d9b52521fc20"},
+                        "quantity": {
+                          "_Type_": "SStandardCargoUnit",
+                          "standardCargoUnits": 0.05},
+                        "minQuality": 0}]},
+                  {
+                    "_Type_": "CraftingCost_Select",
+                    "context": [
+                      {
+                        "_Type_": "CraftingCostContext_ResultGameplayPropertyModifiers",
+                        "gameplayPropertyModifiers": {
+                          "_Type_": "CraftingGameplayPropertyModifiers_List",
+                          "gameplayPropertyModifiers": [
+                            {
+                              "_Type_": "CraftingGameplayPropertyModifierCommon",
+                              "gameplayPropertyRecord": "file://./../../../../../../../../../libs/foundry/records/crafting/craftedproperties/gpp_weapon_damage.json",
+                              "valueRanges": [
+                                {
+                                  "_Type_": "CraftingGameplayPropertyModifierValueRange_Linear",
+                                  "startQuality": 0,
+                                  "endQuality": 499,
+                                  "modifierAtStart": 0.85,
+                                  "modifierAtEnd": 1.0},
+                                {
+                                  "_Type_": "CraftingGameplayPropertyModifierValueRange_Linear",
+                                  "startQuality": 500,
+                                  "endQuality": 1000,
+                                  "modifierAtStart": 1.0,
+                                  "modifierAtEnd": 1.15}]}]}}],
+                    "nameInfo": {
+                      "_Type_": "CraftingNameInfo",
+                      "debugName": "TENSIVE FIBRE",
+                      "displayName": "@crafting_ui_slotname_tensivefibre"},
+                    "count": 1,
+                    "options": [
+                      {
+                        "_Type_": "CraftingCost_Resource",
+                        "context": [],
+                        "resource": {
+                          "_RecordPath_": "file://./../../../../../../../../../libs/foundry/records/resourcetypedatabase/resourcetypedatabase.json",
+                          "_RecordName_": "ResourceType.Ouratite",
+                          "_RecordId_": "989f9b73-f636-4f35-a81d-579dcbe3f0ab"},
+                        "quantity": {
+                          "_Type_": "SStandardCargoUnit",
+                          "standardCargoUnits": 0.02},
+                        "minQuality": 0}]}]},
+              "optionalCosts": []},
+            "results": null},
+          "research": null}]}}}

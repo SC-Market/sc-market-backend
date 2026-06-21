@@ -1,0 +1,18 @@
+{
+  "_RecordName_": "JournalEntry.ContestedZone_Pyam_Volunteers",
+  "_RecordId_": "b9541d14-a3f0-416e-a88e-6d91366e15d4",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "JournalEntry",
+    "Title": "@datapad_contestedzone_pyam_volunteers_title",
+    "ShortTitle": "@datapad_contestedzone_pyam_volunteers_title",
+    "SubHeading": "@LOC_UNINITIALIZED",
+    "autoOpenMobiGlas": false,
+    "showNotification": true,
+    "missionSpecificContent": false,
+    "removeOnMissionEnd": false,
+    "Style": "file://./../../../../../libs/foundry/records/journalentrytype/journalentrytype.textlog.json",
+    "type": {
+      "_Type_": "JournalEntryText",
+      "BodyText": "@datapad_contestedzone_pyam_volunteers_body"},
+    "tutorialEntry": false}}

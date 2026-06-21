@@ -1,0 +1,25 @@
+{
+  "_RecordName_": "mobiGlasApp.Contracts",
+  "_RecordId_": "7f60435f-c7f0-4357-abc3-788f4884f1f4",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "mobiGlasApp",
+    "name": "ContractManager",
+    "bindingsNamespace": "",
+    "appCanvas": "file://./../../../../../../libs/foundry/records/ui/buildingblocks/m_mobiglas/m_sc_contracts/m_sc_contracts_main.json",
+    "homeCanvas": null,
+    "displayIcon": "UI/Textures/Vector/MobiGlas/AppIcons/contract.svg",
+    "displayIcon3d": "Objects/UI/3D_Icons/ui_mobiglas_icon_missions.cgf",
+    "displayName": "@mobiGlas_AppName_Contracts",
+    "appColor": {
+      "_Type_": "SRGBA8",
+      "r": 255,
+      "g": 0,
+      "b": 0,
+      "a": 255},
+    "isHidden": false,
+    "defaultAppData": [],
+    "appParams": null,
+    "hostingApps": [
+      "file://./../../../../../../libs/foundry/records/ui/mobiglas/mobiglasapps/homescreen.json"],
+    "legacyApp": false}}

@@ -1,0 +1,8 @@
+{
+  "_RecordName_": "InteriorMapSectionDefinition.Valkyrie_Deck_02",
+  "_RecordId_": "34e349e2-5f48-4a48-b994-3f1ac4837dc1",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "InteriorMapSectionDefinition",
+    "name": "@vehicle_deck_lower",
+    "restrictViewBounds": false}}

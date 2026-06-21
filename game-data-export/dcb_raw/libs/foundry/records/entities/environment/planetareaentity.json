@@ -1,0 +1,30 @@
+{
+  "_RecordName_": "EntityClassDefinition.PlanetAreaEntity",
+  "_RecordId_": "ec4865b3-888b-452d-b877-484f7f210365",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "EntityClassDefinition",
+    "Category": "Environment",
+    "Icon": "Default.bmp",
+    "Invisible": false,
+    "BBoxSelection": true,
+    "defaultEditorColor": {
+      "_Type_": "RGB",
+      "r": 1.0,
+      "g": 1.0,
+      "b": 0.0},
+    "entityDensityClass": null,
+    "tags": [],
+    "StaticEntityClassData": [],
+    "Components": [
+      {
+        "_Type_": "SEntityComponentPlanetAreaParams",
+        "size": {
+          "_Type_": "Vec3",
+          "x": 1.0,
+          "y": 1.0,
+          "z": 1.0},
+        "areaType": "Hole",
+        "lodLevel": 0,
+        "bOverride": false,
+        "areaFitting": "Loose"}]}}

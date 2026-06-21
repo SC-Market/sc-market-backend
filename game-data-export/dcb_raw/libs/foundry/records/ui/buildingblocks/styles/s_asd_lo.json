@@ -1,0 +1,96 @@
+{
+  "_RecordName_": "BuildingBlocks_Style.S_ASD_LO",
+  "_RecordId_": "7e1c2c4c-06c6-4490-ad82-d22b6b8c8e19",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "BuildingBlocks_Style",
+    "entries": [],
+    "colorStyles": [
+      {
+        "_Type_": "BuildingBlocks_ColorSolid",
+        "color": {
+          "_Type_": "SRGBA8",
+          "r": 194,
+          "g": 199,
+          "b": 205,
+          "a": 255}},
+      {
+        "_Type_": "BuildingBlocks_ColorSolid",
+        "color": {
+          "_Type_": "SRGBA8",
+          "r": 45,
+          "g": 161,
+          "b": 226,
+          "a": 255}},
+      {
+        "_Type_": "BuildingBlocks_ColorSolid",
+        "color": {
+          "_Type_": "SRGBA8",
+          "r": 244,
+          "g": 146,
+          "b": 1,
+          "a": 255}},
+      {
+        "_Type_": "BuildingBlocks_ColorSolid",
+        "color": {
+          "_Type_": "SRGBA8",
+          "r": 237,
+          "g": 66,
+          "b": 73,
+          "a": 255}},
+      {
+        "_Type_": "BuildingBlocks_ColorSolid",
+        "color": {
+          "_Type_": "SRGBA8",
+          "r": 249,
+          "g": 198,
+          "b": 35,
+          "a": 255}},
+      {
+        "_Type_": "BuildingBlocks_ColorSolid",
+        "color": {
+          "_Type_": "SRGBA8",
+          "r": 53,
+          "g": 221,
+          "b": 236,
+          "a": 255}},
+      {
+        "_Type_": "BuildingBlocks_ColorSolid",
+        "color": {
+          "_Type_": "SRGBA8",
+          "r": 215,
+          "g": 230,
+          "b": 221,
+          "a": 255}},
+      {
+        "_Type_": "BuildingBlocks_ColorSolid",
+        "color": {
+          "_Type_": "SRGBA8",
+          "r": 1,
+          "g": 106,
+          "b": 111,
+          "a": 255}},
+      {
+        "_Type_": "BuildingBlocks_ColorSolid",
+        "color": {
+          "_Type_": "SRGBA8",
+          "r": 92,
+          "g": 99,
+          "b": 107,
+          "a": 255}},
+      {
+        "_Type_": "BuildingBlocks_ColorSolid",
+        "color": {
+          "_Type_": "SRGBA8",
+          "r": 17,
+          "g": 24,
+          "b": 32,
+          "a": 255}},
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null],
+    "textFieldModifiers": []}}

@@ -1,0 +1,133 @@
+{
+  "_RecordName_": "BuildingBlocks_Style.Shop_KelTo",
+  "_RecordId_": "f84bf476-f99c-4d97-b564-d6d6ac42db38",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "BuildingBlocks_Style",
+    "entries": [
+      {
+        "_Type_": "BuildingBlocks_StyleEntry",
+        "name": "Global_Font",
+        "conditionsList": [
+          {
+            "_Type_": "BuildingBlocks_StyleConditionList",
+            "name": "New Condition List",
+            "conditions": [
+              {
+                "_Type_": "BuildingBlocks_StyleSelectorConditionAnyOfCondition",
+                "conditions": [
+                  {
+                    "_Type_": "BuildingBlocks_StyleSelectorConditionType",
+                    "type": "Text"},
+                  {
+                    "_Type_": "BuildingBlocks_StyleSelectorConditionTag",
+                    "tag": {
+                      "_RecordPath_": "file://./../../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+                      "_RecordName_": "Tag.295223fa-f17e-48c7-aff0-cec34148be12",
+                      "_RecordId_": "295223fa-f17e-48c7-aff0-cec34148be12"}},
+                  {
+                    "_Type_": "BuildingBlocks_StyleSelectorConditionAncestor",
+                    "breakConditions": [
+                      {
+                        "_Type_": "BuildingBlocks_StyleSelectorConditionTag",
+                        "tag": {
+                          "_RecordPath_": "file://./../../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+                          "_RecordName_": "Tag.1d21c62c-0169-47eb-b715-2e6a64ce2ed3",
+                          "_RecordId_": "1d21c62c-0169-47eb-b715-2e6a64ce2ed3"}}],
+                    "conditions": []}]}]}],
+        "modifiers": [
+          {
+            "_Type_": "BuildingBlocks_FieldModifierRecordRef",
+            "field": {
+              "_Type_": "BuildingBlocks_FieldModifierRecordRefTypeFontStyleRecord",
+              "value": "file://./../../../../../../../libs/foundry/records/ui/buildingblocks/fontstyles/opensans.json"}}],
+        "transitions": []}],
+    "colorStyles": [
+      {
+        "_Type_": "BuildingBlocks_ColorSolid",
+        "color": {
+          "_Type_": "SRGBA8",
+          "r": 27,
+          "g": 26,
+          "b": 25,
+          "a": 255}},
+      {
+        "_Type_": "BuildingBlocks_ColorSolid",
+        "color": {
+          "_Type_": "SRGBA8",
+          "r": 93,
+          "g": 187,
+          "b": 88,
+          "a": 255}},
+      {
+        "_Type_": "BuildingBlocks_ColorSolid",
+        "color": {
+          "_Type_": "SRGBA8",
+          "r": 243,
+          "g": 202,
+          "b": 34,
+          "a": 255}},
+      {
+        "_Type_": "BuildingBlocks_ColorSolid",
+        "color": {
+          "_Type_": "SRGBA8",
+          "r": 234,
+          "g": 20,
+          "b": 20,
+          "a": 255}},
+      {
+        "_Type_": "BuildingBlocks_ColorSolid",
+        "color": {
+          "_Type_": "SRGBA8",
+          "r": 255,
+          "g": 114,
+          "b": 71,
+          "a": 255}},
+      {
+        "_Type_": "BuildingBlocks_ColorSolid",
+        "color": {
+          "_Type_": "SRGBA8",
+          "r": 255,
+          "g": 60,
+          "b": 1,
+          "a": 255}},
+      {
+        "_Type_": "BuildingBlocks_ColorSolid",
+        "color": {
+          "_Type_": "SRGBA8",
+          "r": 0,
+          "g": 0,
+          "b": 0,
+          "a": 255}},
+      {
+        "_Type_": "BuildingBlocks_ColorSolid",
+        "color": {
+          "_Type_": "SRGBA8",
+          "r": 66,
+          "g": 169,
+          "b": 141,
+          "a": 255}},
+      {
+        "_Type_": "BuildingBlocks_ColorSolid",
+        "color": {
+          "_Type_": "SRGBA8",
+          "r": 186,
+          "g": 184,
+          "b": 171,
+          "a": 255}},
+      {
+        "_Type_": "BuildingBlocks_ColorSolid",
+        "color": {
+          "_Type_": "SRGBA8",
+          "r": 208,
+          "g": 204,
+          "b": 174,
+          "a": 255}},
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null],
+    "textFieldModifiers": []}}

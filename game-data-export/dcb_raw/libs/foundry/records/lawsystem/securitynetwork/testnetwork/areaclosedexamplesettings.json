@@ -1,0 +1,27 @@
+{
+  "_RecordName_": "SecurityNetworkRoomSettings.AreaClosedExampleSettings",
+  "_RecordId_": "5cfd3a2e-e99f-4b9d-9dfd-05eecfe7f52a",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "SecurityNetworkRoomSettings",
+    "defaultProtocol": {
+      "_Type_": "SecurityNetworkProtocol",
+      "permissionsWithClearance": {
+        "_Type_": "SecurityNetworkPermissions",
+        "access": "Yes",
+        "trespass": "Yes"},
+      "permissionsWithoutClearance": {
+        "_Type_": "SecurityNetworkPermissions",
+        "access": "No",
+        "trespass": "Yes"},
+      "acceptedClearance": {
+        "_Type_": "SecurityClearanceConditions",
+        "tokens": [
+          null]},
+      "ownerFaction": null},
+    "roomIdentifier": {
+      "_RecordPath_": "file://./../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+      "_RecordName_": "Tag.a2a7510d-f655-481a-aeae-6dfcf30d813c",
+      "_RecordId_": "a2a7510d-f655-481a-aeae-6dfcf30d813c"},
+    "trespassWarningSeconds": -1.0,
+    "trespassRevokeWarningSeconds": -1.0}}

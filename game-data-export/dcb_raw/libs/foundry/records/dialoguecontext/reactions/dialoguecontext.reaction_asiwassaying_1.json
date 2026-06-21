@@ -1,0 +1,21 @@
+{
+  "_RecordName_": "DialogueContext.Reaction_AsIwasSaying_1",
+  "_RecordId_": "d645b228-39b5-4e8d-ba7f-be0b2b6e743e",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "DialogueContext",
+    "speaker": null,
+    "localizedSubtitleText": "@LOC_UNINITIALIZED",
+    "unlocalizedSubtitleText": "@LOC_UNINITIALIZED",
+    "subtitleShowDelay": 0.0,
+    "subtitleDisplayDurationOverride": 0.0,
+    "tempText": "Ok, as I was saying..",
+    "audioTrigger": {
+      "_Type_": "GlobalResourceAudio",
+      "audioTrigger": ""},
+    "femaleAudioTrigger": {
+      "_Type_": "GlobalResourceAudio",
+      "audioTrigger": ""},
+    "forceSubtitles": false,
+    "contents": [],
+    "tags": []}}

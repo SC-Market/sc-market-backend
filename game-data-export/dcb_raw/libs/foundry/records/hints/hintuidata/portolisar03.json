@@ -1,0 +1,12 @@
+{
+  "_RecordName_": "HintUIData.PortOlisar03",
+  "_RecordId_": "d3f801be-364f-4cc0-a1aa-f63fb6ed3bd5",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "HintUIData",
+    "TitleText": "@Hints_Airlocks_Title",
+    "BodyText": "@Hints_Port_Olisar3",
+    "BodyTextGamePad": "@Hints_Port_Olisar3",
+    "BodyTextJoystick": "@Hints_Port_Olisar3",
+    "TitleImagePath": "",
+    "BodyImagePath": ""}}

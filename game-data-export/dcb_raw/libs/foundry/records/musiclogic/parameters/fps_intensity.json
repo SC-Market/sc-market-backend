@@ -1,0 +1,27 @@
+{
+  "_RecordName_": "MusicLogicParameter.FPS_Intensity",
+  "_RecordId_": "102dbd6c-44c9-44bd-9c6a-67c71628f245",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "MusicLogicParameter",
+    "name": "FPS_Intensity",
+    "min": 0.0,
+    "max": 9999.0,
+    "defaultValue": 0.0,
+    "decayRate": 0.0,
+    "decayIsPercentage": false,
+    "scaleModifier": 1.0,
+    "shiftModifier": 0.0,
+    "inverted": false,
+    "rtpc": "SC_Music_FPS_Intensity",
+    "rtpcIsGlobal": false,
+    "contributors": [
+      "file://./../../../../../libs/foundry/records/musiclogic/parameters/fps_intensity_burst.json",
+      "file://./../../../../../libs/foundry/records/musiclogic/parameters/fps_situation.json",
+      "file://./../../../../../libs/foundry/records/musiclogic/parameters/musiclogicparameter.player_under_attack.json",
+      "file://./../../../../../libs/foundry/records/musiclogic/parameters/fps_intensity_slowburn.json"],
+    "debugColour": {
+      "_Type_": "RGB",
+      "r": 0.007499032,
+      "g": 0.7379104,
+      "b": 0.7758222}}}

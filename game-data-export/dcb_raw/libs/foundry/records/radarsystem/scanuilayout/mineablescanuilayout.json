@@ -1,0 +1,59 @@
+{
+  "_RecordName_": "ScanDisplayLayoutParams.MineableScanUILayout",
+  "_RecordId_": "7c2dd55e-09f8-46b4-9f15-0138a95ba173",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "ScanDisplayLayoutParams",
+    "displaySections": [
+      {
+        "_Type_": "ScanDisplaySectionParams",
+        "displayInstances": [
+          "file://./../../../../../libs/foundry/records/radarsystem/scanuidisplayinstances/scandisplaynamefpsmineable.json",
+          "file://./../../../../../libs/foundry/records/radarsystem/scanuidisplayinstances/scandisplaycontacttype.json",
+          "file://./../../../../../libs/foundry/records/radarsystem/scanuidisplayinstances/scandisplaysignatures.json",
+          "file://./../../../../../libs/foundry/records/radarsystem/scanuidisplayinstances/scandisplayarraymineables.json",
+          "file://./../../../../../libs/foundry/records/radarsystem/scanuidisplayinstances/scandisplaymining_powertransferresit.json",
+          "file://./../../../../../libs/foundry/records/radarsystem/scanuidisplayinstances/scandisplaymass.json",
+          "file://./../../../../../libs/foundry/records/radarsystem/scanuidisplayinstances/scandisplaymining_instability.json"]},
+      {
+        "_Type_": "ScanDisplaySectionParams",
+        "displayInstances": [
+          "file://./../../../../../libs/foundry/records/radarsystem/scanuidisplayinstances/scandisplayname.json",
+          "file://./../../../../../libs/foundry/records/radarsystem/scanuidisplayinstances/scandisplaymass.json",
+          "file://./../../../../../libs/foundry/records/radarsystem/scanuidisplayinstances/scandisplaymining_instability.json",
+          "file://./../../../../../libs/foundry/records/radarsystem/scanuidisplayinstances/scandisplaymining_powertransferresit.json",
+          "file://./../../../../../libs/foundry/records/radarsystem/scanuidisplayinstances/scandisplayarraymineables.json"]},
+      {
+        "_Type_": "ScanDisplaySectionParams",
+        "displayInstances": []},
+      {
+        "_Type_": "ScanDisplaySectionParams",
+        "displayInstances": []}],
+    "contactDisplay": {
+      "_Type_": "ScanDisplayHeaderWithBodySetupParams",
+      "scanTable": "Self",
+      "failIfNoBody": true,
+      "checkDisplaySection": false,
+      "headerVariable": {
+        "_Type_": "ScanDisplayScanDataEntryVariableParams",
+        "truncateSize": 0,
+        "displayIsHidden": false,
+        "displayInBrackets": false,
+        "suffixArrayIndex": false,
+        "suffixSemiColon": false,
+        "auxiliaryFlag": "None",
+        "fallback": {
+          "_Type_": "ScanDisplayContactTypeVariableParams",
+          "truncateSize": 0,
+          "displayIsHidden": false,
+          "displayInBrackets": false,
+          "suffixArrayIndex": false,
+          "suffixSemiColon": false,
+          "auxiliaryFlag": "None",
+          "fallback": null},
+        "scanCategory": "General",
+        "scanInformation": "Name"},
+      "bodyVariable": null,
+      "capacityVariable": null,
+      "extensionVariable": null},
+    "boxoutIconDefs": []}}

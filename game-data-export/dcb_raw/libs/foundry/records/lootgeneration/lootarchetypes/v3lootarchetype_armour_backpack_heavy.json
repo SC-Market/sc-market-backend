@@ -1,0 +1,28 @@
+{
+  "_RecordName_": "LootArchetypeV3Record.V3LootArchetype_Armour_Backpack_Heavy",
+  "_RecordId_": "9107d97c-daaa-45dd-83e5-07d54a40d746",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "LootArchetypeV3Record",
+    "lootArchetype": {
+      "_Type_": "LootArchetypeV3",
+      "entries": [
+        {
+          "_Type_": "LootArchetypeV3Entry",
+          "name": "Heavy armour backpack",
+          "weight": 1.0,
+          "selector": {
+            "_Type_": "LootArchetypeV3Selector_Tags",
+            "tags": {
+              "_Type_": "TagsDNFTerm",
+              "positiveTags": [
+                {
+                  "_RecordPath_": "file://./../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+                  "_RecordName_": "Tag.5bbbbf29-ae7e-4a62-a45f-e0b31a780baf",
+                  "_RecordId_": "5bbbbf29-ae7e-4a62-a45f-e0b31a780baf"},
+                {
+                  "_RecordPath_": "file://./../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+                  "_RecordName_": "Tag.df996c18-51ac-405a-9422-6f22ad5a5904",
+                  "_RecordId_": "df996c18-51ac-405a-9422-6f22ad5a5904"}],
+              "negativeTags": []}},
+          "optionalData": []}]}}}

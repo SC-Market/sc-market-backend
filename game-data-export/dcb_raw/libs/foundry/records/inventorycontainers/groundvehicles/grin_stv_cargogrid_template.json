@@ -1,0 +1,17 @@
+{
+  "_RecordName_": "InventoryContainer.GRIN_STV_CargoGrid_Template",
+  "_RecordId_": "500dddae-5900-424d-8e1d-efad94f27262",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "InventoryContainer",
+    "excludedItemSubTypes": [],
+    "interiorDimensions": {
+      "_Type_": "Vec3",
+      "x": 2.0,
+      "y": 1.0,
+      "z": 1.0},
+    "inventoryType": {
+      "_Type_": "InventoryClosedContainerType",
+      "capacity": {
+        "_Type_": "SMicroCargoUnit",
+        "microSCU": 1}}}}

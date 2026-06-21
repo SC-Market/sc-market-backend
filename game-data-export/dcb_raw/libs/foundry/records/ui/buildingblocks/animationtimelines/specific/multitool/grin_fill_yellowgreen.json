@@ -1,0 +1,41 @@
+{
+  "_RecordName_": "BuildingBlocks_Timeline.GRIN_Fill_YellowGreen",
+  "_RecordId_": "01b6d5a9-45b4-46f2-b882-2cb9ec8e2194",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "BuildingBlocks_Timeline",
+    "timeline": {
+      "_Type_": "BuildingBlocks_TimelineTypeEmbedded",
+      "keyframes": [
+        {
+          "_Type_": "BuildingBlocks_Keyframe",
+          "percent": 0.0,
+          "modifiers": [
+            {
+              "_Type_": "BuildingBlocks_KeyframeModifierData",
+              "timingFunction": {
+                "_Type_": "BuildingBlocks_TimingFunctionPreset",
+                "preset": "Linear"},
+              "modifier": {
+                "_Type_": "BuildingBlocks_FieldModifierColor",
+                "field": "FillColor",
+                "color": {
+                  "_Type_": "BuildingBlocks_ColorRecordReference",
+                  "color": "file://./../../../../../../../../libs/foundry/records/ui/buildingblocks/styles/color_grin_yellow.json",
+                  "alpha": 1.0}}}]},
+        {
+          "_Type_": "BuildingBlocks_Keyframe",
+          "percent": 1.0,
+          "modifiers": [
+            {
+              "_Type_": "BuildingBlocks_KeyframeModifierData",
+              "timingFunction": {
+                "_Type_": "BuildingBlocks_TimingFunctionPreset",
+                "preset": "EaseInOutCubic"},
+              "modifier": {
+                "_Type_": "BuildingBlocks_FieldModifierColor",
+                "field": "FillColor",
+                "color": {
+                  "_Type_": "BuildingBlocks_ColorRecordReference",
+                  "color": "file://./../../../../../../../../libs/foundry/records/ui/buildingblocks/styles/color_grin_green.json",
+                  "alpha": 1.0}}}]}]}}}

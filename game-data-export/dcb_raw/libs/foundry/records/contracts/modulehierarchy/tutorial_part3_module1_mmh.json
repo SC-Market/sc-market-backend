@@ -1,0 +1,24 @@
+{
+  "_RecordName_": "MissionModuleHierarchy.Tutorial_Part3_Module1_MMH",
+  "_RecordId_": "f10d5e11-e3bc-4b3a-b8ca-6f4d80fe1a11",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "MissionModuleHierarchy",
+    "missionModule": "Libs/Subsumption/Missions/PU/PU_Missions/Tutorial/Tutorial03_Ship_Part01.xml",
+    "subMissionModules": [
+      {
+        "_Type_": "MissionModuleHierarchySubMission",
+        "subMissionModule": "Libs/Subsumption/Missions/PU/PU_Missions/Tutorial/Modules/Tutorial_Transport.xml",
+        "subModuleHierarchy": null},
+      {
+        "_Type_": "MissionModuleHierarchySubMission",
+        "subMissionModule": "Libs/Subsumption/Missions/PU/PU_Missions/Tutorial/PlayerTracker.xml",
+        "subModuleHierarchy": null},
+      {
+        "_Type_": "MissionModuleHierarchySubMission",
+        "subMissionModule": "Libs/Subsumption/Missions/PU/Modules/Interaction/FollowChainCheck.xml",
+        "subModuleHierarchy": null},
+      {
+        "_Type_": "MissionModuleHierarchySubMission",
+        "subMissionModule": "Libs/Subsumption/Missions/PU/PU_Missions/Tutorial/Tutorial03_Ship_Part02.xml",
+        "subModuleHierarchy": "file://./../../../../../libs/foundry/records/contracts/modulehierarchy/tutorial_part3_module2_mmh.json"}]}}

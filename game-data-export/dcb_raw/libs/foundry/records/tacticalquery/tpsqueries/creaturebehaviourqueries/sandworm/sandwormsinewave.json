@@ -1,0 +1,53 @@
+{
+  "_RecordName_": "TacticalQuery.SandwormSineWave",
+  "_RecordId_": "4da6d5a6-bd68-4d19-8213-071d11ea8068",
+  "_RecordTag_": "CoreAI",
+  "_RecordValue_": {
+    "_Type_": "TacticalQuery",
+    "name": "SandwormSineWave",
+    "type": "TacticalPointQuery",
+    "options": [
+      {
+        "_Type_": "TQSEmbeddedOption",
+        "requirements": {
+          "_Type_": "TagsDNF",
+          "terms": []},
+        "content": {
+          "_Type_": "TQSOptionContent",
+          "parameters": [
+            {
+              "_Type_": "TQSInputFloatValue",
+              "requirements": {
+                "_Type_": "TagsDNF",
+                "terms": []},
+              "condition": "height",
+              "value": 200.0,
+              "overrides": []},
+            {
+              "_Type_": "TQSInputFloatValue",
+              "requirements": {
+                "_Type_": "TagsDNF",
+                "terms": []},
+              "condition": "density",
+              "value": 12.0,
+              "overrides": []}],
+          "generation": [
+            {
+              "_Type_": "TQSInputFloatValue",
+              "requirements": {
+                "_Type_": "TagsDNF",
+                "terms": []},
+              "condition": "sineWave_to_referencePoint_around_puppet",
+              "value": 750.0,
+              "overrides": []}],
+          "conditions": [],
+          "weights": [
+            {
+              "_Type_": "TQSWeightInputValue",
+              "requirements": {
+                "_Type_": "TagsDNF",
+                "terms": []},
+              "condition": "towards_to_referencePoint",
+              "weight": 1.0,
+              "overrides": []}]},
+        "optionOverrides": []}]}}

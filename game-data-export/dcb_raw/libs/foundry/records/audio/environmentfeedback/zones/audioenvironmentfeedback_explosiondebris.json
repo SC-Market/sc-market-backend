@@ -1,0 +1,111 @@
+{
+  "_RecordName_": "AudioEnvironmentFeedbackZoneSetup.AudioEnvironmentFeedback_ExplosionDebris",
+  "_RecordId_": "da4a1ab8-a3ba-496b-a014-8918f26eca1c",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "AudioEnvironmentFeedbackZoneSetup",
+    "processes": [
+      {
+        "_Type_": "AudioEnvironmentFeedbackZoneProcess",
+        "tag": {
+          "_RecordPath_": "file://./../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+          "_RecordName_": "Tag.41fa2c64-02ee-4831-93db-b238f8d2a21b",
+          "_RecordId_": "41fa2c64-02ee-4831-93db-b238f8d2a21b"},
+        "radius": {
+          "_Type_": "BezierCurve",
+          "points": [
+            {
+              "_Type_": "Vec2",
+              "x": -0.05990899,
+              "y": -0.359091},
+            {
+              "_Type_": "Vec2",
+              "x": -0.006199787,
+              "y": -0.03289229},
+            {
+              "_Type_": "Vec2",
+              "x": 0.04750941,
+              "y": 0.2933065},
+            {
+              "_Type_": "Vec2",
+              "x": 0.01164175,
+              "y": 0.4996164},
+            {
+              "_Type_": "Vec2",
+              "x": 0.1346166,
+              "y": 0.7167847},
+            {
+              "_Type_": "Vec2",
+              "x": 0.2575914,
+              "y": 0.933953},
+            {
+              "_Type_": "Vec2",
+              "x": 0.6216873,
+              "y": 1.028305},
+            {
+              "_Type_": "Vec2",
+              "x": 0.990743,
+              "y": 0.9800941},
+            {
+              "_Type_": "Vec2",
+              "x": 1.359799,
+              "y": 0.9318834}],
+          "useLUT": false},
+        "maxRadius": 950.0,
+        "environmentValue": {
+          "_Type_": "BezierCurve",
+          "points": [
+            {
+              "_Type_": "Vec2",
+              "x": -0.3570734,
+              "y": 0.7500175},
+            {
+              "_Type_": "Vec2",
+              "x": -0.07475483,
+              "y": 0.9628522},
+            {
+              "_Type_": "Vec2",
+              "x": 0.2075637,
+              "y": 1.175687},
+            {
+              "_Type_": "Vec2",
+              "x": -0.05860602,
+              "y": 1.181576},
+            {
+              "_Type_": "Vec2",
+              "x": 0.06558903,
+              "y": 0.9864535},
+            {
+              "_Type_": "Vec2",
+              "x": 0.189784,
+              "y": 0.7913319},
+            {
+              "_Type_": "Vec2",
+              "x": 0.1393092,
+              "y": 0.8146071},
+            {
+              "_Type_": "Vec2",
+              "x": 0.326067,
+              "y": 0.5021589},
+            {
+              "_Type_": "Vec2",
+              "x": 0.5128248,
+              "y": 0.1897108},
+            {
+              "_Type_": "Vec2",
+              "x": 0.2425175,
+              "y": 0.4865366},
+            {
+              "_Type_": "Vec2",
+              "x": 1.145782,
+              "y": -0.03544615},
+            {
+              "_Type_": "Vec2",
+              "x": 2.049047,
+              "y": -0.5574288}],
+          "useLUT": false},
+        "maxEnvironmentValue": 1.0,
+        "lifeTime": 45.0,
+        "effectRtpc": {
+          "_Type_": "AudioRtpc",
+          "rtpc": "EnvironmentFeedback_ExplosionDebris_Intensity"}}]}}

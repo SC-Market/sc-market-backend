@@ -1,0 +1,79 @@
+{
+  "_RecordName_": "LootTable.LootTable_Container_Armour_Large_Rare_StormBreaker",
+  "_RecordId_": "2a20d1c5-d2a5-4ccc-b81f-85dfb343075d",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "LootTable",
+    "lootArchetypes": [
+      {
+        "_Type_": "WeightedLootArchetype",
+        "archetype": "file://./../../../../../libs/foundry/records/lootgeneration/lootarchetypes/lootarchetype_container_undersuit_rare.json",
+        "weight": 0.25,
+        "numberOfResultsConstraints": {
+          "_Type_": "NumResultsConstraints",
+          "minResults": 0,
+          "maxResults": 0}},
+      {
+        "_Type_": "WeightedLootArchetype",
+        "archetype": "file://./../../../../../libs/foundry/records/lootgeneration/lootarchetypes/lootarchetype_container_light_armour_rare.json",
+        "weight": 1.0,
+        "numberOfResultsConstraints": {
+          "_Type_": "NumResultsConstraints",
+          "minResults": 0,
+          "maxResults": 0}},
+      {
+        "_Type_": "WeightedLootArchetype",
+        "archetype": "file://./../../../../../libs/foundry/records/lootgeneration/lootarchetypes/lootarchetype_container_backpack_light_rare.json",
+        "weight": 0.125,
+        "numberOfResultsConstraints": {
+          "_Type_": "NumResultsConstraints",
+          "minResults": 0,
+          "maxResults": 1}},
+      {
+        "_Type_": "WeightedLootArchetype",
+        "archetype": "file://./../../../../../libs/foundry/records/lootgeneration/lootarchetypes/lootarchetype_container_medium_armour_rare.json",
+        "weight": 10.0,
+        "numberOfResultsConstraints": {
+          "_Type_": "NumResultsConstraints",
+          "minResults": 0,
+          "maxResults": 0}},
+      {
+        "_Type_": "WeightedLootArchetype",
+        "archetype": "file://./../../../../../libs/foundry/records/lootgeneration/lootarchetypes/lootarchetype_container_backpack_medium_rare.json",
+        "weight": 1.25,
+        "numberOfResultsConstraints": {
+          "_Type_": "NumResultsConstraints",
+          "minResults": 0,
+          "maxResults": 1}},
+      {
+        "_Type_": "WeightedLootArchetype",
+        "archetype": "file://./../../../../../libs/foundry/records/lootgeneration/lootarchetypes/lootarchetype_container_heavy_armour_rare.json",
+        "weight": 100.0,
+        "numberOfResultsConstraints": {
+          "_Type_": "NumResultsConstraints",
+          "minResults": 0,
+          "maxResults": 0}},
+      {
+        "_Type_": "WeightedLootArchetype",
+        "archetype": "file://./../../../../../libs/foundry/records/lootgeneration/lootarchetypes/lootarchetype_container_backpack_heavy_rare.json",
+        "weight": 12.5,
+        "numberOfResultsConstraints": {
+          "_Type_": "NumResultsConstraints",
+          "minResults": 0,
+          "maxResults": 1}},
+      {
+        "_Type_": "WeightedLootArchetype",
+        "archetype": "file://./../../../../../libs/foundry/records/lootgeneration/lootarchetypes/lootarchetype_container_fullsuit_rare.json",
+        "weight": 12.5,
+        "numberOfResultsConstraints": {
+          "_Type_": "NumResultsConstraints",
+          "minResults": 0,
+          "maxResults": 1}},
+      {
+        "_Type_": "WeightedLootArchetype",
+        "archetype": "file://./../../../../../libs/foundry/records/lootgeneration/lootarchetypes/lootarchetype_container_heavy_armour_rare_stormbreaker.json",
+        "weight": 25.0,
+        "numberOfResultsConstraints": {
+          "_Type_": "NumResultsConstraints",
+          "minResults": 0,
+          "maxResults": 0}}]}}

@@ -1,0 +1,142 @@
+{
+  "_RecordName_": "LootArchetypeV3Record.V3LootArchetype_Medpen_Mixed",
+  "_RecordId_": "bf3fb336-c66c-4ce1-ab9d-4570d261fe79",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "LootArchetypeV3Record",
+    "lootArchetype": {
+      "_Type_": "LootArchetypeV3",
+      "entries": [
+        {
+          "_Type_": "LootArchetypeV3Entry",
+          "name": "Healing",
+          "weight": 10.0,
+          "selector": {
+            "_Type_": "LootArchetypeV3Selector_Tags",
+            "tags": {
+              "_Type_": "TagsDNFTerm",
+              "positiveTags": [
+                {
+                  "_RecordPath_": "file://./../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+                  "_RecordName_": "Tag.c3527e30-1051-4e96-b9ad-fd74454f2b02",
+                  "_RecordId_": "c3527e30-1051-4e96-b9ad-fd74454f2b02"},
+                {
+                  "_RecordPath_": "file://./../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+                  "_RecordName_": "Tag.6f1386fe-2319-4137-be37-bf5981074bd3",
+                  "_RecordId_": "6f1386fe-2319-4137-be37-bf5981074bd3"}],
+              "negativeTags": []}},
+          "optionalData": []},
+        {
+          "_Type_": "LootArchetypeV3Entry",
+          "name": "Steriods",
+          "weight": 4.0,
+          "selector": {
+            "_Type_": "LootArchetypeV3Selector_Tags",
+            "tags": {
+              "_Type_": "TagsDNFTerm",
+              "positiveTags": [
+                {
+                  "_RecordPath_": "file://./../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+                  "_RecordName_": "Tag.9aef423c-c5e1-4be6-911a-69b2ba6c6bfe",
+                  "_RecordId_": "9aef423c-c5e1-4be6-911a-69b2ba6c6bfe"},
+                {
+                  "_RecordPath_": "file://./../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+                  "_RecordName_": "Tag.6f1386fe-2319-4137-be37-bf5981074bd3",
+                  "_RecordId_": "6f1386fe-2319-4137-be37-bf5981074bd3"}],
+              "negativeTags": []}},
+          "optionalData": []},
+        {
+          "_Type_": "LootArchetypeV3Entry",
+          "name": "Adrenaline",
+          "weight": 4.0,
+          "selector": {
+            "_Type_": "LootArchetypeV3Selector_Tags",
+            "tags": {
+              "_Type_": "TagsDNFTerm",
+              "positiveTags": [
+                {
+                  "_RecordPath_": "file://./../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+                  "_RecordName_": "Tag.3e16d9f6-9400-499a-a71f-d8087141eade",
+                  "_RecordId_": "3e16d9f6-9400-499a-a71f-d8087141eade"},
+                {
+                  "_RecordPath_": "file://./../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+                  "_RecordName_": "Tag.6f1386fe-2319-4137-be37-bf5981074bd3",
+                  "_RecordId_": "6f1386fe-2319-4137-be37-bf5981074bd3"}],
+              "negativeTags": []}},
+          "optionalData": []},
+        {
+          "_Type_": "LootArchetypeV3Entry",
+          "name": "Painkiller",
+          "weight": 4.0,
+          "selector": {
+            "_Type_": "LootArchetypeV3Selector_Tags",
+            "tags": {
+              "_Type_": "TagsDNFTerm",
+              "positiveTags": [
+                {
+                  "_RecordPath_": "file://./../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+                  "_RecordName_": "Tag.01615094-5d81-4e16-9fa0-79cdda7e6dbf",
+                  "_RecordId_": "01615094-5d81-4e16-9fa0-79cdda7e6dbf"},
+                {
+                  "_RecordPath_": "file://./../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+                  "_RecordName_": "Tag.6f1386fe-2319-4137-be37-bf5981074bd3",
+                  "_RecordId_": "6f1386fe-2319-4137-be37-bf5981074bd3"}],
+              "negativeTags": []}},
+          "optionalData": []},
+        {
+          "_Type_": "LootArchetypeV3Entry",
+          "name": "Overdose revival",
+          "weight": 3.0,
+          "selector": {
+            "_Type_": "LootArchetypeV3Selector_Tags",
+            "tags": {
+              "_Type_": "TagsDNFTerm",
+              "positiveTags": [
+                {
+                  "_RecordPath_": "file://./../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+                  "_RecordName_": "Tag.61d5a4bd-0519-428d-89f4-99c91de5eb42",
+                  "_RecordId_": "61d5a4bd-0519-428d-89f4-99c91de5eb42"},
+                {
+                  "_RecordPath_": "file://./../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+                  "_RecordName_": "Tag.6f1386fe-2319-4137-be37-bf5981074bd3",
+                  "_RecordId_": "6f1386fe-2319-4137-be37-bf5981074bd3"}],
+              "negativeTags": []}},
+          "optionalData": []},
+        {
+          "_Type_": "LootArchetypeV3Entry",
+          "name": "Oxygen",
+          "weight": 2.0,
+          "selector": {
+            "_Type_": "LootArchetypeV3Selector_Tags",
+            "tags": {
+              "_Type_": "TagsDNFTerm",
+              "positiveTags": [
+                {
+                  "_RecordPath_": "file://./../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+                  "_RecordName_": "Tag.daadaef3-1fa6-4f90-afd4-0becb6fdf6f1",
+                  "_RecordId_": "daadaef3-1fa6-4f90-afd4-0becb6fdf6f1"},
+                {
+                  "_RecordPath_": "file://./../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+                  "_RecordName_": "Tag.6f1386fe-2319-4137-be37-bf5981074bd3",
+                  "_RecordId_": "6f1386fe-2319-4137-be37-bf5981074bd3"}],
+              "negativeTags": []}},
+          "optionalData": []},
+        {
+          "_Type_": "LootArchetypeV3Entry",
+          "name": "Radiation",
+          "weight": 1.0,
+          "selector": {
+            "_Type_": "LootArchetypeV3Selector_Tags",
+            "tags": {
+              "_Type_": "TagsDNFTerm",
+              "positiveTags": [
+                {
+                  "_RecordPath_": "file://./../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+                  "_RecordName_": "Tag.564097bf-f499-4f7d-8759-1c263bb67a13",
+                  "_RecordId_": "564097bf-f499-4f7d-8759-1c263bb67a13"},
+                {
+                  "_RecordPath_": "file://./../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+                  "_RecordName_": "Tag.6f1386fe-2319-4137-be37-bf5981074bd3",
+                  "_RecordId_": "6f1386fe-2319-4137-be37-bf5981074bd3"}],
+              "negativeTags": []}},
+          "optionalData": []}]}}}

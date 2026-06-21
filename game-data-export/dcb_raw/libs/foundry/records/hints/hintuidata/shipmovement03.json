@@ -1,0 +1,12 @@
+{
+  "_RecordName_": "HintUIData.ShipMovement03",
+  "_RecordId_": "5de26cb6-3d00-4b5b-b2fe-cf1a7d067749",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "HintUIData",
+    "TitleText": "@Hints_Ship_Movement_Title",
+    "BodyText": "@Hints_Ship_Movement3",
+    "BodyTextGamePad": "@Hints_Ship_Movement3",
+    "BodyTextJoystick": "@Hints_Ship_Movement3",
+    "TitleImagePath": "",
+    "BodyImagePath": ""}}

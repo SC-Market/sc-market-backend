@@ -1,0 +1,24 @@
+{
+  "_RecordName_": "Character.MERCYDISP01",
+  "_RecordId_": "74e8e14f-789a-4a9a-873f-ba915579f08d",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "Character",
+    "characterPersonalData": {
+      "_Type_": "CharacterPersonalData",
+      "title": "",
+      "firstName": "",
+      "nickName": "",
+      "lastName": "",
+      "randomNameParams": null,
+      "affiliation": "",
+      "details": ""},
+    "audioSwitchStateName": "",
+    "animationRemapAlias": "",
+    "characterMannequinTag": "",
+    "styleMannequinTag": "",
+    "combatStyle": "NotSet",
+    "gender": "NotSet",
+    "characterSpeedOverrides": [],
+    "nicknameChance": 0.0,
+    "name": "MERCYDISP01"}}

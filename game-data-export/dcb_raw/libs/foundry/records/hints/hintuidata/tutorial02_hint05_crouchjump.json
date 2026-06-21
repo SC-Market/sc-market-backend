@@ -1,0 +1,12 @@
+{
+  "_RecordName_": "HintUIData.Tutorial02_Hint05_CrouchJump",
+  "_RecordId_": "eaaec88c-71dc-44f0-9eca-77c2b30be8a4",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "HintUIData",
+    "TitleText": "@Tut02_Hint05_CrouchJump_Title",
+    "BodyText": "@Tut02_Hint05_CrouchJump",
+    "BodyTextGamePad": "@Tut02_Hint05_CrouchJump",
+    "BodyTextJoystick": "@Tut02_Hint05_CrouchJump",
+    "TitleImagePath": "",
+    "BodyImagePath": ""}}

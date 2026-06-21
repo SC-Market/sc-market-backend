@@ -1,0 +1,15 @@
+{
+  "_RecordName_": "Conversation.Pilot07_Thanks",
+  "_RecordId_": "45b98c88-1b2e-408d-9c40-8360fe741c52",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "Conversation",
+    "fragments": [
+      {
+        "_Type_": "ConversationNode_Start",
+        "next": null},
+      {
+        "_Type_": "ConversationNode_Dialogue",
+        "next": null,
+        "context": "file://./../../../../../../libs/foundry/records/dialoguecontext/arenacommander/crusader/dialoguecontext.dxhn_pu_distresspilot7_iccstanton_thanks_001_e.json",
+        "skipNodeInXSecs": -1.0}]}}

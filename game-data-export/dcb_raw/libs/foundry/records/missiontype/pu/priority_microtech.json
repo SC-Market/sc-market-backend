@@ -1,0 +1,10 @@
+{
+  "_RecordName_": "MissionType.Priority_MicroTech",
+  "_RecordId_": "eaad408b-c8fb-4a5b-a5c3-1ea37091b62d",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "MissionType",
+    "IconName": "",
+    "LocalisedTypeName": "@mobiglas_ui_Priority_MicroTech",
+    "svgIconPath": "UI/Textures/Vector/MobiGlas/App_ContractsManager/PU_mobiapp_icon_mission_priority.svg",
+    "DisplayTime": -1.0}}

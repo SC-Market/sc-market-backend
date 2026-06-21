@@ -1,0 +1,15 @@
+{
+  "_RecordName_": "Conversation.Scott_Clue",
+  "_RecordId_": "900a423d-9fd2-44c2-ae33-3cee6a361f01",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "Conversation",
+    "fragments": [
+      {
+        "_Type_": "ConversationNode_Start",
+        "next": null},
+      {
+        "_Type_": "ConversationNode_Dialogue",
+        "next": null,
+        "context": "file://./../../../../../../../../libs/foundry/records/dialoguecontext/pu/dialoguecontext.dxhn_pu_group_covalex_clue3_datapadinbarracks_001c.json",
+        "skipNodeInXSecs": -1.0}]}}

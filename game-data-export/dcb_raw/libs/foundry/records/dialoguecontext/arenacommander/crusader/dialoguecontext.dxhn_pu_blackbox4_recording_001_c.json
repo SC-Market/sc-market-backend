@@ -1,0 +1,21 @@
+{
+  "_RecordName_": "DialogueContext.DXHN_PU_BLACKBOX4_RECORDING_001_c",
+  "_RecordId_": "84340559-5b01-4d72-9e91-2245dbfa7dbc",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "DialogueContext",
+    "speaker": null,
+    "localizedSubtitleText": "@LOC_UNINITIALIZED",
+    "unlocalizedSubtitleText": "@LOC_UNINITIALIZED",
+    "subtitleShowDelay": 0.0,
+    "subtitleDisplayDurationOverride": 0.0,
+    "tempText": "",
+    "audioTrigger": {
+      "_Type_": "GlobalResourceAudio",
+      "audioTrigger": ""},
+    "femaleAudioTrigger": {
+      "_Type_": "GlobalResourceAudio",
+      "audioTrigger": ""},
+    "forceSubtitles": false,
+    "contents": [],
+    "tags": []}}

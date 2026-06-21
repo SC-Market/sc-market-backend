@@ -1,0 +1,14 @@
+{
+  "_RecordName_": "AIVisualFieldParams.DefaultFoV_Juvenile",
+  "_RecordId_": "58cb320f-9ae4-45ab-b33b-e8f27fdd6e30",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "AIVisualFieldParams",
+    "sightRange": 50.0,
+    "sixthSenseRange": 0.0,
+    "clampDistanceForHorizontalFOV": 200.0,
+    "clampDistanceForVerticalFOV": 200.0,
+    "FOVHorizontal": 360.0,
+    "FOVVertical": 179.0,
+    "PrimaryFOVHorizontal": 360.0,
+    "PrimaryFOVVertical": 360.0}}

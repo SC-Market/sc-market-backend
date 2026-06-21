@@ -1,0 +1,13 @@
+{
+  "_RecordName_": "CharacterRandomNameParams.HumanMale_UEE_Baramsco",
+  "_RecordId_": "fc9e975c-2c36-4032-8318-7ef6ee81200d",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "CharacterRandomNameParams",
+    "firstNameString": "Name_GilyTraining_Gilly_First_Name",
+    "nickNameString": "Name_GilyTraining_Gilly_Nick_Name",
+    "lastNameString": "Name_GilyTraining_Gilly_Last_Name",
+    "numFirstNames": 1,
+    "numNickNames": 1,
+    "numLastNames": 1,
+    "nicknameChance": 0.05}}

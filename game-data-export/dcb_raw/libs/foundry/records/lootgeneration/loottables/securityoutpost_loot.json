@@ -1,0 +1,39 @@
+{
+  "_RecordName_": "LootTable.SecurityOutpost_Loot",
+  "_RecordId_": "29348e83-8b26-4b66-ba6d-dfde12ce60bc",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "LootTable",
+    "lootArchetypes": [
+      {
+        "_Type_": "WeightedLootArchetype",
+        "archetype": "file://./../../../../../libs/foundry/records/lootgeneration/lootarchetypes/lootarchetype_securityoutpost_grenadelaunchercache.json",
+        "weight": 1.0,
+        "numberOfResultsConstraints": {
+          "_Type_": "NumResultsConstraints",
+          "minResults": 0,
+          "maxResults": 1}},
+      {
+        "_Type_": "WeightedLootArchetype",
+        "archetype": "file://./../../../../../libs/foundry/records/lootgeneration/lootarchetypes/lootarchetype_securityoutpost_heavyweaponcache.json",
+        "weight": 0.5,
+        "numberOfResultsConstraints": {
+          "_Type_": "NumResultsConstraints",
+          "minResults": 0,
+          "maxResults": 2}},
+      {
+        "_Type_": "WeightedLootArchetype",
+        "archetype": "file://./../../../../../libs/foundry/records/lootgeneration/lootarchetypes/lootarchetype_armorcache_rare.json",
+        "weight": 0.25,
+        "numberOfResultsConstraints": {
+          "_Type_": "NumResultsConstraints",
+          "minResults": 0,
+          "maxResults": 2}},
+      {
+        "_Type_": "WeightedLootArchetype",
+        "archetype": "file://./../../../../../libs/foundry/records/lootgeneration/lootarchetypes/lootarchetype_armorcache_uncommon.json",
+        "weight": 1.0,
+        "numberOfResultsConstraints": {
+          "_Type_": "NumResultsConstraints",
+          "minResults": 0,
+          "maxResults": 3}}]}}

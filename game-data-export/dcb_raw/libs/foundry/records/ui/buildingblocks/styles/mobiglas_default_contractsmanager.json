@@ -1,0 +1,124 @@
+{
+  "_RecordName_": "BuildingBlocks_Style.Mobiglas_Default_ContractsManager",
+  "_RecordId_": "58a03c4e-0e05-400b-9bd2-365e0fc5ec45",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "BuildingBlocks_Style",
+    "entries": [
+      {
+        "_Type_": "BuildingBlocks_StyleEntry",
+        "name": "InnerFramePadding",
+        "conditionsList": [
+          {
+            "_Type_": "BuildingBlocks_StyleConditionList",
+            "name": "New Condition List",
+            "conditions": [
+              {
+                "_Type_": "BuildingBlocks_StyleSelectorConditionTag",
+                "tag": {
+                  "_RecordPath_": "file://./../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+                  "_RecordName_": "Tag.ba5f9fc6-e89c-4357-a880-3d5c8d2a8058",
+                  "_RecordId_": "ba5f9fc6-e89c-4357-a880-3d5c8d2a8058"}}]}],
+        "modifiers": [
+          {
+            "_Type_": "BuildingBlocks_FieldModifierNumber",
+            "field": "PaddingTop",
+            "value": 10.0},
+          {
+            "_Type_": "BuildingBlocks_FieldModifierNumber",
+            "field": "PaddingRight",
+            "value": 20.0},
+          {
+            "_Type_": "BuildingBlocks_FieldModifierNumber",
+            "field": "PaddingLeft",
+            "value": 20.0}],
+        "transitions": []}],
+    "colorStyles": [
+      {
+        "_Type_": "BuildingBlocks_ColorSolid",
+        "color": {
+          "_Type_": "SRGBA8",
+          "r": 52,
+          "g": 106,
+          "b": 129,
+          "a": 255}},
+      {
+        "_Type_": "BuildingBlocks_ColorSolid",
+        "color": {
+          "_Type_": "SRGBA8",
+          "r": 70,
+          "g": 255,
+          "b": 204,
+          "a": 255}},
+      {
+        "_Type_": "BuildingBlocks_ColorSolid",
+        "color": {
+          "_Type_": "SRGBA8",
+          "r": 255,
+          "g": 141,
+          "b": 0,
+          "a": 255}},
+      {
+        "_Type_": "BuildingBlocks_ColorSolid",
+        "color": {
+          "_Type_": "SRGBA8",
+          "r": 255,
+          "g": 54,
+          "b": 0,
+          "a": 255}},
+      {
+        "_Type_": "BuildingBlocks_ColorSolid",
+        "color": {
+          "_Type_": "SRGBA8",
+          "r": 130,
+          "g": 218,
+          "b": 235,
+          "a": 255}},
+      {
+        "_Type_": "BuildingBlocks_ColorSolid",
+        "color": {
+          "_Type_": "SRGBA8",
+          "r": 0,
+          "g": 149,
+          "b": 179,
+          "a": 255}},
+      {
+        "_Type_": "BuildingBlocks_ColorSolid",
+        "color": {
+          "_Type_": "SRGBA8",
+          "r": 235,
+          "g": 255,
+          "b": 255,
+          "a": 255}},
+      {
+        "_Type_": "BuildingBlocks_ColorSolid",
+        "color": {
+          "_Type_": "SRGBA8",
+          "r": 56,
+          "g": 216,
+          "b": 235,
+          "a": 255}},
+      {
+        "_Type_": "BuildingBlocks_ColorSolid",
+        "color": {
+          "_Type_": "SRGBA8",
+          "r": 38,
+          "g": 79,
+          "b": 91,
+          "a": 255}},
+      {
+        "_Type_": "BuildingBlocks_ColorSolid",
+        "color": {
+          "_Type_": "SRGBA8",
+          "r": 15,
+          "g": 44,
+          "b": 55,
+          "a": 255}},
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null],
+    "textFieldModifiers": []}}

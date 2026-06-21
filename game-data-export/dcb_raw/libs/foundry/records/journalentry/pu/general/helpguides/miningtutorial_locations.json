@@ -1,0 +1,18 @@
+{
+  "_RecordName_": "JournalEntry.MiningTutorial_Locations",
+  "_RecordId_": "56a13caa-9e20-4f9a-bc02-c113f553f39c",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "JournalEntry",
+    "Title": "@Journal_General_Mining_Compendium_Title",
+    "ShortTitle": "@Journal_General_Mining_Compendium_Title",
+    "SubHeading": "@Journal_General_Mining_Compendium_From",
+    "autoOpenMobiGlas": false,
+    "showNotification": false,
+    "missionSpecificContent": false,
+    "removeOnMissionEnd": false,
+    "Style": "file://./../../../../../../../libs/foundry/records/journalentrytype/journalentrytype.textlog.json",
+    "type": {
+      "_Type_": "JournalEntryText",
+      "BodyText": "@Journal_General_Mining_Compendium_Content"},
+    "tutorialEntry": false}}

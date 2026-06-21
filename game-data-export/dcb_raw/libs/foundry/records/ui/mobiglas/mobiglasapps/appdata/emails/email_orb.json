@@ -1,0 +1,59 @@
+{
+  "_RecordName_": "MobiGlasAppData.Email_Orb",
+  "_RecordId_": "087f022d-38cf-4714-9e04-8675e80c9f05",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "MobiGlasAppData",
+    "appData": {
+      "_Type_": "GenericDataDisplayAppData",
+      "dateTime": {
+        "_Type_": "DateTime",
+        "date": {
+          "_Type_": "Date",
+          "day": 1,
+          "month": "January",
+          "year": 2953},
+        "time": {
+          "_Type_": "Time",
+          "hour": 12,
+          "minute": 0,
+          "second": 0}},
+      "content": [
+        {
+          "_Type_": "MobiGlasAppContent",
+          "textContent": "@hathor_laser_datapad_001_subject",
+          "imageContent": "",
+          "appLink": {
+            "_Type_": "SMobiGlasAppLink",
+            "targetApp": null,
+            "targetDataEntry": null,
+            "displayIcon": ""}},
+        {
+          "_Type_": "MobiGlasAppContent",
+          "textContent": "@hathor_laser_datapad_001_from",
+          "imageContent": "",
+          "appLink": {
+            "_Type_": "SMobiGlasAppLink",
+            "targetApp": null,
+            "targetDataEntry": null,
+            "displayIcon": ""}},
+        {
+          "_Type_": "MobiGlasAppContent",
+          "textContent": "@ElliotWIP_Email_To",
+          "imageContent": "",
+          "appLink": {
+            "_Type_": "SMobiGlasAppLink",
+            "targetApp": null,
+            "targetDataEntry": null,
+            "displayIcon": ""}},
+        {
+          "_Type_": "MobiGlasAppContent",
+          "textContent": "@hathor_laser_datapad_001_text",
+          "imageContent": "",
+          "appLink": {
+            "_Type_": "SMobiGlasAppLink",
+            "targetApp": null,
+            "targetDataEntry": null,
+            "displayIcon": ""}}],
+      "securityToken": null,
+      "dynamicInteger": 0}}}

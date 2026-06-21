@@ -1,0 +1,27 @@
+{
+  "_RecordName_": "SEntrancesDef.GRIN_ROC",
+  "_RecordId_": "a7658587-ecbb-4b43-91ab-f7145d01ce1b",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "SEntrancesDef",
+    "boundingBoxScale": {
+      "_Type_": "Vec3",
+      "x": 1.6,
+      "y": 1.6,
+      "z": 1.6},
+    "boundingBoxOffset": {
+      "_Type_": "Vec3",
+      "x": 0.0,
+      "y": 0.0,
+      "z": -0.5},
+    "entranceArray": [
+      {
+        "_Type_": "SCEntranceItem",
+        "entranceName": "@entrance_hatch",
+        "jointName": "GRIN_ROC",
+        "positionOffset": {
+          "_Type_": "Vec3",
+          "x": 0.0,
+          "y": 1.45,
+          "z": 0.05},
+        "shipState": "Both"}]}}

@@ -1,0 +1,15 @@
+{
+  "_RecordName_": "SReputationStandingParams.ReputationStanding_Racing_Rank1_HeadHunter",
+  "_RecordId_": "5190d6ff-6d9b-4af6-ae98-65057a2d323c",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "SReputationStandingParams",
+    "name": "Racing_Rank1_HeadHunter",
+    "description": "desc",
+    "displayName": "@RepStanding_Rank1",
+    "perkDescription": "@blank_space",
+    "icon": "UI/Textures/Vector/MobiGlas/App_ReputationManager/icon_spaceshipracing_01.svg",
+    "minReputation": 1000,
+    "driftReputation": 0,
+    "driftTimeHours": 24.0,
+    "gated": false}}

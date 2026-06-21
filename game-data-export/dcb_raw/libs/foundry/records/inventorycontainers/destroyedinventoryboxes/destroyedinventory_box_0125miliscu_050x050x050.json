@@ -1,0 +1,17 @@
+{
+  "_RecordName_": "InventoryContainer.DestroyedInventory_Box_0125miliSCU_050x050x050",
+  "_RecordId_": "cba4dff2-f42b-4b7f-9404-9f8270d41797",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "InventoryContainer",
+    "excludedItemSubTypes": [],
+    "interiorDimensions": {
+      "_Type_": "Vec3",
+      "x": 0.499,
+      "y": 0.499,
+      "z": 0.499},
+    "inventoryType": {
+      "_Type_": "InventoryClosedContainerType",
+      "capacity": {
+        "_Type_": "SStandardCargoUnit",
+        "standardCargoUnits": 0.1225}}}}

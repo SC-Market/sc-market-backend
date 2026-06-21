@@ -1,0 +1,165 @@
+{
+  "_RecordName_": "MissionOrganization.WallaceKlim",
+  "_RecordId_": "8e91e906-db1a-4545-b4c5-756a8f734f50",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "MissionOrganization",
+    "organizationTags": [
+      {
+        "_Type_": "MissionLocationTags",
+        "tags": [
+          {
+            "_RecordPath_": "file://./../../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+            "_RecordName_": "Tag.c6963301-dec9-4bdd-be31-bb912d5024f9",
+            "_RecordId_": "c6963301-dec9-4bdd-be31-bb912d5024f9"}]},
+      {
+        "_Type_": "MissionLocationTags",
+        "tags": []},
+      {
+        "_Type_": "MissionLocationTags",
+        "tags": []}],
+    "stringVariants": {
+      "_Type_": "MissionStringVariants",
+      "variants": [
+        {
+          "_Type_": "MissionStringVariant",
+          "tag": {
+            "_RecordPath_": "file://./../../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+            "_RecordName_": "Tag.113f1694-d25a-42de-a9ef-b7015de67f49",
+            "_RecordId_": "113f1694-d25a-42de-a9ef-b7015de67f49"},
+          "string": "@mg_klim_deliver_drug_title_0001"},
+        {
+          "_Type_": "MissionStringVariant",
+          "tag": {
+            "_RecordPath_": "file://./../../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+            "_RecordName_": "Tag.113f1694-d25a-42de-a9ef-b7015de67f49",
+            "_RecordId_": "113f1694-d25a-42de-a9ef-b7015de67f49"},
+          "string": "@mg_klim_deliver_drug_title_0002"},
+        {
+          "_Type_": "MissionStringVariant",
+          "tag": {
+            "_RecordPath_": "file://./../../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+            "_RecordName_": "Tag.113f1694-d25a-42de-a9ef-b7015de67f49",
+            "_RecordId_": "113f1694-d25a-42de-a9ef-b7015de67f49"},
+          "string": "@mg_klim_deliver_drug_title_0003"},
+        {
+          "_Type_": "MissionStringVariant",
+          "tag": {
+            "_RecordPath_": "file://./../../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+            "_RecordName_": "Tag.113f1694-d25a-42de-a9ef-b7015de67f49",
+            "_RecordId_": "113f1694-d25a-42de-a9ef-b7015de67f49"},
+          "string": "@mg_klim_deliver_drug_title_0004"},
+        {
+          "_Type_": "MissionStringVariant",
+          "tag": {
+            "_RecordPath_": "file://./../../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+            "_RecordName_": "Tag.113f1694-d25a-42de-a9ef-b7015de67f49",
+            "_RecordId_": "113f1694-d25a-42de-a9ef-b7015de67f49"},
+          "string": "@mg_klim_deliver_drug_title_0005"},
+        {
+          "_Type_": "MissionStringVariant",
+          "tag": {
+            "_RecordPath_": "file://./../../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+            "_RecordName_": "Tag.87247789-b819-427f-8d6d-883cd6290348",
+            "_RecordId_": "87247789-b819-427f-8d6d-883cd6290348"},
+          "string": "@mg_klim_from_001"},
+        {
+          "_Type_": "MissionStringVariant",
+          "tag": {
+            "_RecordPath_": "file://./../../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+            "_RecordName_": "Tag.87247789-b819-427f-8d6d-883cd6290348",
+            "_RecordId_": "87247789-b819-427f-8d6d-883cd6290348"},
+          "string": "@mg_klim_from_002"},
+        {
+          "_Type_": "MissionStringVariant",
+          "tag": {
+            "_RecordPath_": "file://./../../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+            "_RecordName_": "Tag.87247789-b819-427f-8d6d-883cd6290348",
+            "_RecordId_": "87247789-b819-427f-8d6d-883cd6290348"},
+          "string": "@mg_klim_from_003"},
+        {
+          "_Type_": "MissionStringVariant",
+          "tag": {
+            "_RecordPath_": "file://./../../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+            "_RecordName_": "Tag.87247789-b819-427f-8d6d-883cd6290348",
+            "_RecordId_": "87247789-b819-427f-8d6d-883cd6290348"},
+          "string": "@mg_klim_from_004"},
+        {
+          "_Type_": "MissionStringVariant",
+          "tag": {
+            "_RecordPath_": "file://./../../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+            "_RecordName_": "Tag.b8018001-443a-4fef-8f2e-2d23c7e22938",
+            "_RecordId_": "b8018001-443a-4fef-8f2e-2d23c7e22938"},
+          "string": "@mg_klim_deliver_drug_desc_0001"},
+        {
+          "_Type_": "MissionStringVariant",
+          "tag": {
+            "_RecordPath_": "file://./../../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+            "_RecordName_": "Tag.b8018001-443a-4fef-8f2e-2d23c7e22938",
+            "_RecordId_": "b8018001-443a-4fef-8f2e-2d23c7e22938"},
+          "string": "@mg_klim_deliver_drug_desc_0002"},
+        {
+          "_Type_": "MissionStringVariant",
+          "tag": {
+            "_RecordPath_": "file://./../../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+            "_RecordName_": "Tag.b8018001-443a-4fef-8f2e-2d23c7e22938",
+            "_RecordId_": "b8018001-443a-4fef-8f2e-2d23c7e22938"},
+          "string": "@mg_klim_deliver_drug_desc_0003"},
+        {
+          "_Type_": "MissionStringVariant",
+          "tag": {
+            "_RecordPath_": "file://./../../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+            "_RecordName_": "Tag.b8018001-443a-4fef-8f2e-2d23c7e22938",
+            "_RecordId_": "b8018001-443a-4fef-8f2e-2d23c7e22938"},
+          "string": "@mg_klim_deliver_drug_desc_0004"},
+        {
+          "_Type_": "MissionStringVariant",
+          "tag": {
+            "_RecordPath_": "file://./../../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+            "_RecordName_": "Tag.b8018001-443a-4fef-8f2e-2d23c7e22938",
+            "_RecordId_": "b8018001-443a-4fef-8f2e-2d23c7e22938"},
+          "string": "@mg_klim_deliver_drug_desc_0005"},
+        {
+          "_Type_": "MissionStringVariant",
+          "tag": {
+            "_RecordPath_": "file://./../../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+            "_RecordName_": "Tag.97ace4d5-64b9-46b7-8089-236d141ecd61",
+            "_RecordId_": "97ace4d5-64b9-46b7-8089-236d141ecd61"},
+          "string": "@procedural_text_null"},
+        {
+          "_Type_": "MissionStringVariant",
+          "tag": {
+            "_RecordPath_": "file://./../../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+            "_RecordName_": "Tag.2c1842ee-cba3-4a29-9a3e-86bb88050ca4",
+            "_RecordId_": "2c1842ee-cba3-4a29-9a3e-86bb88050ca4"},
+          "string": "@procedural_text_null"},
+        {
+          "_Type_": "MissionStringVariant",
+          "tag": {
+            "_RecordPath_": "file://./../../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+            "_RecordName_": "Tag.467249b2-2d47-461d-a429-92c988a551e9",
+            "_RecordId_": "467249b2-2d47-461d-a429-92c988a551e9"},
+          "string": "@mg_klim_localdelivery_drugprod_title_001"},
+        {
+          "_Type_": "MissionStringVariant",
+          "tag": {
+            "_RecordPath_": "file://./../../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+            "_RecordName_": "Tag.767f1d4a-6f00-4154-a414-f5074959f172",
+            "_RecordId_": "767f1d4a-6f00-4154-a414-f5074959f172"},
+          "string": "@mg_klim_localdelivery_drugprod_desc_001"},
+        {
+          "_Type_": "MissionStringVariant",
+          "tag": {
+            "_RecordPath_": "file://./../../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+            "_RecordName_": "Tag.767f1d4a-6f00-4154-a414-f5074959f172",
+            "_RecordId_": "767f1d4a-6f00-4154-a414-f5074959f172"},
+          "string": "@mg_klim_localdelivery_drugprod_desc_002"},
+        {
+          "_Type_": "MissionStringVariant",
+          "tag": {
+            "_RecordPath_": "file://./../../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+            "_RecordName_": "Tag.767f1d4a-6f00-4154-a414-f5074959f172",
+            "_RecordId_": "767f1d4a-6f00-4154-a414-f5074959f172"},
+          "string": "@mg_klim_localdelivery_drugprod_desc_003"}]},
+    "weighting": 1.0,
+    "factionReputation": null}}

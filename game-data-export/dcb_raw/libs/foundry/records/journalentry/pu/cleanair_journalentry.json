@@ -1,0 +1,28 @@
+{
+  "_RecordName_": "JournalEntry.CleanAir_JournalEntry",
+  "_RecordId_": "b7cd4127-0527-4956-82b2-fc0023894e48",
+  "_RecordTag_": "MissionDesign",
+  "_RecordValue_": {
+    "_Type_": "JournalEntry",
+    "Title": "@ClearAir_Journal_Header",
+    "ShortTitle": "@ClearAir_Journal_Header",
+    "SubHeading": "@LOC_UNINITIALIZED",
+    "autoOpenMobiGlas": false,
+    "showNotification": true,
+    "missionSpecificContent": false,
+    "removeOnMissionEnd": true,
+    "Style": "file://./../../../../../libs/foundry/records/journalentrytype/journalentrytype.textlog.json",
+    "type": {
+      "_Type_": "JournalEntryLeaderboard",
+      "description": "@LOC_UNINITIALIZED",
+      "activeScenario": "file://./../../../../../libs/foundry/records/missionscenarios/cleanair_scenario.json",
+      "scenarioProgressRecord": "file://./../../../../../libs/foundry/records/missionscenarios/cleanair_scenarioprogress.json",
+      "factions": [
+        {
+          "_Type_": "FactionInfo",
+          "faction": "file://./../../../../../libs/foundry/records/factions/faction_curelife.json",
+          "factionDescription": "@ClearAir_Journal_Desc",
+          "factioncolor": "#1772d4",
+          "leaderboardImage": "UI/SharedAssets/ManufacturerLogos/allianceaid_logo_main_white.tif"}],
+      "leaderboardCanvas": "file://./../../../../../libs/foundry/records/ui/buildingblocks/m_mobiglas/m_sc_journal/m_sc_journal_contributiontracker_solofaction.json"},
+    "tutorialEntry": false}}

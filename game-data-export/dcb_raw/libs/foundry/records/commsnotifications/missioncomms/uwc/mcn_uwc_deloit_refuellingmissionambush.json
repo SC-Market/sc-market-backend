@@ -1,0 +1,29 @@
+{
+  "_RecordName_": "CommsNotification.MCN_UWC_Deloit_RefuellingMissionAmbush",
+  "_RecordId_": "3d3590f6-4b51-4991-acc1-f0f40550358f",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "CommsNotification",
+    "tags": {
+      "_Type_": "TagList",
+      "tags": [
+        {
+          "_RecordPath_": "file://./../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+          "_RecordName_": "Tag.6b095fc8-4df0-4569-a94e-3f8787793d42",
+          "_RecordId_": "6b095fc8-4df0-4569-a94e-3f8787793d42"},
+        {
+          "_RecordPath_": "file://./../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+          "_RecordName_": "Tag.b8e4cf0c-6c89-4dc1-b762-349e15e19919",
+          "_RecordId_": "b8e4cf0c-6c89-4dc1-b762-349e15e19919"},
+        {
+          "_RecordPath_": "file://./../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+          "_RecordName_": "Tag.230be30f-d365-46ba-930b-0bd73c1b00ce",
+          "_RecordId_": "230be30f-d365-46ba-930b-0bd73c1b00ce"},
+        {
+          "_RecordPath_": "file://./../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+          "_RecordName_": "Tag.c6cefa28-ecdc-423d-abf9-86d6e56a513c",
+          "_RecordId_": "c6cefa28-ecdc-423d-abf9-86d6e56a513c"}]},
+    "communicationName": "file://./../../../../../../libs/foundry/records/communicationname/missioncommunications/refuellingmission/refuellingmission_ambush.json",
+    "characterEntityClass": null,
+    "fakeCommsAudioEntityClass": "file://./../../../../../../libs/foundry/records/entities/audio/fakecommsaudioentity_uwc_deloit.json",
+    "stage": "file://./../../../../../../libs/foundry/records/commsnotificationstages/cns_test.json"}}

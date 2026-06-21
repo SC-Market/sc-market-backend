@@ -1,0 +1,15 @@
+{
+  "_RecordName_": "SReputationStandingParams.ReputationStanding_NPC_Reliability_Unreliable",
+  "_RecordId_": "2c82371e-dc9d-473e-9f04-5b9577c59df0",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "SReputationStandingParams",
+    "name": "Reliability_Unreliable",
+    "description": "desc",
+    "displayName": "@RepStanding_MissionGiver_Default_Disliked_Name",
+    "perkDescription": "@blank_space",
+    "icon": "",
+    "minReputation": -9000,
+    "driftReputation": 100,
+    "driftTimeHours": 24.0,
+    "gated": false}}

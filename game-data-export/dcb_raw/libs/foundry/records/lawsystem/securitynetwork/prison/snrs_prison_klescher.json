@@ -1,0 +1,27 @@
+{
+  "_RecordName_": "SecurityNetworkRoomSettings.SNRS_Prison_Klescher",
+  "_RecordId_": "8456cb57-dceb-44f6-9c79-4a98f12d3029",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "SecurityNetworkRoomSettings",
+    "defaultProtocol": {
+      "_Type_": "SecurityNetworkProtocol",
+      "permissionsWithClearance": {
+        "_Type_": "SecurityNetworkPermissions",
+        "access": "Inherit",
+        "trespass": "Inherit"},
+      "permissionsWithoutClearance": {
+        "_Type_": "SecurityNetworkPermissions",
+        "access": "No",
+        "trespass": "Yes"},
+      "acceptedClearance": {
+        "_Type_": "SecurityClearanceConditions",
+        "tokens": [
+          "file://./../../../../../../libs/foundry/records/lawsystem/securityclearancetokens/pu/klescher_inmate.json"]},
+      "ownerFaction": "file://./../../../../../../libs/foundry/records/factions/faction_special_kleschersecurity.json"},
+    "roomIdentifier": {
+      "_RecordPath_": "file://./../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+      "_RecordName_": "Tag.502e53dc-1d6e-4c3b-bcaa-28856af15690",
+      "_RecordId_": "502e53dc-1d6e-4c3b-bcaa-28856af15690"},
+    "trespassWarningSeconds": -1.0,
+    "trespassRevokeWarningSeconds": -1.0}}

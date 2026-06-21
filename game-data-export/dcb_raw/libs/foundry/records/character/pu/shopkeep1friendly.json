@@ -1,0 +1,24 @@
+{
+  "_RecordName_": "Character.Shopkeep1Friendly",
+  "_RecordId_": "8ab1b85a-1d05-4a27-97b5-c6a4b54288c9",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "Character",
+    "characterPersonalData": {
+      "_Type_": "CharacterPersonalData",
+      "title": "",
+      "firstName": "",
+      "nickName": "",
+      "lastName": "",
+      "randomNameParams": null,
+      "affiliation": "",
+      "details": ""},
+    "audioSwitchStateName": "",
+    "animationRemapAlias": "",
+    "characterMannequinTag": "Shopkeep1Friendly",
+    "styleMannequinTag": "",
+    "combatStyle": "NotSet",
+    "gender": "Female",
+    "characterSpeedOverrides": [],
+    "nicknameChance": 0.0,
+    "name": "Shop Keep"}}

@@ -1,0 +1,71 @@
+{
+  "_RecordName_": "BlueprintPoolRecord.BP_MISSIONREWARD_ASD2C",
+  "_RecordId_": "a79a915d-5186-4f87-8140-69bca9fc335e",
+  "_RecordTag_": "SystemsDesign",
+  "_RecordValue_": {
+    "_Type_": "BlueprintPoolRecord",
+    "blueprintRewards": [
+      {
+        "_Type_": "BlueprintReward",
+        "weight": 1.0,
+        "blueprintRecord": "file://./../../../../../../libs/foundry/records/crafting/blueprints/crafting/fpsgear/weapons/sniper/bp_craft_volt_sniper_energy_01_tint03.json"},
+      {
+        "_Type_": "BlueprintReward",
+        "weight": 1.0,
+        "blueprintRecord": "file://./../../../../../../libs/foundry/records/crafting/blueprints/crafting/fpsgear/armour/stealth/light/bp_craft_kap_combat_light_helmet_01_01_15.json"},
+      {
+        "_Type_": "BlueprintReward",
+        "weight": 1.0,
+        "blueprintRecord": "file://./../../../../../../libs/foundry/records/crafting/blueprints/crafting/fpsgear/armour/stealth/light/bp_craft_kap_combat_light_arms_01_01_15.json"},
+      {
+        "_Type_": "BlueprintReward",
+        "weight": 1.0,
+        "blueprintRecord": "file://./../../../../../../libs/foundry/records/crafting/blueprints/crafting/fpsgear/armour/stealth/light/bp_craft_kap_combat_light_core_01_01_15.json"},
+      {
+        "_Type_": "BlueprintReward",
+        "weight": 1.0,
+        "blueprintRecord": "file://./../../../../../../libs/foundry/records/crafting/blueprints/crafting/fpsgear/armour/stealth/light/bp_craft_kap_combat_light_legs_01_01_15.json"},
+      {
+        "_Type_": "BlueprintReward",
+        "weight": 1.0,
+        "blueprintRecord": "file://./../../../../../../libs/foundry/records/crafting/blueprints/crafting/fpsgear/armour/stealth/light/bp_craft_kap_combat_light_arms_01_01_10.json"},
+      {
+        "_Type_": "BlueprintReward",
+        "weight": 1.0,
+        "blueprintRecord": "file://./../../../../../../libs/foundry/records/crafting/blueprints/crafting/fpsgear/armour/stealth/light/bp_craft_kap_combat_light_core_01_01_10.json"},
+      {
+        "_Type_": "BlueprintReward",
+        "weight": 1.0,
+        "blueprintRecord": "file://./../../../../../../libs/foundry/records/crafting/blueprints/crafting/fpsgear/armour/stealth/light/bp_craft_kap_combat_light_legs_01_01_10.json"},
+      {
+        "_Type_": "BlueprintReward",
+        "weight": 1.0,
+        "blueprintRecord": "file://./../../../../../../libs/foundry/records/crafting/blueprints/crafting/fpsgear/armour/stealth/light/bp_craft_kap_combat_light_helmet_01_01_10.json"},
+      {
+        "_Type_": "BlueprintReward",
+        "weight": 1.0,
+        "blueprintRecord": "file://./../../../../../../libs/foundry/records/crafting/blueprints/crafting/fpsgear/armour/engineer/heavy/bp_craft_omc_utility_heavy_arms_01_01_04.json"},
+      {
+        "_Type_": "BlueprintReward",
+        "weight": 1.0,
+        "blueprintRecord": "file://./../../../../../../libs/foundry/records/crafting/blueprints/crafting/fpsgear/armour/engineer/heavy/bp_craft_omc_utility_heavy_core_01_01_04.json"},
+      {
+        "_Type_": "BlueprintReward",
+        "weight": 1.0,
+        "blueprintRecord": "file://./../../../../../../libs/foundry/records/crafting/blueprints/crafting/fpsgear/armour/engineer/heavy/bp_craft_omc_utility_heavy_legs_01_01_04.json"},
+      {
+        "_Type_": "BlueprintReward",
+        "weight": 1.0,
+        "blueprintRecord": "file://./../../../../../../libs/foundry/records/crafting/blueprints/crafting/fpsgear/armour/engineer/heavy/bp_craft_omc_utility_heavy_helmet_01_01_04.json"},
+      {
+        "_Type_": "BlueprintReward",
+        "weight": 1.0,
+        "blueprintRecord": null},
+      {
+        "_Type_": "BlueprintReward",
+        "weight": 1.0,
+        "blueprintRecord": "file://./../../../../../../libs/foundry/records/crafting/blueprints/crafting/fpsgear/ammo/electron/bp_craft_volt_sniper_energy_01_mag.json"},
+      {
+        "_Type_": "BlueprintReward",
+        "weight": 1.0,
+        "blueprintRecord": "file://./../../../../../../libs/foundry/records/crafting/blueprints/crafting/fpsgear/armour/environment/heavy/bp_craft_clda_env_heavy_backpack_01_02_04.json"}]}}

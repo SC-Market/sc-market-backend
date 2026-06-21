@@ -1,0 +1,24 @@
+{
+  "_RecordName_": "Character.Walton",
+  "_RecordId_": "4b45f0a6-b857-441e-8cc7-08d24b3409eb",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "Character",
+    "characterPersonalData": {
+      "_Type_": "CharacterPersonalData",
+      "title": "@LOC_UNINITIALIZED",
+      "firstName": "@Name_FoxwellRep_Walton",
+      "nickName": "@LOC_UNINITIALIZED",
+      "lastName": "@LOC_UNINITIALIZED",
+      "randomNameParams": null,
+      "affiliation": "@LOC_UNINITIALIZED",
+      "details": "@LOC_UNINITIALIZED"},
+    "audioSwitchStateName": "",
+    "animationRemapAlias": "",
+    "characterMannequinTag": "Foxwell_Walton",
+    "styleMannequinTag": "",
+    "combatStyle": "NotSet",
+    "gender": "Male",
+    "characterSpeedOverrides": [],
+    "nicknameChance": 0.0,
+    "name": "Walton"}}

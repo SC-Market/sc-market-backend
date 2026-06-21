@@ -1,0 +1,1938 @@
+{
+  "_RecordName_": "BuildingBlocks_Style.EAStyle",
+  "_RecordId_": "23e9518e-e4a5-49b8-a3e2-374472f73a6b",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "BuildingBlocks_Style",
+    "entries": [
+      {
+        "_Type_": "BuildingBlocks_StyleEntry",
+        "name": "TextDisabled",
+        "conditionsList": [
+          {
+            "_Type_": "BuildingBlocks_StyleConditionList",
+            "name": "New Condition List",
+            "conditions": [
+              {
+                "_Type_": "BuildingBlocks_StyleSelectorConditionTag",
+                "tag": {
+                  "_RecordPath_": "file://./../../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+                  "_RecordName_": "Tag.687468fe-675d-4807-b27c-172591115cb7",
+                  "_RecordId_": "687468fe-675d-4807-b27c-172591115cb7"}},
+              {
+                "_Type_": "BuildingBlocks_StyleSelectorConditionType",
+                "type": "Text"},
+              {
+                "_Type_": "BuildingBlocks_StyleSelectorConditionTag",
+                "tag": {
+                  "_RecordPath_": "file://./../../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+                  "_RecordName_": "Tag.20c8378b-682c-45ef-a9e3-b31bc3980117",
+                  "_RecordId_": "20c8378b-682c-45ef-a9e3-b31bc3980117"}}]}],
+        "modifiers": [
+          {
+            "_Type_": "BuildingBlocks_FieldModifierColor",
+            "field": "FillColor",
+            "color": {
+              "_Type_": "BuildingBlocks_ColorSolid",
+              "color": {
+                "_Type_": "SRGBA8",
+                "r": 108,
+                "g": 108,
+                "b": 108,
+                "a": 255}}}],
+        "transitions": []},
+      {
+        "_Type_": "BuildingBlocks_StyleEntry",
+        "name": "TextEnabled",
+        "conditionsList": [
+          {
+            "_Type_": "BuildingBlocks_StyleConditionList",
+            "name": "New Condition List",
+            "conditions": [
+              {
+                "_Type_": "BuildingBlocks_StyleSelectorConditionTag",
+                "tag": {
+                  "_RecordPath_": "file://./../../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+                  "_RecordName_": "Tag.687468fe-675d-4807-b27c-172591115cb7",
+                  "_RecordId_": "687468fe-675d-4807-b27c-172591115cb7"}},
+              {
+                "_Type_": "BuildingBlocks_StyleSelectorConditionType",
+                "type": "Text"},
+              {
+                "_Type_": "BuildingBlocks_StyleSelectorConditionTag",
+                "tag": {
+                  "_RecordPath_": "file://./../../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+                  "_RecordName_": "Tag.4d366845-6829-4818-9ad6-e6344c1d1eed",
+                  "_RecordId_": "4d366845-6829-4818-9ad6-e6344c1d1eed"}}]}],
+        "modifiers": [
+          {
+            "_Type_": "BuildingBlocks_FieldModifierColor",
+            "field": "FillColor",
+            "color": {
+              "_Type_": "BuildingBlocks_ColorSolid",
+              "color": {
+                "_Type_": "SRGBA8",
+                "r": 102,
+                "g": 204,
+                "b": 204,
+                "a": 255}}}],
+        "transitions": []},
+      {
+        "_Type_": "BuildingBlocks_StyleEntry",
+        "name": "TextHover",
+        "conditionsList": [
+          {
+            "_Type_": "BuildingBlocks_StyleConditionList",
+            "name": "New Condition List",
+            "conditions": [
+              {
+                "_Type_": "BuildingBlocks_StyleSelectorConditionTag",
+                "tag": {
+                  "_RecordPath_": "file://./../../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+                  "_RecordName_": "Tag.687468fe-675d-4807-b27c-172591115cb7",
+                  "_RecordId_": "687468fe-675d-4807-b27c-172591115cb7"}},
+              {
+                "_Type_": "BuildingBlocks_StyleSelectorConditionType",
+                "type": "Text"},
+              {
+                "_Type_": "BuildingBlocks_StyleSelectorConditionTag",
+                "tag": {
+                  "_RecordPath_": "file://./../../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+                  "_RecordName_": "Tag.83924dc1-64f7-452e-b2a8-a8ec42ddd4eb",
+                  "_RecordId_": "83924dc1-64f7-452e-b2a8-a8ec42ddd4eb"}}]}],
+        "modifiers": [
+          {
+            "_Type_": "BuildingBlocks_FieldModifierColor",
+            "field": "FillColor",
+            "color": {
+              "_Type_": "BuildingBlocks_ColorSolid",
+              "color": {
+                "_Type_": "SRGBA8",
+                "r": 102,
+                "g": 204,
+                "b": 204,
+                "a": 255}}}],
+        "transitions": []},
+      {
+        "_Type_": "BuildingBlocks_StyleEntry",
+        "name": "BorderNormal",
+        "conditionsList": [
+          {
+            "_Type_": "BuildingBlocks_StyleConditionList",
+            "name": "New Condition List",
+            "conditions": [
+              {
+                "_Type_": "BuildingBlocks_StyleSelectorConditionType",
+                "type": "Base"},
+              {
+                "_Type_": "BuildingBlocks_StyleSelectorConditionTag",
+                "tag": {
+                  "_RecordPath_": "file://./../../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+                  "_RecordName_": "Tag.b43074e9-d784-49b7-ac4a-69049df294a9",
+                  "_RecordId_": "b43074e9-d784-49b7-ac4a-69049df294a9"}}]}],
+        "modifiers": [
+          {
+            "_Type_": "BuildingBlocks_FieldModifierNumber",
+            "field": "BorderTopWidth",
+            "value": 2.0},
+          {
+            "_Type_": "BuildingBlocks_FieldModifierNumber",
+            "field": "BorderTopLeftRadius",
+            "value": 2.0},
+          {
+            "_Type_": "BuildingBlocks_FieldModifierNumber",
+            "field": "BorderTopRightRadius",
+            "value": 2.0},
+          {
+            "_Type_": "BuildingBlocks_FieldModifierNumber",
+            "field": "BorderBottomRightRadius",
+            "value": 2.0},
+          {
+            "_Type_": "BuildingBlocks_FieldModifierNumber",
+            "field": "BorderBottomLeftRadius",
+            "value": 2.0},
+          {
+            "_Type_": "BuildingBlocks_FieldModifierNumber",
+            "field": "BorderRightWidth",
+            "value": 2.0},
+          {
+            "_Type_": "BuildingBlocks_FieldModifierNumber",
+            "field": "BorderBottomWidth",
+            "value": 2.0},
+          {
+            "_Type_": "BuildingBlocks_FieldModifierNumber",
+            "field": "BorderLeftWidth",
+            "value": 2.0}],
+        "transitions": []},
+      {
+        "_Type_": "BuildingBlocks_StyleEntry",
+        "name": "BorderSmallCorner",
+        "conditionsList": [
+          {
+            "_Type_": "BuildingBlocks_StyleConditionList",
+            "name": "New Condition List",
+            "conditions": [
+              {
+                "_Type_": "BuildingBlocks_StyleSelectorConditionType",
+                "type": "Base"},
+              {
+                "_Type_": "BuildingBlocks_StyleSelectorConditionTag",
+                "tag": {
+                  "_RecordPath_": "file://./../../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+                  "_RecordName_": "Tag.32b5c621-3570-4cb4-ad4d-139c5675f57c",
+                  "_RecordId_": "32b5c621-3570-4cb4-ad4d-139c5675f57c"}}]}],
+        "modifiers": [
+          {
+            "_Type_": "BuildingBlocks_FieldModifierNumber",
+            "field": "BorderTopWidth",
+            "value": 2.0},
+          {
+            "_Type_": "BuildingBlocks_FieldModifierNumber",
+            "field": "BorderTopLeftRadius",
+            "value": 2.0},
+          {
+            "_Type_": "BuildingBlocks_FieldModifierNumber",
+            "field": "BorderTopRightRadius",
+            "value": 2.0},
+          {
+            "_Type_": "BuildingBlocks_FieldModifierNumber",
+            "field": "BorderBottomRightRadius",
+            "value": 15.0},
+          {
+            "_Type_": "BuildingBlocks_FieldModifierNumber",
+            "field": "BorderBottomLeftRadius",
+            "value": 2.0},
+          {
+            "_Type_": "BuildingBlocks_FieldModifierBoolean",
+            "field": "EnableBottomRightBorderChamfer",
+            "value": true},
+          {
+            "_Type_": "BuildingBlocks_FieldModifierNumber",
+            "field": "BorderRightWidth",
+            "value": 2.0},
+          {
+            "_Type_": "BuildingBlocks_FieldModifierNumber",
+            "field": "BorderBottomWidth",
+            "value": 2.0},
+          {
+            "_Type_": "BuildingBlocks_FieldModifierNumber",
+            "field": "BorderLeftWidth",
+            "value": 2.0}],
+        "transitions": []},
+      {
+        "_Type_": "BuildingBlocks_StyleEntry",
+        "name": "BorderLargeCorner",
+        "conditionsList": [
+          {
+            "_Type_": "BuildingBlocks_StyleConditionList",
+            "name": "New Condition List",
+            "conditions": [
+              {
+                "_Type_": "BuildingBlocks_StyleSelectorConditionType",
+                "type": "Base"},
+              {
+                "_Type_": "BuildingBlocks_StyleSelectorConditionTag",
+                "tag": {
+                  "_RecordPath_": "file://./../../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+                  "_RecordName_": "Tag.e005cffe-9f55-4480-a898-41a94111e194",
+                  "_RecordId_": "e005cffe-9f55-4480-a898-41a94111e194"}}]}],
+        "modifiers": [
+          {
+            "_Type_": "BuildingBlocks_FieldModifierNumber",
+            "field": "BorderTopWidth",
+            "value": 2.0},
+          {
+            "_Type_": "BuildingBlocks_FieldModifierNumber",
+            "field": "BorderTopLeftRadius",
+            "value": 2.0},
+          {
+            "_Type_": "BuildingBlocks_FieldModifierNumber",
+            "field": "BorderTopRightRadius",
+            "value": 2.0},
+          {
+            "_Type_": "BuildingBlocks_FieldModifierNumber",
+            "field": "BorderBottomRightRadius",
+            "value": 30.0},
+          {
+            "_Type_": "BuildingBlocks_FieldModifierNumber",
+            "field": "BorderBottomLeftRadius",
+            "value": 2.0},
+          {
+            "_Type_": "BuildingBlocks_FieldModifierBoolean",
+            "field": "EnableBottomRightBorderChamfer",
+            "value": true},
+          {
+            "_Type_": "BuildingBlocks_FieldModifierNumber",
+            "field": "BorderRightWidth",
+            "value": 2.0},
+          {
+            "_Type_": "BuildingBlocks_FieldModifierNumber",
+            "field": "BorderBottomWidth",
+            "value": 2.0},
+          {
+            "_Type_": "BuildingBlocks_FieldModifierNumber",
+            "field": "BorderLeftWidth",
+            "value": 2.0}],
+        "transitions": []},
+      {
+        "_Type_": "BuildingBlocks_StyleEntry",
+        "name": "BorderColorEnabled",
+        "conditionsList": [
+          {
+            "_Type_": "BuildingBlocks_StyleConditionList",
+            "name": "New Condition List",
+            "conditions": [
+              {
+                "_Type_": "BuildingBlocks_StyleSelectorConditionType",
+                "type": "Base"},
+              {
+                "_Type_": "BuildingBlocks_StyleSelectorConditionTag",
+                "tag": {
+                  "_RecordPath_": "file://./../../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+                  "_RecordName_": "Tag.dba66c24-83ad-46f1-ac04-ada0a869245c",
+                  "_RecordId_": "dba66c24-83ad-46f1-ac04-ada0a869245c"}},
+              {
+                "_Type_": "BuildingBlocks_StyleSelectorConditionTag",
+                "tag": {
+                  "_RecordPath_": "file://./../../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+                  "_RecordName_": "Tag.4d366845-6829-4818-9ad6-e6344c1d1eed",
+                  "_RecordId_": "4d366845-6829-4818-9ad6-e6344c1d1eed"}}]}],
+        "modifiers": [
+          {
+            "_Type_": "BuildingBlocks_FieldModifierColor",
+            "field": "BorderColorLeft",
+            "color": {
+              "_Type_": "BuildingBlocks_ColorSolid",
+              "color": {
+                "_Type_": "SRGBA8",
+                "r": 102,
+                "g": 204,
+                "b": 204,
+                "a": 128}}},
+          {
+            "_Type_": "BuildingBlocks_FieldModifierColor",
+            "field": "BorderColorRight",
+            "color": {
+              "_Type_": "BuildingBlocks_ColorSolid",
+              "color": {
+                "_Type_": "SRGBA8",
+                "r": 102,
+                "g": 204,
+                "b": 204,
+                "a": 128}}},
+          {
+            "_Type_": "BuildingBlocks_FieldModifierColor",
+            "field": "BorderColorTop",
+            "color": {
+              "_Type_": "BuildingBlocks_ColorSolid",
+              "color": {
+                "_Type_": "SRGBA8",
+                "r": 102,
+                "g": 204,
+                "b": 204,
+                "a": 128}}},
+          {
+            "_Type_": "BuildingBlocks_FieldModifierColor",
+            "field": "BorderColorBottom",
+            "color": {
+              "_Type_": "BuildingBlocks_ColorSolid",
+              "color": {
+                "_Type_": "SRGBA8",
+                "r": 102,
+                "g": 204,
+                "b": 204,
+                "a": 128}}}],
+        "transitions": []},
+      {
+        "_Type_": "BuildingBlocks_StyleEntry",
+        "name": "BorderColorDisabled",
+        "conditionsList": [
+          {
+            "_Type_": "BuildingBlocks_StyleConditionList",
+            "name": "New Condition List",
+            "conditions": [
+              {
+                "_Type_": "BuildingBlocks_StyleSelectorConditionType",
+                "type": "Base"},
+              {
+                "_Type_": "BuildingBlocks_StyleSelectorConditionTag",
+                "tag": {
+                  "_RecordPath_": "file://./../../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+                  "_RecordName_": "Tag.dba66c24-83ad-46f1-ac04-ada0a869245c",
+                  "_RecordId_": "dba66c24-83ad-46f1-ac04-ada0a869245c"}},
+              {
+                "_Type_": "BuildingBlocks_StyleSelectorConditionTag",
+                "tag": {
+                  "_RecordPath_": "file://./../../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+                  "_RecordName_": "Tag.20c8378b-682c-45ef-a9e3-b31bc3980117",
+                  "_RecordId_": "20c8378b-682c-45ef-a9e3-b31bc3980117"}}]}],
+        "modifiers": [
+          {
+            "_Type_": "BuildingBlocks_FieldModifierColor",
+            "field": "BorderColorLeft",
+            "color": {
+              "_Type_": "BuildingBlocks_ColorSolid",
+              "color": {
+                "_Type_": "SRGBA8",
+                "r": 102,
+                "g": 204,
+                "b": 204,
+                "a": 128}}},
+          {
+            "_Type_": "BuildingBlocks_FieldModifierColor",
+            "field": "BorderColorRight",
+            "color": {
+              "_Type_": "BuildingBlocks_ColorSolid",
+              "color": {
+                "_Type_": "SRGBA8",
+                "r": 102,
+                "g": 204,
+                "b": 204,
+                "a": 128}}},
+          {
+            "_Type_": "BuildingBlocks_FieldModifierColor",
+            "field": "BorderColorTop",
+            "color": {
+              "_Type_": "BuildingBlocks_ColorSolid",
+              "color": {
+                "_Type_": "SRGBA8",
+                "r": 102,
+                "g": 204,
+                "b": 204,
+                "a": 128}}},
+          {
+            "_Type_": "BuildingBlocks_FieldModifierColor",
+            "field": "BorderColorBottom",
+            "color": {
+              "_Type_": "BuildingBlocks_ColorSolid",
+              "color": {
+                "_Type_": "SRGBA8",
+                "r": 102,
+                "g": 204,
+                "b": 204,
+                "a": 128}}}],
+        "transitions": []},
+      {
+        "_Type_": "BuildingBlocks_StyleEntry",
+        "name": "BorderColorHover",
+        "conditionsList": [
+          {
+            "_Type_": "BuildingBlocks_StyleConditionList",
+            "name": "New Condition List",
+            "conditions": [
+              {
+                "_Type_": "BuildingBlocks_StyleSelectorConditionType",
+                "type": "Base"},
+              {
+                "_Type_": "BuildingBlocks_StyleSelectorConditionTag",
+                "tag": {
+                  "_RecordPath_": "file://./../../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+                  "_RecordName_": "Tag.dba66c24-83ad-46f1-ac04-ada0a869245c",
+                  "_RecordId_": "dba66c24-83ad-46f1-ac04-ada0a869245c"}},
+              {
+                "_Type_": "BuildingBlocks_StyleSelectorConditionTag",
+                "tag": {
+                  "_RecordPath_": "file://./../../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+                  "_RecordName_": "Tag.83924dc1-64f7-452e-b2a8-a8ec42ddd4eb",
+                  "_RecordId_": "83924dc1-64f7-452e-b2a8-a8ec42ddd4eb"}}]}],
+        "modifiers": [
+          {
+            "_Type_": "BuildingBlocks_FieldModifierColor",
+            "field": "BorderColorLeft",
+            "color": {
+              "_Type_": "BuildingBlocks_ColorSolid",
+              "color": {
+                "_Type_": "SRGBA8",
+                "r": 114,
+                "g": 250,
+                "b": 250,
+                "a": 255}}},
+          {
+            "_Type_": "BuildingBlocks_FieldModifierColor",
+            "field": "BorderColorRight",
+            "color": {
+              "_Type_": "BuildingBlocks_ColorSolid",
+              "color": {
+                "_Type_": "SRGBA8",
+                "r": 114,
+                "g": 250,
+                "b": 250,
+                "a": 255}}},
+          {
+            "_Type_": "BuildingBlocks_FieldModifierColor",
+            "field": "BorderColorTop",
+            "color": {
+              "_Type_": "BuildingBlocks_ColorSolid",
+              "color": {
+                "_Type_": "SRGBA8",
+                "r": 114,
+                "g": 250,
+                "b": 250,
+                "a": 255}}},
+          {
+            "_Type_": "BuildingBlocks_FieldModifierColor",
+            "field": "BorderColorBottom",
+            "color": {
+              "_Type_": "BuildingBlocks_ColorSolid",
+              "color": {
+                "_Type_": "SRGBA8",
+                "r": 114,
+                "g": 250,
+                "b": 250,
+                "a": 255}}}],
+        "transitions": []},
+      {
+        "_Type_": "BuildingBlocks_StyleEntry",
+        "name": "BorderColorSelected",
+        "conditionsList": [
+          {
+            "_Type_": "BuildingBlocks_StyleConditionList",
+            "name": "New Condition List",
+            "conditions": [
+              {
+                "_Type_": "BuildingBlocks_StyleSelectorConditionType",
+                "type": "Base"},
+              {
+                "_Type_": "BuildingBlocks_StyleSelectorConditionTag",
+                "tag": {
+                  "_RecordPath_": "file://./../../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+                  "_RecordName_": "Tag.dba66c24-83ad-46f1-ac04-ada0a869245c",
+                  "_RecordId_": "dba66c24-83ad-46f1-ac04-ada0a869245c"}},
+              {
+                "_Type_": "BuildingBlocks_StyleSelectorConditionTag",
+                "tag": {
+                  "_RecordPath_": "file://./../../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+                  "_RecordName_": "Tag.2b8ef038-5345-4f3a-9a06-52d4b7f7ab3a",
+                  "_RecordId_": "2b8ef038-5345-4f3a-9a06-52d4b7f7ab3a"}}]}],
+        "modifiers": [
+          {
+            "_Type_": "BuildingBlocks_FieldModifierColor",
+            "field": "BorderColorLeft",
+            "color": {
+              "_Type_": "BuildingBlocks_ColorSolid",
+              "color": {
+                "_Type_": "SRGBA8",
+                "r": 255,
+                "g": 255,
+                "b": 255,
+                "a": 255}}},
+          {
+            "_Type_": "BuildingBlocks_FieldModifierColor",
+            "field": "BorderColorRight",
+            "color": {
+              "_Type_": "BuildingBlocks_ColorSolid",
+              "color": {
+                "_Type_": "SRGBA8",
+                "r": 255,
+                "g": 255,
+                "b": 255,
+                "a": 255}}},
+          {
+            "_Type_": "BuildingBlocks_FieldModifierColor",
+            "field": "BorderColorTop",
+            "color": {
+              "_Type_": "BuildingBlocks_ColorSolid",
+              "color": {
+                "_Type_": "SRGBA8",
+                "r": 255,
+                "g": 255,
+                "b": 255,
+                "a": 255}}},
+          {
+            "_Type_": "BuildingBlocks_FieldModifierColor",
+            "field": "BorderColorBottom",
+            "color": {
+              "_Type_": "BuildingBlocks_ColorSolid",
+              "color": {
+                "_Type_": "SRGBA8",
+                "r": 255,
+                "g": 255,
+                "b": 255,
+                "a": 255}}}],
+        "transitions": []},
+      {
+        "_Type_": "BuildingBlocks_StyleEntry",
+        "name": "BorderCircle",
+        "conditionsList": [
+          {
+            "_Type_": "BuildingBlocks_StyleConditionList",
+            "name": "New Condition List",
+            "conditions": [
+              {
+                "_Type_": "BuildingBlocks_StyleSelectorConditionType",
+                "type": "Base"},
+              {
+                "_Type_": "BuildingBlocks_StyleSelectorConditionTag",
+                "tag": {
+                  "_RecordPath_": "file://./../../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+                  "_RecordName_": "Tag.ab741640-0f63-4c9e-aa12-738a4a5890c4",
+                  "_RecordId_": "ab741640-0f63-4c9e-aa12-738a4a5890c4"}}]}],
+        "modifiers": [
+          {
+            "_Type_": "BuildingBlocks_FieldModifierNumber",
+            "field": "BorderTopWidth",
+            "value": 2.0},
+          {
+            "_Type_": "BuildingBlocks_FieldModifierNumber",
+            "field": "BorderTopLeftRadius",
+            "value": 50.0},
+          {
+            "_Type_": "BuildingBlocks_FieldModifierNumber",
+            "field": "BorderTopRightRadius",
+            "value": 50.0},
+          {
+            "_Type_": "BuildingBlocks_FieldModifierNumber",
+            "field": "BorderBottomRightRadius",
+            "value": 50.0},
+          {
+            "_Type_": "BuildingBlocks_FieldModifierNumber",
+            "field": "BorderBottomLeftRadius",
+            "value": 50.0},
+          {
+            "_Type_": "BuildingBlocks_FieldModifierNumber",
+            "field": "BorderRightWidth",
+            "value": 2.0},
+          {
+            "_Type_": "BuildingBlocks_FieldModifierNumber",
+            "field": "BorderBottomWidth",
+            "value": 2.0},
+          {
+            "_Type_": "BuildingBlocks_FieldModifierNumber",
+            "field": "BorderLeftWidth",
+            "value": 2.0}],
+        "transitions": []},
+      {
+        "_Type_": "BuildingBlocks_StyleEntry",
+        "name": "PrimaryBackgroundEnabled",
+        "conditionsList": [
+          {
+            "_Type_": "BuildingBlocks_StyleConditionList",
+            "name": "New Condition List",
+            "conditions": [
+              {
+                "_Type_": "BuildingBlocks_StyleSelectorConditionTag",
+                "tag": {
+                  "_RecordPath_": "file://./../../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+                  "_RecordName_": "Tag.dfea6ea9-a118-48e5-87af-e1d766114942",
+                  "_RecordId_": "dfea6ea9-a118-48e5-87af-e1d766114942"}},
+              {
+                "_Type_": "BuildingBlocks_StyleSelectorConditionTag",
+                "tag": {
+                  "_RecordPath_": "file://./../../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+                  "_RecordName_": "Tag.4d366845-6829-4818-9ad6-e6344c1d1eed",
+                  "_RecordId_": "4d366845-6829-4818-9ad6-e6344c1d1eed"}}]}],
+        "modifiers": [
+          {
+            "_Type_": "BuildingBlocks_FieldModifierColor",
+            "field": "BackgroundColor",
+            "color": {
+              "_Type_": "BuildingBlocks_ColorSolid",
+              "color": {
+                "_Type_": "SRGBA8",
+                "r": 102,
+                "g": 204,
+                "b": 204,
+                "a": 128}}},
+          {
+            "_Type_": "BuildingBlocks_FieldModifierBoolean",
+            "field": "EnableBackground",
+            "value": true}],
+        "transitions": []},
+      {
+        "_Type_": "BuildingBlocks_StyleEntry",
+        "name": "SecondaryBackgroundEnabled",
+        "conditionsList": [
+          {
+            "_Type_": "BuildingBlocks_StyleConditionList",
+            "name": "New Condition List",
+            "conditions": [
+              {
+                "_Type_": "BuildingBlocks_StyleSelectorConditionTag",
+                "tag": {
+                  "_RecordPath_": "file://./../../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+                  "_RecordName_": "Tag.cf0bbe25-cf44-4010-b07d-692fb3ceb8c0",
+                  "_RecordId_": "cf0bbe25-cf44-4010-b07d-692fb3ceb8c0"}},
+              {
+                "_Type_": "BuildingBlocks_StyleSelectorConditionTag",
+                "tag": {
+                  "_RecordPath_": "file://./../../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+                  "_RecordName_": "Tag.4d366845-6829-4818-9ad6-e6344c1d1eed",
+                  "_RecordId_": "4d366845-6829-4818-9ad6-e6344c1d1eed"}}]}],
+        "modifiers": [
+          {
+            "_Type_": "BuildingBlocks_FieldModifierColor",
+            "field": "BackgroundColor",
+            "color": {
+              "_Type_": "BuildingBlocks_ColorSolid",
+              "color": {
+                "_Type_": "SRGBA8",
+                "r": 0,
+                "g": 0,
+                "b": 0,
+                "a": 64}}},
+          {
+            "_Type_": "BuildingBlocks_FieldModifierBoolean",
+            "field": "EnableBackground",
+            "value": true}],
+        "transitions": []},
+      {
+        "_Type_": "BuildingBlocks_StyleEntry",
+        "name": "TertiaryBackgroundEnabled",
+        "conditionsList": [
+          {
+            "_Type_": "BuildingBlocks_StyleConditionList",
+            "name": "New Condition List",
+            "conditions": [
+              {
+                "_Type_": "BuildingBlocks_StyleSelectorConditionTag",
+                "tag": {
+                  "_RecordPath_": "file://./../../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+                  "_RecordName_": "Tag.7331b4a5-f05f-4b97-996c-6f8087eb69b6",
+                  "_RecordId_": "7331b4a5-f05f-4b97-996c-6f8087eb69b6"}},
+              {
+                "_Type_": "BuildingBlocks_StyleSelectorConditionTag",
+                "tag": {
+                  "_RecordPath_": "file://./../../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+                  "_RecordName_": "Tag.4d366845-6829-4818-9ad6-e6344c1d1eed",
+                  "_RecordId_": "4d366845-6829-4818-9ad6-e6344c1d1eed"}}]}],
+        "modifiers": [
+          {
+            "_Type_": "BuildingBlocks_FieldModifierColor",
+            "field": "BackgroundColor",
+            "color": {
+              "_Type_": "BuildingBlocks_ColorSolid",
+              "color": {
+                "_Type_": "SRGBA8",
+                "r": 113,
+                "g": 113,
+                "b": 113,
+                "a": 66}}},
+          {
+            "_Type_": "BuildingBlocks_FieldModifierBoolean",
+            "field": "EnableBackground",
+            "value": true}],
+        "transitions": []},
+      {
+        "_Type_": "BuildingBlocks_StyleEntry",
+        "name": "QuaternaryBackgroundEnabled",
+        "conditionsList": [
+          {
+            "_Type_": "BuildingBlocks_StyleConditionList",
+            "name": "New Condition List",
+            "conditions": [
+              {
+                "_Type_": "BuildingBlocks_StyleSelectorConditionTag",
+                "tag": {
+                  "_RecordPath_": "file://./../../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+                  "_RecordName_": "Tag.dbdc00f3-17a1-4cde-94f4-8b3b39078bd9",
+                  "_RecordId_": "dbdc00f3-17a1-4cde-94f4-8b3b39078bd9"}},
+              {
+                "_Type_": "BuildingBlocks_StyleSelectorConditionTag",
+                "tag": {
+                  "_RecordPath_": "file://./../../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+                  "_RecordName_": "Tag.4d366845-6829-4818-9ad6-e6344c1d1eed",
+                  "_RecordId_": "4d366845-6829-4818-9ad6-e6344c1d1eed"}}]}],
+        "modifiers": [
+          {
+            "_Type_": "BuildingBlocks_FieldModifierColor",
+            "field": "BackgroundColor",
+            "color": {
+              "_Type_": "BuildingBlocks_ColorSolid",
+              "color": {
+                "_Type_": "SRGBA8",
+                "r": 0,
+                "g": 0,
+                "b": 0,
+                "a": 102}}},
+          {
+            "_Type_": "BuildingBlocks_FieldModifierBoolean",
+            "field": "EnableBackground",
+            "value": true}],
+        "transitions": []},
+      {
+        "_Type_": "BuildingBlocks_StyleEntry",
+        "name": "ImageSelected",
+        "conditionsList": [
+          {
+            "_Type_": "BuildingBlocks_StyleConditionList",
+            "name": "New Condition List",
+            "conditions": [
+              {
+                "_Type_": "BuildingBlocks_StyleSelectorConditionType",
+                "type": "Image"},
+              {
+                "_Type_": "BuildingBlocks_StyleSelectorConditionTag",
+                "tag": {
+                  "_RecordPath_": "file://./../../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+                  "_RecordName_": "Tag.2b8ef038-5345-4f3a-9a06-52d4b7f7ab3a",
+                  "_RecordId_": "2b8ef038-5345-4f3a-9a06-52d4b7f7ab3a"}}]}],
+        "modifiers": [
+          {
+            "_Type_": "BuildingBlocks_FieldModifierColor",
+            "field": "FillColor",
+            "color": {
+              "_Type_": "BuildingBlocks_ColorSolid",
+              "color": {
+                "_Type_": "SRGBA8",
+                "r": 255,
+                "g": 255,
+                "b": 255,
+                "a": 255}}}],
+        "transitions": []},
+      {
+        "_Type_": "BuildingBlocks_StyleEntry",
+        "name": "ImageDisabled",
+        "conditionsList": [
+          {
+            "_Type_": "BuildingBlocks_StyleConditionList",
+            "name": "New Condition List",
+            "conditions": [
+              {
+                "_Type_": "BuildingBlocks_StyleSelectorConditionType",
+                "type": "Image"},
+              {
+                "_Type_": "BuildingBlocks_StyleSelectorConditionTag",
+                "tag": {
+                  "_RecordPath_": "file://./../../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+                  "_RecordName_": "Tag.20c8378b-682c-45ef-a9e3-b31bc3980117",
+                  "_RecordId_": "20c8378b-682c-45ef-a9e3-b31bc3980117"}}]}],
+        "modifiers": [
+          {
+            "_Type_": "BuildingBlocks_FieldModifierColor",
+            "field": "FillColor",
+            "color": {
+              "_Type_": "BuildingBlocks_ColorSolid",
+              "color": {
+                "_Type_": "SRGBA8",
+                "r": 108,
+                "g": 108,
+                "b": 108,
+                "a": 255}}},
+          {
+            "_Type_": "BuildingBlocks_FieldModifierNumber",
+            "field": "Alpha",
+            "value": 0.5}],
+        "transitions": []},
+      {
+        "_Type_": "BuildingBlocks_StyleEntry",
+        "name": "ImageEnabled",
+        "conditionsList": [
+          {
+            "_Type_": "BuildingBlocks_StyleConditionList",
+            "name": "New Condition List",
+            "conditions": [
+              {
+                "_Type_": "BuildingBlocks_StyleSelectorConditionType",
+                "type": "Image"},
+              {
+                "_Type_": "BuildingBlocks_StyleSelectorConditionTag",
+                "tag": {
+                  "_RecordPath_": "file://./../../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+                  "_RecordName_": "Tag.4d366845-6829-4818-9ad6-e6344c1d1eed",
+                  "_RecordId_": "4d366845-6829-4818-9ad6-e6344c1d1eed"}}]}],
+        "modifiers": [
+          {
+            "_Type_": "BuildingBlocks_FieldModifierColor",
+            "field": "FillColor",
+            "color": {
+              "_Type_": "BuildingBlocks_ColorSolid",
+              "color": {
+                "_Type_": "SRGBA8",
+                "r": 102,
+                "g": 204,
+                "b": 204,
+                "a": 255}}},
+          {
+            "_Type_": "BuildingBlocks_FieldModifierNumber",
+            "field": "Alpha",
+            "value": 0.8}],
+        "transitions": []},
+      {
+        "_Type_": "BuildingBlocks_StyleEntry",
+        "name": "ImageLoadoutIcon",
+        "conditionsList": [],
+        "modifiers": [
+          {
+            "_Type_": "BuildingBlocks_FieldModifierColor",
+            "field": "FillColor",
+            "color": null}],
+        "transitions": []},
+      {
+        "_Type_": "BuildingBlocks_StyleEntry",
+        "name": "ImageHover",
+        "conditionsList": [
+          {
+            "_Type_": "BuildingBlocks_StyleConditionList",
+            "name": "New Condition List",
+            "conditions": [
+              {
+                "_Type_": "BuildingBlocks_StyleSelectorConditionType",
+                "type": "Image"},
+              {
+                "_Type_": "BuildingBlocks_StyleSelectorConditionTag",
+                "tag": {
+                  "_RecordPath_": "file://./../../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+                  "_RecordName_": "Tag.83924dc1-64f7-452e-b2a8-a8ec42ddd4eb",
+                  "_RecordId_": "83924dc1-64f7-452e-b2a8-a8ec42ddd4eb"}}]}],
+        "modifiers": [
+          {
+            "_Type_": "BuildingBlocks_FieldModifierColor",
+            "field": "FillColor",
+            "color": {
+              "_Type_": "BuildingBlocks_ColorSolid",
+              "color": {
+                "_Type_": "SRGBA8",
+                "r": 255,
+                "g": 255,
+                "b": 255,
+                "a": 255}}}],
+        "transitions": []},
+      {
+        "_Type_": "BuildingBlocks_StyleEntry",
+        "name": "ImageHoverSpecial",
+        "conditionsList": [
+          {
+            "_Type_": "BuildingBlocks_StyleConditionList",
+            "name": "New Condition List",
+            "conditions": [
+              {
+                "_Type_": "BuildingBlocks_StyleSelectorConditionType",
+                "type": "Image"},
+              {
+                "_Type_": "BuildingBlocks_StyleSelectorConditionTag",
+                "tag": {
+                  "_RecordPath_": "file://./../../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+                  "_RecordName_": "Tag.411fb889-2f3f-4ac9-9c8b-03bde09987f7",
+                  "_RecordId_": "411fb889-2f3f-4ac9-9c8b-03bde09987f7"}}]}],
+        "modifiers": [
+          {
+            "_Type_": "BuildingBlocks_FieldModifierColor",
+            "field": "FillColor",
+            "color": {
+              "_Type_": "BuildingBlocks_ColorSolid",
+              "color": {
+                "_Type_": "SRGBA8",
+                "r": 255,
+                "g": 255,
+                "b": 255,
+                "a": 255}}}],
+        "transitions": []},
+      {
+        "_Type_": "BuildingBlocks_StyleEntry",
+        "name": "SecondaryBackgroundEnabled",
+        "conditionsList": [
+          {
+            "_Type_": "BuildingBlocks_StyleConditionList",
+            "name": "New Condition List",
+            "conditions": [
+              {
+                "_Type_": "BuildingBlocks_StyleSelectorConditionTag",
+                "tag": {
+                  "_RecordPath_": "file://./../../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+                  "_RecordName_": "Tag.4d8643a1-8980-48b5-ad03-7ea6a50dc845",
+                  "_RecordId_": "4d8643a1-8980-48b5-ad03-7ea6a50dc845"}},
+              {
+                "_Type_": "BuildingBlocks_StyleSelectorConditionTag",
+                "tag": {
+                  "_RecordPath_": "file://./../../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+                  "_RecordName_": "Tag.4d366845-6829-4818-9ad6-e6344c1d1eed",
+                  "_RecordId_": "4d366845-6829-4818-9ad6-e6344c1d1eed"}}]}],
+        "modifiers": [
+          {
+            "_Type_": "BuildingBlocks_FieldModifierColor",
+            "field": "FillColor",
+            "color": {
+              "_Type_": "BuildingBlocks_ColorSolid",
+              "color": {
+                "_Type_": "SRGBA8",
+                "r": 102,
+                "g": 204,
+                "b": 204,
+                "a": 255}}},
+          {
+            "_Type_": "BuildingBlocks_FieldModifierBoolean",
+            "field": "DoFill",
+            "value": true}],
+        "transitions": []},
+      {
+        "_Type_": "BuildingBlocks_StyleEntry",
+        "name": "SecondaryBackgroundDisabled",
+        "conditionsList": [
+          {
+            "_Type_": "BuildingBlocks_StyleConditionList",
+            "name": "New Condition List",
+            "conditions": [
+              {
+                "_Type_": "BuildingBlocks_StyleSelectorConditionTag",
+                "tag": {
+                  "_RecordPath_": "file://./../../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+                  "_RecordName_": "Tag.cf0bbe25-cf44-4010-b07d-692fb3ceb8c0",
+                  "_RecordId_": "cf0bbe25-cf44-4010-b07d-692fb3ceb8c0"}},
+              {
+                "_Type_": "BuildingBlocks_StyleSelectorConditionTag",
+                "tag": {
+                  "_RecordPath_": "file://./../../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+                  "_RecordName_": "Tag.20c8378b-682c-45ef-a9e3-b31bc3980117",
+                  "_RecordId_": "20c8378b-682c-45ef-a9e3-b31bc3980117"}}]}],
+        "modifiers": [
+          {
+            "_Type_": "BuildingBlocks_FieldModifierColor",
+            "field": "BackgroundColor",
+            "color": {
+              "_Type_": "BuildingBlocks_ColorSolid",
+              "color": {
+                "_Type_": "SRGBA8",
+                "r": 0,
+                "g": 0,
+                "b": 0,
+                "a": 51}}},
+          {
+            "_Type_": "BuildingBlocks_FieldModifierBoolean",
+            "field": "EnableBackground",
+            "value": true}],
+        "transitions": []},
+      {
+        "_Type_": "BuildingBlocks_StyleEntry",
+        "name": "SecondaryBackgroundDisabled",
+        "conditionsList": [
+          {
+            "_Type_": "BuildingBlocks_StyleConditionList",
+            "name": "New Condition List",
+            "conditions": [
+              {
+                "_Type_": "BuildingBlocks_StyleSelectorConditionTag",
+                "tag": {
+                  "_RecordPath_": "file://./../../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+                  "_RecordName_": "Tag.4d8643a1-8980-48b5-ad03-7ea6a50dc845",
+                  "_RecordId_": "4d8643a1-8980-48b5-ad03-7ea6a50dc845"}},
+              {
+                "_Type_": "BuildingBlocks_StyleSelectorConditionTag",
+                "tag": {
+                  "_RecordPath_": "file://./../../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+                  "_RecordName_": "Tag.20c8378b-682c-45ef-a9e3-b31bc3980117",
+                  "_RecordId_": "20c8378b-682c-45ef-a9e3-b31bc3980117"}}]}],
+        "modifiers": [
+          {
+            "_Type_": "BuildingBlocks_FieldModifierColor",
+            "field": "FillColor",
+            "color": {
+              "_Type_": "BuildingBlocks_ColorSolid",
+              "color": {
+                "_Type_": "SRGBA8",
+                "r": 0,
+                "g": 0,
+                "b": 0,
+                "a": 51}}},
+          {
+            "_Type_": "BuildingBlocks_FieldModifierBoolean",
+            "field": "DoFill",
+            "value": true}],
+        "transitions": []},
+      {
+        "_Type_": "BuildingBlocks_StyleEntry",
+        "name": "SecondaryBackgroundSelected",
+        "conditionsList": [
+          {
+            "_Type_": "BuildingBlocks_StyleConditionList",
+            "name": "New Condition List",
+            "conditions": [
+              {
+                "_Type_": "BuildingBlocks_StyleSelectorConditionTag",
+                "tag": {
+                  "_RecordPath_": "file://./../../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+                  "_RecordName_": "Tag.cf0bbe25-cf44-4010-b07d-692fb3ceb8c0",
+                  "_RecordId_": "cf0bbe25-cf44-4010-b07d-692fb3ceb8c0"}},
+              {
+                "_Type_": "BuildingBlocks_StyleSelectorConditionTag",
+                "tag": {
+                  "_RecordPath_": "file://./../../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+                  "_RecordName_": "Tag.2b8ef038-5345-4f3a-9a06-52d4b7f7ab3a",
+                  "_RecordId_": "2b8ef038-5345-4f3a-9a06-52d4b7f7ab3a"}}]}],
+        "modifiers": [
+          {
+            "_Type_": "BuildingBlocks_FieldModifierColor",
+            "field": "BackgroundColor",
+            "color": {
+              "_Type_": "BuildingBlocks_ColorSolid",
+              "color": {
+                "_Type_": "SRGBA8",
+                "r": 102,
+                "g": 204,
+                "b": 204,
+                "a": 128}}},
+          {
+            "_Type_": "BuildingBlocks_FieldModifierBoolean",
+            "field": "EnableBackground",
+            "value": true}],
+        "transitions": []},
+      {
+        "_Type_": "BuildingBlocks_StyleEntry",
+        "name": "SecondaryBackgroundHover",
+        "conditionsList": [
+          {
+            "_Type_": "BuildingBlocks_StyleConditionList",
+            "name": "New Condition List",
+            "conditions": [
+              {
+                "_Type_": "BuildingBlocks_StyleSelectorConditionTag",
+                "tag": {
+                  "_RecordPath_": "file://./../../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+                  "_RecordName_": "Tag.cf0bbe25-cf44-4010-b07d-692fb3ceb8c0",
+                  "_RecordId_": "cf0bbe25-cf44-4010-b07d-692fb3ceb8c0"}},
+              {
+                "_Type_": "BuildingBlocks_StyleSelectorConditionTag",
+                "tag": {
+                  "_RecordPath_": "file://./../../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+                  "_RecordName_": "Tag.83924dc1-64f7-452e-b2a8-a8ec42ddd4eb",
+                  "_RecordId_": "83924dc1-64f7-452e-b2a8-a8ec42ddd4eb"}}]}],
+        "modifiers": [
+          {
+            "_Type_": "BuildingBlocks_FieldModifierColor",
+            "field": "BackgroundColor",
+            "color": {
+              "_Type_": "BuildingBlocks_ColorSolid",
+              "color": {
+                "_Type_": "SRGBA8",
+                "r": 74,
+                "g": 95,
+                "b": 98,
+                "a": 200}}},
+          {
+            "_Type_": "BuildingBlocks_FieldModifierBoolean",
+            "field": "EnableBackground",
+            "value": true}],
+        "transitions": []},
+      {
+        "_Type_": "BuildingBlocks_StyleEntry",
+        "name": "ScaleEnabled",
+        "conditionsList": [
+          {
+            "_Type_": "BuildingBlocks_StyleConditionList",
+            "name": "New Condition List",
+            "conditions": [
+              {
+                "_Type_": "BuildingBlocks_StyleSelectorConditionTag",
+                "tag": {
+                  "_RecordPath_": "file://./../../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+                  "_RecordName_": "Tag.dffad598-e8e2-4de5-a15a-aa08bb44b400",
+                  "_RecordId_": "dffad598-e8e2-4de5-a15a-aa08bb44b400"}},
+              {
+                "_Type_": "BuildingBlocks_StyleSelectorConditionTag",
+                "tag": {
+                  "_RecordPath_": "file://./../../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+                  "_RecordName_": "Tag.4d366845-6829-4818-9ad6-e6344c1d1eed",
+                  "_RecordId_": "4d366845-6829-4818-9ad6-e6344c1d1eed"}}]}],
+        "modifiers": [
+          {
+            "_Type_": "BuildingBlocks_FieldModifierNumber",
+            "field": "ScaleX",
+            "value": 0.9},
+          {
+            "_Type_": "BuildingBlocks_FieldModifierNumber",
+            "field": "ScaleY",
+            "value": 0.9}],
+        "transitions": []},
+      {
+        "_Type_": "BuildingBlocks_StyleEntry",
+        "name": "ScaleHover",
+        "conditionsList": [
+          {
+            "_Type_": "BuildingBlocks_StyleConditionList",
+            "name": "New Condition List",
+            "conditions": [
+              {
+                "_Type_": "BuildingBlocks_StyleSelectorConditionTag",
+                "tag": {
+                  "_RecordPath_": "file://./../../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+                  "_RecordName_": "Tag.dffad598-e8e2-4de5-a15a-aa08bb44b400",
+                  "_RecordId_": "dffad598-e8e2-4de5-a15a-aa08bb44b400"}},
+              {
+                "_Type_": "BuildingBlocks_StyleSelectorConditionTag",
+                "tag": {
+                  "_RecordPath_": "file://./../../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+                  "_RecordName_": "Tag.83924dc1-64f7-452e-b2a8-a8ec42ddd4eb",
+                  "_RecordId_": "83924dc1-64f7-452e-b2a8-a8ec42ddd4eb"}}]}],
+        "modifiers": [
+          {
+            "_Type_": "BuildingBlocks_FieldModifierNumber",
+            "field": "ScaleX",
+            "value": 0.95},
+          {
+            "_Type_": "BuildingBlocks_FieldModifierNumber",
+            "field": "ScaleY",
+            "value": 0.95}],
+        "transitions": []},
+      {
+        "_Type_": "BuildingBlocks_StyleEntry",
+        "name": "ScaleSelected",
+        "conditionsList": [
+          {
+            "_Type_": "BuildingBlocks_StyleConditionList",
+            "name": "New Condition List",
+            "conditions": [
+              {
+                "_Type_": "BuildingBlocks_StyleSelectorConditionTag",
+                "tag": {
+                  "_RecordPath_": "file://./../../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+                  "_RecordName_": "Tag.dffad598-e8e2-4de5-a15a-aa08bb44b400",
+                  "_RecordId_": "dffad598-e8e2-4de5-a15a-aa08bb44b400"}},
+              {
+                "_Type_": "BuildingBlocks_StyleSelectorConditionTag",
+                "tag": {
+                  "_RecordPath_": "file://./../../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+                  "_RecordName_": "Tag.2b8ef038-5345-4f3a-9a06-52d4b7f7ab3a",
+                  "_RecordId_": "2b8ef038-5345-4f3a-9a06-52d4b7f7ab3a"}}]}],
+        "modifiers": [
+          {
+            "_Type_": "BuildingBlocks_FieldModifierNumber",
+            "field": "ScaleX",
+            "value": 1.0},
+          {
+            "_Type_": "BuildingBlocks_FieldModifierNumber",
+            "field": "ScaleY",
+            "value": 1.0}],
+        "transitions": []},
+      {
+        "_Type_": "BuildingBlocks_StyleEntry",
+        "name": "ScaleDisabled",
+        "conditionsList": [
+          {
+            "_Type_": "BuildingBlocks_StyleConditionList",
+            "name": "New Condition List",
+            "conditions": [
+              {
+                "_Type_": "BuildingBlocks_StyleSelectorConditionTag",
+                "tag": {
+                  "_RecordPath_": "file://./../../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+                  "_RecordName_": "Tag.dffad598-e8e2-4de5-a15a-aa08bb44b400",
+                  "_RecordId_": "dffad598-e8e2-4de5-a15a-aa08bb44b400"}},
+              {
+                "_Type_": "BuildingBlocks_StyleSelectorConditionTag",
+                "tag": {
+                  "_RecordPath_": "file://./../../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+                  "_RecordName_": "Tag.20c8378b-682c-45ef-a9e3-b31bc3980117",
+                  "_RecordId_": "20c8378b-682c-45ef-a9e3-b31bc3980117"}}]}],
+        "modifiers": [
+          {
+            "_Type_": "BuildingBlocks_FieldModifierNumber",
+            "field": "ScaleX",
+            "value": 0.9},
+          {
+            "_Type_": "BuildingBlocks_FieldModifierNumber",
+            "field": "ScaleY",
+            "value": 0.9}],
+        "transitions": []},
+      {
+        "_Type_": "BuildingBlocks_StyleEntry",
+        "name": "ScaleHoverInternal",
+        "conditionsList": [
+          {
+            "_Type_": "BuildingBlocks_StyleConditionList",
+            "name": "New Condition List",
+            "conditions": [
+              {
+                "_Type_": "BuildingBlocks_StyleSelectorConditionTag",
+                "tag": {
+                  "_RecordPath_": "file://./../../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+                  "_RecordName_": "Tag.dffad598-e8e2-4de5-a15a-aa08bb44b400",
+                  "_RecordId_": "dffad598-e8e2-4de5-a15a-aa08bb44b400"}},
+              {
+                "_Type_": "BuildingBlocks_StyleSelectorConditionTag",
+                "tag": {
+                  "_RecordPath_": "file://./../../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+                  "_RecordName_": "Tag.b567faeb-8da9-4d5f-a220-369531071389",
+                  "_RecordId_": "b567faeb-8da9-4d5f-a220-369531071389"}}]}],
+        "modifiers": [
+          {
+            "_Type_": "BuildingBlocks_FieldModifierNumber",
+            "field": "ScaleX",
+            "value": 0.9},
+          {
+            "_Type_": "BuildingBlocks_FieldModifierNumber",
+            "field": "ScaleY",
+            "value": 0.9}],
+        "transitions": []},
+      {
+        "_Type_": "BuildingBlocks_StyleEntry",
+        "name": "PrimaryBackgroundEnabled",
+        "conditionsList": [
+          {
+            "_Type_": "BuildingBlocks_StyleConditionList",
+            "name": "New Condition List",
+            "conditions": [
+              {
+                "_Type_": "BuildingBlocks_StyleSelectorConditionTag",
+                "tag": {
+                  "_RecordPath_": "file://./../../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+                  "_RecordName_": "Tag.dfea6ea9-a118-48e5-87af-e1d766114942",
+                  "_RecordId_": "dfea6ea9-a118-48e5-87af-e1d766114942"}},
+              {
+                "_Type_": "BuildingBlocks_StyleSelectorConditionTag",
+                "tag": {
+                  "_RecordPath_": "file://./../../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+                  "_RecordName_": "Tag.f110a310-0d5c-482b-a832-0bdb098705ad",
+                  "_RecordId_": "f110a310-0d5c-482b-a832-0bdb098705ad"}}]}],
+        "modifiers": [
+          {
+            "_Type_": "BuildingBlocks_FieldModifierColor",
+            "field": "BackgroundColor",
+            "color": {
+              "_Type_": "BuildingBlocks_ColorSolid",
+              "color": {
+                "_Type_": "SRGBA8",
+                "r": 155,
+                "g": 0,
+                "b": 0,
+                "a": 204}}},
+          {
+            "_Type_": "BuildingBlocks_FieldModifierBoolean",
+            "field": "EnableBackground",
+            "value": true}],
+        "transitions": []},
+      {
+        "_Type_": "BuildingBlocks_StyleEntry",
+        "name": "Text_Style_Heading_01",
+        "conditionsList": [
+          {
+            "_Type_": "BuildingBlocks_StyleConditionList",
+            "name": "New Condition List",
+            "conditions": [
+              {
+                "_Type_": "BuildingBlocks_StyleSelectorConditionAllOfCondition",
+                "conditions": [
+                  {
+                    "_Type_": "BuildingBlocks_StyleSelectorConditionTag",
+                    "tag": {
+                      "_RecordPath_": "file://./../../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+                      "_RecordName_": "Tag.054acbe6-7f3b-4be4-a51f-4d94697195b0",
+                      "_RecordId_": "054acbe6-7f3b-4be4-a51f-4d94697195b0"}},
+                  {
+                    "_Type_": "BuildingBlocks_StyleSelectorConditionType",
+                    "type": "Text"}]}]}],
+        "modifiers": [
+          {
+            "_Type_": "BuildingBlocks_FieldModifierRecordRef",
+            "field": {
+              "_Type_": "BuildingBlocks_FieldModifierRecordRefTypeFontStyleRecord",
+              "value": "file://./../../../../../../../libs/foundry/records/ui/buildingblocks/fontstyles/blenderpro-medium.json"}},
+          {
+            "_Type_": "BuildingBlocks_FieldModifierNumber",
+            "field": "FontSize",
+            "value": 32.0},
+          {
+            "_Type_": "BuildingBlocks_FieldModifierEnumerated",
+            "field": {
+              "_Type_": "BuildingBlocks_FieldModifierEnumeratedTypeCaseModifier",
+              "value": "Upper"}}],
+        "transitions": []},
+      {
+        "_Type_": "BuildingBlocks_StyleEntry",
+        "name": "Text_Style_Heading_02",
+        "conditionsList": [
+          {
+            "_Type_": "BuildingBlocks_StyleConditionList",
+            "name": "New Condition List",
+            "conditions": [
+              {
+                "_Type_": "BuildingBlocks_StyleSelectorConditionAllOfCondition",
+                "conditions": [
+                  {
+                    "_Type_": "BuildingBlocks_StyleSelectorConditionTag",
+                    "tag": {
+                      "_RecordPath_": "file://./../../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+                      "_RecordName_": "Tag.52b7f545-8dcf-44cc-8ed9-830407990794",
+                      "_RecordId_": "52b7f545-8dcf-44cc-8ed9-830407990794"}},
+                  {
+                    "_Type_": "BuildingBlocks_StyleSelectorConditionType",
+                    "type": "Text"}]}]}],
+        "modifiers": [
+          {
+            "_Type_": "BuildingBlocks_FieldModifierRecordRef",
+            "field": {
+              "_Type_": "BuildingBlocks_FieldModifierRecordRefTypeFontStyleRecord",
+              "value": "file://./../../../../../../../libs/foundry/records/ui/buildingblocks/fontstyles/blenderpro-book.json"}},
+          {
+            "_Type_": "BuildingBlocks_FieldModifierNumber",
+            "field": "FontSize",
+            "value": 17.0},
+          {
+            "_Type_": "BuildingBlocks_FieldModifierEnumerated",
+            "field": {
+              "_Type_": "BuildingBlocks_FieldModifierEnumeratedTypeCaseModifier",
+              "value": "Upper"}}],
+        "transitions": []},
+      {
+        "_Type_": "BuildingBlocks_StyleEntry",
+        "name": "Text_Style_Heading_03",
+        "conditionsList": [
+          {
+            "_Type_": "BuildingBlocks_StyleConditionList",
+            "name": "New Condition List",
+            "conditions": [
+              {
+                "_Type_": "BuildingBlocks_StyleSelectorConditionAllOfCondition",
+                "conditions": [
+                  {
+                    "_Type_": "BuildingBlocks_StyleSelectorConditionTag",
+                    "tag": {
+                      "_RecordPath_": "file://./../../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+                      "_RecordName_": "Tag.94f25afd-16a3-4c51-a995-1ca5e4227061",
+                      "_RecordId_": "94f25afd-16a3-4c51-a995-1ca5e4227061"}},
+                  {
+                    "_Type_": "BuildingBlocks_StyleSelectorConditionType",
+                    "type": "Text"}]}]}],
+        "modifiers": [
+          {
+            "_Type_": "BuildingBlocks_FieldModifierRecordRef",
+            "field": {
+              "_Type_": "BuildingBlocks_FieldModifierRecordRefTypeFontStyleRecord",
+              "value": "file://./../../../../../../../libs/foundry/records/ui/buildingblocks/fontstyles/blenderpro-medium.json"}},
+          {
+            "_Type_": "BuildingBlocks_FieldModifierNumber",
+            "field": "FontSize",
+            "value": 20.0},
+          {
+            "_Type_": "BuildingBlocks_FieldModifierEnumerated",
+            "field": {
+              "_Type_": "BuildingBlocks_FieldModifierEnumeratedTypeCaseModifier",
+              "value": "Upper"}}],
+        "transitions": []},
+      {
+        "_Type_": "BuildingBlocks_StyleEntry",
+        "name": "Text_Style_Heading_04",
+        "conditionsList": [
+          {
+            "_Type_": "BuildingBlocks_StyleConditionList",
+            "name": "New Condition List",
+            "conditions": [
+              {
+                "_Type_": "BuildingBlocks_StyleSelectorConditionAllOfCondition",
+                "conditions": [
+                  {
+                    "_Type_": "BuildingBlocks_StyleSelectorConditionTag",
+                    "tag": {
+                      "_RecordPath_": "file://./../../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+                      "_RecordName_": "Tag.ae4e7e91-9cc2-4747-b224-eba06fd007ee",
+                      "_RecordId_": "ae4e7e91-9cc2-4747-b224-eba06fd007ee"}},
+                  {
+                    "_Type_": "BuildingBlocks_StyleSelectorConditionType",
+                    "type": "Text"}]}]}],
+        "modifiers": [
+          {
+            "_Type_": "BuildingBlocks_FieldModifierRecordRef",
+            "field": {
+              "_Type_": "BuildingBlocks_FieldModifierRecordRefTypeFontStyleRecord",
+              "value": "file://./../../../../../../../libs/foundry/records/ui/buildingblocks/fontstyles/blenderpro-medium.json"}},
+          {
+            "_Type_": "BuildingBlocks_FieldModifierNumber",
+            "field": "FontSize",
+            "value": 17.0},
+          {
+            "_Type_": "BuildingBlocks_FieldModifierEnumerated",
+            "field": {
+              "_Type_": "BuildingBlocks_FieldModifierEnumeratedTypeCaseModifier",
+              "value": "Upper"}}],
+        "transitions": []},
+      {
+        "_Type_": "BuildingBlocks_StyleEntry",
+        "name": "Text_Style_Body_01",
+        "conditionsList": [
+          {
+            "_Type_": "BuildingBlocks_StyleConditionList",
+            "name": "New Condition List",
+            "conditions": [
+              {
+                "_Type_": "BuildingBlocks_StyleSelectorConditionAllOfCondition",
+                "conditions": [
+                  {
+                    "_Type_": "BuildingBlocks_StyleSelectorConditionTag",
+                    "tag": {
+                      "_RecordPath_": "file://./../../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+                      "_RecordName_": "Tag.7ed58d43-8ac2-4678-8641-79caeee5d72d",
+                      "_RecordId_": "7ed58d43-8ac2-4678-8641-79caeee5d72d"}},
+                  {
+                    "_Type_": "BuildingBlocks_StyleSelectorConditionType",
+                    "type": "Text"}]}]}],
+        "modifiers": [
+          {
+            "_Type_": "BuildingBlocks_FieldModifierRecordRef",
+            "field": {
+              "_Type_": "BuildingBlocks_FieldModifierRecordRefTypeFontStyleRecord",
+              "value": "file://./../../../../../../../libs/foundry/records/ui/buildingblocks/fontstyles/blenderpro-bold.json"}},
+          {
+            "_Type_": "BuildingBlocks_FieldModifierNumber",
+            "field": "FontSize",
+            "value": 12.0},
+          {
+            "_Type_": "BuildingBlocks_FieldModifierEnumerated",
+            "field": {
+              "_Type_": "BuildingBlocks_FieldModifierEnumeratedTypeCaseModifier",
+              "value": "Upper"}}],
+        "transitions": []},
+      {
+        "_Type_": "BuildingBlocks_StyleEntry",
+        "name": "Text_Style_Body_02",
+        "conditionsList": [
+          {
+            "_Type_": "BuildingBlocks_StyleConditionList",
+            "name": "New Condition List",
+            "conditions": [
+              {
+                "_Type_": "BuildingBlocks_StyleSelectorConditionAllOfCondition",
+                "conditions": [
+                  {
+                    "_Type_": "BuildingBlocks_StyleSelectorConditionTag",
+                    "tag": {
+                      "_RecordPath_": "file://./../../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+                      "_RecordName_": "Tag.ae09edfc-5836-4392-baca-0042d8258e3f",
+                      "_RecordId_": "ae09edfc-5836-4392-baca-0042d8258e3f"}},
+                  {
+                    "_Type_": "BuildingBlocks_StyleSelectorConditionType",
+                    "type": "Text"}]}]}],
+        "modifiers": [
+          {
+            "_Type_": "BuildingBlocks_FieldModifierRecordRef",
+            "field": {
+              "_Type_": "BuildingBlocks_FieldModifierRecordRefTypeFontStyleRecord",
+              "value": "file://./../../../../../../../libs/foundry/records/ui/buildingblocks/fontstyles/titilliumweb-regular.json"}},
+          {
+            "_Type_": "BuildingBlocks_FieldModifierNumber",
+            "field": "FontSize",
+            "value": 14.0},
+          {
+            "_Type_": "BuildingBlocks_FieldModifierEnumerated",
+            "field": {
+              "_Type_": "BuildingBlocks_FieldModifierEnumeratedTypeCaseModifier",
+              "value": "None"}},
+          {
+            "_Type_": "BuildingBlocks_FieldModifierNumber",
+            "field": "LineSpacing",
+            "value": 2.0}],
+        "transitions": []},
+      {
+        "_Type_": "BuildingBlocks_StyleEntry",
+        "name": "Text_Style_Tittle_02",
+        "conditionsList": [
+          {
+            "_Type_": "BuildingBlocks_StyleConditionList",
+            "name": "New Condition List",
+            "conditions": [
+              {
+                "_Type_": "BuildingBlocks_StyleSelectorConditionAllOfCondition",
+                "conditions": [
+                  {
+                    "_Type_": "BuildingBlocks_StyleSelectorConditionTag",
+                    "tag": {
+                      "_RecordPath_": "file://./../../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+                      "_RecordName_": "Tag.c323724f-d340-40ab-9a83-03daff4690ec",
+                      "_RecordId_": "c323724f-d340-40ab-9a83-03daff4690ec"}},
+                  {
+                    "_Type_": "BuildingBlocks_StyleSelectorConditionType",
+                    "type": "Text"}]}]}],
+        "modifiers": [
+          {
+            "_Type_": "BuildingBlocks_FieldModifierRecordRef",
+            "field": {
+              "_Type_": "BuildingBlocks_FieldModifierRecordRefTypeFontStyleRecord",
+              "value": "file://./../../../../../../../libs/foundry/records/ui/buildingblocks/fontstyles/blenderpro-book.json"}},
+          {
+            "_Type_": "BuildingBlocks_FieldModifierNumber",
+            "field": "FontSize",
+            "value": 50.0},
+          {
+            "_Type_": "BuildingBlocks_FieldModifierEnumerated",
+            "field": {
+              "_Type_": "BuildingBlocks_FieldModifierEnumeratedTypeCaseModifier",
+              "value": "Upper"}}],
+        "transitions": []},
+      {
+        "_Type_": "BuildingBlocks_StyleEntry",
+        "name": "Text_Style_Tittle_01",
+        "conditionsList": [
+          {
+            "_Type_": "BuildingBlocks_StyleConditionList",
+            "name": "New Condition List",
+            "conditions": [
+              {
+                "_Type_": "BuildingBlocks_StyleSelectorConditionAllOfCondition",
+                "conditions": [
+                  {
+                    "_Type_": "BuildingBlocks_StyleSelectorConditionTag",
+                    "tag": {
+                      "_RecordPath_": "file://./../../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+                      "_RecordName_": "Tag.d77b6940-1f24-4e41-b57f-8c6ae5924616",
+                      "_RecordId_": "d77b6940-1f24-4e41-b57f-8c6ae5924616"}},
+                  {
+                    "_Type_": "BuildingBlocks_StyleSelectorConditionType",
+                    "type": "Text"}]}]}],
+        "modifiers": [
+          {
+            "_Type_": "BuildingBlocks_FieldModifierRecordRef",
+            "field": {
+              "_Type_": "BuildingBlocks_FieldModifierRecordRefTypeFontStyleRecord",
+              "value": "file://./../../../../../../../libs/foundry/records/ui/buildingblocks/fontstyles/blenderpro-book.json"}},
+          {
+            "_Type_": "BuildingBlocks_FieldModifierNumber",
+            "field": "FontSize",
+            "value": 60.0},
+          {
+            "_Type_": "BuildingBlocks_FieldModifierEnumerated",
+            "field": {
+              "_Type_": "BuildingBlocks_FieldModifierEnumeratedTypeCaseModifier",
+              "value": "Upper"}}],
+        "transitions": []},
+      {
+        "_Type_": "BuildingBlocks_StyleEntry",
+        "name": "Text_Style_Subtitle",
+        "conditionsList": [
+          {
+            "_Type_": "BuildingBlocks_StyleConditionList",
+            "name": "New Condition List",
+            "conditions": [
+              {
+                "_Type_": "BuildingBlocks_StyleSelectorConditionAllOfCondition",
+                "conditions": [
+                  {
+                    "_Type_": "BuildingBlocks_StyleSelectorConditionTag",
+                    "tag": {
+                      "_RecordPath_": "file://./../../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+                      "_RecordName_": "Tag.87a2a066-7b83-405c-b0d0-decfc5050f25",
+                      "_RecordId_": "87a2a066-7b83-405c-b0d0-decfc5050f25"}},
+                  {
+                    "_Type_": "BuildingBlocks_StyleSelectorConditionType",
+                    "type": "Text"}]}]}],
+        "modifiers": [
+          {
+            "_Type_": "BuildingBlocks_FieldModifierRecordRef",
+            "field": {
+              "_Type_": "BuildingBlocks_FieldModifierRecordRefTypeFontStyleRecord",
+              "value": "file://./../../../../../../../libs/foundry/records/ui/buildingblocks/fontstyles/blenderpro-book.json"}},
+          {
+            "_Type_": "BuildingBlocks_FieldModifierNumber",
+            "field": "FontSize",
+            "value": 20.0},
+          {
+            "_Type_": "BuildingBlocks_FieldModifierEnumerated",
+            "field": {
+              "_Type_": "BuildingBlocks_FieldModifierEnumeratedTypeCaseModifier",
+              "value": "Upper"}}],
+        "transitions": []},
+      {
+        "_Type_": "BuildingBlocks_StyleEntry",
+        "name": "Text_Style_Heading_05",
+        "conditionsList": [
+          {
+            "_Type_": "BuildingBlocks_StyleConditionList",
+            "name": "New Condition List",
+            "conditions": [
+              {
+                "_Type_": "BuildingBlocks_StyleSelectorConditionAllOfCondition",
+                "conditions": [
+                  {
+                    "_Type_": "BuildingBlocks_StyleSelectorConditionTag",
+                    "tag": {
+                      "_RecordPath_": "file://./../../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+                      "_RecordName_": "Tag.71941cc7-398e-453e-9dce-d878e1b4ec39",
+                      "_RecordId_": "71941cc7-398e-453e-9dce-d878e1b4ec39"}},
+                  {
+                    "_Type_": "BuildingBlocks_StyleSelectorConditionType",
+                    "type": "Text"}]}]}],
+        "modifiers": [
+          {
+            "_Type_": "BuildingBlocks_FieldModifierRecordRef",
+            "field": {
+              "_Type_": "BuildingBlocks_FieldModifierRecordRefTypeFontStyleRecord",
+              "value": "file://./../../../../../../../libs/foundry/records/ui/buildingblocks/fontstyles/blenderpro-book.json"}},
+          {
+            "_Type_": "BuildingBlocks_FieldModifierNumber",
+            "field": "FontSize",
+            "value": 17.0},
+          {
+            "_Type_": "BuildingBlocks_FieldModifierEnumerated",
+            "field": {
+              "_Type_": "BuildingBlocks_FieldModifierEnumeratedTypeCaseModifier",
+              "value": "Upper"}}],
+        "transitions": []},
+      {
+        "_Type_": "BuildingBlocks_StyleEntry",
+        "name": "Text_Style_Heading_06",
+        "conditionsList": [
+          {
+            "_Type_": "BuildingBlocks_StyleConditionList",
+            "name": "New Condition List",
+            "conditions": [
+              {
+                "_Type_": "BuildingBlocks_StyleSelectorConditionAllOfCondition",
+                "conditions": [
+                  {
+                    "_Type_": "BuildingBlocks_StyleSelectorConditionTag",
+                    "tag": {
+                      "_RecordPath_": "file://./../../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+                      "_RecordName_": "Tag.520fe45f-88da-40ed-a203-aede0535eec9",
+                      "_RecordId_": "520fe45f-88da-40ed-a203-aede0535eec9"}},
+                  {
+                    "_Type_": "BuildingBlocks_StyleSelectorConditionType",
+                    "type": "Text"}]}]}],
+        "modifiers": [
+          {
+            "_Type_": "BuildingBlocks_FieldModifierRecordRef",
+            "field": {
+              "_Type_": "BuildingBlocks_FieldModifierRecordRefTypeFontStyleRecord",
+              "value": "file://./../../../../../../../libs/foundry/records/ui/buildingblocks/fontstyles/blenderpro-book.json"}},
+          {
+            "_Type_": "BuildingBlocks_FieldModifierNumber",
+            "field": "FontSize",
+            "value": 17.0},
+          {
+            "_Type_": "BuildingBlocks_FieldModifierEnumerated",
+            "field": {
+              "_Type_": "BuildingBlocks_FieldModifierEnumeratedTypeCaseModifier",
+              "value": "Upper"}}],
+        "transitions": []},
+      {
+        "_Type_": "BuildingBlocks_StyleEntry",
+        "name": "Text_Style_Heading_07",
+        "conditionsList": [
+          {
+            "_Type_": "BuildingBlocks_StyleConditionList",
+            "name": "New Condition List",
+            "conditions": [
+              {
+                "_Type_": "BuildingBlocks_StyleSelectorConditionAllOfCondition",
+                "conditions": [
+                  {
+                    "_Type_": "BuildingBlocks_StyleSelectorConditionTag",
+                    "tag": {
+                      "_RecordPath_": "file://./../../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+                      "_RecordName_": "Tag.76648e73-464c-463c-b09c-33711a535b06",
+                      "_RecordId_": "76648e73-464c-463c-b09c-33711a535b06"}},
+                  {
+                    "_Type_": "BuildingBlocks_StyleSelectorConditionType",
+                    "type": "Text"}]}]}],
+        "modifiers": [
+          {
+            "_Type_": "BuildingBlocks_FieldModifierRecordRef",
+            "field": {
+              "_Type_": "BuildingBlocks_FieldModifierRecordRefTypeFontStyleRecord",
+              "value": "file://./../../../../../../../libs/foundry/records/ui/buildingblocks/fontstyles/blenderpro-medium.json"}},
+          {
+            "_Type_": "BuildingBlocks_FieldModifierNumber",
+            "field": "FontSize",
+            "value": 16.0},
+          {
+            "_Type_": "BuildingBlocks_FieldModifierEnumerated",
+            "field": {
+              "_Type_": "BuildingBlocks_FieldModifierEnumeratedTypeCaseModifier",
+              "value": "Upper"}}],
+        "transitions": []},
+      {
+        "_Type_": "BuildingBlocks_StyleEntry",
+        "name": "Text_Style_Heading_08",
+        "conditionsList": [
+          {
+            "_Type_": "BuildingBlocks_StyleConditionList",
+            "name": "New Condition List",
+            "conditions": [
+              {
+                "_Type_": "BuildingBlocks_StyleSelectorConditionAllOfCondition",
+                "conditions": [
+                  {
+                    "_Type_": "BuildingBlocks_StyleSelectorConditionTag",
+                    "tag": {
+                      "_RecordPath_": "file://./../../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+                      "_RecordName_": "Tag.ab3c1cc2-87b2-40fb-9481-84b79ea5fbf0",
+                      "_RecordId_": "ab3c1cc2-87b2-40fb-9481-84b79ea5fbf0"}},
+                  {
+                    "_Type_": "BuildingBlocks_StyleSelectorConditionType",
+                    "type": "Text"}]}]}],
+        "modifiers": [
+          {
+            "_Type_": "BuildingBlocks_FieldModifierRecordRef",
+            "field": {
+              "_Type_": "BuildingBlocks_FieldModifierRecordRefTypeFontStyleRecord",
+              "value": "file://./../../../../../../../libs/foundry/records/ui/buildingblocks/fontstyles/blenderpro-medium.json"}},
+          {
+            "_Type_": "BuildingBlocks_FieldModifierNumber",
+            "field": "FontSize",
+            "value": 10.0},
+          {
+            "_Type_": "BuildingBlocks_FieldModifierEnumerated",
+            "field": {
+              "_Type_": "BuildingBlocks_FieldModifierEnumeratedTypeCaseModifier",
+              "value": "Upper"}}],
+        "transitions": []},
+      {
+        "_Type_": "BuildingBlocks_StyleEntry",
+        "name": "Text_Style_Body_03",
+        "conditionsList": [
+          {
+            "_Type_": "BuildingBlocks_StyleConditionList",
+            "name": "New Condition List",
+            "conditions": [
+              {
+                "_Type_": "BuildingBlocks_StyleSelectorConditionAllOfCondition",
+                "conditions": [
+                  {
+                    "_Type_": "BuildingBlocks_StyleSelectorConditionTag",
+                    "tag": {
+                      "_RecordPath_": "file://./../../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+                      "_RecordName_": "Tag.7e1140c3-76cd-4f52-96b8-660f378b132b",
+                      "_RecordId_": "7e1140c3-76cd-4f52-96b8-660f378b132b"}},
+                  {
+                    "_Type_": "BuildingBlocks_StyleSelectorConditionType",
+                    "type": "Text"}]}]}],
+        "modifiers": [
+          {
+            "_Type_": "BuildingBlocks_FieldModifierRecordRef",
+            "field": {
+              "_Type_": "BuildingBlocks_FieldModifierRecordRefTypeFontStyleRecord",
+              "value": "file://./../../../../../../../libs/foundry/records/ui/buildingblocks/fontstyles/blenderpro-book.json"}},
+          {
+            "_Type_": "BuildingBlocks_FieldModifierNumber",
+            "field": "FontSize",
+            "value": 18.0},
+          {
+            "_Type_": "BuildingBlocks_FieldModifierEnumerated",
+            "field": {
+              "_Type_": "BuildingBlocks_FieldModifierEnumeratedTypeCaseModifier",
+              "value": "None"}},
+          {
+            "_Type_": "BuildingBlocks_FieldModifierNumber",
+            "field": "LineSpacing",
+            "value": 3.5}],
+        "transitions": []},
+      {
+        "_Type_": "BuildingBlocks_StyleEntry",
+        "name": "Global_Section_Greeble",
+        "conditionsList": [
+          {
+            "_Type_": "BuildingBlocks_StyleConditionList",
+            "name": "New Condition List",
+            "conditions": [
+              {
+                "_Type_": "BuildingBlocks_StyleSelectorConditionAllOfCondition",
+                "conditions": [
+                  {
+                    "_Type_": "BuildingBlocks_StyleSelectorConditionType",
+                    "type": "CustomShape"},
+                  {
+                    "_Type_": "BuildingBlocks_StyleSelectorConditionTag",
+                    "tag": {
+                      "_RecordPath_": "file://./../../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+                      "_RecordName_": "Tag.3b5de03e-7bec-40b5-9b9d-32d0353d2190",
+                      "_RecordId_": "3b5de03e-7bec-40b5-9b9d-32d0353d2190"}}]}]}],
+        "modifiers": [
+          {
+            "_Type_": "BuildingBlocks_FieldModifierString",
+            "field": "SvgPath",
+            "value": "UI/Textures/Vector/EA/Frontend/EA_FEnd_Greeble_Game_Type_Tittle.svg"},
+          {
+            "_Type_": "BuildingBlocks_FieldModifierEnumerated",
+            "field": {
+              "_Type_": "BuildingBlocks_FieldModifierEnumeratedTypeSvgScalingBehavior",
+              "value": "StretchX"}},
+          {
+            "_Type_": "BuildingBlocks_FieldModifierBoolean",
+            "field": "EnableNineSliceRect",
+            "value": true},
+          {
+            "_Type_": "BuildingBlocks_FieldModifierBoolean",
+            "field": "EnableColorOverlay",
+            "value": true},
+          {
+            "_Type_": "BuildingBlocks_FieldModifierColor",
+            "field": "FillColor",
+            "color": {
+              "_Type_": "BuildingBlocks_ColorStyle",
+              "color": "Base",
+              "alpha": 1.0}}],
+        "transitions": []}],
+    "colorStyles": [
+      {
+        "_Type_": "BuildingBlocks_ColorSolid",
+        "color": {
+          "_Type_": "SRGBA8",
+          "r": 162,
+          "g": 225,
+          "b": 243,
+          "a": 255}},
+      {
+        "_Type_": "BuildingBlocks_ColorSolid",
+        "color": {
+          "_Type_": "SRGBA8",
+          "r": 0,
+          "g": 255,
+          "b": 0,
+          "a": 255}},
+      {
+        "_Type_": "BuildingBlocks_ColorSolid",
+        "color": {
+          "_Type_": "SRGBA8",
+          "r": 255,
+          "g": 255,
+          "b": 255,
+          "a": 255}},
+      {
+        "_Type_": "BuildingBlocks_ColorSolid",
+        "color": {
+          "_Type_": "SRGBA8",
+          "r": 255,
+          "g": 0,
+          "b": 0,
+          "a": 255}},
+      {
+        "_Type_": "BuildingBlocks_ColorSolid",
+        "color": {
+          "_Type_": "SRGBA8",
+          "r": 85,
+          "g": 246,
+          "b": 194,
+          "a": 255}},
+      {
+        "_Type_": "BuildingBlocks_ColorSolid",
+        "color": {
+          "_Type_": "SRGBA8",
+          "r": 252,
+          "g": 238,
+          "b": 33,
+          "a": 255}},
+      {
+        "_Type_": "BuildingBlocks_ColorSolid",
+        "color": {
+          "_Type_": "SRGBA8",
+          "r": 2,
+          "g": 255,
+          "b": 255,
+          "a": 255}},
+      null,
+      {
+        "_Type_": "BuildingBlocks_ColorSolid",
+        "color": {
+          "_Type_": "SRGBA8",
+          "r": 53,
+          "g": 53,
+          "b": 53,
+          "a": 255}},
+      {
+        "_Type_": "BuildingBlocks_ColorSolid",
+        "color": {
+          "_Type_": "SRGBA8",
+          "r": 0,
+          "g": 11,
+          "b": 22,
+          "a": 255}},
+      {
+        "_Type_": "BuildingBlocks_ColorSolid",
+        "color": {
+          "_Type_": "SRGBA8",
+          "r": 33,
+          "g": 54,
+          "b": 66,
+          "a": 255}},
+      null,
+      null,
+      null,
+      null,
+      null,
+      null],
+    "textFieldModifiers": []}}

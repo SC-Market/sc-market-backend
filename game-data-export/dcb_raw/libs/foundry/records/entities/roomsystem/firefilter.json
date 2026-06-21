@@ -1,0 +1,31 @@
+{
+  "_RecordName_": "EntityClassDefinition.FireFilter",
+  "_RecordId_": "c4faef08-90c1-4cf4-944d-cb91c84a3a59",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "EntityClassDefinition",
+    "Category": "Room/Fire",
+    "Icon": "Box.bmp",
+    "Invisible": false,
+    "BBoxSelection": false,
+    "defaultEditorColor": {
+      "_Type_": "RGB",
+      "r": 1.0,
+      "g": 1.0,
+      "b": 0.0},
+    "entityDensityClass": null,
+    "tags": [],
+    "StaticEntityClassData": [],
+    "Components": [
+      {
+        "_Type_": "EntityComponentRoomOccupantParams"},
+      {
+        "_Type_": "EntityComponentFireFilter",
+        "mode": "Exclude",
+        "shape": {
+          "_Type_": "FireVoxelSelectionShape_Box",
+          "size": {
+            "_Type_": "Vec3",
+            "x": 4.0,
+            "y": 4.0,
+            "z": 4.0}}}]}}

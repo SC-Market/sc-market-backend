@@ -1,0 +1,41 @@
+{
+  "_RecordName_": "MineableComposition.RareShipMineablesAsteroid_Gold",
+  "_RecordId_": "5a862c96-f156-4dba-94fb-a159166100f3",
+  "_RecordTag_": "SystemsDesign",
+  "_RecordValue_": {
+    "_Type_": "MineableComposition",
+    "depositName": "@items_commodities_gold_ore",
+    "minimumDistinctElements": 4,
+    "compositionArray": [
+      {
+        "_Type_": "MineableCompositionPart",
+        "mineableElement": "file://./../../../../../../libs/foundry/records/mining/mineableelements/gold_ore.json",
+        "minPercentage": 5.7,
+        "maxPercentage": 11.7,
+        "probability": 1.0,
+        "curveExponent": 1.0,
+        "qualityScale": 1.0},
+      {
+        "_Type_": "MineableCompositionPart",
+        "mineableElement": "file://./../../../../../../libs/foundry/records/mining/mineableelements/gold_ore.json",
+        "minPercentage": 28.3,
+        "maxPercentage": 78.3,
+        "probability": 1.0,
+        "curveExponent": 1.0,
+        "qualityScale": 0.49},
+      {
+        "_Type_": "MineableCompositionPart",
+        "mineableElement": "file://./../../../../../../libs/foundry/records/mining/mineableelements/borase_ore.json",
+        "minPercentage": 2.0,
+        "maxPercentage": 5.0,
+        "probability": 1.0,
+        "curveExponent": 1.0,
+        "qualityScale": 0.789},
+      {
+        "_Type_": "MineableCompositionPart",
+        "mineableElement": "file://./../../../../../../libs/foundry/records/mining/mineableelements/bexalite_raw.json",
+        "minPercentage": 2.0,
+        "maxPercentage": 5.0,
+        "probability": 1.0,
+        "curveExponent": 1.0,
+        "qualityScale": 0.789}]}}

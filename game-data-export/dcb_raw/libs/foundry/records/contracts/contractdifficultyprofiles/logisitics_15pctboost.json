@@ -1,0 +1,10 @@
+{
+  "_RecordName_": "ContractDifficultyProfile.Logisitics_15pctBoost",
+  "_RecordId_": "4f9a725e-e872-4c24-9e5f-ad324251cd17",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "ContractDifficultyProfile",
+    "mechanicalSkillWeight": 0.14,
+    "mentalLoadWeight": 0.49,
+    "riskOfLossWeight": 0.36,
+    "gameKnowledgeWeight": 0.14}}

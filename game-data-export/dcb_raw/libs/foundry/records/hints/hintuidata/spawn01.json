@@ -1,0 +1,12 @@
+{
+  "_RecordName_": "HintUIData.Spawn01",
+  "_RecordId_": "4e7f594f-f24f-4822-9105-dbb0b9dd6940",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "HintUIData",
+    "TitleText": "@Hints_Exit_Bed_Title",
+    "BodyText": "@Hints_Spawn01",
+    "BodyTextGamePad": "@Hints_Spawn01",
+    "BodyTextJoystick": "@Hints_Spawn01",
+    "TitleImagePath": "",
+    "BodyImagePath": ""}}

@@ -1,0 +1,75 @@
+{
+  "_RecordName_": "BuildingBlocks_Timeline.AS_Scan_Draw_C",
+  "_RecordId_": "d1aef79f-aa17-47fd-ab6a-5b4384d87fbc",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "BuildingBlocks_Timeline",
+    "timeline": {
+      "_Type_": "BuildingBlocks_TimelineTypeEmbedded",
+      "keyframes": [
+        {
+          "_Type_": "BuildingBlocks_Keyframe",
+          "percent": 0.0,
+          "modifiers": [
+            {
+              "_Type_": "BuildingBlocks_KeyframeModifierData",
+              "timingFunction": {
+                "_Type_": "BuildingBlocks_TimingFunctionPreset",
+                "preset": "EaseInCubic"},
+              "modifier": {
+                "_Type_": "BuildingBlocks_FieldModifierNumber",
+                "field": "StrokeExtent",
+                "value": 0.0}},
+            {
+              "_Type_": "BuildingBlocks_KeyframeModifierData",
+              "timingFunction": {
+                "_Type_": "BuildingBlocks_TimingFunctionPreset",
+                "preset": "EaseInCubic"},
+              "modifier": {
+                "_Type_": "BuildingBlocks_FieldModifierNumber",
+                "field": "Alpha",
+                "value": 0.0}}]},
+        {
+          "_Type_": "BuildingBlocks_Keyframe",
+          "percent": 0.5,
+          "modifiers": [
+            {
+              "_Type_": "BuildingBlocks_KeyframeModifierData",
+              "timingFunction": {
+                "_Type_": "BuildingBlocks_TimingFunctionPreset",
+                "preset": "Linear"},
+              "modifier": {
+                "_Type_": "BuildingBlocks_FieldModifierNumber",
+                "field": "StrokeExtent",
+                "value": 0.45}},
+            {
+              "_Type_": "BuildingBlocks_KeyframeModifierData",
+              "timingFunction": {
+                "_Type_": "BuildingBlocks_TimingFunctionPreset",
+                "preset": "Linear"},
+              "modifier": {
+                "_Type_": "BuildingBlocks_FieldModifierNumber",
+                "field": "Alpha",
+                "value": 0.25}}]},
+        {
+          "_Type_": "BuildingBlocks_Keyframe",
+          "percent": 1.0,
+          "modifiers": [
+            {
+              "_Type_": "BuildingBlocks_KeyframeModifierData",
+              "timingFunction": {
+                "_Type_": "BuildingBlocks_TimingFunctionPreset",
+                "preset": "EaseOutCubic"},
+              "modifier": {
+                "_Type_": "BuildingBlocks_FieldModifierNumber",
+                "field": "StrokeExtent",
+                "value": 0.9}},
+            {
+              "_Type_": "BuildingBlocks_KeyframeModifierData",
+              "timingFunction": {
+                "_Type_": "BuildingBlocks_TimingFunctionPreset",
+                "preset": "EaseOutCubic"},
+              "modifier": {
+                "_Type_": "BuildingBlocks_FieldModifierNumber",
+                "field": "Alpha",
+                "value": 0.0}}]}]}}}

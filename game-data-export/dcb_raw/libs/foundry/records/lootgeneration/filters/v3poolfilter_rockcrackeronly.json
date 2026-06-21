@@ -1,0 +1,23 @@
+{
+  "_RecordName_": "PoolFilterRecord.V3PoolFilter_RockCrackerOnly",
+  "_RecordId_": "ec27c33b-3575-4fec-9e09-9f5fe223eaf0",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "PoolFilterRecord",
+    "filter": {
+      "_Type_": "PoolFilter_Sequence",
+      "filters": [
+        {
+          "_Type_": "PoolFilterInstance",
+          "name": "RockCracker",
+          "mode": "Cumulative",
+          "filter": {
+            "_Type_": "PoolFilter_Tags",
+            "tagFilter": {
+              "_Type_": "TagsDNFTerm",
+              "positiveTags": [
+                {
+                  "_RecordPath_": "file://./../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+                  "_RecordName_": "Tag.fefb9d5b-e1b7-46f8-901a-3f75ea718388",
+                  "_RecordId_": "fefb9d5b-e1b7-46f8-901a-3f75ea718388"}],
+              "negativeTags": []}}}]}}}

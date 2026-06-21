@@ -1,0 +1,11 @@
+{
+  "_RecordName_": "TraversalCostConfig.DefaultTraversalCostConfiguration",
+  "_RecordId_": "0eee30a3-5205-48b1-b61c-f6e285ce1853",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "TraversalCostConfig",
+    "tag": {
+      "_RecordPath_": "file://./../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+      "_RecordName_": "Tag.a195be5e-645b-4ab9-9926-f5239025be0e",
+      "_RecordId_": "a195be5e-645b-4ab9-9926-f5239025be0e"},
+    "costs": []}}

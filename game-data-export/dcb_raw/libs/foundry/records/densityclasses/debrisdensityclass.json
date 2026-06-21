@@ -1,0 +1,13 @@
+{
+  "_RecordName_": "SEntityDensityClass.DebrisDensityClass",
+  "_RecordId_": "926223c4-c709-4da6-8d46-106973cf6570",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "SEntityDensityClass",
+    "clusterDetectionRadius": 1000.0,
+    "clusterUpperObjectCountDGS": 50,
+    "clusterUpperObjectCountPersistence": 20,
+    "clusterPersistenceTimeout": 10.0,
+    "entityMaxIdleLifeTime": null,
+    "resetLifetimeOnMove": false,
+    "entityIdleBuryOnly": false}}

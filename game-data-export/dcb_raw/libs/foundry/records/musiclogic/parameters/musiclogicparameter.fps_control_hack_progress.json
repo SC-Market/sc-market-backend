@@ -1,0 +1,23 @@
+{
+  "_RecordName_": "MusicLogicParameter.FPS_Control_Hack_Progress",
+  "_RecordId_": "a2481243-1c41-48e3-afcb-5e7bed879c1f",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "MusicLogicParameter",
+    "name": "FPS_Control_Hack_Progress",
+    "min": 0.0,
+    "max": 1.0,
+    "defaultValue": 0.0,
+    "decayRate": 0.0,
+    "decayIsPercentage": false,
+    "scaleModifier": 1.0,
+    "shiftModifier": 0.0,
+    "inverted": false,
+    "rtpc": "",
+    "rtpcIsGlobal": false,
+    "contributors": [],
+    "debugColour": {
+      "_Type_": "RGB",
+      "r": 0.373,
+      "g": 0.62,
+      "b": 0.627}}}

@@ -1,0 +1,24 @@
+{
+  "_RecordName_": "Character.NPCVP8",
+  "_RecordId_": "4b8c8fe3-6502-7fe6-6acf-f6446a7bfc9c",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "Character",
+    "characterPersonalData": {
+      "_Type_": "CharacterPersonalData",
+      "title": "",
+      "firstName": "",
+      "nickName": "",
+      "lastName": "",
+      "randomNameParams": null,
+      "affiliation": "",
+      "details": ""},
+    "audioSwitchStateName": "",
+    "animationRemapAlias": "",
+    "characterMannequinTag": "",
+    "styleMannequinTag": "",
+    "combatStyle": "NotSet",
+    "gender": "NotSet",
+    "characterSpeedOverrides": [],
+    "nicknameChance": 0.0,
+    "name": "NPCVP8"}}

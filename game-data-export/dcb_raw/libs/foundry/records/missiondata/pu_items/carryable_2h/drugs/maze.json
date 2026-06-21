@@ -1,0 +1,39 @@
+{
+  "_RecordName_": "MissionItem.Maze",
+  "_RecordId_": "abb08f73-85ff-49b8-8b6c-ade1f195743a",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "MissionItem",
+    "tags": [
+      {
+        "_RecordPath_": "file://./../../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+        "_RecordName_": "Tag.37ba7ad8-8553-45df-a84b-c49eb6ebb7a6",
+        "_RecordId_": "37ba7ad8-8553-45df-a84b-c49eb6ebb7a6"},
+      {
+        "_RecordPath_": "file://./../../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+        "_RecordName_": "Tag.09869105-1fb6-4a95-8871-f7ff80074d96",
+        "_RecordId_": "09869105-1fb6-4a95-8871-f7ff80074d96"},
+      {
+        "_RecordPath_": "file://./../../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+        "_RecordName_": "Tag.afc33a37-d709-49da-8728-1fce06635c23",
+        "_RecordId_": "afc33a37-d709-49da-8728-1fce06635c23"},
+      {
+        "_RecordPath_": "file://./../../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+        "_RecordName_": "Tag.11f894bb-e1b1-40ae-b250-455ccfc78b5c",
+        "_RecordId_": "11f894bb-e1b1-40ae-b250-455ccfc78b5c"},
+      {
+        "_RecordPath_": "file://./../../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+        "_RecordName_": "Tag.ee3edc08-f59c-46c0-b7c5-687240659ea1",
+        "_RecordId_": "ee3edc08-f59c-46c0-b7c5-687240659ea1"}],
+    "stringVariants": {
+      "_Type_": "MissionStringVariants",
+      "variants": [
+        {
+          "_Type_": "MissionStringVariant",
+          "tag": {
+            "_RecordPath_": "file://./../../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+            "_RecordName_": "Tag.0130de18-97e2-4d4c-9bb1-3e7ef5fd0490",
+            "_RecordId_": "0130de18-97e2-4d4c-9bb1-3e7ef5fd0490"},
+          "string": "@items_commodities_maze"}]},
+    "weighting": 0.3,
+    "entityClass": "file://./../../../../../../../libs/foundry/records/entities/scitem/carryables/2h/carryable_2h_fl_05x05x05_commodity_drug_maze_a.json"}}

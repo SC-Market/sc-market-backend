@@ -1,0 +1,49 @@
+{
+  "_RecordName_": "CraftingQualityQuantizationRecord.Quantization_Stileron",
+  "_RecordId_": "3d1fdc62-1edf-4d92-80b1-0ffd3146c4e9",
+  "_RecordTag_": "SystemsDesign",
+  "_RecordValue_": {
+    "_Type_": "CraftingQualityQuantizationRecord",
+    "qualityQuantization": {
+      "_Type_": "CraftingQualityQuantization",
+      "bands": [
+        {
+          "_Type_": "CraftingQualityQuantizationBand",
+          "start": 0,
+          "end": 399,
+          "mappedValue": 330},
+        {
+          "_Type_": "CraftingQualityQuantizationBand",
+          "start": 400,
+          "end": 599,
+          "mappedValue": 517},
+        {
+          "_Type_": "CraftingQualityQuantizationBand",
+          "start": 600,
+          "end": 699,
+          "mappedValue": 681},
+        {
+          "_Type_": "CraftingQualityQuantizationBand",
+          "start": 700,
+          "end": 799,
+          "mappedValue": 747},
+        {
+          "_Type_": "CraftingQualityQuantizationBand",
+          "start": 800,
+          "end": 899,
+          "mappedValue": 874},
+        {
+          "_Type_": "CraftingQualityQuantizationBand",
+          "start": 900,
+          "end": 949,
+          "mappedValue": 947},
+        {
+          "_Type_": "CraftingQualityQuantizationBand",
+          "start": 950,
+          "end": 998,
+          "mappedValue": 972},
+        {
+          "_Type_": "CraftingQualityQuantizationBand",
+          "start": 999,
+          "end": 1000,
+          "mappedValue": 1000}]}}}

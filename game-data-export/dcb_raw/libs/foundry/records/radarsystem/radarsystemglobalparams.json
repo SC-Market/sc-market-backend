@@ -1,0 +1,119 @@
+{
+  "_RecordName_": "RadarSystemGlobalParams.RadarSystemGlobalParams",
+  "_RecordId_": "bc8d2eea-420e-40d1-9228-6f6978485e61",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "RadarSystemGlobalParams",
+    "paramsVersion": 3,
+    "signatureSystemParams": {
+      "_Type_": "SignatureSystemGlobalParams",
+      "globalDBFactor": 1.0,
+      "globalAmbientIRFactor": 1.0,
+      "dBSignaturePeakHoldTime": 2.0,
+      "signatureUIParams": {
+        "_Type_": "SignatureUIGlobalParams",
+        "warningUnderStateTime": 3.0,
+        "signatureDisplayTime": 5.0,
+        "signatureFadeTime": 0.5,
+        "emissionDisplayIncrease": 1.5,
+        "emissionMemoryTime": 10.0},
+      "actorMultiplierParams": {
+        "_Type_": "ActorSignatureMultiplierGlobalParams",
+        "bodyTemperatureToIRMultiplier": 1.08,
+        "staminaToIRMultiplier": 10.0,
+        "staminaToIRDecayDelay": 0.25,
+        "staminaToIRDecayRate": 0.005},
+      "crossSectionParams": {
+        "_Type_": "CrossSectionGlobalParams",
+        "globalCSFactor": {
+          "_Type_": "Vec3",
+          "x": 10.0,
+          "y": 10.0,
+          "z": 10.0},
+        "maxDistance": 10000.0,
+        "lineOfSightAngle": 45.0},
+      "signatureTypeParams": [
+        {
+          "_Type_": "SignatureTypeGlobalParams",
+          "displayName": "@hud_scanning_info_ir_signature",
+          "allowDampening": true,
+          "allowGenerateUnknownContacts": true,
+          "allowVisibleContacts": true,
+          "allowGenerateBlobs": true,
+          "nearbyAmbientMultiplier": 1.0},
+        {
+          "_Type_": "SignatureTypeGlobalParams",
+          "displayName": "@hud_scanning_info_em_signature",
+          "allowDampening": true,
+          "allowGenerateUnknownContacts": true,
+          "allowVisibleContacts": true,
+          "allowGenerateBlobs": true,
+          "nearbyAmbientMultiplier": 1.0},
+        {
+          "_Type_": "SignatureTypeGlobalParams",
+          "displayName": "@hud_scanning_info_cs_signature",
+          "allowDampening": true,
+          "allowGenerateUnknownContacts": true,
+          "allowVisibleContacts": true,
+          "allowGenerateBlobs": true,
+          "nearbyAmbientMultiplier": 0.0},
+        {
+          "_Type_": "SignatureTypeGlobalParams",
+          "displayName": "@hud_scanning_info_db_signature",
+          "allowDampening": true,
+          "allowGenerateUnknownContacts": true,
+          "allowVisibleContacts": true,
+          "allowGenerateBlobs": true,
+          "nearbyAmbientMultiplier": 0.0},
+        {
+          "_Type_": "SignatureTypeGlobalParams",
+          "displayName": "@hud_scanning_info_rs_signature",
+          "allowDampening": true,
+          "allowGenerateUnknownContacts": true,
+          "allowVisibleContacts": true,
+          "allowGenerateBlobs": true,
+          "nearbyAmbientMultiplier": 0.0},
+        {
+          "_Type_": "SignatureTypeGlobalParams",
+          "displayName": "@hud_scanning_info_id_signature",
+          "allowDampening": true,
+          "allowGenerateUnknownContacts": true,
+          "allowVisibleContacts": true,
+          "allowGenerateBlobs": true,
+          "nearbyAmbientMultiplier": 0.0},
+        {
+          "_Type_": "SignatureTypeGlobalParams",
+          "displayName": "@LOC_EMPTY",
+          "allowDampening": true,
+          "allowGenerateUnknownContacts": true,
+          "allowVisibleContacts": false,
+          "allowGenerateBlobs": true,
+          "nearbyAmbientMultiplier": 0.0},
+        {
+          "_Type_": "SignatureTypeGlobalParams",
+          "displayName": "@LOC_EMPTY",
+          "allowDampening": false,
+          "allowGenerateUnknownContacts": false,
+          "allowVisibleContacts": true,
+          "allowGenerateBlobs": false,
+          "nearbyAmbientMultiplier": 0.0}],
+      "masterModeDeltaSignatureType": {
+        "_Type_": "MasterModeSwitchDeltaSignatureTypes",
+        "scmToNav": {
+          "_RecordPath_": "file://./../../../../libs/foundry/records/radarsystem/radardeltasignaturetypes.json",
+          "_RecordName_": "RadarDeltaSignatureEntry.47191e15-dec5-486e-a8dc-ae63ce77d55d",
+          "_RecordId_": "47191e15-dec5-486e-a8dc-ae63ce77d55d"},
+        "navToScm": {
+          "_RecordPath_": "file://./../../../../libs/foundry/records/radarsystem/radardeltasignaturetypes.json",
+          "_RecordName_": "RadarDeltaSignatureEntry.5b9a843b-092e-45ac-9fc6-14dc5f77d447",
+          "_RecordId_": "5b9a843b-092e-45ac-9fc6-14dc5f77d447"}},
+      "scanWaveTriggeredDeltaSignatureType": {
+        "_RecordPath_": "file://./../../../../libs/foundry/records/radarsystem/radardeltasignaturetypes.json",
+        "_RecordName_": "RadarDeltaSignatureEntry.aded4b7e-5bb1-4fd9-a1c7-bec1c9a98a8a",
+        "_RecordId_": "aded4b7e-5bb1-4fd9-a1c7-bec1c9a98a8a"}},
+    "contactStateParams": {
+      "_Type_": "ContactStateGlobalParams",
+      "contactStateIcons": [
+        "UI/Textures/Vector/PIT/Looting/icon_common_magazine.svg",
+        "UI/Textures/Vector/PIT/Looting/icon_common_primary_weapon.svg",
+        "UI/Textures/Vector/PIT/Looting/icon_common_secondary_weapon.svg"]}}}

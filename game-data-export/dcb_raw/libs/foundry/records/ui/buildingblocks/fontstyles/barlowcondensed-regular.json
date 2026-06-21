@@ -1,0 +1,15 @@
+{
+  "_RecordName_": "BuildingBlocks_FontStyle.BarlowCondensed-Regular",
+  "_RecordId_": "a209a6b5-647f-4065-bdc2-97264260f44c",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "BuildingBlocks_FontStyle",
+    "font": "$BarlowCondensed-Regular",
+    "paintFile": "UI/fonts/Install/BarlowCondensed-Regular.slug",
+    "isBold": false,
+    "imageSizePercent": 0.75,
+    "scaleModifier": 0.86,
+    "leadingModifier": -0.17,
+    "topMarginModifier": 0.04,
+    "leftMarginModifier": 0.0,
+    "numImageReplacementSpaces": 7}}

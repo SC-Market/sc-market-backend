@@ -1,0 +1,97 @@
+{
+  "_RecordName_": "BuildingBlocks_LanguageSpecificFontReplacement.japanese__japan_",
+  "_RecordId_": "d5b45819-2b23-44dc-bab6-f0f817c8ed0b",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "BuildingBlocks_LanguageSpecificFontReplacement",
+    "fontReplacementList": [
+      {
+        "_Type_": "BuildingBlocks_FontReplacementPair",
+        "englishFont": "file://./../../../../../../../libs/foundry/records/ui/buildingblocks/fontstyles/titilliumweb-regular.json",
+        "replacementFontName": "$NotoSansJapaneseThin",
+        "replacementFontPaintFile": "UI/fonts/Install/NotoSansJP-Thin.slug"},
+      {
+        "_Type_": "BuildingBlocks_FontReplacementPair",
+        "englishFont": "file://./../../../../../../../libs/foundry/records/ui/buildingblocks/fontstyles/blenderpro-thin.json",
+        "replacementFontName": "$NotoSansJapaneseThin",
+        "replacementFontPaintFile": "UI/fonts/Install/NotoSansJP-Thin.slug"},
+      {
+        "_Type_": "BuildingBlocks_FontReplacementPair",
+        "englishFont": "file://./../../../../../../../libs/foundry/records/ui/buildingblocks/fontstyles/blenderpro-medium.json",
+        "replacementFontName": "$NotoSansJapaneseThin",
+        "replacementFontPaintFile": "UI/fonts/Install/NotoSansJP-Thin.slug"},
+      {
+        "_Type_": "BuildingBlocks_FontReplacementPair",
+        "englishFont": "file://./../../../../../../../libs/foundry/records/ui/buildingblocks/fontstyles/aldrich.json",
+        "replacementFontName": "$NotoSansJapaneseThin",
+        "replacementFontPaintFile": "UI/fonts/Install/NotoSansJP-Thin.slug"},
+      {
+        "_Type_": "BuildingBlocks_FontReplacementPair",
+        "englishFont": "file://./../../../../../../../libs/foundry/records/ui/buildingblocks/fontstyles/blenderpro-book.json",
+        "replacementFontName": "$NotoSansJapaneseThin",
+        "replacementFontPaintFile": "UI/fonts/Install/NotoSansJP-Thin.slug"},
+      {
+        "_Type_": "BuildingBlocks_FontReplacementPair",
+        "englishFont": "file://./../../../../../../../libs/foundry/records/ui/buildingblocks/fontstyles/blenderpro-bold.json",
+        "replacementFontName": "$NotoSansJapaneseThin",
+        "replacementFontPaintFile": "UI/fonts/Install/NotoSansJP-Thin.slug"},
+      {
+        "_Type_": "BuildingBlocks_FontReplacementPair",
+        "englishFont": "file://./../../../../../../../libs/foundry/records/ui/buildingblocks/fontstyles/outfit-regular.json",
+        "replacementFontName": "$NotoSansJapaneseThin",
+        "replacementFontPaintFile": "UI/fonts/Install/NotoSansJP-Thin.slug"},
+      {
+        "_Type_": "BuildingBlocks_FontReplacementPair",
+        "englishFont": "file://./../../../../../../../libs/foundry/records/ui/buildingblocks/fontstyles/outfit-bold.json",
+        "replacementFontName": "$NotoSansJapaneseThin",
+        "replacementFontPaintFile": "UI/fonts/Install/NotoSansJP-Thin.slug"},
+      {
+        "_Type_": "BuildingBlocks_FontReplacementPair",
+        "englishFont": "file://./../../../../../../../libs/foundry/records/ui/buildingblocks/fontstyles/orbitron-medium.json",
+        "replacementFontName": "$NotoSansJapaneseThin",
+        "replacementFontPaintFile": "UI/fonts/Install/NotoSansJP-Thin.slug"},
+      {
+        "_Type_": "BuildingBlocks_FontReplacementPair",
+        "englishFont": "file://./../../../../../../../libs/foundry/records/ui/buildingblocks/fontstyles/orbitron-light.json",
+        "replacementFontName": "$NotoSansJapaneseThin",
+        "replacementFontPaintFile": "UI/fonts/Install/NotoSansJP-Thin.slug"},
+      {
+        "_Type_": "BuildingBlocks_FontReplacementPair",
+        "englishFont": "file://./../../../../../../../libs/foundry/records/ui/buildingblocks/fontstyles/opensans.json",
+        "replacementFontName": "$NotoSansJapaneseThin",
+        "replacementFontPaintFile": "UI/fonts/Install/NotoSansJP-Thin.slug"},
+      {
+        "_Type_": "BuildingBlocks_FontReplacementPair",
+        "englishFont": "file://./../../../../../../../libs/foundry/records/ui/buildingblocks/fontstyles/barlowcondensed-bold.json",
+        "replacementFontName": "$NotoSansJapaneseThin",
+        "replacementFontPaintFile": "UI/fonts/Install/NotoSansJP-Thin.slug"},
+      {
+        "_Type_": "BuildingBlocks_FontReplacementPair",
+        "englishFont": "file://./../../../../../../../libs/foundry/records/ui/buildingblocks/fontstyles/titilliumweb-semibold.json",
+        "replacementFontName": "$NotoSansJapaneseThin",
+        "replacementFontPaintFile": "UI/fonts/Install/NotoSansJP-Thin.slug"},
+      {
+        "_Type_": "BuildingBlocks_FontReplacementPair",
+        "englishFont": "file://./../../../../../../../libs/foundry/records/ui/buildingblocks/fontstyles/audimatmono-regular.json",
+        "replacementFontName": "$NotoSansJapaneseThin",
+        "replacementFontPaintFile": "UI/fonts/Install/NotoSansJP-Thin.slug"},
+      {
+        "_Type_": "BuildingBlocks_FontReplacementPair",
+        "englishFont": "file://./../../../../../../../libs/foundry/records/ui/buildingblocks/fontstyles/cigoptical-regular.json",
+        "replacementFontName": "$NotoSansJapaneseThin",
+        "replacementFontPaintFile": "UI/fonts/Install/NotoSansJP-Thin.slug"},
+      {
+        "_Type_": "BuildingBlocks_FontReplacementPair",
+        "englishFont": "file://./../../../../../../../libs/foundry/records/ui/buildingblocks/fontstyles/audimatmono-bold.json",
+        "replacementFontName": "$NotoSansJapaneseThin",
+        "replacementFontPaintFile": "UI/fonts/Install/NotoSansJP-Thin.slug"},
+      {
+        "_Type_": "BuildingBlocks_FontReplacementPair",
+        "englishFont": "file://./../../../../../../../libs/foundry/records/ui/buildingblocks/fontstyles/furore.json",
+        "replacementFontName": "$NotoSansJapaneseThin",
+        "replacementFontPaintFile": "UI/fonts/Install/NotoSansJP-Thin.slug"},
+      {
+        "_Type_": "BuildingBlocks_FontReplacementPair",
+        "englishFont": "file://./../../../../../../../libs/foundry/records/ui/buildingblocks/fontstyles/blenderpro-heavy.json",
+        "replacementFontName": "$NotoSansJapaneseThin",
+        "replacementFontPaintFile": "UI/fonts/Install/NotoSansJP-Thin.slug"}]}}

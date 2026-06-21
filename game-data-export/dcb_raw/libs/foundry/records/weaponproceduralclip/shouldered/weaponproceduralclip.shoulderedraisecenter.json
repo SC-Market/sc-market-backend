@@ -1,0 +1,20 @@
+{
+  "_RecordName_": "WeaponProceduralClip.ShoulderedRaiseCenter",
+  "_RecordId_": "cb6a7259-0c77-422d-a518-28ba4f230305",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "WeaponProceduralClip",
+    "weaponProceduralClipBase": {
+      "_Type_": "WeaponProceduralClipRaise",
+      "blendTime": 1.0,
+      "weaponRaise": {
+        "_Type_": "Ang3",
+        "x": -50.0,
+        "y": 0.0,
+        "z": 0.0},
+      "weaponShift": {
+        "_Type_": "Vec3",
+        "x": 0.15,
+        "y": 0.2,
+        "z": -0.3},
+      "raiseTime": 0.1}}}

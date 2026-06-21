@@ -1,0 +1,17 @@
+{
+  "_RecordName_": "InventoryContainer.AEGS_Redeemer_PersonalStorage",
+  "_RecordId_": "81b0920c-84be-40a8-899f-32e9f7a5d818",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "InventoryContainer",
+    "excludedItemSubTypes": [],
+    "interiorDimensions": {
+      "_Type_": "Vec3",
+      "x": 0.0,
+      "y": 0.0,
+      "z": 0.0},
+    "inventoryType": {
+      "_Type_": "InventoryClosedContainerType",
+      "capacity": {
+        "_Type_": "SStandardCargoUnit",
+        "standardCargoUnits": 0.0}}}}

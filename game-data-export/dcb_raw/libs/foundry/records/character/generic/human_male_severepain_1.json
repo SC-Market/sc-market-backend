@@ -1,0 +1,24 @@
+{
+  "_RecordName_": "Character.Human_Male_SeverePain_1",
+  "_RecordId_": "652bbf78-bd55-46fc-a2ee-8fc720e064b9",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "Character",
+    "characterPersonalData": {
+      "_Type_": "CharacterPersonalData",
+      "title": "",
+      "firstName": "",
+      "nickName": "",
+      "lastName": "",
+      "randomNameParams": null,
+      "affiliation": "",
+      "details": ""},
+    "audioSwitchStateName": "",
+    "animationRemapAlias": "Human_Male_SeverePain_1",
+    "characterMannequinTag": "",
+    "styleMannequinTag": "SeverePain",
+    "combatStyle": "NotSet",
+    "gender": "NotSet",
+    "characterSpeedOverrides": [],
+    "nicknameChance": 0.0,
+    "name": ""}}

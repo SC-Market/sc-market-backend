@@ -1,0 +1,111 @@
+{
+  "_RecordName_": "InteractionConditionPreset.EquipHelmet_FromFlightsuitLocker",
+  "_RecordId_": "a033729c-6901-498e-aae4-8e0388930f31",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "InteractionConditionPreset",
+    "conditions": [
+      {
+        "_Type_": "InteractionConditionActorHasAttachedEntityTypes",
+        "conditionDisplay": {
+          "_Type_": "ConditionDisplayParams",
+          "exclusiveDisplay": true,
+          "blockedText": {
+            "_Type_": "BlockedTextParams",
+            "blockedText": "@interaction_condition_equipArmor_noUndersuit_flightsuit"},
+          "blockedCursor": {
+            "_Type_": "BlockedCursorParams",
+            "blockedCursor": "Invalid"},
+          "blockedColor": {
+            "_Type_": "BlockedColorParams",
+            "selectedColor": "file://./../../../../../../libs/foundry/records/ui/innerthought/colors/blockedselected.json",
+            "unselectedColor": "file://./../../../../../../libs/foundry/records/ui/innerthought/colors/blockedunselected.json",
+            "applyImmediately": false},
+          "blockedHint": null,
+          "autoStoreOption": null,
+          "blockedInteractionAttemptMonologue": null},
+        "conditionResult": "Pass",
+        "itemTypes": [
+          "Char_Armor_Undersuit"],
+        "itemSubTypes": [],
+        "ignoreItemPorts": [
+          "weapon_attach_hand_right",
+          "weapon_attach_hand_left",
+          "magic_pocket",
+          "inventory_pocket",
+          "inventory_pocket_2"]},
+      {
+        "_Type_": "InteractionConditionIsItemNotBricked",
+        "conditionDisplay": {
+          "_Type_": "ConditionDisplayParams",
+          "exclusiveDisplay": false,
+          "blockedText": {
+            "_Type_": "BlockedTextParams",
+            "blockedText": "@interaction_condition_Bricked"},
+          "blockedCursor": {
+            "_Type_": "BlockedCursorParams",
+            "blockedCursor": "Invalid"},
+          "blockedColor": {
+            "_Type_": "BlockedColorParams",
+            "selectedColor": "file://./../../../../../../libs/foundry/records/ui/innerthought/colors/blockedselected.json",
+            "unselectedColor": "file://./../../../../../../libs/foundry/records/ui/innerthought/colors/blockedunselected.json",
+            "applyImmediately": false},
+          "blockedHint": null,
+          "autoStoreOption": null,
+          "blockedInteractionAttemptMonologue": null}},
+      {
+        "_Type_": "InteractionConditionActorHasAttachedEntityTypes",
+        "conditionDisplay": {
+          "_Type_": "ConditionDisplayParams",
+          "exclusiveDisplay": true,
+          "blockedText": {
+            "_Type_": "BlockedTextParams",
+            "blockedText": "@interaction_condition_helmet_oneAtATime"},
+          "blockedCursor": {
+            "_Type_": "BlockedCursorParams",
+            "blockedCursor": "Invalid"},
+          "blockedColor": {
+            "_Type_": "BlockedColorParams",
+            "selectedColor": "file://./../../../../../../libs/foundry/records/ui/innerthought/colors/blockedselected.json",
+            "unselectedColor": "file://./../../../../../../libs/foundry/records/ui/innerthought/colors/blockedunselected.json",
+            "applyImmediately": false},
+          "blockedHint": null,
+          "autoStoreOption": null,
+          "blockedInteractionAttemptMonologue": null},
+        "conditionResult": "Fail",
+        "itemTypes": [
+          "Char_Armor_Helmet"],
+        "itemSubTypes": [],
+        "ignoreItemPorts": [
+          "weapon_attach_hand_right",
+          "weapon_attach_hand_left",
+          "magic_pocket",
+          "inventory_pocket",
+          "inventory_pocket_2"]}],
+    "conditionToHideParams": [
+      {
+        "_Type_": "InteractionConditionEntityTags",
+        "conditionDisplay": null,
+        "tags": {
+          "_Type_": "TagsDNFTerm",
+          "positiveTags": [
+            {
+              "_RecordPath_": "file://./../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+              "_RecordName_": "Tag.24b19932-58a9-467c-81e4-7955c1b73b24",
+              "_RecordId_": "24b19932-58a9-467c-81e4-7955c1b73b24"}],
+          "negativeTags": []},
+        "CheckParent": true},
+      {
+        "_Type_": "InteractionConditionSwapAvailable",
+        "conditionDisplay": null},
+      {
+        "_Type_": "InteractionConditionAND",
+        "conditionDisplay": null,
+        "firstCondition": {
+          "_Type_": "InteractionConditionGameMode",
+          "conditionDisplay": null,
+          "gameModes": [
+            "S42_Default"]},
+        "secondCondition": {
+          "_Type_": "InteractionConditionEntityIsAttachedToOtherActor",
+          "conditionDisplay": null}}]}}

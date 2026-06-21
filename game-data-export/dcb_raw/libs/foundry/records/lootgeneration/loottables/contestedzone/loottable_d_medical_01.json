@@ -1,0 +1,23 @@
+{
+  "_RecordName_": "LootTable.LootTable_D_Medical_01",
+  "_RecordId_": "7f45c6a9-1c87-4412-abf7-b4f095a82637",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "LootTable",
+    "lootArchetypes": [
+      {
+        "_Type_": "WeightedLootArchetype",
+        "archetype": "file://./../../../../../../libs/foundry/records/lootgeneration/lootarchetypes/lootarchetype_medpen_only.json",
+        "weight": 1.0,
+        "numberOfResultsConstraints": {
+          "_Type_": "NumResultsConstraints",
+          "minResults": 1,
+          "maxResults": 0}},
+      {
+        "_Type_": "WeightedLootArchetype",
+        "archetype": "file://./../../../../../../libs/foundry/records/lootgeneration/lootarchetypes/lootarchetype_drinkscache_common.json",
+        "weight": 0.1,
+        "numberOfResultsConstraints": {
+          "_Type_": "NumResultsConstraints",
+          "minResults": 0,
+          "maxResults": 0}}]}}

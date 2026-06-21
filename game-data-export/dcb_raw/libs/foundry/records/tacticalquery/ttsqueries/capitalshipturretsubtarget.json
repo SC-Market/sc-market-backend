@@ -1,0 +1,16 @@
+{
+  "_RecordName_": "TacticalQuery.CapitalShipTurretSubTarget",
+  "_RecordId_": "64fa60b7-3797-45c8-9a71-f03fe588ab9d",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "TacticalQuery",
+    "name": "CapitalShipTurretSubTarget",
+    "type": "TacticalTargetQuery",
+    "options": [
+      {
+        "_Type_": "TQSOptionReference",
+        "requirements": {
+          "_Type_": "TagsDNF",
+          "terms": []},
+        "content": "file://./../../../../../libs/foundry/records/tacticalquery/ttsqueries/content/capitalshipturretsubtargetcontent.json",
+        "optionOverrides": []}]}}

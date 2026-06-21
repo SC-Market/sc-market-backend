@@ -1,0 +1,28 @@
+{
+  "_RecordName_": "AIWaveCollection.ConvoyAssemble_CivilianEscort_1",
+  "_RecordId_": "5aa58e1f-8c05-4803-9cf6-577753645d37",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "AIWaveCollection",
+    "waves": [
+      {
+        "_Type_": "AIWave",
+        "id": 0,
+        "textId": "",
+        "staggerTime": 0.1,
+        "members": [
+          {
+            "_Type_": "AIWaveMember",
+            "archetype": "",
+            "entityClassDefinition": "file://./../../../../../../../libs/foundry/records/entities/spaceships/aegs_hammerhead_pu_ai_uee.json",
+            "name": "",
+            "vehicleName": "",
+            "amount": 3,
+            "minAmount": -1,
+            "midAmount": -1,
+            "maxAmount": -1,
+            "crewManifestOverride": "file://./../../../../../../../libs/foundry/records/crewmanifest/pu/civilian/pu_human_civilian_light_wturret.json",
+            "skillsetOverride": "file://./../../../../../../../libs/foundry/records/aiprofile/skills/humanpilot50.json",
+            "cargoManifests": [
+              "file://./../../../../../../../libs/foundry/records/cargomanifest/civilian/civilian_01_medium_001.json"],
+            "aiDamageModifiersOverride": null}]}]}}

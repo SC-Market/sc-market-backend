@@ -1,0 +1,27 @@
+{
+  "_RecordName_": "EntityClassDefinition.PlanetKillVolume",
+  "_RecordId_": "61ebe231-77d9-4425-b4f0-c0dcb40aa0e2",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "EntityClassDefinition",
+    "Category": "Environment",
+    "Icon": "StarSystem.bmp",
+    "Invisible": false,
+    "BBoxSelection": false,
+    "defaultEditorColor": {
+      "_Type_": "RGB",
+      "r": 1.0,
+      "g": 1.0,
+      "b": 0.0},
+    "entityDensityClass": null,
+    "tags": [],
+    "StaticEntityClassData": [],
+    "Components": [
+      {
+        "_Type_": "PlanetKillVolumeComponentParams",
+        "planetRadius": 12400000.0,
+        "killRadius": 1241000.0,
+        "shakeRadius": 1242000.0,
+        "warningRadius": 1364000.0,
+        "shadowPenumbraWidth": 20.0,
+        "shadowMaxRange": 100000000.0}]}}

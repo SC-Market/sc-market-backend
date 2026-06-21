@@ -1,0 +1,12 @@
+{
+  "_RecordName_": "HintUIData.DefaultItemAction_TriedToCustomizeDefaultActions",
+  "_RecordId_": "c2f580dc-277b-4fda-89c9-d554a1f9803c",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "HintUIData",
+    "TitleText": "@Hints_DefaultItemActions_AttemptToCustomizeUncustomizable_Title",
+    "BodyText": "@Hints_DefaultItemActions_AttemptToCustomizeUncustomizable",
+    "BodyTextGamePad": "@Hints_DefaultItemActions_AttemptToCustomizeUncustomizable",
+    "BodyTextJoystick": "@Hints_DefaultItemActions_AttemptToCustomizeUncustomizable",
+    "TitleImagePath": "",
+    "BodyImagePath": ""}}

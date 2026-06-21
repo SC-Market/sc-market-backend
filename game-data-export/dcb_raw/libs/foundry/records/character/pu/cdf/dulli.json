@@ -1,0 +1,24 @@
+{
+  "_RecordName_": "Character.DULLI",
+  "_RecordId_": "4c7fbc34-6bc2-12a3-af91-1ccddb34b3ae",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "Character",
+    "characterPersonalData": {
+      "_Type_": "CharacterPersonalData",
+      "title": "@LOC_UNINITIALIZED",
+      "firstName": "@Name_SAICDulli",
+      "nickName": "@LOC_UNINITIALIZED",
+      "lastName": "@LOC_UNINITIALIZED",
+      "randomNameParams": null,
+      "affiliation": "@LOC_UNINITIALIZED",
+      "details": "@LOC_UNINITIALIZED"},
+    "audioSwitchStateName": "",
+    "animationRemapAlias": "",
+    "characterMannequinTag": "DULLI",
+    "styleMannequinTag": "",
+    "combatStyle": "NotSet",
+    "gender": "Female",
+    "characterSpeedOverrides": [],
+    "nicknameChance": 0.0,
+    "name": "DULLI"}}

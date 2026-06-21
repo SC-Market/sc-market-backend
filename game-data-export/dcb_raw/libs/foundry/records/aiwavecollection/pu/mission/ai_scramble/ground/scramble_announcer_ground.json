@@ -1,0 +1,28 @@
+{
+  "_RecordName_": "AIWaveCollection.Scramble_Announcer_Ground",
+  "_RecordId_": "de13fdd8-050c-42a2-a512-0776490155b3",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "AIWaveCollection",
+    "waves": [
+      {
+        "_Type_": "AIWave",
+        "id": 1,
+        "textId": "",
+        "staggerTime": 1.0,
+        "members": [
+          {
+            "_Type_": "AIWaveMember",
+            "archetype": "",
+            "entityClassDefinition": "file://./../../../../../../../../libs/foundry/records/entities/groundvehicles/rsi_ursa_rover.json",
+            "name": "@ScrambleRace_Obj_Marker_Annoucer",
+            "vehicleName": "",
+            "amount": 1,
+            "minAmount": -1,
+            "midAmount": -1,
+            "maxAmount": -1,
+            "crewManifestOverride": "file://./../../../../../../../../libs/foundry/records/crewmanifest/pu/civilian/pu_human_civilian_raceannouncer.json",
+            "skillsetOverride": null,
+            "cargoManifests": [
+              "file://./../../../../../../../../libs/foundry/records/cargomanifest/civilian/civilian_25_medium_001.json"],
+            "aiDamageModifiersOverride": null}]}]}}

@@ -1,0 +1,15 @@
+{
+  "_RecordName_": "Conversation.Racine_Clue",
+  "_RecordId_": "5fc13e07-af2a-4fa7-89a0-ec4f35adf6d3",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "Conversation",
+    "fragments": [
+      {
+        "_Type_": "ConversationNode_Start",
+        "next": null},
+      {
+        "_Type_": "ConversationNode_Dialogue",
+        "next": null,
+        "context": "file://./../../../../../../../../libs/foundry/records/dialoguecontext/pu/dialoguecontext.dxhn_pu_group_covalex_clue2_darnellsterminal_004.json",
+        "skipNodeInXSecs": -1.0}]}}

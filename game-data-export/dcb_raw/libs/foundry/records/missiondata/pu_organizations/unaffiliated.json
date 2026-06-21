@@ -1,0 +1,21 @@
+{
+  "_RecordName_": "MissionOrganization.Unaffiliated",
+  "_RecordId_": "8036c546-54dd-46eb-a383-6773166c2703",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "MissionOrganization",
+    "organizationTags": [
+      {
+        "_Type_": "MissionLocationTags",
+        "tags": []},
+      {
+        "_Type_": "MissionLocationTags",
+        "tags": []},
+      {
+        "_Type_": "MissionLocationTags",
+        "tags": []}],
+    "stringVariants": {
+      "_Type_": "MissionStringVariants",
+      "variants": []},
+    "weighting": 1.0,
+    "factionReputation": null}}

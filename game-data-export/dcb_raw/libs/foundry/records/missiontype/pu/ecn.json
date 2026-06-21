@@ -1,0 +1,10 @@
+{
+  "_RecordName_": "MissionType.ECN",
+  "_RecordId_": "559f4a80-a51e-4954-9141-0067c1cbf31c",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "MissionType",
+    "IconName": "",
+    "LocalisedTypeName": "@mobiglas_ui_ECN",
+    "svgIconPath": "UI/Textures/Vector/MobiGlas/App_ContractsManager/PU_mobiapp_icon_mission_ecn.svg",
+    "DisplayTime": -1.0}}

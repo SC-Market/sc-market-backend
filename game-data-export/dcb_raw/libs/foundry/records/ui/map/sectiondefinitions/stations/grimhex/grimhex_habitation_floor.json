@@ -1,0 +1,8 @@
+{
+  "_RecordName_": "InteriorMapSectionDefinition.GrimHex_Habitation_Floor",
+  "_RecordId_": "9dd115f4-ecec-41f3-9d19-214382b63953",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "InteriorMapSectionDefinition",
+    "name": "@interiormap_common_floor_dynamic",
+    "restrictViewBounds": true}}

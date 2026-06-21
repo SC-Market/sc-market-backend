@@ -1,0 +1,19 @@
+{
+  "_RecordName_": "UIElement.PlayerUI2D",
+  "_RecordId_": "db7efd04-8c62-467a-8d01-4ad8409ae47a",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "UIElement",
+    "sourceFile": "UI/PlayerUI2D/assets/SWF/PlayerUI2D_root.swf",
+    "soundsRecord": "file://./../../../../../libs/foundry/records/ui/elementsounds_deprecated/uielementsoundsrecord.playerui2d.json",
+    "fontFile": "UI/fonts/Shared/fonts_en.gfx",
+    "alignMode": "dynamic",
+    "alignScale": true,
+    "alignMax": true,
+    "layer": 5,
+    "skipFirstFrameInit": true,
+    "keyEvents": true,
+    "eventsExclusive": false,
+    "noDepthTest": true,
+    "forceNoUnload": false,
+    "noPostProcessing": true}}

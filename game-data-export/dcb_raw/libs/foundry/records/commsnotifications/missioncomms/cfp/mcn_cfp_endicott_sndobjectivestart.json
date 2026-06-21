@@ -1,0 +1,29 @@
+{
+  "_RecordName_": "CommsNotification.MCN_CFP_Endicott_SnDObjectiveStart",
+  "_RecordId_": "dbd0c315-9d35-4034-a9d4-39c4e72938ba",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "CommsNotification",
+    "tags": {
+      "_Type_": "TagList",
+      "tags": [
+        {
+          "_RecordPath_": "file://./../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+          "_RecordName_": "Tag.e2bbeaec-58b4-4e16-83c3-8e4ee6c41552",
+          "_RecordId_": "e2bbeaec-58b4-4e16-83c3-8e4ee6c41552"},
+        {
+          "_RecordPath_": "file://./../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+          "_RecordName_": "Tag.5a1d0597-b350-4a45-bcf2-e744bbf4b1ca",
+          "_RecordId_": "5a1d0597-b350-4a45-bcf2-e744bbf4b1ca"},
+        {
+          "_RecordPath_": "file://./../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+          "_RecordName_": "Tag.e6a13cf1-526b-4949-ae2d-d21c2315b5c4",
+          "_RecordId_": "e6a13cf1-526b-4949-ae2d-d21c2315b5c4"},
+        {
+          "_RecordPath_": "file://./../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+          "_RecordName_": "Tag.4f308536-5934-4eb2-9cad-851caae068c0",
+          "_RecordId_": "4f308536-5934-4eb2-9cad-851caae068c0"}]},
+    "communicationName": "file://./../../../../../../libs/foundry/records/communicationname/missioncommunications/searchanddestroy/snd_objectivestart.json",
+    "characterEntityClass": "file://./../../../../../../libs/foundry/records/actor/actors/pyro/npc_archetypes-female-human-missiongivers-limaendicott.json",
+    "fakeCommsAudioEntityClass": null,
+    "stage": "file://./../../../../../../libs/foundry/records/commsnotificationstages/cns_test.json"}}

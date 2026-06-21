@@ -1,0 +1,17 @@
+{
+  "_RecordName_": "InventoryContainer.RSI_Zeus_ES_Template",
+  "_RecordId_": "b1d596cd-e55b-4173-8487-e7664b4bd823",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "InventoryContainer",
+    "excludedItemSubTypes": [],
+    "interiorDimensions": {
+      "_Type_": "Vec3",
+      "x": 2.0,
+      "y": 2.0,
+      "z": 2.0},
+    "inventoryType": {
+      "_Type_": "InventoryClosedContainerType",
+      "capacity": {
+        "_Type_": "SStandardCargoUnit",
+        "standardCargoUnits": 3.81}}}}

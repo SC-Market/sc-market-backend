@@ -1,0 +1,13 @@
+{
+  "_RecordName_": "RefineryNotificationConfiguration.DefaultConfig",
+  "_RecordId_": "fca49fb9-937b-4c01-9a63-45cd42583c48",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "RefineryNotificationConfiguration",
+    "text": "@refinery_ui_jobComplete",
+    "textMultiple": "@refinery_ui_multipleJobsComplete",
+    "duration": 17.0,
+    "refineryServiceError": "@refinery_ui_serviceError",
+    "refineryDeliveryFailed": "@refinery_ui_DeliverFailed",
+    "refineryJobCreationFailed": "@refinery_ui_JobCreationFailed",
+    "refinerySetupError": "@refinery_ui_SetupError"}}

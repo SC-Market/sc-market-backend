@@ -1,0 +1,50 @@
+{
+  "_RecordName_": "SecurityNetworkManifest.SNM_RestStop_Microtech",
+  "_RecordId_": "e87d870a-c52b-4fdb-a5d7-6fadffde95f8",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "SecurityNetworkManifest",
+    "defaultProtocol": {
+      "_Type_": "SecurityNetworkProtocol",
+      "permissionsWithClearance": {
+        "_Type_": "SecurityNetworkPermissions",
+        "access": "Yes",
+        "trespass": "No"},
+      "permissionsWithoutClearance": {
+        "_Type_": "SecurityNetworkPermissions",
+        "access": "No",
+        "trespass": "Yes"},
+      "acceptedClearance": {
+        "_Type_": "SecurityClearanceConditions",
+        "tokens": [
+          "file://./../../../../../../../libs/foundry/records/lawsystem/securityclearancetokens/pu/snct_factionreputation/snct_microtech_rep.json"]},
+      "ownerFaction": "file://./../../../../../../../libs/foundry/records/factions/faction_lawful_microtech.json"},
+    "roomProtocols": [],
+    "variables": [
+      {
+        "_Type_": "SecurityNetworkVariable",
+        "tag": {
+          "_RecordPath_": "file://./../../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+          "_RecordName_": "Tag.6c295146-495e-4896-b739-b000901660e6",
+          "_RecordId_": "6c295146-495e-4896-b739-b000901660e6"},
+        "value": {
+          "_Type_": "SecurityNetworkVariableValue_Bool",
+          "value": true}}],
+    "hostilityRules": [
+      {
+        "_Type_": "SHostilityRules",
+        "tag": {
+          "_RecordPath_": "file://./../../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+          "_RecordName_": "Tag.489c08ec-1af3-422a-a938-48cd6a253f51",
+          "_RecordId_": "489c08ec-1af3-422a-a938-48cd6a253f51"},
+        "useReputationHostility": true,
+        "usePersonalHostility": true,
+        "useFactionHostility": true,
+        "policesLawfulTrespass": true,
+        "hostileToCriminals": true,
+        "hostileToStolenVehicles": true,
+        "factionOverride": null,
+        "factionToOverride": "file://./../../../../../../../libs/foundry/records/factions/faction_lawfulsecurity_microtechprotectionservices.json"}],
+    "variableEffects": [],
+    "isNeutralTerritory": false,
+    "teleportPlayerOut": false}}

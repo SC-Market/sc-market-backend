@@ -1,0 +1,13 @@
+{
+  "_RecordName_": "CharacterRandomNameParams.HumanMale_Ninetails_RemyKettle",
+  "_RecordId_": "9fa99d5e-d885-4bb4-adfb-7739cde1a626",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "CharacterRandomNameParams",
+    "firstNameString": "Human_First_Names_M_2112",
+    "nickNameString": "Human_nickNames_0411",
+    "lastNameString": "Human_Surnames_5102",
+    "numFirstNames": 1,
+    "numNickNames": 1,
+    "numLastNames": 1,
+    "nicknameChance": 0.05}}

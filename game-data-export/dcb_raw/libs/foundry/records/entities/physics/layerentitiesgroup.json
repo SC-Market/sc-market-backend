@@ -1,0 +1,29 @@
+{
+  "_RecordName_": "EntityClassDefinition.LayerEntitiesGroup",
+  "_RecordId_": "2fcb2dd6-1858-4cb8-812c-7ddbe497711d",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "EntityClassDefinition",
+    "Category": "Default",
+    "Icon": "territory.bmp",
+    "Invisible": false,
+    "BBoxSelection": false,
+    "defaultEditorColor": {
+      "_Type_": "RGB",
+      "r": 1.0,
+      "g": 1.0,
+      "b": 0.0},
+    "entityDensityClass": null,
+    "tags": [],
+    "StaticEntityClassData": [],
+    "Components": [
+      {
+        "_Type_": "SLayerEntitiesGroupComponentParams",
+        "allowPhysicsChange": false,
+        "allowStreaming": false,
+        "useLayerData": true,
+        "useMovablesInOCData": false,
+        "useUnreferencedEntities": false,
+        "startStreamedOut": false,
+        "startHidden": false,
+        "isMaster": false}]}}

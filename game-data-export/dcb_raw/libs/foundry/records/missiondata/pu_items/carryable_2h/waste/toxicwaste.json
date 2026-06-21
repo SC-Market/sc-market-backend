@@ -1,0 +1,53 @@
+{
+  "_RecordName_": "MissionItem.ToxicWaste",
+  "_RecordId_": "864759ce-8bbe-4c97-864e-8b46fedc6dca",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "MissionItem",
+    "tags": [
+      {
+        "_RecordPath_": "file://./../../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+        "_RecordName_": "Tag.56b3cdd1-6eb5-4f52-b389-9726a5caea3c",
+        "_RecordId_": "56b3cdd1-6eb5-4f52-b389-9726a5caea3c"},
+      {
+        "_RecordPath_": "file://./../../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+        "_RecordName_": "Tag.1ab9dbc4-3890-421a-bb9f-e4d57333d5a2",
+        "_RecordId_": "1ab9dbc4-3890-421a-bb9f-e4d57333d5a2"},
+      {
+        "_RecordPath_": "file://./../../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+        "_RecordName_": "Tag.37ba7ad8-8553-45df-a84b-c49eb6ebb7a6",
+        "_RecordId_": "37ba7ad8-8553-45df-a84b-c49eb6ebb7a6"},
+      {
+        "_RecordPath_": "file://./../../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+        "_RecordName_": "Tag.162cf95e-943d-478b-a13f-8dace4a0677e",
+        "_RecordId_": "162cf95e-943d-478b-a13f-8dace4a0677e"},
+      {
+        "_RecordPath_": "file://./../../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+        "_RecordName_": "Tag.ac2d3a8b-c832-41c3-993a-9b60ddd2cdb8",
+        "_RecordId_": "ac2d3a8b-c832-41c3-993a-9b60ddd2cdb8"}],
+    "stringVariants": {
+      "_Type_": "MissionStringVariants",
+      "variants": [
+        {
+          "_Type_": "MissionStringVariant",
+          "tag": {
+            "_RecordPath_": "file://./../../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+            "_RecordName_": "Tag.0130de18-97e2-4d4c-9bb1-3e7ef5fd0490",
+            "_RecordId_": "0130de18-97e2-4d4c-9bb1-3e7ef5fd0490"},
+          "string": "@mission_item_0110"},
+        {
+          "_Type_": "MissionStringVariant",
+          "tag": {
+            "_RecordPath_": "file://./../../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+            "_RecordName_": "Tag.7be4d01f-ae1d-45bd-a6d1-bb79e6bee890",
+            "_RecordId_": "7be4d01f-ae1d-45bd-a6d1-bb79e6bee890"},
+          "string": "@planetcollect_illegalwaste_item_0001"},
+        {
+          "_Type_": "MissionStringVariant",
+          "tag": {
+            "_RecordPath_": "file://./../../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+            "_RecordName_": "Tag.7be4d01f-ae1d-45bd-a6d1-bb79e6bee890",
+            "_RecordId_": "7be4d01f-ae1d-45bd-a6d1-bb79e6bee890"},
+          "string": "@planetcollect_illegalwaste_item_0002"}]},
+    "weighting": 1.0,
+    "entityClass": "file://./../../../../../../../libs/foundry/records/entities/scitem/carryables/2h/carryable_2h_fl_05x05x05_commodity_waste_a.json"}}

@@ -1,0 +1,192 @@
+{
+  "_RecordName_": "AudioBreathStyle.PilotRecovery",
+  "_RecordId_": "81088b3e-c332-4859-81de-9ebb212d81ad",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "AudioBreathStyle",
+    "firstBreathCustomisation": [],
+    "VO2InputParam": "StyleActiveTime",
+    "minInputValue": 0.0,
+    "maxInputValue": 5.0,
+    "InputFallingPredictionTime": 0.1,
+    "InputRisingPredictionTime": 0.1,
+    "allowBreathShortening": true,
+    "VO2FromInput": {
+      "_Type_": "BezierCurve",
+      "points": [
+        {
+          "_Type_": "Vec2",
+          "x": -1.104345,
+          "y": 0.0},
+        {
+          "_Type_": "Vec2",
+          "x": 0.0,
+          "y": 0.0},
+        {
+          "_Type_": "Vec2",
+          "x": 1.125715,
+          "y": 0.0},
+        {
+          "_Type_": "Vec2",
+          "x": 3.942181,
+          "y": 1.0},
+        {
+          "_Type_": "Vec2",
+          "x": 5.0,
+          "y": 1.0},
+        {
+          "_Type_": "Vec2",
+          "x": 6.057819,
+          "y": 1.0}],
+      "useLUT": false},
+    "maxVO2FallRate": 1.0,
+    "maxVO2RiseRate": 1.0,
+    "durationFromVO2": {
+      "_Type_": "BezierCurve",
+      "points": [
+        {
+          "_Type_": "Vec2",
+          "x": -0.1197149,
+          "y": 0.5},
+        {
+          "_Type_": "Vec2",
+          "x": 0.0,
+          "y": 0.5},
+        {
+          "_Type_": "Vec2",
+          "x": 0.1197149,
+          "y": 0.5},
+        {
+          "_Type_": "Vec2",
+          "x": 0.7145504,
+          "y": 1.111524},
+        {
+          "_Type_": "Vec2",
+          "x": 1.0,
+          "y": 1.8},
+        {
+          "_Type_": "Vec2",
+          "x": 1.28545,
+          "y": 2.488476}],
+      "useLUT": false},
+    "volumeFromVO2": {
+      "_Type_": "BezierCurve",
+      "points": [
+        {
+          "_Type_": "Vec2",
+          "x": -0.1956438,
+          "y": 0.2},
+        {
+          "_Type_": "Vec2",
+          "x": 0.0,
+          "y": 0.2},
+        {
+          "_Type_": "Vec2",
+          "x": 0.1737203,
+          "y": 0.2},
+        {
+          "_Type_": "Vec2",
+          "x": 0.4548261,
+          "y": 0.2},
+        {
+          "_Type_": "Vec2",
+          "x": 1.0,
+          "y": 0.2},
+        {
+          "_Type_": "Vec2",
+          "x": 1.550326,
+          "y": 0.2}],
+      "useLUT": false},
+    "durationVolumeScaleFromVO2Delta": {
+      "_Type_": "BezierCurve",
+      "points": [
+        {
+          "_Type_": "Vec2",
+          "x": -0.177616,
+          "y": 1.0},
+        {
+          "_Type_": "Vec2",
+          "x": 0.0,
+          "y": 1.0},
+        {
+          "_Type_": "Vec2",
+          "x": 0.1374813,
+          "y": 1.0},
+        {
+          "_Type_": "Vec2",
+          "x": 0.8596931,
+          "y": 1.0},
+        {
+          "_Type_": "Vec2",
+          "x": 1.0,
+          "y": 1.0},
+        {
+          "_Type_": "Vec2",
+          "x": 1.178924,
+          "y": 1.0}],
+      "useLUT": false},
+    "inhaleExhaleRatioFromVO2Delta": {
+      "_Type_": "BezierCurve",
+      "points": [
+        {
+          "_Type_": "Vec2",
+          "x": -0.2017396,
+          "y": 1.0},
+        {
+          "_Type_": "Vec2",
+          "x": 0.0,
+          "y": 1.0},
+        {
+          "_Type_": "Vec2",
+          "x": 0.1143646,
+          "y": 1.0},
+        {
+          "_Type_": "Vec2",
+          "x": 0.8793416,
+          "y": 1.0},
+        {
+          "_Type_": "Vec2",
+          "x": 1.0,
+          "y": 1.0},
+        {
+          "_Type_": "Vec2",
+          "x": 1.196048,
+          "y": 1.0}],
+      "useLUT": false},
+    "minVolume": 0.1,
+    "maxVolume": 1.0,
+    "maxVolumeDrop": 50.0,
+    "maxVolumeRise": 100.0,
+    "minDuration": 0.4,
+    "maxDuration": 2.5,
+    "maxDurationDrop": 50.0,
+    "maxDurationRise": 100.0,
+    "audioEventOnEnter": {
+      "_Type_": "GlobalResourceAudio",
+      "audioTrigger": ""},
+    "audioEventOnExit": {
+      "_Type_": "GlobalResourceAudio",
+      "audioTrigger": ""},
+    "audioEvents": [
+      {
+        "_Type_": "GlobalResourceAudio",
+        "audioTrigger": "Play_DXHN_Player_Breathing_Recovery_Inhale"},
+      {
+        "_Type_": "GlobalResourceAudio",
+        "audioTrigger": "Play_DXHN_Player_Breathing_Recovery_Exhale"},
+      {
+        "_Type_": "GlobalResourceAudio",
+        "audioTrigger": ""},
+      {
+        "_Type_": "GlobalResourceAudio",
+        "audioTrigger": ""},
+      {
+        "_Type_": "GlobalResourceAudio",
+        "audioTrigger": ""},
+      {
+        "_Type_": "GlobalResourceAudio",
+        "audioTrigger": ""},
+      {
+        "_Type_": "GlobalResourceAudio",
+        "audioTrigger": ""}],
+    "landingInterrupt": null}}

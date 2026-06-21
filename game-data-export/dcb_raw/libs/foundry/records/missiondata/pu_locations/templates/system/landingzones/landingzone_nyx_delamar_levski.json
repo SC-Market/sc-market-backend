@@ -1,0 +1,434 @@
+{
+  "_RecordName_": "MissionLocationTemplate.LandingZone_Nyx_Delamar_Levski",
+  "_RecordId_": "e67960e9-c04f-429f-b94f-ea8fdb8ad1b7",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "MissionLocationTemplate",
+    "locationData": {
+      "_Type_": "MissionLocationData",
+      "generalTags": {
+        "_Type_": "MissionLocationTags",
+        "tags": [
+          {
+            "_RecordPath_": "file://./../../../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+            "_RecordName_": "Tag.c70dbe51-3d1e-47b7-9795-290d3eba1728",
+            "_RecordId_": "c70dbe51-3d1e-47b7-9795-290d3eba1728"},
+          {
+            "_RecordPath_": "file://./../../../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+            "_RecordName_": "Tag.2bc6eed6-ef04-4680-ae65-2337258d26b7",
+            "_RecordId_": "2bc6eed6-ef04-4680-ae65-2337258d26b7"},
+          {
+            "_RecordPath_": "file://./../../../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+            "_RecordName_": "Tag.c2bfd638-489d-448d-8f16-580e1f89d5db",
+            "_RecordId_": "c2bfd638-489d-448d-8f16-580e1f89d5db"},
+          {
+            "_RecordPath_": "file://./../../../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+            "_RecordName_": "Tag.ff32dc1e-0fd0-4704-aadc-1a47b30af6e3",
+            "_RecordId_": "ff32dc1e-0fd0-4704-aadc-1a47b30af6e3"},
+          {
+            "_RecordPath_": "file://./../../../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+            "_RecordName_": "Tag.2a55b1c7-0001-4ef1-bfce-cd240f19490a",
+            "_RecordId_": "2a55b1c7-0001-4ef1-bfce-cd240f19490a"},
+          {
+            "_RecordPath_": "file://./../../../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+            "_RecordName_": "Tag.7ed608c0-ddd4-466f-9514-2e6a9b88bb58",
+            "_RecordId_": "7ed608c0-ddd4-466f-9514-2e6a9b88bb58"},
+          {
+            "_RecordPath_": "file://./../../../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+            "_RecordName_": "Tag.984285ee-9b94-48c9-b11a-915fc11643a4",
+            "_RecordId_": "984285ee-9b94-48c9-b11a-915fc11643a4"},
+          {
+            "_RecordPath_": "file://./../../../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+            "_RecordName_": "Tag.1e3de0c0-5ca5-4826-9224-94c3501e03b2",
+            "_RecordId_": "1e3de0c0-5ca5-4826-9224-94c3501e03b2"},
+          {
+            "_RecordPath_": "file://./../../../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+            "_RecordName_": "Tag.f7de902d-76c8-4bc6-9135-65f7d64d757f",
+            "_RecordId_": "f7de902d-76c8-4bc6-9135-65f7d64d757f"},
+          {
+            "_RecordPath_": "file://./../../../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+            "_RecordName_": "Tag.8bff746e-a235-4582-adcc-416bed1154ec",
+            "_RecordId_": "8bff746e-a235-4582-adcc-416bed1154ec"},
+          {
+            "_RecordPath_": "file://./../../../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+            "_RecordName_": "Tag.45e6642a-b1f5-404d-8b6f-e11527a6108e",
+            "_RecordId_": "45e6642a-b1f5-404d-8b6f-e11527a6108e"},
+          {
+            "_RecordPath_": "file://./../../../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+            "_RecordName_": "Tag.4d1faea9-c795-41ab-94b0-a2d1885a3355",
+            "_RecordId_": "4d1faea9-c795-41ab-94b0-a2d1885a3355"},
+          {
+            "_RecordPath_": "file://./../../../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+            "_RecordName_": "Tag.295cbc3e-16fb-46ae-ba3c-2d8882106d97",
+            "_RecordId_": "295cbc3e-16fb-46ae-ba3c-2d8882106d97"},
+          {
+            "_RecordPath_": "file://./../../../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+            "_RecordName_": "Tag.0e8b46f9-1d80-4441-8528-e8e5c2dafec5",
+            "_RecordId_": "0e8b46f9-1d80-4441-8528-e8e5c2dafec5"},
+          {
+            "_RecordPath_": "file://./../../../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+            "_RecordName_": "Tag.8de18eef-9f1d-4c56-a3ba-1dd4937e47e3",
+            "_RecordId_": "8de18eef-9f1d-4c56-a3ba-1dd4937e47e3"},
+          {
+            "_RecordPath_": "file://./../../../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+            "_RecordName_": "Tag.4a99c1b5-2b25-45e6-96c6-53ef31924cb1",
+            "_RecordId_": "4a99c1b5-2b25-45e6-96c6-53ef31924cb1"},
+          {
+            "_RecordPath_": "file://./../../../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+            "_RecordName_": "Tag.27c0ca26-f847-4139-99ec-7a1fb2430208",
+            "_RecordId_": "27c0ca26-f847-4139-99ec-7a1fb2430208"},
+          {
+            "_RecordPath_": "file://./../../../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+            "_RecordName_": "Tag.5b4b7677-2bc1-492d-b206-52a294ea4c71",
+            "_RecordId_": "5b4b7677-2bc1-492d-b206-52a294ea4c71"},
+          {
+            "_RecordPath_": "file://./../../../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+            "_RecordName_": "Tag.6bbe6a43-8121-4b83-9f4b-16f4fc687930",
+            "_RecordId_": "6bbe6a43-8121-4b83-9f4b-16f4fc687930"},
+          {
+            "_RecordPath_": "file://./../../../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+            "_RecordName_": "Tag.55828542-8816-4ae5-b05c-276cff89fada",
+            "_RecordId_": "55828542-8816-4ae5-b05c-276cff89fada"},
+          {
+            "_RecordPath_": "file://./../../../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+            "_RecordName_": "Tag.051515f9-aef4-417c-9e8a-de8dbe3136eb",
+            "_RecordId_": "051515f9-aef4-417c-9e8a-de8dbe3136eb"},
+          {
+            "_RecordPath_": "file://./../../../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+            "_RecordName_": "Tag.6e6d2b3b-6559-4941-ae01-1f636abe1159",
+            "_RecordId_": "6e6d2b3b-6559-4941-ae01-1f636abe1159"},
+          {
+            "_RecordPath_": "file://./../../../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+            "_RecordName_": "Tag.cae38595-85dd-424e-945d-56784d9c7cb6",
+            "_RecordId_": "cae38595-85dd-424e-945d-56784d9c7cb6"},
+          {
+            "_RecordPath_": "file://./../../../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+            "_RecordName_": "Tag.962c02cd-feb5-4ab6-9e13-29e7ac19cbf8",
+            "_RecordId_": "962c02cd-feb5-4ab6-9e13-29e7ac19cbf8"},
+          {
+            "_RecordPath_": "file://./../../../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+            "_RecordName_": "Tag.5973867f-69f6-4105-92dc-43a278c0a8d6",
+            "_RecordId_": "5973867f-69f6-4105-92dc-43a278c0a8d6"},
+          {
+            "_RecordPath_": "file://./../../../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+            "_RecordName_": "Tag.65ae3316-b395-41e0-883f-c0506882953c",
+            "_RecordId_": "65ae3316-b395-41e0-883f-c0506882953c"},
+          {
+            "_RecordPath_": "file://./../../../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+            "_RecordName_": "Tag.4d1faea9-c795-41ab-94b0-a2d1885a3355",
+            "_RecordId_": "4d1faea9-c795-41ab-94b0-a2d1885a3355"},
+          {
+            "_RecordPath_": "file://./../../../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+            "_RecordName_": "Tag.72609231-b9fe-4149-a82b-b5fb63fc7d05",
+            "_RecordId_": "72609231-b9fe-4149-a82b-b5fb63fc7d05"},
+          {
+            "_RecordPath_": "file://./../../../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+            "_RecordName_": "Tag.984285ee-9b94-48c9-b11a-915fc11643a4",
+            "_RecordId_": "984285ee-9b94-48c9-b11a-915fc11643a4"},
+          {
+            "_RecordPath_": "file://./../../../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+            "_RecordName_": "Tag.56564c03-1705-47a2-bf2d-52717d7999d2",
+            "_RecordId_": "56564c03-1705-47a2-bf2d-52717d7999d2"}]},
+      "producesTags": {
+        "_Type_": "TagSearchTerm",
+        "positiveTags": [
+          {
+            "_RecordPath_": "file://./../../../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+            "_RecordName_": "Tag.56b3cdd1-6eb5-4f52-b389-9726a5caea3c",
+            "_RecordId_": "56b3cdd1-6eb5-4f52-b389-9726a5caea3c"},
+          {
+            "_RecordPath_": "file://./../../../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+            "_RecordName_": "Tag.15f3217b-0a8b-4f2e-bfec-9bd58b92eb8b",
+            "_RecordId_": "15f3217b-0a8b-4f2e-bfec-9bd58b92eb8b"},
+          {
+            "_RecordPath_": "file://./../../../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+            "_RecordName_": "Tag.1ab9dbc4-3890-421a-bb9f-e4d57333d5a2",
+            "_RecordId_": "1ab9dbc4-3890-421a-bb9f-e4d57333d5a2"},
+          {
+            "_RecordPath_": "file://./../../../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+            "_RecordName_": "Tag.35fff2fd-fef8-40bc-9bcb-65996e12ef24",
+            "_RecordId_": "35fff2fd-fef8-40bc-9bcb-65996e12ef24"},
+          {
+            "_RecordPath_": "file://./../../../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+            "_RecordName_": "Tag.bed4737d-d4b0-4b64-9abc-2ffee56e1625",
+            "_RecordId_": "bed4737d-d4b0-4b64-9abc-2ffee56e1625"},
+          {
+            "_RecordPath_": "file://./../../../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+            "_RecordName_": "Tag.12d87835-ca60-4307-9583-5bacfe9aae97",
+            "_RecordId_": "12d87835-ca60-4307-9583-5bacfe9aae97"},
+          {
+            "_RecordPath_": "file://./../../../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+            "_RecordName_": "Tag.77fcd0a6-f49b-4942-b646-ea4e1630eedc",
+            "_RecordId_": "77fcd0a6-f49b-4942-b646-ea4e1630eedc"},
+          {
+            "_RecordPath_": "file://./../../../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+            "_RecordName_": "Tag.584e429a-7fd2-4ba1-ac37-8a6b21aff220",
+            "_RecordId_": "584e429a-7fd2-4ba1-ac37-8a6b21aff220"},
+          {
+            "_RecordPath_": "file://./../../../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+            "_RecordName_": "Tag.d2569568-466f-4e81-8b35-ff919f51b4cd",
+            "_RecordId_": "d2569568-466f-4e81-8b35-ff919f51b4cd"},
+          {
+            "_RecordPath_": "file://./../../../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+            "_RecordName_": "Tag.30afe2f2-1f33-4b02-933a-bbcda4a39770",
+            "_RecordId_": "30afe2f2-1f33-4b02-933a-bbcda4a39770"},
+          {
+            "_RecordPath_": "file://./../../../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+            "_RecordName_": "Tag.940ee884-f2d3-4551-a675-4a9f10419eb4",
+            "_RecordId_": "940ee884-f2d3-4551-a675-4a9f10419eb4"},
+          {
+            "_RecordPath_": "file://./../../../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+            "_RecordName_": "Tag.b5dce494-3c8d-4f65-b295-ce93cc5affb4",
+            "_RecordId_": "b5dce494-3c8d-4f65-b295-ce93cc5affb4"},
+          {
+            "_RecordPath_": "file://./../../../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+            "_RecordName_": "Tag.f8d77034-8929-4e11-b6c6-09a20313033d",
+            "_RecordId_": "f8d77034-8929-4e11-b6c6-09a20313033d"},
+          {
+            "_RecordPath_": "file://./../../../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+            "_RecordName_": "Tag.c614efdf-f8ff-4ef5-a21b-0d1fbe5a4b57",
+            "_RecordId_": "c614efdf-f8ff-4ef5-a21b-0d1fbe5a4b57"},
+          {
+            "_RecordPath_": "file://./../../../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+            "_RecordName_": "Tag.eee84e1f-63be-4d94-8150-ef277d014f72",
+            "_RecordId_": "eee84e1f-63be-4d94-8150-ef277d014f72"},
+          {
+            "_RecordPath_": "file://./../../../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+            "_RecordName_": "Tag.ce4d6941-7268-4a97-8b86-44a910b4f369",
+            "_RecordId_": "ce4d6941-7268-4a97-8b86-44a910b4f369"},
+          {
+            "_RecordPath_": "file://./../../../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+            "_RecordName_": "Tag.63049ea3-127c-4ad5-a099-f60e43260509",
+            "_RecordId_": "63049ea3-127c-4ad5-a099-f60e43260509"},
+          {
+            "_RecordPath_": "file://./../../../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+            "_RecordName_": "Tag.69169477-cb7a-4b2a-ae83-40de35124691",
+            "_RecordId_": "69169477-cb7a-4b2a-ae83-40de35124691"},
+          {
+            "_RecordPath_": "file://./../../../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+            "_RecordName_": "Tag.a7d2ff06-57a9-4777-8680-89f50e653c65",
+            "_RecordId_": "a7d2ff06-57a9-4777-8680-89f50e653c65"},
+          {
+            "_RecordPath_": "file://./../../../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+            "_RecordName_": "Tag.162cf95e-943d-478b-a13f-8dace4a0677e",
+            "_RecordId_": "162cf95e-943d-478b-a13f-8dace4a0677e"},
+          {
+            "_RecordPath_": "file://./../../../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+            "_RecordName_": "Tag.b1a87dbe-cf0a-45a7-a569-479c55c76597",
+            "_RecordId_": "b1a87dbe-cf0a-45a7-a569-479c55c76597"},
+          {
+            "_RecordPath_": "file://./../../../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+            "_RecordName_": "Tag.bd8c12b8-ef11-4cde-98b6-ce010e70f236",
+            "_RecordId_": "bd8c12b8-ef11-4cde-98b6-ce010e70f236"},
+          {
+            "_RecordPath_": "file://./../../../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+            "_RecordName_": "Tag.a2b36b6b-2728-4edb-960f-693aa1e8bfde",
+            "_RecordId_": "a2b36b6b-2728-4edb-960f-693aa1e8bfde"},
+          {
+            "_RecordPath_": "file://./../../../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+            "_RecordName_": "Tag.87b507e5-09f3-4b92-82d7-5e18ed474335",
+            "_RecordId_": "87b507e5-09f3-4b92-82d7-5e18ed474335"},
+          {
+            "_RecordPath_": "file://./../../../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+            "_RecordName_": "Tag.3ccd254c-459e-4746-9085-c9ff5364820f",
+            "_RecordId_": "3ccd254c-459e-4746-9085-c9ff5364820f"},
+          {
+            "_RecordPath_": "file://./../../../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+            "_RecordName_": "Tag.20e821ba-649b-4228-8ac5-43e386684bdb",
+            "_RecordId_": "20e821ba-649b-4228-8ac5-43e386684bdb"},
+          {
+            "_RecordPath_": "file://./../../../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+            "_RecordName_": "Tag.a6cc5c2c-64e2-4e9c-a22b-6e33235b77df",
+            "_RecordId_": "a6cc5c2c-64e2-4e9c-a22b-6e33235b77df"},
+          {
+            "_RecordPath_": "file://./../../../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+            "_RecordName_": "Tag.b2d2cd1b-ac25-4d3a-b0db-5f0fc288837a",
+            "_RecordId_": "b2d2cd1b-ac25-4d3a-b0db-5f0fc288837a"},
+          {
+            "_RecordPath_": "file://./../../../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+            "_RecordName_": "Tag.9bfbbfa8-0fce-432e-b924-c2102a168a86",
+            "_RecordId_": "9bfbbfa8-0fce-432e-b924-c2102a168a86"},
+          {
+            "_RecordPath_": "file://./../../../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+            "_RecordName_": "Tag.a552869c-129e-4896-a079-7f08100f0b3b",
+            "_RecordId_": "a552869c-129e-4896-a079-7f08100f0b3b"},
+          {
+            "_RecordPath_": "file://./../../../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+            "_RecordName_": "Tag.1aa215b5-7772-44f0-97a3-9caa24a9cb47",
+            "_RecordId_": "1aa215b5-7772-44f0-97a3-9caa24a9cb47"},
+          {
+            "_RecordPath_": "file://./../../../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+            "_RecordName_": "Tag.e485f445-a76e-4134-888e-3374622af89b",
+            "_RecordId_": "e485f445-a76e-4134-888e-3374622af89b"},
+          {
+            "_RecordPath_": "file://./../../../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+            "_RecordName_": "Tag.f122662b-9489-4b08-b533-51cdf2b6eca2",
+            "_RecordId_": "f122662b-9489-4b08-b533-51cdf2b6eca2"},
+          {
+            "_RecordPath_": "file://./../../../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+            "_RecordName_": "Tag.88561c20-a0e4-4b2c-b688-75609ce717f2",
+            "_RecordId_": "88561c20-a0e4-4b2c-b688-75609ce717f2"}],
+        "negativeTags": []},
+      "consumesTags": {
+        "_Type_": "TagSearchTerm",
+        "positiveTags": [
+          {
+            "_RecordPath_": "file://./../../../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+            "_RecordName_": "Tag.bf562061-790e-4bde-ac61-22ede98d87f6",
+            "_RecordId_": "bf562061-790e-4bde-ac61-22ede98d87f6"},
+          {
+            "_RecordPath_": "file://./../../../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+            "_RecordName_": "Tag.15f3217b-0a8b-4f2e-bfec-9bd58b92eb8b",
+            "_RecordId_": "15f3217b-0a8b-4f2e-bfec-9bd58b92eb8b"},
+          {
+            "_RecordPath_": "file://./../../../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+            "_RecordName_": "Tag.dc9f5bf0-bdee-4ec3-a41f-640ca61a7b92",
+            "_RecordId_": "dc9f5bf0-bdee-4ec3-a41f-640ca61a7b92"},
+          {
+            "_RecordPath_": "file://./../../../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+            "_RecordName_": "Tag.ef6f3714-2dd7-4fd7-ab53-1456202d2ef7",
+            "_RecordId_": "ef6f3714-2dd7-4fd7-ab53-1456202d2ef7"},
+          {
+            "_RecordPath_": "file://./../../../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+            "_RecordName_": "Tag.19ba3529-596c-4c0d-a00c-c39a6fc6a7db",
+            "_RecordId_": "19ba3529-596c-4c0d-a00c-c39a6fc6a7db"},
+          {
+            "_RecordPath_": "file://./../../../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+            "_RecordName_": "Tag.f8d77034-8929-4e11-b6c6-09a20313033d",
+            "_RecordId_": "f8d77034-8929-4e11-b6c6-09a20313033d"},
+          {
+            "_RecordPath_": "file://./../../../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+            "_RecordName_": "Tag.c614efdf-f8ff-4ef5-a21b-0d1fbe5a4b57",
+            "_RecordId_": "c614efdf-f8ff-4ef5-a21b-0d1fbe5a4b57"},
+          {
+            "_RecordPath_": "file://./../../../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+            "_RecordName_": "Tag.eee84e1f-63be-4d94-8150-ef277d014f72",
+            "_RecordId_": "eee84e1f-63be-4d94-8150-ef277d014f72"},
+          {
+            "_RecordPath_": "file://./../../../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+            "_RecordName_": "Tag.ce4d6941-7268-4a97-8b86-44a910b4f369",
+            "_RecordId_": "ce4d6941-7268-4a97-8b86-44a910b4f369"},
+          {
+            "_RecordPath_": "file://./../../../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+            "_RecordName_": "Tag.63049ea3-127c-4ad5-a099-f60e43260509",
+            "_RecordId_": "63049ea3-127c-4ad5-a099-f60e43260509"},
+          {
+            "_RecordPath_": "file://./../../../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+            "_RecordName_": "Tag.69169477-cb7a-4b2a-ae83-40de35124691",
+            "_RecordId_": "69169477-cb7a-4b2a-ae83-40de35124691"},
+          {
+            "_RecordPath_": "file://./../../../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+            "_RecordName_": "Tag.a7d2ff06-57a9-4777-8680-89f50e653c65",
+            "_RecordId_": "a7d2ff06-57a9-4777-8680-89f50e653c65"},
+          {
+            "_RecordPath_": "file://./../../../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+            "_RecordName_": "Tag.162cf95e-943d-478b-a13f-8dace4a0677e",
+            "_RecordId_": "162cf95e-943d-478b-a13f-8dace4a0677e"},
+          {
+            "_RecordPath_": "file://./../../../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+            "_RecordName_": "Tag.b1a87dbe-cf0a-45a7-a569-479c55c76597",
+            "_RecordId_": "b1a87dbe-cf0a-45a7-a569-479c55c76597"},
+          {
+            "_RecordPath_": "file://./../../../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+            "_RecordName_": "Tag.bd8c12b8-ef11-4cde-98b6-ce010e70f236",
+            "_RecordId_": "bd8c12b8-ef11-4cde-98b6-ce010e70f236"},
+          {
+            "_RecordPath_": "file://./../../../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+            "_RecordName_": "Tag.a2b36b6b-2728-4edb-960f-693aa1e8bfde",
+            "_RecordId_": "a2b36b6b-2728-4edb-960f-693aa1e8bfde"},
+          {
+            "_RecordPath_": "file://./../../../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+            "_RecordName_": "Tag.87b507e5-09f3-4b92-82d7-5e18ed474335",
+            "_RecordId_": "87b507e5-09f3-4b92-82d7-5e18ed474335"},
+          {
+            "_RecordPath_": "file://./../../../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+            "_RecordName_": "Tag.3ccd254c-459e-4746-9085-c9ff5364820f",
+            "_RecordId_": "3ccd254c-459e-4746-9085-c9ff5364820f"},
+          {
+            "_RecordPath_": "file://./../../../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+            "_RecordName_": "Tag.20e821ba-649b-4228-8ac5-43e386684bdb",
+            "_RecordId_": "20e821ba-649b-4228-8ac5-43e386684bdb"},
+          {
+            "_RecordPath_": "file://./../../../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+            "_RecordName_": "Tag.a6cc5c2c-64e2-4e9c-a22b-6e33235b77df",
+            "_RecordId_": "a6cc5c2c-64e2-4e9c-a22b-6e33235b77df"},
+          {
+            "_RecordPath_": "file://./../../../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+            "_RecordName_": "Tag.b2d2cd1b-ac25-4d3a-b0db-5f0fc288837a",
+            "_RecordId_": "b2d2cd1b-ac25-4d3a-b0db-5f0fc288837a"},
+          {
+            "_RecordPath_": "file://./../../../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+            "_RecordName_": "Tag.9bfbbfa8-0fce-432e-b924-c2102a168a86",
+            "_RecordId_": "9bfbbfa8-0fce-432e-b924-c2102a168a86"},
+          {
+            "_RecordPath_": "file://./../../../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+            "_RecordName_": "Tag.a552869c-129e-4896-a079-7f08100f0b3b",
+            "_RecordId_": "a552869c-129e-4896-a079-7f08100f0b3b"},
+          {
+            "_RecordPath_": "file://./../../../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+            "_RecordName_": "Tag.1aa215b5-7772-44f0-97a3-9caa24a9cb47",
+            "_RecordId_": "1aa215b5-7772-44f0-97a3-9caa24a9cb47"},
+          {
+            "_RecordPath_": "file://./../../../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+            "_RecordName_": "Tag.e485f445-a76e-4134-888e-3374622af89b",
+            "_RecordId_": "e485f445-a76e-4134-888e-3374622af89b"},
+          {
+            "_RecordPath_": "file://./../../../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+            "_RecordName_": "Tag.f122662b-9489-4b08-b533-51cdf2b6eca2",
+            "_RecordId_": "f122662b-9489-4b08-b533-51cdf2b6eca2"},
+          {
+            "_RecordPath_": "file://./../../../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+            "_RecordName_": "Tag.88561c20-a0e4-4b2c-b688-75609ce717f2",
+            "_RecordId_": "88561c20-a0e4-4b2c-b688-75609ce717f2"}],
+        "negativeTags": []},
+      "aiSpawnTags": {
+        "_Type_": "TagList",
+        "tags": [
+          {
+            "_RecordPath_": "file://./../../../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+            "_RecordName_": "Tag.b9525e1a-cb92-4899-82f8-608b36e4a6f2",
+            "_RecordId_": "b9525e1a-cb92-4899-82f8-608b36e4a6f2"}]},
+      "stringVariants": {
+        "_Type_": "MissionStringVariants",
+        "variants": [
+          {
+            "_Type_": "MissionStringVariant",
+            "tag": {
+              "_RecordPath_": "file://./../../../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+              "_RecordName_": "Tag.0130de18-97e2-4d4c-9bb1-3e7ef5fd0490",
+              "_RecordId_": "0130de18-97e2-4d4c-9bb1-3e7ef5fd0490"},
+            "string": "@mission_location_stanton_0072"},
+          {
+            "_Type_": "MissionStringVariant",
+            "tag": {
+              "_RecordPath_": "file://./../../../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+              "_RecordName_": "Tag.8fd73fe9-94b6-45cd-9d4c-35ce67e86c75",
+              "_RecordId_": "8fd73fe9-94b6-45cd-9d4c-35ce67e86c75"},
+            "string": "@mission_location_stanton_0072"}]},
+      "missionModules": [
+        {
+          "_Type_": "SMissionLocationModule",
+          "isPersistent": false,
+          "missionModule": "Libs/Subsumption/Missions/PU/PU_MissionModules/LocationManager/GreenZone/GreenZone Securirty.xml",
+          "missionInputs": [],
+          "properties": []}],
+      "missionLimits": [
+        {
+          "_Type_": "LocationMissionLimit",
+          "tag": {
+            "_RecordPath_": "file://./../../../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+            "_RecordName_": "Tag.03d3fb77-0c3b-4466-81f9-b8a76edc59ce",
+            "_RecordId_": "03d3fb77-0c3b-4466-81f9-b8a76edc59ce"},
+          "autoConsumeIfPlayerAtLocation": false,
+          "maxMissionInstances": 30,
+          "dependentParentTags": {
+            "_Type_": "TagList",
+            "tags": []},
+          "dependentChildTags": {
+            "_Type_": "TagList",
+            "tags": []}}],
+      "autoSpawnSettings": [],
+      "isSecurityNetworkHost": true,
+      "defaultSecurityNetworkManifest": "file://./../../../../../../../../libs/foundry/records/lawsystem/securitynetwork/manifests/nyx/snm_peoplesalliance.json",
+      "disabled": false,
+      "entityClusterMember": null}}}

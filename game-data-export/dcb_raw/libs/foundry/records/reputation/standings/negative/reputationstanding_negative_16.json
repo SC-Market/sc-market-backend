@@ -1,0 +1,15 @@
+{
+  "_RecordName_": "SReputationStandingParams.ReputationStanding_Negative_16",
+  "_RecordId_": "f8f98bde-bc8b-48ce-94a1-a4bd25960de1",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "SReputationStandingParams",
+    "name": "name",
+    "description": "desc",
+    "displayName": "@LOC_PLACEHOLDER",
+    "perkDescription": "@blank_space",
+    "icon": "",
+    "minReputation": -86750,
+    "driftReputation": 0,
+    "driftTimeHours": 0.0,
+    "gated": false}}

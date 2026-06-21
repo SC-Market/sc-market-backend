@@ -1,0 +1,32 @@
+{
+  "_RecordName_": "MobiGlasAppData.File_TEMPLATE",
+  "_RecordId_": "cf7d420d-fc0c-4ddb-84fa-976b2bc36f37",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "MobiGlasAppData",
+    "appData": {
+      "_Type_": "GenericDataDisplayAppData",
+      "dateTime": {
+        "_Type_": "DateTime",
+        "date": {
+          "_Type_": "Date",
+          "day": 1,
+          "month": "January",
+          "year": 2018},
+        "time": {
+          "_Type_": "Time",
+          "hour": 0,
+          "minute": 0,
+          "second": 0}},
+      "content": [
+        {
+          "_Type_": "MobiGlasAppContent",
+          "textContent": "@ui_datapad_files",
+          "imageContent": "",
+          "appLink": {
+            "_Type_": "SMobiGlasAppLink",
+            "targetApp": null,
+            "targetDataEntry": null,
+            "displayIcon": ""}}],
+      "securityToken": null,
+      "dynamicInteger": 0}}}

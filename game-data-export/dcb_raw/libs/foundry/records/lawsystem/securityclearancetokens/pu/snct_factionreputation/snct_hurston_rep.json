@@ -1,0 +1,15 @@
+{
+  "_RecordName_": "SecurityClearanceToken.SNCT_Hurston_Rep",
+  "_RecordId_": "4a65fb59-f4b4-44d1-adb5-821ff2e2733a",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "SecurityClearanceToken",
+    "customCondition": {
+      "_Type_": "SecurityClearanceTokenData_Reputation",
+      "conditionFailedTag": null,
+      "factionReputation": "file://./../../../../../../../libs/foundry/records/factions/factionreputation/factionreputation_hurstondynamics.json",
+      "scope": "file://./../../../../../../../libs/foundry/records/reputation/scopes/reputationscope_affinity.json",
+      "standing": "file://./../../../../../../../libs/foundry/records/reputation/standings/affinity/reputationstanding_affinity_enemy_-005.json"},
+    "manualInput": null,
+    "missionNote": null,
+    "notifications": null}}

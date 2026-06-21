@@ -1,0 +1,57 @@
+{
+  "_RecordName_": "SEntrancesDef.ORIG_85X",
+  "_RecordId_": "044ea65f-942a-4252-8736-a8e5a29bd7bb",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "SEntrancesDef",
+    "boundingBoxScale": {
+      "_Type_": "Vec3",
+      "x": 1.6,
+      "y": 1.6,
+      "z": 1.6},
+    "boundingBoxOffset": {
+      "_Type_": "Vec3",
+      "x": 0.0,
+      "y": 0.0,
+      "z": 0.0},
+    "entranceArray": [
+      {
+        "_Type_": "SCEntranceItem",
+        "entranceName": "@entrance_ladder",
+        "jointName": "hardpoint_cockpit",
+        "positionOffset": {
+          "_Type_": "Vec3",
+          "x": 2.0,
+          "y": 0.5,
+          "z": -0.5},
+        "shipState": "Grounded"},
+      {
+        "_Type_": "SCEntranceItem",
+        "entranceName": "@entrance_ladder",
+        "jointName": "hardpoint_cockpit",
+        "positionOffset": {
+          "_Type_": "Vec3",
+          "x": -2.0,
+          "y": 0.5,
+          "z": -0.5},
+        "shipState": "Grounded"},
+      {
+        "_Type_": "SCEntranceItem",
+        "entranceName": "@entrance_canopy",
+        "jointName": "hardpoint_cockpit",
+        "positionOffset": {
+          "_Type_": "Vec3",
+          "x": 2.0,
+          "y": 1.0,
+          "z": 0.5},
+        "shipState": "Flying"},
+      {
+        "_Type_": "SCEntranceItem",
+        "entranceName": "@entrance_canopy",
+        "jointName": "hardpoint_cockpit",
+        "positionOffset": {
+          "_Type_": "Vec3",
+          "x": -2.0,
+          "y": 1.0,
+          "z": 0.5},
+        "shipState": "Flying"}]}}

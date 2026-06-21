@@ -1,0 +1,14 @@
+{
+  "_RecordName_": "VehicleCareerList.VehicleCareerList",
+  "_RecordId_": "c9b72448-d102-4033-b337-9c01b7a850bf",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "VehicleCareerList",
+    "careerList": [
+      "file://./../../../../libs/foundry/records/vehicle/careers/combat.json",
+      "file://./../../../../libs/foundry/records/vehicle/careers/transporter.json",
+      "file://./../../../../libs/foundry/records/vehicle/careers/exploration.json",
+      "file://./../../../../libs/foundry/records/vehicle/careers/industrial.json",
+      "file://./../../../../libs/foundry/records/vehicle/careers/support.json",
+      "file://./../../../../libs/foundry/records/vehicle/careers/competition.json",
+      "file://./../../../../libs/foundry/records/vehicle/careers/multirole.json"]}}

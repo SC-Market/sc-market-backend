@@ -1,0 +1,53 @@
+{
+  "_RecordName_": "SLoadoutAssortment.Quasi_Graser_Jungle_Loadoutbundle",
+  "_RecordId_": "ad436ec0-347c-4318-bb42-6e17ed06fd31",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "SLoadoutAssortment",
+    "Requirement": null,
+    "GroupedLoadouts": [
+      {
+        "_Type_": "SGroupedLoadouts",
+        "Group": "Body",
+        "Requirement": null,
+        "Loadouts": [
+          {
+            "_Type_": "SItemPortLoadoutXMLParams",
+            "WearRange": null,
+            "DirtRange": null,
+            "SkipInventoryItemsOnMissionEntities": false,
+            "InventoryItems": [],
+            "loadoutPath": "Scripts/Loadouts/Character/Creatures/Qausi_graser/Quasi_Jungle/quasigrazer_jungle.xml"}]},
+      {
+        "_Type_": "SGroupedLoadouts",
+        "Group": "TorsoAttachments",
+        "Requirement": null,
+        "Loadouts": [
+          {
+            "_Type_": "SItemPortLoadoutXMLParams",
+            "WearRange": null,
+            "DirtRange": null,
+            "SkipInventoryItemsOnMissionEntities": false,
+            "InventoryItems": [],
+            "loadoutPath": "Scripts/Loadouts/Character/Creatures/Qausi_graser/Quasi_Jungle/quasigrazer_Egg_random_1_Jungle.xml"},
+          {
+            "_Type_": "SItemPortLoadoutXMLParams",
+            "WearRange": null,
+            "DirtRange": null,
+            "SkipInventoryItemsOnMissionEntities": false,
+            "InventoryItems": [],
+            "loadoutPath": "Scripts/Loadouts/Character/Creatures/Qausi_graser/Quasi_Jungle/quasigrazer_Egg_random_2_jungle.xml"},
+          {
+            "_Type_": "SItemPortLoadoutXMLParams",
+            "WearRange": null,
+            "DirtRange": null,
+            "SkipInventoryItemsOnMissionEntities": false,
+            "InventoryItems": [],
+            "loadoutPath": "Scripts/Loadouts/Character/Creatures/Qausi_graser/Quasi_Jungle/quasigrazer_Egg_random_3_jungle.xml"},
+          {
+            "_Type_": "SItemPortLoadoutXMLParams",
+            "WearRange": null,
+            "DirtRange": null,
+            "SkipInventoryItemsOnMissionEntities": false,
+            "InventoryItems": [],
+            "loadoutPath": "Scripts/Loadouts/Character/Creatures/Qausi_graser/Quasi_Jungle/quasigrazer_Egg_random_4_jungle.xml"}]}]}}

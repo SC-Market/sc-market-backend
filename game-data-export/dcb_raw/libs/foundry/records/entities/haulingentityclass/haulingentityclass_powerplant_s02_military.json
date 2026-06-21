@@ -1,0 +1,18 @@
+{
+  "_RecordName_": "Hauling_EntityClasses.HaulingEntityClass_PowerPlant_S02_Military",
+  "_RecordId_": "fea36f57-bbba-4623-9a15-46bc73ac2a1a",
+  "_RecordTag_": "MissionDesign",
+  "_RecordValue_": {
+    "_Type_": "Hauling_EntityClasses",
+    "entityClasses": {
+      "_Type_": "Hauling_EntityClassList",
+      "entityClassList": [
+        "file://./../../../../../libs/foundry/records/entities/scitem/ships/powerplant/powr_aegs_s02_bolide_scitem.json",
+        "file://./../../../../../libs/foundry/records/entities/scitem/ships/powerplant/powr_aegs_s02_maelstrom_scitem.json",
+        "file://./../../../../../libs/foundry/records/entities/scitem/ships/powerplant/powr_aegs_s02_quadracellmt_scitem.json",
+        "file://./../../../../../libs/foundry/records/entities/scitem/ships/powerplant/powr_aegs_s02_vortex_scitem.json",
+        "file://./../../../../../libs/foundry/records/entities/scitem/ships/powerplant/powr_amrs_s02_exogen_scitem.json",
+        "file://./../../../../../libs/foundry/records/entities/scitem/ships/powerplant/powr_amrs_s02_js400_scitem.json",
+        "file://./../../../../../libs/foundry/records/entities/scitem/ships/powerplant/powr_amrs_s02_turbodrive_scitem.json",
+        "file://./../../../../../libs/foundry/records/entities/scitem/ships/powerplant/powr_amrs_s02_ultraflux_scitem.json"]},
+    "orderDisplayName": "@Salvage_Ship_Component_Power_Plant_S2_Mil_G_Name"}}

@@ -1,0 +1,10 @@
+{
+  "_RecordName_": "MissionType.Rescue",
+  "_RecordId_": "80f3c6da-28cd-48b7-a429-3995b15c1f23",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "MissionType",
+    "IconName": "Rescue_ico",
+    "LocalisedTypeName": "@mobiGlas_ui_MissionType_Rescue",
+    "svgIconPath": "UI/Textures/Vector/MobiGlas/App_ContractsManager/PU_mobiapp_icon_mission_rescue.svg",
+    "DisplayTime": -1.0}}

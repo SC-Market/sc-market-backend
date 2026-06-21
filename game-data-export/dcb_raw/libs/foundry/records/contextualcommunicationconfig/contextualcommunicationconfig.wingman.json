@@ -1,0 +1,110 @@
+{
+  "_RecordName_": "ContextualCommunicationConfig.Wingman",
+  "_RecordId_": "06058881-7f4f-46a1-bd48-4e89a88157fc",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "ContextualCommunicationConfig",
+    "responseEntries": [
+      {
+        "_Type_": "ContextualCommunicationResponse",
+        "name": "Wingman_Kill",
+        "concept": "OnTargetKilled",
+        "customConcept": "",
+        "refireDelay": 15.0,
+        "rules": [],
+        "response": {
+          "_Type_": "CommunicationRequest",
+          "communication": "file://./../../../../libs/foundry/records/communicationname/communicationname.reaction_successfulkill.json",
+          "channelName": "file://./../../../../libs/foundry/records/communicationchannelname/groupradio.json"},
+        "memoryVariables": []},
+      {
+        "_Type_": "ContextualCommunicationResponse",
+        "name": "Wingman_FriendlyKill",
+        "concept": "OnFriendlyKilledEnemy",
+        "customConcept": "",
+        "refireDelay": 100.0,
+        "rules": [],
+        "response": {
+          "_Type_": "CommunicationRequest",
+          "communication": "file://./../../../../libs/foundry/records/communicationname/communicationname.reaction_friendlysuccessfulkill.json",
+          "channelName": "file://./../../../../libs/foundry/records/communicationchannelname/groupradio.json"},
+        "memoryVariables": []},
+      {
+        "_Type_": "ContextualCommunicationResponse",
+        "name": "Wingman_Respawn",
+        "concept": "OnRespawn",
+        "customConcept": "",
+        "refireDelay": 15.0,
+        "rules": [],
+        "response": {
+          "_Type_": "CommunicationRequest",
+          "communication": "file://./../../../../libs/foundry/records/communicationname/communicationname.reaction_respawn.json",
+          "channelName": "file://./../../../../libs/foundry/records/communicationchannelname/groupradio.json"},
+        "memoryVariables": []},
+      {
+        "_Type_": "ContextualCommunicationResponse",
+        "name": "Wingman_FriendlyDeath",
+        "concept": "OnFriendlyDied",
+        "customConcept": "",
+        "refireDelay": 15.0,
+        "rules": [],
+        "response": {
+          "_Type_": "CommunicationRequest",
+          "communication": "file://./../../../../libs/foundry/records/communicationname/communicationname.reaction_friendlydeath.json",
+          "channelName": "file://./../../../../libs/foundry/records/communicationchannelname/groupradio.json"},
+        "memoryVariables": []},
+      {
+        "_Type_": "ContextualCommunicationResponse",
+        "name": "Wingman_Death",
+        "concept": "OnKilled",
+        "customConcept": "",
+        "refireDelay": 0.0,
+        "rules": [],
+        "response": {
+          "_Type_": "CommunicationRequest",
+          "communication": "file://./../../../../libs/foundry/records/communicationname/communicationname.reaction_death.json",
+          "channelName": "file://./../../../../libs/foundry/records/communicationchannelname/groupradiourgent.json"},
+        "memoryVariables": []},
+      {
+        "_Type_": "ContextualCommunicationResponse",
+        "name": "Wingman_TakingDamage",
+        "concept": "OnVehicleHit",
+        "customConcept": "",
+        "refireDelay": 25.0,
+        "rules": [],
+        "response": {
+          "_Type_": "CommunicationRequest",
+          "communication": "file://./../../../../libs/foundry/records/communicationname/communicationname.reaction_takingdamage.json",
+          "channelName": "file://./../../../../libs/foundry/records/communicationchannelname/groupradiourgent.json"},
+        "memoryVariables": []},
+      {
+        "_Type_": "ContextualCommunicationResponse",
+        "name": "Wingman_TakingFirendlyFire",
+        "concept": "OnVehicleHit",
+        "customConcept": "",
+        "refireDelay": 0.0,
+        "rules": [
+          {
+            "_Type_": "ContextualCommunicationCondition",
+            "criteriaType": "Attacker_IsFriendly",
+            "customCriteria": "",
+            "numberValue": 0.0,
+            "stringValue": "",
+            "operation": "None"}],
+        "response": {
+          "_Type_": "CommunicationRequest",
+          "communication": "file://./../../../../libs/foundry/records/communicationname/communicationname.reaction_takingfriendlyfire.json",
+          "channelName": "file://./../../../../libs/foundry/records/communicationchannelname/groupradiourgent.json"},
+        "memoryVariables": []},
+      {
+        "_Type_": "ContextualCommunicationResponse",
+        "name": "Wingman_HostileSpotted",
+        "concept": "OnVehicleEnemySpotted",
+        "customConcept": "",
+        "refireDelay": 25.0,
+        "rules": [],
+        "response": {
+          "_Type_": "CommunicationRequest",
+          "communication": "file://./../../../../libs/foundry/records/communicationname/communicationname.reaction_hostilespotted.json",
+          "channelName": "file://./../../../../libs/foundry/records/communicationchannelname/groupradiourgent.json"},
+        "memoryVariables": []}]}}

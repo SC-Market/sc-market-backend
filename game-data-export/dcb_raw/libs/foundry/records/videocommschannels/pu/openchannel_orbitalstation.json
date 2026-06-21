@@ -1,0 +1,10 @@
+{
+  "_RecordName_": "CommsChannelDef.OpenChannel_OrbitalStation",
+  "_RecordId_": "74f2abf4-ed82-4199-96b0-dc79bab7bd8b",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "CommsChannelDef",
+    "channelId": "OpenChannel_OrbitalStation",
+    "displayName": "@LOC_PLACEHOLDER",
+    "canHaveMultipleInstances": false,
+    "useAreaOfEffect": false}}

@@ -1,0 +1,660 @@
+{
+  "_RecordName_": "MusicLogicSuite.SC_Universal",
+  "_RecordId_": "767ad03c-a17c-40bf-ab55-fbc8eb1c59f7",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "MusicLogicSuite",
+    "name": "SC_Universal",
+    "musicLogicConfig": null,
+    "nodes": [
+      {
+        "_Pointer_": "ptr:1",
+        "_Type_": "MusicLogicIncrement",
+        "children": [],
+        "parameter": "file://./../../../../../libs/foundry/records/musiclogic/parameters/musiclogicparameter.ship_situation.json",
+        "value": 100.0},
+      {
+        "_Type_": "MusicEventResponse",
+        "children": [
+          "_PointsTo_:ptr:1",
+          "_PointsTo_:ptr:2"],
+        "musicEvent": {
+          "_RecordPath_": "file://./../../../../../libs/foundry/records/musiclogic/events/musiclogiceventlist.flight.json",
+          "_RecordName_": "MusicLogicEvent.MX_Player_Ship_Hull_Hit_By_Enemy",
+          "_RecordId_": "59706884-5193-42ee-810e-549ec8b3a39c"}},
+      {
+        "_Type_": "MusicEventResponse",
+        "children": [
+          "_PointsTo_:ptr:3",
+          "_PointsTo_:ptr:4",
+          "_PointsTo_:ptr:5"],
+        "musicEvent": {
+          "_RecordPath_": "file://./../../../../../libs/foundry/records/musiclogic/events/musiclogiceventlist.flight.json",
+          "_RecordName_": "MusicLogicEvent.MX_Enemy_Ship_Destroyed_By_Player",
+          "_RecordId_": "63b23a44-dca7-4a3e-8cc3-747c655c7c91"}},
+      {
+        "_Pointer_": "ptr:3",
+        "_Type_": "MusicLogicTrigger",
+        "trigger": "Play_SC_Music_Trigger_Enemy_Destroyed"},
+      {
+        "_Type_": "MusicEventResponse",
+        "children": [
+          "_PointsTo_:ptr:6",
+          "_PointsTo_:ptr:7",
+          "_PointsTo_:ptr:8",
+          "_PointsTo_:ptr:9"],
+        "musicEvent": {
+          "_RecordPath_": "file://./../../../../../libs/foundry/records/musiclogic/events/musiclogiceventlist.gameflow.json",
+          "_RecordName_": "MusicLogicEvent.MX_Level_Gameplay_Start",
+          "_RecordId_": "f5908ac2-88e6-4501-ba53-75709cf9fd7f"}},
+      {
+        "_Type_": "MusicEventResponse",
+        "children": [
+          "_PointsTo_:ptr:10",
+          "_PointsTo_:ptr:11"],
+        "musicEvent": {
+          "_RecordPath_": "file://./../../../../../libs/foundry/records/musiclogic/events/musiclogiceventlist.flight.json",
+          "_RecordName_": "MusicLogicEvent.MX_Player_Ship_Shield_Hit_By_Enemy",
+          "_RecordId_": "a83a70b4-6448-4a5e-824f-3177bf5f9e3c"}},
+      {
+        "_Pointer_": "ptr:10",
+        "_Type_": "MusicLogicIncrement",
+        "children": [],
+        "parameter": "file://./../../../../../libs/foundry/records/musiclogic/parameters/musiclogicparameter.ship_intensity_slowburn.json",
+        "value": 300.0},
+      {
+        "_Pointer_": "ptr:11",
+        "_Type_": "MusicLogicIncrement",
+        "children": [],
+        "parameter": "file://./../../../../../libs/foundry/records/musiclogic/parameters/musiclogicparameter.player_mood.json",
+        "value": -75.0},
+      {
+        "_Type_": "MusicEventResponse",
+        "children": [
+          "_PointsTo_:ptr:12",
+          "_PointsTo_:ptr:13"],
+        "musicEvent": {
+          "_RecordPath_": "file://./../../../../../libs/foundry/records/musiclogic/events/musiclogiceventlist.flight.json",
+          "_RecordName_": "MusicLogicEvent.MX_Enemy_Ship_Hull_Hit_By_Player",
+          "_RecordId_": "dd458ee1-0adb-4d2f-a886-7f9b6cf147ef"}},
+      {
+        "_Pointer_": "ptr:12",
+        "_Type_": "MusicLogicIncrement",
+        "children": [],
+        "parameter": "file://./../../../../../libs/foundry/records/musiclogic/parameters/musiclogicparameter.ship_intensity_slowburn.json",
+        "value": 500.0},
+      {
+        "_Pointer_": "ptr:13",
+        "_Type_": "MusicLogicIncrement",
+        "children": [],
+        "parameter": "file://./../../../../../libs/foundry/records/musiclogic/parameters/musiclogicparameter.player_mood.json",
+        "value": 50.0},
+      {
+        "_Pointer_": "ptr:2",
+        "_Type_": "MusicLogicIncrement",
+        "children": [],
+        "parameter": "file://./../../../../../libs/foundry/records/musiclogic/parameters/musiclogicparameter.player_mood.json",
+        "value": -150.0},
+      {
+        "_Type_": "MusicEventResponse",
+        "children": [
+          "_PointsTo_:ptr:14",
+          "_PointsTo_:ptr:15"],
+        "musicEvent": {
+          "_RecordPath_": "file://./../../../../../libs/foundry/records/musiclogic/events/musiclogiceventlist.flight.json",
+          "_RecordName_": "MusicLogicEvent.MX_Ship_Pass_By_Listener",
+          "_RecordId_": "346de930-05a7-438a-a99d-49c89235d87b"}},
+      {
+        "_Pointer_": "ptr:15",
+        "_Type_": "MusicLogicIncrement",
+        "children": [],
+        "parameter": "file://./../../../../../libs/foundry/records/musiclogic/parameters/musiclogicparameter.ship_situation.json",
+        "value": 50.0},
+      {
+        "_Type_": "MusicEventResponse",
+        "children": [
+          "_PointsTo_:ptr:16",
+          "_PointsTo_:ptr:17"],
+        "musicEvent": {
+          "_RecordPath_": "file://./../../../../../libs/foundry/records/musiclogic/events/musiclogiceventlist.flight.json",
+          "_RecordName_": "MusicLogicEvent.MX_Projectile_Whiz_By_Player",
+          "_RecordId_": "566b8846-a1ab-499b-8d9b-e50e7f16536f"}},
+      {
+        "_Pointer_": "ptr:16",
+        "_Type_": "MusicLogicIncrement",
+        "children": [],
+        "parameter": "file://./../../../../../libs/foundry/records/musiclogic/parameters/musiclogicparameter.ship_situation.json",
+        "value": 30.0},
+      {
+        "_Type_": "MusicEventResponse",
+        "children": [
+          "_PointsTo_:ptr:18"],
+        "musicEvent": {
+          "_RecordPath_": "file://./../../../../../libs/foundry/records/musiclogic/events/musiclogiceventlist.flight.json",
+          "_RecordName_": "MusicLogicEvent.MX_Hostile_Ship_Contact",
+          "_RecordId_": "f810cf7e-aa6f-48d3-8932-84906cfb344a"}},
+      {
+        "_Type_": "MusicEventResponse",
+        "children": [
+          "_PointsTo_:ptr:19",
+          "_PointsTo_:ptr:20"],
+        "musicEvent": {
+          "_RecordPath_": "file://./../../../../../libs/foundry/records/musiclogic/events/musiclogiceventlist.flight.json",
+          "_RecordName_": "MusicLogicEvent.MX_Player_Ship_Locked_On_By_Enemy_Missile",
+          "_RecordId_": "45626855-8b36-4544-a9f9-563c619fdde0"}},
+      {
+        "_Pointer_": "ptr:19",
+        "_Type_": "MusicLogicIncrement",
+        "children": [],
+        "parameter": "file://./../../../../../libs/foundry/records/musiclogic/parameters/musiclogicparameter.ship_situation_burst.json",
+        "value": 1000.0},
+      {
+        "_Type_": "MusicEventResponse",
+        "children": [
+          "_PointsTo_:ptr:21",
+          "_PointsTo_:ptr:22"],
+        "musicEvent": {
+          "_RecordPath_": "file://./../../../../../libs/foundry/records/musiclogic/events/musiclogiceventlist.flight.json",
+          "_RecordName_": "MusicLogicEvent.MX_Enemy_Ship_Shield_Hit_By_Player",
+          "_RecordId_": "ccd6bd1d-15f2-4480-ad8a-e6c2f665417e"}},
+      {
+        "_Pointer_": "ptr:21",
+        "_Type_": "MusicLogicIncrement",
+        "children": [],
+        "parameter": "file://./../../../../../libs/foundry/records/musiclogic/parameters/musiclogicparameter.ship_intensity_slowburn.json",
+        "value": 250.0},
+      {
+        "_Pointer_": "ptr:22",
+        "_Type_": "MusicLogicIncrement",
+        "children": [],
+        "parameter": "file://./../../../../../libs/foundry/records/musiclogic/parameters/musiclogicparameter.player_mood.json",
+        "value": 25.0},
+      {
+        "_Pointer_": "ptr:20",
+        "_Type_": "MusicLogicTrigger",
+        "trigger": "Play_SC_Music_Trigger_Missile_Inbound"},
+      {
+        "_Pointer_": "ptr:4",
+        "_Type_": "MusicLogicIncrement",
+        "children": [],
+        "parameter": "file://./../../../../../libs/foundry/records/musiclogic/parameters/musiclogicparameter.player_mood.json",
+        "value": 200.0},
+      {
+        "_Pointer_": "ptr:18",
+        "_Type_": "MusicLogicTrigger",
+        "trigger": "Play_SC_Music_Trigger_Hostile_Arrives"},
+      {
+        "_Type_": "MusicEventResponse",
+        "children": [
+          "_PointsTo_:ptr:23"],
+        "musicEvent": {
+          "_RecordPath_": "file://./../../../../../libs/foundry/records/musiclogic/events/musiclogiceventlist.general.json",
+          "_RecordName_": "MusicLogicEvent.MX_Explosion",
+          "_RecordId_": "9ef7c53f-1265-44f2-a622-064f5d48dc09"}},
+      {
+        "_Pointer_": "ptr:23",
+        "_Type_": "MusicLogicTrigger",
+        "trigger": "Play_SC_Music_Trigger_Explosion"},
+      {
+        "_Pointer_": "ptr:14",
+        "_Type_": "MusicLogicTrigger",
+        "trigger": "Play_SC_Music_Trigger_Ship_Pass_By"},
+      {
+        "_Pointer_": "ptr:6",
+        "_Type_": "MusicLogicSwitch",
+        "switch": "SC_Music_Logic_Theme",
+        "value": "Default"},
+      {
+        "_Pointer_": "ptr:7",
+        "_Type_": "MusicLogicSwitch",
+        "switch": "SC_Music_Global_State",
+        "value": "FPS"},
+      {
+        "_Type_": "MusicEventResponse",
+        "children": [
+          "_PointsTo_:ptr:24",
+          "_PointsTo_:ptr:25",
+          "_PointsTo_:ptr:26"],
+        "musicEvent": {
+          "_RecordPath_": "file://./../../../../../libs/foundry/records/musiclogic/events/musiclogiceventlist.flight.json",
+          "_RecordName_": "MusicLogicEvent.MX_Player_Ship_Destroyed_By_Enemy",
+          "_RecordId_": "635521d5-a288-48ed-bde2-388fe71aab59"}},
+      {
+        "_Pointer_": "ptr:24",
+        "_Type_": "MusicLogicTrigger",
+        "trigger": "Play_SC_Music_Trigger_Enemy_Destroyed_Player"},
+      {
+        "_Pointer_": "ptr:25",
+        "_Type_": "MusicLogicSetValue",
+        "parameter": "file://./../../../../../libs/foundry/records/musiclogic/parameters/musiclogicparameter.ship_intensity.json",
+        "value": 0.0},
+      {
+        "_Pointer_": "ptr:26",
+        "_Type_": "MusicLogicSetValue",
+        "parameter": "file://./../../../../../libs/foundry/records/musiclogic/parameters/musiclogicparameter.player_mood.json",
+        "value": 0.0},
+      {
+        "_Type_": "MusicEventResponse",
+        "children": [
+          "_PointsTo_:ptr:27"],
+        "musicEvent": {
+          "_RecordPath_": "file://./../../../../../libs/foundry/records/musiclogic/events/musiclogiceventlist.general.json",
+          "_RecordName_": "MusicLogicEvent.MX_Local_Player_Lost_Wanted_Status",
+          "_RecordId_": "63554c12-4cb5-4d26-97db-023cee412359"}},
+      {
+        "_Pointer_": "ptr:46",
+        "_Type_": "MusicLogicSwitch",
+        "switch": "SC_Music_Logic_Theme",
+        "value": "Outlaw"},
+      {
+        "_Type_": "MusicEventResponse",
+        "children": [
+          "_PointsTo_:ptr:28",
+          "_PointsTo_:ptr:29",
+          "_PointsTo_:ptr:30",
+          "_PointsTo_:ptr:31",
+          "_PointsTo_:ptr:32"],
+        "musicEvent": {
+          "_RecordPath_": "file://./../../../../../libs/foundry/records/musiclogic/events/musiclogiceventlist.fps.json",
+          "_RecordName_": "MusicLogicEvent.MX_FPS_Player_Kills_Infantry",
+          "_RecordId_": "7050d49d-8d5d-4718-9d44-89cb4301befe"}},
+      {
+        "_Pointer_": "ptr:29",
+        "_Type_": "MusicLogicIncrement",
+        "children": [],
+        "parameter": "file://./../../../../../libs/foundry/records/musiclogic/parameters/musiclogicparameter.ship_intensity_slowburn.json",
+        "value": 500.0},
+      {
+        "_Pointer_": "ptr:30",
+        "_Type_": "MusicLogicIncrement",
+        "children": [],
+        "parameter": "file://./../../../../../libs/foundry/records/musiclogic/parameters/musiclogicparameter.player_mood.json",
+        "value": 100.0},
+      {
+        "_Type_": "MusicEventResponse",
+        "children": [
+          "_PointsTo_:ptr:33",
+          "_PointsTo_:ptr:34",
+          "_PointsTo_:ptr:35"],
+        "musicEvent": {
+          "_RecordPath_": "file://./../../../../../libs/foundry/records/musiclogic/events/musiclogiceventlist.fps.json",
+          "_RecordName_": "MusicLogicEvent.MX_FPS_Infantry_Hit_Player",
+          "_RecordId_": "2dcf57c3-41cb-4118-a65c-359b6ad3e61d"}},
+      {
+        "_Pointer_": "ptr:33",
+        "_Type_": "MusicLogicIncrement",
+        "children": [],
+        "parameter": "file://./../../../../../libs/foundry/records/musiclogic/parameters/musiclogicparameter.ship_intensity_burst.json",
+        "value": 500.0},
+      {
+        "_Pointer_": "ptr:34",
+        "_Type_": "MusicLogicIncrement",
+        "children": [],
+        "parameter": "file://./../../../../../libs/foundry/records/musiclogic/parameters/musiclogicparameter.player_mood.json",
+        "value": -250.0},
+      {
+        "_Type_": "MusicEventResponse",
+        "children": [
+          "_PointsTo_:ptr:36",
+          "_PointsTo_:ptr:37",
+          "_PointsTo_:ptr:38"],
+        "musicEvent": {
+          "_RecordPath_": "file://./../../../../../libs/foundry/records/musiclogic/events/musiclogiceventlist.fps.json",
+          "_RecordName_": "MusicLogicEvent.MX_FPS_Player_Hit_Infantry",
+          "_RecordId_": "1eb37a7e-32b9-496c-9e8f-d5e17ac8ca21"}},
+      {
+        "_Pointer_": "ptr:36",
+        "_Type_": "MusicLogicIncrement",
+        "children": [],
+        "parameter": "file://./../../../../../libs/foundry/records/musiclogic/parameters/musiclogicparameter.ship_intensity_burst.json",
+        "value": 500.0},
+      {
+        "_Pointer_": "ptr:37",
+        "_Type_": "MusicLogicIncrement",
+        "children": [],
+        "parameter": "file://./../../../../../libs/foundry/records/musiclogic/parameters/musiclogicparameter.player_mood.json",
+        "value": 50.0},
+      {
+        "_Pointer_": "ptr:28",
+        "_Type_": "MusicLogicIncrement",
+        "children": [],
+        "parameter": "file://./../../../../../libs/foundry/records/musiclogic/parameters/musiclogicparameter.ship_situation.json",
+        "value": 250.0},
+      {
+        "_Type_": "MusicEventResponse",
+        "children": [
+          "_PointsTo_:ptr:39"],
+        "musicEvent": {
+          "_RecordPath_": "file://./../../../../../libs/foundry/records/musiclogic/events/musiclogiceventlist.general.json",
+          "_RecordName_": "MusicLogicEvent.MX_Intensity_Block_1000",
+          "_RecordId_": "a6d3bd1e-e5dc-4f75-aaaa-f2d3d50342e2"}},
+      {
+        "_Type_": "MusicEventResponse",
+        "children": [
+          "_PointsTo_:ptr:40"],
+        "musicEvent": {
+          "_RecordPath_": "file://./../../../../../libs/foundry/records/musiclogic/events/musiclogiceventlist.general.json",
+          "_RecordName_": "MusicLogicEvent.MX_Intensity_Release_1000",
+          "_RecordId_": "378bfb9e-82ef-4f2e-82fa-9473db80f260"}},
+      {
+        "_Pointer_": "ptr:39",
+        "_Type_": "MusicLogicIncrement",
+        "children": [],
+        "parameter": "file://./../../../../../libs/foundry/records/musiclogic/parameters/musiclogicparameter.intensity_block.json",
+        "value": 1000.0},
+      {
+        "_Pointer_": "ptr:40",
+        "_Type_": "MusicLogicIncrement",
+        "children": [],
+        "parameter": "file://./../../../../../libs/foundry/records/musiclogic/parameters/musiclogicparameter.intensity_block.json",
+        "value": 1000.0},
+      {
+        "_Pointer_": "ptr:8",
+        "_Type_": "MusicLogicSwitch",
+        "switch": "SC_Music_Master",
+        "value": "PU"},
+      {
+        "_Pointer_": "ptr:41",
+        "_Type_": "MusicLogicReset"},
+      {
+        "_Type_": "MusicEventResponse",
+        "children": [
+          "_PointsTo_:ptr:41",
+          "_PointsTo_:ptr:42"],
+        "musicEvent": {
+          "_RecordPath_": "file://./../../../../../libs/foundry/records/musiclogic/events/musiclogiceventlist.gameflow.json",
+          "_RecordName_": "MusicLogicEvent.MX_Level_Gameplay_Start",
+          "_RecordId_": "f5908ac2-88e6-4501-ba53-75709cf9fd7f"}},
+      {
+        "_Type_": "MusicEventResponse",
+        "children": [
+          "_PointsTo_:ptr:43",
+          "_PointsTo_:ptr:44",
+          "_PointsTo_:ptr:45"],
+        "musicEvent": {
+          "_RecordPath_": "file://./../../../../../libs/foundry/records/musiclogic/events/musiclogiceventlist.general.json",
+          "_RecordName_": "MusicLogicEvent.MX_Local_Player_Died",
+          "_RecordId_": "9922e420-f00c-4aed-a70d-71b2094ed18f"}},
+      {
+        "_Pointer_": "ptr:43",
+        "_Type_": "MusicLogicReset"},
+      {
+        "_Type_": "MusicLogicSwitch",
+        "switch": "SC_Music_Global_State",
+        "value": "Cinematic"},
+      {
+        "_Type_": "MusicLogicSwitch",
+        "switch": "SC_Music_Cinematic",
+        "value": "MXGS_PU_CIne_Death"},
+      {
+        "_Type_": "MusicEventResponse",
+        "children": [
+          "_PointsTo_:ptr:46"],
+        "musicEvent": {
+          "_RecordPath_": "file://./../../../../../libs/foundry/records/musiclogic/events/musiclogiceventlist.general.json",
+          "_RecordName_": "MusicLogicEvent.MX_Local_Player_Gained_Wanted_Status",
+          "_RecordId_": "52f758a4-f38d-4556-a773-e43ed68be3a3"}},
+      {
+        "_Pointer_": "ptr:27",
+        "_Type_": "MusicLogicSwitch",
+        "switch": "SC_Music_Logic_Theme",
+        "value": "Default"},
+      {
+        "_Type_": "MusicEventResponse",
+        "children": [
+          "_PointsTo_:ptr:47"],
+        "musicEvent": {
+          "_RecordPath_": "file://./../../../../../libs/foundry/records/musiclogic/events/pumissions.json",
+          "_RecordName_": "MusicLogicEvent.MX_PU_Mission_Xenothreat_Start",
+          "_RecordId_": "807a7a7c-3fcc-4d87-acad-74b625e683ad"}},
+      {
+        "_Pointer_": "ptr:47",
+        "_Type_": "MusicLogicSwitch",
+        "switch": "SC_Music_PU_Missions",
+        "value": "Procyon"},
+      {
+        "_Type_": "MusicEventResponse",
+        "children": [
+          "_PointsTo_:ptr:48"],
+        "musicEvent": {
+          "_RecordPath_": "file://./../../../../../libs/foundry/records/musiclogic/events/pumissions.json",
+          "_RecordName_": "MusicLogicEvent.MX_PU_Mission_Xenothreat_Stop",
+          "_RecordId_": "c04f2dc5-0f0c-4482-a5b5-3d26b21313db"}},
+      {
+        "_Pointer_": "ptr:48",
+        "_Type_": "MusicLogicSwitch",
+        "switch": "SC_Music_PU_Missions",
+        "value": "No_Mission"},
+      {
+        "_Type_": "MusicEventResponse",
+        "children": [
+          "_PointsTo_:ptr:49",
+          "_PointsTo_:ptr:50",
+          "_PointsTo_:ptr:51",
+          "_PointsTo_:ptr:52"],
+        "musicEvent": {
+          "_RecordPath_": "file://./../../../../../libs/foundry/records/musiclogic/events/musiclogiceventlist.flight.json",
+          "_RecordName_": "MusicLogicEvent.MX_ATC_LandingAreaGranted",
+          "_RecordId_": "92b65f4b-6dda-4f47-94e5-b83ed202b7c2"}},
+      {
+        "_Type_": "MusicEventResponse",
+        "children": [
+          "_PointsTo_:ptr:53",
+          "_PointsTo_:ptr:54"],
+        "musicEvent": {
+          "_RecordPath_": "file://./../../../../../libs/foundry/records/musiclogic/events/musiclogiceventlist.flight.json",
+          "_RecordName_": "MusicLogicEvent.MX_ATC_TakingOffAreaGranted",
+          "_RecordId_": "9084385a-73a8-43da-ac89-378dcd840489"}},
+      {
+        "_Type_": "MusicEventResponse",
+        "children": [
+          "_PointsTo_:ptr:55",
+          "_PointsTo_:ptr:56"],
+        "musicEvent": {
+          "_RecordPath_": "file://./../../../../../libs/foundry/records/musiclogic/events/musiclogiceventlist.flight.json",
+          "_RecordName_": "MusicLogicEvent.MX_ATC_SuccessfulLanding",
+          "_RecordId_": "ae87cdcf-1c40-4048-9a72-4bd62f0cf399"}},
+      {
+        "_Type_": "MusicEventResponse",
+        "children": [
+          "_PointsTo_:ptr:57",
+          "_PointsTo_:ptr:58"],
+        "musicEvent": {
+          "_RecordPath_": "file://./../../../../../libs/foundry/records/musiclogic/events/musiclogiceventlist.flight.json",
+          "_RecordName_": "MusicLogicEvent.MX_ATC_SuccessfulTakingOff",
+          "_RecordId_": "232c9c1c-2340-4f5e-a784-e73380ab36ea"}},
+      {
+        "_Type_": "MusicEventResponse",
+        "children": [
+          "_PointsTo_:ptr:59",
+          "_PointsTo_:ptr:60"],
+        "musicEvent": {
+          "_RecordPath_": "file://./../../../../../libs/foundry/records/musiclogic/events/musiclogiceventlist.flight.json",
+          "_RecordName_": "MusicLogicEvent.MX_ATC_TakingOffApproved",
+          "_RecordId_": "64790638-53c9-4d71-a733-c1cbbf7ddcd7"}},
+      {
+        "_Type_": "MusicEventResponse",
+        "children": [
+          "_PointsTo_:ptr:61"],
+        "musicEvent": {
+          "_RecordPath_": "file://./../../../../../libs/foundry/records/musiclogic/events/musiclogiceventlist.flight.json",
+          "_RecordName_": "MusicLogicEvent.MX_ATC_LandingOutOfTime",
+          "_RecordId_": "48909bd0-c0fc-4c28-87e7-9e933bb2aaf4"}},
+      {
+        "_Type_": "MusicEventResponse",
+        "children": [
+          "_PointsTo_:ptr:62"],
+        "musicEvent": {
+          "_RecordPath_": "file://./../../../../../libs/foundry/records/musiclogic/events/musiclogiceventlist.flight.json",
+          "_RecordName_": "MusicLogicEvent.MX_ATC_TakingOffOutOfTime",
+          "_RecordId_": "32f91c7f-72ce-4e77-be04-3a12c3aef1f1"}},
+      {
+        "_Type_": "MusicEventResponse",
+        "children": [
+          "_PointsTo_:ptr:63",
+          "_PointsTo_:ptr:64"],
+        "musicEvent": {
+          "_RecordPath_": "file://./../../../../../libs/foundry/records/musiclogic/events/musiclogiceventlist.flight.json",
+          "_RecordName_": "MusicLogicEvent.MX_ATC_NoPermission",
+          "_RecordId_": "58332951-4448-4788-b15e-edce7ef852d4"}},
+      {
+        "_Pointer_": "ptr:49",
+        "_Type_": "MusicLogicTrigger",
+        "trigger": "MUS_Scripted_Pyro_ATC_LandingAreaGranted"},
+      {
+        "_Pointer_": "ptr:53",
+        "_Type_": "MusicLogicTrigger",
+        "trigger": "MUS_Scripted_Pyro_ATC_TakingOffAreaGranted"},
+      {
+        "_Pointer_": "ptr:55",
+        "_Type_": "MusicLogicTrigger",
+        "trigger": "MUS_Scripted_Pyro_ATC_SuccessfulLanding"},
+      {
+        "_Pointer_": "ptr:57",
+        "_Type_": "MusicLogicTrigger",
+        "trigger": "MUS_Scripted_Pyro_ATC_SuccessfulTakingOff"},
+      {
+        "_Pointer_": "ptr:63",
+        "_Type_": "MusicLogicTrigger",
+        "trigger": "MUS_Scripted_Pyro_ATC_NoPermission"},
+      {
+        "_Pointer_": "ptr:50",
+        "_Type_": "MusicLogicIncrement",
+        "children": [],
+        "parameter": "file://./../../../../../libs/foundry/records/musiclogic/parameters/ship_intensity_burst_slow.json",
+        "value": 499.0},
+      {
+        "_Pointer_": "ptr:59",
+        "_Type_": "MusicLogicTrigger",
+        "trigger": "MUS_Scripted_Pyro_ATC_TakingOffApproved"},
+      {
+        "_Type_": "MusicEventResponse",
+        "children": [
+          "_PointsTo_:ptr:65"],
+        "musicEvent": {
+          "_RecordPath_": "file://./../../../../../libs/foundry/records/musiclogic/events/musiclogiceventlist.flight.json",
+          "_RecordName_": "MusicLogicEvent.MX_QT_PreArrival",
+          "_RecordId_": "b751bf8b-d2c8-444a-9dd5-eead0cdc1908"}},
+      {
+        "_Pointer_": "ptr:65",
+        "_Type_": "MusicLogicTrigger",
+        "trigger": "MUS_PU_Shared_Scripted_QT_PreArrival"},
+      {
+        "_Pointer_": "ptr:35",
+        "_Type_": "MusicLogicIncrement",
+        "children": [],
+        "parameter": "file://./../../../../../libs/foundry/records/musiclogic/parameters/fps_intensity_burst.json",
+        "value": 800.0},
+      {
+        "_Pointer_": "ptr:38",
+        "_Type_": "MusicLogicIncrement",
+        "children": [],
+        "parameter": "file://./../../../../../libs/foundry/records/musiclogic/parameters/fps_intensity_burst.json",
+        "value": 500.0},
+      {
+        "_Pointer_": "ptr:31",
+        "_Type_": "MusicLogicIncrement",
+        "children": [],
+        "parameter": "file://./../../../../../libs/foundry/records/musiclogic/parameters/fps_intensity.json",
+        "value": -350.0},
+      {
+        "_Pointer_": "ptr:32",
+        "_Type_": "MusicLogicIncrement",
+        "children": [],
+        "parameter": "file://./../../../../../libs/foundry/records/musiclogic/parameters/fps_situation.json",
+        "value": -250.0},
+      {
+        "_Pointer_": "ptr:17",
+        "_Type_": "MusicLogicIncrement",
+        "children": [],
+        "parameter": "file://./../../../../../libs/foundry/records/musiclogic/parameters/fps_situation.json",
+        "value": 30.0},
+      {
+        "_Pointer_": "ptr:51",
+        "_Type_": "MusicLogicTrigger",
+        "trigger": "MUS_Scripted_ASD_ATCGranted"},
+      {
+        "_Pointer_": "ptr:44",
+        "_Type_": "MusicLogicTrigger",
+        "trigger": "MUS_Death_Reset"},
+      {
+        "_Type_": "MusicEventResponse",
+        "children": [
+          "_PointsTo_:ptr:66",
+          "_PointsTo_:ptr:67",
+          "_PointsTo_:ptr:68",
+          "_PointsTo_:ptr:69"],
+        "musicEvent": {
+          "_RecordPath_": "file://./../../../../../libs/foundry/records/musiclogic/events/musiclogiceventlist.fps.json",
+          "_RecordName_": "MusicLogicEvent.MX_FPS_Local_Player_Exit_Combat",
+          "_RecordId_": "2b42724a-9b07-4843-a1c4-202840b6a038"}},
+      {
+        "_Pointer_": "ptr:66",
+        "_Type_": "MusicLogicSetValue",
+        "parameter": "file://./../../../../../libs/foundry/records/musiclogic/parameters/fps_intensity.json",
+        "value": 0.0},
+      {
+        "_Pointer_": "ptr:67",
+        "_Type_": "MusicLogicSetValue",
+        "parameter": "file://./../../../../../libs/foundry/records/musiclogic/parameters/fps_intensity_burst.json",
+        "value": 0.0},
+      {
+        "_Pointer_": "ptr:68",
+        "_Type_": "MusicLogicSetValue",
+        "parameter": "file://./../../../../../libs/foundry/records/musiclogic/parameters/fps_intensity_slowburn.json",
+        "value": 0.0},
+      {
+        "_Pointer_": "ptr:69",
+        "_Type_": "MusicLogicSetValue",
+        "parameter": "file://./../../../../../libs/foundry/records/musiclogic/parameters/fps_situation.json",
+        "value": 0.0},
+      {
+        "_Pointer_": "ptr:42",
+        "_Type_": "MusicLogicTrigger",
+        "trigger": "MUS_SetState_LocalPlayer_Alive"},
+      {
+        "_Pointer_": "ptr:45",
+        "_Type_": "MusicLogicTrigger",
+        "trigger": "MUS_SetState_LocalPlayer_Dead"},
+      {
+        "_Pointer_": "ptr:52",
+        "_Type_": "MusicLogicTrigger",
+        "trigger": "MUS_SetSwitch_ATC_LandingAreaGranted"},
+      {
+        "_Pointer_": "ptr:54",
+        "_Type_": "MusicLogicTrigger",
+        "trigger": "MUS_SetSwitch_ATC_TakingOffAreaGranted"},
+      {
+        "_Pointer_": "ptr:56",
+        "_Type_": "MusicLogicTrigger",
+        "trigger": "MUS_SetSwitch_ATC_LandingSuccessful"},
+      {
+        "_Pointer_": "ptr:58",
+        "_Type_": "MusicLogicTrigger",
+        "trigger": "MUS_SetSwitch_ATC_Inactive"},
+      {
+        "_Pointer_": "ptr:60",
+        "_Type_": "MusicLogicTrigger",
+        "trigger": "MUS_SetSwitch_ATC_TakingOffApproved"},
+      {
+        "_Pointer_": "ptr:61",
+        "_Type_": "MusicLogicTrigger",
+        "trigger": "MUS_SetSwitch_ATC_LandingOutOfTime"},
+      {
+        "_Pointer_": "ptr:62",
+        "_Type_": "MusicLogicTrigger",
+        "trigger": "MUS_SetSwitch_ATC_Inactive"},
+      {
+        "_Pointer_": "ptr:64",
+        "_Type_": "MusicLogicTrigger",
+        "trigger": "MUS_SetSwitch_ATC_NoPermission"},
+      {
+        "_Pointer_": "ptr:9",
+        "_Type_": "MusicLogicTrigger",
+        "trigger": "MUS_SetState_LocalPlayer_Alive"},
+      {
+        "_Pointer_": "ptr:5",
+        "_Type_": "MusicLogicIncrement",
+        "children": [],
+        "parameter": "file://./../../../../../libs/foundry/records/musiclogic/parameters/musiclogicparameter.ship_intensity_slowburn.json",
+        "value": -300.0}]}}

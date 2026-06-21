@@ -1,0 +1,33 @@
+{
+  "_RecordName_": "BuildingBlocks_Style.RastarDev",
+  "_RecordId_": "63bafe07-ffb8-4d80-b23c-3c7832ddb774",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "BuildingBlocks_Style",
+    "entries": [],
+    "colorStyles": [
+      {
+        "_Type_": "BuildingBlocks_ColorSolid",
+        "color": {
+          "_Type_": "SRGBA8",
+          "r": 187,
+          "g": 187,
+          "b": 187,
+          "a": 255}},
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null],
+    "textFieldModifiers": []}}

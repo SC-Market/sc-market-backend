@@ -1,0 +1,34 @@
+{
+  "_RecordName_": "InteractionConditionPreset.EquipHelmet_ToHip",
+  "_RecordId_": "190ad549-323f-4a3c-bac7-f3c7829dd538",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "InteractionConditionPreset",
+    "conditions": [
+      {
+        "_Type_": "InteractionConditionActorHasAttachedEntityTypes",
+        "conditionDisplay": {
+          "_Type_": "ConditionDisplayParams",
+          "exclusiveDisplay": true,
+          "blockedText": {
+            "_Type_": "BlockedTextParams",
+            "blockedText": "@interaction_condition_helmet_oneAtATime"},
+          "blockedCursor": {
+            "_Type_": "BlockedCursorParams",
+            "blockedCursor": "Invalid"},
+          "blockedColor": {
+            "_Type_": "BlockedColorParams",
+            "selectedColor": "file://./../../../../../../libs/foundry/records/ui/innerthought/colors/blockedselected.json",
+            "unselectedColor": "file://./../../../../../../libs/foundry/records/ui/innerthought/colors/blockedunselected.json",
+            "applyImmediately": false},
+          "blockedHint": null,
+          "autoStoreOption": null,
+          "blockedInteractionAttemptMonologue": null},
+        "conditionResult": "Fail",
+        "itemTypes": [
+          "Char_Armor_Helmet"],
+        "itemSubTypes": [],
+        "ignoreItemPorts": [
+          "weapon_attach_hand_right",
+          "weapon_attach_hand_left"]}],
+    "conditionToHideParams": []}}

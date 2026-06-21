@@ -1,0 +1,26 @@
+{
+  "_RecordName_": "EntityClassDefinition.Fleetweek_Cine_Depart_Loop",
+  "_RecordId_": "f7a0d6b5-0d0a-4a4a-9e0b-6c54d0da824a",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "EntityClassDefinition",
+    "Category": "Default",
+    "Icon": "Default.bmp",
+    "Invisible": false,
+    "BBoxSelection": false,
+    "defaultEditorColor": {
+      "_Type_": "RGB",
+      "r": 1.0,
+      "g": 1.0,
+      "b": 0.0},
+    "entityDensityClass": null,
+    "tags": [
+      {
+        "_RecordPath_": "file://./../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+        "_RecordName_": "Tag.59696055-64b2-4af6-a574-6183e3299295",
+        "_RecordId_": "59696055-64b2-4af6-a574-6183e3299295"}],
+    "StaticEntityClassData": [],
+    "Components": [
+      {
+        "_Type_": "SObjectContainerComponentParams",
+        "objectContainer": "ObjectContainers/demo/invictus_fleet_depart_loop.socpak"}]}}

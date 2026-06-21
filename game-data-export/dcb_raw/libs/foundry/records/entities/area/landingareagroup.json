@@ -1,0 +1,26 @@
+{
+  "_RecordName_": "EntityClassDefinition.LandingAreaGroup",
+  "_RecordId_": "fa0e3511-2602-4fab-a958-d611c980135b",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "EntityClassDefinition",
+    "Category": "Others",
+    "Icon": "LandingAreaGroup.bmp",
+    "Invisible": false,
+    "BBoxSelection": false,
+    "defaultEditorColor": {
+      "_Type_": "RGB",
+      "r": 1.0,
+      "g": 1.0,
+      "b": 0.0},
+    "entityDensityClass": null,
+    "tags": [],
+    "StaticEntityClassData": [],
+    "Components": [
+      {
+        "_Type_": "LandingAreaGroupParams",
+        "dimensions": {
+          "_Type_": "Vec3",
+          "x": 100.0,
+          "y": 100.0,
+          "z": 100.0}}]}}

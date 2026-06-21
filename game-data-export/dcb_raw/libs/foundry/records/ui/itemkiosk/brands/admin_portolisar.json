@@ -1,0 +1,14 @@
+{
+  "_RecordName_": "ItemKioskBrand.Admin_PortOlisar",
+  "_RecordId_": "7479e15e-7ee6-410f-9dff-5a0598bca64e",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "ItemKioskBrand",
+    "name": "adminPortOlisar",
+    "logoPath": "ui/kiosk/assets/tif/backgrounds/portolisar.tif",
+    "color": {
+      "_Type_": "SRGBA8",
+      "r": 29,
+      "g": 255,
+      "b": 233,
+      "a": 255}}}

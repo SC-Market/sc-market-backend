@@ -1,0 +1,15 @@
+{
+  "_RecordName_": "SReputationStandingParams.ReputationStanding_Racing_NotEligible_HeadHunter",
+  "_RecordId_": "a357f953-5a13-4629-bc60-93c2a5b705ef",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "SReputationStandingParams",
+    "name": "Racing_NotEligible_HeadHunter",
+    "description": "desc",
+    "displayName": "@RepStanding_NotEligible",
+    "perkDescription": "@blank_space",
+    "icon": "UI/Textures/Vector/MobiGlas/App_ReputationManager/icon_spaceshipracing_not_eligible.svg",
+    "minReputation": -1000,
+    "driftReputation": 100,
+    "driftTimeHours": 24.0,
+    "gated": false}}

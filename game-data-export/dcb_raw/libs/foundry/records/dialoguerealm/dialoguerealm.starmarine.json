@@ -1,0 +1,12 @@
+{
+  "_RecordName_": "DialogueRealm.StarMarine",
+  "_RecordId_": "d238fbb3-9121-4161-882c-601300ebf5bb",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "DialogueRealm",
+    "defaultTrigger": {
+      "_Type_": "GlobalResourceAudio",
+      "audioTrigger": ""},
+    "defaultFemaleTrigger": {
+      "_Type_": "GlobalResourceAudio",
+      "audioTrigger": ""}}}

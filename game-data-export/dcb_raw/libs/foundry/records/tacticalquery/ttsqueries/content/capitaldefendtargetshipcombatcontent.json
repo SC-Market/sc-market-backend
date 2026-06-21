@@ -1,0 +1,178 @@
+{
+  "_RecordName_": "TQSOptionContentRecord.CapitalDefendTargetShipCombatContent",
+  "_RecordId_": "d5527a60-3874-4641-8a8d-dfc7ead03afa",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "TQSOptionContentRecord",
+    "content": {
+      "_Type_": "TQSOptionContent",
+      "parameters": [
+        {
+          "_Type_": "TQSInputFloatValue",
+          "requirements": {
+            "_Type_": "TagsDNF",
+            "terms": []},
+          "condition": "maximumDistance",
+          "value": 30000.0,
+          "overrides": []},
+        {
+          "_Type_": "TQSInputFloatValue",
+          "requirements": {
+            "_Type_": "TagsDNF",
+            "terms": []},
+          "condition": "maximumRecentDamage",
+          "value": 30000.0,
+          "overrides": []}],
+      "generation": [
+        {
+          "_Type_": "TQSInputFloatValue",
+          "requirements": {
+            "_Type_": "TagsDNF",
+            "terms": []},
+          "condition": "perceivedHostileTargets_around_host",
+          "value": 100000.0,
+          "overrides": []}],
+      "conditions": [
+        {
+          "_Type_": "TQSInputBoolValue",
+          "requirements": {
+            "_Type_": "TagsDNF",
+            "terms": []},
+          "condition": "isShip",
+          "value": true,
+          "overrides": []},
+        {
+          "_Type_": "TQSInputBoolValue",
+          "requirements": {
+            "_Type_": "TagsDNF",
+            "terms": []},
+          "condition": "isAlive",
+          "value": true,
+          "overrides": []},
+        {
+          "_Type_": "TQSInputBoolValue",
+          "requirements": {
+            "_Type_": "TagsDNF",
+            "terms": []},
+          "condition": "isRadarActive",
+          "value": true,
+          "overrides": []}],
+      "weights": [
+        {
+          "_Type_": "TQSWeightInputValue",
+          "requirements": {
+            "_Type_": "TagsDNF",
+            "terms": []},
+          "condition": "distance_to_host",
+          "weight": -1.0,
+          "overrides": []},
+        {
+          "_Type_": "TQSWeightInputValue",
+          "requirements": {
+            "_Type_": "TagsDNF",
+            "terms": []},
+          "condition": "attackerScoreToCapacityRatioExcluding_the_entity",
+          "weight": -0.1,
+          "overrides": []},
+        {
+          "_Type_": "TQSWeightInputValue",
+          "requirements": {
+            "_Type_": "TagsDNF",
+            "terms": []},
+          "condition": "hasEnoughAttackerCapacityForAI",
+          "weight": 0.1,
+          "overrides": []},
+        {
+          "_Type_": "TQSWeightInputValue",
+          "requirements": {
+            "_Type_": "TagsDNF",
+            "terms": []},
+          "condition": "damageDealtAsAPortionOfHealth_to_host",
+          "weight": 2.5,
+          "overrides": [
+            {
+              "_Type_": "TQSWeightInputValue",
+              "requirements": {
+                "_Type_": "TagsDNF",
+                "terms": [
+                  {
+                    "_Type_": "TagsDNFTerm",
+                    "positiveTags": [
+                      {
+                        "_RecordPath_": "file://./../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+                        "_RecordName_": "Tag.5311f4e0-b3bd-4bd0-92d7-0a011c02b6e8",
+                        "_RecordId_": "5311f4e0-b3bd-4bd0-92d7-0a011c02b6e8"}],
+                    "negativeTags": []}]},
+              "condition": "damageDealtAsAPortionOfHealth_to_host",
+              "weight": 5.0,
+              "overrides": []}]},
+        {
+          "_Type_": "TQSWeightInputValue",
+          "requirements": {
+            "_Type_": "TagsDNF",
+            "terms": []},
+          "condition": "totalRecentDamageDealt",
+          "weight": 1.0,
+          "overrides": []},
+        {
+          "_Type_": "TQSWeightInputValue",
+          "requirements": {
+            "_Type_": "TagsDNF",
+            "terms": [
+              {
+                "_Type_": "TagsDNFTerm",
+                "positiveTags": [
+                  {
+                    "_RecordPath_": "file://./../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+                    "_RecordName_": "Tag.3b47cf95-71fd-41b5-9702-40e474041c6d",
+                    "_RecordId_": "3b47cf95-71fd-41b5-9702-40e474041c6d"}],
+                "negativeTags": []}]},
+          "condition": "damageDealtAsAPortionOfHealth_to_leader",
+          "weight": 3.0,
+          "overrides": []},
+        {
+          "_Type_": "TQSWeightInputTagValue",
+          "requirements": {
+            "_Type_": "TagsDNF",
+            "terms": []},
+          "condition": "hasTag",
+          "weight": 100.0,
+          "value": {
+            "_Type_": "TagsDNF",
+            "terms": [
+              {
+                "_Type_": "TagsDNFTerm",
+                "positiveTags": [
+                  {
+                    "_RecordPath_": "file://./../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+                    "_RecordName_": "Tag.b0f055b9-9586-4d10-82ee-1d822953c956",
+                    "_RecordId_": "b0f055b9-9586-4d10-82ee-1d822953c956"}],
+                "negativeTags": []}]},
+          "overrides": []},
+        {
+          "_Type_": "TQSWeightInputTagValue",
+          "requirements": {
+            "_Type_": "TagsDNF",
+            "terms": []},
+          "condition": "hasTag",
+          "weight": 10.0,
+          "value": {
+            "_Type_": "TagsDNF",
+            "terms": [
+              {
+                "_Type_": "TagsDNFTerm",
+                "positiveTags": [
+                  {
+                    "_RecordPath_": "file://./../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+                    "_RecordName_": "Tag.88ed4ceb-6819-414e-b6f2-7c93f13c527f",
+                    "_RecordId_": "88ed4ceb-6819-414e-b6f2-7c93f13c527f"}],
+                "negativeTags": []},
+              {
+                "_Type_": "TagsDNFTerm",
+                "positiveTags": [
+                  {
+                    "_RecordPath_": "file://./../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+                    "_RecordName_": "Tag.63897a88-9b61-476d-94f4-1fe138ca648e",
+                    "_RecordId_": "63897a88-9b61-476d-94f4-1fe138ca648e"}],
+                "negativeTags": []}]},
+          "overrides": []}]}}}

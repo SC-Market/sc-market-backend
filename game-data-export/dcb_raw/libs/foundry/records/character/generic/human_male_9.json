@@ -1,0 +1,24 @@
+{
+  "_RecordName_": "Character.Human_Male_9",
+  "_RecordId_": "a53acf76-1dc6-4753-b2f6-ec9db70e42fc",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "Character",
+    "characterPersonalData": {
+      "_Type_": "CharacterPersonalData",
+      "title": "",
+      "firstName": "",
+      "nickName": "",
+      "lastName": "",
+      "randomNameParams": null,
+      "affiliation": "",
+      "details": ""},
+    "audioSwitchStateName": "",
+    "animationRemapAlias": "Human_Male_9",
+    "characterMannequinTag": "",
+    "styleMannequinTag": "",
+    "combatStyle": "NotSet",
+    "gender": "Male",
+    "characterSpeedOverrides": [],
+    "nicknameChance": 0.0,
+    "name": ""}}

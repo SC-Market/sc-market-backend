@@ -1,0 +1,21 @@
+{
+  "_RecordName_": "DialogueContext.DXSH_MCAV_PU_Announcements_Job_02",
+  "_RecordId_": "4919f442-cc8a-4384-b25c-67f2ddf660ce",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "DialogueContext",
+    "speaker": null,
+    "localizedSubtitleText": "@LOC_UNINITIALIZED",
+    "unlocalizedSubtitleText": "@LOC_UNINITIALIZED",
+    "subtitleShowDelay": 0.0,
+    "subtitleDisplayDurationOverride": 0.0,
+    "tempText": "Hammer Propulsion require a thruster Specialist. Experience Required. Please report to the Administration Desk.",
+    "audioTrigger": {
+      "_Type_": "GlobalResourceAudio",
+      "audioTrigger": ""},
+    "femaleAudioTrigger": {
+      "_Type_": "GlobalResourceAudio",
+      "audioTrigger": ""},
+    "forceSubtitles": false,
+    "contents": [],
+    "tags": []}}

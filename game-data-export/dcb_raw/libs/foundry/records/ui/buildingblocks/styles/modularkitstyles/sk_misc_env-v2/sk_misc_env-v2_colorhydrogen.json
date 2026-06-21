@@ -1,0 +1,14 @@
+{
+  "_RecordName_": "BuildingBlocks_ExternalColorReference.SK_MISC_ENV-v2_ColorHydrogen",
+  "_RecordId_": "bbed20d4-61ec-4003-8bdd-e2094aa58d0a",
+  "_RecordTag_": "UI",
+  "_RecordValue_": {
+    "_Type_": "BuildingBlocks_ExternalColorReference",
+    "color": {
+      "_Type_": "BuildingBlocks_ColorSolid",
+      "color": {
+        "_Type_": "SRGBA8",
+        "r": 72,
+        "g": 189,
+        "b": 229,
+        "a": 255}}}}

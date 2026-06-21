@@ -1,0 +1,16 @@
+{
+  "_RecordName_": "MissionModuleHierarchy.RE_SupportAttackedShip_MMH",
+  "_RecordId_": "bacf591a-1076-4c5f-a367-2f839f4911fd",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "MissionModuleHierarchy",
+    "missionModule": "Libs/Subsumption/Missions/PU/Missions/RandomEncounter/RE_SupportAttackedShip.xml",
+    "subMissionModules": [
+      {
+        "_Type_": "MissionModuleHierarchySubMission",
+        "subMissionModule": "Libs/Subsumption/Missions/PU/Missions/SupportAttackedShip/SupportAttackedShip.xml",
+        "subModuleHierarchy": "file://./../../../../../libs/foundry/records/contracts/modulehierarchy/supportattackedship_mmh.json"},
+      {
+        "_Type_": "MissionModuleHierarchySubMission",
+        "subMissionModule": "Libs/Subsumption/Missions/PU/Missions/RandomEncounter/AcePilot.xml",
+        "subModuleHierarchy": "file://./../../../../../libs/foundry/records/contracts/modulehierarchy/acepilot_mmh.json"}]}}

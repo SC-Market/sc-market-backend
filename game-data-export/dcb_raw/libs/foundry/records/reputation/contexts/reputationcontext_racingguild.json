@@ -1,0 +1,24 @@
+{
+  "_RecordName_": "SReputationContextUI.ReputationContext_RacingGuild",
+  "_RecordId_": "34f76dfa-f7ff-409c-b13a-2c9c8d7e84b3",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "SReputationContextUI",
+    "sortOrderScope": "Alphabetical",
+    "primaryScopeContext": {
+      "_Type_": "SReputationScopeContextUI",
+      "scope": "file://./../../../../../libs/foundry/records/reputation/scopes/reputationscope_affinity.json",
+      "propertiesBB": []},
+    "scopeContextList": [
+      {
+        "_Type_": "SReputationScopeContextUI",
+        "scope": "file://./../../../../../libs/foundry/records/reputation/scopes/reputationscope_racing_gravlevtimetrial.json",
+        "propertiesBB": []},
+      {
+        "_Type_": "SReputationScopeContextUI",
+        "scope": "file://./../../../../../libs/foundry/records/reputation/scopes/reputationscope_racing_wheeledtimetrial.json",
+        "propertiesBB": []},
+      {
+        "_Type_": "SReputationScopeContextUI",
+        "scope": "file://./../../../../../libs/foundry/records/reputation/scopes/reputationscope_racing_shiptimetrial.json",
+        "propertiesBB": []}]}}

@@ -1,0 +1,9 @@
+{
+  "_RecordName_": "VoiceBundle.Salamanders",
+  "_RecordId_": "45c3d705-6fcb-4005-95e6-3b972c4f05b9",
+  "_RecordTag_": "Audio",
+  "_RecordValue_": {
+    "_Type_": "VoiceBundle",
+    "name": "Salamanders",
+    "voices": [
+      "file://./../../../../libs/foundry/records/voicesingle/pu/salamander1.json"]}}

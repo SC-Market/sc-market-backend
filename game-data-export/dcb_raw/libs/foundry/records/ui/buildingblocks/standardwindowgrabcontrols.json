@@ -1,0 +1,19 @@
+{
+  "_RecordName_": "GrabCameraControlParams.StandardWindowGrabControls",
+  "_RecordId_": "d18ae05f-e463-434d-ad94-c9e9db5c4fe3",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "GrabCameraControlParams",
+    "responsiveness": 10000.0,
+    "rotationSpeed": 25.0,
+    "rotationSlowdown": 4.0,
+    "zoomSpeed": 50.0,
+    "zoomSlowdown": 0.1,
+    "minimumZoomDistance": 0.1,
+    "maximumZoomDistance": 20.0,
+    "maximumZoomSpeed": 50.0,
+    "isGrabbableOutOfBounds": true,
+    "grabRotationMode": "Planar",
+    "panResponsiveness": 1.0,
+    "panSpeed": 4.0,
+    "panSlowdown": 0.075}}

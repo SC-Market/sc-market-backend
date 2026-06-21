@@ -1,0 +1,10 @@
+{
+  "_RecordName_": "DevOwner.AndreeaMazarianu",
+  "_RecordId_": "8f84d8f2-5f01-4b56-8529-e9861aa5f2fe",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "DevOwner",
+    "type": {
+      "_Type_": "Developer",
+      "name": "Andreea Mazarianu",
+      "team": "file://./../../../../../../libs/foundry/records/devowners/devteams/mct.json"}}}

@@ -1,0 +1,12 @@
+{
+  "_RecordName_": "HintUIData.SalvageBeam_HullOverview",
+  "_RecordId_": "6b0a1607-ae82-4ba3-9f93-5e656cd0dbc6",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "HintUIData",
+    "TitleText": "@Hints_SalvageBeam_HullOverview_Title",
+    "BodyText": "@Hints_SalvageBeam_HullOverview",
+    "BodyTextGamePad": "@Hints_SalvageBeam_HullOverview",
+    "BodyTextJoystick": "@Hints_SalvageBeam_HullOverview",
+    "TitleImagePath": "",
+    "BodyImagePath": ""}}

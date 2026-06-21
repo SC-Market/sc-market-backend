@@ -1,0 +1,18 @@
+{
+  "_RecordName_": "LocationEntityDeclaration.DeliveryTarget_FreightElevator",
+  "_RecordId_": "adbcbf25-3569-4113-bdb9-6ffc9ca13edb",
+  "_RecordTag_": "MissionFeatures",
+  "_RecordValue_": {
+    "_Type_": "LocationEntityDeclaration",
+    "entityTags": {
+      "_Type_": "TagList",
+      "tags": [
+        {
+          "_RecordPath_": "file://./../../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+          "_RecordName_": "Tag.7a7c7a33-383d-4b9c-803c-4e2eb6bb7a51",
+          "_RecordId_": "7a7c7a33-383d-4b9c-803c-4e2eb6bb7a51"}]},
+    "type": {
+      "_Type_": "LocationEntityType_DeliveryTarget",
+      "type": "Freight_Entity",
+      "targetDescription": "@location_delivery_target_freight_elevator"},
+    "resourceSlot": null}}

@@ -1,0 +1,22 @@
+{
+  "_RecordName_": "LoadoutKit.CRUS_Ares_Starfighter_Polar_IAE2951_Grey_White_Camo",
+  "_RecordId_": "e180f430-7a37-4679-85a2-3647e76fb9c6",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "LoadoutKit",
+    "name": "@item_NameStar_Fighter_Paint_IAE2951_Grey_White_Camo",
+    "description": "@item_DescStar_Fighter_Paint_IAE2951_Grey_White_Camo",
+    "loadout": {
+      "_Type_": "SItemPortLoadoutManualParams",
+      "WearRange": null,
+      "DirtRange": null,
+      "SkipInventoryItemsOnMissionEntities": false,
+      "InventoryItems": [],
+      "entries": [
+        {
+          "_Type_": "SItemPortLoadoutEntryParams",
+          "itemPortName": "hardpoint_paint",
+          "entityClassName": "",
+          "entityClassReference": "file://./../../../../../libs/foundry/records/entities/scitem/ships/paints/paint_starfighter_iae2951_grey_white_camo.json",
+          "inventoryContainer": null,
+          "loadout": null}]}}}

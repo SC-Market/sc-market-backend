@@ -1,0 +1,42 @@
+{
+  "_RecordName_": "SubHarvestableConfigRecord.V3SubHarvestableConfig_S9_ShipMissiles",
+  "_RecordId_": "57379f00-ed89-47f0-bd6a-ce05ba22da7c",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "SubHarvestableConfigRecord",
+    "subConfig": {
+      "_Type_": "SubHarvestableConfig",
+      "initialSlotsProbability": 1.0,
+      "initialSlotsProbabilityDeepest": null,
+      "configRespawnTimeMultiplier": 1.0,
+      "subHarvestables": [
+        {
+          "_Type_": "SubHarvestableSlot",
+          "harvestable": null,
+          "harvestableEntityClass": "file://./../../../../../libs/foundry/records/entities/scitem/ships/weapons/missiles/misl_s09_cs_taln_argos.json",
+          "harvestableSetup": "file://./../../../../../libs/foundry/records/harvestable/harvestablesetups/v3harvestablesetup_looseitem_2h.json",
+          "relativeProbability": 1.0,
+          "relativeProbabilityDeepest": null,
+          "harvestableRespawnTimeMultiplier": 1.0,
+          "geometries": [],
+          "lootConfig": null},
+        {
+          "_Type_": "SubHarvestableSlot",
+          "harvestable": null,
+          "harvestableEntityClass": "file://./../../../../../libs/foundry/records/entities/scitem/ships/weapons/missiles/misl_s09_em_taln_seeker.json",
+          "harvestableSetup": "file://./../../../../../libs/foundry/records/harvestable/harvestablesetups/v3harvestablesetup_looseitem_2h.json",
+          "relativeProbability": 1.0,
+          "relativeProbabilityDeepest": null,
+          "harvestableRespawnTimeMultiplier": 1.0,
+          "geometries": [],
+          "lootConfig": null},
+        {
+          "_Type_": "SubHarvestableSlot",
+          "harvestable": null,
+          "harvestableEntityClass": "file://./../../../../../libs/foundry/records/entities/scitem/ships/weapons/missiles/misl_s09_ir_taln_typhoon.json",
+          "harvestableSetup": "file://./../../../../../libs/foundry/records/harvestable/harvestablesetups/v3harvestablesetup_looseitem_2h.json",
+          "relativeProbability": 1.0,
+          "relativeProbabilityDeepest": null,
+          "harvestableRespawnTimeMultiplier": 1.0,
+          "geometries": [],
+          "lootConfig": null}]}}}

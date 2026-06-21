@@ -1,0 +1,15 @@
+{
+  "_RecordName_": "UIElementSoundsRecord.Visor_HUD",
+  "_RecordId_": "cccc9df1-8124-46d1-92ff-d796aaba7d5b",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "UIElementSoundsRecord",
+    "SoundDBs": [
+      {
+        "_Type_": "UIElementSoundEntry",
+        "SoundID": "FPS_HUD_Player_Land_Fatal_Hit_On_Enemy",
+        "SoundPath": "Play_FPS_Kill_Notification_01"},
+      {
+        "_Type_": "UIElementSoundEntry",
+        "SoundID": "FPS_HUD_Player_Land_Fatal_Hit_On_Friendly",
+        "SoundPath": "Play_CGCS_UI_FPS_HUD_Visor_Target_Kill_Friendly"}]}}

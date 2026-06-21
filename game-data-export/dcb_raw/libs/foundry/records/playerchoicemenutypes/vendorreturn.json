@@ -1,0 +1,56 @@
+{
+  "_RecordName_": "PlayerChoiceMenuType.VendorReturn",
+  "_RecordId_": "85811e28-89ee-45bb-97f2-023f2004eaef",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "PlayerChoiceMenuType",
+    "focusedConversation": true,
+    "menus": [
+      {
+        "_RecordId_": "7d991186-2945-49cf-b4c0-da13775d58ac",
+        "_RecordName_": "PlayerChoiceMenu.ReturnItem",
+        "_Type_": "PlayerChoiceMenu",
+        "tags": [
+          {
+            "_RecordPath_": "file://./../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+            "_RecordName_": "Tag.d2768cda-57fe-4fd9-a1a1-d75f667ff5d9",
+            "_RecordId_": "d2768cda-57fe-4fd9-a1a1-d75f667ff5d9"},
+          {
+            "_RecordPath_": "file://./../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+            "_RecordName_": "Tag.5cd12ee8-fae7-4be7-b8c4-d66dd37b2882",
+            "_RecordId_": "5cd12ee8-fae7-4be7-b8c4-d66dd37b2882"},
+          {
+            "_RecordPath_": "file://./../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+            "_RecordName_": "Tag.cff03434-9310-4f20-889f-b64209438abc",
+            "_RecordId_": "cff03434-9310-4f20-889f-b64209438abc"}],
+        "blockedSelectedColor": null,
+        "blockedUnselectedColor": null,
+        "options": [
+          {
+            "_Type_": "PlayerChoiceMenuOptionItem",
+            "item": {
+              "_RecordPath_": "file://./../../../../libs/foundry/records/playerchoicemenuitems/playerchoicemenuitems.json",
+              "_RecordName_": "PlayerChoiceMenuItem.35a01949-d428-42d6-8da2-fabce5cdcfe5",
+              "_RecordId_": "35a01949-d428-42d6-8da2-fabce5cdcfe5"},
+            "requiredVisibilityTag": null},
+          {
+            "_Type_": "PlayerChoiceMenuOptionItem",
+            "item": {
+              "_RecordPath_": "file://./../../../../libs/foundry/records/playerchoicemenuitems/playerchoicemenuitems.json",
+              "_RecordName_": "PlayerChoiceMenuItem.5f64e75d-024e-4a17-8f89-d8d5a0428963",
+              "_RecordId_": "5f64e75d-024e-4a17-8f89-d8d5a0428963"},
+            "requiredVisibilityTag": null},
+          {
+            "_Type_": "PlayerChoiceMenuOptionItem",
+            "item": {
+              "_RecordPath_": "file://./../../../../libs/foundry/records/playerchoicemenuitems/playerchoicemenuitems.json",
+              "_RecordName_": "PlayerChoiceMenuItem.8dbb8227-2beb-45e5-944f-bd41b7a9aa26",
+              "_RecordId_": "8dbb8227-2beb-45e5-944f-bd41b7a9aa26"},
+            "requiredVisibilityTag": null},
+          {
+            "_Type_": "PlayerChoiceMenuOptionItem",
+            "item": {
+              "_RecordPath_": "file://./../../../../libs/foundry/records/playerchoicemenuitems/playerchoicemenuitems.json",
+              "_RecordName_": "PlayerChoiceMenuItem.1c14da24-b7fa-418c-915e-98d8b79eb23e",
+              "_RecordId_": "1c14da24-b7fa-418c-915e-98d8b79eb23e"},
+            "requiredVisibilityTag": null}]}]}}

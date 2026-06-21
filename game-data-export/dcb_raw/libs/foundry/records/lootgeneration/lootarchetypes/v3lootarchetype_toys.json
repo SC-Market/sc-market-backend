@@ -1,0 +1,24 @@
+{
+  "_RecordName_": "LootArchetypeV3Record.V3LootArchetype_Toys",
+  "_RecordId_": "9783c401-dcfd-48ef-a3c4-ae0b5b5809fa",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "LootArchetypeV3Record",
+    "lootArchetype": {
+      "_Type_": "LootArchetypeV3",
+      "entries": [
+        {
+          "_Type_": "LootArchetypeV3Entry",
+          "name": "Toys",
+          "weight": 1.0,
+          "selector": {
+            "_Type_": "LootArchetypeV3Selector_Tags",
+            "tags": {
+              "_Type_": "TagsDNFTerm",
+              "positiveTags": [
+                {
+                  "_RecordPath_": "file://./../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+                  "_RecordName_": "Tag.034d1d58-0f50-434e-89a1-9f5dad5d0dcf",
+                  "_RecordId_": "034d1d58-0f50-434e-89a1-9f5dad5d0dcf"}],
+              "negativeTags": []}},
+          "optionalData": []}]}}}

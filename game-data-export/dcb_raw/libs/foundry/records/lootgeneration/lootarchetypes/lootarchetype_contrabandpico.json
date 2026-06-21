@@ -1,0 +1,17 @@
+{
+  "_RecordName_": "LootArchetype.LootArchetype_ContrabandPico",
+  "_RecordId_": "59a02b96-a5c4-46a0-9a89-c9c0c57de7f7",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "LootArchetype",
+    "excludedTags": {
+      "_Type_": "TagList",
+      "tags": [
+        {
+          "_RecordPath_": "file://./../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+          "_RecordName_": "Tag.85e008e3-cc4e-4d13-98f6-b33c234dd82c",
+          "_RecordId_": "85e008e3-cc4e-4d13-98f6-b33c234dd82c"}]},
+    "primaryOrGroup": {
+      "_Type_": "LootArchetypeOrGroup_Primary",
+      "entries": []},
+    "secondaryOrGroups": []}}

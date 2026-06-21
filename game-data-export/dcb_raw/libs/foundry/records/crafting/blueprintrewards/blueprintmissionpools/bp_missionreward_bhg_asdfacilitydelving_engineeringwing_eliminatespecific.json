@@ -1,0 +1,23 @@
+{
+  "_RecordName_": "BlueprintPoolRecord.BP_MISSIONREWARD_BHG_ASDFacilityDelving_EngineeringWing_EliminateSpecific",
+  "_RecordId_": "f14e629c-3346-4ca8-9204-df523ae54822",
+  "_RecordTag_": "SystemsDesign",
+  "_RecordValue_": {
+    "_Type_": "BlueprintPoolRecord",
+    "blueprintRewards": [
+      {
+        "_Type_": "BlueprintReward",
+        "weight": 1.0,
+        "blueprintRecord": "file://./../../../../../../libs/foundry/records/crafting/blueprints/crafting/fpsgear/armour/engineer/heavy/bp_craft_qrt_utility_heavy_arms_01_01_03.json"},
+      {
+        "_Type_": "BlueprintReward",
+        "weight": 1.0,
+        "blueprintRecord": "file://./../../../../../../libs/foundry/records/crafting/blueprints/crafting/fpsgear/armour/engineer/heavy/bp_craft_qrt_utility_heavy_core_01_01_03.json"},
+      {
+        "_Type_": "BlueprintReward",
+        "weight": 1.0,
+        "blueprintRecord": "file://./../../../../../../libs/foundry/records/crafting/blueprints/crafting/fpsgear/armour/engineer/heavy/bp_craft_qrt_utility_heavy_legs_01_01_03.json"},
+      {
+        "_Type_": "BlueprintReward",
+        "weight": 1.0,
+        "blueprintRecord": "file://./../../../../../../libs/foundry/records/crafting/blueprints/crafting/fpsgear/armour/engineer/heavy/bp_craft_qrt_utility_heavy_helmet_01_01_03.json"}]}}

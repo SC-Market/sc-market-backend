@@ -1,0 +1,59 @@
+{
+  "_RecordName_": "MobiGlasAppData.Email_StormBreaker_DataFacility_02_M3",
+  "_RecordId_": "2f282b9a-6c07-49d7-a952-f05006e002a0",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "MobiGlasAppData",
+    "appData": {
+      "_Type_": "GenericDataDisplayAppData",
+      "dateTime": {
+        "_Type_": "DateTime",
+        "date": {
+          "_Type_": "Date",
+          "day": 4,
+          "month": "June",
+          "year": 2955},
+        "time": {
+          "_Type_": "Time",
+          "hour": 9,
+          "minute": 3,
+          "second": 42}},
+      "content": [
+        {
+          "_Type_": "MobiGlasAppContent",
+          "textContent": "@storm_datafac_datapad2_m3_from",
+          "imageContent": "",
+          "appLink": {
+            "_Type_": "SMobiGlasAppLink",
+            "targetApp": null,
+            "targetDataEntry": null,
+            "displayIcon": ""}},
+        {
+          "_Type_": "MobiGlasAppContent",
+          "textContent": "@storm_datafac_datapad2_m3_title",
+          "imageContent": "",
+          "appLink": {
+            "_Type_": "SMobiGlasAppLink",
+            "targetApp": null,
+            "targetDataEntry": null,
+            "displayIcon": ""}},
+        {
+          "_Type_": "MobiGlasAppContent",
+          "textContent": "@storm_datafac_datapad2_m3_to",
+          "imageContent": "",
+          "appLink": {
+            "_Type_": "SMobiGlasAppLink",
+            "targetApp": null,
+            "targetDataEntry": null,
+            "displayIcon": ""}},
+        {
+          "_Type_": "MobiGlasAppContent",
+          "textContent": "@storm_datafac_datapad2_m3_body",
+          "imageContent": "",
+          "appLink": {
+            "_Type_": "SMobiGlasAppLink",
+            "targetApp": null,
+            "targetDataEntry": null,
+            "displayIcon": ""}}],
+      "securityToken": null,
+      "dynamicInteger": 0}}}

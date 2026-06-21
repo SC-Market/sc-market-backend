@@ -1,0 +1,349 @@
+{
+  "_RecordName_": "SLoadoutAssortment.RoughAndReady_Worker_01",
+  "_RecordId_": "1a2cf8a1-ee4b-4873-9e99-958b90aeb751",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "SLoadoutAssortment",
+    "Requirement": null,
+    "GroupedLoadouts": [
+      {
+        "_Type_": "SGroupedLoadouts",
+        "Group": "Head",
+        "Requirement": {
+          "_Type_": "SLoadoutRequirementTags",
+          "RequiredTags": [
+            {
+              "_RecordPath_": "file://./../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+              "_RecordName_": "Tag.25f439d5-146b-4a61-a999-a486dfb68a49",
+              "_RecordId_": "25f439d5-146b-4a61-a999-a486dfb68a49"}],
+          "BannedTags": []},
+        "Loadouts": [
+          {
+            "_Type_": "SItemPortLoadoutXMLParams",
+            "WearRange": null,
+            "DirtRange": null,
+            "SkipInventoryItemsOnMissionEntities": false,
+            "InventoryItems": [],
+            "loadoutPath": "Scripts/Loadouts/Character/Human/Body/NPC/RoughReady/body_rnr_t1_01.xml"},
+          {
+            "_Type_": "SItemPortLoadoutXMLParams",
+            "WearRange": null,
+            "DirtRange": null,
+            "SkipInventoryItemsOnMissionEntities": false,
+            "InventoryItems": [],
+            "loadoutPath": "Scripts/Loadouts/Character/Human/Body/NPC/RoughReady/body_rnr_t1_02.xml"},
+          {
+            "_Type_": "SItemPortLoadoutXMLParams",
+            "WearRange": null,
+            "DirtRange": null,
+            "SkipInventoryItemsOnMissionEntities": false,
+            "InventoryItems": [],
+            "loadoutPath": "Scripts/Loadouts/Character/Human/Body/NPC/RoughReady/body_rnr_t1_03.xml"},
+          {
+            "_Type_": "SItemPortLoadoutXMLParams",
+            "WearRange": null,
+            "DirtRange": null,
+            "SkipInventoryItemsOnMissionEntities": false,
+            "InventoryItems": [],
+            "loadoutPath": "Scripts/Loadouts/Character/Human/Body/NPC/RoughReady/body_rnr_t1_04.xml"},
+          {
+            "_Type_": "SItemPortLoadoutXMLParams",
+            "WearRange": null,
+            "DirtRange": null,
+            "SkipInventoryItemsOnMissionEntities": false,
+            "InventoryItems": [],
+            "loadoutPath": "Scripts/Loadouts/Character/Human/Body/NPC/RoughReady/body_rnr_t1_05.xml"},
+          {
+            "_Type_": "SItemPortLoadoutXMLParams",
+            "WearRange": null,
+            "DirtRange": null,
+            "SkipInventoryItemsOnMissionEntities": false,
+            "InventoryItems": [],
+            "loadoutPath": "Scripts/Loadouts/Character/Human/Body/NPC/RoughReady/body_rnr_t3_01.xml"},
+          {
+            "_Type_": "SItemPortLoadoutXMLParams",
+            "WearRange": null,
+            "DirtRange": null,
+            "SkipInventoryItemsOnMissionEntities": false,
+            "InventoryItems": [],
+            "loadoutPath": "Scripts/Loadouts/Character/Human/Body/NPC/RoughReady/body_rnr_t3_05.xml"}]},
+      {
+        "_Type_": "SGroupedLoadouts",
+        "Group": "Head",
+        "Requirement": {
+          "_Type_": "SLoadoutRequirementTags",
+          "RequiredTags": [
+            {
+              "_RecordPath_": "file://./../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+              "_RecordName_": "Tag.d0794a94-efb0-4cad-ad38-2558b4d3c253",
+              "_RecordId_": "d0794a94-efb0-4cad-ad38-2558b4d3c253"}],
+          "BannedTags": []},
+        "Loadouts": [
+          {
+            "_Type_": "SItemPortLoadoutXMLParams",
+            "WearRange": null,
+            "DirtRange": null,
+            "SkipInventoryItemsOnMissionEntities": false,
+            "InventoryItems": [],
+            "loadoutPath": "Scripts/Loadouts/Character/Human/Body/NPC/RoughReady/f_body_rnr_t1_01.xml"},
+          {
+            "_Type_": "SItemPortLoadoutXMLParams",
+            "WearRange": null,
+            "DirtRange": null,
+            "SkipInventoryItemsOnMissionEntities": false,
+            "InventoryItems": [],
+            "loadoutPath": "Scripts/Loadouts/Character/Human/Body/NPC/RoughReady/f_body_rnr_t1_02.xml"},
+          {
+            "_Type_": "SItemPortLoadoutXMLParams",
+            "WearRange": null,
+            "DirtRange": null,
+            "SkipInventoryItemsOnMissionEntities": false,
+            "InventoryItems": [],
+            "loadoutPath": "Scripts/Loadouts/Character/Human/Body/NPC/RoughReady/f_body_rnr_t1_03.xml"},
+          {
+            "_Type_": "SItemPortLoadoutXMLParams",
+            "WearRange": null,
+            "DirtRange": null,
+            "SkipInventoryItemsOnMissionEntities": false,
+            "InventoryItems": [],
+            "loadoutPath": "Scripts/Loadouts/Character/Human/Body/NPC/RoughReady/f_body_rnr_t1_04.xml"},
+          {
+            "_Type_": "SItemPortLoadoutXMLParams",
+            "WearRange": null,
+            "DirtRange": null,
+            "SkipInventoryItemsOnMissionEntities": false,
+            "InventoryItems": [],
+            "loadoutPath": "Scripts/Loadouts/Character/Human/Body/NPC/RoughReady/f_body_rnr_t1_05.xml"},
+          {
+            "_Type_": "SItemPortLoadoutXMLParams",
+            "WearRange": null,
+            "DirtRange": null,
+            "SkipInventoryItemsOnMissionEntities": false,
+            "InventoryItems": [],
+            "loadoutPath": "Scripts/Loadouts/Character/Human/Body/NPC/RoughReady/f_body_rnr_t3_03.xml"},
+          {
+            "_Type_": "SItemPortLoadoutXMLParams",
+            "WearRange": null,
+            "DirtRange": null,
+            "SkipInventoryItemsOnMissionEntities": false,
+            "InventoryItems": [],
+            "loadoutPath": "Scripts/Loadouts/Character/Human/Body/NPC/RoughReady/f_body_rnr_t3_05.xml"}]},
+      {
+        "_Type_": "SGroupedLoadouts",
+        "Group": "Outfit",
+        "Requirement": {
+          "_Type_": "SLoadoutRequirementTags",
+          "RequiredTags": [],
+          "BannedTags": [
+            {
+              "_RecordPath_": "file://./../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+              "_RecordName_": "Tag.8c4442db-d1a5-479e-8013-fdb1c4237dfe",
+              "_RecordId_": "8c4442db-d1a5-479e-8013-fdb1c4237dfe"}]},
+        "Loadouts": [
+          {
+            "_Type_": "SItemPortLoadoutXMLParams",
+            "WearRange": null,
+            "DirtRange": null,
+            "SkipInventoryItemsOnMissionEntities": false,
+            "InventoryItems": [],
+            "loadoutPath": "Scripts/Loadouts/Character/Human/Clothing/NPC/Criminal/RoughAndReady/roughready_worker_01.xml"},
+          {
+            "_Type_": "SItemPortLoadoutXMLParams",
+            "WearRange": null,
+            "DirtRange": null,
+            "SkipInventoryItemsOnMissionEntities": false,
+            "InventoryItems": [],
+            "loadoutPath": "Scripts/Loadouts/Character/Human/Clothing/NPC/Criminal/RoughAndReady/roughready_worker_02.xml"},
+          {
+            "_Type_": "SItemPortLoadoutXMLParams",
+            "WearRange": null,
+            "DirtRange": null,
+            "SkipInventoryItemsOnMissionEntities": false,
+            "InventoryItems": [],
+            "loadoutPath": "Scripts/Loadouts/Character/Human/Clothing/NPC/Criminal/RoughAndReady/roughready_worker_03.xml"}]},
+      {
+        "_Type_": "SGroupedLoadouts",
+        "Group": "Outfit",
+        "Requirement": {
+          "_Type_": "SLoadoutRequirementTags",
+          "RequiredTags": [
+            {
+              "_RecordPath_": "file://./../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+              "_RecordName_": "Tag.8c4442db-d1a5-479e-8013-fdb1c4237dfe",
+              "_RecordId_": "8c4442db-d1a5-479e-8013-fdb1c4237dfe"}],
+          "BannedTags": []},
+        "Loadouts": [
+          {
+            "_Type_": "SItemPortLoadoutXMLParams",
+            "WearRange": null,
+            "DirtRange": null,
+            "SkipInventoryItemsOnMissionEntities": false,
+            "InventoryItems": [],
+            "loadoutPath": "Scripts/Loadouts/Character/Human/Armor/NPC/Criminal/Pyro/Criminal_Vacuum_01.xml"},
+          {
+            "_Type_": "SItemPortLoadoutXMLParams",
+            "WearRange": null,
+            "DirtRange": null,
+            "SkipInventoryItemsOnMissionEntities": false,
+            "InventoryItems": [],
+            "loadoutPath": "Scripts/Loadouts/Character/Human/Armor/NPC/Criminal/Pyro/Criminal_Vacuum_02.xml"},
+          {
+            "_Type_": "SItemPortLoadoutXMLParams",
+            "WearRange": null,
+            "DirtRange": null,
+            "SkipInventoryItemsOnMissionEntities": false,
+            "InventoryItems": [],
+            "loadoutPath": "Scripts/Loadouts/Character/Human/Armor/NPC/Criminal/Pyro/Criminal_Vacuum_03.xml"},
+          {
+            "_Type_": "SItemPortLoadoutXMLParams",
+            "WearRange": null,
+            "DirtRange": null,
+            "SkipInventoryItemsOnMissionEntities": false,
+            "InventoryItems": [],
+            "loadoutPath": "Scripts/Loadouts/Character/Human/Armor/NPC/Criminal/Pyro/Criminal_Vacuum_04.xml"},
+          {
+            "_Type_": "SItemPortLoadoutXMLParams",
+            "WearRange": null,
+            "DirtRange": null,
+            "SkipInventoryItemsOnMissionEntities": false,
+            "InventoryItems": [],
+            "loadoutPath": "Scripts/Loadouts/Character/Human/Armor/NPC/Criminal/Pyro/Criminal_Vacuum_05.xml"},
+          {
+            "_Type_": "SItemPortLoadoutXMLParams",
+            "WearRange": null,
+            "DirtRange": null,
+            "SkipInventoryItemsOnMissionEntities": false,
+            "InventoryItems": [],
+            "loadoutPath": "Scripts/Loadouts/Character/Human/Armor/NPC/Criminal/Pyro/Criminal_Vacuum_06.xml"},
+          {
+            "_Type_": "SItemPortLoadoutXMLParams",
+            "WearRange": null,
+            "DirtRange": null,
+            "SkipInventoryItemsOnMissionEntities": false,
+            "InventoryItems": [],
+            "loadoutPath": "Scripts/Loadouts/Character/Human/Armor/NPC/Criminal/Pyro/Criminal_Vacuum_07.xml"},
+          {
+            "_Type_": "SItemPortLoadoutXMLParams",
+            "WearRange": null,
+            "DirtRange": null,
+            "SkipInventoryItemsOnMissionEntities": false,
+            "InventoryItems": [],
+            "loadoutPath": "Scripts/Loadouts/Character/Human/Armor/NPC/Criminal/Pyro/Criminal_Vacuum_08.xml"},
+          {
+            "_Type_": "SItemPortLoadoutXMLParams",
+            "WearRange": null,
+            "DirtRange": null,
+            "SkipInventoryItemsOnMissionEntities": false,
+            "InventoryItems": [],
+            "loadoutPath": "Scripts/Loadouts/Character/Human/Armor/NPC/Criminal/Pyro/Criminal_Vacuum_09.xml"},
+          {
+            "_Type_": "SItemPortLoadoutXMLParams",
+            "WearRange": null,
+            "DirtRange": null,
+            "SkipInventoryItemsOnMissionEntities": false,
+            "InventoryItems": [],
+            "loadoutPath": "Scripts/Loadouts/Character/Human/Armor/NPC/Criminal/Pyro/Criminal_Vacuum_10.xml"}]},
+      {
+        "_Type_": "SGroupedLoadouts",
+        "Group": "PrimaryWeapon",
+        "Requirement": {
+          "_Type_": "SLoadoutRequirementTags",
+          "RequiredTags": [],
+          "BannedTags": [
+            {
+              "_RecordPath_": "file://./../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+              "_RecordName_": "Tag.8c4442db-d1a5-479e-8013-fdb1c4237dfe",
+              "_RecordId_": "8c4442db-d1a5-479e-8013-fdb1c4237dfe"}]},
+        "Loadouts": [
+          {
+            "_Type_": "SItemPortLoadoutManualParams",
+            "WearRange": null,
+            "DirtRange": null,
+            "SkipInventoryItemsOnMissionEntities": false,
+            "InventoryItems": [],
+            "entries": [
+              {
+                "_Type_": "SItemPortLoadoutEntryParams",
+                "itemPortName": "Body_ItemPort",
+                "entityClassName": "",
+                "entityClassReference": null,
+                "inventoryContainer": null,
+                "loadout": {
+                  "_Type_": "SItemPortLoadoutManualParams",
+                  "WearRange": null,
+                  "DirtRange": null,
+                  "SkipInventoryItemsOnMissionEntities": false,
+                  "InventoryItems": [],
+                  "entries": [
+                    {
+                      "_Type_": "SItemPortLoadoutEntryParams",
+                      "itemPortName": "Clothing_Legs",
+                      "entityClassName": "",
+                      "entityClassReference": null,
+                      "inventoryContainer": null,
+                      "loadout": {
+                        "_Type_": "SItemPortLoadoutManualParams",
+                        "WearRange": null,
+                        "DirtRange": null,
+                        "SkipInventoryItemsOnMissionEntities": false,
+                        "InventoryItems": [],
+                        "entries": [
+                          {
+                            "_Type_": "SItemPortLoadoutEntryParams",
+                            "itemPortName": "wep_sidearm",
+                            "entityClassName": "behr_pistol_ballistic_01",
+                            "entityClassReference": null,
+                            "inventoryContainer": null,
+                            "loadout": null}]}}]}}]}]},
+      {
+        "_Type_": "SGroupedLoadouts",
+        "Group": "PrimaryWeapon",
+        "Requirement": {
+          "_Type_": "SLoadoutRequirementTags",
+          "RequiredTags": [
+            {
+              "_RecordPath_": "file://./../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+              "_RecordName_": "Tag.8c4442db-d1a5-479e-8013-fdb1c4237dfe",
+              "_RecordId_": "8c4442db-d1a5-479e-8013-fdb1c4237dfe"}],
+          "BannedTags": []},
+        "Loadouts": [
+          {
+            "_Type_": "SItemPortLoadoutManualParams",
+            "WearRange": null,
+            "DirtRange": null,
+            "SkipInventoryItemsOnMissionEntities": false,
+            "InventoryItems": [],
+            "entries": [
+              {
+                "_Type_": "SItemPortLoadoutEntryParams",
+                "itemPortName": "Body_ItemPort",
+                "entityClassName": "",
+                "entityClassReference": null,
+                "inventoryContainer": null,
+                "loadout": {
+                  "_Type_": "SItemPortLoadoutManualParams",
+                  "WearRange": null,
+                  "DirtRange": null,
+                  "SkipInventoryItemsOnMissionEntities": false,
+                  "InventoryItems": [],
+                  "entries": [
+                    {
+                      "_Type_": "SItemPortLoadoutEntryParams",
+                      "itemPortName": "Armor_Undersuit",
+                      "entityClassName": "",
+                      "entityClassReference": null,
+                      "inventoryContainer": null,
+                      "loadout": {
+                        "_Type_": "SItemPortLoadoutManualParams",
+                        "WearRange": null,
+                        "DirtRange": null,
+                        "SkipInventoryItemsOnMissionEntities": false,
+                        "InventoryItems": [],
+                        "entries": [
+                          {
+                            "_Type_": "SItemPortLoadoutEntryParams",
+                            "itemPortName": "wep_sidearm",
+                            "entityClassName": "behr_pistol_ballistic_01",
+                            "entityClassReference": null,
+                            "inventoryContainer": null,
+                            "loadout": null}]}}]}}]}]}]}}

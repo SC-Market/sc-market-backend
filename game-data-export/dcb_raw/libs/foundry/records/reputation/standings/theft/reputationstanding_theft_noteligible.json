@@ -1,0 +1,15 @@
+{
+  "_RecordName_": "SReputationStandingParams.ReputationStanding_Theft_NotEligible",
+  "_RecordId_": "dd41522a-a163-40e9-93b9-8f322c2106f2",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "SReputationStandingParams",
+    "name": "Theft_NotEligible",
+    "description": "desc",
+    "displayName": "@RepStanding_NotEligible",
+    "perkDescription": "@blank_space",
+    "icon": "UI/Textures/Vector/MobiGlas/App_ReputationManager/icon_reputationrank_security_1.svg",
+    "minReputation": -1000,
+    "driftReputation": 100,
+    "driftTimeHours": 24.0,
+    "gated": false}}

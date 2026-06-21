@@ -1,0 +1,13 @@
+{
+  "_RecordName_": "CharacterRandomNameParams.HumanMale_BHG",
+  "_RecordId_": "4f236d6a-0fba-45ad-8301-b23529572431",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "CharacterRandomNameParams",
+    "firstNameString": "BountyHuntersGuild_RepUI_Name",
+    "nickNameString": "LOC_UNINITIALIZED",
+    "lastNameString": "LOC_UNINITIALIZED",
+    "numFirstNames": 2110,
+    "numNickNames": 410,
+    "numLastNames": 5100,
+    "nicknameChance": 0.05}}

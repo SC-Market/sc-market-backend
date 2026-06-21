@@ -1,0 +1,15 @@
+{
+  "_RecordName_": "SReputationStandingParams.ReputationStanding_Theft_Rank4",
+  "_RecordId_": "0615b77a-d7eb-4353-903f-4dbd8cd3022e",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "SReputationStandingParams",
+    "name": "Theft_Rank4",
+    "description": "desc",
+    "displayName": "@RepStanding_Rank3",
+    "perkDescription": "@blank_space",
+    "icon": "UI/Textures/Vector/MobiGlas/App_ReputationManager/icon_reputationrank_security_5.svg",
+    "minReputation": 40000,
+    "driftReputation": 0,
+    "driftTimeHours": 24.0,
+    "gated": false}}

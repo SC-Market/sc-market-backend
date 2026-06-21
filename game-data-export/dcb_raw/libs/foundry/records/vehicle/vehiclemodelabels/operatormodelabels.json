@@ -1,0 +1,32 @@
+{
+  "_RecordName_": "SOperatorModeLabels.OperatorModeLabels",
+  "_RecordId_": "9707e450-e963-4796-bee4-76e72ce7ba73",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "SOperatorModeLabels",
+    "fullNames": [
+      "@operatorMode_None",
+      "@operatorMode_Inactive",
+      "@operatorMode_Flight",
+      "@operatorMode_Combat",
+      "@operatorMode_Turret",
+      "@operatorMode_Missile",
+      "@operatorMode_Scanning",
+      "@operatorMode_Mining",
+      "@operatorMode_QuantumNavigation",
+      "@operatorMode_Refuel",
+      "@operatorMode_AirTrafficController",
+      "@operatorMode_Salvage"],
+    "shortNames": [
+      "@operatorMode_None_Short",
+      "@operatorMode_Inactive_Short",
+      "@operatorMode_Flight_Short",
+      "@operatorMode_Combat_Short",
+      "@operatorMode_Turret_Short",
+      "@operatorMode_Missile_Short",
+      "@operatorMode_Scanning_Short",
+      "@operatorMode_Mining_Short",
+      "@operatorMode_QuantumNavigation_Short",
+      "@operatorMode_Refuel_Short",
+      "@operatorMode_AirTrafficController_Short",
+      "@operatorMode_Salvage_Short"]}}

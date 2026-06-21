@@ -1,0 +1,18 @@
+{
+  "_RecordName_": "BodyHealthConfig.HealthConfig_Invulnerable",
+  "_RecordId_": "2df2a8a9-4181-4f5b-8951-1c4d75f388ed",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "BodyHealthConfig",
+    "bleedingRtpc": {
+      "_Type_": "AudioRtpc",
+      "rtpc": ""},
+    "bleedRateRtpc": {
+      "_Type_": "AudioRtpc",
+      "rtpc": ""},
+    "isInvulnerable": true,
+    "isVulnerableOnlyToPlayer": false,
+    "setDamageEffectRatioOnChildren": false,
+    "canBeRepaired": false,
+    "ignoreZeroDamageHitEventsForTypes": [],
+    "bodyPartConfigs": []}}

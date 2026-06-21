@@ -1,0 +1,163 @@
+{
+  "_RecordName_": "CtxGraph.ShopKiosk",
+  "_RecordId_": "a77c3142-e677-4aa2-8048-2532be1cf607",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "CtxGraph",
+    "groups": [
+      "_PointsTo_:ptr:1",
+      "_PointsTo_:ptr:2",
+      "_PointsTo_:ptr:3"],
+    "nodes": [
+      {
+        "_Pointer_": "ptr:1",
+        "_Type_": "UIGraph_DockingGroup",
+        "contexts": [
+          "_PointsTo_:ptr:4",
+          "_PointsTo_:ptr:5"],
+        "name": "MainGroup",
+        "indexContexts": false,
+        "childGroups": []},
+      {
+        "_Pointer_": "ptr:5",
+        "_Type_": "UIGraph_Context",
+        "name": "ShopKiosk",
+        "dependencies": [],
+        "components": [
+          "_PointsTo_:ptr:6",
+          "_PointsTo_:ptr:7",
+          "_PointsTo_:ptr:8",
+          "_PointsTo_:ptr:9",
+          "_PointsTo_:ptr:10",
+          "_PointsTo_:ptr:11"],
+        "BackBehavior": "NoAction",
+        "renderTarget": "All",
+        "UIController": {
+          "_Type_": "UIGraph_ControllerComponent",
+          "name": ""}},
+      {
+        "_Pointer_": "ptr:6",
+        "_Type_": "UIGraph_FlashDockingStationComponent",
+        "displayName": "Ship Selection"},
+      {
+        "_Pointer_": "ptr:7",
+        "_Type_": "UIGraph_SimpleComponent",
+        "type": "ShopKiosk"},
+      {
+        "_Pointer_": "ptr:4",
+        "_Type_": "UIGraph_Context",
+        "name": "Attract",
+        "dependencies": [],
+        "components": [],
+        "BackBehavior": "NoAction",
+        "renderTarget": "All",
+        "UIController": {
+          "_Type_": "UIGraph_ControllerComponent",
+          "name": ""}},
+      {
+        "_Pointer_": "ptr:8",
+        "_Type_": "UIGraph_SimpleComponent",
+        "type": "VehicleQuery"},
+      {
+        "_Pointer_": "ptr:9",
+        "_Type_": "UIGraph_BindingsArrayDockComponent",
+        "tagName": "Vehicle",
+        "arrayName": "insuredVehicles"},
+      {
+        "_Pointer_": "ptr:10",
+        "_Type_": "UIGraph_LoadoutEditorComponent",
+        "loadoutEditorComponentParams": "file://./../../../../../libs/foundry/records/ui/frontend/shopkiosk3dpreviewparameters.json",
+        "geometryRecord": "file://./../../../../../libs/foundry/records/entities/ui/rttpreviewwindow_vehiclepurchaseorrentalkioskcustom.json",
+        "entityClipName": "ItemPreview",
+        "entityClipDimensions": {
+          "_Type_": "Vec2",
+          "x": 18.7,
+          "y": 10.0}},
+      {
+        "_Pointer_": "ptr:2",
+        "_Type_": "UIGraph_DockingGroup",
+        "contexts": [
+          "_PointsTo_:ptr:12"],
+        "name": "KioskBackground",
+        "indexContexts": false,
+        "childGroups": []},
+      {
+        "_Pointer_": "ptr:12",
+        "_Type_": "UIGraph_Context",
+        "name": "VehicleItemKioskBackground",
+        "dependencies": [],
+        "components": [
+          "_PointsTo_:ptr:13"],
+        "BackBehavior": "NoAction",
+        "renderTarget": "All",
+        "UIController": {
+          "_Type_": "UIGraph_ControllerComponent",
+          "name": ""}},
+      {
+        "_Pointer_": "ptr:13",
+        "_Type_": "UIGraph_KioskBackgroundComponent",
+        "itemKioskMode": "Vehicle",
+        "name": "Background"},
+      {
+        "_Pointer_": "ptr:3",
+        "_Type_": "UIGraph_Group",
+        "contexts": [
+          "_PointsTo_:ptr:14",
+          "_PointsTo_:ptr:15",
+          "_PointsTo_:ptr:16"],
+        "name": "KioskPopup",
+        "indexContexts": true,
+        "childGroups": [
+          "_PointsTo_:ptr:1",
+          "_PointsTo_:ptr:2"]},
+      {
+        "_Pointer_": "ptr:14",
+        "_Type_": "UIGraph_Context",
+        "name": "KioskConfirmPopup",
+        "dependencies": [],
+        "components": [
+          "_PointsTo_:ptr:17"],
+        "BackBehavior": "NoAction",
+        "renderTarget": "All",
+        "UIController": {
+          "_Type_": "UIGraph_ControllerComponent",
+          "name": ""}},
+      {
+        "_Pointer_": "ptr:15",
+        "_Type_": "UIGraph_Context",
+        "name": "KioskOrderPopup",
+        "dependencies": [],
+        "components": [
+          "_PointsTo_:ptr:18"],
+        "BackBehavior": "NoAction",
+        "renderTarget": "All",
+        "UIController": {
+          "_Type_": "UIGraph_ControllerComponent",
+          "name": ""}},
+      {
+        "_Pointer_": "ptr:18",
+        "_Type_": "UIGraph_SimpleComponent",
+        "type": "Popup"},
+      {
+        "_Pointer_": "ptr:17",
+        "_Type_": "UIGraph_SimpleComponent",
+        "type": "Popup"},
+      {
+        "_Pointer_": "ptr:16",
+        "_Type_": "UIGraph_Context",
+        "name": "KioskResultPopup",
+        "dependencies": [],
+        "components": [
+          "_PointsTo_:ptr:19"],
+        "BackBehavior": "NoAction",
+        "renderTarget": "All",
+        "UIController": {
+          "_Type_": "UIGraph_ControllerComponent",
+          "name": ""}},
+      {
+        "_Pointer_": "ptr:19",
+        "_Type_": "UIGraph_SimpleComponent",
+        "type": "Popup"},
+      {
+        "_Pointer_": "ptr:11",
+        "_Type_": "UIGraph_ShopKioskVehicleLoadoutEditorContextComponent"}]}}

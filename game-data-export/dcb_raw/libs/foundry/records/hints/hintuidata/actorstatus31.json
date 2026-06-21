@@ -1,0 +1,12 @@
+{
+  "_RecordName_": "HintUIData.ActorStatus31",
+  "_RecordId_": "ebb8c15d-708f-4d59-ab91-db63398754cc",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "HintUIData",
+    "TitleText": "@Hints_ActorStatusRegenerationLocation_Title",
+    "BodyText": "@Hints_ActorStatusRespawnMedBed",
+    "BodyTextGamePad": "@Hints_ActorStatusRespawnMedBed",
+    "BodyTextJoystick": "@Hints_ActorStatusRespawnMedBed",
+    "TitleImagePath": "",
+    "BodyImagePath": ""}}

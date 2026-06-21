@@ -1,0 +1,34 @@
+{
+  "_RecordName_": "SBezierCurveRecord.Quart_Ease_In",
+  "_RecordId_": "84ce3140-f011-4a04-994e-c87995e20a4e",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "SBezierCurveRecord",
+    "curve": {
+      "_Type_": "BezierCurve",
+      "points": [
+        {
+          "_Type_": "Vec2",
+          "x": 0.0,
+          "y": 0.0},
+        {
+          "_Type_": "Vec2",
+          "x": 0.0,
+          "y": 0.0},
+        {
+          "_Type_": "Vec2",
+          "x": 0.5,
+          "y": 0.0},
+        {
+          "_Type_": "Vec2",
+          "x": 0.75,
+          "y": 0.0},
+        {
+          "_Type_": "Vec2",
+          "x": 1.0,
+          "y": 1.0},
+        {
+          "_Type_": "Vec2",
+          "x": 1.0,
+          "y": 1.0}],
+      "useLUT": false}}}

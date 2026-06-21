@@ -1,0 +1,22 @@
+{
+  "_RecordName_": "SReputationScopeParams.ReputationScope_Technician",
+  "_RecordId_": "363a0761-b1e0-4a41-a6e1-93bab58a0233",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "SReputationScopeParams",
+    "scopeName": "Technician",
+    "displayName": "@RepScope_Technician_Name",
+    "description": "@LOC_PLACEHOLDER",
+    "icon": "UI/Textures/Vector/MobiGlas/App_ReputationManager/icon_reputation_technician_header.svg",
+    "standingMap": {
+      "_Type_": "SReputationStandingMapParams",
+      "reputationCeiling": 243000,
+      "initialReputation": 0,
+      "standings": [
+        "file://./../../../../../libs/foundry/records/reputation/standings/technician/reputationstanding_technician_noteligible.json",
+        "file://./../../../../../libs/foundry/records/reputation/standings/technician/reputationstanding_technician_rank0.json",
+        "file://./../../../../../libs/foundry/records/reputation/standings/technician/reputationstanding_technician_rank1.json",
+        "file://./../../../../../libs/foundry/records/reputation/standings/technician/reputationstanding_technician_rank2.json",
+        "file://./../../../../../libs/foundry/records/reputation/standings/technician/reputationstanding_technician_rank3.json",
+        "file://./../../../../../libs/foundry/records/reputation/standings/technician/reputationstanding_technician_rank4.json",
+        "file://./../../../../../libs/foundry/records/reputation/standings/technician/reputationstanding_technician_rank5.json"]}}}

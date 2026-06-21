@@ -1,0 +1,198 @@
+{
+  "_RecordName_": "UIAudioDefinition.Cockpit_Bot",
+  "_RecordId_": "90219f62-0f86-4f2b-8a19-b9430bb542b7",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "UIAudioDefinition",
+    "events": [
+      {
+        "_Type_": "UIAudioEvent",
+        "tag": {
+          "_RecordPath_": "file://./../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+          "_RecordName_": "Tag.9e3c4f32-90f7-45e2-a0fb-424357c14bc5",
+          "_RecordId_": "9e3c4f32-90f7-45e2-a0fb-424357c14bc5"},
+        "audioTrigger": {
+          "_Type_": "GlobalResourceAudio",
+          "audioTrigger": ""}},
+      {
+        "_Type_": "UIAudioEvent",
+        "tag": {
+          "_RecordPath_": "file://./../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+          "_RecordName_": "Tag.c9f9a7a5-b990-4580-9373-d269e90675aa",
+          "_RecordId_": "c9f9a7a5-b990-4580-9373-d269e90675aa"},
+        "audioTrigger": {
+          "_Type_": "GlobalResourceAudio",
+          "audioTrigger": ""}},
+      {
+        "_Type_": "UIAudioEvent",
+        "tag": {
+          "_RecordPath_": "file://./../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+          "_RecordName_": "Tag.ab28dfa6-967c-4e9e-b347-e54a68970dbd",
+          "_RecordId_": "ab28dfa6-967c-4e9e-b347-e54a68970dbd"},
+        "audioTrigger": {
+          "_Type_": "GlobalResourceAudio",
+          "audioTrigger": ""}},
+      {
+        "_Type_": "UIAudioEvent",
+        "tag": {
+          "_RecordPath_": "file://./../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+          "_RecordName_": "Tag.7a80f99b-ed43-4ed1-8b75-4c71fef13fb1",
+          "_RecordId_": "7a80f99b-ed43-4ed1-8b75-4c71fef13fb1"},
+        "audioTrigger": {
+          "_Type_": "GlobalResourceAudio",
+          "audioTrigger": ""}},
+      {
+        "_Type_": "UIAudioEvent",
+        "tag": {
+          "_RecordPath_": "file://./../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+          "_RecordName_": "Tag.373b8356-d62e-4cf3-922a-9ae3121f465c",
+          "_RecordId_": "373b8356-d62e-4cf3-922a-9ae3121f465c"},
+        "audioTrigger": {
+          "_Type_": "GlobalResourceAudio",
+          "audioTrigger": ""}},
+      {
+        "_Type_": "UIAudioEvent",
+        "tag": {
+          "_RecordPath_": "file://./../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+          "_RecordName_": "Tag.beaa0bfe-9c17-44bc-b9a5-72b51ad09ef0",
+          "_RecordId_": "beaa0bfe-9c17-44bc-b9a5-72b51ad09ef0"},
+        "audioTrigger": {
+          "_Type_": "GlobalResourceAudio",
+          "audioTrigger": ""}},
+      {
+        "_Type_": "UIAudioEvent",
+        "tag": {
+          "_RecordPath_": "file://./../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+          "_RecordName_": "Tag.e70c3aae-5428-4c21-ba27-dd4daf1bf416",
+          "_RecordId_": "e70c3aae-5428-4c21-ba27-dd4daf1bf416"},
+        "audioTrigger": {
+          "_Type_": "GlobalResourceAudio",
+          "audioTrigger": ""}},
+      {
+        "_Type_": "UIAudioEvent",
+        "tag": {
+          "_RecordPath_": "file://./../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+          "_RecordName_": "Tag.736500da-30ce-4f93-9718-f13e77c06ecd",
+          "_RecordId_": "736500da-30ce-4f93-9718-f13e77c06ecd"},
+        "audioTrigger": {
+          "_Type_": "GlobalResourceAudio",
+          "audioTrigger": ""}},
+      {
+        "_Type_": "UIAudioEvent",
+        "tag": {
+          "_RecordPath_": "file://./../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+          "_RecordName_": "Tag.6ae02293-fa21-4e3d-880f-6942b63f383e",
+          "_RecordId_": "6ae02293-fa21-4e3d-880f-6942b63f383e"},
+        "audioTrigger": {
+          "_Type_": "GlobalResourceAudio",
+          "audioTrigger": ""}},
+      {
+        "_Type_": "UIAudioEvent",
+        "tag": {
+          "_RecordPath_": "file://./../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+          "_RecordName_": "Tag.80a9a0a7-2ec1-48ae-b651-2088d7a98b84",
+          "_RecordId_": "80a9a0a7-2ec1-48ae-b651-2088d7a98b84"},
+        "audioTrigger": {
+          "_Type_": "GlobalResourceAudio",
+          "audioTrigger": ""}},
+      {
+        "_Type_": "UIAudioEvent",
+        "tag": {
+          "_RecordPath_": "file://./../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+          "_RecordName_": "Tag.23080340-4e19-4d44-8a41-f5dede21f04d",
+          "_RecordId_": "23080340-4e19-4d44-8a41-f5dede21f04d"},
+        "audioTrigger": {
+          "_Type_": "GlobalResourceAudio",
+          "audioTrigger": "Play_INT_GEN_Cockpit_Bot_Angry"}},
+      {
+        "_Type_": "UIAudioEvent",
+        "tag": {
+          "_RecordPath_": "file://./../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+          "_RecordName_": "Tag.a78ffdc5-9781-4b52-905d-cb8f194c8b9c",
+          "_RecordId_": "a78ffdc5-9781-4b52-905d-cb8f194c8b9c"},
+        "audioTrigger": {
+          "_Type_": "GlobalResourceAudio",
+          "audioTrigger": "Play_INT_GEN_Cockpit_Bot_Asleep"}},
+      {
+        "_Type_": "UIAudioEvent",
+        "tag": {
+          "_RecordPath_": "file://./../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+          "_RecordName_": "Tag.af6dd813-b366-4f30-8122-1d68bbb6a53a",
+          "_RecordId_": "af6dd813-b366-4f30-8122-1d68bbb6a53a"},
+        "audioTrigger": {
+          "_Type_": "GlobalResourceAudio",
+          "audioTrigger": "Play_INT_GEN_Cockpit_Bot_Awaken"}},
+      {
+        "_Type_": "UIAudioEvent",
+        "tag": {
+          "_RecordPath_": "file://./../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+          "_RecordName_": "Tag.aa04831c-fe0b-4456-8822-0f83b57d4915",
+          "_RecordId_": "aa04831c-fe0b-4456-8822-0f83b57d4915"},
+        "audioTrigger": {
+          "_Type_": "GlobalResourceAudio",
+          "audioTrigger": "Play_INT_GEN_Cockpit_Bot_Dazed"}},
+      {
+        "_Type_": "UIAudioEvent",
+        "tag": {
+          "_RecordPath_": "file://./../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+          "_RecordName_": "Tag.9a6c9d1e-1549-4be3-bd6a-e3fc1ceb56d7",
+          "_RecordId_": "9a6c9d1e-1549-4be3-bd6a-e3fc1ceb56d7"},
+        "audioTrigger": {
+          "_Type_": "GlobalResourceAudio",
+          "audioTrigger": "Play_INT_GEN_Cockpit_Bot_Dead"}},
+      {
+        "_Type_": "UIAudioEvent",
+        "tag": {
+          "_RecordPath_": "file://./../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+          "_RecordName_": "Tag.2460f223-2459-4be5-af9c-719357a221c1",
+          "_RecordId_": "2460f223-2459-4be5-af9c-719357a221c1"},
+        "audioTrigger": {
+          "_Type_": "GlobalResourceAudio",
+          "audioTrigger": "Play_INT_GEN_Cockpit_Bot_Grin"}},
+      {
+        "_Type_": "UIAudioEvent",
+        "tag": {
+          "_RecordPath_": "file://./../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+          "_RecordName_": "Tag.37e1bfa8-a043-43e6-96a3-a666f0399f64",
+          "_RecordId_": "37e1bfa8-a043-43e6-96a3-a666f0399f64"},
+        "audioTrigger": {
+          "_Type_": "GlobalResourceAudio",
+          "audioTrigger": "Play_INT_GEN_Cockpit_Bot_LookAround"}},
+      {
+        "_Type_": "UIAudioEvent",
+        "tag": {
+          "_RecordPath_": "file://./../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+          "_RecordName_": "Tag.13d1c404-8889-40b1-b2a5-4207c38c6710",
+          "_RecordId_": "13d1c404-8889-40b1-b2a5-4207c38c6710"},
+        "audioTrigger": {
+          "_Type_": "GlobalResourceAudio",
+          "audioTrigger": "Play_INT_GEN_Cockpit_Bot_Love"}},
+      {
+        "_Type_": "UIAudioEvent",
+        "tag": {
+          "_RecordPath_": "file://./../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+          "_RecordName_": "Tag.26c28174-a468-4743-8055-2c26e9708b84",
+          "_RecordId_": "26c28174-a468-4743-8055-2c26e9708b84"},
+        "audioTrigger": {
+          "_Type_": "GlobalResourceAudio",
+          "audioTrigger": "Play_INT_GEN_Cockpit_Bot_Scared"}},
+      {
+        "_Type_": "UIAudioEvent",
+        "tag": {
+          "_RecordPath_": "file://./../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+          "_RecordName_": "Tag.24b0faf4-f73d-426a-86ed-847c730754fe",
+          "_RecordId_": "24b0faf4-f73d-426a-86ed-847c730754fe"},
+        "audioTrigger": {
+          "_Type_": "GlobalResourceAudio",
+          "audioTrigger": "Play_INT_GEN_Cockpit_Bot_Yawn"}},
+      {
+        "_Type_": "UIAudioEvent",
+        "tag": {
+          "_RecordPath_": "file://./../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+          "_RecordName_": "Tag.cfe6b803-65a8-48de-9177-9802e0e73ef0",
+          "_RecordId_": "cfe6b803-65a8-48de-9177-9802e0e73ef0"},
+        "audioTrigger": {
+          "_Type_": "GlobalResourceAudio",
+          "audioTrigger": ""}}],
+    "parameters": [],
+    "dialogueEvents": []}}

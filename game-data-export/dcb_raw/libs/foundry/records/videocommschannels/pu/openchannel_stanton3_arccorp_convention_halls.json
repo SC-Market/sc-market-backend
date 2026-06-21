@@ -1,0 +1,10 @@
+{
+  "_RecordName_": "CommsChannelDef.OpenChannel_Stanton3_ArcCorp_Convention_Halls",
+  "_RecordId_": "de13d656-89b6-41a0-8d43-eafe012cbc2e",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "CommsChannelDef",
+    "channelId": "OpenChannel_Stanton3_ArcCorp_Convention_Halls",
+    "displayName": "@LOC_PLACEHOLDER",
+    "canHaveMultipleInstances": false,
+    "useAreaOfEffect": false}}

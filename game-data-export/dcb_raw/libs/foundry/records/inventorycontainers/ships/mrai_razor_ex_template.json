@@ -1,0 +1,17 @@
+{
+  "_RecordName_": "InventoryContainer.MRAI_Razor_EX_Template",
+  "_RecordId_": "59b6dc21-f904-4f73-b7be-6c9f7342d190",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "InventoryContainer",
+    "excludedItemSubTypes": [],
+    "interiorDimensions": {
+      "_Type_": "Vec3",
+      "x": 2.0,
+      "y": 2.0,
+      "z": 2.0},
+    "inventoryType": {
+      "_Type_": "InventoryClosedContainerType",
+      "capacity": {
+        "_Type_": "SStandardCargoUnit",
+        "standardCargoUnits": 0.43}}}}

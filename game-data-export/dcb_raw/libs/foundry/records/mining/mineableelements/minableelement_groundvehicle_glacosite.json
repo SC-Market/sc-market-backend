@@ -1,0 +1,17 @@
+{
+  "_RecordName_": "MineableElement.MinableElement_GroundVehicle_Glacosite",
+  "_RecordId_": "7e465c37-1d58-4533-a6e4-13abf1073554",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "MineableElement",
+    "resourceType": {
+      "_RecordPath_": "file://./../../../../../libs/foundry/records/resourcetypedatabase/resourcetypedatabase.json",
+      "_RecordName_": "ResourceType.Glacosite",
+      "_RecordId_": "960eda23-d77c-425e-8cbd-89d94ca6e2aa"},
+    "elementInstability": 0.0,
+    "elementResistance": 0.1,
+    "elementOptimalWindowMidpoint": 0.6,
+    "elementOptimalWindowMidpointRandomness": 0.0,
+    "elementOptimalWindowThinness": 0.0,
+    "elementExplosionMultiplier": 0.0,
+    "elementClusterFactor": 0.0}}

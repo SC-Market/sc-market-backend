@@ -1,0 +1,128 @@
+{
+  "_RecordName_": "BuildingBlocks_Style.S_UIEA_A",
+  "_RecordId_": "cc0066e7-419f-4e9b-8306-16117c879346",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "BuildingBlocks_Style",
+    "entries": [
+      {
+        "_Type_": "BuildingBlocks_StyleEntry",
+        "name": "EACustomListItemCanvasOverrideTertiaryQuad",
+        "conditionsList": [
+          {
+            "_Type_": "BuildingBlocks_StyleConditionList",
+            "name": "General Custom Lists Tag Secondary",
+            "conditions": [
+              {
+                "_Type_": "BuildingBlocks_StyleSelectorConditionType",
+                "type": "Canvas"},
+              {
+                "_Type_": "BuildingBlocks_StyleSelectorConditionTag",
+                "tag": {
+                  "_RecordPath_": "file://./../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+                  "_RecordName_": "Tag.64a6886a-fd36-442a-b5fd-1207ca7a6489",
+                  "_RecordId_": "64a6886a-fd36-442a-b5fd-1207ca7a6489"}},
+              {
+                "_Type_": "BuildingBlocks_StyleSelectorConditionAnyOfTag",
+                "tags": [
+                  {
+                    "_RecordPath_": "file://./../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+                    "_RecordName_": "Tag.10fe708a-69d6-478a-a48b-e3dd5e09f05b",
+                    "_RecordId_": "10fe708a-69d6-478a-a48b-e3dd5e09f05b"},
+                  {
+                    "_RecordPath_": "file://./../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+                    "_RecordName_": "Tag.b2431c20-17d0-4c4d-85fa-268be4c0b39d",
+                    "_RecordId_": "b2431c20-17d0-4c4d-85fa-268be4c0b39d"},
+                  {
+                    "_RecordPath_": "file://./../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+                    "_RecordName_": "Tag.4d8643a1-8980-48b5-ad03-7ea6a50dc845",
+                    "_RecordId_": "4d8643a1-8980-48b5-ad03-7ea6a50dc845"}]}]}],
+        "modifiers": [
+          {
+            "_Type_": "BuildingBlocks_FieldModifierRecordRef",
+            "field": {
+              "_Type_": "BuildingBlocks_FieldModifierRecordRefTypeCanvasReferenceRecord",
+              "value": "file://./../../../../../../libs/foundry/records/ui/buildingblocks/modularkit/ea/components/eacustomlistitemcomponentsvg.json"}}],
+        "transitions": []}],
+    "colorStyles": [
+      {
+        "_Type_": "BuildingBlocks_ColorSolid",
+        "color": {
+          "_Type_": "SRGBA8",
+          "r": 41,
+          "g": 171,
+          "b": 226,
+          "a": 52}},
+      {
+        "_Type_": "BuildingBlocks_ColorSolid",
+        "color": {
+          "_Type_": "SRGBA8",
+          "r": 41,
+          "g": 171,
+          "b": 226,
+          "a": 178}},
+      {
+        "_Type_": "BuildingBlocks_ColorSolid",
+        "color": {
+          "_Type_": "SRGBA8",
+          "r": 255,
+          "g": 26,
+          "b": 103,
+          "a": 255}},
+      {
+        "_Type_": "BuildingBlocks_ColorSolid",
+        "color": {
+          "_Type_": "SRGBA8",
+          "r": 219,
+          "g": 25,
+          "b": 59,
+          "a": 255}},
+      {
+        "_Type_": "BuildingBlocks_ColorSolid",
+        "color": {
+          "_Type_": "SRGBA8",
+          "r": 221,
+          "g": 240,
+          "b": 244,
+          "a": 255}},
+      {
+        "_Type_": "BuildingBlocks_ColorSolid",
+        "color": {
+          "_Type_": "SRGBA8",
+          "r": 108,
+          "g": 184,
+          "b": 199,
+          "a": 255}},
+      {
+        "_Type_": "BuildingBlocks_ColorSolid",
+        "color": {
+          "_Type_": "SRGBA8",
+          "r": 8,
+          "g": 255,
+          "b": 173,
+          "a": 255}},
+      {
+        "_Type_": "BuildingBlocks_ColorSolid",
+        "color": {
+          "_Type_": "SRGBA8",
+          "r": 41,
+          "g": 171,
+          "b": 226,
+          "a": 210}},
+      {
+        "_Type_": "BuildingBlocks_ColorSolid",
+        "color": {
+          "_Type_": "SRGBA8",
+          "r": 102,
+          "g": 102,
+          "b": 102,
+          "a": 255}},
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null],
+    "textFieldModifiers": []}}

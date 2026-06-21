@@ -1,0 +1,24 @@
+{
+  "_RecordName_": "Character.Pyro_RoughAndReady_Guard_Male",
+  "_RecordId_": "508a60e0-f107-424d-9d39-09f4d943c821",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "Character",
+    "characterPersonalData": {
+      "_Type_": "CharacterPersonalData",
+      "title": "",
+      "firstName": "",
+      "nickName": "",
+      "lastName": "",
+      "randomNameParams": "file://./../../../../../../../../libs/foundry/records/characternamedata/humanmale.json",
+      "affiliation": "",
+      "details": ""},
+    "audioSwitchStateName": "",
+    "animationRemapAlias": "",
+    "characterMannequinTag": "",
+    "styleMannequinTag": "Cocky",
+    "combatStyle": "SpecOps",
+    "gender": "Male",
+    "characterSpeedOverrides": [],
+    "nicknameChance": 0.0,
+    "name": "Pyro_RoughAndReady_Guard_Male_001"}}

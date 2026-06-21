@@ -1,0 +1,26 @@
+{
+  "_RecordName_": "SecurityNetworkRoomSettings.SNRS_DC_Airspace_Greycat",
+  "_RecordId_": "5ae120da-010a-4ab6-b64e-89087fb82b22",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "SecurityNetworkRoomSettings",
+    "defaultProtocol": {
+      "_Type_": "SecurityNetworkProtocol",
+      "permissionsWithClearance": {
+        "_Type_": "SecurityNetworkPermissions",
+        "access": "Yes",
+        "trespass": "No"},
+      "permissionsWithoutClearance": {
+        "_Type_": "SecurityNetworkPermissions",
+        "access": "Yes",
+        "trespass": "No"},
+      "acceptedClearance": {
+        "_Type_": "SecurityClearanceConditions",
+        "tokens": []},
+      "ownerFaction": "file://./../../../../../../libs/foundry/records/factions/faction_lawfulsecurity_generic.json"},
+    "roomIdentifier": {
+      "_RecordPath_": "file://./../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+      "_RecordName_": "Tag.2c97d70b-2ff0-4ebe-80c7-8b7c22333df2",
+      "_RecordId_": "2c97d70b-2ff0-4ebe-80c7-8b7c22333df2"},
+    "trespassWarningSeconds": 10.0,
+    "trespassRevokeWarningSeconds": 1800.0}}

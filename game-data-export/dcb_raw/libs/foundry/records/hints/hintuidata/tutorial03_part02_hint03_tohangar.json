@@ -1,0 +1,12 @@
+{
+  "_RecordName_": "HintUIData.Tutorial03_Part02_Hint03_ToHangar",
+  "_RecordId_": "e9585f16-c64c-494c-8abc-af014f9d22d6",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "HintUIData",
+    "TitleText": "@Tut03_Part02_Hint03_ToHangar_Title",
+    "BodyText": "@Tut03_Part02_Hint03_ToHangar",
+    "BodyTextGamePad": "@Tut03_Part02_Hint03_ToHangar",
+    "BodyTextJoystick": "@Tut03_Part02_Hint03_ToHangar",
+    "TitleImagePath": "",
+    "BodyImagePath": ""}}

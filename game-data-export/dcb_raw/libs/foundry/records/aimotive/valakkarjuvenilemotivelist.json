@@ -1,0 +1,206 @@
+{
+  "_RecordName_": "AIMotiveList.ValakkarJuvenileMotiveList",
+  "_RecordId_": "d8d590fa-14a7-4658-8e80-6876749b9202",
+  "_RecordTag_": "CoreAI",
+  "_RecordValue_": {
+    "_Type_": "AIMotiveList",
+    "motiveList": [
+      {
+        "_Type_": "AIMotive",
+        "id": "6b5c3c2a-99c9-4b80-b962-66fb3e7deac9",
+        "actionDefs": [
+          {
+            "_Type_": "AIMotiveAction",
+            "id": "cea53f26-44dd-4f83-8c25-74dbba164b4b",
+            "actionName": "Emerge",
+            "conditions": [],
+            "priority": -1,
+            "actionDetails": [],
+            "params": [
+              {
+                "_Type_": "MotiveParameter_TacticalQuery",
+                "name": "ResolveToNavMeshTPSQuery",
+                "value": "file://./../../../../libs/foundry/records/tacticalquery/tpsqueries/creaturebehaviourqueries/findpositiononplayernavmesh.json"},
+              {
+                "_Type_": "MotiveParameter_Float",
+                "name": "PreEmergeDelayVariation",
+                "value": 1.5},
+              {
+                "_Type_": "MotiveParameter_Bool",
+                "name": "CheckNavMesh",
+                "value": true}]},
+          {
+            "_Type_": "AIMotiveAction",
+            "id": "2796734e-973c-4e81-8aee-2370aaf2993a",
+            "actionName": "SubmergeToIdle",
+            "conditions": [
+              {
+                "_Type_": "Condition_AttentionTarget",
+                "id": "6e5d2460-c4d5-4b8d-accb-521697c5c4d3",
+                "interrupt": false,
+                "minSatisfactionDuration": -1.0,
+                "requiresTarget": false}],
+            "priority": 1000,
+            "actionDetails": [],
+            "params": [
+              {
+                "_Type_": "MotiveParameter_String",
+                "name": "BurrowType",
+                "value": "Default"}]},
+          {
+            "_Type_": "AIMotiveAction",
+            "id": "a9cc11c8-6e95-4ebb-ba0f-6bef044a1c61",
+            "actionName": "Spit",
+            "conditions": [
+              {
+                "_Type_": "Condition_AttentionTarget",
+                "id": "320e5883-681d-44c8-aa4e-203c2258697c",
+                "interrupt": false,
+                "minSatisfactionDuration": -1.0,
+                "requiresTarget": true},
+              {
+                "_Type_": "Condition_DistanceToTarget",
+                "id": "bf11f4dd-9d0e-4012-be7e-6bab6f6a6a40",
+                "interrupt": false,
+                "minSatisfactionDuration": -1.0,
+                "minRange": 0.0,
+                "maxRange": 20.0}],
+            "priority": 15,
+            "actionDetails": [],
+            "params": [
+              {
+                "_Type_": "MotiveParameter_String",
+                "name": "FragId",
+                "value": "melee_heavy"},
+              {
+                "_Type_": "MotiveParameter_String",
+                "name": "FragTags",
+                "value": "projectile+grounded"},
+              {
+                "_Type_": "MotiveParameter_String",
+                "name": "FireModeName",
+                "value": "Default"}]},
+          {
+            "_Type_": "AIMotiveAction",
+            "id": "0344fe16-8e61-49de-a581-040a45e3e487",
+            "actionName": "CloseInOnTarget",
+            "conditions": [
+              {
+                "_Type_": "Condition_AttentionTarget",
+                "id": "cd66a829-a261-4fff-9674-33ed08797095",
+                "interrupt": false,
+                "minSatisfactionDuration": -1.0,
+                "requiresTarget": true},
+              {
+                "_Type_": "Condition_DistanceToTarget",
+                "id": "b75c758c-094c-48ab-9aec-768cde3e1fdb",
+                "interrupt": false,
+                "minSatisfactionDuration": -1.0,
+                "minRange": 15.0,
+                "maxRange": -1.0}],
+            "priority": 20,
+            "actionDetails": [],
+            "params": [
+              {
+                "_Type_": "MotiveParameter_String",
+                "name": "BurrowType",
+                "value": "Relocate"}]},
+          {
+            "_Type_": "AIMotiveAction",
+            "id": "eb3a8814-0146-48f3-ad2c-87feb1d15384",
+            "actionName": "RepositionForProximity",
+            "conditions": [
+              {
+                "_Type_": "Condition_PerceivedHostilesInRange",
+                "id": "40460cc3-88be-4e6b-911c-ab382f8602c4",
+                "interrupt": false,
+                "minSatisfactionDuration": -1.0,
+                "minimumCount": 1,
+                "maximumCount": -1,
+                "minimumRange": 0.0,
+                "maximumRange": 5.0,
+                "halfAngle": 180.0,
+                "maxTime": 0.5}],
+            "priority": 10,
+            "actionDetails": [
+              {
+                "_Type_": "AIMotiveActionTacticalQueryDetails",
+                "detailsId": "",
+                "tacticalQuery": "file://./../../../../libs/foundry/records/tacticalquery/tpsqueries/creaturebehaviourqueries/vlkbehaviourqueries/vlkjuvenile_combatrelocationposition.json"}],
+            "params": [
+              {
+                "_Type_": "MotiveParameter_String",
+                "name": "BurrowType",
+                "value": "Relocate"},
+              {
+                "_Type_": "MotiveParameter_TacticalQuery",
+                "name": "TPSQuery",
+                "value": "file://./../../../../libs/foundry/records/tacticalquery/tpsqueries/creaturebehaviourqueries/vlkbehaviourqueries/vlkjuvenile_combatrelocationposition.json"}]},
+          {
+            "_Type_": "AIMotiveAction",
+            "id": "faf118b8-918e-4eea-be49-8461c8dceca3",
+            "actionName": "CombatIdle",
+            "conditions": [],
+            "priority": 500,
+            "actionDetails": [],
+            "params": [
+              {
+                "_Type_": "MotiveParameter_Float",
+                "name": "IdleDuration",
+                "value": 1.0}]},
+          {
+            "_Type_": "AIMotiveAction",
+            "id": "223a7dba-4b4b-45b7-8fe4-ce8616b04a05",
+            "actionName": "CombatReposition",
+            "conditions": [
+              {
+                "_Type_": "Condition_AttentionTarget",
+                "id": "18eb9473-3948-4793-894a-6976e2b5c606",
+                "interrupt": false,
+                "minSatisfactionDuration": -1.0,
+                "requiresTarget": true}],
+            "priority": 11,
+            "actionDetails": [],
+            "params": [
+              {
+                "_Type_": "MotiveParameter_TacticalQuery",
+                "name": "TPSQuery",
+                "value": "file://./../../../../libs/foundry/records/tacticalquery/tpsqueries/creaturebehaviourqueries/vlkbehaviourqueries/vlkjuvenile_combatreposition.json"},
+              {
+                "_Type_": "MotiveParameter_String",
+                "name": "BurrowType",
+                "value": "Relocate"},
+              {
+                "_Type_": "MotiveParameter_Float",
+                "name": "AttackTimerDuration",
+                "value": 10.0}]}],
+        "triggerableActions": [],
+        "globalBehaviorParameters": [
+          {
+            "_Type_": "MotiveParameter_TacticalQuery",
+            "name": "TargetQuery",
+            "value": "file://./../../../../libs/foundry/records/tacticalquery/ttsqueries/vlkjuvenilecombattarget.json"},
+          {
+            "_Type_": "MotiveParameter_Float",
+            "name": "TimeBetweenEmerges",
+            "value": 5.0},
+          {
+            "_Type_": "MotiveParameter_TacticalQuery",
+            "name": "IdleWanderTPSQueryName",
+            "value": "file://./../../../../libs/foundry/records/tacticalquery/tpsqueries/socialqueries/creaturerandomnavmeshposition.json"},
+          {
+            "_Type_": "MotiveParameter_Bool",
+            "name": "EmergeImmediately",
+            "value": false},
+          {
+            "_Type_": "MotiveParameter_Float",
+            "name": "PostAttackIdleDuration",
+            "value": 0.25},
+          {
+            "_Type_": "MotiveParameter_TacticalQuery",
+            "name": "TargetQueryUnlimitedRange",
+            "value": "file://./../../../../libs/foundry/records/tacticalquery/ttsqueries/vlkjuvenilecombattargetunlimitedrange.json"},
+          {
+            "_Type_": "MotiveParameter_TacticalQuery",
+            "name": "SubmergeTPSQuery",
+            "value": "file://./../../../../libs/foundry/records/tacticalquery/tpsqueries/creaturebehaviourqueries/vlkbehaviourqueries/vlkjuvenile_submergepoint.json"}]}]}}

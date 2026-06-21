@@ -1,0 +1,70 @@
+{
+  "_RecordName_": "GlobalJumpPointParams.GlobalJumpPointParams",
+  "_RecordId_": "2a8af784-5eb1-4bcc-9fad-615d3bee05c4",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "GlobalJumpPointParams",
+    "alignmentAngle": 22.5,
+    "alignmentTolerance": 10.0,
+    "alignmentRange": 15000.0,
+    "startClosingTime": 75.0,
+    "shipPullInDelayTime": 1.5,
+    "shipPullInBufferTime": 10.0,
+    "debrisPushOutAcceleration": 50.0,
+    "debrisPushOutMaximumSpeed": 200.0,
+    "effectParams": {
+      "_Type_": "GlobalJumpPointEffectParams",
+      "tuningParams": {
+        "_Type_": "GlobalJumpPointTuningParams",
+        "requiredTuningAmount": 20.0},
+      "openingParams": {
+        "_Type_": "GlobalJumpPointOpeningParams",
+        "projectileTime": 2.0,
+        "tuningCollapseTime": 0.3,
+        "openEffectStartDelay": 0.0,
+        "revealTime": 10.0,
+        "revealAnimCurve": {
+          "_Type_": "BezierCurve",
+          "points": [
+            {
+              "_Type_": "Vec2",
+              "x": -0.4003674,
+              "y": -0.001240347},
+            {
+              "_Type_": "Vec2",
+              "x": 0.0,
+              "y": 0.0},
+            {
+              "_Type_": "Vec2",
+              "x": 0.4003674,
+              "y": 0.001240347},
+            {
+              "_Type_": "Vec2",
+              "x": 0.8431367,
+              "y": 0.7374011},
+            {
+              "_Type_": "Vec2",
+              "x": 1.0,
+              "y": 1.0},
+            {
+              "_Type_": "Vec2",
+              "x": 1.156863,
+              "y": 1.262599}],
+          "useLUT": false},
+        "revealFadeDelay": 0.5,
+        "openingTime": 3.0,
+        "openingEndDelay": 2.0,
+        "apertureTimeScaleRange": {
+          "_Type_": "Range",
+          "minimum": 1.0,
+          "maximum": 1.0}},
+      "closingParams": {
+        "_Type_": "GlobalJumpPointClosingParams",
+        "closingTime": 5.0,
+        "shrinkTime": 5.0,
+        "closingTriggerDelay": 0.1}},
+    "uiConeParams": {
+      "_Type_": "JumpDriveUIConeParams",
+      "range": 15000.0,
+      "angle": 35.0,
+      "lookAtAngle": 15.0}}}

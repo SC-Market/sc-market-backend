@@ -1,0 +1,21 @@
+{
+  "_RecordName_": "PlacedSurfaceEffects_Emitter.LeftNostrilBlood",
+  "_RecordId_": "a19fec53-b69f-409f-bb2f-c3bd7f341eae",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "PlacedSurfaceEffects_Emitter",
+    "name": "LeftEyeBlood",
+    "tag": {
+      "_RecordPath_": "file://./../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+      "_RecordName_": "Tag.6f950f86-90c5-42ff-81c0-051117a6b77d",
+      "_RecordId_": "6f950f86-90c5-42ff-81c0-051117a6b77d"},
+    "particleEffect": {
+      "_Type_": "GlobalResourceParticle",
+      "path": "de7ffa87-ca21-da64-31da-29209bb18987|RttEffects/rtt_tears.Face.BloodDroplets"},
+    "emitterPosition": {
+      "_Type_": "Vec3",
+      "x": 0.48,
+      "y": 0.5,
+      "z": 0.0},
+    "linkedToSdf": true,
+    "fadeOutDuration": 10.0}}

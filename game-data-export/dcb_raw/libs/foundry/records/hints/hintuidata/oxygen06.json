@@ -1,0 +1,12 @@
+{
+  "_RecordName_": "HintUIData.Oxygen06",
+  "_RecordId_": "3e07d76d-ee9f-41ba-83d7-8da8b3865768",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "HintUIData",
+    "TitleText": "@Hints_Oxygen_Title",
+    "BodyText": "@Hints_Oxygen6",
+    "BodyTextGamePad": "@Hints_Oxygen6",
+    "BodyTextJoystick": "@Hints_Oxygen6",
+    "TitleImagePath": "",
+    "BodyImagePath": ""}}

@@ -1,0 +1,37 @@
+{
+  "_RecordName_": "SEntrancesDef.ARGO_RAFT",
+  "_RecordId_": "070b6de5-dbbb-48a9-ad1b-e00b714e6ffb",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "SEntrancesDef",
+    "boundingBoxScale": {
+      "_Type_": "Vec3",
+      "x": 1.2,
+      "y": 1.2,
+      "z": 1.2},
+    "boundingBoxOffset": {
+      "_Type_": "Vec3",
+      "x": 0.0,
+      "y": 0.0,
+      "z": 0.0},
+    "entranceArray": [
+      {
+        "_Type_": "SCEntranceItem",
+        "entranceName": "@entrance_elevator",
+        "jointName": "ARGO_RAFT",
+        "positionOffset": {
+          "_Type_": "Vec3",
+          "x": 3.206,
+          "y": 10.552,
+          "z": -4.612},
+        "shipState": "Both"},
+      {
+        "_Type_": "SCEntranceItem",
+        "entranceName": "@entrance_dock",
+        "jointName": "ARGO_RAFT",
+        "positionOffset": {
+          "_Type_": "Vec3",
+          "x": -3.125,
+          "y": 15.39,
+          "z": -2.525},
+        "shipState": "Flying"}]}}

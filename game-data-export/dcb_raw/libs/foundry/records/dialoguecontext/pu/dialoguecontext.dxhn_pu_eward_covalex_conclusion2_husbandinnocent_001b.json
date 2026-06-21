@@ -1,0 +1,21 @@
+{
+  "_RecordName_": "DialogueContext.DXHN_PU_EWARD_Covalex_Conclusion2_HusbandInnocent_001b",
+  "_RecordId_": "a31a58f7-94e9-415c-bf34-accccb31e1a3",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "DialogueContext",
+    "speaker": null,
+    "localizedSubtitleText": "@LOC_UNINITIALIZED",
+    "unlocalizedSubtitleText": "@LOC_UNINITIALIZED",
+    "subtitleShowDelay": 0.0,
+    "subtitleDisplayDurationOverride": 0.0,
+    "tempText": "",
+    "audioTrigger": {
+      "_Type_": "GlobalResourceAudio",
+      "audioTrigger": "Play_DXHN_PU_EWARD_Covalex_Conclusion2_HusbandInnocent_001b"},
+    "femaleAudioTrigger": {
+      "_Type_": "GlobalResourceAudio",
+      "audioTrigger": ""},
+    "forceSubtitles": false,
+    "contents": [],
+    "tags": []}}

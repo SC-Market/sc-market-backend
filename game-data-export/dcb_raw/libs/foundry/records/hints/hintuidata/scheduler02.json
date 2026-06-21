@@ -1,0 +1,12 @@
+{
+  "_RecordName_": "HintUIData.Scheduler02",
+  "_RecordId_": "be2cfae1-2e1c-46ca-ad42-b73da5cee133",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "HintUIData",
+    "TitleText": "@Hints_Missions_Title",
+    "BodyText": "@Hints_Scheduler2",
+    "BodyTextGamePad": "@Hints_Scheduler2",
+    "BodyTextJoystick": "@Hints_Scheduler2",
+    "TitleImagePath": "",
+    "BodyImagePath": ""}}

@@ -1,0 +1,17 @@
+{
+  "_RecordName_": "MineableComposition.FPS_Composition_FlowstoneDeposit",
+  "_RecordId_": "edfb6acd-3507-4a2e-9127-29f5bf903965",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "MineableComposition",
+    "depositName": "@MineableRock_FPS_Flowstone_Name",
+    "minimumDistinctElements": 1,
+    "compositionArray": [
+      {
+        "_Type_": "MineableCompositionPart",
+        "mineableElement": "file://./../../../../../libs/foundry/records/mining/mineableelements/minableelement_fps_flowstone.json",
+        "minPercentage": 50.0,
+        "maxPercentage": 100.0,
+        "probability": 1.0,
+        "curveExponent": 1.0,
+        "qualityScale": 1.0}]}}

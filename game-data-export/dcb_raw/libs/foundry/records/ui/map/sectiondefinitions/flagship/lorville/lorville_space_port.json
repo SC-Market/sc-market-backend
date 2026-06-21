@@ -1,0 +1,8 @@
+{
+  "_RecordName_": "InteriorMapSectionDefinition.Lorville_Space_Port",
+  "_RecordId_": "8e25976f-4fdd-4d01-adc2-b6ee668106b5",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "InteriorMapSectionDefinition",
+    "name": "@interiormap_common_space_port",
+    "restrictViewBounds": false}}

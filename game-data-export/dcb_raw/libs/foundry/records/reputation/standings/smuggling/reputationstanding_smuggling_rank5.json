@@ -1,0 +1,15 @@
+{
+  "_RecordName_": "SReputationStandingParams.ReputationStanding_Smuggling_Rank5",
+  "_RecordId_": "d61c9de1-a807-49b4-9190-095e1bf11f0b",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "SReputationStandingParams",
+    "name": "Smuggling_Rank5",
+    "description": "desc",
+    "displayName": "@RepStanding_Rank4",
+    "perkDescription": "@blank_space",
+    "icon": "UI\\Textures\\Vector\\MobiGlas\\App_ReputationManager\\icon_reputationrank_smuggling_6.svg",
+    "minReputation": 4000,
+    "driftReputation": 0,
+    "driftTimeHours": 24.0,
+    "gated": false}}

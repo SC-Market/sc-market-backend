@@ -1,0 +1,20 @@
+{
+  "_RecordName_": "MissionItem.KopionMeat",
+  "_RecordId_": "bd3b37e0-1713-4c3a-bf7b-87af19d73725",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "MissionItem",
+    "tags": [
+      {
+        "_RecordPath_": "file://./../../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+        "_RecordName_": "Tag.5e11a544-7fea-4160-b2bf-98c6cf9ee9df",
+        "_RecordId_": "5e11a544-7fea-4160-b2bf-98c6cf9ee9df"},
+      {
+        "_RecordPath_": "file://./../../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+        "_RecordName_": "Tag.3a810e0a-e07f-4f24-91e1-541ff6ca1d3e",
+        "_RecordId_": "3a810e0a-e07f-4f24-91e1-541ff6ca1d3e"}],
+    "stringVariants": {
+      "_Type_": "MissionStringVariants",
+      "variants": []},
+    "weighting": 1.0,
+    "entityClass": null}}

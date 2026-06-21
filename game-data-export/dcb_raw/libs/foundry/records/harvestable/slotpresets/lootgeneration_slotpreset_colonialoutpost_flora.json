@@ -1,0 +1,12 @@
+{
+  "_RecordName_": "SubHarvestableConfigRecord.LootGeneration_SlotPreset_ColonialOutpost_Flora",
+  "_RecordId_": "19d5f2a9-c739-4c15-89e1-610ec858e7a9",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "SubHarvestableConfigRecord",
+    "subConfig": {
+      "_Type_": "SubHarvestableConfig",
+      "initialSlotsProbability": 0.4,
+      "initialSlotsProbabilityDeepest": null,
+      "configRespawnTimeMultiplier": 1.0,
+      "subHarvestables": []}}}

@@ -1,0 +1,22 @@
+{
+  "_RecordName_": "Faction.Faction_Reputation_Lawful_InterSecDefenseSolutions",
+  "_RecordId_": "615e0c15-883f-4c5c-af0f-0f332483eb31",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "Faction",
+    "name": "@LOC_UNINITIALIZED",
+    "description": "@LOC_EMPTY",
+    "defaultReaction": "Neutral",
+    "alliedFactions": [],
+    "enemyFactions": [],
+    "friendlyFireBehaviorOverrides": [
+      {
+        "_Type_": "FriendlyFireReactionOverride",
+        "reactionType": "Neutral",
+        "shouldAllowFriendlyFire": false}],
+    "factionType": "Lawful",
+    "ableToArrest": false,
+    "policesLawfulTrespass": false,
+    "policesCriminality": false,
+    "noLegalRights": false,
+    "factionReputationRef": null}}

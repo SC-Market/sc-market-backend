@@ -1,0 +1,64 @@
+{
+  "_RecordName_": "MissionLocationTemplate.OrisonFloatingPlatform_Brushwood_Stanton2_BWD-A1",
+  "_RecordId_": "cf254453-2c58-4dfd-becd-02d05ceaed33",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "MissionLocationTemplate",
+    "locationData": {
+      "_Type_": "MissionLocationData",
+      "generalTags": {
+        "_Type_": "MissionLocationTags",
+        "tags": []},
+      "producesTags": {
+        "_Type_": "TagSearchTerm",
+        "positiveTags": [],
+        "negativeTags": []},
+      "consumesTags": {
+        "_Type_": "TagSearchTerm",
+        "positiveTags": [],
+        "negativeTags": []},
+      "aiSpawnTags": {
+        "_Type_": "TagList",
+        "tags": []},
+      "stringVariants": {
+        "_Type_": "MissionStringVariants",
+        "variants": [
+          {
+            "_Type_": "MissionStringVariant",
+            "tag": {
+              "_RecordPath_": "file://./../../../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+              "_RecordName_": "Tag.0130de18-97e2-4d4c-9bb1-3e7ef5fd0490",
+              "_RecordId_": "0130de18-97e2-4d4c-9bb1-3e7ef5fd0490"},
+            "string": "@mission_location_stanton_538"},
+          {
+            "_Type_": "MissionStringVariant",
+            "tag": {
+              "_RecordPath_": "file://./../../../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+              "_RecordName_": "Tag.8fd73fe9-94b6-45cd-9d4c-35ce67e86c75",
+              "_RecordId_": "8fd73fe9-94b6-45cd-9d4c-35ce67e86c75"},
+            "string": "@mission_location_stanton_539"}]},
+      "missionModules": [],
+      "missionLimits": [
+        {
+          "_Type_": "LocationMissionLimit",
+          "tag": {
+            "_RecordPath_": "file://./../../../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+            "_RecordName_": "Tag.03b50a0c-1d1a-4477-ba29-66cb25b80287",
+            "_RecordId_": "03b50a0c-1d1a-4477-ba29-66cb25b80287"},
+          "autoConsumeIfPlayerAtLocation": true,
+          "maxMissionInstances": 1,
+          "dependentParentTags": {
+            "_Type_": "TagList",
+            "tags": [
+              {
+                "_RecordPath_": "file://./../../../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+                "_RecordName_": "Tag.df781ab5-5915-44e6-af45-d09c4fd0bc7b",
+                "_RecordId_": "df781ab5-5915-44e6-af45-d09c4fd0bc7b"}]},
+          "dependentChildTags": {
+            "_Type_": "TagList",
+            "tags": []}}],
+      "autoSpawnSettings": [],
+      "isSecurityNetworkHost": true,
+      "defaultSecurityNetworkManifest": "file://./../../../../../../../../libs/foundry/records/lawsystem/securitynetwork/manifests/fleetweek/2022/soo_eventover.json",
+      "disabled": false,
+      "entityClusterMember": null}}}

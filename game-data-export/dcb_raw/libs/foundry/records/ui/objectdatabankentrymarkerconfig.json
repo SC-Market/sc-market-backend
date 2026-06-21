@@ -1,0 +1,10 @@
+{
+  "_RecordName_": "SCObjectDataBankEntryMarkerConfig.ObjectDataBankEntryMarkerConfig",
+  "_RecordId_": "5c09c70f-c718-4799-92fd-02acfae77cf7",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "SCObjectDataBankEntryMarkerConfig",
+    "managedLandingZoneMinimumDist": 12000.0,
+    "managedLandingZoneMaximumDist": 12250.0,
+    "unmanagedLandingZoneMinimumDist": 1750.0,
+    "unmanagedLandingZoneMaximumDist": 2000.0}}

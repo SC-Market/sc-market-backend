@@ -1,0 +1,17 @@
+{
+  "_RecordName_": "InventoryContainer.PersonalStorage_Locker",
+  "_RecordId_": "01480ef1-2519-4224-bf55-51656845afdf",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "InventoryContainer",
+    "excludedItemSubTypes": [],
+    "interiorDimensions": {
+      "_Type_": "Vec3",
+      "x": 0.0,
+      "y": 0.0,
+      "z": 0.0},
+    "inventoryType": {
+      "_Type_": "InventoryClosedContainerType",
+      "capacity": {
+        "_Type_": "SStandardCargoUnit",
+        "standardCargoUnits": 0.0}}}}

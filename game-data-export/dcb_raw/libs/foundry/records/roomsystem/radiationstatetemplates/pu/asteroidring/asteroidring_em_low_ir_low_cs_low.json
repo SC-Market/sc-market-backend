@@ -1,0 +1,24 @@
+{
+  "_RecordName_": "RadiationStateTemplate.AsteroidRing_EM_Low_IR_Low_CS_Low",
+  "_RecordId_": "cccee195-f305-40a9-ac75-50649bd66970",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "RadiationStateTemplate",
+    "state": {
+      "_Type_": "RadiationStateTemplateInternal",
+      "distortionMod": "Override",
+      "distortion": 0.0,
+      "IR": {
+        "_Type_": "RadiationStatePropertyParams",
+        "modifierType": "Additive",
+        "signatureValue": 2000.0},
+      "EM": {
+        "_Type_": "RadiationStatePropertyParams",
+        "modifierType": "Additive",
+        "signatureValue": 2000.0},
+      "CS": {
+        "_Type_": "RadiationStatePropertyParams",
+        "modifierType": "Additive",
+        "signatureValue": 2000.0},
+      "hazardousRadiationMod": "Override",
+      "hazardousRadiationRate": 0.0}}}

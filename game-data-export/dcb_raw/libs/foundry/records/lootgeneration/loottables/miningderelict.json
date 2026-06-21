@@ -1,0 +1,63 @@
+{
+  "_RecordName_": "LootTable.MiningDerelict",
+  "_RecordId_": "8b5210b7-960a-4acd-a67d-41191c4ae8e5",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "LootTable",
+    "lootArchetypes": [
+      {
+        "_Type_": "WeightedLootArchetype",
+        "archetype": "file://./../../../../../libs/foundry/records/lootgeneration/lootarchetypes/lootarchetype_minerals_derelict_uncommon.json",
+        "weight": 0.8,
+        "numberOfResultsConstraints": {
+          "_Type_": "NumResultsConstraints",
+          "minResults": 0,
+          "maxResults": 0}},
+      {
+        "_Type_": "WeightedLootArchetype",
+        "archetype": "file://./../../../../../libs/foundry/records/lootgeneration/lootarchetypes/lootarchetype_minerals_derelict_rare.json",
+        "weight": 0.5,
+        "numberOfResultsConstraints": {
+          "_Type_": "NumResultsConstraints",
+          "minResults": 0,
+          "maxResults": 0}},
+      {
+        "_Type_": "WeightedLootArchetype",
+        "archetype": "file://./../../../../../libs/foundry/records/lootgeneration/lootarchetypes/lootarchetype_minerals_derelict_epic.json",
+        "weight": 0.3,
+        "numberOfResultsConstraints": {
+          "_Type_": "NumResultsConstraints",
+          "minResults": 0,
+          "maxResults": 0}},
+      {
+        "_Type_": "WeightedLootArchetype",
+        "archetype": "file://./../../../../../libs/foundry/records/lootgeneration/lootarchetypes/lootarchetype_tools_common.json",
+        "weight": 0.8,
+        "numberOfResultsConstraints": {
+          "_Type_": "NumResultsConstraints",
+          "minResults": 0,
+          "maxResults": 0}},
+      {
+        "_Type_": "WeightedLootArchetype",
+        "archetype": "file://./../../../../../libs/foundry/records/lootgeneration/lootarchetypes/lootarchetype_tools_rare.json",
+        "weight": 0.3,
+        "numberOfResultsConstraints": {
+          "_Type_": "NumResultsConstraints",
+          "minResults": 0,
+          "maxResults": 0}},
+      {
+        "_Type_": "WeightedLootArchetype",
+        "archetype": "file://./../../../../../libs/foundry/records/lootgeneration/lootarchetypes/lootarchetype_tools_tractorbeam.json",
+        "weight": 0.5,
+        "numberOfResultsConstraints": {
+          "_Type_": "NumResultsConstraints",
+          "minResults": 0,
+          "maxResults": 0}},
+      {
+        "_Type_": "WeightedLootArchetype",
+        "archetype": "file://./../../../../../libs/foundry/records/lootgeneration/lootarchetypes/lootarchetype_weapons-melee.json",
+        "weight": 0.4,
+        "numberOfResultsConstraints": {
+          "_Type_": "NumResultsConstraints",
+          "minResults": 0,
+          "maxResults": 2}}]}}

@@ -1,0 +1,349 @@
+{
+  "_RecordName_": "SEAGlobalSpecialLoadout.EAFlightOnlyGameRulesLoadoutLayer",
+  "_RecordId_": "018123cd-c1cd-4826-87a7-788718f4019f",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "SEAGlobalSpecialLoadout",
+    "sharedLoadouts": [
+      {
+        "_Type_": "SEALoadoutSet",
+        "displayName": "@ui_sm_loadout_LightArmorButton",
+        "icon": "UI/Textures/EA/LoadoutIcons/Light_Armour_64.tif",
+        "itemSlots": [
+          {
+            "_Type_": "SEALoadoutItem",
+            "itemSlot": "ArmorHelmet",
+            "itemClass": "file://./../../../../../../libs/foundry/records/entities/scitem/characters/human/starwear/helmet/light/nvs_pilot_flightsuit_helmet_01_01_01.json",
+            "itemAttachements": [],
+            "itemExplicit": []},
+          {
+            "_Type_": "SEALoadoutItem",
+            "itemSlot": "ArmorUndersuit",
+            "itemClass": "file://./../../../../../../libs/foundry/records/entities/scitem/characters/human/armor/s42_armor/undersuit/nvs_pilot_flightsuit_01_01_01.json",
+            "itemAttachements": [],
+            "itemExplicit": []}]}],
+    "teamLoadouts": [
+      {
+        "_Type_": "SEALoadoutCollection",
+        "availableLoadouts": [
+          {
+            "_Type_": "SEALoadoutSet",
+            "displayName": "@ui_sm_loadout_LightArmorButton",
+            "icon": "UI/Textures/EA/LoadoutIcons/Light_Armour_64.tif",
+            "itemSlots": [
+              {
+                "_Type_": "SEALoadoutItem",
+                "itemSlot": "ArmorArms",
+                "itemClass": "file://./../../../../../../libs/foundry/records/entities/scitem/characters/human/armor/pu_armor/light/arms/cds_armor_light_arms_01_01_01.json",
+                "itemAttachements": [],
+                "itemExplicit": []},
+              {
+                "_Type_": "SEALoadoutItem",
+                "itemSlot": "ArmorHelmet",
+                "itemClass": "file://./../../../../../../libs/foundry/records/entities/scitem/characters/human/starwear/helmet/light/cds_armor_light_helmet_01_01_01.json",
+                "itemAttachements": [],
+                "itemExplicit": []},
+              {
+                "_Type_": "SEALoadoutItem",
+                "itemSlot": "ArmorLegs",
+                "itemClass": "file://./../../../../../../libs/foundry/records/entities/scitem/characters/human/armor/pu_armor/light/legs/cds_armor_light_legs_01_01_01.json",
+                "itemAttachements": [],
+                "itemExplicit": []},
+              {
+                "_Type_": "SEALoadoutItem",
+                "itemSlot": "ArmorTorso",
+                "itemClass": "file://./../../../../../../libs/foundry/records/entities/scitem/characters/human/armor/pu_armor/light/core/cds_armor_light_core_01_01_01.json",
+                "itemAttachements": [],
+                "itemExplicit": []},
+              {
+                "_Type_": "SEALoadoutItem",
+                "itemSlot": "ArmorUndersuit",
+                "itemClass": "file://./../../../../../../libs/foundry/records/entities/scitem/characters/human/armor/pu_armor/undersuit/cds_undersuit_01_01_01.json",
+                "itemAttachements": [],
+                "itemExplicit": []},
+              {
+                "_Type_": "SEALoadoutItem",
+                "itemSlot": "Medpen",
+                "itemClass": "file://./../../../../../../libs/foundry/records/entities/scitem/consumables/crlf_consumable_ea_medicateall_01.json",
+                "itemAttachements": [],
+                "itemExplicit": []},
+              {
+                "_Type_": "SEALoadoutItem",
+                "itemSlot": "Grenade",
+                "itemClass": "file://./../../../../../../libs/foundry/records/entities/scitem/weapons/throwable/behr_gren_frag_01.json",
+                "itemAttachements": [],
+                "itemExplicit": []},
+              {
+                "_Type_": "SEALoadoutItem",
+                "itemSlot": "Radar",
+                "itemClass": "file://./../../../../../../libs/foundry/records/entities/scitem/suit/fps_defaultradar.json",
+                "itemAttachements": [],
+                "itemExplicit": []}]},
+          {
+            "_Type_": "SEALoadoutSet",
+            "displayName": "@ui_sm_loadout_MediumArmorButton",
+            "icon": "UI/Textures/EA/LoadoutIcons/Medium_Armour_64.tif",
+            "itemSlots": [
+              {
+                "_Type_": "SEALoadoutItem",
+                "itemSlot": "ArmorArms",
+                "itemClass": "file://./../../../../../../libs/foundry/records/entities/scitem/characters/human/armor/pu_armor/medium/arms/cds_armor_medium_arms_01_01_01.json",
+                "itemAttachements": [],
+                "itemExplicit": []},
+              {
+                "_Type_": "SEALoadoutItem",
+                "itemSlot": "ArmorHelmet",
+                "itemClass": "file://./../../../../../../libs/foundry/records/entities/scitem/characters/human/starwear/helmet/medium/cds_armor_medium_helmet_01_01_01.json",
+                "itemAttachements": [],
+                "itemExplicit": []},
+              {
+                "_Type_": "SEALoadoutItem",
+                "itemSlot": "ArmorLegs",
+                "itemClass": "file://./../../../../../../libs/foundry/records/entities/scitem/characters/human/armor/pu_armor/medium/legs/cds_armor_medium_legs_01_01_01.json",
+                "itemAttachements": [],
+                "itemExplicit": []},
+              {
+                "_Type_": "SEALoadoutItem",
+                "itemSlot": "ArmorTorso",
+                "itemClass": "file://./../../../../../../libs/foundry/records/entities/scitem/characters/human/armor/pu_armor/medium/core/cds_armor_medium_core_01_01_01.json",
+                "itemAttachements": [],
+                "itemExplicit": []},
+              {
+                "_Type_": "SEALoadoutItem",
+                "itemSlot": "ArmorUndersuit",
+                "itemClass": "file://./../../../../../../libs/foundry/records/entities/scitem/characters/human/armor/pu_armor/undersuit/cds_undersuit_01_01_01.json",
+                "itemAttachements": [],
+                "itemExplicit": []},
+              {
+                "_Type_": "SEALoadoutItem",
+                "itemSlot": "Medpen",
+                "itemClass": "file://./../../../../../../libs/foundry/records/entities/scitem/consumables/crlf_consumable_ea_medicateall_01.json",
+                "itemAttachements": [],
+                "itemExplicit": []},
+              {
+                "_Type_": "SEALoadoutItem",
+                "itemSlot": "Grenade",
+                "itemClass": "file://./../../../../../../libs/foundry/records/entities/scitem/weapons/throwable/behr_gren_frag_01.json",
+                "itemAttachements": [],
+                "itemExplicit": []},
+              {
+                "_Type_": "SEALoadoutItem",
+                "itemSlot": "Radar",
+                "itemClass": "file://./../../../../../../libs/foundry/records/entities/scitem/suit/fps_defaultradar.json",
+                "itemAttachements": [],
+                "itemExplicit": []}]},
+          {
+            "_Type_": "SEALoadoutSet",
+            "displayName": "@ui_sm_loadout_HeavyArmorButton",
+            "icon": "UI/Textures/EA/LoadoutIcons/Heavy_Armour_64.tif",
+            "itemSlots": [
+              {
+                "_Type_": "SEALoadoutItem",
+                "itemSlot": "ArmorArms",
+                "itemClass": "file://./../../../../../../libs/foundry/records/entities/scitem/characters/human/armor/pu_armor/heavy/arms/cds_armor_heavy_arms_01_01_01.json",
+                "itemAttachements": [],
+                "itemExplicit": []},
+              {
+                "_Type_": "SEALoadoutItem",
+                "itemSlot": "ArmorHelmet",
+                "itemClass": "file://./../../../../../../libs/foundry/records/entities/scitem/characters/human/starwear/helmet/heavy/cds_armor_heavy_helmet_01_01_01.json",
+                "itemAttachements": [],
+                "itemExplicit": []},
+              {
+                "_Type_": "SEALoadoutItem",
+                "itemSlot": "ArmorLegs",
+                "itemClass": "file://./../../../../../../libs/foundry/records/entities/scitem/characters/human/armor/pu_armor/heavy/legs/cds_armor_heavy_legs_01_01_01.json",
+                "itemAttachements": [],
+                "itemExplicit": []},
+              {
+                "_Type_": "SEALoadoutItem",
+                "itemSlot": "ArmorTorso",
+                "itemClass": "file://./../../../../../../libs/foundry/records/entities/scitem/characters/human/armor/pu_armor/heavy/core/cds_armor_heavy_core_01_01_01.json",
+                "itemAttachements": [],
+                "itemExplicit": []},
+              {
+                "_Type_": "SEALoadoutItem",
+                "itemSlot": "ArmorUndersuit",
+                "itemClass": "file://./../../../../../../libs/foundry/records/entities/scitem/characters/human/armor/pu_armor/undersuit/cds_undersuit_01_01_01.json",
+                "itemAttachements": [],
+                "itemExplicit": []},
+              {
+                "_Type_": "SEALoadoutItem",
+                "itemSlot": "Medpen",
+                "itemClass": "file://./../../../../../../libs/foundry/records/entities/scitem/consumables/crlf_consumable_ea_medicateall_01.json",
+                "itemAttachements": [],
+                "itemExplicit": []},
+              {
+                "_Type_": "SEALoadoutItem",
+                "itemSlot": "Grenade",
+                "itemClass": "file://./../../../../../../libs/foundry/records/entities/scitem/weapons/throwable/behr_gren_frag_01.json",
+                "itemAttachements": [],
+                "itemExplicit": []},
+              {
+                "_Type_": "SEALoadoutItem",
+                "itemSlot": "Radar",
+                "itemClass": "file://./../../../../../../libs/foundry/records/entities/scitem/suit/fps_defaultradar.json",
+                "itemAttachements": [],
+                "itemExplicit": []}]}]},
+      {
+        "_Type_": "SEALoadoutCollection",
+        "availableLoadouts": [
+          {
+            "_Type_": "SEALoadoutSet",
+            "displayName": "@ui_sm_loadout_LightArmorButton",
+            "icon": "UI/Textures/EA/LoadoutIcons/Light_Armour_64.tif",
+            "itemSlots": [
+              {
+                "_Type_": "SEALoadoutItem",
+                "itemSlot": "ArmorArms",
+                "itemClass": "file://./../../../../../../libs/foundry/records/entities/scitem/characters/human/armor/pu_armor/light/arms/slaver_armor_light_arms_01_01_15.json",
+                "itemAttachements": [],
+                "itemExplicit": []},
+              {
+                "_Type_": "SEALoadoutItem",
+                "itemSlot": "ArmorHelmet",
+                "itemClass": "file://./../../../../../../libs/foundry/records/entities/scitem/characters/human/starwear/helmet/light/slaver_armor_light_helmet_01_01_15.json",
+                "itemAttachements": [],
+                "itemExplicit": []},
+              {
+                "_Type_": "SEALoadoutItem",
+                "itemSlot": "ArmorLegs",
+                "itemClass": "file://./../../../../../../libs/foundry/records/entities/scitem/characters/human/armor/pu_armor/light/legs/slaver_armor_light_legs_01_01_15.json",
+                "itemAttachements": [],
+                "itemExplicit": []},
+              {
+                "_Type_": "SEALoadoutItem",
+                "itemSlot": "ArmorTorso",
+                "itemClass": "file://./../../../../../../libs/foundry/records/entities/scitem/characters/human/armor/pu_armor/light/core/slaver_armor_light_core_01_01_15.json",
+                "itemAttachements": [],
+                "itemExplicit": []},
+              {
+                "_Type_": "SEALoadoutItem",
+                "itemSlot": "ArmorUndersuit",
+                "itemClass": "file://./../../../../../../libs/foundry/records/entities/scitem/characters/human/armor/pu_armor/undersuit/slaver_undersuit_01_01_15.json",
+                "itemAttachements": [],
+                "itemExplicit": []},
+              {
+                "_Type_": "SEALoadoutItem",
+                "itemSlot": "Medpen",
+                "itemClass": "file://./../../../../../../libs/foundry/records/entities/scitem/consumables/crlf_consumable_ea_medicateall_01.json",
+                "itemAttachements": [],
+                "itemExplicit": []},
+              {
+                "_Type_": "SEALoadoutItem",
+                "itemSlot": "Grenade",
+                "itemClass": "file://./../../../../../../libs/foundry/records/entities/scitem/weapons/throwable/behr_gren_frag_01.json",
+                "itemAttachements": [],
+                "itemExplicit": []},
+              {
+                "_Type_": "SEALoadoutItem",
+                "itemSlot": "Radar",
+                "itemClass": "file://./../../../../../../libs/foundry/records/entities/scitem/suit/fps_defaultradar.json",
+                "itemAttachements": [],
+                "itemExplicit": []}]},
+          {
+            "_Type_": "SEALoadoutSet",
+            "displayName": "@ui_sm_loadout_MediumArmorButton",
+            "icon": "UI/Textures/EA/LoadoutIcons/Medium_Armour_64.tif",
+            "itemSlots": [
+              {
+                "_Type_": "SEALoadoutItem",
+                "itemSlot": "ArmorArms",
+                "itemClass": "file://./../../../../../../libs/foundry/records/entities/scitem/characters/human/armor/pu_armor/medium/arms/slaver_armor_medium_arms_01_01_15.json",
+                "itemAttachements": [],
+                "itemExplicit": []},
+              {
+                "_Type_": "SEALoadoutItem",
+                "itemSlot": "ArmorHelmet",
+                "itemClass": "file://./../../../../../../libs/foundry/records/entities/scitem/characters/human/starwear/helmet/medium/slaver_armor_medium_helmet_01_01_15.json",
+                "itemAttachements": [],
+                "itemExplicit": []},
+              {
+                "_Type_": "SEALoadoutItem",
+                "itemSlot": "ArmorLegs",
+                "itemClass": "file://./../../../../../../libs/foundry/records/entities/scitem/characters/human/armor/pu_armor/medium/legs/slaver_armor_medium_legs_01_01_15.json",
+                "itemAttachements": [],
+                "itemExplicit": []},
+              {
+                "_Type_": "SEALoadoutItem",
+                "itemSlot": "ArmorTorso",
+                "itemClass": "file://./../../../../../../libs/foundry/records/entities/scitem/characters/human/armor/pu_armor/medium/core/slaver_armor_medium_core_01_01_15.json",
+                "itemAttachements": [],
+                "itemExplicit": []},
+              {
+                "_Type_": "SEALoadoutItem",
+                "itemSlot": "ArmorUndersuit",
+                "itemClass": "file://./../../../../../../libs/foundry/records/entities/scitem/characters/human/armor/pu_armor/undersuit/slaver_undersuit_01_01_15.json",
+                "itemAttachements": [],
+                "itemExplicit": []},
+              {
+                "_Type_": "SEALoadoutItem",
+                "itemSlot": "Medpen",
+                "itemClass": "file://./../../../../../../libs/foundry/records/entities/scitem/consumables/crlf_consumable_ea_medicateall_01.json",
+                "itemAttachements": [],
+                "itemExplicit": []},
+              {
+                "_Type_": "SEALoadoutItem",
+                "itemSlot": "Grenade",
+                "itemClass": "file://./../../../../../../libs/foundry/records/entities/scitem/weapons/throwable/behr_gren_frag_01.json",
+                "itemAttachements": [],
+                "itemExplicit": []},
+              {
+                "_Type_": "SEALoadoutItem",
+                "itemSlot": "Radar",
+                "itemClass": "file://./../../../../../../libs/foundry/records/entities/scitem/suit/fps_defaultradar.json",
+                "itemAttachements": [],
+                "itemExplicit": []}]},
+          {
+            "_Type_": "SEALoadoutSet",
+            "displayName": "@ui_sm_loadout_HeavyArmorButton",
+            "icon": "UI/Textures/EA/LoadoutIcons/Heavy_Armour_64.tif",
+            "itemSlots": [
+              {
+                "_Type_": "SEALoadoutItem",
+                "itemSlot": "ArmorArms",
+                "itemClass": "file://./../../../../../../libs/foundry/records/entities/scitem/characters/human/armor/pu_armor/heavy/arms/slaver_armor_heavy_arms_01_01_15.json",
+                "itemAttachements": [],
+                "itemExplicit": []},
+              {
+                "_Type_": "SEALoadoutItem",
+                "itemSlot": "ArmorHelmet",
+                "itemClass": "file://./../../../../../../libs/foundry/records/entities/scitem/characters/human/starwear/helmet/heavy/slaver_armor_heavy_helmet_01_01_15.json",
+                "itemAttachements": [],
+                "itemExplicit": []},
+              {
+                "_Type_": "SEALoadoutItem",
+                "itemSlot": "ArmorLegs",
+                "itemClass": "file://./../../../../../../libs/foundry/records/entities/scitem/characters/human/armor/pu_armor/heavy/legs/slaver_armor_heavy_legs_01_01_15.json",
+                "itemAttachements": [],
+                "itemExplicit": []},
+              {
+                "_Type_": "SEALoadoutItem",
+                "itemSlot": "ArmorTorso",
+                "itemClass": "file://./../../../../../../libs/foundry/records/entities/scitem/characters/human/armor/pu_armor/heavy/core/slaver_armor_heavy_core_01_01_15.json",
+                "itemAttachements": [],
+                "itemExplicit": []},
+              {
+                "_Type_": "SEALoadoutItem",
+                "itemSlot": "ArmorUndersuit",
+                "itemClass": "file://./../../../../../../libs/foundry/records/entities/scitem/characters/human/armor/pu_armor/undersuit/slaver_undersuit_01_01_15.json",
+                "itemAttachements": [],
+                "itemExplicit": []},
+              {
+                "_Type_": "SEALoadoutItem",
+                "itemSlot": "Medpen",
+                "itemClass": "file://./../../../../../../libs/foundry/records/entities/scitem/consumables/crlf_consumable_ea_medicateall_01.json",
+                "itemAttachements": [],
+                "itemExplicit": []},
+              {
+                "_Type_": "SEALoadoutItem",
+                "itemSlot": "Grenade",
+                "itemClass": "file://./../../../../../../libs/foundry/records/entities/scitem/weapons/throwable/behr_gren_frag_01.json",
+                "itemAttachements": [],
+                "itemExplicit": []},
+              {
+                "_Type_": "SEALoadoutItem",
+                "itemSlot": "Radar",
+                "itemClass": "file://./../../../../../../libs/foundry/records/entities/scitem/suit/fps_defaultradar.json",
+                "itemAttachements": [],
+                "itemExplicit": []}]}]}]}}

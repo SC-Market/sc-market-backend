@@ -1,0 +1,17 @@
+{
+  "_RecordName_": "MineableElement.Diamond_Raw",
+  "_RecordId_": "efb89e24-486d-4eee-ab5c-85b90a3bdad1",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "MineableElement",
+    "resourceType": {
+      "_RecordPath_": "file://./../../../../../libs/foundry/records/resourcetypedatabase/resourcetypedatabase.json",
+      "_RecordName_": "ResourceType.Raw_Diamond",
+      "_RecordId_": "9491a4b4-7887-49fc-af04-e7f132078d0f"},
+    "elementInstability": 0.0625,
+    "elementResistance": -0.06875,
+    "elementOptimalWindowMidpoint": 0.6,
+    "elementOptimalWindowMidpointRandomness": 0.1,
+    "elementOptimalWindowThinness": 0.25,
+    "elementExplosionMultiplier": 8.0,
+    "elementClusterFactor": 0.5}}

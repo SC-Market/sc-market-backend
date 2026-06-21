@@ -1,0 +1,15 @@
+{
+  "_RecordName_": "BuildingBlocks_FontStyle.Furore",
+  "_RecordId_": "f642086e-755b-4c62-9a49-17d9a1adcb14",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "BuildingBlocks_FontStyle",
+    "font": "$Furore",
+    "paintFile": "UI/fonts/Install/Furore.slug",
+    "isBold": false,
+    "imageSizePercent": 0.75,
+    "scaleModifier": 0.88,
+    "leadingModifier": 0.01,
+    "topMarginModifier": -0.08,
+    "leftMarginModifier": 0.0,
+    "numImageReplacementSpaces": 4}}

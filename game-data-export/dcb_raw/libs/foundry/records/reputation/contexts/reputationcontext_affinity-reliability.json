@@ -1,0 +1,22 @@
+{
+  "_RecordName_": "SReputationContextUI.ReputationContext_Affinity-Reliability",
+  "_RecordId_": "b357aa95-3b12-45cf-b61e-a8de7cb4bcda",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "SReputationContextUI",
+    "sortOrderScope": "Alphabetical",
+    "primaryScopeContext": {
+      "_Type_": "SReputationScopeContextUI",
+      "scope": "file://./../../../../../libs/foundry/records/reputation/scopes/reputationscope_affinity.json",
+      "propertiesBB": []},
+    "scopeContextList": [
+      {
+        "_Type_": "SReputationScopeContextUI",
+        "scope": "file://./../../../../../libs/foundry/records/reputation/scopes/reputationscope_npc_reliability.json",
+        "propertiesBB": [
+          {
+            "_Type_": "SReputationContextBBPropertyParams",
+            "name": "isReliability",
+            "dynamicProperty": {
+              "_Type_": "SBBDynamicPropertyBool",
+              "value": true}}]}]}}

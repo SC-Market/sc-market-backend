@@ -1,0 +1,12 @@
+{
+  "_RecordName_": "HintUIData.MeleeComboAttacks",
+  "_RecordId_": "c0fa4a99-c894-484a-81a8-f7c52f2b13b4",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "HintUIData",
+    "TitleText": "@Hints_Melee_Combat_Title",
+    "BodyText": "@Hints_Melee_ComboAttacks",
+    "BodyTextGamePad": "@Hints_Melee_ComboAttacks",
+    "BodyTextJoystick": "@Hints_Melee_ComboAttacks",
+    "TitleImagePath": "",
+    "BodyImagePath": ""}}

@@ -1,0 +1,11 @@
+{
+  "_RecordName_": "LocationResourceSlot.BombingRun",
+  "_RecordId_": "e0ec2c0f-548a-4bd8-a754-ac3791c44041",
+  "_RecordTag_": "MissionFeatures",
+  "_RecordValue_": {
+    "_Type_": "LocationResourceSlot",
+    "resourceSlotTag": {
+      "_RecordPath_": "file://./../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+      "_RecordName_": "Tag.6bbf15e9-ffdc-4021-92a1-6533eafaafe6",
+      "_RecordId_": "6bbf15e9-ffdc-4021-92a1-6533eafaafe6"},
+    "autoConsumeIfPlayerAtLocation": true}}

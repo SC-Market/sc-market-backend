@@ -1,0 +1,12 @@
+{
+  "_RecordName_": "ShipComputerDefinition.ARGO",
+  "_RecordId_": "dd02ac2f-dc6c-47ae-a382-457553c0adf3",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "ShipComputerDefinition",
+    "communicationConfig": "file://./../../../../../../libs/foundry/records/communicationconfig/ship_argo.json",
+    "preBootUpTime": 2.0,
+    "bootUpTime": 5.0,
+    "timeSinceLastHitMarkerSfx": {
+      "_Type_": "AudioRtpc",
+      "rtpc": "UI_TimeSinceLastHitMarker"}}}

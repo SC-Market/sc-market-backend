@@ -1,0 +1,10 @@
+{
+  "_RecordName_": "ElectricalStateTemplate.Default",
+  "_RecordId_": "62d99340-f618-4bd1-b7bc-0345345926c9",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "ElectricalStateTemplate",
+    "state": {
+      "_Type_": "ElectricalStateTemplateInternal",
+      "chargeMod": "Override",
+      "charge": 0.0}}}

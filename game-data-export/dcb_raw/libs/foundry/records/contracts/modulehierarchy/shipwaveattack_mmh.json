@@ -1,0 +1,12 @@
+{
+  "_RecordName_": "MissionModuleHierarchy.ShipWaveAttack_MMH",
+  "_RecordId_": "a4b07d24-e4a7-47a1-9890-cb9fb4dc492b",
+  "_RecordTag_": "MissionDesign",
+  "_RecordValue_": {
+    "_Type_": "MissionModuleHierarchy",
+    "missionModule": "Libs/Subsumption/Missions/PU/Missions/ShipWaveAttack/ShipWaveAttack.xml",
+    "subMissionModules": [
+      {
+        "_Type_": "MissionModuleHierarchySubMission",
+        "subMissionModule": "Libs/Subsumption/Missions/PU/Missions/KillShip/KillShip.xml",
+        "subModuleHierarchy": "file://./../../../../../libs/foundry/records/contracts/modulehierarchy/killship_mmh.json"}]}}

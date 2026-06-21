@@ -1,0 +1,30 @@
+{
+  "_RecordName_": "LootArchetype.LootArchetype_Actor_AcePilot_Medals",
+  "_RecordId_": "5ca8aea3-1bde-48f4-acca-dfa106102f56",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "LootArchetype",
+    "excludedTags": {
+      "_Type_": "TagList",
+      "tags": [
+        {
+          "_RecordPath_": "file://./../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+          "_RecordName_": "Tag.85e008e3-cc4e-4d13-98f6-b33c234dd82c",
+          "_RecordId_": "85e008e3-cc4e-4d13-98f6-b33c234dd82c"}]},
+    "primaryOrGroup": {
+      "_Type_": "LootArchetypeOrGroup_Primary",
+      "entries": [
+        {
+          "_Type_": "LootArchetypeEntry_Primary",
+          "name": "Ace Pilot Medals",
+          "tag": {
+            "_RecordPath_": "file://./../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+            "_RecordName_": "Tag.2c9b22eb-b35b-431f-a68d-16f72c577747",
+            "_RecordId_": "2c9b22eb-b35b-431f-a68d-16f72c577747"},
+          "additionalTags": {
+            "_Type_": "TagsDNFTerm",
+            "positiveTags": [],
+            "negativeTags": []},
+          "weight": 1.0,
+          "optionalData": []}]},
+    "secondaryOrGroups": []}}

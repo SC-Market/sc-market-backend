@@ -1,0 +1,46 @@
+{
+  "_RecordName_": "InteractionConditionPreset.PlaceOtherActorInMedBed",
+  "_RecordId_": "6133fe82-ca20-4344-a92c-8412de35ecaa",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "InteractionConditionPreset",
+    "conditions": [
+      {
+        "_Type_": "InteractionConditionDraggedActorNotDead",
+        "conditionDisplay": {
+          "_Type_": "ConditionDisplayParams",
+          "exclusiveDisplay": false,
+          "blockedText": {
+            "_Type_": "BlockedTextParams",
+            "blockedText": "@interaction_condition_liftOtherOntoMedBed_Dead"},
+          "blockedCursor": {
+            "_Type_": "BlockedCursorParams",
+            "blockedCursor": "Invalid"},
+          "blockedColor": {
+            "_Type_": "BlockedColorParams",
+            "selectedColor": "file://./../../../../../../libs/foundry/records/ui/innerthought/colors/blockedselected.json",
+            "unselectedColor": "file://./../../../../../../libs/foundry/records/ui/innerthought/colors/blockedunselected.json",
+            "applyImmediately": true},
+          "blockedHint": null,
+          "autoStoreOption": null,
+          "blockedInteractionAttemptMonologue": null}},
+      {
+        "_Type_": "InteractionConditionDraggedActorIsPlayer",
+        "conditionDisplay": {
+          "_Type_": "ConditionDisplayParams",
+          "exclusiveDisplay": false,
+          "blockedText": {
+            "_Type_": "BlockedTextParams",
+            "blockedText": "@interaction_condition_liftOtherOntoMedBed_NPC"},
+          "blockedCursor": {
+            "_Type_": "BlockedCursorParams",
+            "blockedCursor": "Invalid"},
+          "blockedColor": {
+            "_Type_": "BlockedColorParams",
+            "selectedColor": "file://./../../../../../../libs/foundry/records/ui/innerthought/colors/blockedselected.json",
+            "unselectedColor": "file://./../../../../../../libs/foundry/records/ui/innerthought/colors/blockedunselected.json",
+            "applyImmediately": true},
+          "blockedHint": null,
+          "autoStoreOption": null,
+          "blockedInteractionAttemptMonologue": null}}],
+    "conditionToHideParams": []}}

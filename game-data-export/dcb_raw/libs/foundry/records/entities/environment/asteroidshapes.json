@@ -1,0 +1,69 @@
+{
+  "_RecordName_": "EntityClassDefinition.AsteroidShapes",
+  "_RecordId_": "547fb98c-e760-4d13-85ac-f228ce6ea443",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "EntityClassDefinition",
+    "Category": "Environment",
+    "Icon": "Default.bmp",
+    "Invisible": false,
+    "BBoxSelection": true,
+    "defaultEditorColor": {
+      "_Type_": "RGB",
+      "r": 1.0,
+      "g": 1.0,
+      "b": 0.0},
+    "entityDensityClass": null,
+    "tags": [],
+    "StaticEntityClassData": [],
+    "Components": [
+      {
+        "_Type_": "SAsteroidShapeComponentParams",
+        "rngSeed": 0,
+        "viewDistRatio": 100,
+        "lodRatio": 100,
+        "composition": "",
+        "noiseAmplitude": 0.5,
+        "noiseRoughness": 0.5,
+        "noiseGranularity": 2.0,
+        "densityScale": 0.2,
+        "noiseFrequencyX": 2.5,
+        "noiseFrequencyY": 3.1,
+        "noiseFrequencyZ": 1.1,
+        "shapeLinks": [],
+        "exclusionShapeLinks": []},
+      {
+        "_Type_": "SEntityComponentRoomParams",
+        "roomType": "AsteroidField",
+        "minimumVolumeStrength": 0.0,
+        "roomName": "@LOC_EMPTY",
+        "interiorMapSection": null,
+        "roomExtensions": [],
+        "isPhysical": true},
+      {
+        "_Type_": "AudioPropagationParams",
+        "audioEnvironment": "",
+        "physicalOcclusionValueWhenClosed": 1.0,
+        "physicalEncapsulationValue": 1.0},
+      {
+        "_Type_": "EntityComponentAsteroidVolumeParams",
+        "state": {
+          "_Type_": "AsteroidStateRef",
+          "stateTemplate": "file://./../../../../../libs/foundry/records/roomsystem/asteroidstatetemplates/default.json"},
+        "behavior": "file://./../../../../../libs/foundry/records/roomsystem/asteroidbehaviors/default.json"},
+      {
+        "_Type_": "HarvestableProviderParams",
+        "preset": null},
+      {
+        "_Type_": "QuantumObstacleParams",
+        "defaultSphereFieldGeometry": {
+          "_Type_": "DefaultSphereGeom",
+          "disable": false,
+          "radiusInflation": 1.0},
+        "sphereFieldGeometries": [],
+        "boxFieldGeometries": [],
+        "cylinderFieldGeometries": [],
+        "capsuleFieldGeometries": [],
+        "torusFieldGeometries": [],
+        "meshFieldGeometries": [],
+        "texture3DFieldGeometries": []}]}}

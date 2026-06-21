@@ -1,0 +1,27 @@
+{
+  "_RecordName_": "SGeometryViewDistanceRatioCategories.GeometryViewDistanceCategories",
+  "_RecordId_": "6ff29e0f-29f2-472a-94a0-c3c16900ca85",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "SGeometryViewDistanceRatioCategories",
+    "categories": [
+      {
+        "_RecordId_": "dafc40af-947e-4c2e-9316-a5659b52416a",
+        "_RecordName_": "SViewDistanceRatioParams.Grenade",
+        "_Type_": "SViewDistanceRatioParams",
+        "viewDistRatio": 254},
+      {
+        "_RecordId_": "76141ae2-d64b-4a35-8e36-e4cc177ee53e",
+        "_RecordName_": "SViewDistanceRatioParams.Helmet",
+        "_Type_": "SViewDistanceRatioParams",
+        "viewDistRatio": 150},
+      {
+        "_RecordId_": "56b1881c-d101-4de8-ad07-a3871723ac55",
+        "_RecordName_": "SViewDistanceRatioParams.Commodities",
+        "_Type_": "SViewDistanceRatioParams",
+        "viewDistRatio": 225},
+      {
+        "_RecordId_": "de5051f3-292d-4289-8672-94b18644b573",
+        "_RecordName_": "SViewDistanceRatioParams.PlanetEntities",
+        "_Type_": "SViewDistanceRatioParams",
+        "viewDistRatio": 50}]}}

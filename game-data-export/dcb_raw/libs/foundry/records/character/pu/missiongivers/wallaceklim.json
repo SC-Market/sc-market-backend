@@ -1,0 +1,24 @@
+{
+  "_RecordName_": "Character.WallaceKlim",
+  "_RecordId_": "e52caf6b-4662-47da-b82e-656a13b49ded",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "Character",
+    "characterPersonalData": {
+      "_Type_": "CharacterPersonalData",
+      "title": "",
+      "firstName": "",
+      "nickName": "",
+      "lastName": "",
+      "randomNameParams": null,
+      "affiliation": "",
+      "details": ""},
+    "audioSwitchStateName": "",
+    "animationRemapAlias": "",
+    "characterMannequinTag": "Klim",
+    "styleMannequinTag": "",
+    "combatStyle": "NotSet",
+    "gender": "Male",
+    "characterSpeedOverrides": [],
+    "nicknameChance": 0.0,
+    "name": "Wallace Klim"}}

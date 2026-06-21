@@ -1,0 +1,8 @@
+{
+  "_RecordName_": "InteriorMapSectionDefinition.Newbab_Promenade",
+  "_RecordId_": "77a787bc-75e2-499a-a882-8ab7d87cb53d",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "InteriorMapSectionDefinition",
+    "name": "@area_map_pu_newbab_promenade",
+    "restrictViewBounds": false}}

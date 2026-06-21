@@ -1,0 +1,11 @@
+{
+  "_RecordName_": "ControlHints_Preset.ControlHintsConfig_EMPTY",
+  "_RecordId_": "fcf61709-d118-4884-935a-324b503aee1f",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "ControlHints_Preset",
+    "hintSlots": [
+      {
+        "_Type_": "ControlHint_Entry",
+        "name": "This is a fallback for any slots on a Visor_ControlHintsConfig record that are left empty. If left as (null), the code breaks the control hints (they won&apos;t show in game).",
+        "controlHintList": []}]}}

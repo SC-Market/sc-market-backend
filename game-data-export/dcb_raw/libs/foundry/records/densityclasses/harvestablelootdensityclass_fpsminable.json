@@ -1,0 +1,13 @@
+{
+  "_RecordName_": "SEntityDensityClass.HarvestableLootDensityClass_FPSMinable",
+  "_RecordId_": "78984c3c-d03e-444b-9fad-896e067a7d46",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "SEntityDensityClass",
+    "clusterDetectionRadius": 10.0,
+    "clusterUpperObjectCountDGS": 400,
+    "clusterUpperObjectCountPersistence": 50,
+    "clusterPersistenceTimeout": 30.0,
+    "entityMaxIdleLifeTime": null,
+    "resetLifetimeOnMove": false,
+    "entityIdleBuryOnly": false}}

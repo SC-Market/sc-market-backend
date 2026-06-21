@@ -1,0 +1,8 @@
+{
+  "_RecordName_": "InteriorMapSectionDefinition.UGF_Bunker_Surface",
+  "_RecordId_": "056b09a4-3896-40df-b5b0-830c33de801c",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "InteriorMapSectionDefinition",
+    "name": "@area_name_surface",
+    "restrictViewBounds": false}}

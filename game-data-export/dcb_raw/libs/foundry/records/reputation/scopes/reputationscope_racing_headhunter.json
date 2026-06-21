@@ -1,0 +1,18 @@
+{
+  "_RecordName_": "SReputationScopeParams.ReputationScope_Racing_HeadHunter",
+  "_RecordId_": "dba89f67-1fc3-4bfc-9950-6cee4d371c8f",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "SReputationScopeParams",
+    "scopeName": "Racing_HeadHunter",
+    "displayName": "@RepScope_Racing_HeadHunters_Name",
+    "description": "@LOC_PLACEHOLDER",
+    "icon": "UI/Textures/Vector/MobiGlas/App_ReputationManager/icon_spaceshipracing_header.svg",
+    "standingMap": {
+      "_Type_": "SReputationStandingMapParams",
+      "reputationCeiling": 1001,
+      "initialReputation": 0,
+      "standings": [
+        "file://./../../../../../libs/foundry/records/reputation/standings/racing/reputationstanding_racing_noteligible_headhunter.json",
+        "file://./../../../../../libs/foundry/records/reputation/standings/racing/reputationstanding_racing_rank0_headhunter.json",
+        "file://./../../../../../libs/foundry/records/reputation/standings/racing/reputationstanding_racing_rank1_headhunter.json"]}}}

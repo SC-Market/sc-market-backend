@@ -1,0 +1,53 @@
+{
+  "_RecordName_": "BuildingBlocks_Style.MFD_G_CapacityBars",
+  "_RecordId_": "2bd683a2-8516-44cd-b7cf-e357295dc73b",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "BuildingBlocks_Style",
+    "entries": [
+      {
+        "_Type_": "BuildingBlocks_StyleEntry",
+        "name": "Set Readout Canvas",
+        "conditionsList": [
+          {
+            "_Type_": "BuildingBlocks_StyleConditionList",
+            "name": "New Condition List",
+            "conditions": [
+              {
+                "_Type_": "BuildingBlocks_StyleSelectorConditionAllOfCondition",
+                "conditions": [
+                  {
+                    "_Type_": "BuildingBlocks_StyleSelectorConditionType",
+                    "type": "Canvas"},
+                  {
+                    "_Type_": "BuildingBlocks_StyleSelectorConditionTag",
+                    "tag": {
+                      "_RecordPath_": "file://./../../../../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+                      "_RecordName_": "Tag.235c448c-2dd5-451c-add7-0f75f1bcad59",
+                      "_RecordId_": "235c448c-2dd5-451c-add7-0f75f1bcad59"}}]}]}],
+        "modifiers": [
+          {
+            "_Type_": "BuildingBlocks_FieldModifierRecordRef",
+            "field": {
+              "_Type_": "BuildingBlocks_FieldModifierRecordRefTypeCanvasReferenceRecord",
+              "value": "file://./../../../../../../../../../libs/foundry/records/ui/buildingblocks/ships/displays/mfdscreens/mc_mfdcomponents/screens/self/types/nav/gen_mc_s_navreadout.json"}}],
+        "transitions": []}],
+    "colorStyles": [
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null],
+    "textFieldModifiers": []}}

@@ -1,0 +1,46 @@
+{
+  "_RecordName_": "STurretHealthModifierDef.TurretHealthModifierDefault",
+  "_RecordId_": "61cd42dd-8e00-4101-bb88-c0aae7aefded",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "STurretHealthModifierDef",
+    "damageMovementModifier": {
+      "_Type_": "BezierCurve",
+      "points": [
+        {
+          "_Type_": "Vec2",
+          "x": -0.5609639,
+          "y": 1.00383},
+        {
+          "_Type_": "Vec2",
+          "x": -0.07060242,
+          "y": 1.006979},
+        {
+          "_Type_": "Vec2",
+          "x": 0.419759,
+          "y": 1.010128},
+        {
+          "_Type_": "Vec2",
+          "x": 0.5148594,
+          "y": 0.9314042},
+        {
+          "_Type_": "Vec2",
+          "x": 0.6188755,
+          "y": 0.8432341},
+        {
+          "_Type_": "Vec2",
+          "x": 0.7228916,
+          "y": 0.7550638},
+        {
+          "_Type_": "Vec2",
+          "x": 1.047269,
+          "y": 0.4636101},
+        {
+          "_Type_": "Vec2",
+          "x": 1.050241,
+          "y": 0.2368866},
+        {
+          "_Type_": "Vec2",
+          "x": 1.053213,
+          "y": 0.01016323}],
+      "useLUT": true}}}

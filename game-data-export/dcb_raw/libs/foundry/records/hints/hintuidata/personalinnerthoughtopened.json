@@ -1,0 +1,12 @@
+{
+  "_RecordName_": "HintUIData.PersonalInnerThoughtOpened",
+  "_RecordId_": "d0c7fb0d-2652-4a67-91c4-c5e8463e627d",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "HintUIData",
+    "TitleText": "@Hints_Personal_Inner_Thought_Title",
+    "BodyText": "@Hints_PIT_Menu_Open",
+    "BodyTextGamePad": "@Hints_PIT_Menu_Open",
+    "BodyTextJoystick": "@Hints_PIT_Menu_Open",
+    "TitleImagePath": "",
+    "BodyImagePath": ""}}

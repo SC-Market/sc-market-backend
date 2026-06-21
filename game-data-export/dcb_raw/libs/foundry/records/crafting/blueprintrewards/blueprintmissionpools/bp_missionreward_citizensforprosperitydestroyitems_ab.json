@@ -1,0 +1,63 @@
+{
+  "_RecordName_": "BlueprintPoolRecord.BP_MISSIONREWARD_CitizensForProsperityDestroyItems_AB",
+  "_RecordId_": "cf847b27-bf3b-4d50-87c0-de3c68e4e387",
+  "_RecordTag_": "SystemsDesign",
+  "_RecordValue_": {
+    "_Type_": "BlueprintPoolRecord",
+    "blueprintRewards": [
+      {
+        "_Type_": "BlueprintReward",
+        "weight": 1.0,
+        "blueprintRecord": "file://./../../../../../../libs/foundry/records/crafting/blueprints/crafting/fpsgear/weapons/lmg/bp_craft_behr_lmg_ballistic_01.json"},
+      {
+        "_Type_": "BlueprintReward",
+        "weight": 1.0,
+        "blueprintRecord": "file://./../../../../../../libs/foundry/records/crafting/blueprints/crafting/fpsgear/weapons/shotgun/bp_craft_behr_shotgun_ballistic_01.json"},
+      {
+        "_Type_": "BlueprintReward",
+        "weight": 1.0,
+        "blueprintRecord": "file://./../../../../../../libs/foundry/records/crafting/blueprints/crafting/fpsgear/weapons/rifle/bp_craft_klwe_rifle_energy_01.json"},
+      {
+        "_Type_": "BlueprintReward",
+        "weight": 1.0,
+        "blueprintRecord": "file://./../../../../../../libs/foundry/records/crafting/blueprints/crafting/fpsgear/armour/combat/heavy/bp_craft_cds_legacy_armor_heavy_arms_01_01_01.json"},
+      {
+        "_Type_": "BlueprintReward",
+        "weight": 1.0,
+        "blueprintRecord": "file://./../../../../../../libs/foundry/records/crafting/blueprints/crafting/fpsgear/armour/combat/heavy/bp_craft_cds_legacy_armor_heavy_core_01_01_01.json"},
+      {
+        "_Type_": "BlueprintReward",
+        "weight": 1.0,
+        "blueprintRecord": "file://./../../../../../../libs/foundry/records/crafting/blueprints/crafting/fpsgear/armour/combat/heavy/bp_craft_cds_legacy_armor_heavy_legs_01_01_01.json"},
+      {
+        "_Type_": "BlueprintReward",
+        "weight": 1.0,
+        "blueprintRecord": "file://./../../../../../../libs/foundry/records/crafting/blueprints/crafting/fpsgear/armour/combat/heavy/bp_craft_cds_legacy_armor_heavy_helmet_01_01_01.json"},
+      {
+        "_Type_": "BlueprintReward",
+        "weight": 1.0,
+        "blueprintRecord": "file://./../../../../../../libs/foundry/records/crafting/blueprints/crafting/fpsgear/armour/combat/heavy/bp_craft_cds_armor_heavy_arms_01_01_01.json"},
+      {
+        "_Type_": "BlueprintReward",
+        "weight": 1.0,
+        "blueprintRecord": "file://./../../../../../../libs/foundry/records/crafting/blueprints/crafting/fpsgear/armour/combat/heavy/bp_craft_cds_armor_heavy_legs_01_01_01.json"},
+      {
+        "_Type_": "BlueprintReward",
+        "weight": 1.0,
+        "blueprintRecord": "file://./../../../../../../libs/foundry/records/crafting/blueprints/crafting/fpsgear/armour/combat/heavy/bp_craft_cds_armor_heavy_core_01_01_01.json"},
+      {
+        "_Type_": "BlueprintReward",
+        "weight": 1.0,
+        "blueprintRecord": "file://./../../../../../../libs/foundry/records/crafting/blueprints/crafting/fpsgear/armour/combat/heavy/bp_craft_cds_armor_heavy_helmet_01_01_01.json"},
+      {
+        "_Type_": "BlueprintReward",
+        "weight": 1.0,
+        "blueprintRecord": "file://./../../../../../../libs/foundry/records/crafting/blueprints/crafting/fpsgear/ammo/ballistic/bp_craft_behr_lmg_ballistic_01_mag.json"},
+      {
+        "_Type_": "BlueprintReward",
+        "weight": 1.0,
+        "blueprintRecord": "file://./../../../../../../libs/foundry/records/crafting/blueprints/crafting/fpsgear/ammo/shotgun/bp_craft_behr_shotgun_ballistic_01_mag.json"},
+      {
+        "_Type_": "BlueprintReward",
+        "weight": 1.0,
+        "blueprintRecord": "file://./../../../../../../libs/foundry/records/crafting/blueprints/crafting/fpsgear/ammo/laser/bp_craft_klwe_rifle_energy_01_mag.json"}]}}

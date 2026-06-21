@@ -1,0 +1,29 @@
+{
+  "_RecordName_": "CommsNotification.MCN_UWC_Deloit_GenericMissionFail",
+  "_RecordId_": "62a30cae-c120-42b6-8a6f-cf5ae38d0a9c",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "CommsNotification",
+    "tags": {
+      "_Type_": "TagList",
+      "tags": [
+        {
+          "_RecordPath_": "file://./../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+          "_RecordName_": "Tag.6b095fc8-4df0-4569-a94e-3f8787793d42",
+          "_RecordId_": "6b095fc8-4df0-4569-a94e-3f8787793d42"},
+        {
+          "_RecordPath_": "file://./../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+          "_RecordName_": "Tag.b8e4cf0c-6c89-4dc1-b762-349e15e19919",
+          "_RecordId_": "b8e4cf0c-6c89-4dc1-b762-349e15e19919"},
+        {
+          "_RecordPath_": "file://./../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+          "_RecordName_": "Tag.c9496c18-63d2-482b-8996-b1e566d6f5a9",
+          "_RecordId_": "c9496c18-63d2-482b-8996-b1e566d6f5a9"},
+        {
+          "_RecordPath_": "file://./../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+          "_RecordName_": "Tag.c6545fb0-a59e-4753-99b4-1720b67148ef",
+          "_RecordId_": "c6545fb0-a59e-4753-99b4-1720b67148ef"}]},
+    "communicationName": "file://./../../../../../../libs/foundry/records/communicationname/missioncommunications/basedmissiontriggers/missionfail.json",
+    "characterEntityClass": null,
+    "fakeCommsAudioEntityClass": "file://./../../../../../../libs/foundry/records/entities/audio/fakecommsaudioentity_uwc_deloit.json",
+    "stage": "file://./../../../../../../libs/foundry/records/commsnotificationstages/cns_test.json"}}

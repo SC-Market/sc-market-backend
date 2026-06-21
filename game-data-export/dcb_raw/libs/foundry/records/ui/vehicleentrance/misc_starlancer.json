@@ -1,0 +1,47 @@
+{
+  "_RecordName_": "SEntrancesDef.MISC_Starlancer",
+  "_RecordId_": "3e327e15-4bdd-4b95-acf1-213593a1b100",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "SEntrancesDef",
+    "boundingBoxScale": {
+      "_Type_": "Vec3",
+      "x": 1.8,
+      "y": 1.8,
+      "z": 1.8},
+    "boundingBoxOffset": {
+      "_Type_": "Vec3",
+      "x": 0.0,
+      "y": 0.0,
+      "z": 0.0},
+    "entranceArray": [
+      {
+        "_Type_": "SCEntranceItem",
+        "entranceName": "@entrance_ramp",
+        "jointName": "misc_starlancer",
+        "positionOffset": {
+          "_Type_": "Vec3",
+          "x": -5.9,
+          "y": -23.4,
+          "z": -5.4},
+        "shipState": "Both"},
+      {
+        "_Type_": "SCEntranceItem",
+        "entranceName": "@entrance_ramp",
+        "jointName": "misc_starlancer",
+        "positionOffset": {
+          "_Type_": "Vec3",
+          "x": 5.9,
+          "y": -23.4,
+          "z": -5.4},
+        "shipState": "Both"},
+      {
+        "_Type_": "SCEntranceItem",
+        "entranceName": "@entrance_airlock",
+        "jointName": "misc_starlancer",
+        "positionOffset": {
+          "_Type_": "Vec3",
+          "x": -4.8,
+          "y": 21.0,
+          "z": -3.9},
+        "shipState": "Flying"}]}}

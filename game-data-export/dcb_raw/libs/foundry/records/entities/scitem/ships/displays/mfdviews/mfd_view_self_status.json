@@ -1,0 +1,14 @@
+{
+  "_RecordName_": "SMFDView.MFD_View_Self_Status",
+  "_RecordId_": "f5058b2f-2fed-4d6f-87f4-5d6eb74f3273",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "SMFDView",
+    "name": "@ui_MFD_View_SelfStatus",
+    "landscapeCanvas": "file://./../../../../../../../../libs/foundry/records/ui/buildingblocks/ships/displays/mfdscreens/mc_mfdcomponents/screens/self/mc_s_self_master.json",
+    "landscapeCanvasStyleOverride": [],
+    "castsUsePortrait": true,
+    "portraitCanvas": "file://./../../../../../../../../libs/foundry/records/ui/buildingblocks/ships/displays/mfdscreens/mc_mfdcomponents/casts/self/mc_c_self_master.json",
+    "portraitCanvasStyleOverride": [],
+    "viewType": "eView_SelfStatus",
+    "urlpostfix": "selfstatus"}}

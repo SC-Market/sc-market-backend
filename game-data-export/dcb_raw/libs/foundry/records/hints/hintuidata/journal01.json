@@ -1,0 +1,12 @@
+{
+  "_RecordName_": "HintUIData.Journal01",
+  "_RecordId_": "cf27dd5a-ea09-48b9-8605-1e5d522e0947",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "HintUIData",
+    "TitleText": "@Hints_Journal_Title",
+    "BodyText": "@Hints_Journal1",
+    "BodyTextGamePad": "@Hints_Journal1",
+    "BodyTextJoystick": "@Hints_Journal1",
+    "TitleImagePath": "",
+    "BodyImagePath": ""}}

@@ -1,0 +1,25 @@
+{
+  "_RecordName_": "MineableComposition.CommonShipMineablesAsteroid_Ice",
+  "_RecordId_": "3fc54018-acc4-4b34-aac1-bb97aa2bbece",
+  "_RecordTag_": "SystemsDesign",
+  "_RecordValue_": {
+    "_Type_": "MineableComposition",
+    "depositName": "@items_commodities_raw_ice",
+    "minimumDistinctElements": 2,
+    "compositionArray": [
+      {
+        "_Type_": "MineableCompositionPart",
+        "mineableElement": "file://./../../../../../../libs/foundry/records/mining/mineableelements/ice_raw.json",
+        "minPercentage": 9.7,
+        "maxPercentage": 15.7,
+        "probability": 1.0,
+        "curveExponent": 1.0,
+        "qualityScale": 1.0},
+      {
+        "_Type_": "MineableCompositionPart",
+        "mineableElement": "file://./../../../../../../libs/foundry/records/mining/mineableelements/ice_raw.json",
+        "minPercentage": 34.3,
+        "maxPercentage": 84.3,
+        "probability": 1.0,
+        "curveExponent": 1.0,
+        "qualityScale": 0.49}]}}

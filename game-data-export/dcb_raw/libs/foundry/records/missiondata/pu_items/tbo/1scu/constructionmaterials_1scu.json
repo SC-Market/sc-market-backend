@@ -1,0 +1,35 @@
+{
+  "_RecordName_": "MissionItem.ConstructionMaterials_1SCU",
+  "_RecordId_": "dc971096-148e-481c-8f9c-71eb616fb1f6",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "MissionItem",
+    "tags": [
+      {
+        "_RecordPath_": "file://./../../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+        "_RecordName_": "Tag.2c0d094d-d918-42e0-9c73-107a955f5228",
+        "_RecordId_": "2c0d094d-d918-42e0-9c73-107a955f5228"},
+      {
+        "_RecordPath_": "file://./../../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+        "_RecordName_": "Tag.7a87843c-798f-451b-85ed-3a31d32df969",
+        "_RecordId_": "7a87843c-798f-451b-85ed-3a31d32df969"},
+      {
+        "_RecordPath_": "file://./../../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+        "_RecordName_": "Tag.b1a87dbe-cf0a-45a7-a569-479c55c76597",
+        "_RecordId_": "b1a87dbe-cf0a-45a7-a569-479c55c76597"},
+      {
+        "_RecordPath_": "file://./../../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+        "_RecordName_": "Tag.a6cc5c2c-64e2-4e9c-a22b-6e33235b77df",
+        "_RecordId_": "a6cc5c2c-64e2-4e9c-a22b-6e33235b77df"}],
+    "stringVariants": {
+      "_Type_": "MissionStringVariants",
+      "variants": [
+        {
+          "_Type_": "MissionStringVariant",
+          "tag": {
+            "_RecordPath_": "file://./../../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+            "_RecordName_": "Tag.0130de18-97e2-4d4c-9bb1-3e7ef5fd0490",
+            "_RecordId_": "0130de18-97e2-4d4c-9bb1-3e7ef5fd0490"},
+          "string": "@Mission_Item_0197"}]},
+    "weighting": 1.0,
+    "entityClass": "file://./../../../../../../../libs/foundry/records/entities/scitem/carryables/tractorbeamonly/carryable_tbo_fl_1scu_commodity_processedgoods_constructionmaterials.json"}}

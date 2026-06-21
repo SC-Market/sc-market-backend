@@ -1,0 +1,12 @@
+{
+  "_RecordName_": "HintUIData.FPSMining11",
+  "_RecordId_": "f7565840-3ccf-433e-9afe-3f91b5a7e93b",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "HintUIData",
+    "TitleText": "@Hints_FPSMining_Collection_Title",
+    "BodyText": "@Hints_FPSMining_OnShardLootedIntoBackpack",
+    "BodyTextGamePad": "@Hints_FPSMining_OnShardLootedIntoBackpack",
+    "BodyTextJoystick": "@Hints_FPSMining_OnShardLootedIntoBackpack",
+    "TitleImagePath": "",
+    "BodyImagePath": ""}}

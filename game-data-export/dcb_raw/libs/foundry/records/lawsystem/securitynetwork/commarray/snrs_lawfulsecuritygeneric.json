@@ -1,0 +1,23 @@
+{
+  "_RecordName_": "SecurityNetworkRoomSettings.SNRS_LawfulSecurityGeneric",
+  "_RecordId_": "d551e494-4d4c-4119-8812-638f5bad870b",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "SecurityNetworkRoomSettings",
+    "defaultProtocol": {
+      "_Type_": "SecurityNetworkProtocol",
+      "permissionsWithClearance": {
+        "_Type_": "SecurityNetworkPermissions",
+        "access": "Yes",
+        "trespass": "No"},
+      "permissionsWithoutClearance": {
+        "_Type_": "SecurityNetworkPermissions",
+        "access": "Yes",
+        "trespass": "No"},
+      "acceptedClearance": {
+        "_Type_": "SecurityClearanceConditions",
+        "tokens": []},
+      "ownerFaction": "file://./../../../../../../libs/foundry/records/factions/faction_lawfulsecurity_generic.json"},
+    "roomIdentifier": null,
+    "trespassWarningSeconds": 7.0,
+    "trespassRevokeWarningSeconds": 300.0}}

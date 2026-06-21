@@ -1,0 +1,61 @@
+{
+  "_RecordName_": "TacticalQuery.FindQTAISpawnArrivalFromDirection",
+  "_RecordId_": "ba027924-3220-4ace-b56a-632b49a872e5",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "TacticalQuery",
+    "name": "FindQTAISpawnArrivalFromDirection",
+    "type": "TacticalPointQuery",
+    "options": [
+      {
+        "_Type_": "TQSEmbeddedOption",
+        "requirements": {
+          "_Type_": "TagsDNF",
+          "terms": []},
+        "content": {
+          "_Type_": "TQSOptionContent",
+          "parameters": [
+            {
+              "_Type_": "TQSInputFloatValue",
+              "requirements": {
+                "_Type_": "TagsDNF",
+                "terms": []},
+              "condition": "minimumDistance",
+              "value": 750.0,
+              "overrides": []},
+            {
+              "_Type_": "TQSInputFloatValue",
+              "requirements": {
+                "_Type_": "TagsDNF",
+                "terms": []},
+              "condition": "maximumDistance",
+              "value": 1500.0,
+              "overrides": []},
+            {
+              "_Type_": "TQSInputFloatValue",
+              "requirements": {
+                "_Type_": "TagsDNF",
+                "terms": []},
+              "condition": "density",
+              "value": 100.0,
+              "overrides": []}],
+          "generation": [
+            {
+              "_Type_": "TQSInputFloatValue",
+              "requirements": {
+                "_Type_": "TagsDNF",
+                "terms": []},
+              "condition": "sphereExcludingAABBs_around_entity",
+              "value": 1000.0,
+              "overrides": []}],
+          "conditions": [
+            {
+              "_Type_": "TQSInputFloatValue",
+              "requirements": {
+                "_Type_": "TagsDNF",
+                "terms": []},
+              "condition": "min_dot_to_referencePoint",
+              "value": 0.9,
+              "overrides": []}],
+          "weights": []},
+        "optionOverrides": []}]}}

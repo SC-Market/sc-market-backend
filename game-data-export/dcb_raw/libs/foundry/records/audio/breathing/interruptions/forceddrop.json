@@ -1,0 +1,16 @@
+{
+  "_RecordName_": "AudioBreathInterrupt.ForcedDrop",
+  "_RecordId_": "5ba2c638-c281-432b-a3de-66fa47871748",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "AudioBreathInterrupt",
+    "description": "Breathing interrupt for dropping caused by ArmsLock.",
+    "curve": {
+      "_Type_": "BezierCurve",
+      "points": [],
+      "useLUT": false},
+    "breathEvent": "BreathCustom",
+    "customEvent": {
+      "_Type_": "GlobalResourceAudio",
+      "audioTrigger": "Play_DXHN_PC_ForcedDrop_Grunt"},
+    "triggerCustomEventOnly": true}}

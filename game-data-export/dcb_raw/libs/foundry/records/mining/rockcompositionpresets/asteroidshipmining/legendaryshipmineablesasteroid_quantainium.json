@@ -1,0 +1,33 @@
+{
+  "_RecordName_": "MineableComposition.LegendaryShipMineablesAsteroid_Quantainium",
+  "_RecordId_": "46c05568-b83a-4e7b-862c-cc31be4bae50",
+  "_RecordTag_": "SystemsDesign",
+  "_RecordValue_": {
+    "_Type_": "MineableComposition",
+    "depositName": "@items_commodities_quantainium_raw",
+    "minimumDistinctElements": 3,
+    "compositionArray": [
+      {
+        "_Type_": "MineableCompositionPart",
+        "mineableElement": "file://./../../../../../../libs/foundry/records/mining/mineableelements/quantainium_raw.json",
+        "minPercentage": 5.7,
+        "maxPercentage": 11.7,
+        "probability": 1.0,
+        "curveExponent": 1.0,
+        "qualityScale": 1.0},
+      {
+        "_Type_": "MineableCompositionPart",
+        "mineableElement": "file://./../../../../../../libs/foundry/records/mining/mineableelements/quantainium_raw.json",
+        "minPercentage": 28.3,
+        "maxPercentage": 78.3,
+        "probability": 1.0,
+        "curveExponent": 1.0,
+        "qualityScale": 0.49},
+      {
+        "_Type_": "MineableCompositionPart",
+        "mineableElement": "file://./../../../../../../libs/foundry/records/mining/mineableelements/beryl_raw.json",
+        "minPercentage": 5.0,
+        "maxPercentage": 10.0,
+        "probability": 1.0,
+        "curveExponent": 1.0,
+        "qualityScale": 0.789}]}}

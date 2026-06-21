@@ -1,0 +1,12 @@
+{
+  "_RecordName_": "InteractionConditionPreset.DeveloperOnly",
+  "_RecordId_": "3b322f99-47e0-4593-b027-caab3338b306",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "InteractionConditionPreset",
+    "conditions": [
+      {
+        "_Type_": "InteractionConditionAccountBadge",
+        "conditionDisplay": null,
+        "badgeRequired": "RSI_BADGE_STAFF"}],
+    "conditionToHideParams": []}}

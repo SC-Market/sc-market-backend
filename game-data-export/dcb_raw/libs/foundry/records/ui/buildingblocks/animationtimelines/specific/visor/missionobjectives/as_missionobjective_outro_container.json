@@ -1,0 +1,92 @@
+{
+  "_RecordName_": "BuildingBlocks_Timeline.AS_MissionObjective_Outro_Container",
+  "_RecordId_": "78d7aeb6-97ce-4666-a53d-98e89a340bb9",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "BuildingBlocks_Timeline",
+    "timeline": {
+      "_Type_": "BuildingBlocks_TimelineTypeEmbedded",
+      "keyframes": [
+        {
+          "_Type_": "BuildingBlocks_Keyframe",
+          "percent": 0.0,
+          "modifiers": [
+            {
+              "_Type_": "BuildingBlocks_KeyframeModifierData",
+              "timingFunction": {
+                "_Type_": "BuildingBlocks_TimingFunctionPreset",
+                "preset": "Linear"},
+              "modifier": {
+                "_Type_": "BuildingBlocks_FieldModifierNumber",
+                "field": "Alpha",
+                "value": 1.0}}]},
+        {
+          "_Type_": "BuildingBlocks_Keyframe",
+          "percent": 0.15,
+          "modifiers": [
+            {
+              "_Type_": "BuildingBlocks_KeyframeModifierData",
+              "timingFunction": {
+                "_Type_": "BuildingBlocks_TimingFunctionPreset",
+                "preset": "Linear"},
+              "modifier": {
+                "_Type_": "BuildingBlocks_FieldModifierNumber",
+                "field": "Alpha",
+                "value": 0.0}}]},
+        {
+          "_Type_": "BuildingBlocks_Keyframe",
+          "percent": 0.3,
+          "modifiers": [
+            {
+              "_Type_": "BuildingBlocks_KeyframeModifierData",
+              "timingFunction": {
+                "_Type_": "BuildingBlocks_TimingFunctionPreset",
+                "preset": "Linear"},
+              "modifier": {
+                "_Type_": "BuildingBlocks_FieldModifierNumber",
+                "field": "Alpha",
+                "value": 0.0}}]},
+        {
+          "_Type_": "BuildingBlocks_Keyframe",
+          "percent": 0.45,
+          "modifiers": [
+            {
+              "_Type_": "BuildingBlocks_KeyframeModifierData",
+              "timingFunction": {
+                "_Type_": "BuildingBlocks_TimingFunctionPreset",
+                "preset": "Linear"},
+              "modifier": {
+                "_Type_": "BuildingBlocks_FieldModifierNumber",
+                "field": "Alpha",
+                "value": 1.0}},
+            {
+              "_Type_": "BuildingBlocks_KeyframeModifierData",
+              "timingFunction": {
+                "_Type_": "BuildingBlocks_TimingFunctionPreset",
+                "preset": "Linear"},
+              "modifier": {
+                "_Type_": "BuildingBlocks_FieldModifierNumber",
+                "field": "ScaleY",
+                "value": 1.0}}]},
+        {
+          "_Type_": "BuildingBlocks_Keyframe",
+          "percent": 1.0,
+          "modifiers": [
+            {
+              "_Type_": "BuildingBlocks_KeyframeModifierData",
+              "timingFunction": {
+                "_Type_": "BuildingBlocks_TimingFunctionPreset",
+                "preset": "EaseInExpo"},
+              "modifier": {
+                "_Type_": "BuildingBlocks_FieldModifierNumber",
+                "field": "Alpha",
+                "value": 0.0}},
+            {
+              "_Type_": "BuildingBlocks_KeyframeModifierData",
+              "timingFunction": {
+                "_Type_": "BuildingBlocks_TimingFunctionPreset",
+                "preset": "Linear"},
+              "modifier": {
+                "_Type_": "BuildingBlocks_FieldModifierNumber",
+                "field": "ScaleY",
+                "value": 0.0}}]}]}}}

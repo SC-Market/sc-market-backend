@@ -1,0 +1,18 @@
+{
+  "_RecordName_": "QTERequestConfig.MisfireFixQTEConfig",
+  "_RecordId_": "6f7c4522-3d8c-42c0-94a5-30e2ae1146d1",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "QTERequestConfig",
+    "blockActions": false,
+    "actionName": {
+      "_Type_": "InputAction",
+      "actionName": "player:fixWeaponMisfire"},
+    "totalPressNum": 4,
+    "maxQTETime": 3.0,
+    "decayGracePeriod": 0.0,
+    "decayPerSecond": 0.0,
+    "givewayBehaviour": "Silent",
+    "ownerName": "defaultQTEOwnerName",
+    "QTEPriority": "QTEMediumPriority",
+    "inputPromptConfig": "file://./../../../../libs/foundry/records/inputpromptconfig/inputpromptconfig_fixmisfireqte.json"}}

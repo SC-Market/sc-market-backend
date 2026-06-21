@@ -1,0 +1,20 @@
+{
+  "_RecordName_": "SReputationContextUI.ReputationContext_MicrotechProtectionServices",
+  "_RecordId_": "199fd810-4806-44db-b0aa-ff9c1b1bd3a7",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "SReputationContextUI",
+    "sortOrderScope": "Alphabetical",
+    "primaryScopeContext": {
+      "_Type_": "SReputationScopeContextUI",
+      "scope": "file://./../../../../../libs/foundry/records/reputation/scopes/reputationscope_affinity.json",
+      "propertiesBB": []},
+    "scopeContextList": [
+      {
+        "_Type_": "SReputationScopeContextUI",
+        "scope": "file://./../../../../../libs/foundry/records/reputation/scopes/reputationscope_bounty.json",
+        "propertiesBB": []},
+      {
+        "_Type_": "SReputationScopeContextUI",
+        "scope": "file://./../../../../../libs/foundry/records/reputation/scopes/reputationscope_security.json",
+        "propertiesBB": []}]}}

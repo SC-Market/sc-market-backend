@@ -1,0 +1,11 @@
+{
+  "_RecordName_": "CommunicationConfig.Human_SOC",
+  "_RecordId_": "945eed60-bc0f-4cce-8fec-3f8541e66a57",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "CommunicationConfig",
+    "name": "Human_SOC",
+    "communications": [],
+    "subConfigs": [
+      "file://./../../../../../../libs/foundry/records/communicationconfig/subcommunicationconfig/human_social/human_soc_generictrigger.json",
+      "file://./../../../../../../libs/foundry/records/communicationconfig/subcommunicationconfig/human_social/human_soc_reactions.json"]}}

@@ -1,0 +1,59 @@
+{
+  "_RecordName_": "SeatAdsDef.AdsDefDefault",
+  "_RecordId_": "82ecc0e4-b345-4577-9e5b-b408f5d26ea4",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "SeatAdsDef",
+    "zoomSpeed": 7.0,
+    "minFovWithTarget": 20.0,
+    "minFovWithoutTarget": 50.0,
+    "minFovStableZoom": 15.0,
+    "crosshairAngle": 5.0,
+    "maxPitch": 70.0,
+    "maxYaw": 70.0,
+    "timeToKeepZoomAfterTargetLoss": 0.3,
+    "timeToKeepZoomAfterHoverTargetLoss": 2.0,
+    "timeToDisallowZoomAfterHoverTargetGain": 0.6,
+    "trackSubtargets": false,
+    "useScalingOutsideAds": false,
+    "allowedForOperatorMode": [
+      true,
+      true,
+      true,
+      true,
+      true,
+      true,
+      true,
+      true,
+      true,
+      true,
+      true,
+      false],
+    "recoilFovCurve": {
+      "_Type_": "BezierCurve",
+      "points": [
+        {
+          "_Type_": "Vec2",
+          "x": -0.2619303,
+          "y": -0.3065909},
+        {
+          "_Type_": "Vec2",
+          "x": 0.0,
+          "y": 0.0},
+        {
+          "_Type_": "Vec2",
+          "x": 0.2619303,
+          "y": 0.3065909},
+        {
+          "_Type_": "Vec2",
+          "x": 0.6297587,
+          "y": 0.584375},
+        {
+          "_Type_": "Vec2",
+          "x": 1.0,
+          "y": 1.0},
+        {
+          "_Type_": "Vec2",
+          "x": 1.370241,
+          "y": 1.415625}],
+      "useLUT": false}}}

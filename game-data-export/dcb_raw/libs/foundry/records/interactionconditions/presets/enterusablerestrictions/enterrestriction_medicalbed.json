@@ -1,0 +1,85 @@
+{
+  "_RecordName_": "InteractionConditionPreset.EnterRestriction_MedicalBed",
+  "_RecordId_": "2a85667c-acbc-40ab-abeb-8830c9127a7f",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "InteractionConditionPreset",
+    "conditions": [
+      {
+        "_Type_": "InteractionConditionHasProhibitedItems",
+        "conditionDisplay": {
+          "_Type_": "ConditionDisplayParams",
+          "exclusiveDisplay": true,
+          "blockedText": {
+            "_Type_": "BlockedTextParams",
+            "blockedText": "@interaction_condition_equipUndersuit_wearingClothing"},
+          "blockedCursor": {
+            "_Type_": "BlockedCursorParams",
+            "blockedCursor": "MultiAction"},
+          "blockedColor": {
+            "_Type_": "BlockedColorParams",
+            "selectedColor": "file://./../../../../../../libs/foundry/records/ui/innerthought/colors/blockedselected.json",
+            "unselectedColor": "file://./../../../../../../libs/foundry/records/ui/innerthought/colors/blockedunselected.json",
+            "applyImmediately": false},
+          "blockedHint": null,
+          "autoStoreOption": null,
+          "blockedInteractionAttemptMonologue": null},
+        "prohibitedList": [
+          {
+            "_Type_": "InteractionProhibitedItemParams",
+            "itemPortTag": "",
+            "itemPortName": "",
+            "tags": [],
+            "itemTypes": [
+              "Char_Armor_Undersuit",
+              "Char_Clothing_Feet",
+              "Char_Clothing_Hands",
+              "Char_Clothing_Hat",
+              "Char_Clothing_Legs",
+              "Char_Clothing_Torso_0",
+              "Char_Clothing_Torso_1",
+              "Char_Clothing_Torso_2",
+              "Char_Clothing_Backpack",
+              "Char_Armor_Arms",
+              "Char_Armor_Legs",
+              "Char_Armor_Torso",
+              "Char_Armor_Helmet",
+              "Char_Armor_Backpack",
+              "Char_Accessory_Eyes"],
+            "itemSubTypes": []}],
+        "AIAlwaysPass": true,
+        "autoStoreInItemPortContainer": false},
+      {
+        "_Type_": "InteractionConditionHasProhibitedItems",
+        "conditionDisplay": {
+          "_Type_": "ConditionDisplayParams",
+          "exclusiveDisplay": false,
+          "blockedText": {
+            "_Type_": "BlockedTextParams",
+            "blockedText": "@interaction_condition_seatedItemRestrictions_heldItem"},
+          "blockedCursor": {
+            "_Type_": "BlockedCursorParams",
+            "blockedCursor": "MultiAction"},
+          "blockedColor": {
+            "_Type_": "BlockedColorParams",
+            "selectedColor": "file://./../../../../../../libs/foundry/records/ui/innerthought/colors/blockedselected.json",
+            "unselectedColor": "file://./../../../../../../libs/foundry/records/ui/innerthought/colors/blockedunselected.json",
+            "applyImmediately": false},
+          "blockedHint": null,
+          "autoStoreOption": null,
+          "blockedInteractionAttemptMonologue": null},
+        "prohibitedList": [
+          {
+            "_Type_": "InteractionProhibitedItemParams",
+            "itemPortTag": "",
+            "itemPortName": "weapon_attach_hand_right",
+            "tags": [],
+            "itemTypes": [
+              "WeaponPersonal"],
+            "itemSubTypes": [
+              "Small",
+              "Medium",
+              "Large"]}],
+        "AIAlwaysPass": true,
+        "autoStoreInItemPortContainer": false}],
+    "conditionToHideParams": []}}

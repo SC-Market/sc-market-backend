@@ -1,0 +1,90 @@
+{
+  "_RecordName_": "PlanetOceanAudioData.PlanetOceanAudio_Water",
+  "_RecordId_": "44844662-5ef3-42a3-96eb-e3145722efee",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "PlanetOceanAudioData",
+    "checkpoints": [
+      {
+        "_Type_": "PlanetOceanAudioCheckpoint",
+        "beamCount": 5,
+        "range": 15.0,
+        "useDepthAssignment": false},
+      {
+        "_Type_": "PlanetOceanAudioCheckpoint",
+        "beamCount": 5,
+        "range": 40.0,
+        "useDepthAssignment": true},
+      {
+        "_Type_": "PlanetOceanAudioCheckpoint",
+        "beamCount": 5,
+        "range": 80.0,
+        "useDepthAssignment": true},
+      {
+        "_Type_": "PlanetOceanAudioCheckpoint",
+        "beamCount": 5,
+        "range": 120.0,
+        "useDepthAssignment": true},
+      {
+        "_Type_": "PlanetOceanAudioCheckpoint",
+        "beamCount": 6,
+        "range": 280.0,
+        "useDepthAssignment": true},
+      {
+        "_Type_": "PlanetOceanAudioCheckpoint",
+        "beamCount": 5,
+        "range": 600.0,
+        "useDepthAssignment": true},
+      {
+        "_Type_": "PlanetOceanAudioCheckpoint",
+        "beamCount": 6,
+        "range": 1200.0,
+        "useDepthAssignment": true},
+      {
+        "_Type_": "PlanetOceanAudioCheckpoint",
+        "beamCount": 7,
+        "range": 2500.0,
+        "useDepthAssignment": true}],
+    "assignments": [
+      {
+        "_Type_": "PlanetOceanDepthAssignment",
+        "waterDepth": -10.0,
+        "assignmentStartTrigger": {
+          "_Type_": "GlobalResourceAudio",
+          "audioTrigger": "Play_ENVO_ProceduralPlanetAudio_LiquidBodies_Ocean_Shore_Calm"},
+        "assignmentStopTrigger": {
+          "_Type_": "GlobalResourceAudio",
+          "audioTrigger": "Stop_ENVO_ProceduralPlanetAudio_LiquidBodies_Ocean_Shore_Calm"},
+        "recalculationDistance": 5.0},
+      {
+        "_Type_": "PlanetOceanDepthAssignment",
+        "waterDepth": -10000.0,
+        "assignmentStartTrigger": {
+          "_Type_": "GlobalResourceAudio",
+          "audioTrigger": "Play_ENVO_ProceduralPlanetAudio_LiquidBodies_Ocean_OpenSea_Calm"},
+        "assignmentStopTrigger": {
+          "_Type_": "GlobalResourceAudio",
+          "audioTrigger": "Stop_ENVO_ProceduralPlanetAudio_LiquidBodies_Ocean_OpenSea_Calm"},
+        "recalculationDistance": 5.0}],
+    "waterStartTrigger": {
+      "_Type_": "GlobalResourceAudio",
+      "audioTrigger": "Play_ENVO_ProceduralPlanetAudio_LiquidBodies_Ocean_Close_Calm"},
+    "waterStopTrigger": {
+      "_Type_": "GlobalResourceAudio",
+      "audioTrigger": "Stop_ENVO_ProceduralPlanetAudio_LiquidBodies_Ocean_Close_Calm"},
+    "oceanOffsetRtpc": {
+      "_Type_": "AudioRtpc",
+      "rtpc": "ProceduralPlanetAudio_Ocean_Offset"},
+    "windRTPC": {
+      "_Type_": "AudioRtpc",
+      "rtpc": "ProceduralPlanetAudio_Wind_Speed"},
+    "waveHeightRTPC": {
+      "_Type_": "AudioRtpc",
+      "rtpc": ""},
+    "atmosphereTag": {
+      "_RecordPath_": "file://./../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+      "_RecordName_": "Tag.ae7b18a2-0478-4ff4-8e86-9799af4759b6",
+      "_RecordId_": "ae7b18a2-0478-4ff4-8e86-9799af4759b6"},
+    "terrainChecksPerFrame": 1,
+    "checkOnListenerPosition": true,
+    "listenerPositionUsesAssignment": true}}

@@ -1,0 +1,146 @@
+{
+  "_RecordName_": "ContractTemplate.HijackedShip_890J",
+  "_RecordId_": "f4fd7696-ba7d-4456-bf1e-2ac0ff39bb1c",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "ContractTemplate",
+    "notForRelease": false,
+    "workInProgress": false,
+    "owner": "file://./../../../../../libs/foundry/records/devowners/devteams/mdt.json",
+    "contractClass": {
+      "_Type_": "ContractClass_Contract",
+      "additionalParams": {
+        "_Type_": "ActiveContractSettings",
+        "hasCompleteButton": false,
+        "handlesAbandonRequest": false,
+        "canBeShared": true,
+        "displayAlliedMarkers": true,
+        "onlyOwnerCanComplete": false},
+      "autoFinishSettings": {
+        "_Type_": "ContractAutoFinishSettings",
+        "contractDeadline": {
+          "_Type_": "MissionDeadline",
+          "missionCompletionTime": 0.0,
+          "missionAutoEnd": false,
+          "missionResultAfterTimerEnd": "Failed",
+          "remainingTimeToShowTimer": 0.0,
+          "missionEndReason": "@LOC_EMPTY"},
+        "failIfSentToPrison": true,
+        "failIfBecameCriminal": true,
+        "failIfLeavePrison": false}},
+    "contractDisplayInfo": {
+      "_Type_": "ContractDisplayInfo",
+      "displayString": [
+        "@LOC_UNINITIALIZED",
+        "@LOC_UNINITIALIZED",
+        "@LOC_UNINITIALIZED",
+        "@LOC_UNINITIALIZED",
+        "@LOC_UNINITIALIZED"],
+      "type": "file://./../../../../../libs/foundry/records/missiontype/pu/mercenary.json",
+      "illegal": false,
+      "showLifeTimeInMobiGlas": true,
+      "preShowObjectives": false},
+    "modifiers": [],
+    "contractProperties": [
+      {
+        "_Pointer_": "ptr:1",
+        "_Type_": "MissionProperty",
+        "missionVariableName": "MissionLocation_BP",
+        "extendedTextToken": "Location",
+        "value": {
+          "_Type_": "MissionPropertyValue_Location",
+          "matchConditions": [],
+          "resourceTags": [],
+          "logErrorOnSearchFail": true}},
+      {
+        "_Pointer_": "ptr:2",
+        "_Type_": "MissionProperty",
+        "missionVariableName": "BoardedShip_BP",
+        "extendedTextToken": "Ship",
+        "value": {
+          "_Type_": "MissionPropertyValue_ShipSpawnDescriptions",
+          "spawnDescriptions": [],
+          "allowedForMissionRestrictedDeliveries": false}},
+      {
+        "_Pointer_": "ptr:3",
+        "_Type_": "MissionProperty",
+        "missionVariableName": "HijackerShips_BP",
+        "extendedTextToken": "",
+        "value": {
+          "_Type_": "MissionPropertyValue_ShipSpawnDescriptions",
+          "spawnDescriptions": [],
+          "allowedForMissionRestrictedDeliveries": false}}],
+    "objectiveTokens": [
+      {
+        "_Type_": "ObjectiveToken",
+        "id": "9d2b8f68-47b4-48ad-b36d-85fa428f954d",
+        "debugName": "HijackedShip_890J",
+        "startsActive": true,
+        "properties": [
+          {
+            "_Pointer_": "ptr:4",
+            "_Type_": "ObjectiveProperty_Referenced",
+            "missionVariableName": "MissionLocation_BP",
+            "extendedTextToken": "Location",
+            "property": "_PointsTo_:ptr:1"},
+          {
+            "_Type_": "ObjectiveProperty_Referenced",
+            "missionVariableName": "BoardedShip_BP",
+            "extendedTextToken": "Ship",
+            "property": "_PointsTo_:ptr:2"},
+          {
+            "_Type_": "ObjectiveProperty_Referenced",
+            "missionVariableName": "HijackerShips_BP",
+            "extendedTextToken": "",
+            "property": "_PointsTo_:ptr:3"}],
+        "objectiveHandler": {
+          "_Type_": "ObjectiveHandler_NearLocation",
+          "moduleDeclaration": null,
+          "module": "Libs/Subsumption/Missions/PU/Missions/HijackedShip/HijackedShip_890J.xml",
+          "moduleHierarchy": null,
+          "disableTravelObjectives": false,
+          "disableReturnObjectives": false,
+          "travelRadiusKM": 10.0,
+          "allPlayersLeftGracePeriod": -1.0,
+          "travelObjectiveInfo": {
+            "_Type_": "ObjectiveDisplayInfo",
+            "shortDescription": "@boarders_890J_obj_short_01",
+            "longDescription": "@boarders_890J_obj_long_01",
+            "objectiveMarkerLabel": "@boarders_890J_obj_short_01",
+            "category": "Primary",
+            "hideOnHUD": false},
+          "returnObjectiveInfo": {
+            "_Type_": "ObjectiveDisplayInfo",
+            "shortDescription": "@ReturnObjective_Short",
+            "longDescription": "@ReturnObjective_Long",
+            "objectiveMarkerLabel": "@ReturnObjective_Short",
+            "category": "Primary",
+            "hideOnHUD": false},
+          "navPointSpawnInfo": {
+            "_Type_": "NavPointSpawnInformation",
+            "entityClassDefinition": "file://./../../../../../libs/foundry/records/entities/scitem/mission_entities/mission_qt_quantum_beacon_longrange.json",
+            "name": "@vehicle_NameORIG_890Jump_Hijacked",
+            "extendedTextTokens": []},
+          "location": "_PointsTo_:ptr:4",
+          "maxDistance": 7500000.0,
+          "minDistance": 5000000.0},
+        "rewardContribution": null,
+        "displayInfo": {
+          "_Type_": "ObjectiveDisplayInfo",
+          "shortDescription": "@LOC_UNINITIALIZED",
+          "longDescription": "@LOC_UNINITIALIZED",
+          "objectiveMarkerLabel": "@LOC_UNINITIALIZED",
+          "category": "Primary",
+          "hideOnHUD": false},
+        "overrideMissionDetailsDisplayInfo": {
+          "_Type_": "OverrideMissionDetailsDisplayInfo",
+          "titleOverride": "@LOC_UNINITIALIZED",
+          "descriptionOverride": "@LOC_UNINITIALIZED"},
+        "commsNotifications": [],
+        "childMissionPhases": []}],
+    "partialRewardPayout": null,
+    "missionFlow": {
+      "_Type_": "MissionFlow",
+      "triggers": []},
+    "contractStartCommsNotification": null,
+    "contractEndCommsNotifications": []}}

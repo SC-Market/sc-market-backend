@@ -1,0 +1,14 @@
+{
+  "_RecordName_": "AtmosphereStateTemplate.Stanton1b_PrisonCellblock_AtmoState",
+  "_RecordId_": "8b8764d9-61d9-4748-8b62-79f0fa12f3c7",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "AtmosphereStateTemplate",
+    "state": {
+      "_Type_": "AtmosphereStateTemplateInternal",
+      "pressureMod": "Override",
+      "pressure": 1.0,
+      "temperatureMod": "Override",
+      "temperature": 303.0,
+      "humidityMod": "Override",
+      "humidity": 0.5}}}

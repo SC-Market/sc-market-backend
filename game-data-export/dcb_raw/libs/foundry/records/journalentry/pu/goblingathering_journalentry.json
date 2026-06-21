@@ -1,0 +1,46 @@
+{
+  "_RecordName_": "JournalEntry.GoblinGathering_JournalEntry",
+  "_RecordId_": "2cdd90e1-ebaf-4e5c-ba23-3b4f01a92e6d",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "JournalEntry",
+    "Title": "@stantonRegen_Title",
+    "ShortTitle": "@stantonRegen_Title",
+    "SubHeading": "@LOC_UNINITIALIZED",
+    "autoOpenMobiGlas": false,
+    "showNotification": true,
+    "missionSpecificContent": false,
+    "removeOnMissionEnd": true,
+    "Style": "file://./../../../../../libs/foundry/records/journalentrytype/journalentrytype.textlog.json",
+    "type": {
+      "_Type_": "JournalEntryLeaderboard",
+      "description": "@stantonRegen_Desc",
+      "activeScenario": "file://./../../../../../libs/foundry/records/missionscenarios/rg_scenario.json",
+      "scenarioProgressRecord": "file://./../../../../../libs/foundry/records/missionscenarios/rg_scenarioprogress.json",
+      "factions": [
+        {
+          "_Type_": "FactionInfo",
+          "faction": "file://./../../../../../libs/foundry/records/factions/faction_lawful_hurstondynamics.json",
+          "factionDescription": "@LOC_UNINITIALIZED",
+          "factioncolor": "#AD9540",
+          "leaderboardImage": ""},
+        {
+          "_Type_": "FactionInfo",
+          "faction": "file://./../../../../../libs/foundry/records/factions/faction_lawful_crusaderindustries.json",
+          "factionDescription": "@LOC_UNINITIALIZED",
+          "factioncolor": "#1772D5",
+          "leaderboardImage": ""},
+        {
+          "_Type_": "FactionInfo",
+          "faction": "file://./../../../../../libs/foundry/records/factions/faction_lawful_arccorp.json",
+          "factionDescription": "@LOC_UNINITIALIZED",
+          "factioncolor": "#8C413B",
+          "leaderboardImage": ""},
+        {
+          "_Type_": "FactionInfo",
+          "faction": "file://./../../../../../libs/foundry/records/factions/faction_lawful_microtech.json",
+          "factionDescription": "@LOC_UNINITIALIZED",
+          "factioncolor": "#8FC84C",
+          "leaderboardImage": ""}],
+      "leaderboardCanvas": "file://./../../../../../libs/foundry/records/ui/buildingblocks/m_mobiglas/m_sc_journal/m_sc_journal_contributiontracker.json"},
+    "tutorialEntry": false}}

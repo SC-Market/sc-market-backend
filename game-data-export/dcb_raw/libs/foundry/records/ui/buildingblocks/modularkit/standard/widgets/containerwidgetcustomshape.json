@@ -1,0 +1,1433 @@
+{
+  "_RecordName_": "BuildingBlocks_Canvas.ContainerWidgetCustomShape",
+  "_RecordId_": "277ded80-1e1b-4683-a19e-0418d75ec924",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "BuildingBlocks_Canvas",
+    "size": {
+      "_Type_": "Vec3",
+      "x": 1920.0,
+      "y": 1080.0,
+      "z": 0.0},
+    "coordinateMethod": "useRaw",
+    "embeddedStyles": [],
+    "defaultStyles": {
+      "_Type_": "BuildingBlocks_DefaultStyles",
+      "sharedStyles": null,
+      "entries": [
+        {
+          "_Type_": "BuildingBlocks_StyleEntry",
+          "name": "New Style",
+          "conditionsList": [
+            {
+              "_Type_": "BuildingBlocks_StyleConditionList",
+              "name": "New Condition List",
+              "conditions": [
+                {
+                  "_Type_": "BuildingBlocks_StyleSelectorConditionTag",
+                  "tag": {
+                    "_RecordPath_": "file://./../../../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+                    "_RecordName_": "Tag.f7c626b5-0fc7-4ffe-9fa1-a82ffc9ebde4",
+                    "_RecordId_": "f7c626b5-0fc7-4ffe-9fa1-a82ffc9ebde4"}}]}],
+          "modifiers": [
+            {
+              "_Type_": "BuildingBlocks_FieldModifierString",
+              "field": "SvgPath",
+              "value": "UI/Textures/Vector/ModularKitStyles/Default/Default_Container_9s.svg"},
+            {
+              "_Type_": "BuildingBlocks_FieldModifierBoolean",
+              "field": "EnableColorOverlay",
+              "value": false},
+            {
+              "_Type_": "BuildingBlocks_FieldModifierColor",
+              "field": "FillColor",
+              "color": {
+                "_Type_": "BuildingBlocks_ColorStyle",
+                "color": "Base",
+                "alpha": 0.8}},
+            {
+              "_Type_": "BuildingBlocks_FieldModifierNumber",
+              "field": "NineSliceScale",
+              "value": 1.0},
+            {
+              "_Type_": "BuildingBlocks_FieldModifierNumber",
+              "field": "NineSliceTop",
+              "value": 0.4},
+            {
+              "_Type_": "BuildingBlocks_FieldModifierNumber",
+              "field": "NineSliceBottom",
+              "value": 0.5},
+            {
+              "_Type_": "BuildingBlocks_FieldModifierNumber",
+              "field": "NineSliceRight",
+              "value": 0.5},
+            {
+              "_Type_": "BuildingBlocks_FieldModifierNumber",
+              "field": "NineSliceLeft",
+              "value": 0.4},
+            {
+              "_Type_": "BuildingBlocks_FieldModifierBoolean",
+              "field": "EnableBackground",
+              "value": true},
+            {
+              "_Type_": "BuildingBlocks_FieldModifierColor",
+              "field": "BackgroundColor",
+              "color": {
+                "_Type_": "BuildingBlocks_ColorStyle",
+                "color": "Background",
+                "alpha": 1.0}},
+            {
+              "_Type_": "BuildingBlocks_FieldModifierNumber",
+              "field": "BorderTopLeftRadius",
+              "value": 0.0},
+            {
+              "_Type_": "BuildingBlocks_FieldModifierNumber",
+              "field": "BorderTopRightRadius",
+              "value": 0.0},
+            {
+              "_Type_": "BuildingBlocks_FieldModifierNumber",
+              "field": "BorderBottomRightRadius",
+              "value": 0.0},
+            {
+              "_Type_": "BuildingBlocks_FieldModifierNumber",
+              "field": "BorderBottomLeftRadius",
+              "value": 0.0},
+            {
+              "_Type_": "BuildingBlocks_FieldModifierBoolean",
+              "field": "EnableTopLeftBorderChamfer",
+              "value": false},
+            {
+              "_Type_": "BuildingBlocks_FieldModifierBoolean",
+              "field": "EnableTopRightBorderChamfer",
+              "value": false},
+            {
+              "_Type_": "BuildingBlocks_FieldModifierBoolean",
+              "field": "EnableBottomRightBorderChamfer",
+              "value": false},
+            {
+              "_Type_": "BuildingBlocks_FieldModifierBoolean",
+              "field": "EnableBottomLeftBorderChamfer",
+              "value": false}],
+          "transitions": []}]},
+    "style": null,
+    "brandStyles": [
+      {
+        "_Type_": "BuildingBlocks_BrandStyles",
+        "brandIdentifier": "file://./../../../../../../../../libs/foundry/records/ui/buildingblocks/styles/s_uilo_a.json",
+        "sharedStyles": "file://./../../../../../../../../libs/foundry/records/ui/buildingblocks/styles/modularkitstyles/sk_uilo_a/sk_uilo_a_containercustomstyles.json",
+        "entries": []},
+      {
+        "_Type_": "BuildingBlocks_BrandStyles",
+        "brandIdentifier": "file://./../../../../../../../../libs/foundry/records/ui/buildingblocks/styles/s_visr_a.json",
+        "sharedStyles": "file://./../../../../../../../../libs/foundry/records/ui/buildingblocks/styles/modularkitstyles/sk_visr_a/sk_visr_a_containercustomstyles.json",
+        "entries": []},
+      {
+        "_Type_": "BuildingBlocks_BrandStyles",
+        "brandIdentifier": "file://./../../../../../../../../libs/foundry/records/ui/buildingblocks/styles/s_aegs_env.json",
+        "sharedStyles": "file://./../../../../../../../../libs/foundry/records/ui/buildingblocks/styles/modularkitstyles/sk_aegs_env/sk_aegs_env_containercustomstyles.json",
+        "entries": [
+          {
+            "_Type_": "BuildingBlocks_StyleEntry",
+            "name": "New Style",
+            "conditionsList": [
+              {
+                "_Type_": "BuildingBlocks_StyleConditionList",
+                "name": "New Condition List",
+                "conditions": [
+                  {
+                    "_Type_": "BuildingBlocks_StyleSelectorConditionTag",
+                    "tag": {
+                      "_RecordPath_": "file://./../../../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+                      "_RecordName_": "Tag.f7c626b5-0fc7-4ffe-9fa1-a82ffc9ebde4",
+                      "_RecordId_": "f7c626b5-0fc7-4ffe-9fa1-a82ffc9ebde4"}}]}],
+            "modifiers": [
+              {
+                "_Type_": "BuildingBlocks_FieldModifierString",
+                "field": "SvgPath",
+                "value": "UI/Textures/Vector/ModularKitStyles/AEGS_ENV/AEGS_ENV_InnerFrame_9s.svg"},
+              {
+                "_Type_": "BuildingBlocks_FieldModifierBoolean",
+                "field": "EnableColorOverlay",
+                "value": false},
+              {
+                "_Type_": "BuildingBlocks_FieldModifierColor",
+                "field": "FillColor",
+                "color": {
+                  "_Type_": "BuildingBlocks_ColorStyle",
+                  "color": "Base",
+                  "alpha": 0.8}},
+              {
+                "_Type_": "BuildingBlocks_FieldModifierNumber",
+                "field": "NineSliceScale",
+                "value": 2.0},
+              {
+                "_Type_": "BuildingBlocks_FieldModifierNumber",
+                "field": "NineSliceTop",
+                "value": 0.45},
+              {
+                "_Type_": "BuildingBlocks_FieldModifierNumber",
+                "field": "NineSliceBottom",
+                "value": 0.55},
+              {
+                "_Type_": "BuildingBlocks_FieldModifierNumber",
+                "field": "NineSliceRight",
+                "value": 0.55},
+              {
+                "_Type_": "BuildingBlocks_FieldModifierNumber",
+                "field": "NineSliceLeft",
+                "value": 0.45},
+              {
+                "_Type_": "BuildingBlocks_FieldModifierBoolean",
+                "field": "EnableBackground",
+                "value": false},
+              {
+                "_Type_": "BuildingBlocks_FieldModifierColor",
+                "field": "BackgroundColor",
+                "color": {
+                  "_Type_": "BuildingBlocks_ColorStyle",
+                  "color": "Accent2",
+                  "alpha": 0.5}},
+              {
+                "_Type_": "BuildingBlocks_FieldModifierNumber",
+                "field": "BorderTopLeftRadius",
+                "value": 0.0},
+              {
+                "_Type_": "BuildingBlocks_FieldModifierNumber",
+                "field": "BorderTopRightRadius",
+                "value": 0.0},
+              {
+                "_Type_": "BuildingBlocks_FieldModifierNumber",
+                "field": "BorderBottomRightRadius",
+                "value": 0.0},
+              {
+                "_Type_": "BuildingBlocks_FieldModifierNumber",
+                "field": "BorderBottomLeftRadius",
+                "value": 0.0},
+              {
+                "_Type_": "BuildingBlocks_FieldModifierBoolean",
+                "field": "EnableTopLeftBorderChamfer",
+                "value": false},
+              {
+                "_Type_": "BuildingBlocks_FieldModifierBoolean",
+                "field": "EnableTopRightBorderChamfer",
+                "value": false},
+              {
+                "_Type_": "BuildingBlocks_FieldModifierBoolean",
+                "field": "EnableBottomRightBorderChamfer",
+                "value": false},
+              {
+                "_Type_": "BuildingBlocks_FieldModifierBoolean",
+                "field": "EnableBottomLeftBorderChamfer",
+                "value": false},
+              {
+                "_Type_": "BuildingBlocks_FieldModifierBoolean",
+                "field": "EnableNineSliceRect",
+                "value": true}],
+            "transitions": []}]},
+      {
+        "_Type_": "BuildingBlocks_BrandStyles",
+        "brandIdentifier": "file://./../../../../../../../../libs/foundry/records/ui/buildingblocks/styles/s_misc_env.json",
+        "sharedStyles": "file://./../../../../../../../../libs/foundry/records/ui/buildingblocks/styles/modularkitstyles/sk_misc/sk_misc_containercustomstyles.json",
+        "entries": []},
+      {
+        "_Type_": "BuildingBlocks_BrandStyles",
+        "brandIdentifier": "file://./../../../../../../../../libs/foundry/records/ui/buildingblocks/styles/mobiglasv2_pu.json",
+        "sharedStyles": "file://./../../../../../../../../libs/foundry/records/ui/buildingblocks/styles/modularkitstyles/sk_aegs/sk_aegs_containercustomstyles.json",
+        "entries": []},
+      {
+        "_Type_": "BuildingBlocks_BrandStyles",
+        "brandIdentifier": "file://./../../../../../../../../libs/foundry/records/ui/buildingblocks/styles/mobiglas_default_contractsmanager.json",
+        "sharedStyles": "file://./../../../../../../../../libs/foundry/records/ui/buildingblocks/styles/modularkitstyles/sk_mobiglas_contractsmanager/sk_mg_contractsmgr_containercustomstyles.json",
+        "entries": []},
+      {
+        "_Type_": "BuildingBlocks_BrandStyles",
+        "brandIdentifier": "file://./../../../../../../../../libs/foundry/records/ui/buildingblocks/styles/s_uilo_c.json",
+        "sharedStyles": "file://./../../../../../../../../libs/foundry/records/ui/buildingblocks/styles/modularkitstyles/sk_uilo_c/sk_uilo_c_containercustomstyles.json",
+        "entries": []},
+      {
+        "_Type_": "BuildingBlocks_BrandStyles",
+        "brandIdentifier": "file://./../../../../../../../../libs/foundry/records/ui/buildingblocks/styles/s_uilo_c_2.json",
+        "sharedStyles": "file://./../../../../../../../../libs/foundry/records/ui/buildingblocks/styles/modularkitstyles/sk_uilo_c/sk_uilo_c_containercustomstyles.json",
+        "entries": []},
+      {
+        "_Type_": "BuildingBlocks_BrandStyles",
+        "brandIdentifier": "file://./../../../../../../../../libs/foundry/records/ui/buildingblocks/styles/commoditybrands/commodity_uilo_c.json",
+        "sharedStyles": "file://./../../../../../../../../libs/foundry/records/ui/buildingblocks/styles/modularkitstyles/sk_uilo_c/sk_uilo_c_containercustomstyles.json",
+        "entries": []},
+      {
+        "_Type_": "BuildingBlocks_BrandStyles",
+        "brandIdentifier": "file://./../../../../../../../../libs/foundry/records/ui/buildingblocks/styles/commoditybrands/commodity_default.json",
+        "sharedStyles": "file://./../../../../../../../../libs/foundry/records/ui/buildingblocks/styles/modularkitstyles/sk_uimi_b/sk_uimi_b_containercustomstyles.json",
+        "entries": []},
+      {
+        "_Type_": "BuildingBlocks_BrandStyles",
+        "brandIdentifier": "file://./../../../../../../../../libs/foundry/records/ui/buildingblocks/styles/commoditybrands/commodity_luxury.json",
+        "sharedStyles": "file://./../../../../../../../../libs/foundry/records/ui/buildingblocks/styles/modularkitstyles/sk_uihi_b/sk_uihi_b_containercustomstyles.json",
+        "entries": []},
+      {
+        "_Type_": "BuildingBlocks_BrandStyles",
+        "brandIdentifier": "file://./../../../../../../../../libs/foundry/records/ui/buildingblocks/styles/commoditybrands/commodity_hacked.json",
+        "sharedStyles": "file://./../../../../../../../../libs/foundry/records/ui/buildingblocks/styles/modularkitstyles/sk_uilo_d/sk_uilo_d_containercustomstyles.json",
+        "entries": []},
+      {
+        "_Type_": "BuildingBlocks_BrandStyles",
+        "brandIdentifier": "file://./../../../../../../../../libs/foundry/records/ui/buildingblocks/styles/shopbrands/shop_skutters.json",
+        "sharedStyles": "file://./../../../../../../../../libs/foundry/records/ui/buildingblocks/styles/modularkitstyles/sk_uilo_c/sk_uilo_c_containercustomstyles.json",
+        "entries": []},
+      {
+        "_Type_": "BuildingBlocks_BrandStyles",
+        "brandIdentifier": "file://./../../../../../../../../libs/foundry/records/ui/buildingblocks/styles/shopbrands/shop_general_pharmacy.json",
+        "sharedStyles": "file://./../../../../../../../../libs/foundry/records/ui/buildingblocks/styles/modularkitstyles/sk_uilo_c/sk_uilo_c_containercustomstyles.json",
+        "entries": []},
+      {
+        "_Type_": "BuildingBlocks_BrandStyles",
+        "brandIdentifier": "file://./../../../../../../../../libs/foundry/records/ui/buildingblocks/styles/shopbrands/shop_grimhex.json",
+        "sharedStyles": "file://./../../../../../../../../libs/foundry/records/ui/buildingblocks/styles/modularkitstyles/sk_uilo_c/sk_uilo_c_containercustomstyles.json",
+        "entries": []},
+      {
+        "_Type_": "BuildingBlocks_BrandStyles",
+        "brandIdentifier": "file://./../../../../../../../../libs/foundry/records/ui/buildingblocks/styles/shopbrands/shop_kctrending.json",
+        "sharedStyles": "file://./../../../../../../../../libs/foundry/records/ui/buildingblocks/styles/modularkitstyles/sk_uilo_c/sk_uilo_c_containercustomstyles.json",
+        "entries": []},
+      {
+        "_Type_": "BuildingBlocks_BrandStyles",
+        "brandIdentifier": "file://./../../../../../../../../libs/foundry/records/ui/buildingblocks/styles/shopbrands/shop_refinery.json",
+        "sharedStyles": "file://./../../../../../../../../libs/foundry/records/ui/buildingblocks/styles/modularkitstyles/sk_uilo_c/sk_uilo_c_containercustomstyles.json",
+        "entries": []},
+      {
+        "_Type_": "BuildingBlocks_BrandStyles",
+        "brandIdentifier": "file://./../../../../../../../../libs/foundry/records/ui/buildingblocks/styles/shopbrands/shop_shubin.json",
+        "sharedStyles": "file://./../../../../../../../../libs/foundry/records/ui/buildingblocks/styles/modularkitstyles/sk_uilo_c/sk_uilo_c_containercustomstyles.json",
+        "entries": []},
+      {
+        "_Type_": "BuildingBlocks_BrandStyles",
+        "brandIdentifier": "file://./../../../../../../../../libs/foundry/records/ui/buildingblocks/styles/shopbrands/shop_tammanyandsons.json",
+        "sharedStyles": "file://./../../../../../../../../libs/foundry/records/ui/buildingblocks/styles/modularkitstyles/sk_uilo_c/sk_uilo_c_containercustomstyles.json",
+        "entries": []},
+      {
+        "_Type_": "BuildingBlocks_BrandStyles",
+        "brandIdentifier": "file://./../../../../../../../../libs/foundry/records/ui/buildingblocks/styles/s_uimi_c.json",
+        "sharedStyles": "file://./../../../../../../../../libs/foundry/records/ui/buildingblocks/styles/modularkitstyles/sk_uimi_c/sk_uimi_c_containercustomstyles.json",
+        "entries": []},
+      {
+        "_Type_": "BuildingBlocks_BrandStyles",
+        "brandIdentifier": "file://./../../../../../../../../libs/foundry/records/ui/buildingblocks/styles/shopbrands/shop_regal.json",
+        "sharedStyles": "file://./../../../../../../../../libs/foundry/records/ui/buildingblocks/styles/modularkitstyles/sk_regal/sk_regal_containercustomstyles.json",
+        "entries": []},
+      {
+        "_Type_": "BuildingBlocks_BrandStyles",
+        "brandIdentifier": "file://./../../../../../../../../libs/foundry/records/ui/buildingblocks/styles/shopbrands/shop_traveler.json",
+        "sharedStyles": "file://./../../../../../../../../libs/foundry/records/ui/buildingblocks/styles/modularkitstyles/sk_uimi_c/sk_uimi_c_containercustomstyles.json",
+        "entries": [
+          {
+            "_Type_": "BuildingBlocks_StyleEntry",
+            "name": "New Style",
+            "conditionsList": [
+              {
+                "_Type_": "BuildingBlocks_StyleConditionList",
+                "name": "New Condition List",
+                "conditions": [
+                  {
+                    "_Type_": "BuildingBlocks_StyleSelectorConditionTag",
+                    "tag": {
+                      "_RecordPath_": "file://./../../../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+                      "_RecordName_": "Tag.f7c626b5-0fc7-4ffe-9fa1-a82ffc9ebde4",
+                      "_RecordId_": "f7c626b5-0fc7-4ffe-9fa1-a82ffc9ebde4"}}]}],
+            "modifiers": [
+              {
+                "_Type_": "BuildingBlocks_FieldModifierString",
+                "field": "SvgPath",
+                "value": "UI/Textures/Vector/ModularKitStyles/UIMI_C/UIMI_C_InnerFrame_9s.svg"},
+              {
+                "_Type_": "BuildingBlocks_FieldModifierBoolean",
+                "field": "EnableColorOverlay",
+                "value": false},
+              {
+                "_Type_": "BuildingBlocks_FieldModifierColor",
+                "field": "FillColor",
+                "color": {
+                  "_Type_": "BuildingBlocks_ColorStyle",
+                  "color": "Base",
+                  "alpha": 0.8}},
+              {
+                "_Type_": "BuildingBlocks_FieldModifierNumber",
+                "field": "NineSliceScale",
+                "value": 2.0},
+              {
+                "_Type_": "BuildingBlocks_FieldModifierNumber",
+                "field": "NineSliceTop",
+                "value": 0.45},
+              {
+                "_Type_": "BuildingBlocks_FieldModifierNumber",
+                "field": "NineSliceBottom",
+                "value": 0.55},
+              {
+                "_Type_": "BuildingBlocks_FieldModifierNumber",
+                "field": "NineSliceRight",
+                "value": 0.55},
+              {
+                "_Type_": "BuildingBlocks_FieldModifierNumber",
+                "field": "NineSliceLeft",
+                "value": 0.45},
+              {
+                "_Type_": "BuildingBlocks_FieldModifierBoolean",
+                "field": "EnableBackground",
+                "value": false},
+              {
+                "_Type_": "BuildingBlocks_FieldModifierColor",
+                "field": "BackgroundColor",
+                "color": {
+                  "_Type_": "BuildingBlocks_ColorStyle",
+                  "color": "Accent2",
+                  "alpha": 0.5}},
+              {
+                "_Type_": "BuildingBlocks_FieldModifierNumber",
+                "field": "BorderTopLeftRadius",
+                "value": 0.0},
+              {
+                "_Type_": "BuildingBlocks_FieldModifierNumber",
+                "field": "BorderTopRightRadius",
+                "value": 0.0},
+              {
+                "_Type_": "BuildingBlocks_FieldModifierNumber",
+                "field": "BorderBottomRightRadius",
+                "value": 0.0},
+              {
+                "_Type_": "BuildingBlocks_FieldModifierNumber",
+                "field": "BorderBottomLeftRadius",
+                "value": 0.0},
+              {
+                "_Type_": "BuildingBlocks_FieldModifierBoolean",
+                "field": "EnableTopLeftBorderChamfer",
+                "value": true},
+              {
+                "_Type_": "BuildingBlocks_FieldModifierBoolean",
+                "field": "EnableTopRightBorderChamfer",
+                "value": true},
+              {
+                "_Type_": "BuildingBlocks_FieldModifierBoolean",
+                "field": "EnableBottomRightBorderChamfer",
+                "value": true},
+              {
+                "_Type_": "BuildingBlocks_FieldModifierBoolean",
+                "field": "EnableBottomLeftBorderChamfer",
+                "value": true}],
+            "transitions": []}]},
+      {
+        "_Type_": "BuildingBlocks_BrandStyles",
+        "brandIdentifier": "file://./../../../../../../../../libs/foundry/records/ui/buildingblocks/styles/shopbrands/shop_vantage.json",
+        "sharedStyles": "file://./../../../../../../../../libs/foundry/records/ui/buildingblocks/styles/modularkitstyles/sk_uilo_c/sk_uilo_c_containercustomstyles.json",
+        "entries": [
+          {
+            "_Type_": "BuildingBlocks_StyleEntry",
+            "name": "Root",
+            "conditionsList": [
+              {
+                "_Type_": "BuildingBlocks_StyleConditionList",
+                "name": "New Condition List",
+                "conditions": [
+                  {
+                    "_Type_": "BuildingBlocks_StyleSelectorConditionTag",
+                    "tag": {
+                      "_RecordPath_": "file://./../../../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+                      "_RecordName_": "Tag.f7c626b5-0fc7-4ffe-9fa1-a82ffc9ebde4",
+                      "_RecordId_": "f7c626b5-0fc7-4ffe-9fa1-a82ffc9ebde4"}}]}],
+            "modifiers": [
+              {
+                "_Type_": "BuildingBlocks_FieldModifierBoolean",
+                "field": "EnableBackground",
+                "value": false},
+              {
+                "_Type_": "BuildingBlocks_FieldModifierColor",
+                "field": "BackgroundColor",
+                "color": {
+                  "_Type_": "BuildingBlocks_ColorStyle",
+                  "color": "Background",
+                  "alpha": 1.0}},
+              {
+                "_Type_": "BuildingBlocks_FieldModifierNumber",
+                "field": "NineSliceScale",
+                "value": 0.75},
+              {
+                "_Type_": "BuildingBlocks_FieldModifierNumber",
+                "field": "SizeX",
+                "value": 1.02},
+              {
+                "_Type_": "BuildingBlocks_FieldModifierNumber",
+                "field": "AnchorX",
+                "value": 0.5},
+              {
+                "_Type_": "BuildingBlocks_FieldModifierNumber",
+                "field": "PivotX",
+                "value": 0.5},
+              {
+                "_Type_": "BuildingBlocks_FieldModifierNumber",
+                "field": "SizeY",
+                "value": 1.02},
+              {
+                "_Type_": "BuildingBlocks_FieldModifierNumber",
+                "field": "AnchorY",
+                "value": 0.5},
+              {
+                "_Type_": "BuildingBlocks_FieldModifierNumber",
+                "field": "PivotY",
+                "value": 0.5},
+              {
+                "_Type_": "BuildingBlocks_FieldModifierColor",
+                "field": "FillColor",
+                "color": {
+                  "_Type_": "BuildingBlocks_ColorStyle",
+                  "color": "Base",
+                  "alpha": 1.0}}],
+            "transitions": []}]},
+      {
+        "_Type_": "BuildingBlocks_BrandStyles",
+        "brandIdentifier": "file://./../../../../../../../../libs/foundry/records/ui/buildingblocks/styles/shopbrands/shop_lo_c_armor.json",
+        "sharedStyles": "file://./../../../../../../../../libs/foundry/records/ui/buildingblocks/styles/modularkitstyles/sk_uilo_c/sk_uilo_c_containercustomstyles.json",
+        "entries": []},
+      {
+        "_Type_": "BuildingBlocks_BrandStyles",
+        "brandIdentifier": "file://./../../../../../../../../libs/foundry/records/ui/buildingblocks/styles/shopbrands/shop_lo_c_clothing.json",
+        "sharedStyles": "file://./../../../../../../../../libs/foundry/records/ui/buildingblocks/styles/modularkitstyles/sk_uilo_c/sk_uilo_c_containercustomstyles.json",
+        "entries": []},
+      {
+        "_Type_": "BuildingBlocks_BrandStyles",
+        "brandIdentifier": "file://./../../../../../../../../libs/foundry/records/ui/buildingblocks/styles/shopbrands/shop_lo_c_fpsweapons.json",
+        "sharedStyles": "file://./../../../../../../../../libs/foundry/records/ui/buildingblocks/styles/modularkitstyles/sk_uilo_c/sk_uilo_c_containercustomstyles.json",
+        "entries": []},
+      {
+        "_Type_": "BuildingBlocks_BrandStyles",
+        "brandIdentifier": "file://./../../../../../../../../libs/foundry/records/ui/buildingblocks/styles/shopbrands/shop_lo_c_shipweapons.json",
+        "sharedStyles": "file://./../../../../../../../../libs/foundry/records/ui/buildingblocks/styles/modularkitstyles/sk_uilo_c/sk_uilo_c_containercustomstyles.json",
+        "entries": []},
+      {
+        "_Type_": "BuildingBlocks_BrandStyles",
+        "brandIdentifier": "file://./../../../../../../../../libs/foundry/records/ui/buildingblocks/styles/shopbrands/shop_newdeal.json",
+        "sharedStyles": "file://./../../../../../../../../libs/foundry/records/ui/buildingblocks/styles/modularkitstyles/sk_uimi_c/sk_uimi_c_containercustomstyles.json",
+        "entries": [
+          {
+            "_Type_": "BuildingBlocks_StyleEntry",
+            "name": "New Style",
+            "conditionsList": [
+              {
+                "_Type_": "BuildingBlocks_StyleConditionList",
+                "name": "New Condition List",
+                "conditions": [
+                  {
+                    "_Type_": "BuildingBlocks_StyleSelectorConditionTag",
+                    "tag": {
+                      "_RecordPath_": "file://./../../../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+                      "_RecordName_": "Tag.f7c626b5-0fc7-4ffe-9fa1-a82ffc9ebde4",
+                      "_RecordId_": "f7c626b5-0fc7-4ffe-9fa1-a82ffc9ebde4"}}]}],
+            "modifiers": [
+              {
+                "_Type_": "BuildingBlocks_FieldModifierString",
+                "field": "SvgPath",
+                "value": "UI/Textures/Vector/ModularKitStyles/UIMI_C/UIMI_C_InnerFrame_9s.svg"},
+              {
+                "_Type_": "BuildingBlocks_FieldModifierBoolean",
+                "field": "EnableColorOverlay",
+                "value": false},
+              {
+                "_Type_": "BuildingBlocks_FieldModifierColor",
+                "field": "FillColor",
+                "color": {
+                  "_Type_": "BuildingBlocks_ColorStyle",
+                  "color": "Base",
+                  "alpha": 0.8}},
+              {
+                "_Type_": "BuildingBlocks_FieldModifierNumber",
+                "field": "NineSliceScale",
+                "value": 2.0},
+              {
+                "_Type_": "BuildingBlocks_FieldModifierNumber",
+                "field": "NineSliceTop",
+                "value": 0.45},
+              {
+                "_Type_": "BuildingBlocks_FieldModifierNumber",
+                "field": "NineSliceBottom",
+                "value": 0.55},
+              {
+                "_Type_": "BuildingBlocks_FieldModifierNumber",
+                "field": "NineSliceRight",
+                "value": 0.55},
+              {
+                "_Type_": "BuildingBlocks_FieldModifierNumber",
+                "field": "NineSliceLeft",
+                "value": 0.45},
+              {
+                "_Type_": "BuildingBlocks_FieldModifierBoolean",
+                "field": "EnableBackground",
+                "value": false},
+              {
+                "_Type_": "BuildingBlocks_FieldModifierColor",
+                "field": "BackgroundColor",
+                "color": {
+                  "_Type_": "BuildingBlocks_ColorStyle",
+                  "color": "Accent2",
+                  "alpha": 0.5}},
+              {
+                "_Type_": "BuildingBlocks_FieldModifierNumber",
+                "field": "BorderTopLeftRadius",
+                "value": 0.0},
+              {
+                "_Type_": "BuildingBlocks_FieldModifierNumber",
+                "field": "BorderTopRightRadius",
+                "value": 0.0},
+              {
+                "_Type_": "BuildingBlocks_FieldModifierNumber",
+                "field": "BorderBottomRightRadius",
+                "value": 0.0},
+              {
+                "_Type_": "BuildingBlocks_FieldModifierNumber",
+                "field": "BorderBottomLeftRadius",
+                "value": 0.0},
+              {
+                "_Type_": "BuildingBlocks_FieldModifierBoolean",
+                "field": "EnableTopLeftBorderChamfer",
+                "value": true},
+              {
+                "_Type_": "BuildingBlocks_FieldModifierBoolean",
+                "field": "EnableTopRightBorderChamfer",
+                "value": true},
+              {
+                "_Type_": "BuildingBlocks_FieldModifierBoolean",
+                "field": "EnableBottomRightBorderChamfer",
+                "value": true},
+              {
+                "_Type_": "BuildingBlocks_FieldModifierBoolean",
+                "field": "EnableBottomLeftBorderChamfer",
+                "value": true}],
+            "transitions": []}]},
+      {
+        "_Type_": "BuildingBlocks_BrandStyles",
+        "brandIdentifier": "file://./../../../../../../../../libs/foundry/records/ui/buildingblocks/styles/s_ucag_hi.json",
+        "sharedStyles": "file://./../../../../../../../../libs/foundry/records/ui/buildingblocks/styles/modularkitstyles/sk_ucag_hi/sk_ucag_hi_containercustomstyles.json",
+        "entries": [
+          {
+            "_Type_": "BuildingBlocks_StyleEntry",
+            "name": "New Style",
+            "conditionsList": [
+              {
+                "_Type_": "BuildingBlocks_StyleConditionList",
+                "name": "New Condition List",
+                "conditions": [
+                  {
+                    "_Type_": "BuildingBlocks_StyleSelectorConditionTag",
+                    "tag": {
+                      "_RecordPath_": "file://./../../../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+                      "_RecordName_": "Tag.f7c626b5-0fc7-4ffe-9fa1-a82ffc9ebde4",
+                      "_RecordId_": "f7c626b5-0fc7-4ffe-9fa1-a82ffc9ebde4"}}]}],
+            "modifiers": [
+              {
+                "_Type_": "BuildingBlocks_FieldModifierString",
+                "field": "SvgPath",
+                "value": "UI/Textures/Vector/ModularKitStyles/UCAG_HI/UCAG_HI_InnerFrame_9s.svg"},
+              {
+                "_Type_": "BuildingBlocks_FieldModifierBoolean",
+                "field": "EnableColorOverlay",
+                "value": false},
+              {
+                "_Type_": "BuildingBlocks_FieldModifierColor",
+                "field": "FillColor",
+                "color": {
+                  "_Type_": "BuildingBlocks_ColorStyle",
+                  "color": "Base",
+                  "alpha": 0.8}},
+              {
+                "_Type_": "BuildingBlocks_FieldModifierNumber",
+                "field": "NineSliceScale",
+                "value": 5.5},
+              {
+                "_Type_": "BuildingBlocks_FieldModifierNumber",
+                "field": "NineSliceTop",
+                "value": 0.45},
+              {
+                "_Type_": "BuildingBlocks_FieldModifierNumber",
+                "field": "NineSliceBottom",
+                "value": 0.55},
+              {
+                "_Type_": "BuildingBlocks_FieldModifierNumber",
+                "field": "NineSliceRight",
+                "value": 0.55},
+              {
+                "_Type_": "BuildingBlocks_FieldModifierNumber",
+                "field": "NineSliceLeft",
+                "value": 0.45},
+              {
+                "_Type_": "BuildingBlocks_FieldModifierBoolean",
+                "field": "EnableBackground",
+                "value": false},
+              {
+                "_Type_": "BuildingBlocks_FieldModifierColor",
+                "field": "BackgroundColor",
+                "color": {
+                  "_Type_": "BuildingBlocks_ColorStyle",
+                  "color": "Accent2",
+                  "alpha": 0.5}},
+              {
+                "_Type_": "BuildingBlocks_FieldModifierNumber",
+                "field": "BorderTopLeftRadius",
+                "value": 0.0},
+              {
+                "_Type_": "BuildingBlocks_FieldModifierNumber",
+                "field": "BorderTopRightRadius",
+                "value": 0.0},
+              {
+                "_Type_": "BuildingBlocks_FieldModifierNumber",
+                "field": "BorderBottomRightRadius",
+                "value": 0.0},
+              {
+                "_Type_": "BuildingBlocks_FieldModifierNumber",
+                "field": "BorderBottomLeftRadius",
+                "value": 0.0},
+              {
+                "_Type_": "BuildingBlocks_FieldModifierBoolean",
+                "field": "EnableTopLeftBorderChamfer",
+                "value": true},
+              {
+                "_Type_": "BuildingBlocks_FieldModifierBoolean",
+                "field": "EnableTopRightBorderChamfer",
+                "value": true},
+              {
+                "_Type_": "BuildingBlocks_FieldModifierBoolean",
+                "field": "EnableBottomRightBorderChamfer",
+                "value": true},
+              {
+                "_Type_": "BuildingBlocks_FieldModifierBoolean",
+                "field": "EnableBottomLeftBorderChamfer",
+                "value": true}],
+            "transitions": []}]},
+      {
+        "_Type_": "BuildingBlocks_BrandStyles",
+        "brandIdentifier": "file://./../../../../../../../../libs/foundry/records/ui/buildingblocks/styles/s_sela_lo.json",
+        "sharedStyles": null,
+        "entries": [
+          {
+            "_Type_": "BuildingBlocks_StyleEntry",
+            "name": "New Style",
+            "conditionsList": [
+              {
+                "_Type_": "BuildingBlocks_StyleConditionList",
+                "name": "New Condition List",
+                "conditions": [
+                  {
+                    "_Type_": "BuildingBlocks_StyleSelectorConditionTag",
+                    "tag": {
+                      "_RecordPath_": "file://./../../../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+                      "_RecordName_": "Tag.f7c626b5-0fc7-4ffe-9fa1-a82ffc9ebde4",
+                      "_RecordId_": "f7c626b5-0fc7-4ffe-9fa1-a82ffc9ebde4"}}]}],
+            "modifiers": [
+              {
+                "_Type_": "BuildingBlocks_FieldModifierString",
+                "field": "SvgPath",
+                "value": "UI/Textures/Vector/ModularKitStyles/SELA_LO/SELA_LO_InnerFrame_9s.svg"},
+              {
+                "_Type_": "BuildingBlocks_FieldModifierBoolean",
+                "field": "EnableColorOverlay",
+                "value": false},
+              {
+                "_Type_": "BuildingBlocks_FieldModifierColor",
+                "field": "FillColor",
+                "color": {
+                  "_Type_": "BuildingBlocks_ColorStyle",
+                  "color": "Base",
+                  "alpha": 0.8}},
+              {
+                "_Type_": "BuildingBlocks_FieldModifierNumber",
+                "field": "NineSliceScale",
+                "value": 4.0},
+              {
+                "_Type_": "BuildingBlocks_FieldModifierNumber",
+                "field": "NineSliceTop",
+                "value": 0.45},
+              {
+                "_Type_": "BuildingBlocks_FieldModifierNumber",
+                "field": "NineSliceBottom",
+                "value": 0.55},
+              {
+                "_Type_": "BuildingBlocks_FieldModifierNumber",
+                "field": "NineSliceRight",
+                "value": 0.55},
+              {
+                "_Type_": "BuildingBlocks_FieldModifierNumber",
+                "field": "NineSliceLeft",
+                "value": 0.45},
+              {
+                "_Type_": "BuildingBlocks_FieldModifierBoolean",
+                "field": "EnableBackground",
+                "value": false},
+              {
+                "_Type_": "BuildingBlocks_FieldModifierColor",
+                "field": "BackgroundColor",
+                "color": {
+                  "_Type_": "BuildingBlocks_ColorStyle",
+                  "color": "Accent2",
+                  "alpha": 0.5}},
+              {
+                "_Type_": "BuildingBlocks_FieldModifierNumber",
+                "field": "BorderTopLeftRadius",
+                "value": 0.0},
+              {
+                "_Type_": "BuildingBlocks_FieldModifierNumber",
+                "field": "BorderTopRightRadius",
+                "value": 0.0},
+              {
+                "_Type_": "BuildingBlocks_FieldModifierNumber",
+                "field": "BorderBottomRightRadius",
+                "value": 0.0},
+              {
+                "_Type_": "BuildingBlocks_FieldModifierNumber",
+                "field": "BorderBottomLeftRadius",
+                "value": 0.0},
+              {
+                "_Type_": "BuildingBlocks_FieldModifierBoolean",
+                "field": "EnableTopLeftBorderChamfer",
+                "value": false},
+              {
+                "_Type_": "BuildingBlocks_FieldModifierBoolean",
+                "field": "EnableTopRightBorderChamfer",
+                "value": false},
+              {
+                "_Type_": "BuildingBlocks_FieldModifierBoolean",
+                "field": "EnableBottomRightBorderChamfer",
+                "value": false},
+              {
+                "_Type_": "BuildingBlocks_FieldModifierBoolean",
+                "field": "EnableBottomLeftBorderChamfer",
+                "value": false},
+              {
+                "_Type_": "BuildingBlocks_FieldModifierBoolean",
+                "field": "EnableNineSliceRect",
+                "value": true}],
+            "transitions": []}]},
+      {
+        "_Type_": "BuildingBlocks_BrandStyles",
+        "brandIdentifier": "file://./../../../../../../../../libs/foundry/records/ui/buildingblocks/styles/ea/eastyle.json",
+        "sharedStyles": "file://./../../../../../../../../libs/foundry/records/ui/buildingblocks/styles/modularkitstyles/sk_uiea_fe/sk_uiea_fe_boxcontainerstyles.json",
+        "entries": []},
+      {
+        "_Type_": "BuildingBlocks_BrandStyles",
+        "brandIdentifier": "file://./../../../../../../../../libs/foundry/records/ui/buildingblocks/styles/shopbrands/shop_teachs.json",
+        "sharedStyles": "file://./../../../../../../../../libs/foundry/records/ui/buildingblocks/styles/modularkitstyles/sk_uilo_c/sk_uilo_c_containercustomstyles.json",
+        "entries": []},
+      {
+        "_Type_": "BuildingBlocks_BrandStyles",
+        "brandIdentifier": "file://./../../../../../../../../libs/foundry/records/ui/buildingblocks/styles/s_asd_lo.json",
+        "sharedStyles": "file://./../../../../../../../../libs/foundry/records/ui/buildingblocks/styles/modularkitstyles/sk_asd_lo/sk_asd_lo_containercustomstyles.json",
+        "entries": []},
+      {
+        "_Type_": "BuildingBlocks_BrandStyles",
+        "brandIdentifier": "file://./../../../../../../../../libs/foundry/records/ui/buildingblocks/styles/s_nyx_a.json",
+        "sharedStyles": "file://./../../../../../../../../libs/foundry/records/ui/buildingblocks/styles/modularkitstyles/sk_nyx_a/sk_nyx_a_containercustomstyles.json",
+        "entries": []},
+      {
+        "_Type_": "BuildingBlocks_BrandStyles",
+        "brandIdentifier": "file://./../../../../../../../../libs/foundry/records/ui/buildingblocks/styles/s_nyx_b.json",
+        "sharedStyles": null,
+        "entries": [
+          {
+            "_Type_": "BuildingBlocks_StyleEntry",
+            "name": "Root",
+            "conditionsList": [
+              {
+                "_Type_": "BuildingBlocks_StyleConditionList",
+                "name": "New Condition List",
+                "conditions": [
+                  {
+                    "_Type_": "BuildingBlocks_StyleSelectorConditionTag",
+                    "tag": {
+                      "_RecordPath_": "file://./../../../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+                      "_RecordName_": "Tag.f7c626b5-0fc7-4ffe-9fa1-a82ffc9ebde4",
+                      "_RecordId_": "f7c626b5-0fc7-4ffe-9fa1-a82ffc9ebde4"}}]}],
+            "modifiers": [
+              {
+                "_Type_": "BuildingBlocks_FieldModifierString",
+                "field": "SvgPath",
+                "value": "UI/Textures/ModularKitStyles/NYX_B/S_NYX_B_ContainerFrame_9s.svg"},
+              {
+                "_Type_": "BuildingBlocks_FieldModifierBoolean",
+                "field": "EnableColorOverlay",
+                "value": false},
+              {
+                "_Type_": "BuildingBlocks_FieldModifierColor",
+                "field": "FillColor",
+                "color": {
+                  "_Type_": "BuildingBlocks_ColorStyle",
+                  "color": "Base",
+                  "alpha": 0.8}},
+              {
+                "_Type_": "BuildingBlocks_FieldModifierNumber",
+                "field": "NineSliceScale",
+                "value": 1.0},
+              {
+                "_Type_": "BuildingBlocks_FieldModifierNumber",
+                "field": "NineSliceTop",
+                "value": 0.4},
+              {
+                "_Type_": "BuildingBlocks_FieldModifierNumber",
+                "field": "NineSliceBottom",
+                "value": 0.8},
+              {
+                "_Type_": "BuildingBlocks_FieldModifierNumber",
+                "field": "NineSliceRight",
+                "value": 0.5},
+              {
+                "_Type_": "BuildingBlocks_FieldModifierNumber",
+                "field": "NineSliceLeft",
+                "value": 0.4},
+              {
+                "_Type_": "BuildingBlocks_FieldModifierBoolean",
+                "field": "EnableBackground",
+                "value": true},
+              {
+                "_Type_": "BuildingBlocks_FieldModifierColor",
+                "field": "BackgroundColor",
+                "color": {
+                  "_Type_": "BuildingBlocks_ColorStyle",
+                  "color": "Background",
+                  "alpha": 1.0}},
+              {
+                "_Type_": "BuildingBlocks_FieldModifierNumber",
+                "field": "BorderTopLeftRadius",
+                "value": 15.0},
+              {
+                "_Type_": "BuildingBlocks_FieldModifierNumber",
+                "field": "BorderTopRightRadius",
+                "value": 15.0},
+              {
+                "_Type_": "BuildingBlocks_FieldModifierNumber",
+                "field": "BorderBottomRightRadius",
+                "value": 15.0},
+              {
+                "_Type_": "BuildingBlocks_FieldModifierNumber",
+                "field": "BorderBottomLeftRadius",
+                "value": 15.0},
+              {
+                "_Type_": "BuildingBlocks_FieldModifierBoolean",
+                "field": "EnableTopLeftBorderChamfer",
+                "value": true},
+              {
+                "_Type_": "BuildingBlocks_FieldModifierBoolean",
+                "field": "EnableTopRightBorderChamfer",
+                "value": true},
+              {
+                "_Type_": "BuildingBlocks_FieldModifierBoolean",
+                "field": "EnableBottomRightBorderChamfer",
+                "value": true},
+              {
+                "_Type_": "BuildingBlocks_FieldModifierBoolean",
+                "field": "EnableBottomLeftBorderChamfer",
+                "value": true}],
+            "transitions": []}]},
+      {
+        "_Type_": "BuildingBlocks_BrandStyles",
+        "brandIdentifier": "file://./../../../../../../../../libs/foundry/records/ui/buildingblocks/styles/s_craft.json",
+        "sharedStyles": null,
+        "entries": [
+          {
+            "_Type_": "BuildingBlocks_StyleEntry",
+            "name": "Root",
+            "conditionsList": [
+              {
+                "_Type_": "BuildingBlocks_StyleConditionList",
+                "name": "New Condition List",
+                "conditions": [
+                  {
+                    "_Type_": "BuildingBlocks_StyleSelectorConditionTag",
+                    "tag": {
+                      "_RecordPath_": "file://./../../../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+                      "_RecordName_": "Tag.f7c626b5-0fc7-4ffe-9fa1-a82ffc9ebde4",
+                      "_RecordId_": "f7c626b5-0fc7-4ffe-9fa1-a82ffc9ebde4"}}]}],
+            "modifiers": [
+              {
+                "_Type_": "BuildingBlocks_FieldModifierString",
+                "field": "SvgPath",
+                "value": "UI/Textures/Vector/ModularKitStyles/CRAFT/S_CRAFT_ContainerFrame.svg"},
+              {
+                "_Type_": "BuildingBlocks_FieldModifierBoolean",
+                "field": "EnableColorOverlay",
+                "value": false},
+              {
+                "_Type_": "BuildingBlocks_FieldModifierNumber",
+                "field": "NineSliceScale",
+                "value": 1.0},
+              {
+                "_Type_": "BuildingBlocks_FieldModifierNumber",
+                "field": "NineSliceTop",
+                "value": 0.4},
+              {
+                "_Type_": "BuildingBlocks_FieldModifierNumber",
+                "field": "NineSliceBottom",
+                "value": 0.8},
+              {
+                "_Type_": "BuildingBlocks_FieldModifierNumber",
+                "field": "NineSliceRight",
+                "value": 0.5},
+              {
+                "_Type_": "BuildingBlocks_FieldModifierNumber",
+                "field": "NineSliceLeft",
+                "value": 0.4},
+              {
+                "_Type_": "BuildingBlocks_FieldModifierBoolean",
+                "field": "EnableBackground",
+                "value": false},
+              {
+                "_Type_": "BuildingBlocks_FieldModifierColor",
+                "field": "BackgroundColor",
+                "color": {
+                  "_Type_": "BuildingBlocks_ColorStyle",
+                  "color": "Background",
+                  "alpha": 1.0}},
+              {
+                "_Type_": "BuildingBlocks_FieldModifierNumber",
+                "field": "BorderTopLeftRadius",
+                "value": 15.0},
+              {
+                "_Type_": "BuildingBlocks_FieldModifierNumber",
+                "field": "BorderTopRightRadius",
+                "value": 15.0},
+              {
+                "_Type_": "BuildingBlocks_FieldModifierNumber",
+                "field": "BorderBottomRightRadius",
+                "value": 15.0},
+              {
+                "_Type_": "BuildingBlocks_FieldModifierNumber",
+                "field": "BorderBottomLeftRadius",
+                "value": 15.0},
+              {
+                "_Type_": "BuildingBlocks_FieldModifierBoolean",
+                "field": "EnableTopLeftBorderChamfer",
+                "value": true},
+              {
+                "_Type_": "BuildingBlocks_FieldModifierBoolean",
+                "field": "EnableTopRightBorderChamfer",
+                "value": true},
+              {
+                "_Type_": "BuildingBlocks_FieldModifierBoolean",
+                "field": "EnableBottomRightBorderChamfer",
+                "value": true},
+              {
+                "_Type_": "BuildingBlocks_FieldModifierBoolean",
+                "field": "EnableBottomLeftBorderChamfer",
+                "value": true}],
+            "transitions": []}]}],
+    "entityPreviewScene": {
+      "_Type_": "BuildingBlocks_PreviewSceneEntityRoot",
+      "renderLayer": "Default"},
+    "rttPreviewScene": {
+      "_Type_": "BuildingBlocks_PreviewSceneRttRoot",
+      "renderLayer": "Default",
+      "entityScale": 1.0,
+      "entityOrientation": {
+        "_Type_": "Deg3",
+        "x": 0.0,
+        "y": 0.0,
+        "z": 0.0}},
+    "arPreviewScene": {
+      "_Type_": "BuildingBlocks_PreviewSceneAugmentedRealityRtt",
+      "renderLayer": "Default",
+      "cardsUseStageRadius": true},
+    "previewScenes": [],
+    "staticVariables": [],
+    "proxyRootNode": "_PointsTo_:ptr:1",
+    "defaultButtonDownSoundTag": null,
+    "defaultRightButtonDownSoundTag": null,
+    "defaultLeftClickSoundTag": null,
+    "defaultRightClickSoundTag": null,
+    "defaultLeftDoubleClickSoundTag": null,
+    "defaultRollOverSoundTag": null,
+    "defaultRollOffSoundTag": null,
+    "defaultMovementStartSoundTag": null,
+    "defaultMovementStopSoundTag": null,
+    "collisionType": "Cutout",
+    "cacheAmount": 0,
+    "scene": [
+      {
+        "_Pointer_": "ptr:1",
+        "_Type_": "BuildingBlocks_WidgetCustomShape",
+        "name": "CustomShape",
+        "styleTags": [
+          {
+            "_RecordPath_": "file://./../../../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+            "_RecordName_": "Tag.f7c626b5-0fc7-4ffe-9fa1-a82ffc9ebde4",
+            "_RecordId_": "f7c626b5-0fc7-4ffe-9fa1-a82ffc9ebde4"}],
+        "rendererType": "Flash",
+        "rendererPolicy": {
+          "_Type_": "BuildingBlocks_FlashRendererPolicy",
+          "useFlashRenderThreadUpdate": false,
+          "transformFrom3D": false},
+        "primitiveSettings": {
+          "_Type_": "BuildingBlocks_PrimitiveSettings",
+          "primitiveMaterialPath": "",
+          "UVStart": {
+            "_Type_": "Vec2",
+            "x": 0.0,
+            "y": 0.0},
+          "UVSize": {
+            "_Type_": "Vec2",
+            "x": 1.0,
+            "y": 1.0},
+          "isUValuePerPixel": false,
+          "isVValuePerPixel": false,
+          "isGrouped": true,
+          "visualState": null},
+        "parent": null,
+        "previewScene": null,
+        "previewSceneFlattened": null,
+        "cullingLevel": "Render",
+        "isActive": true,
+        "affectsLayout": true,
+        "affectsAutosize": true,
+        "exportNode": true,
+        "position": {
+          "_Type_": "Vec3",
+          "x": 0.0,
+          "y": 0.0,
+          "z": 0.0},
+        "positionOffset": {
+          "_Type_": "Vec3",
+          "x": 0.0,
+          "y": 0.0,
+          "z": 0.0},
+        "orientation": {
+          "_Type_": "Deg3",
+          "x": 0.0,
+          "y": 0.0,
+          "z": 0.0},
+        "orientationOffset": {
+          "_Type_": "Deg3",
+          "x": 0.0,
+          "y": 0.0,
+          "z": 0.0},
+        "scale": {
+          "_Type_": "Vec3",
+          "x": 1.0,
+          "y": 1.0,
+          "z": 1.0},
+        "sizing": {
+          "_Type_": "BuildingBlocks_Size",
+          "width": {
+            "_Type_": "BuildingBlocks_FixedOrRelativeValue",
+            "value": 1.0,
+            "behavior": "Percent"},
+          "height": {
+            "_Type_": "BuildingBlocks_FixedOrRelativeValue",
+            "value": 1.0,
+            "behavior": "Percent"},
+          "depth": {
+            "_Type_": "BuildingBlocks_FixedOrRelativeValue",
+            "value": 0.0,
+            "behavior": "Fixed"},
+          "minWidth": {
+            "_Type_": "BuildingBlocks_FixedOrRelativeValue",
+            "value": 0.0,
+            "behavior": "Fixed"},
+          "minHeight": {
+            "_Type_": "BuildingBlocks_FixedOrRelativeValue",
+            "value": 0.0,
+            "behavior": "Fixed"},
+          "maxWidth": {
+            "_Type_": "BuildingBlocks_FixedOrRelativeValue",
+            "value": 0.0,
+            "behavior": "Fixed"},
+          "maxHeight": {
+            "_Type_": "BuildingBlocks_FixedOrRelativeValue",
+            "value": 0.0,
+            "behavior": "Fixed"},
+          "enableMinWidth": false,
+          "enableMinHeight": false,
+          "enableMaxWidth": false,
+          "enableMaxHeight": false},
+        "autoScalingMethod": "None",
+        "padding": {
+          "_Type_": "BuildingBlocks_TRBL",
+          "top": 0.0,
+          "right": 0.0,
+          "bottom": 0.0,
+          "left": 0.0,
+          "front": 0.0,
+          "back": 0.0},
+        "margin": {
+          "_Type_": "BuildingBlocks_TRBL",
+          "top": 0.0,
+          "right": 0.0,
+          "bottom": 0.0,
+          "left": 0.0,
+          "front": 0.0,
+          "back": 0.0},
+        "pivot": {
+          "_Type_": "Vec3",
+          "x": 0.0,
+          "y": 0.0,
+          "z": 0.0},
+        "anchor": {
+          "_Type_": "Vec3",
+          "x": 0.0,
+          "y": 0.0,
+          "z": 0.0},
+        "background": {
+          "_Type_": "BuildingBlocks_Background",
+          "enable": false,
+          "color": null,
+          "topLeftColor": null,
+          "topRightColor": null,
+          "bottomLeftColor": null,
+          "bottomRightCColor": null},
+        "segmentedFill": {
+          "_Type_": "BuildingBlocks_SegmentedFill",
+          "enable": false,
+          "segmentSize": {
+            "_Type_": "BuildingBlocks_FixedOrRelativeValue",
+            "value": 64.0,
+            "behavior": "Fixed"},
+          "spaceSize": {
+            "_Type_": "BuildingBlocks_FixedOrRelativeValue",
+            "value": 64.0,
+            "behavior": "Fixed"},
+          "angle": 0.0,
+          "xOffset": 0.0,
+          "segmentColor": null,
+          "barFill": false},
+        "svgFill": {
+          "_Type_": "BuildingBlocks_SvgFill",
+          "svgPath": "",
+          "nineSliceRect": {
+            "_Type_": "BuildingBlocks_TRBL",
+            "top": 0.25,
+            "right": 0.75,
+            "bottom": 0.75,
+            "left": 0.25,
+            "front": 0.0,
+            "back": 0.0},
+          "renderShape": true,
+          "flipHorizontal": false,
+          "flipVertical": false,
+          "enableColorOverlay": true,
+          "color": null,
+          "scalingBehavior": "Contain",
+          "containPositionX": 0.0,
+          "containPositionY": 0.0,
+          "enableNineSliceRect": true,
+          "nineSliceScale": 1.0,
+          "strokeExtent": 1.0,
+          "playhead": 0.0},
+        "border": {
+          "_Type_": "BuildingBlocks_Border",
+          "top": {
+            "_Type_": "BuildingBlocks_BorderSide",
+            "width": 0.0,
+            "color": null},
+          "right": {
+            "_Type_": "BuildingBlocks_BorderSide",
+            "width": 0.0,
+            "color": null},
+          "bottom": {
+            "_Type_": "BuildingBlocks_BorderSide",
+            "width": 0.0,
+            "color": null},
+          "left": {
+            "_Type_": "BuildingBlocks_BorderSide",
+            "width": 0.0,
+            "color": null},
+          "topLeftRadius": {
+            "_Type_": "BuildingBlocks_BorderRadiusCorner",
+            "radius": {
+              "_Type_": "BuildingBlocks_FixedOrRelativeValue",
+              "value": 0.0,
+              "behavior": "Fixed"},
+            "chamfer": false},
+          "topRightRadius": {
+            "_Type_": "BuildingBlocks_BorderRadiusCorner",
+            "radius": {
+              "_Type_": "BuildingBlocks_FixedOrRelativeValue",
+              "value": 0.0,
+              "behavior": "Fixed"},
+            "chamfer": false},
+          "bottomLeftRadius": {
+            "_Type_": "BuildingBlocks_BorderRadiusCorner",
+            "radius": {
+              "_Type_": "BuildingBlocks_FixedOrRelativeValue",
+              "value": 0.0,
+              "behavior": "Fixed"},
+            "chamfer": false},
+          "bottomRightRadius": {
+            "_Type_": "BuildingBlocks_BorderRadiusCorner",
+            "radius": {
+              "_Type_": "BuildingBlocks_FixedOrRelativeValue",
+              "value": 0.0,
+              "behavior": "Fixed"},
+            "chamfer": false}},
+        "layoutPolicy": null,
+        "layoutPolicyItem": null,
+        "layoutItemCommon": null,
+        "dropTargetPolicy": null,
+        "draggablePolicy": null,
+        "tooltipPolicy": null,
+        "contextMenuPolicy": null,
+        "grabControlsPolicy": null,
+        "calloutSettings": null,
+        "virtualCursorPolicy": null,
+        "overflow": {
+          "_Type_": "BuildingBlocks_Overflow",
+          "overflow": "Visible",
+          "widthFadeThreshold": 0.0,
+          "heightFadeThreshold": 0.0,
+          "depthFadeThreshold": 0.0,
+          "fadeXAxis": true,
+          "fadeYAxis": true,
+          "fadeZAxis": true},
+        "scrollPolicy": null,
+        "radialTransform": {
+          "_Type_": "BuildingBlocks_RadialTransform",
+          "transformMultiplier": 0.0,
+          "curvatureAxis": "Z",
+          "mouseTestShape": true,
+          "polyResolution": 45,
+          "conicSlantFactor": 0.0},
+        "radialTransformChild": {
+          "_Type_": "BuildingBlocks_RadialTransformChild",
+          "inheritRotation": true,
+          "inheritShapeWarp": true,
+          "maintainGapLength": true},
+        "animation": {
+          "_Type_": "BuildingBlocks_Animation",
+          "animationTimeline": null,
+          "dynamicStartTimeVariableName": "",
+          "duration": 1.0,
+          "delay": 0.0,
+          "delayRandomRange": 0.0,
+          "direction": "Forward",
+          "fillMode": "None",
+          "iterationCount": 1,
+          "loopIndefinitely": false,
+          "timeSync": false,
+          "additive": true,
+          "timescaleIndependent": false},
+        "interactions": {
+          "_Type_": "BuildingBlocks_Interactions",
+          "canInteract": false,
+          "disabled": false,
+          "selected": false,
+          "collideLeftClick": true,
+          "collideRightClick": true,
+          "collideMouseWheel": false,
+          "hitDetectionOffset": 1.0,
+          "propagateInteractionStates": false,
+          "inheritHoverState": false,
+          "inheritDownState": false,
+          "inheritSelectedState": false,
+          "inheritDisabledState": false,
+          "blocksCursor": false,
+          "blocksNavigation": false,
+          "onLeftClick": [],
+          "onRightClick": [],
+          "onLeftDown": [],
+          "onLeftDoubleClick": [],
+          "onRollOver": [],
+          "onRollOff": [],
+          "boundRestrictionShape": null,
+          "twoVariablePicker": null,
+          "buttonDownSoundTag": null,
+          "rightButtonDownSoundTag": null,
+          "leftClickSoundTag": null,
+          "rightClickSoundTag": null,
+          "leftDoubleClickSoundTag": null,
+          "rollOverSoundTag": null,
+          "rollOffSoundTag": null,
+          "movementStartSoundTag": null,
+          "movementStopSoundTag": null,
+          "movementStopDelayMs": 80.0},
+        "inheritsScale": true,
+        "inheritsRotation": true,
+        "inheritsTranslation": true,
+        "inheritsAlpha": true,
+        "inheritsOverflow": false,
+        "alpha": 1.0,
+        "layer": 5,
+        "aspectRatioLibrary": null,
+        "focusIndex": -1,
+        "inlineStyles": [],
+        "hoverCursor": "Auto",
+        "enableHeldCursor": false,
+        "heldCursor": "Auto",
+        "renderShape": true,
+        "flipHorizontal": false,
+        "flipVertical": false,
+        "svgPath": "",
+        "enableColorOverlay": false,
+        "color": null,
+        "scalingBehavior": "StretchXY",
+        "containPositionX": 0.0,
+        "containPositionY": 0.0,
+        "enableNineSliceRect": true,
+        "nineSliceRect": {
+          "_Type_": "BuildingBlocks_TRBL",
+          "top": 0.25,
+          "right": 0.75,
+          "bottom": 0.75,
+          "left": 0.25,
+          "front": 0.0,
+          "back": 0.0},
+        "nineSliceScale": 1.0,
+        "strokeExtent": 1.0,
+        "playhead": 0.0}],
+    "library": [],
+    "operations": [
+      {
+        "_Type_": "BuildingBlocks_BindingsStringField",
+        "widget": "_PointsTo_:ptr:1",
+        "field": "SvgPath",
+        "input": "_PointsTo_:ptr:2"},
+      {
+        "_Pointer_": "ptr:2",
+        "_Type_": "BuildingBlocks_BindingsStringComponentParameter",
+        "name": "SvgPath",
+        "parameter": "ParamInput0",
+        "defaultValue": ""},
+      {
+        "_Type_": "BuildingBlocks_BindingsNumberField",
+        "widget": "_PointsTo_:ptr:1",
+        "field": "NineSliceTop",
+        "input": "_PointsTo_:ptr:3"},
+      {
+        "_Type_": "BuildingBlocks_BindingsNumberField",
+        "widget": "_PointsTo_:ptr:1",
+        "field": "NineSliceRight",
+        "input": "_PointsTo_:ptr:4"},
+      {
+        "_Type_": "BuildingBlocks_BindingsNumberField",
+        "widget": "_PointsTo_:ptr:1",
+        "field": "NineSliceBottom",
+        "input": "_PointsTo_:ptr:5"},
+      {
+        "_Type_": "BuildingBlocks_BindingsNumberField",
+        "widget": "_PointsTo_:ptr:1",
+        "field": "NineSliceLeft",
+        "input": "_PointsTo_:ptr:6"},
+      {
+        "_Pointer_": "ptr:3",
+        "_Type_": "BuildingBlocks_BindingsNumberComponentParameter",
+        "name": "NineSliceTop",
+        "parameter": "ParamInput0",
+        "defaultValue": 0.0},
+      {
+        "_Pointer_": "ptr:4",
+        "_Type_": "BuildingBlocks_BindingsNumberComponentParameter",
+        "name": "NineSliceRight",
+        "parameter": "ParamInput1",
+        "defaultValue": 0.0},
+      {
+        "_Pointer_": "ptr:5",
+        "_Type_": "BuildingBlocks_BindingsNumberComponentParameter",
+        "name": "NineSliceBottom",
+        "parameter": "ParamInput2",
+        "defaultValue": 0.0},
+      {
+        "_Pointer_": "ptr:6",
+        "_Type_": "BuildingBlocks_BindingsNumberComponentParameter",
+        "name": "NineSliceLeft",
+        "parameter": "ParamInput3",
+        "defaultValue": 0.0}],
+    "overrideDefaultTooltipCanvas": null,
+    "overrideDefaultCalloutCanvas": null}}

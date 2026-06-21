@@ -1,0 +1,36 @@
+{
+  "_RecordName_": "LegacyCraftingRecipeDefRecord.Recipe_subitem_LFSP_Filter_standard_chunks",
+  "_RecordId_": "449aedb7-5e54-4a88-ad57-f1f9acd89c75",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "LegacyCraftingRecipeDefRecord",
+    "recipe": {
+      "_Type_": "LegacyCraftingRecipe_Default",
+      "timeSeconds": 8.0,
+      "outputs": [
+        {
+          "_Type_": "LegacyCraftingOutput_Entity",
+          "entityClass": "file://./../../../../../../../libs/foundry/records/entities/scitem/carryables/1h/lfsp_filter_subitem_standard.json",
+          "amount": 1,
+          "fillAmmo": true}],
+      "costs": [
+        {
+          "_Type_": "LegacyCraftingCost_ResourceAmount",
+          "resource": {
+            "_RecordPath_": "file://./../../../../../../../libs/foundry/records/resourcetypedatabase/resourcetypedatabase.json",
+            "_RecordName_": "ResourceType.RMC",
+            "_RecordId_": "a0e6c4cf-face-4f52-a020-dfa869607901"},
+          "amount": {
+            "_Type_": "SStandardCargoUnit",
+            "standardCargoUnits": 0.02}},
+        {
+          "_Type_": "LegacyCraftingCost_ResourceAmount",
+          "resource": {
+            "_RecordPath_": "file://./../../../../../../../libs/foundry/records/resourcetypedatabase/resourcetypedatabase.json",
+            "_RecordName_": "ResourceType.ConstructionMaterialChunks",
+            "_RecordId_": "ebacf963-517e-4b05-b6cd-ee135e04a1ae"},
+          "amount": {
+            "_Type_": "SStandardCargoUnit",
+            "standardCargoUnits": 0.04}}],
+      "iconImagePath": "UI/Textures/Weapons/GRIN/multitool_01/grin_multi_tractor.tif",
+      "recipeName": "@LOC_EMPTY"}}}

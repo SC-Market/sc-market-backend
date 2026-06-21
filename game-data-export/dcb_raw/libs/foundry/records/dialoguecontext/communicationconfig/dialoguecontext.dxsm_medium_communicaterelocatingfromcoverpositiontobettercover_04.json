@@ -1,0 +1,21 @@
+{
+  "_RecordName_": "DialogueContext.DXSM_Medium_CommunicateRelocatingFromCoverPositionToBetterCover_04",
+  "_RecordId_": "d645ae78-3d30-4a7c-b1aa-aa61766d5b6d",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "DialogueContext",
+    "speaker": "file://./../../../../../libs/foundry/records/character/starmarine/fps/character.sm_fps_outlaw_medium.json",
+    "localizedSubtitleText": "@LOC_UNINITIALIZED",
+    "unlocalizedSubtitleText": "@LOC_UNINITIALIZED",
+    "subtitleShowDelay": 0.0,
+    "subtitleDisplayDurationOverride": 0.0,
+    "tempText": "",
+    "audioTrigger": {
+      "_Type_": "GlobalResourceAudio",
+      "audioTrigger": ""},
+    "femaleAudioTrigger": {
+      "_Type_": "GlobalResourceAudio",
+      "audioTrigger": ""},
+    "forceSubtitles": false,
+    "contents": [],
+    "tags": []}}

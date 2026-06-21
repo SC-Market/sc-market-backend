@@ -1,0 +1,12 @@
+{
+  "_RecordName_": "HintUIData.CryAstro02",
+  "_RecordId_": "3bfb31da-0679-436e-b6b4-d1287f76c97f",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "HintUIData",
+    "TitleText": "@Hints_CryAstro_Title",
+    "BodyText": "@Hints_CryAstro2",
+    "BodyTextGamePad": "@Hints_CryAstro2",
+    "BodyTextJoystick": "@Hints_CryAstro2",
+    "TitleImagePath": "",
+    "BodyImagePath": ""}}

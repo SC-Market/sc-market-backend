@@ -1,0 +1,179 @@
+{
+  "_RecordName_": "SEAGlobalSpecialLoadout.Skeleton_HeadOnly",
+  "_RecordId_": "80bc526a-43a1-47a0-8f68-1cfe14ed68db",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "SEAGlobalSpecialLoadout",
+    "sharedLoadouts": [
+      {
+        "_Type_": "SEALoadoutSet",
+        "displayName": "@LOC_EMPTY",
+        "icon": "",
+        "itemSlots": [
+          {
+            "_Type_": "SEALoadoutItem",
+            "itemSlot": "ArmorHelmet",
+            "itemClass": "file://./../../../../../../libs/foundry/records/entities/scitem/characters/human/starwear/helmet/undersuit/nodraw_undersuit_helmet_01_01_01.json",
+            "itemAttachements": [],
+            "itemExplicit": []},
+          {
+            "_Type_": "SEALoadoutItem",
+            "itemSlot": "CharHead",
+            "itemClass": "file://./../../../../../../libs/foundry/records/entities/scitem/characters/human/body/med_skeleton_head_ea.json",
+            "itemAttachements": [],
+            "itemExplicit": []},
+          {
+            "_Type_": "SEALoadoutItem",
+            "itemSlot": "CharBody",
+            "itemClass": "file://./../../../../../../libs/foundry/records/entities/scitem/characters/human/body/body_01_medicaltest_ea.json",
+            "itemAttachements": [],
+            "itemExplicit": [
+              {
+                "_Type_": "SEALoadoutExplicit",
+                "itemPort": "skeleton_Torso",
+                "itemClass": "file://./../../../../../../libs/foundry/records/entities/scitem/characters/human/body/med_skeleton_torso.json"},
+              {
+                "_Type_": "SEALoadoutExplicit",
+                "itemPort": "skeleton_ArmL",
+                "itemClass": "file://./../../../../../../libs/foundry/records/entities/scitem/characters/human/body/med_skeleton_arml.json"},
+              {
+                "_Type_": "SEALoadoutExplicit",
+                "itemPort": "skeleton_ArmR",
+                "itemClass": "file://./../../../../../../libs/foundry/records/entities/scitem/characters/human/body/med_skeleton_armr.json"},
+              {
+                "_Type_": "SEALoadoutExplicit",
+                "itemPort": "skeleton_LegL",
+                "itemClass": "file://./../../../../../../libs/foundry/records/entities/scitem/characters/human/body/med_skeleton_legl.json"},
+              {
+                "_Type_": "SEALoadoutExplicit",
+                "itemPort": "skeleton_LegR",
+                "itemClass": "file://./../../../../../../libs/foundry/records/entities/scitem/characters/human/body/med_skeleton_legr.json"}]},
+          {
+            "_Type_": "SEALoadoutItem",
+            "itemSlot": "CharHeadEyes",
+            "itemClass": null,
+            "itemAttachements": [],
+            "itemExplicit": []},
+          {
+            "_Type_": "SEALoadoutItem",
+            "itemSlot": "CharAccessoryHead",
+            "itemClass": null,
+            "itemAttachements": [],
+            "itemExplicit": []}]}],
+    "teamLoadouts": [
+      {
+        "_Type_": "SEALoadoutCollection",
+        "availableLoadouts": [
+          {
+            "_Type_": "SEALoadoutSet",
+            "displayName": "@LOC_EMPTY",
+            "icon": "",
+            "itemSlots": [
+              {
+                "_Type_": "SEALoadoutItem",
+                "itemSlot": "ArmorHelmet",
+                "itemClass": "file://./../../../../../../libs/foundry/records/entities/scitem/characters/human/starwear/helmet/undersuit/nodraw_undersuit_helmet_01_01_01.json",
+                "itemAttachements": [],
+                "itemExplicit": []},
+              {
+                "_Type_": "SEALoadoutItem",
+                "itemSlot": "CharHead",
+                "itemClass": "file://./../../../../../../libs/foundry/records/entities/scitem/characters/human/body/med_skeleton_head_ea.json",
+                "itemAttachements": [],
+                "itemExplicit": []},
+              {
+                "_Type_": "SEALoadoutItem",
+                "itemSlot": "CharBody",
+                "itemClass": "file://./../../../../../../libs/foundry/records/entities/scitem/characters/human/body/body_01_medicaltest_ea.json",
+                "itemAttachements": [],
+                "itemExplicit": [
+                  {
+                    "_Type_": "SEALoadoutExplicit",
+                    "itemPort": "skeleton_Torso",
+                    "itemClass": "file://./../../../../../../libs/foundry/records/entities/scitem/characters/human/body/med_skeleton_torso.json"},
+                  {
+                    "_Type_": "SEALoadoutExplicit",
+                    "itemPort": "skeleton_ArmL",
+                    "itemClass": "file://./../../../../../../libs/foundry/records/entities/scitem/characters/human/body/med_skeleton_arml.json"},
+                  {
+                    "_Type_": "SEALoadoutExplicit",
+                    "itemPort": "skeleton_ArmR",
+                    "itemClass": "file://./../../../../../../libs/foundry/records/entities/scitem/characters/human/body/med_skeleton_armr.json"},
+                  {
+                    "_Type_": "SEALoadoutExplicit",
+                    "itemPort": "skeleton_LegL",
+                    "itemClass": "file://./../../../../../../libs/foundry/records/entities/scitem/characters/human/body/med_skeleton_legl.json"},
+                  {
+                    "_Type_": "SEALoadoutExplicit",
+                    "itemPort": "skeleton_LegR",
+                    "itemClass": "file://./../../../../../../libs/foundry/records/entities/scitem/characters/human/body/med_skeleton_legr.json"}]},
+              {
+                "_Type_": "SEALoadoutItem",
+                "itemSlot": "CharHeadEyes",
+                "itemClass": null,
+                "itemAttachements": [],
+                "itemExplicit": []},
+              {
+                "_Type_": "SEALoadoutItem",
+                "itemSlot": "CharAccessoryHead",
+                "itemClass": null,
+                "itemAttachements": [],
+                "itemExplicit": []}]}]},
+      {
+        "_Type_": "SEALoadoutCollection",
+        "availableLoadouts": [
+          {
+            "_Type_": "SEALoadoutSet",
+            "displayName": "@LOC_EMPTY",
+            "icon": "",
+            "itemSlots": [
+              {
+                "_Type_": "SEALoadoutItem",
+                "itemSlot": "ArmorHelmet",
+                "itemClass": "file://./../../../../../../libs/foundry/records/entities/scitem/characters/human/starwear/helmet/undersuit/nodraw_undersuit_helmet_01_01_01.json",
+                "itemAttachements": [],
+                "itemExplicit": []},
+              {
+                "_Type_": "SEALoadoutItem",
+                "itemSlot": "CharHead",
+                "itemClass": "file://./../../../../../../libs/foundry/records/entities/scitem/characters/human/body/med_skeleton_head_ea.json",
+                "itemAttachements": [],
+                "itemExplicit": []},
+              {
+                "_Type_": "SEALoadoutItem",
+                "itemSlot": "CharBody",
+                "itemClass": "file://./../../../../../../libs/foundry/records/entities/scitem/characters/human/body/body_01_medicaltest_ea.json",
+                "itemAttachements": [],
+                "itemExplicit": [
+                  {
+                    "_Type_": "SEALoadoutExplicit",
+                    "itemPort": "skeleton_Torso",
+                    "itemClass": "file://./../../../../../../libs/foundry/records/entities/scitem/characters/human/body/med_skeleton_torso.json"},
+                  {
+                    "_Type_": "SEALoadoutExplicit",
+                    "itemPort": "skeleton_ArmL",
+                    "itemClass": "file://./../../../../../../libs/foundry/records/entities/scitem/characters/human/body/med_skeleton_arml.json"},
+                  {
+                    "_Type_": "SEALoadoutExplicit",
+                    "itemPort": "skeleton_ArmR",
+                    "itemClass": "file://./../../../../../../libs/foundry/records/entities/scitem/characters/human/body/med_skeleton_armr.json"},
+                  {
+                    "_Type_": "SEALoadoutExplicit",
+                    "itemPort": "skeleton_LegL",
+                    "itemClass": "file://./../../../../../../libs/foundry/records/entities/scitem/characters/human/body/med_skeleton_legl.json"},
+                  {
+                    "_Type_": "SEALoadoutExplicit",
+                    "itemPort": "skeleton_LegR",
+                    "itemClass": "file://./../../../../../../libs/foundry/records/entities/scitem/characters/human/body/med_skeleton_legr.json"}]},
+              {
+                "_Type_": "SEALoadoutItem",
+                "itemSlot": "CharHeadEyes",
+                "itemClass": null,
+                "itemAttachements": [],
+                "itemExplicit": []},
+              {
+                "_Type_": "SEALoadoutItem",
+                "itemSlot": "CharAccessoryHead",
+                "itemClass": null,
+                "itemAttachements": [],
+                "itemExplicit": []}]}]}]}}

@@ -1,0 +1,123 @@
+{
+  "_RecordName_": "InteractionConditionPreset.DropItem_Undersuit",
+  "_RecordId_": "d6786003-a922-46fb-8381-50062a686e37",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "InteractionConditionPreset",
+    "conditions": [
+      {
+        "_Type_": "InteractionConditionAND",
+        "conditionDisplay": {
+          "_Type_": "ConditionDisplayParams",
+          "exclusiveDisplay": true,
+          "blockedText": {
+            "_Type_": "BlockedTextParams",
+            "blockedText": "@interaction_condition_exitSeat"},
+          "blockedCursor": {
+            "_Type_": "BlockedCursorParams",
+            "blockedCursor": "Invalid"},
+          "blockedColor": {
+            "_Type_": "BlockedColorParams",
+            "selectedColor": "file://./../../../../../../libs/foundry/records/ui/innerthought/colors/blockedselected.json",
+            "unselectedColor": "file://./../../../../../../libs/foundry/records/ui/innerthought/colors/blockedunselected.json",
+            "applyImmediately": true},
+          "blockedHint": null,
+          "autoStoreOption": null,
+          "blockedInteractionAttemptMonologue": null},
+        "firstCondition": {
+          "_Type_": "InteractionConditionNOT",
+          "conditionDisplay": null,
+          "condition": {
+            "_Type_": "InteractionConditionSeatUserRegistered",
+            "conditionDisplay": null}},
+        "secondCondition": {
+          "_Type_": "IneractionConditionUserNotInUsable",
+          "conditionDisplay": null}},
+      {
+        "_Type_": "InteractionConditionCheckItemWeight",
+        "conditionDisplay": {
+          "_Type_": "ConditionDisplayParams",
+          "exclusiveDisplay": true,
+          "blockedText": {
+            "_Type_": "BlockedTextParams",
+            "blockedText": "@interaction_condition_tooHeavyToCarry"},
+          "blockedCursor": {
+            "_Type_": "BlockedCursorParams",
+            "blockedCursor": "Invalid"},
+          "blockedColor": {
+            "_Type_": "BlockedColorParams",
+            "selectedColor": "file://./../../../../../../libs/foundry/records/ui/innerthought/colors/blockedselected.json",
+            "unselectedColor": "file://./../../../../../../libs/foundry/records/ui/innerthought/colors/blockedunselected.json",
+            "applyImmediately": false},
+          "blockedHint": null,
+          "autoStoreOption": null,
+          "blockedInteractionAttemptMonologue": null}},
+      {
+        "_Type_": "InteractionConditionAND",
+        "conditionDisplay": {
+          "_Type_": "ConditionDisplayParams",
+          "exclusiveDisplay": false,
+          "blockedText": null,
+          "blockedCursor": null,
+          "blockedColor": null,
+          "blockedHint": null,
+          "autoStoreOption": null,
+          "blockedInteractionAttemptMonologue": null},
+        "firstCondition": {
+          "_Type_": "InteractionConditionActorHasAttachedEntityTypes",
+          "conditionDisplay": {
+            "_Type_": "ConditionDisplayParams",
+            "exclusiveDisplay": true,
+            "blockedText": {
+              "_Type_": "BlockedTextParams",
+              "blockedText": "@interaction_condition_equipUndersuit_wearingArmour"},
+            "blockedCursor": {
+              "_Type_": "BlockedCursorParams",
+              "blockedCursor": "Invalid"},
+            "blockedColor": {
+              "_Type_": "BlockedColorParams",
+              "selectedColor": "file://./../../../../../../libs/foundry/records/ui/innerthought/colors/blockedselected.json",
+              "unselectedColor": "file://./../../../../../../libs/foundry/records/ui/innerthought/colors/blockedunselected.json",
+              "applyImmediately": false},
+            "blockedHint": null,
+            "autoStoreOption": null,
+            "blockedInteractionAttemptMonologue": null},
+          "conditionResult": "Fail",
+          "itemTypes": [
+            "Char_Armor_Arms",
+            "Char_Armor_Feet",
+            "Char_Armor_Helmet",
+            "Char_Armor_Torso",
+            "Char_Armor_Legs"],
+          "itemSubTypes": [],
+          "ignoreItemPorts": [
+            "weapon_attach_hand_left",
+            "weapon_attach_hand_right",
+            "magic_pocket",
+            "inventory_pocket",
+            "inventory_pocket_2"]},
+        "secondCondition": {
+          "_Type_": "InteractionConditionNOT",
+          "conditionDisplay": null,
+          "condition": {
+            "_Type_": "InteractionConditionEntityIsHeldByInteractor",
+            "conditionDisplay": null}}}],
+    "conditionToHideParams": [
+      {
+        "_Type_": "InteractionConditionEntityIsHeldByOtherActor",
+        "conditionDisplay": null},
+      {
+        "_Type_": "InteractionConditionEntityIsAttachedToOtherActor",
+        "conditionDisplay": null},
+      {
+        "_Type_": "InteractionConditionEntityTags",
+        "conditionDisplay": null,
+        "tags": {
+          "_Type_": "TagsDNFTerm",
+          "positiveTags": [
+            {
+              "_RecordPath_": "file://./../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+              "_RecordName_": "Tag.24b19932-58a9-467c-81e4-7955c1b73b24",
+              "_RecordId_": "24b19932-58a9-467c-81e4-7955c1b73b24"}],
+          "negativeTags": []},
+        "CheckParent": true}]}}

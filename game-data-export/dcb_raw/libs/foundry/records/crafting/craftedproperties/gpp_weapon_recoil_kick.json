@@ -1,0 +1,11 @@
+{
+  "_RecordName_": "CraftingGameplayPropertyDef.GPP_Weapon_Recoil_Kick",
+  "_RecordId_": "f68f87d6-1981-4c22-bed6-ce352922cb34",
+  "_RecordTag_": "CGP2",
+  "_RecordValue_": {
+    "_Type_": "CraftingGameplayPropertyDef",
+    "propertyName": "@StatName_GPP_Weapon_Recoil_Kick",
+    "displayTransformation": {
+      "_Type_": "CraftingDisplayTransformation_ConvertFactorToPercentChange"},
+    "unitFormat": "@StatUnits_Percent",
+    "nameOverrides": []}}

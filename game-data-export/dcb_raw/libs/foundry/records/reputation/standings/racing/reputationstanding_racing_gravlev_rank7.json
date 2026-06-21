@@ -1,0 +1,15 @@
+{
+  "_RecordName_": "SReputationStandingParams.ReputationStanding_Racing_GravLev_Rank7",
+  "_RecordId_": "dbdd4349-aa69-4bcf-9d11-de8f100fdf4e",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "SReputationStandingParams",
+    "name": "Racing_GravLev_Rank7",
+    "description": "desc",
+    "displayName": "@RacingRep_GravLev_Rank6",
+    "perkDescription": "@blank_space",
+    "icon": "",
+    "minReputation": 32000,
+    "driftReputation": 0,
+    "driftTimeHours": 0.0,
+    "gated": false}}

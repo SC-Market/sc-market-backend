@@ -1,0 +1,15 @@
+{
+  "_RecordName_": "SReputationStandingParams.ReputationStanding_Racing_Ground_Rank4",
+  "_RecordId_": "ba4b638a-30f0-4f34-93f0-a4dd93afd63d",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "SReputationStandingParams",
+    "name": "Racing_Ground_Rank4",
+    "description": "desc",
+    "displayName": "@RacingRep_Ground_Rank4",
+    "perkDescription": "@blank_space",
+    "icon": "",
+    "minReputation": 4000,
+    "driftReputation": 0,
+    "driftTimeHours": 0.0,
+    "gated": false}}

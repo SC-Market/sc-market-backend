@@ -1,0 +1,32 @@
+{
+  "_RecordName_": "MegaMap.EA_Demien_Control",
+  "_RecordId_": "66f21066-d69e-4cf3-b809-58591a895f08",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "MegaMap",
+    "gameMode": "file://./../../../../../../libs/foundry/records/gamemode/ea_control.json",
+    "SolarSystems": [
+      {
+        "_Type_": "SMegaMapSolarSystem",
+        "Record": null,
+        "ObjectContainers": [
+          "objectcontainers/sm/fps_demien/global.socpak",
+          "objectcontainers/sm/fps_demien/blockers.socpak",
+          "objectcontainers/sm/fps_demien/control.socpak",
+          "objectcontainers/sm/fps_loadout.socpak"]}],
+    "singlePlayerOrMultiplayer": "Both",
+    "subsumptionMission": "",
+    "subsumptionMissionInitParams": [],
+    "arenaCommanderScenarioParams": null,
+    "level": "file://./../../../../../../libs/foundry/records/level/ea/ea_demien.json",
+    "trackViewIntro": "",
+    "rootLocation": null,
+    "streamingMode": "Never",
+    "bindCullingEnabled": false,
+    "defaultWinningTeamOverride": -1,
+    "displayName": "@LOC_UNINITIALIZED",
+    "appearsInS42LevelSelect": false,
+    "chapter": null,
+    "chapterAlias": "",
+    "skipLoadScreen": false,
+    "devDebugSkip": false}}

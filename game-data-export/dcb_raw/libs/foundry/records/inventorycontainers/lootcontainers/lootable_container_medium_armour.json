@@ -1,0 +1,17 @@
+{
+  "_RecordName_": "InventoryContainer.Lootable_Container_Medium_Armour",
+  "_RecordId_": "69117d78-bd3a-4e26-bcc9-148d7c45699b",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "InventoryContainer",
+    "excludedItemSubTypes": [],
+    "interiorDimensions": {
+      "_Type_": "Vec3",
+      "x": 0.48,
+      "y": 1.25,
+      "z": 0.7},
+    "inventoryType": {
+      "_Type_": "InventoryClosedContainerType",
+      "capacity": {
+        "_Type_": "SMicroCargoUnit",
+        "microSCU": 180000}}}}

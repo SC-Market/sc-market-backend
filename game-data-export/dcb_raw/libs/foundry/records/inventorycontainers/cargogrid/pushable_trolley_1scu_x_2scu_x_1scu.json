@@ -1,0 +1,48 @@
+{
+  "_RecordName_": "InventoryContainer.Pushable_Trolley_1scu_x_2scu_x_1scu",
+  "_RecordId_": "a3c2fa5b-ddad-4036-bb69-beeb11301f45",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "InventoryContainer",
+    "excludedItemSubTypes": [],
+    "interiorDimensions": {
+      "_Type_": "Vec3",
+      "x": 1.25,
+      "y": 3.0,
+      "z": 1.25},
+    "inventoryType": {
+      "_Type_": "InventoryOpenContainerType",
+      "gridCellSize": {
+        "_Type_": "InventoryContainerGridCellSizeCentimeters",
+        "centimeters": 1},
+      "minPermittedItemSize": {
+        "_Type_": "Vec3",
+        "x": 0.0,
+        "y": 0.0,
+        "z": 0.0},
+      "maxPermittedItemSize": {
+        "_Type_": "Vec3",
+        "x": 0.0,
+        "y": 0.0,
+        "z": 0.0},
+      "isExternalContainer": true,
+      "gridPosOffset": {
+        "_Type_": "Vec3",
+        "x": 0.0,
+        "y": 0.0,
+        "z": 0.06},
+      "maxPercentageErasedOnParentDestruction": 90,
+      "randomDestructionDistributionExponent": 0.25,
+      "appliedForceOnParentDestruction": 1.0,
+      "overrideStorableItemTypes": [
+        {
+          "_Type_": "InventoryContainerItemTypeFilter",
+          "itemType": "Cargo",
+          "itemSubTypes": [
+            "Small",
+            "Cargo"]},
+        {
+          "_Type_": "InventoryContainerItemTypeFilter",
+          "itemType": "Container",
+          "itemSubTypes": [
+            "Box"]}]}}}

@@ -1,0 +1,10 @@
+{
+  "_RecordName_": "ActorStanceConfig.ActorStanceConfig_NPC_VlkJuvenile",
+  "_RecordId_": "d02e7521-94f8-42ed-813a-498918337796",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "ActorStanceConfig",
+    "stanceSpeeds": [
+      "file://./../../../../libs/foundry/records/actor/stanceinfo/creatures/vlk/apex/vlkspeedinfo_juvi.json"],
+    "stanceDimensions": [
+      "file://./../../../../libs/foundry/records/actor/stanceinfo/creatures/vlk/vlkjuveniledimensioninfo.json"]}}

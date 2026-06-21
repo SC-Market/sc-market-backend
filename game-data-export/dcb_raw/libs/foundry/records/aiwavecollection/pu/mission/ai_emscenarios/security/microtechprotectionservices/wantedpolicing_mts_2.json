@@ -1,0 +1,43 @@
+{
+  "_RecordName_": "AIWaveCollection.WantedPolicing_MTS_2",
+  "_RecordId_": "d204aa4a-c019-4ca0-a91a-6b8dad6a1040",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "AIWaveCollection",
+    "waves": [
+      {
+        "_Type_": "AIWave",
+        "id": 1,
+        "textId": "",
+        "staggerTime": 1.0,
+        "members": [
+          {
+            "_Type_": "AIWaveMember",
+            "archetype": "",
+            "entityClassDefinition": "file://./../../../../../../../../../libs/foundry/records/entities/spaceships/orig_325a_pu_ai_mts.json",
+            "name": "@Factions_MTProt_DisplayName",
+            "vehicleName": "",
+            "amount": 1,
+            "minAmount": -1,
+            "midAmount": -1,
+            "maxAmount": -1,
+            "crewManifestOverride": null,
+            "skillsetOverride": "file://./../../../../../../../../../libs/foundry/records/aiprofile/skills/humanpilot40.json",
+            "cargoManifests": [
+              null],
+            "aiDamageModifiersOverride": null},
+          {
+            "_Type_": "AIWaveMember",
+            "archetype": "",
+            "entityClassDefinition": "file://./../../../../../../../../../libs/foundry/records/entities/spaceships/rsi_mantis_pu_ai_mts.json",
+            "name": "@Factions_MTProt_DisplayName",
+            "vehicleName": "",
+            "amount": 1,
+            "minAmount": -1,
+            "midAmount": -1,
+            "maxAmount": -1,
+            "crewManifestOverride": null,
+            "skillsetOverride": "file://./../../../../../../../../../libs/foundry/records/aiprofile/skills/humanpilot40.json",
+            "cargoManifests": [
+              null],
+            "aiDamageModifiersOverride": null}]}]}}

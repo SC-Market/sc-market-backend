@@ -1,0 +1,12 @@
+{
+  "_RecordName_": "HintUIData.TractorBeam09",
+  "_RecordId_": "fb512e7b-b7d9-4f5a-bdd7-1f2585d10898",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "HintUIData",
+    "TitleText": "@Hints_TractorBeam_Title",
+    "BodyText": "@Hints_TractorBeam_OnTetherBroke_ViewCone",
+    "BodyTextGamePad": "@Hints_TractorBeam_OnTetherBroke_ViewCone",
+    "BodyTextJoystick": "@Hints_TractorBeam_OnTetherBroke_ViewCone",
+    "TitleImagePath": "",
+    "BodyImagePath": ""}}

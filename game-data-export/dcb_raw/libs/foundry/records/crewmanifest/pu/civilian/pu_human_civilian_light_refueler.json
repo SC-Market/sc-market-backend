@@ -1,0 +1,23 @@
+{
+  "_RecordName_": "CrewManifest.PU_Human_Civilian_Light_Refueler",
+  "_RecordId_": "9ff7d16c-8aa5-4f02-83e8-04ab042fa975",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "CrewManifest",
+    "descriptionTags": {
+      "_Type_": "TagList",
+      "tags": []},
+    "crew": [
+      {
+        "_Type_": "CrewData",
+        "entityClassDefinition": "file://./../../../../../../libs/foundry/records/actor/actors/pu_pilots/human/civilian/pu_pilots-human-civilian-pilot_refuelprovider.json",
+        "outfitTags": [],
+        "tags": [
+          {
+            "_RecordPath_": "file://./../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+            "_RecordName_": "Tag.275db83d-5b41-4ebc-bcd7-d325220af86a",
+            "_RecordId_": "275db83d-5b41-4ebc-bcd7-d325220af86a"}],
+        "dnfTags": {
+          "_Type_": "TagsDNF",
+          "terms": []},
+        "archetype": null}]}}

@@ -1,0 +1,15 @@
+{
+  "_RecordName_": "LootTable.ContrabandPico",
+  "_RecordId_": "243c50d1-ca2b-459f-9f21-ed3da6fd508c",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "LootTable",
+    "lootArchetypes": [
+      {
+        "_Type_": "WeightedLootArchetype",
+        "archetype": "file://./../../../../../libs/foundry/records/lootgeneration/lootarchetypes/lootarchetype_contrabandpico_ammo.json",
+        "weight": 1.0,
+        "numberOfResultsConstraints": {
+          "_Type_": "NumResultsConstraints",
+          "minResults": 0,
+          "maxResults": 5}}]}}

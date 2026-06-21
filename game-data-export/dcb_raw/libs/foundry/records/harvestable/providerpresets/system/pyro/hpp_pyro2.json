@@ -1,0 +1,160 @@
+{
+  "_RecordName_": "HarvestableProviderPreset.HPP_Pyro2",
+  "_RecordId_": "6a414290-26f7-4a81-842d-93e33b7bbcbf",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "HarvestableProviderPreset",
+    "harvestableGroups": [
+      {
+        "_Type_": "HarvestableElementGroup",
+        "groupName": "Havestables",
+        "groupProbability": 35.0,
+        "harvestables": [
+          {
+            "_Pointer_": "ptr:1",
+            "_Type_": "HarvestableElement",
+            "harvestable": "file://./../../../../../../../libs/foundry/records/harvestable/harvestablepresets/plant_pingala.json",
+            "harvestableEntityClass": null,
+            "harvestableSetup": null,
+            "relativeProbability": 20.0,
+            "clustering": "file://./../../../../../../../libs/foundry/records/harvestable/clusteringpresets/harvestables_cluster_large.json",
+            "geometries": [
+              {
+                "_Type_": "HarvestableGeometry",
+                "tag": {
+                  "_RecordPath_": "file://./../../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+                  "_RecordName_": "Tag.3c25f668-1689-4397-b259-0423fc41f5e6",
+                  "_RecordId_": "3c25f668-1689-4397-b259-0423fc41f5e6"}}]}]},
+      {
+        "_Type_": "HarvestableElementGroup",
+        "groupName": "FPS_Mineables",
+        "groupProbability": 12.5,
+        "harvestables": [
+          {
+            "_Type_": "HarvestableElement",
+            "harvestable": "file://./../../../../../../../libs/foundry/records/harvestable/harvestablepresets/fpsmining_aphorite.json",
+            "harvestableEntityClass": null,
+            "harvestableSetup": null,
+            "relativeProbability": 58.6,
+            "clustering": "file://./../../../../../../../libs/foundry/records/harvestable/clusteringpresets/miningcluster_sml_med.json",
+            "geometries": [
+              {
+                "_Type_": "HarvestableGeometry",
+                "tag": {
+                  "_RecordPath_": "file://./../../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+                  "_RecordName_": "Tag.bf63f1ed-de7f-4c93-90df-091120501bf4",
+                  "_RecordId_": "bf63f1ed-de7f-4c93-90df-091120501bf4"}}]},
+          {
+            "_Type_": "HarvestableElement",
+            "harvestable": "file://./../../../../../../../libs/foundry/records/harvestable/harvestablepresets/fpsmining_dolivine.json",
+            "harvestableEntityClass": null,
+            "harvestableSetup": null,
+            "relativeProbability": 35.4,
+            "clustering": "file://./../../../../../../../libs/foundry/records/harvestable/clusteringpresets/miningcluster_sml_med.json",
+            "geometries": [
+              {
+                "_Type_": "HarvestableGeometry",
+                "tag": {
+                  "_RecordPath_": "file://./../../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+                  "_RecordName_": "Tag.bf63f1ed-de7f-4c93-90df-091120501bf4",
+                  "_RecordId_": "bf63f1ed-de7f-4c93-90df-091120501bf4"}}]},
+          {
+            "_Type_": "HarvestableElement",
+            "harvestable": "file://./../../../../../../../libs/foundry/records/harvestable/harvestablepresets/fpsmining_hadanite.json",
+            "harvestableEntityClass": null,
+            "harvestableSetup": null,
+            "relativeProbability": 6.0,
+            "clustering": "file://./../../../../../../../libs/foundry/records/harvestable/clusteringpresets/miningcluster_med_lrg.json",
+            "geometries": [
+              {
+                "_Type_": "HarvestableGeometry",
+                "tag": {
+                  "_RecordPath_": "file://./../../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+                  "_RecordName_": "Tag.bf63f1ed-de7f-4c93-90df-091120501bf4",
+                  "_RecordId_": "bf63f1ed-de7f-4c93-90df-091120501bf4"}}]}]},
+      {
+        "_Type_": "HarvestableElementGroup",
+        "groupName": "GroundVehicle_Mineables",
+        "groupProbability": 25.0,
+        "harvestables": [
+          {
+            "_Type_": "HarvestableElement",
+            "harvestable": "file://./../../../../../../../libs/foundry/records/harvestable/harvestablepresets/groundvehiclemining_glacosite.json",
+            "harvestableEntityClass": null,
+            "harvestableSetup": null,
+            "relativeProbability": 12.5,
+            "clustering": "file://./../../../../../../../libs/foundry/records/harvestable/clusteringpresets/miningcluster_sml_med.json",
+            "geometries": []}]},
+      {
+        "_Type_": "HarvestableElementGroup",
+        "groupName": "SpaceShip_Mineables",
+        "groupProbability": 7.5,
+        "harvestables": [
+          {
+            "_Type_": "HarvestableElement",
+            "harvestable": "file://./../../../../../../../libs/foundry/records/harvestable/harvestablepresets/mining_common_hephaestanite.json",
+            "harvestableEntityClass": null,
+            "harvestableSetup": null,
+            "relativeProbability": 32.7,
+            "clustering": "file://./../../../../../../../libs/foundry/records/harvestable/clusteringpresets/shipmineables/commonshipmineable_cluster.json",
+            "geometries": []},
+          {
+            "_Type_": "HarvestableElement",
+            "harvestable": "file://./../../../../../../../libs/foundry/records/harvestable/harvestablepresets/mining_common_iron.json",
+            "harvestableEntityClass": null,
+            "harvestableSetup": null,
+            "relativeProbability": 32.6,
+            "clustering": "file://./../../../../../../../libs/foundry/records/harvestable/clusteringpresets/shipmineables/commonshipmineable_cluster.json",
+            "geometries": []},
+          {
+            "_Type_": "HarvestableElement",
+            "harvestable": "file://./../../../../../../../libs/foundry/records/harvestable/harvestablepresets/mining_common_tin.json",
+            "harvestableEntityClass": null,
+            "harvestableSetup": null,
+            "relativeProbability": 32.6,
+            "clustering": "file://./../../../../../../../libs/foundry/records/harvestable/clusteringpresets/shipmineables/commonshipmineable_cluster.json",
+            "geometries": []},
+          {
+            "_Type_": "HarvestableElement",
+            "harvestable": "file://./../../../../../../../libs/foundry/records/harvestable/harvestablepresets/mining_legendary_stileron.json",
+            "harvestableEntityClass": null,
+            "harvestableSetup": null,
+            "relativeProbability": 2.0,
+            "clustering": "file://./../../../../../../../libs/foundry/records/harvestable/clusteringpresets/shipmineables/legendaryshipmineable_cluster.json",
+            "geometries": []}]}],
+    "areas": [
+      {
+        "_Type_": "HarvestableAreaPreset",
+        "debugGroupName": "Deserts",
+        "areaType": {
+          "_Type_": "HarvestableAreaTypeObjectPreset",
+          "objectPresetPaths": [
+            "Libs/ObjectPresets/succulent_desert_bleached_01.opr",
+            "Libs/ObjectPresets/succulent_desert_bleached_02.opr",
+            "Libs/ObjectPresets/succulent_desert_bleached_03.opr",
+            "Libs/ObjectPresets/succulent_desert_bleached_04.opr",
+            "Libs/ObjectPresets/succulent_desert_bleached_05.opr",
+            "Libs/ObjectPresets/succulent_desert_bleached_06.opr",
+            "Libs/ObjectPresets/succulent_desert_rocks_01.opr"]},
+        "globalModifier": 1.0,
+        "modifiers": [
+          {
+            "_Type_": "HarvestableElementModifier",
+            "harvestableElement": "_PointsTo_:ptr:1",
+            "harvestableModifier": 0.0,
+            "geometries": []}]},
+      {
+        "_Type_": "HarvestableAreaPreset",
+        "debugGroupName": "DeadSavannah",
+        "areaType": {
+          "_Type_": "HarvestableAreaTypeObjectPreset",
+          "objectPresetPaths": [
+            "Libs/ObjectPresets/smooth_canyons_01.opr",
+            "Libs/ObjectPresets/smooth_canyons_02.opr"]},
+        "globalModifier": 1.0,
+        "modifiers": [
+          {
+            "_Type_": "HarvestableElementModifier",
+            "harvestableElement": "_PointsTo_:ptr:1",
+            "harvestableModifier": 0.0,
+            "geometries": []}]}]}}

@@ -1,0 +1,12 @@
+{
+  "_RecordName_": "DialogueRealm.AI",
+  "_RecordId_": "9e53d0e6-e27d-410a-a997-c1aa439b237b",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "DialogueRealm",
+    "defaultTrigger": {
+      "_Type_": "GlobalResourceAudio",
+      "audioTrigger": ""},
+    "defaultFemaleTrigger": {
+      "_Type_": "GlobalResourceAudio",
+      "audioTrigger": ""}}}

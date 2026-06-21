@@ -1,0 +1,24 @@
+{
+  "_RecordName_": "Character.HREP_Carmichael",
+  "_RecordId_": "480b5e56-c21b-4c5c-37d3-cd5b714a8594",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "Character",
+    "characterPersonalData": {
+      "_Type_": "CharacterPersonalData",
+      "title": "",
+      "firstName": "",
+      "nickName": "",
+      "lastName": "",
+      "randomNameParams": null,
+      "affiliation": "",
+      "details": ""},
+    "audioSwitchStateName": "",
+    "animationRemapAlias": "",
+    "characterMannequinTag": "HREP_Carmichael",
+    "styleMannequinTag": "",
+    "combatStyle": "NotSet",
+    "gender": "Male",
+    "characterSpeedOverrides": [],
+    "nicknameChance": 0.0,
+    "name": "HREP_Carmichael"}}

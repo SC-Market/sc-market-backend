@@ -1,0 +1,22 @@
+{
+  "_RecordName_": "LoadoutKit.GRIN_STV_BlueSteel_Silver_Blue",
+  "_RecordId_": "265b6eb8-3876-4569-8393-8d3f8d595172",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "LoadoutKit",
+    "name": "@item_NameSTV_Paint_Silver_Blue",
+    "description": "@item_DescSTV_Paint_Silver_Blue",
+    "loadout": {
+      "_Type_": "SItemPortLoadoutManualParams",
+      "WearRange": null,
+      "DirtRange": null,
+      "SkipInventoryItemsOnMissionEntities": false,
+      "InventoryItems": [],
+      "entries": [
+        {
+          "_Type_": "SItemPortLoadoutEntryParams",
+          "itemPortName": "hardpoint_paint",
+          "entityClassName": "",
+          "entityClassReference": "file://./../../../../../libs/foundry/records/entities/scitem/ships/paints/paint_stv_silver_blue.json",
+          "inventoryContainer": null,
+          "loadout": null}]}}}

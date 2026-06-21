@@ -1,0 +1,61 @@
+{
+  "_RecordName_": "TacticalQuery.FindQuickCoverForReload",
+  "_RecordId_": "dfd0f92d-9af1-46f6-acc2-fe6710959e15",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "TacticalQuery",
+    "name": "FindQuickCoverForReload",
+    "type": "TacticalPointQuery",
+    "options": [
+      {
+        "_Type_": "TQSEmbeddedOption",
+        "requirements": {
+          "_Type_": "TagsDNF",
+          "terms": []},
+        "content": {
+          "_Type_": "TQSOptionContent",
+          "parameters": [],
+          "generation": [
+            {
+              "_Type_": "TQSInputIntValue",
+              "requirements": {
+                "_Type_": "TagsDNF",
+                "terms": []},
+              "condition": "cover_from_attentionTarget_around_puppet",
+              "value": 6,
+              "overrides": []}],
+          "conditions": [
+            {
+              "_Type_": "TQSInputIntValue",
+              "requirements": {
+                "_Type_": "TagsDNF",
+                "terms": []},
+              "condition": "min_distance_from_attentionTarget",
+              "value": 3,
+              "overrides": []},
+            {
+              "_Type_": "TQSInputBoolValue",
+              "requirements": {
+                "_Type_": "TagsDNF",
+                "terms": []},
+              "condition": "otherSide_of_attentionTarget",
+              "value": false,
+              "overrides": []},
+            {
+              "_Type_": "TQSInputBoolValue",
+              "requirements": {
+                "_Type_": "TagsDNF",
+                "terms": []},
+              "condition": "isInside_of_area",
+              "value": true,
+              "overrides": []}],
+          "weights": [
+            {
+              "_Type_": "TQSWeightInputValue",
+              "requirements": {
+                "_Type_": "TagsDNF",
+                "terms": []},
+              "condition": "distance_to_puppet",
+              "weight": -1.0,
+              "overrides": []}]},
+        "optionOverrides": []}]}}

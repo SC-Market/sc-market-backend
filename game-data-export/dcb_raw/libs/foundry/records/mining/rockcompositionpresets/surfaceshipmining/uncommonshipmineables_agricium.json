@@ -1,0 +1,41 @@
+{
+  "_RecordName_": "MineableComposition.UncommonShipMineables_Agricium",
+  "_RecordId_": "0a6060e6-261f-4f87-8fc9-07a6342d579e",
+  "_RecordTag_": "SystemsDesign",
+  "_RecordValue_": {
+    "_Type_": "MineableComposition",
+    "depositName": "@items_commodities_agricium_ore",
+    "minimumDistinctElements": 4,
+    "compositionArray": [
+      {
+        "_Type_": "MineableCompositionPart",
+        "mineableElement": "file://./../../../../../../libs/foundry/records/mining/mineableelements/agricium_ore.json",
+        "minPercentage": 9.7,
+        "maxPercentage": 15.7,
+        "probability": 1.0,
+        "curveExponent": 1.0,
+        "qualityScale": 1.0},
+      {
+        "_Type_": "MineableCompositionPart",
+        "mineableElement": "file://./../../../../../../libs/foundry/records/mining/mineableelements/agricium_ore.json",
+        "minPercentage": 24.3,
+        "maxPercentage": 74.3,
+        "probability": 1.0,
+        "curveExponent": 1.0,
+        "qualityScale": 0.49},
+      {
+        "_Type_": "MineableCompositionPart",
+        "mineableElement": "file://./../../../../../../libs/foundry/records/mining/mineableelements/aslarite_raw.json",
+        "minPercentage": 2.0,
+        "maxPercentage": 5.0,
+        "probability": 1.0,
+        "curveExponent": 1.0,
+        "qualityScale": 0.789},
+      {
+        "_Type_": "MineableCompositionPart",
+        "mineableElement": "file://./../../../../../../libs/foundry/records/mining/mineableelements/titanium_ore.json",
+        "minPercentage": 2.0,
+        "maxPercentage": 5.0,
+        "probability": 1.0,
+        "curveExponent": 1.0,
+        "qualityScale": 0.789}]}}

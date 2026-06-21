@@ -1,0 +1,59 @@
+{
+  "_RecordName_": "ScanCustomDataDef.Generic_Debris",
+  "_RecordId_": "b82c0872-b824-46f5-801a-2d6adf20e7d6",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "ScanCustomDataDef",
+    "info": {
+      "_Type_": "ScanCustomDataInfo",
+      "scanProcedures": [
+        {
+          "_Type_": "CustomScanProcedureParams",
+          "requiredScanTag": null,
+          "emissionBaseline": 0.0,
+          "runtimeDuration": 0.1,
+          "allowedInAIAutoScan": true,
+          "allowedInFocalPointScan": true,
+          "allowedInPingBroadScan": true,
+          "allowedInPingFocusScan": true,
+          "allowedInPassiveScan": false,
+          "customDatas": [
+            {
+              "_Type_": "ScanCustomDataDirect",
+              "requiredTags": {
+                "_Type_": "TagsDNFTerm",
+                "positiveTags": [],
+                "negativeTags": []},
+              "name": "@scan_custom_data_debris_ship_name",
+              "displaySection": "Overview",
+              "addToBoxoutDisplay": false,
+              "displayInSameRowAsHeader": false,
+              "value": {
+                "_Type_": "ScanCustomValueLocString",
+                "value": "@scan_custom_data_debris_ship_value"}},
+            {
+              "_Type_": "ScanCustomDataDirect",
+              "requiredTags": {
+                "_Type_": "TagsDNFTerm",
+                "positiveTags": [],
+                "negativeTags": []},
+              "name": "@scan_custom_data_debris_ship_emission_value",
+              "displaySection": "Overview",
+              "addToBoxoutDisplay": false,
+              "displayInSameRowAsHeader": false,
+              "value": {
+                "_Type_": "ScanCustomValueFloat",
+                "value": 6.0}},
+            {
+              "_Type_": "ScanCustomDataDirect",
+              "requiredTags": {
+                "_Type_": "TagsDNFTerm",
+                "positiveTags": [],
+                "negativeTags": []},
+              "name": "@scan_custom_data_debris_ship_emission_name",
+              "displaySection": "Overview",
+              "addToBoxoutDisplay": false,
+              "displayInSameRowAsHeader": false,
+              "value": {
+                "_Type_": "ScanCustomValueLocString",
+                "value": "@scan_custom_data_debris_ship_emission_value"}}]}]}}}

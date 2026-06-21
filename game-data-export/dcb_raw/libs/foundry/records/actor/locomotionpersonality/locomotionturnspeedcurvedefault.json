@@ -1,0 +1,94 @@
+{
+  "_RecordName_": "SBezierCurveRecord.LocomotionTurnSpeedCurveDefault",
+  "_RecordId_": "e0bac207-a59b-4d4d-af43-471840d4b01c",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "SBezierCurveRecord",
+    "curve": {
+      "_Type_": "BezierCurve",
+      "points": [
+        {
+          "_Type_": "Vec2",
+          "x": -360.0,
+          "y": -360.0},
+        {
+          "_Type_": "Vec2",
+          "x": -180.0,
+          "y": -180.0},
+        {
+          "_Type_": "Vec2",
+          "x": -179.0,
+          "y": -180.0},
+        {
+          "_Type_": "Vec2",
+          "x": -106.0,
+          "y": -180.0},
+        {
+          "_Type_": "Vec2",
+          "x": -105.0,
+          "y": -180.0},
+        {
+          "_Type_": "Vec2",
+          "x": -104.0,
+          "y": -180.0},
+        {
+          "_Type_": "Vec2",
+          "x": -45.0,
+          "y": -10.0},
+        {
+          "_Type_": "Vec2",
+          "x": -20.0,
+          "y": -10.0},
+        {
+          "_Type_": "Vec2",
+          "x": -5.0,
+          "y": -10.0},
+        {
+          "_Type_": "Vec2",
+          "x": -4.0,
+          "y": 0.0},
+        {
+          "_Type_": "Vec2",
+          "x": 0.0,
+          "y": 0.0},
+        {
+          "_Type_": "Vec2",
+          "x": 4.0,
+          "y": 0.0},
+        {
+          "_Type_": "Vec2",
+          "x": 5.0,
+          "y": 10.0},
+        {
+          "_Type_": "Vec2",
+          "x": 20.0,
+          "y": 10.0},
+        {
+          "_Type_": "Vec2",
+          "x": 45.0,
+          "y": 10.0},
+        {
+          "_Type_": "Vec2",
+          "x": 104.0,
+          "y": 180.0},
+        {
+          "_Type_": "Vec2",
+          "x": 105.0,
+          "y": 180.0},
+        {
+          "_Type_": "Vec2",
+          "x": 106.0,
+          "y": 180.0},
+        {
+          "_Type_": "Vec2",
+          "x": 179.0,
+          "y": 180.0},
+        {
+          "_Type_": "Vec2",
+          "x": 180.0,
+          "y": 180.0},
+        {
+          "_Type_": "Vec2",
+          "x": 360.0,
+          "y": 360.0}],
+      "useLUT": false}}}

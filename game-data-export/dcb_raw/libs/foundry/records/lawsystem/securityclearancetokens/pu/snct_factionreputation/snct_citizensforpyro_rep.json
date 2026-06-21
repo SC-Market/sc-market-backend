@@ -1,0 +1,15 @@
+{
+  "_RecordName_": "SecurityClearanceToken.SNCT_CitizensForPyro_Rep",
+  "_RecordId_": "946a06dd-3b08-4bf1-98b2-f846b2224bb5",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "SecurityClearanceToken",
+    "customCondition": {
+      "_Type_": "SecurityClearanceTokenData_Reputation",
+      "conditionFailedTag": null,
+      "factionReputation": "file://./../../../../../../../libs/foundry/records/factions/factionreputation/factionreputation_lawful_citizensforprosperity.json",
+      "scope": "file://./../../../../../../../libs/foundry/records/reputation/scopes/factionreputationscope.json",
+      "standing": "file://./../../../../../../../libs/foundry/records/reputation/standings/faction_reputation_pyro/reputationstanding_factionrep_rank0.json"},
+    "manualInput": null,
+    "missionNote": null,
+    "notifications": null}}

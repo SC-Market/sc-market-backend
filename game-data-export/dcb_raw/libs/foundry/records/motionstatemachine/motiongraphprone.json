@@ -1,0 +1,7 @@
+{
+  "_RecordName_": "SCProneMotionGraphDef.MotionGraphProne",
+  "_RecordId_": "b6aa5e45-3d8f-434e-9caf-dc7eb4f0beff",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "SCProneMotionGraphDef",
+    "turnTriggerYawThreshold": 30.0}}

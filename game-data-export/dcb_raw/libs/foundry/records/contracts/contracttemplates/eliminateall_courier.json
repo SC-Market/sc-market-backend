@@ -1,0 +1,794 @@
+{
+  "_RecordName_": "ContractTemplate.EliminateAll_Courier",
+  "_RecordId_": "9553901c-b474-4885-81d2-07870cc7127f",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "ContractTemplate",
+    "notForRelease": true,
+    "workInProgress": false,
+    "owner": "file://./../../../../../libs/foundry/records/devowners/devteams/mdt.json",
+    "contractClass": {
+      "_Type_": "ContractClass_Contract",
+      "additionalParams": {
+        "_Type_": "ActiveContractSettings",
+        "hasCompleteButton": false,
+        "handlesAbandonRequest": false,
+        "canBeShared": true,
+        "displayAlliedMarkers": true,
+        "onlyOwnerCanComplete": false},
+      "autoFinishSettings": {
+        "_Type_": "ContractAutoFinishSettings",
+        "contractDeadline": {
+          "_Type_": "MissionDeadline",
+          "missionCompletionTime": 0.0,
+          "missionAutoEnd": false,
+          "missionResultAfterTimerEnd": "Failed",
+          "remainingTimeToShowTimer": 0.0,
+          "missionEndReason": "@LOC_EMPTY"},
+        "failIfSentToPrison": true,
+        "failIfBecameCriminal": true,
+        "failIfLeavePrison": false}},
+    "contractDisplayInfo": {
+      "_Type_": "ContractDisplayInfo",
+      "displayString": [
+        "@LOC_UNINITIALIZED",
+        "@LOC_UNINITIALIZED",
+        "@LOC_UNINITIALIZED",
+        "@LOC_UNINITIALIZED",
+        "@LOC_UNINITIALIZED"],
+      "type": "file://./../../../../../libs/foundry/records/missiontype/pu/mercenary.json",
+      "illegal": false,
+      "showLifeTimeInMobiGlas": true,
+      "preShowObjectives": false},
+    "modifiers": [],
+    "contractProperties": [
+      {
+        "_Pointer_": "ptr:2",
+        "_Type_": "MissionProperty",
+        "missionVariableName": "BP_MissionLocation",
+        "extendedTextToken": "Location",
+        "value": {
+          "_Type_": "MissionPropertyValue_Location",
+          "matchConditions": [],
+          "resourceTags": [
+            {
+              "_RecordPath_": "file://./../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+              "_RecordName_": "Tag.71ab54b9-727e-49e7-92a7-20f2812c1926",
+              "_RecordId_": "71ab54b9-727e-49e7-92a7-20f2812c1926"}],
+          "logErrorOnSearchFail": true}},
+      {
+        "_Pointer_": "ptr:3",
+        "_Type_": "MissionProperty",
+        "missionVariableName": "BP_SpawnDescriptions",
+        "extendedTextToken": "",
+        "value": {
+          "_Type_": "MissionPropertyValue_NPCSpawnDescriptions",
+          "spawnDescriptions": []}},
+      {
+        "_Pointer_": "ptr:4",
+        "_Type_": "MissionProperty",
+        "missionVariableName": "BP_SpawnTarget",
+        "extendedTextToken": "",
+        "value": {
+          "_Type_": "MissionPropertyValue_Integer",
+          "options": [
+            {
+              "_Type_": "MissionPropertyValueOption_Integer",
+              "textId": "@LOC_UNINITIALIZED",
+              "weighting": 1.0,
+              "DEBUG_forceChooseThisOption": false,
+              "dependentProperties": [],
+              "value": 1,
+              "variation": 0}]}},
+      {
+        "_Pointer_": "ptr:5",
+        "_Type_": "MissionProperty",
+        "missionVariableName": "BP_TargetTags",
+        "extendedTextToken": "",
+        "value": {
+          "_Type_": "MissionPropertyValue_Tags",
+          "tags": {
+            "_Type_": "TagList",
+            "tags": []},
+          "negativeTags": {
+            "_Type_": "TagList",
+            "tags": []},
+          "options": []}},
+      {
+        "_Pointer_": "ptr:6",
+        "_Type_": "MissionProperty",
+        "missionVariableName": "BP_AllowEmergantAI",
+        "extendedTextToken": "",
+        "value": {
+          "_Type_": "MissionPropertyValue_Integer",
+          "options": [
+            {
+              "_Type_": "MissionPropertyValueOption_Integer",
+              "textId": "@LOC_UNINITIALIZED",
+              "weighting": 1.0,
+              "DEBUG_forceChooseThisOption": false,
+              "dependentProperties": [],
+              "value": 0,
+              "variation": 0}]}},
+      {
+        "_Pointer_": "ptr:7",
+        "_Type_": "MissionProperty",
+        "missionVariableName": "",
+        "extendedTextToken": "Contractor",
+        "value": {
+          "_Type_": "MissionPropertyValue_Organization",
+          "matchConditions": [
+            {
+              "_Type_": "DataSetMatchCondition_SpecificOrganizationsDef",
+              "organizations": []}],
+          "debugForceChosenOrganization": null}},
+      {
+        "_Pointer_": "ptr:8",
+        "_Type_": "MissionProperty",
+        "missionVariableName": "AdditionalSpawnClosetManagerSearchTerms_BP",
+        "extendedTextToken": "",
+        "value": {
+          "_Type_": "MissionPropertyValue_Tags",
+          "tags": {
+            "_Type_": "TagList",
+            "tags": []},
+          "negativeTags": {
+            "_Type_": "TagList",
+            "tags": []},
+          "options": []}},
+      {
+        "_Pointer_": "ptr:9",
+        "_Type_": "MissionProperty",
+        "missionVariableName": "PercentageRemainingToMark_BP",
+        "extendedTextToken": "",
+        "value": {
+          "_Type_": "MissionPropertyValue_Integer",
+          "options": [
+            {
+              "_Type_": "MissionPropertyValueOption_Integer",
+              "textId": "@LOC_UNINITIALIZED",
+              "weighting": 1.0,
+              "DEBUG_forceChooseThisOption": false,
+              "dependentProperties": [],
+              "value": 34,
+              "variation": 0}]}},
+      {
+        "_Pointer_": "ptr:10",
+        "_Type_": "MissionProperty",
+        "missionVariableName": "BP_DontHarmAllies",
+        "extendedTextToken": "",
+        "value": {
+          "_Type_": "MissionPropertyValue_Integer",
+          "options": [
+            {
+              "_Type_": "MissionPropertyValueOption_Integer",
+              "textId": "@LOC_UNINITIALIZED",
+              "weighting": 1.0,
+              "DEBUG_forceChooseThisOption": false,
+              "dependentProperties": [],
+              "value": 1,
+              "variation": 0}]}},
+      {
+        "_Pointer_": "ptr:11",
+        "_Type_": "MissionProperty",
+        "missionVariableName": "BP_DontHarmCivs",
+        "extendedTextToken": "",
+        "value": {
+          "_Type_": "MissionPropertyValue_Integer",
+          "options": [
+            {
+              "_Type_": "MissionPropertyValueOption_Integer",
+              "textId": "@LOC_UNINITIALIZED",
+              "weighting": 1.0,
+              "DEBUG_forceChooseThisOption": false,
+              "dependentProperties": [],
+              "value": 1,
+              "variation": 0}]}},
+      {
+        "_Pointer_": "ptr:12",
+        "_Type_": "MissionProperty",
+        "missionVariableName": "AddtionalAlliesToFlag_BP",
+        "extendedTextToken": "",
+        "value": {
+          "_Type_": "MissionPropertyValue_Tags",
+          "tags": {
+            "_Type_": "TagList",
+            "tags": [
+              {
+                "_RecordPath_": "file://./../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+                "_RecordName_": "Tag.90631d8e-99ac-4f70-b534-1ffaff29f9ae",
+                "_RecordId_": "90631d8e-99ac-4f70-b534-1ffaff29f9ae"}]},
+          "negativeTags": {
+            "_Type_": "TagList",
+            "tags": []},
+          "options": []}},
+      {
+        "_Pointer_": "ptr:13",
+        "_Type_": "MissionProperty",
+        "missionVariableName": "MissionLocationClusterClearance",
+        "extendedTextToken": "MissionCluster",
+        "value": {
+          "_Type_": "MissionPropertyValue_Location",
+          "matchConditions": [],
+          "resourceTags": [],
+          "logErrorOnSearchFail": true}},
+      {
+        "_Type_": "MissionProperty",
+        "missionVariableName": "",
+        "extendedTextToken": "CourierRouteToken",
+        "value": {
+          "_Type_": "MissionPropertyValue_StringHash",
+          "options": [
+            {
+              "_Type_": "MissionPropertyValueOption_StringHash",
+              "textId": "@LOC_UNINITIALIZED",
+              "weighting": 1.0,
+              "DEBUG_forceChooseThisOption": false,
+              "dependentProperties": [],
+              "value": ""}]}},
+      {
+        "_Type_": "MissionProperty",
+        "missionVariableName": "",
+        "extendedTextToken": "CourierGradeToken",
+        "value": {
+          "_Type_": "MissionPropertyValue_StringHash",
+          "options": [
+            {
+              "_Type_": "MissionPropertyValueOption_StringHash",
+              "textId": "@LOC_UNINITIALIZED",
+              "weighting": 1.0,
+              "DEBUG_forceChooseThisOption": false,
+              "dependentProperties": [],
+              "value": ""}]}},
+      {
+        "_Type_": "MissionProperty",
+        "missionVariableName": "",
+        "extendedTextToken": "MultiToSingleToken",
+        "value": {
+          "_Type_": "MissionPropertyValue_StringHash",
+          "options": [
+            {
+              "_Type_": "MissionPropertyValueOption_StringHash",
+              "textId": "@LOC_UNINITIALIZED",
+              "weighting": 1.0,
+              "DEBUG_forceChooseThisOption": false,
+              "dependentProperties": [],
+              "value": ""}]}},
+      {
+        "_Type_": "MissionProperty",
+        "missionVariableName": "PickupLocation_BP1",
+        "extendedTextToken": "PickupLocation1",
+        "value": {
+          "_Type_": "MissionPropertyValue_Location",
+          "matchConditions": [],
+          "resourceTags": [],
+          "logErrorOnSearchFail": true}},
+      {
+        "_Pointer_": "ptr:1",
+        "_Type_": "MissionProperty",
+        "missionVariableName": "DropoffLocation_BP1",
+        "extendedTextToken": "DropoffDestination1",
+        "value": {
+          "_Type_": "MissionPropertyValue_Location",
+          "matchConditions": [],
+          "resourceTags": [],
+          "logErrorOnSearchFail": true}},
+      {
+        "_Pointer_": "ptr:15",
+        "_Type_": "MissionProperty",
+        "missionVariableName": "Item1",
+        "extendedTextToken": "Item1",
+        "value": {
+          "_Type_": "MissionPropertyValue_MissionItem",
+          "minItemsToFind": 1,
+          "maxItemsToFind": 1,
+          "matchConditions": [
+            {
+              "_Type_": "DataSetMatchCondition_PropertyTags",
+              "searchProperty": "_PointsTo_:ptr:1",
+              "propertyTagType": "Consumes",
+              "tagFilters": [],
+              "targetTagType": "General",
+              "searchForAnyTag": true},
+            {
+              "_Type_": "DataSetMatchCondition_TagSearch",
+              "tagSearch": [
+                {
+                  "_Type_": "TagSearchTerm",
+                  "positiveTags": [
+                    {
+                      "_RecordPath_": "file://./../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+                      "_RecordName_": "Tag.37ba7ad8-8553-45df-a84b-c49eb6ebb7a6",
+                      "_RecordId_": "37ba7ad8-8553-45df-a84b-c49eb6ebb7a6"}],
+                  "negativeTags": []},
+                {
+                  "_Type_": "TagSearchTerm",
+                  "positiveTags": [
+                    {
+                      "_RecordPath_": "file://./../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+                      "_RecordName_": "Tag.5e11a544-7fea-4160-b2bf-98c6cf9ee9df",
+                      "_RecordId_": "5e11a544-7fea-4160-b2bf-98c6cf9ee9df"}],
+                  "negativeTags": []}],
+              "tagType": "General"}],
+          "debugForceChosenItem": null}},
+      {
+        "_Pointer_": "ptr:16",
+        "_Type_": "MissionProperty",
+        "missionVariableName": "Item2",
+        "extendedTextToken": "Item2",
+        "value": {
+          "_Type_": "MissionPropertyValue_MissionItem",
+          "minItemsToFind": 1,
+          "maxItemsToFind": 1,
+          "matchConditions": [
+            {
+              "_Type_": "DataSetMatchCondition_PropertyTags",
+              "searchProperty": "_PointsTo_:ptr:1",
+              "propertyTagType": "Consumes",
+              "tagFilters": [],
+              "targetTagType": "General",
+              "searchForAnyTag": true},
+            {
+              "_Type_": "DataSetMatchCondition_TagSearch",
+              "tagSearch": [
+                {
+                  "_Type_": "TagSearchTerm",
+                  "positiveTags": [
+                    {
+                      "_RecordPath_": "file://./../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+                      "_RecordName_": "Tag.37ba7ad8-8553-45df-a84b-c49eb6ebb7a6",
+                      "_RecordId_": "37ba7ad8-8553-45df-a84b-c49eb6ebb7a6"}],
+                  "negativeTags": []},
+                {
+                  "_Type_": "TagSearchTerm",
+                  "positiveTags": [
+                    {
+                      "_RecordPath_": "file://./../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+                      "_RecordName_": "Tag.5e11a544-7fea-4160-b2bf-98c6cf9ee9df",
+                      "_RecordId_": "5e11a544-7fea-4160-b2bf-98c6cf9ee9df"}],
+                  "negativeTags": []}],
+              "tagType": "General"}],
+          "debugForceChosenItem": null}},
+      {
+        "_Pointer_": "ptr:17",
+        "_Type_": "MissionProperty",
+        "missionVariableName": "Item3",
+        "extendedTextToken": "Item3",
+        "value": {
+          "_Type_": "MissionPropertyValue_MissionItem",
+          "minItemsToFind": 1,
+          "maxItemsToFind": 1,
+          "matchConditions": [
+            {
+              "_Type_": "DataSetMatchCondition_PropertyTags",
+              "searchProperty": "_PointsTo_:ptr:1",
+              "propertyTagType": "Consumes",
+              "tagFilters": [],
+              "targetTagType": "General",
+              "searchForAnyTag": true},
+            {
+              "_Type_": "DataSetMatchCondition_TagSearch",
+              "tagSearch": [
+                {
+                  "_Type_": "TagSearchTerm",
+                  "positiveTags": [
+                    {
+                      "_RecordPath_": "file://./../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+                      "_RecordName_": "Tag.37ba7ad8-8553-45df-a84b-c49eb6ebb7a6",
+                      "_RecordId_": "37ba7ad8-8553-45df-a84b-c49eb6ebb7a6"}],
+                  "negativeTags": []},
+                {
+                  "_Type_": "TagSearchTerm",
+                  "positiveTags": [
+                    {
+                      "_RecordPath_": "file://./../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+                      "_RecordName_": "Tag.5e11a544-7fea-4160-b2bf-98c6cf9ee9df",
+                      "_RecordId_": "5e11a544-7fea-4160-b2bf-98c6cf9ee9df"}],
+                  "negativeTags": []}],
+              "tagType": "General"}],
+          "debugForceChosenItem": null}},
+      {
+        "_Pointer_": "ptr:18",
+        "_Type_": "MissionProperty",
+        "missionVariableName": "Item4",
+        "extendedTextToken": "Item4",
+        "value": {
+          "_Type_": "MissionPropertyValue_MissionItem",
+          "minItemsToFind": 1,
+          "maxItemsToFind": 1,
+          "matchConditions": [
+            {
+              "_Type_": "DataSetMatchCondition_PropertyTags",
+              "searchProperty": "_PointsTo_:ptr:1",
+              "propertyTagType": "Consumes",
+              "tagFilters": [],
+              "targetTagType": "General",
+              "searchForAnyTag": true},
+            {
+              "_Type_": "DataSetMatchCondition_TagSearch",
+              "tagSearch": [
+                {
+                  "_Type_": "TagSearchTerm",
+                  "positiveTags": [
+                    {
+                      "_RecordPath_": "file://./../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+                      "_RecordName_": "Tag.37ba7ad8-8553-45df-a84b-c49eb6ebb7a6",
+                      "_RecordId_": "37ba7ad8-8553-45df-a84b-c49eb6ebb7a6"}],
+                  "negativeTags": []},
+                {
+                  "_Type_": "TagSearchTerm",
+                  "positiveTags": [
+                    {
+                      "_RecordPath_": "file://./../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+                      "_RecordName_": "Tag.5e11a544-7fea-4160-b2bf-98c6cf9ee9df",
+                      "_RecordId_": "5e11a544-7fea-4160-b2bf-98c6cf9ee9df"}],
+                  "negativeTags": []}],
+              "tagType": "General"}],
+          "debugForceChosenItem": null}},
+      {
+        "_Pointer_": "ptr:19",
+        "_Type_": "MissionProperty",
+        "missionVariableName": "Item5",
+        "extendedTextToken": "Item5",
+        "value": {
+          "_Type_": "MissionPropertyValue_MissionItem",
+          "minItemsToFind": 1,
+          "maxItemsToFind": 1,
+          "matchConditions": [
+            {
+              "_Type_": "DataSetMatchCondition_PropertyTags",
+              "searchProperty": "_PointsTo_:ptr:1",
+              "propertyTagType": "Consumes",
+              "tagFilters": [],
+              "targetTagType": "General",
+              "searchForAnyTag": true},
+            {
+              "_Type_": "DataSetMatchCondition_TagSearch",
+              "tagSearch": [
+                {
+                  "_Type_": "TagSearchTerm",
+                  "positiveTags": [
+                    {
+                      "_RecordPath_": "file://./../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+                      "_RecordName_": "Tag.37ba7ad8-8553-45df-a84b-c49eb6ebb7a6",
+                      "_RecordId_": "37ba7ad8-8553-45df-a84b-c49eb6ebb7a6"}],
+                  "negativeTags": []},
+                {
+                  "_Type_": "TagSearchTerm",
+                  "positiveTags": [
+                    {
+                      "_RecordPath_": "file://./../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+                      "_RecordName_": "Tag.5e11a544-7fea-4160-b2bf-98c6cf9ee9df",
+                      "_RecordId_": "5e11a544-7fea-4160-b2bf-98c6cf9ee9df"}],
+                  "negativeTags": []}],
+              "tagType": "General"}],
+          "debugForceChosenItem": null}},
+      {
+        "_Pointer_": "ptr:20",
+        "_Type_": "MissionProperty",
+        "missionVariableName": "NumberOfHaulingOrders",
+        "extendedTextToken": "NumberOfHaulingOrders",
+        "value": {
+          "_Type_": "MissionPropertyValue_Integer",
+          "options": [
+            {
+              "_Type_": "MissionPropertyValueOption_Integer",
+              "textId": "@LOC_UNINITIALIZED",
+              "weighting": 1.0,
+              "DEBUG_forceChooseThisOption": false,
+              "dependentProperties": [],
+              "value": 5,
+              "variation": 0}]}}],
+    "objectiveTokens": [
+      {
+        "_Type_": "ObjectiveToken",
+        "id": "7abe834b-33c1-4baa-97b9-9f55d5ac42f4",
+        "debugName": "EliminateAll",
+        "startsActive": true,
+        "properties": [
+          {
+            "_Pointer_": "ptr:14",
+            "_Type_": "ObjectiveProperty_Referenced",
+            "missionVariableName": "BP_MissionLocation",
+            "extendedTextToken": "Location",
+            "property": "_PointsTo_:ptr:2"},
+          {
+            "_Type_": "ObjectiveProperty_Referenced",
+            "missionVariableName": "BP_SpawnDescriptions",
+            "extendedTextToken": "",
+            "property": "_PointsTo_:ptr:3"},
+          {
+            "_Type_": "ObjectiveProperty_Referenced",
+            "missionVariableName": "BP_SpawnTarget",
+            "extendedTextToken": "",
+            "property": "_PointsTo_:ptr:4"},
+          {
+            "_Type_": "ObjectiveProperty_Referenced",
+            "missionVariableName": "BP_TargetTags",
+            "extendedTextToken": "",
+            "property": "_PointsTo_:ptr:5"},
+          {
+            "_Type_": "ObjectiveProperty_Referenced",
+            "missionVariableName": "BP_AllowEmergantAI",
+            "extendedTextToken": "",
+            "property": "_PointsTo_:ptr:6"},
+          {
+            "_Type_": "ObjectiveProperty_Referenced",
+            "missionVariableName": "",
+            "extendedTextToken": "Contractor",
+            "property": "_PointsTo_:ptr:7"},
+          {
+            "_Type_": "ObjectiveProperty_Referenced",
+            "missionVariableName": "AdditionalSpawnClosetManagerSearchTerms_BP",
+            "extendedTextToken": "",
+            "property": "_PointsTo_:ptr:8"},
+          {
+            "_Type_": "ObjectiveProperty_Referenced",
+            "missionVariableName": "PercentageRemainingToMark_BP",
+            "extendedTextToken": "",
+            "property": "_PointsTo_:ptr:9"},
+          {
+            "_Type_": "ObjectiveProperty_Referenced",
+            "missionVariableName": "BP_DontHarmAllies",
+            "extendedTextToken": "",
+            "property": "_PointsTo_:ptr:10"},
+          {
+            "_Type_": "ObjectiveProperty_Referenced",
+            "missionVariableName": "BP_DontHarmCivs",
+            "extendedTextToken": "",
+            "property": "_PointsTo_:ptr:11"},
+          {
+            "_Type_": "ObjectiveProperty_Referenced",
+            "missionVariableName": "AddtionalAlliesToFlag_BP",
+            "extendedTextToken": "",
+            "property": "_PointsTo_:ptr:12"},
+          {
+            "_Type_": "ObjectiveProperty_Referenced",
+            "missionVariableName": "MissionLocationClusterClearance",
+            "extendedTextToken": "MissionCluster",
+            "property": "_PointsTo_:ptr:13"}],
+        "objectiveHandler": {
+          "_Type_": "ObjectiveHandler_Local",
+          "moduleDeclaration": null,
+          "module": "Libs/Subsumption/Missions/PU/Missions/InfiltrateAndDefend/PU_EliminateAll.xml",
+          "moduleHierarchy": "file://./../../../../../libs/foundry/records/contracts/modulehierarchy/eliminateall_mmh.json",
+          "disableTravelObjectives": false,
+          "disableReturnObjectives": false,
+          "travelRadiusKM": 0.0,
+          "allPlayersLeftGracePeriod": -1.0,
+          "travelObjectiveInfo": {
+            "_Type_": "ObjectiveDisplayInfo",
+            "shortDescription": "@TravelObjective_Short",
+            "longDescription": "@TravelObjective_Long",
+            "objectiveMarkerLabel": "@TravelObjective_Short",
+            "category": "Primary",
+            "hideOnHUD": false},
+          "returnObjectiveInfo": {
+            "_Type_": "ObjectiveDisplayInfo",
+            "shortDescription": "@ReturnObjective_Short",
+            "longDescription": "@ReturnObjective_Long",
+            "objectiveMarkerLabel": "@ReturnObjective_Short",
+            "category": "Primary",
+            "hideOnHUD": false},
+          "navPointSpawnInfo": null,
+          "location": "_PointsTo_:ptr:14",
+          "securityManifestToOverride": null},
+        "rewardContribution": null,
+        "displayInfo": {
+          "_Type_": "ObjectiveDisplayInfo",
+          "shortDescription": "@LOC_UNINITIALIZED",
+          "longDescription": "@LOC_UNINITIALIZED",
+          "objectiveMarkerLabel": "@LOC_UNINITIALIZED",
+          "category": "Primary",
+          "hideOnHUD": false},
+        "overrideMissionDetailsDisplayInfo": {
+          "_Type_": "OverrideMissionDetailsDisplayInfo",
+          "titleOverride": "@LOC_UNINITIALIZED",
+          "descriptionOverride": "@LOC_UNINITIALIZED"},
+        "commsNotifications": [],
+        "childMissionPhases": []},
+      {
+        "_Type_": "ObjectiveToken",
+        "id": "23720195-00cb-4a28-8763-0a40e1ce51c0",
+        "debugName": "Courier",
+        "startsActive": true,
+        "properties": [
+          {
+            "_Pointer_": "ptr:22",
+            "_Type_": "ObjectiveProperty_Referenced",
+            "missionVariableName": "PickupLocation_BP1",
+            "extendedTextToken": "PickupLocation1",
+            "property": "_PointsTo_:ptr:2"},
+          {
+            "_Pointer_": "ptr:23",
+            "_Type_": "ObjectiveProperty_Referenced",
+            "missionVariableName": "DropoffLocation_BP1",
+            "extendedTextToken": "DropoffDestination1",
+            "property": "_PointsTo_:ptr:1"},
+          {
+            "_Pointer_": "ptr:24",
+            "_Type_": "ObjectiveProperty_Referenced",
+            "missionVariableName": "Item1",
+            "extendedTextToken": "Item1",
+            "property": "_PointsTo_:ptr:15"},
+          {
+            "_Pointer_": "ptr:25",
+            "_Type_": "ObjectiveProperty_Referenced",
+            "missionVariableName": "Item2",
+            "extendedTextToken": "Item2",
+            "property": "_PointsTo_:ptr:16"},
+          {
+            "_Pointer_": "ptr:26",
+            "_Type_": "ObjectiveProperty_Referenced",
+            "missionVariableName": "Item3",
+            "extendedTextToken": "Item3",
+            "property": "_PointsTo_:ptr:17"},
+          {
+            "_Pointer_": "ptr:27",
+            "_Type_": "ObjectiveProperty_Referenced",
+            "missionVariableName": "Item4",
+            "extendedTextToken": "Item4",
+            "property": "_PointsTo_:ptr:18"},
+          {
+            "_Pointer_": "ptr:28",
+            "_Type_": "ObjectiveProperty_Referenced",
+            "missionVariableName": "Item5",
+            "extendedTextToken": "Item5",
+            "property": "_PointsTo_:ptr:19"},
+          {
+            "_Type_": "ObjectiveProperty_Output",
+            "property": {
+              "_Type_": "MissionProperty",
+              "missionVariableName": "CollectedCargo",
+              "extendedTextToken": "",
+              "value": {
+                "_Type_": "MissionPropertyValue_Object"}}},
+          {
+            "_Pointer_": "ptr:21",
+            "_Type_": "ObjectiveProperty_Referenced",
+            "missionVariableName": "Organization",
+            "extendedTextToken": "",
+            "property": "_PointsTo_:ptr:7"},
+          {
+            "_Pointer_": "ptr:29",
+            "_Type_": "ObjectiveProperty_Referenced",
+            "missionVariableName": "NumberOfHaulingOrders",
+            "extendedTextToken": "NumberOfHaulingOrders",
+            "property": "_PointsTo_:ptr:20"}],
+        "objectiveHandler": {
+          "_Type_": "ObjectiveHandler_Hauling",
+          "organization": "_PointsTo_:ptr:21",
+          "objectiveSettings": {
+            "_Type_": "Hauling_ObjectiveSettings",
+            "collectObjective": {
+              "_Type_": "ObjectiveDisplayInfo",
+              "shortDescription": "@LOC_UNINITIALIZED",
+              "longDescription": "@LOC_UNINITIALIZED",
+              "objectiveMarkerLabel": "@LOC_UNINITIALIZED",
+              "category": "Primary",
+              "hideOnHUD": false},
+            "resourceDeliverObjective": {
+              "_Type_": "ObjectiveDisplayInfo",
+              "shortDescription": "@LOC_UNINITIALIZED",
+              "longDescription": "@LOC_UNINITIALIZED",
+              "objectiveMarkerLabel": "@LOC_UNINITIALIZED",
+              "category": "Primary",
+              "hideOnHUD": false},
+            "collectAndDeliverObjective": {
+              "_Type_": "ObjectiveDisplayInfo",
+              "shortDescription": "@LOC_UNINITIALIZED",
+              "longDescription": "@LOC_UNINITIALIZED",
+              "objectiveMarkerLabel": "@LOC_UNINITIALIZED",
+              "category": "Primary",
+              "hideOnHUD": false},
+            "itemDeliverObjective": {
+              "_Type_": "ObjectiveDisplayInfo",
+              "shortDescription": "@LOC_UNINITIALIZED",
+              "longDescription": "@LOC_UNINITIALIZED",
+              "objectiveMarkerLabel": "@LOC_UNINITIALIZED",
+              "category": "Primary",
+              "hideOnHUD": false},
+            "orObjective": {
+              "_Type_": "ObjectiveDisplayInfo",
+              "shortDescription": "@Industrial_GenericCollect_Short_Or",
+              "longDescription": "@Industrial_GenericCollect_Long_Or",
+              "objectiveMarkerLabel": "@LOC_UNINITIALIZED",
+              "category": "Primary",
+              "hideOnHUD": false},
+            "andObjective": {
+              "_Type_": "ObjectiveDisplayInfo",
+              "shortDescription": "@Industrial_GenericCollect_Short_And",
+              "longDescription": "@Industrial_GenericCollect_Long_And",
+              "objectiveMarkerLabel": "@LOC_UNINITIALIZED",
+              "category": "Primary",
+              "hideOnHUD": false},
+            "listItemObjective": {
+              "_Type_": "ObjectiveDisplayInfo",
+              "shortDescription": "@Industrial_GenericCollect_Short_ListItem",
+              "longDescription": "@Industrial_GenericCollect_Long_ListItem",
+              "objectiveMarkerLabel": "@LOC_UNINITIALIZED",
+              "category": "Primary",
+              "hideOnHUD": false},
+            "itemExtendedTextToken": "item",
+            "pickupLocationExtendedTextToken": "location",
+            "amountExtendedTextToken": "amount",
+            "totalExtendedTextToken": "total",
+            "dropOffLocationExtendedTextToken": "destination",
+            "mobiglasDisplayLayout": null},
+          "hideMarkers": false,
+          "haulingOrders": [
+            {
+              "_Type_": "HaulingOrder_MissionItem",
+              "pickUpLocation": "_PointsTo_:ptr:22",
+              "dropOffLocation": "_PointsTo_:ptr:23",
+              "pickUpTargetTypes": [],
+              "dropOffTargetTypes": [],
+              "item": "_PointsTo_:ptr:24",
+              "minAmount": 1,
+              "maxAmount": 0},
+            {
+              "_Type_": "HaulingOrder_MissionItem",
+              "pickUpLocation": "_PointsTo_:ptr:22",
+              "dropOffLocation": "_PointsTo_:ptr:23",
+              "pickUpTargetTypes": [],
+              "dropOffTargetTypes": [],
+              "item": "_PointsTo_:ptr:25",
+              "minAmount": 1,
+              "maxAmount": 0},
+            {
+              "_Type_": "HaulingOrder_MissionItem",
+              "pickUpLocation": "_PointsTo_:ptr:22",
+              "dropOffLocation": "_PointsTo_:ptr:23",
+              "pickUpTargetTypes": [],
+              "dropOffTargetTypes": [],
+              "item": "_PointsTo_:ptr:26",
+              "minAmount": 1,
+              "maxAmount": 0},
+            {
+              "_Type_": "HaulingOrder_MissionItem",
+              "pickUpLocation": "_PointsTo_:ptr:22",
+              "dropOffLocation": "_PointsTo_:ptr:23",
+              "pickUpTargetTypes": [],
+              "dropOffTargetTypes": [],
+              "item": "_PointsTo_:ptr:27",
+              "minAmount": 1,
+              "maxAmount": 0},
+            {
+              "_Type_": "HaulingOrder_MissionItem",
+              "pickUpLocation": "_PointsTo_:ptr:22",
+              "dropOffLocation": "_PointsTo_:ptr:23",
+              "pickUpTargetTypes": [],
+              "dropOffTargetTypes": [],
+              "item": "_PointsTo_:ptr:28",
+              "minAmount": 1,
+              "maxAmount": 0}],
+          "haulingLimitProperty": "_PointsTo_:ptr:29"},
+        "rewardContribution": null,
+        "displayInfo": {
+          "_Type_": "ObjectiveDisplayInfo",
+          "shortDescription": "@LOC_UNINITIALIZED",
+          "longDescription": "@LOC_UNINITIALIZED",
+          "objectiveMarkerLabel": "@LOC_UNINITIALIZED",
+          "category": "Primary",
+          "hideOnHUD": false},
+        "overrideMissionDetailsDisplayInfo": {
+          "_Type_": "OverrideMissionDetailsDisplayInfo",
+          "titleOverride": "@LOC_UNINITIALIZED",
+          "descriptionOverride": "@LOC_UNINITIALIZED"},
+        "commsNotifications": [],
+        "childMissionPhases": []}],
+    "partialRewardPayout": null,
+    "missionFlow": {
+      "_Type_": "MissionFlow",
+      "triggers": [
+        {
+          "_Type_": "MissionFlowTrigger",
+          "description": "When Eliminate All and Courier completed, Complete the Mission",
+          "condition": {
+            "_Type_": "MissionFlowCondition_AllTokensState",
+            "tokenState": "Completed"},
+          "action": {
+            "_Type_": "MissionFlowAction_StateChange",
+            "toState": "Completed"}}]},
+    "contractStartCommsNotification": null,
+    "contractEndCommsNotifications": []}}

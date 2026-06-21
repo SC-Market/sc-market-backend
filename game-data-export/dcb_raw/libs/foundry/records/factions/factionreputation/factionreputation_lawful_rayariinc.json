@@ -1,0 +1,76 @@
+{
+  "_RecordName_": "FactionReputation.FactionReputation_Lawful_RayariInc",
+  "_RecordId_": "afc25254-554d-4409-8893-383a58eb7e8a",
+  "_RecordTag_": "UI",
+  "_RecordValue_": {
+    "_Type_": "FactionReputation",
+    "name": "(Default)",
+    "displayName": "@Rayari_RepUI_Name",
+    "GEID": 199998982735,
+    "logo": "UI/SharedAssets/ManufacturerLogos/rep_ui_icon_logo_rayari_diff.tif",
+    "hideInDelpihApp": false,
+    "isNPC": false,
+    "reputationContextPropertiesUI": "file://./../../../../../libs/foundry/records/reputation/contexts/reputationcontext_affinity.json",
+    "allies": [],
+    "enemies": [],
+    "hostilityParams": {
+      "_Type_": "RelationStandingParams",
+      "scope": "file://./../../../../../libs/foundry/records/reputation/scopes/factionreputationscope.json",
+      "standing": "file://./../../../../../libs/foundry/records/reputation/standings/faction_reputation_pyro/reputationstanding_factionrep_negativerep.json",
+      "markerParams": {
+        "_Type_": "RelationMarkerParams",
+        "description": "@LOC_PLACEHOLDER",
+        "icon": ""}},
+    "alliedParams": {
+      "_Type_": "RelationStandingParams",
+      "scope": "file://./../../../../../libs/foundry/records/reputation/scopes/factionreputationscope.json",
+      "standing": "file://./../../../../../libs/foundry/records/reputation/standings/faction_reputation_pyro/reputationstanding_factionrep_rank1.json",
+      "markerParams": {
+        "_Type_": "RelationMarkerParams",
+        "description": "@LOC_PLACEHOLDER",
+        "icon": ""}},
+    "propertiesBB": [
+      {
+        "_Type_": "SReputationContextBBPropertyParams",
+        "name": "entityDescription",
+        "dynamicProperty": {
+          "_Type_": "SBBDynamicPropertyLocString",
+          "value": "@Rayari_RepUI_Description"}},
+      {
+        "_Type_": "SReputationContextBBPropertyParams",
+        "name": "entityLawful",
+        "dynamicProperty": {
+          "_Type_": "SBBDynamicPropertyBool",
+          "value": true}},
+      {
+        "_Type_": "SReputationContextBBPropertyParams",
+        "name": "entityHeadquarters",
+        "dynamicProperty": {
+          "_Type_": "SBBDynamicPropertyLocString",
+          "value": "@Rayari_RepUI_Headquarters"}},
+      {
+        "_Type_": "SReputationContextBBPropertyParams",
+        "name": "entityFounded",
+        "dynamicProperty": {
+          "_Type_": "SBBDynamicPropertyLocString",
+          "value": "@Rayari_RepUI_Founded"}},
+      {
+        "_Type_": "SReputationContextBBPropertyParams",
+        "name": "entityLeadership",
+        "dynamicProperty": {
+          "_Type_": "SBBDynamicPropertyLocString",
+          "value": "@Rayari_RepUI_Leadership"}},
+      {
+        "_Type_": "SReputationContextBBPropertyParams",
+        "name": "entityArea",
+        "dynamicProperty": {
+          "_Type_": "SBBDynamicPropertyLocString",
+          "value": "@Rayari_RepUI_Area"}},
+      {
+        "_Type_": "SReputationContextBBPropertyParams",
+        "name": "entityFocus",
+        "dynamicProperty": {
+          "_Type_": "SBBDynamicPropertyLocString",
+          "value": "@Rayari_RepUI_Focus"}}],
+    "perkReputationRewardList": [],
+    "sandboxTriggers": []}}

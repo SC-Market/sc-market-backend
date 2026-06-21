@@ -1,0 +1,428 @@
+{
+  "_RecordName_": "MissionBrokerEntry.PU_Derelict_Recovery_MissingPersons_Stanton4",
+  "_RecordId_": "15ca2081-0075-4d29-bdf9-d486486bfb54",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "MissionBrokerEntry",
+    "notForRelease": false,
+    "owner": "file://./../../../../../libs/foundry/records/devowners/devteams/mdt.json",
+    "missionModule": "Libs/Subsumption/Missions/PU/Missions/Derelicts/Derelict_Recovery_MissingPersons.xml",
+    "playerFacingDebugName": "",
+    "title": "@searchcrew_title",
+    "titleHUD": "@LOC_UNINITIALIZED",
+    "description": "@searchcrew_desc",
+    "missionGiver": "@searchcrew_from",
+    "commsChannelName": "@LOC_UNINITIALIZED",
+    "type": "file://./../../../../../libs/foundry/records/missiontype/pu/investigation.json",
+    "associatedMissions": [],
+    "missionDifficulty": -1,
+    "localityAvailable": null,
+    "locationMissionAvailable": "file://./../../../../../libs/foundry/records/starmap/pu/system/stanton/stanton4/starmapobject.stanton4.json",
+    "availableDateSchedule": [],
+    "onlyAvailableIfAllMissionsNotAvailable": [],
+    "missionReward": {
+      "_Type_": "MissionReward",
+      "reward": 0,
+      "max": 10000,
+      "plusBonuses": false,
+      "currencyType": "UEC",
+      "reputationBonus": null},
+    "partialRewardPayout": null,
+    "missionResultReputationRewards": [
+      {
+        "_Type_": "SReputationAmountListParams",
+        "reputationAmounts": []},
+      {
+        "_Type_": "SReputationAmountListParams",
+        "reputationAmounts": []},
+      {
+        "_Type_": "SReputationAmountListParams",
+        "reputationAmounts": []},
+      {
+        "_Type_": "SReputationAmountListParams",
+        "reputationAmounts": []},
+      {
+        "_Type_": "SReputationAmountListParams",
+        "reputationAmounts": []}],
+    "journalEntriesToAddOnComplete": [],
+    "journalEntriesToRemoveOnComplete": [],
+    "initiallyActive": true,
+    "notifyOnAvailable": false,
+    "preShowObjectives": false,
+    "showAsOffer": false,
+    "missionBuyInAmount": 0,
+    "refundBuyInOnWithdraw": false,
+    "hasCompleteButton": false,
+    "onlyOwnerCanComplete": false,
+    "handlesAbandonRequest": false,
+    "missionModulePerPlayer": true,
+    "maxInstances": 2,
+    "maxPlayersPerInstance": 1,
+    "maxInstancesPerPlayer": 1,
+    "canBeShared": true,
+    "onceOnly": false,
+    "tutorial": false,
+    "missionDeadline": {
+      "_Type_": "MissionDeadline",
+      "missionCompletionTime": 0.0,
+      "missionAutoEnd": false,
+      "missionResultAfterTimerEnd": "Failed",
+      "remainingTimeToShowTimer": 0.0,
+      "missionEndReason": "@LOC_EMPTY"},
+    "displayAlliedMarkers": true,
+    "availableInPrison": false,
+    "failIfSentToPrison": true,
+    "failIfBecameCriminal": true,
+    "failIfLeavePrison": false,
+    "completionTags": {
+      "_Type_": "TagList",
+      "tags": []},
+    "applyCompletionTagsOnFailed": false,
+    "applyCompletionTagsOnAbandoned": false,
+    "requestOnly": false,
+    "respawnTime": 45.0,
+    "respawnTimeVariation": 15.0,
+    "instanceHasLifeTime": true,
+    "showLifeTimeInMobiGlas": true,
+    "instanceLifeTime": 30.0,
+    "instanceLifeTimeVariation": 5.0,
+    "canReacceptAfterAbandoning": false,
+    "abandonedCooldownTime": 1.0,
+    "abandonedCooldownTimeVariation": 1.0,
+    "canReacceptAfterFailing": false,
+    "hasPersonalCooldown": false,
+    "personalCooldownTime": 1.0,
+    "personalCooldownTimeVariation": 1.0,
+    "moduleHandlesOwnShutdown": false,
+    "linkedMission": null,
+    "missionCompletePerk": null,
+    "modifiers": [],
+    "lawfulMission": true,
+    "missionGiverRecord": null,
+    "invitationMission": null,
+    "missionTags": [],
+    "missionGiverFragmentTags": "",
+    "reputationPrerequisites": {
+      "_Type_": "ReputationPrerequisites",
+      "wantedLevelJurisdictionOverride": null,
+      "wantedLevel": {
+        "_Type_": "ReputationPrerequisiteRange",
+        "minValue": 0.0,
+        "maxValue": 2.0}},
+    "reputationRequirements": null,
+    "minRequiredMissions": [],
+    "requiredMissions": [],
+    "requiredCompletedMissionTags": [],
+    "requiredJournalEntries": [],
+    "requiredAreaTags": {
+      "_Type_": "TagList",
+      "tags": []},
+    "excludedAreaTags": {
+      "_Type_": "TagList",
+      "tags": []},
+    "properties": [
+      {
+        "_Pointer_": "ptr:1",
+        "_Type_": "MissionProperty",
+        "missionVariableName": "MDSE_MissionLocation",
+        "extendedTextToken": "",
+        "value": {
+          "_Type_": "MissionPropertyValue_Location",
+          "matchConditions": [
+            {
+              "_Type_": "DataSetMatchCondition_TagSearch",
+              "tagSearch": [
+                {
+                  "_Type_": "TagSearchTerm",
+                  "positiveTags": [
+                    {
+                      "_RecordPath_": "file://./../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+                      "_RecordName_": "Tag.eb8006eb-2662-400f-bf41-babfed04cb95",
+                      "_RecordId_": "eb8006eb-2662-400f-bf41-babfed04cb95"},
+                    {
+                      "_RecordPath_": "file://./../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+                      "_RecordName_": "Tag.d181c626-903b-4566-9d82-c8509e7fd4bc",
+                      "_RecordId_": "d181c626-903b-4566-9d82-c8509e7fd4bc"},
+                    {
+                      "_RecordPath_": "file://./../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+                      "_RecordName_": "Tag.ff4d704a-7840-4577-ba64-7d4bd709ab9d",
+                      "_RecordId_": "ff4d704a-7840-4577-ba64-7d4bd709ab9d"}],
+                  "negativeTags": []}],
+              "tagType": "General"}],
+          "resourceTags": [
+            {
+              "_RecordPath_": "file://./../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+              "_RecordName_": "Tag.fc881be5-0c88-4daf-9e28-3fcee7981c16",
+              "_RecordId_": "fc881be5-0c88-4daf-9e28-3fcee7981c16"}],
+          "logErrorOnSearchFail": true}},
+      {
+        "_Type_": "MissionProperty",
+        "missionVariableName": "MDSE_ShipType",
+        "extendedTextToken": "Ship",
+        "value": {
+          "_Type_": "MissionPropertyValue_MissionItem",
+          "minItemsToFind": 1,
+          "maxItemsToFind": 1,
+          "matchConditions": [
+            {
+              "_Type_": "DataSetMatchCondition_PropertyTags",
+              "searchProperty": "_PointsTo_:ptr:1",
+              "propertyTagType": "General",
+              "tagFilters": [
+                {
+                  "_RecordPath_": "file://./../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+                  "_RecordName_": "Tag.90acb7b1-c532-40d3-908c-fec86f1be002",
+                  "_RecordId_": "90acb7b1-c532-40d3-908c-fec86f1be002"}],
+              "targetTagType": "General",
+              "searchForAnyTag": false}],
+          "debugForceChosenItem": null}},
+      {
+        "_Type_": "MissionProperty",
+        "missionVariableName": "NonMission_Danger_StringHash",
+        "extendedTextToken": "Danger",
+        "value": {
+          "_Type_": "MissionPropertyValue_StringHash",
+          "options": [
+            {
+              "_Type_": "MissionPropertyValueOption_StringHash",
+              "textId": "@procedural_text_null",
+              "weighting": 0.9,
+              "DEBUG_forceChooseThisOption": false,
+              "dependentProperties": [],
+              "value": "None"},
+            {
+              "_Type_": "MissionPropertyValueOption_StringHash",
+              "textId": "@searchcrew_danger_0001",
+              "weighting": 0.1,
+              "DEBUG_forceChooseThisOption": false,
+              "dependentProperties": [],
+              "value": "Low"},
+            {
+              "_Type_": "MissionPropertyValueOption_StringHash",
+              "textId": "@searchcrew_danger_0002",
+              "weighting": 0.1,
+              "DEBUG_forceChooseThisOption": false,
+              "dependentProperties": [],
+              "value": "Medium"},
+            {
+              "_Type_": "MissionPropertyValueOption_StringHash",
+              "textId": "@searchcrew_danger_0003",
+              "weighting": 0.1,
+              "DEBUG_forceChooseThisOption": false,
+              "dependentProperties": [],
+              "value": "High"}]}},
+      {
+        "_Type_": "MissionProperty",
+        "missionVariableName": "NonMission_Timed_StringHash",
+        "extendedTextToken": "Timed",
+        "value": {
+          "_Type_": "MissionPropertyValue_StringHash",
+          "options": [
+            {
+              "_Type_": "MissionPropertyValueOption_StringHash",
+              "textId": "@procedural_text_null",
+              "weighting": 1.0,
+              "DEBUG_forceChooseThisOption": false,
+              "dependentProperties": [],
+              "value": ""},
+            {
+              "_Type_": "MissionPropertyValueOption_StringHash",
+              "textId": "@searchcrew_timed_0001",
+              "weighting": 0.5,
+              "DEBUG_forceChooseThisOption": false,
+              "dependentProperties": [],
+              "value": ""},
+            {
+              "_Type_": "MissionPropertyValueOption_StringHash",
+              "textId": "@searchcrew_timed_0002",
+              "weighting": 0.5,
+              "DEBUG_forceChooseThisOption": false,
+              "dependentProperties": [],
+              "value": ""},
+            {
+              "_Type_": "MissionPropertyValueOption_StringHash",
+              "textId": "@searchcrew_timed_0003",
+              "weighting": 0.5,
+              "DEBUG_forceChooseThisOption": false,
+              "dependentProperties": [],
+              "value": ""}]}},
+      {
+        "_Type_": "MissionProperty",
+        "missionVariableName": "NonMission_Location_StringHash",
+        "extendedTextToken": "Location",
+        "value": {
+          "_Type_": "MissionPropertyValue_StringHash",
+          "options": [
+            {
+              "_Type_": "MissionPropertyValueOption_StringHash",
+              "textId": "@searchcrew_location_0001",
+              "weighting": 0.5,
+              "DEBUG_forceChooseThisOption": false,
+              "dependentProperties": [],
+              "value": ""},
+            {
+              "_Type_": "MissionPropertyValueOption_StringHash",
+              "textId": "@searchcrew_location_0002",
+              "weighting": 0.5,
+              "DEBUG_forceChooseThisOption": false,
+              "dependentProperties": [],
+              "value": ""},
+            {
+              "_Type_": "MissionPropertyValueOption_StringHash",
+              "textId": "@searchcrew_location_0003",
+              "weighting": 0.5,
+              "DEBUG_forceChooseThisOption": false,
+              "dependentProperties": [],
+              "value": ""},
+            {
+              "_Type_": "MissionPropertyValueOption_StringHash",
+              "textId": "@searchcrew_location_0005",
+              "weighting": 0.5,
+              "DEBUG_forceChooseThisOption": false,
+              "dependentProperties": [],
+              "value": ""},
+            {
+              "_Type_": "MissionPropertyValueOption_StringHash",
+              "textId": "@searchcrew_location_0006",
+              "weighting": 0.5,
+              "DEBUG_forceChooseThisOption": false,
+              "dependentProperties": [],
+              "value": ""},
+            {
+              "_Type_": "MissionPropertyValueOption_StringHash",
+              "textId": "@searchcrew_location_0008",
+              "weighting": 0.8,
+              "DEBUG_forceChooseThisOption": false,
+              "dependentProperties": [],
+              "value": ""},
+            {
+              "_Type_": "MissionPropertyValueOption_StringHash",
+              "textId": "@searchcrew_location_0009",
+              "weighting": 0.5,
+              "DEBUG_forceChooseThisOption": false,
+              "dependentProperties": [],
+              "value": ""}]}},
+      {
+        "_Type_": "MissionProperty",
+        "missionVariableName": "NonMission_Title_StringHash",
+        "extendedTextToken": "Title",
+        "value": {
+          "_Type_": "MissionPropertyValue_StringHash",
+          "options": [
+            {
+              "_Type_": "MissionPropertyValueOption_StringHash",
+              "textId": "@searchcrew_title_0001",
+              "weighting": 0.5,
+              "DEBUG_forceChooseThisOption": false,
+              "dependentProperties": [],
+              "value": ""},
+            {
+              "_Type_": "MissionPropertyValueOption_StringHash",
+              "textId": "@searchcrew_title_0002",
+              "weighting": 0.5,
+              "DEBUG_forceChooseThisOption": false,
+              "dependentProperties": [],
+              "value": ""},
+            {
+              "_Type_": "MissionPropertyValueOption_StringHash",
+              "textId": "@searchcrew_title_0003",
+              "weighting": 0.5,
+              "DEBUG_forceChooseThisOption": false,
+              "dependentProperties": [],
+              "value": ""},
+            {
+              "_Type_": "MissionPropertyValueOption_StringHash",
+              "textId": "@searchcrew_title_0004",
+              "weighting": 0.5,
+              "DEBUG_forceChooseThisOption": false,
+              "dependentProperties": [],
+              "value": ""}]}},
+      {
+        "_Type_": "MissionProperty",
+        "missionVariableName": "NonMission_Description_StringHash",
+        "extendedTextToken": "Description",
+        "value": {
+          "_Type_": "MissionPropertyValue_StringHash",
+          "options": [
+            {
+              "_Type_": "MissionPropertyValueOption_StringHash",
+              "textId": "@searchcrew_desc_0001",
+              "weighting": 0.5,
+              "DEBUG_forceChooseThisOption": false,
+              "dependentProperties": [],
+              "value": ""},
+            {
+              "_Type_": "MissionPropertyValueOption_StringHash",
+              "textId": "@searchcrew_desc_0002",
+              "weighting": 0.5,
+              "DEBUG_forceChooseThisOption": false,
+              "dependentProperties": [],
+              "value": ""},
+            {
+              "_Type_": "MissionPropertyValueOption_StringHash",
+              "textId": "@searchcrew_desc_0003",
+              "weighting": 0.5,
+              "DEBUG_forceChooseThisOption": false,
+              "dependentProperties": [],
+              "value": ""},
+            {
+              "_Type_": "MissionPropertyValueOption_StringHash",
+              "textId": "@searchcrew_desc_0004",
+              "weighting": 0.5,
+              "DEBUG_forceChooseThisOption": false,
+              "dependentProperties": [],
+              "value": ""},
+            {
+              "_Type_": "MissionPropertyValueOption_StringHash",
+              "textId": "@searchcrew_desc_0005",
+              "weighting": 0.5,
+              "DEBUG_forceChooseThisOption": false,
+              "dependentProperties": [],
+              "value": ""}]}},
+      {
+        "_Type_": "MissionProperty",
+        "missionVariableName": "NonMission_Contractor_StringHash",
+        "extendedTextToken": "Contractor",
+        "value": {
+          "_Type_": "MissionPropertyValue_StringHash",
+          "options": [
+            {
+              "_Type_": "MissionPropertyValueOption_StringHash",
+              "textId": "@mission_contractor_0049",
+              "weighting": 0.5,
+              "DEBUG_forceChooseThisOption": false,
+              "dependentProperties": [],
+              "value": ""},
+            {
+              "_Type_": "MissionPropertyValueOption_StringHash",
+              "textId": "@mission_contractor_0050",
+              "weighting": 0.5,
+              "DEBUG_forceChooseThisOption": false,
+              "dependentProperties": [],
+              "value": ""},
+            {
+              "_Type_": "MissionPropertyValueOption_StringHash",
+              "textId": "@mission_contractor_0051",
+              "weighting": 0.5,
+              "DEBUG_forceChooseThisOption": false,
+              "dependentProperties": [],
+              "value": ""}]}},
+      {
+        "_Type_": "MissionProperty",
+        "missionVariableName": "Mission_MaxReward",
+        "extendedTextToken": "",
+        "value": {
+          "_Type_": "MissionPropertyValue_Integer",
+          "options": [
+            {
+              "_Type_": "MissionPropertyValueOption_Integer",
+              "textId": "@LOC_UNINITIALIZED",
+              "weighting": 1.0,
+              "DEBUG_forceChooseThisOption": false,
+              "dependentProperties": [],
+              "value": 10000,
+              "variation": 0}]}}],
+    "objectiveTokens": [],
+    "missionFlow": {
+      "_Type_": "MissionFlow",
+      "triggers": []}}}

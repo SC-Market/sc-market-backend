@@ -1,0 +1,269 @@
+{
+  "_RecordName_": "ContractTemplate.ShipWaveAttack_NonTraining",
+  "_RecordId_": "eadcbab3-2039-429c-b1d9-3cee2655d478",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "ContractTemplate",
+    "notForRelease": false,
+    "workInProgress": false,
+    "owner": "file://./../../../../../libs/foundry/records/devowners/devteams/mdt.json",
+    "contractClass": {
+      "_Type_": "ContractClass_Contract",
+      "additionalParams": {
+        "_Type_": "ActiveContractSettings",
+        "hasCompleteButton": false,
+        "handlesAbandonRequest": false,
+        "canBeShared": true,
+        "displayAlliedMarkers": true,
+        "onlyOwnerCanComplete": false},
+      "autoFinishSettings": {
+        "_Type_": "ContractAutoFinishSettings",
+        "contractDeadline": {
+          "_Type_": "MissionDeadline",
+          "missionCompletionTime": 0.0,
+          "missionAutoEnd": false,
+          "missionResultAfterTimerEnd": "Failed",
+          "remainingTimeToShowTimer": 0.0,
+          "missionEndReason": "@LOC_EMPTY"},
+        "failIfSentToPrison": true,
+        "failIfBecameCriminal": true,
+        "failIfLeavePrison": false}},
+    "contractDisplayInfo": {
+      "_Type_": "ContractDisplayInfo",
+      "displayString": [
+        "@LOC_UNINITIALIZED",
+        "@LOC_UNINITIALIZED",
+        "@LOC_UNINITIALIZED",
+        "@LOC_UNINITIALIZED",
+        "@LOC_UNINITIALIZED"],
+      "type": "file://./../../../../../libs/foundry/records/missiontype/pu/mercenary.json",
+      "illegal": false,
+      "showLifeTimeInMobiGlas": true,
+      "preShowObjectives": false},
+    "modifiers": [],
+    "contractProperties": [
+      {
+        "_Pointer_": "ptr:1",
+        "_Type_": "MissionProperty",
+        "missionVariableName": "MissionLocation_BP",
+        "extendedTextToken": "Location",
+        "value": {
+          "_Type_": "MissionPropertyValue_Location",
+          "matchConditions": [],
+          "resourceTags": [],
+          "logErrorOnSearchFail": true}},
+      {
+        "_Pointer_": "ptr:2",
+        "_Type_": "MissionProperty",
+        "missionVariableName": "WaveShips_BP",
+        "extendedTextToken": "",
+        "value": {
+          "_Type_": "MissionPropertyValue_ShipSpawnDescriptions",
+          "spawnDescriptions": [],
+          "allowedForMissionRestrictedDeliveries": false}},
+      {
+        "_Type_": "MissionProperty",
+        "missionVariableName": "TrainingMission_BP",
+        "extendedTextToken": "",
+        "value": {
+          "_Type_": "MissionPropertyValue_Boolean",
+          "value": false}},
+      {
+        "_Type_": "MissionProperty",
+        "missionVariableName": "MissionTargetName_BP",
+        "extendedTextToken": "TargetName",
+        "value": {
+          "_Type_": "MissionPropertyValue_AIName",
+          "randomName": true,
+          "randomLastName": true,
+          "randomNickName": true,
+          "characterGivenName": "@LOC_UNINITIALIZED",
+          "characterGivenLastName": "@LOC_UNINITIALIZED",
+          "characterGivenNickName": "@LOC_UNINITIALIZED",
+          "characterNameData": "file://./../../../../../libs/foundry/records/characternamedata/humanmale.json",
+          "chanceOfNickName": 0.25}},
+      {
+        "_Type_": "MissionProperty",
+        "missionVariableName": "MarkTargets_BP",
+        "extendedTextToken": "",
+        "value": {
+          "_Type_": "MissionPropertyValue_Boolean",
+          "value": false}},
+      {
+        "_Type_": "MissionProperty",
+        "missionVariableName": "FinalWaveWithTarget_BP",
+        "extendedTextToken": "",
+        "value": {
+          "_Type_": "MissionPropertyValue_ShipSpawnDescriptions",
+          "spawnDescriptions": [],
+          "allowedForMissionRestrictedDeliveries": false}},
+      {
+        "_Type_": "MissionProperty",
+        "missionVariableName": "FinalWaveOBJLong",
+        "extendedTextToken": "",
+        "value": {
+          "_Type_": "MissionPropertyValue_StringHash",
+          "options": [
+            {
+              "_Type_": "MissionPropertyValueOption_StringHash",
+              "textId": "@ShipWaveAttack_FinalWave_obj_long_01",
+              "weighting": 1.0,
+              "DEBUG_forceChooseThisOption": false,
+              "dependentProperties": [],
+              "value": ""}]}},
+      {
+        "_Type_": "MissionProperty",
+        "missionVariableName": "FinalWaveOBJShort",
+        "extendedTextToken": "",
+        "value": {
+          "_Type_": "MissionPropertyValue_StringHash",
+          "options": [
+            {
+              "_Type_": "MissionPropertyValueOption_StringHash",
+              "textId": "@ShipWaveAttack_FinalWave_obj_short_01",
+              "weighting": 1.0,
+              "DEBUG_forceChooseThisOption": false,
+              "dependentProperties": [],
+              "value": ""}]}},
+      {
+        "_Pointer_": "ptr:4",
+        "_Type_": "MissionProperty",
+        "missionVariableName": "CN_MissionAccept",
+        "extendedTextToken": "",
+        "value": {
+          "_Type_": "MissionPropertyValue_Tags",
+          "tags": {
+            "_Type_": "TagList",
+            "tags": []},
+          "negativeTags": {
+            "_Type_": "TagList",
+            "tags": []},
+          "options": []}},
+      {
+        "_Pointer_": "ptr:7",
+        "_Type_": "MissionProperty",
+        "missionVariableName": "CN_MissionAbandon",
+        "extendedTextToken": "",
+        "value": {
+          "_Type_": "MissionPropertyValue_Tags",
+          "tags": {
+            "_Type_": "TagList",
+            "tags": []},
+          "negativeTags": {
+            "_Type_": "TagList",
+            "tags": []},
+          "options": []}},
+      {
+        "_Pointer_": "ptr:6",
+        "_Type_": "MissionProperty",
+        "missionVariableName": "CN_MissionFail",
+        "extendedTextToken": "",
+        "value": {
+          "_Type_": "MissionPropertyValue_Tags",
+          "tags": {
+            "_Type_": "TagList",
+            "tags": []},
+          "negativeTags": {
+            "_Type_": "TagList",
+            "tags": []},
+          "options": []}},
+      {
+        "_Pointer_": "ptr:5",
+        "_Type_": "MissionProperty",
+        "missionVariableName": "CN_MissionComplete",
+        "extendedTextToken": "",
+        "value": {
+          "_Type_": "MissionPropertyValue_Tags",
+          "tags": {
+            "_Type_": "TagList",
+            "tags": []},
+          "negativeTags": {
+            "_Type_": "TagList",
+            "tags": []},
+          "options": []}}],
+    "objectiveTokens": [
+      {
+        "_Type_": "ObjectiveToken",
+        "id": "8224832a-2a24-4a5f-b0d3-f7cf966ef740",
+        "debugName": "ShipWaveAttack",
+        "startsActive": true,
+        "properties": [
+          {
+            "_Pointer_": "ptr:3",
+            "_Type_": "ObjectiveProperty_Referenced",
+            "missionVariableName": "MissionLocation_BP",
+            "extendedTextToken": "Location",
+            "property": "_PointsTo_:ptr:1"},
+          {
+            "_Type_": "ObjectiveProperty_Referenced",
+            "missionVariableName": "WaveShips_BP",
+            "extendedTextToken": "",
+            "property": "_PointsTo_:ptr:2"}],
+        "objectiveHandler": {
+          "_Type_": "ObjectiveHandler_Local",
+          "moduleDeclaration": null,
+          "module": "Libs/Subsumption/Missions/PU/Missions/ShipWaveAttack/ShipWaveAttack.xml",
+          "moduleHierarchy": "file://./../../../../../libs/foundry/records/contracts/modulehierarchy/shipwaveattack_mmh.json",
+          "disableTravelObjectives": false,
+          "disableReturnObjectives": false,
+          "travelRadiusKM": 15.0,
+          "allPlayersLeftGracePeriod": -1.0,
+          "travelObjectiveInfo": {
+            "_Type_": "ObjectiveDisplayInfo",
+            "shortDescription": "@TravelObjective_Short",
+            "longDescription": "@TravelObjective_Long",
+            "objectiveMarkerLabel": "@TravelObjective_Short",
+            "category": "Primary",
+            "hideOnHUD": false},
+          "returnObjectiveInfo": {
+            "_Type_": "ObjectiveDisplayInfo",
+            "shortDescription": "@ReturnObjective_Short",
+            "longDescription": "@ReturnObjective_Long",
+            "objectiveMarkerLabel": "@ReturnObjective_Short",
+            "category": "Primary",
+            "hideOnHUD": false},
+          "navPointSpawnInfo": {
+            "_Type_": "NavPointSpawnInformation",
+            "entityClassDefinition": "file://./../../../../../libs/foundry/records/entities/scitem/mission_entities/mission_qt_quantum_beacon_longrange.json",
+            "name": "@mission_items_QTDistressBeacon",
+            "extendedTextTokens": []},
+          "location": "_PointsTo_:ptr:3",
+          "securityManifestToOverride": null},
+        "rewardContribution": null,
+        "displayInfo": {
+          "_Type_": "ObjectiveDisplayInfo",
+          "shortDescription": "@LOC_UNINITIALIZED",
+          "longDescription": "@LOC_UNINITIALIZED",
+          "objectiveMarkerLabel": "@LOC_UNINITIALIZED",
+          "category": "Primary",
+          "hideOnHUD": false},
+        "overrideMissionDetailsDisplayInfo": {
+          "_Type_": "OverrideMissionDetailsDisplayInfo",
+          "titleOverride": "@LOC_UNINITIALIZED",
+          "descriptionOverride": "@LOC_UNINITIALIZED"},
+        "commsNotifications": [],
+        "childMissionPhases": []}],
+    "partialRewardPayout": null,
+    "missionFlow": {
+      "_Type_": "MissionFlow",
+      "triggers": []},
+    "contractStartCommsNotification": {
+      "_Type_": "ContractCommsNotification",
+      "communicationTags": "_PointsTo_:ptr:4",
+      "delay": 0.0},
+    "contractEndCommsNotifications": [
+      {
+        "_Type_": "ContractEndCommsNotification",
+        "reason": "Complete",
+        "communicationTags": "_PointsTo_:ptr:5",
+        "delay": 0.0},
+      {
+        "_Type_": "ContractEndCommsNotification",
+        "reason": "Fail",
+        "communicationTags": "_PointsTo_:ptr:6",
+        "delay": 0.0},
+      {
+        "_Type_": "ContractEndCommsNotification",
+        "reason": "Abandon",
+        "communicationTags": "_PointsTo_:ptr:7",
+        "delay": 0.0}]}}

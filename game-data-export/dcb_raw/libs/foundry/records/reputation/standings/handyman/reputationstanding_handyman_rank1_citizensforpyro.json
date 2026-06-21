@@ -1,0 +1,15 @@
+{
+  "_RecordName_": "SReputationStandingParams.ReputationStanding_HandyMan_Rank1_CitizensForPyro",
+  "_RecordId_": "fb89d4cc-de9c-49be-bf6e-034739935c72",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "SReputationStandingParams",
+    "name": "HandyMan_Rank1_CitizensForPyro",
+    "description": "desc",
+    "displayName": "@RepStanding_Rank1",
+    "perkDescription": "@blank_space",
+    "icon": "UI/Textures/Vector/MobiGlas/App_ReputationManager/icon_reputationrank_bountyhunter_3.svg",
+    "minReputation": 1000,
+    "driftReputation": 0,
+    "driftTimeHours": 24.0,
+    "gated": false}}

@@ -1,0 +1,31 @@
+{
+  "_RecordName_": "BlueprintPoolRecord.BP_REWARDS_BombingRun",
+  "_RecordId_": "d16ca80c-eb03-41ad-8574-aa0dc0a5f6e3",
+  "_RecordTag_": "SystemsDesign",
+  "_RecordValue_": {
+    "_Type_": "BlueprintPoolRecord",
+    "blueprintRewards": [
+      {
+        "_Type_": "BlueprintReward",
+        "weight": 1.0,
+        "blueprintRecord": "file://./../../../../../../libs/foundry/records/crafting/blueprints/crafting/vehiclegear/weapons/ballistic/cannon/bp_craft_espr_ballisticcannon_s4.json"},
+      {
+        "_Type_": "BlueprintReward",
+        "weight": 1.0,
+        "blueprintRecord": "file://./../../../../../../libs/foundry/records/crafting/blueprints/crafting/vehiclegear/weapons/ballistic/cannon/bp_craft_espr_ballisticcannon_s5.json"},
+      {
+        "_Type_": "BlueprintReward",
+        "weight": 1.0,
+        "blueprintRecord": "file://./../../../../../../libs/foundry/records/crafting/blueprints/crafting/vehiclegear/weapons/ballistic/cannon/bp_craft_espr_ballisticcannon_s6.json"},
+      {
+        "_Type_": "BlueprintReward",
+        "weight": 1.0,
+        "blueprintRecord": "file://./../../../../../../libs/foundry/records/crafting/blueprints/crafting/vehiclegear/cooler/bp_craft_cool_aegs_s01_polar_scitem.json"},
+      {
+        "_Type_": "BlueprintReward",
+        "weight": 1.0,
+        "blueprintRecord": "file://./../../../../../../libs/foundry/records/crafting/blueprints/crafting/vehiclegear/cooler/bp_craft_cool_aegs_s02_permafrost_scitem.json"},
+      {
+        "_Type_": "BlueprintReward",
+        "weight": 1.0,
+        "blueprintRecord": "file://./../../../../../../libs/foundry/records/crafting/blueprints/crafting/vehiclegear/cooler/bp_craft_cool_aegs_s03_tempest_scitem.json"}]}}

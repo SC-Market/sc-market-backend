@@ -1,0 +1,99 @@
+{
+  "_RecordName_": "UIAudioDefinition.Default",
+  "_RecordId_": "44fc012f-4c7b-47f6-96a4-b852a2f4e9bb",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "UIAudioDefinition",
+    "events": [
+      {
+        "_Type_": "UIAudioEvent",
+        "tag": {
+          "_RecordPath_": "file://./../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+          "_RecordName_": "Tag.9e3c4f32-90f7-45e2-a0fb-424357c14bc5",
+          "_RecordId_": "9e3c4f32-90f7-45e2-a0fb-424357c14bc5"},
+        "audioTrigger": {
+          "_Type_": "GlobalResourceAudio",
+          "audioTrigger": ""}},
+      {
+        "_Type_": "UIAudioEvent",
+        "tag": {
+          "_RecordPath_": "file://./../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+          "_RecordName_": "Tag.c9f9a7a5-b990-4580-9373-d269e90675aa",
+          "_RecordId_": "c9f9a7a5-b990-4580-9373-d269e90675aa"},
+        "audioTrigger": {
+          "_Type_": "GlobalResourceAudio",
+          "audioTrigger": ""}},
+      {
+        "_Type_": "UIAudioEvent",
+        "tag": {
+          "_RecordPath_": "file://./../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+          "_RecordName_": "Tag.ab28dfa6-967c-4e9e-b347-e54a68970dbd",
+          "_RecordId_": "ab28dfa6-967c-4e9e-b347-e54a68970dbd"},
+        "audioTrigger": {
+          "_Type_": "GlobalResourceAudio",
+          "audioTrigger": ""}},
+      {
+        "_Type_": "UIAudioEvent",
+        "tag": {
+          "_RecordPath_": "file://./../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+          "_RecordName_": "Tag.7a80f99b-ed43-4ed1-8b75-4c71fef13fb1",
+          "_RecordId_": "7a80f99b-ed43-4ed1-8b75-4c71fef13fb1"},
+        "audioTrigger": {
+          "_Type_": "GlobalResourceAudio",
+          "audioTrigger": ""}},
+      {
+        "_Type_": "UIAudioEvent",
+        "tag": {
+          "_RecordPath_": "file://./../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+          "_RecordName_": "Tag.373b8356-d62e-4cf3-922a-9ae3121f465c",
+          "_RecordId_": "373b8356-d62e-4cf3-922a-9ae3121f465c"},
+        "audioTrigger": {
+          "_Type_": "GlobalResourceAudio",
+          "audioTrigger": ""}},
+      {
+        "_Type_": "UIAudioEvent",
+        "tag": {
+          "_RecordPath_": "file://./../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+          "_RecordName_": "Tag.beaa0bfe-9c17-44bc-b9a5-72b51ad09ef0",
+          "_RecordId_": "beaa0bfe-9c17-44bc-b9a5-72b51ad09ef0"},
+        "audioTrigger": {
+          "_Type_": "GlobalResourceAudio",
+          "audioTrigger": ""}},
+      {
+        "_Type_": "UIAudioEvent",
+        "tag": {
+          "_RecordPath_": "file://./../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+          "_RecordName_": "Tag.e70c3aae-5428-4c21-ba27-dd4daf1bf416",
+          "_RecordId_": "e70c3aae-5428-4c21-ba27-dd4daf1bf416"},
+        "audioTrigger": {
+          "_Type_": "GlobalResourceAudio",
+          "audioTrigger": ""}},
+      {
+        "_Type_": "UIAudioEvent",
+        "tag": {
+          "_RecordPath_": "file://./../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+          "_RecordName_": "Tag.736500da-30ce-4f93-9718-f13e77c06ecd",
+          "_RecordId_": "736500da-30ce-4f93-9718-f13e77c06ecd"},
+        "audioTrigger": {
+          "_Type_": "GlobalResourceAudio",
+          "audioTrigger": ""}},
+      {
+        "_Type_": "UIAudioEvent",
+        "tag": {
+          "_RecordPath_": "file://./../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+          "_RecordName_": "Tag.6ae02293-fa21-4e3d-880f-6942b63f383e",
+          "_RecordId_": "6ae02293-fa21-4e3d-880f-6942b63f383e"},
+        "audioTrigger": {
+          "_Type_": "GlobalResourceAudio",
+          "audioTrigger": ""}},
+      {
+        "_Type_": "UIAudioEvent",
+        "tag": {
+          "_RecordPath_": "file://./../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+          "_RecordName_": "Tag.80a9a0a7-2ec1-48ae-b651-2088d7a98b84",
+          "_RecordId_": "80a9a0a7-2ec1-48ae-b651-2088d7a98b84"},
+        "audioTrigger": {
+          "_Type_": "GlobalResourceAudio",
+          "audioTrigger": ""}}],
+    "parameters": [],
+    "dialogueEvents": []}}

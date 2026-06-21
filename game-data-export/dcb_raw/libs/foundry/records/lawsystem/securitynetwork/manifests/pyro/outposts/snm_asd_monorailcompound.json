@@ -1,0 +1,41 @@
+{
+  "_RecordName_": "SecurityNetworkManifest.SNM_ASD_MonorailCompound",
+  "_RecordId_": "8bbb5292-bad9-4fd2-ab09-96cdbac31d48",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "SecurityNetworkManifest",
+    "defaultProtocol": {
+      "_Type_": "SecurityNetworkProtocol",
+      "permissionsWithClearance": {
+        "_Type_": "SecurityNetworkPermissions",
+        "access": "Yes",
+        "trespass": "No"},
+      "permissionsWithoutClearance": {
+        "_Type_": "SecurityNetworkPermissions",
+        "access": "No",
+        "trespass": "Yes"},
+      "acceptedClearance": {
+        "_Type_": "SecurityClearanceConditions",
+        "tokens": [
+          "file://./../../../../../../../../libs/foundry/records/lawsystem/securityclearancetokens/pu/asd_monorailcompound_clearance.json"]},
+      "ownerFaction": "file://./../../../../../../../../libs/foundry/records/factions/faction_unlawful_asd.json"},
+    "roomProtocols": [],
+    "variables": [],
+    "hostilityRules": [
+      {
+        "_Type_": "SHostilityRules",
+        "tag": {
+          "_RecordPath_": "file://./../../../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+          "_RecordName_": "Tag.489c08ec-1af3-422a-a938-48cd6a253f51",
+          "_RecordId_": "489c08ec-1af3-422a-a938-48cd6a253f51"},
+        "useReputationHostility": true,
+        "usePersonalHostility": true,
+        "useFactionHostility": true,
+        "policesLawfulTrespass": true,
+        "hostileToCriminals": true,
+        "hostileToStolenVehicles": true,
+        "factionOverride": null,
+        "factionToOverride": "file://./../../../../../../../../libs/foundry/records/factions/faction_unlawful_asd.json"}],
+    "variableEffects": [],
+    "isNeutralTerritory": false,
+    "teleportPlayerOut": false}}

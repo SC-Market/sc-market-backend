@@ -1,0 +1,17 @@
+{
+  "_RecordName_": "InventoryContainer.MISC_Reliant_KORE_Template",
+  "_RecordId_": "862f4211-e910-437c-995b-8bb1baaf1c15",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "InventoryContainer",
+    "excludedItemSubTypes": [],
+    "interiorDimensions": {
+      "_Type_": "Vec3",
+      "x": 2.0,
+      "y": 2.0,
+      "z": 2.0},
+    "inventoryType": {
+      "_Type_": "InventoryClosedContainerType",
+      "capacity": {
+        "_Type_": "SStandardCargoUnit",
+        "standardCargoUnits": 2.03}}}}

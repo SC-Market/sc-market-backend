@@ -1,0 +1,51 @@
+{
+  "_RecordName_": "EntityClassDefinition.AudioAreaAmbience",
+  "_RecordId_": "590303e4-a3e3-49fc-a02b-c9f02663a506",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "EntityClassDefinition",
+    "Category": "Audio",
+    "Icon": "AudioAreaAmbience.bmp",
+    "Invisible": false,
+    "BBoxSelection": false,
+    "defaultEditorColor": {
+      "_Type_": "RGB",
+      "r": 1.0,
+      "g": 1.0,
+      "b": 0.0},
+    "entityDensityClass": null,
+    "tags": [],
+    "StaticEntityClassData": [],
+    "Components": [
+      {
+        "_Type_": "AudioAreaAmbienceComponentParams",
+        "isEnabled": true,
+        "audioPlayTrigger": {
+          "_Type_": "GlobalResourceAudio",
+          "audioTrigger": ""},
+        "audioStopTrigger": {
+          "_Type_": "GlobalResourceAudio",
+          "audioTrigger": ""},
+        "areaFadeRTPC": {
+          "_Type_": "AudioRtpc",
+          "rtpc": "area_fade_distance"},
+        "audioEnvironment": "",
+        "audioSwitch": "",
+        "audioSwitchStateInside": "",
+        "audioSwitchStateNear": "",
+        "audioSwitchStateFar": "",
+        "fadeDistance": 5.0,
+        "environmentFadeDistance": 5.0,
+        "audioSignature": 0.0,
+        "positionFadeDistance": 5.0,
+        "pitch": 0.0,
+        "volume": 0.0,
+        "atsVolumeOffset": 0.0,
+        "isManagedAudioObject": true},
+      {
+        "_Type_": "EntityAudioControllerRtpcSubscriberParams",
+        "rtpcs": [],
+        "rtpcLists": []},
+      {
+        "_Type_": "SAudioProxyParams",
+        "tagActions": []}]}}

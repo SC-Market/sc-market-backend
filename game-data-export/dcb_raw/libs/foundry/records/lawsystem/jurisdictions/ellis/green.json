@@ -1,0 +1,37 @@
+{
+  "_RecordName_": "Jurisdiction.Green",
+  "_RecordId_": "4ad3e0d8-5b7a-4f7c-a94c-f74be23b5ab1",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "Jurisdiction",
+    "subsumptionJurisdiction": "",
+    "name": "@Ellis3",
+    "logoPath": "",
+    "parentJurisdiction": "file://./../../../../../../libs/foundry/records/lawsystem/jurisdictions/uee.json",
+    "respectsParentJurisdictionLaws": true,
+    "infractions": [],
+    "infractionSets": [],
+    "journalEntry": "file://./../../../../../../libs/foundry/records/journalentry/pu/jurisdiction_stanton_microtech.json",
+    "maxStolenGoodsPossessionSCU": 1.0,
+    "prohibitedGoods": [],
+    "prohibitedResources": [],
+    "controlledSubstanceClasses": [
+      {
+        "_Type_": "ControlledSubstanceClass",
+        "commodities": [],
+        "resources": [],
+        "maxPossessionSCU": 0.125},
+      {
+        "_Type_": "ControlledSubstanceClass",
+        "commodities": [],
+        "resources": [],
+        "maxPossessionSCU": 0.125},
+      {
+        "_Type_": "ControlledSubstanceClass",
+        "commodities": [],
+        "resources": [],
+        "maxPossessionSCU": 0.125}],
+    "baseFine": 126,
+    "earlyPaymentPeriod": -1.0,
+    "isPrison": false,
+    "impoundingDefinitions": []}}

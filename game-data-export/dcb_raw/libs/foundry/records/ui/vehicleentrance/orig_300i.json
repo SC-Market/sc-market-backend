@@ -1,0 +1,37 @@
+{
+  "_RecordName_": "SEntrancesDef.ORIG_300i",
+  "_RecordId_": "2af245f3-5289-4f96-b8de-e7a39a3ab1fd",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "SEntrancesDef",
+    "boundingBoxScale": {
+      "_Type_": "Vec3",
+      "x": 1.6,
+      "y": 1.6,
+      "z": 1.6},
+    "boundingBoxOffset": {
+      "_Type_": "Vec3",
+      "x": 0.0,
+      "y": 0.0,
+      "z": -1.0},
+    "entranceArray": [
+      {
+        "_Type_": "SCEntranceItem",
+        "entranceName": "@entrance_hatch",
+        "jointName": "ORIG_300I",
+        "positionOffset": {
+          "_Type_": "Vec3",
+          "x": -2.583,
+          "y": 3.525,
+          "z": 1.133},
+        "shipState": "Flying"},
+      {
+        "_Type_": "SCEntranceItem",
+        "entranceName": "@entrance_ladder",
+        "jointName": "ORIG_300I",
+        "positionOffset": {
+          "_Type_": "Vec3",
+          "x": -2.583,
+          "y": 3.525,
+          "z": 1.133},
+        "shipState": "Grounded"}]}}

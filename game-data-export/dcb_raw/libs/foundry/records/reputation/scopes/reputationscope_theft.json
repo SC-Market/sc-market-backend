@@ -1,0 +1,21 @@
+{
+  "_RecordName_": "SReputationScopeParams.ReputationScope_Theft",
+  "_RecordId_": "025aa8b3-5e14-42d0-8ebc-705a372a9eac",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "SReputationScopeParams",
+    "scopeName": "Theft",
+    "displayName": "@RepScope_Theft_Name",
+    "description": "@LOC_PLACEHOLDER",
+    "icon": "UI/Textures/Vector/MobiGlas/App_ReputationManager/icon_reputationrank_theft_header.svg",
+    "standingMap": {
+      "_Type_": "SReputationStandingMapParams",
+      "reputationCeiling": 320000,
+      "initialReputation": 0,
+      "standings": [
+        "file://./../../../../../libs/foundry/records/reputation/standings/theft/reputationstanding_theft_noteligible.json",
+        "file://./../../../../../libs/foundry/records/reputation/standings/theft/reputationstanding_theft_rank1.json",
+        "file://./../../../../../libs/foundry/records/reputation/standings/theft/reputationstanding_theft_rank2.json",
+        "file://./../../../../../libs/foundry/records/reputation/standings/theft/reputationstanding_theft_rank3.json",
+        "file://./../../../../../libs/foundry/records/reputation/standings/theft/reputationstanding_theft_rank4.json",
+        "file://./../../../../../libs/foundry/records/reputation/standings/theft/reputationstanding_theft_rank5.json"]}}}

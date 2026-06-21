@@ -1,0 +1,28 @@
+{
+  "_RecordName_": "MissionOrganization.HeadHunters",
+  "_RecordId_": "ee84f3c0-aea5-4b45-a204-48c3aa74fa04",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "MissionOrganization",
+    "organizationTags": [
+      {
+        "_Type_": "MissionLocationTags",
+        "tags": []},
+      {
+        "_Type_": "MissionLocationTags",
+        "tags": []},
+      {
+        "_Type_": "MissionLocationTags",
+        "tags": []}],
+    "stringVariants": {
+      "_Type_": "MissionStringVariants",
+      "variants": [
+        {
+          "_Type_": "MissionStringVariant",
+          "tag": {
+            "_RecordPath_": "file://./../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+            "_RecordName_": "Tag.0130de18-97e2-4d4c-9bb1-3e7ef5fd0490",
+            "_RecordId_": "0130de18-97e2-4d4c-9bb1-3e7ef5fd0490"},
+          "string": "@HeadHunters_RepUI_Name"}]},
+    "weighting": 1.0,
+    "factionReputation": "file://./../../../../../libs/foundry/records/factions/factionreputation/factionreputation_unlawful_headhunters.json"}}

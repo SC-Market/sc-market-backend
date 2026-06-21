@@ -1,0 +1,70 @@
+{
+  "_RecordName_": "ScanCustomDataDef.SurfaceRelay_ScanData",
+  "_RecordId_": "ceda3857-9d28-4ab5-a072-81b135ec355a",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "ScanCustomDataDef",
+    "info": {
+      "_Type_": "ScanCustomDataInfo",
+      "scanProcedures": [
+        {
+          "_Type_": "CustomScanProcedureParams",
+          "requiredScanTag": null,
+          "emissionBaseline": 0.0,
+          "runtimeDuration": 0.1,
+          "allowedInAIAutoScan": true,
+          "allowedInFocalPointScan": true,
+          "allowedInPingBroadScan": true,
+          "allowedInPingFocusScan": true,
+          "allowedInPassiveScan": false,
+          "customDatas": [
+            {
+              "_Type_": "ScanCustomDataDirect",
+              "requiredTags": {
+                "_Type_": "TagsDNFTerm",
+                "positiveTags": [],
+                "negativeTags": []},
+              "name": "@scan_data_model",
+              "displaySection": "Overview",
+              "addToBoxoutDisplay": false,
+              "displayInSameRowAsHeader": false,
+              "value": {
+                "_Type_": "ScanCustomValueLocString",
+                "value": "@mg_clovus_satrecover_surfacerelay_model"}},
+            {
+              "_Type_": "ScanCustomDataDirect",
+              "requiredTags": {
+                "_Type_": "TagsDNFTerm",
+                "positiveTags": [],
+                "negativeTags": []},
+              "name": "@scan_data_status",
+              "displaySection": "Overview",
+              "addToBoxoutDisplay": false,
+              "displayInSameRowAsHeader": false,
+              "value": {
+                "_Type_": "ScanCustomValueLocString",
+                "value": "@hud_Vehicle_Status_Offline"}}]},
+        {
+          "_Type_": "CustomScanProcedureParams",
+          "requiredScanTag": null,
+          "emissionBaseline": 0.0,
+          "runtimeDuration": 0.1,
+          "allowedInAIAutoScan": true,
+          "allowedInFocalPointScan": true,
+          "allowedInPingBroadScan": true,
+          "allowedInPingFocusScan": true,
+          "allowedInPassiveScan": false,
+          "customDatas": [
+            {
+              "_Type_": "ScanCustomDataDirect",
+              "requiredTags": {
+                "_Type_": "TagsDNFTerm",
+                "positiveTags": [],
+                "negativeTags": []},
+              "name": "@scan_data_owner",
+              "displaySection": "Overview",
+              "addToBoxoutDisplay": false,
+              "displayInSameRowAsHeader": false,
+              "value": {
+                "_Type_": "ScanCustomValueLocString",
+                "value": "@hurston_from"}}]}]}}}

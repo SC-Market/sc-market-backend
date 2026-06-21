@@ -1,0 +1,27 @@
+{
+  "_RecordName_": "SEntrancesDef.BANU_Defender",
+  "_RecordId_": "02e33075-97b6-42f7-a091-fcc13a19c187",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "SEntrancesDef",
+    "boundingBoxScale": {
+      "_Type_": "Vec3",
+      "x": 1.2,
+      "y": 1.2,
+      "z": 1.2},
+    "boundingBoxOffset": {
+      "_Type_": "Vec3",
+      "x": 0.0,
+      "y": 0.0,
+      "z": 0.0},
+    "entranceArray": [
+      {
+        "_Type_": "SCEntranceItem",
+        "entranceName": "@entrance_ramp",
+        "jointName": "ship_door_entrance",
+        "positionOffset": {
+          "_Type_": "Vec3",
+          "x": -3.0,
+          "y": 1.2,
+          "z": 0.0},
+        "shipState": "Both"}]}}

@@ -1,0 +1,18 @@
+{
+  "_RecordName_": "JournalEntry.Crusader_VeteranAgent_Promotion",
+  "_RecordId_": "95fcbeac-52a5-4b53-8b65-160cb29d2c68",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "JournalEntry",
+    "Title": "@Crusader_ReputationJournal_VeteranAgent_Promotion_Title",
+    "ShortTitle": "@Crusader_ReputationJournal_Generic_Promotion_ShortTitle",
+    "SubHeading": "@Crusader_from",
+    "autoOpenMobiGlas": false,
+    "showNotification": true,
+    "missionSpecificContent": false,
+    "removeOnMissionEnd": true,
+    "Style": "file://./../../../../../../../libs/foundry/records/journalentrytype/journalentrytype.textlog.json",
+    "type": {
+      "_Type_": "JournalEntryText",
+      "BodyText": "@Crusader_ReputationJournal_VeteranAgent_Promotion_BodyText"},
+    "tutorialEntry": false}}

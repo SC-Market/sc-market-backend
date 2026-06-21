@@ -1,0 +1,49 @@
+{
+  "_RecordName_": "EntitlementAccountItemGlobalParams.AccountItemTypes",
+  "_RecordId_": "1bb0dbfd-17c9-4cb1-8f63-bb25e6169368",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "EntitlementAccountItemGlobalParams",
+    "accountItemTypes": [
+      {
+        "_Type_": "EntitlementItemType",
+        "Type": "Char_Body"},
+      {
+        "_Type_": "EntitlementItemType",
+        "Type": "Char_Hair_Color"},
+      {
+        "_Type_": "EntitlementItemType",
+        "Type": "Char_Head"},
+      {
+        "_Type_": "EntitlementItemType",
+        "Type": "Char_Head_Beard"},
+      {
+        "_Type_": "EntitlementItemType",
+        "Type": "Char_Head_Eyebrow"},
+      {
+        "_Type_": "EntitlementItemType",
+        "Type": "Char_Head_Eyelash"},
+      {
+        "_Type_": "EntitlementItemType",
+        "Type": "Char_Head_Eyes"},
+      {
+        "_Type_": "EntitlementItemType",
+        "Type": "Char_Head_Hair"},
+      {
+        "_Type_": "EntitlementItemType",
+        "Type": "Char_Lens"},
+      {
+        "_Type_": "EntitlementItemType",
+        "Type": "Char_Skin_Color"},
+      {
+        "_Type_": "EntitlementItemType",
+        "Type": "HangarExpansion"},
+      {
+        "_Type_": "EntitlementItemType",
+        "Type": "HangarStock"},
+      {
+        "_Type_": "EntitlementItemType",
+        "Type": "Player"},
+      {
+        "_Type_": "EntitlementItemType",
+        "Type": "PersistentHab"}]}}

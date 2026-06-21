@@ -1,0 +1,19 @@
+{
+  "_RecordName_": "UIElement.HighTechAirlocksOuter",
+  "_RecordId_": "23f4f16a-6796-483e-818c-670ff2df0721",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "UIElement",
+    "sourceFile": "ui/environmentalscreens/displaypanels/doors/airlocks/hightech/assets/swf/airlocksexteriorstatus.gfx",
+    "soundsRecord": null,
+    "fontFile": "",
+    "alignMode": "dynamic",
+    "alignScale": true,
+    "alignMax": true,
+    "layer": 0,
+    "skipFirstFrameInit": false,
+    "keyEvents": false,
+    "eventsExclusive": false,
+    "noDepthTest": false,
+    "forceNoUnload": false,
+    "noPostProcessing": false}}

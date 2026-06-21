@@ -1,0 +1,9 @@
+{
+  "_RecordName_": "MissionLocality.PyroAndNyx",
+  "_RecordId_": "0ac98a4a-2371-4522-9bdf-32e8fe1a68d5",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "MissionLocality",
+    "availableLocations": [
+      "file://./../../../../../libs/foundry/records/starmap/pu/system/pyro/pyrostar/pyrostar.json",
+      "file://./../../../../../libs/foundry/records/starmap/pu/system/nyx/nyxstar.json"]}}

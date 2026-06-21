@@ -1,0 +1,59 @@
+{
+  "_RecordName_": "BuildingBlocks_Style.SK_BIOC_LoadingStyles",
+  "_RecordId_": "1fd7598d-6baf-4e01-b537-5c7d4a35a7d7",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "BuildingBlocks_Style",
+    "entries": [
+      {
+        "_Type_": "BuildingBlocks_StyleEntry",
+        "name": "All Circles",
+        "conditionsList": [
+          {
+            "_Type_": "BuildingBlocks_StyleConditionList",
+            "name": "Circle 1",
+            "conditions": [
+              {
+                "_Type_": "BuildingBlocks_StyleSelectorConditionType",
+                "type": "Circle"},
+              {
+                "_Type_": "BuildingBlocks_StyleSelectorConditionParent",
+                "conditions": [
+                  {
+                    "_Type_": "BuildingBlocks_StyleSelectorConditionTag",
+                    "tag": {
+                      "_RecordPath_": "file://./../../../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+                      "_RecordName_": "Tag.3079cc12-2784-40e9-98b1-ed548f7e1901",
+                      "_RecordId_": "3079cc12-2784-40e9-98b1-ed548f7e1901"}}]}]}],
+        "modifiers": [
+          {
+            "_Type_": "BuildingBlocks_FieldModifierNumber",
+            "field": "StrokeWidth",
+            "value": 10.0},
+          {
+            "_Type_": "BuildingBlocks_FieldModifierColor",
+            "field": "StrokeColor",
+            "color": {
+              "_Type_": "BuildingBlocks_ColorStyle",
+              "color": "Base",
+              "alpha": 1.0}}],
+        "transitions": []}],
+    "colorStyles": [
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null],
+    "textFieldModifiers": []}}

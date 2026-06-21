@@ -1,0 +1,17 @@
+{
+  "_RecordName_": "InventoryContainer.Ship_TempItemCarryingCapacity_MISC_Freelancer_MAX",
+  "_RecordId_": "78ef7544-efb0-4c91-95af-0e91f51c78c1",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "InventoryContainer",
+    "excludedItemSubTypes": [],
+    "interiorDimensions": {
+      "_Type_": "Vec3",
+      "x": 3.0,
+      "y": 11.0,
+      "z": 3.7},
+    "inventoryType": {
+      "_Type_": "InventoryClosedContainerType",
+      "capacity": {
+        "_Type_": "SStandardCargoUnit",
+        "standardCargoUnits": 122.0}}}}

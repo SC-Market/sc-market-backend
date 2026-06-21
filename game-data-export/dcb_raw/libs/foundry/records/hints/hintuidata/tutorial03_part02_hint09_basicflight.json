@@ -1,0 +1,12 @@
+{
+  "_RecordName_": "HintUIData.Tutorial03_Part02_Hint09_BasicFlight",
+  "_RecordId_": "9b46e5e9-ec7c-4c4b-beb9-86596e7b03f7",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "HintUIData",
+    "TitleText": "@Tut03_Part02_Hint09_BasicFlight_Title",
+    "BodyText": "@Tut03_Part02_Hint09_BasicFlight",
+    "BodyTextGamePad": "@Tut03_Part02_Hint09_BasicFlight",
+    "BodyTextJoystick": "@Tut03_Part02_Hint09_BasicFlight",
+    "TitleImagePath": "",
+    "BodyImagePath": ""}}

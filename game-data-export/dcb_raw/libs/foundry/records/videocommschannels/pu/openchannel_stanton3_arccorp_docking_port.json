@@ -1,0 +1,10 @@
+{
+  "_RecordName_": "CommsChannelDef.OpenChannel_Stanton3_ArcCorp_Docking_Port",
+  "_RecordId_": "c152486d-e6aa-457c-a59e-e8c7256b9f7d",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "CommsChannelDef",
+    "channelId": "OpenChannel_Stanton3_ArcCorp_Docking_Port",
+    "displayName": "@LOC_PLACEHOLDER",
+    "canHaveMultipleInstances": false,
+    "useAreaOfEffect": false}}

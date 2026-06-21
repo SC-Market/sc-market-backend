@@ -1,0 +1,41 @@
+{
+  "_RecordName_": "InteractionConditionPreset.PreventLooting_WorkaroundForRestrictedWearables",
+  "_RecordId_": "cea9754e-ee8d-47b6-9261-3e06e6163482",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "InteractionConditionPreset",
+    "conditions": [
+      {
+        "_Type_": "InteractionConditionItem",
+        "conditionDisplay": {
+          "_Type_": "ConditionDisplayParams",
+          "exclusiveDisplay": true,
+          "blockedText": {
+            "_Type_": "BlockedTextParams",
+            "blockedText": "@interaction_condition_cannot_remove"},
+          "blockedCursor": {
+            "_Type_": "BlockedCursorParams",
+            "blockedCursor": "Invalid"},
+          "blockedColor": {
+            "_Type_": "BlockedColorParams",
+            "selectedColor": "file://./../../../../../../libs/foundry/records/ui/innerthought/colors/blockedselected.json",
+            "unselectedColor": "file://./../../../../../../libs/foundry/records/ui/innerthought/colors/blockedunselected.json",
+            "applyImmediately": false},
+          "blockedHint": null,
+          "autoStoreOption": null,
+          "blockedInteractionAttemptMonologue": null},
+        "itemType": "UNDEFINED",
+        "portTag": "CannotEverBeTrueAsThisTagIsMadeUp"}],
+    "conditionToHideParams": [
+      {
+        "_Type_": "InteractionConditionEntityTags",
+        "conditionDisplay": null,
+        "tags": {
+          "_Type_": "TagsDNFTerm",
+          "positiveTags": [
+            {
+              "_RecordPath_": "file://./../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+              "_RecordName_": "Tag.24b19932-58a9-467c-81e4-7955c1b73b24",
+              "_RecordId_": "24b19932-58a9-467c-81e4-7955c1b73b24"}],
+          "negativeTags": []},
+        "CheckParent": true}]}}

@@ -1,0 +1,21 @@
+{
+  "_RecordName_": "SReputationScopeParams.ReputationScope_Smuggling",
+  "_RecordId_": "d02450b7-d477-43ed-81a1-ebd89d316705",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "SReputationScopeParams",
+    "scopeName": "Smuggling",
+    "displayName": "@RepScope_HiredMuscle_Name",
+    "description": "@LOC_PLACEHOLDER",
+    "icon": "UI/Textures/Vector/MobiGlas/App_ReputationManager/icon_reputationrank_hiredmuscle_header.svg",
+    "standingMap": {
+      "_Type_": "SReputationStandingMapParams",
+      "reputationCeiling": 320000,
+      "initialReputation": 0,
+      "standings": [
+        "file://./../../../../../libs/foundry/records/reputation/standings/smuggling/reputationstanding_smuggling_noteligible.json",
+        "file://./../../../../../libs/foundry/records/reputation/standings/smuggling/reputationstanding_smuggling_rank1.json",
+        "file://./../../../../../libs/foundry/records/reputation/standings/smuggling/reputationstanding_smuggling_rank2.json",
+        "file://./../../../../../libs/foundry/records/reputation/standings/smuggling/reputationstanding_smuggling_rank3.json",
+        "file://./../../../../../libs/foundry/records/reputation/standings/smuggling/reputationstanding_smuggling_rank4.json",
+        "file://./../../../../../libs/foundry/records/reputation/standings/smuggling/reputationstanding_smuggling_rank5.json"]}}}

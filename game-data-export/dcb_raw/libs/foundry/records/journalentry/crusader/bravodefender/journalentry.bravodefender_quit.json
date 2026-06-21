@@ -1,0 +1,18 @@
+{
+  "_RecordName_": "JournalEntry.BravoDefender_Quit",
+  "_RecordId_": "9da7cc2f-331d-40c4-b2e0-b506c2d08028",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "JournalEntry",
+    "Title": "@mobiglas_BravoDefender_Quit_title",
+    "ShortTitle": "@LOC_UNINITIALIZED",
+    "SubHeading": "@mobiglas_Author_PaulineNesso",
+    "autoOpenMobiGlas": false,
+    "showNotification": true,
+    "missionSpecificContent": false,
+    "removeOnMissionEnd": true,
+    "Style": null,
+    "type": {
+      "_Type_": "JournalEntryText",
+      "BodyText": "@mobiglas_BravoDefender_Quit_text"},
+    "tutorialEntry": false}}

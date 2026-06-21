@@ -1,0 +1,15 @@
+{
+  "_RecordName_": "VoiceBundle.PU_Admin_Nyx_Male_Bundle",
+  "_RecordId_": "fb58077a-5b2f-4f3b-abb3-e00fb4c78f16",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "VoiceBundle",
+    "name": "PU_Admin_Nyx_Male_Bundle",
+    "voices": [
+      "file://./../../../../../libs/foundry/records/voicesingle/pu/admin/pu_admin_male01.json",
+      "file://./../../../../../libs/foundry/records/voicesingle/pu/admin/pu_admin_male02.json",
+      "file://./../../../../../libs/foundry/records/voicesingle/pu/admin/pu_admin_male03.json",
+      "file://./../../../../../libs/foundry/records/voicesingle/pu/admin/pu_admin_male04.json",
+      "file://./../../../../../libs/foundry/records/voicesingle/pu/admin/pu_admin_male05.json",
+      "file://./../../../../../libs/foundry/records/voicesingle/pu/bureaucrat/bureaucrat_male01.json",
+      "file://./../../../../../libs/foundry/records/voicesingle/pu/bureaucrat/bureaucrat_male03.json"]}}

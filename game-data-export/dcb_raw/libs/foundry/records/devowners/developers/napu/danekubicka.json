@@ -1,0 +1,10 @@
+{
+  "_RecordName_": "DevOwner.DaneKubicka",
+  "_RecordId_": "f8028f0f-e1d6-419b-825f-2ea2907e5111",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "DevOwner",
+    "type": {
+      "_Type_": "Developer",
+      "name": "Dane Kubicka",
+      "team": "file://./../../../../../../libs/foundry/records/devowners/devteams/napu.json"}}}

@@ -1,0 +1,22 @@
+{
+  "_RecordName_": "LoadoutKit.BANU_Defender_Harmony_Teal_Red",
+  "_RecordId_": "47c8def5-acfc-4eb2-9ca8-60eca65537b0",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "LoadoutKit",
+    "name": "@item_NameDefender_Paint_Harmony",
+    "description": "@item_DescDefender_Paint_Harmony",
+    "loadout": {
+      "_Type_": "SItemPortLoadoutManualParams",
+      "WearRange": null,
+      "DirtRange": null,
+      "SkipInventoryItemsOnMissionEntities": false,
+      "InventoryItems": [],
+      "entries": [
+        {
+          "_Type_": "SItemPortLoadoutEntryParams",
+          "itemPortName": "hardpoint_paint",
+          "entityClassName": "",
+          "entityClassReference": "file://./../../../../../libs/foundry/records/entities/scitem/ships/paints/paint_defender_teal_red.json",
+          "inventoryContainer": null,
+          "loadout": null}]}}}

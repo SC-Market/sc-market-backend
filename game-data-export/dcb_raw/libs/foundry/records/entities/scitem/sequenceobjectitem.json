@@ -1,0 +1,25 @@
+{
+  "_RecordName_": "EntityClassDefinition.SequenceObjectItem",
+  "_RecordId_": "e29a650f-8cb6-4b1f-9ee7-d0db64b8d727",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "EntityClassDefinition",
+    "Category": "Default",
+    "Icon": "Default.bmp",
+    "Invisible": true,
+    "BBoxSelection": false,
+    "defaultEditorColor": {
+      "_Type_": "RGB",
+      "r": 1.0,
+      "g": 1.0,
+      "b": 0.0},
+    "entityDensityClass": null,
+    "tags": [],
+    "StaticEntityClassData": [],
+    "Components": [
+      {
+        "_Type_": "SEntityComponentTrackViewParams"},
+      {
+        "_Type_": "SubsumptionMissionLinkComponentParams"},
+      {
+        "_Type_": "STrackviewInterruptComponentParams"}]}}

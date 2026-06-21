@@ -1,0 +1,150 @@
+{
+  "_RecordName_": "CraftingBlueprintRecord.BP_CRAFT_ESPR_BallisticCannon_S1",
+  "_RecordId_": "fca087e5-c043-4638-99e8-3c0bd668ab89",
+  "_RecordTag_": "SystemsDesign",
+  "_RecordValue_": {
+    "_Type_": "CraftingBlueprintRecord",
+    "blueprint": {
+      "_Type_": "CraftingBlueprint",
+      "category": {
+        "_RecordPath_": "file://./../../../../../../../../../../libs/foundry/records/crafting/blueprintcategories/blueprintcategorydatabase.json",
+        "_RecordName_": "BlueprintCategoryRecord.VehicleWeaponsS1",
+        "_RecordId_": "61e576d2-f8b4-46b1-98e6-9205bb5de686"},
+      "blueprintName": "@LOC_PLACEHOLDER",
+      "processSpecificData": {
+        "_Type_": "CraftingProcess_Creation",
+        "entityClass": "file://./../../../../../../../../../../libs/foundry/records/entities/scitem/ships/weapons/espr_ballisticcannon_s1.json"},
+      "tiers": [
+        {
+          "_Type_": "CraftingBlueprintTier",
+          "recipe": {
+            "_Type_": "CraftingRecipe",
+            "processSpecificData": null,
+            "costs": {
+              "_Type_": "CraftingRecipeCosts",
+              "craftTime": {
+                "_Type_": "TimeValue_Partitioned",
+                "days": 0,
+                "hours": 0,
+                "minutes": 9,
+                "seconds": 0.0},
+              "mandatoryCost": {
+                "_Type_": "CraftingCost_Select",
+                "context": [
+                  {
+                    "_Type_": "CraftingCostContext_ResultCompositionInclusion",
+                    "option": "Include"}],
+                "nameInfo": {
+                  "_Type_": "CraftingNameInfo",
+                  "debugName": "ASPECTS",
+                  "displayName": "@LOC_PLACEHOLDER"},
+                "count": 3,
+                "options": [
+                  {
+                    "_Type_": "CraftingCost_Select",
+                    "context": [
+                      {
+                        "_Type_": "CraftingCostContext_ResultGameplayPropertyModifiers",
+                        "gameplayPropertyModifiers": {
+                          "_Type_": "CraftingGameplayPropertyModifiers_List",
+                          "gameplayPropertyModifiers": [
+                            {
+                              "_Type_": "CraftingGameplayPropertyModifierCommon",
+                              "gameplayPropertyRecord": "file://./../../../../../../../../../../libs/foundry/records/crafting/craftedproperties/gpp_health_maxhealth.json",
+                              "valueRanges": [
+                                {
+                                  "_Type_": "CraftingGameplayPropertyModifierValueRange_Linear",
+                                  "startQuality": 0,
+                                  "endQuality": 1000,
+                                  "modifierAtStart": 0.9,
+                                  "modifierAtEnd": 1.1}]}]}}],
+                    "nameInfo": {
+                      "_Type_": "CraftingNameInfo",
+                      "debugName": "FRAME",
+                      "displayName": "@crafting_ui_slotname_frame"},
+                    "count": 1,
+                    "options": [
+                      {
+                        "_Type_": "CraftingCost_Resource",
+                        "context": [],
+                        "resource": {
+                          "_RecordPath_": "file://./../../../../../../../../../../libs/foundry/records/resourcetypedatabase/resourcetypedatabase.json",
+                          "_RecordName_": "ResourceType.Iron",
+                          "_RecordId_": "f386a33c-ac9a-400a-a7b8-fe1fc7c8d270"},
+                        "quantity": {
+                          "_Type_": "SStandardCargoUnit",
+                          "standardCargoUnits": 0.36},
+                        "minQuality": 1}]},
+                  {
+                    "_Type_": "CraftingCost_Select",
+                    "context": [
+                      {
+                        "_Type_": "CraftingCostContext_ResultGameplayPropertyModifiers",
+                        "gameplayPropertyModifiers": {
+                          "_Type_": "CraftingGameplayPropertyModifiers_List",
+                          "gameplayPropertyModifiers": [
+                            {
+                              "_Type_": "CraftingGameplayPropertyModifierCommon",
+                              "gameplayPropertyRecord": "file://./../../../../../../../../../../libs/foundry/records/crafting/craftedproperties/gpp_weapon_damage.json",
+                              "valueRanges": [
+                                {
+                                  "_Type_": "CraftingGameplayPropertyModifierValueRange_Linear",
+                                  "startQuality": 0,
+                                  "endQuality": 1000,
+                                  "modifierAtStart": 0.95,
+                                  "modifierAtEnd": 1.05}]}]}}],
+                    "nameInfo": {
+                      "_Type_": "CraftingNameInfo",
+                      "debugName": "CYCLER",
+                      "displayName": "@crafting_ui_slotname_cycler"},
+                    "count": 1,
+                    "options": [
+                      {
+                        "_Type_": "CraftingCost_Resource",
+                        "context": [],
+                        "resource": {
+                          "_RecordPath_": "file://./../../../../../../../../../../libs/foundry/records/resourcetypedatabase/resourcetypedatabase.json",
+                          "_RecordName_": "ResourceType.Riccite",
+                          "_RecordId_": "86d00bd8-08f7-4231-b375-a609803fc46d"},
+                        "quantity": {
+                          "_Type_": "SStandardCargoUnit",
+                          "standardCargoUnits": 0.05},
+                        "minQuality": 1}]},
+                  {
+                    "_Type_": "CraftingCost_Select",
+                    "context": [
+                      {
+                        "_Type_": "CraftingCostContext_ResultGameplayPropertyModifiers",
+                        "gameplayPropertyModifiers": {
+                          "_Type_": "CraftingGameplayPropertyModifiers_List",
+                          "gameplayPropertyModifiers": [
+                            {
+                              "_Type_": "CraftingGameplayPropertyModifierCommon",
+                              "gameplayPropertyRecord": "file://./../../../../../../../../../../libs/foundry/records/crafting/craftedproperties/gpp_weapon_damage.json",
+                              "valueRanges": [
+                                {
+                                  "_Type_": "CraftingGameplayPropertyModifierValueRange_Linear",
+                                  "startQuality": 0,
+                                  "endQuality": 1000,
+                                  "modifierAtStart": 0.95,
+                                  "modifierAtEnd": 1.05}]}]}}],
+                    "nameInfo": {
+                      "_Type_": "CraftingNameInfo",
+                      "debugName": "BARREL",
+                      "displayName": "@crafting_ui_slotname_barrel"},
+                    "count": 1,
+                    "options": [
+                      {
+                        "_Type_": "CraftingCost_Resource",
+                        "context": [],
+                        "resource": {
+                          "_RecordPath_": "file://./../../../../../../../../../../libs/foundry/records/resourcetypedatabase/resourcetypedatabase.json",
+                          "_RecordName_": "ResourceType.Titanium",
+                          "_RecordId_": "07570c9f-fdf6-4bca-a56b-c42809ec0e01"},
+                        "quantity": {
+                          "_Type_": "SStandardCargoUnit",
+                          "standardCargoUnits": 0.18},
+                        "minQuality": 1}]}]},
+              "optionalCosts": []},
+            "results": null},
+          "research": null}]}}}

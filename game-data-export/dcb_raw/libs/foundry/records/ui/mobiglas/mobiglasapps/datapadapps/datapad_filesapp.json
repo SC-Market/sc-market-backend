@@ -1,0 +1,24 @@
+{
+  "_RecordName_": "mobiGlasApp.Datapad_FilesApp",
+  "_RecordId_": "cbf53b02-dc11-4260-8946-ede7501a9384",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "mobiGlasApp",
+    "name": "GeneralDataDisplayApp",
+    "bindingsNamespace": "datapadFiles",
+    "appCanvas": "file://./../../../../../../../libs/foundry/records/ui/buildingblocks/dev/datapadtest/datapad_files.json",
+    "homeCanvas": null,
+    "displayIcon": "UI/Textures/Vector/I_InteractiveScreens/Ter/Datapads_Terminals_GenericOS/I_Eng_PUOnly_GenericOS_Tablet_AppBar_Icon_Files.svg",
+    "displayIcon3d": "",
+    "displayName": "@ui_datapad_files",
+    "appColor": {
+      "_Type_": "SRGBA8",
+      "r": 0,
+      "g": 0,
+      "b": 0,
+      "a": 0},
+    "isHidden": false,
+    "defaultAppData": [],
+    "appParams": null,
+    "hostingApps": [],
+    "legacyApp": false}}

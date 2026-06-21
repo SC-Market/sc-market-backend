@@ -1,0 +1,69 @@
+{
+  "_RecordName_": "EntityClassDefinition.AmioshiPlague",
+  "_RecordId_": "9b18dc50-eb7f-46ff-b30b-c2753cee1c19",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "EntityClassDefinition",
+    "Category": "Default",
+    "Icon": "Default.bmp",
+    "Invisible": true,
+    "BBoxSelection": false,
+    "defaultEditorColor": {
+      "_Type_": "RGB",
+      "r": 1.0,
+      "g": 1.0,
+      "b": 0.0},
+    "entityDensityClass": null,
+    "tags": [
+      {
+        "_RecordPath_": "file://./../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+        "_RecordName_": "Tag.00354f62-8eda-47ee-b91a-1d7d50607674",
+        "_RecordId_": "00354f62-8eda-47ee-b91a-1d7d50607674"}],
+    "StaticEntityClassData": [
+      {
+        "_Type_": "EntityUIDisplayParams",
+        "displayName": "@LOC_UNINITIALIZED",
+        "displayDescription": "@items_commodities_amioshiplague_desc",
+        "displayThumbnail": "",
+        "displayImage": "ui/sharedassets/commodityicons/cargo_comm_050x3_food_a_diff.tif",
+        "displayIcon": "",
+        "sortString": "",
+        "trackerProperties": {
+          "_Type_": "SObjectDataBankEntryTrackerParams"}}],
+    "Components": [
+      {
+        "_Type_": "SCItemPurchasableParams",
+        "Display": null,
+        "displayName": "@items_commodities_amioshiplague",
+        "displayType": "@items_commodities_type_natural",
+        "displayThumbnail": "ui/textures/vector/general/items/inv_icon_amioshiplague.svg",
+        "allowTryOn": false,
+        "allowQuickBuy": false,
+        "tryOnInteractionText": "@shop_ui_item_action_try",
+        "defaultAttachToPortName": "",
+        "interactionPointTemplate": null,
+        "disabledLoadoutInteractions": [],
+        "tutorialParams": null,
+        "interactionPoints": []},
+      {
+        "_Type_": "ResourceContainer",
+        "capacity": {
+          "_Type_": "SMicroCargoUnit",
+          "microSCU": 1200},
+        "immutable": true,
+        "mutabilityLevel": "ReadWrite",
+        "generateRandomQuality": false,
+        "inclusiveResources": [],
+        "exclusiveResources": [],
+        "inclusiveGroups": [],
+        "exclusiveGroups": [],
+        "defaultComposition": [
+          {
+            "_Type_": "ResourceContainerDefaultCompositionEntry",
+            "entry": {
+              "_RecordPath_": "file://./../../../../../../libs/foundry/records/resourcetypedatabase/resourcetypedatabase.json",
+              "_RecordName_": "ResourceType.AmioshiPlague",
+              "_RecordId_": "6c45b24e-bb2d-45f1-9622-f7ef9359dc77"},
+            "weight": 1.0}],
+        "defaultCompositionFillFactor": 1.0,
+        "hideFromUI": false}]}}

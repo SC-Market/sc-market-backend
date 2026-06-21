@@ -1,0 +1,41 @@
+{
+  "_RecordName_": "STargetableItemTypesRecord.Vehicle_Combat",
+  "_RecordId_": "e4e957c1-cb94-4e4f-b937-0703f4efa200",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "STargetableItemTypesRecord",
+    "targetableItemTypes": [
+      {
+        "_Type_": "STargetableItemType",
+        "type": "NOITEM_Vehicle",
+        "subItemTypes": [
+          "MainThruster",
+          "TurretBase",
+          "WeaponGun",
+          "Shield",
+          "PowerPlant",
+          "QuantumDrive",
+          "QuantumInterdictionGenerator",
+          "EMP",
+          "Turret"]},
+      {
+        "_Type_": "STargetableItemType",
+        "type": "Turret",
+        "subItemTypes": []},
+      {
+        "_Type_": "STargetableItemType",
+        "type": "Missile",
+        "subItemTypes": []},
+      {
+        "_Type_": "STargetableItemType",
+        "type": "Bomb",
+        "subItemTypes": []},
+      {
+        "_Type_": "STargetableItemType",
+        "type": "SpaceMine",
+        "subItemTypes": []},
+      {
+        "_Type_": "STargetableItemType",
+        "type": "AirTrafficController",
+        "subItemTypes": []}],
+    "precisionTargetingNames": []}}

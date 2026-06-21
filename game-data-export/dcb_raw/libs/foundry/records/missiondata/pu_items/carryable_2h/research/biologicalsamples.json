@@ -1,0 +1,43 @@
+{
+  "_RecordName_": "MissionItem.BiologicalSamples",
+  "_RecordId_": "7e59af2e-0cce-4c40-bf3a-504b1136b384",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "MissionItem",
+    "tags": [
+      {
+        "_RecordPath_": "file://./../../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+        "_RecordName_": "Tag.209d603a-11d7-4b67-a011-174ae0f77d59",
+        "_RecordId_": "209d603a-11d7-4b67-a011-174ae0f77d59"},
+      {
+        "_RecordPath_": "file://./../../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+        "_RecordName_": "Tag.7ea3a24e-7572-47e1-b7f2-622c78c205c4",
+        "_RecordId_": "7ea3a24e-7572-47e1-b7f2-622c78c205c4"},
+      {
+        "_RecordPath_": "file://./../../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+        "_RecordName_": "Tag.37ba7ad8-8553-45df-a84b-c49eb6ebb7a6",
+        "_RecordId_": "37ba7ad8-8553-45df-a84b-c49eb6ebb7a6"},
+      {
+        "_RecordPath_": "file://./../../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+        "_RecordName_": "Tag.a2b36b6b-2728-4edb-960f-693aa1e8bfde",
+        "_RecordId_": "a2b36b6b-2728-4edb-960f-693aa1e8bfde"},
+      {
+        "_RecordPath_": "file://./../../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+        "_RecordName_": "Tag.f122662b-9489-4b08-b533-51cdf2b6eca2",
+        "_RecordId_": "f122662b-9489-4b08-b533-51cdf2b6eca2"},
+      {
+        "_RecordPath_": "file://./../../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+        "_RecordName_": "Tag.67ed3ab7-f97e-447f-a48b-c9972450adcc",
+        "_RecordId_": "67ed3ab7-f97e-447f-a48b-c9972450adcc"}],
+    "stringVariants": {
+      "_Type_": "MissionStringVariants",
+      "variants": [
+        {
+          "_Type_": "MissionStringVariant",
+          "tag": {
+            "_RecordPath_": "file://./../../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+            "_RecordName_": "Tag.0130de18-97e2-4d4c-9bb1-3e7ef5fd0490",
+            "_RecordId_": "0130de18-97e2-4d4c-9bb1-3e7ef5fd0490"},
+          "string": "@mission_item_0028"}]},
+    "weighting": 1.0,
+    "entityClass": "file://./../../../../../../../libs/foundry/records/entities/scitem/carryables/2h/carryable_2h_fl_05x05x05_missionitem_medical_samples.json"}}

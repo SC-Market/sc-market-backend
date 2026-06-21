@@ -1,0 +1,46 @@
+{
+  "_RecordName_": "CameraTransitionInterpolationCurveRecord.EaseInEaseOut",
+  "_RecordId_": "7d380864-a398-4724-ae84-9d4eeb4dd670",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "CameraTransitionInterpolationCurveRecord",
+    "curve": {
+      "_Type_": "BezierCurve",
+      "points": [
+        {
+          "_Type_": "Vec2",
+          "x": -0.4787515,
+          "y": -0.07821225},
+        {
+          "_Type_": "Vec2",
+          "x": 0.0,
+          "y": 0.0},
+        {
+          "_Type_": "Vec2",
+          "x": 0.4787515,
+          "y": 0.07821225},
+        {
+          "_Type_": "Vec2",
+          "x": 0.3956964,
+          "y": 0.4455295},
+        {
+          "_Type_": "Vec2",
+          "x": 0.4534739,
+          "y": 0.5870997},
+        {
+          "_Type_": "Vec2",
+          "x": 0.5112514,
+          "y": 0.7286698},
+        {
+          "_Type_": "Vec2",
+          "x": 0.6665283,
+          "y": 0.9773742},
+        {
+          "_Type_": "Vec2",
+          "x": 1.0,
+          "y": 1.0},
+        {
+          "_Type_": "Vec2",
+          "x": 1.333472,
+          "y": 1.022626}],
+      "useLUT": false}}}

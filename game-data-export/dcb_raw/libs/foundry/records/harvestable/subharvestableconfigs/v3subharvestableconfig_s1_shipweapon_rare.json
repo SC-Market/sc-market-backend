@@ -1,0 +1,32 @@
+{
+  "_RecordName_": "SubHarvestableConfigRecord.V3SubHarvestableConfig_S1_ShipWeapon_Rare",
+  "_RecordId_": "ddb03e3a-477b-434c-b712-a355b92acc92",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "SubHarvestableConfigRecord",
+    "subConfig": {
+      "_Type_": "SubHarvestableConfig",
+      "initialSlotsProbability": 1.0,
+      "initialSlotsProbabilityDeepest": null,
+      "configRespawnTimeMultiplier": 1.0,
+      "subHarvestables": [
+        {
+          "_Type_": "SubHarvestableSlot",
+          "harvestable": null,
+          "harvestableEntityClass": "file://./../../../../../libs/foundry/records/entities/scitem/ships/weapons/mxox_neutronrepeater_s1.json",
+          "harvestableSetup": "file://./../../../../../libs/foundry/records/harvestable/harvestablesetups/v3harvestablesetup_looseitem_2h.json",
+          "relativeProbability": 1.0,
+          "relativeProbabilityDeepest": null,
+          "harvestableRespawnTimeMultiplier": 1.0,
+          "geometries": [],
+          "lootConfig": null},
+        {
+          "_Type_": "SubHarvestableSlot",
+          "harvestable": null,
+          "harvestableEntityClass": "file://./../../../../../libs/foundry/records/entities/scitem/ships/weapons/mxox_neutroncannon_s1.json",
+          "harvestableSetup": "file://./../../../../../libs/foundry/records/harvestable/harvestablesetups/v3harvestablesetup_looseitem_2h.json",
+          "relativeProbability": 1.0,
+          "relativeProbabilityDeepest": null,
+          "harvestableRespawnTimeMultiplier": 1.0,
+          "geometries": [],
+          "lootConfig": null}]}}}

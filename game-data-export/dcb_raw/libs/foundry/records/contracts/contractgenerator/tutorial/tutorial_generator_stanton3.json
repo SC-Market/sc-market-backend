@@ -1,0 +1,528 @@
+{
+  "_RecordName_": "ContractGenerator.Tutorial_Generator_Stanton3",
+  "_RecordId_": "d013ef86-f00a-4208-b4ad-f6bd172e5189",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "ContractGenerator",
+    "generators": [
+      {
+        "_Type_": "ContractGeneratorHandler_TutorialSeriesDef",
+        "notForRelease": false,
+        "workInProgress": false,
+        "debugName": "ArcCorp Tutorial",
+        "required_active_scenarios": [],
+        "defaultAvailability": {
+          "_Type_": "ContractAvailability",
+          "prerequisites": [
+            {
+              "_Type_": "ContractPrerequisite_Location",
+              "locationAvailable": "file://./../../../../../../libs/foundry/records/starmap/pu/system/stanton/stanton3/starmapobject.stanton3.json"}],
+          "notifyOnAvailable": false,
+          "maxPlayersPerInstance": 1,
+          "onceOnly": true,
+          "availableInPrison": false,
+          "canReacceptAfterAbandoning": false,
+          "abandonedCooldownTime": 1.0,
+          "abandonedCooldownTimeVariation": 1.0,
+          "canReacceptAfterFailing": false,
+          "hasPersonalCooldown": false,
+          "personalCooldownTime": 1.0,
+          "personalCooldownTimeVariation": 1.0,
+          "hideInMobiGlas": false},
+        "contractParams": {
+          "_Type_": "ContractParamOverrides",
+          "stringParamOverrides": [],
+          "boolParamOverrides": [],
+          "intParamOverrides": [],
+          "propertyTagReplacement": [],
+          "propertyOverrides": [],
+          "modifierOverrides": [],
+          "missionTypeOverride": null,
+          "overridePhaseMissionDetailsDisplayInfo": []},
+        "contracts": [
+          {
+            "_Type_": "Contract",
+            "id": "46d8f3d1-d185-4ee4-bff7-060ecbb37a85",
+            "notForRelease": false,
+            "workInProgress": false,
+            "debugName": "Tutorial_Part1_Area18",
+            "template": "file://./../../../../../../libs/foundry/records/contracts/contracttemplates/tutorial_part1.json",
+            "required_active_scenarios": [],
+            "paramOverrides": {
+              "_Type_": "ContractParamOverrides",
+              "stringParamOverrides": [],
+              "boolParamOverrides": [],
+              "intParamOverrides": [],
+              "propertyTagReplacement": [],
+              "propertyOverrides": [
+                {
+                  "_Type_": "MissionProperty",
+                  "missionVariableName": "MissionLocation_BP",
+                  "extendedTextToken": "Location",
+                  "value": {
+                    "_Type_": "MissionPropertyValue_Location",
+                    "matchConditions": [
+                      {
+                        "_Type_": "DataSetMatchCondition_TagSearch",
+                        "tagSearch": [
+                          {
+                            "_Type_": "TagSearchTerm",
+                            "positiveTags": [
+                              {
+                                "_RecordPath_": "file://./../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+                                "_RecordName_": "Tag.c238c1bf-4238-4fc5-bc42-14b6bbcab7b0",
+                                "_RecordId_": "c238c1bf-4238-4fc5-bc42-14b6bbcab7b0"},
+                              {
+                                "_RecordPath_": "file://./../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+                                "_RecordName_": "Tag.67508ea1-f2a5-4e1a-a045-2c1378c4b89e",
+                                "_RecordId_": "67508ea1-f2a5-4e1a-a045-2c1378c4b89e"}],
+                            "negativeTags": []}],
+                        "tagType": "General"}],
+                    "resourceTags": [],
+                    "logErrorOnSearchFail": true}},
+                {
+                  "_Type_": "MissionProperty",
+                  "missionVariableName": "Food_BP",
+                  "extendedTextToken": "",
+                  "value": {
+                    "_Type_": "MissionPropertyValue_EntitySpawnDescriptions",
+                    "spawnDescriptions": [
+                      {
+                        "_Type_": "SpawnDescription_EntityGroup",
+                        "Name": "Burrito",
+                        "entities": [
+                          {
+                            "_Type_": "SpawnDescription_EntityOptions",
+                            "options": [
+                              {
+                                "_Type_": "SpawnDescription_Entity",
+                                "tags": {
+                                  "_Type_": "TagList",
+                                  "tags": [
+                                    {
+                                      "_RecordPath_": "file://./../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+                                      "_RecordName_": "Tag.5e11a544-7fea-4160-b2bf-98c6cf9ee9df",
+                                      "_RecordId_": "5e11a544-7fea-4160-b2bf-98c6cf9ee9df"},
+                                    {
+                                      "_RecordPath_": "file://./../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+                                      "_RecordName_": "Tag.00ead468-9073-485b-a6df-ca6b94053603",
+                                      "_RecordId_": "00ead468-9073-485b-a6df-ca6b94053603"},
+                                    {
+                                      "_RecordPath_": "file://./../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+                                      "_RecordName_": "Tag.0969b307-e268-402c-94b9-ce85db787b00",
+                                      "_RecordId_": "0969b307-e268-402c-94b9-ce85db787b00"},
+                                    {
+                                      "_RecordPath_": "file://./../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+                                      "_RecordName_": "Tag.05404417-1870-4092-9b74-a30f8e213878",
+                                      "_RecordId_": "05404417-1870-4092-9b74-a30f8e213878"},
+                                    {
+                                      "_RecordPath_": "file://./../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+                                      "_RecordName_": "Tag.dfd29606-8533-404a-b6c3-a8d46335ecdc",
+                                      "_RecordId_": "dfd29606-8533-404a-b6c3-a8d46335ecdc"},
+                                    {
+                                      "_RecordPath_": "file://./../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+                                      "_RecordName_": "Tag.b97f2439-cde7-45f9-acc3-5eab75b0f84c",
+                                      "_RecordId_": "b97f2439-cde7-45f9-acc3-5eab75b0f84c"}]},
+                                "negativeTags": {
+                                  "_Type_": "TagList",
+                                  "tags": []},
+                                "markupTags": {
+                                  "_Type_": "TagList",
+                                  "tags": [
+                                    {
+                                      "_RecordPath_": "file://./../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+                                      "_RecordName_": "Tag.140a6201-607a-49c6-8440-cc3039ec1706",
+                                      "_RecordId_": "140a6201-607a-49c6-8440-cc3039ec1706"}]},
+                                "entityTags": {
+                                  "_Type_": "TagList",
+                                  "tags": []},
+                                "amount": 1,
+                                "weight": 1.0}]}]}]}},
+                {
+                  "_Type_": "MissionProperty",
+                  "missionVariableName": "Drink_BP",
+                  "extendedTextToken": "",
+                  "value": {
+                    "_Type_": "MissionPropertyValue_EntitySpawnDescriptions",
+                    "spawnDescriptions": [
+                      {
+                        "_Type_": "SpawnDescription_EntityGroup",
+                        "Name": "Bottle of Water",
+                        "entities": [
+                          {
+                            "_Type_": "SpawnDescription_EntityOptions",
+                            "options": [
+                              {
+                                "_Type_": "SpawnDescription_Entity",
+                                "tags": {
+                                  "_Type_": "TagList",
+                                  "tags": [
+                                    {
+                                      "_RecordPath_": "file://./../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+                                      "_RecordName_": "Tag.5e11a544-7fea-4160-b2bf-98c6cf9ee9df",
+                                      "_RecordId_": "5e11a544-7fea-4160-b2bf-98c6cf9ee9df"},
+                                    {
+                                      "_RecordPath_": "file://./../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+                                      "_RecordName_": "Tag.00ead468-9073-485b-a6df-ca6b94053603",
+                                      "_RecordId_": "00ead468-9073-485b-a6df-ca6b94053603"},
+                                    {
+                                      "_RecordPath_": "file://./../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+                                      "_RecordName_": "Tag.0969b307-e268-402c-94b9-ce85db787b00",
+                                      "_RecordId_": "0969b307-e268-402c-94b9-ce85db787b00"},
+                                    {
+                                      "_RecordPath_": "file://./../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+                                      "_RecordName_": "Tag.05404417-1870-4092-9b74-a30f8e213878",
+                                      "_RecordId_": "05404417-1870-4092-9b74-a30f8e213878"},
+                                    {
+                                      "_RecordPath_": "file://./../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+                                      "_RecordName_": "Tag.184b4c03-ca5a-4d33-84e2-254d4473ca42",
+                                      "_RecordId_": "184b4c03-ca5a-4d33-84e2-254d4473ca42"},
+                                    {
+                                      "_RecordPath_": "file://./../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+                                      "_RecordName_": "Tag.b97f2439-cde7-45f9-acc3-5eab75b0f84c",
+                                      "_RecordId_": "b97f2439-cde7-45f9-acc3-5eab75b0f84c"},
+                                    {
+                                      "_RecordPath_": "file://./../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+                                      "_RecordName_": "Tag.bd734d8f-a2b4-488c-b4df-fe3511f18541",
+                                      "_RecordId_": "bd734d8f-a2b4-488c-b4df-fe3511f18541"},
+                                    {
+                                      "_RecordPath_": "file://./../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+                                      "_RecordName_": "Tag.3e0bfb01-a8cc-4a12-8b04-4f2b54425e9c",
+                                      "_RecordId_": "3e0bfb01-a8cc-4a12-8b04-4f2b54425e9c"},
+                                    {
+                                      "_RecordPath_": "file://./../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+                                      "_RecordName_": "Tag.4e2e55ca-678b-4c6e-b354-5cf1a66ce3e0",
+                                      "_RecordId_": "4e2e55ca-678b-4c6e-b354-5cf1a66ce3e0"}]},
+                                "negativeTags": {
+                                  "_Type_": "TagList",
+                                  "tags": []},
+                                "markupTags": {
+                                  "_Type_": "TagList",
+                                  "tags": [
+                                    {
+                                      "_RecordPath_": "file://./../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+                                      "_RecordName_": "Tag.2d566cd4-3b12-47c6-ace6-11f646849dbc",
+                                      "_RecordId_": "2d566cd4-3b12-47c6-ace6-11f646849dbc"}]},
+                                "entityTags": {
+                                  "_Type_": "TagList",
+                                  "tags": []},
+                                "amount": 1,
+                                "weight": 1.0}]}]}]}},
+                {
+                  "_Type_": "MissionProperty",
+                  "missionVariableName": "",
+                  "extendedTextToken": "JournalToken",
+                  "value": {
+                    "_Type_": "MissionPropertyValue_StringHash",
+                    "options": [
+                      {
+                        "_Type_": "MissionPropertyValueOption_StringHash",
+                        "textId": "@Tutorial01_Area18_JournalToken",
+                        "weighting": 1.0,
+                        "DEBUG_forceChooseThisOption": false,
+                        "dependentProperties": [],
+                        "value": ""}]}},
+                {
+                  "_Type_": "MissionProperty",
+                  "missionVariableName": "",
+                  "extendedTextToken": "Destination",
+                  "value": {
+                    "_Type_": "MissionPropertyValue_StringHash",
+                    "options": [
+                      {
+                        "_Type_": "MissionPropertyValueOption_StringHash",
+                        "textId": "@mission_location_stanton_337",
+                        "weighting": 1.0,
+                        "DEBUG_forceChooseThisOption": false,
+                        "dependentProperties": [],
+                        "value": ""}]}},
+                {
+                  "_Type_": "MissionProperty",
+                  "missionVariableName": "",
+                  "extendedTextToken": "FoodName",
+                  "value": {
+                    "_Type_": "MissionPropertyValue_StringHash",
+                    "options": [
+                      {
+                        "_Type_": "MissionPropertyValueOption_StringHash",
+                        "textId": "@Burrito_Name",
+                        "weighting": 1.0,
+                        "DEBUG_forceChooseThisOption": false,
+                        "dependentProperties": [],
+                        "value": ""}]}},
+                {
+                  "_Type_": "MissionProperty",
+                  "missionVariableName": "",
+                  "extendedTextToken": "DrinkNameShortUpper",
+                  "value": {
+                    "_Type_": "MissionPropertyValue_StringHash",
+                    "options": [
+                      {
+                        "_Type_": "MissionPropertyValueOption_StringHash",
+                        "textId": "@Tutorial_Water_Upper",
+                        "weighting": 1.0,
+                        "DEBUG_forceChooseThisOption": false,
+                        "dependentProperties": [],
+                        "value": ""}]}},
+                {
+                  "_Type_": "MissionProperty",
+                  "missionVariableName": "",
+                  "extendedTextToken": "DrinkNameShortLower",
+                  "value": {
+                    "_Type_": "MissionPropertyValue_StringHash",
+                    "options": [
+                      {
+                        "_Type_": "MissionPropertyValueOption_StringHash",
+                        "textId": "@Tutorial_Water_Lower",
+                        "weighting": 1.0,
+                        "DEBUG_forceChooseThisOption": false,
+                        "dependentProperties": [],
+                        "value": ""}]}}],
+              "modifierOverrides": [],
+              "missionTypeOverride": null,
+              "overridePhaseMissionDetailsDisplayInfo": []},
+            "subContracts": [],
+            "additionalPrerequisites": [],
+            "generationParams": {
+              "_Type_": "ContractGenerationParams_Legacy",
+              "maxInstances": -1,
+              "maxInstancesPerPlayer": 1,
+              "respawnTime": 0.0,
+              "respawnTimeVariation": 0.0},
+            "contractLifeTime": null,
+            "contractPlugins": [],
+            "contractResults": {
+              "_Type_": "ContractResults",
+              "contractResults": [],
+              "contractBuyInAmount": 0,
+              "timeToComplete": -1.0,
+              "difficulty": null}},
+          {
+            "_Type_": "Contract",
+            "id": "4a46f42a-2a96-2b94-6233-490d5e7febbd",
+            "notForRelease": false,
+            "workInProgress": false,
+            "debugName": "Tutorial_Part2_Area18",
+            "template": "file://./../../../../../../libs/foundry/records/contracts/contracttemplates/tutorial_part2.json",
+            "required_active_scenarios": [],
+            "paramOverrides": {
+              "_Type_": "ContractParamOverrides",
+              "stringParamOverrides": [],
+              "boolParamOverrides": [],
+              "intParamOverrides": [],
+              "propertyTagReplacement": [],
+              "propertyOverrides": [
+                {
+                  "_Type_": "MissionProperty",
+                  "missionVariableName": "MissionLocation_BP",
+                  "extendedTextToken": "Location",
+                  "value": {
+                    "_Type_": "MissionPropertyValue_Location",
+                    "matchConditions": [
+                      {
+                        "_Type_": "DataSetMatchCondition_TagSearch",
+                        "tagSearch": [
+                          {
+                            "_Type_": "TagSearchTerm",
+                            "positiveTags": [
+                              {
+                                "_RecordPath_": "file://./../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+                                "_RecordName_": "Tag.c238c1bf-4238-4fc5-bc42-14b6bbcab7b0",
+                                "_RecordId_": "c238c1bf-4238-4fc5-bc42-14b6bbcab7b0"},
+                              {
+                                "_RecordPath_": "file://./../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+                                "_RecordName_": "Tag.67508ea1-f2a5-4e1a-a045-2c1378c4b89e",
+                                "_RecordId_": "67508ea1-f2a5-4e1a-a045-2c1378c4b89e"}],
+                            "negativeTags": []}],
+                        "tagType": "General"}],
+                    "resourceTags": [],
+                    "logErrorOnSearchFail": true}},
+                {
+                  "_Type_": "MissionProperty",
+                  "missionVariableName": "",
+                  "extendedTextToken": "HubFloor",
+                  "value": {
+                    "_Type_": "MissionPropertyValue_StringHash",
+                    "options": [
+                      {
+                        "_Type_": "MissionPropertyValueOption_StringHash",
+                        "textId": "@ui_interactor_ground_floor",
+                        "weighting": 1.0,
+                        "DEBUG_forceChooseThisOption": false,
+                        "dependentProperties": [],
+                        "value": ""}]}},
+                {
+                  "_Type_": "MissionProperty",
+                  "missionVariableName": "",
+                  "extendedTextToken": "StoreName",
+                  "value": {
+                    "_Type_": "MissionPropertyValue_StringHash",
+                    "options": [
+                      {
+                        "_Type_": "MissionPropertyValueOption_StringHash",
+                        "textId": "@Tutorial_Shop_Area18",
+                        "weighting": 1.0,
+                        "DEBUG_forceChooseThisOption": false,
+                        "dependentProperties": [],
+                        "value": ""}]}}],
+              "modifierOverrides": [],
+              "missionTypeOverride": null,
+              "overridePhaseMissionDetailsDisplayInfo": []},
+            "subContracts": [],
+            "additionalPrerequisites": [],
+            "generationParams": {
+              "_Type_": "ContractGenerationParams_Legacy",
+              "maxInstances": -1,
+              "maxInstancesPerPlayer": 1,
+              "respawnTime": 0.0,
+              "respawnTimeVariation": 0.0},
+            "contractLifeTime": null,
+            "contractPlugins": [],
+            "contractResults": {
+              "_Type_": "ContractResults",
+              "contractResults": [],
+              "contractBuyInAmount": 0,
+              "timeToComplete": -1.0,
+              "difficulty": null}},
+          {
+            "_Type_": "Contract",
+            "id": "4d29fdec-214f-ebb0-ef3b-eaa6fe55ef8f",
+            "notForRelease": false,
+            "workInProgress": false,
+            "debugName": "Tutorial_Part3_Area18",
+            "template": "file://./../../../../../../libs/foundry/records/contracts/contracttemplates/tutorial_part3.json",
+            "required_active_scenarios": [],
+            "paramOverrides": {
+              "_Type_": "ContractParamOverrides",
+              "stringParamOverrides": [],
+              "boolParamOverrides": [],
+              "intParamOverrides": [],
+              "propertyTagReplacement": [],
+              "propertyOverrides": [
+                {
+                  "_Type_": "MissionProperty",
+                  "missionVariableName": "MissionLocation_BP",
+                  "extendedTextToken": "Location",
+                  "value": {
+                    "_Type_": "MissionPropertyValue_Location",
+                    "matchConditions": [
+                      {
+                        "_Type_": "DataSetMatchCondition_TagSearch",
+                        "tagSearch": [
+                          {
+                            "_Type_": "TagSearchTerm",
+                            "positiveTags": [
+                              {
+                                "_RecordPath_": "file://./../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+                                "_RecordName_": "Tag.c238c1bf-4238-4fc5-bc42-14b6bbcab7b0",
+                                "_RecordId_": "c238c1bf-4238-4fc5-bc42-14b6bbcab7b0"},
+                              {
+                                "_RecordPath_": "file://./../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+                                "_RecordName_": "Tag.67508ea1-f2a5-4e1a-a045-2c1378c4b89e",
+                                "_RecordId_": "67508ea1-f2a5-4e1a-a045-2c1378c4b89e"}],
+                            "negativeTags": []}],
+                        "tagType": "General"}],
+                    "resourceTags": [],
+                    "logErrorOnSearchFail": true}},
+                {
+                  "_Type_": "MissionProperty",
+                  "missionVariableName": "EndingLocation_BP",
+                  "extendedTextToken": "Destination",
+                  "value": {
+                    "_Type_": "MissionPropertyValue_Location",
+                    "matchConditions": [
+                      {
+                        "_Type_": "DataSetMatchCondition_TagSearch",
+                        "tagSearch": [
+                          {
+                            "_Type_": "TagSearchTerm",
+                            "positiveTags": [
+                              {
+                                "_RecordPath_": "file://./../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+                                "_RecordName_": "Tag.d2997b2e-6690-42a4-b778-cd90061ab131",
+                                "_RecordId_": "d2997b2e-6690-42a4-b778-cd90061ab131"},
+                              {
+                                "_RecordPath_": "file://./../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+                                "_RecordName_": "Tag.67508ea1-f2a5-4e1a-a045-2c1378c4b89e",
+                                "_RecordId_": "67508ea1-f2a5-4e1a-a045-2c1378c4b89e"}],
+                            "negativeTags": []}],
+                        "tagType": "General"}],
+                    "resourceTags": [],
+                    "logErrorOnSearchFail": true}},
+                {
+                  "_Type_": "MissionProperty",
+                  "missionVariableName": "",
+                  "extendedTextToken": "SpaceportStopName",
+                  "value": {
+                    "_Type_": "MissionPropertyValue_StringHash",
+                    "options": [
+                      {
+                        "_Type_": "MissionPropertyValueOption_StringHash",
+                        "textId": "@mission_location_stanton_0298",
+                        "weighting": 1.0,
+                        "DEBUG_forceChooseThisOption": false,
+                        "dependentProperties": [],
+                        "value": ""}]}},
+                {
+                  "_Type_": "MissionProperty",
+                  "missionVariableName": "",
+                  "extendedTextToken": "PlanetName",
+                  "value": {
+                    "_Type_": "MissionPropertyValue_StringHash",
+                    "options": [
+                      {
+                        "_Type_": "MissionPropertyValueOption_StringHash",
+                        "textId": "@Stanton3",
+                        "weighting": 1.0,
+                        "DEBUG_forceChooseThisOption": false,
+                        "dependentProperties": [],
+                        "value": ""}]}},
+                {
+                  "_Type_": "MissionProperty",
+                  "missionVariableName": "",
+                  "extendedTextToken": "TransitNameShort",
+                  "value": {
+                    "_Type_": "MissionPropertyValue_StringHash",
+                    "options": [
+                      {
+                        "_Type_": "MissionPropertyValueOption_StringHash",
+                        "textId": "@Tutorial_Area18_Cityflight",
+                        "weighting": 1.0,
+                        "DEBUG_forceChooseThisOption": false,
+                        "dependentProperties": [],
+                        "value": ""}]}}],
+              "modifierOverrides": [],
+              "missionTypeOverride": null,
+              "overridePhaseMissionDetailsDisplayInfo": []},
+            "subContracts": [],
+            "additionalPrerequisites": [],
+            "generationParams": {
+              "_Type_": "ContractGenerationParams_Legacy",
+              "maxInstances": -1,
+              "maxInstancesPerPlayer": 1,
+              "respawnTime": 0.0,
+              "respawnTimeVariation": 0.0},
+            "contractLifeTime": null,
+            "contractPlugins": [],
+            "contractResults": {
+              "_Type_": "ContractResults",
+              "contractResults": [
+                {
+                  "_Type_": "ContractResult_Reward",
+                  "missionResults": [
+                    true,
+                    false,
+                    false,
+                    false,
+                    false],
+                  "contractReward": {
+                    "_Type_": "MissionReward",
+                    "reward": 40000,
+                    "max": 0,
+                    "plusBonuses": false,
+                    "currencyType": "UEC",
+                    "reputationBonus": null}}],
+              "contractBuyInAmount": 0,
+              "timeToComplete": -1.0,
+              "difficulty": null}}]}],
+    "required_active_scenarios": []}}

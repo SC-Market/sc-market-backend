@@ -1,0 +1,130 @@
+{
+  "_RecordName_": "MissionOrganization.Aciedo",
+  "_RecordId_": "971b6373-9226-481f-8a26-c8db0d465a5f",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "MissionOrganization",
+    "organizationTags": [
+      {
+        "_Type_": "MissionLocationTags",
+        "tags": [
+          {
+            "_RecordPath_": "file://./../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+            "_RecordName_": "Tag.454c412d-4606-4053-8464-0b0d20a07227",
+            "_RecordId_": "454c412d-4606-4053-8464-0b0d20a07227"}]},
+      {
+        "_Type_": "MissionLocationTags",
+        "tags": []},
+      {
+        "_Type_": "MissionLocationTags",
+        "tags": []}],
+    "stringVariants": {
+      "_Type_": "MissionStringVariants",
+      "variants": [
+        {
+          "_Type_": "MissionStringVariant",
+          "tag": {
+            "_RecordPath_": "file://./../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+            "_RecordName_": "Tag.0130de18-97e2-4d4c-9bb1-3e7ef5fd0490",
+            "_RecordId_": "0130de18-97e2-4d4c-9bb1-3e7ef5fd0490"},
+          "string": "@Aciedo_RepUI_Name"},
+        {
+          "_Type_": "MissionStringVariant",
+          "tag": {
+            "_RecordPath_": "file://./../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+            "_RecordName_": "Tag.b9e1d61a-ba90-47cc-afed-32f39ae63f67",
+            "_RecordId_": "b9e1d61a-ba90-47cc-afed-32f39ae63f67"},
+          "string": "@commarray_repair_title_0001"},
+        {
+          "_Type_": "MissionStringVariant",
+          "tag": {
+            "_RecordPath_": "file://./../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+            "_RecordName_": "Tag.b9e1d61a-ba90-47cc-afed-32f39ae63f67",
+            "_RecordId_": "b9e1d61a-ba90-47cc-afed-32f39ae63f67"},
+          "string": "@commarray_repair_title_0002"},
+        {
+          "_Type_": "MissionStringVariant",
+          "tag": {
+            "_RecordPath_": "file://./../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+            "_RecordName_": "Tag.b9e1d61a-ba90-47cc-afed-32f39ae63f67",
+            "_RecordId_": "b9e1d61a-ba90-47cc-afed-32f39ae63f67"},
+          "string": "@commarray_repair_title_0003"},
+        {
+          "_Type_": "MissionStringVariant",
+          "tag": {
+            "_RecordPath_": "file://./../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+            "_RecordName_": "Tag.b9e1d61a-ba90-47cc-afed-32f39ae63f67",
+            "_RecordId_": "b9e1d61a-ba90-47cc-afed-32f39ae63f67"},
+          "string": "@commarray_repair_title_0004"},
+        {
+          "_Type_": "MissionStringVariant",
+          "tag": {
+            "_RecordPath_": "file://./../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+            "_RecordName_": "Tag.b9e1d61a-ba90-47cc-afed-32f39ae63f67",
+            "_RecordId_": "b9e1d61a-ba90-47cc-afed-32f39ae63f67"},
+          "string": "@commarray_repair_title_0005"},
+        {
+          "_Type_": "MissionStringVariant",
+          "tag": {
+            "_RecordPath_": "file://./../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+            "_RecordName_": "Tag.b9e1d61a-ba90-47cc-afed-32f39ae63f67",
+            "_RecordId_": "b9e1d61a-ba90-47cc-afed-32f39ae63f67"},
+          "string": "@commarray_repair_title_0006"},
+        {
+          "_Type_": "MissionStringVariant",
+          "tag": {
+            "_RecordPath_": "file://./../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+            "_RecordName_": "Tag.b9e1d61a-ba90-47cc-afed-32f39ae63f67",
+            "_RecordId_": "b9e1d61a-ba90-47cc-afed-32f39ae63f67"},
+          "string": "@commarray_repair_title_0007"},
+        {
+          "_Type_": "MissionStringVariant",
+          "tag": {
+            "_RecordPath_": "file://./../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+            "_RecordName_": "Tag.6d6a747c-54fb-459f-9b17-a8be4d0e26d3",
+            "_RecordId_": "6d6a747c-54fb-459f-9b17-a8be4d0e26d3"},
+          "string": "@commarray_repair_desc_0001"},
+        {
+          "_Type_": "MissionStringVariant",
+          "tag": {
+            "_RecordPath_": "file://./../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+            "_RecordName_": "Tag.6d6a747c-54fb-459f-9b17-a8be4d0e26d3",
+            "_RecordId_": "6d6a747c-54fb-459f-9b17-a8be4d0e26d3"},
+          "string": "@commarray_repair_desc_0002"},
+        {
+          "_Type_": "MissionStringVariant",
+          "tag": {
+            "_RecordPath_": "file://./../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+            "_RecordName_": "Tag.6d6a747c-54fb-459f-9b17-a8be4d0e26d3",
+            "_RecordId_": "6d6a747c-54fb-459f-9b17-a8be4d0e26d3"},
+          "string": "@commarray_repair_desc_0003"},
+        {
+          "_Type_": "MissionStringVariant",
+          "tag": {
+            "_RecordPath_": "file://./../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+            "_RecordName_": "Tag.6d6a747c-54fb-459f-9b17-a8be4d0e26d3",
+            "_RecordId_": "6d6a747c-54fb-459f-9b17-a8be4d0e26d3"},
+          "string": "@commarray_repair_desc_0004"},
+        {
+          "_Type_": "MissionStringVariant",
+          "tag": {
+            "_RecordPath_": "file://./../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+            "_RecordName_": "Tag.6d6a747c-54fb-459f-9b17-a8be4d0e26d3",
+            "_RecordId_": "6d6a747c-54fb-459f-9b17-a8be4d0e26d3"},
+          "string": "@commarray_repair_desc_0005"},
+        {
+          "_Type_": "MissionStringVariant",
+          "tag": {
+            "_RecordPath_": "file://./../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+            "_RecordName_": "Tag.6d6a747c-54fb-459f-9b17-a8be4d0e26d3",
+            "_RecordId_": "6d6a747c-54fb-459f-9b17-a8be4d0e26d3"},
+          "string": "@commarray_repair_desc_0006"},
+        {
+          "_Type_": "MissionStringVariant",
+          "tag": {
+            "_RecordPath_": "file://./../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+            "_RecordName_": "Tag.ee9d8bdf-d79a-411c-a1c5-c587dffc5ed9",
+            "_RecordId_": "ee9d8bdf-d79a-411c-a1c5-c587dffc5ed9"},
+          "string": "@Aciedo_RepUI_Name"}]},
+    "weighting": 1.0,
+    "factionReputation": "file://./../../../../../libs/foundry/records/factions/factionreputation/factionreputation_aciedo.json"}}

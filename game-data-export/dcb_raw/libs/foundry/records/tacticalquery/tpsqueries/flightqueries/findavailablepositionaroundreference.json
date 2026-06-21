@@ -1,0 +1,37 @@
+{
+  "_RecordName_": "TacticalQuery.FindAvailablePositionAroundReference",
+  "_RecordId_": "2661daf7-ec88-4f55-9a5c-ed3c02bd366e",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "TacticalQuery",
+    "name": "FindAvailablePositionAroundReference",
+    "type": "TacticalPointQuery",
+    "options": [
+      {
+        "_Type_": "TQSOptionReference",
+        "requirements": {
+          "_Type_": "TagsDNF",
+          "terms": []},
+        "content": "file://./../../../../../../libs/foundry/records/tacticalquery/tpsqueries/flightqueries/findavailablepositionsaroundreference/findavailablepositionaroundreference_100.json",
+        "optionOverrides": []},
+      {
+        "_Type_": "TQSOptionReference",
+        "requirements": {
+          "_Type_": "TagsDNF",
+          "terms": []},
+        "content": "file://./../../../../../../libs/foundry/records/tacticalquery/tpsqueries/flightqueries/findavailablepositionsaroundreference/findavailablepositionaroundreference_250.json",
+        "optionOverrides": []},
+      {
+        "_Type_": "TQSOptionReference",
+        "requirements": {
+          "_Type_": "TagsDNF",
+          "terms": []},
+        "content": "file://./../../../../../../libs/foundry/records/tacticalquery/tpsqueries/flightqueries/findavailablepositionsaroundreference/findavailablepositionaroundreference_500.json",
+        "optionOverrides": []},
+      {
+        "_Type_": "TQSOptionReference",
+        "requirements": {
+          "_Type_": "TagsDNF",
+          "terms": []},
+        "content": "file://./../../../../../../libs/foundry/records/tacticalquery/tpsqueries/flightqueries/findavailablepositionsaroundreference/findavailablepositionaroundreference_750.json",
+        "optionOverrides": []}]}}

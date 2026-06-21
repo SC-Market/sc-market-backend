@@ -1,0 +1,62 @@
+{
+  "_RecordName_": "MissionLocationTemplate.LandingZone_Stanton_2_GrimHex_Old38_Bar",
+  "_RecordId_": "ccc9d476-3842-46eb-bf28-724dd4e3ef90",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "MissionLocationTemplate",
+    "locationData": {
+      "_Type_": "MissionLocationData",
+      "generalTags": {
+        "_Type_": "MissionLocationTags",
+        "tags": [
+          {
+            "_RecordPath_": "file://./../../../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+            "_RecordName_": "Tag.c70dbe51-3d1e-47b7-9795-290d3eba1728",
+            "_RecordId_": "c70dbe51-3d1e-47b7-9795-290d3eba1728"},
+          {
+            "_RecordPath_": "file://./../../../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+            "_RecordName_": "Tag.2bc6eed6-ef04-4680-ae65-2337258d26b7",
+            "_RecordId_": "2bc6eed6-ef04-4680-ae65-2337258d26b7"},
+          {
+            "_RecordPath_": "file://./../../../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+            "_RecordName_": "Tag.a47673ef-8511-490d-90ea-fd171d99b626",
+            "_RecordId_": "a47673ef-8511-490d-90ea-fd171d99b626"},
+          {
+            "_RecordPath_": "file://./../../../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+            "_RecordName_": "Tag.2e415c27-168d-4129-a216-7632f74eb911",
+            "_RecordId_": "2e415c27-168d-4129-a216-7632f74eb911"},
+          {
+            "_RecordPath_": "file://./../../../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+            "_RecordName_": "Tag.c83dd76a-486f-4110-91fd-b35d5a0874b6",
+            "_RecordId_": "c83dd76a-486f-4110-91fd-b35d5a0874b6"},
+          {
+            "_RecordPath_": "file://./../../../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+            "_RecordName_": "Tag.a2f5f775-0e60-49e9-8f4f-c3477b653b89",
+            "_RecordId_": "a2f5f775-0e60-49e9-8f4f-c3477b653b89"}]},
+      "producesTags": {
+        "_Type_": "TagSearchTerm",
+        "positiveTags": [],
+        "negativeTags": []},
+      "consumesTags": {
+        "_Type_": "TagSearchTerm",
+        "positiveTags": [],
+        "negativeTags": []},
+      "aiSpawnTags": {
+        "_Type_": "TagList",
+        "tags": []},
+      "stringVariants": {
+        "_Type_": "MissionStringVariants",
+        "variants": []},
+      "missionModules": [
+        {
+          "_Type_": "SMissionLocationModule",
+          "isPersistent": false,
+          "missionModule": "Libs/Subsumption/Missions/PU/PU_MissionModules/AIManagers/PU_BarsPopulousManager.xml",
+          "missionInputs": [],
+          "properties": []}],
+      "missionLimits": [],
+      "autoSpawnSettings": [],
+      "isSecurityNetworkHost": false,
+      "defaultSecurityNetworkManifest": null,
+      "disabled": false,
+      "entityClusterMember": null}}}

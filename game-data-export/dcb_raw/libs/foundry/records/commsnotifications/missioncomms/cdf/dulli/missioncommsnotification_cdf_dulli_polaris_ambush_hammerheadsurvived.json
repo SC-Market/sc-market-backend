@@ -1,0 +1,33 @@
+{
+  "_RecordName_": "CommsNotification.MissionCommsNotification_CDF_Dulli_Polaris_Ambush_HammerheadSurvived",
+  "_RecordId_": "0b74cc8d-5572-4db1-bf02-20503a8dd002",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "CommsNotification",
+    "tags": {
+      "_Type_": "TagList",
+      "tags": [
+        {
+          "_RecordPath_": "file://./../../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+          "_RecordName_": "Tag.9c132978-099a-46bc-9b19-9d77bcef8b9b",
+          "_RecordId_": "9c132978-099a-46bc-9b19-9d77bcef8b9b"},
+        {
+          "_RecordPath_": "file://./../../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+          "_RecordName_": "Tag.7dd97ac4-c553-4a1f-bc88-eea7522266e1",
+          "_RecordId_": "7dd97ac4-c553-4a1f-bc88-eea7522266e1"},
+        {
+          "_RecordPath_": "file://./../../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+          "_RecordName_": "Tag.52b40f62-d9e0-4a0d-b82c-99af0830c296",
+          "_RecordId_": "52b40f62-d9e0-4a0d-b82c-99af0830c296"},
+        {
+          "_RecordPath_": "file://./../../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+          "_RecordName_": "Tag.6bc1aed7-2c00-4d6a-90f9-6d047e1f4ea5",
+          "_RecordId_": "6bc1aed7-2c00-4d6a-90f9-6d047e1f4ea5"},
+        {
+          "_RecordPath_": "file://./../../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+          "_RecordName_": "Tag.d3215b79-bcbd-4b31-8837-ffe5b8119646",
+          "_RecordId_": "d3215b79-bcbd-4b31-8837-ffe5b8119646"}]},
+    "communicationName": "file://./../../../../../../../libs/foundry/records/communicationname/missioncommunications/defendmission/defendship_objectivecomplete.json",
+    "characterEntityClass": "file://./../../../../../../../libs/foundry/records/actor/actors/npc_archetypes/female/human/missiongivers/npc_archetypes-female-human-missiongivers-saic_rowenadulli_polarishunt.json",
+    "fakeCommsAudioEntityClass": "file://./../../../../../../../libs/foundry/records/entities/audio/fakecommsaudioentity_cdf_dulli.json",
+    "stage": "file://./../../../../../../../libs/foundry/records/commsnotificationstages/cns_test.json"}}

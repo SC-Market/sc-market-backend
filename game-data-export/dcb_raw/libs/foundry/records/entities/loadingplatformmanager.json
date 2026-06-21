@@ -1,0 +1,92 @@
+{
+  "_RecordName_": "EntityClassDefinition.LoadingPlatformManager",
+  "_RecordId_": "867b7b28-e62f-49dd-ae39-9057953e8e7b",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "EntityClassDefinition",
+    "Category": "Default",
+    "Icon": "Default.bmp",
+    "Invisible": false,
+    "BBoxSelection": false,
+    "defaultEditorColor": {
+      "_Type_": "RGB",
+      "r": 1.0,
+      "g": 1.0,
+      "b": 0.0},
+    "entityDensityClass": null,
+    "tags": [],
+    "StaticEntityClassData": [],
+    "Components": [
+      {
+        "_Type_": "SCLoadingPlatformManagerParams",
+        "loadingPlatformEntityReferences": {
+          "_Type_": "SCLoadingPlatformEntityReferences",
+          "loadingGate": "",
+          "loadingPlatform": "",
+          "frontGate": "",
+          "kiosk": "",
+          "obstructionCheckBounds": ""},
+        "lightGroupParams": {
+          "_Type_": "SCLoadingPlatformLightGroupParams",
+          "lightGroupEntityReference": "",
+          "platformIdleClosedLightState": "Default",
+          "platformInTransitLightState": "Auxiliary",
+          "platformIdleOpenLightState": "Emergency",
+          "platformObstructedLightState": "Cinematic"},
+        "effectParams": {
+          "_Type_": "SCLoadingPlatformEffectParams",
+          "raisingLoadingPlatformTrigger": [
+            {
+              "_RecordPath_": "file://./../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+              "_RecordName_": "Tag.60614bb3-719a-4574-ba5a-514e987e1d29",
+              "_RecordId_": "60614bb3-719a-4574-ba5a-514e987e1d29"}],
+          "openingLoadingGateTrigger": [
+            {
+              "_RecordPath_": "file://./../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+              "_RecordName_": "Tag.60614bb3-719a-4574-ba5a-514e987e1d29",
+              "_RecordId_": "60614bb3-719a-4574-ba5a-514e987e1d29"}],
+          "openingFrontGateTrigger": [
+            {
+              "_RecordPath_": "file://./../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+              "_RecordName_": "Tag.60614bb3-719a-4574-ba5a-514e987e1d29",
+              "_RecordId_": "60614bb3-719a-4574-ba5a-514e987e1d29"}],
+          "loweringLoadingPlatformTrigger": [
+            {
+              "_RecordPath_": "file://./../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+              "_RecordName_": "Tag.60614bb3-719a-4574-ba5a-514e987e1d29",
+              "_RecordId_": "60614bb3-719a-4574-ba5a-514e987e1d29"}],
+          "closingLoadingGateTrigger": [
+            {
+              "_RecordPath_": "file://./../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+              "_RecordName_": "Tag.60614bb3-719a-4574-ba5a-514e987e1d29",
+              "_RecordId_": "60614bb3-719a-4574-ba5a-514e987e1d29"}],
+          "closingFrontGateTrigger": [
+            {
+              "_RecordPath_": "file://./../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+              "_RecordName_": "Tag.60614bb3-719a-4574-ba5a-514e987e1d29",
+              "_RecordId_": "60614bb3-719a-4574-ba5a-514e987e1d29"}]},
+        "trackviewParams": {
+          "_Type_": "SCLoadingPlatformTrackviewParams",
+          "openingLoadingPlatformTrack": "",
+          "closingLoadingPlatformTrack": ""},
+        "hasFrontGate": true,
+        "hasLoadingGate": true,
+        "hasCargoGrid": true,
+        "hasLandingArea": false},
+      {
+        "_Type_": "SerializedComponentParams"},
+      {
+        "_Type_": "SEntityComponentEffects",
+        "entityEffects": {
+          "_Type_": "SEntitityEffectSystem_System",
+          "particleEffects": null,
+          "materialEffects": null,
+          "soundEffects": null,
+          "audioEnvironmentEffects": null,
+          "lightEffects": null,
+          "uiOwnerEffects": null,
+          "sequencerTags": []},
+        "staticValues": [],
+        "staticColors": [],
+        "tagsToEnableOnLoad": [],
+        "triggersToEnableOnLoad": []}]}}

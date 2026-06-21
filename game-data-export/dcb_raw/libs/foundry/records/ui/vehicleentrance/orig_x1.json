@@ -1,0 +1,47 @@
+{
+  "_RecordName_": "SEntrancesDef.ORIG_X1",
+  "_RecordId_": "9cfa54f9-e38e-4357-bafe-bcd62ad7b42f",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "SEntrancesDef",
+    "boundingBoxScale": {
+      "_Type_": "Vec3",
+      "x": 2.0,
+      "y": 2.0,
+      "z": 2.0},
+    "boundingBoxOffset": {
+      "_Type_": "Vec3",
+      "x": 0.0,
+      "y": 0.0,
+      "z": 0.0},
+    "entranceArray": [
+      {
+        "_Type_": "SCEntranceItem",
+        "entranceName": "@entrance_seat",
+        "jointName": "helper_entrance_left",
+        "positionOffset": {
+          "_Type_": "Vec3",
+          "x": 0.0,
+          "y": 0.0,
+          "z": 0.0},
+        "shipState": "Grounded"},
+      {
+        "_Type_": "SCEntranceItem",
+        "entranceName": "@entrance_seat",
+        "jointName": "helper_entrance_right",
+        "positionOffset": {
+          "_Type_": "Vec3",
+          "x": 0.0,
+          "y": 0.0,
+          "z": 0.0},
+        "shipState": "Grounded"},
+      {
+        "_Type_": "SCEntranceItem",
+        "entranceName": "@entrance_seat",
+        "jointName": "helper_entrance_zerog",
+        "positionOffset": {
+          "_Type_": "Vec3",
+          "x": 0.0,
+          "y": 0.0,
+          "z": 0.0},
+        "shipState": "Flying"}]}}

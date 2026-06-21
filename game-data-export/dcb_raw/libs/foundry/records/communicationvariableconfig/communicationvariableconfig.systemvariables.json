@@ -1,0 +1,17 @@
+{
+  "_RecordName_": "CommunicationVariableConfig.SystemVariables",
+  "_RecordId_": "e7f8ed00-f019-411e-938d-1cdd07748919",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "CommunicationVariableConfig",
+    "variables": [
+      {
+        "_Type_": "CommunicationVariableBool",
+        "name": "TargetIsAbove",
+        "global": false,
+        "value": false},
+      {
+        "_Type_": "CommunicationVariableBool",
+        "name": "TargetIsBelow",
+        "global": false,
+        "value": false}]}}

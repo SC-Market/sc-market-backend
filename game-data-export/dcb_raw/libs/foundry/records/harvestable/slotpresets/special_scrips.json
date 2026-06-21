@@ -1,0 +1,32 @@
+{
+  "_RecordName_": "SubHarvestableConfigRecord.Special_Scrips",
+  "_RecordId_": "53ac34fd-c609-4ea4-9f19-c764b256724b",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "SubHarvestableConfigRecord",
+    "subConfig": {
+      "_Type_": "SubHarvestableConfig",
+      "initialSlotsProbability": 0.075,
+      "initialSlotsProbabilityDeepest": null,
+      "configRespawnTimeMultiplier": 1.0,
+      "subHarvestables": [
+        {
+          "_Type_": "SubHarvestableSlot",
+          "harvestable": "file://./../../../../../libs/foundry/records/harvestable/harvestablepresets/special_scrip_merc.json",
+          "harvestableEntityClass": null,
+          "harvestableSetup": null,
+          "relativeProbability": 1.0,
+          "relativeProbabilityDeepest": null,
+          "harvestableRespawnTimeMultiplier": 1.0,
+          "geometries": [],
+          "lootConfig": null},
+        {
+          "_Type_": "SubHarvestableSlot",
+          "harvestable": "file://./../../../../../libs/foundry/records/harvestable/harvestablepresets/special_scrip_council.json",
+          "harvestableEntityClass": null,
+          "harvestableSetup": null,
+          "relativeProbability": 1.0,
+          "relativeProbabilityDeepest": null,
+          "harvestableRespawnTimeMultiplier": 1.0,
+          "geometries": [],
+          "lootConfig": null}]}}}

@@ -1,0 +1,30 @@
+{
+  "_RecordName_": "LootArchetype.LootArchetype_ScrapLoot",
+  "_RecordId_": "f9a419ed-cc27-4ebb-bdba-6b6fd7ca81b5",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "LootArchetype",
+    "excludedTags": {
+      "_Type_": "TagList",
+      "tags": [
+        {
+          "_RecordPath_": "file://./../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+          "_RecordName_": "Tag.85e008e3-cc4e-4d13-98f6-b33c234dd82c",
+          "_RecordId_": "85e008e3-cc4e-4d13-98f6-b33c234dd82c"}]},
+    "primaryOrGroup": {
+      "_Type_": "LootArchetypeOrGroup_Primary",
+      "entries": [
+        {
+          "_Type_": "LootArchetypeEntry_Primary",
+          "name": "Useless Piece of metal",
+          "tag": {
+            "_RecordPath_": "file://./../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+            "_RecordName_": "Tag.0e5a6576-c1d7-436a-9b3a-3f36ce8c43c8",
+            "_RecordId_": "0e5a6576-c1d7-436a-9b3a-3f36ce8c43c8"},
+          "additionalTags": {
+            "_Type_": "TagsDNFTerm",
+            "positiveTags": [],
+            "negativeTags": []},
+          "weight": 1.0,
+          "optionalData": []}]},
+    "secondaryOrGroups": []}}

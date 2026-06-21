@@ -1,0 +1,22 @@
+{
+  "_RecordName_": "LoadoutKit.ANVL_F7CM_Hornet_Mk2_Fortitude_Grey_Grey_Blue",
+  "_RecordId_": "49575ddc-9653-4c21-8f94-46988bbac416",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "LoadoutKit",
+    "name": "@item_NameHornet_F7CM_Mk2_Paint_Grey_Grey_Blue",
+    "description": "@item_DescHornet_F7CM_Mk2_Paint_Grey_Grey_Blue",
+    "loadout": {
+      "_Type_": "SItemPortLoadoutManualParams",
+      "WearRange": null,
+      "DirtRange": null,
+      "SkipInventoryItemsOnMissionEntities": false,
+      "InventoryItems": [],
+      "entries": [
+        {
+          "_Type_": "SItemPortLoadoutEntryParams",
+          "itemPortName": "hardpoint_paint",
+          "entityClassName": "",
+          "entityClassReference": "file://./../../../../../libs/foundry/records/entities/scitem/ships/paints/paint_hornet_f7cm_mk2_grey_grey_blue.json",
+          "inventoryContainer": null,
+          "loadout": null}]}}}

@@ -1,0 +1,18 @@
+{
+  "_RecordName_": "JournalEntry.Drop_Datapad",
+  "_RecordId_": "11aa06fe-67e8-460b-998b-c1480d78264c",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "JournalEntry",
+    "Title": "@mobiglas_Charlie_DropPad_title",
+    "ShortTitle": "@LOC_UNINITIALIZED",
+    "SubHeading": "@mobiglas_Charlie_DropPad_subtitle",
+    "autoOpenMobiGlas": false,
+    "showNotification": true,
+    "missionSpecificContent": false,
+    "removeOnMissionEnd": true,
+    "Style": "file://./../../../../../../libs/foundry/records/journalentrytype/journalentrytype.textlog.json",
+    "type": {
+      "_Type_": "JournalEntryText",
+      "BodyText": "@mobiglas_Charlie_DropPad_bodytext"},
+    "tutorialEntry": false}}

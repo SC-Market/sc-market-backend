@@ -1,0 +1,17 @@
+{
+  "_RecordName_": "InventoryContainer.PersonalStorage_Locker_RAFT",
+  "_RecordId_": "e9a8140f-12be-4ec0-abb2-c121dde203d8",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "InventoryContainer",
+    "excludedItemSubTypes": [],
+    "interiorDimensions": {
+      "_Type_": "Vec3",
+      "x": 0.5,
+      "y": 0.5,
+      "z": 1.5},
+    "inventoryType": {
+      "_Type_": "InventoryClosedContainerType",
+      "capacity": {
+        "_Type_": "SStandardCargoUnit",
+        "standardCargoUnits": 0.4}}}}

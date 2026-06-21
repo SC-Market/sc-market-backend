@@ -1,0 +1,236 @@
+{
+  "_RecordName_": "ContractGenerator.CDF_Generator",
+  "_RecordId_": "91ce1ba9-9cc4-4bcc-9c20-ce62727cbd14",
+  "_RecordTag_": "MissionDesign",
+  "_RecordValue_": {
+    "_Type_": "ContractGenerator",
+    "generators": [
+      {
+        "_Type_": "ContractGeneratorHandler_List",
+        "notForRelease": false,
+        "workInProgress": false,
+        "debugName": "CDF_SandboxCriminalKills_List",
+        "required_active_scenarios": [],
+        "defaultAvailability": {
+          "_Type_": "ContractAvailability",
+          "prerequisites": [
+            {
+              "_Type_": "ContractPrerequisite_CrimeStat",
+              "includePrerequisiteWhenSharing": true,
+              "crimeStatJurisdictionOverride": null,
+              "minCrimeStat": 0.0,
+              "maxCrimeStat": 2.0},
+            {
+              "_Type_": "ContractPrerequisite_Location",
+              "locationAvailable": "file://./../../../../../libs/foundry/records/starmap/pu/system/stanton/stantonstar/starmapobject.stantonstar.json"}],
+          "notifyOnAvailable": false,
+          "maxPlayersPerInstance": 1,
+          "onceOnly": false,
+          "availableInPrison": false,
+          "canReacceptAfterAbandoning": true,
+          "abandonedCooldownTime": 1.0,
+          "abandonedCooldownTimeVariation": 1.0,
+          "canReacceptAfterFailing": false,
+          "hasPersonalCooldown": false,
+          "personalCooldownTime": 1.0,
+          "personalCooldownTimeVariation": 1.0,
+          "hideInMobiGlas": false},
+        "contractParams": {
+          "_Type_": "ContractParamOverrides",
+          "stringParamOverrides": [
+            {
+              "_Type_": "ContractStringParam",
+              "param": "Contractor",
+              "value": "@cdf_from"}],
+          "boolParamOverrides": [],
+          "intParamOverrides": [],
+          "propertyTagReplacement": [],
+          "propertyOverrides": [
+            {
+              "_Type_": "MissionProperty",
+              "missionVariableName": "",
+              "extendedTextToken": "Contractor",
+              "value": {
+                "_Type_": "MissionPropertyValue_Organization",
+                "matchConditions": [
+                  {
+                    "_Type_": "DataSetMatchCondition_SpecificOrganizationsDef",
+                    "organizations": [
+                      "file://./../../../../../libs/foundry/records/missiondata/pu_organizations/civiliandefenseforce.json"]}],
+                "debugForceChosenOrganization": null}}],
+          "modifierOverrides": [],
+          "missionTypeOverride": null,
+          "overridePhaseMissionDetailsDisplayInfo": []},
+        "contracts": [
+          {
+            "_Type_": "Contract",
+            "id": "4714f336-ac92-861b-8ec8-598c9b915f8b",
+            "notForRelease": false,
+            "workInProgress": false,
+            "debugName": "CDF_StantonStar_SandboxCriminalKills",
+            "template": "file://./../../../../../libs/foundry/records/contracts/contracttemplates/sandboxcriminalkills.json",
+            "required_active_scenarios": [],
+            "paramOverrides": {
+              "_Type_": "ContractParamOverrides",
+              "stringParamOverrides": [
+                {
+                  "_Type_": "ContractStringParam",
+                  "param": "Title",
+                  "value": "@openbounty_title"},
+                {
+                  "_Type_": "ContractStringParam",
+                  "param": "Description",
+                  "value": "@openbounty_desc"}],
+              "boolParamOverrides": [],
+              "intParamOverrides": [],
+              "propertyTagReplacement": [],
+              "propertyOverrides": [],
+              "modifierOverrides": [],
+              "missionTypeOverride": null,
+              "overridePhaseMissionDetailsDisplayInfo": []},
+            "subContracts": [],
+            "additionalPrerequisites": [],
+            "generationParams": {
+              "_Type_": "ContractGenerationParams_Legacy",
+              "maxInstances": -1,
+              "maxInstancesPerPlayer": 1,
+              "respawnTime": 5.0,
+              "respawnTimeVariation": 2.0},
+            "contractLifeTime": {
+              "_Type_": "ContractLifeTime",
+              "instanceLifeTime": 5.0,
+              "instanceLifeTimeVariation": 2.0},
+            "contractPlugins": [],
+            "contractResults": {
+              "_Type_": "ContractResults",
+              "contractResults": [],
+              "contractBuyInAmount": 0,
+              "timeToComplete": 0.0,
+              "difficulty": null}},
+          {
+            "_Type_": "Contract",
+            "id": "fa08dc6f-8add-4688-b35a-13ea214c961d",
+            "notForRelease": true,
+            "workInProgress": false,
+            "debugName": "",
+            "template": null,
+            "required_active_scenarios": [],
+            "paramOverrides": {
+              "_Type_": "ContractParamOverrides",
+              "stringParamOverrides": [
+                {
+                  "_Type_": "ContractStringParam",
+                  "param": "Title",
+                  "value": "@soo2_contract_name"},
+                {
+                  "_Type_": "ContractStringParam",
+                  "param": "Description",
+                  "value": "@soo2_contract_desc"}],
+              "boolParamOverrides": [],
+              "intParamOverrides": [],
+              "propertyTagReplacement": [],
+              "propertyOverrides": [
+                {
+                  "_Type_": "MissionProperty",
+                  "missionVariableName": "Island1_BP",
+                  "extendedTextToken": "",
+                  "value": {
+                    "_Type_": "MissionPropertyValue_Location",
+                    "matchConditions": [
+                      {
+                        "_Type_": "DataSetMatchCondition_TagSearch",
+                        "tagSearch": [
+                          {
+                            "_Type_": "TagSearchTerm",
+                            "positiveTags": [
+                              {
+                                "_RecordPath_": "file://./../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+                                "_RecordName_": "Tag.d0fb963b-e8ff-4646-bc5e-e47bef43151c",
+                                "_RecordId_": "d0fb963b-e8ff-4646-bc5e-e47bef43151c"}],
+                            "negativeTags": []}],
+                        "tagType": "General"}],
+                    "resourceTags": [],
+                    "logErrorOnSearchFail": true}},
+                {
+                  "_Type_": "MissionProperty",
+                  "missionVariableName": "Island2_BP",
+                  "extendedTextToken": "",
+                  "value": {
+                    "_Type_": "MissionPropertyValue_Location",
+                    "matchConditions": [
+                      {
+                        "_Type_": "DataSetMatchCondition_TagSearch",
+                        "tagSearch": [
+                          {
+                            "_Type_": "TagSearchTerm",
+                            "positiveTags": [
+                              {
+                                "_RecordPath_": "file://./../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+                                "_RecordName_": "Tag.62e67f2d-71a2-44d2-8cf5-0893b62fe4dd",
+                                "_RecordId_": "62e67f2d-71a2-44d2-8cf5-0893b62fe4dd"}],
+                            "negativeTags": []}],
+                        "tagType": "General"}],
+                    "resourceTags": [],
+                    "logErrorOnSearchFail": true}},
+                {
+                  "_Type_": "MissionProperty",
+                  "missionVariableName": "Island3_BP",
+                  "extendedTextToken": "",
+                  "value": {
+                    "_Type_": "MissionPropertyValue_Location",
+                    "matchConditions": [
+                      {
+                        "_Type_": "DataSetMatchCondition_TagSearch",
+                        "tagSearch": [
+                          {
+                            "_Type_": "TagSearchTerm",
+                            "positiveTags": [
+                              {
+                                "_RecordPath_": "file://./../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+                                "_RecordName_": "Tag.4d48e667-3e89-4e91-a90b-5dcbb4e945a8",
+                                "_RecordId_": "4d48e667-3e89-4e91-a90b-5dcbb4e945a8"}],
+                            "negativeTags": []}],
+                        "tagType": "General"}],
+                    "resourceTags": [],
+                    "logErrorOnSearchFail": true}},
+                {
+                  "_Type_": "MissionProperty",
+                  "missionVariableName": "MissionLocation_BP",
+                  "extendedTextToken": "",
+                  "value": {
+                    "_Type_": "MissionPropertyValue_Location",
+                    "matchConditions": [
+                      {
+                        "_Type_": "DataSetMatchCondition_TagSearch",
+                        "tagSearch": [
+                          {
+                            "_Type_": "TagSearchTerm",
+                            "positiveTags": [
+                              {
+                                "_RecordPath_": "file://./../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+                                "_RecordName_": "Tag.267da54a-02d1-4cbe-9f89-8d92f2e0fe91",
+                                "_RecordId_": "267da54a-02d1-4cbe-9f89-8d92f2e0fe91"}],
+                            "negativeTags": []}],
+                        "tagType": "General"}],
+                    "resourceTags": [],
+                    "logErrorOnSearchFail": true}}],
+              "modifierOverrides": [],
+              "missionTypeOverride": null,
+              "overridePhaseMissionDetailsDisplayInfo": []},
+            "subContracts": [],
+            "additionalPrerequisites": [],
+            "generationParams": {
+              "_Type_": "ContractGenerationParams_Legacy",
+              "maxInstances": 1,
+              "maxInstancesPerPlayer": -1,
+              "respawnTime": 5.0,
+              "respawnTimeVariation": 2.0},
+            "contractLifeTime": null,
+            "contractPlugins": [],
+            "contractResults": {
+              "_Type_": "ContractResults",
+              "contractResults": [],
+              "contractBuyInAmount": 0,
+              "timeToComplete": 0.0,
+              "difficulty": null}}]}],
+    "required_active_scenarios": []}}

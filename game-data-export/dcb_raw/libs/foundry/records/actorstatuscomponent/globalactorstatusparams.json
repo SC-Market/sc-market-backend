@@ -1,0 +1,1262 @@
+{
+  "_RecordName_": "ActorStatusGlobalParams.GlobalActorStatusParams",
+  "_RecordId_": "412a3dc8-b655-4c77-9aff-a81d23a38fc6",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "ActorStatusGlobalParams",
+    "actorStatusEffects": [
+      {
+        "_Type_": "ActorStatusEffect",
+        "statusEffectValueType": {
+          "_Type_": "BasicStatusEffectApplicationType",
+          "valueType": "Multiplier"},
+        "affectedStat": null,
+        "display": "@LOC_EMPTY"},
+      {
+        "_Type_": "ActorStatusEffect",
+        "statusEffectValueType": {
+          "_Type_": "BasicStatusEffectApplicationType",
+          "valueType": "MaxValue"},
+        "affectedStat": null,
+        "display": "@LOC_EMPTY"},
+      {
+        "_Type_": "ActorStatusEffect",
+        "statusEffectValueType": {
+          "_Type_": "BasicStatusEffectApplicationType",
+          "valueType": "MaxValue"},
+        "affectedStat": null,
+        "display": "@med_statuseffect_bleed"},
+      {
+        "_Type_": "ActorStatusEffect",
+        "statusEffectValueType": {
+          "_Type_": "BasicStatusEffectApplicationType",
+          "valueType": "Multiplier"},
+        "affectedStat": {
+          "_Type_": "ActorStatusStatModifier",
+          "affectedStatType": "BloodDrugLevel"},
+        "display": "@LOC_EMPTY"},
+      {
+        "_Type_": "ActorStatusEffect",
+        "statusEffectValueType": {
+          "_Type_": "BasicStatusEffectApplicationType",
+          "valueType": "MaxValue"},
+        "affectedStat": null,
+        "display": "@LOC_EMPTY"},
+      {
+        "_Type_": "ActorStatusEffect",
+        "statusEffectValueType": {
+          "_Type_": "BasicStatusEffectApplicationType",
+          "valueType": "MaxValue"},
+        "affectedStat": null,
+        "display": "@LOC_EMPTY"},
+      {
+        "_Type_": "ActorStatusEffect",
+        "statusEffectValueType": {
+          "_Type_": "BasicStatusEffectApplicationType",
+          "valueType": "MaxValue"},
+        "affectedStat": {
+          "_Type_": "ActorStatusStatModifier",
+          "affectedStatType": "BodyRadiation"},
+        "display": "@LOC_EMPTY"},
+      {
+        "_Type_": "ActorStatusEffect",
+        "statusEffectValueType": {
+          "_Type_": "BasicStatusEffectApplicationType",
+          "valueType": "MaxValue"},
+        "affectedStat": null,
+        "display": "@LOC_EMPTY"},
+      {
+        "_Type_": "ActorStatusEffect",
+        "statusEffectValueType": {
+          "_Type_": "BasicStatusEffectApplicationType",
+          "valueType": "MaxValue"},
+        "affectedStat": null,
+        "display": "@med_statuseffect_dead"},
+      {
+        "_Type_": "ActorStatusEffect",
+        "statusEffectValueType": {
+          "_Type_": "BasicStatusEffectApplicationType",
+          "valueType": "MaxValue"},
+        "affectedStat": null,
+        "display": "@med_statuseffect_dehydrationdamage"},
+      {
+        "_Type_": "ActorStatusEffect",
+        "statusEffectValueType": {
+          "_Type_": "BasicStatusEffectApplicationType",
+          "valueType": "MaxValue"},
+        "affectedStat": null,
+        "display": "@med_statuseffect_depressurizationdamage"},
+      {
+        "_Type_": "ActorStatusEffect",
+        "statusEffectValueType": {
+          "_Type_": "BasicStatusEffectApplicationType",
+          "valueType": "MinValue"},
+        "affectedStat": null,
+        "display": "@LOC_EMPTY"},
+      {
+        "_Type_": "ActorStatusEffect",
+        "statusEffectValueType": {
+          "_Type_": "BasicStatusEffectApplicationType",
+          "valueType": "MaxValue"},
+        "affectedStat": null,
+        "display": "@LOC_EMPTY"},
+      {
+        "_Type_": "ActorStatusEffect",
+        "statusEffectValueType": {
+          "_Type_": "BasicStatusEffectApplicationType",
+          "valueType": "MaxValue"},
+        "affectedStat": null,
+        "display": "@LOC_EMPTY"},
+      {
+        "_Type_": "ActorStatusEffect",
+        "statusEffectValueType": {
+          "_Type_": "BasicStatusEffectApplicationType",
+          "valueType": "MaxValue"},
+        "affectedStat": null,
+        "display": "@LOC_EMPTY"},
+      {
+        "_Type_": "ActorStatusEffect",
+        "statusEffectValueType": {
+          "_Type_": "BasicStatusEffectApplicationType",
+          "valueType": "Additive"},
+        "affectedStat": {
+          "_Type_": "ActorStatusStatModifier",
+          "affectedStatType": "DownedDamage"},
+        "display": "@med_statuseffect_downeddamagedecay"},
+      {
+        "_Type_": "ActorStatusEffect",
+        "statusEffectValueType": {
+          "_Type_": "BasicStatusEffectApplicationType",
+          "valueType": "MaxValue"},
+        "affectedStat": null,
+        "display": "@LOC_EMPTY"},
+      {
+        "_Type_": "ActorStatusEffect",
+        "statusEffectValueType": {
+          "_Type_": "BasicStatusEffectApplicationType",
+          "valueType": "Multiplier"},
+        "affectedStat": null,
+        "display": "@LOC_EMPTY"},
+      {
+        "_Type_": "ActorStatusEffect",
+        "statusEffectValueType": {
+          "_Type_": "BasicStatusEffectApplicationType",
+          "valueType": "MaxValue"},
+        "affectedStat": null,
+        "display": "@LOC_EMPTY"},
+      {
+        "_Type_": "ActorStatusEffect",
+        "statusEffectValueType": {
+          "_Type_": "BasicStatusEffectApplicationType",
+          "valueType": "MaxValue"},
+        "affectedStat": null,
+        "display": "@LOC_EMPTY"},
+      {
+        "_Type_": "ActorStatusEffect",
+        "statusEffectValueType": {
+          "_Type_": "DiminishingReturnsStatusEffectApplicationType",
+          "valueType": "DiminishingReturns",
+          "scalar": 1.5},
+        "affectedStat": {
+          "_Type_": "ActorStatusStatModifier",
+          "affectedStatType": "HealthPool"},
+        "display": "@LOC_EMPTY"},
+      {
+        "_Type_": "ActorStatusEffect",
+        "statusEffectValueType": {
+          "_Type_": "BasicStatusEffectApplicationType",
+          "valueType": "MaxValue"},
+        "affectedStat": null,
+        "display": "@LOC_EMPTY"},
+      {
+        "_Type_": "ActorStatusEffect",
+        "statusEffectValueType": {
+          "_Type_": "BasicStatusEffectApplicationType",
+          "valueType": "Multiplier"},
+        "affectedStat": {
+          "_Type_": "ActorStatusStatModifier",
+          "affectedStatType": "Hunger"},
+        "display": "@LOC_EMPTY"},
+      {
+        "_Type_": "ActorStatusEffect",
+        "statusEffectValueType": {
+          "_Type_": "BasicStatusEffectApplicationType",
+          "valueType": "MaxValue"},
+        "affectedStat": null,
+        "display": "@LOC_EMPTY"},
+      {
+        "_Type_": "ActorStatusEffect",
+        "statusEffectValueType": {
+          "_Type_": "BasicStatusEffectApplicationType",
+          "valueType": "MaxValue"},
+        "affectedStat": null,
+        "display": "@LOC_EMPTY"},
+      {
+        "_Type_": "ActorStatusEffect",
+        "statusEffectValueType": {
+          "_Type_": "BasicStatusEffectApplicationType",
+          "valueType": "Multiplier"},
+        "affectedStat": {
+          "_Type_": "ActorStatusStatModifier",
+          "affectedStatType": "Hygiene"},
+        "display": "@LOC_EMPTY"},
+      {
+        "_Type_": "ActorStatusEffect",
+        "statusEffectValueType": {
+          "_Type_": "BasicStatusEffectApplicationType",
+          "valueType": "MaxValue"},
+        "affectedStat": null,
+        "display": "@med_statuseffect_hypothermiadamage"},
+      {
+        "_Type_": "ActorStatusEffect",
+        "statusEffectValueType": {
+          "_Type_": "BasicStatusEffectApplicationType",
+          "valueType": "MaxValue"},
+        "affectedStat": null,
+        "display": "@med_statuseffect_hyperthermiadamage"},
+      {
+        "_Type_": "ActorStatusEffect",
+        "statusEffectValueType": {
+          "_Type_": "BasicStatusEffectApplicationType",
+          "valueType": "Multiplier"},
+        "affectedStat": null,
+        "display": "@LOC_EMPTY"},
+      {
+        "_Type_": "ActorStatusEffect",
+        "statusEffectValueType": {
+          "_Type_": "BasicStatusEffectApplicationType",
+          "valueType": "Multiplier"},
+        "affectedStat": null,
+        "display": "@LOC_EMPTY"},
+      {
+        "_Type_": "ActorStatusEffect",
+        "statusEffectValueType": {
+          "_Type_": "BasicStatusEffectApplicationType",
+          "valueType": "Multiplier"},
+        "affectedStat": null,
+        "display": "@LOC_EMPTY"},
+      {
+        "_Type_": "ActorStatusEffect",
+        "statusEffectValueType": {
+          "_Type_": "BasicStatusEffectApplicationType",
+          "valueType": "Multiplier"},
+        "affectedStat": null,
+        "display": "@LOC_EMPTY"},
+      {
+        "_Type_": "ActorStatusEffect",
+        "statusEffectValueType": {
+          "_Type_": "BasicStatusEffectApplicationType",
+          "valueType": "MaxValue"},
+        "affectedStat": null,
+        "display": "@LOC_EMPTY"},
+      {
+        "_Type_": "ActorStatusEffect",
+        "statusEffectValueType": {
+          "_Type_": "BasicStatusEffectApplicationType",
+          "valueType": "Multiplier"},
+        "affectedStat": null,
+        "display": "@LOC_EMPTY"},
+      {
+        "_Type_": "ActorStatusEffect",
+        "statusEffectValueType": {
+          "_Type_": "BasicStatusEffectApplicationType",
+          "valueType": "MaxValue"},
+        "affectedStat": null,
+        "display": "@LOC_EMPTY"},
+      {
+        "_Type_": "ActorStatusEffect",
+        "statusEffectValueType": {
+          "_Type_": "BasicStatusEffectApplicationType",
+          "valueType": "Multiplier"},
+        "affectedStat": null,
+        "display": "@med_statuseffect_meleedamage"},
+      {
+        "_Type_": "ActorStatusEffect",
+        "statusEffectValueType": {
+          "_Type_": "BasicStatusEffectApplicationType",
+          "valueType": "Multiplier"},
+        "affectedStat": null,
+        "display": "@LOC_EMPTY"},
+      {
+        "_Type_": "ActorStatusEffect",
+        "statusEffectValueType": {
+          "_Type_": "BasicStatusEffectApplicationType",
+          "valueType": "Multiplier"},
+        "affectedStat": null,
+        "display": "@LOC_EMPTY"},
+      {
+        "_Type_": "ActorStatusEffect",
+        "statusEffectValueType": {
+          "_Type_": "BasicStatusEffectApplicationType",
+          "valueType": "MaxValue"},
+        "affectedStat": null,
+        "display": "@LOC_EMPTY"},
+      {
+        "_Type_": "ActorStatusEffect",
+        "statusEffectValueType": {
+          "_Type_": "BasicStatusEffectApplicationType",
+          "valueType": "Multiplier"},
+        "affectedStat": null,
+        "display": "@LOC_EMPTY"},
+      {
+        "_Type_": "ActorStatusEffect",
+        "statusEffectValueType": {
+          "_Type_": "BasicStatusEffectApplicationType",
+          "valueType": "MaxValue"},
+        "affectedStat": null,
+        "display": "@LOC_EMPTY"},
+      {
+        "_Type_": "ActorStatusEffect",
+        "statusEffectValueType": {
+          "_Type_": "BasicStatusEffectApplicationType",
+          "valueType": "Multiplier"},
+        "affectedStat": null,
+        "display": "@LOC_EMPTY"},
+      {
+        "_Type_": "ActorStatusEffect",
+        "statusEffectValueType": {
+          "_Type_": "BasicStatusEffectApplicationType",
+          "valueType": "MaxValue"},
+        "affectedStat": null,
+        "display": "@med_statuseffect_overdosedamage"},
+      {
+        "_Type_": "ActorStatusEffect",
+        "statusEffectValueType": {
+          "_Type_": "BasicStatusEffectApplicationType",
+          "valueType": "MaxValue"},
+        "affectedStat": null,
+        "display": "@LOC_EMPTY"},
+      {
+        "_Type_": "ActorStatusEffect",
+        "statusEffectValueType": {
+          "_Type_": "BasicStatusEffectApplicationType",
+          "valueType": "MaxValue"},
+        "affectedStat": null,
+        "display": "@LOC_EMPTY"},
+      {
+        "_Type_": "ActorStatusEffect",
+        "statusEffectValueType": {
+          "_Type_": "BasicStatusEffectApplicationType",
+          "valueType": "MaxValue"},
+        "affectedStat": null,
+        "display": "@LOC_EMPTY"},
+      {
+        "_Type_": "ActorStatusEffect",
+        "statusEffectValueType": {
+          "_Type_": "BasicStatusEffectApplicationType",
+          "valueType": "Multiplier"},
+        "affectedStat": null,
+        "display": "@LOC_EMPTY"},
+      {
+        "_Type_": "ActorStatusEffect",
+        "statusEffectValueType": {
+          "_Type_": "BasicStatusEffectApplicationType",
+          "valueType": "Multiplier"},
+        "affectedStat": null,
+        "display": "@LOC_EMPTY"},
+      {
+        "_Type_": "ActorStatusEffect",
+        "statusEffectValueType": {
+          "_Type_": "BasicStatusEffectApplicationType",
+          "valueType": "Multiplier"},
+        "affectedStat": null,
+        "display": "@LOC_EMPTY"},
+      {
+        "_Type_": "ActorStatusEffect",
+        "statusEffectValueType": {
+          "_Type_": "BasicStatusEffectApplicationType",
+          "valueType": "Multiplier"},
+        "affectedStat": null,
+        "display": "@LOC_EMPTY"},
+      {
+        "_Type_": "ActorStatusEffect",
+        "statusEffectValueType": {
+          "_Type_": "BasicStatusEffectApplicationType",
+          "valueType": "MaxValue"},
+        "affectedStat": null,
+        "display": "@LOC_EMPTY"},
+      {
+        "_Type_": "ActorStatusEffect",
+        "statusEffectValueType": {
+          "_Type_": "BasicStatusEffectApplicationType",
+          "valueType": "Multiplier"},
+        "affectedStat": null,
+        "display": "@LOC_EMPTY"},
+      {
+        "_Type_": "ActorStatusEffect",
+        "statusEffectValueType": {
+          "_Type_": "BasicStatusEffectApplicationType",
+          "valueType": "MinValue"},
+        "affectedStat": null,
+        "display": "@LOC_EMPTY"},
+      {
+        "_Type_": "ActorStatusEffect",
+        "statusEffectValueType": {
+          "_Type_": "BasicStatusEffectApplicationType",
+          "valueType": "MinValue"},
+        "affectedStat": null,
+        "display": "@LOC_EMPTY"},
+      {
+        "_Type_": "ActorStatusEffect",
+        "statusEffectValueType": {
+          "_Type_": "BasicStatusEffectApplicationType",
+          "valueType": "MaxValue"},
+        "affectedStat": null,
+        "display": "@med_statuseffect_starvationdamage"},
+      {
+        "_Type_": "ActorStatusEffect",
+        "statusEffectValueType": {
+          "_Type_": "BasicStatusEffectApplicationType",
+          "valueType": "MaxValue"},
+        "affectedStat": null,
+        "display": "@LOC_EMPTY"},
+      {
+        "_Type_": "ActorStatusEffect",
+        "statusEffectValueType": {
+          "_Type_": "BasicStatusEffectApplicationType",
+          "valueType": "Multiplier"},
+        "affectedStat": null,
+        "display": "@LOC_EMPTY"},
+      {
+        "_Type_": "ActorStatusEffect",
+        "statusEffectValueType": {
+          "_Type_": "BasicStatusEffectApplicationType",
+          "valueType": "MaxValue"},
+        "affectedStat": null,
+        "display": "@LOC_EMPTY"},
+      {
+        "_Type_": "ActorStatusEffect",
+        "statusEffectValueType": {
+          "_Type_": "BasicStatusEffectApplicationType",
+          "valueType": "Multiplier"},
+        "affectedStat": {
+          "_Type_": "ActorStatusStatModifier",
+          "affectedStatType": "Stun"},
+        "display": "@LOC_EMPTY"},
+      {
+        "_Type_": "ActorStatusEffect",
+        "statusEffectValueType": {
+          "_Type_": "BasicStatusEffectApplicationType",
+          "valueType": "MaxValue"},
+        "affectedStat": null,
+        "display": "@LOC_EMPTY"},
+      {
+        "_Type_": "ActorStatusEffect",
+        "statusEffectValueType": {
+          "_Type_": "BasicStatusEffectApplicationType",
+          "valueType": "MaxValue"},
+        "affectedStat": null,
+        "display": "@med_statuseffect_suffocationdamage"},
+      {
+        "_Type_": "ActorStatusEffect",
+        "statusEffectValueType": {
+          "_Type_": "BasicStatusEffectApplicationType",
+          "valueType": "MaxValue"},
+        "affectedStat": null,
+        "display": "@LOC_EMPTY"},
+      {
+        "_Type_": "ActorStatusEffect",
+        "statusEffectValueType": {
+          "_Type_": "BasicStatusEffectApplicationType",
+          "valueType": "Multiplier"},
+        "affectedStat": {
+          "_Type_": "ActorStatusStatModifier",
+          "affectedStatType": "Thirst"},
+        "display": "@LOC_EMPTY"},
+      {
+        "_Type_": "ActorStatusEffect",
+        "statusEffectValueType": {
+          "_Type_": "BasicStatusEffectApplicationType",
+          "valueType": "Multiplier"},
+        "affectedStat": null,
+        "display": "@LOC_EMPTY"},
+      {
+        "_Type_": "ActorStatusEffect",
+        "statusEffectValueType": {
+          "_Type_": "BasicStatusEffectApplicationType",
+          "valueType": "MaxValue"},
+        "affectedStat": null,
+        "display": "@LOC_EMPTY"},
+      {
+        "_Type_": "ActorStatusEffect",
+        "statusEffectValueType": {
+          "_Type_": "BasicStatusEffectApplicationType",
+          "valueType": "MaxValue"},
+        "affectedStat": null,
+        "display": "@LOC_EMPTY"},
+      {
+        "_Type_": "ActorStatusEffect",
+        "statusEffectValueType": {
+          "_Type_": "BasicStatusEffectApplicationType",
+          "valueType": "MaxValue"},
+        "affectedStat": null,
+        "display": "@LOC_EMPTY"},
+      {
+        "_Type_": "ActorStatusEffect",
+        "statusEffectValueType": {
+          "_Type_": "BasicStatusEffectApplicationType",
+          "valueType": "Multiplier"},
+        "affectedStat": null,
+        "display": "@LOC_EMPTY"}],
+    "actorStatusBuffs": [
+      {
+        "_Type_": "ActorStatusBuff",
+        "statusEffectType": "StaminaCost",
+        "buffApplication": {
+          "_Type_": "ApplyStatusBuff"},
+        "buffValue": 0.95,
+        "buffDuration": 600.0,
+        "buffDurationCap": 3600.0},
+      {
+        "_Type_": "ActorStatusBuff",
+        "statusEffectType": "StaminaCost",
+        "buffApplication": {
+          "_Type_": "ApplyStatusBuff"},
+        "buffValue": 1.05,
+        "buffDuration": 300.0,
+        "buffDurationCap": 1800.0},
+      {
+        "_Type_": "ActorStatusBuff",
+        "statusEffectType": "StaminaRegen",
+        "buffApplication": {
+          "_Type_": "ApplyStatusBuff"},
+        "buffValue": 1.05,
+        "buffDuration": 600.0,
+        "buffDurationCap": 3600.0},
+      {
+        "_Type_": "ActorStatusBuff",
+        "statusEffectType": "StaminaRegen",
+        "buffApplication": {
+          "_Type_": "ApplyStatusBuff"},
+        "buffValue": 0.95,
+        "buffDuration": 300.0,
+        "buffDurationCap": 1800.0},
+      {
+        "_Type_": "ActorStatusBuff",
+        "statusEffectType": "WeaponSway",
+        "buffApplication": {
+          "_Type_": "ApplyStatusBuff"},
+        "buffValue": 0.75,
+        "buffDuration": 600.0,
+        "buffDurationCap": 3600.0},
+      {
+        "_Type_": "ActorStatusBuff",
+        "statusEffectType": "WeaponSway",
+        "buffApplication": {
+          "_Type_": "ApplyStatusBuff"},
+        "buffValue": 1.25,
+        "buffDuration": 300.0,
+        "buffDurationCap": 1800.0},
+      {
+        "_Type_": "ActorStatusBuff",
+        "statusEffectType": "HungerDecay",
+        "buffApplication": {
+          "_Type_": "ApplyStatusBuff"},
+        "buffValue": 0.9,
+        "buffDuration": 600.0,
+        "buffDurationCap": 3600.0},
+      {
+        "_Type_": "ActorStatusBuff",
+        "statusEffectType": "HungerDecay",
+        "buffApplication": {
+          "_Type_": "ApplyStatusBuff"},
+        "buffValue": 1.1,
+        "buffDuration": 300.0,
+        "buffDurationCap": 1800.0},
+      {
+        "_Type_": "ActorStatusBuff",
+        "statusEffectType": "ThirstDecay",
+        "buffApplication": {
+          "_Type_": "ApplyStatusBuff"},
+        "buffValue": 0.9,
+        "buffDuration": 600.0,
+        "buffDurationCap": 3600.0},
+      {
+        "_Type_": "ActorStatusBuff",
+        "statusEffectType": "ThirstDecay",
+        "buffApplication": {
+          "_Type_": "ApplyStatusBuff"},
+        "buffValue": 1.1,
+        "buffDuration": 300.0,
+        "buffDurationCap": 1800.0},
+      {
+        "_Type_": "ActorStatusBuff",
+        "statusEffectType": "HealthPool",
+        "buffApplication": {
+          "_Type_": "ApplyStatusBuff"},
+        "buffValue": 0.0,
+        "buffDuration": 0.0,
+        "buffDurationCap": -1.0},
+      {
+        "_Type_": "ActorStatusBuff",
+        "statusEffectType": "HealthPool",
+        "buffApplication": {
+          "_Type_": "ApplyStatusBuff"},
+        "buffValue": 0.0,
+        "buffDuration": 0.0,
+        "buffDurationCap": -1.0},
+      {
+        "_Type_": "ActorStatusBuff",
+        "statusEffectType": "HealthPool",
+        "buffApplication": {
+          "_Type_": "ApplyStatusBuff"},
+        "buffValue": 0.0,
+        "buffDuration": 0.0,
+        "buffDurationCap": -1.0},
+      {
+        "_Type_": "ActorStatusBuff",
+        "statusEffectType": "HealthPool",
+        "buffApplication": {
+          "_Type_": "ApplyStatusBuff"},
+        "buffValue": 0.0,
+        "buffDuration": 0.0,
+        "buffDurationCap": -1.0},
+      {
+        "_Type_": "ActorStatusBuff",
+        "statusEffectType": "MoveSpeed",
+        "buffApplication": {
+          "_Type_": "ApplyStatusBuff"},
+        "buffValue": 0.5,
+        "buffDuration": 1.0,
+        "buffDurationCap": -1.0},
+      {
+        "_Type_": "ActorStatusBuff",
+        "statusEffectType": "PassOutGForce",
+        "buffApplication": {
+          "_Type_": "ApplyStatusBuff"},
+        "buffValue": 0.5,
+        "buffDuration": 10.0,
+        "buffDurationCap": 10.0},
+      {
+        "_Type_": "ActorStatusBuff",
+        "statusEffectType": "PassOutUnconscious",
+        "buffApplication": {
+          "_Type_": "MaskStatusBuff",
+          "maskIfCausedByStatus": []},
+        "buffValue": 1.0,
+        "buffDuration": 1.0,
+        "buffDurationCap": -1.0},
+      {
+        "_Type_": "ActorStatusBuff",
+        "statusEffectType": "BloodDrugLevelDecay",
+        "buffApplication": {
+          "_Type_": "ApplyStatusBuff"},
+        "buffValue": 3.0,
+        "buffDuration": 1.0,
+        "buffDurationCap": -1.0},
+      {
+        "_Type_": "ActorStatusBuff",
+        "statusEffectType": "StatusDamageMultiplier",
+        "buffApplication": {
+          "_Type_": "ApplyStatusBuff"},
+        "buffValue": 0.0,
+        "buffDuration": 0.0,
+        "buffDurationCap": -1.0},
+      {
+        "_Type_": "ActorStatusBuff",
+        "statusEffectType": "ExternalDamageMultiplier",
+        "buffApplication": {
+          "_Type_": "ApplyStatusBuff"},
+        "buffValue": 0.0,
+        "buffDuration": 2.0,
+        "buffDurationCap": -1.0},
+      {
+        "_Type_": "ActorStatusBuff",
+        "statusEffectType": "DrugDuration",
+        "buffApplication": {
+          "_Type_": "ApplyStatusBuff"},
+        "buffValue": 0.3333333,
+        "buffDuration": 1.0,
+        "buffDurationCap": -1.0},
+      {
+        "_Type_": "ActorStatusBuff",
+        "statusEffectType": "HealthPool",
+        "buffApplication": {
+          "_Type_": "MaskStatusBuff",
+          "maskIfCausedByStatus": []},
+        "buffValue": 1.0,
+        "buffDuration": 1.0,
+        "buffDurationCap": -1.0},
+      {
+        "_Type_": "ActorStatusBuff",
+        "statusEffectType": "HurtLocomotion",
+        "buffApplication": {
+          "_Type_": "MaskStatusBuff",
+          "maskIfCausedByStatus": []},
+        "buffValue": 1.0,
+        "buffDuration": 1.0,
+        "buffDurationCap": -1.0},
+      {
+        "_Type_": "ActorStatusBuff",
+        "statusEffectType": "StunDecay",
+        "buffApplication": {
+          "_Type_": "MaskStatusBuff",
+          "maskIfCausedByStatus": []},
+        "buffValue": 1.0,
+        "buffDuration": 1.0,
+        "buffDurationCap": -1.0},
+      {
+        "_Type_": "ActorStatusBuff",
+        "statusEffectType": "ImpactResistanceKnockdown",
+        "buffApplication": {
+          "_Type_": "MaskStatusBuff",
+          "maskIfCausedByStatus": []},
+        "buffValue": 1.0,
+        "buffDuration": 1.0,
+        "buffDurationCap": -1.0},
+      {
+        "_Type_": "ActorStatusBuff",
+        "statusEffectType": "ImpactResistanceStagger",
+        "buffApplication": {
+          "_Type_": "MaskStatusBuff",
+          "maskIfCausedByStatus": []},
+        "buffValue": 1.0,
+        "buffDuration": 1.0,
+        "buffDurationCap": -1.0},
+      {
+        "_Type_": "ActorStatusBuff",
+        "statusEffectType": "ImpactResistanceTwitch",
+        "buffApplication": {
+          "_Type_": "MaskStatusBuff",
+          "maskIfCausedByStatus": []},
+        "buffValue": 1.0,
+        "buffDuration": 1.0,
+        "buffDurationCap": -1.0},
+      {
+        "_Type_": "ActorStatusBuff",
+        "statusEffectType": "ImpactResistanceFlinch",
+        "buffApplication": {
+          "_Type_": "MaskStatusBuff",
+          "maskIfCausedByStatus": []},
+        "buffValue": 1.0,
+        "buffDuration": 1.0,
+        "buffDurationCap": -1.0},
+      {
+        "_Type_": "ActorStatusBuff",
+        "statusEffectType": "StaminaRegen",
+        "buffApplication": {
+          "_Type_": "MaskStatusBuff",
+          "maskIfCausedByStatus": []},
+        "buffValue": 1.0,
+        "buffDuration": 1.0,
+        "buffDurationCap": -1.0},
+      {
+        "_Type_": "ActorStatusBuff",
+        "statusEffectType": "StaminaPool",
+        "buffApplication": {
+          "_Type_": "MaskStatusBuff",
+          "maskIfCausedByStatus": []},
+        "buffValue": 1.0,
+        "buffDuration": 1.0,
+        "buffDurationCap": -1.0},
+      {
+        "_Type_": "ActorStatusBuff",
+        "statusEffectType": "Wheezing",
+        "buffApplication": {
+          "_Type_": "MaskStatusBuff",
+          "maskIfCausedByStatus": []},
+        "buffValue": 1.0,
+        "buffDuration": 1.0,
+        "buffDurationCap": -1.0},
+      {
+        "_Type_": "ActorStatusBuff",
+        "statusEffectType": "CoughBlood",
+        "buffApplication": {
+          "_Type_": "MaskStatusBuff",
+          "maskIfCausedByStatus": []},
+        "buffValue": 1.0,
+        "buffDuration": 1.0,
+        "buffDurationCap": -1.0},
+      {
+        "_Type_": "ActorStatusBuff",
+        "statusEffectType": "MoveSpeed",
+        "buffApplication": {
+          "_Type_": "MaskStatusBuff",
+          "maskIfCausedByStatus": []},
+        "buffValue": 1.0,
+        "buffDuration": 1.0,
+        "buffDurationCap": -1.0},
+      {
+        "_Type_": "ActorStatusBuff",
+        "statusEffectType": "TraversalLock",
+        "buffApplication": {
+          "_Type_": "MaskStatusBuff",
+          "maskIfCausedByStatus": []},
+        "buffValue": 1.0,
+        "buffDuration": 1.0,
+        "buffDurationCap": -1.0},
+      {
+        "_Type_": "ActorStatusBuff",
+        "statusEffectType": "TraversalLockProne",
+        "buffApplication": {
+          "_Type_": "MaskStatusBuff",
+          "maskIfCausedByStatus": []},
+        "buffValue": 1.0,
+        "buffDuration": 1.0,
+        "buffDurationCap": -1.0},
+      {
+        "_Type_": "ActorStatusBuff",
+        "statusEffectType": "PainGrunt",
+        "buffApplication": {
+          "_Type_": "MaskStatusBuff",
+          "maskIfCausedByStatus": []},
+        "buffValue": 1.0,
+        "buffDuration": 1.0,
+        "buffDurationCap": -1.0},
+      {
+        "_Type_": "ActorStatusBuff",
+        "statusEffectType": "ArmsLock",
+        "buffApplication": {
+          "_Type_": "MaskStatusBuff",
+          "maskIfCausedByStatus": []},
+        "buffValue": 1.0,
+        "buffDuration": 1.0,
+        "buffDurationCap": -1.0},
+      {
+        "_Type_": "ActorStatusBuff",
+        "statusEffectType": "WeaponSway",
+        "buffApplication": {
+          "_Type_": "MaskStatusBuff",
+          "maskIfCausedByStatus": []},
+        "buffValue": 1.0,
+        "buffDuration": 1.0,
+        "buffDurationCap": -1.0},
+      {
+        "_Type_": "ActorStatusBuff",
+        "statusEffectType": "ADSEnter",
+        "buffApplication": {
+          "_Type_": "MaskStatusBuff",
+          "maskIfCausedByStatus": []},
+        "buffValue": 1.0,
+        "buffDuration": 1.0,
+        "buffDurationCap": -1.0},
+      {
+        "_Type_": "ActorStatusBuff",
+        "statusEffectType": "BloodVision",
+        "buffApplication": {
+          "_Type_": "MaskStatusBuff",
+          "maskIfCausedByStatus": []},
+        "buffValue": 1.0,
+        "buffDuration": 1.0,
+        "buffDurationCap": -1.0},
+      {
+        "_Type_": "ActorStatusBuff",
+        "statusEffectType": "MuffledAudio",
+        "buffApplication": {
+          "_Type_": "MaskStatusBuff",
+          "maskIfCausedByStatus": [
+            "Injury",
+            "MajorInjury",
+            "DeadlyInjury"]},
+        "buffValue": 1.0,
+        "buffDuration": 1.0,
+        "buffDurationCap": -1.0},
+      {
+        "_Type_": "ActorStatusBuff",
+        "statusEffectType": "BlurredVision",
+        "buffApplication": {
+          "_Type_": "MaskStatusBuff",
+          "maskIfCausedByStatus": []},
+        "buffValue": 1.0,
+        "buffDuration": 1.0,
+        "buffDurationCap": -1.0},
+      {
+        "_Type_": "ActorStatusBuff",
+        "statusEffectType": "DrunkLocomotion",
+        "buffApplication": {
+          "_Type_": "MaskStatusBuff",
+          "maskIfCausedByStatus": []},
+        "buffValue": 1.0,
+        "buffDuration": 1.0,
+        "buffDurationCap": -1.0},
+      {
+        "_Type_": "ActorStatusBuff",
+        "statusEffectType": "DrunkManoeuvring",
+        "buffApplication": {
+          "_Type_": "MaskStatusBuff",
+          "maskIfCausedByStatus": []},
+        "buffValue": 1.0,
+        "buffDuration": 1.0,
+        "buffDurationCap": -1.0},
+      {
+        "_Type_": "ActorStatusBuff",
+        "statusEffectType": "DoubleVision",
+        "buffApplication": {
+          "_Type_": "MaskStatusBuff",
+          "maskIfCausedByStatus": []},
+        "buffValue": 1.0,
+        "buffDuration": 1.0,
+        "buffDurationCap": -1.0},
+      {
+        "_Type_": "ActorStatusBuff",
+        "statusEffectType": "OrificeBlood",
+        "buffApplication": {
+          "_Type_": "MaskStatusBuff",
+          "maskIfCausedByStatus": []},
+        "buffValue": 0.0,
+        "buffDuration": 0.0,
+        "buffDurationCap": -1.0},
+      {
+        "_Type_": "ActorStatusBuff",
+        "statusEffectType": "LightSensitivity",
+        "buffApplication": {
+          "_Type_": "ApplyStatusBuff"},
+        "buffValue": 1.0,
+        "buffDuration": 1.0,
+        "buffDurationCap": -1.0},
+      {
+        "_Type_": "ActorStatusBuff",
+        "statusEffectType": "HealthBoost",
+        "buffApplication": {
+          "_Type_": "ApplyStatusBuff"},
+        "buffValue": 4.0,
+        "buffDuration": 5.0,
+        "buffDurationCap": -1.0},
+      {
+        "_Type_": "ActorStatusBuff",
+        "statusEffectType": "BodyRadiationDecay",
+        "buffApplication": {
+          "_Type_": "ApplyStatusBuff"},
+        "buffValue": 1000.0,
+        "buffDuration": 0.0833,
+        "buffDurationCap": -1.0},
+      {
+        "_Type_": "ActorStatusBuff",
+        "statusEffectType": "",
+        "buffApplication": {
+          "_Type_": "ApplyStatusBuff"},
+        "buffValue": 0.0,
+        "buffDuration": 0.0,
+        "buffDurationCap": -1.0},
+      {
+        "_Type_": "ActorStatusBuff",
+        "statusEffectType": "",
+        "buffApplication": {
+          "_Type_": "ApplyStatusBuff"},
+        "buffValue": 0.0,
+        "buffDuration": 0.0,
+        "buffDurationCap": -1.0}],
+    "actorStatusLocalisation": {
+      "_Type_": "ActorStatusLocalisation",
+      "hospitalisationReasonNames": [
+        "@LOC_EMPTY",
+        "@med_hospitalisationReason_selfCheckin",
+        "@med_hospitalisationReason_died",
+        "@med_hospitalisationReason_injuredAndBroughtToHangar",
+        "@med_hospitalisationReason_incapacitatedAndBroughtToHangar",
+        "@med_hospitalisationReason_incapacitatedInLandingZone",
+        "@med_hospitalisationReason_incapacitatedAndBroughtToHospital"],
+      "deathReasonNames": [
+        "@LOC_EMPTY",
+        "@med_deathReason_hitDamageInstantDeath",
+        "@med_deathReason_tempurature",
+        "@med_deathReason_hungerOrThirst",
+        "@med_deathReason_overdose",
+        "@med_deathReason_hitDamage"],
+      "damageTypeNames": [
+        "@LOC_EMPTY",
+        "@med_damageType_melee",
+        "@med_damageType_unarmedMelee",
+        "@med_damageType_explosion",
+        "@med_damageType_bullet",
+        "@med_damageType_suffocate",
+        "@med_damageType_drown",
+        "@med_damageType_energyWeapon",
+        "@med_damageType_collision",
+        "@med_damageType_fallDamage",
+        "@med_damageType_crash",
+        "@med_damageType_suicide"]},
+    "medicalItemTierConfig": "file://./../../../../libs/foundry/records/actorstatuscomponent/medicaltieritemconfig.json",
+    "drugConsumableType": {
+      "_RecordPath_": "file://./../../../../libs/foundry/records/consumabletypesdatabase/consumabletypes.json",
+      "_RecordName_": "ConsumableType.518c62f1-4605-466d-a85c-957822317e43",
+      "_RecordId_": "518c62f1-4605-466d-a85c-957822317e43"},
+    "overdoseRevivalConsumableSubType": {
+      "_RecordPath_": "file://./../../../../libs/foundry/records/consumabletypesdatabase/consumabletypes.json",
+      "_RecordName_": "ConsumableSubtype.4e45d0b2-3e49-4d85-ba40-29ddcd6e310b",
+      "_RecordId_": "4e45d0b2-3e49-4d85-ba40-29ddcd6e310b"},
+    "somaticShakeParams": {
+      "_Type_": "ActorSomaticShakingParams",
+      "shiveringParams": {
+        "_Type_": "ActorSomaticShakeParams",
+        "frequencyStart": 8.0,
+        "frequencyEnd": 13.0,
+        "amplitudeStart": 0.6,
+        "amplitudeEnd": 2.0,
+        "blendDuration": 2.0,
+        "breathingInfluence": 0.75,
+        "shudder": {
+          "_Type_": "ActorShudderConfig",
+          "shuddersEnabled": true,
+          "frequencyMin": 1.0,
+          "frequencyMax": 3.0,
+          "amplitudeMin": 0.5,
+          "amplitudeMax": 1.9,
+          "durationMin": 4.0,
+          "durationMax": 6.0,
+          "delayMin": 3.0,
+          "delayMax": 5.0},
+        "somaticShakeConfigs": [
+          {
+            "_Type_": "ActorSomaticShakeConfig",
+            "filter": {
+              "_Type_": "ActorStateFilter",
+              "filterName": "New Filter",
+              "filterByState": "Any",
+              "filterByMotionSpeed": "Any",
+              "filterByPoseState": "Any",
+              "filterByStanceState": "Any",
+              "filterByAimStanceState": "ADS",
+              "filterByLeanState": "Any",
+              "filterByHeldItemType": "Any",
+              "filterBySkeleton": "Any",
+              "filterByCharacterType": "Any",
+              "filterByRestrainedState": "Any",
+              "filterByPlayerCamera": "Any",
+              "filterByAimingRestriction": "Any"},
+            "weaponOffsetCm": 0.025,
+            "weaponRotationAngle": 0.1,
+            "armRotationAngle": 0.05,
+            "handRotationAngle": 0.1},
+          {
+            "_Type_": "ActorSomaticShakeConfig",
+            "filter": {
+              "_Type_": "ActorStateFilter",
+              "filterName": "New Filter",
+              "filterByState": "Any",
+              "filterByMotionSpeed": "Any",
+              "filterByPoseState": "Any",
+              "filterByStanceState": "Any",
+              "filterByAimStanceState": "Any",
+              "filterByLeanState": "Any",
+              "filterByHeldItemType": "Stocked",
+              "filterBySkeleton": "Any",
+              "filterByCharacterType": "Any",
+              "filterByRestrainedState": "Any",
+              "filterByPlayerCamera": "Any",
+              "filterByAimingRestriction": "Any"},
+            "weaponOffsetCm": 0.05,
+            "weaponRotationAngle": 0.1,
+            "armRotationAngle": 0.1,
+            "handRotationAngle": -0.01},
+          {
+            "_Type_": "ActorSomaticShakeConfig",
+            "filter": {
+              "_Type_": "ActorStateFilter",
+              "filterName": "New Filter",
+              "filterByState": "Any",
+              "filterByMotionSpeed": "Any",
+              "filterByPoseState": "Any",
+              "filterByStanceState": "Any",
+              "filterByAimStanceState": "Any",
+              "filterByLeanState": "Any",
+              "filterByHeldItemType": "Shouldered",
+              "filterBySkeleton": "Any",
+              "filterByCharacterType": "Any",
+              "filterByRestrainedState": "Any",
+              "filterByPlayerCamera": "Any",
+              "filterByAimingRestriction": "Any"},
+            "weaponOffsetCm": 0.1,
+            "weaponRotationAngle": 0.1,
+            "armRotationAngle": 0.1,
+            "handRotationAngle": -0.1},
+          {
+            "_Type_": "ActorSomaticShakeConfig",
+            "filter": {
+              "_Type_": "ActorStateFilter",
+              "filterName": "New Filter",
+              "filterByState": "Any",
+              "filterByMotionSpeed": "Any",
+              "filterByPoseState": "Any",
+              "filterByStanceState": "Any",
+              "filterByAimStanceState": "Any",
+              "filterByLeanState": "Any",
+              "filterByHeldItemType": "mobiGlas",
+              "filterBySkeleton": "Any",
+              "filterByCharacterType": "Any",
+              "filterByRestrainedState": "Any",
+              "filterByPlayerCamera": "Any",
+              "filterByAimingRestriction": "Any"},
+            "weaponOffsetCm": 0.01,
+            "weaponRotationAngle": 0.1,
+            "armRotationAngle": 0.1,
+            "handRotationAngle": -0.3},
+          {
+            "_Type_": "ActorSomaticShakeConfig",
+            "filter": {
+              "_Type_": "ActorStateFilter",
+              "filterName": "New Filter",
+              "filterByState": "Any",
+              "filterByMotionSpeed": "Any",
+              "filterByPoseState": "Any",
+              "filterByStanceState": "Any",
+              "filterByAimStanceState": "Any",
+              "filterByLeanState": "Any",
+              "filterByHeldItemType": "Any",
+              "filterBySkeleton": "Any",
+              "filterByCharacterType": "Any",
+              "filterByRestrainedState": "Any",
+              "filterByPlayerCamera": "Any",
+              "filterByAimingRestriction": "Any"},
+            "weaponOffsetCm": 0.1,
+            "weaponRotationAngle": 0.1,
+            "armRotationAngle": 0.1,
+            "handRotationAngle": -0.5}]},
+      "armsLockShakeParams": {
+        "_Type_": "ActorSomaticShakeParams",
+        "frequencyStart": 4.0,
+        "frequencyEnd": 5.5,
+        "amplitudeStart": 0.75,
+        "amplitudeEnd": 1.75,
+        "blendDuration": 1.0,
+        "breathingInfluence": 0.75,
+        "shudder": {
+          "_Type_": "ActorShudderConfig",
+          "shuddersEnabled": true,
+          "frequencyMin": 1.0,
+          "frequencyMax": 3.0,
+          "amplitudeMin": 0.5,
+          "amplitudeMax": 1.9,
+          "durationMin": 4.0,
+          "durationMax": 6.0,
+          "delayMin": 3.0,
+          "delayMax": 5.0},
+        "somaticShakeConfigs": [
+          {
+            "_Type_": "ActorSomaticShakeConfig",
+            "filter": {
+              "_Type_": "ActorStateFilter",
+              "filterName": "New Filter",
+              "filterByState": "Any",
+              "filterByMotionSpeed": "Any",
+              "filterByPoseState": "Any",
+              "filterByStanceState": "Any",
+              "filterByAimStanceState": "ADS",
+              "filterByLeanState": "Any",
+              "filterByHeldItemType": "Any",
+              "filterBySkeleton": "Any",
+              "filterByCharacterType": "Any",
+              "filterByRestrainedState": "Any",
+              "filterByPlayerCamera": "Any",
+              "filterByAimingRestriction": "Any"},
+            "weaponOffsetCm": 0.025,
+            "weaponRotationAngle": 0.1,
+            "armRotationAngle": 0.05,
+            "handRotationAngle": 0.1},
+          {
+            "_Type_": "ActorSomaticShakeConfig",
+            "filter": {
+              "_Type_": "ActorStateFilter",
+              "filterName": "New Filter",
+              "filterByState": "Any",
+              "filterByMotionSpeed": "Any",
+              "filterByPoseState": "Any",
+              "filterByStanceState": "Any",
+              "filterByAimStanceState": "Any",
+              "filterByLeanState": "Any",
+              "filterByHeldItemType": "Stocked",
+              "filterBySkeleton": "Any",
+              "filterByCharacterType": "Any",
+              "filterByRestrainedState": "Any",
+              "filterByPlayerCamera": "Any",
+              "filterByAimingRestriction": "Any"},
+            "weaponOffsetCm": 0.05,
+            "weaponRotationAngle": 0.1,
+            "armRotationAngle": 0.1,
+            "handRotationAngle": -0.01},
+          {
+            "_Type_": "ActorSomaticShakeConfig",
+            "filter": {
+              "_Type_": "ActorStateFilter",
+              "filterName": "New Filter",
+              "filterByState": "Any",
+              "filterByMotionSpeed": "Any",
+              "filterByPoseState": "Any",
+              "filterByStanceState": "Any",
+              "filterByAimStanceState": "Any",
+              "filterByLeanState": "Any",
+              "filterByHeldItemType": "Shouldered",
+              "filterBySkeleton": "Any",
+              "filterByCharacterType": "Any",
+              "filterByRestrainedState": "Any",
+              "filterByPlayerCamera": "Any",
+              "filterByAimingRestriction": "Any"},
+            "weaponOffsetCm": 0.1,
+            "weaponRotationAngle": 0.1,
+            "armRotationAngle": 0.1,
+            "handRotationAngle": -0.1},
+          {
+            "_Type_": "ActorSomaticShakeConfig",
+            "filter": {
+              "_Type_": "ActorStateFilter",
+              "filterName": "New Filter",
+              "filterByState": "Any",
+              "filterByMotionSpeed": "Any",
+              "filterByPoseState": "Any",
+              "filterByStanceState": "Any",
+              "filterByAimStanceState": "Any",
+              "filterByLeanState": "Any",
+              "filterByHeldItemType": "mobiGlas",
+              "filterBySkeleton": "Any",
+              "filterByCharacterType": "Any",
+              "filterByRestrainedState": "Any",
+              "filterByPlayerCamera": "Any",
+              "filterByAimingRestriction": "Any"},
+            "weaponOffsetCm": 0.01,
+            "weaponRotationAngle": 0.1,
+            "armRotationAngle": 0.1,
+            "handRotationAngle": -0.3},
+          {
+            "_Type_": "ActorSomaticShakeConfig",
+            "filter": {
+              "_Type_": "ActorStateFilter",
+              "filterName": "New Filter",
+              "filterByState": "Any",
+              "filterByMotionSpeed": "Any",
+              "filterByPoseState": "Any",
+              "filterByStanceState": "Any",
+              "filterByAimStanceState": "Any",
+              "filterByLeanState": "Any",
+              "filterByHeldItemType": "Any",
+              "filterBySkeleton": "Any",
+              "filterByCharacterType": "Any",
+              "filterByRestrainedState": "Any",
+              "filterByPlayerCamera": "Any",
+              "filterByAimingRestriction": "Any"},
+            "weaponOffsetCm": 0.1,
+            "weaponRotationAngle": 0.1,
+            "armRotationAngle": 0.1,
+            "handRotationAngle": -0.5}]}},
+    "statusPlacedSurfaceEffectsTags": [
+      {
+        "_RecordPath_": "file://./../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+        "_RecordName_": "Tag.c5276770-9f19-4588-a874-56c2ceda8a27",
+        "_RecordId_": "c5276770-9f19-4588-a874-56c2ceda8a27"},
+      {
+        "_RecordPath_": "file://./../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+        "_RecordName_": "Tag.6f950f86-90c5-42ff-81c0-051117a6b77d",
+        "_RecordId_": "6f950f86-90c5-42ff-81c0-051117a6b77d"},
+      {
+        "_RecordPath_": "file://./../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+        "_RecordName_": "Tag.1511db61-5b1d-4422-bfea-998503bf177a",
+        "_RecordId_": "1511db61-5b1d-4422-bfea-998503bf177a"},
+      {
+        "_RecordPath_": "file://./../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+        "_RecordName_": "Tag.0afa8582-3403-4430-9efb-268642f3b3b0",
+        "_RecordId_": "0afa8582-3403-4430-9efb-268642f3b3b0"},
+      {
+        "_RecordPath_": "file://./../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+        "_RecordName_": "Tag.1131e88a-593c-4871-902a-d5758bf7a464",
+        "_RecordId_": "1131e88a-593c-4871-902a-d5758bf7a464"},
+      {
+        "_RecordPath_": "file://./../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+        "_RecordName_": "Tag.9e04bc41-4fa7-4dc6-ae2d-8ec05bb95029",
+        "_RecordId_": "9e04bc41-4fa7-4dc6-ae2d-8ec05bb95029"},
+      {
+        "_RecordPath_": "file://./../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+        "_RecordName_": "Tag.9a292d14-fc9a-466a-b5a1-7888d2417713",
+        "_RecordId_": "9a292d14-fc9a-466a-b5a1-7888d2417713"},
+      {
+        "_RecordPath_": "file://./../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+        "_RecordName_": "Tag.aa1ae075-3f53-4d35-b904-bd804be19951",
+        "_RecordId_": "aa1ae075-3f53-4d35-b904-bd804be19951"}]}}

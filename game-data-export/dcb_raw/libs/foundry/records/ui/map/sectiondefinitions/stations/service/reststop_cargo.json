@@ -1,0 +1,8 @@
+{
+  "_RecordName_": "InteriorMapSectionDefinition.RestStop_Cargo",
+  "_RecordId_": "70d48823-374a-4781-b90e-2e56ffd71f5b",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "InteriorMapSectionDefinition",
+    "name": "@area_name_cargo",
+    "restrictViewBounds": false}}

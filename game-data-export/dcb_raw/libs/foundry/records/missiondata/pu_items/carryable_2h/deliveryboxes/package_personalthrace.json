@@ -1,0 +1,27 @@
+{
+  "_RecordName_": "MissionItem.Package_PersonalThrace",
+  "_RecordId_": "6377afd9-0f7c-4ae1-bf88-083e426e3910",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "MissionItem",
+    "tags": [
+      {
+        "_RecordPath_": "file://./../../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+        "_RecordName_": "Tag.15f3217b-0a8b-4f2e-bfec-9bd58b92eb8b",
+        "_RecordId_": "15f3217b-0a8b-4f2e-bfec-9bd58b92eb8b"},
+      {
+        "_RecordPath_": "file://./../../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+        "_RecordName_": "Tag.37ba7ad8-8553-45df-a84b-c49eb6ebb7a6",
+        "_RecordId_": "37ba7ad8-8553-45df-a84b-c49eb6ebb7a6"}],
+    "stringVariants": {
+      "_Type_": "MissionStringVariants",
+      "variants": [
+        {
+          "_Type_": "MissionStringVariant",
+          "tag": {
+            "_RecordPath_": "file://./../../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+            "_RecordName_": "Tag.0130de18-97e2-4d4c-9bb1-3e7ef5fd0490",
+            "_RecordId_": "0130de18-97e2-4d4c-9bb1-3e7ef5fd0490"},
+          "string": "@covalexspec_MissionUI_BoxNumber_173"}]},
+    "weighting": 1.0,
+    "entityClass": "file://./../../../../../../../libs/foundry/records/entities/scitem/carryables/2h/carryable_2h_fl_missionitem_deliverybox_generic_a_173.json"}}

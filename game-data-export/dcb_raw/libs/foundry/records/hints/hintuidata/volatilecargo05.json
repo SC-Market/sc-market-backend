@@ -1,0 +1,12 @@
+{
+  "_RecordName_": "HintUIData.VolatileCargo05",
+  "_RecordId_": "879edc45-edd8-471e-8ace-75dbd13f918f",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "HintUIData",
+    "TitleText": "@Hints_VolatileCargo_Warning_Title",
+    "BodyText": "@Hints_VolatileCargo_OnVolatileCargoCritical",
+    "BodyTextGamePad": "@Hints_VolatileCargo_OnVolatileCargoCritical",
+    "BodyTextJoystick": "@Hints_VolatileCargo_OnVolatileCargoCritical",
+    "TitleImagePath": "",
+    "BodyImagePath": ""}}

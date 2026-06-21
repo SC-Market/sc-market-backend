@@ -1,0 +1,9 @@
+{
+  "_RecordName_": "RentalNotificationParams.RentalNotification",
+  "_RecordId_": "663bba0f-4850-4b6c-bdb6-1c0c732779b6",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "RentalNotificationParams",
+    "timeToRentalExpireMessage": "@RentalTimeRemainingNotification",
+    "rentedItemNameToken": "RentedItemName",
+    "rentalDurationToken": "RentedItemDuration"}}

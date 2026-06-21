@@ -1,0 +1,204 @@
+{
+  "_RecordName_": "CraftingBlueprintRecord.BP_CRAFT_POWR_JUST_S02_Genoa_SCItem",
+  "_RecordId_": "a1999fd1-97b7-48de-b8ea-b062fba7c426",
+  "_RecordTag_": "SystemsDesign",
+  "_RecordValue_": {
+    "_Type_": "CraftingBlueprintRecord",
+    "blueprint": {
+      "_Type_": "CraftingBlueprint",
+      "category": {
+        "_RecordPath_": "file://./../../../../../../../../libs/foundry/records/crafting/blueprintcategories/blueprintcategorydatabase.json",
+        "_RecordName_": "BlueprintCategoryRecord.VehicleComponentS2",
+        "_RecordId_": "43307205-e01b-4f70-a4d9-cec271b04498"},
+      "blueprintName": "@LOC_PLACEHOLDER",
+      "processSpecificData": {
+        "_Type_": "CraftingProcess_Creation",
+        "entityClass": "file://./../../../../../../../../libs/foundry/records/entities/scitem/ships/powerplant/powr_just_s02_genoa_scitem.json"},
+      "tiers": [
+        {
+          "_Type_": "CraftingBlueprintTier",
+          "recipe": {
+            "_Type_": "CraftingRecipe",
+            "processSpecificData": null,
+            "costs": {
+              "_Type_": "CraftingRecipeCosts",
+              "craftTime": {
+                "_Type_": "TimeValue_Partitioned",
+                "days": 0,
+                "hours": 0,
+                "minutes": 20,
+                "seconds": 0.0},
+              "mandatoryCost": {
+                "_Type_": "CraftingCost_Select",
+                "context": [
+                  {
+                    "_Type_": "CraftingCostContext_ResultCompositionInclusion",
+                    "option": "Include"}],
+                "nameInfo": {
+                  "_Type_": "CraftingNameInfo",
+                  "debugName": "ASPECTS",
+                  "displayName": "@LOC_PLACEHOLDER"},
+                "count": 3,
+                "options": [
+                  {
+                    "_Type_": "CraftingCost_Select",
+                    "context": [
+                      {
+                        "_Type_": "CraftingCostContext_ResultGameplayPropertyModifiers",
+                        "gameplayPropertyModifiers": {
+                          "_Type_": "CraftingGameplayPropertyModifiers_List",
+                          "gameplayPropertyModifiers": [
+                            {
+                              "_Type_": "CraftingGameplayPropertyModifierCommon",
+                              "gameplayPropertyRecord": "file://./../../../../../../../../libs/foundry/records/crafting/craftedproperties/gpp_health_maxhealth.json",
+                              "valueRanges": [
+                                {
+                                  "_Type_": "CraftingGameplayPropertyModifierValueRange_Linear",
+                                  "startQuality": 0,
+                                  "endQuality": 500,
+                                  "modifierAtStart": 0.8,
+                                  "modifierAtEnd": 1.0},
+                                {
+                                  "_Type_": "CraftingGameplayPropertyModifierValueRange_Linear",
+                                  "startQuality": 501,
+                                  "endQuality": 1000,
+                                  "modifierAtStart": 1.0,
+                                  "modifierAtEnd": 1.2}]}]}}],
+                    "nameInfo": {
+                      "_Type_": "CraftingNameInfo",
+                      "debugName": "SHELL",
+                      "displayName": "@crafting_ui_slotname_shell"},
+                    "count": 1,
+                    "options": [
+                      {
+                        "_Type_": "CraftingCost_Resource",
+                        "context": [],
+                        "resource": {
+                          "_RecordPath_": "file://./../../../../../../../../libs/foundry/records/resourcetypedatabase/resourcetypedatabase.json",
+                          "_RecordName_": "ResourceType.Riccite",
+                          "_RecordId_": "86d00bd8-08f7-4231-b375-a609803fc46d"},
+                        "quantity": {
+                          "_Type_": "SStandardCargoUnit",
+                          "standardCargoUnits": 1.22},
+                        "minQuality": 1}]},
+                  {
+                    "_Type_": "CraftingCost_Select",
+                    "context": [
+                      {
+                        "_Type_": "CraftingCostContext_ResultGameplayPropertyModifiers",
+                        "gameplayPropertyModifiers": {
+                          "_Type_": "CraftingGameplayPropertyModifiers_List",
+                          "gameplayPropertyModifiers": [
+                            {
+                              "_Type_": "CraftingGameplayPropertyModifierCommon",
+                              "gameplayPropertyRecord": "file://./../../../../../../../../libs/foundry/records/crafting/craftedproperties/gpp_itemresource_powergeneration.json",
+                              "valueRanges": [
+                                {
+                                  "_Type_": "CraftingGameplayPropertyModifierValueRange_LinearIntegerAdditive",
+                                  "startQuality": 0,
+                                  "endQuality": 249,
+                                  "additiveModifierAtStart": -2,
+                                  "additiveModifierAtEnd": -2},
+                                {
+                                  "_Type_": "CraftingGameplayPropertyModifierValueRange_LinearIntegerAdditive",
+                                  "startQuality": 250,
+                                  "endQuality": 499,
+                                  "additiveModifierAtStart": -1,
+                                  "additiveModifierAtEnd": -1},
+                                {
+                                  "_Type_": "CraftingGameplayPropertyModifierValueRange_LinearIntegerAdditive",
+                                  "startQuality": 500,
+                                  "endQuality": 699,
+                                  "additiveModifierAtStart": 0,
+                                  "additiveModifierAtEnd": 0},
+                                {
+                                  "_Type_": "CraftingGameplayPropertyModifierValueRange_LinearIntegerAdditive",
+                                  "startQuality": 700,
+                                  "endQuality": 899,
+                                  "additiveModifierAtStart": 1,
+                                  "additiveModifierAtEnd": 1},
+                                {
+                                  "_Type_": "CraftingGameplayPropertyModifierValueRange_LinearIntegerAdditive",
+                                  "startQuality": 900,
+                                  "endQuality": 1000,
+                                  "additiveModifierAtStart": 2,
+                                  "additiveModifierAtEnd": 2}]}]}}],
+                    "nameInfo": {
+                      "_Type_": "CraftingNameInfo",
+                      "debugName": "VOLTAGE REGULATOR",
+                      "displayName": "@crafting_ui_slotname_voltageregulator"},
+                    "count": 1,
+                    "options": [
+                      {
+                        "_Type_": "CraftingCost_Resource",
+                        "context": [],
+                        "resource": {
+                          "_RecordPath_": "file://./../../../../../../../../libs/foundry/records/resourcetypedatabase/resourcetypedatabase.json",
+                          "_RecordName_": "ResourceType.Laranite",
+                          "_RecordId_": "7f4599b0-a2b2-4178-8c7e-13292054ab20"},
+                        "quantity": {
+                          "_Type_": "SStandardCargoUnit",
+                          "standardCargoUnits": 0.5},
+                        "minQuality": 1}]},
+                  {
+                    "_Type_": "CraftingCost_Select",
+                    "context": [
+                      {
+                        "_Type_": "CraftingCostContext_ResultGameplayPropertyModifiers",
+                        "gameplayPropertyModifiers": {
+                          "_Type_": "CraftingGameplayPropertyModifiers_List",
+                          "gameplayPropertyModifiers": [
+                            {
+                              "_Type_": "CraftingGameplayPropertyModifierCommon",
+                              "gameplayPropertyRecord": "file://./../../../../../../../../libs/foundry/records/crafting/craftedproperties/gpp_itemresource_powergeneration.json",
+                              "valueRanges": [
+                                {
+                                  "_Type_": "CraftingGameplayPropertyModifierValueRange_LinearIntegerAdditive",
+                                  "startQuality": 0,
+                                  "endQuality": 249,
+                                  "additiveModifierAtStart": -2,
+                                  "additiveModifierAtEnd": -2},
+                                {
+                                  "_Type_": "CraftingGameplayPropertyModifierValueRange_LinearIntegerAdditive",
+                                  "startQuality": 250,
+                                  "endQuality": 499,
+                                  "additiveModifierAtStart": -1,
+                                  "additiveModifierAtEnd": -1},
+                                {
+                                  "_Type_": "CraftingGameplayPropertyModifierValueRange_LinearIntegerAdditive",
+                                  "startQuality": 500,
+                                  "endQuality": 699,
+                                  "additiveModifierAtStart": 0,
+                                  "additiveModifierAtEnd": 0},
+                                {
+                                  "_Type_": "CraftingGameplayPropertyModifierValueRange_LinearIntegerAdditive",
+                                  "startQuality": 700,
+                                  "endQuality": 899,
+                                  "additiveModifierAtStart": 1,
+                                  "additiveModifierAtEnd": 1},
+                                {
+                                  "_Type_": "CraftingGameplayPropertyModifierValueRange_LinearIntegerAdditive",
+                                  "startQuality": 900,
+                                  "endQuality": 1000,
+                                  "additiveModifierAtStart": 2,
+                                  "additiveModifierAtEnd": 2}]}]}}],
+                    "nameInfo": {
+                      "_Type_": "CraftingNameInfo",
+                      "debugName": "STATOR CORES",
+                      "displayName": "@crafting_ui_slotname_statorcores"},
+                    "count": 1,
+                    "options": [
+                      {
+                        "_Type_": "CraftingCost_Resource",
+                        "context": [],
+                        "resource": {
+                          "_RecordPath_": "file://./../../../../../../../../libs/foundry/records/resourcetypedatabase/resourcetypedatabase.json",
+                          "_RecordName_": "ResourceType.Riccite",
+                          "_RecordId_": "86d00bd8-08f7-4231-b375-a609803fc46d"},
+                        "quantity": {
+                          "_Type_": "SStandardCargoUnit",
+                          "standardCargoUnits": 0.85},
+                        "minQuality": 1}]}]},
+              "optionalCosts": []},
+            "results": null},
+          "research": null}]}}}

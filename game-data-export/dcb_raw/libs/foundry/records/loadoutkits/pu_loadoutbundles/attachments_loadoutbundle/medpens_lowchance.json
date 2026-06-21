@@ -1,0 +1,87 @@
+{
+  "_RecordName_": "SLoadoutAssortment.medpens_lowchance",
+  "_RecordId_": "e51ddcb5-d504-4a99-a2cc-cc80088b8ca7",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "SLoadoutAssortment",
+    "Requirement": null,
+    "GroupedLoadouts": [
+      {
+        "_Type_": "SGroupedLoadouts",
+        "Group": "MedicalSupplies",
+        "Requirement": null,
+        "Loadouts": [
+          {
+            "_Type_": "SItemPortLoadoutManualParams",
+            "WearRange": null,
+            "DirtRange": null,
+            "SkipInventoryItemsOnMissionEntities": false,
+            "InventoryItems": [],
+            "entries": [
+              {
+                "_Type_": "SItemPortLoadoutEntryParams",
+                "itemPortName": "Body_ItemPort",
+                "entityClassName": "",
+                "entityClassReference": null,
+                "inventoryContainer": null,
+                "loadout": {
+                  "_Type_": "SItemPortLoadoutManualParams",
+                  "WearRange": null,
+                  "DirtRange": null,
+                  "SkipInventoryItemsOnMissionEntities": false,
+                  "InventoryItems": [],
+                  "entries": [
+                    {
+                      "_Type_": "SItemPortLoadoutEntryParams",
+                      "itemPortName": "Armor_Undersuit",
+                      "entityClassName": "",
+                      "entityClassReference": null,
+                      "inventoryContainer": null,
+                      "loadout": {
+                        "_Type_": "SItemPortLoadoutManualParams",
+                        "WearRange": null,
+                        "DirtRange": null,
+                        "SkipInventoryItemsOnMissionEntities": false,
+                        "InventoryItems": [],
+                        "entries": [
+                          {
+                            "_Type_": "SItemPortLoadoutEntryParams",
+                            "itemPortName": "Armor_Legs",
+                            "entityClassName": "",
+                            "entityClassReference": null,
+                            "inventoryContainer": null,
+                            "loadout": {
+                              "_Type_": "SItemPortLoadoutManualParams",
+                              "WearRange": null,
+                              "DirtRange": null,
+                              "SkipInventoryItemsOnMissionEntities": false,
+                              "InventoryItems": [],
+                              "entries": [
+                                {
+                                  "_Type_": "SItemPortLoadoutEntryParams",
+                                  "itemPortName": "medPen_attach_1",
+                                  "entityClassName": "crlf_consumable_healing_01",
+                                  "entityClassReference": null,
+                                  "inventoryContainer": null,
+                                  "loadout": null},
+                                {
+                                  "_Type_": "SItemPortLoadoutEntryParams",
+                                  "itemPortName": "medPen_attach_2",
+                                  "entityClassName": "crlf_consumable_healing_01",
+                                  "entityClassReference": null,
+                                  "inventoryContainer": null,
+                                  "loadout": null}]}}]}}]}}]},
+          {
+            "_Type_": "SItemPortLoadoutXMLParams",
+            "WearRange": null,
+            "DirtRange": null,
+            "SkipInventoryItemsOnMissionEntities": false,
+            "InventoryItems": [],
+            "loadoutPath": "Scripts/Loadouts/Character/Human/Weapon/LoadoutbundleWeaponXML/blank_empty_loadoutbundle.xml"},
+          {
+            "_Type_": "SItemPortLoadoutXMLParams",
+            "WearRange": null,
+            "DirtRange": null,
+            "SkipInventoryItemsOnMissionEntities": false,
+            "InventoryItems": [],
+            "loadoutPath": "Scripts/Loadouts/Character/Human/Weapon/LoadoutbundleWeaponXML/blank_empty_loadoutbundle.xml"}]}]}}

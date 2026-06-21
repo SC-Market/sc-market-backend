@@ -1,0 +1,54 @@
+{
+  "_RecordName_": "LootArchetype.LootArchetype_Oxygen_only",
+  "_RecordId_": "03f38081-e89e-4447-883c-707e47b5d198",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "LootArchetype",
+    "excludedTags": {
+      "_Type_": "TagList",
+      "tags": [
+        {
+          "_RecordPath_": "file://./../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+          "_RecordName_": "Tag.85e008e3-cc4e-4d13-98f6-b33c234dd82c",
+          "_RecordId_": "85e008e3-cc4e-4d13-98f6-b33c234dd82c"},
+        {
+          "_RecordPath_": "file://./../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+          "_RecordName_": "Tag.c3527e30-1051-4e96-b9ad-fd74454f2b02",
+          "_RecordId_": "c3527e30-1051-4e96-b9ad-fd74454f2b02"},
+        {
+          "_RecordPath_": "file://./../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+          "_RecordName_": "Tag.97faa9b4-dd07-4baa-989f-48c6ef1e3a19",
+          "_RecordId_": "97faa9b4-dd07-4baa-989f-48c6ef1e3a19"},
+        {
+          "_RecordPath_": "file://./../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+          "_RecordName_": "Tag.61d5a4bd-0519-428d-89f4-99c91de5eb42",
+          "_RecordId_": "61d5a4bd-0519-428d-89f4-99c91de5eb42"},
+        {
+          "_RecordPath_": "file://./../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+          "_RecordName_": "Tag.6803141b-d6a7-4ee4-8ce2-1b762fa24c51",
+          "_RecordId_": "6803141b-d6a7-4ee4-8ce2-1b762fa24c51"},
+        {
+          "_RecordPath_": "file://./../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+          "_RecordName_": "Tag.29cd8314-e2dd-4045-8ac5-b7cadf80f13a",
+          "_RecordId_": "29cd8314-e2dd-4045-8ac5-b7cadf80f13a"}]},
+    "primaryOrGroup": {
+      "_Type_": "LootArchetypeOrGroup_Primary",
+      "entries": [
+        {
+          "_Type_": "LootArchetypeEntry_Primary",
+          "name": "Oxygen",
+          "tag": {
+            "_RecordPath_": "file://./../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+            "_RecordName_": "Tag.698228ca-185d-4f01-bf2f-bd744131f333",
+            "_RecordId_": "698228ca-185d-4f01-bf2f-bd744131f333"},
+          "additionalTags": {
+            "_Type_": "TagsDNFTerm",
+            "positiveTags": [
+              {
+                "_RecordPath_": "file://./../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+                "_RecordName_": "Tag.daadaef3-1fa6-4f90-afd4-0becb6fdf6f1",
+                "_RecordId_": "daadaef3-1fa6-4f90-afd4-0becb6fdf6f1"}],
+            "negativeTags": []},
+          "weight": 1.0,
+          "optionalData": []}]},
+    "secondaryOrGroups": []}}

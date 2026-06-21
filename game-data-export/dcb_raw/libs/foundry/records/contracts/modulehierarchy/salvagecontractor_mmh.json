@@ -1,0 +1,20 @@
+{
+  "_RecordName_": "MissionModuleHierarchy.SalvageContractor_MMH",
+  "_RecordId_": "28b713d5-17b9-47a0-ab40-02b2bcfd828d",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "MissionModuleHierarchy",
+    "missionModule": "Libs/Subsumption/Missions/PU/Missions/Salvage/SalvageContractor.xml",
+    "subMissionModules": [
+      {
+        "_Type_": "MissionModuleHierarchySubMission",
+        "subMissionModule": "Libs/Subsumption/Missions/PU/Modules/ChickenShip.xml",
+        "subModuleHierarchy": null},
+      {
+        "_Type_": "MissionModuleHierarchySubMission",
+        "subMissionModule": "Libs/Subsumption/Missions/PU/Modules/SpawnShipWaves.xml",
+        "subModuleHierarchy": null},
+      {
+        "_Type_": "MissionModuleHierarchySubMission",
+        "subMissionModule": "Libs/Subsumption/Missions/PU/Modules/BackendModules/DamageMapTrackerUpdateObjective.xml",
+        "subModuleHierarchy": null}]}}

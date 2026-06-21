@@ -1,0 +1,15 @@
+{
+  "_RecordName_": "Conversation.CryAstro_RestockNeeds_Med",
+  "_RecordId_": "5cedb7b3-62aa-4149-98e2-c071d54b70f2",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "Conversation",
+    "fragments": [
+      {
+        "_Type_": "ConversationNode_Start",
+        "next": null},
+      {
+        "_Type_": "ConversationNode_Dialogue",
+        "next": null,
+        "context": "file://./../../../../../../../libs/foundry/records/dialoguecontext/arenacommander/crusader/repair/dialoguecontext.dxsh_pu_autosys_cryastro_restockneeds_med.json",
+        "skipNodeInXSecs": -1.0}]}}

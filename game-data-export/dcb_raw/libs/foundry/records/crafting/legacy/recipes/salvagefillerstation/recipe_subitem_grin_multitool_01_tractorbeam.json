@@ -1,0 +1,36 @@
+{
+  "_RecordName_": "LegacyCraftingRecipeDefRecord.Recipe_subitem_grin_multitool_01_tractorbeam",
+  "_RecordId_": "85cedd90-9b41-43e5-9c8f-cc76fbe96f5b",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "LegacyCraftingRecipeDefRecord",
+    "recipe": {
+      "_Type_": "LegacyCraftingRecipe_Default",
+      "timeSeconds": 4.0,
+      "outputs": [
+        {
+          "_Type_": "LegacyCraftingOutput_Entity",
+          "entityClass": "file://./../../../../../../../libs/foundry/records/entities/scitem/weapons/weapon_modifier/grin_multitool_01_tractorbeam.json",
+          "amount": 1,
+          "fillAmmo": true}],
+      "costs": [
+        {
+          "_Type_": "LegacyCraftingCost_ResourceAmount",
+          "resource": {
+            "_RecordPath_": "file://./../../../../../../../libs/foundry/records/resourcetypedatabase/resourcetypedatabase.json",
+            "_RecordName_": "ResourceType.ConstructionMaterials",
+            "_RecordId_": "98aa6a70-80e7-41d7-9128-9692053d57a2"},
+          "amount": {
+            "_Type_": "SStandardCargoUnit",
+            "standardCargoUnits": 0.05}},
+        {
+          "_Type_": "LegacyCraftingCost_ResourceAmount",
+          "resource": {
+            "_RecordPath_": "file://./../../../../../../../libs/foundry/records/resourcetypedatabase/resourcetypedatabase.json",
+            "_RecordName_": "ResourceType.ConstructionMaterials",
+            "_RecordId_": "98aa6a70-80e7-41d7-9128-9692053d57a2"},
+          "amount": {
+            "_Type_": "SStandardCargoUnit",
+            "standardCargoUnits": 0.01}}],
+      "iconImagePath": "UI/Textures/PlayerUI/WeaponAttachment/Icons/grin_multitool_01_tractorbeam.tif",
+      "recipeName": "@LOC_EMPTY"}}}

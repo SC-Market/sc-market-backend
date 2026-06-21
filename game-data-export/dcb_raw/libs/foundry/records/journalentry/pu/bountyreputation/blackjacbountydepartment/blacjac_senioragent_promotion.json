@@ -1,0 +1,18 @@
+{
+  "_RecordName_": "JournalEntry.BlacJac_SeniorAgent_Promotion",
+  "_RecordId_": "96365206-b825-49e4-ba07-541db176cc0a",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "JournalEntry",
+    "Title": "@BlacJac_ReputationJournal_SeniorAgent_Promotion_Title",
+    "ShortTitle": "@BlacJac_ReputationJournal_SeniorAgent_Promotion_ShortTitle",
+    "SubHeading": "@BlacJac_ReputationJournal_SeniorAgent_Promotion_SubHeading",
+    "autoOpenMobiGlas": false,
+    "showNotification": true,
+    "missionSpecificContent": false,
+    "removeOnMissionEnd": true,
+    "Style": "file://./../../../../../../../libs/foundry/records/journalentrytype/journalentrytype.textlog.json",
+    "type": {
+      "_Type_": "JournalEntryText",
+      "BodyText": "@BlacJac_ReputationJournal_SeniorAgent_Promotion_BodyText"},
+    "tutorialEntry": false}}

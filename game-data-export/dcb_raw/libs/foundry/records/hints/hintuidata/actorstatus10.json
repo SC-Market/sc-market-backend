@@ -1,0 +1,12 @@
+{
+  "_RecordName_": "HintUIData.ActorStatus10",
+  "_RecordId_": "6a45941b-792b-440a-9bc0-520fbb9583bb",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "HintUIData",
+    "TitleText": "@Hints_ActorStatusTemperature_Title",
+    "BodyText": "@Hints_ActorStatusHyperthermiaDamageStarted",
+    "BodyTextGamePad": "@Hints_ActorStatusHyperthermiaDamageStarted",
+    "BodyTextJoystick": "@Hints_ActorStatusHyperthermiaDamageStarted",
+    "TitleImagePath": "",
+    "BodyImagePath": ""}}

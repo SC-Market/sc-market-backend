@@ -1,0 +1,19 @@
+{
+  "_RecordName_": "UIElement.GlobalGameUI",
+  "_RecordId_": "3cdf4c9c-401a-4e17-9e29-2d5a48196545",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "UIElement",
+    "sourceFile": "UI/GlobalGameUI/assets/SWF/GlobalGameUI_root.swf",
+    "soundsRecord": null,
+    "fontFile": "UI/fonts/Shared/fonts_en.gfx",
+    "alignMode": "dynamic",
+    "alignScale": true,
+    "alignMax": false,
+    "layer": 1,
+    "skipFirstFrameInit": true,
+    "keyEvents": true,
+    "eventsExclusive": false,
+    "noDepthTest": false,
+    "forceNoUnload": true,
+    "noPostProcessing": true}}

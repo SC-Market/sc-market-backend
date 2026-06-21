@@ -1,0 +1,10 @@
+{
+  "_RecordName_": "CraftingGameplayPropertyDef.GPP_Weapon_Spread",
+  "_RecordId_": "7c792044-22c1-448e-b6e0-06a17546c0cc",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "CraftingGameplayPropertyDef",
+    "propertyName": "@StatName_GPP_Weapon_Spread",
+    "displayTransformation": null,
+    "unitFormat": "@LOC_EMPTY",
+    "nameOverrides": []}}

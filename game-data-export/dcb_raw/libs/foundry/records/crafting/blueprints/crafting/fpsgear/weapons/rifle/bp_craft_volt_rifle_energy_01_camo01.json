@@ -1,0 +1,175 @@
+{
+  "_RecordName_": "CraftingBlueprintRecord.BP_CRAFT_volt_rifle_energy_01_camo01",
+  "_RecordId_": "f5f78868-8eed-4953-9859-ea405ff8fe91",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "CraftingBlueprintRecord",
+    "blueprint": {
+      "_Type_": "CraftingBlueprint",
+      "category": {
+        "_RecordPath_": "file://./../../../../../../../../../libs/foundry/records/crafting/blueprintcategories/blueprintcategorydatabase.json",
+        "_RecordName_": "BlueprintCategoryRecord.FPSWeapons",
+        "_RecordId_": "f9ccf95d-ad0e-4c33-97e0-e56c847a7e37"},
+      "blueprintName": "@LOC_PLACEHOLDER",
+      "processSpecificData": {
+        "_Type_": "CraftingProcess_Creation",
+        "entityClass": "file://./../../../../../../../../../libs/foundry/records/entities/scitem/weapons/fps_weapons/volt_rifle_energy_01_camo01.json"},
+      "tiers": [
+        {
+          "_Type_": "CraftingBlueprintTier",
+          "recipe": {
+            "_Type_": "CraftingRecipe",
+            "processSpecificData": null,
+            "costs": {
+              "_Type_": "CraftingRecipeCosts",
+              "craftTime": {
+                "_Type_": "TimeValue_Partitioned",
+                "days": 0,
+                "hours": 0,
+                "minutes": 3,
+                "seconds": 0.0},
+              "mandatoryCost": {
+                "_Type_": "CraftingCost_Select",
+                "context": [
+                  {
+                    "_Type_": "CraftingCostContext_ResultCompositionInclusion",
+                    "option": "Include"}],
+                "nameInfo": {
+                  "_Type_": "CraftingNameInfo",
+                  "debugName": "ASPECTS",
+                  "displayName": "@LOC_PLACEHOLDER"},
+                "count": 3,
+                "options": [
+                  {
+                    "_Type_": "CraftingCost_Select",
+                    "context": [
+                      {
+                        "_Type_": "CraftingCostContext_ResultGameplayPropertyModifiers",
+                        "gameplayPropertyModifiers": {
+                          "_Type_": "CraftingGameplayPropertyModifiers_List",
+                          "gameplayPropertyModifiers": [
+                            {
+                              "_Type_": "CraftingGameplayPropertyModifierCommon",
+                              "gameplayPropertyRecord": "file://./../../../../../../../../../libs/foundry/records/crafting/craftedproperties/gpp_weapon_recoil_smoothness.json",
+                              "valueRanges": [
+                                {
+                                  "_Type_": "CraftingGameplayPropertyModifierValueRange_Linear",
+                                  "startQuality": 0,
+                                  "endQuality": 1000,
+                                  "modifierAtStart": 1.4,
+                                  "modifierAtEnd": 0.6}]},
+                            {
+                              "_Type_": "CraftingGameplayPropertyModifierCommon",
+                              "gameplayPropertyRecord": "file://./../../../../../../../../../libs/foundry/records/crafting/craftedproperties/gpp_weapon_recoil_handling.json",
+                              "valueRanges": [
+                                {
+                                  "_Type_": "CraftingGameplayPropertyModifierValueRange_Linear",
+                                  "startQuality": 0,
+                                  "endQuality": 1000,
+                                  "modifierAtStart": 1.4,
+                                  "modifierAtEnd": 0.6}]},
+                            {
+                              "_Type_": "CraftingGameplayPropertyModifierCommon",
+                              "gameplayPropertyRecord": "file://./../../../../../../../../../libs/foundry/records/crafting/craftedproperties/gpp_weapon_recoil_kick.json",
+                              "valueRanges": [
+                                {
+                                  "_Type_": "CraftingGameplayPropertyModifierValueRange_Linear",
+                                  "startQuality": 0,
+                                  "endQuality": 1000,
+                                  "modifierAtStart": 1.4,
+                                  "modifierAtEnd": 0.6}]}]}}],
+                    "nameInfo": {
+                      "_Type_": "CraftingNameInfo",
+                      "debugName": "FRAME",
+                      "displayName": "@crafting_ui_slotname_frame"},
+                    "count": 1,
+                    "options": [
+                      {
+                        "_Type_": "CraftingCost_Resource",
+                        "context": [],
+                        "resource": {
+                          "_RecordPath_": "file://./../../../../../../../../../libs/foundry/records/resourcetypedatabase/resourcetypedatabase.json",
+                          "_RecordName_": "ResourceType.Tungsten",
+                          "_RecordId_": "60f116f4-c02a-45b2-9ded-333747795124"},
+                        "quantity": {
+                          "_Type_": "SStandardCargoUnit",
+                          "standardCargoUnits": 0.04},
+                        "minQuality": 0}]},
+                  {
+                    "_Type_": "CraftingCost_Select",
+                    "context": [
+                      {
+                        "_Type_": "CraftingCostContext_ResultGameplayPropertyModifiers",
+                        "gameplayPropertyModifiers": {
+                          "_Type_": "CraftingGameplayPropertyModifiers_List",
+                          "gameplayPropertyModifiers": [
+                            {
+                              "_Type_": "CraftingGameplayPropertyModifierCommon",
+                              "gameplayPropertyRecord": "file://./../../../../../../../../../libs/foundry/records/crafting/craftedproperties/gpp_weapon_damage.json",
+                              "valueRanges": [
+                                {
+                                  "_Type_": "CraftingGameplayPropertyModifierValueRange_Linear",
+                                  "startQuality": 0,
+                                  "endQuality": 1000,
+                                  "modifierAtStart": 0.9,
+                                  "modifierAtEnd": 1.1}]}]}}],
+                    "nameInfo": {
+                      "_Type_": "CraftingNameInfo",
+                      "debugName": "CABLING",
+                      "displayName": "@crafting_ui_slotname_cabling"},
+                    "count": 1,
+                    "options": [
+                      {
+                        "_Type_": "CraftingCost_Resource",
+                        "context": [],
+                        "resource": {
+                          "_RecordPath_": "file://./../../../../../../../../../libs/foundry/records/resourcetypedatabase/resourcetypedatabase.json",
+                          "_RecordName_": "ResourceType.Gold",
+                          "_RecordId_": "21825507-7923-4683-9bf3-9cfe316940e3"},
+                        "quantity": {
+                          "_Type_": "SStandardCargoUnit",
+                          "standardCargoUnits": 0.02},
+                        "minQuality": 0}]},
+                  {
+                    "_Type_": "CraftingCost_Select",
+                    "context": [
+                      {
+                        "_Type_": "CraftingCostContext_ResultGameplayPropertyModifiers",
+                        "gameplayPropertyModifiers": {
+                          "_Type_": "CraftingGameplayPropertyModifiers_List",
+                          "gameplayPropertyModifiers": [
+                            {
+                              "_Type_": "CraftingGameplayPropertyModifierCommon",
+                              "gameplayPropertyRecord": "file://./../../../../../../../../../libs/foundry/records/crafting/craftedproperties/gpp_weapon_damage.json",
+                              "valueRanges": [
+                                {
+                                  "_Type_": "CraftingGameplayPropertyModifierValueRange_Linear",
+                                  "startQuality": 0,
+                                  "endQuality": 1000,
+                                  "modifierAtStart": 0.9,
+                                  "modifierAtEnd": 1.1}]}]}}],
+                    "nameInfo": {
+                      "_Type_": "CraftingNameInfo",
+                      "debugName": "REGULATOR",
+                      "displayName": "@crafting_ui_slotname_regulator"},
+                    "count": 1,
+                    "options": [
+                      {
+                        "_Type_": "CraftingCost_Item",
+                        "context": [
+                          {
+                            "_Type_": "CraftingCostContext_ResultGameplayPropertyModifiers",
+                            "gameplayPropertyModifiers": {
+                              "_Type_": "CraftingGameplayPropertyModifiers_List",
+                              "gameplayPropertyModifiers": [
+                                {
+                                  "_Type_": "CraftingGameplayPropertyModifierCommon",
+                                  "gameplayPropertyRecord": "file://./../../../../../../../../../libs/foundry/records/crafting/craftedproperties/gpp_weapon_damage.json",
+                                  "valueRanges": [
+                                    null]}]}}],
+                        "entityClass": "file://./../../../../../../../../../libs/foundry/records/entities/scitem/carryables/1h/harvestable_mineral_1h_carinite.json",
+                        "quantity": 1,
+                        "minQuality": 0}]}]},
+              "optionalCosts": []},
+            "results": null},
+          "research": null}]}}}

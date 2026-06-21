@@ -1,0 +1,13 @@
+{
+  "_RecordName_": "PlayerECGGraph_Config.PlayerECGGraphConfig",
+  "_RecordId_": "f90171cf-327b-4222-ba99-cc06e400e522",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "PlayerECGGraph_Config",
+    "idleAmpRangeMax": 0.05,
+    "spikeFrameDuration": 25,
+    "spikeFrameDurationRandFactor": 0.3,
+    "waveFreq": 40,
+    "pulseAmpMin": 0.5,
+    "pulseAmpMax": 0.6,
+    "updateRate": 60}}

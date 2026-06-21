@@ -1,0 +1,12 @@
+{
+  "_RecordName_": "ShipComputerDefinition.RSI",
+  "_RecordId_": "8f852b52-4f6b-4192-b881-199cca1dc714",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "ShipComputerDefinition",
+    "communicationConfig": "file://./../../../../../../libs/foundry/records/communicationconfig/ship_rsi.json",
+    "preBootUpTime": 2.0,
+    "bootUpTime": 5.0,
+    "timeSinceLastHitMarkerSfx": {
+      "_Type_": "AudioRtpc",
+      "rtpc": "UI_TimeSinceLastHitMarker"}}}

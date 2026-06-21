@@ -1,0 +1,17 @@
+{
+  "_RecordName_": "InventoryContainer.ANVL_Valkyrie_Template",
+  "_RecordId_": "571752ce-d873-463c-bb64-bb64f98ee582",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "InventoryContainer",
+    "excludedItemSubTypes": [],
+    "interiorDimensions": {
+      "_Type_": "Vec3",
+      "x": 2.0,
+      "y": 2.0,
+      "z": 2.0},
+    "inventoryType": {
+      "_Type_": "InventoryClosedContainerType",
+      "capacity": {
+        "_Type_": "SStandardCargoUnit",
+        "standardCargoUnits": 4.63}}}}

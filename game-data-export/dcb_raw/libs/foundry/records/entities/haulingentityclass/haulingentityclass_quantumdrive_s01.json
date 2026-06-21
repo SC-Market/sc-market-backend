@@ -1,0 +1,30 @@
+{
+  "_RecordName_": "Hauling_EntityClasses.HaulingEntityClass_QuantumDrive_S01",
+  "_RecordId_": "43c98b81-4bd0-4768-b1a8-785c5a4ea302",
+  "_RecordTag_": "MissionDesign",
+  "_RecordValue_": {
+    "_Type_": "Hauling_EntityClasses",
+    "entityClasses": {
+      "_Type_": "Hauling_EntityClassList",
+      "entityClassList": [
+        "file://./../../../../../libs/foundry/records/entities/scitem/ships/quantumdrive/qdrv_acas_s01_foxfire_scitem.json",
+        "file://./../../../../../libs/foundry/records/entities/scitem/ships/quantumdrive/qdrv_acas_s01_lightfire_scitem.json",
+        "file://./../../../../../libs/foundry/records/entities/scitem/ships/quantumdrive/qdrv_arcc_s01_burst_scitem.json",
+        "file://./../../../../../libs/foundry/records/entities/scitem/ships/quantumdrive/qdrv_arcc_s01_flood_scitem.json",
+        "file://./../../../../../libs/foundry/records/entities/scitem/ships/quantumdrive/qdrv_arcc_s01_rush_scitem.json",
+        "file://./../../../../../libs/foundry/records/entities/scitem/ships/quantumdrive/qdrv_just_s01_colossus_scitem.json",
+        "file://./../../../../../libs/foundry/records/entities/scitem/ships/quantumdrive/qdrv_just_s01_goliath_scitem.json",
+        "file://./../../../../../libs/foundry/records/entities/scitem/ships/quantumdrive/qdrv_just_s01_vulcan_scitem.json",
+        "file://./../../../../../libs/foundry/records/entities/scitem/ships/quantumdrive/qdrv_raco_s01_drift_scitem.json",
+        "file://./../../../../../libs/foundry/records/entities/scitem/ships/quantumdrive/qdrv_raco_s01_spectre_scitem.json",
+        "file://./../../../../../libs/foundry/records/entities/scitem/ships/quantumdrive/qdrv_raco_s01_zephyr_scitem.json",
+        "file://./../../../../../libs/foundry/records/entities/scitem/ships/quantumdrive/qdrv_rsi_s01_atlas_scitem.json",
+        "file://./../../../../../libs/foundry/records/entities/scitem/ships/quantumdrive/qdrv_rsi_s01_eos_scitem.json",
+        "file://./../../../../../libs/foundry/records/entities/scitem/ships/quantumdrive/qdrv_rsi_s01_hyperion_scitem.json",
+        "file://./../../../../../libs/foundry/records/entities/scitem/ships/quantumdrive/qdrv_tars_s01_expedition_scitem.json",
+        "file://./../../../../../libs/foundry/records/entities/scitem/ships/quantumdrive/qdrv_tars_s01_voyage_scitem.json",
+        "file://./../../../../../libs/foundry/records/entities/scitem/ships/quantumdrive/qdrv_tars_s01_wayfare_scitem.json",
+        "file://./../../../../../libs/foundry/records/entities/scitem/ships/quantumdrive/qdrv_wetk_s01_beacon_scitem.json",
+        "file://./../../../../../libs/foundry/records/entities/scitem/ships/quantumdrive/qdrv_wetk_s01_siren_scitem.json",
+        "file://./../../../../../libs/foundry/records/entities/scitem/ships/quantumdrive/qdrv_wetk_s01_vk00_scitem.json"]},
+    "orderDisplayName": "@Salvage_Ship_Component_Quantum_Drive_S1_Name"}}

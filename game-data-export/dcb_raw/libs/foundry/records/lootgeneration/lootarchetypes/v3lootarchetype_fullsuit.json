@@ -1,0 +1,24 @@
+{
+  "_RecordName_": "LootArchetypeV3Record.V3LootArchetype_FullSuit",
+  "_RecordId_": "734972c1-b524-4e63-a931-a1e71e1beeba",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "LootArchetypeV3Record",
+    "lootArchetype": {
+      "_Type_": "LootArchetypeV3",
+      "entries": [
+        {
+          "_Type_": "LootArchetypeV3Entry",
+          "name": "Full suit",
+          "weight": 1.0,
+          "selector": {
+            "_Type_": "LootArchetypeV3Selector_Tags",
+            "tags": {
+              "_Type_": "TagsDNFTerm",
+              "positiveTags": [
+                {
+                  "_RecordPath_": "file://./../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+                  "_RecordName_": "Tag.3521eb58-d811-4f98-893a-3a4bc346fb34",
+                  "_RecordId_": "3521eb58-d811-4f98-893a-3a4bc346fb34"}],
+              "negativeTags": []}},
+          "optionalData": []}]}}}

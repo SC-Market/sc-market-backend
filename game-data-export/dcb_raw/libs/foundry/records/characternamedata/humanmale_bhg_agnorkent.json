@@ -1,0 +1,13 @@
+{
+  "_RecordName_": "CharacterRandomNameParams.HumanMale_BHG_AgnorKent",
+  "_RecordId_": "2b0e0b80-344d-4b22-bdb0-3f39d27b5faf",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "CharacterRandomNameParams",
+    "firstNameString": "Name_BHG_Rep_AgnorKent",
+    "nickNameString": "LOC_UNINITIALIZED",
+    "lastNameString": "LOC_UNINITIALIZED",
+    "numFirstNames": 1,
+    "numNickNames": 0,
+    "numLastNames": 0,
+    "nicknameChance": 0.0}}

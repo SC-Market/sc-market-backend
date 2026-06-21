@@ -1,0 +1,25 @@
+{
+  "_RecordName_": "CommsNotification.MCN_CREP_Samuels_RSGEvent_Announcement",
+  "_RecordId_": "11d0a086-56df-4736-9857-c9b66cad27f3",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "CommsNotification",
+    "tags": {
+      "_Type_": "TagList",
+      "tags": [
+        {
+          "_RecordPath_": "file://./../../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+          "_RecordName_": "Tag.8884f7ac-7342-4dac-83e2-1d819d4a3dc6",
+          "_RecordId_": "8884f7ac-7342-4dac-83e2-1d819d4a3dc6"},
+        {
+          "_RecordPath_": "file://./../../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+          "_RecordName_": "Tag.c06365af-0739-4cc6-be44-6b5ccd0edc45",
+          "_RecordId_": "c06365af-0739-4cc6-be44-6b5ccd0edc45"},
+        {
+          "_RecordPath_": "file://./../../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+          "_RecordName_": "Tag.69c74c38-acc5-43bb-aabd-28cddcfa274b",
+          "_RecordId_": "69c74c38-acc5-43bb-aabd-28cddcfa274b"}]},
+    "communicationName": "file://./../../../../../../../libs/foundry/records/communicationname/missioncommunications/gameevents/mission_gameevent_announcement.json",
+    "characterEntityClass": null,
+    "fakeCommsAudioEntityClass": "file://./../../../../../../../libs/foundry/records/entities/audio/fakecommsaudioentity_crusaderindustries_crep_samuels.json",
+    "stage": null}}

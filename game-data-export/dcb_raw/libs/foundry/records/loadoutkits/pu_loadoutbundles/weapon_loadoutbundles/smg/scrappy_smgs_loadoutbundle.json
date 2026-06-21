@@ -1,0 +1,24 @@
+{
+  "_RecordName_": "SLoadoutAssortment.Scrappy_Smgs_loadoutbundle",
+  "_RecordId_": "579813dc-2869-454a-a970-41d4807f0441",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "SLoadoutAssortment",
+    "Requirement": null,
+    "GroupedLoadouts": [
+      {
+        "_Type_": "SGroupedLoadouts",
+        "Group": "PrimaryWeapon",
+        "Requirement": null,
+        "Loadouts": [
+          {
+            "_Type_": "SItemPortLoadoutRandomGeneratedParams",
+            "WearRange": null,
+            "DirtRange": null,
+            "SkipInventoryItemsOnMissionEntities": false,
+            "InventoryItems": [],
+            "GenerationSeed": 0,
+            "LoadoutAssortments": [
+              "file://./../../../../../../../libs/foundry/records/loadoutkits/pu_loadoutbundles/weapon_loadoutbundles/smg/ksar_smg_loadoutbundle.json",
+              "file://./../../../../../../../libs/foundry/records/loadoutkits/pu_loadoutbundles/weapon_loadoutbundles/smg/gmni_smg_loadoutbundle.json",
+              "file://./../../../../../../../libs/foundry/records/loadoutkits/pu_loadoutbundles/weapon_loadoutbundles/smg/ksar_smg_loadoutbundle.json"]}]}]}}

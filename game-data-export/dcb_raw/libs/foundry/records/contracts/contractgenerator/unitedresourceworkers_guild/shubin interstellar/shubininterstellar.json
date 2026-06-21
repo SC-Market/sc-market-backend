@@ -1,0 +1,1010 @@
+{
+  "_RecordName_": "ContractGenerator.ShubinInterstellar",
+  "_RecordId_": "efdf4c00-c040-4730-a8cf-c1cc0a39f422",
+  "_RecordTag_": "Design",
+  "_RecordValue_": {
+    "_Type_": "ContractGenerator",
+    "generators": [
+      {
+        "_Type_": "ContractGeneratorHandler_List",
+        "notForRelease": false,
+        "workInProgress": false,
+        "debugName": "",
+        "required_active_scenarios": [],
+        "defaultAvailability": {
+          "_Type_": "ContractAvailability",
+          "prerequisites": [
+            {
+              "_Type_": "ContractPrerequisite_Location",
+              "locationAvailable": "file://./../../../../../../../libs/foundry/records/starmap/pu/nyxsolarsystem.json"}],
+          "notifyOnAvailable": false,
+          "maxPlayersPerInstance": 1,
+          "onceOnly": false,
+          "availableInPrison": false,
+          "canReacceptAfterAbandoning": true,
+          "abandonedCooldownTime": 1.0,
+          "abandonedCooldownTimeVariation": 1.0,
+          "canReacceptAfterFailing": false,
+          "hasPersonalCooldown": false,
+          "personalCooldownTime": 1.0,
+          "personalCooldownTimeVariation": 1.0,
+          "hideInMobiGlas": false},
+        "contractParams": {
+          "_Type_": "ContractParamOverrides",
+          "stringParamOverrides": [
+            {
+              "_Type_": "ContractStringParam",
+              "param": "Contractor",
+              "value": "@shubin_from"}],
+          "boolParamOverrides": [],
+          "intParamOverrides": [],
+          "propertyTagReplacement": [],
+          "propertyOverrides": [],
+          "modifierOverrides": [],
+          "missionTypeOverride": null,
+          "overridePhaseMissionDetailsDisplayInfo": []},
+        "contracts": [
+          {
+            "_Type_": "Contract",
+            "id": "b420cb29-8e79-4965-ba20-78047e8fd265",
+            "notForRelease": false,
+            "workInProgress": false,
+            "debugName": "RCD_Exclusive",
+            "template": "file://./../../../../../../../libs/foundry/records/contracts/contracttemplates/rockcrackerdungeon/rcd_powerfacility.json",
+            "required_active_scenarios": [
+              "file://./../../../../../../../libs/foundry/records/missionscenarios/rcd_exclusive_scenario.json"],
+            "paramOverrides": {
+              "_Type_": "ContractParamOverrides",
+              "stringParamOverrides": [
+                {
+                  "_Type_": "ContractStringParam",
+                  "param": "Title",
+                  "value": "@shubin_rockcracker_solo_title_01"},
+                {
+                  "_Type_": "ContractStringParam",
+                  "param": "Description",
+                  "value": "@shubin_rockcracker_solo_desc_01"}],
+              "boolParamOverrides": [
+                {
+                  "_Type_": "ContractBoolParam",
+                  "param": "OnceOnly",
+                  "value": false},
+                {
+                  "_Type_": "ContractBoolParam",
+                  "param": "NotifyOnAvailable",
+                  "value": false}],
+              "intParamOverrides": [],
+              "propertyTagReplacement": [],
+              "propertyOverrides": [
+                {
+                  "_Type_": "MissionProperty",
+                  "missionVariableName": "MissionLocation_BP",
+                  "extendedTextToken": "",
+                  "value": {
+                    "_Type_": "MissionPropertyValue_Location",
+                    "matchConditions": [
+                      {
+                        "_Type_": "DataSetMatchCondition_TagSearch",
+                        "tagSearch": [
+                          {
+                            "_Type_": "TagSearchTerm",
+                            "positiveTags": [
+                              {
+                                "_RecordPath_": "file://./../../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+                                "_RecordName_": "Tag.65ae3316-b395-41e0-883f-c0506882953c",
+                                "_RecordId_": "65ae3316-b395-41e0-883f-c0506882953c"},
+                              {
+                                "_RecordPath_": "file://./../../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+                                "_RecordName_": "Tag.f5e04773-de5c-497f-828a-4a9440b3c13b",
+                                "_RecordId_": "f5e04773-de5c-497f-828a-4a9440b3c13b"},
+                              {
+                                "_RecordPath_": "file://./../../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+                                "_RecordName_": "Tag.3f41464a-5bae-491c-834f-e2acf576b3eb",
+                                "_RecordId_": "3f41464a-5bae-491c-834f-e2acf576b3eb"}],
+                            "negativeTags": [
+                              {
+                                "_RecordPath_": "file://./../../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+                                "_RecordName_": "Tag.d5d68f8c-005a-439b-91ee-3ce637306d09",
+                                "_RecordId_": "d5d68f8c-005a-439b-91ee-3ce637306d09"}]}],
+                        "tagType": "General"}],
+                    "resourceTags": [
+                      {
+                        "_RecordPath_": "file://./../../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+                        "_RecordName_": "Tag.4683af58-3200-4933-aa18-111b9323c61e",
+                        "_RecordId_": "4683af58-3200-4933-aa18-111b9323c61e"}],
+                    "logErrorOnSearchFail": true}},
+                {
+                  "_Type_": "MissionProperty",
+                  "missionVariableName": "CN_ContractStart",
+                  "extendedTextToken": "",
+                  "value": {
+                    "_Type_": "MissionPropertyValue_Tags",
+                    "tags": {
+                      "_Type_": "TagList",
+                      "tags": [
+                        {
+                          "_RecordPath_": "file://./../../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+                          "_RecordName_": "Tag.e0b464a2-f2d7-48cc-94b2-da629490cbb2",
+                          "_RecordId_": "e0b464a2-f2d7-48cc-94b2-da629490cbb2"},
+                        {
+                          "_RecordPath_": "file://./../../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+                          "_RecordName_": "Tag.c5e4e758-1959-44a2-ba4c-a1022d374484",
+                          "_RecordId_": "c5e4e758-1959-44a2-ba4c-a1022d374484"},
+                        {
+                          "_RecordPath_": "file://./../../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+                          "_RecordName_": "Tag.fa9a5787-8fd1-4a97-a6c4-9da4e62e2264",
+                          "_RecordId_": "fa9a5787-8fd1-4a97-a6c4-9da4e62e2264"},
+                        {
+                          "_RecordPath_": "file://./../../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+                          "_RecordName_": "Tag.4683af58-3200-4933-aa18-111b9323c61e",
+                          "_RecordId_": "4683af58-3200-4933-aa18-111b9323c61e"}]},
+                    "negativeTags": {
+                      "_Type_": "TagList",
+                      "tags": []},
+                    "options": []}}],
+              "modifierOverrides": [],
+              "missionTypeOverride": "file://./../../../../../../../libs/foundry/records/missiontype/pu/shipmining.json",
+              "overridePhaseMissionDetailsDisplayInfo": []},
+            "subContracts": [],
+            "additionalPrerequisites": [
+              {
+                "_Type_": "ContractPrerequisite_Reputation",
+                "includePrerequisiteWhenSharing": false,
+                "factionReputation": "file://./../../../../../../../libs/foundry/records/factions/factionreputation/factionreputation_lawful_shubininterstellar.json",
+                "scope": "file://./../../../../../../../libs/foundry/records/reputation/scopes/factionreputationscope.json",
+                "exclude": false,
+                "minStanding": "file://./../../../../../../../libs/foundry/records/reputation/standings/faction_reputation_pyro/reputationstanding_factionrep_rank2.json",
+                "maxStanding": "file://./../../../../../../../libs/foundry/records/reputation/standings/faction_reputation_pyro/reputationstanding_factionrep_rank6.json"}],
+            "generationParams": {
+              "_Type_": "ContractGenerationParams_Legacy",
+              "maxInstances": -1,
+              "maxInstancesPerPlayer": 1,
+              "respawnTime": 1.0,
+              "respawnTimeVariation": 1.0},
+            "contractLifeTime": {
+              "_Type_": "ContractLifeTime",
+              "instanceLifeTime": 5.0,
+              "instanceLifeTimeVariation": 5.0},
+            "contractPlugins": [],
+            "contractResults": {
+              "_Type_": "ContractResults",
+              "contractResults": [
+                {
+                  "_Type_": "BlueprintRewards",
+                  "missionResults": [
+                    true,
+                    false,
+                    false,
+                    false,
+                    false],
+                  "chance": 1.0,
+                  "blueprintPool": "file://./../../../../../../../libs/foundry/records/crafting/blueprintrewards/blueprintmissionpools/bp_missionreward_rdc_exclusive.json"}],
+              "contractBuyInAmount": 850000,
+              "timeToComplete": 10.0,
+              "difficulty": null}},
+          {
+            "_Type_": "Contract",
+            "id": "8f89a2d4-8994-462a-a711-7eca01a3edeb",
+            "notForRelease": false,
+            "workInProgress": false,
+            "debugName": "RCD_Contested",
+            "template": "file://./../../../../../../../libs/foundry/records/contracts/contracttemplates/rockcrackerdungeon/rcd_powerfacility.json",
+            "required_active_scenarios": [
+              "file://./../../../../../../../libs/foundry/records/missionscenarios/rcd_contested_scenario.json"],
+            "paramOverrides": {
+              "_Type_": "ContractParamOverrides",
+              "stringParamOverrides": [
+                {
+                  "_Type_": "ContractStringParam",
+                  "param": "Title",
+                  "value": "@shubin_rockcracker_pvp_title_01"},
+                {
+                  "_Type_": "ContractStringParam",
+                  "param": "Description",
+                  "value": "@shubin_rockcracker_pvp_desc_01"}],
+              "boolParamOverrides": [
+                {
+                  "_Type_": "ContractBoolParam",
+                  "param": "OnceOnly",
+                  "value": false},
+                {
+                  "_Type_": "ContractBoolParam",
+                  "param": "NotifyOnAvailable",
+                  "value": false}],
+              "intParamOverrides": [
+                {
+                  "_Type_": "ContractIntParam",
+                  "param": "MaxPlayersPerInstance",
+                  "value": -1}],
+              "propertyTagReplacement": [],
+              "propertyOverrides": [
+                {
+                  "_Type_": "MissionProperty",
+                  "missionVariableName": "MissionLocation_BP",
+                  "extendedTextToken": "",
+                  "value": {
+                    "_Type_": "MissionPropertyValue_Location",
+                    "matchConditions": [
+                      {
+                        "_Type_": "DataSetMatchCondition_TagSearch",
+                        "tagSearch": [
+                          {
+                            "_Type_": "TagSearchTerm",
+                            "positiveTags": [
+                              {
+                                "_RecordPath_": "file://./../../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+                                "_RecordName_": "Tag.65ae3316-b395-41e0-883f-c0506882953c",
+                                "_RecordId_": "65ae3316-b395-41e0-883f-c0506882953c"},
+                              {
+                                "_RecordPath_": "file://./../../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+                                "_RecordName_": "Tag.f5e04773-de5c-497f-828a-4a9440b3c13b",
+                                "_RecordId_": "f5e04773-de5c-497f-828a-4a9440b3c13b"},
+                              {
+                                "_RecordPath_": "file://./../../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+                                "_RecordName_": "Tag.8e598d06-f7cb-4a69-bb00-46afed4fe68e",
+                                "_RecordId_": "8e598d06-f7cb-4a69-bb00-46afed4fe68e"}],
+                            "negativeTags": []}],
+                        "tagType": "General"}],
+                    "resourceTags": [
+                      {
+                        "_RecordPath_": "file://./../../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+                        "_RecordName_": "Tag.dd49480a-daf4-40a5-9a54-fb893ef01de5",
+                        "_RecordId_": "dd49480a-daf4-40a5-9a54-fb893ef01de5"}],
+                    "logErrorOnSearchFail": true}},
+                {
+                  "_Type_": "MissionProperty",
+                  "missionVariableName": "CN_ContractStart",
+                  "extendedTextToken": "",
+                  "value": {
+                    "_Type_": "MissionPropertyValue_Tags",
+                    "tags": {
+                      "_Type_": "TagList",
+                      "tags": [
+                        {
+                          "_RecordPath_": "file://./../../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+                          "_RecordName_": "Tag.e0b464a2-f2d7-48cc-94b2-da629490cbb2",
+                          "_RecordId_": "e0b464a2-f2d7-48cc-94b2-da629490cbb2"},
+                        {
+                          "_RecordPath_": "file://./../../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+                          "_RecordName_": "Tag.c5e4e758-1959-44a2-ba4c-a1022d374484",
+                          "_RecordId_": "c5e4e758-1959-44a2-ba4c-a1022d374484"},
+                        {
+                          "_RecordPath_": "file://./../../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+                          "_RecordName_": "Tag.fa9a5787-8fd1-4a97-a6c4-9da4e62e2264",
+                          "_RecordId_": "fa9a5787-8fd1-4a97-a6c4-9da4e62e2264"},
+                        {
+                          "_RecordPath_": "file://./../../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+                          "_RecordName_": "Tag.dd49480a-daf4-40a5-9a54-fb893ef01de5",
+                          "_RecordId_": "dd49480a-daf4-40a5-9a54-fb893ef01de5"}]},
+                    "negativeTags": {
+                      "_Type_": "TagList",
+                      "tags": []},
+                    "options": []}}],
+              "modifierOverrides": [],
+              "missionTypeOverride": "file://./../../../../../../../libs/foundry/records/missiontype/pu/shipmining.json",
+              "overridePhaseMissionDetailsDisplayInfo": []},
+            "subContracts": [
+              {
+                "_Type_": "SubContract",
+                "stringParamOverrides": [
+                  {
+                    "_Type_": "ContractStringParam",
+                    "param": "Title",
+                    "value": "@shubin_rockcracker_pvp_title_specific_02"}],
+                "boolParamOverrides": [],
+                "intParamOverrides": [],
+                "propertyTagReplacement": [],
+                "propertyOverrides": [],
+                "modifierOverrides": [],
+                "missionTypeOverride": null,
+                "overridePhaseMissionDetailsDisplayInfo": [],
+                "id": "872dda32-6742-4429-86f5-12fa125bc8f7",
+                "additionalPrerequisites": [
+                  {
+                    "_Type_": "ContractPrerequisite_Location",
+                    "locationAvailable": "file://./../../../../../../../libs/foundry/records/starmap/pu/asteroidclusterbase_nyx_social_keeger_001.json"},
+                  {
+                    "_Type_": "ContractPrerequisite_Reputation",
+                    "includePrerequisiteWhenSharing": false,
+                    "factionReputation": "file://./../../../../../../../libs/foundry/records/factions/factionreputation/factionreputation_lawful_shubininterstellar.json",
+                    "scope": "file://./../../../../../../../libs/foundry/records/reputation/scopes/factionreputationscope.json",
+                    "exclude": false,
+                    "minStanding": "file://./../../../../../../../libs/foundry/records/reputation/standings/faction_reputation_pyro/reputationstanding_factionrep_rank1.json",
+                    "maxStanding": "file://./../../../../../../../libs/foundry/records/reputation/standings/faction_reputation_pyro/reputationstanding_factionrep_rank6.json"}]},
+              {
+                "_Type_": "SubContract",
+                "stringParamOverrides": [
+                  {
+                    "_Type_": "ContractStringParam",
+                    "param": "Title",
+                    "value": "@shubin_rockcracker_pvp_title_specific_03"}],
+                "boolParamOverrides": [],
+                "intParamOverrides": [],
+                "propertyTagReplacement": [],
+                "propertyOverrides": [],
+                "modifierOverrides": [],
+                "missionTypeOverride": null,
+                "overridePhaseMissionDetailsDisplayInfo": [],
+                "id": "3e9ead40-104b-4e29-b895-63d631ce93e5",
+                "additionalPrerequisites": [
+                  {
+                    "_Type_": "ContractPrerequisite_Location",
+                    "locationAvailable": "file://./../../../../../../../libs/foundry/records/starmap/pu/asteroidclusterbase_nyx_social_keeger_002.json"},
+                  {
+                    "_Type_": "ContractPrerequisite_Reputation",
+                    "includePrerequisiteWhenSharing": false,
+                    "factionReputation": "file://./../../../../../../../libs/foundry/records/factions/factionreputation/factionreputation_lawful_shubininterstellar.json",
+                    "scope": "file://./../../../../../../../libs/foundry/records/reputation/scopes/factionreputationscope.json",
+                    "exclude": false,
+                    "minStanding": "file://./../../../../../../../libs/foundry/records/reputation/standings/faction_reputation_pyro/reputationstanding_factionrep_rank1.json",
+                    "maxStanding": "file://./../../../../../../../libs/foundry/records/reputation/standings/faction_reputation_pyro/reputationstanding_factionrep_rank6.json"}]},
+              {
+                "_Type_": "SubContract",
+                "stringParamOverrides": [
+                  {
+                    "_Type_": "ContractStringParam",
+                    "param": "Title",
+                    "value": "@shubin_rockcracker_pvp_title_specific_04"}],
+                "boolParamOverrides": [],
+                "intParamOverrides": [],
+                "propertyTagReplacement": [],
+                "propertyOverrides": [],
+                "modifierOverrides": [],
+                "missionTypeOverride": null,
+                "overridePhaseMissionDetailsDisplayInfo": [],
+                "id": "9f3192b8-859f-4bcd-910a-b1f8c9fad9d4",
+                "additionalPrerequisites": [
+                  {
+                    "_Type_": "ContractPrerequisite_Location",
+                    "locationAvailable": "file://./../../../../../../../libs/foundry/records/starmap/pu/asteroidclusterbase_nyx_social_keeger_003.json"},
+                  {
+                    "_Type_": "ContractPrerequisite_Reputation",
+                    "includePrerequisiteWhenSharing": false,
+                    "factionReputation": "file://./../../../../../../../libs/foundry/records/factions/factionreputation/factionreputation_lawful_shubininterstellar.json",
+                    "scope": "file://./../../../../../../../libs/foundry/records/reputation/scopes/factionreputationscope.json",
+                    "exclude": false,
+                    "minStanding": "file://./../../../../../../../libs/foundry/records/reputation/standings/faction_reputation_pyro/reputationstanding_factionrep_rank1.json",
+                    "maxStanding": "file://./../../../../../../../libs/foundry/records/reputation/standings/faction_reputation_pyro/reputationstanding_factionrep_rank6.json"}]},
+              {
+                "_Type_": "SubContract",
+                "stringParamOverrides": [
+                  {
+                    "_Type_": "ContractStringParam",
+                    "param": "Title",
+                    "value": "@shubin_rockcracker_pvp_title_specific_05"}],
+                "boolParamOverrides": [],
+                "intParamOverrides": [],
+                "propertyTagReplacement": [],
+                "propertyOverrides": [],
+                "modifierOverrides": [],
+                "missionTypeOverride": null,
+                "overridePhaseMissionDetailsDisplayInfo": [],
+                "id": "42b27901-9e86-4f0f-afaf-3cc55e0293ea",
+                "additionalPrerequisites": [
+                  {
+                    "_Type_": "ContractPrerequisite_Location",
+                    "locationAvailable": "file://./../../../../../../../libs/foundry/records/starmap/pu/asteroidclusterbase_nyx_social_keeger_004.json"},
+                  {
+                    "_Type_": "ContractPrerequisite_Reputation",
+                    "includePrerequisiteWhenSharing": false,
+                    "factionReputation": "file://./../../../../../../../libs/foundry/records/factions/factionreputation/factionreputation_lawful_shubininterstellar.json",
+                    "scope": "file://./../../../../../../../libs/foundry/records/reputation/scopes/factionreputationscope.json",
+                    "exclude": false,
+                    "minStanding": "file://./../../../../../../../libs/foundry/records/reputation/standings/faction_reputation_pyro/reputationstanding_factionrep_rank1.json",
+                    "maxStanding": "file://./../../../../../../../libs/foundry/records/reputation/standings/faction_reputation_pyro/reputationstanding_factionrep_rank6.json"}]},
+              {
+                "_Type_": "SubContract",
+                "stringParamOverrides": [
+                  {
+                    "_Type_": "ContractStringParam",
+                    "param": "Title",
+                    "value": "@shubin_rockcracker_pvp_title_specific_06"}],
+                "boolParamOverrides": [],
+                "intParamOverrides": [],
+                "propertyTagReplacement": [],
+                "propertyOverrides": [],
+                "modifierOverrides": [],
+                "missionTypeOverride": null,
+                "overridePhaseMissionDetailsDisplayInfo": [],
+                "id": "a2727120-4cc3-4dcf-820f-fd3debbca370",
+                "additionalPrerequisites": []},
+              {
+                "_Type_": "SubContract",
+                "stringParamOverrides": [
+                  {
+                    "_Type_": "ContractStringParam",
+                    "param": "Title",
+                    "value": "@shubin_rockcracker_pvp_title_specific_07"}],
+                "boolParamOverrides": [],
+                "intParamOverrides": [],
+                "propertyTagReplacement": [],
+                "propertyOverrides": [],
+                "modifierOverrides": [],
+                "missionTypeOverride": null,
+                "overridePhaseMissionDetailsDisplayInfo": [],
+                "id": "4bdf64d5-368a-4646-9dc7-4f80a2c1c6fa",
+                "additionalPrerequisites": []},
+              {
+                "_Type_": "SubContract",
+                "stringParamOverrides": [
+                  {
+                    "_Type_": "ContractStringParam",
+                    "param": "Title",
+                    "value": "@shubin_rockcracker_pvp_title_specific_08"}],
+                "boolParamOverrides": [],
+                "intParamOverrides": [],
+                "propertyTagReplacement": [],
+                "propertyOverrides": [],
+                "modifierOverrides": [],
+                "missionTypeOverride": null,
+                "overridePhaseMissionDetailsDisplayInfo": [],
+                "id": "c65b43ad-9e19-46b8-a0af-574baa427ecc",
+                "additionalPrerequisites": []},
+              {
+                "_Type_": "SubContract",
+                "stringParamOverrides": [
+                  {
+                    "_Type_": "ContractStringParam",
+                    "param": "Title",
+                    "value": "@shubin_rockcracker_pvp_title_specific_09"}],
+                "boolParamOverrides": [],
+                "intParamOverrides": [],
+                "propertyTagReplacement": [],
+                "propertyOverrides": [],
+                "modifierOverrides": [],
+                "missionTypeOverride": null,
+                "overridePhaseMissionDetailsDisplayInfo": [],
+                "id": "d0b31930-469a-40a3-980e-de4e92ad7c05",
+                "additionalPrerequisites": []},
+              {
+                "_Type_": "SubContract",
+                "stringParamOverrides": [
+                  {
+                    "_Type_": "ContractStringParam",
+                    "param": "Title",
+                    "value": "@shubin_rockcracker_pvp_title_specific_10"}],
+                "boolParamOverrides": [],
+                "intParamOverrides": [],
+                "propertyTagReplacement": [],
+                "propertyOverrides": [],
+                "modifierOverrides": [],
+                "missionTypeOverride": null,
+                "overridePhaseMissionDetailsDisplayInfo": [],
+                "id": "7839e89d-b377-4c5c-8e3d-07e6a943bc56",
+                "additionalPrerequisites": []},
+              {
+                "_Type_": "SubContract",
+                "stringParamOverrides": [
+                  {
+                    "_Type_": "ContractStringParam",
+                    "param": "Title",
+                    "value": "@shubin_rockcracker_pvp_title_specific_11"}],
+                "boolParamOverrides": [],
+                "intParamOverrides": [],
+                "propertyTagReplacement": [],
+                "propertyOverrides": [],
+                "modifierOverrides": [],
+                "missionTypeOverride": null,
+                "overridePhaseMissionDetailsDisplayInfo": [],
+                "id": "5200d0d7-a6cf-4c91-8caf-2ceb2f4209e8",
+                "additionalPrerequisites": []},
+              {
+                "_Type_": "SubContract",
+                "stringParamOverrides": [
+                  {
+                    "_Type_": "ContractStringParam",
+                    "param": "Title",
+                    "value": "@shubin_rockcracker_pvp_title_specific_12"}],
+                "boolParamOverrides": [],
+                "intParamOverrides": [],
+                "propertyTagReplacement": [],
+                "propertyOverrides": [],
+                "modifierOverrides": [],
+                "missionTypeOverride": null,
+                "overridePhaseMissionDetailsDisplayInfo": [],
+                "id": "7e045b7e-25e9-4dfd-bbe0-ba8ada3cd42d",
+                "additionalPrerequisites": []},
+              {
+                "_Type_": "SubContract",
+                "stringParamOverrides": [
+                  {
+                    "_Type_": "ContractStringParam",
+                    "param": "Title",
+                    "value": "@shubin_rockcracker_pvp_title_specific_13"}],
+                "boolParamOverrides": [],
+                "intParamOverrides": [],
+                "propertyTagReplacement": [],
+                "propertyOverrides": [],
+                "modifierOverrides": [],
+                "missionTypeOverride": null,
+                "overridePhaseMissionDetailsDisplayInfo": [],
+                "id": "8ff3d4d9-3963-4e7d-a1e7-8c2a6d0b70b4",
+                "additionalPrerequisites": []},
+              {
+                "_Type_": "SubContract",
+                "stringParamOverrides": [
+                  {
+                    "_Type_": "ContractStringParam",
+                    "param": "Title",
+                    "value": "@shubin_rockcracker_pvp_title_specific_14"}],
+                "boolParamOverrides": [],
+                "intParamOverrides": [],
+                "propertyTagReplacement": [],
+                "propertyOverrides": [],
+                "modifierOverrides": [],
+                "missionTypeOverride": null,
+                "overridePhaseMissionDetailsDisplayInfo": [],
+                "id": "870e09c3-5748-4ae5-b7bb-99e78db1c33b",
+                "additionalPrerequisites": []},
+              {
+                "_Type_": "SubContract",
+                "stringParamOverrides": [
+                  {
+                    "_Type_": "ContractStringParam",
+                    "param": "Title",
+                    "value": "@shubin_rockcracker_pvp_title_specific_15"}],
+                "boolParamOverrides": [],
+                "intParamOverrides": [],
+                "propertyTagReplacement": [],
+                "propertyOverrides": [],
+                "modifierOverrides": [],
+                "missionTypeOverride": null,
+                "overridePhaseMissionDetailsDisplayInfo": [],
+                "id": "e49d7342-4163-4e79-b528-0ade58ff2997",
+                "additionalPrerequisites": [
+                  {
+                    "_Type_": "ContractPrerequisite_Location",
+                    "locationAvailable": "file://./../../../../../../../libs/foundry/records/starmap/pu/asteroidclusterbase_nyx_social_keeger_001.json"},
+                  {
+                    "_Type_": "ContractPrerequisite_Reputation",
+                    "includePrerequisiteWhenSharing": false,
+                    "factionReputation": "file://./../../../../../../../libs/foundry/records/factions/factionreputation/factionreputation_lawful_shubininterstellar.json",
+                    "scope": "file://./../../../../../../../libs/foundry/records/reputation/scopes/factionreputationscope.json",
+                    "exclude": false,
+                    "minStanding": "file://./../../../../../../../libs/foundry/records/reputation/standings/faction_reputation_pyro/reputationstanding_factionrep_rank1.json",
+                    "maxStanding": "file://./../../../../../../../libs/foundry/records/reputation/standings/faction_reputation_pyro/reputationstanding_factionrep_rank6.json"}]},
+              {
+                "_Type_": "SubContract",
+                "stringParamOverrides": [
+                  {
+                    "_Type_": "ContractStringParam",
+                    "param": "Title",
+                    "value": "@shubin_rockcracker_pvp_title_specific_16"}],
+                "boolParamOverrides": [],
+                "intParamOverrides": [],
+                "propertyTagReplacement": [],
+                "propertyOverrides": [],
+                "modifierOverrides": [],
+                "missionTypeOverride": null,
+                "overridePhaseMissionDetailsDisplayInfo": [],
+                "id": "e6d50b3c-9ac6-4c09-a4d8-161d7dc34553",
+                "additionalPrerequisites": [
+                  {
+                    "_Type_": "ContractPrerequisite_Location",
+                    "locationAvailable": "file://./../../../../../../../libs/foundry/records/starmap/pu/asteroidclusterbase_nyx_social_keeger_001.json"},
+                  {
+                    "_Type_": "ContractPrerequisite_Reputation",
+                    "includePrerequisiteWhenSharing": false,
+                    "factionReputation": "file://./../../../../../../../libs/foundry/records/factions/factionreputation/factionreputation_lawful_shubininterstellar.json",
+                    "scope": "file://./../../../../../../../libs/foundry/records/reputation/scopes/factionreputationscope.json",
+                    "exclude": false,
+                    "minStanding": "file://./../../../../../../../libs/foundry/records/reputation/standings/faction_reputation_pyro/reputationstanding_factionrep_rank1.json",
+                    "maxStanding": "file://./../../../../../../../libs/foundry/records/reputation/standings/faction_reputation_pyro/reputationstanding_factionrep_rank6.json"}]},
+              {
+                "_Type_": "SubContract",
+                "stringParamOverrides": [
+                  {
+                    "_Type_": "ContractStringParam",
+                    "param": "Title",
+                    "value": "@shubin_rockcracker_pvp_title_specific_17"}],
+                "boolParamOverrides": [],
+                "intParamOverrides": [],
+                "propertyTagReplacement": [],
+                "propertyOverrides": [],
+                "modifierOverrides": [],
+                "missionTypeOverride": null,
+                "overridePhaseMissionDetailsDisplayInfo": [],
+                "id": "ac74e4b0-4cc5-44a6-8f45-84d84fabef94",
+                "additionalPrerequisites": [
+                  {
+                    "_Type_": "ContractPrerequisite_Location",
+                    "locationAvailable": "file://./../../../../../../../libs/foundry/records/starmap/pu/asteroidclusterbase_nyx_social_keeger_001.json"},
+                  {
+                    "_Type_": "ContractPrerequisite_Reputation",
+                    "includePrerequisiteWhenSharing": false,
+                    "factionReputation": "file://./../../../../../../../libs/foundry/records/factions/factionreputation/factionreputation_lawful_shubininterstellar.json",
+                    "scope": "file://./../../../../../../../libs/foundry/records/reputation/scopes/factionreputationscope.json",
+                    "exclude": false,
+                    "minStanding": "file://./../../../../../../../libs/foundry/records/reputation/standings/faction_reputation_pyro/reputationstanding_factionrep_rank1.json",
+                    "maxStanding": "file://./../../../../../../../libs/foundry/records/reputation/standings/faction_reputation_pyro/reputationstanding_factionrep_rank6.json"}]},
+              {
+                "_Type_": "SubContract",
+                "stringParamOverrides": [
+                  {
+                    "_Type_": "ContractStringParam",
+                    "param": "Title",
+                    "value": "@shubin_rockcracker_pvp_title_specific_18"}],
+                "boolParamOverrides": [],
+                "intParamOverrides": [],
+                "propertyTagReplacement": [],
+                "propertyOverrides": [],
+                "modifierOverrides": [],
+                "missionTypeOverride": null,
+                "overridePhaseMissionDetailsDisplayInfo": [],
+                "id": "488937e7-14dc-4e5c-9457-43a04916c22e",
+                "additionalPrerequisites": [
+                  {
+                    "_Type_": "ContractPrerequisite_Location",
+                    "locationAvailable": "file://./../../../../../../../libs/foundry/records/starmap/pu/asteroidclusterbase_nyx_social_keeger_001.json"},
+                  {
+                    "_Type_": "ContractPrerequisite_Reputation",
+                    "includePrerequisiteWhenSharing": false,
+                    "factionReputation": "file://./../../../../../../../libs/foundry/records/factions/factionreputation/factionreputation_lawful_shubininterstellar.json",
+                    "scope": "file://./../../../../../../../libs/foundry/records/reputation/scopes/factionreputationscope.json",
+                    "exclude": false,
+                    "minStanding": "file://./../../../../../../../libs/foundry/records/reputation/standings/faction_reputation_pyro/reputationstanding_factionrep_rank1.json",
+                    "maxStanding": "file://./../../../../../../../libs/foundry/records/reputation/standings/faction_reputation_pyro/reputationstanding_factionrep_rank6.json"}]},
+              {
+                "_Type_": "SubContract",
+                "stringParamOverrides": [
+                  {
+                    "_Type_": "ContractStringParam",
+                    "param": "Title",
+                    "value": "@shubin_rockcracker_pvp_title_specific_19"}],
+                "boolParamOverrides": [],
+                "intParamOverrides": [],
+                "propertyTagReplacement": [],
+                "propertyOverrides": [],
+                "modifierOverrides": [],
+                "missionTypeOverride": null,
+                "overridePhaseMissionDetailsDisplayInfo": [],
+                "id": "4b1c602b-fe0b-4f09-ad55-9696f40196dc",
+                "additionalPrerequisites": [
+                  {
+                    "_Type_": "ContractPrerequisite_Location",
+                    "locationAvailable": "file://./../../../../../../../libs/foundry/records/starmap/pu/asteroidclusterbase_nyx_social_keeger_002.json"},
+                  {
+                    "_Type_": "ContractPrerequisite_Reputation",
+                    "includePrerequisiteWhenSharing": false,
+                    "factionReputation": "file://./../../../../../../../libs/foundry/records/factions/factionreputation/factionreputation_lawful_shubininterstellar.json",
+                    "scope": "file://./../../../../../../../libs/foundry/records/reputation/scopes/factionreputationscope.json",
+                    "exclude": false,
+                    "minStanding": "file://./../../../../../../../libs/foundry/records/reputation/standings/faction_reputation_pyro/reputationstanding_factionrep_rank1.json",
+                    "maxStanding": "file://./../../../../../../../libs/foundry/records/reputation/standings/faction_reputation_pyro/reputationstanding_factionrep_rank6.json"}]},
+              {
+                "_Type_": "SubContract",
+                "stringParamOverrides": [
+                  {
+                    "_Type_": "ContractStringParam",
+                    "param": "Title",
+                    "value": "@shubin_rockcracker_pvp_title_specific_20"}],
+                "boolParamOverrides": [],
+                "intParamOverrides": [],
+                "propertyTagReplacement": [],
+                "propertyOverrides": [],
+                "modifierOverrides": [],
+                "missionTypeOverride": null,
+                "overridePhaseMissionDetailsDisplayInfo": [],
+                "id": "12693c74-9cb8-4ad9-854a-74c0652b908a",
+                "additionalPrerequisites": [
+                  {
+                    "_Type_": "ContractPrerequisite_Location",
+                    "locationAvailable": "file://./../../../../../../../libs/foundry/records/starmap/pu/asteroidclusterbase_nyx_social_keeger_002.json"},
+                  {
+                    "_Type_": "ContractPrerequisite_Reputation",
+                    "includePrerequisiteWhenSharing": false,
+                    "factionReputation": "file://./../../../../../../../libs/foundry/records/factions/factionreputation/factionreputation_lawful_shubininterstellar.json",
+                    "scope": "file://./../../../../../../../libs/foundry/records/reputation/scopes/factionreputationscope.json",
+                    "exclude": false,
+                    "minStanding": "file://./../../../../../../../libs/foundry/records/reputation/standings/faction_reputation_pyro/reputationstanding_factionrep_rank1.json",
+                    "maxStanding": "file://./../../../../../../../libs/foundry/records/reputation/standings/faction_reputation_pyro/reputationstanding_factionrep_rank6.json"}]},
+              {
+                "_Type_": "SubContract",
+                "stringParamOverrides": [
+                  {
+                    "_Type_": "ContractStringParam",
+                    "param": "Title",
+                    "value": "@shubin_rockcracker_pvp_title_specific_21"}],
+                "boolParamOverrides": [],
+                "intParamOverrides": [],
+                "propertyTagReplacement": [],
+                "propertyOverrides": [],
+                "modifierOverrides": [],
+                "missionTypeOverride": null,
+                "overridePhaseMissionDetailsDisplayInfo": [],
+                "id": "a623e67f-572c-47d5-9ee8-e904b87e8e06",
+                "additionalPrerequisites": [
+                  {
+                    "_Type_": "ContractPrerequisite_Location",
+                    "locationAvailable": "file://./../../../../../../../libs/foundry/records/starmap/pu/asteroidclusterbase_nyx_social_keeger_002.json"},
+                  {
+                    "_Type_": "ContractPrerequisite_Reputation",
+                    "includePrerequisiteWhenSharing": false,
+                    "factionReputation": "file://./../../../../../../../libs/foundry/records/factions/factionreputation/factionreputation_lawful_shubininterstellar.json",
+                    "scope": "file://./../../../../../../../libs/foundry/records/reputation/scopes/factionreputationscope.json",
+                    "exclude": false,
+                    "minStanding": "file://./../../../../../../../libs/foundry/records/reputation/standings/faction_reputation_pyro/reputationstanding_factionrep_rank1.json",
+                    "maxStanding": "file://./../../../../../../../libs/foundry/records/reputation/standings/faction_reputation_pyro/reputationstanding_factionrep_rank6.json"}]},
+              {
+                "_Type_": "SubContract",
+                "stringParamOverrides": [
+                  {
+                    "_Type_": "ContractStringParam",
+                    "param": "Title",
+                    "value": "@shubin_rockcracker_pvp_title_specific_22"}],
+                "boolParamOverrides": [],
+                "intParamOverrides": [],
+                "propertyTagReplacement": [],
+                "propertyOverrides": [],
+                "modifierOverrides": [],
+                "missionTypeOverride": null,
+                "overridePhaseMissionDetailsDisplayInfo": [],
+                "id": "67ef62ec-3427-4087-8040-87ed87cdb4e2",
+                "additionalPrerequisites": [
+                  {
+                    "_Type_": "ContractPrerequisite_Location",
+                    "locationAvailable": "file://./../../../../../../../libs/foundry/records/starmap/pu/asteroidclusterbase_nyx_social_keeger_002.json"},
+                  {
+                    "_Type_": "ContractPrerequisite_Reputation",
+                    "includePrerequisiteWhenSharing": false,
+                    "factionReputation": "file://./../../../../../../../libs/foundry/records/factions/factionreputation/factionreputation_lawful_shubininterstellar.json",
+                    "scope": "file://./../../../../../../../libs/foundry/records/reputation/scopes/factionreputationscope.json",
+                    "exclude": false,
+                    "minStanding": "file://./../../../../../../../libs/foundry/records/reputation/standings/faction_reputation_pyro/reputationstanding_factionrep_rank1.json",
+                    "maxStanding": "file://./../../../../../../../libs/foundry/records/reputation/standings/faction_reputation_pyro/reputationstanding_factionrep_rank6.json"}]},
+              {
+                "_Type_": "SubContract",
+                "stringParamOverrides": [
+                  {
+                    "_Type_": "ContractStringParam",
+                    "param": "Title",
+                    "value": "@shubin_rockcracker_pvp_title_specific_23"}],
+                "boolParamOverrides": [],
+                "intParamOverrides": [],
+                "propertyTagReplacement": [],
+                "propertyOverrides": [],
+                "modifierOverrides": [],
+                "missionTypeOverride": null,
+                "overridePhaseMissionDetailsDisplayInfo": [],
+                "id": "91cb4c67-3cc7-4dfd-9488-4839e0128ac4",
+                "additionalPrerequisites": [
+                  {
+                    "_Type_": "ContractPrerequisite_Location",
+                    "locationAvailable": "file://./../../../../../../../libs/foundry/records/starmap/pu/asteroidclusterbase_nyx_social_keeger_003.json"},
+                  {
+                    "_Type_": "ContractPrerequisite_Reputation",
+                    "includePrerequisiteWhenSharing": false,
+                    "factionReputation": "file://./../../../../../../../libs/foundry/records/factions/factionreputation/factionreputation_lawful_shubininterstellar.json",
+                    "scope": "file://./../../../../../../../libs/foundry/records/reputation/scopes/factionreputationscope.json",
+                    "exclude": false,
+                    "minStanding": "file://./../../../../../../../libs/foundry/records/reputation/standings/faction_reputation_pyro/reputationstanding_factionrep_rank1.json",
+                    "maxStanding": "file://./../../../../../../../libs/foundry/records/reputation/standings/faction_reputation_pyro/reputationstanding_factionrep_rank6.json"}]},
+              {
+                "_Type_": "SubContract",
+                "stringParamOverrides": [
+                  {
+                    "_Type_": "ContractStringParam",
+                    "param": "Title",
+                    "value": "@shubin_rockcracker_pvp_title_specific_24"}],
+                "boolParamOverrides": [],
+                "intParamOverrides": [],
+                "propertyTagReplacement": [],
+                "propertyOverrides": [],
+                "modifierOverrides": [],
+                "missionTypeOverride": null,
+                "overridePhaseMissionDetailsDisplayInfo": [],
+                "id": "a2e2b879-011f-4b42-a3a2-8df7bd68b9bd",
+                "additionalPrerequisites": [
+                  {
+                    "_Type_": "ContractPrerequisite_Location",
+                    "locationAvailable": "file://./../../../../../../../libs/foundry/records/starmap/pu/asteroidclusterbase_nyx_social_keeger_003.json"},
+                  {
+                    "_Type_": "ContractPrerequisite_Reputation",
+                    "includePrerequisiteWhenSharing": false,
+                    "factionReputation": "file://./../../../../../../../libs/foundry/records/factions/factionreputation/factionreputation_lawful_shubininterstellar.json",
+                    "scope": "file://./../../../../../../../libs/foundry/records/reputation/scopes/factionreputationscope.json",
+                    "exclude": false,
+                    "minStanding": "file://./../../../../../../../libs/foundry/records/reputation/standings/faction_reputation_pyro/reputationstanding_factionrep_rank1.json",
+                    "maxStanding": "file://./../../../../../../../libs/foundry/records/reputation/standings/faction_reputation_pyro/reputationstanding_factionrep_rank6.json"}]},
+              {
+                "_Type_": "SubContract",
+                "stringParamOverrides": [
+                  {
+                    "_Type_": "ContractStringParam",
+                    "param": "Title",
+                    "value": "@shubin_rockcracker_pvp_title_specific_25"}],
+                "boolParamOverrides": [],
+                "intParamOverrides": [],
+                "propertyTagReplacement": [],
+                "propertyOverrides": [],
+                "modifierOverrides": [],
+                "missionTypeOverride": null,
+                "overridePhaseMissionDetailsDisplayInfo": [],
+                "id": "62325781-90a0-4d86-91e5-879a8fc5d9e8",
+                "additionalPrerequisites": [
+                  {
+                    "_Type_": "ContractPrerequisite_Location",
+                    "locationAvailable": "file://./../../../../../../../libs/foundry/records/starmap/pu/asteroidclusterbase_nyx_social_keeger_003.json"},
+                  {
+                    "_Type_": "ContractPrerequisite_Reputation",
+                    "includePrerequisiteWhenSharing": false,
+                    "factionReputation": "file://./../../../../../../../libs/foundry/records/factions/factionreputation/factionreputation_lawful_shubininterstellar.json",
+                    "scope": "file://./../../../../../../../libs/foundry/records/reputation/scopes/factionreputationscope.json",
+                    "exclude": false,
+                    "minStanding": "file://./../../../../../../../libs/foundry/records/reputation/standings/faction_reputation_pyro/reputationstanding_factionrep_rank1.json",
+                    "maxStanding": "file://./../../../../../../../libs/foundry/records/reputation/standings/faction_reputation_pyro/reputationstanding_factionrep_rank6.json"}]},
+              {
+                "_Type_": "SubContract",
+                "stringParamOverrides": [
+                  {
+                    "_Type_": "ContractStringParam",
+                    "param": "Title",
+                    "value": "@shubin_rockcracker_pvp_title_specific_26"}],
+                "boolParamOverrides": [],
+                "intParamOverrides": [],
+                "propertyTagReplacement": [],
+                "propertyOverrides": [],
+                "modifierOverrides": [],
+                "missionTypeOverride": null,
+                "overridePhaseMissionDetailsDisplayInfo": [],
+                "id": "c4fe3e2b-dc5a-4609-8a6f-2b9603ebd805",
+                "additionalPrerequisites": [
+                  {
+                    "_Type_": "ContractPrerequisite_Location",
+                    "locationAvailable": "file://./../../../../../../../libs/foundry/records/starmap/pu/asteroidclusterbase_nyx_social_keeger_003.json"},
+                  {
+                    "_Type_": "ContractPrerequisite_Reputation",
+                    "includePrerequisiteWhenSharing": false,
+                    "factionReputation": "file://./../../../../../../../libs/foundry/records/factions/factionreputation/factionreputation_lawful_shubininterstellar.json",
+                    "scope": "file://./../../../../../../../libs/foundry/records/reputation/scopes/factionreputationscope.json",
+                    "exclude": false,
+                    "minStanding": "file://./../../../../../../../libs/foundry/records/reputation/standings/faction_reputation_pyro/reputationstanding_factionrep_rank1.json",
+                    "maxStanding": "file://./../../../../../../../libs/foundry/records/reputation/standings/faction_reputation_pyro/reputationstanding_factionrep_rank6.json"}]},
+              {
+                "_Type_": "SubContract",
+                "stringParamOverrides": [
+                  {
+                    "_Type_": "ContractStringParam",
+                    "param": "Title",
+                    "value": "@shubin_rockcracker_pvp_title_specific_27"}],
+                "boolParamOverrides": [],
+                "intParamOverrides": [],
+                "propertyTagReplacement": [],
+                "propertyOverrides": [],
+                "modifierOverrides": [],
+                "missionTypeOverride": null,
+                "overridePhaseMissionDetailsDisplayInfo": [],
+                "id": "706d2852-7e19-4782-aab7-88370c6a4770",
+                "additionalPrerequisites": [
+                  {
+                    "_Type_": "ContractPrerequisite_Location",
+                    "locationAvailable": "file://./../../../../../../../libs/foundry/records/starmap/pu/asteroidclusterbase_nyx_social_keeger_004.json"},
+                  {
+                    "_Type_": "ContractPrerequisite_Reputation",
+                    "includePrerequisiteWhenSharing": false,
+                    "factionReputation": "file://./../../../../../../../libs/foundry/records/factions/factionreputation/factionreputation_lawful_shubininterstellar.json",
+                    "scope": "file://./../../../../../../../libs/foundry/records/reputation/scopes/factionreputationscope.json",
+                    "exclude": false,
+                    "minStanding": "file://./../../../../../../../libs/foundry/records/reputation/standings/faction_reputation_pyro/reputationstanding_factionrep_rank1.json",
+                    "maxStanding": "file://./../../../../../../../libs/foundry/records/reputation/standings/faction_reputation_pyro/reputationstanding_factionrep_rank6.json"}]},
+              {
+                "_Type_": "SubContract",
+                "stringParamOverrides": [
+                  {
+                    "_Type_": "ContractStringParam",
+                    "param": "Title",
+                    "value": "@shubin_rockcracker_pvp_title_specific_28"}],
+                "boolParamOverrides": [],
+                "intParamOverrides": [],
+                "propertyTagReplacement": [],
+                "propertyOverrides": [],
+                "modifierOverrides": [],
+                "missionTypeOverride": null,
+                "overridePhaseMissionDetailsDisplayInfo": [],
+                "id": "e5716d14-53ec-4e84-8023-7049ec7f0785",
+                "additionalPrerequisites": [
+                  {
+                    "_Type_": "ContractPrerequisite_Location",
+                    "locationAvailable": "file://./../../../../../../../libs/foundry/records/starmap/pu/asteroidclusterbase_nyx_social_keeger_004.json"},
+                  {
+                    "_Type_": "ContractPrerequisite_Reputation",
+                    "includePrerequisiteWhenSharing": false,
+                    "factionReputation": "file://./../../../../../../../libs/foundry/records/factions/factionreputation/factionreputation_lawful_shubininterstellar.json",
+                    "scope": "file://./../../../../../../../libs/foundry/records/reputation/scopes/factionreputationscope.json",
+                    "exclude": false,
+                    "minStanding": "file://./../../../../../../../libs/foundry/records/reputation/standings/faction_reputation_pyro/reputationstanding_factionrep_rank1.json",
+                    "maxStanding": "file://./../../../../../../../libs/foundry/records/reputation/standings/faction_reputation_pyro/reputationstanding_factionrep_rank6.json"}]},
+              {
+                "_Type_": "SubContract",
+                "stringParamOverrides": [
+                  {
+                    "_Type_": "ContractStringParam",
+                    "param": "Title",
+                    "value": "@shubin_rockcracker_pvp_title_specific_29"}],
+                "boolParamOverrides": [],
+                "intParamOverrides": [],
+                "propertyTagReplacement": [],
+                "propertyOverrides": [],
+                "modifierOverrides": [],
+                "missionTypeOverride": null,
+                "overridePhaseMissionDetailsDisplayInfo": [],
+                "id": "e4f6126f-a139-48cf-8186-3910646b9a75",
+                "additionalPrerequisites": [
+                  {
+                    "_Type_": "ContractPrerequisite_Location",
+                    "locationAvailable": "file://./../../../../../../../libs/foundry/records/starmap/pu/asteroidclusterbase_nyx_social_keeger_004.json"},
+                  {
+                    "_Type_": "ContractPrerequisite_Reputation",
+                    "includePrerequisiteWhenSharing": false,
+                    "factionReputation": "file://./../../../../../../../libs/foundry/records/factions/factionreputation/factionreputation_lawful_shubininterstellar.json",
+                    "scope": "file://./../../../../../../../libs/foundry/records/reputation/scopes/factionreputationscope.json",
+                    "exclude": false,
+                    "minStanding": "file://./../../../../../../../libs/foundry/records/reputation/standings/faction_reputation_pyro/reputationstanding_factionrep_rank1.json",
+                    "maxStanding": "file://./../../../../../../../libs/foundry/records/reputation/standings/faction_reputation_pyro/reputationstanding_factionrep_rank6.json"}]},
+              {
+                "_Type_": "SubContract",
+                "stringParamOverrides": [
+                  {
+                    "_Type_": "ContractStringParam",
+                    "param": "Title",
+                    "value": "@shubin_rockcracker_pvp_title_specific_30"}],
+                "boolParamOverrides": [],
+                "intParamOverrides": [],
+                "propertyTagReplacement": [],
+                "propertyOverrides": [],
+                "modifierOverrides": [],
+                "missionTypeOverride": null,
+                "overridePhaseMissionDetailsDisplayInfo": [],
+                "id": "37206571-ec30-4669-b58b-8e5d396d5ea3",
+                "additionalPrerequisites": [
+                  {
+                    "_Type_": "ContractPrerequisite_Location",
+                    "locationAvailable": "file://./../../../../../../../libs/foundry/records/starmap/pu/asteroidclusterbase_nyx_social_keeger_004.json"},
+                  {
+                    "_Type_": "ContractPrerequisite_Reputation",
+                    "includePrerequisiteWhenSharing": false,
+                    "factionReputation": "file://./../../../../../../../libs/foundry/records/factions/factionreputation/factionreputation_lawful_shubininterstellar.json",
+                    "scope": "file://./../../../../../../../libs/foundry/records/reputation/scopes/factionreputationscope.json",
+                    "exclude": false,
+                    "minStanding": "file://./../../../../../../../libs/foundry/records/reputation/standings/faction_reputation_pyro/reputationstanding_factionrep_rank1.json",
+                    "maxStanding": "file://./../../../../../../../libs/foundry/records/reputation/standings/faction_reputation_pyro/reputationstanding_factionrep_rank6.json"}]}],
+            "additionalPrerequisites": [
+              {
+                "_Type_": "ContractPrerequisite_Location",
+                "locationAvailable": "file://./../../../../../../../libs/foundry/records/starmap/pu/system/nyx/delamar/landingzone/nyx_levski.json"},
+              {
+                "_Type_": "ContractPrerequisite_Reputation",
+                "includePrerequisiteWhenSharing": false,
+                "factionReputation": "file://./../../../../../../../libs/foundry/records/factions/factionreputation/factionreputation_lawful_shubininterstellar.json",
+                "scope": "file://./../../../../../../../libs/foundry/records/reputation/scopes/factionreputationscope.json",
+                "exclude": false,
+                "minStanding": "file://./../../../../../../../libs/foundry/records/reputation/standings/faction_reputation_pyro/reputationstanding_factionrep_rank1.json",
+                "maxStanding": "file://./../../../../../../../libs/foundry/records/reputation/standings/faction_reputation_pyro/reputationstanding_factionrep_rank6.json"}],
+            "generationParams": {
+              "_Type_": "ContractGenerationParams_Legacy",
+              "maxInstances": 1,
+              "maxInstancesPerPlayer": 1,
+              "respawnTime": 1.0,
+              "respawnTimeVariation": 1.0},
+            "contractLifeTime": {
+              "_Type_": "ContractLifeTime",
+              "instanceLifeTime": 5.0,
+              "instanceLifeTimeVariation": 5.0},
+            "contractPlugins": [],
+            "contractResults": {
+              "_Type_": "ContractResults",
+              "contractResults": [
+                {
+                  "_Type_": "BlueprintRewards",
+                  "missionResults": [
+                    true,
+                    false,
+                    false,
+                    false,
+                    false],
+                  "chance": 1.0,
+                  "blueprintPool": "file://./../../../../../../../libs/foundry/records/crafting/blueprintrewards/blueprintmissionpools/bp_missionreward_rdc_exclusive.json"}],
+              "contractBuyInAmount": 175000,
+              "timeToComplete": 10.0,
+              "difficulty": null}}]}],
+    "required_active_scenarios": []}}

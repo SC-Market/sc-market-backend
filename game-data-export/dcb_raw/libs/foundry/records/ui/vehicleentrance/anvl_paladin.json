@@ -1,0 +1,27 @@
+{
+  "_RecordName_": "SEntrancesDef.ANVL_Paladin",
+  "_RecordId_": "ca62f8e7-69d0-4fa2-9f0c-ac0a9d8f255a",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "SEntrancesDef",
+    "boundingBoxScale": {
+      "_Type_": "Vec3",
+      "x": 1.0,
+      "y": 1.0,
+      "z": 1.0},
+    "boundingBoxOffset": {
+      "_Type_": "Vec3",
+      "x": 0.0,
+      "y": 0.0,
+      "z": 0.0},
+    "entranceArray": [
+      {
+        "_Type_": "SCEntranceItem",
+        "entranceName": "@entrance_ramp",
+        "jointName": "ANVL_Paladin",
+        "positionOffset": {
+          "_Type_": "Vec3",
+          "x": -8.9,
+          "y": -4.85,
+          "z": -4.99},
+        "shipState": "Both"}]}}

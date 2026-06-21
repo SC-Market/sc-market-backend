@@ -1,0 +1,21 @@
+{
+  "_RecordName_": "DialogueContext.DXSH_MCAV_PU_Announcements_Stock_05",
+  "_RecordId_": "9eebdb0e-2a42-4bd1-9782-f5b84c4ea8eb",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "DialogueContext",
+    "speaker": null,
+    "localizedSubtitleText": "@LOC_UNINITIALIZED",
+    "unlocalizedSubtitleText": "@LOC_UNINITIALIZED",
+    "subtitleShowDelay": 0.0,
+    "subtitleDisplayDurationOverride": 0.0,
+    "tempText": "Dragon Stellar plus 1.6, Hammer propulsions 2.3",
+    "audioTrigger": {
+      "_Type_": "GlobalResourceAudio",
+      "audioTrigger": ""},
+    "femaleAudioTrigger": {
+      "_Type_": "GlobalResourceAudio",
+      "audioTrigger": ""},
+    "forceSubtitles": false,
+    "contents": [],
+    "tags": []}}

@@ -1,0 +1,15 @@
+{
+  "_RecordName_": "BuildingBlocks_FontStyle.CIGOptical-Regular",
+  "_RecordId_": "30c195d4-09fb-43f8-98cc-8b27e946e453",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "BuildingBlocks_FontStyle",
+    "font": "$Low-H1",
+    "paintFile": "UI/fonts/Install/CIGOpticalRegular.slug",
+    "isBold": false,
+    "imageSizePercent": 0.75,
+    "scaleModifier": 0.79,
+    "leadingModifier": -0.19,
+    "topMarginModifier": 0.06,
+    "leftMarginModifier": 0.0,
+    "numImageReplacementSpaces": 6}}

@@ -1,0 +1,215 @@
+{
+  "_RecordName_": "ItemAwardWeightingsRecord.IAWR_FoodOrderReward",
+  "_RecordId_": "18998a72-3a48-4d99-a62c-e6b3ec6fe93b",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "ItemAwardWeightingsRecord",
+    "itemAwardStructure": [
+      {
+        "_Type_": "ItemAwardWeightings",
+        "weighting": 1.0,
+        "awards": [
+          {
+            "_Type_": "ItemAwardEntityClass",
+            "amountToAward": 1,
+            "entityClass": "file://./../../../../../libs/foundry/records/entities/scitem/characters/human/clothing/pu_clothing/clothing_hats/cbd_hat_03_iae2021_07.json"},
+          {
+            "_Type_": "ItemAwardEntityClass",
+            "amountToAward": 1,
+            "entityClass": "file://./../../../../../libs/foundry/records/entities/scitem/characters/human/clothing/pu_clothing/clothing_torso0/eld_shirt_04_iae2021_07.json"}]},
+      {
+        "_Type_": "ItemAwardWeightings",
+        "weighting": 1.0,
+        "awards": [
+          {
+            "_Type_": "ItemAwardEntityClass",
+            "amountToAward": 1,
+            "entityClass": "file://./../../../../../libs/foundry/records/entities/scitem/characters/human/clothing/pu_clothing/clothing_torso0/eld_shirt_04_iae2021_10.json"},
+          {
+            "_Type_": "ItemAwardEntityClass",
+            "amountToAward": 1,
+            "entityClass": "file://./../../../../../libs/foundry/records/entities/scitem/characters/human/clothing/pu_clothing/clothing_hats/cbd_hat_03_iae2021_10.json"}]},
+      {
+        "_Type_": "ItemAwardWeightings",
+        "weighting": 1.0,
+        "awards": [
+          {
+            "_Type_": "ItemAwardEntityClass",
+            "amountToAward": 1,
+            "entityClass": "file://./../../../../../libs/foundry/records/entities/scitem/characters/human/clothing/pu_clothing/clothing_hats/cbd_hat_03_iae2022_12.json"},
+          {
+            "_Type_": "ItemAwardEntityClass",
+            "amountToAward": 1,
+            "entityClass": "file://./../../../../../libs/foundry/records/entities/scitem/characters/human/clothing/pu_clothing/clothing_torso0/eld_shirt_04_iae2022_12.json"}]},
+      {
+        "_Type_": "ItemAwardWeightings",
+        "weighting": 1.0,
+        "awards": [
+          {
+            "_Type_": "ItemAwardEntityClass",
+            "amountToAward": 1,
+            "entityClass": "file://./../../../../../libs/foundry/records/entities/scitem/characters/human/clothing/pu_clothing/clothing_torso0/eld_shirt_04_iae2022_02.json"},
+          {
+            "_Type_": "ItemAwardEntityClass",
+            "amountToAward": 1,
+            "entityClass": "file://./../../../../../libs/foundry/records/entities/scitem/characters/human/clothing/pu_clothing/clothing_hats/cbd_hat_03_iae2022_02.json"}]},
+      {
+        "_Type_": "ItemAwardWeightings",
+        "weighting": 1.0,
+        "awards": [
+          {
+            "_Type_": "ItemAwardEntityClass",
+            "amountToAward": 1,
+            "entityClass": "file://./../../../../../libs/foundry/records/entities/scitem/characters/human/clothing/pu_clothing/clothing_hats/cbd_hat_03_iae2023_10.json"},
+          {
+            "_Type_": "ItemAwardEntityClass",
+            "amountToAward": 1,
+            "entityClass": "file://./../../../../../libs/foundry/records/entities/scitem/characters/human/clothing/pu_clothing/clothing_torso0/eld_shirt_04_iae2023_10.json"}]},
+      {
+        "_Type_": "ItemAwardWeightings",
+        "weighting": 1.0,
+        "awards": [
+          {
+            "_Type_": "ItemAwardEntityClass",
+            "amountToAward": 1,
+            "entityClass": "file://./../../../../../libs/foundry/records/entities/scitem/characters/human/clothing/pu_clothing/clothing_torso0/eld_shirt_04_iae2023_19.json"},
+          {
+            "_Type_": "ItemAwardEntityClass",
+            "amountToAward": 1,
+            "entityClass": "file://./../../../../../libs/foundry/records/entities/scitem/characters/human/clothing/pu_clothing/clothing_hats/cbd_hat_03_iae2023_19.json"}]},
+      {
+        "_Type_": "ItemAwardWeightings",
+        "weighting": 1.0,
+        "awards": [
+          {
+            "_Type_": "ItemAwardEntityClass",
+            "amountToAward": 1,
+            "entityClass": "file://./../../../../../libs/foundry/records/entities/scitem/characters/human/clothing/pu_clothing/clothing_torso0/eld_shirt_04_iae2024_19.json"},
+          {
+            "_Type_": "ItemAwardEntityClass",
+            "amountToAward": 1,
+            "entityClass": "file://./../../../../../libs/foundry/records/entities/scitem/characters/human/clothing/pu_clothing/clothing_hats/cbd_hat_03_iae2024_19.json"}]},
+      {
+        "_Type_": "ItemAwardWeightings",
+        "weighting": 1.0,
+        "awards": [
+          {
+            "_Type_": "ItemAwardEntityClass",
+            "amountToAward": 1,
+            "entityClass": "file://./../../../../../libs/foundry/records/entities/scitem/characters/human/clothing/pu_clothing/clothing_torso0/eld_shirt_04_iae2024_10.json"},
+          {
+            "_Type_": "ItemAwardEntityClass",
+            "amountToAward": 1,
+            "entityClass": "file://./../../../../../libs/foundry/records/entities/scitem/characters/human/clothing/pu_clothing/clothing_hats/cbd_hat_03_iae2024_10.json"}]},
+      {
+        "_Type_": "ItemAwardWeightings",
+        "weighting": 1.0,
+        "awards": [
+          {
+            "_Type_": "ItemAwardEntityClass",
+            "amountToAward": 1,
+            "entityClass": "file://./../../../../../libs/foundry/records/entities/scitem/characters/human/clothing/pu_clothing/clothing_hats/cbd_hat_03_iae2024_10.json"},
+          {
+            "_Type_": "ItemAwardEntityClass",
+            "amountToAward": 1,
+            "entityClass": "file://./../../../../../libs/foundry/records/entities/scitem/characters/human/clothing/pu_clothing/clothing_torso0/eld_shirt_04_iae2024_10.json"}]},
+      {
+        "_Type_": "ItemAwardWeightings",
+        "weighting": 1.0,
+        "awards": [
+          {
+            "_Type_": "ItemAwardEntityClass",
+            "amountToAward": 1,
+            "entityClass": "file://./../../../../../libs/foundry/records/entities/scitem/weapons/fps_weapons/ksar_pistol_ballistic_01_iae2023.json"},
+          {
+            "_Type_": "ItemAwardEntityClass",
+            "amountToAward": 20,
+            "entityClass": "file://./../../../../../libs/foundry/records/entities/scitem/weapons/magazines/ksar_pistol_ballistic_01_mag.json"}]},
+      {
+        "_Type_": "ItemAwardWeightings",
+        "weighting": 1.0,
+        "awards": [
+          {
+            "_Type_": "ItemAwardEntityClass",
+            "amountToAward": 1,
+            "entityClass": "file://./../../../../../libs/foundry/records/entities/scitem/weapons/fps_weapons/ksar_rifle_energy_01_iae2023.json"},
+          {
+            "_Type_": "ItemAwardEntityClass",
+            "amountToAward": 20,
+            "entityClass": "file://./../../../../../libs/foundry/records/entities/scitem/weapons/magazines/ksar_rifle_energy_01_mag.json"}]},
+      {
+        "_Type_": "ItemAwardWeightings",
+        "weighting": 1.0,
+        "awards": [
+          {
+            "_Type_": "ItemAwardEntityClass",
+            "amountToAward": 1,
+            "entityClass": "file://./../../../../../libs/foundry/records/entities/scitem/weapons/fps_weapons/klwe_lmg_energy_01_iae2201.json"},
+          {
+            "_Type_": "ItemAwardEntityClass",
+            "amountToAward": 20,
+            "entityClass": "file://./../../../../../libs/foundry/records/entities/scitem/weapons/magazines/klwe_lmg_energy_01_mag.json"}]},
+      {
+        "_Type_": "ItemAwardWeightings",
+        "weighting": 1.0,
+        "awards": [
+          {
+            "_Type_": "ItemAwardEntityClass",
+            "amountToAward": 1,
+            "entityClass": "file://./../../../../../libs/foundry/records/entities/scitem/weapons/fps_weapons/klwe_rifle_energy_01_iae2201.json"},
+          {
+            "_Type_": "ItemAwardEntityClass",
+            "amountToAward": 20,
+            "entityClass": "file://./../../../../../libs/foundry/records/entities/scitem/weapons/magazines/klwe_rifle_energy_01_mag.json"}]},
+      {
+        "_Type_": "ItemAwardWeightings",
+        "weighting": 1.0,
+        "awards": [
+          {
+            "_Type_": "ItemAwardEntityClass",
+            "amountToAward": 1,
+            "entityClass": "file://./../../../../../libs/foundry/records/entities/scitem/weapons/fps_weapons/ksar_shotgun_ballistic_01_iae2201.json"},
+          {
+            "_Type_": "ItemAwardEntityClass",
+            "amountToAward": 20,
+            "entityClass": "file://./../../../../../libs/foundry/records/entities/scitem/weapons/magazines/ksar_shotgun_ballistic_01_mag.json"}]},
+      {
+        "_Type_": "ItemAwardWeightings",
+        "weighting": 1.0,
+        "awards": [
+          {
+            "_Type_": "ItemAwardEntityClass",
+            "amountToAward": 1,
+            "entityClass": "file://./../../../../../libs/foundry/records/entities/scitem/weapons/fps_weapons/behr_smg_ballistic_01_iae2201.json"},
+          {
+            "_Type_": "ItemAwardEntityClass",
+            "amountToAward": 20,
+            "entityClass": "file://./../../../../../libs/foundry/records/entities/scitem/weapons/magazines/behr_smg_ballistic_01_mag.json"}]},
+      {
+        "_Type_": "ItemAwardWeightings",
+        "weighting": 1.0,
+        "awards": [
+          {
+            "_Type_": "ItemAwardEntityClass",
+            "amountToAward": 1,
+            "entityClass": "file://./../../../../../libs/foundry/records/entities/scitem/weapons/fps_weapons/gmni_sniper_ballistic_01_iae2201.json"},
+          {
+            "_Type_": "ItemAwardEntityClass",
+            "amountToAward": 20,
+            "entityClass": "file://./../../../../../libs/foundry/records/entities/scitem/weapons/magazines/gmni_sniper_ballistic_01_mag.json"}]},
+      {
+        "_Type_": "ItemAwardWeightings",
+        "weighting": 0.001,
+        "awards": [
+          {
+            "_Type_": "ItemAwardEntityClass",
+            "amountToAward": 69,
+            "entityClass": "file://./../../../../../libs/foundry/records/entities/scitem/carryables/1h/food_burrito_01_beef_a.json"}]},
+      {
+        "_Type_": "ItemAwardWeightings",
+        "weighting": 0.00001,
+        "awards": [
+          {
+            "_Type_": "ItemAwardEntityClass",
+            "amountToAward": 420,
+            "entityClass": "file://./../../../../../libs/foundry/records/entities/scitem/carryables/1h/food_bar_snaggle_01_smoke_a.json"}]}]}}

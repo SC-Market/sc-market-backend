@@ -1,0 +1,19 @@
+{
+  "_RecordName_": "JournalEntry.Jurisdiction_Nyx_PeoplesAlliance",
+  "_RecordId_": "18fdc2e7-5673-485e-a6ed-55dae1590d70",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "JournalEntry",
+    "Title": "@JurisdictionJournals_PeoplesAlliance_Title",
+    "ShortTitle": "@LOC_UNINITIALIZED",
+    "SubHeading": "@JurisdictionJournals_PeoplesAlliance_SubHeading",
+    "autoOpenMobiGlas": false,
+    "showNotification": true,
+    "missionSpecificContent": false,
+    "removeOnMissionEnd": true,
+    "Style": "file://./../../../../../libs/foundry/records/journalentrytype/journalentrytype.textlog.json",
+    "type": {
+      "_Type_": "JournalEntryLawText",
+      "BodyText": "@JurisdictionJournals_PeoplesAlliance_BodyText",
+      "jurisdiction": "file://./../../../../../libs/foundry/records/lawsystem/jurisdictions/nyx/peoplesalliance.json"},
+    "tutorialEntry": false}}

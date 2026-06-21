@@ -1,0 +1,11 @@
+{
+  "_RecordName_": "AITargetableSettings.ActorTargetableSettings",
+  "_RecordId_": "7bf98d92-153c-4b14-a694-7496161a3c05",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "AITargetableSettings",
+    "suggestedAttackerCapacity": 2.0,
+    "maxIndividualIncomingMissileSize": 0,
+    "maxTotalIncomingMissileSize": 0,
+    "maxAttackerShootingTokens": 3,
+    "targetableByGrenadesCooldown": 10.0}}

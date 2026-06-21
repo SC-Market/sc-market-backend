@@ -1,0 +1,15 @@
+{
+  "_RecordName_": "SReputationStandingParams.ReputationStanding_Guild_19",
+  "_RecordId_": "f58c3f10-af37-4479-9f1d-19b37084345f",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "SReputationStandingParams",
+    "name": "name",
+    "description": "desc",
+    "displayName": "@LOC_PLACEHOLDER",
+    "perkDescription": "@blank_space",
+    "icon": "",
+    "minReputation": 185121,
+    "driftReputation": 0,
+    "driftTimeHours": 0.0,
+    "gated": false}}

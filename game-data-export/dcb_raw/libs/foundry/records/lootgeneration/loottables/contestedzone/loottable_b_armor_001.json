@@ -1,0 +1,15 @@
+{
+  "_RecordName_": "LootTable.LootTable_B_Armor_001",
+  "_RecordId_": "99c34973-6fcd-48a1-8658-e0f57ae856d0",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "LootTable",
+    "lootArchetypes": [
+      {
+        "_Type_": "WeightedLootArchetype",
+        "archetype": "file://./../../../../../../libs/foundry/records/lootgeneration/lootarchetypes/lootarchetype_cz_armour_b.json",
+        "weight": 1.0,
+        "numberOfResultsConstraints": {
+          "_Type_": "NumResultsConstraints",
+          "minResults": 0,
+          "maxResults": 0}}]}}

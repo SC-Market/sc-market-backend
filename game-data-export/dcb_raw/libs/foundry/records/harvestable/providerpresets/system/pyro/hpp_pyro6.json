@@ -1,0 +1,129 @@
+{
+  "_RecordName_": "HarvestableProviderPreset.HPP_Pyro6",
+  "_RecordId_": "c48df8ec-ebad-4ce6-ac42-3d2795b36d24",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "HarvestableProviderPreset",
+    "harvestableGroups": [
+      {
+        "_Type_": "HarvestableElementGroup",
+        "groupName": "FPS_Mineables",
+        "groupProbability": 12.5,
+        "harvestables": [
+          {
+            "_Type_": "HarvestableElement",
+            "harvestable": "file://./../../../../../../../libs/foundry/records/harvestable/harvestablepresets/fpsmining_aphorite.json",
+            "harvestableEntityClass": null,
+            "harvestableSetup": null,
+            "relativeProbability": 61.1,
+            "clustering": "file://./../../../../../../../libs/foundry/records/harvestable/clusteringpresets/miningcluster_sml_med.json",
+            "geometries": [
+              {
+                "_Type_": "HarvestableGeometry",
+                "tag": {
+                  "_RecordPath_": "file://./../../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+                  "_RecordName_": "Tag.bf63f1ed-de7f-4c93-90df-091120501bf4",
+                  "_RecordId_": "bf63f1ed-de7f-4c93-90df-091120501bf4"}}]},
+          {
+            "_Type_": "HarvestableElement",
+            "harvestable": "file://./../../../../../../../libs/foundry/records/harvestable/harvestablepresets/fpsmining_dolivine.json",
+            "harvestableEntityClass": null,
+            "harvestableSetup": null,
+            "relativeProbability": 36.9,
+            "clustering": "file://./../../../../../../../libs/foundry/records/harvestable/clusteringpresets/miningcluster_sml_med.json",
+            "geometries": [
+              {
+                "_Type_": "HarvestableGeometry",
+                "tag": {
+                  "_RecordPath_": "file://./../../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+                  "_RecordName_": "Tag.bf63f1ed-de7f-4c93-90df-091120501bf4",
+                  "_RecordId_": "bf63f1ed-de7f-4c93-90df-091120501bf4"}}]},
+          {
+            "_Type_": "HarvestableElement",
+            "harvestable": "file://./../../../../../../../libs/foundry/records/harvestable/harvestablepresets/fpsmining_janalite.json",
+            "harvestableEntityClass": null,
+            "harvestableSetup": null,
+            "relativeProbability": 2.0,
+            "clustering": "file://./../../../../../../../libs/foundry/records/harvestable/clusteringpresets/miningcluster_med_lrg.json",
+            "geometries": [
+              {
+                "_Type_": "HarvestableGeometry",
+                "tag": {
+                  "_RecordPath_": "file://./../../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+                  "_RecordName_": "Tag.bf63f1ed-de7f-4c93-90df-091120501bf4",
+                  "_RecordId_": "bf63f1ed-de7f-4c93-90df-091120501bf4"}}]}]},
+      {
+        "_Type_": "HarvestableElementGroup",
+        "groupName": "GroundVehicle_Mineables",
+        "groupProbability": 25.0,
+        "harvestables": [
+          {
+            "_Type_": "HarvestableElement",
+            "harvestable": "file://./../../../../../../../libs/foundry/records/harvestable/harvestablepresets/groundvehiclemining_feynmaline.json",
+            "harvestableEntityClass": null,
+            "harvestableSetup": null,
+            "relativeProbability": 12.0,
+            "clustering": "file://./../../../../../../../libs/foundry/records/harvestable/clusteringpresets/miningcluster_med_lrg.json",
+            "geometries": []}]},
+      {
+        "_Type_": "HarvestableElementGroup",
+        "groupName": "SpaceShip_Mineables",
+        "groupProbability": 7.5,
+        "harvestables": [
+          {
+            "_Type_": "HarvestableElement",
+            "harvestable": "file://./../../../../../../../libs/foundry/records/harvestable/harvestablepresets/mining_common_ice.json",
+            "harvestableEntityClass": null,
+            "harvestableSetup": null,
+            "relativeProbability": 20.8,
+            "clustering": "file://./../../../../../../../libs/foundry/records/harvestable/clusteringpresets/shipmineables/commonshipmineable_cluster.json",
+            "geometries": []},
+          {
+            "_Type_": "HarvestableElement",
+            "harvestable": "file://./../../../../../../../libs/foundry/records/harvestable/harvestablepresets/mining_uncommon_agricium.json",
+            "harvestableEntityClass": null,
+            "harvestableSetup": null,
+            "relativeProbability": 14.2,
+            "clustering": "file://./../../../../../../../libs/foundry/records/harvestable/clusteringpresets/shipmineables/uncommonshipmineable_cluster.json",
+            "geometries": []},
+          {
+            "_Type_": "HarvestableElement",
+            "harvestable": "file://./../../../../../../../libs/foundry/records/harvestable/harvestablepresets/mining_common_copper.json",
+            "harvestableEntityClass": null,
+            "harvestableSetup": null,
+            "relativeProbability": 20.8,
+            "clustering": "file://./../../../../../../../libs/foundry/records/harvestable/clusteringpresets/shipmineables/commonshipmineable_cluster.json",
+            "geometries": []},
+          {
+            "_Type_": "HarvestableElement",
+            "harvestable": "file://./../../../../../../../libs/foundry/records/harvestable/harvestablepresets/mining_uncommon_titanium.json",
+            "harvestableEntityClass": null,
+            "harvestableSetup": null,
+            "relativeProbability": 14.2,
+            "clustering": "file://./../../../../../../../libs/foundry/records/harvestable/clusteringpresets/shipmineables/uncommonshipmineable_cluster.json",
+            "geometries": []},
+          {
+            "_Type_": "HarvestableElement",
+            "harvestable": "file://./../../../../../../../libs/foundry/records/harvestable/harvestablepresets/mining_epic_riccite.json",
+            "harvestableEntityClass": null,
+            "harvestableSetup": null,
+            "relativeProbability": 10.0,
+            "clustering": "file://./../../../../../../../libs/foundry/records/harvestable/clusteringpresets/shipmineables/epicshipmineable_cluster.json",
+            "geometries": []},
+          {
+            "_Type_": "HarvestableElement",
+            "harvestable": "file://./../../../../../../../libs/foundry/records/harvestable/harvestablepresets/mining_legendary_stileron.json",
+            "harvestableEntityClass": null,
+            "harvestableSetup": null,
+            "relativeProbability": 2.0,
+            "clustering": "file://./../../../../../../../libs/foundry/records/harvestable/clusteringpresets/shipmineables/legendaryshipmineable_cluster.json",
+            "geometries": []},
+          {
+            "_Type_": "HarvestableElement",
+            "harvestable": "file://./../../../../../../../libs/foundry/records/harvestable/harvestablepresets/mining_rare_gold.json",
+            "harvestableEntityClass": null,
+            "harvestableSetup": null,
+            "relativeProbability": 18.0,
+            "clustering": "file://./../../../../../../../libs/foundry/records/harvestable/clusteringpresets/shipmineables/rareshipmineable_cluster.json",
+            "geometries": []}]}],
+    "areas": []}}

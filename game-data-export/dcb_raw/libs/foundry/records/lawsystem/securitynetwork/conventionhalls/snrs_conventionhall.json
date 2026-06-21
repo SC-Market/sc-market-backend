@@ -1,0 +1,26 @@
+{
+  "_RecordName_": "SecurityNetworkRoomSettings.SNRS_ConventionHall",
+  "_RecordId_": "ef4f5cbf-6c5c-475e-90ce-eb93cbca317f",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "SecurityNetworkRoomSettings",
+    "defaultProtocol": {
+      "_Type_": "SecurityNetworkProtocol",
+      "permissionsWithClearance": {
+        "_Type_": "SecurityNetworkPermissions",
+        "access": "Yes",
+        "trespass": "No"},
+      "permissionsWithoutClearance": {
+        "_Type_": "SecurityNetworkPermissions",
+        "access": "No",
+        "trespass": "Yes"},
+      "acceptedClearance": {
+        "_Type_": "SecurityClearanceConditions",
+        "tokens": []},
+      "ownerFaction": null},
+    "roomIdentifier": {
+      "_RecordPath_": "file://./../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+      "_RecordName_": "Tag.070b2dde-9ee1-4222-a6af-26c62385580a",
+      "_RecordId_": "070b2dde-9ee1-4222-a6af-26c62385580a"},
+    "trespassWarningSeconds": -1.0,
+    "trespassRevokeWarningSeconds": -1.0}}

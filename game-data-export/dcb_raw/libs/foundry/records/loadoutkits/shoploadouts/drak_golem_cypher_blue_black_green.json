@@ -1,0 +1,22 @@
+{
+  "_RecordName_": "LoadoutKit.DRAK_Golem_Cypher_Blue_Black_Green",
+  "_RecordId_": "c9e07859-69d2-45e3-88c0-ad982b6f8900",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "LoadoutKit",
+    "name": "@item_NameGolem_Paint_Blue_Black_Green",
+    "description": "@item_DescGolem_Paint_Blue_Black_Green",
+    "loadout": {
+      "_Type_": "SItemPortLoadoutManualParams",
+      "WearRange": null,
+      "DirtRange": null,
+      "SkipInventoryItemsOnMissionEntities": false,
+      "InventoryItems": [],
+      "entries": [
+        {
+          "_Type_": "SItemPortLoadoutEntryParams",
+          "itemPortName": "hardpoint_paint",
+          "entityClassName": "",
+          "entityClassReference": "file://./../../../../../libs/foundry/records/entities/scitem/ships/paints/paint_golem_blue_black_green.json",
+          "inventoryContainer": null,
+          "loadout": null}]}}}

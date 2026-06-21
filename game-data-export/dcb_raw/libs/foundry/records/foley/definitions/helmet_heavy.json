@@ -1,0 +1,51 @@
+{
+  "_RecordName_": "FoleyDefinition.Helmet_Heavy",
+  "_RecordId_": "71551c0a-ca30-4486-985e-bd45e4e71991",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "FoleyDefinition",
+    "priority": 15,
+    "items": [
+      {
+        "_Type_": "FoleyItem",
+        "bone": "file://./../../../../../libs/foundry/records/foley/bones/foleybone.headcam.json",
+        "trackedBoneOverride": null,
+        "referenceBone": null,
+        "velocityRTPCName": "Head_Speed",
+        "velocityRTPCMinimum": 0.0,
+        "velocityRTPCMaximum": 5.0,
+        "collisionImpactRTPCName": "Character_Collision_Impact_Speed",
+        "collisionScuffRTPCName": "Character_Collision_Scuff_Speed",
+        "equipmentMassRTPCName": "",
+        "oneShots": [],
+        "loops": [
+          {
+            "_Type_": "FoleyLoop",
+            "playTrigger": "Play_CMMV_HM_Helmet_Fabric_w3_Heavy_Loop",
+            "stopTrigger": "Stop_CMMV_HM_Helmet_Fabric_w3_Heavy_Loop",
+            "threshold": 0.0,
+            "applyToClient": true,
+            "applyToNLPC": false,
+            "userRTPCs": []},
+          {
+            "_Type_": "FoleyLoop",
+            "playTrigger": "Play_CGSA_Undersuit",
+            "stopTrigger": "Stop_CGSA_Undersuit",
+            "threshold": 0.0,
+            "applyToClient": true,
+            "applyToNLPC": false,
+            "userRTPCs": []}],
+        "collisions": [
+          {
+            "_Type_": "FoleyCollision",
+            "trigger": "Play_CMMC_HM_Helmet_Generic_Impact",
+            "minImpactSpeed": 0.1,
+            "retriggerTimeout": 0.1,
+            "applyToClient": true,
+            "applyToNLPC": true}]}],
+    "userRTPCs": [
+      {
+        "_Type_": "UserRTPC",
+        "userRTPCName": "Character_Loadout_Helmet_On",
+        "userRTPCValue": 4.0,
+        "userRTPCResetValue": 0.0}]}}

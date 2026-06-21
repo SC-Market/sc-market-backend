@@ -1,0 +1,70 @@
+{
+  "_RecordName_": "AIWaveCollection.Criminal_Wave_Weak",
+  "_RecordId_": "4dacc38c-745d-4ded-aef9-f8f443e1c08c",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "AIWaveCollection",
+    "waves": [
+      {
+        "_Type_": "AIWave",
+        "id": 1,
+        "textId": "Criminals_Wave_Easy_01",
+        "staggerTime": 1.0,
+        "members": [
+          {
+            "_Type_": "AIWaveMember",
+            "archetype": "",
+            "entityClassDefinition": "file://./../../../../../../../libs/foundry/records/entities/spaceships/rsi_aurora_ln_pu_ai_crim.json",
+            "name": "",
+            "vehicleName": "",
+            "amount": 1,
+            "minAmount": -1,
+            "midAmount": -1,
+            "maxAmount": -1,
+            "crewManifestOverride": "file://./../../../../../../../libs/foundry/records/crewmanifest/pu/criminal/pu_human_criminal_light_wturret.json",
+            "skillsetOverride": "file://./../../../../../../../libs/foundry/records/aiprofile/skills/humanpilot40.json",
+            "cargoManifests": [
+              "file://./../../../../../../../libs/foundry/records/cargomanifest/criminal/criminal_25_medium_001.json"],
+            "aiDamageModifiersOverride": null}]},
+      {
+        "_Type_": "AIWave",
+        "id": 2,
+        "textId": "Criminals_Wave_Easy_02",
+        "staggerTime": 1.0,
+        "members": [
+          {
+            "_Type_": "AIWaveMember",
+            "archetype": "",
+            "entityClassDefinition": "file://./../../../../../../../libs/foundry/records/entities/spaceships/cnou_mustang_delta_pu_ai_crim.json",
+            "name": "",
+            "vehicleName": "",
+            "amount": 1,
+            "minAmount": -1,
+            "midAmount": -1,
+            "maxAmount": -1,
+            "crewManifestOverride": "file://./../../../../../../../libs/foundry/records/crewmanifest/pu/criminal/pu_human_criminal_light_wturret.json",
+            "skillsetOverride": "file://./../../../../../../../libs/foundry/records/aiprofile/skills/humanpilot40.json",
+            "cargoManifests": [
+              "file://./../../../../../../../libs/foundry/records/cargomanifest/criminal/criminal_25_medium_001.json"],
+            "aiDamageModifiersOverride": null}]},
+      {
+        "_Type_": "AIWave",
+        "id": 3,
+        "textId": "Criminals_Wave_Easy_03",
+        "staggerTime": 1.0,
+        "members": [
+          {
+            "_Type_": "AIWaveMember",
+            "archetype": "",
+            "entityClassDefinition": "file://./../../../../../../../libs/foundry/records/entities/spaceships/aegs_avenger_stalker_pu_ai_crim.json",
+            "name": "",
+            "vehicleName": "",
+            "amount": 1,
+            "minAmount": -1,
+            "midAmount": -1,
+            "maxAmount": -1,
+            "crewManifestOverride": "file://./../../../../../../../libs/foundry/records/crewmanifest/pu/criminal/pu_human_criminal_light_wturret.json",
+            "skillsetOverride": "file://./../../../../../../../libs/foundry/records/aiprofile/skills/humanpilot40.json",
+            "cargoManifests": [
+              "file://./../../../../../../../libs/foundry/records/cargomanifest/criminal/criminal_25_medium_001.json"],
+            "aiDamageModifiersOverride": null}]}]}}

@@ -1,0 +1,12 @@
+{
+  "_RecordName_": "HintUIData.ActorStatus05",
+  "_RecordId_": "ae76223a-9abc-4d0b-8901-c173f2325d91",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "HintUIData",
+    "TitleText": "@Hints_ActorStatusEating_Title",
+    "BodyText": "@Hints_ActorStatusFoodDrinkItemInInventory",
+    "BodyTextGamePad": "@Hints_ActorStatusFoodDrinkItemInInventory",
+    "BodyTextJoystick": "@Hints_ActorStatusFoodDrinkItemInInventory",
+    "TitleImagePath": "",
+    "BodyImagePath": ""}}

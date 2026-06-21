@@ -1,0 +1,54 @@
+{
+  "_RecordName_": "UIAudioDefinition.Billboard_Tumbril_Cyclone",
+  "_RecordId_": "36bfc5d0-75d1-4c92-a5bf-2e1cffe8ddce",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "UIAudioDefinition",
+    "events": [
+      {
+        "_Type_": "UIAudioEvent",
+        "tag": {
+          "_RecordPath_": "file://./../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+          "_RecordName_": "Tag.9e3c4f32-90f7-45e2-a0fb-424357c14bc5",
+          "_RecordId_": "9e3c4f32-90f7-45e2-a0fb-424357c14bc5"},
+        "audioTrigger": {
+          "_Type_": "GlobalResourceAudio",
+          "audioTrigger": ""}},
+      {
+        "_Type_": "UIAudioEvent",
+        "tag": {
+          "_RecordPath_": "file://./../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+          "_RecordName_": "Tag.c9f9a7a5-b990-4580-9373-d269e90675aa",
+          "_RecordId_": "c9f9a7a5-b990-4580-9373-d269e90675aa"},
+        "audioTrigger": {
+          "_Type_": "GlobalResourceAudio",
+          "audioTrigger": ""}},
+      {
+        "_Type_": "UIAudioEvent",
+        "tag": {
+          "_RecordPath_": "file://./../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+          "_RecordName_": "Tag.47cfb0aa-9b87-4f3a-aa67-82ced322606f",
+          "_RecordId_": "47cfb0aa-9b87-4f3a-aa67-82ced322606f"},
+        "audioTrigger": {
+          "_Type_": "GlobalResourceAudio",
+          "audioTrigger": "Play_ENVP_Media_Advertising_Tumbril_Cyclone_FX_Message_01"}},
+      {
+        "_Type_": "UIAudioEvent",
+        "tag": {
+          "_RecordPath_": "file://./../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+          "_RecordName_": "Tag.b74cf118-6d88-4cc4-bde6-035d18ca1d9d",
+          "_RecordId_": "b74cf118-6d88-4cc4-bde6-035d18ca1d9d"},
+        "audioTrigger": {
+          "_Type_": "GlobalResourceAudio",
+          "audioTrigger": "Play_ENVP_Media_Advertising_Tumbril_Cyclone_FX_Message_02"}},
+      {
+        "_Type_": "UIAudioEvent",
+        "tag": {
+          "_RecordPath_": "file://./../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+          "_RecordName_": "Tag.f832afa7-5c7c-47e3-afd1-c8999602eb63",
+          "_RecordId_": "f832afa7-5c7c-47e3-afd1-c8999602eb63"},
+        "audioTrigger": {
+          "_Type_": "GlobalResourceAudio",
+          "audioTrigger": "Play_ENVP_Media_Advertising_Tumbril_Cyclone_FX_Message_03"}}],
+    "parameters": [],
+    "dialogueEvents": []}}

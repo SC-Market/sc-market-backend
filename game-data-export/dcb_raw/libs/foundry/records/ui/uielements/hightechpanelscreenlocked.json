@@ -1,0 +1,19 @@
+{
+  "_RecordName_": "UIElement.HightechPanelScreenLocked",
+  "_RecordId_": "0ef76cf8-e79b-42eb-8c18-c2eb25611f8c",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "UIElement",
+    "sourceFile": "UI/EnvironmentalScreens/DisplayPanels/Doors/Common/HighTech/assets/SWF/DoorExterior_Locked.gfx",
+    "soundsRecord": null,
+    "fontFile": "",
+    "alignMode": "dynamic",
+    "alignScale": true,
+    "alignMax": true,
+    "layer": 0,
+    "skipFirstFrameInit": false,
+    "keyEvents": false,
+    "eventsExclusive": false,
+    "noDepthTest": false,
+    "forceNoUnload": false,
+    "noPostProcessing": false}}

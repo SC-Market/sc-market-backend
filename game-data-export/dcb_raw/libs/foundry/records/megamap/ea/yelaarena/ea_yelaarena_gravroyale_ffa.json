@@ -1,0 +1,40 @@
+{
+  "_RecordName_": "MegaMap.EA_YelaArena_GravRoyale_FFA",
+  "_RecordId_": "7d508521-597e-4912-8212-b3ecd161a982",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "MegaMap",
+    "gameMode": "file://./../../../../../../libs/foundry/records/gamemode/ea_gravroyale_freeforall.json",
+    "SolarSystems": [
+      {
+        "_Type_": "SMegaMapSolarSystem",
+        "Record": null,
+        "ObjectContainers": [
+          "ObjectContainers/EA/YelaArena/global.socpak"]}],
+    "singlePlayerOrMultiplayer": "Both",
+    "subsumptionMission": "",
+    "subsumptionMissionInitParams": [],
+    "arenaCommanderScenarioParams": {
+      "_Type_": "ArenaCommanderScenarioParams",
+      "locationObjectContainersParams": {
+        "_Type_": "ArenaCommanderLocationObjectContainersParams",
+        "location": "file://./../../../../../../libs/foundry/records/starmap/pu/system/stanton/stanton2c/starmapobject.stanton2c.json",
+        "overrideRootOC": false,
+        "objectContainers": [
+          "ObjectContainers/EA/YelaArena/tonkroyaleffa.socpak"]},
+      "planetOverrideParams": {
+        "_Type_": "ArenaCommanderPlanetOverrideParams",
+        "location": "file://./../../../../../../libs/foundry/records/starmap/pu/system/stanton/stanton2c/starmapobject.stanton2c.json",
+        "fixedRotation": 70.0}},
+    "level": "file://./../../../../../../libs/foundry/records/level/ea/ea_yelagroundarena.json",
+    "trackViewIntro": "",
+    "rootLocation": null,
+    "streamingMode": "Always",
+    "bindCullingEnabled": true,
+    "defaultWinningTeamOverride": -1,
+    "displayName": "@LOC_UNINITIALIZED",
+    "appearsInS42LevelSelect": false,
+    "chapter": null,
+    "chapterAlias": "",
+    "skipLoadScreen": false,
+    "devDebugSkip": false}}

@@ -1,0 +1,20 @@
+{
+  "_RecordName_": "DynamicCameraEffectsList.DCEGlobalList",
+  "_RecordId_": "ab855c64-7f1f-4bca-a9c0-0029b4496fbb",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "DynamicCameraEffectsList",
+    "conversation": "file://./../../../../libs/foundry/records/dynamiccameraeffects/dynamiccameraeffects.conversationdefault.json",
+    "interactionModeFocus": "file://./../../../../libs/foundry/records/dynamiccameraeffects/imfocusmodedefault.json",
+    "mobiglas": "file://./../../../../libs/foundry/records/dynamiccameraeffects/dynamiccameraeffects.mobiglasdefault.json",
+    "personalInnerThought": "file://./../../../../libs/foundry/records/dynamiccameraeffects/dynamiccameraeffects.personalinnerthoughtdefault.json",
+    "externalInventory": "file://./../../../../libs/foundry/records/dynamiccameraeffects/externalinventorydefault.json",
+    "personalInventory": "file://./../../../../libs/foundry/records/dynamiccameraeffects/personalinventorydefault.json",
+    "lootInventory": "file://./../../../../libs/foundry/records/dynamiccameraeffects/personallootingdefault.json",
+    "onFoot": "file://./../../../../libs/foundry/records/dynamiccameraeffects/dynamiccameraeffects.onfootdefault.json",
+    "vehicleSeat": "file://./../../../../libs/foundry/records/dynamiccameraeffects/dynamiccameraeffects.vehicleseatdefault.json",
+    "hacking": "file://./../../../../libs/foundry/records/dynamiccameraeffects/hackingdefault.json",
+    "inspectMode": "file://./../../../../libs/foundry/records/dynamiccameraeffects/inspectmodedefault.json",
+    "prototypeMobiGlas": "file://./../../../../libs/foundry/records/dynamiccameraeffects/mobiglasprototype.json",
+    "simpod": null,
+    "jumpTravel": "file://./../../../../libs/foundry/records/dynamiccameraeffects/jumptravel.json"}}

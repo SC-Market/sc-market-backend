@@ -3904,6 +3904,71 @@ export function RegisterRoutes(app: Router) {
             }
         });
         // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+        const argsShopsV2Controller_getShopsByOwner: Record<string, TsoaRoute.ParameterSchema> = {
+                username: {"in":"query","name":"username","dataType":"string"},
+                spectrum_id: {"in":"query","name":"spectrum_id","dataType":"string"},
+        };
+        app.get('/shops/by-owner',
+            ...(fetchMiddlewares<RequestHandler>(ShopsV2Controller)),
+            ...(fetchMiddlewares<RequestHandler>(ShopsV2Controller.prototype.getShopsByOwner)),
+
+            async function ShopsV2Controller_getShopsByOwner(request: ExRequest, response: ExResponse, next: any) {
+
+            // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+
+            let validatedArgs: any[] = [];
+            try {
+                validatedArgs = templateService.getValidatedArgs({ args: argsShopsV2Controller_getShopsByOwner, request, response });
+
+                const controller = new ShopsV2Controller();
+
+              await templateService.apiHandler({
+                methodName: 'getShopsByOwner',
+                controller,
+                response,
+                next,
+                validatedArgs,
+                successStatus: undefined,
+              });
+            } catch (err) {
+                return next(err);
+            }
+        });
+        // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+        const argsShopsV2Controller_browseShops: Record<string, TsoaRoute.ParameterSchema> = {
+                search: {"in":"query","name":"search","dataType":"string"},
+                page: {"in":"query","name":"page","dataType":"double"},
+                page_size: {"in":"query","name":"page_size","dataType":"double"},
+                sort_by: {"in":"query","name":"sort_by","dataType":"union","subSchemas":[{"dataType":"enum","enums":["name"]},{"dataType":"enum","enums":["rating"]},{"dataType":"enum","enums":["created_at"]}]},
+                sort_order: {"in":"query","name":"sort_order","dataType":"union","subSchemas":[{"dataType":"enum","enums":["asc"]},{"dataType":"enum","enums":["desc"]}]},
+        };
+        app.get('/shops',
+            ...(fetchMiddlewares<RequestHandler>(ShopsV2Controller)),
+            ...(fetchMiddlewares<RequestHandler>(ShopsV2Controller.prototype.browseShops)),
+
+            async function ShopsV2Controller_browseShops(request: ExRequest, response: ExResponse, next: any) {
+
+            // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+
+            let validatedArgs: any[] = [];
+            try {
+                validatedArgs = templateService.getValidatedArgs({ args: argsShopsV2Controller_browseShops, request, response });
+
+                const controller = new ShopsV2Controller();
+
+              await templateService.apiHandler({
+                methodName: 'browseShops',
+                controller,
+                response,
+                next,
+                validatedArgs,
+                successStatus: undefined,
+              });
+            } catch (err) {
+                return next(err);
+            }
+        });
+        // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
         const argsShopsV2Controller_getShop: Record<string, TsoaRoute.ParameterSchema> = {
                 slug: {"in":"path","name":"slug","required":true,"dataType":"string"},
         };

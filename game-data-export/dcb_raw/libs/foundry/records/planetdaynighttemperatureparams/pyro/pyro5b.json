@@ -1,0 +1,11 @@
+{
+  "_RecordName_": "PlanetDayNightTemperatureTemplate.Pyro5b",
+  "_RecordId_": "83f101c8-22f2-4dd8-821d-59e6cea6d7a9",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "PlanetDayNightTemperatureTemplate",
+    "dayNightTemperatureParams": {
+      "_Type_": "PlanetDayNightTemperatureParams",
+      "DayNightCoolingBaseRate": -0.1,
+      "DayNightCoolingHumidityModifier": 0.07454276,
+      "DayNightCoolingHumidityMultiplier": 1.035}}}

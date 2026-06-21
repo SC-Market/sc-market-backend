@@ -1,0 +1,36 @@
+{
+  "_RecordName_": "CargoManifest.LegalCargo_CleanAir_Small",
+  "_RecordId_": "880fb7a2-9063-4b6f-b807-1116c7f0f60e",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "CargoManifest",
+    "descriptionTags": {
+      "_Type_": "TagList",
+      "tags": [
+        {
+          "_RecordPath_": "file://./../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+          "_RecordName_": "Tag.4b9a647c-91f4-4732-b572-912ac03e73f2",
+          "_RecordId_": "4b9a647c-91f4-4732-b572-912ac03e73f2"},
+        {
+          "_RecordPath_": "file://./../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+          "_RecordName_": "Tag.392f2821-b345-4579-94de-5933fbc033fd",
+          "_RecordId_": "392f2821-b345-4579-94de-5933fbc033fd"},
+        {
+          "_RecordPath_": "file://./../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+          "_RecordName_": "Tag.4b79d71e-bf3a-47cd-9069-f9b54da529c8",
+          "_RecordId_": "4b79d71e-bf3a-47cd-9069-f9b54da529c8"}]},
+    "lockCargoGridsOnSpawn": false,
+    "cargoFillCapacity": {
+      "_Type_": "CargoFillCapacityValue_Random",
+      "resources": [
+        {
+          "_Type_": "CargoResource",
+          "resource": {
+            "_RecordPath_": "file://./../../../../libs/foundry/records/resourcetypedatabase/resourcetypedatabase.json",
+            "_RecordName_": "ResourceType.MoldSample",
+            "_RecordId_": "70f388a3-a84c-44c6-be8b-3ed295d39e77"},
+          "probability": 1.0}],
+      "minCapacityRange": 0.3,
+      "maxCapacityRange": 0.7},
+    "cargoSpawnRules": [],
+    "tags": []}}

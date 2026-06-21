@@ -1,0 +1,21 @@
+{
+  "_RecordName_": "DialogueContext.DXSH_MCAV_PU_Announcements_Stock_02",
+  "_RecordId_": "a84609e8-3057-45aa-bb4e-15a81a21d52b",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "DialogueContext",
+    "speaker": null,
+    "localizedSubtitleText": "@LOC_UNINITIALIZED",
+    "unlocalizedSubtitleText": "@LOC_UNINITIALIZED",
+    "subtitleShowDelay": 0.0,
+    "subtitleDisplayDurationOverride": 0.0,
+    "tempText": "Kruger Intergalactic minus 0.6, Klaus and Werner plus 0.6 points, Behring minus 2 points",
+    "audioTrigger": {
+      "_Type_": "GlobalResourceAudio",
+      "audioTrigger": ""},
+    "femaleAudioTrigger": {
+      "_Type_": "GlobalResourceAudio",
+      "audioTrigger": ""},
+    "forceSubtitles": false,
+    "contents": [],
+    "tags": []}}

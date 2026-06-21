@@ -1,0 +1,120 @@
+{
+  "_RecordName_": "BuildingBlocks_Style.SK_UIMI_C_ContainerCustomStyles",
+  "_RecordId_": "66fc1878-acbf-4458-af92-0864cb450055",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "BuildingBlocks_Style",
+    "entries": [
+      {
+        "_Type_": "BuildingBlocks_StyleEntry",
+        "name": "Root",
+        "conditionsList": [
+          {
+            "_Type_": "BuildingBlocks_StyleConditionList",
+            "name": "New Condition List",
+            "conditions": [
+              {
+                "_Type_": "BuildingBlocks_StyleSelectorConditionTag",
+                "tag": {
+                  "_RecordPath_": "file://./../../../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+                  "_RecordName_": "Tag.f7c626b5-0fc7-4ffe-9fa1-a82ffc9ebde4",
+                  "_RecordId_": "f7c626b5-0fc7-4ffe-9fa1-a82ffc9ebde4"}}]}],
+        "modifiers": [
+          {
+            "_Type_": "BuildingBlocks_FieldModifierString",
+            "field": "SvgPath",
+            "value": "UI/Textures/Vector/ModularKitStyles/UIMI_C/UIMI_C_InnerFrame_9s.svg"},
+          {
+            "_Type_": "BuildingBlocks_FieldModifierBoolean",
+            "field": "EnableColorOverlay",
+            "value": true},
+          {
+            "_Type_": "BuildingBlocks_FieldModifierColor",
+            "field": "FillColor",
+            "color": {
+              "_Type_": "BuildingBlocks_ColorStyle",
+              "color": "Base",
+              "alpha": 0.8}},
+          {
+            "_Type_": "BuildingBlocks_FieldModifierNumber",
+            "field": "NineSliceScale",
+            "value": 1.0},
+          {
+            "_Type_": "BuildingBlocks_FieldModifierNumber",
+            "field": "NineSliceTop",
+            "value": 0.4},
+          {
+            "_Type_": "BuildingBlocks_FieldModifierNumber",
+            "field": "NineSliceBottom",
+            "value": 0.8},
+          {
+            "_Type_": "BuildingBlocks_FieldModifierNumber",
+            "field": "NineSliceRight",
+            "value": 0.5},
+          {
+            "_Type_": "BuildingBlocks_FieldModifierNumber",
+            "field": "NineSliceLeft",
+            "value": 0.4},
+          {
+            "_Type_": "BuildingBlocks_FieldModifierBoolean",
+            "field": "EnableBackground",
+            "value": true},
+          {
+            "_Type_": "BuildingBlocks_FieldModifierColor",
+            "field": "BackgroundColor",
+            "color": {
+              "_Type_": "BuildingBlocks_ColorStyle",
+              "color": "Background",
+              "alpha": 1.0}},
+          {
+            "_Type_": "BuildingBlocks_FieldModifierNumber",
+            "field": "BorderTopLeftRadius",
+            "value": 15.0},
+          {
+            "_Type_": "BuildingBlocks_FieldModifierNumber",
+            "field": "BorderTopRightRadius",
+            "value": 15.0},
+          {
+            "_Type_": "BuildingBlocks_FieldModifierNumber",
+            "field": "BorderBottomRightRadius",
+            "value": 15.0},
+          {
+            "_Type_": "BuildingBlocks_FieldModifierNumber",
+            "field": "BorderBottomLeftRadius",
+            "value": 15.0},
+          {
+            "_Type_": "BuildingBlocks_FieldModifierBoolean",
+            "field": "EnableTopLeftBorderChamfer",
+            "value": true},
+          {
+            "_Type_": "BuildingBlocks_FieldModifierBoolean",
+            "field": "EnableTopRightBorderChamfer",
+            "value": true},
+          {
+            "_Type_": "BuildingBlocks_FieldModifierBoolean",
+            "field": "EnableBottomRightBorderChamfer",
+            "value": true},
+          {
+            "_Type_": "BuildingBlocks_FieldModifierBoolean",
+            "field": "EnableBottomLeftBorderChamfer",
+            "value": true}],
+        "transitions": []}],
+    "colorStyles": [
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null],
+    "textFieldModifiers": []}}

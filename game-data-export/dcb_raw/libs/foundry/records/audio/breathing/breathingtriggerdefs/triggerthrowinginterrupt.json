@@ -1,0 +1,11 @@
+{
+  "_RecordName_": "BreathingTriggerDef.TriggerThrowingInterrupt",
+  "_RecordId_": "6ea220d3-2dba-4d62-a891-dd5db5581b5d",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "BreathingTriggerDef",
+    "audioBreathInterrupt": "file://./../../../../../../libs/foundry/records/audio/breathing/interruptions/throwing.json",
+    "interruptParam": 1.0,
+    "resumeBreathingWhenAudioEnds": true,
+    "forceInhaleAfterResume": true,
+    "forceExhaleAfterResume": false}}

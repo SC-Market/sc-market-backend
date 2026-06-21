@@ -1,0 +1,39 @@
+{
+  "_RecordName_": "MissionItem.PrescriptionMedication",
+  "_RecordId_": "e2ffb573-109d-4fd1-abdc-6be5a587ba64",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "MissionItem",
+    "tags": [
+      {
+        "_RecordPath_": "file://./../../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+        "_RecordName_": "Tag.209d603a-11d7-4b67-a011-174ae0f77d59",
+        "_RecordId_": "209d603a-11d7-4b67-a011-174ae0f77d59"},
+      {
+        "_RecordPath_": "file://./../../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+        "_RecordName_": "Tag.061c87a6-f2fb-4b25-bfcc-4ce9828064b8",
+        "_RecordId_": "061c87a6-f2fb-4b25-bfcc-4ce9828064b8"},
+      {
+        "_RecordPath_": "file://./../../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+        "_RecordName_": "Tag.37ba7ad8-8553-45df-a84b-c49eb6ebb7a6",
+        "_RecordId_": "37ba7ad8-8553-45df-a84b-c49eb6ebb7a6"},
+      {
+        "_RecordPath_": "file://./../../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+        "_RecordName_": "Tag.a2b36b6b-2728-4edb-960f-693aa1e8bfde",
+        "_RecordId_": "a2b36b6b-2728-4edb-960f-693aa1e8bfde"},
+      {
+        "_RecordPath_": "file://./../../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+        "_RecordName_": "Tag.bc96bb19-9821-4af1-a96e-b186b0c0d9b1",
+        "_RecordId_": "bc96bb19-9821-4af1-a96e-b186b0c0d9b1"}],
+    "stringVariants": {
+      "_Type_": "MissionStringVariants",
+      "variants": [
+        {
+          "_Type_": "MissionStringVariant",
+          "tag": {
+            "_RecordPath_": "file://./../../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+            "_RecordName_": "Tag.0130de18-97e2-4d4c-9bb1-3e7ef5fd0490",
+            "_RecordId_": "0130de18-97e2-4d4c-9bb1-3e7ef5fd0490"},
+          "string": "@mission_item_0072"}]},
+    "weighting": 1.0,
+    "entityClass": "file://./../../../../../../../libs/foundry/records/entities/scitem/carryables/2h/carryable_2h_fl_05x05x05_commodity_medical_supplies_a.json"}}

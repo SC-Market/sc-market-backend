@@ -1,0 +1,21 @@
+{
+  "_RecordName_": "VehicleCareer.Combat",
+  "_RecordId_": "2bf4345e-cf3c-4ecb-91ce-f9daa8ff47f8",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "VehicleCareer",
+    "displayName": "@vehicle_focus_combat",
+    "roleList": [
+      "file://./../../../../../libs/foundry/records/vehicle/roles/bomber.json",
+      "file://./../../../../../libs/foundry/records/vehicle/roles/dropship.json",
+      "file://./../../../../../libs/foundry/records/vehicle/roles/heavybomber.json",
+      "file://./../../../../../libs/foundry/records/vehicle/roles/heavyfighter.json",
+      "file://./../../../../../libs/foundry/records/vehicle/roles/interdiction.json",
+      "file://./../../../../../libs/foundry/records/vehicle/roles/lightfighter.json",
+      "file://./../../../../../libs/foundry/records/vehicle/roles/mediumfighter.json",
+      "file://./../../../../../libs/foundry/records/vehicle/roles/snubfighter.json",
+      "file://./../../../../../libs/foundry/records/vehicle/roles/stealthbomber.json",
+      "file://./../../../../../libs/foundry/records/vehicle/roles/stealthfighter.json",
+      "file://./../../../../../libs/foundry/records/vehicle/roles/corvette.json",
+      "file://./../../../../../libs/foundry/records/vehicle/roles/gunship.json",
+      "file://./../../../../../libs/foundry/records/vehicle/roles/snubbomber.json"]}}

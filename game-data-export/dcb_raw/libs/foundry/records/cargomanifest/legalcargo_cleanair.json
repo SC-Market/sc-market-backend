@@ -1,0 +1,25 @@
+{
+  "_RecordName_": "CargoManifest.LegalCargo_CleanAir",
+  "_RecordId_": "ec22a856-8517-4e16-8f95-d7361f109433",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "CargoManifest",
+    "descriptionTags": {
+      "_Type_": "TagList",
+      "tags": [
+        {
+          "_RecordPath_": "file://./../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+          "_RecordName_": "Tag.4b9a647c-91f4-4732-b572-912ac03e73f2",
+          "_RecordId_": "4b9a647c-91f4-4732-b572-912ac03e73f2"},
+        {
+          "_RecordPath_": "file://./../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+          "_RecordName_": "Tag.392f2821-b345-4579-94de-5933fbc033fd",
+          "_RecordId_": "392f2821-b345-4579-94de-5933fbc033fd"}]},
+    "lockCargoGridsOnSpawn": false,
+    "cargoFillCapacity": {
+      "_Type_": "CargoFillCapacityValue_Even",
+      "resources": [],
+      "minCapacityRange": 0.0,
+      "maxCapacityRange": 1.0},
+    "cargoSpawnRules": [],
+    "tags": []}}

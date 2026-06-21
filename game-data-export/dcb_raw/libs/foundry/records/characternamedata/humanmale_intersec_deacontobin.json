@@ -1,0 +1,13 @@
+{
+  "_RecordName_": "CharacterRandomNameParams.HumanMale_InterSec_DeaconTobin",
+  "_RecordId_": "5700fa67-0239-4b7e-99ca-2101ed278709",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "CharacterRandomNameParams",
+    "firstNameString": "Name_InteSec_DeaconTobin",
+    "nickNameString": "LOC_UNINITIALIZED",
+    "lastNameString": "LOC_UNINITIALIZED",
+    "numFirstNames": 1,
+    "numNickNames": 0,
+    "numLastNames": 0,
+    "nicknameChance": 0.0}}

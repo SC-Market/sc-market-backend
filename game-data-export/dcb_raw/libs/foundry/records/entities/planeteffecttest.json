@@ -1,0 +1,25 @@
+{
+  "_RecordName_": "EntityClassDefinition.PlanetEffectTest",
+  "_RecordId_": "b04f6b07-0d52-40a1-91e7-72699f18889e",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "EntityClassDefinition",
+    "Category": "VFX",
+    "Icon": "Particles.bmp",
+    "Invisible": false,
+    "BBoxSelection": false,
+    "defaultEditorColor": {
+      "_Type_": "RGB",
+      "r": 1.0,
+      "g": 1.0,
+      "b": 0.0},
+    "entityDensityClass": null,
+    "tags": [],
+    "StaticEntityClassData": [],
+    "Components": [
+      {
+        "_Type_": "PlanetEffectTestParams",
+        "planetEffect": {
+          "_Type_": "GlobalResourceParticle",
+          "path": ""},
+        "surfaceType": ""}]}}

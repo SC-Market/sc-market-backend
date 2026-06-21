@@ -1,0 +1,41 @@
+{
+  "_RecordName_": "LootArchetype.LootArchetypes_ArmourPiece_Orbageddon_Helmet",
+  "_RecordId_": "71d1753c-2f8b-4357-9603-a4257fbb2676",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "LootArchetype",
+    "excludedTags": {
+      "_Type_": "TagList",
+      "tags": []},
+    "primaryOrGroup": {
+      "_Type_": "LootArchetypeOrGroup_Primary",
+      "entries": [
+        {
+          "_Type_": "LootArchetypeEntry_Primary",
+          "name": "Helmet",
+          "tag": {
+            "_RecordPath_": "file://./../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+            "_RecordName_": "Tag.1caa8797-db36-48d0-9809-dd44e3270c31",
+            "_RecordId_": "1caa8797-db36-48d0-9809-dd44e3270c31"},
+          "additionalTags": {
+            "_Type_": "TagsDNFTerm",
+            "positiveTags": [
+              {
+                "_RecordPath_": "file://./../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+                "_RecordName_": "Tag.5e2dc874-480b-4ee7-85ee-733daf16e388",
+                "_RecordId_": "5e2dc874-480b-4ee7-85ee-733daf16e388"}],
+            "negativeTags": []},
+          "weight": 1.0,
+          "optionalData": []}]},
+    "secondaryOrGroups": [
+      {
+        "_Type_": "LootArchetypeOrGroup_Secondary",
+        "groupName": "Rarity",
+        "entries": [
+          {
+            "_Type_": "LootArchetypeEntry_Secondary",
+            "tag": {
+              "_RecordPath_": "file://./../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+              "_RecordName_": "Tag.b285311b-1f68-4a69-b73f-1295e83a3909",
+              "_RecordId_": "b285311b-1f68-4a69-b73f-1295e83a3909"},
+            "weight": 1.0}]}]}}

@@ -1,0 +1,18 @@
+{
+  "_RecordName_": "LocationEntityDeclaration.DeliveryTarget_ItemPort_1SCU",
+  "_RecordId_": "52d98917-2775-4132-b4f0-7752e63f68ce",
+  "_RecordTag_": "MissionFeatures",
+  "_RecordValue_": {
+    "_Type_": "LocationEntityDeclaration",
+    "entityTags": {
+      "_Type_": "TagList",
+      "tags": [
+        {
+          "_RecordPath_": "file://./../../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+          "_RecordName_": "Tag.2c0d094d-d918-42e0-9c73-107a955f5228",
+          "_RecordId_": "2c0d094d-d918-42e0-9c73-107a955f5228"}]},
+    "type": {
+      "_Type_": "LocationEntityType_DeliveryTarget",
+      "type": "ItemPort_Entity",
+      "targetDescription": "@location_delivery_target_item_port"},
+    "resourceSlot": null}}

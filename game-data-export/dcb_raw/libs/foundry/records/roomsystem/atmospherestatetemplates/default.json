@@ -1,0 +1,14 @@
+{
+  "_RecordName_": "AtmosphereStateTemplate.Default",
+  "_RecordId_": "3365117e-972f-4955-9be6-b86a372e474c",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "AtmosphereStateTemplate",
+    "state": {
+      "_Type_": "AtmosphereStateTemplateInternal",
+      "pressureMod": "Override",
+      "pressure": 1.0,
+      "temperatureMod": "Override",
+      "temperature": 294.15,
+      "humidityMod": "Override",
+      "humidity": 0.5}}}

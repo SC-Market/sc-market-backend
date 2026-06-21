@@ -1,0 +1,13 @@
+{
+  "_RecordName_": "CharacterRandomNameParams.HumanMale_Foxwell_Walton",
+  "_RecordId_": "18f26f3d-2bcc-4c56-a16f-fdb6a8682859",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "CharacterRandomNameParams",
+    "firstNameString": "Name_FoxwellRep_Walton",
+    "nickNameString": "LOC_UNINITIALIZED",
+    "lastNameString": "LOC_UNINITIALIZED",
+    "numFirstNames": 1,
+    "numNickNames": 0,
+    "numLastNames": 0,
+    "nicknameChance": 0.05}}

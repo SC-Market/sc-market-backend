@@ -1,0 +1,24 @@
+{
+  "_RecordName_": "MissionItem.AmmoCrate_1SCU",
+  "_RecordId_": "4fb16ff2-1852-4a12-94bd-4e131ffd750e",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "MissionItem",
+    "tags": [
+      {
+        "_RecordPath_": "file://./../../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+        "_RecordName_": "Tag.2c0d094d-d918-42e0-9c73-107a955f5228",
+        "_RecordId_": "2c0d094d-d918-42e0-9c73-107a955f5228"},
+      {
+        "_RecordPath_": "file://./../../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+        "_RecordName_": "Tag.a6cc5c2c-64e2-4e9c-a22b-6e33235b77df",
+        "_RecordId_": "a6cc5c2c-64e2-4e9c-a22b-6e33235b77df"},
+      {
+        "_RecordPath_": "file://./../../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+        "_RecordName_": "Tag.6d56f776-cf33-4680-8a0c-ecbceb0792fe",
+        "_RecordId_": "6d56f776-cf33-4680-8a0c-ecbceb0792fe"}],
+    "stringVariants": {
+      "_Type_": "MissionStringVariants",
+      "variants": []},
+    "weighting": 1.0,
+    "entityClass": "file://./../../../../../../../libs/foundry/records/entities/scitem/carryables/tractorbeamonly/carryable_tbo_fl_1scu_commodity_processedgoods_ammocrate.json"}}

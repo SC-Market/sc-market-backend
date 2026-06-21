@@ -1,0 +1,13 @@
+{
+  "_RecordName_": "VoiceBundle.GenPilot",
+  "_RecordId_": "22d24e3c-cfdf-4752-ab34-4a216a034ff8",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "VoiceBundle",
+    "name": "GenPilot",
+    "voices": [
+      "file://./../../../../libs/foundry/records/voicesingle/pu/pilot/genpilot_male1.json",
+      "file://./../../../../libs/foundry/records/voicesingle/pu/pilot/genpilot_male2.json",
+      "file://./../../../../libs/foundry/records/voicesingle/pu/pilot/genpilot_male3.json",
+      "file://./../../../../libs/foundry/records/voicesingle/pu/pilot/genpilot_male4.json",
+      "file://./../../../../libs/foundry/records/voicesingle/pu/pilot/genpilot_male5.json"]}}

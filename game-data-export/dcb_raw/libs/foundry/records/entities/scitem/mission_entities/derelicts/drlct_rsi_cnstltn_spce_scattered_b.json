@@ -1,0 +1,22 @@
+{
+  "_RecordName_": "EntityClassDefinition.drlct_rsi_cnstltn_spce_scattered_b",
+  "_RecordId_": "10224ff2-9469-42c3-870d-19aa594c80f4",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "EntityClassDefinition",
+    "Category": "Default",
+    "Icon": "Default.bmp",
+    "Invisible": false,
+    "BBoxSelection": false,
+    "defaultEditorColor": {
+      "_Type_": "RGB",
+      "r": 1.0,
+      "g": 1.0,
+      "b": 0.0},
+    "entityDensityClass": null,
+    "tags": [],
+    "StaticEntityClassData": [],
+    "Components": [
+      {
+        "_Type_": "SObjectContainerComponentParams",
+        "objectContainer": "ObjectContainers/PU/derelict/RSI/Constellation/space/set/drlct_rsi_cnstltn_spce_scattered_b.socpak"}]}}

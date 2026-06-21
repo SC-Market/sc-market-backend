@@ -1,0 +1,23 @@
+{
+  "_RecordName_": "MusicLogicParameter.FPS_EnemiesAware",
+  "_RecordId_": "72d86d86-d9d2-421e-a95a-bae5bb012e6d",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "MusicLogicParameter",
+    "name": "FPS_EnemiesAware",
+    "min": 0.0,
+    "max": 10000.0,
+    "defaultValue": 0.0,
+    "decayRate": 0.0,
+    "decayIsPercentage": false,
+    "scaleModifier": 1.0,
+    "shiftModifier": 0.0,
+    "inverted": false,
+    "rtpc": "SC_Music_EnemiesAware",
+    "rtpcIsGlobal": true,
+    "contributors": [],
+    "debugColour": {
+      "_Type_": "RGB",
+      "r": 0.007499032,
+      "g": 0.7379104,
+      "b": 0.7758222}}}

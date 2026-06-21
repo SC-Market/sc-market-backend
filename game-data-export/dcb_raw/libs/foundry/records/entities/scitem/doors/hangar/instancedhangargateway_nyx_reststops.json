@@ -1,0 +1,23 @@
+{
+  "_RecordName_": "EntityClassDefinition.InstancedHangarGateway_Nyx_RestStops",
+  "_RecordId_": "043e6073-0659-43b4-b1d6-0ae85ae29c30",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "EntityClassDefinition",
+    "Category": "InstancedHangarGateway",
+    "Icon": "Default.bmp",
+    "Invisible": true,
+    "BBoxSelection": false,
+    "defaultEditorColor": {
+      "_Type_": "RGB",
+      "r": 1.0,
+      "g": 1.0,
+      "b": 0.0},
+    "entityDensityClass": null,
+    "tags": [],
+    "StaticEntityClassData": [],
+    "Components": [
+      {
+        "_Type_": "SInstancedInteriorGatewayParams",
+        "gatewaySize": 5,
+        "instance": null}]}}

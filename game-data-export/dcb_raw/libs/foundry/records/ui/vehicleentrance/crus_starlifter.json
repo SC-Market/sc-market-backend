@@ -1,0 +1,57 @@
+{
+  "_RecordName_": "SEntrancesDef.CRUS_Starlifter",
+  "_RecordId_": "339807e3-04e1-4987-b50b-726e3ae3113c",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "SEntrancesDef",
+    "boundingBoxScale": {
+      "_Type_": "Vec3",
+      "x": 1.4,
+      "y": 1.4,
+      "z": 1.4},
+    "boundingBoxOffset": {
+      "_Type_": "Vec3",
+      "x": 0.0,
+      "y": 0.0,
+      "z": 0.0},
+    "entranceArray": [
+      {
+        "_Type_": "SCEntranceItem",
+        "entranceName": "@entrance_ramp",
+        "jointName": "CRUS_Starlifter",
+        "positionOffset": {
+          "_Type_": "Vec3",
+          "x": -5.343,
+          "y": 12.404,
+          "z": -9.65},
+        "shipState": "Both"},
+      {
+        "_Type_": "SCEntranceItem",
+        "entranceName": "@entrance_ramp",
+        "jointName": "CRUS_Starlifter",
+        "positionOffset": {
+          "_Type_": "Vec3",
+          "x": -9.098,
+          "y": -25.223,
+          "z": -10.302},
+        "shipState": "Both"},
+      {
+        "_Type_": "SCEntranceItem",
+        "entranceName": "@entrance_elevator",
+        "jointName": "CRUS_Starlifter",
+        "positionOffset": {
+          "_Type_": "Vec3",
+          "x": -7.392,
+          "y": -3.026,
+          "z": -11.002},
+        "shipState": "Flying"},
+      {
+        "_Type_": "SCEntranceItem",
+        "entranceName": "@entrance_elevator",
+        "jointName": "CRUS_Starlifter",
+        "positionOffset": {
+          "_Type_": "Vec3",
+          "x": -7.392,
+          "y": -3.026,
+          "z": -14.5},
+        "shipState": "Grounded"}]}}

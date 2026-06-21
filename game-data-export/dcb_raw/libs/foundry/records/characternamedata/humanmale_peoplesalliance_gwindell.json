@@ -1,0 +1,13 @@
+{
+  "_RecordName_": "CharacterRandomNameParams.HumanMale_PeoplesAlliance_GWindell",
+  "_RecordId_": "e05da5c8-de29-4da4-9b23-a0c6c819b6b6",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "CharacterRandomNameParams",
+    "firstNameString": "Name_PeoplesAlliance_GWindell",
+    "nickNameString": "LOC_UNINITIALIZED",
+    "lastNameString": "LOC_UNINITIALIZED",
+    "numFirstNames": 1,
+    "numNickNames": 0,
+    "numLastNames": 0,
+    "nicknameChance": 0.0}}

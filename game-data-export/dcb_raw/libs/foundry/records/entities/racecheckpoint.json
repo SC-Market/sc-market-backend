@@ -1,0 +1,52 @@
+{
+  "_RecordName_": "EntityClassDefinition.RaceCheckpoint",
+  "_RecordId_": "f745d5f8-90ae-4292-9591-304a6ad9bbe0",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "EntityClassDefinition",
+    "Category": "Multiplayer",
+    "Icon": "road.bmp",
+    "Invisible": false,
+    "BBoxSelection": false,
+    "defaultEditorColor": {
+      "_Type_": "RGB",
+      "r": 1.0,
+      "g": 1.0,
+      "b": 0.0},
+    "entityDensityClass": null,
+    "tags": [],
+    "StaticEntityClassData": [
+      {
+        "_Type_": "EntityUIDisplayParams",
+        "displayName": "@LOC_UNINITIALIZED",
+        "displayDescription": "@LOC_UNINITIALIZED",
+        "displayThumbnail": "",
+        "displayImage": "",
+        "displayIcon": "",
+        "sortString": "",
+        "trackerProperties": {
+          "_Type_": "SRaceCheckpointEntryTrackerParams"}}],
+    "Components": [
+      {
+        "_Type_": "RaceCheckpointComponentParams",
+        "checkpointNumber": 0,
+        "radius": 50.0,
+        "bounds": {
+          "_Type_": "Vec3",
+          "x": 0.0,
+          "y": 0.0,
+          "z": 0.0}},
+      {
+        "_Type_": "SObjectiveMarkerComponentParams"},
+      {
+        "_Type_": "SEntityComponentObjectMetadataParams",
+        "name": "@LOC_EMPTY",
+        "hasLocalBounds": true,
+        "isDynamic": false,
+        "metadata": [
+          {
+            "_Type_": "SMissionMarkerObjectMetadataParams",
+            "label": "@Dlg_SC_ac_simulator_checkpointRace_Checkpoint",
+            "showDistance": false},
+          {
+            "_Type_": "SRaceCheckpointObjectMetadataParams"}]}]}}

@@ -1,0 +1,27 @@
+{
+  "_RecordName_": "EntityClassDefinition.TransitDestination",
+  "_RecordId_": "634b2d67-6b7b-4c78-9f3c-bf0c48aaab6f",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "EntityClassDefinition",
+    "Category": "Default",
+    "Icon": "transit_destination.bmp",
+    "Invisible": false,
+    "BBoxSelection": false,
+    "defaultEditorColor": {
+      "_Type_": "RGB",
+      "r": 1.0,
+      "g": 1.0,
+      "b": 0.0},
+    "entityDensityClass": null,
+    "tags": [],
+    "StaticEntityClassData": [],
+    "Components": [
+      {
+        "_Type_": "TransitDestinationParams",
+        "Name": "@LOC_UNINITIALIZED",
+        "importantLocation": false,
+        "enabledByDefault": true,
+        "priority": 0,
+        "radius": 16.0,
+        "unlockedManufacturers": []}]}}

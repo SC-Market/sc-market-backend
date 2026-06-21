@@ -1,0 +1,22 @@
+{
+  "_RecordName_": "LoadoutKit.GAMA_Syulen_Chuia_Blue_Gold",
+  "_RecordId_": "732dd855-bbd5-4cec-bcb9-5f890815988a",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "LoadoutKit",
+    "name": "@Item_NameSyulen_Paint_chuia_BlueGold",
+    "description": "@Item_DescSyulen_Paint_chuia_BlueGold",
+    "loadout": {
+      "_Type_": "SItemPortLoadoutManualParams",
+      "WearRange": null,
+      "DirtRange": null,
+      "SkipInventoryItemsOnMissionEntities": false,
+      "InventoryItems": [],
+      "entries": [
+        {
+          "_Type_": "SItemPortLoadoutEntryParams",
+          "itemPortName": "hardpoint_paint",
+          "entityClassName": "",
+          "entityClassReference": "file://./../../../../../libs/foundry/records/entities/scitem/ships/paints/paint_syulen_blue_gold.json",
+          "inventoryContainer": null,
+          "loadout": null}]}}}

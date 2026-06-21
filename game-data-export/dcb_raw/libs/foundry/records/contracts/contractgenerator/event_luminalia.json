@@ -1,0 +1,1258 @@
+{
+  "_RecordName_": "ContractGenerator.Event_Luminalia",
+  "_RecordId_": "ce59ca95-997e-4301-adfa-a1cfaa131a02",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "ContractGenerator",
+    "generators": [
+      {
+        "_Type_": "ContractGeneratorHandler_List",
+        "notForRelease": false,
+        "workInProgress": false,
+        "debugName": "Luminalia_List",
+        "required_active_scenarios": [],
+        "defaultAvailability": {
+          "_Type_": "ContractAvailability",
+          "prerequisites": [],
+          "notifyOnAvailable": false,
+          "maxPlayersPerInstance": 1,
+          "onceOnly": false,
+          "availableInPrison": false,
+          "canReacceptAfterAbandoning": true,
+          "abandonedCooldownTime": 0.0,
+          "abandonedCooldownTimeVariation": 0.0,
+          "canReacceptAfterFailing": false,
+          "hasPersonalCooldown": false,
+          "personalCooldownTime": 0.0,
+          "personalCooldownTimeVariation": 0.0,
+          "hideInMobiGlas": false},
+        "contractParams": {
+          "_Type_": "ContractParamOverrides",
+          "stringParamOverrides": [
+            {
+              "_Type_": "ContractStringParam",
+              "param": "Contractor",
+              "value": "@civilian_localdelivery_holiday_from_001"},
+            {
+              "_Type_": "ContractStringParam",
+              "param": "Description",
+              "value": "@LocalDelivery_desc"},
+            {
+              "_Type_": "ContractStringParam",
+              "param": "Title",
+              "value": "@civilian_localdelivery_holiday_title_001"}],
+          "boolParamOverrides": [],
+          "intParamOverrides": [],
+          "propertyTagReplacement": [],
+          "propertyOverrides": [
+            {
+              "_Type_": "MissionProperty",
+              "missionVariableName": "",
+              "extendedTextToken": "Contractor",
+              "value": {
+                "_Type_": "MissionPropertyValue_Organization",
+                "matchConditions": [
+                  {
+                    "_Type_": "DataSetMatchCondition_SpecificOrganizationsDef",
+                    "organizations": [
+                      "file://./../../../../../libs/foundry/records/missiondata/pu_organizations/holidayorg.json"]}],
+                "debugForceChosenOrganization": null}},
+            {
+              "_Type_": "MissionProperty",
+              "missionVariableName": "",
+              "extendedTextToken": "ObjectiveSetup",
+              "value": {
+                "_Type_": "MissionPropertyValue_StringHash",
+                "options": [
+                  {
+                    "_Type_": "MissionPropertyValueOption_StringHash",
+                    "textId": "@civilian_localdelivery_holiday_recipient_001",
+                    "weighting": 1.0,
+                    "DEBUG_forceChooseThisOption": false,
+                    "dependentProperties": [],
+                    "value": ""}]}},
+            {
+              "_Pointer_": "ptr:1",
+              "_Type_": "MissionProperty",
+              "missionVariableName": "",
+              "extendedTextToken": "TheGift",
+              "value": {
+                "_Type_": "MissionPropertyValue_MissionItem",
+                "minItemsToFind": 1,
+                "maxItemsToFind": 1,
+                "matchConditions": [
+                  {
+                    "_Type_": "DataSetMatchCondition_SpecificItemsDef",
+                    "items": [
+                      "file://./../../../../../libs/foundry/records/missiondata/pu_items/carryable_2h/christmas/christmaspresent_a.json",
+                      "file://./../../../../../libs/foundry/records/missiondata/pu_items/carryable_2h/christmas/christmaspresent_a_b.json",
+                      "file://./../../../../../libs/foundry/records/missiondata/pu_items/carryable_2h/christmas/christmaspresent_a_c.json",
+                      "file://./../../../../../libs/foundry/records/missiondata/pu_items/carryable_2h/christmas/christmaspresent_plushie_pico.json",
+                      "file://./../../../../../libs/foundry/records/missiondata/pu_items/carryable_2h/christmas/christmaspresent_plushie_pico_extrasuprise.json",
+                      "file://./../../../../../libs/foundry/records/missiondata/pu_items/carryable_2h/christmas/christmaspresent_plushie_pico_supprise.json",
+                      "file://./../../../../../libs/foundry/records/missiondata/pu_items/carryable_2h/christmas/christmaspresent_plushie_fin_rare.json",
+                      "file://./../../../../../libs/foundry/records/missiondata/pu_items/carryable_2h/christmas/christmaspresent_plushie_fin.json",
+                      "file://./../../../../../libs/foundry/records/missiondata/pu_items/carryable_2h/christmas/christmaspresent_a_d.json"]}],
+                "debugForceChosenItem": null}}],
+          "modifierOverrides": [],
+          "missionTypeOverride": null,
+          "overridePhaseMissionDetailsDisplayInfo": []},
+        "contracts": [
+          {
+            "_Type_": "Contract",
+            "id": "880a9c42-35e4-4fe6-8110-c804e657b826",
+            "notForRelease": false,
+            "workInProgress": false,
+            "debugName": "Luminalia_1",
+            "template": "file://./../../../../../libs/foundry/records/contracts/contracttemplates/courier.json",
+            "required_active_scenarios": [],
+            "paramOverrides": {
+              "_Type_": "ContractParamOverrides",
+              "stringParamOverrides": [],
+              "boolParamOverrides": [],
+              "intParamOverrides": [],
+              "propertyTagReplacement": [],
+              "propertyOverrides": [
+                {
+                  "_Type_": "MissionProperty",
+                  "missionVariableName": "",
+                  "extendedTextToken": "GiftSender",
+                  "value": {
+                    "_Type_": "MissionPropertyValue_AIName",
+                    "randomName": true,
+                    "randomLastName": true,
+                    "randomNickName": true,
+                    "characterGivenName": "@LOC_UNINITIALIZED",
+                    "characterGivenLastName": "@LOC_UNINITIALIZED",
+                    "characterGivenNickName": "@LOC_UNINITIALIZED",
+                    "characterNameData": "file://./../../../../../libs/foundry/records/characternamedata/humanmale.json",
+                    "chanceOfNickName": 0.05}},
+                {
+                  "_Type_": "MissionProperty",
+                  "missionVariableName": "HaulingOrderContent",
+                  "extendedTextToken": "",
+                  "value": {
+                    "_Type_": "MissionPropertyValue_HaulingOrders",
+                    "haulingOrderContent": [
+                      {
+                        "_Type_": "HaulingOrderContent_MissionItem",
+                        "item": "_PointsTo_:ptr:1",
+                        "minAmount": 1,
+                        "maxAmount": 0}]}},
+                {
+                  "_Pointer_": "ptr:2",
+                  "_Type_": "MissionProperty",
+                  "missionVariableName": "PickupLocation_BP1",
+                  "extendedTextToken": "Pickup1",
+                  "value": {
+                    "_Type_": "MissionPropertyValue_Location",
+                    "matchConditions": [
+                      {
+                        "_Type_": "DataSetMatchCondition_TagSearch",
+                        "tagSearch": [
+                          {
+                            "_Type_": "TagSearchTerm",
+                            "positiveTags": [
+                              {
+                                "_RecordPath_": "file://./../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+                                "_RecordName_": "Tag.295cbc3e-16fb-46ae-ba3c-2d8882106d97",
+                                "_RecordId_": "295cbc3e-16fb-46ae-ba3c-2d8882106d97"},
+                              {
+                                "_RecordPath_": "file://./../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+                                "_RecordName_": "Tag.13abec13-80ce-4fda-917a-c2e2225b0268",
+                                "_RecordId_": "13abec13-80ce-4fda-917a-c2e2225b0268"}],
+                            "negativeTags": [
+                              {
+                                "_RecordPath_": "file://./../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+                                "_RecordName_": "Tag.68f6f0e0-e226-417f-b1b6-a00c33de70c1",
+                                "_RecordId_": "68f6f0e0-e226-417f-b1b6-a00c33de70c1"},
+                              {
+                                "_RecordPath_": "file://./../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+                                "_RecordName_": "Tag.c5b38262-c6ca-4207-aaae-a5b2488fb848",
+                                "_RecordId_": "c5b38262-c6ca-4207-aaae-a5b2488fb848"},
+                              {
+                                "_RecordPath_": "file://./../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+                                "_RecordName_": "Tag.53e4b9af-aaa7-47f5-a497-5e06b44f9972",
+                                "_RecordId_": "53e4b9af-aaa7-47f5-a497-5e06b44f9972"}]}],
+                        "tagType": "General"}],
+                    "resourceTags": [],
+                    "logErrorOnSearchFail": true}},
+                {
+                  "_Pointer_": "ptr:3",
+                  "_Type_": "MissionProperty",
+                  "missionVariableName": "DropoffLocation_BP1",
+                  "extendedTextToken": "Dropoff1",
+                  "value": {
+                    "_Type_": "MissionPropertyValue_Location",
+                    "matchConditions": [
+                      {
+                        "_Type_": "DataSetMatchCondition_ExcludeProperty",
+                        "excludedProperty": "_PointsTo_:ptr:2"},
+                      {
+                        "_Type_": "DataSetMatchCondition_TagSearch",
+                        "tagSearch": [
+                          {
+                            "_Type_": "TagSearchTerm",
+                            "positiveTags": [
+                              {
+                                "_RecordPath_": "file://./../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+                                "_RecordName_": "Tag.295cbc3e-16fb-46ae-ba3c-2d8882106d97",
+                                "_RecordId_": "295cbc3e-16fb-46ae-ba3c-2d8882106d97"},
+                              {
+                                "_RecordPath_": "file://./../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+                                "_RecordName_": "Tag.13abec13-80ce-4fda-917a-c2e2225b0268",
+                                "_RecordId_": "13abec13-80ce-4fda-917a-c2e2225b0268"}],
+                            "negativeTags": [
+                              {
+                                "_RecordPath_": "file://./../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+                                "_RecordName_": "Tag.68f6f0e0-e226-417f-b1b6-a00c33de70c1",
+                                "_RecordId_": "68f6f0e0-e226-417f-b1b6-a00c33de70c1"},
+                              {
+                                "_RecordPath_": "file://./../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+                                "_RecordName_": "Tag.c5b38262-c6ca-4207-aaae-a5b2488fb848",
+                                "_RecordId_": "c5b38262-c6ca-4207-aaae-a5b2488fb848"},
+                              {
+                                "_RecordPath_": "file://./../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+                                "_RecordName_": "Tag.53e4b9af-aaa7-47f5-a497-5e06b44f9972",
+                                "_RecordId_": "53e4b9af-aaa7-47f5-a497-5e06b44f9972"}]}],
+                        "tagType": "General"}],
+                    "resourceTags": [],
+                    "logErrorOnSearchFail": true}},
+                {
+                  "_Type_": "MissionProperty",
+                  "missionVariableName": "",
+                  "extendedTextToken": "GiftRecipient1",
+                  "value": {
+                    "_Type_": "MissionPropertyValue_AIName",
+                    "randomName": true,
+                    "randomLastName": true,
+                    "randomNickName": true,
+                    "characterGivenName": "@LOC_UNINITIALIZED",
+                    "characterGivenLastName": "@LOC_UNINITIALIZED",
+                    "characterGivenNickName": "@LOC_UNINITIALIZED",
+                    "characterNameData": "file://./../../../../../libs/foundry/records/characternamedata/humanmale.json",
+                    "chanceOfNickName": 0.05}},
+                {
+                  "_Type_": "MissionProperty",
+                  "missionVariableName": "",
+                  "extendedTextToken": "DescriptionSetup",
+                  "value": {
+                    "_Type_": "MissionPropertyValue_StringHash",
+                    "options": [
+                      {
+                        "_Type_": "MissionPropertyValueOption_StringHash",
+                        "textId": "@Luminalia_1Box_DescriptionSetup",
+                        "weighting": 1.0,
+                        "DEBUG_forceChooseThisOption": false,
+                        "dependentProperties": [],
+                        "value": ""}]}}],
+              "modifierOverrides": [
+                {
+                  "_Type_": "MissionModifier_SecurityClearance",
+                  "modifierName": "Clerance",
+                  "enabled": true,
+                  "clearanceToken": "file://./../../../../../libs/foundry/records/lawsystem/securityclearancetokens/pu/ugf_clearance.json",
+                  "locationProperty": "_PointsTo_:ptr:2"},
+                {
+                  "_Type_": "MissionModifier_SecurityClearance",
+                  "modifierName": "Clerance",
+                  "enabled": true,
+                  "clearanceToken": "file://./../../../../../libs/foundry/records/lawsystem/securityclearancetokens/pu/ugf_airspace.json",
+                  "locationProperty": "_PointsTo_:ptr:2"},
+                {
+                  "_Type_": "MissionModifier_SecurityClearance",
+                  "modifierName": "Clerance",
+                  "enabled": true,
+                  "clearanceToken": "file://./../../../../../libs/foundry/records/lawsystem/securityclearancetokens/pu/ugf_clearance.json",
+                  "locationProperty": "_PointsTo_:ptr:3"},
+                {
+                  "_Type_": "MissionModifier_SecurityClearance",
+                  "modifierName": "Clerance",
+                  "enabled": true,
+                  "clearanceToken": "file://./../../../../../libs/foundry/records/lawsystem/securityclearancetokens/pu/ugf_airspace.json",
+                  "locationProperty": "_PointsTo_:ptr:3"},
+                {
+                  "_Type_": "MissionModifier_SecurityClearance",
+                  "modifierName": "Clerance",
+                  "enabled": true,
+                  "clearanceToken": "file://./../../../../../libs/foundry/records/lawsystem/securityclearancetokens/pu/dc_c_airspace.json",
+                  "locationProperty": "_PointsTo_:ptr:2"},
+                {
+                  "_Type_": "MissionModifier_SecurityClearance",
+                  "modifierName": "Clerance",
+                  "enabled": true,
+                  "clearanceToken": "file://./../../../../../libs/foundry/records/lawsystem/securityclearancetokens/pu/dc_c_interior.json",
+                  "locationProperty": "_PointsTo_:ptr:2"},
+                {
+                  "_Type_": "MissionModifier_SecurityClearance",
+                  "modifierName": "Clerance",
+                  "enabled": true,
+                  "clearanceToken": "file://./../../../../../libs/foundry/records/lawsystem/securityclearancetokens/pu/dc_c_airspace.json",
+                  "locationProperty": "_PointsTo_:ptr:3"},
+                {
+                  "_Type_": "MissionModifier_SecurityClearance",
+                  "modifierName": "Clerance",
+                  "enabled": true,
+                  "clearanceToken": "file://./../../../../../libs/foundry/records/lawsystem/securityclearancetokens/pu/dc_c_interior.json",
+                  "locationProperty": "_PointsTo_:ptr:3"}],
+              "missionTypeOverride": null,
+              "overridePhaseMissionDetailsDisplayInfo": []},
+            "subContracts": [
+              {
+                "_Type_": "SubContract",
+                "stringParamOverrides": [],
+                "boolParamOverrides": [],
+                "intParamOverrides": [],
+                "propertyTagReplacement": [
+                  {
+                    "_Type_": "ContractPropertyTagReplacement",
+                    "templateTag": {
+                      "_RecordPath_": "file://./../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+                      "_RecordName_": "Tag.13abec13-80ce-4fda-917a-c2e2225b0268",
+                      "_RecordId_": "13abec13-80ce-4fda-917a-c2e2225b0268"},
+                    "replacementTag": {
+                      "_RecordPath_": "file://./../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+                      "_RecordName_": "Tag.2e415c27-168d-4129-a216-7632f74eb911",
+                      "_RecordId_": "2e415c27-168d-4129-a216-7632f74eb911"}}],
+                "propertyOverrides": [],
+                "modifierOverrides": [],
+                "missionTypeOverride": null,
+                "overridePhaseMissionDetailsDisplayInfo": [],
+                "id": "491ecdae-a0d8-47ff-b73a-3a0fbeb07bb7",
+                "additionalPrerequisites": [
+                  {
+                    "_Type_": "ContractPrerequisite_Locality",
+                    "localityAvailable": "file://./../../../../../libs/foundry/records/missiondata/pu_missionlocality/stanton2.json"}]},
+              {
+                "_Type_": "SubContract",
+                "stringParamOverrides": [],
+                "boolParamOverrides": [],
+                "intParamOverrides": [],
+                "propertyTagReplacement": [
+                  {
+                    "_Type_": "ContractPropertyTagReplacement",
+                    "templateTag": {
+                      "_RecordPath_": "file://./../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+                      "_RecordName_": "Tag.13abec13-80ce-4fda-917a-c2e2225b0268",
+                      "_RecordId_": "13abec13-80ce-4fda-917a-c2e2225b0268"},
+                    "replacementTag": {
+                      "_RecordPath_": "file://./../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+                      "_RecordName_": "Tag.67508ea1-f2a5-4e1a-a045-2c1378c4b89e",
+                      "_RecordId_": "67508ea1-f2a5-4e1a-a045-2c1378c4b89e"}}],
+                "propertyOverrides": [],
+                "modifierOverrides": [],
+                "missionTypeOverride": null,
+                "overridePhaseMissionDetailsDisplayInfo": [],
+                "id": "cc996da2-ee11-4940-b663-f01d9e3f9bd6",
+                "additionalPrerequisites": [
+                  {
+                    "_Type_": "ContractPrerequisite_Locality",
+                    "localityAvailable": "file://./../../../../../libs/foundry/records/missiondata/pu_missionlocality/stanton3.json"}]},
+              {
+                "_Type_": "SubContract",
+                "stringParamOverrides": [],
+                "boolParamOverrides": [],
+                "intParamOverrides": [],
+                "propertyTagReplacement": [
+                  {
+                    "_Type_": "ContractPropertyTagReplacement",
+                    "templateTag": {
+                      "_RecordPath_": "file://./../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+                      "_RecordName_": "Tag.13abec13-80ce-4fda-917a-c2e2225b0268",
+                      "_RecordId_": "13abec13-80ce-4fda-917a-c2e2225b0268"},
+                    "replacementTag": {
+                      "_RecordPath_": "file://./../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+                      "_RecordName_": "Tag.ff4d704a-7840-4577-ba64-7d4bd709ab9d",
+                      "_RecordId_": "ff4d704a-7840-4577-ba64-7d4bd709ab9d"}}],
+                "propertyOverrides": [],
+                "modifierOverrides": [],
+                "missionTypeOverride": null,
+                "overridePhaseMissionDetailsDisplayInfo": [],
+                "id": "a83a8d8d-147c-4b89-b059-4ee379a42c72",
+                "additionalPrerequisites": [
+                  {
+                    "_Type_": "ContractPrerequisite_Locality",
+                    "localityAvailable": "file://./../../../../../libs/foundry/records/missiondata/pu_missionlocality/stanton4.json"}]}],
+            "additionalPrerequisites": [
+              {
+                "_Type_": "ContractPrerequisite_Locality",
+                "localityAvailable": "file://./../../../../../libs/foundry/records/missiondata/pu_missionlocality/stanton1.json"}],
+            "generationParams": {
+              "_Type_": "ContractGenerationParams_Legacy",
+              "maxInstances": -1,
+              "maxInstancesPerPlayer": 2,
+              "respawnTime": 0.0,
+              "respawnTimeVariation": 0.0},
+            "contractLifeTime": {
+              "_Type_": "ContractLifeTime",
+              "instanceLifeTime": 10.0,
+              "instanceLifeTimeVariation": 5.0},
+            "contractPlugins": [],
+            "contractResults": {
+              "_Type_": "ContractResults",
+              "contractResults": [
+                {
+                  "_Type_": "ContractResult_CalculatedReward",
+                  "missionResults": [
+                    true,
+                    false,
+                    false,
+                    false,
+                    false]},
+                {
+                  "_Type_": "ContractResult_CompletionTags",
+                  "missionResults": [
+                    true,
+                    false,
+                    false,
+                    false,
+                    false],
+                  "completionTags": [
+                    {
+                      "_Type_": "ContractResult_CompletionTag",
+                      "count": 1,
+                      "tag": {
+                        "_RecordPath_": "file://./../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+                        "_RecordName_": "Tag.2d3f8557-8e00-45c8-a2cd-8036a5e10295",
+                        "_RecordId_": "2d3f8557-8e00-45c8-a2cd-8036a5e10295"}}]}],
+              "contractBuyInAmount": 0,
+              "timeToComplete": 20.0,
+              "difficulty": {
+                "_Type_": "ContractDifficulty",
+                "difficultyProfile": "file://./../../../../../libs/foundry/records/contracts/contractdifficultyprofiles/event_difficultyprofile.json",
+                "mechanicalSkill": "Zero_risk_of_action_2",
+                "mentalLoad": "Routine_light_work_3",
+                "riskOfLoss": "Barely_even_breaking_a_sweat_2",
+                "gameKnowledge": "FPS_mechanics_walk_shoot_mobiGlass_2"}}},
+          {
+            "_Type_": "Contract",
+            "id": "46075c79-e0ec-4863-917d-6eebd64913bb",
+            "notForRelease": false,
+            "workInProgress": false,
+            "debugName": "Luminalia_2",
+            "template": "file://./../../../../../libs/foundry/records/contracts/contracttemplates/courier.json",
+            "required_active_scenarios": [],
+            "paramOverrides": {
+              "_Type_": "ContractParamOverrides",
+              "stringParamOverrides": [],
+              "boolParamOverrides": [],
+              "intParamOverrides": [],
+              "propertyTagReplacement": [],
+              "propertyOverrides": [
+                {
+                  "_Type_": "MissionProperty",
+                  "missionVariableName": "",
+                  "extendedTextToken": "GiftSender",
+                  "value": {
+                    "_Type_": "MissionPropertyValue_AIName",
+                    "randomName": true,
+                    "randomLastName": true,
+                    "randomNickName": true,
+                    "characterGivenName": "@LOC_UNINITIALIZED",
+                    "characterGivenLastName": "@LOC_UNINITIALIZED",
+                    "characterGivenNickName": "@LOC_UNINITIALIZED",
+                    "characterNameData": "file://./../../../../../libs/foundry/records/characternamedata/humanmale.json",
+                    "chanceOfNickName": 0.05}},
+                {
+                  "_Type_": "MissionProperty",
+                  "missionVariableName": "HaulingOrderContent",
+                  "extendedTextToken": "",
+                  "value": {
+                    "_Type_": "MissionPropertyValue_HaulingOrders",
+                    "haulingOrderContent": [
+                      {
+                        "_Type_": "HaulingOrderContent_MissionItem",
+                        "item": "_PointsTo_:ptr:1",
+                        "minAmount": 1,
+                        "maxAmount": 0},
+                      {
+                        "_Type_": "HaulingOrderContent_MissionItem",
+                        "item": "_PointsTo_:ptr:1",
+                        "minAmount": 1,
+                        "maxAmount": 0}]}},
+                {
+                  "_Pointer_": "ptr:4",
+                  "_Type_": "MissionProperty",
+                  "missionVariableName": "PickupLocation_BP1",
+                  "extendedTextToken": "Pickup1",
+                  "value": {
+                    "_Type_": "MissionPropertyValue_Location",
+                    "matchConditions": [
+                      {
+                        "_Type_": "DataSetMatchCondition_TagSearch",
+                        "tagSearch": [
+                          {
+                            "_Type_": "TagSearchTerm",
+                            "positiveTags": [
+                              {
+                                "_RecordPath_": "file://./../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+                                "_RecordName_": "Tag.295cbc3e-16fb-46ae-ba3c-2d8882106d97",
+                                "_RecordId_": "295cbc3e-16fb-46ae-ba3c-2d8882106d97"},
+                              {
+                                "_RecordPath_": "file://./../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+                                "_RecordName_": "Tag.13abec13-80ce-4fda-917a-c2e2225b0268",
+                                "_RecordId_": "13abec13-80ce-4fda-917a-c2e2225b0268"}],
+                            "negativeTags": [
+                              {
+                                "_RecordPath_": "file://./../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+                                "_RecordName_": "Tag.68f6f0e0-e226-417f-b1b6-a00c33de70c1",
+                                "_RecordId_": "68f6f0e0-e226-417f-b1b6-a00c33de70c1"},
+                              {
+                                "_RecordPath_": "file://./../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+                                "_RecordName_": "Tag.c5b38262-c6ca-4207-aaae-a5b2488fb848",
+                                "_RecordId_": "c5b38262-c6ca-4207-aaae-a5b2488fb848"},
+                              {
+                                "_RecordPath_": "file://./../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+                                "_RecordName_": "Tag.53e4b9af-aaa7-47f5-a497-5e06b44f9972",
+                                "_RecordId_": "53e4b9af-aaa7-47f5-a497-5e06b44f9972"}]}],
+                        "tagType": "General"}],
+                    "resourceTags": [],
+                    "logErrorOnSearchFail": true}},
+                {
+                  "_Pointer_": "ptr:5",
+                  "_Type_": "MissionProperty",
+                  "missionVariableName": "DropoffLocation_BP1",
+                  "extendedTextToken": "Dropoff1",
+                  "value": {
+                    "_Type_": "MissionPropertyValue_Location",
+                    "matchConditions": [
+                      {
+                        "_Type_": "DataSetMatchCondition_ExcludeProperty",
+                        "excludedProperty": "_PointsTo_:ptr:2"},
+                      {
+                        "_Type_": "DataSetMatchCondition_TagSearch",
+                        "tagSearch": [
+                          {
+                            "_Type_": "TagSearchTerm",
+                            "positiveTags": [
+                              {
+                                "_RecordPath_": "file://./../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+                                "_RecordName_": "Tag.295cbc3e-16fb-46ae-ba3c-2d8882106d97",
+                                "_RecordId_": "295cbc3e-16fb-46ae-ba3c-2d8882106d97"},
+                              {
+                                "_RecordPath_": "file://./../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+                                "_RecordName_": "Tag.13abec13-80ce-4fda-917a-c2e2225b0268",
+                                "_RecordId_": "13abec13-80ce-4fda-917a-c2e2225b0268"}],
+                            "negativeTags": [
+                              {
+                                "_RecordPath_": "file://./../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+                                "_RecordName_": "Tag.68f6f0e0-e226-417f-b1b6-a00c33de70c1",
+                                "_RecordId_": "68f6f0e0-e226-417f-b1b6-a00c33de70c1"},
+                              {
+                                "_RecordPath_": "file://./../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+                                "_RecordName_": "Tag.c5b38262-c6ca-4207-aaae-a5b2488fb848",
+                                "_RecordId_": "c5b38262-c6ca-4207-aaae-a5b2488fb848"},
+                              {
+                                "_RecordPath_": "file://./../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+                                "_RecordName_": "Tag.53e4b9af-aaa7-47f5-a497-5e06b44f9972",
+                                "_RecordId_": "53e4b9af-aaa7-47f5-a497-5e06b44f9972"}]}],
+                        "tagType": "General"}],
+                    "resourceTags": [],
+                    "logErrorOnSearchFail": true}},
+                {
+                  "_Type_": "MissionProperty",
+                  "missionVariableName": "",
+                  "extendedTextToken": "GiftRecipient1",
+                  "value": {
+                    "_Type_": "MissionPropertyValue_AIName",
+                    "randomName": true,
+                    "randomLastName": true,
+                    "randomNickName": true,
+                    "characterGivenName": "@LOC_UNINITIALIZED",
+                    "characterGivenLastName": "@LOC_UNINITIALIZED",
+                    "characterGivenNickName": "@LOC_UNINITIALIZED",
+                    "characterNameData": "file://./../../../../../libs/foundry/records/characternamedata/humanmale.json",
+                    "chanceOfNickName": 0.05}},
+                {
+                  "_Type_": "MissionProperty",
+                  "missionVariableName": "",
+                  "extendedTextToken": "DescriptionSetup",
+                  "value": {
+                    "_Type_": "MissionPropertyValue_StringHash",
+                    "options": [
+                      {
+                        "_Type_": "MissionPropertyValueOption_StringHash",
+                        "textId": "@Luminalia_2Box_DescriptionSetup",
+                        "weighting": 1.0,
+                        "DEBUG_forceChooseThisOption": false,
+                        "dependentProperties": [],
+                        "value": ""}]}},
+                {
+                  "_Type_": "MissionProperty",
+                  "missionVariableName": "",
+                  "extendedTextToken": "GiftRecipient2",
+                  "value": {
+                    "_Type_": "MissionPropertyValue_AIName",
+                    "randomName": true,
+                    "randomLastName": true,
+                    "randomNickName": true,
+                    "characterGivenName": "@LOC_UNINITIALIZED",
+                    "characterGivenLastName": "@LOC_UNINITIALIZED",
+                    "characterGivenNickName": "@LOC_UNINITIALIZED",
+                    "characterNameData": "file://./../../../../../libs/foundry/records/characternamedata/humanmale.json",
+                    "chanceOfNickName": 0.05}}],
+              "modifierOverrides": [
+                {
+                  "_Type_": "MissionModifier_SecurityClearance",
+                  "modifierName": "Clerance",
+                  "enabled": true,
+                  "clearanceToken": "file://./../../../../../libs/foundry/records/lawsystem/securityclearancetokens/pu/ugf_clearance.json",
+                  "locationProperty": "_PointsTo_:ptr:4"},
+                {
+                  "_Type_": "MissionModifier_SecurityClearance",
+                  "modifierName": "Clerance",
+                  "enabled": true,
+                  "clearanceToken": "file://./../../../../../libs/foundry/records/lawsystem/securityclearancetokens/pu/ugf_airspace.json",
+                  "locationProperty": "_PointsTo_:ptr:4"},
+                {
+                  "_Type_": "MissionModifier_SecurityClearance",
+                  "modifierName": "Clerance",
+                  "enabled": true,
+                  "clearanceToken": "file://./../../../../../libs/foundry/records/lawsystem/securityclearancetokens/pu/ugf_clearance.json",
+                  "locationProperty": "_PointsTo_:ptr:5"},
+                {
+                  "_Type_": "MissionModifier_SecurityClearance",
+                  "modifierName": "Clerance",
+                  "enabled": true,
+                  "clearanceToken": "file://./../../../../../libs/foundry/records/lawsystem/securityclearancetokens/pu/ugf_airspace.json",
+                  "locationProperty": "_PointsTo_:ptr:5"},
+                {
+                  "_Type_": "MissionModifier_SecurityClearance",
+                  "modifierName": "Clerance",
+                  "enabled": true,
+                  "clearanceToken": "file://./../../../../../libs/foundry/records/lawsystem/securityclearancetokens/pu/dc_c_airspace.json",
+                  "locationProperty": "_PointsTo_:ptr:4"},
+                {
+                  "_Type_": "MissionModifier_SecurityClearance",
+                  "modifierName": "Clerance",
+                  "enabled": true,
+                  "clearanceToken": "file://./../../../../../libs/foundry/records/lawsystem/securityclearancetokens/pu/dc_c_interior.json",
+                  "locationProperty": "_PointsTo_:ptr:4"},
+                {
+                  "_Type_": "MissionModifier_SecurityClearance",
+                  "modifierName": "Clerance",
+                  "enabled": true,
+                  "clearanceToken": "file://./../../../../../libs/foundry/records/lawsystem/securityclearancetokens/pu/dc_c_airspace.json",
+                  "locationProperty": "_PointsTo_:ptr:5"},
+                {
+                  "_Type_": "MissionModifier_SecurityClearance",
+                  "modifierName": "Clerance",
+                  "enabled": true,
+                  "clearanceToken": "file://./../../../../../libs/foundry/records/lawsystem/securityclearancetokens/pu/dc_c_interior.json",
+                  "locationProperty": "_PointsTo_:ptr:5"}],
+              "missionTypeOverride": null,
+              "overridePhaseMissionDetailsDisplayInfo": []},
+            "subContracts": [
+              {
+                "_Type_": "SubContract",
+                "stringParamOverrides": [],
+                "boolParamOverrides": [],
+                "intParamOverrides": [],
+                "propertyTagReplacement": [
+                  {
+                    "_Type_": "ContractPropertyTagReplacement",
+                    "templateTag": {
+                      "_RecordPath_": "file://./../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+                      "_RecordName_": "Tag.13abec13-80ce-4fda-917a-c2e2225b0268",
+                      "_RecordId_": "13abec13-80ce-4fda-917a-c2e2225b0268"},
+                    "replacementTag": {
+                      "_RecordPath_": "file://./../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+                      "_RecordName_": "Tag.2e415c27-168d-4129-a216-7632f74eb911",
+                      "_RecordId_": "2e415c27-168d-4129-a216-7632f74eb911"}}],
+                "propertyOverrides": [],
+                "modifierOverrides": [],
+                "missionTypeOverride": null,
+                "overridePhaseMissionDetailsDisplayInfo": [],
+                "id": "5e2b3f58-9069-4063-a2a9-46d528e7b3c4",
+                "additionalPrerequisites": [
+                  {
+                    "_Type_": "ContractPrerequisite_Locality",
+                    "localityAvailable": "file://./../../../../../libs/foundry/records/missiondata/pu_missionlocality/stanton2.json"},
+                  {
+                    "_Type_": "ContractPrerequisite_CompletedContractTags",
+                    "includePrerequisiteWhenSharing": false,
+                    "requiredCompletedContractTags": {
+                      "_Type_": "TagList",
+                      "tags": [
+                        {
+                          "_RecordPath_": "file://./../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+                          "_RecordName_": "Tag.2d3f8557-8e00-45c8-a2cd-8036a5e10295",
+                          "_RecordId_": "2d3f8557-8e00-45c8-a2cd-8036a5e10295"}]},
+                    "requiredCountValue": 1,
+                    "excludedCompletedContractTags": {
+                      "_Type_": "TagList",
+                      "tags": []},
+                    "excludedCountValue": 1}]},
+              {
+                "_Type_": "SubContract",
+                "stringParamOverrides": [],
+                "boolParamOverrides": [],
+                "intParamOverrides": [],
+                "propertyTagReplacement": [
+                  {
+                    "_Type_": "ContractPropertyTagReplacement",
+                    "templateTag": {
+                      "_RecordPath_": "file://./../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+                      "_RecordName_": "Tag.13abec13-80ce-4fda-917a-c2e2225b0268",
+                      "_RecordId_": "13abec13-80ce-4fda-917a-c2e2225b0268"},
+                    "replacementTag": {
+                      "_RecordPath_": "file://./../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+                      "_RecordName_": "Tag.67508ea1-f2a5-4e1a-a045-2c1378c4b89e",
+                      "_RecordId_": "67508ea1-f2a5-4e1a-a045-2c1378c4b89e"}}],
+                "propertyOverrides": [],
+                "modifierOverrides": [],
+                "missionTypeOverride": null,
+                "overridePhaseMissionDetailsDisplayInfo": [],
+                "id": "90ddd89a-27aa-49bd-ac75-af9386798ddf",
+                "additionalPrerequisites": [
+                  {
+                    "_Type_": "ContractPrerequisite_Locality",
+                    "localityAvailable": "file://./../../../../../libs/foundry/records/missiondata/pu_missionlocality/stanton3.json"},
+                  {
+                    "_Type_": "ContractPrerequisite_CompletedContractTags",
+                    "includePrerequisiteWhenSharing": false,
+                    "requiredCompletedContractTags": {
+                      "_Type_": "TagList",
+                      "tags": [
+                        {
+                          "_RecordPath_": "file://./../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+                          "_RecordName_": "Tag.2d3f8557-8e00-45c8-a2cd-8036a5e10295",
+                          "_RecordId_": "2d3f8557-8e00-45c8-a2cd-8036a5e10295"}]},
+                    "requiredCountValue": 1,
+                    "excludedCompletedContractTags": {
+                      "_Type_": "TagList",
+                      "tags": []},
+                    "excludedCountValue": 1}]},
+              {
+                "_Type_": "SubContract",
+                "stringParamOverrides": [],
+                "boolParamOverrides": [],
+                "intParamOverrides": [],
+                "propertyTagReplacement": [
+                  {
+                    "_Type_": "ContractPropertyTagReplacement",
+                    "templateTag": {
+                      "_RecordPath_": "file://./../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+                      "_RecordName_": "Tag.13abec13-80ce-4fda-917a-c2e2225b0268",
+                      "_RecordId_": "13abec13-80ce-4fda-917a-c2e2225b0268"},
+                    "replacementTag": {
+                      "_RecordPath_": "file://./../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+                      "_RecordName_": "Tag.ff4d704a-7840-4577-ba64-7d4bd709ab9d",
+                      "_RecordId_": "ff4d704a-7840-4577-ba64-7d4bd709ab9d"}}],
+                "propertyOverrides": [],
+                "modifierOverrides": [],
+                "missionTypeOverride": null,
+                "overridePhaseMissionDetailsDisplayInfo": [],
+                "id": "cd3af108-ce7a-4b7a-895f-3243396c9a11",
+                "additionalPrerequisites": [
+                  {
+                    "_Type_": "ContractPrerequisite_Locality",
+                    "localityAvailable": "file://./../../../../../libs/foundry/records/missiondata/pu_missionlocality/stanton4.json"},
+                  {
+                    "_Type_": "ContractPrerequisite_CompletedContractTags",
+                    "includePrerequisiteWhenSharing": false,
+                    "requiredCompletedContractTags": {
+                      "_Type_": "TagList",
+                      "tags": [
+                        {
+                          "_RecordPath_": "file://./../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+                          "_RecordName_": "Tag.2d3f8557-8e00-45c8-a2cd-8036a5e10295",
+                          "_RecordId_": "2d3f8557-8e00-45c8-a2cd-8036a5e10295"}]},
+                    "requiredCountValue": 1,
+                    "excludedCompletedContractTags": {
+                      "_Type_": "TagList",
+                      "tags": []},
+                    "excludedCountValue": 1}]}],
+            "additionalPrerequisites": [
+              {
+                "_Type_": "ContractPrerequisite_Locality",
+                "localityAvailable": "file://./../../../../../libs/foundry/records/missiondata/pu_missionlocality/stanton1.json"},
+              {
+                "_Type_": "ContractPrerequisite_CompletedContractTags",
+                "includePrerequisiteWhenSharing": false,
+                "requiredCompletedContractTags": {
+                  "_Type_": "TagList",
+                  "tags": [
+                    {
+                      "_RecordPath_": "file://./../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+                      "_RecordName_": "Tag.2d3f8557-8e00-45c8-a2cd-8036a5e10295",
+                      "_RecordId_": "2d3f8557-8e00-45c8-a2cd-8036a5e10295"}]},
+                "requiredCountValue": 1,
+                "excludedCompletedContractTags": {
+                  "_Type_": "TagList",
+                  "tags": []},
+                "excludedCountValue": 1}],
+            "generationParams": {
+              "_Type_": "ContractGenerationParams_Legacy",
+              "maxInstances": -1,
+              "maxInstancesPerPlayer": 2,
+              "respawnTime": 0.0,
+              "respawnTimeVariation": 0.0},
+            "contractLifeTime": {
+              "_Type_": "ContractLifeTime",
+              "instanceLifeTime": 10.0,
+              "instanceLifeTimeVariation": 5.0},
+            "contractPlugins": [],
+            "contractResults": {
+              "_Type_": "ContractResults",
+              "contractResults": [
+                {
+                  "_Type_": "ContractResult_CalculatedReward",
+                  "missionResults": [
+                    true,
+                    false,
+                    false,
+                    false,
+                    false]},
+                {
+                  "_Type_": "ContractResult_CompletionTags",
+                  "missionResults": [
+                    true,
+                    false,
+                    false,
+                    false,
+                    false],
+                  "completionTags": [
+                    {
+                      "_Type_": "ContractResult_CompletionTag",
+                      "count": 1,
+                      "tag": {
+                        "_RecordPath_": "file://./../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+                        "_RecordName_": "Tag.98c4ba7f-c4c4-4d53-bdc1-fa130d2fd566",
+                        "_RecordId_": "98c4ba7f-c4c4-4d53-bdc1-fa130d2fd566"}}]}],
+              "contractBuyInAmount": 0,
+              "timeToComplete": 22.0,
+              "difficulty": {
+                "_Type_": "ContractDifficulty",
+                "difficultyProfile": "file://./../../../../../libs/foundry/records/contracts/contractdifficultyprofiles/event_difficultyprofile.json",
+                "mechanicalSkill": "Zero_risk_of_action_2",
+                "mentalLoad": "Routine_light_work_3",
+                "riskOfLoss": "Barely_even_breaking_a_sweat_2",
+                "gameKnowledge": "FPS_mechanics_walk_shoot_mobiGlass_2"}}},
+          {
+            "_Type_": "Contract",
+            "id": "7b2aaadd-256d-485e-8c9d-52b5a3dde749",
+            "notForRelease": false,
+            "workInProgress": false,
+            "debugName": "Luminalia_3",
+            "template": "file://./../../../../../libs/foundry/records/contracts/contracttemplates/courier.json",
+            "required_active_scenarios": [],
+            "paramOverrides": {
+              "_Type_": "ContractParamOverrides",
+              "stringParamOverrides": [],
+              "boolParamOverrides": [],
+              "intParamOverrides": [],
+              "propertyTagReplacement": [],
+              "propertyOverrides": [
+                {
+                  "_Type_": "MissionProperty",
+                  "missionVariableName": "",
+                  "extendedTextToken": "GiftSender",
+                  "value": {
+                    "_Type_": "MissionPropertyValue_AIName",
+                    "randomName": true,
+                    "randomLastName": true,
+                    "randomNickName": true,
+                    "characterGivenName": "@LOC_UNINITIALIZED",
+                    "characterGivenLastName": "@LOC_UNINITIALIZED",
+                    "characterGivenNickName": "@LOC_UNINITIALIZED",
+                    "characterNameData": "file://./../../../../../libs/foundry/records/characternamedata/humanmale.json",
+                    "chanceOfNickName": 0.05}},
+                {
+                  "_Type_": "MissionProperty",
+                  "missionVariableName": "HaulingOrderContent",
+                  "extendedTextToken": "",
+                  "value": {
+                    "_Type_": "MissionPropertyValue_HaulingOrders",
+                    "haulingOrderContent": [
+                      {
+                        "_Type_": "HaulingOrderContent_MissionItem",
+                        "item": "_PointsTo_:ptr:1",
+                        "minAmount": 1,
+                        "maxAmount": 0},
+                      {
+                        "_Type_": "HaulingOrderContent_MissionItem",
+                        "item": "_PointsTo_:ptr:1",
+                        "minAmount": 1,
+                        "maxAmount": 0},
+                      {
+                        "_Type_": "HaulingOrderContent_MissionItem",
+                        "item": "_PointsTo_:ptr:1",
+                        "minAmount": 1,
+                        "maxAmount": 0}]}},
+                {
+                  "_Pointer_": "ptr:6",
+                  "_Type_": "MissionProperty",
+                  "missionVariableName": "PickupLocation_BP1",
+                  "extendedTextToken": "Pickup1",
+                  "value": {
+                    "_Type_": "MissionPropertyValue_Location",
+                    "matchConditions": [
+                      {
+                        "_Type_": "DataSetMatchCondition_TagSearch",
+                        "tagSearch": [
+                          {
+                            "_Type_": "TagSearchTerm",
+                            "positiveTags": [
+                              {
+                                "_RecordPath_": "file://./../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+                                "_RecordName_": "Tag.295cbc3e-16fb-46ae-ba3c-2d8882106d97",
+                                "_RecordId_": "295cbc3e-16fb-46ae-ba3c-2d8882106d97"},
+                              {
+                                "_RecordPath_": "file://./../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+                                "_RecordName_": "Tag.13abec13-80ce-4fda-917a-c2e2225b0268",
+                                "_RecordId_": "13abec13-80ce-4fda-917a-c2e2225b0268"}],
+                            "negativeTags": [
+                              {
+                                "_RecordPath_": "file://./../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+                                "_RecordName_": "Tag.68f6f0e0-e226-417f-b1b6-a00c33de70c1",
+                                "_RecordId_": "68f6f0e0-e226-417f-b1b6-a00c33de70c1"},
+                              {
+                                "_RecordPath_": "file://./../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+                                "_RecordName_": "Tag.c5b38262-c6ca-4207-aaae-a5b2488fb848",
+                                "_RecordId_": "c5b38262-c6ca-4207-aaae-a5b2488fb848"},
+                              {
+                                "_RecordPath_": "file://./../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+                                "_RecordName_": "Tag.53e4b9af-aaa7-47f5-a497-5e06b44f9972",
+                                "_RecordId_": "53e4b9af-aaa7-47f5-a497-5e06b44f9972"}]}],
+                        "tagType": "General"}],
+                    "resourceTags": [],
+                    "logErrorOnSearchFail": true}},
+                {
+                  "_Pointer_": "ptr:7",
+                  "_Type_": "MissionProperty",
+                  "missionVariableName": "DropoffLocation_BP1",
+                  "extendedTextToken": "Dropoff1",
+                  "value": {
+                    "_Type_": "MissionPropertyValue_Location",
+                    "matchConditions": [
+                      {
+                        "_Type_": "DataSetMatchCondition_ExcludeProperty",
+                        "excludedProperty": "_PointsTo_:ptr:2"},
+                      {
+                        "_Type_": "DataSetMatchCondition_TagSearch",
+                        "tagSearch": [
+                          {
+                            "_Type_": "TagSearchTerm",
+                            "positiveTags": [
+                              {
+                                "_RecordPath_": "file://./../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+                                "_RecordName_": "Tag.295cbc3e-16fb-46ae-ba3c-2d8882106d97",
+                                "_RecordId_": "295cbc3e-16fb-46ae-ba3c-2d8882106d97"},
+                              {
+                                "_RecordPath_": "file://./../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+                                "_RecordName_": "Tag.13abec13-80ce-4fda-917a-c2e2225b0268",
+                                "_RecordId_": "13abec13-80ce-4fda-917a-c2e2225b0268"}],
+                            "negativeTags": [
+                              {
+                                "_RecordPath_": "file://./../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+                                "_RecordName_": "Tag.68f6f0e0-e226-417f-b1b6-a00c33de70c1",
+                                "_RecordId_": "68f6f0e0-e226-417f-b1b6-a00c33de70c1"},
+                              {
+                                "_RecordPath_": "file://./../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+                                "_RecordName_": "Tag.c5b38262-c6ca-4207-aaae-a5b2488fb848",
+                                "_RecordId_": "c5b38262-c6ca-4207-aaae-a5b2488fb848"},
+                              {
+                                "_RecordPath_": "file://./../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+                                "_RecordName_": "Tag.53e4b9af-aaa7-47f5-a497-5e06b44f9972",
+                                "_RecordId_": "53e4b9af-aaa7-47f5-a497-5e06b44f9972"}]}],
+                        "tagType": "General"}],
+                    "resourceTags": [],
+                    "logErrorOnSearchFail": true}},
+                {
+                  "_Type_": "MissionProperty",
+                  "missionVariableName": "",
+                  "extendedTextToken": "GiftRecipient1",
+                  "value": {
+                    "_Type_": "MissionPropertyValue_AIName",
+                    "randomName": true,
+                    "randomLastName": true,
+                    "randomNickName": true,
+                    "characterGivenName": "@LOC_UNINITIALIZED",
+                    "characterGivenLastName": "@LOC_UNINITIALIZED",
+                    "characterGivenNickName": "@LOC_UNINITIALIZED",
+                    "characterNameData": "file://./../../../../../libs/foundry/records/characternamedata/humanmale.json",
+                    "chanceOfNickName": 0.05}},
+                {
+                  "_Type_": "MissionProperty",
+                  "missionVariableName": "",
+                  "extendedTextToken": "DescriptionSetup",
+                  "value": {
+                    "_Type_": "MissionPropertyValue_StringHash",
+                    "options": [
+                      {
+                        "_Type_": "MissionPropertyValueOption_StringHash",
+                        "textId": "@Luminalia_3Box_DescriptionSetup",
+                        "weighting": 1.0,
+                        "DEBUG_forceChooseThisOption": false,
+                        "dependentProperties": [],
+                        "value": ""}]}},
+                {
+                  "_Type_": "MissionProperty",
+                  "missionVariableName": "",
+                  "extendedTextToken": "GiftRecipient2",
+                  "value": {
+                    "_Type_": "MissionPropertyValue_AIName",
+                    "randomName": true,
+                    "randomLastName": true,
+                    "randomNickName": true,
+                    "characterGivenName": "@LOC_UNINITIALIZED",
+                    "characterGivenLastName": "@LOC_UNINITIALIZED",
+                    "characterGivenNickName": "@LOC_UNINITIALIZED",
+                    "characterNameData": "file://./../../../../../libs/foundry/records/characternamedata/humanmale.json",
+                    "chanceOfNickName": 0.05}},
+                {
+                  "_Type_": "MissionProperty",
+                  "missionVariableName": "",
+                  "extendedTextToken": "GiftRecipient3",
+                  "value": {
+                    "_Type_": "MissionPropertyValue_AIName",
+                    "randomName": true,
+                    "randomLastName": true,
+                    "randomNickName": true,
+                    "characterGivenName": "@LOC_UNINITIALIZED",
+                    "characterGivenLastName": "@LOC_UNINITIALIZED",
+                    "characterGivenNickName": "@LOC_UNINITIALIZED",
+                    "characterNameData": "file://./../../../../../libs/foundry/records/characternamedata/humanmale.json",
+                    "chanceOfNickName": 0.05}}],
+              "modifierOverrides": [
+                {
+                  "_Type_": "MissionModifier_SecurityClearance",
+                  "modifierName": "Clerance",
+                  "enabled": true,
+                  "clearanceToken": "file://./../../../../../libs/foundry/records/lawsystem/securityclearancetokens/pu/ugf_clearance.json",
+                  "locationProperty": "_PointsTo_:ptr:6"},
+                {
+                  "_Type_": "MissionModifier_SecurityClearance",
+                  "modifierName": "Clerance",
+                  "enabled": true,
+                  "clearanceToken": "file://./../../../../../libs/foundry/records/lawsystem/securityclearancetokens/pu/ugf_airspace.json",
+                  "locationProperty": "_PointsTo_:ptr:6"},
+                {
+                  "_Type_": "MissionModifier_SecurityClearance",
+                  "modifierName": "Clerance",
+                  "enabled": true,
+                  "clearanceToken": "file://./../../../../../libs/foundry/records/lawsystem/securityclearancetokens/pu/ugf_clearance.json",
+                  "locationProperty": "_PointsTo_:ptr:7"},
+                {
+                  "_Type_": "MissionModifier_SecurityClearance",
+                  "modifierName": "Clerance",
+                  "enabled": true,
+                  "clearanceToken": "file://./../../../../../libs/foundry/records/lawsystem/securityclearancetokens/pu/ugf_airspace.json",
+                  "locationProperty": "_PointsTo_:ptr:7"},
+                {
+                  "_Type_": "MissionModifier_SecurityClearance",
+                  "modifierName": "Clerance",
+                  "enabled": true,
+                  "clearanceToken": "file://./../../../../../libs/foundry/records/lawsystem/securityclearancetokens/pu/dc_c_airspace.json",
+                  "locationProperty": "_PointsTo_:ptr:6"},
+                {
+                  "_Type_": "MissionModifier_SecurityClearance",
+                  "modifierName": "Clerance",
+                  "enabled": true,
+                  "clearanceToken": "file://./../../../../../libs/foundry/records/lawsystem/securityclearancetokens/pu/dc_c_interior.json",
+                  "locationProperty": "_PointsTo_:ptr:6"},
+                {
+                  "_Type_": "MissionModifier_SecurityClearance",
+                  "modifierName": "Clerance",
+                  "enabled": true,
+                  "clearanceToken": "file://./../../../../../libs/foundry/records/lawsystem/securityclearancetokens/pu/dc_c_airspace.json",
+                  "locationProperty": "_PointsTo_:ptr:7"},
+                {
+                  "_Type_": "MissionModifier_SecurityClearance",
+                  "modifierName": "Clerance",
+                  "enabled": true,
+                  "clearanceToken": "file://./../../../../../libs/foundry/records/lawsystem/securityclearancetokens/pu/dc_c_interior.json",
+                  "locationProperty": "_PointsTo_:ptr:7"}],
+              "missionTypeOverride": null,
+              "overridePhaseMissionDetailsDisplayInfo": []},
+            "subContracts": [
+              {
+                "_Type_": "SubContract",
+                "stringParamOverrides": [],
+                "boolParamOverrides": [],
+                "intParamOverrides": [],
+                "propertyTagReplacement": [
+                  {
+                    "_Type_": "ContractPropertyTagReplacement",
+                    "templateTag": {
+                      "_RecordPath_": "file://./../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+                      "_RecordName_": "Tag.13abec13-80ce-4fda-917a-c2e2225b0268",
+                      "_RecordId_": "13abec13-80ce-4fda-917a-c2e2225b0268"},
+                    "replacementTag": {
+                      "_RecordPath_": "file://./../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+                      "_RecordName_": "Tag.2e415c27-168d-4129-a216-7632f74eb911",
+                      "_RecordId_": "2e415c27-168d-4129-a216-7632f74eb911"}}],
+                "propertyOverrides": [],
+                "modifierOverrides": [],
+                "missionTypeOverride": null,
+                "overridePhaseMissionDetailsDisplayInfo": [],
+                "id": "7f059782-82e7-4d05-8248-492baf7fcf4b",
+                "additionalPrerequisites": [
+                  {
+                    "_Type_": "ContractPrerequisite_Locality",
+                    "localityAvailable": "file://./../../../../../libs/foundry/records/missiondata/pu_missionlocality/stanton2.json"},
+                  {
+                    "_Type_": "ContractPrerequisite_CompletedContractTags",
+                    "includePrerequisiteWhenSharing": false,
+                    "requiredCompletedContractTags": {
+                      "_Type_": "TagList",
+                      "tags": [
+                        {
+                          "_RecordPath_": "file://./../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+                          "_RecordName_": "Tag.98c4ba7f-c4c4-4d53-bdc1-fa130d2fd566",
+                          "_RecordId_": "98c4ba7f-c4c4-4d53-bdc1-fa130d2fd566"}]},
+                    "requiredCountValue": 1,
+                    "excludedCompletedContractTags": {
+                      "_Type_": "TagList",
+                      "tags": []},
+                    "excludedCountValue": 1}]},
+              {
+                "_Type_": "SubContract",
+                "stringParamOverrides": [],
+                "boolParamOverrides": [],
+                "intParamOverrides": [],
+                "propertyTagReplacement": [
+                  {
+                    "_Type_": "ContractPropertyTagReplacement",
+                    "templateTag": {
+                      "_RecordPath_": "file://./../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+                      "_RecordName_": "Tag.13abec13-80ce-4fda-917a-c2e2225b0268",
+                      "_RecordId_": "13abec13-80ce-4fda-917a-c2e2225b0268"},
+                    "replacementTag": {
+                      "_RecordPath_": "file://./../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+                      "_RecordName_": "Tag.67508ea1-f2a5-4e1a-a045-2c1378c4b89e",
+                      "_RecordId_": "67508ea1-f2a5-4e1a-a045-2c1378c4b89e"}}],
+                "propertyOverrides": [],
+                "modifierOverrides": [],
+                "missionTypeOverride": null,
+                "overridePhaseMissionDetailsDisplayInfo": [],
+                "id": "79b797e8-6bd7-4bac-9c8c-ef695ae65cec",
+                "additionalPrerequisites": [
+                  {
+                    "_Type_": "ContractPrerequisite_Locality",
+                    "localityAvailable": "file://./../../../../../libs/foundry/records/missiondata/pu_missionlocality/stanton3.json"},
+                  {
+                    "_Type_": "ContractPrerequisite_CompletedContractTags",
+                    "includePrerequisiteWhenSharing": false,
+                    "requiredCompletedContractTags": {
+                      "_Type_": "TagList",
+                      "tags": [
+                        {
+                          "_RecordPath_": "file://./../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+                          "_RecordName_": "Tag.98c4ba7f-c4c4-4d53-bdc1-fa130d2fd566",
+                          "_RecordId_": "98c4ba7f-c4c4-4d53-bdc1-fa130d2fd566"}]},
+                    "requiredCountValue": 1,
+                    "excludedCompletedContractTags": {
+                      "_Type_": "TagList",
+                      "tags": []},
+                    "excludedCountValue": 1}]},
+              {
+                "_Type_": "SubContract",
+                "stringParamOverrides": [],
+                "boolParamOverrides": [],
+                "intParamOverrides": [],
+                "propertyTagReplacement": [
+                  {
+                    "_Type_": "ContractPropertyTagReplacement",
+                    "templateTag": {
+                      "_RecordPath_": "file://./../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+                      "_RecordName_": "Tag.13abec13-80ce-4fda-917a-c2e2225b0268",
+                      "_RecordId_": "13abec13-80ce-4fda-917a-c2e2225b0268"},
+                    "replacementTag": {
+                      "_RecordPath_": "file://./../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+                      "_RecordName_": "Tag.ff4d704a-7840-4577-ba64-7d4bd709ab9d",
+                      "_RecordId_": "ff4d704a-7840-4577-ba64-7d4bd709ab9d"}}],
+                "propertyOverrides": [],
+                "modifierOverrides": [],
+                "missionTypeOverride": null,
+                "overridePhaseMissionDetailsDisplayInfo": [],
+                "id": "f49737f9-bc9a-44db-8c39-e875d06e0a40",
+                "additionalPrerequisites": [
+                  {
+                    "_Type_": "ContractPrerequisite_Locality",
+                    "localityAvailable": "file://./../../../../../libs/foundry/records/missiondata/pu_missionlocality/stanton4.json"},
+                  {
+                    "_Type_": "ContractPrerequisite_CompletedContractTags",
+                    "includePrerequisiteWhenSharing": false,
+                    "requiredCompletedContractTags": {
+                      "_Type_": "TagList",
+                      "tags": [
+                        {
+                          "_RecordPath_": "file://./../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+                          "_RecordName_": "Tag.98c4ba7f-c4c4-4d53-bdc1-fa130d2fd566",
+                          "_RecordId_": "98c4ba7f-c4c4-4d53-bdc1-fa130d2fd566"}]},
+                    "requiredCountValue": 1,
+                    "excludedCompletedContractTags": {
+                      "_Type_": "TagList",
+                      "tags": []},
+                    "excludedCountValue": 1}]}],
+            "additionalPrerequisites": [
+              {
+                "_Type_": "ContractPrerequisite_Locality",
+                "localityAvailable": "file://./../../../../../libs/foundry/records/missiondata/pu_missionlocality/stanton1.json"},
+              {
+                "_Type_": "ContractPrerequisite_CompletedContractTags",
+                "includePrerequisiteWhenSharing": false,
+                "requiredCompletedContractTags": {
+                  "_Type_": "TagList",
+                  "tags": [
+                    {
+                      "_RecordPath_": "file://./../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+                      "_RecordName_": "Tag.98c4ba7f-c4c4-4d53-bdc1-fa130d2fd566",
+                      "_RecordId_": "98c4ba7f-c4c4-4d53-bdc1-fa130d2fd566"}]},
+                "requiredCountValue": 1,
+                "excludedCompletedContractTags": {
+                  "_Type_": "TagList",
+                  "tags": []},
+                "excludedCountValue": 1}],
+            "generationParams": {
+              "_Type_": "ContractGenerationParams_Legacy",
+              "maxInstances": -1,
+              "maxInstancesPerPlayer": 2,
+              "respawnTime": 0.0,
+              "respawnTimeVariation": 0.0},
+            "contractLifeTime": {
+              "_Type_": "ContractLifeTime",
+              "instanceLifeTime": 10.0,
+              "instanceLifeTimeVariation": 5.0},
+            "contractPlugins": [],
+            "contractResults": {
+              "_Type_": "ContractResults",
+              "contractResults": [
+                {
+                  "_Type_": "ContractResult_CalculatedReward",
+                  "missionResults": [
+                    true,
+                    false,
+                    false,
+                    false,
+                    false]},
+                {
+                  "_Type_": "ContractResult_CompletionTags",
+                  "missionResults": [
+                    true,
+                    false,
+                    false,
+                    false,
+                    false],
+                  "completionTags": [
+                    {
+                      "_Type_": "ContractResult_CompletionTag",
+                      "count": 1,
+                      "tag": {
+                        "_RecordPath_": "file://./../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+                        "_RecordName_": "Tag.6bbc0a71-bcc3-483d-b37c-f3e8d5534c83",
+                        "_RecordId_": "6bbc0a71-bcc3-483d-b37c-f3e8d5534c83"}}]},
+                null],
+              "contractBuyInAmount": 0,
+              "timeToComplete": 25.0,
+              "difficulty": {
+                "_Type_": "ContractDifficulty",
+                "difficultyProfile": "file://./../../../../../libs/foundry/records/contracts/contractdifficultyprofiles/event_difficultyprofile.json",
+                "mechanicalSkill": "Zero_risk_of_action_2",
+                "mentalLoad": "Routine_light_work_3",
+                "riskOfLoss": "Barely_even_breaking_a_sweat_2",
+                "gameKnowledge": "FPS_mechanics_walk_shoot_mobiGlass_2"}}}]}],
+    "required_active_scenarios": [
+      "file://./../../../../../libs/foundry/records/missionscenarios/luminalia_scnario.json"]}}

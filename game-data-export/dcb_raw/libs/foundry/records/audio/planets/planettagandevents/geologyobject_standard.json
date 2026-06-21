@@ -1,0 +1,22 @@
+{
+  "_RecordName_": "ProceduralPlanetAudioTagAndEventsDef.GeologyObject_Standard",
+  "_RecordId_": "f88abe1f-972a-470b-b562-9969a6e2b89b",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "ProceduralPlanetAudioTagAndEventsDef",
+    "tagAndEvents": [
+      {
+        "_Type_": "ProceduralPlanetAudioTagAndEvent",
+        "tag": {
+          "_RecordPath_": "file://./../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+          "_RecordName_": "Tag.ae7b18a2-0478-4ff4-8e86-9799af4759b6",
+          "_RecordId_": "ae7b18a2-0478-4ff4-8e86-9799af4759b6"},
+        "movementRtpc": {
+          "_Type_": "AudioRtpc",
+          "rtpc": "ProceduralPlanetAudio_Wind_Speed"},
+        "loopStart": {
+          "_Type_": "GlobalResourceAudio",
+          "audioTrigger": "Play_ENVS_ProcPlanetAudio_AtmosphereDriven_GeologyObject_Standard"},
+        "loopStop": {
+          "_Type_": "GlobalResourceAudio",
+          "audioTrigger": "Stop_ENVS_ProcPlanetAudio_AtmosphereDriven_GeologyObject_Standard"}}]}}

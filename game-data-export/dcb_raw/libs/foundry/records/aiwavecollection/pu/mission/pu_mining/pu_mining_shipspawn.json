@@ -1,0 +1,28 @@
+{
+  "_RecordName_": "AIWaveCollection.PU_Mining_ShipSpawn",
+  "_RecordId_": "e511b5f5-53d7-4d29-8ba5-06ea7aef4920",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "AIWaveCollection",
+    "waves": [
+      {
+        "_Type_": "AIWave",
+        "id": 1,
+        "textId": "",
+        "staggerTime": 1.0,
+        "members": [
+          {
+            "_Type_": "AIWaveMember",
+            "archetype": "",
+            "entityClassDefinition": "file://./../../../../../../../libs/foundry/records/entities/spaceships/misc_prospector.json",
+            "name": "",
+            "vehicleName": "Mission Prospector",
+            "amount": 1,
+            "minAmount": -1,
+            "midAmount": -1,
+            "maxAmount": -1,
+            "crewManifestOverride": null,
+            "skillsetOverride": null,
+            "cargoManifests": [
+              null],
+            "aiDamageModifiersOverride": null}]}]}}

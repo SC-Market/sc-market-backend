@@ -1,0 +1,8 @@
+{
+  "_RecordName_": "InteriorMapSectionDefinition.RestStop_Shop_Ship_Wpn_Gen_Sml_A",
+  "_RecordId_": "9e197ecd-77d5-46e2-9cab-294cfd09a7a6",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "InteriorMapSectionDefinition",
+    "name": "@area_name_shop_ship_wpn_gen_sml_a",
+    "restrictViewBounds": false}}

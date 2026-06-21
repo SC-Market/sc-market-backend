@@ -1,0 +1,152 @@
+{
+  "_RecordName_": "BuildingBlocks_Style.MFD_G_MissileDetails",
+  "_RecordId_": "299c0fd0-b533-4274-a8e1-d6722a96cab9",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "BuildingBlocks_Style",
+    "entries": [
+      {
+        "_Type_": "BuildingBlocks_StyleEntry",
+        "name": "Readout Canvas",
+        "conditionsList": [
+          {
+            "_Type_": "BuildingBlocks_StyleConditionList",
+            "name": "New Condition List",
+            "conditions": [
+              {
+                "_Type_": "BuildingBlocks_StyleSelectorConditionTag",
+                "tag": {
+                  "_RecordPath_": "file://./../../../../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+                  "_RecordName_": "Tag.6f5de253-b3b8-4bee-9ab4-e949da92d4ce",
+                  "_RecordId_": "6f5de253-b3b8-4bee-9ab4-e949da92d4ce"}}]}],
+        "modifiers": [
+          {
+            "_Type_": "BuildingBlocks_FieldModifierRecordRef",
+            "field": {
+              "_Type_": "BuildingBlocks_FieldModifierRecordRefTypeCanvasReferenceRecord",
+              "value": "file://./../../../../../../../../../libs/foundry/records/ui/buildingblocks/ships/displays/mfdscreens/mc_mfdcomponents/screens/self/types/misl/gen_mc_s_missilereadout.json"}},
+          {
+            "_Type_": "BuildingBlocks_FieldModifierBoolean",
+            "field": "IsActive",
+            "value": true}],
+        "transitions": []},
+      {
+        "_Type_": "BuildingBlocks_StyleEntry",
+        "name": "Right Readout Position",
+        "conditionsList": [
+          {
+            "_Type_": "BuildingBlocks_StyleConditionList",
+            "name": "New Condition List",
+            "conditions": [
+              {
+                "_Type_": "BuildingBlocks_StyleSelectorConditionAllOfCondition",
+                "conditions": [
+                  {
+                    "_Type_": "BuildingBlocks_StyleSelectorConditionTag",
+                    "tag": {
+                      "_RecordPath_": "file://./../../../../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+                      "_RecordName_": "Tag.24841a48-796b-4b46-9417-bd2dbfe734d1",
+                      "_RecordId_": "24841a48-796b-4b46-9417-bd2dbfe734d1"}},
+                  {
+                    "_Type_": "BuildingBlocks_StyleSelectorConditionType",
+                    "type": "Base"}]}]}],
+        "modifiers": [
+          {
+            "_Type_": "BuildingBlocks_FieldModifierNumber",
+            "field": "AnchorY",
+            "value": -0.03},
+          {
+            "_Type_": "BuildingBlocks_FieldModifierNumber",
+            "field": "AnchorX",
+            "value": 0.78}],
+        "transitions": []},
+      {
+        "_Type_": "BuildingBlocks_StyleEntry",
+        "name": "Right Readout Greeble",
+        "conditionsList": [
+          {
+            "_Type_": "BuildingBlocks_StyleConditionList",
+            "name": "New Condition List",
+            "conditions": [
+              {
+                "_Type_": "BuildingBlocks_StyleSelectorConditionChild",
+                "conditions": [
+                  {
+                    "_Type_": "BuildingBlocks_StyleSelectorConditionTag",
+                    "tag": {
+                      "_RecordPath_": "file://./../../../../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+                      "_RecordName_": "Tag.24841a48-796b-4b46-9417-bd2dbfe734d1",
+                      "_RecordId_": "24841a48-796b-4b46-9417-bd2dbfe734d1"}}]},
+              {
+                "_Type_": "BuildingBlocks_StyleSelectorConditionType",
+                "type": "Card"}]}],
+        "modifiers": [
+          {
+            "_Type_": "BuildingBlocks_FieldModifierNumber",
+            "field": "AnchorY",
+            "value": 0.95},
+          {
+            "_Type_": "BuildingBlocks_FieldModifierNumber",
+            "field": "AnchorX",
+            "value": 0.75}],
+        "transitions": []},
+      {
+        "_Type_": "BuildingBlocks_StyleEntry",
+        "name": "Right Readout Greeble Pos",
+        "conditionsList": [
+          {
+            "_Type_": "BuildingBlocks_StyleConditionList",
+            "name": "New Condition List",
+            "conditions": [
+              {
+                "_Type_": "BuildingBlocks_StyleSelectorConditionAllOfCondition",
+                "conditions": [
+                  {
+                    "_Type_": "BuildingBlocks_StyleSelectorConditionTag",
+                    "tag": {
+                      "_RecordPath_": "file://./../../../../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+                      "_RecordName_": "Tag.24841a48-796b-4b46-9417-bd2dbfe734d1",
+                      "_RecordId_": "24841a48-796b-4b46-9417-bd2dbfe734d1"}},
+                  {
+                    "_Type_": "BuildingBlocks_StyleSelectorConditionType",
+                    "type": "Image"}]}]}],
+        "modifiers": [
+          {
+            "_Type_": "BuildingBlocks_FieldModifierString",
+            "field": "ImagePath",
+            "value": "UI/Textures/I_InteractiveScreens/MFD/PU Generic/PU_MFD_Generic_SelfStatus_Corner_graphic_backdrop_3.tif"},
+          {
+            "_Type_": "BuildingBlocks_FieldModifierNumber",
+            "field": "SizeX",
+            "value": 0.9},
+          {
+            "_Type_": "BuildingBlocks_FieldModifierNumber",
+            "field": "SizeY",
+            "value": 0.6},
+          {
+            "_Type_": "BuildingBlocks_FieldModifierColor",
+            "field": "FillColor",
+            "color": {
+              "_Type_": "BuildingBlocks_ColorStyle",
+              "color": "Base",
+              "alpha": 1.0}}],
+        "transitions": []}],
+    "colorStyles": [
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null],
+    "textFieldModifiers": []}}

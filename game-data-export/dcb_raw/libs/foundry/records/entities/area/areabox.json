@@ -1,0 +1,21 @@
+{
+  "_RecordName_": "EntityClassDefinition.AreaBox",
+  "_RecordId_": "9bf38988-1d51-4f37-996a-00139e66420b",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "EntityClassDefinition",
+    "Category": "Default",
+    "Icon": "Box.bmp",
+    "Invisible": true,
+    "BBoxSelection": false,
+    "defaultEditorColor": {
+      "_Type_": "RGB",
+      "r": 1.0,
+      "g": 1.0,
+      "b": 0.0},
+    "entityDensityClass": null,
+    "tags": [],
+    "StaticEntityClassData": [],
+    "Components": [
+      {
+        "_Type_": "AreaBoxComponentParams"}]}}

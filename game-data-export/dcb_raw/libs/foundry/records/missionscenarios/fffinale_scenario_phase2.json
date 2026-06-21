@@ -1,0 +1,18 @@
+{
+  "_RecordName_": "MissionScenario.FFFinale_Scenario_Phase2",
+  "_RecordId_": "3b4c3157-193d-4a8f-80fa-4f284eb46a52",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "MissionScenario",
+    "name": "CFP vs HH Phase 2 Scenario",
+    "description": "Start this Scenario to activate phase 2 missions.  This scenario must remain active even during phase 3!",
+    "variables": [],
+    "cycles": [],
+    "schedule": {
+      "_Type_": "MissionScenarioSchedule",
+      "enabled": false,
+      "start_constraint": null,
+      "end_constraint": null,
+      "recurrence": null},
+    "auto_create": true,
+    "track_progress": false}}

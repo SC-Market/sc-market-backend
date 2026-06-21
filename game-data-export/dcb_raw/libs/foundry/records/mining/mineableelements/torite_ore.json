@@ -1,0 +1,17 @@
+{
+  "_RecordName_": "MineableElement.Torite_Ore",
+  "_RecordId_": "d0b10af3-e0f3-4bc3-b2d9-737dbb7846cf",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "MineableElement",
+    "resourceType": {
+      "_RecordPath_": "file://./../../../../../libs/foundry/records/resourcetypedatabase/resourcetypedatabase.json",
+      "_RecordName_": "ResourceType.Ore_Torite",
+      "_RecordId_": "48b9b7ba-cd5e-458b-bb91-9b43eb46c568"},
+    "elementInstability": 550.0,
+    "elementResistance": 0.25,
+    "elementOptimalWindowMidpoint": 0.5,
+    "elementOptimalWindowMidpointRandomness": 0.25,
+    "elementOptimalWindowThinness": 2.1,
+    "elementExplosionMultiplier": 100.0,
+    "elementClusterFactor": 0.05}}

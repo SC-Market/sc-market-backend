@@ -1,0 +1,15 @@
+{
+  "_RecordName_": "LootTable.LootTable_Container_Undersuit_Rare",
+  "_RecordId_": "98302cdb-0a03-4b60-91bd-c06470d79de7",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "LootTable",
+    "lootArchetypes": [
+      {
+        "_Type_": "WeightedLootArchetype",
+        "archetype": "file://./../../../../../libs/foundry/records/lootgeneration/lootarchetypes/lootarchetype_container_undersuit_common.json",
+        "weight": 1.0,
+        "numberOfResultsConstraints": {
+          "_Type_": "NumResultsConstraints",
+          "minResults": 0,
+          "maxResults": 0}}]}}

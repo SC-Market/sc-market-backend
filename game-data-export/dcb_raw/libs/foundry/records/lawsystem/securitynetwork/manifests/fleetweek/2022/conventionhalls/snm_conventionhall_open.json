@@ -1,0 +1,50 @@
+{
+  "_RecordName_": "SecurityNetworkManifest.SNM_ConventionHall_Open",
+  "_RecordId_": "1548cbfa-d157-471c-98ca-cbe006434c5e",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "SecurityNetworkManifest",
+    "defaultProtocol": {
+      "_Type_": "SecurityNetworkProtocol",
+      "permissionsWithClearance": {
+        "_Type_": "SecurityNetworkPermissions",
+        "access": "Yes",
+        "trespass": "No"},
+      "permissionsWithoutClearance": {
+        "_Type_": "SecurityNetworkPermissions",
+        "access": "Yes",
+        "trespass": "No"},
+      "acceptedClearance": {
+        "_Type_": "SecurityClearanceConditions",
+        "tokens": [
+          "file://./../../../../../../../../../libs/foundry/records/lawsystem/securityclearancetokens/pu/conventionhall.json"]},
+      "ownerFaction": null},
+    "roomProtocols": [
+      {
+        "_Type_": "SecurityNetworkProtocolOverride",
+        "roomIdentifiers": {
+          "_Type_": "TagList",
+          "tags": [
+            {
+              "_RecordPath_": "file://./../../../../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+              "_RecordName_": "Tag.c6ad474e-ce77-4bbd-81cd-596e2410c234",
+              "_RecordId_": "c6ad474e-ce77-4bbd-81cd-596e2410c234"}]},
+        "protocol": {
+          "_Type_": "SecurityNetworkProtocol",
+          "permissionsWithClearance": {
+            "_Type_": "SecurityNetworkPermissions",
+            "access": "Yes",
+            "trespass": "Inherit"},
+          "permissionsWithoutClearance": {
+            "_Type_": "SecurityNetworkPermissions",
+            "access": "Yes",
+            "trespass": "Inherit"},
+          "acceptedClearance": {
+            "_Type_": "SecurityClearanceConditions",
+            "tokens": []},
+          "ownerFaction": null}}],
+    "variables": [],
+    "hostilityRules": [],
+    "variableEffects": [],
+    "isNeutralTerritory": false,
+    "teleportPlayerOut": false}}

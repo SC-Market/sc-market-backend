@@ -1,0 +1,19 @@
+{
+  "_RecordName_": "MissionGiver.MissionGiver_UnifiedDistributionManagement",
+  "_RecordId_": "e16755a8-165a-4ded-a899-cf333d85b4ef",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "MissionGiver",
+    "entityClass": "file://./../../../../../libs/foundry/records/factions/legacy/udm.json",
+    "reputation": null,
+    "displayName": "@LOC_UNINITIALIZED",
+    "description": "@LOC_UNINITIALIZED",
+    "headquarters": "@LOC_UNINITIALIZED",
+    "invitationTimeout": 5.0,
+    "visitTimeout": 20.0,
+    "shortCooldown": 10.0,
+    "mediumCooldown": 20.0,
+    "longCooldown": 30.0,
+    "Allies": [],
+    "Enemies": [],
+    "propertiesBB": []}}

@@ -1,0 +1,61 @@
+{
+  "_RecordName_": "ModuleDeclaration.DestroyItems_GasStorage",
+  "_RecordId_": "9592b3a5-67ae-4b5d-8425-556a379a457a",
+  "_RecordTag_": "MissionFeatures",
+  "_RecordValue_": {
+    "_Type_": "ModuleDeclaration",
+    "module": "Libs/Subsumption/Missions/PU/Missions/DestroyItems.xml",
+    "moduleType": {
+      "_Type_": "ModuleDeclarationType_Mission",
+      "requiredLocationModules": [],
+      "requiredResourceSlot": null,
+      "pausesLocationNPCAutospawns": false},
+    "locationEntities": [
+      {
+        "_Type_": "ModuleLocationEntities_Static",
+        "debugName": "TargetEntities",
+        "requiredForInit": false,
+        "optional": false,
+        "entityDeclarations": [
+          "file://./../../../../../../libs/foundry/records/missiondata/declarations/locationentitytypes/destroyable_gasstorage.json"]}],
+    "properties": [
+      {
+        "_Type_": "MissionProperty",
+        "missionVariableName": "",
+        "extendedTextToken": "ItemsToDestroy",
+        "value": {
+          "_Type_": "MissionPropertyValue_StringHash",
+          "options": [
+            {
+              "_Type_": "MissionPropertyValueOption_StringHash",
+              "textId": "@destroyItems_BombingRunItem",
+              "weighting": 1.0,
+              "DEBUG_forceChooseThisOption": false,
+              "dependentProperties": [],
+              "value": ""}]}},
+      {
+        "_Type_": "MissionProperty",
+        "missionVariableName": "HealExisitingEntities_BP",
+        "extendedTextToken": "",
+        "value": {
+          "_Type_": "MissionPropertyValue_Boolean",
+          "value": true}},
+      {
+        "_Type_": "MissionProperty",
+        "missionVariableName": "ExistingEntitiesToFind_BP",
+        "extendedTextToken": "",
+        "value": {
+          "_Type_": "MissionPropertyValue_Tags",
+          "tags": {
+            "_Type_": "TagList",
+            "tags": [
+              {
+                "_RecordPath_": "file://./../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+                "_RecordName_": "Tag.8aab2897-38f0-4097-adf6-4767a018611a",
+                "_RecordId_": "8aab2897-38f0-4097-adf6-4767a018611a"}]},
+          "negativeTags": {
+            "_Type_": "TagList",
+            "tags": []},
+          "options": []}}],
+    "spawnedEntities": [],
+    "declaredVariables": []}}

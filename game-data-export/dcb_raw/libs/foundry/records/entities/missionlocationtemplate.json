@@ -1,0 +1,32 @@
+{
+  "_RecordName_": "EntityClassDefinition.MissionLocationTemplate",
+  "_RecordId_": "b225e68a-e88d-4c67-890a-fa87416df694",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "EntityClassDefinition",
+    "Category": "Default",
+    "Icon": "Default.bmp",
+    "Invisible": false,
+    "BBoxSelection": false,
+    "defaultEditorColor": {
+      "_Type_": "RGB",
+      "r": 1.0,
+      "g": 1.0,
+      "b": 0.0},
+    "entityDensityClass": null,
+    "tags": [],
+    "StaticEntityClassData": [],
+    "Components": [
+      {
+        "_Type_": "LocationComponentParams",
+        "shapeLinkName": ""},
+      {
+        "_Type_": "SEntityComponentObjectMetadataParams",
+        "name": "@LOC_EMPTY",
+        "hasLocalBounds": true,
+        "isDynamic": false,
+        "metadata": []},
+      {
+        "_Type_": "SMissionLocationComponentParams"},
+      {
+        "_Type_": "EntityComponentSpawnClosetManagerParams"}]}}

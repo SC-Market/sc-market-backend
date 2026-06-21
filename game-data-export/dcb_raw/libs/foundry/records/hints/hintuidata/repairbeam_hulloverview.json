@@ -1,0 +1,12 @@
+{
+  "_RecordName_": "HintUIData.RepairBeam_HullOverview",
+  "_RecordId_": "b3dd63bf-01cc-4a4a-95e8-3efb7e3c97f6",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "HintUIData",
+    "TitleText": "@Hints_RepairBeam_HullOverview_Title",
+    "BodyText": "@Hints_RepairBeam_HullOverview",
+    "BodyTextGamePad": "@Hints_RepairBeam_HullOverview",
+    "BodyTextJoystick": "@Hints_RepairBeam_HullOverview",
+    "TitleImagePath": "",
+    "BodyImagePath": ""}}

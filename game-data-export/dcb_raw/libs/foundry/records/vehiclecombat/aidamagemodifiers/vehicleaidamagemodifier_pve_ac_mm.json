@@ -1,0 +1,13 @@
+{
+  "_RecordName_": "SVehicleAiDamageModifiers.VehicleAiDamageModifier_PVE_AC_MM",
+  "_RecordId_": "2f7db0b0-71cc-43d0-99a2-24836dca8da3",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "SVehicleAiDamageModifiers",
+    "modifiers": [
+      1.0,
+      2.0,
+      1.0,
+      1.0,
+      1.0,
+      1.0]}}

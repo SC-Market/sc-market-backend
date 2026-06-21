@@ -1,0 +1,22 @@
+{
+  "_RecordName_": "LoadoutKit.GRIN_MXC_Filament_Grey_Black_Yellow_Solid",
+  "_RecordId_": "937330c0-d5d3-4218-b9c2-9290b55341d1",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "LoadoutKit",
+    "name": "@item_NameMTC_Paint_Grey_Black_Yellow_Solid",
+    "description": "@item_DescMTC_Paint_Grey_Black_Yellow_Solid",
+    "loadout": {
+      "_Type_": "SItemPortLoadoutManualParams",
+      "WearRange": null,
+      "DirtRange": null,
+      "SkipInventoryItemsOnMissionEntities": false,
+      "InventoryItems": [],
+      "entries": [
+        {
+          "_Type_": "SItemPortLoadoutEntryParams",
+          "itemPortName": "hardpoint_paint",
+          "entityClassName": "",
+          "entityClassReference": "file://./../../../../../libs/foundry/records/entities/scitem/ships/paints/paint_mtc_grey_black_yellow_solid.json",
+          "inventoryContainer": null,
+          "loadout": null}]}}}

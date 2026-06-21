@@ -1,0 +1,22 @@
+{
+  "_RecordName_": "SubHarvestableConfigRecord.V3SubHarvestableConfig_LowTech_LMG_WeaponsRack",
+  "_RecordId_": "da6e073c-b9da-49a7-a362-8f4b73b960d2",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "SubHarvestableConfigRecord",
+    "subConfig": {
+      "_Type_": "SubHarvestableConfig",
+      "initialSlotsProbability": 1.0,
+      "initialSlotsProbabilityDeepest": null,
+      "configRespawnTimeMultiplier": 1.0,
+      "subHarvestables": [
+        {
+          "_Type_": "SubHarvestableSlot",
+          "harvestable": null,
+          "harvestableEntityClass": "file://./../../../../../libs/foundry/records/entities/scitem/usables/weapon_rack_1_none_lmg_common_001.json",
+          "harvestableSetup": "file://./../../../../../libs/foundry/records/harvestable/harvestablesetups/v3harvestablesetup_storageunit_30m.json",
+          "relativeProbability": 1.0,
+          "relativeProbabilityDeepest": null,
+          "harvestableRespawnTimeMultiplier": 1.0,
+          "geometries": [],
+          "lootConfig": null}]}}}

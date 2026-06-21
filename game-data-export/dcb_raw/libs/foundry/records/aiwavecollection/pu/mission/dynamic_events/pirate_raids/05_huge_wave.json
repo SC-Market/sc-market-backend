@@ -1,0 +1,43 @@
+{
+  "_RecordName_": "AIWaveCollection.05_Huge_Wave",
+  "_RecordId_": "7eeeb23f-89c7-4e99-b59e-b972cab724d1",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "AIWaveCollection",
+    "waves": [
+      {
+        "_Type_": "AIWave",
+        "id": 1,
+        "textId": "Wave 1",
+        "staggerTime": 1.0,
+        "members": [
+          {
+            "_Type_": "AIWaveMember",
+            "archetype": "",
+            "entityClassDefinition": "file://./../../../../../../../../libs/foundry/records/entities/spaceships/aegs_gladius_ea_ai_pir.json",
+            "name": "",
+            "vehicleName": "",
+            "amount": 4,
+            "minAmount": -1,
+            "midAmount": -1,
+            "maxAmount": -1,
+            "crewManifestOverride": null,
+            "skillsetOverride": "file://./../../../../../../../../libs/foundry/records/aiprofile/skills/humanpilot20.json",
+            "cargoManifests": [
+              null],
+            "aiDamageModifiersOverride": null},
+          {
+            "_Type_": "AIWaveMember",
+            "archetype": "",
+            "entityClassDefinition": "file://./../../../../../../../../libs/foundry/records/entities/spaceships/aegs_hammerhead_ea_ai_pir.json",
+            "name": "",
+            "vehicleName": "",
+            "amount": 1,
+            "minAmount": -1,
+            "midAmount": -1,
+            "maxAmount": -1,
+            "crewManifestOverride": "file://./../../../../../../../../libs/foundry/records/crewmanifest/pu/ninetails/pu_human_ninetails_light_wturret.json",
+            "skillsetOverride": "file://./../../../../../../../../libs/foundry/records/aiprofile/skills/humanpilot20.json",
+            "cargoManifests": [
+              null],
+            "aiDamageModifiersOverride": null}]}]}}

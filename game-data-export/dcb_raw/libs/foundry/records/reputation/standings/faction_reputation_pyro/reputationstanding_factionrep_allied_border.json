@@ -1,0 +1,15 @@
+{
+  "_RecordName_": "SReputationStandingParams.ReputationStanding_FactionRep_Allied_Border",
+  "_RecordId_": "c3c93c3f-b885-47cc-b131-f4250bd0a60e",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "SReputationStandingParams",
+    "name": "FactionRep_Allied_Border",
+    "description": "desc",
+    "displayName": "@RepScope_Contractor_Rank0",
+    "perkDescription": "@blank_space",
+    "icon": "",
+    "minReputation": 750,
+    "driftReputation": 0,
+    "driftTimeHours": 0.0,
+    "gated": false}}

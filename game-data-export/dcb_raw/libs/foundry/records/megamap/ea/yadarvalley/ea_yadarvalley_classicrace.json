@@ -1,0 +1,41 @@
+{
+  "_RecordName_": "MegaMap.EA_YadarValley_ClassicRace",
+  "_RecordId_": "e9304780-deba-4bd5-a491-7ac3b8d29be2",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "MegaMap",
+    "gameMode": "file://./../../../../../../libs/foundry/records/gamemode/ea_classicrace.json",
+    "SolarSystems": [
+      {
+        "_Type_": "SMegaMapSolarSystem",
+        "Record": null,
+        "ObjectContainers": [
+          "ObjectContainers/EA/YadarValley/yadarvalley_global.socpak"]}],
+    "singlePlayerOrMultiplayer": "Both",
+    "subsumptionMission": "Libs/Subsumption/Missions/AC/DFM_Race/DFM_Race.xml",
+    "subsumptionMissionInitParams": [],
+    "arenaCommanderScenarioParams": {
+      "_Type_": "ArenaCommanderScenarioParams",
+      "locationObjectContainersParams": {
+        "_Type_": "ArenaCommanderLocationObjectContainersParams",
+        "location": "file://./../../../../../../libs/foundry/records/starmap/pu/system/stanton/stanton2b/starmapobject.stanton2b.json",
+        "overrideRootOC": false,
+        "objectContainers": [
+          "ObjectContainers/EA/YadarValley/yadarvalley_track1.socpak",
+          "ObjectContainers/EA/YadarValley/yadarvalley_track1_forward.socpak"]},
+      "planetOverrideParams": {
+        "_Type_": "ArenaCommanderPlanetOverrideParams",
+        "location": "file://./../../../../../../libs/foundry/records/starmap/pu/system/stanton/stanton2b/starmapobject.stanton2b.json",
+        "fixedRotation": 180.0}},
+    "level": "file://./../../../../../../libs/foundry/records/level/ea/ea_yadarvalley.json",
+    "trackViewIntro": "",
+    "rootLocation": null,
+    "streamingMode": "Always",
+    "bindCullingEnabled": true,
+    "defaultWinningTeamOverride": -1,
+    "displayName": "@LOC_UNINITIALIZED",
+    "appearsInS42LevelSelect": false,
+    "chapter": null,
+    "chapterAlias": "",
+    "skipLoadScreen": false,
+    "devDebugSkip": false}}

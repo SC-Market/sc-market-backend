@@ -1,0 +1,13 @@
+{
+  "_RecordName_": "AudioEnvironment.Environment_Int_Metal_Medium",
+  "_RecordId_": "181abb02-e5fb-4395-89b2-a2108068b77f",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "AudioEnvironment",
+    "wwiseEnvironmentName": "VERB_SYS_INT_Metal_Medium",
+    "interiorityMinimum": 0.9,
+    "interiorityMaximum": 1.0,
+    "sizeMinimum": 6.0,
+    "sizeMaximum": 10.0,
+    "primarySurfaceType": "metal_dense",
+    "secondarySurfaceType": "concrete_dense"}}

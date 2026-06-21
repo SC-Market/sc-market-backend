@@ -1,0 +1,19 @@
+{
+  "_RecordName_": "BlueprintPoolRecord.BP_REWARDS_BombingRunB",
+  "_RecordId_": "2190957e-a832-4a10-ad68-ec640de2c3d1",
+  "_RecordTag_": "SystemsDesign",
+  "_RecordValue_": {
+    "_Type_": "BlueprintPoolRecord",
+    "blueprintRewards": [
+      {
+        "_Type_": "BlueprintReward",
+        "weight": 1.0,
+        "blueprintRecord": "file://./../../../../../../libs/foundry/records/crafting/blueprints/crafting/fpsgear/armour/flightsuit/bp_craft_vgl_flightsuit_01_01_01.json"},
+      {
+        "_Type_": "BlueprintReward",
+        "weight": 1.0,
+        "blueprintRecord": "file://./../../../../../../libs/foundry/records/crafting/blueprints/crafting/fpsgear/armour/flightsuit/bp_craft_vgl_flightsuit_helmet_01_03_01.json"},
+      {
+        "_Type_": "BlueprintReward",
+        "weight": 1.0,
+        "blueprintRecord": "file://./../../../../../../libs/foundry/records/crafting/blueprints/crafting/fpsgear/armour/flightsuit/bp_craft_vgl_flightsuit_helmet_01_06_01.json"}]}}

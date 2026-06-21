@@ -1,0 +1,25 @@
+{
+  "_RecordName_": "MineableComposition.CommonShipMineables_Iron",
+  "_RecordId_": "6d8ce739-5180-4479-a43b-e1c2a580d72d",
+  "_RecordTag_": "SystemsDesign",
+  "_RecordValue_": {
+    "_Type_": "MineableComposition",
+    "depositName": "@items_commodities_iron_ore",
+    "minimumDistinctElements": 2,
+    "compositionArray": [
+      {
+        "_Type_": "MineableCompositionPart",
+        "mineableElement": "file://./../../../../../../libs/foundry/records/mining/mineableelements/iron_ore.json",
+        "minPercentage": 9.7,
+        "maxPercentage": 15.7,
+        "probability": 1.0,
+        "curveExponent": 1.0,
+        "qualityScale": 1.0},
+      {
+        "_Type_": "MineableCompositionPart",
+        "mineableElement": "file://./../../../../../../libs/foundry/records/mining/mineableelements/iron_ore.json",
+        "minPercentage": 34.3,
+        "maxPercentage": 84.3,
+        "probability": 1.0,
+        "curveExponent": 1.0,
+        "qualityScale": 0.49}]}}

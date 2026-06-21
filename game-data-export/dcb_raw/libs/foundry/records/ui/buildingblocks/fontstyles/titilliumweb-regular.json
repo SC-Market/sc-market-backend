@@ -1,0 +1,15 @@
+{
+  "_RecordName_": "BuildingBlocks_FontStyle.TitilliumWeb-Regular",
+  "_RecordId_": "9ce2c222-4171-4b9b-8908-1ae0d031e2b9",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "BuildingBlocks_FontStyle",
+    "font": "$Titillium-Reg",
+    "paintFile": "UI/fonts/Install/TitilliumWeb-Regular.slug",
+    "isBold": false,
+    "imageSizePercent": 0.75,
+    "scaleModifier": 0.87,
+    "leadingModifier": -0.32,
+    "topMarginModifier": 0.14,
+    "leftMarginModifier": 0.0,
+    "numImageReplacementSpaces": 7}}

@@ -1,0 +1,1158 @@
+{
+  "_RecordName_": "MissionBrokerEntry.PU_HijackedShip_Caterpillar_Stanton2",
+  "_RecordId_": "639f0b27-228b-4290-9022-959740346f48",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "MissionBrokerEntry",
+    "notForRelease": true,
+    "owner": "file://./../../../../../libs/foundry/records/devowners/developers/mft/elliotmaltby.json",
+    "missionModule": "Libs/Subsumption/Missions/PU/Missions/HijackedShip/HijackedShip_Caterpillar.xml",
+    "playerFacingDebugName": "",
+    "title": "@prisonerbreak_title",
+    "titleHUD": "@LOC_UNINITIALIZED",
+    "description": "@prisonerbreak_desc",
+    "missionGiver": "@prisonerbreak_from",
+    "commsChannelName": "@prisonerbreak_from",
+    "type": "file://./../../../../../libs/foundry/records/missiontype/pu/mercenary.json",
+    "associatedMissions": [],
+    "missionDifficulty": -1,
+    "localityAvailable": null,
+    "locationMissionAvailable": "file://./../../../../../libs/foundry/records/starmap/pu/system/stanton/stanton2/starmapobject.stanton2.json",
+    "availableDateSchedule": [],
+    "onlyAvailableIfAllMissionsNotAvailable": [],
+    "missionReward": {
+      "_Type_": "MissionReward",
+      "reward": 0,
+      "max": 38000,
+      "plusBonuses": true,
+      "currencyType": "UEC",
+      "reputationBonus": null},
+    "partialRewardPayout": null,
+    "missionResultReputationRewards": [
+      {
+        "_Type_": "SReputationAmountListParams",
+        "reputationAmounts": [
+          {
+            "_Type_": "SReputationAmountParams",
+            "factionReputation": "file://./../../../../../libs/foundry/records/factions/factionreputation/factionreputation_unlawful_twitchgang.json",
+            "reputationScope": "file://./../../../../../libs/foundry/records/reputation/scopes/reputationscope_affinity.json",
+            "reward": "file://./../../../../../libs/foundry/records/reputation/rewards/missionrewards_reputation/reputationrewardamount_positive_xxxs.json"}]},
+      {
+        "_Type_": "SReputationAmountListParams",
+        "reputationAmounts": []},
+      {
+        "_Type_": "SReputationAmountListParams",
+        "reputationAmounts": [
+          {
+            "_Type_": "SReputationAmountParams",
+            "factionReputation": "file://./../../../../../libs/foundry/records/factions/factionreputation/factionreputation_unlawful_twitchgang.json",
+            "reputationScope": "file://./../../../../../libs/foundry/records/reputation/scopes/reputationscope_affinity.json",
+            "reward": "file://./../../../../../libs/foundry/records/reputation/rewards/missionrewards_reputation/reputationrewardamount_negative_xxxxs.json"}]},
+      {
+        "_Type_": "SReputationAmountListParams",
+        "reputationAmounts": []},
+      {
+        "_Type_": "SReputationAmountListParams",
+        "reputationAmounts": []}],
+    "journalEntriesToAddOnComplete": [],
+    "journalEntriesToRemoveOnComplete": [],
+    "initiallyActive": true,
+    "notifyOnAvailable": false,
+    "preShowObjectives": false,
+    "showAsOffer": true,
+    "missionBuyInAmount": 0,
+    "refundBuyInOnWithdraw": false,
+    "hasCompleteButton": false,
+    "onlyOwnerCanComplete": false,
+    "handlesAbandonRequest": false,
+    "missionModulePerPlayer": true,
+    "maxInstances": 8,
+    "maxPlayersPerInstance": 1,
+    "maxInstancesPerPlayer": 1,
+    "canBeShared": true,
+    "onceOnly": false,
+    "tutorial": false,
+    "missionDeadline": {
+      "_Type_": "MissionDeadline",
+      "missionCompletionTime": 0.0,
+      "missionAutoEnd": false,
+      "missionResultAfterTimerEnd": "Failed",
+      "remainingTimeToShowTimer": 0.0,
+      "missionEndReason": "@LOC_EMPTY"},
+    "displayAlliedMarkers": true,
+    "availableInPrison": false,
+    "failIfSentToPrison": true,
+    "failIfBecameCriminal": false,
+    "failIfLeavePrison": false,
+    "completionTags": {
+      "_Type_": "TagList",
+      "tags": []},
+    "applyCompletionTagsOnFailed": false,
+    "applyCompletionTagsOnAbandoned": false,
+    "requestOnly": false,
+    "respawnTime": 15.0,
+    "respawnTimeVariation": 0.0,
+    "instanceHasLifeTime": true,
+    "showLifeTimeInMobiGlas": true,
+    "instanceLifeTime": 15.0,
+    "instanceLifeTimeVariation": 2.0,
+    "canReacceptAfterAbandoning": false,
+    "abandonedCooldownTime": 1.0,
+    "abandonedCooldownTimeVariation": 1.0,
+    "canReacceptAfterFailing": false,
+    "hasPersonalCooldown": true,
+    "personalCooldownTime": 10.0,
+    "personalCooldownTimeVariation": 0.0,
+    "moduleHandlesOwnShutdown": false,
+    "linkedMission": null,
+    "missionCompletePerk": null,
+    "modifiers": [],
+    "lawfulMission": false,
+    "missionGiverRecord": "file://./../../../../../libs/foundry/records/missiongiver/teciapacheco.json",
+    "invitationMission": null,
+    "missionTags": [],
+    "missionGiverFragmentTags": "",
+    "reputationPrerequisites": {
+      "_Type_": "ReputationPrerequisites",
+      "wantedLevelJurisdictionOverride": null,
+      "wantedLevel": {
+        "_Type_": "ReputationPrerequisiteRange",
+        "minValue": 0.0,
+        "maxValue": 5.0}},
+    "reputationRequirements": {
+      "_Type_": "SReputationMissionRequirementsParams",
+      "expression": [
+        {
+          "_Type_": "SReputationMissionGiverRequirementParams",
+          "factionReputation": "file://./../../../../../libs/foundry/records/factions/factionreputation/factionreputation_unlawful_twitchgang.json",
+          "reputationScope": "file://./../../../../../libs/foundry/records/reputation/scopes/reputationscope_affinity.json",
+          "comparison": "GreaterThan",
+          "standing": "file://./../../../../../libs/foundry/records/reputation/standings/affinity/reputationstanding_affinity_enemy_-005.json"}]},
+    "minRequiredMissions": [],
+    "requiredMissions": [
+      "file://./../../../../../libs/foundry/records/missionbroker/pu_missions/missiongivers/pacheco/pu_hijackedship_caterpillar_stanton3_pacheco.json"],
+    "requiredCompletedMissionTags": [],
+    "requiredJournalEntries": [],
+    "requiredAreaTags": {
+      "_Type_": "TagList",
+      "tags": []},
+    "excludedAreaTags": {
+      "_Type_": "TagList",
+      "tags": []},
+    "properties": [
+      {
+        "_Type_": "MissionProperty",
+        "missionVariableName": "MissionLocation_BP",
+        "extendedTextToken": "",
+        "value": {
+          "_Type_": "MissionPropertyValue_Location",
+          "matchConditions": [
+            {
+              "_Type_": "DataSetMatchCondition_TagSearch",
+              "tagSearch": [
+                {
+                  "_Type_": "TagSearchTerm",
+                  "positiveTags": [
+                    {
+                      "_RecordPath_": "file://./../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+                      "_RecordName_": "Tag.e513a3cd-fdf8-4a03-80d7-64a8c9888e44",
+                      "_RecordId_": "e513a3cd-fdf8-4a03-80d7-64a8c9888e44"},
+                    {
+                      "_RecordPath_": "file://./../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+                      "_RecordName_": "Tag.2e415c27-168d-4129-a216-7632f74eb911",
+                      "_RecordId_": "2e415c27-168d-4129-a216-7632f74eb911"}],
+                  "negativeTags": []}],
+              "tagType": "General"}],
+          "resourceTags": [],
+          "logErrorOnSearchFail": true}},
+      {
+        "_Type_": "MissionProperty",
+        "missionVariableName": "AIName_Save1",
+        "extendedTextToken": "NameSave1",
+        "value": {
+          "_Type_": "MissionPropertyValue_AIName",
+          "randomName": true,
+          "randomLastName": true,
+          "randomNickName": true,
+          "characterGivenName": "@LOC_UNINITIALIZED",
+          "characterGivenLastName": "@LOC_UNINITIALIZED",
+          "characterGivenNickName": "@LOC_UNINITIALIZED",
+          "characterNameData": "file://./../../../../../libs/foundry/records/characternamedata/humanmale.json",
+          "chanceOfNickName": 0.05}},
+      {
+        "_Type_": "MissionProperty",
+        "missionVariableName": "AIName_Save2",
+        "extendedTextToken": "NameSave2",
+        "value": {
+          "_Type_": "MissionPropertyValue_AIName",
+          "randomName": true,
+          "randomLastName": true,
+          "randomNickName": true,
+          "characterGivenName": "@LOC_UNINITIALIZED",
+          "characterGivenLastName": "@LOC_UNINITIALIZED",
+          "characterGivenNickName": "@LOC_UNINITIALIZED",
+          "characterNameData": "file://./../../../../../libs/foundry/records/characternamedata/humanmale.json",
+          "chanceOfNickName": 0.05}},
+      {
+        "_Type_": "MissionProperty",
+        "missionVariableName": "AIName_Save3",
+        "extendedTextToken": "NameSave3",
+        "value": {
+          "_Type_": "MissionPropertyValue_AIName",
+          "randomName": true,
+          "randomLastName": true,
+          "randomNickName": true,
+          "characterGivenName": "@LOC_UNINITIALIZED",
+          "characterGivenLastName": "@LOC_UNINITIALIZED",
+          "characterGivenNickName": "@LOC_UNINITIALIZED",
+          "characterNameData": "file://./../../../../../libs/foundry/records/characternamedata/humanmale.json",
+          "chanceOfNickName": 0.05}},
+      {
+        "_Type_": "MissionProperty",
+        "missionVariableName": "AISave1_BP",
+        "extendedTextToken": "AIIntegerSave1",
+        "value": {
+          "_Type_": "MissionPropertyValue_Integer",
+          "options": [
+            {
+              "_Type_": "MissionPropertyValueOption_Integer",
+              "textId": "@LOC_UNINITIALIZED",
+              "weighting": 1.0,
+              "DEBUG_forceChooseThisOption": false,
+              "dependentProperties": [],
+              "value": 1000,
+              "variation": 8999}]}},
+      {
+        "_Type_": "MissionProperty",
+        "missionVariableName": "AISave2_BP",
+        "extendedTextToken": "AIIntegerSave2",
+        "value": {
+          "_Type_": "MissionPropertyValue_Integer",
+          "options": [
+            {
+              "_Type_": "MissionPropertyValueOption_Integer",
+              "textId": "@LOC_UNINITIALIZED",
+              "weighting": 1.0,
+              "DEBUG_forceChooseThisOption": false,
+              "dependentProperties": [],
+              "value": 1000,
+              "variation": 8999}]}},
+      {
+        "_Type_": "MissionProperty",
+        "missionVariableName": "AISave3_BP",
+        "extendedTextToken": "AIIntegerSave3",
+        "value": {
+          "_Type_": "MissionPropertyValue_Integer",
+          "options": [
+            {
+              "_Type_": "MissionPropertyValueOption_Integer",
+              "textId": "@LOC_UNINITIALIZED",
+              "weighting": 1.0,
+              "DEBUG_forceChooseThisOption": false,
+              "dependentProperties": [],
+              "value": 1000,
+              "variation": 8999}]}},
+      {
+        "_Type_": "MissionProperty",
+        "missionVariableName": "AIKill_BP",
+        "extendedTextToken": "AIIntegerKill",
+        "value": {
+          "_Type_": "MissionPropertyValue_Integer",
+          "options": [
+            {
+              "_Type_": "MissionPropertyValueOption_Integer",
+              "textId": "@LOC_UNINITIALIZED",
+              "weighting": 1.0,
+              "DEBUG_forceChooseThisOption": false,
+              "dependentProperties": [],
+              "value": 1000,
+              "variation": 8999}]}},
+      {
+        "_Type_": "MissionProperty",
+        "missionVariableName": "AIName_Kill1",
+        "extendedTextToken": "NameKill1",
+        "value": {
+          "_Type_": "MissionPropertyValue_AIName",
+          "randomName": true,
+          "randomLastName": true,
+          "randomNickName": true,
+          "characterGivenName": "@LOC_UNINITIALIZED",
+          "characterGivenLastName": "@LOC_UNINITIALIZED",
+          "characterGivenNickName": "@LOC_UNINITIALIZED",
+          "characterNameData": "file://./../../../../../libs/foundry/records/characternamedata/humanmale.json",
+          "chanceOfNickName": 0.05}},
+      {
+        "_Type_": "MissionProperty",
+        "missionVariableName": "AIName_Random1",
+        "extendedTextToken": "RandomName1",
+        "value": {
+          "_Type_": "MissionPropertyValue_AIName",
+          "randomName": true,
+          "randomLastName": true,
+          "randomNickName": true,
+          "characterGivenName": "@LOC_UNINITIALIZED",
+          "characterGivenLastName": "@LOC_UNINITIALIZED",
+          "characterGivenNickName": "@LOC_UNINITIALIZED",
+          "characterNameData": "file://./../../../../../libs/foundry/records/characternamedata/humanmale.json",
+          "chanceOfNickName": 0.05}},
+      {
+        "_Type_": "MissionProperty",
+        "missionVariableName": "AIName_Random2",
+        "extendedTextToken": "RandomName2",
+        "value": {
+          "_Type_": "MissionPropertyValue_AIName",
+          "randomName": true,
+          "randomLastName": true,
+          "randomNickName": true,
+          "characterGivenName": "@LOC_UNINITIALIZED",
+          "characterGivenLastName": "@LOC_UNINITIALIZED",
+          "characterGivenNickName": "@LOC_UNINITIALIZED",
+          "characterNameData": "file://./../../../../../libs/foundry/records/characternamedata/humanmale.json",
+          "chanceOfNickName": 0.05}},
+      {
+        "_Type_": "MissionProperty",
+        "missionVariableName": "AIName_Random3",
+        "extendedTextToken": "RandomName3",
+        "value": {
+          "_Type_": "MissionPropertyValue_AIName",
+          "randomName": true,
+          "randomLastName": true,
+          "randomNickName": true,
+          "characterGivenName": "@LOC_UNINITIALIZED",
+          "characterGivenLastName": "@LOC_UNINITIALIZED",
+          "characterGivenNickName": "@LOC_UNINITIALIZED",
+          "characterNameData": "file://./../../../../../libs/foundry/records/characternamedata/humanmale.json",
+          "chanceOfNickName": 0.05}},
+      {
+        "_Type_": "MissionProperty",
+        "missionVariableName": "AIName_Random4",
+        "extendedTextToken": "RandomName4",
+        "value": {
+          "_Type_": "MissionPropertyValue_AIName",
+          "randomName": true,
+          "randomLastName": true,
+          "randomNickName": true,
+          "characterGivenName": "@LOC_UNINITIALIZED",
+          "characterGivenLastName": "@LOC_UNINITIALIZED",
+          "characterGivenNickName": "@LOC_UNINITIALIZED",
+          "characterNameData": "file://./../../../../../libs/foundry/records/characternamedata/humanmale.json",
+          "chanceOfNickName": 0.05}},
+      {
+        "_Type_": "MissionProperty",
+        "missionVariableName": "AIName_Random5",
+        "extendedTextToken": "RandomName5",
+        "value": {
+          "_Type_": "MissionPropertyValue_AIName",
+          "randomName": true,
+          "randomLastName": true,
+          "randomNickName": true,
+          "characterGivenName": "@LOC_UNINITIALIZED",
+          "characterGivenLastName": "@LOC_UNINITIALIZED",
+          "characterGivenNickName": "@LOC_UNINITIALIZED",
+          "characterNameData": "file://./../../../../../libs/foundry/records/characternamedata/humanmale.json",
+          "chanceOfNickName": 0.05}},
+      {
+        "_Type_": "MissionProperty",
+        "missionVariableName": "AIName_Random6",
+        "extendedTextToken": "RandomName6",
+        "value": {
+          "_Type_": "MissionPropertyValue_AIName",
+          "randomName": true,
+          "randomLastName": true,
+          "randomNickName": true,
+          "characterGivenName": "@LOC_UNINITIALIZED",
+          "characterGivenLastName": "@LOC_UNINITIALIZED",
+          "characterGivenNickName": "@LOC_UNINITIALIZED",
+          "characterNameData": "file://./../../../../../libs/foundry/records/characternamedata/humanmale.json",
+          "chanceOfNickName": 0.05}},
+      {
+        "_Type_": "MissionProperty",
+        "missionVariableName": "AIName_Random7",
+        "extendedTextToken": "RandomName7",
+        "value": {
+          "_Type_": "MissionPropertyValue_AIName",
+          "randomName": true,
+          "randomLastName": true,
+          "randomNickName": true,
+          "characterGivenName": "@LOC_UNINITIALIZED",
+          "characterGivenLastName": "@LOC_UNINITIALIZED",
+          "characterGivenNickName": "@LOC_UNINITIALIZED",
+          "characterNameData": "file://./../../../../../libs/foundry/records/characternamedata/humanmale.json",
+          "chanceOfNickName": 0.05}},
+      {
+        "_Type_": "MissionProperty",
+        "missionVariableName": "AIName_Random8",
+        "extendedTextToken": "RandomName8",
+        "value": {
+          "_Type_": "MissionPropertyValue_AIName",
+          "randomName": true,
+          "randomLastName": true,
+          "randomNickName": true,
+          "characterGivenName": "@LOC_UNINITIALIZED",
+          "characterGivenLastName": "@LOC_UNINITIALIZED",
+          "characterGivenNickName": "@LOC_UNINITIALIZED",
+          "characterNameData": "file://./../../../../../libs/foundry/records/characternamedata/humanmale.json",
+          "chanceOfNickName": 0.05}},
+      {
+        "_Type_": "MissionProperty",
+        "missionVariableName": "AIName_Random9",
+        "extendedTextToken": "RandomName9",
+        "value": {
+          "_Type_": "MissionPropertyValue_AIName",
+          "randomName": true,
+          "randomLastName": true,
+          "randomNickName": true,
+          "characterGivenName": "@LOC_UNINITIALIZED",
+          "characterGivenLastName": "@LOC_UNINITIALIZED",
+          "characterGivenNickName": "@LOC_UNINITIALIZED",
+          "characterNameData": "file://./../../../../../libs/foundry/records/characternamedata/humanmale.json",
+          "chanceOfNickName": 0.05}},
+      {
+        "_Type_": "MissionProperty",
+        "missionVariableName": "AIName_Random10",
+        "extendedTextToken": "RandomName10",
+        "value": {
+          "_Type_": "MissionPropertyValue_AIName",
+          "randomName": true,
+          "randomLastName": true,
+          "randomNickName": true,
+          "characterGivenName": "@LOC_UNINITIALIZED",
+          "characterGivenLastName": "@LOC_UNINITIALIZED",
+          "characterGivenNickName": "@LOC_UNINITIALIZED",
+          "characterNameData": "file://./../../../../../libs/foundry/records/characternamedata/humanmale.json",
+          "chanceOfNickName": 0.05}},
+      {
+        "_Type_": "MissionProperty",
+        "missionVariableName": "AIName_Random11",
+        "extendedTextToken": "RandomName11",
+        "value": {
+          "_Type_": "MissionPropertyValue_AIName",
+          "randomName": true,
+          "randomLastName": true,
+          "randomNickName": true,
+          "characterGivenName": "@LOC_UNINITIALIZED",
+          "characterGivenLastName": "@LOC_UNINITIALIZED",
+          "characterGivenNickName": "@LOC_UNINITIALIZED",
+          "characterNameData": "file://./../../../../../libs/foundry/records/characternamedata/humanmale.json",
+          "chanceOfNickName": 0.05}},
+      {
+        "_Type_": "MissionProperty",
+        "missionVariableName": "AIName_Random12",
+        "extendedTextToken": "RandomName12",
+        "value": {
+          "_Type_": "MissionPropertyValue_AIName",
+          "randomName": true,
+          "randomLastName": true,
+          "randomNickName": true,
+          "characterGivenName": "@LOC_UNINITIALIZED",
+          "characterGivenLastName": "@LOC_UNINITIALIZED",
+          "characterGivenNickName": "@LOC_UNINITIALIZED",
+          "characterNameData": "file://./../../../../../libs/foundry/records/characternamedata/humanmale.json",
+          "chanceOfNickName": 0.05}},
+      {
+        "_Type_": "MissionProperty",
+        "missionVariableName": "AIName_Random13",
+        "extendedTextToken": "RandomName13",
+        "value": {
+          "_Type_": "MissionPropertyValue_AIName",
+          "randomName": true,
+          "randomLastName": true,
+          "randomNickName": true,
+          "characterGivenName": "@LOC_UNINITIALIZED",
+          "characterGivenLastName": "@LOC_UNINITIALIZED",
+          "characterGivenNickName": "@LOC_UNINITIALIZED",
+          "characterNameData": "file://./../../../../../libs/foundry/records/characternamedata/humanmale.json",
+          "chanceOfNickName": 0.05}},
+      {
+        "_Type_": "MissionProperty",
+        "missionVariableName": "AIName_Random14",
+        "extendedTextToken": "RandomName14",
+        "value": {
+          "_Type_": "MissionPropertyValue_AIName",
+          "randomName": true,
+          "randomLastName": true,
+          "randomNickName": true,
+          "characterGivenName": "@LOC_UNINITIALIZED",
+          "characterGivenLastName": "@LOC_UNINITIALIZED",
+          "characterGivenNickName": "@LOC_UNINITIALIZED",
+          "characterNameData": "file://./../../../../../libs/foundry/records/characternamedata/humanmale.json",
+          "chanceOfNickName": 0.05}},
+      {
+        "_Type_": "MissionProperty",
+        "missionVariableName": "AIName_Random15",
+        "extendedTextToken": "RandomName15",
+        "value": {
+          "_Type_": "MissionPropertyValue_AIName",
+          "randomName": true,
+          "randomLastName": true,
+          "randomNickName": true,
+          "characterGivenName": "@LOC_UNINITIALIZED",
+          "characterGivenLastName": "@LOC_UNINITIALIZED",
+          "characterGivenNickName": "@LOC_UNINITIALIZED",
+          "characterNameData": "file://./../../../../../libs/foundry/records/characternamedata/humanmale.json",
+          "chanceOfNickName": 0.05}},
+      {
+        "_Type_": "MissionProperty",
+        "missionVariableName": "AIName_Random16",
+        "extendedTextToken": "RandomName16",
+        "value": {
+          "_Type_": "MissionPropertyValue_AIName",
+          "randomName": true,
+          "randomLastName": true,
+          "randomNickName": true,
+          "characterGivenName": "@LOC_UNINITIALIZED",
+          "characterGivenLastName": "@LOC_UNINITIALIZED",
+          "characterGivenNickName": "@LOC_UNINITIALIZED",
+          "characterNameData": "file://./../../../../../libs/foundry/records/characternamedata/humanmale.json",
+          "chanceOfNickName": 0.05}},
+      {
+        "_Type_": "MissionProperty",
+        "missionVariableName": "AIName_Random17",
+        "extendedTextToken": "RandomName17",
+        "value": {
+          "_Type_": "MissionPropertyValue_AIName",
+          "randomName": true,
+          "randomLastName": true,
+          "randomNickName": true,
+          "characterGivenName": "@LOC_UNINITIALIZED",
+          "characterGivenLastName": "@LOC_UNINITIALIZED",
+          "characterGivenNickName": "@LOC_UNINITIALIZED",
+          "characterNameData": "file://./../../../../../libs/foundry/records/characternamedata/humanmale.json",
+          "chanceOfNickName": 0.05}},
+      {
+        "_Type_": "MissionProperty",
+        "missionVariableName": "AIName_Random18",
+        "extendedTextToken": "RandomName18",
+        "value": {
+          "_Type_": "MissionPropertyValue_AIName",
+          "randomName": true,
+          "randomLastName": true,
+          "randomNickName": true,
+          "characterGivenName": "@LOC_UNINITIALIZED",
+          "characterGivenLastName": "@LOC_UNINITIALIZED",
+          "characterGivenNickName": "@LOC_UNINITIALIZED",
+          "characterNameData": "file://./../../../../../libs/foundry/records/characternamedata/humanmale.json",
+          "chanceOfNickName": 0.05}},
+      {
+        "_Type_": "MissionProperty",
+        "missionVariableName": "AIName_Random19",
+        "extendedTextToken": "RandomName19",
+        "value": {
+          "_Type_": "MissionPropertyValue_AIName",
+          "randomName": true,
+          "randomLastName": true,
+          "randomNickName": true,
+          "characterGivenName": "@LOC_UNINITIALIZED",
+          "characterGivenLastName": "@LOC_UNINITIALIZED",
+          "characterGivenNickName": "@LOC_UNINITIALIZED",
+          "characterNameData": "file://./../../../../../libs/foundry/records/characternamedata/humanmale.json",
+          "chanceOfNickName": 0.05}},
+      {
+        "_Type_": "MissionProperty",
+        "missionVariableName": "AIName_Random20",
+        "extendedTextToken": "RandomName20",
+        "value": {
+          "_Type_": "MissionPropertyValue_AIName",
+          "randomName": true,
+          "randomLastName": true,
+          "randomNickName": true,
+          "characterGivenName": "@LOC_UNINITIALIZED",
+          "characterGivenLastName": "@LOC_UNINITIALIZED",
+          "characterGivenNickName": "@LOC_UNINITIALIZED",
+          "characterNameData": "file://./../../../../../libs/foundry/records/characternamedata/humanmale.json",
+          "chanceOfNickName": 0.05}},
+      {
+        "_Type_": "MissionProperty",
+        "missionVariableName": "AIName_Random21",
+        "extendedTextToken": "RandomName21",
+        "value": {
+          "_Type_": "MissionPropertyValue_AIName",
+          "randomName": true,
+          "randomLastName": true,
+          "randomNickName": true,
+          "characterGivenName": "@LOC_UNINITIALIZED",
+          "characterGivenLastName": "@LOC_UNINITIALIZED",
+          "characterGivenNickName": "@LOC_UNINITIALIZED",
+          "characterNameData": "file://./../../../../../libs/foundry/records/characternamedata/humanmale.json",
+          "chanceOfNickName": 0.05}},
+      {
+        "_Type_": "MissionProperty",
+        "missionVariableName": "AIName_Random22",
+        "extendedTextToken": "RandomName22",
+        "value": {
+          "_Type_": "MissionPropertyValue_AIName",
+          "randomName": true,
+          "randomLastName": true,
+          "randomNickName": true,
+          "characterGivenName": "@LOC_UNINITIALIZED",
+          "characterGivenLastName": "@LOC_UNINITIALIZED",
+          "characterGivenNickName": "@LOC_UNINITIALIZED",
+          "characterNameData": "file://./../../../../../libs/foundry/records/characternamedata/humanmale.json",
+          "chanceOfNickName": 0.05}},
+      {
+        "_Type_": "MissionProperty",
+        "missionVariableName": "AIName_Random23",
+        "extendedTextToken": "RandomName23",
+        "value": {
+          "_Type_": "MissionPropertyValue_AIName",
+          "randomName": true,
+          "randomLastName": true,
+          "randomNickName": true,
+          "characterGivenName": "@LOC_UNINITIALIZED",
+          "characterGivenLastName": "@LOC_UNINITIALIZED",
+          "characterGivenNickName": "@LOC_UNINITIALIZED",
+          "characterNameData": "file://./../../../../../libs/foundry/records/characternamedata/humanmale.json",
+          "chanceOfNickName": 0.05}},
+      {
+        "_Type_": "MissionProperty",
+        "missionVariableName": "AIName_Random24",
+        "extendedTextToken": "RandomName24",
+        "value": {
+          "_Type_": "MissionPropertyValue_AIName",
+          "randomName": true,
+          "randomLastName": true,
+          "randomNickName": true,
+          "characterGivenName": "@LOC_UNINITIALIZED",
+          "characterGivenLastName": "@LOC_UNINITIALIZED",
+          "characterGivenNickName": "@LOC_UNINITIALIZED",
+          "characterNameData": "file://./../../../../../libs/foundry/records/characternamedata/humanmale.json",
+          "chanceOfNickName": 0.05}},
+      {
+        "_Type_": "MissionProperty",
+        "missionVariableName": "AIName_Random25",
+        "extendedTextToken": "RandomName25",
+        "value": {
+          "_Type_": "MissionPropertyValue_AIName",
+          "randomName": true,
+          "randomLastName": true,
+          "randomNickName": true,
+          "characterGivenName": "@LOC_UNINITIALIZED",
+          "characterGivenLastName": "@LOC_UNINITIALIZED",
+          "characterGivenNickName": "@LOC_UNINITIALIZED",
+          "characterNameData": "file://./../../../../../libs/foundry/records/characternamedata/humanmale.json",
+          "chanceOfNickName": 0.05}},
+      {
+        "_Type_": "MissionProperty",
+        "missionVariableName": "AIName_Random26",
+        "extendedTextToken": "RandomName26",
+        "value": {
+          "_Type_": "MissionPropertyValue_AIName",
+          "randomName": true,
+          "randomLastName": true,
+          "randomNickName": true,
+          "characterGivenName": "@LOC_UNINITIALIZED",
+          "characterGivenLastName": "@LOC_UNINITIALIZED",
+          "characterGivenNickName": "@LOC_UNINITIALIZED",
+          "characterNameData": "file://./../../../../../libs/foundry/records/characternamedata/humanmale.json",
+          "chanceOfNickName": 0.05}},
+      {
+        "_Type_": "MissionProperty",
+        "missionVariableName": "AIName_Random27",
+        "extendedTextToken": "RandomName27",
+        "value": {
+          "_Type_": "MissionPropertyValue_AIName",
+          "randomName": true,
+          "randomLastName": true,
+          "randomNickName": true,
+          "characterGivenName": "@LOC_UNINITIALIZED",
+          "characterGivenLastName": "@LOC_UNINITIALIZED",
+          "characterGivenNickName": "@LOC_UNINITIALIZED",
+          "characterNameData": "file://./../../../../../libs/foundry/records/characternamedata/humanmale.json",
+          "chanceOfNickName": 0.05}},
+      {
+        "_Type_": "MissionProperty",
+        "missionVariableName": "AIName_Random28",
+        "extendedTextToken": "RandomName28",
+        "value": {
+          "_Type_": "MissionPropertyValue_AIName",
+          "randomName": true,
+          "randomLastName": true,
+          "randomNickName": true,
+          "characterGivenName": "@LOC_UNINITIALIZED",
+          "characterGivenLastName": "@LOC_UNINITIALIZED",
+          "characterGivenNickName": "@LOC_UNINITIALIZED",
+          "characterNameData": "file://./../../../../../libs/foundry/records/characternamedata/humanmale.json",
+          "chanceOfNickName": 0.05}},
+      {
+        "_Type_": "MissionProperty",
+        "missionVariableName": "AIInteger_1_BP",
+        "extendedTextToken": "RandomInteger1",
+        "value": {
+          "_Type_": "MissionPropertyValue_Integer",
+          "options": [
+            {
+              "_Type_": "MissionPropertyValueOption_Integer",
+              "textId": "@LOC_UNINITIALIZED",
+              "weighting": 1.0,
+              "DEBUG_forceChooseThisOption": false,
+              "dependentProperties": [],
+              "value": 1000,
+              "variation": 8999}]}},
+      {
+        "_Type_": "MissionProperty",
+        "missionVariableName": "AIInteger_2_BP",
+        "extendedTextToken": "RandomInteger2",
+        "value": {
+          "_Type_": "MissionPropertyValue_Integer",
+          "options": [
+            {
+              "_Type_": "MissionPropertyValueOption_Integer",
+              "textId": "@LOC_UNINITIALIZED",
+              "weighting": 1.0,
+              "DEBUG_forceChooseThisOption": false,
+              "dependentProperties": [],
+              "value": 1000,
+              "variation": 8999}]}},
+      {
+        "_Type_": "MissionProperty",
+        "missionVariableName": "AIInteger_3_BP",
+        "extendedTextToken": "RandomInteger3",
+        "value": {
+          "_Type_": "MissionPropertyValue_Integer",
+          "options": [
+            {
+              "_Type_": "MissionPropertyValueOption_Integer",
+              "textId": "@LOC_UNINITIALIZED",
+              "weighting": 1.0,
+              "DEBUG_forceChooseThisOption": false,
+              "dependentProperties": [],
+              "value": 1000,
+              "variation": 8999}]}},
+      {
+        "_Type_": "MissionProperty",
+        "missionVariableName": "AIInteger_4_BP",
+        "extendedTextToken": "RandomInteger4",
+        "value": {
+          "_Type_": "MissionPropertyValue_Integer",
+          "options": [
+            {
+              "_Type_": "MissionPropertyValueOption_Integer",
+              "textId": "@LOC_UNINITIALIZED",
+              "weighting": 1.0,
+              "DEBUG_forceChooseThisOption": false,
+              "dependentProperties": [],
+              "value": 1000,
+              "variation": 8999}]}},
+      {
+        "_Type_": "MissionProperty",
+        "missionVariableName": "AIInteger_5_BP",
+        "extendedTextToken": "RandomInteger5",
+        "value": {
+          "_Type_": "MissionPropertyValue_Integer",
+          "options": [
+            {
+              "_Type_": "MissionPropertyValueOption_Integer",
+              "textId": "@LOC_UNINITIALIZED",
+              "weighting": 1.0,
+              "DEBUG_forceChooseThisOption": false,
+              "dependentProperties": [],
+              "value": 1000,
+              "variation": 8999}]}},
+      {
+        "_Type_": "MissionProperty",
+        "missionVariableName": "AIInteger_6_BP",
+        "extendedTextToken": "RandomInteger6",
+        "value": {
+          "_Type_": "MissionPropertyValue_Integer",
+          "options": [
+            {
+              "_Type_": "MissionPropertyValueOption_Integer",
+              "textId": "@LOC_UNINITIALIZED",
+              "weighting": 1.0,
+              "DEBUG_forceChooseThisOption": false,
+              "dependentProperties": [],
+              "value": 1000,
+              "variation": 8999}]}},
+      {
+        "_Type_": "MissionProperty",
+        "missionVariableName": "AIInteger_7_BP",
+        "extendedTextToken": "RandomInteger7",
+        "value": {
+          "_Type_": "MissionPropertyValue_Integer",
+          "options": [
+            {
+              "_Type_": "MissionPropertyValueOption_Integer",
+              "textId": "@LOC_UNINITIALIZED",
+              "weighting": 1.0,
+              "DEBUG_forceChooseThisOption": false,
+              "dependentProperties": [],
+              "value": 1000,
+              "variation": 8999}]}},
+      {
+        "_Type_": "MissionProperty",
+        "missionVariableName": "AIInteger_8_BP",
+        "extendedTextToken": "RandomInteger8",
+        "value": {
+          "_Type_": "MissionPropertyValue_Integer",
+          "options": [
+            {
+              "_Type_": "MissionPropertyValueOption_Integer",
+              "textId": "@LOC_UNINITIALIZED",
+              "weighting": 1.0,
+              "DEBUG_forceChooseThisOption": false,
+              "dependentProperties": [],
+              "value": 1000,
+              "variation": 8999}]}},
+      {
+        "_Type_": "MissionProperty",
+        "missionVariableName": "AIInteger_9_BP",
+        "extendedTextToken": "RandomInteger9",
+        "value": {
+          "_Type_": "MissionPropertyValue_Integer",
+          "options": [
+            {
+              "_Type_": "MissionPropertyValueOption_Integer",
+              "textId": "@LOC_UNINITIALIZED",
+              "weighting": 1.0,
+              "DEBUG_forceChooseThisOption": false,
+              "dependentProperties": [],
+              "value": 1000,
+              "variation": 8999}]}},
+      {
+        "_Type_": "MissionProperty",
+        "missionVariableName": "AIInteger_10_BP",
+        "extendedTextToken": "RandomInteger10",
+        "value": {
+          "_Type_": "MissionPropertyValue_Integer",
+          "options": [
+            {
+              "_Type_": "MissionPropertyValueOption_Integer",
+              "textId": "@LOC_UNINITIALIZED",
+              "weighting": 1.0,
+              "DEBUG_forceChooseThisOption": false,
+              "dependentProperties": [],
+              "value": 1000,
+              "variation": 8999}]}},
+      {
+        "_Type_": "MissionProperty",
+        "missionVariableName": "AIInteger_11_BP",
+        "extendedTextToken": "RandomInteger11",
+        "value": {
+          "_Type_": "MissionPropertyValue_Integer",
+          "options": [
+            {
+              "_Type_": "MissionPropertyValueOption_Integer",
+              "textId": "@LOC_UNINITIALIZED",
+              "weighting": 1.0,
+              "DEBUG_forceChooseThisOption": false,
+              "dependentProperties": [],
+              "value": 1000,
+              "variation": 8999}]}},
+      {
+        "_Type_": "MissionProperty",
+        "missionVariableName": "AIInteger_12_BP",
+        "extendedTextToken": "RandomInteger12",
+        "value": {
+          "_Type_": "MissionPropertyValue_Integer",
+          "options": [
+            {
+              "_Type_": "MissionPropertyValueOption_Integer",
+              "textId": "@LOC_UNINITIALIZED",
+              "weighting": 1.0,
+              "DEBUG_forceChooseThisOption": false,
+              "dependentProperties": [],
+              "value": 1000,
+              "variation": 8999}]}},
+      {
+        "_Type_": "MissionProperty",
+        "missionVariableName": "AIInteger_13_BP",
+        "extendedTextToken": "RandomInteger13",
+        "value": {
+          "_Type_": "MissionPropertyValue_Integer",
+          "options": [
+            {
+              "_Type_": "MissionPropertyValueOption_Integer",
+              "textId": "@LOC_UNINITIALIZED",
+              "weighting": 1.0,
+              "DEBUG_forceChooseThisOption": false,
+              "dependentProperties": [],
+              "value": 1000,
+              "variation": 8999}]}},
+      {
+        "_Type_": "MissionProperty",
+        "missionVariableName": "AIInteger_14_BP",
+        "extendedTextToken": "RandomInteger14",
+        "value": {
+          "_Type_": "MissionPropertyValue_Integer",
+          "options": [
+            {
+              "_Type_": "MissionPropertyValueOption_Integer",
+              "textId": "@LOC_UNINITIALIZED",
+              "weighting": 1.0,
+              "DEBUG_forceChooseThisOption": false,
+              "dependentProperties": [],
+              "value": 1000,
+              "variation": 8999}]}},
+      {
+        "_Type_": "MissionProperty",
+        "missionVariableName": "AIInteger_15_BP",
+        "extendedTextToken": "RandomInteger15",
+        "value": {
+          "_Type_": "MissionPropertyValue_Integer",
+          "options": [
+            {
+              "_Type_": "MissionPropertyValueOption_Integer",
+              "textId": "@LOC_UNINITIALIZED",
+              "weighting": 1.0,
+              "DEBUG_forceChooseThisOption": false,
+              "dependentProperties": [],
+              "value": 1000,
+              "variation": 8999}]}},
+      {
+        "_Type_": "MissionProperty",
+        "missionVariableName": "AIInteger_16_BP",
+        "extendedTextToken": "RandomInteger16",
+        "value": {
+          "_Type_": "MissionPropertyValue_Integer",
+          "options": [
+            {
+              "_Type_": "MissionPropertyValueOption_Integer",
+              "textId": "@LOC_UNINITIALIZED",
+              "weighting": 1.0,
+              "DEBUG_forceChooseThisOption": false,
+              "dependentProperties": [],
+              "value": 1000,
+              "variation": 8999}]}},
+      {
+        "_Type_": "MissionProperty",
+        "missionVariableName": "AIInteger_17_BP",
+        "extendedTextToken": "RandomInteger17",
+        "value": {
+          "_Type_": "MissionPropertyValue_Integer",
+          "options": [
+            {
+              "_Type_": "MissionPropertyValueOption_Integer",
+              "textId": "@LOC_UNINITIALIZED",
+              "weighting": 1.0,
+              "DEBUG_forceChooseThisOption": false,
+              "dependentProperties": [],
+              "value": 1000,
+              "variation": 8999}]}},
+      {
+        "_Type_": "MissionProperty",
+        "missionVariableName": "AIInteger_18_BP",
+        "extendedTextToken": "RandomInteger18",
+        "value": {
+          "_Type_": "MissionPropertyValue_Integer",
+          "options": [
+            {
+              "_Type_": "MissionPropertyValueOption_Integer",
+              "textId": "@LOC_UNINITIALIZED",
+              "weighting": 1.0,
+              "DEBUG_forceChooseThisOption": false,
+              "dependentProperties": [],
+              "value": 1000,
+              "variation": 8999}]}},
+      {
+        "_Type_": "MissionProperty",
+        "missionVariableName": "AIInteger_19_BP",
+        "extendedTextToken": "RandomInteger19",
+        "value": {
+          "_Type_": "MissionPropertyValue_Integer",
+          "options": [
+            {
+              "_Type_": "MissionPropertyValueOption_Integer",
+              "textId": "@LOC_UNINITIALIZED",
+              "weighting": 1.0,
+              "DEBUG_forceChooseThisOption": false,
+              "dependentProperties": [],
+              "value": 1000,
+              "variation": 8999}]}},
+      {
+        "_Type_": "MissionProperty",
+        "missionVariableName": "AIInteger_20_BP",
+        "extendedTextToken": "RandomInteger20",
+        "value": {
+          "_Type_": "MissionPropertyValue_Integer",
+          "options": [
+            {
+              "_Type_": "MissionPropertyValueOption_Integer",
+              "textId": "@LOC_UNINITIALIZED",
+              "weighting": 1.0,
+              "DEBUG_forceChooseThisOption": false,
+              "dependentProperties": [],
+              "value": 1000,
+              "variation": 8999}]}},
+      {
+        "_Type_": "MissionProperty",
+        "missionVariableName": "AIInteger_21_BP",
+        "extendedTextToken": "RandomInteger21",
+        "value": {
+          "_Type_": "MissionPropertyValue_Integer",
+          "options": [
+            {
+              "_Type_": "MissionPropertyValueOption_Integer",
+              "textId": "@LOC_UNINITIALIZED",
+              "weighting": 1.0,
+              "DEBUG_forceChooseThisOption": false,
+              "dependentProperties": [],
+              "value": 1000,
+              "variation": 8999}]}},
+      {
+        "_Type_": "MissionProperty",
+        "missionVariableName": "AIInteger_22_BP",
+        "extendedTextToken": "RandomInteger22",
+        "value": {
+          "_Type_": "MissionPropertyValue_Integer",
+          "options": [
+            {
+              "_Type_": "MissionPropertyValueOption_Integer",
+              "textId": "@LOC_UNINITIALIZED",
+              "weighting": 1.0,
+              "DEBUG_forceChooseThisOption": false,
+              "dependentProperties": [],
+              "value": 1000,
+              "variation": 8999}]}},
+      {
+        "_Type_": "MissionProperty",
+        "missionVariableName": "AIInteger_23_BP",
+        "extendedTextToken": "RandomInteger23",
+        "value": {
+          "_Type_": "MissionPropertyValue_Integer",
+          "options": [
+            {
+              "_Type_": "MissionPropertyValueOption_Integer",
+              "textId": "@LOC_UNINITIALIZED",
+              "weighting": 1.0,
+              "DEBUG_forceChooseThisOption": false,
+              "dependentProperties": [],
+              "value": 1000,
+              "variation": 8999}]}},
+      {
+        "_Type_": "MissionProperty",
+        "missionVariableName": "AIInteger_24_BP",
+        "extendedTextToken": "RandomInteger24",
+        "value": {
+          "_Type_": "MissionPropertyValue_Integer",
+          "options": [
+            {
+              "_Type_": "MissionPropertyValueOption_Integer",
+              "textId": "@LOC_UNINITIALIZED",
+              "weighting": 1.0,
+              "DEBUG_forceChooseThisOption": false,
+              "dependentProperties": [],
+              "value": 1000,
+              "variation": 8999}]}},
+      {
+        "_Type_": "MissionProperty",
+        "missionVariableName": "AIInteger_25_BP",
+        "extendedTextToken": "RandomInteger25",
+        "value": {
+          "_Type_": "MissionPropertyValue_Integer",
+          "options": [
+            {
+              "_Type_": "MissionPropertyValueOption_Integer",
+              "textId": "@LOC_UNINITIALIZED",
+              "weighting": 1.0,
+              "DEBUG_forceChooseThisOption": false,
+              "dependentProperties": [],
+              "value": 1000,
+              "variation": 8999}]}},
+      {
+        "_Type_": "MissionProperty",
+        "missionVariableName": "AIInteger_26_BP",
+        "extendedTextToken": "RandomInteger26",
+        "value": {
+          "_Type_": "MissionPropertyValue_Integer",
+          "options": [
+            {
+              "_Type_": "MissionPropertyValueOption_Integer",
+              "textId": "@LOC_UNINITIALIZED",
+              "weighting": 1.0,
+              "DEBUG_forceChooseThisOption": false,
+              "dependentProperties": [],
+              "value": 1000,
+              "variation": 8999}]}},
+      {
+        "_Type_": "MissionProperty",
+        "missionVariableName": "AIInteger_27_BP",
+        "extendedTextToken": "RandomInteger27",
+        "value": {
+          "_Type_": "MissionPropertyValue_Integer",
+          "options": [
+            {
+              "_Type_": "MissionPropertyValueOption_Integer",
+              "textId": "@LOC_UNINITIALIZED",
+              "weighting": 1.0,
+              "DEBUG_forceChooseThisOption": false,
+              "dependentProperties": [],
+              "value": 1000,
+              "variation": 8999}]}},
+      {
+        "_Type_": "MissionProperty",
+        "missionVariableName": "AIInteger_28_BP",
+        "extendedTextToken": "RandomInteger28",
+        "value": {
+          "_Type_": "MissionPropertyValue_Integer",
+          "options": [
+            {
+              "_Type_": "MissionPropertyValueOption_Integer",
+              "textId": "@LOC_UNINITIALIZED",
+              "weighting": 1.0,
+              "DEBUG_forceChooseThisOption": false,
+              "dependentProperties": [],
+              "value": 1000,
+              "variation": 8999}]}},
+      {
+        "_Type_": "MissionProperty",
+        "missionVariableName": "",
+        "extendedTextToken": "Contractor",
+        "value": {
+          "_Type_": "MissionPropertyValue_Organization",
+          "matchConditions": [
+            {
+              "_Type_": "DataSetMatchCondition_SpecificOrganizationsDef",
+              "organizations": [
+                "file://./../../../../../libs/foundry/records/missiondata/pu_organizations/missiongivers/stanton3/teciapacheco.json"]}],
+          "debugForceChosenOrganization": null}},
+      {
+        "_Type_": "MissionProperty",
+        "missionVariableName": "ReviveReward_BP",
+        "extendedTextToken": "",
+        "value": {
+          "_Type_": "MissionPropertyValue_Integer",
+          "options": [
+            {
+              "_Type_": "MissionPropertyValueOption_Integer",
+              "textId": "@LOC_UNINITIALIZED",
+              "weighting": 1.0,
+              "DEBUG_forceChooseThisOption": false,
+              "dependentProperties": [],
+              "value": 8250,
+              "variation": 0}]}},
+      {
+        "_Type_": "MissionProperty",
+        "missionVariableName": "KillSnitchReward_BP",
+        "extendedTextToken": "",
+        "value": {
+          "_Type_": "MissionPropertyValue_Integer",
+          "options": [
+            {
+              "_Type_": "MissionPropertyValueOption_Integer",
+              "textId": "@LOC_UNINITIALIZED",
+              "weighting": 1.0,
+              "DEBUG_forceChooseThisOption": false,
+              "dependentProperties": [],
+              "value": 13250,
+              "variation": 0}]}},
+      {
+        "_Type_": "MissionProperty",
+        "missionVariableName": "SecurityTag",
+        "extendedTextToken": "",
+        "value": {
+          "_Type_": "MissionPropertyValue_Tags",
+          "tags": {
+            "_Type_": "TagList",
+            "tags": [
+              {
+                "_RecordPath_": "file://./../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+                "_RecordName_": "Tag.b9525e1a-cb92-4899-82f8-608b36e4a6f2",
+                "_RecordId_": "b9525e1a-cb92-4899-82f8-608b36e4a6f2"}]},
+          "negativeTags": {
+            "_Type_": "TagList",
+            "tags": []},
+          "options": []}}],
+    "objectiveTokens": [],
+    "missionFlow": {
+      "_Type_": "MissionFlow",
+      "triggers": []}}}

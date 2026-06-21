@@ -1,0 +1,21 @@
+{
+  "_RecordName_": "DialogueContext.DXHN_PU_CHODARY_Covalex_Clue2_DarnellsTerminal_002c",
+  "_RecordId_": "4dbde141-0cc9-4ee8-9183-5e75a307d91e",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "DialogueContext",
+    "speaker": null,
+    "localizedSubtitleText": "@LOC_UNINITIALIZED",
+    "unlocalizedSubtitleText": "@LOC_UNINITIALIZED",
+    "subtitleShowDelay": 0.0,
+    "subtitleDisplayDurationOverride": 0.0,
+    "tempText": "",
+    "audioTrigger": {
+      "_Type_": "GlobalResourceAudio",
+      "audioTrigger": "Play_DXHN_PU_CHODARY_Covalex_Clue2_DarnellsTerminal_002c"},
+    "femaleAudioTrigger": {
+      "_Type_": "GlobalResourceAudio",
+      "audioTrigger": ""},
+    "forceSubtitles": false,
+    "contents": [],
+    "tags": []}}

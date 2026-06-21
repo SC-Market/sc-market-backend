@@ -1,0 +1,25 @@
+{
+  "_RecordName_": "CommsNotification.MCN_Collector_GenericMissionAbandon",
+  "_RecordId_": "f8a4214c-79e4-4d53-a8ea-e3047e32be7c",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "CommsNotification",
+    "tags": {
+      "_Type_": "TagList",
+      "tags": [
+        {
+          "_RecordPath_": "file://./../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+          "_RecordName_": "Tag.4683024d-d523-4df7-a82e-f8a6859ff093",
+          "_RecordId_": "4683024d-d523-4df7-a82e-f8a6859ff093"},
+        {
+          "_RecordPath_": "file://./../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+          "_RecordName_": "Tag.c9496c18-63d2-482b-8996-b1e566d6f5a9",
+          "_RecordId_": "c9496c18-63d2-482b-8996-b1e566d6f5a9"},
+        {
+          "_RecordPath_": "file://./../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+          "_RecordName_": "Tag.f0c0c441-e205-4d44-8743-620228b7eee4",
+          "_RecordId_": "f0c0c441-e205-4d44-8743-620228b7eee4"}]},
+    "communicationName": "file://./../../../../../../libs/foundry/records/communicationname/missioncommunications/basedmissiontriggers/missionabandon.json",
+    "characterEntityClass": "file://./../../../../../../libs/foundry/records/actor/actors/npc_archetypes-banu-missiongivers-thecollector.json",
+    "fakeCommsAudioEntityClass": null,
+    "stage": "file://./../../../../../../libs/foundry/records/commsnotificationstages/cns_test.json"}}

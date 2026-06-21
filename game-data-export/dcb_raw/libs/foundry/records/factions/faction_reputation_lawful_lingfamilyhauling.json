@@ -1,0 +1,22 @@
+{
+  "_RecordName_": "Faction.Faction_Reputation_Lawful_LingFamilyHauling",
+  "_RecordId_": "5a27ef3a-55c4-4822-b3f1-6506097d21de",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "Faction",
+    "name": "@LOC_UNINITIALIZED",
+    "description": "@LOC_EMPTY",
+    "defaultReaction": "Neutral",
+    "alliedFactions": [],
+    "enemyFactions": [],
+    "friendlyFireBehaviorOverrides": [
+      {
+        "_Type_": "FriendlyFireReactionOverride",
+        "reactionType": "Neutral",
+        "shouldAllowFriendlyFire": false}],
+    "factionType": "Lawful",
+    "ableToArrest": false,
+    "policesLawfulTrespass": false,
+    "policesCriminality": false,
+    "noLegalRights": false,
+    "factionReputationRef": "file://./../../../../libs/foundry/records/factions/factionreputation/factionreputation_lawful_lingfamilyhauling.json"}}

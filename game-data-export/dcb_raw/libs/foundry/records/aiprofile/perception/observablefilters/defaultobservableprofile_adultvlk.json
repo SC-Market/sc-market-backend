@@ -1,0 +1,12 @@
+{
+  "_RecordName_": "AIObservableFiltersProfile.DefaultObservableProfile_AdultVLK",
+  "_RecordId_": "a03a8cbc-294f-42f8-afb3-a0ef5a412cae",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "AIObservableFiltersProfile",
+    "observableFilters": [
+      {
+        "_Type_": "AIObservableFilters",
+        "typesAndStatus": [
+          "file://./../../../../../../libs/foundry/records/aiprofile/perception/observablefilters/flags/creature/defaultobservablefilterflags_creature.json",
+          null]}]}}

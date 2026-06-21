@@ -1,0 +1,38 @@
+{
+  "_RecordName_": "EntityClassDefinition.UnattendedVehicleMarker",
+  "_RecordId_": "453c0fad-74cc-47fb-ab3e-ab28ab44f916",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "EntityClassDefinition",
+    "Category": "Default",
+    "Icon": "Default.bmp",
+    "Invisible": false,
+    "BBoxSelection": false,
+    "defaultEditorColor": {
+      "_Type_": "RGB",
+      "r": 1.0,
+      "g": 1.0,
+      "b": 0.0},
+    "entityDensityClass": null,
+    "tags": [],
+    "StaticEntityClassData": [],
+    "Components": [
+      {
+        "_Type_": "SEntityComponentUnattendedVehicleMarkerParams",
+        "markerConfig": "file://./../../../../libs/foundry/records/ui/armarkerconfiguration/mk_config_unattendedvehicle.json"},
+      {
+        "_Type_": "SEntityComponentObjectMetadataParams",
+        "name": "@BarMenu_Gin",
+        "hasLocalBounds": true,
+        "isDynamic": false,
+        "metadata": [
+          {
+            "_Type_": "SNavPointObjectMetadataParams",
+            "starmapRecord": "file://./../../../../libs/foundry/records/starmap/pu/player_related/unattended_vehicle_qt_beacon.json",
+            "locationActionArea": "",
+            "permanent": false,
+            "showInAllZones": true,
+            "allowHierarchyDuplicates": true,
+            "saveToLocalPlayerObjectDataBank": false,
+            "moveable": true,
+            "showInRouteOnly": false}]}]}}

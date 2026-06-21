@@ -1,0 +1,72 @@
+{
+  "_RecordName_": "ScanCustomDataDef.JumpPoint_Permanent_Pyro",
+  "_RecordId_": "19a9b969-ccc0-4f08-ac3e-be8fc9e198f4",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "ScanCustomDataDef",
+    "info": {
+      "_Type_": "ScanCustomDataInfo",
+      "scanProcedures": [
+        {
+          "_Type_": "CustomScanProcedureParams",
+          "requiredScanTag": null,
+          "emissionBaseline": 0.0,
+          "runtimeDuration": 0.1,
+          "allowedInAIAutoScan": true,
+          "allowedInFocalPointScan": true,
+          "allowedInPingBroadScan": true,
+          "allowedInPingFocusScan": true,
+          "allowedInPassiveScan": false,
+          "customDatas": [
+            {
+              "_Type_": "ScanCustomDataDirect",
+              "requiredTags": {
+                "_Type_": "TagsDNFTerm",
+                "positiveTags": [],
+                "negativeTags": []},
+              "name": "@scan_custom_data_jumppoint_name_pyro",
+              "displaySection": "Overview",
+              "addToBoxoutDisplay": false,
+              "displayInSameRowAsHeader": false,
+              "value": {
+                "_Type_": "ScanCustomValueLocString",
+                "value": "@scan_custom_data_jumppoint_name"}},
+            {
+              "_Type_": "ScanCustomDataDirect",
+              "requiredTags": {
+                "_Type_": "TagsDNFTerm",
+                "positiveTags": [],
+                "negativeTags": []},
+              "name": "@scan_custom_data_jumppoint_owner",
+              "displaySection": "Overview",
+              "addToBoxoutDisplay": false,
+              "displayInSameRowAsHeader": false,
+              "value": {
+                "_Type_": "ScanCustomValueLocString",
+                "value": "@scan_custom_data_jumppoint_owner_uee"}},
+            {
+              "_Type_": "ScanCustomDataDirect",
+              "requiredTags": {
+                "_Type_": "TagsDNFTerm",
+                "positiveTags": [],
+                "negativeTags": []},
+              "name": "@scan_custom_data_jumppoint_size",
+              "displaySection": "Overview",
+              "addToBoxoutDisplay": false,
+              "displayInSameRowAsHeader": false,
+              "value": {
+                "_Type_": "ScanCustomValueLocString",
+                "value": "@scan_custom_data_jumppoint_size_xxl"}},
+            {
+              "_Type_": "ScanCustomDataDirect",
+              "requiredTags": {
+                "_Type_": "TagsDNFTerm",
+                "positiveTags": [],
+                "negativeTags": []},
+              "name": "@scan_custom_data_jumppoint_paired",
+              "displaySection": "Overview",
+              "addToBoxoutDisplay": false,
+              "displayInSameRowAsHeader": false,
+              "value": {
+                "_Type_": "ScanCustomValueLocString",
+                "value": "@scan_custom_data_jumppoint_paired_yes"}}]}]}}}

@@ -1,0 +1,14 @@
+{
+  "_RecordName_": "BuildingBlocks_ExternalColorReference.Standardized_Signage_Colour_Shubin_Green",
+  "_RecordId_": "c0d5b537-ded2-4691-ace0-101c03d44e52",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "BuildingBlocks_ExternalColorReference",
+    "color": {
+      "_Type_": "BuildingBlocks_ColorSolid",
+      "color": {
+        "_Type_": "SRGBA8",
+        "r": 7,
+        "g": 255,
+        "b": 0,
+        "a": 255}}}}

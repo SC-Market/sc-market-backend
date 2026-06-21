@@ -1,0 +1,42 @@
+{
+  "_RecordName_": "JumpTunnelForcesParams.JumpTunnelForces_S03",
+  "_RecordId_": "702f9525-ef6f-449a-bd55-c3f232fabad2",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "JumpTunnelForcesParams",
+    "angularAccelerationLimit": 100.0,
+    "angularAccelerationDecay": 3.0,
+    "angularSpeedLimit": 120.0,
+    "angularCorrectionForceCurve": {
+      "_Type_": "BezierCurve",
+      "points": [
+        {
+          "_Type_": "Vec2",
+          "x": -0.3422175,
+          "y": 0.1257869},
+        {
+          "_Type_": "Vec2",
+          "x": 0.0,
+          "y": 0.0},
+        {
+          "_Type_": "Vec2",
+          "x": 0.3422175,
+          "y": -0.1257869},
+        {
+          "_Type_": "Vec2",
+          "x": -0.04954835,
+          "y": 1.405035},
+        {
+          "_Type_": "Vec2",
+          "x": 1.0,
+          "y": 1.0},
+        {
+          "_Type_": "Vec2",
+          "x": 2.049548,
+          "y": 0.5949647}],
+      "useLUT": false},
+    "useAngularForces": true,
+    "linearAccelerationLimit": 400.0,
+    "linearAccelerationDecay": 2.0,
+    "linearSpeedLimit": 1000.0,
+    "useWallRepelForces": true}}

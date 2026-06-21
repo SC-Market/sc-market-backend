@@ -1,0 +1,33 @@
+{
+  "_RecordName_": "EntityClassDefinition.TransportDestination",
+  "_RecordId_": "32fd03c8-54fe-4824-a757-8bcf84129fe7",
+  "_RecordTag_": "CGP5",
+  "_RecordValue_": {
+    "_Type_": "EntityClassDefinition",
+    "Category": "Default",
+    "Icon": "Default.bmp",
+    "Invisible": false,
+    "BBoxSelection": false,
+    "defaultEditorColor": {
+      "_Type_": "RGB",
+      "r": 1.0,
+      "g": 1.0,
+      "b": 0.0},
+    "entityDensityClass": null,
+    "tags": [],
+    "StaticEntityClassData": [],
+    "Components": [
+      {
+        "_Type_": "TransportDestinationParams",
+        "name": "@LOC_EMPTY",
+        "autoNumberedName": false,
+        "category": null,
+        "iconOverride": null,
+        "iconString": "@LOC_INVALID",
+        "priority": 0,
+        "useDoorTags": false,
+        "isDefaultDestination": false,
+        "tagFilter": {
+          "_Type_": "TagsDNFTerm",
+          "positiveTags": [],
+          "negativeTags": []}}]}}

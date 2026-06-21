@@ -1,0 +1,420 @@
+{
+  "_RecordName_": "ContractTemplate.ShipWaveAttack",
+  "_RecordId_": "6989d981-bb5e-4eab-ba84-4107542a45b0",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "ContractTemplate",
+    "notForRelease": false,
+    "workInProgress": false,
+    "owner": "file://./../../../../../libs/foundry/records/devowners/devteams/mdt.json",
+    "contractClass": {
+      "_Type_": "ContractClass_Contract",
+      "additionalParams": {
+        "_Type_": "ActiveContractSettings",
+        "hasCompleteButton": false,
+        "handlesAbandonRequest": false,
+        "canBeShared": true,
+        "displayAlliedMarkers": true,
+        "onlyOwnerCanComplete": false},
+      "autoFinishSettings": {
+        "_Type_": "ContractAutoFinishSettings",
+        "contractDeadline": {
+          "_Type_": "MissionDeadline",
+          "missionCompletionTime": 0.0,
+          "missionAutoEnd": false,
+          "missionResultAfterTimerEnd": "Failed",
+          "remainingTimeToShowTimer": 0.0,
+          "missionEndReason": "@LOC_EMPTY"},
+        "failIfSentToPrison": true,
+        "failIfBecameCriminal": true,
+        "failIfLeavePrison": false}},
+    "contractDisplayInfo": {
+      "_Type_": "ContractDisplayInfo",
+      "displayString": [
+        "@LOC_UNINITIALIZED",
+        "@LOC_UNINITIALIZED",
+        "@LOC_UNINITIALIZED",
+        "@LOC_UNINITIALIZED",
+        "@LOC_UNINITIALIZED"],
+      "type": "file://./../../../../../libs/foundry/records/missiontype/pu/mercenary.json",
+      "illegal": false,
+      "showLifeTimeInMobiGlas": true,
+      "preShowObjectives": false},
+    "modifiers": [],
+    "contractProperties": [
+      {
+        "_Pointer_": "ptr:1",
+        "_Type_": "MissionProperty",
+        "missionVariableName": "MissionLocation_BP",
+        "extendedTextToken": "Location",
+        "value": {
+          "_Type_": "MissionPropertyValue_Location",
+          "matchConditions": [],
+          "resourceTags": [],
+          "logErrorOnSearchFail": true}},
+      {
+        "_Pointer_": "ptr:2",
+        "_Type_": "MissionProperty",
+        "missionVariableName": "WaveShips_BP",
+        "extendedTextToken": "",
+        "value": {
+          "_Type_": "MissionPropertyValue_ShipSpawnDescriptions",
+          "spawnDescriptions": [],
+          "allowedForMissionRestrictedDeliveries": false}},
+      {
+        "_Type_": "MissionProperty",
+        "missionVariableName": "TrainingMission_BP",
+        "extendedTextToken": "",
+        "value": {
+          "_Type_": "MissionPropertyValue_Boolean",
+          "value": true}},
+      {
+        "_Pointer_": "ptr:3",
+        "_Type_": "MissionProperty",
+        "missionVariableName": "CN_ObjectiveArrive_BP",
+        "extendedTextToken": "",
+        "value": {
+          "_Type_": "MissionPropertyValue_Tags",
+          "tags": {
+            "_Type_": "TagList",
+            "tags": [
+              {
+                "_RecordPath_": "file://./../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+                "_RecordName_": "Tag.48e4e299-3176-41f8-8d83-54b7871d2ba8",
+                "_RecordId_": "48e4e299-3176-41f8-8d83-54b7871d2ba8"},
+              {
+                "_RecordPath_": "file://./../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+                "_RecordName_": "Tag.507e98a2-49af-466c-a3d0-3d9c57f3b221",
+                "_RecordId_": "507e98a2-49af-466c-a3d0-3d9c57f3b221"},
+              {
+                "_RecordPath_": "file://./../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+                "_RecordName_": "Tag.4f308536-5934-4eb2-9cad-851caae068c0",
+                "_RecordId_": "4f308536-5934-4eb2-9cad-851caae068c0"}]},
+          "negativeTags": {
+            "_Type_": "TagList",
+            "tags": []},
+          "options": []}},
+      {
+        "_Pointer_": "ptr:4",
+        "_Type_": "MissionProperty",
+        "missionVariableName": "CN_HostileKilled2_BP",
+        "extendedTextToken": "",
+        "value": {
+          "_Type_": "MissionPropertyValue_Tags",
+          "tags": {
+            "_Type_": "TagList",
+            "tags": [
+              {
+                "_RecordPath_": "file://./../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+                "_RecordName_": "Tag.48e4e299-3176-41f8-8d83-54b7871d2ba8",
+                "_RecordId_": "48e4e299-3176-41f8-8d83-54b7871d2ba8"},
+              {
+                "_RecordPath_": "file://./../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+                "_RecordName_": "Tag.507e98a2-49af-466c-a3d0-3d9c57f3b221",
+                "_RecordId_": "507e98a2-49af-466c-a3d0-3d9c57f3b221"},
+              {
+                "_RecordPath_": "file://./../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+                "_RecordName_": "Tag.2f760511-24d1-4102-b4f6-c4af4d25d89f",
+                "_RecordId_": "2f760511-24d1-4102-b4f6-c4af4d25d89f"}]},
+          "negativeTags": {
+            "_Type_": "TagList",
+            "tags": []},
+          "options": []}},
+      {
+        "_Pointer_": "ptr:5",
+        "_Type_": "MissionProperty",
+        "missionVariableName": "CN_HostileReinforcements2_BP",
+        "extendedTextToken": "",
+        "value": {
+          "_Type_": "MissionPropertyValue_Tags",
+          "tags": {
+            "_Type_": "TagList",
+            "tags": [
+              {
+                "_RecordPath_": "file://./../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+                "_RecordName_": "Tag.48e4e299-3176-41f8-8d83-54b7871d2ba8",
+                "_RecordId_": "48e4e299-3176-41f8-8d83-54b7871d2ba8"},
+              {
+                "_RecordPath_": "file://./../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+                "_RecordName_": "Tag.507e98a2-49af-466c-a3d0-3d9c57f3b221",
+                "_RecordId_": "507e98a2-49af-466c-a3d0-3d9c57f3b221"},
+              {
+                "_RecordPath_": "file://./../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+                "_RecordName_": "Tag.da0c50ca-8e44-4b75-a93c-e9501da73060",
+                "_RecordId_": "da0c50ca-8e44-4b75-a93c-e9501da73060"}]},
+          "negativeTags": {
+            "_Type_": "TagList",
+            "tags": []},
+          "options": []}},
+      {
+        "_Type_": "MissionProperty",
+        "missionVariableName": "CN_WaveCleared_BP",
+        "extendedTextToken": "",
+        "value": {
+          "_Type_": "MissionPropertyValue_Tags",
+          "tags": {
+            "_Type_": "TagList",
+            "tags": [
+              {
+                "_RecordPath_": "file://./../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+                "_RecordName_": "Tag.9c132978-099a-46bc-9b19-9d77bcef8b9b",
+                "_RecordId_": "9c132978-099a-46bc-9b19-9d77bcef8b9b"},
+              {
+                "_RecordPath_": "file://./../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+                "_RecordName_": "Tag.48e4e299-3176-41f8-8d83-54b7871d2ba8",
+                "_RecordId_": "48e4e299-3176-41f8-8d83-54b7871d2ba8"},
+              {
+                "_RecordPath_": "file://./../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+                "_RecordName_": "Tag.507e98a2-49af-466c-a3d0-3d9c57f3b221",
+                "_RecordId_": "507e98a2-49af-466c-a3d0-3d9c57f3b221"}]},
+          "negativeTags": {
+            "_Type_": "TagList",
+            "tags": []},
+          "options": []}},
+      {
+        "_Pointer_": "ptr:6",
+        "_Type_": "MissionProperty",
+        "missionVariableName": "CN_Baramsco_MissionAccept",
+        "extendedTextToken": "",
+        "value": {
+          "_Type_": "MissionPropertyValue_Tags",
+          "tags": {
+            "_Type_": "TagList",
+            "tags": [
+              {
+                "_RecordPath_": "file://./../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+                "_RecordName_": "Tag.48e4e299-3176-41f8-8d83-54b7871d2ba8",
+                "_RecordId_": "48e4e299-3176-41f8-8d83-54b7871d2ba8"},
+              {
+                "_RecordPath_": "file://./../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+                "_RecordName_": "Tag.184057ca-df36-4418-a887-1a864052cc00",
+                "_RecordId_": "184057ca-df36-4418-a887-1a864052cc00"},
+              {
+                "_RecordPath_": "file://./../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+                "_RecordName_": "Tag.fa9a5787-8fd1-4a97-a6c4-9da4e62e2264",
+                "_RecordId_": "fa9a5787-8fd1-4a97-a6c4-9da4e62e2264"}]},
+          "negativeTags": {
+            "_Type_": "TagList",
+            "tags": []},
+          "options": []}},
+      {
+        "_Pointer_": "ptr:7",
+        "_Type_": "MissionProperty",
+        "missionVariableName": "CN_Baramsco_MissionComplete",
+        "extendedTextToken": "",
+        "value": {
+          "_Type_": "MissionPropertyValue_Tags",
+          "tags": {
+            "_Type_": "TagList",
+            "tags": [
+              {
+                "_RecordPath_": "file://./../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+                "_RecordName_": "Tag.48e4e299-3176-41f8-8d83-54b7871d2ba8",
+                "_RecordId_": "48e4e299-3176-41f8-8d83-54b7871d2ba8"},
+              {
+                "_RecordPath_": "file://./../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+                "_RecordName_": "Tag.2cfb0a1f-917f-426e-8af3-8cb075a09517",
+                "_RecordId_": "2cfb0a1f-917f-426e-8af3-8cb075a09517"},
+              {
+                "_RecordPath_": "file://./../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+                "_RecordName_": "Tag.efc3695e-fbb3-4cd5-9ce3-a6ca0fdb8553",
+                "_RecordId_": "efc3695e-fbb3-4cd5-9ce3-a6ca0fdb8553"}]},
+          "negativeTags": {
+            "_Type_": "TagList",
+            "tags": []},
+          "options": []}}],
+    "objectiveTokens": [
+      {
+        "_Type_": "ObjectiveToken",
+        "id": "dcc79c81-5f10-4231-9124-806061347adb",
+        "debugName": "ShipWaveAttack",
+        "startsActive": true,
+        "properties": [
+          {
+            "_Pointer_": "ptr:8",
+            "_Type_": "ObjectiveProperty_Referenced",
+            "missionVariableName": "MissionLocation_BP",
+            "extendedTextToken": "Location",
+            "property": "_PointsTo_:ptr:1"},
+          {
+            "_Type_": "ObjectiveProperty_Referenced",
+            "missionVariableName": "WaveShips_BP",
+            "extendedTextToken": "",
+            "property": "_PointsTo_:ptr:2"},
+          {
+            "_Pointer_": "ptr:9",
+            "_Type_": "ObjectiveProperty_Embedded",
+            "property": {
+              "_Type_": "MissionProperty",
+              "missionVariableName": "CN_Baramsco_MissionAccept",
+              "extendedTextToken": "",
+              "value": {
+                "_Type_": "MissionPropertyValue_Tags",
+                "tags": {
+                  "_Type_": "TagList",
+                  "tags": [
+                    {
+                      "_RecordPath_": "file://./../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+                      "_RecordName_": "Tag.48e4e299-3176-41f8-8d83-54b7871d2ba8",
+                      "_RecordId_": "48e4e299-3176-41f8-8d83-54b7871d2ba8"},
+                    {
+                      "_RecordPath_": "file://./../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+                      "_RecordName_": "Tag.627d2de4-c6c2-4a20-961e-867fe8f9dffc",
+                      "_RecordId_": "627d2de4-c6c2-4a20-961e-867fe8f9dffc"},
+                    {
+                      "_RecordPath_": "file://./../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+                      "_RecordName_": "Tag.fa9a5787-8fd1-4a97-a6c4-9da4e62e2264",
+                      "_RecordId_": "fa9a5787-8fd1-4a97-a6c4-9da4e62e2264"}]},
+                "negativeTags": {
+                  "_Type_": "TagList",
+                  "tags": []},
+                "options": []}}},
+          {
+            "_Pointer_": "ptr:10",
+            "_Type_": "ObjectiveProperty_Embedded",
+            "property": {
+              "_Type_": "MissionProperty",
+              "missionVariableName": "CN_Baramsco_MissionComplete",
+              "extendedTextToken": "",
+              "value": {
+                "_Type_": "MissionPropertyValue_Tags",
+                "tags": {
+                  "_Type_": "TagList",
+                  "tags": [
+                    {
+                      "_RecordPath_": "file://./../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+                      "_RecordName_": "Tag.48e4e299-3176-41f8-8d83-54b7871d2ba8",
+                      "_RecordId_": "48e4e299-3176-41f8-8d83-54b7871d2ba8"},
+                    {
+                      "_RecordPath_": "file://./../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+                      "_RecordName_": "Tag.507e98a2-49af-466c-a3d0-3d9c57f3b221",
+                      "_RecordId_": "507e98a2-49af-466c-a3d0-3d9c57f3b221"},
+                    {
+                      "_RecordPath_": "file://./../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+                      "_RecordName_": "Tag.efc3695e-fbb3-4cd5-9ce3-a6ca0fdb8553",
+                      "_RecordId_": "efc3695e-fbb3-4cd5-9ce3-a6ca0fdb8553"}]},
+                "negativeTags": {
+                  "_Type_": "TagList",
+                  "tags": []},
+                "options": []}}},
+          {
+            "_Pointer_": "ptr:11",
+            "_Type_": "ObjectiveProperty_Embedded",
+            "property": {
+              "_Type_": "MissionProperty",
+              "missionVariableName": "CN_Baramsco_MissionFailed",
+              "extendedTextToken": "",
+              "value": {
+                "_Type_": "MissionPropertyValue_Tags",
+                "tags": {
+                  "_Type_": "TagList",
+                  "tags": [
+                    {
+                      "_RecordPath_": "file://./../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+                      "_RecordName_": "Tag.48e4e299-3176-41f8-8d83-54b7871d2ba8",
+                      "_RecordId_": "48e4e299-3176-41f8-8d83-54b7871d2ba8"},
+                    {
+                      "_RecordPath_": "file://./../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+                      "_RecordName_": "Tag.507e98a2-49af-466c-a3d0-3d9c57f3b221",
+                      "_RecordId_": "507e98a2-49af-466c-a3d0-3d9c57f3b221"},
+                    {
+                      "_RecordPath_": "file://./../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+                      "_RecordName_": "Tag.c6545fb0-a59e-4753-99b4-1720b67148ef",
+                      "_RecordId_": "c6545fb0-a59e-4753-99b4-1720b67148ef"}]},
+                "negativeTags": {
+                  "_Type_": "TagList",
+                  "tags": []},
+                "options": []}}},
+          {
+            "_Type_": "ObjectiveProperty_Referenced",
+            "missionVariableName": "CN_ObjectiveArrive_BP",
+            "extendedTextToken": "",
+            "property": "_PointsTo_:ptr:3"},
+          {
+            "_Type_": "ObjectiveProperty_Referenced",
+            "missionVariableName": "CN_HostileKilled_BP",
+            "extendedTextToken": "",
+            "property": "_PointsTo_:ptr:4"},
+          {
+            "_Type_": "ObjectiveProperty_Referenced",
+            "missionVariableName": "CN_HostileReinforcements_BP",
+            "extendedTextToken": "",
+            "property": "_PointsTo_:ptr:5"},
+          {
+            "_Type_": "ObjectiveProperty_Referenced",
+            "missionVariableName": "CN_Baramsco_MissionAccept",
+            "extendedTextToken": "",
+            "property": "_PointsTo_:ptr:6"},
+          {
+            "_Type_": "ObjectiveProperty_Referenced",
+            "missionVariableName": "CN_Baramsco_MissionComplete",
+            "extendedTextToken": "",
+            "property": "_PointsTo_:ptr:7"}],
+        "objectiveHandler": {
+          "_Type_": "ObjectiveHandler_Local",
+          "moduleDeclaration": null,
+          "module": "Libs/Subsumption/Missions/PU/Missions/ShipWaveAttack/ShipWaveAttack.xml",
+          "moduleHierarchy": "file://./../../../../../libs/foundry/records/contracts/modulehierarchy/shipwaveattack_mmh.json",
+          "disableTravelObjectives": false,
+          "disableReturnObjectives": false,
+          "travelRadiusKM": 8.0,
+          "allPlayersLeftGracePeriod": -1.0,
+          "travelObjectiveInfo": {
+            "_Type_": "ObjectiveDisplayInfo",
+            "shortDescription": "@TravelObjective_Short",
+            "longDescription": "@TravelObjective_Long",
+            "objectiveMarkerLabel": "@TravelObjective_Short",
+            "category": "Primary",
+            "hideOnHUD": false},
+          "returnObjectiveInfo": {
+            "_Type_": "ObjectiveDisplayInfo",
+            "shortDescription": "@ReturnObjective_Short",
+            "longDescription": "@ReturnObjective_Long",
+            "objectiveMarkerLabel": "@ReturnObjective_Short",
+            "category": "Primary",
+            "hideOnHUD": false},
+          "navPointSpawnInfo": {
+            "_Type_": "NavPointSpawnInformation",
+            "entityClassDefinition": "file://./../../../../../libs/foundry/records/entities/scitem/mission_entities/mission_qt_quantum_beacon.json",
+            "name": "@mission_items_QTDistressBeacon",
+            "extendedTextTokens": []},
+          "location": "_PointsTo_:ptr:8",
+          "securityManifestToOverride": null},
+        "rewardContribution": null,
+        "displayInfo": {
+          "_Type_": "ObjectiveDisplayInfo",
+          "shortDescription": "@LOC_UNINITIALIZED",
+          "longDescription": "@LOC_UNINITIALIZED",
+          "objectiveMarkerLabel": "@LOC_UNINITIALIZED",
+          "category": "Primary",
+          "hideOnHUD": false},
+        "overrideMissionDetailsDisplayInfo": {
+          "_Type_": "OverrideMissionDetailsDisplayInfo",
+          "titleOverride": "@LOC_UNINITIALIZED",
+          "descriptionOverride": "@LOC_UNINITIALIZED"},
+        "commsNotifications": [
+          {
+            "_Type_": "CommsNotificationSelector",
+            "trigger": "Active",
+            "communicationTags": "_PointsTo_:ptr:9",
+            "commsTiming": "Simultaneous",
+            "delay": 0.0},
+          {
+            "_Type_": "CommsNotificationSelector",
+            "trigger": "Completed",
+            "communicationTags": "_PointsTo_:ptr:10",
+            "commsTiming": "Simultaneous",
+            "delay": 0.0},
+          {
+            "_Type_": "CommsNotificationSelector",
+            "trigger": "Failed",
+            "communicationTags": "_PointsTo_:ptr:11",
+            "commsTiming": "Simultaneous",
+            "delay": 0.0}],
+        "childMissionPhases": []}],
+    "partialRewardPayout": null,
+    "missionFlow": {
+      "_Type_": "MissionFlow",
+      "triggers": []},
+    "contractStartCommsNotification": null,
+    "contractEndCommsNotifications": []}}

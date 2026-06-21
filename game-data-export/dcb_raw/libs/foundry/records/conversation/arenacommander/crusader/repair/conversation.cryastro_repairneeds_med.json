@@ -1,0 +1,15 @@
+{
+  "_RecordName_": "Conversation.CryAstro_RepairNeeds_Med",
+  "_RecordId_": "2fdc94b2-24d7-4007-9d89-672852c0179f",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "Conversation",
+    "fragments": [
+      {
+        "_Type_": "ConversationNode_Start",
+        "next": null},
+      {
+        "_Type_": "ConversationNode_Dialogue",
+        "next": null,
+        "context": "file://./../../../../../../../libs/foundry/records/dialoguecontext/arenacommander/crusader/repair/dialoguecontext.dxsh_pu_autosys_cryastro_repairneeds_med.json",
+        "skipNodeInXSecs": -1.0}]}}

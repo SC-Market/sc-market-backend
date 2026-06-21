@@ -1,0 +1,14 @@
+{
+  "_RecordName_": "AtmosphereStateTemplate.Stanton3",
+  "_RecordId_": "bdcb3d2d-efbe-439c-a016-bd65e7e105fb",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "AtmosphereStateTemplate",
+    "state": {
+      "_Type_": "AtmosphereStateTemplateInternal",
+      "pressureMod": "Override",
+      "pressure": 0.9,
+      "temperatureMod": "Override",
+      "temperature": 303.0,
+      "humidityMod": "Override",
+      "humidity": 0.3}}}

@@ -1,0 +1,22 @@
+{
+  "_RecordName_": "LoadoutKit.KRIG_L21_Wolf_Allegro_Silver_Yellow_White",
+  "_RecordId_": "3c7c6b49-3416-452b-a59f-237df2100747",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "LoadoutKit",
+    "name": "@item_NameWolf_Paint_silver_yellow_white_stripes",
+    "description": "@item_DescWolf_Paint_silver_yellow_white_stripes",
+    "loadout": {
+      "_Type_": "SItemPortLoadoutManualParams",
+      "WearRange": null,
+      "DirtRange": null,
+      "SkipInventoryItemsOnMissionEntities": false,
+      "InventoryItems": [],
+      "entries": [
+        {
+          "_Type_": "SItemPortLoadoutEntryParams",
+          "itemPortName": "hardpoint_paint",
+          "entityClassName": "",
+          "entityClassReference": "file://./../../../../../libs/foundry/records/entities/scitem/ships/paints/paint_l22_wolf_silver_yellow_white_stripes.json",
+          "inventoryContainer": null,
+          "loadout": null}]}}}

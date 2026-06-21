@@ -1,0 +1,17 @@
+{
+  "_RecordName_": "MineableElement.TestElement_Balance",
+  "_RecordId_": "3abbac13-812b-4389-88f3-7a5e995cb7af",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "MineableElement",
+    "resourceType": {
+      "_RecordPath_": "file://./../../../../../libs/foundry/records/resourcetypedatabase/resourcetypedatabase.json",
+      "_RecordName_": "ResourceType.Copper",
+      "_RecordId_": "a789f57a-e12b-4bcd-8132-e0c03d84fc89"},
+    "elementInstability": 1.0,
+    "elementResistance": 1.0,
+    "elementOptimalWindowMidpoint": 0.5,
+    "elementOptimalWindowMidpointRandomness": 0.0,
+    "elementOptimalWindowThinness": 1.0,
+    "elementExplosionMultiplier": 1.0,
+    "elementClusterFactor": 1.0}}

@@ -1,0 +1,15 @@
+{
+  "_RecordName_": "BuildingBlocks_FontStyle.AudimatMono-Bold",
+  "_RecordId_": "ea8db152-ef16-4b2b-add6-46ee8eaa99aa",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "BuildingBlocks_FontStyle",
+    "font": "$Low-Bold",
+    "paintFile": "UI/fonts/Install/AUDIMB_.slug",
+    "isBold": true,
+    "imageSizePercent": 0.75,
+    "scaleModifier": 0.96,
+    "leadingModifier": -0.02,
+    "topMarginModifier": 0.01,
+    "leftMarginModifier": 0.0,
+    "numImageReplacementSpaces": 3}}

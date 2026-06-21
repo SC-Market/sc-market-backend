@@ -1,0 +1,20 @@
+{
+  "_RecordName_": "JournalEntry.Elaine_Intro_Transcript",
+  "_RecordId_": "98ccdb7f-f082-450d-95ef-a42b84cb9c1e",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "JournalEntry",
+    "Title": "@mobiglas_CharlieStation_Elaine_Intro_Transcript_title",
+    "ShortTitle": "@LOC_UNINITIALIZED",
+    "SubHeading": "@mobiglas_Author_ElaineWard",
+    "autoOpenMobiGlas": false,
+    "showNotification": true,
+    "missionSpecificContent": false,
+    "removeOnMissionEnd": true,
+    "Style": "file://./../../../../../../libs/foundry/records/journalentrytype/journalentrytype.dialoguelog.json",
+    "type": {
+      "_Type_": "JournalEntryDialogueLog",
+      "Dialogue": [
+        "file://./../../../../../../libs/foundry/records/dialoguecontext/pu/dialoguecontext.dxhn_pu_eward_covalex_regardingjob_001.json"],
+      "Description": "@mobiglas_CharlieStation_Elaine_Intro_Transcript_text"},
+    "tutorialEntry": false}}

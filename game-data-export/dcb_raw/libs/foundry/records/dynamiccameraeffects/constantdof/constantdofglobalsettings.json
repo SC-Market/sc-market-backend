@@ -1,0 +1,49 @@
+{
+  "_RecordName_": "ConstantDOFGlobalData.ConstantDOFGlobalSettings",
+  "_RecordId_": "93e28f05-3425-462a-a669-4ec721b8be33",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "ConstantDOFGlobalData",
+    "movementThresholdToIgnorePlayer": 0.2,
+    "distanceToIgnorePlayer": 0.2,
+    "rotationThresholdToDisable": 30.0,
+    "pierceability": 16,
+    "nonEntityDistanceScale": 0.3,
+    "LODBiasOnTarget": 1,
+    "maxRangeScale": 1.5,
+    "circleOfConfusion": 3.0,
+    "gridParams": {
+      "_Type_": "ConstantDOFGrid",
+      "verticalGridSize": 5,
+      "horizontalGridSize": 5,
+      "verticalSpacing": 0.002,
+      "horizontalSpacing": 0.002},
+    "weights": {
+      "_Type_": "ConstantDOFWeights",
+      "maxPositionWeight": 10.0,
+      "positionWeights": [
+        {
+          "_Type_": "ConstantDOFPosWeights",
+          "gridDistance": 0,
+          "weight": 1.0},
+        {
+          "_Type_": "ConstantDOFPosWeights",
+          "gridDistance": 1,
+          "weight": 0.8},
+        {
+          "_Type_": "ConstantDOFPosWeights",
+          "gridDistance": 2,
+          "weight": 0.6},
+        {
+          "_Type_": "ConstantDOFPosWeights",
+          "gridDistance": 3,
+          "weight": 0.4},
+        {
+          "_Type_": "ConstantDOFPosWeights",
+          "gridDistance": 4,
+          "weight": 0.2}],
+      "NPC": 100.0,
+      "localPlayer": 150.0,
+      "entity": 0.0,
+      "actorLookingAtPlayer": 1000.0,
+      "door": 0.0}}}

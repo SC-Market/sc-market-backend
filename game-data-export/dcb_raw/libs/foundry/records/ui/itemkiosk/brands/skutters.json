@@ -1,0 +1,14 @@
+{
+  "_RecordName_": "ItemKioskBrand.Skutters",
+  "_RecordId_": "f3961c37-cbe8-4900-98d0-714677b39380",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "ItemKioskBrand",
+    "name": "skutters",
+    "logoPath": "ui/kiosk/assets/tif/backgrounds/skutters.tif",
+    "color": {
+      "_Type_": "SRGBA8",
+      "r": 244,
+      "g": 42,
+      "b": 71,
+      "a": 255}}}

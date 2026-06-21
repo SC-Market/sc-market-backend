@@ -1,0 +1,25 @@
+{
+  "_RecordName_": "Conversation.Charlie_Mission_Additional_Message",
+  "_RecordId_": "383dd667-46f0-4d49-ad6f-6c7f06a3f02c",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "Conversation",
+    "fragments": [
+      {
+        "_Type_": "ConversationNode_Start",
+        "next": null},
+      {
+        "_Type_": "ConversationNode_Dialogue",
+        "next": null,
+        "context": "file://./../../../../../../../libs/foundry/records/dialoguecontext/pu/dialoguecontext.dxhn_pu_eward_covalex_epilogue1_additionalmessage_001.json",
+        "skipNodeInXSecs": -1.0},
+      {
+        "_Type_": "ConversationNode_Dialogue",
+        "next": null,
+        "context": "file://./../../../../../../../libs/foundry/records/dialoguecontext/pu/dialoguecontext.dxhn_pu_eward_covalex_epilogue1_additionalmessage_002.json",
+        "skipNodeInXSecs": -1.0},
+      {
+        "_Type_": "ConversationNode_Dialogue",
+        "next": null,
+        "context": "file://./../../../../../../../libs/foundry/records/dialoguecontext/pu/dialoguecontext.dxhn_pu_eward_covalex_epilogue1_additionalmessage_003.json",
+        "skipNodeInXSecs": -1.0}]}}

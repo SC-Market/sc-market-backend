@@ -1,0 +1,12 @@
+{
+  "_RecordName_": "MissionModuleHierarchy.BoardShip_MMH",
+  "_RecordId_": "de93911a-a2e2-4773-9e90-7602c2eb0c56",
+  "_RecordTag_": "MissionDesign",
+  "_RecordValue_": {
+    "_Type_": "MissionModuleHierarchy",
+    "missionModule": "Libs/Subsumption/Missions/PU/Missions/BoardShip/BoardShip.xml",
+    "subMissionModules": [
+      {
+        "_Type_": "MissionModuleHierarchySubMission",
+        "subMissionModule": "Libs/Subsumption/Missions/PU/PU_MissionModules/ModularParts/ClearAll.xml",
+        "subModuleHierarchy": null}]}}

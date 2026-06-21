@@ -1,0 +1,213 @@
+{
+  "_RecordName_": "VibrationAudioPointDef.VibrationAudioPoint_Template",
+  "_RecordId_": "1f26c1d5-c7b6-44fd-bc67-689c073068a5",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "VibrationAudioPointDef",
+    "vibrationAudioEntries": [
+      {
+        "_Type_": "VibrationAudioEntry",
+        "debugName": "SSVIB_Projectile_Impact",
+        "vibrationRtpcs": [
+          {
+            "_Type_": "AudioRtpcWithBehaviour",
+            "rtpc": {
+              "_Type_": "AudioRtpc",
+              "rtpc": "Vibration_ImpactDamageExplosionDriven"},
+            "behavior": {
+              "_Type_": "SRtpcBehaviour"}}],
+        "loopStart": {
+          "_Type_": "GlobalResourceAudio",
+          "audioTrigger": ""},
+        "loopStop": {
+          "_Type_": "GlobalResourceAudio",
+          "audioTrigger": ""},
+        "jostleEvent": {
+          "_Type_": "GlobalResourceAudio",
+          "audioTrigger": ""},
+        "jostleCooldown": 0.1,
+        "jostleThreshold": 30.0,
+        "jostleRtpc": {
+          "_Type_": "AudioRtpc",
+          "rtpc": "Vibration_Jostle"},
+        "usedVibrationTypes": [
+          "ProjectileImpact"],
+        "vibrationInputModifiers": [
+          1.0,
+          1.0,
+          1.0,
+          1.0,
+          1.0,
+          1.0,
+          1.0,
+          1.0,
+          1.0,
+          1.0,
+          1.0,
+          1.0,
+          1.0,
+          1.0,
+          1.0,
+          1.0,
+          1.0,
+          1.0,
+          1.0,
+          1.0,
+          1.0],
+        "calculationType": "Additive"},
+      {
+        "_Type_": "VibrationAudioEntry",
+        "debugName": "SSVIB_Weapon_Fire",
+        "vibrationRtpcs": [
+          {
+            "_Type_": "AudioRtpcWithBehaviour",
+            "rtpc": {
+              "_Type_": "AudioRtpc",
+              "rtpc": "Vibration_WeaponFireDriven"},
+            "behavior": {
+              "_Type_": "SRtpcBehaviour"}}],
+        "loopStart": {
+          "_Type_": "GlobalResourceAudio",
+          "audioTrigger": ""},
+        "loopStop": {
+          "_Type_": "GlobalResourceAudio",
+          "audioTrigger": ""},
+        "jostleEvent": {
+          "_Type_": "GlobalResourceAudio",
+          "audioTrigger": ""},
+        "jostleCooldown": 0.1,
+        "jostleThreshold": 30.0,
+        "jostleRtpc": {
+          "_Type_": "AudioRtpc",
+          "rtpc": "Vibration_Jostle"},
+        "usedVibrationTypes": [],
+        "vibrationInputModifiers": [
+          1.0,
+          1.0,
+          1.0,
+          1.0,
+          1.0,
+          1.0,
+          1.0,
+          1.0,
+          1.0,
+          1.0,
+          1.0,
+          1.0,
+          1.0,
+          1.0,
+          1.0,
+          1.0,
+          1.0,
+          1.0,
+          1.0,
+          1.0,
+          1.0],
+        "calculationType": "Additive"},
+      {
+        "_Type_": "VibrationAudioEntry",
+        "debugName": "SSVIB_Movement",
+        "vibrationRtpcs": [
+          {
+            "_Type_": "AudioRtpcWithBehaviour",
+            "rtpc": {
+              "_Type_": "AudioRtpc",
+              "rtpc": "Vibration_MovementDriven"},
+            "behavior": {
+              "_Type_": "SSmoothingTimeBased",
+              "attackSlew": 1.0,
+              "releaseSlew": 1.0,
+              "clampedBelow": 0.001}}],
+        "loopStart": {
+          "_Type_": "GlobalResourceAudio",
+          "audioTrigger": ""},
+        "loopStop": {
+          "_Type_": "GlobalResourceAudio",
+          "audioTrigger": ""},
+        "jostleEvent": {
+          "_Type_": "GlobalResourceAudio",
+          "audioTrigger": ""},
+        "jostleCooldown": 2.0,
+        "jostleThreshold": 20.0,
+        "jostleRtpc": {
+          "_Type_": "AudioRtpc",
+          "rtpc": "Vibration_Jostle"},
+        "usedVibrationTypes": [
+          "Thruster",
+          "Quantum",
+          "ThrusterAfterburner",
+          "ThrustersAcceleration"],
+        "vibrationInputModifiers": [
+          1.0,
+          1.0,
+          1.0,
+          0.0,
+          1.0,
+          1.0,
+          1.0,
+          1.0,
+          1.0,
+          1.0,
+          0.25,
+          1.0,
+          1.0,
+          0.0,
+          0.0,
+          1.0,
+          1.0,
+          1.0,
+          1.0,
+          1.0,
+          1.0],
+        "calculationType": "Additive"},
+      {
+        "_Type_": "VibrationAudioEntry",
+        "debugName": "SSVIB_Collision",
+        "vibrationRtpcs": [
+          {
+            "_Type_": "AudioRtpcWithBehaviour",
+            "rtpc": {
+              "_Type_": "AudioRtpc",
+              "rtpc": "Vibration_ImpactDamageExplosionDriven"},
+            "behavior": {
+              "_Type_": "SRtpcBehaviour"}}],
+        "loopStart": {
+          "_Type_": "GlobalResourceAudio",
+          "audioTrigger": ""},
+        "loopStop": {
+          "_Type_": "GlobalResourceAudio",
+          "audioTrigger": ""},
+        "jostleEvent": {
+          "_Type_": "GlobalResourceAudio",
+          "audioTrigger": ""},
+        "jostleCooldown": 0.1,
+        "jostleThreshold": 30.0,
+        "jostleRtpc": {
+          "_Type_": "AudioRtpc",
+          "rtpc": "Vibration_Jostle"},
+        "usedVibrationTypes": [
+          "Collision"],
+        "vibrationInputModifiers": [
+          1.0,
+          1.0,
+          1.0,
+          1.0,
+          1.0,
+          1.0,
+          1.0,
+          1.0,
+          1.0,
+          1.0,
+          1.0,
+          1.0,
+          1.0,
+          1.0,
+          1.0,
+          1.0,
+          1.0,
+          1.0,
+          1.0,
+          1.0,
+          1.0],
+        "calculationType": "Additive"}],
+    "customFalloff": 0.0}}

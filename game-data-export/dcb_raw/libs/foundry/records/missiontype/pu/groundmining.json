@@ -1,0 +1,10 @@
+{
+  "_RecordName_": "MissionType.GroundMining",
+  "_RecordId_": "c4d26408-7679-46ce-9c4e-cd6a840485e3",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "MissionType",
+    "IconName": "",
+    "LocalisedTypeName": "@mobiglas_ui_GroundMining",
+    "svgIconPath": "UI/Textures/Vector/MobiGlas/App_ContractsManager/icon_mobiglas_mining_groundvehicle.svg",
+    "DisplayTime": -1.0}}

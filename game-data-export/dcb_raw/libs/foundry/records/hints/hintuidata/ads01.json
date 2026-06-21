@@ -1,0 +1,12 @@
+{
+  "_RecordName_": "HintUIData.ADS01",
+  "_RecordId_": "95646346-975a-42eb-bc49-4b1fd0ffe945",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "HintUIData",
+    "TitleText": "@Hints_ActorStatusBuff_Title",
+    "BodyText": "@Hints_ActorStatusBuffApplied",
+    "BodyTextGamePad": "@Hints_ActorStatusBuffApplied",
+    "BodyTextJoystick": "@Hints_ActorStatusBuffApplied",
+    "TitleImagePath": "",
+    "BodyImagePath": ""}}

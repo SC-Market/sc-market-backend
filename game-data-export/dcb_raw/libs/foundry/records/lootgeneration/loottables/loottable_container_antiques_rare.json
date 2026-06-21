@@ -1,0 +1,15 @@
+{
+  "_RecordName_": "LootTable.LootTable_Container_Antiques_Rare",
+  "_RecordId_": "f5f82c07-6c55-4487-801b-8f9a159f21d3",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "LootTable",
+    "lootArchetypes": [
+      {
+        "_Type_": "WeightedLootArchetype",
+        "archetype": "file://./../../../../../libs/foundry/records/lootgeneration/lootarchetypes/lootarchetype_container_antiques_rare.json",
+        "weight": 0.1,
+        "numberOfResultsConstraints": {
+          "_Type_": "NumResultsConstraints",
+          "minResults": 0,
+          "maxResults": 0}}]}}

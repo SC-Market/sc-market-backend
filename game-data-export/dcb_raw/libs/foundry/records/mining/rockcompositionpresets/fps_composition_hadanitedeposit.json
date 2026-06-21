@@ -1,0 +1,17 @@
+{
+  "_RecordName_": "MineableComposition.FPS_Composition_HadaniteDeposit",
+  "_RecordId_": "b67114a3-683b-49be-b6a5-c712e7338901",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "MineableComposition",
+    "depositName": "@hud_mining_fps_rock_name_3",
+    "minimumDistinctElements": 1,
+    "compositionArray": [
+      {
+        "_Type_": "MineableCompositionPart",
+        "mineableElement": "file://./../../../../../libs/foundry/records/mining/mineableelements/minableelement_fps_hadanite.json",
+        "minPercentage": 50.0,
+        "maxPercentage": 100.0,
+        "probability": 1.0,
+        "curveExponent": 1.0,
+        "qualityScale": 1.0}]}}

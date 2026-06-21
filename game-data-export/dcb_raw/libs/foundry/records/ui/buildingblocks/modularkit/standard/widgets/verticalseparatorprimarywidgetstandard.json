@@ -1,0 +1,4196 @@
+{
+  "_RecordName_": "BuildingBlocks_Canvas.VerticalSeparatorPrimaryWidgetStandard",
+  "_RecordId_": "8ff37f6e-be2c-41a9-8ac5-6fcf98c2b273",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "BuildingBlocks_Canvas",
+    "size": {
+      "_Type_": "Vec3",
+      "x": 1920.0,
+      "y": 1080.0,
+      "z": 0.0},
+    "coordinateMethod": "useRaw",
+    "embeddedStyles": [],
+    "defaultStyles": {
+      "_Type_": "BuildingBlocks_DefaultStyles",
+      "sharedStyles": null,
+      "entries": [
+        {
+          "_Type_": "BuildingBlocks_StyleEntry",
+          "name": "Root",
+          "conditionsList": [
+            {
+              "_Type_": "BuildingBlocks_StyleConditionList",
+              "name": "New Condition List",
+              "conditions": [
+                {
+                  "_Type_": "BuildingBlocks_StyleSelectorConditionTag",
+                  "tag": {
+                    "_RecordPath_": "file://./../../../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+                    "_RecordName_": "Tag.21788313-6aff-45b4-a3ad-fdc62b1cf849",
+                    "_RecordId_": "21788313-6aff-45b4-a3ad-fdc62b1cf849"}},
+                {
+                  "_Type_": "BuildingBlocks_StyleSelectorConditionParent",
+                  "conditions": [
+                    {
+                      "_Type_": "BuildingBlocks_StyleSelectorConditionTag",
+                      "tag": {
+                        "_RecordPath_": "file://./../../../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+                        "_RecordName_": "Tag.97b7c650-2d90-4810-8b5e-ec7f43091216",
+                        "_RecordId_": "97b7c650-2d90-4810-8b5e-ec7f43091216"}},
+                    {
+                      "_Type_": "BuildingBlocks_StyleSelectorConditionTag",
+                      "tag": {
+                        "_RecordPath_": "file://./../../../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+                        "_RecordName_": "Tag.2f96c664-ba91-4681-a1cf-fc9679a38abd",
+                        "_RecordId_": "2f96c664-ba91-4681-a1cf-fc9679a38abd"}}]}]}],
+          "modifiers": [
+            {
+              "_Type_": "BuildingBlocks_FieldModifierBoolean",
+              "field": "EnableBackground",
+              "value": true},
+            {
+              "_Type_": "BuildingBlocks_FieldModifierBoolean",
+              "field": "EnableMinWidth",
+              "value": true},
+            {
+              "_Type_": "BuildingBlocks_FieldModifierBoolean",
+              "field": "EnableMaxWidth",
+              "value": true},
+            {
+              "_Type_": "BuildingBlocks_FieldModifierNumber",
+              "field": "MinSizeX",
+              "value": 3.0},
+            {
+              "_Type_": "BuildingBlocks_FieldModifierNumber",
+              "field": "MaxSizeX",
+              "value": 3.0},
+            {
+              "_Type_": "BuildingBlocks_FieldModifierNumber",
+              "field": "PivotX",
+              "value": 0.5},
+            {
+              "_Type_": "BuildingBlocks_FieldModifierNumber",
+              "field": "AnchorX",
+              "value": 0.5},
+            {
+              "_Type_": "BuildingBlocks_FieldModifierNumber",
+              "field": "BorderTopWidth",
+              "value": 24.0},
+            {
+              "_Type_": "BuildingBlocks_FieldModifierNumber",
+              "field": "BorderBottomWidth",
+              "value": 24.0},
+            {
+              "_Type_": "BuildingBlocks_FieldModifierEnumerated",
+              "field": {
+                "_Type_": "BuildingBlocks_FieldModifierEnumeratedTypeWidthBehavior",
+                "value": "Fixed"}},
+            {
+              "_Type_": "BuildingBlocks_FieldModifierColor",
+              "field": "BackgroundColor",
+              "color": {
+                "_Type_": "BuildingBlocks_ColorSolid",
+                "color": {
+                  "_Type_": "SRGBA8",
+                  "r": 255,
+                  "g": 255,
+                  "b": 255,
+                  "a": 38}}},
+            {
+              "_Type_": "BuildingBlocks_FieldModifierColor",
+              "field": "BorderColorTop",
+              "color": {
+                "_Type_": "BuildingBlocks_ColorSolid",
+                "color": {
+                  "_Type_": "SRGBA8",
+                  "r": 0,
+                  "g": 122,
+                  "b": 255,
+                  "a": 255}}},
+            {
+              "_Type_": "BuildingBlocks_FieldModifierColor",
+              "field": "BorderColorBottom",
+              "color": {
+                "_Type_": "BuildingBlocks_ColorSolid",
+                "color": {
+                  "_Type_": "SRGBA8",
+                  "r": 0,
+                  "g": 122,
+                  "b": 255,
+                  "a": 255}}}],
+          "transitions": []},
+        {
+          "_Type_": "BuildingBlocks_StyleEntry",
+          "name": "FlipHorizontal",
+          "conditionsList": [
+            {
+              "_Type_": "BuildingBlocks_StyleConditionList",
+              "name": "FlipHorizontal",
+              "conditions": [
+                {
+                  "_Type_": "BuildingBlocks_StyleSelectorConditionAllOfTag",
+                  "tags": [
+                    {
+                      "_RecordPath_": "file://./../../../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+                      "_RecordName_": "Tag.21788313-6aff-45b4-a3ad-fdc62b1cf849",
+                      "_RecordId_": "21788313-6aff-45b4-a3ad-fdc62b1cf849"},
+                    {
+                      "_RecordPath_": "file://./../../../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+                      "_RecordName_": "Tag.9862b0b1-0bcf-4e2a-93a8-3d9dcb611102",
+                      "_RecordId_": "9862b0b1-0bcf-4e2a-93a8-3d9dcb611102"}]}]}],
+          "modifiers": [
+            {
+              "_Type_": "BuildingBlocks_FieldModifierBoolean",
+              "field": "SvgFlipHorizontal",
+              "value": true}],
+          "transitions": []},
+        {
+          "_Type_": "BuildingBlocks_StyleEntry",
+          "name": "FlipVertical",
+          "conditionsList": [
+            {
+              "_Type_": "BuildingBlocks_StyleConditionList",
+              "name": "FlipVertical",
+              "conditions": [
+                {
+                  "_Type_": "BuildingBlocks_StyleSelectorConditionAllOfTag",
+                  "tags": [
+                    {
+                      "_RecordPath_": "file://./../../../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+                      "_RecordName_": "Tag.21788313-6aff-45b4-a3ad-fdc62b1cf849",
+                      "_RecordId_": "21788313-6aff-45b4-a3ad-fdc62b1cf849"},
+                    {
+                      "_RecordPath_": "file://./../../../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+                      "_RecordName_": "Tag.29eae641-74bb-4648-a179-586ccc720211",
+                      "_RecordId_": "29eae641-74bb-4648-a179-586ccc720211"}]}]}],
+          "modifiers": [
+            {
+              "_Type_": "BuildingBlocks_FieldModifierBoolean",
+              "field": "SvgFlipVertical",
+              "value": true}],
+          "transitions": []}]},
+    "style": null,
+    "brandStyles": [
+      {
+        "_Type_": "BuildingBlocks_BrandStyles",
+        "brandIdentifier": "file://./../../../../../../../../libs/foundry/records/ui/buildingblocks/styles/s_uilo_a.json",
+        "sharedStyles": null,
+        "entries": [
+          {
+            "_Type_": "BuildingBlocks_StyleEntry",
+            "name": "Root",
+            "conditionsList": [
+              {
+                "_Type_": "BuildingBlocks_StyleConditionList",
+                "name": "New Condition List",
+                "conditions": [
+                  {
+                    "_Type_": "BuildingBlocks_StyleSelectorConditionTag",
+                    "tag": {
+                      "_RecordPath_": "file://./../../../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+                      "_RecordName_": "Tag.21788313-6aff-45b4-a3ad-fdc62b1cf849",
+                      "_RecordId_": "21788313-6aff-45b4-a3ad-fdc62b1cf849"}},
+                  {
+                    "_Type_": "BuildingBlocks_StyleSelectorConditionParent",
+                    "conditions": [
+                      {
+                        "_Type_": "BuildingBlocks_StyleSelectorConditionTag",
+                        "tag": {
+                          "_RecordPath_": "file://./../../../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+                          "_RecordName_": "Tag.97b7c650-2d90-4810-8b5e-ec7f43091216",
+                          "_RecordId_": "97b7c650-2d90-4810-8b5e-ec7f43091216"}},
+                      {
+                        "_Type_": "BuildingBlocks_StyleSelectorConditionTag",
+                        "tag": {
+                          "_RecordPath_": "file://./../../../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+                          "_RecordName_": "Tag.2f96c664-ba91-4681-a1cf-fc9679a38abd",
+                          "_RecordId_": "2f96c664-ba91-4681-a1cf-fc9679a38abd"}}]}]}],
+            "modifiers": [
+              {
+                "_Type_": "BuildingBlocks_FieldModifierBoolean",
+                "field": "EnableBackground",
+                "value": true},
+              {
+                "_Type_": "BuildingBlocks_FieldModifierBoolean",
+                "field": "EnableMinWidth",
+                "value": true},
+              {
+                "_Type_": "BuildingBlocks_FieldModifierBoolean",
+                "field": "EnableMaxWidth",
+                "value": true},
+              {
+                "_Type_": "BuildingBlocks_FieldModifierNumber",
+                "field": "MinSizeX",
+                "value": 6.0},
+              {
+                "_Type_": "BuildingBlocks_FieldModifierNumber",
+                "field": "MaxSizeX",
+                "value": 6.0},
+              {
+                "_Type_": "BuildingBlocks_FieldModifierNumber",
+                "field": "PivotX",
+                "value": 0.5},
+              {
+                "_Type_": "BuildingBlocks_FieldModifierNumber",
+                "field": "AnchorX",
+                "value": 0.5},
+              {
+                "_Type_": "BuildingBlocks_FieldModifierEnumerated",
+                "field": {
+                  "_Type_": "BuildingBlocks_FieldModifierEnumeratedTypeWidthBehavior",
+                  "value": "Fixed"}},
+              {
+                "_Type_": "BuildingBlocks_FieldModifierColor",
+                "field": "BackgroundColor",
+                "color": {
+                  "_Type_": "BuildingBlocks_ColorStyle",
+                  "color": "Base",
+                  "alpha": 1.0}}],
+            "transitions": []},
+          {
+            "_Type_": "BuildingBlocks_StyleEntry",
+            "name": "FlipHorizontal",
+            "conditionsList": [
+              {
+                "_Type_": "BuildingBlocks_StyleConditionList",
+                "name": "FlipHorizontal",
+                "conditions": [
+                  {
+                    "_Type_": "BuildingBlocks_StyleSelectorConditionAllOfTag",
+                    "tags": [
+                      {
+                        "_RecordPath_": "file://./../../../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+                        "_RecordName_": "Tag.21788313-6aff-45b4-a3ad-fdc62b1cf849",
+                        "_RecordId_": "21788313-6aff-45b4-a3ad-fdc62b1cf849"},
+                      {
+                        "_RecordPath_": "file://./../../../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+                        "_RecordName_": "Tag.9862b0b1-0bcf-4e2a-93a8-3d9dcb611102",
+                        "_RecordId_": "9862b0b1-0bcf-4e2a-93a8-3d9dcb611102"}]}]}],
+            "modifiers": [
+              {
+                "_Type_": "BuildingBlocks_FieldModifierBoolean",
+                "field": "SvgFlipHorizontal",
+                "value": true}],
+            "transitions": []},
+          {
+            "_Type_": "BuildingBlocks_StyleEntry",
+            "name": "FlipVertical",
+            "conditionsList": [
+              {
+                "_Type_": "BuildingBlocks_StyleConditionList",
+                "name": "FlipVertical",
+                "conditions": [
+                  {
+                    "_Type_": "BuildingBlocks_StyleSelectorConditionAllOfTag",
+                    "tags": [
+                      {
+                        "_RecordPath_": "file://./../../../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+                        "_RecordName_": "Tag.21788313-6aff-45b4-a3ad-fdc62b1cf849",
+                        "_RecordId_": "21788313-6aff-45b4-a3ad-fdc62b1cf849"},
+                      {
+                        "_RecordPath_": "file://./../../../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+                        "_RecordName_": "Tag.29eae641-74bb-4648-a179-586ccc720211",
+                        "_RecordId_": "29eae641-74bb-4648-a179-586ccc720211"}]}]}],
+            "modifiers": [
+              {
+                "_Type_": "BuildingBlocks_FieldModifierBoolean",
+                "field": "SvgFlipVertical",
+                "value": true}],
+            "transitions": []}]},
+      {
+        "_Type_": "BuildingBlocks_BrandStyles",
+        "brandIdentifier": "file://./../../../../../../../../libs/foundry/records/ui/buildingblocks/styles/s_uimi_a.json",
+        "sharedStyles": null,
+        "entries": [
+          {
+            "_Type_": "BuildingBlocks_StyleEntry",
+            "name": "Root",
+            "conditionsList": [
+              {
+                "_Type_": "BuildingBlocks_StyleConditionList",
+                "name": "New Condition List",
+                "conditions": [
+                  {
+                    "_Type_": "BuildingBlocks_StyleSelectorConditionTag",
+                    "tag": {
+                      "_RecordPath_": "file://./../../../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+                      "_RecordName_": "Tag.21788313-6aff-45b4-a3ad-fdc62b1cf849",
+                      "_RecordId_": "21788313-6aff-45b4-a3ad-fdc62b1cf849"}},
+                  {
+                    "_Type_": "BuildingBlocks_StyleSelectorConditionParent",
+                    "conditions": [
+                      {
+                        "_Type_": "BuildingBlocks_StyleSelectorConditionTag",
+                        "tag": {
+                          "_RecordPath_": "file://./../../../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+                          "_RecordName_": "Tag.97b7c650-2d90-4810-8b5e-ec7f43091216",
+                          "_RecordId_": "97b7c650-2d90-4810-8b5e-ec7f43091216"}},
+                      {
+                        "_Type_": "BuildingBlocks_StyleSelectorConditionTag",
+                        "tag": {
+                          "_RecordPath_": "file://./../../../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+                          "_RecordName_": "Tag.2f96c664-ba91-4681-a1cf-fc9679a38abd",
+                          "_RecordId_": "2f96c664-ba91-4681-a1cf-fc9679a38abd"}}]}]}],
+            "modifiers": [
+              {
+                "_Type_": "BuildingBlocks_FieldModifierBoolean",
+                "field": "EnableBackground",
+                "value": false},
+              {
+                "_Type_": "BuildingBlocks_FieldModifierBoolean",
+                "field": "EnableMinWidth",
+                "value": true},
+              {
+                "_Type_": "BuildingBlocks_FieldModifierBoolean",
+                "field": "EnableMaxWidth",
+                "value": true},
+              {
+                "_Type_": "BuildingBlocks_FieldModifierNumber",
+                "field": "MinSizeX",
+                "value": 8.0},
+              {
+                "_Type_": "BuildingBlocks_FieldModifierNumber",
+                "field": "MaxSizeX",
+                "value": 8.0},
+              {
+                "_Type_": "BuildingBlocks_FieldModifierNumber",
+                "field": "PivotX",
+                "value": 0.5},
+              {
+                "_Type_": "BuildingBlocks_FieldModifierNumber",
+                "field": "AnchorX",
+                "value": 0.5},
+              {
+                "_Type_": "BuildingBlocks_FieldModifierEnumerated",
+                "field": {
+                  "_Type_": "BuildingBlocks_FieldModifierEnumeratedTypeWidthBehavior",
+                  "value": "Fixed"}},
+              {
+                "_Type_": "BuildingBlocks_FieldModifierString",
+                "field": "SvgPath",
+                "value": "UI/Textures/Vector/ModularKitStyles/UIMI_A/UIMI_A_Seperator_V_1.svg"},
+              {
+                "_Type_": "BuildingBlocks_FieldModifierBoolean",
+                "field": "EnableColorOverlay",
+                "value": false},
+              {
+                "_Type_": "BuildingBlocks_FieldModifierBoolean",
+                "field": "EnableNineSliceRect",
+                "value": true},
+              {
+                "_Type_": "BuildingBlocks_FieldModifierNumber",
+                "field": "NineSliceTop",
+                "value": 0.5},
+              {
+                "_Type_": "BuildingBlocks_FieldModifierNumber",
+                "field": "NineSliceBottom",
+                "value": 0.51},
+              {
+                "_Type_": "BuildingBlocks_FieldModifierString",
+                "field": "SvgPath",
+                "value": "UI/Textures/Vector/ModularKitStyles/UIMI_A/UIMI_A_Seperator_V_1.svg"}],
+            "transitions": []},
+          {
+            "_Type_": "BuildingBlocks_StyleEntry",
+            "name": "FlipHorizontal",
+            "conditionsList": [
+              {
+                "_Type_": "BuildingBlocks_StyleConditionList",
+                "name": "FlipHorizontal",
+                "conditions": [
+                  {
+                    "_Type_": "BuildingBlocks_StyleSelectorConditionAllOfTag",
+                    "tags": [
+                      {
+                        "_RecordPath_": "file://./../../../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+                        "_RecordName_": "Tag.21788313-6aff-45b4-a3ad-fdc62b1cf849",
+                        "_RecordId_": "21788313-6aff-45b4-a3ad-fdc62b1cf849"},
+                      {
+                        "_RecordPath_": "file://./../../../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+                        "_RecordName_": "Tag.9862b0b1-0bcf-4e2a-93a8-3d9dcb611102",
+                        "_RecordId_": "9862b0b1-0bcf-4e2a-93a8-3d9dcb611102"}]}]}],
+            "modifiers": [
+              {
+                "_Type_": "BuildingBlocks_FieldModifierBoolean",
+                "field": "SvgFlipHorizontal",
+                "value": true}],
+            "transitions": []},
+          {
+            "_Type_": "BuildingBlocks_StyleEntry",
+            "name": "FlipVertical",
+            "conditionsList": [
+              {
+                "_Type_": "BuildingBlocks_StyleConditionList",
+                "name": "FlipVertical",
+                "conditions": [
+                  {
+                    "_Type_": "BuildingBlocks_StyleSelectorConditionAllOfTag",
+                    "tags": [
+                      {
+                        "_RecordPath_": "file://./../../../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+                        "_RecordName_": "Tag.21788313-6aff-45b4-a3ad-fdc62b1cf849",
+                        "_RecordId_": "21788313-6aff-45b4-a3ad-fdc62b1cf849"},
+                      {
+                        "_RecordPath_": "file://./../../../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+                        "_RecordName_": "Tag.29eae641-74bb-4648-a179-586ccc720211",
+                        "_RecordId_": "29eae641-74bb-4648-a179-586ccc720211"}]}]}],
+            "modifiers": [
+              {
+                "_Type_": "BuildingBlocks_FieldModifierBoolean",
+                "field": "SvgFlipVertical",
+                "value": true}],
+            "transitions": []}]},
+      {
+        "_Type_": "BuildingBlocks_BrandStyles",
+        "brandIdentifier": "file://./../../../../../../../../libs/foundry/records/ui/buildingblocks/styles/s_visr_a.json",
+        "sharedStyles": null,
+        "entries": [
+          {
+            "_Type_": "BuildingBlocks_StyleEntry",
+            "name": "Root",
+            "conditionsList": [
+              {
+                "_Type_": "BuildingBlocks_StyleConditionList",
+                "name": "New Condition List",
+                "conditions": [
+                  {
+                    "_Type_": "BuildingBlocks_StyleSelectorConditionTag",
+                    "tag": {
+                      "_RecordPath_": "file://./../../../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+                      "_RecordName_": "Tag.21788313-6aff-45b4-a3ad-fdc62b1cf849",
+                      "_RecordId_": "21788313-6aff-45b4-a3ad-fdc62b1cf849"}},
+                  {
+                    "_Type_": "BuildingBlocks_StyleSelectorConditionParent",
+                    "conditions": [
+                      {
+                        "_Type_": "BuildingBlocks_StyleSelectorConditionTag",
+                        "tag": {
+                          "_RecordPath_": "file://./../../../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+                          "_RecordName_": "Tag.97b7c650-2d90-4810-8b5e-ec7f43091216",
+                          "_RecordId_": "97b7c650-2d90-4810-8b5e-ec7f43091216"}},
+                      {
+                        "_Type_": "BuildingBlocks_StyleSelectorConditionTag",
+                        "tag": {
+                          "_RecordPath_": "file://./../../../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+                          "_RecordName_": "Tag.2f96c664-ba91-4681-a1cf-fc9679a38abd",
+                          "_RecordId_": "2f96c664-ba91-4681-a1cf-fc9679a38abd"}}]}]}],
+            "modifiers": [
+              {
+                "_Type_": "BuildingBlocks_FieldModifierColor",
+                "field": "FillColor",
+                "color": {
+                  "_Type_": "BuildingBlocks_ColorStyle",
+                  "color": "Base",
+                  "alpha": 1.0}},
+              {
+                "_Type_": "BuildingBlocks_FieldModifierString",
+                "field": "SvgPath",
+                "value": "UI/Textures/Vector/ModularKitStyles/S_VISR_A/S_VISR_A_Separator_V1.svg"},
+              {
+                "_Type_": "BuildingBlocks_FieldModifierNumber",
+                "field": "PivotX",
+                "value": 0.5},
+              {
+                "_Type_": "BuildingBlocks_FieldModifierNumber",
+                "field": "AnchorX",
+                "value": 0.5},
+              {
+                "_Type_": "BuildingBlocks_FieldModifierBoolean",
+                "field": "EnableNineSliceRect",
+                "value": true},
+              {
+                "_Type_": "BuildingBlocks_FieldModifierNumber",
+                "field": "NineSliceTop",
+                "value": 0.6},
+              {
+                "_Type_": "BuildingBlocks_FieldModifierNumber",
+                "field": "NineSliceBottom",
+                "value": 0.8},
+              {
+                "_Type_": "BuildingBlocks_FieldModifierEnumerated",
+                "field": {
+                  "_Type_": "BuildingBlocks_FieldModifierEnumeratedTypeWidthBehavior",
+                  "value": "Auto"}},
+              {
+                "_Type_": "BuildingBlocks_FieldModifierNumber",
+                "field": "MinSizeX",
+                "value": 7.0},
+              {
+                "_Type_": "BuildingBlocks_FieldModifierNumber",
+                "field": "MaxSizeX",
+                "value": 7.0},
+              {
+                "_Type_": "BuildingBlocks_FieldModifierNumber",
+                "field": "Alpha",
+                "value": 1.0}],
+            "transitions": []},
+          {
+            "_Type_": "BuildingBlocks_StyleEntry",
+            "name": "FlipHorizontal",
+            "conditionsList": [
+              {
+                "_Type_": "BuildingBlocks_StyleConditionList",
+                "name": "FlipHorizontal",
+                "conditions": [
+                  {
+                    "_Type_": "BuildingBlocks_StyleSelectorConditionAllOfTag",
+                    "tags": [
+                      {
+                        "_RecordPath_": "file://./../../../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+                        "_RecordName_": "Tag.21788313-6aff-45b4-a3ad-fdc62b1cf849",
+                        "_RecordId_": "21788313-6aff-45b4-a3ad-fdc62b1cf849"},
+                      {
+                        "_RecordPath_": "file://./../../../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+                        "_RecordName_": "Tag.9862b0b1-0bcf-4e2a-93a8-3d9dcb611102",
+                        "_RecordId_": "9862b0b1-0bcf-4e2a-93a8-3d9dcb611102"}]}]}],
+            "modifiers": [
+              {
+                "_Type_": "BuildingBlocks_FieldModifierBoolean",
+                "field": "SvgFlipHorizontal",
+                "value": true}],
+            "transitions": []},
+          {
+            "_Type_": "BuildingBlocks_StyleEntry",
+            "name": "FlipVertical",
+            "conditionsList": [
+              {
+                "_Type_": "BuildingBlocks_StyleConditionList",
+                "name": "FlipVertical",
+                "conditions": [
+                  {
+                    "_Type_": "BuildingBlocks_StyleSelectorConditionAllOfTag",
+                    "tags": [
+                      {
+                        "_RecordPath_": "file://./../../../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+                        "_RecordName_": "Tag.21788313-6aff-45b4-a3ad-fdc62b1cf849",
+                        "_RecordId_": "21788313-6aff-45b4-a3ad-fdc62b1cf849"},
+                      {
+                        "_RecordPath_": "file://./../../../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+                        "_RecordName_": "Tag.29eae641-74bb-4648-a179-586ccc720211",
+                        "_RecordId_": "29eae641-74bb-4648-a179-586ccc720211"}]}]}],
+            "modifiers": [
+              {
+                "_Type_": "BuildingBlocks_FieldModifierBoolean",
+                "field": "SvgFlipVertical",
+                "value": true}],
+            "transitions": []}]},
+      {
+        "_Type_": "BuildingBlocks_BrandStyles",
+        "brandIdentifier": "file://./../../../../../../../../libs/foundry/records/ui/buildingblocks/styles/s_uilo_b.json",
+        "sharedStyles": null,
+        "entries": [
+          {
+            "_Type_": "BuildingBlocks_StyleEntry",
+            "name": "Root",
+            "conditionsList": [
+              {
+                "_Type_": "BuildingBlocks_StyleConditionList",
+                "name": "New Condition List",
+                "conditions": [
+                  {
+                    "_Type_": "BuildingBlocks_StyleSelectorConditionTag",
+                    "tag": {
+                      "_RecordPath_": "file://./../../../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+                      "_RecordName_": "Tag.21788313-6aff-45b4-a3ad-fdc62b1cf849",
+                      "_RecordId_": "21788313-6aff-45b4-a3ad-fdc62b1cf849"}},
+                  {
+                    "_Type_": "BuildingBlocks_StyleSelectorConditionParent",
+                    "conditions": [
+                      {
+                        "_Type_": "BuildingBlocks_StyleSelectorConditionTag",
+                        "tag": {
+                          "_RecordPath_": "file://./../../../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+                          "_RecordName_": "Tag.97b7c650-2d90-4810-8b5e-ec7f43091216",
+                          "_RecordId_": "97b7c650-2d90-4810-8b5e-ec7f43091216"}},
+                      {
+                        "_Type_": "BuildingBlocks_StyleSelectorConditionTag",
+                        "tag": {
+                          "_RecordPath_": "file://./../../../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+                          "_RecordName_": "Tag.2f96c664-ba91-4681-a1cf-fc9679a38abd",
+                          "_RecordId_": "2f96c664-ba91-4681-a1cf-fc9679a38abd"}}]}]}],
+            "modifiers": [
+              {
+                "_Type_": "BuildingBlocks_FieldModifierBoolean",
+                "field": "EnableBackground",
+                "value": false},
+              {
+                "_Type_": "BuildingBlocks_FieldModifierBoolean",
+                "field": "EnableMinWidth",
+                "value": true},
+              {
+                "_Type_": "BuildingBlocks_FieldModifierBoolean",
+                "field": "EnableMaxWidth",
+                "value": true},
+              {
+                "_Type_": "BuildingBlocks_FieldModifierNumber",
+                "field": "MinSizeX",
+                "value": 8.0},
+              {
+                "_Type_": "BuildingBlocks_FieldModifierNumber",
+                "field": "MaxSizeX",
+                "value": 8.0},
+              {
+                "_Type_": "BuildingBlocks_FieldModifierNumber",
+                "field": "PivotX",
+                "value": 0.5},
+              {
+                "_Type_": "BuildingBlocks_FieldModifierNumber",
+                "field": "AnchorX",
+                "value": 0.5},
+              {
+                "_Type_": "BuildingBlocks_FieldModifierString",
+                "field": "SvgPath",
+                "value": "UI/Textures/Vector/ModularKitStyles/UILO_B/UILO_B_Seperator_V_1.svg"},
+              {
+                "_Type_": "BuildingBlocks_FieldModifierBoolean",
+                "field": "EnableColorOverlay",
+                "value": true},
+              {
+                "_Type_": "BuildingBlocks_FieldModifierBoolean",
+                "field": "EnableNineSliceRect",
+                "value": true},
+              {
+                "_Type_": "BuildingBlocks_FieldModifierNumber",
+                "field": "NineSliceTop",
+                "value": 0.4},
+              {
+                "_Type_": "BuildingBlocks_FieldModifierNumber",
+                "field": "NineSliceBottom",
+                "value": 0.6},
+              {
+                "_Type_": "BuildingBlocks_FieldModifierNumber",
+                "field": "NineSliceLeft",
+                "value": 0.0},
+              {
+                "_Type_": "BuildingBlocks_FieldModifierNumber",
+                "field": "NineSliceRight",
+                "value": 0.0},
+              {
+                "_Type_": "BuildingBlocks_FieldModifierColor",
+                "field": "FillColor",
+                "color": {
+                  "_Type_": "BuildingBlocks_ColorStyle",
+                  "color": "Base",
+                  "alpha": 1.0}}],
+            "transitions": []},
+          {
+            "_Type_": "BuildingBlocks_StyleEntry",
+            "name": "FlipHorizontal",
+            "conditionsList": [
+              {
+                "_Type_": "BuildingBlocks_StyleConditionList",
+                "name": "FlipHorizontal",
+                "conditions": [
+                  {
+                    "_Type_": "BuildingBlocks_StyleSelectorConditionAllOfTag",
+                    "tags": [
+                      {
+                        "_RecordPath_": "file://./../../../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+                        "_RecordName_": "Tag.21788313-6aff-45b4-a3ad-fdc62b1cf849",
+                        "_RecordId_": "21788313-6aff-45b4-a3ad-fdc62b1cf849"},
+                      {
+                        "_RecordPath_": "file://./../../../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+                        "_RecordName_": "Tag.9862b0b1-0bcf-4e2a-93a8-3d9dcb611102",
+                        "_RecordId_": "9862b0b1-0bcf-4e2a-93a8-3d9dcb611102"}]}]}],
+            "modifiers": [
+              {
+                "_Type_": "BuildingBlocks_FieldModifierBoolean",
+                "field": "SvgFlipHorizontal",
+                "value": true}],
+            "transitions": []},
+          {
+            "_Type_": "BuildingBlocks_StyleEntry",
+            "name": "FlipVertical",
+            "conditionsList": [
+              {
+                "_Type_": "BuildingBlocks_StyleConditionList",
+                "name": "FlipVertical",
+                "conditions": [
+                  {
+                    "_Type_": "BuildingBlocks_StyleSelectorConditionAllOfTag",
+                    "tags": [
+                      {
+                        "_RecordPath_": "file://./../../../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+                        "_RecordName_": "Tag.21788313-6aff-45b4-a3ad-fdc62b1cf849",
+                        "_RecordId_": "21788313-6aff-45b4-a3ad-fdc62b1cf849"},
+                      {
+                        "_RecordPath_": "file://./../../../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+                        "_RecordName_": "Tag.29eae641-74bb-4648-a179-586ccc720211",
+                        "_RecordId_": "29eae641-74bb-4648-a179-586ccc720211"}]}]}],
+            "modifiers": [
+              {
+                "_Type_": "BuildingBlocks_FieldModifierBoolean",
+                "field": "SvgFlipVertical",
+                "value": true}],
+            "transitions": []}]},
+      {
+        "_Type_": "BuildingBlocks_BrandStyles",
+        "brandIdentifier": "file://./../../../../../../../../libs/foundry/records/ui/buildingblocks/styles/s_crus_env.json",
+        "sharedStyles": null,
+        "entries": [
+          {
+            "_Type_": "BuildingBlocks_StyleEntry",
+            "name": "Root",
+            "conditionsList": [
+              {
+                "_Type_": "BuildingBlocks_StyleConditionList",
+                "name": "New Condition List",
+                "conditions": [
+                  {
+                    "_Type_": "BuildingBlocks_StyleSelectorConditionTag",
+                    "tag": {
+                      "_RecordPath_": "file://./../../../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+                      "_RecordName_": "Tag.21788313-6aff-45b4-a3ad-fdc62b1cf849",
+                      "_RecordId_": "21788313-6aff-45b4-a3ad-fdc62b1cf849"}},
+                  {
+                    "_Type_": "BuildingBlocks_StyleSelectorConditionParent",
+                    "conditions": [
+                      {
+                        "_Type_": "BuildingBlocks_StyleSelectorConditionTag",
+                        "tag": {
+                          "_RecordPath_": "file://./../../../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+                          "_RecordName_": "Tag.97b7c650-2d90-4810-8b5e-ec7f43091216",
+                          "_RecordId_": "97b7c650-2d90-4810-8b5e-ec7f43091216"}},
+                      {
+                        "_Type_": "BuildingBlocks_StyleSelectorConditionTag",
+                        "tag": {
+                          "_RecordPath_": "file://./../../../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+                          "_RecordName_": "Tag.2f96c664-ba91-4681-a1cf-fc9679a38abd",
+                          "_RecordId_": "2f96c664-ba91-4681-a1cf-fc9679a38abd"}}]}]}],
+            "modifiers": [
+              {
+                "_Type_": "BuildingBlocks_FieldModifierBoolean",
+                "field": "EnableBackground",
+                "value": false},
+              {
+                "_Type_": "BuildingBlocks_FieldModifierBoolean",
+                "field": "EnableMinWidth",
+                "value": true},
+              {
+                "_Type_": "BuildingBlocks_FieldModifierBoolean",
+                "field": "EnableMaxWidth",
+                "value": true},
+              {
+                "_Type_": "BuildingBlocks_FieldModifierNumber",
+                "field": "MinSizeX",
+                "value": 8.0},
+              {
+                "_Type_": "BuildingBlocks_FieldModifierNumber",
+                "field": "MaxSizeX",
+                "value": 8.0},
+              {
+                "_Type_": "BuildingBlocks_FieldModifierNumber",
+                "field": "PivotX",
+                "value": 0.5},
+              {
+                "_Type_": "BuildingBlocks_FieldModifierNumber",
+                "field": "AnchorX",
+                "value": 0.5},
+              {
+                "_Type_": "BuildingBlocks_FieldModifierString",
+                "field": "SvgPath",
+                "value": "UI/Textures/Vector/ModularKitStyles/CRUS/CRUS_Seperator_V_1.svg"},
+              {
+                "_Type_": "BuildingBlocks_FieldModifierBoolean",
+                "field": "EnableColorOverlay",
+                "value": false},
+              {
+                "_Type_": "BuildingBlocks_FieldModifierBoolean",
+                "field": "EnableNineSliceRect",
+                "value": true},
+              {
+                "_Type_": "BuildingBlocks_FieldModifierNumber",
+                "field": "NineSliceTop",
+                "value": 0.85},
+              {
+                "_Type_": "BuildingBlocks_FieldModifierNumber",
+                "field": "NineSliceBottom",
+                "value": 0.86},
+              {
+                "_Type_": "BuildingBlocks_FieldModifierNumber",
+                "field": "NineSliceLeft",
+                "value": 0.0},
+              {
+                "_Type_": "BuildingBlocks_FieldModifierNumber",
+                "field": "NineSliceRight",
+                "value": 0.0},
+              {
+                "_Type_": "BuildingBlocks_FieldModifierColor",
+                "field": "FillColor",
+                "color": {
+                  "_Type_": "BuildingBlocks_ColorStyle",
+                  "color": "Base",
+                  "alpha": 1.0}}],
+            "transitions": []},
+          {
+            "_Type_": "BuildingBlocks_StyleEntry",
+            "name": "FlipHorizontal",
+            "conditionsList": [
+              {
+                "_Type_": "BuildingBlocks_StyleConditionList",
+                "name": "FlipHorizontal",
+                "conditions": [
+                  {
+                    "_Type_": "BuildingBlocks_StyleSelectorConditionAllOfTag",
+                    "tags": [
+                      {
+                        "_RecordPath_": "file://./../../../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+                        "_RecordName_": "Tag.21788313-6aff-45b4-a3ad-fdc62b1cf849",
+                        "_RecordId_": "21788313-6aff-45b4-a3ad-fdc62b1cf849"},
+                      {
+                        "_RecordPath_": "file://./../../../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+                        "_RecordName_": "Tag.9862b0b1-0bcf-4e2a-93a8-3d9dcb611102",
+                        "_RecordId_": "9862b0b1-0bcf-4e2a-93a8-3d9dcb611102"}]}]}],
+            "modifiers": [
+              {
+                "_Type_": "BuildingBlocks_FieldModifierBoolean",
+                "field": "SvgFlipHorizontal",
+                "value": true}],
+            "transitions": []},
+          {
+            "_Type_": "BuildingBlocks_StyleEntry",
+            "name": "FlipVertical",
+            "conditionsList": [
+              {
+                "_Type_": "BuildingBlocks_StyleConditionList",
+                "name": "FlipVertical",
+                "conditions": [
+                  {
+                    "_Type_": "BuildingBlocks_StyleSelectorConditionAllOfTag",
+                    "tags": [
+                      {
+                        "_RecordPath_": "file://./../../../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+                        "_RecordName_": "Tag.21788313-6aff-45b4-a3ad-fdc62b1cf849",
+                        "_RecordId_": "21788313-6aff-45b4-a3ad-fdc62b1cf849"},
+                      {
+                        "_RecordPath_": "file://./../../../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+                        "_RecordName_": "Tag.29eae641-74bb-4648-a179-586ccc720211",
+                        "_RecordId_": "29eae641-74bb-4648-a179-586ccc720211"}]}]}],
+            "modifiers": [
+              {
+                "_Type_": "BuildingBlocks_FieldModifierBoolean",
+                "field": "SvgFlipVertical",
+                "value": true}],
+            "transitions": []}]},
+      {
+        "_Type_": "BuildingBlocks_BrandStyles",
+        "brandIdentifier": "file://./../../../../../../../../libs/foundry/records/ui/buildingblocks/styles/s_bioc.json",
+        "sharedStyles": null,
+        "entries": [
+          {
+            "_Type_": "BuildingBlocks_StyleEntry",
+            "name": "Root",
+            "conditionsList": [
+              {
+                "_Type_": "BuildingBlocks_StyleConditionList",
+                "name": "New Condition List",
+                "conditions": [
+                  {
+                    "_Type_": "BuildingBlocks_StyleSelectorConditionTag",
+                    "tag": {
+                      "_RecordPath_": "file://./../../../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+                      "_RecordName_": "Tag.21788313-6aff-45b4-a3ad-fdc62b1cf849",
+                      "_RecordId_": "21788313-6aff-45b4-a3ad-fdc62b1cf849"}},
+                  {
+                    "_Type_": "BuildingBlocks_StyleSelectorConditionParent",
+                    "conditions": [
+                      {
+                        "_Type_": "BuildingBlocks_StyleSelectorConditionTag",
+                        "tag": {
+                          "_RecordPath_": "file://./../../../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+                          "_RecordName_": "Tag.97b7c650-2d90-4810-8b5e-ec7f43091216",
+                          "_RecordId_": "97b7c650-2d90-4810-8b5e-ec7f43091216"}},
+                      {
+                        "_Type_": "BuildingBlocks_StyleSelectorConditionTag",
+                        "tag": {
+                          "_RecordPath_": "file://./../../../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+                          "_RecordName_": "Tag.2f96c664-ba91-4681-a1cf-fc9679a38abd",
+                          "_RecordId_": "2f96c664-ba91-4681-a1cf-fc9679a38abd"}}]}]}],
+            "modifiers": [
+              {
+                "_Type_": "BuildingBlocks_FieldModifierBoolean",
+                "field": "EnableBackground",
+                "value": false},
+              {
+                "_Type_": "BuildingBlocks_FieldModifierBoolean",
+                "field": "EnableMinWidth",
+                "value": true},
+              {
+                "_Type_": "BuildingBlocks_FieldModifierBoolean",
+                "field": "EnableMaxWidth",
+                "value": true},
+              {
+                "_Type_": "BuildingBlocks_FieldModifierNumber",
+                "field": "MinSizeX",
+                "value": 8.0},
+              {
+                "_Type_": "BuildingBlocks_FieldModifierNumber",
+                "field": "MaxSizeX",
+                "value": 8.0},
+              {
+                "_Type_": "BuildingBlocks_FieldModifierNumber",
+                "field": "PivotX",
+                "value": 0.5},
+              {
+                "_Type_": "BuildingBlocks_FieldModifierNumber",
+                "field": "AnchorX",
+                "value": 0.5},
+              {
+                "_Type_": "BuildingBlocks_FieldModifierString",
+                "field": "SvgPath",
+                "value": "UI/Textures/Vector/ModularKitStyles/BIOC/BIOC_seperator_V1.svg"},
+              {
+                "_Type_": "BuildingBlocks_FieldModifierBoolean",
+                "field": "EnableColorOverlay",
+                "value": false},
+              {
+                "_Type_": "BuildingBlocks_FieldModifierBoolean",
+                "field": "EnableNineSliceRect",
+                "value": true},
+              {
+                "_Type_": "BuildingBlocks_FieldModifierNumber",
+                "field": "NineSliceTop",
+                "value": 0.85},
+              {
+                "_Type_": "BuildingBlocks_FieldModifierNumber",
+                "field": "NineSliceBottom",
+                "value": 0.86},
+              {
+                "_Type_": "BuildingBlocks_FieldModifierNumber",
+                "field": "NineSliceLeft",
+                "value": 0.0},
+              {
+                "_Type_": "BuildingBlocks_FieldModifierNumber",
+                "field": "NineSliceRight",
+                "value": 0.0},
+              {
+                "_Type_": "BuildingBlocks_FieldModifierColor",
+                "field": "FillColor",
+                "color": {
+                  "_Type_": "BuildingBlocks_ColorStyle",
+                  "color": "Base",
+                  "alpha": 1.0}}],
+            "transitions": []},
+          {
+            "_Type_": "BuildingBlocks_StyleEntry",
+            "name": "FlipHorizontal",
+            "conditionsList": [
+              {
+                "_Type_": "BuildingBlocks_StyleConditionList",
+                "name": "FlipHorizontal",
+                "conditions": [
+                  {
+                    "_Type_": "BuildingBlocks_StyleSelectorConditionAllOfTag",
+                    "tags": [
+                      {
+                        "_RecordPath_": "file://./../../../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+                        "_RecordName_": "Tag.21788313-6aff-45b4-a3ad-fdc62b1cf849",
+                        "_RecordId_": "21788313-6aff-45b4-a3ad-fdc62b1cf849"},
+                      {
+                        "_RecordPath_": "file://./../../../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+                        "_RecordName_": "Tag.9862b0b1-0bcf-4e2a-93a8-3d9dcb611102",
+                        "_RecordId_": "9862b0b1-0bcf-4e2a-93a8-3d9dcb611102"}]}]}],
+            "modifiers": [
+              {
+                "_Type_": "BuildingBlocks_FieldModifierBoolean",
+                "field": "SvgFlipHorizontal",
+                "value": true}],
+            "transitions": []},
+          {
+            "_Type_": "BuildingBlocks_StyleEntry",
+            "name": "FlipVertical",
+            "conditionsList": [
+              {
+                "_Type_": "BuildingBlocks_StyleConditionList",
+                "name": "FlipVertical",
+                "conditions": [
+                  {
+                    "_Type_": "BuildingBlocks_StyleSelectorConditionAllOfTag",
+                    "tags": [
+                      {
+                        "_RecordPath_": "file://./../../../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+                        "_RecordName_": "Tag.21788313-6aff-45b4-a3ad-fdc62b1cf849",
+                        "_RecordId_": "21788313-6aff-45b4-a3ad-fdc62b1cf849"},
+                      {
+                        "_RecordPath_": "file://./../../../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+                        "_RecordName_": "Tag.29eae641-74bb-4648-a179-586ccc720211",
+                        "_RecordId_": "29eae641-74bb-4648-a179-586ccc720211"}]}]}],
+            "modifiers": [
+              {
+                "_Type_": "BuildingBlocks_FieldModifierBoolean",
+                "field": "SvgFlipVertical",
+                "value": true}],
+            "transitions": []}]},
+      {
+        "_Type_": "BuildingBlocks_BrandStyles",
+        "brandIdentifier": "file://./../../../../../../../../libs/foundry/records/ui/buildingblocks/styles/s_aegs_env.json",
+        "sharedStyles": null,
+        "entries": [
+          {
+            "_Type_": "BuildingBlocks_StyleEntry",
+            "name": "Root",
+            "conditionsList": [
+              {
+                "_Type_": "BuildingBlocks_StyleConditionList",
+                "name": "New Condition List",
+                "conditions": [
+                  {
+                    "_Type_": "BuildingBlocks_StyleSelectorConditionTag",
+                    "tag": {
+                      "_RecordPath_": "file://./../../../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+                      "_RecordName_": "Tag.21788313-6aff-45b4-a3ad-fdc62b1cf849",
+                      "_RecordId_": "21788313-6aff-45b4-a3ad-fdc62b1cf849"}},
+                  {
+                    "_Type_": "BuildingBlocks_StyleSelectorConditionParent",
+                    "conditions": [
+                      {
+                        "_Type_": "BuildingBlocks_StyleSelectorConditionTag",
+                        "tag": {
+                          "_RecordPath_": "file://./../../../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+                          "_RecordName_": "Tag.97b7c650-2d90-4810-8b5e-ec7f43091216",
+                          "_RecordId_": "97b7c650-2d90-4810-8b5e-ec7f43091216"}},
+                      {
+                        "_Type_": "BuildingBlocks_StyleSelectorConditionTag",
+                        "tag": {
+                          "_RecordPath_": "file://./../../../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+                          "_RecordName_": "Tag.2f96c664-ba91-4681-a1cf-fc9679a38abd",
+                          "_RecordId_": "2f96c664-ba91-4681-a1cf-fc9679a38abd"}}]}]}],
+            "modifiers": [
+              {
+                "_Type_": "BuildingBlocks_FieldModifierBoolean",
+                "field": "EnableBackground",
+                "value": false},
+              {
+                "_Type_": "BuildingBlocks_FieldModifierBoolean",
+                "field": "EnableMinWidth",
+                "value": true},
+              {
+                "_Type_": "BuildingBlocks_FieldModifierBoolean",
+                "field": "EnableMaxWidth",
+                "value": true},
+              {
+                "_Type_": "BuildingBlocks_FieldModifierNumber",
+                "field": "MinSizeX",
+                "value": 8.0},
+              {
+                "_Type_": "BuildingBlocks_FieldModifierNumber",
+                "field": "MaxSizeX",
+                "value": 8.0},
+              {
+                "_Type_": "BuildingBlocks_FieldModifierNumber",
+                "field": "PivotX",
+                "value": 0.5},
+              {
+                "_Type_": "BuildingBlocks_FieldModifierNumber",
+                "field": "AnchorX",
+                "value": 0.5},
+              {
+                "_Type_": "BuildingBlocks_FieldModifierString",
+                "field": "SvgPath",
+                "value": "UI/Textures/Vector/ModularKitStyles/AEGS_ENV/AEGS_ENV_Seperator_V_1.svg"},
+              {
+                "_Type_": "BuildingBlocks_FieldModifierBoolean",
+                "field": "EnableColorOverlay",
+                "value": false},
+              {
+                "_Type_": "BuildingBlocks_FieldModifierBoolean",
+                "field": "EnableNineSliceRect",
+                "value": true},
+              {
+                "_Type_": "BuildingBlocks_FieldModifierNumber",
+                "field": "NineSliceScale",
+                "value": 2.0},
+              {
+                "_Type_": "BuildingBlocks_FieldModifierNumber",
+                "field": "NineSliceTop",
+                "value": 0.5},
+              {
+                "_Type_": "BuildingBlocks_FieldModifierNumber",
+                "field": "NineSliceBottom",
+                "value": 0.6},
+              {
+                "_Type_": "BuildingBlocks_FieldModifierNumber",
+                "field": "NineSliceLeft",
+                "value": 0.0},
+              {
+                "_Type_": "BuildingBlocks_FieldModifierNumber",
+                "field": "NineSliceRight",
+                "value": 0.0},
+              {
+                "_Type_": "BuildingBlocks_FieldModifierColor",
+                "field": "FillColor",
+                "color": {
+                  "_Type_": "BuildingBlocks_ColorStyle",
+                  "color": "Base",
+                  "alpha": 1.0}}],
+            "transitions": []},
+          {
+            "_Type_": "BuildingBlocks_StyleEntry",
+            "name": "FlipHorizontal",
+            "conditionsList": [
+              {
+                "_Type_": "BuildingBlocks_StyleConditionList",
+                "name": "FlipHorizontal",
+                "conditions": [
+                  {
+                    "_Type_": "BuildingBlocks_StyleSelectorConditionAllOfTag",
+                    "tags": [
+                      {
+                        "_RecordPath_": "file://./../../../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+                        "_RecordName_": "Tag.21788313-6aff-45b4-a3ad-fdc62b1cf849",
+                        "_RecordId_": "21788313-6aff-45b4-a3ad-fdc62b1cf849"},
+                      {
+                        "_RecordPath_": "file://./../../../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+                        "_RecordName_": "Tag.9862b0b1-0bcf-4e2a-93a8-3d9dcb611102",
+                        "_RecordId_": "9862b0b1-0bcf-4e2a-93a8-3d9dcb611102"}]}]}],
+            "modifiers": [
+              {
+                "_Type_": "BuildingBlocks_FieldModifierBoolean",
+                "field": "SvgFlipHorizontal",
+                "value": true}],
+            "transitions": []},
+          {
+            "_Type_": "BuildingBlocks_StyleEntry",
+            "name": "FlipVertical",
+            "conditionsList": [
+              {
+                "_Type_": "BuildingBlocks_StyleConditionList",
+                "name": "FlipVertical",
+                "conditions": [
+                  {
+                    "_Type_": "BuildingBlocks_StyleSelectorConditionAllOfTag",
+                    "tags": [
+                      {
+                        "_RecordPath_": "file://./../../../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+                        "_RecordName_": "Tag.21788313-6aff-45b4-a3ad-fdc62b1cf849",
+                        "_RecordId_": "21788313-6aff-45b4-a3ad-fdc62b1cf849"},
+                      {
+                        "_RecordPath_": "file://./../../../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+                        "_RecordName_": "Tag.29eae641-74bb-4648-a179-586ccc720211",
+                        "_RecordId_": "29eae641-74bb-4648-a179-586ccc720211"}]}]}],
+            "modifiers": [
+              {
+                "_Type_": "BuildingBlocks_FieldModifierBoolean",
+                "field": "SvgFlipVertical",
+                "value": true}],
+            "transitions": []}]},
+      {
+        "_Type_": "BuildingBlocks_BrandStyles",
+        "brandIdentifier": "file://./../../../../../../../../libs/foundry/records/ui/buildingblocks/styles/s_rsi_env.json",
+        "sharedStyles": null,
+        "entries": [
+          {
+            "_Type_": "BuildingBlocks_StyleEntry",
+            "name": "New Style",
+            "conditionsList": [
+              {
+                "_Type_": "BuildingBlocks_StyleConditionList",
+                "name": "New Condition List",
+                "conditions": [
+                  {
+                    "_Type_": "BuildingBlocks_StyleSelectorConditionTag",
+                    "tag": {
+                      "_RecordPath_": "file://./../../../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+                      "_RecordName_": "Tag.21788313-6aff-45b4-a3ad-fdc62b1cf849",
+                      "_RecordId_": "21788313-6aff-45b4-a3ad-fdc62b1cf849"}},
+                  {
+                    "_Type_": "BuildingBlocks_StyleSelectorConditionParent",
+                    "conditions": [
+                      {
+                        "_Type_": "BuildingBlocks_StyleSelectorConditionTag",
+                        "tag": {
+                          "_RecordPath_": "file://./../../../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+                          "_RecordName_": "Tag.97b7c650-2d90-4810-8b5e-ec7f43091216",
+                          "_RecordId_": "97b7c650-2d90-4810-8b5e-ec7f43091216"}},
+                      {
+                        "_Type_": "BuildingBlocks_StyleSelectorConditionTag",
+                        "tag": {
+                          "_RecordPath_": "file://./../../../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+                          "_RecordName_": "Tag.2f96c664-ba91-4681-a1cf-fc9679a38abd",
+                          "_RecordId_": "2f96c664-ba91-4681-a1cf-fc9679a38abd"}}]}]}],
+            "modifiers": [
+              {
+                "_Type_": "BuildingBlocks_FieldModifierString",
+                "field": "SvgPath",
+                "value": "UI/Textures/Vector/ModularKitStyles/RSI/RSI_Separator_V1.svg"},
+              {
+                "_Type_": "BuildingBlocks_FieldModifierBoolean",
+                "field": "EnableColorOverlay",
+                "value": false},
+              {
+                "_Type_": "BuildingBlocks_FieldModifierBoolean",
+                "field": "EnableNineSliceRect",
+                "value": true},
+              {
+                "_Type_": "BuildingBlocks_FieldModifierNumber",
+                "field": "NineSliceTop",
+                "value": 0.49},
+              {
+                "_Type_": "BuildingBlocks_FieldModifierNumber",
+                "field": "NineSliceBottom",
+                "value": 0.51},
+              {
+                "_Type_": "BuildingBlocks_FieldModifierEnumerated",
+                "field": {
+                  "_Type_": "BuildingBlocks_FieldModifierEnumeratedTypeSvgScalingBehavior",
+                  "value": "StretchY"}},
+              {
+                "_Type_": "BuildingBlocks_FieldModifierNumber",
+                "field": "Alpha",
+                "value": 0.3}],
+            "transitions": []},
+          {
+            "_Type_": "BuildingBlocks_StyleEntry",
+            "name": "FlipHorizontal",
+            "conditionsList": [
+              {
+                "_Type_": "BuildingBlocks_StyleConditionList",
+                "name": "FlipHorizontal",
+                "conditions": [
+                  {
+                    "_Type_": "BuildingBlocks_StyleSelectorConditionAllOfTag",
+                    "tags": [
+                      {
+                        "_RecordPath_": "file://./../../../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+                        "_RecordName_": "Tag.21788313-6aff-45b4-a3ad-fdc62b1cf849",
+                        "_RecordId_": "21788313-6aff-45b4-a3ad-fdc62b1cf849"},
+                      {
+                        "_RecordPath_": "file://./../../../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+                        "_RecordName_": "Tag.9862b0b1-0bcf-4e2a-93a8-3d9dcb611102",
+                        "_RecordId_": "9862b0b1-0bcf-4e2a-93a8-3d9dcb611102"}]}]}],
+            "modifiers": [
+              {
+                "_Type_": "BuildingBlocks_FieldModifierBoolean",
+                "field": "SvgFlipHorizontal",
+                "value": true}],
+            "transitions": []},
+          {
+            "_Type_": "BuildingBlocks_StyleEntry",
+            "name": "FlipVertical",
+            "conditionsList": [
+              {
+                "_Type_": "BuildingBlocks_StyleConditionList",
+                "name": "FlipVertical",
+                "conditions": [
+                  {
+                    "_Type_": "BuildingBlocks_StyleSelectorConditionAllOfTag",
+                    "tags": [
+                      {
+                        "_RecordPath_": "file://./../../../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+                        "_RecordName_": "Tag.21788313-6aff-45b4-a3ad-fdc62b1cf849",
+                        "_RecordId_": "21788313-6aff-45b4-a3ad-fdc62b1cf849"},
+                      {
+                        "_RecordPath_": "file://./../../../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+                        "_RecordName_": "Tag.29eae641-74bb-4648-a179-586ccc720211",
+                        "_RecordId_": "29eae641-74bb-4648-a179-586ccc720211"}]}]}],
+            "modifiers": [
+              {
+                "_Type_": "BuildingBlocks_FieldModifierBoolean",
+                "field": "SvgFlipVertical",
+                "value": true}],
+            "transitions": []}]},
+      {
+        "_Type_": "BuildingBlocks_BrandStyles",
+        "brandIdentifier": "file://./../../../../../../../../libs/foundry/records/ui/buildingblocks/styles/orig.json",
+        "sharedStyles": null,
+        "entries": [
+          {
+            "_Type_": "BuildingBlocks_StyleEntry",
+            "name": "Root",
+            "conditionsList": [
+              {
+                "_Type_": "BuildingBlocks_StyleConditionList",
+                "name": "New Condition List",
+                "conditions": [
+                  {
+                    "_Type_": "BuildingBlocks_StyleSelectorConditionTag",
+                    "tag": {
+                      "_RecordPath_": "file://./../../../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+                      "_RecordName_": "Tag.21788313-6aff-45b4-a3ad-fdc62b1cf849",
+                      "_RecordId_": "21788313-6aff-45b4-a3ad-fdc62b1cf849"}},
+                  {
+                    "_Type_": "BuildingBlocks_StyleSelectorConditionParent",
+                    "conditions": [
+                      {
+                        "_Type_": "BuildingBlocks_StyleSelectorConditionTag",
+                        "tag": {
+                          "_RecordPath_": "file://./../../../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+                          "_RecordName_": "Tag.97b7c650-2d90-4810-8b5e-ec7f43091216",
+                          "_RecordId_": "97b7c650-2d90-4810-8b5e-ec7f43091216"}},
+                      {
+                        "_Type_": "BuildingBlocks_StyleSelectorConditionTag",
+                        "tag": {
+                          "_RecordPath_": "file://./../../../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+                          "_RecordName_": "Tag.2f96c664-ba91-4681-a1cf-fc9679a38abd",
+                          "_RecordId_": "2f96c664-ba91-4681-a1cf-fc9679a38abd"}}]}]}],
+            "modifiers": [
+              {
+                "_Type_": "BuildingBlocks_FieldModifierBoolean",
+                "field": "EnableBackground",
+                "value": false},
+              {
+                "_Type_": "BuildingBlocks_FieldModifierBoolean",
+                "field": "EnableMinWidth",
+                "value": true},
+              {
+                "_Type_": "BuildingBlocks_FieldModifierBoolean",
+                "field": "EnableMaxWidth",
+                "value": true},
+              {
+                "_Type_": "BuildingBlocks_FieldModifierNumber",
+                "field": "MinSizeX",
+                "value": 8.0},
+              {
+                "_Type_": "BuildingBlocks_FieldModifierNumber",
+                "field": "MaxSizeX",
+                "value": 8.0},
+              {
+                "_Type_": "BuildingBlocks_FieldModifierNumber",
+                "field": "PivotX",
+                "value": 0.5},
+              {
+                "_Type_": "BuildingBlocks_FieldModifierNumber",
+                "field": "AnchorX",
+                "value": 0.5},
+              {
+                "_Type_": "BuildingBlocks_FieldModifierString",
+                "field": "SvgPath",
+                "value": "UI/Textures/Vector/ModularKitStyles/CRUS/CRUS_Seperator_V_1.svg"},
+              {
+                "_Type_": "BuildingBlocks_FieldModifierBoolean",
+                "field": "EnableColorOverlay",
+                "value": false},
+              {
+                "_Type_": "BuildingBlocks_FieldModifierBoolean",
+                "field": "EnableNineSliceRect",
+                "value": true},
+              {
+                "_Type_": "BuildingBlocks_FieldModifierNumber",
+                "field": "NineSliceTop",
+                "value": 0.85},
+              {
+                "_Type_": "BuildingBlocks_FieldModifierNumber",
+                "field": "NineSliceBottom",
+                "value": 0.86},
+              {
+                "_Type_": "BuildingBlocks_FieldModifierNumber",
+                "field": "NineSliceLeft",
+                "value": 0.0},
+              {
+                "_Type_": "BuildingBlocks_FieldModifierNumber",
+                "field": "NineSliceRight",
+                "value": 0.0},
+              {
+                "_Type_": "BuildingBlocks_FieldModifierColor",
+                "field": "FillColor",
+                "color": {
+                  "_Type_": "BuildingBlocks_ColorStyle",
+                  "color": "Base",
+                  "alpha": 1.0}}],
+            "transitions": []},
+          {
+            "_Type_": "BuildingBlocks_StyleEntry",
+            "name": "FlipHorizontal",
+            "conditionsList": [
+              {
+                "_Type_": "BuildingBlocks_StyleConditionList",
+                "name": "FlipHorizontal",
+                "conditions": [
+                  {
+                    "_Type_": "BuildingBlocks_StyleSelectorConditionAllOfTag",
+                    "tags": [
+                      {
+                        "_RecordPath_": "file://./../../../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+                        "_RecordName_": "Tag.21788313-6aff-45b4-a3ad-fdc62b1cf849",
+                        "_RecordId_": "21788313-6aff-45b4-a3ad-fdc62b1cf849"},
+                      {
+                        "_RecordPath_": "file://./../../../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+                        "_RecordName_": "Tag.9862b0b1-0bcf-4e2a-93a8-3d9dcb611102",
+                        "_RecordId_": "9862b0b1-0bcf-4e2a-93a8-3d9dcb611102"}]}]}],
+            "modifiers": [
+              {
+                "_Type_": "BuildingBlocks_FieldModifierBoolean",
+                "field": "SvgFlipHorizontal",
+                "value": true}],
+            "transitions": []},
+          {
+            "_Type_": "BuildingBlocks_StyleEntry",
+            "name": "FlipVertical",
+            "conditionsList": [
+              {
+                "_Type_": "BuildingBlocks_StyleConditionList",
+                "name": "FlipVertical",
+                "conditions": [
+                  {
+                    "_Type_": "BuildingBlocks_StyleSelectorConditionAllOfTag",
+                    "tags": [
+                      {
+                        "_RecordPath_": "file://./../../../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+                        "_RecordName_": "Tag.21788313-6aff-45b4-a3ad-fdc62b1cf849",
+                        "_RecordId_": "21788313-6aff-45b4-a3ad-fdc62b1cf849"},
+                      {
+                        "_RecordPath_": "file://./../../../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+                        "_RecordName_": "Tag.29eae641-74bb-4648-a179-586ccc720211",
+                        "_RecordId_": "29eae641-74bb-4648-a179-586ccc720211"}]}]}],
+            "modifiers": [
+              {
+                "_Type_": "BuildingBlocks_FieldModifierBoolean",
+                "field": "SvgFlipVertical",
+                "value": true}],
+            "transitions": []}]},
+      {
+        "_Type_": "BuildingBlocks_BrandStyles",
+        "brandIdentifier": null,
+        "sharedStyles": null,
+        "entries": [
+          {
+            "_Type_": "BuildingBlocks_StyleEntry",
+            "name": "Root",
+            "conditionsList": [
+              {
+                "_Type_": "BuildingBlocks_StyleConditionList",
+                "name": "New Condition List",
+                "conditions": [
+                  {
+                    "_Type_": "BuildingBlocks_StyleSelectorConditionTag",
+                    "tag": {
+                      "_RecordPath_": "file://./../../../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+                      "_RecordName_": "Tag.21788313-6aff-45b4-a3ad-fdc62b1cf849",
+                      "_RecordId_": "21788313-6aff-45b4-a3ad-fdc62b1cf849"}},
+                  {
+                    "_Type_": "BuildingBlocks_StyleSelectorConditionParent",
+                    "conditions": [
+                      {
+                        "_Type_": "BuildingBlocks_StyleSelectorConditionTag",
+                        "tag": {
+                          "_RecordPath_": "file://./../../../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+                          "_RecordName_": "Tag.97b7c650-2d90-4810-8b5e-ec7f43091216",
+                          "_RecordId_": "97b7c650-2d90-4810-8b5e-ec7f43091216"}},
+                      {
+                        "_Type_": "BuildingBlocks_StyleSelectorConditionTag",
+                        "tag": {
+                          "_RecordPath_": "file://./../../../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+                          "_RecordName_": "Tag.2f96c664-ba91-4681-a1cf-fc9679a38abd",
+                          "_RecordId_": "2f96c664-ba91-4681-a1cf-fc9679a38abd"}}]}]}],
+            "modifiers": [
+              {
+                "_Type_": "BuildingBlocks_FieldModifierBoolean",
+                "field": "EnableBackground",
+                "value": false},
+              {
+                "_Type_": "BuildingBlocks_FieldModifierBoolean",
+                "field": "EnableMinWidth",
+                "value": true},
+              {
+                "_Type_": "BuildingBlocks_FieldModifierBoolean",
+                "field": "EnableMaxWidth",
+                "value": true},
+              {
+                "_Type_": "BuildingBlocks_FieldModifierNumber",
+                "field": "MinSizeX",
+                "value": 8.0},
+              {
+                "_Type_": "BuildingBlocks_FieldModifierNumber",
+                "field": "MaxSizeX",
+                "value": 8.0},
+              {
+                "_Type_": "BuildingBlocks_FieldModifierNumber",
+                "field": "PivotX",
+                "value": 0.5},
+              {
+                "_Type_": "BuildingBlocks_FieldModifierNumber",
+                "field": "AnchorX",
+                "value": 0.5},
+              {
+                "_Type_": "BuildingBlocks_FieldModifierString",
+                "field": "SvgPath",
+                "value": "UI/Textures/Vector/CharacterCustomizer/BIOC_S42_CC_divider_01_Vertical.svg"},
+              {
+                "_Type_": "BuildingBlocks_FieldModifierBoolean",
+                "field": "EnableColorOverlay",
+                "value": false},
+              {
+                "_Type_": "BuildingBlocks_FieldModifierBoolean",
+                "field": "EnableNineSliceRect",
+                "value": true},
+              {
+                "_Type_": "BuildingBlocks_FieldModifierNumber",
+                "field": "NineSliceTop",
+                "value": 0.85},
+              {
+                "_Type_": "BuildingBlocks_FieldModifierNumber",
+                "field": "NineSliceBottom",
+                "value": 0.86},
+              {
+                "_Type_": "BuildingBlocks_FieldModifierNumber",
+                "field": "NineSliceLeft",
+                "value": 0.0},
+              {
+                "_Type_": "BuildingBlocks_FieldModifierNumber",
+                "field": "NineSliceRight",
+                "value": 0.0},
+              {
+                "_Type_": "BuildingBlocks_FieldModifierColor",
+                "field": "FillColor",
+                "color": {
+                  "_Type_": "BuildingBlocks_ColorStyle",
+                  "color": "Base",
+                  "alpha": 1.0}}],
+            "transitions": []},
+          {
+            "_Type_": "BuildingBlocks_StyleEntry",
+            "name": "FlipHorizontal",
+            "conditionsList": [
+              {
+                "_Type_": "BuildingBlocks_StyleConditionList",
+                "name": "FlipHorizontal",
+                "conditions": [
+                  {
+                    "_Type_": "BuildingBlocks_StyleSelectorConditionAllOfTag",
+                    "tags": [
+                      {
+                        "_RecordPath_": "file://./../../../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+                        "_RecordName_": "Tag.21788313-6aff-45b4-a3ad-fdc62b1cf849",
+                        "_RecordId_": "21788313-6aff-45b4-a3ad-fdc62b1cf849"},
+                      {
+                        "_RecordPath_": "file://./../../../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+                        "_RecordName_": "Tag.9862b0b1-0bcf-4e2a-93a8-3d9dcb611102",
+                        "_RecordId_": "9862b0b1-0bcf-4e2a-93a8-3d9dcb611102"}]}]}],
+            "modifiers": [
+              {
+                "_Type_": "BuildingBlocks_FieldModifierBoolean",
+                "field": "SvgFlipHorizontal",
+                "value": true}],
+            "transitions": []},
+          {
+            "_Type_": "BuildingBlocks_StyleEntry",
+            "name": "FlipVertical",
+            "conditionsList": [
+              {
+                "_Type_": "BuildingBlocks_StyleConditionList",
+                "name": "FlipVertical",
+                "conditions": [
+                  {
+                    "_Type_": "BuildingBlocks_StyleSelectorConditionAllOfTag",
+                    "tags": [
+                      {
+                        "_RecordPath_": "file://./../../../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+                        "_RecordName_": "Tag.21788313-6aff-45b4-a3ad-fdc62b1cf849",
+                        "_RecordId_": "21788313-6aff-45b4-a3ad-fdc62b1cf849"},
+                      {
+                        "_RecordPath_": "file://./../../../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+                        "_RecordName_": "Tag.29eae641-74bb-4648-a179-586ccc720211",
+                        "_RecordId_": "29eae641-74bb-4648-a179-586ccc720211"}]}]}],
+            "modifiers": [
+              {
+                "_Type_": "BuildingBlocks_FieldModifierBoolean",
+                "field": "SvgFlipVertical",
+                "value": true}],
+            "transitions": []}]},
+      {
+        "_Type_": "BuildingBlocks_BrandStyles",
+        "brandIdentifier": "file://./../../../../../../../../libs/foundry/records/ui/buildingblocks/styles/s_misc_env.json",
+        "sharedStyles": null,
+        "entries": [
+          {
+            "_Type_": "BuildingBlocks_StyleEntry",
+            "name": "Root",
+            "conditionsList": [
+              {
+                "_Type_": "BuildingBlocks_StyleConditionList",
+                "name": "New Condition List",
+                "conditions": [
+                  {
+                    "_Type_": "BuildingBlocks_StyleSelectorConditionTag",
+                    "tag": {
+                      "_RecordPath_": "file://./../../../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+                      "_RecordName_": "Tag.21788313-6aff-45b4-a3ad-fdc62b1cf849",
+                      "_RecordId_": "21788313-6aff-45b4-a3ad-fdc62b1cf849"}},
+                  {
+                    "_Type_": "BuildingBlocks_StyleSelectorConditionParent",
+                    "conditions": [
+                      {
+                        "_Type_": "BuildingBlocks_StyleSelectorConditionTag",
+                        "tag": {
+                          "_RecordPath_": "file://./../../../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+                          "_RecordName_": "Tag.97b7c650-2d90-4810-8b5e-ec7f43091216",
+                          "_RecordId_": "97b7c650-2d90-4810-8b5e-ec7f43091216"}},
+                      {
+                        "_Type_": "BuildingBlocks_StyleSelectorConditionTag",
+                        "tag": {
+                          "_RecordPath_": "file://./../../../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+                          "_RecordName_": "Tag.2f96c664-ba91-4681-a1cf-fc9679a38abd",
+                          "_RecordId_": "2f96c664-ba91-4681-a1cf-fc9679a38abd"}}]}]}],
+            "modifiers": [
+              {
+                "_Type_": "BuildingBlocks_FieldModifierString",
+                "field": "SvgPath",
+                "value": "UI/Textures/Vector/ModularKitStyles/MISC/Separator_V1.svg"},
+              {
+                "_Type_": "BuildingBlocks_FieldModifierBoolean",
+                "field": "EnableNineSliceRect",
+                "value": true},
+              {
+                "_Type_": "BuildingBlocks_FieldModifierNumber",
+                "field": "NineSliceTop",
+                "value": 0.2},
+              {
+                "_Type_": "BuildingBlocks_FieldModifierNumber",
+                "field": "NineSliceBottom",
+                "value": 0.8},
+              {
+                "_Type_": "BuildingBlocks_FieldModifierNumber",
+                "field": "NineSliceLeft",
+                "value": 0.0},
+              {
+                "_Type_": "BuildingBlocks_FieldModifierNumber",
+                "field": "NineSliceRight",
+                "value": 0.0},
+              {
+                "_Type_": "BuildingBlocks_FieldModifierBoolean",
+                "field": "EnableColorOverlay",
+                "value": false}],
+            "transitions": []},
+          {
+            "_Type_": "BuildingBlocks_StyleEntry",
+            "name": "FlipHorizontal",
+            "conditionsList": [
+              {
+                "_Type_": "BuildingBlocks_StyleConditionList",
+                "name": "FlipHorizontal",
+                "conditions": [
+                  {
+                    "_Type_": "BuildingBlocks_StyleSelectorConditionAllOfTag",
+                    "tags": [
+                      {
+                        "_RecordPath_": "file://./../../../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+                        "_RecordName_": "Tag.21788313-6aff-45b4-a3ad-fdc62b1cf849",
+                        "_RecordId_": "21788313-6aff-45b4-a3ad-fdc62b1cf849"},
+                      {
+                        "_RecordPath_": "file://./../../../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+                        "_RecordName_": "Tag.9862b0b1-0bcf-4e2a-93a8-3d9dcb611102",
+                        "_RecordId_": "9862b0b1-0bcf-4e2a-93a8-3d9dcb611102"}]}]}],
+            "modifiers": [
+              {
+                "_Type_": "BuildingBlocks_FieldModifierBoolean",
+                "field": "SvgFlipHorizontal",
+                "value": true}],
+            "transitions": []},
+          {
+            "_Type_": "BuildingBlocks_StyleEntry",
+            "name": "FlipVertical",
+            "conditionsList": [
+              {
+                "_Type_": "BuildingBlocks_StyleConditionList",
+                "name": "FlipVertical",
+                "conditions": [
+                  {
+                    "_Type_": "BuildingBlocks_StyleSelectorConditionAllOfTag",
+                    "tags": [
+                      {
+                        "_RecordPath_": "file://./../../../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+                        "_RecordName_": "Tag.21788313-6aff-45b4-a3ad-fdc62b1cf849",
+                        "_RecordId_": "21788313-6aff-45b4-a3ad-fdc62b1cf849"},
+                      {
+                        "_RecordPath_": "file://./../../../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+                        "_RecordName_": "Tag.29eae641-74bb-4648-a179-586ccc720211",
+                        "_RecordId_": "29eae641-74bb-4648-a179-586ccc720211"}]}]}],
+            "modifiers": [
+              {
+                "_Type_": "BuildingBlocks_FieldModifierBoolean",
+                "field": "SvgFlipVertical",
+                "value": true}],
+            "transitions": []}]},
+      {
+        "_Type_": "BuildingBlocks_BrandStyles",
+        "brandIdentifier": "file://./../../../../../../../../libs/foundry/records/ui/buildingblocks/styles/s_aegs_hud.json",
+        "sharedStyles": null,
+        "entries": [
+          {
+            "_Type_": "BuildingBlocks_StyleEntry",
+            "name": "Root",
+            "conditionsList": [
+              {
+                "_Type_": "BuildingBlocks_StyleConditionList",
+                "name": "New Condition List",
+                "conditions": [
+                  {
+                    "_Type_": "BuildingBlocks_StyleSelectorConditionTag",
+                    "tag": {
+                      "_RecordPath_": "file://./../../../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+                      "_RecordName_": "Tag.21788313-6aff-45b4-a3ad-fdc62b1cf849",
+                      "_RecordId_": "21788313-6aff-45b4-a3ad-fdc62b1cf849"}},
+                  {
+                    "_Type_": "BuildingBlocks_StyleSelectorConditionParent",
+                    "conditions": [
+                      {
+                        "_Type_": "BuildingBlocks_StyleSelectorConditionTag",
+                        "tag": {
+                          "_RecordPath_": "file://./../../../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+                          "_RecordName_": "Tag.97b7c650-2d90-4810-8b5e-ec7f43091216",
+                          "_RecordId_": "97b7c650-2d90-4810-8b5e-ec7f43091216"}},
+                      {
+                        "_Type_": "BuildingBlocks_StyleSelectorConditionTag",
+                        "tag": {
+                          "_RecordPath_": "file://./../../../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+                          "_RecordName_": "Tag.2f96c664-ba91-4681-a1cf-fc9679a38abd",
+                          "_RecordId_": "2f96c664-ba91-4681-a1cf-fc9679a38abd"}}]}]}],
+            "modifiers": [
+              {
+                "_Type_": "BuildingBlocks_FieldModifierString",
+                "field": "SvgPath",
+                "value": "UI/Textures/Vector/ModularKitStyles/AEGS_HUD/SeparatorV1.svg"},
+              {
+                "_Type_": "BuildingBlocks_FieldModifierBoolean",
+                "field": "EnableColorOverlay",
+                "value": false},
+              {
+                "_Type_": "BuildingBlocks_FieldModifierBoolean",
+                "field": "EnableNineSliceRect",
+                "value": true},
+              {
+                "_Type_": "BuildingBlocks_FieldModifierNumber",
+                "field": "NineSliceTop",
+                "value": 0.3},
+              {
+                "_Type_": "BuildingBlocks_FieldModifierNumber",
+                "field": "NineSliceBottom",
+                "value": 0.4},
+              {
+                "_Type_": "BuildingBlocks_FieldModifierNumber",
+                "field": "NineSliceLeft",
+                "value": 0.0},
+              {
+                "_Type_": "BuildingBlocks_FieldModifierNumber",
+                "field": "NineSliceRight",
+                "value": 0.0},
+              {
+                "_Type_": "BuildingBlocks_FieldModifierColor",
+                "field": "FillColor",
+                "color": {
+                  "_Type_": "BuildingBlocks_ColorStyle",
+                  "color": "Base",
+                  "alpha": 1.0}},
+              {
+                "_Type_": "BuildingBlocks_FieldModifierEnumerated",
+                "field": {
+                  "_Type_": "BuildingBlocks_FieldModifierEnumeratedTypeSvgScalingBehavior",
+                  "value": "StretchY"}},
+              {
+                "_Type_": "BuildingBlocks_FieldModifierNumber",
+                "field": "NineSliceScale",
+                "value": 1.0}],
+            "transitions": []},
+          {
+            "_Type_": "BuildingBlocks_StyleEntry",
+            "name": "FlipHorizontal",
+            "conditionsList": [
+              {
+                "_Type_": "BuildingBlocks_StyleConditionList",
+                "name": "FlipHorizontal",
+                "conditions": [
+                  {
+                    "_Type_": "BuildingBlocks_StyleSelectorConditionAllOfTag",
+                    "tags": [
+                      {
+                        "_RecordPath_": "file://./../../../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+                        "_RecordName_": "Tag.21788313-6aff-45b4-a3ad-fdc62b1cf849",
+                        "_RecordId_": "21788313-6aff-45b4-a3ad-fdc62b1cf849"},
+                      {
+                        "_RecordPath_": "file://./../../../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+                        "_RecordName_": "Tag.9862b0b1-0bcf-4e2a-93a8-3d9dcb611102",
+                        "_RecordId_": "9862b0b1-0bcf-4e2a-93a8-3d9dcb611102"}]}]}],
+            "modifiers": [
+              {
+                "_Type_": "BuildingBlocks_FieldModifierBoolean",
+                "field": "SvgFlipHorizontal",
+                "value": true}],
+            "transitions": []},
+          {
+            "_Type_": "BuildingBlocks_StyleEntry",
+            "name": "FlipVertical",
+            "conditionsList": [
+              {
+                "_Type_": "BuildingBlocks_StyleConditionList",
+                "name": "FlipVertical",
+                "conditions": [
+                  {
+                    "_Type_": "BuildingBlocks_StyleSelectorConditionAllOfTag",
+                    "tags": [
+                      {
+                        "_RecordPath_": "file://./../../../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+                        "_RecordName_": "Tag.21788313-6aff-45b4-a3ad-fdc62b1cf849",
+                        "_RecordId_": "21788313-6aff-45b4-a3ad-fdc62b1cf849"},
+                      {
+                        "_RecordPath_": "file://./../../../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+                        "_RecordName_": "Tag.29eae641-74bb-4648-a179-586ccc720211",
+                        "_RecordId_": "29eae641-74bb-4648-a179-586ccc720211"}]}]}],
+            "modifiers": [
+              {
+                "_Type_": "BuildingBlocks_FieldModifierBoolean",
+                "field": "SvgFlipVertical",
+                "value": true}],
+            "transitions": []}]},
+      {
+        "_Type_": "BuildingBlocks_BrandStyles",
+        "brandIdentifier": "file://./../../../../../../../../libs/foundry/records/ui/buildingblocks/styles/s_drak_env.json",
+        "sharedStyles": null,
+        "entries": [
+          {
+            "_Type_": "BuildingBlocks_StyleEntry",
+            "name": "New Style",
+            "conditionsList": [
+              {
+                "_Type_": "BuildingBlocks_StyleConditionList",
+                "name": "New Condition List",
+                "conditions": [
+                  {
+                    "_Type_": "BuildingBlocks_StyleSelectorConditionTag",
+                    "tag": {
+                      "_RecordPath_": "file://./../../../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+                      "_RecordName_": "Tag.21788313-6aff-45b4-a3ad-fdc62b1cf849",
+                      "_RecordId_": "21788313-6aff-45b4-a3ad-fdc62b1cf849"}},
+                  {
+                    "_Type_": "BuildingBlocks_StyleSelectorConditionParent",
+                    "conditions": [
+                      {
+                        "_Type_": "BuildingBlocks_StyleSelectorConditionTag",
+                        "tag": {
+                          "_RecordPath_": "file://./../../../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+                          "_RecordName_": "Tag.97b7c650-2d90-4810-8b5e-ec7f43091216",
+                          "_RecordId_": "97b7c650-2d90-4810-8b5e-ec7f43091216"}},
+                      {
+                        "_Type_": "BuildingBlocks_StyleSelectorConditionTag",
+                        "tag": {
+                          "_RecordPath_": "file://./../../../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+                          "_RecordName_": "Tag.2f96c664-ba91-4681-a1cf-fc9679a38abd",
+                          "_RecordId_": "2f96c664-ba91-4681-a1cf-fc9679a38abd"}}]}]}],
+            "modifiers": [
+              {
+                "_Type_": "BuildingBlocks_FieldModifierString",
+                "field": "SvgPath",
+                "value": "UI/Textures/Vector/ModularKitStyles/DRAK_S42/DRAK_S42_seperator_vertical_3.svg"},
+              {
+                "_Type_": "BuildingBlocks_FieldModifierBoolean",
+                "field": "EnableColorOverlay",
+                "value": false},
+              {
+                "_Type_": "BuildingBlocks_FieldModifierBoolean",
+                "field": "EnableNineSliceRect",
+                "value": true},
+              {
+                "_Type_": "BuildingBlocks_FieldModifierNumber",
+                "field": "NineSliceTop",
+                "value": 0.49},
+              {
+                "_Type_": "BuildingBlocks_FieldModifierNumber",
+                "field": "NineSliceBottom",
+                "value": 0.51},
+              {
+                "_Type_": "BuildingBlocks_FieldModifierEnumerated",
+                "field": {
+                  "_Type_": "BuildingBlocks_FieldModifierEnumeratedTypeSvgScalingBehavior",
+                  "value": "StretchY"}},
+              {
+                "_Type_": "BuildingBlocks_FieldModifierNumber",
+                "field": "Alpha",
+                "value": 0.3}],
+            "transitions": []},
+          {
+            "_Type_": "BuildingBlocks_StyleEntry",
+            "name": "FlipHorizontal",
+            "conditionsList": [
+              {
+                "_Type_": "BuildingBlocks_StyleConditionList",
+                "name": "FlipHorizontal",
+                "conditions": [
+                  {
+                    "_Type_": "BuildingBlocks_StyleSelectorConditionAllOfTag",
+                    "tags": [
+                      {
+                        "_RecordPath_": "file://./../../../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+                        "_RecordName_": "Tag.21788313-6aff-45b4-a3ad-fdc62b1cf849",
+                        "_RecordId_": "21788313-6aff-45b4-a3ad-fdc62b1cf849"},
+                      {
+                        "_RecordPath_": "file://./../../../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+                        "_RecordName_": "Tag.9862b0b1-0bcf-4e2a-93a8-3d9dcb611102",
+                        "_RecordId_": "9862b0b1-0bcf-4e2a-93a8-3d9dcb611102"}]}]}],
+            "modifiers": [
+              {
+                "_Type_": "BuildingBlocks_FieldModifierBoolean",
+                "field": "SvgFlipHorizontal",
+                "value": true}],
+            "transitions": []},
+          {
+            "_Type_": "BuildingBlocks_StyleEntry",
+            "name": "FlipVertical",
+            "conditionsList": [
+              {
+                "_Type_": "BuildingBlocks_StyleConditionList",
+                "name": "FlipVertical",
+                "conditions": [
+                  {
+                    "_Type_": "BuildingBlocks_StyleSelectorConditionAllOfTag",
+                    "tags": [
+                      {
+                        "_RecordPath_": "file://./../../../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+                        "_RecordName_": "Tag.21788313-6aff-45b4-a3ad-fdc62b1cf849",
+                        "_RecordId_": "21788313-6aff-45b4-a3ad-fdc62b1cf849"},
+                      {
+                        "_RecordPath_": "file://./../../../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+                        "_RecordName_": "Tag.29eae641-74bb-4648-a179-586ccc720211",
+                        "_RecordId_": "29eae641-74bb-4648-a179-586ccc720211"}]}]}],
+            "modifiers": [
+              {
+                "_Type_": "BuildingBlocks_FieldModifierBoolean",
+                "field": "SvgFlipVertical",
+                "value": true}],
+            "transitions": []}]},
+      {
+        "_Type_": "BuildingBlocks_BrandStyles",
+        "brandIdentifier": "file://./../../../../../../../../libs/foundry/records/ui/buildingblocks/styles/s_anvl_env.json",
+        "sharedStyles": null,
+        "entries": [
+          {
+            "_Type_": "BuildingBlocks_StyleEntry",
+            "name": "New Style",
+            "conditionsList": [
+              {
+                "_Type_": "BuildingBlocks_StyleConditionList",
+                "name": "New Condition List",
+                "conditions": [
+                  {
+                    "_Type_": "BuildingBlocks_StyleSelectorConditionTag",
+                    "tag": {
+                      "_RecordPath_": "file://./../../../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+                      "_RecordName_": "Tag.21788313-6aff-45b4-a3ad-fdc62b1cf849",
+                      "_RecordId_": "21788313-6aff-45b4-a3ad-fdc62b1cf849"}},
+                  {
+                    "_Type_": "BuildingBlocks_StyleSelectorConditionParent",
+                    "conditions": [
+                      {
+                        "_Type_": "BuildingBlocks_StyleSelectorConditionTag",
+                        "tag": {
+                          "_RecordPath_": "file://./../../../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+                          "_RecordName_": "Tag.97b7c650-2d90-4810-8b5e-ec7f43091216",
+                          "_RecordId_": "97b7c650-2d90-4810-8b5e-ec7f43091216"}},
+                      {
+                        "_Type_": "BuildingBlocks_StyleSelectorConditionTag",
+                        "tag": {
+                          "_RecordPath_": "file://./../../../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+                          "_RecordName_": "Tag.2f96c664-ba91-4681-a1cf-fc9679a38abd",
+                          "_RecordId_": "2f96c664-ba91-4681-a1cf-fc9679a38abd"}}]}]}],
+            "modifiers": [
+              {
+                "_Type_": "BuildingBlocks_FieldModifierString",
+                "field": "SvgPath",
+                "value": "UI/Textures/Vector/ModularKitStyles/ANVL_S42/Anvil_v_divider_1.svg"},
+              {
+                "_Type_": "BuildingBlocks_FieldModifierBoolean",
+                "field": "EnableColorOverlay",
+                "value": false},
+              {
+                "_Type_": "BuildingBlocks_FieldModifierBoolean",
+                "field": "EnableNineSliceRect",
+                "value": true},
+              {
+                "_Type_": "BuildingBlocks_FieldModifierNumber",
+                "field": "NineSliceTop",
+                "value": 0.49},
+              {
+                "_Type_": "BuildingBlocks_FieldModifierNumber",
+                "field": "NineSliceBottom",
+                "value": 0.51},
+              {
+                "_Type_": "BuildingBlocks_FieldModifierEnumerated",
+                "field": {
+                  "_Type_": "BuildingBlocks_FieldModifierEnumeratedTypeSvgScalingBehavior",
+                  "value": "StretchY"}},
+              {
+                "_Type_": "BuildingBlocks_FieldModifierNumber",
+                "field": "Alpha",
+                "value": 1.0}],
+            "transitions": []},
+          {
+            "_Type_": "BuildingBlocks_StyleEntry",
+            "name": "FlipHorizontal",
+            "conditionsList": [
+              {
+                "_Type_": "BuildingBlocks_StyleConditionList",
+                "name": "FlipHorizontal",
+                "conditions": [
+                  {
+                    "_Type_": "BuildingBlocks_StyleSelectorConditionAllOfTag",
+                    "tags": [
+                      {
+                        "_RecordPath_": "file://./../../../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+                        "_RecordName_": "Tag.21788313-6aff-45b4-a3ad-fdc62b1cf849",
+                        "_RecordId_": "21788313-6aff-45b4-a3ad-fdc62b1cf849"},
+                      {
+                        "_RecordPath_": "file://./../../../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+                        "_RecordName_": "Tag.9862b0b1-0bcf-4e2a-93a8-3d9dcb611102",
+                        "_RecordId_": "9862b0b1-0bcf-4e2a-93a8-3d9dcb611102"}]}]}],
+            "modifiers": [
+              {
+                "_Type_": "BuildingBlocks_FieldModifierBoolean",
+                "field": "SvgFlipHorizontal",
+                "value": true}],
+            "transitions": []},
+          {
+            "_Type_": "BuildingBlocks_StyleEntry",
+            "name": "FlipVertical",
+            "conditionsList": [
+              {
+                "_Type_": "BuildingBlocks_StyleConditionList",
+                "name": "FlipVertical",
+                "conditions": [
+                  {
+                    "_Type_": "BuildingBlocks_StyleSelectorConditionAllOfTag",
+                    "tags": [
+                      {
+                        "_RecordPath_": "file://./../../../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+                        "_RecordName_": "Tag.21788313-6aff-45b4-a3ad-fdc62b1cf849",
+                        "_RecordId_": "21788313-6aff-45b4-a3ad-fdc62b1cf849"},
+                      {
+                        "_RecordPath_": "file://./../../../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+                        "_RecordName_": "Tag.29eae641-74bb-4648-a179-586ccc720211",
+                        "_RecordId_": "29eae641-74bb-4648-a179-586ccc720211"}]}]}],
+            "modifiers": [
+              {
+                "_Type_": "BuildingBlocks_FieldModifierBoolean",
+                "field": "SvgFlipVertical",
+                "value": true}],
+            "transitions": []}]},
+      {
+        "_Type_": "BuildingBlocks_BrandStyles",
+        "brandIdentifier": "file://./../../../../../../../../libs/foundry/records/ui/buildingblocks/styles/s_cnou_env.json",
+        "sharedStyles": null,
+        "entries": [
+          {
+            "_Type_": "BuildingBlocks_StyleEntry",
+            "name": "Root",
+            "conditionsList": [
+              {
+                "_Type_": "BuildingBlocks_StyleConditionList",
+                "name": "New Condition List",
+                "conditions": [
+                  {
+                    "_Type_": "BuildingBlocks_StyleSelectorConditionTag",
+                    "tag": {
+                      "_RecordPath_": "file://./../../../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+                      "_RecordName_": "Tag.21788313-6aff-45b4-a3ad-fdc62b1cf849",
+                      "_RecordId_": "21788313-6aff-45b4-a3ad-fdc62b1cf849"}},
+                  {
+                    "_Type_": "BuildingBlocks_StyleSelectorConditionParent",
+                    "conditions": [
+                      {
+                        "_Type_": "BuildingBlocks_StyleSelectorConditionTag",
+                        "tag": {
+                          "_RecordPath_": "file://./../../../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+                          "_RecordName_": "Tag.97b7c650-2d90-4810-8b5e-ec7f43091216",
+                          "_RecordId_": "97b7c650-2d90-4810-8b5e-ec7f43091216"}},
+                      {
+                        "_Type_": "BuildingBlocks_StyleSelectorConditionTag",
+                        "tag": {
+                          "_RecordPath_": "file://./../../../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+                          "_RecordName_": "Tag.2f96c664-ba91-4681-a1cf-fc9679a38abd",
+                          "_RecordId_": "2f96c664-ba91-4681-a1cf-fc9679a38abd"}}]}]}],
+            "modifiers": [
+              {
+                "_Type_": "BuildingBlocks_FieldModifierString",
+                "field": "SvgPath",
+                "value": "UI/Textures/Vector/ModularKitStyles/CNOU/CNOU_SeparatorVerticalPrimary.svg"},
+              {
+                "_Type_": "BuildingBlocks_FieldModifierBoolean",
+                "field": "EnableNineSliceRect",
+                "value": true},
+              {
+                "_Type_": "BuildingBlocks_FieldModifierNumber",
+                "field": "NineSliceTop",
+                "value": 0.4},
+              {
+                "_Type_": "BuildingBlocks_FieldModifierNumber",
+                "field": "NineSliceBottom",
+                "value": 0.5},
+              {
+                "_Type_": "BuildingBlocks_FieldModifierEnumerated",
+                "field": {
+                  "_Type_": "BuildingBlocks_FieldModifierEnumeratedTypeSvgScalingBehavior",
+                  "value": "StretchY"}},
+              {
+                "_Type_": "BuildingBlocks_FieldModifierNumber",
+                "field": "Alpha",
+                "value": 1.0},
+              {
+                "_Type_": "BuildingBlocks_FieldModifierBoolean",
+                "field": "EnableColorOverlay",
+                "value": false}],
+            "transitions": []},
+          {
+            "_Type_": "BuildingBlocks_StyleEntry",
+            "name": "FlipHorizontal",
+            "conditionsList": [
+              {
+                "_Type_": "BuildingBlocks_StyleConditionList",
+                "name": "FlipHorizontal",
+                "conditions": [
+                  {
+                    "_Type_": "BuildingBlocks_StyleSelectorConditionAllOfTag",
+                    "tags": [
+                      {
+                        "_RecordPath_": "file://./../../../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+                        "_RecordName_": "Tag.21788313-6aff-45b4-a3ad-fdc62b1cf849",
+                        "_RecordId_": "21788313-6aff-45b4-a3ad-fdc62b1cf849"},
+                      {
+                        "_RecordPath_": "file://./../../../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+                        "_RecordName_": "Tag.9862b0b1-0bcf-4e2a-93a8-3d9dcb611102",
+                        "_RecordId_": "9862b0b1-0bcf-4e2a-93a8-3d9dcb611102"}]}]}],
+            "modifiers": [
+              {
+                "_Type_": "BuildingBlocks_FieldModifierBoolean",
+                "field": "SvgFlipHorizontal",
+                "value": true}],
+            "transitions": []},
+          {
+            "_Type_": "BuildingBlocks_StyleEntry",
+            "name": "FlipVertical",
+            "conditionsList": [
+              {
+                "_Type_": "BuildingBlocks_StyleConditionList",
+                "name": "FlipVertical",
+                "conditions": [
+                  {
+                    "_Type_": "BuildingBlocks_StyleSelectorConditionAllOfTag",
+                    "tags": [
+                      {
+                        "_RecordPath_": "file://./../../../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+                        "_RecordName_": "Tag.21788313-6aff-45b4-a3ad-fdc62b1cf849",
+                        "_RecordId_": "21788313-6aff-45b4-a3ad-fdc62b1cf849"},
+                      {
+                        "_RecordPath_": "file://./../../../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+                        "_RecordName_": "Tag.29eae641-74bb-4648-a179-586ccc720211",
+                        "_RecordId_": "29eae641-74bb-4648-a179-586ccc720211"}]}]}],
+            "modifiers": [
+              {
+                "_Type_": "BuildingBlocks_FieldModifierBoolean",
+                "field": "SvgFlipVertical",
+                "value": true}],
+            "transitions": []}]},
+      {
+        "_Type_": "BuildingBlocks_BrandStyles",
+        "brandIdentifier": "file://./../../../../../../../../libs/foundry/records/ui/buildingblocks/styles/s_uilo_c.json",
+        "sharedStyles": null,
+        "entries": [
+          {
+            "_Type_": "BuildingBlocks_StyleEntry",
+            "name": "Root",
+            "conditionsList": [
+              {
+                "_Type_": "BuildingBlocks_StyleConditionList",
+                "name": "New Condition List",
+                "conditions": [
+                  {
+                    "_Type_": "BuildingBlocks_StyleSelectorConditionTag",
+                    "tag": {
+                      "_RecordPath_": "file://./../../../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+                      "_RecordName_": "Tag.21788313-6aff-45b4-a3ad-fdc62b1cf849",
+                      "_RecordId_": "21788313-6aff-45b4-a3ad-fdc62b1cf849"}},
+                  {
+                    "_Type_": "BuildingBlocks_StyleSelectorConditionParent",
+                    "conditions": [
+                      {
+                        "_Type_": "BuildingBlocks_StyleSelectorConditionTag",
+                        "tag": {
+                          "_RecordPath_": "file://./../../../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+                          "_RecordName_": "Tag.97b7c650-2d90-4810-8b5e-ec7f43091216",
+                          "_RecordId_": "97b7c650-2d90-4810-8b5e-ec7f43091216"}},
+                      {
+                        "_Type_": "BuildingBlocks_StyleSelectorConditionTag",
+                        "tag": {
+                          "_RecordPath_": "file://./../../../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+                          "_RecordName_": "Tag.2f96c664-ba91-4681-a1cf-fc9679a38abd",
+                          "_RecordId_": "2f96c664-ba91-4681-a1cf-fc9679a38abd"}}]}]}],
+            "modifiers": [
+              {
+                "_Type_": "BuildingBlocks_FieldModifierBoolean",
+                "field": "EnableBackground",
+                "value": false},
+              {
+                "_Type_": "BuildingBlocks_FieldModifierBoolean",
+                "field": "EnableMinWidth",
+                "value": true},
+              {
+                "_Type_": "BuildingBlocks_FieldModifierBoolean",
+                "field": "EnableMaxWidth",
+                "value": true},
+              {
+                "_Type_": "BuildingBlocks_FieldModifierNumber",
+                "field": "MinSizeX",
+                "value": 8.0},
+              {
+                "_Type_": "BuildingBlocks_FieldModifierNumber",
+                "field": "MaxSizeX",
+                "value": 8.0},
+              {
+                "_Type_": "BuildingBlocks_FieldModifierNumber",
+                "field": "PivotX",
+                "value": 0.5},
+              {
+                "_Type_": "BuildingBlocks_FieldModifierNumber",
+                "field": "AnchorX",
+                "value": 0.5},
+              {
+                "_Type_": "BuildingBlocks_FieldModifierString",
+                "field": "SvgPath",
+                "value": "UI/Textures/Vector/ModularKitStyles/UILO_C/UILO_C_Seperator_V_1.svg"},
+              {
+                "_Type_": "BuildingBlocks_FieldModifierBoolean",
+                "field": "EnableColorOverlay",
+                "value": true},
+              {
+                "_Type_": "BuildingBlocks_FieldModifierBoolean",
+                "field": "EnableNineSliceRect",
+                "value": true},
+              {
+                "_Type_": "BuildingBlocks_FieldModifierNumber",
+                "field": "NineSliceTop",
+                "value": 0.4},
+              {
+                "_Type_": "BuildingBlocks_FieldModifierNumber",
+                "field": "NineSliceBottom",
+                "value": 0.6},
+              {
+                "_Type_": "BuildingBlocks_FieldModifierNumber",
+                "field": "NineSliceLeft",
+                "value": 0.0},
+              {
+                "_Type_": "BuildingBlocks_FieldModifierNumber",
+                "field": "NineSliceRight",
+                "value": 0.0},
+              {
+                "_Type_": "BuildingBlocks_FieldModifierColor",
+                "field": "FillColor",
+                "color": {
+                  "_Type_": "BuildingBlocks_ColorStyle",
+                  "color": "Base",
+                  "alpha": 1.0}}],
+            "transitions": []},
+          {
+            "_Type_": "BuildingBlocks_StyleEntry",
+            "name": "FlipHorizontal",
+            "conditionsList": [
+              {
+                "_Type_": "BuildingBlocks_StyleConditionList",
+                "name": "FlipHorizontal",
+                "conditions": [
+                  {
+                    "_Type_": "BuildingBlocks_StyleSelectorConditionAllOfTag",
+                    "tags": [
+                      {
+                        "_RecordPath_": "file://./../../../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+                        "_RecordName_": "Tag.21788313-6aff-45b4-a3ad-fdc62b1cf849",
+                        "_RecordId_": "21788313-6aff-45b4-a3ad-fdc62b1cf849"},
+                      {
+                        "_RecordPath_": "file://./../../../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+                        "_RecordName_": "Tag.9862b0b1-0bcf-4e2a-93a8-3d9dcb611102",
+                        "_RecordId_": "9862b0b1-0bcf-4e2a-93a8-3d9dcb611102"}]}]}],
+            "modifiers": [
+              {
+                "_Type_": "BuildingBlocks_FieldModifierBoolean",
+                "field": "SvgFlipHorizontal",
+                "value": true}],
+            "transitions": []},
+          {
+            "_Type_": "BuildingBlocks_StyleEntry",
+            "name": "FlipVertical",
+            "conditionsList": [
+              {
+                "_Type_": "BuildingBlocks_StyleConditionList",
+                "name": "FlipVertical",
+                "conditions": [
+                  {
+                    "_Type_": "BuildingBlocks_StyleSelectorConditionAllOfTag",
+                    "tags": [
+                      {
+                        "_RecordPath_": "file://./../../../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+                        "_RecordName_": "Tag.21788313-6aff-45b4-a3ad-fdc62b1cf849",
+                        "_RecordId_": "21788313-6aff-45b4-a3ad-fdc62b1cf849"},
+                      {
+                        "_RecordPath_": "file://./../../../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+                        "_RecordName_": "Tag.29eae641-74bb-4648-a179-586ccc720211",
+                        "_RecordId_": "29eae641-74bb-4648-a179-586ccc720211"}]}]}],
+            "modifiers": [
+              {
+                "_Type_": "BuildingBlocks_FieldModifierBoolean",
+                "field": "SvgFlipVertical",
+                "value": true}],
+            "transitions": []}]},
+      {
+        "_Type_": "BuildingBlocks_BrandStyles",
+        "brandIdentifier": "file://./../../../../../../../../libs/foundry/records/ui/buildingblocks/styles/s_argo_env.json",
+        "sharedStyles": null,
+        "entries": [
+          {
+            "_Type_": "BuildingBlocks_StyleEntry",
+            "name": "Root",
+            "conditionsList": [
+              {
+                "_Type_": "BuildingBlocks_StyleConditionList",
+                "name": "New Condition List",
+                "conditions": [
+                  {
+                    "_Type_": "BuildingBlocks_StyleSelectorConditionTag",
+                    "tag": {
+                      "_RecordPath_": "file://./../../../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+                      "_RecordName_": "Tag.21788313-6aff-45b4-a3ad-fdc62b1cf849",
+                      "_RecordId_": "21788313-6aff-45b4-a3ad-fdc62b1cf849"}},
+                  {
+                    "_Type_": "BuildingBlocks_StyleSelectorConditionParent",
+                    "conditions": [
+                      {
+                        "_Type_": "BuildingBlocks_StyleSelectorConditionTag",
+                        "tag": {
+                          "_RecordPath_": "file://./../../../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+                          "_RecordName_": "Tag.97b7c650-2d90-4810-8b5e-ec7f43091216",
+                          "_RecordId_": "97b7c650-2d90-4810-8b5e-ec7f43091216"}},
+                      {
+                        "_Type_": "BuildingBlocks_StyleSelectorConditionTag",
+                        "tag": {
+                          "_RecordPath_": "file://./../../../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+                          "_RecordName_": "Tag.2f96c664-ba91-4681-a1cf-fc9679a38abd",
+                          "_RecordId_": "2f96c664-ba91-4681-a1cf-fc9679a38abd"}}]}]}],
+            "modifiers": [
+              {
+                "_Type_": "BuildingBlocks_FieldModifierString",
+                "field": "SvgPath",
+                "value": "UI/Textures/Vector/ModularKitStyles/ARGO/ARGO_V_divider_1.svg"},
+              {
+                "_Type_": "BuildingBlocks_FieldModifierBoolean",
+                "field": "EnableNineSliceRect",
+                "value": false},
+              {
+                "_Type_": "BuildingBlocks_FieldModifierNumber",
+                "field": "NineSliceTop",
+                "value": 0.4},
+              {
+                "_Type_": "BuildingBlocks_FieldModifierNumber",
+                "field": "NineSliceBottom",
+                "value": 0.5},
+              {
+                "_Type_": "BuildingBlocks_FieldModifierEnumerated",
+                "field": {
+                  "_Type_": "BuildingBlocks_FieldModifierEnumeratedTypeSvgScalingBehavior",
+                  "value": "StretchY"}},
+              {
+                "_Type_": "BuildingBlocks_FieldModifierNumber",
+                "field": "Alpha",
+                "value": 1.0},
+              {
+                "_Type_": "BuildingBlocks_FieldModifierBoolean",
+                "field": "EnableColorOverlay",
+                "value": false}],
+            "transitions": []},
+          {
+            "_Type_": "BuildingBlocks_StyleEntry",
+            "name": "FlipHorizontal",
+            "conditionsList": [
+              {
+                "_Type_": "BuildingBlocks_StyleConditionList",
+                "name": "FlipHorizontal",
+                "conditions": [
+                  {
+                    "_Type_": "BuildingBlocks_StyleSelectorConditionAllOfTag",
+                    "tags": [
+                      {
+                        "_RecordPath_": "file://./../../../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+                        "_RecordName_": "Tag.21788313-6aff-45b4-a3ad-fdc62b1cf849",
+                        "_RecordId_": "21788313-6aff-45b4-a3ad-fdc62b1cf849"},
+                      {
+                        "_RecordPath_": "file://./../../../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+                        "_RecordName_": "Tag.9862b0b1-0bcf-4e2a-93a8-3d9dcb611102",
+                        "_RecordId_": "9862b0b1-0bcf-4e2a-93a8-3d9dcb611102"}]}]}],
+            "modifiers": [
+              {
+                "_Type_": "BuildingBlocks_FieldModifierBoolean",
+                "field": "SvgFlipHorizontal",
+                "value": true}],
+            "transitions": []},
+          {
+            "_Type_": "BuildingBlocks_StyleEntry",
+            "name": "FlipVertical",
+            "conditionsList": [
+              {
+                "_Type_": "BuildingBlocks_StyleConditionList",
+                "name": "FlipVertical",
+                "conditions": [
+                  {
+                    "_Type_": "BuildingBlocks_StyleSelectorConditionAllOfTag",
+                    "tags": [
+                      {
+                        "_RecordPath_": "file://./../../../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+                        "_RecordName_": "Tag.21788313-6aff-45b4-a3ad-fdc62b1cf849",
+                        "_RecordId_": "21788313-6aff-45b4-a3ad-fdc62b1cf849"},
+                      {
+                        "_RecordPath_": "file://./../../../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+                        "_RecordName_": "Tag.29eae641-74bb-4648-a179-586ccc720211",
+                        "_RecordId_": "29eae641-74bb-4648-a179-586ccc720211"}]}]}],
+            "modifiers": [
+              {
+                "_Type_": "BuildingBlocks_FieldModifierBoolean",
+                "field": "SvgFlipVertical",
+                "value": true}],
+            "transitions": []}]},
+      {
+        "_Type_": "BuildingBlocks_BrandStyles",
+        "brandIdentifier": "file://./../../../../../../../../libs/foundry/records/ui/buildingblocks/styles/shopbrands/shop_skutters.json",
+        "sharedStyles": null,
+        "entries": [
+          {
+            "_Type_": "BuildingBlocks_StyleEntry",
+            "name": "Root",
+            "conditionsList": [
+              {
+                "_Type_": "BuildingBlocks_StyleConditionList",
+                "name": "New Condition List",
+                "conditions": [
+                  {
+                    "_Type_": "BuildingBlocks_StyleSelectorConditionTag",
+                    "tag": {
+                      "_RecordPath_": "file://./../../../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+                      "_RecordName_": "Tag.21788313-6aff-45b4-a3ad-fdc62b1cf849",
+                      "_RecordId_": "21788313-6aff-45b4-a3ad-fdc62b1cf849"}},
+                  {
+                    "_Type_": "BuildingBlocks_StyleSelectorConditionParent",
+                    "conditions": [
+                      {
+                        "_Type_": "BuildingBlocks_StyleSelectorConditionTag",
+                        "tag": {
+                          "_RecordPath_": "file://./../../../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+                          "_RecordName_": "Tag.97b7c650-2d90-4810-8b5e-ec7f43091216",
+                          "_RecordId_": "97b7c650-2d90-4810-8b5e-ec7f43091216"}},
+                      {
+                        "_Type_": "BuildingBlocks_StyleSelectorConditionTag",
+                        "tag": {
+                          "_RecordPath_": "file://./../../../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+                          "_RecordName_": "Tag.2f96c664-ba91-4681-a1cf-fc9679a38abd",
+                          "_RecordId_": "2f96c664-ba91-4681-a1cf-fc9679a38abd"}}]}]}],
+            "modifiers": [
+              {
+                "_Type_": "BuildingBlocks_FieldModifierBoolean",
+                "field": "EnableBackground",
+                "value": false},
+              {
+                "_Type_": "BuildingBlocks_FieldModifierBoolean",
+                "field": "EnableMinWidth",
+                "value": true},
+              {
+                "_Type_": "BuildingBlocks_FieldModifierBoolean",
+                "field": "EnableMaxWidth",
+                "value": true},
+              {
+                "_Type_": "BuildingBlocks_FieldModifierNumber",
+                "field": "MinSizeX",
+                "value": 8.0},
+              {
+                "_Type_": "BuildingBlocks_FieldModifierNumber",
+                "field": "MaxSizeX",
+                "value": 8.0},
+              {
+                "_Type_": "BuildingBlocks_FieldModifierNumber",
+                "field": "PivotX",
+                "value": 0.5},
+              {
+                "_Type_": "BuildingBlocks_FieldModifierNumber",
+                "field": "AnchorX",
+                "value": 0.5},
+              {
+                "_Type_": "BuildingBlocks_FieldModifierString",
+                "field": "SvgPath",
+                "value": "UI/Textures/Vector/ModularKitStyles/UILO_C/UILO_C_Seperator_V_1.svg"},
+              {
+                "_Type_": "BuildingBlocks_FieldModifierBoolean",
+                "field": "EnableColorOverlay",
+                "value": true},
+              {
+                "_Type_": "BuildingBlocks_FieldModifierBoolean",
+                "field": "EnableNineSliceRect",
+                "value": true},
+              {
+                "_Type_": "BuildingBlocks_FieldModifierNumber",
+                "field": "NineSliceTop",
+                "value": 0.4},
+              {
+                "_Type_": "BuildingBlocks_FieldModifierNumber",
+                "field": "NineSliceBottom",
+                "value": 0.6},
+              {
+                "_Type_": "BuildingBlocks_FieldModifierNumber",
+                "field": "NineSliceLeft",
+                "value": 0.0},
+              {
+                "_Type_": "BuildingBlocks_FieldModifierNumber",
+                "field": "NineSliceRight",
+                "value": 0.0},
+              {
+                "_Type_": "BuildingBlocks_FieldModifierColor",
+                "field": "FillColor",
+                "color": {
+                  "_Type_": "BuildingBlocks_ColorStyle",
+                  "color": "Base",
+                  "alpha": 1.0}}],
+            "transitions": []},
+          {
+            "_Type_": "BuildingBlocks_StyleEntry",
+            "name": "FlipHorizontal",
+            "conditionsList": [
+              {
+                "_Type_": "BuildingBlocks_StyleConditionList",
+                "name": "FlipHorizontal",
+                "conditions": [
+                  {
+                    "_Type_": "BuildingBlocks_StyleSelectorConditionAllOfTag",
+                    "tags": [
+                      {
+                        "_RecordPath_": "file://./../../../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+                        "_RecordName_": "Tag.21788313-6aff-45b4-a3ad-fdc62b1cf849",
+                        "_RecordId_": "21788313-6aff-45b4-a3ad-fdc62b1cf849"},
+                      {
+                        "_RecordPath_": "file://./../../../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+                        "_RecordName_": "Tag.9862b0b1-0bcf-4e2a-93a8-3d9dcb611102",
+                        "_RecordId_": "9862b0b1-0bcf-4e2a-93a8-3d9dcb611102"}]}]}],
+            "modifiers": [
+              {
+                "_Type_": "BuildingBlocks_FieldModifierBoolean",
+                "field": "SvgFlipHorizontal",
+                "value": true}],
+            "transitions": []},
+          {
+            "_Type_": "BuildingBlocks_StyleEntry",
+            "name": "FlipVertical",
+            "conditionsList": [
+              {
+                "_Type_": "BuildingBlocks_StyleConditionList",
+                "name": "FlipVertical",
+                "conditions": [
+                  {
+                    "_Type_": "BuildingBlocks_StyleSelectorConditionAllOfTag",
+                    "tags": [
+                      {
+                        "_RecordPath_": "file://./../../../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+                        "_RecordName_": "Tag.21788313-6aff-45b4-a3ad-fdc62b1cf849",
+                        "_RecordId_": "21788313-6aff-45b4-a3ad-fdc62b1cf849"},
+                      {
+                        "_RecordPath_": "file://./../../../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+                        "_RecordName_": "Tag.29eae641-74bb-4648-a179-586ccc720211",
+                        "_RecordId_": "29eae641-74bb-4648-a179-586ccc720211"}]}]}],
+            "modifiers": [
+              {
+                "_Type_": "BuildingBlocks_FieldModifierBoolean",
+                "field": "SvgFlipVertical",
+                "value": true}],
+            "transitions": []}]},
+      {
+        "_Type_": "BuildingBlocks_BrandStyles",
+        "brandIdentifier": "file://./../../../../../../../../libs/foundry/records/ui/buildingblocks/styles/shopbrands/shop_general_pharmacy.json",
+        "sharedStyles": null,
+        "entries": [
+          {
+            "_Type_": "BuildingBlocks_StyleEntry",
+            "name": "Root",
+            "conditionsList": [
+              {
+                "_Type_": "BuildingBlocks_StyleConditionList",
+                "name": "New Condition List",
+                "conditions": [
+                  {
+                    "_Type_": "BuildingBlocks_StyleSelectorConditionTag",
+                    "tag": {
+                      "_RecordPath_": "file://./../../../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+                      "_RecordName_": "Tag.21788313-6aff-45b4-a3ad-fdc62b1cf849",
+                      "_RecordId_": "21788313-6aff-45b4-a3ad-fdc62b1cf849"}},
+                  {
+                    "_Type_": "BuildingBlocks_StyleSelectorConditionParent",
+                    "conditions": [
+                      {
+                        "_Type_": "BuildingBlocks_StyleSelectorConditionTag",
+                        "tag": {
+                          "_RecordPath_": "file://./../../../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+                          "_RecordName_": "Tag.97b7c650-2d90-4810-8b5e-ec7f43091216",
+                          "_RecordId_": "97b7c650-2d90-4810-8b5e-ec7f43091216"}},
+                      {
+                        "_Type_": "BuildingBlocks_StyleSelectorConditionTag",
+                        "tag": {
+                          "_RecordPath_": "file://./../../../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+                          "_RecordName_": "Tag.2f96c664-ba91-4681-a1cf-fc9679a38abd",
+                          "_RecordId_": "2f96c664-ba91-4681-a1cf-fc9679a38abd"}}]}]}],
+            "modifiers": [
+              {
+                "_Type_": "BuildingBlocks_FieldModifierBoolean",
+                "field": "EnableBackground",
+                "value": false},
+              {
+                "_Type_": "BuildingBlocks_FieldModifierBoolean",
+                "field": "EnableMinWidth",
+                "value": true},
+              {
+                "_Type_": "BuildingBlocks_FieldModifierBoolean",
+                "field": "EnableMaxWidth",
+                "value": true},
+              {
+                "_Type_": "BuildingBlocks_FieldModifierNumber",
+                "field": "MinSizeX",
+                "value": 8.0},
+              {
+                "_Type_": "BuildingBlocks_FieldModifierNumber",
+                "field": "MaxSizeX",
+                "value": 8.0},
+              {
+                "_Type_": "BuildingBlocks_FieldModifierNumber",
+                "field": "PivotX",
+                "value": 0.5},
+              {
+                "_Type_": "BuildingBlocks_FieldModifierNumber",
+                "field": "AnchorX",
+                "value": 0.5},
+              {
+                "_Type_": "BuildingBlocks_FieldModifierString",
+                "field": "SvgPath",
+                "value": "UI/Textures/Vector/ModularKitStyles/UILO_C/UILO_C_Seperator_V_1.svg"},
+              {
+                "_Type_": "BuildingBlocks_FieldModifierBoolean",
+                "field": "EnableColorOverlay",
+                "value": true},
+              {
+                "_Type_": "BuildingBlocks_FieldModifierBoolean",
+                "field": "EnableNineSliceRect",
+                "value": true},
+              {
+                "_Type_": "BuildingBlocks_FieldModifierNumber",
+                "field": "NineSliceTop",
+                "value": 0.4},
+              {
+                "_Type_": "BuildingBlocks_FieldModifierNumber",
+                "field": "NineSliceBottom",
+                "value": 0.6},
+              {
+                "_Type_": "BuildingBlocks_FieldModifierNumber",
+                "field": "NineSliceLeft",
+                "value": 0.0},
+              {
+                "_Type_": "BuildingBlocks_FieldModifierNumber",
+                "field": "NineSliceRight",
+                "value": 0.0},
+              {
+                "_Type_": "BuildingBlocks_FieldModifierColor",
+                "field": "FillColor",
+                "color": {
+                  "_Type_": "BuildingBlocks_ColorStyle",
+                  "color": "Base",
+                  "alpha": 1.0}}],
+            "transitions": []},
+          {
+            "_Type_": "BuildingBlocks_StyleEntry",
+            "name": "FlipHorizontal",
+            "conditionsList": [
+              {
+                "_Type_": "BuildingBlocks_StyleConditionList",
+                "name": "FlipHorizontal",
+                "conditions": [
+                  {
+                    "_Type_": "BuildingBlocks_StyleSelectorConditionAllOfTag",
+                    "tags": [
+                      {
+                        "_RecordPath_": "file://./../../../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+                        "_RecordName_": "Tag.21788313-6aff-45b4-a3ad-fdc62b1cf849",
+                        "_RecordId_": "21788313-6aff-45b4-a3ad-fdc62b1cf849"},
+                      {
+                        "_RecordPath_": "file://./../../../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+                        "_RecordName_": "Tag.9862b0b1-0bcf-4e2a-93a8-3d9dcb611102",
+                        "_RecordId_": "9862b0b1-0bcf-4e2a-93a8-3d9dcb611102"}]}]}],
+            "modifiers": [
+              {
+                "_Type_": "BuildingBlocks_FieldModifierBoolean",
+                "field": "SvgFlipHorizontal",
+                "value": true}],
+            "transitions": []},
+          {
+            "_Type_": "BuildingBlocks_StyleEntry",
+            "name": "FlipVertical",
+            "conditionsList": [
+              {
+                "_Type_": "BuildingBlocks_StyleConditionList",
+                "name": "FlipVertical",
+                "conditions": [
+                  {
+                    "_Type_": "BuildingBlocks_StyleSelectorConditionAllOfTag",
+                    "tags": [
+                      {
+                        "_RecordPath_": "file://./../../../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+                        "_RecordName_": "Tag.21788313-6aff-45b4-a3ad-fdc62b1cf849",
+                        "_RecordId_": "21788313-6aff-45b4-a3ad-fdc62b1cf849"},
+                      {
+                        "_RecordPath_": "file://./../../../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+                        "_RecordName_": "Tag.29eae641-74bb-4648-a179-586ccc720211",
+                        "_RecordId_": "29eae641-74bb-4648-a179-586ccc720211"}]}]}],
+            "modifiers": [
+              {
+                "_Type_": "BuildingBlocks_FieldModifierBoolean",
+                "field": "SvgFlipVertical",
+                "value": true}],
+            "transitions": []}]},
+      {
+        "_Type_": "BuildingBlocks_BrandStyles",
+        "brandIdentifier": "file://./../../../../../../../../libs/foundry/records/ui/buildingblocks/styles/shopbrands/shop_grimhex.json",
+        "sharedStyles": null,
+        "entries": [
+          {
+            "_Type_": "BuildingBlocks_StyleEntry",
+            "name": "Root",
+            "conditionsList": [
+              {
+                "_Type_": "BuildingBlocks_StyleConditionList",
+                "name": "New Condition List",
+                "conditions": [
+                  {
+                    "_Type_": "BuildingBlocks_StyleSelectorConditionTag",
+                    "tag": {
+                      "_RecordPath_": "file://./../../../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+                      "_RecordName_": "Tag.21788313-6aff-45b4-a3ad-fdc62b1cf849",
+                      "_RecordId_": "21788313-6aff-45b4-a3ad-fdc62b1cf849"}},
+                  {
+                    "_Type_": "BuildingBlocks_StyleSelectorConditionParent",
+                    "conditions": [
+                      {
+                        "_Type_": "BuildingBlocks_StyleSelectorConditionTag",
+                        "tag": {
+                          "_RecordPath_": "file://./../../../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+                          "_RecordName_": "Tag.97b7c650-2d90-4810-8b5e-ec7f43091216",
+                          "_RecordId_": "97b7c650-2d90-4810-8b5e-ec7f43091216"}},
+                      {
+                        "_Type_": "BuildingBlocks_StyleSelectorConditionTag",
+                        "tag": {
+                          "_RecordPath_": "file://./../../../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+                          "_RecordName_": "Tag.2f96c664-ba91-4681-a1cf-fc9679a38abd",
+                          "_RecordId_": "2f96c664-ba91-4681-a1cf-fc9679a38abd"}}]}]}],
+            "modifiers": [
+              {
+                "_Type_": "BuildingBlocks_FieldModifierBoolean",
+                "field": "EnableBackground",
+                "value": false},
+              {
+                "_Type_": "BuildingBlocks_FieldModifierBoolean",
+                "field": "EnableMinWidth",
+                "value": true},
+              {
+                "_Type_": "BuildingBlocks_FieldModifierBoolean",
+                "field": "EnableMaxWidth",
+                "value": true},
+              {
+                "_Type_": "BuildingBlocks_FieldModifierNumber",
+                "field": "MinSizeX",
+                "value": 8.0},
+              {
+                "_Type_": "BuildingBlocks_FieldModifierNumber",
+                "field": "MaxSizeX",
+                "value": 8.0},
+              {
+                "_Type_": "BuildingBlocks_FieldModifierNumber",
+                "field": "PivotX",
+                "value": 0.5},
+              {
+                "_Type_": "BuildingBlocks_FieldModifierNumber",
+                "field": "AnchorX",
+                "value": 0.5},
+              {
+                "_Type_": "BuildingBlocks_FieldModifierString",
+                "field": "SvgPath",
+                "value": "UI/Textures/Vector/ModularKitStyles/UILO_C/UILO_C_Seperator_V_1.svg"},
+              {
+                "_Type_": "BuildingBlocks_FieldModifierBoolean",
+                "field": "EnableColorOverlay",
+                "value": true},
+              {
+                "_Type_": "BuildingBlocks_FieldModifierBoolean",
+                "field": "EnableNineSliceRect",
+                "value": true},
+              {
+                "_Type_": "BuildingBlocks_FieldModifierNumber",
+                "field": "NineSliceTop",
+                "value": 0.4},
+              {
+                "_Type_": "BuildingBlocks_FieldModifierNumber",
+                "field": "NineSliceBottom",
+                "value": 0.6},
+              {
+                "_Type_": "BuildingBlocks_FieldModifierNumber",
+                "field": "NineSliceLeft",
+                "value": 0.0},
+              {
+                "_Type_": "BuildingBlocks_FieldModifierNumber",
+                "field": "NineSliceRight",
+                "value": 0.0},
+              {
+                "_Type_": "BuildingBlocks_FieldModifierColor",
+                "field": "FillColor",
+                "color": {
+                  "_Type_": "BuildingBlocks_ColorStyle",
+                  "color": "Base",
+                  "alpha": 1.0}}],
+            "transitions": []},
+          {
+            "_Type_": "BuildingBlocks_StyleEntry",
+            "name": "FlipHorizontal",
+            "conditionsList": [
+              {
+                "_Type_": "BuildingBlocks_StyleConditionList",
+                "name": "FlipHorizontal",
+                "conditions": [
+                  {
+                    "_Type_": "BuildingBlocks_StyleSelectorConditionAllOfTag",
+                    "tags": [
+                      {
+                        "_RecordPath_": "file://./../../../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+                        "_RecordName_": "Tag.21788313-6aff-45b4-a3ad-fdc62b1cf849",
+                        "_RecordId_": "21788313-6aff-45b4-a3ad-fdc62b1cf849"},
+                      {
+                        "_RecordPath_": "file://./../../../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+                        "_RecordName_": "Tag.9862b0b1-0bcf-4e2a-93a8-3d9dcb611102",
+                        "_RecordId_": "9862b0b1-0bcf-4e2a-93a8-3d9dcb611102"}]}]}],
+            "modifiers": [
+              {
+                "_Type_": "BuildingBlocks_FieldModifierBoolean",
+                "field": "SvgFlipHorizontal",
+                "value": true}],
+            "transitions": []},
+          {
+            "_Type_": "BuildingBlocks_StyleEntry",
+            "name": "FlipVertical",
+            "conditionsList": [
+              {
+                "_Type_": "BuildingBlocks_StyleConditionList",
+                "name": "FlipVertical",
+                "conditions": [
+                  {
+                    "_Type_": "BuildingBlocks_StyleSelectorConditionAllOfTag",
+                    "tags": [
+                      {
+                        "_RecordPath_": "file://./../../../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+                        "_RecordName_": "Tag.21788313-6aff-45b4-a3ad-fdc62b1cf849",
+                        "_RecordId_": "21788313-6aff-45b4-a3ad-fdc62b1cf849"},
+                      {
+                        "_RecordPath_": "file://./../../../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+                        "_RecordName_": "Tag.29eae641-74bb-4648-a179-586ccc720211",
+                        "_RecordId_": "29eae641-74bb-4648-a179-586ccc720211"}]}]}],
+            "modifiers": [
+              {
+                "_Type_": "BuildingBlocks_FieldModifierBoolean",
+                "field": "SvgFlipVertical",
+                "value": true}],
+            "transitions": []}]},
+      {
+        "_Type_": "BuildingBlocks_BrandStyles",
+        "brandIdentifier": "file://./../../../../../../../../libs/foundry/records/ui/buildingblocks/styles/shopbrands/shop_kctrending.json",
+        "sharedStyles": null,
+        "entries": [
+          {
+            "_Type_": "BuildingBlocks_StyleEntry",
+            "name": "Root",
+            "conditionsList": [
+              {
+                "_Type_": "BuildingBlocks_StyleConditionList",
+                "name": "New Condition List",
+                "conditions": [
+                  {
+                    "_Type_": "BuildingBlocks_StyleSelectorConditionTag",
+                    "tag": {
+                      "_RecordPath_": "file://./../../../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+                      "_RecordName_": "Tag.21788313-6aff-45b4-a3ad-fdc62b1cf849",
+                      "_RecordId_": "21788313-6aff-45b4-a3ad-fdc62b1cf849"}},
+                  {
+                    "_Type_": "BuildingBlocks_StyleSelectorConditionParent",
+                    "conditions": [
+                      {
+                        "_Type_": "BuildingBlocks_StyleSelectorConditionTag",
+                        "tag": {
+                          "_RecordPath_": "file://./../../../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+                          "_RecordName_": "Tag.97b7c650-2d90-4810-8b5e-ec7f43091216",
+                          "_RecordId_": "97b7c650-2d90-4810-8b5e-ec7f43091216"}},
+                      {
+                        "_Type_": "BuildingBlocks_StyleSelectorConditionTag",
+                        "tag": {
+                          "_RecordPath_": "file://./../../../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+                          "_RecordName_": "Tag.2f96c664-ba91-4681-a1cf-fc9679a38abd",
+                          "_RecordId_": "2f96c664-ba91-4681-a1cf-fc9679a38abd"}}]}]}],
+            "modifiers": [
+              {
+                "_Type_": "BuildingBlocks_FieldModifierBoolean",
+                "field": "EnableBackground",
+                "value": false},
+              {
+                "_Type_": "BuildingBlocks_FieldModifierBoolean",
+                "field": "EnableMinWidth",
+                "value": true},
+              {
+                "_Type_": "BuildingBlocks_FieldModifierBoolean",
+                "field": "EnableMaxWidth",
+                "value": true},
+              {
+                "_Type_": "BuildingBlocks_FieldModifierNumber",
+                "field": "MinSizeX",
+                "value": 8.0},
+              {
+                "_Type_": "BuildingBlocks_FieldModifierNumber",
+                "field": "MaxSizeX",
+                "value": 8.0},
+              {
+                "_Type_": "BuildingBlocks_FieldModifierNumber",
+                "field": "PivotX",
+                "value": 0.5},
+              {
+                "_Type_": "BuildingBlocks_FieldModifierNumber",
+                "field": "AnchorX",
+                "value": 0.5},
+              {
+                "_Type_": "BuildingBlocks_FieldModifierString",
+                "field": "SvgPath",
+                "value": "UI/Textures/Vector/ModularKitStyles/UILO_C/UILO_C_Seperator_V_1.svg"},
+              {
+                "_Type_": "BuildingBlocks_FieldModifierBoolean",
+                "field": "EnableColorOverlay",
+                "value": true},
+              {
+                "_Type_": "BuildingBlocks_FieldModifierBoolean",
+                "field": "EnableNineSliceRect",
+                "value": true},
+              {
+                "_Type_": "BuildingBlocks_FieldModifierNumber",
+                "field": "NineSliceTop",
+                "value": 0.4},
+              {
+                "_Type_": "BuildingBlocks_FieldModifierNumber",
+                "field": "NineSliceBottom",
+                "value": 0.6},
+              {
+                "_Type_": "BuildingBlocks_FieldModifierNumber",
+                "field": "NineSliceLeft",
+                "value": 0.0},
+              {
+                "_Type_": "BuildingBlocks_FieldModifierNumber",
+                "field": "NineSliceRight",
+                "value": 0.0},
+              {
+                "_Type_": "BuildingBlocks_FieldModifierColor",
+                "field": "FillColor",
+                "color": {
+                  "_Type_": "BuildingBlocks_ColorStyle",
+                  "color": "Base",
+                  "alpha": 1.0}}],
+            "transitions": []},
+          {
+            "_Type_": "BuildingBlocks_StyleEntry",
+            "name": "FlipHorizontal",
+            "conditionsList": [
+              {
+                "_Type_": "BuildingBlocks_StyleConditionList",
+                "name": "FlipHorizontal",
+                "conditions": [
+                  {
+                    "_Type_": "BuildingBlocks_StyleSelectorConditionAllOfTag",
+                    "tags": [
+                      {
+                        "_RecordPath_": "file://./../../../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+                        "_RecordName_": "Tag.21788313-6aff-45b4-a3ad-fdc62b1cf849",
+                        "_RecordId_": "21788313-6aff-45b4-a3ad-fdc62b1cf849"},
+                      {
+                        "_RecordPath_": "file://./../../../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+                        "_RecordName_": "Tag.9862b0b1-0bcf-4e2a-93a8-3d9dcb611102",
+                        "_RecordId_": "9862b0b1-0bcf-4e2a-93a8-3d9dcb611102"}]}]}],
+            "modifiers": [
+              {
+                "_Type_": "BuildingBlocks_FieldModifierBoolean",
+                "field": "SvgFlipHorizontal",
+                "value": true}],
+            "transitions": []},
+          {
+            "_Type_": "BuildingBlocks_StyleEntry",
+            "name": "FlipVertical",
+            "conditionsList": [
+              {
+                "_Type_": "BuildingBlocks_StyleConditionList",
+                "name": "FlipVertical",
+                "conditions": [
+                  {
+                    "_Type_": "BuildingBlocks_StyleSelectorConditionAllOfTag",
+                    "tags": [
+                      {
+                        "_RecordPath_": "file://./../../../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+                        "_RecordName_": "Tag.21788313-6aff-45b4-a3ad-fdc62b1cf849",
+                        "_RecordId_": "21788313-6aff-45b4-a3ad-fdc62b1cf849"},
+                      {
+                        "_RecordPath_": "file://./../../../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+                        "_RecordName_": "Tag.29eae641-74bb-4648-a179-586ccc720211",
+                        "_RecordId_": "29eae641-74bb-4648-a179-586ccc720211"}]}]}],
+            "modifiers": [
+              {
+                "_Type_": "BuildingBlocks_FieldModifierBoolean",
+                "field": "SvgFlipVertical",
+                "value": true}],
+            "transitions": []}]},
+      {
+        "_Type_": "BuildingBlocks_BrandStyles",
+        "brandIdentifier": "file://./../../../../../../../../libs/foundry/records/ui/buildingblocks/styles/shopbrands/shop_refinery.json",
+        "sharedStyles": null,
+        "entries": [
+          {
+            "_Type_": "BuildingBlocks_StyleEntry",
+            "name": "Root",
+            "conditionsList": [
+              {
+                "_Type_": "BuildingBlocks_StyleConditionList",
+                "name": "New Condition List",
+                "conditions": [
+                  {
+                    "_Type_": "BuildingBlocks_StyleSelectorConditionTag",
+                    "tag": {
+                      "_RecordPath_": "file://./../../../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+                      "_RecordName_": "Tag.21788313-6aff-45b4-a3ad-fdc62b1cf849",
+                      "_RecordId_": "21788313-6aff-45b4-a3ad-fdc62b1cf849"}},
+                  {
+                    "_Type_": "BuildingBlocks_StyleSelectorConditionParent",
+                    "conditions": [
+                      {
+                        "_Type_": "BuildingBlocks_StyleSelectorConditionTag",
+                        "tag": {
+                          "_RecordPath_": "file://./../../../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+                          "_RecordName_": "Tag.97b7c650-2d90-4810-8b5e-ec7f43091216",
+                          "_RecordId_": "97b7c650-2d90-4810-8b5e-ec7f43091216"}},
+                      {
+                        "_Type_": "BuildingBlocks_StyleSelectorConditionTag",
+                        "tag": {
+                          "_RecordPath_": "file://./../../../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+                          "_RecordName_": "Tag.2f96c664-ba91-4681-a1cf-fc9679a38abd",
+                          "_RecordId_": "2f96c664-ba91-4681-a1cf-fc9679a38abd"}}]}]}],
+            "modifiers": [
+              {
+                "_Type_": "BuildingBlocks_FieldModifierBoolean",
+                "field": "EnableBackground",
+                "value": false},
+              {
+                "_Type_": "BuildingBlocks_FieldModifierBoolean",
+                "field": "EnableMinWidth",
+                "value": true},
+              {
+                "_Type_": "BuildingBlocks_FieldModifierBoolean",
+                "field": "EnableMaxWidth",
+                "value": true},
+              {
+                "_Type_": "BuildingBlocks_FieldModifierNumber",
+                "field": "MinSizeX",
+                "value": 8.0},
+              {
+                "_Type_": "BuildingBlocks_FieldModifierNumber",
+                "field": "MaxSizeX",
+                "value": 8.0},
+              {
+                "_Type_": "BuildingBlocks_FieldModifierNumber",
+                "field": "PivotX",
+                "value": 0.5},
+              {
+                "_Type_": "BuildingBlocks_FieldModifierNumber",
+                "field": "AnchorX",
+                "value": 0.5},
+              {
+                "_Type_": "BuildingBlocks_FieldModifierString",
+                "field": "SvgPath",
+                "value": "UI/Textures/Vector/ModularKitStyles/UILO_C/UILO_C_Seperator_V_1.svg"},
+              {
+                "_Type_": "BuildingBlocks_FieldModifierBoolean",
+                "field": "EnableColorOverlay",
+                "value": true},
+              {
+                "_Type_": "BuildingBlocks_FieldModifierBoolean",
+                "field": "EnableNineSliceRect",
+                "value": true},
+              {
+                "_Type_": "BuildingBlocks_FieldModifierNumber",
+                "field": "NineSliceTop",
+                "value": 0.4},
+              {
+                "_Type_": "BuildingBlocks_FieldModifierNumber",
+                "field": "NineSliceBottom",
+                "value": 0.6},
+              {
+                "_Type_": "BuildingBlocks_FieldModifierNumber",
+                "field": "NineSliceLeft",
+                "value": 0.0},
+              {
+                "_Type_": "BuildingBlocks_FieldModifierNumber",
+                "field": "NineSliceRight",
+                "value": 0.0},
+              {
+                "_Type_": "BuildingBlocks_FieldModifierColor",
+                "field": "FillColor",
+                "color": {
+                  "_Type_": "BuildingBlocks_ColorStyle",
+                  "color": "Base",
+                  "alpha": 1.0}}],
+            "transitions": []},
+          {
+            "_Type_": "BuildingBlocks_StyleEntry",
+            "name": "FlipHorizontal",
+            "conditionsList": [
+              {
+                "_Type_": "BuildingBlocks_StyleConditionList",
+                "name": "FlipHorizontal",
+                "conditions": [
+                  {
+                    "_Type_": "BuildingBlocks_StyleSelectorConditionAllOfTag",
+                    "tags": [
+                      {
+                        "_RecordPath_": "file://./../../../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+                        "_RecordName_": "Tag.21788313-6aff-45b4-a3ad-fdc62b1cf849",
+                        "_RecordId_": "21788313-6aff-45b4-a3ad-fdc62b1cf849"},
+                      {
+                        "_RecordPath_": "file://./../../../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+                        "_RecordName_": "Tag.9862b0b1-0bcf-4e2a-93a8-3d9dcb611102",
+                        "_RecordId_": "9862b0b1-0bcf-4e2a-93a8-3d9dcb611102"}]}]}],
+            "modifiers": [
+              {
+                "_Type_": "BuildingBlocks_FieldModifierBoolean",
+                "field": "SvgFlipHorizontal",
+                "value": true}],
+            "transitions": []},
+          {
+            "_Type_": "BuildingBlocks_StyleEntry",
+            "name": "FlipVertical",
+            "conditionsList": [
+              {
+                "_Type_": "BuildingBlocks_StyleConditionList",
+                "name": "FlipVertical",
+                "conditions": [
+                  {
+                    "_Type_": "BuildingBlocks_StyleSelectorConditionAllOfTag",
+                    "tags": [
+                      {
+                        "_RecordPath_": "file://./../../../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+                        "_RecordName_": "Tag.21788313-6aff-45b4-a3ad-fdc62b1cf849",
+                        "_RecordId_": "21788313-6aff-45b4-a3ad-fdc62b1cf849"},
+                      {
+                        "_RecordPath_": "file://./../../../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+                        "_RecordName_": "Tag.29eae641-74bb-4648-a179-586ccc720211",
+                        "_RecordId_": "29eae641-74bb-4648-a179-586ccc720211"}]}]}],
+            "modifiers": [
+              {
+                "_Type_": "BuildingBlocks_FieldModifierBoolean",
+                "field": "SvgFlipVertical",
+                "value": true}],
+            "transitions": []}]},
+      {
+        "_Type_": "BuildingBlocks_BrandStyles",
+        "brandIdentifier": "file://./../../../../../../../../libs/foundry/records/ui/buildingblocks/styles/shopbrands/shop_shubin.json",
+        "sharedStyles": null,
+        "entries": [
+          {
+            "_Type_": "BuildingBlocks_StyleEntry",
+            "name": "Root",
+            "conditionsList": [
+              {
+                "_Type_": "BuildingBlocks_StyleConditionList",
+                "name": "New Condition List",
+                "conditions": [
+                  {
+                    "_Type_": "BuildingBlocks_StyleSelectorConditionTag",
+                    "tag": {
+                      "_RecordPath_": "file://./../../../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+                      "_RecordName_": "Tag.21788313-6aff-45b4-a3ad-fdc62b1cf849",
+                      "_RecordId_": "21788313-6aff-45b4-a3ad-fdc62b1cf849"}},
+                  {
+                    "_Type_": "BuildingBlocks_StyleSelectorConditionParent",
+                    "conditions": [
+                      {
+                        "_Type_": "BuildingBlocks_StyleSelectorConditionTag",
+                        "tag": {
+                          "_RecordPath_": "file://./../../../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+                          "_RecordName_": "Tag.97b7c650-2d90-4810-8b5e-ec7f43091216",
+                          "_RecordId_": "97b7c650-2d90-4810-8b5e-ec7f43091216"}},
+                      {
+                        "_Type_": "BuildingBlocks_StyleSelectorConditionTag",
+                        "tag": {
+                          "_RecordPath_": "file://./../../../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+                          "_RecordName_": "Tag.2f96c664-ba91-4681-a1cf-fc9679a38abd",
+                          "_RecordId_": "2f96c664-ba91-4681-a1cf-fc9679a38abd"}}]}]}],
+            "modifiers": [
+              {
+                "_Type_": "BuildingBlocks_FieldModifierBoolean",
+                "field": "EnableBackground",
+                "value": false},
+              {
+                "_Type_": "BuildingBlocks_FieldModifierBoolean",
+                "field": "EnableMinWidth",
+                "value": true},
+              {
+                "_Type_": "BuildingBlocks_FieldModifierBoolean",
+                "field": "EnableMaxWidth",
+                "value": true},
+              {
+                "_Type_": "BuildingBlocks_FieldModifierNumber",
+                "field": "MinSizeX",
+                "value": 8.0},
+              {
+                "_Type_": "BuildingBlocks_FieldModifierNumber",
+                "field": "MaxSizeX",
+                "value": 8.0},
+              {
+                "_Type_": "BuildingBlocks_FieldModifierNumber",
+                "field": "PivotX",
+                "value": 0.5},
+              {
+                "_Type_": "BuildingBlocks_FieldModifierNumber",
+                "field": "AnchorX",
+                "value": 0.5},
+              {
+                "_Type_": "BuildingBlocks_FieldModifierString",
+                "field": "SvgPath",
+                "value": "UI/Textures/Vector/ModularKitStyles/UILO_C/UILO_C_Seperator_V_1.svg"},
+              {
+                "_Type_": "BuildingBlocks_FieldModifierBoolean",
+                "field": "EnableColorOverlay",
+                "value": true},
+              {
+                "_Type_": "BuildingBlocks_FieldModifierBoolean",
+                "field": "EnableNineSliceRect",
+                "value": true},
+              {
+                "_Type_": "BuildingBlocks_FieldModifierNumber",
+                "field": "NineSliceTop",
+                "value": 0.4},
+              {
+                "_Type_": "BuildingBlocks_FieldModifierNumber",
+                "field": "NineSliceBottom",
+                "value": 0.6},
+              {
+                "_Type_": "BuildingBlocks_FieldModifierNumber",
+                "field": "NineSliceLeft",
+                "value": 0.0},
+              {
+                "_Type_": "BuildingBlocks_FieldModifierNumber",
+                "field": "NineSliceRight",
+                "value": 0.0},
+              {
+                "_Type_": "BuildingBlocks_FieldModifierColor",
+                "field": "FillColor",
+                "color": {
+                  "_Type_": "BuildingBlocks_ColorStyle",
+                  "color": "Base",
+                  "alpha": 1.0}}],
+            "transitions": []},
+          {
+            "_Type_": "BuildingBlocks_StyleEntry",
+            "name": "FlipHorizontal",
+            "conditionsList": [
+              {
+                "_Type_": "BuildingBlocks_StyleConditionList",
+                "name": "FlipHorizontal",
+                "conditions": [
+                  {
+                    "_Type_": "BuildingBlocks_StyleSelectorConditionAllOfTag",
+                    "tags": [
+                      {
+                        "_RecordPath_": "file://./../../../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+                        "_RecordName_": "Tag.21788313-6aff-45b4-a3ad-fdc62b1cf849",
+                        "_RecordId_": "21788313-6aff-45b4-a3ad-fdc62b1cf849"},
+                      {
+                        "_RecordPath_": "file://./../../../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+                        "_RecordName_": "Tag.9862b0b1-0bcf-4e2a-93a8-3d9dcb611102",
+                        "_RecordId_": "9862b0b1-0bcf-4e2a-93a8-3d9dcb611102"}]}]}],
+            "modifiers": [
+              {
+                "_Type_": "BuildingBlocks_FieldModifierBoolean",
+                "field": "SvgFlipHorizontal",
+                "value": true}],
+            "transitions": []},
+          {
+            "_Type_": "BuildingBlocks_StyleEntry",
+            "name": "FlipVertical",
+            "conditionsList": [
+              {
+                "_Type_": "BuildingBlocks_StyleConditionList",
+                "name": "FlipVertical",
+                "conditions": [
+                  {
+                    "_Type_": "BuildingBlocks_StyleSelectorConditionAllOfTag",
+                    "tags": [
+                      {
+                        "_RecordPath_": "file://./../../../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+                        "_RecordName_": "Tag.21788313-6aff-45b4-a3ad-fdc62b1cf849",
+                        "_RecordId_": "21788313-6aff-45b4-a3ad-fdc62b1cf849"},
+                      {
+                        "_RecordPath_": "file://./../../../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+                        "_RecordName_": "Tag.29eae641-74bb-4648-a179-586ccc720211",
+                        "_RecordId_": "29eae641-74bb-4648-a179-586ccc720211"}]}]}],
+            "modifiers": [
+              {
+                "_Type_": "BuildingBlocks_FieldModifierBoolean",
+                "field": "SvgFlipVertical",
+                "value": true}],
+            "transitions": []}]},
+      {
+        "_Type_": "BuildingBlocks_BrandStyles",
+        "brandIdentifier": "file://./../../../../../../../../libs/foundry/records/ui/buildingblocks/styles/shopbrands/shop_tammanyandsons.json",
+        "sharedStyles": null,
+        "entries": [
+          {
+            "_Type_": "BuildingBlocks_StyleEntry",
+            "name": "Root",
+            "conditionsList": [
+              {
+                "_Type_": "BuildingBlocks_StyleConditionList",
+                "name": "New Condition List",
+                "conditions": [
+                  {
+                    "_Type_": "BuildingBlocks_StyleSelectorConditionTag",
+                    "tag": {
+                      "_RecordPath_": "file://./../../../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+                      "_RecordName_": "Tag.21788313-6aff-45b4-a3ad-fdc62b1cf849",
+                      "_RecordId_": "21788313-6aff-45b4-a3ad-fdc62b1cf849"}},
+                  {
+                    "_Type_": "BuildingBlocks_StyleSelectorConditionParent",
+                    "conditions": [
+                      {
+                        "_Type_": "BuildingBlocks_StyleSelectorConditionTag",
+                        "tag": {
+                          "_RecordPath_": "file://./../../../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+                          "_RecordName_": "Tag.97b7c650-2d90-4810-8b5e-ec7f43091216",
+                          "_RecordId_": "97b7c650-2d90-4810-8b5e-ec7f43091216"}},
+                      {
+                        "_Type_": "BuildingBlocks_StyleSelectorConditionTag",
+                        "tag": {
+                          "_RecordPath_": "file://./../../../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+                          "_RecordName_": "Tag.2f96c664-ba91-4681-a1cf-fc9679a38abd",
+                          "_RecordId_": "2f96c664-ba91-4681-a1cf-fc9679a38abd"}}]}]}],
+            "modifiers": [
+              {
+                "_Type_": "BuildingBlocks_FieldModifierBoolean",
+                "field": "EnableBackground",
+                "value": false},
+              {
+                "_Type_": "BuildingBlocks_FieldModifierBoolean",
+                "field": "EnableMinWidth",
+                "value": true},
+              {
+                "_Type_": "BuildingBlocks_FieldModifierBoolean",
+                "field": "EnableMaxWidth",
+                "value": true},
+              {
+                "_Type_": "BuildingBlocks_FieldModifierNumber",
+                "field": "MinSizeX",
+                "value": 8.0},
+              {
+                "_Type_": "BuildingBlocks_FieldModifierNumber",
+                "field": "MaxSizeX",
+                "value": 8.0},
+              {
+                "_Type_": "BuildingBlocks_FieldModifierNumber",
+                "field": "PivotX",
+                "value": 0.5},
+              {
+                "_Type_": "BuildingBlocks_FieldModifierNumber",
+                "field": "AnchorX",
+                "value": 0.5},
+              {
+                "_Type_": "BuildingBlocks_FieldModifierString",
+                "field": "SvgPath",
+                "value": "UI/Textures/Vector/ModularKitStyles/UILO_C/UILO_C_Seperator_V_1.svg"},
+              {
+                "_Type_": "BuildingBlocks_FieldModifierBoolean",
+                "field": "EnableColorOverlay",
+                "value": true},
+              {
+                "_Type_": "BuildingBlocks_FieldModifierBoolean",
+                "field": "EnableNineSliceRect",
+                "value": true},
+              {
+                "_Type_": "BuildingBlocks_FieldModifierNumber",
+                "field": "NineSliceTop",
+                "value": 0.4},
+              {
+                "_Type_": "BuildingBlocks_FieldModifierNumber",
+                "field": "NineSliceBottom",
+                "value": 0.6},
+              {
+                "_Type_": "BuildingBlocks_FieldModifierNumber",
+                "field": "NineSliceLeft",
+                "value": 0.0},
+              {
+                "_Type_": "BuildingBlocks_FieldModifierNumber",
+                "field": "NineSliceRight",
+                "value": 0.0},
+              {
+                "_Type_": "BuildingBlocks_FieldModifierColor",
+                "field": "FillColor",
+                "color": {
+                  "_Type_": "BuildingBlocks_ColorStyle",
+                  "color": "Base",
+                  "alpha": 1.0}}],
+            "transitions": []},
+          {
+            "_Type_": "BuildingBlocks_StyleEntry",
+            "name": "FlipHorizontal",
+            "conditionsList": [
+              {
+                "_Type_": "BuildingBlocks_StyleConditionList",
+                "name": "FlipHorizontal",
+                "conditions": [
+                  {
+                    "_Type_": "BuildingBlocks_StyleSelectorConditionAllOfTag",
+                    "tags": [
+                      {
+                        "_RecordPath_": "file://./../../../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+                        "_RecordName_": "Tag.21788313-6aff-45b4-a3ad-fdc62b1cf849",
+                        "_RecordId_": "21788313-6aff-45b4-a3ad-fdc62b1cf849"},
+                      {
+                        "_RecordPath_": "file://./../../../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+                        "_RecordName_": "Tag.9862b0b1-0bcf-4e2a-93a8-3d9dcb611102",
+                        "_RecordId_": "9862b0b1-0bcf-4e2a-93a8-3d9dcb611102"}]}]}],
+            "modifiers": [
+              {
+                "_Type_": "BuildingBlocks_FieldModifierBoolean",
+                "field": "SvgFlipHorizontal",
+                "value": true}],
+            "transitions": []},
+          {
+            "_Type_": "BuildingBlocks_StyleEntry",
+            "name": "FlipVertical",
+            "conditionsList": [
+              {
+                "_Type_": "BuildingBlocks_StyleConditionList",
+                "name": "FlipVertical",
+                "conditions": [
+                  {
+                    "_Type_": "BuildingBlocks_StyleSelectorConditionAllOfTag",
+                    "tags": [
+                      {
+                        "_RecordPath_": "file://./../../../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+                        "_RecordName_": "Tag.21788313-6aff-45b4-a3ad-fdc62b1cf849",
+                        "_RecordId_": "21788313-6aff-45b4-a3ad-fdc62b1cf849"},
+                      {
+                        "_RecordPath_": "file://./../../../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+                        "_RecordName_": "Tag.29eae641-74bb-4648-a179-586ccc720211",
+                        "_RecordId_": "29eae641-74bb-4648-a179-586ccc720211"}]}]}],
+            "modifiers": [
+              {
+                "_Type_": "BuildingBlocks_FieldModifierBoolean",
+                "field": "SvgFlipVertical",
+                "value": true}],
+            "transitions": []}]},
+      {
+        "_Type_": "BuildingBlocks_BrandStyles",
+        "brandIdentifier": "file://./../../../../../../../../libs/foundry/records/ui/buildingblocks/styles/s_uimi_c.json",
+        "sharedStyles": null,
+        "entries": [
+          {
+            "_Type_": "BuildingBlocks_StyleEntry",
+            "name": "Root",
+            "conditionsList": [
+              {
+                "_Type_": "BuildingBlocks_StyleConditionList",
+                "name": "New Condition List",
+                "conditions": [
+                  {
+                    "_Type_": "BuildingBlocks_StyleSelectorConditionTag",
+                    "tag": {
+                      "_RecordPath_": "file://./../../../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+                      "_RecordName_": "Tag.21788313-6aff-45b4-a3ad-fdc62b1cf849",
+                      "_RecordId_": "21788313-6aff-45b4-a3ad-fdc62b1cf849"}},
+                  {
+                    "_Type_": "BuildingBlocks_StyleSelectorConditionParent",
+                    "conditions": [
+                      {
+                        "_Type_": "BuildingBlocks_StyleSelectorConditionTag",
+                        "tag": {
+                          "_RecordPath_": "file://./../../../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+                          "_RecordName_": "Tag.97b7c650-2d90-4810-8b5e-ec7f43091216",
+                          "_RecordId_": "97b7c650-2d90-4810-8b5e-ec7f43091216"}},
+                      {
+                        "_Type_": "BuildingBlocks_StyleSelectorConditionTag",
+                        "tag": {
+                          "_RecordPath_": "file://./../../../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+                          "_RecordName_": "Tag.2f96c664-ba91-4681-a1cf-fc9679a38abd",
+                          "_RecordId_": "2f96c664-ba91-4681-a1cf-fc9679a38abd"}}]}]}],
+            "modifiers": [
+              {
+                "_Type_": "BuildingBlocks_FieldModifierBoolean",
+                "field": "EnableBackground",
+                "value": false},
+              {
+                "_Type_": "BuildingBlocks_FieldModifierBoolean",
+                "field": "EnableMinWidth",
+                "value": true},
+              {
+                "_Type_": "BuildingBlocks_FieldModifierBoolean",
+                "field": "EnableMaxWidth",
+                "value": true},
+              {
+                "_Type_": "BuildingBlocks_FieldModifierNumber",
+                "field": "MinSizeX",
+                "value": 8.0},
+              {
+                "_Type_": "BuildingBlocks_FieldModifierNumber",
+                "field": "MaxSizeX",
+                "value": 8.0},
+              {
+                "_Type_": "BuildingBlocks_FieldModifierNumber",
+                "field": "PivotX",
+                "value": 0.5},
+              {
+                "_Type_": "BuildingBlocks_FieldModifierNumber",
+                "field": "AnchorX",
+                "value": 0.5},
+              {
+                "_Type_": "BuildingBlocks_FieldModifierString",
+                "field": "SvgPath",
+                "value": "UI/Textures/Vector/ModularKitStyles/UIMI_C/UIMI_C_Seperator_V_1.svg"},
+              {
+                "_Type_": "BuildingBlocks_FieldModifierBoolean",
+                "field": "EnableColorOverlay",
+                "value": true},
+              {
+                "_Type_": "BuildingBlocks_FieldModifierBoolean",
+                "field": "EnableNineSliceRect",
+                "value": true},
+              {
+                "_Type_": "BuildingBlocks_FieldModifierNumber",
+                "field": "NineSliceTop",
+                "value": 0.4},
+              {
+                "_Type_": "BuildingBlocks_FieldModifierNumber",
+                "field": "NineSliceBottom",
+                "value": 0.6},
+              {
+                "_Type_": "BuildingBlocks_FieldModifierNumber",
+                "field": "NineSliceLeft",
+                "value": 0.0},
+              {
+                "_Type_": "BuildingBlocks_FieldModifierNumber",
+                "field": "NineSliceRight",
+                "value": 0.0},
+              {
+                "_Type_": "BuildingBlocks_FieldModifierColor",
+                "field": "FillColor",
+                "color": {
+                  "_Type_": "BuildingBlocks_ColorStyle",
+                  "color": "Base",
+                  "alpha": 1.0}}],
+            "transitions": []},
+          {
+            "_Type_": "BuildingBlocks_StyleEntry",
+            "name": "FlipHorizontal",
+            "conditionsList": [
+              {
+                "_Type_": "BuildingBlocks_StyleConditionList",
+                "name": "FlipHorizontal",
+                "conditions": [
+                  {
+                    "_Type_": "BuildingBlocks_StyleSelectorConditionAllOfTag",
+                    "tags": [
+                      {
+                        "_RecordPath_": "file://./../../../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+                        "_RecordName_": "Tag.21788313-6aff-45b4-a3ad-fdc62b1cf849",
+                        "_RecordId_": "21788313-6aff-45b4-a3ad-fdc62b1cf849"},
+                      {
+                        "_RecordPath_": "file://./../../../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+                        "_RecordName_": "Tag.9862b0b1-0bcf-4e2a-93a8-3d9dcb611102",
+                        "_RecordId_": "9862b0b1-0bcf-4e2a-93a8-3d9dcb611102"}]}]}],
+            "modifiers": [
+              {
+                "_Type_": "BuildingBlocks_FieldModifierBoolean",
+                "field": "SvgFlipHorizontal",
+                "value": true}],
+            "transitions": []},
+          {
+            "_Type_": "BuildingBlocks_StyleEntry",
+            "name": "FlipVertical",
+            "conditionsList": [
+              {
+                "_Type_": "BuildingBlocks_StyleConditionList",
+                "name": "FlipVertical",
+                "conditions": [
+                  {
+                    "_Type_": "BuildingBlocks_StyleSelectorConditionAllOfTag",
+                    "tags": [
+                      {
+                        "_RecordPath_": "file://./../../../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+                        "_RecordName_": "Tag.21788313-6aff-45b4-a3ad-fdc62b1cf849",
+                        "_RecordId_": "21788313-6aff-45b4-a3ad-fdc62b1cf849"},
+                      {
+                        "_RecordPath_": "file://./../../../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+                        "_RecordName_": "Tag.29eae641-74bb-4648-a179-586ccc720211",
+                        "_RecordId_": "29eae641-74bb-4648-a179-586ccc720211"}]}]}],
+            "modifiers": [
+              {
+                "_Type_": "BuildingBlocks_FieldModifierBoolean",
+                "field": "SvgFlipVertical",
+                "value": true}],
+            "transitions": []}]},
+      {
+        "_Type_": "BuildingBlocks_BrandStyles",
+        "brandIdentifier": "file://./../../../../../../../../libs/foundry/records/ui/buildingblocks/styles/shopbrands/shop_regal.json",
+        "sharedStyles": null,
+        "entries": [
+          {
+            "_Type_": "BuildingBlocks_StyleEntry",
+            "name": "Root",
+            "conditionsList": [
+              {
+                "_Type_": "BuildingBlocks_StyleConditionList",
+                "name": "New Condition List",
+                "conditions": [
+                  {
+                    "_Type_": "BuildingBlocks_StyleSelectorConditionTag",
+                    "tag": {
+                      "_RecordPath_": "file://./../../../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+                      "_RecordName_": "Tag.21788313-6aff-45b4-a3ad-fdc62b1cf849",
+                      "_RecordId_": "21788313-6aff-45b4-a3ad-fdc62b1cf849"}},
+                  {
+                    "_Type_": "BuildingBlocks_StyleSelectorConditionParent",
+                    "conditions": [
+                      {
+                        "_Type_": "BuildingBlocks_StyleSelectorConditionTag",
+                        "tag": {
+                          "_RecordPath_": "file://./../../../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+                          "_RecordName_": "Tag.97b7c650-2d90-4810-8b5e-ec7f43091216",
+                          "_RecordId_": "97b7c650-2d90-4810-8b5e-ec7f43091216"}},
+                      {
+                        "_Type_": "BuildingBlocks_StyleSelectorConditionTag",
+                        "tag": {
+                          "_RecordPath_": "file://./../../../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+                          "_RecordName_": "Tag.2f96c664-ba91-4681-a1cf-fc9679a38abd",
+                          "_RecordId_": "2f96c664-ba91-4681-a1cf-fc9679a38abd"}}]}]}],
+            "modifiers": [
+              {
+                "_Type_": "BuildingBlocks_FieldModifierBoolean",
+                "field": "EnableBackground",
+                "value": false},
+              {
+                "_Type_": "BuildingBlocks_FieldModifierBoolean",
+                "field": "EnableMinWidth",
+                "value": true},
+              {
+                "_Type_": "BuildingBlocks_FieldModifierBoolean",
+                "field": "EnableMaxWidth",
+                "value": true},
+              {
+                "_Type_": "BuildingBlocks_FieldModifierNumber",
+                "field": "MinSizeX",
+                "value": 8.0},
+              {
+                "_Type_": "BuildingBlocks_FieldModifierNumber",
+                "field": "MaxSizeX",
+                "value": 8.0},
+              {
+                "_Type_": "BuildingBlocks_FieldModifierNumber",
+                "field": "PivotX",
+                "value": 0.5},
+              {
+                "_Type_": "BuildingBlocks_FieldModifierNumber",
+                "field": "AnchorX",
+                "value": 0.5},
+              {
+                "_Type_": "BuildingBlocks_FieldModifierString",
+                "field": "SvgPath",
+                "value": "UI/Textures/Vector/ModularKitStyles/REGAL/REGAL_Seperator_V_1.svg"},
+              {
+                "_Type_": "BuildingBlocks_FieldModifierBoolean",
+                "field": "EnableColorOverlay",
+                "value": false},
+              {
+                "_Type_": "BuildingBlocks_FieldModifierNumber",
+                "field": "NineSliceScale",
+                "value": 2.0},
+              {
+                "_Type_": "BuildingBlocks_FieldModifierBoolean",
+                "field": "EnableNineSliceRect",
+                "value": true},
+              {
+                "_Type_": "BuildingBlocks_FieldModifierNumber",
+                "field": "NineSliceTop",
+                "value": 0.4},
+              {
+                "_Type_": "BuildingBlocks_FieldModifierNumber",
+                "field": "NineSliceBottom",
+                "value": 0.6},
+              {
+                "_Type_": "BuildingBlocks_FieldModifierNumber",
+                "field": "NineSliceLeft",
+                "value": 0.0},
+              {
+                "_Type_": "BuildingBlocks_FieldModifierNumber",
+                "field": "NineSliceRight",
+                "value": 0.0},
+              {
+                "_Type_": "BuildingBlocks_FieldModifierColor",
+                "field": "FillColor",
+                "color": {
+                  "_Type_": "BuildingBlocks_ColorStyle",
+                  "color": "Base",
+                  "alpha": 1.0}}],
+            "transitions": []},
+          {
+            "_Type_": "BuildingBlocks_StyleEntry",
+            "name": "FlipHorizontal",
+            "conditionsList": [
+              {
+                "_Type_": "BuildingBlocks_StyleConditionList",
+                "name": "FlipHorizontal",
+                "conditions": [
+                  {
+                    "_Type_": "BuildingBlocks_StyleSelectorConditionAllOfTag",
+                    "tags": [
+                      {
+                        "_RecordPath_": "file://./../../../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+                        "_RecordName_": "Tag.21788313-6aff-45b4-a3ad-fdc62b1cf849",
+                        "_RecordId_": "21788313-6aff-45b4-a3ad-fdc62b1cf849"},
+                      {
+                        "_RecordPath_": "file://./../../../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+                        "_RecordName_": "Tag.9862b0b1-0bcf-4e2a-93a8-3d9dcb611102",
+                        "_RecordId_": "9862b0b1-0bcf-4e2a-93a8-3d9dcb611102"}]}]}],
+            "modifiers": [
+              {
+                "_Type_": "BuildingBlocks_FieldModifierBoolean",
+                "field": "SvgFlipHorizontal",
+                "value": true}],
+            "transitions": []},
+          {
+            "_Type_": "BuildingBlocks_StyleEntry",
+            "name": "FlipVertical",
+            "conditionsList": [
+              {
+                "_Type_": "BuildingBlocks_StyleConditionList",
+                "name": "FlipVertical",
+                "conditions": [
+                  {
+                    "_Type_": "BuildingBlocks_StyleSelectorConditionAllOfTag",
+                    "tags": [
+                      {
+                        "_RecordPath_": "file://./../../../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+                        "_RecordName_": "Tag.21788313-6aff-45b4-a3ad-fdc62b1cf849",
+                        "_RecordId_": "21788313-6aff-45b4-a3ad-fdc62b1cf849"},
+                      {
+                        "_RecordPath_": "file://./../../../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+                        "_RecordName_": "Tag.29eae641-74bb-4648-a179-586ccc720211",
+                        "_RecordId_": "29eae641-74bb-4648-a179-586ccc720211"}]}]}],
+            "modifiers": [
+              {
+                "_Type_": "BuildingBlocks_FieldModifierBoolean",
+                "field": "SvgFlipVertical",
+                "value": true}],
+            "transitions": []}]}],
+    "entityPreviewScene": {
+      "_Type_": "BuildingBlocks_PreviewSceneEntityRoot",
+      "renderLayer": "Default"},
+    "rttPreviewScene": {
+      "_Type_": "BuildingBlocks_PreviewSceneRttRoot",
+      "renderLayer": "Default",
+      "entityScale": 1.0,
+      "entityOrientation": {
+        "_Type_": "Deg3",
+        "x": 0.0,
+        "y": 0.0,
+        "z": 0.0}},
+    "arPreviewScene": {
+      "_Type_": "BuildingBlocks_PreviewSceneAugmentedRealityRtt",
+      "renderLayer": "Default",
+      "cardsUseStageRadius": true},
+    "previewScenes": [],
+    "staticVariables": [],
+    "proxyRootNode": "_PointsTo_:ptr:1",
+    "defaultButtonDownSoundTag": null,
+    "defaultRightButtonDownSoundTag": null,
+    "defaultLeftClickSoundTag": null,
+    "defaultRightClickSoundTag": null,
+    "defaultLeftDoubleClickSoundTag": null,
+    "defaultRollOverSoundTag": null,
+    "defaultRollOffSoundTag": null,
+    "defaultMovementStartSoundTag": null,
+    "defaultMovementStopSoundTag": null,
+    "collisionType": "Cutout",
+    "cacheAmount": 0,
+    "scene": [
+      {
+        "_Pointer_": "ptr:1",
+        "_Type_": "BuildingBlocks_WidgetCustomShape",
+        "name": "ComponentRoot",
+        "styleTags": [
+          {
+            "_RecordPath_": "file://./../../../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+            "_RecordName_": "Tag.21788313-6aff-45b4-a3ad-fdc62b1cf849",
+            "_RecordId_": "21788313-6aff-45b4-a3ad-fdc62b1cf849"}],
+        "rendererType": "Flash",
+        "rendererPolicy": {
+          "_Type_": "BuildingBlocks_FlashRendererPolicy",
+          "useFlashRenderThreadUpdate": false,
+          "transformFrom3D": false},
+        "primitiveSettings": {
+          "_Type_": "BuildingBlocks_PrimitiveSettings",
+          "primitiveMaterialPath": "",
+          "UVStart": {
+            "_Type_": "Vec2",
+            "x": 0.0,
+            "y": 0.0},
+          "UVSize": {
+            "_Type_": "Vec2",
+            "x": 1.0,
+            "y": 1.0},
+          "isUValuePerPixel": false,
+          "isVValuePerPixel": false,
+          "isGrouped": true,
+          "visualState": null},
+        "parent": null,
+        "previewScene": null,
+        "previewSceneFlattened": null,
+        "cullingLevel": "Render",
+        "isActive": true,
+        "affectsLayout": true,
+        "affectsAutosize": true,
+        "exportNode": true,
+        "position": {
+          "_Type_": "Vec3",
+          "x": 0.0,
+          "y": 0.0,
+          "z": 0.0},
+        "positionOffset": {
+          "_Type_": "Vec3",
+          "x": 0.0,
+          "y": 0.0,
+          "z": 0.0},
+        "orientation": {
+          "_Type_": "Deg3",
+          "x": 0.0,
+          "y": 0.0,
+          "z": 0.0},
+        "orientationOffset": {
+          "_Type_": "Deg3",
+          "x": 0.0,
+          "y": 0.0,
+          "z": 0.0},
+        "scale": {
+          "_Type_": "Vec3",
+          "x": 1.0,
+          "y": 1.0,
+          "z": 1.0},
+        "sizing": {
+          "_Type_": "BuildingBlocks_Size",
+          "width": {
+            "_Type_": "BuildingBlocks_FixedOrRelativeValue",
+            "value": 1.0,
+            "behavior": "Percent"},
+          "height": {
+            "_Type_": "BuildingBlocks_FixedOrRelativeValue",
+            "value": 1.0,
+            "behavior": "Percent"},
+          "depth": {
+            "_Type_": "BuildingBlocks_FixedOrRelativeValue",
+            "value": 0.0,
+            "behavior": "Fixed"},
+          "minWidth": {
+            "_Type_": "BuildingBlocks_FixedOrRelativeValue",
+            "value": 0.0,
+            "behavior": "Fixed"},
+          "minHeight": {
+            "_Type_": "BuildingBlocks_FixedOrRelativeValue",
+            "value": 0.0,
+            "behavior": "Fixed"},
+          "maxWidth": {
+            "_Type_": "BuildingBlocks_FixedOrRelativeValue",
+            "value": 0.0,
+            "behavior": "Fixed"},
+          "maxHeight": {
+            "_Type_": "BuildingBlocks_FixedOrRelativeValue",
+            "value": 0.0,
+            "behavior": "Fixed"},
+          "enableMinWidth": false,
+          "enableMinHeight": false,
+          "enableMaxWidth": false,
+          "enableMaxHeight": false},
+        "autoScalingMethod": "None",
+        "padding": {
+          "_Type_": "BuildingBlocks_TRBL",
+          "top": 0.0,
+          "right": 0.0,
+          "bottom": 0.0,
+          "left": 0.0,
+          "front": 0.0,
+          "back": 0.0},
+        "margin": {
+          "_Type_": "BuildingBlocks_TRBL",
+          "top": 0.0,
+          "right": 0.0,
+          "bottom": 0.0,
+          "left": 0.0,
+          "front": 0.0,
+          "back": 0.0},
+        "pivot": {
+          "_Type_": "Vec3",
+          "x": 0.0,
+          "y": 0.0,
+          "z": 0.0},
+        "anchor": {
+          "_Type_": "Vec3",
+          "x": 0.0,
+          "y": 0.0,
+          "z": 0.0},
+        "background": {
+          "_Type_": "BuildingBlocks_Background",
+          "enable": false,
+          "color": null,
+          "topLeftColor": null,
+          "topRightColor": null,
+          "bottomLeftColor": null,
+          "bottomRightCColor": null},
+        "segmentedFill": {
+          "_Type_": "BuildingBlocks_SegmentedFill",
+          "enable": false,
+          "segmentSize": {
+            "_Type_": "BuildingBlocks_FixedOrRelativeValue",
+            "value": 64.0,
+            "behavior": "Fixed"},
+          "spaceSize": {
+            "_Type_": "BuildingBlocks_FixedOrRelativeValue",
+            "value": 64.0,
+            "behavior": "Fixed"},
+          "angle": 0.0,
+          "xOffset": 0.0,
+          "segmentColor": null,
+          "barFill": false},
+        "svgFill": {
+          "_Type_": "BuildingBlocks_SvgFill",
+          "svgPath": "",
+          "nineSliceRect": {
+            "_Type_": "BuildingBlocks_TRBL",
+            "top": 0.25,
+            "right": 0.75,
+            "bottom": 0.75,
+            "left": 0.25,
+            "front": 0.0,
+            "back": 0.0},
+          "renderShape": true,
+          "flipHorizontal": false,
+          "flipVertical": false,
+          "enableColorOverlay": true,
+          "color": null,
+          "scalingBehavior": "Contain",
+          "containPositionX": 0.0,
+          "containPositionY": 0.0,
+          "enableNineSliceRect": true,
+          "nineSliceScale": 1.0,
+          "strokeExtent": 1.0,
+          "playhead": 0.0},
+        "border": {
+          "_Type_": "BuildingBlocks_Border",
+          "top": {
+            "_Type_": "BuildingBlocks_BorderSide",
+            "width": 0.0,
+            "color": null},
+          "right": {
+            "_Type_": "BuildingBlocks_BorderSide",
+            "width": 0.0,
+            "color": null},
+          "bottom": {
+            "_Type_": "BuildingBlocks_BorderSide",
+            "width": 0.0,
+            "color": null},
+          "left": {
+            "_Type_": "BuildingBlocks_BorderSide",
+            "width": 0.0,
+            "color": null},
+          "topLeftRadius": {
+            "_Type_": "BuildingBlocks_BorderRadiusCorner",
+            "radius": {
+              "_Type_": "BuildingBlocks_FixedOrRelativeValue",
+              "value": 0.0,
+              "behavior": "Fixed"},
+            "chamfer": false},
+          "topRightRadius": {
+            "_Type_": "BuildingBlocks_BorderRadiusCorner",
+            "radius": {
+              "_Type_": "BuildingBlocks_FixedOrRelativeValue",
+              "value": 0.0,
+              "behavior": "Fixed"},
+            "chamfer": false},
+          "bottomLeftRadius": {
+            "_Type_": "BuildingBlocks_BorderRadiusCorner",
+            "radius": {
+              "_Type_": "BuildingBlocks_FixedOrRelativeValue",
+              "value": 0.0,
+              "behavior": "Fixed"},
+            "chamfer": false},
+          "bottomRightRadius": {
+            "_Type_": "BuildingBlocks_BorderRadiusCorner",
+            "radius": {
+              "_Type_": "BuildingBlocks_FixedOrRelativeValue",
+              "value": 0.0,
+              "behavior": "Fixed"},
+            "chamfer": false}},
+        "layoutPolicy": null,
+        "layoutPolicyItem": null,
+        "layoutItemCommon": null,
+        "dropTargetPolicy": null,
+        "draggablePolicy": null,
+        "tooltipPolicy": null,
+        "contextMenuPolicy": null,
+        "grabControlsPolicy": null,
+        "calloutSettings": null,
+        "virtualCursorPolicy": null,
+        "overflow": {
+          "_Type_": "BuildingBlocks_Overflow",
+          "overflow": "Visible",
+          "widthFadeThreshold": 0.0,
+          "heightFadeThreshold": 0.0,
+          "depthFadeThreshold": 0.0,
+          "fadeXAxis": true,
+          "fadeYAxis": true,
+          "fadeZAxis": true},
+        "scrollPolicy": null,
+        "radialTransform": {
+          "_Type_": "BuildingBlocks_RadialTransform",
+          "transformMultiplier": 0.0,
+          "curvatureAxis": "Z",
+          "mouseTestShape": true,
+          "polyResolution": 45,
+          "conicSlantFactor": 0.0},
+        "radialTransformChild": {
+          "_Type_": "BuildingBlocks_RadialTransformChild",
+          "inheritRotation": true,
+          "inheritShapeWarp": true,
+          "maintainGapLength": true},
+        "animation": {
+          "_Type_": "BuildingBlocks_Animation",
+          "animationTimeline": null,
+          "dynamicStartTimeVariableName": "",
+          "duration": 1.0,
+          "delay": 0.0,
+          "delayRandomRange": 0.0,
+          "direction": "Forward",
+          "fillMode": "None",
+          "iterationCount": 1,
+          "loopIndefinitely": false,
+          "timeSync": false,
+          "additive": true,
+          "timescaleIndependent": false},
+        "interactions": {
+          "_Type_": "BuildingBlocks_Interactions",
+          "canInteract": false,
+          "disabled": false,
+          "selected": false,
+          "collideLeftClick": true,
+          "collideRightClick": true,
+          "collideMouseWheel": false,
+          "hitDetectionOffset": 1.0,
+          "propagateInteractionStates": false,
+          "inheritHoverState": false,
+          "inheritDownState": false,
+          "inheritSelectedState": false,
+          "inheritDisabledState": false,
+          "blocksCursor": false,
+          "blocksNavigation": false,
+          "onLeftClick": [],
+          "onRightClick": [],
+          "onLeftDown": [],
+          "onLeftDoubleClick": [],
+          "onRollOver": [],
+          "onRollOff": [],
+          "boundRestrictionShape": null,
+          "twoVariablePicker": null,
+          "buttonDownSoundTag": null,
+          "rightButtonDownSoundTag": null,
+          "leftClickSoundTag": null,
+          "rightClickSoundTag": null,
+          "leftDoubleClickSoundTag": null,
+          "rollOverSoundTag": null,
+          "rollOffSoundTag": null,
+          "movementStartSoundTag": null,
+          "movementStopSoundTag": null,
+          "movementStopDelayMs": 80.0},
+        "inheritsScale": true,
+        "inheritsRotation": true,
+        "inheritsTranslation": true,
+        "inheritsAlpha": true,
+        "inheritsOverflow": false,
+        "alpha": 1.0,
+        "layer": 5,
+        "aspectRatioLibrary": null,
+        "focusIndex": -1,
+        "inlineStyles": [],
+        "hoverCursor": "Auto",
+        "enableHeldCursor": false,
+        "heldCursor": "Auto",
+        "renderShape": true,
+        "flipHorizontal": false,
+        "flipVertical": false,
+        "svgPath": "",
+        "enableColorOverlay": true,
+        "color": null,
+        "scalingBehavior": "StretchY",
+        "containPositionX": 0.0,
+        "containPositionY": 0.0,
+        "enableNineSliceRect": false,
+        "nineSliceRect": {
+          "_Type_": "BuildingBlocks_TRBL",
+          "top": 0.25,
+          "right": 0.75,
+          "bottom": 0.75,
+          "left": 0.25,
+          "front": 0.0,
+          "back": 0.0},
+        "nineSliceScale": 1.0,
+        "strokeExtent": 1.0,
+        "playhead": 0.0}],
+    "library": [],
+    "operations": [
+      {
+        "_Pointer_": "ptr:2",
+        "_Type_": "BuildingBlocks_BindingsBooleanComponentParameter",
+        "name": "FlipHorizontal",
+        "parameter": "ParamInput0",
+        "defaultValue": false},
+      {
+        "_Pointer_": "ptr:3",
+        "_Type_": "BuildingBlocks_BindingsBooleanComponentParameter",
+        "name": "FlipVertical",
+        "parameter": "ParamInput1",
+        "defaultValue": false},
+      {
+        "_Pointer_": "ptr:5",
+        "_Type_": "BuildingBlocks_BindingsTagFromBoolean",
+        "isTrue": {
+          "_RecordPath_": "file://./../../../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+          "_RecordName_": "Tag.9862b0b1-0bcf-4e2a-93a8-3d9dcb611102",
+          "_RecordId_": "9862b0b1-0bcf-4e2a-93a8-3d9dcb611102"},
+        "isFalse": null,
+        "inputTrue": null,
+        "inputFalse": null,
+        "input": "_PointsTo_:ptr:2"},
+      {
+        "_Pointer_": "ptr:4",
+        "_Type_": "BuildingBlocks_BindingsTagFromBoolean",
+        "isTrue": {
+          "_RecordPath_": "file://./../../../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+          "_RecordName_": "Tag.29eae641-74bb-4648-a179-586ccc720211",
+          "_RecordId_": "29eae641-74bb-4648-a179-586ccc720211"},
+        "isFalse": null,
+        "inputTrue": null,
+        "inputFalse": null,
+        "input": "_PointsTo_:ptr:3"},
+      {
+        "_Type_": "BuildingBlocks_BindingsStringField",
+        "widget": "_PointsTo_:ptr:1",
+        "field": "SecondaryStateTag",
+        "input": "_PointsTo_:ptr:4"},
+      {
+        "_Type_": "BuildingBlocks_BindingsStringField",
+        "widget": "_PointsTo_:ptr:1",
+        "field": "PrimaryStateTag",
+        "input": "_PointsTo_:ptr:5"}],
+    "overrideDefaultTooltipCanvas": null,
+    "overrideDefaultCalloutCanvas": null}}

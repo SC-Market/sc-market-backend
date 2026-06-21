@@ -1,0 +1,59 @@
+{
+  "_RecordName_": "MobiGlasAppData.Email_PreludeToNyx_Asteroid_002",
+  "_RecordId_": "81c2bb03-1b24-4f4b-aacb-79855847f964",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "MobiGlasAppData",
+    "appData": {
+      "_Type_": "GenericDataDisplayAppData",
+      "dateTime": {
+        "_Type_": "DateTime",
+        "date": {
+          "_Type_": "Date",
+          "day": 1,
+          "month": "November",
+          "year": 2955},
+        "time": {
+          "_Type_": "Time",
+          "hour": 18,
+          "minute": 11,
+          "second": 55}},
+      "content": [
+        {
+          "_Type_": "MobiGlasAppContent",
+          "textContent": "@shatteredblade_asteroid_datapad_002_from",
+          "imageContent": "",
+          "appLink": {
+            "_Type_": "SMobiGlasAppLink",
+            "targetApp": null,
+            "targetDataEntry": null,
+            "displayIcon": ""}},
+        {
+          "_Type_": "MobiGlasAppContent",
+          "textContent": "@shatteredblade_asteroid_datapad_002_subject",
+          "imageContent": "",
+          "appLink": {
+            "_Type_": "SMobiGlasAppLink",
+            "targetApp": null,
+            "targetDataEntry": null,
+            "displayIcon": ""}},
+        {
+          "_Type_": "MobiGlasAppContent",
+          "textContent": "@shatteredblade_asteroid_datapad_002_to",
+          "imageContent": "",
+          "appLink": {
+            "_Type_": "SMobiGlasAppLink",
+            "targetApp": null,
+            "targetDataEntry": null,
+            "displayIcon": ""}},
+        {
+          "_Type_": "MobiGlasAppContent",
+          "textContent": "@shatteredblade_asteroid_datapad_002_text",
+          "imageContent": "",
+          "appLink": {
+            "_Type_": "SMobiGlasAppLink",
+            "targetApp": null,
+            "targetDataEntry": null,
+            "displayIcon": ""}}],
+      "securityToken": null,
+      "dynamicInteger": 0}}}

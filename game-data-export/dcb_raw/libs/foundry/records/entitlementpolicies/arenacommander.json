@@ -1,0 +1,9 @@
+{
+  "_RecordName_": "DefaultEntitlementRecord.ArenaCommander",
+  "_RecordId_": "5e130d37-6fe8-4763-83d4-66aea07f05dc",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "DefaultEntitlementRecord",
+    "Entitlements": [
+      "ArenaCommander"],
+    "subscribersOnly": false}}

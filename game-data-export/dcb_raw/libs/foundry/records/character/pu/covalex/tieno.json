@@ -1,0 +1,24 @@
+{
+  "_RecordName_": "Character.Tieno",
+  "_RecordId_": "9c483fb5-ca98-46e8-9226-e9b2baef6a65",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "Character",
+    "characterPersonalData": {
+      "_Type_": "CharacterPersonalData",
+      "title": "@LOC_UNINITIALIZED",
+      "firstName": "@Name_Covalex_Rep_EllaTieno",
+      "nickName": "@LOC_UNINITIALIZED",
+      "lastName": "@LOC_UNINITIALIZED",
+      "randomNameParams": null,
+      "affiliation": "@LOC_UNINITIALIZED",
+      "details": "@LOC_UNINITIALIZED"},
+    "audioSwitchStateName": "",
+    "animationRemapAlias": "",
+    "characterMannequinTag": "MC_Cov_Tieno",
+    "styleMannequinTag": "",
+    "combatStyle": "Civilian",
+    "gender": "Female",
+    "characterSpeedOverrides": [],
+    "nicknameChance": 0.0,
+    "name": "Covalex Rep Tieno"}}

@@ -1,0 +1,19 @@
+{
+  "_RecordName_": "UIElement.Liberty_Lake_Beer",
+  "_RecordId_": "60ac746e-2051-4fcb-b859-cc83de1021b0",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "UIElement",
+    "sourceFile": "UI\\EnvironmentalScreens\\Signs\\Brands\\liberty_lake\\assets\\SWF\\Liberty_Lake_Beer.gfx",
+    "soundsRecord": null,
+    "fontFile": "",
+    "alignMode": "dynamic",
+    "alignScale": true,
+    "alignMax": true,
+    "layer": 0,
+    "skipFirstFrameInit": false,
+    "keyEvents": false,
+    "eventsExclusive": false,
+    "noDepthTest": false,
+    "forceNoUnload": false,
+    "noPostProcessing": false}}

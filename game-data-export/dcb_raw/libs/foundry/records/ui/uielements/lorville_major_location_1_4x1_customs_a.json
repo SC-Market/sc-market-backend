@@ -1,0 +1,19 @@
+{
+  "_RecordName_": "UIElement.lorville_major_location_1_4x1_customs_a",
+  "_RecordId_": "f5a28019-eb7a-407d-b9cd-6089fe0fa648",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "UIElement",
+    "sourceFile": "UI\\EnvironmentalScreens\\Props\\Hurston\\assets\\SWF\\lorville_major_location_1_4x1_customs_a.gfx",
+    "soundsRecord": null,
+    "fontFile": "",
+    "alignMode": "dynamic",
+    "alignScale": true,
+    "alignMax": true,
+    "layer": 0,
+    "skipFirstFrameInit": false,
+    "keyEvents": false,
+    "eventsExclusive": false,
+    "noDepthTest": false,
+    "forceNoUnload": false,
+    "noPostProcessing": false}}

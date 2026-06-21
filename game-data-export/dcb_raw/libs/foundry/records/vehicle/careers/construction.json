@@ -1,0 +1,9 @@
+{
+  "_RecordName_": "VehicleCareer.Construction",
+  "_RecordId_": "a14fe91f-ff99-44a3-bf12-0c5f24a30296",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "VehicleCareer",
+    "displayName": "@vehicle_focus_construction",
+    "roleList": [
+      "file://./../../../../../libs/foundry/records/vehicle/roles/construction.json"]}}

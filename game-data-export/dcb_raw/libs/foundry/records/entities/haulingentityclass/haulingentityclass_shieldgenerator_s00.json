@@ -1,0 +1,12 @@
+{
+  "_RecordName_": "Hauling_EntityClasses.HaulingEntityClass_ShieldGenerator_S00",
+  "_RecordId_": "64fe9592-a354-45fb-9858-30d3cb8be370",
+  "_RecordTag_": "MissionDesign",
+  "_RecordValue_": {
+    "_Type_": "Hauling_EntityClasses",
+    "entityClasses": {
+      "_Type_": "Hauling_EntityClassList",
+      "entityClassList": [
+        "file://./../../../../../libs/foundry/records/entities/scitem/ships/shieldgenerator/shld_basl_s00_castra_scitem.json",
+        "file://./../../../../../libs/foundry/records/entities/scitem/ships/shieldgenerator/shld_seco_s00_pin_scitem.json"]},
+    "orderDisplayName": "@Salvage_Ship_Component_Shield_Generator_S0_Name"}}

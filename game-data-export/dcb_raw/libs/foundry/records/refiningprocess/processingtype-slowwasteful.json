@@ -1,0 +1,9 @@
+{
+  "_RecordName_": "RefiningProcess.ProcessingType-SlowWasteful",
+  "_RecordId_": "89933668-9b60-4d68-9598-827631105277",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "RefiningProcess",
+    "refiningSpeed": "Slow",
+    "refiningQuality": "Wasteful",
+    "processName": "@refinery_ui_ProcessingType_SlowWasteful"}}

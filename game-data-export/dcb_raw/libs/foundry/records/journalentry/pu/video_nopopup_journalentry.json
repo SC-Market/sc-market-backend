@@ -1,0 +1,19 @@
+{
+  "_RecordName_": "JournalEntry.Video_NoPopUp_JournalEntry",
+  "_RecordId_": "73765c13-af1e-48b0-a1ee-a4c271b4efa8",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "JournalEntry",
+    "Title": "@LOC_UNINITIALIZED",
+    "ShortTitle": "@LOC_UNINITIALIZED",
+    "SubHeading": "@LOC_UNINITIALIZED",
+    "autoOpenMobiGlas": false,
+    "showNotification": true,
+    "missionSpecificContent": false,
+    "removeOnMissionEnd": true,
+    "Style": "file://./../../../../../libs/foundry/records/journalentrytype/journalentrytype.videolog.json",
+    "type": {
+      "_Type_": "JournalEntryVideo",
+      "videoDef": null,
+      "description": "@LOC_UNINITIALIZED"},
+    "tutorialEntry": false}}

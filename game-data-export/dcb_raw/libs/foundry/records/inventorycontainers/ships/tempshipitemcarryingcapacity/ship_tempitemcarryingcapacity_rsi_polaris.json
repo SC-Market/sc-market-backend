@@ -1,0 +1,17 @@
+{
+  "_RecordName_": "InventoryContainer.Ship_TempItemCarryingCapacity_RSI_Polaris",
+  "_RecordId_": "2d983aaf-8a73-446b-9c40-6ecde2d865c8",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "InventoryContainer",
+    "excludedItemSubTypes": [],
+    "interiorDimensions": {
+      "_Type_": "Vec3",
+      "x": 15.0,
+      "y": 15.0,
+      "z": 3.75},
+    "inventoryType": {
+      "_Type_": "InventoryClosedContainerType",
+      "capacity": {
+        "_Type_": "SStandardCargoUnit",
+        "standardCargoUnits": 432.0}}}}

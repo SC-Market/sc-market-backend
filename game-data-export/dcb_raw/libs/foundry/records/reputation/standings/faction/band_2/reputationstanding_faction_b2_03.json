@@ -1,0 +1,15 @@
+{
+  "_RecordName_": "SReputationStandingParams.ReputationStanding_Faction_B2_03",
+  "_RecordId_": "49665b6f-31c6-4a87-b7ad-818cf86e3a77",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "SReputationStandingParams",
+    "name": "name",
+    "description": "desc",
+    "displayName": "@LOC_PLACEHOLDER",
+    "perkDescription": "@blank_space",
+    "icon": "",
+    "minReputation": 0,
+    "driftReputation": 0,
+    "driftTimeHours": 0.0,
+    "gated": false}}

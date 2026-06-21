@@ -1,0 +1,12 @@
+{
+  "_RecordName_": "HintUIData.ActorStatus15",
+  "_RecordId_": "bcf93a8f-8409-4502-9569-6ce58f7a5b7b",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "HintUIData",
+    "TitleText": "@Hints_ActorStatusTemperature_Title",
+    "BodyText": "@Hints_ActorStatusTemperatureBelowMinResistance",
+    "BodyTextGamePad": "@Hints_ActorStatusTemperatureBelowMinResistance",
+    "BodyTextJoystick": "@Hints_ActorStatusTemperatureBelowMinResistance",
+    "TitleImagePath": "",
+    "BodyImagePath": ""}}

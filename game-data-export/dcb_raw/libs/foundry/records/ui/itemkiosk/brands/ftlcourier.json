@@ -1,0 +1,14 @@
+{
+  "_RecordName_": "ItemKioskBrand.FTLcourier",
+  "_RecordId_": "59fd38b1-d3c1-48c2-a73d-f13cd25b0183",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "ItemKioskBrand",
+    "name": "FTLcourier",
+    "logoPath": "UI/Kiosk/assets/TIF/backgrounds/ftl.tif",
+    "color": {
+      "_Type_": "SRGBA8",
+      "r": 143,
+      "g": 197,
+      "b": 213,
+      "a": 255}}}

@@ -1,0 +1,15 @@
+{
+  "_RecordName_": "PlayerAnimatedInteractionTemplate.Cockpit_RightSide_ButtonPress",
+  "_RecordId_": "a2a1753d-6f9f-4a1a-ab3e-46ee2e56b874",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "PlayerAnimatedInteractionTemplate",
+    "playerAnimatedInteraction": {
+      "_Type_": "PlayerAnimatedInteraction",
+      "supportWalkToAlign": false,
+      "type": "Reactive",
+      "fragTags": [],
+      "CDIKTargetName": "button_R_loc",
+      "handModeParams": {
+        "_Type_": "PlayerAnimatedInteractionHandParams",
+        "handMode": "RightHand"}}}}

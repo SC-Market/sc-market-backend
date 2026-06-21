@@ -1,0 +1,136 @@
+{
+  "_RecordName_": "EntityClassDefinition.LoadingArea",
+  "_RecordId_": "5e63d420-9a7c-4c0f-b33b-06023ff374ef",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "EntityClassDefinition",
+    "Category": "Others",
+    "Icon": "LandingArea.bmp",
+    "Invisible": false,
+    "BBoxSelection": false,
+    "defaultEditorColor": {
+      "_Type_": "RGB",
+      "r": 1.0,
+      "g": 1.0,
+      "b": 0.0},
+    "entityDensityClass": null,
+    "tags": [],
+    "StaticEntityClassData": [
+      {
+        "_Type_": "EntityUIDisplayParams",
+        "displayName": "@LOC_UNINITIALIZED",
+        "displayDescription": "@LOC_UNINITIALIZED",
+        "displayThumbnail": "",
+        "displayImage": "",
+        "displayIcon": "",
+        "sortString": "",
+        "trackerProperties": {
+          "_Type_": "SLandingAreaEntryTrackerParams"}}],
+    "Components": [
+      {
+        "_Type_": "SLoadingAreaParams",
+        "enabled": true,
+        "dimensions": {
+          "_Type_": "Vec3",
+          "x": 100.0,
+          "y": 100.0,
+          "z": 100.0},
+        "autoRegisterWithATC": true,
+        "dockingClassOverride": -1,
+        "allowGroundVehicles": false,
+        "allowSpaceships": true,
+        "canBeUsedBy": "Player",
+        "HUDDisplayName": "@LOC_UNINITIALIZED",
+        "ATCPriority": 0,
+        "autoGenerateUI": true},
+      {
+        "_Type_": "SLandingCommunicationParams"},
+      {
+        "_Type_": "SEntityComponentObjectMetadataParams",
+        "name": "@LOC_EMPTY",
+        "hasLocalBounds": false,
+        "isDynamic": false,
+        "metadata": [
+          {
+            "_Type_": "SLandingAreaObjectMetadataParams"}]},
+      {
+        "_Type_": "LandingUIParams",
+        "hidden": false,
+        "timeToLoop": 1.5,
+        "gridLayerCount": 5,
+        "dimensions": {
+          "_Type_": "Vec3",
+          "x": 1.0,
+          "y": 1.0,
+          "z": 1.0},
+        "drawFarDistance": 300.0,
+        "gridAreaHeightPerc": 0.5,
+        "baseLineWidthPerc": 0.04,
+        "basePaddingInnerPerc": 1.0,
+        "baseOffset": 1.5,
+        "gridPaddingInnerPerc": 0.85,
+        "gridLineWidthPerc": 0.04,
+        "gridHighlightFeatherPerc": 0.2,
+        "gridFalloffPerc": 1.0,
+        "baseLineMaterial": "materials/ui/landing/base.mtl",
+        "beamMaterial": "materials/ui/landing/beam.mtl",
+        "gridLineMaterial": "materials/ui/landing/grid.mtl"},
+      {
+        "_Type_": "EAEntityMarkerComponentParams",
+        "name": "@vehicle_class_dropship",
+        "description": "@PU_CUSTOMS1_SK_RequestLeave_IG_001_PleaseVacateThe",
+        "iconPath": "UI/Textures/EA/ObjectiveMarkerIcons/PlayableAreaMarker.tif",
+        "markerType": "LandingZone",
+        "factionTag": null,
+        "activeDistanceTreshold": 200.0,
+        "boxRadius": 0.5,
+        "fovModifier": 0.5,
+        "offset": {
+          "_Type_": "Vec3",
+          "x": 0.0,
+          "y": 0.0,
+          "z": 1.0}},
+      {
+        "_Type_": "ShipServicesProviderParams",
+        "repairAvailable": true,
+        "useZoneServicing": false,
+        "allowHostile": false,
+        "usingRequireBeingLanded": true,
+        "servicesClass": "file://./../../../../../libs/foundry/records/areaservices/areaservices.cryastro.json"},
+      {
+        "_Type_": "UIBindingsVendorEntityComponentParams",
+        "namespace": ""},
+      {
+        "_Type_": "UIBuildingBlocksEntityComponentParams",
+        "layers": [
+          {
+            "_Type_": "BuildingBlocksLayer",
+            "layerName": "",
+            "renderTarget": "All",
+            "defaultView": "_PointsTo_:ptr:1",
+            "views": [
+              {
+                "_Pointer_": "ptr:1",
+                "_Type_": "BuildingBlocksView",
+                "name": "Default",
+                "component": {
+                  "_Type_": "UIGraph_BuildingBlocksContextComponent",
+                  "canvas": "file://./../../../../../libs/foundry/records/ui/buildingblocks/ar/cargotransferarea.json",
+                  "isSystemViewInstance": false,
+                  "canvasInstantiationMode": "RootDeferred"}}]}],
+        "enableFullScreenMouse": false,
+        "defaultStyle": null,
+        "defaultPreviewScene": null},
+      {
+        "_Type_": "UISimpleRenderNodeEntityComponentParams",
+        "minimumBounds": 1.0,
+        "materialName": "materials/default_ui.mtl",
+        "sortDistance": 0.0,
+        "fixedScaleMin": 0.0,
+        "fixedScaleMax": 0.0,
+        "cardStageRadius": 2.0,
+        "flattenBehavior": "None",
+        "interference": 0.0},
+      {
+        "_Type_": "UIBindingsConsumerEntityComponentParams",
+        "linkToPort": false}]}}

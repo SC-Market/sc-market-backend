@@ -1,0 +1,87 @@
+{
+  "_RecordName_": "CommunicationConfig.Human_DF_Taunt",
+  "_RecordId_": "496f2a23-93e1-4cb2-90bf-0d39aa5f9828",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "CommunicationConfig",
+    "name": "Human_DF_Taunt",
+    "communications": [
+      {
+        "_Type_": "CommunicationEntry",
+        "name": "file://./../../../../../../libs/foundry/records/communicationname/dogfight/taunts/df_taunting.json",
+        "channelName": "file://./../../../../../../libs/foundry/records/communicationchannelname/globalgroup.json",
+        "method": "RandomSequence",
+        "forceAnimation": false,
+        "variations": [
+          {
+            "_Type_": "CommunicationVariation",
+            "animationFragmentId": "dx_dogfighting",
+            "animationFragmentTags": "dxg__project:dx_s42+dxg__subject:dx_CommSilence+dxg__verb:dx_Chatter+dxg__from:dx_FromEnemy+dxg__actor:dx_aEnemy+dxg__alertness_state:dx_inCombat",
+            "soundName": "",
+            "overrideMinSilence": -1.0,
+            "overrideMinSpeakerSilence": -1.0,
+            "dialogueContext": null,
+            "playDialogueAsAnimation": false,
+            "dialogueExternalSource": null,
+            "rules": {
+              "_Type_": "CommunicationVariationRules",
+              "timeout": 0.0,
+              "lookAtTarget": false,
+              "finishAnimation": true,
+              "finishSound": true,
+              "finishVoice": true,
+              "finishTimeout": true,
+              "blockMovement": false,
+              "blockFire": false},
+            "conditions": {
+              "_Type_": "CommunicationVariationCondition",
+              "expression": "",
+              "conditionTags": {
+                "_Type_": "TagsDNF",
+                "terms": [
+                  {
+                    "_Type_": "TagsDNFTerm",
+                    "positiveTags": [
+                      {
+                        "_RecordPath_": "file://./../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+                        "_RecordName_": "Tag.3749ea08-282d-464e-ab8c-4b87c2a40696",
+                        "_RecordId_": "3749ea08-282d-464e-ab8c-4b87c2a40696"}],
+                    "negativeTags": []}]}}},
+          {
+            "_Type_": "CommunicationVariation",
+            "animationFragmentId": "dx_dogfighting",
+            "animationFragmentTags": "dxg__narrativename:dx_C04A+dxg__subject:dx_CommSilence+dxg__verb:dx_Chatter+dxg__from:dx_FromEnemy+dxg__actor:dx_aEnemy+dxg__alertness_state:dx_inCombat+dxg__project:dx_s42",
+            "soundName": "",
+            "overrideMinSilence": -1.0,
+            "overrideMinSpeakerSilence": -1.0,
+            "dialogueContext": null,
+            "playDialogueAsAnimation": false,
+            "dialogueExternalSource": null,
+            "rules": {
+              "_Type_": "CommunicationVariationRules",
+              "timeout": 0.0,
+              "lookAtTarget": false,
+              "finishAnimation": true,
+              "finishSound": true,
+              "finishVoice": true,
+              "finishTimeout": true,
+              "blockMovement": false,
+              "blockFire": false},
+            "conditions": {
+              "_Type_": "CommunicationVariationCondition",
+              "expression": "",
+              "conditionTags": {
+                "_Type_": "TagsDNF",
+                "terms": [
+                  {
+                    "_Type_": "TagsDNFTerm",
+                    "positiveTags": [
+                      {
+                        "_RecordPath_": "file://./../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+                        "_RecordName_": "Tag.7bd0d8c8-60ff-43b9-97ae-7af942f6d42b",
+                        "_RecordId_": "7bd0d8c8-60ff-43b9-97ae-7af942f6d42b"}],
+                    "negativeTags": []}]}}}],
+        "entityRetriggerDelay": 0.0,
+        "channelRetriggerDelay": 0.0,
+        "gameTags": []}],
+    "subConfigs": []}}

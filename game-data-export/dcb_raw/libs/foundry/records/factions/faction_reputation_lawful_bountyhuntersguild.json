@@ -1,0 +1,22 @@
+{
+  "_RecordName_": "Faction.Faction_Reputation_Lawful_BountyHuntersGuild",
+  "_RecordId_": "29e65591-d776-49a4-9a98-eb1fd7c51fcc",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "Faction",
+    "name": "@LOC_UNINITIALIZED",
+    "description": "@LOC_EMPTY",
+    "defaultReaction": "Neutral",
+    "alliedFactions": [],
+    "enemyFactions": [],
+    "friendlyFireBehaviorOverrides": [
+      {
+        "_Type_": "FriendlyFireReactionOverride",
+        "reactionType": "Neutral",
+        "shouldAllowFriendlyFire": false}],
+    "factionType": "Lawful",
+    "ableToArrest": false,
+    "policesLawfulTrespass": false,
+    "policesCriminality": false,
+    "noLegalRights": false,
+    "factionReputationRef": "file://./../../../../libs/foundry/records/factions/factionreputation/factionreputation_lawful_bountyhuntersguild.json"}}

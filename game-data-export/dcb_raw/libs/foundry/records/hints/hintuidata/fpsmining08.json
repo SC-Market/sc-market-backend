@@ -1,0 +1,12 @@
+{
+  "_RecordName_": "HintUIData.FPSMining08",
+  "_RecordId_": "20eb1fb5-4f9e-4bff-ab61-22e45828bcb6",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "HintUIData",
+    "TitleText": "@Hints_FPSMining_Fracturing_Title",
+    "BodyText": "@Hints_FPSMining_OnRockEnterOptimalZone",
+    "BodyTextGamePad": "@Hints_FPSMining_OnRockEnterOptimalZone",
+    "BodyTextJoystick": "@Hints_FPSMining_OnRockEnterOptimalZone",
+    "TitleImagePath": "",
+    "BodyImagePath": ""}}

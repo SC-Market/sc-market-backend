@@ -1,0 +1,143 @@
+{
+  "_RecordName_": "BuildingBlocks_Style.Shop_Traveler",
+  "_RecordId_": "eaa39c52-b4af-45fc-9194-6d0e4a40e20a",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "BuildingBlocks_Style",
+    "entries": [
+      {
+        "_Type_": "BuildingBlocks_StyleEntry",
+        "name": "Caret",
+        "conditionsList": [
+          {
+            "_Type_": "BuildingBlocks_StyleConditionList",
+            "name": "New Condition List",
+            "conditions": [
+              {
+                "_Type_": "BuildingBlocks_StyleSelectorConditionTag",
+                "tag": {
+                  "_RecordPath_": "file://./../../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+                  "_RecordName_": "Tag.b2a7f5df-9e51-46cc-9d10-a8d27dc6d508",
+                  "_RecordId_": "b2a7f5df-9e51-46cc-9d10-a8d27dc6d508"}}]}],
+        "modifiers": [
+          {
+            "_Type_": "BuildingBlocks_FieldModifierString",
+            "field": "SvgPath",
+            "value": "UI/Textures/Vector/ModularKitStyles/UIMI_C/UIMI_C_CaretFilled.svg"},
+          {
+            "_Type_": "BuildingBlocks_FieldModifierBoolean",
+            "field": "EnableColorOverlay",
+            "value": false},
+          {
+            "_Type_": "BuildingBlocks_FieldModifierColor",
+            "field": "FillColor",
+            "color": {
+              "_Type_": "BuildingBlocks_ColorStyle",
+              "color": "Accent1",
+              "alpha": 1.0}},
+          {
+            "_Type_": "BuildingBlocks_FieldModifierNumber",
+            "field": "ScaleX",
+            "value": 2.0},
+          {
+            "_Type_": "BuildingBlocks_FieldModifierNumber",
+            "field": "ScaleY",
+            "value": 2.0},
+          {
+            "_Type_": "BuildingBlocks_FieldModifierNumber",
+            "field": "AnchorX",
+            "value": 0.2},
+          {
+            "_Type_": "BuildingBlocks_FieldModifierNumber",
+            "field": "AnchorY",
+            "value": 0.6}],
+        "transitions": []}],
+    "colorStyles": [
+      {
+        "_Type_": "BuildingBlocks_ColorSolid",
+        "color": {
+          "_Type_": "SRGBA8",
+          "r": 59,
+          "g": 132,
+          "b": 173,
+          "a": 255}},
+      {
+        "_Type_": "BuildingBlocks_ColorSolid",
+        "color": {
+          "_Type_": "SRGBA8",
+          "r": 144,
+          "g": 255,
+          "b": 44,
+          "a": 255}},
+      {
+        "_Type_": "BuildingBlocks_ColorSolid",
+        "color": {
+          "_Type_": "SRGBA8",
+          "r": 255,
+          "g": 139,
+          "b": 44,
+          "a": 255}},
+      {
+        "_Type_": "BuildingBlocks_ColorSolid",
+        "color": {
+          "_Type_": "SRGBA8",
+          "r": 255,
+          "g": 44,
+          "b": 44,
+          "a": 255}},
+      {
+        "_Type_": "BuildingBlocks_ColorSolid",
+        "color": {
+          "_Type_": "SRGBA8",
+          "r": 86,
+          "g": 193,
+          "b": 201,
+          "a": 255}},
+      {
+        "_Type_": "BuildingBlocks_ColorSolid",
+        "color": {
+          "_Type_": "SRGBA8",
+          "r": 162,
+          "g": 219,
+          "b": 224,
+          "a": 255}},
+      {
+        "_Type_": "BuildingBlocks_ColorSolid",
+        "color": {
+          "_Type_": "SRGBA8",
+          "r": 243,
+          "g": 250,
+          "b": 255,
+          "a": 255}},
+      {
+        "_Type_": "BuildingBlocks_ColorSolid",
+        "color": {
+          "_Type_": "SRGBA8",
+          "r": 2,
+          "g": 154,
+          "b": 186,
+          "a": 255}},
+      {
+        "_Type_": "BuildingBlocks_ColorSolid",
+        "color": {
+          "_Type_": "SRGBA8",
+          "r": 96,
+          "g": 112,
+          "b": 128,
+          "a": 255}},
+      {
+        "_Type_": "BuildingBlocks_ColorSolid",
+        "color": {
+          "_Type_": "SRGBA8",
+          "r": 31,
+          "g": 48,
+          "b": 64,
+          "a": 255}},
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null],
+    "textFieldModifiers": []}}

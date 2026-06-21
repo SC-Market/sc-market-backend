@@ -1,0 +1,57 @@
+{
+  "_RecordName_": "EntityClassDefinition.JurisdictionRoom",
+  "_RecordId_": "ae8951cd-17c4-438a-9ef9-79600a43f6dd",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "EntityClassDefinition",
+    "Category": "Room",
+    "Icon": "Room.bmp",
+    "Invisible": false,
+    "BBoxSelection": false,
+    "defaultEditorColor": {
+      "_Type_": "RGB",
+      "r": 1.0,
+      "g": 1.0,
+      "b": 0.0},
+    "entityDensityClass": null,
+    "tags": [
+      {
+        "_RecordPath_": "file://./../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+        "_RecordName_": "Tag.00ead468-9073-485b-a6df-ca6b94053603",
+        "_RecordId_": "00ead468-9073-485b-a6df-ca6b94053603"}],
+    "StaticEntityClassData": [],
+    "Components": [
+      {
+        "_Type_": "SEntityComponentRoomParams",
+        "roomType": "Area",
+        "minimumVolumeStrength": 0.0,
+        "roomName": "@LOC_EMPTY",
+        "interiorMapSection": null,
+        "roomExtensions": [],
+        "isPhysical": true},
+      {
+        "_Type_": "SActionAreaComponentParams",
+        "triggerOnce": false,
+        "requiredTags": [],
+        "excludedTags": [],
+        "applyTagsToContainedEntities": [],
+        "enterEvent": "ActionAreaEntered",
+        "exitEvent": "ActionAreaExited",
+        "sendEventsToEntity": false,
+        "eventTriggerMask": "AIAndPlayer",
+        "areaExtensions": [],
+        "audioFilter": null},
+      {
+        "_Type_": "AudioPropagationParams",
+        "audioEnvironment": "",
+        "physicalOcclusionValueWhenClosed": 1.0,
+        "physicalEncapsulationValue": 1.0},
+      {
+        "_Type_": "SubsumptionMissionLinkComponentParams"},
+      {
+        "_Type_": "SSecurityNetworkRoomExtensionParams",
+        "settings": null},
+      {
+        "_Type_": "SJurisdictionRoomExtensionParams",
+        "jurisdiction": null,
+        "extraInfractions": []}]}}

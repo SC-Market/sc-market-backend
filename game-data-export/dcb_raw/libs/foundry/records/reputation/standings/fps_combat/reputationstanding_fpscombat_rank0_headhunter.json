@@ -1,0 +1,15 @@
+{
+  "_RecordName_": "SReputationStandingParams.ReputationStanding_FPSCombat_Rank0_HeadHunter",
+  "_RecordId_": "20c1ac22-fbcc-4e77-8d4d-704fb5a1c973",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "SReputationStandingParams",
+    "name": "FPSCombat_Rank0_HeadHunter",
+    "description": "desc",
+    "displayName": "@RepStanding_Rank0",
+    "perkDescription": "@blank_space",
+    "icon": "UI/Textures/Vector/MobiGlas/App_ReputationManager/icon_reputationrank_assassination_2.svg",
+    "minReputation": 0,
+    "driftReputation": 0,
+    "driftTimeHours": 24.0,
+    "gated": true}}

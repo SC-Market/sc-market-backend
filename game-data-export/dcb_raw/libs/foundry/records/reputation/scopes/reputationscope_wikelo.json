@@ -1,0 +1,18 @@
+{
+  "_RecordName_": "SReputationScopeParams.ReputationScope_Wikelo",
+  "_RecordId_": "041cce33-d883-4d0b-8ae6-2f4928f2e590",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "SReputationScopeParams",
+    "scopeName": "Wikelo",
+    "displayName": "@RepScope_Barter_Name",
+    "description": "@LOC_PLACEHOLDER",
+    "icon": "",
+    "standingMap": {
+      "_Type_": "SReputationStandingMapParams",
+      "reputationCeiling": 1000,
+      "initialReputation": 0,
+      "standings": [
+        "file://./../../../../../libs/foundry/records/reputation/standings/affinity/reputationstanding_wikelo_002.json",
+        "file://./../../../../../libs/foundry/records/reputation/standings/affinity/reputationstanding_wikelo_001.json",
+        "file://./../../../../../libs/foundry/records/reputation/standings/affinity/reputationstanding_wikelo_000.json"]}}}

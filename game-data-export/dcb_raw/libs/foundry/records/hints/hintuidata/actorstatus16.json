@@ -1,0 +1,12 @@
+{
+  "_RecordName_": "HintUIData.ActorStatus16",
+  "_RecordId_": "9d57fce1-4a1f-44e8-be6b-e014bbb6ec5c",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "HintUIData",
+    "TitleText": "@Hints_ActorStatusTemperature_Title",
+    "BodyText": "@Hints_ActorStatusTemperatureDeath",
+    "BodyTextGamePad": "@Hints_ActorStatusTemperatureDeath",
+    "BodyTextJoystick": "@Hints_ActorStatusTemperatureDeath",
+    "TitleImagePath": "",
+    "BodyImagePath": ""}}

@@ -1,0 +1,11 @@
+{
+  "_RecordName_": "CommunicationConfig.MC_InterSec_DeaconTobin",
+  "_RecordId_": "5a16cdc1-9def-4b27-8f5f-192e5645ff55",
+  "_RecordTag_": "SocialAI",
+  "_RecordValue_": {
+    "_Type_": "CommunicationConfig",
+    "name": "MC_InterSec_DeaconTobin",
+    "communications": [],
+    "subConfigs": [
+      "file://./../../../../../../libs/foundry/records/communicationconfig/communicationformissions/bespokeevents/mc_prenyx.json",
+      "file://./../../../../../../libs/foundry/records/communicationconfig/communicationformissions/mc_tsg.json"]}}

@@ -1,0 +1,12 @@
+{
+  "_RecordName_": "InnerThought_Anim.PITAnim",
+  "_RecordId_": "5316fd6b-4fed-47b5-9cf3-ab23b476da61",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "InnerThought_Anim",
+    "type": {
+      "_Type_": "InnerThought_AnimBase",
+      "glyphStagger": 0.0,
+      "length": 0.0001,
+      "randomStagger": false,
+      "interpolationMode": "Linear"}}}

@@ -1,0 +1,18 @@
+{
+  "_RecordName_": "MissionScenario.FFFinale_Scenario",
+  "_RecordId_": "883e1fab-bab0-48d9-9877-c33de34f4286",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "MissionScenario",
+    "name": "CFP vs HH Mission Scenario",
+    "description": "Start this scenario to activate the journal tracker for the CFP vs HH event.  This must remain active for the entire event!",
+    "variables": [],
+    "cycles": [],
+    "schedule": {
+      "_Type_": "MissionScenarioSchedule",
+      "enabled": false,
+      "start_constraint": null,
+      "end_constraint": null,
+      "recurrence": null},
+    "auto_create": true,
+    "track_progress": true}}

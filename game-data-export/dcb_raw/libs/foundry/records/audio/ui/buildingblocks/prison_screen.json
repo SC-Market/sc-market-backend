@@ -1,0 +1,225 @@
+{
+  "_RecordName_": "UIAudioDefinition.prison_screen",
+  "_RecordId_": "92b70797-9d27-4bc7-844e-f360c880a858",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "UIAudioDefinition",
+    "events": [
+      {
+        "_Type_": "UIAudioEvent",
+        "tag": {
+          "_RecordPath_": "file://./../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+          "_RecordName_": "Tag.9e3c4f32-90f7-45e2-a0fb-424357c14bc5",
+          "_RecordId_": "9e3c4f32-90f7-45e2-a0fb-424357c14bc5"},
+        "audioTrigger": {
+          "_Type_": "GlobalResourceAudio",
+          "audioTrigger": ""}},
+      {
+        "_Type_": "UIAudioEvent",
+        "tag": {
+          "_RecordPath_": "file://./../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+          "_RecordName_": "Tag.c9f9a7a5-b990-4580-9373-d269e90675aa",
+          "_RecordId_": "c9f9a7a5-b990-4580-9373-d269e90675aa"},
+        "audioTrigger": {
+          "_Type_": "GlobalResourceAudio",
+          "audioTrigger": ""}},
+      {
+        "_Type_": "UIAudioEvent",
+        "tag": {
+          "_RecordPath_": "file://./../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+          "_RecordName_": "Tag.ab28dfa6-967c-4e9e-b347-e54a68970dbd",
+          "_RecordId_": "ab28dfa6-967c-4e9e-b347-e54a68970dbd"},
+        "audioTrigger": {
+          "_Type_": "GlobalResourceAudio",
+          "audioTrigger": "Play_UI_MCCS_Prison_Screen_Button_Down"}},
+      {
+        "_Type_": "UIAudioEvent",
+        "tag": {
+          "_RecordPath_": "file://./../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+          "_RecordName_": "Tag.7a80f99b-ed43-4ed1-8b75-4c71fef13fb1",
+          "_RecordId_": "7a80f99b-ed43-4ed1-8b75-4c71fef13fb1"},
+        "audioTrigger": {
+          "_Type_": "GlobalResourceAudio",
+          "audioTrigger": "Play_UI_MCCS_Prison_Screen_Button_Up"}},
+      {
+        "_Type_": "UIAudioEvent",
+        "tag": {
+          "_RecordPath_": "file://./../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+          "_RecordName_": "Tag.373b8356-d62e-4cf3-922a-9ae3121f465c",
+          "_RecordId_": "373b8356-d62e-4cf3-922a-9ae3121f465c"},
+        "audioTrigger": {
+          "_Type_": "GlobalResourceAudio",
+          "audioTrigger": "Play_UI_MCCS_Prison_Screen_Roll_In"}},
+      {
+        "_Type_": "UIAudioEvent",
+        "tag": {
+          "_RecordPath_": "file://./../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+          "_RecordName_": "Tag.beaa0bfe-9c17-44bc-b9a5-72b51ad09ef0",
+          "_RecordId_": "beaa0bfe-9c17-44bc-b9a5-72b51ad09ef0"},
+        "audioTrigger": {
+          "_Type_": "GlobalResourceAudio",
+          "audioTrigger": ""}},
+      {
+        "_Type_": "UIAudioEvent",
+        "tag": {
+          "_RecordPath_": "file://./../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+          "_RecordName_": "Tag.e70c3aae-5428-4c21-ba27-dd4daf1bf416",
+          "_RecordId_": "e70c3aae-5428-4c21-ba27-dd4daf1bf416"},
+        "audioTrigger": {
+          "_Type_": "GlobalResourceAudio",
+          "audioTrigger": ""}},
+      {
+        "_Type_": "UIAudioEvent",
+        "tag": {
+          "_RecordPath_": "file://./../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+          "_RecordName_": "Tag.736500da-30ce-4f93-9718-f13e77c06ecd",
+          "_RecordId_": "736500da-30ce-4f93-9718-f13e77c06ecd"},
+        "audioTrigger": {
+          "_Type_": "GlobalResourceAudio",
+          "audioTrigger": ""}},
+      {
+        "_Type_": "UIAudioEvent",
+        "tag": {
+          "_RecordPath_": "file://./../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+          "_RecordName_": "Tag.6ae02293-fa21-4e3d-880f-6942b63f383e",
+          "_RecordId_": "6ae02293-fa21-4e3d-880f-6942b63f383e"},
+        "audioTrigger": {
+          "_Type_": "GlobalResourceAudio",
+          "audioTrigger": ""}},
+      {
+        "_Type_": "UIAudioEvent",
+        "tag": {
+          "_RecordPath_": "file://./../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+          "_RecordName_": "Tag.80a9a0a7-2ec1-48ae-b651-2088d7a98b84",
+          "_RecordId_": "80a9a0a7-2ec1-48ae-b651-2088d7a98b84"},
+        "audioTrigger": {
+          "_Type_": "GlobalResourceAudio",
+          "audioTrigger": ""}},
+      {
+        "_Type_": "UIAudioEvent",
+        "tag": {
+          "_RecordPath_": "file://./../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+          "_RecordName_": "Tag.fbad81f3-fe7b-4bef-8941-f270e6165974",
+          "_RecordId_": "fbad81f3-fe7b-4bef-8941-f270e6165974"},
+        "audioTrigger": {
+          "_Type_": "GlobalResourceAudio",
+          "audioTrigger": "Play_UI_MCCS_Prison_Screen_Start"}},
+      {
+        "_Type_": "UIAudioEvent",
+        "tag": {
+          "_RecordPath_": "file://./../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+          "_RecordName_": "Tag.e8380446-15ad-4c48-8d73-8d0fdf24ddd7",
+          "_RecordId_": "e8380446-15ad-4c48-8d73-8d0fdf24ddd7"},
+        "audioTrigger": {
+          "_Type_": "GlobalResourceAudio",
+          "audioTrigger": "Play_UI_MCCS_Prison_Screen_Exit"}},
+      {
+        "_Type_": "UIAudioEvent",
+        "tag": {
+          "_RecordPath_": "file://./../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+          "_RecordName_": "Tag.b7c11980-e641-4075-97f1-16c8249158d6",
+          "_RecordId_": "b7c11980-e641-4075-97f1-16c8249158d6"},
+        "audioTrigger": {
+          "_Type_": "GlobalResourceAudio",
+          "audioTrigger": "Play_UI_MCCS_Prison_Screen_Sentence_Finished"}},
+      {
+        "_Type_": "UIAudioEvent",
+        "tag": {
+          "_RecordPath_": "file://./../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+          "_RecordName_": "Tag.5defdb48-77c1-47c6-b260-3eb77c4bc20c",
+          "_RecordId_": "5defdb48-77c1-47c6-b260-3eb77c4bc20c"},
+        "audioTrigger": {
+          "_Type_": "GlobalResourceAudio",
+          "audioTrigger": "Play_UI_MCCS_Prison_Screen_Notification_Positive"}},
+      {
+        "_Type_": "UIAudioEvent",
+        "tag": {
+          "_RecordPath_": "file://./../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+          "_RecordName_": "Tag.20b1664e-f7f9-4329-8686-2a0423fe974f",
+          "_RecordId_": "20b1664e-f7f9-4329-8686-2a0423fe974f"},
+        "audioTrigger": {
+          "_Type_": "GlobalResourceAudio",
+          "audioTrigger": "Play_UI_MCCS_Prison_Screen_Notification_Negative"}},
+      {
+        "_Type_": "UIAudioEvent",
+        "tag": {
+          "_RecordPath_": "file://./../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+          "_RecordName_": "Tag.a460eac2-b171-4a92-a99e-1e5f96230289",
+          "_RecordId_": "a460eac2-b171-4a92-a99e-1e5f96230289"},
+        "audioTrigger": {
+          "_Type_": "GlobalResourceAudio",
+          "audioTrigger": "Play_UI_MCCS_Prison_Screen_Notification_Positive"}},
+      {
+        "_Type_": "UIAudioEvent",
+        "tag": {
+          "_RecordPath_": "file://./../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+          "_RecordName_": "Tag.b36af2d4-95d2-48b4-b5f3-dfb041ed2ba5",
+          "_RecordId_": "b36af2d4-95d2-48b4-b5f3-dfb041ed2ba5"},
+        "audioTrigger": {
+          "_Type_": "GlobalResourceAudio",
+          "audioTrigger": "Play_UI_MCCS_Prison_Screen_Notification_Positive"}},
+      {
+        "_Type_": "UIAudioEvent",
+        "tag": {
+          "_RecordPath_": "file://./../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+          "_RecordName_": "Tag.0ab6e9dd-4464-44d6-a79a-a01db8b18bd6",
+          "_RecordId_": "0ab6e9dd-4464-44d6-a79a-a01db8b18bd6"},
+        "audioTrigger": {
+          "_Type_": "GlobalResourceAudio",
+          "audioTrigger": "Play_UI_MCCS_Prison_Screen_Notification_Negative"}},
+      {
+        "_Type_": "UIAudioEvent",
+        "tag": {
+          "_RecordPath_": "file://./../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+          "_RecordName_": "Tag.3655bbe4-5000-4b27-bf8a-b1a819774984",
+          "_RecordId_": "3655bbe4-5000-4b27-bf8a-b1a819774984"},
+        "audioTrigger": {
+          "_Type_": "GlobalResourceAudio",
+          "audioTrigger": "Play_UI_MCCS_Prison_Screen_Oxygen_Dispense_Loop"}},
+      {
+        "_Type_": "UIAudioEvent",
+        "tag": {
+          "_RecordPath_": "file://./../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+          "_RecordName_": "Tag.bade1d49-0dec-48e4-8b20-3c58bd3d817b",
+          "_RecordId_": "bade1d49-0dec-48e4-8b20-3c58bd3d817b"},
+        "audioTrigger": {
+          "_Type_": "GlobalResourceAudio",
+          "audioTrigger": "Stop_UI_MCCS_Prison_Screen_Oxygen_Dispense_Loop"}},
+      {
+        "_Type_": "UIAudioEvent",
+        "tag": {
+          "_RecordPath_": "file://./../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+          "_RecordName_": "Tag.56714487-11b5-494d-bba9-a3b26aeb24b5",
+          "_RecordId_": "56714487-11b5-494d-bba9-a3b26aeb24b5"},
+        "audioTrigger": {
+          "_Type_": "GlobalResourceAudio",
+          "audioTrigger": "Play_UI_MCCS_Prison_Screen_Notification_Positive"}},
+      {
+        "_Type_": "UIAudioEvent",
+        "tag": {
+          "_RecordPath_": "file://./../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+          "_RecordName_": "Tag.567ad13e-487d-4390-9c6e-508bbd1b1a1d",
+          "_RecordId_": "567ad13e-487d-4390-9c6e-508bbd1b1a1d"},
+        "audioTrigger": {
+          "_Type_": "GlobalResourceAudio",
+          "audioTrigger": "Play_UI_MCCS_Prison_Screen_Notification_Positive"}},
+      {
+        "_Type_": "UIAudioEvent",
+        "tag": {
+          "_RecordPath_": "file://./../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+          "_RecordName_": "Tag.5d9013af-1a41-4505-a00d-fe3233f84042",
+          "_RecordId_": "5d9013af-1a41-4505-a00d-fe3233f84042"},
+        "audioTrigger": {
+          "_Type_": "GlobalResourceAudio",
+          "audioTrigger": "Play_UI_MCCS_Prison_Screen_Notification_Negative"}}],
+    "parameters": [
+      {
+        "_Type_": "UIAudioParameter",
+        "tag": {
+          "_RecordPath_": "file://./../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+          "_RecordName_": "Tag.2a92a9d6-9515-43b5-a90b-d138d34ef2cd",
+          "_RecordId_": "2a92a9d6-9515-43b5-a90b-d138d34ef2cd"},
+        "rtpc": {
+          "_Type_": "AudioRtpc",
+          "rtpc": "UI_Prison_Screen_Oxygen_User_Capacity"}}],
+    "dialogueEvents": []}}

@@ -1,0 +1,10 @@
+{
+  "_RecordName_": "CraftingGameplayPropertyDef.GPP_Weapon_HullScraping_Speed",
+  "_RecordId_": "30f1ce44-3b3c-4610-a20d-1815a46b69ec",
+  "_RecordTag_": "CGP2",
+  "_RecordValue_": {
+    "_Type_": "CraftingGameplayPropertyDef",
+    "propertyName": "@StatName_GPP_HullScraping_Speed",
+    "displayTransformation": null,
+    "unitFormat": "@LOC_EMPTY",
+    "nameOverrides": []}}

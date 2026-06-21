@@ -1,0 +1,21 @@
+{
+  "_RecordName_": "DialogueContext.DXSH_MCCV_OSYS_AC_Wingman_Vixen_Reaction_Incoming_Enemies_01",
+  "_RecordId_": "603b5d21-4960-4282-8b11-c3822395e08f",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "DialogueContext",
+    "speaker": "file://./../../../../../libs/foundry/records/character/arenacommander/ai/character.vixen.json",
+    "localizedSubtitleText": "@LOC_UNINITIALIZED",
+    "unlocalizedSubtitleText": "@LOC_UNINITIALIZED",
+    "subtitleShowDelay": 0.0,
+    "subtitleDisplayDurationOverride": 0.0,
+    "tempText": "",
+    "audioTrigger": {
+      "_Type_": "GlobalResourceAudio",
+      "audioTrigger": ""},
+    "femaleAudioTrigger": {
+      "_Type_": "GlobalResourceAudio",
+      "audioTrigger": ""},
+    "forceSubtitles": false,
+    "contents": [],
+    "tags": []}}

@@ -1,0 +1,18 @@
+{
+  "_RecordName_": "GasParams.Hydrogen",
+  "_RecordId_": "2c1f9847-e6bc-4890-9786-e67ce43394fb",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "GasParams",
+    "debugColor": {
+      "_Type_": "RGB",
+      "r": 1.0,
+      "g": 0.0,
+      "b": 1.0},
+    "chemicalSymbol": "@ui_chemsymbol_Hydrogen",
+    "fogDensity": 0.0,
+    "fogColor": {
+      "_Type_": "RGB",
+      "r": 0.0,
+      "g": 0.0,
+      "b": 0.0}}}

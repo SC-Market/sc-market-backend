@@ -1,0 +1,40 @@
+{
+  "_RecordName_": "CrewManifest.PU_Human_HurstonSecurity_Light_wTurret",
+  "_RecordId_": "f2e74208-f4e8-48a8-bde9-341c142ca951",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "CrewManifest",
+    "descriptionTags": {
+      "_Type_": "TagList",
+      "tags": [
+        {
+          "_RecordPath_": "file://./../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+          "_RecordName_": "Tag.10e6b387-5548-4253-9c71-107f27bb2803",
+          "_RecordId_": "10e6b387-5548-4253-9c71-107f27bb2803"}]},
+    "crew": [
+      {
+        "_Type_": "CrewData",
+        "entityClassDefinition": "file://./../../../../../../libs/foundry/records/actor/actors/pu_pilots/human/crusadersecurity/pu_pilots-human-hurstonsecurity-pilot_light.json",
+        "outfitTags": [],
+        "tags": [
+          {
+            "_RecordPath_": "file://./../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+            "_RecordName_": "Tag.275db83d-5b41-4ebc-bcd7-d325220af86a",
+            "_RecordId_": "275db83d-5b41-4ebc-bcd7-d325220af86a"}],
+        "dnfTags": {
+          "_Type_": "TagsDNF",
+          "terms": []},
+        "archetype": null},
+      {
+        "_Type_": "CrewData",
+        "entityClassDefinition": "file://./../../../../../../libs/foundry/records/actor/actors/pu_pilots/human/crusadersecurity/pu_pilots-human-hurstonsecurity-gunner_light.json",
+        "outfitTags": [],
+        "tags": [
+          {
+            "_RecordPath_": "file://./../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+            "_RecordName_": "Tag.61d439f9-0bef-43e0-8ecc-fe96c9793d66",
+            "_RecordId_": "61d439f9-0bef-43e0-8ecc-fe96c9793d66"}],
+        "dnfTags": {
+          "_Type_": "TagsDNF",
+          "terms": []},
+        "archetype": null}]}}

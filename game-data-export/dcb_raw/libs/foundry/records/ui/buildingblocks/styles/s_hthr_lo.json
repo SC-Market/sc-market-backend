@@ -1,0 +1,188 @@
+{
+  "_RecordName_": "BuildingBlocks_Style.S_HTHR_LO",
+  "_RecordId_": "47572567-deae-41c9-802a-1652ea73ac8b",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "BuildingBlocks_Style",
+    "entries": [
+      {
+        "_Type_": "BuildingBlocks_StyleEntry",
+        "name": "Caret",
+        "conditionsList": [
+          {
+            "_Type_": "BuildingBlocks_StyleConditionList",
+            "name": "New Condition List",
+            "conditions": [
+              {
+                "_Type_": "BuildingBlocks_StyleSelectorConditionTag",
+                "tag": {
+                  "_RecordPath_": "file://./../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+                  "_RecordName_": "Tag.b2a7f5df-9e51-46cc-9d10-a8d27dc6d508",
+                  "_RecordId_": "b2a7f5df-9e51-46cc-9d10-a8d27dc6d508"}}]}],
+        "modifiers": [
+          {
+            "_Type_": "BuildingBlocks_FieldModifierString",
+            "field": "SvgPath",
+            "value": "UI/Textures/Vector/ModularKitStyles/UILO_C/CaretFilled.svg"},
+          {
+            "_Type_": "BuildingBlocks_FieldModifierBoolean",
+            "field": "EnableColorOverlay",
+            "value": true},
+          {
+            "_Type_": "BuildingBlocks_FieldModifierColor",
+            "field": "FillColor",
+            "color": {
+              "_Type_": "BuildingBlocks_ColorStyle",
+              "color": "Accent1",
+              "alpha": 1.0}},
+          {
+            "_Type_": "BuildingBlocks_FieldModifierNumber",
+            "field": "ScaleX",
+            "value": 1.5},
+          {
+            "_Type_": "BuildingBlocks_FieldModifierNumber",
+            "field": "ScaleY",
+            "value": 1.0},
+          {
+            "_Type_": "BuildingBlocks_FieldModifierNumber",
+            "field": "AnchorX",
+            "value": 0.3}],
+        "transitions": []}],
+    "colorStyles": [
+      {
+        "_Type_": "BuildingBlocks_ColorSolid",
+        "color": {
+          "_Type_": "SRGBA8",
+          "r": 186,
+          "g": 186,
+          "b": 186,
+          "a": 255}},
+      {
+        "_Type_": "BuildingBlocks_ColorSolid",
+        "color": {
+          "_Type_": "SRGBA8",
+          "r": 93,
+          "g": 187,
+          "b": 88,
+          "a": 255}},
+      {
+        "_Type_": "BuildingBlocks_ColorSolid",
+        "color": {
+          "_Type_": "SRGBA8",
+          "r": 243,
+          "g": 202,
+          "b": 34,
+          "a": 255}},
+      {
+        "_Type_": "BuildingBlocks_ColorSolid",
+        "color": {
+          "_Type_": "SRGBA8",
+          "r": 234,
+          "g": 20,
+          "b": 20,
+          "a": 255}},
+      {
+        "_Type_": "BuildingBlocks_ColorSolid",
+        "color": {
+          "_Type_": "SRGBA8",
+          "r": 204,
+          "g": 204,
+          "b": 204,
+          "a": 255}},
+      {
+        "_Type_": "BuildingBlocks_ColorSolid",
+        "color": {
+          "_Type_": "SRGBA8",
+          "r": 131,
+          "g": 131,
+          "b": 131,
+          "a": 255}},
+      {
+        "_Type_": "BuildingBlocks_ColorSolid",
+        "color": {
+          "_Type_": "SRGBA8",
+          "r": 251,
+          "g": 251,
+          "b": 251,
+          "a": 255}},
+      {
+        "_Type_": "BuildingBlocks_ColorSolid",
+        "color": {
+          "_Type_": "SRGBA8",
+          "r": 233,
+          "g": 233,
+          "b": 233,
+          "a": 255}},
+      {
+        "_Type_": "BuildingBlocks_ColorSolid",
+        "color": {
+          "_Type_": "SRGBA8",
+          "r": 111,
+          "g": 111,
+          "b": 111,
+          "a": 255}},
+      {
+        "_Type_": "BuildingBlocks_ColorSolid",
+        "color": {
+          "_Type_": "SRGBA8",
+          "r": 15,
+          "g": 15,
+          "b": 15,
+          "a": 255}},
+      {
+        "_Type_": "BuildingBlocks_ColorSolid",
+        "color": {
+          "_Type_": "SRGBA8",
+          "r": 225,
+          "g": 225,
+          "b": 225,
+          "a": 255}},
+      {
+        "_Type_": "BuildingBlocks_ColorSolid",
+        "color": {
+          "_Type_": "SRGBA8",
+          "r": 90,
+          "g": 176,
+          "b": 255,
+          "a": 255}},
+      {
+        "_Type_": "BuildingBlocks_ColorSolid",
+        "color": {
+          "_Type_": "SRGBA8",
+          "r": 4,
+          "g": 184,
+          "b": 15,
+          "a": 255}},
+      {
+        "_Type_": "BuildingBlocks_ColorSolid",
+        "color": {
+          "_Type_": "SRGBA8",
+          "r": 255,
+          "g": 115,
+          "b": 0,
+          "a": 255}},
+      {
+        "_Type_": "BuildingBlocks_ColorSolid",
+        "color": {
+          "_Type_": "SRGBA8",
+          "r": 178,
+          "g": 0,
+          "b": 0,
+          "a": 255}},
+      {
+        "_Type_": "BuildingBlocks_ColorSolid",
+        "color": {
+          "_Type_": "SRGBA8",
+          "r": 225,
+          "g": 225,
+          "b": 225,
+          "a": 255}},
+      {
+        "_Type_": "BuildingBlocks_ColorSolid",
+        "color": {
+          "_Type_": "SRGBA8",
+          "r": 243,
+          "g": 220,
+          "b": 110,
+          "a": 255}}],
+    "textFieldModifiers": []}}

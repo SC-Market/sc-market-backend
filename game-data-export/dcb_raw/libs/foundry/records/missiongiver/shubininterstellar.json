@@ -1,0 +1,19 @@
+{
+  "_RecordName_": "MissionGiver.ShubinInterstellar",
+  "_RecordId_": "05e3f9ed-c38d-465b-be6d-8e2c5ccbcbfa",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "MissionGiver",
+    "entityClass": "file://./../../../../libs/foundry/records/factions/legacy/shubininterstellar.json",
+    "reputation": "file://./../../../../libs/foundry/records/factions/factionreputation/factionreputation_lawful_shubininterstellar.json",
+    "displayName": "@shubin_from",
+    "description": "@LOC_UNINITIALIZED",
+    "headquarters": "@LOC_UNINITIALIZED",
+    "invitationTimeout": 5.0,
+    "visitTimeout": 20.0,
+    "shortCooldown": 10.0,
+    "mediumCooldown": 20.0,
+    "longCooldown": 30.0,
+    "Allies": [],
+    "Enemies": [],
+    "propertiesBB": []}}

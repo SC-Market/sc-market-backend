@@ -1,0 +1,17 @@
+{
+  "_RecordName_": "MineableElement.Laranite_Raw",
+  "_RecordId_": "8375a8d8-1627-4d35-ae91-6f39b373c3ad",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "MineableElement",
+    "resourceType": {
+      "_RecordPath_": "file://./../../../../../libs/foundry/records/resourcetypedatabase/resourcetypedatabase.json",
+      "_RecordName_": "ResourceType.Raw_Laranite",
+      "_RecordId_": "7b7178c1-b0f0-4760-89de-9a3e3851e7a8"},
+    "elementInstability": 400.0,
+    "elementResistance": 0.5,
+    "elementOptimalWindowMidpoint": 0.4,
+    "elementOptimalWindowMidpointRandomness": 0.1,
+    "elementOptimalWindowThinness": 0.5,
+    "elementExplosionMultiplier": 200.0,
+    "elementClusterFactor": 0.4}}

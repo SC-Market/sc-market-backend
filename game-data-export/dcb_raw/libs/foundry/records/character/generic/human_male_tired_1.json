@@ -1,0 +1,24 @@
+{
+  "_RecordName_": "Character.Human_Male_Tired_1",
+  "_RecordId_": "4e05d09b-e464-4b77-9b68-083434e4757f",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "Character",
+    "characterPersonalData": {
+      "_Type_": "CharacterPersonalData",
+      "title": "",
+      "firstName": "",
+      "nickName": "",
+      "lastName": "",
+      "randomNameParams": null,
+      "affiliation": "",
+      "details": ""},
+    "audioSwitchStateName": "",
+    "animationRemapAlias": "Human_Male_Tired_1",
+    "characterMannequinTag": "",
+    "styleMannequinTag": "tired",
+    "combatStyle": "NotSet",
+    "gender": "NotSet",
+    "characterSpeedOverrides": [],
+    "nicknameChance": 0.0,
+    "name": ""}}

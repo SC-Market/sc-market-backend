@@ -1,0 +1,70 @@
+{
+  "_RecordName_": "SBezierCurveRecord.Bounce_Ease_In",
+  "_RecordId_": "81e5d1e8-346d-4d6d-bf00-2f5df8f532a2",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "SBezierCurveRecord",
+    "curve": {
+      "_Type_": "BezierCurve",
+      "points": [
+        {
+          "_Type_": "Vec2",
+          "x": 0.0,
+          "y": 0.0},
+        {
+          "_Type_": "Vec2",
+          "x": 0.0,
+          "y": 0.0},
+        {
+          "_Type_": "Vec2",
+          "x": 0.04,
+          "y": 0.06},
+        {
+          "_Type_": "Vec2",
+          "x": 0.08,
+          "y": 0.0},
+        {
+          "_Type_": "Vec2",
+          "x": 0.08,
+          "y": 0.0},
+        {
+          "_Type_": "Vec2",
+          "x": 0.18,
+          "y": 0.15},
+        {
+          "_Type_": "Vec2",
+          "x": 0.26,
+          "y": 0.0},
+        {
+          "_Type_": "Vec2",
+          "x": 0.26,
+          "y": 0.0},
+        {
+          "_Type_": "Vec2",
+          "x": 0.46,
+          "y": 0.5},
+        {
+          "_Type_": "Vec2",
+          "x": 0.64,
+          "y": 0.0},
+        {
+          "_Type_": "Vec2",
+          "x": 0.64,
+          "y": 0.0},
+        {
+          "_Type_": "Vec2",
+          "x": 0.88,
+          "y": 0.89},
+        {
+          "_Type_": "Vec2",
+          "x": 1.0,
+          "y": 1.0},
+        {
+          "_Type_": "Vec2",
+          "x": 1.0,
+          "y": 1.0},
+        {
+          "_Type_": "Vec2",
+          "x": 1.0,
+          "y": 1.0}],
+      "useLUT": false}}}

@@ -1,0 +1,97 @@
+{
+  "_RecordName_": "BuildingBlocks_LanguageSpecificFontReplacement.chinese__simplified_",
+  "_RecordId_": "0e7b92d6-4e7a-428c-b4b9-483f3db8e1f2",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "BuildingBlocks_LanguageSpecificFontReplacement",
+    "fontReplacementList": [
+      {
+        "_Type_": "BuildingBlocks_FontReplacementPair",
+        "englishFont": "file://./../../../../../../../libs/foundry/records/ui/buildingblocks/fontstyles/titilliumweb-regular.json",
+        "replacementFontName": "$NotoSansSimplifiedChineseThin",
+        "replacementFontPaintFile": "UI/fonts/Install/NotoSansSC-Thin.slug"},
+      {
+        "_Type_": "BuildingBlocks_FontReplacementPair",
+        "englishFont": "file://./../../../../../../../libs/foundry/records/ui/buildingblocks/fontstyles/blenderpro-thin.json",
+        "replacementFontName": "$NotoSansSimplifiedChineseThin",
+        "replacementFontPaintFile": "UI/fonts/Install/NotoSansSC-Thin.slug"},
+      {
+        "_Type_": "BuildingBlocks_FontReplacementPair",
+        "englishFont": "file://./../../../../../../../libs/foundry/records/ui/buildingblocks/fontstyles/blenderpro-medium.json",
+        "replacementFontName": "$NotoSansSimplifiedChineseThin",
+        "replacementFontPaintFile": "UI/fonts/Install/NotoSansSC-Thin.slug"},
+      {
+        "_Type_": "BuildingBlocks_FontReplacementPair",
+        "englishFont": "file://./../../../../../../../libs/foundry/records/ui/buildingblocks/fontstyles/aldrich.json",
+        "replacementFontName": "$NotoSansSimplifiedChineseThin",
+        "replacementFontPaintFile": "UI/fonts/Install/NotoSansSC-Thin.slug"},
+      {
+        "_Type_": "BuildingBlocks_FontReplacementPair",
+        "englishFont": "file://./../../../../../../../libs/foundry/records/ui/buildingblocks/fontstyles/blenderpro-book.json",
+        "replacementFontName": "$NotoSansSimplifiedChineseThin",
+        "replacementFontPaintFile": "UI/fonts/Install/NotoSansSC-Thin.slug"},
+      {
+        "_Type_": "BuildingBlocks_FontReplacementPair",
+        "englishFont": "file://./../../../../../../../libs/foundry/records/ui/buildingblocks/fontstyles/blenderpro-bold.json",
+        "replacementFontName": "$NotoSansSimplifiedChineseThin",
+        "replacementFontPaintFile": "UI/fonts/Install/NotoSansSC-Thin.slug"},
+      {
+        "_Type_": "BuildingBlocks_FontReplacementPair",
+        "englishFont": "file://./../../../../../../../libs/foundry/records/ui/buildingblocks/fontstyles/outfit-regular.json",
+        "replacementFontName": "$NotoSansSimplifiedChineseThin",
+        "replacementFontPaintFile": "UI/fonts/Install/NotoSansSC-Thin.slug"},
+      {
+        "_Type_": "BuildingBlocks_FontReplacementPair",
+        "englishFont": "file://./../../../../../../../libs/foundry/records/ui/buildingblocks/fontstyles/outfit-bold.json",
+        "replacementFontName": "$NotoSansSimplifiedChineseThin",
+        "replacementFontPaintFile": "UI/fonts/Install/NotoSansSC-Thin.slug"},
+      {
+        "_Type_": "BuildingBlocks_FontReplacementPair",
+        "englishFont": "file://./../../../../../../../libs/foundry/records/ui/buildingblocks/fontstyles/orbitron-medium.json",
+        "replacementFontName": "$NotoSansSimplifiedChineseThin",
+        "replacementFontPaintFile": "UI/fonts/Install/NotoSansSC-Thin.slug"},
+      {
+        "_Type_": "BuildingBlocks_FontReplacementPair",
+        "englishFont": "file://./../../../../../../../libs/foundry/records/ui/buildingblocks/fontstyles/orbitron-light.json",
+        "replacementFontName": "$NotoSansSimplifiedChineseThin",
+        "replacementFontPaintFile": "UI/fonts/Install/NotoSansSC-Thin.slug"},
+      {
+        "_Type_": "BuildingBlocks_FontReplacementPair",
+        "englishFont": "file://./../../../../../../../libs/foundry/records/ui/buildingblocks/fontstyles/opensans.json",
+        "replacementFontName": "$NotoSansSimplifiedChineseThin",
+        "replacementFontPaintFile": "UI/fonts/Install/NotoSansSC-Thin.slug"},
+      {
+        "_Type_": "BuildingBlocks_FontReplacementPair",
+        "englishFont": "file://./../../../../../../../libs/foundry/records/ui/buildingblocks/fontstyles/barlowcondensed-bold.json",
+        "replacementFontName": "$NotoSansSimplifiedChineseThin",
+        "replacementFontPaintFile": "UI/fonts/Install/NotoSansSC-Thin.slug"},
+      {
+        "_Type_": "BuildingBlocks_FontReplacementPair",
+        "englishFont": "file://./../../../../../../../libs/foundry/records/ui/buildingblocks/fontstyles/titilliumweb-semibold.json",
+        "replacementFontName": "$NotoSansSimplifiedChineseThin",
+        "replacementFontPaintFile": "UI/fonts/Install/NotoSansSC-Thin.slug"},
+      {
+        "_Type_": "BuildingBlocks_FontReplacementPair",
+        "englishFont": "file://./../../../../../../../libs/foundry/records/ui/buildingblocks/fontstyles/audimatmono-regular.json",
+        "replacementFontName": "$NotoSansSimplifiedChineseThin",
+        "replacementFontPaintFile": "UI/fonts/Install/NotoSansSC-Thin.slug"},
+      {
+        "_Type_": "BuildingBlocks_FontReplacementPair",
+        "englishFont": "file://./../../../../../../../libs/foundry/records/ui/buildingblocks/fontstyles/cigoptical-regular.json",
+        "replacementFontName": "$NotoSansSimplifiedChineseThin",
+        "replacementFontPaintFile": "UI/fonts/Install/NotoSansSC-Thin.slug"},
+      {
+        "_Type_": "BuildingBlocks_FontReplacementPair",
+        "englishFont": "file://./../../../../../../../libs/foundry/records/ui/buildingblocks/fontstyles/audimatmono-bold.json",
+        "replacementFontName": "$NotoSansSimplifiedChineseThin",
+        "replacementFontPaintFile": "UI/fonts/Install/NotoSansSC-Thin.slug"},
+      {
+        "_Type_": "BuildingBlocks_FontReplacementPair",
+        "englishFont": "file://./../../../../../../../libs/foundry/records/ui/buildingblocks/fontstyles/furore.json",
+        "replacementFontName": "$NotoSansSimplifiedChineseThin",
+        "replacementFontPaintFile": "UI/fonts/Install/NotoSansSC-Thin.slug"},
+      {
+        "_Type_": "BuildingBlocks_FontReplacementPair",
+        "englishFont": "file://./../../../../../../../libs/foundry/records/ui/buildingblocks/fontstyles/blenderpro-heavy.json",
+        "replacementFontName": "$NotoSansSimplifiedChineseThin",
+        "replacementFontPaintFile": "UI/fonts/Install/NotoSansSC-Thin.slug"}]}}

@@ -1,0 +1,14 @@
+{
+  "_RecordName_": "AIVisualFieldParams.DefaultFoV_PU_Human_OnSeat",
+  "_RecordId_": "0ebe4f3c-d7e0-48db-bbd5-ecce5c2bc129",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "AIVisualFieldParams",
+    "sightRange": 1000.0,
+    "sixthSenseRange": 1.5,
+    "clampDistanceForHorizontalFOV": 5.0,
+    "clampDistanceForVerticalFOV": 55.0,
+    "FOVHorizontal": 100.0,
+    "FOVVertical": 120.0,
+    "PrimaryFOVHorizontal": 70.0,
+    "PrimaryFOVVertical": 70.0}}

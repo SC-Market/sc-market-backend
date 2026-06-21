@@ -1,0 +1,28 @@
+{
+  "_RecordName_": "EntityClassDefinition.Hangar_HT_M",
+  "_RecordId_": "440e6ab5-5393-4056-9674-8860c6d6023a",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "EntityClassDefinition",
+    "Category": "Default",
+    "Icon": "Default.bmp",
+    "Invisible": false,
+    "BBoxSelection": false,
+    "defaultEditorColor": {
+      "_Type_": "RGB",
+      "r": 1.0,
+      "g": 1.0,
+      "b": 0.0},
+    "entityDensityClass": null,
+    "tags": [
+      {
+        "_RecordPath_": "file://./../../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+        "_RecordName_": "Tag.3a5b50b9-ab6a-4b53-86d8-cde4a42f21e8",
+        "_RecordId_": "3a5b50b9-ab6a-4b53-86d8-cde4a42f21e8"}],
+    "StaticEntityClassData": [],
+    "Components": [
+      {
+        "_Type_": "SObjectContainerComponentParams",
+        "objectContainer": "ObjectContainers/PU/loc/mod/common/hangar/hightech_a/hangar_medtop_001_newbab.socpak"},
+      {
+        "_Type_": "SubsumptionMissionLinkComponentParams"}]}}

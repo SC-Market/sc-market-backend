@@ -1,0 +1,52 @@
+{
+  "_RecordName_": "SLoadoutAssortment.volt_Rifle_loadoutbundle",
+  "_RecordId_": "35fb6640-fec9-4fd5-9738-d95d7b9c33e8",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "SLoadoutAssortment",
+    "Requirement": null,
+    "GroupedLoadouts": [
+      {
+        "_Type_": "SGroupedLoadouts",
+        "Group": "PrimaryWeapon",
+        "Requirement": {
+          "_Type_": "SLoadoutRequirementTags",
+          "RequiredTags": [],
+          "BannedTags": [
+            {
+              "_RecordPath_": "file://./../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+              "_RecordName_": "Tag.29413549-5eb1-4a17-85f2-8699d837003a",
+              "_RecordId_": "29413549-5eb1-4a17-85f2-8699d837003a"}]},
+        "Loadouts": [
+          {
+            "_Type_": "SItemPortLoadoutXMLParams",
+            "WearRange": {
+              "_Type_": "Range",
+              "minimum": 0.1,
+              "maximum": 0.3},
+            "DirtRange": {
+              "_Type_": "Range",
+              "minimum": 0.1,
+              "maximum": 0.3},
+            "SkipInventoryItemsOnMissionEntities": false,
+            "InventoryItems": [],
+            "loadoutPath": "Scripts/Loadouts/Character/Human/Weapon/LoadoutbundleWeaponXML/loadoutbundle_rifle/Volt_Rifle.xml"}]},
+      {
+        "_Type_": "SGroupedLoadouts",
+        "Group": "PrimaryWeapon",
+        "Requirement": {
+          "_Type_": "SLoadoutRequirementTags",
+          "RequiredTags": [
+            {
+              "_RecordPath_": "file://./../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+              "_RecordName_": "Tag.29413549-5eb1-4a17-85f2-8699d837003a",
+              "_RecordId_": "29413549-5eb1-4a17-85f2-8699d837003a"}],
+          "BannedTags": []},
+        "Loadouts": [
+          {
+            "_Type_": "SItemPortLoadoutXMLParams",
+            "WearRange": null,
+            "DirtRange": null,
+            "SkipInventoryItemsOnMissionEntities": false,
+            "InventoryItems": [],
+            "loadoutPath": "Scripts/Loadouts/Character/Human/Weapon/LoadoutbundleWeaponXML/loadoutbundle_rifle/rifle_skins/volt_rifle_energy_01_tint02.xml"}]}]}}

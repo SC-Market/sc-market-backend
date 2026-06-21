@@ -1,0 +1,15 @@
+{
+  "_RecordName_": "SReputationStandingParams.ReputationStanding_HandyMan_Rank0",
+  "_RecordId_": "17d0763a-39f1-4677-9506-6b58ae3d728e",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "SReputationStandingParams",
+    "name": "HandyMan_Rank0",
+    "description": "desc",
+    "displayName": "@RepStanding_Rank0",
+    "perkDescription": "@blank_space",
+    "icon": "",
+    "minReputation": 0,
+    "driftReputation": 0,
+    "driftTimeHours": 24.0,
+    "gated": true}}

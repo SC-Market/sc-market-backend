@@ -1,0 +1,15 @@
+{
+  "_RecordName_": "LootTable.LootTable_D_Ammo_001",
+  "_RecordId_": "2708d89b-9414-42e7-8a1e-66f7f26dc031",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "LootTable",
+    "lootArchetypes": [
+      {
+        "_Type_": "WeightedLootArchetype",
+        "archetype": "file://./../../../../../../libs/foundry/records/lootgeneration/lootarchetypes/lootarchetype_container_large_weapons_ammo_common.json",
+        "weight": 1.0,
+        "numberOfResultsConstraints": {
+          "_Type_": "NumResultsConstraints",
+          "minResults": 0,
+          "maxResults": 0}}]}}

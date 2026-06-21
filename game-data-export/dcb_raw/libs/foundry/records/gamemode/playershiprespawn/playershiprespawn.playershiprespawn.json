@@ -1,0 +1,187 @@
+{
+  "_RecordName_": "PlayerShipRespawn.PlayerShipRespawn",
+  "_RecordId_": "766d8c61-5bb8-4941-961b-8ad0e8908a42",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "PlayerShipRespawn",
+    "Ships": [
+      {
+        "_Type_": "PlayerShipRespawnShipInfo",
+        "Name": "AEGS_Avenger_Stalker",
+        "RespawnWaitTime": 120,
+        "InstantRespawnCost": 1000},
+      {
+        "_Type_": "PlayerShipRespawnShipInfo",
+        "Name": "AEGS_Avenger_Titan",
+        "RespawnWaitTime": 120,
+        "InstantRespawnCost": 1000},
+      {
+        "_Type_": "PlayerShipRespawnShipInfo",
+        "Name": "AEGS_Avenger_Warlock",
+        "RespawnWaitTime": 120,
+        "InstantRespawnCost": 1000},
+      {
+        "_Type_": "PlayerShipRespawnShipInfo",
+        "Name": "AEGS_Gladius",
+        "RespawnWaitTime": 120,
+        "InstantRespawnCost": 1050},
+      {
+        "_Type_": "PlayerShipRespawnShipInfo",
+        "Name": "AEGS_Retaliator",
+        "RespawnWaitTime": 1320,
+        "InstantRespawnCost": 14500},
+      {
+        "_Type_": "PlayerShipRespawnShipInfo",
+        "Name": "AEGS_Sabre",
+        "RespawnWaitTime": 300,
+        "InstantRespawnCost": 3000},
+      {
+        "_Type_": "PlayerShipRespawnShipInfo",
+        "Name": "AEGS_Vanguard",
+        "RespawnWaitTime": 720,
+        "InstantRespawnCost": 7650},
+      {
+        "_Type_": "PlayerShipRespawnShipInfo",
+        "Name": "ANVL_Gladiator",
+        "RespawnWaitTime": 300,
+        "InstantRespawnCost": 3000},
+      {
+        "_Type_": "PlayerShipRespawnShipInfo",
+        "Name": "ANVL_Hornet_F7C",
+        "RespawnWaitTime": 240,
+        "InstantRespawnCost": 2400},
+      {
+        "_Type_": "PlayerShipRespawnShipInfo",
+        "Name": "ANVL_Hornet_F7A",
+        "RespawnWaitTime": 240,
+        "InstantRespawnCost": 2400},
+      {
+        "_Type_": "PlayerShipRespawnShipInfo",
+        "Name": "ANVL_Hornet_F7CR",
+        "RespawnWaitTime": 240,
+        "InstantRespawnCost": 2400},
+      {
+        "_Type_": "PlayerShipRespawnShipInfo",
+        "Name": "ANVL_Hornet_F7CM",
+        "RespawnWaitTime": 240,
+        "InstantRespawnCost": 2400},
+      {
+        "_Type_": "PlayerShipRespawnShipInfo",
+        "Name": "ANVL_Hornet_F7CS",
+        "RespawnWaitTime": 240,
+        "InstantRespawnCost": 2400},
+      {
+        "_Type_": "PlayerShipRespawnShipInfo",
+        "Name": "CNOU_Mustang_Alpha",
+        "RespawnWaitTime": 180,
+        "InstantRespawnCost": 2000},
+      {
+        "_Type_": "PlayerShipRespawnShipInfo",
+        "Name": "CNOU_Mustang_Beta",
+        "RespawnWaitTime": 420,
+        "InstantRespawnCost": 4150},
+      {
+        "_Type_": "PlayerShipRespawnShipInfo",
+        "Name": "CNOU_Mustang_Delta",
+        "RespawnWaitTime": 180,
+        "InstantRespawnCost": 1850},
+      {
+        "_Type_": "PlayerShipRespawnShipInfo",
+        "Name": "CNOU_Mustang_Gamma",
+        "RespawnWaitTime": 120,
+        "InstantRespawnCost": 900},
+      {
+        "_Type_": "PlayerShipRespawnShipInfo",
+        "Name": "CNOU_Mustang_Omega",
+        "RespawnWaitTime": 120,
+        "InstantRespawnCost": 900},
+      {
+        "_Type_": "PlayerShipRespawnShipInfo",
+        "Name": "DRAK_Cutlass_Black",
+        "RespawnWaitTime": 420,
+        "InstantRespawnCost": 4400},
+      {
+        "_Type_": "PlayerShipRespawnShipInfo",
+        "Name": "KRIG_P52_Merlin",
+        "RespawnWaitTime": 120,
+        "InstantRespawnCost": 700},
+      {
+        "_Type_": "PlayerShipRespawnShipInfo",
+        "Name": "MISC_Freelancer",
+        "RespawnWaitTime": 300,
+        "InstantRespawnCost": 3000},
+      {
+        "_Type_": "PlayerShipRespawnShipInfo",
+        "Name": "MISC_Starfarer",
+        "RespawnWaitTime": 1320,
+        "InstantRespawnCost": 14250},
+      {
+        "_Type_": "PlayerShipRespawnShipInfo",
+        "Name": "ORIG_m50",
+        "RespawnWaitTime": 120,
+        "InstantRespawnCost": 900},
+      {
+        "_Type_": "PlayerShipRespawnShipInfo",
+        "Name": "ORIG_300i",
+        "RespawnWaitTime": 480,
+        "InstantRespawnCost": 4750},
+      {
+        "_Type_": "PlayerShipRespawnShipInfo",
+        "Name": "ORIG_315p",
+        "RespawnWaitTime": 480,
+        "InstantRespawnCost": 4750},
+      {
+        "_Type_": "PlayerShipRespawnShipInfo",
+        "Name": "ORIG_325a",
+        "RespawnWaitTime": 420,
+        "InstantRespawnCost": 4200},
+      {
+        "_Type_": "PlayerShipRespawnShipInfo",
+        "Name": "ORIG_350r",
+        "RespawnWaitTime": 300,
+        "InstantRespawnCost": 3150},
+      {
+        "_Type_": "PlayerShipRespawnShipInfo",
+        "Name": "RSI_Aurora_ES",
+        "RespawnWaitTime": 240,
+        "InstantRespawnCost": 2400},
+      {
+        "_Type_": "PlayerShipRespawnShipInfo",
+        "Name": "RSI_Aurora_CL",
+        "RespawnWaitTime": 240,
+        "InstantRespawnCost": 2400},
+      {
+        "_Type_": "PlayerShipRespawnShipInfo",
+        "Name": "RSI_Aurora_MR",
+        "RespawnWaitTime": 240,
+        "InstantRespawnCost": 2400},
+      {
+        "_Type_": "PlayerShipRespawnShipInfo",
+        "Name": "RSI_Aurora_LN",
+        "RespawnWaitTime": 240,
+        "InstantRespawnCost": 2400},
+      {
+        "_Type_": "PlayerShipRespawnShipInfo",
+        "Name": "RSI_Aurora_LX",
+        "RespawnWaitTime": 240,
+        "InstantRespawnCost": 2400},
+      {
+        "_Type_": "PlayerShipRespawnShipInfo",
+        "Name": "RSI_Constellation_Andromeda",
+        "RespawnWaitTime": 1380,
+        "InstantRespawnCost": 15050},
+      {
+        "_Type_": "PlayerShipRespawnShipInfo",
+        "Name": "VNCL_Glaive",
+        "RespawnWaitTime": 240,
+        "InstantRespawnCost": 2200},
+      {
+        "_Type_": "PlayerShipRespawnShipInfo",
+        "Name": "VNCL_Scythe",
+        "RespawnWaitTime": 180,
+        "InstantRespawnCost": 1800},
+      {
+        "_Type_": "PlayerShipRespawnShipInfo",
+        "Name": "XIAN_Scout",
+        "RespawnWaitTime": 300,
+        "InstantRespawnCost": 2800}]}}

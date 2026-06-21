@@ -1,0 +1,12 @@
+{
+  "_RecordName_": "HintUIData.RespawnMedBed_OutOfRange",
+  "_RecordId_": "fa1ab59d-7bdd-4064-a0c4-a74c575e4264",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "HintUIData",
+    "TitleText": "@Hints_Emergency_Treatment_Title",
+    "BodyText": "@Hints_Respawn_MedBed_OutOfRange",
+    "BodyTextGamePad": "@Hints_Respawn_MedBed_OutOfRange",
+    "BodyTextJoystick": "@Hints_Respawn_MedBed_OutOfRange",
+    "TitleImagePath": "",
+    "BodyImagePath": ""}}

@@ -1,0 +1,21 @@
+{
+  "_RecordName_": "DialogueContext.DXSM_Light_TauntTheTargetToNotHideAndShowHimself_01",
+  "_RecordId_": "a2c9489b-cb63-4524-8132-9911900264d7",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "DialogueContext",
+    "speaker": "file://./../../../../../libs/foundry/records/character/starmarine/fps/character.sm_fps_outlaw_light.json",
+    "localizedSubtitleText": "@LOC_UNINITIALIZED",
+    "unlocalizedSubtitleText": "@LOC_UNINITIALIZED",
+    "subtitleShowDelay": 0.0,
+    "subtitleDisplayDurationOverride": 0.0,
+    "tempText": "",
+    "audioTrigger": {
+      "_Type_": "GlobalResourceAudio",
+      "audioTrigger": ""},
+    "femaleAudioTrigger": {
+      "_Type_": "GlobalResourceAudio",
+      "audioTrigger": ""},
+    "forceSubtitles": false,
+    "contents": [],
+    "tags": []}}

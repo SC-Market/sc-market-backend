@@ -1,0 +1,124 @@
+{
+  "_RecordName_": "AnimatedMarker.Scan",
+  "_RecordId_": "33936178-a17e-4dbd-9a9d-982d18465f0a",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "AnimatedMarker",
+    "name": "Scan",
+    "objectName": "bracket.cga",
+    "doOriginOffsetScale": true,
+    "originOffsetScaleMin": 0.08,
+    "originOffsetTargetBoundInc": 32.0,
+    "matrixBlendRate": 2.0,
+    "lockLostLength": 1.0,
+    "additionAttachments": 1,
+    "markers": [
+      {
+        "_Type_": "AnimatedMarker_Marker",
+        "matrixStackID": [
+          "_inv_origin_",
+          "Rotator",
+          "Rotator2",
+          "_target_orientation_",
+          "_origin_",
+          "_target_size_"],
+        "timelines": [
+          {
+            "_Type_": "AnimationGraph_Timeline",
+            "timerID": "_progress_time_",
+            "frameRate": 1000,
+            "tracks": [
+              {
+                "_Type_": "AnimationGraph_Track",
+                "trackName": "_progress_",
+                "type": "Number",
+                "keyFrames": [
+                  {
+                    "_Type_": "AnimationGraph_KeyFrame",
+                    "frame": 0,
+                    "value": 1.0,
+                    "timeModifier": "Stagger",
+                    "easeType": "EaseOutQuad"},
+                  {
+                    "_Type_": "AnimationGraph_KeyFrame",
+                    "frame": 400,
+                    "value": 0.2,
+                    "timeModifier": "Stagger",
+                    "easeType": "EaseOutCubic"},
+                  {
+                    "_Type_": "AnimationGraph_KeyFrame",
+                    "frame": 3000,
+                    "value": 0.0,
+                    "timeModifier": "Stagger",
+                    "easeType": "EaseInOutCubic"},
+                  {
+                    "_Type_": "AnimationGraph_KeyFrame",
+                    "frame": 0,
+                    "value": 0.0,
+                    "timeModifier": "Total",
+                    "easeType": "Linear"}]},
+              {
+                "_Type_": "AnimationGraph_Track",
+                "trackName": "Rotator",
+                "type": "RotateZ",
+                "keyFrames": [
+                  {
+                    "_Type_": "AnimationGraph_KeyFrame",
+                    "frame": 0,
+                    "value": 720.0,
+                    "timeModifier": "None",
+                    "easeType": "EaseOutCubic"},
+                  {
+                    "_Type_": "AnimationGraph_KeyFrame",
+                    "frame": 2500,
+                    "value": 0.0,
+                    "timeModifier": "Stagger",
+                    "easeType": "EaseOutCubic"},
+                  {
+                    "_Type_": "AnimationGraph_KeyFrame",
+                    "frame": 0,
+                    "value": 0.0,
+                    "timeModifier": "Total",
+                    "easeType": "Linear"}]},
+              {
+                "_Type_": "AnimationGraph_Track",
+                "trackName": "Rotator2",
+                "type": "RotateX",
+                "keyFrames": [
+                  {
+                    "_Type_": "AnimationGraph_KeyFrame",
+                    "frame": 720,
+                    "value": 0.0,
+                    "timeModifier": "None",
+                    "easeType": "Linear"},
+                  {
+                    "_Type_": "AnimationGraph_KeyFrame",
+                    "frame": 0,
+                    "value": 2500.0,
+                    "timeModifier": "Stagger",
+                    "easeType": "EaseOutCubic"},
+                  {
+                    "_Type_": "AnimationGraph_KeyFrame",
+                    "frame": 0,
+                    "value": 0.0,
+                    "timeModifier": "Total",
+                    "easeType": "Linear"}]}]}],
+        "timers": []},
+      {
+        "_Type_": "AnimatedMarker_Marker",
+        "matrixStackID": [
+          "_inv_origin_",
+          "_target_orientation_",
+          "_origin_",
+          "_target_size_"],
+        "timelines": [],
+        "timers": []},
+      {
+        "_Type_": "AnimatedMarker_Marker",
+        "matrixStackID": [
+          "_inv_origin_",
+          "_target_orientation_",
+          "_origin_",
+          "_target_size_"],
+        "timelines": [],
+        "timers": []}]}}

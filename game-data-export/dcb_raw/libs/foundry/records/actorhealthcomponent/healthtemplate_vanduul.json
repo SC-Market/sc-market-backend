@@ -1,0 +1,8 @@
+{
+  "_RecordName_": "HealthTemplate.HealthTemplate_Vanduul",
+  "_RecordId_": "24add72b-851a-42c4-8d57-b11ec711505f",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "HealthTemplate",
+    "bodyMapping": "file://./../../../../libs/foundry/records/actorhealthcomponent/bodymapping/bodymapping_vanduul.json",
+    "healthConfig": "file://./../../../../libs/foundry/records/actorhealthcomponent/healthconfig/healthconfig_vanduul.json"}}

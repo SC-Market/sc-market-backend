@@ -1,0 +1,10 @@
+{
+  "_RecordName_": "ChatCommandFastAccess.Private",
+  "_RecordId_": "d0d66d7e-a9eb-4028-b74c-730e3440aa30",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "ChatCommandFastAccess",
+    "commands": [
+      {
+        "_Type_": "ChatCommandName",
+        "commandName": "@chat_command_help"}]}}

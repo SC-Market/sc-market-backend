@@ -1,0 +1,15 @@
+{
+  "_RecordName_": "SReputationStandingParams.ReputationStanding_Affinity_Enemy_-005",
+  "_RecordId_": "3dcef506-9006-4755-a6a8-70aa31869f6f",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "SReputationStandingParams",
+    "name": "Affinity_Bad_005",
+    "description": "desc",
+    "displayName": "@LOC_PLACEHOLDER",
+    "perkDescription": "@blank_space",
+    "icon": "",
+    "minReputation": -500,
+    "driftReputation": 0,
+    "driftTimeHours": 0.0,
+    "gated": false}}

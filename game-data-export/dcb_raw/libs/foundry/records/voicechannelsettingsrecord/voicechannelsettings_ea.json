@@ -1,0 +1,22 @@
+{
+  "_RecordName_": "VoiceChannelSettingsRecord.VoiceChannelSettings_EA",
+  "_RecordId_": "585a4dce-9fa8-4e95-9fe3-bb8a767e2fe7",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "VoiceChannelSettingsRecord",
+    "autoConnectProximityChannelType": {
+      "_Type_": "SMatchChannel"},
+    "autoConnectPrimaryChannelType": [
+      {
+        "_Type_": "SMatchChannel"}],
+    "cyclingChannelOption": {
+      "_Type_": "CyclingChannelOption",
+      "cyclingChannelCount": 3,
+      "cycleChannelConnectionWaitSecond": 0.5,
+      "autoRegisterCyclingChannelTypes": [
+        {
+          "_Type_": "SSquadChannel"},
+        {
+          "_Type_": "SGroupChannel",
+          "groupType": [
+            "GameEntity"]}]}}}

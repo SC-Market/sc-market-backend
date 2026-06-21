@@ -1,0 +1,17 @@
+{
+  "_RecordName_": "LandingPadSize.Large",
+  "_RecordId_": "5c3f1707-f3e8-435d-aa16-20e1fde1fc44",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "LandingPadSize",
+    "id": 5,
+    "shipSize": {
+      "_Type_": "Vec3",
+      "x": 72.0,
+      "y": 128.0,
+      "z": 36.0},
+    "groundVehicleSize": {
+      "_Type_": "Vec3",
+      "x": 16.0,
+      "y": 30.0,
+      "z": 6.0}}}

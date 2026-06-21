@@ -1,0 +1,25 @@
+{
+  "_RecordName_": "CommsNotification.MCN_Headhunters_Stows_HostilesReinforcementsBigShip",
+  "_RecordId_": "252c6839-8761-4ae7-a3b2-3929fc52a5aa",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "CommsNotification",
+    "tags": {
+      "_Type_": "TagList",
+      "tags": [
+        {
+          "_RecordPath_": "file://./../../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+          "_RecordName_": "Tag.16bc9e3a-f896-478e-89e5-0141752fd2d3",
+          "_RecordId_": "16bc9e3a-f896-478e-89e5-0141752fd2d3"},
+        {
+          "_RecordPath_": "file://./../../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+          "_RecordName_": "Tag.efc819e6-2a98-438e-a161-9af7c162952e",
+          "_RecordId_": "efc819e6-2a98-438e-a161-9af7c162952e"},
+        {
+          "_RecordPath_": "file://./../../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+          "_RecordName_": "Tag.7d09eec8-ab8c-44f3-ba4a-1f96c1a962f3",
+          "_RecordId_": "7d09eec8-ab8c-44f3-ba4a-1f96c1a962f3"}]},
+    "communicationName": "file://./../../../../../../../libs/foundry/records/communicationname/missioncommunications/eliminatehostiles/hostiles_reinforcements_bigship.json",
+    "characterEntityClass": "file://./../../../../../../../libs/foundry/records/actor/actors/npc_archetypes/male/human/missiongivers/npc_archetypes-male-human-missiongivers-stows.json",
+    "fakeCommsAudioEntityClass": "file://./../../../../../../../libs/foundry/records/entities/audio/fakecommsaudioentity_headhunters_stows.json",
+    "stage": "file://./../../../../../../../libs/foundry/records/commsnotificationstages/cns_stows.json"}}

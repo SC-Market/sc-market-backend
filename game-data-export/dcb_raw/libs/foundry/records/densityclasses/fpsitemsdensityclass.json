@@ -1,0 +1,13 @@
+{
+  "_RecordName_": "SEntityDensityClass.FPSItemsDensityClass",
+  "_RecordId_": "41d1b328-7a76-41dc-8c6d-76d9b8249969",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "SEntityDensityClass",
+    "clusterDetectionRadius": 30.0,
+    "clusterUpperObjectCountDGS": 20,
+    "clusterUpperObjectCountPersistence": 10,
+    "clusterPersistenceTimeout": 10.0,
+    "entityMaxIdleLifeTime": null,
+    "resetLifetimeOnMove": false,
+    "entityIdleBuryOnly": false}}

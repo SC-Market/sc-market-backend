@@ -1,0 +1,76 @@
+{
+  "_RecordName_": "FactionReputation.FactionReputation_Unlawful_Vaughn",
+  "_RecordId_": "a161c267-0253-48e5-be7a-dfa16c6cbebe",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "FactionReputation",
+    "name": "(Default)",
+    "displayName": "@Vaughn_RepUI_Name",
+    "GEID": 199998949485,
+    "logo": "UI/SharedAssets/ManufacturerLogos/rep_ui_icon_logo_vaughn.tif",
+    "hideInDelpihApp": false,
+    "isNPC": false,
+    "reputationContextPropertiesUI": "file://./../../../../../libs/foundry/records/reputation/contexts/reputationcontext_assassination.json",
+    "allies": [],
+    "enemies": [],
+    "hostilityParams": {
+      "_Type_": "RelationStandingParams",
+      "scope": "file://./../../../../../libs/foundry/records/reputation/scopes/factionreputationscope.json",
+      "standing": "file://./../../../../../libs/foundry/records/reputation/standings/faction_reputation_pyro/reputationstanding_factionrep_negativerep.json",
+      "markerParams": {
+        "_Type_": "RelationMarkerParams",
+        "description": "@LOC_PLACEHOLDER",
+        "icon": ""}},
+    "alliedParams": {
+      "_Type_": "RelationStandingParams",
+      "scope": "file://./../../../../../libs/foundry/records/reputation/scopes/factionreputationscope.json",
+      "standing": "file://./../../../../../libs/foundry/records/reputation/standings/faction_reputation_pyro/reputationstanding_factionrep_rank1.json",
+      "markerParams": {
+        "_Type_": "RelationMarkerParams",
+        "description": "@LOC_PLACEHOLDER",
+        "icon": ""}},
+    "propertiesBB": [
+      {
+        "_Type_": "SReputationContextBBPropertyParams",
+        "name": "entityDescription",
+        "dynamicProperty": {
+          "_Type_": "SBBDynamicPropertyLocString",
+          "value": "@Vaughn_RepUI_Description"}},
+      {
+        "_Type_": "SReputationContextBBPropertyParams",
+        "name": "entityLawful",
+        "dynamicProperty": {
+          "_Type_": "SBBDynamicPropertyBool",
+          "value": false}},
+      {
+        "_Type_": "SReputationContextBBPropertyParams",
+        "name": "entityHeadquarters",
+        "dynamicProperty": {
+          "_Type_": "SBBDynamicPropertyLocString",
+          "value": "@Vaughn_RepUI_Description"}},
+      {
+        "_Type_": "SReputationContextBBPropertyParams",
+        "name": "entityFounded",
+        "dynamicProperty": {
+          "_Type_": "SBBDynamicPropertyLocString",
+          "value": "@Vaughn_RepUI_Founded"}},
+      {
+        "_Type_": "SReputationContextBBPropertyParams",
+        "name": "entityLeadership",
+        "dynamicProperty": {
+          "_Type_": "SBBDynamicPropertyLocString",
+          "value": "@Vaughn_RepUI_Leadership"}},
+      {
+        "_Type_": "SReputationContextBBPropertyParams",
+        "name": "entityArea",
+        "dynamicProperty": {
+          "_Type_": "SBBDynamicPropertyLocString",
+          "value": "@Vaughn_RepUI_Area"}},
+      {
+        "_Type_": "SReputationContextBBPropertyParams",
+        "name": "entityFocus",
+        "dynamicProperty": {
+          "_Type_": "SBBDynamicPropertyLocString",
+          "value": "@Vaughn_RepUI_Focus"}}],
+    "perkReputationRewardList": [],
+    "sandboxTriggers": []}}

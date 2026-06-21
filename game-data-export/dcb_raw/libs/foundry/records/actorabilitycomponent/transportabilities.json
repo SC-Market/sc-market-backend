@@ -1,0 +1,657 @@
+{
+  "_RecordName_": "ActorAbilityComponent.TransportAbilities",
+  "_RecordId_": "aae35727-725f-4d3b-8a22-e0c352811abc",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "ActorAbilityComponent",
+    "abilityDefinitions": [
+      {
+        "_Type_": "AbilityDefinition",
+        "abilitiesToLock": [],
+        "abilitiesToInterrupt": [],
+        "breathingParams": null},
+      {
+        "_Type_": "AbilityDefinition",
+        "abilitiesToLock": [],
+        "abilitiesToInterrupt": [],
+        "breathingParams": null},
+      {
+        "_Type_": "AbilityDefinition",
+        "abilitiesToLock": [],
+        "abilitiesToInterrupt": [],
+        "breathingParams": null},
+      {
+        "_Type_": "AbilityDefinition",
+        "abilitiesToLock": [],
+        "abilitiesToInterrupt": [],
+        "breathingParams": null},
+      {
+        "_Type_": "AbilityDefinition",
+        "abilitiesToLock": [],
+        "abilitiesToInterrupt": [],
+        "breathingParams": null},
+      {
+        "_Type_": "AbilityDefinition",
+        "abilitiesToLock": [],
+        "abilitiesToInterrupt": [],
+        "breathingParams": null},
+      {
+        "_Type_": "AbilityDefinition",
+        "abilitiesToLock": [],
+        "abilitiesToInterrupt": [],
+        "breathingParams": null},
+      {
+        "_Type_": "AbilityDefinition",
+        "abilitiesToLock": [],
+        "abilitiesToInterrupt": [],
+        "breathingParams": null},
+      {
+        "_Type_": "AbilityDefinition",
+        "abilitiesToLock": [],
+        "abilitiesToInterrupt": [],
+        "breathingParams": null},
+      {
+        "_Type_": "AbilityDefinition",
+        "abilitiesToLock": [],
+        "abilitiesToInterrupt": [],
+        "breathingParams": null},
+      {
+        "_Type_": "AbilityDefinition",
+        "abilitiesToLock": [],
+        "abilitiesToInterrupt": [],
+        "breathingParams": null},
+      {
+        "_Type_": "AbilityDefinition",
+        "abilitiesToLock": [],
+        "abilitiesToInterrupt": [],
+        "breathingParams": null},
+      {
+        "_Type_": "AbilityDefinition",
+        "abilitiesToLock": [],
+        "abilitiesToInterrupt": [],
+        "breathingParams": null},
+      {
+        "_Type_": "AbilityDefinition",
+        "abilitiesToLock": [],
+        "abilitiesToInterrupt": [],
+        "breathingParams": null},
+      {
+        "_Type_": "AbilityDefinition",
+        "abilitiesToLock": [],
+        "abilitiesToInterrupt": [],
+        "breathingParams": null},
+      {
+        "_Type_": "AbilityDefinition",
+        "abilitiesToLock": [],
+        "abilitiesToInterrupt": [],
+        "breathingParams": null},
+      {
+        "_Type_": "AbilityDefinition",
+        "abilitiesToLock": [],
+        "abilitiesToInterrupt": [],
+        "breathingParams": null},
+      {
+        "_Type_": "AbilityDefinition",
+        "abilitiesToLock": [],
+        "abilitiesToInterrupt": [],
+        "breathingParams": null},
+      {
+        "_Type_": "AbilityDefinition",
+        "abilitiesToLock": [],
+        "abilitiesToInterrupt": [],
+        "breathingParams": null},
+      {
+        "_Type_": "AbilityDefinition",
+        "abilitiesToLock": [],
+        "abilitiesToInterrupt": [],
+        "breathingParams": null},
+      {
+        "_Type_": "AbilityDefinition",
+        "abilitiesToLock": [],
+        "abilitiesToInterrupt": [],
+        "breathingParams": null},
+      {
+        "_Type_": "AbilityDefinition",
+        "abilitiesToLock": [],
+        "abilitiesToInterrupt": [],
+        "breathingParams": null},
+      {
+        "_Type_": "AbilityDefinition",
+        "abilitiesToLock": [],
+        "abilitiesToInterrupt": [],
+        "breathingParams": null},
+      {
+        "_Type_": "AbilityDefinition",
+        "abilitiesToLock": [],
+        "abilitiesToInterrupt": [],
+        "breathingParams": null},
+      {
+        "_Type_": "AbilityDefinition",
+        "abilitiesToLock": [],
+        "abilitiesToInterrupt": [],
+        "breathingParams": null},
+      {
+        "_Type_": "AbilityDefinition",
+        "abilitiesToLock": [],
+        "abilitiesToInterrupt": [],
+        "breathingParams": null},
+      {
+        "_Type_": "AbilityDefinition",
+        "abilitiesToLock": [],
+        "abilitiesToInterrupt": [],
+        "breathingParams": null},
+      {
+        "_Type_": "AbilityDefinition",
+        "abilitiesToLock": [],
+        "abilitiesToInterrupt": [],
+        "breathingParams": null},
+      {
+        "_Type_": "AbilityDefinition",
+        "abilitiesToLock": [],
+        "abilitiesToInterrupt": [],
+        "breathingParams": null},
+      {
+        "_Type_": "AbilityDefinition",
+        "abilitiesToLock": [],
+        "abilitiesToInterrupt": [],
+        "breathingParams": null},
+      {
+        "_Type_": "AbilityDefinition",
+        "abilitiesToLock": [],
+        "abilitiesToInterrupt": [],
+        "breathingParams": null},
+      {
+        "_Type_": "AbilityDefinition",
+        "abilitiesToLock": [],
+        "abilitiesToInterrupt": [],
+        "breathingParams": null},
+      {
+        "_Type_": "AbilityDefinition",
+        "abilitiesToLock": [],
+        "abilitiesToInterrupt": [],
+        "breathingParams": null},
+      {
+        "_Type_": "AbilityDefinition",
+        "abilitiesToLock": [],
+        "abilitiesToInterrupt": [],
+        "breathingParams": null},
+      {
+        "_Type_": "AbilityDefinition",
+        "abilitiesToLock": [],
+        "abilitiesToInterrupt": [],
+        "breathingParams": null},
+      {
+        "_Type_": "AbilityDefinition",
+        "abilitiesToLock": [],
+        "abilitiesToInterrupt": [],
+        "breathingParams": null},
+      {
+        "_Type_": "AbilityDefinition",
+        "abilitiesToLock": [],
+        "abilitiesToInterrupt": [],
+        "breathingParams": null},
+      {
+        "_Type_": "AbilityDefinition",
+        "abilitiesToLock": [],
+        "abilitiesToInterrupt": [],
+        "breathingParams": null},
+      {
+        "_Type_": "AbilityDefinition",
+        "abilitiesToLock": [],
+        "abilitiesToInterrupt": [],
+        "breathingParams": null},
+      {
+        "_Type_": "AbilityDefinition",
+        "abilitiesToLock": [],
+        "abilitiesToInterrupt": [],
+        "breathingParams": null},
+      {
+        "_Type_": "AbilityDefinition",
+        "abilitiesToLock": [],
+        "abilitiesToInterrupt": [],
+        "breathingParams": null},
+      {
+        "_Type_": "AbilityDefinition",
+        "abilitiesToLock": [],
+        "abilitiesToInterrupt": [],
+        "breathingParams": null},
+      {
+        "_Type_": "AbilityDefinition",
+        "abilitiesToLock": [],
+        "abilitiesToInterrupt": [],
+        "breathingParams": null},
+      {
+        "_Type_": "AbilityDefinition",
+        "abilitiesToLock": [],
+        "abilitiesToInterrupt": [],
+        "breathingParams": null},
+      {
+        "_Type_": "AbilityDefinition",
+        "abilitiesToLock": [],
+        "abilitiesToInterrupt": [],
+        "breathingParams": null},
+      {
+        "_Type_": "AbilityDefinition",
+        "abilitiesToLock": [],
+        "abilitiesToInterrupt": [],
+        "breathingParams": null},
+      {
+        "_Type_": "AbilityDefinition",
+        "abilitiesToLock": [],
+        "abilitiesToInterrupt": [],
+        "breathingParams": null},
+      {
+        "_Type_": "AbilityDefinition",
+        "abilitiesToLock": [],
+        "abilitiesToInterrupt": [],
+        "breathingParams": null},
+      {
+        "_Type_": "AbilityDefinition",
+        "abilitiesToLock": [],
+        "abilitiesToInterrupt": [],
+        "breathingParams": null},
+      {
+        "_Type_": "AbilityDefinition",
+        "abilitiesToLock": [],
+        "abilitiesToInterrupt": [],
+        "breathingParams": null},
+      {
+        "_Type_": "AbilityDefinition",
+        "abilitiesToLock": [],
+        "abilitiesToInterrupt": [],
+        "breathingParams": null},
+      {
+        "_Type_": "AbilityDefinition",
+        "abilitiesToLock": [],
+        "abilitiesToInterrupt": [],
+        "breathingParams": null},
+      {
+        "_Type_": "AbilityDefinition",
+        "abilitiesToLock": [],
+        "abilitiesToInterrupt": [],
+        "breathingParams": null},
+      {
+        "_Type_": "AbilityDefinition",
+        "abilitiesToLock": [],
+        "abilitiesToInterrupt": [],
+        "breathingParams": null},
+      {
+        "_Type_": "AbilityDefinition",
+        "abilitiesToLock": [],
+        "abilitiesToInterrupt": [],
+        "breathingParams": null},
+      {
+        "_Type_": "AbilityDefinition",
+        "abilitiesToLock": [],
+        "abilitiesToInterrupt": [],
+        "breathingParams": null},
+      {
+        "_Type_": "AbilityDefinition",
+        "abilitiesToLock": [],
+        "abilitiesToInterrupt": [],
+        "breathingParams": null},
+      {
+        "_Type_": "AbilityDefinition",
+        "abilitiesToLock": [],
+        "abilitiesToInterrupt": [],
+        "breathingParams": null},
+      {
+        "_Type_": "AbilityDefinition",
+        "abilitiesToLock": [],
+        "abilitiesToInterrupt": [],
+        "breathingParams": null},
+      {
+        "_Type_": "AbilityDefinition",
+        "abilitiesToLock": [],
+        "abilitiesToInterrupt": [],
+        "breathingParams": null},
+      {
+        "_Type_": "AbilityDefinition",
+        "abilitiesToLock": [],
+        "abilitiesToInterrupt": [],
+        "breathingParams": null},
+      {
+        "_Type_": "AbilityDefinition",
+        "abilitiesToLock": [],
+        "abilitiesToInterrupt": [],
+        "breathingParams": null},
+      {
+        "_Type_": "AbilityDefinition",
+        "abilitiesToLock": [],
+        "abilitiesToInterrupt": [],
+        "breathingParams": null},
+      {
+        "_Type_": "AbilityDefinition",
+        "abilitiesToLock": [],
+        "abilitiesToInterrupt": [],
+        "breathingParams": null},
+      {
+        "_Type_": "AbilityDefinition",
+        "abilitiesToLock": [],
+        "abilitiesToInterrupt": [],
+        "breathingParams": null},
+      {
+        "_Type_": "AbilityDefinition",
+        "abilitiesToLock": [],
+        "abilitiesToInterrupt": [],
+        "breathingParams": null},
+      {
+        "_Type_": "AbilityDefinition",
+        "abilitiesToLock": [],
+        "abilitiesToInterrupt": [],
+        "breathingParams": null},
+      {
+        "_Type_": "AbilityDefinition",
+        "abilitiesToLock": [],
+        "abilitiesToInterrupt": [],
+        "breathingParams": null},
+      {
+        "_Type_": "AbilityDefinition",
+        "abilitiesToLock": [],
+        "abilitiesToInterrupt": [],
+        "breathingParams": null},
+      {
+        "_Type_": "AbilityDefinition",
+        "abilitiesToLock": [],
+        "abilitiesToInterrupt": [],
+        "breathingParams": null},
+      {
+        "_Type_": "AbilityDefinition",
+        "abilitiesToLock": [],
+        "abilitiesToInterrupt": [],
+        "breathingParams": null},
+      {
+        "_Type_": "AbilityDefinition",
+        "abilitiesToLock": [],
+        "abilitiesToInterrupt": [],
+        "breathingParams": null},
+      {
+        "_Type_": "AbilityDefinition",
+        "abilitiesToLock": [],
+        "abilitiesToInterrupt": [],
+        "breathingParams": null},
+      {
+        "_Type_": "AbilityDefinition",
+        "abilitiesToLock": [],
+        "abilitiesToInterrupt": [],
+        "breathingParams": null},
+      {
+        "_Type_": "AbilityDefinition",
+        "abilitiesToLock": [],
+        "abilitiesToInterrupt": [],
+        "breathingParams": null},
+      {
+        "_Type_": "AbilityDefinition",
+        "abilitiesToLock": [],
+        "abilitiesToInterrupt": [],
+        "breathingParams": null},
+      {
+        "_Type_": "AbilityDefinition",
+        "abilitiesToLock": [],
+        "abilitiesToInterrupt": [],
+        "breathingParams": null},
+      {
+        "_Type_": "AbilityDefinition",
+        "abilitiesToLock": [
+          "Fidgets",
+          "DamageReactions",
+          "Duck",
+          "ItemRaise",
+          "ForceReactions"],
+        "abilitiesToInterrupt": [],
+        "breathingParams": null},
+      {
+        "_Type_": "AbilityDefinition",
+        "abilitiesToLock": [],
+        "abilitiesToInterrupt": [],
+        "breathingParams": null},
+      {
+        "_Type_": "AbilityDefinition",
+        "abilitiesToLock": [],
+        "abilitiesToInterrupt": [],
+        "breathingParams": null},
+      {
+        "_Type_": "AbilityDefinition",
+        "abilitiesToLock": [],
+        "abilitiesToInterrupt": [],
+        "breathingParams": null},
+      {
+        "_Type_": "AbilityDefinition",
+        "abilitiesToLock": [],
+        "abilitiesToInterrupt": [],
+        "breathingParams": null},
+      {
+        "_Type_": "AbilityDefinition",
+        "abilitiesToLock": [],
+        "abilitiesToInterrupt": [],
+        "breathingParams": null},
+      {
+        "_Type_": "AbilityDefinition",
+        "abilitiesToLock": [],
+        "abilitiesToInterrupt": [],
+        "breathingParams": null},
+      {
+        "_Type_": "AbilityDefinition",
+        "abilitiesToLock": [],
+        "abilitiesToInterrupt": [],
+        "breathingParams": null},
+      {
+        "_Type_": "AbilityDefinition",
+        "abilitiesToLock": [],
+        "abilitiesToInterrupt": [],
+        "breathingParams": null},
+      {
+        "_Type_": "AbilityDefinition",
+        "abilitiesToLock": [],
+        "abilitiesToInterrupt": [],
+        "breathingParams": null},
+      {
+        "_Type_": "AbilityDefinition",
+        "abilitiesToLock": [],
+        "abilitiesToInterrupt": [],
+        "breathingParams": null},
+      {
+        "_Type_": "AbilityDefinition",
+        "abilitiesToLock": [],
+        "abilitiesToInterrupt": [],
+        "breathingParams": null},
+      {
+        "_Type_": "AbilityDefinition",
+        "abilitiesToLock": [],
+        "abilitiesToInterrupt": [],
+        "breathingParams": null},
+      {
+        "_Type_": "AbilityDefinition",
+        "abilitiesToLock": [],
+        "abilitiesToInterrupt": [],
+        "breathingParams": null},
+      {
+        "_Type_": "AbilityDefinition",
+        "abilitiesToLock": [],
+        "abilitiesToInterrupt": [],
+        "breathingParams": null},
+      {
+        "_Type_": "AbilityDefinition",
+        "abilitiesToLock": [],
+        "abilitiesToInterrupt": [],
+        "breathingParams": null},
+      {
+        "_Type_": "AbilityDefinition",
+        "abilitiesToLock": [],
+        "abilitiesToInterrupt": [],
+        "breathingParams": null},
+      {
+        "_Type_": "AbilityDefinition",
+        "abilitiesToLock": [],
+        "abilitiesToInterrupt": [],
+        "breathingParams": null},
+      {
+        "_Type_": "AbilityDefinition",
+        "abilitiesToLock": [],
+        "abilitiesToInterrupt": [],
+        "breathingParams": null},
+      {
+        "_Type_": "AbilityDefinition",
+        "abilitiesToLock": [],
+        "abilitiesToInterrupt": [],
+        "breathingParams": null},
+      {
+        "_Type_": "AbilityDefinition",
+        "abilitiesToLock": [],
+        "abilitiesToInterrupt": [],
+        "breathingParams": null},
+      {
+        "_Type_": "AbilityDefinition",
+        "abilitiesToLock": [],
+        "abilitiesToInterrupt": [],
+        "breathingParams": null},
+      {
+        "_Type_": "AbilityDefinition",
+        "abilitiesToLock": [],
+        "abilitiesToInterrupt": [],
+        "breathingParams": null},
+      {
+        "_Type_": "AbilityDefinition",
+        "abilitiesToLock": [],
+        "abilitiesToInterrupt": [],
+        "breathingParams": null},
+      {
+        "_Type_": "AbilityDefinition",
+        "abilitiesToLock": [],
+        "abilitiesToInterrupt": [],
+        "breathingParams": null},
+      {
+        "_Type_": "AbilityDefinition",
+        "abilitiesToLock": [],
+        "abilitiesToInterrupt": [],
+        "breathingParams": null},
+      {
+        "_Type_": "AbilityDefinition",
+        "abilitiesToLock": [],
+        "abilitiesToInterrupt": [],
+        "breathingParams": null},
+      {
+        "_Type_": "AbilityDefinition",
+        "abilitiesToLock": [],
+        "abilitiesToInterrupt": [],
+        "breathingParams": null},
+      {
+        "_Type_": "AbilityDefinition",
+        "abilitiesToLock": [],
+        "abilitiesToInterrupt": [],
+        "breathingParams": null},
+      {
+        "_Type_": "AbilityDefinition",
+        "abilitiesToLock": [
+          "Fire",
+          "Equip"],
+        "abilitiesToInterrupt": [
+          "Equip"],
+        "breathingParams": null},
+      {
+        "_Type_": "AbilityDefinition",
+        "abilitiesToLock": [],
+        "abilitiesToInterrupt": [],
+        "breathingParams": null},
+      {
+        "_Type_": "AbilityDefinition",
+        "abilitiesToLock": [],
+        "abilitiesToInterrupt": [],
+        "breathingParams": null},
+      {
+        "_Type_": "AbilityDefinition",
+        "abilitiesToLock": [],
+        "abilitiesToInterrupt": [],
+        "breathingParams": null},
+      {
+        "_Type_": "AbilityDefinition",
+        "abilitiesToLock": [],
+        "abilitiesToInterrupt": [],
+        "breathingParams": null},
+      {
+        "_Type_": "AbilityDefinition",
+        "abilitiesToLock": [],
+        "abilitiesToInterrupt": [],
+        "breathingParams": null},
+      {
+        "_Type_": "AbilityDefinition",
+        "abilitiesToLock": [],
+        "abilitiesToInterrupt": [],
+        "breathingParams": null},
+      {
+        "_Type_": "AbilityDefinition",
+        "abilitiesToLock": [
+          "SyncedMeleeDefend"],
+        "abilitiesToInterrupt": [],
+        "breathingParams": null},
+      {
+        "_Type_": "AbilityDefinition",
+        "abilitiesToLock": [
+          "SyncedMeleeAttack"],
+        "abilitiesToInterrupt": [],
+        "breathingParams": null},
+      {
+        "_Type_": "AbilityDefinition",
+        "abilitiesToLock": [],
+        "abilitiesToInterrupt": [],
+        "breathingParams": null},
+      {
+        "_Type_": "AbilityDefinition",
+        "abilitiesToLock": [],
+        "abilitiesToInterrupt": [],
+        "breathingParams": null},
+      {
+        "_Type_": "AbilityDefinition",
+        "abilitiesToLock": [],
+        "abilitiesToInterrupt": [],
+        "breathingParams": null},
+      {
+        "_Type_": "AbilityDefinition",
+        "abilitiesToLock": [],
+        "abilitiesToInterrupt": [],
+        "breathingParams": null},
+      {
+        "_Type_": "AbilityDefinition",
+        "abilitiesToLock": [],
+        "abilitiesToInterrupt": [],
+        "breathingParams": null},
+      {
+        "_Type_": "AbilityDefinition",
+        "abilitiesToLock": [],
+        "abilitiesToInterrupt": [],
+        "breathingParams": null},
+      {
+        "_Type_": "AbilityDefinition",
+        "abilitiesToLock": [],
+        "abilitiesToInterrupt": [],
+        "breathingParams": null},
+      {
+        "_Type_": "AbilityDefinition",
+        "abilitiesToLock": [],
+        "abilitiesToInterrupt": [],
+        "breathingParams": null},
+      {
+        "_Type_": "AbilityDefinition",
+        "abilitiesToLock": [],
+        "abilitiesToInterrupt": [],
+        "breathingParams": null},
+      {
+        "_Type_": "AbilityDefinition",
+        "abilitiesToLock": [],
+        "abilitiesToInterrupt": [],
+        "breathingParams": null},
+      {
+        "_Type_": "AbilityDefinition",
+        "abilitiesToLock": [],
+        "abilitiesToInterrupt": [],
+        "breathingParams": null},
+      {
+        "_Type_": "AbilityDefinition",
+        "abilitiesToLock": [],
+        "abilitiesToInterrupt": [],
+        "breathingParams": null},
+      {
+        "_Type_": "AbilityDefinition",
+        "abilitiesToLock": [],
+        "abilitiesToInterrupt": [],
+        "breathingParams": null}]}}

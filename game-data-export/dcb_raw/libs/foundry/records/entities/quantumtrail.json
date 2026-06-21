@@ -1,0 +1,25 @@
+{
+  "_RecordName_": "EntityClassDefinition.QuantumTrail",
+  "_RecordId_": "b3e1f2dc-d3fa-4bfa-b3b2-f67cbe21cd1c",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "EntityClassDefinition",
+    "Category": "Default",
+    "Icon": "Default.bmp",
+    "Invisible": false,
+    "BBoxSelection": false,
+    "defaultEditorColor": {
+      "_Type_": "RGB",
+      "r": 1.0,
+      "g": 1.0,
+      "b": 0.0},
+    "entityDensityClass": null,
+    "tags": [],
+    "StaticEntityClassData": [],
+    "Components": [
+      {
+        "_Type_": "SQuantumTrailParams",
+        "destructionTime": 300.0,
+        "trailLength": 402983.8,
+        "viewableDistance": 10000.0,
+        "maxVisibleLength": 6000.0}]}}

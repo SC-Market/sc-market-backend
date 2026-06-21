@@ -1,0 +1,10 @@
+{
+  "_RecordName_": "CommsChannelDef.OpenChannel_Stanton4_Microtech_ShallowFrontierStation_L1",
+  "_RecordId_": "0d628309-99fd-43c0-88a6-3d9cd9a507bd",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "CommsChannelDef",
+    "channelId": "OpenChannel_Stanton4_Microtech_ShallowFrontierStation_L1",
+    "displayName": "@LOC_PLACEHOLDER",
+    "canHaveMultipleInstances": false,
+    "useAreaOfEffect": false}}

@@ -1,0 +1,21 @@
+{
+  "_RecordName_": "CommsNotification.MCN_DefendNPC02_FriendlyCallouts",
+  "_RecordId_": "96f9c45d-21e1-4547-b84f-a4d5c2e699ce",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "CommsNotification",
+    "tags": {
+      "_Type_": "TagList",
+      "tags": [
+        {
+          "_RecordPath_": "file://./../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+          "_RecordName_": "Tag.a98767d8-464c-495a-bc11-ea905b79380b",
+          "_RecordId_": "a98767d8-464c-495a-bc11-ea905b79380b"},
+        {
+          "_RecordPath_": "file://./../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+          "_RecordName_": "Tag.f97d014a-083e-4e7a-8aad-aa9ca0e8ae10",
+          "_RecordId_": "f97d014a-083e-4e7a-8aad-aa9ca0e8ae10"}]},
+    "communicationName": "file://./../../../../../../libs/foundry/records/communicationname/missioncommunications/ambushmission/ambush_hide.json",
+    "characterEntityClass": "file://./../../../../../../libs/foundry/records/actor/actors/npc_archetypes/female/human/missiongivers/npc_archetypes-female-human-missiongivers-defendnpc02.json",
+    "fakeCommsAudioEntityClass": "file://./../../../../../../libs/foundry/records/entities/audio/fakecommsaudioentity_civilian_defendnpc02.json",
+    "stage": "file://./../../../../../../libs/foundry/records/commsnotificationstages/cns_test.json"}}

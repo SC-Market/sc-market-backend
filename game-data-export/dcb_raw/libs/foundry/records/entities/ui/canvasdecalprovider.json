@@ -1,0 +1,66 @@
+{
+  "_RecordName_": "EntityClassDefinition.CanvasDecalProvider",
+  "_RecordId_": "25293e54-dd1a-463c-8947-ecb0efd77bec",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "EntityClassDefinition",
+    "Category": "Default",
+    "Icon": "Default.bmp",
+    "Invisible": false,
+    "BBoxSelection": false,
+    "defaultEditorColor": {
+      "_Type_": "RGB",
+      "r": 1.0,
+      "g": 1.0,
+      "b": 0.0},
+    "entityDensityClass": null,
+    "tags": [],
+    "StaticEntityClassData": [],
+    "Components": [
+      {
+        "_Type_": "UserVariablesComponentParams",
+        "AlwaysUseDefaultValues": false,
+        "floats": [
+          {
+            "_Type_": "FloatUserVariable",
+            "name": "NumberArg0",
+            "defaultValue": 0.0,
+            "tasks": []}],
+        "ints": [
+          {
+            "_Type_": "IntUserVariable",
+            "name": "IntegerArg0",
+            "defaultValue": 0,
+            "tasks": []}],
+        "bools": [
+          {
+            "_Type_": "BoolUserVariable",
+            "name": "BooleanArg1",
+            "defaultValue": false,
+            "tasks": []},
+          {
+            "_Type_": "BoolUserVariable",
+            "name": "PrimaryActive",
+            "defaultValue": true,
+            "tasks": []},
+          {
+            "_Type_": "BoolUserVariable",
+            "name": "SecondaryActive",
+            "defaultValue": true,
+            "tasks": []}],
+        "strings": [],
+        "locStrings": [
+          {
+            "_Type_": "LocStringUserVariable",
+            "name": "Title",
+            "defaultValue": "@LOC_EMPTY"},
+          {
+            "_Type_": "LocStringUserVariable",
+            "name": "SubTitle",
+            "defaultValue": "@LOC_EMPTY"}]},
+      {
+        "_Type_": "UIBindingsVendorEntityComponentParams",
+        "namespace": ""},
+      {
+        "_Type_": "LiteralStringProviderComponentParams",
+        "strings": []}]}}

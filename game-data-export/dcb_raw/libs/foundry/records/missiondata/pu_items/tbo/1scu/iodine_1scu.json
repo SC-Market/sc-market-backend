@@ -1,0 +1,24 @@
+{
+  "_RecordName_": "MissionItem.Iodine_1SCU",
+  "_RecordId_": "b03cfad9-f78d-4c8a-8175-9ba9210ad2c2",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "MissionItem",
+    "tags": [
+      {
+        "_RecordPath_": "file://./../../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+        "_RecordName_": "Tag.2c0d094d-d918-42e0-9c73-107a955f5228",
+        "_RecordId_": "2c0d094d-d918-42e0-9c73-107a955f5228"},
+      {
+        "_RecordPath_": "file://./../../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+        "_RecordName_": "Tag.88561c20-a0e4-4b2c-b688-75609ce717f2",
+        "_RecordId_": "88561c20-a0e4-4b2c-b688-75609ce717f2"},
+      {
+        "_RecordPath_": "file://./../../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+        "_RecordName_": "Tag.8a73bcce-fa01-418d-a137-d500c102e1e8",
+        "_RecordId_": "8a73bcce-fa01-418d-a137-d500c102e1e8"}],
+    "stringVariants": {
+      "_Type_": "MissionStringVariants",
+      "variants": []},
+    "weighting": 1.0,
+    "entityClass": "file://./../../../../../../../libs/foundry/records/entities/scitem/carryables/tractorbeamonly/carryable_tbo_fl_1scu_commodity_nonmetal_iodine.json"}}

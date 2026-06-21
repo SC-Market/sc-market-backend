@@ -1,0 +1,31 @@
+{
+  "_RecordName_": "LootTable.LootTable_D_Ammo_01",
+  "_RecordId_": "d285cdaa-90c2-42c5-b02b-db9248e15955",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "LootTable",
+    "lootArchetypes": [
+      {
+        "_Type_": "WeightedLootArchetype",
+        "archetype": "file://./../../../../../../libs/foundry/records/lootgeneration/lootarchetypes/lootarchetype_ammo_pistol_common.json",
+        "weight": 0.6,
+        "numberOfResultsConstraints": {
+          "_Type_": "NumResultsConstraints",
+          "minResults": 1,
+          "maxResults": 0}},
+      {
+        "_Type_": "WeightedLootArchetype",
+        "archetype": "file://./../../../../../../libs/foundry/records/lootgeneration/lootarchetypes/lootarchetype_ammo_stocked.json",
+        "weight": 0.3,
+        "numberOfResultsConstraints": {
+          "_Type_": "NumResultsConstraints",
+          "minResults": 0,
+          "maxResults": 0}},
+      {
+        "_Type_": "WeightedLootArchetype",
+        "archetype": "file://./../../../../../../libs/foundry/records/lootgeneration/lootarchetypes/lootarchetype_ammo_shouldered.json",
+        "weight": 0.05,
+        "numberOfResultsConstraints": {
+          "_Type_": "NumResultsConstraints",
+          "minResults": 0,
+          "maxResults": 0}}]}}

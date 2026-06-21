@@ -1,0 +1,30 @@
+{
+  "_RecordName_": "TacticalQuery.DisembarkLocation",
+  "_RecordId_": "1830ef50-29a3-43bc-be36-d8b40a6391d5",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "TacticalQuery",
+    "name": "DisembarkLocation",
+    "type": "TacticalPointQuery",
+    "options": [
+      {
+        "_Type_": "TQSOptionReference",
+        "requirements": {
+          "_Type_": "TagsDNF",
+          "terms": []},
+        "content": "file://./../../../../../../libs/foundry/records/tacticalquery/tpsqueries/reinforcement/content/disembarklocationdefault.json",
+        "optionOverrides": []},
+      {
+        "_Type_": "TQSOptionReference",
+        "requirements": {
+          "_Type_": "TagsDNF",
+          "terms": []},
+        "content": "file://./../../../../../../libs/foundry/records/tacticalquery/tpsqueries/reinforcement/content/disembarklocationcontent_35.json",
+        "optionOverrides": []},
+      {
+        "_Type_": "TQSOptionReference",
+        "requirements": {
+          "_Type_": "TagsDNF",
+          "terms": []},
+        "content": "file://./../../../../../../libs/foundry/records/tacticalquery/tpsqueries/reinforcement/content/disembarklocationcontent_40.json",
+        "optionOverrides": []}]}}

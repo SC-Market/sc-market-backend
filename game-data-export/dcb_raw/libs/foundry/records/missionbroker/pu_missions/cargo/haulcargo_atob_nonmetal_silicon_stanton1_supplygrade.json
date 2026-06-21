@@ -1,0 +1,477 @@
+{
+  "_RecordName_": "MissionBrokerEntry.HaulCargo_AToB_NonMetal_Silicon_Stanton1_SupplyGrade",
+  "_RecordId_": "4c337715-d4ba-43ef-a18e-3a216015ed3c",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "MissionBrokerEntry",
+    "notForRelease": false,
+    "owner": "file://./../../../../../../libs/foundry/records/devowners/devteams/mdt.json",
+    "missionModule": "Libs/Subsumption/Missions/PU/Missions/EmptyMission.xml",
+    "playerFacingDebugName": "",
+    "title": "@Covalex_HaulCargo_AToB_title",
+    "titleHUD": "@Covalex_HaulCargo_AToB_title",
+    "description": "@HaulCargo_AtoB_desc",
+    "missionGiver": "@mission_contractor_0003",
+    "commsChannelName": "@LOC_UNINITIALIZED",
+    "type": "file://./../../../../../../libs/foundry/records/missiontype/pu/hauling_solar.json",
+    "associatedMissions": [],
+    "missionDifficulty": 2,
+    "localityAvailable": "file://./../../../../../../libs/foundry/records/missiondata/pu_missionlocality/stanton1.json",
+    "locationMissionAvailable": null,
+    "availableDateSchedule": [],
+    "onlyAvailableIfAllMissionsNotAvailable": [],
+    "missionReward": {
+      "_Type_": "MissionReward",
+      "reward": 50500,
+      "max": 0,
+      "plusBonuses": false,
+      "currencyType": "UEC",
+      "reputationBonus": null},
+    "partialRewardPayout": {
+      "_Type_": "PartialContractRewards",
+      "percentageThresholds": [
+        {
+          "_Type_": "PartialContractRewardRange",
+          "minPercentage": 76,
+          "maxPercentage": 99,
+          "currencyRewardMultiplier": 0.76,
+          "reputationMultipliers": []},
+        {
+          "_Type_": "PartialContractRewardRange",
+          "minPercentage": 51,
+          "maxPercentage": 75,
+          "currencyRewardMultiplier": 0.45,
+          "reputationMultipliers": []},
+        {
+          "_Type_": "PartialContractRewardRange",
+          "minPercentage": 26,
+          "maxPercentage": 50,
+          "currencyRewardMultiplier": 0.15,
+          "reputationMultipliers": []},
+        {
+          "_Type_": "PartialContractRewardRange",
+          "minPercentage": 0,
+          "maxPercentage": 25,
+          "currencyRewardMultiplier": 0.0,
+          "reputationMultipliers": []}]},
+    "missionResultReputationRewards": [
+      {
+        "_Type_": "SReputationAmountListParams",
+        "reputationAmounts": [
+          {
+            "_Type_": "SReputationAmountParams",
+            "factionReputation": "file://./../../../../../../libs/foundry/records/factions/factionreputation/factionreputation_lawful_covalexshipping.json",
+            "reputationScope": "file://./../../../../../../libs/foundry/records/reputation/scopes/reputationscope_hauling.json",
+            "reward": "file://./../../../../../../libs/foundry/records/reputation/rewards/missionrewards_reputation/reputationrewardamount_positive_xxxxs.json"}]},
+      {
+        "_Type_": "SReputationAmountListParams",
+        "reputationAmounts": []},
+      {
+        "_Type_": "SReputationAmountListParams",
+        "reputationAmounts": []},
+      {
+        "_Type_": "SReputationAmountListParams",
+        "reputationAmounts": []},
+      {
+        "_Type_": "SReputationAmountListParams",
+        "reputationAmounts": []}],
+    "journalEntriesToAddOnComplete": [],
+    "journalEntriesToRemoveOnComplete": [],
+    "initiallyActive": true,
+    "notifyOnAvailable": false,
+    "preShowObjectives": true,
+    "showAsOffer": false,
+    "missionBuyInAmount": 0,
+    "refundBuyInOnWithdraw": false,
+    "hasCompleteButton": true,
+    "onlyOwnerCanComplete": true,
+    "handlesAbandonRequest": false,
+    "missionModulePerPlayer": true,
+    "maxInstances": 6,
+    "maxPlayersPerInstance": 1,
+    "maxInstancesPerPlayer": 1,
+    "canBeShared": true,
+    "onceOnly": false,
+    "tutorial": false,
+    "missionDeadline": {
+      "_Type_": "MissionDeadline",
+      "missionCompletionTime": 300.0,
+      "missionAutoEnd": true,
+      "missionResultAfterTimerEnd": "Failed",
+      "remainingTimeToShowTimer": 15.0,
+      "missionEndReason": "@HaulCargo_Fail_TimeOut"},
+    "displayAlliedMarkers": true,
+    "availableInPrison": false,
+    "failIfSentToPrison": true,
+    "failIfBecameCriminal": true,
+    "failIfLeavePrison": false,
+    "completionTags": {
+      "_Type_": "TagList",
+      "tags": []},
+    "applyCompletionTagsOnFailed": false,
+    "applyCompletionTagsOnAbandoned": false,
+    "requestOnly": false,
+    "respawnTime": 30.0,
+    "respawnTimeVariation": 15.0,
+    "instanceHasLifeTime": true,
+    "showLifeTimeInMobiGlas": false,
+    "instanceLifeTime": 120.0,
+    "instanceLifeTimeVariation": 15.0,
+    "canReacceptAfterAbandoning": false,
+    "abandonedCooldownTime": 1440.0,
+    "abandonedCooldownTimeVariation": 0.0,
+    "canReacceptAfterFailing": true,
+    "hasPersonalCooldown": true,
+    "personalCooldownTime": 10.0,
+    "personalCooldownTimeVariation": 0.0,
+    "moduleHandlesOwnShutdown": false,
+    "linkedMission": null,
+    "missionCompletePerk": null,
+    "modifiers": [],
+    "lawfulMission": true,
+    "missionGiverRecord": "file://./../../../../../../libs/foundry/records/missiongiver/courier/missiongiver_covalexindependentcontractors.json",
+    "invitationMission": null,
+    "missionTags": [],
+    "missionGiverFragmentTags": "",
+    "reputationPrerequisites": {
+      "_Type_": "ReputationPrerequisites",
+      "wantedLevelJurisdictionOverride": null,
+      "wantedLevel": {
+        "_Type_": "ReputationPrerequisiteRange",
+        "minValue": 0.0,
+        "maxValue": 2.0}},
+    "reputationRequirements": {
+      "_Type_": "SReputationMissionRequirementsParams",
+      "expression": [
+        {
+          "_Type_": "SReputationMissionGiverRequirementParams",
+          "factionReputation": "file://./../../../../../../libs/foundry/records/factions/factionreputation/factionreputation_lawful_covalexshipping.json",
+          "reputationScope": "file://./../../../../../../libs/foundry/records/reputation/scopes/reputationscope_hauling.json",
+          "comparison": "GreaterThanOrEqualTo",
+          "standing": "file://./../../../../../../libs/foundry/records/reputation/standings/delivery/reputationstanding_hauling_rank1.json"}]},
+    "minRequiredMissions": [],
+    "requiredMissions": [],
+    "requiredCompletedMissionTags": [],
+    "requiredJournalEntries": [],
+    "requiredAreaTags": {
+      "_Type_": "TagList",
+      "tags": []},
+    "excludedAreaTags": {
+      "_Type_": "TagList",
+      "tags": []},
+    "properties": [
+      {
+        "_Pointer_": "ptr:3",
+        "_Type_": "MissionProperty",
+        "missionVariableName": "",
+        "extendedTextToken": "Contractor",
+        "value": {
+          "_Type_": "MissionPropertyValue_Organization",
+          "matchConditions": [
+            {
+              "_Type_": "DataSetMatchCondition_SpecificOrganizationsDef",
+              "organizations": [
+                "file://./../../../../../../libs/foundry/records/missiondata/pu_organizations/covalexindependentcontractors.json"]}],
+          "debugForceChosenOrganization": "file://./../../../../../../libs/foundry/records/missiondata/pu_organizations/covalexindependentcontractors.json"}},
+      {
+        "_Type_": "MissionProperty",
+        "missionVariableName": "",
+        "extendedTextToken": "CargoRouteToken",
+        "value": {
+          "_Type_": "MissionPropertyValue_StringHash",
+          "options": [
+            {
+              "_Type_": "MissionPropertyValueOption_StringHash",
+              "textId": "@HaulCargo_CargoRoute_Solar",
+              "weighting": 1.0,
+              "DEBUG_forceChooseThisOption": false,
+              "dependentProperties": [],
+              "value": ""}]}},
+      {
+        "_Type_": "MissionProperty",
+        "missionVariableName": "",
+        "extendedTextToken": "CargoGradeToken",
+        "value": {
+          "_Type_": "MissionPropertyValue_StringHash",
+          "options": [
+            {
+              "_Type_": "MissionPropertyValueOption_StringHash",
+              "textId": "@HaulCargo_CargoGrade_Supply",
+              "weighting": 1.0,
+              "DEBUG_forceChooseThisOption": false,
+              "dependentProperties": [],
+              "value": ""}]}},
+      {
+        "_Type_": "MissionProperty",
+        "missionVariableName": "",
+        "extendedTextToken": "ReputationRank",
+        "value": {
+          "_Type_": "MissionPropertyValue_StringHash",
+          "options": [
+            {
+              "_Type_": "MissionPropertyValueOption_StringHash",
+              "textId": "@RepStanding_TransportGuild_Rank1",
+              "weighting": 1.0,
+              "DEBUG_forceChooseThisOption": false,
+              "dependentProperties": [],
+              "value": "@RepStanding_TransportGuild_Rank1"}]}},
+      {
+        "_Type_": "MissionProperty",
+        "missionVariableName": "",
+        "extendedTextToken": "MissionMaxSCUSize",
+        "value": {
+          "_Type_": "MissionPropertyValue_StringHash",
+          "options": [
+            {
+              "_Type_": "MissionPropertyValueOption_StringHash",
+              "textId": "@FreightElevator_8SCU",
+              "weighting": 1.0,
+              "DEBUG_forceChooseThisOption": false,
+              "dependentProperties": [],
+              "value": "@FreightElevator_8SCU"}]}},
+      {
+        "_Pointer_": "ptr:1",
+        "_Type_": "MissionProperty",
+        "missionVariableName": "PickupLocation_BP",
+        "extendedTextToken": "Location",
+        "value": {
+          "_Type_": "MissionPropertyValue_Location",
+          "matchConditions": [
+            {
+              "_Type_": "DataSetMatchCondition_TagSearch",
+              "tagSearch": [
+                {
+                  "_Type_": "TagSearchTerm",
+                  "positiveTags": [
+                    {
+                      "_RecordPath_": "file://./../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+                      "_RecordName_": "Tag.13abec13-80ce-4fda-917a-c2e2225b0268",
+                      "_RecordId_": "13abec13-80ce-4fda-917a-c2e2225b0268"},
+                    {
+                      "_RecordPath_": "file://./../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+                      "_RecordName_": "Tag.b25e5ca9-20be-4e7a-a016-d8801d669a22",
+                      "_RecordId_": "b25e5ca9-20be-4e7a-a016-d8801d669a22"}],
+                  "negativeTags": []}],
+              "tagType": "General"},
+            {
+              "_Type_": "DataSetMatchCondition_TagSearch",
+              "tagSearch": [
+                {
+                  "_Type_": "TagSearchTerm",
+                  "positiveTags": [
+                    {
+                      "_RecordPath_": "file://./../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+                      "_RecordName_": "Tag.d9180b94-a47d-49d4-9715-37da263c2c2b",
+                      "_RecordId_": "d9180b94-a47d-49d4-9715-37da263c2c2b"},
+                    {
+                      "_RecordPath_": "file://./../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+                      "_RecordName_": "Tag.f7f34af0-d34a-4d3f-a682-b362fa6772a5",
+                      "_RecordId_": "f7f34af0-d34a-4d3f-a682-b362fa6772a5"}],
+                  "negativeTags": []}],
+              "tagType": "Produces"}],
+          "resourceTags": [],
+          "logErrorOnSearchFail": true}},
+      {
+        "_Pointer_": "ptr:2",
+        "_Type_": "MissionProperty",
+        "missionVariableName": "DropoffLocation_BP",
+        "extendedTextToken": "Destination",
+        "value": {
+          "_Type_": "MissionPropertyValue_Location",
+          "matchConditions": [
+            {
+              "_Type_": "DataSetMatchCondition_TagSearch",
+              "tagSearch": [
+                {
+                  "_Type_": "TagSearchTerm",
+                  "positiveTags": [
+                    {
+                      "_RecordPath_": "file://./../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+                      "_RecordName_": "Tag.13abec13-80ce-4fda-917a-c2e2225b0268",
+                      "_RecordId_": "13abec13-80ce-4fda-917a-c2e2225b0268"},
+                    {
+                      "_RecordPath_": "file://./../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+                      "_RecordName_": "Tag.41ef12a1-59fc-4b92-a5bc-53cb2f6d474e",
+                      "_RecordId_": "41ef12a1-59fc-4b92-a5bc-53cb2f6d474e"}],
+                  "negativeTags": []}],
+              "tagType": "General"},
+            {
+              "_Type_": "DataSetMatchCondition_TagSearch",
+              "tagSearch": [
+                {
+                  "_Type_": "TagSearchTerm",
+                  "positiveTags": [
+                    {
+                      "_RecordPath_": "file://./../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+                      "_RecordName_": "Tag.d9180b94-a47d-49d4-9715-37da263c2c2b",
+                      "_RecordId_": "d9180b94-a47d-49d4-9715-37da263c2c2b"}],
+                  "negativeTags": []}],
+              "tagType": "Consumes"},
+            {
+              "_Type_": "DataSetMatchCondition_ExcludeProperty",
+              "excludedProperty": "_PointsTo_:ptr:1"}],
+          "resourceTags": [],
+          "logErrorOnSearchFail": true}}],
+    "objectiveTokens": [
+      {
+        "_Pointer_": "ptr:7",
+        "_Type_": "ObjectiveToken",
+        "id": "62d6b8d9-8efc-4fc8-bd7f-18f4c950648a",
+        "debugName": "Hauling",
+        "startsActive": true,
+        "properties": [
+          {
+            "_Pointer_": "ptr:5",
+            "_Type_": "ObjectiveProperty_Referenced",
+            "missionVariableName": "",
+            "extendedTextToken": "Location",
+            "property": "_PointsTo_:ptr:1"},
+          {
+            "_Pointer_": "ptr:6",
+            "_Type_": "ObjectiveProperty_Referenced",
+            "missionVariableName": "",
+            "extendedTextToken": "Destination",
+            "property": "_PointsTo_:ptr:2"},
+          {
+            "_Pointer_": "ptr:4",
+            "_Type_": "ObjectiveProperty_Referenced",
+            "missionVariableName": "Organization",
+            "extendedTextToken": "",
+            "property": "_PointsTo_:ptr:3"},
+          {
+            "_Type_": "ObjectiveProperty_Output",
+            "property": {
+              "_Type_": "MissionProperty",
+              "missionVariableName": "CollectedCargo",
+              "extendedTextToken": "",
+              "value": {
+                "_Type_": "MissionPropertyValue_Object"}}}],
+        "objectiveHandler": {
+          "_Type_": "ObjectiveHandler_Hauling",
+          "organization": "_PointsTo_:ptr:4",
+          "objectiveSettings": {
+            "_Type_": "Hauling_ObjectiveSettings",
+            "collectObjective": {
+              "_Type_": "ObjectiveDisplayInfo",
+              "shortDescription": "@LOC_UNINITIALIZED",
+              "longDescription": "@hauling_collect_objective",
+              "objectiveMarkerLabel": "@HaulCargo_obj_short_01",
+              "category": "Primary",
+              "hideOnHUD": true},
+            "resourceDeliverObjective": {
+              "_Type_": "ObjectiveDisplayInfo",
+              "shortDescription": "@HaulCargo_obj_itemspecifics_01",
+              "longDescription": "@hauling_deliver_resource_objective",
+              "objectiveMarkerLabel": "@HaulCargo_obj_short_02",
+              "category": "Primary",
+              "hideOnHUD": false},
+            "collectAndDeliverObjective": {
+              "_Type_": "ObjectiveDisplayInfo",
+              "shortDescription": "@LOC_UNINITIALIZED",
+              "longDescription": "@LOC_UNINITIALIZED",
+              "objectiveMarkerLabel": "@HaulCargo_obj_short_03",
+              "category": "Primary",
+              "hideOnHUD": false},
+            "itemDeliverObjective": {
+              "_Type_": "ObjectiveDisplayInfo",
+              "shortDescription": "@LOC_UNINITIALIZED",
+              "longDescription": "@LOC_UNINITIALIZED",
+              "objectiveMarkerLabel": "@LOC_UNINITIALIZED",
+              "category": "Primary",
+              "hideOnHUD": false},
+            "orObjective": {
+              "_Type_": "ObjectiveDisplayInfo",
+              "shortDescription": "@Industrial_GenericCollect_Short_Or",
+              "longDescription": "@Industrial_GenericCollect_Long_Or",
+              "objectiveMarkerLabel": "@LOC_UNINITIALIZED",
+              "category": "Primary",
+              "hideOnHUD": false},
+            "andObjective": {
+              "_Type_": "ObjectiveDisplayInfo",
+              "shortDescription": "@Industrial_GenericCollect_Short_And",
+              "longDescription": "@Industrial_GenericCollect_Long_And",
+              "objectiveMarkerLabel": "@LOC_UNINITIALIZED",
+              "category": "Primary",
+              "hideOnHUD": false},
+            "listItemObjective": {
+              "_Type_": "ObjectiveDisplayInfo",
+              "shortDescription": "@Industrial_GenericCollect_Short_ListItem",
+              "longDescription": "@Industrial_GenericCollect_Long_ListItem",
+              "objectiveMarkerLabel": "@LOC_UNINITIALIZED",
+              "category": "Primary",
+              "hideOnHUD": false},
+            "itemExtendedTextToken": "item",
+            "pickupLocationExtendedTextToken": "location",
+            "amountExtendedTextToken": "amount",
+            "totalExtendedTextToken": "total",
+            "dropOffLocationExtendedTextToken": "destination",
+            "mobiglasDisplayLayout": null},
+          "hideMarkers": false,
+          "haulingOrders": [
+            {
+              "_Type_": "HaulingOrder_Resource",
+              "pickUpLocation": "_PointsTo_:ptr:5",
+              "dropOffLocation": "_PointsTo_:ptr:6",
+              "pickUpTargetTypes": [],
+              "dropOffTargetTypes": [],
+              "resource": {
+                "_RecordPath_": "file://./../../../../../../libs/foundry/records/resourcetypedatabase/resourcetypedatabase.json",
+                "_RecordName_": "ResourceType.Silicon",
+                "_RecordId_": "7bbd3197-a6e1-49b3-a495-0b7ef4f8ce40"},
+              "maxContainerSize": 8.0,
+              "minSCU": 80.0,
+              "maxSCU": 112.0}],
+          "haulingLimitProperty": null},
+        "rewardContribution": {
+          "_Type_": "ObjectiveRewardContribution_PercentOfMission",
+          "percentContribution": 100.0,
+          "doPartialRewardPayout": true},
+        "displayInfo": {
+          "_Type_": "ObjectiveDisplayInfo",
+          "shortDescription": "@LOC_UNINITIALIZED",
+          "longDescription": "@LOC_UNINITIALIZED",
+          "objectiveMarkerLabel": "@LOC_UNINITIALIZED",
+          "category": "Primary",
+          "hideOnHUD": false},
+        "overrideMissionDetailsDisplayInfo": {
+          "_Type_": "OverrideMissionDetailsDisplayInfo",
+          "titleOverride": "@LOC_UNINITIALIZED",
+          "descriptionOverride": "@LOC_UNINITIALIZED"},
+        "commsNotifications": [],
+        "childMissionPhases": []}],
+    "missionFlow": {
+      "_Type_": "MissionFlow",
+      "triggers": [
+        {
+          "_Type_": "MissionFlowTrigger",
+          "description": "When [Hauling] completed -&gt; Mission Completed",
+          "condition": {
+            "_Type_": "MissionFlowCondition_TokenState",
+            "objectiveToken": "_PointsTo_:ptr:7",
+            "tokenState": "Completed"},
+          "action": {
+            "_Type_": "MissionFlowAction_StateChange",
+            "toState": "Completed"}},
+        {
+          "_Type_": "MissionFlowTrigger",
+          "description": "When [Hauling] failed -&gt; Mission Failed",
+          "condition": {
+            "_Type_": "MissionFlowCondition_TokenState",
+            "objectiveToken": "_PointsTo_:ptr:7",
+            "tokenState": "Failed"},
+          "action": {
+            "_Type_": "MissionFlowAction_StateChange",
+            "toState": "Failed"}},
+        {
+          "_Type_": "MissionFlowTrigger",
+          "description": "When [Hauling] abandoned -&gt; Mission Abandoned",
+          "condition": {
+            "_Type_": "MissionFlowCondition_AND",
+            "conditions": [
+              {
+                "_Type_": "MissionFlowCondition_TokenState",
+                "objectiveToken": "_PointsTo_:ptr:7",
+                "tokenState": "Abandoned"}]},
+          "action": {
+            "_Type_": "MissionFlowAction_StateChange",
+            "toState": "Abandoned"}}]}}}

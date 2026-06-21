@@ -1,0 +1,11 @@
+{
+  "_RecordName_": "CraftingGameplayPropertyDef.GPP_Weapon_Recoil_Handling",
+  "_RecordId_": "037ea34c-e564-492e-b575-3e5aac5895e4",
+  "_RecordTag_": "CGP2",
+  "_RecordValue_": {
+    "_Type_": "CraftingGameplayPropertyDef",
+    "propertyName": "@StatName_GPP_Weapon_Recoil_Handling",
+    "displayTransformation": {
+      "_Type_": "CraftingDisplayTransformation_ConvertFactorToNegatedPercentChange"},
+    "unitFormat": "@StatUnits_Percent",
+    "nameOverrides": []}}

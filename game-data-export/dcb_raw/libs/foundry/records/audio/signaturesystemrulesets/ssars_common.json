@@ -1,0 +1,51 @@
+{
+  "_RecordName_": "SSCSignatureSystemAudioRuleset.SSARS_Common",
+  "_RecordId_": "f489a2f4-ac4a-45c9-af3d-ffd7723b95e1",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "SSCSignatureSystemAudioRuleset",
+    "rules": [
+      {
+        "_Type_": "SSCSignatureSystemAudioTriggerTypeRule",
+        "subRules": [
+          {
+            "_Type_": "SSCSignatureSystemAudioRtpcSubRule",
+            "Rtpc": {
+              "_Type_": "AudioRtpc",
+              "rtpc": ""},
+            "RTPCValue1": 0.0,
+            "SignatureMultiplier1": 1.0,
+            "RTPCValue2": 1.0,
+            "SignatureMultiplier2": 0.25}],
+        "modifier": null,
+        "triggerType": "WeaponFire"},
+      {
+        "_Type_": "SSCSignatureSystemAudioTriggerTypeRule",
+        "subRules": [],
+        "modifier": null,
+        "triggerType": "EntityEffect"},
+      {
+        "_Type_": "SSCSignatureSystemAudioTriggerTypeRule",
+        "subRules": [],
+        "modifier": null,
+        "triggerType": "Footsteps"},
+      {
+        "_Type_": "SSCSignatureSystemAudioRuleAlways",
+        "subRules": [],
+        "modifier": {
+          "_Type_": "SSCSignatureSystemAudioOverride",
+          "value": 0.0}},
+      {
+        "_Type_": "SSCSignatureSystemAudioTriggerTypeRule",
+        "subRules": [
+          {
+            "_Type_": "SSCSignatureSystemAudioRtpcSubRule",
+            "Rtpc": {
+              "_Type_": "AudioRtpc",
+              "rtpc": "Actor_Stance"},
+            "RTPCValue1": 0.0,
+            "SignatureMultiplier1": 0.0,
+            "RTPCValue2": 1.0,
+            "SignatureMultiplier2": 1.0}],
+        "modifier": null,
+        "triggerType": "Footsteps"}]}}

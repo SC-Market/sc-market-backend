@@ -1,0 +1,14 @@
+{
+  "_RecordName_": "BuildingBlocks_ExternalColorReference.c_default_contact_aggressive",
+  "_RecordId_": "66681ca2-e2f3-4d30-8d56-1dfe6ca1bb67",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "BuildingBlocks_ExternalColorReference",
+    "color": {
+      "_Type_": "BuildingBlocks_ColorSolid",
+      "color": {
+        "_Type_": "SRGBA8",
+        "r": 255,
+        "g": 0,
+        "b": 0,
+        "a": 255}}}}

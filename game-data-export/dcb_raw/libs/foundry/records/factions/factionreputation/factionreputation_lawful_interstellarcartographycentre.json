@@ -1,0 +1,76 @@
+{
+  "_RecordName_": "FactionReputation.FactionReputation_Lawful_InterstellarCartographyCentre",
+  "_RecordId_": "3afb087d-5e66-4f3f-996d-521bf48f6e1b",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "FactionReputation",
+    "name": "(Default)",
+    "displayName": "@LOC_PLACEHOLDER",
+    "GEID": 199998982730,
+    "logo": "",
+    "hideInDelpihApp": false,
+    "isNPC": false,
+    "reputationContextPropertiesUI": "file://./../../../../../libs/foundry/records/reputation/contexts/reputationcontext_affinity.json",
+    "allies": [],
+    "enemies": [],
+    "hostilityParams": {
+      "_Type_": "RelationStandingParams",
+      "scope": "file://./../../../../../libs/foundry/records/reputation/scopes/factionreputationscope.json",
+      "standing": "file://./../../../../../libs/foundry/records/reputation/standings/faction_reputation_pyro/reputationstanding_factionrep_negativerep.json",
+      "markerParams": {
+        "_Type_": "RelationMarkerParams",
+        "description": "@LOC_PLACEHOLDER",
+        "icon": ""}},
+    "alliedParams": {
+      "_Type_": "RelationStandingParams",
+      "scope": "file://./../../../../../libs/foundry/records/reputation/scopes/factionreputationscope.json",
+      "standing": "file://./../../../../../libs/foundry/records/reputation/standings/faction_reputation_pyro/reputationstanding_factionrep_rank1.json",
+      "markerParams": {
+        "_Type_": "RelationMarkerParams",
+        "description": "@LOC_PLACEHOLDER",
+        "icon": ""}},
+    "propertiesBB": [
+      {
+        "_Type_": "SReputationContextBBPropertyParams",
+        "name": "entityDescription",
+        "dynamicProperty": {
+          "_Type_": "SBBDynamicPropertyLocString",
+          "value": "@LOC_PLACEHOLDER"}},
+      {
+        "_Type_": "SReputationContextBBPropertyParams",
+        "name": "entityLawful",
+        "dynamicProperty": {
+          "_Type_": "SBBDynamicPropertyBool",
+          "value": true}},
+      {
+        "_Type_": "SReputationContextBBPropertyParams",
+        "name": "entityHeadquarters",
+        "dynamicProperty": {
+          "_Type_": "SBBDynamicPropertyLocString",
+          "value": "@LOC_PLACEHOLDER"}},
+      {
+        "_Type_": "SReputationContextBBPropertyParams",
+        "name": "entityFounded",
+        "dynamicProperty": {
+          "_Type_": "SBBDynamicPropertyLocString",
+          "value": "@LOC_PLACEHOLDER"}},
+      {
+        "_Type_": "SReputationContextBBPropertyParams",
+        "name": "entityLeadership",
+        "dynamicProperty": {
+          "_Type_": "SBBDynamicPropertyLocString",
+          "value": "@LOC_PLACEHOLDER"}},
+      {
+        "_Type_": "SReputationContextBBPropertyParams",
+        "name": "entityArea",
+        "dynamicProperty": {
+          "_Type_": "SBBDynamicPropertyLocString",
+          "value": "@LOC_PLACEHOLDER"}},
+      {
+        "_Type_": "SReputationContextBBPropertyParams",
+        "name": "entityFocus",
+        "dynamicProperty": {
+          "_Type_": "SBBDynamicPropertyLocString",
+          "value": "@LOC_PLACEHOLDER"}}],
+    "perkReputationRewardList": [],
+    "sandboxTriggers": []}}

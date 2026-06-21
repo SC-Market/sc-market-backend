@@ -1,0 +1,19 @@
+{
+  "_RecordName_": "EntityClassDefinition.Default",
+  "_RecordId_": "3d8cc013-66d7-4ea9-8e5a-2909cd1e93f9",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "EntityClassDefinition",
+    "Category": "Default",
+    "Icon": "Default.bmp",
+    "Invisible": true,
+    "BBoxSelection": false,
+    "defaultEditorColor": {
+      "_Type_": "RGB",
+      "r": 1.0,
+      "g": 1.0,
+      "b": 0.0},
+    "entityDensityClass": "file://./../../../../libs/foundry/records/densityclasses/defaultdensityclass.json",
+    "tags": [],
+    "StaticEntityClassData": [],
+    "Components": []}}

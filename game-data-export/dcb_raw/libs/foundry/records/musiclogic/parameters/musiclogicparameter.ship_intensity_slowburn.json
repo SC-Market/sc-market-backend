@@ -1,0 +1,23 @@
+{
+  "_RecordName_": "MusicLogicParameter.Ship_Intensity_Slowburn",
+  "_RecordId_": "c2daea86-d4f0-46f5-a34a-549763e9490e",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "MusicLogicParameter",
+    "name": "Ship_Intensity_Slowburn",
+    "min": 0.0,
+    "max": 4000.0,
+    "defaultValue": 0.0,
+    "decayRate": 5.0,
+    "decayIsPercentage": true,
+    "scaleModifier": 1.0,
+    "shiftModifier": 0.0,
+    "inverted": false,
+    "rtpc": "",
+    "rtpcIsGlobal": false,
+    "contributors": [],
+    "debugColour": {
+      "_Type_": "RGB",
+      "r": 0.373,
+      "g": 0.62,
+      "b": 0.627}}}

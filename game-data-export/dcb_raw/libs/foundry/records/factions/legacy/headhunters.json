@@ -1,0 +1,100 @@
+{
+  "_RecordName_": "EntityClassDefinition.HeadHunters",
+  "_RecordId_": "3102b519-5262-4b86-a87d-f40fe40066e4",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "EntityClassDefinition",
+    "Category": "Default",
+    "Icon": "Default.bmp",
+    "Invisible": false,
+    "BBoxSelection": false,
+    "defaultEditorColor": {
+      "_Type_": "RGB",
+      "r": 1.0,
+      "g": 1.0,
+      "b": 0.0},
+    "entityDensityClass": null,
+    "tags": [],
+    "StaticEntityClassData": [
+      {
+        "_Type_": "SOrganizationProperties",
+        "Name": "HeadHunters",
+        "DisplayName": "@HeadHunters_RepUI_Name",
+        "Description": "@HeadHunters_RepUI_Description",
+        "Headquarters": "@HeadHunters_RepUI_Headquarters",
+        "GEID": 199998949430,
+        "Logo": "UI/SharedAssets/ManufacturerLogos/Branding_Headhunters_Icon_1x1.tif",
+        "ReputationContextPropertiesUI": null,
+        "MemberCount": 0,
+        "Lawful": false,
+        "DisableReputationTracking": false,
+        "Allies": [
+          {
+            "_Type_": "OrganizationRelationshipParams",
+            "organization": "file://./../../../../../libs/foundry/records/factions/legacy/roughandready.json",
+            "scope": "file://./../../../../../libs/foundry/records/reputation/scopes/reputationscope_affinity.json",
+            "standing": "file://./../../../../../libs/foundry/records/reputation/standings/affinity/reputationstanding_affinity_ally_050.json"}],
+        "Enemies": [
+          {
+            "_Type_": "OrganizationRelationshipParams",
+            "organization": "file://./../../../../../libs/foundry/records/factions/legacy/xenothreat.json",
+            "scope": "file://./../../../../../libs/foundry/records/reputation/scopes/reputationscope_affinity.json",
+            "standing": "file://./../../../../../libs/foundry/records/reputation/standings/affinity/reputationstanding_affinity_neutral_010.json"},
+          {
+            "_Type_": "OrganizationRelationshipParams",
+            "organization": "file://./../../../../../libs/foundry/records/factions/legacy/citizensforpyro.json",
+            "scope": "file://./../../../../../libs/foundry/records/reputation/scopes/factionreputationscope.json",
+            "standing": "file://./../../../../../libs/foundry/records/reputation/standings/faction_reputation_pyro/reputationstanding_factionrep_rank1.json"}],
+        "hostilityParams": {
+          "_Type_": "RelationStandingParams",
+          "scope": "file://./../../../../../libs/foundry/records/reputation/scopes/factionreputationscope.json",
+          "standing": "file://./../../../../../libs/foundry/records/reputation/standings/faction_reputation_pyro/reputationstanding_factionrep_negativerep.json",
+          "markerParams": {
+            "_Type_": "RelationMarkerParams",
+            "description": "@LOC_PLACEHOLDER",
+            "icon": ""}},
+        "alliedParams": {
+          "_Type_": "RelationStandingParams",
+          "scope": "file://./../../../../../libs/foundry/records/reputation/scopes/factionreputationscope.json",
+          "standing": "file://./../../../../../libs/foundry/records/reputation/standings/faction_reputation_pyro/reputationstanding_factionrep_rank1.json",
+          "markerParams": {
+            "_Type_": "RelationMarkerParams",
+            "description": "@LOC_PLACEHOLDER",
+            "icon": ""}},
+        "propertiesBB": [
+          {
+            "_Type_": "SReputationContextBBPropertyParams",
+            "name": "entityFounded",
+            "dynamicProperty": {
+              "_Type_": "SBBDynamicPropertyLocString",
+              "value": "@HeadHunters_RepUI_Founded"}},
+          {
+            "_Type_": "SReputationContextBBPropertyParams",
+            "name": "entityLeadership",
+            "dynamicProperty": {
+              "_Type_": "SBBDynamicPropertyLocString",
+              "value": "@HeadHunters_RepUI_Leadership"}},
+          {
+            "_Type_": "SReputationContextBBPropertyParams",
+            "name": "entityArea",
+            "dynamicProperty": {
+              "_Type_": "SBBDynamicPropertyLocString",
+              "value": "@HeadHunters_RepUI_Area"}},
+          {
+            "_Type_": "SReputationContextBBPropertyParams",
+            "name": "entityFocus",
+            "dynamicProperty": {
+              "_Type_": "SBBDynamicPropertyLocString",
+              "value": "@HeadHunters_RepUI_Focus"}}],
+        "perkReputationRewardList": [],
+        "sandboxTriggers": [
+          {
+            "_Type_": "SandboxTriggerRecordParams",
+            "triggerRecord": "file://./../../../../../libs/foundry/records/reputation/sandboxtriggers/grievousharm_ai.json"}]},
+      {
+        "_Type_": "SUniqueEntityClass",
+        "fixed_geid": 199998948060},
+      {
+        "_Type_": "SReputationContextPropertiesUI",
+        "context": "file://./../../../../../libs/foundry/records/reputation/contexts/reputationcontext_headhunters.json"}],
+    "Components": []}}

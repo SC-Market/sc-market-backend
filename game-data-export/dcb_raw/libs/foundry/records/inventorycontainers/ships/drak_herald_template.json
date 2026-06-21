@@ -1,0 +1,17 @@
+{
+  "_RecordName_": "InventoryContainer.DRAK_Herald_Template",
+  "_RecordId_": "c1336037-6461-4d7b-ac7b-aebbb0d80dc9",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "InventoryContainer",
+    "excludedItemSubTypes": [],
+    "interiorDimensions": {
+      "_Type_": "Vec3",
+      "x": 2.0,
+      "y": 2.0,
+      "z": 2.0},
+    "inventoryType": {
+      "_Type_": "InventoryClosedContainerType",
+      "capacity": {
+        "_Type_": "SStandardCargoUnit",
+        "standardCargoUnits": 0.84}}}}

@@ -1,0 +1,77 @@
+{
+  "_RecordName_": "SEntrancesDef.DRAK_Ironclad",
+  "_RecordId_": "de697b51-5979-4647-ac06-9f109a1e511e",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "SEntrancesDef",
+    "boundingBoxScale": {
+      "_Type_": "Vec3",
+      "x": 1.2,
+      "y": 1.2,
+      "z": 1.2},
+    "boundingBoxOffset": {
+      "_Type_": "Vec3",
+      "x": 0.0,
+      "y": 0.0,
+      "z": 0.0},
+    "entranceArray": [
+      {
+        "_Type_": "SCEntranceItem",
+        "entranceName": "@entrance_ramp",
+        "jointName": "hardpoint_ramp",
+        "positionOffset": {
+          "_Type_": "Vec3",
+          "x": -10.5006,
+          "y": -1.0,
+          "z": -2.0},
+        "shipState": "Both"},
+      {
+        "_Type_": "SCEntranceItem",
+        "entranceName": "@entrance_ramp",
+        "jointName": "hardpoint_ramp",
+        "positionOffset": {
+          "_Type_": "Vec3",
+          "x": 10.5006,
+          "y": -1.0,
+          "z": -2.0},
+        "shipState": "Both"},
+      {
+        "_Type_": "SCEntranceItem",
+        "entranceName": "@entrance_ladder",
+        "jointName": "hardpoint_entry_platform_right",
+        "positionOffset": {
+          "_Type_": "Vec3",
+          "x": 1.125,
+          "y": 2.5,
+          "z": -1.5},
+        "shipState": "Both"},
+      {
+        "_Type_": "SCEntranceItem",
+        "entranceName": "@entrance_ladder",
+        "jointName": "hardpoint_entry_platform_left",
+        "positionOffset": {
+          "_Type_": "Vec3",
+          "x": -1.125,
+          "y": 2.5,
+          "z": -1.5},
+        "shipState": "Both"},
+      {
+        "_Type_": "SCEntranceItem",
+        "entranceName": "@entrance_ladder",
+        "jointName": "drak_ironclad",
+        "positionOffset": {
+          "_Type_": "Vec3",
+          "x": 17.0,
+          "y": -2.875,
+          "z": 3.25},
+        "shipState": "Grounded"},
+      {
+        "_Type_": "SCEntranceItem",
+        "entranceName": "@entrance_dock",
+        "jointName": "hardpoint_docking_collar",
+        "positionOffset": {
+          "_Type_": "Vec3",
+          "x": 1.3,
+          "y": 0.0,
+          "z": 0.0},
+        "shipState": "Flying"}]}}

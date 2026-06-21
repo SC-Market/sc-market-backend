@@ -1,0 +1,49 @@
+{
+  "_RecordName_": "AIWaveCollection.AI_Reinforcements_Unlawful",
+  "_RecordId_": "258e54dd-1537-4031-8eda-102d4954c4cd",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "AIWaveCollection",
+    "waves": [
+      {
+        "_Type_": "AIWave",
+        "id": 1,
+        "textId": "",
+        "staggerTime": 1.0,
+        "members": [
+          {
+            "_Type_": "AIWaveMember",
+            "archetype": "",
+            "entityClassDefinition": "file://./../../../../../../../libs/foundry/records/entities/spaceships/misc_prospector_pu_ai_nt.json",
+            "name": "",
+            "vehicleName": "",
+            "amount": 1,
+            "minAmount": -1,
+            "midAmount": -1,
+            "maxAmount": -1,
+            "crewManifestOverride": null,
+            "skillsetOverride": "file://./../../../../../../../libs/foundry/records/aiprofile/skills/humanpilot40.json",
+            "cargoManifests": [
+              null],
+            "aiDamageModifiersOverride": null}]},
+      {
+        "_Type_": "AIWave",
+        "id": 2,
+        "textId": "",
+        "staggerTime": 1.0,
+        "members": [
+          {
+            "_Type_": "AIWaveMember",
+            "archetype": "",
+            "entityClassDefinition": "file://./../../../../../../../libs/foundry/records/entities/spaceships/misc_prospector_pu_ai_nt_nonlethal.json",
+            "name": "",
+            "vehicleName": "",
+            "amount": 1,
+            "minAmount": -1,
+            "midAmount": -1,
+            "maxAmount": -1,
+            "crewManifestOverride": null,
+            "skillsetOverride": "file://./../../../../../../../libs/foundry/records/aiprofile/skills/humanpilot40.json",
+            "cargoManifests": [
+              null],
+            "aiDamageModifiersOverride": null}]}]}}

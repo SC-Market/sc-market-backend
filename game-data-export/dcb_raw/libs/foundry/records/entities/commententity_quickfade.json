@@ -1,0 +1,33 @@
+{
+  "_RecordName_": "EntityClassDefinition.CommentEntity_Quickfade",
+  "_RecordId_": "5cf852b6-12e8-49ae-a4aa-dd9999180b43",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "EntityClassDefinition",
+    "Category": "Misc",
+    "Icon": "Comment.bmp",
+    "Invisible": false,
+    "BBoxSelection": false,
+    "defaultEditorColor": {
+      "_Type_": "RGB",
+      "r": 1.0,
+      "g": 1.0,
+      "b": 0.0},
+    "entityDensityClass": null,
+    "tags": [],
+    "StaticEntityClassData": [],
+    "Components": [
+      {
+        "_Type_": "SCommentEntityParams",
+        "text": "Tag",
+        "size": 2.4,
+        "minScale": 0.3,
+        "hidden": false,
+        "maxDistance": 15.0,
+        "charsPerLine": 30,
+        "fixed": false,
+        "color": {
+          "_Type_": "SRGB8",
+          "r": 211,
+          "g": 255,
+          "b": 211}}]}}

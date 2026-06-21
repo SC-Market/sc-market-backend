@@ -1,0 +1,27 @@
+{
+  "_RecordName_": "LegacyCraftingRecipeDefRecord.Recipe_ammunition_grin_multitool_resource_salvage_repair_01_empty_scraps",
+  "_RecordId_": "86a89c5b-991a-4433-8d19-c4805d8dcdb3",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "LegacyCraftingRecipeDefRecord",
+    "recipe": {
+      "_Type_": "LegacyCraftingRecipe_Default",
+      "timeSeconds": 2.0,
+      "outputs": [
+        {
+          "_Type_": "LegacyCraftingOutput_Entity",
+          "entityClass": "file://./../../../../../../../libs/foundry/records/entities/scitem/weapons/magazines/grin_multitool_resource_salvage_repair_01.json",
+          "amount": 1,
+          "fillAmmo": false}],
+      "costs": [
+        {
+          "_Type_": "LegacyCraftingCost_ResourceAmount",
+          "resource": {
+            "_RecordPath_": "file://./../../../../../../../libs/foundry/records/resourcetypedatabase/resourcetypedatabase.json",
+            "_RecordName_": "ResourceType.ConstructionMaterialScrap",
+            "_RecordId_": "0de337b5-01ca-4fd7-afdf-b67cf598f3c3"},
+          "amount": {
+            "_Type_": "SStandardCargoUnit",
+            "standardCargoUnits": 0.01}}],
+      "iconImagePath": "UI/Textures/PlayerUI/WeaponAttachment/Icons/grin_multitool_01_salvage.tif",
+      "recipeName": "@item_Namegrin_multitool_01_salvage_mag_empty"}}}

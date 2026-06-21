@@ -1,0 +1,47 @@
+{
+  "_RecordName_": "SEntrancesDef.AEGS_Avenger",
+  "_RecordId_": "156ddeb8-a296-4e31-9767-f61f701efa46",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "SEntrancesDef",
+    "boundingBoxScale": {
+      "_Type_": "Vec3",
+      "x": 1.6,
+      "y": 1.6,
+      "z": 1.6},
+    "boundingBoxOffset": {
+      "_Type_": "Vec3",
+      "x": 0.0,
+      "y": 0.0,
+      "z": -0.5},
+    "entranceArray": [
+      {
+        "_Type_": "SCEntranceItem",
+        "entranceName": "@entrance_canopy",
+        "jointName": "Canopy",
+        "positionOffset": {
+          "_Type_": "Vec3",
+          "x": 0.0,
+          "y": 0.0,
+          "z": 0.0},
+        "shipState": "Flying"},
+      {
+        "_Type_": "SCEntranceItem",
+        "entranceName": "@entrance_ladder",
+        "jointName": "ladder_door",
+        "positionOffset": {
+          "_Type_": "Vec3",
+          "x": 0.0,
+          "y": 0.0,
+          "z": 0.0},
+        "shipState": "Grounded"},
+      {
+        "_Type_": "SCEntranceItem",
+        "entranceName": "@entrance_ramp",
+        "jointName": "hardpoint_door_rear",
+        "positionOffset": {
+          "_Type_": "Vec3",
+          "x": 0.0,
+          "y": -2.0,
+          "z": 0.1},
+        "shipState": "Both"}]}}

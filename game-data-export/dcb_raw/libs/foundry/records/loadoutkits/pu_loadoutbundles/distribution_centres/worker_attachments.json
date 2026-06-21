@@ -1,0 +1,98 @@
+{
+  "_RecordName_": "SLoadoutAssortment.Worker_Attachments",
+  "_RecordId_": "82e99785-9ebd-40d6-80e3-f58fcde80485",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "SLoadoutAssortment",
+    "Requirement": null,
+    "GroupedLoadouts": [
+      {
+        "_Type_": "SGroupedLoadouts",
+        "Group": "PrimaryWeapon",
+        "Requirement": null,
+        "Loadouts": [
+          {
+            "_Type_": "SItemPortLoadoutManualParams",
+            "WearRange": null,
+            "DirtRange": null,
+            "SkipInventoryItemsOnMissionEntities": false,
+            "InventoryItems": [],
+            "entries": [
+              {
+                "_Type_": "SItemPortLoadoutEntryParams",
+                "itemPortName": "Body_ItemPort",
+                "entityClassName": "",
+                "entityClassReference": null,
+                "inventoryContainer": null,
+                "loadout": {
+                  "_Type_": "SItemPortLoadoutManualParams",
+                  "WearRange": null,
+                  "DirtRange": null,
+                  "SkipInventoryItemsOnMissionEntities": false,
+                  "InventoryItems": [],
+                  "entries": [
+                    {
+                      "_Type_": "SItemPortLoadoutEntryParams",
+                      "itemPortName": "Clothing_Legs",
+                      "entityClassName": "",
+                      "entityClassReference": null,
+                      "inventoryContainer": null,
+                      "loadout": {
+                        "_Type_": "SItemPortLoadoutManualParams",
+                        "WearRange": null,
+                        "DirtRange": null,
+                        "SkipInventoryItemsOnMissionEntities": false,
+                        "InventoryItems": [],
+                        "entries": [
+                          {
+                            "_Type_": "SItemPortLoadoutEntryParams",
+                            "itemPortName": "wep_sidearm",
+                            "entityClassName": "behr_pistol_ballistic_01",
+                            "entityClassReference": null,
+                            "inventoryContainer": null,
+                            "loadout": null}]}}]}}]}]},
+      {
+        "_Type_": "SGroupedLoadouts",
+        "Group": "SecondaryWeapon",
+        "Requirement": null,
+        "Loadouts": [
+          {
+            "_Type_": "SItemPortLoadoutManualParams",
+            "WearRange": null,
+            "DirtRange": null,
+            "SkipInventoryItemsOnMissionEntities": false,
+            "InventoryItems": [],
+            "entries": [
+              {
+                "_Type_": "SItemPortLoadoutEntryParams",
+                "itemPortName": "Body_ItemPort",
+                "entityClassName": "",
+                "entityClassReference": null,
+                "inventoryContainer": null,
+                "loadout": {
+                  "_Type_": "SItemPortLoadoutManualParams",
+                  "WearRange": null,
+                  "DirtRange": null,
+                  "SkipInventoryItemsOnMissionEntities": false,
+                  "InventoryItems": [],
+                  "entries": [
+                    {
+                      "_Type_": "SItemPortLoadoutEntryParams",
+                      "itemPortName": "Clothing_Legs",
+                      "entityClassName": "",
+                      "entityClassReference": null,
+                      "inventoryContainer": null,
+                      "loadout": {
+                        "_Type_": "SItemPortLoadoutManualParams",
+                        "WearRange": null,
+                        "DirtRange": null,
+                        "SkipInventoryItemsOnMissionEntities": false,
+                        "InventoryItems": [],
+                        "entries": [
+                          {
+                            "_Type_": "SItemPortLoadoutEntryParams",
+                            "itemPortName": "utility_attach_1",
+                            "entityClassName": "grin_multitool_01_default_cutter_AI",
+                            "entityClassReference": null,
+                            "inventoryContainer": null,
+                            "loadout": null}]}}]}}]}]}]}}

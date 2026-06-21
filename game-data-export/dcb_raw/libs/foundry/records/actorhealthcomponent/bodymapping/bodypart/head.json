@@ -1,0 +1,9 @@
+{
+  "_RecordName_": "BodyPart.head",
+  "_RecordId_": "ea721959-c3e2-4df8-9ef3-8831dc98c514",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "BodyPart",
+    "partHealthStat": "HealthHead",
+    "partWearStat": "WearHead",
+    "jointName": "Head"}}

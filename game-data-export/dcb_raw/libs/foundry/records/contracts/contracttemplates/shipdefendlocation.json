@@ -1,0 +1,363 @@
+{
+  "_RecordName_": "ContractTemplate.ShipDefendLocation",
+  "_RecordId_": "cdb057ec-f1af-4c44-8368-c8d280f6f340",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "ContractTemplate",
+    "notForRelease": false,
+    "workInProgress": false,
+    "owner": "file://./../../../../../libs/foundry/records/devowners/devteams/mdt.json",
+    "contractClass": {
+      "_Type_": "ContractClass_Contract",
+      "additionalParams": {
+        "_Type_": "ActiveContractSettings",
+        "hasCompleteButton": false,
+        "handlesAbandonRequest": false,
+        "canBeShared": true,
+        "displayAlliedMarkers": true,
+        "onlyOwnerCanComplete": false},
+      "autoFinishSettings": {
+        "_Type_": "ContractAutoFinishSettings",
+        "contractDeadline": {
+          "_Type_": "MissionDeadline",
+          "missionCompletionTime": 0.0,
+          "missionAutoEnd": false,
+          "missionResultAfterTimerEnd": "Failed",
+          "remainingTimeToShowTimer": 0.0,
+          "missionEndReason": "@LOC_EMPTY"},
+        "failIfSentToPrison": true,
+        "failIfBecameCriminal": true,
+        "failIfLeavePrison": false}},
+    "contractDisplayInfo": {
+      "_Type_": "ContractDisplayInfo",
+      "displayString": [
+        "@LOC_UNINITIALIZED",
+        "@LOC_UNINITIALIZED",
+        "@LOC_UNINITIALIZED",
+        "@LOC_UNINITIALIZED",
+        "@LOC_UNINITIALIZED"],
+      "type": "file://./../../../../../libs/foundry/records/missiontype/pu/mercenary.json",
+      "illegal": false,
+      "showLifeTimeInMobiGlas": true,
+      "preShowObjectives": false},
+    "modifiers": [],
+    "contractProperties": [
+      {
+        "_Pointer_": "ptr:1",
+        "_Type_": "MissionProperty",
+        "missionVariableName": "MissionLocation_BP",
+        "extendedTextToken": "Location",
+        "value": {
+          "_Type_": "MissionPropertyValue_Location",
+          "matchConditions": [],
+          "resourceTags": [],
+          "logErrorOnSearchFail": true}},
+      {
+        "_Pointer_": "ptr:2",
+        "_Type_": "MissionProperty",
+        "missionVariableName": "ObjectsToFind_BP",
+        "extendedTextToken": "Objects",
+        "value": {
+          "_Type_": "MissionPropertyValue_Tags",
+          "tags": {
+            "_Type_": "TagList",
+            "tags": []},
+          "negativeTags": {
+            "_Type_": "TagList",
+            "tags": []},
+          "options": []}},
+      {
+        "_Pointer_": "ptr:3",
+        "_Type_": "MissionProperty",
+        "missionVariableName": "",
+        "extendedTextToken": "ItemsToDefend",
+        "value": {
+          "_Type_": "MissionPropertyValue_StringHash",
+          "options": [
+            {
+              "_Type_": "MissionPropertyValueOption_StringHash",
+              "textId": "@LOC_UNINITIALIZED",
+              "weighting": 1.0,
+              "DEBUG_forceChooseThisOption": false,
+              "dependentProperties": [],
+              "value": ""}]}},
+      {
+        "_Pointer_": "ptr:4",
+        "_Type_": "MissionProperty",
+        "missionVariableName": "Bombers_BP",
+        "extendedTextToken": "",
+        "value": {
+          "_Type_": "MissionPropertyValue_ShipSpawnDescriptions",
+          "spawnDescriptions": [],
+          "allowedForMissionRestrictedDeliveries": false}},
+      {
+        "_Pointer_": "ptr:5",
+        "_Type_": "MissionProperty",
+        "missionVariableName": "IsMissionWaves_BP",
+        "extendedTextToken": "",
+        "value": {
+          "_Type_": "MissionPropertyValue_Boolean",
+          "value": true}},
+      {
+        "_Pointer_": "ptr:6",
+        "_Type_": "MissionProperty",
+        "missionVariableName": "NPCSpawnDescriptions_BP",
+        "extendedTextToken": "",
+        "value": {
+          "_Type_": "MissionPropertyValue_NPCSpawnDescriptions",
+          "spawnDescriptions": []}},
+      {
+        "_Pointer_": "ptr:7",
+        "_Type_": "MissionProperty",
+        "missionVariableName": "AllowEmergentAI_BP",
+        "extendedTextToken": "",
+        "value": {
+          "_Type_": "MissionPropertyValue_Boolean",
+          "value": false}},
+      {
+        "_Pointer_": "ptr:8",
+        "_Type_": "MissionProperty",
+        "missionVariableName": "HealObjectsToDefend_BP",
+        "extendedTextToken": "",
+        "value": {
+          "_Type_": "MissionPropertyValue_Boolean",
+          "value": true}},
+      {
+        "_Pointer_": "ptr:9",
+        "_Type_": "MissionProperty",
+        "missionVariableName": "DefendedObjectsBonus_BP",
+        "extendedTextToken": "Bonus",
+        "value": {
+          "_Type_": "MissionPropertyValue_Integer",
+          "options": [
+            {
+              "_Type_": "MissionPropertyValueOption_Integer",
+              "textId": "@LOC_UNINITIALIZED",
+              "weighting": 1.0,
+              "DEBUG_forceChooseThisOption": false,
+              "dependentProperties": [],
+              "value": 1000,
+              "variation": 0}]}},
+      {
+        "_Pointer_": "ptr:10",
+        "_Type_": "MissionProperty",
+        "missionVariableName": "CN_MissionStart",
+        "extendedTextToken": "",
+        "value": {
+          "_Type_": "MissionPropertyValue_Tags",
+          "tags": {
+            "_Type_": "TagList",
+            "tags": [
+              {
+                "_RecordPath_": "file://./../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+                "_RecordName_": "Tag.63c4e16e-5dd2-4431-871a-3691ab2aba17",
+                "_RecordId_": "63c4e16e-5dd2-4431-871a-3691ab2aba17"}]},
+          "negativeTags": {
+            "_Type_": "TagList",
+            "tags": []},
+          "options": []}},
+      {
+        "_Pointer_": "ptr:11",
+        "_Type_": "MissionProperty",
+        "missionVariableName": "CN_MissionComplete",
+        "extendedTextToken": "",
+        "value": {
+          "_Type_": "MissionPropertyValue_Tags",
+          "tags": {
+            "_Type_": "TagList",
+            "tags": [
+              {
+                "_RecordPath_": "file://./../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+                "_RecordName_": "Tag.63c4e16e-5dd2-4431-871a-3691ab2aba17",
+                "_RecordId_": "63c4e16e-5dd2-4431-871a-3691ab2aba17"}]},
+          "negativeTags": {
+            "_Type_": "TagList",
+            "tags": []},
+          "options": []}},
+      {
+        "_Pointer_": "ptr:12",
+        "_Type_": "MissionProperty",
+        "missionVariableName": "CN_MissionFail",
+        "extendedTextToken": "",
+        "value": {
+          "_Type_": "MissionPropertyValue_Tags",
+          "tags": {
+            "_Type_": "TagList",
+            "tags": [
+              {
+                "_RecordPath_": "file://./../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+                "_RecordName_": "Tag.63c4e16e-5dd2-4431-871a-3691ab2aba17",
+                "_RecordId_": "63c4e16e-5dd2-4431-871a-3691ab2aba17"}]},
+          "negativeTags": {
+            "_Type_": "TagList",
+            "tags": []},
+          "options": []}},
+      {
+        "_Pointer_": "ptr:13",
+        "_Type_": "MissionProperty",
+        "missionVariableName": "CN_MissionAbandon",
+        "extendedTextToken": "",
+        "value": {
+          "_Type_": "MissionPropertyValue_Tags",
+          "tags": {
+            "_Type_": "TagList",
+            "tags": [
+              {
+                "_RecordPath_": "file://./../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+                "_RecordName_": "Tag.63c4e16e-5dd2-4431-871a-3691ab2aba17",
+                "_RecordId_": "63c4e16e-5dd2-4431-871a-3691ab2aba17"}]},
+          "negativeTags": {
+            "_Type_": "TagList",
+            "tags": []},
+          "options": []}}],
+    "objectiveTokens": [
+      {
+        "_Type_": "ObjectiveToken",
+        "id": "6174a552-6e91-42e2-937e-b8b28c3e72fe",
+        "debugName": "ShipDefendLocation",
+        "startsActive": true,
+        "properties": [
+          {
+            "_Pointer_": "ptr:14",
+            "_Type_": "ObjectiveProperty_Referenced",
+            "missionVariableName": "MissionLocation_BP",
+            "extendedTextToken": "Location",
+            "property": "_PointsTo_:ptr:1"},
+          {
+            "_Type_": "ObjectiveProperty_Referenced",
+            "missionVariableName": "ObjectsToFind_BP",
+            "extendedTextToken": "Objects",
+            "property": "_PointsTo_:ptr:2"},
+          {
+            "_Type_": "ObjectiveProperty_Referenced",
+            "missionVariableName": "",
+            "extendedTextToken": "ItemsToDefend",
+            "property": "_PointsTo_:ptr:3"},
+          {
+            "_Type_": "ObjectiveProperty_Referenced",
+            "missionVariableName": "Bombers_BP",
+            "extendedTextToken": "",
+            "property": "_PointsTo_:ptr:4"},
+          {
+            "_Type_": "ObjectiveProperty_Referenced",
+            "missionVariableName": "IsMissionWaves_BP",
+            "extendedTextToken": "",
+            "property": "_PointsTo_:ptr:5"},
+          {
+            "_Type_": "ObjectiveProperty_Referenced",
+            "missionVariableName": "NPCSpawnDescriptions_BP",
+            "extendedTextToken": "",
+            "property": "_PointsTo_:ptr:6"},
+          {
+            "_Type_": "ObjectiveProperty_Referenced",
+            "missionVariableName": "AllowEmergentAI_BP",
+            "extendedTextToken": "",
+            "property": "_PointsTo_:ptr:7"},
+          {
+            "_Type_": "ObjectiveProperty_Referenced",
+            "missionVariableName": "HealObjectsToDefend_BP",
+            "extendedTextToken": "",
+            "property": "_PointsTo_:ptr:8"},
+          {
+            "_Type_": "ObjectiveProperty_Referenced",
+            "missionVariableName": "DefendedObjectsBonus_BP",
+            "extendedTextToken": "Bonus",
+            "property": "_PointsTo_:ptr:9"},
+          {
+            "_Pointer_": "ptr:15",
+            "_Type_": "ObjectiveProperty_Referenced",
+            "missionVariableName": "CN_MissionStart",
+            "extendedTextToken": "",
+            "property": "_PointsTo_:ptr:10"},
+          {
+            "_Pointer_": "ptr:16",
+            "_Type_": "ObjectiveProperty_Referenced",
+            "missionVariableName": "CN_MissionComplete",
+            "extendedTextToken": "",
+            "property": "_PointsTo_:ptr:11"},
+          {
+            "_Pointer_": "ptr:17",
+            "_Type_": "ObjectiveProperty_Referenced",
+            "missionVariableName": "CN_MissionFail",
+            "extendedTextToken": "",
+            "property": "_PointsTo_:ptr:12"},
+          {
+            "_Pointer_": "ptr:18",
+            "_Type_": "ObjectiveProperty_Referenced",
+            "missionVariableName": "CN_MissionAbandon",
+            "extendedTextToken": "",
+            "property": "_PointsTo_:ptr:13"}],
+        "objectiveHandler": {
+          "_Type_": "ObjectiveHandler_Local",
+          "moduleDeclaration": null,
+          "module": "Libs/Subsumption/Missions/PU/Missions/ShipDefendLocation/ShipDefendLocation.xml",
+          "moduleHierarchy": null,
+          "disableTravelObjectives": false,
+          "disableReturnObjectives": false,
+          "travelRadiusKM": 15.0,
+          "allPlayersLeftGracePeriod": -1.0,
+          "travelObjectiveInfo": {
+            "_Type_": "ObjectiveDisplayInfo",
+            "shortDescription": "@ShipDefendLocation_reach_short_01",
+            "longDescription": "@ShipDefendLocation_reach_long_01",
+            "objectiveMarkerLabel": "@ShipDefendLocation_reach_marker_01",
+            "category": "Primary",
+            "hideOnHUD": false},
+          "returnObjectiveInfo": {
+            "_Type_": "ObjectiveDisplayInfo",
+            "shortDescription": "@ReturnObjective_Short",
+            "longDescription": "@ReturnObjective_Long",
+            "objectiveMarkerLabel": "@ReturnObjective_Short",
+            "category": "Primary",
+            "hideOnHUD": false},
+          "navPointSpawnInfo": {
+            "_Type_": "NavPointSpawnInformation",
+            "entityClassDefinition": "file://./../../../../../libs/foundry/records/entities/scitem/mission_entities/mission_qt_quantum_beacon.json",
+            "name": "@mission_items_QTDistressBeacon",
+            "extendedTextTokens": []},
+          "location": "_PointsTo_:ptr:14",
+          "securityManifestToOverride": null},
+        "rewardContribution": null,
+        "displayInfo": {
+          "_Type_": "ObjectiveDisplayInfo",
+          "shortDescription": "@LOC_UNINITIALIZED",
+          "longDescription": "@LOC_UNINITIALIZED",
+          "objectiveMarkerLabel": "@LOC_UNINITIALIZED",
+          "category": "Primary",
+          "hideOnHUD": false},
+        "overrideMissionDetailsDisplayInfo": {
+          "_Type_": "OverrideMissionDetailsDisplayInfo",
+          "titleOverride": "@LOC_UNINITIALIZED",
+          "descriptionOverride": "@LOC_UNINITIALIZED"},
+        "commsNotifications": [
+          {
+            "_Type_": "CommsNotificationSelector",
+            "trigger": "Active",
+            "communicationTags": "_PointsTo_:ptr:15",
+            "commsTiming": "Simultaneous",
+            "delay": 0.0},
+          {
+            "_Type_": "CommsNotificationSelector",
+            "trigger": "Completed",
+            "communicationTags": "_PointsTo_:ptr:16",
+            "commsTiming": "Simultaneous",
+            "delay": 0.0},
+          {
+            "_Type_": "CommsNotificationSelector",
+            "trigger": "Failed",
+            "communicationTags": "_PointsTo_:ptr:17",
+            "commsTiming": "Simultaneous",
+            "delay": 0.0},
+          {
+            "_Type_": "CommsNotificationSelector",
+            "trigger": "Abandoned",
+            "communicationTags": "_PointsTo_:ptr:18",
+            "commsTiming": "Simultaneous",
+            "delay": 0.0}],
+        "childMissionPhases": []}],
+    "partialRewardPayout": null,
+    "missionFlow": {
+      "_Type_": "MissionFlow",
+      "triggers": []},
+    "contractStartCommsNotification": null,
+    "contractEndCommsNotifications": []}}

@@ -1,0 +1,55 @@
+{
+  "_RecordName_": "Level.pu",
+  "_RecordId_": "6121a33a-d801-440d-a9e4-9bfeae0f3515",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "Level",
+    "id": "INVALID",
+    "locDisplayName": "@ui_pregame_stanton_name",
+    "description": "@ui_pregame_stanton_desc",
+    "displayFeatures": {
+      "_Type_": "SCExtendedLocalizationLevelParams",
+      "LogoSimplifiedWhite": "",
+      "FrontendBackground": "ui/frontend/assets/tif/locations/pubackdrop_port_olisar.tif",
+      "History": "@ui_pregame_stanton_desc",
+      "Callout1": "@ui_pregame_stanton_callout1",
+      "Callout2": "@ui_pregame_stanton_callout2",
+      "Callout3": "@ui_pregame_stanton_callout3",
+      "UIPriority": 1,
+      "locationAudioPlayTrigger": {
+        "_Type_": "GlobalResourceAudio",
+        "audioTrigger": ""},
+      "locationAudioStopTrigger": {
+        "_Type_": "GlobalResourceAudio",
+        "audioTrigger": ""}},
+    "thumbnail": "ui/frontend/assets/tif/gametypesmaps/tutorial.tif",
+    "gameToken": "",
+    "universeLocationUniqueId": 562954248454145,
+    "defaultGameRules": "file://./../../../../../libs/foundry/records/gamemode/sc_default.json",
+    "validGameRules": [
+      "file://./../../../../../libs/foundry/records/gamemode/sc_default.json"],
+    "loadingScreenInfo": {
+      "_Type_": "SLoadingScreenInformationDef",
+      "loadingScreenType": "StarCitizen",
+      "imagePath": "UI/GlobalGameUI/assets/TIF/LoadingScreen/PU.tif",
+      "imagePath_2k": "UI/GlobalGameUI/assets/TIF/LoadingScreen/PU_2K.tif",
+      "imagePath_4k": "UI/GlobalGameUI/assets/TIF/LoadingScreen/PU_4K.tif",
+      "primaryTitle": "@LOC_EMPTY",
+      "secondaryTitle": "@LOC_EMPTY",
+      "subtitle": "@LOC_EMPTY",
+      "description": "@LOC_EMPTY",
+      "tips": []},
+    "potentialSpawnLocations": [
+      "file://./../../../../../libs/foundry/records/starmap/pu/system/stanton/stanton1/landingzone/stanton1_lorville.json",
+      "file://./../../../../../libs/foundry/records/starmap/pu/system/stanton/stanton2/landingzone/stanton2_orison.json",
+      "file://./../../../../../libs/foundry/records/starmap/pu/system/stanton/stanton3/landingzone/stanton3_area18.json",
+      "file://./../../../../../libs/foundry/records/starmap/pu/system/stanton/stanton4/landingzone/stanton4_newbabbage.json"],
+    "potentialDevOnlySpawnLocations": [
+      "file://./../../../../../libs/foundry/records/starmap/pu/system/stanton/stanton2/orbiting/rr_cru_leo.json",
+      "file://./../../../../../libs/foundry/records/starmap/pu/system/stanton/stanton1/orbiting/rr_hur_leo.json",
+      "file://./../../../../../libs/foundry/records/starmap/pu/system/stanton/stanton4/orbiting/rr_mic_leo.json",
+      "file://./../../../../../libs/foundry/records/starmap/pu/system/stanton/stanton3/orbiting/rr_arc_leo.json",
+      "file://./../../../../../libs/foundry/records/starmap/pu/station/motel/starmapobject.grimhex.json",
+      "file://./../../../../../libs/foundry/records/starmap/pu/prisonmine_stanton1b.json",
+      "file://./../../../../../libs/foundry/records/starmap/pu/station/reststop/rr_cru_l1.json"],
+    "systemImagePath": "UI/Frontend/assets/TIF/Locations/PUBackdrop_Stanton_Crusader.tif"}}

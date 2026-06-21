@@ -1,0 +1,11 @@
+{
+  "_RecordName_": "PlanetDayNightTemperatureTemplate.Moon",
+  "_RecordId_": "88966d6e-e41f-4a97-baad-fafed137ac71",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "PlanetDayNightTemperatureTemplate",
+    "dayNightTemperatureParams": {
+      "_Type_": "PlanetDayNightTemperatureParams",
+      "DayNightCoolingBaseRate": -16.0,
+      "DayNightCoolingHumidityModifier": 0.07454276,
+      "DayNightCoolingHumidityMultiplier": 1.035}}}

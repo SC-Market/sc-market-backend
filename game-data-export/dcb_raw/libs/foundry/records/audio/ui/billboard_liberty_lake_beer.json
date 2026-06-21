@@ -1,0 +1,72 @@
+{
+  "_RecordName_": "UIAudioDefinition.Billboard_Liberty_Lake_Beer",
+  "_RecordId_": "43d7ca8f-8283-4a6a-a68b-32dbccebf9cd",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "UIAudioDefinition",
+    "events": [
+      {
+        "_Type_": "UIAudioEvent",
+        "tag": {
+          "_RecordPath_": "file://./../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+          "_RecordName_": "Tag.9e3c4f32-90f7-45e2-a0fb-424357c14bc5",
+          "_RecordId_": "9e3c4f32-90f7-45e2-a0fb-424357c14bc5"},
+        "audioTrigger": {
+          "_Type_": "GlobalResourceAudio",
+          "audioTrigger": ""}},
+      {
+        "_Type_": "UIAudioEvent",
+        "tag": {
+          "_RecordPath_": "file://./../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+          "_RecordName_": "Tag.c9f9a7a5-b990-4580-9373-d269e90675aa",
+          "_RecordId_": "c9f9a7a5-b990-4580-9373-d269e90675aa"},
+        "audioTrigger": {
+          "_Type_": "GlobalResourceAudio",
+          "audioTrigger": ""}},
+      {
+        "_Type_": "UIAudioEvent",
+        "tag": {
+          "_RecordPath_": "file://./../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+          "_RecordName_": "Tag.c14f4793-ccef-44d6-87cf-d6a66f4d588a",
+          "_RecordId_": "c14f4793-ccef-44d6-87cf-d6a66f4d588a"},
+        "audioTrigger": {
+          "_Type_": "GlobalResourceAudio",
+          "audioTrigger": "Play_ENVP_Media_Advertising_LibertyLake_FX_Start"}},
+      {
+        "_Type_": "UIAudioEvent",
+        "tag": {
+          "_RecordPath_": "file://./../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+          "_RecordName_": "Tag.adf2dab4-0de1-4657-a06a-cb2d16fb6f42",
+          "_RecordId_": "adf2dab4-0de1-4657-a06a-cb2d16fb6f42"},
+        "audioTrigger": {
+          "_Type_": "GlobalResourceAudio",
+          "audioTrigger": "Play_ENVP_Media_Advertising_LibertyLake_FX_LogoZoom"}},
+      {
+        "_Type_": "UIAudioEvent",
+        "tag": {
+          "_RecordPath_": "file://./../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+          "_RecordName_": "Tag.96cc92fc-7fad-469f-a42e-dc311c01519f",
+          "_RecordId_": "96cc92fc-7fad-469f-a42e-dc311c01519f"},
+        "audioTrigger": {
+          "_Type_": "GlobalResourceAudio",
+          "audioTrigger": "Play_ENVP_Media_Advertising_LibertyLake_DX"}},
+      {
+        "_Type_": "UIAudioEvent",
+        "tag": {
+          "_RecordPath_": "file://./../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+          "_RecordName_": "Tag.26faab19-e8dc-408f-9920-8ee334b8bc49",
+          "_RecordId_": "26faab19-e8dc-408f-9920-8ee334b8bc49"},
+        "audioTrigger": {
+          "_Type_": "GlobalResourceAudio",
+          "audioTrigger": "Play_ENVP_Media_Advertising_LibertyLake_FX_Message"}},
+      {
+        "_Type_": "UIAudioEvent",
+        "tag": {
+          "_RecordPath_": "file://./../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+          "_RecordName_": "Tag.163f9282-2e10-40a8-9a40-56070069b245",
+          "_RecordId_": "163f9282-2e10-40a8-9a40-56070069b245"},
+        "audioTrigger": {
+          "_Type_": "GlobalResourceAudio",
+          "audioTrigger": "Play_ENVP_Media_Advertising_LibertyLake_FX_End"}}],
+    "parameters": [],
+    "dialogueEvents": []}}

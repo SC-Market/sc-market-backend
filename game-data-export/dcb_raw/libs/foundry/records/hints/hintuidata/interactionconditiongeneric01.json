@@ -1,0 +1,12 @@
+{
+  "_RecordName_": "HintUIData.InteractionConditionGeneric01",
+  "_RecordId_": "ff268452-1e1b-4f12-83de-876ed5b9e8e3",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "HintUIData",
+    "TitleText": "@Hints_Interaction_Condition_Title",
+    "BodyText": "@Hints_Interaction_Condition_Generic",
+    "BodyTextGamePad": "@Hints_Interaction_Condition_Generic",
+    "BodyTextJoystick": "@Hints_Interaction_Condition_Generic",
+    "TitleImagePath": "",
+    "BodyImagePath": ""}}

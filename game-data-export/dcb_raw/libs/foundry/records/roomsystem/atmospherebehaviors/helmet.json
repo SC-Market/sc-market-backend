@@ -1,0 +1,27 @@
+{
+  "_RecordName_": "AtmosphereBehavior.Helmet",
+  "_RecordId_": "a34e0570-5854-4bb0-a5d0-63a5ff56a492",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "AtmosphereBehavior",
+    "vehicleEffects": {
+      "_Type_": "Behavior_AtmosphereVehicleEffectParams",
+      "enableEngineTrails": false,
+      "enableEngineContrails": true,
+      "customVehicleEffects": null,
+      "aerodynamicTrailCalculation": {
+        "_Type_": "AerodynamicTrailCalculationDefault"}},
+    "turbulence": null,
+    "weather": null,
+    "enableAtmosphericHeating": true,
+    "enableActorVectorFields": false,
+    "atmosphereEnvironmentTag": null,
+    "atmospherePressureRtpc": {
+      "_Type_": "AudioRtpc",
+      "rtpc": "EnvironmentFeedback_Atmosphere_Pressure"},
+    "atmosphereTemperatureRtpc": {
+      "_Type_": "AudioRtpc",
+      "rtpc": "EnvironmentFeedback_Atmosphere_Temperature"},
+    "atmosphereHumidityRtpc": {
+      "_Type_": "AudioRtpc",
+      "rtpc": "EnvironmentFeedback_Atmosphere_Humidity"}}}

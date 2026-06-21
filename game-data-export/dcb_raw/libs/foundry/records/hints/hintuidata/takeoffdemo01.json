@@ -1,0 +1,12 @@
+{
+  "_RecordName_": "HintUIData.TakeOffDemo01",
+  "_RecordId_": "93001ac0-a27a-4cdd-9815-bf355ba1f28b",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "HintUIData",
+    "TitleText": "@Hints_Take-off_Title",
+    "BodyText": "@Hints_Take-off_Demo1",
+    "BodyTextGamePad": "@Hints_Take-off_Demo1",
+    "BodyTextJoystick": "@Hints_Take-off_Demo1",
+    "TitleImagePath": "",
+    "BodyImagePath": ""}}

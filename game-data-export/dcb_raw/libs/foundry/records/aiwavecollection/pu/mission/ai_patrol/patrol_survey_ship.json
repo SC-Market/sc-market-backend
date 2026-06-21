@@ -1,0 +1,70 @@
+{
+  "_RecordName_": "AIWaveCollection.Patrol_Survey_Ship",
+  "_RecordId_": "52736880-8a27-46de-a35e-ba7700e64836",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "AIWaveCollection",
+    "waves": [
+      {
+        "_Type_": "AIWave",
+        "id": 1,
+        "textId": "",
+        "staggerTime": 0.1,
+        "members": [
+          {
+            "_Type_": "AIWaveMember",
+            "archetype": "",
+            "entityClassDefinition": "file://./../../../../../../../libs/foundry/records/entities/spaceships/drak_herald_pu_ai_civ.json",
+            "name": "@Mission_Patrol_SurveyShip",
+            "vehicleName": "",
+            "amount": 1,
+            "minAmount": -1,
+            "midAmount": -1,
+            "maxAmount": -1,
+            "crewManifestOverride": "file://./../../../../../../../libs/foundry/records/crewmanifest/pu/civilian/pu_human_civilian_patrol.json",
+            "skillsetOverride": "file://./../../../../../../../libs/foundry/records/aiprofile/skills/humanpilot20.json",
+            "cargoManifests": [
+              null],
+            "aiDamageModifiersOverride": null}]},
+      {
+        "_Type_": "AIWave",
+        "id": 2,
+        "textId": "",
+        "staggerTime": 0.1,
+        "members": [
+          {
+            "_Type_": "AIWaveMember",
+            "archetype": "",
+            "entityClassDefinition": "file://./../../../../../../../libs/foundry/records/entities/spaceships/misc_prospector_pu_ai_civ.json",
+            "name": "",
+            "vehicleName": "",
+            "amount": 1,
+            "minAmount": -1,
+            "midAmount": -1,
+            "maxAmount": -1,
+            "crewManifestOverride": "file://./../../../../../../../libs/foundry/records/crewmanifest/pu/civilian/pu_human_civilian_patrol.json",
+            "skillsetOverride": "file://./../../../../../../../libs/foundry/records/aiprofile/skills/humanpilot20.json",
+            "cargoManifests": [
+              null],
+            "aiDamageModifiersOverride": null}]},
+      {
+        "_Type_": "AIWave",
+        "id": 3,
+        "textId": "",
+        "staggerTime": 0.1,
+        "members": [
+          {
+            "_Type_": "AIWaveMember",
+            "archetype": "",
+            "entityClassDefinition": "file://./../../../../../../../libs/foundry/records/entities/spaceships/rsi_constellation_aquila_pu_ai_civ.json",
+            "name": "",
+            "vehicleName": "",
+            "amount": 1,
+            "minAmount": -1,
+            "midAmount": -1,
+            "maxAmount": -1,
+            "crewManifestOverride": "file://./../../../../../../../libs/foundry/records/crewmanifest/pu/civilian/pu_human_civilian_patrol.json",
+            "skillsetOverride": "file://./../../../../../../../libs/foundry/records/aiprofile/skills/humanpilot20.json",
+            "cargoManifests": [
+              "file://./../../../../../../../libs/foundry/records/cargomanifest/civilian/civilian_explorer_25_high_001.json"],
+            "aiDamageModifiersOverride": null}]}]}}

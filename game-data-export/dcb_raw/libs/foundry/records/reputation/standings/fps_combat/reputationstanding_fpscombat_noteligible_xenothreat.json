@@ -1,0 +1,15 @@
+{
+  "_RecordName_": "SReputationStandingParams.ReputationStanding_FPSCombat_NotEligible_XenoThreat",
+  "_RecordId_": "b286566b-9344-4593-aa04-594140a4b6c1",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "SReputationStandingParams",
+    "name": "FPSCombat_NotEligible_XenoThreat",
+    "description": "desc",
+    "displayName": "@RepStanding_NotEligible",
+    "perkDescription": "@blank_space",
+    "icon": "UI/Textures/Vector/MobiGlas/App_ReputationManager/icon_reputationrank_assassination_1.svg",
+    "minReputation": -1000,
+    "driftReputation": 100,
+    "driftTimeHours": 24.0,
+    "gated": false}}

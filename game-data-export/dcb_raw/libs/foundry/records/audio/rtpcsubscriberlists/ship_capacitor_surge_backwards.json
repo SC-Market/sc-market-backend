@@ -1,0 +1,13 @@
+{
+  "_RecordName_": "EntityAudioControllerRtpcSubscriberListDef.Ship_Capacitor_Surge_Backwards",
+  "_RecordId_": "5785a329-cc26-4475-befc-0adb3929d075",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "EntityAudioControllerRtpcSubscriberListDef",
+    "rtpcs": [
+      {
+        "_Type_": "AudioRtpc",
+        "rtpc": "Ship_Translation_CapacitorSurge_Backward"},
+      {
+        "_Type_": "AudioRtpc",
+        "rtpc": "Ship_Translation_CapacitorSurge_Backward_SlowLerp"}]}}

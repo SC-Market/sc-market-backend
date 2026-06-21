@@ -1,0 +1,191 @@
+{
+  "_RecordName_": "LegacyCraftingRecipeListRecord.Demo",
+  "_RecordId_": "c62a0aa2-bb30-44f5-aa37-c433a71f0dfe",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "LegacyCraftingRecipeListRecord",
+    "recipes": [
+      {
+        "_Type_": "LegacyCraftingRecipeDef_Direct",
+        "recipe": {
+          "_Type_": "LegacyCraftingRecipe_Default",
+          "timeSeconds": 5.0,
+          "outputs": [
+            {
+              "_Type_": "LegacyCraftingOutput_Entity",
+              "entityClass": "file://./../../../../../../libs/foundry/records/entities/scitem/carryables/1h/carryable_1h_cu_glowstick_pink.json",
+              "amount": 2,
+              "fillAmmo": true}],
+          "costs": [],
+          "iconImagePath": "",
+          "recipeName": "@LOC_EMPTY"}},
+      {
+        "_Type_": "LegacyCraftingRecipeDef_Direct",
+        "recipe": {
+          "_Type_": "LegacyCraftingRecipe_Default",
+          "timeSeconds": 0.0,
+          "outputs": [
+            {
+              "_Type_": "LegacyCraftingOutput_Entity",
+              "entityClass": "file://./../../../../../../libs/foundry/records/entities/scitem/weapons/fps_weapons/behr_pistol_ballistic_01.json",
+              "amount": 1,
+              "fillAmmo": true}],
+          "costs": [],
+          "iconImagePath": "",
+          "recipeName": "@room_dumpers_depot"}},
+      {
+        "_Type_": "LegacyCraftingRecipeDef_Direct",
+        "recipe": {
+          "_Type_": "LegacyCraftingRecipe_Default",
+          "timeSeconds": 3.0,
+          "outputs": [
+            {
+              "_Type_": "LegacyCraftingOutput_Entity",
+              "entityClass": "file://./../../../../../../libs/foundry/records/entities/scitem/carryables/1h/carryable_1h_cu_glowstick_pink_active.json",
+              "amount": 1,
+              "fillAmmo": true},
+            {
+              "_Type_": "LegacyCraftingOutput_ResourceAmount",
+              "resource": {
+                "_RecordPath_": "file://./../../../../../../libs/foundry/records/resourcetypedatabase/resourcetypedatabase.json",
+                "_RecordName_": "ResourceType.Taranite",
+                "_RecordId_": "06cafea0-49fe-4dce-b0f0-dc583316c66d"},
+              "amount": {
+                "_Type_": "SStandardCargoUnit",
+                "standardCargoUnits": 2.0}},
+            {
+              "_Type_": "LegacyCraftingOutput_ResourceAmount",
+              "resource": {
+                "_RecordPath_": "file://./../../../../../../libs/foundry/records/resourcetypedatabase/resourcetypedatabase.json",
+                "_RecordName_": "ResourceType.RantaDung",
+                "_RecordId_": "5cc98bf3-8edd-4184-9e47-2ff40e4c556b"},
+              "amount": {
+                "_Type_": "SStandardCargoUnit",
+                "standardCargoUnits": 4.0}}],
+          "costs": [],
+          "iconImagePath": "",
+          "recipeName": "@LOC_EMPTY"}},
+      {
+        "_Type_": "LegacyCraftingRecipeDef_Direct",
+        "recipe": {
+          "_Type_": "LegacyCraftingRecipe_Default",
+          "timeSeconds": 2.0,
+          "outputs": [
+            {
+              "_Type_": "LegacyCraftingOutput_ResourceAmount",
+              "resource": {
+                "_RecordPath_": "file://./../../../../../../libs/foundry/records/resourcetypedatabase/resourcetypedatabase.json",
+                "_RecordName_": "ResourceType.Scrap",
+                "_RecordId_": "dae3efcb-f82e-4c2a-b24b-81f2be8daa51"},
+              "amount": {
+                "_Type_": "SStandardCargoUnit",
+                "standardCargoUnits": 4.0}}],
+          "costs": [],
+          "iconImagePath": "",
+          "recipeName": "@LOC_EMPTY"}},
+      {
+        "_Type_": "LegacyCraftingRecipeDef_Direct",
+        "recipe": {
+          "_Type_": "LegacyCraftingRecipe_Default",
+          "timeSeconds": 0.0,
+          "outputs": [
+            {
+              "_Type_": "LegacyCraftingOutput_Entity",
+              "entityClass": "file://./../../../../../../libs/foundry/records/entities/scitem/weapons/fps_weapons/behr_pistol_ballistic_01.json",
+              "amount": 1,
+              "fillAmmo": true}],
+          "costs": [
+            {
+              "_Type_": "LegacyCraftingCost_ResourceAmount",
+              "resource": {
+                "_RecordPath_": "file://./../../../../../../libs/foundry/records/resourcetypedatabase/resourcetypedatabase.json",
+                "_RecordName_": "ResourceType.Neon",
+                "_RecordId_": "d3c3ec68-b4ac-4504-85b3-e860a70eb9a5"},
+              "amount": {
+                "_Type_": "SCentiCargoUnit",
+                "centiSCU": 6}}],
+          "iconImagePath": "",
+          "recipeName": "@LOC_EMPTY"}},
+      {
+        "_Type_": "LegacyCraftingRecipeDef_Direct",
+        "recipe": {
+          "_Type_": "LegacyCraftingRecipe_Default",
+          "timeSeconds": 0.0,
+          "outputs": [
+            {
+              "_Type_": "LegacyCraftingOutput_Entity",
+              "entityClass": "file://./../../../../../../libs/foundry/records/entities/scitem/weapons/magazines/grin_multitool_resource_salvage_repair_01.json",
+              "amount": 1,
+              "fillAmmo": true},
+            {
+              "_Type_": "LegacyCraftingOutput_Entity",
+              "entityClass": "file://./../../../../../../libs/foundry/records/entities/scitem/carryables/1h/carryable_1h_cy_drug_stomachmedicine_2_d.json",
+              "amount": 1,
+              "fillAmmo": true},
+            {
+              "_Type_": "LegacyCraftingOutput_Entity",
+              "entityClass": "file://./../../../../../../libs/foundry/records/entities/scitem/weapons/magazines/grin_multitool_resource_salvage_repair_01.json",
+              "amount": 1,
+              "fillAmmo": true}],
+          "costs": [
+            {
+              "_Type_": "LegacyCraftingCost_ResourceAmountDerivedFromAmmoContainer",
+              "resource": {
+                "_RecordPath_": "file://./../../../../../../libs/foundry/records/resourcetypedatabase/resourcetypedatabase.json",
+                "_RecordName_": "ResourceType.RMC",
+                "_RecordId_": "a0e6c4cf-face-4f52-a020-dfa869607901"}},
+            {
+              "_Type_": "LegacyCraftingCost_ResourceAmount",
+              "resource": {
+                "_RecordPath_": "file://./../../../../../../libs/foundry/records/resourcetypedatabase/resourcetypedatabase.json",
+                "_RecordName_": "ResourceType.Fotia",
+                "_RecordId_": "def044a7-a56a-4f99-a497-ef6022113922"},
+              "amount": {
+                "_Type_": "SStandardCargoUnit",
+                "standardCargoUnits": 5.0}}],
+          "iconImagePath": "",
+          "recipeName": "@LOC_EMPTY"}},
+      {
+        "_Type_": "LegacyCraftingRecipeDef_Direct",
+        "recipe": {
+          "_Type_": "LegacyCraftingRecipe_Default",
+          "timeSeconds": 0.0,
+          "outputs": [
+            {
+              "_Type_": "LegacyCraftingOutput_Entity",
+              "entityClass": "file://./../../../../../../libs/foundry/records/entities/scitem/carryables/1h/carryable_1h_cu_glowstick_pink_active_prison.json",
+              "amount": 1,
+              "fillAmmo": true},
+            {
+              "_Type_": "LegacyCraftingOutput_Entity",
+              "entityClass": "file://./../../../../../../libs/foundry/records/entities/scitem/flair/carryables/carryable_1h_cu_glowstick_orange.json",
+              "amount": 1,
+              "fillAmmo": true},
+            {
+              "_Type_": "LegacyCraftingOutput_Entity",
+              "entityClass": "file://./../../../../../../libs/foundry/records/entities/scitem/flair/carryables/carryable_1h_cu_glowstick_yellow.json",
+              "amount": 1,
+              "fillAmmo": true},
+            {
+              "_Type_": "LegacyCraftingOutput_Entity",
+              "entityClass": "file://./../../../../../../libs/foundry/records/entities/scitem/carryables/1h/carryable_1h_cu_glowstick_pink.json",
+              "amount": 1,
+              "fillAmmo": true},
+            {
+              "_Type_": "LegacyCraftingOutput_Entity",
+              "entityClass": "file://./../../../../../../libs/foundry/records/entities/scitem/flair/carryables/carryable_1h_cu_glowstick_blue.json",
+              "amount": 1,
+              "fillAmmo": true},
+            {
+              "_Type_": "LegacyCraftingOutput_Entity",
+              "entityClass": "file://./../../../../../../libs/foundry/records/entities/scitem/flair/carryables/carryable_1h_cu_glowstick_red.json",
+              "amount": 1,
+              "fillAmmo": true},
+            {
+              "_Type_": "LegacyCraftingOutput_Entity",
+              "entityClass": "file://./../../../../../../libs/foundry/records/entities/scitem/flair/carryables/carryable_1h_cu_glowstick_green.json",
+              "amount": 1,
+              "fillAmmo": true}],
+          "costs": [],
+          "iconImagePath": "",
+          "recipeName": "@LOC_EMPTY"}}]}}

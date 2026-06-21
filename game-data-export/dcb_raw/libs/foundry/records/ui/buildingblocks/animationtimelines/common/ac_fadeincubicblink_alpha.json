@@ -1,0 +1,61 @@
+{
+  "_RecordName_": "BuildingBlocks_Timeline.AC_FadeInCubicBlink_Alpha",
+  "_RecordId_": "3f157a7d-d957-4e89-9ae6-afa791d8acca",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "BuildingBlocks_Timeline",
+    "timeline": {
+      "_Type_": "BuildingBlocks_TimelineTypeEmbedded",
+      "keyframes": [
+        {
+          "_Type_": "BuildingBlocks_Keyframe",
+          "percent": 0.0,
+          "modifiers": [
+            {
+              "_Type_": "BuildingBlocks_KeyframeModifierData",
+              "timingFunction": {
+                "_Type_": "BuildingBlocks_TimingFunctionPreset",
+                "preset": "EaseInOutCubic"},
+              "modifier": {
+                "_Type_": "BuildingBlocks_FieldModifierNumber",
+                "field": "Alpha",
+                "value": 0.0}}]},
+        {
+          "_Type_": "BuildingBlocks_Keyframe",
+          "percent": 0.92,
+          "modifiers": [
+            {
+              "_Type_": "BuildingBlocks_KeyframeModifierData",
+              "timingFunction": {
+                "_Type_": "BuildingBlocks_TimingFunctionPreset",
+                "preset": "EaseInOutCubic"},
+              "modifier": {
+                "_Type_": "BuildingBlocks_FieldModifierNumber",
+                "field": "Alpha",
+                "value": 1.0}}]},
+        {
+          "_Type_": "BuildingBlocks_Keyframe",
+          "percent": 0.96,
+          "modifiers": [
+            {
+              "_Type_": "BuildingBlocks_KeyframeModifierData",
+              "timingFunction": {
+                "_Type_": "BuildingBlocks_TimingFunctionPreset",
+                "preset": "EaseInOutCubic"},
+              "modifier": {
+                "_Type_": "BuildingBlocks_FieldModifierNumber",
+                "field": "Alpha",
+                "value": 0.8}}]},
+        {
+          "_Type_": "BuildingBlocks_Keyframe",
+          "percent": 1.0,
+          "modifiers": [
+            {
+              "_Type_": "BuildingBlocks_KeyframeModifierData",
+              "timingFunction": {
+                "_Type_": "BuildingBlocks_TimingFunctionPreset",
+                "preset": "EaseInOutCubic"},
+              "modifier": {
+                "_Type_": "BuildingBlocks_FieldModifierNumber",
+                "field": "Alpha",
+                "value": 1.0}}]}]}}}

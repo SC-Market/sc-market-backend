@@ -1,0 +1,53 @@
+{
+  "_RecordName_": "MissionOrganization.Adagio",
+  "_RecordId_": "38a8d4b7-904c-4651-96fa-ebbb27d274a5",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "MissionOrganization",
+    "organizationTags": [
+      {
+        "_Type_": "MissionLocationTags",
+        "tags": [
+          {
+            "_RecordPath_": "file://./../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+            "_RecordName_": "Tag.39e58f9d-9c7d-4537-a7a0-4309819abf7e",
+            "_RecordId_": "39e58f9d-9c7d-4537-a7a0-4309819abf7e"}]},
+      {
+        "_Type_": "MissionLocationTags",
+        "tags": []},
+      {
+        "_Type_": "MissionLocationTags",
+        "tags": []}],
+    "stringVariants": {
+      "_Type_": "MissionStringVariants",
+      "variants": [
+        {
+          "_Type_": "MissionStringVariant",
+          "tag": {
+            "_RecordPath_": "file://./../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+            "_RecordName_": "Tag.b1ae3a8d-4f36-4374-a9ee-dce4b01a095b",
+            "_RecordId_": "b1ae3a8d-4f36-4374-a9ee-dce4b01a095b"},
+          "string": "@Adagio_BasicSalvage_Title_01"},
+        {
+          "_Type_": "MissionStringVariant",
+          "tag": {
+            "_RecordPath_": "file://./../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+            "_RecordName_": "Tag.3af179a2-1168-4854-96b2-735eb00bcb7a",
+            "_RecordId_": "3af179a2-1168-4854-96b2-735eb00bcb7a"},
+          "string": "@Adagio_BasicSalvage_Desc_01"},
+        {
+          "_Type_": "MissionStringVariant",
+          "tag": {
+            "_RecordPath_": "file://./../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+            "_RecordName_": "Tag.38e56e96-5c51-4e7b-bb6b-ad07358ca267",
+            "_RecordId_": "38e56e96-5c51-4e7b-bb6b-ad07358ca267"},
+          "string": "@Adagio_RepUI_DisplayName"},
+        {
+          "_Type_": "MissionStringVariant",
+          "tag": {
+            "_RecordPath_": "file://./../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+            "_RecordName_": "Tag.65a6e51a-cd14-40c9-a14a-614a0696eed7",
+            "_RecordId_": "65a6e51a-cd14-40c9-a14a-614a0696eed7"},
+          "string": "@Adagio_RepUI_DisplayName"}]},
+    "weighting": 1.0,
+    "factionReputation": "file://./../../../../../libs/foundry/records/factions/factionreputation/factionreputation_lawful_adagioholdings.json"}}

@@ -1,0 +1,12 @@
+{
+  "_RecordName_": "HintUIData.ShipDefense01",
+  "_RecordId_": "9918c973-fb3b-4843-b341-0f77265027e9",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "HintUIData",
+    "TitleText": "@Hints_Ship_Combat_Title",
+    "BodyText": "@Hints_Ship_Defense1",
+    "BodyTextGamePad": "@Hints_Ship_Defense1",
+    "BodyTextJoystick": "@Hints_Ship_Defense1",
+    "TitleImagePath": "",
+    "BodyImagePath": ""}}

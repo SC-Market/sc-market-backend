@@ -1,0 +1,15 @@
+{
+  "_RecordName_": "Conversation.BlackBox_1_Distress_Beacon_Ambush",
+  "_RecordId_": "3b2bbebc-eebc-49e3-accf-1278a3982de8",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "Conversation",
+    "fragments": [
+      {
+        "_Type_": "ConversationNode_Start",
+        "next": null},
+      {
+        "_Type_": "ConversationNode_Dialogue",
+        "next": null,
+        "context": "file://./../../../../../../libs/foundry/records/dialoguecontext/arenacommander/crusader/dialoguecontext.dxhn_pu_blackbox1_recording_001_e.json",
+        "skipNodeInXSecs": -1.0}]}}

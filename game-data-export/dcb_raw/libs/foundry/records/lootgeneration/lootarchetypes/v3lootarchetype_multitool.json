@@ -1,0 +1,24 @@
+{
+  "_RecordName_": "LootArchetypeV3Record.V3LootArchetype_Multitool",
+  "_RecordId_": "2278476e-ad5a-4175-aa35-262f299760ce",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "LootArchetypeV3Record",
+    "lootArchetype": {
+      "_Type_": "LootArchetypeV3",
+      "entries": [
+        {
+          "_Type_": "LootArchetypeV3Entry",
+          "name": "Multitool",
+          "weight": 1.0,
+          "selector": {
+            "_Type_": "LootArchetypeV3Selector_Tags",
+            "tags": {
+              "_Type_": "TagsDNFTerm",
+              "positiveTags": [
+                {
+                  "_RecordPath_": "file://./../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+                  "_RecordName_": "Tag.121da25c-a309-410a-961f-1f7d8c00e12c",
+                  "_RecordId_": "121da25c-a309-410a-961f-1f7d8c00e12c"}],
+              "negativeTags": []}},
+          "optionalData": []}]}}}

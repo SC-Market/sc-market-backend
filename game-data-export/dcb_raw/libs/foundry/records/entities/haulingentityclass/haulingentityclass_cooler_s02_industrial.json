@@ -1,0 +1,14 @@
+{
+  "_RecordName_": "Hauling_EntityClasses.HaulingEntityClass_Cooler_S02_Industrial",
+  "_RecordId_": "c32872bf-c0a4-47a5-9385-f3313eeca85c",
+  "_RecordTag_": "MissionDesign",
+  "_RecordValue_": {
+    "_Type_": "Hauling_EntityClasses",
+    "entityClasses": {
+      "_Type_": "Hauling_EntityClassList",
+      "entityClassList": [
+        "file://./../../../../../libs/foundry/records/entities/scitem/ships/cooler/cool_just_s02_coolcore_scitem.json",
+        "file://./../../../../../libs/foundry/records/entities/scitem/ships/cooler/cool_just_s02_hydrojet_scitem.json",
+        "file://./../../../../../libs/foundry/records/entities/scitem/ships/cooler/cool_just_s02_snowfall_scitem.json",
+        "file://./../../../../../libs/foundry/records/entities/scitem/ships/cooler/cool_just_s02_snowpack_scitem.json"]},
+    "orderDisplayName": "@Salvage_Ship_Component_Cooler_S2_Ind_G_Name"}}

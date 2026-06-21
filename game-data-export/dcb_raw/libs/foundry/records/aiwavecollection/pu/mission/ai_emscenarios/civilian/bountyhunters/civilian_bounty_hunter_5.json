@@ -1,0 +1,28 @@
+{
+  "_RecordName_": "AIWaveCollection.Civilian_Bounty_Hunter_5",
+  "_RecordId_": "0b0c06b1-ff69-4baf-8d93-ff65bbde350a",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "AIWaveCollection",
+    "waves": [
+      {
+        "_Type_": "AIWave",
+        "id": 1,
+        "textId": "",
+        "staggerTime": 1.0,
+        "members": [
+          {
+            "_Type_": "AIWaveMember",
+            "archetype": "",
+            "entityClassDefinition": "file://./../../../../../../../../../libs/foundry/records/entities/spaceships/rsi_mantis_pu_ai_sec_crusader.json",
+            "name": "",
+            "vehicleName": "",
+            "amount": 1,
+            "minAmount": -1,
+            "midAmount": -1,
+            "maxAmount": -1,
+            "crewManifestOverride": "file://./../../../../../../../../../libs/foundry/records/crewmanifest/pu/civilian/pu_human_civilian_bountyhunter_wturret.json",
+            "skillsetOverride": "file://./../../../../../../../../../libs/foundry/records/aiprofile/skills/humanpilot70.json",
+            "cargoManifests": [
+              "file://./../../../../../../../../../libs/foundry/records/cargomanifest/civilian/civilian_25_medium_001.json"],
+            "aiDamageModifiersOverride": null}]}]}}

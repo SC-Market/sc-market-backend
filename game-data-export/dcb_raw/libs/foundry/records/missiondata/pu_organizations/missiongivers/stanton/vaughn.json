@@ -1,0 +1,445 @@
+{
+  "_RecordName_": "MissionOrganization.Vaughn",
+  "_RecordId_": "cc00b5dd-1b77-4c0f-af92-9de4f17ea7c9",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "MissionOrganization",
+    "organizationTags": [
+      {
+        "_Type_": "MissionLocationTags",
+        "tags": [
+          {
+            "_RecordPath_": "file://./../../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+            "_RecordName_": "Tag.c096fa6d-17b0-4415-8a84-b158cfaf4f53",
+            "_RecordId_": "c096fa6d-17b0-4415-8a84-b158cfaf4f53"}]},
+      {
+        "_Type_": "MissionLocationTags",
+        "tags": []},
+      {
+        "_Type_": "MissionLocationTags",
+        "tags": []}],
+    "stringVariants": {
+      "_Type_": "MissionStringVariants",
+      "variants": [
+        {
+          "_Type_": "MissionStringVariant",
+          "tag": {
+            "_RecordPath_": "file://./../../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+            "_RecordName_": "Tag.0130de18-97e2-4d4c-9bb1-3e7ef5fd0490",
+            "_RecordId_": "0130de18-97e2-4d4c-9bb1-3e7ef5fd0490"},
+          "string": "@vaughn_from"},
+        {
+          "_Type_": "MissionStringVariant",
+          "tag": {
+            "_RecordPath_": "file://./../../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+            "_RecordName_": "Tag.2fd72e12-19db-4036-885e-f763c077334c",
+            "_RecordId_": "2fd72e12-19db-4036-885e-f763c077334c"},
+          "string": "@vaughn_assassination_VE_desc_001"},
+        {
+          "_Type_": "MissionStringVariant",
+          "tag": {
+            "_RecordPath_": "file://./../../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+            "_RecordName_": "Tag.2fd72e12-19db-4036-885e-f763c077334c",
+            "_RecordId_": "2fd72e12-19db-4036-885e-f763c077334c"},
+          "string": "@vaughn_assassination_VE_desc_002"},
+        {
+          "_Type_": "MissionStringVariant",
+          "tag": {
+            "_RecordPath_": "file://./../../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+            "_RecordName_": "Tag.2fd72e12-19db-4036-885e-f763c077334c",
+            "_RecordId_": "2fd72e12-19db-4036-885e-f763c077334c"},
+          "string": "@vaughn_assassination_VE_desc_003"},
+        {
+          "_Type_": "MissionStringVariant",
+          "tag": {
+            "_RecordPath_": "file://./../../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+            "_RecordName_": "Tag.4442d354-9531-4253-87b8-b378377598b8",
+            "_RecordId_": "4442d354-9531-4253-87b8-b378377598b8"},
+          "string": "@vaughn_assassination_VE_title_001"},
+        {
+          "_Type_": "MissionStringVariant",
+          "tag": {
+            "_RecordPath_": "file://./../../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+            "_RecordName_": "Tag.4442d354-9531-4253-87b8-b378377598b8",
+            "_RecordId_": "4442d354-9531-4253-87b8-b378377598b8"},
+          "string": "@vaughn_assassination_VE_title_002"},
+        {
+          "_Type_": "MissionStringVariant",
+          "tag": {
+            "_RecordPath_": "file://./../../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+            "_RecordName_": "Tag.4442d354-9531-4253-87b8-b378377598b8",
+            "_RecordId_": "4442d354-9531-4253-87b8-b378377598b8"},
+          "string": "@vaughn_assassination_VE_title_003"},
+        {
+          "_Type_": "MissionStringVariant",
+          "tag": {
+            "_RecordPath_": "file://./../../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+            "_RecordName_": "Tag.f89097e6-b0e5-4163-8793-bd967c0955d7",
+            "_RecordId_": "f89097e6-b0e5-4163-8793-bd967c0955d7"},
+          "string": "@vaughn_assassination_E_title_003"},
+        {
+          "_Type_": "MissionStringVariant",
+          "tag": {
+            "_RecordPath_": "file://./../../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+            "_RecordName_": "Tag.f89097e6-b0e5-4163-8793-bd967c0955d7",
+            "_RecordId_": "f89097e6-b0e5-4163-8793-bd967c0955d7"},
+          "string": "@vaughn_assassination_E_title_002"},
+        {
+          "_Type_": "MissionStringVariant",
+          "tag": {
+            "_RecordPath_": "file://./../../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+            "_RecordName_": "Tag.f89097e6-b0e5-4163-8793-bd967c0955d7",
+            "_RecordId_": "f89097e6-b0e5-4163-8793-bd967c0955d7"},
+          "string": "@vaughn_assassination_E_title_001"},
+        {
+          "_Type_": "MissionStringVariant",
+          "tag": {
+            "_RecordPath_": "file://./../../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+            "_RecordName_": "Tag.42952771-f578-470a-a049-4b68e612de89",
+            "_RecordId_": "42952771-f578-470a-a049-4b68e612de89"},
+          "string": "@vaughn_assassination_E_desc_001"},
+        {
+          "_Type_": "MissionStringVariant",
+          "tag": {
+            "_RecordPath_": "file://./../../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+            "_RecordName_": "Tag.42952771-f578-470a-a049-4b68e612de89",
+            "_RecordId_": "42952771-f578-470a-a049-4b68e612de89"},
+          "string": "@vaughn_assassination_E_desc_002"},
+        {
+          "_Type_": "MissionStringVariant",
+          "tag": {
+            "_RecordPath_": "file://./../../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+            "_RecordName_": "Tag.42952771-f578-470a-a049-4b68e612de89",
+            "_RecordId_": "42952771-f578-470a-a049-4b68e612de89"},
+          "string": "@vaughn_assassination_E_desc_003"},
+        {
+          "_Type_": "MissionStringVariant",
+          "tag": {
+            "_RecordPath_": "file://./../../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+            "_RecordName_": "Tag.64a067f5-3c1d-42f9-80a8-31f9b470dd83",
+            "_RecordId_": "64a067f5-3c1d-42f9-80a8-31f9b470dd83"},
+          "string": "@vaughn_assassination_M_desc_001"},
+        {
+          "_Type_": "MissionStringVariant",
+          "tag": {
+            "_RecordPath_": "file://./../../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+            "_RecordName_": "Tag.64a067f5-3c1d-42f9-80a8-31f9b470dd83",
+            "_RecordId_": "64a067f5-3c1d-42f9-80a8-31f9b470dd83"},
+          "string": "@vaughn_assassination_M_desc_002"},
+        {
+          "_Type_": "MissionStringVariant",
+          "tag": {
+            "_RecordPath_": "file://./../../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+            "_RecordName_": "Tag.64a067f5-3c1d-42f9-80a8-31f9b470dd83",
+            "_RecordId_": "64a067f5-3c1d-42f9-80a8-31f9b470dd83"},
+          "string": "@vaughn_assassination_M_desc_003"},
+        {
+          "_Type_": "MissionStringVariant",
+          "tag": {
+            "_RecordPath_": "file://./../../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+            "_RecordName_": "Tag.1eca09a1-4d41-4d54-a5fb-5d452da851a5",
+            "_RecordId_": "1eca09a1-4d41-4d54-a5fb-5d452da851a5"},
+          "string": "@vaughn_assassination_M_title_001"},
+        {
+          "_Type_": "MissionStringVariant",
+          "tag": {
+            "_RecordPath_": "file://./../../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+            "_RecordName_": "Tag.1eca09a1-4d41-4d54-a5fb-5d452da851a5",
+            "_RecordId_": "1eca09a1-4d41-4d54-a5fb-5d452da851a5"},
+          "string": "@vaughn_assassination_M_title_002"},
+        {
+          "_Type_": "MissionStringVariant",
+          "tag": {
+            "_RecordPath_": "file://./../../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+            "_RecordName_": "Tag.1eca09a1-4d41-4d54-a5fb-5d452da851a5",
+            "_RecordId_": "1eca09a1-4d41-4d54-a5fb-5d452da851a5"},
+          "string": "@vaughn_assassination_M_title_003"},
+        {
+          "_Type_": "MissionStringVariant",
+          "tag": {
+            "_RecordPath_": "file://./../../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+            "_RecordName_": "Tag.0b0008b2-5ae1-4a84-8bc9-5b9edb8aa669",
+            "_RecordId_": "0b0008b2-5ae1-4a84-8bc9-5b9edb8aa669"},
+          "string": "@vaughn_assassination_H_desc_001"},
+        {
+          "_Type_": "MissionStringVariant",
+          "tag": {
+            "_RecordPath_": "file://./../../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+            "_RecordName_": "Tag.0b0008b2-5ae1-4a84-8bc9-5b9edb8aa669",
+            "_RecordId_": "0b0008b2-5ae1-4a84-8bc9-5b9edb8aa669"},
+          "string": "@vaughn_assassination_H_desc_002"},
+        {
+          "_Type_": "MissionStringVariant",
+          "tag": {
+            "_RecordPath_": "file://./../../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+            "_RecordName_": "Tag.0b0008b2-5ae1-4a84-8bc9-5b9edb8aa669",
+            "_RecordId_": "0b0008b2-5ae1-4a84-8bc9-5b9edb8aa669"},
+          "string": "@vaughn_assassination_H_desc_003"},
+        {
+          "_Type_": "MissionStringVariant",
+          "tag": {
+            "_RecordPath_": "file://./../../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+            "_RecordName_": "Tag.e3364051-f2b5-4235-9dea-df0e615bde84",
+            "_RecordId_": "e3364051-f2b5-4235-9dea-df0e615bde84"},
+          "string": "@vaughn_assassination_H_title_001"},
+        {
+          "_Type_": "MissionStringVariant",
+          "tag": {
+            "_RecordPath_": "file://./../../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+            "_RecordName_": "Tag.e3364051-f2b5-4235-9dea-df0e615bde84",
+            "_RecordId_": "e3364051-f2b5-4235-9dea-df0e615bde84"},
+          "string": "@vaughn_assassination_H_title_002"},
+        {
+          "_Type_": "MissionStringVariant",
+          "tag": {
+            "_RecordPath_": "file://./../../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+            "_RecordName_": "Tag.e3364051-f2b5-4235-9dea-df0e615bde84",
+            "_RecordId_": "e3364051-f2b5-4235-9dea-df0e615bde84"},
+          "string": "@vaughn_assassination_H_title_003"},
+        {
+          "_Type_": "MissionStringVariant",
+          "tag": {
+            "_RecordPath_": "file://./../../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+            "_RecordName_": "Tag.21393610-4d85-47bf-8985-f92899a458f1",
+            "_RecordId_": "21393610-4d85-47bf-8985-f92899a458f1"},
+          "string": "@vaughn_assassination_VH_desc_001"},
+        {
+          "_Type_": "MissionStringVariant",
+          "tag": {
+            "_RecordPath_": "file://./../../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+            "_RecordName_": "Tag.21393610-4d85-47bf-8985-f92899a458f1",
+            "_RecordId_": "21393610-4d85-47bf-8985-f92899a458f1"},
+          "string": "@vaughn_assassination_VH_desc_002"},
+        {
+          "_Type_": "MissionStringVariant",
+          "tag": {
+            "_RecordPath_": "file://./../../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+            "_RecordName_": "Tag.21393610-4d85-47bf-8985-f92899a458f1",
+            "_RecordId_": "21393610-4d85-47bf-8985-f92899a458f1"},
+          "string": "@vaughn_assassination_VH_desc_003"},
+        {
+          "_Type_": "MissionStringVariant",
+          "tag": {
+            "_RecordPath_": "file://./../../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+            "_RecordName_": "Tag.8fcdcb3a-9ac5-4ac3-a93a-d99d52db9e60",
+            "_RecordId_": "8fcdcb3a-9ac5-4ac3-a93a-d99d52db9e60"},
+          "string": "@vaughn_assassination_VH_title_001"},
+        {
+          "_Type_": "MissionStringVariant",
+          "tag": {
+            "_RecordPath_": "file://./../../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+            "_RecordName_": "Tag.8fcdcb3a-9ac5-4ac3-a93a-d99d52db9e60",
+            "_RecordId_": "8fcdcb3a-9ac5-4ac3-a93a-d99d52db9e60"},
+          "string": "@vaughn_assassination_VH_title_002"},
+        {
+          "_Type_": "MissionStringVariant",
+          "tag": {
+            "_RecordPath_": "file://./../../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+            "_RecordName_": "Tag.8fcdcb3a-9ac5-4ac3-a93a-d99d52db9e60",
+            "_RecordId_": "8fcdcb3a-9ac5-4ac3-a93a-d99d52db9e60"},
+          "string": "@vaughn_assassination_VH_title_003"},
+        {
+          "_Type_": "MissionStringVariant",
+          "tag": {
+            "_RecordPath_": "file://./../../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+            "_RecordName_": "Tag.39a2e850-7e48-4555-9286-24aed163fdfb",
+            "_RecordId_": "39a2e850-7e48-4555-9286-24aed163fdfb"},
+          "string": "@vaughn_assassination_S_desc_001"},
+        {
+          "_Type_": "MissionStringVariant",
+          "tag": {
+            "_RecordPath_": "file://./../../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+            "_RecordName_": "Tag.39a2e850-7e48-4555-9286-24aed163fdfb",
+            "_RecordId_": "39a2e850-7e48-4555-9286-24aed163fdfb"},
+          "string": "@vaughn_assassination_S_desc_002"},
+        {
+          "_Type_": "MissionStringVariant",
+          "tag": {
+            "_RecordPath_": "file://./../../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+            "_RecordName_": "Tag.39a2e850-7e48-4555-9286-24aed163fdfb",
+            "_RecordId_": "39a2e850-7e48-4555-9286-24aed163fdfb"},
+          "string": "@vaughn_assassination_S_desc_003"},
+        {
+          "_Type_": "MissionStringVariant",
+          "tag": {
+            "_RecordPath_": "file://./../../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+            "_RecordName_": "Tag.024413b7-0a45-4623-a724-e8594fb4ebb8",
+            "_RecordId_": "024413b7-0a45-4623-a724-e8594fb4ebb8"},
+          "string": "@vaughn_assassination_S_title_001"},
+        {
+          "_Type_": "MissionStringVariant",
+          "tag": {
+            "_RecordPath_": "file://./../../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+            "_RecordName_": "Tag.024413b7-0a45-4623-a724-e8594fb4ebb8",
+            "_RecordId_": "024413b7-0a45-4623-a724-e8594fb4ebb8"},
+          "string": "@vaughn_assassination_S_title_002"},
+        {
+          "_Type_": "MissionStringVariant",
+          "tag": {
+            "_RecordPath_": "file://./../../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+            "_RecordName_": "Tag.024413b7-0a45-4623-a724-e8594fb4ebb8",
+            "_RecordId_": "024413b7-0a45-4623-a724-e8594fb4ebb8"},
+          "string": "@vaughn_assassination_S_title_003"},
+        {
+          "_Type_": "MissionStringVariant",
+          "tag": {
+            "_RecordPath_": "file://./../../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+            "_RecordName_": "Tag.af3fcbbd-5e53-4099-885a-cc098697446c",
+            "_RecordId_": "af3fcbbd-5e53-4099-885a-cc098697446c"},
+          "string": "@vaughn_assassination_FPS_desc_001"},
+        {
+          "_Type_": "MissionStringVariant",
+          "tag": {
+            "_RecordPath_": "file://./../../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+            "_RecordName_": "Tag.af3fcbbd-5e53-4099-885a-cc098697446c",
+            "_RecordId_": "af3fcbbd-5e53-4099-885a-cc098697446c"},
+          "string": "@vaughn_assassination_FPS_desc_002"},
+        {
+          "_Type_": "MissionStringVariant",
+          "tag": {
+            "_RecordPath_": "file://./../../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+            "_RecordName_": "Tag.af3fcbbd-5e53-4099-885a-cc098697446c",
+            "_RecordId_": "af3fcbbd-5e53-4099-885a-cc098697446c"},
+          "string": "@vaughn_assassination_FPS_desc_003"},
+        {
+          "_Type_": "MissionStringVariant",
+          "tag": {
+            "_RecordPath_": "file://./../../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+            "_RecordName_": "Tag.ad7b35ec-eadb-4ce9-ba70-8b9e2dee7f5e",
+            "_RecordId_": "ad7b35ec-eadb-4ce9-ba70-8b9e2dee7f5e"},
+          "string": "@vaughn_assassination_FPS_title_001"},
+        {
+          "_Type_": "MissionStringVariant",
+          "tag": {
+            "_RecordPath_": "file://./../../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+            "_RecordName_": "Tag.ad7b35ec-eadb-4ce9-ba70-8b9e2dee7f5e",
+            "_RecordId_": "ad7b35ec-eadb-4ce9-ba70-8b9e2dee7f5e"},
+          "string": "@vaughn_assassination_FPS_title_002"},
+        {
+          "_Type_": "MissionStringVariant",
+          "tag": {
+            "_RecordPath_": "file://./../../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+            "_RecordName_": "Tag.ad7b35ec-eadb-4ce9-ba70-8b9e2dee7f5e",
+            "_RecordId_": "ad7b35ec-eadb-4ce9-ba70-8b9e2dee7f5e"},
+          "string": "@vaughn_assassination_FPS_title_003"},
+        {
+          "_Type_": "MissionStringVariant",
+          "tag": {
+            "_RecordPath_": "file://./../../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+            "_RecordName_": "Tag.d0512f33-05b6-49f6-8fb2-e0b7a1428f5b",
+            "_RecordId_": "d0512f33-05b6-49f6-8fb2-e0b7a1428f5b"},
+          "string": "@vaughn_assassination_FPS_desc_001"},
+        {
+          "_Type_": "MissionStringVariant",
+          "tag": {
+            "_RecordPath_": "file://./../../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+            "_RecordName_": "Tag.d0512f33-05b6-49f6-8fb2-e0b7a1428f5b",
+            "_RecordId_": "d0512f33-05b6-49f6-8fb2-e0b7a1428f5b"},
+          "string": "@vaughn_assassination_FPS_desc_002"},
+        {
+          "_Type_": "MissionStringVariant",
+          "tag": {
+            "_RecordPath_": "file://./../../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+            "_RecordName_": "Tag.d0512f33-05b6-49f6-8fb2-e0b7a1428f5b",
+            "_RecordId_": "d0512f33-05b6-49f6-8fb2-e0b7a1428f5b"},
+          "string": "@vaughn_assassination_FPS_desc_003"},
+        {
+          "_Type_": "MissionStringVariant",
+          "tag": {
+            "_RecordPath_": "file://./../../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+            "_RecordName_": "Tag.bbc4913d-6b01-428a-bf91-8aa2800bb550",
+            "_RecordId_": "bbc4913d-6b01-428a-bf91-8aa2800bb550"},
+          "string": "@vaughn_searchbody_space_Intro_Title_001"},
+        {
+          "_Type_": "MissionStringVariant",
+          "tag": {
+            "_RecordPath_": "file://./../../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+            "_RecordName_": "Tag.9df4bd64-a736-4a65-aaf2-a884b6983283",
+            "_RecordId_": "9df4bd64-a736-4a65-aaf2-a884b6983283"},
+          "string": "@vaughn_searchbody_space_VE_Title_001"},
+        {
+          "_Type_": "MissionStringVariant",
+          "tag": {
+            "_RecordPath_": "file://./../../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+            "_RecordName_": "Tag.6bb12a1f-a6c4-4b09-bdf7-63f6aed1c993",
+            "_RecordId_": "6bb12a1f-a6c4-4b09-bdf7-63f6aed1c993"},
+          "string": "@vaughn_searchbody_space_E_Title_001"},
+        {
+          "_Type_": "MissionStringVariant",
+          "tag": {
+            "_RecordPath_": "file://./../../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+            "_RecordName_": "Tag.1005f114-4c69-42a5-aa34-5988af6a069c",
+            "_RecordId_": "1005f114-4c69-42a5-aa34-5988af6a069c"},
+          "string": "@vaughn_searchbody_space_M_Title_001"},
+        {
+          "_Type_": "MissionStringVariant",
+          "tag": {
+            "_RecordPath_": "file://./../../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+            "_RecordName_": "Tag.ae19dd52-12eb-4a86-8f84-81d38fc3c1a5",
+            "_RecordId_": "ae19dd52-12eb-4a86-8f84-81d38fc3c1a5"},
+          "string": "@vaughn_searchbody_space_H_Title_001"},
+        {
+          "_Type_": "MissionStringVariant",
+          "tag": {
+            "_RecordPath_": "file://./../../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+            "_RecordName_": "Tag.7b9d1081-c823-4eb7-9a33-46e59e6d232f",
+            "_RecordId_": "7b9d1081-c823-4eb7-9a33-46e59e6d232f"},
+          "string": "@vaughn_searchbody_space_VH_Title_001"},
+        {
+          "_Type_": "MissionStringVariant",
+          "tag": {
+            "_RecordPath_": "file://./../../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+            "_RecordName_": "Tag.ec5ae693-4d7a-4a3a-a7c5-129cd254b92f",
+            "_RecordId_": "ec5ae693-4d7a-4a3a-a7c5-129cd254b92f"},
+          "string": "@vaughn_searchbody_space_S_Title_001"},
+        {
+          "_Type_": "MissionStringVariant",
+          "tag": {
+            "_RecordPath_": "file://./../../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+            "_RecordName_": "Tag.00acd2cc-ec60-4e1f-b5df-c0ab12ebcba0",
+            "_RecordId_": "00acd2cc-ec60-4e1f-b5df-c0ab12ebcba0"},
+          "string": "@vaughn_searchbody_space_Intro_Desc_001"},
+        {
+          "_Type_": "MissionStringVariant",
+          "tag": {
+            "_RecordPath_": "file://./../../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+            "_RecordName_": "Tag.5c68199d-82ed-4054-8834-1ea4595072e6",
+            "_RecordId_": "5c68199d-82ed-4054-8834-1ea4595072e6"},
+          "string": "@vaughn_searchbody_space_VE_Desc_001"},
+        {
+          "_Type_": "MissionStringVariant",
+          "tag": {
+            "_RecordPath_": "file://./../../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+            "_RecordName_": "Tag.4e4d1c6d-03d9-4f08-8221-928496ca0c81",
+            "_RecordId_": "4e4d1c6d-03d9-4f08-8221-928496ca0c81"},
+          "string": "@vaughn_searchbody_space_E_Desc_001"},
+        {
+          "_Type_": "MissionStringVariant",
+          "tag": {
+            "_RecordPath_": "file://./../../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+            "_RecordName_": "Tag.a08d58e6-872d-4bcf-a8c8-dddc99f29646",
+            "_RecordId_": "a08d58e6-872d-4bcf-a8c8-dddc99f29646"},
+          "string": "@vaughn_searchbody_space_M_Desc_001"},
+        {
+          "_Type_": "MissionStringVariant",
+          "tag": {
+            "_RecordPath_": "file://./../../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+            "_RecordName_": "Tag.7bfe991a-dffa-418c-ab41-03b5889af908",
+            "_RecordId_": "7bfe991a-dffa-418c-ab41-03b5889af908"},
+          "string": "@vaughn_searchbody_space_H_Desc_001"},
+        {
+          "_Type_": "MissionStringVariant",
+          "tag": {
+            "_RecordPath_": "file://./../../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+            "_RecordName_": "Tag.997dc7b8-470f-4576-a3ce-ce47e7617a77",
+            "_RecordId_": "997dc7b8-470f-4576-a3ce-ce47e7617a77"},
+          "string": "@vaughn_searchbody_space_VH_Desc_001"},
+        {
+          "_Type_": "MissionStringVariant",
+          "tag": {
+            "_RecordPath_": "file://./../../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+            "_RecordName_": "Tag.25c065cb-b19e-4c57-9bfe-d9e513930c6f",
+            "_RecordId_": "25c065cb-b19e-4c57-9bfe-d9e513930c6f"},
+          "string": "@vaughn_searchbody_space_S_Desc_001"}]},
+    "weighting": 1.0,
+    "factionReputation": "file://./../../../../../../../libs/foundry/records/factions/factionreputation/factionreputation_unlawful_vaughn.json"}}

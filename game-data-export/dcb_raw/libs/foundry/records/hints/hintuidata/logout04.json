@@ -1,0 +1,12 @@
+{
+  "_RecordName_": "HintUIData.Logout04",
+  "_RecordId_": "4d8d0b0d-6790-40a5-997f-09f52f3882bb",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "HintUIData",
+    "TitleText": "@Hints_Logout_Title",
+    "BodyText": "@Hints_LogoutEnteredNonOwned",
+    "BodyTextGamePad": "@Hints_LogoutEnteredNonOwned",
+    "BodyTextJoystick": "@Hints_LogoutEnteredNonOwned",
+    "TitleImagePath": "",
+    "BodyImagePath": ""}}

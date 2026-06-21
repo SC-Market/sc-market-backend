@@ -1,0 +1,15 @@
+{
+  "_RecordName_": "LootTable.DerelictTest",
+  "_RecordId_": "5ca470b5-7ac2-4c7c-a462-bf18a48ef3a3",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "LootTable",
+    "lootArchetypes": [
+      {
+        "_Type_": "WeightedLootArchetype",
+        "archetype": "file://./../../../../../../libs/foundry/records/lootgeneration/lootarchetypes/lootarchetype_derelicttest.json",
+        "weight": 1.0,
+        "numberOfResultsConstraints": {
+          "_Type_": "NumResultsConstraints",
+          "minResults": 1,
+          "maxResults": 1}}]}}

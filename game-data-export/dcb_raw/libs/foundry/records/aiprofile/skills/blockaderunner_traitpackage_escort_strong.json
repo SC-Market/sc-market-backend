@@ -1,0 +1,154 @@
+{
+  "_RecordName_": "SkillDefinitions.BlockadeRunner_TraitPackage_Escort_Strong",
+  "_RecordId_": "05455312-67af-4183-8c96-0744b8702b7d",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "SkillDefinitions",
+    "descriptionTags": {
+      "_Type_": "TagList",
+      "tags": [
+        {
+          "_RecordPath_": "file://./../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+          "_RecordName_": "Tag.751c3594-4136-410a-9620-098d9487442a",
+          "_RecordId_": "751c3594-4136-410a-9620-098d9487442a"}]},
+    "traits": {
+      "_Type_": "TagList",
+      "tags": [
+        {
+          "_RecordPath_": "file://./../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+          "_RecordName_": "Tag.eb9b8dc9-daa5-4c5c-982f-f0d067a7fd35",
+          "_RecordId_": "eb9b8dc9-daa5-4c5c-982f-f0d067a7fd35"},
+        {
+          "_RecordPath_": "file://./../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+          "_RecordName_": "Tag.e44fa27e-cc37-485c-a551-d0ab42df2d8d",
+          "_RecordId_": "e44fa27e-cc37-485c-a551-d0ab42df2d8d"},
+        {
+          "_RecordPath_": "file://./../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+          "_RecordName_": "Tag.48cd4772-9432-493c-8037-82b2e6355790",
+          "_RecordId_": "48cd4772-9432-493c-8037-82b2e6355790"},
+        {
+          "_RecordPath_": "file://./../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+          "_RecordName_": "Tag.961d37e1-7bf8-4fad-9a23-42a2cca5b8cd",
+          "_RecordId_": "961d37e1-7bf8-4fad-9a23-42a2cca5b8cd"},
+        null]},
+    "skills": [
+      {
+        "_Type_": "Skill",
+        "isSkill": true,
+        "optional": false,
+        "skillType": "Seated",
+        "skillLevel": 4.0,
+        "skillTag": {
+          "_RecordPath_": "file://./../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+          "_RecordName_": "Tag.1edcdd09-64fe-4120-a794-d96ae1ab859f",
+          "_RecordId_": "1edcdd09-64fe-4120-a794-d96ae1ab859f"},
+        "categoryName": "",
+        "skills": [
+          {
+            "_Type_": "Skill",
+            "isSkill": true,
+            "optional": true,
+            "skillType": "Seated",
+            "skillLevel": 1.0,
+            "skillTag": {
+              "_RecordPath_": "file://./../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+              "_RecordName_": "Tag.b6f2ae47-9950-46bb-8c18-69cb7d22be74",
+              "_RecordId_": "b6f2ae47-9950-46bb-8c18-69cb7d22be74"},
+            "categoryName": "",
+            "skills": []},
+          {
+            "_Type_": "Skill",
+            "isSkill": true,
+            "optional": true,
+            "skillType": "Seated",
+            "skillLevel": 1.0,
+            "skillTag": {
+              "_RecordPath_": "file://./../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+              "_RecordName_": "Tag.980ce6e8-afa2-4084-b13b-b0d01e5d7848",
+              "_RecordId_": "980ce6e8-afa2-4084-b13b-b0d01e5d7848"},
+            "categoryName": "",
+            "skills": []}]},
+      {
+        "_Type_": "Skill",
+        "isSkill": false,
+        "optional": false,
+        "skillType": "OnFoot",
+        "skillLevel": -1.0,
+        "skillTag": {
+          "_RecordPath_": "file://./../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+          "_RecordName_": "Tag.f1f9bf91-5f80-499c-aa56-246f4c74877c",
+          "_RecordId_": "f1f9bf91-5f80-499c-aa56-246f4c74877c"},
+        "categoryName": "",
+        "skills": [
+          {
+            "_Type_": "Skill",
+            "isSkill": true,
+            "optional": true,
+            "skillType": "OnFoot",
+            "skillLevel": 1.0,
+            "skillTag": {
+              "_RecordPath_": "file://./../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+              "_RecordName_": "Tag.983dcf50-2aac-40e5-9de2-df45f52de633",
+              "_RecordId_": "983dcf50-2aac-40e5-9de2-df45f52de633"},
+            "categoryName": "",
+            "skills": []},
+          {
+            "_Type_": "Skill",
+            "isSkill": true,
+            "optional": true,
+            "skillType": "OnFoot",
+            "skillLevel": 1.0,
+            "skillTag": {
+              "_RecordPath_": "file://./../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+              "_RecordName_": "Tag.0b5f6d80-6a59-4408-aaad-393499fd46e8",
+              "_RecordId_": "0b5f6d80-6a59-4408-aaad-393499fd46e8"},
+            "categoryName": "",
+            "skills": []}]},
+      {
+        "_Type_": "Skill",
+        "isSkill": true,
+        "optional": false,
+        "skillType": "Seated",
+        "skillLevel": 1.0,
+        "skillTag": {
+          "_RecordPath_": "file://./../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+          "_RecordName_": "Tag.071daac7-7305-4975-b89c-0f4e0d65a1cd",
+          "_RecordId_": "071daac7-7305-4975-b89c-0f4e0d65a1cd"},
+        "categoryName": "",
+        "skills": []},
+      {
+        "_Type_": "Skill",
+        "isSkill": true,
+        "optional": false,
+        "skillType": "Seated",
+        "skillLevel": 1.0,
+        "skillTag": {
+          "_RecordPath_": "file://./../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+          "_RecordName_": "Tag.13708fcf-6db2-4c91-ae51-2f569f12010d",
+          "_RecordId_": "13708fcf-6db2-4c91-ae51-2f569f12010d"},
+        "categoryName": "",
+        "skills": []},
+      {
+        "_Type_": "Skill",
+        "isSkill": true,
+        "optional": false,
+        "skillType": "Seated",
+        "skillLevel": 1.0,
+        "skillTag": {
+          "_RecordPath_": "file://./../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+          "_RecordName_": "Tag.1804ac5c-d35c-457d-9dd8-b3b1f2f728d1",
+          "_RecordId_": "1804ac5c-d35c-457d-9dd8-b3b1f2f728d1"},
+        "categoryName": "",
+        "skills": []},
+      {
+        "_Type_": "Skill",
+        "isSkill": true,
+        "optional": false,
+        "skillType": "Seated",
+        "skillLevel": 5.0,
+        "skillTag": {
+          "_RecordPath_": "file://./../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+          "_RecordName_": "Tag.425725f0-2556-44cc-927c-5d10cbfe9caa",
+          "_RecordId_": "425725f0-2556-44cc-927c-5d10cbfe9caa"},
+        "categoryName": "",
+        "skills": []}]}}

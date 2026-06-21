@@ -1,0 +1,47 @@
+{
+  "_RecordName_": "SEntrancesDef.MISC_Hull_B",
+  "_RecordId_": "edd7f041-f3b0-42d2-aad5-a10860aab9a6",
+  "_RecordTag_": "Ship",
+  "_RecordValue_": {
+    "_Type_": "SEntrancesDef",
+    "boundingBoxScale": {
+      "_Type_": "Vec3",
+      "x": 1.7,
+      "y": 1.7,
+      "z": 1.7},
+    "boundingBoxOffset": {
+      "_Type_": "Vec3",
+      "x": 0.0,
+      "y": 0.0,
+      "z": 0.0},
+    "entranceArray": [
+      {
+        "_Type_": "SCEntranceItem",
+        "entranceName": "@entrance_elevator",
+        "jointName": "entrance_marker_elevator",
+        "positionOffset": {
+          "_Type_": "Vec3",
+          "x": 0.0,
+          "y": -0.5,
+          "z": 0.0},
+        "shipState": "Flying"},
+      {
+        "_Type_": "SCEntranceItem",
+        "entranceName": "@entrance_dock",
+        "jointName": "entrance_marker_airlock",
+        "positionOffset": {
+          "_Type_": "Vec3",
+          "x": 0.0,
+          "y": 0.0,
+          "z": 0.0},
+        "shipState": "Flying"},
+      {
+        "_Type_": "SCEntranceItem",
+        "entranceName": "@entrance_elevator",
+        "jointName": "entrance_marker_elevator",
+        "positionOffset": {
+          "_Type_": "Vec3",
+          "x": 0.0,
+          "y": 0.0,
+          "z": -3.0},
+        "shipState": "Grounded"}]}}

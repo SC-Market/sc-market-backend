@@ -1,0 +1,249 @@
+{
+  "_RecordName_": "SGlobalSalvageRepairBeamParams.SGlobalSalvageRepairBeamParams",
+  "_RecordId_": "f1f5c417-b573-4732-8568-a1f5e60b43a2",
+  "_RecordTag_": "SystemsDesign",
+  "_RecordValue_": {
+    "_Type_": "SGlobalSalvageRepairBeamParams",
+    "tag": {
+      "_RecordPath_": "file://./../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+      "_RecordName_": "Tag.32cdba1f-4fb4-4416-a97d-3c02d68f158f",
+      "_RecordId_": "32cdba1f-4fb4-4416-a97d-3c02d68f158f"},
+    "cardParams": {
+      "_Type_": "SSalvageRepairCardParams",
+      "cardLerpSpeed": 6.5,
+      "attachPointLerpSpeed": 11.0,
+      "closingTransitionTime": 0.75,
+      "nearDistance": 1.25,
+      "defaultScreenPos": {
+        "_Type_": "Vec2",
+        "x": 0.675,
+        "y": 0.45},
+      "maxDistScreenPosScale": 0.25},
+    "highlightParams": {
+      "_Type_": "SSalvageRepairHighlightParams",
+      "colors": [
+        {
+          "_Type_": "SSalvageRepairHighlightColorParams",
+          "color": {
+            "_Type_": "RGB",
+            "r": 0.002124689,
+            "g": 1.0,
+            "b": 0.184475},
+          "hullThreshold": 0.9999},
+        {
+          "_Type_": "SSalvageRepairHighlightColorParams",
+          "color": {
+            "_Type_": "RGB",
+            "r": 0.2961383,
+            "g": 0.9559733,
+            "b": 1.0},
+          "hullThreshold": 0.66},
+        {
+          "_Type_": "SSalvageRepairHighlightColorParams",
+          "color": {
+            "_Type_": "RGB",
+            "r": 0.9734453,
+            "g": 0.9734453,
+            "b": 0.1980693},
+          "hullThreshold": 0.33},
+        {
+          "_Type_": "SSalvageRepairHighlightColorParams",
+          "color": {
+            "_Type_": "RGB",
+            "r": 0.6866853,
+            "g": 0.02217389,
+            "b": 0.07227185},
+          "hullThreshold": 0.0}],
+      "validOutlineValues": {
+        "_Type_": "SSalvageRepairHighlightOutlineValues",
+        "occludedAlpha": 0.1,
+        "outlineWidth": 0.33,
+        "outlineOnly": true},
+      "invalidTargetColor": {
+        "_Type_": "RGB",
+        "r": 0.6866853,
+        "g": 0.02217389,
+        "b": 0.07227185},
+      "invalidOutlineValues": {
+        "_Type_": "SSalvageRepairHighlightOutlineValues",
+        "occludedAlpha": 0.25,
+        "outlineWidth": 0.33,
+        "outlineOnly": false},
+      "filterItemTypes": [
+        {
+          "_Type_": "SItemTypeFilter",
+          "itemType": "Seat",
+          "itemSubTypes": []},
+        {
+          "_Type_": "SItemTypeFilter",
+          "itemType": "Usable",
+          "itemSubTypes": []},
+        {
+          "_Type_": "SItemTypeFilter",
+          "itemType": "SalvageFillerStation",
+          "itemSubTypes": []},
+        {
+          "_Type_": "SItemTypeFilter",
+          "itemType": "Display",
+          "itemSubTypes": []},
+        {
+          "_Type_": "SItemTypeFilter",
+          "itemType": "SeatAccess",
+          "itemSubTypes": []},
+        {
+          "_Type_": "SItemTypeFilter",
+          "itemType": "SeatDashboard",
+          "itemSubTypes": []},
+        {
+          "_Type_": "SItemTypeFilter",
+          "itemType": "NOITEM_Vehicle",
+          "itemSubTypes": []},
+        {
+          "_Type_": "SItemTypeFilter",
+          "itemType": "WeaponPersonal",
+          "itemSubTypes": []},
+        {
+          "_Type_": "SItemTypeFilter",
+          "itemType": "Relay",
+          "itemSubTypes": []}]},
+    "localizationParams": {
+      "_Type_": "SSalvageRepairLocalizationParams",
+      "hullLoc": "@ui_weapons_salvage_repair_vehicle_hull",
+      "itemTypeLocalizationPairs": [
+        {
+          "_Type_": "SSalvageRepairItemTypeLocalizationPair",
+          "itemType": "MainThruster",
+          "typeLoc": "@item_TypeThruster"},
+        {
+          "_Type_": "SSalvageRepairItemTypeLocalizationPair",
+          "itemType": "ManneuverThruster",
+          "typeLoc": "@item_TypeManneuverThruster"},
+        {
+          "_Type_": "SSalvageRepairItemTypeLocalizationPair",
+          "itemType": "Turret",
+          "typeLoc": "@item_TypeTurret"},
+        {
+          "_Type_": "SSalvageRepairItemTypeLocalizationPair",
+          "itemType": "TurretBase",
+          "typeLoc": "@item_TypeTurretBase"},
+        {
+          "_Type_": "SSalvageRepairItemTypeLocalizationPair",
+          "itemType": "Door",
+          "typeLoc": "@item_TypeDoor"},
+        {
+          "_Type_": "SSalvageRepairItemTypeLocalizationPair",
+          "itemType": "Debris",
+          "typeLoc": "@item_TypeDebris"},
+        {
+          "_Type_": "SSalvageRepairItemTypeLocalizationPair",
+          "itemType": "LandingSystem",
+          "typeLoc": "@item_SubTypeLandingSystem"},
+        {
+          "_Type_": "SSalvageRepairItemTypeLocalizationPair",
+          "itemType": "MiningModifier",
+          "typeLoc": "@item_TypeMisc"},
+        {
+          "_Type_": "SSalvageRepairItemTypeLocalizationPair",
+          "itemType": "Light",
+          "typeLoc": "@item_TypeLight"},
+        {
+          "_Type_": "SSalvageRepairItemTypeLocalizationPair",
+          "itemType": "WeaponGun",
+          "typeLoc": "@item_TypeWeaponGun"},
+        {
+          "_Type_": "SSalvageRepairItemTypeLocalizationPair",
+          "itemType": "WeaponMining",
+          "typeLoc": "@item_TypeWeaponMining"},
+        {
+          "_Type_": "SSalvageRepairItemTypeLocalizationPair",
+          "itemType": "WeaponAttachment",
+          "typeLoc": "@item_TypeWeaponAttachment"},
+        {
+          "_Type_": "SSalvageRepairItemTypeLocalizationPair",
+          "itemType": "Missile",
+          "typeLoc": "@item_TypeMissile"},
+        {
+          "_Type_": "SSalvageRepairItemTypeLocalizationPair",
+          "itemType": "MissileLauncher",
+          "typeLoc": "@item_TypeMissileLauncher"},
+        {
+          "_Type_": "SSalvageRepairItemTypeLocalizationPair",
+          "itemType": "FuelTank",
+          "typeLoc": "@item_TypeFuelTank"},
+        {
+          "_Type_": "SSalvageRepairItemTypeLocalizationPair",
+          "itemType": "FuelIntake",
+          "typeLoc": "@item_TypeFuelIntake"},
+        {
+          "_Type_": "SSalvageRepairItemTypeLocalizationPair",
+          "itemType": "Ship",
+          "typeLoc": "@item_TypeShip"},
+        {
+          "_Type_": "SSalvageRepairItemTypeLocalizationPair",
+          "itemType": "SalvageHead",
+          "typeLoc": "@item_TypeSalvageHead"},
+        {
+          "_Type_": "SSalvageRepairItemTypeLocalizationPair",
+          "itemType": "DockingAnimator",
+          "typeLoc": "@item_TypeDoor"},
+        {
+          "_Type_": "SSalvageRepairItemTypeLocalizationPair",
+          "itemType": "QuantumDrive",
+          "typeLoc": "@item_displayType_QuantumDrive"},
+        {
+          "_Type_": "SSalvageRepairItemTypeLocalizationPair",
+          "itemType": "QuantumFuelTank",
+          "typeLoc": "@item_TypeFuelTank"},
+        {
+          "_Type_": "SSalvageRepairItemTypeLocalizationPair",
+          "itemType": "Misc",
+          "typeLoc": "@item_TypeMisc"},
+        {
+          "_Type_": "SSalvageRepairItemTypeLocalizationPair",
+          "itemType": "Cargo",
+          "typeLoc": "@item_TypeCargo"},
+        {
+          "_Type_": "SSalvageRepairItemTypeLocalizationPair",
+          "itemType": "PowerPlant",
+          "typeLoc": "@item_displayType_PowerPlant"},
+        {
+          "_Type_": "SSalvageRepairItemTypeLocalizationPair",
+          "itemType": "Shield",
+          "typeLoc": "@item_displayType_ShieldGenerator"},
+        {
+          "_Type_": "SSalvageRepairItemTypeLocalizationPair",
+          "itemType": "Cooler",
+          "typeLoc": "@item_displayType_Cooler"},
+        {
+          "_Type_": "SSalvageRepairItemTypeLocalizationPair",
+          "itemType": "BombLauncher",
+          "typeLoc": "@item_SubTypeBombRack"},
+        {
+          "_Type_": "SSalvageRepairItemTypeLocalizationPair",
+          "itemType": "Radar",
+          "typeLoc": "@item_TypeRadar"},
+        {
+          "_Type_": "SSalvageRepairItemTypeLocalizationPair",
+          "itemType": "LifeSupportGenerator",
+          "typeLoc": "@item_TypeLifeSupportGenerator"},
+        {
+          "_Type_": "SSalvageRepairItemTypeLocalizationPair",
+          "itemType": "JumpDrive",
+          "typeLoc": "@item_TypeJumpDrive"}],
+      "itemTypeNotFoundLoc": "@ui_weapons_salvage_repair_unknown_part"},
+    "materialParams": {
+      "_Type_": "SSalvageRepairMaterialParams",
+      "hullThicknessMeters": 0.009,
+      "ammoToMaterialFactor": 100.0,
+      "RMCResourceType": {
+        "_RecordPath_": "file://./../../../../libs/foundry/records/resourcetypedatabase/resourcetypedatabase.json",
+        "_RecordName_": "ResourceType.RMC",
+        "_RecordId_": "a0e6c4cf-face-4f52-a020-dfa869607901"}},
+    "globalSalvageAudioParams": {
+      "_Type_": "SSalvageRepairAudioParams",
+      "salvageCargoOccupancyFactorRTPC": {
+        "_Type_": "AudioRtpc",
+        "rtpc": "Salvage_Cargo_Filling"},
+      "friendlyFireMessageCooldownScale": 10.0},
+    "hitsPerSecond": 10.0,
+    "hitDuration": 0.3}}

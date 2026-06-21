@@ -1,0 +1,39 @@
+{
+  "_RecordName_": "MissionItem.Laranite",
+  "_RecordId_": "cda054f6-a66f-4d98-b12d-22d3344633ff",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "MissionItem",
+    "tags": [
+      {
+        "_RecordPath_": "file://./../../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+        "_RecordName_": "Tag.dce2bf6a-62fb-4923-a954-f3e9a77f08fe",
+        "_RecordId_": "dce2bf6a-62fb-4923-a954-f3e9a77f08fe"},
+      {
+        "_RecordPath_": "file://./../../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+        "_RecordName_": "Tag.56b3cdd1-6eb5-4f52-b389-9726a5caea3c",
+        "_RecordId_": "56b3cdd1-6eb5-4f52-b389-9726a5caea3c"},
+      {
+        "_RecordPath_": "file://./../../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+        "_RecordName_": "Tag.37ba7ad8-8553-45df-a84b-c49eb6ebb7a6",
+        "_RecordId_": "37ba7ad8-8553-45df-a84b-c49eb6ebb7a6"},
+      {
+        "_RecordPath_": "file://./../../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+        "_RecordName_": "Tag.87b507e5-09f3-4b92-82d7-5e18ed474335",
+        "_RecordId_": "87b507e5-09f3-4b92-82d7-5e18ed474335"},
+      {
+        "_RecordPath_": "file://./../../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+        "_RecordName_": "Tag.18866e12-3f66-40bc-aea8-b22cf7a7bbe9",
+        "_RecordId_": "18866e12-3f66-40bc-aea8-b22cf7a7bbe9"}],
+    "stringVariants": {
+      "_Type_": "MissionStringVariants",
+      "variants": [
+        {
+          "_Type_": "MissionStringVariant",
+          "tag": {
+            "_RecordPath_": "file://./../../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+            "_RecordName_": "Tag.0130de18-97e2-4d4c-9bb1-3e7ef5fd0490",
+            "_RecordId_": "0130de18-97e2-4d4c-9bb1-3e7ef5fd0490"},
+          "string": "@mission_item_0022"}]},
+    "weighting": 1.0,
+    "entityClass": "file://./../../../../../../../libs/foundry/records/entities/scitem/carryables/2h/carryable_2h_fl_05x05x05_commodity_minerals_laranite_a.json"}}

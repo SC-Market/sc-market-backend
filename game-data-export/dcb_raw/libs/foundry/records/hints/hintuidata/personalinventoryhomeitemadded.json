@@ -1,0 +1,12 @@
+{
+  "_RecordName_": "HintUIData.PersonalInventoryHomeItemAdded",
+  "_RecordId_": "b7ec83d4-f64a-4fa3-bb5a-816559f8aef7",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "HintUIData",
+    "TitleText": "@Hints_Inventory_HomeItemAdded_Title",
+    "BodyText": "@Hints_Inventory_HomeItemAdded",
+    "BodyTextGamePad": "@Hints_Inventory_HomeItemAdded",
+    "BodyTextJoystick": "@Hints_Inventory_HomeItemAdded",
+    "TitleImagePath": "",
+    "BodyImagePath": ""}}

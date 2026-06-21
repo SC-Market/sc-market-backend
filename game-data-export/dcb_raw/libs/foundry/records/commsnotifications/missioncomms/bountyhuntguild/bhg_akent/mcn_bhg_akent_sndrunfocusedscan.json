@@ -1,0 +1,29 @@
+{
+  "_RecordName_": "CommsNotification.MCN_BHG_AKent_SnDRunFocusedScan",
+  "_RecordId_": "a7f50808-4b76-40eb-948e-5db8403c1434",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "CommsNotification",
+    "tags": {
+      "_Type_": "TagList",
+      "tags": [
+        {
+          "_RecordPath_": "file://./../../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+          "_RecordName_": "Tag.86eb0c14-d376-4590-bed3-fff52ac6f9fb",
+          "_RecordId_": "86eb0c14-d376-4590-bed3-fff52ac6f9fb"},
+        {
+          "_RecordPath_": "file://./../../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+          "_RecordName_": "Tag.b364360c-549a-4fdc-a5f5-ffa155486cd5",
+          "_RecordId_": "b364360c-549a-4fdc-a5f5-ffa155486cd5"},
+        {
+          "_RecordPath_": "file://./../../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+          "_RecordName_": "Tag.e6a13cf1-526b-4949-ae2d-d21c2315b5c4",
+          "_RecordId_": "e6a13cf1-526b-4949-ae2d-d21c2315b5c4"},
+        {
+          "_RecordPath_": "file://./../../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+          "_RecordName_": "Tag.4a67a31c-e462-458f-bbcc-643269a7c9ee",
+          "_RecordId_": "4a67a31c-e462-458f-bbcc-643269a7c9ee"}]},
+    "communicationName": "file://./../../../../../../../libs/foundry/records/communicationname/missioncommunications/searchanddestroy/snd_scan_focused.json",
+    "characterEntityClass": "file://./../../../../../../../libs/foundry/records/actor/actors/pyro/npc_archetypes-male-human-missiongivers-agnorkent.json",
+    "fakeCommsAudioEntityClass": null,
+    "stage": "file://./../../../../../../../libs/foundry/records/commsnotificationstages/cns_test.json"}}

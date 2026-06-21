@@ -1,0 +1,15 @@
+{
+  "_RecordName_": "SReputationStandingParams.ReputationStanding_Affinity_Enemy_-100",
+  "_RecordId_": "37867ba7-ca89-460f-8679-df5be5322463",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "SReputationStandingParams",
+    "name": "Affinity_Bad_100_Hated",
+    "description": "desc",
+    "displayName": "@RepStanding_MissionGiver_Default_Hated_Name",
+    "perkDescription": "@blank_space",
+    "icon": "",
+    "minReputation": -10000,
+    "driftReputation": 0,
+    "driftTimeHours": 0.0,
+    "gated": false}}

@@ -1,0 +1,16 @@
+{
+  "_RecordName_": "AudioBreathInterrupt.Throwing",
+  "_RecordId_": "efac9352-30cb-4373-aee4-22c6e09901f4",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "AudioBreathInterrupt",
+    "description": "",
+    "curve": {
+      "_Type_": "BezierCurve",
+      "points": [],
+      "useLUT": false},
+    "breathEvent": "BreathCustom",
+    "customEvent": {
+      "_Type_": "GlobalResourceAudio",
+      "audioTrigger": ""},
+    "triggerCustomEventOnly": true}}

@@ -1,0 +1,29 @@
+{
+  "_RecordName_": "CommsNotification.MCN_CREP_Samuels_RSGEvent_DefendCargo_MissionComplete",
+  "_RecordId_": "83505d51-f38c-419d-998c-a1fd570256f7",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "CommsNotification",
+    "tags": {
+      "_Type_": "TagList",
+      "tags": [
+        {
+          "_RecordPath_": "file://./../../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+          "_RecordName_": "Tag.8884f7ac-7342-4dac-83e2-1d819d4a3dc6",
+          "_RecordId_": "8884f7ac-7342-4dac-83e2-1d819d4a3dc6"},
+        {
+          "_RecordPath_": "file://./../../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+          "_RecordName_": "Tag.c06365af-0739-4cc6-be44-6b5ccd0edc45",
+          "_RecordId_": "c06365af-0739-4cc6-be44-6b5ccd0edc45"},
+        {
+          "_RecordPath_": "file://./../../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+          "_RecordName_": "Tag.4d04f555-f7f8-4518-b004-27426a047e79",
+          "_RecordId_": "4d04f555-f7f8-4518-b004-27426a047e79"},
+        {
+          "_RecordPath_": "file://./../../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+          "_RecordName_": "Tag.efc3695e-fbb3-4cd5-9ce3-a6ca0fdb8553",
+          "_RecordId_": "efc3695e-fbb3-4cd5-9ce3-a6ca0fdb8553"}]},
+    "communicationName": "file://./../../../../../../../libs/foundry/records/communicationname/missioncommunications/defendmission/defendcargo_missioncomplete.json",
+    "characterEntityClass": null,
+    "fakeCommsAudioEntityClass": "file://./../../../../../../../libs/foundry/records/entities/audio/fakecommsaudioentity_crusaderindustries_crep_samuels.json",
+    "stage": null}}

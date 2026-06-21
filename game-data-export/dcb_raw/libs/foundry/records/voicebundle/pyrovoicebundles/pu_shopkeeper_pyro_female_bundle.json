@@ -1,0 +1,10 @@
+{
+  "_RecordName_": "VoiceBundle.PU_ShopKeeper_Pyro_Female_Bundle",
+  "_RecordId_": "a43af9af-8c46-4bf6-b562-6910b0188195",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "VoiceBundle",
+    "name": "PU_ShopKeeper_Pyro_Female_Bundle",
+    "voices": [
+      "file://./../../../../../libs/foundry/records/voicesingle/pu/civilian/pu_vendor_female_02.json",
+      "file://./../../../../../libs/foundry/records/voicesingle/pu/civilian/pu_vendor_female_04.json"]}}

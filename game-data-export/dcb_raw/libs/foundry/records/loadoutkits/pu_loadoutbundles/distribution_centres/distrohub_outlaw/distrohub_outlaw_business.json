@@ -1,0 +1,1817 @@
+{
+  "_RecordName_": "SLoadoutAssortment.DistroHub_Outlaw_Business",
+  "_RecordId_": "c6c5327f-c0b9-4017-9e28-1d0757fddcff",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "SLoadoutAssortment",
+    "Requirement": null,
+    "GroupedLoadouts": [
+      {
+        "_Type_": "SGroupedLoadouts",
+        "Group": "Body",
+        "Requirement": null,
+        "Loadouts": [
+          {
+            "_Type_": "SItemPortLoadoutRandomGeneratedParams",
+            "WearRange": null,
+            "DirtRange": null,
+            "SkipInventoryItemsOnMissionEntities": false,
+            "InventoryItems": [],
+            "GenerationSeed": 0,
+            "LoadoutAssortments": [
+              "file://./../../../../../../../libs/foundry/records/loadoutkits/pu_loadoutbundles/bodies_bluecollar.json"]}]},
+      {
+        "_Type_": "SGroupedLoadouts",
+        "Group": "Torso",
+        "Requirement": null,
+        "Loadouts": [
+          {
+            "_Type_": "SItemPortLoadoutManualParams",
+            "WearRange": null,
+            "DirtRange": null,
+            "SkipInventoryItemsOnMissionEntities": false,
+            "InventoryItems": [],
+            "entries": [
+              {
+                "_Type_": "SItemPortLoadoutEntryParams",
+                "itemPortName": "Body_ItemPort",
+                "entityClassName": "",
+                "entityClassReference": null,
+                "inventoryContainer": null,
+                "loadout": {
+                  "_Type_": "SItemPortLoadoutManualParams",
+                  "WearRange": null,
+                  "DirtRange": null,
+                  "SkipInventoryItemsOnMissionEntities": false,
+                  "InventoryItems": [],
+                  "entries": [
+                    {
+                      "_Type_": "SItemPortLoadoutEntryParams",
+                      "itemPortName": "Clothing_Torso_0",
+                      "entityClassName": "alb_shirt_01_01_05",
+                      "entityClassReference": null,
+                      "inventoryContainer": null,
+                      "loadout": null}]}}]}]},
+      {
+        "_Type_": "SGroupedLoadouts",
+        "Group": "Torso",
+        "Requirement": null,
+        "Loadouts": [
+          {
+            "_Type_": "SItemPortLoadoutManualParams",
+            "WearRange": null,
+            "DirtRange": null,
+            "SkipInventoryItemsOnMissionEntities": false,
+            "InventoryItems": [],
+            "entries": [
+              {
+                "_Type_": "SItemPortLoadoutEntryParams",
+                "itemPortName": "Body_ItemPort",
+                "entityClassName": "",
+                "entityClassReference": null,
+                "inventoryContainer": null,
+                "loadout": {
+                  "_Type_": "SItemPortLoadoutManualParams",
+                  "WearRange": null,
+                  "DirtRange": null,
+                  "SkipInventoryItemsOnMissionEntities": false,
+                  "InventoryItems": [],
+                  "entries": [
+                    {
+                      "_Type_": "SItemPortLoadoutEntryParams",
+                      "itemPortName": "Clothing_Torso_0",
+                      "entityClassName": "alb_shirt_02_01_04",
+                      "entityClassReference": null,
+                      "inventoryContainer": null,
+                      "loadout": null}]}}]}]},
+      {
+        "_Type_": "SGroupedLoadouts",
+        "Group": "Torso",
+        "Requirement": null,
+        "Loadouts": [
+          {
+            "_Type_": "SItemPortLoadoutManualParams",
+            "WearRange": null,
+            "DirtRange": null,
+            "SkipInventoryItemsOnMissionEntities": false,
+            "InventoryItems": [],
+            "entries": [
+              {
+                "_Type_": "SItemPortLoadoutEntryParams",
+                "itemPortName": "Body_ItemPort",
+                "entityClassName": "",
+                "entityClassReference": null,
+                "inventoryContainer": null,
+                "loadout": {
+                  "_Type_": "SItemPortLoadoutManualParams",
+                  "WearRange": null,
+                  "DirtRange": null,
+                  "SkipInventoryItemsOnMissionEntities": false,
+                  "InventoryItems": [],
+                  "entries": [
+                    {
+                      "_Type_": "SItemPortLoadoutEntryParams",
+                      "itemPortName": "Clothing_Torso_0",
+                      "entityClassName": "mym_shirt_02_01_15",
+                      "entityClassReference": null,
+                      "inventoryContainer": null,
+                      "loadout": null}]}}]}]},
+      {
+        "_Type_": "SGroupedLoadouts",
+        "Group": "Torso",
+        "Requirement": null,
+        "Loadouts": [
+          {
+            "_Type_": "SItemPortLoadoutManualParams",
+            "WearRange": null,
+            "DirtRange": null,
+            "SkipInventoryItemsOnMissionEntities": false,
+            "InventoryItems": [],
+            "entries": [
+              {
+                "_Type_": "SItemPortLoadoutEntryParams",
+                "itemPortName": "Body_ItemPort",
+                "entityClassName": "",
+                "entityClassReference": null,
+                "inventoryContainer": null,
+                "loadout": {
+                  "_Type_": "SItemPortLoadoutManualParams",
+                  "WearRange": null,
+                  "DirtRange": null,
+                  "SkipInventoryItemsOnMissionEntities": false,
+                  "InventoryItems": [],
+                  "entries": [
+                    {
+                      "_Type_": "SItemPortLoadoutEntryParams",
+                      "itemPortName": "Clothing_Torso_0",
+                      "entityClassName": "cbd_shirt_01_04_01",
+                      "entityClassReference": null,
+                      "inventoryContainer": null,
+                      "loadout": null}]}}]}]},
+      {
+        "_Type_": "SGroupedLoadouts",
+        "Group": "Torso",
+        "Requirement": null,
+        "Loadouts": [
+          {
+            "_Type_": "SItemPortLoadoutManualParams",
+            "WearRange": null,
+            "DirtRange": null,
+            "SkipInventoryItemsOnMissionEntities": false,
+            "InventoryItems": [],
+            "entries": [
+              {
+                "_Type_": "SItemPortLoadoutEntryParams",
+                "itemPortName": "Body_ItemPort",
+                "entityClassName": "",
+                "entityClassReference": null,
+                "inventoryContainer": null,
+                "loadout": {
+                  "_Type_": "SItemPortLoadoutManualParams",
+                  "WearRange": null,
+                  "DirtRange": null,
+                  "SkipInventoryItemsOnMissionEntities": false,
+                  "InventoryItems": [],
+                  "entries": [
+                    {
+                      "_Type_": "SItemPortLoadoutEntryParams",
+                      "itemPortName": "Clothing_Torso_0",
+                      "entityClassName": "eld_shirt_01_01_01",
+                      "entityClassReference": null,
+                      "inventoryContainer": null,
+                      "loadout": null}]}}]}]},
+      {
+        "_Type_": "SGroupedLoadouts",
+        "Group": "Torso",
+        "Requirement": null,
+        "Loadouts": [
+          {
+            "_Type_": "SItemPortLoadoutManualParams",
+            "WearRange": null,
+            "DirtRange": null,
+            "SkipInventoryItemsOnMissionEntities": false,
+            "InventoryItems": [],
+            "entries": [
+              {
+                "_Type_": "SItemPortLoadoutEntryParams",
+                "itemPortName": "Body_ItemPort",
+                "entityClassName": "",
+                "entityClassReference": null,
+                "inventoryContainer": null,
+                "loadout": {
+                  "_Type_": "SItemPortLoadoutManualParams",
+                  "WearRange": null,
+                  "DirtRange": null,
+                  "SkipInventoryItemsOnMissionEntities": false,
+                  "InventoryItems": [],
+                  "entries": [
+                    {
+                      "_Type_": "SItemPortLoadoutEntryParams",
+                      "itemPortName": "Clothing_Torso_0",
+                      "entityClassName": "scu_shirt_01_01_04",
+                      "entityClassReference": null,
+                      "inventoryContainer": null,
+                      "loadout": null}]}}]}]},
+      {
+        "_Type_": "SGroupedLoadouts",
+        "Group": "Torso",
+        "Requirement": null,
+        "Loadouts": [
+          {
+            "_Type_": "SItemPortLoadoutManualParams",
+            "WearRange": null,
+            "DirtRange": null,
+            "SkipInventoryItemsOnMissionEntities": false,
+            "InventoryItems": [],
+            "entries": [
+              {
+                "_Type_": "SItemPortLoadoutEntryParams",
+                "itemPortName": "Body_ItemPort",
+                "entityClassName": "",
+                "entityClassReference": null,
+                "inventoryContainer": null,
+                "loadout": {
+                  "_Type_": "SItemPortLoadoutManualParams",
+                  "WearRange": null,
+                  "DirtRange": null,
+                  "SkipInventoryItemsOnMissionEntities": false,
+                  "InventoryItems": [],
+                  "entries": [
+                    {
+                      "_Type_": "SItemPortLoadoutEntryParams",
+                      "itemPortName": "Clothing_Torso_0",
+                      "entityClassName": "mym_shirt_03_01_01",
+                      "entityClassReference": null,
+                      "inventoryContainer": null,
+                      "loadout": null}]}}]}]},
+      {
+        "_Type_": "SGroupedLoadouts",
+        "Group": "Torso",
+        "Requirement": null,
+        "Loadouts": [
+          {
+            "_Type_": "SItemPortLoadoutManualParams",
+            "WearRange": null,
+            "DirtRange": null,
+            "SkipInventoryItemsOnMissionEntities": false,
+            "InventoryItems": [],
+            "entries": [
+              {
+                "_Type_": "SItemPortLoadoutEntryParams",
+                "itemPortName": "Body_ItemPort",
+                "entityClassName": "",
+                "entityClassReference": null,
+                "inventoryContainer": null,
+                "loadout": {
+                  "_Type_": "SItemPortLoadoutManualParams",
+                  "WearRange": null,
+                  "DirtRange": null,
+                  "SkipInventoryItemsOnMissionEntities": false,
+                  "InventoryItems": [],
+                  "entries": [
+                    {
+                      "_Type_": "SItemPortLoadoutEntryParams",
+                      "itemPortName": "Clothing_Torso_0",
+                      "entityClassName": "scu_shirt_01_01_01",
+                      "entityClassReference": null,
+                      "inventoryContainer": null,
+                      "loadout": null}]}}]}]},
+      {
+        "_Type_": "SGroupedLoadouts",
+        "Group": "Torso",
+        "Requirement": null,
+        "Loadouts": [
+          {
+            "_Type_": "SItemPortLoadoutManualParams",
+            "WearRange": null,
+            "DirtRange": null,
+            "SkipInventoryItemsOnMissionEntities": false,
+            "InventoryItems": [],
+            "entries": [
+              {
+                "_Type_": "SItemPortLoadoutEntryParams",
+                "itemPortName": "Body_ItemPort",
+                "entityClassName": "",
+                "entityClassReference": null,
+                "inventoryContainer": null,
+                "loadout": {
+                  "_Type_": "SItemPortLoadoutManualParams",
+                  "WearRange": null,
+                  "DirtRange": null,
+                  "SkipInventoryItemsOnMissionEntities": false,
+                  "InventoryItems": [],
+                  "entries": [
+                    {
+                      "_Type_": "SItemPortLoadoutEntryParams",
+                      "itemPortName": "Clothing_Torso_0",
+                      "entityClassName": "eld_shirt_02_01_01",
+                      "entityClassReference": null,
+                      "inventoryContainer": null,
+                      "loadout": null}]}}]}]},
+      {
+        "_Type_": "SGroupedLoadouts",
+        "Group": "Torso",
+        "Requirement": null,
+        "Loadouts": [
+          {
+            "_Type_": "SItemPortLoadoutManualParams",
+            "WearRange": null,
+            "DirtRange": null,
+            "SkipInventoryItemsOnMissionEntities": false,
+            "InventoryItems": [],
+            "entries": [
+              {
+                "_Type_": "SItemPortLoadoutEntryParams",
+                "itemPortName": "Body_ItemPort",
+                "entityClassName": "",
+                "entityClassReference": null,
+                "inventoryContainer": null,
+                "loadout": {
+                  "_Type_": "SItemPortLoadoutManualParams",
+                  "WearRange": null,
+                  "DirtRange": null,
+                  "SkipInventoryItemsOnMissionEntities": false,
+                  "InventoryItems": [],
+                  "entries": [
+                    {
+                      "_Type_": "SItemPortLoadoutEntryParams",
+                      "itemPortName": "Clothing_Torso_0",
+                      "entityClassName": "mym_shirt_02_01_01",
+                      "entityClassReference": null,
+                      "inventoryContainer": null,
+                      "loadout": null}]}}]}]},
+      {
+        "_Type_": "SGroupedLoadouts",
+        "Group": "Torso",
+        "Requirement": null,
+        "Loadouts": [
+          {
+            "_Type_": "SItemPortLoadoutManualParams",
+            "WearRange": null,
+            "DirtRange": null,
+            "SkipInventoryItemsOnMissionEntities": false,
+            "InventoryItems": [],
+            "entries": [
+              {
+                "_Type_": "SItemPortLoadoutEntryParams",
+                "itemPortName": "Body_ItemPort",
+                "entityClassName": "",
+                "entityClassReference": null,
+                "inventoryContainer": null,
+                "loadout": {
+                  "_Type_": "SItemPortLoadoutManualParams",
+                  "WearRange": null,
+                  "DirtRange": null,
+                  "SkipInventoryItemsOnMissionEntities": false,
+                  "InventoryItems": [],
+                  "entries": [
+                    {
+                      "_Type_": "SItemPortLoadoutEntryParams",
+                      "itemPortName": "Clothing_Torso_0",
+                      "entityClassName": "alb_shirt_01_01_11",
+                      "entityClassReference": null,
+                      "inventoryContainer": null,
+                      "loadout": null}]}}]}]},
+      {
+        "_Type_": "SGroupedLoadouts",
+        "Group": "Torso",
+        "Requirement": null,
+        "Loadouts": [
+          {
+            "_Type_": "SItemPortLoadoutManualParams",
+            "WearRange": null,
+            "DirtRange": null,
+            "SkipInventoryItemsOnMissionEntities": false,
+            "InventoryItems": [],
+            "entries": [
+              {
+                "_Type_": "SItemPortLoadoutEntryParams",
+                "itemPortName": "Body_ItemPort",
+                "entityClassName": "",
+                "entityClassReference": null,
+                "inventoryContainer": null,
+                "loadout": {
+                  "_Type_": "SItemPortLoadoutManualParams",
+                  "WearRange": null,
+                  "DirtRange": null,
+                  "SkipInventoryItemsOnMissionEntities": false,
+                  "InventoryItems": [],
+                  "entries": [
+                    {
+                      "_Type_": "SItemPortLoadoutEntryParams",
+                      "itemPortName": "Clothing_Torso_0",
+                      "entityClassName": "alb_shirt_02_01_15",
+                      "entityClassReference": null,
+                      "inventoryContainer": null,
+                      "loadout": null}]}}]}]},
+      {
+        "_Type_": "SGroupedLoadouts",
+        "Group": "Torso",
+        "Requirement": null,
+        "Loadouts": [
+          {
+            "_Type_": "SItemPortLoadoutManualParams",
+            "WearRange": null,
+            "DirtRange": null,
+            "SkipInventoryItemsOnMissionEntities": false,
+            "InventoryItems": [],
+            "entries": [
+              {
+                "_Type_": "SItemPortLoadoutEntryParams",
+                "itemPortName": "Body_ItemPort",
+                "entityClassName": "",
+                "entityClassReference": null,
+                "inventoryContainer": null,
+                "loadout": {
+                  "_Type_": "SItemPortLoadoutManualParams",
+                  "WearRange": null,
+                  "DirtRange": null,
+                  "SkipInventoryItemsOnMissionEntities": false,
+                  "InventoryItems": [],
+                  "entries": [
+                    {
+                      "_Type_": "SItemPortLoadoutEntryParams",
+                      "itemPortName": "Clothing_Torso_0",
+                      "entityClassName": "scu_shirt_01_01_01",
+                      "entityClassReference": null,
+                      "inventoryContainer": null,
+                      "loadout": null}]}}]}]},
+      {
+        "_Type_": "SGroupedLoadouts",
+        "Group": "Torso",
+        "Requirement": null,
+        "Loadouts": [
+          {
+            "_Type_": "SItemPortLoadoutManualParams",
+            "WearRange": null,
+            "DirtRange": null,
+            "SkipInventoryItemsOnMissionEntities": false,
+            "InventoryItems": [],
+            "entries": [
+              {
+                "_Type_": "SItemPortLoadoutEntryParams",
+                "itemPortName": "Body_ItemPort",
+                "entityClassName": "",
+                "entityClassReference": null,
+                "inventoryContainer": null,
+                "loadout": {
+                  "_Type_": "SItemPortLoadoutManualParams",
+                  "WearRange": null,
+                  "DirtRange": null,
+                  "SkipInventoryItemsOnMissionEntities": false,
+                  "InventoryItems": [],
+                  "entries": [
+                    {
+                      "_Type_": "SItemPortLoadoutEntryParams",
+                      "itemPortName": "Clothing_Torso_0",
+                      "entityClassName": "cbd_shirt_01_04_01",
+                      "entityClassReference": null,
+                      "inventoryContainer": null,
+                      "loadout": null}]}}]}]},
+      {
+        "_Type_": "SGroupedLoadouts",
+        "Group": "Torso",
+        "Requirement": null,
+        "Loadouts": [
+          {
+            "_Type_": "SItemPortLoadoutManualParams",
+            "WearRange": null,
+            "DirtRange": null,
+            "SkipInventoryItemsOnMissionEntities": false,
+            "InventoryItems": [],
+            "entries": [
+              {
+                "_Type_": "SItemPortLoadoutEntryParams",
+                "itemPortName": "Body_ItemPort",
+                "entityClassName": "",
+                "entityClassReference": null,
+                "inventoryContainer": null,
+                "loadout": {
+                  "_Type_": "SItemPortLoadoutManualParams",
+                  "WearRange": null,
+                  "DirtRange": null,
+                  "SkipInventoryItemsOnMissionEntities": false,
+                  "InventoryItems": [],
+                  "entries": [
+                    {
+                      "_Type_": "SItemPortLoadoutEntryParams",
+                      "itemPortName": "Clothing_Torso_0",
+                      "entityClassName": "scu_shirt_01_01_15",
+                      "entityClassReference": null,
+                      "inventoryContainer": null,
+                      "loadout": null}]}}]}]},
+      {
+        "_Type_": "SGroupedLoadouts",
+        "Group": "Torso",
+        "Requirement": null,
+        "Loadouts": [
+          {
+            "_Type_": "SItemPortLoadoutManualParams",
+            "WearRange": null,
+            "DirtRange": null,
+            "SkipInventoryItemsOnMissionEntities": false,
+            "InventoryItems": [],
+            "entries": [
+              {
+                "_Type_": "SItemPortLoadoutEntryParams",
+                "itemPortName": "Body_ItemPort",
+                "entityClassName": "",
+                "entityClassReference": null,
+                "inventoryContainer": null,
+                "loadout": {
+                  "_Type_": "SItemPortLoadoutManualParams",
+                  "WearRange": null,
+                  "DirtRange": null,
+                  "SkipInventoryItemsOnMissionEntities": false,
+                  "InventoryItems": [],
+                  "entries": [
+                    {
+                      "_Type_": "SItemPortLoadoutEntryParams",
+                      "itemPortName": "Clothing_Torso_0",
+                      "entityClassName": "scu_shirt_01_01_12",
+                      "entityClassReference": null,
+                      "inventoryContainer": null,
+                      "loadout": null}]}}]}]},
+      {
+        "_Type_": "SGroupedLoadouts",
+        "Group": "TorsoAttachments",
+        "Requirement": null,
+        "Loadouts": [
+          {
+            "_Type_": "SItemPortLoadoutManualParams",
+            "WearRange": null,
+            "DirtRange": null,
+            "SkipInventoryItemsOnMissionEntities": false,
+            "InventoryItems": [],
+            "entries": [
+              {
+                "_Type_": "SItemPortLoadoutEntryParams",
+                "itemPortName": "Body_ItemPort",
+                "entityClassName": "",
+                "entityClassReference": null,
+                "inventoryContainer": null,
+                "loadout": {
+                  "_Type_": "SItemPortLoadoutManualParams",
+                  "WearRange": null,
+                  "DirtRange": null,
+                  "SkipInventoryItemsOnMissionEntities": false,
+                  "InventoryItems": [],
+                  "entries": [
+                    {
+                      "_Type_": "SItemPortLoadoutEntryParams",
+                      "itemPortName": "Clothing_Torso_1",
+                      "entityClassName": "987_jacket_05_01_12",
+                      "entityClassReference": null,
+                      "inventoryContainer": null,
+                      "loadout": null}]}}]}]},
+      {
+        "_Type_": "SGroupedLoadouts",
+        "Group": "TorsoAttachments",
+        "Requirement": null,
+        "Loadouts": [
+          {
+            "_Type_": "SItemPortLoadoutManualParams",
+            "WearRange": null,
+            "DirtRange": null,
+            "SkipInventoryItemsOnMissionEntities": false,
+            "InventoryItems": [],
+            "entries": [
+              {
+                "_Type_": "SItemPortLoadoutEntryParams",
+                "itemPortName": "Body_ItemPort",
+                "entityClassName": "",
+                "entityClassReference": null,
+                "inventoryContainer": null,
+                "loadout": {
+                  "_Type_": "SItemPortLoadoutManualParams",
+                  "WearRange": null,
+                  "DirtRange": null,
+                  "SkipInventoryItemsOnMissionEntities": false,
+                  "InventoryItems": [],
+                  "entries": [
+                    {
+                      "_Type_": "SItemPortLoadoutEntryParams",
+                      "itemPortName": "Clothing_Torso_1",
+                      "entityClassName": "alb_jacket_02_01_01",
+                      "entityClassReference": null,
+                      "inventoryContainer": null,
+                      "loadout": null}]}}]}]},
+      {
+        "_Type_": "SGroupedLoadouts",
+        "Group": "TorsoAttachments",
+        "Requirement": null,
+        "Loadouts": [
+          {
+            "_Type_": "SItemPortLoadoutManualParams",
+            "WearRange": null,
+            "DirtRange": null,
+            "SkipInventoryItemsOnMissionEntities": false,
+            "InventoryItems": [],
+            "entries": [
+              {
+                "_Type_": "SItemPortLoadoutEntryParams",
+                "itemPortName": "Body_ItemPort",
+                "entityClassName": "",
+                "entityClassReference": null,
+                "inventoryContainer": null,
+                "loadout": {
+                  "_Type_": "SItemPortLoadoutManualParams",
+                  "WearRange": null,
+                  "DirtRange": null,
+                  "SkipInventoryItemsOnMissionEntities": false,
+                  "InventoryItems": [],
+                  "entries": [
+                    {
+                      "_Type_": "SItemPortLoadoutEntryParams",
+                      "itemPortName": "Clothing_Torso_1",
+                      "entityClassName": "",
+                      "entityClassReference": null,
+                      "inventoryContainer": null,
+                      "loadout": null}]}}]}]},
+      {
+        "_Type_": "SGroupedLoadouts",
+        "Group": "TorsoAttachments",
+        "Requirement": null,
+        "Loadouts": [
+          {
+            "_Type_": "SItemPortLoadoutManualParams",
+            "WearRange": null,
+            "DirtRange": null,
+            "SkipInventoryItemsOnMissionEntities": false,
+            "InventoryItems": [],
+            "entries": [
+              {
+                "_Type_": "SItemPortLoadoutEntryParams",
+                "itemPortName": "Body_ItemPort",
+                "entityClassName": "",
+                "entityClassReference": null,
+                "inventoryContainer": null,
+                "loadout": {
+                  "_Type_": "SItemPortLoadoutManualParams",
+                  "WearRange": null,
+                  "DirtRange": null,
+                  "SkipInventoryItemsOnMissionEntities": false,
+                  "InventoryItems": [],
+                  "entries": [
+                    {
+                      "_Type_": "SItemPortLoadoutEntryParams",
+                      "itemPortName": "Clothing_Torso_1",
+                      "entityClassName": "",
+                      "entityClassReference": null,
+                      "inventoryContainer": null,
+                      "loadout": null}]}}]}]},
+      {
+        "_Type_": "SGroupedLoadouts",
+        "Group": "TorsoAttachments",
+        "Requirement": null,
+        "Loadouts": [
+          {
+            "_Type_": "SItemPortLoadoutManualParams",
+            "WearRange": null,
+            "DirtRange": null,
+            "SkipInventoryItemsOnMissionEntities": false,
+            "InventoryItems": [],
+            "entries": [
+              {
+                "_Type_": "SItemPortLoadoutEntryParams",
+                "itemPortName": "Body_ItemPort",
+                "entityClassName": "",
+                "entityClassReference": null,
+                "inventoryContainer": null,
+                "loadout": {
+                  "_Type_": "SItemPortLoadoutManualParams",
+                  "WearRange": null,
+                  "DirtRange": null,
+                  "SkipInventoryItemsOnMissionEntities": false,
+                  "InventoryItems": [],
+                  "entries": [
+                    {
+                      "_Type_": "SItemPortLoadoutEntryParams",
+                      "itemPortName": "Clothing_Torso_1",
+                      "entityClassName": "",
+                      "entityClassReference": null,
+                      "inventoryContainer": null,
+                      "loadout": null}]}}]}]},
+      {
+        "_Type_": "SGroupedLoadouts",
+        "Group": "TorsoAttachments",
+        "Requirement": null,
+        "Loadouts": [
+          {
+            "_Type_": "SItemPortLoadoutManualParams",
+            "WearRange": null,
+            "DirtRange": null,
+            "SkipInventoryItemsOnMissionEntities": false,
+            "InventoryItems": [],
+            "entries": [
+              {
+                "_Type_": "SItemPortLoadoutEntryParams",
+                "itemPortName": "Body_ItemPort",
+                "entityClassName": "",
+                "entityClassReference": null,
+                "inventoryContainer": null,
+                "loadout": {
+                  "_Type_": "SItemPortLoadoutManualParams",
+                  "WearRange": null,
+                  "DirtRange": null,
+                  "SkipInventoryItemsOnMissionEntities": false,
+                  "InventoryItems": [],
+                  "entries": [
+                    {
+                      "_Type_": "SItemPortLoadoutEntryParams",
+                      "itemPortName": "Clothing_Torso_1",
+                      "entityClassName": "",
+                      "entityClassReference": null,
+                      "inventoryContainer": null,
+                      "loadout": null}]}}]}]},
+      {
+        "_Type_": "SGroupedLoadouts",
+        "Group": "TorsoAttachments",
+        "Requirement": null,
+        "Loadouts": [
+          {
+            "_Type_": "SItemPortLoadoutManualParams",
+            "WearRange": null,
+            "DirtRange": null,
+            "SkipInventoryItemsOnMissionEntities": false,
+            "InventoryItems": [],
+            "entries": [
+              {
+                "_Type_": "SItemPortLoadoutEntryParams",
+                "itemPortName": "Body_ItemPort",
+                "entityClassName": "",
+                "entityClassReference": null,
+                "inventoryContainer": null,
+                "loadout": {
+                  "_Type_": "SItemPortLoadoutManualParams",
+                  "WearRange": null,
+                  "DirtRange": null,
+                  "SkipInventoryItemsOnMissionEntities": false,
+                  "InventoryItems": [],
+                  "entries": [
+                    {
+                      "_Type_": "SItemPortLoadoutEntryParams",
+                      "itemPortName": "Clothing_Torso_1",
+                      "entityClassName": "",
+                      "entityClassReference": null,
+                      "inventoryContainer": null,
+                      "loadout": null}]}}]}]},
+      {
+        "_Type_": "SGroupedLoadouts",
+        "Group": "TorsoAttachments",
+        "Requirement": null,
+        "Loadouts": [
+          {
+            "_Type_": "SItemPortLoadoutManualParams",
+            "WearRange": null,
+            "DirtRange": null,
+            "SkipInventoryItemsOnMissionEntities": false,
+            "InventoryItems": [],
+            "entries": [
+              {
+                "_Type_": "SItemPortLoadoutEntryParams",
+                "itemPortName": "Body_ItemPort",
+                "entityClassName": "",
+                "entityClassReference": null,
+                "inventoryContainer": null,
+                "loadout": {
+                  "_Type_": "SItemPortLoadoutManualParams",
+                  "WearRange": null,
+                  "DirtRange": null,
+                  "SkipInventoryItemsOnMissionEntities": false,
+                  "InventoryItems": [],
+                  "entries": [
+                    {
+                      "_Type_": "SItemPortLoadoutEntryParams",
+                      "itemPortName": "Clothing_Torso_1",
+                      "entityClassName": "",
+                      "entityClassReference": null,
+                      "inventoryContainer": null,
+                      "loadout": null}]}}]}]},
+      {
+        "_Type_": "SGroupedLoadouts",
+        "Group": "TorsoAttachments",
+        "Requirement": null,
+        "Loadouts": [
+          {
+            "_Type_": "SItemPortLoadoutManualParams",
+            "WearRange": null,
+            "DirtRange": null,
+            "SkipInventoryItemsOnMissionEntities": false,
+            "InventoryItems": [],
+            "entries": [
+              {
+                "_Type_": "SItemPortLoadoutEntryParams",
+                "itemPortName": "Body_ItemPort",
+                "entityClassName": "",
+                "entityClassReference": null,
+                "inventoryContainer": null,
+                "loadout": {
+                  "_Type_": "SItemPortLoadoutManualParams",
+                  "WearRange": null,
+                  "DirtRange": null,
+                  "SkipInventoryItemsOnMissionEntities": false,
+                  "InventoryItems": [],
+                  "entries": [
+                    {
+                      "_Type_": "SItemPortLoadoutEntryParams",
+                      "itemPortName": "Clothing_Torso_1",
+                      "entityClassName": "",
+                      "entityClassReference": null,
+                      "inventoryContainer": null,
+                      "loadout": null}]}}]}]},
+      {
+        "_Type_": "SGroupedLoadouts",
+        "Group": "TorsoAttachments",
+        "Requirement": null,
+        "Loadouts": [
+          {
+            "_Type_": "SItemPortLoadoutManualParams",
+            "WearRange": null,
+            "DirtRange": null,
+            "SkipInventoryItemsOnMissionEntities": false,
+            "InventoryItems": [],
+            "entries": [
+              {
+                "_Type_": "SItemPortLoadoutEntryParams",
+                "itemPortName": "Body_ItemPort",
+                "entityClassName": "",
+                "entityClassReference": null,
+                "inventoryContainer": null,
+                "loadout": {
+                  "_Type_": "SItemPortLoadoutManualParams",
+                  "WearRange": null,
+                  "DirtRange": null,
+                  "SkipInventoryItemsOnMissionEntities": false,
+                  "InventoryItems": [],
+                  "entries": [
+                    {
+                      "_Type_": "SItemPortLoadoutEntryParams",
+                      "itemPortName": "Clothing_Torso_1",
+                      "entityClassName": "",
+                      "entityClassReference": null,
+                      "inventoryContainer": null,
+                      "loadout": null}]}}]}]},
+      {
+        "_Type_": "SGroupedLoadouts",
+        "Group": "TorsoAttachments",
+        "Requirement": null,
+        "Loadouts": [
+          {
+            "_Type_": "SItemPortLoadoutManualParams",
+            "WearRange": null,
+            "DirtRange": null,
+            "SkipInventoryItemsOnMissionEntities": false,
+            "InventoryItems": [],
+            "entries": [
+              {
+                "_Type_": "SItemPortLoadoutEntryParams",
+                "itemPortName": "Body_ItemPort",
+                "entityClassName": "",
+                "entityClassReference": null,
+                "inventoryContainer": null,
+                "loadout": {
+                  "_Type_": "SItemPortLoadoutManualParams",
+                  "WearRange": null,
+                  "DirtRange": null,
+                  "SkipInventoryItemsOnMissionEntities": false,
+                  "InventoryItems": [],
+                  "entries": [
+                    {
+                      "_Type_": "SItemPortLoadoutEntryParams",
+                      "itemPortName": "Clothing_Torso_1",
+                      "entityClassName": "scu_jacket_02_01_12",
+                      "entityClassReference": null,
+                      "inventoryContainer": null,
+                      "loadout": null}]}}]}]},
+      {
+        "_Type_": "SGroupedLoadouts",
+        "Group": "TorsoAttachments",
+        "Requirement": null,
+        "Loadouts": [
+          {
+            "_Type_": "SItemPortLoadoutManualParams",
+            "WearRange": null,
+            "DirtRange": null,
+            "SkipInventoryItemsOnMissionEntities": false,
+            "InventoryItems": [],
+            "entries": [
+              {
+                "_Type_": "SItemPortLoadoutEntryParams",
+                "itemPortName": "Body_ItemPort",
+                "entityClassName": "",
+                "entityClassReference": null,
+                "inventoryContainer": null,
+                "loadout": {
+                  "_Type_": "SItemPortLoadoutManualParams",
+                  "WearRange": null,
+                  "DirtRange": null,
+                  "SkipInventoryItemsOnMissionEntities": false,
+                  "InventoryItems": [],
+                  "entries": [
+                    {
+                      "_Type_": "SItemPortLoadoutEntryParams",
+                      "itemPortName": "Clothing_Torso_1",
+                      "entityClassName": "scu_jacket_03_01_12",
+                      "entityClassReference": null,
+                      "inventoryContainer": null,
+                      "loadout": null}]}}]}]},
+      {
+        "_Type_": "SGroupedLoadouts",
+        "Group": "Item",
+        "Requirement": null,
+        "Loadouts": [
+          {
+            "_Type_": "SItemPortLoadoutManualParams",
+            "WearRange": null,
+            "DirtRange": null,
+            "SkipInventoryItemsOnMissionEntities": false,
+            "InventoryItems": [],
+            "entries": [
+              {
+                "_Type_": "SItemPortLoadoutEntryParams",
+                "itemPortName": "Body_ItemPort",
+                "entityClassName": "",
+                "entityClassReference": null,
+                "inventoryContainer": null,
+                "loadout": {
+                  "_Type_": "SItemPortLoadoutManualParams",
+                  "WearRange": null,
+                  "DirtRange": null,
+                  "SkipInventoryItemsOnMissionEntities": false,
+                  "InventoryItems": [],
+                  "entries": [
+                    {
+                      "_Type_": "SItemPortLoadoutEntryParams",
+                      "itemPortName": "Clothing_Feet",
+                      "entityClassName": "gsb_boots_01_01_01",
+                      "entityClassReference": null,
+                      "inventoryContainer": null,
+                      "loadout": null}]}}]}]},
+      {
+        "_Type_": "SGroupedLoadouts",
+        "Group": "Item",
+        "Requirement": null,
+        "Loadouts": [
+          {
+            "_Type_": "SItemPortLoadoutManualParams",
+            "WearRange": null,
+            "DirtRange": null,
+            "SkipInventoryItemsOnMissionEntities": false,
+            "InventoryItems": [],
+            "entries": [
+              {
+                "_Type_": "SItemPortLoadoutEntryParams",
+                "itemPortName": "Body_ItemPort",
+                "entityClassName": "",
+                "entityClassReference": null,
+                "inventoryContainer": null,
+                "loadout": {
+                  "_Type_": "SItemPortLoadoutManualParams",
+                  "WearRange": null,
+                  "DirtRange": null,
+                  "SkipInventoryItemsOnMissionEntities": false,
+                  "InventoryItems": [],
+                  "entries": [
+                    {
+                      "_Type_": "SItemPortLoadoutEntryParams",
+                      "itemPortName": "Clothing_Feet",
+                      "entityClassName": "gsb_boots_03_01_03",
+                      "entityClassReference": null,
+                      "inventoryContainer": null,
+                      "loadout": null}]}}]}]},
+      {
+        "_Type_": "SGroupedLoadouts",
+        "Group": "Item",
+        "Requirement": null,
+        "Loadouts": [
+          {
+            "_Type_": "SItemPortLoadoutManualParams",
+            "WearRange": null,
+            "DirtRange": null,
+            "SkipInventoryItemsOnMissionEntities": false,
+            "InventoryItems": [],
+            "entries": [
+              {
+                "_Type_": "SItemPortLoadoutEntryParams",
+                "itemPortName": "Body_ItemPort",
+                "entityClassName": "",
+                "entityClassReference": null,
+                "inventoryContainer": null,
+                "loadout": {
+                  "_Type_": "SItemPortLoadoutManualParams",
+                  "WearRange": null,
+                  "DirtRange": null,
+                  "SkipInventoryItemsOnMissionEntities": false,
+                  "InventoryItems": [],
+                  "entries": [
+                    {
+                      "_Type_": "SItemPortLoadoutEntryParams",
+                      "itemPortName": "Clothing_Feet",
+                      "entityClassName": "gsb_boots_04_01_12",
+                      "entityClassReference": null,
+                      "inventoryContainer": null,
+                      "loadout": null}]}}]}]},
+      {
+        "_Type_": "SGroupedLoadouts",
+        "Group": "Item",
+        "Requirement": null,
+        "Loadouts": [
+          {
+            "_Type_": "SItemPortLoadoutManualParams",
+            "WearRange": null,
+            "DirtRange": null,
+            "SkipInventoryItemsOnMissionEntities": false,
+            "InventoryItems": [],
+            "entries": [
+              {
+                "_Type_": "SItemPortLoadoutEntryParams",
+                "itemPortName": "Body_ItemPort",
+                "entityClassName": "",
+                "entityClassReference": null,
+                "inventoryContainer": null,
+                "loadout": {
+                  "_Type_": "SItemPortLoadoutManualParams",
+                  "WearRange": null,
+                  "DirtRange": null,
+                  "SkipInventoryItemsOnMissionEntities": false,
+                  "InventoryItems": [],
+                  "entries": [
+                    {
+                      "_Type_": "SItemPortLoadoutEntryParams",
+                      "itemPortName": "Clothing_Feet",
+                      "entityClassName": "gsb_shoes_01_01_01",
+                      "entityClassReference": null,
+                      "inventoryContainer": null,
+                      "loadout": null}]}}]}]},
+      {
+        "_Type_": "SGroupedLoadouts",
+        "Group": "Item",
+        "Requirement": null,
+        "Loadouts": [
+          {
+            "_Type_": "SItemPortLoadoutManualParams",
+            "WearRange": null,
+            "DirtRange": null,
+            "SkipInventoryItemsOnMissionEntities": false,
+            "InventoryItems": [],
+            "entries": [
+              {
+                "_Type_": "SItemPortLoadoutEntryParams",
+                "itemPortName": "Body_ItemPort",
+                "entityClassName": "",
+                "entityClassReference": null,
+                "inventoryContainer": null,
+                "loadout": {
+                  "_Type_": "SItemPortLoadoutManualParams",
+                  "WearRange": null,
+                  "DirtRange": null,
+                  "SkipInventoryItemsOnMissionEntities": false,
+                  "InventoryItems": [],
+                  "entries": [
+                    {
+                      "_Type_": "SItemPortLoadoutEntryParams",
+                      "itemPortName": "Clothing_Feet",
+                      "entityClassName": "nrs_shoes_03_01_01",
+                      "entityClassReference": null,
+                      "inventoryContainer": null,
+                      "loadout": null}]}}]}]},
+      {
+        "_Type_": "SGroupedLoadouts",
+        "Group": "Item",
+        "Requirement": null,
+        "Loadouts": [
+          {
+            "_Type_": "SItemPortLoadoutManualParams",
+            "WearRange": null,
+            "DirtRange": null,
+            "SkipInventoryItemsOnMissionEntities": false,
+            "InventoryItems": [],
+            "entries": [
+              {
+                "_Type_": "SItemPortLoadoutEntryParams",
+                "itemPortName": "Body_ItemPort",
+                "entityClassName": "",
+                "entityClassReference": null,
+                "inventoryContainer": null,
+                "loadout": {
+                  "_Type_": "SItemPortLoadoutManualParams",
+                  "WearRange": null,
+                  "DirtRange": null,
+                  "SkipInventoryItemsOnMissionEntities": false,
+                  "InventoryItems": [],
+                  "entries": [
+                    {
+                      "_Type_": "SItemPortLoadoutEntryParams",
+                      "itemPortName": "Clothing_Feet",
+                      "entityClassName": "nvy_shoes_01_01_20",
+                      "entityClassReference": null,
+                      "inventoryContainer": null,
+                      "loadout": null}]}}]}]},
+      {
+        "_Type_": "SGroupedLoadouts",
+        "Group": "Item",
+        "Requirement": null,
+        "Loadouts": [
+          {
+            "_Type_": "SItemPortLoadoutManualParams",
+            "WearRange": null,
+            "DirtRange": null,
+            "SkipInventoryItemsOnMissionEntities": false,
+            "InventoryItems": [],
+            "entries": [
+              {
+                "_Type_": "SItemPortLoadoutEntryParams",
+                "itemPortName": "Body_ItemPort",
+                "entityClassName": "",
+                "entityClassReference": null,
+                "inventoryContainer": null,
+                "loadout": {
+                  "_Type_": "SItemPortLoadoutManualParams",
+                  "WearRange": null,
+                  "DirtRange": null,
+                  "SkipInventoryItemsOnMissionEntities": false,
+                  "InventoryItems": [],
+                  "entries": [
+                    {
+                      "_Type_": "SItemPortLoadoutEntryParams",
+                      "itemPortName": "Clothing_Feet",
+                      "entityClassName": "nrs_shoes_05_01_15",
+                      "entityClassReference": null,
+                      "inventoryContainer": null,
+                      "loadout": null}]}}]}]},
+      {
+        "_Type_": "SGroupedLoadouts",
+        "Group": "Item",
+        "Requirement": null,
+        "Loadouts": [
+          {
+            "_Type_": "SItemPortLoadoutManualParams",
+            "WearRange": null,
+            "DirtRange": null,
+            "SkipInventoryItemsOnMissionEntities": false,
+            "InventoryItems": [],
+            "entries": [
+              {
+                "_Type_": "SItemPortLoadoutEntryParams",
+                "itemPortName": "Body_ItemPort",
+                "entityClassName": "",
+                "entityClassReference": null,
+                "inventoryContainer": null,
+                "loadout": {
+                  "_Type_": "SItemPortLoadoutManualParams",
+                  "WearRange": null,
+                  "DirtRange": null,
+                  "SkipInventoryItemsOnMissionEntities": false,
+                  "InventoryItems": [],
+                  "entries": [
+                    {
+                      "_Type_": "SItemPortLoadoutEntryParams",
+                      "itemPortName": "Clothing_Feet",
+                      "entityClassName": "r6p_boots_02_01_15",
+                      "entityClassReference": null,
+                      "inventoryContainer": null,
+                      "loadout": null}]}}]}]},
+      {
+        "_Type_": "SGroupedLoadouts",
+        "Group": "Leg",
+        "Requirement": null,
+        "Loadouts": [
+          {
+            "_Type_": "SItemPortLoadoutManualParams",
+            "WearRange": null,
+            "DirtRange": null,
+            "SkipInventoryItemsOnMissionEntities": false,
+            "InventoryItems": [],
+            "entries": [
+              {
+                "_Type_": "SItemPortLoadoutEntryParams",
+                "itemPortName": "Body_ItemPort",
+                "entityClassName": "",
+                "entityClassReference": null,
+                "inventoryContainer": null,
+                "loadout": {
+                  "_Type_": "SItemPortLoadoutManualParams",
+                  "WearRange": null,
+                  "DirtRange": null,
+                  "SkipInventoryItemsOnMissionEntities": false,
+                  "InventoryItems": [],
+                  "entries": [
+                    {
+                      "_Type_": "SItemPortLoadoutEntryParams",
+                      "itemPortName": "Clothing_Legs",
+                      "entityClassName": "987_pants_03_01_12",
+                      "entityClassReference": null,
+                      "inventoryContainer": null,
+                      "loadout": null}]}}]}]},
+      {
+        "_Type_": "SGroupedLoadouts",
+        "Group": "Leg",
+        "Requirement": null,
+        "Loadouts": [
+          {
+            "_Type_": "SItemPortLoadoutManualParams",
+            "WearRange": null,
+            "DirtRange": null,
+            "SkipInventoryItemsOnMissionEntities": false,
+            "InventoryItems": [],
+            "entries": [
+              {
+                "_Type_": "SItemPortLoadoutEntryParams",
+                "itemPortName": "Body_ItemPort",
+                "entityClassName": "",
+                "entityClassReference": null,
+                "inventoryContainer": null,
+                "loadout": {
+                  "_Type_": "SItemPortLoadoutManualParams",
+                  "WearRange": null,
+                  "DirtRange": null,
+                  "SkipInventoryItemsOnMissionEntities": false,
+                  "InventoryItems": [],
+                  "entries": [
+                    {
+                      "_Type_": "SItemPortLoadoutEntryParams",
+                      "itemPortName": "Clothing_Legs",
+                      "entityClassName": "cbd_pants_01_01_15",
+                      "entityClassReference": null,
+                      "inventoryContainer": null,
+                      "loadout": null}]}}]}]},
+      {
+        "_Type_": "SGroupedLoadouts",
+        "Group": "Leg",
+        "Requirement": null,
+        "Loadouts": [
+          {
+            "_Type_": "SItemPortLoadoutManualParams",
+            "WearRange": null,
+            "DirtRange": null,
+            "SkipInventoryItemsOnMissionEntities": false,
+            "InventoryItems": [],
+            "entries": [
+              {
+                "_Type_": "SItemPortLoadoutEntryParams",
+                "itemPortName": "Body_ItemPort",
+                "entityClassName": "",
+                "entityClassReference": null,
+                "inventoryContainer": null,
+                "loadout": {
+                  "_Type_": "SItemPortLoadoutManualParams",
+                  "WearRange": null,
+                  "DirtRange": null,
+                  "SkipInventoryItemsOnMissionEntities": false,
+                  "InventoryItems": [],
+                  "entries": [
+                    {
+                      "_Type_": "SItemPortLoadoutEntryParams",
+                      "itemPortName": "Clothing_Legs",
+                      "entityClassName": "dmc_pants_01_01_01",
+                      "entityClassReference": null,
+                      "inventoryContainer": null,
+                      "loadout": null}]}}]}]},
+      {
+        "_Type_": "SGroupedLoadouts",
+        "Group": "Leg",
+        "Requirement": null,
+        "Loadouts": [
+          {
+            "_Type_": "SItemPortLoadoutManualParams",
+            "WearRange": null,
+            "DirtRange": null,
+            "SkipInventoryItemsOnMissionEntities": false,
+            "InventoryItems": [],
+            "entries": [
+              {
+                "_Type_": "SItemPortLoadoutEntryParams",
+                "itemPortName": "Body_ItemPort",
+                "entityClassName": "",
+                "entityClassReference": null,
+                "inventoryContainer": null,
+                "loadout": {
+                  "_Type_": "SItemPortLoadoutManualParams",
+                  "WearRange": null,
+                  "DirtRange": null,
+                  "SkipInventoryItemsOnMissionEntities": false,
+                  "InventoryItems": [],
+                  "entries": [
+                    {
+                      "_Type_": "SItemPortLoadoutEntryParams",
+                      "itemPortName": "Clothing_Legs",
+                      "entityClassName": "dmc_pants_03_01_16",
+                      "entityClassReference": null,
+                      "inventoryContainer": null,
+                      "loadout": null}]}}]}]},
+      {
+        "_Type_": "SGroupedLoadouts",
+        "Group": "Leg",
+        "Requirement": null,
+        "Loadouts": [
+          {
+            "_Type_": "SItemPortLoadoutManualParams",
+            "WearRange": null,
+            "DirtRange": null,
+            "SkipInventoryItemsOnMissionEntities": false,
+            "InventoryItems": [],
+            "entries": [
+              {
+                "_Type_": "SItemPortLoadoutEntryParams",
+                "itemPortName": "Body_ItemPort",
+                "entityClassName": "",
+                "entityClassReference": null,
+                "inventoryContainer": null,
+                "loadout": {
+                  "_Type_": "SItemPortLoadoutManualParams",
+                  "WearRange": null,
+                  "DirtRange": null,
+                  "SkipInventoryItemsOnMissionEntities": false,
+                  "InventoryItems": [],
+                  "entries": [
+                    {
+                      "_Type_": "SItemPortLoadoutEntryParams",
+                      "itemPortName": "Clothing_Legs",
+                      "entityClassName": "dmc_pants_04_01_05",
+                      "entityClassReference": null,
+                      "inventoryContainer": null,
+                      "loadout": null}]}}]}]},
+      {
+        "_Type_": "SGroupedLoadouts",
+        "Group": "Leg",
+        "Requirement": null,
+        "Loadouts": [
+          {
+            "_Type_": "SItemPortLoadoutManualParams",
+            "WearRange": null,
+            "DirtRange": null,
+            "SkipInventoryItemsOnMissionEntities": false,
+            "InventoryItems": [],
+            "entries": [
+              {
+                "_Type_": "SItemPortLoadoutEntryParams",
+                "itemPortName": "Body_ItemPort",
+                "entityClassName": "",
+                "entityClassReference": null,
+                "inventoryContainer": null,
+                "loadout": {
+                  "_Type_": "SItemPortLoadoutManualParams",
+                  "WearRange": null,
+                  "DirtRange": null,
+                  "SkipInventoryItemsOnMissionEntities": false,
+                  "InventoryItems": [],
+                  "entries": [
+                    {
+                      "_Type_": "SItemPortLoadoutEntryParams",
+                      "itemPortName": "Clothing_Legs",
+                      "entityClassName": "dmc_pants_05_01_15",
+                      "entityClassReference": null,
+                      "inventoryContainer": null,
+                      "loadout": null}]}}]}]},
+      {
+        "_Type_": "SGroupedLoadouts",
+        "Group": "Head",
+        "Requirement": null,
+        "Loadouts": [
+          {
+            "_Type_": "SItemPortLoadoutManualParams",
+            "WearRange": null,
+            "DirtRange": null,
+            "SkipInventoryItemsOnMissionEntities": false,
+            "InventoryItems": [],
+            "entries": [
+              {
+                "_Type_": "SItemPortLoadoutEntryParams",
+                "itemPortName": "Body_ItemPort",
+                "entityClassName": "",
+                "entityClassReference": null,
+                "inventoryContainer": null,
+                "loadout": {
+                  "_Type_": "SItemPortLoadoutManualParams",
+                  "WearRange": null,
+                  "DirtRange": null,
+                  "SkipInventoryItemsOnMissionEntities": false,
+                  "InventoryItems": [],
+                  "entries": [
+                    {
+                      "_Type_": "SItemPortLoadoutEntryParams",
+                      "itemPortName": "Head_ItemPort",
+                      "entityClassName": "",
+                      "entityClassReference": null,
+                      "inventoryContainer": null,
+                      "loadout": {
+                        "_Type_": "SItemPortLoadoutManualParams",
+                        "WearRange": null,
+                        "DirtRange": null,
+                        "SkipInventoryItemsOnMissionEntities": false,
+                        "InventoryItems": [],
+                        "entries": [
+                          {
+                            "_Type_": "SItemPortLoadoutEntryParams",
+                            "itemPortName": "Eye_Accessories_ItemPort",
+                            "entityClassName": "",
+                            "entityClassReference": null,
+                            "inventoryContainer": null,
+                            "loadout": null}]}}]}}]}]},
+      {
+        "_Type_": "SGroupedLoadouts",
+        "Group": "Head",
+        "Requirement": null,
+        "Loadouts": [
+          {
+            "_Type_": "SItemPortLoadoutManualParams",
+            "WearRange": null,
+            "DirtRange": null,
+            "SkipInventoryItemsOnMissionEntities": false,
+            "InventoryItems": [],
+            "entries": [
+              {
+                "_Type_": "SItemPortLoadoutEntryParams",
+                "itemPortName": "Body_ItemPort",
+                "entityClassName": "",
+                "entityClassReference": null,
+                "inventoryContainer": null,
+                "loadout": {
+                  "_Type_": "SItemPortLoadoutManualParams",
+                  "WearRange": null,
+                  "DirtRange": null,
+                  "SkipInventoryItemsOnMissionEntities": false,
+                  "InventoryItems": [],
+                  "entries": [
+                    {
+                      "_Type_": "SItemPortLoadoutEntryParams",
+                      "itemPortName": "Head_ItemPort",
+                      "entityClassName": "",
+                      "entityClassReference": null,
+                      "inventoryContainer": null,
+                      "loadout": {
+                        "_Type_": "SItemPortLoadoutManualParams",
+                        "WearRange": null,
+                        "DirtRange": null,
+                        "SkipInventoryItemsOnMissionEntities": false,
+                        "InventoryItems": [],
+                        "entries": [
+                          {
+                            "_Type_": "SItemPortLoadoutEntryParams",
+                            "itemPortName": "Eye_Accessories_ItemPort",
+                            "entityClassName": "",
+                            "entityClassReference": null,
+                            "inventoryContainer": null,
+                            "loadout": null}]}}]}}]}]},
+      {
+        "_Type_": "SGroupedLoadouts",
+        "Group": "Head",
+        "Requirement": null,
+        "Loadouts": [
+          {
+            "_Type_": "SItemPortLoadoutManualParams",
+            "WearRange": null,
+            "DirtRange": null,
+            "SkipInventoryItemsOnMissionEntities": false,
+            "InventoryItems": [],
+            "entries": [
+              {
+                "_Type_": "SItemPortLoadoutEntryParams",
+                "itemPortName": "Body_ItemPort",
+                "entityClassName": "",
+                "entityClassReference": null,
+                "inventoryContainer": null,
+                "loadout": {
+                  "_Type_": "SItemPortLoadoutManualParams",
+                  "WearRange": null,
+                  "DirtRange": null,
+                  "SkipInventoryItemsOnMissionEntities": false,
+                  "InventoryItems": [],
+                  "entries": [
+                    {
+                      "_Type_": "SItemPortLoadoutEntryParams",
+                      "itemPortName": "Head_ItemPort",
+                      "entityClassName": "",
+                      "entityClassReference": null,
+                      "inventoryContainer": null,
+                      "loadout": {
+                        "_Type_": "SItemPortLoadoutManualParams",
+                        "WearRange": null,
+                        "DirtRange": null,
+                        "SkipInventoryItemsOnMissionEntities": false,
+                        "InventoryItems": [],
+                        "entries": [
+                          {
+                            "_Type_": "SItemPortLoadoutEntryParams",
+                            "itemPortName": "Eye_Accessories_ItemPort",
+                            "entityClassName": "",
+                            "entityClassReference": null,
+                            "inventoryContainer": null,
+                            "loadout": null}]}}]}}]}]},
+      {
+        "_Type_": "SGroupedLoadouts",
+        "Group": "Head",
+        "Requirement": null,
+        "Loadouts": [
+          {
+            "_Type_": "SItemPortLoadoutManualParams",
+            "WearRange": null,
+            "DirtRange": null,
+            "SkipInventoryItemsOnMissionEntities": false,
+            "InventoryItems": [],
+            "entries": [
+              {
+                "_Type_": "SItemPortLoadoutEntryParams",
+                "itemPortName": "Body_ItemPort",
+                "entityClassName": "",
+                "entityClassReference": null,
+                "inventoryContainer": null,
+                "loadout": {
+                  "_Type_": "SItemPortLoadoutManualParams",
+                  "WearRange": null,
+                  "DirtRange": null,
+                  "SkipInventoryItemsOnMissionEntities": false,
+                  "InventoryItems": [],
+                  "entries": [
+                    {
+                      "_Type_": "SItemPortLoadoutEntryParams",
+                      "itemPortName": "Head_ItemPort",
+                      "entityClassName": "",
+                      "entityClassReference": null,
+                      "inventoryContainer": null,
+                      "loadout": {
+                        "_Type_": "SItemPortLoadoutManualParams",
+                        "WearRange": null,
+                        "DirtRange": null,
+                        "SkipInventoryItemsOnMissionEntities": false,
+                        "InventoryItems": [],
+                        "entries": [
+                          {
+                            "_Type_": "SItemPortLoadoutEntryParams",
+                            "itemPortName": "Eye_Accessories_ItemPort",
+                            "entityClassName": "",
+                            "entityClassReference": null,
+                            "inventoryContainer": null,
+                            "loadout": null}]}}]}}]}]},
+      {
+        "_Type_": "SGroupedLoadouts",
+        "Group": "Head",
+        "Requirement": null,
+        "Loadouts": [
+          {
+            "_Type_": "SItemPortLoadoutManualParams",
+            "WearRange": null,
+            "DirtRange": null,
+            "SkipInventoryItemsOnMissionEntities": false,
+            "InventoryItems": [],
+            "entries": [
+              {
+                "_Type_": "SItemPortLoadoutEntryParams",
+                "itemPortName": "Body_ItemPort",
+                "entityClassName": "",
+                "entityClassReference": null,
+                "inventoryContainer": null,
+                "loadout": {
+                  "_Type_": "SItemPortLoadoutManualParams",
+                  "WearRange": null,
+                  "DirtRange": null,
+                  "SkipInventoryItemsOnMissionEntities": false,
+                  "InventoryItems": [],
+                  "entries": [
+                    {
+                      "_Type_": "SItemPortLoadoutEntryParams",
+                      "itemPortName": "Head_ItemPort",
+                      "entityClassName": "",
+                      "entityClassReference": null,
+                      "inventoryContainer": null,
+                      "loadout": {
+                        "_Type_": "SItemPortLoadoutManualParams",
+                        "WearRange": null,
+                        "DirtRange": null,
+                        "SkipInventoryItemsOnMissionEntities": false,
+                        "InventoryItems": [],
+                        "entries": [
+                          {
+                            "_Type_": "SItemPortLoadoutEntryParams",
+                            "itemPortName": "Eye_Accessories_ItemPort",
+                            "entityClassName": "",
+                            "entityClassReference": null,
+                            "inventoryContainer": null,
+                            "loadout": null}]}}]}}]}]},
+      {
+        "_Type_": "SGroupedLoadouts",
+        "Group": "Head",
+        "Requirement": null,
+        "Loadouts": [
+          {
+            "_Type_": "SItemPortLoadoutManualParams",
+            "WearRange": null,
+            "DirtRange": null,
+            "SkipInventoryItemsOnMissionEntities": false,
+            "InventoryItems": [],
+            "entries": [
+              {
+                "_Type_": "SItemPortLoadoutEntryParams",
+                "itemPortName": "Body_ItemPort",
+                "entityClassName": "",
+                "entityClassReference": null,
+                "inventoryContainer": null,
+                "loadout": {
+                  "_Type_": "SItemPortLoadoutManualParams",
+                  "WearRange": null,
+                  "DirtRange": null,
+                  "SkipInventoryItemsOnMissionEntities": false,
+                  "InventoryItems": [],
+                  "entries": [
+                    {
+                      "_Type_": "SItemPortLoadoutEntryParams",
+                      "itemPortName": "Head_ItemPort",
+                      "entityClassName": "",
+                      "entityClassReference": null,
+                      "inventoryContainer": null,
+                      "loadout": {
+                        "_Type_": "SItemPortLoadoutManualParams",
+                        "WearRange": null,
+                        "DirtRange": null,
+                        "SkipInventoryItemsOnMissionEntities": false,
+                        "InventoryItems": [],
+                        "entries": [
+                          {
+                            "_Type_": "SItemPortLoadoutEntryParams",
+                            "itemPortName": "Eye_Accessories_ItemPort",
+                            "entityClassName": "",
+                            "entityClassReference": null,
+                            "inventoryContainer": null,
+                            "loadout": null}]}}]}}]}]},
+      {
+        "_Type_": "SGroupedLoadouts",
+        "Group": "Head",
+        "Requirement": null,
+        "Loadouts": [
+          {
+            "_Type_": "SItemPortLoadoutManualParams",
+            "WearRange": null,
+            "DirtRange": null,
+            "SkipInventoryItemsOnMissionEntities": false,
+            "InventoryItems": [],
+            "entries": [
+              {
+                "_Type_": "SItemPortLoadoutEntryParams",
+                "itemPortName": "Body_ItemPort",
+                "entityClassName": "",
+                "entityClassReference": null,
+                "inventoryContainer": null,
+                "loadout": {
+                  "_Type_": "SItemPortLoadoutManualParams",
+                  "WearRange": null,
+                  "DirtRange": null,
+                  "SkipInventoryItemsOnMissionEntities": false,
+                  "InventoryItems": [],
+                  "entries": [
+                    {
+                      "_Type_": "SItemPortLoadoutEntryParams",
+                      "itemPortName": "Head_ItemPort",
+                      "entityClassName": "",
+                      "entityClassReference": null,
+                      "inventoryContainer": null,
+                      "loadout": {
+                        "_Type_": "SItemPortLoadoutManualParams",
+                        "WearRange": null,
+                        "DirtRange": null,
+                        "SkipInventoryItemsOnMissionEntities": false,
+                        "InventoryItems": [],
+                        "entries": [
+                          {
+                            "_Type_": "SItemPortLoadoutEntryParams",
+                            "itemPortName": "Eye_Accessories_ItemPort",
+                            "entityClassName": "",
+                            "entityClassReference": null,
+                            "inventoryContainer": null,
+                            "loadout": null}]}}]}}]}]},
+      {
+        "_Type_": "SGroupedLoadouts",
+        "Group": "Head",
+        "Requirement": null,
+        "Loadouts": [
+          {
+            "_Type_": "SItemPortLoadoutManualParams",
+            "WearRange": null,
+            "DirtRange": null,
+            "SkipInventoryItemsOnMissionEntities": false,
+            "InventoryItems": [],
+            "entries": [
+              {
+                "_Type_": "SItemPortLoadoutEntryParams",
+                "itemPortName": "Body_ItemPort",
+                "entityClassName": "",
+                "entityClassReference": null,
+                "inventoryContainer": null,
+                "loadout": {
+                  "_Type_": "SItemPortLoadoutManualParams",
+                  "WearRange": null,
+                  "DirtRange": null,
+                  "SkipInventoryItemsOnMissionEntities": false,
+                  "InventoryItems": [],
+                  "entries": [
+                    {
+                      "_Type_": "SItemPortLoadoutEntryParams",
+                      "itemPortName": "Head_ItemPort",
+                      "entityClassName": "",
+                      "entityClassReference": null,
+                      "inventoryContainer": null,
+                      "loadout": {
+                        "_Type_": "SItemPortLoadoutManualParams",
+                        "WearRange": null,
+                        "DirtRange": null,
+                        "SkipInventoryItemsOnMissionEntities": false,
+                        "InventoryItems": [],
+                        "entries": [
+                          {
+                            "_Type_": "SItemPortLoadoutEntryParams",
+                            "itemPortName": "Eye_Accessories_ItemPort",
+                            "entityClassName": "",
+                            "entityClassReference": null,
+                            "inventoryContainer": null,
+                            "loadout": null}]}}]}}]}]},
+      {
+        "_Type_": "SGroupedLoadouts",
+        "Group": "Head",
+        "Requirement": null,
+        "Loadouts": [
+          {
+            "_Type_": "SItemPortLoadoutManualParams",
+            "WearRange": null,
+            "DirtRange": null,
+            "SkipInventoryItemsOnMissionEntities": false,
+            "InventoryItems": [],
+            "entries": [
+              {
+                "_Type_": "SItemPortLoadoutEntryParams",
+                "itemPortName": "Body_ItemPort",
+                "entityClassName": "",
+                "entityClassReference": null,
+                "inventoryContainer": null,
+                "loadout": {
+                  "_Type_": "SItemPortLoadoutManualParams",
+                  "WearRange": null,
+                  "DirtRange": null,
+                  "SkipInventoryItemsOnMissionEntities": false,
+                  "InventoryItems": [],
+                  "entries": [
+                    {
+                      "_Type_": "SItemPortLoadoutEntryParams",
+                      "itemPortName": "Head_ItemPort",
+                      "entityClassName": "",
+                      "entityClassReference": null,
+                      "inventoryContainer": null,
+                      "loadout": {
+                        "_Type_": "SItemPortLoadoutManualParams",
+                        "WearRange": null,
+                        "DirtRange": null,
+                        "SkipInventoryItemsOnMissionEntities": false,
+                        "InventoryItems": [],
+                        "entries": [
+                          {
+                            "_Type_": "SItemPortLoadoutEntryParams",
+                            "itemPortName": "Eye_Accessories_ItemPort",
+                            "entityClassName": "",
+                            "entityClassReference": null,
+                            "inventoryContainer": null,
+                            "loadout": null}]}}]}}]}]},
+      {
+        "_Type_": "SGroupedLoadouts",
+        "Group": "Mobiglas",
+        "Requirement": null,
+        "Loadouts": [
+          {
+            "_Type_": "SItemPortLoadoutManualParams",
+            "WearRange": null,
+            "DirtRange": null,
+            "SkipInventoryItemsOnMissionEntities": false,
+            "InventoryItems": [],
+            "entries": [
+              {
+                "_Type_": "SItemPortLoadoutEntryParams",
+                "itemPortName": "Body_ItemPort",
+                "entityClassName": "",
+                "entityClassReference": null,
+                "inventoryContainer": null,
+                "loadout": {
+                  "_Type_": "SItemPortLoadoutManualParams",
+                  "WearRange": null,
+                  "DirtRange": null,
+                  "SkipInventoryItemsOnMissionEntities": false,
+                  "InventoryItems": [],
+                  "entries": [
+                    {
+                      "_Type_": "SItemPortLoadoutEntryParams",
+                      "itemPortName": "mobiglas_attach",
+                      "entityClassName": "MobiGlas",
+                      "entityClassReference": null,
+                      "inventoryContainer": null,
+                      "loadout": null}]}}]}]},
+      {
+        "_Type_": "SGroupedLoadouts",
+        "Group": "Hair",
+        "Requirement": null,
+        "Loadouts": [
+          {
+            "_Type_": "SItemPortLoadoutRandomGeneratedParams",
+            "WearRange": null,
+            "DirtRange": null,
+            "SkipInventoryItemsOnMissionEntities": false,
+            "InventoryItems": [],
+            "GenerationSeed": 0,
+            "LoadoutAssortments": [
+              "file://./../../../../../../../libs/foundry/records/loadoutkits/pu_loadoutbundles/beard_whitecollar_01.json"]}]}]}}

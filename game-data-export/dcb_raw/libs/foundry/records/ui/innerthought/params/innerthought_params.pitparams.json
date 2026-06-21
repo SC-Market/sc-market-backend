@@ -1,0 +1,45 @@
+{
+  "_RecordName_": "InnerThought_Params.PITParams",
+  "_RecordId_": "f7a40530-f456-4e08-af18-9ec88cbcccfc",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "InnerThought_Params",
+    "fontSize": 0.5,
+    "radialSelection": false,
+    "loopedSelection": false,
+    "useDepthTest": false,
+    "states": [
+      {
+        "_Type_": "InnerThought_LayoutStates",
+        "name": "Idle",
+        "layout": {
+          "_Type_": "InnerThought_LayoutPIT",
+          "selectedColor": "file://./../../../../../../libs/foundry/records/ui/innerthought/colors/innerthought_colorparams.pitselected.json",
+          "unselectedColor": "file://./../../../../../../libs/foundry/records/ui/innerthought/colors/innerthought_colorparams.pitunselected.json",
+          "inactiveColor": "file://./../../../../../../libs/foundry/records/ui/innerthought/colors/innerthought_colorparams.pitinactive.json"}},
+      {
+        "_Type_": "InnerThought_LayoutStates",
+        "name": "Intro",
+        "layout": {
+          "_Type_": "InnerThought_LayoutPIT",
+          "selectedColor": "file://./../../../../../../libs/foundry/records/ui/innerthought/colors/innerthought_colorparams.pitselected.json",
+          "unselectedColor": "file://./../../../../../../libs/foundry/records/ui/innerthought/colors/innerthought_colorparams.pitunselected.json",
+          "inactiveColor": "file://./../../../../../../libs/foundry/records/ui/innerthought/colors/innerthought_colorparams.pitinactive.json"}},
+      {
+        "_Type_": "InnerThought_LayoutStates",
+        "name": "Cancelled",
+        "layout": {
+          "_Type_": "InnerThought_LayoutPIT",
+          "selectedColor": "file://./../../../../../../libs/foundry/records/ui/innerthought/colors/innerthought_colorparams.pitselected.json",
+          "unselectedColor": "file://./../../../../../../libs/foundry/records/ui/innerthought/colors/innerthought_colorparams.pitunselected.json",
+          "inactiveColor": "file://./../../../../../../libs/foundry/records/ui/innerthought/colors/innerthought_colorparams.pitinactive.json"}},
+      {
+        "_Type_": "InnerThought_LayoutStates",
+        "name": "Selected",
+        "layout": {
+          "_Type_": "InnerThought_LayoutPIT",
+          "selectedColor": "file://./../../../../../../libs/foundry/records/ui/innerthought/colors/innerthought_colorparams.pitselected.json",
+          "unselectedColor": "file://./../../../../../../libs/foundry/records/ui/innerthought/colors/innerthought_colorparams.pitunselected.json",
+          "inactiveColor": "file://./../../../../../../libs/foundry/records/ui/innerthought/colors/innerthought_colorparams.pitinactive.json"}}],
+    "stateAnim": "file://./../../../../../../libs/foundry/records/ui/innerthought/anims/innerthought_anim.pitanim.json",
+    "selectionAnim": "file://./../../../../../../libs/foundry/records/ui/innerthought/anims/innerthought_anim.pitanim.json"}}

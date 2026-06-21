@@ -1,0 +1,10 @@
+{
+  "_RecordName_": "DevOwner.MatthewDelanty",
+  "_RecordId_": "3dce20ab-52b6-4f0d-b417-cba23747086f",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "DevOwner",
+    "type": {
+      "_Type_": "Developer",
+      "name": "Matthew Delanty",
+      "team": "file://./../../../../../../libs/foundry/records/devowners/devteams/mct.json"}}}

@@ -1,0 +1,49 @@
+{
+  "_RecordName_": "LootGenerationGlobalParams.LootGenerationGlobalParams",
+  "_RecordId_": "a056eb2f-de8a-4b9a-b4c6-05c0609d97cb",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "LootGenerationGlobalParams",
+    "specialEventArchetypes": [
+      {
+        "_Type_": "LootGenerationSpecialEventArchetype",
+        "eventString": "ChristmasEvent",
+        "probabilityPerContainer": 0.033,
+        "minEntriesPerContainer": 1,
+        "maxEntriesPerContainer": 3,
+        "archetype": "file://./../../../../libs/foundry/records/lootgeneration/lootarchetypes/lootarchetype_specialevent_luminalia.json",
+        "archetypeV3": {
+          "_Type_": "LootArchetypeV3_RecordRef",
+          "lootArchetypeRecord": null}},
+      {
+        "_Type_": "LootGenerationSpecialEventArchetype",
+        "eventString": "HalloweenEvent",
+        "probabilityPerContainer": 0.05,
+        "minEntriesPerContainer": 1,
+        "maxEntriesPerContainer": 1,
+        "archetype": "file://./../../../../libs/foundry/records/lootgeneration/lootarchetypes/lootarchetype_specialevent_vara.json",
+        "archetypeV3": null},
+      {
+        "_Type_": "LootGenerationSpecialEventArchetype",
+        "eventString": "Darkwater",
+        "probabilityPerContainer": 0.03,
+        "minEntriesPerContainer": 1,
+        "maxEntriesPerContainer": 1,
+        "archetype": "file://./../../../../libs/foundry/records/lootgeneration/lootarchetypes/lootarchetype_specialevent_darkwater.json",
+        "archetypeV3": null},
+      {
+        "_Type_": "LootGenerationSpecialEventArchetype",
+        "eventString": "DarkwaterHalloweenEvent",
+        "probabilityPerContainer": 0.05,
+        "minEntriesPerContainer": 1,
+        "maxEntriesPerContainer": 1,
+        "archetype": "file://./../../../../libs/foundry/records/lootgeneration/lootarchetypes/lootarchetype_specialevent_darkwatervara.json",
+        "archetypeV3": null},
+      {
+        "_Type_": "LootGenerationSpecialEventArchetype",
+        "eventString": "DarkwaterChristmasEvent",
+        "probabilityPerContainer": 0.033,
+        "minEntriesPerContainer": 1,
+        "maxEntriesPerContainer": 3,
+        "archetype": "file://./../../../../libs/foundry/records/lootgeneration/lootarchetypes/lootarchetype_specialevent_darkwaterluminalia.json",
+        "archetypeV3": null}]}}

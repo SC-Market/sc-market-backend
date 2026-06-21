@@ -1,0 +1,391 @@
+{
+  "_RecordName_": "ForceFeedback.ForceFeedbackEffects",
+  "_RecordId_": "027448c3-9ee9-486f-99ef-91c6d7739ef2",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "ForceFeedback",
+    "Patterns": [
+      {
+        "_Type_": "ForceFeedbackPattern",
+        "name": "100",
+        "samples": "1"},
+      {
+        "_Type_": "ForceFeedbackPattern",
+        "name": "75",
+        "samples": "0.75"},
+      {
+        "_Type_": "ForceFeedbackPattern",
+        "name": "50",
+        "samples": "0.5"},
+      {
+        "_Type_": "ForceFeedbackPattern",
+        "name": "30",
+        "samples": "0.3"},
+      {
+        "_Type_": "ForceFeedbackPattern",
+        "name": "20",
+        "samples": "0.2"},
+      {
+        "_Type_": "ForceFeedbackPattern",
+        "name": "12",
+        "samples": "0.12"},
+      {
+        "_Type_": "ForceFeedbackPattern",
+        "name": "square",
+        "samples": "1,1,1,1,1,1,1,1,0,0,0,0,0,0,0,0"},
+      {
+        "_Type_": "ForceFeedbackPattern",
+        "name": "triangle",
+        "samples": "0,0.15,0.3,0.45,0.6,0.75,0.9,1,1,0.9,0.75,0.6,0.45,0.3,0.15,0"}],
+    "Envelopes": [
+      {
+        "_Type_": "ForceFeedbackEnvelope",
+        "name": "linearDecrease",
+        "samples": "1,0"},
+      {
+        "_Type_": "ForceFeedbackEnvelope",
+        "name": "Gate",
+        "samples": "1,1,1,1,1,1,1,0"},
+      {
+        "_Type_": "ForceFeedbackEnvelope",
+        "name": "CosineDecrease",
+        "samples": "1,0.98,0.92,0.83,0.69,0.54,0.25,0"},
+      {
+        "_Type_": "ForceFeedbackEnvelope",
+        "name": "constant",
+        "samples": "1"},
+      {
+        "_Type_": "ForceFeedbackEnvelope",
+        "name": "50constant",
+        "samples": "0.5"},
+      {
+        "_Type_": "ForceFeedbackEnvelope",
+        "name": "Gausscharge",
+        "samples": "0,0,0,0,1,1,1,1"}],
+    "Effects": [
+      {
+        "_Type_": "ForceFeedbackEffect",
+        "name": "smallexplosion",
+        "time": 1.0,
+        "MotorAB": {
+          "_Type_": "ForceFeedbackMotor",
+          "frequency": 1.0,
+          "pattern": "100",
+          "envelope": "linearDecrease"},
+        "MotorA": null,
+        "MotorB": null},
+      {
+        "_Type_": "ForceFeedbackEffect",
+        "name": "suitactiveateFF",
+        "time": 1.5,
+        "MotorAB": null,
+        "MotorA": {
+          "_Type_": "ForceFeedbackMotor",
+          "frequency": 1.0,
+          "pattern": "30",
+          "envelope": "linearDecrease"},
+        "MotorB": null},
+      {
+        "_Type_": "ForceFeedbackEffect",
+        "name": "suitdeactiveateFF",
+        "time": 1.5,
+        "MotorAB": null,
+        "MotorA": null,
+        "MotorB": {
+          "_Type_": "ForceFeedbackMotor",
+          "frequency": 1.0,
+          "pattern": "12",
+          "envelope": "CosineDecrease"}},
+      {
+        "_Type_": "ForceFeedbackEffect",
+        "name": "cloakactiveateFF",
+        "time": 1.5,
+        "MotorAB": null,
+        "MotorA": {
+          "_Type_": "ForceFeedbackMotor",
+          "frequency": 1.0,
+          "pattern": "20",
+          "envelope": "linearDecrease"},
+        "MotorB": null},
+      {
+        "_Type_": "ForceFeedbackEffect",
+        "name": "cloakactiveFF",
+        "time": -1.0,
+        "MotorAB": null,
+        "MotorA": {
+          "_Type_": "ForceFeedbackMotor",
+          "frequency": 1.0,
+          "pattern": "12",
+          "envelope": "constant"},
+        "MotorB": null},
+      {
+        "_Type_": "ForceFeedbackEffect",
+        "name": "landFF",
+        "time": 0.1,
+        "MotorAB": null,
+        "MotorA": null,
+        "MotorB": {
+          "_Type_": "ForceFeedbackMotor",
+          "frequency": 1.0,
+          "pattern": "75",
+          "envelope": "Gate"}},
+      {
+        "_Type_": "ForceFeedbackEffect",
+        "name": "jumpFF",
+        "time": 0.1,
+        "MotorAB": null,
+        "MotorA": null,
+        "MotorB": {
+          "_Type_": "ForceFeedbackMotor",
+          "frequency": 1.0,
+          "pattern": "75",
+          "envelope": "Gate"}},
+      {
+        "_Type_": "ForceFeedbackEffect",
+        "name": "weaponfirerapidsmall",
+        "time": 0.05,
+        "MotorAB": null,
+        "MotorA": {
+          "_Type_": "ForceFeedbackMotor",
+          "frequency": 1.0,
+          "pattern": "20",
+          "envelope": "CosineDecrease"},
+        "MotorB": {
+          "_Type_": "ForceFeedbackMotor",
+          "frequency": 1.0,
+          "pattern": "20",
+          "envelope": "CosineDecrease"}},
+      {
+        "_Type_": "ForceFeedbackEffect",
+        "name": "weaponfirerapidsmall_slow",
+        "time": 0.07,
+        "MotorAB": null,
+        "MotorA": {
+          "_Type_": "ForceFeedbackMotor",
+          "frequency": 1.0,
+          "pattern": "30",
+          "envelope": "CosineDecrease"},
+        "MotorB": {
+          "_Type_": "ForceFeedbackMotor",
+          "frequency": 1.0,
+          "pattern": "20",
+          "envelope": "Gate"}},
+      {
+        "_Type_": "ForceFeedbackEffect",
+        "name": "weaponfirerapidsmall_fast",
+        "time": -0.05,
+        "MotorAB": null,
+        "MotorA": {
+          "_Type_": "ForceFeedbackMotor",
+          "frequency": 1.0,
+          "pattern": "50",
+          "envelope": "Gate"},
+        "MotorB": null},
+      {
+        "_Type_": "ForceFeedbackEffect",
+        "name": "weaponfiresinglesmall",
+        "time": 0.2,
+        "MotorAB": null,
+        "MotorA": {
+          "_Type_": "ForceFeedbackMotor",
+          "frequency": 1.0,
+          "pattern": "50",
+          "envelope": "CosineDecrease"},
+        "MotorB": {
+          "_Type_": "ForceFeedbackMotor",
+          "frequency": 1.0,
+          "pattern": "20",
+          "envelope": "linearDecrease"}},
+      {
+        "_Type_": "ForceFeedbackEffect",
+        "name": "weaponfirerapidmedium",
+        "time": 0.1,
+        "MotorAB": null,
+        "MotorA": {
+          "_Type_": "ForceFeedbackMotor",
+          "frequency": 1.0,
+          "pattern": "20",
+          "envelope": "CosineDecrease"},
+        "MotorB": {
+          "_Type_": "ForceFeedbackMotor",
+          "frequency": 1.0,
+          "pattern": "30",
+          "envelope": "CosineDecrease"}},
+      {
+        "_Type_": "ForceFeedbackEffect",
+        "name": "weaponfiresinglemedium",
+        "time": 0.2,
+        "MotorAB": null,
+        "MotorA": {
+          "_Type_": "ForceFeedbackMotor",
+          "frequency": 1.0,
+          "pattern": "50",
+          "envelope": "CosineDecrease"},
+        "MotorB": {
+          "_Type_": "ForceFeedbackMotor",
+          "frequency": 1.0,
+          "pattern": "20",
+          "envelope": "linearDecrease"}},
+      {
+        "_Type_": "ForceFeedbackEffect",
+        "name": "weaponfirerapidheavy",
+        "time": 0.12,
+        "MotorAB": null,
+        "MotorA": {
+          "_Type_": "ForceFeedbackMotor",
+          "frequency": 1.0,
+          "pattern": "20",
+          "envelope": "CosineDecrease"},
+        "MotorB": {
+          "_Type_": "ForceFeedbackMotor",
+          "frequency": 1.0,
+          "pattern": "50",
+          "envelope": "CosineDecrease"}},
+      {
+        "_Type_": "ForceFeedbackEffect",
+        "name": "weaponfiresingleheavy",
+        "time": 0.2,
+        "MotorAB": null,
+        "MotorA": {
+          "_Type_": "ForceFeedbackMotor",
+          "frequency": 1.0,
+          "pattern": "50",
+          "envelope": "CosineDecrease"},
+        "MotorB": {
+          "_Type_": "ForceFeedbackMotor",
+          "frequency": 1.0,
+          "pattern": "50",
+          "envelope": "CosineDecrease"}},
+      {
+        "_Type_": "ForceFeedbackEffect",
+        "name": "weaponfiresinglegauss",
+        "time": 1.0,
+        "MotorAB": null,
+        "MotorA": {
+          "_Type_": "ForceFeedbackMotor",
+          "frequency": 1.0,
+          "pattern": "75",
+          "envelope": "Gausscharge"},
+        "MotorB": {
+          "_Type_": "ForceFeedbackMotor",
+          "frequency": 1.0,
+          "pattern": "50",
+          "envelope": "linearDecrease"}},
+      {
+        "_Type_": "ForceFeedbackEffect",
+        "name": "weaponfiresinglemassive",
+        "time": 0.5,
+        "MotorAB": null,
+        "MotorA": {
+          "_Type_": "ForceFeedbackMotor",
+          "frequency": 1.0,
+          "pattern": "75",
+          "envelope": "linearDecrease"},
+        "MotorB": {
+          "_Type_": "ForceFeedbackMotor",
+          "frequency": 1.0,
+          "pattern": "75",
+          "envelope": "linearDecrease"}},
+      {
+        "_Type_": "ForceFeedbackEffect",
+        "name": "reloadsmallFF",
+        "time": 0.1,
+        "MotorAB": null,
+        "MotorA": null,
+        "MotorB": {
+          "_Type_": "ForceFeedbackMotor",
+          "frequency": 1.0,
+          "pattern": "30",
+          "envelope": "Gate"}},
+      {
+        "_Type_": "ForceFeedbackEffect",
+        "name": "reloadshortFF",
+        "time": 0.1,
+        "MotorAB": null,
+        "MotorA": {
+          "_Type_": "ForceFeedbackMotor",
+          "frequency": 1.0,
+          "pattern": "30",
+          "envelope": "Gate"},
+        "MotorB": {
+          "_Type_": "ForceFeedbackMotor",
+          "frequency": 1.0,
+          "pattern": "30",
+          "envelope": "linearDecrease"}},
+      {
+        "_Type_": "ForceFeedbackEffect",
+        "name": "weakFF",
+        "time": 0.5,
+        "MotorAB": {
+          "_Type_": "ForceFeedbackMotor",
+          "frequency": 1.0,
+          "pattern": "12",
+          "envelope": "linearDecrease"},
+        "MotorA": null,
+        "MotorB": null},
+      {
+        "_Type_": "ForceFeedbackEffect",
+        "name": "mediumFF",
+        "time": 0.5,
+        "MotorAB": null,
+        "MotorA": null,
+        "MotorB": {
+          "_Type_": "ForceFeedbackMotor",
+          "frequency": 1.0,
+          "pattern": "50",
+          "envelope": "linearDecrease"}},
+      {
+        "_Type_": "ForceFeedbackEffect",
+        "name": "strongFF",
+        "time": 0.5,
+        "MotorAB": {
+          "_Type_": "ForceFeedbackMotor",
+          "frequency": 1.0,
+          "pattern": "100",
+          "envelope": "linearDecrease"},
+        "MotorA": null,
+        "MotorB": null},
+      {
+        "_Type_": "ForceFeedbackEffect",
+        "name": "gForceY",
+        "time": 0.5,
+        "MotorAB": {
+          "_Type_": "ForceFeedbackMotor",
+          "frequency": 1.0,
+          "pattern": "12",
+          "envelope": "linearDecrease"},
+        "MotorA": null,
+        "MotorB": null},
+      {
+        "_Type_": "ForceFeedbackEffect",
+        "name": "eject",
+        "time": 3.0,
+        "MotorAB": {
+          "_Type_": "ForceFeedbackMotor",
+          "frequency": 1.0,
+          "pattern": "50",
+          "envelope": "linearDecrease"},
+        "MotorA": null,
+        "MotorB": null},
+      {
+        "_Type_": "ForceFeedbackEffect",
+        "name": "afterburner",
+        "time": 2.0,
+        "MotorAB": {
+          "_Type_": "ForceFeedbackMotor",
+          "frequency": 1.0,
+          "pattern": "12",
+          "envelope": "CosineDecrease"},
+        "MotorA": null,
+        "MotorB": null},
+      {
+        "_Type_": "ForceFeedbackEffect",
+        "name": "WeaponFire_RapidSmall_Looped",
+        "time": -0.05,
+        "MotorAB": null,
+        "MotorA": {
+          "_Type_": "ForceFeedbackMotor",
+          "frequency": 1.0,
+          "pattern": "50",
+          "envelope": "Gate"},
+        "MotorB": null}]}}

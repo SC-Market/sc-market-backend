@@ -1,0 +1,17 @@
+{
+  "_RecordName_": "InventoryContainer.PersonalStorage_Locker_Hull_A_01",
+  "_RecordId_": "a45885a9-946e-4985-8ce8-11b61ee6b68f",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "InventoryContainer",
+    "excludedItemSubTypes": [],
+    "interiorDimensions": {
+      "_Type_": "Vec3",
+      "x": 0.6,
+      "y": 0.7,
+      "z": 0.4},
+    "inventoryType": {
+      "_Type_": "InventoryClosedContainerType",
+      "capacity": {
+        "_Type_": "SStandardCargoUnit",
+        "standardCargoUnits": 0.2}}}}

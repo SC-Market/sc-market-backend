@@ -1,0 +1,12 @@
+{
+  "_RecordName_": "HintUIData.Mining07",
+  "_RecordId_": "e69751ec-d146-4f7f-832c-c8076e525099",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "HintUIData",
+    "TitleText": "@Hints_Mining_Extraction_Title",
+    "BodyText": "@Hints_OnProspectorRockPowerOptimalLevel",
+    "BodyTextGamePad": "@Hints_OnProspectorRockPowerOptimalLevel",
+    "BodyTextJoystick": "@Hints_OnProspectorRockPowerOptimalLevel",
+    "TitleImagePath": "",
+    "BodyImagePath": ""}}

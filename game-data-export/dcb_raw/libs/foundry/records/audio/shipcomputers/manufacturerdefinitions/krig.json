@@ -1,0 +1,12 @@
+{
+  "_RecordName_": "ShipComputerDefinition.KRIG",
+  "_RecordId_": "65b16fcd-4161-4d6b-bee3-1b11675059d3",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "ShipComputerDefinition",
+    "communicationConfig": "file://./../../../../../../libs/foundry/records/communicationconfig/ship_krig.json",
+    "preBootUpTime": 2.0,
+    "bootUpTime": 5.0,
+    "timeSinceLastHitMarkerSfx": {
+      "_Type_": "AudioRtpc",
+      "rtpc": "UI_TimeSinceLastHitMarker"}}}

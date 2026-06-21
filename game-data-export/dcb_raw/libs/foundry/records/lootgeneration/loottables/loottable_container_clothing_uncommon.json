@@ -1,0 +1,15 @@
+{
+  "_RecordName_": "LootTable.LootTable_Container_Clothing_Uncommon",
+  "_RecordId_": "c225a83f-4497-4ab9-8ca0-0a76e0cb21eb",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "LootTable",
+    "lootArchetypes": [
+      {
+        "_Type_": "WeightedLootArchetype",
+        "archetype": "file://./../../../../../libs/foundry/records/lootgeneration/lootarchetypes/lootarchetype_container_light_armour_common.json",
+        "weight": 1.0,
+        "numberOfResultsConstraints": {
+          "_Type_": "NumResultsConstraints",
+          "minResults": 0,
+          "maxResults": 0}}]}}

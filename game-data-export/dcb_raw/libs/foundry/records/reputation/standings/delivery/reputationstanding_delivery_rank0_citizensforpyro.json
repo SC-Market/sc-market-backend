@@ -1,0 +1,15 @@
+{
+  "_RecordName_": "SReputationStandingParams.ReputationStanding_Delivery_Rank0_CitizensForPyro",
+  "_RecordId_": "b68f6731-a305-44af-8a9d-b8a5d9c6e419",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "SReputationStandingParams",
+    "name": "Delivery_Rank0_CitizensForPyro",
+    "description": "desc",
+    "displayName": "@RepStanding_TransportGuild_Rank0",
+    "perkDescription": "@blank_space",
+    "icon": "UI/Textures/Vector/MobiGlas/App_ReputationManager/icon_reputationrank_courier_2.svg",
+    "minReputation": 0,
+    "driftReputation": 0,
+    "driftTimeHours": 24.0,
+    "gated": true}}

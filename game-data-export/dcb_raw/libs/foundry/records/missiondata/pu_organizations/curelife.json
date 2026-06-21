@@ -1,0 +1,40 @@
+{
+  "_RecordName_": "MissionOrganization.CureLife",
+  "_RecordId_": "b9f8e5ed-c80e-40b7-b431-bf5d628d3d6e",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "MissionOrganization",
+    "organizationTags": [
+      {
+        "_Type_": "MissionLocationTags",
+        "tags": [
+          {
+            "_RecordPath_": "file://./../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+            "_RecordName_": "Tag.209d603a-11d7-4b67-a011-174ae0f77d59",
+            "_RecordId_": "209d603a-11d7-4b67-a011-174ae0f77d59"},
+          {
+            "_RecordPath_": "file://./../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+            "_RecordName_": "Tag.1ab9dbc4-3890-421a-bb9f-e4d57333d5a2",
+            "_RecordId_": "1ab9dbc4-3890-421a-bb9f-e4d57333d5a2"},
+          {
+            "_RecordPath_": "file://./../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+            "_RecordName_": "Tag.c187c41d-8675-4868-a4e1-ab5599075ab0",
+            "_RecordId_": "c187c41d-8675-4868-a4e1-ab5599075ab0"}]},
+      {
+        "_Type_": "MissionLocationTags",
+        "tags": []},
+      {
+        "_Type_": "MissionLocationTags",
+        "tags": []}],
+    "stringVariants": {
+      "_Type_": "MissionStringVariants",
+      "variants": [
+        {
+          "_Type_": "MissionStringVariant",
+          "tag": {
+            "_RecordPath_": "file://./../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+            "_RecordName_": "Tag.0130de18-97e2-4d4c-9bb1-3e7ef5fd0490",
+            "_RecordId_": "0130de18-97e2-4d4c-9bb1-3e7ef5fd0490"},
+          "string": "@mission_client_0019"}]},
+    "weighting": 1.0,
+    "factionReputation": null}}

@@ -1,0 +1,29 @@
+{
+  "_RecordName_": "HarvestableClusterPreset.MiningCluster_Med_Lrg",
+  "_RecordId_": "d3bc17e2-7a06-450a-82a0-1c5774329054",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "HarvestableClusterPreset",
+    "probabilityOfClustering": 100.0,
+    "clusterParamsArray": [
+      {
+        "_Type_": "HarvestableClusterParams",
+        "relativeProbability": 0.2,
+        "minSize": 10,
+        "maxSize": 22,
+        "minProximity": 3.0,
+        "maxProximity": 5.0},
+      {
+        "_Type_": "HarvestableClusterParams",
+        "relativeProbability": 0.3,
+        "minSize": 13,
+        "maxSize": 24,
+        "minProximity": 2.0,
+        "maxProximity": 8.0},
+      {
+        "_Type_": "HarvestableClusterParams",
+        "relativeProbability": 0.5,
+        "minSize": 15,
+        "maxSize": 25,
+        "minProximity": 1.5,
+        "maxProximity": 10.0}]}}

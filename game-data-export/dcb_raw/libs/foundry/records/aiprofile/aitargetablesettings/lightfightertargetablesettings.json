@@ -1,0 +1,11 @@
+{
+  "_RecordName_": "AITargetableSettings.LightFighterTargetableSettings",
+  "_RecordId_": "e0616bbe-1ca7-4645-b88f-bdc62740f60f",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "AITargetableSettings",
+    "suggestedAttackerCapacity": 5.0,
+    "maxIndividualIncomingMissileSize": 5,
+    "maxTotalIncomingMissileSize": 5,
+    "maxAttackerShootingTokens": 5,
+    "targetableByGrenadesCooldown": 10.0}}

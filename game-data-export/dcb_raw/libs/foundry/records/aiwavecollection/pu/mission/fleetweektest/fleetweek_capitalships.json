@@ -1,0 +1,47 @@
+{
+  "_RecordName_": "AIWaveCollection.FleetWeek_CapitalShips",
+  "_RecordId_": "b8525192-f7a6-4b50-9622-5ff91c474a0b",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "AIWaveCollection",
+    "waves": [
+      {
+        "_Type_": "AIWave",
+        "id": 1,
+        "textId": "",
+        "staggerTime": 0.0,
+        "members": [
+          {
+            "_Type_": "AIWaveMember",
+            "archetype": "",
+            "entityClassDefinition": "file://./../../../../../../../libs/foundry/records/entities/spaceships/aegs_javelin_pu_ai_uee_fleetweek.json",
+            "name": "",
+            "vehicleName": "",
+            "amount": 1,
+            "minAmount": -1,
+            "midAmount": -1,
+            "maxAmount": -1,
+            "crewManifestOverride": null,
+            "skillsetOverride": null,
+            "cargoManifests": [],
+            "aiDamageModifiersOverride": null}]},
+      {
+        "_Type_": "AIWave",
+        "id": 2,
+        "textId": "",
+        "staggerTime": 0.0,
+        "members": [
+          {
+            "_Type_": "AIWaveMember",
+            "archetype": "",
+            "entityClassDefinition": "file://./../../../../../../../libs/foundry/records/entities/spaceships/aegs_idris_m_pu_ai_uee.json",
+            "name": "",
+            "vehicleName": "",
+            "amount": 2,
+            "minAmount": -1,
+            "midAmount": -1,
+            "maxAmount": -1,
+            "crewManifestOverride": null,
+            "skillsetOverride": null,
+            "cargoManifests": [],
+            "aiDamageModifiersOverride": null}]}]}}

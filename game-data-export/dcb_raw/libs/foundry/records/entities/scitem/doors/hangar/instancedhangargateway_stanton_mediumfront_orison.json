@@ -1,0 +1,23 @@
+{
+  "_RecordName_": "EntityClassDefinition.InstancedHangarGateway_Stanton_MediumFront_Orison",
+  "_RecordId_": "e7781992-b688-48bf-aad2-464e3a842ed4",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "EntityClassDefinition",
+    "Category": "InstancedHangarGateway",
+    "Icon": "Default.bmp",
+    "Invisible": false,
+    "BBoxSelection": false,
+    "defaultEditorColor": {
+      "_Type_": "RGB",
+      "r": 1.0,
+      "g": 1.0,
+      "b": 0.0},
+    "entityDensityClass": null,
+    "tags": [],
+    "StaticEntityClassData": [],
+    "Components": [
+      {
+        "_Type_": "SInstancedInteriorGatewayParams",
+        "gatewaySize": 4,
+        "instance": "file://./../../../../../../../libs/foundry/records/instancedinterior/hangar/hangar_mediumfront_orison.json"}]}}

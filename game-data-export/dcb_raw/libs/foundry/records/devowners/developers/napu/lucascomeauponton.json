@@ -1,0 +1,10 @@
+{
+  "_RecordName_": "DevOwner.LucasComeauPonton",
+  "_RecordId_": "cb3624fc-4577-4e29-a4e8-b0643a27865e",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "DevOwner",
+    "type": {
+      "_Type_": "Developer",
+      "name": "Lucas Comeau-Ponton",
+      "team": "file://./../../../../../../libs/foundry/records/devowners/devteams/napu.json"}}}

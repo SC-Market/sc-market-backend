@@ -1,0 +1,17 @@
+{
+  "_RecordName_": "MineableElement.MinableElement_GroundVehicle_template",
+  "_RecordId_": "5e930824-e3c8-49b6-b500-1ba641495777",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "MineableElement",
+    "resourceType": {
+      "_RecordPath_": "file://./../../../../../libs/foundry/records/resourcetypedatabase/resourcetypedatabase.json",
+      "_RecordName_": "ResourceType.Beradom",
+      "_RecordId_": "c339897c-d682-48ad-a16f-daf145bc0f4d"},
+    "elementInstability": 0.0,
+    "elementResistance": 1.0,
+    "elementOptimalWindowMidpoint": 0.7,
+    "elementOptimalWindowMidpointRandomness": 0.0,
+    "elementOptimalWindowThinness": 0.1,
+    "elementExplosionMultiplier": 1.0,
+    "elementClusterFactor": 0.0}}

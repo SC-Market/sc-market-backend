@@ -1,0 +1,25 @@
+{
+  "_RecordName_": "CommsNotification.MCN_FF_Boyd_FrontierFighterFinale_Phase1",
+  "_RecordId_": "85aee0b9-fa13-4862-b9e0-b3e0ca1140a4",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "CommsNotification",
+    "tags": {
+      "_Type_": "TagList",
+      "tags": [
+        {
+          "_RecordPath_": "file://./../../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+          "_RecordName_": "Tag.a0a3bf89-b022-41f7-8c5b-286a69d703c5",
+          "_RecordId_": "a0a3bf89-b022-41f7-8c5b-286a69d703c5"},
+        {
+          "_RecordPath_": "file://./../../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+          "_RecordName_": "Tag.04f3b0c0-192d-47f8-8edc-eb5b00ec2e03",
+          "_RecordId_": "04f3b0c0-192d-47f8-8edc-eb5b00ec2e03"},
+        {
+          "_RecordPath_": "file://./../../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+          "_RecordName_": "Tag.556d9806-70bc-4ef8-960d-5c44f2315ce9",
+          "_RecordId_": "556d9806-70bc-4ef8-960d-5c44f2315ce9"}]},
+    "communicationName": "file://./../../../../../../../libs/foundry/records/communicationname/missioncommunications/basedmissiontriggers/missionaccept.json",
+    "characterEntityClass": null,
+    "fakeCommsAudioEntityClass": "file://./../../../../../../../libs/foundry/records/entities/audio/fakecommsaudioentity_frontierfighters_boyd.json",
+    "stage": "file://./../../../../../../../libs/foundry/records/commsnotificationstages/cns_test.json"}}

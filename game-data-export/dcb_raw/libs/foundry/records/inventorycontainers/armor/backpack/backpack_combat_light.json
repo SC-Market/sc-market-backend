@@ -1,0 +1,17 @@
+{
+  "_RecordName_": "InventoryContainer.backpack_combat_light",
+  "_RecordId_": "2fe657bc-8530-475b-9bc2-cf3312829b1d",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "InventoryContainer",
+    "excludedItemSubTypes": [],
+    "interiorDimensions": {
+      "_Type_": "Vec3",
+      "x": 0.53,
+      "y": 0.64,
+      "z": 0.38},
+    "inventoryType": {
+      "_Type_": "InventoryClosedContainerType",
+      "capacity": {
+        "_Type_": "SMicroCargoUnit",
+        "microSCU": 54000}}}}

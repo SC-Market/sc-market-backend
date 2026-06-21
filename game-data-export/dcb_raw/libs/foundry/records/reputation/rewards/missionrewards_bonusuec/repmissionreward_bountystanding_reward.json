@@ -1,0 +1,112 @@
+{
+  "_RecordName_": "SReputationMissionRewardBonusParams.RepMissionReward_BountyStanding_Reward",
+  "_RecordId_": "14d6becd-fe1a-4896-a9a6-7ed6f2977d76",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "SReputationMissionRewardBonusParams",
+    "missionGiverBonuses": [
+      {
+        "_Type_": "SReputationMissionGiverRewardBonusParams",
+        "factionReputation": "file://./../../../../../../libs/foundry/records/factions/factionreputation/factionreputation_crusaderindustries.json",
+        "reputationScope": "file://./../../../../../../libs/foundry/records/reputation/scopes/reputationscope_bounty.json",
+        "rewardBonuses": [
+          {
+            "_Type_": "SReputationStandingRewardBonusParams",
+            "standing": "file://./../../../../../../libs/foundry/records/reputation/standings/bounty/reputationstanding_bounty_agent.json",
+            "bonusFraction": 0.05},
+          {
+            "_Type_": "SReputationStandingRewardBonusParams",
+            "standing": "file://./../../../../../../libs/foundry/records/reputation/standings/bounty/reputationstanding_bounty_senior.json",
+            "bonusFraction": 0.1},
+          {
+            "_Type_": "SReputationStandingRewardBonusParams",
+            "standing": "file://./../../../../../../libs/foundry/records/reputation/standings/bounty/reputationstanding_bounty_veteranagent.json",
+            "bonusFraction": 0.15},
+          {
+            "_Type_": "SReputationStandingRewardBonusParams",
+            "standing": "file://./../../../../../../libs/foundry/records/reputation/standings/bounty/reputationstanding_bounty_masteragent.json",
+            "bonusFraction": 0.2}]},
+      {
+        "_Type_": "SReputationMissionGiverRewardBonusParams",
+        "factionReputation": "file://./../../../../../../libs/foundry/records/factions/factionreputation/factionreputation_hurstondynamics.json",
+        "reputationScope": "file://./../../../../../../libs/foundry/records/reputation/scopes/reputationscope_bounty.json",
+        "rewardBonuses": [
+          {
+            "_Type_": "SReputationStandingRewardBonusParams",
+            "standing": "file://./../../../../../../libs/foundry/records/reputation/standings/bounty/reputationstanding_bounty_agent.json",
+            "bonusFraction": 0.05},
+          {
+            "_Type_": "SReputationStandingRewardBonusParams",
+            "standing": "file://./../../../../../../libs/foundry/records/reputation/standings/bounty/reputationstanding_bounty_senior.json",
+            "bonusFraction": 0.1},
+          {
+            "_Type_": "SReputationStandingRewardBonusParams",
+            "standing": "file://./../../../../../../libs/foundry/records/reputation/standings/bounty/reputationstanding_bounty_veteranagent.json",
+            "bonusFraction": 0.15},
+          {
+            "_Type_": "SReputationStandingRewardBonusParams",
+            "standing": "file://./../../../../../../libs/foundry/records/reputation/standings/bounty/reputationstanding_bounty_masteragent.json",
+            "bonusFraction": 0.2}]},
+      {
+        "_Type_": "SReputationMissionGiverRewardBonusParams",
+        "factionReputation": "file://./../../../../../../libs/foundry/records/factions/factionreputation/factionreputation_lawful_northrockservicegroup.json",
+        "reputationScope": "file://./../../../../../../libs/foundry/records/reputation/scopes/reputationscope_bounty.json",
+        "rewardBonuses": [
+          {
+            "_Type_": "SReputationStandingRewardBonusParams",
+            "standing": "file://./../../../../../../libs/foundry/records/reputation/standings/bounty/reputationstanding_bounty_agent.json",
+            "bonusFraction": 0.05},
+          {
+            "_Type_": "SReputationStandingRewardBonusParams",
+            "standing": "file://./../../../../../../libs/foundry/records/reputation/standings/bounty/reputationstanding_bounty_senior.json",
+            "bonusFraction": 0.1},
+          {
+            "_Type_": "SReputationStandingRewardBonusParams",
+            "standing": "file://./../../../../../../libs/foundry/records/reputation/standings/bounty/reputationstanding_bounty_veteranagent.json",
+            "bonusFraction": 0.15},
+          {
+            "_Type_": "SReputationStandingRewardBonusParams",
+            "standing": "file://./../../../../../../libs/foundry/records/reputation/standings/bounty/reputationstanding_bounty_masteragent.json",
+            "bonusFraction": 0.2}]},
+      {
+        "_Type_": "SReputationMissionGiverRewardBonusParams",
+        "factionReputation": "file://./../../../../../../libs/foundry/records/factions/factionreputation/factionreputation_arccorp.json",
+        "reputationScope": "file://./../../../../../../libs/foundry/records/reputation/scopes/reputationscope_bounty.json",
+        "rewardBonuses": [
+          {
+            "_Type_": "SReputationStandingRewardBonusParams",
+            "standing": "file://./../../../../../../libs/foundry/records/reputation/standings/bounty/reputationstanding_bounty_agent.json",
+            "bonusFraction": 0.05},
+          {
+            "_Type_": "SReputationStandingRewardBonusParams",
+            "standing": "file://./../../../../../../libs/foundry/records/reputation/standings/bounty/reputationstanding_bounty_senior.json",
+            "bonusFraction": 0.1},
+          {
+            "_Type_": "SReputationStandingRewardBonusParams",
+            "standing": "file://./../../../../../../libs/foundry/records/reputation/standings/bounty/reputationstanding_bounty_veteranagent.json",
+            "bonusFraction": 0.15},
+          {
+            "_Type_": "SReputationStandingRewardBonusParams",
+            "standing": "file://./../../../../../../libs/foundry/records/reputation/standings/bounty/reputationstanding_bounty_masteragent.json",
+            "bonusFraction": 0.2}]},
+      {
+        "_Type_": "SReputationMissionGiverRewardBonusParams",
+        "factionReputation": "file://./../../../../../../libs/foundry/records/factions/factionreputation/factionreputation_microtech.json",
+        "reputationScope": "file://./../../../../../../libs/foundry/records/reputation/scopes/reputationscope_bounty.json",
+        "rewardBonuses": [
+          {
+            "_Type_": "SReputationStandingRewardBonusParams",
+            "standing": "file://./../../../../../../libs/foundry/records/reputation/standings/bounty/reputationstanding_bounty_agent.json",
+            "bonusFraction": 0.05},
+          {
+            "_Type_": "SReputationStandingRewardBonusParams",
+            "standing": "file://./../../../../../../libs/foundry/records/reputation/standings/bounty/reputationstanding_bounty_senior.json",
+            "bonusFraction": 0.1},
+          {
+            "_Type_": "SReputationStandingRewardBonusParams",
+            "standing": "file://./../../../../../../libs/foundry/records/reputation/standings/bounty/reputationstanding_bounty_veteranagent.json",
+            "bonusFraction": 0.15},
+          {
+            "_Type_": "SReputationStandingRewardBonusParams",
+            "standing": "file://./../../../../../../libs/foundry/records/reputation/standings/bounty/reputationstanding_bounty_masteragent.json",
+            "bonusFraction": 0.2}]}]}}

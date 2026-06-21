@@ -1,0 +1,17 @@
+{
+  "_RecordName_": "InventoryContainer.Ship_TempItemCarryingCapacity_CRUS_Hercules_M2",
+  "_RecordId_": "8ca0ba49-527c-4837-ad4d-3a682eccf676",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "InventoryContainer",
+    "excludedItemSubTypes": [],
+    "interiorDimensions": {
+      "_Type_": "Vec3",
+      "x": 12.0,
+      "y": 12.0,
+      "z": 3.25},
+    "inventoryType": {
+      "_Type_": "InventoryClosedContainerType",
+      "capacity": {
+        "_Type_": "SStandardCargoUnit",
+        "standardCargoUnits": 468.0}}}}

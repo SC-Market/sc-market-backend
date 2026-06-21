@@ -1,0 +1,19 @@
+{
+  "_RecordName_": "UIStateDisplay.SuitOxygenWarning",
+  "_RecordId_": "a7ff915d-30c7-440a-9d55-e4ba7f52d27c",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "UIStateDisplay",
+    "thresholds": [
+      {
+        "_Type_": "UIStateDisplay_Threshold",
+        "displayName": "@LOC_EMPTY",
+        "timelineLabel": "warning",
+        "minThresholdValue": 0.0,
+        "stateColor": "Critical"},
+      {
+        "_Type_": "UIStateDisplay_Threshold",
+        "displayName": "@LOC_EMPTY",
+        "timelineLabel": "normal",
+        "minThresholdValue": 1.0,
+        "stateColor": "Positive"}]}}

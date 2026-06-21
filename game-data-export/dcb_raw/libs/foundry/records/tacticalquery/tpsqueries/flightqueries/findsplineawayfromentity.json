@@ -1,0 +1,67 @@
+{
+  "_RecordName_": "TacticalQuery.FindSplineAwayFromEntity",
+  "_RecordId_": "db35aa60-d690-4d90-8d82-dc7abbb1e78d",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "TacticalQuery",
+    "name": "FindSplineAwayFromEntity",
+    "type": "TacticalPointQuery",
+    "options": [
+      {
+        "_Type_": "TQSEmbeddedOption",
+        "requirements": {
+          "_Type_": "TagsDNF",
+          "terms": [
+            {
+              "_Type_": "TagsDNFTerm",
+              "positiveTags": [],
+              "negativeTags": []}]},
+        "content": {
+          "_Type_": "TQSOptionContent",
+          "parameters": [
+            {
+              "_Type_": "TQSInputTagValue",
+              "requirements": {
+                "_Type_": "TagsDNF",
+                "terms": []},
+              "condition": "tag",
+              "value": {
+                "_Type_": "TagsDNF",
+                "terms": [
+                  {
+                    "_Type_": "TagsDNFTerm",
+                    "positiveTags": [
+                      {
+                        "_RecordPath_": "file://./../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+                        "_RecordName_": "Tag.43af619d-c16a-4148-9f06-00ee9b64dcb7",
+                        "_RecordId_": "43af619d-c16a-4148-9f06-00ee9b64dcb7"}],
+                    "negativeTags": []}]},
+              "overrides": []}],
+          "generation": [
+            {
+              "_Type_": "TQSInputFloatValue",
+              "requirements": {
+                "_Type_": "TagsDNF",
+                "terms": []},
+              "condition": "entities_around_host",
+              "value": 10000.0,
+              "overrides": []}],
+          "conditions": [
+            {
+              "_Type_": "TQSInputBoolValue",
+              "requirements": {
+                "_Type_": "TagsDNF",
+                "terms": []},
+              "condition": "otherSide_of_referencePoint",
+              "value": false,
+              "overrides": []}],
+          "weights": [
+            {
+              "_Type_": "TQSWeightInputValue",
+              "requirements": {
+                "_Type_": "TagsDNF",
+                "terms": []},
+              "condition": "distance_from_host",
+              "weight": 1.0,
+              "overrides": []}]},
+        "optionOverrides": []}]}}

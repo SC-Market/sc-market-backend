@@ -1,0 +1,274 @@
+{
+  "_RecordName_": "BuildingBlocks_Style.PIT_Inventory_A_LoadingStyles",
+  "_RecordId_": "c4674a08-55e8-420c-ac95-b03afe18678c",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "BuildingBlocks_Style",
+    "entries": [
+      {
+        "_Type_": "BuildingBlocks_StyleEntry",
+        "name": "Circle 1",
+        "conditionsList": [
+          {
+            "_Type_": "BuildingBlocks_StyleConditionList",
+            "name": "New Condition List",
+            "conditions": [
+              {
+                "_Type_": "BuildingBlocks_StyleSelectorConditionTag",
+                "tag": {
+                  "_RecordPath_": "file://./../../../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+                  "_RecordName_": "Tag.4fe31302-0687-45be-8750-5cad7b655337",
+                  "_RecordId_": "4fe31302-0687-45be-8750-5cad7b655337"}},
+              {
+                "_Type_": "BuildingBlocks_StyleSelectorConditionParent",
+                "conditions": [
+                  {
+                    "_Type_": "BuildingBlocks_StyleSelectorConditionTag",
+                    "tag": {
+                      "_RecordPath_": "file://./../../../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+                      "_RecordName_": "Tag.3079cc12-2784-40e9-98b1-ed548f7e1901",
+                      "_RecordId_": "3079cc12-2784-40e9-98b1-ed548f7e1901"}}]}]}],
+        "modifiers": [
+          {
+            "_Type_": "BuildingBlocks_FieldModifierNumber",
+            "field": "Alpha",
+            "value": 0.5},
+          {
+            "_Type_": "BuildingBlocks_FieldModifierColor",
+            "field": "StrokeColor",
+            "color": {
+              "_Type_": "BuildingBlocks_ColorStyle",
+              "color": "Base",
+              "alpha": 1.0}},
+          {
+            "_Type_": "BuildingBlocks_FieldModifierNumber",
+            "field": "StrokeWidth",
+            "value": 3.0},
+          {
+            "_Type_": "BuildingBlocks_FieldModifierNumber",
+            "field": "Progress",
+            "value": 0.25},
+          {
+            "_Type_": "BuidlingBlocks_FieldModifierAnimation",
+            "value": {
+              "_Type_": "BuildingBlocks_Animation",
+              "animationTimeline": {
+                "_Type_": "BuildingBlocks_TimelineTypeReference",
+                "timelineRecord": "file://./../../../../../../../../libs/foundry/records/ui/buildingblocks/animationtimelines/common/ac_spin_orientationz.json"},
+              "dynamicStartTimeVariableName": "",
+              "duration": 0.599,
+              "delay": 0.0,
+              "delayRandomRange": 0.0,
+              "direction": "Forward",
+              "fillMode": "None",
+              "iterationCount": 1,
+              "loopIndefinitely": true,
+              "timeSync": false,
+              "additive": true,
+              "timescaleIndependent": false}}],
+        "transitions": []},
+      {
+        "_Type_": "BuildingBlocks_StyleEntry",
+        "name": "Circle 2",
+        "conditionsList": [
+          {
+            "_Type_": "BuildingBlocks_StyleConditionList",
+            "name": "New Condition List",
+            "conditions": [
+              {
+                "_Type_": "BuildingBlocks_StyleSelectorConditionTag",
+                "tag": {
+                  "_RecordPath_": "file://./../../../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+                  "_RecordName_": "Tag.5fa7f35c-2afd-4968-a5c2-5c53d25a1c45",
+                  "_RecordId_": "5fa7f35c-2afd-4968-a5c2-5c53d25a1c45"}},
+              {
+                "_Type_": "BuildingBlocks_StyleSelectorConditionParent",
+                "conditions": [
+                  {
+                    "_Type_": "BuildingBlocks_StyleSelectorConditionTag",
+                    "tag": {
+                      "_RecordPath_": "file://./../../../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+                      "_RecordName_": "Tag.3079cc12-2784-40e9-98b1-ed548f7e1901",
+                      "_RecordId_": "3079cc12-2784-40e9-98b1-ed548f7e1901"}}]}]}],
+        "modifiers": [
+          {
+            "_Type_": "BuildingBlocks_FieldModifierNumber",
+            "field": "Alpha",
+            "value": 0.5},
+          {
+            "_Type_": "BuildingBlocks_FieldModifierColor",
+            "field": "StrokeColor",
+            "color": {
+              "_Type_": "BuildingBlocks_ColorStyle",
+              "color": "Accent1",
+              "alpha": 1.0}},
+          {
+            "_Type_": "BuildingBlocks_FieldModifierNumber",
+            "field": "StrokeWidth",
+            "value": 3.0},
+          {
+            "_Type_": "BuildingBlocks_FieldModifierNumber",
+            "field": "Progress",
+            "value": 0.25},
+          {
+            "_Type_": "BuidlingBlocks_FieldModifierAnimation",
+            "value": {
+              "_Type_": "BuildingBlocks_Animation",
+              "animationTimeline": {
+                "_Type_": "BuildingBlocks_TimelineTypeReference",
+                "timelineRecord": "file://./../../../../../../../../libs/foundry/records/ui/buildingblocks/animationtimelines/common/ac_spin_orientationz.json"},
+              "dynamicStartTimeVariableName": "",
+              "duration": 0.7199,
+              "delay": 0.0,
+              "delayRandomRange": 0.0,
+              "direction": "Forward",
+              "fillMode": "None",
+              "iterationCount": 1,
+              "loopIndefinitely": true,
+              "timeSync": false,
+              "additive": true,
+              "timescaleIndependent": false}}],
+        "transitions": []},
+      {
+        "_Type_": "BuildingBlocks_StyleEntry",
+        "name": "Circle 3",
+        "conditionsList": [
+          {
+            "_Type_": "BuildingBlocks_StyleConditionList",
+            "name": "New Condition List",
+            "conditions": [
+              {
+                "_Type_": "BuildingBlocks_StyleSelectorConditionTag",
+                "tag": {
+                  "_RecordPath_": "file://./../../../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+                  "_RecordName_": "Tag.564b473a-e138-4c6a-9017-6c1bdd7a2506",
+                  "_RecordId_": "564b473a-e138-4c6a-9017-6c1bdd7a2506"}},
+              {
+                "_Type_": "BuildingBlocks_StyleSelectorConditionParent",
+                "conditions": [
+                  {
+                    "_Type_": "BuildingBlocks_StyleSelectorConditionTag",
+                    "tag": {
+                      "_RecordPath_": "file://./../../../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+                      "_RecordName_": "Tag.3079cc12-2784-40e9-98b1-ed548f7e1901",
+                      "_RecordId_": "3079cc12-2784-40e9-98b1-ed548f7e1901"}}]}]}],
+        "modifiers": [
+          {
+            "_Type_": "BuildingBlocks_FieldModifierNumber",
+            "field": "Alpha",
+            "value": 0.5},
+          {
+            "_Type_": "BuildingBlocks_FieldModifierColor",
+            "field": "StrokeColor",
+            "color": {
+              "_Type_": "BuildingBlocks_ColorStyle",
+              "color": "Accent1",
+              "alpha": 1.0}},
+          {
+            "_Type_": "BuildingBlocks_FieldModifierNumber",
+            "field": "StrokeWidth",
+            "value": 3.0},
+          {
+            "_Type_": "BuildingBlocks_FieldModifierNumber",
+            "field": "Progress",
+            "value": 0.25},
+          {
+            "_Type_": "BuidlingBlocks_FieldModifierAnimation",
+            "value": {
+              "_Type_": "BuildingBlocks_Animation",
+              "animationTimeline": {
+                "_Type_": "BuildingBlocks_TimelineTypeReference",
+                "timelineRecord": "file://./../../../../../../../../libs/foundry/records/ui/buildingblocks/animationtimelines/common/ac_spin_orientationz.json"},
+              "dynamicStartTimeVariableName": "",
+              "duration": 0.9,
+              "delay": 0.0,
+              "delayRandomRange": 0.0,
+              "direction": "Forward",
+              "fillMode": "None",
+              "iterationCount": 1,
+              "loopIndefinitely": true,
+              "timeSync": false,
+              "additive": true,
+              "timescaleIndependent": false}}],
+        "transitions": []},
+      {
+        "_Type_": "BuildingBlocks_StyleEntry",
+        "name": "Circle 4",
+        "conditionsList": [
+          {
+            "_Type_": "BuildingBlocks_StyleConditionList",
+            "name": "New Condition List",
+            "conditions": [
+              {
+                "_Type_": "BuildingBlocks_StyleSelectorConditionTag",
+                "tag": {
+                  "_RecordPath_": "file://./../../../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+                  "_RecordName_": "Tag.fa788a47-ab80-48a0-8f7e-69ceb92a24c6",
+                  "_RecordId_": "fa788a47-ab80-48a0-8f7e-69ceb92a24c6"}},
+              {
+                "_Type_": "BuildingBlocks_StyleSelectorConditionParent",
+                "conditions": [
+                  {
+                    "_Type_": "BuildingBlocks_StyleSelectorConditionTag",
+                    "tag": {
+                      "_RecordPath_": "file://./../../../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+                      "_RecordName_": "Tag.3079cc12-2784-40e9-98b1-ed548f7e1901",
+                      "_RecordId_": "3079cc12-2784-40e9-98b1-ed548f7e1901"}}]}]}],
+        "modifiers": [
+          {
+            "_Type_": "BuildingBlocks_FieldModifierNumber",
+            "field": "Alpha",
+            "value": 0.5},
+          {
+            "_Type_": "BuildingBlocks_FieldModifierColor",
+            "field": "StrokeColor",
+            "color": {
+              "_Type_": "BuildingBlocks_ColorStyle",
+              "color": "Accent1",
+              "alpha": 1.0}},
+          {
+            "_Type_": "BuildingBlocks_FieldModifierNumber",
+            "field": "StrokeWidth",
+            "value": 3.0},
+          {
+            "_Type_": "BuildingBlocks_FieldModifierNumber",
+            "field": "Progress",
+            "value": 0.25},
+          {
+            "_Type_": "BuidlingBlocks_FieldModifierAnimation",
+            "value": {
+              "_Type_": "BuildingBlocks_Animation",
+              "animationTimeline": {
+                "_Type_": "BuildingBlocks_TimelineTypeReference",
+                "timelineRecord": "file://./../../../../../../../../libs/foundry/records/ui/buildingblocks/animationtimelines/common/ac_spin_orientationz.json"},
+              "dynamicStartTimeVariableName": "",
+              "duration": 1.2,
+              "delay": 0.0,
+              "delayRandomRange": 0.0,
+              "direction": "Forward",
+              "fillMode": "None",
+              "iterationCount": 1,
+              "loopIndefinitely": true,
+              "timeSync": false,
+              "additive": true,
+              "timescaleIndependent": false}}],
+        "transitions": []}],
+    "colorStyles": [
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null],
+    "textFieldModifiers": []}}

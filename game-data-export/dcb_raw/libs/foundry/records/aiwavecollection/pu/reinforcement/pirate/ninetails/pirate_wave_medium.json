@@ -1,0 +1,157 @@
+{
+  "_RecordName_": "AIWaveCollection.Pirate_Wave_Medium",
+  "_RecordId_": "b7ca3139-f88c-4091-9a16-823cbbf25392",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "AIWaveCollection",
+    "waves": [
+      {
+        "_Type_": "AIWave",
+        "id": 1,
+        "textId": "Pirates_Wave_Medium_01",
+        "staggerTime": 1.0,
+        "members": [
+          {
+            "_Type_": "AIWaveMember",
+            "archetype": "",
+            "entityClassDefinition": "file://./../../../../../../../../libs/foundry/records/entities/spaceships/cnou_mustang_delta_pu_ai_nt.json",
+            "name": "",
+            "vehicleName": "",
+            "amount": 1,
+            "minAmount": -1,
+            "midAmount": -1,
+            "maxAmount": -1,
+            "crewManifestOverride": null,
+            "skillsetOverride": "file://./../../../../../../../../libs/foundry/records/aiprofile/skills/humanpilot40.json",
+            "cargoManifests": [
+              "file://./../../../../../../../../libs/foundry/records/cargomanifest/criminal/criminal_25_medium_001.json"],
+            "aiDamageModifiersOverride": null},
+          {
+            "_Type_": "AIWaveMember",
+            "archetype": "",
+            "entityClassDefinition": "file://./../../../../../../../../libs/foundry/records/entities/spaceships/drak_buccaneer_pu_ai_nt.json",
+            "name": "",
+            "vehicleName": "",
+            "amount": 1,
+            "minAmount": -1,
+            "midAmount": -1,
+            "maxAmount": -1,
+            "crewManifestOverride": null,
+            "skillsetOverride": "file://./../../../../../../../../libs/foundry/records/aiprofile/skills/humanpilot60.json",
+            "cargoManifests": [
+              "file://./../../../../../../../../libs/foundry/records/cargomanifest/criminal/criminal_25_medium_001.json"],
+            "aiDamageModifiersOverride": null}]},
+      {
+        "_Type_": "AIWave",
+        "id": 2,
+        "textId": "Pirates_Wave_Medium_02",
+        "staggerTime": 1.0,
+        "members": [
+          {
+            "_Type_": "AIWaveMember",
+            "archetype": "",
+            "entityClassDefinition": "file://./../../../../../../../../libs/foundry/records/entities/spaceships/cnou_mustang_delta_pu_ai_nt.json",
+            "name": "",
+            "vehicleName": "",
+            "amount": 2,
+            "minAmount": -1,
+            "midAmount": -1,
+            "maxAmount": -1,
+            "crewManifestOverride": null,
+            "skillsetOverride": "file://./../../../../../../../../libs/foundry/records/aiprofile/skills/humanpilot40.json",
+            "cargoManifests": [
+              "file://./../../../../../../../../libs/foundry/records/cargomanifest/criminal/criminal_25_medium_001.json"],
+            "aiDamageModifiersOverride": null},
+          {
+            "_Type_": "AIWaveMember",
+            "archetype": "",
+            "entityClassDefinition": "file://./../../../../../../../../libs/foundry/records/entities/spaceships/orig_m50_pu_ai_nt.json",
+            "name": "",
+            "vehicleName": "",
+            "amount": 1,
+            "minAmount": -1,
+            "midAmount": -1,
+            "maxAmount": -1,
+            "crewManifestOverride": null,
+            "skillsetOverride": "file://./../../../../../../../../libs/foundry/records/aiprofile/skills/humanpilot30.json",
+            "cargoManifests": [
+              "file://./../../../../../../../../libs/foundry/records/cargomanifest/criminal/criminal_10_medium_001.json"],
+            "aiDamageModifiersOverride": null}]},
+      {
+        "_Type_": "AIWave",
+        "id": 3,
+        "textId": "Pirates_Wave_Medium_03",
+        "staggerTime": 1.0,
+        "members": [
+          {
+            "_Type_": "AIWaveMember",
+            "archetype": "",
+            "entityClassDefinition": "file://./../../../../../../../../libs/foundry/records/entities/spaceships/drak_buccaneer_pu_ai_nt.json",
+            "name": "",
+            "vehicleName": "",
+            "amount": 1,
+            "minAmount": -1,
+            "midAmount": -1,
+            "maxAmount": -1,
+            "crewManifestOverride": null,
+            "skillsetOverride": "file://./../../../../../../../../libs/foundry/records/aiprofile/skills/humanpilot60.json",
+            "cargoManifests": [
+              "file://./../../../../../../../../libs/foundry/records/cargomanifest/criminal/criminal_25_medium_001.json"],
+            "aiDamageModifiersOverride": null},
+          {
+            "_Type_": "AIWaveMember",
+            "archetype": "",
+            "entityClassDefinition": "file://./../../../../../../../../libs/foundry/records/entities/spaceships/orig_m50_pu_ai_nt.json",
+            "name": "",
+            "vehicleName": "",
+            "amount": 1,
+            "minAmount": -1,
+            "midAmount": -1,
+            "maxAmount": -1,
+            "crewManifestOverride": null,
+            "skillsetOverride": "file://./../../../../../../../../libs/foundry/records/aiprofile/skills/humanpilot30.json",
+            "cargoManifests": [
+              "file://./../../../../../../../../libs/foundry/records/cargomanifest/criminal/criminal_25_medium_001.json"],
+            "aiDamageModifiersOverride": null}]},
+      {
+        "_Type_": "AIWave",
+        "id": 4,
+        "textId": "Pirates_Wave_Medium_04",
+        "staggerTime": 1.0,
+        "members": [
+          {
+            "_Type_": "AIWaveMember",
+            "archetype": "",
+            "entityClassDefinition": "file://./../../../../../../../../libs/foundry/records/entities/spaceships/drak_cutlass_black_pu_ai_nt.json",
+            "name": "",
+            "vehicleName": "",
+            "amount": 1,
+            "minAmount": -1,
+            "midAmount": -1,
+            "maxAmount": -1,
+            "crewManifestOverride": null,
+            "skillsetOverride": "file://./../../../../../../../../libs/foundry/records/aiprofile/skills/humanpilot70.json",
+            "cargoManifests": [
+              "file://./../../../../../../../../libs/foundry/records/cargomanifest/criminal/criminal_25_medium_001.json"],
+            "aiDamageModifiersOverride": null}]},
+      {
+        "_Type_": "AIWave",
+        "id": 5,
+        "textId": "Pirates_Wave_Medium_06",
+        "staggerTime": 1.0,
+        "members": [
+          {
+            "_Type_": "AIWaveMember",
+            "archetype": "",
+            "entityClassDefinition": "file://./../../../../../../../../libs/foundry/records/entities/spaceships/drak_buccaneer_pu_ai_nt.json",
+            "name": "",
+            "vehicleName": "",
+            "amount": 2,
+            "minAmount": -1,
+            "midAmount": -1,
+            "maxAmount": -1,
+            "crewManifestOverride": null,
+            "skillsetOverride": "file://./../../../../../../../../libs/foundry/records/aiprofile/skills/humanpilot60.json",
+            "cargoManifests": [
+              "file://./../../../../../../../../libs/foundry/records/cargomanifest/criminal/criminal_10_medium_001.json"],
+            "aiDamageModifiersOverride": null}]}]}}

@@ -1,0 +1,12 @@
+{
+  "_RecordName_": "CraftingQualityDistributionRecord.FPSMineable_QualityDistribution_Default",
+  "_RecordId_": "ef749246-fa19-45bf-ae65-1d5a02e51c98",
+  "_RecordTag_": "SystemsDesign",
+  "_RecordValue_": {
+    "_Type_": "CraftingQualityDistributionRecord",
+    "qualityDistribution": {
+      "_Type_": "CraftingQualityDistributionNormal",
+      "min": 201,
+      "max": 1000,
+      "mean": 201.0,
+      "stddev": 298.0}}}

@@ -1,0 +1,66 @@
+{
+  "_RecordName_": "LootArchetype.LootArchetype_Attachments_Rare",
+  "_RecordId_": "dcb165d9-2c6c-4d28-b84a-7c950df0d1e4",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "LootArchetype",
+    "excludedTags": {
+      "_Type_": "TagList",
+      "tags": [
+        {
+          "_RecordPath_": "file://./../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+          "_RecordName_": "Tag.85e008e3-cc4e-4d13-98f6-b33c234dd82c",
+          "_RecordId_": "85e008e3-cc4e-4d13-98f6-b33c234dd82c"},
+        {
+          "_RecordPath_": "file://./../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+          "_RecordName_": "Tag.6101f12b-1494-4561-93cd-0c6e6e69bc6a",
+          "_RecordId_": "6101f12b-1494-4561-93cd-0c6e6e69bc6a"}]},
+    "primaryOrGroup": {
+      "_Type_": "LootArchetypeOrGroup_Primary",
+      "entries": [
+        {
+          "_Type_": "LootArchetypeEntry_Primary",
+          "name": "Any Common Random Weapon",
+          "tag": {
+            "_RecordPath_": "file://./../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+            "_RecordName_": "Tag.b14fcbf7-efa4-4128-8151-5acb23974a20",
+            "_RecordId_": "b14fcbf7-efa4-4128-8151-5acb23974a20"},
+          "additionalTags": {
+            "_Type_": "TagsDNFTerm",
+            "positiveTags": [],
+            "negativeTags": [
+              {
+                "_RecordPath_": "file://./../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+                "_RecordName_": "Tag.294f29fa-d2bb-406a-b9c1-413fbf323676",
+                "_RecordId_": "294f29fa-d2bb-406a-b9c1-413fbf323676"},
+              {
+                "_RecordPath_": "file://./../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+                "_RecordName_": "Tag.ea0c4066-3bbc-4b88-b56a-a1550d32d65c",
+                "_RecordId_": "ea0c4066-3bbc-4b88-b56a-a1550d32d65c"}]},
+          "weight": 1.0,
+          "optionalData": []},
+        {
+          "_Type_": "LootArchetypeEntry_Primary",
+          "name": "Any Random FPS Weapon Attachment",
+          "tag": {
+            "_RecordPath_": "file://./../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+            "_RecordName_": "Tag.ea0c4066-3bbc-4b88-b56a-a1550d32d65c",
+            "_RecordId_": "ea0c4066-3bbc-4b88-b56a-a1550d32d65c"},
+          "additionalTags": {
+            "_Type_": "TagsDNFTerm",
+            "positiveTags": [],
+            "negativeTags": []},
+          "weight": 3.0,
+          "optionalData": []}]},
+    "secondaryOrGroups": [
+      {
+        "_Type_": "LootArchetypeOrGroup_Secondary",
+        "groupName": "Rarity",
+        "entries": [
+          {
+            "_Type_": "LootArchetypeEntry_Secondary",
+            "tag": {
+              "_RecordPath_": "file://./../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+              "_RecordName_": "Tag.dfbc6af5-6211-4d71-8d10-b64c66ea95a9",
+              "_RecordId_": "dfbc6af5-6211-4d71-8d10-b64c66ea95a9"},
+            "weight": 1.0}]}]}}

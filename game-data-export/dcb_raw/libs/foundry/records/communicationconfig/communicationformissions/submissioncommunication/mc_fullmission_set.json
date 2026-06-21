@@ -1,0 +1,24 @@
+{
+  "_RecordName_": "CommunicationConfig.MC_FullMission_set",
+  "_RecordId_": "cd190f24-272b-4c7e-8d77-a1ca679edf5d",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "CommunicationConfig",
+    "name": "MC_FullMission_set",
+    "communications": [],
+    "subConfigs": [
+      "file://./../../../../../../libs/foundry/records/communicationconfig/communicationformissions/submissioncommunication/mc_ambush_set.json",
+      "file://./../../../../../../libs/foundry/records/communicationconfig/communicationformissions/submissioncommunication/mc_basedmissionstriggers.json",
+      "file://./../../../../../../libs/foundry/records/communicationconfig/communicationformissions/submissioncommunication/mc_craft_set.json",
+      "file://./../../../../../../libs/foundry/records/communicationconfig/communicationformissions/submissioncommunication/mc_defendtarget_set.json",
+      "file://./../../../../../../libs/foundry/records/communicationconfig/communicationformissions/submissioncommunication/mc_emptyobjective_set.json",
+      "file://./../../../../../../libs/foundry/records/communicationconfig/communicationformissions/submissioncommunication/mc_enemycallouts.json",
+      "file://./../../../../../../libs/foundry/records/communicationconfig/communicationformissions/submissioncommunication/mc_food_set.json",
+      "file://./../../../../../../libs/foundry/records/communicationconfig/communicationformissions/submissioncommunication/mc_friendlycallouts.json",
+      "file://./../../../../../../libs/foundry/records/communicationconfig/communicationformissions/submissioncommunication/mc_hostiles_set.json",
+      "file://./../../../../../../libs/foundry/records/communicationconfig/communicationformissions/submissioncommunication/mc_patrol_set.json",
+      "file://./../../../../../../libs/foundry/records/communicationconfig/communicationformissions/submissioncommunication/mc_searchanddestroy_set.json",
+      "file://./../../../../../../libs/foundry/records/communicationconfig/communicationformissions/submissioncommunication/mc_trade_set.json",
+      "file://./../../../../../../libs/foundry/records/communicationconfig/communicationformissions/submissioncommunication/mc_waveattack_set.json",
+      "file://./../../../../../../libs/foundry/records/communicationconfig/communicationformissions/submissioncommunication/mc_bountyhunt.json",
+      "file://./../../../../../../libs/foundry/records/communicationconfig/communicationformissions/submissioncommunication/mc_hauling_set.json"]}}

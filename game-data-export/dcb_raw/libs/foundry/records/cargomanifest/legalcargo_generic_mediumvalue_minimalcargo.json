@@ -1,0 +1,96 @@
+{
+  "_RecordName_": "CargoManifest.LegalCargo_Generic_MediumValue_MinimalCargo",
+  "_RecordId_": "6c1ca762-14a7-4de8-b655-6f81f9fe7fa7",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "CargoManifest",
+    "descriptionTags": {
+      "_Type_": "TagList",
+      "tags": [
+        {
+          "_RecordPath_": "file://./../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+          "_RecordName_": "Tag.4b9a647c-91f4-4732-b572-912ac03e73f2",
+          "_RecordId_": "4b9a647c-91f4-4732-b572-912ac03e73f2"},
+        {
+          "_RecordPath_": "file://./../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+          "_RecordName_": "Tag.2b3c1abe-4aee-4073-a3a7-4db00fd15422",
+          "_RecordId_": "2b3c1abe-4aee-4073-a3a7-4db00fd15422"},
+        {
+          "_RecordPath_": "file://./../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+          "_RecordName_": "Tag.2e1d1864-30e1-4eaf-b072-029abad13163",
+          "_RecordId_": "2e1d1864-30e1-4eaf-b072-029abad13163"},
+        {
+          "_RecordPath_": "file://./../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+          "_RecordName_": "Tag.4b79d71e-bf3a-47cd-9069-f9b54da529c8",
+          "_RecordId_": "4b79d71e-bf3a-47cd-9069-f9b54da529c8"}]},
+    "lockCargoGridsOnSpawn": false,
+    "cargoFillCapacity": {
+      "_Type_": "CargoFillCapacityValue_Random",
+      "resources": [
+        {
+          "_Type_": "CargoResource",
+          "resource": {
+            "_RecordPath_": "file://./../../../../libs/foundry/records/resourcetypedatabase/resourcetypedatabase.json",
+            "_RecordName_": "ResourceType.Nitrogen",
+            "_RecordId_": "8ee121cc-aabb-4394-87dd-02552d228d0b"},
+          "probability": 0.0},
+        {
+          "_Type_": "CargoResource",
+          "resource": {
+            "_RecordPath_": "file://./../../../../libs/foundry/records/resourcetypedatabase/resourcetypedatabase.json",
+            "_RecordName_": "ResourceType.Titanium",
+            "_RecordId_": "07570c9f-fdf6-4bca-a56b-c42809ec0e01"},
+          "probability": 0.0},
+        {
+          "_Type_": "CargoResource",
+          "resource": {
+            "_RecordPath_": "file://./../../../../libs/foundry/records/resourcetypedatabase/resourcetypedatabase.json",
+            "_RecordName_": "ResourceType.Iron",
+            "_RecordId_": "f386a33c-ac9a-400a-a7b8-fe1fc7c8d270"},
+          "probability": 0.0},
+        {
+          "_Type_": "CargoResource",
+          "resource": {
+            "_RecordPath_": "file://./../../../../libs/foundry/records/resourcetypedatabase/resourcetypedatabase.json",
+            "_RecordName_": "ResourceType.Potassium",
+            "_RecordId_": "8dda1cf4-dc6c-4b31-93f2-8ca28ef6ec55"},
+          "probability": 0.0},
+        {
+          "_Type_": "CargoResource",
+          "resource": {
+            "_RecordPath_": "file://./../../../../libs/foundry/records/resourcetypedatabase/resourcetypedatabase.json",
+            "_RecordName_": "ResourceType.Carbon",
+            "_RecordId_": "9dc16af8-bfb9-4119-9e54-6db11b0a7ed2"},
+          "probability": 0.0},
+        {
+          "_Type_": "CargoResource",
+          "resource": {
+            "_RecordPath_": "file://./../../../../libs/foundry/records/resourcetypedatabase/resourcetypedatabase.json",
+            "_RecordName_": "ResourceType.Waste",
+            "_RecordId_": "b999ef65-35be-45bf-908a-5eac6e06ba12"},
+          "probability": 0.0},
+        {
+          "_Type_": "CargoResource",
+          "resource": {
+            "_RecordPath_": "file://./../../../../libs/foundry/records/resourcetypedatabase/resourcetypedatabase.json",
+            "_RecordName_": "ResourceType.Copper",
+            "_RecordId_": "a789f57a-e12b-4bcd-8132-e0c03d84fc89"},
+          "probability": 0.15},
+        {
+          "_Type_": "CargoResource",
+          "resource": {
+            "_RecordPath_": "file://./../../../../libs/foundry/records/resourcetypedatabase/resourcetypedatabase.json",
+            "_RecordName_": "ResourceType.Tin",
+            "_RecordId_": "1b4c4042-5fdc-4b52-bec4-07085cb3520a"},
+          "probability": 0.4},
+        {
+          "_Type_": "CargoResource",
+          "resource": {
+            "_RecordPath_": "file://./../../../../libs/foundry/records/resourcetypedatabase/resourcetypedatabase.json",
+            "_RecordName_": "ResourceType.Aluminum",
+            "_RecordId_": "48c7080a-bbef-43d2-901a-698321ed4340"},
+          "probability": 0.45}],
+      "minCapacityRange": 0.0,
+      "maxCapacityRange": 0.08},
+    "cargoSpawnRules": [],
+    "tags": []}}

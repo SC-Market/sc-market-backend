@@ -1,0 +1,15 @@
+{
+  "_RecordName_": "SecurityClearanceToken.SNCT_XenoThreat_Rep",
+  "_RecordId_": "4cd0f1bb-50ab-4419-9fa3-504db82b5113",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "SecurityClearanceToken",
+    "customCondition": {
+      "_Type_": "SecurityClearanceTokenData_Reputation",
+      "conditionFailedTag": null,
+      "factionReputation": "file://./../../../../../../../libs/foundry/records/factions/factionreputation/factionreputation_xenothreat.json",
+      "scope": "file://./../../../../../../../libs/foundry/records/reputation/scopes/reputationscope_affinity.json",
+      "standing": "file://./../../../../../../../libs/foundry/records/reputation/standings/affinity/reputationstanding_affinity_enemy_-005.json"},
+    "manualInput": null,
+    "missionNote": null,
+    "notifications": null}}

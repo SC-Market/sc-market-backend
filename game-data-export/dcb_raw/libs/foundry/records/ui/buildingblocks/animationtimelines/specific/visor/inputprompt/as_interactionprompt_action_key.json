@@ -1,0 +1,61 @@
+{
+  "_RecordName_": "BuildingBlocks_Timeline.AS_InteractionPrompt_Action_Key",
+  "_RecordId_": "6d71aa0b-75d2-48c3-b4c1-40c386d58739",
+  "_RecordTag_": "UI",
+  "_RecordValue_": {
+    "_Type_": "BuildingBlocks_Timeline",
+    "timeline": {
+      "_Type_": "BuildingBlocks_TimelineTypeEmbedded",
+      "keyframes": [
+        {
+          "_Type_": "BuildingBlocks_Keyframe",
+          "percent": 0.4,
+          "modifiers": [
+            {
+              "_Type_": "BuildingBlocks_KeyframeModifierData",
+              "timingFunction": {
+                "_Type_": "BuildingBlocks_TimingFunctionPreset",
+                "preset": "EaseInOutExpo"},
+              "modifier": {
+                "_Type_": "BuildingBlocks_FieldModifierNumber",
+                "field": "AnchorZ",
+                "value": 0.5}}]},
+        {
+          "_Type_": "BuildingBlocks_Keyframe",
+          "percent": 0.55,
+          "modifiers": [
+            {
+              "_Type_": "BuildingBlocks_KeyframeModifierData",
+              "timingFunction": {
+                "_Type_": "BuildingBlocks_TimingFunctionPreset",
+                "preset": "EaseInOutExpo"},
+              "modifier": {
+                "_Type_": "BuildingBlocks_FieldModifierNumber",
+                "field": "AnchorZ",
+                "value": 0.7}}]},
+        {
+          "_Type_": "BuildingBlocks_Keyframe",
+          "percent": 0.6,
+          "modifiers": [
+            {
+              "_Type_": "BuildingBlocks_KeyframeModifierData",
+              "timingFunction": {
+                "_Type_": "BuildingBlocks_TimingFunctionPreset",
+                "preset": "EaseInOutExpo"},
+              "modifier": {
+                "_Type_": "BuildingBlocks_FieldModifierNumber",
+                "field": "AnchorZ",
+                "value": 0.7}}]},
+        {
+          "_Type_": "BuildingBlocks_Keyframe",
+          "percent": 0.66,
+          "modifiers": [
+            {
+              "_Type_": "BuildingBlocks_KeyframeModifierData",
+              "timingFunction": {
+                "_Type_": "BuildingBlocks_TimingFunctionPreset",
+                "preset": "EaseInOutExpo"},
+              "modifier": {
+                "_Type_": "BuildingBlocks_FieldModifierNumber",
+                "field": "AnchorZ",
+                "value": 0.5}}]}]}}}

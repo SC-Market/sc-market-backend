@@ -1,0 +1,14 @@
+{
+  "_RecordName_": "ItemKioskBrand.HurstonDynamics",
+  "_RecordId_": "01fc6393-12d8-4aa4-b7d5-2b6f1cbecdaa",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "ItemKioskBrand",
+    "name": "HurstonDynamics",
+    "logoPath": "ui/kiosk/assets/tif/backgrounds/hurstondynamics.tif",
+    "color": {
+      "_Type_": "SRGBA8",
+      "r": 115,
+      "g": 115,
+      "b": 114,
+      "a": 255}}}

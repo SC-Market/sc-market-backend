@@ -1,0 +1,21 @@
+{
+  "_RecordName_": "CommsNotification.MCN_Foxwell_Walton_HostilesModule",
+  "_RecordId_": "2bc10564-1385-4be9-bdc0-41c815842feb",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "CommsNotification",
+    "tags": {
+      "_Type_": "TagList",
+      "tags": [
+        {
+          "_RecordPath_": "file://./../../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+          "_RecordName_": "Tag.ea085a8b-13df-4fdf-a9f8-128e73e114b8",
+          "_RecordId_": "ea085a8b-13df-4fdf-a9f8-128e73e114b8"},
+        {
+          "_RecordPath_": "file://./../../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+          "_RecordName_": "Tag.2e163167-257e-4a27-9dd6-6c7982364a2e",
+          "_RecordId_": "2e163167-257e-4a27-9dd6-6c7982364a2e"}]},
+    "communicationName": "file://./../../../../../../../libs/foundry/records/communicationname/missioncommunications/basedmissiontriggers/missionaccept.json",
+    "characterEntityClass": "file://./../../../../../../../libs/foundry/records/actor/actors/npc_archetypes/male/human/missiongivers/npc_archetypes-male-human-missiongivers-walton.json",
+    "fakeCommsAudioEntityClass": "file://./../../../../../../../libs/foundry/records/entities/audio/fakecommsaudioentity_foxwell_walton.json",
+    "stage": null}}

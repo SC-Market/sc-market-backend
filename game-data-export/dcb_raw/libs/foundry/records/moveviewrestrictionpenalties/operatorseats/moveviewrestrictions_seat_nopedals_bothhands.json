@@ -1,0 +1,18 @@
+{
+  "_RecordName_": "ArmorMoveViewRestrictions.MoveViewRestrictions_Seat_NoPedals_BothHands",
+  "_RecordId_": "1a2bdf18-a7ab-4036-9350-82713b637e25",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "ArmorMoveViewRestrictions",
+    "ViewRestriction": {
+      "_Type_": "MoveViewRestrictionWeighting",
+      "HelmetWeighting": 3.0,
+      "CoreWeighting": 2.0,
+      "LegsWeighting": 0.5,
+      "ArmsWeighting": 1.0},
+    "MoveRestriction": {
+      "_Type_": "MoveViewRestrictionWeighting",
+      "HelmetWeighting": 0.5,
+      "CoreWeighting": 3.0,
+      "LegsWeighting": 0.0,
+      "ArmsWeighting": 2.0}}}

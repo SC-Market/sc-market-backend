@@ -1,0 +1,12 @@
+{
+  "_RecordName_": "HintUIData.ASOP01",
+  "_RecordId_": "432e8e82-6cd4-4d1a-b6ee-49f5c63e7a86",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "HintUIData",
+    "TitleText": "@Hints_ASOP_Title",
+    "BodyText": "@Hints_ASOP1",
+    "BodyTextGamePad": "@Hints_ASOP1",
+    "BodyTextJoystick": "@Hints_ASOP1",
+    "TitleImagePath": "",
+    "BodyImagePath": ""}}

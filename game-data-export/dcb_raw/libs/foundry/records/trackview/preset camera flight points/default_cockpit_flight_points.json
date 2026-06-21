@@ -1,0 +1,58 @@
+{
+  "_RecordName_": "CinematicFlightPointsRecord.Default_Cockpit_Flight_Points",
+  "_RecordId_": "37cc9697-903a-48f7-90da-1b4656881fea",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "CinematicFlightPointsRecord",
+    "flightPoints": [
+      {
+        "_Type_": "CinematicFlythroughPoint",
+        "position": {
+          "_Type_": "Vec3",
+          "x": 0.0,
+          "y": 0.0,
+          "z": 0.0},
+        "rotation": {
+          "_Type_": "Quat",
+          "Rotation": {
+            "_Type_": "Ang3",
+            "x": 0.0,
+            "y": 0.0,
+            "z": 0.0}},
+        "duration": 0.0,
+        "relativeTo": "Start",
+        "interpolationToPoint": "file://./../../../../../libs/foundry/records/trackview/camera interpolation curves/easein.json"},
+      {
+        "_Type_": "CinematicFlythroughPoint",
+        "position": {
+          "_Type_": "Vec3",
+          "x": 0.0,
+          "y": 7.0,
+          "z": 2.0},
+        "rotation": {
+          "_Type_": "Quat",
+          "Rotation": {
+            "_Type_": "Ang3",
+            "x": 0.0,
+            "y": 0.0,
+            "z": 0.0}},
+        "duration": 3.0,
+        "relativeTo": "Start",
+        "interpolationToPoint": "file://./../../../../../libs/foundry/records/trackview/camera interpolation curves/easein.json"},
+      {
+        "_Type_": "CinematicFlythroughPoint",
+        "position": {
+          "_Type_": "Vec3",
+          "x": 0.0,
+          "y": 10.0,
+          "z": 7.0},
+        "rotation": {
+          "_Type_": "Quat",
+          "Rotation": {
+            "_Type_": "Ang3",
+            "x": 0.0,
+            "y": 0.0,
+            "z": 180.0}},
+        "duration": 2.0,
+        "relativeTo": "Start",
+        "interpolationToPoint": "file://./../../../../../libs/foundry/records/trackview/camera interpolation curves/easein.json"}]}}

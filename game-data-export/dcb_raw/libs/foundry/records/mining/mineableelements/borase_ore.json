@@ -1,0 +1,17 @@
+{
+  "_RecordName_": "MineableElement.Borase_Ore",
+  "_RecordId_": "07f6158a-6494-4b7c-9dd0-bbaab7362137",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "MineableElement",
+    "resourceType": {
+      "_RecordPath_": "file://./../../../../../libs/foundry/records/resourcetypedatabase/resourcetypedatabase.json",
+      "_RecordName_": "ResourceType.Ore_Borase",
+      "_RecordId_": "728a3d7e-9567-4e1c-87fd-2bd45b458aa6"},
+    "elementInstability": 40.0,
+    "elementResistance": 0.3,
+    "elementOptimalWindowMidpoint": 0.3,
+    "elementOptimalWindowMidpointRandomness": 0.3,
+    "elementOptimalWindowThinness": 0.5,
+    "elementExplosionMultiplier": 120.0,
+    "elementClusterFactor": 0.4}}

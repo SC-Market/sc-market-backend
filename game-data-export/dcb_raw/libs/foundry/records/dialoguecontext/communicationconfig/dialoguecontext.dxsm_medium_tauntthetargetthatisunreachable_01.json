@@ -1,0 +1,21 @@
+{
+  "_RecordName_": "DialogueContext.DXSM_Medium_TauntTheTargetThatIsUnreachable_01",
+  "_RecordId_": "2d4262af-54e6-4e97-939d-eea7e71a0562",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "DialogueContext",
+    "speaker": "file://./../../../../../libs/foundry/records/character/starmarine/fps/character.sm_fps_outlaw_medium.json",
+    "localizedSubtitleText": "@LOC_UNINITIALIZED",
+    "unlocalizedSubtitleText": "@LOC_UNINITIALIZED",
+    "subtitleShowDelay": 0.0,
+    "subtitleDisplayDurationOverride": 0.0,
+    "tempText": "",
+    "audioTrigger": {
+      "_Type_": "GlobalResourceAudio",
+      "audioTrigger": ""},
+    "femaleAudioTrigger": {
+      "_Type_": "GlobalResourceAudio",
+      "audioTrigger": ""},
+    "forceSubtitles": false,
+    "contents": [],
+    "tags": []}}

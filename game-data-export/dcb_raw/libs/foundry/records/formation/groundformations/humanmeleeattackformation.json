@@ -1,0 +1,44 @@
+{
+  "_RecordName_": "Formation.HumanMeleeAttackFormation",
+  "_RecordId_": "fc5e8efd-680a-4957-861b-b0aab78e32fc",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "Formation",
+    "name": "humanmeleeattackformation",
+    "offsets": [
+      {
+        "_Type_": "FormationOffset",
+        "offset": {
+          "_Type_": "Vec3",
+          "x": -2.0,
+          "y": 1.0,
+          "z": 0.0},
+        "offsetTag": null,
+        "offsetVariation": {
+          "_Type_": "Vec3",
+          "x": 0.0,
+          "y": 0.0,
+          "z": 0.0}},
+      {
+        "_Type_": "FormationOffset",
+        "offset": {
+          "_Type_": "Vec3",
+          "x": 2.0,
+          "y": 1.0,
+          "z": 0.0},
+        "offsetTag": null,
+        "offsetVariation": {
+          "_Type_": "Vec3",
+          "x": 0.0,
+          "y": 0.0,
+          "z": 0.0}}],
+    "playerFormationParams": {
+      "_Type_": "PlayerFormationParams",
+      "targetRadius": 0.0,
+      "breakRadius": 5000.0,
+      "abandonFormationAtBreakRadius": false,
+      "targetVelocityTolerance": 5.0},
+    "formationTag": {
+      "_RecordPath_": "file://./../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+      "_RecordName_": "Tag.ac904ae7-ae1c-4438-99d1-2fe61ad73a1c",
+      "_RecordId_": "ac904ae7-ae1c-4438-99d1-2fe61ad73a1c"}}}

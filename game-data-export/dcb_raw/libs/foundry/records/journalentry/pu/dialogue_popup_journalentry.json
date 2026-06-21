@@ -1,0 +1,19 @@
+{
+  "_RecordName_": "JournalEntry.Dialogue_PopUp_JournalEntry",
+  "_RecordId_": "5034d24a-fa09-4320-b66a-b373b0820627",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "JournalEntry",
+    "Title": "@LOC_UNINITIALIZED",
+    "ShortTitle": "@LOC_UNINITIALIZED",
+    "SubHeading": "@LOC_UNINITIALIZED",
+    "autoOpenMobiGlas": false,
+    "showNotification": true,
+    "missionSpecificContent": false,
+    "removeOnMissionEnd": true,
+    "Style": "file://./../../../../../libs/foundry/records/journalentrytype/journalentrytype.dialoguelog.json",
+    "type": {
+      "_Type_": "JournalEntryDialogueLog",
+      "Dialogue": [],
+      "Description": "@LOC_UNINITIALIZED"},
+    "tutorialEntry": false}}

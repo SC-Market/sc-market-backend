@@ -1,0 +1,157 @@
+{
+  "_RecordName_": "InteractionConditionPreset.EnterRestriction_OperatorStandingConsole",
+  "_RecordId_": "f713f310-57ac-4e81-9ee8-4cce37b8840f",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "InteractionConditionPreset",
+    "conditions": [
+      {
+        "_Type_": "InteractionConditionHasProhibitedItems",
+        "conditionDisplay": {
+          "_Type_": "ConditionDisplayParams",
+          "exclusiveDisplay": false,
+          "blockedText": {
+            "_Type_": "BlockedTextParams",
+            "blockedText": "@interaction_condition_seatedItemRestrictions_heldItem"},
+          "blockedCursor": {
+            "_Type_": "BlockedCursorParams",
+            "blockedCursor": "MultiAction"},
+          "blockedColor": {
+            "_Type_": "BlockedColorParams",
+            "selectedColor": "file://./../../../../../../libs/foundry/records/ui/innerthought/colors/blockedselected.json",
+            "unselectedColor": "file://./../../../../../../libs/foundry/records/ui/innerthought/colors/blockedunselected.json",
+            "applyImmediately": false},
+          "blockedHint": null,
+          "autoStoreOption": null,
+          "blockedInteractionAttemptMonologue": null},
+        "prohibitedList": [
+          {
+            "_Type_": "InteractionProhibitedItemParams",
+            "itemPortTag": "",
+            "itemPortName": "weapon_attach_hand_right",
+            "tags": [],
+            "itemTypes": [
+              "WeaponPersonal"],
+            "itemSubTypes": [
+              "Small",
+              "Medium",
+              "Large"]}],
+        "AIAlwaysPass": true,
+        "autoStoreInItemPortContainer": false},
+      {
+        "_Type_": "InteractionConditionOR",
+        "conditionDisplay": {
+          "_Type_": "ConditionDisplayParams",
+          "exclusiveDisplay": false,
+          "blockedText": {
+            "_Type_": "BlockedTextParams",
+            "blockedText": "@interaction_condition_sq42_operatorSeatEnter_weaponsBack_stocked"},
+          "blockedCursor": {
+            "_Type_": "BlockedCursorParams",
+            "blockedCursor": "MultiAction"},
+          "blockedColor": {
+            "_Type_": "BlockedColorParams",
+            "selectedColor": "file://./../../../../../../libs/foundry/records/ui/innerthought/colors/blockedselected.json",
+            "unselectedColor": "file://./../../../../../../libs/foundry/records/ui/innerthought/colors/blockedunselected.json",
+            "applyImmediately": false},
+          "blockedHint": null,
+          "autoStoreOption": null,
+          "blockedInteractionAttemptMonologue": null},
+        "firstCondition": {
+          "_Type_": "InteractionConditionNOT",
+          "conditionDisplay": {
+            "_Type_": "ConditionDisplayParams",
+            "exclusiveDisplay": false,
+            "blockedText": {
+              "_Type_": "BlockedTextParams",
+              "blockedText": "@interaction_condition_seatedItemRestrictions_weaponsBack_stocked"},
+            "blockedCursor": {
+              "_Type_": "BlockedCursorParams",
+              "blockedCursor": "MultiAction"},
+            "blockedColor": {
+              "_Type_": "BlockedColorParams",
+              "selectedColor": "file://./../../../../../../libs/foundry/records/ui/innerthought/colors/blockedselected.json",
+              "unselectedColor": "file://./../../../../../../libs/foundry/records/ui/innerthought/colors/blockedunselected.json",
+              "applyImmediately": false},
+            "blockedHint": null,
+            "autoStoreOption": null,
+            "blockedInteractionAttemptMonologue": null},
+          "condition": {
+            "_Type_": "InteractionConditionGameMode",
+            "conditionDisplay": null,
+            "gameModes": [
+              "S42_Default"]}},
+        "secondCondition": {
+          "_Type_": "InteractionConditionOR",
+          "conditionDisplay": null,
+          "firstCondition": {
+            "_Type_": "InteractionConditionIsUserAI",
+            "conditionDisplay": null},
+          "secondCondition": {
+            "_Type_": "InteractionConditionActorHasAttachedEntityTypes",
+            "conditionDisplay": null,
+            "conditionResult": "Fail",
+            "itemTypes": [
+              "WeaponPersonal"],
+            "itemSubTypes": [
+              "Large"],
+            "ignoreItemPorts": []}}},
+      {
+        "_Type_": "InteractionConditionOR",
+        "conditionDisplay": {
+          "_Type_": "ConditionDisplayParams",
+          "exclusiveDisplay": false,
+          "blockedText": {
+            "_Type_": "BlockedTextParams",
+            "blockedText": "@interaction_condition_sq42_operatorSeatEnter_weaponsBack_shoulder"},
+          "blockedCursor": {
+            "_Type_": "BlockedCursorParams",
+            "blockedCursor": "MultiAction"},
+          "blockedColor": {
+            "_Type_": "BlockedColorParams",
+            "selectedColor": "file://./../../../../../../libs/foundry/records/ui/innerthought/colors/blockedselected.json",
+            "unselectedColor": "file://./../../../../../../libs/foundry/records/ui/innerthought/colors/blockedunselected.json",
+            "applyImmediately": false},
+          "blockedHint": null,
+          "autoStoreOption": null,
+          "blockedInteractionAttemptMonologue": null},
+        "firstCondition": {
+          "_Type_": "InteractionConditionNOT",
+          "conditionDisplay": null,
+          "condition": {
+            "_Type_": "InteractionConditionGameMode",
+            "conditionDisplay": null,
+            "gameModes": [
+              "S42_Default"]}},
+        "secondCondition": {
+          "_Type_": "InteractionConditionOR",
+          "conditionDisplay": {
+            "_Type_": "ConditionDisplayParams",
+            "exclusiveDisplay": false,
+            "blockedText": {
+              "_Type_": "BlockedTextParams",
+              "blockedText": "@interaction_condition_seatedItemRestrictions_weaponsBack_stocked"},
+            "blockedCursor": {
+              "_Type_": "BlockedCursorParams",
+              "blockedCursor": "MultiAction"},
+            "blockedColor": {
+              "_Type_": "BlockedColorParams",
+              "selectedColor": "file://./../../../../../../libs/foundry/records/ui/innerthought/colors/blockedselected.json",
+              "unselectedColor": "file://./../../../../../../libs/foundry/records/ui/innerthought/colors/blockedunselected.json",
+              "applyImmediately": false},
+            "blockedHint": null,
+            "autoStoreOption": null,
+            "blockedInteractionAttemptMonologue": null},
+          "firstCondition": {
+            "_Type_": "InteractionConditionIsUserAI",
+            "conditionDisplay": null},
+          "secondCondition": {
+            "_Type_": "InteractionConditionActorHasAttachedEntityTypes",
+            "conditionDisplay": null,
+            "conditionResult": "Fail",
+            "itemTypes": [
+              "WeaponPersonal"],
+            "itemSubTypes": [
+              "Medium"],
+            "ignoreItemPorts": []}}}],
+    "conditionToHideParams": []}}

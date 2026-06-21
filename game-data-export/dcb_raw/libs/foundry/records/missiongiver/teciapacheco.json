@@ -1,0 +1,45 @@
+{
+  "_RecordName_": "MissionGiver.TeciaPacheco",
+  "_RecordId_": "5fd52afe-490a-4b5c-9b06-e86553e5a7c8",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "MissionGiver",
+    "entityClass": "file://./../../../../libs/foundry/records/actor/actors/npc_archetypes/female/human/missiongivers/npc_archetypes-female-human-missiongivers-teciapacheco.json",
+    "reputation": null,
+    "displayName": "@mg_pacheco_from",
+    "description": "@TeciaPacheco_RepUI_Biography",
+    "headquarters": "@TeciaPacheco_RepUI_Location",
+    "invitationTimeout": 7.0,
+    "visitTimeout": 120.0,
+    "shortCooldown": 15.0,
+    "mediumCooldown": 45.0,
+    "longCooldown": 135.0,
+    "Allies": [
+      "@Pacheco_Allies"],
+    "Enemies": [
+      "@Pacheco_Rivals"],
+    "propertiesBB": [
+      {
+        "_Type_": "SReputationContextBBPropertyParams",
+        "name": "entityLoadout",
+        "dynamicProperty": {
+          "_Type_": "SBBDynamicPropertyString",
+          "value": "Scripts/Loadouts/Character/Human/Body/PUCast/Stanton/PU_Pacheco_FullOutfit_Temp.xml"}},
+      {
+        "_Type_": "SReputationContextBBPropertyParams",
+        "name": "entityNPCIcon",
+        "dynamicProperty": {
+          "_Type_": "SBBDynamicPropertyString",
+          "value": "UI/SharedAssets/ManufacturerLogos/rep_ui_icon_NPC_teciapacheco.tif"}},
+      {
+        "_Type_": "SReputationContextBBPropertyParams",
+        "name": "entityOccupation",
+        "dynamicProperty": {
+          "_Type_": "SBBDynamicPropertyLocString",
+          "value": "@TeciaPacheco_RepUI_Occupation"}},
+      {
+        "_Type_": "SReputationContextBBPropertyParams",
+        "name": "entityAssociation",
+        "dynamicProperty": {
+          "_Type_": "SBBDynamicPropertyLocString",
+          "value": "@TeciaPacheco_RepUI_Association"}}]}}

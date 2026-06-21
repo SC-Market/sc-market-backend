@@ -1,0 +1,10 @@
+{
+  "_RecordName_": "CraftingGameplayPropertyDef.GPP_Radar_MinAimAssistDistance",
+  "_RecordId_": "a89e5659-e184-4d95-acec-5be747608212",
+  "_RecordTag_": "CGP2",
+  "_RecordValue_": {
+    "_Type_": "CraftingGameplayPropertyDef",
+    "propertyName": "@StatName_GPP_Radar_MinAimAssistDistance",
+    "displayTransformation": null,
+    "unitFormat": "@StatUnits_Meters",
+    "nameOverrides": []}}

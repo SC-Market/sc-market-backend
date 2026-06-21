@@ -1,0 +1,14 @@
+{
+  "_RecordName_": "ItemKioskBrand.UILO_C",
+  "_RecordId_": "ffeebf6f-4468-4cd2-aba5-0d756de550e3",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "ItemKioskBrand",
+    "name": "UILO_C",
+    "logoPath": "UI/Kiosk/assets/TIF/backgrounds/uilo_c.tif",
+    "color": {
+      "_Type_": "SRGBA8",
+      "r": 241,
+      "g": 127,
+      "b": 33,
+      "a": 255}}}

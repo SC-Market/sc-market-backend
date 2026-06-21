@@ -1,0 +1,17 @@
+{
+  "_RecordName_": "MineableElement.Savrilium_Ore",
+  "_RecordId_": "6426f04e-2f7d-4c8e-a615-64aa582eaa31",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "MineableElement",
+    "resourceType": {
+      "_RecordPath_": "file://./../../../../../libs/foundry/records/resourcetypedatabase/resourcetypedatabase.json",
+      "_RecordName_": "ResourceType.Ore_Savrilium",
+      "_RecordId_": "d76ea7ef-5116-488c-93d3-71e02bada13d"},
+    "elementInstability": 1000.0,
+    "elementResistance": 0.95,
+    "elementOptimalWindowMidpoint": 0.5,
+    "elementOptimalWindowMidpointRandomness": 0.2,
+    "elementOptimalWindowThinness": 2.3,
+    "elementExplosionMultiplier": 260.0,
+    "elementClusterFactor": 0.1}}

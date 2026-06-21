@@ -1,0 +1,13 @@
+{
+  "_RecordName_": "SEntityDensityClass.VehicleItemsDensityClass",
+  "_RecordId_": "a153bc13-b348-47a4-8bae-1ce22b0b4023",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "SEntityDensityClass",
+    "clusterDetectionRadius": 200.0,
+    "clusterUpperObjectCountDGS": 25,
+    "clusterUpperObjectCountPersistence": 15,
+    "clusterPersistenceTimeout": 10.0,
+    "entityMaxIdleLifeTime": null,
+    "resetLifetimeOnMove": false,
+    "entityIdleBuryOnly": false}}

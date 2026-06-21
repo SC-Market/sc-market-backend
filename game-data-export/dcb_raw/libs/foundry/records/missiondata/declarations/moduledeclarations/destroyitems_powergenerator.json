@@ -1,0 +1,61 @@
+{
+  "_RecordName_": "ModuleDeclaration.DestroyItems_PowerGenerator",
+  "_RecordId_": "6e798ea9-fd56-4fc2-ad29-d7c17d45d599",
+  "_RecordTag_": "MissionFeatures",
+  "_RecordValue_": {
+    "_Type_": "ModuleDeclaration",
+    "module": "Libs/Subsumption/Missions/PU/Missions/DestroyItems.xml",
+    "moduleType": {
+      "_Type_": "ModuleDeclarationType_Mission",
+      "requiredLocationModules": [],
+      "requiredResourceSlot": null,
+      "pausesLocationNPCAutospawns": false},
+    "locationEntities": [
+      {
+        "_Type_": "ModuleLocationEntities_Static",
+        "debugName": "TargetEntities",
+        "requiredForInit": false,
+        "optional": false,
+        "entityDeclarations": [
+          "file://./../../../../../../libs/foundry/records/missiondata/declarations/locationentitytypes/destroyable_powergenerator.json"]}],
+    "properties": [
+      {
+        "_Type_": "MissionProperty",
+        "missionVariableName": "",
+        "extendedTextToken": "ItemsToDestroy",
+        "value": {
+          "_Type_": "MissionPropertyValue_StringHash",
+          "options": [
+            {
+              "_Type_": "MissionPropertyValueOption_StringHash",
+              "textId": "@destoryitems_item_05",
+              "weighting": 1.0,
+              "DEBUG_forceChooseThisOption": false,
+              "dependentProperties": [],
+              "value": ""}]}},
+      {
+        "_Type_": "MissionProperty",
+        "missionVariableName": "HealExisitingEntities_BP",
+        "extendedTextToken": "",
+        "value": {
+          "_Type_": "MissionPropertyValue_Boolean",
+          "value": true}},
+      {
+        "_Type_": "MissionProperty",
+        "missionVariableName": "ExistingEntitiesToFind_BP",
+        "extendedTextToken": "",
+        "value": {
+          "_Type_": "MissionPropertyValue_Tags",
+          "tags": {
+            "_Type_": "TagList",
+            "tags": [
+              {
+                "_RecordPath_": "file://./../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+                "_RecordName_": "Tag.1e3260ab-2016-4788-8a4c-c289b5cef3c4",
+                "_RecordId_": "1e3260ab-2016-4788-8a4c-c289b5cef3c4"}]},
+          "negativeTags": {
+            "_Type_": "TagList",
+            "tags": []},
+          "options": []}}],
+    "spawnedEntities": [],
+    "declaredVariables": []}}

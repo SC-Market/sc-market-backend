@@ -1,0 +1,24 @@
+{
+  "_RecordName_": "Character.Endicott",
+  "_RecordId_": "46bc302d-81c1-43ba-99be-c3d5f96c1d0d",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "Character",
+    "characterPersonalData": {
+      "_Type_": "CharacterPersonalData",
+      "title": "@LOC_UNINITIALIZED",
+      "firstName": "@Name_CFP_Rep_LimaEndicott_First_Name",
+      "nickName": "@LOC_UNINITIALIZED",
+      "lastName": "@Name_CFP_Rep_LimaEndicott_Last_Name",
+      "randomNameParams": null,
+      "affiliation": "@LOC_UNINITIALIZED",
+      "details": "@LOC_UNINITIALIZED"},
+    "audioSwitchStateName": "",
+    "animationRemapAlias": "",
+    "characterMannequinTag": "CFP_Endicott",
+    "styleMannequinTag": "",
+    "combatStyle": "NotSet",
+    "gender": "Female",
+    "characterSpeedOverrides": [],
+    "nicknameChance": 0.0,
+    "name": "Endicott"}}

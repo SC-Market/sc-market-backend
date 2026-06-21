@@ -1,0 +1,23 @@
+{
+  "_RecordName_": "EntityClassDefinition.InstancedHangarGateway_Stanton_SmallFront_NewBabbage",
+  "_RecordId_": "82c30855-e072-48bb-b7de-7e2ad30ed2e3",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "EntityClassDefinition",
+    "Category": "InstancedHangarGateway",
+    "Icon": "Default.bmp",
+    "Invisible": false,
+    "BBoxSelection": false,
+    "defaultEditorColor": {
+      "_Type_": "RGB",
+      "r": 1.0,
+      "g": 1.0,
+      "b": 0.0},
+    "entityDensityClass": null,
+    "tags": [],
+    "StaticEntityClassData": [],
+    "Components": [
+      {
+        "_Type_": "SInstancedInteriorGatewayParams",
+        "gatewaySize": 3,
+        "instance": "file://./../../../../../../../libs/foundry/records/instancedinterior/hangar/hangar_smallfront_newbabbage.json"}]}}

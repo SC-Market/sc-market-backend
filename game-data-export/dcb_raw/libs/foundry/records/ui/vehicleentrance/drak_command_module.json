@@ -1,0 +1,37 @@
+{
+  "_RecordName_": "SEntrancesDef.DRAK_Command_Module",
+  "_RecordId_": "f57771a7-0e06-4838-8c7b-1df926460924",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "SEntrancesDef",
+    "boundingBoxScale": {
+      "_Type_": "Vec3",
+      "x": 1.2,
+      "y": 1.2,
+      "z": 1.2},
+    "boundingBoxOffset": {
+      "_Type_": "Vec3",
+      "x": 0.0,
+      "y": 0.0,
+      "z": 0.0},
+    "entranceArray": [
+      {
+        "_Type_": "SCEntranceItem",
+        "entranceName": "@entrance_ladder",
+        "jointName": "drak_command_module",
+        "positionOffset": {
+          "_Type_": "Vec3",
+          "x": -3.0,
+          "y": 5.8,
+          "z": -2.2},
+        "shipState": "Both"},
+      {
+        "_Type_": "SCEntranceItem",
+        "entranceName": "@entrance_dock",
+        "jointName": "drak_command_module",
+        "positionOffset": {
+          "_Type_": "Vec3",
+          "x": 4.0,
+          "y": 0.0,
+          "z": 1.0},
+        "shipState": "Both"}]}}

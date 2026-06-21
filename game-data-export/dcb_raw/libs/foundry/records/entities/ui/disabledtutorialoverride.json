@@ -1,0 +1,12 @@
+{
+  "_RecordName_": "FrontendOverrideParams.DisabledTutorialOverride",
+  "_RecordId_": "c077eabf-e93d-4dd4-a775-bc9df3313ff6",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "FrontendOverrideParams",
+    "persistentUniverseActive": true,
+    "arenaCommanderActive": true,
+    "tutorialDisabled": true,
+    "disableResidenceSelectionWarning": false,
+    "backgroundVideoPath": "",
+    "disabledSystems": []}}

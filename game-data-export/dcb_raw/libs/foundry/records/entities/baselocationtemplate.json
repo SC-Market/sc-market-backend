@@ -1,0 +1,28 @@
+{
+  "_RecordName_": "EntityClassDefinition.BaseLocationTemplate",
+  "_RecordId_": "1729d041-b533-4151-8cb7-dfe52f6f7f21",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "EntityClassDefinition",
+    "Category": "Default",
+    "Icon": "Default.bmp",
+    "Invisible": false,
+    "BBoxSelection": false,
+    "defaultEditorColor": {
+      "_Type_": "RGB",
+      "r": 1.0,
+      "g": 1.0,
+      "b": 0.0},
+    "entityDensityClass": null,
+    "tags": [],
+    "StaticEntityClassData": [],
+    "Components": [
+      {
+        "_Type_": "LocationComponentParams",
+        "shapeLinkName": ""},
+      {
+        "_Type_": "SEntityComponentObjectMetadataParams",
+        "name": "@LOC_EMPTY",
+        "hasLocalBounds": true,
+        "isDynamic": false,
+        "metadata": []}]}}

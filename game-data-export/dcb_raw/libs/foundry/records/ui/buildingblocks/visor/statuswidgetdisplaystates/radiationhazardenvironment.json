@@ -1,0 +1,42 @@
+{
+  "_RecordName_": "StatusWidgetDisplayPreset.RadiationHazardEnvironment",
+  "_RecordId_": "1b10f94f-0638-4cca-9df9-6e543385dc41",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "StatusWidgetDisplayPreset",
+    "ranges": [
+      {
+        "_Type_": "DisplayState",
+        "minimumValue": 400.0,
+        "maximumValue": 1e+14,
+        "displayDuration": 0.0,
+        "activeRange": "InteriorRange",
+        "enabled": true},
+      {
+        "_Type_": "DisplayState",
+        "minimumValue": 0.00001,
+        "maximumValue": 400.0,
+        "displayDuration": 0.0,
+        "activeRange": "InteriorRange",
+        "enabled": true},
+      {
+        "_Type_": "DisplayState",
+        "minimumValue": 0.0,
+        "maximumValue": 0.00001,
+        "displayDuration": 0.0,
+        "activeRange": "InteriorRange",
+        "enabled": false},
+      {
+        "_Type_": "DisplayState",
+        "minimumValue": 0.0,
+        "maximumValue": 0.00001,
+        "displayDuration": 0.0,
+        "activeRange": "InteriorRange",
+        "enabled": false}],
+    "incrementDisplayDuration": 0.0,
+    "incrementStep": 0.0,
+    "maximumChangePerSecond": 0.0,
+    "historySeconds": 1,
+    "historySamplesPerSecond": 1,
+    "shownOnLens": true,
+    "shownOnVisor": true}}

@@ -1,0 +1,15 @@
+{
+  "_RecordName_": "Conversation.Pilot02_Distress_Death_Cry",
+  "_RecordId_": "6f5fed07-0064-453d-96d2-0fc56999d811",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "Conversation",
+    "fragments": [
+      {
+        "_Type_": "ConversationNode_Start",
+        "next": null},
+      {
+        "_Type_": "ConversationNode_Dialogue",
+        "next": null,
+        "context": "file://./../../../../../../libs/foundry/records/dialoguecontext/arenacommander/crusader/dialoguecontext.dxhn_pu_distresspilot2_iccstanton_deathcry_004_alt.json",
+        "skipNodeInXSecs": -1.0}]}}

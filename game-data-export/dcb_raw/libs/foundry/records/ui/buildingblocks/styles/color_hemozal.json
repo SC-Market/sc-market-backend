@@ -1,0 +1,14 @@
+{
+  "_RecordName_": "BuildingBlocks_ExternalColorReference.Color_Hemozal",
+  "_RecordId_": "5ce9a2e1-f5a7-4dff-87b1-8e62ce527ab9",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "BuildingBlocks_ExternalColorReference",
+    "color": {
+      "_Type_": "BuildingBlocks_ColorSolid",
+      "color": {
+        "_Type_": "SRGBA8",
+        "r": 229,
+        "g": 41,
+        "b": 41,
+        "a": 255}}}}

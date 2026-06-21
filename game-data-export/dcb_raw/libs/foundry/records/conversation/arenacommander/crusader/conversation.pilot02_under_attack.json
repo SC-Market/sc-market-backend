@@ -1,0 +1,15 @@
+{
+  "_RecordName_": "Conversation.Pilot02_Under_Attack",
+  "_RecordId_": "7a788f93-03cd-448e-97c0-2f3c439faa72",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "Conversation",
+    "fragments": [
+      {
+        "_Type_": "ConversationNode_Start",
+        "next": null},
+      {
+        "_Type_": "ConversationNode_Dialogue",
+        "next": null,
+        "context": "file://./../../../../../../libs/foundry/records/dialoguecontext/arenacommander/crusader/dialoguecontext.dxhn_pu_distresspilot2_iccstanton_underattack_001.json",
+        "skipNodeInXSecs": -1.0}]}}

@@ -1,0 +1,14 @@
+{
+  "_RecordName_": "SMFDView.MFD_View_Turret_Status",
+  "_RecordId_": "75350209-0385-4520-9299-371806e80749",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "SMFDView",
+    "name": "@hud_turret_status",
+    "landscapeCanvas": "file://./../../../../../../../../libs/foundry/records/ui/buildingblocks/ships/displays/mfdscreens/mc_mfdcomponents/screens/self/mc_s_self_master.json",
+    "landscapeCanvasStyleOverride": [],
+    "castsUsePortrait": true,
+    "portraitCanvas": "file://./../../../../../../../../libs/foundry/records/ui/buildingblocks/ships/displays/mfdscreens/mc_mfdcomponents/casts/self/mc_c_self_master.json",
+    "portraitCanvasStyleOverride": [],
+    "viewType": "eView_SelfStatus",
+    "urlpostfix": "selfstatus"}}

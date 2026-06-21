@@ -1,0 +1,96 @@
+{
+  "_RecordName_": "BuildingBlocks_Timeline.AS_InputPrompt_Action_SingleClick",
+  "_RecordId_": "7fb3ab38-7025-4a53-8c95-99f12873fccb",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "BuildingBlocks_Timeline",
+    "timeline": {
+      "_Type_": "BuildingBlocks_TimelineTypeEmbedded",
+      "keyframes": [
+        {
+          "_Type_": "BuildingBlocks_Keyframe",
+          "percent": 0.0,
+          "modifiers": [
+            {
+              "_Type_": "BuildingBlocks_KeyframeModifierData",
+              "timingFunction": {
+                "_Type_": "BuildingBlocks_TimingFunctionPreset",
+                "preset": "EaseInOutExpo"},
+              "modifier": {
+                "_Type_": "BuildingBlocks_FieldModifierColor",
+                "field": "BackgroundColor",
+                "color": {
+                  "_Type_": "BuildingBlocks_ColorSolid",
+                  "color": {
+                    "_Type_": "SRGBA8",
+                    "r": 255,
+                    "g": 255,
+                    "b": 255,
+                    "a": 0}}}},
+            {
+              "_Type_": "BuildingBlocks_KeyframeModifierData",
+              "timingFunction": {
+                "_Type_": "BuildingBlocks_TimingFunctionPreset",
+                "preset": "EaseInOutExpo"},
+              "modifier": {
+                "_Type_": "BuildingBlocks_FieldModifierNumber",
+                "field": "Alpha",
+                "value": 0.4}}]},
+        {
+          "_Type_": "BuildingBlocks_Keyframe",
+          "percent": 0.00625,
+          "modifiers": [
+            {
+              "_Type_": "BuildingBlocks_KeyframeModifierData",
+              "timingFunction": {
+                "_Type_": "BuildingBlocks_TimingFunctionPreset",
+                "preset": "EaseInExpo"},
+              "modifier": {
+                "_Type_": "BuildingBlocks_FieldModifierColor",
+                "field": "BackgroundColor",
+                "color": {
+                  "_Type_": "BuildingBlocks_ColorSolid",
+                  "color": {
+                    "_Type_": "SRGBA8",
+                    "r": 255,
+                    "g": 255,
+                    "b": 255,
+                    "a": 96}}}},
+            {
+              "_Type_": "BuildingBlocks_KeyframeModifierData",
+              "timingFunction": {
+                "_Type_": "BuildingBlocks_TimingFunctionPreset",
+                "preset": "EaseInExpo"},
+              "modifier": {
+                "_Type_": "BuildingBlocks_FieldModifierNumber",
+                "field": "Alpha",
+                "value": 1.0}}]},
+        {
+          "_Type_": "BuildingBlocks_Keyframe",
+          "percent": 0.15,
+          "modifiers": [
+            {
+              "_Type_": "BuildingBlocks_KeyframeModifierData",
+              "timingFunction": {
+                "_Type_": "BuildingBlocks_TimingFunctionPreset",
+                "preset": "EaseInOutExpo"},
+              "modifier": {
+                "_Type_": "BuildingBlocks_FieldModifierColor",
+                "field": "BackgroundColor",
+                "color": {
+                  "_Type_": "BuildingBlocks_ColorSolid",
+                  "color": {
+                    "_Type_": "SRGBA8",
+                    "r": 255,
+                    "g": 255,
+                    "b": 255,
+                    "a": 0}}}},
+            {
+              "_Type_": "BuildingBlocks_KeyframeModifierData",
+              "timingFunction": {
+                "_Type_": "BuildingBlocks_TimingFunctionPreset",
+                "preset": "EaseInOutExpo"},
+              "modifier": {
+                "_Type_": "BuildingBlocks_FieldModifierNumber",
+                "field": "Alpha",
+                "value": 0.4}}]}]}}}

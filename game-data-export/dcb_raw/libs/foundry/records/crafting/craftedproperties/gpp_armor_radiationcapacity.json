@@ -1,0 +1,10 @@
+{
+  "_RecordName_": "CraftingGameplayPropertyDef.GPP_Armor_RadiationCapacity",
+  "_RecordId_": "fc074156-fa95-4667-9f12-a541e5024abc",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "CraftingGameplayPropertyDef",
+    "propertyName": "@StatName_GPP_Armor_RadiationCapacity",
+    "displayTransformation": null,
+    "unitFormat": "@StatUnits_RadiationCapacity",
+    "nameOverrides": []}}

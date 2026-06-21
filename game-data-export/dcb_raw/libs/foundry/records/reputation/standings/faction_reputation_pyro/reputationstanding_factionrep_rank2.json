@@ -1,0 +1,15 @@
+{
+  "_RecordName_": "SReputationStandingParams.ReputationStanding_FactionRep_Rank2",
+  "_RecordId_": "fab8e959-132a-4fa8-a83e-92c42492438d",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "SReputationStandingParams",
+    "name": "FactionRep_Allied_Rank2",
+    "description": "desc",
+    "displayName": "@RepScope_Contractor_Rank2",
+    "perkDescription": "@blank_space",
+    "icon": "",
+    "minReputation": 2200,
+    "driftReputation": 0,
+    "driftTimeHours": 0.0,
+    "gated": false}}

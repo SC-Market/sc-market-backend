@@ -1,0 +1,12 @@
+{
+  "_RecordName_": "HintUIData.QuantumTravel01",
+  "_RecordId_": "19f32ba7-4159-4645-b21f-6142ad76491d",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "HintUIData",
+    "TitleText": "@Hints_Quantum_Travel_Title",
+    "BodyText": "@Hints_Quantum_Travel1",
+    "BodyTextGamePad": "@Hints_Quantum_Travel1",
+    "BodyTextJoystick": "@Hints_Quantum_Travel1",
+    "TitleImagePath": "",
+    "BodyImagePath": ""}}

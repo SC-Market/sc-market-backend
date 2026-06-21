@@ -1,0 +1,14 @@
+{
+  "_RecordName_": "SMFDView.MFD_View_Diagnostics",
+  "_RecordId_": "e2570492-43fe-41bf-bede-6c7fc8a12c10",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "SMFDView",
+    "name": "@ui_MFD_View_Diagnostics",
+    "landscapeCanvas": "file://./../../../../../../../../libs/foundry/records/ui/buildingblocks/ships/displays/mfdscreens/mc_mfdcomponents/screens/diag/mc_s_diag_master.json",
+    "landscapeCanvasStyleOverride": [],
+    "castsUsePortrait": true,
+    "portraitCanvas": null,
+    "portraitCanvasStyleOverride": [],
+    "viewType": "eView_Diagnostics",
+    "urlpostfix": ""}}

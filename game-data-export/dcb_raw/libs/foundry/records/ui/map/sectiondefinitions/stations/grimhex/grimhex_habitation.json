@@ -1,0 +1,8 @@
+{
+  "_RecordName_": "InteriorMapSectionDefinition.GrimHex_Habitation",
+  "_RecordId_": "b68ea1a2-091d-41ad-b819-a5f01eb15c37",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "InteriorMapSectionDefinition",
+    "name": "@LOC_EMPTY",
+    "restrictViewBounds": false}}

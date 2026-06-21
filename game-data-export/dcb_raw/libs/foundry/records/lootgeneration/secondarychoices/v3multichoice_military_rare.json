@@ -1,0 +1,10 @@
+{
+  "_RecordName_": "LootV3SecondaryChoicesMultiLayerRecord.V3MultiChoice_Military_Rare",
+  "_RecordId_": "abd00eb5-acb2-47b5-9d7c-c24faf6ca7ce",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "LootV3SecondaryChoicesMultiLayerRecord",
+    "layers": [
+      "file://./../../../../../libs/foundry/records/lootgeneration/secondarychoices/v3secondarychoices_faction.json",
+      "file://./../../../../../libs/foundry/records/lootgeneration/secondarychoices/v3manufacturerweights_military.json",
+      "file://./../../../../../libs/foundry/records/lootgeneration/secondarychoices/v3secondarychoices_rarity_rare.json"]}}

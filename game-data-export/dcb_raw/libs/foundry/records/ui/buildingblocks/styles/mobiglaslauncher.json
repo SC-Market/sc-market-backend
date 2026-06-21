@@ -1,0 +1,469 @@
+{
+  "_RecordName_": "BuildingBlocks_Style.MobiglasLauncher",
+  "_RecordId_": "be4afd6a-ce6c-40a0-8973-49a30305dbca",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "BuildingBlocks_Style",
+    "entries": [
+      {
+        "_Type_": "BuildingBlocks_StyleEntry",
+        "name": "GenericElement",
+        "conditionsList": [
+          {
+            "_Type_": "BuildingBlocks_StyleConditionList",
+            "name": "New Condition List",
+            "conditions": [
+              {
+                "_Type_": "BuildingBlocks_StyleSelectorConditionParent",
+                "conditions": []}]}],
+        "modifiers": [
+          {
+            "_Type_": "BuildingBlocks_FieldModifierColor",
+            "field": "FillColor",
+            "color": {
+              "_Type_": "BuildingBlocks_ColorSolid",
+              "color": {
+                "_Type_": "SRGBA8",
+                "r": 41,
+                "g": 99,
+                "b": 255,
+                "a": 255}}},
+          {
+            "_Type_": "BuildingBlocks_FieldModifierColor",
+            "field": "StrokeColor",
+            "color": {
+              "_Type_": "BuildingBlocks_ColorSolid",
+              "color": {
+                "_Type_": "SRGBA8",
+                "r": 41,
+                "g": 99,
+                "b": 255,
+                "a": 255}}},
+          {
+            "_Type_": "BuildingBlocks_FieldModifierColor",
+            "field": "BorderColorLeft",
+            "color": {
+              "_Type_": "BuildingBlocks_ColorSolid",
+              "color": {
+                "_Type_": "SRGBA8",
+                "r": 41,
+                "g": 99,
+                "b": 255,
+                "a": 255}}},
+          {
+            "_Type_": "BuildingBlocks_FieldModifierColor",
+            "field": "BorderColorRight",
+            "color": {
+              "_Type_": "BuildingBlocks_ColorSolid",
+              "color": {
+                "_Type_": "SRGBA8",
+                "r": 41,
+                "g": 99,
+                "b": 255,
+                "a": 255}}},
+          {
+            "_Type_": "BuildingBlocks_FieldModifierColor",
+            "field": "BorderColorTop",
+            "color": {
+              "_Type_": "BuildingBlocks_ColorSolid",
+              "color": {
+                "_Type_": "SRGBA8",
+                "r": 41,
+                "g": 99,
+                "b": 255,
+                "a": 255}}},
+          {
+            "_Type_": "BuildingBlocks_FieldModifierColor",
+            "field": "BorderColorBottom",
+            "color": {
+              "_Type_": "BuildingBlocks_ColorSolid",
+              "color": {
+                "_Type_": "SRGBA8",
+                "r": 41,
+                "g": 99,
+                "b": 255,
+                "a": 255}}}],
+        "transitions": []},
+      {
+        "_Type_": "BuildingBlocks_StyleEntry",
+        "name": "IconElement",
+        "conditionsList": [
+          {
+            "_Type_": "BuildingBlocks_StyleConditionList",
+            "name": "New Condition List",
+            "conditions": [
+              {
+                "_Type_": "BuildingBlocks_StyleSelectorConditionTag",
+                "tag": {
+                  "_RecordPath_": "file://./../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+                  "_RecordName_": "Tag.8b9ef179-6e50-456f-a67f-21de88e96f51",
+                  "_RecordId_": "8b9ef179-6e50-456f-a67f-21de88e96f51"}}]}],
+        "modifiers": [
+          {
+            "_Type_": "BuildingBlocks_FieldModifierColor",
+            "field": "FillColor",
+            "color": {
+              "_Type_": "BuildingBlocks_ColorSolid",
+              "color": {
+                "_Type_": "SRGBA8",
+                "r": 255,
+                "g": 0,
+                "b": 0,
+                "a": 255}}}],
+        "transitions": []},
+      {
+        "_Type_": "BuildingBlocks_StyleEntry",
+        "name": "InfoPanelValueText",
+        "conditionsList": [
+          {
+            "_Type_": "BuildingBlocks_StyleConditionList",
+            "name": "New Condition List",
+            "conditions": [
+              {
+                "_Type_": "BuildingBlocks_StyleSelectorConditionTag",
+                "tag": {
+                  "_RecordPath_": "file://./../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+                  "_RecordName_": "Tag.b5395a75-7479-4026-8597-c6348321fe4c",
+                  "_RecordId_": "b5395a75-7479-4026-8597-c6348321fe4c"}}]}],
+        "modifiers": [
+          {
+            "_Type_": "BuildingBlocks_FieldModifierColor",
+            "field": "FillColor",
+            "color": {
+              "_Type_": "BuildingBlocks_ColorSolid",
+              "color": {
+                "_Type_": "SRGBA8",
+                "r": 131,
+                "g": 238,
+                "b": 93,
+                "a": 255}}}],
+        "transitions": []},
+      {
+        "_Type_": "BuildingBlocks_StyleEntry",
+        "name": "LauncherButtonFrameDefault",
+        "conditionsList": [
+          {
+            "_Type_": "BuildingBlocks_StyleConditionList",
+            "name": "New Condition List",
+            "conditions": [
+              {
+                "_Type_": "BuildingBlocks_StyleSelectorConditionParent",
+                "conditions": [
+                  {
+                    "_Type_": "BuildingBlocks_StyleSelectorConditionTag",
+                    "tag": {
+                      "_RecordPath_": "file://./../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+                      "_RecordName_": "Tag.5f5d2742-383a-4abe-b505-d12db2a3360e",
+                      "_RecordId_": "5f5d2742-383a-4abe-b505-d12db2a3360e"}}]}]}],
+        "modifiers": [
+          {
+            "_Type_": "BuildingBlocks_FieldModifierColor",
+            "field": "BackgroundColor",
+            "color": {
+              "_Type_": "BuildingBlocks_ColorSolid",
+              "color": {
+                "_Type_": "SRGBA8",
+                "r": 0,
+                "g": 78,
+                "b": 255,
+                "a": 8}}},
+          {
+            "_Type_": "BuildingBlocks_FieldModifierColor",
+            "field": "BorderColorLeft",
+            "color": {
+              "_Type_": "BuildingBlocks_ColorSolid",
+              "color": {
+                "_Type_": "SRGBA8",
+                "r": 41,
+                "g": 99,
+                "b": 255,
+                "a": 255}}},
+          {
+            "_Type_": "BuildingBlocks_FieldModifierColor",
+            "field": "BorderColorRight",
+            "color": {
+              "_Type_": "BuildingBlocks_ColorSolid",
+              "color": {
+                "_Type_": "SRGBA8",
+                "r": 41,
+                "g": 99,
+                "b": 255,
+                "a": 255}}},
+          {
+            "_Type_": "BuildingBlocks_FieldModifierColor",
+            "field": "BorderColorTop",
+            "color": {
+              "_Type_": "BuildingBlocks_ColorSolid",
+              "color": {
+                "_Type_": "SRGBA8",
+                "r": 41,
+                "g": 99,
+                "b": 255,
+                "a": 255}}},
+          {
+            "_Type_": "BuildingBlocks_FieldModifierColor",
+            "field": "BorderColorBottom",
+            "color": {
+              "_Type_": "BuildingBlocks_ColorSolid",
+              "color": {
+                "_Type_": "SRGBA8",
+                "r": 41,
+                "g": 99,
+                "b": 255,
+                "a": 255}}}],
+        "transitions": []},
+      {
+        "_Type_": "BuildingBlocks_StyleEntry",
+        "name": "LauncherButtonFrameHover",
+        "conditionsList": [
+          {
+            "_Type_": "BuildingBlocks_StyleConditionList",
+            "name": "New Condition List",
+            "conditions": [
+              {
+                "_Type_": "BuildingBlocks_StyleSelectorConditionParent",
+                "conditions": [
+                  {
+                    "_Type_": "BuildingBlocks_StyleSelectorConditionAllOfTag",
+                    "tags": [
+                      {
+                        "_RecordPath_": "file://./../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+                        "_RecordName_": "Tag.5f5d2742-383a-4abe-b505-d12db2a3360e",
+                        "_RecordId_": "5f5d2742-383a-4abe-b505-d12db2a3360e"},
+                      {
+                        "_RecordPath_": "file://./../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+                        "_RecordName_": "Tag.b567faeb-8da9-4d5f-a220-369531071389",
+                        "_RecordId_": "b567faeb-8da9-4d5f-a220-369531071389"}]}]}]}],
+        "modifiers": [
+          {
+            "_Type_": "BuildingBlocks_FieldModifierColor",
+            "field": "BackgroundColor",
+            "color": {
+              "_Type_": "BuildingBlocks_ColorSolid",
+              "color": {
+                "_Type_": "SRGBA8",
+                "r": 0,
+                "g": 78,
+                "b": 255,
+                "a": 8}}},
+          {
+            "_Type_": "BuildingBlocks_FieldModifierColor",
+            "field": "BorderColorLeft",
+            "color": {
+              "_Type_": "BuildingBlocks_ColorSolid",
+              "color": {
+                "_Type_": "SRGBA8",
+                "r": 154,
+                "g": 181,
+                "b": 255,
+                "a": 255}}},
+          {
+            "_Type_": "BuildingBlocks_FieldModifierColor",
+            "field": "BorderColorRight",
+            "color": {
+              "_Type_": "BuildingBlocks_ColorSolid",
+              "color": {
+                "_Type_": "SRGBA8",
+                "r": 154,
+                "g": 181,
+                "b": 255,
+                "a": 255}}},
+          {
+            "_Type_": "BuildingBlocks_FieldModifierColor",
+            "field": "BorderColorTop",
+            "color": {
+              "_Type_": "BuildingBlocks_ColorSolid",
+              "color": {
+                "_Type_": "SRGBA8",
+                "r": 154,
+                "g": 181,
+                "b": 255,
+                "a": 255}}},
+          {
+            "_Type_": "BuildingBlocks_FieldModifierColor",
+            "field": "BorderColorBottom",
+            "color": {
+              "_Type_": "BuildingBlocks_ColorSolid",
+              "color": {
+                "_Type_": "SRGBA8",
+                "r": 154,
+                "g": 181,
+                "b": 255,
+                "a": 255}}}],
+        "transitions": []},
+      {
+        "_Type_": "BuildingBlocks_StyleEntry",
+        "name": "LauncherButtonFrameSelected",
+        "conditionsList": [
+          {
+            "_Type_": "BuildingBlocks_StyleConditionList",
+            "name": "New Condition List",
+            "conditions": [
+              {
+                "_Type_": "BuildingBlocks_StyleSelectorConditionParent",
+                "conditions": [
+                  {
+                    "_Type_": "BuildingBlocks_StyleSelectorConditionAllOfTag",
+                    "tags": [
+                      {
+                        "_RecordPath_": "file://./../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+                        "_RecordName_": "Tag.5f5d2742-383a-4abe-b505-d12db2a3360e",
+                        "_RecordId_": "5f5d2742-383a-4abe-b505-d12db2a3360e"},
+                      {
+                        "_RecordPath_": "file://./../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+                        "_RecordName_": "Tag.797684dc-56d9-452f-9496-e0b7a2ae8dac",
+                        "_RecordId_": "797684dc-56d9-452f-9496-e0b7a2ae8dac"}]}]}]}],
+        "modifiers": [
+          {
+            "_Type_": "BuildingBlocks_FieldModifierColor",
+            "field": "BackgroundColor",
+            "color": {
+              "_Type_": "BuildingBlocks_ColorSolid",
+              "color": {
+                "_Type_": "SRGBA8",
+                "r": 0,
+                "g": 178,
+                "b": 255,
+                "a": 49}}},
+          {
+            "_Type_": "BuildingBlocks_FieldModifierColor",
+            "field": "BorderColorLeft",
+            "color": {
+              "_Type_": "BuildingBlocks_ColorSolid",
+              "color": {
+                "_Type_": "SRGBA8",
+                "r": 154,
+                "g": 181,
+                "b": 255,
+                "a": 255}}},
+          {
+            "_Type_": "BuildingBlocks_FieldModifierColor",
+            "field": "BorderColorRight",
+            "color": {
+              "_Type_": "BuildingBlocks_ColorSolid",
+              "color": {
+                "_Type_": "SRGBA8",
+                "r": 154,
+                "g": 181,
+                "b": 255,
+                "a": 255}}},
+          {
+            "_Type_": "BuildingBlocks_FieldModifierColor",
+            "field": "BorderColorTop",
+            "color": {
+              "_Type_": "BuildingBlocks_ColorSolid",
+              "color": {
+                "_Type_": "SRGBA8",
+                "r": 154,
+                "g": 181,
+                "b": 255,
+                "a": 255}}},
+          {
+            "_Type_": "BuildingBlocks_FieldModifierColor",
+            "field": "BorderColorBottom",
+            "color": {
+              "_Type_": "BuildingBlocks_ColorSolid",
+              "color": {
+                "_Type_": "SRGBA8",
+                "r": 154,
+                "g": 181,
+                "b": 255,
+                "a": 255}}}],
+        "transitions": []},
+      {
+        "_Type_": "BuildingBlocks_StyleEntry",
+        "name": "AppNameHover",
+        "conditionsList": [
+          {
+            "_Type_": "BuildingBlocks_StyleConditionList",
+            "name": "New Condition List",
+            "conditions": [
+              {
+                "_Type_": "BuildingBlocks_StyleSelectorConditionParent",
+                "conditions": [
+                  {
+                    "_Type_": "BuildingBlocks_StyleSelectorConditionTag",
+                    "tag": {
+                      "_RecordPath_": "file://./../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+                      "_RecordName_": "Tag.b567faeb-8da9-4d5f-a220-369531071389",
+                      "_RecordId_": "b567faeb-8da9-4d5f-a220-369531071389"}}]},
+              {
+                "_Type_": "BuildingBlocks_StyleSelectorConditionType",
+                "type": "Text"}]}],
+        "modifiers": [
+          {
+            "_Type_": "BuildingBlocks_FieldModifierNumber",
+            "field": "Alpha",
+            "value": 1.0}],
+        "transitions": []},
+      {
+        "_Type_": "BuildingBlocks_StyleEntry",
+        "name": "HomeButtonSelected",
+        "conditionsList": [
+          {
+            "_Type_": "BuildingBlocks_StyleConditionList",
+            "name": "New Condition List",
+            "conditions": [
+              {
+                "_Type_": "BuildingBlocks_StyleSelectorConditionAllOfTag",
+                "tags": [
+                  {
+                    "_RecordPath_": "file://./../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+                    "_RecordName_": "Tag.c1e1ba97-be8c-43f0-8414-be064cee82b7",
+                    "_RecordId_": "c1e1ba97-be8c-43f0-8414-be064cee82b7"},
+                  {
+                    "_RecordPath_": "file://./../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+                    "_RecordName_": "Tag.797684dc-56d9-452f-9496-e0b7a2ae8dac",
+                    "_RecordId_": "797684dc-56d9-452f-9496-e0b7a2ae8dac"}]}]}],
+        "modifiers": [
+          {
+            "_Type_": "BuildingBlocks_FieldModifierColor",
+            "field": "FillColor",
+            "color": {
+              "_Type_": "BuildingBlocks_ColorSolid",
+              "color": {
+                "_Type_": "SRGBA8",
+                "r": 88,
+                "g": 110,
+                "b": 255,
+                "a": 255}}}],
+        "transitions": []},
+      {
+        "_Type_": "BuildingBlocks_StyleEntry",
+        "name": "HomeButtonDefault",
+        "conditionsList": [
+          {
+            "_Type_": "BuildingBlocks_StyleConditionList",
+            "name": "New Condition List",
+            "conditions": [
+              {
+                "_Type_": "BuildingBlocks_StyleSelectorConditionTag",
+                "tag": {
+                  "_RecordPath_": "file://./../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+                  "_RecordName_": "Tag.c1e1ba97-be8c-43f0-8414-be064cee82b7",
+                  "_RecordId_": "c1e1ba97-be8c-43f0-8414-be064cee82b7"}}]}],
+        "modifiers": [
+          {
+            "_Type_": "BuildingBlocks_FieldModifierColor",
+            "field": "FillColor",
+            "color": null}],
+        "transitions": []}],
+    "colorStyles": [
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null],
+    "textFieldModifiers": []}}

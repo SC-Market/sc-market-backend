@@ -1,0 +1,14 @@
+{
+  "_RecordName_": "AIObservableFilterFlags.DefaultObservableFilterFlags_Creature",
+  "_RecordId_": "7c8e361f-5c72-4c43-9df0-5f33e6e87d4c",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "AIObservableFilterFlags",
+    "typeFlags": [
+      "Explosive",
+      "Agent",
+      "Player",
+      "SabotageEquipment",
+      "FiringRangeTarget",
+      "ExplosiveDestructible"],
+    "statusFlags": []}}

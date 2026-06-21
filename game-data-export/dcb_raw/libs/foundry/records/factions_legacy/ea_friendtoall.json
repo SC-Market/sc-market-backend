@@ -1,0 +1,16 @@
+{
+  "_RecordName_": "Faction_LEGACY.EA_FriendToAll",
+  "_RecordId_": "7d6b8aac-b9c0-41ba-802d-4157610a246d",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "Faction_LEGACY",
+    "displayName": "@LOC_UNINITIALIZED",
+    "description": "@LOC_EMPTY",
+    "factionIcon": "",
+    "gameToken": "ea_friendly",
+    "defaultReaction": "Friendly",
+    "friendlyFireBehaviorOverrides": [],
+    "factionRelationships": [],
+    "disguiseManufacturerTags": {
+      "_Type_": "TagsDNF",
+      "terms": []}}}

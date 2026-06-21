@@ -1,0 +1,10 @@
+{
+  "_RecordName_": "CraftingGameplayPropertyDef.GPP_Weapon_HullScraping_Radius",
+  "_RecordId_": "a16e33d1-73b0-46cb-a579-84ebc81c3b00",
+  "_RecordTag_": "CGP2",
+  "_RecordValue_": {
+    "_Type_": "CraftingGameplayPropertyDef",
+    "propertyName": "@StatName_GPP_HullScraping_Radius",
+    "displayTransformation": null,
+    "unitFormat": "@LOC_EMPTY",
+    "nameOverrides": []}}

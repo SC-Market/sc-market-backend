@@ -1,0 +1,53 @@
+{
+  "_RecordName_": "EntityClassDefinition.CargoTransferArea",
+  "_RecordId_": "6fd2ac16-d724-4186-870e-6ccabb730431",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "EntityClassDefinition",
+    "Category": "Default",
+    "Icon": "Default.bmp",
+    "Invisible": false,
+    "BBoxSelection": false,
+    "defaultEditorColor": {
+      "_Type_": "RGB",
+      "r": 1.0,
+      "g": 1.0,
+      "b": 0.0},
+    "entityDensityClass": null,
+    "tags": [],
+    "StaticEntityClassData": [],
+    "Components": [
+      {
+        "_Type_": "UIBuildingBlocksEntityComponentParams",
+        "layers": [
+          {
+            "_Type_": "BuildingBlocksLayer",
+            "layerName": "",
+            "renderTarget": "All",
+            "defaultView": "_PointsTo_:ptr:1",
+            "views": [
+              {
+                "_Pointer_": "ptr:1",
+                "_Type_": "BuildingBlocksView",
+                "name": "Default",
+                "component": {
+                  "_Type_": "UIGraph_BuildingBlocksContextComponent",
+                  "canvas": "file://./../../../../../libs/foundry/records/ui/buildingblocks/ar/cargotransferarea.json",
+                  "isSystemViewInstance": false,
+                  "canvasInstantiationMode": "RootDeferred"}}]}],
+        "enableFullScreenMouse": false,
+        "defaultStyle": null,
+        "defaultPreviewScene": null},
+      {
+        "_Type_": "UISimpleRenderNodeEntityComponentParams",
+        "minimumBounds": 1.0,
+        "materialName": "materials/default_ui.mtl",
+        "sortDistance": 0.0,
+        "fixedScaleMin": 0.0,
+        "fixedScaleMax": 0.0,
+        "cardStageRadius": 2.0,
+        "flattenBehavior": "None",
+        "interference": 0.0},
+      {
+        "_Type_": "UIBindingsConsumerEntityComponentParams",
+        "linkToPort": false}]}}

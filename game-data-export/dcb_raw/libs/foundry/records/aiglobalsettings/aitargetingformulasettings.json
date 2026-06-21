@@ -1,0 +1,27 @@
+{
+  "_RecordName_": "AITargetingFormulaSettings.AITargetingFormulaSettings",
+  "_RecordId_": "0051ba74-9beb-43b2-9099-0bafb32fb8c6",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "AITargetingFormulaSettings",
+    "onFootRangeMultiplier": 0.1,
+    "inVehicleRangeMultiplier": 1.0,
+    "selfDefenceMaxHealthMultiplier": 0.1,
+    "protectedMaxHealthMultiplier": 0.1,
+    "recentDamageDecayFactorPerSecond": 0.05,
+    "attackerCapacityScore": {
+      "_Type_": "AIFormulaScoreModifiers",
+      "exponent": 2.0,
+      "weight": 2.0},
+    "distanceScore": {
+      "_Type_": "AIFormulaScoreModifiers",
+      "exponent": 2.0,
+      "weight": 2.0},
+    "selfDefenceScore": {
+      "_Type_": "AIFormulaScoreModifiers",
+      "exponent": 0.75,
+      "weight": 3.0},
+    "protectionScore": {
+      "_Type_": "AIFormulaScoreModifiers",
+      "exponent": 0.75,
+      "weight": 5.0}}}

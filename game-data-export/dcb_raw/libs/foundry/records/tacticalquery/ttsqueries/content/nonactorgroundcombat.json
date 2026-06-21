@@ -1,0 +1,68 @@
+{
+  "_RecordName_": "TQSOptionContentRecord.NonActorGroundCombat",
+  "_RecordId_": "eb565ece-181c-46d1-8758-af4ed3366ed8",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "TQSOptionContentRecord",
+    "content": {
+      "_Type_": "TQSOptionContent",
+      "parameters": [
+        {
+          "_Type_": "TQSInputFloatValue",
+          "requirements": {
+            "_Type_": "TagsDNF",
+            "terms": []},
+          "condition": "maximumDistance",
+          "value": 500.0,
+          "overrides": []}],
+      "generation": [
+        {
+          "_Type_": "TQSInputFloatValue",
+          "requirements": {
+            "_Type_": "TagsDNF",
+            "terms": []},
+          "condition": "perceivedTargets_around_referencePoint",
+          "value": 100.0,
+          "overrides": []}],
+      "conditions": [
+        {
+          "_Type_": "TQSInputBoolValue",
+          "requirements": {
+            "_Type_": "TagsDNF",
+            "terms": []},
+          "condition": "isActor",
+          "value": false,
+          "overrides": []},
+        {
+          "_Type_": "TQSInputFloatValue",
+          "requirements": {
+            "_Type_": "TagsDNF",
+            "terms": []},
+          "condition": "max_distance_to_referencePoint",
+          "value": 3.5,
+          "overrides": []}],
+      "weights": [
+        {
+          "_Type_": "TQSWeightInputValue",
+          "requirements": {
+            "_Type_": "TagsDNF",
+            "terms": []},
+          "condition": "distance_to_referencePoint",
+          "weight": -2.0,
+          "overrides": []},
+        {
+          "_Type_": "TQSWeightInputValue",
+          "requirements": {
+            "_Type_": "TagsDNF",
+            "terms": []},
+          "condition": "isPlayer",
+          "weight": 3.0,
+          "overrides": []},
+        {
+          "_Type_": "TQSWeightInputValue",
+          "requirements": {
+            "_Type_": "TagsDNF",
+            "terms": []},
+          "condition": "random",
+          "weight": 1.0,
+          "overrides": []}]}}}

@@ -1,0 +1,12 @@
+{
+  "_RecordName_": "HintUIData.Items02",
+  "_RecordId_": "646b4bf3-5178-4fc8-96c3-80264052187f",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "HintUIData",
+    "TitleText": "@Hints_Grenades_Indicator_Title",
+    "BodyText": "@Hints_Items2",
+    "BodyTextGamePad": "@Hints_Items2",
+    "BodyTextJoystick": "@Hints_Items2",
+    "TitleImagePath": "",
+    "BodyImagePath": ""}}

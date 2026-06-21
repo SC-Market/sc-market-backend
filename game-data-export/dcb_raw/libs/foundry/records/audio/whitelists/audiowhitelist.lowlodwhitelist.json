@@ -1,0 +1,10 @@
+{
+  "_RecordName_": "AudioWhitelist.LowLODWhitelist",
+  "_RecordId_": "736a6a13-5551-4ae5-91d8-88b67a9600a3",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "AudioWhitelist",
+    "triggerTypes": [
+      "WeaponFire",
+      "EntityEffect",
+      "Dialogue"]}}

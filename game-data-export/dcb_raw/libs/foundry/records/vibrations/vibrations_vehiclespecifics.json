@@ -1,0 +1,720 @@
+{
+  "_RecordName_": "SVibrationVehicleDef.Vibrations_VehicleSpecifics",
+  "_RecordId_": "84c05aab-4e57-4e4a-a4ba-edd44deb3ce0",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "SVibrationVehicleDef",
+    "listensToVehicleHitEvents": true,
+    "vehicleHitDamageMaxRatio": 0.05,
+    "vehicleHitSuppressionDecayTime": 7.0,
+    "vehicleHitSuppressionCurve": {
+      "_Type_": "BezierCurve",
+      "points": [
+        {
+          "_Type_": "Vec2",
+          "x": -0.1152722,
+          "y": 0.9843092},
+        {
+          "_Type_": "Vec2",
+          "x": 0.0,
+          "y": 1.0},
+        {
+          "_Type_": "Vec2",
+          "x": 0.1152722,
+          "y": 1.015691},
+        {
+          "_Type_": "Vec2",
+          "x": 0.05708266,
+          "y": 1.032506},
+        {
+          "_Type_": "Vec2",
+          "x": 0.2157814,
+          "y": 0.9792576},
+        {
+          "_Type_": "Vec2",
+          "x": 0.3744802,
+          "y": 0.9260091},
+        {
+          "_Type_": "Vec2",
+          "x": 0.1708168,
+          "y": 0.1581096},
+        {
+          "_Type_": "Vec2",
+          "x": 1.0,
+          "y": 0.1110952},
+        {
+          "_Type_": "Vec2",
+          "x": 1.829183,
+          "y": 0.06408069}],
+      "useLUT": false},
+    "vehicleHitDamageVibrationMapping": {
+      "_Type_": "BezierCurve",
+      "points": [
+        {
+          "_Type_": "Vec2",
+          "x": -0.06016064,
+          "y": -0.9660426},
+        {
+          "_Type_": "Vec2",
+          "x": 0.0,
+          "y": 0.0},
+        {
+          "_Type_": "Vec2",
+          "x": 0.06016064,
+          "y": 0.9660426},
+        {
+          "_Type_": "Vec2",
+          "x": 0.03545226,
+          "y": 0.9823138},
+        {
+          "_Type_": "Vec2",
+          "x": 0.9794843,
+          "y": 0.9997098},
+        {
+          "_Type_": "Vec2",
+          "x": 1.923516,
+          "y": 1.017106}],
+      "useLUT": false},
+    "dragModifier": 1.0,
+    "liftModifier": 1.25,
+    "masterModeDragModifier": 1.0,
+    "thrusterModifier": 1.0,
+    "thrusterNormalSuppressionIncreaseTime": 1.5,
+    "thrusterNormalSuppressionDecayTime": 3.0,
+    "thrusterNormalSuppressionCurve": {
+      "_Type_": "BezierCurve",
+      "points": [
+        {
+          "_Type_": "Vec2",
+          "x": -0.811219,
+          "y": 0.9992254},
+        {
+          "_Type_": "Vec2",
+          "x": 0.0,
+          "y": 1.0},
+        {
+          "_Type_": "Vec2",
+          "x": 0.811219,
+          "y": 1.000775},
+        {
+          "_Type_": "Vec2",
+          "x": 0.6283443,
+          "y": 0.310416},
+        {
+          "_Type_": "Vec2",
+          "x": 1.0,
+          "y": 0.2},
+        {
+          "_Type_": "Vec2",
+          "x": 1.371656,
+          "y": 0.08958396}],
+      "useLUT": false},
+    "thrusterBoostRumbleStrength": 0.3,
+    "thrusterBoostSuppressionIncreaseTime": 0.7,
+    "thrusterBoostSuppressionDecayTime": 1.5,
+    "thrusterBoostSuppressionCurve": {
+      "_Type_": "BezierCurve",
+      "points": [
+        {
+          "_Type_": "Vec2",
+          "x": -0.03309988,
+          "y": 0.8534449},
+        {
+          "_Type_": "Vec2",
+          "x": 0.0,
+          "y": 1.0},
+        {
+          "_Type_": "Vec2",
+          "x": 0.03309988,
+          "y": 1.146555},
+        {
+          "_Type_": "Vec2",
+          "x": 0.07964492,
+          "y": 1.103209},
+        {
+          "_Type_": "Vec2",
+          "x": 0.1,
+          "y": 1.0},
+        {
+          "_Type_": "Vec2",
+          "x": 0.1203551,
+          "y": 0.8967912},
+        {
+          "_Type_": "Vec2",
+          "x": 0.4854316,
+          "y": 0.6997132},
+        {
+          "_Type_": "Vec2",
+          "x": 1.0,
+          "y": 0.65},
+        {
+          "_Type_": "Vec2",
+          "x": 1.514568,
+          "y": 0.6002868}],
+      "useLUT": false},
+    "electricalChargeModifier": 1.0,
+    "deactivateWindCheckOnPlanets": false,
+    "magLaunchInputModifier": 1.0,
+    "jumpSystemVibrations": {
+      "_Type_": "JumpSystemVibrationParams",
+      "jumpPoint": {
+        "_Type_": "JumpPointVibrationParams",
+        "openStrength": 0.75,
+        "closeStrength": 0.0},
+      "jumpDrive": {
+        "_Type_": "JumpDriveVibrationParams",
+        "tuningCurve": {
+          "_Type_": "BezierCurve",
+          "points": [
+            {
+              "_Type_": "Vec2",
+              "x": 0.002215092,
+              "y": -0.1968296},
+            {
+              "_Type_": "Vec2",
+              "x": 0.0,
+              "y": 0.0},
+            {
+              "_Type_": "Vec2",
+              "x": -0.002215092,
+              "y": 0.1968296},
+            {
+              "_Type_": "Vec2",
+              "x": 0.2985081,
+              "y": 0.7598554},
+            {
+              "_Type_": "Vec2",
+              "x": 0.5,
+              "y": 0.75},
+            {
+              "_Type_": "Vec2",
+              "x": 0.7014919,
+              "y": 0.7401446},
+            {
+              "_Type_": "Vec2",
+              "x": 0.6652368,
+              "y": 0.2044259},
+            {
+              "_Type_": "Vec2",
+              "x": 1.0,
+              "y": 0.2},
+            {
+              "_Type_": "Vec2",
+              "x": 1.334763,
+              "y": 0.1955741}],
+          "useLUT": false},
+        "distortionCurve": {
+          "_Type_": "BezierCurve",
+          "points": [
+            {
+              "_Type_": "Vec2",
+              "x": -0.4145413,
+              "y": -0.002193218},
+            {
+              "_Type_": "Vec2",
+              "x": 0.0,
+              "y": 0.0},
+            {
+              "_Type_": "Vec2",
+              "x": 0.4145413,
+              "y": 0.002193218},
+            {
+              "_Type_": "Vec2",
+              "x": 0.4553067,
+              "y": -0.004452529},
+            {
+              "_Type_": "Vec2",
+              "x": 1.0,
+              "y": 0.0},
+            {
+              "_Type_": "Vec2",
+              "x": 1.544693,
+              "y": 0.004452529}],
+          "useLUT": false},
+        "turbulenceCurve": {
+          "_Type_": "BezierCurve",
+          "points": [
+            {
+              "_Type_": "Vec2",
+              "x": -0.5504441,
+              "y": 0.004866956},
+            {
+              "_Type_": "Vec2",
+              "x": 0.0,
+              "y": 0.0},
+            {
+              "_Type_": "Vec2",
+              "x": 0.5504441,
+              "y": -0.004866956},
+            {
+              "_Type_": "Vec2",
+              "x": 0.5197774,
+              "y": -0.004866956},
+            {
+              "_Type_": "Vec2",
+              "x": 1.0,
+              "y": 0.0},
+            {
+              "_Type_": "Vec2",
+              "x": 1.480223,
+              "y": 0.004866956}],
+          "useLUT": false},
+        "gustCurve": {
+          "_Type_": "BezierCurve",
+          "points": [
+            {
+              "_Type_": "Vec2",
+              "x": -0.5504441,
+              "y": 0.004866956},
+            {
+              "_Type_": "Vec2",
+              "x": 0.0,
+              "y": 0.0},
+            {
+              "_Type_": "Vec2",
+              "x": 0.5504441,
+              "y": -0.004866956},
+            {
+              "_Type_": "Vec2",
+              "x": 0.4898995,
+              "y": 0.002199812},
+            {
+              "_Type_": "Vec2",
+              "x": 1.0,
+              "y": 0.0},
+            {
+              "_Type_": "Vec2",
+              "x": 1.510101,
+              "y": -0.002199812}],
+          "useLUT": false},
+        "boostCurve": {
+          "_Type_": "BezierCurve",
+          "points": [
+            {
+              "_Type_": "Vec2",
+              "x": -0.1725989,
+              "y": -0.3218029},
+            {
+              "_Type_": "Vec2",
+              "x": 0.0,
+              "y": 0.0},
+            {
+              "_Type_": "Vec2",
+              "x": 0.1725989,
+              "y": 0.3218029},
+            {
+              "_Type_": "Vec2",
+              "x": 0.529266,
+              "y": 0.8655568},
+            {
+              "_Type_": "Vec2",
+              "x": 1.0,
+              "y": 0.0},
+            {
+              "_Type_": "Vec2",
+              "x": 1.470734,
+              "y": -0.8655568}],
+          "useLUT": false},
+        "postExitStrength": 1.0,
+        "postFailStrength": 1.0,
+        "onStartedEnteringTunnelStrength": 0.35,
+        "enteredTunnelStrength": 0.6,
+        "enablePostTunedVibrations": true,
+        "jumpDriveNormalSuppressionIncreaseTime": 4.0,
+        "jumpDriveNormalSuppressionDecayTime": 2.0,
+        "jumpDriveNormalSuppressionCurve": {
+          "_Type_": "BezierCurve",
+          "points": [
+            {
+              "_Type_": "Vec2",
+              "x": -0.4095825,
+              "y": -0.005143267},
+            {
+              "_Type_": "Vec2",
+              "x": 0.0,
+              "y": 0.0},
+            {
+              "_Type_": "Vec2",
+              "x": 0.4095825,
+              "y": 0.005143267},
+            {
+              "_Type_": "Vec2",
+              "x": 0.5893673,
+              "y": -0.007557441},
+            {
+              "_Type_": "Vec2",
+              "x": 1.0,
+              "y": 0.0},
+            {
+              "_Type_": "Vec2",
+              "x": 1.410633,
+              "y": 0.007557441}],
+          "useLUT": false}},
+      "jumpTunnel": {
+        "_Type_": "JumpTunnelVibrationParams",
+        "enteringCurve": {
+          "_Type_": "BezierCurve",
+          "points": [
+            {
+              "_Type_": "Vec2",
+              "x": -0.2832156,
+              "y": -0.1171879},
+            {
+              "_Type_": "Vec2",
+              "x": 0.0,
+              "y": 0.2},
+            {
+              "_Type_": "Vec2",
+              "x": 0.2832156,
+              "y": 0.517188},
+            {
+              "_Type_": "Vec2",
+              "x": 0.7656664,
+              "y": 0.5392028},
+            {
+              "_Type_": "Vec2",
+              "x": 1.0,
+              "y": 0.55},
+            {
+              "_Type_": "Vec2",
+              "x": 1.234334,
+              "y": 0.5607972}],
+          "useLUT": false},
+        "wallProximityCurve": {
+          "_Type_": "BezierCurve",
+          "points": [
+            {
+              "_Type_": "Vec2",
+              "x": -0.8756984,
+              "y": -0.001461555},
+            {
+              "_Type_": "Vec2",
+              "x": 0.0,
+              "y": 0.0},
+            {
+              "_Type_": "Vec2",
+              "x": 0.8756984,
+              "y": 0.001461555},
+            {
+              "_Type_": "Vec2",
+              "x": 0.1525582,
+              "y": 0.9983065},
+            {
+              "_Type_": "Vec2",
+              "x": 1.0,
+              "y": 1.0},
+            {
+              "_Type_": "Vec2",
+              "x": 1.847442,
+              "y": 1.001693}],
+          "useLUT": false},
+        "offAxisCurve": {
+          "_Type_": "BezierCurve",
+          "points": [
+            {
+              "_Type_": "Vec2",
+              "x": -0.3714609,
+              "y": -0.0004934856},
+            {
+              "_Type_": "Vec2",
+              "x": 0.0,
+              "y": 0.0},
+            {
+              "_Type_": "Vec2",
+              "x": 0.3714609,
+              "y": 0.0004934856},
+            {
+              "_Type_": "Vec2",
+              "x": 0.5078063,
+              "y": -0.004021503},
+            {
+              "_Type_": "Vec2",
+              "x": 1.0,
+              "y": 0.0},
+            {
+              "_Type_": "Vec2",
+              "x": 1.492194,
+              "y": 0.004021503}],
+          "useLUT": false},
+        "failingCurve": {
+          "_Type_": "BezierCurve",
+          "points": [
+            {
+              "_Type_": "Vec2",
+              "x": -0.1866882,
+              "y": 0.4166243},
+            {
+              "_Type_": "Vec2",
+              "x": 0.0,
+              "y": 0.7},
+            {
+              "_Type_": "Vec2",
+              "x": 0.1866882,
+              "y": 0.9833757},
+            {
+              "_Type_": "Vec2",
+              "x": 0.6589476,
+              "y": 1.188778},
+            {
+              "_Type_": "Vec2",
+              "x": 1.0,
+              "y": 0.7},
+            {
+              "_Type_": "Vec2",
+              "x": 1.541052,
+              "y": 0.2112223}],
+          "useLUT": false}},
+      "movementNormal": {
+        "_Type_": "SVibrationSuppression",
+        "increaseTime": 1.5,
+        "decayTime": 3.0,
+        "suppressionCurve": {
+          "_Type_": "BezierCurve",
+          "points": [
+            {
+              "_Type_": "Vec2",
+              "x": -0.811219,
+              "y": 0.9992254},
+            {
+              "_Type_": "Vec2",
+              "x": 0.0,
+              "y": 1.0},
+            {
+              "_Type_": "Vec2",
+              "x": 0.811219,
+              "y": 1.000775},
+            {
+              "_Type_": "Vec2",
+              "x": 0.6283443,
+              "y": 0.310416},
+            {
+              "_Type_": "Vec2",
+              "x": 1.0,
+              "y": 0.2},
+            {
+              "_Type_": "Vec2",
+              "x": 1.371656,
+              "y": 0.08958396}],
+          "useLUT": false}},
+      "movementAfterburner": {
+        "_Type_": "SVibrationSuppression",
+        "increaseTime": 1.5,
+        "decayTime": 3.0,
+        "suppressionCurve": {
+          "_Type_": "BezierCurve",
+          "points": [
+            {
+              "_Type_": "Vec2",
+              "x": -0.811219,
+              "y": 0.9992254},
+            {
+              "_Type_": "Vec2",
+              "x": 0.0,
+              "y": 1.0},
+            {
+              "_Type_": "Vec2",
+              "x": 0.811219,
+              "y": 1.000775},
+            {
+              "_Type_": "Vec2",
+              "x": 0.6283443,
+              "y": 0.310416},
+            {
+              "_Type_": "Vec2",
+              "x": 1.0,
+              "y": 0.2},
+            {
+              "_Type_": "Vec2",
+              "x": 1.371656,
+              "y": 0.08958396}],
+          "useLUT": false}}},
+    "thrusterNormal": {
+      "_Type_": "SVibrationSuppression",
+      "increaseTime": 1.5,
+      "decayTime": 3.0,
+      "suppressionCurve": {
+        "_Type_": "BezierCurve",
+        "points": [
+          {
+            "_Type_": "Vec2",
+            "x": -0.811219,
+            "y": 0.9992254},
+          {
+            "_Type_": "Vec2",
+            "x": 0.0,
+            "y": 1.0},
+          {
+            "_Type_": "Vec2",
+            "x": 0.811219,
+            "y": 1.000775},
+          {
+            "_Type_": "Vec2",
+            "x": 0.6283443,
+            "y": 0.310416},
+          {
+            "_Type_": "Vec2",
+            "x": 1.0,
+            "y": 0.2},
+          {
+            "_Type_": "Vec2",
+            "x": 1.371656,
+            "y": 0.08958396}],
+        "useLUT": false}},
+    "thrusterAfterburner": {
+      "_Type_": "SVibrationSuppression",
+      "increaseTime": 2.0,
+      "decayTime": 1.0,
+      "suppressionCurve": {
+        "_Type_": "BezierCurve",
+        "points": [
+          {
+            "_Type_": "Vec2",
+            "x": -0.614,
+            "y": 0.8639999},
+          {
+            "_Type_": "Vec2",
+            "x": 0.0,
+            "y": 1.0},
+          {
+            "_Type_": "Vec2",
+            "x": 0.804,
+            "y": 0.934},
+          {
+            "_Type_": "Vec2",
+            "x": 0.579,
+            "y": 0.745},
+          {
+            "_Type_": "Vec2",
+            "x": 1.0,
+            "y": 0.7},
+          {
+            "_Type_": "Vec2",
+            "x": 1.247,
+            "y": 0.42524}],
+        "useLUT": false}},
+    "thrusterAfterburnerRumbleRatio": 0.2,
+    "thrusterRawAngularAccelerationRatio": 0.2,
+    "aerodynamicsLinAccelerationVibration": {
+      "_Type_": "SVibrationReferenceData",
+      "referenceValue": 200.0,
+      "referenceMapping": {
+        "_Type_": "BezierCurve",
+        "points": [
+          {
+            "_Type_": "Vec2",
+            "x": 0.317,
+            "y": 0.07500001},
+          {
+            "_Type_": "Vec2",
+            "x": 0.0,
+            "y": 0.0},
+          {
+            "_Type_": "Vec2",
+            "x": 0.167,
+            "y": 0.145},
+          {
+            "_Type_": "Vec2",
+            "x": 0.843,
+            "y": 0.837},
+          {
+            "_Type_": "Vec2",
+            "x": 1.0,
+            "y": 1.0},
+          {
+            "_Type_": "Vec2",
+            "x": 1.199,
+            "y": 1.169}],
+        "useLUT": false}},
+    "aerodynamicsAngleOfAttackVibration": {
+      "_Type_": "SVibrationReferenceData",
+      "referenceValue": 1.0,
+      "referenceMapping": {
+        "_Type_": "BezierCurve",
+        "points": [
+          {
+            "_Type_": "Vec2",
+            "x": 0.317,
+            "y": 0.07500001},
+          {
+            "_Type_": "Vec2",
+            "x": 0.0,
+            "y": 0.0},
+          {
+            "_Type_": "Vec2",
+            "x": 0.283,
+            "y": 0.003},
+          {
+            "_Type_": "Vec2",
+            "x": -0.135,
+            "y": 0.985},
+          {
+            "_Type_": "Vec2",
+            "x": 1.0,
+            "y": 1.0},
+          {
+            "_Type_": "Vec2",
+            "x": 1.199,
+            "y": 1.169}],
+        "useLUT": false}},
+    "externalVibration": {
+      "_Type_": "SVibrationReferenceData",
+      "referenceValue": 200.0,
+      "referenceMapping": {
+        "_Type_": "BezierCurve",
+        "points": [
+          {
+            "_Type_": "Vec2",
+            "x": 0.317,
+            "y": 0.07500001},
+          {
+            "_Type_": "Vec2",
+            "x": 0.0,
+            "y": 0.0},
+          {
+            "_Type_": "Vec2",
+            "x": 0.167,
+            "y": 0.145},
+          {
+            "_Type_": "Vec2",
+            "x": 0.843,
+            "y": 0.837},
+          {
+            "_Type_": "Vec2",
+            "x": 1.0,
+            "y": 1.0},
+          {
+            "_Type_": "Vec2",
+            "x": 1.199,
+            "y": 1.169}],
+        "useLUT": false}},
+    "windVibration": {
+      "_Type_": "SVibrationReferenceData",
+      "referenceValue": 150.0,
+      "referenceMapping": {
+        "_Type_": "BezierCurve",
+        "points": [
+          {
+            "_Type_": "Vec2",
+            "x": 0.317,
+            "y": 0.07500001},
+          {
+            "_Type_": "Vec2",
+            "x": 0.0,
+            "y": 0.0},
+          {
+            "_Type_": "Vec2",
+            "x": 0.167,
+            "y": 0.145},
+          {
+            "_Type_": "Vec2",
+            "x": 0.843,
+            "y": 0.837},
+          {
+            "_Type_": "Vec2",
+            "x": 1.0,
+            "y": 1.0},
+          {
+            "_Type_": "Vec2",
+            "x": 1.199,
+            "y": 1.169}],
+        "useLUT": false}}}}

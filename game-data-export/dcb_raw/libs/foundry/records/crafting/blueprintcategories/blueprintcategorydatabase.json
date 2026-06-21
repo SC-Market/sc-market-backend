@@ -1,0 +1,87 @@
+{
+  "_RecordName_": "BlueprintCategoryDatabaseRecord.BlueprintCategoryDatabase",
+  "_RecordId_": "2f8b8c66-af27-4e6a-ba30-e95efd593dd4",
+  "_RecordTag_": "SystemsDesign",
+  "_RecordValue_": {
+    "_Type_": "BlueprintCategoryDatabaseRecord",
+    "categories": [
+      {
+        "_RecordId_": "9fd07c29-711c-4eee-a7d5-a3de5e7daae8",
+        "_RecordName_": "BlueprintCategoryRecord.Example1",
+        "_Type_": "BlueprintCategoryRecord"},
+      {
+        "_RecordId_": "7bba1e5a-1a32-4726-a7ac-0cc35d29dc09",
+        "_RecordName_": "BlueprintCategoryRecord.Example2",
+        "_Type_": "BlueprintCategoryRecord"},
+      {
+        "_RecordId_": "bf7a9b17-df7f-4009-a6d3-c40c8489a5ef",
+        "_RecordName_": "BlueprintCategoryRecord.RefiningExample1",
+        "_Type_": "BlueprintCategoryRecord"},
+      {
+        "_RecordId_": "a78c7449-cd59-415f-bd2e-a5b9a318248b",
+        "_RecordName_": "BlueprintCategoryRecord.DismantleExample1",
+        "_Type_": "BlueprintCategoryRecord"},
+      {
+        "_RecordId_": "7a141fa2-f4cb-4ae9-83fb-74251f0ca718",
+        "_RecordName_": "BlueprintCategoryRecord.MissionItem",
+        "_Type_": "BlueprintCategoryRecord"},
+      {
+        "_RecordId_": "f9ccf95d-ad0e-4c33-97e0-e56c847a7e37",
+        "_RecordName_": "BlueprintCategoryRecord.FPSWeapons",
+        "_Type_": "BlueprintCategoryRecord"},
+      {
+        "_RecordId_": "35b0267e-cce0-46cc-a3ec-250271fe2ef3",
+        "_RecordName_": "BlueprintCategoryRecord.FPSArmours",
+        "_Type_": "BlueprintCategoryRecord"},
+      {
+        "_RecordId_": "61e576d2-f8b4-46b1-98e6-9205bb5de686",
+        "_RecordName_": "BlueprintCategoryRecord.VehicleWeaponsS1",
+        "_Type_": "BlueprintCategoryRecord"},
+      {
+        "_RecordId_": "3b758fdc-250d-4a15-bf4e-118d4a5b66bd",
+        "_RecordName_": "BlueprintCategoryRecord.VehicleWeaponsS2",
+        "_Type_": "BlueprintCategoryRecord"},
+      {
+        "_RecordId_": "e1a590f1-5ba5-4927-8ea2-71caac1475c4",
+        "_RecordName_": "BlueprintCategoryRecord.VehicleWeaponsS3",
+        "_Type_": "BlueprintCategoryRecord"},
+      {
+        "_RecordId_": "90240571-2b85-4074-8354-15973036c57c",
+        "_RecordName_": "BlueprintCategoryRecord.VehicleWeaponsS4",
+        "_Type_": "BlueprintCategoryRecord"},
+      {
+        "_RecordId_": "8fbcbf20-45d8-4c1c-a52a-3dae1f4cdd74",
+        "_RecordName_": "BlueprintCategoryRecord.VehicleWeaponsS5",
+        "_Type_": "BlueprintCategoryRecord"},
+      {
+        "_RecordId_": "6913dee4-7db3-42dd-b966-50a32a7c1299",
+        "_RecordName_": "BlueprintCategoryRecord.VehicleWeaponsS6",
+        "_Type_": "BlueprintCategoryRecord"},
+      {
+        "_RecordId_": "80c5d838-ad5c-4be1-95e0-d54b7b3279be",
+        "_RecordName_": "BlueprintCategoryRecord.Medical",
+        "_Type_": "BlueprintCategoryRecord"},
+      {
+        "_RecordId_": "680b05ad-a784-4f92-a230-6def5ec50567",
+        "_RecordName_": "BlueprintCategoryRecord.FuseBattery",
+        "_Type_": "BlueprintCategoryRecord"},
+      {
+        "_RecordId_": "df6376b6-eeb0-4e27-a709-98e2ffebe099",
+        "_RecordName_": "BlueprintCategoryRecord.VehicleComponentS0",
+        "_Type_": "BlueprintCategoryRecord"},
+      {
+        "_RecordId_": "7648457f-7f20-4f71-a10f-045ddcb65a31",
+        "_RecordName_": "BlueprintCategoryRecord.VehicleComponentS1",
+        "_Type_": "BlueprintCategoryRecord"},
+      {
+        "_RecordId_": "43307205-e01b-4f70-a4d9-cec271b04498",
+        "_RecordName_": "BlueprintCategoryRecord.VehicleComponentS2",
+        "_Type_": "BlueprintCategoryRecord"},
+      {
+        "_RecordId_": "a7a033d9-4dcb-4a8a-8ba6-077973f1d4aa",
+        "_RecordName_": "BlueprintCategoryRecord.VehicleComponentS3",
+        "_Type_": "BlueprintCategoryRecord"},
+      {
+        "_RecordId_": "0c11afd4-2287-43fb-8da9-1b6673ac8e1b",
+        "_RecordName_": "BlueprintCategoryRecord.VehicleComponentS4",
+        "_Type_": "BlueprintCategoryRecord"}]}}

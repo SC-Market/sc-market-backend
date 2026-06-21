@@ -1,0 +1,20 @@
+{
+  "_RecordName_": "WeaponProceduralClip.SniperRaiseLeft",
+  "_RecordId_": "b0a5542c-36f0-433d-ad6e-e9e80c17dbf8",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "WeaponProceduralClip",
+    "weaponProceduralClipBase": {
+      "_Type_": "WeaponProceduralClipRaise",
+      "blendTime": 1.0,
+      "weaponRaise": {
+        "_Type_": "Ang3",
+        "x": 70.0,
+        "y": -5.0,
+        "z": 25.0},
+      "weaponShift": {
+        "_Type_": "Vec3",
+        "x": 0.09,
+        "y": 0.15,
+        "z": -0.3},
+      "raiseTime": 0.1}}}

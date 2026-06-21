@@ -1,0 +1,14 @@
+{
+  "_RecordName_": "Hauling_EntityClasses.HaulingEntityClass_SalvageRepairMagazines",
+  "_RecordId_": "8c07c513-0dee-4703-b9f8-2cf1ee507461",
+  "_RecordTag_": "MissionDesign",
+  "_RecordValue_": {
+    "_Type_": "Hauling_EntityClasses",
+    "entityClasses": {
+      "_Type_": "Hauling_EntityClassList",
+      "entityClassList": [
+        "file://./../../../../../libs/foundry/records/entities/scitem/weapons/magazines/grin_multitool_resource_salvage_repair_01.json",
+        "file://./../../../../../libs/foundry/records/entities/scitem/weapons/magazines/grin_multitool_resource_salvage_repair_01_filled.json",
+        "file://./../../../../../libs/foundry/records/entities/scitem/weapons/magazines/grin_tool_resource_salvage_repair_01.json",
+        "file://./../../../../../libs/foundry/records/entities/scitem/weapons/magazines/grin_tool_resource_salvage_repair_01_filled.json"]},
+    "orderDisplayName": "@Salvage_Ship_Component_SRT_Cannister_Name"}}

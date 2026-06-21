@@ -1,0 +1,28 @@
+{
+  "_RecordName_": "AIWaveCollection.Steal_Wave_Hard_Stanton_Target",
+  "_RecordId_": "5ef4686a-0e9c-4ab2-b034-fccf7388cbf6",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "AIWaveCollection",
+    "waves": [
+      {
+        "_Type_": "AIWave",
+        "id": 1,
+        "textId": "Bounty_Wave_Hard_Stanton1_01",
+        "staggerTime": 1.0,
+        "members": [
+          {
+            "_Type_": "AIWaveMember",
+            "archetype": "",
+            "entityClassDefinition": "file://./../../../../../../../libs/foundry/records/entities/spaceships/drak_caterpillar_pu_ai_civ.json",
+            "name": "",
+            "vehicleName": "",
+            "amount": 1,
+            "minAmount": -1,
+            "midAmount": -1,
+            "maxAmount": -1,
+            "crewManifestOverride": null,
+            "skillsetOverride": "file://./../../../../../../../libs/foundry/records/aiprofile/skills/humanpilot50.json",
+            "cargoManifests": [
+              "file://./../../../../../../../libs/foundry/records/cargomanifest/security/security_25_medium_001.json"],
+            "aiDamageModifiersOverride": null}]}]}}

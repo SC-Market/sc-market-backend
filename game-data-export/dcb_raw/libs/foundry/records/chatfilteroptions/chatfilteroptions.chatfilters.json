@@ -1,0 +1,47 @@
+{
+  "_RecordName_": "ChatFilterOptions.ChatFilters",
+  "_RecordId_": "44270e3e-580a-448e-9637-7246bc69e51f",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "ChatFilterOptions",
+    "options": [
+      {
+        "_Type_": "ChatFilter",
+        "tagId": 1028,
+        "localizedString": "@chat_filter_display_org"},
+      {
+        "_Type_": "ChatFilter",
+        "tagId": 1039,
+        "localizedString": "@chat_filter_display_msg"},
+      {
+        "_Type_": "ChatFilter",
+        "tagId": 1026,
+        "localizedString": "@chat_filter_display_party"},
+      {
+        "_Type_": "ChatFilter",
+        "tagId": 1025,
+        "localizedString": "@chat_filter_display_local"},
+      {
+        "_Type_": "ChatFilter",
+        "tagId": -1,
+        "localizedString": ""},
+      {
+        "_Type_": "ChatFilter",
+        "tagId": 996,
+        "localizedString": "@chat_filter_display_npcs"},
+      {
+        "_Type_": "ChatFilter",
+        "tagId": 995,
+        "localizedString": "@chat_filter_display_combat_info"},
+      {
+        "_Type_": "ChatFilter",
+        "tagId": 994,
+        "localizedString": "@chat_filter_display_emotes"},
+      {
+        "_Type_": "ChatFilter",
+        "tagId": 993,
+        "localizedString": "@chat_filter_display_game_messages"},
+      {
+        "_Type_": "ChatFilter",
+        "tagId": 992,
+        "localizedString": "@chat_filter_display_looking_for_group"}]}}

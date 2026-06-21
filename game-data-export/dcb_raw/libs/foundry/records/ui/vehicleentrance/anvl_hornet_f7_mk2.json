@@ -1,0 +1,37 @@
+{
+  "_RecordName_": "SEntrancesDef.ANVL_Hornet_F7_Mk2",
+  "_RecordId_": "872fdb3f-ea14-4522-837a-d0f54c2fd2ba",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "SEntrancesDef",
+    "boundingBoxScale": {
+      "_Type_": "Vec3",
+      "x": 1.2,
+      "y": 1.2,
+      "z": 1.2},
+    "boundingBoxOffset": {
+      "_Type_": "Vec3",
+      "x": 0.0,
+      "y": 0.0,
+      "z": -1.0},
+    "entranceArray": [
+      {
+        "_Type_": "SCEntranceItem",
+        "entranceName": "@entrance_ladder",
+        "jointName": "ladder_hatch",
+        "positionOffset": {
+          "_Type_": "Vec3",
+          "x": -1.0,
+          "y": 0.0,
+          "z": 0.5},
+        "shipState": "Grounded"},
+      {
+        "_Type_": "SCEntranceItem",
+        "entranceName": "@entrance_canopy",
+        "jointName": "canopy",
+        "positionOffset": {
+          "_Type_": "Vec3",
+          "x": 0.0,
+          "y": 3.0,
+          "z": -0.5},
+        "shipState": "Flying"}]}}

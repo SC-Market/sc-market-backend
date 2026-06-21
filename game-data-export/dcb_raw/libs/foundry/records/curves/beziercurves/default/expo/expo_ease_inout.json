@@ -1,0 +1,34 @@
+{
+  "_RecordName_": "SBezierCurveRecord.Expo_Ease_InOut",
+  "_RecordId_": "0e20f987-e41c-4fef-a212-cded0f2528b3",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "SBezierCurveRecord",
+    "curve": {
+      "_Type_": "BezierCurve",
+      "points": [
+        {
+          "_Type_": "Vec2",
+          "x": 0.0,
+          "y": 0.0},
+        {
+          "_Type_": "Vec2",
+          "x": 0.0,
+          "y": 0.0},
+        {
+          "_Type_": "Vec2",
+          "x": 0.87,
+          "y": 0.0},
+        {
+          "_Type_": "Vec2",
+          "x": 0.13,
+          "y": 1.0},
+        {
+          "_Type_": "Vec2",
+          "x": 1.0,
+          "y": 1.0},
+        {
+          "_Type_": "Vec2",
+          "x": 1.0,
+          "y": 1.0}],
+      "useLUT": false}}}

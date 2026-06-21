@@ -1,0 +1,54 @@
+{
+  "_RecordName_": "Formation.FighterFormation_Tight3",
+  "_RecordId_": "c30ec2ab-26f1-45cc-a142-4446fd4853f4",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "Formation",
+    "name": "",
+    "offsets": [
+      {
+        "_Type_": "FormationOffset",
+        "offset": {
+          "_Type_": "Vec3",
+          "x": -120.0,
+          "y": 100.0,
+          "z": 40.0},
+        "offsetTag": null,
+        "offsetVariation": {
+          "_Type_": "Vec3",
+          "x": 0.0,
+          "y": 0.0,
+          "z": 0.0}},
+      {
+        "_Type_": "FormationOffset",
+        "offset": {
+          "_Type_": "Vec3",
+          "x": 120.0,
+          "y": 100.0,
+          "z": 40.0},
+        "offsetTag": null,
+        "offsetVariation": {
+          "_Type_": "Vec3",
+          "x": 0.0,
+          "y": 0.0,
+          "z": 0.0}},
+      {
+        "_Type_": "FormationOffset",
+        "offset": {
+          "_Type_": "Vec3",
+          "x": 0.0,
+          "y": 120.0,
+          "z": 140.0},
+        "offsetTag": null,
+        "offsetVariation": {
+          "_Type_": "Vec3",
+          "x": 0.0,
+          "y": 0.0,
+          "z": 0.0}}],
+    "playerFormationParams": {
+      "_Type_": "PlayerFormationParams",
+      "targetRadius": 50.0,
+      "breakRadius": 5000.0,
+      "abandonFormationAtBreakRadius": false,
+      "targetVelocityTolerance": 5.0},
+    "formationTag": null}}

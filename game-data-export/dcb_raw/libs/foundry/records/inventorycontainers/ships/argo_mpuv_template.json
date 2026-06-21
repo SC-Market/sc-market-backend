@@ -1,0 +1,17 @@
+{
+  "_RecordName_": "InventoryContainer.ARGO_MPUV_Template",
+  "_RecordId_": "bbaa3409-7c13-4f5a-b73b-7be6a42c2f7e",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "InventoryContainer",
+    "excludedItemSubTypes": [],
+    "interiorDimensions": {
+      "_Type_": "Vec3",
+      "x": 2.0,
+      "y": 2.0,
+      "z": 2.0},
+    "inventoryType": {
+      "_Type_": "InventoryClosedContainerType",
+      "capacity": {
+        "_Type_": "SStandardCargoUnit",
+        "standardCargoUnits": 0.0}}}}

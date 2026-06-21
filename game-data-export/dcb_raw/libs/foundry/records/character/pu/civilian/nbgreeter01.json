@@ -1,0 +1,24 @@
+{
+  "_RecordName_": "Character.NBGreeter01",
+  "_RecordId_": "4a7fe4f1-d46f-8461-a69d-6176624f9f88",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "Character",
+    "characterPersonalData": {
+      "_Type_": "CharacterPersonalData",
+      "title": "",
+      "firstName": "@Name_Greeter_Newbabbage",
+      "nickName": "",
+      "lastName": "",
+      "randomNameParams": null,
+      "affiliation": "@microTech_RepUI_Name",
+      "details": "@microTech_RepUI_Description"},
+    "audioSwitchStateName": "",
+    "animationRemapAlias": "",
+    "characterMannequinTag": "Greeter_MicroTech",
+    "styleMannequinTag": "",
+    "combatStyle": "NotSet",
+    "gender": "NotSet",
+    "characterSpeedOverrides": [],
+    "nicknameChance": 0.0,
+    "name": "Miss Babbage"}}

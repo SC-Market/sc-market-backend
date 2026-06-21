@@ -1,0 +1,24 @@
+{
+  "_RecordName_": "Character.AMallor",
+  "_RecordId_": "4240a860-8d1f-a189-e236-18676b51da96",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "Character",
+    "characterPersonalData": {
+      "_Type_": "CharacterPersonalData",
+      "title": "@LOC_UNINITIALIZED",
+      "firstName": "@Name_ArkenMallor_First_Name",
+      "nickName": "@LOC_UNINITIALIZED",
+      "lastName": "@Name_ArkenMallor_Last_Name",
+      "randomNameParams": null,
+      "affiliation": "@LOC_UNINITIALIZED",
+      "details": "@LOC_UNINITIALIZED"},
+    "audioSwitchStateName": "",
+    "animationRemapAlias": "",
+    "characterMannequinTag": "AMallor",
+    "styleMannequinTag": "",
+    "combatStyle": "Civilian",
+    "gender": "Male",
+    "characterSpeedOverrides": [],
+    "nicknameChance": 0.0,
+    "name": "AMallor"}}

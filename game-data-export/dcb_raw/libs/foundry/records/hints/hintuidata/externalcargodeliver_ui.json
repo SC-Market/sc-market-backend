@@ -1,0 +1,12 @@
+{
+  "_RecordName_": "HintUIData.ExternalCargoDeliver_UI",
+  "_RecordId_": "82b02086-1f10-452c-8a53-2d72e7f1993b",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "HintUIData",
+    "TitleText": "@Hints_Cargo_Deliver_Title",
+    "BodyText": "@Hints_Cargo_Deliver",
+    "BodyTextGamePad": "@room_cargo_bay",
+    "BodyTextJoystick": "@room_cargo_bay",
+    "TitleImagePath": "",
+    "BodyImagePath": ""}}

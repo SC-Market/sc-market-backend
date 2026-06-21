@@ -1,0 +1,34 @@
+{
+  "_RecordName_": "DialogueContextBank.PU_ShopKeep4",
+  "_RecordId_": "4960e2e3-7a9a-6209-8578-a0d01049ac85",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "DialogueContextBank",
+    "realm": "file://./../../../../../libs/foundry/records/dialoguerealm/dialoguerealm.pu.json",
+    "character": null,
+    "defaultTrigger": {
+      "_Type_": "GlobalResourceAudio",
+      "audioTrigger": ""},
+    "defaultFemaleTrigger": {
+      "_Type_": "GlobalResourceAudio",
+      "audioTrigger": ""},
+    "contexts": [
+      {
+        "_RecordId_": "4f2be1a4-52b2-64b5-822b-7b5d348639ac",
+        "_RecordName_": "DialogueContext.PU_SHOPKEEP4_SK_Gruff_ConvoCont_IG_004_Seriously",
+        "_Type_": "DialogueContext",
+        "speaker": null,
+        "localizedSubtitleText": "@PU_SHOPKEEP4_SK_Gruff_ConvoCont_IG_004_Seriously",
+        "unlocalizedSubtitleText": "@LOC_UNINITIALIZED",
+        "subtitleShowDelay": 0.0,
+        "subtitleDisplayDurationOverride": 0.0,
+        "tempText": "",
+        "audioTrigger": {
+          "_Type_": "GlobalResourceAudio",
+          "audioTrigger": "Play_PU_SHOPKEEP4_SK_Gruff_ConvoCont_IG_004_Seriously"},
+        "femaleAudioTrigger": {
+          "_Type_": "GlobalResourceAudio",
+          "audioTrigger": ""},
+        "forceSubtitles": false,
+        "contents": [],
+        "tags": []}]}}

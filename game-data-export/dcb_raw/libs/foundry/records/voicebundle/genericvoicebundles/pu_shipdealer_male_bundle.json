@@ -1,0 +1,10 @@
+{
+  "_RecordName_": "VoiceBundle.PU_ShipDealer_Male_Bundle",
+  "_RecordId_": "f5f92043-4b02-4936-bcd2-d02286ef7cb0",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "VoiceBundle",
+    "name": "PU_ShipDealer_Male_Bundle",
+    "voices": [
+      "file://./../../../../../libs/foundry/records/voicesingle/pu/shipdealer/pu_shipdealer_male01.json",
+      "file://./../../../../../libs/foundry/records/voicesingle/pu/shipdealer/pu_shipdealer_male02.json"]}}

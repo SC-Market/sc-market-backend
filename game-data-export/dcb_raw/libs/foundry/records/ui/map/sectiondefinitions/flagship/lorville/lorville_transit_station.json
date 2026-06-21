@@ -1,0 +1,8 @@
+{
+  "_RecordName_": "InteriorMapSectionDefinition.Lorville_Transit_Station",
+  "_RecordId_": "af2af5ef-dadb-47b0-8c71-5c678204b158",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "InteriorMapSectionDefinition",
+    "name": "@interiormap_common_transit",
+    "restrictViewBounds": false}}

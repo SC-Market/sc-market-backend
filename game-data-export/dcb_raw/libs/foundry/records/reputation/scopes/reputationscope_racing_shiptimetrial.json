@@ -1,0 +1,24 @@
+{
+  "_RecordName_": "SReputationScopeParams.ReputationScope_Racing_ShipTimeTrial",
+  "_RecordId_": "913c0c6a-cc08-4e92-9d72-6c78172d71d3",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "SReputationScopeParams",
+    "scopeName": "RacingShip",
+    "displayName": "@Racing_Ship_DisplayName",
+    "description": "@Racing_Ship_DisplayDescription",
+    "icon": "UI/Textures/Vector/MobiGlas/App_ReputationManager/icon_spaceshipracing_header.svg",
+    "standingMap": {
+      "_Type_": "SReputationStandingMapParams",
+      "reputationCeiling": 640000,
+      "initialReputation": 0,
+      "standings": [
+        "file://./../../../../../libs/foundry/records/reputation/standings/racing/reputationstanding_racing_ship_noteligible.json",
+        "file://./../../../../../libs/foundry/records/reputation/standings/racing/reputationstanding_racing_ship_rank0.json",
+        "file://./../../../../../libs/foundry/records/reputation/standings/racing/reputationstanding_racing_ship_rank1.json",
+        "file://./../../../../../libs/foundry/records/reputation/standings/racing/reputationstanding_racing_ship_rank2.json",
+        "file://./../../../../../libs/foundry/records/reputation/standings/racing/reputationstanding_racing_ship_rank3.json",
+        "file://./../../../../../libs/foundry/records/reputation/standings/racing/reputationstanding_racing_ship_rank4.json",
+        "file://./../../../../../libs/foundry/records/reputation/standings/racing/reputationstanding_racing_ship_rank5.json",
+        "file://./../../../../../libs/foundry/records/reputation/standings/racing/reputationstanding_racing_ship_rank6.json",
+        "file://./../../../../../libs/foundry/records/reputation/standings/racing/reputationstanding_racing_ship_rank7.json"]}}}

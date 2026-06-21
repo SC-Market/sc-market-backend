@@ -1,0 +1,10 @@
+{
+  "_RecordName_": "LootV3SecondaryChoicesMultiLayerRecord.V3MultiChoice_Criminal_Uncommon",
+  "_RecordId_": "32195f85-a8d0-4d70-8208-4ce1b474cd85",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "LootV3SecondaryChoicesMultiLayerRecord",
+    "layers": [
+      "file://./../../../../../libs/foundry/records/lootgeneration/secondarychoices/v3secondarychoices_faction.json",
+      "file://./../../../../../libs/foundry/records/lootgeneration/secondarychoices/v3manufacturerweights_criminal.json",
+      "file://./../../../../../libs/foundry/records/lootgeneration/secondarychoices/v3secondarychoices_rarity_uncommon.json"]}}

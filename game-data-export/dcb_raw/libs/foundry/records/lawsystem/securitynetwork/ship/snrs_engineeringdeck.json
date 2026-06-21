@@ -1,0 +1,26 @@
+{
+  "_RecordName_": "SecurityNetworkRoomSettings.SNRS_EngineeringDeck",
+  "_RecordId_": "5630be6f-3570-4858-90ae-0de3144b920e",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "SecurityNetworkRoomSettings",
+    "defaultProtocol": {
+      "_Type_": "SecurityNetworkProtocol",
+      "permissionsWithClearance": {
+        "_Type_": "SecurityNetworkPermissions",
+        "access": "Inherit",
+        "trespass": "Inherit"},
+      "permissionsWithoutClearance": {
+        "_Type_": "SecurityNetworkPermissions",
+        "access": "Inherit",
+        "trespass": "Inherit"},
+      "acceptedClearance": {
+        "_Type_": "SecurityClearanceConditions",
+        "tokens": []},
+      "ownerFaction": null},
+    "roomIdentifier": {
+      "_RecordPath_": "file://./../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+      "_RecordName_": "Tag.846a3315-78df-4ac4-bcc2-9234e54f89ef",
+      "_RecordId_": "846a3315-78df-4ac4-bcc2-9234e54f89ef"},
+    "trespassWarningSeconds": 0.0,
+    "trespassRevokeWarningSeconds": 0.0}}

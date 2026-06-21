@@ -1,0 +1,25 @@
+{
+  "_RecordName_": "SecurityNetworkRoomSettings.SNRS_Salvage",
+  "_RecordId_": "0bef955c-1681-4ebb-ac77-b38165c7d55a",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "SecurityNetworkRoomSettings",
+    "defaultProtocol": {
+      "_Type_": "SecurityNetworkProtocol",
+      "permissionsWithClearance": {
+        "_Type_": "SecurityNetworkPermissions",
+        "access": "Yes",
+        "trespass": "No"},
+      "permissionsWithoutClearance": {
+        "_Type_": "SecurityNetworkPermissions",
+        "access": "No",
+        "trespass": "Yes"},
+      "acceptedClearance": {
+        "_Type_": "SecurityClearanceConditions",
+        "tokens": [
+          "file://./../../../../../../libs/foundry/records/lawsystem/securityclearancetokens/pu/salvage_clearance.json",
+          "file://./../../../../../../libs/foundry/records/lawsystem/securityclearancetokens/pu/salvage_clearance_rep.json"]},
+      "ownerFaction": null},
+    "roomIdentifier": null,
+    "trespassWarningSeconds": 30.0,
+    "trespassRevokeWarningSeconds": -1.0}}

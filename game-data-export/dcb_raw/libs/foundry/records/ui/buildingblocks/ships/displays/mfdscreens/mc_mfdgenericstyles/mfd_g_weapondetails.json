@@ -1,0 +1,338 @@
+{
+  "_RecordName_": "BuildingBlocks_Style.MFD_G_WeaponDetails",
+  "_RecordId_": "b4f5f97b-c7c6-4ce4-9008-cfdc306539dd",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "BuildingBlocks_Style",
+    "entries": [
+      {
+        "_Type_": "BuildingBlocks_StyleEntry",
+        "name": "AmmoReadoutBorder",
+        "conditionsList": [
+          {
+            "_Type_": "BuildingBlocks_StyleConditionList",
+            "name": "New Condition List",
+            "conditions": [
+              {
+                "_Type_": "BuildingBlocks_StyleSelectorConditionAllOfCondition",
+                "conditions": [
+                  {
+                    "_Type_": "BuildingBlocks_StyleSelectorConditionType",
+                    "type": "CustomShape"},
+                  {
+                    "_Type_": "BuildingBlocks_StyleSelectorConditionParent",
+                    "conditions": [
+                      {
+                        "_Type_": "BuildingBlocks_StyleSelectorConditionTag",
+                        "tag": {
+                          "_RecordPath_": "file://./../../../../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+                          "_RecordName_": "Tag.a65489cf-133d-45e5-8a10-e5f97d660f03",
+                          "_RecordId_": "a65489cf-133d-45e5-8a10-e5f97d660f03"}}]}]}]}],
+        "modifiers": [
+          {
+            "_Type_": "BuildingBlocks_FieldModifierString",
+            "field": "SvgPath",
+            "value": ""}],
+        "transitions": []},
+      {
+        "_Type_": "BuildingBlocks_StyleEntry",
+        "name": "Hardpoint",
+        "conditionsList": [
+          {
+            "_Type_": "BuildingBlocks_StyleConditionList",
+            "name": "New Condition List",
+            "conditions": [
+              {
+                "_Type_": "BuildingBlocks_StyleSelectorConditionAllOfCondition",
+                "conditions": [
+                  {
+                    "_Type_": "BuildingBlocks_StyleSelectorConditionType",
+                    "type": "CustomShape"},
+                  {
+                    "_Type_": "BuildingBlocks_StyleSelectorConditionTag",
+                    "tag": {
+                      "_RecordPath_": "file://./../../../../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+                      "_RecordName_": "Tag.30c9e3e7-5acb-4ad8-b39f-26d98135b427",
+                      "_RecordId_": "30c9e3e7-5acb-4ad8-b39f-26d98135b427"}}]}]}],
+        "modifiers": [
+          {
+            "_Type_": "BuildingBlocks_FieldModifierString",
+            "field": "SvgPath",
+            "value": ""}],
+        "transitions": []},
+      {
+        "_Type_": "BuildingBlocks_StyleEntry",
+        "name": "LineSource",
+        "conditionsList": [
+          {
+            "_Type_": "BuildingBlocks_StyleConditionList",
+            "name": "New Condition List",
+            "conditions": [
+              {
+                "_Type_": "BuildingBlocks_StyleSelectorConditionAllOfCondition",
+                "conditions": [
+                  {
+                    "_Type_": "BuildingBlocks_StyleSelectorConditionType",
+                    "type": "Image"},
+                  {
+                    "_Type_": "BuildingBlocks_StyleSelectorConditionTag",
+                    "tag": {
+                      "_RecordPath_": "file://./../../../../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+                      "_RecordName_": "Tag.30c9e3e7-5acb-4ad8-b39f-26d98135b427",
+                      "_RecordId_": "30c9e3e7-5acb-4ad8-b39f-26d98135b427"}}]}]}],
+        "modifiers": [
+          {
+            "_Type_": "BuildingBlocks_FieldModifierString",
+            "field": "ImagePath",
+            "value": ""}],
+        "transitions": []},
+      {
+        "_Type_": "BuildingBlocks_StyleEntry",
+        "name": "Positive Text",
+        "conditionsList": [
+          {
+            "_Type_": "BuildingBlocks_StyleConditionList",
+            "name": "New Condition List",
+            "conditions": [
+              {
+                "_Type_": "BuildingBlocks_StyleSelectorConditionAllOfCondition",
+                "conditions": [
+                  {
+                    "_Type_": "BuildingBlocks_StyleSelectorConditionType",
+                    "type": "Text"},
+                  {
+                    "_Type_": "BuildingBlocks_StyleSelectorConditionAncestor",
+                    "breakConditions": [],
+                    "conditions": [
+                      {
+                        "_Type_": "BuildingBlocks_StyleSelectorConditionTag",
+                        "tag": {
+                          "_RecordPath_": "file://./../../../../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+                          "_RecordName_": "Tag.bbba2f50-f123-40da-a00c-5bca7258b44a",
+                          "_RecordId_": "bbba2f50-f123-40da-a00c-5bca7258b44a"}}]}]}]}],
+        "modifiers": [
+          {
+            "_Type_": "BuildingBlocks_FieldModifierColor",
+            "field": "StrokeColor",
+            "color": {
+              "_Type_": "BuildingBlocks_ColorSolid",
+              "color": {
+                "_Type_": "SRGBA8",
+                "r": 255,
+                "g": 255,
+                "b": 255,
+                "a": 255}}},
+          {
+            "_Type_": "BuidlingBlocks_FieldModifierAnimation",
+            "value": {
+              "_Type_": "BuildingBlocks_Animation",
+              "animationTimeline": {
+                "_Type_": "BuildingBlocks_TimelineTypeEmbedded",
+                "keyframes": [
+                  {
+                    "_Type_": "BuildingBlocks_Keyframe",
+                    "percent": 0.0,
+                    "modifiers": [
+                      {
+                        "_Type_": "BuildingBlocks_KeyframeModifierData",
+                        "timingFunction": {
+                          "_Type_": "BuildingBlocks_TimingFunctionPreset",
+                          "preset": "Linear"},
+                        "modifier": {
+                          "_Type_": "BuildingBlocks_FieldModifierNumber",
+                          "field": "Alpha",
+                          "value": 0.0}}]},
+                  {
+                    "_Type_": "BuildingBlocks_Keyframe",
+                    "percent": 1.0,
+                    "modifiers": [
+                      {
+                        "_Type_": "BuildingBlocks_KeyframeModifierData",
+                        "timingFunction": {
+                          "_Type_": "BuildingBlocks_TimingFunctionPreset",
+                          "preset": "Linear"},
+                        "modifier": {
+                          "_Type_": "BuildingBlocks_FieldModifierNumber",
+                          "field": "Alpha",
+                          "value": 1.0}}]}]},
+              "dynamicStartTimeVariableName": "",
+              "duration": 0.15,
+              "delay": 0.0,
+              "delayRandomRange": 0.25,
+              "direction": "Forward",
+              "fillMode": "Both",
+              "iterationCount": 1,
+              "loopIndefinitely": false,
+              "timeSync": false,
+              "additive": true,
+              "timescaleIndependent": false}}],
+        "transitions": []},
+      {
+        "_Type_": "BuildingBlocks_StyleEntry",
+        "name": "Disabled Text",
+        "conditionsList": [
+          {
+            "_Type_": "BuildingBlocks_StyleConditionList",
+            "name": "New Condition List",
+            "conditions": [
+              {
+                "_Type_": "BuildingBlocks_StyleSelectorConditionAllOfCondition",
+                "conditions": [
+                  {
+                    "_Type_": "BuildingBlocks_StyleSelectorConditionType",
+                    "type": "Text"},
+                  {
+                    "_Type_": "BuildingBlocks_StyleSelectorConditionAncestor",
+                    "breakConditions": [],
+                    "conditions": [
+                      {
+                        "_Type_": "BuildingBlocks_StyleSelectorConditionAllOfCondition",
+                        "conditions": [
+                          {
+                            "_Type_": "BuildingBlocks_StyleSelectorConditionNotTag",
+                            "tag": {
+                              "_RecordPath_": "file://./../../../../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+                              "_RecordName_": "Tag.bbba2f50-f123-40da-a00c-5bca7258b44a",
+                              "_RecordId_": "bbba2f50-f123-40da-a00c-5bca7258b44a"}},
+                          {
+                            "_Type_": "BuildingBlocks_StyleSelectorConditionTag",
+                            "tag": {
+                              "_RecordPath_": "file://./../../../../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+                              "_RecordName_": "Tag.5af9b0a3-9ddc-4861-95a7-30f0d21fd3fe",
+                              "_RecordId_": "5af9b0a3-9ddc-4861-95a7-30f0d21fd3fe"}}]}]}]}]}],
+        "modifiers": [
+          {
+            "_Type_": "BuildingBlocks_FieldModifierColor",
+            "field": "StrokeColor",
+            "color": {
+              "_Type_": "BuildingBlocks_ColorStyle",
+              "color": "Disabled",
+              "alpha": 1.0}}],
+        "transitions": []},
+      {
+        "_Type_": "BuildingBlocks_StyleEntry",
+        "name": "Positive Bar",
+        "conditionsList": [
+          {
+            "_Type_": "BuildingBlocks_StyleConditionList",
+            "name": "New Condition List",
+            "conditions": [
+              {
+                "_Type_": "BuildingBlocks_StyleSelectorConditionAllOfCondition",
+                "conditions": [
+                  {
+                    "_Type_": "BuildingBlocks_StyleSelectorConditionType",
+                    "type": "Base"},
+                  {
+                    "_Type_": "BuildingBlocks_StyleSelectorConditionAncestor",
+                    "breakConditions": [],
+                    "conditions": [
+                      {
+                        "_Type_": "BuildingBlocks_StyleSelectorConditionTag",
+                        "tag": {
+                          "_RecordPath_": "file://./../../../../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+                          "_RecordName_": "Tag.bbba2f50-f123-40da-a00c-5bca7258b44a",
+                          "_RecordId_": "bbba2f50-f123-40da-a00c-5bca7258b44a"}}]},
+                  {
+                    "_Type_": "BuildingBlocks_StyleSelectorConditionTag",
+                    "tag": {
+                      "_RecordPath_": "file://./../../../../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+                      "_RecordName_": "Tag.ea1c99fc-9f04-4c81-99ec-bf8941eb2f7e",
+                      "_RecordId_": "ea1c99fc-9f04-4c81-99ec-bf8941eb2f7e"}}]}]}],
+        "modifiers": [
+          {
+            "_Type_": "BuildingBlocks_FieldModifierColor",
+            "field": "BackgroundColor",
+            "color": {
+              "_Type_": "BuildingBlocks_ColorStyle",
+              "color": "Bright",
+              "alpha": 1.0}}],
+        "transitions": []},
+      {
+        "_Type_": "BuildingBlocks_StyleEntry",
+        "name": "Disabled Bar",
+        "conditionsList": [
+          {
+            "_Type_": "BuildingBlocks_StyleConditionList",
+            "name": "New Condition List",
+            "conditions": [
+              {
+                "_Type_": "BuildingBlocks_StyleSelectorConditionAllOfCondition",
+                "conditions": [
+                  {
+                    "_Type_": "BuildingBlocks_StyleSelectorConditionType",
+                    "type": "Base"},
+                  {
+                    "_Type_": "BuildingBlocks_StyleSelectorConditionAncestor",
+                    "breakConditions": [],
+                    "conditions": [
+                      {
+                        "_Type_": "BuildingBlocks_StyleSelectorConditionNotTag",
+                        "tag": {
+                          "_RecordPath_": "file://./../../../../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+                          "_RecordName_": "Tag.bbba2f50-f123-40da-a00c-5bca7258b44a",
+                          "_RecordId_": "bbba2f50-f123-40da-a00c-5bca7258b44a"}},
+                      {
+                        "_Type_": "BuildingBlocks_StyleSelectorConditionTag",
+                        "tag": {
+                          "_RecordPath_": "file://./../../../../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+                          "_RecordName_": "Tag.5af9b0a3-9ddc-4861-95a7-30f0d21fd3fe",
+                          "_RecordId_": "5af9b0a3-9ddc-4861-95a7-30f0d21fd3fe"}}]},
+                  {
+                    "_Type_": "BuildingBlocks_StyleSelectorConditionTag",
+                    "tag": {
+                      "_RecordPath_": "file://./../../../../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+                      "_RecordName_": "Tag.ea1c99fc-9f04-4c81-99ec-bf8941eb2f7e",
+                      "_RecordId_": "ea1c99fc-9f04-4c81-99ec-bf8941eb2f7e"}}]}]}],
+        "modifiers": [
+          {
+            "_Type_": "BuildingBlocks_FieldModifierColor",
+            "field": "BackgroundColor",
+            "color": {
+              "_Type_": "BuildingBlocks_ColorStyle",
+              "color": "Disabled",
+              "alpha": 1.0}}],
+        "transitions": []},
+      {
+        "_Type_": "BuildingBlocks_StyleEntry",
+        "name": "Line",
+        "conditionsList": [
+          {
+            "_Type_": "BuildingBlocks_StyleConditionList",
+            "name": "New Condition List",
+            "conditions": [
+              {
+                "_Type_": "BuildingBlocks_StyleSelectorConditionType",
+                "type": "Line"}]}],
+        "modifiers": [
+          {
+            "_Type_": "BuildingBlocks_FieldModifierColor",
+            "field": "StrokeColor",
+            "color": {
+              "_Type_": "BuildingBlocks_ColorStyle",
+              "color": "Bright",
+              "alpha": 0.5}},
+          {
+            "_Type_": "BuildingBlocks_FieldModifierNumber",
+            "field": "StepAngle",
+            "value": 90.0}],
+        "transitions": []}],
+    "colorStyles": [
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null,
+      null],
+    "textFieldModifiers": []}}

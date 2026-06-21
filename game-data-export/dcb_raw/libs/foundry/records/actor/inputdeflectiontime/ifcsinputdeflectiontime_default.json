@@ -1,0 +1,70 @@
+{
+  "_RecordName_": "IfcsInputDeflectionTimeParams.IfcsInputDeflectionTime_Default",
+  "_RecordId_": "a79383a6-c0e8-4a79-9810-807c7bb22a12",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "IfcsInputDeflectionTimeParams",
+    "linearMovement": {
+      "_Type_": "SInputDeflectionTimeParams",
+      "minDeflectionTime": 0.2,
+      "maxDeflectionTime": 1.0,
+      "penaltyMapping": {
+        "_Type_": "BezierCurve",
+        "points": [
+          {
+            "_Type_": "Vec2",
+            "x": -0.1,
+            "y": -0.1},
+          {
+            "_Type_": "Vec2",
+            "x": 0.0,
+            "y": 0.0},
+          {
+            "_Type_": "Vec2",
+            "x": 0.1,
+            "y": 0.1},
+          {
+            "_Type_": "Vec2",
+            "x": 0.9,
+            "y": 0.9},
+          {
+            "_Type_": "Vec2",
+            "x": 1.0,
+            "y": 1.0},
+          {
+            "_Type_": "Vec2",
+            "x": 1.1,
+            "y": 1.1}],
+        "useLUT": true}},
+    "angularMovement": {
+      "_Type_": "SInputDeflectionTimeParams",
+      "minDeflectionTime": 0.0,
+      "maxDeflectionTime": 1.0,
+      "penaltyMapping": {
+        "_Type_": "BezierCurve",
+        "points": [
+          {
+            "_Type_": "Vec2",
+            "x": -0.1,
+            "y": -0.1},
+          {
+            "_Type_": "Vec2",
+            "x": 0.0,
+            "y": 0.0},
+          {
+            "_Type_": "Vec2",
+            "x": 0.1,
+            "y": 0.1},
+          {
+            "_Type_": "Vec2",
+            "x": 0.9,
+            "y": 0.9},
+          {
+            "_Type_": "Vec2",
+            "x": 1.0,
+            "y": 1.0},
+          {
+            "_Type_": "Vec2",
+            "x": 1.1,
+            "y": 1.1}],
+        "useLUT": true}}}}

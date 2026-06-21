@@ -1,0 +1,42 @@
+{
+  "_RecordName_": "LootTableV3Record.V3LootTable_Weapons_Small",
+  "_RecordId_": "4f3038ea-e208-4310-a0f9-d865ca098df3",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "LootTableV3Record",
+    "lootTable": {
+      "_Type_": "LootTableV3",
+      "lootArchetypes": [
+        {
+          "_Type_": "LootTableV3Entry",
+          "name": "Small ammo",
+          "weight": 1.0,
+          "archetype": {
+            "_Type_": "LootArchetypeV3_RecordRef",
+            "lootArchetypeRecord": "file://./../../../../../libs/foundry/records/lootgeneration/lootarchetypes/v3lootarchetype_weapons_ammo_small.json"},
+          "optionalData": [
+            {
+              "_Type_": "LootTableOptionalDataV3_DupeLimit",
+              "dupeLimit": 1}]},
+        {
+          "_Type_": "LootTableV3Entry",
+          "name": "Small weapons",
+          "weight": 0.25,
+          "archetype": {
+            "_Type_": "LootArchetypeV3_RecordRef",
+            "lootArchetypeRecord": "file://./../../../../../libs/foundry/records/lootgeneration/lootarchetypes/v3lootarchetype_weapons_small.json"},
+          "optionalData": [
+            {
+              "_Type_": "LootTableOptionalDataV3_ChoiceLimit",
+              "choiceLimit": 1}]},
+        {
+          "_Type_": "LootTableV3Entry",
+          "name": "Small attachments",
+          "weight": 0.1,
+          "archetype": {
+            "_Type_": "LootArchetypeV3_RecordRef",
+            "lootArchetypeRecord": "file://./../../../../../libs/foundry/records/lootgeneration/lootarchetypes/v3lootarchetype_weapons_attachments_small.json"},
+          "optionalData": [
+            {
+              "_Type_": "LootTableOptionalDataV3_ChoiceLimit",
+              "choiceLimit": 1}]}]}}}

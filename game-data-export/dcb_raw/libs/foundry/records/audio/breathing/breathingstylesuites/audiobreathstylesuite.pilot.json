@@ -1,0 +1,136 @@
+{
+  "_RecordName_": "AudioBreathStyleSuite.Pilot",
+  "_RecordId_": "9f4db628-81ed-472a-8a92-b666b910c85c",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "AudioBreathStyleSuite",
+    "initialStyle": "_PointsTo_:ptr:1",
+    "nodes": [
+      {
+        "_Pointer_": "ptr:1",
+        "_Type_": "AudioBreathStyleNode",
+        "description": "Initial Pilot Breathing Style",
+        "style": "file://./../../../../../../libs/foundry/records/audio/breathing/breathingstyles/audiobreathstyle.pilot.json",
+        "transitions": [
+          "_PointsTo_:ptr:2",
+          "_PointsTo_:ptr:3"]},
+      {
+        "_Pointer_": "ptr:2",
+        "_Type_": "AudioBreathStyleTransitionNode",
+        "description": "Pilot_TO_PilotHighG_WHEN_GForceIsAbove14",
+        "whenConditionsAreTrueFor": 10.0,
+        "onNextInhale": true,
+        "onNextExhale": true,
+        "immediately": false,
+        "conditions": [
+          {
+            "_RecordPath_": "file://./../../../../../../libs/foundry/records/audio/breathing/conditions/audiobreathstyleconditionlist.conditionslist.json",
+            "_RecordName_": "AudioBreathStyleCondition.Pilot_GForce_Above_14",
+            "_RecordId_": "7dc12bbd-447a-41d2-9b04-9e873f4a5a49"}],
+        "style": "_PointsTo_:ptr:4"},
+      {
+        "_Pointer_": "ptr:4",
+        "_Type_": "AudioBreathStyleNode",
+        "description": "PilotHighG",
+        "style": "file://./../../../../../../libs/foundry/records/audio/breathing/breathingstyles/audiobreathstyle.pilothighg.json",
+        "transitions": [
+          "_PointsTo_:ptr:5",
+          "_PointsTo_:ptr:3"]},
+      {
+        "_Pointer_": "ptr:9",
+        "_Type_": "AudioBreathStyleNode",
+        "description": "PilotRecovery",
+        "style": "file://./../../../../../../libs/foundry/records/audio/breathing/breathingstyles/audiobreathstyle.pilotrecovery.json",
+        "transitions": [
+          "_PointsTo_:ptr:6",
+          "_PointsTo_:ptr:3"]},
+      {
+        "_Pointer_": "ptr:10",
+        "_Type_": "AudioBreathStyleNode",
+        "description": "PilotPassout",
+        "style": "file://./../../../../../../libs/foundry/records/audio/breathing/breathingstyles/audiobreathstyle.pilotpassout.json",
+        "transitions": [
+          "_PointsTo_:ptr:7",
+          "_PointsTo_:ptr:8"]},
+      {
+        "_Pointer_": "ptr:5",
+        "_Type_": "AudioBreathStyleTransitionNode",
+        "description": "PilotHighG_TO_PilotRecovery_WHEN_GForceIsBelow8",
+        "whenConditionsAreTrueFor": 3.0,
+        "onNextInhale": true,
+        "onNextExhale": true,
+        "immediately": false,
+        "conditions": [],
+        "style": "_PointsTo_:ptr:9"},
+      {
+        "_Pointer_": "ptr:3",
+        "_Type_": "AudioBreathStyleTransitionNode",
+        "description": "Pilot Has Passed Out",
+        "whenConditionsAreTrueFor": 0.25,
+        "onNextInhale": true,
+        "onNextExhale": true,
+        "immediately": false,
+        "conditions": [
+          {
+            "_RecordPath_": "file://./../../../../../../libs/foundry/records/audio/breathing/conditions/audiobreathstyleconditionlist.conditionslist.json",
+            "_RecordName_": "AudioBreathStyleCondition.Pilot Has Passed Out",
+            "_RecordId_": "1ea52a4c-0633-4f1e-90d6-b768a6e041d7"}],
+        "style": "_PointsTo_:ptr:10"},
+      {
+        "_Pointer_": "ptr:11",
+        "_Type_": "AudioBreathStyleNode",
+        "description": "PassedOutHighH",
+        "style": "file://./../../../../../../libs/foundry/records/audio/breathing/breathingstyles/audiobreathstyle.passedouthighg.json",
+        "transitions": [
+          "_PointsTo_:ptr:8"]},
+      {
+        "_Pointer_": "ptr:7",
+        "_Type_": "AudioBreathStyleTransitionNode",
+        "description": "PilotPassout_TO_PilotPassedOutHighG After 1 second",
+        "whenConditionsAreTrueFor": 1.0,
+        "onNextInhale": true,
+        "onNextExhale": true,
+        "immediately": false,
+        "conditions": [],
+        "style": "_PointsTo_:ptr:11"},
+      {
+        "_Pointer_": "ptr:13",
+        "_Type_": "AudioBreathStyleNode",
+        "description": "PilotWakeUpHighG",
+        "style": "file://./../../../../../../libs/foundry/records/audio/breathing/breathingstyles/audiobreathstyle.wakeuphighg.json",
+        "transitions": [
+          "_PointsTo_:ptr:12"]},
+      {
+        "_Pointer_": "ptr:8",
+        "_Type_": "AudioBreathStyleTransitionNode",
+        "description": "PassedOutHighG_TO_WakeUpHighG_WHEN_Pilot Wakes Up",
+        "whenConditionsAreTrueFor": 0.25,
+        "onNextInhale": true,
+        "onNextExhale": true,
+        "immediately": true,
+        "conditions": [
+          {
+            "_RecordPath_": "file://./../../../../../../libs/foundry/records/audio/breathing/conditions/audiobreathstyleconditionlist.conditionslist.json",
+            "_RecordName_": "AudioBreathStyleCondition.Pilot Wakes Up",
+            "_RecordId_": "0c1f9c12-43bc-4748-a24a-1de11c9daf84"}],
+        "style": "_PointsTo_:ptr:13"},
+      {
+        "_Pointer_": "ptr:12",
+        "_Type_": "AudioBreathStyleTransitionNode",
+        "description": "WakeUpHighG_TO_Pilot After 1 second",
+        "whenConditionsAreTrueFor": 1.0,
+        "onNextInhale": true,
+        "onNextExhale": true,
+        "immediately": false,
+        "conditions": [],
+        "style": "_PointsTo_:ptr:1"},
+      {
+        "_Pointer_": "ptr:6",
+        "_Type_": "AudioBreathStyleTransitionNode",
+        "description": "PilotRecovery_TO_Pilot After 6 seconds",
+        "whenConditionsAreTrueFor": 6.0,
+        "onNextInhale": true,
+        "onNextExhale": true,
+        "immediately": false,
+        "conditions": [],
+        "style": "_PointsTo_:ptr:1"}]}}

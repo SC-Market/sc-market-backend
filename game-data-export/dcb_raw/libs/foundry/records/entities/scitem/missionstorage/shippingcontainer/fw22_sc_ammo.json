@@ -1,0 +1,42 @@
+{
+  "_RecordName_": "EntityClassDefinition.FW22_SC_Ammo",
+  "_RecordId_": "937f462d-06fe-47da-8f09-bc64edc7e1da",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "EntityClassDefinition",
+    "Category": "Default",
+    "Icon": "Default.bmp",
+    "Invisible": false,
+    "BBoxSelection": false,
+    "defaultEditorColor": {
+      "_Type_": "RGB",
+      "r": 1.0,
+      "g": 1.0,
+      "b": 0.0},
+    "entityDensityClass": null,
+    "tags": [
+      {
+        "_RecordPath_": "file://./../../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+        "_RecordName_": "Tag.3573c175-1066-42de-b37b-1d5db448779e",
+        "_RecordId_": "3573c175-1066-42de-b37b-1d5db448779e"},
+      {
+        "_RecordPath_": "file://./../../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+        "_RecordName_": "Tag.3a5b50b9-ab6a-4b53-86d8-cde4a42f21e8",
+        "_RecordId_": "3a5b50b9-ab6a-4b53-86d8-cde4a42f21e8"},
+      {
+        "_RecordPath_": "file://./../../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+        "_RecordName_": "Tag.00ead468-9073-485b-a6df-ca6b94053603",
+        "_RecordId_": "00ead468-9073-485b-a6df-ca6b94053603"}],
+    "StaticEntityClassData": [],
+    "Components": [
+      {
+        "_Type_": "SObjectContainerComponentParams",
+        "objectContainer": "ObjectContainers/PU/design/FleetWeek2022/ShippingContainer/shippingcontainer_ammocache.socpak"},
+      {
+        "_Type_": "SubsumptionMissionLinkComponentParams"},
+      {
+        "_Type_": "HarvestableParams",
+        "looseSubConfigBase": {
+          "_Type_": "SubHarvestableConfigRef",
+          "subConfigRef": "file://./../../../../../../../libs/foundry/records/harvestable/slotpresets/lootgeneration_slotpreset_shippingcontainer_ammo.json"},
+        "allowAutoRespawning": true}]}}

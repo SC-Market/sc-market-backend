@@ -1,0 +1,161 @@
+{
+  "_RecordName_": "ScenarioProgress.CleanAir_ScenarioProgress",
+  "_RecordId_": "11c3aa9f-5a3b-40de-b931-a44cd102c5eb",
+  "_RecordTag_": "MissionDesign",
+  "_RecordValue_": {
+    "_Type_": "ScenarioProgress",
+    "multiplierRewards": [],
+    "factionRewardTiers": [
+      {
+        "_Type_": "SScenarioProgressRewardsTiers",
+        "faction": "file://./../../../../libs/foundry/records/factions/faction_curelife.json",
+        "convertTiersPointsToPercent": true,
+        "tierProgressions": [
+          {
+            "_Type_": "STierProgressions",
+            "progressionText": "@ClearAir_Journal_Total_Personal",
+            "minMultiplierThreshold": 1.0,
+            "showAsEqualPartsOnProgression": false,
+            "lastTierDisplayOnProgression": false,
+            "progressionColor": "",
+            "completionType": {
+              "_Type_": "CompletionType_GlobalProgression"},
+            "periodMissionScenario": null,
+            "tierRewards": [
+              {
+                "_Type_": "STierReward",
+                "minPoints": 9000,
+                "badgeToAward": "R_PU_CA_OP_1",
+                "globalPointsMultiplier": 1,
+                "commsNotification": null,
+                "blueprintPool": []},
+              {
+                "_Type_": "STierReward",
+                "minPoints": 21000,
+                "badgeToAward": "R_PU_CA_OP_2",
+                "globalPointsMultiplier": 1,
+                "commsNotification": null,
+                "blueprintPool": []},
+              {
+                "_Type_": "STierReward",
+                "minPoints": 27000,
+                "badgeToAward": "R_PU_CA_OP_3",
+                "globalPointsMultiplier": 1,
+                "commsNotification": null,
+                "blueprintPool": []},
+              {
+                "_Type_": "STierReward",
+                "minPoints": 30000,
+                "badgeToAward": "R_PU_CA_OP_4",
+                "globalPointsMultiplier": 1,
+                "commsNotification": null,
+                "blueprintPool": []}]},
+          {
+            "_Type_": "STierProgressions",
+            "progressionText": "@ClearAir_Journal_Hauling",
+            "minMultiplierThreshold": 1.0,
+            "showAsEqualPartsOnProgression": false,
+            "lastTierDisplayOnProgression": false,
+            "progressionColor": "#4dcaff",
+            "completionType": {
+              "_Type_": "CompletionType_CompletionTag",
+              "completionTags": {
+                "_RecordPath_": "file://./../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+                "_RecordName_": "Tag.92d14e87-a044-474a-807e-98a49f4ed49a",
+                "_RecordId_": "92d14e87-a044-474a-807e-98a49f4ed49a"}},
+            "periodMissionScenario": null,
+            "tierRewards": [
+              {
+                "_Type_": "STierReward",
+                "minPoints": 1000,
+                "badgeToAward": "R_PU_CA_TRANSPORT_1",
+                "globalPointsMultiplier": 1,
+                "commsNotification": null,
+                "blueprintPool": []},
+              {
+                "_Type_": "STierReward",
+                "minPoints": 5000,
+                "badgeToAward": "R_PU_CA_TRANSPORT_3",
+                "globalPointsMultiplier": 1,
+                "commsNotification": null,
+                "blueprintPool": []},
+              {
+                "_Type_": "STierReward",
+                "minPoints": 10000,
+                "badgeToAward": "R_PU_CA_TRANSPORT_4",
+                "globalPointsMultiplier": 1,
+                "commsNotification": null,
+                "blueprintPool": []}]},
+          {
+            "_Type_": "STierProgressions",
+            "progressionText": "@ClearAir_Journal_ResourceGathering",
+            "minMultiplierThreshold": 1.0,
+            "showAsEqualPartsOnProgression": false,
+            "lastTierDisplayOnProgression": false,
+            "progressionColor": "#4dcaff",
+            "completionType": {
+              "_Type_": "CompletionType_CompletionTag",
+              "completionTags": {
+                "_RecordPath_": "file://./../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+                "_RecordName_": "Tag.72f86012-4475-46fa-b533-8190402b2c2a",
+                "_RecordId_": "72f86012-4475-46fa-b533-8190402b2c2a"}},
+            "periodMissionScenario": null,
+            "tierRewards": [
+              {
+                "_Type_": "STierReward",
+                "minPoints": 1000,
+                "badgeToAward": "R_PU_CA_COLLECTION_1",
+                "globalPointsMultiplier": 1,
+                "commsNotification": null,
+                "blueprintPool": []},
+              {
+                "_Type_": "STierReward",
+                "minPoints": 5000,
+                "badgeToAward": "R_PU_CA_COLLECTION_3",
+                "globalPointsMultiplier": 1,
+                "commsNotification": null,
+                "blueprintPool": []},
+              {
+                "_Type_": "STierReward",
+                "minPoints": 10000,
+                "badgeToAward": "R_PU_CA_COLLECTION_4",
+                "globalPointsMultiplier": 1,
+                "commsNotification": null,
+                "blueprintPool": []}]},
+          {
+            "_Type_": "STierProgressions",
+            "progressionText": "@ClearAir_Journal_Combat",
+            "minMultiplierThreshold": 1.0,
+            "showAsEqualPartsOnProgression": false,
+            "lastTierDisplayOnProgression": false,
+            "progressionColor": "#4dcaff",
+            "completionType": {
+              "_Type_": "CompletionType_CompletionTag",
+              "completionTags": {
+                "_RecordPath_": "file://./../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+                "_RecordName_": "Tag.ef61dd87-b138-4791-b87f-7571689daa8b",
+                "_RecordId_": "ef61dd87-b138-4791-b87f-7571689daa8b"}},
+            "periodMissionScenario": null,
+            "tierRewards": [
+              {
+                "_Type_": "STierReward",
+                "minPoints": 1000,
+                "badgeToAward": "R_PU_CA_DEFENSE_1",
+                "globalPointsMultiplier": 1,
+                "commsNotification": null,
+                "blueprintPool": []},
+              {
+                "_Type_": "STierReward",
+                "minPoints": 5000,
+                "badgeToAward": "R_PU_CA_DEFENSE_3",
+                "globalPointsMultiplier": 1,
+                "commsNotification": null,
+                "blueprintPool": []},
+              {
+                "_Type_": "STierReward",
+                "minPoints": 10000,
+                "badgeToAward": "R_PU_CA_DEFENSE_4",
+                "globalPointsMultiplier": 1,
+                "commsNotification": null,
+                "blueprintPool": []}]}],
+        "rewardPeriodical": []}]}}

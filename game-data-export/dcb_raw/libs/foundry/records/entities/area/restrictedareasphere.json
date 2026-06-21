@@ -1,0 +1,36 @@
+{
+  "_RecordName_": "EntityClassDefinition.RestrictedAreaSphere",
+  "_RecordId_": "b1c78606-6473-4b81-8c6a-c9b83192c7dc",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "EntityClassDefinition",
+    "Category": "Default",
+    "Icon": "Box.bmp",
+    "Invisible": false,
+    "BBoxSelection": false,
+    "defaultEditorColor": {
+      "_Type_": "RGB",
+      "r": 1.0,
+      "g": 1.0,
+      "b": 0.0},
+    "entityDensityClass": null,
+    "tags": [],
+    "StaticEntityClassData": [],
+    "Components": [
+      {
+        "_Type_": "AreaSphereComponentParams"},
+      {
+        "_Type_": "RestrictedAreaPatchParams",
+        "patchTypes": {
+          "_Type_": "RestrictedAreaPatchTypes",
+          "killPatch": false,
+          "autopilotPatch": false,
+          "redoutPatch": false,
+          "permissionPatch": false},
+        "defaultActive": true,
+        "priority": 0,
+        "affectsShips": true,
+        "affectsGroundVehicles": true,
+        "affectsActors": true},
+      {
+        "_Type_": "RestrictedAreaSphereParams"}]}}

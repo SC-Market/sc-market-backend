@@ -1,0 +1,8 @@
+{
+  "_RecordName_": "InteriorMapSectionDefinition.A18_Ac_Tower",
+  "_RecordId_": "de97b5dd-87b7-4c2d-a439-3f3abfe678ec",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "InteriorMapSectionDefinition",
+    "name": "@area_map_pu_a18_ac_tower",
+    "restrictViewBounds": true}}

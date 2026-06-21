@@ -1,0 +1,21 @@
+{
+  "_RecordName_": "DialogueContext.DXSM_PU_COMP_CommArray_RestoreUplink_002",
+  "_RecordId_": "55a438a4-bc4a-41ba-87cd-da24c0fe22cc",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "DialogueContext",
+    "speaker": "file://./../../../../../../libs/foundry/records/character/pu/stanton/character.aciedocommarray.json",
+    "localizedSubtitleText": "@LOC_UNINITIALIZED",
+    "unlocalizedSubtitleText": "@LOC_UNINITIALIZED",
+    "subtitleShowDelay": 0.0,
+    "subtitleDisplayDurationOverride": 0.0,
+    "tempText": "",
+    "audioTrigger": {
+      "_Type_": "GlobalResourceAudio",
+      "audioTrigger": ""},
+    "femaleAudioTrigger": {
+      "_Type_": "GlobalResourceAudio",
+      "audioTrigger": ""},
+    "forceSubtitles": false,
+    "contents": [],
+    "tags": []}}

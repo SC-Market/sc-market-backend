@@ -1,0 +1,27 @@
+{
+  "_RecordName_": "SEntrancesDef.MRAI_Pulse",
+  "_RecordId_": "22deed1a-4b56-4aaf-959c-14c01f36b655",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "SEntrancesDef",
+    "boundingBoxScale": {
+      "_Type_": "Vec3",
+      "x": 2.0,
+      "y": 2.0,
+      "z": 2.0},
+    "boundingBoxOffset": {
+      "_Type_": "Vec3",
+      "x": 0.0,
+      "y": 0.0,
+      "z": 0.0},
+    "entranceArray": [
+      {
+        "_Type_": "SCEntranceItem",
+        "entranceName": "@entrance_seat",
+        "jointName": "mrai_pulse",
+        "positionOffset": {
+          "_Type_": "Vec3",
+          "x": 0.0,
+          "y": -0.45,
+          "z": 0.2},
+        "shipState": "Both"}]}}

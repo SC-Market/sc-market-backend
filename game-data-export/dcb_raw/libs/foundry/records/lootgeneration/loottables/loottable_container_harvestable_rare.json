@@ -1,0 +1,15 @@
+{
+  "_RecordName_": "LootTable.LootTable_Container_Harvestable_Rare",
+  "_RecordId_": "762abb8d-a296-41fe-b0c2-3f07e2920f6f",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "LootTable",
+    "lootArchetypes": [
+      {
+        "_Type_": "WeightedLootArchetype",
+        "archetype": "file://./../../../../../libs/foundry/records/lootgeneration/lootarchetypes/lootarchetype_container_harvestables_rare.json",
+        "weight": 1.0,
+        "numberOfResultsConstraints": {
+          "_Type_": "NumResultsConstraints",
+          "minResults": 0,
+          "maxResults": 0}}]}}

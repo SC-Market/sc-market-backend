@@ -1,0 +1,85 @@
+{
+  "_RecordName_": "EntityClassDefinition.GenericPrivateSecurity",
+  "_RecordId_": "75e39f0e-1a73-409d-90ba-f76ea58a43bd",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "EntityClassDefinition",
+    "Category": "Default",
+    "Icon": "Default.bmp",
+    "Invisible": false,
+    "BBoxSelection": false,
+    "defaultEditorColor": {
+      "_Type_": "RGB",
+      "r": 1.0,
+      "g": 1.0,
+      "b": 0.0},
+    "entityDensityClass": null,
+    "tags": [],
+    "StaticEntityClassData": [
+      {
+        "_Type_": "SOrganizationProperties",
+        "Name": "PrivateSecurity",
+        "DisplayName": "@PrivateSecurity_RepUI_Name",
+        "Description": "@PrivateSecurity_RepUI_Description",
+        "Headquarters": "@PrivateSecurity_RepUI_Headquarters",
+        "GEID": 199998949442,
+        "Logo": "UI/SharedAssets/ManufacturerLogos/rep_ui_icon_logo_blacjac.tif",
+        "ReputationContextPropertiesUI": null,
+        "MemberCount": 154,
+        "Lawful": true,
+        "DisableReputationTracking": false,
+        "Allies": [],
+        "Enemies": [],
+        "hostilityParams": {
+          "_Type_": "RelationStandingParams",
+          "scope": "file://./../../../../../libs/foundry/records/reputation/scopes/reputationscope_affinity.json",
+          "standing": "file://./../../../../../libs/foundry/records/reputation/standings/affinity/reputationstanding_affinity_enemy_-005.json",
+          "markerParams": {
+            "_Type_": "RelationMarkerParams",
+            "description": "@LOC_PLACEHOLDER",
+            "icon": ""}},
+        "alliedParams": {
+          "_Type_": "RelationStandingParams",
+          "scope": "file://./../../../../../libs/foundry/records/reputation/scopes/reputationscope_affinity.json",
+          "standing": "file://./../../../../../libs/foundry/records/reputation/standings/affinity/reputationstanding_affinity_enemy_-045.json",
+          "markerParams": {
+            "_Type_": "RelationMarkerParams",
+            "description": "@LOC_PLACEHOLDER",
+            "icon": ""}},
+        "propertiesBB": [
+          {
+            "_Type_": "SReputationContextBBPropertyParams",
+            "name": "entityFounded",
+            "dynamicProperty": {
+              "_Type_": "SBBDynamicPropertyLocString",
+              "value": "@PrivateSecurity_RepUI_Founded"}},
+          {
+            "_Type_": "SReputationContextBBPropertyParams",
+            "name": "entityLeadership",
+            "dynamicProperty": {
+              "_Type_": "SBBDynamicPropertyLocString",
+              "value": "@PrivateSecurity_RepUI_Leadership"}},
+          {
+            "_Type_": "SReputationContextBBPropertyParams",
+            "name": "entityArea",
+            "dynamicProperty": {
+              "_Type_": "SBBDynamicPropertyLocString",
+              "value": "@PrivateSecurity_RepUI_Area"}},
+          {
+            "_Type_": "SReputationContextBBPropertyParams",
+            "name": "entityFocus",
+            "dynamicProperty": {
+              "_Type_": "SBBDynamicPropertyLocString",
+              "value": "@PrivateSecurity_RepUI_Focus"}}],
+        "perkReputationRewardList": [],
+        "sandboxTriggers": [
+          {
+            "_Type_": "SandboxTriggerRecordParams",
+            "triggerRecord": "file://./../../../../../libs/foundry/records/reputation/sandboxtriggers/grievousharm_ai.json"}]},
+      {
+        "_Type_": "SUniqueEntityClass",
+        "fixed_geid": 199998000925},
+      {
+        "_Type_": "SReputationContextPropertiesUI",
+        "context": null}],
+    "Components": []}}

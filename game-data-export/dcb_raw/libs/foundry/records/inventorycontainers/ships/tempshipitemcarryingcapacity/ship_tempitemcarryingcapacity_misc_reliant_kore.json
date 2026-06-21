@@ -1,0 +1,17 @@
+{
+  "_RecordName_": "InventoryContainer.Ship_TempItemCarryingCapacity_MISC_Reliant_Kore",
+  "_RecordId_": "20f73600-cd9a-44f8-9538-80537d7f531e",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "InventoryContainer",
+    "excludedItemSubTypes": [],
+    "interiorDimensions": {
+      "_Type_": "Vec3",
+      "x": 1.5,
+      "y": 3.5,
+      "z": 1.15},
+    "inventoryType": {
+      "_Type_": "InventoryClosedContainerType",
+      "capacity": {
+        "_Type_": "SStandardCargoUnit",
+        "standardCargoUnits": 6.0}}}}

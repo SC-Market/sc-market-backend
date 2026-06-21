@@ -1,0 +1,21 @@
+{
+  "_RecordName_": "DialogueContext.DXHN_PU_OSOSKY_Covalex_Clue6_SmugglersNote_001",
+  "_RecordId_": "038dd7a0-b970-4c38-8ea5-61a924de3d03",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "DialogueContext",
+    "speaker": null,
+    "localizedSubtitleText": "@LOC_UNINITIALIZED",
+    "unlocalizedSubtitleText": "@LOC_UNINITIALIZED",
+    "subtitleShowDelay": 0.0,
+    "subtitleDisplayDurationOverride": 0.0,
+    "tempText": "",
+    "audioTrigger": {
+      "_Type_": "GlobalResourceAudio",
+      "audioTrigger": "Play_DXHN_PU_OSOSKY_Covalex_Clue6_SmugglersNote_001"},
+    "femaleAudioTrigger": {
+      "_Type_": "GlobalResourceAudio",
+      "audioTrigger": ""},
+    "forceSubtitles": false,
+    "contents": [],
+    "tags": []}}

@@ -1,0 +1,14 @@
+{
+  "_RecordName_": "PlayerAnimatedInteractionTemplate.Button_Large_Angled",
+  "_RecordId_": "04fe2a51-8093-46f5-8288-0507ab8416c2",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "PlayerAnimatedInteractionTemplate",
+    "playerAnimatedInteraction": {
+      "_Type_": "PlayerAnimatedInteraction",
+      "supportWalkToAlign": true,
+      "type": "Reactive",
+      "fragTags": [
+        "palm"],
+      "CDIKTargetName": "button",
+      "handModeParams": null}}}

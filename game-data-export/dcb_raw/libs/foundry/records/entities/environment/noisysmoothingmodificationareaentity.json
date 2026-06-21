@@ -1,0 +1,30 @@
+{
+  "_RecordName_": "EntityClassDefinition.NoisySmoothingModificationAreaEntity",
+  "_RecordId_": "dedb126a-d2e1-480e-839b-a1304819846e",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "EntityClassDefinition",
+    "Category": "Environment",
+    "Icon": "Default.bmp",
+    "Invisible": false,
+    "BBoxSelection": true,
+    "defaultEditorColor": {
+      "_Type_": "RGB",
+      "r": 1.0,
+      "g": 1.0,
+      "b": 0.0},
+    "entityDensityClass": null,
+    "tags": [],
+    "StaticEntityClassData": [],
+    "Components": [
+      {
+        "_Type_": "SEntityComponentNoisySmoothingModificationObjectParams",
+        "smoothingParams": {
+          "_Type_": "SEntityComponentSmoothingModificationObjectParams",
+          "size": 1.0,
+          "rollOff": 1.0,
+          "strength": 20.0,
+          "sortOrder": -1},
+        "noiseAmount": 0.1,
+        "noiseFrequency": 10.0,
+        "seed": 17}]}}

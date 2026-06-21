@@ -1,0 +1,10 @@
+{
+  "_RecordName_": "CommsChannelDef.OpenChannel_Stanton3_ArcCorp_LivelyPathwayStation_L2",
+  "_RecordId_": "cec29b5b-cb35-44bb-9054-d373d7eff867",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "CommsChannelDef",
+    "channelId": "OpenChannel_Stanton3_ArcCorp_LivelyPathwayStation_L2",
+    "displayName": "@LOC_PLACEHOLDER",
+    "canHaveMultipleInstances": false,
+    "useAreaOfEffect": false}}

@@ -1,0 +1,42 @@
+{
+  "_RecordName_": "MissionLocationTemplate.Bar_Orison_Voyager_Interior",
+  "_RecordId_": "7bd78874-cfc2-48d1-b44b-b3e225f34eca",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "MissionLocationTemplate",
+    "locationData": {
+      "_Type_": "MissionLocationData",
+      "generalTags": {
+        "_Type_": "MissionLocationTags",
+        "tags": [
+          {
+            "_RecordPath_": "file://./../../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+            "_RecordName_": "Tag.79883b3f-93dc-4028-88dc-292a2066fdb0",
+            "_RecordId_": "79883b3f-93dc-4028-88dc-292a2066fdb0"}]},
+      "producesTags": {
+        "_Type_": "TagSearchTerm",
+        "positiveTags": [],
+        "negativeTags": []},
+      "consumesTags": {
+        "_Type_": "TagSearchTerm",
+        "positiveTags": [],
+        "negativeTags": []},
+      "aiSpawnTags": {
+        "_Type_": "TagList",
+        "tags": []},
+      "stringVariants": {
+        "_Type_": "MissionStringVariants",
+        "variants": []},
+      "missionModules": [
+        {
+          "_Type_": "SMissionLocationModule",
+          "isPersistent": false,
+          "missionModule": "Libs/Subsumption/Missions/PU/PU_MissionModules/AIManagers/PU_BarsPopulousManager.xml",
+          "missionInputs": [],
+          "properties": []}],
+      "missionLimits": [],
+      "autoSpawnSettings": [],
+      "isSecurityNetworkHost": false,
+      "defaultSecurityNetworkManifest": null,
+      "disabled": false,
+      "entityClusterMember": null}}}

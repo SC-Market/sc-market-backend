@@ -1,0 +1,44 @@
+{
+  "_RecordName_": "MissionLocationTemplate.PortOlisar_StrutB",
+  "_RecordId_": "ba602448-3b7a-4e59-8105-518826a5cee7",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "MissionLocationTemplate",
+    "locationData": {
+      "_Type_": "MissionLocationData",
+      "generalTags": {
+        "_Type_": "MissionLocationTags",
+        "tags": [
+          {
+            "_RecordPath_": "file://./../../../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+            "_RecordName_": "Tag.f00b6f01-7245-437d-9c41-da6a00e2df43",
+            "_RecordId_": "f00b6f01-7245-437d-9c41-da6a00e2df43"},
+          {
+            "_RecordPath_": "file://./../../../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+            "_RecordName_": "Tag.984285ee-9b94-48c9-b11a-915fc11643a4",
+            "_RecordId_": "984285ee-9b94-48c9-b11a-915fc11643a4"},
+          {
+            "_RecordPath_": "file://./../../../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+            "_RecordName_": "Tag.3901d80b-588e-4711-9a4a-c45493b99d67",
+            "_RecordId_": "3901d80b-588e-4711-9a4a-c45493b99d67"}]},
+      "producesTags": {
+        "_Type_": "TagSearchTerm",
+        "positiveTags": [],
+        "negativeTags": []},
+      "consumesTags": {
+        "_Type_": "TagSearchTerm",
+        "positiveTags": [],
+        "negativeTags": []},
+      "aiSpawnTags": {
+        "_Type_": "TagList",
+        "tags": []},
+      "stringVariants": {
+        "_Type_": "MissionStringVariants",
+        "variants": []},
+      "missionModules": [],
+      "missionLimits": [],
+      "autoSpawnSettings": [],
+      "isSecurityNetworkHost": false,
+      "defaultSecurityNetworkManifest": null,
+      "disabled": false,
+      "entityClusterMember": null}}}

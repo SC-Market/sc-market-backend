@@ -1,0 +1,33 @@
+{
+  "_RecordName_": "InteractionConditionPreset.CarryingCanisterResourceHealing",
+  "_RecordId_": "ebc6aeb5-f9c7-44fe-b914-dc74d5674e54",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "InteractionConditionPreset",
+    "conditions": [
+      {
+        "_Type_": "InteractionConditionActorHasAttachedEntityTypes",
+        "conditionDisplay": {
+          "_Type_": "ConditionDisplayParams",
+          "exclusiveDisplay": true,
+          "blockedText": {
+            "_Type_": "BlockedTextParams",
+            "blockedText": "@interaction_condition_placeOnItemport_medgel_canister_missingItem"},
+          "blockedCursor": {
+            "_Type_": "BlockedCursorParams",
+            "blockedCursor": "Invalid"},
+          "blockedColor": {
+            "_Type_": "BlockedColorParams",
+            "selectedColor": "file://./../../../../../../libs/foundry/records/ui/innerthought/colors/blockedselected.json",
+            "unselectedColor": "file://./../../../../../../libs/foundry/records/ui/innerthought/colors/blockedunselected.json",
+            "applyImmediately": false},
+          "blockedHint": null,
+          "autoStoreOption": null,
+          "blockedInteractionAttemptMonologue": null},
+        "conditionResult": "Pass",
+        "itemTypes": [
+          "Container"],
+        "itemSubTypes": [
+          "Medical"],
+        "ignoreItemPorts": []}],
+    "conditionToHideParams": []}}

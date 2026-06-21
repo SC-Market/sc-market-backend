@@ -1,0 +1,21 @@
+{
+  "_RecordName_": "EntityClassDefinition.PatrolGraph",
+  "_RecordId_": "34b8f0da-2b24-4498-9c64-86f63e9d8d4c",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "EntityClassDefinition",
+    "Category": "Default",
+    "Icon": "Default.bmp",
+    "Invisible": false,
+    "BBoxSelection": false,
+    "defaultEditorColor": {
+      "_Type_": "RGB",
+      "r": 1.0,
+      "g": 1.0,
+      "b": 0.0},
+    "entityDensityClass": null,
+    "tags": [],
+    "StaticEntityClassData": [],
+    "Components": [
+      {
+        "_Type_": "PatrolGraphComponentParams"}]}}

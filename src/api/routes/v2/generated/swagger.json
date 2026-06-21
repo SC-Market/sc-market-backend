@@ -11287,6 +11287,106 @@
 						}
 					}
 				}
+			},
+			"get": {
+				"operationId": "BrowseShops",
+				"responses": {
+					"200": {
+						"description": "Ok",
+						"content": {
+							"application/json": {
+								"schema": {
+									"properties": {
+										"page_size": {
+											"type": "number",
+											"format": "double"
+										},
+										"page": {
+											"type": "number",
+											"format": "double"
+										},
+										"total": {
+											"type": "number",
+											"format": "double"
+										},
+										"shops": {
+											"items": {
+												"$ref": "#/components/schemas/ShopPublicResponse"
+											},
+											"type": "array"
+										}
+									},
+									"required": [
+										"page_size",
+										"page",
+										"total",
+										"shops"
+									],
+									"type": "object"
+								}
+							}
+						}
+					}
+				},
+				"description": "Browse all active shops. Supports search, pagination, and sorting.",
+				"summary": "Browse shops",
+				"tags": [
+					"Shops"
+				],
+				"security": [],
+				"parameters": [
+					{
+						"in": "query",
+						"name": "search",
+						"required": false,
+						"schema": {
+							"type": "string"
+						}
+					},
+					{
+						"in": "query",
+						"name": "page",
+						"required": false,
+						"schema": {
+							"format": "double",
+							"type": "number"
+						}
+					},
+					{
+						"in": "query",
+						"name": "page_size",
+						"required": false,
+						"schema": {
+							"format": "double",
+							"type": "number"
+						}
+					},
+					{
+						"in": "query",
+						"name": "sort_by",
+						"required": false,
+						"schema": {
+							"type": "string",
+							"enum": [
+								"name",
+								"rating",
+								"created_at"
+							]
+						}
+					},
+					{
+						"in": "query",
+						"name": "sort_order",
+						"required": false,
+						"schema": {
+							"type": "string",
+							"enum": [
+								"asc",
+								"desc"
+							]
+						}
+					}
+				]
 			}
 		},
 		"/shops/quick": {
@@ -11325,6 +11425,50 @@
 						}
 					}
 				}
+			}
+		},
+		"/shops/by-owner": {
+			"get": {
+				"operationId": "GetShopsByOwner",
+				"responses": {
+					"200": {
+						"description": "Ok",
+						"content": {
+							"application/json": {
+								"schema": {
+									"items": {
+										"$ref": "#/components/schemas/ShopPublicResponse"
+									},
+									"type": "array"
+								}
+							}
+						}
+					}
+				},
+				"description": "Get shops by owner. Used on user/org profile pages to show their shops.",
+				"summary": "Get shops by owner",
+				"tags": [
+					"Shops"
+				],
+				"security": [],
+				"parameters": [
+					{
+						"in": "query",
+						"name": "username",
+						"required": false,
+						"schema": {
+							"type": "string"
+						}
+					},
+					{
+						"in": "query",
+						"name": "spectrum_id",
+						"required": false,
+						"schema": {
+							"type": "string"
+						}
+					}
+				]
 			}
 		},
 		"/shops/{slug}": {

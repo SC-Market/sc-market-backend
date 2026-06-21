@@ -1,0 +1,33 @@
+{
+  "_RecordName_": "CommsNotification.MCN_InterSec_Tobin_TSG_Generic_MissionAbandon",
+  "_RecordId_": "1c9a2a6a-9705-4eb4-818f-748fd71932ab",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "CommsNotification",
+    "tags": {
+      "_Type_": "TagList",
+      "tags": [
+        {
+          "_RecordPath_": "file://./../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+          "_RecordName_": "Tag.ed75fbfc-5ab5-4938-9bf5-093b435dde27",
+          "_RecordId_": "ed75fbfc-5ab5-4938-9bf5-093b435dde27"},
+        {
+          "_RecordPath_": "file://./../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+          "_RecordName_": "Tag.9143ac19-c526-475c-a8b4-c5597e377366",
+          "_RecordId_": "9143ac19-c526-475c-a8b4-c5597e377366"},
+        {
+          "_RecordPath_": "file://./../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+          "_RecordName_": "Tag.7a668b61-da01-43ad-9639-e552027e0768",
+          "_RecordId_": "7a668b61-da01-43ad-9639-e552027e0768"},
+        {
+          "_RecordPath_": "file://./../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+          "_RecordName_": "Tag.c9496c18-63d2-482b-8996-b1e566d6f5a9",
+          "_RecordId_": "c9496c18-63d2-482b-8996-b1e566d6f5a9"},
+        {
+          "_RecordPath_": "file://./../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+          "_RecordName_": "Tag.f0c0c441-e205-4d44-8743-620228b7eee4",
+          "_RecordId_": "f0c0c441-e205-4d44-8743-620228b7eee4"}]},
+    "communicationName": "file://./../../../../../../libs/foundry/records/communicationname/missioncommunications/tsgspecific/tsg_missionabandon.json",
+    "characterEntityClass": "file://./../../../../../../libs/foundry/records/actor/actors/npc_archetypes/male/human/missiongivers/npc_archetypes-male-human-missiongivers-deacontobin.json",
+    "fakeCommsAudioEntityClass": null,
+    "stage": "file://./../../../../../../libs/foundry/records/commsnotificationstages/cns_test.json"}}

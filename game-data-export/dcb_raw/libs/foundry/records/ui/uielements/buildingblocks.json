@@ -1,0 +1,19 @@
+{
+  "_RecordName_": "UIElement.BuildingBlocks",
+  "_RecordId_": "235bfc85-aa63-4fd5-b5d1-821fb3522a39",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "UIElement",
+    "sourceFile": "UI/BuildingBlocks/assets/SWF/BuildingBlocks_root.swf",
+    "soundsRecord": null,
+    "fontFile": "UI/fonts/Shared/fonts_en.gfx",
+    "alignMode": "fullscreen",
+    "alignScale": false,
+    "alignMax": false,
+    "layer": 10,
+    "skipFirstFrameInit": true,
+    "keyEvents": false,
+    "eventsExclusive": false,
+    "noDepthTest": false,
+    "forceNoUnload": false,
+    "noPostProcessing": false}}

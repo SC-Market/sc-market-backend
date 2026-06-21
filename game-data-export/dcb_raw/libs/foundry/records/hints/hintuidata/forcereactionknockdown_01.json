@@ -1,0 +1,12 @@
+{
+  "_RecordName_": "HintUIData.ForceReactionKnockDown_01",
+  "_RecordId_": "8518be17-bc9a-42d6-b32d-c6b71d7133b1",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "HintUIData",
+    "TitleText": "@Hints_ForceReaction_KnockDown_Title",
+    "BodyText": "@Hints_ForceReaction_KnockDown_FirstTime",
+    "BodyTextGamePad": "@Hints_ForceReaction_KnockDown_FirstTime",
+    "BodyTextJoystick": "@Hints_ForceReaction_KnockDown_FirstTime",
+    "TitleImagePath": "",
+    "BodyImagePath": ""}}

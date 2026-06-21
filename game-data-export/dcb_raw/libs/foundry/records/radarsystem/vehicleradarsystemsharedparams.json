@@ -1,0 +1,691 @@
+{
+  "_RecordName_": "RadarSystemSharedParams.VehicleRadarSystemSharedParams",
+  "_RecordId_": "55db8f52-159c-4b72-9b62-2b8f9dfb0c2d",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "RadarSystemSharedParams",
+    "paramsVersion": 3,
+    "focusAngles": [
+      360.0,
+      180.0,
+      90.0,
+      45.0,
+      22.5,
+      11.25,
+      5.625,
+      2.8125],
+    "radarParams": {
+      "_Type_": "RadarSharedParams",
+      "maxPassiveDistance": 0.0,
+      "useRoomGraphForPassiveDetection": false},
+    "scanParams": {
+      "_Type_": "ScanSharedParams",
+      "enableNewBindings": true,
+      "requireLockedTarget": false,
+      "enableManualFocusScan": true,
+      "enableAutoFocusScan": false,
+      "enablePassiveScan": false,
+      "enablePingWaveScan": false,
+      "allowPassiveUnlockContactType": true,
+      "enableActiveUnlockName": true,
+      "unscannedText": "@scan_data_scan_needed",
+      "sfxParams": {
+        "_Type_": "ScanSFXSharedParams",
+        "startScan": {
+          "_Type_": "GlobalResourceAudio",
+          "audioTrigger": "Play_SSMC_Shared_Scanner_Radar_Scan"},
+        "stopScan": {
+          "_Type_": "GlobalResourceAudio",
+          "audioTrigger": "Stop_SSMC_Shared_Scanner_Radar_Scan"},
+        "infoPopulate": {
+          "_Type_": "GlobalResourceAudio",
+          "audioTrigger": "Play_UI_MCMN_Scan_Interface_Radar_Stat_Result"}}},
+    "pingParams": {
+      "_Type_": "PingSharedParams",
+      "blobLifeTime": {
+        "_Type_": "PingBlobLifeTime",
+        "lifeTimeMin": 5.0,
+        "lifeTimeMax": 15.0},
+      "blobOffsetScalar": 0.5,
+      "blobSizeScalar": 1.0,
+      "blobScaleFov": 60.0,
+      "blobScaleMinPixels": 5.0,
+      "blobScaleMaxPixels": 160.0,
+      "blobScaleFixedResolution": 1080.0,
+      "contactLifeTime": {
+        "_Type_": "PingContactLifeTime",
+        "lifeTimeMin": 5.0,
+        "lifeTimeMax": 15.0},
+      "extendedLifeTimeParams": null,
+      "pingWaveAcceleration": 30000.0,
+      "pingWaveJerk": 20000.0,
+      "pingWaveJerkDistance": 20000.0,
+      "useADSMode": false,
+      "ADSFovFocusAngleMultiplier": 0.1,
+      "blobVFXParams": {
+        "_Type_": "BlobVFXSharedParams",
+        "snapBlobTimescaleToLifeTime": true,
+        "blobVFXs": [
+          {
+            "_Type_": "BlobVFXDistanceParams",
+            "effect": {
+              "_Type_": "GlobalResourceParticle",
+              "path": "8b4730e7-84b9-f164-715a-89474171cb0c|UI/ui_radar.all.radar_blob"},
+            "distance": 0.0},
+          {
+            "_Type_": "BlobVFXDistanceParams",
+            "effect": {
+              "_Type_": "GlobalResourceParticle",
+              "path": "8a5b9772-40b5-5003-6f50-78dd87db0654|UI/ui_radar.all.radar_blob_far"},
+            "distance": 200000.0}]},
+      "pingSFXParams": {
+        "_Type_": "PingSFXSharedParams",
+        "invokePing": {
+          "_Type_": "GlobalResourceAudio",
+          "audioTrigger": "Play_UI_MCMN_Scan_Interface_Radar_Ping_Scan"},
+        "invokePingCharged": {
+          "_Type_": "GlobalResourceAudio",
+          "audioTrigger": ""},
+        "invokePingBlocked": {
+          "_Type_": "GlobalResourceAudio",
+          "audioTrigger": ""},
+        "invokePingCooldown": {
+          "_Type_": "GlobalResourceAudio",
+          "audioTrigger": ""}},
+      "pingVFXParams": {
+        "_Type_": "PingVFXSharedParams",
+        "quickPingWaveVFXParams": {
+          "_Type_": "PingWaveVFXParams",
+          "waveParticle": [
+            {
+              "_Type_": "GlobalResourceParticle",
+              "path": "b25313a4-e257-b92d-4a56-b602638d20e4|UI/ui_radar.all.radar_wave"},
+            {
+              "_Type_": "GlobalResourceParticle",
+              "path": "7cbaec43-42ba-9189-70ed-baf7dc1645ca|UI/ui_radar.all.radar_wave_x2"},
+            {
+              "_Type_": "GlobalResourceParticle",
+              "path": "32ecd2a2-6fa9-3282-0810-760437774e94|UI/ui_radar.all.radar_wave_x4"},
+            {
+              "_Type_": "GlobalResourceParticle",
+              "path": "f41de1be-0b67-d3d6-deea-7d1c1cadf230|UI/ui_radar.all.radar_wave_x8"},
+            {
+              "_Type_": "GlobalResourceParticle",
+              "path": "fea36ba2-b3a2-f567-0669-8bc891ca8f92|UI/ui_radar.all.radar_wave_x16"},
+            {
+              "_Type_": "GlobalResourceParticle",
+              "path": "110d6ff1-c7b5-0439-a799-6bf1ccf0880a|UI/ui_radar.all.radar_wave_x32"},
+            {
+              "_Type_": "GlobalResourceParticle",
+              "path": "8e9ec024-55ae-457d-e397-a28733c125cd|UI/ui_radar.all.radar_wave_x64"},
+            {
+              "_Type_": "GlobalResourceParticle",
+              "path": "71648552-8e18-9836-77a3-b161c40c7f9c|UI/ui_radar.all.radar_wave_x128"}],
+          "pulseSphereGeometry": {
+            "_Type_": "GlobalResourceGeometry",
+            "path": "Objects/VFX/MeshEffects/radar_pulse_sphere.cgf"},
+          "pulseHalfSphereGeometry": {
+            "_Type_": "GlobalResourceGeometry",
+            "path": "Objects/VFX/MeshEffects/radar_pulse_half.cgf"},
+          "pulseConeGeometry": {
+            "_Type_": "GlobalResourceGeometry",
+            "path": "Objects/VFX/MeshEffects/radar_pulse_cone_90.cgf"},
+          "pulseMaterial": {
+            "_Type_": "GlobalResourceMaterial",
+            "path": "Materials/VFX/ping/vehicle_ping_wave1.mtl"},
+          "conePulseMaterial": {
+            "_Type_": "GlobalResourceMaterial",
+            "path": "Materials/VFX/ping/scanning_ping2.mtl"},
+          "visualAcceleration": 30000.0,
+          "visualMaxDistance": 200000.0,
+          "snapWaveTimescaleToLifetime": true,
+          "use360PingwaveEffectForAllLevels": true,
+          "attachPingwaveEffectToHost": false},
+        "chargedPingWaveVFXParams": {
+          "_Type_": "PingWaveVFXParams",
+          "waveParticle": [
+            {
+              "_Type_": "GlobalResourceParticle",
+              "path": "b25313a4-e257-b92d-4a56-b602638d20e4|UI/ui_radar.all.radar_wave"},
+            {
+              "_Type_": "GlobalResourceParticle",
+              "path": "7cbaec43-42ba-9189-70ed-baf7dc1645ca|UI/ui_radar.all.radar_wave_x2"},
+            {
+              "_Type_": "GlobalResourceParticle",
+              "path": "32ecd2a2-6fa9-3282-0810-760437774e94|UI/ui_radar.all.radar_wave_x4"},
+            {
+              "_Type_": "GlobalResourceParticle",
+              "path": "f41de1be-0b67-d3d6-deea-7d1c1cadf230|UI/ui_radar.all.radar_wave_x8"},
+            {
+              "_Type_": "GlobalResourceParticle",
+              "path": "fea36ba2-b3a2-f567-0669-8bc891ca8f92|UI/ui_radar.all.radar_wave_x16"},
+            {
+              "_Type_": "GlobalResourceParticle",
+              "path": "110d6ff1-c7b5-0439-a799-6bf1ccf0880a|UI/ui_radar.all.radar_wave_x32"},
+            {
+              "_Type_": "GlobalResourceParticle",
+              "path": "8e9ec024-55ae-457d-e397-a28733c125cd|UI/ui_radar.all.radar_wave_x64"},
+            {
+              "_Type_": "GlobalResourceParticle",
+              "path": "71648552-8e18-9836-77a3-b161c40c7f9c|UI/ui_radar.all.radar_wave_x128"}],
+          "pulseSphereGeometry": {
+            "_Type_": "GlobalResourceGeometry",
+            "path": "Objects/VFX/MeshEffects/radar_pulse_sphere.cgf"},
+          "pulseHalfSphereGeometry": {
+            "_Type_": "GlobalResourceGeometry",
+            "path": "Objects/VFX/MeshEffects/radar_pulse_half.cgf"},
+          "pulseConeGeometry": {
+            "_Type_": "GlobalResourceGeometry",
+            "path": "Objects/VFX/MeshEffects/radar_pulse_cone_90.cgf"},
+          "pulseMaterial": {
+            "_Type_": "GlobalResourceMaterial",
+            "path": "Materials/VFX/ping/vehicle_ping_wave1.mtl"},
+          "conePulseMaterial": {
+            "_Type_": "GlobalResourceMaterial",
+            "path": "Materials/VFX/ping/scanning_ping2.mtl"},
+          "visualAcceleration": 30000.0,
+          "visualMaxDistance": 200000.0,
+          "snapWaveTimescaleToLifetime": true,
+          "use360PingwaveEffectForAllLevels": true,
+          "attachPingwaveEffectToHost": false},
+        "blockedPingWaveVFXParams": {
+          "_Type_": "PingWaveVFXParams",
+          "waveParticle": [
+            {
+              "_Type_": "GlobalResourceParticle",
+              "path": "b25313a4-e257-b92d-4a56-b602638d20e4|UI/ui_radar.all.radar_wave"},
+            {
+              "_Type_": "GlobalResourceParticle",
+              "path": "7cbaec43-42ba-9189-70ed-baf7dc1645ca|UI/ui_radar.all.radar_wave_x2"},
+            {
+              "_Type_": "GlobalResourceParticle",
+              "path": "32ecd2a2-6fa9-3282-0810-760437774e94|UI/ui_radar.all.radar_wave_x4"},
+            {
+              "_Type_": "GlobalResourceParticle",
+              "path": "f41de1be-0b67-d3d6-deea-7d1c1cadf230|UI/ui_radar.all.radar_wave_x8"},
+            {
+              "_Type_": "GlobalResourceParticle",
+              "path": "fea36ba2-b3a2-f567-0669-8bc891ca8f92|UI/ui_radar.all.radar_wave_x16"},
+            {
+              "_Type_": "GlobalResourceParticle",
+              "path": "110d6ff1-c7b5-0439-a799-6bf1ccf0880a|UI/ui_radar.all.radar_wave_x32"},
+            {
+              "_Type_": "GlobalResourceParticle",
+              "path": "8e9ec024-55ae-457d-e397-a28733c125cd|UI/ui_radar.all.radar_wave_x64"},
+            {
+              "_Type_": "GlobalResourceParticle",
+              "path": "71648552-8e18-9836-77a3-b161c40c7f9c|UI/ui_radar.all.radar_wave_x128"}],
+          "pulseSphereGeometry": {
+            "_Type_": "GlobalResourceGeometry",
+            "path": "Objects/VFX/MeshEffects/radar_pulse_sphere.cgf"},
+          "pulseHalfSphereGeometry": {
+            "_Type_": "GlobalResourceGeometry",
+            "path": "Objects/VFX/MeshEffects/radar_pulse_half.cgf"},
+          "pulseConeGeometry": {
+            "_Type_": "GlobalResourceGeometry",
+            "path": "Objects/VFX/MeshEffects/radar_pulse_cone_90.cgf"},
+          "pulseMaterial": {
+            "_Type_": "GlobalResourceMaterial",
+            "path": "Materials/VFX/ping/vehicle_ping_wave1.mtl"},
+          "conePulseMaterial": {
+            "_Type_": "GlobalResourceMaterial",
+            "path": "Materials/VFX/ping/scanning_ping2.mtl"},
+          "visualAcceleration": 30000.0,
+          "visualMaxDistance": 200000.0,
+          "snapWaveTimescaleToLifetime": true,
+          "use360PingwaveEffectForAllLevels": true,
+          "attachPingwaveEffectToHost": false}},
+      "pingTypeParams": {
+        "_Type_": "BasicPingTypeParams",
+        "pingChargeUIShowTime": 2.5,
+        "pingChargeUIJammedTime": 2.0,
+        "pingChargeUIHideTime": 3.0,
+        "pingChargeUIUnavailableTime": 1.0,
+        "pingSettingsParams": {
+          "_Type_": "PingSettingsParams",
+          "maxActiveDistance": 0.0,
+          "cooldownRate": 0.5,
+          "detectionLevelParams": [
+            {
+              "_Type_": "PingDetectionLevelParams",
+              "contactSensitivityFactors": [
+                1.01,
+                1.1,
+                1.2,
+                1.3,
+                1.4,
+                1.5,
+                1.75,
+                2.0],
+              "blobSensitivityFactors": [
+                2.0,
+                2.1,
+                2.2,
+                2.4,
+                2.8,
+                3.2,
+                3.8,
+                5.0],
+              "pierceFactors": [
+                1.0,
+                1.0,
+                1.0,
+                1.0,
+                1.0,
+                1.0,
+                1.0,
+                1.0]},
+            {
+              "_Type_": "PingDetectionLevelParams",
+              "contactSensitivityFactors": [
+                1.01,
+                1.1,
+                1.2,
+                1.3,
+                1.4,
+                1.5,
+                1.75,
+                2.0],
+              "blobSensitivityFactors": [
+                2.0,
+                2.1,
+                2.2,
+                2.4,
+                2.8,
+                3.2,
+                3.8,
+                5.0],
+              "pierceFactors": [
+                1.0,
+                1.0,
+                1.0,
+                1.0,
+                1.0,
+                1.0,
+                1.0,
+                1.0]},
+            {
+              "_Type_": "PingDetectionLevelParams",
+              "contactSensitivityFactors": [
+                1.01,
+                1.1,
+                1.2,
+                1.3,
+                1.4,
+                1.5,
+                1.75,
+                2.0],
+              "blobSensitivityFactors": [
+                2.0,
+                2.1,
+                2.2,
+                2.4,
+                2.8,
+                3.2,
+                3.8,
+                5.0],
+              "pierceFactors": [
+                1.0,
+                1.0,
+                1.0,
+                1.0,
+                1.0,
+                1.0,
+                1.0,
+                1.0]},
+            {
+              "_Type_": "PingDetectionLevelParams",
+              "contactSensitivityFactors": [
+                1.01,
+                1.1,
+                1.2,
+                1.3,
+                1.4,
+                1.5,
+                1.75,
+                2.0],
+              "blobSensitivityFactors": [
+                2.0,
+                2.1,
+                2.2,
+                2.4,
+                2.8,
+                3.2,
+                3.8,
+                5.0],
+              "pierceFactors": [
+                1.0,
+                1.0,
+                1.0,
+                1.0,
+                1.0,
+                1.0,
+                1.0,
+                1.0]},
+            {
+              "_Type_": "PingDetectionLevelParams",
+              "contactSensitivityFactors": [
+                2.0,
+                3.0,
+                4.0,
+                5.0,
+                6.0,
+                7.0,
+                8.0,
+                9.0],
+              "blobSensitivityFactors": [
+                10.0,
+                10.0,
+                10.0,
+                10.0,
+                10.0,
+                10.0,
+                10.0,
+                10.0],
+              "pierceFactors": [
+                1.0,
+                1.0,
+                1.0,
+                1.0,
+                1.0,
+                1.0,
+                1.0,
+                1.0]},
+            {
+              "_Type_": "PingDetectionLevelParams",
+              "contactSensitivityFactors": [
+                1.01,
+                1.1,
+                1.2,
+                1.3,
+                1.4,
+                1.5,
+                1.75,
+                2.0],
+              "blobSensitivityFactors": [
+                2.0,
+                2.1,
+                2.2,
+                2.4,
+                2.8,
+                3.2,
+                3.8,
+                5.0],
+              "pierceFactors": [
+                1.0,
+                1.0,
+                1.0,
+                1.0,
+                1.0,
+                1.0,
+                1.0,
+                1.0]},
+            {
+              "_Type_": "PingDetectionLevelParams",
+              "contactSensitivityFactors": [
+                1.01,
+                1.1,
+                1.2,
+                1.3,
+                1.4,
+                1.5,
+                1.75,
+                2.0],
+              "blobSensitivityFactors": [
+                2.0,
+                2.1,
+                2.2,
+                2.4,
+                2.8,
+                3.2,
+                3.8,
+                5.0],
+              "pierceFactors": [
+                1.0,
+                1.0,
+                1.0,
+                1.0,
+                1.0,
+                1.0,
+                1.0,
+                1.0]},
+            {
+              "_Type_": "PingDetectionLevelParams",
+              "contactSensitivityFactors": [
+                1.0,
+                1.0,
+                1.0,
+                1.0,
+                1.0,
+                1.0,
+                1.0,
+                1.0],
+              "blobSensitivityFactors": [
+                1.0,
+                1.0,
+                1.0,
+                1.0,
+                1.0,
+                1.0,
+                1.0,
+                1.0],
+              "pierceFactors": [
+                1.0,
+                1.0,
+                1.0,
+                1.0,
+                1.0,
+                1.0,
+                1.0,
+                1.0]}]}}},
+    "highlightParams": {
+      "_Type_": "ContactHighlightSharedParams",
+      "enableMaterialHighlight": false,
+      "lifeTimeTotal": 4.0,
+      "lifeTimeInterference": 1.0,
+      "lifeTimeFlare": 1.0,
+      "maxHighlightDistance": 60.0,
+      "minHighlightDistance": 20.0,
+      "maxHighlightOpacity": 1.0,
+      "minHighlightOpacity": 0.3,
+      "opacityFadeInDelay": 0.0,
+      "opacityFadeInDuration": 1.0,
+      "opacityFadeOutDuration": 1.0,
+      "highlightLayers": [
+        {
+          "_Type_": "ContactHighlightLayersParams",
+          "highlightParams": [
+            {
+              "_Type_": "ContactHighlightStateParams",
+              "defaultParams": null,
+              "occludedParams": null,
+              "flareParams": null,
+              "occludedFlareParams": null},
+            {
+              "_Type_": "ContactHighlightStateParams",
+              "defaultParams": null,
+              "occludedParams": null,
+              "flareParams": null,
+              "occludedFlareParams": null},
+            {
+              "_Type_": "ContactHighlightStateParams",
+              "defaultParams": null,
+              "occludedParams": null,
+              "flareParams": null,
+              "occludedFlareParams": null},
+            {
+              "_Type_": "ContactHighlightStateParams",
+              "defaultParams": null,
+              "occludedParams": null,
+              "flareParams": null,
+              "occludedFlareParams": null},
+            {
+              "_Type_": "ContactHighlightStateParams",
+              "defaultParams": null,
+              "occludedParams": null,
+              "flareParams": null,
+              "occludedFlareParams": null},
+            {
+              "_Type_": "ContactHighlightStateParams",
+              "defaultParams": null,
+              "occludedParams": null,
+              "flareParams": null,
+              "occludedFlareParams": null},
+            {
+              "_Type_": "ContactHighlightStateParams",
+              "defaultParams": null,
+              "occludedParams": null,
+              "flareParams": null,
+              "occludedFlareParams": null},
+            {
+              "_Type_": "ContactHighlightStateParams",
+              "defaultParams": null,
+              "occludedParams": null,
+              "flareParams": null,
+              "occludedFlareParams": null},
+            {
+              "_Type_": "ContactHighlightStateParams",
+              "defaultParams": null,
+              "occludedParams": null,
+              "flareParams": null,
+              "occludedFlareParams": null}]},
+        {
+          "_Type_": "ContactHighlightLayersParams",
+          "highlightParams": [
+            {
+              "_Type_": "ContactHighlightStateParams",
+              "defaultParams": null,
+              "occludedParams": null,
+              "flareParams": null,
+              "occludedFlareParams": null},
+            {
+              "_Type_": "ContactHighlightStateParams",
+              "defaultParams": null,
+              "occludedParams": null,
+              "flareParams": null,
+              "occludedFlareParams": null},
+            {
+              "_Type_": "ContactHighlightStateParams",
+              "defaultParams": null,
+              "occludedParams": null,
+              "flareParams": null,
+              "occludedFlareParams": null},
+            {
+              "_Type_": "ContactHighlightStateParams",
+              "defaultParams": null,
+              "occludedParams": null,
+              "flareParams": null,
+              "occludedFlareParams": null},
+            {
+              "_Type_": "ContactHighlightStateParams",
+              "defaultParams": null,
+              "occludedParams": null,
+              "flareParams": null,
+              "occludedFlareParams": null},
+            {
+              "_Type_": "ContactHighlightStateParams",
+              "defaultParams": null,
+              "occludedParams": null,
+              "flareParams": null,
+              "occludedFlareParams": null},
+            {
+              "_Type_": "ContactHighlightStateParams",
+              "defaultParams": null,
+              "occludedParams": null,
+              "flareParams": null,
+              "occludedFlareParams": null},
+            {
+              "_Type_": "ContactHighlightStateParams",
+              "defaultParams": null,
+              "occludedParams": null,
+              "flareParams": null,
+              "occludedFlareParams": null},
+            {
+              "_Type_": "ContactHighlightStateParams",
+              "defaultParams": null,
+              "occludedParams": null,
+              "flareParams": null,
+              "occludedFlareParams": null}]}],
+      "audioTriggerTags": [
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null]},
+    "taggingParams": null,
+    "occlusionParams": null,
+    "roomSharedParams": null,
+    "displayRadarContactMarkers": true,
+    "applyNearbyAmbientSignatures": false,
+    "radarJammerParams": null,
+    "deltaSignatureDetectionParams": [],
+    "deltaSignatureBaseSpike": [
+      {
+        "_Type_": "DeltaSignatureSpikeParams",
+        "operationType": "Add",
+        "spikeValue": 1.0},
+      {
+        "_Type_": "DeltaSignatureSpikeParams",
+        "operationType": "Add",
+        "spikeValue": 1.0},
+      {
+        "_Type_": "DeltaSignatureSpikeParams",
+        "operationType": "Add",
+        "spikeValue": 1.0},
+      {
+        "_Type_": "DeltaSignatureSpikeParams",
+        "operationType": "Add",
+        "spikeValue": 1.0},
+      {
+        "_Type_": "DeltaSignatureSpikeParams",
+        "operationType": "Add",
+        "spikeValue": 1.0},
+      {
+        "_Type_": "DeltaSignatureSpikeParams",
+        "operationType": "Add",
+        "spikeValue": 1.0},
+      {
+        "_Type_": "DeltaSignatureSpikeParams",
+        "operationType": "Add",
+        "spikeValue": 1.0},
+      {
+        "_Type_": "DeltaSignatureSpikeParams",
+        "operationType": "Add",
+        "spikeValue": 1.0}],
+    "deltaSignatureSensitivityParams": [
+      {
+        "_Type_": "DeltaSignatureSensitivityParams",
+        "sensitivity": 1.0,
+        "pierce": 1.0},
+      {
+        "_Type_": "DeltaSignatureSensitivityParams",
+        "sensitivity": 1.0,
+        "pierce": 1.0},
+      {
+        "_Type_": "DeltaSignatureSensitivityParams",
+        "sensitivity": 1.0,
+        "pierce": 1.0},
+      {
+        "_Type_": "DeltaSignatureSensitivityParams",
+        "sensitivity": 1.0,
+        "pierce": 1.0},
+      {
+        "_Type_": "DeltaSignatureSensitivityParams",
+        "sensitivity": 1.0,
+        "pierce": 1.0},
+      {
+        "_Type_": "DeltaSignatureSensitivityParams",
+        "sensitivity": 1.0,
+        "pierce": 1.0},
+      {
+        "_Type_": "DeltaSignatureSensitivityParams",
+        "sensitivity": 1.0,
+        "pierce": 1.0},
+      {
+        "_Type_": "DeltaSignatureSensitivityParams",
+        "sensitivity": 1.0,
+        "pierce": 1.0}]}}

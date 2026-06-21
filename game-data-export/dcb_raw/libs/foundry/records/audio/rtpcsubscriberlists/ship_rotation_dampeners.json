@@ -1,0 +1,19 @@
+{
+  "_RecordName_": "EntityAudioControllerRtpcSubscriberListDef.Ship_Rotation_Dampeners",
+  "_RecordId_": "f91f30d4-5f41-4b7d-9cdb-cab859aac9c4",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "EntityAudioControllerRtpcSubscriberListDef",
+    "rtpcs": [
+      {
+        "_Type_": "AudioRtpc",
+        "rtpc": "Ship_Rotation_Dampener_All"},
+      {
+        "_Type_": "AudioRtpc",
+        "rtpc": "Ship_Rotation_Dampener_Pitch"},
+      {
+        "_Type_": "AudioRtpc",
+        "rtpc": "Ship_Rotation_Dampener_Roll"},
+      {
+        "_Type_": "AudioRtpc",
+        "rtpc": "Ship_Rotation_Dampener_Yaw"}]}}

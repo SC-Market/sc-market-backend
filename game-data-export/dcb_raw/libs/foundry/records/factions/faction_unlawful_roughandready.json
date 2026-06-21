@@ -1,0 +1,18 @@
+{
+  "_RecordName_": "Faction.Faction_Unlawful_RoughAndReady",
+  "_RecordId_": "3c9a42a9-a986-494f-b724-4d74415f6016",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "Faction",
+    "name": "@RoughAndReady_RepUI_Name",
+    "description": "@RoughAndReady_RepUI_Description",
+    "defaultReaction": "Neutral",
+    "alliedFactions": [],
+    "enemyFactions": [],
+    "friendlyFireBehaviorOverrides": [],
+    "factionType": "Unlawful",
+    "ableToArrest": false,
+    "policesLawfulTrespass": false,
+    "policesCriminality": false,
+    "noLegalRights": false,
+    "factionReputationRef": null}}

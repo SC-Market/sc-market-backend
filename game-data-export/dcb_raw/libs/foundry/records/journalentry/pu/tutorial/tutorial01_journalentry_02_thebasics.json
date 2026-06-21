@@ -1,0 +1,18 @@
+{
+  "_RecordName_": "JournalEntry.Tutorial01_JournalEntry_02_TheBasics",
+  "_RecordId_": "948e8799-4c8a-41a4-88dc-384e28b8e529",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "JournalEntry",
+    "Title": "@Tut01_Journal02_TheBasics_Title",
+    "ShortTitle": "@LOC_UNINITIALIZED",
+    "SubHeading": "@Tut01_Journal02_TheBasics_Title",
+    "autoOpenMobiGlas": false,
+    "showNotification": true,
+    "missionSpecificContent": false,
+    "removeOnMissionEnd": false,
+    "Style": "file://./../../../../../../libs/foundry/records/journalentrytype/journalentrytype.textlog.json",
+    "type": {
+      "_Type_": "JournalEntryText",
+      "BodyText": "@Tut01_Journal02_TheBasics_Content"},
+    "tutorialEntry": true}}

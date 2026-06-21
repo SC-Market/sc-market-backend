@@ -1,0 +1,27 @@
+{
+  "_RecordName_": "SEntrancesDef.VNCL_Glaive",
+  "_RecordId_": "dcb561af-75fb-4f4b-b200-86081003f87e",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "SEntrancesDef",
+    "boundingBoxScale": {
+      "_Type_": "Vec3",
+      "x": 1.6,
+      "y": 1.6,
+      "z": 1.6},
+    "boundingBoxOffset": {
+      "_Type_": "Vec3",
+      "x": 0.0,
+      "y": 0.0,
+      "z": -0.5},
+    "entranceArray": [
+      {
+        "_Type_": "SCEntranceItem",
+        "entranceName": "@entrance_canopy",
+        "jointName": "VNCL_Glaive",
+        "positionOffset": {
+          "_Type_": "Vec3",
+          "x": 0.0,
+          "y": 5.879,
+          "z": -2.745},
+        "shipState": "Both"}]}}

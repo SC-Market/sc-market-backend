@@ -1,0 +1,37 @@
+{
+  "_RecordName_": "CommsNotification.MCN_ASDDelving_AMallor_Phase3_MissionComplete_Intro_02",
+  "_RecordId_": "e76fd3cb-3cfb-4614-b914-054c1318d7c9",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "CommsNotification",
+    "tags": {
+      "_Type_": "TagList",
+      "tags": [
+        {
+          "_RecordPath_": "file://./../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+          "_RecordName_": "Tag.39de38cd-d4d3-4fee-a80a-99f35046bfc6",
+          "_RecordId_": "39de38cd-d4d3-4fee-a80a-99f35046bfc6"},
+        {
+          "_RecordPath_": "file://./../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+          "_RecordName_": "Tag.10e86aa3-33df-4eb7-aa8a-e447254e8769",
+          "_RecordId_": "10e86aa3-33df-4eb7-aa8a-e447254e8769"},
+        {
+          "_RecordPath_": "file://./../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+          "_RecordName_": "Tag.f2e0e1f6-a4db-4610-a844-f633e7ea86c6",
+          "_RecordId_": "f2e0e1f6-a4db-4610-a844-f633e7ea86c6"},
+        {
+          "_RecordPath_": "file://./../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+          "_RecordName_": "Tag.efc3695e-fbb3-4cd5-9ce3-a6ca0fdb8553",
+          "_RecordId_": "efc3695e-fbb3-4cd5-9ce3-a6ca0fdb8553"},
+        {
+          "_RecordPath_": "file://./../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+          "_RecordName_": "Tag.75e3a7c7-996f-4420-bd15-5620595a7e70",
+          "_RecordId_": "75e3a7c7-996f-4420-bd15-5620595a7e70"},
+        {
+          "_RecordPath_": "file://./../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+          "_RecordName_": "Tag.9b013203-177e-42b4-9d34-02d44caaba09",
+          "_RecordId_": "9b013203-177e-42b4-9d34-02d44caaba09"}]},
+    "communicationName": "file://./../../../../../../libs/foundry/records/communicationname/missioncommunications/asddelvingbespoke/asddelving_phase3_missioncomplete_intro_02.json",
+    "characterEntityClass": "file://./../../../../../../libs/foundry/records/actor/actors/npc_archetypes/male/human/missiongivers/npc_archetypes-male-human-missiongivers-arkenmallor.json",
+    "fakeCommsAudioEntityClass": null,
+    "stage": "file://./../../../../../../libs/foundry/records/commsnotificationstages/cns_test.json"}}

@@ -1,0 +1,41 @@
+{
+  "_RecordName_": "LootArchetype.LootArchetypes_ArmourPiece_Orbageddon_Arms",
+  "_RecordId_": "f93f5454-e56d-41ca-8638-437a19c88c9c",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "LootArchetype",
+    "excludedTags": {
+      "_Type_": "TagList",
+      "tags": []},
+    "primaryOrGroup": {
+      "_Type_": "LootArchetypeOrGroup_Primary",
+      "entries": [
+        {
+          "_Type_": "LootArchetypeEntry_Primary",
+          "name": "Arms",
+          "tag": {
+            "_RecordPath_": "file://./../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+            "_RecordName_": "Tag.0381ccf3-9e09-4ce0-aedd-a4c5123e628b",
+            "_RecordId_": "0381ccf3-9e09-4ce0-aedd-a4c5123e628b"},
+          "additionalTags": {
+            "_Type_": "TagsDNFTerm",
+            "positiveTags": [
+              {
+                "_RecordPath_": "file://./../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+                "_RecordName_": "Tag.5e2dc874-480b-4ee7-85ee-733daf16e388",
+                "_RecordId_": "5e2dc874-480b-4ee7-85ee-733daf16e388"}],
+            "negativeTags": []},
+          "weight": 1.0,
+          "optionalData": []}]},
+    "secondaryOrGroups": [
+      {
+        "_Type_": "LootArchetypeOrGroup_Secondary",
+        "groupName": "Rarity",
+        "entries": [
+          {
+            "_Type_": "LootArchetypeEntry_Secondary",
+            "tag": {
+              "_RecordPath_": "file://./../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+              "_RecordName_": "Tag.b285311b-1f68-4a69-b73f-1295e83a3909",
+              "_RecordId_": "b285311b-1f68-4a69-b73f-1295e83a3909"},
+            "weight": 1.0}]}]}}

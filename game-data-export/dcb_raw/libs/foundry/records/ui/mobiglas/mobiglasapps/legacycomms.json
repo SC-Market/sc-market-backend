@@ -1,0 +1,24 @@
+{
+  "_RecordName_": "mobiGlasApp.LegacyComms",
+  "_RecordId_": "7f16888e-c1e9-466b-baec-f4241bf9b009",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "mobiGlasApp",
+    "name": "ContactsScreen",
+    "bindingsNamespace": "",
+    "appCanvas": null,
+    "homeCanvas": null,
+    "displayIcon": "UI/Textures/Vector/MobiGlas/General/NotificationMessage.svg",
+    "displayIcon3d": "Objects/UI/3D_Icons/ui_mobiapp_message.cgf",
+    "displayName": "@mobiGlas_AppName_Comms",
+    "appColor": {
+      "_Type_": "SRGBA8",
+      "r": 0,
+      "g": 255,
+      "b": 0,
+      "a": 255},
+    "isHidden": false,
+    "defaultAppData": [],
+    "appParams": null,
+    "hostingApps": [],
+    "legacyApp": true}}

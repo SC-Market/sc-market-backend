@@ -1,0 +1,34 @@
+{
+  "_RecordName_": "EntityClassDefinition.BaseEffect",
+  "_RecordId_": "2de6d3a8-1b60-4b95-94b8-d314efaa13eb",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "EntityClassDefinition",
+    "Category": "Default",
+    "Icon": "Default.bmp",
+    "Invisible": true,
+    "BBoxSelection": false,
+    "defaultEditorColor": {
+      "_Type_": "RGB",
+      "r": 1.0,
+      "g": 1.0,
+      "b": 0.0},
+    "entityDensityClass": null,
+    "tags": [],
+    "StaticEntityClassData": [],
+    "Components": [
+      {
+        "_Type_": "SEntityComponentEffects",
+        "entityEffects": {
+          "_Type_": "SEntitityEffectSystem_System",
+          "particleEffects": null,
+          "materialEffects": null,
+          "soundEffects": null,
+          "audioEnvironmentEffects": null,
+          "lightEffects": null,
+          "uiOwnerEffects": null,
+          "sequencerTags": []},
+        "staticValues": [],
+        "staticColors": [],
+        "tagsToEnableOnLoad": [],
+        "triggersToEnableOnLoad": []}]}}

@@ -1,0 +1,12 @@
+{
+  "_RecordName_": "ShipComputerDefinition.CNOU",
+  "_RecordId_": "c096b712-9c22-4f73-9d6f-bc46efa87f8e",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "ShipComputerDefinition",
+    "communicationConfig": "file://./../../../../../../libs/foundry/records/communicationconfig/ship_cnou.json",
+    "preBootUpTime": 2.0,
+    "bootUpTime": 5.0,
+    "timeSinceLastHitMarkerSfx": {
+      "_Type_": "AudioRtpc",
+      "rtpc": "UI_TimeSinceLastHitMarker"}}}

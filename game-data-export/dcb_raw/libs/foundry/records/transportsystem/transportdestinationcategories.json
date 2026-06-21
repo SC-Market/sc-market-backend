@@ -1,0 +1,40 @@
+{
+  "_RecordName_": "TransportDestinationCategories.TransportDestinationCategories",
+  "_RecordId_": "5ebc6308-a8c7-4a42-9de6-2785aedd8e68",
+  "_RecordTag_": "CGP5",
+  "_RecordValue_": {
+    "_Type_": "TransportDestinationCategories",
+    "categories": [
+      {
+        "_RecordId_": "706ca5d5-a657-41ac-b042-1cc58ac67fe5",
+        "_RecordName_": "TransportDestinationCategory.706ca5d5-a657-41ac-b042-1cc58ac67fe5",
+        "_Type_": "TransportDestinationCategory",
+        "categoryName": "Hidden",
+        "locName": "@LOC_EMPTY",
+        "layout": "List",
+        "icon": null,
+        "priority": -1},
+      {
+        "_RecordId_": "bde30751-abdd-491c-8281-2b094e51e139",
+        "_RecordName_": "TransportDestinationCategory.bde30751-abdd-491c-8281-2b094e51e139",
+        "_Type_": "TransportDestinationCategory",
+        "categoryName": "Habs",
+        "locName": "@ui_transport_destination_category_habs",
+        "layout": "ButtonGrid",
+        "icon": {
+          "_RecordPath_": "file://./../../../../libs/foundry/records/transportsystem/transporticons.json",
+          "_RecordName_": "TransportIconType.7f21eacb-d54a-4e19-91e9-08b4f789fc8b",
+          "_RecordId_": "7f21eacb-d54a-4e19-91e9-08b4f789fc8b"},
+        "priority": 1},
+      {
+        "_RecordId_": "96a7ac12-bed8-46b4-a06e-2190ed820afd",
+        "_RecordName_": "TransportDestinationCategory.96a7ac12-bed8-46b4-a06e-2190ed820afd",
+        "_Type_": "TransportDestinationCategory",
+        "categoryName": "Hangars",
+        "locName": "@ui_transport_destination_category_hangars",
+        "layout": "List",
+        "icon": {
+          "_RecordPath_": "file://./../../../../libs/foundry/records/transportsystem/transporticons.json",
+          "_RecordName_": "TransportIconType.92f163d8-89c6-4667-bc85-b4474002dc3c",
+          "_RecordId_": "92f163d8-89c6-4667-bc85-b4474002dc3c"},
+        "priority": 2}]}}

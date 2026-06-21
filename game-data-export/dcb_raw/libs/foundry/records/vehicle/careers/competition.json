@@ -1,0 +1,9 @@
+{
+  "_RecordName_": "VehicleCareer.Competition",
+  "_RecordId_": "0f148cb8-74eb-45fa-bd77-82a756fa4b36",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "VehicleCareer",
+    "displayName": "@vehicle_focus_competition",
+    "roleList": [
+      "file://./../../../../../libs/foundry/records/vehicle/roles/racing.json"]}}

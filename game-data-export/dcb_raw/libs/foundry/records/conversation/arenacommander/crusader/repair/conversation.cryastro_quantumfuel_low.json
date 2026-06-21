@@ -1,0 +1,15 @@
+{
+  "_RecordName_": "Conversation.CryAstro_QuantumFuel_Low",
+  "_RecordId_": "3b6c8a21-8523-459f-82c7-14b03b84a3b4",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "Conversation",
+    "fragments": [
+      {
+        "_Type_": "ConversationNode_Start",
+        "next": null},
+      {
+        "_Type_": "ConversationNode_Dialogue",
+        "next": null,
+        "context": "file://./../../../../../../../libs/foundry/records/dialoguecontext/arenacommander/crusader/repair/dialoguecontext.dxsh_pu_autosys_cryastro_quantumfuel_low.json",
+        "skipNodeInXSecs": -1.0}]}}

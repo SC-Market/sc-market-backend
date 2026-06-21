@@ -1,0 +1,12 @@
+{
+  "_RecordName_": "HintUIData.SalvageRepairBeam_Shields",
+  "_RecordId_": "dc0dbad1-d0f0-4b5a-88e8-c7cc9ca4b87b",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "HintUIData",
+    "TitleText": "@Hints_SalvageRepairBeam_Shields_Title",
+    "BodyText": "@Hints_SalvageRepairBeam_Shields",
+    "BodyTextGamePad": "@Hints_SalvageRepairBeam_Shields",
+    "BodyTextJoystick": "@Hints_SalvageRepairBeam_Shields",
+    "TitleImagePath": "",
+    "BodyImagePath": ""}}

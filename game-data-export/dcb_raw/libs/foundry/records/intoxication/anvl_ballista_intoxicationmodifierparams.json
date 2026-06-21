@@ -1,0 +1,81 @@
+{
+  "_RecordName_": "IntoxicationWheeledModifierParams.ANVL_Ballista_IntoxicationModifierParams",
+  "_RecordId_": "7d6adb2e-dec3-43ec-be69-68567892ffed",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "IntoxicationWheeledModifierParams",
+    "distortion": {
+      "_Type_": "ToxiInputModifierDistortion",
+      "enable": true,
+      "amplitudeInterpolant": {
+        "_Type_": "BezierCurve",
+        "points": [
+          {
+            "_Type_": "Vec2",
+            "x": -0.4910843,
+            "y": -0.002468079},
+          {
+            "_Type_": "Vec2",
+            "x": 0.0,
+            "y": 0.0},
+          {
+            "_Type_": "Vec2",
+            "x": 0.4910843,
+            "y": 0.002468079},
+          {
+            "_Type_": "Vec2",
+            "x": 0.8656923,
+            "y": 0.1960732},
+          {
+            "_Type_": "Vec2",
+            "x": 1.0,
+            "y": 1.0},
+          {
+            "_Type_": "Vec2",
+            "x": 1.134308,
+            "y": 1.803927}],
+        "useLUT": false},
+      "axesInputScale": {
+        "_Type_": "BezierCurve",
+        "points": [
+          {
+            "_Type_": "Vec2",
+            "x": -0.475502,
+            "y": -0.1002553},
+          {
+            "_Type_": "Vec2",
+            "x": 0.0,
+            "y": 0.0},
+          {
+            "_Type_": "Vec2",
+            "x": 0.475502,
+            "y": 0.1002553},
+          {
+            "_Type_": "Vec2",
+            "x": 0.8364194,
+            "y": 0.1124328},
+          {
+            "_Type_": "Vec2",
+            "x": 1.0,
+            "y": 1.0},
+          {
+            "_Type_": "Vec2",
+            "x": 1.163581,
+            "y": 1.887567}],
+        "useLUT": false},
+      "minAmplitude": 1.4,
+      "maxAmplitude": 1.9,
+      "frequency": 0.5},
+    "delay": {
+      "_Type_": "ToxiInputModifierDelay",
+      "enable": true,
+      "minSpeed": 1.1,
+      "maxSpeed": 1.5},
+    "yaw": {
+      "_Type_": "ToxiInputModifierAxis",
+      "strength": 1.0,
+      "triggerAxes": {
+        "_Type_": "Vec3",
+        "x": 0.2,
+        "y": 1.0,
+        "z": 0.0}}}}

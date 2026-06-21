@@ -1,0 +1,52 @@
+{
+  "_RecordName_": "SubHarvestableConfigRecord.V3SubHarvestableConfig_Loose_Medpen",
+  "_RecordId_": "d9d56824-e240-44f7-945c-f292785aee73",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "SubHarvestableConfigRecord",
+    "subConfig": {
+      "_Type_": "SubHarvestableConfig",
+      "initialSlotsProbability": 1.0,
+      "initialSlotsProbabilityDeepest": null,
+      "configRespawnTimeMultiplier": 1.0,
+      "subHarvestables": [
+        {
+          "_Type_": "SubHarvestableSlot",
+          "harvestable": null,
+          "harvestableEntityClass": "file://./../../../../../libs/foundry/records/entities/scitem/consumables/crlf_consumable_healing_01.json",
+          "harvestableSetup": "file://./../../../../../libs/foundry/records/harvestable/harvestablesetups/v3harvestablesetup_looseitem_2h.json",
+          "relativeProbability": 1.0,
+          "relativeProbabilityDeepest": null,
+          "harvestableRespawnTimeMultiplier": 1.0,
+          "geometries": [],
+          "lootConfig": null},
+        {
+          "_Type_": "SubHarvestableSlot",
+          "harvestable": null,
+          "harvestableEntityClass": "file://./../../../../../libs/foundry/records/entities/scitem/consumables/crlf_consumable_radiation_01.json",
+          "harvestableSetup": "file://./../../../../../libs/foundry/records/harvestable/harvestablesetups/v3harvestablesetup_looseitem_2h.json",
+          "relativeProbability": 0.1,
+          "relativeProbabilityDeepest": null,
+          "harvestableRespawnTimeMultiplier": 1.0,
+          "geometries": [],
+          "lootConfig": null},
+        {
+          "_Type_": "SubHarvestableSlot",
+          "harvestable": null,
+          "harvestableEntityClass": "file://./../../../../../libs/foundry/records/entities/scitem/consumables/crlf_consumable_adrenaline_01.json",
+          "harvestableSetup": "file://./../../../../../libs/foundry/records/harvestable/harvestablesetups/v3harvestablesetup_looseitem_2h.json",
+          "relativeProbability": 0.1,
+          "relativeProbabilityDeepest": null,
+          "harvestableRespawnTimeMultiplier": 1.0,
+          "geometries": [],
+          "lootConfig": null},
+        {
+          "_Type_": "SubHarvestableSlot",
+          "harvestable": null,
+          "harvestableEntityClass": "file://./../../../../../libs/foundry/records/entities/scitem/consumables/crlf_consumable_steroid_01.json",
+          "harvestableSetup": "file://./../../../../../libs/foundry/records/harvestable/harvestablesetups/v3harvestablesetup_looseitem_2h.json",
+          "relativeProbability": 0.1,
+          "relativeProbabilityDeepest": null,
+          "harvestableRespawnTimeMultiplier": 1.0,
+          "geometries": [],
+          "lootConfig": null}]}}}

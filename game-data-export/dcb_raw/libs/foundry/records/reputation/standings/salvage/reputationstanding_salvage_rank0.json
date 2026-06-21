@@ -1,0 +1,15 @@
+{
+  "_RecordName_": "SReputationStandingParams.ReputationStanding_Salvage_Rank0",
+  "_RecordId_": "95a26649-79d5-4a9f-9a00-839e92a279c6",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "SReputationStandingParams",
+    "name": "Applicant",
+    "description": "The base rank in the salvaging reputation scope",
+    "displayName": "@RepStanding_Salvaging_Rank0",
+    "perkDescription": "@blank_space",
+    "icon": "",
+    "minReputation": 0,
+    "driftReputation": 0,
+    "driftTimeHours": 24.0,
+    "gated": false}}

@@ -1,0 +1,34 @@
+{
+  "_RecordName_": "DialogueContextBank.POI_Player_Convs_Astro_Armada_Salesperson",
+  "_RecordId_": "ade803a7-5057-445b-aefd-ca39aac83008",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "DialogueContextBank",
+    "realm": "file://./../../../../../../libs/foundry/records/dialoguerealm/pu/dialoguerealm.poi_player_convs.json",
+    "character": "file://./../../../../../../libs/foundry/records/character/pu/character.astro_armada_salesperson.json",
+    "defaultTrigger": {
+      "_Type_": "GlobalResourceAudio",
+      "audioTrigger": ""},
+    "defaultFemaleTrigger": {
+      "_Type_": "GlobalResourceAudio",
+      "audioTrigger": ""},
+    "contexts": [
+      {
+        "_RecordId_": "eb7218a9-6e78-4cc7-8a4b-27b87f2cc340",
+        "_RecordName_": "DialogueContext.AstroArmada_Salesperson_Conv_001_1",
+        "_Type_": "DialogueContext",
+        "speaker": "file://./../../../../../../libs/foundry/records/character/pu/character.astro_armada_salesperson.json",
+        "localizedSubtitleText": "@AstroArmada_Salesperson_Conv_001_1",
+        "unlocalizedSubtitleText": "@LOC_UNINITIALIZED",
+        "subtitleShowDelay": 0.0,
+        "subtitleDisplayDurationOverride": 0.0,
+        "tempText": "",
+        "audioTrigger": {
+          "_Type_": "GlobalResourceAudio",
+          "audioTrigger": ""},
+        "femaleAudioTrigger": {
+          "_Type_": "GlobalResourceAudio",
+          "audioTrigger": ""},
+        "forceSubtitles": false,
+        "contents": [],
+        "tags": []}]}}

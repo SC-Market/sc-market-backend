@@ -1,0 +1,17 @@
+{
+  "_RecordName_": "InventoryContainer.Ship_TempItemCarryingCapacity_CRUS_Mercury",
+  "_RecordId_": "fe8ac5e6-e7d7-4e8d-911d-b52120cdca4c",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "InventoryContainer",
+    "excludedItemSubTypes": [],
+    "interiorDimensions": {
+      "_Type_": "Vec3",
+      "x": 5.0,
+      "y": 10.0,
+      "z": 2.0},
+    "inventoryType": {
+      "_Type_": "InventoryClosedContainerType",
+      "capacity": {
+        "_Type_": "SStandardCargoUnit",
+        "standardCargoUnits": 114.0}}}}

@@ -1,0 +1,47 @@
+{
+  "_RecordName_": "SEntrancesDef.RSI_Zeus",
+  "_RecordId_": "f1280459-1cc8-46d0-8d54-fef773d1733f",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "SEntrancesDef",
+    "boundingBoxScale": {
+      "_Type_": "Vec3",
+      "x": 1.2,
+      "y": 1.2,
+      "z": 1.2},
+    "boundingBoxOffset": {
+      "_Type_": "Vec3",
+      "x": 0.0,
+      "y": 0.0,
+      "z": -0.5},
+    "entranceArray": [
+      {
+        "_Type_": "SCEntranceItem",
+        "entranceName": "@entrance_ramp",
+        "jointName": "hardpoint_ramp",
+        "positionOffset": {
+          "_Type_": "Vec3",
+          "x": 4.07,
+          "y": 0.484,
+          "z": -0.0208},
+        "shipState": "Both"},
+      {
+        "_Type_": "SCEntranceItem",
+        "entranceName": "@entrance_ladder",
+        "jointName": "hardpoint_entrance_ladder",
+        "positionOffset": {
+          "_Type_": "Vec3",
+          "x": -0.569,
+          "y": 1.97,
+          "z": -0.9},
+        "shipState": "Both"},
+      {
+        "_Type_": "SCEntranceItem",
+        "entranceName": "@entrance_airlock",
+        "jointName": "hardpoint_airlock_door",
+        "positionOffset": {
+          "_Type_": "Vec3",
+          "x": 0.17425,
+          "y": -1.578,
+          "z": -0.09035},
+        "shipState": "Flying"}]}}

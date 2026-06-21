@@ -1,0 +1,30 @@
+{
+  "_RecordName_": "MegaMap.EA_PyroJump_ClassicRace",
+  "_RecordId_": "055073ce-5dbf-4873-8109-f8d22dca968e",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "MegaMap",
+    "gameMode": "file://./../../../../../../libs/foundry/records/gamemode/ea_classicrace.json",
+    "SolarSystems": [
+      {
+        "_Type_": "SMegaMapSolarSystem",
+        "Record": null,
+        "ObjectContainers": [
+          "ObjectContainers/EA/PyroJump/pyrojump_global.socpak",
+          "ObjectContainers/EA/PyroJump/pyrojump_track1.socpak"]}],
+    "singlePlayerOrMultiplayer": "Both",
+    "subsumptionMission": "Libs/Subsumption/Missions/AC/DFM_Race/DFM_Race.xml",
+    "subsumptionMissionInitParams": [],
+    "arenaCommanderScenarioParams": null,
+    "level": "file://./../../../../../../libs/foundry/records/level/ea/ea_pyrojump.json",
+    "trackViewIntro": "",
+    "rootLocation": null,
+    "streamingMode": "Never",
+    "bindCullingEnabled": false,
+    "defaultWinningTeamOverride": -1,
+    "displayName": "@LOC_UNINITIALIZED",
+    "appearsInS42LevelSelect": false,
+    "chapter": null,
+    "chapterAlias": "",
+    "skipLoadScreen": false,
+    "devDebugSkip": false}}

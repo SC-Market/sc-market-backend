@@ -1,0 +1,76 @@
+{
+  "_RecordName_": "ProceduralAnimation.HeavyCameraShake",
+  "_RecordId_": "b4d8fb11-b534-44e4-9245-8f5ffe6f6c41",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "ProceduralAnimation",
+    "sequences": [
+      {
+        "_Type_": "ProceduralAnimationSequence",
+        "duration": 0.5,
+        "animationCurve": {
+          "_Type_": "BezierCurve",
+          "points": [
+            {
+              "_Type_": "Vec2",
+              "x": -0.06644851,
+              "y": -0.06908333},
+            {
+              "_Type_": "Vec2",
+              "x": 0.0,
+              "y": 0.0},
+            {
+              "_Type_": "Vec2",
+              "x": 0.06644851,
+              "y": 0.06908333},
+            {
+              "_Type_": "Vec2",
+              "x": 0.04554893,
+              "y": 0.4549126},
+            {
+              "_Type_": "Vec2",
+              "x": 0.1692614,
+              "y": 0.4429961},
+            {
+              "_Type_": "Vec2",
+              "x": 0.2929738,
+              "y": 0.4310794},
+            {
+              "_Type_": "Vec2",
+              "x": 0.3857581,
+              "y": -0.2034792},
+            {
+              "_Type_": "Vec2",
+              "x": 0.537587,
+              "y": -0.2034792},
+            {
+              "_Type_": "Vec2",
+              "x": 0.6894159,
+              "y": -0.2034792},
+            {
+              "_Type_": "Vec2",
+              "x": 0.6078781,
+              "y": -0.0008970636},
+            {
+              "_Type_": "Vec2",
+              "x": 1.0,
+              "y": 0.0},
+            {
+              "_Type_": "Vec2",
+              "x": 1.392122,
+              "y": 0.0008970636}],
+          "useLUT": false},
+        "boneAnimations": [
+          {
+            "_Type_": "ProceduralAnimationBone",
+            "bone": "Head_LowPass",
+            "chainLength": 0,
+            "layer": 16,
+            "operation": "Rotation",
+            "relativeTo": "ParentBone",
+            "values": {
+              "_Type_": "Vec3",
+              "x": 5.0,
+              "y": 10.0,
+              "z": 20.0},
+            "delay": 0.0}]}]}}

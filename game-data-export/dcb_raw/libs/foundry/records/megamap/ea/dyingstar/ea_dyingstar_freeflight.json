@@ -1,0 +1,30 @@
+{
+  "_RecordName_": "MegaMap.EA_DyingStar_FreeFlight",
+  "_RecordId_": "2a62bb5e-b1b8-45d7-ac39-80a0128d29e6",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "MegaMap",
+    "gameMode": "file://./../../../../../../libs/foundry/records/gamemode/ea_freeflight.json",
+    "SolarSystems": [
+      {
+        "_Type_": "SMegaMapSolarSystem",
+        "Record": null,
+        "ObjectContainers": [
+          "ObjectContainers/EA/DyingStar/freeflight.socpak",
+          "ObjectContainers/EA/DyingStar/global.socpak"]}],
+    "singlePlayerOrMultiplayer": "Both",
+    "subsumptionMission": "",
+    "subsumptionMissionInitParams": [],
+    "arenaCommanderScenarioParams": null,
+    "level": "file://./../../../../../../libs/foundry/records/level/ea/ea_dyingstar.json",
+    "trackViewIntro": "",
+    "rootLocation": null,
+    "streamingMode": "Never",
+    "bindCullingEnabled": false,
+    "defaultWinningTeamOverride": -1,
+    "displayName": "@LOC_UNINITIALIZED",
+    "appearsInS42LevelSelect": false,
+    "chapter": null,
+    "chapterAlias": "",
+    "skipLoadScreen": false,
+    "devDebugSkip": false}}

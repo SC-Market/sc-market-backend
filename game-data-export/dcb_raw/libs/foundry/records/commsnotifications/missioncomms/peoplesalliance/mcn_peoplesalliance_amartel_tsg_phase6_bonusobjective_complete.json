@@ -1,0 +1,37 @@
+{
+  "_RecordName_": "CommsNotification.MCN_PeoplesAlliance_AMartel_TSG_Phase6_BonusObjective_Complete",
+  "_RecordId_": "1fa83bd9-d9ee-4e00-bb08-b469b8b01fbf",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "CommsNotification",
+    "tags": {
+      "_Type_": "TagList",
+      "tags": [
+        {
+          "_RecordPath_": "file://./../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+          "_RecordName_": "Tag.b9675fd9-e22e-45de-a58d-e4990aa92c32",
+          "_RecordId_": "b9675fd9-e22e-45de-a58d-e4990aa92c32"},
+        {
+          "_RecordPath_": "file://./../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+          "_RecordName_": "Tag.263275f9-9db9-44f0-bb08-a874e7602185",
+          "_RecordId_": "263275f9-9db9-44f0-bb08-a874e7602185"},
+        {
+          "_RecordPath_": "file://./../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+          "_RecordName_": "Tag.7a668b61-da01-43ad-9639-e552027e0768",
+          "_RecordId_": "7a668b61-da01-43ad-9639-e552027e0768"},
+        {
+          "_RecordPath_": "file://./../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+          "_RecordName_": "Tag.161cb435-4941-4113-a2bf-b87362efd8bf",
+          "_RecordId_": "161cb435-4941-4113-a2bf-b87362efd8bf"},
+        {
+          "_RecordPath_": "file://./../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+          "_RecordName_": "Tag.9c132978-099a-46bc-9b19-9d77bcef8b9b",
+          "_RecordId_": "9c132978-099a-46bc-9b19-9d77bcef8b9b"},
+        {
+          "_RecordPath_": "file://./../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+          "_RecordName_": "Tag.b1c94fba-5972-40d1-bf67-0e16e0879996",
+          "_RecordId_": "b1c94fba-5972-40d1-bf67-0e16e0879996"}]},
+    "communicationName": "file://./../../../../../../libs/foundry/records/communicationname/missioncommunications/tsgspecific/tsg_phase6_bonusobjective_complete.json",
+    "characterEntityClass": "file://./../../../../../../libs/foundry/records/actor/actors/pyro/npc_archetypes-male-human-missiongivers-anissmartel.json",
+    "fakeCommsAudioEntityClass": null,
+    "stage": "file://./../../../../../../libs/foundry/records/commsnotificationstages/cns_test.json"}}

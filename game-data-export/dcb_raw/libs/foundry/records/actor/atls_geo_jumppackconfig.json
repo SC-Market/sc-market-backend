@@ -1,0 +1,18 @@
+{
+  "_RecordName_": "JumpThrusterPackConfig.ATLS_GEO_JumpPackConfig",
+  "_RecordId_": "6804ce97-451c-4d69-bef2-7508c8bff5fb",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "JumpThrusterPackConfig",
+    "useJumpThrusters": true,
+    "jumpBoosterFuel": 1.6,
+    "jumpBoosterFuelConsumptionSpeed": 1.0,
+    "jumpBoosterFuelAirRestoreSpeed": 0.8,
+    "jumpBoosterFuelGroundRestoreSpeed": 1.0,
+    "jumpThrustersImpulseStrenght": 38000.0,
+    "useLandThrusters": true,
+    "landThrustersImpulseStrenght": 2500.0,
+    "landThrustersMinThresholdDistance": 3.0,
+    "landThrustersMaxThresholdDistance": 5.0,
+    "landThrustersMinSpeed": 3.0,
+    "landThrustersMinTime": 0.5}}

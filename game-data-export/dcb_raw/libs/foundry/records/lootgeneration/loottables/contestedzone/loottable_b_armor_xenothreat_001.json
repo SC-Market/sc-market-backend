@@ -1,0 +1,15 @@
+{
+  "_RecordName_": "LootTable.LootTable_B_Armor_Xenothreat_001",
+  "_RecordId_": "9621236e-1bc2-4d76-bb42-067bc745fdca",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "LootTable",
+    "lootArchetypes": [
+      {
+        "_Type_": "WeightedLootArchetype",
+        "archetype": "file://./../../../../../../libs/foundry/records/lootgeneration/lootarchetypes/lootarchetype_cz_armor_horizon.json",
+        "weight": 1.0,
+        "numberOfResultsConstraints": {
+          "_Type_": "NumResultsConstraints",
+          "minResults": 0,
+          "maxResults": 0}}]}}

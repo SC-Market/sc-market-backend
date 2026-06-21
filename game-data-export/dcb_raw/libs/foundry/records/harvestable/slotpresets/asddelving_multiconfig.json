@@ -1,0 +1,103 @@
+{
+  "_RecordName_": "SubHarvestableMultiConfigRecord.ASDDelving_MultiConfig",
+  "_RecordId_": "a12e818a-8aa7-4563-b6b1-26647281480b",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "SubHarvestableMultiConfigRecord",
+    "multiConfig": {
+      "_Type_": "SubHarvestableMultiConfig",
+      "defaultConfig": null,
+      "ignoreAttachableTagsForTaggedConfigs": true,
+      "taggedConfigs": [
+        {
+          "_Type_": "TaggedSubHarvestableConfig",
+          "name": "PenDispenser - Medical",
+          "tagList": {
+            "_Type_": "HarvestableTagListTagEditor",
+            "tags": [
+              {
+                "_RecordPath_": "file://./../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+                "_RecordName_": "Tag.9446d839-3a8b-4b8a-ace7-f1f0a084945f",
+                "_RecordId_": "9446d839-3a8b-4b8a-ace7-f1f0a084945f"}]},
+          "subConfig": {
+            "_Type_": "SubHarvestableConfigSingleManual",
+            "subConfigManual": {
+              "_Type_": "SubHarvestableConfig",
+              "initialSlotsProbability": 1.0,
+              "initialSlotsProbabilityDeepest": null,
+              "configRespawnTimeMultiplier": 1.0,
+              "subHarvestables": [
+                {
+                  "_Type_": "SubHarvestableSlot",
+                  "harvestable": "file://./../../../../../libs/foundry/records/harvestable/harvestablepresets/dispenser_med_itemslot_dcd.json",
+                  "harvestableEntityClass": null,
+                  "harvestableSetup": null,
+                  "relativeProbability": 1.0,
+                  "relativeProbabilityDeepest": null,
+                  "harvestableRespawnTimeMultiplier": 1.0,
+                  "geometries": [],
+                  "lootConfig": {
+                    "_Type_": "LootConfig",
+                    "lootConstraints": {
+                      "_Type_": "LootConstraints",
+                      "poolFilter": null,
+                      "secondaryChoices": null,
+                      "fullnessFactorRange": {
+                        "_Type_": "FloatFactorRange",
+                        "min": 0.2,
+                        "max": 0.8},
+                      "totalResultsLimit": 0,
+                      "chanceToGenerate": 1.0,
+                      "chanceToGenerateAdditionalAttachedInventories": 1.0,
+                      "advanced": {
+                        "_Type_": "AdvancedLootConstraints",
+                        "pruningLevel": "containerSize",
+                        "fullnessMode": "stopAfterExceed"}},
+                    "lootTable": null,
+                    "lootTableV3": null}}]}}},
+        {
+          "_Type_": "TaggedSubHarvestableConfig",
+          "name": "PenDispender- Radiation",
+          "tagList": {
+            "_Type_": "HarvestableTagListTagEditor",
+            "tags": [
+              {
+                "_RecordPath_": "file://./../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+                "_RecordName_": "Tag.1df1ea0a-957e-4fe9-82c2-9e208867d196",
+                "_RecordId_": "1df1ea0a-957e-4fe9-82c2-9e208867d196"}]},
+          "subConfig": {
+            "_Type_": "SubHarvestableConfigSingleManual",
+            "subConfigManual": {
+              "_Type_": "SubHarvestableConfig",
+              "initialSlotsProbability": 1.0,
+              "initialSlotsProbabilityDeepest": null,
+              "configRespawnTimeMultiplier": 1.0,
+              "subHarvestables": [
+                {
+                  "_Type_": "SubHarvestableSlot",
+                  "harvestable": "file://./../../../../../libs/foundry/records/harvestable/harvestablepresets/dispenser_rad_itemslot_dcd.json",
+                  "harvestableEntityClass": null,
+                  "harvestableSetup": null,
+                  "relativeProbability": 1.0,
+                  "relativeProbabilityDeepest": null,
+                  "harvestableRespawnTimeMultiplier": 1.0,
+                  "geometries": [],
+                  "lootConfig": {
+                    "_Type_": "LootConfig",
+                    "lootConstraints": {
+                      "_Type_": "LootConstraints",
+                      "poolFilter": null,
+                      "secondaryChoices": null,
+                      "fullnessFactorRange": {
+                        "_Type_": "FloatFactorRange",
+                        "min": 0.2,
+                        "max": 0.8},
+                      "totalResultsLimit": 0,
+                      "chanceToGenerate": 1.0,
+                      "chanceToGenerateAdditionalAttachedInventories": 1.0,
+                      "advanced": {
+                        "_Type_": "AdvancedLootConstraints",
+                        "pruningLevel": "containerSize",
+                        "fullnessMode": "stopAfterExceed"}},
+                    "lootTable": null,
+                    "lootTableV3": null}}]}}}]}}}

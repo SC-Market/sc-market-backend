@@ -1,0 +1,19 @@
+{
+  "_RecordName_": "UIElement.ShipInterface",
+  "_RecordId_": "49d0e4c2-c54d-4bab-a561-9eb9c4fc025b",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "UIElement",
+    "sourceFile": "UI/ShipInterface/assets/SWF/ShipInterface_root.swf",
+    "soundsRecord": null,
+    "fontFile": "UI/fonts/Shared/fonts_en.gfx",
+    "alignMode": "fullscreen",
+    "alignScale": true,
+    "alignMax": false,
+    "layer": 10,
+    "skipFirstFrameInit": true,
+    "keyEvents": true,
+    "eventsExclusive": false,
+    "noDepthTest": false,
+    "forceNoUnload": false,
+    "noPostProcessing": false}}

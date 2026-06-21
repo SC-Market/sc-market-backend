@@ -1,0 +1,9 @@
+{
+  "_RecordName_": "SActorLocomotionFidgetDef.LocoFidgetConfig_Default",
+  "_RecordId_": "fdbda370-75ca-4980-b024-95def89c2c19",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "SActorLocomotionFidgetDef",
+    "enable": true,
+    "stateDefs": [
+      "file://./../../../../../../libs/foundry/records/actor/locomotionpersonality/fidget/locofidgetstateconfig_default.json"]}}

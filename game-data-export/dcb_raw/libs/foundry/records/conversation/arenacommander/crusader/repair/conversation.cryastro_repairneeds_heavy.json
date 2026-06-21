@@ -1,0 +1,15 @@
+{
+  "_RecordName_": "Conversation.CryAstro_RepairNeeds_Heavy",
+  "_RecordId_": "f89a2ed6-1e7b-4ace-abaf-e932634f6400",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "Conversation",
+    "fragments": [
+      {
+        "_Type_": "ConversationNode_Start",
+        "next": null},
+      {
+        "_Type_": "ConversationNode_Dialogue",
+        "next": null,
+        "context": "file://./../../../../../../../libs/foundry/records/dialoguecontext/arenacommander/crusader/repair/dialoguecontext.dxsh_pu_autosys_cryastro_repairneeds_heavy.json",
+        "skipNodeInXSecs": -1.0}]}}

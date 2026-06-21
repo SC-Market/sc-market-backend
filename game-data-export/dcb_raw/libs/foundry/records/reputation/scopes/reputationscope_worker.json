@@ -1,0 +1,18 @@
+{
+  "_RecordName_": "SReputationScopeParams.ReputationScope_Worker",
+  "_RecordId_": "3dfdf838-23c2-4ea7-be0e-f34c93728eda",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "SReputationScopeParams",
+    "scopeName": "Worker",
+    "displayName": "@RepScope_Worker_Name",
+    "description": "@LOC_PLACEHOLDER",
+    "icon": "",
+    "standingMap": {
+      "_Type_": "SReputationStandingMapParams",
+      "reputationCeiling": 1001,
+      "initialReputation": 0,
+      "standings": [
+        "file://./../../../../../libs/foundry/records/reputation/standings/worker/reputationstanding_worker_noteligible.json",
+        "file://./../../../../../libs/foundry/records/reputation/standings/worker/reputationstanding_worker_rank0.json",
+        "file://./../../../../../libs/foundry/records/reputation/standings/worker/reputationstanding_worker_rank1.json"]}}}

@@ -1,0 +1,30 @@
+{
+  "_RecordName_": "Level.EA_NHS_DeffordLink",
+  "_RecordId_": "d5c0bf36-a58b-4d66-bcc5-b44680b57f03",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "Level",
+    "id": "EA_NHS_DeffordLink",
+    "locDisplayName": "@ea_ui_map_NHS_DeffordLink_Short",
+    "description": "@ea_ui_mapdesc_NHS_DeffordLink",
+    "displayFeatures": null,
+    "thumbnail": "ui/frontend/assets/tif/gametypesmaps/map_race_03.tif",
+    "gameToken": "defford",
+    "universeLocationUniqueId": 0,
+    "defaultGameRules": "file://./../../../../../libs/foundry/records/gamemode/ea_classicrace.json",
+    "validGameRules": [
+      "file://./../../../../../libs/foundry/records/gamemode/ea_classicrace.json"],
+    "loadingScreenInfo": {
+      "_Type_": "SLoadingScreenInformationDef",
+      "loadingScreenType": "ElectronicAccess",
+      "imagePath": "UI/GlobalGameUI/assets/TIF/LoadingScreen/AC/AC_BG_DeffordLink_Main.tif",
+      "imagePath_2k": "",
+      "imagePath_4k": "",
+      "primaryTitle": "@LOC_EMPTY",
+      "secondaryTitle": "@LOC_EMPTY",
+      "subtitle": "@ea_ui_map_NHS_DeffordLink",
+      "description": "@ea_ui_mapdesc_NHS_DeffordLink",
+      "tips": []},
+    "potentialSpawnLocations": [],
+    "potentialDevOnlySpawnLocations": [],
+    "systemImagePath": ""}}

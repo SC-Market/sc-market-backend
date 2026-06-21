@@ -1,0 +1,23 @@
+{
+  "_RecordName_": "AIVisualFieldProfile.ShortRangeVisualFieldProfile_Quadruped",
+  "_RecordId_": "0e0f3ba7-6069-457f-87ea-28ecf7151777",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "AIVisualFieldProfile",
+    "profile": [
+      {
+        "_Type_": "AIContextualVisualFieldProfile",
+        "defaultProfile": "file://./../../../../../../libs/foundry/records/aiprofile/perception/visualfield/params/creature/shortfov_quadruped.json",
+        "awarenessLevelOverrides": [
+          null,
+          null,
+          null,
+          null]},
+      {
+        "_Type_": "AIContextualVisualFieldProfile",
+        "defaultProfile": "file://./../../../../../../libs/foundry/records/aiprofile/perception/visualfield/params/creature/shortfov_quadruped.json",
+        "awarenessLevelOverrides": [
+          null,
+          null,
+          null,
+          null]}]}}

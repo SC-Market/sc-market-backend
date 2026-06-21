@@ -1,0 +1,8 @@
+{
+  "_RecordName_": "InteriorMapSectionDefinition.Maria_Pure_Of_Heart_Floor",
+  "_RecordId_": "f5217fdc-28eb-4c1d-8e14-75cb4c0760e3",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "InteriorMapSectionDefinition",
+    "name": "@interiormap_common_floor_dynamic",
+    "restrictViewBounds": true}}

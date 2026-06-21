@@ -1,0 +1,19 @@
+{
+  "_RecordName_": "MusicLogicEventList.PUMissions",
+  "_RecordId_": "88d1f309-7cb7-449b-92b8-3b05238941b8",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "MusicLogicEventList",
+    "events": [
+      {
+        "_RecordId_": "807a7a7c-3fcc-4d87-acad-74b625e683ad",
+        "_RecordName_": "MusicLogicEvent.MX_PU_Mission_Xenothreat_Start",
+        "_Type_": "MusicLogicEvent",
+        "name": "MX_PU_Mission_Xenothreat_Start",
+        "retriggerDelay": 0.0},
+      {
+        "_RecordId_": "c04f2dc5-0f0c-4482-a5b5-3d26b21313db",
+        "_RecordName_": "MusicLogicEvent.MX_PU_Mission_Xenothreat_Stop",
+        "_Type_": "MusicLogicEvent",
+        "name": "MX_PU_Mission_Xenothreat_Stop",
+        "retriggerDelay": 0.0}]}}

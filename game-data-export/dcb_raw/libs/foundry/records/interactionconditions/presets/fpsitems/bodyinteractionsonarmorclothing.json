@@ -1,0 +1,34 @@
+{
+  "_RecordName_": "InteractionConditionPreset.BodyInteractionsOnArmorClothing",
+  "_RecordId_": "49e18f10-93c9-4340-ba08-2b00631ab51a",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "InteractionConditionPreset",
+    "conditions": [
+      {
+        "_Type_": "InteractionConditionLootableNotBeingViewedByAnyOtherInventory",
+        "conditionDisplay": {
+          "_Type_": "ConditionDisplayParams",
+          "exclusiveDisplay": true,
+          "blockedText": {
+            "_Type_": "BlockedTextParams",
+            "blockedText": "@interaction_condition_InUseByAnother"},
+          "blockedCursor": {
+            "_Type_": "BlockedCursorParams",
+            "blockedCursor": "Invalid"},
+          "blockedColor": {
+            "_Type_": "BlockedColorParams",
+            "selectedColor": "file://./../../../../../../libs/foundry/records/ui/innerthought/colors/blockedselected.json",
+            "unselectedColor": "file://./../../../../../../libs/foundry/records/ui/innerthought/colors/blockedunselected.json",
+            "applyImmediately": false},
+          "blockedHint": null,
+          "autoStoreOption": null,
+          "blockedInteractionAttemptMonologue": null}}],
+    "conditionToHideParams": [
+      {
+        "_Type_": "InteractionConditionEntityIsHeldByInteractor",
+        "conditionDisplay": null},
+      {
+        "_Type_": "InteractionConditionEntityIsAttachedToInteractor",
+        "conditionDisplay": null,
+        "ignoreItemPorts": []}]}}

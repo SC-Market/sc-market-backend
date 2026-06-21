@@ -1,0 +1,50 @@
+{
+  "_RecordName_": "MissionLocationTemplate.Inhabited_Derelict_Bar",
+  "_RecordId_": "ec1ed83e-11b9-414a-9614-e302b40c12f7",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "MissionLocationTemplate",
+    "locationData": {
+      "_Type_": "MissionLocationData",
+      "generalTags": {
+        "_Type_": "MissionLocationTags",
+        "tags": [
+          {
+            "_RecordPath_": "file://./../../../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+            "_RecordName_": "Tag.19b465cf-ba03-4706-8fec-3b356726eb03",
+            "_RecordId_": "19b465cf-ba03-4706-8fec-3b356726eb03"},
+          {
+            "_RecordPath_": "file://./../../../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+            "_RecordName_": "Tag.c70dbe51-3d1e-47b7-9795-290d3eba1728",
+            "_RecordId_": "c70dbe51-3d1e-47b7-9795-290d3eba1728"},
+          {
+            "_RecordPath_": "file://./../../../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+            "_RecordName_": "Tag.99f77215-2f08-4969-8a6a-0079c45f049e",
+            "_RecordId_": "99f77215-2f08-4969-8a6a-0079c45f049e"}]},
+      "producesTags": {
+        "_Type_": "TagSearchTerm",
+        "positiveTags": [],
+        "negativeTags": []},
+      "consumesTags": {
+        "_Type_": "TagSearchTerm",
+        "positiveTags": [],
+        "negativeTags": []},
+      "aiSpawnTags": {
+        "_Type_": "TagList",
+        "tags": []},
+      "stringVariants": {
+        "_Type_": "MissionStringVariants",
+        "variants": []},
+      "missionModules": [
+        {
+          "_Type_": "SMissionLocationModule",
+          "isPersistent": false,
+          "missionModule": "Libs/Subsumption/Missions/PU/PU_MissionModules/AIManagers/PU_BarsPopulousManager.xml",
+          "missionInputs": [],
+          "properties": []}],
+      "missionLimits": [],
+      "autoSpawnSettings": [],
+      "isSecurityNetworkHost": false,
+      "defaultSecurityNetworkManifest": null,
+      "disabled": false,
+      "entityClusterMember": null}}}

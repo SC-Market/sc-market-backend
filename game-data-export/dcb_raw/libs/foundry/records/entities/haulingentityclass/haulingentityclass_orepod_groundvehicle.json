@@ -1,0 +1,13 @@
+{
+  "_RecordName_": "Hauling_EntityClasses.HaulingEntityClass_OrePod_GroundVehicle",
+  "_RecordId_": "c66c7e02-96c6-4ff4-bb05-1c922c677186",
+  "_RecordTag_": "MissionDesign",
+  "_RecordValue_": {
+    "_Type_": "Hauling_EntityClasses",
+    "entityClasses": {
+      "_Type_": "Hauling_EntityClassList",
+      "entityClassList": [
+        "file://./../../../../../libs/foundry/records/entities/scitem/ships/shippart/argo_mpuv_cargo_pod.json",
+        "file://./../../../../../libs/foundry/records/entities/scitem/ships/utility/mining/miningpods/cargo_groundvehiclemining_pod_roc.json",
+        "file://./../../../../../libs/foundry/records/entities/scitem/ships/utility/mining/miningpods/cargo_groundvehiclemining_pod_roc_ds.json"]},
+    "orderDisplayName": "@Salvage_Ship_Component_Ground_Vehicle_Ore_Pod_Name"}}

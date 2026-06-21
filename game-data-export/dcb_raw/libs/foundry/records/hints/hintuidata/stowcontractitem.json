@@ -1,0 +1,12 @@
+{
+  "_RecordName_": "HintUIData.StowContractItem",
+  "_RecordId_": "cb8e79be-8264-4a99-b928-adc4ca509e86",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "HintUIData",
+    "TitleText": "@Hints_StowContractItem_Title",
+    "BodyText": "@Hints_StowContractItem",
+    "BodyTextGamePad": "@Hints_StowContractItem",
+    "BodyTextJoystick": "@Hints_StowContractItem",
+    "TitleImagePath": "",
+    "BodyImagePath": ""}}

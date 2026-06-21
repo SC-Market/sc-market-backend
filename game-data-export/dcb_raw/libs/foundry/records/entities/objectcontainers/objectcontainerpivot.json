@@ -1,0 +1,22 @@
+{
+  "_RecordName_": "EntityClassDefinition.ObjectContainerPivot",
+  "_RecordId_": "70d1695b-131d-42f1-b694-162a0b19654b",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "EntityClassDefinition",
+    "Category": "Others",
+    "Icon": "Prefab.bmp",
+    "Invisible": true,
+    "BBoxSelection": false,
+    "defaultEditorColor": {
+      "_Type_": "RGB",
+      "r": 1.0,
+      "g": 1.0,
+      "b": 0.0},
+    "entityDensityClass": null,
+    "tags": [],
+    "StaticEntityClassData": [],
+    "Components": [
+      {
+        "_Type_": "SEntityComponentPhysicsGridParams",
+        "PhysGridType": null}]}}

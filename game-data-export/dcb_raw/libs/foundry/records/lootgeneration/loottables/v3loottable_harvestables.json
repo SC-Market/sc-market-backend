@@ -1,0 +1,44 @@
+{
+  "_RecordName_": "LootTableV3Record.V3LootTable_Harvestables",
+  "_RecordId_": "82134c19-8699-4eee-8ba1-ad4425a03b6a",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "LootTableV3Record",
+    "lootTable": {
+      "_Type_": "LootTableV3",
+      "lootArchetypes": [
+        {
+          "_Type_": "LootTableV3Entry",
+          "name": "Harvestables",
+          "weight": 1.0,
+          "archetype": {
+            "_Type_": "LootArchetypeV3",
+            "entries": [
+              {
+                "_Type_": "LootArchetypeV3Entry",
+                "name": "Harvestables",
+                "weight": 1.0,
+                "selector": {
+                  "_Type_": "LootArchetypeV3Selector_Tags",
+                  "tags": {
+                    "_Type_": "TagsDNFTerm",
+                    "positiveTags": [
+                      {
+                        "_RecordPath_": "file://./../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+                        "_RecordName_": "Tag.ce613614-ef14-4471-96c1-1319b3219ddc",
+                        "_RecordId_": "ce613614-ef14-4471-96c1-1319b3219ddc"}],
+                    "negativeTags": [
+                      {
+                        "_RecordPath_": "file://./../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+                        "_RecordName_": "Tag.33343636-46c2-4b37-8a19-3fdb1e396efc",
+                        "_RecordId_": "33343636-46c2-4b37-8a19-3fdb1e396efc"},
+                      {
+                        "_RecordPath_": "file://./../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+                        "_RecordName_": "Tag.3a96b2bd-c314-44ec-978c-e9973260a74b",
+                        "_RecordId_": "3a96b2bd-c314-44ec-978c-e9973260a74b"},
+                      {
+                        "_RecordPath_": "file://./../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+                        "_RecordName_": "Tag.ad40e9c1-a7c4-44e3-b03a-c334bd2ece76",
+                        "_RecordId_": "ad40e9c1-a7c4-44e3-b03a-c334bd2ece76"}]}},
+                "optionalData": []}]},
+          "optionalData": []}]}}}

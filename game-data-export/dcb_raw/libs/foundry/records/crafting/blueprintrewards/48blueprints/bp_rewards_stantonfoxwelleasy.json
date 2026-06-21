@@ -1,0 +1,31 @@
+{
+  "_RecordName_": "BlueprintPoolRecord.BP_REWARDS_StantonFoxwellEasy",
+  "_RecordId_": "f045d6b4-1c56-4975-b78f-a876a1c23cd3",
+  "_RecordTag_": "SystemsDesign",
+  "_RecordValue_": {
+    "_Type_": "BlueprintPoolRecord",
+    "blueprintRewards": [
+      {
+        "_Type_": "BlueprintReward",
+        "weight": 1.0,
+        "blueprintRecord": "file://./../../../../../../libs/foundry/records/crafting/blueprints/crafting/vehiclegear/shield/bp_craft_shld_behr_s01_7sa_scitem.json"},
+      {
+        "_Type_": "BlueprintReward",
+        "weight": 1.0,
+        "blueprintRecord": "file://./../../../../../../libs/foundry/records/crafting/blueprints/crafting/vehiclegear/shield/bp_craft_shld_seco_s01_ink_scitem.json"},
+      {
+        "_Type_": "BlueprintReward",
+        "weight": 1.0,
+        "blueprintRecord": "file://./../../../../../../libs/foundry/records/crafting/blueprints/crafting/vehiclegear/shield/bp_craft_shld_behr_s02_7ma_scitem.json"},
+      {
+        "_Type_": "BlueprintReward",
+        "weight": 1.0,
+        "blueprintRecord": "file://./../../../../../../libs/foundry/records/crafting/blueprints/crafting/vehiclegear/shield/bp_craft_shld_seco_s02_rpel_scitem.json"},
+      {
+        "_Type_": "BlueprintReward",
+        "weight": 1.0,
+        "blueprintRecord": "file://./../../../../../../libs/foundry/records/crafting/blueprints/crafting/vehiclegear/shield/bp_craft_shld_behr_s03_7ca_scitem.json"},
+      {
+        "_Type_": "BlueprintReward",
+        "weight": 1.0,
+        "blueprintRecord": "file://./../../../../../../libs/foundry/records/crafting/blueprints/crafting/vehiclegear/shield/bp_craft_shld_seco_s03_haven_scitem.json"}]}}

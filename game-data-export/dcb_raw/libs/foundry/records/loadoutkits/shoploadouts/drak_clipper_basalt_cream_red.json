@@ -1,0 +1,22 @@
+{
+  "_RecordName_": "LoadoutKit.DRAK_Clipper_Basalt_Cream_Red",
+  "_RecordId_": "d346225d-b5d4-471e-9364-ca062be36669",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "LoadoutKit",
+    "name": "@item_NameClipper_Paint_Black_Cream_Red",
+    "description": "@item_DescClipper_Paint_Black_Cream_Red",
+    "loadout": {
+      "_Type_": "SItemPortLoadoutManualParams",
+      "WearRange": null,
+      "DirtRange": null,
+      "SkipInventoryItemsOnMissionEntities": false,
+      "InventoryItems": [],
+      "entries": [
+        {
+          "_Type_": "SItemPortLoadoutEntryParams",
+          "itemPortName": "hardpoint_paint",
+          "entityClassName": "",
+          "entityClassReference": "file://./../../../../../libs/foundry/records/entities/scitem/ships/paints/paint_clipper_black_cream_red.json",
+          "inventoryContainer": null,
+          "loadout": null}]}}}

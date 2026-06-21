@@ -1,0 +1,27 @@
+{
+  "_RecordName_": "SEntrancesDef.AEGS_Redeemer",
+  "_RecordId_": "943bb134-720d-48d0-858d-06b13b796915",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "SEntrancesDef",
+    "boundingBoxScale": {
+      "_Type_": "Vec3",
+      "x": 1.2,
+      "y": 1.6,
+      "z": 1.2},
+    "boundingBoxOffset": {
+      "_Type_": "Vec3",
+      "x": 0.0,
+      "y": 0.0,
+      "z": -0.5},
+    "entranceArray": [
+      {
+        "_Type_": "SCEntranceItem",
+        "entranceName": "@entrance_ramp",
+        "jointName": "hardpoint_ramp",
+        "positionOffset": {
+          "_Type_": "Vec3",
+          "x": 1.95,
+          "y": -1.0,
+          "z": -0.7},
+        "shipState": "Both"}]}}

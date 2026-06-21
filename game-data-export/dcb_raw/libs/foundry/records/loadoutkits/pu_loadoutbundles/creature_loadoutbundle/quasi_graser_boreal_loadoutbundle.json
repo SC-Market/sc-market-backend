@@ -1,0 +1,53 @@
+{
+  "_RecordName_": "SLoadoutAssortment.Quasi_Graser_Boreal_Loadoutbundle",
+  "_RecordId_": "f01f595f-35ff-41fb-a3e8-70443e045d4f",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "SLoadoutAssortment",
+    "Requirement": null,
+    "GroupedLoadouts": [
+      {
+        "_Type_": "SGroupedLoadouts",
+        "Group": "Body",
+        "Requirement": null,
+        "Loadouts": [
+          {
+            "_Type_": "SItemPortLoadoutXMLParams",
+            "WearRange": null,
+            "DirtRange": null,
+            "SkipInventoryItemsOnMissionEntities": false,
+            "InventoryItems": [],
+            "loadoutPath": "Scripts/Loadouts/Character/Creatures/Qausi_graser/Quasi_Boreal/quasigrazer_boreal.xml"}]},
+      {
+        "_Type_": "SGroupedLoadouts",
+        "Group": "TorsoAttachments",
+        "Requirement": null,
+        "Loadouts": [
+          {
+            "_Type_": "SItemPortLoadoutXMLParams",
+            "WearRange": null,
+            "DirtRange": null,
+            "SkipInventoryItemsOnMissionEntities": false,
+            "InventoryItems": [],
+            "loadoutPath": "Scripts/Loadouts/Character/Creatures/Qausi_graser/Quasi_Boreal/quasigrazer_Egg_random_1_Boreal.xml"},
+          {
+            "_Type_": "SItemPortLoadoutXMLParams",
+            "WearRange": null,
+            "DirtRange": null,
+            "SkipInventoryItemsOnMissionEntities": false,
+            "InventoryItems": [],
+            "loadoutPath": "Scripts/Loadouts/Character/Creatures/Qausi_graser/Quasi_Boreal/quasigrazer_Egg_random_2_boreal.xml"},
+          {
+            "_Type_": "SItemPortLoadoutXMLParams",
+            "WearRange": null,
+            "DirtRange": null,
+            "SkipInventoryItemsOnMissionEntities": false,
+            "InventoryItems": [],
+            "loadoutPath": "Scripts/Loadouts/Character/Creatures/Qausi_graser/Quasi_Boreal/quasigrazer_Egg_random_3_boreal.xml"},
+          {
+            "_Type_": "SItemPortLoadoutXMLParams",
+            "WearRange": null,
+            "DirtRange": null,
+            "SkipInventoryItemsOnMissionEntities": false,
+            "InventoryItems": [],
+            "loadoutPath": "Scripts/Loadouts/Character/Creatures/Qausi_graser/Quasi_Boreal/quasigrazer_Egg_random_4_boreal.xml"}]}]}}

@@ -1,0 +1,30 @@
+{
+  "_RecordName_": "InfractionDefinition.BatteryFirstDegree",
+  "_RecordId_": "b630a5c9-e42c-411a-a018-4a7f67174f6f",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "InfractionDefinition",
+    "name": "@Infractions_Name_032",
+    "description": "@Infractions_Desc_032",
+    "triggers": [
+      "KnockoutActor",
+      "HighBDL"],
+    "defaultParameters": {
+      "_Type_": "InfractionParameters",
+      "isFelony": -1,
+      "graceAllowance": -1,
+      "graceAllowanceCooldown": -1.0,
+      "gracePeriod": -1.0,
+      "graceCooloffScale": -1.0,
+      "graceWarnings": [],
+      "displayGraceTime": -1,
+      "escalatedPaymentFineMultiplier": 320.0,
+      "earlyPaymentPeriod": 168.0,
+      "lifetime": 168.0,
+      "coolOffTime": 45.0,
+      "pressChargesNotificationTime": -1.0,
+      "removeTimeSeconds": -1.0,
+      "felonyMerits": -1,
+      "ignoreIfAgainstPartyMember": 1,
+      "hideCrimeNotification": -1,
+      "hideCrimeInJournal": -1}}}

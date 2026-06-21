@@ -1,0 +1,31 @@
+{
+  "_RecordName_": "ActorLookLimits.BaseLookLimits_Transport",
+  "_RecordId_": "52df6beb-18b3-4daa-bbc0-c2a13455f8ce",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "ActorLookLimits",
+    "lookLimitsStateFilters": [
+      {
+        "_Type_": "ActorLookLimitsStateFilter",
+        "filterName": "New Filter",
+        "filterByState": "Any",
+        "filterByMotionSpeed": "Any",
+        "filterByPoseState": "Any",
+        "filterByStanceState": "Any",
+        "filterByAimStanceState": "Any",
+        "filterByLeanState": "Any",
+        "filterByHeldItemType": "Any",
+        "filterBySkeleton": "Any",
+        "filterByCharacterType": "Any",
+        "filterByRestrainedState": "Any",
+        "filterByPlayerCamera": "Any",
+        "filterByAimingRestriction": "Any",
+        "lookLimits": {
+          "_Type_": "ActorViewLimits",
+          "minYaw": -90.0,
+          "maxYaw": 90.0,
+          "minPitch": -85.0,
+          "maxPitch": 85.0,
+          "minRoll": -45.0,
+          "maxRoll": 45.0,
+          "useEllipse": true}}]}}

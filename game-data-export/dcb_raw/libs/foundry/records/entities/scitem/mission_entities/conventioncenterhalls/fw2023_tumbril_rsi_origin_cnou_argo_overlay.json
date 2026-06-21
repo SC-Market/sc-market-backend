@@ -1,0 +1,22 @@
+{
+  "_RecordName_": "EntityClassDefinition.fw2023_tumbril_rsi_origin_cnou_argo_overlay",
+  "_RecordId_": "b5d32d1e-1ec5-4cda-9e3a-1001ca551973",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "EntityClassDefinition",
+    "Category": "Default",
+    "Icon": "Default.bmp",
+    "Invisible": false,
+    "BBoxSelection": false,
+    "defaultEditorColor": {
+      "_Type_": "RGB",
+      "r": 1.0,
+      "g": 1.0,
+      "b": 0.0},
+    "entityDensityClass": null,
+    "tags": [],
+    "StaticEntityClassData": [],
+    "Components": [
+      {
+        "_Type_": "SObjectContainerComponentParams",
+        "objectContainer": "ObjectContainers/PU/loc/mod/common/convention/hightech_a/fw_2023_tumbril_rsi_origin_cnou_argo.socpak"}]}}

@@ -1,0 +1,22 @@
+{
+  "_RecordName_": "EntityClassDefinition.ProximityAssistModifier",
+  "_RecordId_": "ca3ddf5f-39b7-46ba-9098-f6a52f623026",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "EntityClassDefinition",
+    "Category": "Default",
+    "Icon": "Default.bmp",
+    "Invisible": false,
+    "BBoxSelection": false,
+    "defaultEditorColor": {
+      "_Type_": "RGB",
+      "r": 1.0,
+      "g": 1.0,
+      "b": 0.0},
+    "entityDensityClass": null,
+    "tags": [],
+    "StaticEntityClassData": [],
+    "Components": [
+      {
+        "_Type_": "ProximityAssistModifierParams",
+        "strengthModifier": 1.0}]}}

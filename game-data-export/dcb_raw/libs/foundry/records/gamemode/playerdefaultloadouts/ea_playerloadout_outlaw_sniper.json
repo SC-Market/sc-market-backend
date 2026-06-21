@@ -1,0 +1,13 @@
+{
+  "_RecordName_": "EntityDefaultLoadoutParams.EA_PlayerLoadout_Outlaw_Sniper",
+  "_RecordId_": "2ea78fee-b008-4662-89a9-66601ca5641e",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "EntityDefaultLoadoutParams",
+    "loadout": {
+      "_Type_": "SItemPortLoadoutXMLParams",
+      "WearRange": null,
+      "DirtRange": null,
+      "SkipInventoryItemsOnMissionEntities": false,
+      "InventoryItems": [],
+      "loadoutPath": "scripts/loadouts/player/EA/ToW_Defaults/Outlaws_Loadout03_M_Sniper.xml"}}}

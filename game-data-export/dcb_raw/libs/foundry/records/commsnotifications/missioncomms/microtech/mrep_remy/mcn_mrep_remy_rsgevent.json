@@ -1,0 +1,21 @@
+{
+  "_RecordName_": "CommsNotification.MCN_MREP_Remy_RSGEvent",
+  "_RecordId_": "ebf05a00-316e-4198-9626-9e1b907b5585",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "CommsNotification",
+    "tags": {
+      "_Type_": "TagList",
+      "tags": [
+        {
+          "_RecordPath_": "file://./../../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+          "_RecordName_": "Tag.e50da79d-8393-45b7-9bfe-d6854ed45a4b",
+          "_RecordId_": "e50da79d-8393-45b7-9bfe-d6854ed45a4b"},
+        {
+          "_RecordPath_": "file://./../../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+          "_RecordName_": "Tag.c06365af-0739-4cc6-be44-6b5ccd0edc45",
+          "_RecordId_": "c06365af-0739-4cc6-be44-6b5ccd0edc45"}]},
+    "communicationName": "file://./../../../../../../../libs/foundry/records/communicationname/missioncommunications/defendmission/missionaccept_defendship.json",
+    "characterEntityClass": null,
+    "fakeCommsAudioEntityClass": "file://./../../../../../../../libs/foundry/records/entities/audio/fakecommsaudioentity_microtech_mrep_remy.json",
+    "stage": null}}

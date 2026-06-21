@@ -1,0 +1,14 @@
+{
+  "_RecordName_": "ItemKioskBrand.Centermass",
+  "_RecordId_": "fc19e333-82f2-4525-89c9-4dac32f06fb5",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "ItemKioskBrand",
+    "name": "Centermass",
+    "logoPath": "ui/kiosk/assets/tif/backgrounds/centermass.tif",
+    "color": {
+      "_Type_": "SRGBA8",
+      "r": 105,
+      "g": 199,
+      "b": 255,
+      "a": 255}}}

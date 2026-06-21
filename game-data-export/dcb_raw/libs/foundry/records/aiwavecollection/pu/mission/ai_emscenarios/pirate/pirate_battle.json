@@ -1,0 +1,70 @@
+{
+  "_RecordName_": "AIWaveCollection.Pirate_Battle",
+  "_RecordId_": "87793ca5-df4f-470a-9da6-2c33c61fdc59",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "AIWaveCollection",
+    "waves": [
+      {
+        "_Type_": "AIWave",
+        "id": 1,
+        "textId": "",
+        "staggerTime": 1.0,
+        "members": [
+          {
+            "_Type_": "AIWaveMember",
+            "archetype": "",
+            "entityClassDefinition": "file://./../../../../../../../../libs/foundry/records/entities/spaceships/rsi_constellation_andromeda_pu_ai_nt.json",
+            "name": "@Factions_NineTail_DisplayName",
+            "vehicleName": "",
+            "amount": 1,
+            "minAmount": -1,
+            "midAmount": -1,
+            "maxAmount": -1,
+            "crewManifestOverride": null,
+            "skillsetOverride": "file://./../../../../../../../../libs/foundry/records/aiprofile/skills/humanpilot20.json",
+            "cargoManifests": [
+              "file://./../../../../../../../../libs/foundry/records/cargomanifest/criminal/criminal_25_high_001.json"],
+            "aiDamageModifiersOverride": null}]},
+      {
+        "_Type_": "AIWave",
+        "id": 2,
+        "textId": "",
+        "staggerTime": 1.0,
+        "members": [
+          {
+            "_Type_": "AIWaveMember",
+            "archetype": "",
+            "entityClassDefinition": "file://./../../../../../../../../libs/foundry/records/entities/spaceships/drak_cutlass_black_pu_ai_nt.json",
+            "name": "@Factions_NineTail_DisplayName",
+            "vehicleName": "",
+            "amount": 2,
+            "minAmount": -1,
+            "midAmount": -1,
+            "maxAmount": -1,
+            "crewManifestOverride": null,
+            "skillsetOverride": "file://./../../../../../../../../libs/foundry/records/aiprofile/skills/humanpilot30.json",
+            "cargoManifests": [
+              "file://./../../../../../../../../libs/foundry/records/cargomanifest/criminal/criminal_25_high_001.json"],
+            "aiDamageModifiersOverride": null}]},
+      {
+        "_Type_": "AIWave",
+        "id": 3,
+        "textId": "",
+        "staggerTime": 1.0,
+        "members": [
+          {
+            "_Type_": "AIWaveMember",
+            "archetype": "",
+            "entityClassDefinition": "file://./../../../../../../../../libs/foundry/records/entities/spaceships/drak_buccaneer_pu_ai_nt.json",
+            "name": "@Factions_NineTail_DisplayName",
+            "vehicleName": "",
+            "amount": 2,
+            "minAmount": -1,
+            "midAmount": -1,
+            "maxAmount": -1,
+            "crewManifestOverride": null,
+            "skillsetOverride": "file://./../../../../../../../../libs/foundry/records/aiprofile/skills/humanpilot40.json",
+            "cargoManifests": [
+              "file://./../../../../../../../../libs/foundry/records/cargomanifest/criminal/criminal_25_high_001.json"],
+            "aiDamageModifiersOverride": null}]}]}}

@@ -1,0 +1,327 @@
+{
+  "_RecordName_": "MusicLogicSuite.SC_ArenaCommander",
+  "_RecordId_": "1ec367fd-6545-4db4-8a45-44a7c3e94266",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "MusicLogicSuite",
+    "name": "SC_ArenaCommander",
+    "musicLogicConfig": null,
+    "nodes": [
+      {
+        "_Pointer_": "ptr:1",
+        "_Type_": "MusicLogicIncrement",
+        "children": [],
+        "parameter": "file://./../../../../../libs/foundry/records/musiclogic/parameters/musiclogicparameter.ship_situation.json",
+        "value": 500.0},
+      {
+        "_Type_": "MusicEventResponse",
+        "children": [
+          "_PointsTo_:ptr:1",
+          "_PointsTo_:ptr:2"],
+        "musicEvent": {
+          "_RecordPath_": "file://./../../../../../libs/foundry/records/musiclogic/events/musiclogiceventlist.flight.json",
+          "_RecordName_": "MusicLogicEvent.MX_Player_Ship_Hull_Hit_By_Enemy",
+          "_RecordId_": "59706884-5193-42ee-810e-549ec8b3a39c"}},
+      {
+        "_Type_": "MusicEventResponse",
+        "children": [
+          "_PointsTo_:ptr:3",
+          "_PointsTo_:ptr:4"],
+        "musicEvent": {
+          "_RecordPath_": "file://./../../../../../libs/foundry/records/musiclogic/events/musiclogiceventlist.flight.json",
+          "_RecordName_": "MusicLogicEvent.MX_Enemy_Ship_Destroyed_By_Player",
+          "_RecordId_": "63b23a44-dca7-4a3e-8cc3-747c655c7c91"}},
+      {
+        "_Pointer_": "ptr:3",
+        "_Type_": "GreaterThan",
+        "children": [
+          "_PointsTo_:ptr:5",
+          "_PointsTo_:ptr:6"],
+        "parameter": "file://./../../../../../libs/foundry/records/musiclogic/parameters/musiclogicparameter.played_sting_timer.json",
+        "value": 10.0},
+      {
+        "_Pointer_": "ptr:5",
+        "_Type_": "MusicLogicTrigger",
+        "trigger": "Play_SC_Music_Trigger_Enemy_Destroyed"},
+      {
+        "_Pointer_": "ptr:6",
+        "_Type_": "MusicLogicSetValue",
+        "parameter": "file://./../../../../../libs/foundry/records/musiclogic/parameters/musiclogicparameter.played_sting_timer.json",
+        "value": 0.0},
+      {
+        "_Type_": "MusicEventResponse",
+        "children": [
+          "_PointsTo_:ptr:7",
+          "_PointsTo_:ptr:8"],
+        "musicEvent": {
+          "_RecordPath_": "file://./../../../../../libs/foundry/records/musiclogic/events/musiclogiceventlist.flight.json",
+          "_RecordName_": "MusicLogicEvent.MX_Player_Ship_Shield_Hit_By_Enemy",
+          "_RecordId_": "a83a70b4-6448-4a5e-824f-3177bf5f9e3c"}},
+      {
+        "_Pointer_": "ptr:7",
+        "_Type_": "MusicLogicIncrement",
+        "children": [],
+        "parameter": "file://./../../../../../libs/foundry/records/musiclogic/parameters/musiclogicparameter.ship_intensity_burst.json",
+        "value": 200.0},
+      {
+        "_Pointer_": "ptr:8",
+        "_Type_": "MusicLogicIncrement",
+        "children": [],
+        "parameter": "file://./../../../../../libs/foundry/records/musiclogic/parameters/musiclogicparameter.player_mood.json",
+        "value": -50.0},
+      {
+        "_Type_": "MusicEventResponse",
+        "children": [
+          "_PointsTo_:ptr:9"],
+        "musicEvent": {
+          "_RecordPath_": "file://./../../../../../libs/foundry/records/musiclogic/events/musiclogiceventlist.flight.json",
+          "_RecordName_": "MusicLogicEvent.MX_Enemy_Ship_Hull_Hit_By_Player",
+          "_RecordId_": "dd458ee1-0adb-4d2f-a886-7f9b6cf147ef"}},
+      {
+        "_Pointer_": "ptr:9",
+        "_Type_": "MusicLogicIncrement",
+        "children": [
+          "_PointsTo_:ptr:10"],
+        "parameter": "file://./../../../../../libs/foundry/records/musiclogic/parameters/musiclogicparameter.ship_intensity_burst.json",
+        "value": 10000.0},
+      {
+        "_Pointer_": "ptr:2",
+        "_Type_": "MusicLogicIncrement",
+        "children": [],
+        "parameter": "file://./../../../../../libs/foundry/records/musiclogic/parameters/musiclogicparameter.player_mood.json",
+        "value": -100.0},
+      {
+        "_Type_": "MusicEventResponse",
+        "children": [
+          "_PointsTo_:ptr:11"],
+        "musicEvent": {
+          "_RecordPath_": "file://./../../../../../libs/foundry/records/musiclogic/events/musiclogiceventlist.flight.json",
+          "_RecordName_": "MusicLogicEvent.MX_Ship_Pass_By_Listener",
+          "_RecordId_": "346de930-05a7-438a-a99d-49c89235d87b"}},
+      {
+        "_Pointer_": "ptr:11",
+        "_Type_": "MusicLogicIncrement",
+        "children": [
+          "_PointsTo_:ptr:12"],
+        "parameter": "file://./../../../../../libs/foundry/records/musiclogic/parameters/musiclogicparameter.ship_situation.json",
+        "value": 250.0},
+      {
+        "_Pointer_": "ptr:12",
+        "_Type_": "MusicLogicParameterMultiply",
+        "parameter": "file://./../../../../../libs/foundry/records/musiclogic/parameters/musiclogicparameter.ship_shield_scale.json"},
+      {
+        "_Pointer_": "ptr:10",
+        "_Type_": "MusicLogicParameterMultiply",
+        "parameter": "file://./../../../../../libs/foundry/records/musiclogic/parameters/musiclogicparameter.ship_hit_damage_ratio.json"},
+      {
+        "_Type_": "MusicEventResponse",
+        "children": [
+          "_PointsTo_:ptr:13"],
+        "musicEvent": {
+          "_RecordPath_": "file://./../../../../../libs/foundry/records/musiclogic/events/musiclogiceventlist.flight.json",
+          "_RecordName_": "MusicLogicEvent.MX_Projectile_Whiz_By_Player",
+          "_RecordId_": "566b8846-a1ab-499b-8d9b-e50e7f16536f"}},
+      {
+        "_Pointer_": "ptr:13",
+        "_Type_": "MusicLogicIncrement",
+        "children": [],
+        "parameter": "file://./../../../../../libs/foundry/records/musiclogic/parameters/musiclogicparameter.ship_situation.json",
+        "value": 30.0},
+      {
+        "_Type_": "MusicEventResponse",
+        "children": [
+          "_PointsTo_:ptr:14",
+          "_PointsTo_:ptr:15"],
+        "musicEvent": {
+          "_RecordPath_": "file://./../../../../../libs/foundry/records/musiclogic/events/musiclogiceventlist.flight.json",
+          "_RecordName_": "MusicLogicEvent.MX_Player_Ship_Item_Destroyed",
+          "_RecordId_": "dcdfb8fb-7601-44bd-87e9-a773e0d8452e"}},
+      {
+        "_Pointer_": "ptr:14",
+        "_Type_": "MusicLogicIncrement",
+        "children": [
+          "_PointsTo_:ptr:16"],
+        "parameter": "file://./../../../../../libs/foundry/records/musiclogic/parameters/musiclogicparameter.ship_situation_burst.json",
+        "value": 500.0},
+      {
+        "_Pointer_": "ptr:15",
+        "_Type_": "MusicLogicIncrement",
+        "children": [],
+        "parameter": "file://./../../../../../libs/foundry/records/musiclogic/parameters/musiclogicparameter.player_mood.json",
+        "value": -75.0},
+      {
+        "_Pointer_": "ptr:16",
+        "_Type_": "MusicLogicParameterMultiply",
+        "parameter": "file://./../../../../../libs/foundry/records/musiclogic/parameters/musiclogicparameter.ship_shield_scale.json"},
+      {
+        "_Type_": "MusicEventResponse",
+        "children": [
+          "_PointsTo_:ptr:17"],
+        "musicEvent": {
+          "_RecordPath_": "file://./../../../../../libs/foundry/records/musiclogic/events/musiclogiceventlist.flight.json",
+          "_RecordName_": "MusicLogicEvent.MX_Hostile_Ship_Contact",
+          "_RecordId_": "f810cf7e-aa6f-48d3-8932-84906cfb344a"}},
+      {
+        "_Pointer_": "ptr:17",
+        "_Type_": "MusicLogicIncrement",
+        "children": [
+          "_PointsTo_:ptr:18"],
+        "parameter": "file://./../../../../../libs/foundry/records/musiclogic/parameters/musiclogicparameter.ship_situation_burst.json",
+        "value": 50.0},
+      {
+        "_Pointer_": "ptr:18",
+        "_Type_": "MusicLogicParameterMultiply",
+        "parameter": "file://./../../../../../libs/foundry/records/musiclogic/parameters/musiclogicparameter.ship_shield_scale.json"},
+      {
+        "_Type_": "MusicEventResponse",
+        "children": [
+          "_PointsTo_:ptr:19"],
+        "musicEvent": {
+          "_RecordPath_": "file://./../../../../../libs/foundry/records/musiclogic/events/musiclogiceventlist.flight.json",
+          "_RecordName_": "MusicLogicEvent.MX_Player_Ship_Locked_On_By_Enemy_Missile",
+          "_RecordId_": "45626855-8b36-4544-a9f9-563c619fdde0"}},
+      {
+        "_Pointer_": "ptr:19",
+        "_Type_": "MusicLogicIncrement",
+        "children": [],
+        "parameter": "file://./../../../../../libs/foundry/records/musiclogic/parameters/musiclogicparameter.ship_situation.json",
+        "value": 500.0},
+      {
+        "_Type_": "MusicEventResponse",
+        "children": [
+          "_PointsTo_:ptr:20",
+          "_PointsTo_:ptr:21"],
+        "musicEvent": {
+          "_RecordPath_": "file://./../../../../../libs/foundry/records/musiclogic/events/musiclogiceventlist.arenacommander.json",
+          "_RecordName_": "MusicLogicEvent.MX_DFM_Pre_Game",
+          "_RecordId_": "bf3f5b72-d219-4898-8b4e-b09f08ba18b4"}},
+      {
+        "_Pointer_": "ptr:20",
+        "_Type_": "MusicLogicSwitch",
+        "switch": "SC_Music_Mode",
+        "value": "Space"},
+      {
+        "_Pointer_": "ptr:21",
+        "_Type_": "MusicLogicSwitch",
+        "switch": "SC_Music_Space_Battle_States",
+        "value": "Spectator"},
+      {
+        "_Type_": "MusicEventResponse",
+        "children": [
+          "_PointsTo_:ptr:22",
+          "_PointsTo_:ptr:23",
+          "_PointsTo_:ptr:24"],
+        "musicEvent": {
+          "_RecordPath_": "file://./../../../../../libs/foundry/records/musiclogic/events/musiclogiceventlist.arenacommander.json",
+          "_RecordName_": "MusicLogicEvent.MX_DFM_In_Game",
+          "_RecordId_": "8c332eb7-f657-42f0-be9a-e2a613f3a9e1"}},
+      {
+        "_Pointer_": "ptr:22",
+        "_Type_": "MusicLogicSwitch",
+        "switch": "SC_Music_Mode",
+        "value": "Space"},
+      {
+        "_Pointer_": "ptr:23",
+        "_Type_": "MusicLogicSwitch",
+        "switch": "SC_Music_Space_Battle_States",
+        "value": "Standard"},
+      {
+        "_Type_": "MusicEventResponse",
+        "children": [
+          "_PointsTo_:ptr:25"],
+        "musicEvent": {
+          "_RecordPath_": "file://./../../../../../libs/foundry/records/musiclogic/events/musiclogiceventlist.arenacommander.json",
+          "_RecordName_": "MusicLogicEvent.MX_DFM_Post_Game_Victory",
+          "_RecordId_": "59e446df-c760-4a48-9718-88dc2613e073"}},
+      {
+        "_Pointer_": "ptr:25",
+        "_Type_": "MusicLogicSwitch",
+        "switch": "SC_Music_Space_Battle_States",
+        "value": "Victory"},
+      {
+        "_Type_": "MusicEventResponse",
+        "children": [
+          "_PointsTo_:ptr:26"],
+        "musicEvent": {
+          "_RecordPath_": "file://./../../../../../libs/foundry/records/musiclogic/events/musiclogiceventlist.arenacommander.json",
+          "_RecordName_": "MusicLogicEvent.MX_DFM_Post_Game_Defeat",
+          "_RecordId_": "0e8d2b9b-aab1-4b44-8c41-0c30edf8eb89"}},
+      {
+        "_Pointer_": "ptr:26",
+        "_Type_": "MusicLogicSwitch",
+        "switch": "SC_Music_Space_Battle_States",
+        "value": "Defeat"},
+      {
+        "_Type_": "MusicEventResponse",
+        "children": [
+          "_PointsTo_:ptr:27"],
+        "musicEvent": {
+          "_RecordPath_": "file://./../../../../../libs/foundry/records/musiclogic/events/musiclogiceventlist.arenacommander.json",
+          "_RecordName_": "MusicLogicEvent.MX_DFM_Start_Spectator_Mode",
+          "_RecordId_": "c47c9529-b28f-486f-acf4-1ff638c879cb"}},
+      {
+        "_Pointer_": "ptr:27",
+        "_Type_": "MusicLogicSwitch",
+        "switch": "SC_Music_Space_Battle_States",
+        "value": "Spectator"},
+      {
+        "_Type_": "MusicEventResponse",
+        "children": [
+          "_PointsTo_:ptr:28"],
+        "musicEvent": {
+          "_RecordPath_": "file://./../../../../../libs/foundry/records/musiclogic/events/musiclogiceventlist.arenacommander.json",
+          "_RecordName_": "MusicLogicEvent.MX_DFM_EndGame_Winning",
+          "_RecordId_": "4e149a1e-6c2e-4911-94f0-0af68553135f"}},
+      {
+        "_Pointer_": "ptr:28",
+        "_Type_": "MusicLogicSwitch",
+        "switch": "SC_Music_Space_Battle_States",
+        "value": "Heroic"},
+      {
+        "_Type_": "MusicEventResponse",
+        "children": [
+          "_PointsTo_:ptr:29"],
+        "musicEvent": {
+          "_RecordPath_": "file://./../../../../../libs/foundry/records/musiclogic/events/musiclogiceventlist.arenacommander.json",
+          "_RecordName_": "MusicLogicEvent.MX_DFM_EndGame_Losing",
+          "_RecordId_": "31977653-dce0-4077-bc59-f2cee1c1778e"}},
+      {
+        "_Pointer_": "ptr:29",
+        "_Type_": "MusicLogicSwitch",
+        "switch": "SC_Music_Space_Battle_States",
+        "value": "Grim"},
+      {
+        "_Type_": "MusicEventResponse",
+        "children": [
+          "_PointsTo_:ptr:30"],
+        "musicEvent": {
+          "_RecordPath_": "file://./../../../../../libs/foundry/records/musiclogic/events/musiclogiceventlist.gameflow.json",
+          "_RecordName_": "MusicLogicEvent.MX_Level_Gameplay_Start",
+          "_RecordId_": "f5908ac2-88e6-4501-ba53-75709cf9fd7f"}},
+      {
+        "_Pointer_": "ptr:30",
+        "_Type_": "MusicLogicSwitch",
+        "switch": "SC_Music_Master",
+        "value": "Arena_Commander"},
+      {
+        "_Pointer_": "ptr:24",
+        "_Type_": "MusicLogicSwitch",
+        "switch": "SC_Music_Space_States",
+        "value": "Battle"},
+      {
+        "_Pointer_": "ptr:4",
+        "_Type_": "MusicLogicIncrement",
+        "children": [],
+        "parameter": "file://./../../../../../libs/foundry/records/musiclogic/parameters/musiclogicparameter.player_mood.json",
+        "value": 1000.0},
+      {
+        "_Type_": "MusicEventResponse",
+        "children": [
+          "_PointsTo_:ptr:31"],
+        "musicEvent": {
+          "_RecordPath_": "file://./../../../../../libs/foundry/records/musiclogic/events/musiclogiceventlist.general.json",
+          "_RecordName_": "MusicLogicEvent.MX_Local_Player_Revived",
+          "_RecordId_": "4174f480-0602-412f-aefa-b6cba7c6a3e8"}},
+      {
+        "_Pointer_": "ptr:31",
+        "_Type_": "MusicLogicReset"}]}}

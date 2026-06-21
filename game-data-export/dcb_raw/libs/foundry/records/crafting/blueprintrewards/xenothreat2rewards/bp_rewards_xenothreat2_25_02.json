@@ -1,0 +1,11 @@
+{
+  "_RecordName_": "BlueprintPoolRecord.BP_REWARDS_Xenothreat2_25_02",
+  "_RecordId_": "e052cb6e-dfb2-489f-b4c7-2ee41195e101",
+  "_RecordTag_": "SystemsDesign",
+  "_RecordValue_": {
+    "_Type_": "BlueprintPoolRecord",
+    "blueprintRewards": [
+      {
+        "_Type_": "BlueprintReward",
+        "weight": 1.0,
+        "blueprintRecord": "file://./../../../../../../libs/foundry/records/crafting/blueprints/crafting/fpsgear/armour/combat/medium/bp_craft_qrt_combat_medium_backpack_01_02_01.json"}]}}

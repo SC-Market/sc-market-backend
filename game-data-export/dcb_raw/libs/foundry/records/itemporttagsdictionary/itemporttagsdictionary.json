@@ -1,0 +1,42 @@
+{
+  "_RecordName_": "ItemPortTagsDictionary.ItemPortTagsDictionary",
+  "_RecordId_": "e1e70f2f-6e25-4f15-bf16-d18561880a8e",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "ItemPortTagsDictionary",
+    "elements": [
+      {
+        "_Type_": "ItemPortTagsElement",
+        "string": "behr_rifle_ballistic_01",
+        "tag": null},
+      {
+        "_Type_": "ItemPortTagsElement",
+        "string": "behr_smg_ballistic_01",
+        "tag": null},
+      {
+        "_Type_": "ItemPortTagsElement",
+        "string": "ksar_shotgun_energy_01",
+        "tag": null},
+      {
+        "_Type_": "ItemPortTagsElement",
+        "string": "klwe_rifle_energy_01",
+        "tag": null},
+      {
+        "_Type_": "ItemPortTagsElement",
+        "string": "behr_rifle_ballistic_02",
+        "tag": null},
+      {
+        "_Type_": "ItemPortTagsElement",
+        "string": "klwe_sniper_energy_01",
+        "tag": null},
+      {
+        "_Type_": "ItemPortTagsElement",
+        "string": "ksar_shotgun_ballistic_01",
+        "tag": null},
+      {
+        "_Type_": "ItemPortTagsElement",
+        "string": "beer",
+        "tag": {
+          "_RecordPath_": "file://./../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+          "_RecordName_": "Tag.b81fc5b7-39e7-49f4-b8ce-1647aeb4116a",
+          "_RecordId_": "b81fc5b7-39e7-49f4-b8ce-1647aeb4116a"}}]}}

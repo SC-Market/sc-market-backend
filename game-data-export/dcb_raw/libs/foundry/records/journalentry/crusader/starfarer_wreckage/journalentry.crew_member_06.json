@@ -1,0 +1,18 @@
+{
+  "_RecordName_": "JournalEntry.Crew_Member_06",
+  "_RecordId_": "33aaa74a-a1ca-47e9-8e5b-d0f6f8279456",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "JournalEntry",
+    "Title": "@JournalEntry_CrewMember_06_Title",
+    "ShortTitle": "@LOC_UNINITIALIZED",
+    "SubHeading": "@JournalEntry_CrewMember_06_SubTitle",
+    "autoOpenMobiGlas": false,
+    "showNotification": true,
+    "missionSpecificContent": false,
+    "removeOnMissionEnd": true,
+    "Style": "file://./../../../../../../libs/foundry/records/journalentrytype/journalentrytype.textlog.json",
+    "type": {
+      "_Type_": "JournalEntryText",
+      "BodyText": "@JournalEntry_CrewMember_06_Description"},
+    "tutorialEntry": false}}

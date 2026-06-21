@@ -1,0 +1,949 @@
+{
+  "_RecordName_": "ContractTemplate.Salvage_Killship",
+  "_RecordId_": "eaaf6b45-13d4-4b15-a4e4-ef896e34867a",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "ContractTemplate",
+    "notForRelease": false,
+    "workInProgress": false,
+    "owner": "file://./../../../../../libs/foundry/records/devowners/devteams/mdt.json",
+    "contractClass": {
+      "_Type_": "ContractClass_Contract",
+      "additionalParams": {
+        "_Type_": "ActiveContractSettings",
+        "hasCompleteButton": false,
+        "handlesAbandonRequest": false,
+        "canBeShared": true,
+        "displayAlliedMarkers": true,
+        "onlyOwnerCanComplete": false},
+      "autoFinishSettings": {
+        "_Type_": "ContractAutoFinishSettings",
+        "contractDeadline": {
+          "_Type_": "MissionDeadline",
+          "missionCompletionTime": 0.0,
+          "missionAutoEnd": false,
+          "missionResultAfterTimerEnd": "Failed",
+          "remainingTimeToShowTimer": 0.0,
+          "missionEndReason": "@LOC_EMPTY"},
+        "failIfSentToPrison": true,
+        "failIfBecameCriminal": true,
+        "failIfLeavePrison": false}},
+    "contractDisplayInfo": {
+      "_Type_": "ContractDisplayInfo",
+      "displayString": [
+        "@LOC_UNINITIALIZED",
+        "@LOC_UNINITIALIZED",
+        "@LOC_UNINITIALIZED",
+        "@LOC_UNINITIALIZED",
+        "@LOC_UNINITIALIZED"],
+      "type": "file://./../../../../../libs/foundry/records/missiontype/pu/salvage.json",
+      "illegal": false,
+      "showLifeTimeInMobiGlas": true,
+      "preShowObjectives": false},
+    "modifiers": [
+      {
+        "_Type_": "MissionModifier_SecurityClearance",
+        "modifierName": "",
+        "enabled": true,
+        "clearanceToken": "file://./../../../../../libs/foundry/records/lawsystem/securityclearancetokens/pu/salvage_clearance.json",
+        "locationProperty": null}],
+    "contractProperties": [
+      {
+        "_Pointer_": "ptr:1",
+        "_Type_": "MissionProperty",
+        "missionVariableName": "MissionLocation_BP1",
+        "extendedTextToken": "Location1",
+        "value": {
+          "_Type_": "MissionPropertyValue_Location",
+          "matchConditions": [],
+          "resourceTags": [],
+          "logErrorOnSearchFail": true}},
+      {
+        "_Pointer_": "ptr:2",
+        "_Type_": "MissionProperty",
+        "missionVariableName": "SalvageSpawnDescription_BP",
+        "extendedTextToken": "Ship",
+        "value": {
+          "_Type_": "MissionPropertyValue_ShipSpawnDescriptions",
+          "spawnDescriptions": [],
+          "allowedForMissionRestrictedDeliveries": false}},
+      {
+        "_Pointer_": "ptr:3",
+        "_Type_": "MissionProperty",
+        "missionVariableName": "QTBeaconOnMissionLocation_BP",
+        "extendedTextToken": "",
+        "value": {
+          "_Type_": "MissionPropertyValue_Boolean",
+          "value": false}},
+      {
+        "_Pointer_": "ptr:4",
+        "_Type_": "MissionProperty",
+        "missionVariableName": "DistanceFromPositionMin_BP",
+        "extendedTextToken": "",
+        "value": {
+          "_Type_": "MissionPropertyValue_Float",
+          "options": [
+            {
+              "_Type_": "MissionPropertyValueOption_Float",
+              "textId": "@LOC_UNINITIALIZED",
+              "weighting": 1.0,
+              "DEBUG_forceChooseThisOption": false,
+              "dependentProperties": [],
+              "value": 50000.0,
+              "variation": 0.0}]}},
+      {
+        "_Pointer_": "ptr:5",
+        "_Type_": "MissionProperty",
+        "missionVariableName": "DistanceFromPositionMax_BP",
+        "extendedTextToken": "",
+        "value": {
+          "_Type_": "MissionPropertyValue_Float",
+          "options": [
+            {
+              "_Type_": "MissionPropertyValueOption_Float",
+              "textId": "@LOC_UNINITIALIZED",
+              "weighting": 1.0,
+              "DEBUG_forceChooseThisOption": false,
+              "dependentProperties": [],
+              "value": 75000.0,
+              "variation": 0.0}]}},
+      {
+        "_Pointer_": "ptr:6",
+        "_Type_": "MissionProperty",
+        "missionVariableName": "TurretSpawnDescription_BP",
+        "extendedTextToken": "",
+        "value": {
+          "_Type_": "MissionPropertyValue_ShipSpawnDescriptions",
+          "spawnDescriptions": [],
+          "allowedForMissionRestrictedDeliveries": false}},
+      {
+        "_Pointer_": "ptr:7",
+        "_Type_": "MissionProperty",
+        "missionVariableName": "OwnerShipSpawnDescription_BP",
+        "extendedTextToken": "",
+        "value": {
+          "_Type_": "MissionPropertyValue_ShipSpawnDescriptions",
+          "spawnDescriptions": [],
+          "allowedForMissionRestrictedDeliveries": false}},
+      {
+        "_Pointer_": "ptr:8",
+        "_Type_": "MissionProperty",
+        "missionVariableName": "TimedMissionTimerDuration_BP",
+        "extendedTextToken": "timertemp",
+        "value": {
+          "_Type_": "MissionPropertyValue_Float",
+          "options": [
+            {
+              "_Type_": "MissionPropertyValueOption_Float",
+              "textId": "@LOC_UNINITIALIZED",
+              "weighting": 1.0,
+              "DEBUG_forceChooseThisOption": false,
+              "dependentProperties": [],
+              "value": 0.0,
+              "variation": 0.0}]}},
+      {
+        "_Pointer_": "ptr:9",
+        "_Type_": "MissionProperty",
+        "missionVariableName": "TimedMissionTimerDisplay_BP",
+        "extendedTextToken": "",
+        "value": {
+          "_Type_": "MissionPropertyValue_Boolean",
+          "value": false}},
+      {
+        "_Pointer_": "ptr:10",
+        "_Type_": "MissionProperty",
+        "missionVariableName": "ReinforcementsSpawnChance_BP",
+        "extendedTextToken": "",
+        "value": {
+          "_Type_": "MissionPropertyValue_Float",
+          "options": [
+            {
+              "_Type_": "MissionPropertyValueOption_Float",
+              "textId": "@LOC_UNINITIALIZED",
+              "weighting": 1.0,
+              "DEBUG_forceChooseThisOption": false,
+              "dependentProperties": [],
+              "value": 0.1,
+              "variation": 0.0}]}},
+      {
+        "_Pointer_": "ptr:11",
+        "_Type_": "MissionProperty",
+        "missionVariableName": "ReinforcementsSpawnDescription_BP",
+        "extendedTextToken": "",
+        "value": {
+          "_Type_": "MissionPropertyValue_ShipSpawnDescriptions",
+          "spawnDescriptions": [],
+          "allowedForMissionRestrictedDeliveries": false}},
+      {
+        "_Pointer_": "ptr:12",
+        "_Type_": "MissionProperty",
+        "missionVariableName": "ReinforcementsSpawnDelay_BP",
+        "extendedTextToken": "",
+        "value": {
+          "_Type_": "MissionPropertyValue_Float",
+          "options": [
+            {
+              "_Type_": "MissionPropertyValueOption_Float",
+              "textId": "@LOC_UNINITIALIZED",
+              "weighting": 1.0,
+              "DEBUG_forceChooseThisOption": false,
+              "dependentProperties": [],
+              "value": 60.0,
+              "variation": 0.0}]}},
+      {
+        "_Pointer_": "ptr:13",
+        "_Type_": "MissionProperty",
+        "missionVariableName": "ReinforcementsWaveCooldown_BP",
+        "extendedTextToken": "",
+        "value": {
+          "_Type_": "MissionPropertyValue_Float",
+          "options": [
+            {
+              "_Type_": "MissionPropertyValueOption_Float",
+              "textId": "@LOC_UNINITIALIZED",
+              "weighting": 1.0,
+              "DEBUG_forceChooseThisOption": false,
+              "dependentProperties": [],
+              "value": 60.0,
+              "variation": 0.0}]}},
+      {
+        "_Pointer_": "ptr:14",
+        "_Type_": "MissionProperty",
+        "missionVariableName": "ClearWaveBeforeProceeding_BP",
+        "extendedTextToken": "",
+        "value": {
+          "_Type_": "MissionPropertyValue_Boolean",
+          "value": false}},
+      {
+        "_Pointer_": "ptr:15",
+        "_Type_": "MissionProperty",
+        "missionVariableName": "ChickenShipSpawnDescription_BP",
+        "extendedTextToken": "",
+        "value": {
+          "_Type_": "MissionPropertyValue_ShipSpawnDescriptions",
+          "spawnDescriptions": [],
+          "allowedForMissionRestrictedDeliveries": false}},
+      {
+        "_Pointer_": "ptr:16",
+        "_Type_": "MissionProperty",
+        "missionVariableName": "CompleteMissionOnFinish_BP",
+        "extendedTextToken": "",
+        "value": {
+          "_Type_": "MissionPropertyValue_Boolean",
+          "value": true}},
+      {
+        "_Pointer_": "ptr:17",
+        "_Type_": "MissionProperty",
+        "missionVariableName": "CompletionPercentage_BP",
+        "extendedTextToken": "",
+        "value": {
+          "_Type_": "MissionPropertyValue_Integer",
+          "options": [
+            {
+              "_Type_": "MissionPropertyValueOption_Integer",
+              "textId": "@LOC_UNINITIALIZED",
+              "weighting": 1.0,
+              "DEBUG_forceChooseThisOption": false,
+              "dependentProperties": [],
+              "value": 20,
+              "variation": 0}]}},
+      {
+        "_Pointer_": "ptr:18",
+        "_Type_": "MissionProperty",
+        "missionVariableName": "AbandonCompletionPercentage_BP",
+        "extendedTextToken": "",
+        "value": {
+          "_Type_": "MissionPropertyValue_Float",
+          "options": [
+            {
+              "_Type_": "MissionPropertyValueOption_Float",
+              "textId": "@LOC_UNINITIALIZED",
+              "weighting": 1.0,
+              "DEBUG_forceChooseThisOption": false,
+              "dependentProperties": [],
+              "value": 50.0,
+              "variation": 0.0}]}},
+      {
+        "_Pointer_": "ptr:19",
+        "_Type_": "MissionProperty",
+        "missionVariableName": "DisableTrespassArea_BP",
+        "extendedTextToken": "",
+        "value": {
+          "_Type_": "MissionPropertyValue_Boolean",
+          "value": false}},
+      {
+        "_Pointer_": "ptr:20",
+        "_Type_": "MissionProperty",
+        "missionVariableName": "",
+        "extendedTextToken": "Contractor",
+        "value": {
+          "_Type_": "MissionPropertyValue_Organization",
+          "matchConditions": [],
+          "debugForceChosenOrganization": null}},
+      {
+        "_Pointer_": "ptr:21",
+        "_Type_": "MissionProperty",
+        "missionVariableName": "",
+        "extendedTextToken": "ClaimNumber",
+        "value": {
+          "_Type_": "MissionPropertyValue_Integer",
+          "options": [
+            {
+              "_Type_": "MissionPropertyValueOption_Integer",
+              "textId": "@LOC_UNINITIALIZED",
+              "weighting": 1.0,
+              "DEBUG_forceChooseThisOption": false,
+              "dependentProperties": [],
+              "value": 10000,
+              "variation": 89999}]}},
+      {
+        "_Pointer_": "ptr:22",
+        "_Type_": "MissionProperty",
+        "missionVariableName": "",
+        "extendedTextToken": "ShipStory",
+        "value": {
+          "_Type_": "MissionPropertyValue_StringHash",
+          "options": [
+            {
+              "_Type_": "MissionPropertyValueOption_StringHash",
+              "textId": "@SalvageContractor_Lawful_shipstory_001",
+              "weighting": 0.1,
+              "DEBUG_forceChooseThisOption": false,
+              "dependentProperties": [],
+              "value": ""},
+            {
+              "_Type_": "MissionPropertyValueOption_StringHash",
+              "textId": "@SalvageContractor_Lawful_shipstory_002",
+              "weighting": 0.1,
+              "DEBUG_forceChooseThisOption": false,
+              "dependentProperties": [],
+              "value": ""},
+            {
+              "_Type_": "MissionPropertyValueOption_StringHash",
+              "textId": "@SalvageContractor_Lawful_shipstory_003",
+              "weighting": 0.1,
+              "DEBUG_forceChooseThisOption": false,
+              "dependentProperties": [],
+              "value": ""},
+            {
+              "_Type_": "MissionPropertyValueOption_StringHash",
+              "textId": "@SalvageContractor_Lawful_shipstory_004",
+              "weighting": 0.1,
+              "DEBUG_forceChooseThisOption": false,
+              "dependentProperties": [],
+              "value": ""},
+            {
+              "_Type_": "MissionPropertyValueOption_StringHash",
+              "textId": "@SalvageContractor_Lawful_shipstory_006",
+              "weighting": 0.1,
+              "DEBUG_forceChooseThisOption": false,
+              "dependentProperties": [],
+              "value": ""},
+            {
+              "_Type_": "MissionPropertyValueOption_StringHash",
+              "textId": "@SalvageContractor_Lawful_shipstory_007",
+              "weighting": 0.1,
+              "DEBUG_forceChooseThisOption": false,
+              "dependentProperties": [],
+              "value": ""},
+            {
+              "_Type_": "MissionPropertyValueOption_StringHash",
+              "textId": "@SalvageContractor_Lawful_shipstory_008",
+              "weighting": 0.1,
+              "DEBUG_forceChooseThisOption": false,
+              "dependentProperties": [],
+              "value": ""},
+            {
+              "_Type_": "MissionPropertyValueOption_StringHash",
+              "textId": "@SalvageContractor_Lawful_shipstory_010",
+              "weighting": 0.1,
+              "DEBUG_forceChooseThisOption": false,
+              "dependentProperties": [],
+              "value": ""}]}},
+      {
+        "_Pointer_": "ptr:25",
+        "_Type_": "MissionProperty",
+        "missionVariableName": "",
+        "extendedTextToken": "Danger",
+        "value": {
+          "_Type_": "MissionPropertyValue_StringHash",
+          "options": [
+            {
+              "_Type_": "MissionPropertyValueOption_StringHash",
+              "textId": "@procedural_text_null",
+              "weighting": 1.0,
+              "DEBUG_forceChooseThisOption": false,
+              "dependentProperties": [],
+              "value": ""}]}},
+      {
+        "_Pointer_": "ptr:24",
+        "_Type_": "MissionProperty",
+        "missionVariableName": "MissionTargetName_BP",
+        "extendedTextToken": "TargetName",
+        "value": {
+          "_Type_": "MissionPropertyValue_AIName",
+          "randomName": true,
+          "randomLastName": true,
+          "randomNickName": true,
+          "characterGivenName": "@LOC_UNINITIALIZED",
+          "characterGivenLastName": "@LOC_UNINITIALIZED",
+          "characterGivenNickName": "@LOC_UNINITIALIZED",
+          "characterNameData": "file://./../../../../../libs/foundry/records/characternamedata/humanmale.json",
+          "chanceOfNickName": 0.25}},
+      {
+        "_Type_": "MissionProperty",
+        "missionVariableName": "MissionLocation_BP2",
+        "extendedTextToken": "Location2",
+        "value": {
+          "_Type_": "MissionPropertyValue_Location",
+          "matchConditions": [],
+          "resourceTags": [
+            {
+              "_RecordPath_": "file://./../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+              "_RecordName_": "Tag.6804b0a9-b01d-4c9a-8063-67784bd0f021",
+              "_RecordId_": "6804b0a9-b01d-4c9a-8063-67784bd0f021"}],
+          "logErrorOnSearchFail": true}},
+      {
+        "_Pointer_": "ptr:26",
+        "_Type_": "MissionProperty",
+        "missionVariableName": "MarkOnSpawn_BP",
+        "extendedTextToken": "",
+        "value": {
+          "_Type_": "MissionPropertyValue_Boolean",
+          "value": false}},
+      {
+        "_Pointer_": "ptr:27",
+        "_Type_": "MissionProperty",
+        "missionVariableName": "RewardOnKill_BP",
+        "extendedTextToken": "",
+        "value": {
+          "_Type_": "MissionPropertyValue_Boolean",
+          "value": false}},
+      {
+        "_Pointer_": "ptr:28",
+        "_Type_": "MissionProperty",
+        "missionVariableName": "IsMissionLawful_BP",
+        "extendedTextToken": "",
+        "value": {
+          "_Type_": "MissionPropertyValue_Boolean",
+          "value": false}},
+      {
+        "_Pointer_": "ptr:29",
+        "_Type_": "MissionProperty",
+        "missionVariableName": "TimeBeforeTargetEscape_BP",
+        "extendedTextToken": "",
+        "value": {
+          "_Type_": "MissionPropertyValue_Float",
+          "options": [
+            {
+              "_Type_": "MissionPropertyValueOption_Float",
+              "textId": "@LOC_UNINITIALIZED",
+              "weighting": 1.0,
+              "DEBUG_forceChooseThisOption": false,
+              "dependentProperties": [],
+              "value": 0.0,
+              "variation": 0.0}]}},
+      {
+        "_Pointer_": "ptr:30",
+        "_Type_": "MissionProperty",
+        "missionVariableName": "TimePerTargetShip_BP",
+        "extendedTextToken": "",
+        "value": {
+          "_Type_": "MissionPropertyValue_Float",
+          "options": [
+            {
+              "_Type_": "MissionPropertyValueOption_Float",
+              "textId": "@LOC_UNINITIALIZED",
+              "weighting": 1.0,
+              "DEBUG_forceChooseThisOption": false,
+              "dependentProperties": [],
+              "value": 0.0,
+              "variation": 0.0}]}},
+      {
+        "_Pointer_": "ptr:31",
+        "_Type_": "MissionProperty",
+        "missionVariableName": "TargetEscapeTimerStartOnHostileAction_BP",
+        "extendedTextToken": "",
+        "value": {
+          "_Type_": "MissionPropertyValue_Boolean",
+          "value": false}},
+      {
+        "_Pointer_": "ptr:32",
+        "_Type_": "MissionProperty",
+        "missionVariableName": "TargetEscapeTimerStartOnEnteredAA_BP",
+        "extendedTextToken": "",
+        "value": {
+          "_Type_": "MissionPropertyValue_Boolean",
+          "value": false}},
+      {
+        "_Pointer_": "ptr:33",
+        "_Type_": "MissionProperty",
+        "missionVariableName": "MissionTargets_BP",
+        "extendedTextToken": "",
+        "value": {
+          "_Type_": "MissionPropertyValue_ShipSpawnDescriptions",
+          "spawnDescriptions": [],
+          "allowedForMissionRestrictedDeliveries": false}},
+      {
+        "_Pointer_": "ptr:34",
+        "_Type_": "MissionProperty",
+        "missionVariableName": "TargetsToExpect_BP",
+        "extendedTextToken": "",
+        "value": {
+          "_Type_": "MissionPropertyValue_Integer",
+          "options": [
+            {
+              "_Type_": "MissionPropertyValueOption_Integer",
+              "textId": "@LOC_UNINITIALIZED",
+              "weighting": 1.0,
+              "DEBUG_forceChooseThisOption": false,
+              "dependentProperties": [],
+              "value": 1,
+              "variation": 0}]}},
+      {
+        "_Pointer_": "ptr:35",
+        "_Type_": "MissionProperty",
+        "missionVariableName": "IsMissionWaves_BP",
+        "extendedTextToken": "",
+        "value": {
+          "_Type_": "MissionPropertyValue_Boolean",
+          "value": false}},
+      {
+        "_Pointer_": "ptr:36",
+        "_Type_": "MissionProperty",
+        "missionVariableName": "NextWaveUponTargetKilled_BP",
+        "extendedTextToken": "",
+        "value": {
+          "_Type_": "MissionPropertyValue_Boolean",
+          "value": false}},
+      {
+        "_Pointer_": "ptr:37",
+        "_Type_": "MissionProperty",
+        "missionVariableName": "UseNextWaveDelay_BP",
+        "extendedTextToken": "",
+        "value": {
+          "_Type_": "MissionPropertyValue_Boolean",
+          "value": false}},
+      {
+        "_Pointer_": "ptr:38",
+        "_Type_": "MissionProperty",
+        "missionVariableName": "NextWaveDelay_BP",
+        "extendedTextToken": "",
+        "value": {
+          "_Type_": "MissionPropertyValue_Float",
+          "options": [
+            {
+              "_Type_": "MissionPropertyValueOption_Float",
+              "textId": "@LOC_UNINITIALIZED",
+              "weighting": 1.0,
+              "DEBUG_forceChooseThisOption": false,
+              "dependentProperties": [],
+              "value": 0.0,
+              "variation": 0.0}]}},
+      {
+        "_Pointer_": "ptr:39",
+        "_Type_": "MissionProperty",
+        "missionVariableName": "WaveSpawnCap_BP",
+        "extendedTextToken": "",
+        "value": {
+          "_Type_": "MissionPropertyValue_Integer",
+          "options": [
+            {
+              "_Type_": "MissionPropertyValueOption_Integer",
+              "textId": "@LOC_UNINITIALIZED",
+              "weighting": 1.0,
+              "DEBUG_forceChooseThisOption": false,
+              "dependentProperties": [],
+              "value": 0,
+              "variation": 0}]}},
+      {
+        "_Pointer_": "ptr:40",
+        "_Type_": "MissionProperty",
+        "missionVariableName": "TargetSpread_BP",
+        "extendedTextToken": "",
+        "value": {
+          "_Type_": "MissionPropertyValue_StringHash",
+          "options": [
+            {
+              "_Type_": "MissionPropertyValueOption_StringHash",
+              "textId": "@LOC_UNINITIALIZED",
+              "weighting": 1.0,
+              "DEBUG_forceChooseThisOption": false,
+              "dependentProperties": [],
+              "value": ""}]}},
+      {
+        "_Pointer_": "ptr:41",
+        "_Type_": "MissionProperty",
+        "missionVariableName": "TargetRange_BP",
+        "extendedTextToken": "",
+        "value": {
+          "_Type_": "MissionPropertyValue_StringHash",
+          "options": [
+            {
+              "_Type_": "MissionPropertyValueOption_StringHash",
+              "textId": "@LOC_UNINITIALIZED",
+              "weighting": 1.0,
+              "DEBUG_forceChooseThisOption": false,
+              "dependentProperties": [],
+              "value": ""}]}},
+      {
+        "_Pointer_": "ptr:42",
+        "_Type_": "MissionProperty",
+        "missionVariableName": "CreateLocationObjectives_BP",
+        "extendedTextToken": "",
+        "value": {
+          "_Type_": "MissionPropertyValue_Boolean",
+          "value": true}},
+      {
+        "_Pointer_": "ptr:43",
+        "_Type_": "MissionProperty",
+        "missionVariableName": "CreateMissionObjectives_BP",
+        "extendedTextToken": "",
+        "value": {
+          "_Type_": "MissionPropertyValue_Boolean",
+          "value": true}}],
+    "objectiveTokens": [
+      {
+        "_Pointer_": "ptr:44",
+        "_Type_": "ObjectiveToken",
+        "id": "ae05e812-b3fd-40b4-91dd-d0b9598a36de",
+        "debugName": "Salvage",
+        "startsActive": true,
+        "properties": [
+          {
+            "_Pointer_": "ptr:23",
+            "_Type_": "ObjectiveProperty_Referenced",
+            "missionVariableName": "MissionLocation_BP",
+            "extendedTextToken": "Location",
+            "property": "_PointsTo_:ptr:1"},
+          {
+            "_Type_": "ObjectiveProperty_Referenced",
+            "missionVariableName": "SalvageSpawnDescription_BP",
+            "extendedTextToken": "",
+            "property": "_PointsTo_:ptr:2"},
+          {
+            "_Type_": "ObjectiveProperty_Referenced",
+            "missionVariableName": "QTBeaconOnMissionLocation_BP",
+            "extendedTextToken": "",
+            "property": "_PointsTo_:ptr:3"},
+          {
+            "_Type_": "ObjectiveProperty_Referenced",
+            "missionVariableName": "DistanceFromPositionMin_BP",
+            "extendedTextToken": "",
+            "property": "_PointsTo_:ptr:4"},
+          {
+            "_Type_": "ObjectiveProperty_Referenced",
+            "missionVariableName": "DistanceFromPositionMax_BP",
+            "extendedTextToken": "",
+            "property": "_PointsTo_:ptr:5"},
+          {
+            "_Type_": "ObjectiveProperty_Referenced",
+            "missionVariableName": "TurretSpawnDescription_BP",
+            "extendedTextToken": "",
+            "property": "_PointsTo_:ptr:6"},
+          {
+            "_Type_": "ObjectiveProperty_Referenced",
+            "missionVariableName": "OwnerShipSpawnDescription_BP",
+            "extendedTextToken": "",
+            "property": "_PointsTo_:ptr:7"},
+          {
+            "_Type_": "ObjectiveProperty_Referenced",
+            "missionVariableName": "TimedMissionTimerDuration_BP",
+            "extendedTextToken": "timertemp",
+            "property": "_PointsTo_:ptr:8"},
+          {
+            "_Type_": "ObjectiveProperty_Referenced",
+            "missionVariableName": "TimedMissionTimerDisplay_BP",
+            "extendedTextToken": "",
+            "property": "_PointsTo_:ptr:9"},
+          {
+            "_Type_": "ObjectiveProperty_Referenced",
+            "missionVariableName": "ReinforcementsSpawnChance_BP",
+            "extendedTextToken": "",
+            "property": "_PointsTo_:ptr:10"},
+          {
+            "_Type_": "ObjectiveProperty_Referenced",
+            "missionVariableName": "ReinforcementsSpawnDescription_BP",
+            "extendedTextToken": "",
+            "property": "_PointsTo_:ptr:11"},
+          {
+            "_Type_": "ObjectiveProperty_Referenced",
+            "missionVariableName": "ReinforcementsSpawnDelay_BP",
+            "extendedTextToken": "",
+            "property": "_PointsTo_:ptr:12"},
+          {
+            "_Type_": "ObjectiveProperty_Referenced",
+            "missionVariableName": "ReinforcementsWaveCooldown_BP",
+            "extendedTextToken": "",
+            "property": "_PointsTo_:ptr:13"},
+          {
+            "_Type_": "ObjectiveProperty_Referenced",
+            "missionVariableName": "ClearWaveBeforeProceeding_BP",
+            "extendedTextToken": "",
+            "property": "_PointsTo_:ptr:14"},
+          {
+            "_Type_": "ObjectiveProperty_Referenced",
+            "missionVariableName": "ChickenShipSpawnDescription_BP",
+            "extendedTextToken": "",
+            "property": "_PointsTo_:ptr:15"},
+          {
+            "_Type_": "ObjectiveProperty_Referenced",
+            "missionVariableName": "CompleteMissionOnFinish_BP",
+            "extendedTextToken": "",
+            "property": "_PointsTo_:ptr:16"},
+          {
+            "_Type_": "ObjectiveProperty_Referenced",
+            "missionVariableName": "CompletionPercentage_BP",
+            "extendedTextToken": "",
+            "property": "_PointsTo_:ptr:17"},
+          {
+            "_Type_": "ObjectiveProperty_Referenced",
+            "missionVariableName": "AbandonCompletionPercentage_BP",
+            "extendedTextToken": "",
+            "property": "_PointsTo_:ptr:18"},
+          {
+            "_Type_": "ObjectiveProperty_Referenced",
+            "missionVariableName": "DisableTrespassArea_BP",
+            "extendedTextToken": "",
+            "property": "_PointsTo_:ptr:19"},
+          {
+            "_Type_": "ObjectiveProperty_Referenced",
+            "missionVariableName": "",
+            "extendedTextToken": "Contractor",
+            "property": "_PointsTo_:ptr:20"},
+          {
+            "_Type_": "ObjectiveProperty_Referenced",
+            "missionVariableName": "",
+            "extendedTextToken": "ClaimNumber",
+            "property": "_PointsTo_:ptr:21"},
+          {
+            "_Type_": "ObjectiveProperty_Referenced",
+            "missionVariableName": "",
+            "extendedTextToken": "ShipStory",
+            "property": "_PointsTo_:ptr:22"}],
+        "objectiveHandler": {
+          "_Type_": "ObjectiveHandler_NearLocation",
+          "moduleDeclaration": null,
+          "module": "Libs/Subsumption/Missions/PU/Missions/Salvage/SalvageContractor.xml",
+          "moduleHierarchy": "file://./../../../../../libs/foundry/records/contracts/modulehierarchy/salvagecontractor_mmh.json",
+          "disableTravelObjectives": false,
+          "disableReturnObjectives": false,
+          "travelRadiusKM": 0.0,
+          "allPlayersLeftGracePeriod": -1.0,
+          "travelObjectiveInfo": {
+            "_Type_": "ObjectiveDisplayInfo",
+            "shortDescription": "@TravelObjective_Short",
+            "longDescription": "@TravelObjective_Long",
+            "objectiveMarkerLabel": "@TravelObjective_Short",
+            "category": "Primary",
+            "hideOnHUD": false},
+          "returnObjectiveInfo": {
+            "_Type_": "ObjectiveDisplayInfo",
+            "shortDescription": "@ReturnObjective_Short",
+            "longDescription": "@ReturnObjective_Long",
+            "objectiveMarkerLabel": "@ReturnObjective_Short",
+            "category": "Primary",
+            "hideOnHUD": false},
+          "navPointSpawnInfo": null,
+          "location": "_PointsTo_:ptr:23",
+          "maxDistance": 10000.0,
+          "minDistance": 5000.0},
+        "rewardContribution": null,
+        "displayInfo": {
+          "_Type_": "ObjectiveDisplayInfo",
+          "shortDescription": "@LOC_UNINITIALIZED",
+          "longDescription": "@LOC_UNINITIALIZED",
+          "objectiveMarkerLabel": "@LOC_UNINITIALIZED",
+          "category": "Primary",
+          "hideOnHUD": false},
+        "overrideMissionDetailsDisplayInfo": {
+          "_Type_": "OverrideMissionDetailsDisplayInfo",
+          "titleOverride": "@LOC_UNINITIALIZED",
+          "descriptionOverride": "@LOC_UNINITIALIZED"},
+        "commsNotifications": [],
+        "childMissionPhases": []},
+      {
+        "_Pointer_": "ptr:45",
+        "_Type_": "ObjectiveToken",
+        "id": "af141981-4be6-43e5-814c-1963e077ad88",
+        "debugName": "Killship",
+        "startsActive": true,
+        "properties": [
+          {
+            "_Type_": "ObjectiveProperty_Referenced",
+            "missionVariableName": "",
+            "extendedTextToken": "Contractor",
+            "property": "_PointsTo_:ptr:20"},
+          {
+            "_Type_": "ObjectiveProperty_Referenced",
+            "missionVariableName": "BP_MissionTargetName",
+            "extendedTextToken": "TargetName",
+            "property": "_PointsTo_:ptr:24"},
+          {
+            "_Type_": "ObjectiveProperty_Referenced",
+            "missionVariableName": "MissionLocation_BP",
+            "extendedTextToken": "Location",
+            "property": "_PointsTo_:ptr:1"},
+          {
+            "_Type_": "ObjectiveProperty_Referenced",
+            "missionVariableName": "",
+            "extendedTextToken": "Danger",
+            "property": "_PointsTo_:ptr:25"},
+          {
+            "_Type_": "ObjectiveProperty_Referenced",
+            "missionVariableName": "MarkOnSpawn_BP",
+            "extendedTextToken": "",
+            "property": "_PointsTo_:ptr:26"},
+          {
+            "_Type_": "ObjectiveProperty_Referenced",
+            "missionVariableName": "RewardOnKill_BP",
+            "extendedTextToken": "",
+            "property": "_PointsTo_:ptr:27"},
+          {
+            "_Type_": "ObjectiveProperty_Referenced",
+            "missionVariableName": "IsMissionLawful_BP",
+            "extendedTextToken": "",
+            "property": "_PointsTo_:ptr:28"},
+          {
+            "_Type_": "ObjectiveProperty_Referenced",
+            "missionVariableName": "TimeBeforeTargetEscape_BP",
+            "extendedTextToken": "",
+            "property": "_PointsTo_:ptr:29"},
+          {
+            "_Type_": "ObjectiveProperty_Referenced",
+            "missionVariableName": "TimePerTargetShip_BP",
+            "extendedTextToken": "",
+            "property": "_PointsTo_:ptr:30"},
+          {
+            "_Type_": "ObjectiveProperty_Referenced",
+            "missionVariableName": "TargetEscapeTimerStartOnHostileAction_BP",
+            "extendedTextToken": "",
+            "property": "_PointsTo_:ptr:31"},
+          {
+            "_Type_": "ObjectiveProperty_Referenced",
+            "missionVariableName": "TargetEscapeTimerStartOnEnteredAA_BP",
+            "extendedTextToken": "",
+            "property": "_PointsTo_:ptr:32"},
+          {
+            "_Type_": "ObjectiveProperty_Referenced",
+            "missionVariableName": "MissionTargets_BP",
+            "extendedTextToken": "",
+            "property": "_PointsTo_:ptr:33"},
+          {
+            "_Type_": "ObjectiveProperty_Referenced",
+            "missionVariableName": "TargetsToExpect_BP",
+            "extendedTextToken": "",
+            "property": "_PointsTo_:ptr:34"},
+          {
+            "_Type_": "ObjectiveProperty_Referenced",
+            "missionVariableName": "IsMissionWaves_BP",
+            "extendedTextToken": "",
+            "property": "_PointsTo_:ptr:35"},
+          {
+            "_Type_": "ObjectiveProperty_Referenced",
+            "missionVariableName": "ClearWaveBeforeProceeding_BP",
+            "extendedTextToken": "",
+            "property": "_PointsTo_:ptr:14"},
+          {
+            "_Type_": "ObjectiveProperty_Referenced",
+            "missionVariableName": "NextWaveUponTargetKilled_BP",
+            "extendedTextToken": "",
+            "property": "_PointsTo_:ptr:36"},
+          {
+            "_Type_": "ObjectiveProperty_Referenced",
+            "missionVariableName": "UseNextWaveDelay_BP",
+            "extendedTextToken": "",
+            "property": "_PointsTo_:ptr:37"},
+          {
+            "_Type_": "ObjectiveProperty_Referenced",
+            "missionVariableName": "NextWaveDelay_BP",
+            "extendedTextToken": "",
+            "property": "_PointsTo_:ptr:38"},
+          {
+            "_Type_": "ObjectiveProperty_Referenced",
+            "missionVariableName": "WaveSpawnCap_BP",
+            "extendedTextToken": "",
+            "property": "_PointsTo_:ptr:39"},
+          {
+            "_Type_": "ObjectiveProperty_Referenced",
+            "missionVariableName": "TargetSpread_BP",
+            "extendedTextToken": "",
+            "property": "_PointsTo_:ptr:40"},
+          {
+            "_Type_": "ObjectiveProperty_Referenced",
+            "missionVariableName": "TargetRange_BP",
+            "extendedTextToken": "",
+            "property": "_PointsTo_:ptr:41"},
+          {
+            "_Type_": "ObjectiveProperty_Referenced",
+            "missionVariableName": "CreateLocationObjectives_BP",
+            "extendedTextToken": "",
+            "property": "_PointsTo_:ptr:42"},
+          {
+            "_Type_": "ObjectiveProperty_Referenced",
+            "missionVariableName": "CreateMissionObjectives_BP",
+            "extendedTextToken": "",
+            "property": "_PointsTo_:ptr:43"}],
+        "objectiveHandler": {
+          "_Type_": "ObjectiveHandler_Local",
+          "moduleDeclaration": null,
+          "module": "Libs/Subsumption/Missions/PU/Missions/KillShip/KillShip.xml",
+          "moduleHierarchy": "file://./../../../../../libs/foundry/records/contracts/modulehierarchy/killship_mmh.json",
+          "disableTravelObjectives": false,
+          "disableReturnObjectives": false,
+          "travelRadiusKM": 0.0,
+          "allPlayersLeftGracePeriod": -1.0,
+          "travelObjectiveInfo": {
+            "_Type_": "ObjectiveDisplayInfo",
+            "shortDescription": "@bounty_obj_short_01",
+            "longDescription": "@bounty_obj_long_01",
+            "objectiveMarkerLabel": "@KillShip_Reach_Marker_01",
+            "category": "Primary",
+            "hideOnHUD": false},
+          "returnObjectiveInfo": {
+            "_Type_": "ObjectiveDisplayInfo",
+            "shortDescription": "@bounty_obj_short_02",
+            "longDescription": "@bounty_obj_long_02",
+            "objectiveMarkerLabel": "@bounty_obj_marker_02",
+            "category": "Primary",
+            "hideOnHUD": false},
+          "navPointSpawnInfo": null,
+          "location": "_PointsTo_:ptr:23",
+          "securityManifestToOverride": null},
+        "rewardContribution": null,
+        "displayInfo": {
+          "_Type_": "ObjectiveDisplayInfo",
+          "shortDescription": "@LOC_UNINITIALIZED",
+          "longDescription": "@LOC_UNINITIALIZED",
+          "objectiveMarkerLabel": "@LOC_UNINITIALIZED",
+          "category": "Primary",
+          "hideOnHUD": false},
+        "overrideMissionDetailsDisplayInfo": {
+          "_Type_": "OverrideMissionDetailsDisplayInfo",
+          "titleOverride": "@LOC_UNINITIALIZED",
+          "descriptionOverride": "@LOC_UNINITIALIZED"},
+        "commsNotifications": [],
+        "childMissionPhases": []}],
+    "partialRewardPayout": null,
+    "missionFlow": {
+      "_Type_": "MissionFlow",
+      "triggers": [
+        {
+          "_Type_": "MissionFlowTrigger",
+          "description": "If all Phases are complete, complete mission",
+          "condition": {
+            "_Type_": "MissionFlowCondition_AND",
+            "conditions": [
+              {
+                "_Type_": "MissionFlowCondition_TokenState",
+                "objectiveToken": "_PointsTo_:ptr:44",
+                "tokenState": "Completed"},
+              {
+                "_Type_": "MissionFlowCondition_TokenState",
+                "objectiveToken": "_PointsTo_:ptr:45",
+                "tokenState": "Completed"}]},
+          "action": {
+            "_Type_": "MissionFlowAction_StateChange",
+            "toState": "Completed"}}]},
+    "contractStartCommsNotification": null,
+    "contractEndCommsNotifications": []}}

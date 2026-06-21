@@ -1,0 +1,17 @@
+{
+  "_RecordName_": "InventoryContainer.PersonalStorage_Locker_Spartan",
+  "_RecordId_": "c20ea96e-6d31-44fb-aa89-7b87401edb7f",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "InventoryContainer",
+    "excludedItemSubTypes": [],
+    "interiorDimensions": {
+      "_Type_": "Vec3",
+      "x": 0.5,
+      "y": 0.7,
+      "z": 1.3},
+    "inventoryType": {
+      "_Type_": "InventoryClosedContainerType",
+      "capacity": {
+        "_Type_": "SStandardCargoUnit",
+        "standardCargoUnits": 1.06}}}}

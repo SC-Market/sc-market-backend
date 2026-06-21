@@ -1,0 +1,18 @@
+{
+  "_RecordName_": "MissionScenario.RCD_Exclusive_Scenario",
+  "_RecordId_": "58c147c3-4524-40f6-838e-4f52eb109546",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "MissionScenario",
+    "name": "RCD_Exclusive_Scenario",
+    "description": "Start this scenario to activate the Rockcracker Dungeon exclusive mission",
+    "variables": [],
+    "cycles": [],
+    "schedule": {
+      "_Type_": "MissionScenarioSchedule",
+      "enabled": true,
+      "start_constraint": null,
+      "end_constraint": null,
+      "recurrence": null},
+    "auto_create": true,
+    "track_progress": false}}

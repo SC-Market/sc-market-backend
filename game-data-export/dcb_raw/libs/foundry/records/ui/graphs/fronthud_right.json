@@ -1,0 +1,60 @@
+{
+  "_RecordName_": "CtxGraph.FrontHUD_Right",
+  "_RecordId_": "bd97f8a2-765f-485d-995f-f8fe781942e0",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "CtxGraph",
+    "groups": [
+      "_PointsTo_:ptr:1",
+      "_PointsTo_:ptr:2"],
+    "nodes": [
+      {
+        "_Pointer_": "ptr:1",
+        "_Type_": "UIGraph_Group",
+        "contexts": [
+          "_PointsTo_:ptr:3"],
+        "name": "Main",
+        "indexContexts": false,
+        "childGroups": []},
+      {
+        "_Pointer_": "ptr:3",
+        "_Type_": "UIGraph_Context",
+        "name": "Home",
+        "dependencies": [],
+        "components": [
+          "_PointsTo_:ptr:4"],
+        "BackBehavior": "NoAction",
+        "renderTarget": "All",
+        "UIController": {
+          "_Type_": "UIGraph_ControllerComponent",
+          "name": ""}},
+      {
+        "_Pointer_": "ptr:4",
+        "_Type_": "UIGraph_BuildingBlocksContextComponent",
+        "canvas": "file://./../../../../../libs/foundry/records/ui/buildingblocks/dev/tests/fronthud_right.json",
+        "isSystemViewInstance": false,
+        "canvasInstantiationMode": "RootDeferred"},
+      {
+        "_Pointer_": "ptr:2",
+        "_Type_": "UIGraph_Group",
+        "contexts": [
+          "_PointsTo_:ptr:5"],
+        "name": "Background",
+        "indexContexts": false,
+        "childGroups": []},
+      {
+        "_Pointer_": "ptr:5",
+        "_Type_": "UIGraph_Context",
+        "name": "Default",
+        "dependencies": [],
+        "components": [],
+        "BackBehavior": "NoAction",
+        "renderTarget": "All",
+        "UIController": {
+          "_Type_": "UIGraph_ControllerComponent",
+          "name": ""}},
+      {
+        "_Type_": "UIGraph_BuildingBlocksContextComponent",
+        "canvas": "file://./../../../../../libs/foundry/records/ui/buildingblocks/props/deliverylocker/backgroundcanvas_deliverylocker.json",
+        "isSystemViewInstance": false,
+        "canvasInstantiationMode": "RootDeferred"}]}}

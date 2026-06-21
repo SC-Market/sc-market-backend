@@ -1,0 +1,17 @@
+{
+  "_RecordName_": "InventoryContainer.ORIG_85x_Template",
+  "_RecordId_": "bc61b3f7-20fa-4cbb-9765-d43954b4a823",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "InventoryContainer",
+    "excludedItemSubTypes": [],
+    "interiorDimensions": {
+      "_Type_": "Vec3",
+      "x": 2.0,
+      "y": 2.0,
+      "z": 2.0},
+    "inventoryType": {
+      "_Type_": "InventoryClosedContainerType",
+      "capacity": {
+        "_Type_": "SStandardCargoUnit",
+        "standardCargoUnits": 1.47}}}}

@@ -1,0 +1,10 @@
+{
+  "_RecordName_": "ARModeSettings.ARModeSettings",
+  "_RecordId_": "d9f36265-906a-41e7-ac11-6e41295667e2",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "ARModeSettings",
+    "playerLabelOffsetX": 0.0,
+    "playerLabelOffsetY": 0.0,
+    "playerLabelOffsetZ": 0.2,
+    "starMapParams": "file://./../../../../../libs/foundry/records/ui/radar3dpresets/radardisplay3dpreset.mobiglasskyline.json"}}

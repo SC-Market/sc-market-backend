@@ -1,0 +1,57 @@
+{
+  "_RecordName_": "SEntrancesDef.ORIG_890Jump",
+  "_RecordId_": "5a56a06a-12fa-449b-a765-e21a22029f38",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "SEntrancesDef",
+    "boundingBoxScale": {
+      "_Type_": "Vec3",
+      "x": 1.2,
+      "y": 1.2,
+      "z": 1.2},
+    "boundingBoxOffset": {
+      "_Type_": "Vec3",
+      "x": 0.0,
+      "y": 0.0,
+      "z": 0.0},
+    "entranceArray": [
+      {
+        "_Type_": "SCEntranceItem",
+        "entranceName": "@entrance_elevator",
+        "jointName": "exterior_lights",
+        "positionOffset": {
+          "_Type_": "Vec3",
+          "x": 0.0,
+          "y": -17.0,
+          "z": -20.0},
+        "shipState": "Grounded"},
+      {
+        "_Type_": "SCEntranceItem",
+        "entranceName": "@entrance_cargo",
+        "jointName": "exterior_lights",
+        "positionOffset": {
+          "_Type_": "Vec3",
+          "x": 0.0,
+          "y": 5.0,
+          "z": -20.0},
+        "shipState": "Grounded"},
+      {
+        "_Type_": "SCEntranceItem",
+        "entranceName": "@entrance_dock",
+        "jointName": "Hardpoint_Airlock_Door_R",
+        "positionOffset": {
+          "_Type_": "Vec3",
+          "x": 0.0,
+          "y": 0.0,
+          "z": 1.0},
+        "shipState": "Flying"},
+      {
+        "_Type_": "SCEntranceItem",
+        "entranceName": "@entrance_dock",
+        "jointName": "Hardpoint_Airlock_Door_L",
+        "positionOffset": {
+          "_Type_": "Vec3",
+          "x": 0.0,
+          "y": 0.0,
+          "z": 1.0},
+        "shipState": "Flying"}]}}

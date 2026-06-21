@@ -1,0 +1,15 @@
+{
+  "_RecordName_": "PlayerAnimatedInteractionTemplate.Button_DoorPanel",
+  "_RecordId_": "627d9876-4172-4d8b-92cb-704088aa3d41",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "PlayerAnimatedInteractionTemplate",
+    "playerAnimatedInteraction": {
+      "_Type_": "PlayerAnimatedInteraction",
+      "supportWalkToAlign": true,
+      "type": "Reactive",
+      "fragTags": [
+        "palm",
+        "fist"],
+      "CDIKTargetName": "button",
+      "handModeParams": null}}}

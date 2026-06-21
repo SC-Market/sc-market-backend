@@ -1,0 +1,29 @@
+{
+  "_RecordName_": "InfractionDefinition.EscapedConvict",
+  "_RecordId_": "6874d38b-f442-41b1-bc52-94784012b2cc",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "InfractionDefinition",
+    "name": "@Infractions_Name_034",
+    "description": "@Infractions_Desc_034",
+    "triggers": [
+      "PrisonEscape"],
+    "defaultParameters": {
+      "_Type_": "InfractionParameters",
+      "isFelony": 1,
+      "graceAllowance": -1,
+      "graceAllowanceCooldown": -1.0,
+      "gracePeriod": -1.0,
+      "graceCooloffScale": -1.0,
+      "graceWarnings": [],
+      "displayGraceTime": -1,
+      "escalatedPaymentFineMultiplier": -1.0,
+      "earlyPaymentPeriod": -1.0,
+      "lifetime": 168.0,
+      "coolOffTime": -1.0,
+      "pressChargesNotificationTime": -1.0,
+      "removeTimeSeconds": -1.0,
+      "felonyMerits": 2000,
+      "ignoreIfAgainstPartyMember": -1,
+      "hideCrimeNotification": -1,
+      "hideCrimeInJournal": -1}}}

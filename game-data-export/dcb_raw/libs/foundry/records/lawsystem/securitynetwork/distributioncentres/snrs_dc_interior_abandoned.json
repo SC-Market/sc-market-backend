@@ -1,0 +1,26 @@
+{
+  "_RecordName_": "SecurityNetworkRoomSettings.SNRS_DC_Interior_Abandoned",
+  "_RecordId_": "3b2dac6b-5960-40c6-92f4-d822d4345344",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "SecurityNetworkRoomSettings",
+    "defaultProtocol": {
+      "_Type_": "SecurityNetworkProtocol",
+      "permissionsWithClearance": {
+        "_Type_": "SecurityNetworkPermissions",
+        "access": "Yes",
+        "trespass": "No"},
+      "permissionsWithoutClearance": {
+        "_Type_": "SecurityNetworkPermissions",
+        "access": "Yes",
+        "trespass": "No"},
+      "acceptedClearance": {
+        "_Type_": "SecurityClearanceConditions",
+        "tokens": []},
+      "ownerFaction": null},
+    "roomIdentifier": {
+      "_RecordPath_": "file://./../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+      "_RecordName_": "Tag.e039c470-0b59-4f3d-88fc-1f9846174b29",
+      "_RecordId_": "e039c470-0b59-4f3d-88fc-1f9846174b29"},
+    "trespassWarningSeconds": 10.0,
+    "trespassRevokeWarningSeconds": 1800.0}}

@@ -1,0 +1,8 @@
+{
+  "_RecordName_": "InteriorMapSectionDefinition.Providence_Industrial_Platform",
+  "_RecordId_": "df64278a-2e1f-44f6-a140-5ff81820e79b",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "InteriorMapSectionDefinition",
+    "name": "@area_map_pu_orison_providence_industrial_platform",
+    "restrictViewBounds": false}}

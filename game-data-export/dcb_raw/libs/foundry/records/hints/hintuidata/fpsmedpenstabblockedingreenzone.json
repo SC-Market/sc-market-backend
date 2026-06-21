@@ -1,0 +1,12 @@
+{
+  "_RecordName_": "HintUIData.FPSMedpenStabBlockedInGreenZone",
+  "_RecordId_": "9095d3b3-f00a-4c31-a0b1-214a04302717",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "HintUIData",
+    "TitleText": "@Hints_MedpenStabBlockedInGreenZone_Title",
+    "BodyText": "@Hints_MedpenStabBlockedInGreenZone",
+    "BodyTextGamePad": "@Hints_MedpenStabBlockedInGreenZone",
+    "BodyTextJoystick": "@Hints_MedpenStabBlockedInGreenZone",
+    "TitleImagePath": "",
+    "BodyImagePath": ""}}

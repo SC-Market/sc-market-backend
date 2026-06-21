@@ -1,0 +1,87 @@
+{
+  "_RecordName_": "UIElementSoundsRecord.PlayerUI2D",
+  "_RecordId_": "eb74babb-5981-4d45-a3a3-1af228243e9f",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "UIElementSoundsRecord",
+    "SoundDBs": [
+      {
+        "_Type_": "UIElementSoundEntry",
+        "SoundID": "AR_MODE_POWER_ON",
+        "SoundPath": ""},
+      {
+        "_Type_": "UIElementSoundEntry",
+        "SoundID": "AR_MODE_POWER_OFF",
+        "SoundPath": ""},
+      {
+        "_Type_": "UIElementSoundEntry",
+        "SoundID": "AR_MODE_POWER_LOOP",
+        "SoundPath": ""},
+      {
+        "_Type_": "UIElementSoundEntry",
+        "SoundID": "AR_MODE_ITEM_SELECTED",
+        "SoundPath": ""},
+      {
+        "_Type_": "UIElementSoundEntry",
+        "SoundID": "AR_MODE_ITEM_INFO_CLOSE",
+        "SoundPath": ""},
+      {
+        "_Type_": "UIElementSoundEntry",
+        "SoundID": "AR_MODE_ITEM_INFO_OPEN",
+        "SoundPath": ""},
+      {
+        "_Type_": "UIElementSoundEntry",
+        "SoundID": "AR_MODE_ITEM_ROLL_OVER",
+        "SoundPath": ""},
+      {
+        "_Type_": "UIElementSoundEntry",
+        "SoundID": "AR_MODE_ITEM_SELECT_DENY",
+        "SoundPath": ""},
+      {
+        "_Type_": "UIElementSoundEntry",
+        "SoundID": "AR_MODE_ITEM_SELECT_ACCEPT",
+        "SoundPath": ""},
+      {
+        "_Type_": "UIElementSoundEntry",
+        "SoundID": "CONTACT_LIST_OPEN",
+        "SoundPath": ""},
+      {
+        "_Type_": "UIElementSoundEntry",
+        "SoundID": "CONTACT_LIST_CLOSE",
+        "SoundPath": ""},
+      {
+        "_Type_": "UIElementSoundEntry",
+        "SoundID": "CONTACT_LIST_SIDE_WINDOW_OPEN",
+        "SoundPath": ""},
+      {
+        "_Type_": "UIElementSoundEntry",
+        "SoundID": "CONTACT_LIST_SIDE_WINDOW_CLOSE",
+        "SoundPath": ""},
+      {
+        "_Type_": "UIElementSoundEntry",
+        "SoundID": "CONTACT_LIST_HANGAR_NOTIF_ACCESS_GRANTED",
+        "SoundPath": ""},
+      {
+        "_Type_": "UIElementSoundEntry",
+        "SoundID": "CONTACT_LIST_HANGAR_NOTIF_ACCESS_REMOVED",
+        "SoundPath": ""},
+      {
+        "_Type_": "UIElementSoundEntry",
+        "SoundID": "ROLL_OVER",
+        "SoundPath": ""},
+      {
+        "_Type_": "UIElementSoundEntry",
+        "SoundID": "FPS_ReticleTarget_Hit_Friendly",
+        "SoundPath": ""},
+      {
+        "_Type_": "UIElementSoundEntry",
+        "SoundID": "FPS_ReticleTarget_Hit_Enemy",
+        "SoundPath": ""},
+      {
+        "_Type_": "UIElementSoundEntry",
+        "SoundID": "Lens_OnNotificationReceived",
+        "SoundPath": ""},
+      {
+        "_Type_": "UIElementSoundEntry",
+        "SoundID": "HOLO_ITEM_PORT_SNAP",
+        "SoundPath": ""}]}}

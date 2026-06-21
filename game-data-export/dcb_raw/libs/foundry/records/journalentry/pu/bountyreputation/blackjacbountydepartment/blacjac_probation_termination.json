@@ -1,0 +1,18 @@
+{
+  "_RecordName_": "JournalEntry.BlacJac_Probation_Termination",
+  "_RecordId_": "a9d5d933-41c6-484b-a03e-538819c4c141",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "JournalEntry",
+    "Title": "@BlacJac_ReputationJournal_Probation_Demotion_Title",
+    "ShortTitle": "@BlacJac_ReputationJournal_Probation_Demotion_ShortTitle",
+    "SubHeading": "@BlacJac_ReputationJournal_Probation_Demotion_SubHeading",
+    "autoOpenMobiGlas": false,
+    "showNotification": true,
+    "missionSpecificContent": false,
+    "removeOnMissionEnd": true,
+    "Style": "file://./../../../../../../../libs/foundry/records/journalentrytype/journalentrytype.textlog.json",
+    "type": {
+      "_Type_": "JournalEntryText",
+      "BodyText": "@BlacJac_ReputationJournal_Probation_Demotion_BodyText"},
+    "tutorialEntry": false}}

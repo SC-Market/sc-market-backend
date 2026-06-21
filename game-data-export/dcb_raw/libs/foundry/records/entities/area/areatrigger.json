@@ -1,0 +1,31 @@
+{
+  "_RecordName_": "EntityClassDefinition.AreaTrigger",
+  "_RecordId_": "32316f99-7da3-49ba-b6b7-9f5d01d54537",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "EntityClassDefinition",
+    "Category": "Triggers",
+    "Icon": "AreaTrigger.bmp",
+    "Invisible": false,
+    "BBoxSelection": false,
+    "defaultEditorColor": {
+      "_Type_": "RGB",
+      "r": 1.0,
+      "g": 1.0,
+      "b": 0.0},
+    "entityDensityClass": null,
+    "tags": [],
+    "StaticEntityClassData": [],
+    "Components": [
+      {
+        "_Type_": "AreaTriggerParams",
+        "enabled": true,
+        "triggerOnce": false,
+        "onlyPlayers": true,
+        "onlyLocalPlayer": false,
+        "onlyAI": false,
+        "inVehicleOnly": false,
+        "removeEntityOnTrigger": false,
+        "perPlayer": false,
+        "enterDelay": 0.0,
+        "exitDelay": 0.0}]}}

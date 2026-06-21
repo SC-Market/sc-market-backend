@@ -1,0 +1,9 @@
+{
+  "_RecordName_": "GameNotificationDockItemParams.NotificationParams_AcceptDecline",
+  "_RecordId_": "a721d657-ec44-4f8b-8c5b-971f31ba4c20",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "GameNotificationDockItemParams",
+    "notificationPositivePrompt": "@notification_prompt_accept",
+    "notificationNegativePrompt": "@notification_prompt_decline",
+    "notificationDismissPrompt": "@notification_prompt_dismiss"}}

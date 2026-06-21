@@ -1,0 +1,22 @@
+{
+  "_RecordName_": "EntityClassDefinition.fw2023_anvil_overlay",
+  "_RecordId_": "052760a4-8543-460b-ae3d-6905eae0cd81",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "EntityClassDefinition",
+    "Category": "Default",
+    "Icon": "Default.bmp",
+    "Invisible": false,
+    "BBoxSelection": false,
+    "defaultEditorColor": {
+      "_Type_": "RGB",
+      "r": 1.0,
+      "g": 1.0,
+      "b": 0.0},
+    "entityDensityClass": null,
+    "tags": [],
+    "StaticEntityClassData": [],
+    "Components": [
+      {
+        "_Type_": "SObjectContainerComponentParams",
+        "objectContainer": "ObjectContainers/PU/loc/mod/common/convention/hightech_a/fw_2023_anvil.socpak"}]}}

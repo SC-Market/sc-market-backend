@@ -1,0 +1,14 @@
+{
+  "_RecordName_": "AtmosphereStateTemplate.GasCloud_P_05_T_173_H_01",
+  "_RecordId_": "c26868d1-b86b-4b4f-a5ca-c4ac1e5d343e",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "AtmosphereStateTemplate",
+    "state": {
+      "_Type_": "AtmosphereStateTemplateInternal",
+      "pressureMod": "Override",
+      "pressure": 0.5,
+      "temperatureMod": "Override",
+      "temperature": 173.15,
+      "humidityMod": "Override",
+      "humidity": 0.1}}}

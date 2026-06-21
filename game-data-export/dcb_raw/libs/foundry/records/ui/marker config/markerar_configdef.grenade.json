@@ -1,0 +1,18 @@
+{
+  "_RecordName_": "MarkerAR_ConfigDef.Grenade",
+  "_RecordId_": "6e3adfa3-ae64-4b97-b68e-8e0bedb9443b",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "MarkerAR_ConfigDef",
+    "maxVisibleDistance": 100.0,
+    "minFocusAngle": 4.0,
+    "clipScreenMin": {
+      "_Type_": "Vec2",
+      "x": 0.0,
+      "y": 0.0},
+    "clipScreenMax": {
+      "_Type_": "Vec2",
+      "x": 100.0,
+      "y": 100.0},
+    "clipRadius": 40.0,
+    "clipAspect": 0.0}}

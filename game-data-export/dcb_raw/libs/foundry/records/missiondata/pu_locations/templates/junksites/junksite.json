@@ -1,0 +1,138 @@
+{
+  "_RecordName_": "MissionLocationTemplate.Junksite",
+  "_RecordId_": "dafeae68-c2cf-4469-9c96-0633450136bb",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "MissionLocationTemplate",
+    "locationData": {
+      "_Type_": "MissionLocationData",
+      "generalTags": {
+        "_Type_": "MissionLocationTags",
+        "tags": [
+          {
+            "_RecordPath_": "file://./../../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+            "_RecordName_": "Tag.c70dbe51-3d1e-47b7-9795-290d3eba1728",
+            "_RecordId_": "c70dbe51-3d1e-47b7-9795-290d3eba1728"},
+          {
+            "_RecordPath_": "file://./../../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+            "_RecordName_": "Tag.458b9c78-641a-4aec-9e2b-b7723635ba90",
+            "_RecordId_": "458b9c78-641a-4aec-9e2b-b7723635ba90"},
+          {
+            "_RecordPath_": "file://./../../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+            "_RecordName_": "Tag.984285ee-9b94-48c9-b11a-915fc11643a4",
+            "_RecordId_": "984285ee-9b94-48c9-b11a-915fc11643a4"},
+          {
+            "_RecordPath_": "file://./../../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+            "_RecordName_": "Tag.11e7419c-3a19-416f-9474-695d94980088",
+            "_RecordId_": "11e7419c-3a19-416f-9474-695d94980088"},
+          {
+            "_RecordPath_": "file://./../../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+            "_RecordName_": "Tag.65b7846b-44e5-4175-b93c-919008d15912",
+            "_RecordId_": "65b7846b-44e5-4175-b93c-919008d15912"},
+          {
+            "_RecordPath_": "file://./../../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+            "_RecordName_": "Tag.72609231-b9fe-4149-a82b-b5fb63fc7d05",
+            "_RecordId_": "72609231-b9fe-4149-a82b-b5fb63fc7d05"},
+          {
+            "_RecordPath_": "file://./../../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+            "_RecordName_": "Tag.bc928e7d-1e52-416f-86f3-2f4d19025743",
+            "_RecordId_": "bc928e7d-1e52-416f-86f3-2f4d19025743"},
+          {
+            "_RecordPath_": "file://./../../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+            "_RecordName_": "Tag.4d1faea9-c795-41ab-94b0-a2d1885a3355",
+            "_RecordId_": "4d1faea9-c795-41ab-94b0-a2d1885a3355"},
+          {
+            "_RecordPath_": "file://./../../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+            "_RecordName_": "Tag.bcd41861-4115-44a0-9433-b52c48d015bb",
+            "_RecordId_": "bcd41861-4115-44a0-9433-b52c48d015bb"}]},
+      "producesTags": {
+        "_Type_": "TagSearchTerm",
+        "positiveTags": [],
+        "negativeTags": []},
+      "consumesTags": {
+        "_Type_": "TagSearchTerm",
+        "positiveTags": [
+          {
+            "_RecordPath_": "file://./../../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+            "_RecordName_": "Tag.63049ea3-127c-4ad5-a099-f60e43260509",
+            "_RecordId_": "63049ea3-127c-4ad5-a099-f60e43260509"},
+          {
+            "_RecordPath_": "file://./../../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+            "_RecordName_": "Tag.69169477-cb7a-4b2a-ae83-40de35124691",
+            "_RecordId_": "69169477-cb7a-4b2a-ae83-40de35124691"},
+          {
+            "_RecordPath_": "file://./../../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+            "_RecordName_": "Tag.a7d2ff06-57a9-4777-8680-89f50e653c65",
+            "_RecordId_": "a7d2ff06-57a9-4777-8680-89f50e653c65"},
+          {
+            "_RecordPath_": "file://./../../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+            "_RecordName_": "Tag.162cf95e-943d-478b-a13f-8dace4a0677e",
+            "_RecordId_": "162cf95e-943d-478b-a13f-8dace4a0677e"},
+          {
+            "_RecordPath_": "file://./../../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+            "_RecordName_": "Tag.b1a87dbe-cf0a-45a7-a569-479c55c76597",
+            "_RecordId_": "b1a87dbe-cf0a-45a7-a569-479c55c76597"},
+          {
+            "_RecordPath_": "file://./../../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+            "_RecordName_": "Tag.bd8c12b8-ef11-4cde-98b6-ce010e70f236",
+            "_RecordId_": "bd8c12b8-ef11-4cde-98b6-ce010e70f236"},
+          {
+            "_RecordPath_": "file://./../../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+            "_RecordName_": "Tag.a2b36b6b-2728-4edb-960f-693aa1e8bfde",
+            "_RecordId_": "a2b36b6b-2728-4edb-960f-693aa1e8bfde"},
+          {
+            "_RecordPath_": "file://./../../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+            "_RecordName_": "Tag.87b507e5-09f3-4b92-82d7-5e18ed474335",
+            "_RecordId_": "87b507e5-09f3-4b92-82d7-5e18ed474335"},
+          {
+            "_RecordPath_": "file://./../../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+            "_RecordName_": "Tag.88561c20-a0e4-4b2c-b688-75609ce717f2",
+            "_RecordId_": "88561c20-a0e4-4b2c-b688-75609ce717f2"},
+          {
+            "_RecordPath_": "file://./../../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+            "_RecordName_": "Tag.3ccd254c-459e-4746-9085-c9ff5364820f",
+            "_RecordId_": "3ccd254c-459e-4746-9085-c9ff5364820f"},
+          {
+            "_RecordPath_": "file://./../../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+            "_RecordName_": "Tag.20e821ba-649b-4228-8ac5-43e386684bdb",
+            "_RecordId_": "20e821ba-649b-4228-8ac5-43e386684bdb"},
+          {
+            "_RecordPath_": "file://./../../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+            "_RecordName_": "Tag.b2d2cd1b-ac25-4d3a-b0db-5f0fc288837a",
+            "_RecordId_": "b2d2cd1b-ac25-4d3a-b0db-5f0fc288837a"},
+          {
+            "_RecordPath_": "file://./../../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+            "_RecordName_": "Tag.9bfbbfa8-0fce-432e-b924-c2102a168a86",
+            "_RecordId_": "9bfbbfa8-0fce-432e-b924-c2102a168a86"},
+          {
+            "_RecordPath_": "file://./../../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+            "_RecordName_": "Tag.e485f445-a76e-4134-888e-3374622af89b",
+            "_RecordId_": "e485f445-a76e-4134-888e-3374622af89b"}],
+        "negativeTags": []},
+      "aiSpawnTags": {
+        "_Type_": "TagList",
+        "tags": []},
+      "stringVariants": {
+        "_Type_": "MissionStringVariants",
+        "variants": []},
+      "missionModules": [],
+      "missionLimits": [
+        {
+          "_Type_": "LocationMissionLimit",
+          "tag": {
+            "_RecordPath_": "file://./../../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+            "_RecordName_": "Tag.6804b0a9-b01d-4c9a-8063-67784bd0f021",
+            "_RecordId_": "6804b0a9-b01d-4c9a-8063-67784bd0f021"},
+          "autoConsumeIfPlayerAtLocation": false,
+          "maxMissionInstances": 1,
+          "dependentParentTags": {
+            "_Type_": "TagList",
+            "tags": []},
+          "dependentChildTags": {
+            "_Type_": "TagList",
+            "tags": []}}],
+      "autoSpawnSettings": [],
+      "isSecurityNetworkHost": false,
+      "defaultSecurityNetworkManifest": null,
+      "disabled": false,
+      "entityClusterMember": null}}}

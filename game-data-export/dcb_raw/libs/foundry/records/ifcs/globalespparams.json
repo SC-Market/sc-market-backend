@@ -1,0 +1,48 @@
+{
+  "_RecordName_": "ESPParams.GlobalESPParams",
+  "_RecordId_": "606615ec-f8f7-4bc5-b99e-ba2b7b4e6387",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "ESPParams",
+    "triggerZoneRampInCurve": {
+      "_Type_": "BezierCurve",
+      "points": [
+        {
+          "_Type_": "Vec2",
+          "x": -0.4287576,
+          "y": -0.1740026},
+        {
+          "_Type_": "Vec2",
+          "x": 0.0,
+          "y": 0.0},
+        {
+          "_Type_": "Vec2",
+          "x": 0.4248401,
+          "y": 0.184009},
+        {
+          "_Type_": "Vec2",
+          "x": 0.6738061,
+          "y": 0.1510342},
+        {
+          "_Type_": "Vec2",
+          "x": 1.0,
+          "y": 1.0},
+        {
+          "_Type_": "Vec2",
+          "x": 1.331788,
+          "y": 1.846879}],
+      "useLUT": false},
+    "trackingStrength": 0.6,
+    "distanceFalloffStart": 1500.0,
+    "distanceFalloffEnd": 2500.0,
+    "outerZoneDeg": 12.0,
+    "innerZoneRatio": 0.35,
+    "adsZoneMinSizeDeg": 4.5,
+    "inputDisengageCurve": 4.0,
+    "directionSimilaritySmoothSpeed": 1.2,
+    "assistRelaxSpeed": 1.0,
+    "alignmentAngleCurve": 10000.0,
+    "dampeningMin": 1.0,
+    "dampeningMax": 1.15,
+    "allowPulling": false,
+    "allowWithRelativeMouseModes": false}}

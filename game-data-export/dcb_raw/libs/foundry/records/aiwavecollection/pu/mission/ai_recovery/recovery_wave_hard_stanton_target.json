@@ -1,0 +1,28 @@
+{
+  "_RecordName_": "AIWaveCollection.Recovery_Wave_Hard_Stanton_Target",
+  "_RecordId_": "08dd1eff-2ef2-48f2-9688-d394b8116d16",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "AIWaveCollection",
+    "waves": [
+      {
+        "_Type_": "AIWave",
+        "id": 1,
+        "textId": "Recovery_Wave_Hard_Stanton3_Target_01",
+        "staggerTime": 1.0,
+        "members": [
+          {
+            "_Type_": "AIWaveMember",
+            "archetype": "",
+            "entityClassDefinition": "file://./../../../../../../../libs/foundry/records/entities/spaceships/drak_caterpillar_pu_ai_nt.json",
+            "name": "",
+            "vehicleName": "",
+            "amount": 1,
+            "minAmount": -1,
+            "midAmount": -1,
+            "maxAmount": -1,
+            "crewManifestOverride": null,
+            "skillsetOverride": "file://./../../../../../../../libs/foundry/records/aiprofile/skills/humanpilot70.json",
+            "cargoManifests": [
+              "file://./../../../../../../../libs/foundry/records/cargomanifest/criminal/criminal_25_high_001.json"],
+            "aiDamageModifiersOverride": null}]}]}}

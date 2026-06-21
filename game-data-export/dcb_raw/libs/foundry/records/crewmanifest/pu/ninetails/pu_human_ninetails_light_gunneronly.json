@@ -1,0 +1,27 @@
+{
+  "_RecordName_": "CrewManifest.PU_Human_NineTails_Light_GunnerOnly",
+  "_RecordId_": "fb7590bb-dee4-4606-bfce-0842de107ab2",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "CrewManifest",
+    "descriptionTags": {
+      "_Type_": "TagList",
+      "tags": [
+        {
+          "_RecordPath_": "file://./../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+          "_RecordName_": "Tag.ab432fac-eff3-4a1a-a831-ebf8dde2dd3a",
+          "_RecordId_": "ab432fac-eff3-4a1a-a831-ebf8dde2dd3a"}]},
+    "crew": [
+      {
+        "_Type_": "CrewData",
+        "entityClassDefinition": "file://./../../../../../../libs/foundry/records/actor/actors/ninetails/pu_human-ninetails-gunner-male-light_01.json",
+        "outfitTags": [],
+        "tags": [
+          {
+            "_RecordPath_": "file://./../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+            "_RecordName_": "Tag.61d439f9-0bef-43e0-8ecc-fe96c9793d66",
+            "_RecordId_": "61d439f9-0bef-43e0-8ecc-fe96c9793d66"}],
+        "dnfTags": {
+          "_Type_": "TagsDNF",
+          "terms": []},
+        "archetype": null}]}}

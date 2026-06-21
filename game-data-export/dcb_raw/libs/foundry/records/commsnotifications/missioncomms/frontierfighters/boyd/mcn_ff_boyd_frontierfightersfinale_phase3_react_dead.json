@@ -1,0 +1,37 @@
+{
+  "_RecordName_": "CommsNotification.MCN_FF_Boyd_FrontierFightersFinale_Phase3_React_Dead",
+  "_RecordId_": "49709cbb-3c01-446c-a511-2c5063663930",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "CommsNotification",
+    "tags": {
+      "_Type_": "TagList",
+      "tags": [
+        {
+          "_RecordPath_": "file://./../../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+          "_RecordName_": "Tag.a0a3bf89-b022-41f7-8c5b-286a69d703c5",
+          "_RecordId_": "a0a3bf89-b022-41f7-8c5b-286a69d703c5"},
+        {
+          "_RecordPath_": "file://./../../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+          "_RecordName_": "Tag.04f3b0c0-192d-47f8-8edc-eb5b00ec2e03",
+          "_RecordId_": "04f3b0c0-192d-47f8-8edc-eb5b00ec2e03"},
+        {
+          "_RecordPath_": "file://./../../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+          "_RecordName_": "Tag.556d9806-70bc-4ef8-960d-5c44f2315ce9",
+          "_RecordId_": "556d9806-70bc-4ef8-960d-5c44f2315ce9"},
+        {
+          "_RecordPath_": "file://./../../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+          "_RecordName_": "Tag.52b40f62-d9e0-4a0d-b82c-99af0830c296",
+          "_RecordId_": "52b40f62-d9e0-4a0d-b82c-99af0830c296"},
+        {
+          "_RecordPath_": "file://./../../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+          "_RecordName_": "Tag.fa675898-bc28-4fe1-adb9-9d97a01edccd",
+          "_RecordId_": "fa675898-bc28-4fe1-adb9-9d97a01edccd"},
+        {
+          "_RecordPath_": "file://./../../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+          "_RecordName_": "Tag.6dd59d04-5dd8-49fe-ac51-ca043d729e37",
+          "_RecordId_": "6dd59d04-5dd8-49fe-ac51-ca043d729e37"}]},
+    "communicationName": "file://./../../../../../../../libs/foundry/records/communicationname/missioncommunications/shipbattle/fff_react_dead.json",
+    "characterEntityClass": "file://./../../../../../../../libs/foundry/records/actor/actors/npc_archetypes/female/human/missiongivers/npc_archetypes-female-human-missiongivers-boyd.json",
+    "fakeCommsAudioEntityClass": null,
+    "stage": "file://./../../../../../../../libs/foundry/records/commsnotificationstages/cns_test.json"}}

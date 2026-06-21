@@ -1,0 +1,14 @@
+{
+  "_RecordName_": "BuildingBlocks_ExternalColorReference.Color_CRUS_Interactive",
+  "_RecordId_": "aabc040b-59ee-4555-b6b0-c5b065f30ebb",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "BuildingBlocks_ExternalColorReference",
+    "color": {
+      "_Type_": "BuildingBlocks_ColorSolid",
+      "color": {
+        "_Type_": "SRGBA8",
+        "r": 148,
+        "g": 200,
+        "b": 255,
+        "a": 255}}}}

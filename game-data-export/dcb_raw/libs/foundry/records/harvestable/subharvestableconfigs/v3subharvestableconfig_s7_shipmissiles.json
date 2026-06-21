@@ -1,0 +1,22 @@
+{
+  "_RecordName_": "SubHarvestableConfigRecord.V3SubHarvestableConfig_S7_ShipMissiles",
+  "_RecordId_": "912e484c-6e4e-4e28-b21a-b66be594fc6b",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "SubHarvestableConfigRecord",
+    "subConfig": {
+      "_Type_": "SubHarvestableConfig",
+      "initialSlotsProbability": 1.0,
+      "initialSlotsProbabilityDeepest": null,
+      "configRespawnTimeMultiplier": 1.0,
+      "subHarvestables": [
+        {
+          "_Type_": "SubHarvestableSlot",
+          "harvestable": null,
+          "harvestableEntityClass": "file://./../../../../../libs/foundry/records/entities/scitem/ships/weapons/missiles/misl_s07_ir_taln_hellion.json",
+          "harvestableSetup": "file://./../../../../../libs/foundry/records/harvestable/harvestablesetups/v3harvestablesetup_looseitem_2h.json",
+          "relativeProbability": 1.0,
+          "relativeProbabilityDeepest": null,
+          "harvestableRespawnTimeMultiplier": 1.0,
+          "geometries": [],
+          "lootConfig": null}]}}}

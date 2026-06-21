@@ -1,0 +1,594 @@
+{
+  "_RecordName_": "BuildingBlocks_Canvas.H_HUD_ANVL_Screen_AR",
+  "_RecordId_": "a2601580-51cd-4abd-8615-aa77e893f3ab",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "BuildingBlocks_Canvas",
+    "size": {
+      "_Type_": "Vec3",
+      "x": 1920.0,
+      "y": 1080.0,
+      "z": 0.0},
+    "coordinateMethod": "useRaw",
+    "embeddedStyles": [
+      {
+        "_Type_": "BuildingBlocks_StyleEntry",
+        "name": "cards group",
+        "conditionsList": [
+          {
+            "_Type_": "BuildingBlocks_StyleConditionList",
+            "name": "New Condition List",
+            "conditions": [
+              {
+                "_Type_": "BuildingBlocks_StyleSelectorConditionType",
+                "type": "Card"}]}],
+        "modifiers": [
+          {
+            "_Type_": "BuildingBlocks_FieldModifierInteger",
+            "field": "TextureGroup",
+            "value": 0}],
+        "transitions": []}],
+    "defaultStyles": {
+      "_Type_": "BuildingBlocks_DefaultStyles",
+      "sharedStyles": null,
+      "entries": [
+        {
+          "_Type_": "BuildingBlocks_StyleEntry",
+          "name": "Standardised Text Size Large",
+          "conditionsList": [
+            {
+              "_Type_": "BuildingBlocks_StyleConditionList",
+              "name": "New Condition List",
+              "conditions": [
+                {
+                  "_Type_": "BuildingBlocks_StyleSelectorConditionAllOfCondition",
+                  "conditions": [
+                    {
+                      "_Type_": "BuildingBlocks_StyleSelectorConditionParent",
+                      "conditions": [
+                        {
+                          "_Type_": "BuildingBlocks_StyleSelectorConditionTag",
+                          "tag": {
+                            "_RecordPath_": "file://./../../../../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+                            "_RecordName_": "Tag.3af47f21-9907-4354-b285-add110f8e35d",
+                            "_RecordId_": "3af47f21-9907-4354-b285-add110f8e35d"}}]},
+                    {
+                      "_Type_": "BuildingBlocks_StyleSelectorConditionType",
+                      "type": "Text"}]}]}],
+          "modifiers": [
+            {
+              "_Type_": "BuildingBlocks_FieldModifierNumber",
+              "field": "FontSize",
+              "value": 27.0}],
+          "transitions": []},
+        {
+          "_Type_": "BuildingBlocks_StyleEntry",
+          "name": "Standardised Text Size Medium",
+          "conditionsList": [
+            {
+              "_Type_": "BuildingBlocks_StyleConditionList",
+              "name": "New Condition List",
+              "conditions": [
+                {
+                  "_Type_": "BuildingBlocks_StyleSelectorConditionAllOfCondition",
+                  "conditions": [
+                    {
+                      "_Type_": "BuildingBlocks_StyleSelectorConditionParent",
+                      "conditions": [
+                        {
+                          "_Type_": "BuildingBlocks_StyleSelectorConditionTag",
+                          "tag": {
+                            "_RecordPath_": "file://./../../../../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+                            "_RecordName_": "Tag.1d43519b-1af9-472d-b3d4-1f1c379ecdc1",
+                            "_RecordId_": "1d43519b-1af9-472d-b3d4-1f1c379ecdc1"}}]},
+                    {
+                      "_Type_": "BuildingBlocks_StyleSelectorConditionType",
+                      "type": "Text"}]}]}],
+          "modifiers": [
+            {
+              "_Type_": "BuildingBlocks_FieldModifierNumber",
+              "field": "FontSize",
+              "value": 25.0}],
+          "transitions": []},
+        {
+          "_Type_": "BuildingBlocks_StyleEntry",
+          "name": "Standardised Text Size Small",
+          "conditionsList": [
+            {
+              "_Type_": "BuildingBlocks_StyleConditionList",
+              "name": "New Condition List",
+              "conditions": [
+                {
+                  "_Type_": "BuildingBlocks_StyleSelectorConditionAllOfCondition",
+                  "conditions": [
+                    {
+                      "_Type_": "BuildingBlocks_StyleSelectorConditionParent",
+                      "conditions": [
+                        {
+                          "_Type_": "BuildingBlocks_StyleSelectorConditionTag",
+                          "tag": {
+                            "_RecordPath_": "file://./../../../../../../../../../libs/foundry/records/tagdatabase/tagdatabase.tagdatabase.json",
+                            "_RecordName_": "Tag.46446fa5-914f-40a7-a6c8-0d18072282fe",
+                            "_RecordId_": "46446fa5-914f-40a7-a6c8-0d18072282fe"}}]},
+                    {
+                      "_Type_": "BuildingBlocks_StyleSelectorConditionType",
+                      "type": "Text"}]}]}],
+          "modifiers": [
+            {
+              "_Type_": "BuildingBlocks_FieldModifierNumber",
+              "field": "FontSize",
+              "value": 23.0}],
+          "transitions": []},
+        {
+          "_Type_": "BuildingBlocks_StyleEntry",
+          "name": "Cards Material / Visuals",
+          "conditionsList": [
+            {
+              "_Type_": "BuildingBlocks_StyleConditionList",
+              "name": "New Condition List",
+              "conditions": [
+                {
+                  "_Type_": "BuildingBlocks_StyleSelectorConditionType",
+                  "type": "Card"}]}],
+          "modifiers": [
+            {
+              "_Type_": "BuildingBlocks_FieldModifierString",
+              "field": "PrimitiveMaterialPath",
+              "value": "Materials/UI/AR_HoloVolume_standards/ui_ar_card_in_world_hud.mtl"},
+            {
+              "_Type_": "BuildingBlocks_FieldModifierNumber",
+              "field": "SizeZ",
+              "value": 0.0},
+            {
+              "_Type_": "BuildingBlocks_FieldModifierInteger",
+              "field": "GhostPrimCount",
+              "value": 0},
+            {
+              "_Type_": "BuildingBlocks_FieldModifierEnumerated",
+              "field": {
+                "_Type_": "BuildingBlocks_FieldModifierEnumeratedTypeDepthBehavior",
+                "value": "Fixed"}},
+            {
+              "_Type_": "BuildingBlocks_FieldModifierNumber",
+              "field": "GhostPrimAlphaFactor",
+              "value": 0.95},
+            {
+              "_Type_": "BuildingBlocks_FieldModifierColor",
+              "field": "BackgroundColor",
+              "color": {
+                "_Type_": "BuildingBlocks_ColorSolid",
+                "color": {
+                  "_Type_": "SRGBA8",
+                  "r": 243,
+                  "g": 244,
+                  "b": 251,
+                  "a": 255}}}],
+          "transitions": []},
+        {
+          "_Type_": "BuildingBlocks_StyleEntry",
+          "name": "Disable Word Wrap",
+          "conditionsList": [
+            {
+              "_Type_": "BuildingBlocks_StyleConditionList",
+              "name": "New Condition List",
+              "conditions": [
+                {
+                  "_Type_": "BuildingBlocks_StyleSelectorConditionType",
+                  "type": "Text"}]}],
+          "modifiers": [
+            {
+              "_Type_": "BuildingBlocks_FieldModifierBoolean",
+              "field": "WordWrap",
+              "value": false}],
+          "transitions": []}]},
+    "style": null,
+    "brandStyles": [],
+    "entityPreviewScene": {
+      "_Type_": "BuildingBlocks_PreviewSceneEntityRoot",
+      "renderLayer": "Default"},
+    "rttPreviewScene": {
+      "_Type_": "BuildingBlocks_PreviewSceneRttRoot",
+      "renderLayer": "Default",
+      "entityScale": 1.0,
+      "entityOrientation": {
+        "_Type_": "Deg3",
+        "x": 0.0,
+        "y": 0.0,
+        "z": 0.0}},
+    "arPreviewScene": {
+      "_Type_": "BuildingBlocks_PreviewSceneAugmentedRealityRtt",
+      "renderLayer": "Default",
+      "cardsUseStageRadius": true},
+    "previewScenes": [],
+    "staticVariables": [
+      {
+        "_Type_": "BuildingBlocks_StaticVariableArray",
+        "name": "AftLineTicks",
+        "value": {
+          "_Type_": "BuildingBlocks_StaticArrayEntry",
+          "structureVariables": [
+            {
+              "_Type_": "BuildingBlocks_StaticArrayDataNumber",
+              "name": "Height",
+              "values": [
+                1.0,
+                0.94,
+                0.9,
+                0.86,
+                0.82,
+                0.78,
+                0.74,
+                0.7,
+                0.66,
+                0.62,
+                0.58,
+                0.54,
+                0.5,
+                0.46,
+                0.42,
+                0.38,
+                0.34,
+                0.3,
+                0.26,
+                0.22,
+                0.18,
+                0.14,
+                0.1]},
+            {
+              "_Type_": "BuildingBlocks_StaticArrayDataInteger",
+              "name": "ColourType",
+              "values": [
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                1,
+                1,
+                1,
+                1,
+                1,
+                1,
+                1,
+                1,
+                2,
+                2,
+                2,
+                2,
+                2]}]}},
+      {
+        "_Type_": "BuildingBlocks_StaticVariableBoolean",
+        "name": "ShowContextualElements",
+        "value": false}],
+    "proxyRootNode": null,
+    "defaultButtonDownSoundTag": null,
+    "defaultRightButtonDownSoundTag": null,
+    "defaultLeftClickSoundTag": null,
+    "defaultRightClickSoundTag": null,
+    "defaultLeftDoubleClickSoundTag": null,
+    "defaultRollOverSoundTag": null,
+    "defaultRollOffSoundTag": null,
+    "defaultMovementStartSoundTag": null,
+    "defaultMovementStopSoundTag": null,
+    "collisionType": "Cutout",
+    "cacheAmount": 0,
+    "scene": [
+      {
+        "_Type_": "BuildingBlocks_WidgetCanvas",
+        "name": "canvas_Annunciator",
+        "styleTags": [],
+        "rendererType": "Flash",
+        "rendererPolicy": {
+          "_Type_": "BuildingBlocks_FlashRendererPolicy",
+          "useFlashRenderThreadUpdate": false,
+          "transformFrom3D": false},
+        "primitiveSettings": {
+          "_Type_": "BuildingBlocks_PrimitiveSettings",
+          "primitiveMaterialPath": "",
+          "UVStart": {
+            "_Type_": "Vec2",
+            "x": 0.0,
+            "y": 0.0},
+          "UVSize": {
+            "_Type_": "Vec2",
+            "x": 1.0,
+            "y": 1.0},
+          "isUValuePerPixel": false,
+          "isVValuePerPixel": false,
+          "isGrouped": true,
+          "visualState": null},
+        "parent": null,
+        "previewScene": null,
+        "previewSceneFlattened": null,
+        "cullingLevel": "Render",
+        "isActive": true,
+        "affectsLayout": true,
+        "affectsAutosize": true,
+        "exportNode": true,
+        "position": {
+          "_Type_": "Vec3",
+          "x": 0.0,
+          "y": 0.0,
+          "z": 0.0},
+        "positionOffset": {
+          "_Type_": "Vec3",
+          "x": 0.0,
+          "y": 0.0,
+          "z": 0.0},
+        "orientation": {
+          "_Type_": "Deg3",
+          "x": 0.0,
+          "y": 0.0,
+          "z": 0.0},
+        "orientationOffset": {
+          "_Type_": "Deg3",
+          "x": 0.0,
+          "y": 0.0,
+          "z": 0.0},
+        "scale": {
+          "_Type_": "Vec3",
+          "x": 1.0,
+          "y": 1.0,
+          "z": 1.0},
+        "sizing": {
+          "_Type_": "BuildingBlocks_Size",
+          "width": {
+            "_Type_": "BuildingBlocks_FixedOrRelativeValue",
+            "value": 0.99,
+            "behavior": "Percent"},
+          "height": {
+            "_Type_": "BuildingBlocks_FixedOrRelativeValue",
+            "value": 0.8,
+            "behavior": "Percent"},
+          "depth": {
+            "_Type_": "BuildingBlocks_FixedOrRelativeValue",
+            "value": 0.0,
+            "behavior": "Fixed"},
+          "minWidth": {
+            "_Type_": "BuildingBlocks_FixedOrRelativeValue",
+            "value": 0.0,
+            "behavior": "Fixed"},
+          "minHeight": {
+            "_Type_": "BuildingBlocks_FixedOrRelativeValue",
+            "value": 0.0,
+            "behavior": "Fixed"},
+          "maxWidth": {
+            "_Type_": "BuildingBlocks_FixedOrRelativeValue",
+            "value": 0.0,
+            "behavior": "Fixed"},
+          "maxHeight": {
+            "_Type_": "BuildingBlocks_FixedOrRelativeValue",
+            "value": 0.0,
+            "behavior": "Fixed"},
+          "enableMinWidth": false,
+          "enableMinHeight": false,
+          "enableMaxWidth": false,
+          "enableMaxHeight": false},
+        "autoScalingMethod": "None",
+        "padding": {
+          "_Type_": "BuildingBlocks_TRBL",
+          "top": 0.0,
+          "right": 0.0,
+          "bottom": 0.0,
+          "left": 0.0,
+          "front": 0.0,
+          "back": 0.0},
+        "margin": {
+          "_Type_": "BuildingBlocks_TRBL",
+          "top": 0.0,
+          "right": 0.0,
+          "bottom": 0.0,
+          "left": 0.0,
+          "front": 0.0,
+          "back": 0.0},
+        "pivot": {
+          "_Type_": "Vec3",
+          "x": 1.0,
+          "y": 0.5,
+          "z": 0.0},
+        "anchor": {
+          "_Type_": "Vec3",
+          "x": 1.0,
+          "y": 0.5,
+          "z": 0.0},
+        "background": {
+          "_Type_": "BuildingBlocks_Background",
+          "enable": false,
+          "color": null,
+          "topLeftColor": null,
+          "topRightColor": null,
+          "bottomLeftColor": null,
+          "bottomRightCColor": null},
+        "segmentedFill": {
+          "_Type_": "BuildingBlocks_SegmentedFill",
+          "enable": false,
+          "segmentSize": {
+            "_Type_": "BuildingBlocks_FixedOrRelativeValue",
+            "value": 64.0,
+            "behavior": "Fixed"},
+          "spaceSize": {
+            "_Type_": "BuildingBlocks_FixedOrRelativeValue",
+            "value": 64.0,
+            "behavior": "Fixed"},
+          "angle": 0.0,
+          "xOffset": 0.0,
+          "segmentColor": null,
+          "barFill": false},
+        "svgFill": {
+          "_Type_": "BuildingBlocks_SvgFill",
+          "svgPath": "",
+          "nineSliceRect": {
+            "_Type_": "BuildingBlocks_TRBL",
+            "top": 0.25,
+            "right": 0.75,
+            "bottom": 0.75,
+            "left": 0.25,
+            "front": 0.0,
+            "back": 0.0},
+          "renderShape": true,
+          "flipHorizontal": false,
+          "flipVertical": false,
+          "enableColorOverlay": true,
+          "color": null,
+          "scalingBehavior": "Contain",
+          "containPositionX": 0.0,
+          "containPositionY": 0.0,
+          "enableNineSliceRect": true,
+          "nineSliceScale": 1.0,
+          "strokeExtent": 1.0,
+          "playhead": 0.0},
+        "border": {
+          "_Type_": "BuildingBlocks_Border",
+          "top": {
+            "_Type_": "BuildingBlocks_BorderSide",
+            "width": 0.0,
+            "color": null},
+          "right": {
+            "_Type_": "BuildingBlocks_BorderSide",
+            "width": 0.0,
+            "color": null},
+          "bottom": {
+            "_Type_": "BuildingBlocks_BorderSide",
+            "width": 0.0,
+            "color": null},
+          "left": {
+            "_Type_": "BuildingBlocks_BorderSide",
+            "width": 0.0,
+            "color": null},
+          "topLeftRadius": {
+            "_Type_": "BuildingBlocks_BorderRadiusCorner",
+            "radius": {
+              "_Type_": "BuildingBlocks_FixedOrRelativeValue",
+              "value": 0.0,
+              "behavior": "Fixed"},
+            "chamfer": false},
+          "topRightRadius": {
+            "_Type_": "BuildingBlocks_BorderRadiusCorner",
+            "radius": {
+              "_Type_": "BuildingBlocks_FixedOrRelativeValue",
+              "value": 0.0,
+              "behavior": "Fixed"},
+            "chamfer": false},
+          "bottomLeftRadius": {
+            "_Type_": "BuildingBlocks_BorderRadiusCorner",
+            "radius": {
+              "_Type_": "BuildingBlocks_FixedOrRelativeValue",
+              "value": 0.0,
+              "behavior": "Fixed"},
+            "chamfer": false},
+          "bottomRightRadius": {
+            "_Type_": "BuildingBlocks_BorderRadiusCorner",
+            "radius": {
+              "_Type_": "BuildingBlocks_FixedOrRelativeValue",
+              "value": 0.0,
+              "behavior": "Fixed"},
+            "chamfer": false}},
+        "layoutPolicy": null,
+        "layoutPolicyItem": null,
+        "layoutItemCommon": null,
+        "dropTargetPolicy": null,
+        "draggablePolicy": null,
+        "tooltipPolicy": null,
+        "contextMenuPolicy": null,
+        "grabControlsPolicy": null,
+        "calloutSettings": null,
+        "virtualCursorPolicy": null,
+        "overflow": {
+          "_Type_": "BuildingBlocks_Overflow",
+          "overflow": "Visible",
+          "widthFadeThreshold": 0.0,
+          "heightFadeThreshold": 0.0,
+          "depthFadeThreshold": 0.0,
+          "fadeXAxis": true,
+          "fadeYAxis": true,
+          "fadeZAxis": true},
+        "scrollPolicy": null,
+        "radialTransform": {
+          "_Type_": "BuildingBlocks_RadialTransform",
+          "transformMultiplier": 0.0,
+          "curvatureAxis": "Z",
+          "mouseTestShape": true,
+          "polyResolution": 45,
+          "conicSlantFactor": 0.0},
+        "radialTransformChild": {
+          "_Type_": "BuildingBlocks_RadialTransformChild",
+          "inheritRotation": true,
+          "inheritShapeWarp": true,
+          "maintainGapLength": true},
+        "animation": {
+          "_Type_": "BuildingBlocks_Animation",
+          "animationTimeline": null,
+          "dynamicStartTimeVariableName": "",
+          "duration": 1.0,
+          "delay": 0.0,
+          "delayRandomRange": 0.0,
+          "direction": "Forward",
+          "fillMode": "None",
+          "iterationCount": 1,
+          "loopIndefinitely": false,
+          "timeSync": false,
+          "additive": true,
+          "timescaleIndependent": false},
+        "interactions": {
+          "_Type_": "BuildingBlocks_Interactions",
+          "canInteract": false,
+          "disabled": false,
+          "selected": false,
+          "collideLeftClick": true,
+          "collideRightClick": true,
+          "collideMouseWheel": false,
+          "hitDetectionOffset": 1.0,
+          "propagateInteractionStates": false,
+          "inheritHoverState": false,
+          "inheritDownState": false,
+          "inheritSelectedState": false,
+          "inheritDisabledState": false,
+          "blocksCursor": false,
+          "blocksNavigation": false,
+          "onLeftClick": [],
+          "onRightClick": [],
+          "onLeftDown": [],
+          "onLeftDoubleClick": [],
+          "onRollOver": [],
+          "onRollOff": [],
+          "boundRestrictionShape": null,
+          "twoVariablePicker": null,
+          "buttonDownSoundTag": null,
+          "rightButtonDownSoundTag": null,
+          "leftClickSoundTag": null,
+          "rightClickSoundTag": null,
+          "leftDoubleClickSoundTag": null,
+          "rollOverSoundTag": null,
+          "rollOffSoundTag": null,
+          "movementStartSoundTag": null,
+          "movementStopSoundTag": null,
+          "movementStopDelayMs": 80.0},
+        "inheritsScale": true,
+        "inheritsRotation": true,
+        "inheritsTranslation": true,
+        "inheritsAlpha": true,
+        "inheritsOverflow": false,
+        "alpha": 1.0,
+        "layer": 5,
+        "aspectRatioLibrary": null,
+        "focusIndex": -1,
+        "inlineStyles": [],
+        "hoverCursor": "Auto",
+        "enableHeldCursor": false,
+        "heldCursor": "Auto",
+        "instantiated": true,
+        "urlOptional": "",
+        "urlPostfix": "",
+        "stylesheetOverride": null,
+        "canvas": "file://./../../../../../../../../../libs/foundry/records/ui/buildingblocks/ships/displays/physicalscreens/annunciator/h_eng_annunciator_master_right.json",
+        "sizingMethod": "Size",
+        "paramInputValues": []}],
+    "library": [],
+    "operations": [],
+    "overrideDefaultTooltipCanvas": null,
+    "overrideDefaultCalloutCanvas": null}}

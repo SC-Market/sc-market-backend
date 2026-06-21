@@ -1,0 +1,25 @@
+{
+  "_RecordName_": "SSolarSystem.Nyx",
+  "_RecordId_": "db28aec7-9815-41bd-8200-46240692dcbb",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "SSolarSystem",
+    "Name": "Nyx",
+    "landingZoneInventory": "file://./../../../../libs/foundry/records/inventorycontainers/nyx_landingzoneinventory.json",
+    "DefaultLocation": "file://./../../../../libs/foundry/records/starmap/pu/system/nyx/delamar/landingzone/nyx_levski.json",
+    "SolarSystemRecord": "file://./../../../../libs/foundry/records/starmap/pu/nyxsolarsystem.json",
+    "galacticPosition": {
+      "_Type_": "Vec3",
+      "x": 20.0,
+      "y": 8.414866,
+      "z": -17.2174},
+    "organicFallbackBedrockTint": {
+      "_Type_": "RGB",
+      "r": 0.14,
+      "g": 0.16,
+      "b": 0.22},
+    "organicFallbackSoilTint": {
+      "_Type_": "RGB",
+      "r": 0.14,
+      "g": 0.16,
+      "b": 0.22}}}

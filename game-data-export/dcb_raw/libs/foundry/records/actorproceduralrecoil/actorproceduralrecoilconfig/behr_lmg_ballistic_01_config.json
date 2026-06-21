@@ -1,0 +1,23 @@
+{
+  "_RecordName_": "ActorProceduralRecoilConfig.behr_lmg_ballistic_01_Config",
+  "_RecordId_": "c584261a-3251-4c65-b29d-31c9f32558c3",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "ActorProceduralRecoilConfig",
+    "actorProceduralRecoilSetup": [
+      {
+        "_Type_": "ActorProceduralRecoilSetup",
+        "filterName": "New Filter",
+        "filterByState": "Any",
+        "filterByMotionSpeed": "Any",
+        "filterByPoseState": "Any",
+        "filterByStanceState": "Any",
+        "filterByAimStanceState": "ADS",
+        "filterByLeanState": "Any",
+        "filterByHeldItemType": "Any",
+        "filterBySkeleton": "Any",
+        "filterByCharacterType": "Any",
+        "filterByRestrainedState": "Any",
+        "filterByPlayerCamera": "Any",
+        "filterByAimingRestriction": "Any",
+        "actorProceduralRecoilModifiers": "file://./../../../../../libs/foundry/records/actorproceduralrecoil/actorproceduralrecoilmodifiers/behr_lmg_ballistic_01_ads_modifiers.json"}]}}

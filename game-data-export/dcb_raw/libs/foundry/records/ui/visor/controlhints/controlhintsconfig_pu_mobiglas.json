@@ -1,0 +1,394 @@
+{
+  "_RecordName_": "ControlHints_Preset.ControlHintsConfig_PU_MobiGlas",
+  "_RecordId_": "faf837f6-cd80-4ac3-8e48-cd54cecd3022",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "ControlHints_Preset",
+    "hintSlots": [
+      {
+        "_Type_": "ControlHint_Entry",
+        "name": "MobiGlasSlot_01",
+        "controlHintList": [
+          {
+            "_Type_": "ControlHintDef",
+            "description": "Set Route",
+            "condition": {
+              "_Type_": "ControlHintCondition_OR",
+              "conditions": [
+                {
+                  "_Type_": "ControlHintCondition_AND",
+                  "conditions": [
+                    {
+                      "_Type_": "ControlHintCondition_MobiglasMapState",
+                      "mobiglasMapState": "InteriorMapActive"},
+                    {
+                      "_Type_": "ControlHintCondition_NOT",
+                      "condition": {
+                        "_Type_": "ControlHintCondition_MobiglasMapState",
+                        "mobiglasMapState": "InteriorMapRouteSet"}},
+                    {
+                      "_Type_": "ControlHintCondition_MobiglasMapState",
+                      "mobiglasMapState": "InteriorMapRouteAvailable"}]},
+                {
+                  "_Type_": "ControlHintCondition_AND",
+                  "conditions": [
+                    {
+                      "_Type_": "ControlHintCondition_MobiglasMapState",
+                      "mobiglasMapState": "StarMapActive"},
+                    {
+                      "_Type_": "ControlHintCondition_MobiglasMapState",
+                      "mobiglasMapState": "StarMapRouteAvailable"},
+                    {
+                      "_Type_": "ControlHintCondition_NOT",
+                      "condition": {
+                        "_Type_": "ControlHintCondition_MobiglasMapState",
+                        "mobiglasMapState": "StarMapRouteSet"}},
+                    {
+                      "_Type_": "ControlHintCondition_NOT",
+                      "condition": {
+                        "_Type_": "ControlHintCondition_MobiglasMapState",
+                        "mobiglasMapState": "StarMapInJumpTunnel"}}]}]},
+            "alwaysDisplayCondition": null,
+            "hintDisplayInfoSet": [
+              {
+                "_Type_": "ControlHint_DisplayInfoSet",
+                "overrideHint": {
+                  "_Type_": "ControlHints_HintDisplayInfoAction",
+                  "overrideName": true,
+                  "name": "@Maps_KeyHint_SetRoute",
+                  "includeSeparator": false,
+                  "separatorInputName": "@LOC_EMPTY",
+                  "separatorIconPath": "",
+                  "actions": [
+                    {
+                      "_Type_": "ControlHints_ActionInput",
+                      "activationMode": "Default",
+                      "actionName": "mapui:mapui_action_planroute"}]},
+                "gamepadHint": null,
+                "joystickHint": null,
+                "alwaysShowIfBound": false}]},
+          {
+            "_Type_": "ControlHintDef",
+            "description": "Cancel Route",
+            "condition": {
+              "_Type_": "ControlHintCondition_OR",
+              "conditions": [
+                {
+                  "_Type_": "ControlHintCondition_AND",
+                  "conditions": [
+                    {
+                      "_Type_": "ControlHintCondition_MobiglasMapState",
+                      "mobiglasMapState": "InteriorMapActive"},
+                    {
+                      "_Type_": "ControlHintCondition_MobiglasMapState",
+                      "mobiglasMapState": "InteriorMapRouteSet"}]},
+                {
+                  "_Type_": "ControlHintCondition_AND",
+                  "conditions": [
+                    {
+                      "_Type_": "ControlHintCondition_OR",
+                      "conditions": [
+                        {
+                          "_Type_": "ControlHintCondition_MobiglasMapState",
+                          "mobiglasMapState": "StarMapActive"},
+                        {
+                          "_Type_": "ControlHintCondition_MobiglasMapState",
+                          "mobiglasMapState": "GalacticMapActive"}]},
+                    {
+                      "_Type_": "ControlHintCondition_MobiglasMapState",
+                      "mobiglasMapState": "StarMapRouteSet"}]}]},
+            "alwaysDisplayCondition": null,
+            "hintDisplayInfoSet": [
+              {
+                "_Type_": "ControlHint_DisplayInfoSet",
+                "overrideHint": {
+                  "_Type_": "ControlHints_HintDisplayInfoAction",
+                  "overrideName": true,
+                  "name": "@Maps_KeyHint_CancelRoute",
+                  "includeSeparator": false,
+                  "separatorInputName": "@LOC_EMPTY",
+                  "separatorIconPath": "",
+                  "actions": [
+                    {
+                      "_Type_": "ControlHints_ActionInput",
+                      "activationMode": "Default",
+                      "actionName": "mapui:mapui_action_clearroute"}]},
+                "gamepadHint": null,
+                "joystickHint": null,
+                "alwaysShowIfBound": false}]}]},
+      {
+        "_Type_": "ControlHint_Entry",
+        "name": "MobiGlasSlot_02",
+        "controlHintList": [
+          {
+            "_Type_": "ControlHintDef",
+            "description": "Place Pin",
+            "condition": {
+              "_Type_": "ControlHintCondition_AND",
+              "conditions": [
+                {
+                  "_Type_": "ControlHintCondition_MobiglasMapState",
+                  "mobiglasMapState": "InteriorMapActive"},
+                {
+                  "_Type_": "ControlHintCondition_MobiglasMapState",
+                  "mobiglasMapState": "InteriorMapRouteAvailable"}]},
+            "alwaysDisplayCondition": null,
+            "hintDisplayInfoSet": [
+              {
+                "_Type_": "ControlHint_DisplayInfoSet",
+                "overrideHint": {
+                  "_Type_": "ControlHints_HintDisplayInfoAction",
+                  "overrideName": true,
+                  "name": "@Maps_KeyHint_SetMarker",
+                  "includeSeparator": false,
+                  "separatorInputName": "@LOC_EMPTY",
+                  "separatorIconPath": "",
+                  "actions": [
+                    {
+                      "_Type_": "ControlHints_ActionInput",
+                      "activationMode": "Default",
+                      "actionName": "mapui:mapui_action_togglepin"}]},
+                "gamepadHint": null,
+                "joystickHint": null,
+                "alwaysShowIfBound": false}]}]},
+      {
+        "_Type_": "ControlHint_Entry",
+        "name": "MobiGlasSlot_03",
+        "controlHintList": [
+          {
+            "_Type_": "ControlHintDef",
+            "description": "Full View",
+            "condition": {
+              "_Type_": "ControlHintCondition_AND",
+              "conditions": [
+                {
+                  "_Type_": "ControlHintCondition_MobiglasMapState",
+                  "mobiglasMapState": "InteriorMapActive"},
+                {
+                  "_Type_": "ControlHintCondition_MobiglasMapState",
+                  "mobiglasMapState": "InteriorMapCrossSectionViewActive"}]},
+            "alwaysDisplayCondition": null,
+            "hintDisplayInfoSet": [
+              {
+                "_Type_": "ControlHint_DisplayInfoSet",
+                "overrideHint": {
+                  "_Type_": "ControlHints_HintDisplayInfoAction",
+                  "overrideName": true,
+                  "name": "@Maps_KeyHint_FullView",
+                  "includeSeparator": false,
+                  "separatorInputName": "@LOC_EMPTY",
+                  "separatorIconPath": "",
+                  "actions": [
+                    {
+                      "_Type_": "ControlHints_ActionInput",
+                      "activationMode": "Default",
+                      "actionName": "mapui:mapui_action_toggle_view_entire_zone"}]},
+                "gamepadHint": null,
+                "joystickHint": null,
+                "alwaysShowIfBound": false}]},
+          {
+            "_Type_": "ControlHintDef",
+            "description": "Cross-Section View",
+            "condition": {
+              "_Type_": "ControlHintCondition_AND",
+              "conditions": [
+                {
+                  "_Type_": "ControlHintCondition_MobiglasMapState",
+                  "mobiglasMapState": "InteriorMapActive"},
+                {
+                  "_Type_": "ControlHintCondition_NOT",
+                  "condition": {
+                    "_Type_": "ControlHintCondition_MobiglasMapState",
+                    "mobiglasMapState": "InteriorMapCrossSectionViewActive"}}]},
+            "alwaysDisplayCondition": null,
+            "hintDisplayInfoSet": [
+              {
+                "_Type_": "ControlHint_DisplayInfoSet",
+                "overrideHint": {
+                  "_Type_": "ControlHints_HintDisplayInfoAction",
+                  "overrideName": true,
+                  "name": "@Maps_KeyHint_CrossSectionView",
+                  "includeSeparator": false,
+                  "separatorInputName": "@LOC_EMPTY",
+                  "separatorIconPath": "",
+                  "actions": [
+                    {
+                      "_Type_": "ControlHints_ActionInput",
+                      "activationMode": "Default",
+                      "actionName": "mapui:mapui_action_toggle_view_entire_zone"}]},
+                "gamepadHint": null,
+                "joystickHint": null,
+                "alwaysShowIfBound": false}]}]},
+      {
+        "_Type_": "ControlHint_Entry",
+        "name": "MobiGlasSlot_04",
+        "controlHintList": [
+          {
+            "_Type_": "ControlHintDef",
+            "description": "Step Back",
+            "condition": {
+              "_Type_": "ControlHintCondition_MobiglasMapState",
+              "mobiglasMapState": "GeneralMapStepBackAvailable"},
+            "alwaysDisplayCondition": null,
+            "hintDisplayInfoSet": [
+              {
+                "_Type_": "ControlHint_DisplayInfoSet",
+                "overrideHint": {
+                  "_Type_": "ControlHints_HintDisplayInfoAction",
+                  "overrideName": true,
+                  "name": "@Maps_KeyHint_StepBack",
+                  "includeSeparator": false,
+                  "separatorInputName": "@LOC_EMPTY",
+                  "separatorIconPath": "",
+                  "actions": [
+                    {
+                      "_Type_": "ControlHints_ActionInput",
+                      "activationMode": "Default",
+                      "actionName": "mapui:mapui_action_step_back"}]},
+                "gamepadHint": null,
+                "joystickHint": null,
+                "alwaysShowIfBound": false}]}]},
+      {
+        "_Type_": "ControlHint_Entry",
+        "name": "MobiGlasSlot_05",
+        "controlHintList": [
+          {
+            "_Type_": "ControlHintDef",
+            "description": "Go to selection",
+            "condition": {
+              "_Type_": "ControlHintCondition_MobiglasMapState",
+              "mobiglasMapState": "StarMapActive"},
+            "alwaysDisplayCondition": null,
+            "hintDisplayInfoSet": [
+              {
+                "_Type_": "ControlHint_DisplayInfoSet",
+                "overrideHint": {
+                  "_Type_": "ControlHints_HintDisplayInfoAction",
+                  "overrideName": true,
+                  "name": "@Maps_KeyHint_GoToSelection",
+                  "includeSeparator": false,
+                  "separatorInputName": "@LOC_EMPTY",
+                  "separatorIconPath": "",
+                  "actions": [
+                    {
+                      "_Type_": "ControlHints_ActionInput",
+                      "activationMode": "Default",
+                      "actionName": "mapui:mapui_action_goto_selection"}]},
+                "gamepadHint": null,
+                "joystickHint": null,
+                "alwaysShowIfBound": false}]},
+          {
+            "_Type_": "ControlHintDef",
+            "description": "Go to solar system",
+            "condition": {
+              "_Type_": "ControlHintCondition_MobiglasMapState",
+              "mobiglasMapState": "GalacticMapActive"},
+            "alwaysDisplayCondition": null,
+            "hintDisplayInfoSet": [
+              {
+                "_Type_": "ControlHint_DisplayInfoSet",
+                "overrideHint": {
+                  "_Type_": "ControlHints_HintDisplayInfoAction",
+                  "overrideName": true,
+                  "name": "@Maps_Keyhint_GoToSolarSystem",
+                  "includeSeparator": false,
+                  "separatorInputName": "@LOC_EMPTY",
+                  "separatorIconPath": "",
+                  "actions": [
+                    {
+                      "_Type_": "ControlHints_ActionInput",
+                      "activationMode": "Default",
+                      "actionName": "mapui:mapui_action_goto_selection"}]},
+                "gamepadHint": null,
+                "joystickHint": null,
+                "alwaysShowIfBound": false}]}]},
+      {
+        "_Type_": "ControlHint_Entry",
+        "name": "MobiGlasSlot_06",
+        "controlHintList": [
+          {
+            "_Type_": "ControlHintDef",
+            "description": "My Location",
+            "condition": {
+              "_Type_": "ControlHintCondition_OR",
+              "conditions": [
+                {
+                  "_Type_": "ControlHintCondition_MobiglasMapState",
+                  "mobiglasMapState": "InteriorMapActive"},
+                {
+                  "_Type_": "ControlHintCondition_AND",
+                  "conditions": [
+                    {
+                      "_Type_": "ControlHintCondition_OR",
+                      "conditions": [
+                        {
+                          "_Type_": "ControlHintCondition_MobiglasMapState",
+                          "mobiglasMapState": "StarMapActive"},
+                        {
+                          "_Type_": "ControlHintCondition_MobiglasMapState",
+                          "mobiglasMapState": "GalacticMapActive"}]},
+                    {
+                      "_Type_": "ControlHintCondition_NOT",
+                      "condition": {
+                        "_Type_": "ControlHintCondition_MobiglasMapState",
+                        "mobiglasMapState": "StarMapInJumpTunnel"}}]}]},
+            "alwaysDisplayCondition": null,
+            "hintDisplayInfoSet": [
+              {
+                "_Type_": "ControlHint_DisplayInfoSet",
+                "overrideHint": {
+                  "_Type_": "ControlHints_HintDisplayInfoAction",
+                  "overrideName": true,
+                  "name": "@Maps_KeyHint_MyLocation",
+                  "includeSeparator": false,
+                  "separatorInputName": "@LOC_EMPTY",
+                  "separatorIconPath": "",
+                  "actions": [
+                    {
+                      "_Type_": "ControlHints_ActionInput",
+                      "activationMode": "Default",
+                      "actionName": "mapui:mapui_action_mylocation"}]},
+                "gamepadHint": null,
+                "joystickHint": null,
+                "alwaysShowIfBound": false}]}]},
+      {
+        "_Type_": "ControlHint_Entry",
+        "name": "MobiGlasSlot_07",
+        "controlHintList": [
+          {
+            "_Type_": "ControlHintDef",
+            "description": "Transition to local map",
+            "condition": {
+              "_Type_": "ControlHintCondition_AND",
+              "conditions": [
+                {
+                  "_Type_": "ControlHintCondition_OR",
+                  "conditions": [
+                    {
+                      "_Type_": "ControlHintCondition_MobiglasMapState",
+                      "mobiglasMapState": "StarMapActive"},
+                    {
+                      "_Type_": "ControlHintCondition_MobiglasMapState",
+                      "mobiglasMapState": "GalacticMapActive"}]},
+                {
+                  "_Type_": "ControlHintCondition_MobiglasMapState",
+                  "mobiglasMapState": "InteriorMapAvailable"}]},
+            "alwaysDisplayCondition": null,
+            "hintDisplayInfoSet": [
+              {
+                "_Type_": "ControlHint_DisplayInfoSet",
+                "overrideHint": {
+                  "_Type_": "ControlHints_HintDisplayInfoAction",
+                  "overrideName": true,
+                  "name": "@Maps_KeyHint_LocalMap",
+                  "includeSeparator": false,
+                  "separatorInputName": "@LOC_EMPTY",
+                  "separatorIconPath": "",
+                  "actions": [
+                    {
+                      "_Type_": "ControlHints_ActionInput",
+                      "activationMode": "Default",
+                      "actionName": "mapui:mapui_action_goto_localmap"}]},
+                "gamepadHint": null,
+                "joystickHint": null,
+                "alwaysShowIfBound": false}]}]}]}}

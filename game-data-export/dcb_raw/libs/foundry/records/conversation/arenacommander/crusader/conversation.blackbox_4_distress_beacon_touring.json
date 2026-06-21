@@ -1,0 +1,15 @@
+{
+  "_RecordName_": "Conversation.BlackBox_4_Distress_Beacon_Touring",
+  "_RecordId_": "a7e9c965-dc17-4ef1-af79-72cf94116d61",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "Conversation",
+    "fragments": [
+      {
+        "_Type_": "ConversationNode_Start",
+        "next": null},
+      {
+        "_Type_": "ConversationNode_Dialogue",
+        "next": null,
+        "context": "file://./../../../../../../libs/foundry/records/dialoguecontext/arenacommander/crusader/dialoguecontext.dxhn_pu_blackbox4_recording_001_c.json",
+        "skipNodeInXSecs": -1.0}]}}

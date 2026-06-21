@@ -1,0 +1,973 @@
+{
+  "_RecordName_": "MedicalItemTierConfig.MedicalTierItemConfig",
+  "_RecordId_": "c3d42fe9-1cf2-4eb0-8d9b-f4425d76efe6",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "MedicalItemTierConfig",
+    "medBedConfigs": [
+      {
+        "_Type_": "MedBedTierParams",
+        "medBedTier": "Hospital",
+        "defaultRespawnRange": 750000000000,
+        "drugEfficacyForConsumableTypes": [
+          {
+            "_Type_": "DrugEfficacyForConsumableType",
+            "consumableSubtype": {
+              "_RecordPath_": "file://./../../../../libs/foundry/records/consumabletypesdatabase/consumabletypes.json",
+              "_RecordName_": "ConsumableSubtype.2d9aa8d0-cb7d-40bf-a3a6-b1869feb0d14",
+              "_RecordId_": "2d9aa8d0-cb7d-40bf-a3a6-b1869feb0d14"},
+            "drugEfficacyForConsumableType": {
+              "_Type_": "DrugEfficacy",
+              "maxDose": 60.0,
+              "BDLMultiplier": 1.0,
+              "minsPerDosageMultiplier": 1.0,
+              "ValuePerDosageMultiplier": 1.0}},
+          {
+            "_Type_": "DrugEfficacyForConsumableType",
+            "consumableSubtype": {
+              "_RecordPath_": "file://./../../../../libs/foundry/records/consumabletypesdatabase/consumabletypes.json",
+              "_RecordName_": "ConsumableSubtype.bff2f5cb-a902-4df9-9560-97f550484ee6",
+              "_RecordId_": "bff2f5cb-a902-4df9-9560-97f550484ee6"},
+            "drugEfficacyForConsumableType": {
+              "_Type_": "DrugEfficacy",
+              "maxDose": 60.0,
+              "BDLMultiplier": 1.0,
+              "minsPerDosageMultiplier": 1.0,
+              "ValuePerDosageMultiplier": 1.0}},
+          {
+            "_Type_": "DrugEfficacyForConsumableType",
+            "consumableSubtype": {
+              "_RecordPath_": "file://./../../../../libs/foundry/records/consumabletypesdatabase/consumabletypes.json",
+              "_RecordName_": "ConsumableSubtype.cabca3ed-15cd-4dab-89de-5ce92d597868",
+              "_RecordId_": "cabca3ed-15cd-4dab-89de-5ce92d597868"},
+            "drugEfficacyForConsumableType": {
+              "_Type_": "DrugEfficacy",
+              "maxDose": 60.0,
+              "BDLMultiplier": 1.0,
+              "minsPerDosageMultiplier": 1.0,
+              "ValuePerDosageMultiplier": 1.0}},
+          {
+            "_Type_": "DrugEfficacyForConsumableType",
+            "consumableSubtype": {
+              "_RecordPath_": "file://./../../../../libs/foundry/records/consumabletypesdatabase/consumabletypes.json",
+              "_RecordName_": "ConsumableSubtype.4e45d0b2-3e49-4d85-ba40-29ddcd6e310b",
+              "_RecordId_": "4e45d0b2-3e49-4d85-ba40-29ddcd6e310b"},
+            "drugEfficacyForConsumableType": {
+              "_Type_": "DrugEfficacy",
+              "maxDose": 60.0,
+              "BDLMultiplier": 0.0,
+              "minsPerDosageMultiplier": 1.0,
+              "ValuePerDosageMultiplier": 1.0}},
+          {
+            "_Type_": "DrugEfficacyForConsumableType",
+            "consumableSubtype": {
+              "_RecordPath_": "file://./../../../../libs/foundry/records/consumabletypesdatabase/consumabletypes.json",
+              "_RecordName_": "ConsumableSubtype.d908155e-84fa-4965-aec5-568870a40b95",
+              "_RecordId_": "d908155e-84fa-4965-aec5-568870a40b95"},
+            "drugEfficacyForConsumableType": {
+              "_Type_": "DrugEfficacy",
+              "maxDose": 60.0,
+              "BDLMultiplier": 1.0,
+              "minsPerDosageMultiplier": 1.0,
+              "ValuePerDosageMultiplier": 1.0}}],
+        "statTypesToHeal": [
+          "BloodDrugLevel",
+          "OverdoseLevel",
+          "Stun",
+          "Hunger",
+          "Thirst",
+          "BodyRadiation"]},
+      {
+        "_Type_": "MedBedTierParams",
+        "medBedTier": "Clinic",
+        "defaultRespawnRange": 8000000,
+        "drugEfficacyForConsumableTypes": [
+          {
+            "_Type_": "DrugEfficacyForConsumableType",
+            "consumableSubtype": {
+              "_RecordPath_": "file://./../../../../libs/foundry/records/consumabletypesdatabase/consumabletypes.json",
+              "_RecordName_": "ConsumableSubtype.2d9aa8d0-cb7d-40bf-a3a6-b1869feb0d14",
+              "_RecordId_": "2d9aa8d0-cb7d-40bf-a3a6-b1869feb0d14"},
+            "drugEfficacyForConsumableType": {
+              "_Type_": "DrugEfficacy",
+              "maxDose": 60.0,
+              "BDLMultiplier": 1.0,
+              "minsPerDosageMultiplier": 1.0,
+              "ValuePerDosageMultiplier": 1.0}},
+          {
+            "_Type_": "DrugEfficacyForConsumableType",
+            "consumableSubtype": {
+              "_RecordPath_": "file://./../../../../libs/foundry/records/consumabletypesdatabase/consumabletypes.json",
+              "_RecordName_": "ConsumableSubtype.bff2f5cb-a902-4df9-9560-97f550484ee6",
+              "_RecordId_": "bff2f5cb-a902-4df9-9560-97f550484ee6"},
+            "drugEfficacyForConsumableType": {
+              "_Type_": "DrugEfficacy",
+              "maxDose": 60.0,
+              "BDLMultiplier": 1.0,
+              "minsPerDosageMultiplier": 1.0,
+              "ValuePerDosageMultiplier": 1.0}},
+          {
+            "_Type_": "DrugEfficacyForConsumableType",
+            "consumableSubtype": {
+              "_RecordPath_": "file://./../../../../libs/foundry/records/consumabletypesdatabase/consumabletypes.json",
+              "_RecordName_": "ConsumableSubtype.cabca3ed-15cd-4dab-89de-5ce92d597868",
+              "_RecordId_": "cabca3ed-15cd-4dab-89de-5ce92d597868"},
+            "drugEfficacyForConsumableType": {
+              "_Type_": "DrugEfficacy",
+              "maxDose": 60.0,
+              "BDLMultiplier": 1.0,
+              "minsPerDosageMultiplier": 1.0,
+              "ValuePerDosageMultiplier": 1.0}},
+          {
+            "_Type_": "DrugEfficacyForConsumableType",
+            "consumableSubtype": {
+              "_RecordPath_": "file://./../../../../libs/foundry/records/consumabletypesdatabase/consumabletypes.json",
+              "_RecordName_": "ConsumableSubtype.4e45d0b2-3e49-4d85-ba40-29ddcd6e310b",
+              "_RecordId_": "4e45d0b2-3e49-4d85-ba40-29ddcd6e310b"},
+            "drugEfficacyForConsumableType": {
+              "_Type_": "DrugEfficacy",
+              "maxDose": 60.0,
+              "BDLMultiplier": 0.0,
+              "minsPerDosageMultiplier": 1.0,
+              "ValuePerDosageMultiplier": 1.0}},
+          {
+            "_Type_": "DrugEfficacyForConsumableType",
+            "consumableSubtype": {
+              "_RecordPath_": "file://./../../../../libs/foundry/records/consumabletypesdatabase/consumabletypes.json",
+              "_RecordName_": "ConsumableSubtype.d908155e-84fa-4965-aec5-568870a40b95",
+              "_RecordId_": "d908155e-84fa-4965-aec5-568870a40b95"},
+            "drugEfficacyForConsumableType": {
+              "_Type_": "DrugEfficacy",
+              "maxDose": 60.0,
+              "BDLMultiplier": 1.0,
+              "minsPerDosageMultiplier": 1.0,
+              "ValuePerDosageMultiplier": 1.0}}],
+        "statTypesToHeal": [
+          "BloodDrugLevel",
+          "OverdoseLevel",
+          "Stun",
+          "Hunger",
+          "Thirst",
+          "BodyRadiation"]},
+      {
+        "_Type_": "MedBedTierParams",
+        "medBedTier": "Ambulance",
+        "defaultRespawnRange": 50000,
+        "drugEfficacyForConsumableTypes": [
+          {
+            "_Type_": "DrugEfficacyForConsumableType",
+            "consumableSubtype": {
+              "_RecordPath_": "file://./../../../../libs/foundry/records/consumabletypesdatabase/consumabletypes.json",
+              "_RecordName_": "ConsumableSubtype.2d9aa8d0-cb7d-40bf-a3a6-b1869feb0d14",
+              "_RecordId_": "2d9aa8d0-cb7d-40bf-a3a6-b1869feb0d14"},
+            "drugEfficacyForConsumableType": {
+              "_Type_": "DrugEfficacy",
+              "maxDose": 60.0,
+              "BDLMultiplier": 1.1,
+              "minsPerDosageMultiplier": 1.0,
+              "ValuePerDosageMultiplier": 1.0}},
+          {
+            "_Type_": "DrugEfficacyForConsumableType",
+            "consumableSubtype": {
+              "_RecordPath_": "file://./../../../../libs/foundry/records/consumabletypesdatabase/consumabletypes.json",
+              "_RecordName_": "ConsumableSubtype.bff2f5cb-a902-4df9-9560-97f550484ee6",
+              "_RecordId_": "bff2f5cb-a902-4df9-9560-97f550484ee6"},
+            "drugEfficacyForConsumableType": {
+              "_Type_": "DrugEfficacy",
+              "maxDose": 60.0,
+              "BDLMultiplier": 1.1,
+              "minsPerDosageMultiplier": 1.0,
+              "ValuePerDosageMultiplier": 1.0}},
+          {
+            "_Type_": "DrugEfficacyForConsumableType",
+            "consumableSubtype": {
+              "_RecordPath_": "file://./../../../../libs/foundry/records/consumabletypesdatabase/consumabletypes.json",
+              "_RecordName_": "ConsumableSubtype.cabca3ed-15cd-4dab-89de-5ce92d597868",
+              "_RecordId_": "cabca3ed-15cd-4dab-89de-5ce92d597868"},
+            "drugEfficacyForConsumableType": {
+              "_Type_": "DrugEfficacy",
+              "maxDose": 60.0,
+              "BDLMultiplier": 1.1,
+              "minsPerDosageMultiplier": 1.0,
+              "ValuePerDosageMultiplier": 1.0}},
+          {
+            "_Type_": "DrugEfficacyForConsumableType",
+            "consumableSubtype": {
+              "_RecordPath_": "file://./../../../../libs/foundry/records/consumabletypesdatabase/consumabletypes.json",
+              "_RecordName_": "ConsumableSubtype.4e45d0b2-3e49-4d85-ba40-29ddcd6e310b",
+              "_RecordId_": "4e45d0b2-3e49-4d85-ba40-29ddcd6e310b"},
+            "drugEfficacyForConsumableType": {
+              "_Type_": "DrugEfficacy",
+              "maxDose": 60.0,
+              "BDLMultiplier": 0.0,
+              "minsPerDosageMultiplier": 1.0,
+              "ValuePerDosageMultiplier": 1.0}},
+          {
+            "_Type_": "DrugEfficacyForConsumableType",
+            "consumableSubtype": {
+              "_RecordPath_": "file://./../../../../libs/foundry/records/consumabletypesdatabase/consumabletypes.json",
+              "_RecordName_": "ConsumableSubtype.d908155e-84fa-4965-aec5-568870a40b95",
+              "_RecordId_": "d908155e-84fa-4965-aec5-568870a40b95"},
+            "drugEfficacyForConsumableType": {
+              "_Type_": "DrugEfficacy",
+              "maxDose": 60.0,
+              "BDLMultiplier": 1.1,
+              "minsPerDosageMultiplier": 1.0,
+              "ValuePerDosageMultiplier": 1.0}}],
+        "statTypesToHeal": [
+          "BloodDrugLevel",
+          "OverdoseLevel",
+          "Stun",
+          "Hunger",
+          "Thirst",
+          "BodyRadiation"]}],
+    "drugEfficacyConfig": [
+      {
+        "_Type_": "DrugEfficacyForItemType",
+        "itemType": "FPS_Consumable",
+        "drugEfficacyForItemSubType": [
+          {
+            "_Type_": "DrugEfficacyConfigForItemSubType",
+            "itemSubType": "MedPack",
+            "drugEfficacyForItemSubType": {
+              "_Type_": "DrugEfficacyForItemSubType",
+              "drugEfficacyForItemSubType": [
+                {
+                  "_Type_": "DrugEfficacyForConsumableType",
+                  "consumableSubtype": {
+                    "_RecordPath_": "file://./../../../../libs/foundry/records/consumabletypesdatabase/consumabletypes.json",
+                    "_RecordName_": "ConsumableSubtype.2e3fc0d3-be97-4c57-972e-526872e4bd56",
+                    "_RecordId_": "2e3fc0d3-be97-4c57-972e-526872e4bd56"},
+                  "drugEfficacyForConsumableType": {
+                    "_Type_": "DrugEfficacy",
+                    "maxDose": 30.0,
+                    "BDLMultiplier": 0.25,
+                    "minsPerDosageMultiplier": 1.2,
+                    "ValuePerDosageMultiplier": 1.2}},
+                {
+                  "_Type_": "DrugEfficacyForConsumableType",
+                  "consumableSubtype": {
+                    "_RecordPath_": "file://./../../../../libs/foundry/records/consumabletypesdatabase/consumabletypes.json",
+                    "_RecordName_": "ConsumableSubtype.57efc6c0-c2cb-4fd1-a987-ba74ba1f5f8c",
+                    "_RecordId_": "57efc6c0-c2cb-4fd1-a987-ba74ba1f5f8c"},
+                  "drugEfficacyForConsumableType": {
+                    "_Type_": "DrugEfficacy",
+                    "maxDose": 30.0,
+                    "BDLMultiplier": 0.25,
+                    "minsPerDosageMultiplier": 1.0,
+                    "ValuePerDosageMultiplier": 1.0}},
+                {
+                  "_Type_": "DrugEfficacyForConsumableType",
+                  "consumableSubtype": {
+                    "_RecordPath_": "file://./../../../../libs/foundry/records/consumabletypesdatabase/consumabletypes.json",
+                    "_RecordName_": "ConsumableSubtype.11485202-6b90-4474-836b-569f3204641e",
+                    "_RecordId_": "11485202-6b90-4474-836b-569f3204641e"},
+                  "drugEfficacyForConsumableType": {
+                    "_Type_": "DrugEfficacy",
+                    "maxDose": 15.0,
+                    "BDLMultiplier": 1.25,
+                    "minsPerDosageMultiplier": 1.0,
+                    "ValuePerDosageMultiplier": 1.0}},
+                {
+                  "_Type_": "DrugEfficacyForConsumableType",
+                  "consumableSubtype": {
+                    "_RecordPath_": "file://./../../../../libs/foundry/records/consumabletypesdatabase/consumabletypes.json",
+                    "_RecordName_": "ConsumableSubtype.0b015e7f-1d34-4a8f-9b21-4e47f9480738",
+                    "_RecordId_": "0b015e7f-1d34-4a8f-9b21-4e47f9480738"},
+                  "drugEfficacyForConsumableType": {
+                    "_Type_": "DrugEfficacy",
+                    "maxDose": 30.0,
+                    "BDLMultiplier": 0.25,
+                    "minsPerDosageMultiplier": 1.0,
+                    "ValuePerDosageMultiplier": 1.0}},
+                {
+                  "_Type_": "DrugEfficacyForConsumableType",
+                  "consumableSubtype": {
+                    "_RecordPath_": "file://./../../../../libs/foundry/records/consumabletypesdatabase/consumabletypes.json",
+                    "_RecordName_": "ConsumableSubtype.c847f7d7-3592-42ec-9103-e5c1e0f2f728",
+                    "_RecordId_": "c847f7d7-3592-42ec-9103-e5c1e0f2f728"},
+                  "drugEfficacyForConsumableType": {
+                    "_Type_": "DrugEfficacy",
+                    "maxDose": 15.0,
+                    "BDLMultiplier": 0.0,
+                    "minsPerDosageMultiplier": 1.0,
+                    "ValuePerDosageMultiplier": 1.0}},
+                {
+                  "_Type_": "DrugEfficacyForConsumableType",
+                  "consumableSubtype": {
+                    "_RecordPath_": "file://./../../../../libs/foundry/records/consumabletypesdatabase/consumabletypes.json",
+                    "_RecordName_": "ConsumableSubtype.6b4b999e-d0e0-4b81-9b74-49c9368e85d6",
+                    "_RecordId_": "6b4b999e-d0e0-4b81-9b74-49c9368e85d6"},
+                  "drugEfficacyForConsumableType": {
+                    "_Type_": "DrugEfficacy",
+                    "maxDose": 15.0,
+                    "BDLMultiplier": 1.25,
+                    "minsPerDosageMultiplier": 1.0,
+                    "ValuePerDosageMultiplier": 1.0}},
+                {
+                  "_Type_": "DrugEfficacyForConsumableType",
+                  "consumableSubtype": {
+                    "_RecordPath_": "file://./../../../../libs/foundry/records/consumabletypesdatabase/consumabletypes.json",
+                    "_RecordName_": "ConsumableSubtype.d016ae40-85e0-461a-aeb9-350758145b56",
+                    "_RecordId_": "d016ae40-85e0-461a-aeb9-350758145b56"},
+                  "drugEfficacyForConsumableType": {
+                    "_Type_": "DrugEfficacy",
+                    "maxDose": 15.0,
+                    "BDLMultiplier": 1.25,
+                    "minsPerDosageMultiplier": 1.0,
+                    "ValuePerDosageMultiplier": 1.0}},
+                {
+                  "_Type_": "DrugEfficacyForConsumableType",
+                  "consumableSubtype": {
+                    "_RecordPath_": "file://./../../../../libs/foundry/records/consumabletypesdatabase/consumabletypes.json",
+                    "_RecordName_": "ConsumableSubtype.f44629fc-9e4a-4848-b398-b7497da50fdb",
+                    "_RecordId_": "f44629fc-9e4a-4848-b398-b7497da50fdb"},
+                  "drugEfficacyForConsumableType": {
+                    "_Type_": "DrugEfficacy",
+                    "maxDose": 15.0,
+                    "BDLMultiplier": 1.25,
+                    "minsPerDosageMultiplier": 1.0,
+                    "ValuePerDosageMultiplier": 1.0}}]}},
+          {
+            "_Type_": "DrugEfficacyConfigForItemSubType",
+            "itemSubType": "Medical",
+            "drugEfficacyForItemSubType": {
+              "_Type_": "DrugEfficacyForItemSubType",
+              "drugEfficacyForItemSubType": [
+                {
+                  "_Type_": "DrugEfficacyForConsumableType",
+                  "consumableSubtype": {
+                    "_RecordPath_": "file://./../../../../libs/foundry/records/consumabletypesdatabase/consumabletypes.json",
+                    "_RecordName_": "ConsumableSubtype.2d9aa8d0-cb7d-40bf-a3a6-b1869feb0d14",
+                    "_RecordId_": "2d9aa8d0-cb7d-40bf-a3a6-b1869feb0d14"},
+                  "drugEfficacyForConsumableType": {
+                    "_Type_": "DrugEfficacy",
+                    "maxDose": 15.0,
+                    "BDLMultiplier": 1.25,
+                    "minsPerDosageMultiplier": 1.0,
+                    "ValuePerDosageMultiplier": 1.0}},
+                {
+                  "_Type_": "DrugEfficacyForConsumableType",
+                  "consumableSubtype": {
+                    "_RecordPath_": "file://./../../../../libs/foundry/records/consumabletypesdatabase/consumabletypes.json",
+                    "_RecordName_": "ConsumableSubtype.e4a3719b-a1ed-4dfd-a94c-d113a27ad0f3",
+                    "_RecordId_": "e4a3719b-a1ed-4dfd-a94c-d113a27ad0f3"},
+                  "drugEfficacyForConsumableType": {
+                    "_Type_": "DrugEfficacy",
+                    "maxDose": 15.0,
+                    "BDLMultiplier": 1.25,
+                    "minsPerDosageMultiplier": 1.0,
+                    "ValuePerDosageMultiplier": 1.0}},
+                {
+                  "_Type_": "DrugEfficacyForConsumableType",
+                  "consumableSubtype": {
+                    "_RecordPath_": "file://./../../../../libs/foundry/records/consumabletypesdatabase/consumabletypes.json",
+                    "_RecordName_": "ConsumableSubtype.4e45d0b2-3e49-4d85-ba40-29ddcd6e310b",
+                    "_RecordId_": "4e45d0b2-3e49-4d85-ba40-29ddcd6e310b"},
+                  "drugEfficacyForConsumableType": {
+                    "_Type_": "DrugEfficacy",
+                    "maxDose": 15.0,
+                    "BDLMultiplier": 0.0,
+                    "minsPerDosageMultiplier": 1.0,
+                    "ValuePerDosageMultiplier": 1.0}},
+                {
+                  "_Type_": "DrugEfficacyForConsumableType",
+                  "consumableSubtype": {
+                    "_RecordPath_": "file://./../../../../libs/foundry/records/consumabletypesdatabase/consumabletypes.json",
+                    "_RecordName_": "ConsumableSubtype.bff2f5cb-a902-4df9-9560-97f550484ee6",
+                    "_RecordId_": "bff2f5cb-a902-4df9-9560-97f550484ee6"},
+                  "drugEfficacyForConsumableType": {
+                    "_Type_": "DrugEfficacy",
+                    "maxDose": 15.0,
+                    "BDLMultiplier": 1.25,
+                    "minsPerDosageMultiplier": 1.0,
+                    "ValuePerDosageMultiplier": 1.0}},
+                {
+                  "_Type_": "DrugEfficacyForConsumableType",
+                  "consumableSubtype": {
+                    "_RecordPath_": "file://./../../../../libs/foundry/records/consumabletypesdatabase/consumabletypes.json",
+                    "_RecordName_": "ConsumableSubtype.cabca3ed-15cd-4dab-89de-5ce92d597868",
+                    "_RecordId_": "cabca3ed-15cd-4dab-89de-5ce92d597868"},
+                  "drugEfficacyForConsumableType": {
+                    "_Type_": "DrugEfficacy",
+                    "maxDose": 15.0,
+                    "BDLMultiplier": 1.25,
+                    "minsPerDosageMultiplier": 1.0,
+                    "ValuePerDosageMultiplier": 1.0}},
+                {
+                  "_Type_": "DrugEfficacyForConsumableType",
+                  "consumableSubtype": {
+                    "_RecordPath_": "file://./../../../../libs/foundry/records/consumabletypesdatabase/consumabletypes.json",
+                    "_RecordName_": "ConsumableSubtype.2d29cf33-06dc-4304-a5ac-95a40043edd7",
+                    "_RecordId_": "2d29cf33-06dc-4304-a5ac-95a40043edd7"},
+                  "drugEfficacyForConsumableType": {
+                    "_Type_": "DrugEfficacy",
+                    "maxDose": 15.0,
+                    "BDLMultiplier": 1.25,
+                    "minsPerDosageMultiplier": 1.0,
+                    "ValuePerDosageMultiplier": 1.0}},
+                {
+                  "_Type_": "DrugEfficacyForConsumableType",
+                  "consumableSubtype": {
+                    "_RecordPath_": "file://./../../../../libs/foundry/records/consumabletypesdatabase/consumabletypes.json",
+                    "_RecordName_": "ConsumableSubtype.da7c1fbb-f624-4bad-a8b3-ff1a7b39222f",
+                    "_RecordId_": "da7c1fbb-f624-4bad-a8b3-ff1a7b39222f"},
+                  "drugEfficacyForConsumableType": {
+                    "_Type_": "DrugEfficacy",
+                    "maxDose": 15.0,
+                    "BDLMultiplier": 1.25,
+                    "minsPerDosageMultiplier": 1.0,
+                    "ValuePerDosageMultiplier": 1.0}},
+                {
+                  "_Type_": "DrugEfficacyForConsumableType",
+                  "consumableSubtype": {
+                    "_RecordPath_": "file://./../../../../libs/foundry/records/consumabletypesdatabase/consumabletypes.json",
+                    "_RecordName_": "ConsumableSubtype.d908155e-84fa-4965-aec5-568870a40b95",
+                    "_RecordId_": "d908155e-84fa-4965-aec5-568870a40b95"},
+                  "drugEfficacyForConsumableType": {
+                    "_Type_": "DrugEfficacy",
+                    "maxDose": 15.0,
+                    "BDLMultiplier": 1.0,
+                    "minsPerDosageMultiplier": 1.0,
+                    "ValuePerDosageMultiplier": 1.0}},
+                {
+                  "_Type_": "DrugEfficacyForConsumableType",
+                  "consumableSubtype": {
+                    "_RecordPath_": "file://./../../../../libs/foundry/records/consumabletypesdatabase/consumabletypes.json",
+                    "_RecordName_": "ConsumableSubtype.ad7649ae-da2b-4739-a000-2bccce72dda9",
+                    "_RecordId_": "ad7649ae-da2b-4739-a000-2bccce72dda9"},
+                  "drugEfficacyForConsumableType": {
+                    "_Type_": "DrugEfficacy",
+                    "maxDose": 15.0,
+                    "BDLMultiplier": 1.0,
+                    "minsPerDosageMultiplier": 1.0,
+                    "ValuePerDosageMultiplier": 1.0}},
+                {
+                  "_Type_": "DrugEfficacyForConsumableType",
+                  "consumableSubtype": {
+                    "_RecordPath_": "file://./../../../../libs/foundry/records/consumabletypesdatabase/consumabletypes.json",
+                    "_RecordName_": "ConsumableSubtype.483fa143-1a13-453c-9612-419426cd90dd",
+                    "_RecordId_": "483fa143-1a13-453c-9612-419426cd90dd"},
+                  "drugEfficacyForConsumableType": {
+                    "_Type_": "DrugEfficacy",
+                    "maxDose": 50.0,
+                    "BDLMultiplier": 1.0,
+                    "minsPerDosageMultiplier": 1.0,
+                    "ValuePerDosageMultiplier": 1.0}},
+                {
+                  "_Type_": "DrugEfficacyForConsumableType",
+                  "consumableSubtype": {
+                    "_RecordPath_": "file://./../../../../libs/foundry/records/consumabletypesdatabase/consumabletypes.json",
+                    "_RecordName_": "ConsumableSubtype.78d433c1-d728-4496-8fcf-f4828ba7bbea",
+                    "_RecordId_": "78d433c1-d728-4496-8fcf-f4828ba7bbea"},
+                  "drugEfficacyForConsumableType": {
+                    "_Type_": "DrugEfficacy",
+                    "maxDose": 15.0,
+                    "BDLMultiplier": 1.5,
+                    "minsPerDosageMultiplier": 1.0,
+                    "ValuePerDosageMultiplier": 1.0}},
+                {
+                  "_Type_": "DrugEfficacyForConsumableType",
+                  "consumableSubtype": {
+                    "_RecordPath_": "file://./../../../../libs/foundry/records/consumabletypesdatabase/consumabletypes.json",
+                    "_RecordName_": "ConsumableSubtype.ac3c220b-9778-4a82-bf3b-91f4ba0dc20d",
+                    "_RecordId_": "ac3c220b-9778-4a82-bf3b-91f4ba0dc20d"},
+                  "drugEfficacyForConsumableType": {
+                    "_Type_": "DrugEfficacy",
+                    "maxDose": 15.0,
+                    "BDLMultiplier": 1.5,
+                    "minsPerDosageMultiplier": 1.0,
+                    "ValuePerDosageMultiplier": 1.0}},
+                {
+                  "_Type_": "DrugEfficacyForConsumableType",
+                  "consumableSubtype": {
+                    "_RecordPath_": "file://./../../../../libs/foundry/records/consumabletypesdatabase/consumabletypes.json",
+                    "_RecordName_": "ConsumableSubtype.57efc6c0-c2cb-4fd1-a987-ba74ba1f5f8c",
+                    "_RecordId_": "57efc6c0-c2cb-4fd1-a987-ba74ba1f5f8c"},
+                  "drugEfficacyForConsumableType": {
+                    "_Type_": "DrugEfficacy",
+                    "maxDose": 30.0,
+                    "BDLMultiplier": 0.25,
+                    "minsPerDosageMultiplier": 1.2,
+                    "ValuePerDosageMultiplier": 1.0}},
+                {
+                  "_Type_": "DrugEfficacyForConsumableType",
+                  "consumableSubtype": {
+                    "_RecordPath_": "file://./../../../../libs/foundry/records/consumabletypesdatabase/consumabletypes.json",
+                    "_RecordName_": "ConsumableSubtype.11485202-6b90-4474-836b-569f3204641e",
+                    "_RecordId_": "11485202-6b90-4474-836b-569f3204641e"},
+                  "drugEfficacyForConsumableType": {
+                    "_Type_": "DrugEfficacy",
+                    "maxDose": 15.0,
+                    "BDLMultiplier": 1.25,
+                    "minsPerDosageMultiplier": 1.0,
+                    "ValuePerDosageMultiplier": 1.0}},
+                {
+                  "_Type_": "DrugEfficacyForConsumableType",
+                  "consumableSubtype": {
+                    "_RecordPath_": "file://./../../../../libs/foundry/records/consumabletypesdatabase/consumabletypes.json",
+                    "_RecordName_": "ConsumableSubtype.c847f7d7-3592-42ec-9103-e5c1e0f2f728",
+                    "_RecordId_": "c847f7d7-3592-42ec-9103-e5c1e0f2f728"},
+                  "drugEfficacyForConsumableType": {
+                    "_Type_": "DrugEfficacy",
+                    "maxDose": 15.0,
+                    "BDLMultiplier": 0.0,
+                    "minsPerDosageMultiplier": 1.0,
+                    "ValuePerDosageMultiplier": 1.0}},
+                {
+                  "_Type_": "DrugEfficacyForConsumableType",
+                  "consumableSubtype": {
+                    "_RecordPath_": "file://./../../../../libs/foundry/records/consumabletypesdatabase/consumabletypes.json",
+                    "_RecordName_": "ConsumableSubtype.6b4b999e-d0e0-4b81-9b74-49c9368e85d6",
+                    "_RecordId_": "6b4b999e-d0e0-4b81-9b74-49c9368e85d6"},
+                  "drugEfficacyForConsumableType": {
+                    "_Type_": "DrugEfficacy",
+                    "maxDose": 15.0,
+                    "BDLMultiplier": 1.25,
+                    "minsPerDosageMultiplier": 1.0,
+                    "ValuePerDosageMultiplier": 1.0}},
+                {
+                  "_Type_": "DrugEfficacyForConsumableType",
+                  "consumableSubtype": {
+                    "_RecordPath_": "file://./../../../../libs/foundry/records/consumabletypesdatabase/consumabletypes.json",
+                    "_RecordName_": "ConsumableSubtype.d016ae40-85e0-461a-aeb9-350758145b56",
+                    "_RecordId_": "d016ae40-85e0-461a-aeb9-350758145b56"},
+                  "drugEfficacyForConsumableType": {
+                    "_Type_": "DrugEfficacy",
+                    "maxDose": 15.0,
+                    "BDLMultiplier": 1.25,
+                    "minsPerDosageMultiplier": 1.0,
+                    "ValuePerDosageMultiplier": 1.0}},
+                {
+                  "_Type_": "DrugEfficacyForConsumableType",
+                  "consumableSubtype": {
+                    "_RecordPath_": "file://./../../../../libs/foundry/records/consumabletypesdatabase/consumabletypes.json",
+                    "_RecordName_": "ConsumableSubtype.6020959a-015a-4ebc-a815-41a2d42deac9",
+                    "_RecordId_": "6020959a-015a-4ebc-a815-41a2d42deac9"},
+                  "drugEfficacyForConsumableType": {
+                    "_Type_": "DrugEfficacy",
+                    "maxDose": 15.0,
+                    "BDLMultiplier": 1.25,
+                    "minsPerDosageMultiplier": 1.0,
+                    "ValuePerDosageMultiplier": 1.0}},
+                {
+                  "_Type_": "DrugEfficacyForConsumableType",
+                  "consumableSubtype": {
+                    "_RecordPath_": "file://./../../../../libs/foundry/records/consumabletypesdatabase/consumabletypes.json",
+                    "_RecordName_": "ConsumableSubtype.4b878cd8-1a56-46f6-941e-a7c8c8e82362",
+                    "_RecordId_": "4b878cd8-1a56-46f6-941e-a7c8c8e82362"},
+                  "drugEfficacyForConsumableType": {
+                    "_Type_": "DrugEfficacy",
+                    "maxDose": 15.0,
+                    "BDLMultiplier": 1.25,
+                    "minsPerDosageMultiplier": 1.0,
+                    "ValuePerDosageMultiplier": 1.0}}]}},
+          {
+            "_Type_": "DrugEfficacyConfigForItemSubType",
+            "itemSubType": "OxygenCap",
+            "drugEfficacyForItemSubType": {
+              "_Type_": "DrugEfficacyForItemSubType",
+              "drugEfficacyForItemSubType": [
+                {
+                  "_Type_": "DrugEfficacyForConsumableType",
+                  "consumableSubtype": {
+                    "_RecordPath_": "file://./../../../../libs/foundry/records/consumabletypesdatabase/consumabletypes.json",
+                    "_RecordName_": "ConsumableSubtype.79e0313c-827e-429a-9c59-a0a2eae78596",
+                    "_RecordId_": "79e0313c-827e-429a-9c59-a0a2eae78596"},
+                  "drugEfficacyForConsumableType": {
+                    "_Type_": "DrugEfficacy",
+                    "maxDose": 10.0,
+                    "BDLMultiplier": 1.0,
+                    "minsPerDosageMultiplier": 1.0,
+                    "ValuePerDosageMultiplier": 1.0}},
+                {
+                  "_Type_": "DrugEfficacyForConsumableType",
+                  "consumableSubtype": {
+                    "_RecordPath_": "file://./../../../../libs/foundry/records/consumabletypesdatabase/consumabletypes.json",
+                    "_RecordName_": "ConsumableSubtype.c62bd27b-dcc5-4ca4-898b-d020085f1d41",
+                    "_RecordId_": "c62bd27b-dcc5-4ca4-898b-d020085f1d41"},
+                  "drugEfficacyForConsumableType": {
+                    "_Type_": "DrugEfficacy",
+                    "maxDose": 10.0,
+                    "BDLMultiplier": 1.0,
+                    "minsPerDosageMultiplier": 1.0,
+                    "ValuePerDosageMultiplier": 1.0}}]}}]},
+      {
+        "_Type_": "DrugEfficacyForItemType",
+        "itemType": "WeaponPersonal",
+        "drugEfficacyForItemSubType": [
+          {
+            "_Type_": "DrugEfficacyConfigForItemSubTypeWeapon",
+            "itemSubType": "Gadget",
+            "drugEfficacyForItemSubType": [
+              {
+                "_Type_": "DrugEfficacyForItemSubType",
+                "drugEfficacyForItemSubType": [
+                  {
+                    "_Type_": "DrugEfficacyForConsumableType",
+                    "consumableSubtype": {
+                      "_RecordPath_": "file://./../../../../libs/foundry/records/consumabletypesdatabase/consumabletypes.json",
+                      "_RecordName_": "ConsumableSubtype.2d9aa8d0-cb7d-40bf-a3a6-b1869feb0d14",
+                      "_RecordId_": "2d9aa8d0-cb7d-40bf-a3a6-b1869feb0d14"},
+                    "drugEfficacyForConsumableType": {
+                      "_Type_": "DrugEfficacy",
+                      "maxDose": 60.0,
+                      "BDLMultiplier": 1.1875,
+                      "minsPerDosageMultiplier": 1.0,
+                      "ValuePerDosageMultiplier": 1.0}},
+                  {
+                    "_Type_": "DrugEfficacyForConsumableType",
+                    "consumableSubtype": {
+                      "_RecordPath_": "file://./../../../../libs/foundry/records/consumabletypesdatabase/consumabletypes.json",
+                      "_RecordName_": "ConsumableSubtype.2e3fc0d3-be97-4c57-972e-526872e4bd56",
+                      "_RecordId_": "2e3fc0d3-be97-4c57-972e-526872e4bd56"},
+                    "drugEfficacyForConsumableType": {
+                      "_Type_": "DrugEfficacy",
+                      "maxDose": 56.0,
+                      "BDLMultiplier": 0.25,
+                      "minsPerDosageMultiplier": 1.25,
+                      "ValuePerDosageMultiplier": 1.25}},
+                  {
+                    "_Type_": "DrugEfficacyForConsumableType",
+                    "consumableSubtype": {
+                      "_RecordPath_": "file://./../../../../libs/foundry/records/consumabletypesdatabase/consumabletypes.json",
+                      "_RecordName_": "ConsumableSubtype.4e45d0b2-3e49-4d85-ba40-29ddcd6e310b",
+                      "_RecordId_": "4e45d0b2-3e49-4d85-ba40-29ddcd6e310b"},
+                    "drugEfficacyForConsumableType": {
+                      "_Type_": "DrugEfficacy",
+                      "maxDose": 60.0,
+                      "BDLMultiplier": 0.0,
+                      "minsPerDosageMultiplier": 1.0,
+                      "ValuePerDosageMultiplier": 1.0}},
+                  {
+                    "_Type_": "DrugEfficacyForConsumableType",
+                    "consumableSubtype": {
+                      "_RecordPath_": "file://./../../../../libs/foundry/records/consumabletypesdatabase/consumabletypes.json",
+                      "_RecordName_": "ConsumableSubtype.79e0313c-827e-429a-9c59-a0a2eae78596",
+                      "_RecordId_": "79e0313c-827e-429a-9c59-a0a2eae78596"},
+                    "drugEfficacyForConsumableType": {
+                      "_Type_": "DrugEfficacy",
+                      "maxDose": 10.0,
+                      "BDLMultiplier": 0.0,
+                      "minsPerDosageMultiplier": 1.0,
+                      "ValuePerDosageMultiplier": 1.0}},
+                  {
+                    "_Type_": "DrugEfficacyForConsumableType",
+                    "consumableSubtype": {
+                      "_RecordPath_": "file://./../../../../libs/foundry/records/consumabletypesdatabase/consumabletypes.json",
+                      "_RecordName_": "ConsumableSubtype.bff2f5cb-a902-4df9-9560-97f550484ee6",
+                      "_RecordId_": "bff2f5cb-a902-4df9-9560-97f550484ee6"},
+                    "drugEfficacyForConsumableType": {
+                      "_Type_": "DrugEfficacy",
+                      "maxDose": 60.0,
+                      "BDLMultiplier": 1.1875,
+                      "minsPerDosageMultiplier": 1.0,
+                      "ValuePerDosageMultiplier": 1.0}},
+                  {
+                    "_Type_": "DrugEfficacyForConsumableType",
+                    "consumableSubtype": {
+                      "_RecordPath_": "file://./../../../../libs/foundry/records/consumabletypesdatabase/consumabletypes.json",
+                      "_RecordName_": "ConsumableSubtype.cabca3ed-15cd-4dab-89de-5ce92d597868",
+                      "_RecordId_": "cabca3ed-15cd-4dab-89de-5ce92d597868"},
+                    "drugEfficacyForConsumableType": {
+                      "_Type_": "DrugEfficacy",
+                      "maxDose": 60.0,
+                      "BDLMultiplier": 1.1875,
+                      "minsPerDosageMultiplier": 1.0,
+                      "ValuePerDosageMultiplier": 1.0}},
+                  {
+                    "_Type_": "DrugEfficacyForConsumableType",
+                    "consumableSubtype": {
+                      "_RecordPath_": "file://./../../../../libs/foundry/records/consumabletypesdatabase/consumabletypes.json",
+                      "_RecordName_": "ConsumableSubtype.6020959a-015a-4ebc-a815-41a2d42deac9",
+                      "_RecordId_": "6020959a-015a-4ebc-a815-41a2d42deac9"},
+                    "drugEfficacyForConsumableType": {
+                      "_Type_": "DrugEfficacy",
+                      "maxDose": 60.0,
+                      "BDLMultiplier": 1.1875,
+                      "minsPerDosageMultiplier": 1.0,
+                      "ValuePerDosageMultiplier": 1.0}}]},
+              {
+                "_Type_": "DrugEfficacyForItemSubType",
+                "drugEfficacyForItemSubType": [
+                  {
+                    "_Type_": "DrugEfficacyForConsumableType",
+                    "consumableSubtype": {
+                      "_RecordPath_": "file://./../../../../libs/foundry/records/consumabletypesdatabase/consumabletypes.json",
+                      "_RecordName_": "ConsumableSubtype.2d9aa8d0-cb7d-40bf-a3a6-b1869feb0d14",
+                      "_RecordId_": "2d9aa8d0-cb7d-40bf-a3a6-b1869feb0d14"},
+                    "drugEfficacyForConsumableType": {
+                      "_Type_": "DrugEfficacy",
+                      "maxDose": 60.0,
+                      "BDLMultiplier": 1.25,
+                      "minsPerDosageMultiplier": 1.0,
+                      "ValuePerDosageMultiplier": 1.0}},
+                  {
+                    "_Type_": "DrugEfficacyForConsumableType",
+                    "consumableSubtype": {
+                      "_RecordPath_": "file://./../../../../libs/foundry/records/consumabletypesdatabase/consumabletypes.json",
+                      "_RecordName_": "ConsumableSubtype.2e3fc0d3-be97-4c57-972e-526872e4bd56",
+                      "_RecordId_": "2e3fc0d3-be97-4c57-972e-526872e4bd56"},
+                    "drugEfficacyForConsumableType": {
+                      "_Type_": "DrugEfficacy",
+                      "maxDose": 56.0,
+                      "BDLMultiplier": 0.25,
+                      "minsPerDosageMultiplier": 1.25,
+                      "ValuePerDosageMultiplier": 1.25}},
+                  {
+                    "_Type_": "DrugEfficacyForConsumableType",
+                    "consumableSubtype": {
+                      "_RecordPath_": "file://./../../../../libs/foundry/records/consumabletypesdatabase/consumabletypes.json",
+                      "_RecordName_": "ConsumableSubtype.4e45d0b2-3e49-4d85-ba40-29ddcd6e310b",
+                      "_RecordId_": "4e45d0b2-3e49-4d85-ba40-29ddcd6e310b"},
+                    "drugEfficacyForConsumableType": {
+                      "_Type_": "DrugEfficacy",
+                      "maxDose": 60.0,
+                      "BDLMultiplier": 0.0,
+                      "minsPerDosageMultiplier": 1.0,
+                      "ValuePerDosageMultiplier": 1.0}},
+                  {
+                    "_Type_": "DrugEfficacyForConsumableType",
+                    "consumableSubtype": {
+                      "_RecordPath_": "file://./../../../../libs/foundry/records/consumabletypesdatabase/consumabletypes.json",
+                      "_RecordName_": "ConsumableSubtype.79e0313c-827e-429a-9c59-a0a2eae78596",
+                      "_RecordId_": "79e0313c-827e-429a-9c59-a0a2eae78596"},
+                    "drugEfficacyForConsumableType": {
+                      "_Type_": "DrugEfficacy",
+                      "maxDose": 10.0,
+                      "BDLMultiplier": 0.0,
+                      "minsPerDosageMultiplier": 1.0,
+                      "ValuePerDosageMultiplier": 1.0}},
+                  {
+                    "_Type_": "DrugEfficacyForConsumableType",
+                    "consumableSubtype": {
+                      "_RecordPath_": "file://./../../../../libs/foundry/records/consumabletypesdatabase/consumabletypes.json",
+                      "_RecordName_": "ConsumableSubtype.bff2f5cb-a902-4df9-9560-97f550484ee6",
+                      "_RecordId_": "bff2f5cb-a902-4df9-9560-97f550484ee6"},
+                    "drugEfficacyForConsumableType": {
+                      "_Type_": "DrugEfficacy",
+                      "maxDose": 60.0,
+                      "BDLMultiplier": 1.25,
+                      "minsPerDosageMultiplier": 1.0,
+                      "ValuePerDosageMultiplier": 1.0}},
+                  {
+                    "_Type_": "DrugEfficacyForConsumableType",
+                    "consumableSubtype": {
+                      "_RecordPath_": "file://./../../../../libs/foundry/records/consumabletypesdatabase/consumabletypes.json",
+                      "_RecordName_": "ConsumableSubtype.cabca3ed-15cd-4dab-89de-5ce92d597868",
+                      "_RecordId_": "cabca3ed-15cd-4dab-89de-5ce92d597868"},
+                    "drugEfficacyForConsumableType": {
+                      "_Type_": "DrugEfficacy",
+                      "maxDose": 60.0,
+                      "BDLMultiplier": 1.25,
+                      "minsPerDosageMultiplier": 1.0,
+                      "ValuePerDosageMultiplier": 1.0}}]}]},
+          {
+            "_Type_": "DrugEfficacyConfigForItemSubTypeWeapon",
+            "itemSubType": "Small",
+            "drugEfficacyForItemSubType": [
+              {
+                "_Type_": "DrugEfficacyForItemSubType",
+                "drugEfficacyForItemSubType": [
+                  {
+                    "_Type_": "DrugEfficacyForConsumableType",
+                    "consumableSubtype": {
+                      "_RecordPath_": "file://./../../../../libs/foundry/records/consumabletypesdatabase/consumabletypes.json",
+                      "_RecordName_": "ConsumableSubtype.2d9aa8d0-cb7d-40bf-a3a6-b1869feb0d14",
+                      "_RecordId_": "2d9aa8d0-cb7d-40bf-a3a6-b1869feb0d14"},
+                    "drugEfficacyForConsumableType": {
+                      "_Type_": "DrugEfficacy",
+                      "maxDose": 60.0,
+                      "BDLMultiplier": 1.1875,
+                      "minsPerDosageMultiplier": 1.0,
+                      "ValuePerDosageMultiplier": 1.0}},
+                  {
+                    "_Type_": "DrugEfficacyForConsumableType",
+                    "consumableSubtype": {
+                      "_RecordPath_": "file://./../../../../libs/foundry/records/consumabletypesdatabase/consumabletypes.json",
+                      "_RecordName_": "ConsumableSubtype.2e3fc0d3-be97-4c57-972e-526872e4bd56",
+                      "_RecordId_": "2e3fc0d3-be97-4c57-972e-526872e4bd56"},
+                    "drugEfficacyForConsumableType": {
+                      "_Type_": "DrugEfficacy",
+                      "maxDose": 56.0,
+                      "BDLMultiplier": 0.25,
+                      "minsPerDosageMultiplier": 1.25,
+                      "ValuePerDosageMultiplier": 1.25}},
+                  {
+                    "_Type_": "DrugEfficacyForConsumableType",
+                    "consumableSubtype": {
+                      "_RecordPath_": "file://./../../../../libs/foundry/records/consumabletypesdatabase/consumabletypes.json",
+                      "_RecordName_": "ConsumableSubtype.4e45d0b2-3e49-4d85-ba40-29ddcd6e310b",
+                      "_RecordId_": "4e45d0b2-3e49-4d85-ba40-29ddcd6e310b"},
+                    "drugEfficacyForConsumableType": {
+                      "_Type_": "DrugEfficacy",
+                      "maxDose": 60.0,
+                      "BDLMultiplier": 0.0,
+                      "minsPerDosageMultiplier": 1.0,
+                      "ValuePerDosageMultiplier": 1.0}},
+                  {
+                    "_Type_": "DrugEfficacyForConsumableType",
+                    "consumableSubtype": {
+                      "_RecordPath_": "file://./../../../../libs/foundry/records/consumabletypesdatabase/consumabletypes.json",
+                      "_RecordName_": "ConsumableSubtype.79e0313c-827e-429a-9c59-a0a2eae78596",
+                      "_RecordId_": "79e0313c-827e-429a-9c59-a0a2eae78596"},
+                    "drugEfficacyForConsumableType": {
+                      "_Type_": "DrugEfficacy",
+                      "maxDose": 10.0,
+                      "BDLMultiplier": 0.0,
+                      "minsPerDosageMultiplier": 1.0,
+                      "ValuePerDosageMultiplier": 1.0}},
+                  {
+                    "_Type_": "DrugEfficacyForConsumableType",
+                    "consumableSubtype": {
+                      "_RecordPath_": "file://./../../../../libs/foundry/records/consumabletypesdatabase/consumabletypes.json",
+                      "_RecordName_": "ConsumableSubtype.bff2f5cb-a902-4df9-9560-97f550484ee6",
+                      "_RecordId_": "bff2f5cb-a902-4df9-9560-97f550484ee6"},
+                    "drugEfficacyForConsumableType": {
+                      "_Type_": "DrugEfficacy",
+                      "maxDose": 60.0,
+                      "BDLMultiplier": 1.1875,
+                      "minsPerDosageMultiplier": 1.0,
+                      "ValuePerDosageMultiplier": 1.0}},
+                  {
+                    "_Type_": "DrugEfficacyForConsumableType",
+                    "consumableSubtype": {
+                      "_RecordPath_": "file://./../../../../libs/foundry/records/consumabletypesdatabase/consumabletypes.json",
+                      "_RecordName_": "ConsumableSubtype.cabca3ed-15cd-4dab-89de-5ce92d597868",
+                      "_RecordId_": "cabca3ed-15cd-4dab-89de-5ce92d597868"},
+                    "drugEfficacyForConsumableType": {
+                      "_Type_": "DrugEfficacy",
+                      "maxDose": 60.0,
+                      "BDLMultiplier": 1.1875,
+                      "minsPerDosageMultiplier": 1.0,
+                      "ValuePerDosageMultiplier": 1.0}},
+                  {
+                    "_Type_": "DrugEfficacyForConsumableType",
+                    "consumableSubtype": {
+                      "_RecordPath_": "file://./../../../../libs/foundry/records/consumabletypesdatabase/consumabletypes.json",
+                      "_RecordName_": "ConsumableSubtype.6020959a-015a-4ebc-a815-41a2d42deac9",
+                      "_RecordId_": "6020959a-015a-4ebc-a815-41a2d42deac9"},
+                    "drugEfficacyForConsumableType": {
+                      "_Type_": "DrugEfficacy",
+                      "maxDose": 60.0,
+                      "BDLMultiplier": 1.1875,
+                      "minsPerDosageMultiplier": 1.0,
+                      "ValuePerDosageMultiplier": 1.0}}]},
+              {
+                "_Type_": "DrugEfficacyForItemSubType",
+                "drugEfficacyForItemSubType": [
+                  {
+                    "_Type_": "DrugEfficacyForConsumableType",
+                    "consumableSubtype": {
+                      "_RecordPath_": "file://./../../../../libs/foundry/records/consumabletypesdatabase/consumabletypes.json",
+                      "_RecordName_": "ConsumableSubtype.2d9aa8d0-cb7d-40bf-a3a6-b1869feb0d14",
+                      "_RecordId_": "2d9aa8d0-cb7d-40bf-a3a6-b1869feb0d14"},
+                    "drugEfficacyForConsumableType": {
+                      "_Type_": "DrugEfficacy",
+                      "maxDose": 60.0,
+                      "BDLMultiplier": 1.25,
+                      "minsPerDosageMultiplier": 1.0,
+                      "ValuePerDosageMultiplier": 1.0}},
+                  {
+                    "_Type_": "DrugEfficacyForConsumableType",
+                    "consumableSubtype": {
+                      "_RecordPath_": "file://./../../../../libs/foundry/records/consumabletypesdatabase/consumabletypes.json",
+                      "_RecordName_": "ConsumableSubtype.2e3fc0d3-be97-4c57-972e-526872e4bd56",
+                      "_RecordId_": "2e3fc0d3-be97-4c57-972e-526872e4bd56"},
+                    "drugEfficacyForConsumableType": {
+                      "_Type_": "DrugEfficacy",
+                      "maxDose": 56.0,
+                      "BDLMultiplier": 0.25,
+                      "minsPerDosageMultiplier": 1.25,
+                      "ValuePerDosageMultiplier": 1.25}},
+                  {
+                    "_Type_": "DrugEfficacyForConsumableType",
+                    "consumableSubtype": {
+                      "_RecordPath_": "file://./../../../../libs/foundry/records/consumabletypesdatabase/consumabletypes.json",
+                      "_RecordName_": "ConsumableSubtype.4e45d0b2-3e49-4d85-ba40-29ddcd6e310b",
+                      "_RecordId_": "4e45d0b2-3e49-4d85-ba40-29ddcd6e310b"},
+                    "drugEfficacyForConsumableType": {
+                      "_Type_": "DrugEfficacy",
+                      "maxDose": 60.0,
+                      "BDLMultiplier": 0.0,
+                      "minsPerDosageMultiplier": 1.0,
+                      "ValuePerDosageMultiplier": 1.0}},
+                  {
+                    "_Type_": "DrugEfficacyForConsumableType",
+                    "consumableSubtype": {
+                      "_RecordPath_": "file://./../../../../libs/foundry/records/consumabletypesdatabase/consumabletypes.json",
+                      "_RecordName_": "ConsumableSubtype.79e0313c-827e-429a-9c59-a0a2eae78596",
+                      "_RecordId_": "79e0313c-827e-429a-9c59-a0a2eae78596"},
+                    "drugEfficacyForConsumableType": {
+                      "_Type_": "DrugEfficacy",
+                      "maxDose": 10.0,
+                      "BDLMultiplier": 0.0,
+                      "minsPerDosageMultiplier": 1.0,
+                      "ValuePerDosageMultiplier": 1.0}},
+                  {
+                    "_Type_": "DrugEfficacyForConsumableType",
+                    "consumableSubtype": {
+                      "_RecordPath_": "file://./../../../../libs/foundry/records/consumabletypesdatabase/consumabletypes.json",
+                      "_RecordName_": "ConsumableSubtype.bff2f5cb-a902-4df9-9560-97f550484ee6",
+                      "_RecordId_": "bff2f5cb-a902-4df9-9560-97f550484ee6"},
+                    "drugEfficacyForConsumableType": {
+                      "_Type_": "DrugEfficacy",
+                      "maxDose": 60.0,
+                      "BDLMultiplier": 1.25,
+                      "minsPerDosageMultiplier": 1.0,
+                      "ValuePerDosageMultiplier": 1.0}},
+                  {
+                    "_Type_": "DrugEfficacyForConsumableType",
+                    "consumableSubtype": {
+                      "_RecordPath_": "file://./../../../../libs/foundry/records/consumabletypesdatabase/consumabletypes.json",
+                      "_RecordName_": "ConsumableSubtype.cabca3ed-15cd-4dab-89de-5ce92d597868",
+                      "_RecordId_": "cabca3ed-15cd-4dab-89de-5ce92d597868"},
+                    "drugEfficacyForConsumableType": {
+                      "_Type_": "DrugEfficacy",
+                      "maxDose": 60.0,
+                      "BDLMultiplier": 1.25,
+                      "minsPerDosageMultiplier": 1.0,
+                      "ValuePerDosageMultiplier": 1.0}}]}]}]}],
+    "availableDrugTypes": [
+      {
+        "_Type_": "DrugTypeToApply",
+        "consumableSubtype": {
+          "_RecordPath_": "file://./../../../../libs/foundry/records/consumabletypesdatabase/consumabletypes.json",
+          "_RecordName_": "ConsumableSubtype.2d9aa8d0-cb7d-40bf-a3a6-b1869feb0d14",
+          "_RecordId_": "2d9aa8d0-cb7d-40bf-a3a6-b1869feb0d14"}},
+      {
+        "_Type_": "DrugTypeToApply",
+        "consumableSubtype": {
+          "_RecordPath_": "file://./../../../../libs/foundry/records/consumabletypesdatabase/consumabletypes.json",
+          "_RecordName_": "ConsumableSubtype.cabca3ed-15cd-4dab-89de-5ce92d597868",
+          "_RecordId_": "cabca3ed-15cd-4dab-89de-5ce92d597868"}},
+      {
+        "_Type_": "DrugTypeToApply",
+        "consumableSubtype": {
+          "_RecordPath_": "file://./../../../../libs/foundry/records/consumabletypesdatabase/consumabletypes.json",
+          "_RecordName_": "ConsumableSubtype.bff2f5cb-a902-4df9-9560-97f550484ee6",
+          "_RecordId_": "bff2f5cb-a902-4df9-9560-97f550484ee6"}},
+      {
+        "_Type_": "DrugTypeToApply",
+        "consumableSubtype": {
+          "_RecordPath_": "file://./../../../../libs/foundry/records/consumabletypesdatabase/consumabletypes.json",
+          "_RecordName_": "ConsumableSubtype.4e45d0b2-3e49-4d85-ba40-29ddcd6e310b",
+          "_RecordId_": "4e45d0b2-3e49-4d85-ba40-29ddcd6e310b"}}],
+    "resourceConsumption": {
+      "_Type_": "MedBedResourceConsumptionParams",
+      "bedResource": {
+        "_RecordPath_": "file://./../../../../libs/foundry/records/resourcetypedatabase/resourcetypedatabase.json",
+        "_RecordName_": "ResourceType.MedGel",
+        "_RecordId_": "83101c4a-baea-429f-b5db-2a439dabe963"},
+      "resourceAmountForSurgeryT1": {
+        "_Type_": "SMicroCargoUnit",
+        "microSCU": 20},
+      "resourceAmountForSurgeryT2": {
+        "_Type_": "SMicroCargoUnit",
+        "microSCU": 10},
+      "resourceAmountForSurgeryT3": {
+        "_Type_": "SMicroCargoUnit",
+        "microSCU": 5},
+      "resourceAmountForCloning": {
+        "_Type_": "SMicroCargoUnit",
+        "microSCU": 100}}}}

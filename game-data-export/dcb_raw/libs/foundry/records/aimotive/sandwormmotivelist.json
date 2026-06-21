@@ -1,0 +1,140 @@
+{
+  "_RecordName_": "AIMotiveList.SandwormMotiveList",
+  "_RecordId_": "64792b92-2873-4695-9db9-fa950a25c47b",
+  "_RecordTag_": "CoreAI",
+  "_RecordValue_": {
+    "_Type_": "AIMotiveList",
+    "motiveList": [
+      {
+        "_Type_": "AIMotive",
+        "id": "425e8449-9c1e-4bd4-991c-536e00dbeb56",
+        "actionDefs": [
+          {
+            "_Type_": "AIMotiveAction",
+            "id": "3d2b0e08-895a-4574-ab5a-c3ce35b8bc51",
+            "actionName": "Wander",
+            "conditions": [],
+            "priority": 1000,
+            "actionDetails": [
+              {
+                "_Type_": "AIMotiveActionTacticalQueryDetails",
+                "detailsId": "Arena",
+                "tacticalQuery": "file://./../../../../libs/foundry/records/tacticalquery/tpsqueries/creaturebehaviourqueries/sandworm/sandwormwanderpositioninarena.json"},
+              {
+                "_Type_": "AIMotiveActionTacticalQueryDetails",
+                "detailsId": "NoArena",
+                "tacticalQuery": "file://./../../../../libs/foundry/records/tacticalquery/tpsqueries/creaturebehaviourqueries/sandworm/sandwormwanderposition.json"}],
+            "params": []},
+          {
+            "_Type_": "AIMotiveAction",
+            "id": "96e05665-7d80-49a3-94d3-afa3ecdc2133",
+            "actionName": "Entrance",
+            "conditions": [],
+            "priority": 1,
+            "actionDetails": [
+              {
+                "_Type_": "AIMotiveActionBurrowDetails",
+                "detailsId": "",
+                "burrowType": "Default"},
+              {
+                "_Type_": "AIMotiveActionTacticalQueryDetails",
+                "detailsId": "",
+                "tacticalQuery": "file://./../../../../libs/foundry/records/tacticalquery/tpsqueries/creaturebehaviourqueries/sandworm/sandwormsubmergeposition.json"}],
+            "params": [
+              {
+                "_Type_": "MotiveParameter_String",
+                "name": "EmergeBurrowType",
+                "value": "Default"}]},
+          {
+            "_Type_": "AIMotiveAction",
+            "id": "ab3dcd26-1de7-4459-b584-2bc8ce390789",
+            "actionName": "StandardAttack",
+            "conditions": [
+              {
+                "_Type_": "Condition_ScriptedTrigger",
+                "id": "7e89835a-16ca-4c09-a6ae-a8b545e8f2b2",
+                "interrupt": true,
+                "minSatisfactionDuration": -1.0,
+                "resetAfterTrigger": true},
+              {
+                "_Type_": "Condition_Cooldown",
+                "id": "0aafb449-1fc6-4b41-8dcf-047598a415d5",
+                "interrupt": false,
+                "minSatisfactionDuration": -1.0,
+                "duration": 10.0,
+                "cooldownStartsImmediatelyUponActionTrigger": false,
+                "startsReady": true}],
+            "priority": 100,
+            "actionDetails": [
+              {
+                "_Type_": "AIMotiveActionAnimDetails",
+                "detailsId": "",
+                "fragmentId": "melee_heavy",
+                "fragmentTags": "projectile"},
+              {
+                "_Type_": "AIMotiveActionBurrowDetails",
+                "detailsId": "",
+                "burrowType": "Default"},
+              {
+                "_Type_": "AIMotiveActionFireModeDetails",
+                "detailsId": "",
+                "fireModeName": "Default"},
+              {
+                "_Type_": "AIMotiveActionTacticalQueryDetails",
+                "detailsId": "",
+                "tacticalQuery": "file://./../../../../libs/foundry/records/tacticalquery/tpsqueries/creaturebehaviourqueries/sandworm/sandwormsubmergeposition.json"}],
+            "params": []},
+          {
+            "_Type_": "AIMotiveAction",
+            "id": "32f48b48-573d-4615-b599-fd474b7665d0",
+            "actionName": "EndWander",
+            "conditions": [],
+            "priority": 500,
+            "actionDetails": [],
+            "params": [
+              {
+                "_Type_": "MotiveParameter_Float",
+                "name": "EndWanderTimerDuration",
+                "value": 60.0},
+              {
+                "_Type_": "MotiveParameter_String",
+                "name": "BurrowType",
+                "value": "Default"},
+              {
+                "_Type_": "MotiveParameter_TacticalQuery",
+                "name": "BurrowTPSQuery",
+                "value": "file://./../../../../libs/foundry/records/tacticalquery/tpsqueries/creaturebehaviourqueries/sandworm/sandwormsubmergeposition.json"}]},
+          {
+            "_Type_": "AIMotiveAction",
+            "id": "d752901e-d5cc-4afd-b5ff-8a996eef7ed1",
+            "actionName": "SubmergeAndDespawn",
+            "conditions": [
+              {
+                "_Type_": "Condition_TimeSinceSpawn",
+                "id": "f3d2d3b2-d231-4dae-9876-9732fb5a9e83",
+                "interrupt": false,
+                "minSatisfactionDuration": -1.0,
+                "timerDuration": 600.0},
+              {
+                "_Type_": "Condition_TimeSinceDamaged",
+                "id": "a7703203-3403-4bd6-bc71-45a74c58df9f",
+                "interrupt": false,
+                "minSatisfactionDuration": -1.0,
+                "timerDuration": 600.0,
+                "minDamage": {
+                  "_Type_": "DamageInfo",
+                  "DamagePhysical": 10.0,
+                  "DamageEnergy": 0.0,
+                  "DamageDistortion": 0.0,
+                  "DamageThermal": 0.0,
+                  "DamageBiochemical": 0.0,
+                  "DamageStun": 0.0}}],
+            "priority": 10,
+            "actionDetails": [],
+            "params": []}],
+        "triggerableActions": [],
+        "globalBehaviorParameters": [
+          {
+            "_Type_": "MotiveParameter_TacticalQuery",
+            "name": "TargetQuery",
+            "value": "file://./../../../../libs/foundry/records/tacticalquery/ttsqueries/sandwormcombattarget.json"}]}]}}

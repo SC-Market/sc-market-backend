@@ -1,0 +1,10 @@
+{
+  "_RecordName_": "MissionType.Job",
+  "_RecordId_": "da636837-7db3-4ef6-8a9c-502b3d38a91b",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "MissionType",
+    "IconName": "Job",
+    "LocalisedTypeName": "@mobiGlas_ui_MissionType_Job",
+    "svgIconPath": "UI/Textures/Vector/MobiGlas/App_ContractsManager/PU_mobiapp_icon_mission_job.svg",
+    "DisplayTime": -1.0}}

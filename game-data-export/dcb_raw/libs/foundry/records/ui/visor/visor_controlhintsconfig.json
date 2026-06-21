@@ -1,0 +1,26 @@
+{
+  "_RecordName_": "Visor_ControlHintsConfig.Visor_ControlHintsConfig",
+  "_RecordId_": "200b43d0-adea-47fa-95ad-375b639c0b36",
+  "_RecordTag_": "Unknown",
+  "_RecordValue_": {
+    "_Type_": "Visor_ControlHintsConfig",
+    "controlHintsPU": {
+      "_Type_": "ControlHintGameModeRecords",
+      "onFootControlHints": "file://./../../../../../libs/foundry/records/ui/visor/controlhints/controlhintsconfig_pu_onfoot.json",
+      "vehicleControlHints": "file://./../../../../../libs/foundry/records/ui/visor/controlhints/controlhintsconfig_pu_vehicle.json",
+      "steeringSequenceControlHints": "file://./../../../../../libs/foundry/records/ui/visor/controlhints/controlhintsconfig_empty.json",
+      "groundVehicleControlHints": "file://./../../../../../libs/foundry/records/ui/visor/controlhints/controlhintsconfig_pu_groundvehicle.json",
+      "turretControlHints": "file://./../../../../../libs/foundry/records/ui/visor/controlhints/controlhintsconfig_pu_turret.json",
+      "boatVehicleControlHints": "file://./../../../../../libs/foundry/records/ui/visor/controlhints/controlhintsconfig_pu_boat.json",
+      "mobiglasControlHints": "file://./../../../../../libs/foundry/records/ui/visor/controlhints/controlhintsconfig_pu_mobiglas.json",
+      "transportedControlHints": "file://./../../../../../libs/foundry/records/ui/visor/controlhints/controlhintsconfig_pu_transported.json"},
+    "controlHintsSQ42": {
+      "_Type_": "ControlHintGameModeRecords",
+      "onFootControlHints": "file://./../../../../../libs/foundry/records/ui/visor/controlhints/controlhintsconfig_empty.json",
+      "vehicleControlHints": "file://./../../../../../libs/foundry/records/ui/visor/controlhints/controlhintsconfig_empty.json",
+      "steeringSequenceControlHints": "file://./../../../../../libs/foundry/records/ui/visor/controlhints/controlhintsconfig_empty.json",
+      "groundVehicleControlHints": "file://./../../../../../libs/foundry/records/ui/visor/controlhints/controlhintsconfig_empty.json",
+      "turretControlHints": "file://./../../../../../libs/foundry/records/ui/visor/controlhints/controlhintsconfig_empty.json",
+      "boatVehicleControlHints": "file://./../../../../../libs/foundry/records/ui/visor/controlhints/controlhintsconfig_empty.json",
+      "mobiglasControlHints": "file://./../../../../../libs/foundry/records/ui/visor/controlhints/controlhintsconfig_empty.json",
+      "transportedControlHints": "file://./../../../../../libs/foundry/records/ui/visor/controlhints/controlhintsconfig_empty.json"}}}
