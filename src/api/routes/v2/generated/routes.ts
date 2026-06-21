@@ -440,6 +440,18 @@ const models: TsoaRoute.Models = {
         "additionalProperties": false,
     },
     // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+    "ShopReviewResponse": {
+        "dataType": "refObject",
+        "properties": {
+            "review_id": {"dataType":"string","required":true},
+            "rating": {"dataType":"double","required":true},
+            "comment": {"dataType":"string","required":true},
+            "created_at": {"dataType":"string","required":true},
+            "author": {"dataType":"nestedObjectLiteral","nestedProperties":{"avatar":{"dataType":"union","subSchemas":[{"dataType":"string"},{"dataType":"enum","enums":[null]}],"required":true},"display_name":{"dataType":"string","required":true},"username":{"dataType":"string","required":true},"user_id":{"dataType":"string","required":true}},"required":true},
+        },
+        "additionalProperties": false,
+    },
+    // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
     "TransferShopRequest": {
         "dataType": "refObject",
         "properties": {
@@ -4078,6 +4090,38 @@ export function RegisterRoutes(app: Router) {
 
               await templateService.apiHandler({
                 methodName: 'archiveShop',
+                controller,
+                response,
+                next,
+                validatedArgs,
+                successStatus: undefined,
+              });
+            } catch (err) {
+                return next(err);
+            }
+        });
+        // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+        const argsShopsV2Controller_getShopReviews: Record<string, TsoaRoute.ParameterSchema> = {
+                shopId: {"in":"path","name":"shopId","required":true,"dataType":"string"},
+                page: {"in":"query","name":"page","dataType":"double"},
+                page_size: {"in":"query","name":"page_size","dataType":"double"},
+        };
+        app.get('/shops/:shopId/reviews',
+            ...(fetchMiddlewares<RequestHandler>(ShopsV2Controller)),
+            ...(fetchMiddlewares<RequestHandler>(ShopsV2Controller.prototype.getShopReviews)),
+
+            async function ShopsV2Controller_getShopReviews(request: ExRequest, response: ExResponse, next: any) {
+
+            // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+
+            let validatedArgs: any[] = [];
+            try {
+                validatedArgs = templateService.getValidatedArgs({ args: argsShopsV2Controller_getShopReviews, request, response });
+
+                const controller = new ShopsV2Controller();
+
+              await templateService.apiHandler({
+                methodName: 'getShopReviews',
                 controller,
                 response,
                 next,
