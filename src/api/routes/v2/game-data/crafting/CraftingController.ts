@@ -768,7 +768,7 @@ export class CraftingController extends BaseController {
           "sl.lot_id",
           "iv.attributes",
         )
-        .where("l.seller_id", user_id)
+        .whereIn("l.shop_id", knex("shops").where("owner_user_id", user_id).select("shop_id"))
         .where("sl.listed", true)
 
       // Build material availability map: game_item_id -> { total_quantity, quality_tiers, lot_ids }

@@ -129,12 +129,11 @@ export interface GetOrderDetailResponse {
     avatar: string | null;
   };
   
-  /** Seller information */
+  /** Seller shop information */
   seller: {
-    user_id: string;
-    username: string;
-    display_name: string;
-    avatar: string | null;
+    shop_id: string;
+    name: string;
+    slug: string;
   };
   
   /** Total price in aUEC (atomic units) */
