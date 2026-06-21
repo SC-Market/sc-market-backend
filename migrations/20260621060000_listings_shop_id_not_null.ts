@@ -19,13 +19,9 @@ export async function up(knex: Knex): Promise<void> {
     )
   }
 
-  await knex.schema.alterTable("listings", (table) => {
-    table.uuid("shop_id").notNullable().alter()
-  })
+  await knex.raw(`ALTER TABLE listings ALTER COLUMN shop_id SET NOT NULL`)
 }
 
 export async function down(knex: Knex): Promise<void> {
-  await knex.schema.alterTable("listings", (table) => {
-    table.uuid("shop_id").nullable().alter()
-  })
+  await knex.raw(`ALTER TABLE listings ALTER COLUMN shop_id DROP NOT NULL`)
 }
