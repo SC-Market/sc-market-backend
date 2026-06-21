@@ -211,6 +211,10 @@ export class ShopsV2Controller extends BaseController {
         this.throwForbidden("You do not have manage_market permission in this org")
       }
 
+      // Return existing shop if one already exists for this org
+      const existing = await db("shops").where("owner_contractor_id", body.contractor_id).where("status", "active").first()
+      if (existing) return await shopToResponse(existing)
+
       const contractor = await db("contractors")
         .where("contractor_id", body.contractor_id)
         .first()
@@ -232,6 +236,10 @@ export class ShopsV2Controller extends BaseController {
 
       return await shopToResponse(shop)
     }
+
+    // Return existing personal shop if one already exists
+    const existingPersonal = await db("shops").where("owner_user_id", userId).where("status", "active").first()
+    if (existingPersonal) return await shopToResponse(existingPersonal)
 
     // User-owned shop
     const user = await db("accounts").where("user_id", userId).first()
@@ -636,7 +644,7 @@ async function generateSlug(db: ReturnType<typeof getKnex>, base: string): Promi
     .replace(/^-|-$/g, "")
     .slice(0, 45)
 
-  const existing = await db("shops").where("slug", slug).first()
+  const existing = await db("shops").whereRaw("LOWER(slug) = ?", [slug]).first()
   if (!existing) return slug
 
   // Append numeric suffix
