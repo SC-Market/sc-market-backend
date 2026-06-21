@@ -626,11 +626,11 @@ export class OrdersV2Controller extends BaseController {
       const enrichedOrders = await Promise.all(
         orders.map(async (order) => {
           // Get shop information for the seller
-          const seller = await knex("market_orders")
+          const sellerShop = await knex("market_orders")
             .join("listings", "market_orders.listing_id", "listings.listing_id")
             .join("shops", "listings.shop_id", "shops.shop_id")
             .where({ "market_orders.order_id": order.order_id })
-            .select("shops.name as username", "shops.logo as avatar", "shops.slug as shop_slug")
+            .select("shops.name as shop_name", "shops.slug as shop_slug", "shops.logo as shop_logo")
             .first()
 
           // Get order items with variant details
@@ -685,12 +685,13 @@ export class OrdersV2Controller extends BaseController {
             created_at: order.created_at.toISOString(),
             updated_at: order.updated_at.toISOString(),
             buyer_username: order.buyer_username,
-            seller_username: seller?.username || "Unknown",
+            shop_name: sellerShop?.shop_name || "Unknown",
+            shop_slug: sellerShop?.shop_slug || "",
             item_count: orderItems.length,
             quality_tier_min: qualityTierMin,
             quality_tier_max: qualityTierMax,
             buyer_avatar: order.buyer_avatar,
-            seller_avatar: seller?.avatar,
+            shop_logo: sellerShop?.shop_logo || null,
           }
         }),
       )

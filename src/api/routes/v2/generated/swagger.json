@@ -1906,9 +1906,13 @@
 						"type": "string",
 						"description": "Buyer username"
 					},
-					"seller_username": {
+					"shop_name": {
 						"type": "string",
-						"description": "Seller username"
+						"description": "Shop name (seller)"
+					},
+					"shop_slug": {
+						"type": "string",
+						"description": "Shop slug (for linking to /shops/:slug)"
 					},
 					"item_count": {
 						"type": "number",
@@ -1930,10 +1934,10 @@
 						"nullable": true,
 						"description": "Buyer avatar URL"
 					},
-					"seller_avatar": {
+					"shop_logo": {
 						"type": "string",
 						"nullable": true,
-						"description": "Seller avatar URL"
+						"description": "Shop logo URL"
 					}
 				},
 				"required": [
@@ -1944,7 +1948,8 @@
 					"created_at",
 					"updated_at",
 					"buyer_username",
-					"seller_username",
+					"shop_name",
+					"shop_slug",
 					"item_count"
 				],
 				"type": "object",
