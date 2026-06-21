@@ -26,7 +26,7 @@ export async function up(knex: Knex): Promise<void> {
       .references("contractor_id")
       .inTable("contractors")
       .onDelete("SET NULL")
-    table.specificType("supported_languages", "TEXT[]").defaultTo("{en}")
+    table.specificType("supported_languages", "TEXT[]").defaultTo(knex.raw("ARRAY['en']"))
     table.string("market_order_template", 2000).defaultTo("")
     table.string("default_pickup_method", 20).nullable()
     table

@@ -781,6 +781,15 @@
 						},
 						"type": "array"
 					},
+					"tags": {
+						"items": {
+							"type": "string"
+						},
+						"type": "array"
+					},
+					"accepts_custom_orders": {
+						"type": "boolean"
+					},
 					"market_order_template": {
 						"type": "string"
 					},
@@ -816,6 +825,8 @@
 					"owner_user_id",
 					"owner_contractor_id",
 					"supported_languages",
+					"tags",
+					"accepts_custom_orders",
 					"market_order_template",
 					"default_pickup_method",
 					"status",
@@ -933,6 +944,15 @@
 						},
 						"type": "array"
 					},
+					"tags": {
+						"items": {
+							"type": "string"
+						},
+						"type": "array"
+					},
+					"accepts_custom_orders": {
+						"type": "boolean"
+					},
 					"status": {
 						"type": "string"
 					},
@@ -971,6 +991,8 @@
 					"banner_url",
 					"logo_url",
 					"supported_languages",
+					"tags",
+					"accepts_custom_orders",
 					"status",
 					"created_at",
 					"rating",
@@ -1008,6 +1030,15 @@
 					"default_pickup_method": {
 						"type": "string",
 						"nullable": true
+					},
+					"tags": {
+						"items": {
+							"type": "string"
+						},
+						"type": "array"
+					},
+					"accepts_custom_orders": {
+						"type": "boolean"
 					}
 				},
 				"type": "object",
@@ -11389,6 +11420,14 @@
 					},
 					{
 						"in": "query",
+						"name": "tag",
+						"required": false,
+						"schema": {
+							"type": "string"
+						}
+					},
+					{
+						"in": "query",
 						"name": "page",
 						"required": false,
 						"schema": {
@@ -11414,7 +11453,8 @@
 							"enum": [
 								"name",
 								"rating",
-								"created_at"
+								"created_at",
+								"total_sales"
 							]
 						}
 					},

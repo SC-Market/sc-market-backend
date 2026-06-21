@@ -46,6 +46,8 @@ export interface UpdateShopRequest {
   supported_languages?: string[]
   market_order_template?: string
   default_pickup_method?: string | null
+  tags?: string[]
+  accepts_custom_orders?: boolean
 }
 
 export interface TransferShopRequest {
@@ -62,6 +64,8 @@ export interface ShopResponse {
   owner_user_id: string | null
   owner_contractor_id: string | null
   supported_languages: string[]
+  tags: string[]
+  accepts_custom_orders: boolean
   market_order_template: string
   default_pickup_method: string | null
   status: string
@@ -87,6 +91,8 @@ export interface ShopPublicResponse {
   banner_url: string | null
   logo_url: string | null
   supported_languages: string[]
+  tags: string[]
+  accepts_custom_orders: boolean
   status: string
   created_at: string
   rating: number | null
@@ -286,6 +292,8 @@ export class ShopsV2Controller extends BaseController {
           banner_url: await resolveImageUrl(db, shop.banner),
           logo_url: await resolveImageUrl(db, shop.logo),
           supported_languages: shop.supported_languages,
+          tags: shop.tags || [],
+          accepts_custom_orders: shop.accepts_custom_orders || false,
           status: shop.status,
           created_at: shop.created_at,
           rating: ratingResult?.rating ? parseFloat(ratingResult.rating) : null,
@@ -303,19 +311,24 @@ export class ShopsV2Controller extends BaseController {
   @Get("")
   public async browseShops(
     @Query() search?: string,
+    @Query() tag?: string,
     @Query() page?: number,
     @Query() page_size?: number,
-    @Query() sort_by?: "name" | "rating" | "created_at",
+    @Query() sort_by?: "name" | "rating" | "created_at" | "total_sales",
     @Query() sort_order?: "asc" | "desc",
   ): Promise<{ shops: ShopPublicResponse[]; total: number; page: number; page_size: number }> {
     const db = getKnex()
     const validatedPage = Math.max(1, page || 1)
     const validatedPageSize = Math.min(50, Math.max(1, page_size || 20))
-    const sortBy = sort_by || "created_at"
+    const sortBy = sort_by || "rating"
     const sortOrder = sort_order || "desc"
 
     let query = db("shops as s")
       .where("s.status", "active")
+
+    if (tag) {
+      query = query.whereRaw("? = ANY(s.tags)", [tag])
+    }
 
     if (search && search.trim()) {
       query = query.where(function () {
@@ -357,6 +370,8 @@ export class ShopsV2Controller extends BaseController {
           banner_url: await resolveImageUrl(db, shop.banner),
           logo_url: await resolveImageUrl(db, shop.logo),
           supported_languages: shop.supported_languages,
+          tags: shop.tags || [],
+          accepts_custom_orders: shop.accepts_custom_orders || false,
           status: shop.status,
           created_at: shop.created_at,
           rating: ratingResult?.rating ? parseFloat(ratingResult.rating) : null,
@@ -432,6 +447,8 @@ export class ShopsV2Controller extends BaseController {
       banner_url: await resolveImageUrl(db, shop.banner),
       logo_url: await resolveImageUrl(db, shop.logo),
       supported_languages: shop.supported_languages,
+      tags: shop.tags || [],
+      accepts_custom_orders: shop.accepts_custom_orders || false,
       status: shop.status,
       created_at: shop.created_at,
       rating: ratingResult?.rating ? parseFloat(ratingResult.rating) : null,
@@ -480,6 +497,8 @@ export class ShopsV2Controller extends BaseController {
     if (body.supported_languages !== undefined) updates.supported_languages = body.supported_languages
     if (body.market_order_template !== undefined) updates.market_order_template = body.market_order_template
     if (body.default_pickup_method !== undefined) updates.default_pickup_method = body.default_pickup_method
+    if (body.tags !== undefined) updates.tags = body.tags
+    if (body.accepts_custom_orders !== undefined) updates.accepts_custom_orders = body.accepts_custom_orders
 
     const [updated] = await db("shops").where("shop_id", shopId).update(updates).returning("*")
     return await shopToResponse(updated)
@@ -567,7 +586,7 @@ export class ShopsV2Controller extends BaseController {
 
 // ─── Helpers ─────────────────────────────────────────────────────────────────
 
-async function shopToResponse(shop: Shop): Promise<ShopResponse> {
+async function shopToResponse(shop: Shop & { tags?: string[]; accepts_custom_orders?: boolean }): Promise<ShopResponse> {
   const db = getKnex()
   return {
     shop_id: shop.shop_id,
@@ -579,6 +598,8 @@ async function shopToResponse(shop: Shop): Promise<ShopResponse> {
     owner_user_id: shop.owner_user_id,
     owner_contractor_id: shop.owner_contractor_id,
     supported_languages: shop.supported_languages,
+    tags: shop.tags || [],
+    accepts_custom_orders: shop.accepts_custom_orders || false,
     market_order_template: shop.market_order_template,
     default_pickup_method: shop.default_pickup_method,
     status: shop.status,

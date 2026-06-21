@@ -353,6 +353,8 @@ const models: TsoaRoute.Models = {
             "owner_user_id": {"dataType":"union","subSchemas":[{"dataType":"string"},{"dataType":"enum","enums":[null]}],"required":true},
             "owner_contractor_id": {"dataType":"union","subSchemas":[{"dataType":"string"},{"dataType":"enum","enums":[null]}],"required":true},
             "supported_languages": {"dataType":"array","array":{"dataType":"string"},"required":true},
+            "tags": {"dataType":"array","array":{"dataType":"string"},"required":true},
+            "accepts_custom_orders": {"dataType":"boolean","required":true},
             "market_order_template": {"dataType":"string","required":true},
             "default_pickup_method": {"dataType":"union","subSchemas":[{"dataType":"string"},{"dataType":"enum","enums":[null]}],"required":true},
             "status": {"dataType":"string","required":true},
@@ -407,6 +409,8 @@ const models: TsoaRoute.Models = {
             "banner_url": {"dataType":"union","subSchemas":[{"dataType":"string"},{"dataType":"enum","enums":[null]}],"required":true},
             "logo_url": {"dataType":"union","subSchemas":[{"dataType":"string"},{"dataType":"enum","enums":[null]}],"required":true},
             "supported_languages": {"dataType":"array","array":{"dataType":"string"},"required":true},
+            "tags": {"dataType":"array","array":{"dataType":"string"},"required":true},
+            "accepts_custom_orders": {"dataType":"boolean","required":true},
             "status": {"dataType":"string","required":true},
             "created_at": {"dataType":"string","required":true},
             "rating": {"dataType":"union","subSchemas":[{"dataType":"double"},{"dataType":"enum","enums":[null]}],"required":true},
@@ -429,6 +433,8 @@ const models: TsoaRoute.Models = {
             "supported_languages": {"dataType":"array","array":{"dataType":"string"}},
             "market_order_template": {"dataType":"string"},
             "default_pickup_method": {"dataType":"union","subSchemas":[{"dataType":"string"},{"dataType":"enum","enums":[null]}]},
+            "tags": {"dataType":"array","array":{"dataType":"string"}},
+            "accepts_custom_orders": {"dataType":"boolean"},
         },
         "additionalProperties": false,
     },
@@ -3951,9 +3957,10 @@ export function RegisterRoutes(app: Router) {
         // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
         const argsShopsV2Controller_browseShops: Record<string, TsoaRoute.ParameterSchema> = {
                 search: {"in":"query","name":"search","dataType":"string"},
+                tag: {"in":"query","name":"tag","dataType":"string"},
                 page: {"in":"query","name":"page","dataType":"double"},
                 page_size: {"in":"query","name":"page_size","dataType":"double"},
-                sort_by: {"in":"query","name":"sort_by","dataType":"union","subSchemas":[{"dataType":"enum","enums":["name"]},{"dataType":"enum","enums":["rating"]},{"dataType":"enum","enums":["created_at"]}]},
+                sort_by: {"in":"query","name":"sort_by","dataType":"union","subSchemas":[{"dataType":"enum","enums":["name"]},{"dataType":"enum","enums":["rating"]},{"dataType":"enum","enums":["created_at"]},{"dataType":"enum","enums":["total_sales"]}]},
                 sort_order: {"in":"query","name":"sort_order","dataType":"union","subSchemas":[{"dataType":"enum","enums":["asc"]},{"dataType":"enum","enums":["desc"]}]},
         };
         app.get('/shops',
