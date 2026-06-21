@@ -258,23 +258,26 @@ export interface OrderPreview {
   /** Buyer username */
   buyer_username: string;
   
-  /** Seller username */
-  seller_username: string;
-  
+  /** Shop name (seller) */
+  shop_name: string;
+
+  /** Shop slug (for linking to /shops/:slug) */
+  shop_slug: string;
+
   /** Number of items in order */
   item_count: number;
-  
+
   /** Minimum quality tier across all items */
   quality_tier_min?: number;
-  
+
   /** Maximum quality tier across all items */
   quality_tier_max?: number;
-  
+
   /** Buyer avatar URL */
   buyer_avatar?: string | null;
-  
-  /** Seller avatar URL */
-  seller_avatar?: string | null;
+
+  /** Shop logo URL */
+  shop_logo?: string | null;
 }
 
 /**
