@@ -169,6 +169,19 @@ export class OffersV2Controller extends BaseController {
       ? await knex("contractors").where({ contractor_id: session.contractor_id }).select("official_server_id").first()
       : null
 
+    // Resolve shop slug
+    let shop_slug: string | null = null
+    if (session.shop_id) {
+      const shop = await knex("shops").where("shop_id", session.shop_id).first("slug")
+      shop_slug = shop?.slug || null
+    } else if (session.contractor_id) {
+      const shop = await knex("shops").where("owner_contractor_id", session.contractor_id).first("slug")
+      shop_slug = shop?.slug || null
+    } else if (session.assigned_id) {
+      const shop = await knex("shops").where("owner_user_id", session.assigned_id).first("slug")
+      shop_slug = shop?.slug || null
+    }
+
     return {
       session_id: session.id,
       status: derivedStatus,
@@ -181,6 +194,7 @@ export class OffersV2Controller extends BaseController {
       customer,
       assigned_to,
       contractor,
+      shop_slug,
       offers,
       availability,
     }
