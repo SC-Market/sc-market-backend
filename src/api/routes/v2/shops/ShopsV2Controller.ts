@@ -107,6 +107,19 @@ export interface ShopPublicResponse {
   total_sales?: number
 }
 
+export interface ShopReviewResponse {
+  review_id: string
+  rating: number
+  comment: string
+  created_at: string
+  author: {
+    user_id: string
+    username: string
+    display_name: string
+    avatar: string | null
+  }
+}
+
 // ─── Controller ──────────────────────────────────────────────────────────────
 
 @Route("shops")
@@ -545,6 +558,61 @@ export class ShopsV2Controller extends BaseController {
 
     await db("shops").where("shop_id", shopId).update({ status: "archived", updated_at: db.fn.now() })
     return { success: true }
+  }
+
+  /**
+   * Get reviews for a shop. Returns paginated list of ratings with reviewer info.
+   *
+   * @summary Get shop reviews
+   */
+  @Get("{shopId}/reviews")
+  public async getShopReviews(
+    @Path() shopId: string,
+    @Query() page?: number,
+    @Query() page_size?: number,
+  ): Promise<{ reviews: ShopReviewResponse[]; total: number; page: number; page_size: number }> {
+    const db = getKnex()
+    const validatedPage = Math.max(1, page || 1)
+    const validatedPageSize = Math.min(50, Math.max(1, page_size || 20))
+    const offset = (validatedPage - 1) * validatedPageSize
+
+    const shop = await getShopById(shopId)
+    if (!shop) this.throwNotFound("Shop", shopId)
+
+    const [{ count }] = await db("shop_ratings").where("shop_id", shopId).count("* as count")
+    const total = parseInt(String(count), 10)
+
+    const rows = await db("shop_ratings as sr")
+      .join("accounts as a", "sr.reviewer_id", "a.user_id")
+      .where("sr.shop_id", shopId)
+      .select(
+        "sr.rating_id",
+        "sr.rating",
+        "sr.comment",
+        "sr.created_at",
+        "a.user_id",
+        "a.username",
+        "a.display_name",
+        "a.avatar",
+      )
+      .orderBy("sr.created_at", "desc")
+      .limit(validatedPageSize)
+      .offset(offset)
+
+    const reviews: ShopReviewResponse[] = rows.map((row: Record<string, unknown>) => ({
+      review_id: row.rating_id as string,
+      rating: row.rating as number,
+      comment: (row.comment as string) || "",
+      created_at: (row.created_at as Date).toISOString(),
+      author: {
+        user_id: row.user_id as string,
+        username: row.username as string,
+        display_name: row.display_name as string,
+        avatar: row.avatar as string | null,
+      },
+    }))
+
+    return { reviews, total, page: validatedPage, page_size: validatedPageSize }
   }
 
   /**

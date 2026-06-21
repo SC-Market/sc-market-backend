@@ -1048,6 +1048,56 @@
 				"type": "object",
 				"additionalProperties": false
 			},
+			"ShopReviewResponse": {
+				"properties": {
+					"review_id": {
+						"type": "string"
+					},
+					"rating": {
+						"type": "number",
+						"format": "double"
+					},
+					"comment": {
+						"type": "string"
+					},
+					"created_at": {
+						"type": "string"
+					},
+					"author": {
+						"properties": {
+							"avatar": {
+								"type": "string",
+								"nullable": true
+							},
+							"display_name": {
+								"type": "string"
+							},
+							"username": {
+								"type": "string"
+							},
+							"user_id": {
+								"type": "string"
+							}
+						},
+						"required": [
+							"avatar",
+							"display_name",
+							"username",
+							"user_id"
+						],
+						"type": "object"
+					}
+				},
+				"required": [
+					"review_id",
+					"rating",
+					"comment",
+					"created_at",
+					"author"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
 			"TransferShopRequest": {
 				"properties": {
 					"target_contractor_id": {
@@ -11692,6 +11742,83 @@
 						"required": true,
 						"schema": {
 							"type": "string"
+						}
+					}
+				]
+			}
+		},
+		"/shops/{shopId}/reviews": {
+			"get": {
+				"operationId": "GetShopReviews",
+				"responses": {
+					"200": {
+						"description": "Ok",
+						"content": {
+							"application/json": {
+								"schema": {
+									"properties": {
+										"page_size": {
+											"type": "number",
+											"format": "double"
+										},
+										"page": {
+											"type": "number",
+											"format": "double"
+										},
+										"total": {
+											"type": "number",
+											"format": "double"
+										},
+										"reviews": {
+											"items": {
+												"$ref": "#/components/schemas/ShopReviewResponse"
+											},
+											"type": "array"
+										}
+									},
+									"required": [
+										"page_size",
+										"page",
+										"total",
+										"reviews"
+									],
+									"type": "object"
+								}
+							}
+						}
+					}
+				},
+				"description": "Get reviews for a shop. Returns paginated list of ratings with reviewer info.",
+				"summary": "Get shop reviews",
+				"tags": [
+					"Shops"
+				],
+				"security": [],
+				"parameters": [
+					{
+						"in": "path",
+						"name": "shopId",
+						"required": true,
+						"schema": {
+							"type": "string"
+						}
+					},
+					{
+						"in": "query",
+						"name": "page",
+						"required": false,
+						"schema": {
+							"format": "double",
+							"type": "number"
+						}
+					},
+					{
+						"in": "query",
+						"name": "page_size",
+						"required": false,
+						"schema": {
+							"format": "double",
+							"type": "number"
 						}
 					}
 				]
