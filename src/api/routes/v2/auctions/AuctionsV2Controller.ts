@@ -123,9 +123,10 @@ export class AuctionsV2Controller extends BaseController {
         ])
       }
 
-      // 2. Validate bidder is not the seller
+      // 2. Validate bidder is not the seller (check shop ownership)
       const listing = await trx("listings").where({ listing_id: listingId }).first()
-      if (listing.seller_id === userId) {
+      const { canModifyListing } = await import("../util/listing-permissions.js")
+      if (await canModifyListing({ shop_id: listing.shop_id }, userId)) {
         throw this.throwValidationError("Cannot bid on your own listing", [
           { field: "bidder", message: "You cannot bid on your own auction" },
         ])
