@@ -39,6 +39,7 @@ async function runTests() {
     // Create listing 1 - Active, unified pricing
     const listing1 = await controller.createListing(
       {
+        shop_id: "test-shop-id",
         title: "Test Listing 1 - Active",
         description: "First test listing",
         game_item_id: TEST_GAME_ITEM_ID,
@@ -59,6 +60,7 @@ async function runTests() {
     // Create listing 2 - Active, per-variant pricing
     const listing2 = await controller.createListing(
       {
+        shop_id: "test-shop-id",
         title: "Test Listing 2 - Per-Variant",
         description: "Second test listing with per-variant pricing",
         game_item_id: TEST_GAME_ITEM_ID,
@@ -84,6 +86,7 @@ async function runTests() {
     // Create listing 3 - Sold status
     const listing3 = await controller.createListing(
       {
+        shop_id: "test-shop-id",
         title: "Test Listing 3 - Sold",
         description: "Third test listing (will be marked sold)",
         game_item_id: TEST_GAME_ITEM_ID,

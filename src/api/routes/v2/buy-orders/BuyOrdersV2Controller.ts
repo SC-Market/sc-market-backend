@@ -210,8 +210,8 @@ export class BuyOrdersV2Controller extends BaseController {
         // Calculate total price
         const totalPrice = price * requestBody.quantity
 
-        // Get seller_id
-        const sellerId = listing.seller_id
+        // Get shop_id from listing
+        const shopId = listing.shop_id
 
         // Step 6: Create order record in V1 orders table
         const [order] = await trx("orders")
@@ -317,7 +317,7 @@ export class BuyOrdersV2Controller extends BaseController {
         return {
           order_id: order.order_id,
           buyer_id: userId,
-          seller_id: sellerId,
+          shop_id: shopId,
           total_price: totalPrice,
           status: order.status,
           created_at: order.created_at.toISOString(),
@@ -340,7 +340,7 @@ export class BuyOrdersV2Controller extends BaseController {
       try {
         // Adapt buy order response to CreateOrderResponse shape for notification
         const orderForNotification = { ...result, items: [result.item] } as any
-        await notificationService.createNewOrderNotificationV2(orderForNotification, result.seller_id)
+        await notificationService.createNewOrderNotificationV2(orderForNotification, result.shop_id)
       } catch (e) {
         logger.error("Failed to send V2 buy order notification", { error: e })
       }
@@ -516,10 +516,11 @@ export class BuyOrdersV2Controller extends BaseController {
     const p = Math.max(1, page || 1)
     const ps = Math.min(50, Math.max(1, page_size || 10))
 
-    // Find game_item_ids the seller currently has active listings for
+    // Find game_item_ids the seller's shops have active listings for
+    const sellerShopIds = db('shops').where('owner_user_id', sellerId).select('shop_id')
     const sellerItemIds = db('listing_items as li')
       .join('listings as l', 'l.listing_id', 'li.listing_id')
-      .where('l.seller_id', sellerId)
+      .whereIn('l.shop_id', sellerShopIds)
       .where('l.status', 'active')
       .select('li.game_item_id')
 
@@ -732,8 +733,12 @@ export class BuyOrdersV2Controller extends BaseController {
         ])
       }
 
-      // Validate listing belongs to seller and is active
-      const listing = await trx('listings').where({ listing_id: body.listing_id, seller_id: sellerId }).first()
+      // Validate listing belongs to seller's shop and is active
+      const sellerShops = await trx('shops').where('owner_user_id', sellerId).select('shop_id')
+      const listing = await trx('listings')
+        .where('listing_id', body.listing_id)
+        .whereIn('shop_id', sellerShops.map((s: any) => s.shop_id))
+        .first()
       if (!listing) throw this.throwNotFound('Listing', body.listing_id)
       if (listing.status !== 'active') {
         throw this.throwValidationError('Listing is not active', [
@@ -828,6 +833,7 @@ export class BuyOrdersV2Controller extends BaseController {
       // Record fulfillment and update buy order
       const newFulfilled = (buyOrder.quantity_fulfilled || 0) + quantity
       const isFullyFulfilled = newFulfilled >= buyOrder.quantity_desired
+      const fulfillmentShopId = listing.shop_id
 
       try {
         await trx('buy_order_fulfillments').insert({
@@ -855,7 +861,7 @@ export class BuyOrdersV2Controller extends BaseController {
       return {
         order_id: order.order_id,
         buyer_id: buyOrder.buyer_id,
-        seller_id: sellerId,
+        shop_id: fulfillmentShopId,
         total_price: price * quantity,
         status: order.status,
         created_at: order.created_at.toISOString(),

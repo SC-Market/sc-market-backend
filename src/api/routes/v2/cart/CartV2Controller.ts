@@ -88,14 +88,7 @@ export class CartV2Controller extends BaseController {
         .join("listings as l", "ci.listing_id", "l.listing_id")
         .join("listing_items as li", "ci.item_id", "li.item_id")
         .join("item_variants as iv", "ci.variant_id", "iv.variant_id")
-        .leftJoin("accounts as seller", function() {
-          this.on("l.seller_id", "seller.user_id")
-            .andOn(knex.raw("l.seller_type = 'user'"))
-        })
-        .leftJoin("contractors as contractor", function() {
-          this.on("l.seller_id", "contractor.contractor_id")
-            .andOn(knex.raw("l.seller_type = 'contractor'"))
-        })
+        .join("shops as s", "l.shop_id", "s.shop_id")
         .where("ci.user_id", userId)
         .select(
           "ci.cart_item_id",
@@ -109,24 +102,15 @@ export class CartV2Controller extends BaseController {
           // Listing info
           "l.title as listing_title",
           "l.status as listing_status",
-          "l.seller_type",
-          "l.seller_id",
+          "l.shop_id",
           // Variant info
           "iv.attributes as variant_attributes",
           "iv.display_name as variant_display_name",
           "iv.short_name as variant_short_name",
-          // Seller info
-          "seller.username as seller_username",
-          "seller.display_name as seller_display_name",
-          knex.raw(`
-            CASE 
-              WHEN l.seller_type = 'user' THEN get_total_rating(l.seller_id, NULL)
-              WHEN l.seller_type = 'contractor' THEN get_total_rating(NULL, l.seller_id)
-              ELSE 0
-            END AS seller_rating
-          `),
-          "contractor.spectrum_id as contractor_spectrum_id",
-          "contractor.name as contractor_name",
+          // Shop info
+          "s.name as shop_name",
+          "s.slug as shop_slug",
+          knex.raw(`(SELECT COALESCE(AVG(sr.rating)::numeric(3,2), 0) FROM shop_ratings sr WHERE sr.shop_id = l.shop_id) AS shop_rating`),
           // Pricing info
           "li.pricing_mode",
           "li.base_price",
@@ -180,35 +164,14 @@ export class CartV2Controller extends BaseController {
           }
 
           // Build listing info (Requirement 29.3)
-          const sellerSlug = item.seller_type === "contractor"
-            ? item.contractor_spectrum_id || ""
-            : item.seller_username || ""
-          const sellerName = item.seller_type === "contractor"
-            ? item.contractor_name || "Unknown"
-            : item.seller_username || item.seller_display_name || "Unknown"
-
-          // Compute next available time from seller's availability schedule
-          let sellerNextAvailable: string | null = null
-          try {
-            const availability = await profileDb.getUserAvailability(
-              item.seller_id,
-              item.seller_type === "contractor" ? item.seller_id : null,
-            )
-            sellerNextAvailable = getNextAvailableTime(availability)
-          } catch {
-            // Silently ignore — availability is optional
-          }
-
           const listingInfo: CartListingInfo = {
             listing_id: item.listing_id,
             title: item.listing_title,
-            seller_name: sellerName,
-            seller_id: item.seller_id,
-            seller_type: item.seller_type,
-            seller_slug: sellerSlug,
-            seller_rating: parseInt(item.seller_rating) || 0,
+            shop_id: item.shop_id,
+            shop_name: item.shop_name || "Unknown",
+            shop_slug: item.shop_slug || "",
+            shop_rating: parseFloat(item.shop_rating) || 0,
             status: item.listing_status,
-            seller_next_available: sellerNextAvailable,
           }
 
           // Calculate subtotal (Requirement 29.6)
@@ -817,14 +780,14 @@ export class CartV2Controller extends BaseController {
     try {
       const knex = getKnex()
 
-      // Step 1: Fetch cart items (optionally filtered by seller)
+      // Step 1: Fetch cart items (optionally filtered by shop)
       let cartQuery = knex("cart_items_v2 as ci")
         .join("listings as l", "ci.listing_id", "l.listing_id")
         .where("ci.user_id", userId)
-        .select("ci.*", "l.seller_id", "l.seller_type")
+        .select("ci.*", "l.shop_id")
 
-      if (requestBody.seller_id) {
-        cartQuery = cartQuery.where("l.seller_id", requestBody.seller_id)
+      if (requestBody.shop_id) {
+        cartQuery = cartQuery.where("l.shop_id", requestBody.shop_id)
       }
 
       const cartItems = await cartQuery
@@ -847,8 +810,7 @@ export class CartV2Controller extends BaseController {
         current_price: number
         listing_title: string
         variant_display_name: string
-        seller_id: string
-        seller_type: string
+        shop_id: string
       }> = []
       let hasPriceChanges = false
 
@@ -931,8 +893,7 @@ export class CartV2Controller extends BaseController {
           current_price: currentPrice,
           listing_title: listing.title,
           variant_display_name: variant.display_name || "Unknown",
-          seller_id: listing.seller_id,
-          seller_type: listing.seller_type,
+          shop_id: listing.shop_id,
         })
       }
 
@@ -956,39 +917,42 @@ export class CartV2Controller extends BaseController {
         ])
       }
 
-      // Verify single seller (skip if already filtered by seller_id)
-      const sellerIds = new Set(validatedItems.map((i) => i.seller_id))
-      if (sellerIds.size > 1 && !requestBody.seller_id) {
-        this.throwValidationError("Cart contains items from multiple sellers", [
-          { field: "cart", message: "Cannot checkout - all items must be from the same seller. Pass seller_id to checkout one seller at a time." },
+      // Verify single shop (skip if already filtered by shop_id)
+      const shopIds = new Set(validatedItems.map((i) => i.shop_id))
+      if (shopIds.size > 1 && !requestBody.shop_id) {
+        this.throwValidationError("Cart contains items from multiple shops", [
+          { field: "cart", message: "Cannot checkout - all items must be from the same shop. Pass shop_id to checkout one shop at a time." },
         ])
       }
 
       const firstItem = validatedItems[0]
-      const sellerContractorId = firstItem.seller_type === "contractor" ? firstItem.seller_id : null
-      const sellerUserId = firstItem.seller_type === "user" ? firstItem.seller_id : null
+      const shop = await knex("shops").where("shop_id", firstItem.shop_id).first()
 
-      // Self-purchase check — can't buy your own listings (org listings are fine)
-      if (sellerUserId && sellerUserId === userId) {
-        this.throwValidationError("You cannot purchase your own listings", [
-          { field: "seller", message: "You cannot purchase your own listings" },
+      // Self-purchase check — can't buy from your own shop
+      if (shop?.owner_user_id && shop.owner_user_id === userId) {
+        this.throwValidationError("You cannot purchase from your own shop", [
+          { field: "shop", message: "You cannot purchase from your own shop" },
         ])
       }
 
-      // Step 3: Blocked user check (mirrors V1)
+      // Resolve owner IDs from shop for V1 compat (blocked check, order creation)
+      const sellerContractorId = shop?.owner_contractor_id || null
+      const sellerUserId = shop?.owner_user_id || null
+
+      // Step 3: Blocked user check
       if (sellerContractorId) {
         const blocked = await profileDb.isUserBlocked(sellerContractorId, userId, "contractor")
         if (blocked) {
-          this.throwValidationError("You are blocked from creating offers with this contractor", [
-            { field: "seller", message: "You are blocked from creating offers with this contractor" },
+          this.throwValidationError("You are blocked from purchasing from this shop", [
+            { field: "shop", message: "You are blocked from purchasing from this shop" },
           ])
         }
       }
       if (sellerUserId) {
         const blocked = await profileDb.isUserBlocked(sellerUserId, userId, "user")
         if (blocked) {
-          this.throwValidationError("You are blocked from creating offers with this user", [
-            { field: "seller", message: "You are blocked from creating offers with this user" },
+          this.throwValidationError("You are blocked from purchasing from this shop", [
+            { field: "shop", message: "You are blocked from purchasing from this shop" },
           ])
         }
       }

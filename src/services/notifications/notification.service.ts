@@ -25,6 +25,7 @@ import { webhookService } from "../webhooks/webhook.service.js"
 import { emailService } from "../email/email.service.js"
 import * as payloadFormatters from "./notification-payload-formatters.js"
 import * as payloadFormattersV2 from "./notification-payload-formatters-v2.js"
+import { getKnex } from "../../clients/database/knex-db.js"
 import type {
   GetListingDetailResponse,
 } from "../../api/routes/v2/types/listings.types.js"
@@ -1542,19 +1543,20 @@ class DatabaseNotificationService implements NotificationService {
     variantId?: string,
   ): Promise<void> {
     try {
-      const sellerId = listing.listing.seller_id
-      const sellerType = listing.listing.seller_type
+      // Resolve notification recipients from shop
       const recipients: string[] = []
-
-      // Determine recipients (mirrors V1 createMarketBidNotification logic)
-      if (sellerType === "contractor") {
-        const admins = await contractorDb.getMembersWithMatchingRole(
-          sellerId,
-          { manage_market: true },
-        )
-        recipients.push(...admins.map((u) => u.user_id))
-      } else {
-        recipients.push(sellerId)
+      const shopId = listing.listing.shop_id
+      if (shopId) {
+        const shop = await getKnex()("shops").where("shop_id", shopId).first()
+        if (shop?.owner_contractor_id) {
+          const admins = await contractorDb.getMembersWithMatchingRole(
+            shop.owner_contractor_id,
+            { manage_market: true },
+          )
+          recipients.push(...admins.map((u: any) => u.user_id))
+        } else if (shop?.owner_user_id) {
+          recipients.push(shop.owner_user_id)
+        }
       }
 
       // Create in-app notification
@@ -1588,7 +1590,7 @@ class DatabaseNotificationService implements NotificationService {
 
       logger.info("Created V2 market bid notification", {
         listing_id: listing.listing.listing_id,
-        seller_id: sellerId,
+        shop_id: shopId,
         bid_amount: bidAmount,
         variant_id: variantId,
         recipient_count: recipients.length,
@@ -1596,7 +1598,7 @@ class DatabaseNotificationService implements NotificationService {
 
       // Send webhooks
       await webhookService.sendBidWebhooksV2(
-        { listing_id: listing.listing.listing_id, title: listing.listing.title, seller_id: sellerId, seller_type: sellerType },
+        { listing_id: listing.listing.listing_id, title: listing.listing.title, shop_id: shopId! },
         bidAmount,
         bidderId,
       )
@@ -1618,8 +1620,19 @@ class DatabaseNotificationService implements NotificationService {
     variantId?: string,
   ): Promise<void> {
     try {
-      // Get seller ID from listing
-      const sellerId = listing.listing.seller_id
+      // Resolve seller from shop
+      const shopId = listing.listing.shop_id
+      let sellerId: string | null = null
+      if (shopId) {
+        const shop = await getKnex()("shops").where("shop_id", shopId).first()
+        sellerId = shop?.owner_user_id || null
+        if (shop?.owner_contractor_id) {
+          const admins = await contractorDb.getMembersWithMatchingRole(shop.owner_contractor_id, { manage_market: true })
+          if (admins.length > 0) sellerId = admins[0].user_id
+        }
+      }
+
+      if (!sellerId) return
 
       // Format and send push notification
       const payload = payloadFormattersV2.formatMarketOfferNotificationPayloadV2(
@@ -1636,7 +1649,7 @@ class DatabaseNotificationService implements NotificationService {
 
       logger.info("Created V2 market offer notification", {
         listing_id: listing.listing.listing_id,
-        seller_id: sellerId,
+        shop_id: shopId,
         offer_amount: offerAmount,
         variant_id: variantId,
       })

@@ -35,8 +35,7 @@ import { checkBuyOrderMatches } from "../../../../services/buy-order-matching/bu
  */
 export interface CreateListingResponse {
   listing_id: string
-  seller_id: string
-  seller_type: "user" | "contractor"
+  shop_id: string
   title: string
   description: string
   status: "active" | "inactive" | "sold" | "expired" | "cancelled"
@@ -100,22 +99,44 @@ export class ListingsV2Controller extends BaseController {
     this.validateCreateListingRequest(requestBody)
 
     try {
+      // Resolve shop and seller identity — shop_id is required
+      if (!requestBody.shop_id) {
+        this.throwValidationError("shop_id is required", [
+          { field: "shop_id", message: "You must select a shop to list under. Use GET /shops/mine or POST /shops/quick to get one." },
+        ])
+      }
+
+      const shop = await getKnex()("shops").where("shop_id", requestBody.shop_id).first()
+      if (!shop) this.throwNotFound("Shop", requestBody.shop_id)
+
+      const { canManageShop } = await import("../../../../services/shops/shop-permissions.service.js")
+      if (!(await canManageShop(shop, userId))) {
+        this.throwForbidden("You do not have permission to create listings in this shop")
+      }
+
+      const shopId = shop.shop_id
+      let sellerId: string
+      let sellerType: "user" | "contractor"
+      if (shop.owner_contractor_id) {
+        sellerId = shop.owner_contractor_id
+        sellerType = "contractor"
+      } else {
+        sellerId = shop.owner_user_id!
+        sellerType = "user"
+      }
+
       // Use database transaction for atomicity (Requirement 14.7)
       const result = await withTransaction(async (trx) => {
-        // 1. Create listing record
+        // 1. Create listing record (dual-write: seller_id/seller_type AND shop_id)
         const [listing] = await trx("listings")
           .insert({
-            seller_id: requestBody.contractor_spectrum_id
-              ? await (async () => {
-                  const c = await trx("contractors").where("spectrum_id", requestBody.contractor_spectrum_id).select("contractor_id").first()
-                  return c?.contractor_id || userId
-                })()
-              : userId,
-            seller_type: requestBody.contractor_spectrum_id ? "contractor" : "user",
+            seller_id: sellerId,
+            seller_type: sellerType,
+            shop_id: shopId,
             title: requestBody.title,
             description: requestBody.description,
             status: requestBody.status || "active",
-            visibility: (requestBody.contractor_spectrum_id && requestBody.visibility) || "public",
+            visibility: (sellerType === "contractor" && requestBody.visibility) || "public",
             sale_type: requestBody.sale_type || "fixed",
             listing_type: "single",
             pickup_method: requestBody.pickup_method || null,
@@ -243,8 +264,7 @@ export class ListingsV2Controller extends BaseController {
         // Return listing data (Requirement 14.9)
         return {
           listing_id: listing.listing_id,
-          seller_id: listing.seller_id,
-          seller_type: listing.seller_type,
+          shop_id: listing.shop_id,
           title: listing.title,
           description: listing.description,
           status: listing.status,
@@ -273,7 +293,7 @@ export class ListingsV2Controller extends BaseController {
       checkBuyOrderMatches({
         listing_id: result.listing_id,
         game_item_id: requestBody.game_item_id,
-        seller_id: userId,
+        shop_id: shopId,
         price: requestBody.base_price || requestBody.lots?.[0]?.price || 0,
         quality_tier: requestBody.lots?.[0]?.variant_attributes?.quality_tier,
         quality_value: requestBody.lots?.[0]?.variant_attributes?.quality_value,
@@ -505,12 +525,11 @@ export class ListingsV2Controller extends BaseController {
     @Query() item_type?: string,
     @Query() quantity_min?: number,
     @Query() status?: 'active' | 'inactive' | 'sold' | 'expired' | 'cancelled',
-    @Query() sort_by?: "created_at" | "updated_at" | "price" | "quality" | "seller_rating" | "quantity",
+    @Query() sort_by?: "created_at" | "updated_at" | "price" | "quality" | "shop_rating" | "quantity",
     @Query() sort_order?: "asc" | "desc",
     @Query() language_codes?: string,
     @Query() listing_type?: 'single' | 'bundle' | 'bulk',
-    @Query() seller_username?: string,
-    @Query() contractor_spectrum_id?: string,
+    @Query() shop_slug?: string,
     @Request() request?: ExpressRequest,
   ): Promise<SearchListingsResponse> {
     if (request) this.request = request
@@ -588,18 +607,8 @@ export class ListingsV2Controller extends BaseController {
     })
 
     try {
-      // Build query using listing_search view
+      // Build query using listing_search view — shop data comes from the view's INNER JOIN on shops
       let query = db("listing_search as ls")
-        .leftJoin("accounts as u", function () {
-          this.on("ls.seller_id", "=", "u.user_id").andOn(
-            db.raw("ls.seller_type = 'user'"),
-          )
-        })
-        .leftJoin("contractors as c", function () {
-          this.on("ls.seller_id", "=", "c.contractor_id").andOn(
-            db.raw("ls.seller_type = 'contractor'"),
-          )
-        })
         .select(
           "ls.listing_id",
           "ls.title",
@@ -630,40 +639,16 @@ export class ListingsV2Controller extends BaseController {
               AND lil.quantity_total > 0
               AND lil.listed = true
           ) as quality_value_max`),
-          db.raw(`
-            CASE 
-              WHEN ls.seller_type = 'user' THEN u.username
-              WHEN ls.seller_type = 'contractor' THEN c.name
-            END AS seller_name
-          `),
-          db.raw(`
-            CASE 
-              WHEN ls.seller_type = 'user' THEN COALESCE(public.get_average_rating_float(ls.seller_id, NULL), 0)
-              WHEN ls.seller_type = 'contractor' THEN COALESCE(public.get_average_rating_float(NULL, ls.seller_id), 0)
-            END AS seller_rating
-          `),
-          "ls.seller_type",
-          db.raw(`
-            CASE 
-              WHEN ls.seller_type = 'user' THEN u.username
-              WHEN ls.seller_type = 'contractor' THEN c.spectrum_id
-            END AS seller_slug
-          `),
-          db.raw(`
-            CASE 
-              WHEN ls.seller_type = 'user' THEN COALESCE(u.supported_languages, ARRAY['en'])
-              WHEN ls.seller_type = 'contractor' THEN COALESCE(c.supported_languages, ARRAY['en'])
-            END AS seller_languages
-          `),
+          "ls.shop_id",
+          "ls.shop_name",
+          "ls.shop_slug",
+          "ls.shop_logo",
+          "ls.shop_languages",
+          db.raw(`(SELECT COALESCE(AVG(sr.rating)::numeric(3,2), 0) FROM shop_ratings sr WHERE sr.shop_id = ls.shop_id) AS shop_rating`),
+          db.raw(`(SELECT COUNT(*)::integer FROM shop_ratings sr WHERE sr.shop_id = ls.shop_id) AS shop_rating_count`),
           "ls.updated_at",
           "ls.game_item_name",
           "ls.game_item_type",
-          db.raw(`
-            CASE 
-              WHEN ls.seller_type = 'user' THEN COALESCE(public.get_rating_count(ls.seller_id, NULL), 0)
-              WHEN ls.seller_type = 'contractor' THEN COALESCE(public.get_rating_count(NULL, ls.seller_id), 0)
-            END AS seller_rating_count
-          `),
           "ls.photo",
           "ls.pickup_method",
           "ls.quantity_unit",
@@ -731,19 +716,14 @@ export class ListingsV2Controller extends BaseController {
         query = query.where('ls.quantity_available', '>=', quantity_min);
       }
 
-      // Filter by language codes (seller supports ANY of the requested languages)
+      // Filter by language codes (shop supports ANY of the requested languages)
       if (language_codes) {
         const langs = language_codes.split(',').map(l => l.trim()).filter(Boolean);
         if (langs.length > 0) {
-          query = query.where(function() {
-            this.whereRaw(
-              `COALESCE(u.supported_languages, ARRAY['en']) && ARRAY[${langs.map(() => '?').join(',')}]::text[]`,
-              langs
-            ).orWhereRaw(
-              `COALESCE(c.supported_languages, ARRAY['en']) && ARRAY[${langs.map(() => '?').join(',')}]::text[]`,
-              langs
-            );
-          });
+          query = query.whereRaw(
+            `ls.shop_languages && ARRAY[${langs.map(() => '?').join(',')}]::text[]`,
+            langs
+          );
         }
       }
 
@@ -752,35 +732,22 @@ export class ListingsV2Controller extends BaseController {
         query = query.where('ls.listing_type', listing_type);
       }
 
-      // Filter by seller (user or contractor) — resolve public identifiers to internal IDs
-      if (seller_username) {
-        const user = await db('accounts').where('username', seller_username).first('user_id')
-        if (user) {
-          query = query.where('ls.seller_id', user.user_id).where('ls.seller_type', 'user')
-        } else {
-          query = query.whereRaw('1 = 0') // No results if user not found
-        }
-      }
-      if (contractor_spectrum_id) {
-        const contractor = await db('contractors').where('spectrum_id', contractor_spectrum_id).first('contractor_id')
-        if (contractor) {
-          query = query.where('ls.seller_id', contractor.contractor_id).where('ls.seller_type', 'contractor')
-        } else {
-          query = query.whereRaw('1 = 0')
-        }
+      // Filter by shop
+      if (shop_slug) {
+        query = query.where('ls.shop_slug', shop_slug)
       }
 
-      // Filter by visibility: exclude private listings unless user is an org member
+      // Filter by visibility: exclude private listings unless user is an org member of the shop's owner
       const currentUserId = this.tryGetUserId()
       if (currentUserId) {
         query = query.where(function () {
           this.where("ls.visibility", "!=", "private")
             .orWhere(function () {
-              this.where("ls.seller_type", "contractor")
+              this.whereNotNull("ls.shop_owner_contractor_id")
                 .whereExists(function () {
                   this.select(db.raw("1"))
                     .from("contractor_members")
-                    .whereRaw("contractor_members.contractor_id = ls.seller_id")
+                    .whereRaw("contractor_members.contractor_id = ls.shop_owner_contractor_id")
                     .where("contractor_members.user_id", currentUserId)
                 })
             })
@@ -802,12 +769,9 @@ export class ListingsV2Controller extends BaseController {
         case "quality":
           query = query.orderBy("ls.quality_tier_max", validatedSortOrder)
           break
-        case "seller_rating":
+        case "shop_rating":
           query = query.orderByRaw(
-            `CASE 
-              WHEN ls.seller_type = 'user' THEN COALESCE(public.get_average_rating_float(ls.seller_id, NULL), 0)
-              WHEN ls.seller_type = 'contractor' THEN COALESCE(public.get_average_rating_float(NULL, ls.seller_id), 0)
-            END ${validatedSortOrder}`,
+            `(SELECT COALESCE(AVG(sr.rating)::numeric(3,2), 0) FROM shop_ratings sr WHERE sr.shop_id = ls.shop_id) ${validatedSortOrder}`,
           )
           break
         case "updated_at":
@@ -829,12 +793,17 @@ export class ListingsV2Controller extends BaseController {
       // Execute query
       const results = await query
 
-      // Transform results to match response type (Requirements 15.7, 15.10, 15.11)
+      // Transform results to response type
       const listings: ListingSearchResult[] = results.map((row: any) => ({
         listing_id: row.listing_id,
         title: row.title,
-        seller_name: row.seller_name || "Unknown",
-        seller_rating: parseFloat(row.seller_rating) || 0,
+        shop_id: row.shop_id,
+        shop_name: row.shop_name,
+        shop_slug: row.shop_slug,
+        shop_logo: row.shop_logo || undefined,
+        shop_rating: parseFloat(row.shop_rating) || 0,
+        shop_rating_count: row.shop_rating_count || 0,
+        shop_languages: row.shop_languages || ['en'],
         price_min: parseInt(row.price_min, 10) || 0,
         price_max: parseInt(row.price_max, 10) || 0,
         quantity_available: row.quantity_available || 0,
@@ -843,14 +812,10 @@ export class ListingsV2Controller extends BaseController {
         quality_value_min: row.quality_value_min != null ? parseInt(row.quality_value_min) : undefined,
         quality_value_max: row.quality_value_max != null ? parseInt(row.quality_value_max) : undefined,
         variant_count: row.variant_count || 0,
-        seller_type: row.seller_type,
-        seller_slug: row.seller_slug || "",
         created_at: row.created_at.toISOString(),
         updated_at: row.updated_at?.toISOString() || row.created_at.toISOString(),
         game_item_name: row.game_item_name || '',
         game_item_type: row.game_item_type || '',
-        seller_rating_count: parseInt(row.seller_rating_count, 10) || 0,
-        seller_languages: row.seller_languages || ['en'],
         photo: row.photo || undefined,
         pickup_method: row.pickup_method || null,
         quantity_unit: row.quantity_unit || "unit",
@@ -1000,18 +965,16 @@ export class ListingsV2Controller extends BaseController {
         )
         .leftJoin("listings as l_full", "ls.listing_id", "l_full.listing_id")
 
-      // Filter by org (spectrum_id) or current user
+      // Filter by shop: show listings from user's shops or specified org's shops
       if (spectrum_id) {
         const contractor = await db("contractors").where({ spectrum_id }).first()
         if (contractor) {
-          query = query.where("ls.seller_id", contractor.contractor_id).where("ls.seller_type", "contractor")
+          query = query.whereIn("ls.shop_id", db("shops").where("owner_contractor_id", contractor.contractor_id).select("shop_id"))
         } else {
-          // No matching org — return empty
           query = query.whereRaw("1 = 0")
         }
       } else {
-        // Show only user's own listings (org listings require explicit spectrum_id)
-        query = query.where("ls.seller_id", userId).where("ls.seller_type", "user")
+        query = query.whereIn("ls.shop_id", db("shops").where("owner_user_id", userId).select("shop_id"))
       }
 
       // Apply status filter if provided; exclude cancelled/archived by default
@@ -1129,9 +1092,9 @@ export class ListingsV2Controller extends BaseController {
       .where("l.status", "active").where("lil.listed", true).where("lil.quantity_total", ">", 0)
     if (spectrum_id) {
       const org = await db("contractors").where("spectrum_id", spectrum_id).first("contractor_id")
-      if (org) { query = query.where(function () { this.where("l.seller_id", user_id).orWhere(function () { this.where("l.seller_type", "contractor").where("l.seller_id", org.contractor_id) }) }) }
-      else { query = query.where("l.seller_id", user_id) }
-    } else { query = query.where("l.seller_id", user_id) }
+      if (org) { query = query.whereIn("l.shop_id", db("shops").where("owner_contractor_id", org.contractor_id).select("shop_id")) }
+      else { query = query.whereIn("l.shop_id", db("shops").where("owner_user_id", user_id).select("shop_id")) }
+    } else { query = query.whereIn("l.shop_id", db("shops").where("owner_user_id", user_id).select("shop_id")) }
     const rows = await query.groupBy("li.game_item_id", "gi.name", "gi.type", "gi.image_url")
       .select("li.game_item_id", "gi.name as game_item_name", "gi.type as game_item_type", "gi.image_url as game_item_icon",
         db.raw("SUM(lil.quantity_total)::numeric as total_quantity"),
@@ -1152,22 +1115,12 @@ export class ListingsV2Controller extends BaseController {
     logger.info("Fetching listing detail", { listingId: id })
 
     try {
-      // Query listing with seller information (Requirements 16.2, 16.11)
+      // Query listing with shop information
       const listing = await db("listings as l")
-        .leftJoin("accounts as u", function () {
-          this.on("l.seller_id", "=", "u.user_id").andOn(
-            db.raw("l.seller_type = 'user'"),
-          )
-        })
-        .leftJoin("contractors as c", function () {
-          this.on("l.seller_id", "=", "c.contractor_id").andOn(
-            db.raw("l.seller_type = 'contractor'"),
-          )
-        })
+        .join("shops as s", "l.shop_id", "s.shop_id")
         .select(
           "l.listing_id",
-          "l.seller_id",
-          "l.seller_type",
+          "l.shop_id",
           "l.title",
           "l.description",
           "l.status",
@@ -1183,36 +1136,11 @@ export class ListingsV2Controller extends BaseController {
           "l.created_at",
           "l.updated_at",
           "l.expires_at",
-          db.raw(`
-            CASE 
-              WHEN l.seller_type = 'user' THEN u.username
-              WHEN l.seller_type = 'contractor' THEN c.name
-            END AS seller_name
-          `),
-          db.raw(`
-            CASE 
-              WHEN l.seller_type = 'user' THEN COALESCE(public.get_average_rating_float(l.seller_id, NULL), 0)
-              WHEN l.seller_type = 'contractor' THEN COALESCE(public.get_average_rating_float(NULL, l.seller_id), 0)
-            END AS seller_rating
-          `),
-          db.raw(`
-            CASE 
-              WHEN l.seller_type = 'user' THEN u.avatar
-              WHEN l.seller_type = 'contractor' THEN c.avatar
-            END AS seller_avatar
-          `),
-          db.raw(`
-            CASE 
-              WHEN l.seller_type = 'user' THEN u.username
-              WHEN l.seller_type = 'contractor' THEN c.spectrum_id
-            END AS seller_slug
-          `),
-          db.raw(`
-            CASE 
-              WHEN l.seller_type = 'user' THEN COALESCE(u.supported_languages, ARRAY['en'])
-              WHEN l.seller_type = 'contractor' THEN COALESCE(c.supported_languages, ARRAY['en'])
-            END AS seller_languages
-          `),
+          "s.slug as shop_slug",
+          "s.name as shop_name",
+          "s.logo as shop_logo_resource_id",
+          "s.supported_languages as shop_languages",
+          "s.owner_contractor_id as shop_owner_contractor_id",
         )
         .where("l.listing_id", id)
         .first()
@@ -1231,13 +1159,13 @@ export class ListingsV2Controller extends BaseController {
       }
 
       // Visibility access control: private listings require org membership
-      if (listing.visibility === "private" && listing.seller_type === "contractor") {
+      if (listing.visibility === "private" && listing.shop_owner_contractor_id) {
         const currentUserId = this.tryGetUserId()
         if (!currentUserId) {
           this.throwForbidden("This listing is only visible to organization members")
         }
         const membership = await db("contractor_members")
-          .where("contractor_id", listing.seller_id)
+          .where("contractor_id", listing.shop_owner_contractor_id)
           .where("user_id", currentUserId)
           .first()
         if (!membership) {
@@ -1375,12 +1303,24 @@ export class ListingsV2Controller extends BaseController {
         variantCount: items.reduce((sum, item) => sum + item.variants.length, 0),
       })
 
-      // Return complete listing detail (Requirement 16.10)
+      // Resolve shop rating and logo
+      const ratingResult = await db("shop_ratings")
+        .where("shop_id", listing.shop_id)
+        .select(db.raw("COALESCE(AVG(rating)::numeric(3,2), 0) as rating"))
+        .first()
+      const shopRating = ratingResult?.rating ? parseFloat(ratingResult.rating) : 0
+
+      let shopLogoUrl: string | undefined
+      if (listing.shop_logo_resource_id) {
+        const logoRow = await db("image_resources").where("resource_id", listing.shop_logo_resource_id).first()
+        shopLogoUrl = logoRow ? (logoRow.external_url || `https://cdn.sc-market.space/${logoRow.filename}`) : undefined
+      }
+
+      // Return complete listing detail
       return {
         listing: {
           listing_id: listing.listing_id,
-          seller_id: listing.seller_id,
-          seller_type: listing.seller_type,
+          shop_id: listing.shop_id,
           title: listing.title,
           description: listing.description || "",
           status: listing.status,
@@ -1400,12 +1340,12 @@ export class ListingsV2Controller extends BaseController {
           view_count: await this.getViewCount(db, id),
         },
         seller: {
-          name: listing.seller_name || "Unknown",
-          type: listing.seller_type,
-          slug: listing.seller_slug || "",
-          rating: parseFloat(listing.seller_rating) || 0,
-          avatar_url: listing.seller_avatar ? (await cdn.getFileLinkResource(listing.seller_avatar)) || undefined : undefined,
-          languages: listing.seller_languages || ["en"],
+          shop_id: listing.shop_id,
+          name: listing.shop_name,
+          slug: listing.shop_slug,
+          rating: shopRating,
+          logo_url: shopLogoUrl,
+          languages: listing.shop_languages || ["en"],
         },
         items,
       }
@@ -1491,7 +1431,7 @@ export class ListingsV2Controller extends BaseController {
           this.throwNotFound("Listing", id)
         }
 
-        logger.info("PUT /listings/:id - listing found, checking permissions", { id, userId, sellerId: listing.seller_id, sellerType: listing.seller_type })
+        logger.info("PUT /listings/:id - listing found, checking permissions", { id, userId, shopId: listing.shop_id })
 
         // Verify ownership
         if (!(await canModifyListing(listing, userId))) {
@@ -1570,9 +1510,10 @@ export class ListingsV2Controller extends BaseController {
               { field: "visibility", message: "Must be 'public' or 'private'" },
             ])
           }
-          if (requestBody.visibility === 'private' && listing.seller_type !== 'contractor') {
+          const shop = await trx("shops").where("shop_id", listing.shop_id).first()
+          if (requestBody.visibility === 'private' && !shop?.owner_contractor_id) {
             this.throwValidationError("Invalid visibility", [
-              { field: "visibility", message: "Only contractor listings can be private" },
+              { field: "visibility", message: "Only org shop listings can be private" },
             ])
           }
           listingUpdates.visibility = requestBody.visibility
@@ -2158,7 +2099,7 @@ export class ListingsV2Controller extends BaseController {
   public async importFromUex(
     @Body() requestBody: {
       uex_username: string
-      contractor_spectrum_id?: string
+      shop_id: string
       listings?: Array<{
         title: string
         description: string
@@ -2182,29 +2123,18 @@ export class ListingsV2Controller extends BaseController {
     const userId = this.getUserId()
     const db = getKnex()
 
-    // Determine seller
-    let sellerId = userId
-    let sellerType: "user" | "contractor" = "user"
+    // Resolve shop and seller
+    const shop = await db("shops").where("shop_id", requestBody.shop_id).first()
+    if (!shop) this.throwNotFound("Shop", requestBody.shop_id)
 
-    if (requestBody.contractor_spectrum_id) {
-      const contractor = await db("contractors")
-        .where("spectrum_id", requestBody.contractor_spectrum_id)
-        .first()
-      if (!contractor) {
-        this.throwValidationError("Org not found", [
-          { field: "contractor_spectrum_id", message: "Organization not found" },
-        ])
-      }
-      // Verify user is a member with listing permissions
-      const membership = await db("contractor_members")
-        .where({ contractor_id: contractor.contractor_id, user_id: userId })
-        .first()
-      if (!membership) {
-        this.throwForbidden("You are not a member of this organization")
-      }
-      sellerId = contractor.contractor_id
-      sellerType = "contractor"
+    const { canManageShop } = await import("../../../../services/shops/shop-permissions.service.js")
+    if (!(await canManageShop(shop, userId))) {
+      this.throwForbidden("You do not have permission to create listings in this shop")
     }
+
+    const sellerId = shop.owner_contractor_id || shop.owner_user_id!
+    const sellerType: "user" | "contractor" = shop.owner_contractor_id ? "contractor" : "user"
+    const shopId = shop.shop_id
 
     // If no listings provided, fetch from UEX and return preview
     if (!requestBody.confirm || !requestBody.listings) {
@@ -2233,6 +2163,7 @@ export class ListingsV2Controller extends BaseController {
             .insert({
               seller_id: sellerId,
               seller_type: sellerType,
+              shop_id: shopId,
               title: item.title,
               description: item.description || item.title,
               status: "active",

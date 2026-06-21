@@ -22,7 +22,7 @@ export interface GetGameItemListingsRequest {
   quality_tier?: number
 
   /** Sort field (default: price) */
-  sort_by?: "price" | "quality" | "quantity" | "seller_rating"
+  sort_by?: "price" | "quality" | "quantity" | "shop_rating"
 
   /** Sort order (default: asc) */
   sort_order?: "asc" | "desc"
@@ -53,8 +53,8 @@ export interface GameItemQualityDistribution {
   /** Average price for this tier */
   price_avg: number
 
-  /** Number of unique sellers offering this tier */
-  seller_count: number
+  /** Number of unique shops offering this tier */
+  shop_count: number
 
   /** Number of listings offering this tier */
   listing_count: number
@@ -70,20 +70,17 @@ export interface GameItemListingResult {
   /** Listing title */
   title: string
 
-  /** Seller ID */
-  seller_id: string
+  /** Shop ID */
+  shop_id: string
 
-  /** Seller name */
-  seller_name: string
+  /** Shop name */
+  shop_name: string
 
-  /** Seller rating (0-5) */
-  seller_rating: number
+  /** Shop rating (0-5) */
+  shop_rating: number
 
-  /** Seller type */
-  seller_type: "user" | "contractor"
-
-  /** Username (for user sellers) or spectrum_id (for contractor sellers) */
-  seller_slug: string
+  /** Shop slug — use for profile links: /shops/:slug */
+  shop_slug: string
 
   /** Minimum price across all variants in this listing */
   price_min: number
@@ -172,7 +169,7 @@ export interface GameItemAggregate {
   /** Number of active listings */
   listing_count: number
   /** Number of unique sellers */
-  seller_count: number
+  shop_count: number
   /** Minimum quality tier available */
   quality_tier_min?: number
   /** Maximum quality tier available */

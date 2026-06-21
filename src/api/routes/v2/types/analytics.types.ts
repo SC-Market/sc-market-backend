@@ -118,7 +118,7 @@ export interface QualityTierDistribution {
   max_price: number;
   
   /** Number of unique sellers offering this tier */
-  seller_count: number;
+  shop_count: number;
 }
 
 /**
@@ -149,11 +149,11 @@ export interface GetQualityDistributionResponse {
 // ============================================================================
 
 /**
- * Query parameters for seller stats endpoint
+ * Query parameters for shop stats endpoint
  */
 export interface GetSellerStatsRequest {
-  /** Optional seller ID filter (defaults to current user) */
-  seller_id?: string;
+  /** Shop ID to get stats for */
+  shop_id?: string;
 }
 
 /**
@@ -188,8 +188,8 @@ export interface QualityTierPremium {
  * Response for seller stats endpoint
  */
 export interface GetSellerStatsResponse {
-  /** Seller ID */
-  seller_id: string;
+  /** Shop ID */
+  shop_id: string;
   
   /** Sales data grouped by quality tier */
   sales_by_quality: QualityTierSales[];

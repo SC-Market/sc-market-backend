@@ -107,8 +107,8 @@ export class OrdersV2Controller extends BaseController {
           0,
         )
 
-        // Get seller_id from first listing (all items must be from same seller)
-        const sellerId = itemsWithPricing[0].seller_id
+        // Get shop_id from first listing (all items must be from same shop)
+        const shopId = itemsWithPricing[0].shop_id
 
         // Step 2: Create order record in V1 orders table
         // This maintains compatibility with existing order system
@@ -194,10 +194,10 @@ export class OrdersV2Controller extends BaseController {
 
         // Step 5: Allocate stock from variant-specific lots
         // V2 uses listing_item_lots directly (not V1 stock_allocations)
-        const sellerType = itemsWithPricing[0].seller_type
+        const shop = await trx("shops").where("shop_id", shopId).first()
         const allocationMode = await getAllocationMode(
-          sellerType === "contractor" ? "contractor" : "user",
-          sellerId,
+          shop?.owner_contractor_id ? "contractor" : "user",
+          shop?.owner_contractor_id || shop?.owner_user_id,
         )
 
         if (allocationMode === "auto") {
@@ -241,7 +241,7 @@ export class OrdersV2Controller extends BaseController {
         return {
           order_id: order.order_id,
           buyer_id: userId,
-          seller_id: sellerId,
+          shop_id: shopId,
           total_price: totalPrice,
           status: order.status,
           created_at: order.created_at.toISOString(),
@@ -263,7 +263,7 @@ export class OrdersV2Controller extends BaseController {
       // Notify seller of new order
       try {
         // V2 push notification
-        await notificationService.createNewOrderNotificationV2(result, result.seller_id)
+        await notificationService.createNewOrderNotificationV2(result, result.shop_id)
         // V1 in-app notification (creates notification objects in DB)
         const orderRow = await getKnex()("orders").where({ order_id: result.order_id }).first()
         if (orderRow) await notificationService.createOrderNotification(orderRow)
@@ -788,7 +788,7 @@ export class OrdersV2Controller extends BaseController {
    */
   private async validateAndGetPricing(
     items: Array<{ listing_id: string; variant_id: string; quantity: number }>,
-    trx: any,
+    trx: ReturnType<typeof getKnex>,
   ): Promise<
     Array<{
       listing_id: string
@@ -796,16 +796,15 @@ export class OrdersV2Controller extends BaseController {
       variant_id: string
       quantity: number
       price: number
-      seller_id: string
-      seller_type: string
+      shop_id: string
       listing_title: string
-      variant_attributes: any
+      variant_attributes: Record<string, unknown>
       variant_display_name: string
       variant_short_name: string
     }>
   > {
     const result = []
-    let firstSellerId: string | null = null
+    let firstShopId: string | null = null
 
     for (const item of items) {
       // Get listing and verify it's active
@@ -832,16 +831,16 @@ export class OrdersV2Controller extends BaseController {
         )
       }
 
-      // Verify all items are from the same seller
-      if (firstSellerId === null) {
-        firstSellerId = listing.seller_id
-      } else if (listing.seller_id !== firstSellerId) {
+      // Verify all items are from the same shop
+      if (firstShopId === null) {
+        firstShopId = listing.shop_id
+      } else if (listing.shop_id !== firstShopId) {
         throw this.throwValidationError(
-          "All items must be from the same seller",
+          "All items must be from the same shop",
           [
             {
               field: "items",
-              message: "Cannot create order with items from multiple sellers",
+              message: "Cannot create order with items from multiple shops",
             },
           ],
         )
@@ -926,8 +925,7 @@ export class OrdersV2Controller extends BaseController {
         variant_id: item.variant_id,
         quantity: item.quantity,
         price,
-        seller_id: listing.seller_id,
-        seller_type: listing.seller_type,
+        shop_id: listing.shop_id,
         listing_title: listing.title,
         variant_attributes: variant.attributes,
         variant_display_name: variant.display_name,

@@ -252,6 +252,20 @@ export async function archiveContractor({
     })
   }
 
+  // Archive all shops owned by this contractor
+  try {
+    await database
+      .knex("shops")
+      .where({ owner_contractor_id: contractor.contractor_id })
+      .where("status", "active")
+      .update({ status: "archived", updated_at: new Date() })
+  } catch (error) {
+    logger.error("Failed to archive shops during contractor archive", {
+      contractorId: contractor.contractor_id,
+      error,
+    })
+  }
+
   await auditLogService.record({
     action: "org.archived",
     actorId,

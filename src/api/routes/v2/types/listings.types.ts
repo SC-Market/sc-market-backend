@@ -107,8 +107,8 @@ export interface CreateListingRequest {
   /** Optional bulk discount tiers sorted by min_quantity ascending */
   bulk_discount_tiers?: BulkDiscountTier[];
 
-  /** Optional contractor spectrum_id — if provided, listing is created on behalf of the org */
-  contractor_spectrum_id?: string;
+  /** Shop ID to create the listing under. Required — use GET /shops/mine to list available shops, or POST /shops/quick to create one. */
+  shop_id: string;
 
   /** Sale type: fixed price, auction, or negotiable */
   sale_type?: 'fixed' | 'auction' | 'negotiable';
@@ -174,7 +174,7 @@ export interface SearchListingsRequest {
   status?: 'active' | 'inactive' | 'sold' | 'expired' | 'cancelled';
   
   /** Sort field (default: created_at) */
-  sort_by?: 'created_at' | 'updated_at' | 'price' | 'quality' | 'seller_rating' | 'quantity';
+  sort_by?: 'created_at' | 'updated_at' | 'price' | 'quality' | 'shop_rating' | 'quantity';
   
   /** Sort order */
   sort_order?: 'asc' | 'desc';
@@ -191,28 +191,43 @@ export interface SearchListingsRequest {
 export interface ListingSearchResult {
   /** Listing UUID */
   listing_id: string;
-  
+
   /** Listing title */
   title: string;
-  
-  /** Seller username or contractor name */
-  seller_name: string;
-  
-  /** Seller rating (0-5) */
-  seller_rating: number;
-  
+
+  /** Shop ID this listing belongs to */
+  shop_id: string;
+
+  /** Shop name */
+  shop_name: string;
+
+  /** Shop slug — use for profile links: /shops/:slug */
+  shop_slug: string;
+
+  /** Shop logo URL */
+  shop_logo?: string;
+
+  /** Shop rating (0-5) */
+  shop_rating: number;
+
+  /** Shop rating count */
+  shop_rating_count: number;
+
+  /** Shop supported languages (ISO 639-1 codes) */
+  shop_languages: string[];
+
   /** Minimum price across all variants */
   price_min: number;
-  
+
   /** Maximum price across all variants */
   price_max: number;
-  
+
   /** Total quantity available across all variants */
   quantity_available: number;
-  
+
   /** Minimum quality tier available (1-5) */
   quality_tier_min?: number;
-  
+
   /** Maximum quality tier available (1-5) */
   quality_tier_max?: number;
 
@@ -221,33 +236,21 @@ export interface ListingSearchResult {
 
   /** Maximum quality value available (0-1000) */
   quality_value_max?: number;
-  
+
   /** Number of unique variants in this listing */
   variant_count: number;
-  
-  /** Seller type (user or contractor) */
-  seller_type: 'user' | 'contractor';
-  
-  /** Username (for user sellers) or spectrum_id (for contractor sellers) - use for profile links */
-  seller_slug: string;
-  
+
   /** ISO 8601 timestamp when listing was created */
   created_at: string;
-  
+
   /** ISO 8601 timestamp when listing was last updated */
   updated_at: string;
-  
+
   /** Game item name */
   game_item_name: string;
-  
+
   /** Game item type/category */
   game_item_type: string;
-  
-  /** Seller rating count */
-  seller_rating_count: number;
-
-  /** Seller's supported languages (ISO 639-1 codes) */
-  seller_languages?: string[];
 
   /** First photo URL (null if no photos) */
   photo?: string;
@@ -292,12 +295,9 @@ export interface SearchListingsResponse {
 export interface ListingDetail {
   /** Listing UUID */
   listing_id: string;
-  
-  /** Seller UUID */
-  seller_id: string;
-  
-  /** Type of seller */
-  seller_type: 'user' | 'contractor';
+
+  /** Shop ID this listing belongs to */
+  shop_id: string;
   
   /** Listing title */
   title: string;
@@ -389,26 +389,26 @@ export interface GameItemInfo {
 }
 
 /**
- * Seller information
+ * Shop information for a listing's seller
  */
 export interface SellerInfo {
-  /** Seller username or contractor name */
-  name: string;
-  
-  /** Seller type */
-  type: 'user' | 'contractor';
-  
-  /** Username (for users) or spectrum_id (for contractors) - use for profile links */
-  slug: string;
-  
-  /** Seller rating (0-5) */
-  rating: number;
-  
-  /** Optional seller avatar URL */
-  avatar_url?: string;
+  /** Shop ID */
+  shop_id: string;
 
-  /** Seller's supported languages (ISO 639-1 codes) */
-  languages?: string[];
+  /** Shop name */
+  name: string;
+
+  /** Shop slug — use for profile links: /shops/:slug */
+  slug: string;
+
+  /** Shop rating (0-5) */
+  rating: number;
+
+  /** Shop logo URL */
+  logo_url?: string;
+
+  /** Shop supported languages (ISO 639-1 codes) */
+  languages: string[];
 }
 
 /**
