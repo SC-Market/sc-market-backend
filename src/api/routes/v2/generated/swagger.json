@@ -1702,28 +1702,23 @@
 					},
 					"seller": {
 						"properties": {
-							"avatar": {
-								"type": "string",
-								"nullable": true
-							},
-							"display_name": {
+							"slug": {
 								"type": "string"
 							},
-							"username": {
+							"name": {
 								"type": "string"
 							},
-							"user_id": {
+							"shop_id": {
 								"type": "string"
 							}
 						},
 						"required": [
-							"avatar",
-							"display_name",
-							"username",
-							"user_id"
+							"slug",
+							"name",
+							"shop_id"
 						],
 						"type": "object",
-						"description": "Seller information"
+						"description": "Seller shop information"
 					},
 					"total_price": {
 						"type": "number",

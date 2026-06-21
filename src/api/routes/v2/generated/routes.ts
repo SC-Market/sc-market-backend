@@ -649,7 +649,7 @@ const models: TsoaRoute.Models = {
         "properties": {
             "order_id": {"dataType":"string","required":true},
             "buyer": {"dataType":"nestedObjectLiteral","nestedProperties":{"avatar":{"dataType":"union","subSchemas":[{"dataType":"string"},{"dataType":"enum","enums":[null]}],"required":true},"display_name":{"dataType":"string","required":true},"username":{"dataType":"string","required":true},"user_id":{"dataType":"string","required":true}},"required":true},
-            "seller": {"dataType":"nestedObjectLiteral","nestedProperties":{"avatar":{"dataType":"union","subSchemas":[{"dataType":"string"},{"dataType":"enum","enums":[null]}],"required":true},"display_name":{"dataType":"string","required":true},"username":{"dataType":"string","required":true},"user_id":{"dataType":"string","required":true}},"required":true},
+            "seller": {"dataType":"nestedObjectLiteral","nestedProperties":{"slug":{"dataType":"string","required":true},"name":{"dataType":"string","required":true},"shop_id":{"dataType":"string","required":true}},"required":true},
             "total_price": {"dataType":"double","required":true},
             "status": {"dataType":"string","required":true},
             "kind": {"dataType":"string","required":true},
