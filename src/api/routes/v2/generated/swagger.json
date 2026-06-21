@@ -875,6 +875,36 @@
 				"type": "object",
 				"additionalProperties": false
 			},
+			"ShopOwnerInfo": {
+				"properties": {
+					"type": {
+						"type": "string",
+						"enum": [
+							"user",
+							"contractor"
+						]
+					},
+					"slug": {
+						"type": "string",
+						"description": "Username (for users) or spectrum_id (for orgs)"
+					},
+					"name": {
+						"type": "string"
+					},
+					"avatar_url": {
+						"type": "string",
+						"nullable": true
+					}
+				},
+				"required": [
+					"type",
+					"slug",
+					"name",
+					"avatar_url"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
 			"ShopPublicResponse": {
 				"properties": {
 					"shop_id": {
@@ -917,6 +947,20 @@
 					"rating_count": {
 						"type": "number",
 						"format": "double"
+					},
+					"owner": {
+						"$ref": "#/components/schemas/ShopOwnerInfo",
+						"description": "Owner information — link to user profile or org page (included in detail view)"
+					},
+					"listing_count": {
+						"type": "number",
+						"format": "double",
+						"description": "Number of active listings in this shop (included in detail view)"
+					},
+					"total_sales": {
+						"type": "number",
+						"format": "double",
+						"description": "Total completed orders (included in detail view)"
 					}
 				},
 				"required": [

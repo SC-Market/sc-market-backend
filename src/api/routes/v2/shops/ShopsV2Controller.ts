@@ -71,6 +71,14 @@ export interface ShopResponse {
   logo_url: string | null
 }
 
+export interface ShopOwnerInfo {
+  type: "user" | "contractor"
+  /** Username (for users) or spectrum_id (for orgs) */
+  slug: string
+  name: string
+  avatar_url: string | null
+}
+
 export interface ShopPublicResponse {
   shop_id: string
   slug: string
@@ -83,6 +91,12 @@ export interface ShopPublicResponse {
   created_at: string
   rating: number | null
   rating_count: number
+  /** Owner information — link to user profile or org page (included in detail view) */
+  owner?: ShopOwnerInfo
+  /** Number of active listings in this shop (included in detail view) */
+  listing_count?: number
+  /** Total completed orders (included in detail view) */
+  total_sales?: number
 }
 
 // ─── Controller ──────────────────────────────────────────────────────────────
@@ -373,6 +387,43 @@ export class ShopsV2Controller extends BaseController {
       )
       .first()
 
+    // Resolve owner info
+    let owner: ShopOwnerInfo
+    if (shop.owner_contractor_id) {
+      const contractor = await db("contractors")
+        .where("contractor_id", shop.owner_contractor_id)
+        .first("name", "spectrum_id", "avatar")
+      owner = {
+        type: "contractor",
+        slug: contractor?.spectrum_id || "",
+        name: contractor?.name || "Unknown",
+        avatar_url: contractor?.avatar ? await resolveImageUrl(db, contractor.avatar) : null,
+      }
+    } else {
+      const user = await db("accounts")
+        .where("user_id", shop.owner_user_id)
+        .first("display_name", "username", "avatar")
+      owner = {
+        type: "user",
+        slug: user?.username || "",
+        name: user?.display_name || "Unknown",
+        avatar_url: user?.avatar ? await resolveImageUrl(db, user.avatar) : null,
+      }
+    }
+
+    // Listing count and total sales
+    const listingCount = await db("listings")
+      .where("shop_id", shop.shop_id)
+      .where("status", "active")
+      .count("* as count")
+      .first()
+
+    const salesCount = await db("orders")
+      .where("shop_id", shop.shop_id)
+      .where("status", "fulfilled")
+      .count("* as count")
+      .first()
+
     return {
       shop_id: shop.shop_id,
       slug: shop.slug,
@@ -385,6 +436,9 @@ export class ShopsV2Controller extends BaseController {
       created_at: shop.created_at,
       rating: ratingResult?.rating ? parseFloat(ratingResult.rating) : null,
       rating_count: ratingResult?.rating_count || 0,
+      owner,
+      listing_count: parseInt(String(listingCount?.count || 0), 10),
+      total_sales: parseInt(String(salesCount?.count || 0), 10),
     }
   }
 
