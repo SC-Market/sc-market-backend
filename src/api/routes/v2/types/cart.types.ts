@@ -71,30 +71,27 @@ export interface CartVariantDetail {
 export interface CartListingInfo {
   /** Listing UUID */
   listing_id: string;
-  
+
   /** Listing title */
   title: string;
-  
-  /** Seller username or contractor name */
-  seller_name: string;
 
-  /** Seller ID (user_id or contractor_id) */
-  seller_id: string;
-  
-  /** Seller type */
-  seller_type: 'user' | 'contractor';
+  /** Shop ID */
+  shop_id: string;
 
-  /** Seller slug (username or spectrum_id) */
-  seller_slug: string;
+  /** Shop name */
+  shop_name: string;
 
-  /** Seller rating (0-5) */
-  seller_rating: number;
-  
+  /** Shop slug — use for profile links: /shops/:slug */
+  shop_slug: string;
+
+  /** Shop rating (0-5) */
+  shop_rating: number;
+
   /** Current listing status */
   status: string;
 
-  /** ISO 8601 timestamp of seller's next available slot, or null if not set / currently available */
-  seller_next_available?: string | null;
+  /** ISO 8601 timestamp of shop's next available slot, or null if not set / currently available */
+  shop_next_available?: string | null;
 }
 
 /**
@@ -157,8 +154,8 @@ export interface CheckoutCartRequest {
   confirm_price_changes?: boolean;
   /** Optional note from buyer to seller */
   note?: string;
-  /** Checkout only items from this seller (user_id or contractor_id). If omitted, all items must be from one seller. */
-  seller_id?: string;
+  /** Checkout only items from this shop. If omitted, all items must be from one shop. */
+  shop_id?: string;
 }
 
 /**

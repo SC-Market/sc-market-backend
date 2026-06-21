@@ -139,6 +139,12 @@ export async function requestDeletion(
       .where("status", "active")
       .update({ status: "cancelled" })
 
+    // Archive user's shops
+    await trx("shops")
+      .where("owner_user_id", userId)
+      .where("status", "active")
+      .update({ status: "archived", updated_at: trx.fn.now() })
+
     // Expire active V2 listings
     await trx("listings")
       .where("seller_id", userId)

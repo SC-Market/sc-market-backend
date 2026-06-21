@@ -7,7 +7,7 @@ import { env } from "../../config/env.js"
 interface ListingMatchInfo {
   listing_id: string
   game_item_id: string
-  seller_id: string
+  shop_id: string
   price: number
   quality_tier?: number
   quality_value?: number
@@ -22,12 +22,23 @@ export async function checkBuyOrderMatches(listing: ListingMatchInfo): Promise<v
   const db = getKnex()
 
   try {
+    // Resolve shop owner user to exclude self-matches
+    const shop = await db("shops").where("shop_id", listing.shop_id).first()
+    const ownerUserId = shop?.owner_user_id
+
     let query = db("buy_orders_v2 as bo")
       .join("game_items as gi", "bo.game_item_id", "gi.id")
       .where("bo.status", "active")
       .where("bo.game_item_id", listing.game_item_id)
-      // Don't notify the buyer about their own listings
-      .whereNot("bo.buyer_id", listing.seller_id)
+      // Don't notify the buyer about their own shop's listings
+      .where(function () {
+        if (ownerUserId) {
+          this.whereNot("bo.buyer_id", ownerUserId)
+        }
+        if (shop?.owner_contractor_id) {
+          this.whereNotIn("bo.buyer_id", db("contractor_members").where("contractor_id", shop.owner_contractor_id).select("user_id"))
+        }
+      })
       // Price within buy order's range
       .where("bo.price_max", ">=", listing.price)
       .where("bo.price_min", "<=", listing.price)

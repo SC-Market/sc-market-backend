@@ -42,9 +42,9 @@ export interface CreateOrderResponse {
   
   /** UUID of the buyer */
   buyer_id: string;
-  
-  /** UUID of the seller */
-  seller_id: string;
+
+  /** Shop ID of the seller */
+  shop_id: string;
   
   /** Total price in aUEC (atomic units) */
   total_price: number;

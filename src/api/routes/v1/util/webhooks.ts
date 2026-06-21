@@ -759,19 +759,24 @@ async function marketBidWebhook(
 }
 
 export async function sendBidWebhooksV2(
-  listing: { listing_id: string; title: string; seller_id: string; seller_type: string },
+  listing: { listing_id: string; title: string; shop_id: string },
   bidAmount: number,
   bidderId: string,
 ) {
+  // Resolve shop owner to find webhooks
+  const { getKnex } = await import("../../../../clients/database/knex-db.js")
+  const shop = await getKnex()("shops").where("shop_id", listing.shop_id).first()
+  if (!shop) return
+
   let webhooks: DBNotificationWebhook[]
-  if (listing.seller_type === "contractor") {
+  if (shop.owner_contractor_id) {
     webhooks = await notificationDb.getNotificationWebhooksByAction(
-      { "notification_webhooks.contractor_id": listing.seller_id },
+      { "notification_webhooks.contractor_id": shop.owner_contractor_id },
       "market_item_bid",
     )
   } else {
     webhooks = await notificationDb.getNotificationWebhooksByAction(
-      { "notification_webhooks.user_id": listing.seller_id },
+      { "notification_webhooks.user_id": shop.owner_user_id },
       "market_item_bid",
     )
   }

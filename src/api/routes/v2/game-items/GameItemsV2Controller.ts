@@ -130,7 +130,7 @@ export class GameItemsV2Controller extends BaseController {
   public async getListings(
     @Path() id: string,
     @Query() quality_tier?: number,
-    @Query() sort_by?: "price" | "quality" | "quantity" | "seller_rating",
+    @Query() sort_by?: "price" | "quality" | "quantity" | "shop_rating",
     @Query() sort_order?: "asc" | "desc",
     @Query() page?: number,
     @Query() page_size?: number,
@@ -212,7 +212,7 @@ export class GameItemsV2Controller extends BaseController {
           knex.raw("(iv.attributes->>'quality_tier')::integer as quality_tier"),
           knex.raw("SUM(lil.quantity_total)::integer as quantity_available"),
           knex.raw("COUNT(DISTINCT l.listing_id)::integer as listing_count"),
-          knex.raw("COUNT(DISTINCT l.seller_id)::integer as seller_count"),
+          knex.raw("COUNT(DISTINCT l.shop_id)::integer as shop_count"),
           knex.raw(
             `AVG(COALESCE(vp.price, li.base_price))::bigint as price_avg`,
           ),
@@ -241,30 +241,21 @@ export class GameItemsV2Controller extends BaseController {
           price_min: parseInt(row.price_min, 10),
           price_max: parseInt(row.price_max, 10),
           price_avg: parseInt(row.price_avg, 10),
-          seller_count: row.seller_count,
+          shop_count: row.shop_count,
           listing_count: row.listing_count,
         }))
 
       // ========================================================================
       // Part 3: Get individual listings (Requirements 38.2, 38.7, 38.8)
       // ========================================================================
-      // Build query for individual listings using listing_search view
+      // Build query for individual listings using listing_search view (shop-based)
       let listingsQuery = knex("listing_search as ls")
-        .leftJoin("accounts as u", function () {
-          this.on("ls.seller_id", "=", "u.user_id").andOn(
-            knex.raw("ls.seller_type = 'user'"),
-          )
-        })
-        .leftJoin("contractors as c", function () {
-          this.on("ls.seller_id", "=", "c.contractor_id").andOn(
-            knex.raw("ls.seller_type = 'contractor'"),
-          )
-        })
         .select(
           "ls.listing_id",
           "ls.title",
-          "ls.seller_id",
-          "ls.seller_type",
+          "ls.shop_id",
+          "ls.shop_name",
+          "ls.shop_slug",
           "ls.quantity_available",
           "ls.variant_count",
           "ls.price_min",
@@ -272,24 +263,7 @@ export class GameItemsV2Controller extends BaseController {
           "ls.quality_tier_min",
           "ls.quality_tier_max",
           "ls.created_at",
-          knex.raw(`
-            CASE 
-              WHEN ls.seller_type = 'user' THEN u.username
-              WHEN ls.seller_type = 'contractor' THEN c.name
-            END AS seller_name
-          `),
-          knex.raw(`
-            CASE 
-              WHEN ls.seller_type = 'user' THEN COALESCE(public.get_average_rating_float(ls.seller_id, NULL), 0)
-              WHEN ls.seller_type = 'contractor' THEN COALESCE(public.get_average_rating_float(NULL, ls.seller_id), 0)
-            END AS seller_rating
-          `),
-          knex.raw(`
-            CASE 
-              WHEN ls.seller_type = 'user' THEN u.username
-              WHEN ls.seller_type = 'contractor' THEN c.spectrum_id
-            END AS seller_slug
-          `),
+          knex.raw(`(SELECT COALESCE(AVG(sr.rating)::numeric(3,2), 0) FROM shop_ratings sr WHERE sr.shop_id = ls.shop_id) AS shop_rating`),
         )
         .where("ls.game_item_id", id)
         .where("ls.status", "active")
@@ -334,12 +308,9 @@ export class GameItemsV2Controller extends BaseController {
             validatedSortOrder,
           )
           break
-        case "seller_rating":
+        case "shop_rating":
           listingsQuery = listingsQuery.orderByRaw(
-            `CASE 
-              WHEN ls.seller_type = 'user' THEN COALESCE(public.get_average_rating_float(ls.seller_id, NULL), 0)
-              WHEN ls.seller_type = 'contractor' THEN COALESCE(public.get_average_rating_float(NULL, ls.seller_id), 0)
-            END ${validatedSortOrder}`,
+            `(SELECT COALESCE(AVG(sr.rating)::numeric(3,2), 0) FROM shop_ratings sr WHERE sr.shop_id = ls.shop_id) ${validatedSortOrder}`,
           )
           break
         default:
@@ -364,21 +335,20 @@ export class GameItemsV2Controller extends BaseController {
 
       // Transform results to listing format (Requirement 38.2)
       const listings: GameItemListingResult[] = listingsResults.map(
-        (row: any) => ({
-          listing_id: row.listing_id,
-          title: row.title,
-          seller_id: row.seller_id,
-          seller_name: row.seller_name || "Unknown",
-          seller_rating: parseFloat(row.seller_rating) || 0,
-          seller_type: row.seller_type,
-          seller_slug: row.seller_slug || "",
-          price_min: parseInt(row.price_min, 10) || 0,
-          price_max: parseInt(row.price_max, 10) || 0,
-          quantity_available: row.quantity_available || 0,
-          quality_tier_min: row.quality_tier_min || undefined,
-          quality_tier_max: row.quality_tier_max || undefined,
-          variant_count: row.variant_count || 0,
-          created_at: row.created_at.toISOString(),
+        (row: Record<string, unknown>) => ({
+          listing_id: row.listing_id as string,
+          title: row.title as string,
+          shop_id: row.shop_id as string,
+          shop_name: (row.shop_name as string) || "Unknown",
+          shop_rating: parseFloat(row.shop_rating as string) || 0,
+          shop_slug: (row.shop_slug as string) || "",
+          price_min: parseInt(row.price_min as string, 10) || 0,
+          price_max: parseInt(row.price_max as string, 10) || 0,
+          quantity_available: (row.quantity_available as number) || 0,
+          quality_tier_min: (row.quality_tier_min as number) || undefined,
+          quality_tier_max: (row.quality_tier_max as number) || undefined,
+          variant_count: (row.variant_count as number) || 0,
+          created_at: (row.created_at as Date).toISOString(),
         }),
       )
 
@@ -416,7 +386,7 @@ export class GameItemsV2Controller extends BaseController {
     @Query() price_max?: number,
     @Query() quantity_min?: number,
     @Query() quantity_max?: number,
-    @Query() sort_by?: "price" | "quantity" | "name" | "seller_count",
+    @Query() sort_by?: "price" | "quantity" | "name" | "shop_count",
     @Query() sort_order?: "asc" | "desc",
     @Query() page?: number,
     @Query() page_size?: number,
@@ -450,7 +420,7 @@ export class GameItemsV2Controller extends BaseController {
           db.raw("MAX(ls.price_max) as max_price"),
           db.raw("SUM(ls.quantity_available) as total_quantity"),
           db.raw("COUNT(DISTINCT ls.listing_id) as listing_count"),
-          db.raw("COUNT(DISTINCT ls.seller_id) as seller_count"),
+          db.raw("COUNT(DISTINCT ls.shop_id) as shop_count"),
           db.raw("MIN(ls.quality_tier_min) as quality_tier_min"),
           db.raw("MAX(ls.quality_tier_max) as quality_tier_max"),
         )
@@ -490,7 +460,7 @@ export class GameItemsV2Controller extends BaseController {
       switch (sortField) {
         case "price": query = query.orderByRaw(`MIN(ls.price_min) ${sortDir}`); break
         case "name": query = query.orderByRaw(`COALESCE(gi.name, ls.title) ${sortDir}`); break
-        case "seller_count": query = query.orderByRaw(`COUNT(DISTINCT ls.seller_id) ${sortDir}`); break
+        case "shop_count": query = query.orderByRaw(`COUNT(DISTINCT ls.shop_id) ${sortDir}`); break
         default: query = query.orderByRaw(`SUM(ls.quantity_available) ${sortDir}`); break
       }
 
@@ -505,7 +475,7 @@ export class GameItemsV2Controller extends BaseController {
         max_price: parseInt(r.max_price, 10) || 0,
         total_quantity: parseInt(r.total_quantity, 10) || 0,
         listing_count: parseInt(r.listing_count, 10) || 0,
-        seller_count: parseInt(r.seller_count, 10) || 0,
+        shop_count: parseInt(r.shop_count, 10) || 0,
         quality_tier_min: r.quality_tier_min || undefined,
         quality_tier_max: r.quality_tier_max || undefined,
       }))

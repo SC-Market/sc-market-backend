@@ -745,6 +745,242 @@
 				"type": "object",
 				"additionalProperties": false
 			},
+			"ShopResponse": {
+				"properties": {
+					"shop_id": {
+						"type": "string"
+					},
+					"slug": {
+						"type": "string"
+					},
+					"name": {
+						"type": "string"
+					},
+					"description": {
+						"type": "string"
+					},
+					"banner": {
+						"type": "string",
+						"nullable": true
+					},
+					"logo": {
+						"type": "string",
+						"nullable": true
+					},
+					"owner_user_id": {
+						"type": "string",
+						"nullable": true
+					},
+					"owner_contractor_id": {
+						"type": "string",
+						"nullable": true
+					},
+					"supported_languages": {
+						"items": {
+							"type": "string"
+						},
+						"type": "array"
+					},
+					"market_order_template": {
+						"type": "string"
+					},
+					"default_pickup_method": {
+						"type": "string",
+						"nullable": true
+					},
+					"status": {
+						"type": "string"
+					},
+					"created_at": {
+						"type": "string"
+					},
+					"updated_at": {
+						"type": "string"
+					},
+					"banner_url": {
+						"type": "string",
+						"nullable": true
+					},
+					"logo_url": {
+						"type": "string",
+						"nullable": true
+					}
+				},
+				"required": [
+					"shop_id",
+					"slug",
+					"name",
+					"description",
+					"banner",
+					"logo",
+					"owner_user_id",
+					"owner_contractor_id",
+					"supported_languages",
+					"market_order_template",
+					"default_pickup_method",
+					"status",
+					"created_at",
+					"updated_at",
+					"banner_url",
+					"logo_url"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
+			"CreateShopRequest": {
+				"properties": {
+					"name": {
+						"type": "string"
+					},
+					"slug": {
+						"type": "string"
+					},
+					"description": {
+						"type": "string"
+					},
+					"banner": {
+						"type": "string"
+					},
+					"logo": {
+						"type": "string"
+					},
+					"contractor_id": {
+						"type": "string",
+						"description": "If set, shop is owned by this org. User must have manage_market in the org."
+					}
+				},
+				"required": [
+					"name"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
+			"QuickCreateShopRequest": {
+				"properties": {
+					"owner_type": {
+						"type": "string",
+						"enum": [
+							"user",
+							"contractor"
+						]
+					},
+					"contractor_id": {
+						"type": "string",
+						"description": "Required when owner_type is \"contractor\""
+					}
+				},
+				"required": [
+					"owner_type"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
+			"ShopPublicResponse": {
+				"properties": {
+					"shop_id": {
+						"type": "string"
+					},
+					"slug": {
+						"type": "string"
+					},
+					"name": {
+						"type": "string"
+					},
+					"description": {
+						"type": "string"
+					},
+					"banner_url": {
+						"type": "string",
+						"nullable": true
+					},
+					"logo_url": {
+						"type": "string",
+						"nullable": true
+					},
+					"supported_languages": {
+						"items": {
+							"type": "string"
+						},
+						"type": "array"
+					},
+					"status": {
+						"type": "string"
+					},
+					"created_at": {
+						"type": "string"
+					},
+					"rating": {
+						"type": "number",
+						"format": "double",
+						"nullable": true
+					},
+					"rating_count": {
+						"type": "number",
+						"format": "double"
+					}
+				},
+				"required": [
+					"shop_id",
+					"slug",
+					"name",
+					"description",
+					"banner_url",
+					"logo_url",
+					"supported_languages",
+					"status",
+					"created_at",
+					"rating",
+					"rating_count"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
+			"UpdateShopRequest": {
+				"properties": {
+					"name": {
+						"type": "string"
+					},
+					"slug": {
+						"type": "string"
+					},
+					"description": {
+						"type": "string"
+					},
+					"banner": {
+						"type": "string"
+					},
+					"logo": {
+						"type": "string"
+					},
+					"supported_languages": {
+						"items": {
+							"type": "string"
+						},
+						"type": "array"
+					},
+					"market_order_template": {
+						"type": "string"
+					},
+					"default_pickup_method": {
+						"type": "string",
+						"nullable": true
+					}
+				},
+				"type": "object",
+				"additionalProperties": false
+			},
+			"TransferShopRequest": {
+				"properties": {
+					"target_contractor_id": {
+						"type": "string"
+					}
+				},
+				"required": [
+					"target_contractor_id"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
 			"RequisitionLineItem": {
 				"description": "Requisition Order Types\n\nTypes for supplier requisition orders — orders where line items are anchored\nto game items (not listings). Suppliers decide which listing to fulfil from.\n\nA requisition order has orders.kind = 'requisition' and its line items live in\nrequisition_items instead of market_orders / order_market_items_v2.",
 				"properties": {
@@ -1227,9 +1463,9 @@
 						"type": "string",
 						"description": "UUID of the buyer"
 					},
-					"seller_id": {
+					"shop_id": {
 						"type": "string",
-						"description": "UUID of the seller"
+						"description": "Shop ID of the seller"
 					},
 					"total_price": {
 						"type": "number",
@@ -1277,7 +1513,7 @@
 				"required": [
 					"order_id",
 					"buyer_id",
-					"seller_id",
+					"shop_id",
 					"total_price",
 					"status",
 					"created_at",
@@ -2454,15 +2690,8 @@
 					"listing_id": {
 						"type": "string"
 					},
-					"seller_id": {
+					"shop_id": {
 						"type": "string"
-					},
-					"seller_type": {
-						"type": "string",
-						"enum": [
-							"user",
-							"contractor"
-						]
 					},
 					"title": {
 						"type": "string"
@@ -2489,8 +2718,7 @@
 				},
 				"required": [
 					"listing_id",
-					"seller_id",
-					"seller_type",
+					"shop_id",
 					"title",
 					"description",
 					"status",
@@ -2636,9 +2864,9 @@
 						"type": "array",
 						"description": "Optional bulk discount tiers sorted by min_quantity ascending"
 					},
-					"contractor_spectrum_id": {
+					"shop_id": {
 						"type": "string",
-						"description": "Optional contractor spectrum_id — if provided, listing is created on behalf of the org"
+						"description": "Shop ID to create the listing under. Required — use GET /shops/mine to list available shops, or POST /shops/quick to create one."
 					},
 					"sale_type": {
 						"type": "string",
@@ -2700,7 +2928,8 @@
 					"description",
 					"game_item_id",
 					"pricing_mode",
-					"lots"
+					"lots",
+					"shop_id"
 				],
 				"type": "object",
 				"additionalProperties": false
@@ -2716,14 +2945,38 @@
 						"type": "string",
 						"description": "Listing title"
 					},
-					"seller_name": {
+					"shop_id": {
 						"type": "string",
-						"description": "Seller username or contractor name"
+						"description": "Shop ID this listing belongs to"
 					},
-					"seller_rating": {
+					"shop_name": {
+						"type": "string",
+						"description": "Shop name"
+					},
+					"shop_slug": {
+						"type": "string",
+						"description": "Shop slug — use for profile links: /shops/:slug"
+					},
+					"shop_logo": {
+						"type": "string",
+						"description": "Shop logo URL"
+					},
+					"shop_rating": {
 						"type": "number",
 						"format": "double",
-						"description": "Seller rating (0-5)"
+						"description": "Shop rating (0-5)"
+					},
+					"shop_rating_count": {
+						"type": "number",
+						"format": "double",
+						"description": "Shop rating count"
+					},
+					"shop_languages": {
+						"items": {
+							"type": "string"
+						},
+						"type": "array",
+						"description": "Shop supported languages (ISO 639-1 codes)"
 					},
 					"price_min": {
 						"type": "number",
@@ -2765,18 +3018,6 @@
 						"format": "double",
 						"description": "Number of unique variants in this listing"
 					},
-					"seller_type": {
-						"type": "string",
-						"enum": [
-							"user",
-							"contractor"
-						],
-						"description": "Seller type (user or contractor)"
-					},
-					"seller_slug": {
-						"type": "string",
-						"description": "Username (for user sellers) or spectrum_id (for contractor sellers) - use for profile links"
-					},
 					"created_at": {
 						"type": "string",
 						"description": "ISO 8601 timestamp when listing was created"
@@ -2792,18 +3033,6 @@
 					"game_item_type": {
 						"type": "string",
 						"description": "Game item type/category"
-					},
-					"seller_rating_count": {
-						"type": "number",
-						"format": "double",
-						"description": "Seller rating count"
-					},
-					"seller_languages": {
-						"items": {
-							"type": "string"
-						},
-						"type": "array",
-						"description": "Seller's supported languages (ISO 639-1 codes)"
 					},
 					"photo": {
 						"type": "string",
@@ -2845,19 +3074,20 @@
 				"required": [
 					"listing_id",
 					"title",
-					"seller_name",
-					"seller_rating",
+					"shop_id",
+					"shop_name",
+					"shop_slug",
+					"shop_rating",
+					"shop_rating_count",
+					"shop_languages",
 					"price_min",
 					"price_max",
 					"quantity_available",
 					"variant_count",
-					"seller_type",
-					"seller_slug",
 					"created_at",
 					"updated_at",
 					"game_item_name",
 					"game_item_type",
-					"seller_rating_count",
 					"quantity_unit"
 				],
 				"type": "object",
@@ -3075,17 +3305,9 @@
 						"type": "string",
 						"description": "Listing UUID"
 					},
-					"seller_id": {
+					"shop_id": {
 						"type": "string",
-						"description": "Seller UUID"
-					},
-					"seller_type": {
-						"type": "string",
-						"enum": [
-							"user",
-							"contractor"
-						],
-						"description": "Type of seller"
+						"description": "Shop ID this listing belongs to"
 					},
 					"title": {
 						"type": "string",
@@ -3200,8 +3422,7 @@
 				},
 				"required": [
 					"listing_id",
-					"seller_id",
-					"seller_type",
+					"shop_id",
 					"title",
 					"description",
 					"status",
@@ -3216,46 +3437,43 @@
 				"additionalProperties": false
 			},
 			"SellerInfo": {
-				"description": "Seller information",
+				"description": "Shop information for a listing's seller",
 				"properties": {
+					"shop_id": {
+						"type": "string",
+						"description": "Shop ID"
+					},
 					"name": {
 						"type": "string",
-						"description": "Seller username or contractor name"
-					},
-					"type": {
-						"type": "string",
-						"enum": [
-							"user",
-							"contractor"
-						],
-						"description": "Seller type"
+						"description": "Shop name"
 					},
 					"slug": {
 						"type": "string",
-						"description": "Username (for users) or spectrum_id (for contractors) - use for profile links"
+						"description": "Shop slug — use for profile links: /shops/:slug"
 					},
 					"rating": {
 						"type": "number",
 						"format": "double",
-						"description": "Seller rating (0-5)"
+						"description": "Shop rating (0-5)"
 					},
-					"avatar_url": {
+					"logo_url": {
 						"type": "string",
-						"description": "Optional seller avatar URL"
+						"description": "Shop logo URL"
 					},
 					"languages": {
 						"items": {
 							"type": "string"
 						},
 						"type": "array",
-						"description": "Seller's supported languages (ISO 639-1 codes)"
+						"description": "Shop supported languages (ISO 639-1 codes)"
 					}
 				},
 				"required": [
+					"shop_id",
 					"name",
-					"type",
 					"slug",
-					"rating"
+					"rating",
+					"languages"
 				],
 				"type": "object",
 				"additionalProperties": false
@@ -3933,10 +4151,10 @@
 						"format": "double",
 						"description": "Average price for this tier"
 					},
-					"seller_count": {
+					"shop_count": {
 						"type": "number",
 						"format": "double",
-						"description": "Number of unique sellers offering this tier"
+						"description": "Number of unique shops offering this tier"
 					},
 					"listing_count": {
 						"type": "number",
@@ -3950,7 +4168,7 @@
 					"price_min",
 					"price_max",
 					"price_avg",
-					"seller_count",
+					"shop_count",
 					"listing_count"
 				],
 				"type": "object",
@@ -3967,30 +4185,22 @@
 						"type": "string",
 						"description": "Listing title"
 					},
-					"seller_id": {
+					"shop_id": {
 						"type": "string",
-						"description": "Seller ID"
+						"description": "Shop ID"
 					},
-					"seller_name": {
+					"shop_name": {
 						"type": "string",
-						"description": "Seller name"
+						"description": "Shop name"
 					},
-					"seller_rating": {
+					"shop_rating": {
 						"type": "number",
 						"format": "double",
-						"description": "Seller rating (0-5)"
+						"description": "Shop rating (0-5)"
 					},
-					"seller_type": {
+					"shop_slug": {
 						"type": "string",
-						"enum": [
-							"user",
-							"contractor"
-						],
-						"description": "Seller type"
-					},
-					"seller_slug": {
-						"type": "string",
-						"description": "Username (for user sellers) or spectrum_id (for contractor sellers)"
+						"description": "Shop slug — use for profile links: /shops/:slug"
 					},
 					"price_min": {
 						"type": "number",
@@ -4030,11 +4240,10 @@
 				"required": [
 					"listing_id",
 					"title",
-					"seller_id",
-					"seller_name",
-					"seller_rating",
-					"seller_type",
-					"seller_slug",
+					"shop_id",
+					"shop_name",
+					"shop_rating",
+					"shop_slug",
 					"price_min",
 					"price_max",
 					"quantity_available",
@@ -4131,7 +4340,7 @@
 						"format": "double",
 						"description": "Number of active listings"
 					},
-					"seller_count": {
+					"shop_count": {
 						"type": "number",
 						"format": "double",
 						"description": "Number of unique sellers"
@@ -4155,7 +4364,7 @@
 					"max_price",
 					"total_quantity",
 					"listing_count",
-					"seller_count"
+					"shop_count"
 				],
 				"type": "object",
 				"additionalProperties": false
@@ -8814,49 +9023,40 @@
 						"type": "string",
 						"description": "Listing title"
 					},
-					"seller_name": {
+					"shop_id": {
 						"type": "string",
-						"description": "Seller username or contractor name"
+						"description": "Shop ID"
 					},
-					"seller_id": {
+					"shop_name": {
 						"type": "string",
-						"description": "Seller ID (user_id or contractor_id)"
+						"description": "Shop name"
 					},
-					"seller_type": {
+					"shop_slug": {
 						"type": "string",
-						"enum": [
-							"user",
-							"contractor"
-						],
-						"description": "Seller type"
+						"description": "Shop slug — use for profile links: /shops/:slug"
 					},
-					"seller_slug": {
-						"type": "string",
-						"description": "Seller slug (username or spectrum_id)"
-					},
-					"seller_rating": {
+					"shop_rating": {
 						"type": "number",
 						"format": "double",
-						"description": "Seller rating (0-5)"
+						"description": "Shop rating (0-5)"
 					},
 					"status": {
 						"type": "string",
 						"description": "Current listing status"
 					},
-					"seller_next_available": {
+					"shop_next_available": {
 						"type": "string",
 						"nullable": true,
-						"description": "ISO 8601 timestamp of seller's next available slot, or null if not set / currently available"
+						"description": "ISO 8601 timestamp of shop's next available slot, or null if not set / currently available"
 					}
 				},
 				"required": [
 					"listing_id",
 					"title",
-					"seller_name",
-					"seller_id",
-					"seller_type",
-					"seller_slug",
-					"seller_rating",
+					"shop_id",
+					"shop_name",
+					"shop_slug",
+					"shop_rating",
 					"status"
 				],
 				"type": "object",
@@ -9120,9 +9320,9 @@
 						"type": "string",
 						"description": "Optional note from buyer to seller"
 					},
-					"seller_id": {
+					"shop_id": {
 						"type": "string",
-						"description": "Checkout only items from this seller (user_id or contractor_id). If omitted, all items must be from one seller."
+						"description": "Checkout only items from this shop. If omitted, all items must be from one shop."
 					}
 				},
 				"type": "object",
@@ -9214,9 +9414,9 @@
 						"type": "string",
 						"description": "UUID of the buyer"
 					},
-					"seller_id": {
+					"shop_id": {
 						"type": "string",
-						"description": "UUID of the seller"
+						"description": "Shop ID of the seller"
 					},
 					"total_price": {
 						"type": "number",
@@ -9261,7 +9461,7 @@
 				"required": [
 					"order_id",
 					"buyer_id",
-					"seller_id",
+					"shop_id",
 					"total_price",
 					"status",
 					"created_at",
@@ -9875,7 +10075,7 @@
 						"format": "double",
 						"description": "Maximum price for this tier"
 					},
-					"seller_count": {
+					"shop_count": {
 						"type": "number",
 						"format": "double",
 						"description": "Number of unique sellers offering this tier"
@@ -9888,7 +10088,7 @@
 					"avg_price",
 					"min_price",
 					"max_price",
-					"seller_count"
+					"shop_count"
 				],
 				"type": "object",
 				"additionalProperties": false
@@ -9991,9 +10191,9 @@
 			"GetSellerStatsResponse": {
 				"description": "Response for seller stats endpoint",
 				"properties": {
-					"seller_id": {
+					"shop_id": {
 						"type": "string",
-						"description": "Seller ID"
+						"description": "Shop ID"
 					},
 					"sales_by_quality": {
 						"items": {
@@ -10018,7 +10218,7 @@
 					}
 				},
 				"required": [
-					"seller_id",
+					"shop_id",
 					"sales_by_quality",
 					"inventory_distribution",
 					"price_premiums"
@@ -11333,6 +11533,283 @@
 				}
 			}
 		},
+		"/shops/mine": {
+			"get": {
+				"operationId": "GetMyShops",
+				"responses": {
+					"200": {
+						"description": "Ok",
+						"content": {
+							"application/json": {
+								"schema": {
+									"items": {
+										"$ref": "#/components/schemas/ShopResponse"
+									},
+									"type": "array"
+								}
+							}
+						}
+					}
+				},
+				"description": "List all shops the current user can manage.\nIncludes personal shops and org shops where user has manage_market.",
+				"summary": "List my shops",
+				"tags": [
+					"Shops"
+				],
+				"security": [
+					{
+						"loggedin": []
+					}
+				],
+				"parameters": []
+			}
+		},
+		"/shops": {
+			"post": {
+				"operationId": "CreateShop",
+				"responses": {
+					"200": {
+						"description": "Ok",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/ShopResponse"
+								}
+							}
+						}
+					}
+				},
+				"description": "Create a new shop. If contractor_id is provided, the shop is org-owned\n(user must have manage_market). Otherwise, user-owned.",
+				"summary": "Create shop",
+				"tags": [
+					"Shops"
+				],
+				"security": [
+					{
+						"loggedin": []
+					}
+				],
+				"parameters": [],
+				"requestBody": {
+					"required": true,
+					"content": {
+						"application/json": {
+							"schema": {
+								"$ref": "#/components/schemas/CreateShopRequest"
+							}
+						}
+					}
+				}
+			}
+		},
+		"/shops/quick": {
+			"post": {
+				"operationId": "QuickCreateShop",
+				"responses": {
+					"200": {
+						"description": "Ok",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/ShopResponse"
+								}
+							}
+						}
+					}
+				},
+				"description": "Quick-create a shop with auto-populated defaults from user profile or org details.\nOnly name is required to proceed — everything else is pre-filled.",
+				"summary": "Quick-create shop",
+				"tags": [
+					"Shops"
+				],
+				"security": [
+					{
+						"loggedin": []
+					}
+				],
+				"parameters": [],
+				"requestBody": {
+					"required": true,
+					"content": {
+						"application/json": {
+							"schema": {
+								"$ref": "#/components/schemas/QuickCreateShopRequest"
+							}
+						}
+					}
+				}
+			}
+		},
+		"/shops/{slug}": {
+			"get": {
+				"operationId": "GetShop",
+				"responses": {
+					"200": {
+						"description": "Ok",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/ShopPublicResponse"
+								}
+							}
+						}
+					}
+				},
+				"description": "Get a shop's public profile by slug.",
+				"summary": "Get shop by slug",
+				"tags": [
+					"Shops"
+				],
+				"security": [],
+				"parameters": [
+					{
+						"in": "path",
+						"name": "slug",
+						"required": true,
+						"schema": {
+							"type": "string"
+						}
+					}
+				]
+			}
+		},
+		"/shops/{shopId}": {
+			"put": {
+				"operationId": "UpdateShop",
+				"responses": {
+					"200": {
+						"description": "Ok",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/ShopResponse"
+								}
+							}
+						}
+					}
+				},
+				"description": "Update shop settings. Only the shop owner (or org member with manage_market) can update.",
+				"summary": "Update shop",
+				"tags": [
+					"Shops"
+				],
+				"security": [
+					{
+						"loggedin": []
+					}
+				],
+				"parameters": [
+					{
+						"in": "path",
+						"name": "shopId",
+						"required": true,
+						"schema": {
+							"type": "string"
+						}
+					}
+				],
+				"requestBody": {
+					"required": true,
+					"content": {
+						"application/json": {
+							"schema": {
+								"$ref": "#/components/schemas/UpdateShopRequest"
+							}
+						}
+					}
+				}
+			},
+			"delete": {
+				"operationId": "ArchiveShop",
+				"responses": {
+					"200": {
+						"description": "Ok",
+						"content": {
+							"application/json": {
+								"schema": {
+									"properties": {
+										"success": {
+											"type": "boolean"
+										}
+									},
+									"required": [
+										"success"
+									],
+									"type": "object"
+								}
+							}
+						}
+					}
+				},
+				"description": "Archive a shop. Listings under this shop will remain but the shop won't appear in directories.",
+				"summary": "Archive shop",
+				"tags": [
+					"Shops"
+				],
+				"security": [
+					{
+						"loggedin": []
+					}
+				],
+				"parameters": [
+					{
+						"in": "path",
+						"name": "shopId",
+						"required": true,
+						"schema": {
+							"type": "string"
+						}
+					}
+				]
+			}
+		},
+		"/shops/{shopId}/transfer": {
+			"post": {
+				"operationId": "TransferShop",
+				"responses": {
+					"200": {
+						"description": "Ok",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/ShopResponse"
+								}
+							}
+						}
+					}
+				},
+				"description": "Transfer shop ownership to an org. Auto-accepts if the requesting user\nhas manage_market in the target org.",
+				"summary": "Transfer shop to org",
+				"tags": [
+					"Shops"
+				],
+				"security": [
+					{
+						"loggedin": []
+					}
+				],
+				"parameters": [
+					{
+						"in": "path",
+						"name": "shopId",
+						"required": true,
+						"schema": {
+							"type": "string"
+						}
+					}
+				],
+				"requestBody": {
+					"required": true,
+					"content": {
+						"application/json": {
+							"schema": {
+								"$ref": "#/components/schemas/TransferShopRequest"
+							}
+						}
+					}
+				}
+			}
+		},
 		"/requisitions": {
 			"post": {
 				"operationId": "CreateRequisition",
@@ -12145,7 +12622,7 @@
 								"updated_at",
 								"price",
 								"quality",
-								"seller_rating",
+								"shop_rating",
 								"quantity"
 							]
 						}
@@ -12186,15 +12663,7 @@
 					},
 					{
 						"in": "query",
-						"name": "seller_username",
-						"required": false,
-						"schema": {
-							"type": "string"
-						}
-					},
-					{
-						"in": "query",
-						"name": "contractor_spectrum_id",
+						"name": "shop_slug",
 						"required": false,
 						"schema": {
 							"type": "string"
@@ -12734,7 +13203,7 @@
 										},
 										"type": "array"
 									},
-									"contractor_spectrum_id": {
+									"shop_id": {
 										"type": "string"
 									},
 									"uex_username": {
@@ -12742,6 +13211,7 @@
 									}
 								},
 								"required": [
+									"shop_id",
 									"uex_username"
 								],
 								"type": "object",
@@ -13303,7 +13773,7 @@
 								"price",
 								"quality",
 								"quantity",
-								"seller_rating"
+								"shop_rating"
 							]
 						}
 					},
@@ -13427,7 +13897,7 @@
 								"price",
 								"quantity",
 								"name",
-								"seller_count"
+								"shop_count"
 							]
 						}
 					},
@@ -17617,7 +18087,7 @@
 				"operationId": "GetSellerStats",
 				"responses": {
 					"200": {
-						"description": "Seller analytics with sales and inventory breakdown",
+						"description": "Shop analytics with sales and inventory breakdown",
 						"content": {
 							"application/json": {
 								"schema": {
@@ -17628,16 +18098,16 @@
 					}
 				},
 				"description": "Get seller analytics with sales and inventory breakdown by quality tier\n\nProvides comprehensive seller analytics including:\n- Sales volume by quality tier (from completed orders)\n- Average sale price by quality tier\n- Time-to-sale metrics by quality tier\n- Current inventory distribution by quality tier\n- Price premium percentages for higher quality tiers\n\nRequirements:\n- 48.1: GET /api/v2/analytics/seller-stats endpoint\n- 48.2: Display sales volume by quality tier\n- 48.3: Display average sale price by quality tier\n- 48.4: Display time-to-sale by quality tier\n- 48.5: Display quality tier distribution of current inventory\n- 48.6: Calculate price premium percentage for higher quality tiers",
-				"summary": "Get seller analytics",
+				"summary": "Get shop analytics",
 				"tags": [
 					"Analytics V2"
 				],
 				"security": [],
 				"parameters": [
 					{
-						"description": "Optional seller ID (defaults to current user)",
+						"description": "Shop ID to get stats for",
 						"in": "query",
-						"name": "seller_id",
+						"name": "shop_id",
 						"required": false,
 						"schema": {
 							"type": "string"

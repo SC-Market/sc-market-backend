@@ -282,7 +282,7 @@ export class AnalyticsV2Controller extends BaseController {
           knex.raw("(iv.attributes->>'quality_tier')::integer as quality_tier"),
           knex.raw("SUM(lil.quantity_total)::integer as quantity_available"),
           knex.raw("COUNT(DISTINCT l.listing_id)::integer as listing_count"),
-          knex.raw("COUNT(DISTINCT l.seller_id)::integer as seller_count"),
+          knex.raw("COUNT(DISTINCT l.shop_id)::integer as shop_count"),
           knex.raw(
             `AVG(COALESCE(vp.price, li.base_price))::bigint as avg_price`,
           ),
@@ -318,7 +318,7 @@ export class AnalyticsV2Controller extends BaseController {
           quality_tier: row.quality_tier,
           quantity_available: row.quantity_available,
           listing_count: row.listing_count,
-          seller_count: row.seller_count,
+          shop_count: row.shop_count,
           avg_price: parseInt(row.avg_price, 10),
           min_price: parseInt(row.min_price, 10),
           max_price: parseInt(row.max_price, 10),
@@ -368,28 +368,26 @@ export class AnalyticsV2Controller extends BaseController {
    * - 48.5: Display quality tier distribution of current inventory
    * - 48.6: Calculate price premium percentage for higher quality tiers
    *
-   * @summary Get seller analytics
-   * @param seller_id Optional seller ID (defaults to current user)
-   * @returns Seller analytics with sales and inventory breakdown
+   * @summary Get shop analytics
+   * @param shop_id Shop ID to get stats for
+   * @returns Shop analytics with sales and inventory breakdown
    */
   @Get("seller-stats")
   public async getSellerStats(
-    @Query() seller_id?: string,
+    @Query() shop_id?: string,
   ): Promise<GetSellerStatsResponse> {
     const knex = getKnex()
 
-    // TODO: Get current user ID from authentication context
-    // For now, require seller_id parameter
-    if (!seller_id) {
-      this.throwValidationError("seller_id is required", [
+    if (!shop_id) {
+      this.throwValidationError("shop_id is required", [
         {
-          field: "seller_id",
-          message: "Seller ID is required (authentication not yet implemented)",
+          field: "shop_id",
+          message: "Shop ID is required",
         },
       ])
     }
 
-    logger.info("Fetching seller stats", { seller_id })
+    logger.info("Fetching shop stats", { shop_id })
 
     try {
       // ========================================================================
@@ -413,7 +411,7 @@ export class AnalyticsV2Controller extends BaseController {
             )::numeric as avg_time_to_sale_hours
           `),
         )
-        .where("l.seller_id", seller_id)
+        .where("l.shop_id", shop_id)
         .whereRaw("iv.attributes->>'quality_tier' IS NOT NULL")
         .groupBy(knex.raw("(iv.attributes->>'quality_tier')::integer"))
         .orderBy(knex.raw("(iv.attributes->>'quality_tier')::integer") as any, "asc")
@@ -421,7 +419,7 @@ export class AnalyticsV2Controller extends BaseController {
       const salesResults = await salesQuery
 
       logger.info("Fetched sales by quality tier", {
-        seller_id,
+        shop_id,
         tier_count: salesResults.length,
       })
 
@@ -458,14 +456,14 @@ export class AnalyticsV2Controller extends BaseController {
           knex.raw("(iv.attributes->>'quality_tier')::integer as quality_tier"),
           knex.raw("SUM(lil.quantity_total)::integer as quantity_available"),
           knex.raw("COUNT(DISTINCT l.listing_id)::integer as listing_count"),
-          knex.raw("COUNT(DISTINCT l.seller_id)::integer as seller_count"),
+          knex.raw("COUNT(DISTINCT l.shop_id)::integer as shop_count"),
           knex.raw(
             `AVG(COALESCE(vp.price, li.base_price))::bigint as avg_price`,
           ),
           knex.raw(`MIN(COALESCE(vp.price, li.base_price)) as min_price`),
           knex.raw(`MAX(COALESCE(vp.price, li.base_price)) as max_price`),
         )
-        .where("l.seller_id", seller_id)
+        .where("l.shop_id", shop_id)
         .where("l.status", "active")
         .where("lil.listed", true)
         .whereRaw("iv.attributes->>'quality_tier' IS NOT NULL")
@@ -475,7 +473,7 @@ export class AnalyticsV2Controller extends BaseController {
       const inventoryResults = await inventoryQuery
 
       logger.info("Fetched inventory distribution", {
-        seller_id,
+        shop_id,
         tier_count: inventoryResults.length,
       })
 
@@ -485,7 +483,7 @@ export class AnalyticsV2Controller extends BaseController {
           quality_tier: row.quality_tier,
           quantity_available: row.quantity_available,
           listing_count: row.listing_count,
-          seller_count: row.seller_count,
+          shop_count: row.shop_count,
           avg_price: parseInt(row.avg_price, 10),
           min_price: parseInt(row.min_price, 10),
           max_price: parseInt(row.max_price, 10),
@@ -547,19 +545,19 @@ export class AnalyticsV2Controller extends BaseController {
       }
 
       logger.info("Calculated price premiums", {
-        seller_id,
+        shop_id,
         premium_count: price_premiums.length,
       })
 
       return {
-        seller_id,
+        shop_id,
         sales_by_quality,
         inventory_distribution,
         price_premiums,
       }
     } catch (error) {
       logger.error("Failed to fetch seller stats", {
-        seller_id,
+        shop_id,
         error: error instanceof Error ? error.message : String(error),
         stack: error instanceof Error ? error.stack : undefined,
       })

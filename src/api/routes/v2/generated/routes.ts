@@ -10,6 +10,8 @@ import { SuppliersV2Controller } from './../suppliers/SuppliersV2Controller.js';
 // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
 import { StockLotsV2Controller } from './../stock-lots/StockLotsV2Controller.js';
 // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+import { ShopsV2Controller } from './../shops/ShopsV2Controller.js';
+// WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
 import { RequisitionsV2Controller } from './../requisitions/RequisitionsV2Controller.js';
 // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
 import { OrdersV2Controller } from './../orders/OrdersV2Controller.js';
@@ -341,6 +343,92 @@ const models: TsoaRoute.Models = {
         "additionalProperties": false,
     },
     // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+    "ShopResponse": {
+        "dataType": "refObject",
+        "properties": {
+            "shop_id": {"dataType":"string","required":true},
+            "slug": {"dataType":"string","required":true},
+            "name": {"dataType":"string","required":true},
+            "description": {"dataType":"string","required":true},
+            "banner": {"dataType":"union","subSchemas":[{"dataType":"string"},{"dataType":"enum","enums":[null]}],"required":true},
+            "logo": {"dataType":"union","subSchemas":[{"dataType":"string"},{"dataType":"enum","enums":[null]}],"required":true},
+            "owner_user_id": {"dataType":"union","subSchemas":[{"dataType":"string"},{"dataType":"enum","enums":[null]}],"required":true},
+            "owner_contractor_id": {"dataType":"union","subSchemas":[{"dataType":"string"},{"dataType":"enum","enums":[null]}],"required":true},
+            "supported_languages": {"dataType":"array","array":{"dataType":"string"},"required":true},
+            "market_order_template": {"dataType":"string","required":true},
+            "default_pickup_method": {"dataType":"union","subSchemas":[{"dataType":"string"},{"dataType":"enum","enums":[null]}],"required":true},
+            "status": {"dataType":"string","required":true},
+            "created_at": {"dataType":"string","required":true},
+            "updated_at": {"dataType":"string","required":true},
+            "banner_url": {"dataType":"union","subSchemas":[{"dataType":"string"},{"dataType":"enum","enums":[null]}],"required":true},
+            "logo_url": {"dataType":"union","subSchemas":[{"dataType":"string"},{"dataType":"enum","enums":[null]}],"required":true},
+        },
+        "additionalProperties": false,
+    },
+    // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+    "CreateShopRequest": {
+        "dataType": "refObject",
+        "properties": {
+            "name": {"dataType":"string","required":true},
+            "slug": {"dataType":"string"},
+            "description": {"dataType":"string"},
+            "banner": {"dataType":"string"},
+            "logo": {"dataType":"string"},
+            "contractor_id": {"dataType":"string"},
+        },
+        "additionalProperties": false,
+    },
+    // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+    "QuickCreateShopRequest": {
+        "dataType": "refObject",
+        "properties": {
+            "owner_type": {"dataType":"union","subSchemas":[{"dataType":"enum","enums":["user"]},{"dataType":"enum","enums":["contractor"]}],"required":true},
+            "contractor_id": {"dataType":"string"},
+        },
+        "additionalProperties": false,
+    },
+    // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+    "ShopPublicResponse": {
+        "dataType": "refObject",
+        "properties": {
+            "shop_id": {"dataType":"string","required":true},
+            "slug": {"dataType":"string","required":true},
+            "name": {"dataType":"string","required":true},
+            "description": {"dataType":"string","required":true},
+            "banner_url": {"dataType":"union","subSchemas":[{"dataType":"string"},{"dataType":"enum","enums":[null]}],"required":true},
+            "logo_url": {"dataType":"union","subSchemas":[{"dataType":"string"},{"dataType":"enum","enums":[null]}],"required":true},
+            "supported_languages": {"dataType":"array","array":{"dataType":"string"},"required":true},
+            "status": {"dataType":"string","required":true},
+            "created_at": {"dataType":"string","required":true},
+            "rating": {"dataType":"union","subSchemas":[{"dataType":"double"},{"dataType":"enum","enums":[null]}],"required":true},
+            "rating_count": {"dataType":"double","required":true},
+        },
+        "additionalProperties": false,
+    },
+    // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+    "UpdateShopRequest": {
+        "dataType": "refObject",
+        "properties": {
+            "name": {"dataType":"string"},
+            "slug": {"dataType":"string"},
+            "description": {"dataType":"string"},
+            "banner": {"dataType":"string"},
+            "logo": {"dataType":"string"},
+            "supported_languages": {"dataType":"array","array":{"dataType":"string"}},
+            "market_order_template": {"dataType":"string"},
+            "default_pickup_method": {"dataType":"union","subSchemas":[{"dataType":"string"},{"dataType":"enum","enums":[null]}]},
+        },
+        "additionalProperties": false,
+    },
+    // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+    "TransferShopRequest": {
+        "dataType": "refObject",
+        "properties": {
+            "target_contractor_id": {"dataType":"string","required":true},
+        },
+        "additionalProperties": false,
+    },
+    // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
     "RequisitionLineItem": {
         "dataType": "refObject",
         "properties": {
@@ -490,7 +578,7 @@ const models: TsoaRoute.Models = {
         "properties": {
             "order_id": {"dataType":"string","required":true},
             "buyer_id": {"dataType":"string","required":true},
-            "seller_id": {"dataType":"string","required":true},
+            "shop_id": {"dataType":"string","required":true},
             "total_price": {"dataType":"double","required":true},
             "status": {"dataType":"string","required":true},
             "created_at": {"dataType":"string","required":true},
@@ -859,8 +947,7 @@ const models: TsoaRoute.Models = {
         "dataType": "refObject",
         "properties": {
             "listing_id": {"dataType":"string","required":true},
-            "seller_id": {"dataType":"string","required":true},
-            "seller_type": {"dataType":"union","subSchemas":[{"dataType":"enum","enums":["user"]},{"dataType":"enum","enums":["contractor"]}],"required":true},
+            "shop_id": {"dataType":"string","required":true},
             "title": {"dataType":"string","required":true},
             "description": {"dataType":"string","required":true},
             "status": {"dataType":"union","subSchemas":[{"dataType":"enum","enums":["active"]},{"dataType":"enum","enums":["inactive"]},{"dataType":"enum","enums":["sold"]},{"dataType":"enum","enums":["expired"]},{"dataType":"enum","enums":["cancelled"]}],"required":true},
@@ -907,7 +994,7 @@ const models: TsoaRoute.Models = {
             "min_order_value": {"dataType":"double"},
             "max_order_value": {"dataType":"double"},
             "bulk_discount_tiers": {"dataType":"array","array":{"dataType":"refObject","ref":"BulkDiscountTier"}},
-            "contractor_spectrum_id": {"dataType":"string"},
+            "shop_id": {"dataType":"string","required":true},
             "sale_type": {"dataType":"union","subSchemas":[{"dataType":"enum","enums":["fixed"]},{"dataType":"enum","enums":["auction"]},{"dataType":"enum","enums":["negotiable"]}]},
             "auction_details": {"dataType":"nestedObjectLiteral","nestedProperties":{"reserve_price":{"dataType":"double"},"buyout_price":{"dataType":"double"},"min_bid_increment":{"dataType":"double","required":true},"end_time":{"dataType":"string","required":true}}},
             "status": {"dataType":"union","subSchemas":[{"dataType":"enum","enums":["active"]},{"dataType":"enum","enums":["inactive"]}]},
@@ -921,8 +1008,13 @@ const models: TsoaRoute.Models = {
         "properties": {
             "listing_id": {"dataType":"string","required":true},
             "title": {"dataType":"string","required":true},
-            "seller_name": {"dataType":"string","required":true},
-            "seller_rating": {"dataType":"double","required":true},
+            "shop_id": {"dataType":"string","required":true},
+            "shop_name": {"dataType":"string","required":true},
+            "shop_slug": {"dataType":"string","required":true},
+            "shop_logo": {"dataType":"string"},
+            "shop_rating": {"dataType":"double","required":true},
+            "shop_rating_count": {"dataType":"double","required":true},
+            "shop_languages": {"dataType":"array","array":{"dataType":"string"},"required":true},
             "price_min": {"dataType":"double","required":true},
             "price_max": {"dataType":"double","required":true},
             "quantity_available": {"dataType":"double","required":true},
@@ -931,14 +1023,10 @@ const models: TsoaRoute.Models = {
             "quality_value_min": {"dataType":"double"},
             "quality_value_max": {"dataType":"double"},
             "variant_count": {"dataType":"double","required":true},
-            "seller_type": {"dataType":"union","subSchemas":[{"dataType":"enum","enums":["user"]},{"dataType":"enum","enums":["contractor"]}],"required":true},
-            "seller_slug": {"dataType":"string","required":true},
             "created_at": {"dataType":"string","required":true},
             "updated_at": {"dataType":"string","required":true},
             "game_item_name": {"dataType":"string","required":true},
             "game_item_type": {"dataType":"string","required":true},
-            "seller_rating_count": {"dataType":"double","required":true},
-            "seller_languages": {"dataType":"array","array":{"dataType":"string"}},
             "photo": {"dataType":"string"},
             "pickup_method": {"dataType":"union","subSchemas":[{"dataType":"enum","enums":["delivery"]},{"dataType":"enum","enums":["pickup"]},{"dataType":"enum","enums":["any"]},{"dataType":"enum","enums":[null]}]},
             "quantity_unit": {"dataType":"union","subSchemas":[{"dataType":"enum","enums":["unit"]},{"dataType":"enum","enums":["scu"]}],"required":true},
@@ -1017,8 +1105,7 @@ const models: TsoaRoute.Models = {
         "dataType": "refObject",
         "properties": {
             "listing_id": {"dataType":"string","required":true},
-            "seller_id": {"dataType":"string","required":true},
-            "seller_type": {"dataType":"union","subSchemas":[{"dataType":"enum","enums":["user"]},{"dataType":"enum","enums":["contractor"]}],"required":true},
+            "shop_id": {"dataType":"string","required":true},
             "title": {"dataType":"string","required":true},
             "description": {"dataType":"string","required":true},
             "status": {"dataType":"union","subSchemas":[{"dataType":"enum","enums":["active"]},{"dataType":"enum","enums":["inactive"]},{"dataType":"enum","enums":["sold"]},{"dataType":"enum","enums":["expired"]},{"dataType":"enum","enums":["cancelled"]}],"required":true},
@@ -1043,12 +1130,12 @@ const models: TsoaRoute.Models = {
     "SellerInfo": {
         "dataType": "refObject",
         "properties": {
+            "shop_id": {"dataType":"string","required":true},
             "name": {"dataType":"string","required":true},
-            "type": {"dataType":"union","subSchemas":[{"dataType":"enum","enums":["user"]},{"dataType":"enum","enums":["contractor"]}],"required":true},
             "slug": {"dataType":"string","required":true},
             "rating": {"dataType":"double","required":true},
-            "avatar_url": {"dataType":"string"},
-            "languages": {"dataType":"array","array":{"dataType":"string"}},
+            "logo_url": {"dataType":"string"},
+            "languages": {"dataType":"array","array":{"dataType":"string"},"required":true},
         },
         "additionalProperties": false,
     },
@@ -1286,7 +1373,7 @@ const models: TsoaRoute.Models = {
             "price_min": {"dataType":"double","required":true},
             "price_max": {"dataType":"double","required":true},
             "price_avg": {"dataType":"double","required":true},
-            "seller_count": {"dataType":"double","required":true},
+            "shop_count": {"dataType":"double","required":true},
             "listing_count": {"dataType":"double","required":true},
         },
         "additionalProperties": false,
@@ -1297,11 +1384,10 @@ const models: TsoaRoute.Models = {
         "properties": {
             "listing_id": {"dataType":"string","required":true},
             "title": {"dataType":"string","required":true},
-            "seller_id": {"dataType":"string","required":true},
-            "seller_name": {"dataType":"string","required":true},
-            "seller_rating": {"dataType":"double","required":true},
-            "seller_type": {"dataType":"union","subSchemas":[{"dataType":"enum","enums":["user"]},{"dataType":"enum","enums":["contractor"]}],"required":true},
-            "seller_slug": {"dataType":"string","required":true},
+            "shop_id": {"dataType":"string","required":true},
+            "shop_name": {"dataType":"string","required":true},
+            "shop_rating": {"dataType":"double","required":true},
+            "shop_slug": {"dataType":"string","required":true},
             "price_min": {"dataType":"double","required":true},
             "price_max": {"dataType":"double","required":true},
             "quantity_available": {"dataType":"double","required":true},
@@ -1337,7 +1423,7 @@ const models: TsoaRoute.Models = {
             "max_price": {"dataType":"double","required":true},
             "total_quantity": {"dataType":"double","required":true},
             "listing_count": {"dataType":"double","required":true},
-            "seller_count": {"dataType":"double","required":true},
+            "shop_count": {"dataType":"double","required":true},
             "quality_tier_min": {"dataType":"double"},
             "quality_tier_max": {"dataType":"double"},
         },
@@ -2798,13 +2884,12 @@ const models: TsoaRoute.Models = {
         "properties": {
             "listing_id": {"dataType":"string","required":true},
             "title": {"dataType":"string","required":true},
-            "seller_name": {"dataType":"string","required":true},
-            "seller_id": {"dataType":"string","required":true},
-            "seller_type": {"dataType":"union","subSchemas":[{"dataType":"enum","enums":["user"]},{"dataType":"enum","enums":["contractor"]}],"required":true},
-            "seller_slug": {"dataType":"string","required":true},
-            "seller_rating": {"dataType":"double","required":true},
+            "shop_id": {"dataType":"string","required":true},
+            "shop_name": {"dataType":"string","required":true},
+            "shop_slug": {"dataType":"string","required":true},
+            "shop_rating": {"dataType":"double","required":true},
             "status": {"dataType":"string","required":true},
-            "seller_next_available": {"dataType":"union","subSchemas":[{"dataType":"string"},{"dataType":"enum","enums":[null]}]},
+            "shop_next_available": {"dataType":"union","subSchemas":[{"dataType":"string"},{"dataType":"enum","enums":[null]}]},
         },
         "additionalProperties": false,
     },
@@ -2903,7 +2988,7 @@ const models: TsoaRoute.Models = {
         "properties": {
             "confirm_price_changes": {"dataType":"boolean"},
             "note": {"dataType":"string"},
-            "seller_id": {"dataType":"string"},
+            "shop_id": {"dataType":"string"},
         },
         "additionalProperties": false,
     },
@@ -2938,7 +3023,7 @@ const models: TsoaRoute.Models = {
         "properties": {
             "order_id": {"dataType":"string","required":true},
             "buyer_id": {"dataType":"string","required":true},
-            "seller_id": {"dataType":"string","required":true},
+            "shop_id": {"dataType":"string","required":true},
             "total_price": {"dataType":"double","required":true},
             "status": {"dataType":"string","required":true},
             "created_at": {"dataType":"string","required":true},
@@ -3156,7 +3241,7 @@ const models: TsoaRoute.Models = {
             "avg_price": {"dataType":"double","required":true},
             "min_price": {"dataType":"double","required":true},
             "max_price": {"dataType":"double","required":true},
-            "seller_count": {"dataType":"double","required":true},
+            "shop_count": {"dataType":"double","required":true},
         },
         "additionalProperties": false,
     },
@@ -3197,7 +3282,7 @@ const models: TsoaRoute.Models = {
     "GetSellerStatsResponse": {
         "dataType": "refObject",
         "properties": {
-            "seller_id": {"dataType":"string","required":true},
+            "shop_id": {"dataType":"string","required":true},
             "sales_by_quality": {"dataType":"array","array":{"dataType":"refObject","ref":"QualityTierSales"},"required":true},
             "inventory_distribution": {"dataType":"array","array":{"dataType":"refObject","ref":"QualityTierDistribution"},"required":true},
             "price_premiums": {"dataType":"array","array":{"dataType":"refObject","ref":"QualityTierPremium"},"required":true},
@@ -3790,6 +3875,229 @@ export function RegisterRoutes(app: Router) {
             }
         });
         // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+        const argsShopsV2Controller_getMyShops: Record<string, TsoaRoute.ParameterSchema> = {
+                request: {"in":"request","name":"request","required":true,"dataType":"object"},
+        };
+        app.get('/shops/mine',
+            authenticateMiddleware([{"loggedin":[]}]),
+            ...(fetchMiddlewares<RequestHandler>(ShopsV2Controller)),
+            ...(fetchMiddlewares<RequestHandler>(ShopsV2Controller.prototype.getMyShops)),
+
+            async function ShopsV2Controller_getMyShops(request: ExRequest, response: ExResponse, next: any) {
+
+            // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+
+            let validatedArgs: any[] = [];
+            try {
+                validatedArgs = templateService.getValidatedArgs({ args: argsShopsV2Controller_getMyShops, request, response });
+
+                const controller = new ShopsV2Controller();
+
+              await templateService.apiHandler({
+                methodName: 'getMyShops',
+                controller,
+                response,
+                next,
+                validatedArgs,
+                successStatus: undefined,
+              });
+            } catch (err) {
+                return next(err);
+            }
+        });
+        // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+        const argsShopsV2Controller_createShop: Record<string, TsoaRoute.ParameterSchema> = {
+                request: {"in":"request","name":"request","required":true,"dataType":"object"},
+                body: {"in":"body","name":"body","required":true,"ref":"CreateShopRequest"},
+        };
+        app.post('/shops',
+            authenticateMiddleware([{"loggedin":[]}]),
+            ...(fetchMiddlewares<RequestHandler>(ShopsV2Controller)),
+            ...(fetchMiddlewares<RequestHandler>(ShopsV2Controller.prototype.createShop)),
+
+            async function ShopsV2Controller_createShop(request: ExRequest, response: ExResponse, next: any) {
+
+            // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+
+            let validatedArgs: any[] = [];
+            try {
+                validatedArgs = templateService.getValidatedArgs({ args: argsShopsV2Controller_createShop, request, response });
+
+                const controller = new ShopsV2Controller();
+
+              await templateService.apiHandler({
+                methodName: 'createShop',
+                controller,
+                response,
+                next,
+                validatedArgs,
+                successStatus: undefined,
+              });
+            } catch (err) {
+                return next(err);
+            }
+        });
+        // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+        const argsShopsV2Controller_quickCreateShop: Record<string, TsoaRoute.ParameterSchema> = {
+                request: {"in":"request","name":"request","required":true,"dataType":"object"},
+                body: {"in":"body","name":"body","required":true,"ref":"QuickCreateShopRequest"},
+        };
+        app.post('/shops/quick',
+            authenticateMiddleware([{"loggedin":[]}]),
+            ...(fetchMiddlewares<RequestHandler>(ShopsV2Controller)),
+            ...(fetchMiddlewares<RequestHandler>(ShopsV2Controller.prototype.quickCreateShop)),
+
+            async function ShopsV2Controller_quickCreateShop(request: ExRequest, response: ExResponse, next: any) {
+
+            // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+
+            let validatedArgs: any[] = [];
+            try {
+                validatedArgs = templateService.getValidatedArgs({ args: argsShopsV2Controller_quickCreateShop, request, response });
+
+                const controller = new ShopsV2Controller();
+
+              await templateService.apiHandler({
+                methodName: 'quickCreateShop',
+                controller,
+                response,
+                next,
+                validatedArgs,
+                successStatus: undefined,
+              });
+            } catch (err) {
+                return next(err);
+            }
+        });
+        // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+        const argsShopsV2Controller_getShop: Record<string, TsoaRoute.ParameterSchema> = {
+                slug: {"in":"path","name":"slug","required":true,"dataType":"string"},
+        };
+        app.get('/shops/:slug',
+            ...(fetchMiddlewares<RequestHandler>(ShopsV2Controller)),
+            ...(fetchMiddlewares<RequestHandler>(ShopsV2Controller.prototype.getShop)),
+
+            async function ShopsV2Controller_getShop(request: ExRequest, response: ExResponse, next: any) {
+
+            // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+
+            let validatedArgs: any[] = [];
+            try {
+                validatedArgs = templateService.getValidatedArgs({ args: argsShopsV2Controller_getShop, request, response });
+
+                const controller = new ShopsV2Controller();
+
+              await templateService.apiHandler({
+                methodName: 'getShop',
+                controller,
+                response,
+                next,
+                validatedArgs,
+                successStatus: undefined,
+              });
+            } catch (err) {
+                return next(err);
+            }
+        });
+        // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+        const argsShopsV2Controller_updateShop: Record<string, TsoaRoute.ParameterSchema> = {
+                request: {"in":"request","name":"request","required":true,"dataType":"object"},
+                shopId: {"in":"path","name":"shopId","required":true,"dataType":"string"},
+                body: {"in":"body","name":"body","required":true,"ref":"UpdateShopRequest"},
+        };
+        app.put('/shops/:shopId',
+            authenticateMiddleware([{"loggedin":[]}]),
+            ...(fetchMiddlewares<RequestHandler>(ShopsV2Controller)),
+            ...(fetchMiddlewares<RequestHandler>(ShopsV2Controller.prototype.updateShop)),
+
+            async function ShopsV2Controller_updateShop(request: ExRequest, response: ExResponse, next: any) {
+
+            // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+
+            let validatedArgs: any[] = [];
+            try {
+                validatedArgs = templateService.getValidatedArgs({ args: argsShopsV2Controller_updateShop, request, response });
+
+                const controller = new ShopsV2Controller();
+
+              await templateService.apiHandler({
+                methodName: 'updateShop',
+                controller,
+                response,
+                next,
+                validatedArgs,
+                successStatus: undefined,
+              });
+            } catch (err) {
+                return next(err);
+            }
+        });
+        // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+        const argsShopsV2Controller_archiveShop: Record<string, TsoaRoute.ParameterSchema> = {
+                request: {"in":"request","name":"request","required":true,"dataType":"object"},
+                shopId: {"in":"path","name":"shopId","required":true,"dataType":"string"},
+        };
+        app.delete('/shops/:shopId',
+            authenticateMiddleware([{"loggedin":[]}]),
+            ...(fetchMiddlewares<RequestHandler>(ShopsV2Controller)),
+            ...(fetchMiddlewares<RequestHandler>(ShopsV2Controller.prototype.archiveShop)),
+
+            async function ShopsV2Controller_archiveShop(request: ExRequest, response: ExResponse, next: any) {
+
+            // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+
+            let validatedArgs: any[] = [];
+            try {
+                validatedArgs = templateService.getValidatedArgs({ args: argsShopsV2Controller_archiveShop, request, response });
+
+                const controller = new ShopsV2Controller();
+
+              await templateService.apiHandler({
+                methodName: 'archiveShop',
+                controller,
+                response,
+                next,
+                validatedArgs,
+                successStatus: undefined,
+              });
+            } catch (err) {
+                return next(err);
+            }
+        });
+        // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+        const argsShopsV2Controller_transferShop: Record<string, TsoaRoute.ParameterSchema> = {
+                request: {"in":"request","name":"request","required":true,"dataType":"object"},
+                shopId: {"in":"path","name":"shopId","required":true,"dataType":"string"},
+                body: {"in":"body","name":"body","required":true,"ref":"TransferShopRequest"},
+        };
+        app.post('/shops/:shopId/transfer',
+            authenticateMiddleware([{"loggedin":[]}]),
+            ...(fetchMiddlewares<RequestHandler>(ShopsV2Controller)),
+            ...(fetchMiddlewares<RequestHandler>(ShopsV2Controller.prototype.transferShop)),
+
+            async function ShopsV2Controller_transferShop(request: ExRequest, response: ExResponse, next: any) {
+
+            // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+
+            let validatedArgs: any[] = [];
+            try {
+                validatedArgs = templateService.getValidatedArgs({ args: argsShopsV2Controller_transferShop, request, response });
+
+                const controller = new ShopsV2Controller();
+
+              await templateService.apiHandler({
+                methodName: 'transferShop',
+                controller,
+                response,
+                next,
+                validatedArgs,
+                successStatus: undefined,
+              });
+            } catch (err) {
+                return next(err);
+            }
+        });
+        // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
         const argsRequisitionsV2Controller_createRequisition: Record<string, TsoaRoute.ParameterSchema> = {
                 body: {"in":"body","name":"body","required":true,"ref":"CreateRequisitionRequest"},
                 request: {"in":"request","name":"request","required":true,"dataType":"object"},
@@ -4260,12 +4568,11 @@ export function RegisterRoutes(app: Router) {
                 item_type: {"in":"query","name":"item_type","dataType":"string"},
                 quantity_min: {"in":"query","name":"quantity_min","dataType":"double"},
                 status: {"in":"query","name":"status","dataType":"union","subSchemas":[{"dataType":"enum","enums":["active"]},{"dataType":"enum","enums":["inactive"]},{"dataType":"enum","enums":["sold"]},{"dataType":"enum","enums":["expired"]},{"dataType":"enum","enums":["cancelled"]}]},
-                sort_by: {"in":"query","name":"sort_by","dataType":"union","subSchemas":[{"dataType":"enum","enums":["created_at"]},{"dataType":"enum","enums":["updated_at"]},{"dataType":"enum","enums":["price"]},{"dataType":"enum","enums":["quality"]},{"dataType":"enum","enums":["seller_rating"]},{"dataType":"enum","enums":["quantity"]}]},
+                sort_by: {"in":"query","name":"sort_by","dataType":"union","subSchemas":[{"dataType":"enum","enums":["created_at"]},{"dataType":"enum","enums":["updated_at"]},{"dataType":"enum","enums":["price"]},{"dataType":"enum","enums":["quality"]},{"dataType":"enum","enums":["shop_rating"]},{"dataType":"enum","enums":["quantity"]}]},
                 sort_order: {"in":"query","name":"sort_order","dataType":"union","subSchemas":[{"dataType":"enum","enums":["asc"]},{"dataType":"enum","enums":["desc"]}]},
                 language_codes: {"in":"query","name":"language_codes","dataType":"string"},
                 listing_type: {"in":"query","name":"listing_type","dataType":"union","subSchemas":[{"dataType":"enum","enums":["single"]},{"dataType":"enum","enums":["bundle"]},{"dataType":"enum","enums":["bulk"]}]},
-                seller_username: {"in":"query","name":"seller_username","dataType":"string"},
-                contractor_spectrum_id: {"in":"query","name":"contractor_spectrum_id","dataType":"string"},
+                shop_slug: {"in":"query","name":"shop_slug","dataType":"string"},
                 request: {"in":"request","name":"request","dataType":"object"},
         };
         app.get('/listings/search',
@@ -4555,7 +4862,7 @@ export function RegisterRoutes(app: Router) {
         });
         // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
         const argsListingsV2Controller_importFromUex: Record<string, TsoaRoute.ParameterSchema> = {
-                requestBody: {"in":"body","name":"requestBody","required":true,"dataType":"nestedObjectLiteral","nestedProperties":{"confirm":{"dataType":"boolean"},"listings":{"dataType":"array","array":{"dataType":"nestedObjectLiteral","nestedProperties":{"source":{"dataType":"string"},"location":{"dataType":"string"},"durability":{"dataType":"double"},"quality":{"dataType":"double"},"quantity":{"dataType":"double","required":true},"price":{"dataType":"double","required":true},"description":{"dataType":"string","required":true},"title":{"dataType":"string","required":true}}}},"contractor_spectrum_id":{"dataType":"string"},"uex_username":{"dataType":"string","required":true}}},
+                requestBody: {"in":"body","name":"requestBody","required":true,"dataType":"nestedObjectLiteral","nestedProperties":{"confirm":{"dataType":"boolean"},"listings":{"dataType":"array","array":{"dataType":"nestedObjectLiteral","nestedProperties":{"source":{"dataType":"string"},"location":{"dataType":"string"},"durability":{"dataType":"double"},"quality":{"dataType":"double"},"quantity":{"dataType":"double","required":true},"price":{"dataType":"double","required":true},"description":{"dataType":"string","required":true},"title":{"dataType":"string","required":true}}}},"shop_id":{"dataType":"string","required":true},"uex_username":{"dataType":"string","required":true}}},
                 request: {"in":"request","name":"request","required":true,"dataType":"object"},
         };
         app.post('/listings/import-uex',
@@ -4969,7 +5276,7 @@ export function RegisterRoutes(app: Router) {
         const argsGameItemsV2Controller_getListings: Record<string, TsoaRoute.ParameterSchema> = {
                 id: {"in":"path","name":"id","required":true,"dataType":"string"},
                 quality_tier: {"in":"query","name":"quality_tier","dataType":"double"},
-                sort_by: {"in":"query","name":"sort_by","dataType":"union","subSchemas":[{"dataType":"enum","enums":["price"]},{"dataType":"enum","enums":["quality"]},{"dataType":"enum","enums":["quantity"]},{"dataType":"enum","enums":["seller_rating"]}]},
+                sort_by: {"in":"query","name":"sort_by","dataType":"union","subSchemas":[{"dataType":"enum","enums":["price"]},{"dataType":"enum","enums":["quality"]},{"dataType":"enum","enums":["quantity"]},{"dataType":"enum","enums":["shop_rating"]}]},
                 sort_order: {"in":"query","name":"sort_order","dataType":"union","subSchemas":[{"dataType":"enum","enums":["asc"]},{"dataType":"enum","enums":["desc"]}]},
                 page: {"in":"query","name":"page","dataType":"double"},
                 page_size: {"in":"query","name":"page_size","dataType":"double"},
@@ -5008,7 +5315,7 @@ export function RegisterRoutes(app: Router) {
                 price_max: {"in":"query","name":"price_max","dataType":"double"},
                 quantity_min: {"in":"query","name":"quantity_min","dataType":"double"},
                 quantity_max: {"in":"query","name":"quantity_max","dataType":"double"},
-                sort_by: {"in":"query","name":"sort_by","dataType":"union","subSchemas":[{"dataType":"enum","enums":["price"]},{"dataType":"enum","enums":["quantity"]},{"dataType":"enum","enums":["name"]},{"dataType":"enum","enums":["seller_count"]}]},
+                sort_by: {"in":"query","name":"sort_by","dataType":"union","subSchemas":[{"dataType":"enum","enums":["price"]},{"dataType":"enum","enums":["quantity"]},{"dataType":"enum","enums":["name"]},{"dataType":"enum","enums":["shop_count"]}]},
                 sort_order: {"in":"query","name":"sort_order","dataType":"union","subSchemas":[{"dataType":"enum","enums":["asc"]},{"dataType":"enum","enums":["desc"]}]},
                 page: {"in":"query","name":"page","dataType":"double"},
                 page_size: {"in":"query","name":"page_size","dataType":"double"},
@@ -7471,7 +7778,7 @@ export function RegisterRoutes(app: Router) {
         });
         // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
         const argsAnalyticsV2Controller_getSellerStats: Record<string, TsoaRoute.ParameterSchema> = {
-                seller_id: {"in":"query","name":"seller_id","dataType":"string"},
+                shop_id: {"in":"query","name":"shop_id","dataType":"string"},
         };
         app.get('/analytics/seller-stats',
             ...(fetchMiddlewares<RequestHandler>(AnalyticsV2Controller)),

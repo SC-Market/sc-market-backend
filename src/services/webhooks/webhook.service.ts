@@ -46,7 +46,7 @@ export interface WebhookService {
     bid: DBMarketBid,
   ): Promise<void>
   sendBidWebhooksV2(
-    listing: { listing_id: string; title: string; seller_id: string; seller_type: string },
+    listing: { listing_id: string; title: string; shop_id: string },
     bidAmount: number,
     bidderId: string,
   ): Promise<void>
@@ -132,7 +132,7 @@ class DatabaseWebhookService implements WebhookService {
   }
 
   async sendBidWebhooksV2(
-    listing: { listing_id: string; title: string; seller_id: string; seller_type: string },
+    listing: { listing_id: string; title: string; shop_id: string },
     bidAmount: number,
     bidderId: string,
   ): Promise<void> {

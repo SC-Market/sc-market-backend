@@ -144,18 +144,18 @@ export interface CreateBuyOrderResponse {
   /** UUID of the buyer */
   buyer_id: string;
   
-  /** UUID of the seller */
-  seller_id: string;
-  
+  /** Shop ID of the seller */
+  shop_id: string;
+
   /** Total price in aUEC (atomic units) */
   total_price: number;
-  
+
   /** Order status */
   status: string;
-  
+
   /** ISO 8601 timestamp of order creation */
   created_at: string;
-  
+
   /** Purchase item details */
   item: BuyOrderItemDetail;
   
@@ -194,7 +194,7 @@ export interface FulfillBuyOrderRequest {
 export interface BuyOrderFulfillment {
   fulfillment_id: string
   buy_order_id: string
-  seller_id: string
+  shop_id: string
   order_id: string
   listing_id: string
   variant_id: string
