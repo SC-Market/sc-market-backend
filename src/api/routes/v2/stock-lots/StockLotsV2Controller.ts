@@ -200,15 +200,14 @@ export class StockLotsV2Controller extends BaseController {
           this.on("lp.listing_id", "lst.listing_id").andOn("lp.display_order", knex.raw("0"))
         })
         .leftJoin("image_resources as ir", "lp.resource_id", "ir.resource_id")
-        // Only show lots from listings the user can manage
+        // Only show lots from listings the user can manage (via shop ownership)
         .where(function () {
           if (spectrum_id) {
-            // Scoped to a specific org
-            this.where("lst.seller_type", "contractor")
-              .whereIn("lst.seller_id", knex("contractors").select("contractor_id").where("spectrum_id", spectrum_id))
+            // Scoped to a specific org's shops
+            this.whereIn("lst.shop_id", knex("shops").whereIn("owner_contractor_id", knex("contractors").select("contractor_id").where("spectrum_id", spectrum_id)).select("shop_id"))
           } else {
-            // User's own listings only (no org context)
-            this.where("lst.seller_id", userId).where("lst.seller_type", "user")
+            // User's own shops
+            this.whereIn("lst.shop_id", knex("shops").where("owner_user_id", userId).select("shop_id"))
           }
         })
         .select(

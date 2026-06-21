@@ -261,9 +261,10 @@ export class BuyOrdersV2Controller extends BaseController {
         })
 
         // Step 9: Allocate stock from variant-specific lots (V2 direct)
+        const listingShop = await trx("shops").where("shop_id", listing.shop_id).first()
         const allocationMode = await getAllocationMode(
-          listing.seller_type === "contractor" ? "contractor" : "user",
-          listing.seller_id,
+          listingShop?.owner_contractor_id ? "contractor" : "user",
+          listingShop?.owner_contractor_id || listingShop?.owner_user_id,
         )
 
         if (allocationMode === "auto") {
@@ -808,9 +809,10 @@ export class BuyOrdersV2Controller extends BaseController {
       }).returning('*')
 
       // Allocate stock
+      const fulfillShop = await trx("shops").where("shop_id", listing.shop_id).first()
       const allocationMode2 = await getAllocationMode(
-        listing.seller_type === "contractor" ? "contractor" : "user",
-        sellerId,
+        fulfillShop?.owner_contractor_id ? "contractor" : "user",
+        fulfillShop?.owner_contractor_id || fulfillShop?.owner_user_id,
       )
 
       if (allocationMode2 === "auto") {

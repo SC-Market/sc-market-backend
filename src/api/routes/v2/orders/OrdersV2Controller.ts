@@ -344,41 +344,25 @@ export class OrdersV2Controller extends BaseController {
         .select("user_id", "username", "display_name", "avatar")
         .first()
 
-      // Seller — from market_orders → listings → accounts, or from assigned_id
-      let seller = await knex("market_orders")
+      // Seller — resolve shop from listing
+      const orderShop = await knex("market_orders")
         .join("listings", "market_orders.listing_id", "listings.listing_id")
-        .join("accounts", "listings.seller_id", "accounts.user_id")
+        .join("shops", "listings.shop_id", "shops.shop_id")
         .where({ "market_orders.order_id": orderId })
-        .select("accounts.user_id", "accounts.username", "accounts.display_name", "accounts.avatar")
+        .select("shops.shop_id", "shops.name as shop_name", "shops.slug as shop_slug", "shops.logo", "shops.owner_user_id", "shops.owner_contractor_id")
         .first()
-
-      if (!seller && order.assigned_id) {
-        seller = await knex("accounts")
-          .where({ user_id: order.assigned_id })
-          .select("user_id", "username", "display_name", "avatar")
-          .first()
-      }
 
       if (!buyer) throw this.throwNotFound("Order buyer", orderId)
 
-      // Auth check — buyer, seller, or contractor member
+      // Auth check — buyer, shop owner/member, or assignee
       const isBuyer = userId === buyer.user_id
-      const isSeller = seller && userId === seller.user_id
       const isAssigned = order.assigned_id === userId
-      // Check contractor membership if seller is an org
-      let isOrgMember = false
-      if (!isSeller && seller) {
-        const listing = await knex("market_orders")
-          .join("listings", "market_orders.listing_id", "listings.listing_id")
-          .where({ "market_orders.order_id": orderId })
-          .select("listings.seller_id", "listings.seller_type")
-          .first()
-        if (listing?.seller_type === "contractor") {
-          const { is_member } = await import("../../../routes/v1/util/permissions.js")
-          isOrgMember = await is_member(listing.seller_id, userId)
-        }
+      let isShopMember = false
+      if (orderShop) {
+        const { canManageShop } = await import("../../../../services/shops/shop-permissions.service.js")
+        isShopMember = await canManageShop(orderShop, userId)
       }
-      if (!isBuyer && !isSeller && !isAssigned && !isOrgMember) {
+      if (!isBuyer && !isShopMember && !isAssigned) {
         throw this.throwForbidden("You do not have permission to view this order")
       }
 
@@ -478,9 +462,9 @@ export class OrdersV2Controller extends BaseController {
       return {
         order_id: order.order_id,
         buyer: { user_id: buyer.user_id, username: buyer.username, display_name: buyer.display_name, avatar: buyer.avatar },
-        seller: seller
-          ? { user_id: seller.user_id, username: seller.username, display_name: seller.display_name, avatar: seller.avatar }
-          : { user_id: "", username: "Unknown", display_name: "Unknown", avatar: null },
+        seller: orderShop
+          ? { shop_id: orderShop.shop_id, name: orderShop.shop_name, slug: orderShop.shop_slug }
+          : { shop_id: "", name: "Unknown", slug: "" },
         total_price: totalPrice,
         status: order.status,
         kind: order.kind || "",
@@ -579,37 +563,38 @@ export class OrdersV2Controller extends BaseController {
       if (role === 'buyer') {
         query = query.where("orders.customer_id", userId)
       } else if (role === 'seller') {
-        // For seller role: direct seller OR member of seller contractor
-        const userContractorIds = await knex("contractor_members")
-          .where("user_id", userId)
-          .select("contractor_id")
-        const cIds = userContractorIds.map((r: any) => r.contractor_id)
+        // For seller role: orders where listing belongs to user's shops
+        const userShopIds = knex("shops").where("owner_user_id", userId).select("shop_id")
+        const orgShopIds = knex("shops")
+          .whereIn("owner_contractor_id", knex("contractor_members").where("user_id", userId).select("contractor_id"))
+          .select("shop_id")
         query = query
           .join("market_orders", "orders.order_id", "market_orders.order_id")
           .join("listings", "market_orders.listing_id", "listings.listing_id")
           .where((qb) => {
-            qb.where("listings.seller_id", userId)
-            if (cIds.length) qb.orWhereIn("listings.seller_id", cIds)
+            qb.whereIn("listings.shop_id", userShopIds)
+              .orWhereIn("listings.shop_id", orgShopIds)
           })
           .groupBy("orders.order_id", "buyer.username", "buyer.avatar")
       } else {
-        // No role: buyer OR seller (direct or org)
-        const userContractorIds = await knex("contractor_members")
-          .where("user_id", userId)
-          .select("contractor_id")
-        const cIds = userContractorIds.map((r: any) => r.contractor_id)
+        // No role: buyer OR seller (via shop ownership)
+        const userShopIds = knex("shops").where("owner_user_id", userId).select("shop_id")
+        const orgShopIds = knex("shops")
+          .whereIn("owner_contractor_id", knex("contractor_members").where("user_id", userId).select("contractor_id"))
+          .select("shop_id")
+
         query = query.where((builder) => {
           builder
             .where("orders.customer_id", userId)
             .orWhereExists((subquery) => {
               subquery
-                .select("*")
+                .select(knex.raw("1"))
                 .from("market_orders")
                 .join("listings", "market_orders.listing_id", "listings.listing_id")
                 .whereRaw("market_orders.order_id = orders.order_id")
                 .where((qb) => {
-                  qb.where("listings.seller_id", userId)
-                  if (cIds.length) qb.orWhereIn("listings.seller_id", cIds)
+                  qb.whereIn("listings.shop_id", userShopIds)
+                    .orWhereIn("listings.shop_id", orgShopIds)
                 })
             })
         })
@@ -640,12 +625,12 @@ export class OrdersV2Controller extends BaseController {
       // Enrich orders with additional information
       const enrichedOrders = await Promise.all(
         orders.map(async (order) => {
-          // Get seller information
+          // Get shop information for the seller
           const seller = await knex("market_orders")
             .join("listings", "market_orders.listing_id", "listings.listing_id")
-            .join("accounts", "listings.seller_id", "accounts.user_id")
+            .join("shops", "listings.shop_id", "shops.shop_id")
             .where({ "market_orders.order_id": order.order_id })
-            .select("accounts.username", "accounts.avatar")
+            .select("shops.name as username", "shops.logo as avatar", "shops.slug as shop_slug")
             .first()
 
           // Get order items with variant details
@@ -950,17 +935,14 @@ export class OrdersV2Controller extends BaseController {
     const knex = getKnex()
     const userId = this.getUserId()
 
-    // Verify user owns this listing or is in the org
+    // Verify user can manage this listing's shop
     const listing = await knex("listings").where("listing_id", listingId).first()
     if (!listing) this.throwNotFound("Listing", listingId)
 
-    const isOwner = listing.seller_id === userId
-    let isOrgMember = false
-    if (!isOwner && listing.seller_type === "contractor") {
-      const member = await knex("contractor_members").where({ user_id: userId, contractor_id: listing.seller_id }).first()
-      isOrgMember = !!member
+    const { canModifyListing } = await import("../util/listing-permissions.js")
+    if (!(await canModifyListing({ shop_id: listing.shop_id }, userId))) {
+      this.throwForbidden("Not authorized to view orders for this listing")
     }
-    if (!isOwner && !isOrgMember) this.throwForbidden("Not authorized to view orders for this listing")
 
     // Get orders via order_market_items_v2
     interface OrderRow { order_id: string; status: string; created_at: Date; buyer_name: string; quantity: number; price_per_unit: string }
