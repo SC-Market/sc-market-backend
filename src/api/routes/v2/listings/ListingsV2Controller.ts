@@ -911,6 +911,7 @@ export class ListingsV2Controller extends BaseController {
     @Query() sort_by?: "created_at" | "updated_at" | "price" | "quantity",
     @Query() sort_order?: "asc" | "desc",
     @Query() spectrum_id?: string,
+    @Query() shop_id?: string,
     @Request() request?: ExpressRequest,
   ): Promise<GetMyListingsResponse> {
     this.request = request
@@ -965,8 +966,10 @@ export class ListingsV2Controller extends BaseController {
         )
         .leftJoin("listings as l_full", "ls.listing_id", "l_full.listing_id")
 
-      // Filter by shop: show listings from user's shops or specified org's shops
-      if (spectrum_id) {
+      // Filter by specific shop, org's shops, or user's shops
+      if (shop_id) {
+        query = query.where("ls.shop_id", shop_id)
+      } else if (spectrum_id) {
         const contractor = await db("contractors").where({ spectrum_id }).first()
         if (contractor) {
           query = query.whereIn("ls.shop_id", db("shops").where("owner_contractor_id", contractor.contractor_id).select("shop_id"))
