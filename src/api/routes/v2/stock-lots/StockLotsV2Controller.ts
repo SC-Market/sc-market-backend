@@ -55,15 +55,18 @@ export class StockLotsV2Controller extends BaseController {
 
     const db = getKnex()
 
-    // Verify the listing item exists and user owns the listing
+    // Verify the listing item exists and user can manage the listing's shop
     const item = await db('listing_items as li')
       .join('listings as l', 'li.listing_id', 'l.listing_id')
       .where('li.item_id', requestBody.item_id)
-      .andWhere('l.seller_id', userId)
-      .first('li.item_id', 'l.listing_id', 'li.game_item_id')
+      .first('li.item_id', 'l.listing_id', 'li.game_item_id', 'l.shop_id')
 
     if (!item) {
-      this.throwNotFound('Listing item not found or not owned by user')
+      this.throwNotFound('Listing item', requestBody.item_id)
+    }
+
+    if (!(await canModifyListing({ shop_id: item.shop_id }, userId))) {
+      this.throwForbidden('You do not have permission to add stock to this listing')
     }
 
     // Get or create variant
@@ -422,7 +425,7 @@ export class StockLotsV2Controller extends BaseController {
           .join("listing_items as li", "sl.item_id", "li.item_id")
           .join("listings as l", "li.listing_id", "l.listing_id")
           .where("sl.lot_id", id)
-          .select("sl.*", "l.seller_id", "l.seller_type")
+          .select("sl.*", "l.shop_id")
           .first()
 
         if (!lot) {
@@ -430,7 +433,7 @@ export class StockLotsV2Controller extends BaseController {
         }
 
         // Verify ownership
-        if (!(await canModifyListing(lot, userId))) {
+        if (!(await canModifyListing({ shop_id: lot.shop_id }, userId))) {
           this.throwForbidden("You do not have permission to update this stock lot")
         }
 
@@ -672,7 +675,7 @@ export class StockLotsV2Controller extends BaseController {
           .join("listing_items as li", "sl.item_id", "li.item_id")
           .join("listings as l", "li.listing_id", "l.listing_id")
           .whereIn("sl.lot_id", lotIds)
-          .select("sl.lot_id", "l.seller_id", "l.seller_type")
+          .select("sl.lot_id", "l.shop_id")
 
         // Create a map for quick lookup
         const lotMap = new Map(lots.map((lot) => [lot.lot_id, lot]))
@@ -693,7 +696,7 @@ export class StockLotsV2Controller extends BaseController {
             }
 
             // Verify ownership
-            if (!(await canModifyListing(lot, userId))) {
+            if (!(await canModifyListing({ shop_id: lot.shop_id }, userId))) {
               results.push({
                 lot_id: update.lot_id,
                 success: false,
@@ -827,11 +830,11 @@ export class StockLotsV2Controller extends BaseController {
       .join("listing_items as li", "sl.item_id", "li.item_id")
       .join("listings as l", "li.listing_id", "l.listing_id")
       .where("sl.lot_id", id)
-      .select("sl.*", "l.seller_id")
+      .select("sl.*", "l.shop_id")
       .first()
 
     if (!lot) throw this.throwNotFound("Stock lot", id)
-    if (!(await canModifyListing(lot, userId))) throw this.throwForbidden("You do not own this stock lot")
+    if (!(await canModifyListing({ shop_id: lot.shop_id }, userId))) throw this.throwForbidden("You do not own this stock lot")
 
     // Check if lot is allocated to pending orders
     const hasTable = await db.schema.hasTable("stock_allocation_log")

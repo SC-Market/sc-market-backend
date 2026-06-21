@@ -5,7 +5,11 @@ export async function up(knex: Knex): Promise<void> {
   await knex.raw(`
     INSERT INTO shops (slug, name, description, banner, logo, owner_contractor_id, market_order_template, created_at, updated_at)
     SELECT
-      c.spectrum_id,
+      CASE
+        WHEN NOT EXISTS (SELECT 1 FROM shops WHERE slug = c.spectrum_id)
+          THEN c.spectrum_id
+        ELSE c.spectrum_id || '-' || substr(c.contractor_id::text, 1, 8)
+      END,
       c.name,
       c.description,
       c.banner,
@@ -15,24 +19,24 @@ export async function up(knex: Knex): Promise<void> {
       c.created_at,
       NOW()
     FROM contractors c
-    WHERE EXISTS (
-      SELECT 1 FROM listings WHERE seller_id = c.contractor_id AND seller_type = 'contractor'
+    WHERE (
+      EXISTS (SELECT 1 FROM listings WHERE seller_id = c.contractor_id AND seller_type = 'contractor')
+      OR EXISTS (SELECT 1 FROM market_listings WHERE contractor_seller_id = c.contractor_id)
+      OR EXISTS (SELECT 1 FROM services WHERE contractor_id = c.contractor_id)
     )
-    OR EXISTS (
-      SELECT 1 FROM market_listings WHERE contractor_seller_id = c.contractor_id
-    )
-    OR EXISTS (
-      SELECT 1 FROM services WHERE contractor_id = c.contractor_id
-    )
-    ON CONFLICT (slug) DO NOTHING
+    AND NOT EXISTS (SELECT 1 FROM shops WHERE owner_contractor_id = c.contractor_id)
   `)
 
   // Create shops for users that have V2 listings or V1 market_listings
-  // Append '-shop' to slug to avoid collisions with contractor spectrum_ids
+  // Use username-shop as slug, with substr(user_id) suffix on collision
   await knex.raw(`
     INSERT INTO shops (slug, name, description, banner, logo, owner_user_id, market_order_template, created_at, updated_at)
     SELECT
-      a.username || '-shop',
+      CASE
+        WHEN NOT EXISTS (SELECT 1 FROM shops WHERE slug = a.username || '-shop')
+          THEN a.username || '-shop'
+        ELSE a.username || '-shop-' || substr(a.user_id::text, 1, 8)
+      END,
       a.display_name || '''s Shop',
       '',
       a.banner,
@@ -42,16 +46,12 @@ export async function up(knex: Knex): Promise<void> {
       a.created_at,
       NOW()
     FROM accounts a
-    WHERE EXISTS (
-      SELECT 1 FROM listings WHERE seller_id = a.user_id AND seller_type = 'user'
+    WHERE (
+      EXISTS (SELECT 1 FROM listings WHERE seller_id = a.user_id AND seller_type = 'user')
+      OR EXISTS (SELECT 1 FROM market_listings WHERE user_seller_id = a.user_id)
+      OR EXISTS (SELECT 1 FROM services WHERE user_id = a.user_id)
     )
-    OR EXISTS (
-      SELECT 1 FROM market_listings WHERE user_seller_id = a.user_id
-    )
-    OR EXISTS (
-      SELECT 1 FROM services WHERE user_id = a.user_id
-    )
-    ON CONFLICT (slug) DO NOTHING
+    AND NOT EXISTS (SELECT 1 FROM shops WHERE owner_user_id = a.user_id)
   `)
 
   // Backfill shop_id on V2 listings from contractor sellers
@@ -73,6 +73,17 @@ export async function up(knex: Knex): Promise<void> {
       AND s.owner_user_id = l.seller_id
       AND l.shop_id IS NULL
   `)
+
+  // Safety check: fail loudly if any listings still have NULL shop_id
+  const result = await knex.raw(`SELECT COUNT(*) as count FROM listings WHERE shop_id IS NULL`)
+  const nullCount = parseInt(result.rows[0].count, 10)
+  if (nullCount > 0) {
+    throw new Error(
+      `Backfill incomplete: ${nullCount} listings still have NULL shop_id. ` +
+      `This likely means a seller has no corresponding shop (slug collision or missing data). ` +
+      `Investigate before proceeding.`
+    )
+  }
 }
 
 export async function down(knex: Knex): Promise<void> {
