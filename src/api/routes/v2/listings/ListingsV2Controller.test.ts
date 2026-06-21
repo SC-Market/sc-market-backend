@@ -96,8 +96,7 @@ describe("ListingsV2Controller.createListing", () => {
 
       // Verify response
       expect(response.listing_id).toBeTruthy()
-      expect(response.seller_id).toBe(testUserId)
-      expect(response.seller_type).toBe("user")
+      expect(response.shop_id).toBe(testUserId)
       expect(response.title).toBe(request.title)
       expect(response.description).toBe(request.description)
       expect(response.status).toBe("active")
@@ -647,8 +646,7 @@ describe("ListingsV2Controller.getListingDetail", () => {
         "This is a test listing for detail retrieval",
       )
       expect(response.listing.status).toBe("active")
-      expect(response.listing.seller_id).toBe(testUserId)
-      expect(response.listing.seller_type).toBe("user")
+      expect(response.listing.shop_id).toBe(testUserId)
 
       // Verify timestamps
       expect(response.listing.created_at).toBeTruthy()
@@ -993,8 +991,7 @@ describe("ListingsV2Controller.getListingDetail", () => {
 
       // Verify listing fields
       expect(response.listing).toHaveProperty("listing_id")
-      expect(response.listing).toHaveProperty("seller_id")
-      expect(response.listing).toHaveProperty("seller_type")
+      expect(response.listing).toHaveProperty("shop_id")
       expect(response.listing).toHaveProperty("title")
       expect(response.listing).toHaveProperty("description")
       expect(response.listing).toHaveProperty("status")
